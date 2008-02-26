@@ -21,8 +21,10 @@ import java.util.StringTokenizer;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
+import javax.xml.namespace.QName;
 
 import org.osoa.sca.annotations.Reference;
+import static org.osoa.sca.Constants.SCA_NS;
 
 import org.fabric3.loader.common.InvalidNameException;
 import org.fabric3.scdl.BindingDefinition;
@@ -47,6 +49,7 @@ import org.fabric3.spi.loader.UnrecognizedElementException;
  * @version $Rev$ $Date$
  */
 public class CompositeReferenceLoader implements StAXElementLoader<CompositeReference> {
+    private static final QName CALLBACK = new QName(SCA_NS, "callback");
     private final Loader loader;
     private final PolicyHelper policyHelper;
 
@@ -79,15 +82,21 @@ public class CompositeReferenceLoader implements StAXElementLoader<CompositeRefe
         } catch (IllegalArgumentException e) {
             throw new InvalidValueException(reader.getAttributeValue(null, "multiplicity"), "multiplicity");
         }
-
+        boolean callback;
         while (true) {
             switch (reader.next()) {
             case XMLStreamConstants.START_ELEMENT:
+                callback = CALLBACK.equals(reader.getName());
                 ModelObject type = loader.load(reader, ModelObject.class, context);
                 if (type instanceof ServiceContract) {
                     referenceDefinition.setServiceContract((ServiceContract<?>) type);
                 } else if (type instanceof BindingDefinition) {
-                    referenceDefinition.addBinding((BindingDefinition) type);
+                    if (callback) {
+                        referenceDefinition.addCallbackBinding((BindingDefinition) type);
+                    } else {
+                        referenceDefinition.addBinding((BindingDefinition) type);
+
+                    }
                 } else if (type instanceof OperationDefinition) {
                     referenceDefinition.addOperation((OperationDefinition) type);
                 } else {

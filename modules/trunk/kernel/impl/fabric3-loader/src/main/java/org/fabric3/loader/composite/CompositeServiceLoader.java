@@ -18,13 +18,16 @@
  */
 package org.fabric3.loader.composite;
 
+import javax.xml.namespace.QName;
 import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
 import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
+import static org.osoa.sca.Constants.SCA_NS;
 import org.osoa.sca.annotations.Reference;
 
+import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.scdl.BindingDefinition;
 import org.fabric3.scdl.CompositeService;
 import org.fabric3.scdl.ModelObject;
@@ -32,7 +35,6 @@ import org.fabric3.scdl.OperationDefinition;
 import org.fabric3.scdl.ServiceContract;
 import org.fabric3.spi.loader.InvalidValueException;
 import org.fabric3.spi.loader.Loader;
-import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderUtil;
 import org.fabric3.spi.loader.PolicyHelper;
@@ -45,6 +47,7 @@ import org.fabric3.spi.loader.UnrecognizedElementException;
  * @version $Rev$ $Date$
  */
 public class CompositeServiceLoader implements StAXElementLoader<CompositeService> {
+    private static final QName CALLBACK = new QName(SCA_NS, "callback");
     private final Loader loader;
     private final PolicyHelper policyHelper;
 
@@ -68,15 +71,21 @@ public class CompositeServiceLoader implements StAXElementLoader<CompositeServic
         def.setPromote(LoaderUtil.getURI(promote));
 
         policyHelper.loadPolicySetsAndIntents(def, reader);
+        boolean callback;
         while (true) {
             int i = reader.next();
             switch (i) {
             case START_ELEMENT:
+                callback = CALLBACK.equals(reader.getName());
                 ModelObject type = loader.load(reader, ModelObject.class, context);
                 if (type instanceof ServiceContract) {
                     def.setServiceContract((ServiceContract<?>) type);
                 } else if (type instanceof BindingDefinition) {
-                    def.addBinding((BindingDefinition) type);
+                    if (callback) {
+                        def.addCallbackBinding((BindingDefinition) type);
+                    } else {
+                        def.addBinding((BindingDefinition) type);
+                    }
                 } else if (type instanceof OperationDefinition) {
                     def.addOperation((OperationDefinition) type);
                 } else {

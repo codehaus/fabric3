@@ -23,11 +23,13 @@ import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
 import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
+import javax.xml.namespace.QName;
 
 import junit.framework.TestCase;
 import org.easymock.EasyMock;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
+import static org.osoa.sca.Constants.SCA_NS;
 
 import org.fabric3.scdl.BindingDefinition;
 import org.fabric3.scdl.CompositeService;
@@ -45,6 +47,7 @@ import org.fabric3.spi.loader.PolicyHelper;
  * @version $Rev$ $Date$
  */
 public class CompositeServiceLoaderTestCase extends TestCase {
+    private static final QName NAME = new QName("test", "binding");
     private final String serviceName = "service";
     private final String componentName = "component";
     private final String componentServiceName = "component/service";
@@ -83,7 +86,9 @@ public class CompositeServiceLoaderTestCase extends TestCase {
         expect(mockReader.getAttributeValue(null, "name")).andReturn(serviceName);
         expect(mockReader.getAttributeValue(null, "promote")).andReturn(componentName);
         expect(mockReader.next()).andReturn(START_ELEMENT);
+        expect(mockReader.getName()).andReturn(NAME);
         expect(mockReader.next()).andReturn(START_ELEMENT);
+        expect(mockReader.getName()).andReturn(NAME);
         expect(mockReader.next()).andReturn(END_ELEMENT);
         replay(mockReader);
 
@@ -112,6 +117,7 @@ public class CompositeServiceLoaderTestCase extends TestCase {
         expect(mockReader.getAttributeValue(null, "name")).andReturn(serviceName);
         expect(mockReader.getAttributeValue(null, "promote")).andReturn(componentName);
         expect(mockReader.next()).andReturn(START_ELEMENT);
+        expect(mockReader.getName()).andReturn(NAME);
         expect(mockRegistry.load(mockReader, ModelObject.class, introspectionContext)).andReturn(sc);
         expect(mockReader.next()).andReturn(END_ELEMENT);
 

@@ -25,25 +25,29 @@ import java.util.List;
  * @version $Rev$ $Date$
  */
 public class CompositeReference extends ReferenceDefinition {
-    
+
     private final List<URI> promotedUris = new ArrayList<URI>();
-    
+
     public CompositeReference(String name, ServiceContract<?> serviceContract) {
         super(name, serviceContract);
     }
 
     /**
-     * @return
+     * Returns the list of references this composite reference promotes.
+     *
+     * @return the list of references this composite reference promotes
      */
     public List<URI> getPromotedUris() {
         return Collections.unmodifiableList(promotedUris);
     }
 
     /**
-     * @param uri
+     * Adds the URI of a reference this composite reference promotes.
+     *
+     * @param uri the promoted reference URI
      */
     public void addPromotedUri(URI uri) {
         promotedUris.add(uri);
     }
-    
+
 }
