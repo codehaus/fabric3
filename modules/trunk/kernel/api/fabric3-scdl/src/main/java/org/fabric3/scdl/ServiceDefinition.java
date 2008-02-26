@@ -28,10 +28,10 @@ import java.util.List;
  * @version $Rev$ $Date$
  */
 public class ServiceDefinition extends AbstractPolicyAware {
-    
     private String name;
     private ServiceContract<?> serviceContract;
     private final List<BindingDefinition> bindings = new ArrayList<BindingDefinition>();
+    private final List<BindingDefinition> callbackBindings = new ArrayList<BindingDefinition>();
     private final List<OperationDefinition> operations = new ArrayList<OperationDefinition>();
 
     public ServiceDefinition(String name) {
@@ -87,14 +87,29 @@ public class ServiceDefinition extends AbstractPolicyAware {
     public void addBinding(BindingDefinition binding) {
         this.bindings.add(binding);
     }
-    
+
+    /**
+     * @return List of callback bindings defined against the reference.
+     */
+    public List<BindingDefinition> getCallbackBindings() {
+        return Collections.unmodifiableList(callbackBindings);
+    }
+
+    /**
+     * @param binding callback binding to be added.
+     */
+    public void addCallbackBinding(BindingDefinition binding) {
+        this.callbackBindings.add(binding);
+    }
+
+
     /**
      * @return Get the list of operations defined against the reference.
      */
     public List<OperationDefinition> getOperations() {
         return Collections.unmodifiableList(operations);
     }
-    
+
     /**
      * @param operation Operation definition to be added.
      */
