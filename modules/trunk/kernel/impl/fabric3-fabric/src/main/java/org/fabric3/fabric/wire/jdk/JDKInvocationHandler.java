@@ -122,12 +122,6 @@ public final class JDKInvocationHandler<B> implements InvocationHandler, Service
         assert headInterceptor != null;
 
         WorkContext workContext = PojoWorkContextTunnel.getThreadWorkContext();
-        CallFrame previousFrame = workContext.peekCallFrame();
-        Object clientCorrelation = null;
-        if (previousFrame != null) {
-            // previous call frame can be null if calling from unmanaged code
-            clientCorrelation = previousFrame.getCorrelationId(Object.class);
-        }
         if (conversational && conversation == null) {
             conversation = new ConversationImpl(createConversationID());
             // mark the CallFrame as starting a conversation
