@@ -63,12 +63,15 @@ public class ComponentServiceLoader implements StAXElementLoader<ComponentServic
 
         policyHelper.loadPolicySetsAndIntents(def, reader);
 
-        boolean callback;
+        boolean callback = false;
         while (true) {
             int i = reader.next();
             switch (i) {
             case XMLStreamConstants.START_ELEMENT:
                 callback = CALLBACK.equals(reader.getName());
+                if (callback) {
+                    reader.nextTag();
+                }
                 ModelObject type = loader.load(reader, ModelObject.class, context);
                 if (type instanceof ServiceContract) {
                     def.setServiceContract((ServiceContract<?>) type);
@@ -85,6 +88,10 @@ public class ComponentServiceLoader implements StAXElementLoader<ComponentServic
                 }
                 break;
             case XMLStreamConstants.END_ELEMENT:
+                if (callback) {
+                    callback = false;
+                    break;
+                }
                 return def;
             }
         }

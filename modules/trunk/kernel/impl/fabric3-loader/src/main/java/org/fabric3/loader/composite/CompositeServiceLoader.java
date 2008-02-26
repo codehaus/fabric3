@@ -71,12 +71,15 @@ public class CompositeServiceLoader implements StAXElementLoader<CompositeServic
         def.setPromote(LoaderUtil.getURI(promote));
 
         policyHelper.loadPolicySetsAndIntents(def, reader);
-        boolean callback;
+        boolean callback = false;
         while (true) {
             int i = reader.next();
             switch (i) {
             case START_ELEMENT:
                 callback = CALLBACK.equals(reader.getName());
+                if (callback) {
+                    reader.nextTag();
+                }
                 ModelObject type = loader.load(reader, ModelObject.class, context);
                 if (type instanceof ServiceContract) {
                     def.setServiceContract((ServiceContract<?>) type);
@@ -93,6 +96,10 @@ public class CompositeServiceLoader implements StAXElementLoader<CompositeServic
                 }
                 break;
             case END_ELEMENT:
+                if (callback) {
+                    callback = false;
+                    break;
+                }
                 return def;
             }
         }

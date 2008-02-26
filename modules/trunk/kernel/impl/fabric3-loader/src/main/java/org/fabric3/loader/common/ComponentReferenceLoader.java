@@ -89,12 +89,15 @@ public class ComponentReferenceLoader implements StAXElementLoader<ComponentRefe
         reference.getTargets().addAll(uris);
 
         policyHelper.loadPolicySetsAndIntents(reference, reader);
-        boolean callback;
+        boolean callback = false;
         while (true) {
             switch (reader.next()) {
             case XMLStreamConstants.START_ELEMENT:
-                ModelObject type = loader.load(reader, ModelObject.class, context);
                 callback = CALLBACK.equals(reader.getName());
+                if (callback) {
+                    reader.nextTag();
+                }
+                ModelObject type = loader.load(reader, ModelObject.class, context);
                 if (type instanceof ServiceContract) {
                     reference.setServiceContract((ServiceContract<?>) type);
                 } else if (type instanceof BindingDefinition) {
@@ -110,6 +113,10 @@ public class ComponentReferenceLoader implements StAXElementLoader<ComponentRefe
                 }
                 break;
             case XMLStreamConstants.END_ELEMENT:
+                if (callback) {
+                    callback = false;
+                    break;
+                }
                 return reference;
             }
         }

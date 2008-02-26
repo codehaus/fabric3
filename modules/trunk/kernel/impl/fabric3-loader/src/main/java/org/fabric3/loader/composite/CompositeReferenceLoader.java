@@ -82,11 +82,14 @@ public class CompositeReferenceLoader implements StAXElementLoader<CompositeRefe
         } catch (IllegalArgumentException e) {
             throw new InvalidValueException(reader.getAttributeValue(null, "multiplicity"), "multiplicity");
         }
-        boolean callback;
+        boolean callback = false;
         while (true) {
             switch (reader.next()) {
             case XMLStreamConstants.START_ELEMENT:
                 callback = CALLBACK.equals(reader.getName());
+                if (callback) {
+                    reader.nextTag();
+                }
                 ModelObject type = loader.load(reader, ModelObject.class, context);
                 if (type instanceof ServiceContract) {
                     referenceDefinition.setServiceContract((ServiceContract<?>) type);
@@ -104,6 +107,10 @@ public class CompositeReferenceLoader implements StAXElementLoader<CompositeRefe
                 }
                 break;
             case XMLStreamConstants.END_ELEMENT:
+                if (callback) {
+                    callback = false;
+                    break;
+                }
                 return referenceDefinition;
             }
         }
