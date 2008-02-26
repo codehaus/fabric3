@@ -42,15 +42,15 @@ import org.fabric3.spi.ObjectFactory;
  * @version $Rev$ $Date$
  */
 @EagerInit
-@Service(interfaces={SourceWireAttacher.class, TargetWireAttacher.class})
+@Service(interfaces = {SourceWireAttacher.class, TargetWireAttacher.class})
 public class TestBindingWireAttacher implements SourceWireAttacher<TestBindingSourceDefinition>, TargetWireAttacher<TestBindingTargetDefinition> {
     private final SourceWireAttacherRegistry sourceWireAttacherRegistry;
     private final TargetWireAttacherRegistry targetWireAttacherRegistry;
     private final BindingChannel channel;
 
     public TestBindingWireAttacher(@Reference SourceWireAttacherRegistry sourceWireAttacherRegistry,
-                              @Reference TargetWireAttacherRegistry targetWireAttacherRegistry,
-                              @Reference BindingChannel channel) {
+                                   @Reference TargetWireAttacherRegistry targetWireAttacherRegistry,
+                                   @Reference BindingChannel channel) {
         this.sourceWireAttacherRegistry = sourceWireAttacherRegistry;
         this.targetWireAttacherRegistry = targetWireAttacherRegistry;
         this.channel = channel;
@@ -68,17 +68,20 @@ public class TestBindingWireAttacher implements SourceWireAttacher<TestBindingSo
         targetWireAttacherRegistry.unregister(TestBindingTargetDefinition.class, this);
     }
 
-    public void attachToSource(TestBindingSourceDefinition source, PhysicalWireTargetDefinition target, Wire wire)
-            throws WiringException {
-        // register the wire to the bound service so it can be invoked through the channel
-        // from a bound reference
-        channel.registerDestinationWire(source.getUri(), wire);
+    public void attachToSource(TestBindingSourceDefinition source, PhysicalWireTargetDefinition target, Wire wire) throws WiringException {
+        // register the wire to the bound service so it can be invoked through the channel from a bound reference
+        URI callbackUri = target.getCallbackUri();
+        channel.registerDestinationWire(source.getUri(), wire, callbackUri);
     }
 
-    public void attachToTarget(PhysicalWireSourceDefinition source, TestBindingTargetDefinition target, Wire wire)
-            throws WiringException {
+    public void attachToTarget(PhysicalWireSourceDefinition source, TestBindingTargetDefinition target, Wire wire) throws WiringException {
         for (Map.Entry<PhysicalOperationDefinition, InvocationChain> entry : wire.getInvocationChains().entrySet()) {
-            URI destination = target.getUri();
+            URI destination;
+            if (target.isCallback()) {
+                destination = target.getCallbackUri();
+            } else {
+                destination = target.getUri();
+            }
             String name = entry.getKey().getName();
             Interceptor interceptor = new TestBindingInterceptor(channel, destination, name);
             entry.getValue().addInterceptor(interceptor);

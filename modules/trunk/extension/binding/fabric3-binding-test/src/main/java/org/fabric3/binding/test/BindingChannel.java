@@ -33,8 +33,9 @@ public interface BindingChannel {
      *
      * @param uri  the destination uri
      * @param wire the wire
+     * @param callbackUri the callback uri or null
      */
-    void registerDestinationWire(URI uri, Wire wire);
+    void registerDestinationWire(URI uri, Wire wire, URI callbackUri);
 
     /**
      * Sends a message to the destination, invoking the given operation. Note overloaded operations are not supported
