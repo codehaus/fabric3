@@ -18,7 +18,6 @@
  */
 package org.fabric3.scdl;
 
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -29,26 +28,30 @@ import java.util.List;
  * @version $Rev$ $Date$
  */
 public class ReferenceDefinition extends AbstractPolicyAware {
-    
     private final String name;
     private ServiceContract<?> serviceContract;
     private Multiplicity multiplicity;
     private boolean required;
     private final List<BindingDefinition> bindings = new ArrayList<BindingDefinition>();
+    private final List<BindingDefinition> callbackBindings = new ArrayList<BindingDefinition>();
     private final List<OperationDefinition> operations = new ArrayList<OperationDefinition>();
 
     /**
-     * @param name
-     * @param serviceContract
+     * Constructor.
+     *
+     * @param name            the refeence name
+     * @param serviceContract the service contract required by this reference
      */
     public ReferenceDefinition(String name, ServiceContract<?> serviceContract) {
         this(name, serviceContract, Multiplicity.ONE_ONE);
     }
 
     /**
-     * @param name
-     * @param serviceContract
-     * @param multiplicity
+     * Constructor.
+     *
+     * @param name            the refeence name
+     * @param serviceContract the service contract required by this reference
+     * @param multiplicity    the reference multiplicity
      */
     public ReferenceDefinition(String name, ServiceContract<?> serviceContract, Multiplicity multiplicity) {
         this.name = name;
@@ -57,49 +60,63 @@ public class ReferenceDefinition extends AbstractPolicyAware {
     }
 
     /**
-     * @return
+     * Returns the reference name.
+     *
+     * @return the reference name
      */
     public String getName() {
         return name;
     }
 
     /**
-     * @return
+     * Returns the service contract required by this reference.
+     *
+     * @return the service contract required by this reference
      */
     public ServiceContract<?> getServiceContract() {
         return serviceContract;
     }
 
     /**
-     * @param serviceContract
+     * Sets the service contract required by this reference.
+     *
+     * @param serviceContract the service contract required by this reference
      */
     public void setServiceContract(ServiceContract<?> serviceContract) {
         this.serviceContract = serviceContract;
     }
 
     /**
-     * @return
+     * Returns the reference multiplicity.
+     *
+     * @return the reference multiplicity
      */
     public Multiplicity getMultiplicity() {
         return multiplicity;
     }
 
     /**
-     * @param multiplicity
+     * Sets the reference multiplicity.
+     *
+     * @param multiplicity the reference multiplicity
      */
     public void setMultiplicity(Multiplicity multiplicity) {
         this.multiplicity = multiplicity;
     }
 
     /**
-     * @return
+     * Returns true if the reference is required
+     *
+     * @return true if the reference is required
      */
     public boolean isRequired() {
         return required;
     }
 
     /**
-     * @param required
+     * Sets if the reference is required.
+     *
+     * @param required true if the reference is required
      */
     public void setRequired(boolean required) {
         this.required = required;
@@ -118,14 +135,28 @@ public class ReferenceDefinition extends AbstractPolicyAware {
     public void addBinding(BindingDefinition binding) {
         this.bindings.add(binding);
     }
-    
+
+    /**
+     * @return List of callback bindings defined against the reference.
+     */
+    public List<BindingDefinition> getCallbackBindings() {
+        return Collections.unmodifiableList(callbackBindings);
+    }
+
+    /**
+     * @param binding callback binding to be added.
+     */
+    public void addCallbackBinding(BindingDefinition binding) {
+        this.callbackBindings.add(binding);
+    }
+
     /**
      * @return Get the list of operations defined against the reference.
      */
     public List<OperationDefinition> getOperations() {
         return Collections.unmodifiableList(operations);
     }
-    
+
     /**
      * @param operation Operation definition to be added.
      */
