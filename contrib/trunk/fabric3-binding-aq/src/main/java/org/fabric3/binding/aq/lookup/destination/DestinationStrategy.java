@@ -19,10 +19,7 @@
 
 package org.fabric3.binding.aq.lookup.destination;
 
-import java.util.Hashtable;
-
 import javax.jms.Destination;
-import javax.jms.Queue;
 import javax.jms.QueueConnectionFactory;
 
 import org.fabric3.binding.aq.model.DestinationDefinition;
