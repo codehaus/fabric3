@@ -94,4 +94,13 @@ public abstract class Bindable extends LogicalScaArtifact<LogicalComponent<?>> {
         bindings.add(binding);
     }
 
+    /**
+     * Adds a callback binding to the service or the reference.
+     *
+     * @param binding Binding to be added to the service or the reference.
+     */
+    public final void addCallbackBinding(LogicalBinding<?> binding) {
+        callbackBindings.add(binding);
+    }
+
 }
