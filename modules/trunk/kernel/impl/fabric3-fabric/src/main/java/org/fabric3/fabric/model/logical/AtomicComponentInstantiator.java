@@ -35,6 +35,7 @@ import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalResource;
 import org.fabric3.spi.model.instance.LogicalService;
+
 import org.osoa.sca.annotations.Reference;
 
 /**
@@ -42,7 +43,7 @@ import org.osoa.sca.annotations.Reference;
  */
 public class AtomicComponentInstantiator extends AbstractComponentInstantiator {
 
-    public AtomicComponentInstantiator(@Reference(name="documentLoader") DocumentLoader documentLoader) {
+    public AtomicComponentInstantiator(@Reference(name = "documentLoader")DocumentLoader documentLoader) {
         super(documentLoader);
     }
 
@@ -52,35 +53,34 @@ public class AtomicComponentInstantiator extends AbstractComponentInstantiator {
         URI runtimeId = definition.getRuntimeId();
         URI uri = URI.create(parent.getUri() + "/" + definition.getName());
         LogicalComponent<I> component = new LogicalComponent<I>(uri, runtimeId, definition, parent);
-        
+
         initializeProperties(component, definition);
-        
+
         I impl = definition.getImplementation();
         AbstractComponentType<?, ?, ?, ?> componentType = impl.getComponentType();
 
         createServices(definition, component, componentType);
         createReferences(definition, component, componentType);
         createResources(component, componentType);
-        
+
         return component;
-        
+
     }
 
-    private <I extends Implementation<?>>void createResources(LogicalComponent<I> component,
-                                 AbstractComponentType<?, ?, ?, ?> componentType) {
-        
+    private <I extends Implementation<?>> void createResources(LogicalComponent<I> component, AbstractComponentType<?, ?, ?, ?> componentType) {
+
         for (ResourceDefinition resource : componentType.getResources().values()) {
             URI resourceUri = component.getUri().resolve('#' + resource.getName());
             LogicalResource<?> logicalResource = createLogicalResource(resource, resourceUri, component);
             component.addResource(logicalResource);
         }
-        
+
     }
 
-    private <I extends Implementation<?>>void createServices(ComponentDefinition<I> definition,
-                                LogicalComponent<I> component,
-                                AbstractComponentType<?, ?, ?, ?> componentType) {
-        
+    private <I extends Implementation<?>> void createServices(ComponentDefinition<I> definition,
+                                                              LogicalComponent<I> component,
+                                                              AbstractComponentType<?, ?, ?, ?> componentType) {
+
         for (ServiceDefinition service : componentType.getServices().values()) {
             String name = service.getName();
             URI serviceUri = component.getUri().resolve('#' + name);
@@ -92,16 +92,19 @@ public class AtomicComponentInstantiator extends AbstractComponentInstantiator {
                 for (BindingDefinition binding : componentService.getBindings()) {
                     logicalService.addBinding(new LogicalBinding<BindingDefinition>(binding, logicalService));
                 }
+                for (BindingDefinition binding : componentService.getCallbackBindings()) {
+                    logicalService.addCallbackBinding(new LogicalBinding<BindingDefinition>(binding, logicalService));
+                }
             }
             component.addService(logicalService);
         }
-        
+
     }
 
-    private <I extends Implementation<?>>void createReferences(ComponentDefinition<I> definition,
-                                  LogicalComponent<I> component,
-                                  AbstractComponentType<?, ?, ?, ?> componentType) {
-        
+    private <I extends Implementation<?>> void createReferences(ComponentDefinition<I> definition,
+                                                                LogicalComponent<I> component,
+                                                                AbstractComponentType<?, ?, ?, ?> componentType) {
+
         for (ReferenceDefinition reference : componentType.getReferences().values()) {
             String name = reference.getName();
             URI referenceUri = component.getUri().resolve('#' + name);
@@ -113,18 +116,21 @@ public class AtomicComponentInstantiator extends AbstractComponentInstantiator {
                 for (BindingDefinition binding : componentReference.getBindings()) {
                     logicalReference.addBinding(new LogicalBinding<BindingDefinition>(binding, logicalReference));
                 }
+                for (BindingDefinition binding : componentReference.getCallbackBindings()) {
+                    logicalReference.addCallbackBinding(new LogicalBinding<BindingDefinition>(binding, logicalReference));
+                }
             }
             component.addReference(logicalReference);
         }
-        
+
     }
 
     /*
      * Creates a logical resource.
      */
     private <RD extends ResourceDefinition> LogicalResource<RD> createLogicalResource(RD resourceDefinition,
-                                                                              URI resourceUri,
-                                                                              LogicalComponent<?> component) {
+                                                                                      URI resourceUri,
+                                                                                      LogicalComponent<?> component) {
         return new LogicalResource<RD>(resourceUri, resourceDefinition, component);
     }
 

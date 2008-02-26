@@ -30,6 +30,7 @@ import org.fabric3.fabric.services.routing.RoutingService;
 import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.CompositeImplementation;
 import org.fabric3.scdl.Implementation;
+import org.fabric3.scdl.ServiceContract;
 import org.fabric3.spi.assembly.ActivateException;
 import org.fabric3.spi.command.Command;
 import org.fabric3.spi.command.CommandSet;
@@ -49,6 +50,7 @@ import org.fabric3.spi.model.physical.PhysicalChangeSet;
 import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
 import org.fabric3.spi.runtime.assembly.LogicalComponentManager;
 import org.fabric3.spi.util.UriHelper;
+
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
@@ -73,7 +75,7 @@ public class PhysicalModelGeneratorImpl implements PhysicalModelGenerator {
      */
     public PhysicalModelGeneratorImpl(@Reference GeneratorRegistry generatorRegistry,
                                       @Reference RoutingService routingService,
-                                      @Reference(name = "logicalComponentManager") LogicalComponentManager logicalComponentManager,
+                                      @Reference(name = "logicalComponentManager")LogicalComponentManager logicalComponentManager,
                                       @Reference PhysicalWireGenerator physicalWireGenerator) {
         this.generatorRegistry = generatorRegistry;
         this.routingService = routingService;
@@ -114,11 +116,11 @@ public class PhysicalModelGeneratorImpl implements PhysicalModelGenerator {
 
     }
 
-    private void generateChangeSets(LogicalComponent<?> component, Map<URI, GeneratorContext> contexts)  throws GenerationException {
+    private void generateChangeSets(LogicalComponent<?> component, Map<URI, GeneratorContext> contexts) throws GenerationException {
 
         ComponentDefinition<? extends Implementation<?>> definition = component.getDefinition();
         Implementation<?> implementation = definition.getImplementation();
-        
+
         if (CompositeImplementation.IMPLEMENTATION_COMPOSITE.equals(implementation.getType())) {
             LogicalCompositeComponent composite = (LogicalCompositeComponent) component;
             for (LogicalComponent<?> child : composite.getComponents()) {
@@ -139,22 +141,22 @@ public class PhysicalModelGeneratorImpl implements PhysicalModelGenerator {
 
     @SuppressWarnings({"unchecked"})
     private void generatePhysicalComponent(LogicalComponent<?> component, Map<URI, GeneratorContext> contexts) throws GenerationException {
-        
+
         if (component.isProvisioned()) {
             return;
         }
 
         URI id = component.getRuntimeId();
         GeneratorContext context = contexts.get(id);
-        
+
         if (context == null) {
             PhysicalChangeSet changeSet = new PhysicalChangeSet();
             CommandSet commandSet = new CommandSet();
             context = new DefaultGeneratorContext(changeSet, commandSet);
             contexts.put(id, context);
         }
-        
-        ComponentGenerator generator =  generatorRegistry.getComponentGenerator(component.getDefinition().getImplementation().getClass());
+
+        ComponentGenerator generator = generatorRegistry.getComponentGenerator(component.getDefinition().getImplementation().getClass());
         PhysicalComponentDefinition pcd = generator.generate(component, context);
         context.getPhysicalChangeSet().addComponentDefinition(pcd);
 
@@ -199,8 +201,26 @@ public class PhysicalModelGeneratorImpl implements PhysicalModelGenerator {
             if (bindings.isEmpty()) {
                 continue;
             }
+            ServiceContract<?> callbackContract = service.getDefinition().getServiceContract().getCallbackContract();
+            LogicalBinding<?> callbackBinding = null;
+            URI callbackUri = null;
+            if (callbackContract != null) {
+                List<LogicalBinding<?>> callbackBindings = service.getCallbackBindings();
+                if (callbackBindings.size() != 1) {
+                    String uri = service.getUri().toString();
+                    throw new UnsupportedOperationException("The runtime requires exactly one callback binding to be specified on service ["
+                            + uri + "]");
+                }
+                callbackBinding = callbackBindings.get(0);
+                // xcv FIXME should be on the logical binding
+                callbackUri = callbackBinding.getBinding().getTargetUri();
+            }
             for (LogicalBinding<?> binding : service.getBindings()) {
-                physicalWireGenerator.generateBoundServiceWire(service, binding, component, context);
+                physicalWireGenerator.generateBoundServiceWire(service, binding, component, callbackUri, context);
+
+            }
+            if (callbackContract != null) {
+                physicalWireGenerator.generateBoundCallbackServiceWire(component, service, callbackBinding, context);
             }
         }
 
@@ -215,26 +235,37 @@ public class PhysicalModelGeneratorImpl implements PhysicalModelGenerator {
                 // TODO this should be extensible and moved out
                 LogicalBinding<?> logicalBinding = logicalReference.getBindings().get(0);
                 physicalWireGenerator.generateBoundReferenceWire(component, logicalReference, logicalBinding, context);
+                if (logicalReference.getDefinition().getServiceContract().getCallbackContract() != null) {
+                    List<LogicalBinding<?>> callbackBindings = logicalReference.getCallbackBindings();
+                    if (callbackBindings.size() != 1) {
+                        String uri = logicalReference.getUri().toString();
+                        throw new UnsupportedOperationException("The runtime requires exactly one callback binding to be specified on reference ["
+                                + uri + "]");
+                    }
+                    LogicalBinding<?> callbackBinding = callbackBindings.get(0);
+
+                    physicalWireGenerator.generateBoundCallbackRerenceWire(logicalReference, callbackBinding, component, context);
+                }
             }
         }
-        
+
     }
 
     private void generateUnboundReferenceWires(LogicalReference logicalReference, GeneratorContext context) throws GenerationException {
 
         LogicalComponent<?> component = logicalReference.getParent();
-        
+
         for (LogicalWire logicalWire : logicalReference.getWires()) {
-            
+
             if (logicalWire.isProvisioned()) {
                 continue;
             }
-            
+
             URI uri = logicalWire.getTargetUri();
             LogicalComponent<?> target = logicalComponentManager.getComponent(uri);
             String serviceName = uri.getFragment();
             LogicalService targetService = target.getService(serviceName);
-            
+
             assert targetService != null;
             while (CompositeImplementation.class.isInstance(target.getDefinition().getImplementation())) {
                 LogicalCompositeComponent composite = (LogicalCompositeComponent) target;
@@ -251,17 +282,17 @@ public class PhysicalModelGeneratorImpl implements PhysicalModelGenerator {
                 generateResourceWires(component, context);
                 physicalWireGenerator.generateUnboundCallbackWire(target, reference, component, context);
             }
-            
+
             logicalWire.setProvisioned(true);
-            
+
         }
 
     }
 
     private void generateCommandSets(LogicalComponent<?> component, Map<URI, GeneratorContext> contexts) throws GenerationException {
-        
+
         GeneratorContext context = contexts.get(component.getRuntimeId());
-        
+
         if (context != null) {
             generateCommandSet(component, context);
             if (component.isEagerInit()) {

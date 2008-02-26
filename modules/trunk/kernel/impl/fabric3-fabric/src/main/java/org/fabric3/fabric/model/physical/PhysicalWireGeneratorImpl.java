@@ -32,6 +32,7 @@ import org.fabric3.scdl.Operation;
 import org.fabric3.scdl.ReferenceDefinition;
 import org.fabric3.scdl.ResourceDefinition;
 import org.fabric3.scdl.ServiceContract;
+import org.fabric3.scdl.ServiceDefinition;
 import org.fabric3.scdl.definitions.PolicySet;
 import org.fabric3.spi.generator.BindingGenerator;
 import org.fabric3.spi.generator.ComponentGenerator;
@@ -131,22 +132,9 @@ public class PhysicalWireGeneratorImpl implements PhysicalWireGenerator {
         ServiceContract<?> callbackContract = reference.getDefinition().getServiceContract().getCallbackContract();
         if (callbackContract != null) {
             // if there is a callback wire associated with this forward wire, calculate its URI
-            LogicalService candidate = null;
-            for (LogicalService entry : source.getServices()) {
-                if (callbackContract.isAssignableFrom(entry.getDefinition().getServiceContract())) {
-                    candidate = entry;
-                    break;
-                }
-            }
-            if (candidate == null) {
-                String name = callbackContract.getInterfaceName();
-                URI uri = source.getUri();
-                throw new CallbackServiceNotFoundException("Callback service not found ["
-                        + name + "] on component [" + uri + "] originating from reference [" + referenceDefinition.getName() + "]", name);
-            }
-            targetDefinition.setCallbackUri(URI.create(source.getUri().toString() + "#" + candidate.getDefinition().getName()));
+            URI callbackUri = generateCallbackUri(source, callbackContract, referenceDefinition.getName());
+            targetDefinition.setCallbackUri(callbackUri);
         }
-
 
         ComponentGenerator<S> sourceGenerator = getGenerator(source);
         PhysicalWireSourceDefinition sourceDefinition = sourceGenerator.generateWireSource(source, reference, sourcePolicy, context);
@@ -195,6 +183,7 @@ public class PhysicalWireGeneratorImpl implements PhysicalWireGenerator {
     public <C extends LogicalComponent<?>> void generateBoundServiceWire(LogicalService service,
                                                                          LogicalBinding<?> binding,
                                                                          C component,
+                                                                         URI callbackUri,
                                                                          GeneratorContext context) throws GenerationException {
 
         // use the service contract from the binding's parent service if it is defined, otherwise default to the one
@@ -227,7 +216,7 @@ public class PhysicalWireGeneratorImpl implements PhysicalWireGenerator {
 
         ComponentGenerator<C> targetGenerator = getGenerator(component);
         PhysicalWireTargetDefinition targetDefinition = targetGenerator.generateWireTarget(targetService, component, targetPolicy, context);
-
+        targetDefinition.setCallbackUri(callbackUri);
         BindingGenerator sourceGenerator = getGenerator(binding);
         PhysicalWireSourceDefinition sourceDefinition = sourceGenerator.generateWireSource(binding, sourcePolicy, context, service.getDefinition());
 
@@ -243,7 +232,8 @@ public class PhysicalWireGeneratorImpl implements PhysicalWireGenerator {
                                                                            LogicalBinding<?> binding,
                                                                            GeneratorContext context) throws GenerationException {
 
-        ServiceContract<?> contract = reference.getDefinition().getServiceContract();
+        ReferenceDefinition referenceDefinition = reference.getDefinition();
+        ServiceContract<?> contract = referenceDefinition.getServiceContract();
         LogicalBinding<SCABindingDefinition> sourceBinding = new LogicalBinding<SCABindingDefinition>(SCABindingDefinition.INSTANCE, reference);
 
         PolicyResult policyResult = resolvePolicies(contract, sourceBinding, binding, component, null);
@@ -252,6 +242,14 @@ public class PhysicalWireGeneratorImpl implements PhysicalWireGenerator {
 
         BindingGenerator targetGenerator = getGenerator(binding);
         PhysicalWireTargetDefinition targetDefinition = targetGenerator.generateWireTarget(binding, targetPolicy, context, reference.getDefinition());
+        ServiceContract<?> callbackContract = contract.getCallbackContract();
+        if (callbackContract != null) {
+            // if there is a callback wire associated with this forward wire, calculate its URI
+            URI callbackUri = generateCallbackUri(component, callbackContract, referenceDefinition.getName());
+            targetDefinition.setCallbackUri(callbackUri);
+        }
+
+
         ComponentGenerator<C> sourceGenerator = getGenerator(component);
 
         PhysicalWireSourceDefinition sourceDefinition = sourceGenerator.generateWireSource(component, reference, sourcePolicy, context);
@@ -264,6 +262,69 @@ public class PhysicalWireGeneratorImpl implements PhysicalWireGenerator {
 
     }
 
+    @SuppressWarnings({"unchecked"})
+    public <C extends LogicalComponent<?>> void generateBoundCallbackRerenceWire(LogicalReference reference, LogicalBinding<?> binding, C component,
+                                                                                 GeneratorContext context) throws GenerationException {
+        ReferenceDefinition definition = reference.getDefinition();
+        ServiceContract<?> contract = definition.getServiceContract();
+        ServiceContract<?> callbackContract = contract.getCallbackContract();
+
+        LogicalService callbackService = component.getService(callbackContract.getInterfaceName());
+
+        ServiceDefinition serviceDefinition = callbackService.getDefinition();
+
+        LogicalBinding<SCABindingDefinition> sourceBinding = new LogicalBinding<SCABindingDefinition>(SCABindingDefinition.INSTANCE, reference);
+
+        PolicyResult policyResult = resolvePolicies(contract, sourceBinding, binding, component, null);
+        Policy sourcePolicy = policyResult.getSourcePolicy();
+        Policy targetPolicy = policyResult.getTargetPolicy();
+        BindingGenerator bindingGenerator = getGenerator(binding);
+        ComponentGenerator<C> componentGenerator = getGenerator(component);
+
+        PhysicalWireSourceDefinition sourceDefinition = bindingGenerator.generateWireSource(binding, targetPolicy, context, serviceDefinition);
+        PhysicalWireTargetDefinition targetDefinition = componentGenerator.generateWireTarget(callbackService, component, sourcePolicy, context);
+        targetDefinition.setCallback(true);
+        Set<PhysicalOperationDefinition> operation = generateOperations(callbackContract, context, policyResult, binding);
+        PhysicalWireDefinition wireDefinition = new PhysicalWireDefinition(sourceDefinition, targetDefinition, operation);
+        context.getPhysicalChangeSet().addWireDefinition(wireDefinition);
+    }
+
+    @SuppressWarnings({"unchecked"})
+    public <C extends LogicalComponent<?>> void generateBoundCallbackServiceWire(C component, LogicalService service,
+                                                                                 LogicalBinding<?> binding,
+                                                                                 GeneratorContext context) throws GenerationException {
+
+        // use the service contract from the binding's parent service if it is defined, otherwise default to the one
+        // defined on the original component
+        Bindable bindable = binding.getParent();
+        assert bindable instanceof LogicalService;
+        LogicalService logicalService = (LogicalService) bindable;
+
+        ServiceContract<?> contract = logicalService.getDefinition().getServiceContract();
+        if (contract == null) {
+            contract = service.getDefinition().getServiceContract();
+        }
+        ServiceContract<?> callbackContract = contract.getCallbackContract();
+
+        // TODO policies are not correctly calculated
+        LogicalBinding<SCABindingDefinition> targetBinding = new LogicalBinding<SCABindingDefinition>(SCABindingDefinition.INSTANCE, service);
+        PolicyResult policyResult = resolvePolicies(callbackContract, binding, targetBinding, null, component);
+        Policy targetPolicy = policyResult.getSourcePolicy();
+        Policy sourcePolicy = policyResult.getTargetPolicy();
+
+        ComponentGenerator<C> componentGenerator = getGenerator(component);
+        PhysicalWireSourceDefinition sourceDefinition =
+                componentGenerator.generateCallbackWireSource(component, callbackContract, sourcePolicy, context);
+
+        BindingGenerator bindingGenerator = getGenerator(binding);
+        // xcv FIXME refactor null param to use ServiceContract
+        PhysicalWireTargetDefinition targetDefinition = bindingGenerator.generateWireTarget(binding, targetPolicy, context, null);
+
+        Set<PhysicalOperationDefinition> operations = generateOperations(callbackContract, context, policyResult, binding);
+        PhysicalWireDefinition wireDefinition = new PhysicalWireDefinition(sourceDefinition, targetDefinition, operations);
+        context.getPhysicalChangeSet().addWireDefinition(wireDefinition);
+
+    }
 
     private Set<PhysicalOperationDefinition> generateOperations(ServiceContract<?> contract,
                                                                 GeneratorContext context,
@@ -320,6 +381,24 @@ public class PhysicalWireGeneratorImpl implements PhysicalWireGenerator {
             throw new PolicyException(e);
         }
 
+    }
+
+    private <S extends LogicalComponent<?>> URI generateCallbackUri(S source, ServiceContract<?> contract, String sourceName)
+            throws CallbackServiceNotFoundException {
+        LogicalService candidate = null;
+        for (LogicalService entry : source.getServices()) {
+            if (contract.isAssignableFrom(entry.getDefinition().getServiceContract())) {
+                candidate = entry;
+                break;
+            }
+        }
+        if (candidate == null) {
+            String name = contract.getInterfaceName();
+            URI uri = source.getUri();
+            throw new CallbackServiceNotFoundException("Callback service not found ["
+                    + name + "] on component [" + uri + "] originating from reference [" + sourceName + "]", name);
+        }
+        return URI.create(source.getUri().toString() + "#" + candidate.getDefinition().getName());
     }
 
     @SuppressWarnings("unchecked")
