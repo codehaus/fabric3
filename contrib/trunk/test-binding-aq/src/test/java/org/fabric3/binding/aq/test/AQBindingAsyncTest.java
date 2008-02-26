@@ -18,13 +18,8 @@
  */
 package org.fabric3.binding.aq.test;
 
-import java.util.Date;
-
 import junit.framework.TestCase;
 
-import org.fabric3.binding.aq.test.HelloRequest;
-import org.fabric3.binding.aq.test.HelloResponse;
-import org.fabric3.binding.aq.test.HelloService;
 import org.osoa.sca.annotations.Reference;
 
 /**
