@@ -16,9 +16,9 @@
  */
 package org.fabric3.tests.function.callback.stateless;
 
-import java.util.concurrent.CountDownLatch;
-
 import org.osoa.sca.annotations.Callback;
+
+import org.fabric3.tests.function.callback.common.CallbackData;
 
 /**
  * @version $Rev$ $Date$
@@ -27,7 +27,7 @@ public class EndServiceImpl implements EndService {
     @Callback
     protected CallbackService callbackService;
 
-    public void invoke(CountDownLatch latch) {
-        callbackService.onCallback(latch);
+    public void invoke(CallbackData data) {
+        callbackService.onCallback(data);
     }
 }

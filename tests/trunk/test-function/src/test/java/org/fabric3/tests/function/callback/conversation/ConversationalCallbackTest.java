@@ -14,22 +14,28 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.tests.function.callback.stateless;
+package org.fabric3.tests.function.callback.conversation;
 
-import org.osoa.sca.annotations.Callback;
-import org.osoa.sca.annotations.OneWay;
+import junit.framework.TestCase;
+import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.tests.function.callback.common.CallbackData;
 
 /**
- * Terminating service in a callback sequence.
+ * Tests for stateless calbacks.
  *
- * @version $Rev$ $Date$
+ * @version $Rev: 2751 $ $Date: 2008-02-12 01:14:41 -0800 (Tue, 12 Feb 2008) $
  */
-@Callback(CallbackService.class)
-public interface EndService {
+public class ConversationalCallbackTest extends TestCase {
+    @Reference
+    protected ConversationalClientService client;
 
-    @OneWay
-    void invoke(CallbackData data);
+    public void testConversationalCallback() throws Exception {
+        CallbackData data = new CallbackData(1);
+        client.invoke(data);
+   //     data.getLatch().await();
+        assertTrue(data.isCalledBack());
+        assertEquals(2,client.getCount());
+    }
 
 }

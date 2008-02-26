@@ -1,6 +1,8 @@
 /*
- * See the NOTICE file distributed with this work for information
- * regarding copyright ownership.  This file is licensed
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
@@ -14,22 +16,19 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.tests.function.callback.stateless;
+package org.fabric3.tests.function.callback.conversation;
 
-import org.osoa.sca.annotations.Callback;
 import org.osoa.sca.annotations.OneWay;
 
 import org.fabric3.tests.function.callback.common.CallbackData;
 
 /**
- * Terminating service in a callback sequence.
- *
- * @version $Rev$ $Date$
+ * @version $Revision$ $Date$
  */
-@Callback(CallbackService.class)
-public interface EndService {
+public interface CallbackService {
+   // @OneWay
+    void onCallback();
 
-    @OneWay
-    void invoke(CallbackData data);
-
+   // @OneWay
+    void end();
 }

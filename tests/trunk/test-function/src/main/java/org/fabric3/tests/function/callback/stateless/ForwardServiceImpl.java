@@ -16,15 +16,17 @@
  */
 package org.fabric3.tests.function.callback.stateless;
 
-import java.util.concurrent.CountDownLatch;
-
 import org.osoa.sca.ServiceReference;
 import org.osoa.sca.annotations.Callback;
 import org.osoa.sca.annotations.Reference;
+import org.osoa.sca.annotations.Service;
+
+import org.fabric3.tests.function.callback.common.CallbackData;
 
 /**
  * @version $Rev$ $Date$
  */
+@Service(interfaces = {ForwardService.class, CallbackService.class})
 public class ForwardServiceImpl implements ForwardService, CallbackService {
     @Reference
     protected EndService endService;
@@ -35,32 +37,32 @@ public class ForwardServiceImpl implements ForwardService, CallbackService {
     @Callback
     protected ServiceReference<CallbackService> reference;
 
-    public void invoke(CountDownLatch latch) {
-        callbackService.onCallback(latch);
+    public void invoke(CallbackData data) {
+        callbackService.onCallback(data);
     }
 
-    public String invokeSync() {
-        callbackService.onSyncCallback();
+    public String invokeSync(CallbackData data) {
+        callbackService.onSyncCallback(data);
         return "receipt";
     }
 
-    public void invokeServiceReferenceCallback(CountDownLatch latch) {
-        reference.getService().onServiceReferenceCallback(latch);
+    public void invokeServiceReferenceCallback(CallbackData data) {
+        reference.getService().onServiceReferenceCallback(data);
     }
 
-    public void invokeMultipleHops(CountDownLatch latch) {
-        endService.invoke(latch);
+    public void invokeMultipleHops(CallbackData data) {
+        endService.invoke(data);
     }
 
-    public void onCallback(CountDownLatch latch) {
-        callbackService.onCallback(latch);
+    public void onCallback(CallbackData data) {
+        callbackService.onCallback(data);
     }
 
-    public void onServiceReferenceCallback(CountDownLatch latch) {
-        callbackService.onServiceReferenceCallback(latch);
+    public void onServiceReferenceCallback(CallbackData data) {
+        callbackService.onServiceReferenceCallback(data);
     }
 
-    public void onSyncCallback() {
-        callbackService.onSyncCallback();
+    public void onSyncCallback(CallbackData data) {
+        callbackService.onSyncCallback(data);
     }
 }

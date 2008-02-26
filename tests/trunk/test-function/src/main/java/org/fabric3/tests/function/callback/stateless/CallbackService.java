@@ -16,21 +16,21 @@
  */
 package org.fabric3.tests.function.callback.stateless;
 
-import java.util.concurrent.CountDownLatch;
-
 import org.osoa.sca.annotations.OneWay;
+
+import org.fabric3.tests.function.callback.common.CallbackData;
 
 /**
  * @version $Rev$ $Date$
  */
 public interface CallbackService {
     @OneWay
-    void onCallback(CountDownLatch latch);
+    void onCallback(CallbackData data);
 
     @OneWay
-    void onServiceReferenceCallback(CountDownLatch latch);
+    void onServiceReferenceCallback(CallbackData data);
 
-    void onSyncCallback();
+    void onSyncCallback(CallbackData data);
 
 
 }

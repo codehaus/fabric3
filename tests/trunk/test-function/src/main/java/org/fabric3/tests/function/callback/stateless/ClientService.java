@@ -16,15 +16,27 @@
  */
 package org.fabric3.tests.function.callback.stateless;
 
+import org.osoa.sca.annotations.OneWay;
+
+import org.fabric3.tests.function.callback.common.CallbackData;
+
 /**
  * Interface for test cases to verify and reset the callback client.
  *
  * @version $Rev$ $Date$
  */
-public interface ClientService extends ForwardService {
+public interface ClientService {
 
-    boolean isCallback();
+    @OneWay
+    void invoke(CallbackData data);
 
-    void resetCallback();
+    String invokeSync(CallbackData data);
+
+    @OneWay
+    void invokeServiceReferenceCallback(CallbackData data);
+
+    @OneWay
+    public void invokeMultipleHops(CallbackData data);
+
 
 }

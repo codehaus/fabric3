@@ -16,22 +16,25 @@
  */
 package org.fabric3.tests.function.callback.stateless;
 
-import java.util.concurrent.CountDownLatch;
-
 import org.osoa.sca.ComponentContext;
 import org.osoa.sca.annotations.Context;
 import org.osoa.sca.annotations.Reference;
+import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Service;
+
+import org.fabric3.tests.function.callback.common.CallbackData;
 
 /**
  * @version $Rev$ $Date$
  */
-@Service(ClientService.class)
-public class CallbackClient implements ClientService, CallbackService {
-    private boolean callback;
+@Service(interfaces = {ForwardService.class, ClientService.class, CallbackService.class})
+public class CallbackClient implements ForwardService, CallbackService, ClientService {
 
     @Reference
     protected ForwardService forwardService;
+
+    @Property
+    protected boolean fail;
 
 //    @Reference
 //    protected ServiceReference<ForwardService> serviceReference;
@@ -39,45 +42,34 @@ public class CallbackClient implements ClientService, CallbackService {
     @Context
     ComponentContext context;
 
-    public boolean isCallback() {
-        return callback;
+    public void invoke(CallbackData data) {
+        forwardService.invoke(data);
     }
 
-    public void resetCallback() {
-        callback = false;
+    public String invokeSync(CallbackData data) {
+        return forwardService.invokeSync(data);
     }
 
-    public void invoke(CountDownLatch latch) {
-        forwardService.invoke(latch);
+    public void invokeServiceReferenceCallback(CallbackData data) {
+        forwardService.invokeServiceReferenceCallback(data);
     }
 
-    public String invokeSync() {
-        return forwardService.invokeSync();
+    public void invokeMultipleHops(CallbackData data) {
+        forwardService.invokeMultipleHops(data);
     }
 
-    public void invokeServiceReferenceCallback(CountDownLatch latch) {
-        forwardService.invokeServiceReferenceCallback(latch);
+    public void onCallback(CallbackData data) {
+        data.callback();
+        data.getLatch().countDown();
     }
 
-    public void invokeMultipleHops(CountDownLatch latch) {
-        forwardService.invokeMultipleHops(latch);
-    }
-
-    public void onCallback(CountDownLatch latch) {
-        callback = true;
-        latch.countDown();
-    }
-
-    public void onServiceReferenceCallback(CountDownLatch latch) {
-//        if (serviceReference.getCallbackID() != null) {
-//            throw new AssertionError("Callback ID not set");
-//        }
-//        callback = true;
+    public void onServiceReferenceCallback(CallbackData data) {
+//        data.callback();
 //        latch.countDown();
     }
 
-    public void onSyncCallback() {
-        callback = true;
+    public void onSyncCallback(CallbackData data) {
+        data.callback();
     }
 
 }

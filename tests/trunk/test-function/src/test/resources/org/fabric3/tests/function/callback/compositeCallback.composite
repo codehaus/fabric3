@@ -15,11 +15,23 @@
  specific language governing permissions and limitations
  under the License.
 -->
+<!-- An assembly used for stateless callback functional testing -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
-           name="CallbackComposite" autowire="false">
+           name="CompositeCallbackComposite" autowire="false">
 
-    <include name="StatelessCallbackComposite"/>
-    <include name="CompositeCallbackComposite"/>
-    <include name="ConversationCallbackComposite"/>
+    <component name="CompositeCallbackTestComponent">
+        <f3:junit class="org.fabric3.tests.function.callback.composite.CompositeCallbackTest"/>
+        <reference name="client" target="CompositeCallbackClient/ClientService"/>
+    </component>
+
+    <component name="CompositeCallbackClient">
+        <implementation.java class="org.fabric3.tests.function.callback.composite.ClientServiceImpl"/>
+        <reference name="forwardService" target="CompositeForwardService/ForwardService"/>
+    </component>
+
+    <component name="CompositeForwardService">
+        <implementation.java class="org.fabric3.tests.function.callback.composite.ForwardServiceImpl"/>
+    </component>
+
 </composite>

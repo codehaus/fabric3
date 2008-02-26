@@ -19,17 +19,19 @@ package org.fabric3.tests.function.callback.stateless;
 import junit.framework.TestCase;
 import org.osoa.sca.annotations.Reference;
 
+import org.fabric3.tests.function.callback.common.CallbackData;
+
 /**
  * Tests for stateless calbacks.
  *
  * @version $Rev$ $Date$
  */
-public class CallbackTest extends TestCase {
+public class StatelessCallbackTest extends TestCase {
     @Reference
     protected ClientService client1;
 
-    @Reference
-    protected ClientService client2;
+//    @Reference
+//    protected ClientService client2;
 
     /**
      * Verifies the case where two clients are wired to the same target service.
@@ -37,12 +39,13 @@ public class CallbackTest extends TestCase {
      * @throws Exception
      */
     public void testSimpleCallback() throws Exception {
-//        CountDownLatch latch = new CountDownLatch(1);
-//        client1.invoke(latch);
+        CallbackData data = new CallbackData(1);
+        client1.invoke(data);
 //        latch.await(4000, TimeUnit.MILLISECONDS);
-//        assertTrue(client1.isCallback());
-//        // test that the other client was not issued a callback
-//        assertFalse(client2.isCallback());
+        data.getLatch().await();
+        assertTrue(data.isCalledBack());
+        // test that the other client was not issued a callback
+        // assertFalse(client2.isCallback());
     }
 
     /**
@@ -90,7 +93,5 @@ public class CallbackTest extends TestCase {
 
     protected void tearDown() throws Exception {
         super.tearDown();
-        client1.resetCallback();
-        client2.resetCallback();
     }
 }

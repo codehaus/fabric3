@@ -16,10 +16,10 @@
  */
 package org.fabric3.tests.function.callback.stateless;
 
-import java.util.concurrent.CountDownLatch;
-
 import org.osoa.sca.annotations.Callback;
 import org.osoa.sca.annotations.OneWay;
+
+import org.fabric3.tests.function.callback.common.CallbackData;
 
 /**
  * Target service of a forward invocation.
@@ -30,14 +30,14 @@ import org.osoa.sca.annotations.OneWay;
 public interface ForwardService {
 
     @OneWay
-    void invoke(CountDownLatch latch);
+    void invoke(CallbackData data);
 
-    String invokeSync();
-
-    @OneWay
-    void invokeServiceReferenceCallback(CountDownLatch latch);
+    String invokeSync(CallbackData data);
 
     @OneWay
-    public void invokeMultipleHops(CountDownLatch latch);
+    void invokeServiceReferenceCallback(CallbackData data);
+
+    @OneWay
+    public void invokeMultipleHops(CallbackData data);
 
 }
