@@ -99,8 +99,9 @@ public class Axis2TargetInterceptor implements Interceptor {
             CompositeClassLoader systemCl = (CompositeClassLoader) getClass().getClassLoader();
             currentThread.setContextClassLoader(systemCl);
             
-            ServiceClient sender = new ServiceClient(f3Configurator.getConfigurationContext(), null);
-            sender.setOptions(options);
+            ServiceClient sender = new ServiceClient(f3Configurator.getConfigurationContext(), null);            
+            sender.setOptions(options);            
+            sender.getOptions().setTimeOutInMilliSeconds(0l);
             applyPolicies(sender, operation);
             
             OMElement result = sender.sendReceive(message);
