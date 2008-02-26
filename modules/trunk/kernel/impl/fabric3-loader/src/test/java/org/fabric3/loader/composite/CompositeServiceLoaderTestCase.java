@@ -19,24 +19,23 @@
 package org.fabric3.loader.composite;
 
 import java.net.URI;
+import javax.xml.namespace.QName;
 import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
 import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
-import javax.xml.namespace.QName;
 
 import junit.framework.TestCase;
 import org.easymock.EasyMock;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
-import static org.osoa.sca.Constants.SCA_NS;
 
+import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.scdl.BindingDefinition;
 import org.fabric3.scdl.CompositeService;
 import org.fabric3.scdl.ModelObject;
 import org.fabric3.scdl.ServiceContract;
 import org.fabric3.scdl.ServiceDefinition;
-import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.loader.PolicyHelper;
@@ -109,7 +108,6 @@ public class CompositeServiceLoaderTestCase extends TestCase {
 
             @Override
             public String getQualifiedInterfaceName() {
-                // TODO Auto-generated method stub
                 return null;
             }
 
