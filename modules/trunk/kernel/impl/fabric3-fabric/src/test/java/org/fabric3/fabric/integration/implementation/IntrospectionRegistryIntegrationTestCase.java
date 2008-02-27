@@ -80,8 +80,8 @@ public class IntrospectionRegistryIntegrationTestCase extends TestCase {
         registry.registerProcessor(new InitProcessor());
         registry.registerProcessor(new ScopeProcessor(scopeRegistry));
         ContractProcessor interfaceProcessorRegistry = new DefaultContractProcessor(helper);
-        registry.registerProcessor(new PropertyProcessor());
-        registry.registerProcessor(new ReferenceProcessor(interfaceProcessorRegistry));
+        registry.registerProcessor(new PropertyProcessor(helper));
+        registry.registerProcessor(new ReferenceProcessor(helper, interfaceProcessorRegistry));
     }
 
     @Scope("COMPOSITE")

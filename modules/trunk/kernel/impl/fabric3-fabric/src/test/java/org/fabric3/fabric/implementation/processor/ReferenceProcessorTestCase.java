@@ -128,7 +128,7 @@ public class ReferenceProcessorTestCase extends TestCase {
         super.setUp();
         type = new PojoComponentType(null);
         IntrospectionHelper helper = new DefaultIntrospectionHelper();
-        processor = new ReferenceProcessor(new DefaultContractProcessor(helper));
+        processor = new ReferenceProcessor(helper, new DefaultContractProcessor(helper));
 
         TypeMapping typeMapping = new TypeMapping();
         context = EasyMock.createMock(IntrospectionContext.class);

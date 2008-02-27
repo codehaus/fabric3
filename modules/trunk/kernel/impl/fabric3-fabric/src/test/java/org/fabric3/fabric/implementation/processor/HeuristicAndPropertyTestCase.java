@@ -64,7 +64,7 @@ public class HeuristicAndPropertyTestCase extends TestCase {
         EasyMock.expect(context.getTypeMapping()).andStubReturn(typeMapping);
         EasyMock.replay(context);
 
-        propertyProcessor = new PropertyProcessor();
+        propertyProcessor = new PropertyProcessor(helper);
         heuristicProcessor = new HeuristicPojoProcessor(service);
     }
 

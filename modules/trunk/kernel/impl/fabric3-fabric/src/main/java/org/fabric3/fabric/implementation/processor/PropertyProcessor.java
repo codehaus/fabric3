@@ -20,12 +20,14 @@ package org.fabric3.fabric.implementation.processor;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.Collection;
 import java.util.Map;
 
 import org.osoa.sca.annotations.Property;
+import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.introspection.IntrospectionContext;
+import org.fabric3.introspection.IntrospectionHelper;
+import org.fabric3.introspection.IntrospectionException;
 import org.fabric3.pojo.processor.ImplementationProcessorExtension;
 import org.fabric3.pojo.processor.ProcessingException;
 import org.fabric3.pojo.scdl.PojoComponentType;
@@ -38,93 +40,70 @@ import org.fabric3.scdl.MethodInjectionSite;
  * @version $Rev$ $Date$
  */
 public class PropertyProcessor extends ImplementationProcessorExtension {
+    private final IntrospectionHelper helper;
+
+    public PropertyProcessor(@Reference IntrospectionHelper helper) {
+        this.helper = helper;
+    }
+
     protected String getName(Property annotation) {
         return annotation.name();
     }
 
-    public void visitMethod(
-            Method method,
-            PojoComponentType type,
-            IntrospectionContext context) throws ProcessingException {
-        Property annotation = method.getAnnotation(Property.class);
-        if (annotation == null) {
-            return;
-        }
-
-        if (!Void.TYPE.equals(method.getReturnType())) {
-            throw new IllegalPropertyException("Method does not have void return type", method.toString());
-        }
-        Class[] paramTypes = method.getParameterTypes();
-        if (paramTypes.length != 1) {
-            throw new IllegalPropertyException("Method must have a single parameter", method.toString());
-        }
-        Class<?> javaType = paramTypes[0];
-
-        String name = getName(annotation);
-        if (name == null || name.length() == 0) {
-            name = method.getName();
-            if (name.startsWith("set")) {
-                name = toPropertyName(method.getName());
+    public void visitMethod(Method method, PojoComponentType type, IntrospectionContext context) throws ProcessingException {
+        try {
+            Property annotation = method.getAnnotation(Property.class);
+            if (annotation == null) {
+                return;
             }
-        }
 
-        Map<String, org.fabric3.scdl.Property> properties = type.getProperties();
-        if (properties.containsKey(name)) {
-            throw new DuplicatePropertyException(name);
-        }
+            if (!Void.TYPE.equals(method.getReturnType())) {
+                throw new IllegalPropertyException("Method does not have void return type", method.toString());
+            }
+            Class[] paramTypes = method.getParameterTypes();
+            if (paramTypes.length != 1) {
+                throw new IllegalPropertyException("Method must have a single parameter", method.toString());
+            }
 
-        Class<?> baseType = getBaseType(javaType, method.getGenericParameterTypes()[0]);
-        MethodInjectionSite site = new MethodInjectionSite(method, 0);
-        org.fabric3.scdl.Property property = createProperty(name, baseType);
-        if (javaType.isArray() || Collection.class.isAssignableFrom(javaType)) {
-            property.setMany(true);
-        }
+            String name = helper.getSiteName(method, annotation.name());
 
-        property.setRequired(annotation.required());
-        type.add(property, site);
+            Map<String, org.fabric3.scdl.Property> properties = type.getProperties();
+            if (properties.containsKey(name)) {
+                throw new DuplicatePropertyException(name);
+            }
+
+            MethodInjectionSite site = new MethodInjectionSite(method, 0);
+            org.fabric3.scdl.Property property = new org.fabric3.scdl.Property(name, null);
+            property.setMany(helper.isManyValued(context.getTypeMapping(), helper.getGenericType(method)));
+            property.setRequired(annotation.required());
+            type.add(property, site);
+        } catch (IntrospectionException e) {
+            throw new ProcessingException(e);
+        }
     }
 
-    public void visitField(
-            Field field,
-            PojoComponentType type,
-            IntrospectionContext context) throws ProcessingException {
+    public void visitField(Field field, PojoComponentType type, IntrospectionContext context) throws ProcessingException {
 
-        Property annotation = field.getAnnotation(Property.class);
-        if (annotation == null) {
-            return;
+        try {
+            Property annotation = field.getAnnotation(Property.class);
+            if (annotation == null) {
+                return;
+            }
+
+            String name = helper.getSiteName(field, annotation.name());
+
+            Map<String, org.fabric3.scdl.Property> properties = type.getProperties();
+            if (properties.containsKey(name)) {
+                throw new DuplicatePropertyException(name);
+            }
+
+            FieldInjectionSite site = new FieldInjectionSite(field);
+            org.fabric3.scdl.Property property = new org.fabric3.scdl.Property(name, null);
+            property.setMany(helper.isManyValued(context.getTypeMapping(), field.getGenericType()));
+            property.setRequired(annotation.required());
+            type.add(property, site);
+        } catch (IntrospectionException e) {
+            throw new ProcessingException(e);
         }
-
-        Class<?> javaType = field.getType();
-
-        String name = getName(annotation);
-        if (name == null || name.length() == 0) {
-            name = field.getName();
-        }
-
-        Map<String, org.fabric3.scdl.Property> properties = type.getProperties();
-        if (properties.containsKey(name)) {
-            throw new DuplicatePropertyException(name);
-        }
-
-        Class<?> baseType = getBaseType(javaType, field.getGenericType());
-        FieldInjectionSite site = new FieldInjectionSite(field);
-        org.fabric3.scdl.Property property = createProperty(name, baseType);
-        if (javaType.isArray() || Collection.class.isAssignableFrom(javaType)) {
-            property.setMany(true);
-        }
-
-        property.setRequired(annotation.required());
-        type.add(property, site);
-    }
-
-    protected <T> org.fabric3.scdl.Property createProperty(String name, Class<T> javaType) throws ProcessingException {
-        return new org.fabric3.scdl.Property(name, null);
-    }
-
-    public static String toPropertyName(String name) {
-        if (!name.startsWith("set")) {
-            return name;
-        }
-        return Character.toLowerCase(name.charAt(3)) + name.substring(4);
     }
 }

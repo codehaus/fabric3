@@ -21,18 +21,14 @@ package org.fabric3.pojo.processor;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
-import java.util.Collection;
-import java.util.Map;
 
 import org.osoa.sca.annotations.Destroy;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.introspection.IntrospectionContext;
+import org.fabric3.pojo.scdl.PojoComponentType;
 
 /**
  * A convenience class for annotation processors which alleviates the need to implement unused callbacks
@@ -90,52 +86,6 @@ public abstract class ImplementationProcessorExtension implements Implementation
     }
 
     public <T> void visitEnd(Class<T> clazz, PojoComponentType type, IntrospectionContext context) throws ProcessingException {
-    }
-
-    /**
-     * Computes the base type from a parameterized or non-paramaterized type.
-     *
-     * @param cls         Raw type.
-     * @param genericType Parameterized type.
-     * @return Base type.
-     */
-    protected static Class<?> getBaseType(Class<?> cls, Type genericType) {
-
-        if (cls.isArray()) {
-            return cls.getComponentType();
-        } else if (Collection.class.isAssignableFrom(cls)) {
-            if (genericType == cls) {
-                return Object.class;
-            } else {
-                ParameterizedType parameterizedType = (ParameterizedType) genericType;
-                Type baseType = parameterizedType.getActualTypeArguments()[0];
-                if (baseType instanceof Class) {
-                    return (Class<?>) baseType;
-                } else if (baseType instanceof ParameterizedType) {
-                    return (Class<?>) ((ParameterizedType) baseType).getRawType();
-                } else {
-                    return null;
-                }
-            }
-        } else if (Map.class.isAssignableFrom(cls)) {
-            if (genericType == cls) {
-                return Object.class;
-            } else {
-                ParameterizedType parameterizedType = (ParameterizedType) genericType;
-                Type type = parameterizedType.getActualTypeArguments()[1];
-                if (type instanceof Class) {
-                    return (Class<?>) type;
-                } else if (type instanceof ParameterizedType) {
-                    ParameterizedType valueType = (ParameterizedType) type;
-                    return (Class<?>) valueType.getRawType();
-                } else {
-                    throw new AssertionError();
-                }
-            }
-        } else {
-            return cls;
-        }
-
     }
 
 }
