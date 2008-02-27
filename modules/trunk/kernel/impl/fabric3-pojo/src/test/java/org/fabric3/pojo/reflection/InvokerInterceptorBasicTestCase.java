@@ -33,6 +33,7 @@ import org.fabric3.spi.component.TargetResolutionException;
 import org.fabric3.spi.component.WorkContext;
 import org.fabric3.spi.wire.InvocationRuntimeException;
 import org.fabric3.spi.wire.Message;
+import org.fabric3.scdl.Scope;
 
 public class InvokerInterceptorBasicTestCase extends TestCase {
     private TestBean bean;
@@ -51,81 +52,80 @@ public class InvokerInterceptorBasicTestCase extends TestCase {
     private Message message;
 
     public void testObjectInvoke() throws Throwable {
-        InvokerInterceptor<TestBean, URI> invoker =
-                new InvokerInterceptor<TestBean, URI>(echoMethod, false, false,component, scopeContainer);
         String value = "foo";
         mockCall(new Object[]{value}, value);
         control.replay();
+        InvokerInterceptor<TestBean, URI> invoker =
+                new InvokerInterceptor<TestBean, URI>(echoMethod, false, false,component, scopeContainer);
         Message ret = invoker.invoke(message);
         assertSame(ret, message);
         control.verify();
     }
 
     public void testPrimitiveInvoke() throws Throwable {
-        InvokerInterceptor<TestBean, URI> invoker =
-                new InvokerInterceptor<TestBean, URI>(primitiveMethod, false,false, component, scopeContainer);
         Integer value = 1;
         mockCall(new Object[]{value}, value);
         control.replay();
+        InvokerInterceptor<TestBean, URI> invoker =
+                new InvokerInterceptor<TestBean, URI>(primitiveMethod, false,false, component, scopeContainer);
         Message ret = invoker.invoke(message);
         assertSame(ret, message);
         control.verify();
     }
 
     public void testArrayInvoke() throws Throwable {
-        InvokerInterceptor<TestBean, URI> invoker =
-                new InvokerInterceptor<TestBean, URI>(arrayMethod, false,false, component, scopeContainer);
         String[] value = new String[]{"foo", "bar"};
         mockCall(new Object[]{value}, value);
         control.replay();
+        InvokerInterceptor<TestBean, URI> invoker =
+                new InvokerInterceptor<TestBean, URI>(arrayMethod, false,false, component, scopeContainer);
         Message ret = invoker.invoke(message);
         assertSame(ret, message);
         control.verify();
     }
 
     public void testEmptyInvoke() throws Throwable {
-        InvokerInterceptor<TestBean, URI> invoker =
-                new InvokerInterceptor<TestBean, URI>(nullParamMethod, false,false, component, scopeContainer);
         mockCall(new Object[]{}, "foo");
         control.replay();
+        InvokerInterceptor<TestBean, URI> invoker =
+                new InvokerInterceptor<TestBean, URI>(nullParamMethod, false,false, component, scopeContainer);
         Message ret = invoker.invoke(message);
         assertSame(ret, message);
         control.verify();
     }
 
     public void testNullInvoke() throws Throwable {
-        InvokerInterceptor<TestBean, URI> invoker =
-                new InvokerInterceptor<TestBean, URI>(nullParamMethod, false, false,component, scopeContainer);
         mockCall(null, "foo");
         control.replay();
+        InvokerInterceptor<TestBean, URI> invoker =
+                new InvokerInterceptor<TestBean, URI>(nullParamMethod, false, false,component, scopeContainer);
         Message ret = invoker.invoke(message);
         assertSame(ret, message);
         control.verify();
     }
 
     public void testInvokeCheckedException() throws Throwable {
-        InvokerInterceptor<TestBean, URI> invoker =
-                new InvokerInterceptor<TestBean, URI>(checkedMethod, false,false, component, scopeContainer);
         mockFaultCall(null, TestException.class);
         control.replay();
+        InvokerInterceptor<TestBean, URI> invoker =
+                new InvokerInterceptor<TestBean, URI>(checkedMethod, false,false, component, scopeContainer);
         Message ret = invoker.invoke(message);
         assertSame(ret, message);
         control.verify();
     }
 
     public void testInvokeRuntimeException() throws Throwable {
-        InvokerInterceptor<TestBean, URI> invoker =
-                new InvokerInterceptor<TestBean, URI>(runtimeMethod, false, false,component, scopeContainer);
         mockFaultCall(null, TestRuntimeException.class);
         control.replay();
+        InvokerInterceptor<TestBean, URI> invoker =
+                new InvokerInterceptor<TestBean, URI>(runtimeMethod, false, false,component, scopeContainer);
         Message ret = invoker.invoke(message);
         assertSame(ret, message);
         control.verify();
     }
 
     public void testFailureGettingWrapperThrowsException() {
-        InvokerInterceptor<TestBean, URI> invoker =
-                new InvokerInterceptor<TestBean, URI>(echoMethod, false, false,component, scopeContainer);
+        EasyMock.expect(scopeContainer.getScope()).andReturn(Scope.COMPOSITE);
         TargetResolutionException ex = new TargetResolutionException(null);
         EasyMock.expect(message.getBody()).andReturn(null);
         EasyMock.expect(message.getWorkContext()).andReturn(workContext);
@@ -137,6 +137,8 @@ public class InvokerInterceptorBasicTestCase extends TestCase {
         }
         control.replay();
         try {
+            InvokerInterceptor<TestBean, URI> invoker =
+                    new InvokerInterceptor<TestBean, URI>(echoMethod, false, false,component, scopeContainer);
             invoker.invoke(message);
             fail();
         } catch (InvocationRuntimeException e) {
@@ -146,6 +148,7 @@ public class InvokerInterceptorBasicTestCase extends TestCase {
     }
 
     private void mockCall(Object value, Object body) throws Exception {
+        EasyMock.expect(scopeContainer.getScope()).andReturn(Scope.COMPOSITE);
         EasyMock.expect(message.getBody()).andReturn(value);
         EasyMock.expect(message.getWorkContext()).andReturn(workContext);
         EasyMock.expect(workContext.peekCallFrame()).andReturn(new CallFrame());
@@ -156,6 +159,7 @@ public class InvokerInterceptorBasicTestCase extends TestCase {
     }
 
     private void mockFaultCall(Object value, Class<? extends Exception> fault) throws Exception {
+        EasyMock.expect(scopeContainer.getScope()).andReturn(Scope.COMPOSITE);
         EasyMock.expect(message.getBody()).andReturn(value);
         EasyMock.expect(message.getWorkContext()).andReturn(workContext);
         EasyMock.expect(workContext.peekCallFrame()).andReturn(new CallFrame());

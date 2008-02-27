@@ -33,6 +33,7 @@ import org.fabric3.spi.component.WorkContext;
 import org.fabric3.spi.wire.Interceptor;
 import org.fabric3.spi.wire.InvocationRuntimeException;
 import org.fabric3.spi.wire.Message;
+import org.fabric3.scdl.Scope;
 
 /**
  * Responsible for dispatching an invocation to a Java component implementation instance.
@@ -47,6 +48,7 @@ public class InvokerInterceptor<T, CONTEXT> implements Interceptor {
     private ScopeContainer<CONTEXT> scopeContainer;
     private boolean callback;
     private boolean endConversation;
+    private boolean conversationScope;
 
     /**
      * Creates a new interceptor instance.
@@ -67,6 +69,7 @@ public class InvokerInterceptor<T, CONTEXT> implements Interceptor {
         this.endConversation = endConversation;
         this.component = component;
         this.scopeContainer = scopeContainer;
+        conversationScope = Scope.CONVERSATION.equals(scopeContainer.getScope());
     }
 
     public void setNext(Interceptor next) {
@@ -91,7 +94,7 @@ public class InvokerInterceptor<T, CONTEXT> implements Interceptor {
             if (frame != null) {
                 if (!callback) {
                     // check if this is a callback. If so, do not start the conversation since it has already been done by the forward invocation
-                    if (frame.isStartConversation()) {
+                    if (conversationScope && frame.isStartConversation()) {
                         // start the conversation context
                         scopeContainer.startContext(workContext, null);
                     }
@@ -120,7 +123,7 @@ public class InvokerInterceptor<T, CONTEXT> implements Interceptor {
         } finally {
             try {
                 scopeContainer.returnWrapper(component, workContext, wrapper);
-                if (endConversation) {
+                if (conversationScope && endConversation) {
                     scopeContainer.stopContext(workContext);
                 }
             } catch (TargetDestructionException e) {
