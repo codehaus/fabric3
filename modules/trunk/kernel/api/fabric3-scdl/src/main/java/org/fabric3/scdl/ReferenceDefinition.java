@@ -31,7 +31,6 @@ public class ReferenceDefinition extends AbstractPolicyAware {
     private final String name;
     private ServiceContract<?> serviceContract;
     private Multiplicity multiplicity;
-    private boolean required;
     private final List<BindingDefinition> bindings = new ArrayList<BindingDefinition>();
     private final List<BindingDefinition> callbackBindings = new ArrayList<BindingDefinition>();
     private final List<OperationDefinition> operations = new ArrayList<OperationDefinition>();
@@ -110,16 +109,7 @@ public class ReferenceDefinition extends AbstractPolicyAware {
      * @return true if the reference is required
      */
     public boolean isRequired() {
-        return required;
-    }
-
-    /**
-     * Sets if the reference is required.
-     *
-     * @param required true if the reference is required
-     */
-    public void setRequired(boolean required) {
-        this.required = required;
+        return multiplicity == Multiplicity.ONE_ONE || multiplicity == Multiplicity.ONE_N;
     }
 
     /**

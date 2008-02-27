@@ -74,11 +74,6 @@ public class CompositeReferenceLoader implements StAXElementLoader<CompositeRefe
         try {
             Multiplicity multiplicity = Multiplicity.fromString(reader.getAttributeValue(null, "multiplicity"));
             referenceDefinition.setMultiplicity(multiplicity);
-            if (multiplicity == null
-                    || Multiplicity.ONE_ONE.equals(multiplicity)
-                    || Multiplicity.ONE_N.equals(multiplicity)) {
-                referenceDefinition.setRequired(true);
-            }
         } catch (IllegalArgumentException e) {
             throw new InvalidValueException(reader.getAttributeValue(null, "multiplicity"), "multiplicity");
         }

@@ -148,9 +148,8 @@ public class ImplementationProcessorServiceImpl implements ImplementationProcess
         } catch (InvalidServiceContractException e1) {
             throw new ProcessingException(e1);
         }
-        ReferenceDefinition reference = new ReferenceDefinition(name, contract);
-        reference.setRequired(false);
-        return reference;
+        Multiplicity multiplicity = multiplicity(false, paramType, typeMapping);
+        return new ReferenceDefinition(name, contract, multiplicity);
     }
 
     /**
@@ -204,9 +203,7 @@ public class ImplementationProcessorServiceImpl implements ImplementationProcess
         ServiceContract<Type> contract = contractProcessor.introspect(typeMapping, helper.getBaseType(type, typeMapping));
         Multiplicity multiplicity = multiplicity(required, type, typeMapping);
 
-        ReferenceDefinition reference = new ReferenceDefinition(name, contract, multiplicity);
-        reference.setRequired(required);
-        return reference;
+        return new ReferenceDefinition(name, contract, multiplicity);
     }
 
     private Multiplicity multiplicity(boolean required, Type type, TypeMapping typeMapping) {

@@ -385,7 +385,6 @@ public class HeuristicPojoProcessor extends ImplementationProcessorExtension {
         }
         return true;
     }
-
 }
 
 /*

@@ -80,9 +80,8 @@ public class ReferenceProcessor extends ImplementationProcessorExtension {
                 throw new ProcessingException(e);
             }
             InjectionSite injectionSite = new MethodInjectionSite(method, 0);
-            ReferenceDefinition reference = new ReferenceDefinition(name, contract);
-            reference.setRequired(required);
-            reference.setMultiplicity(multiplicity(required, helper.getGenericType(method), context.getTypeMapping()));
+            Multiplicity multiplicity = multiplicity(required, helper.getGenericType(method), context.getTypeMapping());
+            ReferenceDefinition reference = new ReferenceDefinition(name, contract, multiplicity);
             type.add(reference, injectionSite);
         } catch (IntrospectionException e) {
             throw new ProcessingException(e);
@@ -115,9 +114,8 @@ public class ReferenceProcessor extends ImplementationProcessorExtension {
         }
 
         InjectionSite injectionSite = new FieldInjectionSite(field);
-        ReferenceDefinition reference = new ReferenceDefinition(name, contract);
-        reference.setRequired(required);
-        reference.setMultiplicity(multiplicity(required, field.getGenericType(), context.getTypeMapping()));
+        Multiplicity multiplicity = multiplicity(required, field.getGenericType(), context.getTypeMapping());
+        ReferenceDefinition reference = new ReferenceDefinition(name, contract, multiplicity);
         type.add(reference, injectionSite);
     }
 

@@ -35,6 +35,7 @@ import org.fabric3.scdl.ReferenceDefinition;
 import org.fabric3.scdl.ResourceDefinition;
 import org.fabric3.scdl.ServiceDefinition;
 import org.fabric3.scdl.ServiceContract;
+import org.fabric3.scdl.Multiplicity;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
@@ -153,8 +154,7 @@ public class DefaultWireResolverTestCase extends TestCase {
     private LogicalComponent<?> createSourceAtomic(Class<?> requiredInterface, LogicalCompositeComponent parent) {
 
         ServiceContract contract = new JavaServiceContract(requiredInterface);
-        ReferenceDefinition referenceDefinition = new ReferenceDefinition("ref", contract);
-        referenceDefinition.setRequired(true);
+        ReferenceDefinition referenceDefinition = new ReferenceDefinition("ref", contract, Multiplicity.ONE_ONE);
         MockComponentType type = new MockComponentType();
         type.add(referenceDefinition);
         MockAtomicImpl impl = new MockAtomicImpl();
