@@ -29,7 +29,7 @@ import org.fabric3.tests.function.callback.common.CallbackData;
 @Conversational
 public interface ConversationalClientService {
 
-   // @OneWay
+    @OneWay
     void invoke(CallbackData data);
 
     int getCount();

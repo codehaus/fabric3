@@ -26,6 +26,8 @@ import java.util.concurrent.CountDownLatch;
 public class CallbackData {
     private CountDownLatch latch;
     private boolean calledBack;
+    private boolean error;
+    private Throwable exception;
 
     public CallbackData(int times) {
         this.latch = new CountDownLatch(times);
@@ -41,5 +43,18 @@ public class CallbackData {
 
     public boolean isCalledBack() {
         return calledBack;
+    }
+
+    public Throwable getException() {
+       return exception;
+    }
+
+    public void setException(Throwable e) {
+        error = true;
+        exception = e;
+    }
+
+    public boolean isError() {
+        return error;
     }
 }

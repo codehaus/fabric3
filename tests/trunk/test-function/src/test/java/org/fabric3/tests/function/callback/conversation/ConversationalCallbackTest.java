@@ -30,12 +30,15 @@ public class ConversationalCallbackTest extends TestCase {
     @Reference
     protected ConversationalClientService client;
 
-    public void testConversationalCallback() throws Exception {
+    public void testConversationalCallback() throws Throwable {
         CallbackData data = new CallbackData(1);
         client.invoke(data);
-   //     data.getLatch().await();
+        data.getLatch().await();
+        if (data.isError()) {
+            throw data.getException();
+        }
         assertTrue(data.isCalledBack());
-        assertEquals(2,client.getCount());
+        assertEquals(3,client.getCount());
     }
 
 }

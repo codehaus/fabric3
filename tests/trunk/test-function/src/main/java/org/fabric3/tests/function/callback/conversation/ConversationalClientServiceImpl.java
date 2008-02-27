@@ -30,13 +30,21 @@ public class ConversationalClientServiceImpl implements ConversationalClientServ
 
     public void onCallback() {
         count++;
-        data.callback();
-        data.getLatch().countDown();
-//        forwardService.invoke2();
+        if (forwardService.getCount() != 1) {
+            throw new AssertionError("Forward service count incorrect");
+        }
+        forwardService.invokeForward2();
     }
 
     public void end() {
-//        data.callback();
-//        data.getLatch().countDown();
+        if (forwardService.getCount() != 2) {
+            //noinspection ThrowableInstanceNeverThrown
+            AssertionError e = new AssertionError("Forward service count incorrect");
+            data.setException(e);
+        } else {
+            count++;
+            data.callback();
+        }
+        data.getLatch().countDown();
     }
 }

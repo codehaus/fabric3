@@ -36,7 +36,7 @@ public class ForwardServiceImpl implements ForwardService {
         callbackService.onCallback();
     }
 
-    public void invoke2() {
+    public void invokeForward2() {
         count++;
         callbackService.end();
     }
