@@ -29,7 +29,6 @@
         <reference name="subService" target="ConversationalServiceImpl"/>
     </component>
 
-<!--
     <component name="CompositeServiceImpl">
         <implementation.java class="org.fabric3.tests.function.conversation.CompositeServiceImpl"/>
     </component>
@@ -39,5 +38,4 @@
         <reference name="service" target="CompositeServiceImpl"/>
         <reference name="subService" target="CompositeServiceImpl"/>
     </component>
--->
 </composite>
