@@ -20,7 +20,6 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Type;
 import java.lang.reflect.Method;
 import java.lang.reflect.Field;
-import java.util.Collections;
 import java.util.Set;
 
 import org.osoa.sca.annotations.Reference;
