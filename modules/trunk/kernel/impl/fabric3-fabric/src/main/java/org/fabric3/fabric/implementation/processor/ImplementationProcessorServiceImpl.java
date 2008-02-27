@@ -140,16 +140,12 @@ public class ImplementationProcessorServiceImpl implements ImplementationProcess
         return false;
     }
 
-    public ReferenceDefinition createReference(String name, Class<?> paramType, TypeMapping typeMapping)
-            throws ProcessingException {
-        ServiceContract<Type> contract;
+    public ReferenceDefinition createReference(String name, Class<?> paramType, TypeMapping typeMapping) throws ProcessingException {
         try {
-            contract = contractProcessor.introspect(typeMapping, paramType);
-        } catch (InvalidServiceContractException e1) {
-            throw new ProcessingException(e1);
+            return createDefinition(name, false, paramType, typeMapping);
+        } catch (IntrospectionException e) {
+            throw new ProcessingException(e);
         }
-        Multiplicity multiplicity = multiplicity(false, paramType, typeMapping);
-        return new ReferenceDefinition(name, contract, multiplicity);
     }
 
     /**

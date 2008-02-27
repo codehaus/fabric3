@@ -121,9 +121,9 @@ public class DefaultContractProcessor implements ContractProcessor {
                 }
             }
 
-            Type returnType = method.getGenericReturnType();
-            Type[] paramTypes = method.getGenericParameterTypes();
-            Type[] faultTypes = method.getGenericExceptionTypes();
+            Class<?> returnType = method.getReturnType();
+            Class<?>[] paramTypes = method.getParameterTypes();
+            Class<?>[] faultTypes = method.getExceptionTypes();
 
             int conversationSequence = NO_CONVERSATION;
             if (method.isAnnotationPresent(EndsConversation.class)) {

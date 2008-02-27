@@ -19,6 +19,7 @@
            xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
            name="FunctionTestHarnessComposite">
 
+<!--
     <include name="CommonComposite"/>
     <include name="SmokeTestComposite"/>
     <include name="MonitorTestComposite"/>
@@ -33,7 +34,6 @@
     <include name="AsyncComposite"/>
     <include name="CallbackComposite"/>           
     <include name="OrderingComposite"/>
-<!--
-    <include name="GenericTestComposite"/>
 -->
+    <include name="GenericTestComposite"/>
 </composite>

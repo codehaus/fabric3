@@ -23,9 +23,9 @@ import org.osoa.sca.annotations.Reference;
  */
 public class GenericDelegate implements GenericInterface<String> {
     @Reference
-    protected GenericInterface<Long> delegate;
+    protected GenericInterface<String> delegate;
 
     public String echo(String t) {
-        return String.valueOf(delegate.echo(Long.valueOf(t)));
+        return delegate.echo(t);
     }
 }

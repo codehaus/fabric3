@@ -80,7 +80,7 @@ public class DefaultContractProcessorTestCase extends TestCase {
         assertEquals("echo", operation.getName());
 
         DataType<Type> returnType = operation.getOutputType();
-        assertEquals(Simple.class, returnType.getPhysical());
+        assertEquals(Base.class, returnType.getPhysical());
 
     }
 
