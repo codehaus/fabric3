@@ -21,6 +21,7 @@ package org.fabric3.binding.hessian.transport;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.List;
 import java.util.Map;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -31,6 +32,7 @@ import com.caucho.hessian.io.Hessian2Input;
 import com.caucho.hessian.io.Hessian2Output;
 import com.caucho.hessian.io.SerializerFactory;
 
+import org.fabric3.spi.component.CallFrame;
 import org.fabric3.spi.component.WorkContext;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 import org.fabric3.spi.wire.Interceptor;
@@ -51,6 +53,7 @@ public class HessianServiceHandler extends HttpServlet {
      */
     private Map<String, Map.Entry<PhysicalOperationDefinition, InvocationChain>> ops;
 
+    private String callbackUri;
     /**
      * The classloader to deserialize parameters in. Referencing the classloader directly is ok given this class must be cleaned up if the target
      * component associated with the classloader for this service is removed.
@@ -63,20 +66,22 @@ public class HessianServiceHandler extends HttpServlet {
      * Initializes the wire associated with the service.
      *
      * @param ops               Map of op names to operation definitions.
+     * @param callbackUri       the callback URI or null if the wire targets a unidirectional service
      * @param classLoader       the classloader to load parameters in
      * @param serializerFactory the factory for Hessian serializers
      */
     public HessianServiceHandler(Map<String, Map.Entry<PhysicalOperationDefinition, InvocationChain>> ops,
+                                 String callbackUri,
                                  ClassLoader classLoader,
                                  SerializerFactory serializerFactory) {
         this.ops = ops;
+        this.callbackUri = callbackUri;
         this.classLoader = classLoader;
         this.serializerFactory = serializerFactory;
     }
 
     @Override
-    protected void service(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+    protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         doPost(request, response);
     }
 
@@ -84,15 +89,16 @@ public class HessianServiceHandler extends HttpServlet {
      * Handles the hessian requests.
      */
     @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
-
+    protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         InputStream in = request.getInputStream();
 
         Hessian2Input hessianInput = new Hessian2Input(in);
         hessianInput.setSerializerFactory(serializerFactory);
-
-        hessianInput.readCall();
+        String header = hessianInput.readHeader();
+        if (!"callFrames".equals(header)) {
+            throw new InvalidTransportException("CallFrames header not found");
+        }
+        List<CallFrame> callFrames = (List<CallFrame>) hessianInput.readObject();
         hessianInput.readMethod();
 
         // TODO handle method overloading
@@ -113,7 +119,15 @@ public class HessianServiceHandler extends HttpServlet {
         }
         hessianInput.completeCall();
 
-        Message input = new MessageImpl(args, false, new WorkContext());
+        WorkContext workContext = new WorkContext();
+        workContext.addCallFrames(callFrames);
+        CallFrame previous = workContext.peekCallFrame();
+        // copy correlation information from incoming frame
+        Object id = previous.getCorrelationId(Object.class);
+        boolean start = previous.isStartConversation();
+        CallFrame frame = new CallFrame(callbackUri, id, start);
+        callFrames.add(frame);
+        Message input = new MessageImpl(args, false, workContext);
 
         Message output = head.invoke(input);
 
@@ -125,7 +139,7 @@ public class HessianServiceHandler extends HttpServlet {
         if (output.isFault()) {
             Throwable t = (Throwable) output.getBody();
             // FIXME work around for FABRICTHREE-161
-//            hessianOutput.writeFault("ServiceException", null, t);
+            //  hessianOutput.writeFault("ServiceException", null, t);
             hessianOutput.writeFault("ServiceException", t.getMessage(), t.getClass());
         } else {
             hessianOutput.writeObject(output.getBody());
@@ -133,6 +147,7 @@ public class HessianServiceHandler extends HttpServlet {
         hessianOutput.completeReply();
         hessianOutput.flush();
         out.close();
+        // note we don't need to pop the CallFrame as the CallFrame stack is thrown away
     }
 
 }
