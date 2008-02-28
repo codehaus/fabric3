@@ -55,11 +55,6 @@ public class SpringComponentGenerator implements ComponentGenerator<LogicalCompo
         registry.register(SpringImplementation.class, this);
     }
 
-    /**
-     * @see org.fabric3.spi.generator.ComponentGenerator#generate(org.fabric3.spi.model.instance.LogicalComponent, 
-     *                                                            java.util.Set, 
-     *                                                            org.fabric3.spi.generator.GeneratorContext)
-     */
     public PhysicalComponentDefinition generate(LogicalComponent<SpringImplementation> component)
             throws GenerationException {
         ComponentDefinition<SpringImplementation> componentDefinition = component.getDefinition();
@@ -97,11 +92,6 @@ public class SpringComponentGenerator implements ComponentGenerator<LogicalCompo
 
     }
 
-    /**
-     * @see org.fabric3.spi.generator.ComponentGenerator#generateWireSource(org.fabric3.spi.model.instance.LogicalComponent, 
-     *                                                                      org.fabric3.spi.model.instance.LogicalReference, 
-     *                                                                      boolean)
-     */
     public PhysicalWireSourceDefinition generateWireSource(LogicalComponent<SpringImplementation> source,
                                                            LogicalReference reference,
                                                            Policy policy) throws GenerationException {

@@ -30,8 +30,7 @@ import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 import org.fabric3.spi.policy.Policy;
 
 /**
- * Implementations are responsible for generating {@link org.fabric3.spi.model.physical.PhysicalChangeSet} metadata used to provision components to
- * service nodes
+ * Implementations are responsible for generating command metadata used to provision components to service nodes.
  *
  * @version $Rev$ $Date$
  */
@@ -42,7 +41,6 @@ public interface ComponentGenerator<C extends LogicalComponent<? extends Impleme
      * resulting PhysicalComponentDefinition is added to the PhysicalChangeSet associated with the current GeneratorContext.
      *
      * @param component the logical component to evaluate
-     * @param context   the generator context to update
      * @return the physical component definition
      * @throws GenerationException if an error occurs during the generation process
      */
@@ -56,7 +54,6 @@ public interface ComponentGenerator<C extends LogicalComponent<? extends Impleme
      * @param source    the logical component for the wire source
      * @param reference the source logical reference
      * @param policy    the provided intents and policy sets
-     * @param context   the generator context to update
      * @return the metadata used to attach the wire to its source on the service node
      * @throws GenerationException if an error occurs during the generation process
      */
@@ -70,7 +67,6 @@ public interface ComponentGenerator<C extends LogicalComponent<? extends Impleme
      * @param source          the logical component for the wire source
      * @param serviceContract callback service contract
      * @param policy          the provided intents and policy sets
-     * @param context         the generator context to update
      * @return the metadata used to attach the wire to its source on the service node
      * @throws GenerationException if an error occurs during the generation process
      */
@@ -85,7 +81,6 @@ public interface ComponentGenerator<C extends LogicalComponent<? extends Impleme
      * @param service the target logical service
      * @param target  the logical component for the wire target
      * @param policy  the provided intents and policy sets
-     * @param context the generator context to update
      * @return the metadata used to attach the wire to its target on the service node
      * @throws GenerationException if an error occurs during the generation process
      */
@@ -98,7 +93,6 @@ public interface ComponentGenerator<C extends LogicalComponent<? extends Impleme
      *
      * @param source   the logical component for the resource
      * @param resource the source logical resource
-     * @param context  the generator context to update
      * @return the metadata used to attach the wire to its source on the service node
      * @throws GenerationException if an error occurs during the generation process
      */

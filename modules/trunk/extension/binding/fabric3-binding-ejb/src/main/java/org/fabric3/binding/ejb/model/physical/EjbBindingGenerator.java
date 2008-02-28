@@ -47,13 +47,6 @@ public class EjbBindingGenerator implements BindingGenerator<EjbWireSourceDefini
         generatorRegistry.register(EjbBindingDefinition.class, this);
     }
 
-    /**
-     * @see org.fabric3.spi.generator.BindingGenerator#generateWireSource(
-     *      org.fabric3.spi.model.instance.LogicalBinding,
-     *      Policy,
-     *      org.fabric3.spi.generator.GeneratorContext,
-     *      org.fabric3.scdl.ServiceDefinition)
-     */
     public EjbWireSourceDefinition generateWireSource(LogicalBinding<EjbBindingDefinition> logicalBinding,
                                                       Policy policy,
                                                       ServiceDefinition serviceDefinition)
@@ -71,13 +64,6 @@ public class EjbBindingGenerator implements BindingGenerator<EjbWireSourceDefini
         return ewsd;
     }
 
-    /**
-     * @see org.fabric3.spi.generator.BindingGenerator#generateWireTarget(
-     *      org.fabric3.spi.model.instance.LogicalBinding,
-     *      Policy,
-     *      org.fabric3.spi.generator.GeneratorContext,
-     *      org.fabric3.scdl.ReferenceDefinition)
-     */
     public EjbWireTargetDefinition generateWireTarget(LogicalBinding<EjbBindingDefinition> logicalBinding,
                                                       Policy policy,
                                                       ReferenceDefinition referenceDefinition)
