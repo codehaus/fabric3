@@ -21,16 +21,10 @@ package org.fabric3.binding.aq.model.logical;
 import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
 import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
 
-import java.sql.SQLException;
-
-import javax.transaction.TransactionManager;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
-import oracle.jdbc.pool.OracleDataSource;
-
-import org.enhydra.jdbc.standard.StandardXADataSource;
 import org.fabric3.binding.aq.model.AQBindingMetadata;
 import org.fabric3.binding.aq.model.AdministeredObjectDefinition;
 import org.fabric3.binding.aq.model.CorrelationScheme;

@@ -18,12 +18,7 @@
  */
 package org.fabric3.binding.aq.model;
 
-import java.util.Hashtable;
-
-import javax.naming.Context;
 import javax.sql.DataSource;
-
-import org.enhydra.jdbc.standard.StandardXADataSource;
 
 /**
  * Logical model object for JMS binding definition. TODO Support for overriding
