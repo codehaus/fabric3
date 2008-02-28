@@ -18,14 +18,15 @@
  */
 package org.fabric3.binding.rmi.model.physical;
 
+import java.net.URI;
+
 import org.fabric3.binding.rmi.model.logical.RmiBindingDefinition;
 import org.fabric3.scdl.ReferenceDefinition;
-import org.fabric3.scdl.ServiceDefinition;
 import org.fabric3.scdl.ServiceContract;
+import org.fabric3.scdl.ServiceDefinition;
 import org.fabric3.spi.generator.BindingGenerator;
 import org.fabric3.spi.generator.ClassLoaderGenerator;
 import org.fabric3.spi.generator.GenerationException;
-import org.fabric3.spi.generator.GeneratorContext;
 import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.policy.Policy;
@@ -52,7 +53,6 @@ public class RmiBindingGenerator
     public RmiWireSourceDefinition generateWireSource(
             LogicalBinding<RmiBindingDefinition> logicalBinding,
             Policy policy,
-            GeneratorContext generatorContext,
             ServiceDefinition serviceDefinition)
             throws GenerationException {
 
@@ -63,7 +63,9 @@ public class RmiBindingGenerator
         ewsd.setBindingDefinition(logicalBinding.getBinding());
         ServiceContract<?> contract = serviceDefinition.getServiceContract();
         ewsd.setInterfaceName(contract.getQualifiedInterfaceName());
-        ewsd.setClassLoaderURI(classLoaderGenerator.generate(logicalBinding, generatorContext));
+        
+        URI classloaderId = logicalBinding.getParent().getParent().getParent().getUri();
+        ewsd.setClassLoaderURI(classloaderId);
         return ewsd;
 
     }
@@ -71,7 +73,6 @@ public class RmiBindingGenerator
     public RmiWireTargetDefinition generateWireTarget(
             LogicalBinding<RmiBindingDefinition> logicalBinding,
             Policy policy,
-            GeneratorContext generatorContext,
             ReferenceDefinition referenceDefinition)
             throws GenerationException {
 
@@ -82,7 +83,9 @@ public class RmiBindingGenerator
         ewtd.setBindingDefinition(logicalBinding.getBinding());
         ServiceContract<?> contract = referenceDefinition.getServiceContract();
         ewtd.setInterfaceName(contract.getQualifiedInterfaceName());
-        ewtd.setClassLoaderURI(classLoaderGenerator.generate(logicalBinding, generatorContext));
+        
+        URI classloaderId = logicalBinding.getParent().getParent().getParent().getUri();
+        ewtd.setClassLoaderURI(classloaderId);
         return ewtd;
 
     }

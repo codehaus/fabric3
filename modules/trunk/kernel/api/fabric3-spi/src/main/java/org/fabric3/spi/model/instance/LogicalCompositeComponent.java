@@ -18,7 +18,7 @@ import org.fabric3.scdl.CompositeImplementation;
  *
  */
 public class LogicalCompositeComponent extends LogicalComponent<CompositeImplementation> {
-    
+
     private final Map<LogicalReference, Set<LogicalWire>> wires = new HashMap<LogicalReference, Set<LogicalWire>>();
     private final Map<URI, LogicalComponent<?>> components = new HashMap<URI, LogicalComponent<?>>();
 
@@ -106,6 +106,14 @@ public class LogicalCompositeComponent extends LogicalComponent<CompositeImpleme
      */
     public void addComponent(LogicalComponent<?> component) {
         components.put(component.getUri(), component);
+    }
+    
+    @Override
+    public void setProvisioned(boolean provisioned) {
+        super.setProvisioned(provisioned);
+        for (LogicalComponent<?> component : getComponents()) {
+            component.setProvisioned(true);
+        }
     }
 
 }

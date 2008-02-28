@@ -62,6 +62,7 @@ public class ComponentManagerImpl implements ComponentManager {
             // FIXME shouldn't it take the canonical name and also not distinguish atomic components?
             managementService.registerComponent(component.getUri().toString(), component);
         }
+
     }
 
     public synchronized void unregister(Component component) throws RegistrationException {

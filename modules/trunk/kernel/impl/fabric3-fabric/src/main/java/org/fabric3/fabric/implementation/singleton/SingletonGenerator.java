@@ -20,9 +20,9 @@ package org.fabric3.fabric.implementation.singleton;
 
 import java.net.URI;
 
+import org.fabric3.scdl.ServiceContract;
 import org.fabric3.spi.generator.ComponentGenerator;
 import org.fabric3.spi.generator.GenerationException;
-import org.fabric3.spi.generator.GeneratorContext;
 import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
@@ -32,8 +32,6 @@ import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 import org.fabric3.spi.policy.Policy;
-import org.fabric3.scdl.ServiceContract;
-
 import org.osoa.sca.annotations.Reference;
 
 /**
@@ -45,29 +43,25 @@ public class SingletonGenerator implements ComponentGenerator<LogicalComponent<S
         registry.register(SingletonImplementation.class, this);
     }
 
-    public PhysicalComponentDefinition generate(LogicalComponent<SingletonImplementation> component,
-                                                GeneratorContext context) throws GenerationException {
+    public PhysicalComponentDefinition generate(LogicalComponent<SingletonImplementation> component) throws GenerationException {
         throw new UnsupportedOperationException();
     }
 
     public PhysicalWireSourceDefinition generateWireSource(LogicalComponent<SingletonImplementation> source,
                                                            LogicalReference reference,
-                                                           Policy policy,
-                                                           GeneratorContext context) throws GenerationException {
+                                                           Policy policy) throws GenerationException {
         throw new UnsupportedOperationException();
     }
 
     public PhysicalWireSourceDefinition generateCallbackWireSource(LogicalComponent<SingletonImplementation> source,
                                                                    ServiceContract<?> serviceContract,
-                                                                   Policy policy,
-                                                                   GeneratorContext context) throws GenerationException {
+                                                                   Policy policy) throws GenerationException {
         throw new UnsupportedOperationException();
     }
 
     public PhysicalWireTargetDefinition generateWireTarget(LogicalService service,
                                                            LogicalComponent<SingletonImplementation> logical,
-                                                           Policy policy,
-                                                           GeneratorContext context) throws GenerationException {
+                                                           Policy policy) throws GenerationException {
         SingletonWireTargetDefinition wireDefinition = new SingletonWireTargetDefinition();
         URI uri = logical.getUri().resolve(service.getUri());
         wireDefinition.setUri(uri);
@@ -76,8 +70,7 @@ public class SingletonGenerator implements ComponentGenerator<LogicalComponent<S
     }
 
     public PhysicalWireSourceDefinition generateResourceWireSource(LogicalComponent<SingletonImplementation> source,
-                                                                   LogicalResource<?> resource,
-                                                                   GeneratorContext context) throws GenerationException {
+                                                                   LogicalResource<?> resource) throws GenerationException {
         throw new UnsupportedOperationException();
     }
 

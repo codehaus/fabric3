@@ -25,13 +25,10 @@ import org.fabric3.scdl.ReferenceDefinition;
 import org.fabric3.scdl.ServiceContract;
 import org.fabric3.scdl.ServiceDefinition;
 import org.fabric3.spi.generator.BindingGeneratorDelegate;
-import org.fabric3.spi.generator.ClassLoaderGenerator;
 import org.fabric3.spi.generator.GenerationException;
-import org.fabric3.spi.generator.GeneratorContext;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.policy.Policy;
 import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Reference;
 
 /**
  * Implementation of the hessian binding generator.
@@ -40,29 +37,23 @@ import org.osoa.sca.annotations.Reference;
  */
 @EagerInit
 public class CxfBindingGeneratorDelegate implements BindingGeneratorDelegate<WsBindingDefinition> {
-    private ClassLoaderGenerator classLoaderGenerator;
-
-    public CxfBindingGeneratorDelegate(@Reference ClassLoaderGenerator classLoaderGenerator) {
-        this.classLoaderGenerator = classLoaderGenerator;
-    }
 
     public CxfWireSourceDefinition generateWireSource(LogicalBinding<WsBindingDefinition> logicalBinding,
                                                      Policy policy,
-                                                     GeneratorContext generatorContext,
                                                      ServiceDefinition serviceDefinition) throws GenerationException {
         CxfWireSourceDefinition hwsd = new CxfWireSourceDefinition();
         hwsd.setUri(logicalBinding.getBinding().getTargetUri());
         ServiceContract<?> contract = serviceDefinition.getServiceContract();
         hwsd.setServiceInterface(contract.getQualifiedInterfaceName());
-        URI classloader = classLoaderGenerator.generate(logicalBinding, generatorContext);
-        hwsd.setClassloaderURI(classloader);
+        
+        URI classloaderId = logicalBinding.getParent().getParent().getParent().getUri();
+        hwsd.setClassloaderURI(classloaderId);
         return hwsd;
 
     }
 
     public CxfWireTargetDefinition generateWireTarget(LogicalBinding<WsBindingDefinition> logicalBinding,
                                                      Policy policy,
-                                                     GeneratorContext generatorContext,
                                                      ReferenceDefinition referenceDefinition)
             throws GenerationException {
 
@@ -70,8 +61,9 @@ public class CxfBindingGeneratorDelegate implements BindingGeneratorDelegate<WsB
         hwtd.setUri(logicalBinding.getBinding().getTargetUri());
         ServiceContract<?> contract = referenceDefinition.getServiceContract();
         hwtd.setReferenceInterface(contract.getQualifiedInterfaceName());
-        URI classloader = classLoaderGenerator.generate(logicalBinding, generatorContext);
-        hwtd.setClassloaderURI(classloader);
+        
+        URI classloaderId = logicalBinding.getParent().getParent().getParent().getUri();
+        hwtd.setClassloaderURI(classloaderId);
         return hwtd;
 
     }

@@ -18,36 +18,21 @@
  */
 package org.fabric3.fabric.deployer;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-
-import org.osoa.sca.annotations.Constructor;
-import org.osoa.sca.annotations.Reference;
-import org.osoa.sca.annotations.Service;
-
+import org.fabric3.api.annotation.Monitor;
 import org.fabric3.fabric.builder.Connector;
-import org.fabric3.monitor.MonitorFactory;
 import org.fabric3.spi.builder.BuilderException;
 import org.fabric3.spi.builder.component.ComponentBuilderRegistry;
 import org.fabric3.spi.builder.resource.ResourceContainerBuilderRegistry;
-import org.fabric3.spi.component.Component;
-import org.fabric3.spi.deployer.Deployer;
-import org.fabric3.spi.model.physical.PhysicalChangeSet;
-import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
-import org.fabric3.spi.model.physical.PhysicalResourceContainerDefinition;
-import org.fabric3.spi.model.physical.PhysicalWireDefinition;
 import org.fabric3.spi.runtime.component.ComponentManager;
 import org.fabric3.spi.runtime.component.RegistrationException;
-import org.fabric3.api.annotation.Monitor;
+import org.osoa.sca.annotations.Reference;
 
 /**
  * Deploys components in response to asynchronous messages from the Assembly.
  *
  * @version $Revision$ $Date$
  */
-@Service(Deployer.class)
-public class DeployerImpl implements Deployer {
+public class DeployerImpl {
 
     /**
      * Physical component builder registry.
@@ -79,8 +64,8 @@ public class DeployerImpl implements Deployer {
         this.monitor = monitor;
     }
 
-    public void applyChangeSet(PhysicalChangeSet changeSet) throws BuilderException, RegistrationException {
-        monitor.applyChangeset();
+    public void applyChangeSet() throws BuilderException, RegistrationException {
+       /* monitor.applyChangeset();
         Set<PhysicalComponentDefinition> componentDefinitions = changeSet.getComponentDefinitions();
         List<Component> components = new ArrayList<Component>(componentDefinitions.size());
         for (PhysicalResourceContainerDefinition definition : changeSet.getAllResourceDefinitions()) {
@@ -100,7 +85,7 @@ public class DeployerImpl implements Deployer {
         for (Component component : components) {
             component.start();
             monitor.startComponent(component.getUri().toString());
-        }
+        }*/
     }
 
     /**

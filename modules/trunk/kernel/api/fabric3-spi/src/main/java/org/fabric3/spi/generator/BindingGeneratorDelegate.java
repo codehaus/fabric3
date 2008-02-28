@@ -42,10 +42,8 @@ public interface BindingGeneratorDelegate<BD extends BindingDefinition> {
      * @return Physical wire source definition.
      * @throws GenerationException
      */
-    PhysicalWireSourceDefinition generateWireSource(LogicalBinding<BD> binding, 
-                            Policy policy,
-                            GeneratorContext context,
-                            ServiceDefinition serviceDefinition) throws GenerationException;
+    PhysicalWireSourceDefinition generateWireSource(LogicalBinding<BD> binding, Policy policy, ServiceDefinition serviceDefinition) 
+        throws GenerationException;
 
     /**
      * Generates a physical wire target definition from a logical binding.
@@ -56,9 +54,7 @@ public interface BindingGeneratorDelegate<BD extends BindingDefinition> {
      * @return Physical wire target definition.
      * @throws GenerationException
      */
-    PhysicalWireTargetDefinition generateWireTarget(LogicalBinding<BD> binding, 
-                            Policy policy,
-                            GeneratorContext context,
-                            ReferenceDefinition referenceDefinition) throws GenerationException;
+    PhysicalWireTargetDefinition generateWireTarget(LogicalBinding<BD> binding, Policy policy, ReferenceDefinition referenceDefinition) 
+        throws GenerationException;
 
 }

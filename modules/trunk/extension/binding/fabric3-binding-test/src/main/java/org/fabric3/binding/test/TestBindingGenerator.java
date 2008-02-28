@@ -20,7 +20,6 @@ import org.fabric3.scdl.ReferenceDefinition;
 import org.fabric3.scdl.ServiceDefinition;
 import org.fabric3.spi.generator.BindingGenerator;
 import org.fabric3.spi.generator.GenerationException;
-import org.fabric3.spi.generator.GeneratorContext;
 import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.policy.Policy;
@@ -48,7 +47,6 @@ public class TestBindingGenerator implements BindingGenerator<TestBindingSourceD
 
     public TestBindingSourceDefinition generateWireSource(LogicalBinding<TestBindingDefinition> logicalBinding,
                                                           Policy policy,
-                                                          GeneratorContext context,
                                                           ServiceDefinition serviceDefinition)
             throws GenerationException {
         TestBindingSourceDefinition definition = new TestBindingSourceDefinition();
@@ -58,7 +56,6 @@ public class TestBindingGenerator implements BindingGenerator<TestBindingSourceD
 
     public TestBindingTargetDefinition generateWireTarget(LogicalBinding<TestBindingDefinition> logicalBinding,
                                                           Policy policy,
-                                                          GeneratorContext context,
                                                           ReferenceDefinition referenceDefinition)
             throws GenerationException {
 

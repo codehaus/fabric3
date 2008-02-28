@@ -44,8 +44,6 @@ public class ExplicitTargetResolutionService implements TargetResolutionService 
         }
         logicalReference.overrideTargets(resolvedUris);
         
-        return;
-        
     }
     
     private URI resolveByUri(LogicalReference reference, URI targetUri, LogicalCompositeComponent composite) throws TargetResolutionException {

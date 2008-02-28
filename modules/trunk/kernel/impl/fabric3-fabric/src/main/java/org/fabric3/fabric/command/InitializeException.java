@@ -25,6 +25,11 @@ import org.fabric3.spi.command.ExecutionException;
  */
 public class InitializeException extends ExecutionException {
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = -276254239988931352L;
+
     public InitializeException(String message, String identifier) {
         super(message, identifier);
     }

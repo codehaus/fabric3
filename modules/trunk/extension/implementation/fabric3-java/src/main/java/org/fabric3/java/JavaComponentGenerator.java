@@ -20,22 +20,17 @@ package org.fabric3.java;
 
 import java.net.URI;
 
-import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Reference;
-
 import org.fabric3.pojo.instancefactory.InstanceFactoryDefinition;
 import org.fabric3.pojo.instancefactory.InstanceFactoryGenerationHelper;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.CallbackDefinition;
 import org.fabric3.scdl.ComponentDefinition;
-import org.fabric3.scdl.Scope;
-import org.fabric3.scdl.ServiceContract;
 import org.fabric3.scdl.InjectableAttribute;
 import org.fabric3.scdl.InjectableAttributeType;
-import org.fabric3.spi.generator.ClassLoaderGenerator;
+import org.fabric3.scdl.Scope;
+import org.fabric3.scdl.ServiceContract;
 import org.fabric3.spi.generator.ComponentGenerator;
 import org.fabric3.spi.generator.GenerationException;
-import org.fabric3.spi.generator.GeneratorContext;
 import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
@@ -45,6 +40,8 @@ import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 import org.fabric3.spi.policy.Policy;
+import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Reference;
 
 /**
  * Generates a JavaComponentDefinition from a ComponentDefinition corresponding to a Java component implementation
@@ -54,17 +51,14 @@ import org.fabric3.spi.policy.Policy;
 @EagerInit
 public class JavaComponentGenerator implements ComponentGenerator<LogicalComponent<JavaImplementation>> {
     private final InstanceFactoryGenerationHelper helper;
-    private final ClassLoaderGenerator classLoaderGenerator;
 
     public JavaComponentGenerator(@Reference GeneratorRegistry registry,
-                                  @Reference ClassLoaderGenerator classLoaderGenerator,
                                   @Reference InstanceFactoryGenerationHelper helper) {
-        this.classLoaderGenerator = classLoaderGenerator;
         registry.register(JavaImplementation.class, this);
         this.helper = helper;
     }
 
-    public PhysicalComponentDefinition generate(LogicalComponent<JavaImplementation> component, GeneratorContext context)
+    public PhysicalComponentDefinition generate(LogicalComponent<JavaImplementation> component)
             throws GenerationException {
         ComponentDefinition<JavaImplementation> definition = component.getDefinition();
         JavaImplementation implementation = definition.getImplementation();
@@ -88,7 +82,7 @@ public class JavaComponentGenerator implements ComponentGenerator<LogicalCompone
         physical.setInstanceFactoryProviderDefinition(providerDefinition);
         helper.processPropertyValues(component, physical);
         // generate the classloader resource definition
-        URI classLoaderId = classLoaderGenerator.generate(component, context);
+        URI classLoaderId = component.getParent().getUri();
         physical.setClassLoaderId(classLoaderId);
 
         return physical;
@@ -97,12 +91,11 @@ public class JavaComponentGenerator implements ComponentGenerator<LogicalCompone
 
     public PhysicalWireSourceDefinition generateWireSource(LogicalComponent<JavaImplementation> source,
                                                            LogicalReference reference,
-                                                           Policy policy,
-                                                           GeneratorContext context) throws GenerationException {
+                                                           Policy policy) throws GenerationException {
         URI uri = reference.getUri();
         ServiceContract<?> serviceContract = reference.getDefinition().getServiceContract();
         String interfaceName = serviceContract.getQualifiedInterfaceName();
-        URI classLoaderId = classLoaderGenerator.generate(source, context);
+        URI classLoaderId = source.getParent().getUri();
 
         JavaWireSourceDefinition wireDefinition = new JavaWireSourceDefinition();
         wireDefinition.setUri(uri);
@@ -119,10 +112,9 @@ public class JavaComponentGenerator implements ComponentGenerator<LogicalCompone
 
     public PhysicalWireSourceDefinition generateCallbackWireSource(LogicalComponent<JavaImplementation> source,
                                                                    ServiceContract<?> serviceContract,
-                                                                   Policy policy,
-                                                                   GeneratorContext context) throws GenerationException {
+                                                                   Policy policy) throws GenerationException {
         String interfaceName = serviceContract.getQualifiedInterfaceName();
-        URI classLoaderId = classLoaderGenerator.generate(source, context);
+        URI classLoaderId = source.getParent().getUri();
         PojoComponentType type = source.getDefinition().getImplementation().getComponentType();
         String name = null;
         for (CallbackDefinition entry : type.getCallbacks().values()) {
@@ -148,12 +140,11 @@ public class JavaComponentGenerator implements ComponentGenerator<LogicalCompone
     }
 
     public PhysicalWireSourceDefinition generateResourceWireSource(LogicalComponent<JavaImplementation> source,
-                                                                   LogicalResource<?> resource,
-                                                                   GeneratorContext context) throws GenerationException {
+                                                                   LogicalResource<?> resource) throws GenerationException {
         URI uri = resource.getUri();
         ServiceContract<?> serviceContract = resource.getResourceDefinition().getServiceContract();
         String interfaceName = serviceContract.getQualifiedInterfaceName();
-        URI classLoaderId = classLoaderGenerator.generate(source, context);
+        URI classLoaderId = source.getParent().getUri();
 
         JavaWireSourceDefinition wireDefinition = new JavaWireSourceDefinition();
         wireDefinition.setUri(uri);
@@ -166,8 +157,7 @@ public class JavaComponentGenerator implements ComponentGenerator<LogicalCompone
 
     public PhysicalWireTargetDefinition generateWireTarget(LogicalService service,
                                                            LogicalComponent<JavaImplementation> target,
-                                                           Policy policy,
-                                                           GeneratorContext context) throws GenerationException {
+                                                           Policy policy) throws GenerationException {
         JavaWireTargetDefinition wireDefinition = new JavaWireTargetDefinition();
         URI uri;
         if (service != null) {

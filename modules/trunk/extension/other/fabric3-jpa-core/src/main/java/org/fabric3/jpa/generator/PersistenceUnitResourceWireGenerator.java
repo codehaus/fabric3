@@ -21,9 +21,7 @@ package org.fabric3.jpa.generator;
 import java.net.URI;
 
 import org.fabric3.jpa.PersistenceUnitResource;
-import org.fabric3.spi.generator.ClassLoaderGenerator;
 import org.fabric3.spi.generator.GenerationException;
-import org.fabric3.spi.generator.GeneratorContext;
 import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.generator.ResourceWireGenerator;
 import org.fabric3.spi.model.instance.LogicalResource;
@@ -37,18 +35,9 @@ import org.osoa.sca.annotations.Reference;
  */
 @EagerInit
 public class PersistenceUnitResourceWireGenerator implements ResourceWireGenerator<PersistenceUnitWireTargetDefinition, PersistenceUnitResource> {
-    
-    private ClassLoaderGenerator classLoaderGenerator;
+
     private GeneratorRegistry registry;
 
-    /**
-     * Injects the generator registry.
-     * 
-     * @param generatorRegistry Generator registry to be injected.
-     */
-    public PersistenceUnitResourceWireGenerator(@Reference ClassLoaderGenerator classLoaderGenerator) {
-        this.classLoaderGenerator = classLoaderGenerator;
-    }
     
     /**
      * @param registry Injected registry.
@@ -69,10 +58,10 @@ public class PersistenceUnitResourceWireGenerator implements ResourceWireGenerat
     /**
      * @see org.fabric3.spi.generator.ResourceWireGenerator#genearteWireTargetDefinition(org.fabric3.spi.model.instance.LogicalResource)
      */
-    public PersistenceUnitWireTargetDefinition generateWireTargetDefinition(LogicalResource<PersistenceUnitResource> logicalResource,
-                                                                            GeneratorContext context) throws GenerationException {
+    public PersistenceUnitWireTargetDefinition generateWireTargetDefinition(LogicalResource<PersistenceUnitResource> logicalResource) 
+        throws GenerationException {
         
-        URI classLoaderUri = classLoaderGenerator.generate(logicalResource, context);
+        URI classLoaderUri = logicalResource.getParent().getParent().getUri();
             
         PersistenceUnitWireTargetDefinition pwtd = new PersistenceUnitWireTargetDefinition();
         pwtd.setOptimizable(false);

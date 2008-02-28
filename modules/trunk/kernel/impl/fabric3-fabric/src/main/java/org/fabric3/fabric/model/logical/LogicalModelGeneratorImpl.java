@@ -70,11 +70,15 @@ public class LogicalModelGeneratorImpl implements LogicalModelGenerator {
 
     @SuppressWarnings("unchecked")
     public void include(LogicalCompositeComponent parent, Composite composite) throws ActivateException {
+        
+        if (parent == null) {
+            System.err.println("Oops parent is null:" + composite.getName());
+        }
 
         // merge the property values into the parent
         for (Property property : composite.getProperties().values()) {
             String name = property.getName();
-            if (parent.getPropertyValues().containsKey(name)) {
+            if (parent != null && parent.getPropertyValues() != null && parent.getPropertyValues().containsKey(name)) {
                 throw new ActivateException("Duplicate property", name);
             }
             Document value = property.getDefaultValue();

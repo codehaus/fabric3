@@ -20,23 +20,22 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.osoa.sca.annotations.Constructor;
-import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Init;
-import org.osoa.sca.annotations.Reference;
-
 import org.fabric3.scdl.Scope;
 import org.fabric3.spi.command.CommandExecutor;
 import org.fabric3.spi.command.CommandExecutorRegistry;
 import org.fabric3.spi.command.ExecutionException;
 import org.fabric3.spi.component.AtomicComponent;
+import org.fabric3.spi.component.CallFrame;
 import org.fabric3.spi.component.Component;
 import org.fabric3.spi.component.GroupInitializationException;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.spi.component.WorkContext;
-import org.fabric3.spi.component.CallFrame;
 import org.fabric3.spi.runtime.component.ComponentManager;
+import org.osoa.sca.annotations.Constructor;
+import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Init;
+import org.osoa.sca.annotations.Reference;
 
 /**
  * Eagerly initializes a component on a service node.
@@ -44,19 +43,19 @@ import org.fabric3.spi.runtime.component.ComponentManager;
  * @version $Rev$ $Date$
  */
 @EagerInit
-public class InitializeComponentExecutor implements CommandExecutor<InitializeComponentCommand> {
+public class InitializeComponentCommandExecutor implements CommandExecutor<InitializeComponentCommand> {
     private CommandExecutorRegistry commandExecutorRegistry;
     private ComponentManager manager;
     private ScopeContainer<?> scopeContainer;
 
-    public InitializeComponentExecutor(ScopeRegistry scopeRegistry, ComponentManager manager) {
+    public InitializeComponentCommandExecutor(ScopeRegistry scopeRegistry, ComponentManager manager) {
         this(null, scopeRegistry, manager);
     }
 
     @Constructor
-    public InitializeComponentExecutor(@Reference CommandExecutorRegistry commandExecutorRegistry,
-                                       @Reference ScopeRegistry scopeRegistry,
-                                       @Reference ComponentManager manager) {
+    public InitializeComponentCommandExecutor(@Reference CommandExecutorRegistry commandExecutorRegistry,
+                                              @Reference ScopeRegistry scopeRegistry,
+                                              @Reference ComponentManager manager) {
         this.commandExecutorRegistry = commandExecutorRegistry;
         this.manager = manager;
         this.scopeContainer = scopeRegistry.getScopeContainer(Scope.COMPOSITE);
@@ -68,21 +67,19 @@ public class InitializeComponentExecutor implements CommandExecutor<InitializeCo
     }
 
     public void execute(InitializeComponentCommand command) throws ExecutionException {
-        List<URI> uris = command.getUris();
-        List<AtomicComponent<?>> components = new ArrayList<AtomicComponent<?>>();
         URI groupId = command.getGroupId();
-        for (URI uri : uris) {
-            Component component = manager.getComponent(uri);
-            if (!(component instanceof AtomicComponent)) {
-                throw new ComponentNotRegisteredException("Component not registered", uri.toString());
-            }
-            components.add((AtomicComponent<?>) component);
+        URI uri = command.getUri();
+        Component component = manager.getComponent(uri);
+        if (!(component instanceof AtomicComponent)) {
+            throw new ComponentNotRegisteredException("Component not registered", uri.toString());
         }
         WorkContext workContext = new WorkContext();
-        CallFrame frame = new CallFrame();
+        CallFrame frame = new CallFrame(groupId);
         workContext.addCallFrame(frame);
+        List<AtomicComponent<?>> atomicComponents = new ArrayList<AtomicComponent<?>>();
+        atomicComponents.add((AtomicComponent<?>) component);
         try {
-            scopeContainer.initializeComponents(components, groupId, workContext);
+            scopeContainer.initializeComponents(atomicComponents, groupId, workContext);
         } catch (GroupInitializationException e) {
             throw new ExecutionException("Error starting components", e);
         }

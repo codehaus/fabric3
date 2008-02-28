@@ -32,14 +32,13 @@ import org.fabric3.scdl.ResourceDescription;
 import org.fabric3.scdl.ServiceDefinition;
 import org.fabric3.spi.generator.ClassLoaderGenerator;
 import org.fabric3.spi.generator.GenerationException;
-import org.fabric3.spi.generator.GeneratorContext;
 import org.fabric3.spi.model.instance.Bindable;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalResource;
 import org.fabric3.spi.model.instance.LogicalService;
-import org.fabric3.spi.model.physical.PhysicalChangeSet;
+import org.fabric3.spi.model.physical.PhysicalResourceContainerDefinition;
 import org.fabric3.spi.model.topology.RuntimeInfo;
 import org.fabric3.spi.model.type.ContributionResourceDescription;
 import org.fabric3.spi.services.discovery.DiscoveryService;
@@ -54,74 +53,85 @@ import org.fabric3.spi.util.UriHelper;
  */
 @EagerInit
 public class ClassLoaderGeneratorImpl implements ClassLoaderGenerator {
+    
     private DiscoveryService discoveryService;
 
     public ClassLoaderGeneratorImpl(@Reference DiscoveryService discoveryService) {
         this.discoveryService = discoveryService;
     }
 
-    public URI generate(LogicalComponent<?> component, GeneratorContext context) throws GenerationException {
+    public PhysicalResourceContainerDefinition generate(LogicalComponent<?> component) throws GenerationException {
+        
         LogicalComponent<CompositeImplementation> parent = component.getParent();
         Implementation<?> impl = component.getDefinition().getImplementation();
-        List<ResourceDescription> descriptions = impl.getResourceDescriptions();
-        URI runtimeId = component.getRuntimeId();
-        return generate(parent, runtimeId, descriptions, context);
+        
+        List<ResourceDescription<?>> descriptions = impl.getResourceDescriptions();
+        
+        return generate(parent, descriptions);
+        
     }
 
-    public URI generate(LogicalResource<?> resource, GeneratorContext context) throws GenerationException {
+    public PhysicalResourceContainerDefinition generate(LogicalResource<?> resource) throws GenerationException {
+        
         LogicalComponent<?> component = resource.getParent();
         LogicalComponent<CompositeImplementation> parent = component.getParent();
-        List<ResourceDescription> descriptions = new ArrayList<ResourceDescription>();
-        descriptions.addAll(resource.getResourceDefinition().getResourceDescriptions());
-        URI runtimeId = component.getRuntimeId();
-        return generate(parent, runtimeId, descriptions, context);
+        
+        List<ResourceDescription<?>> descriptions = resource.getResourceDefinition().getResourceDescriptions();
+        
+        return generate(parent, descriptions);
+        
     }
 
-    @SuppressWarnings({"unchecked"})
-    public URI generate(LogicalBinding<?> binding, GeneratorContext context) throws GenerationException {
+    public PhysicalResourceContainerDefinition generate(LogicalBinding<?> binding) throws GenerationException {
+        
         Bindable bindable = binding.getParent();
         LogicalComponent<?> parent = bindable.getParent();
-        List<ResourceDescription> descriptions = new ArrayList<ResourceDescription>();
+        
+        List<ResourceDescription<?>> descriptions = new ArrayList<ResourceDescription<?>>();
+        
         if (bindable instanceof LogicalReference) {
             ReferenceDefinition definition = ((LogicalReference) bindable).getDefinition();
-            for (ResourceDescription description : definition.getResourceDescriptions()) {
+            for (ResourceDescription<?> description : definition.getResourceDescriptions()) {
                 if (!descriptions.contains(description)) {
                     descriptions.add(description);
                 }
             }
         } else if (bindable instanceof LogicalService) {
             ServiceDefinition definition = ((LogicalService) bindable).getDefinition();
-            for (ResourceDescription description : definition.getResourceDescriptions()) {
+            for (ResourceDescription<?> description : definition.getResourceDescriptions()) {
                 if (!descriptions.contains(description)) {
                     descriptions.add(description);
                 }
             }
         }
-        for (ResourceDescription description : binding.getBinding().getResourceDescriptions()) {
+        
+        for (ResourceDescription<?> description : binding.getBinding().getResourceDescriptions()) {
             if (!descriptions.contains(description)) {
                 descriptions.add(description);
             }
         }
-        URI runtimeUri = parent.getRuntimeId();
-        return generate(parent, runtimeUri, descriptions, context);
+        
+        return generate(parent, descriptions);
+        
     }
 
-    private URI generate(LogicalComponent<?> parent,
-                         URI runtimeId,
-                         List<ResourceDescription> descriptions,
-                         GeneratorContext context) throws GenerationException {
+    private PhysicalResourceContainerDefinition generate(LogicalComponent<?> parent, List<ResourceDescription<?>> descriptions) throws GenerationException {
+        
+        URI runtimeId = parent.getRuntimeId();
+        
         RuntimeInfo info = discoveryService.getRuntimeInfo(runtimeId);
+        
         if (info == null) {
             String id = runtimeId.toString();
             throw new ClassLoaderGenerationException("Runtime not found [" + id + "]", id);
         }
 
-        PhysicalChangeSet changeSet = context.getPhysicalChangeSet();
+        //PhysicalChangeSet changeSet = context.getPhysicalChangeSet();
         // check to see if the classloader definition has been created as part of the current changeset
         URI classLoaderUri = parent.getUri();
 
-        PhysicalClassLoaderDefinition definition =
-                changeSet.getResourceDefinition(PhysicalClassLoaderDefinition.class, classLoaderUri);
+        //PhysicalClassLoaderDefinition definition = changeSet.getResourceDefinition(PhysicalClassLoaderDefinition.class, classLoaderUri);
+        PhysicalClassLoaderDefinition definition = null;
         if (definition == null) {
             // classloader definition has not been created during generation, create one including parents if necessary.
             definition = new PhysicalClassLoaderDefinition(classLoaderUri);
@@ -131,25 +141,23 @@ public class ClassLoaderGeneratorImpl implements ClassLoaderGenerator {
                 URI uri = grandParent.getUri();
                 definition.addParentClassLoader(uri);
                 if (discoveryService != null) {
-                    generateClassLoaderHierarchy(uri, info, context);
+                    //generateClassLoaderHierarchy(uri, info);
                 }
             }
-            changeSet.addResourceDefinition(definition);
+            //changeSet.addResourceDefinition(definition);
             processPhysicalDefinition(info, definition, descriptions);
         } else {
             // process the existing definition
             processPhysicalDefinition(info, definition, descriptions);
         }
-        return definition.getUri();
+        return definition;
     }
 
-    private void processPhysicalDefinition(RuntimeInfo info,
-                                           PhysicalClassLoaderDefinition definition,
-                                           List<ResourceDescription> descriptions)
-            throws ClassLoaderGenerationException {
+    private void processPhysicalDefinition(RuntimeInfo info, PhysicalClassLoaderDefinition definition, List<ResourceDescription<?>> descriptions)
+        throws ClassLoaderGenerationException {
+        
         // Determine if a classloader exists on the target participant.
-        ClassLoaderResourceDescription clDescription =
-                info.getResourceDescription(ClassLoaderResourceDescription.class, definition.getUri());
+        ClassLoaderResourceDescription clDescription = info.getResourceDescription(ClassLoaderResourceDescription.class, definition.getUri());
         if (clDescription == null) {
             processNew(definition, descriptions);
         } else {
@@ -157,8 +165,9 @@ public class ClassLoaderGeneratorImpl implements ClassLoaderGenerator {
         }
     }
 
-    private void processNew(PhysicalClassLoaderDefinition definition, List<ResourceDescription> descriptions) {
-        for (ResourceDescription description : descriptions) {
+    private void processNew(PhysicalClassLoaderDefinition definition, List<ResourceDescription<?>> descriptions) {
+        
+        for (ResourceDescription<?> description : descriptions) {
             if (description instanceof ContributionResourceDescription) {
                 ContributionResourceDescription contribDescription = (ContributionResourceDescription) description;
                 // add the contribution artifact urls to the classpath
@@ -176,11 +185,11 @@ public class ClassLoaderGeneratorImpl implements ClassLoaderGenerator {
         }
     }
 
-    private void processUpdate(PhysicalClassLoaderDefinition definition,
-                               ClassLoaderResourceDescription clDescription,
-                               List<ResourceDescription> descriptions) {
+    private void processUpdate(PhysicalClassLoaderDefinition definition, ClassLoaderResourceDescription clDescription, 
+            List<ResourceDescription<?>> descriptions) {
+        
         definition.setUpdate(true);
-        for (ResourceDescription description : descriptions) {
+        for (ResourceDescription<?> description : descriptions) {
             if (description instanceof ContributionResourceDescription) {
                 ContributionResourceDescription contribDescription = (ContributionResourceDescription) description;
                 // add the contribution artifact urls to the classpath
@@ -210,14 +219,14 @@ public class ClassLoaderGeneratorImpl implements ClassLoaderGenerator {
      * @param info    the current runtime info
      * @param context the generator context
      */
-    private void generateClassLoaderHierarchy(URI uri, RuntimeInfo info, GeneratorContext context) {
+    /*private void generateClassLoaderHierarchy(URI uri, RuntimeInfo info) {
+        
         ClassLoaderResourceDescription desc = info.getResourceDescription(ClassLoaderResourceDescription.class, uri);
         PhysicalChangeSet changeSet = context.getPhysicalChangeSet();
         if (desc != null) {
             return;
         } else {
-            PhysicalClassLoaderDefinition definition =
-                    changeSet.getResourceDefinition(PhysicalClassLoaderDefinition.class, uri);
+            PhysicalClassLoaderDefinition definition = changeSet.getResourceDefinition(PhysicalClassLoaderDefinition.class, uri);
             if (definition != null) {
                 return;
             }
@@ -232,7 +241,8 @@ public class ClassLoaderGeneratorImpl implements ClassLoaderGenerator {
         // set the classloader hierarchy if we are not at the domain level
         definition.addParentClassLoader(parentUri);
         changeSet.addResourceDefinition(definition);
-    }
+        
+    }*/
 
 
 }

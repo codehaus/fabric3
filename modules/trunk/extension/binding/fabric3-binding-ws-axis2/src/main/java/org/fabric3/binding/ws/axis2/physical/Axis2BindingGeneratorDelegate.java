@@ -30,12 +30,9 @@ import org.fabric3.scdl.ServiceDefinition;
 import org.fabric3.scdl.definitions.PolicySet;
 import org.fabric3.spi.Constants;
 import org.fabric3.spi.generator.BindingGeneratorDelegate;
-import org.fabric3.spi.generator.ClassLoaderGenerator;
 import org.fabric3.spi.generator.GenerationException;
-import org.fabric3.spi.generator.GeneratorContext;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.policy.Policy;
-import org.osoa.sca.annotations.Reference;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
@@ -47,16 +44,9 @@ import org.w3c.dom.NodeList;
 public class Axis2BindingGeneratorDelegate implements BindingGeneratorDelegate<WsBindingDefinition> {
     
     private static final QName POLICY_ELEMENT = new QName(Constants.FABRIC3_NS, "axisPolicy");
-    
-    private ClassLoaderGenerator classLoaderGenerator;
-
-    public Axis2BindingGeneratorDelegate(@Reference ClassLoaderGenerator classLoaderGenerator) {
-        this.classLoaderGenerator = classLoaderGenerator;
-    }
 
     public Axis2WireSourceDefinition generateWireSource(LogicalBinding<WsBindingDefinition> binding,
-                                                        Policy policy, 
-                                                        GeneratorContext context, 
+                                                        Policy policy,  
                                                         ServiceDefinition serviceDefinition) throws GenerationException {
         
         Axis2WireSourceDefinition hwsd = new Axis2WireSourceDefinition();
@@ -65,8 +55,8 @@ public class Axis2BindingGeneratorDelegate implements BindingGeneratorDelegate<W
         ServiceContract<?> contract = serviceDefinition.getServiceContract();
         hwsd.setServiceInterface(contract.getQualifiedInterfaceName());
         
-        URI classloader = classLoaderGenerator.generate(binding, context);
-        hwsd.setClassloaderURI(classloader);
+        URI classloaderId = binding.getParent().getParent().getParent().getUri();
+        hwsd.setClassloaderURI(classloaderId);
         
         setPolicyConfigs(hwsd, policy, contract);
         
@@ -76,7 +66,6 @@ public class Axis2BindingGeneratorDelegate implements BindingGeneratorDelegate<W
 
     public Axis2WireTargetDefinition generateWireTarget(LogicalBinding<WsBindingDefinition> binding,
                                                         Policy policy,
-                                                        GeneratorContext context, 
                                                         ReferenceDefinition referenceDefinition) throws GenerationException {
 
         Axis2WireTargetDefinition hwtd = new Axis2WireTargetDefinition();
@@ -85,8 +74,8 @@ public class Axis2BindingGeneratorDelegate implements BindingGeneratorDelegate<W
         ServiceContract<?> contract = referenceDefinition.getServiceContract();
         hwtd.setReferenceInterface(contract.getQualifiedInterfaceName());
         
-        URI classloader = classLoaderGenerator.generate(binding, context);
-        hwtd.setClassloaderURI(classloader);
+        URI classloaderId = binding.getParent().getParent().getParent().getUri();
+        hwtd.setClassloaderURI(classloaderId);
         
         setPolicyConfigs(hwtd, policy, contract);
         

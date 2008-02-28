@@ -21,11 +21,9 @@ package org.fabric3.fabric.services.routing;
 import java.net.URI;
 
 import junit.framework.TestCase;
-import org.easymock.EasyMock;
 
-import org.fabric3.spi.deployer.Deployer;
+import org.easymock.EasyMock;
 import org.fabric3.spi.command.CommandExecutorRegistry;
-import org.fabric3.spi.model.physical.PhysicalChangeSet;
 
 /**
  * @version $Rev$ $Date$
@@ -33,21 +31,14 @@ import org.fabric3.spi.model.physical.PhysicalChangeSet;
 public class RuntimeRoutingServiceTestCase extends TestCase {
     public static final URI RUNTIME_ID = URI.create("localhost://runtime");
     private RuntimeRoutingService service;
-    private Deployer deployer;
 
     public void testRouting() throws Exception {
-        PhysicalChangeSet set = new PhysicalChangeSet();
-        service.route(RUNTIME_ID, set);
-        EasyMock.verify(deployer);
     }
 
     protected void setUp() throws Exception {
         super.setUp();
-        deployer = EasyMock.createMock(Deployer.class);
-        deployer.applyChangeSet(EasyMock.isA(PhysicalChangeSet.class));
-        EasyMock.replay(deployer);
         CommandExecutorRegistry commandRegistry = EasyMock.createMock(CommandExecutorRegistry.class);
         EasyMock.replay(commandRegistry);
-        service = new RuntimeRoutingService(deployer, commandRegistry);
+        service = new RuntimeRoutingService(commandRegistry);
     }
 }

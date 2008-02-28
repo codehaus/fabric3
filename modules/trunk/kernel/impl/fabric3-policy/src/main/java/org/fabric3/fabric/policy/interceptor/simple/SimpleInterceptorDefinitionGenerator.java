@@ -20,17 +20,15 @@ package org.fabric3.fabric.policy.interceptor.simple;
 
 import javax.xml.namespace.QName;
 
+import org.fabric3.scdl.Operation;
+import org.fabric3.spi.Constants;
+import org.fabric3.spi.generator.GeneratorRegistry;
+import org.fabric3.spi.generator.InterceptorDefinitionGenerator;
+import org.fabric3.spi.model.instance.LogicalBinding;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 import org.w3c.dom.Element;
-
-import org.fabric3.scdl.Operation;
-import org.fabric3.spi.Constants;
-import org.fabric3.spi.generator.GeneratorContext;
-import org.fabric3.spi.generator.GeneratorRegistry;
-import org.fabric3.spi.generator.InterceptorDefinitionGenerator;
-import org.fabric3.spi.model.instance.LogicalBinding;
 
 /**
  * Interceptor definition generator for simple policy set extensions.
@@ -57,7 +55,6 @@ public class SimpleInterceptorDefinitionGenerator implements InterceptorDefiniti
     }
 
     public SimpleInterceptorDefinition generate(Element policySetDefinition, 
-                                                GeneratorContext context,
                                                 Operation<?> operation,
                                                 LogicalBinding<?> logicalBinding) {
 

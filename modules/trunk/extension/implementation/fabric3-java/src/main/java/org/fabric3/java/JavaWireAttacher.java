@@ -133,7 +133,8 @@ public class JavaWireAttacher extends PojoWireAttacher implements SourceWireAtta
         URI targetName = UriHelper.getDefragmentedName(targetDefinition.getUri());
         Component component = manager.getComponent(targetName);
         assert component instanceof JavaComponent;
-        JavaComponent<?> target = (JavaComponent) component;
+        
+        JavaComponent<?> target = (JavaComponent<?>) component;
 
         ScopeContainer<?> scopeContainer = target.getScopeContainer();
         Class<?> implementationClass = target.getImplementationClass();

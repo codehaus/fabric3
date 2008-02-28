@@ -22,16 +22,12 @@ import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Reference;
-
 import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.ComponentType;
 import org.fabric3.scdl.ReferenceDefinition;
 import org.fabric3.scdl.ServiceContract;
 import org.fabric3.spi.generator.ComponentGenerator;
 import org.fabric3.spi.generator.GenerationException;
-import org.fabric3.spi.generator.GeneratorContext;
 import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
@@ -41,6 +37,8 @@ import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 import org.fabric3.spi.policy.Policy;
+import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Reference;
 
 /**
  * @version $Rev$ $Date$
@@ -52,8 +50,7 @@ public class WebappComponentGenerator implements ComponentGenerator<LogicalCompo
         registry.register(WebappImplementation.class, this);
     }
 
-    public PhysicalComponentDefinition generate(LogicalComponent<WebappImplementation> component,
-                                                GeneratorContext context) {
+    public PhysicalComponentDefinition generate(LogicalComponent<WebappImplementation> component) {
         ComponentDefinition<WebappImplementation> definition = component.getDefinition();
         ComponentType componentType = definition.getImplementation().getComponentType();
 
@@ -77,8 +74,7 @@ public class WebappComponentGenerator implements ComponentGenerator<LogicalCompo
 
     public WebappWireSourceDefinition generateWireSource(LogicalComponent<WebappImplementation> source,
                                                          LogicalReference reference,
-                                                         Policy policy,
-                                                         GeneratorContext context) throws GenerationException {
+                                                         Policy policy) throws GenerationException {
 
         WebappWireSourceDefinition sourceDefinition = new WebappWireSourceDefinition();
         sourceDefinition.setUri(reference.getUri());
@@ -87,22 +83,19 @@ public class WebappComponentGenerator implements ComponentGenerator<LogicalCompo
 
     public PhysicalWireSourceDefinition generateCallbackWireSource(LogicalComponent<WebappImplementation> source,
                                                                    ServiceContract<?> serviceContract,
-                                                                   Policy policy,
-                                                                   GeneratorContext context) throws GenerationException {
+                                                                   Policy policy) throws GenerationException {
         throw new UnsupportedOperationException();
     }
 
     public PhysicalWireTargetDefinition generateWireTarget(LogicalService service,
                                                            LogicalComponent<WebappImplementation> arg1,
-                                                           Policy policy,
-                                                           GeneratorContext context) throws GenerationException {
+                                                           Policy policy) throws GenerationException {
         // TODO Auto-generated method stub
         return null;
     }
 
     public PhysicalWireSourceDefinition generateResourceWireSource(LogicalComponent<WebappImplementation> source,
-                                                                   LogicalResource<?> resource,
-                                                                   GeneratorContext context) throws GenerationException {
+                                                                   LogicalResource<?> resource) throws GenerationException {
         // TODO Auto-generated method stub
         return null;
     }

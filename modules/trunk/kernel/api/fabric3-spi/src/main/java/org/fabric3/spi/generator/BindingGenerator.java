@@ -42,10 +42,7 @@ public interface BindingGenerator<PWSD extends PhysicalWireSourceDefinition, PWT
      * @return Physical wire source definition.
      * @throws GenerationException
      */
-    PWSD generateWireSource(LogicalBinding<BD> binding, 
-                            Policy policy,
-                            GeneratorContext context,
-                            ServiceDefinition serviceDefinition) throws GenerationException;
+    PWSD generateWireSource(LogicalBinding<BD> binding, Policy policy, ServiceDefinition serviceDefinition) throws GenerationException;
 
     /**
      * Generates a physical wire target definition from a logical binding.
@@ -56,9 +53,6 @@ public interface BindingGenerator<PWSD extends PhysicalWireSourceDefinition, PWT
      * @return Physical wire target definition.
      * @throws GenerationException
      */
-    PWTD generateWireTarget(LogicalBinding<BD> binding, 
-                            Policy policy,
-                            GeneratorContext context,
-                            ReferenceDefinition referenceDefinition) throws GenerationException;
+    PWTD generateWireTarget(LogicalBinding<BD> binding, Policy policy, ReferenceDefinition referenceDefinition) throws GenerationException;
 
 }

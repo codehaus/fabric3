@@ -34,7 +34,7 @@ public class JavaPhysicalComponentGeneratorRegistrationTestCase extends TestCase
         registry.register(EasyMock.isA(Class.class),
                           EasyMock.isA(JavaComponentGenerator.class));
         EasyMock.replay(registry);
-        new JavaComponentGenerator(registry, null, null);
+        new JavaComponentGenerator(registry, null);
         EasyMock.verify(registry);
     }
 

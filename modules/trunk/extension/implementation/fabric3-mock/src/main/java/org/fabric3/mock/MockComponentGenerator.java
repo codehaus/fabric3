@@ -19,10 +19,8 @@ package org.fabric3.mock;
 import java.net.URI;
 
 import org.fabric3.scdl.ServiceContract;
-import org.fabric3.spi.generator.ClassLoaderGenerator;
 import org.fabric3.spi.generator.ComponentGenerator;
 import org.fabric3.spi.generator.GenerationException;
-import org.fabric3.spi.generator.GeneratorContext;
 import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
@@ -41,7 +39,6 @@ import org.osoa.sca.annotations.Reference;
 public class MockComponentGenerator implements ComponentGenerator<LogicalComponent<ImplementationMock>> {
 
     private final GeneratorRegistry registry;
-    private final ClassLoaderGenerator classLoaderGenerator;
 
     /**
      * Initializes the generator registry.
@@ -49,10 +46,8 @@ public class MockComponentGenerator implements ComponentGenerator<LogicalCompone
      * @param registry             Generator registry.
      * @param classLoaderGenerator the classloader generator
      */
-    public MockComponentGenerator(@Reference GeneratorRegistry registry,
-                                  @Reference ClassLoaderGenerator classLoaderGenerator) {
+    public MockComponentGenerator(@Reference GeneratorRegistry registry) {
         this.registry = registry;
-        this.classLoaderGenerator = classLoaderGenerator;
     }
 
     /**
@@ -66,8 +61,7 @@ public class MockComponentGenerator implements ComponentGenerator<LogicalCompone
     /**
      * Generates the component definition.
      */
-    public MockComponentDefinition generate(LogicalComponent<ImplementationMock> component,
-                                            GeneratorContext context) throws GenerationException {
+    public MockComponentDefinition generate(LogicalComponent<ImplementationMock> component) throws GenerationException {
 
         MockComponentDefinition componentDefinition = new MockComponentDefinition();
 
@@ -79,7 +73,7 @@ public class MockComponentGenerator implements ComponentGenerator<LogicalCompone
         componentDefinition.setComponentId(component.getUri());
         componentDefinition.setScope(componentType.getImplementationScope());
 
-        URI classLoaderId = classLoaderGenerator.generate(component, context);
+        URI classLoaderId = component.getParent().getUri();
         componentDefinition.setClassLoaderId(classLoaderId);
 
         return componentDefinition;
@@ -91,12 +85,11 @@ public class MockComponentGenerator implements ComponentGenerator<LogicalCompone
      */
     public MockWireTargetDefinition generateWireTarget(LogicalService service,
                                                        LogicalComponent<ImplementationMock> component,
-                                                       Policy policy,
-                                                       GeneratorContext context) throws GenerationException {
+                                                       Policy policy) throws GenerationException {
 
         MockWireTargetDefinition definition = new MockWireTargetDefinition();
         definition.setUri(service.getUri());
-        URI classLoaderId = classLoaderGenerator.generate(component, context);
+        URI classLoaderId = component.getParent().getUri();
         definition.setClassLoaderId(classLoaderId);
         ServiceContract<?> serviceContract = service.getDefinition().getServiceContract();
 
@@ -107,22 +100,19 @@ public class MockComponentGenerator implements ComponentGenerator<LogicalCompone
     }
 
     public PhysicalWireSourceDefinition generateResourceWireSource(LogicalComponent<ImplementationMock> component,
-                                                                   LogicalResource<?> resource,
-                                                                   GeneratorContext generatorContext) {
+                                                                   LogicalResource<?> resource) {
         throw new UnsupportedOperationException("Mock objects cannot have resources");
     }
 
     public PhysicalWireSourceDefinition generateWireSource(LogicalComponent<ImplementationMock> component,
                                                            LogicalReference reference,
-                                                           Policy policy,
-                                                           GeneratorContext generatorContext) {
+                                                           Policy policy) {
         throw new UnsupportedOperationException("Mock objects cannot be source of a wire");
     }
 
     public PhysicalWireSourceDefinition generateCallbackWireSource(LogicalComponent<ImplementationMock> source,
                                                                    ServiceContract<?> serviceContract,
-                                                                   Policy policy,
-                                                                   GeneratorContext context) throws GenerationException {
+                                                                   Policy policy) throws GenerationException {
         throw new UnsupportedOperationException();
     }
 

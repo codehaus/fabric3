@@ -65,11 +65,13 @@ public class ClassLoaderBuilder implements ResourceContainerBuilder<PhysicalClas
     }
 
     public void build(PhysicalClassLoaderDefinition definition) throws ClassLoaderBuilderException {
-        if (definition.isUpdate()) {
+        
+        if (classLoaderRegistry.getClassLoader(definition.getUri()) != null) {
             updateClassLoader(definition);
         } else {
             createClassLoader(definition);
         }
+        
     }
 
     /**
@@ -79,19 +81,26 @@ public class ClassLoaderBuilder implements ResourceContainerBuilder<PhysicalClas
      * @throws ClassLoaderBuilderException if an error occurs creating the classloader
      */
     private void createClassLoader(PhysicalClassLoaderDefinition definition) throws ClassLoaderBuilderException {
+        
         URI name = definition.getUri();
         URL[] classpath = resolveClasspath(definition.getResourceUrls());
+        
         // build the classloader using the locally cached resources
         CompositeClassLoader loader = new CompositeClassLoader(name, classpath, null);
         for (URI uri : definition.getParentClassLoaders()) {
             ClassLoader parent = classLoaderRegistry.getClassLoader(uri);
-            if (parent == null) {
+            /*if (parent == null) {
                 String identifier = uri.toString();
                 throw new ClassLoaderBuilderException("Parent classloader not found [" + identifier + "]", identifier);
+            }*/
+            // TODO fix this
+            if (parent != null) {
+                loader.addParent(parent);
             }
-            loader.addParent(parent);
         }
+        
         classLoaderRegistry.register(name, loader);
+        
     }
 
     /**
@@ -103,13 +112,17 @@ public class ClassLoaderBuilder implements ResourceContainerBuilder<PhysicalClas
      * @throws ClassLoaderBuilderException if an error occurs updating the classloader
      */
     private void updateClassLoader(PhysicalClassLoaderDefinition definition) throws ClassLoaderBuilderException {
+        
         ClassLoader cl = classLoaderRegistry.getClassLoader(definition.getUri());
         assert cl instanceof CompositeClassLoader;
         CompositeClassLoader loader = (CompositeClassLoader) cl;
+        
         List<URL> classpath = new ArrayList<URL>();
         Set<URL> urls = definition.getResourceUrls();
         URL[] loaderUrls = loader.getURLs();
+        
         for (URL url : urls) {
+            
             boolean found = false;
             for (URL loaderUrl : loaderUrls) {
                 if (loaderUrl.equals(url)) {
@@ -130,15 +143,18 @@ public class ClassLoaderBuilder implements ResourceContainerBuilder<PhysicalClas
                 }
             }
         }
+        
         for (URL url : classpath) {
             loader.addURL(url);
         }
+        
         for (URI uri : definition.getParentClassLoaders()) {
             ClassLoader parent = classLoaderRegistry.getClassLoader(uri);
             if (!loader.getParents().contains(parent)) {
                 loader.addParent(parent);
             }
         }
+        
     }
 
     /**
@@ -149,7 +165,9 @@ public class ClassLoaderBuilder implements ResourceContainerBuilder<PhysicalClas
      * @throws ClassLoaderBuilderException if an error occurs resolving a url
      */
     private URL[] resolveClasspath(Set<URL> urls) throws ClassLoaderBuilderException {
+        
         List<URL> classpath = new ArrayList<URL>();
+        
         for (URL url : urls) {
             try {
                 // resolve the remote artifact URLs and cache them locally
@@ -162,7 +180,9 @@ public class ClassLoaderBuilder implements ResourceContainerBuilder<PhysicalClas
                 throw new ClassLoaderBuilderException("Error processing", url.toString(), e);
             }
         }
+        
         return classpath.toArray(new URL[classpath.size()]);
+        
     }
 
 }

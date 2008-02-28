@@ -28,7 +28,8 @@ import java.util.List;
  * @version $Rev$ $Date$
  */
 public abstract class ModelObject {
-    private List<ResourceDescription> resources;
+    
+    private List<ResourceDescription<?>> resources;
 
     protected ModelObject() {
     }
@@ -38,7 +39,7 @@ public abstract class ModelObject {
      *
      * @return the collection of resource descriptions for the type
      */
-    public List<ResourceDescription> getResourceDescriptions() {
+    public List<ResourceDescription<?>> getResourceDescriptions() {
         if (resources == null) {
             return Collections.emptyList();
         }
@@ -51,9 +52,9 @@ public abstract class ModelObject {
      *
      * @param description the resource description to add
      */
-    public void addResourceDescription(ResourceDescription description) {
+    public void addResourceDescription(ResourceDescription<?> description) {
         if (resources == null) {
-            resources = new ArrayList<ResourceDescription>();
+            resources = new ArrayList<ResourceDescription<?>>();
         }
         resources.add(description);
     }

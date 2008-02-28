@@ -17,22 +17,24 @@
 package org.fabric3.fabric.command;
 
 import java.net.URI;
+
 import javax.xml.namespace.QName;
 
 import org.fabric3.spi.Constants;
-import org.fabric3.spi.command.Command;
+import org.fabric3.spi.command.AbstractCommand;
 
 /**
  * Starts a context with the composite container
  *
  * @version $Rev$ $Date$
  */
-public class StartCompositeContextCommand implements Command {
+public class StartCompositeContextCommand extends AbstractCommand {
     public static final QName QNAME = new QName(Constants.FABRIC3_NS, "startCompositeContextCommand");
 
     private final URI groupId;
 
-    public StartCompositeContextCommand(URI groupId) {
+    public StartCompositeContextCommand(URI groupId, int order) {
+        super(order);
         this.groupId = groupId;
     }
 

@@ -18,26 +18,12 @@
  */
 package org.fabric3.fabric.assembly;
 
-import java.util.Collection;
-import java.util.Map;
-import java.net.URI;
-
 import org.fabric3.fabric.assembly.allocator.Allocator;
-import org.fabric3.fabric.assembly.allocator.AllocationException;
-import org.fabric3.fabric.assembly.resolver.WireResolver;
-import org.fabric3.spi.runtime.assembly.LogicalComponentManager;
 import org.fabric3.fabric.model.logical.LogicalModelGenerator;
 import org.fabric3.fabric.model.physical.PhysicalModelGenerator;
-import org.fabric3.fabric.model.physical.PhysicalWireGenerator;
-import org.fabric3.fabric.services.routing.RoutingException;
-import org.fabric3.fabric.services.routing.RoutingService;
-import org.fabric3.spi.services.contribution.MetaDataStore;
 import org.fabric3.spi.assembly.AssemblyException;
-import org.fabric3.spi.assembly.ActivateException;
-import org.fabric3.spi.model.instance.LogicalComponent;
-import org.fabric3.spi.generator.GenerationException;
-import org.fabric3.spi.generator.GeneratorContext;
-
+import org.fabric3.spi.runtime.assembly.LogicalComponentManager;
+import org.fabric3.spi.services.contribution.MetaDataStore;
 import org.osoa.sca.annotations.Reference;
 import org.osoa.sca.annotations.Service;
 
@@ -50,38 +36,14 @@ import org.osoa.sca.annotations.Service;
 public class DistributedAssemblyImpl extends AbstractAssembly implements DistributedAssembly {
     
     public DistributedAssemblyImpl(@Reference Allocator allocator,
-                                   @Reference RoutingService routingService,
                                    @Reference(name = "store") MetaDataStore metaDataStore,
                                    @Reference PhysicalModelGenerator physicalModelGenerator,
                                    @Reference LogicalModelGenerator logicalModelGenerator,
-                                   @Reference(name="logicalComponentManager") LogicalComponentManager logicalComponentManager,
-                                   @Reference PhysicalWireGenerator wireGenerator) {
-        super(allocator, routingService, metaDataStore, physicalModelGenerator, logicalModelGenerator,
-              logicalComponentManager, wireGenerator);
+                                   @Reference(name="logicalComponentManager") LogicalComponentManager logicalComponentManager) {
+        super(allocator, metaDataStore, physicalModelGenerator, logicalModelGenerator, logicalComponentManager);
     }
 
     public void initialize() throws AssemblyException {
         logicalComponentManager.initialize();
-        Collection<LogicalComponent<?>> components = logicalComponentManager.getComponents();
-
-        try {
-            for (LogicalComponent<?> component : components) {
-                allocator.allocate(component, false);
-            }
-        } catch (AllocationException e) {
-            throw new ActivateException(e);
-        }
-
-        try {
-            // generate and provision any new components and new wires
-            Map<URI, GeneratorContext> contexts = physicalModelGenerator.generate(components);
-            physicalModelGenerator.provision(contexts);
-        } catch (GenerationException e) {
-            throw new ActivateException(e);
-        } catch (RoutingException e) {
-            throw new ActivateException(e);
-        }
-        // TODO end temporary recovery code
-
     }
 }

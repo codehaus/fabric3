@@ -20,12 +20,10 @@ package org.fabric3.binding.ejb.model.physical;
 
 import org.fabric3.binding.ejb.model.logical.EjbBindingDefinition;
 import org.fabric3.scdl.ReferenceDefinition;
-import org.fabric3.scdl.ServiceDefinition;
 import org.fabric3.scdl.ServiceContract;
+import org.fabric3.scdl.ServiceDefinition;
 import org.fabric3.spi.generator.BindingGenerator;
-import org.fabric3.spi.generator.ClassLoaderGenerator;
 import org.fabric3.spi.generator.GenerationException;
-import org.fabric3.spi.generator.GeneratorContext;
 import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.policy.Policy;
@@ -38,20 +36,15 @@ import org.osoa.sca.annotations.Reference;
  * @version $Revision: 1 $ $Date: 2007-05-14 10:40:37 -0700 (Mon, 14 May 2007) $
  */
 @EagerInit
-public class EjbBindingGenerator implements
-    BindingGenerator<EjbWireSourceDefinition, EjbWireTargetDefinition, EjbBindingDefinition> {
-
-    private final ClassLoaderGenerator classLoaderGenerator;
+public class EjbBindingGenerator implements BindingGenerator<EjbWireSourceDefinition, EjbWireTargetDefinition, EjbBindingDefinition> {
 
     /**
      * Injects the generator registry.
      * 
      * @param generatorRegistry Generator registry.
      */
-    public EjbBindingGenerator(@Reference GeneratorRegistry generatorRegistry,
-                               @Reference ClassLoaderGenerator classLoaderGenerator) {
+    public EjbBindingGenerator(@Reference GeneratorRegistry generatorRegistry) {
         generatorRegistry.register(EjbBindingDefinition.class, this);
-        this.classLoaderGenerator = classLoaderGenerator;
     }
 
     /**
@@ -63,7 +56,6 @@ public class EjbBindingGenerator implements
      */
     public EjbWireSourceDefinition generateWireSource(LogicalBinding<EjbBindingDefinition> logicalBinding,
                                                       Policy policy,
-                                                      GeneratorContext generatorContext,
                                                       ServiceDefinition serviceDefinition)
         throws GenerationException {
         
@@ -74,7 +66,7 @@ public class EjbBindingGenerator implements
         ewsd.setBindingDefinition(logicalBinding.getBinding());
         ServiceContract<?> contract = serviceDefinition.getServiceContract();
         ewsd.setInterfaceName(contract.getQualifiedInterfaceName());
-        ewsd.setClassLoaderURI(classLoaderGenerator.generate(logicalBinding, generatorContext));
+        ewsd.setClassLoaderURI(logicalBinding.getParent().getParent().getParent().getUri());
 
         return ewsd;
     }
@@ -88,7 +80,6 @@ public class EjbBindingGenerator implements
      */
     public EjbWireTargetDefinition generateWireTarget(LogicalBinding<EjbBindingDefinition> logicalBinding,
                                                       Policy policy,
-                                                      GeneratorContext generatorContext,
                                                       ReferenceDefinition referenceDefinition)
         throws GenerationException {
         
@@ -99,7 +90,7 @@ public class EjbBindingGenerator implements
         ewtd.setBindingDefinition(logicalBinding.getBinding());
         ServiceContract<?> contract = referenceDefinition.getServiceContract();
         ewtd.setInterfaceName(contract.getQualifiedInterfaceName());
-        ewtd.setClassLoaderURI(classLoaderGenerator.generate(logicalBinding, generatorContext));
+        ewtd.setClassLoaderURI(logicalBinding.getParent().getParent().getParent().getUri());
 
         return ewtd;
     }

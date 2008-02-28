@@ -37,6 +37,6 @@ public interface ResourceWireGenerator<PWTD extends PhysicalWireTargetDefinition
      * @return Source wire definition.
      * @throws GenerationException if there was a problem generating the wire
      */
-    PWTD generateWireTargetDefinition(LogicalResource<RD> logicalResource, GeneratorContext context) throws GenerationException;
+    PWTD generateWireTargetDefinition(LogicalResource<RD> logicalResource) throws GenerationException;
 
 }

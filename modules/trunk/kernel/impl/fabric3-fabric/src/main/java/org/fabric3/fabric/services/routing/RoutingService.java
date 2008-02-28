@@ -19,9 +19,10 @@
 package org.fabric3.fabric.services.routing;
 
 import java.net.URI;
+import java.util.Map;
 
-import org.fabric3.spi.command.CommandSet;
-import org.fabric3.spi.model.physical.PhysicalChangeSet;
+import org.fabric3.spi.command.Command;
+import org.fabric3.spi.generator.CommandMap;
 
 /**
  * Implementations route physical change sets to a runtime node.
@@ -31,21 +32,12 @@ import org.fabric3.spi.model.physical.PhysicalChangeSet;
 public interface RoutingService {
 
     /**
-     * Routes a physical change set to a runtime node
-     *
-     * @param runtimeId the runtime node id
-     * @param set       the physical change set
-     * @throws RoutingException if an exception occurs during routing
-     */
-    void route(URI runtimeId, PhysicalChangeSet set) throws RoutingException;
-
-    /**
      * Routes a command set to a runtime node
      *
      * @param runtimeId the runtime node id
      * @param set       the command set
      * @throws RoutingException if an exception occurs during routing
      */
-    void route(URI runtimeId, CommandSet set) throws RoutingException;
+    void route(CommandMap commandMap) throws RoutingException;
 
 }

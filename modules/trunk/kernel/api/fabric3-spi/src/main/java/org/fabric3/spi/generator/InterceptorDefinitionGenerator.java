@@ -40,7 +40,6 @@ public interface InterceptorDefinitionGenerator {
      * @return Physical interceptor definition.
      */
     PhysicalInterceptorDefinition generate(Element policyDefinition, 
-                                           GeneratorContext generatorContext, 
                                            Operation<?> operation,
                                            LogicalBinding<?> logicalBinding) throws GenerationException;
 

@@ -20,19 +20,17 @@ package org.fabric3.tx.interceptor;
 
 import javax.xml.namespace.QName;
 
+import org.fabric3.scdl.Operation;
+import org.fabric3.spi.Constants;
+import org.fabric3.spi.generator.GenerationException;
+import org.fabric3.spi.generator.GeneratorRegistry;
+import org.fabric3.spi.generator.InterceptorDefinitionGenerator;
+import org.fabric3.spi.model.instance.LogicalBinding;
+import org.fabric3.spi.model.physical.PhysicalInterceptorDefinition;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 import org.w3c.dom.Element;
-
-import org.fabric3.spi.Constants;
-import org.fabric3.spi.model.physical.PhysicalInterceptorDefinition;
-import org.fabric3.spi.model.instance.LogicalBinding;
-import org.fabric3.spi.generator.GeneratorContext;
-import org.fabric3.spi.generator.GeneratorRegistry;
-import org.fabric3.spi.generator.InterceptorDefinitionGenerator;
-import org.fabric3.spi.generator.GenerationException;
-import org.fabric3.scdl.Operation;
 
 /**
  * Interceptor definition generator for suspend transaction policy extensions.
@@ -57,7 +55,6 @@ public class TxInterceptorDefinitionGenerator implements InterceptorDefinitionGe
     }
 
     public PhysicalInterceptorDefinition generate(Element policyDefinition,
-                                                  GeneratorContext generatorContext,
                                                   Operation<?> operation,
                                                   LogicalBinding<?> logicalBinding) throws GenerationException {
         String action = policyDefinition.getAttribute("action");

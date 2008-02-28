@@ -16,6 +16,9 @@
  */
 package org.fabric3.spi.generator;
 
+import java.util.Set;
+
+import org.fabric3.spi.command.Command;
 import org.fabric3.spi.model.instance.LogicalComponent;
 
 /**
@@ -24,17 +27,7 @@ import org.fabric3.spi.model.instance.LogicalComponent;
  * @version $Rev$ $Date$
  */
 public interface CommandGenerator {
-
-    /**
-     * Generates an {@link org.fabric3.spi.command.CommandSet} based on a {@link
-     * org.fabric3.scdl.ComponentDefinition}. The resulting CommandSet is added to the PhysicalChangeSet
-     * associated with the current GeneratorContext.
-     *
-     * @param component the logical component to evaluate
-     * @param context   the current generator context, which contains the CommandSet to be marshalled
-     * @throws GenerationException if an error occurs during the generation process
-     */
-    void generate(LogicalComponent<?> component, GeneratorContext context)
-            throws GenerationException;
+    
+    Set<Command> generate(LogicalComponent<?> logicalComponent) throws GenerationException;
 
 }

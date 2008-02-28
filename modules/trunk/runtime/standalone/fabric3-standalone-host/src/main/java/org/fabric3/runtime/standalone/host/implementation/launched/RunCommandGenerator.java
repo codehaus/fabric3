@@ -1,17 +1,18 @@
 package org.fabric3.runtime.standalone.host.implementation.launched;
 
-import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Init;
-import org.osoa.sca.annotations.Reference;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
-import org.fabric3.spi.command.CommandSet;
+import org.fabric3.scdl.Implementation;
+import org.fabric3.spi.command.Command;
 import org.fabric3.spi.generator.CommandGenerator;
 import org.fabric3.spi.generator.GenerationException;
-import org.fabric3.spi.generator.GeneratorContext;
 import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
-import org.fabric3.scdl.Implementation;
+import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Init;
+import org.osoa.sca.annotations.Reference;
 
 /**
  * @version $Rev$ $Date$
@@ -29,13 +30,12 @@ public class RunCommandGenerator implements CommandGenerator {
         registry.register(this);
     }
 
-    public void generate(LogicalComponent<?> component, GeneratorContext context) throws GenerationException {
+    public Set<Command> generate(LogicalComponent<?> component) throws GenerationException {
+        
+        Set<Command> commandSet = new LinkedHashSet<Command>();
         RunCommand command = generateCommand(component, null);
-        if (command != null) {
-            CommandSet set = context.getCommandSet();
-            assert set != null;
-            set.add(CommandSet.Phase.LAST, command);
-        }
+        commandSet.add(command);
+        return commandSet;
     }
 
     /**
@@ -57,7 +57,7 @@ public class RunCommandGenerator implements CommandGenerator {
         
         if (isLaunched(component)) {
             if (command == null) {
-                command = new RunCommand();
+                command = new RunCommand(0);
             }
             command.addComponentUri(component.getUri());
         }

@@ -16,13 +16,11 @@
  */
 package org.fabric3.fabric.model.physical;
 
-import java.net.URI;
 import java.util.Collection;
-import java.util.Map;
 
 import org.fabric3.fabric.services.routing.RoutingException;
+import org.fabric3.spi.generator.CommandMap;
 import org.fabric3.spi.generator.GenerationException;
-import org.fabric3.spi.generator.GeneratorContext;
 import org.fabric3.spi.model.instance.LogicalComponent;
 
 /**
@@ -45,7 +43,7 @@ public interface PhysicalModelGenerator {
      * @return Physical changeset for each allocated runtime.
      * @throws GenerationException If unable to generate changeset.
      */
-    Map<URI, GeneratorContext> generate(Collection<LogicalComponent<?>> components) throws GenerationException;
+    CommandMap generate(Collection<LogicalComponent<?>> components) throws GenerationException;
 
     /**
      * Provision the physical changeset to the participant nodes.
@@ -53,6 +51,6 @@ public interface PhysicalModelGenerator {
      * @param contexts Physical changesets to be provisioned.
      * @throws RoutingException If unable to provision changesets.
      */
-    void provision(Map<URI, GeneratorContext> contexts) throws RoutingException;
+    void provision(CommandMap commandMap) throws RoutingException;
 
 }

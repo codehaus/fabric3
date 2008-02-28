@@ -24,9 +24,7 @@ import org.fabric3.binding.burlap.model.logical.BurlapBindingDefinition;
 import org.fabric3.scdl.ReferenceDefinition;
 import org.fabric3.scdl.ServiceDefinition;
 import org.fabric3.spi.generator.BindingGenerator;
-import org.fabric3.spi.generator.ClassLoaderGenerator;
 import org.fabric3.spi.generator.GenerationException;
-import org.fabric3.spi.generator.GeneratorContext;
 import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.policy.Policy;
@@ -41,12 +39,11 @@ import org.osoa.sca.annotations.Reference;
  */
 @EagerInit
 public class BurlapBindingGenerator implements BindingGenerator<BurlapWireSourceDefinition, BurlapWireTargetDefinition, BurlapBindingDefinition> {
-    private ClassLoaderGenerator classLoaderGenerator;
+
     private GeneratorRegistry generatorRegistry;
 
-    public BurlapBindingGenerator(@Reference ClassLoaderGenerator classLoaderGenerator,
-                                  @Reference GeneratorRegistry generatorRegistry) {
-        this.classLoaderGenerator = classLoaderGenerator;
+    public BurlapBindingGenerator(@Reference GeneratorRegistry generatorRegistry) {
+
         this.generatorRegistry = generatorRegistry;
     }
 
@@ -57,11 +54,10 @@ public class BurlapBindingGenerator implements BindingGenerator<BurlapWireSource
 
     public BurlapWireSourceDefinition generateWireSource(LogicalBinding<BurlapBindingDefinition> logicalBinding,
                                                          Policy policy,
-                                                         GeneratorContext context,
                                                          ServiceDefinition serviceDefinition)
             throws GenerationException {
         // TODO Pass the contract information to physical
-        URI id = classLoaderGenerator.generate(logicalBinding, context);
+        URI id = logicalBinding.getParent().getParent().getParent().getUri();
         BurlapWireSourceDefinition hwsd = new BurlapWireSourceDefinition(id);
         hwsd.setUri(logicalBinding.getBinding().getTargetUri());
         return hwsd;
@@ -69,12 +65,11 @@ public class BurlapBindingGenerator implements BindingGenerator<BurlapWireSource
 
     public BurlapWireTargetDefinition generateWireTarget(LogicalBinding<BurlapBindingDefinition> logicalBinding,
                                                          Policy policy,
-                                                         GeneratorContext context,
                                                          ReferenceDefinition referenceDefinition)
             throws GenerationException {
 
         // TODO Pass the contract information to the physical
-        URI id = classLoaderGenerator.generate(logicalBinding, context);
+        URI id = logicalBinding.getParent().getParent().getParent().getUri();
         BurlapWireTargetDefinition hwtd = new BurlapWireTargetDefinition(id);
         hwtd.setUri(logicalBinding.getBinding().getTargetUri());
         return hwtd;

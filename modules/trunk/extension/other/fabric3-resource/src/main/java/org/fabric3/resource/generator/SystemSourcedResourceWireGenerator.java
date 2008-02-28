@@ -20,17 +20,15 @@ package org.fabric3.resource.generator;
 
 import java.net.URI;
 
-import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Init;
-import org.osoa.sca.annotations.Reference;
-
 import org.fabric3.resource.model.SystemSourcedResource;
 import org.fabric3.resource.model.SystemSourcedWireTargetDefinition;
 import org.fabric3.spi.generator.GenerationException;
-import org.fabric3.spi.generator.GeneratorContext;
 import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.generator.ResourceWireGenerator;
 import org.fabric3.spi.model.instance.LogicalResource;
+import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Init;
+import org.osoa.sca.annotations.Reference;
 
 /**
  * @version $Revision$ $Date$
@@ -59,8 +57,7 @@ public class SystemSourcedResourceWireGenerator implements ResourceWireGenerator
         registry.register(SystemSourcedResource.class, this);
     }
 
-    public SystemSourcedWireTargetDefinition generateWireTargetDefinition(LogicalResource<SystemSourcedResource> logicalResource,
-                                                                          GeneratorContext context)
+    public SystemSourcedWireTargetDefinition generateWireTargetDefinition(LogicalResource<SystemSourcedResource> logicalResource)
             throws GenerationException {
 
         SystemSourcedResource resourceDefinition = logicalResource.getResourceDefinition();

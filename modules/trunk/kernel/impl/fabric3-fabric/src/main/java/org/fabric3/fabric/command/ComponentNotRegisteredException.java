@@ -21,6 +21,11 @@ package org.fabric3.fabric.command;
  */
 public class ComponentNotRegisteredException extends InitializeException{
 
+    /**
+     * 
+     */
+    private static final long serialVersionUID = 3517203494921758959L;
+
     public ComponentNotRegisteredException(String message, String identifier) {
         super(message, identifier);
     }

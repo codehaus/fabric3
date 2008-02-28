@@ -39,18 +39,18 @@ import org.fabric3.spi.component.CallFrame;
  * @version $Rev$ $Date$
  */
 @EagerInit
-public class StartCompositeContextExecutor implements CommandExecutor<StartCompositeContextCommand> {
+public class StartCompositeContextCommandExecutor implements CommandExecutor<StartCompositeContextCommand> {
     private ScopeContainer<URI> container;
     private CommandExecutorRegistry commandExecutorRegistry;
 
     @Constructor
-    public StartCompositeContextExecutor(@Reference CommandExecutorRegistry commandExecutorRegistry,
-                                         @Reference ScopeRegistry scopeRegistry) {
+    public StartCompositeContextCommandExecutor(@Reference CommandExecutorRegistry commandExecutorRegistry,
+                                                @Reference ScopeRegistry scopeRegistry) {
         this.commandExecutorRegistry = commandExecutorRegistry;
         this.container = scopeRegistry.getScopeContainer(Scope.COMPOSITE);
     }
 
-    public StartCompositeContextExecutor(ScopeRegistry scopeRegistry) {
+    public StartCompositeContextCommandExecutor(ScopeRegistry scopeRegistry) {
         this.container = scopeRegistry.getScopeContainer(Scope.COMPOSITE);
     }
 
@@ -62,7 +62,7 @@ public class StartCompositeContextExecutor implements CommandExecutor<StartCompo
     public void execute(StartCompositeContextCommand command) throws ExecutionException {
         WorkContext workContext = new WorkContext();
         URI id = command.getGroupId();
-        CallFrame frame = new CallFrame();
+        CallFrame frame = new CallFrame(id);
         workContext.addCallFrame(frame);
         try {
             container.startContext(workContext, id);

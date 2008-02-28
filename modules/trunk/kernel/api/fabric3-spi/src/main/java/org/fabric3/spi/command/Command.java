@@ -21,5 +21,7 @@ package org.fabric3.spi.command;
  *
  * @version $Rev$ $Date$
  */
-public interface Command {
+public interface Command extends Comparable<Command> {
+    
+    int getOrder();
 }

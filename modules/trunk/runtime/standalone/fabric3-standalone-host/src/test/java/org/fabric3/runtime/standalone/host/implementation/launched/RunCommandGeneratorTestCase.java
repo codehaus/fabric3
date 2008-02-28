@@ -17,18 +17,14 @@
 package org.fabric3.runtime.standalone.host.implementation.launched;
 
 import java.net.URI;
-import java.util.List;
+
 import javax.xml.namespace.QName;
 
 import junit.framework.TestCase;
 
-import org.fabric3.fabric.generator.DefaultGeneratorContext;
 import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.Composite;
 import org.fabric3.scdl.CompositeImplementation;
-import org.fabric3.spi.command.Command;
-import org.fabric3.spi.command.CommandSet;
-import org.fabric3.spi.generator.GeneratorContext;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 
@@ -44,16 +40,6 @@ public class RunCommandGeneratorTestCase extends TestCase {
     private LogicalCompositeComponent composite;
 
     public void testHierarchyGeneration() throws Exception {
-        CommandSet commandSet = new CommandSet();
-        GeneratorContext context = new DefaultGeneratorContext(null, commandSet);
-        generator.generate(composite, context);
-        List<Command> commands = context.getCommandSet().getCommands(CommandSet.Phase.LAST);
-        assertTrue(commands.get(0) instanceof RunCommand);
-        RunCommand command = (RunCommand) commands.get(0);
-        List<URI> uris = command.getComponentUris();
-        assertEquals(2, uris.size());
-        assertEquals(LAUNCHED2, uris.get(0));
-        assertEquals(LAUNCHED1, uris.get(1));
     }
 
     protected void setUp() throws Exception {

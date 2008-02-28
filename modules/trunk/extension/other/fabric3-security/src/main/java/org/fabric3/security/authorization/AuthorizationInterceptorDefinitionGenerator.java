@@ -4,7 +4,6 @@ import javax.xml.namespace.QName;
 
 import org.fabric3.scdl.Operation;
 import org.fabric3.spi.Constants;
-import org.fabric3.spi.generator.GeneratorContext;
 import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.generator.InterceptorDefinitionGenerator;
 import org.fabric3.spi.model.instance.LogicalBinding;
@@ -56,8 +55,7 @@ public class AuthorizationInterceptorDefinitionGenerator implements InterceptorD
      * @param logicalBinding Logical binding on the service or reference.
      * @return Physical interceptor definition.
      */
-    public AuthorizationInterceptorDefinition generate(Element policyDefinition, 
-                                                       GeneratorContext generatorContext,
+    public AuthorizationInterceptorDefinition generate(Element policyDefinition,
                                                        Operation<?> operation,
                                                        LogicalBinding<?> logicalBinding) {
         

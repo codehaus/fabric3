@@ -25,7 +25,6 @@ import org.fabric3.scdl.ServiceContract;
 import org.fabric3.spi.generator.ClassLoaderGenerator;
 import org.fabric3.spi.generator.ComponentGenerator;
 import org.fabric3.spi.generator.GenerationException;
-import org.fabric3.spi.generator.GeneratorContext;
 import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
@@ -44,19 +43,13 @@ import org.osoa.sca.annotations.Reference;
 @EagerInit
 public class GroovyComponentGenerator implements ComponentGenerator<LogicalComponent<GroovyImplementation>> {
     private final InstanceFactoryGenerationHelper helper;
-    private final ClassLoaderGenerator classLoaderGenerator;
 
-    public GroovyComponentGenerator(@Reference GeneratorRegistry registry,
-                                    @Reference ClassLoaderGenerator classLoaderGenerator,
-                                    @Reference InstanceFactoryGenerationHelper helper) {
-        this.classLoaderGenerator = classLoaderGenerator;
+    public GroovyComponentGenerator(@Reference GeneratorRegistry registry, @Reference InstanceFactoryGenerationHelper helper) {
         registry.register(GroovyImplementation.class, this);
         this.helper = helper;
     }
 
-    public PhysicalComponentDefinition generate(LogicalComponent<GroovyImplementation> component,
-                                                GeneratorContext context)
-            throws GenerationException {
+    public PhysicalComponentDefinition generate(LogicalComponent<GroovyImplementation> component) throws GenerationException {
 
         ComponentDefinition<GroovyImplementation> definition = component.getDefinition();
         GroovyImplementation implementation = definition.getImplementation();
@@ -81,7 +74,7 @@ public class GroovyComponentGenerator implements ComponentGenerator<LogicalCompo
         physical.setInstanceFactoryProviderDefinition(providerDefinition);
         helper.processPropertyValues(component, physical);
         // generate the classloader resource definition
-        URI classLoaderId = classLoaderGenerator.generate(component, context);
+        URI classLoaderId = component.getParent().getUri();
         physical.setClassLoaderId(classLoaderId);
         
         return physical;
@@ -89,8 +82,7 @@ public class GroovyComponentGenerator implements ComponentGenerator<LogicalCompo
 
     public PhysicalWireSourceDefinition generateWireSource(LogicalComponent<GroovyImplementation> source,
                                                            LogicalReference reference,
-                                                           Policy policy,
-                                                           GeneratorContext context)
+                                                           Policy policy)
             throws GenerationException {
         GroovyWireSourceDefinition wireDefinition = new GroovyWireSourceDefinition();
         wireDefinition.setUri(reference.getUri());
@@ -100,15 +92,13 @@ public class GroovyComponentGenerator implements ComponentGenerator<LogicalCompo
 
     public PhysicalWireSourceDefinition generateCallbackWireSource(LogicalComponent<GroovyImplementation> source,
                                                                    ServiceContract<?> serviceContract,
-                                                                   Policy policy,
-                                                                   GeneratorContext context) throws GenerationException {
+                                                                   Policy policy) throws GenerationException {
         throw new UnsupportedOperationException();
     }
 
     public PhysicalWireTargetDefinition generateWireTarget(LogicalService service,
                                                            LogicalComponent<GroovyImplementation> target, 
-                                                           Policy policy,
-                                                           GeneratorContext context)
+                                                           Policy policy)
             throws GenerationException {
         GroovyWireTargetDefinition wireDefinition = new GroovyWireTargetDefinition();
         URI uri;
@@ -123,8 +113,7 @@ public class GroovyComponentGenerator implements ComponentGenerator<LogicalCompo
     }
 
     public PhysicalWireSourceDefinition generateResourceWireSource(LogicalComponent<GroovyImplementation> source, 
-                                                                   LogicalResource<?> resource, 
-                                                                   GeneratorContext context) throws GenerationException {
+                                                                   LogicalResource<?> resource) throws GenerationException {
         GroovyWireSourceDefinition wireDefinition = new GroovyWireSourceDefinition();
         wireDefinition.setUri(resource.getUri());
         wireDefinition.setConversational(false);

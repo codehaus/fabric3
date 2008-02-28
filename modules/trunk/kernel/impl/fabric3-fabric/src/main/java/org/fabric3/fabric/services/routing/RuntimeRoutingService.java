@@ -18,18 +18,16 @@
  */
 package org.fabric3.fabric.services.routing;
 
-import java.net.URI;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Set;
 
-import org.osoa.sca.annotations.Reference;
-
-import org.fabric3.spi.deployer.Deployer;
-import org.fabric3.spi.builder.BuilderException;
 import org.fabric3.spi.command.Command;
 import org.fabric3.spi.command.CommandExecutorRegistry;
-import org.fabric3.spi.command.CommandSet;
 import org.fabric3.spi.command.ExecutionException;
-import org.fabric3.spi.runtime.component.RegistrationException;
-import org.fabric3.spi.model.physical.PhysicalChangeSet;
+import org.fabric3.spi.generator.CommandMap;
+import org.osoa.sca.annotations.Reference;
 
 /**
  * A routing service implementation that routes to the local runtime instance. For example, this service is used to
@@ -38,38 +36,27 @@ import org.fabric3.spi.model.physical.PhysicalChangeSet;
  * @version $Rev$ $Date$
  */
 public class RuntimeRoutingService implements RoutingService {
-    private final Deployer deployer;
+
     private final CommandExecutorRegistry registry;
 
-    public RuntimeRoutingService(@Reference Deployer deployer, @Reference CommandExecutorRegistry registry) {
-        this.deployer = deployer;
+    public RuntimeRoutingService(@Reference CommandExecutorRegistry registry) {
         this.registry = registry;
     }
 
-    public void route(URI runtimeId, PhysicalChangeSet set) throws RoutingException {
-        try {
-            deployer.applyChangeSet(set);
-        } catch (BuilderException e) {
-            throw new RoutingException(e);
-        } catch (RegistrationException e) {
-            throw new RoutingException(e);
-        }
-    }
+    public void route(CommandMap commandMap) throws RoutingException {
 
-    public void route(URI runtimeId, CommandSet set) throws RoutingException {
-        try {
-            for (Command command : set.getCommands(CommandSet.Phase.FIRST)) {
+        Set<Command> commands = commandMap.getCommandsForRuntime(null);
+        List<Command> orderedCommands = new ArrayList<Command>(commands);
+        Collections.sort(orderedCommands);
+        
+        for (Command command : orderedCommands) {
+            try {
                 registry.execute(command);
+            } catch (ExecutionException e) {
+                throw new RoutingException(e);
             }
-            for (Command command : set.getCommands(CommandSet.Phase.STANDARD)) {
-                registry.execute(command);
-            }
-            for (Command command : set.getCommands(CommandSet.Phase.LAST)) {
-                registry.execute(command);
-            }
-        } catch (ExecutionException e) {
-            throw new RoutingException(e);
         }
+
     }
 
 }

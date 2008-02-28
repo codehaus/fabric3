@@ -18,15 +18,13 @@ package org.fabric3.fabric.async;
 
 import javax.xml.namespace.QName;
 
+import org.fabric3.scdl.Operation;
 import org.fabric3.spi.Constants;
-import org.fabric3.spi.generator.GeneratorContext;
+import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.generator.InterceptorDefinitionGenerator;
-import org.fabric3.spi.generator.GenerationException;
-import org.fabric3.spi.model.physical.PhysicalInterceptorDefinition;
 import org.fabric3.spi.model.instance.LogicalBinding;
-import org.fabric3.scdl.Operation;
-
+import org.fabric3.spi.model.physical.PhysicalInterceptorDefinition;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
@@ -54,7 +52,6 @@ public class NonBlockingGenerator implements InterceptorDefinitionGenerator {
     }
 
     public PhysicalInterceptorDefinition generate(Element policyDefinition,
-                                                  GeneratorContext generatorContext,
                                                   Operation<?> operation,
                                                   LogicalBinding<?> logicalBinding) throws GenerationException {
         return new NonBlockingInterceptorDefinition();

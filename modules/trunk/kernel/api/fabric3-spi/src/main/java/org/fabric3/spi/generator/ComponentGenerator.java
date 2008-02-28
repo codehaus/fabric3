@@ -46,7 +46,7 @@ public interface ComponentGenerator<C extends LogicalComponent<? extends Impleme
      * @return the physical component definition
      * @throws GenerationException if an error occurs during the generation process
      */
-    PhysicalComponentDefinition generate(C component, GeneratorContext context) throws GenerationException;
+    PhysicalComponentDefinition generate(C component) throws GenerationException;
 
     /**
      * Generates a {@link PhysicalWireSourceDefinition} used to attach a wire to a source component. Metadata contained in the
@@ -60,8 +60,7 @@ public interface ComponentGenerator<C extends LogicalComponent<? extends Impleme
      * @return the metadata used to attach the wire to its source on the service node
      * @throws GenerationException if an error occurs during the generation process
      */
-    PhysicalWireSourceDefinition generateWireSource(C source, LogicalReference reference, Policy policy, GeneratorContext context)
-            throws GenerationException;
+    PhysicalWireSourceDefinition generateWireSource(C source, LogicalReference reference, Policy policy) throws GenerationException;
 
     /**
      * Generates a {@link PhysicalWireSourceDefinition} used to attach a wire for a callback service to a source component. Metadata contained in the
@@ -75,7 +74,7 @@ public interface ComponentGenerator<C extends LogicalComponent<? extends Impleme
      * @return the metadata used to attach the wire to its source on the service node
      * @throws GenerationException if an error occurs during the generation process
      */
-    PhysicalWireSourceDefinition generateCallbackWireSource(C source, ServiceContract<?> serviceContract, Policy policy, GeneratorContext context)
+    PhysicalWireSourceDefinition generateCallbackWireSource(C source, ServiceContract<?> serviceContract, Policy policy)
             throws GenerationException;
 
     /**
@@ -90,8 +89,7 @@ public interface ComponentGenerator<C extends LogicalComponent<? extends Impleme
      * @return the metadata used to attach the wire to its target on the service node
      * @throws GenerationException if an error occurs during the generation process
      */
-    PhysicalWireTargetDefinition generateWireTarget(LogicalService service, C target, Policy policy, GeneratorContext context)
-            throws GenerationException;
+    PhysicalWireTargetDefinition generateWireTarget(LogicalService service, C target, Policy policy) throws GenerationException;
 
     /**
      * Generates a {@link PhysicalWireSourceDefinition} used to attach a resource to a source component. Metadata contained in the
@@ -104,7 +102,6 @@ public interface ComponentGenerator<C extends LogicalComponent<? extends Impleme
      * @return the metadata used to attach the wire to its source on the service node
      * @throws GenerationException if an error occurs during the generation process
      */
-    PhysicalWireSourceDefinition generateResourceWireSource(C source, LogicalResource<?> resource, GeneratorContext context)
-            throws GenerationException;
+    PhysicalWireSourceDefinition generateResourceWireSource(C source, LogicalResource<?> resource) throws GenerationException;
 
 }

@@ -24,13 +24,11 @@ import org.fabric3.pojo.instancefactory.InstanceFactoryDefinition;
 import org.fabric3.pojo.instancefactory.InstanceFactoryGenerationHelper;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.ComponentDefinition;
-import org.fabric3.scdl.ServiceContract;
 import org.fabric3.scdl.InjectableAttribute;
 import org.fabric3.scdl.InjectableAttributeType;
-import org.fabric3.spi.generator.ClassLoaderGenerator;
+import org.fabric3.scdl.ServiceContract;
 import org.fabric3.spi.generator.ComponentGenerator;
 import org.fabric3.spi.generator.GenerationException;
-import org.fabric3.spi.generator.GeneratorContext;
 import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
@@ -40,7 +38,6 @@ import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 import org.fabric3.spi.policy.Policy;
-
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
@@ -49,19 +46,17 @@ import org.osoa.sca.annotations.Reference;
  */
 @EagerInit
 public class SystemComponentGenerator implements ComponentGenerator<LogicalComponent<SystemImplementation>> {
+    
     private final InstanceFactoryGenerationHelper helper;
-    private ClassLoaderGenerator classLoaderGenerator;
-
+    
     public SystemComponentGenerator(@Reference GeneratorRegistry registry,
-                                    @Reference ClassLoaderGenerator classLoaderGenerator,
                                     @Reference InstanceFactoryGenerationHelper helper) {
-        this.classLoaderGenerator = classLoaderGenerator;
+
         registry.register(SystemImplementation.class, this);
         this.helper = helper;
     }
 
-    public PhysicalComponentDefinition generate(LogicalComponent<SystemImplementation> component,
-                                                GeneratorContext context)
+    public PhysicalComponentDefinition generate(LogicalComponent<SystemImplementation> component)
             throws GenerationException {
         ComponentDefinition<SystemImplementation> definition = component.getDefinition();
         SystemImplementation implementation = definition.getImplementation();
@@ -85,7 +80,7 @@ public class SystemComponentGenerator implements ComponentGenerator<LogicalCompo
         helper.processPropertyValues(component, physical);
 
         // generate the classloader resource definition
-        URI classLoaderId = classLoaderGenerator.generate(component, context);
+        URI classLoaderId = component.getParent().getUri();
         physical.setClassLoaderId(classLoaderId);
 
         return physical;
@@ -93,8 +88,7 @@ public class SystemComponentGenerator implements ComponentGenerator<LogicalCompo
 
     public PhysicalWireSourceDefinition generateWireSource(LogicalComponent<SystemImplementation> source,
                                                            LogicalReference reference,
-                                                           Policy policy,
-                                                           GeneratorContext context) throws GenerationException {
+                                                           Policy policy) throws GenerationException {
 
         URI uri = reference.getUri();
         SystemWireSourceDefinition wireDefinition = new SystemWireSourceDefinition();
@@ -102,7 +96,7 @@ public class SystemComponentGenerator implements ComponentGenerator<LogicalCompo
         wireDefinition.setUri(uri);
         wireDefinition.setValueSource(new InjectableAttribute(InjectableAttributeType.REFERENCE, uri.getFragment()));
 
-        URI classLoaderId = classLoaderGenerator.generate(source, context);
+        URI classLoaderId = source.getParent().getUri();
         wireDefinition.setClassLoaderId(classLoaderId);
 
         return wireDefinition;
@@ -110,15 +104,13 @@ public class SystemComponentGenerator implements ComponentGenerator<LogicalCompo
 
     public PhysicalWireSourceDefinition generateCallbackWireSource(LogicalComponent<SystemImplementation> source,
                                                                    ServiceContract<?> serviceContract,
-                                                                   Policy policy,
-                                                                   GeneratorContext context) throws GenerationException {
+                                                                   Policy policy) throws GenerationException {
         throw new UnsupportedOperationException();
     }
 
     public PhysicalWireTargetDefinition generateWireTarget(LogicalService service,
                                                            LogicalComponent<SystemImplementation> logical,
-                                                           Policy policy,
-                                                           GeneratorContext context) throws GenerationException {
+                                                           Policy policy) throws GenerationException {
         SystemWireTargetDefinition wireDefinition = new SystemWireTargetDefinition();
         wireDefinition.setOptimizable(true);
         wireDefinition.setUri(service.getUri());
@@ -126,15 +118,14 @@ public class SystemComponentGenerator implements ComponentGenerator<LogicalCompo
     }
 
     public PhysicalWireSourceDefinition generateResourceWireSource(LogicalComponent<SystemImplementation> source,
-                                                                   LogicalResource<?> resource,
-                                                                   GeneratorContext context) throws GenerationException {
+                                                                   LogicalResource<?> resource) throws GenerationException {
         URI uri = resource.getUri();
         SystemWireSourceDefinition wireDefinition = new SystemWireSourceDefinition();
         wireDefinition.setOptimizable(true);
         wireDefinition.setUri(uri);
         wireDefinition.setValueSource(new InjectableAttribute(InjectableAttributeType.RESOURCE, uri.getFragment()));
 
-        URI classLoaderId = classLoaderGenerator.generate(source, context);
+        URI classLoaderId =source.getParent().getUri();
         wireDefinition.setClassLoaderId(classLoaderId);
 
         return wireDefinition;

@@ -6,35 +6,41 @@
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
- *
+ * 
  *   http://www.apache.org/licenses/LICENSE-2.0
- *
+ * 
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
- * under the License.
+ * under the License.    
  */
-package org.fabric3.spi.deployer;
+package org.fabric3.fabric.command;
 
-import org.fabric3.spi.builder.BuilderException;
-import org.fabric3.spi.runtime.component.RegistrationException;
-import org.fabric3.spi.model.physical.PhysicalChangeSet;
+import org.fabric3.spi.command.AbstractCommand;
+import org.fabric3.spi.model.physical.PhysicalWireDefinition;
 
 /**
- * Responsible for deploying a changeset to a runtime instance
  *
- * @version $Rev$ $Date$
+ * @version $Revision$ $Date$
  */
-public interface Deployer {
+public class WireAttachCommand extends AbstractCommand {
 
-    /**
-     * Apply the changeset to the runtime
-     *
-     * @param changeSet the changeset to apply
-     * @throws BuilderException      if an exception occurs building runtime artifacts from the changeset
-     * @throws RegistrationException if an error occurs registering a component built from the changeset
-     */
-    void applyChangeSet(PhysicalChangeSet changeSet) throws BuilderException, RegistrationException;
+    private final PhysicalWireDefinition physicalWireDefinition;
+
+    public WireAttachCommand(PhysicalWireDefinition physicalWireDefinition, int order) {
+        super(order);
+        this.physicalWireDefinition = physicalWireDefinition;
+    }
+
+    public PhysicalWireDefinition getPhysicalWireDefinition() {
+        return physicalWireDefinition;
+    }
+    
+    @Override
+    public String toString() {
+        return physicalWireDefinition.getSource().getUri() + ":" + physicalWireDefinition.getTarget().getUri();
+    }
+
 }

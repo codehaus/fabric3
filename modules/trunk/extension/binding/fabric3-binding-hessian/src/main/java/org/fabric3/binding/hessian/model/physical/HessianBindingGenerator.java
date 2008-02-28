@@ -24,9 +24,7 @@ import org.fabric3.binding.hessian.model.logical.HessianBindingDefinition;
 import org.fabric3.scdl.ReferenceDefinition;
 import org.fabric3.scdl.ServiceDefinition;
 import org.fabric3.spi.generator.BindingGenerator;
-import org.fabric3.spi.generator.ClassLoaderGenerator;
 import org.fabric3.spi.generator.GenerationException;
-import org.fabric3.spi.generator.GeneratorContext;
 import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.policy.Policy;
@@ -41,12 +39,11 @@ import org.osoa.sca.annotations.Reference;
  */
 @EagerInit
 public class HessianBindingGenerator implements BindingGenerator<HessianWireSourceDefinition, HessianWireTargetDefinition, HessianBindingDefinition> {
-    private ClassLoaderGenerator classLoaderGenerator;
+
     private GeneratorRegistry generatorRegistry;
 
-    public HessianBindingGenerator(@Reference ClassLoaderGenerator classLoaderGenerator,
-                                   @Reference GeneratorRegistry generatorRegistry) {
-        this.classLoaderGenerator = classLoaderGenerator;
+    public HessianBindingGenerator(@Reference GeneratorRegistry generatorRegistry) {
+
         this.generatorRegistry = generatorRegistry;
     }
 
@@ -57,11 +54,10 @@ public class HessianBindingGenerator implements BindingGenerator<HessianWireSour
 
     public HessianWireSourceDefinition generateWireSource(LogicalBinding<HessianBindingDefinition> logicalBinding,
                                                           Policy policy,
-                                                          GeneratorContext generatorContext,
                                                           ServiceDefinition serviceDefinition)
             throws GenerationException {
 
-        URI id = classLoaderGenerator.generate(logicalBinding, generatorContext);
+        URI id = logicalBinding.getParent().getParent().getParent().getUri();
         HessianWireSourceDefinition hwsd = new HessianWireSourceDefinition(id);
         hwsd.setUri(logicalBinding.getBinding().getTargetUri());
 
@@ -71,11 +67,9 @@ public class HessianBindingGenerator implements BindingGenerator<HessianWireSour
 
     public HessianWireTargetDefinition generateWireTarget(LogicalBinding<HessianBindingDefinition> logicalBinding,
                                                           Policy policy,
-                                                          GeneratorContext generatorContext,
                                                           ReferenceDefinition referenceDefinition)
             throws GenerationException {
-
-        URI id = classLoaderGenerator.generate(logicalBinding, generatorContext);
+        URI id = logicalBinding.getParent().getParent().getParent().getUri();
         HessianWireTargetDefinition hwtd = new HessianWireTargetDefinition(id);
         hwtd.setUri(logicalBinding.getBinding().getTargetUri());
 

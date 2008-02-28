@@ -20,26 +20,21 @@ package org.fabric3.fabric.assembly;
 
 import static org.osoa.sca.Constants.SCA_NS;
 
-import java.net.URI;
 import java.util.Collection;
-import java.util.Map;
 
 import javax.xml.namespace.QName;
 
 import org.fabric3.fabric.assembly.allocator.AllocationException;
 import org.fabric3.fabric.assembly.allocator.Allocator;
-import org.fabric3.fabric.assembly.resolver.WireResolver;
 import org.fabric3.fabric.model.logical.LogicalModelGenerator;
 import org.fabric3.fabric.model.physical.PhysicalModelGenerator;
-import org.fabric3.fabric.model.physical.PhysicalWireGenerator;
 import org.fabric3.fabric.services.routing.RoutingException;
-import org.fabric3.fabric.services.routing.RoutingService;
 import org.fabric3.scdl.Composite;
 import org.fabric3.spi.assembly.ActivateException;
 import org.fabric3.spi.assembly.Assembly;
 import org.fabric3.spi.assembly.AssemblyException;
+import org.fabric3.spi.generator.CommandMap;
 import org.fabric3.spi.generator.GenerationException;
-import org.fabric3.spi.generator.GeneratorContext;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 import org.fabric3.spi.runtime.assembly.LogicalComponentManager;
@@ -58,27 +53,21 @@ public abstract class AbstractAssembly implements Assembly {
     public static final QName COMPOSITE = new QName(SCA_NS, "composite");
 
     protected final PhysicalModelGenerator physicalModelGenerator;
-    protected final LogicalModelGenerator logicalModelGenerator;
+    private final LogicalModelGenerator logicalModelGenerator;
     protected final Allocator allocator;
-    protected final RoutingService routingService;
-    protected final MetaDataStore metadataStore;
+    private final MetaDataStore metadataStore;
     protected final LogicalComponentManager logicalComponentManager;
-    protected final PhysicalWireGenerator wireGenerator;
 
     public AbstractAssembly(Allocator allocator,
-                            RoutingService routingService,
                             MetaDataStore metadataStore,
                             PhysicalModelGenerator physicalModelGenerator,
                             LogicalModelGenerator logicalModelGenerator,
-                            LogicalComponentManager logicalComponentManager,
-                            PhysicalWireGenerator wireGenerator) {
-        this.allocator = allocator;
-        this.routingService = routingService; 
+                            LogicalComponentManager logicalComponentManager) {
+        this.allocator = allocator; 
         this.metadataStore = metadataStore;
         this.physicalModelGenerator = physicalModelGenerator;
         this.logicalModelGenerator = logicalModelGenerator;
         this.logicalComponentManager = logicalComponentManager;
-        this.wireGenerator = wireGenerator;
     }
 
     public void initialize() throws AssemblyException {
@@ -121,8 +110,8 @@ public abstract class AbstractAssembly implements Assembly {
 
         try {
             // generate and provision any new components and new wires
-            Map<URI, GeneratorContext> contexts = physicalModelGenerator.generate(components);
-            physicalModelGenerator.provision(contexts);
+            CommandMap commandMap = physicalModelGenerator.generate(components);
+            physicalModelGenerator.provision(commandMap);
         } catch (GenerationException e) {
             throw new ActivateException(e);
         } catch (RoutingException e) {

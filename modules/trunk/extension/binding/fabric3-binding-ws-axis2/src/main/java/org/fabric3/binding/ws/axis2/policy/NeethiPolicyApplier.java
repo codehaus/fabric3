@@ -56,7 +56,6 @@ public class NeethiPolicyApplier implements PolicyApplier {
 
         try {
             OMElement policyElement = XMLUtils.toOM(policy);
-
             axisDescription.applyPolicy(PolicyEngine.getPolicy(policyElement));
 
         } catch (Exception e) {

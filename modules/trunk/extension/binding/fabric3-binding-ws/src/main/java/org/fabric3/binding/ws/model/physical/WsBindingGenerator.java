@@ -26,7 +26,6 @@ import org.fabric3.scdl.ServiceDefinition;
 import org.fabric3.spi.generator.BindingGenerator;
 import org.fabric3.spi.generator.BindingGeneratorDelegate;
 import org.fabric3.spi.generator.GenerationException;
-import org.fabric3.spi.generator.GeneratorContext;
 import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
@@ -63,18 +62,16 @@ public class WsBindingGenerator implements BindingGenerator<PhysicalWireSourceDe
 
     public PhysicalWireSourceDefinition generateWireSource(LogicalBinding<WsBindingDefinition> logicalBinding,
                                                            Policy policy,
-                                                           GeneratorContext generatorContext,
                                                            ServiceDefinition serviceDefinition)
             throws GenerationException {
-        return getDelegate(logicalBinding).generateWireSource(logicalBinding, policy, generatorContext, serviceDefinition);
+        return getDelegate(logicalBinding).generateWireSource(logicalBinding, policy, serviceDefinition);
     }
 
     public PhysicalWireTargetDefinition generateWireTarget(LogicalBinding<WsBindingDefinition> logicalBinding,
                                                            Policy policy,
-                                                           GeneratorContext generatorContext,
                                                            ReferenceDefinition referenceDefinition)
             throws GenerationException {
-        return getDelegate(logicalBinding).generateWireTarget(logicalBinding, policy, generatorContext, referenceDefinition);
+        return getDelegate(logicalBinding).generateWireTarget(logicalBinding, policy, referenceDefinition);
     }
 
     /*

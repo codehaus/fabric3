@@ -114,7 +114,7 @@ public class TypeBasedAutoWireService implements TargetResolutionService {
     }
 
     private List<URI> resolveByType(LogicalCompositeComponent composite, LogicalComponent<?> component, String name, ServiceContract<?> contract) {
-
+        
         List<URI> candidates = new ArrayList<URI>();
         
         for (LogicalComponent<?> child : composite.getComponents()) {

@@ -20,24 +20,23 @@ import java.lang.reflect.Method;
 import java.net.URI;
 import java.util.HashSet;
 import java.util.List;
+
 import java.util.Set;
+
 import javax.xml.namespace.QName;
 import javax.xml.ws.WebFault;
 
-import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Init;
-import org.osoa.sca.annotations.Reference;
-import org.w3c.dom.Element;
-
 import org.fabric3.scdl.DataType;
 import org.fabric3.scdl.Operation;
-import org.fabric3.spi.generator.ClassLoaderGenerator;
 import org.fabric3.spi.generator.GenerationException;
-import org.fabric3.spi.generator.GeneratorContext;
 import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.generator.InterceptorDefinitionGenerator;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.instance.LogicalService;
+import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Init;
+import org.osoa.sca.annotations.Reference;
+import org.w3c.dom.Element;
 
 /**
  * @version $Revision$ $Date$
@@ -48,11 +47,9 @@ public class JaxbInterceptorDefinitionGenerator implements InterceptorDefinition
     private static final QName EXTENSION_NAME = new QName("http://fabric3.org/xmlns/sca/2.0-alpha/axis", "dataBinding.jaxb");
     
     private GeneratorRegistry generatorRegistry;
-    private ClassLoaderGenerator classLoaderGenerator;
 
-    public JaxbInterceptorDefinitionGenerator(@Reference GeneratorRegistry generatorRegistry, @Reference ClassLoaderGenerator classLoaderGenerator) {
+    public JaxbInterceptorDefinitionGenerator(@Reference GeneratorRegistry generatorRegistry) {
         this.generatorRegistry = generatorRegistry;
-        this.classLoaderGenerator = classLoaderGenerator;
     }
 
     /**
@@ -63,14 +60,12 @@ public class JaxbInterceptorDefinitionGenerator implements InterceptorDefinition
         generatorRegistry.register(EXTENSION_NAME, this);
     }
 
-    public JaxbInterceptorDefinition generate(Element policySet,
-                                              GeneratorContext generatorContext,
-                                              Operation<?> operation,
-                                              LogicalBinding<?> logicalBinding) throws GenerationException {
+    public JaxbInterceptorDefinition generate(Element policySet, Operation<?> operation, LogicalBinding<?> logicalBinding) 
+        throws GenerationException {
         
         boolean service = logicalBinding.getParent() instanceof LogicalService;
         
-        URI classLoaderId = classLoaderGenerator.generate(logicalBinding, generatorContext);
+        URI classLoaderId = logicalBinding.getParent().getParent().getParent().getUri();
         
         // This assumes a Java interface contract
 
@@ -110,8 +105,9 @@ public class JaxbInterceptorDefinitionGenerator implements InterceptorDefinition
 
         // return type
         classNames.add(((Class<?>) outputType.getPhysical()).getName());
-        
+
         return new JaxbInterceptorDefinition(classLoaderId, classNames, faultNames, service);
+
     }
 
 }

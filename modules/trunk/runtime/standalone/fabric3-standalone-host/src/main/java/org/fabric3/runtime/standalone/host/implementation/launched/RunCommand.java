@@ -21,17 +21,18 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.fabric3.spi.command.Command;
+import org.fabric3.spi.command.AbstractCommand;
 
 /**
  * Runs <code>implementation.launched</code> components on a service node
  *
  * @version $Rev$ $Date$
  */
-public class RunCommand implements Command {
+public class RunCommand extends AbstractCommand {
     private List<URI> components = new ArrayList<URI>();
 
-    public RunCommand() {
+    public RunCommand(int order) {
+        super(order);
     }
 
     public void addComponentUri(URI uri) {
