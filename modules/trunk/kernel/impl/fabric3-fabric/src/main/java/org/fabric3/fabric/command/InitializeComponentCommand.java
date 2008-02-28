@@ -56,7 +56,8 @@ public class InitializeComponentCommand extends AbstractCommand {
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof InitializeComponentCommand) {
-            return ((InitializeComponentCommand) obj).uri.equals(uri);
+            InitializeComponentCommand other = (InitializeComponentCommand) obj;
+            return other.uri.equals(uri);
         }
         return false;
     }

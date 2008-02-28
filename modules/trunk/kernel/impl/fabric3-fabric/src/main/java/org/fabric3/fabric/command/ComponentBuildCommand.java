@@ -46,7 +46,8 @@ public class ComponentBuildCommand extends AbstractCommand {
     @Override
     public boolean equals(Object obj) {
         if (obj instanceof ComponentBuildCommand) {
-            return ((ComponentBuildCommand) obj).physicalComponentDefinition.getComponentId().equals(physicalComponentDefinition.getComponentId());
+            ComponentBuildCommand other = (ComponentBuildCommand) obj;
+            return other.physicalComponentDefinition.getComponentId().equals(physicalComponentDefinition.getComponentId());
         }
         return false;
     }
