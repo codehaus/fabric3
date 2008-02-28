@@ -53,7 +53,12 @@ import org.w3c.dom.Text;
 public class Stream2Document extends AbstractPullTransformer<XMLStreamReader, Document> {
     
     private static final JavaClass<Document> TARGET = new JavaClass<Document>(Document.class);
-    private static final DocumentBuilderFactory FACTORY = DocumentBuilderFactory.newInstance();
+    private static final DocumentBuilderFactory FACTORY;
+
+    static {
+        FACTORY = DocumentBuilderFactory.newInstance();
+        FACTORY.setNamespaceAware(true);
+    }
 
     public DataType<?> getTargetType() {
         return TARGET;
