@@ -35,8 +35,11 @@ public class FieldInjector<T> implements Injector<T> {
     private final ObjectFactory<?> objectFactory;
 
     /**
-     * Create an injector and have it use the given <code>ObjectFactory</code> to inject a value on the instance using
-     * the reflected <code>Field</code>
+     * Create an injector and have it use the given <code>ObjectFactory</code> to inject a value on the instance using the reflected
+     * <code>Field</code>
+     *
+     * @param field         target field to inject on
+     * @param objectFactory the object factor that creates the value to inject
      */
     public FieldInjector(Field field, ObjectFactory<?> objectFactory) {
         this.field = field;
@@ -51,7 +54,8 @@ public class FieldInjector<T> implements Injector<T> {
         try {
             field.set(instance, objectFactory.getInstance());
         } catch (IllegalAccessException e) {
-            throw new AssertionError("Field is not accessible [" + field + "]");
+            String id = field.getName();
+            throw new AssertionError("Field is not accessible:" + id);
         }
     }
 }

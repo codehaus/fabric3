@@ -65,12 +65,13 @@ public class ReflectiveObjectFactory<T> implements ObjectFactory<T> {
             }
         } catch (InstantiationException e) {
             String name = constructor.getDeclaringClass().getName();
-            throw new AssertionError("Class is not instantiable [" + name + "]");
+            throw new AssertionError("Class is not instantiable:" + name);
         } catch (IllegalAccessException e) {
-            throw new AssertionError("Constructor is not accessible [" + constructor.toString() + "]");
+            String id = constructor.toString();
+            throw new AssertionError("Constructor is not accessible: " + id);
         } catch (InvocationTargetException e) {
-            String name = constructor.getDeclaringClass().getName();
-            throw new ObjectCreationException("Exception thrown by constructor", name, e.getCause());
+            String id = constructor.toString();
+            throw new ObjectCreationException("Exception thrown by constructor: " + id, id, e.getCause());
         }
     }
 }

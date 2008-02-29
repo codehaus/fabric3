@@ -22,29 +22,28 @@ import org.fabric3.spi.component.InstanceFactoryProvider;
 
 /**
  * Registry for instance factory builders.
- * 
- * @version $Revision$ $Date: 2007-03-12 22:26:18 +0000 (Mon, 12 Mar
- *          2007) $
+ *
+ * @version $Revision$ $Date$
  */
 public interface InstanceFactoryBuilderRegistry {
 
     /**
      * Registers an instance factory provider builder.
-     * 
+     *
      * @param ifpdClass Instance factory provider definition class.
-     * @param builder Instance factory provider builder.
+     * @param builder   Instance factory provider builder.
      */
-    <IFPD extends InstanceFactoryDefinition> void register(Class<?> ifpdClass,
-                                                                   InstanceFactoryBuilder<?, IFPD> builder);
+    <IFPD extends InstanceFactoryDefinition> void register(Class<?> ifpdClass, InstanceFactoryBuilder<?, IFPD> builder);
 
     /**
-     * Builds an instnace factory provider from a definition.
-     * 
+     * Builds an instance factory provider from a definition.
+     *
      * @param providerDefinition Provider definition.
-     * @param cl Clasloader to use.
+     * @param cl                 Clasloader to use.
+     * @param <T>                the type of instance the InstanceFactory creates
      * @return Instance factory provider.
-     * @param <T> the type of instance the InstanceFactory creates
+     * @throws InstanceFactoryBuilderException
+     *          if an error occurs building the factory
      */
-    <T> InstanceFactoryProvider<T> build(InstanceFactoryDefinition providerDefinition, ClassLoader cl)
-        throws InstanceFactoryBuilderException;
+    <T> InstanceFactoryProvider<T> build(InstanceFactoryDefinition providerDefinition, ClassLoader cl) throws InstanceFactoryBuilderException;
 }

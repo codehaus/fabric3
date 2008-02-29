@@ -67,19 +67,16 @@ public abstract class ImplementationProcessorExtension implements Implementation
         registry.unregisterProcessor(this);
     }
 
-    public <T> void visitClass(Class<T> clazz, PojoComponentType type, IntrospectionContext context)
-            throws ProcessingException {
+    public <T> void visitClass(Class<T> clazz, PojoComponentType type, IntrospectionContext context) throws ProcessingException {
     }
 
-    public <T> void visitSuperClass(Class<T> clazz, PojoComponentType type, IntrospectionContext context)
-            throws ProcessingException {
+    public <T> void visitSuperClass(Class<T> clazz, PojoComponentType type, IntrospectionContext context) throws ProcessingException {
     }
 
     public void visitMethod(Method method, PojoComponentType type, IntrospectionContext context) throws ProcessingException {
     }
 
-    public <T> void visitConstructor(Constructor<T> constructor, PojoComponentType type, IntrospectionContext context)
-            throws ProcessingException {
+    public <T> void visitConstructor(Constructor<T> constructor, PojoComponentType type, IntrospectionContext context) throws ProcessingException {
     }
 
     public void visitField(Field field, PojoComponentType type, IntrospectionContext context) throws ProcessingException {

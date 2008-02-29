@@ -46,7 +46,7 @@ import org.fabric3.introspection.TypeMapping;
 public class MonitorProcessor extends ImplementationProcessorExtension {
     private final ContractProcessor contractProcessor;
 
-    public MonitorProcessor(@Reference(name="processorRegistry")ContractProcessor contractProcessor) {
+    public MonitorProcessor(@Reference(name = "processorRegistry")ContractProcessor contractProcessor) {
         this.contractProcessor = contractProcessor;
     }
 
@@ -56,7 +56,8 @@ public class MonitorProcessor extends ImplementationProcessorExtension {
             return;
         }
         if (method.getParameterTypes().length != 1) {
-            throw new InvalidSetterException(method);
+            String id = method.toString();
+            throw new InvalidSetterException("Invalid number of parameters on method: " + id, id);
         }
 
         Class<?> resourceType = method.getParameterTypes()[0];

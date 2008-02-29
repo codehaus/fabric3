@@ -31,6 +31,8 @@ public class MethodEventInvoker<T> implements EventInvoker<T> {
 
     /**
      * Intantiates an  invoker for the given method
+     *
+     * @param method the method to invoke on
      */
     public MethodEventInvoker(Method method) {
         assert method != null;
@@ -42,14 +44,14 @@ public class MethodEventInvoker<T> implements EventInvoker<T> {
         try {
             method.invoke(instance);
         } catch (IllegalArgumentException e) {
-            String name = method.getName();
-            throw new ObjectCallbackException("Exception thrown by callback method [" + name + "]", e.getCause());
+            String name = method.toString();
+            throw new ObjectCallbackException("Exception thrown by method: " + name, e.getCause());
         } catch (IllegalAccessException e) {
             String name = method.getName();
-            throw new AssertionError("Method is not accessible [" + name + "]");
+            throw new AssertionError("Method is not accessible: " + name);
         } catch (InvocationTargetException e) {
             String name = method.getName();
-            throw new ObjectCallbackException("Exception thrown by callback method [" + name + "]", e.getCause());
+            throw new ObjectCallbackException("Exception thrown by callback method:" + name, e.getCause());
         }
     }
 

@@ -77,7 +77,7 @@ public class ReflectiveInstanceFactoryProvider<T> implements InstanceFactoryProv
     public Class<?> getMemberType(InjectableAttribute injectableAttribute) {
         InjectionSite site = injectionSites.get(injectableAttribute);
         if (site == null) {
-            throw new AssertionError("No injection site for " + injectableAttribute);
+            throw new AssertionError("No injection site for: " + injectableAttribute);
         }
         switch (site.getElementType()) {
         case FIELD:

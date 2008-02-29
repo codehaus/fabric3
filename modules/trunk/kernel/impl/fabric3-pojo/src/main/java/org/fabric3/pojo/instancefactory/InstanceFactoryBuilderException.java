@@ -25,32 +25,17 @@ import org.fabric3.spi.builder.BuilderException;
  *
  * @version $Revision$ $Date$
  */
-@SuppressWarnings("serial")
 public class InstanceFactoryBuilderException extends BuilderException {
+    private static final long serialVersionUID = -2582100608101918880L;
 
-    /**
-     * Initializes the message.
-     *
-     * @param message Initializes the message.
-     */
     public InstanceFactoryBuilderException(String message) {
         super(message);
     }
 
-    /**
-     * Initil
-     * @param message
-     * @param identifier
-     */
     public InstanceFactoryBuilderException(String message, String identifier) {
         super(message, identifier);
     }
 
-    /**
-     * Initializes the causer.
-     *
-     * @param cause Initializes the cause.
-     */
     public InstanceFactoryBuilderException(Throwable cause) {
         super(cause);
     }

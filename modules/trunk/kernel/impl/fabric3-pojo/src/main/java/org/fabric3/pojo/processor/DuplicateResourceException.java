@@ -23,8 +23,8 @@ package org.fabric3.pojo.processor;
  *
  * @version $Rev$ $Date$
  */
-@SuppressWarnings("serial")
 public class DuplicateResourceException extends ProcessingException {
+    private static final long serialVersionUID = -2922042151983251832L;
 
     public DuplicateResourceException(String message) {
         super(message);

@@ -27,10 +27,8 @@ import org.fabric3.scdl.Signature;
 public interface InstanceFactoryBuildHelper {
     Class<?> loadClass(ClassLoader cl, String name) throws ClassNotFoundException;
 
-    <T> Constructor<T> getConstructor(Class<T> implClass, Signature signature)
-            throws ClassNotFoundException, NoSuchMethodException;
+    <T> Constructor<T> getConstructor(Class<T> implClass, Signature signature) throws ClassNotFoundException, NoSuchMethodException;
 
-    Method getMethod(Class<?> implClass, Signature signature)
-            throws NoSuchMethodException, ClassNotFoundException;
+    Method getMethod(Class<?> implClass, Signature signature) throws NoSuchMethodException, ClassNotFoundException;
 
 }

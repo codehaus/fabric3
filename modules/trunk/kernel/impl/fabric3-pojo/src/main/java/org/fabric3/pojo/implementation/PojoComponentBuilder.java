@@ -62,10 +62,11 @@ public abstract class PojoComponentBuilder<T, PCD extends PojoComponentDefinitio
     protected final ScopeRegistry scopeRegistry;
     protected final InstanceFactoryBuilderRegistry providerBuilders;
     protected final ClassLoaderRegistry classLoaderRegistry;
-    protected final TransformerRegistry<PullTransformer<?,?>> transformerRegistry;
+    protected final TransformerRegistry<PullTransformer<?, ?>> transformerRegistry;
 
     private static final XSDSimpleType SOURCE_TYPE = new XSDSimpleType(Node.class, XSDSimpleType.STRING);
     private static final Map<Class<?>, Class<?>> OBJECT_TYPES;
+
     static {
         OBJECT_TYPES = new HashMap<Class<?>, Class<?>>();
         OBJECT_TYPES.put(Boolean.TYPE, Boolean.class);
@@ -120,24 +121,24 @@ public abstract class PojoComponentBuilder<T, PCD extends PojoComponentDefinitio
         JavaClass<I> targetType = new JavaClass<I>(type);
         PullTransformer<Node, I> transformer = getTransformer(SOURCE_TYPE, targetType);
         if (transformer == null) {
-            throw new PropertyTransformException("No transformer for property of type " + type.getCanonicalName(), name, null);
+            throw new PropertyTransformException("No transformer for property of type: " + type.getCanonicalName(), name, null);
         }
         try {
             I instance = type.cast(transformer.transform(value, context));
             return new SingletonObjectFactory<I>(instance);
         } catch (Exception e) {
-            throw new PropertyTransformException("Unable to transform property value", name, e);
+            throw new PropertyTransformException("Unable to transform property value: " + name, name, e);
         }
     }
 
     @SuppressWarnings("unchecked")
-    protected <I> PullTransformer<Node,I> getTransformer(XSDSimpleType source, JavaClass<I> target) {
-        return (PullTransformer<Node,I>) transformerRegistry.getTransformer(source, target);
+    protected <I> PullTransformer<Node, I> getTransformer(XSDSimpleType source, JavaClass<I> target) {
+        return (PullTransformer<Node, I>) transformerRegistry.getTransformer(source, target);
     }
 
     /**
      * Creates object factories for references of multiplicty greater than one.
-     * 
+     *
      * @param providerDefinition Instance factory provider definition.
      * @return Map of reference names to multiplicty object factories.
      */
@@ -152,13 +153,15 @@ public abstract class PojoComponentBuilder<T, PCD extends PojoComponentDefinitio
             }
         }
         return referenceFactories;
-        
+
     }
-    
+
     /*
-     * Adds the multiplicty reference factories.
-     */
-    private void addMultiplicityFactory(String referenceType, InjectableAttribute injectableAttribute, Map<String, MultiplicityObjectFactory<?>> referenceFactories) {
+    * Adds the multiplicty reference factories.
+    */
+    private void addMultiplicityFactory(String referenceType,
+                                        InjectableAttribute injectableAttribute,
+                                        Map<String, MultiplicityObjectFactory<?>> referenceFactories) {
 
         if ("java.util.Map".equals(referenceType)) {
             referenceFactories.put(injectableAttribute.getName(), new MapMultiplicityObjectFactory());

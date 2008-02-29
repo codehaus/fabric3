@@ -22,6 +22,7 @@ import org.fabric3.spi.ObjectCreationException;
  * @version $Rev$ $Date$
  */
 public class IncompatibleArgumentException extends ObjectCreationException {
+    private static final long serialVersionUID = 7837357233260840672L;
     private final int param;
     private final String type;
 

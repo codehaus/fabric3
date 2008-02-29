@@ -28,6 +28,7 @@ import org.fabric3.spi.loader.LoaderException;
  * @version $Rev$ $Date$
  */
 public class ProcessingException extends LoaderException {
+    private static final long serialVersionUID = -8242851132636936113L;
     private Member member;
 
     public ProcessingException() {

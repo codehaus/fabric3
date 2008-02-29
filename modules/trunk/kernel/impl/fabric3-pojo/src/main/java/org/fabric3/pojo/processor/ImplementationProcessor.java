@@ -43,9 +43,7 @@ public interface ImplementationProcessor {
      * @param context the current deployment context
      * @throws ProcessingException if an error is encountered while processing metadata
      */
-    <T> void visitClass(Class<T> clazz,
-                        PojoComponentType type,
-                        IntrospectionContext context) throws ProcessingException;
+    <T> void visitClass(Class<T> clazz, PojoComponentType type, IntrospectionContext context) throws ProcessingException;
 
     /**
      * A callback received as the component implementation class hierarchy is evaluated
@@ -55,10 +53,7 @@ public interface ImplementationProcessor {
      * @param context the current deployment context
      * @throws ProcessingException if an error is encountered while processing metadata
      */
-    <T> void visitSuperClass(
-            Class<T> clazz,
-            PojoComponentType type,
-            IntrospectionContext context) throws ProcessingException;
+    <T> void visitSuperClass(Class<T> clazz, PojoComponentType type, IntrospectionContext context) throws ProcessingException;
 
     /**
      * A callback received as the component implementation's public and protected methods are evaluated
@@ -68,10 +63,7 @@ public interface ImplementationProcessor {
      * @param context the current deployment context
      * @throws ProcessingException if an error is encountered while processing metadata
      */
-    void visitMethod(
-            Method method,
-            PojoComponentType type,
-            IntrospectionContext context) throws ProcessingException;
+    void visitMethod(Method method, PojoComponentType type, IntrospectionContext context) throws ProcessingException;
 
     /**
      * A callback received as the component implementation's constructor used for instantiation by the runtime is evaluated. If an implementation
@@ -83,11 +75,7 @@ public interface ImplementationProcessor {
      * @param context     the current deployment context
      * @throws ProcessingException if an error is encountered while processing metadata
      */
-    <T> void visitConstructor(
-            Constructor<T> constructor,
-            PojoComponentType type,
-            IntrospectionContext context)
-            throws ProcessingException;
+    <T> void visitConstructor(Constructor<T> constructor, PojoComponentType type, IntrospectionContext context) throws ProcessingException;
 
     /**
      * A callback received as the component implementation's public and protected fields are evaluated
@@ -97,10 +85,7 @@ public interface ImplementationProcessor {
      * @param context the current deployment context
      * @throws ProcessingException if an error is encountered while processing metadata
      */
-    void visitField(
-            Field field,
-            PojoComponentType type,
-            IntrospectionContext context) throws ProcessingException;
+    void visitField(Field field, PojoComponentType type, IntrospectionContext context) throws ProcessingException;
 
     /**
      * The final callback received when all other callbacks during evaluation of the component implementation have been issued
@@ -110,9 +95,6 @@ public interface ImplementationProcessor {
      * @param context the current deployment context
      * @throws ProcessingException if an error is encountered while processing metadata
      */
-    <T> void visitEnd(
-            Class<T> clazz,
-            PojoComponentType type,
-            IntrospectionContext context) throws ProcessingException;
+    <T> void visitEnd(Class<T> clazz, PojoComponentType type, IntrospectionContext context) throws ProcessingException;
 
 }

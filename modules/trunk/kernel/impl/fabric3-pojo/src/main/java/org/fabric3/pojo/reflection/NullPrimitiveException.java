@@ -22,6 +22,7 @@ import org.fabric3.spi.ObjectCreationException;
  * @version $Rev$ $Date$
  */
 public class NullPrimitiveException extends ObjectCreationException {
+    private static final long serialVersionUID = 4043316381690250609L;
     private final int param;
 
     public NullPrimitiveException(String identifier, int param) {

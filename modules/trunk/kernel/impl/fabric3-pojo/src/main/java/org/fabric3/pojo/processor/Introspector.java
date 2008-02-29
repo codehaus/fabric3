@@ -22,8 +22,7 @@ import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.pojo.scdl.PojoComponentType;
 
 /**
- * Implementations are responsible for walking a component implementation class, adding additional component type
- * information as appropriate
+ * Implementations are responsible for walking a component implementation class, adding additional component type information as appropriate
  *
  * @version $Rev$ $Date$
  */
@@ -32,13 +31,12 @@ public interface Introspector {
     /**
      * Walks the given component implementation class
      *
-     * @param clazz the component implementation class
-     * @param type  the component type associated with the implementation class
+     * @param clazz   the component implementation class
+     * @param type    the component type associated with the implementation class
+     * @param context the introspection context
      * @return the updated component type
      * @throws ProcessingException if an error is encountered evaluating the implementation class
      */
-    PojoComponentType introspect(Class<?> clazz,
-                                 PojoComponentType type,
-                                 IntrospectionContext context) throws ProcessingException;
+    PojoComponentType introspect(Class<?> clazz, PojoComponentType type, IntrospectionContext context) throws ProcessingException;
 
 }

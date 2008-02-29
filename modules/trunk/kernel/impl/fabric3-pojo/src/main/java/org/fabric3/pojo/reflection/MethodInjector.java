@@ -46,13 +46,13 @@ public class MethodInjector<T> implements Injector<T> {
         try {
             method.invoke(instance, target);
         } catch (IllegalAccessException e) {
-            throw new AssertionError("Method is not accessible [" + method + "]");
+            throw new AssertionError("Method is not accessible:" + method);
         } catch (IllegalArgumentException e) {
-            // System.err.println(method.getDeclaringClass() + ":" + method.getName());
-            // System.err.println(method.getParameterTypes()[0].isAssignableFrom(target.getClass()));
-            throw new ObjectCreationException("Exception thrown by setter", method.getName(), e);
+            String id = method.toString();
+            throw new ObjectCreationException("Exception thrown by setter: " + id, id, e);
         } catch (InvocationTargetException e) {
-            throw new ObjectCreationException("Exception thrown by setter", method.getName(), e);
+            String id = method.toString();
+            throw new ObjectCreationException("Exception thrown by setter: " + id, id, e);
         }
     }
 }

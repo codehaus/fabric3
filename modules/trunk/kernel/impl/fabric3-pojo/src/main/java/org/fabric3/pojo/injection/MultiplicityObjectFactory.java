@@ -22,18 +22,17 @@ import org.fabric3.spi.ObjectFactory;
 
 /**
  * Common  interface for all multiplicity object factories.
- * 
- * @version $Revision$ $Date$
  *
+ * @version $Revision$ $Date$
  * @param <T>
  */
 public interface MultiplicityObjectFactory<T> extends ObjectFactory<T> {
-    
+
     /**
      * Adds a constituent object factory.
-     * 
-     * @param objectFactory Constituent object factory.
-     * @param targetComponent Target component.
+     *
+     * @param objectFactory Constituent object factory
+     * @param key           the target key
      */
     void addObjectFactory(ObjectFactory<?> objectFactory, Object key);
 

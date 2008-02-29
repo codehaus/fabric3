@@ -27,11 +27,15 @@ public interface IntrospectionRegistry extends Introspector {
 
     /**
      * Registers the given processor and makes it available during assembly evaluation (i.e. build)
+     *
+     * @param processor the processor to register
      */
     void registerProcessor(ImplementationProcessor processor);
 
     /**
      * Deregisters the given processor
+     *
+     * @param processor the processor to de-register
      */
     void unregisterProcessor(ImplementationProcessor processor);
 

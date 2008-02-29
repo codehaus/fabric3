@@ -16,34 +16,18 @@
  */
 package org.fabric3.pojo.processor;
 
-import java.lang.reflect.Method;
-
 /**
  * Exception indicating that a method annotated as an injection site does not meet the requirements.
- *
- * Such methods must be:
- * <ul>
- * <li>protected or private</li>
- * <li>instance methods (not static or synthetic)</li>
- * <li>have a void return type</li>
- * <li>have a single parameter</li>
- * </ul>
+ * <p/>
+ * Such methods must be: <ul> <li>protected or private</li> <li>instance methods (not static or synthetic)</li> <li>have a void return type</li>
+ * <li>have a single parameter</li> </ul>
  *
  * @version $Rev$ $Date$
  */
 public class InvalidSetterException extends ProcessingException {
+    private static final long serialVersionUID = 5045283889662715253L;
 
-    /**
-     * Constructor taking a default message and an identifier for the method.
-     *
-     * @param method the invalid setter method
-     */
-    public InvalidSetterException(Method method) {
-        super(null, method.toString());
-        setMember(method);
-    }
-
-    public String getMessage() {
-        return getIdentifier();
+    public InvalidSetterException(String message, String identifier) {
+        super(message, identifier);
     }
 }
