@@ -22,6 +22,8 @@ import org.fabric3.host.contribution.ContributionException;
  * @version $Rev$ $Date$
  */
 public class MavenArtifactNotFoundException extends ContributionException {
+    private static final long serialVersionUID = 7417463079401606508L;
+
     public MavenArtifactNotFoundException(String message, String identifier) {
         super(message, identifier);
     }

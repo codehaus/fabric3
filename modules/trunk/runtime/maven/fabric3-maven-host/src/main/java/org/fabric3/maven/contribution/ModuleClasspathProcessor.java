@@ -32,8 +32,7 @@ import org.fabric3.spi.services.contribution.ClasspathProcessor;
 import org.fabric3.spi.services.contribution.ClasspathProcessorRegistry;
 
 /**
- * Fabricates a classpath for a Maven module by including the classes and test-classes directories and any module
- * dependencies.
+ * Fabricates a classpath for a Maven module by including the classes and test-classes directories and any module dependencies.
  *
  * @version $Rev$ $Date$
  */
@@ -43,8 +42,7 @@ public class ModuleClasspathProcessor implements ClasspathProcessor {
     private ClasspathProcessorRegistry registry;
     private MavenHostInfo hostInfo;
 
-    public ModuleClasspathProcessor(@Reference ClasspathProcessorRegistry registry,
-                                    @Reference MavenHostInfo hostInfo) {
+    public ModuleClasspathProcessor(@Reference ClasspathProcessorRegistry registry, @Reference MavenHostInfo hostInfo) {
         this.registry = registry;
         this.hostInfo = hostInfo;
     }

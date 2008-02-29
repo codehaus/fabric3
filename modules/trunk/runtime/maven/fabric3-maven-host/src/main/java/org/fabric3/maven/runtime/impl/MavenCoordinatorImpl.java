@@ -230,8 +230,8 @@ public class MavenCoordinatorImpl implements MavenCoordinator {
             }
             ContributionService contributionService = runtime.getSystemComponent(ContributionService.class,
                                                                                  CONTRIBUTION_SERVICE_URI);
-            
-            ContributionSource source = new FileContributionSource(new URI(URLEncoder.encode(intentsLocation.toString(),"UTF-8")),
+
+            ContributionSource source = new FileContributionSource(new URI(URLEncoder.encode(intentsLocation.toString(), "UTF-8")),
                                                                    intentsLocation,
                                                                    -1,
                                                                    new byte[0]);
@@ -325,7 +325,7 @@ public class MavenCoordinatorImpl implements MavenCoordinator {
         MetaDataStore metaDataStore = runtime.getSystemComponent(MetaDataStore.class, METADATA_STORE_URI);
         if (metaDataStore == null) {
             String id = METADATA_STORE_URI.toString();
-            throw new InitializationException("Extensions metadata store not configured", id);
+            throw new InitializationException("Extensions metadata store not configured: " + id, id);
         }
         QName qName = new QName(org.fabric3.spi.Constants.FABRIC3_SYSTEM_NS, "extension");
         Composite composite = new Composite(qName);

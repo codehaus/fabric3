@@ -88,7 +88,8 @@ public class MavenArchiveStore implements ArchiveStore {
                 return null;
             }
         } catch (Fabric3DependencyException e) {
-            throw new ArchiveStoreException("Error finding archive", uri.toString(), e);
+            String id = uri.toString();
+            throw new ArchiveStoreException("Error finding archive: " + id, id, e);
         }
         return artifact.getUrl();
     }

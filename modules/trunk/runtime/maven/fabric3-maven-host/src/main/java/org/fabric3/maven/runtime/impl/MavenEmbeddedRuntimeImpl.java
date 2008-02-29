@@ -81,7 +81,7 @@ public class MavenEmbeddedRuntimeImpl extends AbstractRuntime<MavenHostInfo> imp
             return activate(source, qName);
         } catch (MalformedURLException e) {
             String identifier = url.toString();
-            throw new CompositeActivationException("Invalid project directory [" + identifier + "]", identifier, e);
+            throw new CompositeActivationException("Invalid project directory: " + identifier, identifier, e);
         }
     }
 
@@ -102,7 +102,7 @@ public class MavenEmbeddedRuntimeImpl extends AbstractRuntime<MavenHostInfo> imp
             throw new CompositeActivationException("Error processing project", e);
         } catch (ActivateException e) {
             String identifier = qName.toString();
-            throw new CompositeActivationException("Error activating composite [" + identifier + "]", identifier, e);
+            throw new CompositeActivationException("Error activating composite:" + identifier, identifier, e);
         }
     }
 
