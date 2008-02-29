@@ -24,8 +24,9 @@ import org.fabric3.pojo.instancefactory.InstanceFactoryBuilderException;
  * @version $Rev$ $Date$
  */
 public class NoRegisteredIFBuilderException extends InstanceFactoryBuilderException {
+    private static final long serialVersionUID = 8566546048246232275L;
 
-    public NoRegisteredIFBuilderException(String identifier) {
-        super("No registered builder for", identifier);
+    public NoRegisteredIFBuilderException(String message, String identifier) {
+        super(message, identifier);
     }
 }

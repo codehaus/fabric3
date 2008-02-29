@@ -44,14 +44,12 @@ import org.fabric3.scdl.InjectableAttribute;
  * @version $Date$ $Revision$
  */
 @EagerInit
-public class ReflectiveInstanceFactoryBuilder<T>
-        implements InstanceFactoryBuilder<ReflectiveInstanceFactoryProvider<T>, InstanceFactoryDefinition> {
+public class ReflectiveInstanceFactoryBuilder<T> implements InstanceFactoryBuilder<ReflectiveInstanceFactoryProvider<T>, InstanceFactoryDefinition> {
 
     private final InstanceFactoryBuilderRegistry registry;
     private final InstanceFactoryBuildHelper helper;
 
-    public ReflectiveInstanceFactoryBuilder(@Reference InstanceFactoryBuilderRegistry registry,
-                                            @Reference InstanceFactoryBuildHelper helper) {
+    public ReflectiveInstanceFactoryBuilder(@Reference InstanceFactoryBuilderRegistry registry, @Reference InstanceFactoryBuildHelper helper) {
         this.registry = registry;
         this.helper = helper;
     }
@@ -61,8 +59,7 @@ public class ReflectiveInstanceFactoryBuilder<T>
         registry.register(InstanceFactoryDefinition.class, this);
     }
 
-    public ReflectiveInstanceFactoryProvider<T> build(InstanceFactoryDefinition ifpd, ClassLoader cl)
-            throws InstanceFactoryBuilderException {
+    public ReflectiveInstanceFactoryProvider<T> build(InstanceFactoryDefinition ifpd, ClassLoader cl) throws InstanceFactoryBuilderException {
 
         try {
             @SuppressWarnings("unchecked")
@@ -81,20 +78,15 @@ public class ReflectiveInstanceFactoryBuilder<T>
             }
             for (int i = 0; i < cdiSources.length; i++) {
                 if (cdiSources[i] == null) {
-                    throw new InstanceFactoryBuilderException("No source for constructor parameter " + i, ctr.getName());
+                    String clazz = ctr.getName();
+                    throw new InstanceFactoryBuilderException("No injection value for constructor parameter " + i + " in class " + clazz, clazz);
                 }
             }
 
             Method initMethod = helper.getMethod(implClass, ifpd.getInitMethod());
             Method destroyMethod = helper.getMethod(implClass, ifpd.getDestroyMethod());
 
-            return new ReflectiveInstanceFactoryProvider<T>(ctr,
-                                                            Arrays.asList(cdiSources),
-                                                            injectionSites,
-                                                            initMethod,
-                                                            destroyMethod,
-                                                            cl);
-
+            return new ReflectiveInstanceFactoryProvider<T>(ctr, Arrays.asList(cdiSources), injectionSites, initMethod, destroyMethod, cl);
         } catch (ClassNotFoundException ex) {
             throw new InstanceFactoryBuilderException(ex);
         } catch (NoSuchMethodException ex) {

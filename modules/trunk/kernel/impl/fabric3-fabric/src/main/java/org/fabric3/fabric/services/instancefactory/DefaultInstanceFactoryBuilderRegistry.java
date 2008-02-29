@@ -29,7 +29,7 @@ import org.fabric3.pojo.instancefactory.InstanceFactoryDefinition;
 
 /**
  * Default implementation of the registry.
- * 
+ *
  * @version $Revison$ $Date$
  */
 public class DefaultInstanceFactoryBuilderRegistry implements InstanceFactoryBuilderRegistry {
@@ -37,24 +37,23 @@ public class DefaultInstanceFactoryBuilderRegistry implements InstanceFactoryBui
     // Internal cache
     private Map<Class<?>, InstanceFactoryBuilder<? extends InstanceFactoryProvider,
             ? extends InstanceFactoryDefinition>> registry =
-        new ConcurrentHashMap<Class<?>, InstanceFactoryBuilder<? extends InstanceFactoryProvider,
-                        ? extends InstanceFactoryDefinition>>();
+            new ConcurrentHashMap<Class<?>, InstanceFactoryBuilder<? extends InstanceFactoryProvider,
+                    ? extends InstanceFactoryDefinition>>();
 
     /**
      * Builds an instnace factory provider from a definition.
-     * 
+     *
      * @param providerDefinition Provider definition.
-     * @param cl Clasloader to use.
+     * @param cl                 Clasloader to use.
      * @return Instance factory provider.
      */
     @SuppressWarnings("unchecked")
-    public InstanceFactoryProvider build(InstanceFactoryDefinition providerDefinition, ClassLoader cl)
-        throws InstanceFactoryBuilderException {
-
+    public InstanceFactoryProvider build(InstanceFactoryDefinition providerDefinition, ClassLoader cl) throws InstanceFactoryBuilderException {
         Class<? extends InstanceFactoryDefinition> type = providerDefinition.getClass();
         InstanceFactoryBuilder builder = registry.get(type);
-        if(builder == null) {
-            throw new NoRegisteredIFBuilderException(type.toString());
+        if (builder == null) {
+            String id = type.toString();
+            throw new NoRegisteredIFBuilderException("No registered builder for: " + id, id);
         }
         return builder.build(providerDefinition, cl);
     }
@@ -62,8 +61,7 @@ public class DefaultInstanceFactoryBuilderRegistry implements InstanceFactoryBui
     /**
      * Registers the builder.
      */
-    public <IFPD extends InstanceFactoryDefinition> void register(Class<?> ifpdClass,
-                                                                          InstanceFactoryBuilder<?, IFPD> builder) {
+    public <IFPD extends InstanceFactoryDefinition> void register(Class<?> ifpdClass, InstanceFactoryBuilder<?, IFPD> builder) {
         registry.put(ifpdClass, builder);
     }
 

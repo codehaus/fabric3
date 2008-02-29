@@ -39,16 +39,13 @@ public class BuildHelperImpl implements InstanceFactoryBuildHelper {
         return classLoaderRegistry.loadClass(cl, name);
     }
 
-    public <T> Constructor<T> getConstructor(Class<T> implClass, Signature signature)
-            throws ClassNotFoundException, NoSuchMethodException {
-
+    public <T> Constructor<T> getConstructor(Class<T> implClass, Signature signature) throws ClassNotFoundException, NoSuchMethodException {
         Constructor<T> ctr = signature.getConstructor(implClass);
         ctr.setAccessible(true);
         return ctr;
     }
 
-    public Method getMethod(Class<?> implClass, Signature signature)
-            throws NoSuchMethodException, ClassNotFoundException {
+    public Method getMethod(Class<?> implClass, Signature signature) throws NoSuchMethodException, ClassNotFoundException {
         return signature == null ? null : signature.getMethod(implClass);
     }
 
