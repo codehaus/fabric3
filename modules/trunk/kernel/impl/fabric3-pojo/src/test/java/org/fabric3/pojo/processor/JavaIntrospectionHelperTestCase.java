@@ -16,16 +16,15 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.fabric.util;
+package org.fabric3.pojo.processor;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Set;
 
+import junit.framework.Assert;
 import junit.framework.TestCase;
-
-import org.fabric3.pojo.processor.JavaIntrospectionHelper;
 
 @Deprecated
 public class JavaIntrospectionHelperTestCase extends TestCase {
@@ -45,12 +44,12 @@ public class JavaIntrospectionHelperTestCase extends TestCase {
 
     public void testGetSuperAllMethods() throws Exception {
         Set<Method> superBeanMethods = JavaIntrospectionHelper.getAllUniquePublicProtectedMethods(SuperBean.class);
-        assertEquals(SuperBean.ALL_SUPER_METHODS, superBeanMethods.size());
+        Assert.assertEquals(SuperBean.ALL_SUPER_METHODS, superBeanMethods.size());
     }
 
     public void testGetBean1AllMethods() throws Exception {
         Set<Method> beanMethods = JavaIntrospectionHelper.getAllUniquePublicProtectedMethods(Bean1.class);
-        assertEquals(Bean1.ALL_BEAN1_METHODS, beanMethods.size());
+        Assert.assertEquals(Bean1.ALL_BEAN1_METHODS, beanMethods.size());
     }
 
     public void testOverrideMethod() throws Exception {

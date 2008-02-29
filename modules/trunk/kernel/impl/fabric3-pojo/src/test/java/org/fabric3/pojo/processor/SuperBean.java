@@ -16,32 +16,33 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.fabric.util;
+package org.fabric3.pojo.processor;
 
-import java.util.List;
+/**
+ * @version $Rev$ $Date$
+ */
+public class SuperBean {
 
-import junit.framework.AssertionFailedError;
+    public static final int ALL_SUPER_FIELDS = 6;
+    public static final int ALL_SUPER_PUBLIC_PROTECTED_FIELDS = 5;
+    public static final int ALL_SUPER_METHODS = 4;
+    public String superField2;
 
-public class Bean2 {
+    protected String superField3;
 
-    private List methodList;
-    private List fieldList;
+    private String superField1;
 
-    public List getMethodList() {
-        return methodList;
+    public void setSuperMethod1(String param) {
     }
 
-    public void setMethodList(List list) {
-        methodList = list;
+    public void setSuperMethod1(int param) {
     }
 
-    public List getfieldList() {
-        return fieldList;
+    public void override(String param) throws Exception {
+        throw new Exception("Override not handled");
     }
 
-    public void setfieldList(List list) {
-        throw new AssertionFailedError("setter inadvertantly called");
+    public void noOverride() throws Exception {
     }
-
 
 }
