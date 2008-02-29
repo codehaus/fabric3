@@ -46,7 +46,7 @@ public class QNameImport extends Import {
     }
 
     public String toString() {
-        return "Import qname [" + namespace + "]";
+        return "qname [" + namespace + "]";
     }
 
 }

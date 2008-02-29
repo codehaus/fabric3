@@ -71,7 +71,7 @@ public class ContributionElementLoader extends LoaderExtension<ContributionManif
                 } else if (DEPLOYABLE.equals(element)) {
                     String name = reader.getAttributeValue(null, "composite");
                     if (name == null) {
-                        throw new MissingAttributeException("composite");
+                        throw new MissingAttributeException("Composite attribute must be specified", "composite");
                     }
                     QName qName = StaxUtil.createQName(name, reader);
                     Deployable deployable = new Deployable(qName, Constants.COMPOSITE_TYPE);
@@ -83,7 +83,8 @@ public class ContributionElementLoader extends LoaderExtension<ContributionManif
                     } else if (o instanceof Import) {
                         contribution.addImport((Import) o);
                     } else if (o != null) {
-                        throw new InvalidManifestTypeException("Unrecognized type", o.getClass().getName());
+                        String type = o.getClass().getName();
+                        throw new InvalidManifestTypeException("Unrecognized type: " + type, type);
                     }
                 }
                 break;

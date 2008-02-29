@@ -26,9 +26,14 @@ import org.fabric3.spi.services.contribution.ManifestLoadException;
  * @version $Rev$ $Date$
  */
 public class MissingAttributeException extends ManifestLoadException {
+    private static final long serialVersionUID = 2966463108475506318L;
 
-    public MissingAttributeException(String identifier) {
-        super("Required attribute not specified", identifier);
+    public MissingAttributeException(String message) {
+        super(message, null);
+    }
+
+    public MissingAttributeException(String message, String identifier) {
+        super(message, identifier);
     }
 
 }

@@ -128,8 +128,7 @@ public class ImplementationCompositeLoader implements StAXElementLoader<Composit
             return impl;
 
         } else {
-            throw new MissingAttributeException(
-                    "Implementaiton.composite must have a name, scdlLocation, or scdlResource");
+            throw new MissingAttributeException("Implementaiton.composite must have a name, scdlLocation, or scdlResource");
         }
 
     }

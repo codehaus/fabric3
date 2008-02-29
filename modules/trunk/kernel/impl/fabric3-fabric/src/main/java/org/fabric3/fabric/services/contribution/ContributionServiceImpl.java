@@ -167,7 +167,8 @@ public class ContributionServiceImpl implements ContributionService {
     public List<Deployable> getDeployables(URI contributionUri) throws ContributionException {
         Contribution contribution = metaDataStore.find(contributionUri);
         if (contribution == null) {
-            throw new ContributionNotFoundException("No contribution found for URI", contributionUri.toString());
+            String uri = contributionUri.toString();
+            throw new ContributionNotFoundException("No contribution found for: " + uri, uri);
         }
         List<Deployable> list = new ArrayList<Deployable>();
         if (contribution.getManifest() != null) {
@@ -193,7 +194,8 @@ public class ContributionServiceImpl implements ContributionService {
     private void update(URI uri, byte[] checksum, long timestamp) throws ContributionException, IOException {
         Contribution contribution = metaDataStore.find(uri);
         if (contribution == null) {
-            throw new ContributionNotFoundException("Contribution not found for ", uri.toString());
+            String identifier = uri.toString();
+            throw new ContributionNotFoundException("Contribution not found for: " + identifier, identifier);
         }
         long archivedTimestamp = contribution.getTimestamp();
         if (timestamp > archivedTimestamp) {

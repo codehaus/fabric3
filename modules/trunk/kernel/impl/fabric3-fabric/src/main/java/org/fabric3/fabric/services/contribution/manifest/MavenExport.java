@@ -161,7 +161,7 @@ public class MavenExport extends Export {
             revision = Integer.parseInt(tokens[2]);
             snapshot = true;
         } else {
-            throw new IllegalArgumentException("Illegal Maven version number [" + version + "]");
+            throw new IllegalArgumentException("Illegal Maven version number :" + version);
         }
     }
 

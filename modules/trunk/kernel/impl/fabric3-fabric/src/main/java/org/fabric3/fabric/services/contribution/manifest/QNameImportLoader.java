@@ -57,7 +57,7 @@ public class QNameImportLoader extends LoaderExtension<QNameImport> {
             throws ManifestLoadException, XMLStreamException {
         String ns = reader.getAttributeValue(null, "namespace");
         if (ns == null) {
-            throw new MissingAttributeException("namespace");
+            throw new MissingAttributeException("Namespace attribute must be specified", "namespace");
         }
         String location = reader.getAttributeValue(null, "location");
         QNameImport contributionImport = new QNameImport(new QName(ns));

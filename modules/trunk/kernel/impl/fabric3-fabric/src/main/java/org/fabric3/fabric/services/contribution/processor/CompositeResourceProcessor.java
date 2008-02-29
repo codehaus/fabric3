@@ -119,7 +119,7 @@ public class CompositeResourceProcessor implements ResourceProcessor {
             }
             if (!found) {
                 String identifier = composite.getName().toString();
-                throw new ResourceElementNotFoundException("Resource element not found", identifier);
+                throw new ResourceElementNotFoundException("Resource element not found: " + identifier, identifier);
             }
         } catch (LoaderException e) {
             throw new ContributionException(e);

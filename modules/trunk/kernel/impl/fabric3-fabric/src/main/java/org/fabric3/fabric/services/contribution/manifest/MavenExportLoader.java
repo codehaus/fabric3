@@ -48,11 +48,11 @@ public class MavenExportLoader extends LoaderExtension<MavenExport> {
             throws XMLStreamException, LoaderException {
         String groupId = reader.getAttributeValue(null, "groupId");
         if (groupId == null) {
-            throw new MissingAttributeException("groupId");
+            throw new MissingAttributeException("groupId attribute must be specified", "groupId");
         }
         String artifactId = reader.getAttributeValue(null, "artifactId");
         if (artifactId == null) {
-            throw new MissingAttributeException("artifactId");
+            throw new MissingAttributeException("artifictId attribute must be specified", "artifictId");
         }
         String version = reader.getAttributeValue(null, "version");
         String classifier = reader.getAttributeValue(null, "classifier");

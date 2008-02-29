@@ -21,8 +21,8 @@ package org.fabric3.fabric.services.contribution;
 import org.fabric3.host.contribution.ContributionException;
 
 /**
- * Exception thrown to indicate that a Content-Type is not supported by this SCA Domain. The Content-Type value supplied
- * will be returned as the message text for this exception.
+ * Exception thrown to indicate that a Content-Type is not supported by this SCA Domain. The Content-Type value supplied will be returned as the
+ * message text for this exception.
  *
  * @version $Rev$ $Date$
  */
@@ -30,22 +30,13 @@ public class UnsupportedContentTypeException extends ContributionException {
     private static final long serialVersionUID = -1831797280021355672L;
 
     /**
-     * Constructor specifying the Content-Type value that is not supported.
+     * Constructor specifying the Content-Type value that is not supported and an identifier to use with this exception (typically the resource being
+     * processed).
      *
-     * @param contentType the type that is not supported
+     * @param message    the error message
+     * @param identifier an identifier for this exception
      */
-    public UnsupportedContentTypeException(String contentType) {
-        super("Unsupported content type", contentType);
-    }
-
-    /**
-     * Constructor specifying the Content-Type value that is not supported and an identifier to use with this exception
-     * (typically the resource being processed).
-     *
-     * @param contentType the type that is not supported
-     * @param identifier  an identifier for this exception
-     */
-    public UnsupportedContentTypeException(String contentType, String identifier) {
-        super(contentType, identifier);
+    public UnsupportedContentTypeException(String message, String identifier) {
+        super(message, identifier);
     }
 }

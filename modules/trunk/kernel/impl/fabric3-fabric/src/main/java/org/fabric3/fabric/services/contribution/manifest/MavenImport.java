@@ -117,13 +117,13 @@ public class MavenImport extends Import {
             revision = Integer.parseInt(tokens[2]);
             snapshot = true;
         } else {
-            throw new IllegalArgumentException("Illegal Maven version number [" + version + "]");
+            throw new IllegalArgumentException("Illegal Maven version number :" + version);
         }
     }
 
     public String toString() {
-        return new StringBuilder().append("Maven import [").append(groupId).append(":").append(artifactId).
+        return new StringBuilder().append("Maven [").append(groupId).append(":").append(artifactId).
                 append(":").append(version).append(":").append(classifier).append("]").toString();
     }
-    
+
 }

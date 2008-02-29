@@ -23,8 +23,8 @@ import javax.xml.stream.XMLStreamReader;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.extension.loader.LoaderExtension;
-import org.fabric3.spi.Constants;
 import org.fabric3.introspection.IntrospectionContext;
+import org.fabric3.spi.Constants;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
 
@@ -48,11 +48,11 @@ public class MavenImportLoader extends LoaderExtension<MavenImport> {
             throws XMLStreamException, LoaderException {
         String groupId = reader.getAttributeValue(null, "groupId");
         if (groupId == null) {
-            throw new MissingAttributeException("groupId");
+            throw new MissingAttributeException("groupId attribute must be specified", "groupId");
         }
         String artifactId = reader.getAttributeValue(null, "artifactId");
         if (artifactId == null) {
-            throw new MissingAttributeException("artifactId");
+            throw new MissingAttributeException("artifactId attribute must be specified", "artifactId");
         }
         String version = reader.getAttributeValue(null, "version");
         String classifier = reader.getAttributeValue(null, "classifier");

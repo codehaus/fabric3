@@ -98,7 +98,7 @@ public class MetaDataStoreImpl implements MetaDataStore {
         Contribution contribution = find(contributionUri);
         if (contribution == null) {
             String identifier = contributionUri.toString();
-            throw new ContributionResolutionException("Contribution not found", identifier);
+            throw new ContributionResolutionException("Contribution not found: " + identifier, identifier);
         }
         ResourceElement<S, V> element = resolveInternal(contribution, type, symbol);
         if (element != null) {
@@ -108,7 +108,7 @@ public class MetaDataStoreImpl implements MetaDataStore {
             Contribution resolved = cache.get(uri);
             if (resolved == null) {
                 String identifier = contributionUri.toString();
-                throw new ContributionResolutionException("Dependent contibution not found", identifier);
+                throw new ContributionResolutionException("Dependent contibution not found: " + identifier, identifier);
             }
             element = resolveInternal(resolved, type, symbol);
             if (element != null) {
@@ -149,8 +149,8 @@ public class MetaDataStoreImpl implements MetaDataStore {
         for (Import imprt : contribution.getManifest().getImports()) {
             Contribution imported = resolve(imprt);
             if (imported == null) {
-                String identifier = contribution.getUri().toString();
-                throw new UnresolvableImportException("Unable to resolve import in contribution", identifier, imprt);
+                String id = contribution.getUri().toString();
+                throw new UnresolvableImportException("Import " + imprt + " in contribution " + id + " cannot be resolved", id, imprt);
             }
             if (!dependencies.contains(imported)) {
                 dependencies.add(imported);
@@ -174,11 +174,11 @@ public class MetaDataStoreImpl implements MetaDataStore {
                             processorRegistry.processResource(contributionUri, resource, loader);
                         } catch (ContributionException e) {
                             String identifier = resource.getUrl().toString();
-                            throw new MetaDataStoreException("Error resolving resurce", identifier, e);
+                            throw new MetaDataStoreException("Error resolving resurce: " + identifier, identifier, e);
                         }
                     }
                     if (!type.isInstance(element.getValue())) {
-                        throw new IllegalArgumentException("Invalid type for symbol [" + type + "]");
+                        throw new IllegalArgumentException("Invalid type for symbol: " + type);
                     }
                     return (ResourceElement<S, V>) element;
                 }

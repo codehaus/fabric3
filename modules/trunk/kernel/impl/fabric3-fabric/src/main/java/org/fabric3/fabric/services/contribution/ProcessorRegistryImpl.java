@@ -84,7 +84,7 @@ public class ProcessorRegistryImpl implements ProcessorRegistry {
         ContributionProcessor processor = contributionProcessorCache.get(contentType);
         if (processor == null) {
             String source = contribution.getUri().toString();
-            throw new UnsupportedContentTypeException(contentType, source);
+            throw new UnsupportedContentTypeException("Type " + contentType + "in contribution " + source + " not supported", contentType);
         }
         processor.processManifest(contribution);
 
@@ -103,8 +103,8 @@ public class ProcessorRegistryImpl implements ProcessorRegistry {
         String contentType = contribution.getContentType();
         ContributionProcessor processor = contributionProcessorCache.get(contentType);
         if (processor == null) {
-            URI source = contribution.getUri();
-            throw new UnsupportedContentTypeException(contentType, source.toString());
+            String source = contribution.getUri().toString();
+            throw new UnsupportedContentTypeException("Type " + contentType + "in contribution " + source + " not supported", contentType);
         }
         processor.index(contribution);
     }
@@ -123,8 +123,8 @@ public class ProcessorRegistryImpl implements ProcessorRegistry {
         String contentType = contribution.getContentType();
         ContributionProcessor processor = contributionProcessorCache.get(contentType);
         if (processor == null) {
-            URI source = contribution.getUri();
-            throw new UnsupportedContentTypeException(contentType, source.toString());
+            String source = contribution.getUri().toString();
+            throw new UnsupportedContentTypeException("Type " + contentType + "in contribution " + source + " not supported", contentType);
         }
         processor.process(contribution, loader);
     }
@@ -145,8 +145,8 @@ public class ProcessorRegistryImpl implements ProcessorRegistry {
         String contentType = contribution.getContentType();
         ContributionProcessor processor = contributionProcessorCache.get(contentType);
         if (processor == null) {
-            URI source = contribution.getUri();
-            throw new UnsupportedContentTypeException(contentType, source.toString());
+            String source = contribution.getUri().toString();
+            throw new UnsupportedContentTypeException("Type " + contentType + "in contribution " + source + " not supported", contentType);
         }
         processor.updateContributionDescription(contribution, description);
     }

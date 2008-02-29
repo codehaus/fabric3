@@ -56,7 +56,7 @@ public class QNameExportLoader extends LoaderExtension<QNameExport> {
             throws ManifestLoadException, XMLStreamException {
         String ns = reader.getAttributeValue(null, "namespace");
         if (ns == null) {
-            throw new MissingAttributeException("namespace");
+            throw new MissingAttributeException("Namespace attribute must be specified", "namespace");
         }
         return new QNameExport(new QName(ns));
     }

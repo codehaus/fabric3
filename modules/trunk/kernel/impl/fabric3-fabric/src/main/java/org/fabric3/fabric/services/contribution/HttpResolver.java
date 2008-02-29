@@ -68,11 +68,14 @@ public class HttpResolver implements ArtifactResolver {
             }
             return localURL;
         } catch (URISyntaxException e) {
-            throw new ResolutionException("URL cannot be converted to URI", url.toString(), e);
+            String identifier = url.toString();
+            throw new ResolutionException("URL cannot be converted to URI: " + identifier, identifier, e);
         } catch (IOException e) {
-            throw new ResolutionException("Error resolving artifact", url.toString(), e);
+            String identifier = url.toString();
+            throw new ResolutionException("Error resolving artifact: " + identifier, identifier, e);
         } catch (ArchiveStoreException e) {
-            throw new ResolutionException("Error resolving artifact", url.toString(), e);
+            String identifier = url.toString();
+            throw new ResolutionException("Error resolving artifact: " + identifier, identifier, e);
         } finally {
             try {
                 if (stream != null) {

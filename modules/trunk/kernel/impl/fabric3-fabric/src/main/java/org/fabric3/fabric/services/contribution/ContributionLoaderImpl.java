@@ -17,8 +17,8 @@ import org.fabric3.spi.services.contribution.MatchingExportNotFoundException;
 import org.fabric3.spi.services.contribution.MetaDataStore;
 
 /**
- * Default implementation of the ContributionLoader. Classloaders corresponding to loaded contributions are registered
- * by name with the system ClassLoaderRegistry.
+ * Default implementation of the ContributionLoader. Classloaders corresponding to loaded contributions are registered by name with the system
+ * ClassLoaderRegistry.
  *
  * @version $Rev$ $Date$
  */
@@ -65,7 +65,8 @@ public class ContributionLoaderImpl implements ContributionLoader {
             ClassLoader importedLoader = classLoaderRegistry.getClassLoader(importedUri);
             if (importedLoader == null) {
                 // TODO load in a transient classloader
-                throw new ContributionLoadException("imported classloader could not be found", importedUri.toString());
+                String uri = importedUri.toString();
+                throw new ContributionLoadException("imported classloader could not be found: " + uri, uri);
             }
             loader.addParent(importedLoader);
         }
