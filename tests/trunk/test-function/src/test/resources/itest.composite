@@ -32,6 +32,6 @@
     <include name="LifecycleComposite"/>
     <include name="AsyncComposite"/>
     <include name="CallbackComposite"/>         
-    <!-- <include name="OrderingComposite"/> -->
+    <include name="OrderingComposite"/>
     <include name="GenericTestComposite"/>
 </composite>
