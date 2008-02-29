@@ -27,8 +27,7 @@ import org.fabric3.spi.services.messaging.MessagingService;
 import org.fabric3.spi.services.messaging.MessagingServiceRegistry;
 
 /**
- * MessagingService implementation that deleagtes to other MessagingServices. Messages will be dispatched based on the
- * runtime id scheme.
+ * MessagingService implementation that deleagtes to other MessagingServices. Messages will be dispatched based on the runtime id scheme.
  *
  * @version $Rev$ $Date$
  */
@@ -50,7 +49,7 @@ public class DelegatingMessagingService implements MessagingService {
         String scheme = runtimeId.getScheme();
         MessagingService service = registry.getServiceForScheme(scheme);
         if (service == null) {
-            throw new UnknownMessagingSchemeException("No messaging service for scheme [" + scheme + "]", scheme);
+            throw new UnknownMessagingSchemeException("No messaging service for scheme: " + scheme, scheme);
         }
         service.sendMessage(runtimeId, content);
     }
