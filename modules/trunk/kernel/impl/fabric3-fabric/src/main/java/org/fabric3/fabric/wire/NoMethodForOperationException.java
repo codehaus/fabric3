@@ -22,9 +22,12 @@ import org.fabric3.spi.wire.ProxyCreationException;
 
 /**
  * Thrown when an {@link org.fabric3.scdl.Operation} cannot be mapped to a method on an interface
+ *
  * @version $Rev$ $Date$
  */
 public class NoMethodForOperationException extends ProxyCreationException {
+    private static final long serialVersionUID = -2770346906058273180L;
+
     public NoMethodForOperationException() {
     }
 

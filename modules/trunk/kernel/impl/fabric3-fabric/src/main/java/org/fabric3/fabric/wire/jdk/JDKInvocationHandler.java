@@ -192,6 +192,7 @@ public final class JDKInvocationHandler<B> implements InvocationHandler, Service
             return hashCode();
             // TODO beter hash algorithm
         }
-        throw new TargetInvocationException("Operation not configured", method.getName());
+        String op = method.getName();
+        throw new TargetInvocationException("Operation not configured: " + op, op);
     }
 }
