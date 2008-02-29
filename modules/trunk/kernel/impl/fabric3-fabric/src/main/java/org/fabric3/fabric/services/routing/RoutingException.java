@@ -26,7 +26,7 @@ import org.fabric3.host.Fabric3Exception;
  * @version $Rev$ $Date$
  */
 public class RoutingException extends Fabric3Exception {
-
+    private static final long serialVersionUID = -7865833725458046880L;
 
     protected RoutingException() {
     }
