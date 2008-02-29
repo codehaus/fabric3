@@ -31,8 +31,8 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.fabric.services.contribution.manifest.MissingAttributeException;
 import org.fabric3.loader.common.IntrospectionContextImpl;
+import org.fabric3.loader.common.MissingAttributeException;
 import org.fabric3.scdl.Composite;
 import org.fabric3.scdl.CompositeImplementation;
 import org.fabric3.spi.loader.Loader;

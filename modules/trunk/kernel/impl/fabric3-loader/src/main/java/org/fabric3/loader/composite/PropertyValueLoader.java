@@ -26,7 +26,7 @@ import org.osoa.sca.annotations.Reference;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import org.fabric3.loader.common.InvalidNameException;
+import org.fabric3.loader.common.MissingAttributeException;
 import org.fabric3.loader.common.PropertyHelper;
 import org.fabric3.scdl.DataType;
 import org.fabric3.scdl.PropertyValue;
@@ -51,7 +51,7 @@ public class PropertyValueLoader implements StAXElementLoader<PropertyValue> {
             throws XMLStreamException, LoaderException {
         String name = reader.getAttributeValue(null, "name");
         if (name == null || name.length() == 0) {
-            throw new InvalidNameException(name);
+            throw new MissingAttributeException("Missing name attribute");
         }
 
         String source = reader.getAttributeValue(null, "source");

@@ -20,6 +20,7 @@ package org.fabric3.loader.composite;
  * @version $Rev$ $Date$
  */
 public class ComponentServiceNotFoundException extends CompositeLoaderException {
+    private static final long serialVersionUID = 2466623032616409398L;
     private final String componentName;
     private final String name;
 

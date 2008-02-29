@@ -20,6 +20,7 @@ package org.fabric3.loader.composite;
  * @version $Rev$ $Date$
  */
 public class ComponentPropertyNotFoundException extends CompositeLoaderException {
+    private static final long serialVersionUID = -6052356261652955167L;
     private final String componentName;
     private final String name;
 

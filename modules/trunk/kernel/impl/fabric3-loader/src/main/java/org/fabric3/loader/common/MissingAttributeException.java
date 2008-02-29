@@ -16,27 +16,27 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.loader.composite;
+package org.fabric3.loader.common;
 
-import javax.xml.namespace.QName;
+import java.net.URL;
+
+import org.fabric3.spi.loader.LoaderException;
 
 /**
- * Exception that indicates that the composite named in an include could not be located.
+ * Denotes a missing attribute
  *
  * @version $Rev$ $Date$
  */
-public class IncludeNotFoundException extends CompositeLoaderException {
-    private final QName includedCompositeName;
+public class MissingAttributeException extends LoaderException {
+    private static final long serialVersionUID = 1L;
 
-    public IncludeNotFoundException(QName includedCompositeName) {
-        this.includedCompositeName = includedCompositeName;
+    public MissingAttributeException(String message) {
+        super(message);
     }
 
-    public QName getIncludedCompositeName() {
-        return includedCompositeName;
+    public MissingAttributeException(String message, String identifier) {
+        super(message, identifier);
     }
 
-    public String getMessage() {
-        return "Unable to include composite with name " + includedCompositeName + " (currently scdlResource or scdlLocation must be specified).";
-    }
 }
+

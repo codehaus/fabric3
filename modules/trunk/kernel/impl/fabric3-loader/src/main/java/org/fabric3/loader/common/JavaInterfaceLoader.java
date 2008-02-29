@@ -81,7 +81,7 @@ public class JavaInterfaceLoader implements StAXElementLoader<ServiceContract> {
             serviceContract.setConversational(conversational);
             return serviceContract;
         } catch (InvalidServiceContractException e) {
-            throw new LoaderException(interfaceClass.getName(), e);
+            throw new LoaderException("The Java interface is an invalid service contract: " + interfaceClass.getName(), e);
         }
     }
 }

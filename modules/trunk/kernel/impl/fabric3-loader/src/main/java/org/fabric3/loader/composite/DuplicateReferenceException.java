@@ -26,7 +26,7 @@ import org.fabric3.spi.loader.LoaderException;
 public class DuplicateReferenceException extends LoaderException {
     private static final long serialVersionUID = -1635475341693729845L;
 
-    public DuplicateReferenceException(String identifier) {
-        super("Reference defined more than once [" + identifier + "]", identifier);
+    public DuplicateReferenceException(String message, String identifier) {
+        super(message, identifier);
     }
 }

@@ -27,7 +27,7 @@ import javax.xml.stream.XMLStreamReader;
 
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.loader.common.InvalidNameException;
+import org.fabric3.loader.common.MissingAttributeException;
 import org.fabric3.loader.common.IntrospectionContextImpl;
 import org.fabric3.scdl.Composite;
 import org.fabric3.scdl.Include;
@@ -56,12 +56,11 @@ public class IncludeLoader implements StAXElementLoader<Include> {
         this.store = store;
     }
 
-    public Include load(XMLStreamReader reader, IntrospectionContext introspectionContext)
-            throws XMLStreamException, LoaderException {
+    public Include load(XMLStreamReader reader, IntrospectionContext introspectionContext) throws XMLStreamException, LoaderException {
 
         String nameAttr = reader.getAttributeValue(null, "name");
         if (nameAttr == null || nameAttr.length() == 0) {
-            throw new InvalidNameException(nameAttr);
+            throw new MissingAttributeException("Missing name attribute");
         }
         QName name = LoaderUtil.getQName(nameAttr, introspectionContext.getTargetNamespace(), reader.getNamespaceContext());
         String scdlLocation = reader.getAttributeValue(null, "scdlLocation");
@@ -74,7 +73,7 @@ public class IncludeLoader implements StAXElementLoader<Include> {
         if (scdlLocation != null) {
             try {
                 url = new URL(introspectionContext.getSourceBase(), scdlLocation);
-                return loadFromSideFile(name, cl,contributionUri, url);
+                return loadFromSideFile(name, cl, contributionUri, url);
             } catch (MalformedURLException e) {
                 throw new MissingResourceException(scdlLocation, name.toString(), e);
             }
@@ -83,7 +82,7 @@ public class IncludeLoader implements StAXElementLoader<Include> {
             if (url == null) {
                 throw new MissingResourceException(scdlResource, name.toString());
             }
-            return loadFromSideFile(name, cl,contributionUri, url);
+            return loadFromSideFile(name, cl, contributionUri, url);
         } else {
             try {
                 QNameSymbol symbol = new QNameSymbol(name);

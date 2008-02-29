@@ -52,6 +52,7 @@ import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderUtil;
 import org.fabric3.spi.loader.PolicyHelper;
 import org.fabric3.spi.loader.StAXElementLoader;
+import org.fabric3.loader.common.MissingAttributeException;
 
 /**
  * Loads a component definition from an XML-based assembly file
@@ -100,12 +101,12 @@ public class ComponentLoader implements StAXElementLoader<ComponentDefinition<?>
 
         String name = reader.getAttributeValue(null, "name");
         if (name == null) {
-            throw new ComponentNameNotSpecifiedException();
+            throw new MissingAttributeException("Component name not specified");
         }
 
         Autowire autowire = Autowire.fromString(reader.getAttributeValue(null, "autowire"));
-        URI runtimeId = loadRuntimeId(reader, context);
-        Integer initLevel = loadInitLevel(reader, context);
+        URI runtimeId = loadRuntimeId(reader);
+        Integer initLevel = loadInitLevel(reader);
         Document key = loadKey(reader);
 
         ComponentDefinition<Implementation<?>> componentDefinition = new ComponentDefinition<Implementation<?>>(name);
@@ -120,10 +121,10 @@ public class ComponentLoader implements StAXElementLoader<ComponentDefinition<?>
         try {
             impl = loadImplementation(reader, context);
         } catch (LoaderException e) {
-            throw new InvalidImplementationException(name, e);
+            throw new InvalidImplementationException("Invalid component implementation: " + name, e);
         }
         componentDefinition.setImplementation(impl);
-        AbstractComponentType<?,?,?,?> componentType = impl.getComponentType();
+        AbstractComponentType<?, ?, ?, ?> componentType = impl.getComponentType();
 
         while (true) {
             switch (reader.next()) {
@@ -136,7 +137,8 @@ public class ComponentLoader implements StAXElementLoader<ComponentDefinition<?>
                         throw new ComponentPropertyNotFoundException(name, value.getName());
                     }
                     if (componentDefinition.getPropertyValues().containsKey(value.getName())) {
-                        throw new DuplicateConfiguredPropertyException(value.getName());
+                        String id = value.getName();
+                        throw new DuplicateConfiguredPropertyException("The property is configured more than once: " + id, id);
                     }
                     componentDefinition.add(value);
                 } else if (REFERENCE.equals(qname)) {
@@ -145,8 +147,9 @@ public class ComponentLoader implements StAXElementLoader<ComponentDefinition<?>
                         // ensure the reference exists
                         throw new ComponentReferenceNotFoundException(name, reference.getName());
                     }
-                    if (componentDefinition.getReferences().containsKey(reference.getName())) {
-                        throw new DuplicateConfiguredReferenceException(reference.getName());
+                    String refKey = reference.getName();
+                    if (componentDefinition.getReferences().containsKey(refKey)) {
+                        throw new DuplicateConfiguredReferenceException("The reference is configured more than once: " + refKey, refKey);
                     }
                     componentDefinition.add(reference);
                 } else if (SERVICE.equals(qname)) {
@@ -156,7 +159,8 @@ public class ComponentLoader implements StAXElementLoader<ComponentDefinition<?>
                         throw new ComponentServiceNotFoundException(name, service.getName());
                     }
                     if (componentDefinition.getServices().containsKey(service.getName())) {
-                        throw new DuplicateConfiguredServiceException(service.getName());
+                        String id = service.getName();
+                        throw new DuplicateConfiguredServiceException("Service configured more than once: " + id, id);
                     }
                     componentDefinition.add(service);
                 } else {
@@ -173,8 +177,8 @@ public class ComponentLoader implements StAXElementLoader<ComponentDefinition<?>
     }
 
     private void validateRequiredProperties(ComponentDefinition<? extends Implementation<?>> definition) throws RequiredPropertyNotProvidedException {
-        AbstractComponentType<?,?,?,?> type = definition.getImplementation().getComponentType();
-        Map<String,? extends Property> properties = type.getProperties();
+        AbstractComponentType<?, ?, ?, ?> type = definition.getImplementation().getComponentType();
+        Map<String, ? extends Property> properties = type.getProperties();
         Map<String, PropertyValue> values = definition.getPropertyValues();
         for (Property property : properties.values()) {
             if (property.isRequired() && !values.containsKey(property.getName())) {
@@ -219,7 +223,7 @@ public class ComponentLoader implements StAXElementLoader<ComponentDefinition<?>
     /*
      * Loads the init level.
      */
-    private Integer loadInitLevel(XMLStreamReader reader, IntrospectionContext context) throws InvalidValueException {
+    private Integer loadInitLevel(XMLStreamReader reader) throws InvalidValueException {
         String initLevel = reader.getAttributeValue(null, "initLevel");
         if (initLevel == null || initLevel.length() == 0) {
             return null;
@@ -227,7 +231,7 @@ public class ComponentLoader implements StAXElementLoader<ComponentDefinition<?>
             try {
                 return Integer.valueOf(initLevel);
             } catch (NumberFormatException e) {
-                throw new InvalidValueException(initLevel, "initValue", e);
+                throw new InvalidValueException("Invalid initialization level: " + initLevel, e);
             }
         }
     }
@@ -235,7 +239,7 @@ public class ComponentLoader implements StAXElementLoader<ComponentDefinition<?>
     /*
      * Loads the runtime id.
      */
-    private URI loadRuntimeId(XMLStreamReader reader, IntrospectionContext context) throws InvalidValueException {
+    private URI loadRuntimeId(XMLStreamReader reader) throws InvalidValueException {
         String runtimeAttr = reader.getAttributeValue(null, "runtimeId");
         if (runtimeAttr == null) {
             return null;
@@ -243,7 +247,7 @@ public class ComponentLoader implements StAXElementLoader<ComponentDefinition<?>
             try {
                 return new URI(runtimeAttr);
             } catch (URISyntaxException e) {
-                throw new InvalidValueException(runtimeAttr, "runtimeId", e);
+                throw new InvalidValueException("Invalid runtime id value: " + runtimeAttr, e);
             }
         }
     }

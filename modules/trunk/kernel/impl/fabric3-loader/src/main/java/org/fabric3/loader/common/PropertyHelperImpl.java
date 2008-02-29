@@ -47,7 +47,7 @@ public class PropertyHelperImpl implements PropertyHelper {
         try {
             builder = documentBuilderFactory.newDocumentBuilder();
         } catch (ParserConfigurationException e) {
-            throw new AssertionError();
+            throw new AssertionError(e);
         }
         Document value = builder.newDocument();
         Element root = value.createElement("value");

@@ -18,15 +18,15 @@ package org.fabric3.loader.composite;
 
 import java.net.URI;
 import java.util.StringTokenizer;
+import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
-import javax.xml.namespace.QName;
 
-import org.osoa.sca.annotations.Reference;
 import static org.osoa.sca.Constants.SCA_NS;
+import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.loader.common.InvalidNameException;
+import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.scdl.BindingDefinition;
 import org.fabric3.scdl.CompositeReference;
 import org.fabric3.scdl.ModelObject;
@@ -36,7 +36,6 @@ import org.fabric3.scdl.ServiceContract;
 import org.fabric3.spi.loader.InvalidReferenceException;
 import org.fabric3.spi.loader.InvalidValueException;
 import org.fabric3.spi.loader.Loader;
-import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderUtil;
 import org.fabric3.spi.loader.PolicyHelper;
@@ -69,7 +68,7 @@ public class CompositeReferenceLoader implements StAXElementLoader<CompositeRefe
         CompositeReference referenceDefinition = new CompositeReference(name, null);
         policyHelper.loadPolicySetsAndIntents(referenceDefinition, reader);
 
-        setPromoted(reader, referenceDefinition, name, context);
+        setPromoted(reader, referenceDefinition, name);
 
         try {
             Multiplicity multiplicity = Multiplicity.fromString(reader.getAttributeValue(null, "multiplicity"));
@@ -115,15 +114,11 @@ public class CompositeReferenceLoader implements StAXElementLoader<CompositeRefe
     /*
      * Processes the promotes attribute.
      */
-    private void setPromoted(XMLStreamReader reader,
-                             CompositeReference referenceDefinition,
-                             String name,
-                             IntrospectionContext context)
-            throws InvalidReferenceException, InvalidNameException {
+    private void setPromoted(XMLStreamReader reader, CompositeReference referenceDefinition, String name) throws InvalidReferenceException {
 
         String promoted = reader.getAttributeValue(null, "promote");
         if (promoted == null || promoted.trim().length() < 1) {
-            throw new InvalidReferenceException("No promoted reference specified", name);
+            throw new InvalidReferenceException("No promoted reference specified on reference: " + name, name);
         }
         StringTokenizer tokenizer = new StringTokenizer(promoted, " ");
         while (tokenizer.hasMoreTokens()) {

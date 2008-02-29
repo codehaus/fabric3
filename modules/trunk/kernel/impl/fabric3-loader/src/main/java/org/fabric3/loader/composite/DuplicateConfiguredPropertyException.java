@@ -16,8 +16,6 @@
  */
 package org.fabric3.loader.composite;
 
-import java.net.URL;
-
 import org.fabric3.spi.loader.LoaderException;
 
 /**
@@ -26,7 +24,7 @@ import org.fabric3.spi.loader.LoaderException;
 public class DuplicateConfiguredPropertyException extends LoaderException {
     private static final long serialVersionUID = -7165805004688402192L;
 
-    public DuplicateConfiguredPropertyException(String identifier) {
-        super("Property configured more than once", identifier);
+    public DuplicateConfiguredPropertyException(String message, String identifier) {
+        super(message, identifier);
     }
 }

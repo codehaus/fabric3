@@ -31,6 +31,7 @@ import org.fabric3.extension.loader.LoaderExtension;
 import org.fabric3.host.contribution.Constants;
 import org.fabric3.host.contribution.Deployable;
 import org.fabric3.introspection.IntrospectionContext;
+import org.fabric3.loader.common.MissingAttributeException;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.services.contribution.ContributionManifest;

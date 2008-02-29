@@ -26,7 +26,7 @@ import org.fabric3.spi.loader.LoaderException;
 public class DuplicateConfiguredServiceException extends LoaderException {
     private static final long serialVersionUID = 316549203790360060L;
 
-    public DuplicateConfiguredServiceException(String identifier) {
-        super("Service configured more than once", identifier);
+    public DuplicateConfiguredServiceException(String message, String identifier) {
+        super(message, identifier);
     }
 }

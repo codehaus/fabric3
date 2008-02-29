@@ -57,7 +57,7 @@ public class ComponentServiceLoader implements StAXElementLoader<ComponentServic
 
         String name = reader.getAttributeValue(null, "name");
         if (name == null) {
-            throw new MissingServiceNameException();
+            throw new MissingAttributeException("Missing name attribute");
         }
         ComponentService def = new ComponentService(name, null);
 

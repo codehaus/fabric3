@@ -25,6 +25,7 @@ package org.fabric3.spi.loader;
  * @version $Rev$ $Date$
  */
 public class InvalidValueException extends LoaderException {
+    private static final long serialVersionUID = 754253893069141986L;
 
     public InvalidValueException(String message) {
         super(message);

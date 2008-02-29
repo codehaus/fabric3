@@ -26,7 +26,7 @@ import org.fabric3.spi.loader.LoaderException;
 public class DuplicateServiceException extends LoaderException {
     private static final long serialVersionUID = 6690233199134874915L;
 
-    public DuplicateServiceException(String identifier) {
-        super("Service defined more than once [" + identifier + "]", identifier);
+    public DuplicateServiceException(String message, String identifier) {
+        super(message, identifier);
     }
 }

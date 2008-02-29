@@ -28,6 +28,7 @@ import org.fabric3.spi.loader.LoaderException;
  * @version $Rev$ $Date$
  */
 public class InvalidIncludeException extends CompositeLoaderException {
+    private static final long serialVersionUID = 2784600570114810462L;
     private final QName compositeName;
 
     public InvalidIncludeException(QName compositeName, LoaderException cause) {

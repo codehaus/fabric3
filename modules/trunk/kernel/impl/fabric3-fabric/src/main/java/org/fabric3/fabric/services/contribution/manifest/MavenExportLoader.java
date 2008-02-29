@@ -27,6 +27,7 @@ import org.fabric3.spi.Constants;
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
+import org.fabric3.loader.common.MissingAttributeException;
 
 /**
  * Loads Maven export entries in a contribution manifest.
