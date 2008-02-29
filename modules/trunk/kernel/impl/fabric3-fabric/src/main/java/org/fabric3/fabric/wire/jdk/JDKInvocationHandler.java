@@ -125,10 +125,10 @@ public final class JDKInvocationHandler<B> implements InvocationHandler, Service
         if (conversational && conversation == null) {
             conversation = new ConversationImpl(createConversationID());
             // mark the CallFrame as starting a conversation
-            CallFrame frame = new CallFrame(callbackUri, conversation, true);
+            CallFrame frame = new CallFrame(callbackUri, null, conversation, true);
             workContext.addCallFrame(frame);
         } else {
-            CallFrame frame = new CallFrame(callbackUri, conversation);
+            CallFrame frame = new CallFrame(callbackUri, null, conversation, false);
             workContext.addCallFrame(frame);
         }
         // send the invocation down the wire

@@ -27,6 +27,6 @@ public class DuplicateServiceException extends LoaderException {
     private static final long serialVersionUID = 6690233199134874915L;
 
     public DuplicateServiceException(String identifier) {
-        super("Service defined more than once", identifier);
+        super("Service defined more than once [" + identifier + "]", identifier);
     }
 }

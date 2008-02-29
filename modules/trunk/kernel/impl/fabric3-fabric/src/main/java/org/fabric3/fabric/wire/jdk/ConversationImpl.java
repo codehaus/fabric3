@@ -16,6 +16,8 @@
  */
 package org.fabric3.fabric.wire.jdk;
 
+import java.io.Serializable;
+
 import org.osoa.sca.Conversation;
 
 /**
@@ -23,7 +25,8 @@ import org.osoa.sca.Conversation;
  *
  * @version $Rev$ $Date$
  */
-public class ConversationImpl implements Conversation {
+public class ConversationImpl implements Conversation, Serializable {
+    private static final long serialVersionUID = 8249514203064252385L;
     private final Object conversationId;
 
     /**

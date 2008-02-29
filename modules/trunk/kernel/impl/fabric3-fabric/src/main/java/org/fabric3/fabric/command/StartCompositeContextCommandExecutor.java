@@ -62,7 +62,7 @@ public class StartCompositeContextCommandExecutor implements CommandExecutor<Sta
     public void execute(StartCompositeContextCommand command) throws ExecutionException {
         WorkContext workContext = new WorkContext();
         URI id = command.getGroupId();
-        CallFrame frame = new CallFrame(id);
+        CallFrame frame = new CallFrame(null, id, null, false);
         workContext.addCallFrame(frame);
         try {
             container.startContext(workContext, id);

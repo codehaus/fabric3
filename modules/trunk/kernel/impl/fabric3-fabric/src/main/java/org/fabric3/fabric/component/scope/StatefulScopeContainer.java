@@ -28,13 +28,12 @@ import org.fabric3.spi.component.WorkContext;
 import org.fabric3.scdl.Scope;
 
 /**
- * Scope container that manages instances in association with a backing store that is able to persist them across
- * invocations.
+ * Scope container that manages instances in association with a backing store that is able to persist them across invocations.
  *
  * @version $Rev$ $Date$
  * @param <KEY> the type of identifier used to identify instances of this scope
  */
-public class StatefulScopeContainer<KEY> extends AbstractScopeContainer<KEY> {
+public abstract class StatefulScopeContainer<KEY> extends AbstractScopeContainer<KEY> {
     private final InstanceWrapperStore<KEY> store;
 
     public StatefulScopeContainer(Scope<KEY> scope, ScopeContainerMonitor monitor, InstanceWrapperStore<KEY> store) {
@@ -42,23 +41,22 @@ public class StatefulScopeContainer<KEY> extends AbstractScopeContainer<KEY> {
         this.store = store;
     }
 
-    public void startContext(WorkContext workContext, URI groupId) throws GroupInitializationException {
-        KEY contextId = workContext.peekCallFrame().getCorrelationId(getScope().getIdentifierType());
-        assert contextId != null;
+    public void startContext(WorkContext workContext, KEY contextId, URI groupId) throws GroupInitializationException {
         store.startContext(contextId);
         super.startContext(workContext, contextId, groupId);
     }
 
-    public void stopContext(WorkContext workContext) {
-        KEY contextId = workContext.peekCallFrame().getCorrelationId(getScope().getIdentifierType());
-        assert contextId != null;
-        super.stopContext(workContext);
+    protected void stopContext(KEY contextId) {
+        super.stopContext(contextId);
         store.stopContext(contextId);
     }
 
-    public <T> InstanceWrapper<T> getWrapper(AtomicComponent<T> component, WorkContext workContext)
+    public <T> void returnWrapper(AtomicComponent<T> component, WorkContext workContext, InstanceWrapper<T> wrapper)
+            throws TargetDestructionException {
+    }
+
+    protected <T> InstanceWrapper<T> getWrapper(AtomicComponent<T> component, WorkContext workContext, KEY contextId)
             throws TargetResolutionException {
-        KEY contextId = workContext.peekCallFrame().getCorrelationId(getScope().getIdentifierType());
         assert contextId != null;
         InstanceWrapper<T> wrapper = store.getWrapper(component, contextId);
         if (wrapper == null) {
@@ -69,7 +67,4 @@ public class StatefulScopeContainer<KEY> extends AbstractScopeContainer<KEY> {
         return wrapper;
     }
 
-    public <T> void returnWrapper(AtomicComponent<T> component, WorkContext workContext, InstanceWrapper<T> wrapper)
-            throws TargetDestructionException {
-    }
 }

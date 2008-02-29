@@ -27,9 +27,11 @@ import org.osoa.sca.annotations.Scope;
 
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.pojo.processor.ImplementationProcessorExtension;
-import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.pojo.processor.ProcessingException;
+import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.FieldInjectionSite;
+import org.fabric3.scdl.InjectableAttribute;
+import org.fabric3.scdl.InjectionSite;
 import org.fabric3.scdl.MethodInjectionSite;
 
 /**
@@ -42,9 +44,7 @@ public class ConversationProcessor extends ImplementationProcessorExtension {
     private static final String DAYS = " DAYS";
     private static final String YEARS = " YEARS";
 
-    public <T> void visitClass(Class<T> clazz,
-                               PojoComponentType type,
-                               IntrospectionContext context) throws ProcessingException {
+    public <T> void visitClass(Class<T> clazz, PojoComponentType type, IntrospectionContext context) throws ProcessingException {
 
         ConversationAttributes conversation = clazz.getAnnotation(ConversationAttributes.class);
         if (conversation == null) {
@@ -56,8 +56,8 @@ public class ConversationProcessor extends ImplementationProcessorExtension {
             type.setImplementationScope(org.fabric3.scdl.Scope.CONVERSATION);
         } else if (scope != null && !"CONVERSATION".equals(scope.value().toUpperCase())) {
             throw new InvalidConversationalImplementation(
-                "Service is marked with @ConversationAttributes but the scope is not @Scope(\"CONVERSATION\")",
-                clazz.getName());
+                    "Service is marked with @ConversationAttributes but the scope is not @Scope(\"CONVERSATION\")",
+                    clazz.getName());
         } else if (conversation != null) {
             long maxAge;
             long maxIdleTime;
@@ -86,25 +86,22 @@ public class ConversationProcessor extends ImplementationProcessorExtension {
 
     }
 
-    public void visitMethod(Method method,
-                            PojoComponentType type,
-                            IntrospectionContext context)
-        throws ProcessingException {
+    public void visitMethod(Method method, PojoComponentType type, IntrospectionContext context) throws ProcessingException {
         ConversationID conversationID = method.getAnnotation(ConversationID.class);
         if (conversationID == null) {
             return;
         }
-        type.setConversationIDMember(new MethodInjectionSite(method, 0));
+        InjectionSite site = new MethodInjectionSite(method, 0);
+        type.addInjectionSite(InjectableAttribute.CONVERSATION_ID, site);
     }
 
-    public void visitField(Field field,
-                           PojoComponentType type,
-                           IntrospectionContext context) throws ProcessingException {
+    public void visitField(Field field, PojoComponentType type, IntrospectionContext context) throws ProcessingException {
         ConversationID conversationID = field.getAnnotation(ConversationID.class);
         if (conversationID == null) {
             return;
         }
-        type.setConversationIDMember(new FieldInjectionSite(field));
+        InjectionSite site = new FieldInjectionSite(field);
+        type.addInjectionSite(InjectableAttribute.CONVERSATION_ID, site);
     }
 
     protected long convertTimeMillis(String expr) throws NumberFormatException {

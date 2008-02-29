@@ -16,15 +16,14 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.fabric.injection;
+package org.fabric3.pojo.injection;
 
 import org.osoa.sca.Conversation;
 
 import org.fabric3.pojo.PojoWorkContextTunnel;
 import org.fabric3.spi.ObjectFactory;
-import org.fabric3.spi.component.WorkContext;
 import org.fabric3.spi.component.CallFrame;
-import org.fabric3.scdl.Scope;
+import org.fabric3.spi.component.WorkContext;
 
 public class ConversationIDObjectFactory implements ObjectFactory<String> {
 
@@ -34,7 +33,7 @@ public class ConversationIDObjectFactory implements ObjectFactory<String> {
     public String getInstance() {
         WorkContext workContext = PojoWorkContextTunnel.getThreadWorkContext();
         CallFrame frame = workContext.peekCallFrame();
-        Conversation conversation = frame.getCorrelationId(Scope.CONVERSATION.getIdentifierType());
+        Conversation conversation = frame.getConversation();
         if (conversation == null) {
             return null;
         }

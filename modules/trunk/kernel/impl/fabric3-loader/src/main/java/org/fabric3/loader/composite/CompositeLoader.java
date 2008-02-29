@@ -30,6 +30,7 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
+import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.loader.common.IntrospectionContextImpl;
 import org.fabric3.scdl.Autowire;
 import org.fabric3.scdl.ComponentDefinition;
@@ -41,7 +42,6 @@ import org.fabric3.scdl.ModelObject;
 import org.fabric3.scdl.Property;
 import org.fabric3.scdl.WireDefinition;
 import org.fabric3.spi.loader.InvalidServiceException;
-import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.loader.LoaderUtil;
@@ -130,12 +130,13 @@ public class CompositeLoader implements StAXElementLoader<Composite> {
                         Include include = includeLoader.load(reader, introspectionContext);
                         QName includeName = include.getName();
                         if (type.getIncludes().containsKey(includeName)) {
-                            throw new DuplicateIncludeException("Include already defined with name", includeName.toString());
+                            String identifier = includeName.toString();
+                            throw new DuplicateIncludeException("Include already defined with name [" + identifier + "]", identifier);
                         }
                         for (ComponentDefinition definition : include.getIncluded().getComponents().values()) {
                             String key = definition.getName();
                             if (type.getComponents().containsKey(key)) {
-                                throw new DuplicateComponentNameException("Component with name already defined", key);
+                                throw new DuplicateComponentNameException("Component with name already defined [" + key + "]", key);
                             }
                         }
                         type.add(include);
@@ -161,7 +162,7 @@ public class CompositeLoader implements StAXElementLoader<Composite> {
                         ComponentDefinition<?> componentDefinition = componentLoader.load(reader, introspectionContext);
                         String key = componentDefinition.getName();
                         if (type.getComponents().containsKey(key)) {
-                            throw new DuplicateComponentNameException("Component with name already defined", key);
+                            throw new DuplicateComponentNameException("Component with name already defined [" + key + "]", key);
                         }
                         type.add(componentDefinition);
                     } else if (WIRE.equals(qname)) {
@@ -185,7 +186,7 @@ public class CompositeLoader implements StAXElementLoader<Composite> {
                     break;
                 case END_ELEMENT:
                     assert COMPOSITE.equals(reader.getName());
-                    verifyCompositeCompleteness(type, introspectionContext);
+                    verifyCompositeCompleteness(type);
                     return type;
                 }
             }
@@ -195,12 +196,12 @@ public class CompositeLoader implements StAXElementLoader<Composite> {
         }
     }
 
-    protected void verifyCompositeCompleteness(Composite composite, IntrospectionContext introspectionContext)
-            throws InvalidServiceException {
+    protected void verifyCompositeCompleteness(Composite composite)  throws InvalidServiceException {
         // check if all of the composite services have been wired
         for (CompositeService svcDefn : composite.getDeclaredServices().values()) {
             if (svcDefn.getPromote() == null) {
-                throw new InvalidServiceException("Composite service not wired to a target", svcDefn.getName());
+                String name = svcDefn.getName();
+                throw new InvalidServiceException("Composite service not wired to a target [" + name + "]", name);
             }
         }
     }

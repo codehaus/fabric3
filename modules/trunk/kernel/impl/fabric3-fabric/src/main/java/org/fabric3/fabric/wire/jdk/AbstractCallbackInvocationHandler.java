@@ -57,6 +57,7 @@ public abstract class AbstractCallbackInvocationHandler<T> implements Invocation
         // will be present as existed when the initial forward request to this proxy's instance was dispatched to. Consequently,
         // CallFrame#getForwardCorrelaltionId() will return the correlation id for the callback target.
         CallFrame frame = workContext.popCallFrame();
+
         // find the invocation chain for the invoked operation
         InvocationChain chain = getChain(frame, method);
         if (chain == null) {

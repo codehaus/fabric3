@@ -21,19 +21,17 @@ package org.fabric3.fabric.component.scope;
 import java.net.URI;
 
 import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Reference;
 import org.osoa.sca.annotations.Service;
 
-import org.fabric3.monitor.MonitorFactory;
+import org.fabric3.api.annotation.Monitor;
+import org.fabric3.scdl.Scope;
 import org.fabric3.spi.component.AtomicComponent;
+import org.fabric3.spi.component.GroupInitializationException;
 import org.fabric3.spi.component.InstanceWrapper;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.TargetDestructionException;
 import org.fabric3.spi.component.TargetResolutionException;
 import org.fabric3.spi.component.WorkContext;
-import org.fabric3.spi.component.GroupInitializationException;
-import org.fabric3.scdl.Scope;
-import org.fabric3.api.annotation.Monitor;
 
 /**
  * A scope context which manages stateless atomic component instances in a non-pooled fashion.
@@ -52,8 +50,7 @@ public class StatelessScopeContainer extends AbstractScopeContainer<Object> {
         super.startContext(workContext, null, null);
     }
 
-    public <T> InstanceWrapper<T> getWrapper(AtomicComponent<T> component, WorkContext workContext)
-            throws TargetResolutionException {
+    public <T> InstanceWrapper<T> getWrapper(AtomicComponent<T> component, WorkContext workContext) throws TargetResolutionException {
         InstanceWrapper<T> ctx = createInstance(component, workContext);
         ctx.start();
         return ctx;
@@ -63,4 +60,8 @@ public class StatelessScopeContainer extends AbstractScopeContainer<Object> {
             throws TargetDestructionException {
         wrapper.stop();
     }
+
+    public void stopContext(WorkContext workContext) {
+    }
+
 }

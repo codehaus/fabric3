@@ -25,7 +25,6 @@ import org.fabric3.spi.ObjectCreationException;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.ProxyService;
-import org.fabric3.spi.wire.Wire;
 
 /**
  * Uses a wire to return an object instance

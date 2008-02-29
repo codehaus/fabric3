@@ -32,6 +32,7 @@ import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.spi.component.WorkContext;
 import org.fabric3.spi.runtime.component.ComponentManager;
+
 import org.osoa.sca.annotations.Constructor;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
@@ -74,7 +75,7 @@ public class InitializeComponentCommandExecutor implements CommandExecutor<Initi
             throw new ComponentNotRegisteredException("Component not registered", uri.toString());
         }
         WorkContext workContext = new WorkContext();
-        CallFrame frame = new CallFrame(groupId);
+        CallFrame frame = new CallFrame(null, groupId, null, false);
         workContext.addCallFrame(frame);
         List<AtomicComponent<?>> atomicComponents = new ArrayList<AtomicComponent<?>>();
         atomicComponents.add((AtomicComponent<?>) component);

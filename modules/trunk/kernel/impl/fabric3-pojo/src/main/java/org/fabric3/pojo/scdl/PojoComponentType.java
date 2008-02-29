@@ -19,7 +19,6 @@
 package org.fabric3.pojo.scdl;
 
 import org.fabric3.scdl.InjectingComponentType;
-import org.fabric3.scdl.InjectionSite;
 import org.fabric3.scdl.Signature;
 
 /**
@@ -30,7 +29,6 @@ import org.fabric3.scdl.Signature;
 public class PojoComponentType extends InjectingComponentType {
     private String implClass;
     private Signature constructor;
-    private InjectionSite conversationIDInjectionSite;
 
     /**
      * Constructor used only for deserialization
@@ -71,14 +69,6 @@ public class PojoComponentType extends InjectingComponentType {
      */
     public void setConstructor(Signature constructor) {
         this.constructor = constructor;
-    }
-
-    public InjectionSite getConversationIDMember() {
-        return this.conversationIDInjectionSite;
-    }
-
-    public void setConversationIDMember(InjectionSite conversationIDInjectionSite) {
-        this.conversationIDInjectionSite = conversationIDInjectionSite;
     }
 
 }

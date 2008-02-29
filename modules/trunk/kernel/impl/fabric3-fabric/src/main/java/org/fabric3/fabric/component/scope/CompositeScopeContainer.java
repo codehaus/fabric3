@@ -63,8 +63,7 @@ public class CompositeScopeContainer extends AbstractScopeContainer<URI> {
     };
 
     // there is one instance per component so we can index directly
-    private final Map<AtomicComponent<?>, InstanceWrapper<?>> instanceWrappers =
-            new ConcurrentHashMap<AtomicComponent<?>, InstanceWrapper<?>>();
+    private final Map<AtomicComponent<?>, InstanceWrapper<?>> instanceWrappers = new ConcurrentHashMap<AtomicComponent<?>, InstanceWrapper<?>>();
 
     public CompositeScopeContainer(@Monitor ScopeContainerMonitor monitor) {
         super(Scope.COMPOSITE, monitor);
@@ -85,13 +84,17 @@ public class CompositeScopeContainer extends AbstractScopeContainer<URI> {
         super.startContext(workContext, groupId, groupId);
     }
 
+    public void stopContext(WorkContext workContext) {
+        URI contextId = workContext.peekCallFrame().getCorrelationId(URI.class);
+        super.stopContext(contextId);
+    }
+
     public synchronized void stop() {
         super.stop();
         instanceWrappers.clear();
     }
 
-    public <T> InstanceWrapper<T> getWrapper(AtomicComponent<T> component, WorkContext workContext)
-            throws TargetResolutionException {
+    public <T> InstanceWrapper<T> getWrapper(AtomicComponent<T> component, WorkContext workContext) throws TargetResolutionException {
         assert instanceWrappers.containsKey(component);
         @SuppressWarnings("unchecked")
         InstanceWrapper<T> wrapper = (InstanceWrapper<T>) instanceWrappers.get(component);

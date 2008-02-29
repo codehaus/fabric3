@@ -20,6 +20,8 @@ package org.fabric3.spi.component;
 
 import java.io.Serializable;
 
+import org.osoa.sca.Conversation;
+
 /**
  * Encapsulates information for a specific invocation that is made as part of a request entering the domain. Requests may have multiple associated
  * invocations as component implementations may invoke services on other components as a request is processed.
@@ -27,10 +29,17 @@ import java.io.Serializable;
  * @version $Revision$ $Date$
  */
 public class CallFrame implements Serializable {
+    /**
+     * A frame for stateless, unidirectional invocations which can be used to avoid new object allocation
+     */
+    public static final CallFrame STATELESS_FRAME = new CallFrame();
+
     private static final long serialVersionUID = -6108279393891496098L;
+
     private String callbackUri;
     private Object correlationId;
     private boolean startConversation;
+    private Conversation conversation;
 
     /**
      * Default constructor. Creates a CallFrame for an invocation on a stateless, unidirectional service.
@@ -39,37 +48,19 @@ public class CallFrame implements Serializable {
     }
 
     /**
-     * Constructor. Creates a CallFrame for an invocation to a stateful bidirectional service that starts a conversation.
+     * Constructor. Creates a CallFrame for an invocation to a stateful bidirectional service.
      *
      * @param callbackUri       the URI the caller of the current service can be called back on
      * @param correlationId     the key used to correlate the forward invocation with the target component implementation instance. For stateless
      *                          targets, the id may be null.
+     * @param conversation      the conversaation associated with the invocation or null
      * @param startConversation true if a conversation is to be started for this invocation
      */
-    public CallFrame(String callbackUri, Object correlationId, boolean startConversation) {
+    public CallFrame(String callbackUri, Object correlationId, Conversation conversation, boolean startConversation) {
         this.callbackUri = callbackUri;
         this.correlationId = correlationId;
+        this.conversation = conversation;
         this.startConversation = startConversation;
-    }
-
-    /**
-     * Convenience constructor for invocations to stateful services that do not start a conversation.
-     *
-     * @param callbackUri          the URI the caller of the current service can be called back on
-     * @param correlationId the key used to correlate the forward invocation with the target component implementation instance. For stateless
-     *                             targets, the id may be null.
-     */
-    public CallFrame(String callbackUri, Object correlationId) {
-        this(callbackUri, correlationId, false);
-    }
-
-    /**
-     * Convenience constructor for invocations to stateful unidirectional services.
-     *
-     * @param correlationId the key used to correlate the forward invocation with the target component implementation instance. For stateless
-     */
-    public CallFrame(Object correlationId) {
-        this(null, correlationId);
     }
 
     /**
@@ -92,6 +83,15 @@ public class CallFrame implements Serializable {
     }
 
     /**
+     * Returns the conversation associated with this CallFrame or null if the invocation is non-conversational.
+     *
+     * @return the conversation associated with this CallFrame or null if the invocation is non-conversational
+     */
+    public Conversation getConversation() {
+        return conversation;
+    }
+
+    /**
      * Returns true if the invocation starts a conversation.
      *
      * @return true if the invocation starts a conversation
@@ -107,6 +107,15 @@ public class CallFrame implements Serializable {
      */
     public CallFrame copy() {
         // data is immutable, return shallow copy
-        return new CallFrame(callbackUri, correlationId);
+        return new CallFrame(callbackUri, correlationId, conversation, startConversation);
+    }
+
+    public String toString() {
+        StringBuilder s = new StringBuilder().append("CallFrame [Callback URI:").append(callbackUri).append(" Correlation ID:").append(correlationId);
+        if (conversation != null) {
+            s.append(" Conversation ID:").append(conversation.getConversationID());
+            s.append(" Start conversation:").append(startConversation);
+        }
+        return s.append("]").toString();
     }
 }

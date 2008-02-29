@@ -21,16 +21,13 @@ package org.fabric3.fabric.implementation.processor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
+import junit.framework.TestCase;
 import org.osoa.sca.annotations.ConversationAttributes;
 import org.osoa.sca.annotations.ConversationID;
 import org.osoa.sca.annotations.Scope;
 
 import org.fabric3.pojo.scdl.PojoComponentType;
-import org.fabric3.scdl.Signature;
-import org.fabric3.scdl.FieldInjectionSite;
-import org.fabric3.scdl.MethodInjectionSite;
-
-import junit.framework.TestCase;
+import org.fabric3.scdl.InjectableAttribute;
 
 /**
  * @version $Rev$ $Date$
@@ -66,8 +63,7 @@ public class ConversationProcessorTestCase extends TestCase {
     }
 
     public void testImplicitScope() throws Exception {
-        PojoComponentType type =
-            new PojoComponentType(null);
+        PojoComponentType type =  new PojoComponentType(null);
         processor.visitClass(ImplicitFooScope.class, type, null);
         assertEquals(org.fabric3.scdl.Scope.CONVERSATION, type.getImplementationScope());
     }
@@ -93,22 +89,20 @@ public class ConversationProcessorTestCase extends TestCase {
         assertEquals(-1, type.getMaxIdleTime());
     }
 
-    public void testSetConversationIDField() throws Exception {
+    public void testSetConversationIdField() throws Exception {
         PojoComponentType type =
             new PojoComponentType(null);
         Field field = FooWithConversationIDField.class.getDeclaredField("conversationID");
         processor.visitField(field, type, null);
-        assertNotNull(type.getConversationIDMember());
-        assertEquals(field.getName(), ((FieldInjectionSite)type.getConversationIDMember()).getName());
+        assertNotNull(type.getInjectionSite(InjectableAttribute.CONVERSATION_ID));
     }
 
-    public void testSetConversationIDMethod() throws Exception {
+    public void testSetConversationIdMethod() throws Exception {
         PojoComponentType type =
             new PojoComponentType(null);
         Method method = FooWithConversationIDMethod.class.getDeclaredMethods()[0];
         processor.visitMethod(method, type, null);
-        assertNotNull(type.getConversationIDMember());
-        assertEquals(new Signature(method), ((MethodInjectionSite)type.getConversationIDMember()).getSignature());
+        assertNotNull(type.getInjectionSite(InjectableAttribute.CONVERSATION_ID));
     }
 
     @Scope("CONVERSATION")

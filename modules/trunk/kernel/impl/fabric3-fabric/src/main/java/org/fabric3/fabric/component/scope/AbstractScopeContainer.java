@@ -67,8 +67,7 @@ public abstract class AbstractScopeContainer<KEY> extends AbstractLifecycle impl
     protected final Map<URI, List<AtomicComponent<?>>> initQueues = new HashMap<URI, List<AtomicComponent<?>>>();
 
     // the queue of instanceWrappers to destroy, in the order that their instances were created
-    protected final Map<KEY, List<InstanceWrapper<?>>> destroyQueues =
-            new ConcurrentHashMap<KEY, List<InstanceWrapper<?>>>();
+    protected final Map<KEY, List<InstanceWrapper<?>>> destroyQueues = new ConcurrentHashMap<KEY, List<InstanceWrapper<?>>>();
 
     public AbstractScopeContainer(Scope<KEY> scope, ScopeContainerMonitor monitor) {
         this.scope = scope;
@@ -142,14 +141,7 @@ public abstract class AbstractScopeContainer<KEY> extends AbstractLifecycle impl
         }
     }
 
-    public void stopContext(WorkContext workContext) {
-        KEY contextId = workContext.peekCallFrame().getCorrelationId(scope.getIdentifierType());
-        shutdownComponents(destroyQueues.get(contextId));
-        destroyQueues.remove(contextId);
-    }
-
-    public void initializeComponents(List<AtomicComponent<?>> components, URI groupId, WorkContext workContext)
-            throws GroupInitializationException {
+    public void initializeComponents(List<AtomicComponent<?>> components, URI groupId, WorkContext workContext) throws GroupInitializationException {
         List<Exception> causes = null;
         for (AtomicComponent<?> component : components) {
             try {
@@ -188,13 +180,34 @@ public abstract class AbstractScopeContainer<KEY> extends AbstractLifecycle impl
         }
     }
 
+    protected void stopContext(KEY contextId) {
+        shutdownComponents(destroyQueues.get(contextId));
+        destroyQueues.remove(contextId);
+    }
+
+    /**
+     * Creates a new physical instance of a component, wrapped in an InstanceWrapper.
+     *
+     * @param component   the component whose instance should be created
+     * @param workContext the work context in which to create the instance
+     * @return a wrapped instance that has been injected but not yet started
+     * @throws TargetResolutionException if there was a problem creating the instance
+     */
+    protected <T> InstanceWrapper<T> createInstance(AtomicComponent<T> component, WorkContext workContext) throws TargetResolutionException {
+        try {
+            return component.createInstanceWrapper(workContext);
+        } catch (ObjectCreationException e) {
+            throw new TargetResolutionException(e.getMessage(), component.getUri().toString(), e);
+        }
+    }
+
     /**
      * Shut down an ordered list of instances. The list passed to this method is treated as a live, mutable list so any instances added to this list
      * as shutdown is occuring will also be shut down.
      *
      * @param instances the list of instances to shutdown
      */
-    protected void shutdownComponents(List<InstanceWrapper<?>> instances) {
+    private void shutdownComponents(List<InstanceWrapper<?>> instances) {
         while (true) {
             InstanceWrapper<?> toDestroy;
             synchronized (instances) {
@@ -209,23 +222,6 @@ public abstract class AbstractScopeContainer<KEY> extends AbstractLifecycle impl
                 // log the error from destroy but continue
                 monitor.destructionError(e);
             }
-        }
-    }
-
-    /**
-     * Creates a new physical instance of a component, wrapped in an InstanceWrapper.
-     *
-     * @param component   the component whose instance should be created
-     * @param workContext the work context in which to create the instance
-     * @return a wrapped instance that has been injected but not yet started
-     * @throws TargetResolutionException if there was a problem creating the instance
-     */
-    protected <T> InstanceWrapper<T> createInstance(AtomicComponent<T> component, WorkContext workContext)
-            throws TargetResolutionException {
-        try {
-            return component.createInstanceWrapper(workContext);
-        } catch (ObjectCreationException e) {
-            throw new TargetResolutionException(e.getMessage(), component.getUri().toString(), e);
         }
     }
 

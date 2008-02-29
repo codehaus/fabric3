@@ -33,6 +33,8 @@ import java.util.Set;
 import org.osoa.sca.annotations.Reference;
 import org.osoa.sca.annotations.Remotable;
 import org.osoa.sca.annotations.Service;
+import org.osoa.sca.annotations.ConversationID;
+import org.osoa.sca.annotations.Context;
 
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.InvalidServiceContractException;
@@ -131,6 +133,10 @@ public class HeuristicPojoProcessor extends ImplementationProcessorExtension {
                     || method.getReturnType() != void.class) {
                 continue;
             }
+            if (method.isAnnotationPresent(ConversationID.class) || method.isAnnotationPresent(Context.class)) {
+                // hack to avoid interpreting this method as a property
+                continue;
+            }
             if (!isInServiceInterface(method, services)) {
                 String name = toPropertyName(method.getName());
                 // avoid duplicate property or ref names
@@ -153,6 +159,10 @@ public class HeuristicPojoProcessor extends ImplementationProcessorExtension {
                     || method.getReturnType() != void.class) {
                 continue;
             }
+            if (method.isAnnotationPresent(ConversationID.class) || method.isAnnotationPresent(Context.class)) {
+                // hack to avoid interpreting this method as a property
+                continue;
+            }
             Class<?> param = method.getParameterTypes()[0];
             String name = toPropertyName(method.getName());
             // avoid duplicate property or ref names
@@ -167,6 +177,10 @@ public class HeuristicPojoProcessor extends ImplementationProcessorExtension {
         }
         Set<Field> fields = getAllPublicAndProtectedFields(clazz);
         for (Field field : fields) {
+            if (field.isAnnotationPresent(ConversationID.class) || field.isAnnotationPresent(Context.class)) {
+                // hack to avoid interpreting this method as a property
+                continue;
+            }
             Class<?> paramType = field.getType();
             InjectionSite site = new FieldInjectionSite(field);
             if (isReferenceType(paramType)) {
