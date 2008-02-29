@@ -40,6 +40,8 @@ import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.Message;
 import org.fabric3.spi.wire.MessageImpl;
 
+import org.osoa.sca.Conversation;
+
 /**
  * Servlet for handling the hessian service requests.
  *
@@ -122,10 +124,13 @@ public class HessianServiceHandler extends HttpServlet {
         WorkContext workContext = new WorkContext();
         workContext.addCallFrames(callFrames);
         CallFrame previous = workContext.peekCallFrame();
-        // copy correlation information from incoming frame
+        // Copy correlation and conversation information from incoming frame to new frame
+        // Note that the callback URI is set to the callback address of this service so its callback wire can be mapped in the case of a
+        // bidirectional service
         Object id = previous.getCorrelationId(Object.class);
         boolean start = previous.isStartConversation();
-        CallFrame frame = new CallFrame(callbackUri, id, start);
+        Conversation conversation = previous.getConversation();
+        CallFrame frame = new CallFrame(callbackUri, id, conversation, start);
         callFrames.add(frame);
         Message input = new MessageImpl(args, false, workContext);
 
