@@ -18,12 +18,8 @@
  */
 package org.fabric3.fabric.command;
 
-import java.util.LinkedHashSet;
-import java.util.Set;
-
 import org.fabric3.fabric.implementation.singleton.SingletonImplementation;
 import org.fabric3.scdl.Implementation;
-import org.fabric3.spi.command.Command;
 import org.fabric3.spi.generator.CommandGenerator;
 import org.fabric3.spi.generator.ComponentGenerator;
 import org.fabric3.spi.generator.GenerationException;
@@ -49,23 +45,23 @@ public class ComponentBuildCommandGenerator implements CommandGenerator {
     }
 
     @SuppressWarnings("unchecked")
-    public Set<Command> generate(LogicalComponent<?> component) throws GenerationException {
+    public ComponentBuildCommand generate(LogicalComponent<?> component) throws GenerationException {
         
-        Set<Command> commandSet = new LinkedHashSet<Command>();
+        ComponentBuildCommand command = new ComponentBuildCommand(order);
         Implementation<?> implementation = component.getDefinition().getImplementation();
         
         if (component instanceof LogicalCompositeComponent) {
             LogicalCompositeComponent compositeComponent = (LogicalCompositeComponent) component;
             for (LogicalComponent<?> child : compositeComponent.getComponents()) {
-                commandSet.addAll(generate(child));
+                command.addPhysicalComponentDefinitions(generate(child).getPhysicalComponentDefinitions());
             }
         } else if (!component.isProvisioned() && !implementation.isType(SingletonImplementation.IMPLEMENTATION_SINGLETON)) {
             ComponentGenerator generator =  generatorRegistry.getComponentGenerator(component.getDefinition().getImplementation().getClass());
-            PhysicalComponentDefinition pcd = generator.generate(component);
-            commandSet.add(new ComponentBuildCommand(pcd, order));
+            PhysicalComponentDefinition physicalComponentDefinition = generator.generate(component);
+            command.addPhysicalComponentDefinition(physicalComponentDefinition);
         }
         
-        return commandSet;
+        return command;
         
     }
 

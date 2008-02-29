@@ -21,6 +21,7 @@ import org.fabric3.spi.builder.BuilderException;
 import org.fabric3.spi.command.CommandExecutor;
 import org.fabric3.spi.command.CommandExecutorRegistry;
 import org.fabric3.spi.command.ExecutionException;
+import org.fabric3.spi.model.physical.PhysicalWireDefinition;
 import org.osoa.sca.annotations.Constructor;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
@@ -54,10 +55,14 @@ public class WireAttachCommandExecutor implements CommandExecutor<WireAttachComm
     }
 
     public void execute(WireAttachCommand command) throws ExecutionException {
-        try {
-            connector.connect(command.getPhysicalWireDefinition());
-        } catch (BuilderException e) {
-            throw new ExecutionException(e.getMessage(), e);
+        
+        for (PhysicalWireDefinition physicalWireDefinition : command.getPhysicalWireDefinitions()) {
+            try {
+                connector.connect(physicalWireDefinition);
+            } catch (BuilderException e) {
+                throw new ExecutionException(e.getMessage(), e);
+            }
         }
+        
     }
 }

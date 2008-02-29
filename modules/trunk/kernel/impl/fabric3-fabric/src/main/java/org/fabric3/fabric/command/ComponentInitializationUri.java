@@ -18,34 +18,29 @@
  */
 package org.fabric3.fabric.command;
 
-import java.util.LinkedHashSet;
-import java.util.Set;
-
-import org.fabric3.spi.command.AbstractCommand;
-import org.fabric3.spi.model.physical.PhysicalWireDefinition;
+import java.net.URI;
 
 /**
  *
  * @version $Revision$ $Date$
  */
-public class WireAttachCommand extends AbstractCommand {
-
-    private final Set<PhysicalWireDefinition> physicalWireDefinitions = new LinkedHashSet<PhysicalWireDefinition>();
-
-    public WireAttachCommand(int order) {
-        super(order);
-    }
-
-    public Set<PhysicalWireDefinition> getPhysicalWireDefinitions() {
-        return physicalWireDefinitions;
-    }
+public class ComponentInitializationUri {
     
-    public void addPhysicalWireDefinition(PhysicalWireDefinition physicalWireDefinition) {
-        physicalWireDefinitions.add(physicalWireDefinition);
-    }
+    private URI groupId;
+    private URI uri;
     
-    public void addPhysicalWireDefinitions(Set<PhysicalWireDefinition> physicalWireDefinitions) {
-        this.physicalWireDefinitions.addAll(physicalWireDefinitions);
+    public URI getGroupId() {
+        return groupId;
+    }
+
+    public URI getUri() {
+        return uri;
+    }
+
+    public ComponentInitializationUri(URI groupId, URI uri) {
+        super();
+        this.groupId = groupId;
+        this.uri = uri;
     }
 
 }

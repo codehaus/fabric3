@@ -16,8 +16,6 @@
  */
 package org.fabric3.spi.generator;
 
-import java.util.Set;
-
 import org.fabric3.spi.command.Command;
 import org.fabric3.spi.model.instance.LogicalComponent;
 
@@ -28,6 +26,6 @@ import org.fabric3.spi.model.instance.LogicalComponent;
  */
 public interface CommandGenerator {
     
-    Set<Command> generate(LogicalComponent<?> logicalComponent) throws GenerationException;
+    Command generate(LogicalComponent<?> logicalComponent) throws GenerationException;
 
 }

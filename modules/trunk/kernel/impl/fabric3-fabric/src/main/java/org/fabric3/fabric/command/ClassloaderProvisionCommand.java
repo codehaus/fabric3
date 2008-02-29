@@ -18,7 +18,9 @@
  */
 package org.fabric3.fabric.command;
 
-import org.fabric3.fabric.classloader.PhysicalClassLoaderDefinition;
+import java.util.LinkedHashSet;
+import java.util.Set;
+
 import org.fabric3.spi.command.AbstractCommand;
 import org.fabric3.spi.model.physical.PhysicalResourceContainerDefinition;
 
@@ -28,21 +30,23 @@ import org.fabric3.spi.model.physical.PhysicalResourceContainerDefinition;
  */
 public class ClassloaderProvisionCommand extends AbstractCommand {
     
-    private final PhysicalResourceContainerDefinition physicalResourceContainerDefinition;
+    private final Set<PhysicalResourceContainerDefinition> physicalResourceContainerDefinitions = 
+        new LinkedHashSet<PhysicalResourceContainerDefinition>();
 
-    public ClassloaderProvisionCommand(PhysicalResourceContainerDefinition physicalResourceContainerDefinition, int order) {
+    public ClassloaderProvisionCommand(int order) {
         super(order);
-        this.physicalResourceContainerDefinition = physicalResourceContainerDefinition;
     }
 
-    public PhysicalResourceContainerDefinition getPhysicalResourceContainerDefinition() {
-        return physicalResourceContainerDefinition;
+    public Set<PhysicalResourceContainerDefinition> getPhysicalResourceContainerDefinitions() {
+        return physicalResourceContainerDefinitions;
     }
     
-    @Override
-    public String toString() {
-        PhysicalClassLoaderDefinition pcl = (PhysicalClassLoaderDefinition) physicalResourceContainerDefinition;
-        return pcl.getUri().toString() + ":" + pcl.getResourceUrls() + ":" + pcl.isUpdate();
+    public void addPhysicalResourceContainerDefinition(PhysicalResourceContainerDefinition physicalResourceContainerDefinition) {
+        physicalResourceContainerDefinitions.add(physicalResourceContainerDefinition);
+    }
+    
+    public void addPhysicalResourceContainerDefinitions(Set<PhysicalResourceContainerDefinition> physicalResourceContainerDefinitions) {
+        this.physicalResourceContainerDefinitions.addAll(physicalResourceContainerDefinitions);
     }
 
 }

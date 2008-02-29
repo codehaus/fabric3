@@ -18,7 +18,6 @@ package org.fabric3.fabric.model.physical;
 
 import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
 import org.fabric3.fabric.services.routing.RoutingException;
 import org.fabric3.fabric.services.routing.RoutingService;
@@ -56,8 +55,8 @@ public class PhysicalModelGeneratorImpl implements PhysicalModelGenerator {
         
         for (LogicalComponent<?> component : components) {
             for (CommandGenerator commandGenerator : commandGenerators) {
-                Set<Command> commandSet = commandGenerator.generate(component);
-                commandMap.addCommands(component.getRuntimeId(), commandSet);
+                Command command = commandGenerator.generate(component);
+                commandMap.addCommand(component.getRuntimeId(), command);
             }
             component.setProvisioned(true);
         }

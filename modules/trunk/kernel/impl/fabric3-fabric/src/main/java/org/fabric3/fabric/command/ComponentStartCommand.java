@@ -19,6 +19,8 @@
 package org.fabric3.fabric.command;
 
 import java.net.URI;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
 import org.fabric3.spi.command.AbstractCommand;
 
@@ -28,34 +30,22 @@ import org.fabric3.spi.command.AbstractCommand;
  */
 public class ComponentStartCommand extends AbstractCommand {
     
-    private final URI uri;
+    private final Set<URI> uris = new LinkedHashSet<URI>();
 
-    public ComponentStartCommand(URI uri, int order) {
+    public ComponentStartCommand(int order) {
         super(order);
-        this.uri = uri;
     }
 
-    public URI getUri() {
-        return uri;
+    public Set<URI> getUris() {
+        return uris;
     }
     
-    @Override
-    public String toString() {
-        return uri.toString();
+    public void addUri(URI uri) {
+        uris.add(uri);
     }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (obj instanceof ComponentStartCommand) {
-            ComponentStartCommand other = (ComponentStartCommand) obj;
-            return other.uri.equals(uri);
-        }
-        return false;
-    }
-
-    @Override
-    public int hashCode() {
-        return uri.hashCode();
+    
+    public void addUris(Set<URI> uris) {
+        this.uris.addAll(uris);
     }
 
 }

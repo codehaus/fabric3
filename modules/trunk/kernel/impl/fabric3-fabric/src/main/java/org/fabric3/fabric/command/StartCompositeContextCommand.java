@@ -17,10 +17,9 @@
 package org.fabric3.fabric.command;
 
 import java.net.URI;
+import java.util.LinkedHashSet;
+import java.util.Set;
 
-import javax.xml.namespace.QName;
-
-import org.fabric3.spi.Constants;
 import org.fabric3.spi.command.AbstractCommand;
 
 /**
@@ -29,16 +28,22 @@ import org.fabric3.spi.command.AbstractCommand;
  * @version $Rev$ $Date$
  */
 public class StartCompositeContextCommand extends AbstractCommand {
-    public static final QName QNAME = new QName(Constants.FABRIC3_NS, "startCompositeContextCommand");
 
-    private final URI groupId;
+    private final Set<URI> groupIds = new LinkedHashSet<URI>();
 
-    public StartCompositeContextCommand(URI groupId, int order) {
+    public StartCompositeContextCommand(int order) {
         super(order);
-        this.groupId = groupId;
     }
 
-    public URI getGroupId() {
-        return groupId;
+    public Set<URI> getGroupIds() {
+        return groupIds;
+    }
+    
+    public void addGroupId(URI groupId) {
+        groupIds.add(groupId);
+    }
+    
+    public void addGroupIds(Set<URI> groupIds) {
+        this.groupIds.addAll(groupIds);
     }
 }

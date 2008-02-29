@@ -18,6 +18,9 @@
  */
 package org.fabric3.fabric.command;
 
+import java.util.LinkedHashSet;
+import java.util.Set;
+
 import org.fabric3.spi.command.AbstractCommand;
 import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
 
@@ -27,34 +30,22 @@ import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
  */
 public class ComponentBuildCommand extends AbstractCommand {
 
-    private final PhysicalComponentDefinition physicalComponentDefinition;
+    private final Set<PhysicalComponentDefinition> physicalComponentDefinitions = new LinkedHashSet<PhysicalComponentDefinition>();
 
-    public ComponentBuildCommand(PhysicalComponentDefinition physicalComponentDefinition, int order) {
+    public ComponentBuildCommand(int order) {
         super(order);
-        this.physicalComponentDefinition = physicalComponentDefinition;
     }
 
-    public PhysicalComponentDefinition getPhysicalComponentDefinition() {
-        return physicalComponentDefinition;
+    public Set<PhysicalComponentDefinition> getPhysicalComponentDefinitions() {
+        return physicalComponentDefinitions;
     }
     
-    @Override
-    public String toString() {
-        return physicalComponentDefinition.getComponentId().toString();
+    public void addPhysicalComponentDefinition(PhysicalComponentDefinition physicalComponentDefinition) {
+        physicalComponentDefinitions.add(physicalComponentDefinition);
     }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (obj instanceof ComponentBuildCommand) {
-            ComponentBuildCommand other = (ComponentBuildCommand) obj;
-            return other.physicalComponentDefinition.getComponentId().equals(physicalComponentDefinition.getComponentId());
-        }
-        return false;
-    }
-
-    @Override
-    public int hashCode() {
-        return physicalComponentDefinition.getComponentId().hashCode();
+    
+    public void addPhysicalComponentDefinitions(Set<PhysicalComponentDefinition> physicalComponentDefinitions) {
+        this.physicalComponentDefinitions.addAll(physicalComponentDefinitions);
     }
 
 }

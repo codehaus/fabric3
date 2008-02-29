@@ -22,6 +22,7 @@ import org.fabric3.spi.command.CommandExecutor;
 import org.fabric3.spi.command.CommandExecutorRegistry;
 import org.fabric3.spi.command.ExecutionException;
 import org.fabric3.spi.component.Component;
+import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
 import org.fabric3.spi.runtime.component.ComponentManager;
 import org.fabric3.spi.runtime.component.RegistrationException;
 import org.osoa.sca.annotations.Constructor;
@@ -63,8 +64,10 @@ public class ComponentBuildCommandExecutor implements CommandExecutor<ComponentB
     public void execute(ComponentBuildCommand command) throws ExecutionException {
         
         try {
-            final Component component = componentBuilderRegistry.build(command.getPhysicalComponentDefinition());
-            componentManager.register(component);
+            for (PhysicalComponentDefinition physicalComponentDefinition : command.getPhysicalComponentDefinitions()) {
+                final Component component = componentBuilderRegistry.build(physicalComponentDefinition);
+                componentManager.register(component);
+            }
         } catch (BuilderException e) {
             throw new ExecutionException(e.getMessage(), e);
         } catch (RegistrationException e) {

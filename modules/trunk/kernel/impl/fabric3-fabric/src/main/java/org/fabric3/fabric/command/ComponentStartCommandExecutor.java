@@ -16,6 +16,8 @@
  */
 package org.fabric3.fabric.command;
 
+import java.net.URI;
+
 import org.fabric3.spi.command.CommandExecutor;
 import org.fabric3.spi.command.CommandExecutorRegistry;
 import org.fabric3.spi.command.ExecutionException;
@@ -55,8 +57,10 @@ public class ComponentStartCommandExecutor implements CommandExecutor<ComponentS
 
     public void execute(ComponentStartCommand command) throws ExecutionException {
         
-        final Component component = componentManager.getComponent(command.getUri());
-        component.start();
+        for (URI uri : command.getUris()) {
+            final Component component = componentManager.getComponent(uri);
+            component.start();
+        }
         
     }
 }

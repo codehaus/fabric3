@@ -19,14 +19,11 @@
 package org.fabric3.fabric.command;
 
 import java.net.URI;
-import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Set;
 
 import org.fabric3.fabric.model.physical.PhysicalWireGenerator;
 import org.fabric3.scdl.CompositeImplementation;
 import org.fabric3.scdl.ServiceContract;
-import org.fabric3.spi.command.Command;
 import org.fabric3.spi.generator.CommandGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.LogicalBinding;
@@ -39,7 +36,6 @@ import org.fabric3.spi.model.instance.LogicalWire;
 import org.fabric3.spi.model.physical.PhysicalWireDefinition;
 import org.fabric3.spi.runtime.assembly.LogicalComponentManager;
 import org.fabric3.spi.util.UriHelper;
-
 import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Reference;
 
@@ -61,41 +57,41 @@ public class WireAttachCommandGenerator implements CommandGenerator {
     }
 
     @SuppressWarnings("unchecked")
-    public Set<Command> generate(LogicalComponent<?> component) throws GenerationException {
+    public WireAttachCommand generate(LogicalComponent<?> component) throws GenerationException {
 
-        Set<Command> commandSet = new LinkedHashSet<Command>();
+        WireAttachCommand command = new WireAttachCommand(order);
 
         if (component instanceof LogicalCompositeComponent) {
             LogicalCompositeComponent compositeComponent = (LogicalCompositeComponent) component;
             for (LogicalComponent<?> child : compositeComponent.getComponents()) {
-                commandSet.addAll(generate(child));
+                command.addPhysicalWireDefinitions(generate(child).getPhysicalWireDefinitions());
             }
         } else {
-            generatePhysicalWires(component, commandSet);
+            generatePhysicalWires(component, command);
         }
 
-        return commandSet;
+        return command;
     }
 
     @SuppressWarnings("unchecked")
-    private void generatePhysicalWires(LogicalComponent<?> component, Set<Command> commandSet) throws GenerationException {
+    private void generatePhysicalWires(LogicalComponent<?> component, WireAttachCommand command) throws GenerationException {
 
-        generateReferenceWires(component, commandSet);
-        generateServiceWires(component, commandSet);
-        generateResourceWires(component, commandSet);
+        generateReferenceWires(component, command);
+        generateServiceWires(component, command);
+        generateResourceWires(component, command);
 
     }
 
     @SuppressWarnings("unchecked")
-    private void generateResourceWires(LogicalComponent<?> component, Set<Command> commandSet) throws GenerationException {
+    private void generateResourceWires(LogicalComponent<?> component, WireAttachCommand command) throws GenerationException {
         for (LogicalResource<?> resource : component.getResources()) {
             PhysicalWireDefinition pwd = physicalWireGenerator.generateResourceWire(component, resource);
-            commandSet.add(new WireAttachCommand(pwd, order));
+            command.addPhysicalWireDefinition(pwd);
         }
     }
 
     @SuppressWarnings("unchecked")
-    private void generateServiceWires(LogicalComponent<?> component, Set<Command> commandSet) throws GenerationException {
+    private void generateServiceWires(LogicalComponent<?> component, WireAttachCommand command) throws GenerationException {
 
         for (LogicalService service : component.getServices()) {
             List<LogicalBinding<?>> bindings = service.getBindings();
@@ -120,28 +116,28 @@ public class WireAttachCommandGenerator implements CommandGenerator {
 
             for (LogicalBinding<?> binding : service.getBindings()) {
                 PhysicalWireDefinition pwd = physicalWireGenerator.generateBoundServiceWire(service, binding, component, callbackUri);
-                commandSet.add(new WireAttachCommand(pwd, order));
+                command.addPhysicalWireDefinition(pwd);
             }
             // generate the callback command set
             if (callbackContract != null) {
                 PhysicalWireDefinition callbackPwd = physicalWireGenerator.generateBoundCallbackServiceWire(component, service, callbackBinding);
-                commandSet.add(new WireAttachCommand(callbackPwd, order));
+                command.addPhysicalWireDefinition(callbackPwd);
             }
         }
 
     }
 
     @SuppressWarnings("unchecked")
-    private void generateReferenceWires(LogicalComponent<?> component, Set<Command> commandSet) throws GenerationException {
+    private void generateReferenceWires(LogicalComponent<?> component, WireAttachCommand command) throws GenerationException {
 
         for (LogicalReference logicalReference : component.getReferences()) {
             if (logicalReference.getBindings().isEmpty()) {
-                generateUnboundReferenceWires(logicalReference, commandSet);
+                generateUnboundReferenceWires(logicalReference, command);
             } else {
                 // TODO this should be extensible and moved out
                 LogicalBinding<?> logicalBinding = logicalReference.getBindings().get(0);
                 PhysicalWireDefinition pwd = physicalWireGenerator.generateBoundReferenceWire(component, logicalReference, logicalBinding);
-                commandSet.add(new WireAttachCommand(pwd, order));
+                command.addPhysicalWireDefinition(pwd);
                 if (logicalReference.getDefinition().getServiceContract().getCallbackContract() != null) {
                     List<LogicalBinding<?>> callbackBindings = logicalReference.getCallbackBindings();
                     if (callbackBindings.size() != 1) {
@@ -153,7 +149,7 @@ public class WireAttachCommandGenerator implements CommandGenerator {
                     // generate the callback wire
                     PhysicalWireDefinition callbackPwd =
                             physicalWireGenerator.generateBoundCallbackRerenceWire(logicalReference, callbackBinding, component);
-                    commandSet.add(new WireAttachCommand(callbackPwd, order));
+                    command.addPhysicalWireDefinition(callbackPwd);
                 }
 
             }
@@ -162,7 +158,7 @@ public class WireAttachCommandGenerator implements CommandGenerator {
     }
 
     @SuppressWarnings("unchecked")
-    private void generateUnboundReferenceWires(LogicalReference logicalReference, Set<Command> commandSet) throws GenerationException {
+    private void generateUnboundReferenceWires(LogicalReference logicalReference, WireAttachCommand command) throws GenerationException {
 
         LogicalComponent<?> component = logicalReference.getParent();
 
@@ -177,11 +173,6 @@ public class WireAttachCommandGenerator implements CommandGenerator {
 
             LogicalComponent<?> target = logicalComponentManager.getComponent(uri);
 
-            if (target == null) {
-                System.err.println("++++++++++++++++++++++++++++++++++++++++++++");
-                System.err.println(uri + " is unavailable in" + logicalComponentManager.getDomain().getUri());
-                System.err.println("++++++++++++++++++++++++++++++++++++++++++++");
-            }
             LogicalService targetService = target.getService(serviceName);
 
             assert targetService != null;
@@ -195,12 +186,12 @@ public class WireAttachCommandGenerator implements CommandGenerator {
 
             LogicalReference reference = logicalWire.getSource();
             PhysicalWireDefinition pwd = physicalWireGenerator.generateUnboundWire(component, reference, targetService, target);
-            commandSet.add(new WireAttachCommand(pwd, order));
+            command.addPhysicalWireDefinition(pwd);
 
             // generate physical callback wires if the forward service is bidirectional
             if (reference.getDefinition().getServiceContract().getCallbackContract() != null) {
                 pwd = physicalWireGenerator.generateUnboundCallbackWire(target, reference, component);
-                commandSet.add(new WireAttachCommand(pwd, order));
+                command.addPhysicalWireDefinition(pwd);
             }
 
             logicalWire.setProvisioned(true);

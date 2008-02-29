@@ -68,21 +68,25 @@ public class InitializeComponentCommandExecutor implements CommandExecutor<Initi
     }
 
     public void execute(InitializeComponentCommand command) throws ExecutionException {
-        URI groupId = command.getGroupId();
-        URI uri = command.getUri();
-        Component component = manager.getComponent(uri);
-        if (!(component instanceof AtomicComponent)) {
-            throw new ComponentNotRegisteredException("Component not registered", uri.toString());
+        
+        for (ComponentInitializationUri componentInitializationUri : command.getUris()) {
+            URI groupId = componentInitializationUri.getGroupId();
+            URI uri = componentInitializationUri.getUri();
+            Component component = manager.getComponent(uri);
+            if (!(component instanceof AtomicComponent)) {
+                throw new ComponentNotRegisteredException("Component not registered", uri.toString());
+            }
+            WorkContext workContext = new WorkContext();
+            CallFrame frame = new CallFrame(null, groupId, null, false);
+            workContext.addCallFrame(frame);
+            List<AtomicComponent<?>> atomicComponents = new ArrayList<AtomicComponent<?>>();
+            atomicComponents.add((AtomicComponent<?>) component);
+            try {
+                scopeContainer.initializeComponents(atomicComponents, groupId, workContext);
+            } catch (GroupInitializationException e) {
+                throw new ExecutionException("Error starting components", e);
+            }
         }
-        WorkContext workContext = new WorkContext();
-        CallFrame frame = new CallFrame(null, groupId, null, false);
-        workContext.addCallFrame(frame);
-        List<AtomicComponent<?>> atomicComponents = new ArrayList<AtomicComponent<?>>();
-        atomicComponents.add((AtomicComponent<?>) component);
-        try {
-            scopeContainer.initializeComponents(atomicComponents, groupId, workContext);
-        } catch (GroupInitializationException e) {
-            throw new ExecutionException("Error starting components", e);
-        }
+        
     }
 }

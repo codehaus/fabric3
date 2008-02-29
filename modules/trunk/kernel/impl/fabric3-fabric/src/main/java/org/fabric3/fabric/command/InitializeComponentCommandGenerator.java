@@ -17,10 +17,7 @@
 package org.fabric3.fabric.command;
 
 import java.net.URI;
-import java.util.LinkedHashSet;
-import java.util.Set;
 
-import org.fabric3.spi.command.Command;
 import org.fabric3.spi.generator.CommandGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.LogicalComponent;
@@ -44,21 +41,21 @@ public class InitializeComponentCommandGenerator implements CommandGenerator {
     }
 
     @SuppressWarnings("unchecked")
-    public Set<Command> generate(LogicalComponent<?> component) throws GenerationException {
+    public InitializeComponentCommand generate(LogicalComponent<?> component) throws GenerationException {
         
-        Set<Command> commandSet = new LinkedHashSet<Command>();
+        InitializeComponentCommand command = new InitializeComponentCommand(order);
         
         if (component instanceof LogicalCompositeComponent) {
             LogicalCompositeComponent compositeComponent = (LogicalCompositeComponent) component;
             for (LogicalComponent<?> child : compositeComponent.getComponents()) {
-                commandSet.addAll(generate(child));
+                command.addUris(generate(child).getUris());
             }
         } else if (!component.isProvisioned()) {
             URI groupId = URI.create(component.getParent().getUri().toString() + "/");
-            commandSet.add(new InitializeComponentCommand(groupId, component.getUri(), order));
+            command.addUri(new ComponentInitializationUri(groupId, component.getUri()));
         }
         
-        return commandSet;
+        return command;
         
     }
 

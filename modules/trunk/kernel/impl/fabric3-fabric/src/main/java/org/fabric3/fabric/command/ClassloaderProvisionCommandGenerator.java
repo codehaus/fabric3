@@ -46,24 +46,23 @@ public class ClassloaderProvisionCommandGenerator implements CommandGenerator {
     }
 
     @SuppressWarnings("unchecked")
-    public Set<Command> generate(LogicalComponent<?> component) throws GenerationException {
+    public ClassloaderProvisionCommand generate(LogicalComponent<?> component) throws GenerationException {
         
-        Set<Command> commandSet = new LinkedHashSet<Command>();
+        ClassloaderProvisionCommand command = new ClassloaderProvisionCommand(order);
         
         if (component instanceof LogicalCompositeComponent) {
             
             LogicalCompositeComponent compositeComponent = (LogicalCompositeComponent) component;
             for (LogicalComponent<?> child : compositeComponent.getComponents()) {
-                commandSet.addAll(generate(child));
+                command.addPhysicalResourceContainerDefinitions(generate(child).getPhysicalResourceContainerDefinitions());
             }
             
         } else if (!component.isProvisioned()) {
-            PhysicalResourceContainerDefinition prcd = classLoaderGenerator.generate(component);
-            Command command = new ClassloaderProvisionCommand(prcd, order);
-            commandSet.add(command);
+            PhysicalResourceContainerDefinition physicalResourceContainerDefinition = classLoaderGenerator.generate(component);
+            command.addPhysicalResourceContainerDefinition(physicalResourceContainerDefinition);
         }
         
-        return commandSet;
+        return command;
         
     }
 

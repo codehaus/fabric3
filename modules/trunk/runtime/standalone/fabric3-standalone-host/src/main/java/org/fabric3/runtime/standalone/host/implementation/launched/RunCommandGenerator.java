@@ -1,10 +1,6 @@
 package org.fabric3.runtime.standalone.host.implementation.launched;
 
-import java.util.LinkedHashSet;
-import java.util.Set;
-
 import org.fabric3.scdl.Implementation;
-import org.fabric3.spi.command.Command;
 import org.fabric3.spi.generator.CommandGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.generator.GeneratorRegistry;
@@ -30,12 +26,10 @@ public class RunCommandGenerator implements CommandGenerator {
         registry.register(this);
     }
 
-    public Set<Command> generate(LogicalComponent<?> component) throws GenerationException {
+    public RunCommand generate(LogicalComponent<?> component) throws GenerationException {
         
-        Set<Command> commandSet = new LinkedHashSet<Command>();
-        RunCommand command = generateCommand(component, null);
-        commandSet.add(command);
-        return commandSet;
+        return generateCommand(component, null);
+
     }
 
     /**

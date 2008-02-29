@@ -21,7 +21,7 @@ public class OrderingITest extends TestCase
         
         assertEquals(expectedItemNames.length, actualItems.length);
         for(int idx = 0; idx < expectedItemNames.length; idx++) {
-        	//assertEquals(expectedItemNames[idx], actualItems[idx].getName());
+        	assertEquals(expectedItemNames[idx], actualItems[idx].getName());
         }
     }
 }
