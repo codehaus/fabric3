@@ -29,6 +29,7 @@ import org.fabric3.pojo.implementation.PojoComponentBuilder;
 import org.fabric3.pojo.implementation.PojoComponentContext;
 import org.fabric3.pojo.implementation.PojoRequestContext;
 import org.fabric3.pojo.injection.MultiplicityObjectFactory;
+import org.fabric3.pojo.injection.ConversationIDObjectFactory;
 import org.fabric3.pojo.instancefactory.InstanceFactoryBuilderRegistry;
 import org.fabric3.pojo.instancefactory.InstanceFactoryDefinition;
 import org.fabric3.scdl.Scope;
@@ -109,6 +110,7 @@ public class JavaComponentBuilder<T> extends PojoComponentBuilder<T, JavaCompone
 
         PojoComponentContext componentContext = new PojoComponentContext(component, requestContext);
         provider.setObjectFactory(InjectableAttribute.COMPONENT_CONTEXT, new SingletonObjectFactory<PojoComponentContext>(componentContext));
+        provider.setObjectFactory(InjectableAttribute.CONVERSATION_ID, new ConversationIDObjectFactory());
 
         return component;
 
