@@ -22,14 +22,15 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.osoa.sca.ServiceRuntimeException;
 import org.osoa.sca.ServiceUnavailableException;
+import org.osoa.sca.Conversation;
 import org.osoa.sca.annotations.EagerInit;
 
+import org.fabric3.spi.component.CallFrame;
+import org.fabric3.spi.component.WorkContext;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.Message;
 import org.fabric3.spi.wire.Wire;
-import org.fabric3.spi.component.WorkContext;
-import org.fabric3.spi.component.CallFrame;
 
 /**
  * @version $Rev$ $Date$
@@ -63,7 +64,9 @@ public class BindingChannelImpl implements BindingChannel {
             // copy correlation information from incoming frame
             Object id = previous.getCorrelationId(Object.class);
             boolean start = previous.isStartConversation();
-            CallFrame frame = new CallFrame(holder.getCallbackUri(), id, start);
+            Conversation conversation = previous.getConversation();
+            String callbackUri = holder.getCallbackUri();
+            CallFrame frame = new CallFrame(callbackUri, id, conversation, start);
             workContext.addCallFrame(frame);
             return chain.getHeadInterceptor().invoke(msg);
         } finally {
