@@ -51,7 +51,7 @@ public class ExtensionMapContentTypeResolver implements ContentTypeResolver {
 
     public String getContentType(URL contentUrl) throws ContentTypeResolutionException {
 
-        if(contentUrl == null) {
+        if (contentUrl == null) {
             throw new IllegalArgumentException("Content URL cannot be null");
         }
 
@@ -67,14 +67,14 @@ public class ExtensionMapContentTypeResolver implements ContentTypeResolver {
             }
             contentType = connection.getContentType();
 
-            if(contentType == null || UNKNOWN_CONTENT.equals(contentType) || "application/octet-stream".equals(contentType)) {
+            if (contentType == null || UNKNOWN_CONTENT.equals(contentType) || "application/octet-stream".equals(contentType)) {
                 String filename = contentUrl.getFile();
                 contentType = typeMap.getContentType(filename);
             }
 
             return contentType;
         } catch (IOException ex) {
-            throw new ContentTypeResolutionException("Unable to resolve content type", urlString, ex);
+            throw new ContentTypeResolutionException("Unable to resolve content type: " + urlString, urlString, ex);
         }
 
     }

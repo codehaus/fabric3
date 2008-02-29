@@ -54,7 +54,7 @@ public class ClassLoaderRegistryImpl implements ClassLoaderRegistry {
     public synchronized void register(URI id, ClassLoader classLoader) throws DuplicateClassLoaderException {
         if (registry.containsKey(id)) {
             String identifier = id.toString();
-            throw new DuplicateClassLoaderException("Duplicate class loader [" + identifier + "]", identifier);
+            throw new DuplicateClassLoaderException("Duplicate class loader: " + identifier, identifier);
         }
         registry.put(id, classLoader);
     }

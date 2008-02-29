@@ -54,7 +54,7 @@ public class ComponentManagerImpl implements ComponentManager {
         assert uri != null;
         assert !uri.toString().endsWith("/");
         if (components.containsKey(uri)) {
-            throw new DuplicateComponentException(uri.toString());
+            throw new DuplicateComponentException("A component is already registered for: " + uri.toString());
         }
         components.put(uri, component);
 

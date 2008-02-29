@@ -26,6 +26,7 @@ import org.fabric3.spi.runtime.component.RegistrationException;
  * @version $Rev$ $Date$
  */
 public class DuplicateComponentException extends RegistrationException {
+    private static final long serialVersionUID = 2257483559370700093L;
 
     /**
      * Constructor specifying the id of the component.

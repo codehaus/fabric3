@@ -21,27 +21,29 @@ package org.fabric3.spi.services.contenttype;
 import org.fabric3.host.Fabric3Exception;
 
 /**
+ * Denotes an error resolving the content type for a resource.
+ *
  * @version $Revision$ $Date$
  */
 public class ContentTypeResolutionException extends Fabric3Exception {
-
-    /**
-     * Serial version UID.
-     */
     private static final long serialVersionUID = 7983355008884153907L;
 
     /**
-     * @param message
-     * @param identifier
+     * Constructor.
+     *
+     * @param message    the error message
+     * @param identifier an error identifier
      */
     public ContentTypeResolutionException(String message, String identifier) {
         super(message, identifier);
     }
 
     /**
-     * @param message
-     * @param identifier
-     * @param cause
+     * Constructor.
+     *
+     * @param message    the error message
+     * @param identifier an error identifier
+     * @param cause      an exception thrown during resolution
      */
     public ContentTypeResolutionException(String message, String identifier, Throwable cause) {
         super(message, identifier, cause);

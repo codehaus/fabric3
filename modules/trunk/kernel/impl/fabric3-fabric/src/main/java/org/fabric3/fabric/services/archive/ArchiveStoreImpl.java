@@ -121,7 +121,8 @@ public class ArchiveStoreImpl implements ArchiveStore {
             archiveUriToUrl.put(uri, locationUrl);
             return locationUrl;
         } catch (IOException e) {
-            throw new ArchiveStoreException("Error storing archive", uri.toString(), e);
+            String id = uri.toString();
+            throw new ArchiveStoreException("Error storing archive: " + id, id, e);
         }
     }
 
@@ -147,7 +148,8 @@ public class ArchiveStoreImpl implements ArchiveStore {
                 return location.toURL();
             }
         } catch (IOException e) {
-            throw new ArchiveStoreException("Error storing archive", sourceURL.toString(), e);
+            String id = sourceURL.toString();
+            throw new ArchiveStoreException("Error storing archive: " + id, id, e);
         }
     }
 
@@ -164,8 +166,7 @@ public class ArchiveStoreImpl implements ArchiveStore {
     }
 
     /**
-     * Resolve contribution location in the repository -> root repository / contribution file -> contribution group id /
-     * artifact id / version
+     * Resolve contribution location in the repository -> root repository / contribution file -> contribution group id / artifact id / version
      *
      * @param uri the uri to resolve
      * @return the mapped file
