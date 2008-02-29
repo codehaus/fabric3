@@ -77,7 +77,7 @@ public class DocumentLoaderImpl implements DocumentLoader {
         try {
             return DOCUMENT_FACTORY.newDocumentBuilder();
         } catch (ParserConfigurationException e) {
-            throw new AssertionError();
+            throw new AssertionError(e);
         }
     }
 }
