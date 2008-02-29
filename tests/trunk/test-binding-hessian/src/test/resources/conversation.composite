@@ -18,10 +18,19 @@
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
            xmlns:hessian="http://www.fabric3.org/binding/hessian/0.2"
-           name="HessianTestComposite">
+           name="ConversationComposite" autowire="false">
 
-    <include name="SyncComposite"/>
-    <include name="CallbackComposite"/>
-    <include name="ConversationComposite"/>
-    <include name="ScopeComposite"/>
+    <component name="BindingConversationTestComponent">
+        <f3:junit class="org.fabric3.tests.binding.harness.conversation.ConversationTest"/>
+        <reference name="conversationalService" target="ConversationalService"/>
+    </component>
+
+    <component name="ConversationalService">
+        <implementation.java class="org.fabric3.tests.binding.harness.conversation.ConversationalServiceImpl"/>
+        <service name="ConversationalService">
+            <hessian:binding.hessian uri="/ConversationalService"/>
+        </service>
+    </component>
+
+
 </composite>

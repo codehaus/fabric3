@@ -18,10 +18,20 @@
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
            xmlns:hessian="http://www.fabric3.org/binding/hessian/0.2"
-           name="HessianTestComposite">
+           name="SyncComposite" autowire="false">
 
-    <include name="SyncComposite"/>
-    <include name="CallbackComposite"/>
-    <include name="ConversationComposite"/>
-    <include name="ScopeComposite"/>
+    <component name="EchoTest">
+        <f3:junit class="org.fabric3.tests.binding.harness.EchoTest"/>
+        <reference name="service">
+            <hessian:binding.hessian uri="http://localhost:8900/echoService"/>
+        </reference>
+    </component>
+
+    <component name="EchoService">
+        <implementation.java class="org.fabric3.tests.binding.harness.EchoServiceImpl"/>
+        <service name="EchoService">
+            <hessian:binding.hessian uri="/echoService"/>
+        </service>
+    </component>
+
 </composite>

@@ -38,7 +38,7 @@
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>binding-test-harness</artifactId>
-            <version>0.2</version>
+            <version>0.5-SNAPSHOT</version>
             <scope>test</scope>
         </dependency>
     </dependencies>
@@ -53,6 +53,16 @@
                 <configuration>
                     <runtimeVersion>0.5-SNAPSHOT</runtimeVersion>
                     <extensions>
+                        <dependency>
+                            <groupId>org.codehaus.fabric3</groupId>
+                            <artifactId>fabric3-async-loader</artifactId>
+                            <version>0.5-SNAPSHOT</version>
+                        </dependency>
+                        <dependency>
+                            <groupId>org.codehaus.fabric3</groupId>
+                            <artifactId>fabric3-async-runtime</artifactId>
+                            <version>0.5-SNAPSHOT</version>
+                        </dependency>
                         <dependency>
                             <groupId>org.codehaus.fabric3</groupId>
                             <artifactId>fabric3-binding-hessian</artifactId>
