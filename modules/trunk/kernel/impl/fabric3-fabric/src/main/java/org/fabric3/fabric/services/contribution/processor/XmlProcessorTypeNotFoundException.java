@@ -22,6 +22,8 @@ import org.fabric3.host.contribution.ContributionException;
  * @version $Rev$ $Date$
  */
 public class XmlProcessorTypeNotFoundException extends ContributionException {
+    private static final long serialVersionUID = -4930429145821670207L;
+
     public XmlProcessorTypeNotFoundException(String message, String identifier) {
         super(message, identifier);
     }

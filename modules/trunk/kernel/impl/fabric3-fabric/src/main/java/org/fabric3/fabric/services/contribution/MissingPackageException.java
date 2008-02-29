@@ -24,6 +24,7 @@ import org.fabric3.spi.loader.LoaderException;
  * @version $Rev$ $Date$
  */
 public class MissingPackageException extends LoaderException {
+    private static final long serialVersionUID = 2448827235127768791L;
 
     public MissingPackageException(String message) {
         super(message);
