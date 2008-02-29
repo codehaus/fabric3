@@ -120,11 +120,6 @@
         <system:implementation.system class="org.fabric3.fabric.services.store.NonExpiringMemoryStore"/>
     </component>
 
-    <!-- Resource host registry -->
-    <component name="resourceHostRegistry">
-        <system:implementation.system class="org.fabric3.fabric.services.host.DelegatingResourceHostRegistry"/>
-    </component>
-
     <component name="DelegatingMarshalService">
         <system:implementation.system class="org.fabric3.fabric.marshaller.DelegatingMarshalServiceImpl"/>
     </component>
