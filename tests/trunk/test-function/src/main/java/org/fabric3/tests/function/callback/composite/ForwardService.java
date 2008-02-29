@@ -24,5 +24,5 @@ import org.osoa.sca.annotations.Callback;
  * @version $Revision$ $Date$
  */
 @Callback(CallbackService.class)
-public interface ForwardService extends ClientService{
+public interface ForwardService extends ClientService {
 }

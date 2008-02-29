@@ -22,7 +22,7 @@ import org.osoa.sca.annotations.Reference;
 import org.fabric3.tests.function.callback.common.CallbackData;
 
 /**
- * Tests for stateless calbacks.
+ * Tests for callbacks with composite-scoped components.
  *
  * @version $Rev: 2751 $ $Date: 2008-02-12 01:14:41 -0800 (Tue, 12 Feb 2008) $
  */

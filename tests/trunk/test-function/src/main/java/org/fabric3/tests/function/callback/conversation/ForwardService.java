@@ -32,10 +32,10 @@ import org.fabric3.tests.function.callback.common.CallbackData;
 public interface ForwardService {
 
     @OneWay
-    void invokeForward();
+    void invoke();
 
     @OneWay
-    void invokeForward2();
+    void invoke2();
 
     public int getCount();
 

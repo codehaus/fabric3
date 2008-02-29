@@ -18,6 +18,7 @@ package org.fabric3.tests.function.conversation;
 
 import org.osoa.sca.annotations.Scope;
 import org.osoa.sca.annotations.EndsConversation;
+import org.osoa.sca.annotations.ConversationID;
 
 /**
  * @version $Rev$ $Date$
@@ -25,6 +26,27 @@ import org.osoa.sca.annotations.EndsConversation;
 @Scope("CONVERSATION")
 public class ConversationalServiceImpl implements ConversationalService {
     private String value;
+    private Object conversationId;
+
+//    @ConversationID
+//    protected Object fieldConversationId;
+
+    // FIXME the introspection framwork does not support injecting context types (RequestContext, ComponentContext) and conversation ids on multiple
+    // sites.  
+
+    @ConversationID
+    public void setConversationId(Object conversationId) {
+        this.conversationId = conversationId;
+    }
+
+    public Object getConversationId() {
+        return conversationId;
+    }
+
+    public Object getFieldConversationId() {
+        return null;
+        //return fieldConversationId;
+    }
 
     public void setValue(String value) {
         this.value = value;

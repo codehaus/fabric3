@@ -15,7 +15,6 @@
  specific language governing permissions and limitations
  under the License.
 -->
-<!-- An assembly used for stateless callback functional testing -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
            name="ConversationCallbackComposite" autowire="false">
@@ -23,6 +22,7 @@
     <component name="ConversationCallbackTestComponent">
         <f3:junit class="org.fabric3.tests.function.callback.conversation.ConversationalCallbackTest"/>
         <reference name="client" target="ConversationalCallbackClient/ConversationalClientService"/>
+        <reference name="conversationalToCompositeClient" target="ConversationalToCompositeClient/ConversationalClientService"/>
     </component>
 
     <component name="ConversationalCallbackClient">
@@ -32,6 +32,20 @@
 
     <component name="ConversationalForwardService">
         <implementation.java class="org.fabric3.tests.function.callback.conversation.ForwardServiceImpl"/>
+    </component>
+
+    <component name="ConversationalToCompositeClient">
+        <implementation.java class="org.fabric3.tests.function.callback.conversation.ConversationalToCompositeClientServiceImpl"/>
+        <reference name="compositeService" target="CompositeService/CompositeService"/>
+    </component>
+
+    <component name="CompositeService">
+        <implementation.java class="org.fabric3.tests.function.callback.conversation.CompositeServiceImpl"/>
+        <reference name="forwardService" target="CompositeCallbackForwardService/ForwardService"/>
+    </component>
+
+    <component name="CompositeCallbackForwardService">
+        <implementation.java class="org.fabric3.tests.function.callback.conversation.CompositeForwardServiceImpl"/>
     </component>
 
 </composite>

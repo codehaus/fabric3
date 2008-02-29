@@ -30,6 +30,14 @@ public class ConversationalCallbackTest extends TestCase {
     @Reference
     protected ConversationalClientService client;
 
+    @Reference
+    protected ConversationalClientService conversationalToCompositeClient;
+
+    /**
+     * Verfies a callback is routed back to the correct conversational client instance.
+     *
+     * @throws Throwable
+     */
     public void testConversationalCallback() throws Throwable {
         CallbackData data = new CallbackData(1);
         client.invoke(data);
@@ -38,7 +46,25 @@ public class ConversationalCallbackTest extends TestCase {
             throw data.getException();
         }
         assertTrue(data.isCalledBack());
-        assertEquals(3,client.getCount());
+        assertEquals(3, client.getCount());
+    }
+
+    /**
+     * Verifies a conversational client is called back when it invokes a composite-scoped component which in turn invokes another composite-scoped
+     * component via a non-blocking operation. The fabric must route back to the orignal conversational client instance as the invocation sequence is
+     * processed on different threads.
+     *
+     * @throws Throwable
+     */
+    public void testConversationalToCompositeCallback() throws Throwable {
+        CallbackData data = new CallbackData(1);
+        conversationalToCompositeClient.invoke(data);
+        data.getLatch().await();
+        if (data.isError()) {
+            throw data.getException();
+        }
+        assertTrue(data.isCalledBack());
+        assertEquals(3, conversationalToCompositeClient.getCount());
     }
 
 }

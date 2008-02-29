@@ -29,6 +29,16 @@ public class ConversationTest extends TestCase {
     @Reference
     public ConversationalSubservice subService;
 
+    @Reference
+    public ConversationalService compositeService;
+
+    @Reference
+    public ConversationalSubservice compositeSubService;
+
+    public void testConversationIdIsInjected() {
+        assertNotNull(service.getConversationId());
+    }
+
     public void testStateIsRetained() {
         assertNull(service.getValue());
         service.setValue("Hello");
@@ -48,4 +58,26 @@ public class ConversationTest extends TestCase {
         assertEquals("Hello", subService.getValue());
         assertEquals("Hello", subService.getValue());
     }
+
+    public void testCompositeStateIsRetained() {
+        assertNull(compositeService.getValue());
+        compositeService.setValue("Hello");
+        assertEquals("Hello", compositeService.getValue());
+        assertEquals("Hello", compositeService.getValue());
+    }
+
+    public void testCompositeEndConversation() {
+        compositeService.setValue("Hello");
+        assertEquals("Hello", compositeService.end());
+        assertNull(compositeService.getValue());
+    }
+
+    public void testCompositeConversationalityIsInherited() {
+        assertNull(compositeSubService.getValue());
+        compositeSubService.setValue("Hello");
+        assertEquals("Hello", compositeSubService.getValue());
+        assertEquals("Hello", compositeSubService.getValue());
+    }
+
+
 }

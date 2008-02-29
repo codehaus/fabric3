@@ -22,7 +22,7 @@ import org.osoa.sca.annotations.Reference;
 import org.fabric3.tests.function.callback.common.CallbackData;
 
 /**
- * Tests for stateless calbacks.
+ * Tests for stateless callbacks.
  *
  * @version $Rev$ $Date$
  */
@@ -41,7 +41,6 @@ public class StatelessCallbackTest extends TestCase {
     public void testSimpleCallback() throws Exception {
         CallbackData data = new CallbackData(1);
         client1.invoke(data);
-//        latch.await(4000, TimeUnit.MILLISECONDS);
         data.getLatch().await();
         assertTrue(data.isCalledBack());
         // test that the other client was not issued a callback
@@ -56,7 +55,7 @@ public class StatelessCallbackTest extends TestCase {
     public void testServiceReferenceCallback() throws Exception {
 //        CountDownLatch latch = new CountDownLatch(1);
 //        client1.invokeServiceReferenceCallback(latch);
-//        latch.await(4000, TimeUnit.MILLISECONDS);
+//        latch.await();
 //        assertTrue(client1.isCallback());
 //        // test that the other client was not issued a callback
 //        assertFalse(client2.isCallback());
@@ -73,7 +72,7 @@ public class StatelessCallbackTest extends TestCase {
     public void testMultipleHopCallback() throws Exception {
 //        CountDownLatch latch = new CountDownLatch(1);
 //        client1.invokeMultipleHops(latch);
-//        latch.await(4000, TimeUnit.MILLISECONDS);
+//        latch.await();
 //        assertTrue(client1.isCallback());
 //        assertFalse(client2.isCallback());
     }
@@ -86,7 +85,7 @@ public class StatelessCallbackTest extends TestCase {
     public void testNoCallbackServiceReference() throws Exception {
 //        CountDownLatch latch = new CountDownLatch(2);
 //        client1.invokeNoCallbackServiceReference(latch);
-//        latch.await(4000, TimeUnit.MILLISECONDS);
+//        latch.await();
 //        assertTrue(client1.isCallback());
 //        assertFalse(client2.isCallback());
     }

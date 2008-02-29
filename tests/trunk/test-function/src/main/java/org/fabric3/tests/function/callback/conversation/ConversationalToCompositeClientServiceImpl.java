@@ -11,17 +11,17 @@ import org.fabric3.tests.function.callback.common.CallbackData;
  */
 @Service(interfaces = {ConversationalClientService.class, CallbackService.class})
 @Scope("CONVERSATION")
-public class ConversationalClientServiceImpl implements ConversationalClientService, CallbackService {
+public class ConversationalToCompositeClientServiceImpl implements ConversationalClientService, CallbackService {
     private int count;
     private CallbackData data;
 
     @Reference
-    protected ForwardService forwardService;
+    protected CompositeService compositeService;
 
     public void invoke(CallbackData data) {
         count++;
         this.data = data;
-        forwardService.invoke();
+        compositeService.invoke();
     }
 
     public int getCount() {
@@ -30,20 +30,11 @@ public class ConversationalClientServiceImpl implements ConversationalClientServ
 
     public void onCallback() {
         count++;
-        if (forwardService.getCount() != 1) {
-            //noinspection ThrowableInstanceNeverThrown
-            AssertionError e = new AssertionError("Forward servsice count incorrect");
-            data.setException(e);
-        }
-        forwardService.invoke2();
+        compositeService.invoke2();
     }
 
     public void end() {
-        if (!data.isError() && forwardService.getCount() != 2) {
-            //noinspection ThrowableInstanceNeverThrown
-            AssertionError e = new AssertionError("Forward service count incorrect");
-            data.setException(e);
-        } else if (!data.isError()) {
+        if (!data.isError()) {
             count++;
             data.callback();
         }

@@ -28,6 +28,10 @@ public interface ConversationalService {
 
     String getValue();
 
+    Object getConversationId();
+
+    public Object getFieldConversationId();
+
     @EndsConversation
     String end();
 }

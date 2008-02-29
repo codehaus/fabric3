@@ -21,28 +21,25 @@ package org.fabric3.tests.function.callback.conversation;
 import org.osoa.sca.annotations.Callback;
 import org.osoa.sca.annotations.Scope;
 
-/**                                     
+/**
  * @version $Revision$ $Date$
  */
-@Scope("CONVERSATION")
-public class ForwardServiceImpl implements ForwardService {
-    private int count;
+@Scope("COMPOSITE")
+public class CompositeForwardServiceImpl implements ForwardService {
 
     @Callback
     protected CallbackService callbackService;
 
     public void invoke() {
-        count++;
         callbackService.onCallback();
     }
 
     public void invoke2() {
-        count++;
         callbackService.end();
     }
 
     public int getCount() {
-        return count;
+        return 0;
     }
 
 }

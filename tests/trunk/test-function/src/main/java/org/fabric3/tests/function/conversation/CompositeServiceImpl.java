@@ -23,8 +23,15 @@ import org.osoa.sca.annotations.Scope;
  */
 @Scope("COMPOSITE")
 public class CompositeServiceImpl implements ConversationalService {
-    // TODO use the conversationId to store this in a map
     private static final ThreadLocal<String> value = new ThreadLocal<String>();
+
+    public Object getConversationId() {
+        return null;
+    }
+
+    public Object getFieldConversationId() {
+        return null;
+    }
 
     public void setValue(String value) {
         CompositeServiceImpl.value.set(value);
