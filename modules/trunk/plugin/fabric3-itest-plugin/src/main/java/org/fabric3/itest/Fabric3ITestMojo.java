@@ -306,7 +306,7 @@ public class Fabric3ITestMojo extends AbstractMojo {
         try {
             testScdlURL = testScdl.toURI().toURL();
         } catch (MalformedURLException e) {
-            throw new AssertionError();
+            throw new AssertionError(e);
         }
 
         Set<Artifact> runtimeArtifacts = calculateRuntimeArtifacts(runtimeVersion);
@@ -358,7 +358,7 @@ public class Fabric3ITestMojo extends AbstractMojo {
                     testSuite = createTestSuite(runtime);
                 }
             } catch (Exception e) {
-                throw new MojoExecutionException("Error deploying test component " + testScdl, e);
+                throw new MojoExecutionException("Error deploying test component: " + testScdl, e);
             }
             log.info("Executing tests...");
 
@@ -465,7 +465,7 @@ public class Fabric3ITestMojo extends AbstractMojo {
                 urls[i++] = file.toURI().toURL();
             } catch (MalformedURLException e) {
                 // toURI should have made this valid
-                throw new AssertionError();
+                throw new AssertionError(e);
             }
         }
 
@@ -731,7 +731,7 @@ public class Fabric3ITestMojo extends AbstractMojo {
                 urls.add(url);
             } catch (MalformedURLException e) {
                 // toURI should have encoded the URL
-                throw new AssertionError();
+                throw new AssertionError(e);
             }
 
         }
@@ -761,7 +761,7 @@ public class Fabric3ITestMojo extends AbstractMojo {
 
             } catch (MalformedURLException e) {
                 // toURI should have encoded the URL
-                throw new AssertionError();
+                throw new AssertionError(e);
             }
 
         }
