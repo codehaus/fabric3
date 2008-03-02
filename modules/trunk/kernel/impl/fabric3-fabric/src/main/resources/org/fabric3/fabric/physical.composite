@@ -25,11 +25,6 @@
            name="org.fabric3.fabric.Physical"
            autowire="true">
 
-    <!-- Component that provides the Deployer service -->
-    <component name="deployer">
-        <system:implementation.system class="org.fabric3.fabric.deployer.DeployerImpl"/>
-    </component>
-
     <component name="connector">
         <system:implementation.system class="org.fabric3.fabric.builder.ConnectorImpl"/>
     </component>
