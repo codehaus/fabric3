@@ -47,7 +47,7 @@ import org.fabric3.spi.transform.TransformerRegistry;
 import org.fabric3.spi.wire.ProxyService;
 
 /**
- * The component builder for Java implementation types. Responsible for creating the Component runtime artifact from a physical component definition
+ * Builds a JavaComponent from a physical definition.
  *
  * @version $Rev$ $Date$
  * @param <T> the implementation class for the defined component

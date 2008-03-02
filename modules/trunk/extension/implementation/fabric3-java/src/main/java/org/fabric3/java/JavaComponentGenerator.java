@@ -130,7 +130,7 @@ public class JavaComponentGenerator implements ComponentGenerator<LogicalCompone
         }
         if (name == null) {
             String interfaze = serviceContract.getQualifiedInterfaceName();
-            throw new CallbackSiteNotFound("Callback injection site not found for type [" + interfaze + "]", interfaze);
+            throw new CallbackSiteNotFound("Callback injection site not found for type: " + interfaze, interfaze);
         }
 
         JavaWireSourceDefinition wireDefinition = new JavaWireSourceDefinition();

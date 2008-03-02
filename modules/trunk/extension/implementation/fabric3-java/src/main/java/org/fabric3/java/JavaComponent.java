@@ -33,7 +33,7 @@ import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.wire.ProxyService;
 
 /**
- * The runtime instantiation of Java component implementations
+ * The runtime instantiation of a Java component implementation.
  *
  * @version $Revision$ $Date$
  * @param <T> the implementation class for the defined component
@@ -54,6 +54,7 @@ public class JavaComponent<T> extends PojoComponent<T> {
      * @param maxAge                  the time after which instances of this component can be expired
      * @param proxyService            the service used to create reference proxies
      * @param propertyFactories       map of factories for property values
+     * @param referenceFactories      object factories for multiplicity references
      */
     public JavaComponent(URI componentId,
                          InstanceFactoryProvider<T> instanceFactoryProvider,

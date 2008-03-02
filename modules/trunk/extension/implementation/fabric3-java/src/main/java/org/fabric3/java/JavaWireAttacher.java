@@ -54,7 +54,7 @@ import org.fabric3.spi.wire.ProxyService;
 import org.fabric3.spi.wire.Wire;
 
 /**
- * The component builder for Java implementation types. Responsible for creating the Component runtime artifact from a physical component definition
+ * Attaches wires to and from components implemented using the Java programming model.
  *
  * @version $Rev$ $Date$
  */
@@ -133,7 +133,7 @@ public class JavaWireAttacher extends PojoWireAttacher implements SourceWireAtta
         URI targetName = UriHelper.getDefragmentedName(targetDefinition.getUri());
         Component component = manager.getComponent(targetName);
         assert component instanceof JavaComponent;
-        
+
         JavaComponent<?> target = (JavaComponent<?>) component;
 
         ScopeContainer<?> scopeContainer = target.getScopeContainer();

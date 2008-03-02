@@ -26,6 +26,8 @@ import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.Implementation;
 
 /**
+ * Represents a Java component implementation type.
+ *
  * @version $$Rev$$ $$Date$$
  */
 public class JavaImplementation extends Implementation<PojoComponentType> {

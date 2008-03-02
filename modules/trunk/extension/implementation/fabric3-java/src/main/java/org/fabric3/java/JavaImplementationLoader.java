@@ -30,6 +30,9 @@ import org.fabric3.spi.loader.PolicyHelper;
 import org.fabric3.spi.loader.StAXElementLoader;
 import org.fabric3.spi.loader.InvalidValueException;
 
+/**
+ * Loads <implementation.java> in a composite.
+ */
 public class JavaImplementationLoader implements StAXElementLoader<JavaImplementation> {
 
     private final JavaComponentTypeLoader componentTypeLoader;
