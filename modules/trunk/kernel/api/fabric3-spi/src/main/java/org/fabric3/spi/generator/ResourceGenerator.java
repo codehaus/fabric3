@@ -35,7 +35,6 @@ public interface ResourceGenerator {
      * already exits, it will be updated with resources required by the component.
      *
      * @param component the logical component to generate the physical definition from
-     * @param context   the current generator context
      * @return the id of the physical resource
      * @throws GenerationException if an error occurs during the generation process
      */
@@ -46,7 +45,6 @@ public interface ResourceGenerator {
      * already exits, it will be updated with resources required by the binding.
      *
      * @param binding the logical binding to generate the physical definition from
-     * @param context the current generator context
      * @return the id of the physical resource
      * @throws GenerationException if an error occurs during the generation process
      */
@@ -57,7 +55,6 @@ public interface ResourceGenerator {
      * already exits, it will be updated with resources required by the binding.
      *
      * @param resource the logical resource to generate the physical definition from
-     * @param context the current generator context
      * @return the id of the physical resource
      * @throws GenerationException if an error occurs during the generation process
      */
