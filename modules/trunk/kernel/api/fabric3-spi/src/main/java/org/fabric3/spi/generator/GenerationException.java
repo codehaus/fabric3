@@ -26,6 +26,7 @@ import org.fabric3.host.Fabric3Exception;
  * @version $Rev$ $Date$
  */
 public abstract class GenerationException extends Fabric3Exception {
+    private static final long serialVersionUID = -1307164947930260525L;
 
     public GenerationException() {
     }
