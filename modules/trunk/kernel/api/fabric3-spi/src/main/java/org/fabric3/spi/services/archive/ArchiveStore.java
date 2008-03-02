@@ -30,13 +30,6 @@ import java.util.List;
 public interface ArchiveStore {
 
     /**
-     * Returns the store id.
-     *
-     * @return the store id.
-     */
-    String getId();
-
-    /**
      * Copies an artifact to the store.
      *
      * @param uri    A URI pointing to the artifact being copied to the store

@@ -38,18 +38,8 @@ import org.fabric3.spi.services.artifact.Artifact;
 @EagerInit
 public class MavenArchiveStore implements ArchiveStore {
     private static final String DEFAULT_REPO = "http://repo1.maven.org/maven2/";
-    private String id = "extensions";
     private String remoteRepositories = DEFAULT_REPO;
     private MavenHelper helper;
-
-    public String getId() {
-        return id;
-    }
-
-    @Property(required = false)
-    public void setId(String id) {
-        this.id = id;
-    }
 
     @Property(required = false)
     public void setRemoteRepositories(String remoteRepositories) {

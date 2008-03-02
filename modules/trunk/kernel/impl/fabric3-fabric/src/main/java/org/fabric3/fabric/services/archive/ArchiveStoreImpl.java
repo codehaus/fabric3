@@ -51,9 +51,9 @@ public class ArchiveStoreImpl implements ArchiveStore {
     protected File root;
     protected Map<URI, URL> archiveUriToUrl;
     protected String storeId;
-    private boolean persistent = true;
     protected String domain;
     protected String repository;
+    private boolean persistent = true;
     private File baseDir;
 
     /**
@@ -85,10 +85,6 @@ public class ArchiveStoreImpl implements ArchiveStore {
     @Property(required = false)
     public void setRepository(String repository) {
         this.repository = repository;
-    }
-
-    public String getId() {
-        return storeId;
     }
 
     @Init
