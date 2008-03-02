@@ -29,9 +29,7 @@ import java.util.Map;
 import org.osoa.sca.CallableReference;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.fabric.injection.CallbackWireObjectFactory;
 import org.fabric3.fabric.wire.NoMethodForOperationException;
-import org.fabric3.fabric.wire.WireObjectFactory;
 import org.fabric3.scdl.Scope;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;

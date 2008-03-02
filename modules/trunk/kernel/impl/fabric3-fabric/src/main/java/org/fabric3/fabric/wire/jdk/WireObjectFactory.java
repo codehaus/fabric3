@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.fabric.wire;
+package org.fabric3.fabric.wire.jdk;
 
 import java.lang.reflect.Method;
 import java.util.Map;
@@ -25,6 +25,7 @@ import org.fabric3.spi.ObjectCreationException;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.ProxyService;
+import org.fabric3.fabric.wire.NoMethodForOperationException;
 
 /**
  * Uses a wire to return an object instance
@@ -47,7 +48,7 @@ public class WireObjectFactory<T> implements ObjectFactory<T> {
      * @param callbackUri    the callback URI for the wire or null if the wire is unidirectional
      * @param proxyService   the wire service to create the proxy
      * @param mappings       proxy method to invocation chain mappings
-     * @throws NoMethodForOperationException if a method matching the operation cannot be found
+     * @throws org.fabric3.fabric.wire.NoMethodForOperationException if a method matching the operation cannot be found
      */
     public WireObjectFactory(Class<T> interfaze,
                              boolean conversational,
