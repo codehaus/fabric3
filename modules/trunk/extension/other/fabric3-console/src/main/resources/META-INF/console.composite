@@ -28,18 +28,6 @@
            name="ConsoleExtension"
            autowire="true">
 
-    <!-- Servlet that serves the SCDL contribution form -->
-    <component name="console.scdlRequestForm">
-        <system:implementation.system class="org.fabric3.console.handler.scdl.ScdlContributionForm"/>
-        <property name="path">/scdlForm</property>
-    </component>
-
-    <!-- Servlet that handles the scdl submission -->
-    <component name="console.scdlHandler">
-        <system:implementation.system class="org.fabric3.console.handler.scdl.ScdlContributionHandler"/>
-        <property name="path">/scdlSubmit</property>
-    </component>
-
     <component name="console.consoleServlet">
         <system:implementation.system class="org.fabric3.console.handler.scdl.ConsoleServlet"/>
         <reference name="assembly" target="distributedAssembly"/>
