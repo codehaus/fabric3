@@ -32,6 +32,7 @@ import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.TargetDestructionException;
 import org.fabric3.spi.component.TargetResolutionException;
 import org.fabric3.spi.component.WorkContext;
+import org.fabric3.spi.component.ExpirationPolicy;
 
 /**
  * A scope context which manages stateless atomic component instances in a non-pooled fashion.
@@ -47,7 +48,12 @@ public class StatelessScopeContainer extends AbstractScopeContainer<Object> {
     }
 
     public void startContext(WorkContext workContext, URI groupId) throws GroupInitializationException {
-        super.startContext(workContext, null, null);
+        super.startContext(workContext, null, (URI) null);
+    }
+
+    public void startContext(WorkContext workContext, URI groupId, ExpirationPolicy policy) throws GroupInitializationException {
+        // scope does not support expiration
+        this.startContext(workContext, groupId);
     }
 
     public <T> InstanceWrapper<T> getWrapper(AtomicComponent<T> component, WorkContext workContext) throws TargetResolutionException {

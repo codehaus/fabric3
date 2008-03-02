@@ -94,13 +94,14 @@ public class JavaComponentBuilder<T> extends PojoComponentBuilder<T, JavaCompone
 
         Map<String, ObjectFactory<?>> propertyFactories = createPropertyFactories(definition, provider);
         Map<String, MultiplicityObjectFactory<?>> referenceFactories = createMultiplicityReferenceFactories(providerDefinition);
+
         JavaComponent<T> component = new JavaComponent<T>(componentId,
                                                           provider,
                                                           scopeContainer,
                                                           groupId,
                                                           initLevel,
-                                                          -1,
-                                                          -1,
+                                                          definition.getMaxIdleTime(),
+                                                          definition.getMaxAge(),
                                                           proxyService,
                                                           propertyFactories,
                                                           referenceFactories);

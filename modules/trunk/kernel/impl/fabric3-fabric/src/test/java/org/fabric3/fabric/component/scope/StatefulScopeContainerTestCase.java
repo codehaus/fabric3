@@ -32,6 +32,7 @@ import org.fabric3.spi.component.InstanceWrapper;
 import org.fabric3.spi.component.InstanceWrapperStore;
 import org.fabric3.spi.component.TargetResolutionException;
 import org.fabric3.spi.component.WorkContext;
+import org.fabric3.spi.component.ExpirationPolicy;
 
 /**
  * @version $Rev$ $Date$
@@ -94,12 +95,16 @@ public class StatefulScopeContainerTestCase extends TestCase {
                 super.startContext(workContext, conversation, groupId);
             }
 
+            public void startContext(WorkContext workContext, URI groupId, ExpirationPolicy policy) throws GroupInitializationException {
+
+            }
+
             public void stopContext(WorkContext workContext) {
                 super.stopContext(conversation);
             }
 
             public <T> InstanceWrapper<T> getWrapper(AtomicComponent<T> component, WorkContext workContext) throws TargetResolutionException {
-                return super.getWrapper(component, workContext, conversation);
+                return super.getWrapper(component, workContext, conversation, true);
             }
         };
     }

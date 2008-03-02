@@ -29,11 +29,12 @@ import org.fabric3.scdl.Scope;
  * @version $Rev$ $Date$
  */
 public abstract class PhysicalComponentDefinition extends ModelObject {
-
     private URI componentId;
     private Scope<?> scope;
     private URI groupId;
     private int initLevel;
+    private long maxIdleTime;
+    private long maxAge;
 
     /**
      * Gets the component id.
@@ -55,6 +56,7 @@ public abstract class PhysicalComponentDefinition extends ModelObject {
 
     /**
      * Returns the id of the component group this component belongs to.
+     *
      * @return the id of the component group this component belongs to
      */
     public URI getGroupId() {
@@ -63,6 +65,7 @@ public abstract class PhysicalComponentDefinition extends ModelObject {
 
     /**
      * Sets the id of the component group this component belongs to.
+     *
      * @param groupId the id of the component group this component belongs to
      */
     public void setGroupId(URI groupId) {
@@ -70,14 +73,18 @@ public abstract class PhysicalComponentDefinition extends ModelObject {
     }
 
     /**
-     * @return
+     * Returns the component initialization level.
+     *
+     * @return the component initialization level
      */
     public int getInitLevel() {
         return initLevel;
     }
 
     /**
-     * @param initLevel
+     * Sets the component initialization level.
+     *
+     * @param initLevel the component initialization level.
      */
     public void setInitLevel(int initLevel) {
         this.initLevel = initLevel;
@@ -101,4 +108,39 @@ public abstract class PhysicalComponentDefinition extends ModelObject {
         this.scope = scope;
     }
 
+    /**
+     * Returns the idle time allowed between operations in milliseconds if the implementation is conversational.
+     *
+     * @return the idle time allowed between operations in milliseconds if the implementation is conversational
+     */
+    public long getMaxIdleTime() {
+        return maxIdleTime;
+    }
+
+    /**
+     * Sets the idle time allowed between operations in milliseconds if the implementation is conversational.
+     *
+     * @param maxIdleTime the idle time
+     */
+    public void setMaxIdleTime(long maxIdleTime) {
+        this.maxIdleTime = maxIdleTime;
+    }
+
+    /**
+     * Returns the maximum age a conversation may remain active in milliseconds if the implementation is conversational.
+     *
+     * @return the maximum age a conversation may remain active in milliseconds if the implementation is conversational
+     */
+    public long getMaxAge() {
+        return maxAge;
+    }
+
+    /**
+     * Sets the maximum age a conversation may remain active in milliseconds if the implementation is conversational.
+     *
+     * @param maxAge the maximum age
+     */
+    public void setMaxAge(long maxAge) {
+        this.maxAge = maxAge;
+    }
 }

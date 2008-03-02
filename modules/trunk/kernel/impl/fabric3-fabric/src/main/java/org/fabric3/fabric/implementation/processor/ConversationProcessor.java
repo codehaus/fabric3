@@ -38,6 +38,7 @@ import org.fabric3.scdl.MethodInjectionSite;
  * @version $Rev$ $Date$
  */
 public class ConversationProcessor extends ImplementationProcessorExtension {
+    private static final String MILLISECONDS = " MILLISECONDS";
     private static final String SECONDS = " SECONDS";
     private static final String MINUTES = " MINUTES";
     private static final String HOURS = " HOURS";
@@ -131,6 +132,11 @@ public class ConversationProcessor extends ImplementationProcessorExtension {
         if (i >= 0) {
             String units = expr.substring(0, i);
             return Long.parseLong(units) * 31556926000L;
+        }
+        i = expr.lastIndexOf(MILLISECONDS);
+        if (i >= 0) {
+            String units = expr.substring(0, i);
+            return Long.parseLong(units);
         }
         return Long.parseLong(expr) * 1000;  // assume seconds if no suffix specified
     }

@@ -35,6 +35,7 @@ import org.fabric3.spi.component.TargetInitializationException;
 import org.fabric3.spi.component.TargetResolutionException;
 import org.fabric3.spi.component.WorkContext;
 import org.fabric3.spi.component.GroupInitializationException;
+import org.fabric3.spi.component.ExpirationPolicy;
 
 /**
  * A scope context which manages atomic component instances keyed by composite
@@ -82,6 +83,11 @@ public class CompositeScopeContainer extends AbstractScopeContainer<URI> {
 
     public void startContext(WorkContext workContext, URI groupId) throws GroupInitializationException {
         super.startContext(workContext, groupId, groupId);
+    }
+
+    public void startContext(WorkContext workContext, URI groupId, ExpirationPolicy policy) throws GroupInitializationException {
+        // scope does not support expiration
+        this.startContext(workContext, groupId);
     }
 
     public void stopContext(WorkContext workContext) {

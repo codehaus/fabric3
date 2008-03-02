@@ -36,24 +36,21 @@ public class ConversationProcessorTestCase extends TestCase {
     private ConversationProcessor processor = new ConversationProcessor();
 
     public void testMaxIdleTime() throws Exception {
-        PojoComponentType type =
-            new PojoComponentType(null);
+        PojoComponentType type = new PojoComponentType(null);
         processor.visitClass(FooMaxIdle.class, type, null);
         assertEquals(10000L, type.getMaxIdleTime());
-        assertEquals(-1, type.getMaxAge());
+        assertEquals(0, type.getMaxAge());
     }
 
     public void testMaxAge() throws Exception {
-        PojoComponentType type =
-            new PojoComponentType(null);
+        PojoComponentType type = new PojoComponentType(null);
         processor.visitClass(FooMaxAge.class, type, null);
         assertEquals(10000L, type.getMaxAge());
-        assertEquals(-1, type.getMaxIdleTime());
+        assertEquals(0, type.getMaxIdleTime());
     }
 
     public void testBadFooBoth() throws Exception {
-        PojoComponentType type =
-            new PojoComponentType(null);
+        PojoComponentType type = new PojoComponentType(null);
         try {
             processor.visitClass(BadFooBoth.class, type, null);
             fail();
@@ -63,14 +60,13 @@ public class ConversationProcessorTestCase extends TestCase {
     }
 
     public void testImplicitScope() throws Exception {
-        PojoComponentType type =  new PojoComponentType(null);
+        PojoComponentType type = new PojoComponentType(null);
         processor.visitClass(ImplicitFooScope.class, type, null);
         assertEquals(org.fabric3.scdl.Scope.CONVERSATION, type.getImplementationScope());
     }
 
     public void testBadFooScope() throws Exception {
-        PojoComponentType type =
-            new PojoComponentType(null);
+        PojoComponentType type = new PojoComponentType(null);
         try {
             processor.visitClass(BadFooScope.class, type, null);
             fail();
@@ -81,25 +77,22 @@ public class ConversationProcessorTestCase extends TestCase {
 
     public void testJustConversation() throws Exception {
         // TODO do we want these semantics
-        PojoComponentType type =
-            new PojoComponentType(null);
+        PojoComponentType type = new PojoComponentType(null);
         processor.visitClass(FooJustConversation.class, type, null);
         assertEquals(org.fabric3.scdl.Scope.CONVERSATION, type.getImplementationScope());
-        assertEquals(-1, type.getMaxAge());
-        assertEquals(-1, type.getMaxIdleTime());
+        assertEquals(0, type.getMaxAge());
+        assertEquals(0, type.getMaxIdleTime());
     }
 
     public void testSetConversationIdField() throws Exception {
-        PojoComponentType type =
-            new PojoComponentType(null);
+        PojoComponentType type = new PojoComponentType(null);
         Field field = FooWithConversationIDField.class.getDeclaredField("conversationID");
         processor.visitField(field, type, null);
         assertNotNull(type.getInjectionSite(InjectableAttribute.CONVERSATION_ID));
     }
 
     public void testSetConversationIdMethod() throws Exception {
-        PojoComponentType type =
-            new PojoComponentType(null);
+        PojoComponentType type = new PojoComponentType(null);
         Method method = FooWithConversationIDMethod.class.getDeclaredMethods()[0];
         processor.visitMethod(method, type, null);
         assertNotNull(type.getInjectionSite(InjectableAttribute.CONVERSATION_ID));

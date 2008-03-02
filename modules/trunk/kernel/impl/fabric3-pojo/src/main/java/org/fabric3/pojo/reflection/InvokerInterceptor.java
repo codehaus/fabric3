@@ -30,6 +30,7 @@ import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.TargetDestructionException;
 import org.fabric3.spi.component.TargetResolutionException;
 import org.fabric3.spi.component.WorkContext;
+import org.fabric3.spi.component.ExpirationPolicy;
 import org.fabric3.spi.wire.Interceptor;
 import org.fabric3.spi.wire.InvocationRuntimeException;
 import org.fabric3.spi.wire.Message;
@@ -96,7 +97,16 @@ public class InvokerInterceptor<T, CONTEXT> implements Interceptor {
                     // check if this is a callback. If so, do not start the conversation since it has already been done by the forward invocation
                     if (conversationScope && frame.isStartConversation()) {
                         // start the conversation context
-                        scopeContainer.startContext(workContext, null);
+                        if (component.getMaxAge() > 0) {
+                            ExpirationPolicy policy = new NonRenewableExpirationPolicy(System.currentTimeMillis() + component.getMaxAge());
+                            scopeContainer.startContext(workContext, null, policy);
+                        } else if (component.getMaxIdleTime() > 0) {
+                            long expire = System.currentTimeMillis() + component.getMaxIdleTime();
+                            ExpirationPolicy policy = new RenewableExpirationPolicy(expire, component.getMaxIdleTime());
+                            scopeContainer.startContext(workContext, null, policy);
+                        } else {
+                            scopeContainer.startContext(workContext, null);
+                        }
                     }
                 }
             }

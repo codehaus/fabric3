@@ -41,6 +41,10 @@ public abstract class StatefulScopeContainer<KEY> extends AbstractScopeContainer
         this.store = store;
     }
 
+    public <T> void returnWrapper(AtomicComponent<T> component, WorkContext workContext, InstanceWrapper<T> wrapper)
+            throws TargetDestructionException {
+    }
+
     public void startContext(WorkContext workContext, KEY contextId, URI groupId) throws GroupInitializationException {
         store.startContext(contextId);
         super.startContext(workContext, contextId, groupId);
@@ -51,15 +55,22 @@ public abstract class StatefulScopeContainer<KEY> extends AbstractScopeContainer
         store.stopContext(contextId);
     }
 
-    public <T> void returnWrapper(AtomicComponent<T> component, WorkContext workContext, InstanceWrapper<T> wrapper)
-            throws TargetDestructionException {
-    }
-
-    protected <T> InstanceWrapper<T> getWrapper(AtomicComponent<T> component, WorkContext workContext, KEY contextId)
+    /**
+     * Return an instance wrapper containing a component implementation instance associated with the correlation key, optionally creating one if not
+     * found.
+     *
+     * @param component   the component the implementation instance belongs to
+     * @param workContext the current WorkContext
+     * @param contextId   the correlation key for the component implementation instance
+     * @param create      true if an instance should be created
+     * @return an instance wrapper or null if not found an create is set to false
+     * @throws TargetResolutionException if an error occurs returning the wrapper
+     */
+    protected <T> InstanceWrapper<T> getWrapper(AtomicComponent<T> component, WorkContext workContext, KEY contextId, boolean create)
             throws TargetResolutionException {
         assert contextId != null;
         InstanceWrapper<T> wrapper = store.getWrapper(component, contextId);
-        if (wrapper == null) {
+        if (wrapper == null && create) {
             wrapper = createInstance(component, workContext);
             wrapper.start();
             store.putWrapper(component, contextId, wrapper);

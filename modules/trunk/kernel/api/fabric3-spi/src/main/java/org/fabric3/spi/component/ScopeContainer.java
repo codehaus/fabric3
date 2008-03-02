@@ -56,13 +56,24 @@ public interface ScopeContainer<KEY> extends Lifecycle {
     void unregister(AtomicComponent<?> component);
 
     /**
-     * Start a new context with the supplied ID.
+     * Start a new, non-expiring context with the supplied group ID. The context will remain active until explicitly stopped.
      *
      * @param workContext the current WorkContext
-     * @param groupId     the group of components to associate with this context
+     * @param groupId     the group of components to initially associate with this context or null if the scope does not support eager initialization
      * @throws GroupInitializationException if an exception was thrown by any eagerInit component
      */
     void startContext(WorkContext workContext, URI groupId) throws GroupInitializationException;
+
+    /**
+     * Start a new context with the supplied group ID which expires according to the given ExpirationPolicy. The context will remain active until it
+     * is explicitly stopped or it expires.
+     *
+     * @param workContext the current WorkContext
+     * @param groupId     the group of components to initially associate with this context or null if the scope does not support eager initialization
+     * @param policy      determines when the context expires
+     * @throws GroupInitializationException if an exception was thrown by any eagerInit component
+     */
+    public void startContext(WorkContext workContext, URI groupId, ExpirationPolicy policy) throws GroupInitializationException;
 
     /**
      * Stop the context with the supplied ID.
@@ -79,7 +90,7 @@ public interface ScopeContainer<KEY> extends Lifecycle {
      * @return the wrapper for the target instance
      * @throws TargetResolutionException if there was a problem instantiating the target instance
      */
-    <T> InstanceWrapper<T> getWrapper(AtomicComponent<T> component, WorkContext workContext)  throws TargetResolutionException;
+    <T> InstanceWrapper<T> getWrapper(AtomicComponent<T> component, WorkContext workContext) throws TargetResolutionException;
 
     /**
      * Return a wrapper after use (for example, after invoking the instance).
@@ -96,7 +107,7 @@ public interface ScopeContainer<KEY> extends Lifecycle {
      * with the supplied context.
      *
      * @param components  the components to be initialized
-     * @param groupId  the group ID of the components to initialize
+     * @param groupId     the group ID of the components to initialize
      * @param workContext the work context in which to initialize the components
      * @throws GroupInitializationException if one or more components threw an exception during initialization
      */

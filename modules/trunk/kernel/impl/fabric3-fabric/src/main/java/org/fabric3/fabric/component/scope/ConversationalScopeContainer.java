@@ -17,21 +17,33 @@
 package org.fabric3.fabric.component.scope;
 
 import java.net.URI;
+import java.util.Iterator;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 import org.osoa.sca.Conversation;
+import org.osoa.sca.ConversationEndedException;
+import org.osoa.sca.annotations.Destroy;
 import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Init;
+import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Reference;
 import org.osoa.sca.annotations.Service;
 
 import org.fabric3.api.annotation.Monitor;
 import org.fabric3.scdl.Scope;
-import org.fabric3.spi.component.InstanceWrapperStore;
-import org.fabric3.spi.component.ScopeContainer;
-import org.fabric3.spi.component.WorkContext;
+import org.fabric3.spi.component.AtomicComponent;
+import org.fabric3.spi.component.ExpirationPolicy;
 import org.fabric3.spi.component.GroupInitializationException;
 import org.fabric3.spi.component.InstanceWrapper;
-import org.fabric3.spi.component.AtomicComponent;
+import org.fabric3.spi.component.InstanceWrapperStore;
+import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.TargetResolutionException;
+import org.fabric3.spi.component.WorkContext;
+import org.fabric3.spi.component.CallFrame;
 
 /**
  * Scope container for the standard CONVERSATIONAL scope.
@@ -41,8 +53,39 @@ import org.fabric3.spi.component.TargetResolutionException;
 @Service(ScopeContainer.class)
 @EagerInit
 public class ConversationalScopeContainer extends StatefulScopeContainer<Conversation> {
-    public ConversationalScopeContainer(@Monitor ScopeContainerMonitor monitor, @Reference(name = "store")InstanceWrapperStore<Conversation> store) {
+    private final ConcurrentHashMap<Conversation, ExpirationPolicy> expirationPolicies;
+    private ScheduledExecutorService executor;
+    // TODO this should be part of the system configuration
+    private long delay = 600;  // reap every 600 seconds
+
+    public ConversationalScopeContainer(@Monitor ScopeContainerMonitor monitor,
+                                        @Reference(name = "store")InstanceWrapperStore<Conversation> store) {
         super(Scope.CONVERSATION, monitor, store);
+        expirationPolicies = new ConcurrentHashMap<Conversation, ExpirationPolicy>();
+    }
+
+    /**
+     * Optional property to set the delay for executing the reaper to clear expired conversation contexts
+     *
+     * @param delay the delay in seconds
+     */
+    @Property
+    public void setDelay(long delay) {
+        this.delay = delay;
+    }
+
+    @Init
+    public void start() {
+        super.start();
+        executor = Executors.newSingleThreadScheduledExecutor();
+        Runnable reaper = new Reaper();
+        executor.scheduleWithFixedDelay(reaper, delay, delay, TimeUnit.SECONDS);
+    }
+
+    @Destroy
+    public void stop() {
+        executor.shutdownNow();
+        super.stop();
     }
 
     public void startContext(WorkContext workContext, URI groupId) throws GroupInitializationException {
@@ -51,17 +94,52 @@ public class ConversationalScopeContainer extends StatefulScopeContainer<Convers
         super.startContext(workContext, conversation, groupId);
     }
 
+    public void startContext(WorkContext workContext, URI groupId, ExpirationPolicy policy) throws GroupInitializationException {
+        Conversation conversation = workContext.peekCallFrame().getConversation();
+        assert conversation != null;
+        super.startContext(workContext, conversation, groupId);
+        expirationPolicies.put(conversation, policy);
+    }
+
     public void stopContext(WorkContext workContext) {
         Conversation conversation = workContext.peekCallFrame().getConversation();
         assert conversation != null;
         super.stopContext(conversation);
+        expirationPolicies.remove(conversation);
     }
 
     public <T> InstanceWrapper<T> getWrapper(AtomicComponent<T> component, WorkContext workContext) throws TargetResolutionException {
-        Conversation conversation = workContext.peekCallFrame().getConversation();
+        CallFrame frame = workContext.peekCallFrame();
+        Conversation conversation = frame.getConversation();
         assert conversation != null;
-        return super.getWrapper(component, workContext, conversation);
+        ExpirationPolicy policy = expirationPolicies.get(conversation);
+        if (policy != null && !policy.isExpired()) {
+            // renew the conversation expiration if one is associated, i.e. it is an expiring conversation
+            expirationPolicies.get(conversation).renew();
+        }
+        boolean start = frame.isStartConversation();
+        InstanceWrapper<T> wrapper = super.getWrapper(component, workContext, conversation, start);
+        if (wrapper == null) {
+            // conversation has either been ended or timed out, throw an exception
+            throw new ConversationEndedException();
+        }
+        return wrapper;
     }
 
+    /**
+     * Periodically scans and removes expired conversation contexts.
+     */
+    private class Reaper implements Runnable {
+        public void run() {
+            for (Iterator<Map.Entry<Conversation, ExpirationPolicy>> iterator = expirationPolicies.entrySet().iterator(); iterator.hasNext();) {
+                Map.Entry<Conversation, ExpirationPolicy> entry = iterator.next();
+                if (entry.getValue().isExpired()) {
+                    Conversation conversation = entry.getKey();
+                    iterator.remove();
+                    stopContext(conversation);
+                }
+            }
+        }
+    }
 
 }

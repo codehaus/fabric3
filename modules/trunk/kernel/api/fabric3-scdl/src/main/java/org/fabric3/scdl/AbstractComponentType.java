@@ -22,21 +22,19 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * The definition of the configurable aspects of an implementation in terms of the services it exposes, the services it
- * references, and properties that can be used to configure it.
+ * The definition of the configurable aspects of an implementation in terms of the services it exposes, the services it references, and properties
+ * that can be used to configure it.
  * <p/>
- * A service represents an addressable interface provided by the implementation. Such a service may be the target of a
- * wire from another component.
+ * A service represents an addressable interface provided by the implementation. Such a service may be the target of a wire from another component.
  * <p/>
- * A reference represents a requirement that an implementation has on a service provided by another component or by a
- * resource outside the SCA system. Such a reference may be the source of a wire to another component.
+ * A reference represents a requirement that an implementation has on a service provided by another component or by a resource outside the SCA system.
+ * Such a reference may be the source of a wire to another component.
  * <p/>
  * A property allows the behaviour of the implementation to be configured through externally set values.
  * <p/>
- * A component type may also declare that it wishes to be initialized upon activation of the scope that contains it and
- * may specify an order relative to other eagerly initializing components. For example, an implementation that pre-loads
- * some form of cache could declare that it should be eagerly initialized at the start of the scope so that the cache
- * load occured on startup rather than first use.
+ * A component type may also declare that it wishes to be initialized upon activation of the scope that contains it and may specify an order relative
+ * to other eagerly initializing components. For example, an implementation that pre-loads some form of cache could declare that it should be eagerly
+ * initialized at the start of the scope so that the cache load occured on startup rather than first use.
  *
  * @version $Rev$ $Date$
  */
@@ -48,8 +46,8 @@ public abstract class AbstractComponentType<S extends ServiceDefinition,
     private String scope;
     private Scope<?> implementationScope;
     private int initLevel;
-    private long maxAge = -1;
-    private long maxIdleTime = -1;
+    private long maxAge;
+    private long maxIdleTime;
     private final Map<String, S> services = new HashMap<String, S>();
     private final Map<String, R> references = new HashMap<String, R>();
     private final Map<String, P> properties = new HashMap<String, P>();
@@ -69,6 +67,7 @@ public abstract class AbstractComponentType<S extends ServiceDefinition,
 
     /**
      * Sets the lifecycle scope for the component.
+     *
      * @param scope the lifecycle scope for the component
      */
     public void setScope(String scope) {
@@ -96,8 +95,8 @@ public abstract class AbstractComponentType<S extends ServiceDefinition,
     }
 
     /**
-     * Returns the default initialization level for components of this type. A value greater than zero indicates that
-     * components should be eagerly initialized.
+     * Returns the default initialization level for components of this type. A value greater than zero indicates that components should be eagerly
+     * initialized.
      *
      * @return the default initialization level
      */
@@ -106,8 +105,8 @@ public abstract class AbstractComponentType<S extends ServiceDefinition,
     }
 
     /**
-     * Sets the default initialization level for components of this type. A value greater than zero indicates that
-     * components should be eagerly initialized.
+     * Sets the default initialization level for components of this type. A value greater than zero indicates that components should be eagerly
+     * initialized.
      *
      * @param initLevel default initialization level for components of this type
      */
@@ -136,8 +135,7 @@ public abstract class AbstractComponentType<S extends ServiceDefinition,
     /**
      * Sets the idle time allowed between operations in milliseconds if the implementation is conversational.
      *
-     * @param maxIdleTime the idle time allowed between operations in milliseconds if the implementation is
-     *                    conversational
+     * @param maxIdleTime the idle time allowed between operations in milliseconds if the implementation is conversational
      */
     public void setMaxIdleTime(long maxIdleTime) {
         this.maxIdleTime = maxIdleTime;
@@ -155,8 +153,7 @@ public abstract class AbstractComponentType<S extends ServiceDefinition,
     /**
      * Sets the maximum age a conversation may remain active in milliseconds if the implementation is conversational.
      *
-     * @param maxAge the maximum age a conversation may remain active in milliseconds if the implementation is
-     *               conversational
+     * @param maxAge the maximum age a conversation may remain active in milliseconds if the implementation is conversational
      */
     public void setMaxAge(long maxAge) {
         this.maxAge = maxAge;
@@ -200,8 +197,7 @@ public abstract class AbstractComponentType<S extends ServiceDefinition,
     }
 
     /**
-     * Add a reference to a service consumed by the implementation. Any existing reference with the same name is
-     * replaced.
+     * Add a reference to a service consumed by the implementation. Any existing reference with the same name is replaced.
      *
      * @param reference a reference to a service consumed by the implementation
      */
@@ -229,8 +225,7 @@ public abstract class AbstractComponentType<S extends ServiceDefinition,
     }
 
     /**
-     * Add a property that can be used to configure the implementation. Any existing property with the same name is
-     * replaced.
+     * Add a property that can be used to configure the implementation. Any existing property with the same name is replaced.
      *
      * @param property a property that can be used to configure the implementation
      */
@@ -258,8 +253,7 @@ public abstract class AbstractComponentType<S extends ServiceDefinition,
     }
 
     /**
-     * Add a resource that can be used to configure the implementation. Any existing resource with the same name is
-     * replaced.
+     * Add a resource that can be used to configure the implementation. Any existing resource with the same name is replaced.
      *
      * @param resource a resource that can be used to configure the implementation
      */

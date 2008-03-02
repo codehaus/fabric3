@@ -40,6 +40,7 @@ import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 import org.fabric3.spi.policy.Policy;
+
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
@@ -79,6 +80,8 @@ public class JavaComponentGenerator implements ComponentGenerator<LogicalCompone
         physical.setGroupId(component.getParent().getUri());
         physical.setScope(type.getImplementationScope());
         physical.setInitLevel(helper.getInitLevel(definition, type));
+        physical.setMaxAge(type.getMaxAge());
+        physical.setMaxIdleTime(type.getMaxIdleTime());
         physical.setInstanceFactoryProviderDefinition(providerDefinition);
         helper.processPropertyValues(component, physical);
         // generate the classloader resource definition
