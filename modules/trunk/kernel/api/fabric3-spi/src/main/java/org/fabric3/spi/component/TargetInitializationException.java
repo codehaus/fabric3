@@ -24,6 +24,7 @@ package org.fabric3.spi.component;
  * @version $Rev$ $Date$
  */
 public class TargetInitializationException extends TargetResolutionException {
+    private static final long serialVersionUID = 987684568823134235L;
 
     public TargetInitializationException(String message, String identifier) {
         super(message, identifier);

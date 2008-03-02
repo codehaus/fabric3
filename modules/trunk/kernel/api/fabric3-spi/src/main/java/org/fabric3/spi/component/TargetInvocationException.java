@@ -24,6 +24,7 @@ package org.fabric3.spi.component;
  * @version $Rev$ $Date$
  */
 public class TargetInvocationException extends TargetException {
+    private static final long serialVersionUID = -487975880014726227L;
 
     public TargetInvocationException(String message) {
         super(message);

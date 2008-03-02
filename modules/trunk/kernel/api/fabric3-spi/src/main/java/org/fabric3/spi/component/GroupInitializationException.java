@@ -26,6 +26,7 @@ import java.io.PrintStream;
  * @version $Rev$ $Date$
  */
 public class GroupInitializationException extends ComponentException {
+    private static final long serialVersionUID = 2049226987838195489L;
     private final List<Exception> causes;
 
     /**
