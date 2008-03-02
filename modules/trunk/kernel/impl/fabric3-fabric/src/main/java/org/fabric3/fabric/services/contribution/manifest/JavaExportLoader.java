@@ -21,32 +21,42 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
 import static org.osoa.sca.Constants.SCA_NS;
+import org.osoa.sca.annotations.Destroy;
+import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.extension.loader.LoaderExtension;
 import org.fabric3.fabric.services.contribution.MissingPackageException;
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
+import org.fabric3.spi.loader.StAXElementLoader;
 
 /**
  * Loads an <code>export.java</code> entry in a contribution manifest.
  *
  * @version $Rev$ $Date$
  */
-public class JavaExportLoader extends LoaderExtension<JavaExport> {
+@EagerInit
+public class JavaExportLoader implements StAXElementLoader<JavaExport> {
     private static final QName EXPORT = new QName(SCA_NS, "export.java");
+    private LoaderRegistry registry;
 
     public JavaExportLoader(@Reference LoaderRegistry registry) {
-        super(registry);
+        this.registry = registry;
     }
 
-    public QName getXMLType() {
-        return EXPORT;
+    @Init
+    public void start() {
+        registry.registerLoader(EXPORT, this);
     }
 
-    public JavaExport load(XMLStreamReader reader, IntrospectionContext context)
-            throws XMLStreamException, LoaderException {
+    @Destroy
+    public void stop() {
+        registry.unregisterLoader(EXPORT);
+    }
+
+    public JavaExport load(XMLStreamReader reader, IntrospectionContext context) throws XMLStreamException, LoaderException {
         String packageName = reader.getAttributeValue(null, "package");
         if (packageName == null) {
             throw new MissingPackageException("No package name specified");

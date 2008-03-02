@@ -20,29 +20,40 @@ import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
+import org.osoa.sca.annotations.Destroy;
+import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.extension.loader.LoaderExtension;
-import org.fabric3.spi.Constants;
 import org.fabric3.introspection.IntrospectionContext;
+import org.fabric3.loader.common.MissingAttributeException;
+import org.fabric3.spi.Constants;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
-import org.fabric3.loader.common.MissingAttributeException;
+import org.fabric3.spi.loader.StAXElementLoader;
 
 /**
  * Loads Maven export entries in a contribution manifest.
  *
  * @version $Rev$ $Date$
  */
-public class MavenExportLoader extends LoaderExtension<MavenExport> {
+@EagerInit
+public class MavenExportLoader implements StAXElementLoader<MavenExport> {
     private static final QName IMPORT = new QName(Constants.FABRIC3_MAVEN_NS, "export");
+    private LoaderRegistry registry;
 
     public MavenExportLoader(@Reference LoaderRegistry registry) {
-        super(registry);
+        this.registry = registry;
     }
 
-    public QName getXMLType() {
-        return IMPORT;
+    @Init
+    public void start() {
+        registry.registerLoader(IMPORT, this);
+    }
+
+    @Destroy
+    public void stop() {
+        registry.unregisterLoader(IMPORT);
     }
 
     public MavenExport load(XMLStreamReader reader, IntrospectionContext context)

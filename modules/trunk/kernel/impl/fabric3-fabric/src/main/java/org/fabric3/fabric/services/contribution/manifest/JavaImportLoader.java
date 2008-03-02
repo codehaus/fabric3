@@ -21,21 +21,26 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
 import org.osoa.sca.Constants;
+import org.osoa.sca.annotations.Destroy;
+import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.extension.loader.LoaderExtension;
 import org.fabric3.fabric.services.contribution.MissingPackageException;
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
+import org.fabric3.spi.loader.StAXElementLoader;
 
 /**
  * Processes a <code>import.java</code> element in a contribution manifest
  *
  * @version $Rev$ $Date$
  */
-public class JavaImportLoader extends LoaderExtension<JavaImport> {
+@EagerInit
+public class JavaImportLoader implements StAXElementLoader<JavaImport> {
     private static final QName IMPORT = new QName(Constants.SCA_NS, "import.java");
+    private LoaderRegistry registry;
 
     /**
      * Constructor specifies the registry to register with.
@@ -43,15 +48,20 @@ public class JavaImportLoader extends LoaderExtension<JavaImport> {
      * @param registry the LoaderRegistry this loader should register with
      */
     public JavaImportLoader(@Reference LoaderRegistry registry) {
-        super(registry);
+        this.registry = registry;
     }
 
-    public QName getXMLType() {
-        return IMPORT;
+    @Init
+    public void start() {
+        registry.registerLoader(IMPORT, this);
     }
 
-    public JavaImport load(XMLStreamReader reader, IntrospectionContext context)
-            throws LoaderException, XMLStreamException {
+    @Destroy
+    public void stop() {
+        registry.unregisterLoader(IMPORT);
+    }
+
+    public JavaImport load(XMLStreamReader reader, IntrospectionContext context) throws LoaderException, XMLStreamException {
         String packageName = reader.getAttributeValue(null, "package");
         if (packageName == null) {
             throw new MissingPackageException("No package name specified");

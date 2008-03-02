@@ -18,37 +18,45 @@
  */
 package org.fabric3.runtime.standalone.host.implementation.launched;
 
-import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
+import org.osoa.sca.annotations.Destroy;
+import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.extension.loader.LoaderExtension;
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.loader.LoaderUtil;
+import org.fabric3.spi.loader.StAXElementLoader;
 
 /**
  * @version $Rev$ $Date$
  */
-public class LaunchedLoader extends LoaderExtension<Launched> {
+@EagerInit
+public class LaunchedLoader implements StAXElementLoader<Launched> {
 
+    private LoaderRegistry registry;
     private final LaunchedComponentTypeLoader componentTypeLoader;
 
-    public LaunchedLoader(@Reference LoaderRegistry registry,
-                          @Reference LaunchedComponentTypeLoader componentTypeLoader) {
-        super(registry);
+    public LaunchedLoader(@Reference LoaderRegistry registry, @Reference LaunchedComponentTypeLoader componentTypeLoader) {
+        this.registry = registry;
         this.componentTypeLoader = componentTypeLoader;
     }
 
-    public QName getXMLType() {
-        return Launched.IMPLEMENTATION_LAUNCHED;
+    @Init
+    public void start() {
+        registry.registerLoader(Launched.IMPLEMENTATION_LAUNCHED, this);
     }
 
-    public Launched load(XMLStreamReader reader, IntrospectionContext introspectionContext)
-            throws XMLStreamException, LoaderException {
+    @Destroy
+    public void stop() {
+        registry.unregisterLoader(Launched.IMPLEMENTATION_LAUNCHED);
+    }
+
+    public Launched load(XMLStreamReader reader, IntrospectionContext introspectionContext) throws XMLStreamException, LoaderException {
         String className = reader.getAttributeValue(null, "class");
         String factoryName = reader.getAttributeValue(null, "factory");
         LoaderUtil.skipToEndElement(reader);

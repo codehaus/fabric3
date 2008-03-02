@@ -23,12 +23,15 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
 import static org.osoa.sca.Constants.SCA_NS;
+import org.osoa.sca.annotations.Destroy;
+import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.extension.loader.LoaderExtension;
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.loader.common.MissingAttributeException;
 import org.fabric3.spi.loader.LoaderRegistry;
+import org.fabric3.spi.loader.StAXElementLoader;
 import org.fabric3.spi.services.contribution.QNameExport;
 
 /**
@@ -36,8 +39,10 @@ import org.fabric3.spi.services.contribution.QNameExport;
  *
  * @version $Rev$ $Date$
  */
-public class QNameExportLoader extends LoaderExtension<QNameExport> {
+@EagerInit
+public class QNameExportLoader implements StAXElementLoader<QNameExport> {
     private static final QName EXPORT = new QName(SCA_NS, "export");
+    private LoaderRegistry registry;
 
     /**
      * Constructor specifies the registry to register with.
@@ -45,11 +50,17 @@ public class QNameExportLoader extends LoaderExtension<QNameExport> {
      * @param registry the LoaderRegistry this loader should register with
      */
     public QNameExportLoader(@Reference LoaderRegistry registry) {
-        super(registry);
+        this.registry = registry;
     }
 
-    public QName getXMLType() {
-        return EXPORT;
+    @Init
+    public void start() {
+        registry.registerLoader(EXPORT, this);
+    }
+
+    @Destroy
+    public void stop() {
+        registry.unregisterLoader(EXPORT);
     }
 
     public QNameExport load(XMLStreamReader reader, IntrospectionContext context) throws MissingAttributeException, XMLStreamException {

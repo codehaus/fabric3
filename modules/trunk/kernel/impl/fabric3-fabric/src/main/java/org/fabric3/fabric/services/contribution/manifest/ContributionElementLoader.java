@@ -25,15 +25,18 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
 import static org.osoa.sca.Constants.SCA_NS;
+import org.osoa.sca.annotations.Destroy;
+import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.extension.loader.LoaderExtension;
 import org.fabric3.host.contribution.Constants;
 import org.fabric3.host.contribution.Deployable;
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.loader.common.MissingAttributeException;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
+import org.fabric3.spi.loader.StAXElementLoader;
 import org.fabric3.spi.services.contribution.ContributionManifest;
 import org.fabric3.spi.services.contribution.Export;
 import org.fabric3.spi.services.contribution.Import;
@@ -44,23 +47,29 @@ import org.fabric3.spi.util.stax.StaxUtil;
  *
  * @version $Rev$ $Date$
  */
-public class ContributionElementLoader extends LoaderExtension<ContributionManifest> {
+@EagerInit
+public class ContributionElementLoader implements StAXElementLoader<ContributionManifest> {
     private static final QName CONTRIBUTION = new QName(SCA_NS, "contribution");
     private static final QName DEPLOYABLE = new QName(SCA_NS, "deployable");
 
     private final LoaderRegistry registry;
 
     public ContributionElementLoader(@Reference LoaderRegistry registry) {
-        super(registry);
         this.registry = registry;
     }
 
-    public QName getXMLType() {
-        return CONTRIBUTION;
+    @Init
+    public void start() {
+        registry.registerLoader(CONTRIBUTION, this);
     }
 
-    public ContributionManifest load(XMLStreamReader reader, IntrospectionContext context)
-            throws XMLStreamException, LoaderException {
+    @Destroy
+    public void stop() {
+        registry.unregisterLoader(CONTRIBUTION);
+    }
+
+
+    public ContributionManifest load(XMLStreamReader reader, IntrospectionContext context) throws XMLStreamException, LoaderException {
         ContributionManifest contribution = new ContributionManifest();
         while (true) {
             int event = reader.next();

@@ -26,26 +26,31 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
 import org.osoa.sca.Constants;
+import org.osoa.sca.annotations.Destroy;
+import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Init;
 
-import org.fabric3.extension.loader.LoaderExtension;
 import org.fabric3.idl.wsdl.WsdlContract;
 import org.fabric3.idl.wsdl.processor.WsdlProcessor;
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
+import org.fabric3.spi.loader.StAXElementLoader;
 
 /**
  * Loader for interface.wsdl.
  *
  * @version $Revision$ $Date$
  */
-public class InterfaceWsdlLoader extends LoaderExtension<WsdlContract> implements Constants {
+@EagerInit
+public class InterfaceWsdlLoader implements StAXElementLoader<WsdlContract>, Constants {
 
     /**
      * Interface element QName.
      */
     private static final QName QNAME = new QName(SCA_NS, "interface.wsdl");
 
+    private LoaderRegistry registry;
     /**
      * WSDL processor.
      */
@@ -56,21 +61,20 @@ public class InterfaceWsdlLoader extends LoaderExtension<WsdlContract> implement
      * @param processor      WSDL processor.
      */
     protected InterfaceWsdlLoader(LoaderRegistry loaderRegistry, WsdlProcessor processor) {
-        super(loaderRegistry);
+        registry = loaderRegistry;
         this.processor = processor;
     }
 
-    /**
-     * @see org.fabric3.extension.loader.LoaderExtension#getXMLType()
-     */
-    @Override
-    public QName getXMLType() {
-        return QNAME;
+    @Init
+    public void start() {
+        registry.registerLoader(QNAME, this);
     }
 
-    /**
-     * @see org.fabric3.spi.loader.StAXElementLoader#load(javax.xml.stream.XMLStreamReader, org.fabric3.introspection.IntrospectionContext)
-     */
+    @Destroy
+    public void stop() {
+        registry.unregisterLoader(QNAME);
+    }
+
     public WsdlContract load(XMLStreamReader reader, IntrospectionContext context) throws XMLStreamException, LoaderException {
 
         WsdlContract wsdlContract = new WsdlContract();

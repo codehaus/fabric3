@@ -22,13 +22,14 @@ import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
-import org.osoa.sca.annotations.Reference;
-import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Destroy;
+import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Init;
+import org.osoa.sca.annotations.Reference;
 import org.w3c.dom.Document;
 
-import org.fabric3.extension.loader.LoaderExtension;
 import org.fabric3.fabric.implementation.system.SystemImplementation;
+import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.loader.common.PropertyHelper;
 import org.fabric3.pojo.processor.Introspector;
 import org.fabric3.pojo.scdl.PojoComponentType;
@@ -37,7 +38,6 @@ import org.fabric3.scdl.Implementation;
 import org.fabric3.scdl.PropertyValue;
 import org.fabric3.scdl.Scope;
 import org.fabric3.spi.Constants;
-import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.loader.StAXElementLoader;
@@ -45,6 +45,7 @@ import org.fabric3.spi.loader.StAXElementLoader;
 /**
  * @version $Revision: 1 $ $Date: 2007-05-14 18:40:37 +0100 (Mon, 14 May 2007) $
  */
+@EagerInit
 public class FeatureLoader implements StAXElementLoader<ComponentDefinition> {
 
     // Qualified name of the root element.
