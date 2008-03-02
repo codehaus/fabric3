@@ -18,9 +18,6 @@
  */
 package org.fabric3.spi.component;
 
-import org.fabric3.spi.component.TargetDestructionException;
-import org.fabric3.spi.component.TargetInitializationException;
-
 /**
  * Provides lifecycle management for an implementation instance associated with an {@link
  * org.fabric3.spi.component.AtomicComponent} for use by the atomic component's associated {@link
