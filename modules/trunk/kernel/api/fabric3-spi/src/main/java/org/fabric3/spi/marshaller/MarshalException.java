@@ -25,8 +25,8 @@ import org.fabric3.host.Fabric3Exception;
  * 
  * @version $Rev$ $Date$
  */
-@SuppressWarnings("serial")
 public class MarshalException extends Fabric3Exception {
+    private static final long serialVersionUID = 4331693493574960157L;
 
     /**
      * Initializes the exception message.
