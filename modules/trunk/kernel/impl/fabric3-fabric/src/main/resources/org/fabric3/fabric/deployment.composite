@@ -51,14 +51,6 @@
         <system:implementation.system class="org.fabric3.fabric.services.contribution.DependencyServiceImpl"/>
     </component>
 
-    <component name="UnresolvableImportExceptionFormatter">
-        <system:implementation.system class="org.fabric3.fabric.services.contribution.UnresolvableImportExceptionFormatter"/>
-    </component>
-
-    <component name="CyclicDependencyExceptionFormatter">
-        <system:implementation.system class="org.fabric3.fabric.services.contribution.CyclicDependencyExceptionFormatter"/>
-    </component>
-
     <component name="ZipContributionProcessor">
         <system:implementation.system class="org.fabric3.fabric.services.contribution.processor.ZipContributionProcessor"/>
         <!--<reference name="metaDataStore" target="MetadataStore"/>-->

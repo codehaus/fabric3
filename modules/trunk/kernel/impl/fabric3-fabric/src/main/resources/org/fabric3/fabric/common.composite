@@ -26,10 +26,6 @@
            name="org.fabric3.fabric.Common"
            autowire="true">
 
-    <component name="FormatterRegistry">
-        <system:implementation.system class="org.fabric3.fabric.services.formatter.DefaultFormatterRegistry"/>
-    </component>
-
     <component name="physicalOperationHelper">
         <system:implementation.system class="org.fabric3.fabric.model.physical.PhysicalOperationHelperImpl"/>
     </component>

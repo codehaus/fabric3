@@ -40,9 +40,6 @@
     <include name="org.fabric3.fabric.Common" scdlResource="org/fabric3/fabric/common.composite"/>
 
 
-    <!-- include exception formatters  -->
-    <include name="org.fabric3.fabric.Formatters" scdlResource="org/fabric3/fabric/formatters.composite"/>
-
     <!-- include physical deployment configuration -->
     <include name="org.fabric3.fabric.Physical" scdlResource="org/fabric3/fabric/physical.composite"/>
 
@@ -72,7 +69,7 @@
     <include name="org.fabric3.fabric.Stores" scdlResource="org/fabric3/fabric/nonPersistentStore.composite"/>
 
     <include name="org.fabric3.fabric.FileSystemResolver" scdlResource="org/fabric3/fabric/fileSystemResolver.composite"/>
-    
+
     <!-- include transform configuration -->
     <include name="org.fabric3.transform.Transform" scdlResource="org/fabric3/transform/transform.composite"/>
 
