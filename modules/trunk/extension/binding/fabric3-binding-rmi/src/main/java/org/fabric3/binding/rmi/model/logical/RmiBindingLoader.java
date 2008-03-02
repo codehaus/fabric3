@@ -24,36 +24,40 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
 import static org.osoa.sca.Constants.SCA_NS;
+import org.osoa.sca.annotations.Destroy;
 import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.extension.loader.LoaderExtension;
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.loader.LoaderUtil;
+import org.fabric3.spi.loader.StAXElementLoader;
 
 @EagerInit
-public class RmiBindingLoader extends LoaderExtension<RmiBindingDefinition> {
+public class RmiBindingLoader implements StAXElementLoader<RmiBindingDefinition> {
 
     /**
      * Qualified name for the binding element.
      */
     public static final QName BINDING_QNAME = new QName(SCA_NS, "binding.rmi");
+    private LoaderRegistry registry;
 
-    /**
-     * Injects the registry.
-     *
-     * @param registry Loader registry.
-     */
     public RmiBindingLoader(@Reference LoaderRegistry registry) {
-        super(registry);
+        this.registry = registry;
     }
 
-    @Override
-    public QName getXMLType() {
-        return BINDING_QNAME;
+    @Init
+    public void start() {
+        registry.registerLoader(BINDING_QNAME, this);
     }
+
+    @Destroy
+    public void stop() {
+        registry.unregisterLoader(BINDING_QNAME);
+    }
+
 
     public RmiBindingDefinition load(XMLStreamReader reader, IntrospectionContext introspectionContext)
             throws XMLStreamException, LoaderException {

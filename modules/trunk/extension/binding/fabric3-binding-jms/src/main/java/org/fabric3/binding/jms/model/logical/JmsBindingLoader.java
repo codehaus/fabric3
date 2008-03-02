@@ -18,12 +18,17 @@
  */
 package org.fabric3.binding.jms.model.logical;
 
+import javax.xml.namespace.QName;
 import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
 import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
-
-import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
+
+import org.osoa.sca.Constants;
+import org.osoa.sca.annotations.Destroy;
+import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Init;
+import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.binding.jms.model.AdministeredObjectDefinition;
 import org.fabric3.binding.jms.model.ConnectionFactoryDefinition;
@@ -33,51 +38,49 @@ import org.fabric3.binding.jms.model.DestinationDefinition;
 import org.fabric3.binding.jms.model.DestinationType;
 import org.fabric3.binding.jms.model.JmsBindingMetadata;
 import org.fabric3.binding.jms.model.ResponseDefinition;
-import org.fabric3.extension.loader.LoaderExtension;
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.loader.PolicyHelper;
-import org.osoa.sca.Constants;
-import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Reference;
+import org.fabric3.spi.loader.StAXElementLoader;
 
 /**
  * @version $Revision$ $Date$
  */
 @EagerInit
-public class JmsBindingLoader extends LoaderExtension<JmsBindingDefinition> {
+public class JmsBindingLoader implements StAXElementLoader<JmsBindingDefinition> {
 
-    /** Qualified name for the binding element. */
+    /**
+     * Qualified name for the binding element.
+     */
     public static final QName BINDING_QNAME = new QName(Constants.SCA_NS, "binding.jms");
-    
+
+    private LoaderRegistry registry;
     private final PolicyHelper policyHelper;
 
     /**
-     * Injects the registry.
+     * Constructor.
      *
-     * @param registry Loader registry.
+     * @param registry     Loader registry.
+     * @param policyHelper the policyHelper
      */
     public JmsBindingLoader(@Reference LoaderRegistry registry, @Reference PolicyHelper policyHelper) {
-        super(registry);
+        this.registry = registry;
         this.policyHelper = policyHelper;
     }
 
-    /**
-     * @see org.fabric3.extension.loader.LoaderExtension#getXMLType()
-     */
-    @Override
-    public QName getXMLType() {
-        return BINDING_QNAME;
+    @Init
+    public void start() {
+        registry.registerLoader(BINDING_QNAME, this);
     }
 
-    /**
-     * @see org.fabric3.spi.loader.StAXElementLoader#load(java.lang.Object,
-     *      javax.xml.stream.XMLStreamReader,
-     *      org.fabric3.introspection.IntrospectionContext)
-     */
+    @Destroy
+    public void stop() {
+        registry.unregisterLoader(BINDING_QNAME);
+    }
+
     public JmsBindingDefinition load(XMLStreamReader reader, IntrospectionContext introspectionContext)
-        throws XMLStreamException, LoaderException {
+            throws XMLStreamException, LoaderException {
 
         JmsBindingMetadata metadata = new JmsBindingMetadata();
         JmsBindingDefinition bd = new JmsBindingDefinition(metadata);
@@ -88,32 +91,32 @@ public class JmsBindingLoader extends LoaderExtension<JmsBindingDefinition> {
         }
         metadata.setJndiUrl(reader.getAttributeValue(null, "jndiURL"));
         metadata.setInitialContextFactory(reader.getAttributeValue(null, "initialContextFactory"));
-        
+
         policyHelper.loadPolicySetsAndIntents(bd, reader);
 
         String name = null;
         while (true) {
 
-            switch(reader.next()) {
-                case START_ELEMENT:
-                    name = reader.getName().getLocalPart();
-                    if ("destination".equals(name)) {
-                        DestinationDefinition destination = loadDestination(reader);
-                        metadata.setDestination(destination);
-                    } else if ("connectionFactory".equals(name)) {
-                        ConnectionFactoryDefinition connectionFactory = loadConnectionFactory(reader);
-                        metadata.setConnectionFactory(connectionFactory);
-                    } else if ("response".equals(name)) {
-                        ResponseDefinition response = loadResponse(reader);
-                        metadata.setResponse(response);
-                    }
-                    break;
-                case END_ELEMENT:
-                    name = reader.getName().getLocalPart();
-                    if("binding.jms".equals(name)) {
-                        return bd;
-                    }
-                    break;
+            switch (reader.next()) {
+            case START_ELEMENT:
+                name = reader.getName().getLocalPart();
+                if ("destination".equals(name)) {
+                    DestinationDefinition destination = loadDestination(reader);
+                    metadata.setDestination(destination);
+                } else if ("connectionFactory".equals(name)) {
+                    ConnectionFactoryDefinition connectionFactory = loadConnectionFactory(reader);
+                    metadata.setConnectionFactory(connectionFactory);
+                } else if ("response".equals(name)) {
+                    ResponseDefinition response = loadResponse(reader);
+                    metadata.setResponse(response);
+                }
+                break;
+            case END_ELEMENT:
+                name = reader.getName().getLocalPart();
+                if ("binding.jms".equals(name)) {
+                    return bd;
+                }
+                break;
             }
 
         }
@@ -126,27 +129,27 @@ public class JmsBindingLoader extends LoaderExtension<JmsBindingDefinition> {
     private ResponseDefinition loadResponse(XMLStreamReader reader) throws XMLStreamException {
 
         ResponseDefinition response = new ResponseDefinition();
-        
+
         String name = null;
         while (true) {
 
-            switch(reader.next()) {
-                case START_ELEMENT:
-                    name = reader.getName().getLocalPart();
-                    if ("destination".equals(name)) {
-                        DestinationDefinition destination = loadDestination(reader);
-                        response.setDestination(destination);
-                    } else if ("connectionFactory".equals(name)) {
-                        ConnectionFactoryDefinition connectionFactory = loadConnectionFactory(reader);
-                        response.setConnectionFactory(connectionFactory);
-                    }
-                    break;
-                case END_ELEMENT:
-                    name = reader.getName().getLocalPart();
-                    if("response".equals(name)) {
-                        return response;
-                    }
-                    break;
+            switch (reader.next()) {
+            case START_ELEMENT:
+                name = reader.getName().getLocalPart();
+                if ("destination".equals(name)) {
+                    DestinationDefinition destination = loadDestination(reader);
+                    response.setDestination(destination);
+                } else if ("connectionFactory".equals(name)) {
+                    ConnectionFactoryDefinition connectionFactory = loadConnectionFactory(reader);
+                    response.setConnectionFactory(connectionFactory);
+                }
+                break;
+            case END_ELEMENT:
+                name = reader.getName().getLocalPart();
+                if ("response".equals(name)) {
+                    return response;
+                }
+                break;
             }
 
         }
@@ -167,7 +170,7 @@ public class JmsBindingLoader extends LoaderExtension<JmsBindingDefinition> {
             connectionFactory.setCreate(CreateOption.valueOf(create));
         }
         loadProperties(reader, connectionFactory, "connectionFactory");
-        
+
         return connectionFactory;
 
     }
@@ -187,45 +190,45 @@ public class JmsBindingLoader extends LoaderExtension<JmsBindingDefinition> {
         }
 
         String type = reader.getAttributeValue(null, "type");
-        if(type != null) {
+        if (type != null) {
             destination.setDestinationType(DestinationType.valueOf(type));
         }
-        
+
         loadProperties(reader, destination, "destination");
-        
+
         return destination;
 
     }
-    
+
     /*
-     * Loads properties. TODO Support property type.
-     */
-    private void loadProperties(XMLStreamReader reader, 
+    * Loads properties. TODO Support property type.
+    */
+    private void loadProperties(XMLStreamReader reader,
                                 AdministeredObjectDefinition parent,
                                 String parentName) throws XMLStreamException {
-        
+
         String name = null;
         while (true) {
 
-            switch(reader.next()) {
-                case START_ELEMENT:
-                    name = reader.getName().getLocalPart();
-                    if ("property".equals(name)) {
-                        final String key = reader.getAttributeValue(null, "name");
-                        final String value = reader.getElementText();
-                        parent.addProperty(key, value);
-                    }
-                    break;
-                case END_ELEMENT:
-                    name = reader.getName().getLocalPart();
-                    if(parentName.equals(name)) {
-                        return;
-                    }
-                    break;
+            switch (reader.next()) {
+            case START_ELEMENT:
+                name = reader.getName().getLocalPart();
+                if ("property".equals(name)) {
+                    final String key = reader.getAttributeValue(null, "name");
+                    final String value = reader.getElementText();
+                    parent.addProperty(key, value);
+                }
+                break;
+            case END_ELEMENT:
+                name = reader.getName().getLocalPart();
+                if (parentName.equals(name)) {
+                    return;
+                }
+                break;
             }
 
         }
-        
+
     }
 
 }

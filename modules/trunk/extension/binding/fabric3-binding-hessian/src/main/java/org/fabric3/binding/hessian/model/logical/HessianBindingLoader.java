@@ -31,57 +31,70 @@ import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.loader.LoaderUtil;
 import org.fabric3.spi.loader.PolicyHelper;
+import org.fabric3.spi.loader.StAXElementLoader;
+
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
+import org.osoa.sca.annotations.Init;
+import org.osoa.sca.annotations.Destroy;
 
-/**               
+/**
  * @version $Revision$ $Date$
  */
 @EagerInit
-public class HessianBindingLoader extends LoaderExtension<HessianBindingDefinition> {
+public class HessianBindingLoader implements StAXElementLoader<HessianBindingDefinition> {
 
-    /** Qualified name for the binding element. */
-    public static final QName BINDING_QNAME = 
-        new QName("http://www.fabric3.org/binding/hessian/0.2", "binding.hessian");
-    
-    private final PolicyHelper policyHelper;
-    
     /**
-     * Injects the registry.
-     * @param registry Loader registry.
+     * Qualified name for the binding element.
+     */
+    public static final QName BINDING_QNAME = new QName("http://www.fabric3.org/binding/hessian/0.2", "binding.hessian");
+
+    private LoaderRegistry registry;
+    private final PolicyHelper policyHelper;
+
+    /**
+     * Constructor.
+     *
+     * @param registry     Loader registry.
+     * @param policyHelper the policy helper
      */
     public HessianBindingLoader(@Reference LoaderRegistry registry, @Reference PolicyHelper policyHelper) {
-        super(registry);
+        this.registry = registry;
         this.policyHelper = policyHelper;
     }
 
-    @Override
-    public QName getXMLType() {
-        return BINDING_QNAME;
+    @Init
+    public void start() {
+        registry.registerLoader(BINDING_QNAME, this);
+    }
+
+    @Destroy
+    public void stop() {
+        registry.unregisterLoader(BINDING_QNAME);
     }
 
     public HessianBindingDefinition load(XMLStreamReader reader, IntrospectionContext introspectionContext)
-        throws XMLStreamException, LoaderException {
-        
+            throws XMLStreamException, LoaderException {
+
         HessianBindingDefinition bd = null;
-        
+
         try {
 
             String uri = reader.getAttributeValue(null, "uri");
-            if(uri == null) {
+            if (uri == null) {
                 throw new LoaderException("The uri attribute is not specified");
             }
             bd = new HessianBindingDefinition(new URI(uri));
-            
+
             policyHelper.loadPolicySetsAndIntents(bd, reader);
-            
-        } catch(URISyntaxException ex) {
+
+        } catch (URISyntaxException ex) {
             throw new LoaderException(ex);
         }
-        
+
         LoaderUtil.skipToEndElement(reader);
         return bd;
-        
+
     }
 
 }

@@ -20,48 +20,60 @@ package org.fabric3.binding.ws.model.logical;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
-import org.fabric3.extension.loader.LoaderExtension;
+import org.osoa.sca.Constants;
+import org.osoa.sca.annotations.Destroy;
+import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Init;
+import org.osoa.sca.annotations.Reference;
+
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.loader.LoaderUtil;
 import org.fabric3.spi.loader.PolicyHelper;
-import org.osoa.sca.Constants;
-import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Reference;
+import org.fabric3.spi.loader.StAXElementLoader;
 
 /**
  * @version $Revision$ $Date$
  */
 @EagerInit
-public class WsBindingLoader extends LoaderExtension<WsBindingDefinition> {
+public class WsBindingLoader implements StAXElementLoader<WsBindingDefinition> {
 
-    /** Qualified name for the binding element. */
-    public static final QName BINDING_QNAME =  new QName(Constants.SCA_NS, "binding.ws");
-    
+    /**
+     * Qualified name for the binding element.
+     */
+    public static final QName BINDING_QNAME = new QName(Constants.SCA_NS, "binding.ws");
+
+    private LoaderRegistry registry;
     private final PolicyHelper policyHelper;
 
     /**
-     * Injects the registry.
-     * @param registry Loader registry.
+     * Constructor.
+     *
+     * @param registry     Loader registry.
+     * @param policyHelper the policy helper
      */
     public WsBindingLoader(@Reference LoaderRegistry registry, @Reference PolicyHelper policyHelper) {
-        super(registry);
+        this.registry = registry;
         this.policyHelper = policyHelper;
     }
 
-    @Override
-    public QName getXMLType() {
-        return BINDING_QNAME;
+    @Init
+    public void start() {
+        registry.registerLoader(BINDING_QNAME, this);
+    }
+
+    @Destroy
+    public void stop() {
+        registry.unregisterLoader(BINDING_QNAME);
     }
 
     public WsBindingDefinition load(XMLStreamReader reader, IntrospectionContext introspectionContext)
-        throws XMLStreamException, LoaderException {
+            throws XMLStreamException, LoaderException {
 
         WsBindingDefinition bd = null;
 
@@ -72,17 +84,17 @@ public class WsBindingLoader extends LoaderExtension<WsBindingDefinition> {
             String wsdlElement = reader.getAttributeValue(null, "wsdlElement");
             String wsdlLocation = reader.getAttributeValue("http://www.w3.org/2004/08/wsdl-instance", "wsdlLocation");
 
-            if(uri == null) {
+            if (uri == null) {
                 throw new LoaderException("The uri attribute is not specified");
             }
             bd = new WsBindingDefinition(new URI(uri), implementation,
-                wsdlLocation, wsdlElement);
-            
+                                         wsdlLocation, wsdlElement);
+
             policyHelper.loadPolicySetsAndIntents(bd, reader);
 
             // TODO Add rest of the WSDL support
 
-        } catch(URISyntaxException ex) {
+        } catch (URISyntaxException ex) {
             throw new LoaderException(ex);
         }
 

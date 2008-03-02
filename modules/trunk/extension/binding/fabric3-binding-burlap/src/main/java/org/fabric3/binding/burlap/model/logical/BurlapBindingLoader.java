@@ -24,44 +24,52 @@ import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
+import org.osoa.sca.annotations.Destroy;
 import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.extension.loader.LoaderExtension;
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.loader.LoaderUtil;
 import org.fabric3.spi.loader.PolicyHelper;
+import org.fabric3.spi.loader.StAXElementLoader;
 
 /**
  * @version $Revision$ $Date$
  */
 @EagerInit
-public class BurlapBindingLoader extends LoaderExtension<BurlapBindingDefinition> {
+public class BurlapBindingLoader implements StAXElementLoader<BurlapBindingDefinition> {
 
     /**
      * Qualified name for the binding element.
      */
-    public static final QName BINDING_QNAME =
-            new QName("http://www.fabric3.org/binding/burlap/0.2", "binding.burlap");
+    public static final QName BINDING_QNAME = new QName("http://www.fabric3.org/binding/burlap/0.2", "binding.burlap");
 
+    private LoaderRegistry registry;
     private final PolicyHelper policyHelper;
 
+
     /**
-     * Injects the registry.
+     * Constructor.
      *
      * @param registry     Loader registry.
      * @param policyHelper the policy helper
      */
     public BurlapBindingLoader(@Reference LoaderRegistry registry, @Reference PolicyHelper policyHelper) {
-        super(registry);
+        this.registry = registry;
         this.policyHelper = policyHelper;
     }
 
-    @Override
-    public QName getXMLType() {
-        return BINDING_QNAME;
+    @Init
+    public void start() {
+        registry.registerLoader(BINDING_QNAME, this);
+    }
+
+    @Destroy
+    public void stop() {
+        registry.unregisterLoader(BINDING_QNAME);
     }
 
     public BurlapBindingDefinition load(XMLStreamReader reader, IntrospectionContext introspectionContext)

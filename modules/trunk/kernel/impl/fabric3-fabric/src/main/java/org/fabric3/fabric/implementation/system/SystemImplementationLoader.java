@@ -23,6 +23,9 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
 import org.osoa.sca.annotations.Reference;
+import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Init;
+import org.osoa.sca.annotations.Destroy;
 
 import org.fabric3.extension.loader.LoaderExtension;
 import org.fabric3.spi.loader.InvalidValueException;
@@ -30,21 +33,35 @@ import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.loader.LoaderUtil;
+import org.fabric3.spi.loader.StAXElementLoader;
 
 /**
  * Loads information for a system implementation
  *
  * @version $Rev$ $Date$
  */
-public class SystemImplementationLoader extends LoaderExtension<SystemImplementation> {
+@EagerInit
+public class SystemImplementationLoader implements StAXElementLoader<SystemImplementation> {
 
+    private LoaderRegistry registry;
     private final SystemComponentTypeLoader componentTypeLoader;
 
     public SystemImplementationLoader(@Reference LoaderRegistry registry,
                                       @Reference SystemComponentTypeLoader componentTypeLoader) {
-        super(registry);
+        this.registry = registry;
         this.componentTypeLoader = componentTypeLoader;
     }
+
+    @Init
+    public void start() {
+        registry.registerLoader(SystemImplementation.IMPLEMENTATION_SYSTEM, this);
+    }
+
+    @Destroy
+    public void stop() {
+        registry.unregisterLoader(SystemImplementation.IMPLEMENTATION_SYSTEM);
+    }
+
 
     public SystemImplementation load(XMLStreamReader reader, IntrospectionContext introspectionContext)
             throws XMLStreamException, LoaderException {
@@ -61,8 +78,5 @@ public class SystemImplementationLoader extends LoaderExtension<SystemImplementa
         return implementation;
     }
 
-    public QName getXMLType() {
-        return SystemImplementation.IMPLEMENTATION_SYSTEM;
-    }
 
 }

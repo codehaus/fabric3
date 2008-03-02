@@ -27,63 +27,71 @@ import javax.xml.stream.XMLStreamReader;
 import static org.osoa.sca.Constants.SCA_NS;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
+import org.osoa.sca.annotations.Init;
+import org.osoa.sca.annotations.Destroy;
 
 import org.fabric3.extension.loader.LoaderExtension;
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.loader.LoaderUtil;
+import org.fabric3.spi.loader.StAXElementLoader;
 
 
 /**
  * @version $Revision: 1 $ $Date: 2007-05-14 10:40:37 -0700 (Mon, 14 May 2007) $
  */
 @EagerInit
-public class EjbBindingLoader extends LoaderExtension<EjbBindingDefinition> {
+public class EjbBindingLoader implements StAXElementLoader<EjbBindingDefinition> {
 
-    /** Qualified name for the binding element. */
-    public static final QName BINDING_QNAME =
-        new QName(SCA_NS, "binding.ejb");
-    
     /**
-     * Injects the registry.
-     * @param registry Loader registry.
+     * Qualified name for the binding element.
      */
+    public static final QName BINDING_QNAME = new QName(SCA_NS, "binding.ejb");
+
+    private LoaderRegistry registry;
+
     public EjbBindingLoader(@Reference LoaderRegistry registry) {
-        super(registry);
+        this.registry = registry;
     }
 
-    @Override
-    public QName getXMLType() {
-        return BINDING_QNAME;
+    @Init
+    public void start() {
+        registry.registerLoader(BINDING_QNAME, this);
     }
+
+    @Destroy
+    public void stop() {
+        registry.unregisterLoader(BINDING_QNAME);
+    }
+
 
     public EjbBindingDefinition load(XMLStreamReader reader, IntrospectionContext introspectionContext)
-        throws XMLStreamException, LoaderException {
+            throws XMLStreamException, LoaderException {
 
         String uri = reader.getAttributeValue(null, "uri");
 
         EjbBindingDefinition bd = new EjbBindingDefinition(createURI(uri));
-        
+
         String homeInterface = reader.getAttributeValue(null, "homeInterface");
         bd.setHomeInterface(homeInterface);
 
         bd.setEjbLink(reader.getAttributeValue(null, "ejb-link-name"));
 
-        if("stateful".equalsIgnoreCase(reader.getAttributeValue(null, "session-type"))) {
+        if ("stateful".equalsIgnoreCase(reader.getAttributeValue(null, "session-type"))) {
             bd.setStateless(false);
         }
 
         boolean isEjb3 = true;
         String ejbVersion = reader.getAttributeValue(null, "ejb-version");
-        if(ejbVersion != null) {
+        if (ejbVersion != null) {
             isEjb3 = "EJB3".equalsIgnoreCase(ejbVersion);
         } else {
             isEjb3 = (homeInterface == null);
         }
         bd.setEjb3(isEjb3);
 
-        if(!isEjb3 && homeInterface == null) {
+        if (!isEjb3 && homeInterface == null) {
             throw new LoaderException("homeInterface must be specified for EJB 2.x bindings");
         }
 
@@ -92,11 +100,11 @@ public class EjbBindingLoader extends LoaderExtension<EjbBindingDefinition> {
 
         LoaderUtil.skipToEndElement(reader);
         return bd;
-        
+
     }
 
     private URI createURI(String uri) throws LoaderException {
-        if(uri == null) return null;
+        if (uri == null) return null;
 
         // In EJB 3, the @Stateless & @Stateful annotations contain an attribute named mappedName.
         // Although the specification doesn't spell out what this attribute is used for, it is
@@ -110,10 +118,10 @@ public class EjbBindingLoader extends LoaderExtension<EjbBindingDefinition> {
         // As such, we'll attempt to account for this issue by stripping off the "corbaname:rir:#" portion
         // of the URI string before we actually construct the URI object.
 
-        if(uri.indexOf('#') != uri.lastIndexOf('#')) {
-           if(uri.startsWith("corbaname:rir:#")) {
-               uri = uri.substring(uri.indexOf('#') + 1);
-           }
+        if (uri.indexOf('#') != uri.lastIndexOf('#')) {
+            if (uri.startsWith("corbaname:rir:#")) {
+                uri = uri.substring(uri.indexOf('#') + 1);
+            }
         }
 
         try {

@@ -23,6 +23,8 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
 import org.osoa.sca.annotations.Reference;
+import org.osoa.sca.annotations.Init;
+import org.osoa.sca.annotations.Destroy;
 import org.w3c.dom.Document;
 
 import org.fabric3.extension.loader.LoaderExtension;
@@ -38,48 +40,41 @@ import org.fabric3.spi.Constants;
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
+import org.fabric3.spi.loader.StAXElementLoader;
 
 /**
  * @version $Revision: 1 $ $Date: 2007-05-14 18:40:37 +0100 (Mon, 14 May 2007) $
  */
-public class FeatureLoader extends LoaderExtension<ComponentDefinition> {
+public class FeatureLoader implements StAXElementLoader<ComponentDefinition> {
 
     // Qualified name of the root element.
     private static final QName QNAME = new QName(Constants.FABRIC3_SYSTEM_NS, "feature");
 
+    private LoaderRegistry registry;
     // Introspector
     private final Introspector introspector;
 
     private final PropertyHelper propertyHelper;
 
-    /**
-     * Registers the metadata loader with the registry.
-     *
-     * @param registry Loader registry.
-     */
-    public FeatureLoader(@Reference LoaderRegistry registry,
-                         @Reference Introspector introspector,
-                         @Reference PropertyHelper propertyHelper) {
-
-        super(registry);
+    public FeatureLoader(@Reference LoaderRegistry registry, @Reference Introspector introspector, @Reference PropertyHelper propertyHelper) {
+        this.registry = registry;
         this.introspector = introspector;
         this.propertyHelper = propertyHelper;
     }
 
-    /**
-     * Qualified name of the marshalled element.
-     */
-    @Override
-    public QName getXMLType() {
-        return QNAME;
+
+    @Init
+    public void start() {
+        registry.registerLoader(QNAME, this);
     }
 
-    /**
-     * Registers the metadata with the marshaller registry.
-     */
-    @SuppressWarnings("unchecked")
-    public ComponentDefinition load(XMLStreamReader reader, IntrospectionContext context)
-            throws XMLStreamException, LoaderException {
+    @Destroy
+    public void stop() {
+        registry.unregisterLoader(QNAME);
+    }
+
+
+    public ComponentDefinition load(XMLStreamReader reader, IntrospectionContext context) throws XMLStreamException, LoaderException {
 
         String name = reader.getAttributeValue(null, "name");
         Document value = propertyHelper.loadValue(reader);
@@ -104,8 +99,7 @@ public class FeatureLoader extends LoaderExtension<ComponentDefinition> {
     /*
     * Loads the component type for the reflection marshaller.
     */
-    private PojoComponentType getComponentType(Class<FeatureComponent> implClass, IntrospectionContext context)
-            throws LoaderException {
+    private PojoComponentType getComponentType(Class<FeatureComponent> implClass, IntrospectionContext context) throws LoaderException {
 
         PojoComponentType componentType = new PojoComponentType(implClass.getName());
         introspector.introspect(implClass, componentType, context);

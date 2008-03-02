@@ -22,34 +22,41 @@ import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
+import org.osoa.sca.annotations.Destroy;
 import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.extension.loader.LoaderExtension;
-import org.fabric3.spi.Constants;
 import org.fabric3.introspection.IntrospectionContext;
+import org.fabric3.spi.Constants;
 import org.fabric3.spi.loader.LoaderException;
 import org.fabric3.spi.loader.LoaderRegistry;
 import org.fabric3.spi.loader.LoaderUtil;
+import org.fabric3.spi.loader.StAXElementLoader;
 
 /**
- * Parses <code>binding.test</code> for services and references. A uri to bind the service to or target a reference must
- * be provided as an attribute.
+ * Parses <code>binding.test</code> for services and references. A uri to bind the service to or target a reference must be provided as an attribute.
  *
  * @version $Revision$ $Date$
  */
 @EagerInit
-public class TestBindingLoader extends LoaderExtension<TestBindingDefinition> {
+public class TestBindingLoader implements StAXElementLoader<TestBindingDefinition> {
 
     public static final QName BINDING_QNAME = new QName(Constants.FABRIC3_NS, "binding.test");
+    private LoaderRegistry registry;
 
     public TestBindingLoader(@Reference LoaderRegistry registry) {
-        super(registry);
+        this.registry = registry;
     }
 
-    @Override
-    public QName getXMLType() {
-        return BINDING_QNAME;
+    @Init
+    public void start() {
+        registry.registerLoader(BINDING_QNAME, this);
+    }
+
+    @Destroy
+    public void stop() {
+        registry.unregisterLoader(BINDING_QNAME);
     }
 
     public TestBindingDefinition load(XMLStreamReader reader, IntrospectionContext context)
