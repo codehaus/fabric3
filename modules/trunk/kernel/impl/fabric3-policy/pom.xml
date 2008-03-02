@@ -38,12 +38,6 @@
         
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
-            <artifactId>fabric3-extension</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-util</artifactId>
             <version>${project.version}</version>
         </dependency>

@@ -37,13 +37,6 @@
             <scope>provided</scope>
         </dependency>
 
-        <dependency>
-            <groupId>org.codehaus.fabric3</groupId>
-            <artifactId>fabric3-extension</artifactId>
-            <version>${project.version}</version>
-            <scope>provided</scope>
-        </dependency>
-
         <!-- Import async-loader as a dependent libarary since the physical classes must be shared.
              Note that its components will not be instantiated as the module is used only as a library -->
         <dependency>

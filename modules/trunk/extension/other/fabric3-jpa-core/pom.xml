@@ -64,13 +64,6 @@
         </dependency>
 
         <dependency>
-            <groupId>org.codehaus.fabric3</groupId>
-            <artifactId>fabric3-extension</artifactId>
-            <version>${project.version}</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
             <groupId>stax</groupId>
             <artifactId>stax-api</artifactId>
             <!-- use version 1.0 as it is the version bundled in JDK 6 -->

@@ -59,9 +59,9 @@
     
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
-            <artifactId>fabric3-extension</artifactId>
+            <artifactId>fabric3-spi</artifactId>
             <version>${project.version}</version>
-            <scope>compile</scope>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
