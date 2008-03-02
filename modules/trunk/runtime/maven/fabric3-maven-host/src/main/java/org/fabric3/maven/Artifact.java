@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.spi.services.artifact;
+package org.fabric3.maven;
 
 import java.net.URL;
 import java.util.HashSet;

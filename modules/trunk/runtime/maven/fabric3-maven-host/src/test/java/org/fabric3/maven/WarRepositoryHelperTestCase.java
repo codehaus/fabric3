@@ -21,8 +21,6 @@ package org.fabric3.maven;
 import java.net.URL;
 import java.net.URLClassLoader;
 
-import org.fabric3.spi.services.artifact.Artifact;
-
 import junit.framework.TestCase;
 
 /**

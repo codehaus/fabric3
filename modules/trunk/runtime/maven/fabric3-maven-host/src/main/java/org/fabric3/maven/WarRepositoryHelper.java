@@ -29,8 +29,6 @@ import java.util.Set;
 
 import org.codehaus.plexus.util.IOUtil;
 
-import org.fabric3.spi.services.artifact.Artifact;
-
 /**
  * Helper class for resolving dependencies from WAR files.
  *

@@ -28,7 +28,6 @@ import org.osoa.sca.annotations.Property;
 
 import org.fabric3.spi.services.archive.ArchiveStore;
 import org.fabric3.spi.services.archive.ArchiveStoreException;
-import org.fabric3.spi.services.artifact.Artifact;
 
 /**
  * An archive store that delegates to a set of local and remote Maven repositories.
