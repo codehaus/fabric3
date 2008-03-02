@@ -35,29 +35,29 @@ public abstract class StaxUtil {
 
     private StaxUtil() {
     }
-    
+
     /**
      * Parses a list of qualified names.
-     * 
-     * @param reader XML stream reader.
+     *
+     * @param reader    XML stream reader.
      * @param attribute Attribute that contains the list of qualified names.
      * @return Set containing the qualified names.
      * @throws InvalidPrefixException If the qualified name cannot be resolved.
      */
     public static Set<QName> parseListOfQNames(XMLStreamReader reader, String attribute) throws InvalidPrefixException {
-        
+
         Set<QName> qNames = new HashSet<QName>();
-        
+
         String val = reader.getAttributeValue(null, attribute);
-        if(val != null) {
+        if (val != null) {
             StringTokenizer tok = new StringTokenizer(val);
-            while(tok.hasMoreElements()) {
+            while (tok.hasMoreElements()) {
                 qNames.add(StaxUtil.createQName(tok.nextToken(), reader));
             }
         }
-        
+
         return qNames;
-        
+
     }
 
     /**
@@ -109,8 +109,7 @@ public abstract class StaxUtil {
     }
 
     /**
-     * Constructs a QName from the given name. If a namespace prefix is not specified in the name, the namespace context
-     * is used
+     * Constructs a QName from the given name. If a namespace prefix is not specified in the name, the namespace context is used
      *
      * @param name   the name to parse
      * @param reader the XML stream reader
@@ -125,7 +124,7 @@ public abstract class StaxUtil {
             String localPart = name.substring(index + 1);
             String ns = reader.getNamespaceContext().getNamespaceURI(prefix);
             if (ns == null) {
-                throw new InvalidPrefixException(prefix);
+                throw new InvalidPrefixException("Invalid prefix: " + prefix, prefix);
             }
             qName = new QName(ns, localPart, prefix);
         } else {

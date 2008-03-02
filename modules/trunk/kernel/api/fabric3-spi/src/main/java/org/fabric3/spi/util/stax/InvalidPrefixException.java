@@ -21,12 +21,15 @@ package org.fabric3.spi.util.stax;
 import org.fabric3.spi.loader.LoaderException;
 
 /**
+ * Denotes an invalid QName prefix.
+ *
  * @version $Rev$ $Date$
  */
 public class InvalidPrefixException extends LoaderException {
+    private static final long serialVersionUID = -4896928793798546890L;
 
-    public InvalidPrefixException(String identifier) {
-        super("Invalid prefix", identifier);
+    public InvalidPrefixException(String message, String identifier) {
+        super(message, identifier);
     }
 
 }
