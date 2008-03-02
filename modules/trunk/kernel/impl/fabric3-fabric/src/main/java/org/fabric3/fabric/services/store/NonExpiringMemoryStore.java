@@ -25,9 +25,8 @@ import org.fabric3.spi.component.InstanceWrapper;
 import org.fabric3.spi.component.AtomicComponent;
 
 /**
- * A simple store that just retains instances in memory without expiration.
- * Basically, a HashMap.
- * 
+ * A simple store that just retains instances in memory without expiration. Basically, a HashMap.
+ *
  * @version $Rev$ $Date$
  */
 public class NonExpiringMemoryStore<KEY> implements InstanceWrapperStore<KEY> {
@@ -45,7 +44,9 @@ public class NonExpiringMemoryStore<KEY> implements InstanceWrapperStore<KEY> {
     @SuppressWarnings("unchecked")
     public <T> InstanceWrapper<T> getWrapper(AtomicComponent<T> component, KEY contextId) throws StoreException {
         Map<AtomicComponent<?>, InstanceWrapper<?>> context = contexts.get(contextId);
-        assert context != null;
+        if (context == null) {
+            return null;
+        }
         return (InstanceWrapper<T>) context.get(component);
     }
 
