@@ -42,7 +42,6 @@ import org.fabric3.spi.services.discovery.DiscoveryService;
 import org.fabric3.spi.services.discovery.DiscoveryServiceRegistry;
 import org.fabric3.spi.services.runtime.RuntimeInfoService;
 import org.fabric3.spi.services.work.WorkScheduler;
-import org.fabric3.spi.util.TwosTuple;
 
 /**
  * JXTA implementation of the discovery service. <p/> <p/> The implementation uses the JXTA PDP to broadcast

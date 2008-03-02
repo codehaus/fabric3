@@ -16,38 +16,24 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.spi.util;
+package org.fabric3.discovery.jxta;
 
 /**
  * @version $Revsion$ $Date$
  */
 public class TwosTuple<FIRST, SECOND> {
-
-    // First
     private FIRST first;
-
-    // Second
     private SECOND second;
 
-    /**
-     * @param first
-     * @param second
-     */
     public TwosTuple(FIRST first, SECOND second) {
         this.first = first;
         this.second = second;
     }
 
-    /**
-     * @return the first
-     */
     public FIRST getFirst() {
         return first;
     }
 
-    /**
-     * @return the second
-     */
     public SECOND getSecond() {
         return second;
     }
