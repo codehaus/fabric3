@@ -33,13 +33,11 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import sun.security.util.SecurityConstants;
 
 /**
- * ClassLoader associated with a composite. Each classloader has a name that can be used to reference it in the runtime.
- * The classloader supports multiple parents allowing application code to share selected libraries with the runtime
- * infrastructure as determined by the component's implementation type.
+ * A classloader implementation that supports a multi-parent hierarchy. Each classloader has a name that can be used to reference it in the runtime.
  *
  * @version $Rev$ $Date$
  */
-public class CompositeClassLoader extends URLClassLoader {
+public class MultiParentClassLoader extends URLClassLoader {
     private static final URL[] NOURLS = {};
 
     private final URI name;
@@ -52,7 +50,7 @@ public class CompositeClassLoader extends URLClassLoader {
      * @param name   a name used to identify this classloader
      * @param parent the initial parent
      */
-    public CompositeClassLoader(URI name, ClassLoader parent) {
+    public MultiParentClassLoader(URI name, ClassLoader parent) {
         this(name, NOURLS, parent);
     }
 
@@ -63,7 +61,7 @@ public class CompositeClassLoader extends URLClassLoader {
      * @param urls   the URLs from which to load classes and resources
      * @param parent the initial parent
      */
-    public CompositeClassLoader(URI name, URL[] urls, ClassLoader parent) {
+    public MultiParentClassLoader(URI name, URL[] urls, ClassLoader parent) {
         super(urls, parent);
         this.name = name;
         this.parent = parent;

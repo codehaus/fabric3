@@ -7,7 +7,7 @@ import java.util.List;
 
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.spi.deployer.CompositeClassLoader;
+import org.fabric3.spi.deployer.MultiParentClassLoader;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.services.contribution.ClasspathProcessorRegistry;
 import org.fabric3.spi.services.contribution.Contribution;
@@ -40,7 +40,7 @@ public class ContributionLoaderImpl implements ContributionLoader {
             throws ContributionLoadException, MatchingExportNotFoundException {
         ClassLoader cl = classLoaderRegistry.getClassLoader(HOST_CLASSLOADER);
         URI contributionUri = contribution.getUri();
-        CompositeClassLoader loader = new CompositeClassLoader(contributionUri, cl);
+        MultiParentClassLoader loader = new MultiParentClassLoader(contributionUri, cl);
         List<URL> classpath;
         try {
             // construct the classpath for contained resources in the contribution

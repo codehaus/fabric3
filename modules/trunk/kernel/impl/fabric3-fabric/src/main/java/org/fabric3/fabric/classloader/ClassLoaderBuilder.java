@@ -29,7 +29,7 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.spi.builder.resource.ResourceContainerBuilder;
 import org.fabric3.spi.builder.resource.ResourceContainerBuilderRegistry;
-import org.fabric3.spi.deployer.CompositeClassLoader;
+import org.fabric3.spi.deployer.MultiParentClassLoader;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.services.contribution.ArtifactResolverRegistry;
 import org.fabric3.spi.services.contribution.ClasspathProcessorRegistry;
@@ -86,7 +86,7 @@ public class ClassLoaderBuilder implements ResourceContainerBuilder<PhysicalClas
         URL[] classpath = resolveClasspath(definition.getResourceUrls());
         
         // build the classloader using the locally cached resources
-        CompositeClassLoader loader = new CompositeClassLoader(name, classpath, null);
+        MultiParentClassLoader loader = new MultiParentClassLoader(name, classpath, null);
         for (URI uri : definition.getParentClassLoaders()) {
             ClassLoader parent = classLoaderRegistry.getClassLoader(uri);
             /*if (parent == null) {
@@ -114,8 +114,8 @@ public class ClassLoaderBuilder implements ResourceContainerBuilder<PhysicalClas
     private void updateClassLoader(PhysicalClassLoaderDefinition definition) throws ClassLoaderBuilderException {
         
         ClassLoader cl = classLoaderRegistry.getClassLoader(definition.getUri());
-        assert cl instanceof CompositeClassLoader;
-        CompositeClassLoader loader = (CompositeClassLoader) cl;
+        assert cl instanceof MultiParentClassLoader;
+        MultiParentClassLoader loader = (MultiParentClassLoader) cl;
         
         List<URL> classpath = new ArrayList<URL>();
         Set<URL> urls = definition.getResourceUrls();

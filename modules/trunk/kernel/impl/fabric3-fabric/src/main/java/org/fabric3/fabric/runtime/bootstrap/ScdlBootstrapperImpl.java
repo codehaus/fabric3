@@ -57,7 +57,7 @@ import org.fabric3.spi.assembly.Assembly;
 import org.fabric3.spi.component.AtomicComponent;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.ScopeRegistry;
-import org.fabric3.spi.deployer.CompositeClassLoader;
+import org.fabric3.spi.deployer.MultiParentClassLoader;
 import org.fabric3.spi.loader.Loader;
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.ContractProcessor;
@@ -220,11 +220,11 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
                 runtime.getSystemComponent(ClassLoaderRegistry.class, ComponentNames.CLASSLOADER_REGISTRY_URI);
         classLoaderRegistry.register(HOST_CLASSLOADER_ID, runtime.getHostClassLoader());
         classLoaderRegistry.register(BOOT_CLASSLOADER_ID, bootClassLoader);
-        classLoaderRegistry.register(RUNTIME_URI, new CompositeClassLoader(RUNTIME_URI, bootClassLoader));
+        classLoaderRegistry.register(RUNTIME_URI, new MultiParentClassLoader(RUNTIME_URI, bootClassLoader));
 
         URI domainId = runtime.getHostInfo().getDomain();
         classLoaderRegistry.register(APPLICATION_CLASSLOADER_ID, appClassLoader);
-        classLoaderRegistry.register(domainId, new CompositeClassLoader(domainId, appClassLoader));
+        classLoaderRegistry.register(domainId, new MultiParentClassLoader(domainId, appClassLoader));
     }
 
     private MetaDataStore createMetaDataStore(ClassLoaderRegistry classLoaderRegistry,

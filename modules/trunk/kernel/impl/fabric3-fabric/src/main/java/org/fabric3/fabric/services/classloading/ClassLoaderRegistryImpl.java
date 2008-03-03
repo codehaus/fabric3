@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.fabric3.spi.deployer.CompositeClassLoader;
+import org.fabric3.spi.deployer.MultiParentClassLoader;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.services.classloading.DuplicateClassLoaderException;
 
@@ -86,8 +86,8 @@ public class ClassLoaderRegistryImpl implements ClassLoaderRegistry {
     }
 
     public List<URI> resolveParentUris(ClassLoader cl) {
-        if (cl instanceof CompositeClassLoader) {
-            CompositeClassLoader loader = (CompositeClassLoader) cl;
+        if (cl instanceof MultiParentClassLoader) {
+            MultiParentClassLoader loader = (MultiParentClassLoader) cl;
             List<ClassLoader> parents = loader.getParents();
             List<URI> uris = new ArrayList<URI>(parents.size());
             for (ClassLoader parent : parents) {

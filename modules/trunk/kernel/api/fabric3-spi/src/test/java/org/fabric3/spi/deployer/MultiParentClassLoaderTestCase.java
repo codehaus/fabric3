@@ -23,8 +23,8 @@ import junit.framework.TestCase;
 /**
  * @version $Rev$ $Date$
  */
-public class CompositeClassLoaderTestCase extends TestCase {
-    private CompositeClassLoader nullParent;
+public class MultiParentClassLoaderTestCase extends TestCase {
+    private MultiParentClassLoader nullParent;
 
     public void testNullParentCanLoadPrimordialClass() {
         try {
@@ -36,6 +36,6 @@ public class CompositeClassLoaderTestCase extends TestCase {
 
     protected void setUp() throws Exception {
         super.setUp();
-        nullParent = new CompositeClassLoader(URI.create("nullParent"), null);
+        nullParent = new MultiParentClassLoader(URI.create("nullParent"), null);
     }
 }

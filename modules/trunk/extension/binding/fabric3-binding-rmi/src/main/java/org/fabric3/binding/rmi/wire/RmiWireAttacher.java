@@ -51,7 +51,7 @@ import org.fabric3.spi.builder.component.TargetWireAttacher;
 import org.fabric3.spi.builder.component.WireAttachException;
 import org.fabric3.spi.builder.component.SourceWireAttacherRegistry;
 import org.fabric3.spi.builder.component.TargetWireAttacherRegistry;
-import org.fabric3.spi.deployer.CompositeClassLoader;
+import org.fabric3.spi.deployer.MultiParentClassLoader;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
@@ -161,14 +161,14 @@ public class RmiWireAttacher implements SourceWireAttacher<RmiWireSourceDefiniti
             throws IOException, ClassNotFoundException {
         String key = uri.toString();
         CodeGenClassLoader cl = classLoaderMap.get(name);
-        CompositeClassLoader compositeCL;
+        MultiParentClassLoader multiParentCL;
         if (cl == null) {
-            compositeCL =
-                    (CompositeClassLoader) classLoaderRegistry.getClassLoader(uri);
+            multiParentCL =
+                    (MultiParentClassLoader) classLoaderRegistry.getClassLoader(uri);
             ClassLoader ccl = Thread.currentThread().getContextClassLoader();
             if (ccl != null)
-                compositeCL.addParent(ccl);
-            cl = new CodeGenClassLoader(key, compositeCL);
+                multiParentCL.addParent(ccl);
+            cl = new CodeGenClassLoader(key, multiParentCL);
             classLoaderMap.put(name, cl);
         }
         String resourceName = name.replace('.', '/') + ".class";

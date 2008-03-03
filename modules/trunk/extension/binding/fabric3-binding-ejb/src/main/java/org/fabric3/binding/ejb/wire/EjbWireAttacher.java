@@ -47,7 +47,7 @@ import org.fabric3.spi.builder.component.SourceWireAttacherRegistry;
 import org.fabric3.spi.builder.component.TargetWireAttacher;
 import org.fabric3.spi.builder.component.TargetWireAttacherRegistry;
 import org.fabric3.spi.component.ScopeRegistry;
-import org.fabric3.spi.deployer.CompositeClassLoader;
+import org.fabric3.spi.deployer.MultiParentClassLoader;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
@@ -235,13 +235,13 @@ public class EjbWireAttacher implements SourceWireAttacher<EjbWireSourceDefiniti
             throws WiringException {
 
         if (cl == null) {
-            CompositeClassLoader compositeCL =
-                    (CompositeClassLoader) classLoaderRegistry.getClassLoader(classLoaderURI);
+            MultiParentClassLoader multiParentCL =
+                    (MultiParentClassLoader) classLoaderRegistry.getClassLoader(classLoaderURI);
             ClassLoader ccl = Thread.currentThread().getContextClassLoader();
             if (ccl != null) {
-                compositeCL.addParent(ccl);
+                multiParentCL.addParent(ccl);
             }
-            cl = compositeCL;
+            cl = multiParentCL;
         }
 
         try {

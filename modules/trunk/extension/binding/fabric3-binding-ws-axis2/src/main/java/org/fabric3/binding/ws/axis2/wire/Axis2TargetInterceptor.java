@@ -32,7 +32,7 @@ import org.fabric3.binding.ws.axis2.config.F3Configurator;
 import org.fabric3.binding.ws.axis2.physical.Axis2WireTargetDefinition;
 import org.fabric3.binding.ws.axis2.policy.AxisPolicy;
 import org.fabric3.binding.ws.axis2.policy.PolicyApplier;
-import org.fabric3.spi.deployer.CompositeClassLoader;
+import org.fabric3.spi.deployer.MultiParentClassLoader;
 import org.fabric3.spi.wire.Interceptor;
 import org.fabric3.spi.wire.Message;
 import org.fabric3.spi.wire.MessageImpl;
@@ -96,7 +96,7 @@ public class Axis2TargetInterceptor implements Interceptor {
         
         try {
             
-            CompositeClassLoader systemCl = (CompositeClassLoader) getClass().getClassLoader();
+            MultiParentClassLoader systemCl = (MultiParentClassLoader) getClass().getClassLoader();
             currentThread.setContextClassLoader(systemCl);
             
             ServiceClient sender = new ServiceClient(f3Configurator.getConfigurationContext(), null);            

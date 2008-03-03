@@ -32,7 +32,7 @@ import org.fabric3.jpa.provider.EmfBuilder;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.TargetWireAttacher;
 import org.fabric3.spi.builder.component.TargetWireAttacherRegistry;
-import org.fabric3.spi.deployer.CompositeClassLoader;
+import org.fabric3.spi.deployer.MultiParentClassLoader;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
@@ -92,7 +92,7 @@ public class PersistenceUnitWireAttacher implements TargetWireAttacher<Persisten
         ClassLoader systemCl = getClass().getClassLoader();
         ClassLoader hostCl = systemCl.getParent();
         
-        CompositeClassLoader tccl = new CompositeClassLoader(URI.create("JPA"), hostCl);
+        MultiParentClassLoader tccl = new MultiParentClassLoader(URI.create("JPA"), hostCl);
         tccl.addParent(appCl);
         tccl.addParent(systemCl);
         
