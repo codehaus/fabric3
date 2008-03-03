@@ -32,7 +32,7 @@ import org.fabric3.binding.ws.axis2.config.F3Configurator;
 import org.fabric3.binding.ws.axis2.physical.Axis2WireTargetDefinition;
 import org.fabric3.binding.ws.axis2.policy.AxisPolicy;
 import org.fabric3.binding.ws.axis2.policy.PolicyApplier;
-import org.fabric3.spi.deployer.MultiParentClassLoader;
+import org.fabric3.spi.classloader.MultiParentClassLoader;
 import org.fabric3.spi.wire.Interceptor;
 import org.fabric3.spi.wire.Message;
 import org.fabric3.spi.wire.MessageImpl;

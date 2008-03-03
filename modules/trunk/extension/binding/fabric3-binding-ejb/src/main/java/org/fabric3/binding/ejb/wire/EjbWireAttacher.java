@@ -47,7 +47,7 @@ import org.fabric3.spi.builder.component.SourceWireAttacherRegistry;
 import org.fabric3.spi.builder.component.TargetWireAttacher;
 import org.fabric3.spi.builder.component.TargetWireAttacherRegistry;
 import org.fabric3.spi.component.ScopeRegistry;
-import org.fabric3.spi.deployer.MultiParentClassLoader;
+import org.fabric3.spi.classloader.MultiParentClassLoader;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;

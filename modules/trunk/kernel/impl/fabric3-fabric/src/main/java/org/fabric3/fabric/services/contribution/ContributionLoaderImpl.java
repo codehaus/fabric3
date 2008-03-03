@@ -7,7 +7,7 @@ import java.util.List;
 
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.spi.deployer.MultiParentClassLoader;
+import org.fabric3.spi.classloader.MultiParentClassLoader;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.services.contribution.ClasspathProcessorRegistry;
 import org.fabric3.spi.services.contribution.Contribution;

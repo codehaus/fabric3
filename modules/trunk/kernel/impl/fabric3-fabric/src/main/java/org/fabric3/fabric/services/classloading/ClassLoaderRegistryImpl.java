@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.fabric3.spi.deployer.MultiParentClassLoader;
+import org.fabric3.spi.classloader.MultiParentClassLoader;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.services.classloading.DuplicateClassLoaderException;
 

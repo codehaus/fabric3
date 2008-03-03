@@ -78,7 +78,7 @@ import org.fabric3.scdl.Composite;
 import org.fabric3.scdl.Implementation;
 import org.fabric3.scdl.Operation;
 import org.fabric3.scdl.ServiceDefinition;
-import org.fabric3.spi.deployer.MultiParentClassLoader;
+import org.fabric3.spi.classloader.MultiParentClassLoader;
 
 /**
  * Run integration tests on a SCA composite using an embedded Fabric3 runtime.

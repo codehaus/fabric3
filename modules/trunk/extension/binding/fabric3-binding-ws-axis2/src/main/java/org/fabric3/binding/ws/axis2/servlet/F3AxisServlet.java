@@ -27,7 +27,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.transport.http.AxisServlet;
 
-import org.fabric3.spi.deployer.MultiParentClassLoader;
+import org.fabric3.spi.classloader.MultiParentClassLoader;
 
 /**
  * @version $Revision$ $Date$

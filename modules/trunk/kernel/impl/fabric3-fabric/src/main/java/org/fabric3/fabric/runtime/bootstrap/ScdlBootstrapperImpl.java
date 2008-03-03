@@ -57,7 +57,7 @@ import org.fabric3.spi.assembly.Assembly;
 import org.fabric3.spi.component.AtomicComponent;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.ScopeRegistry;
-import org.fabric3.spi.deployer.MultiParentClassLoader;
+import org.fabric3.spi.classloader.MultiParentClassLoader;
 import org.fabric3.spi.loader.Loader;
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.ContractProcessor;

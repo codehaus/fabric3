@@ -29,7 +29,7 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.spi.builder.resource.ResourceContainerBuilder;
 import org.fabric3.spi.builder.resource.ResourceContainerBuilderRegistry;
-import org.fabric3.spi.deployer.MultiParentClassLoader;
+import org.fabric3.spi.classloader.MultiParentClassLoader;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.services.contribution.ArtifactResolverRegistry;
 import org.fabric3.spi.services.contribution.ClasspathProcessorRegistry;
