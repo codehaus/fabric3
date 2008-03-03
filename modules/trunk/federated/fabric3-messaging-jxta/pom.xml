@@ -42,6 +42,13 @@
         </dependency>
 
         <dependency>
+            <groupId>org.codehaus.fabric3</groupId>
+            <artifactId>fabric3-spi</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
             <groupId>bouncycastle</groupId>
             <artifactId>bcprov-jdk14</artifactId>
             <version>124</version>
