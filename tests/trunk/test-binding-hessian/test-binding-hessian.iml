@@ -38,7 +38,7 @@
         </SOURCES>
       </library>
     </orderEntry>
-    <orderEntry type="module" module-name="binding-test-harness" />
+    <orderEntry type="module" module-name="binding-test-harness" exported="" />
     <orderEntryProperties />
   </component>
 </module>
