@@ -1,6 +1,6 @@
 BEGIN 
   sys.dbms_aqadm.create_queue_table ( 
-    queue_table          => 'TESTER_TWO_Q'
+    queue_table          => 'TESTER_Q'
     , queue_payload_type => 'SYS.AQ$_JMS_MESSAGE'
     , sort_list          => 'ENQ_TIME'
     , comment            => 'TEST QUEUE TABLE'
