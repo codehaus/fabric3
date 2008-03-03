@@ -62,6 +62,7 @@
                 <include>org.codehaus.fabric3:fabric3-api</include>
                 <include>org.codehaus.fabric3:fabric3-host-api</include>
                 <include>org.codehaus.fabric3.standalone:fabric3-standalone-api</include>
+                <include>org.codehaus.fabric3:fabric3-monitor</include>
                 <include>org.apache.geronimo.specs:geronimo-annotation_1.0_spec</include>
             </includes>
             <outputDirectory>lib</outputDirectory>
@@ -78,8 +79,9 @@
         <!-- copy boot dependencies to standalone profile -->
         <dependencySet>
             <includes>
-                <include>org.codehaus.fabric3:fabric3-monitor</include>
                 <include>org.codehaus.fabric3:fabric3-scdl</include>
+                <include>org.codehaus.fabric3:fabric3-introspection-spi</include>
+                <include>org.codehaus.fabric3:fabric3-introspection</include>
                 <include>org.codehaus.fabric3:fabric3-spi</include>
                 <include>org.codehaus.fabric3:fabric3-util</include>
                 <include>org.codehaus.fabric3:fabric3-jmx</include>
