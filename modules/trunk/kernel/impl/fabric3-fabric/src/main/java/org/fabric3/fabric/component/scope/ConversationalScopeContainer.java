@@ -121,7 +121,7 @@ public class ConversationalScopeContainer extends StatefulScopeContainer<Convers
         InstanceWrapper<T> wrapper = super.getWrapper(component, workContext, conversation, start);
         if (wrapper == null) {
             // conversation has either been ended or timed out, throw an exception
-            throw new ConversationEndedException();
+            throw new ConversationEndedException("Conversation ended");
         }
         return wrapper;
     }

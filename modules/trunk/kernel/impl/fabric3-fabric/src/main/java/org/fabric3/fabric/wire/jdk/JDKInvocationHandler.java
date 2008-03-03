@@ -27,8 +27,6 @@ import java.util.UUID;
 import org.osoa.sca.Conversation;
 import org.osoa.sca.ServiceReference;
 import org.osoa.sca.ServiceUnavailableException;
-import org.osoa.sca.ConversationEndedException;
-import org.osoa.sca.NoRegisteredCallbackException;
 
 import org.fabric3.fabric.wire.NoMethodForOperationException;
 import org.fabric3.pojo.PojoWorkContextTunnel;
@@ -144,12 +142,6 @@ public final class JDKInvocationHandler<B> implements InvocationHandler, Service
                 resp = headInterceptor.invoke(msg);
             } catch (ServiceUnavailableException e) {
                 // simply rethrow ServiceUnavailableExceptions
-                throw e;
-            } catch (ConversationEndedException e) {
-                // simply rethrow ConversationEndedException
-                throw e;
-            } catch (NoRegisteredCallbackException e) {
-                // simply rethrow NoRegisteredCallbackException
                 throw e;
             } catch (RuntimeException e) {
                 // wrap other exceptions raised by the runtime

@@ -21,6 +21,8 @@ package org.fabric3.spi.component;
 import java.net.URI;
 import java.util.List;
 
+import org.osoa.sca.ConversationEndedException;
+
 import org.fabric3.spi.Lifecycle;
 import org.fabric3.scdl.Scope;
 
@@ -88,9 +90,11 @@ public interface ScopeContainer<KEY> extends Lifecycle {
      * @param component   the component
      * @param workContext the work context in which the instance should be obtained
      * @return the wrapper for the target instance
-     * @throws TargetResolutionException if there was a problem instantiating the target instance
+     * @throws TargetResolutionException  if there was a problem instantiating the target instance
+     * @throws ConversationEndedException if the instance is conversational and the associated has ended or expired
      */
-    <T> InstanceWrapper<T> getWrapper(AtomicComponent<T> component, WorkContext workContext) throws TargetResolutionException;
+    <T> InstanceWrapper<T> getWrapper(AtomicComponent<T> component, WorkContext workContext)
+            throws TargetResolutionException, ConversationEndedException;
 
     /**
      * Return a wrapper after use (for example, after invoking the instance).

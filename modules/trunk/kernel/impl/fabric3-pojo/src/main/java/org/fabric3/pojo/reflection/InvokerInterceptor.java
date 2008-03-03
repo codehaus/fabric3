@@ -21,6 +21,9 @@ package org.fabric3.pojo.reflection;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+import org.osoa.sca.NoRegisteredCallbackException;
+import org.osoa.sca.ConversationEndedException;
+
 import org.fabric3.pojo.PojoWorkContextTunnel;
 import org.fabric3.spi.component.AtomicComponent;
 import org.fabric3.spi.component.CallFrame;
@@ -111,6 +114,9 @@ public class InvokerInterceptor<T, CONTEXT> implements Interceptor {
                 }
             }
             wrapper = scopeContainer.getWrapper(component, workContext);
+        } catch (ConversationEndedException e) {
+            msg.setBodyWithFault(e);
+            return msg;
         } catch (TargetResolutionException e) {
             throw new InvocationRuntimeException(e);
         } catch (GroupInitializationException e) {
