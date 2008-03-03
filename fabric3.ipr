@@ -339,7 +339,6 @@
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/other/fabric3-contribution-scanner/fabric3-contribution-scanner.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/other/fabric3-contribution-scanner/fabric3-contribution-scanner.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/other/fabric3-contribution-scanner-spi/fabric3-contribution-scanner-spi.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/other/fabric3-contribution-scanner-spi/fabric3-contribution-scanner-spi.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/federated/fabric3-discovery-jxta/fabric3-discovery-jxta.iml" filepath="$PROJECT_DIR$/modules/trunk/federated/fabric3-discovery-jxta/fabric3-discovery-jxta.iml" />
-      <module fileurl="file://$PROJECT_DIR$/modules/trunk/kernel/impl/fabric3-extension/fabric3-extension.iml" filepath="$PROJECT_DIR$/modules/trunk/kernel/impl/fabric3-extension/fabric3-extension.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/kernel/impl/fabric3-fabric/fabric3-fabric.iml" filepath="$PROJECT_DIR$/modules/trunk/kernel/impl/fabric3-fabric/fabric3-fabric.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/implementation/fabric3-groovy/fabric3-groovy.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/implementation/fabric3-groovy/fabric3-groovy.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/kernel/api/fabric3-host-api/fabric3-host-api.iml" filepath="$PROJECT_DIR$/modules/trunk/kernel/api/fabric3-host-api/fabric3-host-api.iml" />
@@ -432,6 +431,7 @@
     </option>
   </component>
   <UsedPathMacros>
+    <macro name="IDEA_HOME" />
     <macro name="M2_REPO" />
   </UsedPathMacros>
 </project>
