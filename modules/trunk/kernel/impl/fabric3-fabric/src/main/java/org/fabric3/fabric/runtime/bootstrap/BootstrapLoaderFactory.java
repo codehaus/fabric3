@@ -33,7 +33,7 @@ import org.fabric3.fabric.implementation.system.SystemComponentTypeLoaderImpl;
 import org.fabric3.fabric.implementation.system.SystemImplementationLoader;
 import org.fabric3.fabric.loader.LoaderRegistryImpl;
 import org.fabric3.fabric.runtime.ComponentNames;
-import org.fabric3.fabric.services.advertsiement.FeatureLoader;
+import org.fabric3.fabric.services.advertisement.FeatureLoader;
 import org.fabric3.fabric.services.factories.xml.XMLFactoryImpl;
 import org.fabric3.host.runtime.Fabric3Runtime;
 import org.fabric3.introspection.ContractProcessor;

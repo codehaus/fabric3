@@ -16,15 +16,16 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.fabric.services.advertsiement;
+package org.fabric3.fabric.services.advertisement;
 
 import javax.xml.namespace.QName;
 
-import org.fabric3.spi.services.advertisement.AdvertisementService;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Reference;
+
+import org.fabric3.spi.services.advertisement.AdvertisementService;
 
 /**
  * @version $Revsion$ $Date$

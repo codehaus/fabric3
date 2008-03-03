@@ -91,11 +91,11 @@
     </component>
 
     <component name="advertismentService">
-        <system:implementation.system class="org.fabric3.fabric.services.advertsiement.DefaultAdvertismentService"/>
+        <system:implementation.system class="org.fabric3.fabric.services.advertisement.DefaultAdvertismentService"/>
     </component>
 
     <component name="featureLoader">
-        <system:implementation.system class="org.fabric3.fabric.services.advertsiement.FeatureLoader"/>
+        <system:implementation.system class="org.fabric3.fabric.services.advertisement.FeatureLoader"/>
     </component>
 
     <component name="proxyService">
