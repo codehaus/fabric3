@@ -40,7 +40,6 @@
     </orderEntry>
     <orderEntry type="module" module-name="fabric3-api" exported="" />
     <orderEntry type="module" module-name="fabric3-async-loader" exported="" />
-    <orderEntry type="module" module-name="fabric3-extension" exported="" />
     <orderEntry type="module" module-name="fabric3-host-api" exported="" />
     <orderEntry type="module" module-name="fabric3-introspection-spi" exported="" />
     <orderEntry type="module" module-name="fabric3-monitor" exported="" />
