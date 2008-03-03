@@ -26,9 +26,9 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.spi.marshaller.MarshalException;
-import org.fabric3.spi.marshaller.MarshalService;
-import org.fabric3.spi.marshaller.DelegatingMarshalService;
+import org.fabric3.spi.services.marshaller.MarshalException;
+import org.fabric3.spi.services.marshaller.MarshalService;
+import org.fabric3.spi.services.marshaller.DelegatingMarshalService;
 import org.fabric3.xstream.factory.ClassLoaderStaxDriver;
 import org.fabric3.xstream.factory.XStreamFactory;
 

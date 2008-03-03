@@ -117,7 +117,7 @@
     </component>
 
     <component name="DelegatingMarshalService">
-        <system:implementation.system class="org.fabric3.fabric.marshaller.DelegatingMarshalServiceImpl"/>
+        <system:implementation.system class="org.fabric3.fabric.services.marshaller.DelegatingMarshalServiceImpl"/>
     </component>
 
     <component name="eventService">

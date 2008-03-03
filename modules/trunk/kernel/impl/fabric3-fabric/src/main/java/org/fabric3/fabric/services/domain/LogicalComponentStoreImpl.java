@@ -36,13 +36,14 @@ import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.Composite;
 import org.fabric3.scdl.CompositeImplementation;
-import org.fabric3.spi.marshaller.MarshalException;
-import org.fabric3.spi.marshaller.MarshalService;
+import org.fabric3.spi.services.marshaller.MarshalException;
+import org.fabric3.spi.services.marshaller.MarshalService;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 import org.fabric3.spi.runtime.assembly.LogicalComponentStore;
 import org.fabric3.spi.runtime.assembly.RecordException;
 import org.fabric3.spi.runtime.assembly.RecoveryException;
 import org.fabric3.spi.services.factories.xml.XMLFactory;
+
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 import org.osoa.sca.annotations.Service;

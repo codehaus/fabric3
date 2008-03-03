@@ -28,8 +28,8 @@ import org.fabric3.spi.command.Command;
 import org.fabric3.spi.command.CommandExecutorRegistry;
 import org.fabric3.spi.command.CommandSet;
 import org.fabric3.spi.command.ExecutionException;
-import org.fabric3.spi.marshaller.MarshalException;
-import org.fabric3.spi.marshaller.MarshalService;
+import org.fabric3.spi.services.marshaller.MarshalException;
+import org.fabric3.spi.services.marshaller.MarshalService;
 import org.fabric3.spi.services.messaging.MessagingEventService;
 import org.fabric3.spi.services.messaging.RequestListener;
 

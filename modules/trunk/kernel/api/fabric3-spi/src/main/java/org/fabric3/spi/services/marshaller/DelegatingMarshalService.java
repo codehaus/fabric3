@@ -14,7 +14,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.spi.marshaller;
+package org.fabric3.spi.services.marshaller;
 
 /**
  * @version $Rev$ $Date$

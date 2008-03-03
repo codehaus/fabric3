@@ -14,16 +14,16 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.fabric.marshaller;
+package org.fabric3.fabric.services.marshaller;
 
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamWriter;
 
 import org.osoa.sca.annotations.Service;
 
-import org.fabric3.spi.marshaller.DelegatingMarshalService;
-import org.fabric3.spi.marshaller.MarshalException;
-import org.fabric3.spi.marshaller.MarshalService;
+import org.fabric3.spi.services.marshaller.DelegatingMarshalService;
+import org.fabric3.spi.services.marshaller.MarshalException;
+import org.fabric3.spi.services.marshaller.MarshalService;
 
 /**
  * Delegates to an underlying marshalling service.
