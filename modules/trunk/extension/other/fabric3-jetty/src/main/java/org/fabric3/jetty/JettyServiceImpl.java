@@ -44,7 +44,7 @@ import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Reference;
 import org.osoa.sca.annotations.Service;
 
-import org.fabric3.monitor.MonitorFactory;
+import org.fabric3.api.annotation.Monitor;
 import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.spi.host.ServletHost;
 import org.fabric3.spi.services.work.WorkScheduler;
@@ -88,29 +88,11 @@ public class JettyServiceImpl implements JettyService {
         System.setProperty("org.mortbay.log.class", JettyLogger.class.getName());
     }
 
-//    public JettyServiceImpl(@Monitor TransportMonitor monitor,
-//                            @Reference WorkScheduler scheduler) {
-//        this.monitor = monitor;
-//        this.scheduler = scheduler;
-//        // Jetty uses a static logger, so jam in the monitor into a static reference
-//        Logger logger = Log.getLogger(null);
-//        if (logger instanceof JettyLogger) {
-//            JettyLogger jettyLogger = (JettyLogger) logger;
-//            jettyLogger.setMonitor(monitor);
-//            if (debug) {
-//                jettyLogger.setDebugEnabled(true);
-//            }
-//        }
-//    }
 
     @Constructor
-    @Deprecated
-    // JFM remove when @Monitor
-    public JettyServiceImpl(@Reference MonitorFactory monitor,
-                            @Reference WorkScheduler scheduler,
-                            @Reference HostInfo info) {
+    public JettyServiceImpl(@Reference WorkScheduler scheduler, @Reference HostInfo info, @Monitor TransportMonitor monitor) {
         this.info = info;
-        this.monitor = monitor.getMonitor(TransportMonitor.class);
+        this.monitor = monitor;
         this.scheduler = scheduler;
         // Jetty uses a static logger, so jam in the monitor into a static reference
         Logger logger = Log.getLogger(null);

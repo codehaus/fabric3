@@ -49,13 +49,13 @@ import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Reference;
 import org.osoa.sca.annotations.Service;
 
+import org.fabric3.api.annotation.Monitor;
 import org.fabric3.host.contribution.Constants;
 import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.host.contribution.ContributionService;
 import org.fabric3.host.contribution.ContributionSource;
 import org.fabric3.host.contribution.Deployable;
 import org.fabric3.host.contribution.FileContributionSource;
-import org.fabric3.monitor.MonitorFactory;
 import org.fabric3.spi.assembly.ActivateException;
 import org.fabric3.spi.assembly.Assembly;
 import org.fabric3.spi.marshaller.MarshalException;
@@ -70,18 +70,16 @@ import org.fabric3.spi.services.event.RuntimeStart;
 import org.fabric3.spi.services.factories.xml.XMLFactory;
 
 /**
- * Periodically scans a directory for new, updated, or removed contributions. New contributions are added to the domain
- * and any deployable components activated. Updated components will trigger re-activation of previously deployed
- * components. Removal will remove the contribution from the domain and de-activate any associated deployed components.
+ * Periodically scans a directory for new, updated, or removed contributions. New contributions are added to the domain and any deployable components
+ * activated. Updated components will trigger re-activation of previously deployed components. Removal will remove the contribution from the domain
+ * and de-activate any associated deployed components.
  * <p/>
- * The scanner watches the deployment directory at a fixed-delay interval. Files are tracked as a {@link
- * FileSystemResource}, which provides a consistent metadata view across various types such as jars and exploded
- * directories. Unknown file types are ignored. At the specified interval, removed files are determined by comparing the
- * current directory contents with the contents from the previous pass. Changes or additions are also determined by
- * comparing the current directory state with that of the previous pass. Detected changes and additions are cached for
- * the following interval. Detected changes and additions from the previous interval are then checked using a checksum
- * to see if they have changed again. If so, they remain cached. If they have not changed, they are processed,
- * contributed via the ContributionService and activated in the domain.
+ * The scanner watches the deployment directory at a fixed-delay interval. Files are tracked as a {@link FileSystemResource}, which provides a
+ * consistent metadata view across various types such as jars and exploded directories. Unknown file types are ignored. At the specified interval,
+ * removed files are determined by comparing the current directory contents with the contents from the previous pass. Changes or additions are also
+ * determined by comparing the current directory state with that of the previous pass. Detected changes and additions are cached for the following
+ * interval. Detected changes and additions from the previous interval are then checked using a checksum to see if they have changed again. If so,
+ * they remain cached. If they have not changed, they are processed, contributed via the ContributionService and activated in the domain.
  * <p/>
  * The scanner is persistent and supports recovery on re-start.
  * <p/>
@@ -115,7 +113,7 @@ public class ContributionDirectoryScanner implements Runnable, Fabric3EventListe
                                         @Reference EventService eventService,
                                         @Reference MarshalService service,
                                         @Reference XMLFactory xmlFactory,
-                                        @Reference MonitorFactory factory) {
+                                        @Monitor ScannerMonitor monitor) {
         this.registry = registry;
         this.contributionService = contributionService;
         this.assembly = assembly;
@@ -123,7 +121,7 @@ public class ContributionDirectoryScanner implements Runnable, Fabric3EventListe
         this.marshallService = service;
         this.xmlInputFactory = xmlFactory.newInputFactoryInstance();
         this.xmlOutputFactory = xmlFactory.newOutputFactoryInstance();
-        this.monitor = factory.getMonitor(ScannerMonitor.class);
+        this.monitor = monitor;
     }
 
     @Property(required = false)

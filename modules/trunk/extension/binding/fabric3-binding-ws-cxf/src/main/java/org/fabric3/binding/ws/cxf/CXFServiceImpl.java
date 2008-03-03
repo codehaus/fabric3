@@ -43,8 +43,8 @@ import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Reference;
 
+import org.fabric3.api.annotation.Monitor;
 import org.fabric3.binding.ws.cxf.wire.CxfTargetInterceptor;
-import org.fabric3.monitor.MonitorFactory;
 import org.fabric3.spi.host.ServletHost;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 import org.fabric3.spi.wire.InvocationChain;
@@ -66,16 +66,16 @@ public class CXFServiceImpl implements CXFService {
     /**
      * Constructor.
      *
-     * @param host           the servlet host to register endpoints with
-     * @param monitorFactory the monitor factory
-     * @param contextPath    context path from which the web services are provisioned.
+     * @param host        the servlet host to register endpoints with
+     * @param monitor     the monitor
+     * @param contextPath context path from which the web services are provisioned.
      */
     public CXFServiceImpl(@Reference(name = "host")ServletHost host,
-                          @Reference(name = "monitorFactory")MonitorFactory monitorFactory,
+                          @Monitor CXFMonitor monitor,
                           @Property(name = "contextPath")String contextPath) {
         this.host = host;
         this.contextPath = contextPath;
-        monitor = monitorFactory.getMonitor(CXFMonitor.class);
+        this.monitor = monitor;
     }
 
     @Property

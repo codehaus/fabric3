@@ -48,6 +48,7 @@ import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.Wire;
 import org.fabric3.spi.ObjectFactory;
+import org.fabric3.api.annotation.Monitor;
 
 import com.caucho.hessian.io.SerializerFactory;
 
@@ -57,7 +58,7 @@ import com.caucho.hessian.io.SerializerFactory;
  * @version $Revision$ $Date$
  */
 @EagerInit
-@Service(interfaces={SourceWireAttacher.class, TargetWireAttacher.class})
+@Service(interfaces = {SourceWireAttacher.class, TargetWireAttacher.class})
 public class HessianWireAttacher implements SourceWireAttacher<HessianWireSourceDefinition>, TargetWireAttacher<HessianWireTargetDefinition> {
     private final SourceWireAttacherRegistry sourceWireAttacherRegistry;
     private final TargetWireAttacherRegistry targetWireAttacherRegistry;
@@ -73,18 +74,18 @@ public class HessianWireAttacher implements SourceWireAttacher<HessianWireSource
      * @param targetWireAttacherRegistry the registry for target wire attachers
      * @param servletHost                Servlet host.
      * @param classLoaderRegistry        the classloader registry
-     * @param monitorFactory             the monitor factory
+     * @param monitor                    the Hessian monitor
      */
     public HessianWireAttacher(@Reference SourceWireAttacherRegistry sourceWireAttacherRegistry,
                                @Reference TargetWireAttacherRegistry targetWireAttacherRegistry,
                                @Reference ServletHost servletHost,
                                @Reference ClassLoaderRegistry classLoaderRegistry,
-                               @Reference MonitorFactory monitorFactory) {
+                               @Monitor HessianWireAttacherMonitor monitor) {
         this.sourceWireAttacherRegistry = sourceWireAttacherRegistry;
         this.targetWireAttacherRegistry = targetWireAttacherRegistry;
         this.servletHost = servletHost;
         this.classLoaderRegistry = classLoaderRegistry;
-        this.monitor = monitorFactory.getMonitor(HessianWireAttacherMonitor.class);
+        this.monitor = monitor;
         this.serializerFactory = new SerializerFactory();
     }
 

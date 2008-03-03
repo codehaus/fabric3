@@ -23,7 +23,7 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.monitor.MonitorFactory;
+import org.fabric3.api.annotation.Monitor;
 import org.fabric3.spi.command.Command;
 import org.fabric3.spi.command.CommandExecutorRegistry;
 import org.fabric3.spi.command.CommandSet;
@@ -46,11 +46,11 @@ public class CommandSetListener implements RequestListener {
     public CommandSetListener(@Reference MessagingEventService eventService,
                               @Reference CommandExecutorRegistry executorRegistry,
                               @Reference MarshalService marshalService,
-                              @Reference MonitorFactory factory) {
+                              @Monitor ListenerMonitor monitor) {
         this.eventService = eventService;
         this.executorRegistry = executorRegistry;
         this.marshalService = marshalService;
-        monitor = factory.getMonitor(ListenerMonitor.class);
+        this.monitor = monitor;
     }
 
     @Init

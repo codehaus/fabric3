@@ -29,11 +29,11 @@ import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 import org.osoa.sca.annotations.Service;
 
+import org.fabric3.api.annotation.Monitor;
 import org.fabric3.binding.burlap.model.physical.BurlapWireSourceDefinition;
 import org.fabric3.binding.burlap.model.physical.BurlapWireTargetDefinition;
 import org.fabric3.binding.burlap.transport.BurlapServiceHandler;
 import org.fabric3.binding.burlap.transport.BurlapTargetInterceptor;
-import org.fabric3.monitor.MonitorFactory;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.SourceWireAttacher;
@@ -70,18 +70,18 @@ public class BurlapWireAttacher implements SourceWireAttacher<BurlapWireSourceDe
      * @param targetWireAttacherRegistry the registry for target wire attachers
      * @param servletHost                Servlet host.
      * @param classLoaderRegistry        the classloader registry to resolve the target classloader from
-     * @param monitorFactory             the system monitor factory
+     * @param monitor                    the Burlap monitor
      */
     public BurlapWireAttacher(@Reference SourceWireAttacherRegistry sourceWireAttacherRegistry,
                               @Reference TargetWireAttacherRegistry targetWireAttacherRegistry,
                               @Reference ServletHost servletHost,
                               @Reference ClassLoaderRegistry classLoaderRegistry,
-                              @Reference MonitorFactory monitorFactory) {
+                              @Monitor BurlapWireAttacherMonitor monitor) {
         this.sourceWireAttacherRegistry = sourceWireAttacherRegistry;
         this.targetWireAttacherRegistry = targetWireAttacherRegistry;
         this.servletHost = servletHost;
         this.classLoaderRegistry = classLoaderRegistry;
-        this.monitor = monitorFactory.getMonitor(BurlapWireAttacherMonitor.class);
+        this.monitor = monitor;
     }
 
     @Init
