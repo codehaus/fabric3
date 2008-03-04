@@ -26,8 +26,8 @@ import org.osoa.sca.ServiceRuntimeException;
 import org.fabric3.binding.ejb.wire.EjbResolver;
 import org.fabric3.scdl.Signature;
 import org.fabric3.spi.wire.Interceptor;
-import org.fabric3.spi.wire.Message;
-import org.fabric3.spi.wire.MessageImpl;
+import org.fabric3.spi.invocation.Message;
+import org.fabric3.spi.invocation.MessageImpl;
 
 /**
  * @version $Revision: 1 $ $Date: 2007-05-14 10:40:37 -0700 (Mon, 14 May 2007) $

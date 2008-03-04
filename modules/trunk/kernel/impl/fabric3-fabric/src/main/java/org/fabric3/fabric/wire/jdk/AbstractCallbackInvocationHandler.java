@@ -27,10 +27,10 @@ import org.fabric3.pojo.PojoWorkContextTunnel;
 import org.fabric3.spi.invocation.CallFrame;
 import org.fabric3.spi.component.TargetInvocationException;
 import org.fabric3.spi.invocation.WorkContext;
+import org.fabric3.spi.invocation.MessageImpl;
 import org.fabric3.spi.wire.Interceptor;
 import org.fabric3.spi.wire.InvocationChain;
-import org.fabric3.spi.wire.Message;
-import org.fabric3.spi.wire.MessageImpl;
+import org.fabric3.spi.invocation.Message;
 
 /**
  * Abstract callback handler implementation. Concrete classes must implement a strategy for mapping the callback target chain for the invoked callback

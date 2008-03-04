@@ -24,8 +24,8 @@ import java.lang.reflect.Method;
 import org.osoa.sca.ServiceUnavailableException;
 
 import org.fabric3.spi.wire.Interceptor;
-import org.fabric3.spi.wire.Message;
-import org.fabric3.spi.wire.MessageImpl;
+import org.fabric3.spi.invocation.Message;
+import org.fabric3.spi.invocation.MessageImpl;
 
 /**
  * @version $Revision: 1589 $ $Date: 2007-10-25 23:13:37 +0100 (Thu, 25 Oct 2007) $

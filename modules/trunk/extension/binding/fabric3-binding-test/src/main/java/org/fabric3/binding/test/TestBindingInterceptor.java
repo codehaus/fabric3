@@ -19,7 +19,7 @@ package org.fabric3.binding.test;
 import java.net.URI;
 
 import org.fabric3.spi.wire.Interceptor;
-import org.fabric3.spi.wire.Message;
+import org.fabric3.spi.invocation.Message;
 
 /**
  * @version $Rev$ $Date$

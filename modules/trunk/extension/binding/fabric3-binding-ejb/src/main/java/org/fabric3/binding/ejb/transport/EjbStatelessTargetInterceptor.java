@@ -20,8 +20,7 @@ package org.fabric3.binding.ejb.transport;
 
 import org.fabric3.binding.ejb.wire.EjbResolver;
 import org.fabric3.scdl.Signature;
-import org.fabric3.spi.wire.Message;
-
+import org.fabric3.spi.invocation.Message;
 
 
 /**
@@ -38,7 +37,7 @@ public class EjbStatelessTargetInterceptor extends BaseEjbTargetInterceptor {
     }
 
     /**
-     * @see org.fabric3.spi.wire.Interceptor#invoke(org.fabric3.spi.wire.Message)
+     * @see org.fabric3.spi.wire.Interceptor#invoke(org.fabric3.spi.invocation.Message)
      */
     public Message invoke(Message message) {
         Object slsb = resolver.resolveStatelessEjb();

@@ -35,8 +35,8 @@ import org.fabric3.spi.invocation.WorkContext;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 import org.fabric3.spi.wire.Interceptor;
 import org.fabric3.spi.wire.InvocationChain;
-import org.fabric3.spi.wire.Message;
-import org.fabric3.spi.wire.MessageImpl;
+import org.fabric3.spi.invocation.Message;
+import org.fabric3.spi.invocation.MessageImpl;
 
 /**
  * Servlet for handling the hessian service requests.

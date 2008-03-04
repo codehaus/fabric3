@@ -26,8 +26,8 @@ import org.osoa.sca.ServiceRuntimeException;
 
 import org.fabric3.binding.rmi.wire.RmiReferenceFactory;
 import org.fabric3.spi.wire.Interceptor;
-import org.fabric3.spi.wire.Message;
-import org.fabric3.spi.wire.MessageImpl;
+import org.fabric3.spi.invocation.Message;
+import org.fabric3.spi.invocation.MessageImpl;
 
 public final class RmiTargetInterceptor implements Interceptor {
 

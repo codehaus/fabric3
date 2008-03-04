@@ -16,9 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.spi.wire;
-
-import org.fabric3.spi.invocation.WorkContext;
+package org.fabric3.spi.invocation;
 
 /**
  * The default implementation of a message flowed through a wire during an invocation

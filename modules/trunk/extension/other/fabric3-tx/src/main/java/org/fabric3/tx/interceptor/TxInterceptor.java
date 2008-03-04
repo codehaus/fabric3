@@ -29,7 +29,7 @@ import javax.transaction.Transaction;
 import javax.transaction.TransactionManager;
 
 import org.fabric3.spi.wire.Interceptor;
-import org.fabric3.spi.wire.Message;
+import org.fabric3.spi.invocation.Message;
 import org.fabric3.tx.TxException;
 
 /**
@@ -71,7 +71,7 @@ public class TxInterceptor implements Interceptor {
     }
 
     /**
-     * @see org.fabric3.spi.wire.Interceptor#invoke(org.fabric3.spi.wire.Message)
+     * @see org.fabric3.spi.wire.Interceptor#invoke(org.fabric3.spi.invocation.Message)
      */
     public Message invoke(Message message) {
         

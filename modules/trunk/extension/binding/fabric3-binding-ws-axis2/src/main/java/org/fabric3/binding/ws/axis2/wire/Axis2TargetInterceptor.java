@@ -34,8 +34,8 @@ import org.fabric3.binding.ws.axis2.policy.AxisPolicy;
 import org.fabric3.binding.ws.axis2.policy.PolicyApplier;
 import org.fabric3.spi.classloader.MultiParentClassLoader;
 import org.fabric3.spi.wire.Interceptor;
-import org.fabric3.spi.wire.Message;
-import org.fabric3.spi.wire.MessageImpl;
+import org.fabric3.spi.invocation.Message;
+import org.fabric3.spi.invocation.MessageImpl;
 import org.fabric3.spi.wire.InvocationRuntimeException;
 
 /**
@@ -78,7 +78,7 @@ public class Axis2TargetInterceptor implements Interceptor {
     }
 
     /**
-     * @see org.fabric3.spi.wire.Interceptor#invoke(org.fabric3.spi.wire.Message)
+     * @see org.fabric3.spi.wire.Interceptor#invoke(org.fabric3.spi.invocation.Message)
      */
     public Message invoke(Message msg) {
         

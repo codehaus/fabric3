@@ -31,8 +31,8 @@ import org.fabric3.spi.component.InstanceWrapper;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.TargetResolutionException;
 import org.fabric3.spi.invocation.WorkContext;
+import org.fabric3.spi.invocation.Message;
 import org.fabric3.spi.wire.InvocationRuntimeException;
-import org.fabric3.spi.wire.Message;
 import org.fabric3.scdl.Scope;
 
 public class InvokerInterceptorBasicTestCase extends TestCase {

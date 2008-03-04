@@ -28,8 +28,8 @@ import org.fabric3.scdl.Signature;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.TargetDestructionException;
 import org.fabric3.spi.component.TargetResolutionException;
-import org.fabric3.spi.wire.Message;
-import org.fabric3.spi.wire.MessageImpl;
+import org.fabric3.spi.invocation.Message;
+import org.fabric3.spi.invocation.MessageImpl;
 
 
 /**
@@ -54,7 +54,7 @@ public class EjbStatefulTargetInterceptor extends BaseEjbTargetInterceptor {
     }
 
     /**
-     * @see org.fabric3.spi.wire.Interceptor#invoke(org.fabric3.spi.wire.Message)
+     * @see org.fabric3.spi.wire.Interceptor#invoke(org.fabric3.spi.invocation.Message)
      */
     public Message invoke(Message message) {
         EjbStatefulInstanceWrapper wrap = null;

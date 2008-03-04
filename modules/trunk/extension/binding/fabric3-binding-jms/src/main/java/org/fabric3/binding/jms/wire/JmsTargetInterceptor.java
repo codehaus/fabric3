@@ -31,8 +31,8 @@ import org.fabric3.binding.jms.helper.JmsHelper;
 import org.fabric3.binding.jms.model.CorrelationScheme;
 import org.fabric3.binding.jms.transport.Fabric3MessageReceiver;
 import org.fabric3.spi.wire.Interceptor;
-import org.fabric3.spi.wire.Message;
-import org.fabric3.spi.wire.MessageImpl;
+import org.fabric3.spi.invocation.Message;
+import org.fabric3.spi.invocation.MessageImpl;
 
 /**
  * @version $Revision$ $Date$
@@ -103,7 +103,7 @@ public class JmsTargetInterceptor implements Interceptor {
     }
 
     /**
-     * @see org.fabric3.spi.wire.Interceptor#invoke(org.fabric3.spi.wire.Message)
+     * @see org.fabric3.spi.wire.Interceptor#invoke(org.fabric3.spi.invocation.Message)
      */
     public Message invoke(Message message) {
         

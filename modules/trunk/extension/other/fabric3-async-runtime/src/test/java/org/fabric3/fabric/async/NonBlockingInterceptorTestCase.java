@@ -28,10 +28,10 @@ import org.easymock.IAnswer;
 
 import org.fabric3.spi.invocation.CallFrame;
 import org.fabric3.spi.invocation.WorkContext;
+import org.fabric3.spi.invocation.MessageImpl;
+import org.fabric3.spi.invocation.Message;
 import org.fabric3.spi.services.work.WorkScheduler;
 import org.fabric3.spi.wire.Interceptor;
-import org.fabric3.spi.wire.Message;
-import org.fabric3.spi.wire.MessageImpl;
 
 /**
  * @version $Rev$ $Date$

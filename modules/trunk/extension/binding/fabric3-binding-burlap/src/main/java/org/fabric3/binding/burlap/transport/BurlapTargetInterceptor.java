@@ -27,12 +27,11 @@ import java.net.URLConnection;
 import com.caucho.burlap.io.BurlapInput;
 import com.caucho.burlap.io.BurlapOutput;
 import com.caucho.burlap.io.SerializerFactory;
-import com.caucho.burlap.io.BurlapServiceException;
 import org.osoa.sca.ServiceUnavailableException;
 
 import org.fabric3.spi.wire.Interceptor;
-import org.fabric3.spi.wire.Message;
-import org.fabric3.spi.wire.MessageImpl;
+import org.fabric3.spi.invocation.Message;
+import org.fabric3.spi.invocation.MessageImpl;
 
 
 /**

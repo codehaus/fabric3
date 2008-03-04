@@ -41,7 +41,7 @@ import org.fabric3.spi.invocation.WorkContext;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 import org.fabric3.spi.wire.Interceptor;
 import org.fabric3.spi.wire.InvocationChain;
-import org.fabric3.spi.wire.MessageImpl;
+import org.fabric3.spi.invocation.MessageImpl;
 
 /**
  * Message listeher for service requests.
@@ -117,8 +117,8 @@ public class Fabric3MessageListener implements MessageListener {
             ObjectMessage objectMessage = (ObjectMessage) request;
             Object[] payload = (Object[]) objectMessage.getObject();
 
-            org.fabric3.spi.wire.Message inMessage = new MessageImpl(payload, false, new WorkContext());
-            org.fabric3.spi.wire.Message outMessage = interceptor.invoke(inMessage);
+            org.fabric3.spi.invocation.Message inMessage = new MessageImpl(payload, false, new WorkContext());
+            org.fabric3.spi.invocation.Message outMessage = interceptor.invoke(inMessage);
 
             connection = connectionFactory.createConnection();
             Session session = connection.createSession(true, Session.SESSION_TRANSACTED);

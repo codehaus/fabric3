@@ -31,8 +31,8 @@ import com.caucho.hessian.io.SerializerFactory;
 import org.osoa.sca.ServiceUnavailableException;
 
 import org.fabric3.spi.wire.Interceptor;
-import org.fabric3.spi.wire.Message;
-import org.fabric3.spi.wire.MessageImpl;
+import org.fabric3.spi.invocation.Message;
+import org.fabric3.spi.invocation.MessageImpl;
 
 /**
  * @version $Revision$ $Date$

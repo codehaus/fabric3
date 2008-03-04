@@ -51,6 +51,8 @@ import org.fabric3.scdl.Scope;
 import org.fabric3.spi.ObjectCreationException;
 import org.fabric3.spi.invocation.WorkContext;
 import org.fabric3.spi.invocation.CallFrame;
+import org.fabric3.spi.invocation.MessageImpl;
+import org.fabric3.spi.invocation.Message;
 import org.fabric3.spi.assembly.ActivateException;
 import org.fabric3.spi.assembly.Assembly;
 import org.fabric3.spi.component.GroupInitializationException;
@@ -60,8 +62,6 @@ import org.fabric3.spi.services.contribution.MetaDataStore;
 import org.fabric3.spi.services.contribution.QNameSymbol;
 import org.fabric3.spi.services.contribution.ResourceElement;
 import org.fabric3.spi.services.factories.xml.XMLFactory;
-import org.fabric3.spi.wire.Message;
-import org.fabric3.spi.wire.MessageImpl;
 
 /**
  * Default Maven runtime implementation.

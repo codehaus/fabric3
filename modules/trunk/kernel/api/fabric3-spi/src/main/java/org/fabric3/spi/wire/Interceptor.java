@@ -18,6 +18,8 @@
  */
 package org.fabric3.spi.wire;
 
+import org.fabric3.spi.invocation.Message;
+
 /**
  * Synchronous, around-style mediation associated with wire.
  *

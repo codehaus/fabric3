@@ -26,7 +26,7 @@ import javax.xml.bind.JAXBException;
 import org.apache.axiom.om.OMElement;
 
 import org.fabric3.spi.wire.Interceptor;
-import org.fabric3.spi.wire.Message;
+import org.fabric3.spi.invocation.Message;
 
 /**
  * Interceptor that transforms an OMElement to a JAXB bound object on the way in and JAXB bound object to OMElement on the way out.

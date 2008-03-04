@@ -39,10 +39,10 @@ import org.apache.ws.security.handler.WSHandlerResult;
 import org.apache.ws.security.util.WSSecurityUtil;
 
 import org.fabric3.spi.invocation.WorkContext;
+import org.fabric3.spi.invocation.MessageImpl;
+import org.fabric3.spi.invocation.Message;
 import org.fabric3.spi.wire.Interceptor;
 import org.fabric3.spi.wire.InvocationChain;
-import org.fabric3.spi.wire.Message;
-import org.fabric3.spi.wire.MessageImpl;
 
 /**
  * Proxy handler for the invocation.

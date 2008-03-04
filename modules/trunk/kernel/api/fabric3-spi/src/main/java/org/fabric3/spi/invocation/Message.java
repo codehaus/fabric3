@@ -16,9 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.spi.wire;
-
-import org.fabric3.spi.invocation.WorkContext;
+package org.fabric3.spi.invocation;
 
 /**
  * Represents a request, response, or exception flowing through a wire
