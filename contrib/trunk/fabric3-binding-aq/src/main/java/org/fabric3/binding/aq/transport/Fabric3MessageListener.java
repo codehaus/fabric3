@@ -38,11 +38,11 @@ import org.fabric3.binding.aq.TransactionType;
 import org.fabric3.binding.aq.helper.JmsHelper;
 import org.fabric3.binding.aq.model.CorrelationScheme;
 import org.fabric3.binding.aq.tx.TransactionHandler;
-import org.fabric3.spi.component.WorkContext;
+import org.fabric3.spi.invocation.MessageImpl;
+import org.fabric3.spi.invocation.WorkContext;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 import org.fabric3.spi.wire.Interceptor;
 import org.fabric3.spi.wire.InvocationChain;
-import org.fabric3.spi.wire.MessageImpl;
 
 /**
  * Message listeher for service requests.
@@ -110,7 +110,7 @@ public class Fabric3MessageListener implements MessageListener {
      * @see javax.jms.MessageListener#onMessage(javax.jms.Message)
      */
     public void onMessage(final Message request) {
-        final org.fabric3.spi.wire.Message outMessage;
+        final org.fabric3.spi.invocation.Message outMessage;
         try {
             outMessage = handleInboundMessage(request);
             
@@ -123,7 +123,7 @@ public class Fabric3MessageListener implements MessageListener {
         }
     }
 
-    private void sendResponse(Message request, org.fabric3.spi.wire.Message outMessage) {
+    private void sendResponse(Message request, org.fabric3.spi.invocation.Message outMessage) {
         Connection connection = null;
         try {
             connection = respConnectionFactory.createConnection();
@@ -166,7 +166,7 @@ public class Fabric3MessageListener implements MessageListener {
      * @return Message
      * @throws JMSException
      */
-    private org.fabric3.spi.wire.Message handleInboundMessage(final Message request) throws JMSException {
+    private org.fabric3.spi.invocation.Message handleInboundMessage(final Message request) throws JMSException {
         final String opName = request.getStringProperty("scaOperationName");
         final Interceptor interceptor = getInterceptor(opName);
 
@@ -183,8 +183,8 @@ public class Fabric3MessageListener implements MessageListener {
      * @param payload
      * @return
      */
-    private org.fabric3.spi.wire.Message invokeOnService(final Interceptor interceptor, final Object[] payload) {
-        final org.fabric3.spi.wire.Message inMessage = new MessageImpl(payload, false, new WorkContext());
+    private org.fabric3.spi.invocation.Message invokeOnService(final Interceptor interceptor, final Object[] payload) {
+        final org.fabric3.spi.invocation.Message inMessage = new MessageImpl(payload, false, new WorkContext());
         return interceptor.invoke(inMessage);
     }
 

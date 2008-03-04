@@ -24,22 +24,15 @@ import javax.jms.Destination;
 import javax.jms.JMSException;
 import javax.jms.MessageProducer;
 import javax.jms.ObjectMessage;
-import javax.jms.Queue;
 import javax.jms.Session;
-import javax.jms.TextMessage;
-import javax.jms.XAConnection;
-import javax.jms.XAConnectionFactory;
-
-import oracle.jms.AQjmsFactory;
 
 import org.fabric3.binding.aq.Fabric3AQException;
 import org.fabric3.binding.aq.helper.JmsHelper;
-import org.fabric3.binding.aq.model.AQBindingMetadata;
 import org.fabric3.binding.aq.model.CorrelationScheme;
 import org.fabric3.binding.aq.transport.Fabric3MessageReceiver;
+import org.fabric3.spi.invocation.Message;
+import org.fabric3.spi.invocation.MessageImpl;
 import org.fabric3.spi.wire.Interceptor;
-import org.fabric3.spi.wire.Message;
-import org.fabric3.spi.wire.MessageImpl;
 
 /**
  * @version $Revision$ $Date: 2007-09-17 18:06:21 +0100 (Mon, 17 Sep
@@ -170,6 +163,6 @@ public class AQTargetInterceptor implements Interceptor {
      */
     public void setNext(Interceptor next) {
         this.next = next;
-    }
+    }   
 
 }
