@@ -37,7 +37,7 @@ import org.fabric3.binding.jms.TransactionType;
 import org.fabric3.binding.jms.helper.JmsHelper;
 import org.fabric3.binding.jms.model.CorrelationScheme;
 import org.fabric3.binding.jms.tx.TransactionHandler;
-import org.fabric3.spi.component.WorkContext;
+import org.fabric3.spi.invocation.WorkContext;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 import org.fabric3.spi.wire.Interceptor;
 import org.fabric3.spi.wire.InvocationChain;

@@ -33,7 +33,7 @@ import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.TargetDestructionException;
 import org.fabric3.spi.component.TargetInitializationException;
 import org.fabric3.spi.component.TargetResolutionException;
-import org.fabric3.spi.component.WorkContext;
+import org.fabric3.spi.invocation.WorkContext;
 import org.fabric3.spi.component.GroupInitializationException;
 import org.fabric3.spi.component.ExpirationPolicy;
 

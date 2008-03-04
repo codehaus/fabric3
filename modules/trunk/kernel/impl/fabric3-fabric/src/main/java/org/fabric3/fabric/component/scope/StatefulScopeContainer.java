@@ -24,7 +24,7 @@ import org.fabric3.spi.component.InstanceWrapper;
 import org.fabric3.spi.component.InstanceWrapperStore;
 import org.fabric3.spi.component.TargetDestructionException;
 import org.fabric3.spi.component.TargetResolutionException;
-import org.fabric3.spi.component.WorkContext;
+import org.fabric3.spi.invocation.WorkContext;
 import org.fabric3.scdl.Scope;
 
 /**

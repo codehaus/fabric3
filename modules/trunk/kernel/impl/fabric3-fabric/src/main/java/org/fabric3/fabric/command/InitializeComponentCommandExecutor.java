@@ -25,12 +25,12 @@ import org.fabric3.spi.command.CommandExecutor;
 import org.fabric3.spi.command.CommandExecutorRegistry;
 import org.fabric3.spi.command.ExecutionException;
 import org.fabric3.spi.component.AtomicComponent;
-import org.fabric3.spi.component.CallFrame;
+import org.fabric3.spi.invocation.CallFrame;
 import org.fabric3.spi.component.Component;
 import org.fabric3.spi.component.GroupInitializationException;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.ScopeRegistry;
-import org.fabric3.spi.component.WorkContext;
+import org.fabric3.spi.invocation.WorkContext;
 import org.fabric3.spi.runtime.component.ComponentManager;
 
 import org.osoa.sca.annotations.Constructor;

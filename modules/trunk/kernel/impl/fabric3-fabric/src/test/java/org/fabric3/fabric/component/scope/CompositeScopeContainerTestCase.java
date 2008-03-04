@@ -28,8 +28,8 @@ import org.fabric3.scdl.Scope;
 import org.fabric3.spi.component.AtomicComponent;
 import org.fabric3.spi.component.InstanceWrapper;
 import org.fabric3.spi.component.ScopeContainer;
-import org.fabric3.spi.component.WorkContext;
-import org.fabric3.spi.component.CallFrame;
+import org.fabric3.spi.invocation.WorkContext;
+import org.fabric3.spi.invocation.CallFrame;
 
 /**
  * @version $$Rev$$ $$Date$$

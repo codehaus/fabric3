@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.spi.component;
+package org.fabric3.spi.invocation;
 
 import java.util.ArrayList;
 import java.util.List;

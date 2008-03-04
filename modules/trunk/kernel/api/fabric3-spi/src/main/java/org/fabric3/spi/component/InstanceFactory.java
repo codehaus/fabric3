@@ -19,6 +19,7 @@
 package org.fabric3.spi.component;
 
 import org.fabric3.spi.ObjectCreationException;
+import org.fabric3.spi.invocation.WorkContext;
 
 /**
  * Interface for a factory that returns an injected component instance.

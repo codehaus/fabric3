@@ -1,6 +1,6 @@
 package org.fabric3.security.authorization;
 
-import org.fabric3.spi.component.WorkContext;
+import org.fabric3.spi.invocation.WorkContext;
 import org.fabric3.spi.wire.Interceptor;
 import org.fabric3.spi.wire.Message;
 

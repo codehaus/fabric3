@@ -38,9 +38,9 @@ import org.fabric3.scdl.PropertyValue;
 import org.fabric3.spi.AbstractLifecycle;
 import org.fabric3.spi.ObjectCreationException;
 import org.fabric3.spi.ObjectFactory;
+import org.fabric3.spi.invocation.WorkContext;
 import org.fabric3.spi.component.AtomicComponent;
 import org.fabric3.spi.component.InstanceWrapper;
-import org.fabric3.spi.component.WorkContext;
 import org.fabric3.spi.wire.ProxyService;
 import org.fabric3.spi.wire.Wire;
 

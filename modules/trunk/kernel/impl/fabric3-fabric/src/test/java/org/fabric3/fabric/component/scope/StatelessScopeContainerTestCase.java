@@ -25,7 +25,7 @@ import org.easymock.classextension.EasyMock;
 import org.fabric3.scdl.Scope;
 import org.fabric3.spi.component.AtomicComponent;
 import org.fabric3.spi.component.InstanceWrapper;
-import org.fabric3.spi.component.WorkContext;
+import org.fabric3.spi.invocation.WorkContext;
 
 /**
  * Unit tests for the composite scope container

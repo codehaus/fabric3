@@ -24,8 +24,6 @@ import org.osoa.sca.RequestContext;
 import org.osoa.sca.ServiceReference;
 import org.osoa.sca.CallableReference;
 
-import org.fabric3.spi.component.WorkContext;
-
 /**
  * @version $Rev$ $Date$
  */

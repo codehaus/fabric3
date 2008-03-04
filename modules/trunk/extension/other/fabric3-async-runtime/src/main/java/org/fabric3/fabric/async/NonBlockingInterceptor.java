@@ -21,8 +21,8 @@ package org.fabric3.fabric.async;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.fabric3.spi.component.CallFrame;
-import org.fabric3.spi.component.WorkContext;
+import org.fabric3.spi.invocation.CallFrame;
+import org.fabric3.spi.invocation.WorkContext;
 import org.fabric3.spi.services.work.WorkScheduler;
 import org.fabric3.spi.wire.Interceptor;
 import org.fabric3.spi.wire.Message;

@@ -22,6 +22,7 @@ import java.net.URI;
 
 import org.fabric3.spi.ObjectCreationException;
 import org.fabric3.spi.ObjectFactory;
+import org.fabric3.spi.invocation.WorkContext;
 
 /**
  * The runtime instantiation of an SCA atomic, or leaf-type, component

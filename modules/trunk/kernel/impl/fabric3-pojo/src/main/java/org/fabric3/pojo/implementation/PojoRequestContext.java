@@ -22,7 +22,7 @@ import org.osoa.sca.RequestContext;
 import org.osoa.sca.CallableReference;
 
 import org.fabric3.pojo.PojoWorkContextTunnel;
-import org.fabric3.spi.component.WorkContext;
+import org.fabric3.spi.invocation.WorkContext;
 
 /**
  * @version $Rev$ $Date$

@@ -18,7 +18,7 @@
  */
 package org.fabric3.spi.wire;
 
-import org.fabric3.spi.component.WorkContext;
+import org.fabric3.spi.invocation.WorkContext;
 
 /**
  * Represents a request, response, or exception flowing through a wire

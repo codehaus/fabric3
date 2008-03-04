@@ -22,8 +22,8 @@ import org.osoa.sca.Conversation;
 
 import org.fabric3.pojo.PojoWorkContextTunnel;
 import org.fabric3.spi.ObjectFactory;
-import org.fabric3.spi.component.CallFrame;
-import org.fabric3.spi.component.WorkContext;
+import org.fabric3.spi.invocation.WorkContext;
+import org.fabric3.spi.invocation.CallFrame;
 
 public class ConversationIDObjectFactory implements ObjectFactory<String> {
 

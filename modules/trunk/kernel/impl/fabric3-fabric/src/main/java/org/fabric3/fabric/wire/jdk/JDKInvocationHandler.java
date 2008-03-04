@@ -30,9 +30,9 @@ import org.osoa.sca.ServiceUnavailableException;
 
 import org.fabric3.fabric.wire.NoMethodForOperationException;
 import org.fabric3.pojo.PojoWorkContextTunnel;
-import org.fabric3.spi.component.CallFrame;
+import org.fabric3.spi.invocation.CallFrame;
 import org.fabric3.spi.component.TargetInvocationException;
-import org.fabric3.spi.component.WorkContext;
+import org.fabric3.spi.invocation.WorkContext;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 import org.fabric3.spi.wire.Interceptor;
 import org.fabric3.spi.wire.InvocationChain;

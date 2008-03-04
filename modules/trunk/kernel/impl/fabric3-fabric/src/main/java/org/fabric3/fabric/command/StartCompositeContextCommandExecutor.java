@@ -30,8 +30,8 @@ import org.fabric3.spi.command.ExecutionException;
 import org.fabric3.spi.component.GroupInitializationException;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.ScopeRegistry;
-import org.fabric3.spi.component.WorkContext;
-import org.fabric3.spi.component.CallFrame;
+import org.fabric3.spi.invocation.WorkContext;
+import org.fabric3.spi.invocation.CallFrame;
 
 /**
  * Executes a {@link StartCompositeContextCommand}.

@@ -22,7 +22,7 @@ import java.lang.reflect.Method;
 import java.util.Map;
 
 import org.fabric3.spi.wire.InvocationChain;
-import org.fabric3.spi.component.CallFrame;
+import org.fabric3.spi.invocation.CallFrame;
 
 /**
  * Responsible for dispatching to a callback service from a component implementation instance that is not composite scope. Since only one client can

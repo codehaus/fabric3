@@ -25,7 +25,7 @@ import org.fabric3.pojo.PojoWorkContextTunnel;
 import org.fabric3.scdl.Scope;
 import org.fabric3.spi.ObjectCreationException;
 import org.fabric3.spi.ObjectFactory;
-import org.fabric3.spi.component.CallFrame;
+import org.fabric3.spi.invocation.CallFrame;
 import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.ProxyService;
 

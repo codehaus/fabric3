@@ -42,8 +42,8 @@ import org.fabric3.spi.component.InstanceWrapper;
 import org.fabric3.spi.component.InstanceWrapperStore;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.TargetResolutionException;
-import org.fabric3.spi.component.WorkContext;
-import org.fabric3.spi.component.CallFrame;
+import org.fabric3.spi.invocation.WorkContext;
+import org.fabric3.spi.invocation.CallFrame;
 
 /**
  * Scope container for the standard CONVERSATIONAL scope.

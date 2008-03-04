@@ -18,7 +18,7 @@
  */
 package org.fabric3.spi.wire;
 
-import org.fabric3.spi.component.WorkContext;
+import org.fabric3.spi.invocation.WorkContext;
 
 /**
  * The default implementation of a message flowed through a wire during an invocation

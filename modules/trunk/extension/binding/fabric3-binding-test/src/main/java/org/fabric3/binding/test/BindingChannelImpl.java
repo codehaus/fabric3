@@ -25,8 +25,8 @@ import org.osoa.sca.ServiceUnavailableException;
 import org.osoa.sca.Conversation;
 import org.osoa.sca.annotations.EagerInit;
 
-import org.fabric3.spi.component.CallFrame;
-import org.fabric3.spi.component.WorkContext;
+import org.fabric3.spi.invocation.CallFrame;
+import org.fabric3.spi.invocation.WorkContext;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.Message;

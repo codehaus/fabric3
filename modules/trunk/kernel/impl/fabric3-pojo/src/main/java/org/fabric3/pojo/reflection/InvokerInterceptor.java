@@ -21,18 +21,17 @@ package org.fabric3.pojo.reflection;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
-import org.osoa.sca.NoRegisteredCallbackException;
 import org.osoa.sca.ConversationEndedException;
 
 import org.fabric3.pojo.PojoWorkContextTunnel;
 import org.fabric3.spi.component.AtomicComponent;
-import org.fabric3.spi.component.CallFrame;
+import org.fabric3.spi.invocation.CallFrame;
 import org.fabric3.spi.component.GroupInitializationException;
 import org.fabric3.spi.component.InstanceWrapper;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.TargetDestructionException;
 import org.fabric3.spi.component.TargetResolutionException;
-import org.fabric3.spi.component.WorkContext;
+import org.fabric3.spi.invocation.WorkContext;
 import org.fabric3.spi.component.ExpirationPolicy;
 import org.fabric3.spi.wire.Interceptor;
 import org.fabric3.spi.wire.InvocationRuntimeException;

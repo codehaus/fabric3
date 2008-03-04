@@ -24,6 +24,7 @@ import java.util.List;
 import org.osoa.sca.ConversationEndedException;
 
 import org.fabric3.spi.Lifecycle;
+import org.fabric3.spi.invocation.WorkContext;
 import org.fabric3.scdl.Scope;
 
 

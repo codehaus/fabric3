@@ -23,9 +23,9 @@ import java.util.List;
 import org.fabric3.pojo.PojoWorkContextTunnel;
 import org.fabric3.spi.ObjectCreationException;
 import org.fabric3.spi.ObjectFactory;
+import org.fabric3.spi.invocation.WorkContext;
 import org.fabric3.spi.component.InstanceFactory;
 import org.fabric3.spi.component.InstanceWrapper;
-import org.fabric3.spi.component.WorkContext;
 
 /**
  * @version $Rev$ $Date$

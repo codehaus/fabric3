@@ -22,8 +22,8 @@ import java.util.List;
 
 import org.fabric3.spi.wire.Interceptor;
 import org.fabric3.spi.wire.Message;
-import org.fabric3.spi.component.CallFrame;
-import org.fabric3.spi.component.WorkContext;
+import org.fabric3.spi.invocation.CallFrame;
+import org.fabric3.spi.invocation.WorkContext;
 
 /**
  * Encapsulates an invocation to be processed asynchronously.

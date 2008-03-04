@@ -18,7 +18,7 @@
  */
 package org.fabric3.pojo;
 
-import org.fabric3.spi.component.WorkContext;
+import org.fabric3.spi.invocation.WorkContext;
 
 /**
  * Class for tunneling a WorkContext through the invocation of a user class.

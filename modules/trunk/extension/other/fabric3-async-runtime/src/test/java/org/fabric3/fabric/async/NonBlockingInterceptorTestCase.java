@@ -26,8 +26,8 @@ import static org.easymock.EasyMock.isA;
 import static org.easymock.EasyMock.replay;
 import org.easymock.IAnswer;
 
-import org.fabric3.spi.component.CallFrame;
-import org.fabric3.spi.component.WorkContext;
+import org.fabric3.spi.invocation.CallFrame;
+import org.fabric3.spi.invocation.WorkContext;
 import org.fabric3.spi.services.work.WorkScheduler;
 import org.fabric3.spi.wire.Interceptor;
 import org.fabric3.spi.wire.Message;
