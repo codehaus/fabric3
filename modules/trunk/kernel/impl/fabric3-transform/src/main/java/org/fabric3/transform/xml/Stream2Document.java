@@ -138,8 +138,10 @@ public class Stream2Document extends AbstractPullTransformer<XMLStreamReader, Do
             String attributeNs = reader.getAttributeNamespace(i);
             String localName = reader.getAttributeLocalName(i);
             String value = reader.getAttributeValue(i);
+            String attributePrefix = reader.getAttributePrefix(i);
+            String qualifiedName = attributePrefix == null ? localName : attributePrefix + ":" + localName;
             
-            root.setAttributeNS(attributeNs, localName, value);
+            root.setAttributeNS(attributeNs, qualifiedName, value);
             
         }
         

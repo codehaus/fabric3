@@ -20,18 +20,14 @@ import java.util.Iterator;
 
 import javax.imageio.spi.ServiceRegistry;
 import javax.xml.namespace.QName;
-import javax.xml.stream.XMLStreamReader;
 
 import org.apache.axiom.om.OMElement;
-import org.apache.axiom.om.impl.builder.StAXOMBuilder;
+import org.apache.axiom.om.impl.dom.factory.OMDOMFactory;
 import org.apache.axis2.description.AxisDescription;
 import org.apache.neethi.PolicyEngine;
 import org.apache.neethi.builders.AssertionBuilder;
 import org.apache.neethi.builders.xml.XMLPrimitiveAssertionBuilder;
-import org.fabric3.spi.services.factories.xml.XMLFactory;
-import org.fabric3.transform.xml.Element2Stream;
 import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Reference;
 import org.w3c.dom.Element;
 
 /**
@@ -41,23 +37,19 @@ import org.w3c.dom.Element;
  */
 @EagerInit
 public class NeethiPolicyApplier implements PolicyApplier {
-    
-    private final Element2Stream transformer;
 
     static {
         buildAssertionBuilders();
     }
     
-    public NeethiPolicyApplier(@Reference XMLFactory xmlFactory){
-        transformer = new Element2Stream(xmlFactory.newInputFactoryInstance());
+    public NeethiPolicyApplier() {        
     }
 
     public void applyPolicy(AxisDescription axisDescription, Element policy) {
 
         try {
-            XMLStreamReader reader = transformer.transform(policy, null);
-            StAXOMBuilder builder = new StAXOMBuilder(reader);
-            OMElement policyElement = builder.getDocumentElement();
+        	OMElement policyElement = 
+        		(OMElement) new OMDOMFactory().getDocument().importNode(policy, true);
 
             axisDescription.applyPolicy(PolicyEngine.getPolicy(policyElement));
 
