@@ -66,6 +66,7 @@
                 <version>0.5-SNAPSHOT</version>
                 <configuration>
                     <runtimeVersion>0.5-SNAPSHOT</runtimeVersion>
+		    <systemConfigDir>classes/META-INF</systemConfigDir>
                     <extensions>
                         <!-- JPA Hibernate Extensions -->
                         <dependency>

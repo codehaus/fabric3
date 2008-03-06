@@ -89,6 +89,10 @@ import org.fabric3.spi.classloader.MultiParentClassLoader;
  */
 public class Fabric3ITestMojo extends AbstractMojo {
 
+	private static final String SYSTEM_CONFIG_XML_FILE = "systemConfig.xml";
+	
+	private static final String DEFAULT_SYSTEM_CONFIG_DIR = "test-classes" + File.separator + "META-INF" + File.separator;
+	
     /**
      * POM
      *
@@ -280,6 +284,18 @@ public class Fabric3ITestMojo extends AbstractMojo {
      * @readonly
      */
     public ArtifactFactory artifactFactory;
+    
+    /**
+     * The sub-directory of the project's output directory which contains the systemConfig.xml file. Users 
+     * are limited to specifying the (relative) directory name in this param - the file name is fixed. 
+     * The fixed name is not required by the itest environment but using it retains the relationship between 
+     * the test config file and WEB-INF/systemConfig.xml which contains the same information for the deployed
+     * composite
+     * 
+     * @parameter
+     */
+    public String systemConfigDir;
+    
 
     /**
      * Build output directory.
@@ -288,6 +304,7 @@ public class Fabric3ITestMojo extends AbstractMojo {
      * @required
      */
     protected File outputDirectory;
+    
 
     @SuppressWarnings({"ThrowFromFinallyBlock", "unchecked"})
     public void execute() throws MojoExecutionException, MojoFailureException {
@@ -448,11 +465,25 @@ public class Fabric3ITestMojo extends AbstractMojo {
         future = coordinator.start();
         future.get();
     }
+   
+    private URL getSystemConfig() throws MalformedURLException, MojoExecutionException {
+    	File systemConfig = new File(outputDirectory, DEFAULT_SYSTEM_CONFIG_DIR + SYSTEM_CONFIG_XML_FILE);
+    	if(systemConfigDir != null) {
+    		systemConfig = new File(outputDirectory, systemConfigDir + File.separator + SYSTEM_CONFIG_XML_FILE);
+    		if(!systemConfig.exists()) {
+    			//The user has explicitly attempted to configure the system config location but the information is incorrect                    
+    			throw new MojoExecutionException("Failed to find the system config information in: " + systemConfig.getAbsolutePath()); 
+    		}               
+    	}
 
-    private URL getSystemConfig() throws MalformedURLException {
-        File systemConfig = new File(outputDirectory, "classes" + File.separator + "META-INF" + File.separator + "systemConfig.xml");
+    	Log log = getLog();
+    	if (log.isDebugEnabled()) {
+    		log.debug("Using system config information from: " + systemConfig.getAbsolutePath());   
+    	}                       
+              
         return systemConfig.exists() ? systemConfig.toURL() : null;
-    }
+     }
+    
 
     private ClassLoader createBootClassLoader(ClassLoader parent, Set<Artifact> artifacts)
             throws MojoExecutionException {
