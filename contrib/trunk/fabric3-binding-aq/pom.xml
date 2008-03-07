@@ -51,6 +51,12 @@
 
 		<dependency>
 			<groupId>org.codehaus.fabric3</groupId>
+			<artifactId>fabric3-introspection-spi</artifactId>
+			<version>0.5-SNAPSHOT</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.codehaus.fabric3</groupId>
 			<artifactId>fabric3-extension</artifactId>
 			<version>0.5-SNAPSHOT</version>
 		</dependency>
@@ -84,13 +90,13 @@
 			<artifactId>commons-logging-api</artifactId>
 			<version>1.0.4</version>
 		</dependency>
-		
+
 		<dependency>
-			<groupId>commons-io</groupId> 
-  			<artifactId>commons-io</artifactId>
-  			<version>1.2</version>
-  		</dependency>	 
-		
+			<groupId>commons-io</groupId>
+			<artifactId>commons-io</artifactId>
+			<version>1.2</version>
+		</dependency>
+
 
 		<dependency>
 			<groupId>com.oracle</groupId>
@@ -154,9 +160,15 @@
 
 
 	<scm>
-		<connection>scm:svn:http://svn.codehaus.org/fabric3/contrib/trunk/fabric3-binding-aq</connection>
-		<developerConnection>scm:svn:https://svn.codehaus.org/fabric3/contrib/trunk/fabric3-binding-aq</developerConnection>
-		<url>http://svn.fabric3.codehaus.org/browse/fabric3/contrib/trunk/fabric3-binding-aq</url>
+		<connection>
+			scm:svn:http://svn.codehaus.org/fabric3/contrib/trunk/fabric3-binding-aq
+		</connection>
+		<developerConnection>
+			scm:svn:https://svn.codehaus.org/fabric3/contrib/trunk/fabric3-binding-aq
+		</developerConnection>
+		<url>
+			http://svn.fabric3.codehaus.org/browse/fabric3/contrib/trunk/fabric3-binding-aq
+		</url>
 	</scm>
 
 </project>
