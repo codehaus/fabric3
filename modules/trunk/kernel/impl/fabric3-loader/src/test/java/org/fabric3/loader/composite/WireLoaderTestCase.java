@@ -25,6 +25,8 @@ import junit.framework.TestCase;
 
 import org.fabric3.scdl.WireDefinition;
 import org.fabric3.introspection.xml.LoaderException;
+import org.fabric3.introspection.xml.LoaderHelper;
+import org.fabric3.loader.common.DefaultLoaderHelper;
 
 import org.easymock.EasyMock;
 
@@ -59,7 +61,8 @@ public class WireLoaderTestCase extends TestCase {
 
     protected void setUp() throws Exception {
         super.setUp();
-        wireLoader = new WireLoader();
+        LoaderHelper helper = new DefaultLoaderHelper();
+        wireLoader = new WireLoader(helper);
         reader = EasyMock.createStrictMock(XMLStreamReader.class);
     }
 }

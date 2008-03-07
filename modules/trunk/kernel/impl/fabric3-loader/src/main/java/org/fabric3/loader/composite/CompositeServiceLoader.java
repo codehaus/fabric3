@@ -36,7 +36,6 @@ import org.fabric3.scdl.OperationDefinition;
 import org.fabric3.scdl.ServiceContract;
 import org.fabric3.introspection.xml.Loader;
 import org.fabric3.introspection.xml.LoaderException;
-import org.fabric3.introspection.xml.LoaderUtil;
 import org.fabric3.introspection.xml.LoaderHelper;
 import org.fabric3.introspection.xml.TypeLoader;
 import org.fabric3.introspection.xml.UnrecognizedElementException;
@@ -68,7 +67,7 @@ public class CompositeServiceLoader implements TypeLoader<CompositeService> {
         }
 
         CompositeService def = new CompositeService(name, null);
-        def.setPromote(LoaderUtil.getURI(promote));
+        def.setPromote(loaderHelper.getURI(promote));
 
         loaderHelper.loadPolicySetsAndIntents(def, reader);
         boolean callback = false;

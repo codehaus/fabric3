@@ -29,6 +29,7 @@ import junit.framework.TestCase;
 import org.easymock.EasyMock;
 import static org.easymock.EasyMock.expect;
 import static org.easymock.EasyMock.replay;
+import static org.easymock.EasyMock.verify;
 
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.xml.LoaderException;
@@ -62,42 +63,51 @@ public class CompositeServiceLoaderTestCase extends TestCase {
     public void testPromotedComponent() throws LoaderException, XMLStreamException {
         expect(mockReader.getAttributeValue(null, "name")).andReturn(serviceName);
         expect(mockReader.getAttributeValue(null, "promote")).andReturn(componentName);
+        expect(mockLoaderHelper.getURI(componentName)).andReturn(componentURI);
+        mockLoaderHelper.loadPolicySetsAndIntents(EasyMock.isA(CompositeService.class), EasyMock.same(mockReader));
         expect(mockReader.next()).andReturn(END_ELEMENT);
-        replay(mockReader);
+        replay(mockReader, mockLoaderHelper);
         CompositeService serviceDefinition = loader.load(mockReader, introspectionContext);
         assertNotNull(serviceDefinition);
         assertEquals(serviceName, serviceDefinition.getName());
         assertEquals(componentURI, serviceDefinition.getPromote());
+        verify(mockReader, mockLoaderHelper);
     }
 
     public void testPromotedService() throws LoaderException, XMLStreamException {
         expect(mockReader.getAttributeValue(null, "name")).andReturn(serviceName);
         expect(mockReader.getAttributeValue(null, "promote")).andReturn(componentServiceName);
+        expect(mockLoaderHelper.getURI(componentServiceName)).andReturn(componentServiceURI);
+        mockLoaderHelper.loadPolicySetsAndIntents(EasyMock.isA(CompositeService.class), EasyMock.same(mockReader));
         expect(mockReader.next()).andReturn(END_ELEMENT);
-        replay(mockReader);
+        replay(mockReader, mockLoaderHelper);
         CompositeService serviceDefinition = loader.load(mockReader, introspectionContext);
         assertNotNull(serviceDefinition);
         assertEquals(serviceName, serviceDefinition.getName());
         assertEquals(componentServiceURI, serviceDefinition.getPromote());
+        verify(mockReader, mockLoaderHelper);
     }
 
     public void testMultipleBindings() throws LoaderException, XMLStreamException {
         expect(mockReader.getAttributeValue(null, "name")).andReturn(serviceName);
         expect(mockReader.getAttributeValue(null, "promote")).andReturn(componentName);
+        expect(mockLoaderHelper.getURI(componentName)).andReturn(componentURI);
+        mockLoaderHelper.loadPolicySetsAndIntents(EasyMock.isA(CompositeService.class), EasyMock.same(mockReader));
+
         expect(mockReader.next()).andReturn(START_ELEMENT);
         expect(mockReader.getName()).andReturn(NAME);
         expect(mockReader.next()).andReturn(START_ELEMENT);
         expect(mockReader.getName()).andReturn(NAME);
         expect(mockReader.next()).andReturn(END_ELEMENT);
-        replay(mockReader);
 
         BindingDefinition binding = new BindingDefinition(null) {
         };
         expect(mockRegistry.load(mockReader, ModelObject.class, introspectionContext)).andReturn(binding).times(2);
-        replay(mockRegistry);
+        replay(mockReader, mockLoaderHelper, mockRegistry);
 
         ServiceDefinition serviceDefinition = loader.load(mockReader, introspectionContext);
         assertEquals(2, serviceDefinition.getBindings().size());
+        verify(mockReader, mockLoaderHelper, mockRegistry);
     }
 
     public void testWithInterface() throws LoaderException, XMLStreamException {
@@ -114,16 +124,19 @@ public class CompositeServiceLoaderTestCase extends TestCase {
         };
         expect(mockReader.getAttributeValue(null, "name")).andReturn(serviceName);
         expect(mockReader.getAttributeValue(null, "promote")).andReturn(componentName);
+        expect(mockLoaderHelper.getURI(componentName)).andReturn(componentURI);
+        mockLoaderHelper.loadPolicySetsAndIntents(EasyMock.isA(CompositeService.class), EasyMock.same(mockReader));
+
         expect(mockReader.next()).andReturn(START_ELEMENT);
         expect(mockReader.getName()).andReturn(NAME);
         expect(mockRegistry.load(mockReader, ModelObject.class, introspectionContext)).andReturn(sc);
         expect(mockReader.next()).andReturn(END_ELEMENT);
 
-        replay(mockReader);
-        replay(mockRegistry);
+        replay(mockReader, mockLoaderHelper, mockRegistry);
 
         ServiceDefinition serviceDefinition = loader.load(mockReader, introspectionContext);
         assertSame(sc, serviceDefinition.getServiceContract());
+        verify(mockReader, mockLoaderHelper, mockRegistry);
     }
 
     protected void setUp() throws Exception {

@@ -20,29 +20,28 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
+import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
-import javax.xml.namespace.QName;
 
-import org.osoa.sca.annotations.Reference;
 import static org.osoa.sca.Constants.SCA_NS;
+import org.osoa.sca.annotations.Reference;
 
+import org.fabric3.introspection.IntrospectionContext;
+import org.fabric3.introspection.xml.InvalidReferenceException;
+import org.fabric3.introspection.xml.InvalidValueException;
+import org.fabric3.introspection.xml.Loader;
+import org.fabric3.introspection.xml.LoaderException;
+import org.fabric3.introspection.xml.LoaderHelper;
+import org.fabric3.introspection.xml.TypeLoader;
+import org.fabric3.introspection.xml.UnrecognizedElementException;
 import org.fabric3.scdl.BindingDefinition;
 import org.fabric3.scdl.ComponentReference;
 import org.fabric3.scdl.ModelObject;
 import org.fabric3.scdl.Multiplicity;
 import org.fabric3.scdl.OperationDefinition;
 import org.fabric3.scdl.ServiceContract;
-import org.fabric3.introspection.xml.InvalidReferenceException;
-import org.fabric3.introspection.xml.InvalidValueException;
-import org.fabric3.introspection.xml.Loader;
-import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.introspection.xml.LoaderException;
-import org.fabric3.introspection.xml.LoaderUtil;
-import org.fabric3.introspection.xml.LoaderHelper;
-import org.fabric3.introspection.xml.TypeLoader;
-import org.fabric3.introspection.xml.UnrecognizedElementException;
 
 /**
  * Loads a reference from an XML-based assembly file
@@ -83,7 +82,7 @@ public class ComponentReferenceLoader implements TypeLoader<ComponentReference> 
             StringTokenizer tokenizer = new StringTokenizer(target);
             while (tokenizer.hasMoreTokens()) {
                 String token = tokenizer.nextToken();
-                uris.add(LoaderUtil.getURI(token));
+                uris.add(loaderHelper.getURI(token));
             }
         }
         reference.getTargets().addAll(uris);

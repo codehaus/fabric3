@@ -17,19 +17,28 @@
 package org.fabric3.loader.composite;
 
 import java.net.URI;
-import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
 
-import org.fabric3.introspection.xml.TypeLoader;
+import org.osoa.sca.annotations.Reference;
+
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.xml.LoaderException;
+import org.fabric3.introspection.xml.LoaderHelper;
 import org.fabric3.introspection.xml.LoaderUtil;
+import org.fabric3.introspection.xml.TypeLoader;
 import org.fabric3.scdl.WireDefinition;
 
 /**
  * @version $Rev$ $Date$
  */
 public class WireLoader implements TypeLoader<WireDefinition> {
+    private final LoaderHelper helper;
+
+    public WireLoader(@Reference LoaderHelper helper) {
+        this.helper = helper;
+    }
+
     public WireDefinition load(XMLStreamReader reader, IntrospectionContext context)
             throws XMLStreamException, LoaderException {
 
@@ -37,8 +46,8 @@ public class WireLoader implements TypeLoader<WireDefinition> {
         String target = reader.getAttributeValue(null, "target");
         LoaderUtil.skipToEndElement(reader);
 
-        URI sourceURI = LoaderUtil.getURI(source);
-        URI targetURI = LoaderUtil.getURI(target);
+        URI sourceURI = helper.getURI(source);
+        URI targetURI = helper.getURI(target);
         return new WireDefinition(sourceURI, targetURI);
     }
 }

@@ -122,7 +122,7 @@ public class CompositeReferenceLoader implements TypeLoader<CompositeReference> 
         }
         StringTokenizer tokenizer = new StringTokenizer(promoted, " ");
         while (tokenizer.hasMoreTokens()) {
-            URI uri = LoaderUtil.getURI(tokenizer.nextToken());
+            URI uri = loaderHelper.getURI(tokenizer.nextToken());
             referenceDefinition.addPromotedUri(uri);
         }
 
