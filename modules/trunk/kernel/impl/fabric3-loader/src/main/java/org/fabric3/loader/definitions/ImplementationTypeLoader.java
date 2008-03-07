@@ -23,16 +23,18 @@ import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
+import org.osoa.sca.annotations.Destroy;
 import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.scdl.definitions.ImplementationType;
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.xml.LoaderException;
+import org.fabric3.introspection.xml.LoaderHelper;
 import org.fabric3.introspection.xml.LoaderRegistry;
 import org.fabric3.introspection.xml.LoaderUtil;
 import org.fabric3.introspection.xml.TypeLoader;
-import org.fabric3.spi.util.stax.StaxUtil;
+import org.fabric3.scdl.definitions.ImplementationType;
 
 /**
  * Loader for definitions.
@@ -42,13 +44,23 @@ import org.fabric3.spi.util.stax.StaxUtil;
 @EagerInit
 public class ImplementationTypeLoader implements TypeLoader<ImplementationType> {
 
-    /**
-     * Registers the loader with the registry.
-     *
-     * @param registry Injected registry
-     */
-    public ImplementationTypeLoader(@Reference LoaderRegistry registry) {
+    private final LoaderRegistry registry;
+    private final LoaderHelper helper;
+
+    public ImplementationTypeLoader(@Reference LoaderRegistry registry,
+                                    @Reference LoaderHelper helper) {
+        this.registry = registry;
+        this.helper = helper;
+    }
+
+    @Init
+    public void init() {
         registry.registerLoader(DefinitionsLoader.IMPLEMENTATION_TYPE, this);
+    }
+
+    @Destroy
+    public void destroy() {
+        registry.unregisterLoader(DefinitionsLoader.IMPLEMENTATION_TYPE);
     }
 
     public ImplementationType load(XMLStreamReader reader, IntrospectionContext context)
@@ -57,8 +69,8 @@ public class ImplementationTypeLoader implements TypeLoader<ImplementationType> 
         String name = reader.getAttributeValue(null, "name");
         QName qName = new QName(context.getTargetNamespace(), name);
 
-        Set<QName> alwaysProvides = StaxUtil.parseListOfQNames(reader, "alwaysProvides");
-        Set<QName> mayProvide = StaxUtil.parseListOfQNames(reader, "mayProvide");
+        Set<QName> alwaysProvides = helper.parseListOfQNames(reader, "alwaysProvides");
+        Set<QName> mayProvide = helper.parseListOfQNames(reader, "mayProvide");
 
         LoaderUtil.skipToEndElement(reader);
 

@@ -31,13 +31,15 @@ import javax.xml.stream.XMLStreamReader;
 
 import junit.framework.TestCase;
 
+import org.fabric3.introspection.IntrospectionContext;
+import org.fabric3.introspection.xml.LoaderException;
+import org.fabric3.introspection.xml.LoaderHelper;
+import org.fabric3.introspection.xml.LoaderRegistry;
+import org.fabric3.introspection.xml.TypeLoader;
+import org.fabric3.loader.common.DefaultLoaderHelper;
 import org.fabric3.scdl.definitions.AbstractDefinition;
 import org.fabric3.scdl.definitions.Intent;
 import org.fabric3.scdl.definitions.PolicySet;
-import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.introspection.xml.LoaderException;
-import org.fabric3.introspection.xml.LoaderRegistry;
-import org.fabric3.introspection.xml.TypeLoader;
 import org.fabric3.spi.services.contribution.QNameSymbol;
 import org.fabric3.spi.services.contribution.Resource;
 import org.fabric3.spi.services.contribution.ResourceElement;
@@ -109,8 +111,9 @@ public class DefinitionsLoaderTestCase extends TestCase {
         // setup loader infrastructure
         LoaderRegistry loaderRegistry = new MockLoaderRegistry();
         loader = new DefinitionsLoader(null, loaderRegistry);
-        IntentLoader intentLoader = new IntentLoader();
-        PolicySetLoader policySetLoader = new PolicySetLoader(loaderRegistry);
+        LoaderHelper helper = new DefaultLoaderHelper();
+        IntentLoader intentLoader = new IntentLoader(helper);
+        PolicySetLoader policySetLoader = new PolicySetLoader(loaderRegistry, helper);
         policySetLoader.init();
         loaderRegistry.registerLoader(DefinitionsLoader.INTENT, intentLoader);
 

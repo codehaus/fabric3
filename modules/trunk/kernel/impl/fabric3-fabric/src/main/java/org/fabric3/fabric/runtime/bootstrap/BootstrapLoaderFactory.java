@@ -43,7 +43,7 @@ import org.fabric3.introspection.impl.DefaultIntrospectionHelper;
 import org.fabric3.introspection.xml.Loader;
 import org.fabric3.loader.common.ComponentReferenceLoader;
 import org.fabric3.loader.common.ComponentServiceLoader;
-import org.fabric3.loader.common.DefaultPolicyHelper;
+import org.fabric3.loader.common.DefaultLoaderHelper;
 import org.fabric3.loader.common.PropertyHelperImpl;
 import org.fabric3.loader.common.PropertyLoader;
 import org.fabric3.loader.composite.ComponentLoader;
@@ -79,7 +79,7 @@ public class BootstrapLoaderFactory {
         PropertyLoader propertyLoader = new PropertyLoader(propertyHelper);
         PropertyValueLoader propertyValueLoader = new PropertyValueLoader(propertyHelper);
 
-        LoaderHelper loaderHelper = new DefaultPolicyHelper();
+        LoaderHelper loaderHelper = new DefaultLoaderHelper();
         ComponentReferenceLoader componentReferenceLoader = new ComponentReferenceLoader(loader, loaderHelper);
         ComponentServiceLoader componentServiceLoader = new ComponentServiceLoader(loader, loaderHelper);
         ComponentLoader componentLoader = new ComponentLoader(loader,

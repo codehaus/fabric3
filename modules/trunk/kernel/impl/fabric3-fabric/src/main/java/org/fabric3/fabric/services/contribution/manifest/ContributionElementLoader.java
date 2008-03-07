@@ -37,10 +37,10 @@ import org.fabric3.loader.common.MissingAttributeException;
 import org.fabric3.introspection.xml.LoaderException;
 import org.fabric3.introspection.xml.LoaderRegistry;
 import org.fabric3.introspection.xml.TypeLoader;
+import org.fabric3.introspection.xml.LoaderHelper;
 import org.fabric3.spi.services.contribution.ContributionManifest;
 import org.fabric3.spi.services.contribution.Export;
 import org.fabric3.spi.services.contribution.Import;
-import org.fabric3.spi.util.stax.StaxUtil;
 
 /**
  * Loads a contribution manifest from a contribution element
@@ -53,9 +53,12 @@ public class ContributionElementLoader implements TypeLoader<ContributionManifes
     private static final QName DEPLOYABLE = new QName(SCA_NS, "deployable");
 
     private final LoaderRegistry registry;
+    private final LoaderHelper helper;
 
-    public ContributionElementLoader(@Reference LoaderRegistry registry) {
+    public ContributionElementLoader(@Reference LoaderRegistry registry,
+                                     @Reference LoaderHelper helper) {
         this.registry = registry;
+        this.helper = helper;
     }
 
     @Init
@@ -83,7 +86,7 @@ public class ContributionElementLoader implements TypeLoader<ContributionManifes
                     if (name == null) {
                         throw new MissingAttributeException("Composite attribute must be specified", "composite");
                     }
-                    QName qName = StaxUtil.createQName(name, reader);
+                    QName qName = helper.createQName(name, reader);
                     Deployable deployable = new Deployable(qName, Constants.COMPOSITE_TYPE);
                     contribution.addDeployable(deployable);
                 } else {

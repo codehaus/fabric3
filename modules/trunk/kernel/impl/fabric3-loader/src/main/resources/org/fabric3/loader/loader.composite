@@ -124,7 +124,7 @@
 
     <!-- Policy helper -->
     <component name="loaderHelper">
-        <system:implementation.system class="org.fabric3.loader.common.DefaultPolicyHelper"/>
+        <system:implementation.system class="org.fabric3.loader.common.DefaultLoaderHelper"/>
     </component>
 
 </composite>

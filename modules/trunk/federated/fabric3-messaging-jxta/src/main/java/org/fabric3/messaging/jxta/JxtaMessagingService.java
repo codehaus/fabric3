@@ -40,7 +40,6 @@ import org.fabric3.spi.services.messaging.MessagingEventService;
 import org.fabric3.spi.services.messaging.MessagingException;
 import org.fabric3.spi.services.messaging.MessagingService;
 import org.fabric3.spi.services.messaging.MessagingServiceRegistry;
-import org.fabric3.spi.util.stax.StaxUtil;
 
 /**
  * Messaging service implemented using JXTA.
@@ -112,7 +111,6 @@ public class JxtaMessagingService implements MessagingService {
      *
      * @param runtimeId Runtime id of recipient. If null, the message is broadcasted to all runtimes in the domain.
      * @param content   Message content.
-     * @return The message id.
      * @throws MessagingException In case of Messaging errors.
      */
     public void sendMessage(final URI runtimeId, final XMLStreamReader content) throws MessagingException {

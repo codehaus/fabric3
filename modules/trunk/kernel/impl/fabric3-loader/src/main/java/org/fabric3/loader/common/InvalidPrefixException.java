@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.spi.util.stax;
+package org.fabric3.loader.common;
 
 import org.fabric3.introspection.xml.LoaderException;
 

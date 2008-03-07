@@ -19,52 +19,64 @@
 package org.fabric3.loader.definitions;
 
 import java.util.Set;
-
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
-import org.fabric3.scdl.definitions.BindingType;
+import org.osoa.sca.annotations.Destroy;
+import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Init;
+import org.osoa.sca.annotations.Reference;
+
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.xml.LoaderException;
+import org.fabric3.introspection.xml.LoaderHelper;
 import org.fabric3.introspection.xml.LoaderRegistry;
 import org.fabric3.introspection.xml.LoaderUtil;
 import org.fabric3.introspection.xml.TypeLoader;
-import org.fabric3.spi.util.stax.StaxUtil;
-
-import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Reference;
+import org.fabric3.scdl.definitions.BindingType;
 
 /**
  * Loader for definitions.
- * 
+ *
  * @version $Revision$ $Date$
  */
 @EagerInit
 public class BindingTypeLoader implements TypeLoader<BindingType> {
 
-    /**
-     * Registers the loader with the registry.
-     * @param registry Injected registry
-     */
-    public BindingTypeLoader(@Reference LoaderRegistry registry) {
+    private final LoaderRegistry registry;
+    private final LoaderHelper helper;
+
+    public BindingTypeLoader(@Reference LoaderRegistry registry,
+                             @Reference LoaderHelper helper) {
+        this.registry = registry;
+        this.helper = helper;
+    }
+
+    @Init
+    public void init() {
         registry.registerLoader(DefinitionsLoader.BINDING_TYPE, this);
     }
 
+    @Destroy
+    public void destroy() {
+        registry.unregisterLoader(DefinitionsLoader.BINDING_TYPE);
+    }
+
     public BindingType load(XMLStreamReader reader, IntrospectionContext context) throws XMLStreamException, LoaderException {
-        
+
 
         String name = reader.getAttributeValue(null, "name");
         QName qName = new QName(context.getTargetNamespace(), name);
-        
-        Set<QName> alwaysProvides = StaxUtil.parseListOfQNames(reader, "alwaysProvides");
-        Set<QName> mayProvide = StaxUtil.parseListOfQNames(reader, "mayProvide");
-        
+
+        Set<QName> alwaysProvides = helper.parseListOfQNames(reader, "alwaysProvides");
+        Set<QName> mayProvide = helper.parseListOfQNames(reader, "mayProvide");
+
         LoaderUtil.skipToEndElement(reader);
-        
+
         return new BindingType(qName, alwaysProvides, mayProvide);
 
-        
+
     }
 
 }

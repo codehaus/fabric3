@@ -16,11 +16,8 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.spi.util.stax;
+package org.fabric3.messaging.jxta;
 
-import java.util.HashSet;
-import java.util.Set;
-import java.util.StringTokenizer;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
@@ -34,30 +31,6 @@ import javax.xml.stream.XMLStreamReader;
 public abstract class StaxUtil {
 
     private StaxUtil() {
-    }
-
-    /**
-     * Parses a list of qualified names.
-     *
-     * @param reader    XML stream reader.
-     * @param attribute Attribute that contains the list of qualified names.
-     * @return Set containing the qualified names.
-     * @throws InvalidPrefixException If the qualified name cannot be resolved.
-     */
-    public static Set<QName> parseListOfQNames(XMLStreamReader reader, String attribute) throws InvalidPrefixException {
-
-        Set<QName> qNames = new HashSet<QName>();
-
-        String val = reader.getAttributeValue(null, attribute);
-        if (val != null) {
-            StringTokenizer tok = new StringTokenizer(val);
-            while (tok.hasMoreElements()) {
-                qNames.add(StaxUtil.createQName(tok.nextToken(), reader));
-            }
-        }
-
-        return qNames;
-
     }
 
     /**
@@ -106,33 +79,6 @@ public abstract class StaxUtil {
             reader.close();
         }
 
-    }
-
-    /**
-     * Constructs a QName from the given name. If a namespace prefix is not specified in the name, the namespace context is used
-     *
-     * @param name   the name to parse
-     * @param reader the XML stream reader
-     * @return the parsed QName
-     * @throws InvalidPrefixException if a specified namespace prefix is invalid
-     */
-    public static QName createQName(String name, XMLStreamReader reader) throws InvalidPrefixException {
-        QName qName;
-        int index = name.indexOf(':');
-        if (index != -1) {
-            String prefix = name.substring(0, index);
-            String localPart = name.substring(index + 1);
-            String ns = reader.getNamespaceContext().getNamespaceURI(prefix);
-            if (ns == null) {
-                throw new InvalidPrefixException("Invalid prefix: " + prefix, prefix);
-            }
-            qName = new QName(ns, localPart, prefix);
-        } else {
-            String prefix = "";
-            String ns = reader.getNamespaceURI();
-            qName = new QName(ns, name, prefix);
-        }
-        return qName;
     }
 
     /*

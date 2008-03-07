@@ -27,11 +27,13 @@ import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
+import org.osoa.sca.annotations.Reference;
+
 import org.fabric3.scdl.definitions.Intent;
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.xml.LoaderException;
 import org.fabric3.introspection.xml.TypeLoader;
-import org.fabric3.spi.util.stax.StaxUtil;
+import org.fabric3.introspection.xml.LoaderHelper;
 
 /**
  * Loader for definitions.
@@ -39,6 +41,12 @@ import org.fabric3.spi.util.stax.StaxUtil;
  * @version $Revision$ $Date$
  */
 public class IntentLoader implements TypeLoader<Intent> {
+
+    private final LoaderHelper helper;
+
+    public IntentLoader(@Reference LoaderHelper helper) {
+        this.helper = helper;
+    }
 
     public Intent load(XMLStreamReader reader, IntrospectionContext context) throws XMLStreamException, LoaderException {
         
@@ -48,7 +56,7 @@ public class IntentLoader implements TypeLoader<Intent> {
         String constrainsVal = reader.getAttributeValue(null, "constrains");
         QName constrains = null;
         if(constrainsVal != null) {
-            constrains = StaxUtil.createQName(constrainsVal, reader);
+            constrains = helper.createQName(constrainsVal, reader);
         }
         
         String description = null;
@@ -58,7 +66,7 @@ public class IntentLoader implements TypeLoader<Intent> {
         if(requiresVal != null) {
             StringTokenizer tok = new StringTokenizer(requiresVal);
             while(tok.hasMoreElements()) {
-                requires.add(StaxUtil.createQName(tok.nextToken(), reader));
+                requires.add(helper.createQName(tok.nextToken(), reader));
             }
         }
         
