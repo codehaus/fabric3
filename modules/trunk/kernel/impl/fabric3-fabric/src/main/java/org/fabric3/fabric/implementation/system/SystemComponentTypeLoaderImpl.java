@@ -20,14 +20,14 @@ package org.fabric3.fabric.implementation.system;
 
 import org.osoa.sca.annotations.Reference;
 
+import org.fabric3.introspection.IntrospectionContext;
+import org.fabric3.introspection.java.ImplementationNotFoundException;
+import org.fabric3.introspection.java.IntrospectionHelper;
+import org.fabric3.introspection.xml.LoaderException;
+import org.fabric3.introspection.xml.MissingResourceException;
 import org.fabric3.pojo.processor.Introspector;
-import org.fabric3.pojo.processor.ProcessingException;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.Scope;
-import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.introspection.xml.LoaderException;
-import org.fabric3.introspection.xml.LoaderUtil;
-import org.fabric3.introspection.xml.MissingResourceException;
 
 /**
  * Loads a system component type
@@ -36,9 +36,12 @@ import org.fabric3.introspection.xml.MissingResourceException;
  */
 public class SystemComponentTypeLoaderImpl implements SystemComponentTypeLoader {
     private final Introspector introspector;
+    private final IntrospectionHelper helper;
 
-    public SystemComponentTypeLoaderImpl(@Reference Introspector introspector) {
+    public SystemComponentTypeLoaderImpl(@Reference Introspector introspector,
+                                         @Reference IntrospectionHelper helper) {
         this.introspector = introspector;
+        this.helper = helper;
     }
 
     public void load(SystemImplementation implementation, IntrospectionContext introspectionContext) throws LoaderException {
@@ -49,11 +52,15 @@ public class SystemComponentTypeLoaderImpl implements SystemComponentTypeLoader 
     }
 
     protected PojoComponentType loadByIntrospection(SystemImplementation implementation, IntrospectionContext context)
-            throws ProcessingException, MissingResourceException {
-        ClassLoader cl = context.getTargetClassLoader();
-        Class<?> implClass = LoaderUtil.loadClass(implementation.getImplementationClass(), cl);
-        PojoComponentType componentType = new PojoComponentType(implClass.getName());
-        introspector.introspect(implClass, componentType, context);
-        return componentType;
+            throws LoaderException {
+        try {
+            ClassLoader cl = context.getTargetClassLoader();
+            Class<?> implClass = helper.loadClass(implementation.getImplementationClass(), cl);
+            PojoComponentType componentType = new PojoComponentType(implClass.getName());
+            introspector.introspect(implClass, componentType, context);
+            return componentType;
+        } catch (ImplementationNotFoundException e) {
+            throw new MissingResourceException(null, implementation.getImplementationClass(), e);
+        }
     }
 }

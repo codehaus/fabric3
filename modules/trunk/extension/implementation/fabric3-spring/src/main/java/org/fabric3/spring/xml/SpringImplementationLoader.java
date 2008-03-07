@@ -18,9 +18,6 @@
  */
 package org.fabric3.spring.xml;
 
-import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
-import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -34,55 +31,53 @@ import java.util.jar.Attributes;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
-
 import javax.xml.namespace.QName;
+import javax.xml.stream.XMLInputFactory;
+import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
+import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
-import org.osoa.sca.Constants;
 import org.osoa.sca.annotations.Reference;
-
-import javax.xml.stream.XMLInputFactory;
-
-import org.fabric3.pojo.processor.IntrospectionRegistry;
-import org.fabric3.pojo.processor.ProcessingException;
-import org.fabric3.pojo.scdl.PojoComponentType;
-import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.introspection.xml.LoaderException;
-import org.fabric3.introspection.xml.LoaderUtil;
-import org.fabric3.introspection.xml.MissingResourceException;
-import org.fabric3.introspection.xml.LoaderHelper;
-import org.fabric3.introspection.xml.TypeLoader;
-import org.fabric3.spring.SpringComponentType;
-import org.fabric3.spring.SpringImplementation;
-import org.fabric3.scdl.ServiceDefinition;
-import org.fabric3.scdl.ReferenceDefinition;
-
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 
+import org.fabric3.introspection.IntrospectionContext;
+import org.fabric3.introspection.java.ImplementationNotFoundException;
+import org.fabric3.introspection.java.IntrospectionHelper;
+import org.fabric3.introspection.xml.LoaderException;
+import org.fabric3.introspection.xml.LoaderHelper;
+import org.fabric3.introspection.xml.LoaderUtil;
+import org.fabric3.introspection.xml.MissingResourceException;
+import org.fabric3.introspection.xml.TypeLoader;
+import org.fabric3.pojo.processor.IntrospectionRegistry;
+import org.fabric3.pojo.scdl.PojoComponentType;
+import org.fabric3.scdl.ReferenceDefinition;
+import org.fabric3.scdl.ServiceDefinition;
+import org.fabric3.spring.SpringComponentType;
+import org.fabric3.spring.SpringImplementation;
+
 public class SpringImplementationLoader implements TypeLoader<SpringImplementation> {
     private static final String SPRING_NS = "http://www.springframework.org/schema/beans";
-    private static final QName SERVICE_ELEMENT = new QName(Constants.SCA_NS, "service");
-    private static final QName REFERENCE_ELEMENT = new QName(Constants.SCA_NS, "reference");
-    private static final QName SCAPROPERTY_ELEMENT = new QName(Constants.SCA_NS, "property");
     private static final QName BEANS_ELEMENT = new QName("beans");
     private static final QName BEAN_ELEMENT = new QName("bean");
-    private static final QName PROPERTY_ELEMENT = new QName(SPRING_NS, "property");
     private static final String APPLICATION_CONTEXT = "application-context.xml";
 
     private final SpringComponentTypeLoader componentTypeLoader;
     private final LoaderHelper loaderHelper;
     private final IntrospectionRegistry introspector;
+    private final IntrospectionHelper introspectionHelper;
 
     private boolean debug = false;
 
     public SpringImplementationLoader(@Reference SpringComponentTypeLoader componentTypeLoader,
                                       @Reference LoaderHelper loaderHelper,
-                                      @Reference IntrospectionRegistry introspector) {
+                                      @Reference IntrospectionRegistry introspector,
+                                      @Reference IntrospectionHelper introspectionHelper) {
         this.componentTypeLoader = componentTypeLoader;
         this.loaderHelper = loaderHelper;
         this.introspector = introspector;
+        this.introspectionHelper = introspectionHelper;
     }
 
 
@@ -201,7 +196,8 @@ public class SpringImplementationLoader implements TypeLoader<SpringImplementati
         generateSpringComponentType(beans, implementation, introspectionContext);
     }
     
-    protected void generateSpringComponentType(List<SpringBeanElement> beanElements, SpringImplementation implementation, IntrospectionContext introspectionContext) {
+    protected void generateSpringComponentType(List<SpringBeanElement> beanElements, SpringImplementation implementation, IntrospectionContext introspectionContext)
+            throws LoaderException {
         SpringComponentType springComponentType = implementation.getComponentType();
         
         // don't need this if explicit service is declared, not DONE
@@ -211,31 +207,28 @@ public class SpringImplementationLoader implements TypeLoader<SpringImplementati
         for (SpringBeanElement beanElement : beanElements) {
             Class<?> implClass;
             try {
-                implClass = LoaderUtil.loadClass(beanElement.getClassName(), introspectionContext.getTargetClassLoader());
-                PojoComponentType pojoComponentType = new PojoComponentType(implClass.getName());
-                introspector.introspect(implClass, pojoComponentType, introspectionContext);
-                springComponentType.getServices().putAll(pojoComponentType.getServices());
-                
-                // TODO work around: Use @Reference in spring bean to create a reference for now
-                // Don't need @Reference in spring bean to get a reference
-                // <property ... ref="..."> should trigger a reference creation
-                springComponentType.getReferences().putAll(pojoComponentType.getReferences());
-                for (Map.Entry<String, ReferenceDefinition> entry : pojoComponentType.getReferences().entrySet()) {
-                    for (Field f : implClass.getDeclaredFields()) {
-                        if (f.getName().equals(entry.getKey())) {
-                            implementation.addRefNameToFieldType(entry.getKey(), f.getType());
-                        }
+                implClass = introspectionHelper.loadClass(beanElement.getClassName(), introspectionContext.getTargetClassLoader());
+            } catch (ImplementationNotFoundException e) {
+                throw new MissingResourceException(null, beanElement.getClassName(), e);
+            }
+
+            PojoComponentType pojoComponentType = new PojoComponentType(implClass.getName());
+            introspector.introspect(implClass, pojoComponentType, introspectionContext);
+            springComponentType.getServices().putAll(pojoComponentType.getServices());
+
+            // TODO work around: Use @Reference in spring bean to create a reference for now
+            // Don't need @Reference in spring bean to get a reference
+            // <property ... ref="..."> should trigger a reference creation
+            springComponentType.getReferences().putAll(pojoComponentType.getReferences());
+            for (Map.Entry<String, ReferenceDefinition> entry : pojoComponentType.getReferences().entrySet()) {
+                for (Field f : implClass.getDeclaredFields()) {
+                    if (f.getName().equals(entry.getKey())) {
+                        implementation.addRefNameToFieldType(entry.getKey(), f.getType());
                     }
                 }
-                for (ServiceDefinition javaMapppdService : pojoComponentType.getServices().values()) {
-                    implementation.addServiceNameToBeanId(javaMapppdService.getName(), beanElement.getId());
-                }
-            } catch (MissingResourceException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            } catch (ProcessingException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
+            }
+            for (ServiceDefinition javaMapppdService : pojoComponentType.getServices().values()) {
+                implementation.addServiceNameToBeanId(javaMapppdService.getName(), beanElement.getId());
             }
 
         }

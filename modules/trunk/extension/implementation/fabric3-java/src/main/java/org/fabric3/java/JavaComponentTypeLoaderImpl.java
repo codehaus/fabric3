@@ -20,38 +20,44 @@ package org.fabric3.java;
 
 import java.net.URL;
 
-import org.osoa.sca.annotations.Constructor;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.pojo.processor.IntrospectionRegistry;
+import org.fabric3.introspection.IntrospectionContext;
+import org.fabric3.introspection.java.ImplementationNotFoundException;
+import org.fabric3.introspection.java.IntrospectionHelper;
+import org.fabric3.introspection.xml.LoaderException;
+import org.fabric3.introspection.xml.MissingResourceException;
 import org.fabric3.pojo.processor.Introspector;
 import org.fabric3.pojo.processor.JavaIntrospectionHelper;
 import org.fabric3.pojo.processor.ProcessingException;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.Scope;
-import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.introspection.xml.LoaderException;
-import org.fabric3.introspection.xml.LoaderUtil;
-import org.fabric3.introspection.xml.MissingResourceException;
 
 /**
  * @version $Rev$ $Date$
  */
 public class JavaComponentTypeLoaderImpl implements JavaComponentTypeLoader {
     private final Introspector introspector;
+    private final IntrospectionHelper helper;
 
-    @Constructor({"introspector"})
-    public JavaComponentTypeLoaderImpl(@Reference IntrospectionRegistry introspector) {
+    public JavaComponentTypeLoaderImpl(@Reference Introspector introspector,
+                                       @Reference IntrospectionHelper helper) {
         this.introspector = introspector;
+        this.helper = helper;
     }
 
     public void load(JavaImplementation implementation, IntrospectionContext introspectionContext) throws LoaderException {
-        Class<?> implClass =
-                LoaderUtil.loadClass(implementation.getImplementationClass(), introspectionContext.getTargetClassLoader());
+        Class<?> implClass;
+        try {
+            implClass = helper.loadClass(implementation.getImplementationClass(), introspectionContext.getTargetClassLoader());
+        } catch (ImplementationNotFoundException e) {
+            throw new MissingResourceException(null, implementation.getImplementationClass(), e);
+        }
         URL resource = implClass.getResource(JavaIntrospectionHelper.getBaseName(implClass) + ".componentType");
+
         PojoComponentType componentType;
         if (resource == null) {
-            componentType = loadByIntrospection(implementation, introspectionContext);
+            componentType = loadByIntrospection(implClass, introspectionContext);
         } else {
             componentType = loadFromSidefile(resource, introspectionContext);
         }
@@ -61,16 +67,13 @@ public class JavaComponentTypeLoaderImpl implements JavaComponentTypeLoader {
         implementation.setComponentType(componentType);
     }
 
-    protected PojoComponentType loadByIntrospection(JavaImplementation implementation, IntrospectionContext context)
-            throws ProcessingException, MissingResourceException {
-        Class<?> implClass =
-                LoaderUtil.loadClass(implementation.getImplementationClass(), context.getTargetClassLoader());
+    PojoComponentType loadByIntrospection(Class<?> implClass, IntrospectionContext context) throws ProcessingException {
         PojoComponentType componentType = new PojoComponentType(implClass.getName());
         introspector.introspect(implClass, componentType, context);
         return componentType;
     }
 
-    protected PojoComponentType loadFromSidefile(URL url, IntrospectionContext introspectionContext) throws LoaderException {
+    PojoComponentType loadFromSidefile(URL url, IntrospectionContext introspectionContext) throws LoaderException {
         // FIXME we need to merge the loaded componentType information with the introspection result
         throw new UnsupportedOperationException();
 /*

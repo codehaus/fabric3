@@ -64,10 +64,7 @@ public class IntrospectionRegistryImpl implements IntrospectionRegistry {
         cache.remove(processor);
     }
 
-    public PojoComponentType introspect(Class<?> clazz,
-                                        PojoComponentType type,
-                                        IntrospectionContext context)
-        throws ProcessingException {
+    public void introspect(Class<?> clazz, PojoComponentType type, IntrospectionContext context) throws ProcessingException {
 
         TypeMapping typeMapping = helper.mapTypeParameters(clazz);
         context = new IntrospectionContextImpl(context, typeMapping);
@@ -104,7 +101,6 @@ public class IntrospectionRegistryImpl implements IntrospectionRegistry {
         for (ImplementationProcessor processor : cache) {
             processor.visitEnd(clazz, type, context);
         }
-        return type;
     }
 
     private void visitSuperClass(Class<?> clazz,

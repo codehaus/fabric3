@@ -73,13 +73,16 @@ public class BootstrapLoaderFactory {
         XMLFactory xmlFactory = new XMLFactoryImpl();
         LoaderRegistryImpl loader = new LoaderRegistryImpl(monitorFactory.getMonitor(LoaderRegistryImpl.Monitor.class), xmlFactory);
 
-        Introspector introspector = createIntrospector(monitorFactory);
+        IntrospectionHelper helper = new DefaultIntrospectionHelper();
+        LoaderHelper loaderHelper = new DefaultLoaderHelper();
+
+        Introspector introspector = createIntrospector(monitorFactory, helper);
 
         PropertyHelperImpl propertyHelper = new PropertyHelperImpl();
         PropertyLoader propertyLoader = new PropertyLoader(propertyHelper);
         PropertyValueLoader propertyValueLoader = new PropertyValueLoader(propertyHelper);
 
-        LoaderHelper loaderHelper = new DefaultLoaderHelper();
+
         ComponentReferenceLoader componentReferenceLoader = new ComponentReferenceLoader(loader, loaderHelper);
         ComponentServiceLoader componentServiceLoader = new ComponentServiceLoader(loader, loaderHelper);
         ComponentLoader componentLoader = new ComponentLoader(loader,
@@ -99,7 +102,7 @@ public class BootstrapLoaderFactory {
                                                               loaderHelper);
         compositeLoader.init();
 
-        SystemComponentTypeLoader typeLoader = new SystemComponentTypeLoaderImpl(introspector);
+        SystemComponentTypeLoader typeLoader = new SystemComponentTypeLoaderImpl(introspector, helper);
         SystemImplementationLoader implementationLoader = new SystemImplementationLoader(loader, typeLoader);
         implementationLoader.start();
 
@@ -109,9 +112,8 @@ public class BootstrapLoaderFactory {
         return loader;
     }
 
-    private static Introspector createIntrospector(MonitorFactory monitorFactory) {
+    private static Introspector createIntrospector(MonitorFactory monitorFactory, IntrospectionHelper helper) {
 
-        IntrospectionHelper helper = new DefaultIntrospectionHelper();
         ContractProcessor contractProcessor = new DefaultContractProcessor(helper);
         ImplementationProcessorService service = new ImplementationProcessorServiceImpl(contractProcessor, helper);
 

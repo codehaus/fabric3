@@ -20,59 +20,37 @@ package org.fabric3.java;
 
 import junit.framework.TestCase;
 import org.easymock.EasyMock;
-import org.easymock.IAnswer;
 
-import org.fabric3.pojo.processor.IntrospectionRegistry;
-import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.introspection.IntrospectionContext;
+import org.fabric3.introspection.java.IntrospectionHelper;
+import org.fabric3.pojo.processor.Introspector;
+import org.fabric3.pojo.scdl.PojoComponentType;
 
 /**
  * @version $Rev$ $Date$
  */
 public class JavaComponentTypeLoaderTestCase extends TestCase {
 
-    @SuppressWarnings("unchecked")
+    private JavaComponentTypeLoaderImpl loader;
+    private IntrospectionContext context;
+    private Introspector introspector;
+    private IntrospectionHelper helper;
+
     public void testPojoComponentTypeCreatedForIntrospection() throws Exception {
-        IntrospectionRegistry registry = EasyMock.createMock(IntrospectionRegistry.class);
-        registry.introspect(
-                (Class) EasyMock.isA(Object.class),
-                EasyMock.isA(PojoComponentType.class),
-                EasyMock.isA(IntrospectionContext.class));
-        EasyMock.expectLastCall().andStubAnswer(new IAnswer() {
-            public Object answer() throws Throwable {
-                return null;
-            }
-        });
-        ClassLoader cl = Thread.currentThread().getContextClassLoader();
-        IntrospectionContext context = EasyMock.createMock(IntrospectionContext.class);
-        EasyMock.expect(context.getTargetClassLoader()).andStubReturn(cl);
-        EasyMock.replay(registry, context);
-        JavaComponentTypeLoaderImpl loader = new JavaComponentTypeLoaderImpl(registry);
-        JavaImplementation implementation = new JavaImplementation();
-        implementation.setImplementationClass(Object.class.getName());
-        loader.loadByIntrospection(implementation, context);
-        EasyMock.verify(registry, context);
+        introspector.introspect(EasyMock.eq(Object.class), EasyMock.isA(PojoComponentType.class), EasyMock.same(context));
+        EasyMock.replay(introspector, helper, context);
+
+        PojoComponentType componentType = loader.loadByIntrospection(Object.class, context);
+        assertEquals("java.lang.Object", componentType.getImplClass());
+        EasyMock.verify(introspector, helper, context);
     }
 
-/*
-    @SuppressWarnings("unchecked")
-    public void testPojoComponentTypeCreatedForSideFileLoadAndReturned() throws Exception {
-        LoaderRegistry registry = EasyMock.createMock(LoaderRegistry.class);
-        registry.load(
-                (URL) EasyMock.isNull(),
-            EasyMock.eq(PojoComponentType.class),
-            (IntrospectionContext) EasyMock.isNull());
-        EasyMock.expectLastCall().andStubAnswer(new IAnswer() {
-            public Object answer() throws Throwable {
-                return EasyMock.getCurrentArguments()[0];
-            }
-        });
-        EasyMock.replay(registry);
-        JavaComponentTypeLoader loader = new JavaComponentTypeLoader(registry, null);
-        assertEquals(PojoComponentType.class, loader.loadFromSidefile(null, null).getClass());
-        EasyMock.verify(registry);
+    protected void setUp() throws Exception {
+        super.setUp();
+
+        context = EasyMock.createMock(IntrospectionContext.class);
+        introspector = EasyMock.createMock(Introspector.class);
+        helper = EasyMock.createMock(IntrospectionHelper.class);
+        loader = new JavaComponentTypeLoaderImpl(introspector, helper);
     }
-*/
-
-
 }

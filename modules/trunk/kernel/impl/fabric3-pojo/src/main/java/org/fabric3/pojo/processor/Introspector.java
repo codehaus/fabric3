@@ -34,9 +34,8 @@ public interface Introspector {
      * @param clazz   the component implementation class
      * @param type    the component type associated with the implementation class
      * @param context the introspection context
-     * @return the updated component type
      * @throws ProcessingException if an error is encountered evaluating the implementation class
      */
-    PojoComponentType introspect(Class<?> clazz, PojoComponentType type, IntrospectionContext context) throws ProcessingException;
+    void introspect(Class<?> clazz, PojoComponentType type, IntrospectionContext context) throws ProcessingException;
 
 }

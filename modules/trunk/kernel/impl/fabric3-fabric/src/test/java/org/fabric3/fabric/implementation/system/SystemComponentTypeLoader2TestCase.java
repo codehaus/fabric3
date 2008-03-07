@@ -23,12 +23,14 @@ import junit.framework.TestCase;
 import org.easymock.EasyMock;
 import org.easymock.IMocksControl;
 
-import org.fabric3.introspection.java.ClassWalker;
-import org.fabric3.introspection.java.HeuristicProcessor;
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.IntrospectionException;
-import org.fabric3.pojo.scdl.PojoComponentType;
+import org.fabric3.introspection.impl.DefaultIntrospectionHelper;
+import org.fabric3.introspection.java.ClassWalker;
+import org.fabric3.introspection.java.HeuristicProcessor;
+import org.fabric3.introspection.java.IntrospectionHelper;
 import org.fabric3.introspection.xml.LoaderException;
+import org.fabric3.pojo.scdl.PojoComponentType;
 
 /**
  * @version $Rev$ $Date$
@@ -63,6 +65,8 @@ public class SystemComponentTypeLoader2TestCase extends TestCase {
     protected void setUp() throws Exception {
         super.setUp();
         impl = new SystemImplementation();
+        IntrospectionHelper helper = new DefaultIntrospectionHelper();
+
 
         context = EasyMock.createMock(IntrospectionContext.class);
         EasyMock.expect(context.getTargetClassLoader()).andStubReturn(getClass().getClassLoader());
@@ -74,6 +78,6 @@ public class SystemComponentTypeLoader2TestCase extends TestCase {
 
         heuristics = new ArrayList<HeuristicProcessor<SystemImplementation>>();
         heuristics.add(heuristic);
-        this.loader = new SystemComponentTypeLoaderImpl2(classWalker, heuristics);
+        this.loader = new SystemComponentTypeLoaderImpl2(classWalker, heuristics, helper);
     }
 }

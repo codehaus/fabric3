@@ -42,6 +42,7 @@ import org.osoa.sca.annotations.Service;
 import org.fabric3.introspection.IntrospectionException;
 import org.fabric3.introspection.java.IntrospectionHelper;
 import org.fabric3.introspection.java.TypeMapping;
+import org.fabric3.introspection.java.ImplementationNotFoundException;
 import org.fabric3.scdl.InjectableAttributeType;
 import org.fabric3.scdl.ServiceDefinition;
 import org.fabric3.scdl.Signature;
@@ -61,6 +62,22 @@ public class DefaultIntrospectionHelper implements IntrospectionHelper {
         COLLECTIONS.add(Queue.class);
         COLLECTIONS.add(Set.class);
         COLLECTIONS.add(SortedSet.class); }
+
+    public Class<?> loadClass(String name, ClassLoader cl) throws ImplementationNotFoundException {
+        final Thread thread = Thread.currentThread();
+        final ClassLoader oldCL = thread.getContextClassLoader();
+        try {
+            thread.setContextClassLoader(cl);
+            return Class.forName(name, true, cl);
+        } catch (ClassNotFoundException e) {
+            throw new ImplementationNotFoundException(name, e);
+        } catch (NoClassDefFoundError e) {
+            // we trap this error as the most likely cause is a missing dependency on the classpath
+            throw new ImplementationNotFoundException(name, e);
+        } finally {
+            thread.setContextClassLoader(oldCL);
+        }
+    }
 
     public String getSiteName(Field field, String override) throws IntrospectionException {
         if (override != null && override.length() != 0) {

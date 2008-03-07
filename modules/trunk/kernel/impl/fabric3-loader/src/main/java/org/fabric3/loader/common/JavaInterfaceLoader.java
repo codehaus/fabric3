@@ -23,16 +23,18 @@ import javax.xml.stream.XMLStreamReader;
 
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.introspection.java.ContractProcessor;
 import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.introspection.xml.InvalidValueException;
-import org.fabric3.introspection.java.InvalidServiceContractException;
+import org.fabric3.introspection.java.ContractProcessor;
+import org.fabric3.introspection.java.ImplementationNotFoundException;
 import org.fabric3.introspection.java.IntrospectionHelper;
+import org.fabric3.introspection.java.InvalidServiceContractException;
 import org.fabric3.introspection.java.TypeMapping;
-import org.fabric3.scdl.ServiceContract;
+import org.fabric3.introspection.xml.InvalidValueException;
 import org.fabric3.introspection.xml.LoaderException;
 import org.fabric3.introspection.xml.LoaderUtil;
+import org.fabric3.introspection.xml.MissingResourceException;
 import org.fabric3.introspection.xml.TypeLoader;
+import org.fabric3.scdl.ServiceContract;
 
 /**
  * Loads a Java interface definition from an XML-based assembly file
@@ -63,11 +65,20 @@ public class JavaInterfaceLoader implements TypeLoader<ServiceContract> {
         if (name == null) {
             throw new InvalidValueException("interface name not supplied");
         }
-        Class<?> interfaceClass = LoaderUtil.loadClass(name, context.getTargetClassLoader());
+        Class<?> interfaceClass;
+        try {
+            interfaceClass = helper.loadClass(name, context.getTargetClassLoader());
+        } catch (ImplementationNotFoundException e) {
+            throw new MissingResourceException(null, name, e);
+        }
 
         name = reader.getAttributeValue(null, "callbackInterface");
-        Class<?> callbackClass =
-                (name != null) ? LoaderUtil.loadClass(name, context.getTargetClassLoader()) : null;
+        Class<?> callbackClass;
+        try {
+            callbackClass = (name != null) ? helper.loadClass(name, context.getTargetClassLoader()) : null;
+        } catch (ImplementationNotFoundException e) {
+            throw new MissingResourceException(null, name, e);
+        }
 
         LoaderUtil.skipToEndElement(reader);
 

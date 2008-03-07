@@ -22,14 +22,14 @@ import java.util.Collection;
 
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.introspection.java.ClassWalker;
-import org.fabric3.introspection.java.HeuristicProcessor;
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.IntrospectionException;
+import org.fabric3.introspection.java.ClassWalker;
+import org.fabric3.introspection.java.HeuristicProcessor;
+import org.fabric3.introspection.java.IntrospectionHelper;
+import org.fabric3.introspection.xml.LoaderException;
 import org.fabric3.pojo.processor.ProcessingException;
 import org.fabric3.pojo.scdl.PojoComponentType;
-import org.fabric3.introspection.xml.LoaderException;
-import org.fabric3.introspection.xml.LoaderUtil;
 
 /**
  * Loads a system component type
@@ -39,11 +39,14 @@ import org.fabric3.introspection.xml.LoaderUtil;
 public class SystemComponentTypeLoaderImpl2 implements SystemComponentTypeLoader {
     private final ClassWalker<SystemImplementation> classWalker;
     private final Collection<HeuristicProcessor<SystemImplementation>> heuristics;
+    private final IntrospectionHelper helper;
 
     public SystemComponentTypeLoaderImpl2(@Reference ClassWalker<SystemImplementation> classWalker,
-                                          @Reference Collection<HeuristicProcessor<SystemImplementation>> heuristics) {
+                                          @Reference Collection<HeuristicProcessor<SystemImplementation>> heuristics,
+                                          @Reference IntrospectionHelper helper) {
         this.classWalker = classWalker;
         this.heuristics = heuristics;
+        this.helper = helper;
     }
 
     public void load(SystemImplementation implementation, IntrospectionContext context) throws LoaderException {
@@ -52,8 +55,8 @@ public class SystemComponentTypeLoaderImpl2 implements SystemComponentTypeLoader
         implementation.setComponentType(componentType);
 
         ClassLoader cl = context.getTargetClassLoader();
-        Class<?> implClass = LoaderUtil.loadClass(implClassName, cl);
         try {
+            Class<?> implClass = helper.loadClass(implClassName, cl);
             classWalker.walk(implementation, implClass, context);
 
             for (HeuristicProcessor<SystemImplementation> heuristic : heuristics) {

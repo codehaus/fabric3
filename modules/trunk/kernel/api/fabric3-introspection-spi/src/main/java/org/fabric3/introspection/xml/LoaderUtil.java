@@ -55,28 +55,6 @@ public final class LoaderUtil {
     }
 
     /**
-     * Load the class using the supplied ClassLoader. The class will be defined so any initializers present will be
-     * fired. As the class is being loaded, the Thread context ClassLoader will be set to the supplied classloader.
-     *
-     * @param name the name of the class to load
-     * @param cl   the classloader to use to load it
-     * @return the class
-     * @throws MissingResourceException if the class could not be found
-     */
-    public static Class<?> loadClass(String name, ClassLoader cl) throws MissingResourceException {
-        final Thread thread = Thread.currentThread();
-        final ClassLoader oldCL = thread.getContextClassLoader();
-        try {
-            thread.setContextClassLoader(cl);
-            return Class.forName(name, true, cl);
-        } catch (ClassNotFoundException e) {
-            throw new MissingResourceException(name, e);
-        } finally {
-            thread.setContextClassLoader(oldCL);
-        }
-    }
-
-    /**
      * Construct a QName from an XML value.
      *
      * @param text             the text of an XML QName; if null or "" then null will be returned

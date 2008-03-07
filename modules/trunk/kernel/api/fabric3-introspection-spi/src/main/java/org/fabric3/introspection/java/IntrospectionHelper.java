@@ -24,9 +24,9 @@ import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.Set;
 
+import org.fabric3.introspection.IntrospectionException;
 import org.fabric3.scdl.InjectableAttributeType;
 import org.fabric3.scdl.ServiceDefinition;
-import org.fabric3.introspection.IntrospectionException;
 
 /**
  * Helper service that provides support methods to simplify introspection.
@@ -34,6 +34,18 @@ import org.fabric3.introspection.IntrospectionException;
  * @version $Rev$ $Date$
  */
 public interface IntrospectionHelper {
+
+    /**
+     * Load the class using the supplied ClassLoader. The class will be defined so any initializers present will be
+     * fired. As the class is being loaded, the Thread context ClassLoader will be set to the supplied classloader.
+     *
+     * @param name the name of the class to load
+     * @param cl   the classloader to use to load it
+     * @return the class
+     * @throws ImplementationNotFoundException if the class could not be found
+     */
+    Class<?> loadClass(String name, ClassLoader cl) throws ImplementationNotFoundException;
+
     /**
      * Derive the name of an injection site from a field.
      *
