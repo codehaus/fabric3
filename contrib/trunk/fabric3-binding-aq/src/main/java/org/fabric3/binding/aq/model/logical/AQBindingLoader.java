@@ -32,50 +32,62 @@ import org.fabric3.binding.aq.model.CreateOption;
 import org.fabric3.binding.aq.model.DestinationDefinition;
 import org.fabric3.binding.aq.model.DestinationType;
 import org.fabric3.binding.aq.model.ResponseDefinition;
-import org.fabric3.extension.loader.LoaderExtension;
 import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.spi.loader.LoaderException;
-import org.fabric3.spi.loader.LoaderRegistry;
-import org.fabric3.spi.loader.PolicyHelper;
+import org.fabric3.introspection.xml.LoaderException;
+import org.fabric3.introspection.xml.LoaderHelper;
+import org.fabric3.introspection.xml.LoaderRegistry;
+import org.fabric3.introspection.xml.TypeLoader;
 import org.osoa.sca.Constants;
+import org.osoa.sca.annotations.Destroy;
 import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
 /**
  * @version $Revision$ $Date$
  */
 @EagerInit
-public class AQBindingLoader extends LoaderExtension<AQBindingDefinition> {
+public class AQBindingLoader implements TypeLoader<AQBindingDefinition> {
 
     /** Qualified name for the binding element. */
     public static final QName BINDING_QNAME = new QName(Constants.SCA_NS, "binding.aq");
 
-    /** Assiste with Policies */
-    private final PolicyHelper policyHelper;    
+    /** Registry*/
+    private final LoaderRegistry registry;
+    
+    /** Assits in Loading XML with Policies */
+    private final LoaderHelper loaderHelper;  
               
 
     /**
-     * Injects the registry.
-     *
+     * COnstructor
      * @param registry Loader registry.
      */
-    public AQBindingLoader(@Reference LoaderRegistry registry, @Reference PolicyHelper policyHelper) {
-        super(registry);
-        this.policyHelper = policyHelper;           
+    public AQBindingLoader(@Reference LoaderRegistry registry, @Reference LoaderHelper loaderHelper) {        
+          this.registry = registry;
+          this.loaderHelper = loaderHelper;
+          
     }
        
     /**
-     * @see org.fabric3.extension.loader.LoaderExtension#getXMLType()
+     * Loader AQ Loder into the registry
      */
-    @Override
-    public QName getXMLType() {
-        return BINDING_QNAME;
+    @Init
+    public void start() {
+        registry.registerLoader(BINDING_QNAME, this);
     }
 
     /**
-     * @see org.fabric3.spi.loader.StAXElementLoader#load(java.lang.Object,
-     *      javax.xml.stream.XMLStreamReader,
-     *      org.fabric3.spi.loader.LoaderContext)
+     * Unload
+     */
+    @Destroy
+    public void stop() {
+        registry.unregisterLoader(BINDING_QNAME);
+    }
+
+   
+    /**
+     * @see org.fabric3.introspection.xml.TypeLoader#load(javax.xml.stream.XMLStreamReader, org.fabric3.introspection.IntrospectionContext)
      */
     public AQBindingDefinition load(final XMLStreamReader reader, final IntrospectionContext loaderContext)
         throws XMLStreamException, LoaderException {             
@@ -88,7 +100,7 @@ public class AQBindingLoader extends LoaderExtension<AQBindingDefinition> {
             metadata.setCorrelationScheme(CorrelationScheme.valueOf(correlationScheme));
         }        
 
-        policyHelper.loadPolicySetsAndIntents(bd, reader);
+        loaderHelper.loadPolicySetsAndIntents(bd, reader);
 
         String name = null;
         while (true) {
