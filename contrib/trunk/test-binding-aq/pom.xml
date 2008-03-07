@@ -56,6 +56,7 @@
 				<version>0.5-SNAPSHOT</version>
 				<configuration>
 					<runtimeVersion>0.5-SNAPSHOT</runtimeVersion>
+					<systemConfigDir>classes/META-INF</systemConfigDir>
 					<extensions>
 						<dependency>
 							<groupId>org.codehaus.fabric3</groupId>
@@ -81,7 +82,7 @@
                             <groupId>org.codehaus.fabric3.tests</groupId>
                             <artifactId>test-ds-extension</artifactId>
                             <version>0.1-SNAPSHOT</version>
-                        </dependency>							
+                        </dependency>					
 					</extensions>
 					<shared>
 						<dependency>
