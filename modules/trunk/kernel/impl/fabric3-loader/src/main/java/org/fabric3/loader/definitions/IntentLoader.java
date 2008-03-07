@@ -29,8 +29,8 @@ import javax.xml.stream.XMLStreamReader;
 
 import org.fabric3.scdl.definitions.Intent;
 import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.spi.loader.LoaderException;
-import org.fabric3.spi.loader.StAXElementLoader;
+import org.fabric3.introspection.xml.LoaderException;
+import org.fabric3.introspection.xml.TypeLoader;
 import org.fabric3.spi.util.stax.StaxUtil;
 
 /**
@@ -38,7 +38,7 @@ import org.fabric3.spi.util.stax.StaxUtil;
  * 
  * @version $Revision$ $Date$
  */
-public class IntentLoader implements StAXElementLoader<Intent> {
+public class IntentLoader implements TypeLoader<Intent> {
 
     public Intent load(XMLStreamReader reader, IntrospectionContext context) throws XMLStreamException, LoaderException {
         

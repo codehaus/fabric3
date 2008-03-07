@@ -19,7 +19,7 @@ package org.fabric3.mock;
 import java.util.List;
 
 import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.spi.loader.LoaderException;
+import org.fabric3.introspection.xml.LoaderException;
 
 /**
  * Component type loader for the mock component type.

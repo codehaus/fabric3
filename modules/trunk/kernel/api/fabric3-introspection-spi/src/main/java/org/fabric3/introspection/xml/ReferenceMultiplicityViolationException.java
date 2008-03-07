@@ -17,7 +17,7 @@
  * under the License.    
  */
 
-package org.fabric3.spi.loader;
+package org.fabric3.introspection.xml;
 
 import org.fabric3.scdl.Multiplicity;
 

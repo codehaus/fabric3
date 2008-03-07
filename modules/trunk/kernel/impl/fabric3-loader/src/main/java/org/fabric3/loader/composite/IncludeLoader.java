@@ -31,12 +31,12 @@ import org.fabric3.loader.common.MissingAttributeException;
 import org.fabric3.loader.common.IntrospectionContextImpl;
 import org.fabric3.scdl.Composite;
 import org.fabric3.scdl.Include;
-import org.fabric3.spi.loader.Loader;
+import org.fabric3.introspection.xml.Loader;
 import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.spi.loader.LoaderException;
-import org.fabric3.spi.loader.LoaderUtil;
-import org.fabric3.spi.loader.MissingResourceException;
-import org.fabric3.spi.loader.StAXElementLoader;
+import org.fabric3.introspection.xml.LoaderException;
+import org.fabric3.introspection.xml.LoaderUtil;
+import org.fabric3.introspection.xml.MissingResourceException;
+import org.fabric3.introspection.xml.TypeLoader;
 import org.fabric3.spi.services.contribution.MetaDataStore;
 import org.fabric3.spi.services.contribution.MetaDataStoreException;
 import org.fabric3.spi.services.contribution.QNameSymbol;
@@ -47,7 +47,7 @@ import org.fabric3.spi.services.contribution.ResourceElement;
  *
  * @version $Rev$ $Date$
  */
-public class IncludeLoader implements StAXElementLoader<Include> {
+public class IncludeLoader implements TypeLoader<Include> {
     private final Loader loader;
     private MetaDataStore store;
 

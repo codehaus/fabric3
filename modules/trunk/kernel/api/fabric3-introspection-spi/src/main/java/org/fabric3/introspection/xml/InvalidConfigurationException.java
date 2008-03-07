@@ -6,40 +6,35 @@
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
- * under the License.    
+ * under the License.
  */
-package org.fabric3.spi.loader;
+package org.fabric3.introspection.xml;
 
 /**
- * Exception that indicates the loader encountered an invalid value.
- * The message should be set to the invalid value.
+ * Denotes an invalid configuration artifact
  *
  * @version $Rev$ $Date$
  */
-public class InvalidValueException extends LoaderException {
-    private static final long serialVersionUID = 754253893069141986L;
+public class InvalidConfigurationException extends LoaderException {
 
-    public InvalidValueException(String message) {
+    public InvalidConfigurationException(String message) {
         super(message);
     }
 
-    public InvalidValueException(String message, String identifier) {
+    public InvalidConfigurationException(String message, String identifier) {
         super(message, identifier);
     }
 
-    public InvalidValueException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
-    public InvalidValueException(String message, String identifier, Throwable cause) {
+    public InvalidConfigurationException(String message, String identifier, Throwable cause) {
         super(message, identifier, cause);
     }
+
 }

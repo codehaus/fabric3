@@ -28,10 +28,10 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.scdl.definitions.ImplementationType;
 import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.spi.loader.LoaderException;
-import org.fabric3.spi.loader.LoaderRegistry;
-import org.fabric3.spi.loader.LoaderUtil;
-import org.fabric3.spi.loader.StAXElementLoader;
+import org.fabric3.introspection.xml.LoaderException;
+import org.fabric3.introspection.xml.LoaderRegistry;
+import org.fabric3.introspection.xml.LoaderUtil;
+import org.fabric3.introspection.xml.TypeLoader;
 import org.fabric3.spi.util.stax.StaxUtil;
 
 /**
@@ -40,7 +40,7 @@ import org.fabric3.spi.util.stax.StaxUtil;
  * @version $Revision$ $Date$
  */
 @EagerInit
-public class ImplementationTypeLoader implements StAXElementLoader<ImplementationType> {
+public class ImplementationTypeLoader implements TypeLoader<ImplementationType> {
 
     /**
      * Registers the loader with the registry.

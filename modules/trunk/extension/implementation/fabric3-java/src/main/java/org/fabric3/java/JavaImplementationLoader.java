@@ -24,25 +24,25 @@ import javax.xml.stream.XMLStreamReader;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.spi.loader.LoaderException;
-import org.fabric3.spi.loader.LoaderUtil;
-import org.fabric3.spi.loader.PolicyHelper;
-import org.fabric3.spi.loader.StAXElementLoader;
-import org.fabric3.spi.loader.InvalidValueException;
+import org.fabric3.introspection.xml.LoaderException;
+import org.fabric3.introspection.xml.LoaderUtil;
+import org.fabric3.introspection.xml.LoaderHelper;
+import org.fabric3.introspection.xml.TypeLoader;
+import org.fabric3.introspection.xml.InvalidValueException;
 
 /**
  * Loads <implementation.java> in a composite.
  */
-public class JavaImplementationLoader implements StAXElementLoader<JavaImplementation> {
+public class JavaImplementationLoader implements TypeLoader<JavaImplementation> {
 
     private final JavaComponentTypeLoader componentTypeLoader;
-    private final PolicyHelper policyHelper;
+    private final LoaderHelper loaderHelper;
 
 
     public JavaImplementationLoader(@Reference JavaComponentTypeLoader componentTypeLoader,
-                                    @Reference PolicyHelper policyHelper) {
+                                    @Reference LoaderHelper loaderHelper) {
         this.componentTypeLoader = componentTypeLoader;
-        this.policyHelper = policyHelper;
+        this.loaderHelper = loaderHelper;
     }
 
 
@@ -56,7 +56,7 @@ public class JavaImplementationLoader implements StAXElementLoader<JavaImplement
         if (implClass == null) {
             throw new InvalidValueException("Missing implementation class");
         }
-        policyHelper.loadPolicySetsAndIntents(implementation, reader);
+        loaderHelper.loadPolicySetsAndIntents(implementation, reader);
         LoaderUtil.skipToEndElement(reader);
 
         implementation.setImplementationClass(implClass);

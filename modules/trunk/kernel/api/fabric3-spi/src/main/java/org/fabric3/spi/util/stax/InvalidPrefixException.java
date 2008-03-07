@@ -18,7 +18,7 @@
  */
 package org.fabric3.spi.util.stax;
 
-import org.fabric3.spi.loader.LoaderException;
+import org.fabric3.introspection.xml.LoaderException;
 
 /**
  * Denotes an invalid QName prefix.

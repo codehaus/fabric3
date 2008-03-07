@@ -16,28 +16,27 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.spi.loader;
+package org.fabric3.introspection.xml;
 
-import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
-import org.fabric3.introspection.IntrospectionContext;
+import org.fabric3.scdl.PolicyAware;
 
 /**
- * Deserializes an element from a StAX input stream.
- *
- * @version $Rev$ $Date$
+ * Interface for the helper class for loading intents and policy sets 
+ * into elements aginst which intents and policies can be declared.
+ * 
+ * @version $Revision$ $Date$
  */
-public interface StAXElementLoader<OUTPUT> {
+public interface LoaderHelper {
+    
     /**
-     * Deserialize an element in an XML stream. When this method returns the stream will be positioned on the
-     * corresponding END_ELEMENT.
-     *
-     * @param reader  the XML stream reader positioned on the applicable START_ELEMENT
-     * @param context the context for the load operation
-     * @return the deserialized object for that element
-     * @throws LoaderException    if an error loading the type occurs
-     * @throws XMLStreamException if an error reading the XML stream occurs
+     * Loads policy sets and intents defined against bindings, implementations, 
+     * services, references and components.
+     * 
+     * @param policyAware Element against which policy sets and intents are declared.
+     * @param reader XML stream reader from where the attributes are read.
      */
-    OUTPUT load(XMLStreamReader reader, IntrospectionContext context) throws XMLStreamException, LoaderException;
+    void loadPolicySetsAndIntents(PolicyAware policyAware, XMLStreamReader reader) throws LoaderException;
+
 }

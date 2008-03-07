@@ -31,17 +31,17 @@ import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.spi.loader.LoaderException;
-import org.fabric3.spi.loader.LoaderRegistry;
-import org.fabric3.spi.loader.LoaderUtil;
-import org.fabric3.spi.loader.StAXElementLoader;
+import org.fabric3.introspection.xml.LoaderException;
+import org.fabric3.introspection.xml.LoaderRegistry;
+import org.fabric3.introspection.xml.LoaderUtil;
+import org.fabric3.introspection.xml.TypeLoader;
 
 
 /**
  * @version $Revision: 1 $ $Date: 2007-05-14 10:40:37 -0700 (Mon, 14 May 2007) $
  */
 @EagerInit
-public class EjbBindingLoader implements StAXElementLoader<EjbBindingDefinition> {
+public class EjbBindingLoader implements TypeLoader<EjbBindingDefinition> {
 
     /**
      * Qualified name for the binding element.

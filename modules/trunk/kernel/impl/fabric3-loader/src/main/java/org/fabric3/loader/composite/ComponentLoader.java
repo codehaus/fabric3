@@ -45,13 +45,13 @@ import org.fabric3.scdl.PropertyValue;
 import org.fabric3.scdl.AbstractComponentType;
 import org.fabric3.scdl.Property;
 import org.fabric3.spi.Constants;
-import org.fabric3.spi.loader.InvalidValueException;
-import org.fabric3.spi.loader.Loader;
+import org.fabric3.introspection.xml.InvalidValueException;
+import org.fabric3.introspection.xml.Loader;
 import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.spi.loader.LoaderException;
-import org.fabric3.spi.loader.LoaderUtil;
-import org.fabric3.spi.loader.PolicyHelper;
-import org.fabric3.spi.loader.StAXElementLoader;
+import org.fabric3.introspection.xml.LoaderException;
+import org.fabric3.introspection.xml.LoaderUtil;
+import org.fabric3.introspection.xml.LoaderHelper;
+import org.fabric3.introspection.xml.TypeLoader;
 import org.fabric3.loader.common.MissingAttributeException;
 
 /**
@@ -59,7 +59,7 @@ import org.fabric3.loader.common.MissingAttributeException;
  *
  * @version $Rev$ $Date$
  */
-public class ComponentLoader implements StAXElementLoader<ComponentDefinition<?>> {
+public class ComponentLoader implements TypeLoader<ComponentDefinition<?>> {
 
     private static final QName COMPONENT = new QName(SCA_NS, "component");
     private static final QName PROPERTY = new QName(SCA_NS, "property");
@@ -79,21 +79,21 @@ public class ComponentLoader implements StAXElementLoader<ComponentDefinition<?>
     }
 
     private final Loader loader;
-    private final StAXElementLoader<PropertyValue> propertyValueLoader;
-    private final StAXElementLoader<ComponentReference> referenceLoader;
-    private final StAXElementLoader<ComponentService> serviceLoader;
-    private final PolicyHelper policyHelper;
+    private final TypeLoader<PropertyValue> propertyValueLoader;
+    private final TypeLoader<ComponentReference> referenceLoader;
+    private final TypeLoader<ComponentService> serviceLoader;
+    private final LoaderHelper loaderHelper;
 
     public ComponentLoader(@Reference Loader loader,
-                           @Reference(name = "propertyValue")StAXElementLoader<PropertyValue> propertyValueLoader,
-                           @Reference(name = "reference")StAXElementLoader<ComponentReference> referenceLoader,
-                           @Reference(name = "service")StAXElementLoader<ComponentService> serviceLoader,
-                           @Reference(name = "policyHelper")PolicyHelper policyHelper) {
+                           @Reference(name = "propertyValue")TypeLoader<PropertyValue> propertyValueLoader,
+                           @Reference(name = "reference")TypeLoader<ComponentReference> referenceLoader,
+                           @Reference(name = "service")TypeLoader<ComponentService> serviceLoader,
+                           @Reference(name = "loaderHelper")LoaderHelper loaderHelper) {
         this.loader = loader;
         this.propertyValueLoader = propertyValueLoader;
         this.referenceLoader = referenceLoader;
         this.serviceLoader = serviceLoader;
-        this.policyHelper = policyHelper;
+        this.loaderHelper = loaderHelper;
     }
 
     public ComponentDefinition<?> load(XMLStreamReader reader, IntrospectionContext context)
@@ -115,7 +115,7 @@ public class ComponentLoader implements StAXElementLoader<ComponentDefinition<?>
         componentDefinition.setInitLevel(initLevel);
         componentDefinition.setKey(key);
 
-        policyHelper.loadPolicySetsAndIntents(componentDefinition, reader);
+        loaderHelper.loadPolicySetsAndIntents(componentDefinition, reader);
 
         Implementation<?> impl;
         try {

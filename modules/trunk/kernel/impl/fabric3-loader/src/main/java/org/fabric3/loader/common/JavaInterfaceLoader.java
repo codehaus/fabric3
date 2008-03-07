@@ -23,23 +23,23 @@ import javax.xml.stream.XMLStreamReader;
 
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.introspection.ContractProcessor;
+import org.fabric3.introspection.java.ContractProcessor;
 import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.introspection.InvalidServiceContractException;
-import org.fabric3.introspection.IntrospectionHelper;
-import org.fabric3.introspection.TypeMapping;
+import org.fabric3.introspection.xml.InvalidValueException;
+import org.fabric3.introspection.java.InvalidServiceContractException;
+import org.fabric3.introspection.java.IntrospectionHelper;
+import org.fabric3.introspection.java.TypeMapping;
 import org.fabric3.scdl.ServiceContract;
-import org.fabric3.spi.loader.InvalidValueException;
-import org.fabric3.spi.loader.LoaderException;
-import org.fabric3.spi.loader.LoaderUtil;
-import org.fabric3.spi.loader.StAXElementLoader;
+import org.fabric3.introspection.xml.LoaderException;
+import org.fabric3.introspection.xml.LoaderUtil;
+import org.fabric3.introspection.xml.TypeLoader;
 
 /**
  * Loads a Java interface definition from an XML-based assembly file
  *
  * @version $Rev$ $Date$
  */
-public class JavaInterfaceLoader implements StAXElementLoader<ServiceContract> {
+public class JavaInterfaceLoader implements TypeLoader<ServiceContract> {
 
     private final ContractProcessor contractProcessor;
     private final IntrospectionHelper helper;

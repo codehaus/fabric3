@@ -28,10 +28,10 @@ import org.fabric3.scdl.ComponentType;
 import org.fabric3.scdl.CompositeService;
 import org.fabric3.scdl.Implementation;
 import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.spi.loader.LoaderException;
-import org.fabric3.spi.loader.LoaderRegistry;
-import org.fabric3.spi.loader.PolicyHelper;
-import org.fabric3.spi.loader.StAXElementLoader;
+import org.fabric3.introspection.xml.LoaderException;
+import org.fabric3.introspection.xml.LoaderRegistry;
+import org.fabric3.introspection.xml.LoaderHelper;
+import org.fabric3.introspection.xml.TypeLoader;
 
 /**
  * @version $Rev$ $Date$
@@ -59,9 +59,9 @@ public class CompositeLoaderDuplicateServiceTestCase extends TestCase {
 
     protected void setUp() throws Exception {
         super.setUp();
-        StAXElementLoader<CompositeService> serviceLoader = createServiceLoader();
+        TypeLoader<CompositeService> serviceLoader = createServiceLoader();
         LoaderRegistry registry = createRegistry();
-        PolicyHelper helper = EasyMock.createNiceMock(PolicyHelper.class);
+        LoaderHelper helper = EasyMock.createNiceMock(LoaderHelper.class);
         EasyMock.replay(helper);
         loader = new CompositeLoader(registry, null, null, serviceLoader, null, null, null, helper);
         reader = createReader();
@@ -80,14 +80,14 @@ public class CompositeLoaderDuplicateServiceTestCase extends TestCase {
     }
 
     @SuppressWarnings({"unchecked"})
-    private <T> StAXElementLoader<CompositeService> createServiceLoader()
+    private <T> TypeLoader<CompositeService> createServiceLoader()
             throws XMLStreamException, LoaderException {
-        StAXElementLoader loader = EasyMock.createMock(StAXElementLoader.class);
+        TypeLoader loader = EasyMock.createMock(TypeLoader.class);
         CompositeService value = new CompositeService(SERVICE_NAME, null);
         EasyMock.expect(loader.load(EasyMock.isA(XMLStreamReader.class),
                                     EasyMock.isA(IntrospectionContext.class))).andReturn(value).times(2);
         EasyMock.replay(loader);
-        return (StAXElementLoader<CompositeService>) loader;
+        return (TypeLoader<CompositeService>) loader;
     }
 
     private Implementation createImpl() {

@@ -16,15 +16,30 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.spi.loader;
+package org.fabric3.introspection.xml;
 
 /**
  * @version $Rev$ $Date$
  */
-public class MissingRequiredPropertyException extends LoaderException {
-
-    public MissingRequiredPropertyException(String name) {
-        super(name);
+public class InvalidWireException extends LoaderException {
+    
+    public InvalidWireException() {
     }
 
+    public InvalidWireException(String message) {
+        super(message);
+    }
+
+
+    public InvalidWireException(String message, String identifier) {
+        super(message, identifier);
+    }
+
+    public InvalidWireException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public InvalidWireException(Throwable cause) {
+        super(cause);
+    }
 }

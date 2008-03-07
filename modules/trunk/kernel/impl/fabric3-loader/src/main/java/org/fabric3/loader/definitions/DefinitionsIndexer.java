@@ -32,7 +32,7 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.scdl.definitions.AbstractDefinition;
-import org.fabric3.spi.loader.LoaderUtil;
+import org.fabric3.introspection.xml.LoaderUtil;
 import org.fabric3.spi.services.contribution.QNameSymbol;
 import org.fabric3.spi.services.contribution.Resource;
 import org.fabric3.spi.services.contribution.ResourceElement;

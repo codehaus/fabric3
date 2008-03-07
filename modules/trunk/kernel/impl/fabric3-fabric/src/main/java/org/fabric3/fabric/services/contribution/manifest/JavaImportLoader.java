@@ -28,9 +28,9 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.fabric.services.contribution.MissingPackageException;
 import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.spi.loader.LoaderException;
-import org.fabric3.spi.loader.LoaderRegistry;
-import org.fabric3.spi.loader.StAXElementLoader;
+import org.fabric3.introspection.xml.LoaderException;
+import org.fabric3.introspection.xml.LoaderRegistry;
+import org.fabric3.introspection.xml.TypeLoader;
 
 /**
  * Processes a <code>import.java</code> element in a contribution manifest
@@ -38,7 +38,7 @@ import org.fabric3.spi.loader.StAXElementLoader;
  * @version $Rev$ $Date$
  */
 @EagerInit
-public class JavaImportLoader implements StAXElementLoader<JavaImport> {
+public class JavaImportLoader implements TypeLoader<JavaImport> {
     private static final QName IMPORT = new QName(Constants.SCA_NS, "import.java");
     private LoaderRegistry registry;
 

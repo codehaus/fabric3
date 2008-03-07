@@ -28,11 +28,11 @@ import org.fabric3.scdl.ComponentType;
 import org.fabric3.scdl.Implementation;
 import org.fabric3.scdl.Property;
 import org.fabric3.scdl.PropertyValue;
-import org.fabric3.spi.loader.Loader;
+import org.fabric3.introspection.xml.Loader;
 import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.spi.loader.LoaderException;
-import org.fabric3.spi.loader.PolicyHelper;
-import org.fabric3.spi.loader.StAXElementLoader;
+import org.fabric3.introspection.xml.LoaderException;
+import org.fabric3.introspection.xml.LoaderHelper;
+import org.fabric3.introspection.xml.TypeLoader;
 
 /**
  * @version $Rev$ $Date$
@@ -60,9 +60,9 @@ public class ComponentLoaderDuplicatePropertyTestCase extends TestCase {
 
     protected void setUp() throws Exception {
         super.setUp();
-        StAXElementLoader<PropertyValue> propLoader = createPropertyLoader();
+        TypeLoader<PropertyValue> propLoader = createPropertyLoader();
         Loader registry = createRegistry();
-        PolicyHelper helper = EasyMock.createNiceMock(PolicyHelper.class);
+        LoaderHelper helper = EasyMock.createNiceMock(LoaderHelper.class);
         EasyMock.replay(helper);
         loader = new ComponentLoader(registry, propLoader, null, null, helper);
         reader = createReader();
@@ -81,8 +81,8 @@ public class ComponentLoaderDuplicatePropertyTestCase extends TestCase {
     }
 
     @SuppressWarnings({"unchecked"})
-    private StAXElementLoader<PropertyValue> createPropertyLoader() throws XMLStreamException, LoaderException {
-        StAXElementLoader<PropertyValue> loader = EasyMock.createMock(StAXElementLoader.class);
+    private TypeLoader<PropertyValue> createPropertyLoader() throws XMLStreamException, LoaderException {
+        TypeLoader<PropertyValue> loader = EasyMock.createMock(TypeLoader.class);
         PropertyValue value = new PropertyValue(PROP_NAME, "test");
         EasyMock.expect(loader.load(EasyMock.isA(XMLStreamReader.class),
                                     EasyMock.isA(IntrospectionContext.class))).andReturn(value).times(2);

@@ -28,15 +28,15 @@ import org.w3c.dom.Document;
 
 import org.fabric3.scdl.Property;
 import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.spi.loader.LoaderException;
-import org.fabric3.spi.loader.StAXElementLoader;
+import org.fabric3.introspection.xml.LoaderException;
+import org.fabric3.introspection.xml.TypeLoader;
 
 /**
  * Loads a property declaration from an XML-based assembly file
  *
  * @version $Rev$ $Date$
  */
-public class PropertyLoader implements StAXElementLoader<Property> {
+public class PropertyLoader implements TypeLoader<Property> {
     private static final String NAME = "name";
     private static final String MANY = "many";
     private static final String MUST_SUPPLY = "mustSupply";

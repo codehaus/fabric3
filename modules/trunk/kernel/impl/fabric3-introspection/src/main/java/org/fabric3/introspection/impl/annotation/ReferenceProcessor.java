@@ -23,12 +23,12 @@ import java.lang.reflect.Type;
 
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.introspection.AbstractAnnotationProcessor;
-import org.fabric3.introspection.ContractProcessor;
+import org.fabric3.introspection.java.AbstractAnnotationProcessor;
+import org.fabric3.introspection.java.ContractProcessor;
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.IntrospectionException;
-import org.fabric3.introspection.IntrospectionHelper;
-import org.fabric3.introspection.TypeMapping;
+import org.fabric3.introspection.java.IntrospectionHelper;
+import org.fabric3.introspection.java.TypeMapping;
 import org.fabric3.scdl.ConstructorInjectionSite;
 import org.fabric3.scdl.FieldInjectionSite;
 import org.fabric3.scdl.Implementation;

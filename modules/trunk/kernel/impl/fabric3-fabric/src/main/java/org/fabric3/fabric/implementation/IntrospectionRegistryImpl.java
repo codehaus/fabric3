@@ -28,8 +28,8 @@ import java.util.Set;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.introspection.IntrospectionHelper;
-import org.fabric3.introspection.TypeMapping;
+import org.fabric3.introspection.java.IntrospectionHelper;
+import org.fabric3.introspection.java.TypeMapping;
 import org.fabric3.loader.common.IntrospectionContextImpl;
 import org.fabric3.pojo.processor.ImplementationProcessor;
 import org.fabric3.pojo.processor.IntrospectionRegistry;

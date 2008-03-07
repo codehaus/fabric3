@@ -21,6 +21,8 @@ import java.util.Collection;
 
 import junit.framework.TestCase;
 
+import org.fabric3.introspection.java.TypeMapping;
+
 /**
  * @version $Rev$ $Date$
  */

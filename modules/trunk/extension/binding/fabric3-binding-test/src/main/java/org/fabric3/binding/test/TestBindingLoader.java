@@ -29,10 +29,10 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.spi.Constants;
-import org.fabric3.spi.loader.LoaderException;
-import org.fabric3.spi.loader.LoaderRegistry;
-import org.fabric3.spi.loader.LoaderUtil;
-import org.fabric3.spi.loader.StAXElementLoader;
+import org.fabric3.introspection.xml.LoaderException;
+import org.fabric3.introspection.xml.LoaderRegistry;
+import org.fabric3.introspection.xml.LoaderUtil;
+import org.fabric3.introspection.xml.TypeLoader;
 
 /**
  * Parses <code>binding.test</code> for services and references. A uri to bind the service to or target a reference must be provided as an attribute.
@@ -40,7 +40,7 @@ import org.fabric3.spi.loader.StAXElementLoader;
  * @version $Revision$ $Date$
  */
 @EagerInit
-public class TestBindingLoader implements StAXElementLoader<TestBindingDefinition> {
+public class TestBindingLoader implements TypeLoader<TestBindingDefinition> {
 
     public static final QName BINDING_QNAME = new QName(Constants.FABRIC3_NS, "binding.test");
     private LoaderRegistry registry;

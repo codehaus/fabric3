@@ -28,11 +28,11 @@ import org.fabric3.scdl.ComponentReference;
 import org.fabric3.scdl.ComponentType;
 import org.fabric3.scdl.Implementation;
 import org.fabric3.scdl.ReferenceDefinition;
-import org.fabric3.spi.loader.Loader;
+import org.fabric3.introspection.xml.Loader;
 import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.spi.loader.LoaderException;
-import org.fabric3.spi.loader.PolicyHelper;
-import org.fabric3.spi.loader.StAXElementLoader;
+import org.fabric3.introspection.xml.LoaderException;
+import org.fabric3.introspection.xml.LoaderHelper;
+import org.fabric3.introspection.xml.TypeLoader;
 
 /**
  * @version $Rev$ $Date$
@@ -61,9 +61,9 @@ public class ComponentLoaderDuplicateReferenceTestCase extends TestCase {
 
     protected void setUp() throws Exception {
         super.setUp();
-        StAXElementLoader<ComponentReference> referenceLoader = createReferenceLoader();
+        TypeLoader<ComponentReference> referenceLoader = createReferenceLoader();
         Loader registry = createRegistry();
-        PolicyHelper helper = EasyMock.createNiceMock(PolicyHelper.class);
+        LoaderHelper helper = EasyMock.createNiceMock(LoaderHelper.class);
         EasyMock.replay(helper);
         loader = new ComponentLoader(registry, null, referenceLoader, null, helper);
         reader = createReader();
@@ -82,8 +82,8 @@ public class ComponentLoaderDuplicateReferenceTestCase extends TestCase {
     }
 
     @SuppressWarnings({"unchecked"})
-    private StAXElementLoader<ComponentReference> createReferenceLoader() throws XMLStreamException, LoaderException {
-        StAXElementLoader<ComponentReference> referenceLoader = EasyMock.createMock(StAXElementLoader.class);
+    private TypeLoader<ComponentReference> createReferenceLoader() throws XMLStreamException, LoaderException {
+        TypeLoader<ComponentReference> referenceLoader = EasyMock.createMock(TypeLoader.class);
         ComponentReference reference = new ComponentReference(REF_NAME);
         EasyMock.expect(referenceLoader.load(EasyMock.isA(XMLStreamReader.class),
                                              EasyMock.isA(IntrospectionContext.class))).andReturn(reference).times(2);

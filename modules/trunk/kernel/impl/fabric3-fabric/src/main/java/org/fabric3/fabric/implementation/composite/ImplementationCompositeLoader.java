@@ -35,13 +35,13 @@ import org.fabric3.loader.common.IntrospectionContextImpl;
 import org.fabric3.loader.common.MissingAttributeException;
 import org.fabric3.scdl.Composite;
 import org.fabric3.scdl.CompositeImplementation;
-import org.fabric3.spi.loader.Loader;
+import org.fabric3.introspection.xml.Loader;
+import org.fabric3.introspection.xml.LoaderException;
 import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.spi.loader.LoaderException;
-import org.fabric3.spi.loader.LoaderRegistry;
-import org.fabric3.spi.loader.LoaderUtil;
-import org.fabric3.spi.loader.MissingResourceException;
-import org.fabric3.spi.loader.StAXElementLoader;
+import org.fabric3.introspection.xml.LoaderRegistry;
+import org.fabric3.introspection.xml.LoaderUtil;
+import org.fabric3.introspection.xml.MissingResourceException;
+import org.fabric3.introspection.xml.TypeLoader;
 import org.fabric3.spi.services.contribution.MetaDataStore;
 import org.fabric3.spi.services.contribution.MetaDataStoreException;
 import org.fabric3.spi.services.contribution.QNameSymbol;
@@ -53,7 +53,7 @@ import org.fabric3.spi.services.contribution.ResourceElement;
  * @version $Rev$ $Date$
  */
 @EagerInit
-public class ImplementationCompositeLoader implements StAXElementLoader<CompositeImplementation> {
+public class ImplementationCompositeLoader implements TypeLoader<CompositeImplementation> {
     private final Loader loader;
     private final LoaderRegistry registry;
     private final MetaDataStore store;

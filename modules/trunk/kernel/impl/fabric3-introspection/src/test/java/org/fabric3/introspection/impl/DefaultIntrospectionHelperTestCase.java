@@ -27,8 +27,8 @@ import java.util.Set;
 
 import junit.framework.TestCase;
 
-import org.fabric3.introspection.TypeMapping;
-import org.fabric3.introspection.InvalidServiceContractException;
+import org.fabric3.introspection.java.TypeMapping;
+import org.fabric3.introspection.java.InvalidServiceContractException;
 import org.fabric3.introspection.impl.contract.DefaultContractProcessor;
 import org.fabric3.scdl.ServiceDefinition;
 import org.fabric3.scdl.ServiceContract;

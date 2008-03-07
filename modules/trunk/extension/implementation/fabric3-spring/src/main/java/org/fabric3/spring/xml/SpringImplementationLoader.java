@@ -48,11 +48,11 @@ import org.fabric3.pojo.processor.IntrospectionRegistry;
 import org.fabric3.pojo.processor.ProcessingException;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.spi.loader.LoaderException;
-import org.fabric3.spi.loader.LoaderUtil;
-import org.fabric3.spi.loader.PolicyHelper;
-import org.fabric3.spi.loader.StAXElementLoader;
-import org.fabric3.spi.loader.MissingResourceException;
+import org.fabric3.introspection.xml.LoaderException;
+import org.fabric3.introspection.xml.LoaderUtil;
+import org.fabric3.introspection.xml.MissingResourceException;
+import org.fabric3.introspection.xml.LoaderHelper;
+import org.fabric3.introspection.xml.TypeLoader;
 import org.fabric3.spring.SpringComponentType;
 import org.fabric3.spring.SpringImplementation;
 import org.fabric3.scdl.ServiceDefinition;
@@ -61,7 +61,7 @@ import org.fabric3.scdl.ReferenceDefinition;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
 
-public class SpringImplementationLoader implements StAXElementLoader<SpringImplementation> {
+public class SpringImplementationLoader implements TypeLoader<SpringImplementation> {
     private static final String SPRING_NS = "http://www.springframework.org/schema/beans";
     private static final QName SERVICE_ELEMENT = new QName(Constants.SCA_NS, "service");
     private static final QName REFERENCE_ELEMENT = new QName(Constants.SCA_NS, "reference");
@@ -72,16 +72,16 @@ public class SpringImplementationLoader implements StAXElementLoader<SpringImple
     private static final String APPLICATION_CONTEXT = "application-context.xml";
 
     private final SpringComponentTypeLoader componentTypeLoader;
-    private final PolicyHelper policyHelper;
+    private final LoaderHelper loaderHelper;
     private final IntrospectionRegistry introspector;
 
     private boolean debug = false;
 
     public SpringImplementationLoader(@Reference SpringComponentTypeLoader componentTypeLoader,
-                                      @Reference PolicyHelper policyHelper,
+                                      @Reference LoaderHelper loaderHelper,
                                       @Reference IntrospectionRegistry introspector) {
         this.componentTypeLoader = componentTypeLoader;
-        this.policyHelper = policyHelper;
+        this.loaderHelper = loaderHelper;
         this.introspector = introspector;
     }
 
@@ -107,7 +107,7 @@ public class SpringImplementationLoader implements StAXElementLoader<SpringImple
         loadSpringAppContextXML(location, implementation, introspectionContext);
         
 
-        policyHelper.loadPolicySetsAndIntents(implementation, reader);
+        loaderHelper.loadPolicySetsAndIntents(implementation, reader);
         LoaderUtil.skipToEndElement(reader);
 
         implementation.setLocation(location);

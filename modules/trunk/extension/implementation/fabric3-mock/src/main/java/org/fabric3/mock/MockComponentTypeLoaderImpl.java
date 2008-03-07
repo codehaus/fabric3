@@ -22,15 +22,15 @@ import java.util.List;
 import org.easymock.IMocksControl;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.introspection.ContractProcessor;
+import org.fabric3.introspection.java.ContractProcessor;
+import org.fabric3.introspection.java.IntrospectionHelper;
 import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.introspection.InvalidServiceContractException;
-import org.fabric3.introspection.TypeMapping;
-import org.fabric3.introspection.IntrospectionHelper;
+import org.fabric3.introspection.xml.LoaderException;
+import org.fabric3.introspection.java.InvalidServiceContractException;
+import org.fabric3.introspection.java.TypeMapping;
 import org.fabric3.scdl.Scope;
 import org.fabric3.scdl.ServiceContract;
 import org.fabric3.scdl.ServiceDefinition;
-import org.fabric3.spi.loader.LoaderException;
 
 /**
  * @version $Revision$ $Date$

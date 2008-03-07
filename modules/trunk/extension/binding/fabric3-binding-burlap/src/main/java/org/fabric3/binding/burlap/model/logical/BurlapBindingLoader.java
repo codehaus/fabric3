@@ -30,17 +30,17 @@ import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.spi.loader.LoaderException;
-import org.fabric3.spi.loader.LoaderRegistry;
-import org.fabric3.spi.loader.LoaderUtil;
-import org.fabric3.spi.loader.PolicyHelper;
-import org.fabric3.spi.loader.StAXElementLoader;
+import org.fabric3.introspection.xml.LoaderException;
+import org.fabric3.introspection.xml.LoaderRegistry;
+import org.fabric3.introspection.xml.LoaderUtil;
+import org.fabric3.introspection.xml.LoaderHelper;
+import org.fabric3.introspection.xml.TypeLoader;
 
 /**
  * @version $Revision$ $Date$
  */
 @EagerInit
-public class BurlapBindingLoader implements StAXElementLoader<BurlapBindingDefinition> {
+public class BurlapBindingLoader implements TypeLoader<BurlapBindingDefinition> {
 
     /**
      * Qualified name for the binding element.
@@ -48,18 +48,18 @@ public class BurlapBindingLoader implements StAXElementLoader<BurlapBindingDefin
     public static final QName BINDING_QNAME = new QName("http://www.fabric3.org/binding/burlap/0.2", "binding.burlap");
 
     private LoaderRegistry registry;
-    private final PolicyHelper policyHelper;
+    private final LoaderHelper loaderHelper;
 
 
     /**
      * Constructor.
      *
      * @param registry     Loader registry.
-     * @param policyHelper the policy helper
+     * @param loaderHelper the policy helper
      */
-    public BurlapBindingLoader(@Reference LoaderRegistry registry, @Reference PolicyHelper policyHelper) {
+    public BurlapBindingLoader(@Reference LoaderRegistry registry, @Reference LoaderHelper loaderHelper) {
         this.registry = registry;
-        this.policyHelper = policyHelper;
+        this.loaderHelper = loaderHelper;
     }
 
     @Init
@@ -85,7 +85,7 @@ public class BurlapBindingLoader implements StAXElementLoader<BurlapBindingDefin
             }
             bd = new BurlapBindingDefinition(new URI(uri));
 
-            policyHelper.loadPolicySetsAndIntents(bd, reader);
+            loaderHelper.loadPolicySetsAndIntents(bd, reader);
 
         } catch (URISyntaxException ex) {
             throw new LoaderException(ex);

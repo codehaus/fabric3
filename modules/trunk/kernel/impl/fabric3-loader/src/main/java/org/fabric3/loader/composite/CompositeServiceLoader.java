@@ -34,26 +34,26 @@ import org.fabric3.scdl.CompositeService;
 import org.fabric3.scdl.ModelObject;
 import org.fabric3.scdl.OperationDefinition;
 import org.fabric3.scdl.ServiceContract;
-import org.fabric3.spi.loader.Loader;
-import org.fabric3.spi.loader.LoaderException;
-import org.fabric3.spi.loader.LoaderUtil;
-import org.fabric3.spi.loader.PolicyHelper;
-import org.fabric3.spi.loader.StAXElementLoader;
-import org.fabric3.spi.loader.UnrecognizedElementException;
+import org.fabric3.introspection.xml.Loader;
+import org.fabric3.introspection.xml.LoaderException;
+import org.fabric3.introspection.xml.LoaderUtil;
+import org.fabric3.introspection.xml.LoaderHelper;
+import org.fabric3.introspection.xml.TypeLoader;
+import org.fabric3.introspection.xml.UnrecognizedElementException;
 
 /**
  * Loads a service definition from an XML-based assembly file
  *
  * @version $Rev$ $Date$
  */
-public class CompositeServiceLoader implements StAXElementLoader<CompositeService> {
+public class CompositeServiceLoader implements TypeLoader<CompositeService> {
     private static final QName CALLBACK = new QName(SCA_NS, "callback");
     private final Loader loader;
-    private final PolicyHelper policyHelper;
+    private final LoaderHelper loaderHelper;
 
-    public CompositeServiceLoader(@Reference Loader loader, @Reference PolicyHelper policyHelper) {
+    public CompositeServiceLoader(@Reference Loader loader, @Reference LoaderHelper loaderHelper) {
         this.loader = loader;
-        this.policyHelper = policyHelper;
+        this.loaderHelper = loaderHelper;
     }
 
     public CompositeService load(XMLStreamReader reader, IntrospectionContext context)
@@ -70,7 +70,7 @@ public class CompositeServiceLoader implements StAXElementLoader<CompositeServic
         CompositeService def = new CompositeService(name, null);
         def.setPromote(LoaderUtil.getURI(promote));
 
-        policyHelper.loadPolicySetsAndIntents(def, reader);
+        loaderHelper.loadPolicySetsAndIntents(def, reader);
         boolean callback = false;
         while (true) {
             int i = reader.next();

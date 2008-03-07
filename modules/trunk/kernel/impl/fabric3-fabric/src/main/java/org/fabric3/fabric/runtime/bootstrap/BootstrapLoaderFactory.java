@@ -36,10 +36,11 @@ import org.fabric3.fabric.runtime.ComponentNames;
 import org.fabric3.fabric.services.advertisement.FeatureLoader;
 import org.fabric3.fabric.services.factories.xml.XMLFactoryImpl;
 import org.fabric3.host.runtime.Fabric3Runtime;
-import org.fabric3.introspection.ContractProcessor;
-import org.fabric3.introspection.IntrospectionHelper;
+import org.fabric3.introspection.java.ContractProcessor;
+import org.fabric3.introspection.java.IntrospectionHelper;
 import org.fabric3.introspection.impl.contract.DefaultContractProcessor;
 import org.fabric3.introspection.impl.DefaultIntrospectionHelper;
+import org.fabric3.introspection.xml.Loader;
 import org.fabric3.loader.common.ComponentReferenceLoader;
 import org.fabric3.loader.common.ComponentServiceLoader;
 import org.fabric3.loader.common.DefaultPolicyHelper;
@@ -52,8 +53,7 @@ import org.fabric3.loader.composite.PropertyValueLoader;
 import org.fabric3.monitor.MonitorFactory;
 import org.fabric3.pojo.processor.ImplementationProcessorService;
 import org.fabric3.pojo.processor.Introspector;
-import org.fabric3.spi.loader.Loader;
-import org.fabric3.spi.loader.PolicyHelper;
+import org.fabric3.introspection.xml.LoaderHelper;
 import org.fabric3.spi.services.contribution.MetaDataStore;
 import org.fabric3.spi.services.factories.xml.XMLFactory;
 
@@ -79,14 +79,14 @@ public class BootstrapLoaderFactory {
         PropertyLoader propertyLoader = new PropertyLoader(propertyHelper);
         PropertyValueLoader propertyValueLoader = new PropertyValueLoader(propertyHelper);
 
-        PolicyHelper policyHelper = new DefaultPolicyHelper();
-        ComponentReferenceLoader componentReferenceLoader = new ComponentReferenceLoader(loader, policyHelper);
-        ComponentServiceLoader componentServiceLoader = new ComponentServiceLoader(loader, policyHelper);
+        LoaderHelper loaderHelper = new DefaultPolicyHelper();
+        ComponentReferenceLoader componentReferenceLoader = new ComponentReferenceLoader(loader, loaderHelper);
+        ComponentServiceLoader componentServiceLoader = new ComponentServiceLoader(loader, loaderHelper);
         ComponentLoader componentLoader = new ComponentLoader(loader,
                                                               propertyValueLoader,
                                                               componentReferenceLoader,
                                                               componentServiceLoader,
-                                                              policyHelper);
+                                                              loaderHelper);
 
         IncludeLoader includeLoader = new IncludeLoader(loader, metaDataStore);
         CompositeLoader compositeLoader = new CompositeLoader(loader,
@@ -96,7 +96,7 @@ public class BootstrapLoaderFactory {
                                                               null,
                                                               componentLoader,
                                                               null,
-                                                              policyHelper);
+                                                              loaderHelper);
         compositeLoader.init();
 
         SystemComponentTypeLoader typeLoader = new SystemComponentTypeLoaderImpl(introspector);

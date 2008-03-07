@@ -31,9 +31,9 @@ import org.fabric3.scdl.FieldInjectionSite;
 import org.fabric3.scdl.MethodInjectionSite;
 import org.fabric3.resource.model.SystemSourcedResource;
 import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.introspection.ContractProcessor;
-import org.fabric3.introspection.InvalidServiceContractException;
-import org.fabric3.introspection.TypeMapping;
+import org.fabric3.introspection.java.ContractProcessor;
+import org.fabric3.introspection.java.InvalidServiceContractException;
+import org.fabric3.introspection.java.TypeMapping;
 
 import org.osoa.sca.annotations.Reference;
 

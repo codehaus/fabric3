@@ -27,11 +27,11 @@ import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.spi.loader.InvalidValueException;
-import org.fabric3.spi.loader.LoaderException;
-import org.fabric3.spi.loader.LoaderRegistry;
-import org.fabric3.spi.loader.LoaderUtil;
-import org.fabric3.spi.loader.StAXElementLoader;
+import org.fabric3.introspection.xml.InvalidValueException;
+import org.fabric3.introspection.xml.LoaderException;
+import org.fabric3.introspection.xml.LoaderRegistry;
+import org.fabric3.introspection.xml.LoaderUtil;
+import org.fabric3.introspection.xml.TypeLoader;
 
 /**
  * Loads information for a system implementation
@@ -39,7 +39,7 @@ import org.fabric3.spi.loader.StAXElementLoader;
  * @version $Rev$ $Date$
  */
 @EagerInit
-public class SystemImplementationLoader implements StAXElementLoader<SystemImplementation> {
+public class SystemImplementationLoader implements TypeLoader<SystemImplementation> {
 
     private LoaderRegistry registry;
     private final SystemComponentTypeLoader componentTypeLoader;

@@ -16,20 +16,13 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.spi.loader;
+package org.fabric3.introspection.xml;
 
 /**
- * Exception that indicates that an implementation was not provided.
- *
  * @version $Rev$ $Date$
  */
-public class MissingImplementationException extends LoaderException {
-    private static final long serialVersionUID = -2917278473974880124L;
-
-    /**
-     * Default constructor.
-     */
-    public MissingImplementationException() {
-        super();
+public class UndefinedPropertyException extends LoaderException {
+    public UndefinedPropertyException(String name) {
+        super("Property not found on implementation", name);
     }
 }

@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.spi.loader;
+package org.fabric3.introspection.xml;
 
 /**
  * Exception that indicates an expected resource could not be found. The message should be set to the name of the

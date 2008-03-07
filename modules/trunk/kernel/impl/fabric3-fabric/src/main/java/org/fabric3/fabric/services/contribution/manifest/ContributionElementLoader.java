@@ -34,9 +34,9 @@ import org.fabric3.host.contribution.Constants;
 import org.fabric3.host.contribution.Deployable;
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.loader.common.MissingAttributeException;
-import org.fabric3.spi.loader.LoaderException;
-import org.fabric3.spi.loader.LoaderRegistry;
-import org.fabric3.spi.loader.StAXElementLoader;
+import org.fabric3.introspection.xml.LoaderException;
+import org.fabric3.introspection.xml.LoaderRegistry;
+import org.fabric3.introspection.xml.TypeLoader;
 import org.fabric3.spi.services.contribution.ContributionManifest;
 import org.fabric3.spi.services.contribution.Export;
 import org.fabric3.spi.services.contribution.Import;
@@ -48,7 +48,7 @@ import org.fabric3.spi.util.stax.StaxUtil;
  * @version $Rev$ $Date$
  */
 @EagerInit
-public class ContributionElementLoader implements StAXElementLoader<ContributionManifest> {
+public class ContributionElementLoader implements TypeLoader<ContributionManifest> {
     private static final QName CONTRIBUTION = new QName(SCA_NS, "contribution");
     private static final QName DEPLOYABLE = new QName(SCA_NS, "deployable");
 

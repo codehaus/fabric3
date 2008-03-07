@@ -21,6 +21,8 @@ package org.fabric3.introspection;
 import java.net.URI;
 import java.net.URL;
 
+import org.fabric3.introspection.java.TypeMapping;
+
 /**
  * Context for the current introspection session. It provides information about the environment in which the
  * components being introspected will be used.
@@ -62,5 +64,6 @@ public interface IntrospectionContext {
      *
      * @return the mappings from formal to actual types for the component being introspected
      */
+    @Deprecated
     TypeMapping getTypeMapping();
 }

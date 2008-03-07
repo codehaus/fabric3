@@ -20,7 +20,7 @@ import java.lang.reflect.Method;
 
 import org.osoa.sca.annotations.Init;
 
-import org.fabric3.introspection.AbstractAnnotationProcessor;
+import org.fabric3.introspection.java.AbstractAnnotationProcessor;
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.IntrospectionException;
 import org.fabric3.scdl.Implementation;

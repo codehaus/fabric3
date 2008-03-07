@@ -18,7 +18,7 @@
  */
 package org.fabric3.spi.services.contribution;
 
-import org.fabric3.spi.loader.LoaderException;
+import org.fabric3.introspection.xml.LoaderException;
 
 /**
  * Base class for parsing exception

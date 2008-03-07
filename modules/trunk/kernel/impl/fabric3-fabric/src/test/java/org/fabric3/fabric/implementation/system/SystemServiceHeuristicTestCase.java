@@ -26,11 +26,11 @@ import junit.framework.TestCase;
 import org.easymock.classextension.EasyMock;
 import org.easymock.classextension.IMocksControl;
 
-import org.fabric3.introspection.ContractProcessor;
+import org.fabric3.introspection.java.ContractProcessor;
+import org.fabric3.introspection.java.IntrospectionHelper;
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.IntrospectionException;
-import org.fabric3.introspection.IntrospectionHelper;
-import org.fabric3.introspection.TypeMapping;
+import org.fabric3.introspection.java.TypeMapping;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.ServiceContract;
 import org.fabric3.scdl.ServiceDefinition;

@@ -36,10 +36,10 @@ import org.fabric3.scdl.Property;
 import org.fabric3.scdl.ReferenceDefinition;
 import org.fabric3.scdl.ServiceDefinition;
 import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.spi.loader.LoaderException;
-import org.fabric3.spi.loader.LoaderRegistry;
-import org.fabric3.spi.loader.LoaderUtil;
-import org.fabric3.spi.loader.StAXElementLoader;
+import org.fabric3.introspection.xml.LoaderException;
+import org.fabric3.introspection.xml.LoaderRegistry;
+import org.fabric3.introspection.xml.LoaderUtil;
+import org.fabric3.introspection.xml.TypeLoader;
 
 /**
  * Loads a generic component type.
@@ -47,21 +47,21 @@ import org.fabric3.spi.loader.StAXElementLoader;
  * @version $Rev$ $Date$
  */
 @EagerInit
-public class ComponentTypeLoader implements StAXElementLoader<ComponentType> {
+public class ComponentTypeLoader implements TypeLoader<ComponentType> {
     private static final QName COMPONENT_TYPE = new QName(SCA_NS, "componentType");
     private static final QName PROPERTY = new QName(SCA_NS, "property");
     private static final QName SERVICE = new QName(SCA_NS, "service");
     private static final QName REFERENCE = new QName(SCA_NS, "reference");
 
     private final LoaderRegistry registry;
-    private final StAXElementLoader<Property> propertyLoader;
-    private final StAXElementLoader<ServiceDefinition> serviceLoader;
-    private final StAXElementLoader<ReferenceDefinition> referenceLoader;
+    private final TypeLoader<Property> propertyLoader;
+    private final TypeLoader<ServiceDefinition> serviceLoader;
+    private final TypeLoader<ReferenceDefinition> referenceLoader;
 
     public ComponentTypeLoader(@Reference LoaderRegistry registry,
-                               @Reference(name = "property")StAXElementLoader<Property> propertyLoader,
-                               @Reference(name = "service")StAXElementLoader<ServiceDefinition> serviceLoader,
-                               @Reference(name = "reference")StAXElementLoader<ReferenceDefinition> referenceLoader
+                               @Reference(name = "property")TypeLoader<Property> propertyLoader,
+                               @Reference(name = "service")TypeLoader<ServiceDefinition> serviceLoader,
+                               @Reference(name = "reference")TypeLoader<ReferenceDefinition> referenceLoader
     ) {
         this.registry = registry;
         this.propertyLoader = propertyLoader;

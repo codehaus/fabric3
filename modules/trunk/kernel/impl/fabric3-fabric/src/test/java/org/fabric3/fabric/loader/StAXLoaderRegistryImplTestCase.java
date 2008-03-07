@@ -31,9 +31,9 @@ import org.easymock.classextension.EasyMock;
 import org.fabric3.loader.common.IntrospectionContextImpl;
 import org.fabric3.scdl.ModelObject;
 import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.spi.loader.LoaderException;
-import org.fabric3.spi.loader.StAXElementLoader;
-import org.fabric3.spi.loader.UnrecognizedElementException;
+import org.fabric3.introspection.xml.LoaderException;
+import org.fabric3.introspection.xml.TypeLoader;
+import org.fabric3.introspection.xml.UnrecognizedElementException;
 import org.fabric3.spi.services.factories.xml.XMLFactory;
 
 /**
@@ -45,7 +45,7 @@ public class StAXLoaderRegistryImplTestCase extends TestCase {
     private LoaderRegistryImpl registry;
     private QName name;
     private LoaderRegistryImpl.Monitor mockMonitor;
-    private StAXElementLoader<Object> mockLoader;
+    private TypeLoader<Object> mockLoader;
     private XMLStreamReader mockReader;
     private IntrospectionContext introspectionContext;
     private ModelObject modelType;
@@ -124,9 +124,9 @@ public class StAXLoaderRegistryImplTestCase extends TestCase {
         EasyMock.expect(xmlFactory.newInputFactoryInstance()).andStubReturn(xmlInputFactory);
         EasyMock.replay(xmlFactory);
         registry = new LoaderRegistryImpl(mockMonitor, xmlFactory);
-        Map<QName, StAXElementLoader<?>> map = Collections.emptyMap();
+        Map<QName, TypeLoader<?>> map = Collections.emptyMap();
         registry.setLoaders(map);
-        mockLoader = EasyMock.createMock(StAXElementLoader.class);
+        mockLoader = EasyMock.createMock(TypeLoader.class);
         mockReader = EasyMock.createMock(XMLStreamReader.class);
         modelType = new ModelObject() {
         };

@@ -25,7 +25,7 @@ import javax.xml.stream.XMLStreamReader;
 
 import org.easymock.EasyMock;
 import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.spi.loader.LoaderRegistry;
+import org.fabric3.introspection.xml.LoaderRegistry;
 
 import junit.framework.TestCase;
 

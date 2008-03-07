@@ -1,8 +1,6 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
+ * See the NOTICE file distributed with this work for information
+ * regarding copyright ownership.  This file is licensed
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
@@ -16,17 +14,20 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.spi.loader;
+package org.fabric3.introspection.java;
+
+import org.fabric3.introspection.IntrospectionException;
 
 /**
- * Indicates a required reference was not configured
- *
  * @version $Rev$ $Date$
  */
-public class MissingReferenceException extends LoaderException {
+public class UnsupportedTypeException extends IntrospectionException {
 
-    public MissingReferenceException(String message) {
-        super(message);
+    public UnsupportedTypeException(String identifier) {
+        super(null, identifier);
     }
 
+    public String getMessage() {
+        return "Injection not supported for location: " + getIdentifier();
+    }
 }

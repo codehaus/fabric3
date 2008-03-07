@@ -20,7 +20,7 @@ package org.fabric3.pojo.processor;
 
 import java.lang.reflect.Member;
 
-import org.fabric3.spi.loader.LoaderException;
+import org.fabric3.introspection.xml.LoaderException;
 
 /**
  * Denotes a problem processing annotations on a POJO implementation

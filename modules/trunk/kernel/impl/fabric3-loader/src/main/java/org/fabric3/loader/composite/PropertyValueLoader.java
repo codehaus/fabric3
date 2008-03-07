@@ -30,17 +30,17 @@ import org.fabric3.loader.common.MissingAttributeException;
 import org.fabric3.loader.common.PropertyHelper;
 import org.fabric3.scdl.DataType;
 import org.fabric3.scdl.PropertyValue;
-import org.fabric3.spi.loader.InvalidValueException;
+import org.fabric3.introspection.xml.InvalidValueException;
 import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.spi.loader.LoaderException;
-import org.fabric3.spi.loader.LoaderUtil;
-import org.fabric3.spi.loader.StAXElementLoader;
+import org.fabric3.introspection.xml.LoaderException;
+import org.fabric3.introspection.xml.LoaderUtil;
+import org.fabric3.introspection.xml.TypeLoader;
 import org.fabric3.spi.model.type.XSDSimpleType;
 
 /**
  * @version $Rev$ $Date$
  */
-public class PropertyValueLoader implements StAXElementLoader<PropertyValue> {
+public class PropertyValueLoader implements TypeLoader<PropertyValue> {
     private final PropertyHelper helper;
 
     public PropertyValueLoader(@Reference PropertyHelper helper) {

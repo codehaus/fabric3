@@ -28,7 +28,7 @@ import org.w3c.dom.Element;
 import org.fabric3.transform.xml.Stream2Element2;
 
 /**
- * Default implementation of PolicyHelper.
+ * Default implementation of LoaderHelper.
  *
  * @version $Rev$ $Date$
  */

@@ -29,27 +29,27 @@ import org.fabric3.scdl.ComponentService;
 import org.fabric3.scdl.ModelObject;
 import org.fabric3.scdl.OperationDefinition;
 import org.fabric3.scdl.ServiceContract;
-import org.fabric3.spi.loader.Loader;
+import org.fabric3.introspection.xml.Loader;
 import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.spi.loader.LoaderException;
-import org.fabric3.spi.loader.PolicyHelper;
-import org.fabric3.spi.loader.StAXElementLoader;
-import org.fabric3.spi.loader.UnrecognizedElementException;
+import org.fabric3.introspection.xml.LoaderException;
+import org.fabric3.introspection.xml.LoaderHelper;
+import org.fabric3.introspection.xml.TypeLoader;
+import org.fabric3.introspection.xml.UnrecognizedElementException;
 
 /**
  * Loads a service definition from an XML-based assembly file
  *
  * @version $Rev$ $Date$
  */
-public class ComponentServiceLoader implements StAXElementLoader<ComponentService> {
+public class ComponentServiceLoader implements TypeLoader<ComponentService> {
     private static final QName CALLBACK = new QName(SCA_NS, "callback");
     private final Loader loader;
-    private final PolicyHelper policyHelper;
+    private final LoaderHelper loaderHelper;
 
     public ComponentServiceLoader(@Reference Loader loader,
-                                  @Reference PolicyHelper policyHelper) {
+                                  @Reference LoaderHelper loaderHelper) {
         this.loader = loader;
-        this.policyHelper = policyHelper;
+        this.loaderHelper = loaderHelper;
     }
 
     public ComponentService load(XMLStreamReader reader, IntrospectionContext context)
@@ -61,7 +61,7 @@ public class ComponentServiceLoader implements StAXElementLoader<ComponentServic
         }
         ComponentService def = new ComponentService(name, null);
 
-        policyHelper.loadPolicySetsAndIntents(def, reader);
+        loaderHelper.loadPolicySetsAndIntents(def, reader);
 
         boolean callback = false;
         while (true) {

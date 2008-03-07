@@ -18,7 +18,7 @@
  */
 package org.fabric3.introspection.impl.contract;
 
-import org.fabric3.introspection.InvalidServiceContractException;
+import org.fabric3.introspection.java.InvalidServiceContractException;
 
 /**
  * Denotes an missing callback interface

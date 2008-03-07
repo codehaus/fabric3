@@ -16,7 +16,7 @@
  */
 package org.fabric3.fabric.services.contribution;
 
-import org.fabric3.spi.loader.LoaderException;
+import org.fabric3.introspection.xml.LoaderException;
 
 /**
  * Thrown when a package name on <code>import.java</code> or <code>export.java</code> is not specified

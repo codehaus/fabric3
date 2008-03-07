@@ -27,10 +27,10 @@ import org.osoa.sca.annotations.Callback;
 import org.osoa.sca.annotations.Conversational;
 import org.osoa.sca.annotations.EndsConversation;
 
-import org.fabric3.introspection.ContractProcessor;
-import org.fabric3.introspection.IntrospectionHelper;
-import org.fabric3.introspection.InvalidServiceContractException;
-import org.fabric3.introspection.TypeMapping;
+import org.fabric3.introspection.java.ContractProcessor;
+import org.fabric3.introspection.java.IntrospectionHelper;
+import org.fabric3.introspection.java.InvalidServiceContractException;
+import org.fabric3.introspection.java.TypeMapping;
 import org.fabric3.introspection.impl.DefaultIntrospectionHelper;
 import org.fabric3.scdl.DataType;
 import org.fabric3.scdl.Operation;

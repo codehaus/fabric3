@@ -18,9 +18,7 @@
  */
 package org.fabric3.loader.common;
 
-import java.net.URL;
-
-import org.fabric3.spi.loader.LoaderException;
+import org.fabric3.introspection.xml.LoaderException;
 
 /**
  * Denotes a missing attribute

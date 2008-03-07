@@ -17,7 +17,7 @@
 package org.fabric3.runtime.standalone.host.implementation.launched;
 
 import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.spi.loader.LoaderException;
+import org.fabric3.introspection.xml.LoaderException;
 
 /**
  * @version $Rev$ $Date$

@@ -34,30 +34,30 @@ import org.fabric3.scdl.ModelObject;
 import org.fabric3.scdl.Multiplicity;
 import org.fabric3.scdl.OperationDefinition;
 import org.fabric3.scdl.ServiceContract;
-import org.fabric3.spi.loader.InvalidReferenceException;
-import org.fabric3.spi.loader.InvalidValueException;
-import org.fabric3.spi.loader.Loader;
+import org.fabric3.introspection.xml.InvalidReferenceException;
+import org.fabric3.introspection.xml.InvalidValueException;
+import org.fabric3.introspection.xml.Loader;
 import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.spi.loader.LoaderException;
-import org.fabric3.spi.loader.LoaderUtil;
-import org.fabric3.spi.loader.PolicyHelper;
-import org.fabric3.spi.loader.StAXElementLoader;
-import org.fabric3.spi.loader.UnrecognizedElementException;
+import org.fabric3.introspection.xml.LoaderException;
+import org.fabric3.introspection.xml.LoaderUtil;
+import org.fabric3.introspection.xml.LoaderHelper;
+import org.fabric3.introspection.xml.TypeLoader;
+import org.fabric3.introspection.xml.UnrecognizedElementException;
 
 /**
  * Loads a reference from an XML-based assembly file
  *
  * @version $Rev$ $Date$
  */
-public class ComponentReferenceLoader implements StAXElementLoader<ComponentReference> {
+public class ComponentReferenceLoader implements TypeLoader<ComponentReference> {
     private static final QName CALLBACK = new QName(SCA_NS, "callback");
 
     private final Loader loader;
-    private final PolicyHelper policyHelper;
+    private final LoaderHelper loaderHelper;
 
-    public ComponentReferenceLoader(@Reference Loader loader, @Reference PolicyHelper policyHelper) {
+    public ComponentReferenceLoader(@Reference Loader loader, @Reference LoaderHelper loaderHelper) {
         this.loader = loader;
-        this.policyHelper = policyHelper;
+        this.loaderHelper = loaderHelper;
     }
 
     public ComponentReference load(XMLStreamReader reader, IntrospectionContext context) throws XMLStreamException, LoaderException {
@@ -88,7 +88,7 @@ public class ComponentReferenceLoader implements StAXElementLoader<ComponentRefe
         }
         reference.getTargets().addAll(uris);
 
-        policyHelper.loadPolicySetsAndIntents(reference, reader);
+        loaderHelper.loadPolicySetsAndIntents(reference, reader);
         boolean callback = false;
         while (true) {
             switch (reader.next()) {

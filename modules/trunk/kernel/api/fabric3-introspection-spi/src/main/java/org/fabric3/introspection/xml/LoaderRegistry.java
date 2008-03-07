@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.spi.loader;
+package org.fabric3.introspection.xml;
 
 import javax.xml.namespace.QName;
 
@@ -41,7 +41,7 @@ public interface LoaderRegistry extends Loader {
      * @param loader  a loader that is being contributed to the system
      * @throws IllegalStateException if there is already a loader registered for the supplied element
      */
-    void registerLoader(QName element, StAXElementLoader<?> loader) throws IllegalStateException;
+    void registerLoader(QName element, TypeLoader<?> loader) throws IllegalStateException;
 
     /**
      * Unregister the loader for the supplied element. This will typically be called by a loader as it is being

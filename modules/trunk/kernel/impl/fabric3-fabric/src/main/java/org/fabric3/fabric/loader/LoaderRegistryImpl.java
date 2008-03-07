@@ -34,11 +34,11 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.spi.loader.InvalidConfigurationException;
-import org.fabric3.spi.loader.LoaderException;
-import org.fabric3.spi.loader.LoaderRegistry;
-import org.fabric3.spi.loader.StAXElementLoader;
-import org.fabric3.spi.loader.UnrecognizedElementException;
+import org.fabric3.introspection.xml.InvalidConfigurationException;
+import org.fabric3.introspection.xml.LoaderException;
+import org.fabric3.introspection.xml.LoaderRegistry;
+import org.fabric3.introspection.xml.TypeLoader;
+import org.fabric3.introspection.xml.UnrecognizedElementException;
 import org.fabric3.spi.services.factories.xml.XMLFactory;
 
 /**
@@ -50,8 +50,8 @@ import org.fabric3.spi.services.factories.xml.XMLFactory;
 public class LoaderRegistryImpl implements LoaderRegistry {
     private Monitor monitor;
     private final XMLInputFactory xmlFactory;
-    private Map<QName, StAXElementLoader<?>> mappedLoaders;
-    private final Map<QName, StAXElementLoader<?>> loaders = new HashMap<QName, StAXElementLoader<?>>();
+    private Map<QName, TypeLoader<?>> mappedLoaders;
+    private final Map<QName, TypeLoader<?>> loaders = new HashMap<QName, TypeLoader<?>>();
 
     @Constructor
     public LoaderRegistryImpl(@org.fabric3.api.annotation.Monitor Monitor monitor, @Reference XMLFactory factory) {
@@ -60,11 +60,11 @@ public class LoaderRegistryImpl implements LoaderRegistry {
     }
 
     @Reference(required = false)
-    public void setLoaders(Map<QName, StAXElementLoader<?>> mappedLoaders) {
+    public void setLoaders(Map<QName, TypeLoader<?>> mappedLoaders) {
         this.mappedLoaders = mappedLoaders;
     }
 
-    public void registerLoader(QName element, StAXElementLoader<?> loader) {
+    public void registerLoader(QName element, TypeLoader<?> loader) {
         if (loaders.containsKey(element)) {
             throw new IllegalStateException("Loader already registered for " + element);
         }
@@ -81,7 +81,7 @@ public class LoaderRegistryImpl implements LoaderRegistry {
             throws XMLStreamException, LoaderException {
         QName name = reader.getName();
         monitor.elementLoad(name);
-        StAXElementLoader<?> loader = loaders.get(name);
+        TypeLoader<?> loader = loaders.get(name);
         if (loader == null) {
             loader = mappedLoaders.get(name);
         }

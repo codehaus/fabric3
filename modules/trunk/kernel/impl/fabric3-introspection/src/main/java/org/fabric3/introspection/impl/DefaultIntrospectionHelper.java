@@ -40,8 +40,8 @@ import org.osoa.sca.annotations.Remotable;
 import org.osoa.sca.annotations.Service;
 
 import org.fabric3.introspection.IntrospectionException;
-import org.fabric3.introspection.IntrospectionHelper;
-import org.fabric3.introspection.TypeMapping;
+import org.fabric3.introspection.java.IntrospectionHelper;
+import org.fabric3.introspection.java.TypeMapping;
 import org.fabric3.scdl.InjectableAttributeType;
 import org.fabric3.scdl.ServiceDefinition;
 import org.fabric3.scdl.Signature;

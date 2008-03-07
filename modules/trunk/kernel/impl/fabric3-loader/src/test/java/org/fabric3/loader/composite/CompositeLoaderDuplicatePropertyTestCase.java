@@ -28,10 +28,10 @@ import org.fabric3.scdl.ComponentType;
 import org.fabric3.scdl.Implementation;
 import org.fabric3.scdl.Property;
 import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.spi.loader.LoaderException;
-import org.fabric3.spi.loader.LoaderRegistry;
-import org.fabric3.spi.loader.PolicyHelper;
-import org.fabric3.spi.loader.StAXElementLoader;
+import org.fabric3.introspection.xml.LoaderException;
+import org.fabric3.introspection.xml.LoaderRegistry;
+import org.fabric3.introspection.xml.LoaderHelper;
+import org.fabric3.introspection.xml.TypeLoader;
 
 /**
  * @version $Rev$ $Date$
@@ -59,9 +59,9 @@ public class CompositeLoaderDuplicatePropertyTestCase extends TestCase {
 
     protected void setUp() throws Exception {
         super.setUp();
-        StAXElementLoader<Property> propLoader = createPropertyLoader();
+        TypeLoader<Property> propLoader = createPropertyLoader();
         LoaderRegistry registry = createRegistry();
-        PolicyHelper helper = EasyMock.createNiceMock(PolicyHelper.class);
+        LoaderHelper helper = EasyMock.createNiceMock(LoaderHelper.class);
         EasyMock.replay(helper);
         loader = new CompositeLoader(registry, null, propLoader, null, null, null, null, helper);
         reader = createReader();
@@ -81,13 +81,13 @@ public class CompositeLoaderDuplicatePropertyTestCase extends TestCase {
     }
 
     @SuppressWarnings({"unchecked"})
-    private <T> StAXElementLoader<Property> createPropertyLoader() throws XMLStreamException, LoaderException {
-        StAXElementLoader loader = EasyMock.createMock(StAXElementLoader.class);
+    private <T> TypeLoader<Property> createPropertyLoader() throws XMLStreamException, LoaderException {
+        TypeLoader loader = EasyMock.createMock(TypeLoader.class);
         Property value = new Property(PROP_NAME, null);
         EasyMock.expect(loader.load(EasyMock.isA(XMLStreamReader.class),
                                     EasyMock.isA(IntrospectionContext.class))).andReturn(value).times(2);
         EasyMock.replay(loader);
-        return (StAXElementLoader<Property>) loader;
+        return (TypeLoader<Property>) loader;
     }
 
     private Implementation createImpl() {

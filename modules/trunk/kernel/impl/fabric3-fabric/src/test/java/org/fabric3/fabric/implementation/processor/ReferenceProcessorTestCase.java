@@ -31,8 +31,8 @@ import org.fabric3.scdl.ServiceContract;
 import org.fabric3.scdl.ReferenceDefinition;
 import org.fabric3.introspection.impl.contract.DefaultContractProcessor;
 import org.fabric3.introspection.impl.DefaultIntrospectionHelper;
-import org.fabric3.introspection.IntrospectionHelper;
-import org.fabric3.introspection.TypeMapping;
+import org.fabric3.introspection.java.IntrospectionHelper;
+import org.fabric3.introspection.java.TypeMapping;
 import org.fabric3.introspection.IntrospectionContext;
 
 /**

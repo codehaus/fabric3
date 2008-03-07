@@ -27,11 +27,11 @@ import static org.osoa.sca.Constants.SCA_NS;
 import org.fabric3.scdl.ComponentService;
 import org.fabric3.scdl.ComponentType;
 import org.fabric3.scdl.Implementation;
-import org.fabric3.spi.loader.Loader;
+import org.fabric3.introspection.xml.Loader;
 import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.spi.loader.LoaderException;
-import org.fabric3.spi.loader.PolicyHelper;
-import org.fabric3.spi.loader.StAXElementLoader;
+import org.fabric3.introspection.xml.LoaderException;
+import org.fabric3.introspection.xml.LoaderHelper;
+import org.fabric3.introspection.xml.TypeLoader;
 
 /**
  * @version $Rev$ $Date$
@@ -59,9 +59,9 @@ public class ComponentLoaderServiceTestCase extends TestCase {
 
     protected void setUp() throws Exception {
         super.setUp();
-        StAXElementLoader<ComponentService> serviceLoader = createServiceLoader();
+        TypeLoader<ComponentService> serviceLoader = createServiceLoader();
         Loader registry = createRegistry();
-        PolicyHelper helper = EasyMock.createNiceMock(PolicyHelper.class);
+        LoaderHelper helper = EasyMock.createNiceMock(LoaderHelper.class);
         EasyMock.replay(helper);
         loader = new ComponentLoader(registry, null, null, serviceLoader, helper);
         reader = createReader();
@@ -80,8 +80,8 @@ public class ComponentLoaderServiceTestCase extends TestCase {
     }
 
     @SuppressWarnings({"unchecked"})
-    private StAXElementLoader<ComponentService> createServiceLoader() throws XMLStreamException, LoaderException {
-        StAXElementLoader<ComponentService> loader = EasyMock.createMock(StAXElementLoader.class);
+    private TypeLoader<ComponentService> createServiceLoader() throws XMLStreamException, LoaderException {
+        TypeLoader<ComponentService> loader = EasyMock.createMock(TypeLoader.class);
         ComponentService service = new ComponentService(SERVICE_NAME, null);
         EasyMock.expect(loader.load(EasyMock.isA(XMLStreamReader.class),
                                     EasyMock.isA(IntrospectionContext.class))).andReturn(service);

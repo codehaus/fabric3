@@ -39,8 +39,8 @@ import org.fabric3.scdl.Scope;
 import org.fabric3.scdl.ServiceContract;
 import org.fabric3.scdl.ServiceDefinition;
 import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.spi.loader.LoaderException;
-import org.fabric3.spi.loader.MissingResourceException;
+import org.fabric3.introspection.xml.LoaderException;
+import org.fabric3.introspection.xml.MissingResourceException;
 
 /**
  * @version $Rev$ $Date$

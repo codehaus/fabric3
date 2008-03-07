@@ -16,28 +16,20 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.spi.loader;
+package org.fabric3.introspection.xml;
 
 /**
+ * Exception that indicates that an implementation was not provided.
+ *
  * @version $Rev$ $Date$
  */
-public class InvalidReferenceException extends LoaderException {
-    private static final long serialVersionUID = -4346666572527197558L;
+public class MissingImplementationException extends LoaderException {
+    private static final long serialVersionUID = -2917278473974880124L;
 
-    public InvalidReferenceException(String message) {
-        super(message);
+    /**
+     * Default constructor.
+     */
+    public MissingImplementationException() {
+        super();
     }
-
-    public InvalidReferenceException(String message, String identifier) {
-        super(message, identifier);
-    }
-
-    public InvalidReferenceException(String message, String identifier, Throwable cause) {
-        super(message, identifier, cause);
-    }
-
-    public InvalidReferenceException(Throwable cause) {
-        super(cause);
-    }
-
 }

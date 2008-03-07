@@ -31,6 +31,7 @@ import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.introspection.IntrospectionContext;
+import org.fabric3.introspection.xml.InvalidServiceException;
 import org.fabric3.loader.common.IntrospectionContextImpl;
 import org.fabric3.scdl.Autowire;
 import org.fabric3.scdl.ComponentDefinition;
@@ -41,12 +42,11 @@ import org.fabric3.scdl.Include;
 import org.fabric3.scdl.ModelObject;
 import org.fabric3.scdl.Property;
 import org.fabric3.scdl.WireDefinition;
-import org.fabric3.spi.loader.InvalidServiceException;
-import org.fabric3.spi.loader.LoaderException;
-import org.fabric3.spi.loader.LoaderRegistry;
-import org.fabric3.spi.loader.LoaderUtil;
-import org.fabric3.spi.loader.PolicyHelper;
-import org.fabric3.spi.loader.StAXElementLoader;
+import org.fabric3.introspection.xml.LoaderException;
+import org.fabric3.introspection.xml.LoaderRegistry;
+import org.fabric3.introspection.xml.LoaderUtil;
+import org.fabric3.introspection.xml.LoaderHelper;
+import org.fabric3.introspection.xml.TypeLoader;
 
 /**
  * Loads a composite component definition from an XML-based assembly file
@@ -54,7 +54,7 @@ import org.fabric3.spi.loader.StAXElementLoader;
  * @version $Rev$ $Date$
  */
 @EagerInit
-public class CompositeLoader implements StAXElementLoader<Composite> {
+public class CompositeLoader implements TypeLoader<Composite> {
     private static final QName COMPOSITE = new QName(SCA_NS, "composite");
     private static final QName INCLUDE = new QName(SCA_NS, "include");
     private static final QName PROPERTY = new QName(SCA_NS, "property");
@@ -64,22 +64,22 @@ public class CompositeLoader implements StAXElementLoader<Composite> {
     private static final QName WIRE = new QName(SCA_NS, "wire");
 
     private final LoaderRegistry registry;
-    private final StAXElementLoader<Include> includeLoader;
-    private final StAXElementLoader<Property> propertyLoader;
-    private final StAXElementLoader<CompositeService> serviceLoader;
-    private final StAXElementLoader<CompositeReference> referenceLoader;
-    private final StAXElementLoader<ComponentDefinition<?>> componentLoader;
-    private final StAXElementLoader<WireDefinition> wireLoader;
-    private final PolicyHelper policyHelper;
+    private final TypeLoader<Include> includeLoader;
+    private final TypeLoader<Property> propertyLoader;
+    private final TypeLoader<CompositeService> serviceLoader;
+    private final TypeLoader<CompositeReference> referenceLoader;
+    private final TypeLoader<ComponentDefinition<?>> componentLoader;
+    private final TypeLoader<WireDefinition> wireLoader;
+    private final LoaderHelper loaderHelper;
 
     public CompositeLoader(@Reference LoaderRegistry registry,
-                           @Reference(name = "include")StAXElementLoader<Include> includeLoader,
-                           @Reference(name = "property")StAXElementLoader<Property> propertyLoader,
-                           @Reference(name = "service")StAXElementLoader<CompositeService> serviceLoader,
-                           @Reference(name = "reference")StAXElementLoader<CompositeReference> referenceLoader,
-                           @Reference(name = "component")StAXElementLoader<ComponentDefinition<?>> componentLoader,
-                           @Reference(name = "wire")StAXElementLoader<WireDefinition> wireLoader,
-                           @Reference(name = "policyHelper")PolicyHelper policyHelper) {
+                           @Reference(name = "include")TypeLoader<Include> includeLoader,
+                           @Reference(name = "property")TypeLoader<Property> propertyLoader,
+                           @Reference(name = "service")TypeLoader<CompositeService> serviceLoader,
+                           @Reference(name = "reference")TypeLoader<CompositeReference> referenceLoader,
+                           @Reference(name = "component")TypeLoader<ComponentDefinition<?>> componentLoader,
+                           @Reference(name = "wire")TypeLoader<WireDefinition> wireLoader,
+                           @Reference(name = "loaderHelper")LoaderHelper loaderHelper) {
         this.registry = registry;
         this.includeLoader = includeLoader;
         this.propertyLoader = propertyLoader;
@@ -87,7 +87,7 @@ public class CompositeLoader implements StAXElementLoader<Composite> {
         this.referenceLoader = referenceLoader;
         this.componentLoader = componentLoader;
         this.wireLoader = wireLoader;
-        this.policyHelper = policyHelper;
+        this.loaderHelper = loaderHelper;
     }
 
     public QName getXMLType() {
@@ -119,7 +119,7 @@ public class CompositeLoader implements StAXElementLoader<Composite> {
         type.setLocal(local);
         type.setAutowire(Autowire.fromString(reader.getAttributeValue(null, "autowire")));
         type.setConstrainingType(constrainingType);
-        policyHelper.loadPolicySetsAndIntents(type, reader);
+        loaderHelper.loadPolicySetsAndIntents(type, reader);
 
         try {
             while (true) {

@@ -29,9 +29,9 @@ import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.introspection.IntrospectionContext;
+import org.fabric3.introspection.xml.LoaderRegistry;
 import org.fabric3.loader.common.MissingAttributeException;
-import org.fabric3.spi.loader.LoaderRegistry;
-import org.fabric3.spi.loader.StAXElementLoader;
+import org.fabric3.introspection.xml.TypeLoader;
 import org.fabric3.spi.services.contribution.QNameExport;
 
 /**
@@ -40,7 +40,7 @@ import org.fabric3.spi.services.contribution.QNameExport;
  * @version $Rev$ $Date$
  */
 @EagerInit
-public class QNameExportLoader implements StAXElementLoader<QNameExport> {
+public class QNameExportLoader implements TypeLoader<QNameExport> {
     private static final QName EXPORT = new QName(SCA_NS, "export");
     private LoaderRegistry registry;
 

@@ -18,7 +18,7 @@ package org.fabric3.fabric.implementation.system;
 
 import java.lang.reflect.Constructor;
 
-import org.fabric3.introspection.HeuristicProcessor;
+import org.fabric3.introspection.java.HeuristicProcessor;
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.IntrospectionException;
 import org.fabric3.pojo.scdl.PojoComponentType;

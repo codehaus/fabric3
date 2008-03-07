@@ -31,17 +31,17 @@ import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.spi.loader.LoaderException;
-import org.fabric3.spi.loader.LoaderRegistry;
-import org.fabric3.spi.loader.LoaderUtil;
-import org.fabric3.spi.loader.PolicyHelper;
-import org.fabric3.spi.loader.StAXElementLoader;
+import org.fabric3.introspection.xml.LoaderException;
+import org.fabric3.introspection.xml.LoaderRegistry;
+import org.fabric3.introspection.xml.LoaderUtil;
+import org.fabric3.introspection.xml.LoaderHelper;
+import org.fabric3.introspection.xml.TypeLoader;
 
 /**
  * @version $Revision$ $Date$
  */
 @EagerInit
-public class WsBindingLoader implements StAXElementLoader<WsBindingDefinition> {
+public class WsBindingLoader implements TypeLoader<WsBindingDefinition> {
 
     /**
      * Qualified name for the binding element.
@@ -49,17 +49,17 @@ public class WsBindingLoader implements StAXElementLoader<WsBindingDefinition> {
     public static final QName BINDING_QNAME = new QName(Constants.SCA_NS, "binding.ws");
 
     private LoaderRegistry registry;
-    private final PolicyHelper policyHelper;
+    private final LoaderHelper loaderHelper;
 
     /**
      * Constructor.
      *
      * @param registry     Loader registry.
-     * @param policyHelper the policy helper
+     * @param loaderHelper the policy helper
      */
-    public WsBindingLoader(@Reference LoaderRegistry registry, @Reference PolicyHelper policyHelper) {
+    public WsBindingLoader(@Reference LoaderRegistry registry, @Reference LoaderHelper loaderHelper) {
         this.registry = registry;
-        this.policyHelper = policyHelper;
+        this.loaderHelper = loaderHelper;
     }
 
     @Init
@@ -90,7 +90,7 @@ public class WsBindingLoader implements StAXElementLoader<WsBindingDefinition> {
             bd = new WsBindingDefinition(new URI(uri), implementation,
                                          wsdlLocation, wsdlElement);
 
-            policyHelper.loadPolicySetsAndIntents(bd, reader);
+            loaderHelper.loadPolicySetsAndIntents(bd, reader);
 
             // TODO Add rest of the WSDL support
 

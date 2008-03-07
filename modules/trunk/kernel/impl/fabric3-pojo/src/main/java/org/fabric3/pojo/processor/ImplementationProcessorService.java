@@ -22,11 +22,10 @@ import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
 import java.util.List;
 
-import org.fabric3.introspection.InvalidServiceContractException;
+import org.fabric3.introspection.java.InvalidServiceContractException;
 import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.introspection.TypeMapping;
+import org.fabric3.introspection.java.TypeMapping;
 import org.fabric3.pojo.scdl.PojoComponentType;
-import org.fabric3.scdl.InjectionSite;
 import org.fabric3.scdl.ServiceDefinition;
 import org.fabric3.scdl.ReferenceDefinition;
 

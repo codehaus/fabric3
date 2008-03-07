@@ -16,13 +16,20 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.spi.loader;
+package org.fabric3.introspection.xml;
+
+import junit.framework.TestCase;
+
+import org.fabric3.introspection.xml.LoaderException;
 
 /**
  * @version $Rev$ $Date$
  */
-public class UndefinedPropertyException extends LoaderException {
-    public UndefinedPropertyException(String name) {
-        super("Property not found on implementation", name);
+public class LoaderExceptionTestCase extends TestCase {
+
+    public void testResourceURI() throws Exception {
+        LoaderException e = new LoaderException();
+        e.setResourceURI("test");
+        assertEquals("test", e.getResourceURI());
     }
 }

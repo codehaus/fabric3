@@ -35,9 +35,9 @@ import org.fabric3.scdl.definitions.AbstractDefinition;
 import org.fabric3.scdl.definitions.Intent;
 import org.fabric3.scdl.definitions.PolicySet;
 import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.spi.loader.LoaderException;
-import org.fabric3.spi.loader.LoaderRegistry;
-import org.fabric3.spi.loader.StAXElementLoader;
+import org.fabric3.introspection.xml.LoaderException;
+import org.fabric3.introspection.xml.LoaderRegistry;
+import org.fabric3.introspection.xml.TypeLoader;
 import org.fabric3.spi.services.contribution.QNameSymbol;
 import org.fabric3.spi.services.contribution.Resource;
 import org.fabric3.spi.services.contribution.ResourceElement;
@@ -141,9 +141,9 @@ public class DefinitionsLoaderTestCase extends TestCase {
     @SuppressWarnings("deprecation")
     private static class MockLoaderRegistry implements LoaderRegistry {
 
-        private Map<QName, StAXElementLoader<?>> loaders = new HashMap<QName, StAXElementLoader<?>>();
+        private Map<QName, TypeLoader<?>> loaders = new HashMap<QName, TypeLoader<?>>();
 
-        public void registerLoader(QName element, StAXElementLoader<?> loader)
+        public void registerLoader(QName element, TypeLoader<?> loader)
                 throws IllegalStateException {
             loaders.put(element, loader);
         }

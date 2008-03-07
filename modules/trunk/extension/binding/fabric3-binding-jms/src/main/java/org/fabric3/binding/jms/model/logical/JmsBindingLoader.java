@@ -39,16 +39,16 @@ import org.fabric3.binding.jms.model.DestinationType;
 import org.fabric3.binding.jms.model.JmsBindingMetadata;
 import org.fabric3.binding.jms.model.ResponseDefinition;
 import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.spi.loader.LoaderException;
-import org.fabric3.spi.loader.LoaderRegistry;
-import org.fabric3.spi.loader.PolicyHelper;
-import org.fabric3.spi.loader.StAXElementLoader;
+import org.fabric3.introspection.xml.LoaderException;
+import org.fabric3.introspection.xml.LoaderRegistry;
+import org.fabric3.introspection.xml.LoaderHelper;
+import org.fabric3.introspection.xml.TypeLoader;
 
 /**
  * @version $Revision$ $Date$
  */
 @EagerInit
-public class JmsBindingLoader implements StAXElementLoader<JmsBindingDefinition> {
+public class JmsBindingLoader implements TypeLoader<JmsBindingDefinition> {
 
     /**
      * Qualified name for the binding element.
@@ -56,17 +56,17 @@ public class JmsBindingLoader implements StAXElementLoader<JmsBindingDefinition>
     public static final QName BINDING_QNAME = new QName(Constants.SCA_NS, "binding.jms");
 
     private LoaderRegistry registry;
-    private final PolicyHelper policyHelper;
+    private final LoaderHelper loaderHelper;
 
     /**
      * Constructor.
      *
      * @param registry     Loader registry.
-     * @param policyHelper the policyHelper
+     * @param loaderHelper the loaderHelper
      */
-    public JmsBindingLoader(@Reference LoaderRegistry registry, @Reference PolicyHelper policyHelper) {
+    public JmsBindingLoader(@Reference LoaderRegistry registry, @Reference LoaderHelper loaderHelper) {
         this.registry = registry;
-        this.policyHelper = policyHelper;
+        this.loaderHelper = loaderHelper;
     }
 
     @Init
@@ -92,7 +92,7 @@ public class JmsBindingLoader implements StAXElementLoader<JmsBindingDefinition>
         metadata.setJndiUrl(reader.getAttributeValue(null, "jndiURL"));
         metadata.setInitialContextFactory(reader.getAttributeValue(null, "initialContextFactory"));
 
-        policyHelper.loadPolicySetsAndIntents(bd, reader);
+        loaderHelper.loadPolicySetsAndIntents(bd, reader);
 
         String name = null;
         while (true) {

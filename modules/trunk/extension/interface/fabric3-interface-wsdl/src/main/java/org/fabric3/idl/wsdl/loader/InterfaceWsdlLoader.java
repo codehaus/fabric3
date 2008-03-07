@@ -33,9 +33,9 @@ import org.osoa.sca.annotations.Init;
 import org.fabric3.idl.wsdl.WsdlContract;
 import org.fabric3.idl.wsdl.processor.WsdlProcessor;
 import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.spi.loader.LoaderException;
-import org.fabric3.spi.loader.LoaderRegistry;
-import org.fabric3.spi.loader.StAXElementLoader;
+import org.fabric3.introspection.xml.LoaderException;
+import org.fabric3.introspection.xml.LoaderRegistry;
+import org.fabric3.introspection.xml.TypeLoader;
 
 /**
  * Loader for interface.wsdl.
@@ -43,7 +43,7 @@ import org.fabric3.spi.loader.StAXElementLoader;
  * @version $Revision$ $Date$
  */
 @EagerInit
-public class InterfaceWsdlLoader implements StAXElementLoader<WsdlContract>, Constants {
+public class InterfaceWsdlLoader implements TypeLoader<WsdlContract>, Constants {
 
     /**
      * Interface element QName.

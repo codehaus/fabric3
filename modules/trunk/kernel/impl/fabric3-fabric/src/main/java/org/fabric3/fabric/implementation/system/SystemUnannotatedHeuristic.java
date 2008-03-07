@@ -24,14 +24,14 @@ import java.util.Set;
 
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.introspection.ContractProcessor;
-import org.fabric3.introspection.HeuristicProcessor;
+import org.fabric3.introspection.java.ContractProcessor;
+import org.fabric3.introspection.java.HeuristicProcessor;
+import org.fabric3.introspection.java.IntrospectionHelper;
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.IntrospectionException;
-import org.fabric3.introspection.IntrospectionHelper;
-import org.fabric3.introspection.InvalidServiceContractException;
-import org.fabric3.introspection.TypeMapping;
-import org.fabric3.introspection.UnsupportedTypeException;
+import org.fabric3.introspection.java.InvalidServiceContractException;
+import org.fabric3.introspection.java.TypeMapping;
+import org.fabric3.introspection.java.UnsupportedTypeException;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.ConstructorInjectionSite;
 import org.fabric3.scdl.InjectionSite;
@@ -150,7 +150,8 @@ public class SystemUnannotatedHeuristic implements HeuristicProcessor<SystemImpl
         componentType.add(property, site);
     }
 
-    void addReference(PojoComponentType componentType, TypeMapping typeMapping, String name, Type parameterType, InjectionSite site) throws InvalidServiceContractException {
+    void addReference(PojoComponentType componentType, TypeMapping typeMapping, String name, Type parameterType, InjectionSite site) throws
+            InvalidServiceContractException {
         ServiceContract<Type> contract = contractProcessor.introspect(typeMapping, parameterType);
         Multiplicity multiplicity = helper.isManyValued(typeMapping, parameterType) ? Multiplicity.ONE_N : Multiplicity.ONE_ONE;
         ReferenceDefinition reference = new ReferenceDefinition(name, contract, multiplicity);

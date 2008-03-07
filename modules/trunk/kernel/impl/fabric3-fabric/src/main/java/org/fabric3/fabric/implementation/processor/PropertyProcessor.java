@@ -26,7 +26,7 @@ import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.introspection.IntrospectionHelper;
+import org.fabric3.introspection.java.IntrospectionHelper;
 import org.fabric3.introspection.IntrospectionException;
 import org.fabric3.pojo.processor.ImplementationProcessorExtension;
 import org.fabric3.pojo.processor.ProcessingException;

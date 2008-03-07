@@ -28,11 +28,11 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.api.annotation.Resource;
 import org.fabric3.api.annotation.Monitor;
-import org.fabric3.introspection.ContractProcessor;
+import org.fabric3.introspection.java.ContractProcessor;
 import org.fabric3.introspection.IntrospectionException;
-import org.fabric3.introspection.IntrospectionHelper;
-import org.fabric3.introspection.InvalidServiceContractException;
-import org.fabric3.introspection.TypeMapping;
+import org.fabric3.introspection.java.IntrospectionHelper;
+import org.fabric3.introspection.java.InvalidServiceContractException;
+import org.fabric3.introspection.java.TypeMapping;
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.pojo.processor.ImplementationProcessorService;
 import org.fabric3.pojo.processor.ProcessingException;

@@ -37,8 +37,8 @@ import org.osoa.sca.annotations.ConversationID;
 import org.osoa.sca.annotations.Context;
 
 import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.introspection.InvalidServiceContractException;
-import org.fabric3.introspection.TypeMapping;
+import org.fabric3.introspection.java.InvalidServiceContractException;
+import org.fabric3.introspection.java.TypeMapping;
 import org.fabric3.pojo.processor.ImplementationProcessorExtension;
 import org.fabric3.pojo.processor.ImplementationProcessorService;
 import static org.fabric3.pojo.processor.JavaIntrospectionHelper.getAllInterfaces;

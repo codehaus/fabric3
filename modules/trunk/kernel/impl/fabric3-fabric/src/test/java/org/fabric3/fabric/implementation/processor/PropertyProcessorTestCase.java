@@ -28,7 +28,7 @@ import org.easymock.EasyMock;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.introspection.impl.DefaultIntrospectionHelper;
 import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.introspection.TypeMapping;
+import org.fabric3.introspection.java.TypeMapping;
 
 /**
  * @version $Rev$ $Date$

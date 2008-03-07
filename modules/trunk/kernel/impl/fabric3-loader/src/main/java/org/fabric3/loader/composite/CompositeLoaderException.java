@@ -18,7 +18,7 @@ package org.fabric3.loader.composite;
 
 import javax.xml.namespace.QName;
 
-import org.fabric3.spi.loader.LoaderException;
+import org.fabric3.introspection.xml.LoaderException;
 
 /**
  * Base class for exceptions raised during the load of a composite XML file.

@@ -32,29 +32,29 @@ import org.fabric3.pojo.processor.Introspector;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.Scope;
 import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.spi.loader.LoaderException;
-import org.fabric3.spi.loader.LoaderRegistry;
-import org.fabric3.spi.loader.LoaderUtil;
-import org.fabric3.spi.loader.MissingResourceException;
-import org.fabric3.spi.loader.PolicyHelper;
-import org.fabric3.spi.loader.StAXElementLoader;
+import org.fabric3.introspection.xml.LoaderException;
+import org.fabric3.introspection.xml.LoaderRegistry;
+import org.fabric3.introspection.xml.LoaderUtil;
+import org.fabric3.introspection.xml.MissingResourceException;
+import org.fabric3.introspection.xml.LoaderHelper;
+import org.fabric3.introspection.xml.TypeLoader;
 
 /**
  * @version $Rev$ $Date$
  */
 @EagerInit
-public class GroovyImplementationLoader implements StAXElementLoader<GroovyImplementation> {
+public class GroovyImplementationLoader implements TypeLoader<GroovyImplementation> {
 
     private final LoaderRegistry registry;
     private final Introspector introspector;
-    private final PolicyHelper policyHelper;
+    private final LoaderHelper loaderHelper;
 
     public GroovyImplementationLoader(@Reference LoaderRegistry registry,
                                       @Reference Introspector introspector,
-                                      @Reference PolicyHelper policyHelper) {
+                                      @Reference LoaderHelper loaderHelper) {
         this.registry = registry;
         this.introspector = introspector;
-        this.policyHelper = policyHelper;
+        this.loaderHelper = loaderHelper;
     }
 
     @Init
@@ -110,7 +110,7 @@ public class GroovyImplementationLoader implements StAXElementLoader<GroovyImple
         }
         GroovyImplementation impl = new GroovyImplementation(scriptName, className, componentType);
 
-        policyHelper.loadPolicySetsAndIntents(impl, reader);
+        loaderHelper.loadPolicySetsAndIntents(impl, reader);
 
         LoaderUtil.skipToEndElement(reader);
 

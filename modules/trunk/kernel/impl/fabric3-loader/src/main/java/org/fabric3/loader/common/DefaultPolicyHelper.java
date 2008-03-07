@@ -21,8 +21,8 @@ package org.fabric3.loader.common;
 import javax.xml.stream.XMLStreamReader;
 
 import org.fabric3.scdl.PolicyAware;
-import org.fabric3.spi.loader.LoaderException;
-import org.fabric3.spi.loader.PolicyHelper;
+import org.fabric3.introspection.xml.LoaderException;
+import org.fabric3.introspection.xml.LoaderHelper;
 import org.fabric3.spi.util.stax.StaxUtil;
 
 /**
@@ -30,7 +30,7 @@ import org.fabric3.spi.util.stax.StaxUtil;
  * 
  * @version $Revision$ $Date$
  */
-public class DefaultPolicyHelper implements PolicyHelper {
+public class DefaultPolicyHelper implements LoaderHelper {
 
     public void loadPolicySetsAndIntents(PolicyAware policyAware, XMLStreamReader reader) throws LoaderException {
         

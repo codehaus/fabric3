@@ -32,16 +32,16 @@ import org.fabric3.loader.common.IntrospectionContextImpl;
 import org.fabric3.scdl.ComponentType;
 import org.fabric3.scdl.Scope;
 import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.spi.loader.LoaderException;
-import org.fabric3.spi.loader.LoaderRegistry;
-import org.fabric3.spi.loader.LoaderUtil;
-import org.fabric3.spi.loader.StAXElementLoader;
+import org.fabric3.introspection.xml.LoaderException;
+import org.fabric3.introspection.xml.LoaderRegistry;
+import org.fabric3.introspection.xml.LoaderUtil;
+import org.fabric3.introspection.xml.TypeLoader;
 
 /**
  * @version $Rev$ $Date$
  */
 @EagerInit
-public class WebappLoader implements StAXElementLoader<WebappImplementation> {
+public class WebappLoader implements TypeLoader<WebappImplementation> {
 
     private final LoaderRegistry registry;
 

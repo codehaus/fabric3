@@ -16,9 +16,7 @@
  */
 package org.fabric3.loader.composite;
 
-import java.net.URL;
-
-import org.fabric3.spi.loader.LoaderException;
+import org.fabric3.introspection.xml.LoaderException;
 
 /**
  * @version $Rev$ $Date$

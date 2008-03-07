@@ -30,6 +30,7 @@ import org.w3c.dom.Document;
 
 import org.fabric3.fabric.implementation.system.SystemImplementation;
 import org.fabric3.introspection.IntrospectionContext;
+import org.fabric3.introspection.xml.LoaderException;
 import org.fabric3.loader.common.PropertyHelper;
 import org.fabric3.pojo.processor.Introspector;
 import org.fabric3.pojo.scdl.PojoComponentType;
@@ -38,15 +39,14 @@ import org.fabric3.scdl.Implementation;
 import org.fabric3.scdl.PropertyValue;
 import org.fabric3.scdl.Scope;
 import org.fabric3.spi.Constants;
-import org.fabric3.spi.loader.LoaderException;
-import org.fabric3.spi.loader.LoaderRegistry;
-import org.fabric3.spi.loader.StAXElementLoader;
+import org.fabric3.introspection.xml.LoaderRegistry;
+import org.fabric3.introspection.xml.TypeLoader;
 
 /**
  * @version $Revision: 1 $ $Date: 2007-05-14 18:40:37 +0100 (Mon, 14 May 2007) $
  */
 @EagerInit
-public class FeatureLoader implements StAXElementLoader<ComponentDefinition> {
+public class FeatureLoader implements TypeLoader<ComponentDefinition> {
 
     // Qualified name of the root element.
     private static final QName QNAME = new QName(Constants.FABRIC3_SYSTEM_NS, "feature");

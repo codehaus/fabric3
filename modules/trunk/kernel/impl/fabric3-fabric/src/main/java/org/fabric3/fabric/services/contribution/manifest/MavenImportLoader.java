@@ -28,9 +28,9 @@ import org.osoa.sca.annotations.EagerInit;
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.loader.common.MissingAttributeException;
 import org.fabric3.spi.Constants;
-import org.fabric3.spi.loader.LoaderException;
-import org.fabric3.spi.loader.LoaderRegistry;
-import org.fabric3.spi.loader.StAXElementLoader;
+import org.fabric3.introspection.xml.LoaderException;
+import org.fabric3.introspection.xml.LoaderRegistry;
+import org.fabric3.introspection.xml.TypeLoader;
 
 /**
  * Loads Maven import entries in a contribution manifest.
@@ -38,7 +38,7 @@ import org.fabric3.spi.loader.StAXElementLoader;
  * @version $Rev$ $Date$
  */
 @EagerInit
-public class MavenImportLoader implements StAXElementLoader<MavenImport> {
+public class MavenImportLoader implements TypeLoader<MavenImport> {
     private static final QName IMPORT = new QName(Constants.FABRIC3_MAVEN_NS, "import");
     private LoaderRegistry registry;
 

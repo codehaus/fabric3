@@ -30,9 +30,9 @@ import org.fabric3.scdl.definitions.PolicyPhase;
 import org.fabric3.scdl.definitions.PolicySet;
 import org.fabric3.spi.Constants;
 import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.spi.loader.LoaderException;
-import org.fabric3.spi.loader.LoaderRegistry;
-import org.fabric3.spi.loader.StAXElementLoader;
+import org.fabric3.introspection.xml.LoaderException;
+import org.fabric3.introspection.xml.LoaderRegistry;
+import org.fabric3.introspection.xml.TypeLoader;
 import org.fabric3.spi.util.stax.StaxUtil;
 import org.fabric3.transform.xml.Stream2Document;
 
@@ -48,7 +48,7 @@ import org.w3c.dom.NodeList;
  * @version $Revision$ $Date$
  */
 @EagerInit
-public class PolicySetLoader implements StAXElementLoader<PolicySet> {
+public class PolicySetLoader implements TypeLoader<PolicySet> {
     
     private LoaderRegistry registry;
     private Stream2Document transformer = new Stream2Document();

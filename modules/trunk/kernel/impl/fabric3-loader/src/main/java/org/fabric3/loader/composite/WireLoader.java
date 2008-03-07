@@ -20,16 +20,16 @@ import java.net.URI;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamException;
 
-import org.fabric3.spi.loader.StAXElementLoader;
+import org.fabric3.introspection.xml.TypeLoader;
 import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.spi.loader.LoaderException;
-import org.fabric3.spi.loader.LoaderUtil;
+import org.fabric3.introspection.xml.LoaderException;
+import org.fabric3.introspection.xml.LoaderUtil;
 import org.fabric3.scdl.WireDefinition;
 
 /**
  * @version $Rev$ $Date$
  */
-public class WireLoader implements StAXElementLoader<WireDefinition> {
+public class WireLoader implements TypeLoader<WireDefinition> {
     public WireDefinition load(XMLStreamReader reader, IntrospectionContext context)
             throws XMLStreamException, LoaderException {
 
