@@ -26,24 +26,24 @@ import org.osoa.sca.annotations.Reference;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import org.fabric3.loader.common.MissingAttributeException;
-import org.fabric3.loader.common.PropertyHelper;
-import org.fabric3.scdl.DataType;
-import org.fabric3.scdl.PropertyValue;
-import org.fabric3.introspection.xml.InvalidValueException;
 import org.fabric3.introspection.IntrospectionContext;
+import org.fabric3.introspection.xml.InvalidValueException;
 import org.fabric3.introspection.xml.LoaderException;
+import org.fabric3.introspection.xml.LoaderHelper;
 import org.fabric3.introspection.xml.LoaderUtil;
 import org.fabric3.introspection.xml.TypeLoader;
+import org.fabric3.loader.common.MissingAttributeException;
+import org.fabric3.scdl.DataType;
+import org.fabric3.scdl.PropertyValue;
 import org.fabric3.spi.model.type.XSDSimpleType;
 
 /**
  * @version $Rev$ $Date$
  */
 public class PropertyValueLoader implements TypeLoader<PropertyValue> {
-    private final PropertyHelper helper;
+    private final LoaderHelper helper;
 
-    public PropertyValueLoader(@Reference PropertyHelper helper) {
+    public PropertyValueLoader(@Reference LoaderHelper helper) {
         this.helper = helper;
     }
 

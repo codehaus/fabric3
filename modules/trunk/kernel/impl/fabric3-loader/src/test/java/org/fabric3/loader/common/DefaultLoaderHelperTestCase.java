@@ -24,6 +24,9 @@ import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLInputFactory;
 
 import junit.framework.TestCase;
+import org.w3c.dom.Document;
+import org.w3c.dom.NodeList;
+import org.w3c.dom.Element;
 
 /**
  * @version $Rev$ $Date$
@@ -37,7 +40,6 @@ public class DefaultLoaderHelperTestCase extends TestCase {
 
     public void testCreateQName() throws Exception {
         XMLStreamReader reader = createReader(XML);
-        reader.nextTag();
         QName qName = helper.createQName("f3:bar", reader);
         assertEquals("http://fabric3.org/xmlns/sca/2.0-alpha", qName.getNamespaceURI());
         assertEquals("bar", qName.getLocalPart());
@@ -45,20 +47,41 @@ public class DefaultLoaderHelperTestCase extends TestCase {
 
     public void testCreateQNameContext() throws Exception {
         XMLStreamReader reader = createReader(XML);
-        reader.nextTag();
         QName qName = helper.createQName("bar", reader);
         assertEquals("http://www.osoa.org/xmlns/sca/1.0", qName.getNamespaceURI());
     }
 
     public void testCreateQNameInvalidPrefix() throws Exception {
         XMLStreamReader reader = createReader(XML);
-        reader.nextTag();
         try {
             helper.createQName("bad:bar", reader);
             fail();
         } catch (InvalidPrefixException e) {
             //expected
         }
+    }
+
+    public void testComplexProperty() throws XMLStreamException {
+        String xml = "<property xmlns:foo='http://foo.com'>"
+            + "<foo:a>aValue</foo:a>"
+            + "<foo:b>InterestingURI</foo:b>"
+            + "</property>";
+
+        XMLStreamReader reader = createReader(xml);
+        Document value = helper.loadValue(reader);
+        reader.close();
+
+        NodeList childNodes = value.getDocumentElement().getChildNodes();
+        assertEquals(2, childNodes.getLength());
+
+        Element e = (Element) childNodes.item(0);
+        assertEquals("http://foo.com", e.getNamespaceURI());
+        assertEquals("a", e.getLocalName());
+        assertEquals("aValue", e.getTextContent());
+        e = (Element) childNodes.item(1);
+        assertEquals("http://foo.com", e.getNamespaceURI());
+        assertEquals("b", e.getLocalName());
+        assertEquals("InterestingURI", e.getTextContent());
     }
 
     protected void setUp() throws Exception {
@@ -71,7 +94,9 @@ public class DefaultLoaderHelperTestCase extends TestCase {
     private XMLStreamReader createReader(String xml) throws XMLStreamException {
 
         InputStream in = new ByteArrayInputStream(xml.getBytes());
-        return xmlFactory.createXMLStreamReader(in);
+        XMLStreamReader reader = xmlFactory.createXMLStreamReader(in);
+        reader.nextTag();
+        return reader;
 
     }
 }

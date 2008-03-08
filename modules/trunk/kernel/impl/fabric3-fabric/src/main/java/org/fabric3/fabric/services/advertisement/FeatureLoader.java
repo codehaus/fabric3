@@ -31,7 +31,9 @@ import org.w3c.dom.Document;
 import org.fabric3.fabric.implementation.system.SystemImplementation;
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.xml.LoaderException;
-import org.fabric3.loader.common.PropertyHelper;
+import org.fabric3.introspection.xml.LoaderHelper;
+import org.fabric3.introspection.xml.LoaderRegistry;
+import org.fabric3.introspection.xml.TypeLoader;
 import org.fabric3.pojo.processor.Introspector;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.ComponentDefinition;
@@ -39,8 +41,6 @@ import org.fabric3.scdl.Implementation;
 import org.fabric3.scdl.PropertyValue;
 import org.fabric3.scdl.Scope;
 import org.fabric3.spi.Constants;
-import org.fabric3.introspection.xml.LoaderRegistry;
-import org.fabric3.introspection.xml.TypeLoader;
 
 /**
  * @version $Revision: 1 $ $Date: 2007-05-14 18:40:37 +0100 (Mon, 14 May 2007) $
@@ -52,15 +52,15 @@ public class FeatureLoader implements TypeLoader<ComponentDefinition> {
     private static final QName QNAME = new QName(Constants.FABRIC3_SYSTEM_NS, "feature");
 
     private LoaderRegistry registry;
-    // Introspector
     private final Introspector introspector;
+    private final LoaderHelper helper;
 
-    private final PropertyHelper propertyHelper;
-
-    public FeatureLoader(@Reference LoaderRegistry registry, @Reference Introspector introspector, @Reference PropertyHelper propertyHelper) {
+    public FeatureLoader(@Reference LoaderRegistry registry, 
+                         @Reference Introspector introspector,
+                         @Reference LoaderHelper helper) {
         this.registry = registry;
         this.introspector = introspector;
-        this.propertyHelper = propertyHelper;
+        this.helper = helper;
     }
 
 
@@ -78,7 +78,7 @@ public class FeatureLoader implements TypeLoader<ComponentDefinition> {
     public ComponentDefinition load(XMLStreamReader reader, IntrospectionContext context) throws XMLStreamException, LoaderException {
 
         String name = reader.getAttributeValue(null, "name");
-        Document value = propertyHelper.loadValue(reader);
+        Document value = helper.loadValue(reader);
         PropertyValue propertyValue = new PropertyValue("feature", null, value);
 
         final Class<FeatureComponent> implClass = FeatureComponent.class;

@@ -30,6 +30,7 @@ import org.fabric3.scdl.Property;
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.xml.LoaderException;
 import org.fabric3.introspection.xml.TypeLoader;
+import org.fabric3.introspection.xml.LoaderHelper;
 
 /**
  * Loads a property declaration from an XML-based assembly file
@@ -42,9 +43,9 @@ public class PropertyLoader implements TypeLoader<Property> {
     private static final String MUST_SUPPLY = "mustSupply";
     private static final QName XS_STRING = new QName(XMLConstants.W3C_XML_SCHEMA_NS_URI, "string");
 
-    private final PropertyHelper helper;
+    private final LoaderHelper helper;
 
-    public PropertyLoader(@Reference PropertyHelper helper) {
+    public PropertyLoader(@Reference LoaderHelper helper) {
         this.helper = helper;
     }
 

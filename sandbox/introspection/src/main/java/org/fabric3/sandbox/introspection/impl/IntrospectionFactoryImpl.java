@@ -48,7 +48,6 @@ import org.fabric3.java.JavaImplementationLoader;
 import org.fabric3.loader.common.ComponentReferenceLoader;
 import org.fabric3.loader.common.ComponentServiceLoader;
 import org.fabric3.loader.common.DefaultLoaderHelper;
-import org.fabric3.loader.common.PropertyHelperImpl;
 import org.fabric3.loader.common.PropertyLoader;
 import org.fabric3.loader.composite.ComponentLoader;
 import org.fabric3.loader.composite.CompositeLoader;
@@ -91,9 +90,8 @@ public class IntrospectionFactoryImpl implements IntrospectionFactory {
 
         Introspector introspector = createIntrospector(monitorFactory, helper);
 
-        PropertyHelperImpl propertyHelper = new PropertyHelperImpl();
-        PropertyLoader propertyLoader = new PropertyLoader(propertyHelper);
-        PropertyValueLoader propertyValueLoader = new PropertyValueLoader(propertyHelper);
+        PropertyLoader propertyLoader = new PropertyLoader(loaderHelper);
+        PropertyValueLoader propertyValueLoader = new PropertyValueLoader(loaderHelper);
 
         CompositeServiceLoader serviceLoader = new CompositeServiceLoader(loader, loaderHelper);
         CompositeReferenceLoader referenceLoader = new CompositeReferenceLoader(loader, loaderHelper);

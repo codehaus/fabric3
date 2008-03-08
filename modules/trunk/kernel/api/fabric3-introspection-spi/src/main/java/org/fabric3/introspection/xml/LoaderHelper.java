@@ -22,6 +22,9 @@ import java.net.URI;
 import java.util.Set;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamReader;
+import javax.xml.stream.XMLStreamException;
+
+import org.w3c.dom.Document;
 
 import org.fabric3.scdl.PolicyAware;
 
@@ -31,6 +34,18 @@ import org.fabric3.scdl.PolicyAware;
  * @version $Revision$ $Date$
  */
 public interface LoaderHelper {
+    /**
+     * Load an XML value from a Stax stream.
+     * <p/>
+     * The reader must be positioned at an element whose body contains an XML value. This will typically be an SCA
+     * &lt;property&gt; element (either in a &lt;composite&gt; or in a &lt;component&gt;). The resulting document
+     * comprises a &lt;value&gt; element whose body content will be that of the original &lt;property&gt; element.
+     *
+     * @param reader a stream containing a property value
+     * @return a standalone document containing the value
+     * @throws javax.xml.stream.XMLStreamException if there was a problem reading the stream
+     */
+    Document loadValue(XMLStreamReader reader) throws XMLStreamException;
 
     /**
      * Loads policy sets and intents defined against bindings, implementations, services, references and components.
