@@ -14,7 +14,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.loader.common;
+package org.fabric3.loader.impl;
 
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
@@ -27,6 +27,9 @@ import junit.framework.TestCase;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.w3c.dom.Element;
+
+import org.fabric3.loader.impl.DefaultLoaderHelper;
+import org.fabric3.loader.common.InvalidPrefixException;
 
 /**
  * @version $Rev$ $Date$

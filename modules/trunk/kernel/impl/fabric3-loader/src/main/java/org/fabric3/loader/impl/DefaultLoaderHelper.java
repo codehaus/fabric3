@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.loader.common;
+package org.fabric3.loader.impl;
 
 import java.net.URI;
 import java.util.Set;
@@ -36,6 +36,7 @@ import org.fabric3.scdl.PolicyAware;
 import org.fabric3.introspection.xml.LoaderException;
 import org.fabric3.introspection.xml.LoaderHelper;
 import org.fabric3.transform.xml.Stream2Element2;
+import org.fabric3.loader.common.InvalidPrefixException;
 
 /**
  * Default implementation of the loader helper.

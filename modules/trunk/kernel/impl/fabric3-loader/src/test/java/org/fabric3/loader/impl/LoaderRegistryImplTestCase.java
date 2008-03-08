@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.fabric.loader;
+package org.fabric3.loader.impl;
 
 import java.util.Collections;
 import java.util.Map;
@@ -26,7 +26,7 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
 import junit.framework.TestCase;
-import org.easymock.classextension.EasyMock;
+import org.easymock.EasyMock;
 
 import org.fabric3.loader.common.IntrospectionContextImpl;
 import org.fabric3.scdl.ModelObject;
@@ -41,7 +41,7 @@ import org.fabric3.spi.services.factories.xml.XMLFactory;
  *
  * @version $Rev$ $Date$
  */
-public class StAXLoaderRegistryImplTestCase extends TestCase {
+public class LoaderRegistryImplTestCase extends TestCase {
     private LoaderRegistryImpl registry;
     private QName name;
     private LoaderRegistryImpl.Monitor mockMonitor;
@@ -51,14 +51,14 @@ public class StAXLoaderRegistryImplTestCase extends TestCase {
     private ModelObject modelType;
 
     public void testLoaderRegistration() {
-        mockMonitor.registeringLoader(EasyMock.eq(name));
+        mockMonitor.registeringLoader(name);
         EasyMock.replay(mockMonitor);
         registry.registerLoader(name, mockLoader);
         EasyMock.verify(mockMonitor);
     }
 
     public void testLoaderUnregistration() {
-        mockMonitor.unregisteringLoader(EasyMock.eq(name));
+        mockMonitor.unregisteringLoader(name);
         EasyMock.replay(mockMonitor);
         registry.unregisterLoader(name);
         EasyMock.verify(mockMonitor);
@@ -67,12 +67,10 @@ public class StAXLoaderRegistryImplTestCase extends TestCase {
     public void testSuccessfulDispatch() throws LoaderException, XMLStreamException {
         EasyMock.expect(mockReader.getName()).andReturn(name);
         EasyMock.replay(mockReader);
-        mockMonitor.registeringLoader(EasyMock.eq(name));
-        mockMonitor.elementLoad(EasyMock.eq(name));
+        mockMonitor.registeringLoader(name);
+        mockMonitor.elementLoad(name);
         EasyMock.replay(mockMonitor);
-        EasyMock.expect(mockLoader.load(
-                EasyMock.eq(mockReader),
-                EasyMock.eq(introspectionContext))).andReturn(modelType);
+        EasyMock.expect(mockLoader.load(mockReader, introspectionContext)).andReturn(modelType);
         EasyMock.replay(mockLoader);
         registry.registerLoader(name, mockLoader);
         assertSame(modelType, registry.load(mockReader, ModelObject.class, introspectionContext));
@@ -85,7 +83,7 @@ public class StAXLoaderRegistryImplTestCase extends TestCase {
     public void testUnsuccessfulDispatch() throws LoaderException, XMLStreamException {
         EasyMock.expect(mockReader.getName()).andReturn(name);
         EasyMock.replay(mockReader);
-        mockMonitor.elementLoad(EasyMock.eq(name));
+        mockMonitor.elementLoad(name);
         EasyMock.replay(mockMonitor);
         try {
             registry.load(mockReader, ModelObject.class, introspectionContext);
@@ -100,12 +98,10 @@ public class StAXLoaderRegistryImplTestCase extends TestCase {
     public void testPregivenModelObject() throws Exception {
         EasyMock.expect(mockReader.getName()).andReturn(name);
         EasyMock.replay(mockReader);
-        mockMonitor.registeringLoader(EasyMock.eq(name));
-        mockMonitor.elementLoad(EasyMock.eq(name));
+        mockMonitor.registeringLoader(name);
+        mockMonitor.elementLoad(name);
         EasyMock.replay(mockMonitor);
-        EasyMock.expect(mockLoader.load(
-                EasyMock.eq(mockReader),
-                EasyMock.eq(introspectionContext))).andReturn(modelType);
+        EasyMock.expect(mockLoader.load(mockReader, introspectionContext)).andReturn(modelType);
         EasyMock.replay(mockLoader);
         registry.registerLoader(name, mockLoader);
         assertSame(modelType, registry.load(mockReader, ModelObject.class, introspectionContext));

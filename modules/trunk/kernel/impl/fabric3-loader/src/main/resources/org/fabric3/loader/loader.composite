@@ -31,7 +31,12 @@
 
     <!-- Loader and LoaderRegistry -->
     <component name="loader">
-        <system:implementation.system class="org.fabric3.fabric.loader.LoaderRegistryImpl"/>
+        <system:implementation.system class="org.fabric3.loader.impl.LoaderRegistryImpl"/>
+    </component>
+
+    <!-- Loader helper -->
+    <component name="loaderHelper">
+        <system:implementation.system class="org.fabric3.loader.impl.DefaultLoaderHelper"/>
     </component>
 
     <!-- Common SCDL loader implementations -->
@@ -115,11 +120,6 @@
 
     <component name="loader.implementationType">
         <system:implementation.system class="org.fabric3.loader.definitions.ImplementationTypeLoader"/>
-    </component>
-
-    <!-- Policy helper -->
-    <component name="loaderHelper">
-        <system:implementation.system class="org.fabric3.loader.common.DefaultLoaderHelper"/>
     </component>
 
 </composite>
