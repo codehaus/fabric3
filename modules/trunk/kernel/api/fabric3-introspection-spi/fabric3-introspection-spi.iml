@@ -55,13 +55,17 @@
         </SOURCES>
       </library>
     </orderEntry>
-    <orderEntry type="module-library">
-      <library>
+    <orderEntry type="module-library" exported="">
+      <library name="stax:stax-api:1.0">
         <CLASSES>
           <root url="jar://$M2_REPO$/stax/stax-api/1.0/stax-api-1.0.jar!/" />
         </CLASSES>
-        <JAVADOC />
-        <SOURCES />
+        <JAVADOC>
+          <root url="jar://$M2_REPO$/stax/stax-api/1.0/stax-api-1.0-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$M2_REPO$/stax/stax-api/1.0/stax-api-1.0-sources.jar!/" />
+        </SOURCES>
       </library>
     </orderEntry>
     <orderEntryProperties />
