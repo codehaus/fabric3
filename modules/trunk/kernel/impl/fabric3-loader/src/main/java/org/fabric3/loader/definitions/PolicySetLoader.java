@@ -40,7 +40,6 @@ import org.fabric3.introspection.xml.TypeLoader;
 import org.fabric3.scdl.definitions.PolicyPhase;
 import org.fabric3.scdl.definitions.PolicySet;
 import org.fabric3.spi.Constants;
-import org.fabric3.transform.xml.Stream2Document;
 
 /**
  * Loader for definitions.
@@ -52,7 +51,6 @@ public class PolicySetLoader implements TypeLoader<PolicySet> {
 
     private LoaderRegistry registry;
     private final LoaderHelper helper;
-    private Stream2Document transformer = new Stream2Document();
 
     public PolicySetLoader(@Reference LoaderRegistry registry,
                            @Reference LoaderHelper helper) {
@@ -74,8 +72,8 @@ public class PolicySetLoader implements TypeLoader<PolicySet> {
         
         try {
         
-            Element policyElement = transformer.transform(reader, null).getDocumentElement();
-            
+            Element policyElement = helper.loadValue(reader).getDocumentElement();
+
             String name = policyElement.getAttribute("name");
             QName qName = new QName(context.getTargetNamespace(), name);
             
@@ -88,7 +86,7 @@ public class PolicySetLoader implements TypeLoader<PolicySet> {
             String appliesTo = policyElement.getAttribute("appliesTo");
             
             String sPhase = policyElement.getAttributeNS(Constants.FABRIC3_NS, "phase");
-            PolicyPhase phase = null;
+            PolicyPhase phase;
             if (sPhase != null && !"".equals(sPhase.trim())) {
                 phase = PolicyPhase.valueOf(sPhase);
             } else {
