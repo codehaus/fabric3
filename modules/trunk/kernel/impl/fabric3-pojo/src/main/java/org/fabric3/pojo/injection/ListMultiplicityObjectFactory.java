@@ -18,8 +18,8 @@
  */
 package org.fabric3.pojo.injection;
 
-import java.util.LinkedList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import org.fabric3.spi.ObjectCreationException;
 import org.fabric3.spi.ObjectFactory;
@@ -33,10 +33,10 @@ import org.fabric3.spi.ObjectFactory;
 public class ListMultiplicityObjectFactory implements MultiplicityObjectFactory<List<?>> {
 
     // Object factories
-    private List<ObjectFactory<?>> factories = new LinkedList<ObjectFactory<?>>();
+    private List<ObjectFactory<?>> factories = new CopyOnWriteArrayList<ObjectFactory<?>>();
 
     public List<Object> getInstance() throws ObjectCreationException {
-        List<Object> list = new LinkedList<Object>();
+        List<Object> list = new CopyOnWriteArrayList<Object>();
         for (ObjectFactory<?> factory : factories) {
             list.add(factory.getInstance());
         }

@@ -18,32 +18,13 @@
  */
 package org.fabric3.pojo.injection;
 
-import java.util.Set;
-import java.util.concurrent.CopyOnWriteArraySet;
-
-import org.fabric3.spi.ObjectCreationException;
-import org.fabric3.spi.ObjectFactory;
+import org.fabric3.spi.services.event.Fabric3Event;
 
 /**
- * A set based object factory.
- *
- * @version $Rev: 1 $ $Date: 2007-05-14 18:40:37 +0100 (Mon, 14 May 2007) $
+ * Event that is fired to trigger re-injection.
+ * 
+ * @version $Revision$ $Date$
  */
-public class SetMultiplicityObjectFactory implements MultiplicityObjectFactory<Set<?>> {
-
-    // Object factories
-    private Set<ObjectFactory<?>> factories = new CopyOnWriteArraySet<ObjectFactory<?>>();
-
-    public Set<Object> getInstance() throws ObjectCreationException {
-        Set<Object> set = new CopyOnWriteArraySet<Object>();
-        for (ObjectFactory<?> factory : factories) {
-            set.add(factory.getInstance());
-        }
-        return set;
-    }
-
-    public void addObjectFactory(ObjectFactory<?> objectFactory, Object key) {
-        factories.add(objectFactory);
-    }
+public class ReInjectionEvent implements Fabric3Event {
 
 }

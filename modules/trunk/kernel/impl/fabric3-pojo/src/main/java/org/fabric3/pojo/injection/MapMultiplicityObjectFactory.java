@@ -18,8 +18,8 @@
  */
 package org.fabric3.pojo.injection;
 
-import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.fabric3.spi.ObjectCreationException;
 import org.fabric3.spi.ObjectFactory;
@@ -32,10 +32,10 @@ import org.fabric3.spi.ObjectFactory;
 public class MapMultiplicityObjectFactory implements MultiplicityObjectFactory<Map<?, ?>> {
 
     // Object factories
-    private Map<Object, ObjectFactory<?>> factories = new HashMap<Object, ObjectFactory<?>>();
+    private Map<Object, ObjectFactory<?>> factories = new ConcurrentHashMap<Object, ObjectFactory<?>>();
 
     public Map<Object, Object> getInstance() throws ObjectCreationException {
-        Map<Object, Object> map = new HashMap<Object, Object>();
+        Map<Object, Object> map = new ConcurrentHashMap<Object, Object>();
         for (Map.Entry<Object, ObjectFactory<?>> entry : factories.entrySet()) {
             map.put(entry.getKey(), entry.getValue().getInstance());
         }
