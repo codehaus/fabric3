@@ -18,6 +18,7 @@
  */
 package org.fabric3.spi.component;
 
+
 /**
  * Provides lifecycle management for an implementation instance associated with an {@link
  * org.fabric3.spi.component.AtomicComponent} for use by the atomic component's associated {@link
@@ -35,6 +36,6 @@ public interface InstanceWrapper<T> {
 
     void stop() throws TargetDestructionException;
     
-    void inject();
+    void reinject() throws TargetResolutionException;
 
 }

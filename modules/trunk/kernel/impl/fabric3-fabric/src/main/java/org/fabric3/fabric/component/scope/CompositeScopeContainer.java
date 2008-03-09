@@ -22,12 +22,11 @@ import java.net.URI;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Service;
-
 import org.fabric3.api.annotation.Monitor;
 import org.fabric3.scdl.Scope;
 import org.fabric3.spi.component.AtomicComponent;
+import org.fabric3.spi.component.ExpirationPolicy;
+import org.fabric3.spi.component.GroupInitializationException;
 import org.fabric3.spi.component.InstanceWrapper;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.TargetDestructionException;
@@ -36,8 +35,8 @@ import org.fabric3.spi.component.TargetResolutionException;
 import org.fabric3.spi.invocation.WorkContext;
 import org.fabric3.spi.services.event.Fabric3Event;
 import org.fabric3.spi.services.event.Fabric3EventListener;
-import org.fabric3.spi.component.GroupInitializationException;
-import org.fabric3.spi.component.ExpirationPolicy;
+import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Service;
 
 /**
  * A scope context which manages atomic component instances keyed by composite
@@ -46,7 +45,7 @@ import org.fabric3.spi.component.ExpirationPolicy;
  */
 @EagerInit
 @Service(ScopeContainer.class)
-public class CompositeScopeContainer extends AbstractScopeContainer<URI> implements Fabric3EventListener{
+public class CompositeScopeContainer extends AbstractScopeContainer<URI> implements Fabric3EventListener {
     
     private static final InstanceWrapper<Object> EMPTY = new InstanceWrapper<Object>() {
         public Object getInstance() {
@@ -63,7 +62,7 @@ public class CompositeScopeContainer extends AbstractScopeContainer<URI> impleme
         public void stop() throws TargetDestructionException {
         }
         
-        public void inject() {
+        public void reinject() {
         }
         
     };
@@ -105,7 +104,8 @@ public class CompositeScopeContainer extends AbstractScopeContainer<URI> impleme
         instanceWrappers.clear();
     }
 
-    public <T> InstanceWrapper<T> getWrapper(AtomicComponent<T> component, WorkContext workContext) throws TargetResolutionException {
+    public <T> InstanceWrapper<T> getWrapper(AtomicComponent<T> component, WorkContext workContext)  throws TargetResolutionException {
+        
         assert instanceWrappers.containsKey(component);
         @SuppressWarnings("unchecked")
         InstanceWrapper<T> wrapper = (InstanceWrapper<T>) instanceWrappers.get(component);
@@ -115,7 +115,6 @@ public class CompositeScopeContainer extends AbstractScopeContainer<URI> impleme
 
         // FIXME is there a potential race condition here that may result in two instances being created
         wrapper = createInstance(component, workContext);
-        wrapper.inject();
         if (!wrapper.isStarted()) {
             wrapper.start();
             destroyQueues.get(component.getGroupId()).add(wrapper);
@@ -130,7 +129,11 @@ public class CompositeScopeContainer extends AbstractScopeContainer<URI> impleme
 
     public void onEvent(Fabric3Event event) {
         for (InstanceWrapper<?> instanceWrapper : instanceWrappers.values()) {
-            instanceWrapper.inject();
+            try {
+                instanceWrapper.reinject();
+            } catch (TargetResolutionException ex) {
+                throw new AssertionError(ex);
+            }
         }
     }
 }

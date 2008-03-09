@@ -28,18 +28,19 @@ import java.util.List;
 import java.util.Map;
 
 import junit.framework.TestCase;
-import org.easymock.EasyMock;
 
+import org.easymock.EasyMock;
 import org.fabric3.scdl.FieldInjectionSite;
-import org.fabric3.scdl.InjectionSite;
-import org.fabric3.scdl.MethodInjectionSite;
 import org.fabric3.scdl.InjectableAttribute;
 import org.fabric3.scdl.InjectableAttributeType;
+import org.fabric3.scdl.InjectionSite;
+import org.fabric3.scdl.MethodInjectionSite;
 import org.fabric3.spi.ObjectCreationException;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.component.InstanceFactory;
 import org.fabric3.spi.component.InstanceWrapper;
 import org.fabric3.spi.component.TargetInitializationException;
+import org.fabric3.spi.component.TargetResolutionException;
 
 /**
  * @version $Rev$ $Date$
@@ -113,7 +114,7 @@ public class ReflectiveInstanceFactoryProviderTestCase extends TestCase {
         assertEquals("Hello", foo.stringField);
     }
 
-    public void testFactory() throws ObjectCreationException {
+    public void testFactory() throws ObjectCreationException, TargetResolutionException {
         sites.put(intProperty, new MethodInjectionSite(intSetter, 0));
         sites.put(stringProperty, new MethodInjectionSite(stringSetter, 0));
         InstanceFactory<Foo> instanceFactory = provider.createFactory();

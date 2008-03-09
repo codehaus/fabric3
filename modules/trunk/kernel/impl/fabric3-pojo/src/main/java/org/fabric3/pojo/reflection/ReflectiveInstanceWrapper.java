@@ -18,9 +18,13 @@
  */
 package org.fabric3.pojo.reflection;
 
+import java.util.List;
+
+import org.fabric3.spi.ObjectCreationException;
 import org.fabric3.spi.component.InstanceWrapper;
 import org.fabric3.spi.component.TargetDestructionException;
 import org.fabric3.spi.component.TargetInitializationException;
+import org.fabric3.spi.component.TargetResolutionException;
 
 /**
  * @version $Rev$ $Date$
@@ -31,16 +35,19 @@ public class ReflectiveInstanceWrapper<T> implements InstanceWrapper<T> {
     private final EventInvoker<T> initInvoker;
     private final EventInvoker<T> destroyInvoker;
     private boolean started;
+    private final List<Injector<T>> injectors;
 
     public ReflectiveInstanceWrapper(T instance,
                                      ClassLoader cl,
                                      EventInvoker<T> initInvoker,
-                                     EventInvoker<T> destroyInvoker) {
+                                     EventInvoker<T> destroyInvoker,
+                                     List<Injector<T>> injectors) {
         this.instance = instance;
         this.cl = cl;
         this.initInvoker = initInvoker;
         this.destroyInvoker = destroyInvoker;
         this.started = false;
+        this.injectors = injectors;
     }
 
     public T getInstance() {
@@ -88,7 +95,17 @@ public class ReflectiveInstanceWrapper<T> implements InstanceWrapper<T> {
         }
     }
     
-    public void inject() {
+    public void reinject() throws TargetResolutionException {
+        
+        try {
+            if (injectors != null) {
+                for (Injector<T> injector : injectors) {
+                    injector.inject(instance);
+                }
+            }
+        } catch (ObjectCreationException ex) {
+            throw new TargetResolutionException("Unable to inject", ex);
+        }
     }
     
 }

@@ -61,7 +61,7 @@ public class ReflectiveInstanceFactory<T> implements InstanceFactory<T> {
                     injector.inject(instance);
                 }
             }
-            return new ReflectiveInstanceWrapper<T>(instance, cl, initInvoker, destroyInvoker);
+            return new ReflectiveInstanceWrapper<T>(instance, cl, initInvoker, destroyInvoker, injectors);
         } finally {
             PojoWorkContextTunnel.setThreadWorkContext(oldContext);
             Thread.currentThread().setContextClassLoader(oldCl);

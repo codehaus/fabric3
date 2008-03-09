@@ -132,7 +132,7 @@ public class SingletonComponent<T> extends AbstractLifecycle implements AtomicCo
         public void stop() throws TargetDestructionException {
         }
         
-        public void inject() {
+        public void reinject() {
         }
         
     }

@@ -48,7 +48,7 @@ public class EjbStatefulInstanceWrapper implements InstanceWrapper {
         started = false;
     }
     
-    public void inject() {
+    public void reinject() {
     }
     
 }
