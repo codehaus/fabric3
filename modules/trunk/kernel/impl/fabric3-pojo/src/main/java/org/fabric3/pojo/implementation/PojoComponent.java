@@ -24,10 +24,8 @@ import java.util.Map;
 
 import org.fabric3.pojo.ComponentObjectFactory;
 import org.fabric3.pojo.injection.MultiplicityObjectFactory;
-import org.fabric3.pojo.injection.ReInjectionEvent;
-import org.fabric3.scdl.PropertyValue;
 import org.fabric3.scdl.InjectableAttribute;
-import org.fabric3.scdl.Scope;
+import org.fabric3.scdl.PropertyValue;
 import org.fabric3.spi.AbstractLifecycle;
 import org.fabric3.spi.ObjectCreationException;
 import org.fabric3.spi.ObjectFactory;
@@ -37,9 +35,6 @@ import org.fabric3.spi.component.InstanceFactoryProvider;
 import org.fabric3.spi.component.InstanceWrapper;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.invocation.WorkContext;
-import org.fabric3.spi.services.event.EventService;
-import org.fabric3.spi.services.event.Fabric3Event;
-import org.fabric3.spi.services.event.Fabric3EventListener;
 
 /**
  * Base class for Component implementations based on Java objects.
@@ -47,7 +42,7 @@ import org.fabric3.spi.services.event.Fabric3EventListener;
  * @version $Rev$ $Date$
  * @param <T> the implementation class
  */
-public abstract class PojoComponent<T> extends AbstractLifecycle implements AtomicComponent<T>, Fabric3EventListener {
+public abstract class PojoComponent<T> extends AbstractLifecycle implements AtomicComponent<T> {
     private final URI uri;
     private final InstanceFactoryProvider<T> provider;
     private final ScopeContainer<?> scopeContainer;
@@ -57,7 +52,6 @@ public abstract class PojoComponent<T> extends AbstractLifecycle implements Atom
     private final long maxAge;
     private InstanceFactory<T> instanceFactory;
     private final Map<String, MultiplicityObjectFactory<?>> referenceFactories;
-    private final EventService eventService;
 
     public PojoComponent(URI componentId,
                          InstanceFactoryProvider<T> provider,
@@ -66,8 +60,7 @@ public abstract class PojoComponent<T> extends AbstractLifecycle implements Atom
                          int initLevel,
                          long maxIdleTime,
                          long maxAge,
-                         Map<String, MultiplicityObjectFactory<?>> referenceFactories,
-                         EventService eventService) {
+                         Map<String, MultiplicityObjectFactory<?>> referenceFactories) {
         this.uri = componentId;
         this.provider = provider;
         this.scopeContainer = scopeContainer;
@@ -76,7 +69,6 @@ public abstract class PojoComponent<T> extends AbstractLifecycle implements Atom
         this.maxIdleTime = maxIdleTime;
         this.maxAge = maxAge;
         this.referenceFactories = referenceFactories;
-        this.eventService = eventService;
     }
 
     public URI getUri() {
@@ -109,11 +101,6 @@ public abstract class PojoComponent<T> extends AbstractLifecycle implements Atom
         
         instanceFactory = provider.createFactory();
         scopeContainer.register(this);
-        
-        // Register for re-inection events only for composite scope components
-        if (Scope.COMPOSITE.equals(scopeContainer.getScope())) {
-            eventService.subscribe(ReInjectionEvent.class, this);
-        }
         
     }
 
@@ -183,17 +170,6 @@ public abstract class PojoComponent<T> extends AbstractLifecycle implements Atom
         } else {
             setObjectFactory(referenceSource, objectFactory);
         }
-    }
-    
-    /**
-     * Receives a re-injection event and revalidates references.
-     */
-    public void onEvent(Fabric3Event event) {
-        
-        if (!(event instanceof ReInjectionEvent)) {
-            return;
-        }
-
     }
 
 }

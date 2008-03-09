@@ -25,7 +25,6 @@ import org.fabric3.spi.builder.BuilderException;
 import org.fabric3.spi.builder.component.ComponentBuilderRegistry;
 import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
-import org.fabric3.spi.services.event.EventService;
 import org.fabric3.spi.transform.PullTransformer;
 import org.fabric3.spi.transform.TransformerRegistry;
 import org.fabric3.spi.wire.ProxyService;
@@ -50,14 +49,8 @@ public class SpringComponentBuilder<T> extends PojoComponentBuilder<T, SpringCom
                                 @Reference InstanceFactoryBuilderRegistry providerBuilders,
                                 @Reference ClassLoaderRegistry classLoaderRegistry,
                                 @Reference(name = "transformerRegistry") TransformerRegistry<PullTransformer<?, ?>> transformerRegistry,
-                                @Reference ProxyService proxyService,
-                                @Reference EventService eventService) {
-        super(builderRegistry,
-              scopeRegistry,
-              providerBuilders,
-              classLoaderRegistry,
-              transformerRegistry,
-              eventService);
+                                @Reference ProxyService proxyService) {
+        super(builderRegistry, scopeRegistry, providerBuilders, classLoaderRegistry, transformerRegistry);
     }
 
     @Init

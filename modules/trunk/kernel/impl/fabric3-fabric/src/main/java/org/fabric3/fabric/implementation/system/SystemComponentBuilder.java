@@ -21,24 +21,22 @@ package org.fabric3.fabric.implementation.system;
 import java.net.URI;
 import java.util.Map;
 
-import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Init;
-import org.osoa.sca.annotations.Reference;
-
+import org.fabric3.pojo.implementation.PojoComponentBuilder;
 import org.fabric3.pojo.injection.MultiplicityObjectFactory;
 import org.fabric3.pojo.instancefactory.InstanceFactoryBuilderRegistry;
-import org.fabric3.pojo.implementation.PojoComponentBuilder;
+import org.fabric3.pojo.instancefactory.InstanceFactoryDefinition;
+import org.fabric3.scdl.Scope;
 import org.fabric3.spi.builder.BuilderException;
 import org.fabric3.spi.builder.component.ComponentBuilderRegistry;
 import org.fabric3.spi.component.InstanceFactoryProvider;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.ScopeRegistry;
-import org.fabric3.pojo.instancefactory.InstanceFactoryDefinition;
-import org.fabric3.scdl.Scope;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
-import org.fabric3.spi.services.event.EventService;
 import org.fabric3.spi.transform.PullTransformer;
 import org.fabric3.spi.transform.TransformerRegistry;
+import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Init;
+import org.osoa.sca.annotations.Reference;
 
 /**
  * @version $Rev$ $Date$
@@ -51,14 +49,8 @@ public class SystemComponentBuilder<T> extends PojoComponentBuilder<T, SystemCom
             @Reference ScopeRegistry scopeRegistry,
             @Reference InstanceFactoryBuilderRegistry providerBuilders,
             @Reference ClassLoaderRegistry classLoaderRegistry,
-            @Reference TransformerRegistry<PullTransformer<?, ?>> transformerRegistry,
-            @Reference EventService eventService) {
-        super(builderRegistry,
-              scopeRegistry,
-              providerBuilders,
-              classLoaderRegistry,
-              transformerRegistry,
-              eventService);
+            @Reference TransformerRegistry<PullTransformer<?, ?>> transformerRegistry) {
+        super(builderRegistry, scopeRegistry, providerBuilders, classLoaderRegistry, transformerRegistry);
     }
 
     @Init
@@ -83,6 +75,6 @@ public class SystemComponentBuilder<T> extends PojoComponentBuilder<T, SystemCom
         createPropertyFactories(definition, provider);
         Map<String, MultiplicityObjectFactory<?>> referenceFactories = createMultiplicityReferenceFactories(providerDefinition);
 
-        return new SystemComponent<T>(componentId, provider, scopeContainer, groupId, initLevel, -1, -1, referenceFactories, eventService);
+        return new SystemComponent<T>(componentId, provider, scopeContainer, groupId, initLevel, -1, -1, referenceFactories);
     }
 }

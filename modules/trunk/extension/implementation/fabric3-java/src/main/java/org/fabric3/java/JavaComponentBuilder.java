@@ -21,19 +21,15 @@ package org.fabric3.java;
 import java.net.URI;
 import java.util.Map;
 
-import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Init;
-import org.osoa.sca.annotations.Reference;
-
 import org.fabric3.pojo.implementation.PojoComponentBuilder;
 import org.fabric3.pojo.implementation.PojoComponentContext;
 import org.fabric3.pojo.implementation.PojoRequestContext;
-import org.fabric3.pojo.injection.MultiplicityObjectFactory;
 import org.fabric3.pojo.injection.ConversationIDObjectFactory;
+import org.fabric3.pojo.injection.MultiplicityObjectFactory;
 import org.fabric3.pojo.instancefactory.InstanceFactoryBuilderRegistry;
 import org.fabric3.pojo.instancefactory.InstanceFactoryDefinition;
-import org.fabric3.scdl.Scope;
 import org.fabric3.scdl.InjectableAttribute;
+import org.fabric3.scdl.Scope;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.SingletonObjectFactory;
 import org.fabric3.spi.builder.BuilderException;
@@ -42,10 +38,12 @@ import org.fabric3.spi.component.InstanceFactoryProvider;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
-import org.fabric3.spi.services.event.EventService;
 import org.fabric3.spi.transform.PullTransformer;
 import org.fabric3.spi.transform.TransformerRegistry;
 import org.fabric3.spi.wire.ProxyService;
+import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Init;
+import org.osoa.sca.annotations.Reference;
 
 /**
  * Builds a JavaComponent from a physical definition.
@@ -62,14 +60,8 @@ public class JavaComponentBuilder<T> extends PojoComponentBuilder<T, JavaCompone
                                 @Reference InstanceFactoryBuilderRegistry providerBuilders,
                                 @Reference ClassLoaderRegistry classLoaderRegistry,
                                 @Reference(name = "transformerRegistry") TransformerRegistry<PullTransformer<?, ?>> transformerRegistry,
-                                @Reference ProxyService proxyService,
-                                @Reference EventService eventService) {
-        super(builderRegistry,
-              scopeRegistry,
-              providerBuilders,
-              classLoaderRegistry,
-              transformerRegistry,
-              eventService);
+                                @Reference ProxyService proxyService) {
+        super(builderRegistry, scopeRegistry, providerBuilders, classLoaderRegistry, transformerRegistry);
         this.proxyService = proxyService;
     }
 
@@ -106,8 +98,7 @@ public class JavaComponentBuilder<T> extends PojoComponentBuilder<T, JavaCompone
                                                           definition.getMaxAge(),
                                                           proxyService,
                                                           propertyFactories,
-                                                          referenceFactories,
-                                                          eventService);
+                                                          referenceFactories);
 
         PojoRequestContext requestContext = new PojoRequestContext();
         provider.setObjectFactory(InjectableAttribute.REQUEST_CONTEXT, new SingletonObjectFactory<PojoRequestContext>(requestContext));

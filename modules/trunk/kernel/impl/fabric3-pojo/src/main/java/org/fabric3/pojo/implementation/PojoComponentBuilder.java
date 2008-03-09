@@ -22,16 +22,14 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-
 import org.fabric3.pojo.injection.ListMultiplicityObjectFactory;
 import org.fabric3.pojo.injection.MapMultiplicityObjectFactory;
 import org.fabric3.pojo.injection.MultiplicityObjectFactory;
 import org.fabric3.pojo.injection.SetMultiplicityObjectFactory;
 import org.fabric3.pojo.instancefactory.InstanceFactoryBuilderRegistry;
 import org.fabric3.pojo.instancefactory.InstanceFactoryDefinition;
+import org.fabric3.scdl.InjectableAttribute;
+import org.fabric3.scdl.InjectableAttributeType;
 import org.fabric3.scdl.InjectionSite;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.SingletonObjectFactory;
@@ -41,15 +39,15 @@ import org.fabric3.spi.builder.component.ComponentBuilderRegistry;
 import org.fabric3.spi.component.Component;
 import org.fabric3.spi.component.InstanceFactoryProvider;
 import org.fabric3.spi.component.ScopeRegistry;
-import org.fabric3.scdl.InjectableAttribute;
-import org.fabric3.scdl.InjectableAttributeType;
 import org.fabric3.spi.model.type.JavaClass;
 import org.fabric3.spi.model.type.XSDSimpleType;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
-import org.fabric3.spi.services.event.EventService;
 import org.fabric3.spi.transform.PullTransformer;
-import org.fabric3.spi.transform.TransformerRegistry;
 import org.fabric3.spi.transform.TransformContext;
+import org.fabric3.spi.transform.TransformerRegistry;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
 
 /**
  * Base class for ComponentBuilders that build components based on POJOs.
@@ -64,7 +62,6 @@ public abstract class PojoComponentBuilder<T, PCD extends PojoComponentDefinitio
     protected final InstanceFactoryBuilderRegistry providerBuilders;
     protected final ClassLoaderRegistry classLoaderRegistry;
     protected final TransformerRegistry<PullTransformer<?, ?>> transformerRegistry;
-    protected final EventService eventService;
 
     private static final XSDSimpleType SOURCE_TYPE = new XSDSimpleType(Node.class, XSDSimpleType.STRING);
     private static final Map<Class<?>, Class<?>> OBJECT_TYPES;
@@ -85,14 +82,12 @@ public abstract class PojoComponentBuilder<T, PCD extends PojoComponentDefinitio
             ScopeRegistry scopeRegistry,
             InstanceFactoryBuilderRegistry providerBuilders,
             ClassLoaderRegistry classLoaderRegistry,
-            TransformerRegistry<PullTransformer<?, ?>> transformerRegistry,
-            EventService eventService) {
+            TransformerRegistry<PullTransformer<?, ?>> transformerRegistry) {
         this.builderRegistry = builderRegistry;
         this.scopeRegistry = scopeRegistry;
         this.providerBuilders = providerBuilders;
         this.classLoaderRegistry = classLoaderRegistry;
         this.transformerRegistry = transformerRegistry;
-        this.eventService = eventService;
     }
 
     protected Map<String, ObjectFactory<?>> createPropertyFactories(PCD definition,

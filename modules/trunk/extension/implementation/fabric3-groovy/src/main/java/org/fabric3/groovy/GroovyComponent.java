@@ -38,8 +38,7 @@ public class GroovyComponent<T> extends PojoComponent<T> {
                            int initLevel,
                            long maxIdleTime,
                            long maxAge,
-                           Map<String, MultiplicityObjectFactory<?>> referenceFactories,
-                           EventService eventService) {
-        super(componentId, instanceFactoryProvider, scopeContainer, groupId, initLevel, maxIdleTime, maxAge, referenceFactories, eventService);
+                           Map<String, MultiplicityObjectFactory<?>> referenceFactories) {
+        super(componentId, instanceFactoryProvider, scopeContainer, groupId, initLevel, maxIdleTime, maxAge, referenceFactories);
     }
 }

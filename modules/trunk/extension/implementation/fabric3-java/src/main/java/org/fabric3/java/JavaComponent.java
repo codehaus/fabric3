@@ -21,17 +21,15 @@ package org.fabric3.java;
 import java.net.URI;
 import java.util.Map;
 
-import org.osoa.sca.CallableReference;
-import org.osoa.sca.ServiceReference;
-
 import org.fabric3.pojo.implementation.PojoComponent;
 import org.fabric3.pojo.injection.MultiplicityObjectFactory;
 import org.fabric3.spi.ObjectCreationException;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.component.InstanceFactoryProvider;
 import org.fabric3.spi.component.ScopeContainer;
-import org.fabric3.spi.services.event.EventService;
 import org.fabric3.spi.wire.ProxyService;
+import org.osoa.sca.CallableReference;
+import org.osoa.sca.ServiceReference;
 
 /**
  * The runtime instantiation of a Java component implementation.
@@ -66,17 +64,8 @@ public class JavaComponent<T> extends PojoComponent<T> {
                          long maxAge,
                          ProxyService proxyService,
                          Map<String, ObjectFactory<?>> propertyFactories,
-                         Map<String, MultiplicityObjectFactory<?>> referenceFactories,
-                         EventService eventService) {
-        super(componentId,
-              instanceFactoryProvider,
-              scopeContainer,
-              groupId,
-              initLevel,
-              maxIdleTime,
-              maxAge,
-              referenceFactories,
-              eventService);
+                         Map<String, MultiplicityObjectFactory<?>> referenceFactories) {
+        super(componentId, instanceFactoryProvider, scopeContainer, groupId, initLevel, maxIdleTime, maxAge, referenceFactories);
         this.proxyService = proxyService;
         this.propertyFactories = propertyFactories;
     }

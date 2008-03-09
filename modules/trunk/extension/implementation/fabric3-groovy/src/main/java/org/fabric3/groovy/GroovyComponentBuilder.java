@@ -19,14 +19,10 @@ package org.fabric3.groovy;
 import java.net.URI;
 import java.util.Map;
 
-import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Init;
-import org.osoa.sca.annotations.Reference;
-
 import org.fabric3.pojo.implementation.PojoComponentBuilder;
+import org.fabric3.pojo.injection.MultiplicityObjectFactory;
 import org.fabric3.pojo.instancefactory.InstanceFactoryBuilderRegistry;
 import org.fabric3.pojo.instancefactory.InstanceFactoryDefinition;
-import org.fabric3.pojo.injection.MultiplicityObjectFactory;
 import org.fabric3.scdl.Scope;
 import org.fabric3.spi.builder.BuilderException;
 import org.fabric3.spi.builder.component.ComponentBuilderRegistry;
@@ -34,9 +30,11 @@ import org.fabric3.spi.component.InstanceFactoryProvider;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
-import org.fabric3.spi.services.event.EventService;
 import org.fabric3.spi.transform.PullTransformer;
 import org.fabric3.spi.transform.TransformerRegistry;
+import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Init;
+import org.osoa.sca.annotations.Reference;
 
 /**
  * @version $Rev$ $Date$
@@ -47,14 +45,8 @@ public class GroovyComponentBuilder<T> extends PojoComponentBuilder<T, GroovyCom
                                   @Reference ScopeRegistry scopeRegistry,
                                   @Reference InstanceFactoryBuilderRegistry providerBuilders,
                                   @Reference ClassLoaderRegistry classLoaderRegistry,
-                                  @Reference(name = "transformerRegistry") TransformerRegistry<PullTransformer<?, ?>> transformerRegistry,
-                                  @Reference EventService eventService) {
-        super(builderRegistry,
-              scopeRegistry,
-              providerBuilders,
-              classLoaderRegistry,
-              transformerRegistry,
-              eventService);
+                                  @Reference(name = "transformerRegistry") TransformerRegistry<PullTransformer<?, ?>> transformerRegistry) {
+        super(builderRegistry, scopeRegistry, providerBuilders, classLoaderRegistry,transformerRegistry);
     }
 
     @Init
@@ -80,6 +72,6 @@ public class GroovyComponentBuilder<T> extends PojoComponentBuilder<T, GroovyCom
         Map<String, MultiplicityObjectFactory<?>> referenceFactories =
                 createMultiplicityReferenceFactories(providerDefinition);
 
-        return new GroovyComponent<T>(componentId, provider, scopeContainer, groupId, initLevel, -1, -1, referenceFactories, eventService);
+        return new GroovyComponent<T>(componentId, provider, scopeContainer, groupId, initLevel, -1, -1, referenceFactories);
     }
 }

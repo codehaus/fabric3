@@ -230,8 +230,7 @@ public class BootstrapAssemblyFactory {
                                                                                scopeRegistry,
                                                                                providerRegistry,
                                                                                classLoaderRegistry,
-                                                                               transformerRegistry,
-                                                                               eventService);
+                                                                               transformerRegistry);
         builder.init();
 
         SingletonWireAttacher singletonWireAttacher = new SingletonWireAttacher(componentManager);

@@ -39,9 +39,8 @@ public class SystemComponent<T> extends PojoComponent<T> {
                            int initLevel,
                            int maxIdleTime,
                            int maxAge,
-                           Map<String, MultiplicityObjectFactory<?>> referenceFactories,
-                           EventService eventService) {
-        super(componentId, provider, scopeContainer, groupId, initLevel, maxIdleTime, maxAge, referenceFactories, eventService);
+                           Map<String, MultiplicityObjectFactory<?>> referenceFactories) {
+        super(componentId, provider, scopeContainer, groupId, initLevel, maxIdleTime, maxAge, referenceFactories);
     }
 
 }

@@ -21,16 +21,15 @@ package org.fabric3.fabric.implementation.system;
 import java.net.URI;
 
 import junit.framework.TestCase;
-import org.easymock.EasyMock;
 
-import org.fabric3.spi.component.InstanceFactoryProvider;
-import org.fabric3.fabric.services.event.EventServiceImpl;
+import org.easymock.EasyMock;
 import org.fabric3.pojo.instancefactory.InstanceFactoryBuilderRegistry;
 import org.fabric3.pojo.instancefactory.InstanceFactoryDefinition;
-import org.fabric3.spi.builder.component.ComponentBuilderRegistry;
-import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.scdl.Scope;
 import org.fabric3.scdl.Signature;
+import org.fabric3.spi.builder.component.ComponentBuilderRegistry;
+import org.fabric3.spi.component.InstanceFactoryProvider;
+import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 
 /**
@@ -80,8 +79,7 @@ public class SystemPhysicalComponentBuilderTestCase<T> extends TestCase {
                                                 scopeRegistry,
                                                 providerBuilders,
                                                 classLoaderRegistry,
-                                                null,
-                                                new EventServiceImpl());
+                                                null);
 
         definition = new SystemComponentDefinition();
         definition.setGroupId(groupId);
