@@ -38,11 +38,11 @@ import org.fabric3.pojo.scdl.PojoComponentType;
  */
 public class SystemComponentTypeLoaderImpl2 implements SystemComponentTypeLoader {
     private final ClassWalker<SystemImplementation> classWalker;
-    private final Collection<HeuristicProcessor<SystemImplementation>> heuristics;
+    private final Collection<? extends HeuristicProcessor<SystemImplementation>> heuristics;
     private final IntrospectionHelper helper;
 
     public SystemComponentTypeLoaderImpl2(@Reference ClassWalker<SystemImplementation> classWalker,
-                                          @Reference Collection<HeuristicProcessor<SystemImplementation>> heuristics,
+                                          @Reference Collection<? extends HeuristicProcessor<SystemImplementation>> heuristics,
                                           @Reference IntrospectionHelper helper) {
         this.classWalker = classWalker;
         this.heuristics = heuristics;

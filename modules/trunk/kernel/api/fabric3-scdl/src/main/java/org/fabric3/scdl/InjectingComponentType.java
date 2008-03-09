@@ -27,6 +27,7 @@ import java.util.Map;
 public class InjectingComponentType extends AbstractComponentType<ServiceDefinition, ReferenceDefinition, Property, ResourceDefinition> {
 
     private final Map<InjectableAttribute, InjectionSite> injectionMappings = new HashMap<InjectableAttribute, InjectionSite>();
+    private Signature constructor;
     private Signature initMethod;
     private Signature destroyMethod;
     private final Map<String, CallbackDefinition> callbacks = new HashMap<String, CallbackDefinition>();
@@ -122,6 +123,23 @@ public class InjectingComponentType extends AbstractComponentType<ServiceDefinit
      */
     public Map<InjectableAttribute, InjectionSite> getInjectionMappings() {
         return injectionMappings;
+    }
+
+    /**
+     * Returns the signature of the constructor to use.
+     *
+     * @return the signature of the constructor to use
+     */
+    public Signature getConstructor() {
+        return constructor;
+    }
+
+    /**
+     * Sets the signature of the constructor to use.
+     * @param constructor the signature of the constructor to use
+     */
+    public void setConstructor(Signature constructor) {
+        this.constructor = constructor;
     }
 
     /**

@@ -25,6 +25,7 @@ import org.osoa.sca.annotations.Destroy;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
+import org.osoa.sca.annotations.Constructor;
 
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.xml.InvalidValueException;
@@ -41,9 +42,26 @@ import org.fabric3.introspection.xml.TypeLoader;
 @EagerInit
 public class SystemImplementationLoader implements TypeLoader<SystemImplementation> {
 
-    private LoaderRegistry registry;
+    private final LoaderRegistry registry;
     private final SystemComponentTypeLoader componentTypeLoader;
 
+    /**
+     * Constructor used during bootstrap.
+     *
+     * @param componentTypeLoader the component type loader to use
+     */
+    public SystemImplementationLoader(@Reference SystemComponentTypeLoader componentTypeLoader) {
+        this.registry = null;
+        this.componentTypeLoader = componentTypeLoader;
+    }
+
+    /**
+     * Constructor to be used when loaded from SCDL.
+     *
+     * @param registry the loader registry to register with
+     * @param componentTypeLoader the component type loader to use
+     */
+    @Constructor
     public SystemImplementationLoader(@Reference LoaderRegistry registry,
                                       @Reference SystemComponentTypeLoader componentTypeLoader) {
         this.registry = registry;

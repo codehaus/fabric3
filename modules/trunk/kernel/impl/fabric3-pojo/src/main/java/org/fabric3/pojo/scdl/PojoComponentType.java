@@ -28,7 +28,6 @@ import org.fabric3.scdl.Signature;
  */
 public class PojoComponentType extends InjectingComponentType {
     private String implClass;
-    private Signature constructor;
 
     /**
      * Constructor used only for deserialization
@@ -52,23 +51,6 @@ public class PojoComponentType extends InjectingComponentType {
      */
     public String getImplClass() {
         return implClass;
-    }
-
-    /**
-     * Returns the signature of the constructor to use.
-     *
-     * @return the signature of the constructor to use
-     */
-    public Signature getConstructor() {
-        return constructor;
-    }
-
-    /**
-     * Sets the signature of the constructor to use.
-     * @param constructor the signature of the constructor to use
-     */
-    public void setConstructor(Signature constructor) {
-        this.constructor = constructor;
     }
 
 }

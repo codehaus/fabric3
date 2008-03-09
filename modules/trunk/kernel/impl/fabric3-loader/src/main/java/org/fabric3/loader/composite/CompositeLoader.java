@@ -29,6 +29,7 @@ import org.osoa.sca.annotations.Destroy;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
+import org.osoa.sca.annotations.Constructor;
 
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.xml.InvalidServiceException;
@@ -47,6 +48,7 @@ import org.fabric3.introspection.xml.LoaderRegistry;
 import org.fabric3.introspection.xml.LoaderUtil;
 import org.fabric3.introspection.xml.LoaderHelper;
 import org.fabric3.introspection.xml.TypeLoader;
+import org.fabric3.introspection.xml.Loader;
 
 /**
  * Loads a composite component definition from an XML-based assembly file
@@ -55,15 +57,16 @@ import org.fabric3.introspection.xml.TypeLoader;
  */
 @EagerInit
 public class CompositeLoader implements TypeLoader<Composite> {
-    private static final QName COMPOSITE = new QName(SCA_NS, "composite");
-    private static final QName INCLUDE = new QName(SCA_NS, "include");
-    private static final QName PROPERTY = new QName(SCA_NS, "property");
-    private static final QName SERVICE = new QName(SCA_NS, "service");
-    private static final QName REFERENCE = new QName(SCA_NS, "reference");
-    private static final QName COMPONENT = new QName(SCA_NS, "component");
-    private static final QName WIRE = new QName(SCA_NS, "wire");
+    public static final QName COMPOSITE = new QName(SCA_NS, "composite");
+    public static final QName INCLUDE = new QName(SCA_NS, "include");
+    public static final QName PROPERTY = new QName(SCA_NS, "property");
+    public static final QName SERVICE = new QName(SCA_NS, "service");
+    public static final QName REFERENCE = new QName(SCA_NS, "reference");
+    public static final QName COMPONENT = new QName(SCA_NS, "component");
+    public static final QName WIRE = new QName(SCA_NS, "wire");
 
     private final LoaderRegistry registry;
+    private final Loader loader;
     private final TypeLoader<Include> includeLoader;
     private final TypeLoader<Property> propertyLoader;
     private final TypeLoader<CompositeService> serviceLoader;
@@ -72,6 +75,45 @@ public class CompositeLoader implements TypeLoader<Composite> {
     private final TypeLoader<WireDefinition> wireLoader;
     private final LoaderHelper loaderHelper;
 
+    /**
+     * Constructor used during bootstrap.
+     *
+     * @param loader loader for extension elements
+     * @param includeLoader loader for include elements
+     * @param propertyLoader loader for composite property elements
+     * @param componentLoader loader for component elements
+     * @param loaderHelper helper
+     */
+    public CompositeLoader(@Reference(name = "loader") Loader loader,
+                           @Reference(name = "include")TypeLoader<Include> includeLoader,
+                           @Reference(name = "property")TypeLoader<Property> propertyLoader,
+                           @Reference(name = "component")TypeLoader<ComponentDefinition<?>> componentLoader,
+                           @Reference(name = "loaderHelper")LoaderHelper loaderHelper) {
+        this.loader = loader;
+        this.includeLoader = includeLoader;
+        this.propertyLoader = propertyLoader;
+        this.componentLoader = componentLoader;
+        this.loaderHelper = loaderHelper;
+
+        this.registry = null;
+        this.serviceLoader = null;
+        this.referenceLoader = null;
+        this.wireLoader = null;
+    }
+
+    /**
+     * Constructor to be used when registering this component through SCDL.
+     *
+     * @param registry the loader registry to register with; also used to load extension elements
+     * @param includeLoader loader for include elements
+     * @param propertyLoader loader for composite property elements
+     * @param serviceLoader loader for composite services
+     * @param referenceLoader loader for composite references
+     * @param componentLoader loader for component elements
+     * @param wireLoader loader for wire elements
+     * @param loaderHelper helper
+     */
+    @Constructor
     public CompositeLoader(@Reference LoaderRegistry registry,
                            @Reference(name = "include")TypeLoader<Include> includeLoader,
                            @Reference(name = "property")TypeLoader<Property> propertyLoader,
@@ -81,6 +123,7 @@ public class CompositeLoader implements TypeLoader<Composite> {
                            @Reference(name = "wire")TypeLoader<WireDefinition> wireLoader,
                            @Reference(name = "loaderHelper")LoaderHelper loaderHelper) {
         this.registry = registry;
+        this.loader = registry;
         this.includeLoader = includeLoader;
         this.propertyLoader = propertyLoader;
         this.serviceLoader = serviceLoader;
@@ -173,7 +216,7 @@ public class CompositeLoader implements TypeLoader<Composite> {
                         type.add(wire);
                     } else {
                         // Extension element - for now try to load and see if we can handle it
-                        ModelObject modelObject = registry.load(reader, ModelObject.class, introspectionContext);
+                        ModelObject modelObject = loader.load(reader, ModelObject.class, introspectionContext);
                         if (modelObject instanceof Property) {
                             type.add((Property) modelObject);
                         } else if (modelObject instanceof CompositeService) {
