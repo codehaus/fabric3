@@ -46,6 +46,7 @@ import org.fabric3.scdl.InjectableAttributeType;
 import org.fabric3.spi.model.type.JavaClass;
 import org.fabric3.spi.model.type.XSDSimpleType;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
+import org.fabric3.spi.services.event.EventService;
 import org.fabric3.spi.transform.PullTransformer;
 import org.fabric3.spi.transform.TransformerRegistry;
 import org.fabric3.spi.transform.TransformContext;
@@ -63,6 +64,7 @@ public abstract class PojoComponentBuilder<T, PCD extends PojoComponentDefinitio
     protected final InstanceFactoryBuilderRegistry providerBuilders;
     protected final ClassLoaderRegistry classLoaderRegistry;
     protected final TransformerRegistry<PullTransformer<?, ?>> transformerRegistry;
+    protected final EventService eventService;
 
     private static final XSDSimpleType SOURCE_TYPE = new XSDSimpleType(Node.class, XSDSimpleType.STRING);
     private static final Map<Class<?>, Class<?>> OBJECT_TYPES;
@@ -83,12 +85,14 @@ public abstract class PojoComponentBuilder<T, PCD extends PojoComponentDefinitio
             ScopeRegistry scopeRegistry,
             InstanceFactoryBuilderRegistry providerBuilders,
             ClassLoaderRegistry classLoaderRegistry,
-            TransformerRegistry<PullTransformer<?, ?>> transformerRegistry) {
+            TransformerRegistry<PullTransformer<?, ?>> transformerRegistry,
+            EventService eventService) {
         this.builderRegistry = builderRegistry;
         this.scopeRegistry = scopeRegistry;
         this.providerBuilders = providerBuilders;
         this.classLoaderRegistry = classLoaderRegistry;
         this.transformerRegistry = transformerRegistry;
+        this.eventService = eventService;
     }
 
     protected Map<String, ObjectFactory<?>> createPropertyFactories(PCD definition,
@@ -173,4 +177,5 @@ public abstract class PojoComponentBuilder<T, PCD extends PojoComponentDefinitio
             referenceFactories.put(injectableAttribute.getName(), new ListMultiplicityObjectFactory());
         }
     }
+    
 }

@@ -18,25 +18,22 @@
  */
 package org.fabric3.spring;
 
-import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Init;
-import org.osoa.sca.annotations.Reference;
-
 import org.fabric3.pojo.implementation.PojoComponentBuilder;
-import org.fabric3.pojo.injection.MultiplicityObjectFactory;
 import org.fabric3.pojo.instancefactory.InstanceFactoryBuilderRegistry;
-import org.fabric3.pojo.instancefactory.InstanceFactoryDefinition;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.BuilderException;
 import org.fabric3.spi.builder.component.ComponentBuilderRegistry;
-import org.fabric3.spi.component.InstanceFactoryProvider;
 import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
+import org.fabric3.spi.services.event.EventService;
 import org.fabric3.spi.transform.PullTransformer;
 import org.fabric3.spi.transform.TransformerRegistry;
 import org.fabric3.spi.wire.ProxyService;
 import org.fabric3.spring.applicationContext.SCAApplicationContext;
 import org.fabric3.spring.applicationContext.SCAParentApplicationContext;
+import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Init;
+import org.osoa.sca.annotations.Reference;
 
 /**
  * The component builder for Spring implementation types. Responsible for creating the Component runtime artifact from a
@@ -48,21 +45,19 @@ import org.fabric3.spring.applicationContext.SCAParentApplicationContext;
 @EagerInit
 public class SpringComponentBuilder<T> extends PojoComponentBuilder<T, SpringComponentDefinition, SpringComponent<T>> {
 
-    private ProxyService proxyService;
-
     public SpringComponentBuilder(@Reference ComponentBuilderRegistry builderRegistry,
                                 @Reference ScopeRegistry scopeRegistry,
                                 @Reference InstanceFactoryBuilderRegistry providerBuilders,
                                 @Reference ClassLoaderRegistry classLoaderRegistry,
-                                @Reference(name = "transformerRegistry")
-                                TransformerRegistry<PullTransformer<?, ?>> transformerRegistry,
-                                @Reference ProxyService proxyService) {
+                                @Reference(name = "transformerRegistry") TransformerRegistry<PullTransformer<?, ?>> transformerRegistry,
+                                @Reference ProxyService proxyService,
+                                @Reference EventService eventService) {
         super(builderRegistry,
               scopeRegistry,
               providerBuilders,
               classLoaderRegistry,
-              transformerRegistry);
-        this.proxyService = proxyService;
+              transformerRegistry,
+              eventService);
     }
 
     @Init

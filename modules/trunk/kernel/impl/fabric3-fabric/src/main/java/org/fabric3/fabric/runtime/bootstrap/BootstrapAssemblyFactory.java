@@ -76,6 +76,7 @@ import org.fabric3.fabric.services.contribution.processor.JarClasspathProcessor;
 import org.fabric3.fabric.services.discovery.SingleVMDiscoveryService;
 import org.fabric3.fabric.services.documentloader.DocumentLoader;
 import org.fabric3.fabric.services.documentloader.DocumentLoaderImpl;
+import org.fabric3.fabric.services.event.EventServiceImpl;
 import org.fabric3.fabric.services.instancefactory.BuildHelperImpl;
 import org.fabric3.fabric.services.instancefactory.DefaultInstanceFactoryBuilderRegistry;
 import org.fabric3.fabric.services.instancefactory.GenerationHelperImpl;
@@ -109,6 +110,7 @@ import org.fabric3.spi.services.contribution.ArtifactResolverRegistry;
 import org.fabric3.spi.services.contribution.ClasspathProcessorRegistry;
 import org.fabric3.spi.services.contribution.MetaDataStore;
 import org.fabric3.spi.services.discovery.DiscoveryService;
+import org.fabric3.spi.services.event.EventService;
 import org.fabric3.spi.services.runtime.RuntimeInfoService;
 import org.fabric3.spi.transform.PullTransformer;
 import org.fabric3.spi.transform.TransformerRegistry;
@@ -220,11 +222,15 @@ public class BootstrapAssemblyFactory {
         transformerRegistry.register(new String2QName());
 
         ComponentBuilderRegistry registry = new DefaultComponentBuilderRegistry();
+        
+        EventService eventService = new EventServiceImpl();
+        
         SystemComponentBuilder<?> builder = new SystemComponentBuilder<Object>(registry,
                                                                                scopeRegistry,
                                                                                providerRegistry,
                                                                                classLoaderRegistry,
-                                                                               transformerRegistry);
+                                                                               transformerRegistry,
+                                                                               eventService);
         builder.init();
 
         SingletonWireAttacher singletonWireAttacher = new SingletonWireAttacher(componentManager);

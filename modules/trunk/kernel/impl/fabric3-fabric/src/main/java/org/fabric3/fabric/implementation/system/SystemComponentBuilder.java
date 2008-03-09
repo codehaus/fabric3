@@ -36,6 +36,7 @@ import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.pojo.instancefactory.InstanceFactoryDefinition;
 import org.fabric3.scdl.Scope;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
+import org.fabric3.spi.services.event.EventService;
 import org.fabric3.spi.transform.PullTransformer;
 import org.fabric3.spi.transform.TransformerRegistry;
 
@@ -50,12 +51,14 @@ public class SystemComponentBuilder<T> extends PojoComponentBuilder<T, SystemCom
             @Reference ScopeRegistry scopeRegistry,
             @Reference InstanceFactoryBuilderRegistry providerBuilders,
             @Reference ClassLoaderRegistry classLoaderRegistry,
-            @Reference TransformerRegistry<PullTransformer<?, ?>> transformerRegistry) {
+            @Reference TransformerRegistry<PullTransformer<?, ?>> transformerRegistry,
+            @Reference EventService eventService) {
         super(builderRegistry,
               scopeRegistry,
               providerBuilders,
               classLoaderRegistry,
-              transformerRegistry);
+              transformerRegistry,
+              eventService);
     }
 
     @Init

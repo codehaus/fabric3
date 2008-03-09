@@ -24,6 +24,7 @@ import junit.framework.TestCase;
 import org.easymock.EasyMock;
 
 import org.fabric3.spi.component.InstanceFactoryProvider;
+import org.fabric3.fabric.services.event.EventServiceImpl;
 import org.fabric3.pojo.instancefactory.InstanceFactoryBuilderRegistry;
 import org.fabric3.pojo.instancefactory.InstanceFactoryDefinition;
 import org.fabric3.spi.builder.component.ComponentBuilderRegistry;
@@ -79,7 +80,8 @@ public class SystemPhysicalComponentBuilderTestCase<T> extends TestCase {
                                                 scopeRegistry,
                                                 providerBuilders,
                                                 classLoaderRegistry,
-                                                null);
+                                                null,
+                                                new EventServiceImpl());
 
         definition = new SystemComponentDefinition();
         definition.setGroupId(groupId);
