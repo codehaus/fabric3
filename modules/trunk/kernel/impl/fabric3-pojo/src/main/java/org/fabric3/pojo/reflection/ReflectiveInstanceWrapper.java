@@ -87,4 +87,8 @@ public class ReflectiveInstanceWrapper<T> implements InstanceWrapper<T> {
             started = false;
         }
     }
+    
+    public void inject() {
+    }
+    
 }

@@ -34,6 +34,8 @@ import org.fabric3.spi.component.TargetDestructionException;
 import org.fabric3.spi.component.TargetInitializationException;
 import org.fabric3.spi.component.TargetResolutionException;
 import org.fabric3.spi.invocation.WorkContext;
+import org.fabric3.spi.services.event.Fabric3Event;
+import org.fabric3.spi.services.event.Fabric3EventListener;
 import org.fabric3.spi.component.GroupInitializationException;
 import org.fabric3.spi.component.ExpirationPolicy;
 
@@ -44,7 +46,8 @@ import org.fabric3.spi.component.ExpirationPolicy;
  */
 @EagerInit
 @Service(ScopeContainer.class)
-public class CompositeScopeContainer extends AbstractScopeContainer<URI> {
+public class CompositeScopeContainer extends AbstractScopeContainer<URI> implements Fabric3EventListener{
+    
     private static final InstanceWrapper<Object> EMPTY = new InstanceWrapper<Object>() {
         public Object getInstance() {
             return null;
@@ -55,12 +58,14 @@ public class CompositeScopeContainer extends AbstractScopeContainer<URI> {
         }
 
         public void start() throws TargetInitializationException {
-
         }
 
         public void stop() throws TargetDestructionException {
-
         }
+        
+        public void inject() {
+        }
+        
     };
 
     // there is one instance per component so we can index directly
@@ -110,6 +115,7 @@ public class CompositeScopeContainer extends AbstractScopeContainer<URI> {
 
         // FIXME is there a potential race condition here that may result in two instances being created
         wrapper = createInstance(component, workContext);
+        wrapper.inject();
         if (!wrapper.isStarted()) {
             wrapper.start();
             destroyQueues.get(component.getGroupId()).add(wrapper);
@@ -120,5 +126,11 @@ public class CompositeScopeContainer extends AbstractScopeContainer<URI> {
 
     public <T> void returnWrapper(AtomicComponent<T> component, WorkContext workContext, InstanceWrapper<T> wrapper)
             throws TargetDestructionException {
+    }
+
+    public void onEvent(Fabric3Event event) {
+        for (InstanceWrapper<?> instanceWrapper : instanceWrappers.values()) {
+            instanceWrapper.inject();
+        }
     }
 }

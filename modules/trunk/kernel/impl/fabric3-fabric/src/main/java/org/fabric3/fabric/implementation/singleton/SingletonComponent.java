@@ -111,6 +111,7 @@ public class SingletonComponent<T> extends AbstractLifecycle implements AtomicCo
     }
 
     private static class SingletonWrapper<T> implements InstanceWrapper<T> {
+        
         private final T instance;
 
         private SingletonWrapper(T instance) {
@@ -130,5 +131,9 @@ public class SingletonComponent<T> extends AbstractLifecycle implements AtomicCo
 
         public void stop() throws TargetDestructionException {
         }
+        
+        public void inject() {
+        }
+        
     }
 }

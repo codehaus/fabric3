@@ -52,6 +52,7 @@ public class CompositeScopeContainerTestCase<T> extends TestCase {
         CallFrame frame = new CallFrame();
         EasyMock.expect(workContext.peekCallFrame()).andStubReturn(frame);
         EasyMock.expect(component.createInstanceWrapper(workContext)).andReturn(wrapper);
+        wrapper.inject();
         EasyMock.expect(wrapper.isStarted()).andReturn(false);
         wrapper.start();
         EasyMock.expect(component.getGroupId()).andStubReturn(groupId);

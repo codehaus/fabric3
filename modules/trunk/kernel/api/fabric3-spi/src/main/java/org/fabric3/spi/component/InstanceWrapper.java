@@ -34,5 +34,7 @@ public interface InstanceWrapper<T> {
     void start() throws TargetInitializationException;
 
     void stop() throws TargetDestructionException;
+    
+    void inject();
 
 }
