@@ -106,7 +106,8 @@ public class JavaComponentBuilder<T> extends PojoComponentBuilder<T, JavaCompone
                                                           definition.getMaxAge(),
                                                           proxyService,
                                                           propertyFactories,
-                                                          referenceFactories);
+                                                          referenceFactories,
+                                                          eventService);
 
         PojoRequestContext requestContext = new PojoRequestContext();
         provider.setObjectFactory(InjectableAttribute.REQUEST_CONTEXT, new SingletonObjectFactory<PojoRequestContext>(requestContext));

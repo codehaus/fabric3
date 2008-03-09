@@ -30,6 +30,7 @@ import org.fabric3.spi.ObjectCreationException;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.component.InstanceFactoryProvider;
 import org.fabric3.spi.component.ScopeContainer;
+import org.fabric3.spi.services.event.EventService;
 import org.fabric3.spi.wire.ProxyService;
 
 /**
@@ -65,7 +66,8 @@ public class JavaComponent<T> extends PojoComponent<T> {
                          long maxAge,
                          ProxyService proxyService,
                          Map<String, ObjectFactory<?>> propertyFactories,
-                         Map<String, MultiplicityObjectFactory<?>> referenceFactories) {
+                         Map<String, MultiplicityObjectFactory<?>> referenceFactories,
+                         EventService eventService) {
         super(componentId,
               instanceFactoryProvider,
               scopeContainer,
@@ -73,7 +75,8 @@ public class JavaComponent<T> extends PojoComponent<T> {
               initLevel,
               maxIdleTime,
               maxAge,
-              referenceFactories);
+              referenceFactories,
+              eventService);
         this.proxyService = proxyService;
         this.propertyFactories = propertyFactories;
     }

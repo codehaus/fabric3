@@ -35,6 +35,7 @@ import org.fabric3.spi.component.InstanceFactoryProvider;
 import org.fabric3.spi.component.InstanceWrapper;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.invocation.WorkContext;
+import org.fabric3.spi.services.event.EventService;
 
 /**
  * Base class for Component implementations based on Java objects.
@@ -52,6 +53,7 @@ public abstract class PojoComponent<T> extends AbstractLifecycle implements Atom
     private final long maxAge;
     private InstanceFactory<T> instanceFactory;
     private final Map<String, MultiplicityObjectFactory<?>> referenceFactories;
+    private final EventService eventService;
 
     public PojoComponent(URI componentId,
                          InstanceFactoryProvider<T> provider,
@@ -60,7 +62,8 @@ public abstract class PojoComponent<T> extends AbstractLifecycle implements Atom
                          int initLevel,
                          long maxIdleTime,
                          long maxAge,
-                         Map<String, MultiplicityObjectFactory<?>> referenceFactories) {
+                         Map<String, MultiplicityObjectFactory<?>> referenceFactories,
+                         EventService eventService) {
         this.uri = componentId;
         this.provider = provider;
         this.scopeContainer = scopeContainer;
@@ -69,6 +72,7 @@ public abstract class PojoComponent<T> extends AbstractLifecycle implements Atom
         this.maxIdleTime = maxIdleTime;
         this.maxAge = maxAge;
         this.referenceFactories = referenceFactories;
+        this.eventService = eventService;
     }
 
     public URI getUri() {

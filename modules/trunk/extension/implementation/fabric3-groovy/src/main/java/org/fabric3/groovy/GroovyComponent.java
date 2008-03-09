@@ -23,6 +23,7 @@ import org.fabric3.pojo.implementation.PojoComponent;
 import org.fabric3.pojo.injection.MultiplicityObjectFactory;
 import org.fabric3.spi.component.InstanceFactoryProvider;
 import org.fabric3.spi.component.ScopeContainer;
+import org.fabric3.spi.services.event.EventService;
 
 /**
  * Runtime container for a component implemented in Groovy.
@@ -37,7 +38,8 @@ public class GroovyComponent<T> extends PojoComponent<T> {
                            int initLevel,
                            long maxIdleTime,
                            long maxAge,
-                           Map<String, MultiplicityObjectFactory<?>> referenceFactories) {
-        super(componentId, instanceFactoryProvider, scopeContainer, groupId, initLevel, maxIdleTime, maxAge, referenceFactories);
+                           Map<String, MultiplicityObjectFactory<?>> referenceFactories,
+                           EventService eventService) {
+        super(componentId, instanceFactoryProvider, scopeContainer, groupId, initLevel, maxIdleTime, maxAge, referenceFactories, eventService);
     }
 }
