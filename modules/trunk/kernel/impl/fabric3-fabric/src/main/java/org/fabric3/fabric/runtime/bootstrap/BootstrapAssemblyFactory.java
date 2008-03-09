@@ -156,7 +156,7 @@ public class BootstrapAssemblyFactory {
         CommandExecutorRegistry commandRegistry  = 
             createCommandExecutorRegistry(monitorFactory, classLoaderRegistry, scopeRegistry, componentManager, eventService);
 
-        RuntimeRoutingService routingService = new RuntimeRoutingService(commandRegistry, eventService);
+        RuntimeRoutingService routingService = new RuntimeRoutingService(commandRegistry, scopeRegistry);
 
         GeneratorRegistry generatorRegistry = createGeneratorRegistry(classLoaderRegistry);
         PhysicalOperationHelper physicalOperationHelper = new PhysicalOperationHelperImpl();

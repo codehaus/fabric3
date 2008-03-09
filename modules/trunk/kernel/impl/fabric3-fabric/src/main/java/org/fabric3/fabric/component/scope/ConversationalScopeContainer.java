@@ -125,6 +125,9 @@ public class ConversationalScopeContainer extends StatefulScopeContainer<Convers
         }
         return wrapper;
     }
+    
+    public void reinject() {
+    }
 
     /**
      * Periodically scans and removes expired conversation contexts.

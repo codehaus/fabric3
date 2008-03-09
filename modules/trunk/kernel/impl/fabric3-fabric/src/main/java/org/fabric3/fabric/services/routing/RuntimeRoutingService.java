@@ -23,12 +23,13 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
-import org.fabric3.pojo.injection.ReInjectionEvent;
+import org.fabric3.scdl.Scope;
 import org.fabric3.spi.command.Command;
 import org.fabric3.spi.command.CommandExecutorRegistry;
 import org.fabric3.spi.command.ExecutionException;
+import org.fabric3.spi.component.ScopeRegistry;
+import org.fabric3.spi.component.TargetResolutionException;
 import org.fabric3.spi.generator.CommandMap;
-import org.fabric3.spi.services.event.EventService;
 import org.osoa.sca.annotations.Reference;
 
 /**
@@ -40,11 +41,11 @@ import org.osoa.sca.annotations.Reference;
 public class RuntimeRoutingService implements RoutingService {
 
     private final CommandExecutorRegistry registry;
-    private final EventService eventService;
+    private final ScopeRegistry scopeRegistry;
 
-    public RuntimeRoutingService(@Reference CommandExecutorRegistry registry, @Reference EventService eventService) {
+    public RuntimeRoutingService(@Reference CommandExecutorRegistry registry, @Reference ScopeRegistry scopeRegistry) {
         this.registry = registry;
-        this.eventService = eventService;
+        this.scopeRegistry = scopeRegistry;
     }
 
     public void route(CommandMap commandMap) throws RoutingException {
@@ -61,7 +62,13 @@ public class RuntimeRoutingService implements RoutingService {
             }
         }
         
-        eventService.publish(new ReInjectionEvent());
+        try {
+            if (scopeRegistry != null) {
+                scopeRegistry.getScopeContainer(Scope.COMPOSITE).reinject();
+            }
+        } catch (TargetResolutionException e) {
+            throw new RoutingException(e);
+        }
 
     }
 

@@ -31,16 +31,17 @@ import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamWriter;
 
 import org.fabric3.api.annotation.Monitor;
-import org.fabric3.pojo.injection.ReInjectionEvent;
+import org.fabric3.scdl.Scope;
 import org.fabric3.spi.command.Command;
 import org.fabric3.spi.command.CommandExecutorRegistry;
 import org.fabric3.spi.command.ExecutionException;
+import org.fabric3.spi.component.ScopeRegistry;
+import org.fabric3.spi.component.TargetResolutionException;
 import org.fabric3.spi.generator.CommandMap;
-import org.fabric3.spi.services.marshaller.MarshalException;
-import org.fabric3.spi.services.marshaller.MarshalService;
-import org.fabric3.spi.services.event.EventService;
 import org.fabric3.spi.services.factories.xml.FactoryInstantiationException;
 import org.fabric3.spi.services.factories.xml.XMLFactory;
+import org.fabric3.spi.services.marshaller.MarshalException;
+import org.fabric3.spi.services.marshaller.MarshalService;
 import org.fabric3.spi.services.messaging.MessagingException;
 import org.fabric3.spi.services.messaging.MessagingService;
 import org.osoa.sca.annotations.Reference;
@@ -57,21 +58,21 @@ public class FederatedRoutingService implements RoutingService {
     private final CommandExecutorRegistry executorRegistry;
     private final XMLFactory xmlFactory;
     private final RoutingMonitor monitor;
-    private final EventService eventService;
+    private final ScopeRegistry scopeRegistry;
 
     public FederatedRoutingService(@Reference MarshalService marshalService,
                                    @Reference MessagingService messagingService,
                                    @Reference CommandExecutorRegistry executorRegistry,
                                    @Reference XMLFactory xmlFactory,
                                    @Monitor RoutingMonitor monitor,
-                                   @Reference EventService eventService) {
+                                   @Reference ScopeRegistry scopeRegistry) {
 
         this.marshalService = marshalService;
         this.messagingService = messagingService;
         this.executorRegistry = executorRegistry;
         this.xmlFactory = xmlFactory;
         this.monitor = monitor;
-        this.eventService = eventService;
+        this.scopeRegistry = scopeRegistry;
     }
 
     public void route(CommandMap commandMap) throws RoutingException {
@@ -102,7 +103,11 @@ public class FederatedRoutingService implements RoutingService {
             }
         }
         
-        eventService.publish(new ReInjectionEvent());
+        try {
+            scopeRegistry.getScopeContainer(Scope.COMPOSITE).reinject();
+        } catch (TargetResolutionException e) {
+            throw new RoutingException(e);
+        }
         
     }
 

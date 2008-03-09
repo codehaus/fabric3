@@ -69,5 +69,8 @@ public class StatelessScopeContainer extends AbstractScopeContainer<Object> {
 
     public void stopContext(WorkContext workContext) {
     }
+    
+    public void reinject() {
+    }
 
 }

@@ -106,6 +106,9 @@ public class StatefulScopeContainerTestCase extends TestCase {
             public <T> InstanceWrapper<T> getWrapper(AtomicComponent<T> component, WorkContext workContext) throws TargetResolutionException {
                 return super.getWrapper(component, workContext, conversation, true);
             }
+            
+            public void reinject() {
+            }
         };
     }
 }

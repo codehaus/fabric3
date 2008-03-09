@@ -40,6 +40,6 @@ public class RuntimeRoutingServiceTestCase extends TestCase {
         super.setUp();
         CommandExecutorRegistry commandRegistry = EasyMock.createMock(CommandExecutorRegistry.class);
         EasyMock.replay(commandRegistry);
-        service = new RuntimeRoutingService(commandRegistry, new EventServiceImpl());
+        service = new RuntimeRoutingService(commandRegistry, null);
     }
 }

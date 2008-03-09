@@ -117,4 +117,10 @@ public interface ScopeContainer<KEY> extends Lifecycle {
      * @throws GroupInitializationException if one or more components threw an exception during initialization
      */
     void initializeComponents(List<AtomicComponent<?>> components, URI groupId, WorkContext workContext) throws GroupInitializationException;
+    
+    /**
+     * Re-injects the targets.
+     * @throws TargetResolutionException
+     */
+    void reinject() throws TargetResolutionException;
 }

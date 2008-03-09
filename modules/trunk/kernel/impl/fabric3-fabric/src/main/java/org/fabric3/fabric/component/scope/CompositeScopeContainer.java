@@ -45,7 +45,7 @@ import org.osoa.sca.annotations.Service;
  */
 @EagerInit
 @Service(ScopeContainer.class)
-public class CompositeScopeContainer extends AbstractScopeContainer<URI> implements Fabric3EventListener {
+public class CompositeScopeContainer extends AbstractScopeContainer<URI> {
     
     private static final InstanceWrapper<Object> EMPTY = new InstanceWrapper<Object>() {
         public Object getInstance() {
@@ -127,13 +127,9 @@ public class CompositeScopeContainer extends AbstractScopeContainer<URI> impleme
             throws TargetDestructionException {
     }
 
-    public void onEvent(Fabric3Event event) {
+    public void reinject() throws TargetResolutionException {
         for (InstanceWrapper<?> instanceWrapper : instanceWrappers.values()) {
-            try {
-                instanceWrapper.reinject();
-            } catch (TargetResolutionException ex) {
-                throw new AssertionError(ex);
-            }
+            instanceWrapper.reinject();
         }
     }
 }
