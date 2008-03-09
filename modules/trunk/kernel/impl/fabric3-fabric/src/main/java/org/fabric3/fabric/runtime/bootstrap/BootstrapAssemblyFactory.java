@@ -149,12 +149,14 @@ public class BootstrapAssemblyFactory {
                                           ComponentManager componentManager,
                                           LogicalComponentManager logicalComponentManager,
                                           MetaDataStore metaDataStore) throws InitializationException {
+        
+        EventService eventService = new EventServiceImpl();
         Allocator allocator = new LocalAllocator();
 
         CommandExecutorRegistry commandRegistry  = 
-            createCommandExecutorRegistry(monitorFactory, classLoaderRegistry, scopeRegistry, componentManager);
+            createCommandExecutorRegistry(monitorFactory, classLoaderRegistry, scopeRegistry, componentManager, eventService);
 
-        RuntimeRoutingService routingService = new RuntimeRoutingService(commandRegistry);
+        RuntimeRoutingService routingService = new RuntimeRoutingService(commandRegistry, eventService);
 
         GeneratorRegistry generatorRegistry = createGeneratorRegistry(classLoaderRegistry);
         PhysicalOperationHelper physicalOperationHelper = new PhysicalOperationHelperImpl();
@@ -206,7 +208,8 @@ public class BootstrapAssemblyFactory {
     private static CommandExecutorRegistry createCommandExecutorRegistry(MonitorFactory monitorFactory,
                                                ClassLoaderRegistry classLoaderRegistry,
                                                ScopeRegistry scopeRegistry,
-                                               ComponentManager componentManager) {
+                                               ComponentManager componentManager,
+                                               EventService eventService) {
 
         InstanceFactoryBuilderRegistry providerRegistry = new DefaultInstanceFactoryBuilderRegistry();
         InstanceFactoryBuildHelper buildHelper = new BuildHelperImpl(classLoaderRegistry);
@@ -222,8 +225,6 @@ public class BootstrapAssemblyFactory {
         transformerRegistry.register(new String2QName());
 
         ComponentBuilderRegistry registry = new DefaultComponentBuilderRegistry();
-        
-        EventService eventService = new EventServiceImpl();
         
         SystemComponentBuilder<?> builder = new SystemComponentBuilder<Object>(registry,
                                                                                scopeRegistry,

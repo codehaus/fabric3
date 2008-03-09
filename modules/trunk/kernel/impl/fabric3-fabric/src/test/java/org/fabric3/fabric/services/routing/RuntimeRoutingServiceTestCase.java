@@ -23,6 +23,7 @@ import java.net.URI;
 import junit.framework.TestCase;
 
 import org.easymock.EasyMock;
+import org.fabric3.fabric.services.event.EventServiceImpl;
 import org.fabric3.spi.command.CommandExecutorRegistry;
 
 /**
@@ -39,6 +40,6 @@ public class RuntimeRoutingServiceTestCase extends TestCase {
         super.setUp();
         CommandExecutorRegistry commandRegistry = EasyMock.createMock(CommandExecutorRegistry.class);
         EasyMock.replay(commandRegistry);
-        service = new RuntimeRoutingService(commandRegistry);
+        service = new RuntimeRoutingService(commandRegistry, new EventServiceImpl());
     }
 }

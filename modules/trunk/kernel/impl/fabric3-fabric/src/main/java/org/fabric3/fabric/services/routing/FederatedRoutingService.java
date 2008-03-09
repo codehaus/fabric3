@@ -31,12 +31,14 @@ import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamWriter;
 
 import org.fabric3.api.annotation.Monitor;
+import org.fabric3.pojo.injection.ReInjectionEvent;
 import org.fabric3.spi.command.Command;
 import org.fabric3.spi.command.CommandExecutorRegistry;
 import org.fabric3.spi.command.ExecutionException;
 import org.fabric3.spi.generator.CommandMap;
 import org.fabric3.spi.services.marshaller.MarshalException;
 import org.fabric3.spi.services.marshaller.MarshalService;
+import org.fabric3.spi.services.event.EventService;
 import org.fabric3.spi.services.factories.xml.FactoryInstantiationException;
 import org.fabric3.spi.services.factories.xml.XMLFactory;
 import org.fabric3.spi.services.messaging.MessagingException;
@@ -53,20 +55,23 @@ public class FederatedRoutingService implements RoutingService {
     private final MarshalService marshalService;
     private final MessagingService messagingService;
     private final CommandExecutorRegistry executorRegistry;
-    private XMLFactory xmlFactory;
-    private RoutingMonitor monitor;
+    private final XMLFactory xmlFactory;
+    private final RoutingMonitor monitor;
+    private final EventService eventService;
 
     public FederatedRoutingService(@Reference MarshalService marshalService,
                                    @Reference MessagingService messagingService,
                                    @Reference CommandExecutorRegistry executorRegistry,
                                    @Reference XMLFactory xmlFactory,
-                                   @Monitor RoutingMonitor monitor) {
+                                   @Monitor RoutingMonitor monitor,
+                                   @Reference EventService eventService) {
 
         this.marshalService = marshalService;
         this.messagingService = messagingService;
         this.executorRegistry = executorRegistry;
         this.xmlFactory = xmlFactory;
         this.monitor = monitor;
+        this.eventService = eventService;
     }
 
     public void route(CommandMap commandMap) throws RoutingException {
@@ -96,6 +101,9 @@ public class FederatedRoutingService implements RoutingService {
                 throw new RoutingException(e);
             }
         }
+        
+        eventService.publish(new ReInjectionEvent());
+        
     }
 
     private void routeToDestination(URI runtimeId, Object commandSet) throws RoutingException {

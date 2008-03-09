@@ -18,10 +18,6 @@
  */
 package org.fabric3.fabric.services.routing;
 
-import java.net.URI;
-import java.util.Map;
-
-import org.fabric3.spi.command.Command;
 import org.fabric3.spi.generator.CommandMap;
 
 /**

@@ -23,10 +23,12 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
+import org.fabric3.pojo.injection.ReInjectionEvent;
 import org.fabric3.spi.command.Command;
 import org.fabric3.spi.command.CommandExecutorRegistry;
 import org.fabric3.spi.command.ExecutionException;
 import org.fabric3.spi.generator.CommandMap;
+import org.fabric3.spi.services.event.EventService;
 import org.osoa.sca.annotations.Reference;
 
 /**
@@ -38,9 +40,11 @@ import org.osoa.sca.annotations.Reference;
 public class RuntimeRoutingService implements RoutingService {
 
     private final CommandExecutorRegistry registry;
+    private final EventService eventService;
 
-    public RuntimeRoutingService(@Reference CommandExecutorRegistry registry) {
+    public RuntimeRoutingService(@Reference CommandExecutorRegistry registry, @Reference EventService eventService) {
         this.registry = registry;
+        this.eventService = eventService;
     }
 
     public void route(CommandMap commandMap) throws RoutingException {
@@ -56,6 +60,8 @@ public class RuntimeRoutingService implements RoutingService {
                 throw new RoutingException(e);
             }
         }
+        
+        eventService.publish(new ReInjectionEvent());
 
     }
 

@@ -193,6 +193,7 @@ public abstract class PojoComponent<T> extends AbstractLifecycle implements Atom
         if (!(event instanceof ReInjectionEvent)) {
             return;
         }
+
     }
 
 }
