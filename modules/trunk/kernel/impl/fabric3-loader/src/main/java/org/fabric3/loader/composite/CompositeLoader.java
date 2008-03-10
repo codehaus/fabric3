@@ -84,11 +84,11 @@ public class CompositeLoader implements TypeLoader<Composite> {
      * @param componentLoader loader for component elements
      * @param loaderHelper helper
      */
-    public CompositeLoader(@Reference(name = "loader") Loader loader,
-                           @Reference(name = "include")TypeLoader<Include> includeLoader,
-                           @Reference(name = "property")TypeLoader<Property> propertyLoader,
-                           @Reference(name = "component")TypeLoader<ComponentDefinition<?>> componentLoader,
-                           @Reference(name = "loaderHelper")LoaderHelper loaderHelper) {
+    public CompositeLoader(Loader loader,
+                           TypeLoader<Include> includeLoader,
+                           TypeLoader<Property> propertyLoader,
+                           TypeLoader<ComponentDefinition<?>> componentLoader,
+                           LoaderHelper loaderHelper) {
         this.loader = loader;
         this.includeLoader = includeLoader;
         this.propertyLoader = propertyLoader;

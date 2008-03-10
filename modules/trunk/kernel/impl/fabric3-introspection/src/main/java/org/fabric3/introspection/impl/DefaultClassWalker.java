@@ -159,6 +159,6 @@ public class DefaultClassWalker<I extends Implementation<? extends InjectingComp
 
     @SuppressWarnings("unchecked")
     private <A extends Annotation> AnnotationProcessor<A, I> getProcessor(A annotation) {
-        return (AnnotationProcessor<A, I>) processors.get(annotation.getClass());
+        return (AnnotationProcessor<A, I>) processors.get(annotation.annotationType());
     }
 }

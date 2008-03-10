@@ -41,7 +41,6 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamWriter;
 
-import org.osoa.sca.annotations.Constructor;
 import org.osoa.sca.annotations.Destroy;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
@@ -106,7 +105,6 @@ public class ContributionDirectoryScanner implements Runnable, Fabric3EventListe
     private long delay = 5000;
     private ScheduledExecutorService executor;
 
-    @Constructor
     public ContributionDirectoryScanner(@Reference FileSystemResourceFactoryRegistry registry,
                                         @Reference ContributionService contributionService,
                                         @Reference(name = "assembly")Assembly assembly,

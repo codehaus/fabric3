@@ -35,7 +35,6 @@ import org.fabric3.spring.SpringImplementation;
 public class SpringComponentTypeLoaderImpl implements SpringComponentTypeLoader {
     private final Introspector introspector;
 
-    @Constructor({"introspector"})
     public SpringComponentTypeLoaderImpl(@Reference IntrospectionRegistry introspector) {
         this.introspector = introspector;
     }

@@ -55,7 +55,6 @@ public class ConnectorImpl implements Connector, SourceWireAttacherRegistry, Tar
     private final Map<Class<? extends PhysicalWireSourceDefinition>, SourceWireAttacher<? extends PhysicalWireSourceDefinition>> sourceAttachers;
     private final Map<Class<? extends PhysicalWireTargetDefinition>, TargetWireAttacher<? extends PhysicalWireTargetDefinition>> targetAttachers;
 
-    @Constructor
     public ConnectorImpl(@Reference InterceptorBuilderRegistry interceptorBuilderRegistry) {
         this.interceptorBuilderRegistry = interceptorBuilderRegistry;
         sourceAttachers =

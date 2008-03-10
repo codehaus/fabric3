@@ -40,6 +40,7 @@ import org.fabric3.fabric.services.contribution.MetaDataStoreImpl;
 import org.fabric3.fabric.services.contribution.ProcessorRegistryImpl;
 import org.fabric3.fabric.services.documentloader.DocumentLoader;
 import org.fabric3.fabric.services.documentloader.DocumentLoaderImpl;
+import org.fabric3.fabric.services.factories.xml.XMLFactoryImpl;
 import org.fabric3.monitor.MonitorFactory;
 import org.fabric3.host.runtime.Fabric3Runtime;
 import org.fabric3.host.runtime.HostInfo;
@@ -141,6 +142,7 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
         ClassLoaderRegistry classLoaderRegistry =
                 runtime.getSystemComponent(ClassLoaderRegistry.class, ComponentNames.CLASSLOADER_REGISTRY_URI);
         Loader loader = BootstrapLoaderFactory.createLoader(runtime);
+//        Loader loader = BootstrapLoaderFactory2.createLoader(runtime.getMonitorFactory(), new XMLFactoryImpl());
         Assembly runtimeAssembly = runtime.getSystemComponent(Assembly.class, ComponentNames.RUNTIME_ASSEMBLY_URI);
         try {
 

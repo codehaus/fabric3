@@ -50,7 +50,7 @@ public class SystemImplementationLoader implements TypeLoader<SystemImplementati
      *
      * @param componentTypeLoader the component type loader to use
      */
-    public SystemImplementationLoader(@Reference SystemComponentTypeLoader componentTypeLoader) {
+    public SystemImplementationLoader(SystemComponentTypeLoader componentTypeLoader) {
         this.registry = null;
         this.componentTypeLoader = componentTypeLoader;
     }

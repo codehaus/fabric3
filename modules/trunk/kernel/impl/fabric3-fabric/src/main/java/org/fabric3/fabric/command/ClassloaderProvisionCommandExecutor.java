@@ -45,7 +45,7 @@ public class ClassloaderProvisionCommandExecutor implements CommandExecutor<Clas
         this.commandExecutorRegistry = commandExecutorRegistry;
     }
 
-    public ClassloaderProvisionCommandExecutor(@Reference ResourceContainerBuilderRegistry resourceContainerBuilderRegistry) {
+    public ClassloaderProvisionCommandExecutor(ResourceContainerBuilderRegistry resourceContainerBuilderRegistry) {
         this.resourceContainerBuilderRegistry = resourceContainerBuilderRegistry;
     }
 

@@ -18,7 +18,6 @@
  */
 package org.fabric3.runtime.webapp.smoketest;
 
-import org.osoa.sca.annotations.Constructor;
 import org.osoa.sca.annotations.Property;
 
 /**

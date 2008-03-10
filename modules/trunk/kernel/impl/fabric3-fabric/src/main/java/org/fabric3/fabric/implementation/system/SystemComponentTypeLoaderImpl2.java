@@ -27,9 +27,12 @@ import org.fabric3.introspection.IntrospectionException;
 import org.fabric3.introspection.java.ClassWalker;
 import org.fabric3.introspection.java.HeuristicProcessor;
 import org.fabric3.introspection.java.IntrospectionHelper;
+import org.fabric3.introspection.java.TypeMapping;
 import org.fabric3.introspection.xml.LoaderException;
 import org.fabric3.pojo.processor.ProcessingException;
 import org.fabric3.pojo.scdl.PojoComponentType;
+import org.fabric3.loader.common.IntrospectionContextImpl;
+import org.fabric3.scdl.Scope;
 
 /**
  * Loads a system component type
@@ -52,11 +55,15 @@ public class SystemComponentTypeLoaderImpl2 implements SystemComponentTypeLoader
     public void load(SystemImplementation implementation, IntrospectionContext context) throws LoaderException {
         String implClassName = implementation.getImplementationClass();
         PojoComponentType componentType = new PojoComponentType(implClassName);
+        componentType.setImplementationScope(Scope.COMPOSITE);
         implementation.setComponentType(componentType);
 
         ClassLoader cl = context.getTargetClassLoader();
         try {
             Class<?> implClass = helper.loadClass(implClassName, cl);
+            TypeMapping typeMapping = helper.mapTypeParameters(implClass);
+
+            context = new IntrospectionContextImpl(context, typeMapping);
             classWalker.walk(implementation, implClass, context);
 
             for (HeuristicProcessor<SystemImplementation> heuristic : heuristics) {

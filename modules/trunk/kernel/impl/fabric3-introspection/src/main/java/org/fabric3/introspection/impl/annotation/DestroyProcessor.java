@@ -37,6 +37,6 @@ public class DestroyProcessor<I extends Implementation<? extends InjectingCompon
     }
 
     public void visitMethod(Destroy annotation, Method method, I implementation, IntrospectionContext context) throws IntrospectionException {
-        implementation.getComponentType().setInitMethod(new Signature(method));
+        implementation.getComponentType().setDestroyMethod(new Signature(method));
     }
 }

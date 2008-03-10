@@ -32,6 +32,7 @@ import org.fabric3.pojo.processor.ProcessingException;
 import org.fabric3.scdl.ServiceContract;
 import org.fabric3.scdl.FieldInjectionSite;
 import org.fabric3.scdl.MethodInjectionSite;
+import org.fabric3.scdl.MonitorResource;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.java.ContractProcessor;

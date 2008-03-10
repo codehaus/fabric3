@@ -29,7 +29,6 @@ import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
-import org.osoa.sca.annotations.Constructor;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
@@ -53,7 +52,6 @@ public class LoaderRegistryImpl implements LoaderRegistry {
     private Map<QName, TypeLoader<?>> mappedLoaders;
     private final Map<QName, TypeLoader<?>> loaders = new HashMap<QName, TypeLoader<?>>();
 
-    @Constructor
     public LoaderRegistryImpl(@org.fabric3.api.annotation.Monitor Monitor monitor, @Reference XMLFactory factory) {
         this.monitor = monitor;
         this.xmlFactory = factory.newInputFactoryInstance();

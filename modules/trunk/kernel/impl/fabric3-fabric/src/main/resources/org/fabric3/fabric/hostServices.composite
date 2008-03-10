@@ -34,10 +34,8 @@
 
     <!-- WorkScheduler service -->
     <component name="workManager">
-        <system:implementation.system
-                class="org.fabric3.fabric.services.work.jsr237.workmanager.ThreadPoolWorkManager"/>
-        <!-- JFM FIXME
-        <property name="poolSize">10</property>   -->
+        <system:implementation.system class="org.fabric3.fabric.services.work.jsr237.workmanager.ThreadPoolWorkManager"/>
+        <property name="poolSize">10</property>
     </component>
 
     <component name="workScheduler">

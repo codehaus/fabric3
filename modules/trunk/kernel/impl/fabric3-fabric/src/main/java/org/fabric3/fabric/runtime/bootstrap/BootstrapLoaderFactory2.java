@@ -28,7 +28,6 @@ import org.osoa.sca.annotations.Reference;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Destroy;
-import org.osoa.sca.annotations.Constructor;
 
 import org.fabric3.fabric.implementation.system.SystemComponentTypeLoader;
 import org.fabric3.fabric.implementation.system.SystemComponentTypeLoaderImpl2;
@@ -45,7 +44,7 @@ import org.fabric3.introspection.impl.annotation.ReferenceProcessor;
 import org.fabric3.introspection.impl.annotation.EagerInitProcessor;
 import org.fabric3.introspection.impl.annotation.InitProcessor;
 import org.fabric3.introspection.impl.annotation.DestroyProcessor;
-import org.fabric3.introspection.impl.annotation.ConstructorProcessor;
+import org.fabric3.introspection.impl.annotation.MonitorProcessor;
 import org.fabric3.introspection.impl.contract.DefaultContractProcessor;
 import org.fabric3.introspection.java.AnnotationProcessor;
 import org.fabric3.introspection.java.ClassWalker;
@@ -64,15 +63,15 @@ import org.fabric3.loader.composite.PropertyValueLoader;
 import org.fabric3.loader.impl.DefaultLoaderHelper;
 import org.fabric3.loader.impl.LoaderRegistryImpl;
 import org.fabric3.monitor.MonitorFactory;
-import org.fabric3.spi.services.contribution.MetaDataStore;
 import org.fabric3.spi.services.factories.xml.XMLFactory;
+import org.fabric3.api.annotation.Monitor;
 
 /**
  * @version $Rev$ $Date$
  */
 public class BootstrapLoaderFactory2 {
 
-    public static Loader createLoader(MonitorFactory monitorFactory, MetaDataStore metaDataStore, XMLFactory xmlFactory) {
+    public static Loader createLoader(MonitorFactory monitorFactory, XMLFactory xmlFactory) {
 
         LoaderHelper loaderHelper = new DefaultLoaderHelper();
 
@@ -80,7 +79,7 @@ public class BootstrapLoaderFactory2 {
         Map<QName, TypeLoader<?>> loaders = new HashMap<QName, TypeLoader<?>>();
 
         // loader for <composite> document
-        loaders.put(CompositeLoader.COMPOSITE, compositeLoader(loader, loaderHelper, metaDataStore));
+        loaders.put(CompositeLoader.COMPOSITE, compositeLoader(loader, loaderHelper));
 
         // loader for <implementation.system> element
         loaders.put(SystemImplementation.IMPLEMENTATION_SYSTEM, systemImplementation());
@@ -89,7 +88,7 @@ public class BootstrapLoaderFactory2 {
         return loader;
     }
 
-    private static CompositeLoader compositeLoader(Loader loader, LoaderHelper loaderHelper, MetaDataStore metaDataStore) {
+    private static CompositeLoader compositeLoader(Loader loader, LoaderHelper loaderHelper) {
         PropertyLoader propertyLoader = new PropertyLoader(loaderHelper);
         PropertyValueLoader propertyValueLoader = new PropertyValueLoader(loaderHelper);
 
@@ -102,7 +101,7 @@ public class BootstrapLoaderFactory2 {
                                                               componentServiceLoader,
                                                               loaderHelper);
 
-        IncludeLoader includeLoader = new IncludeLoader(loader, metaDataStore);
+        IncludeLoader includeLoader = new IncludeLoader(loader, null);
         return new CompositeLoader(loader, includeLoader, propertyLoader, componentLoader, loaderHelper);
     }
 
@@ -113,12 +112,13 @@ public class BootstrapLoaderFactory2 {
         Map<Class<? extends Annotation>, AnnotationProcessor<? extends Annotation, SystemImplementation>> processors =
                 new HashMap<Class<? extends Annotation>, AnnotationProcessor<? extends Annotation, SystemImplementation>>();
 
-        processors.put(Constructor.class, new ConstructorProcessor<SystemImplementation>());
+        // no constructor processor is needed as that is handled by heuristics
         processors.put(Property.class, new PropertyProcessor<SystemImplementation>(helper));
         processors.put(Reference.class, new ReferenceProcessor<SystemImplementation>(contractProcessor, helper));
         processors.put(EagerInit.class, new EagerInitProcessor<SystemImplementation>());
         processors.put(Init.class, new InitProcessor<SystemImplementation>());
         processors.put(Destroy.class, new DestroyProcessor<SystemImplementation>());
+        processors.put(Monitor.class, new MonitorProcessor<SystemImplementation>(helper, contractProcessor));
 
         ClassWalker<SystemImplementation> classWalker = new DefaultClassWalker<SystemImplementation>(processors);
 

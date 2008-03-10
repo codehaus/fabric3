@@ -51,7 +51,7 @@ public class ComponentBuildCommandExecutor implements CommandExecutor<ComponentB
         this.commandExecutorRegistry = commandExecutorRegistry;
     }
 
-    public ComponentBuildCommandExecutor(@Reference ComponentBuilderRegistry componentBuilderRegistry, @Reference ComponentManager componentManager) {
+    public ComponentBuildCommandExecutor(ComponentBuilderRegistry componentBuilderRegistry, ComponentManager componentManager) {
         this.componentBuilderRegistry = componentBuilderRegistry;
         this.componentManager = componentManager;
     }

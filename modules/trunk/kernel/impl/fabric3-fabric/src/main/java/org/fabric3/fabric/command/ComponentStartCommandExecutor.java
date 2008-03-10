@@ -46,7 +46,7 @@ public class ComponentStartCommandExecutor implements CommandExecutor<ComponentS
         this.commandExecutorRegistry = commandExecutorRegistry;
     }
 
-    public ComponentStartCommandExecutor(@Reference ComponentManager componentManager) {
+    public ComponentStartCommandExecutor(ComponentManager componentManager) {
         this.componentManager = componentManager;
     }
 

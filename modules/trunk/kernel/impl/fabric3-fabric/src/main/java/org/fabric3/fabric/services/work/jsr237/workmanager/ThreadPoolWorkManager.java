@@ -28,7 +28,6 @@ import java.util.concurrent.RejectedExecutionException;
 
 import org.osoa.sca.annotations.Destroy;
 import org.osoa.sca.annotations.Property;
-import org.osoa.sca.annotations.Constructor;
 
 import commonj.work.Work;
 import commonj.work.WorkEvent;
@@ -53,16 +52,6 @@ public class ThreadPoolWorkManager implements WorkManager {
 
     // Thread-pool
     private ExecutorService executor;
-
-    /**
-     * Initializes the thread-pool.
-     * JFM FIXME Temporary until properties work
-     * @Deprecated
-     */
-    @Constructor
-    public ThreadPoolWorkManager() {
-        executor = Executors.newFixedThreadPool(10);
-    }
 
     /**
      * Initializes the thread-pool.

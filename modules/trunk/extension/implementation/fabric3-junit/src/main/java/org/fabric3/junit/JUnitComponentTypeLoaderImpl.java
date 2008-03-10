@@ -49,7 +49,6 @@ public class JUnitComponentTypeLoaderImpl implements JUnitComponentTypeLoader {
     private static final String TEST_SERVICE_NAME = "testService";
     private final Introspector introspector;
 
-    @Constructor
     public JUnitComponentTypeLoaderImpl(@Reference IntrospectionRegistry introspector) {
         this.introspector = introspector;
     }

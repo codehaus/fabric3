@@ -84,6 +84,11 @@ public class IncludeLoader implements TypeLoader<Include> {
             }
             return loadFromSideFile(name, cl, contributionUri, url);
         } else {
+            if (store == null) {
+                // throw error as this is invalid in a bootstrap environment
+                throw new UnsupportedOperationException("scdlLocation or scdlResource must be supplied as no MetaDataStore is available");
+            }
+
             try {
                 QNameSymbol symbol = new QNameSymbol(name);
                 ResourceElement<QNameSymbol, Composite> element = store.resolve(contributionUri, Composite.class, symbol);

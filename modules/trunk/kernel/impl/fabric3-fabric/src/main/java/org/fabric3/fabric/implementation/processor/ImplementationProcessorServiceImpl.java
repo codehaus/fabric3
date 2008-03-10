@@ -44,7 +44,7 @@ import org.fabric3.scdl.ServiceContract;
 import org.fabric3.scdl.ServiceDefinition;
 import org.fabric3.scdl.ReferenceDefinition;
 import org.fabric3.scdl.InjectableAttributeType;
-import org.fabric3.fabric.monitor.MonitorResource;
+import org.fabric3.scdl.MonitorResource;
 
 /**
  * The default implementation of an <code>ImplementationProcessorService</code>

@@ -45,7 +45,7 @@ public class WireAttachCommandExecutor implements CommandExecutor<WireAttachComm
         this.connector = connector;
     }
 
-    public WireAttachCommandExecutor(@Reference Connector connector) {
+    public WireAttachCommandExecutor(Connector connector) {
         this.connector = connector;
     }
 

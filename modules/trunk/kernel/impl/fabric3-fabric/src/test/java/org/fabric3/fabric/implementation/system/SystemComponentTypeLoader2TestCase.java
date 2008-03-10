@@ -47,8 +47,8 @@ public class SystemComponentTypeLoader2TestCase extends TestCase {
     public void testSimple() throws LoaderException, IntrospectionException {
         impl.setImplementationClass(Simple.class.getName());
 
-        classWalker.walk(impl, Simple.class, context);
-        heuristic.applyHeuristics(impl, Simple.class, context);
+        classWalker.walk(EasyMock.same(impl), EasyMock.eq(Simple.class), EasyMock.isA(IntrospectionContext.class));
+        heuristic.applyHeuristics(EasyMock.same(impl), EasyMock.eq(Simple.class), EasyMock.isA(IntrospectionContext.class));
         control.replay();
         loader.load(impl, context);
 
@@ -68,7 +68,7 @@ public class SystemComponentTypeLoader2TestCase extends TestCase {
         IntrospectionHelper helper = new DefaultIntrospectionHelper();
 
 
-        context = EasyMock.createMock(IntrospectionContext.class);
+        context = EasyMock.createNiceMock(IntrospectionContext.class);
         EasyMock.expect(context.getTargetClassLoader()).andStubReturn(getClass().getClassLoader());
         EasyMock.replay(context);
 
