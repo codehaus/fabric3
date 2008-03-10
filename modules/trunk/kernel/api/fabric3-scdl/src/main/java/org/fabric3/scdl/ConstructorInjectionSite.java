@@ -50,6 +50,10 @@ public class ConstructorInjectionSite extends InjectionSite {
         return param;
     }
 
+    public String toString() {
+        return signature.toString() + '[' + param + ']';
+    }
+
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
@@ -62,9 +66,5 @@ public class ConstructorInjectionSite extends InjectionSite {
 
     public int hashCode() {
         return 31 * signature.hashCode() + param;
-    }
-
-    public String toString() {
-        return signature.toString() + '[' + param + ']';
     }
 }

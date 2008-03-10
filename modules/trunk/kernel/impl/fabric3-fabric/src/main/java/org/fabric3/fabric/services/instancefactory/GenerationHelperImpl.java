@@ -18,6 +18,7 @@ package org.fabric3.fabric.services.instancefactory;
 
 import java.lang.reflect.Method;
 import java.util.Map;
+import java.util.Set;
 
 import org.w3c.dom.Document;
 
@@ -54,10 +55,10 @@ public class GenerationHelperImpl implements InstanceFactoryGenerationHelper {
 
         Implementation<PojoComponentType> implementation = component.getDefinition().getImplementation();
         PojoComponentType type = implementation.getComponentType();
-        Map<InjectableAttribute, InjectionSite> mappings = type.getInjectionMappings();
-        for (Map.Entry<InjectableAttribute, InjectionSite> entry : mappings.entrySet()) {
+        Map<InjectableAttribute, Set<InjectionSite>> mappings = type.getInjectionSites();
+        for (Map.Entry<InjectableAttribute, Set<InjectionSite>> entry : mappings.entrySet()) {
             InjectableAttribute source = entry.getKey();
-            InjectionSite site = entry.getValue();
+            InjectionSite site = entry.getValue().iterator().next();
             providerDefinition.addInjectionSite(source, site);
         }
     }

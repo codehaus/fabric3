@@ -18,6 +18,8 @@ package org.fabric3.scdl;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Set;
+import java.util.Collections;
 
 /**
  * A component type associated with an implementation that supports injection.
@@ -26,7 +28,7 @@ import java.util.Map;
  */
 public class InjectingComponentType extends AbstractComponentType<ServiceDefinition, ReferenceDefinition, Property, ResourceDefinition> {
 
-    private final Map<InjectableAttribute, InjectionSite> injectionMappings = new HashMap<InjectableAttribute, InjectionSite>();
+    private final Map<InjectableAttribute, Set<InjectionSite>> injectionSites = new HashMap<InjectableAttribute, Set<InjectionSite>>();
     private Signature constructor;
     private Signature initMethod;
     private Signature destroyMethod;
@@ -84,7 +86,7 @@ public class InjectingComponentType extends AbstractComponentType<ServiceDefinit
         String name = definition.getName();
         callbacks.put(name, definition);
         InjectableAttribute injectableAttribute = new InjectableAttribute(InjectableAttributeType.CALLBACK, name);
-        injectionMappings.put(injectableAttribute, injectionSite);
+        injectionSites.put(injectableAttribute, Collections.singleton(injectionSite));
     }
 
     /**
@@ -103,7 +105,7 @@ public class InjectingComponentType extends AbstractComponentType<ServiceDefinit
      * @param site   the injection site
      */
     public void addInjectionSite(InjectableAttribute source, InjectionSite site) {
-        injectionMappings.put(source, site);
+        injectionSites.put(source, Collections.singleton(site));
     }
 
     /**
@@ -111,8 +113,8 @@ public class InjectingComponentType extends AbstractComponentType<ServiceDefinit
      *
      * @return the map of all injection mappings
      */
-    public Map<InjectableAttribute, InjectionSite> getInjectionMappings() {
-        return injectionMappings;
+    public Map<InjectableAttribute, Set<InjectionSite>> getInjectionSites() {
+        return injectionSites;
     }
 
     /**

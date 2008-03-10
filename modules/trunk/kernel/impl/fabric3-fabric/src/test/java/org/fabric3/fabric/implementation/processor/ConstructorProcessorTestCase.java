@@ -23,6 +23,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 import java.util.Map;
+import java.util.HashMap;
+import java.util.Collections;
 
 import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Reference;
@@ -86,13 +88,15 @@ public class ConstructorProcessorTestCase extends TestCase {
     public void testMixedParameters() throws Exception {
         Constructor<Mixed> ctor1 = Mixed.class.getConstructor(String.class, String.class, String.class);
         processor.visitConstructor(ctor1, type, context);
-        assertNotNull(type.getReferences().get("Mixed[0]"));
-        Map<InjectableAttribute,InjectionSite> mappings = type.getInjectionMappings();
-        assertEquals(new ConstructorInjectionSite(ctor1, 0), mappings.get(new InjectableAttribute(InjectableAttributeType.REFERENCE, "Mixed[0]")));
-        assertNotNull(type.getProperties().get("foo"));
-        assertEquals(new ConstructorInjectionSite(ctor1, 1), mappings.get(new InjectableAttribute(InjectableAttributeType.PROPERTY, "foo")));
-        assertNotNull(type.getReferences().get("bar"));
-        assertEquals(new ConstructorInjectionSite(ctor1, 2), mappings.get(new InjectableAttribute(InjectableAttributeType.REFERENCE, "bar")));
+        assertTrue(type.getReferences().containsKey("Mixed[0]"));
+        assertTrue(type.getProperties().containsKey("foo"));
+        assertTrue(type.getReferences().containsKey("bar"));
+
+        Map<InjectableAttribute, Set<InjectionSite>> expected = new HashMap<InjectableAttribute, Set<InjectionSite>>();
+        expected.put(new InjectableAttribute(InjectableAttributeType.REFERENCE, "Mixed[0]"), Collections.singleton((InjectionSite) new ConstructorInjectionSite(ctor1, 0)));
+        expected.put(new InjectableAttribute(InjectableAttributeType.PROPERTY, "foo"), Collections.singleton((InjectionSite) new ConstructorInjectionSite(ctor1, 1)));
+        expected.put(new InjectableAttribute(InjectableAttributeType.REFERENCE, "bar"), Collections.singleton((InjectionSite) new ConstructorInjectionSite(ctor1, 2)));
+        assertEquals(expected, type.getInjectionSites());
     }
 
     private static class BadFoo {

@@ -54,4 +54,18 @@ public class MethodInjectionSite extends InjectionSite {
     public String toString() {
         return signature.toString() + '[' + param + ']';
     }
+
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        MethodInjectionSite that = (MethodInjectionSite) o;
+
+        return signature.equals(that.signature) && param == that.param;
+
+    }
+
+    public int hashCode() {
+        return signature.hashCode() * 31 + param;
+    }
 }

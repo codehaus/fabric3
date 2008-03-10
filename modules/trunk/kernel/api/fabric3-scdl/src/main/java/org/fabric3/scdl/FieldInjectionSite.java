@@ -42,4 +42,17 @@ public class FieldInjectionSite extends InjectionSite {
     public String toString() {
         return name;
     }
+
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        FieldInjectionSite that = (FieldInjectionSite) o;
+        return name.equals(that.name);
+
+    }
+
+    public int hashCode() {
+        return name.hashCode();
+    }
 }
