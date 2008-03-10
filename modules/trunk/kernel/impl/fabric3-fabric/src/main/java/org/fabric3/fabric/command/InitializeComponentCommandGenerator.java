@@ -50,7 +50,7 @@ public class InitializeComponentCommandGenerator implements CommandGenerator {
             for (LogicalComponent<?> child : compositeComponent.getComponents()) {
                 command.addUris(generate(child).getUris());
             }
-        } else if (!component.isProvisioned()) {
+        } else if (!component.isProvisioned() && component.isEagerInit()) {
             URI groupId = URI.create(component.getParent().getUri().toString() + "/");
             command.addUri(new ComponentInitializationUri(groupId, component.getUri()));
         }
