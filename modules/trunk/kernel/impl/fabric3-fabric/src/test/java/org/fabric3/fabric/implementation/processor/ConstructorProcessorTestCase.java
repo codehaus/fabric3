@@ -22,6 +22,7 @@ import java.lang.reflect.Constructor;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
+import java.util.Map;
 
 import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Reference;
@@ -34,6 +35,7 @@ import org.fabric3.scdl.InjectableAttribute;
 import org.fabric3.scdl.ConstructorInjectionSite;
 import org.fabric3.scdl.ReferenceDefinition;
 import org.fabric3.scdl.InjectableAttributeType;
+import org.fabric3.scdl.InjectionSite;
 
 import junit.framework.TestCase;
 import org.fabric3.introspection.impl.contract.DefaultContractProcessor;
@@ -85,11 +87,12 @@ public class ConstructorProcessorTestCase extends TestCase {
         Constructor<Mixed> ctor1 = Mixed.class.getConstructor(String.class, String.class, String.class);
         processor.visitConstructor(ctor1, type, context);
         assertNotNull(type.getReferences().get("Mixed[0]"));
-        assertEquals(new ConstructorInjectionSite(ctor1, 0), type.getInjectionSite(new InjectableAttribute(InjectableAttributeType.REFERENCE, "Mixed[0]")));
+        Map<InjectableAttribute,InjectionSite> mappings = type.getInjectionMappings();
+        assertEquals(new ConstructorInjectionSite(ctor1, 0), mappings.get(new InjectableAttribute(InjectableAttributeType.REFERENCE, "Mixed[0]")));
         assertNotNull(type.getProperties().get("foo"));
-        assertEquals(new ConstructorInjectionSite(ctor1, 1), type.getInjectionSite(new InjectableAttribute(InjectableAttributeType.PROPERTY, "foo")));
+        assertEquals(new ConstructorInjectionSite(ctor1, 1), mappings.get(new InjectableAttribute(InjectableAttributeType.PROPERTY, "foo")));
         assertNotNull(type.getReferences().get("bar"));
-        assertEquals(new ConstructorInjectionSite(ctor1, 2), type.getInjectionSite(new InjectableAttribute(InjectableAttributeType.REFERENCE, "bar")));
+        assertEquals(new ConstructorInjectionSite(ctor1, 2), mappings.get(new InjectableAttribute(InjectableAttributeType.REFERENCE, "bar")));
     }
 
     private static class BadFoo {

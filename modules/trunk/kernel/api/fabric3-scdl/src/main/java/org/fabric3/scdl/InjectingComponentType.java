@@ -107,16 +107,6 @@ public class InjectingComponentType extends AbstractComponentType<ServiceDefinit
     }
 
     /**
-     * Returns the injection site for a value.
-     *
-     * @param source the value for which the site should be returned
-     * @return in the injection site for the supplied value
-     */
-    public InjectionSite getInjectionSite(InjectableAttribute source) {
-        return injectionMappings.get(source);
-    }
-
-    /**
      * Returns the map of all injection mappings.
      *
      * @return the map of all injection mappings

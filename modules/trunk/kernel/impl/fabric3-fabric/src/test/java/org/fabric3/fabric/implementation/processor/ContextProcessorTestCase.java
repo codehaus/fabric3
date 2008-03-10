@@ -21,6 +21,7 @@ package org.fabric3.fabric.implementation.processor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.annotation.ElementType;
+import java.util.Map;
 
 import junit.framework.TestCase;
 import org.osoa.sca.ComponentContext;
@@ -66,7 +67,8 @@ public class ContextProcessorTestCase extends TestCase {
         Method method = Foo.class.getMethod("setRequestContext", RequestContext.class);
         PojoComponentType type = new PojoComponentType(null);
         processor.visitMethod(method, type, null);
-        InjectionSite requestContextMember = type.getInjectionSite(InjectableAttribute.REQUEST_CONTEXT);
+        Map<InjectableAttribute,InjectionSite> mappings = type.getInjectionMappings();
+        InjectionSite requestContextMember = mappings.get(InjectableAttribute.REQUEST_CONTEXT);
         assertEquals(ElementType.METHOD, requestContextMember.getElementType());
         assertEquals(RequestContext.class.getName(), requestContextMember.getType());
         assertEquals(new Signature(method), ((MethodInjectionSite)requestContextMember).getSignature());
@@ -76,7 +78,8 @@ public class ContextProcessorTestCase extends TestCase {
         Field field = Foo.class.getDeclaredField("requestContext");
         PojoComponentType type = new PojoComponentType(null);
         processor.visitField(field, type, null);
-        InjectionSite requestContextMember = type.getInjectionSite(InjectableAttribute.REQUEST_CONTEXT);
+        Map<InjectableAttribute,InjectionSite> mappings = type.getInjectionMappings();
+        InjectionSite requestContextMember = mappings.get(InjectableAttribute.REQUEST_CONTEXT);
         assertEquals(ElementType.FIELD, requestContextMember.getElementType());
         assertEquals(RequestContext.class.getName(), requestContextMember.getType());
         assertEquals(field.getName(), ((FieldInjectionSite)requestContextMember).getName());

@@ -88,14 +88,14 @@ public class ConversationProcessorTestCase extends TestCase {
         PojoComponentType type = new PojoComponentType(null);
         Field field = FooWithConversationIDField.class.getDeclaredField("conversationID");
         processor.visitField(field, type, null);
-        assertNotNull(type.getInjectionSite(InjectableAttribute.CONVERSATION_ID));
+        assertNotNull(type.getInjectionMappings().get(InjectableAttribute.CONVERSATION_ID));
     }
 
     public void testSetConversationIdMethod() throws Exception {
         PojoComponentType type = new PojoComponentType(null);
         Method method = FooWithConversationIDMethod.class.getDeclaredMethods()[0];
         processor.visitMethod(method, type, null);
-        assertNotNull(type.getInjectionSite(InjectableAttribute.CONVERSATION_ID));
+        assertNotNull(type.getInjectionMappings().get(InjectableAttribute.CONVERSATION_ID));
     }
 
     @Scope("CONVERSATION")
