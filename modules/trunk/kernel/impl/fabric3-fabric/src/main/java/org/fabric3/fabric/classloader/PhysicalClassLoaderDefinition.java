@@ -33,6 +33,7 @@ import org.fabric3.spi.model.physical.PhysicalResourceContainerDefinition;
  * @version $Rev$ $Date$
  */
 public class PhysicalClassLoaderDefinition extends PhysicalResourceContainerDefinition {
+    
     private List<URI> parentClassLoaders = new ArrayList<URI>();
     private Set<URL> urls = new LinkedHashSet<URL>();
     private boolean update;
@@ -85,5 +86,32 @@ public class PhysicalClassLoaderDefinition extends PhysicalResourceContainerDefi
 
     public void setUpdate(boolean update) {
         this.update = update;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        
+        if (obj == null || obj.getClass() != PhysicalClassLoaderDefinition.class) {
+            return false;
+        }
+        
+        PhysicalClassLoaderDefinition other = (PhysicalClassLoaderDefinition) obj;
+        
+        return parentClassLoaders.equals(other.parentClassLoaders) && 
+               urls.equals(other.urls) && 
+               update == other.update && 
+               getUri().equals(other.getUri());
+    }
+
+    @Override
+    public int hashCode() {
+        
+        int hash = 7;
+        hash = 31 * hash + getUri().hashCode();
+        hash = 31 * hash + parentClassLoaders.hashCode();
+        hash = 31 * hash + urls.hashCode();
+        hash = 31 * hash + (update ? 0 : 1);
+        
+        return hash;
     }
 }

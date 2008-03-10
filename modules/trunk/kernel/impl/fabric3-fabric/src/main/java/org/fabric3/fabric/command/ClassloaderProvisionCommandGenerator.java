@@ -21,6 +21,7 @@ package org.fabric3.fabric.command;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
+import org.fabric3.fabric.classloader.PhysicalClassLoaderDefinition;
 import org.fabric3.spi.command.Command;
 import org.fabric3.spi.generator.ClassLoaderGenerator;
 import org.fabric3.spi.generator.CommandGenerator;
@@ -54,12 +55,12 @@ public class ClassloaderProvisionCommandGenerator implements CommandGenerator {
             
             LogicalCompositeComponent compositeComponent = (LogicalCompositeComponent) component;
             for (LogicalComponent<?> child : compositeComponent.getComponents()) {
-                command.addPhysicalResourceContainerDefinitions(generate(child).getPhysicalResourceContainerDefinitions());
+                command.addPhysicalClassLoaderDefinitions(generate(child).getPhysicalClassLoaderDefinitions());
             }
             
         } else if (!component.isProvisioned()) {
-            PhysicalResourceContainerDefinition physicalResourceContainerDefinition = classLoaderGenerator.generate(component);
-            command.addPhysicalResourceContainerDefinition(physicalResourceContainerDefinition);
+            PhysicalClassLoaderDefinition physicalClassLoaderDefinition = (PhysicalClassLoaderDefinition) classLoaderGenerator.generate(component);
+            command.addPhysicalClassLoaderDefinition(physicalClassLoaderDefinition);
         }
         
         return command;

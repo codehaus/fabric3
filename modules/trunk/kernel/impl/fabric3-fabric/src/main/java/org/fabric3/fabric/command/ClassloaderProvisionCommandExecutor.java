@@ -57,7 +57,7 @@ public class ClassloaderProvisionCommandExecutor implements CommandExecutor<Clas
     public void execute(ClassloaderProvisionCommand command) throws ExecutionException {
         
         try {
-            for (PhysicalResourceContainerDefinition prcd : command.getPhysicalResourceContainerDefinitions()) {
+            for (PhysicalResourceContainerDefinition prcd : command.getPhysicalClassLoaderDefinitions()) {
                 resourceContainerBuilderRegistry.build(prcd);
             }
         } catch (BuilderException e) {
