@@ -48,4 +48,21 @@ public class InitializeComponentCommand extends AbstractCommand {
         this.uris.addAll(uris);
     }
     
+    @Override
+    public boolean equals(Object obj) {
+        
+        if (obj == null || obj.getClass() != InitializeComponentCommand.class) {
+            return false;
+        }
+        
+        InitializeComponentCommand other = (InitializeComponentCommand) obj;
+        return uris.equals(other.uris);
+        
+    }
+
+    @Override
+    public int hashCode() {
+        return uris.hashCode();
+    }
+    
 }

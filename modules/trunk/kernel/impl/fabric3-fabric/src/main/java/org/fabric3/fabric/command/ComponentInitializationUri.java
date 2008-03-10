@@ -42,5 +42,22 @@ public class ComponentInitializationUri {
         this.groupId = groupId;
         this.uri = uri;
     }
+    
+    @Override
+    public boolean equals(Object obj) {
+        
+        if (obj == null || obj.getClass() != ComponentInitializationUri.class) {
+            return false;
+        }
+        
+        ComponentInitializationUri other = (ComponentInitializationUri) obj;
+        return super.equals(uri.equals(other.uri));
+        
+    }
+
+    @Override
+    public int hashCode() {
+        return uri.hashCode();
+    }
 
 }

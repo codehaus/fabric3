@@ -29,6 +29,7 @@ import org.fabric3.scdl.Scope;
  * @version $Rev$ $Date$
  */
 public abstract class PhysicalComponentDefinition extends ModelObject {
+
     private URI componentId;
     private Scope<?> scope;
     private URI groupId;
@@ -142,5 +143,27 @@ public abstract class PhysicalComponentDefinition extends ModelObject {
      */
     public void setMaxAge(long maxAge) {
         this.maxAge = maxAge;
+    }
+    
+    @Override
+    public boolean equals(Object obj) {
+        
+        if (obj == null || obj.getClass() != getClass()) {
+            return false;
+        }
+        
+        PhysicalComponentDefinition other = (PhysicalComponentDefinition) obj;
+        return super.equals(componentId.equals(other.getComponentId()));
+        
+    }
+
+    @Override
+    public int hashCode() {
+        return componentId.hashCode();
+    }
+    
+    @Override
+    public String toString() {
+        return componentId.toString();
     }
 }

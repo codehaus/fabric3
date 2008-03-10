@@ -46,4 +46,21 @@ public class StartCompositeContextCommand extends AbstractCommand {
     public void addGroupIds(Set<URI> groupIds) {
         this.groupIds.addAll(groupIds);
     }
+    
+    @Override
+    public boolean equals(Object obj) {
+        
+        if (obj == null || obj.getClass() != StartCompositeContextCommand.class) {
+            return false;
+        }
+        
+        StartCompositeContextCommand other = (StartCompositeContextCommand) obj;
+        return groupIds.equals(other.groupIds);
+        
+    }
+
+    @Override
+    public int hashCode() {
+        return groupIds.hashCode();
+    }
 }

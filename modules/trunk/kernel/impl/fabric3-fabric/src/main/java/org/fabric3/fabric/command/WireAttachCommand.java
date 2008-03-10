@@ -47,5 +47,22 @@ public class WireAttachCommand extends AbstractCommand {
     public void addPhysicalWireDefinitions(Set<PhysicalWireDefinition> physicalWireDefinitions) {
         this.physicalWireDefinitions.addAll(physicalWireDefinitions);
     }
+    
+    @Override
+    public boolean equals(Object obj) {
+        
+        if (obj == null || obj.getClass() != WireAttachCommand.class) {
+            return false;
+        }
+        
+        WireAttachCommand other = (WireAttachCommand) obj;
+        return physicalWireDefinitions.equals(other.physicalWireDefinitions);
+        
+    }
+
+    @Override
+    public int hashCode() {
+        return physicalWireDefinitions.hashCode();
+    }
 
 }

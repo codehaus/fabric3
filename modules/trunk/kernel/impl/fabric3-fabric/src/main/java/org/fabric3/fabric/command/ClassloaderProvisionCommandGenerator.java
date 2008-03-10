@@ -18,17 +18,12 @@
  */
 package org.fabric3.fabric.command;
 
-import java.util.LinkedHashSet;
-import java.util.Set;
-
 import org.fabric3.fabric.classloader.PhysicalClassLoaderDefinition;
-import org.fabric3.spi.command.Command;
 import org.fabric3.spi.generator.ClassLoaderGenerator;
 import org.fabric3.spi.generator.CommandGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
-import org.fabric3.spi.model.physical.PhysicalResourceContainerDefinition;
 import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Reference;
 

@@ -47,5 +47,22 @@ public class ComponentBuildCommand extends AbstractCommand {
     public void addPhysicalComponentDefinitions(Set<PhysicalComponentDefinition> physicalComponentDefinitions) {
         this.physicalComponentDefinitions.addAll(physicalComponentDefinitions);
     }
+    
+    @Override
+    public boolean equals(Object obj) {
+        
+        if (obj == null || obj.getClass() != ComponentBuildCommand.class) {
+            return false;
+        }
+        
+        ComponentBuildCommand other = (ComponentBuildCommand) obj;
+        return physicalComponentDefinitions.equals(other.physicalComponentDefinitions);
+        
+    }
+
+    @Override
+    public int hashCode() {
+        return physicalComponentDefinitions.hashCode();
+    }
 
 }

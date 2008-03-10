@@ -47,5 +47,22 @@ public class ComponentStartCommand extends AbstractCommand {
     public void addUris(Set<URI> uris) {
         this.uris.addAll(uris);
     }
+    
+    @Override
+    public boolean equals(Object obj) {
+        
+        if (obj == null || obj.getClass() != ComponentStartCommand.class) {
+            return false;
+        }
+        
+        ComponentStartCommand other = (ComponentStartCommand) obj;
+        return uris.equals(other.uris);
+        
+    }
+
+    @Override
+    public int hashCode() {
+        return uris.hashCode();
+    }
 
 }
