@@ -42,7 +42,7 @@ import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 import org.fabric3.spi.runtime.assembly.LogicalComponentStore;
 import org.fabric3.spi.runtime.assembly.RecordException;
 import org.fabric3.spi.runtime.assembly.RecoveryException;
-import org.fabric3.spi.services.factories.xml.XMLFactory;
+import org.fabric3.services.xmlfactory.XMLFactory;
 
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;

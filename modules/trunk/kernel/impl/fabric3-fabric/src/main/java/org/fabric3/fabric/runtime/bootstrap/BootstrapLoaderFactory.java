@@ -34,7 +34,7 @@ import org.fabric3.fabric.implementation.system.SystemImplementationLoader;
 import org.fabric3.loader.impl.LoaderRegistryImpl;
 import org.fabric3.fabric.runtime.ComponentNames;
 import org.fabric3.fabric.services.advertisement.FeatureLoader;
-import org.fabric3.fabric.services.factories.xml.XMLFactoryImpl;
+import org.fabric3.services.xmlfactory.impl.XMLFactoryImpl;
 import org.fabric3.host.runtime.Fabric3Runtime;
 import org.fabric3.introspection.java.ContractProcessor;
 import org.fabric3.introspection.java.IntrospectionHelper;
@@ -54,7 +54,7 @@ import org.fabric3.pojo.processor.ImplementationProcessorService;
 import org.fabric3.pojo.processor.Introspector;
 import org.fabric3.introspection.xml.LoaderHelper;
 import org.fabric3.spi.services.contribution.MetaDataStore;
-import org.fabric3.spi.services.factories.xml.XMLFactory;
+import org.fabric3.services.xmlfactory.XMLFactory;
 
 /**
  * @version $Rev$ $Date$

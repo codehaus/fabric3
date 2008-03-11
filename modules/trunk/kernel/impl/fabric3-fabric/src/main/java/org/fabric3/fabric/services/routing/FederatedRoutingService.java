@@ -38,8 +38,8 @@ import org.fabric3.spi.command.ExecutionException;
 import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.spi.component.TargetResolutionException;
 import org.fabric3.spi.generator.CommandMap;
-import org.fabric3.spi.services.factories.xml.FactoryInstantiationException;
-import org.fabric3.spi.services.factories.xml.XMLFactory;
+import org.fabric3.services.xmlfactory.XMLFactoryInstantiationException;
+import org.fabric3.services.xmlfactory.XMLFactory;
 import org.fabric3.spi.services.marshaller.MarshalException;
 import org.fabric3.spi.services.marshaller.MarshalService;
 import org.fabric3.spi.services.messaging.MessagingException;
@@ -121,7 +121,7 @@ public class FederatedRoutingService implements RoutingService {
             ByteArrayInputStream in = new ByteArrayInputStream(out.toByteArray());
             XMLStreamReader pcsReader = xmlFactory.newInputFactoryInstance().createXMLStreamReader(in);
             messagingService.sendMessage(runtimeId, pcsReader);
-        } catch (FactoryInstantiationException e) {
+        } catch (XMLFactoryInstantiationException e) {
             e.printStackTrace();
         } catch (XMLStreamException e) {
             throw new RoutingException("Routing error", e);

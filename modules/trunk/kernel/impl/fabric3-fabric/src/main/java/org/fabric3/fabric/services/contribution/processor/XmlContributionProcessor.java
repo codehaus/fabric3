@@ -36,7 +36,7 @@ import org.fabric3.spi.services.contribution.ProcessorRegistry;
 import org.fabric3.spi.services.contribution.Resource;
 import org.fabric3.spi.services.contribution.XmlIndexerRegistry;
 import org.fabric3.spi.services.contribution.XmlProcessorRegistry;
-import org.fabric3.spi.services.factories.xml.XMLFactory;
+import org.fabric3.services.xmlfactory.XMLFactory;
 
 /**
  * Processes an XML-based contribution. The implementaton dispatches to a specific XmlProcessor based on the QName of

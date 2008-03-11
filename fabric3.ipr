@@ -380,8 +380,10 @@
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/runtime/webapp/fabric3-webapp-host/fabric3-webapp-host.iml" filepath="$PROJECT_DIR$/modules/trunk/runtime/webapp/fabric3-webapp-host/fabric3-webapp-host.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/plugin/fabric3-webapp-plugin/fabric3-webapp-plugin.iml" filepath="$PROJECT_DIR$/modules/trunk/plugin/fabric3-webapp-plugin/fabric3-webapp-plugin.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/other/fabric3-xapool/fabric3-xapool.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/other/fabric3-xapool/fabric3-xapool.iml" />
+      <module fileurl="file://$PROJECT_DIR$/modules/trunk/kernel/services/fabric3-xmlfactory/fabric3-xmlfactory.iml" filepath="$PROJECT_DIR$/modules/trunk/kernel/services/fabric3-xmlfactory/fabric3-xmlfactory.iml" />
       <module fileurl="file://$PROJECT_DIR$/parent-pom/trunk/parent-pom.iml" filepath="$PROJECT_DIR$/parent-pom/trunk/parent-pom.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/runtime/standalone/runtime-standalone/runtime-standalone.iml" filepath="$PROJECT_DIR$/modules/trunk/runtime/standalone/runtime-standalone/runtime-standalone.iml" />
+      <module fileurl="file://$PROJECT_DIR$/sandbox/introspection/sandbox-introspection.iml" filepath="$PROJECT_DIR$/sandbox/introspection/sandbox-introspection.iml" />
       <module fileurl="file://$PROJECT_DIR$/spec/trunk/sca-spec.iml" filepath="$PROJECT_DIR$/spec/trunk/sca-spec.iml" />
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-binding-axis2/test-binding-axis2.iml" filepath="$PROJECT_DIR$/tests/trunk/test-binding-axis2/test-binding-axis2.iml" />
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-binding-axis2-jaxb/test-binding-axis2-jaxb.iml" filepath="$PROJECT_DIR$/tests/trunk/test-binding-axis2-jaxb/test-binding-axis2-jaxb.iml" />

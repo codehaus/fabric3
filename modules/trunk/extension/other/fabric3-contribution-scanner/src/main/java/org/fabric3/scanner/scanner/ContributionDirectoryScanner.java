@@ -66,7 +66,7 @@ import org.fabric3.spi.services.event.EventService;
 import org.fabric3.spi.services.event.Fabric3Event;
 import org.fabric3.spi.services.event.Fabric3EventListener;
 import org.fabric3.spi.services.event.RuntimeStart;
-import org.fabric3.spi.services.factories.xml.XMLFactory;
+import org.fabric3.services.xmlfactory.XMLFactory;
 
 /**
  * Periodically scans a directory for new, updated, or removed contributions. New contributions are added to the domain and any deployable components

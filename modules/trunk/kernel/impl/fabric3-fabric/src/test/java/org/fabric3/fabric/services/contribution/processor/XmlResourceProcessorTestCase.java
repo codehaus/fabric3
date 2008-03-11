@@ -22,10 +22,10 @@ import javax.xml.stream.XMLStreamReader;
 import junit.framework.TestCase;
 import org.easymock.EasyMock;
 
-import org.fabric3.fabric.services.factories.xml.XMLFactoryImpl;
+import org.fabric3.services.xmlfactory.impl.XMLFactoryImpl;
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.xml.LoaderRegistry;
-import org.fabric3.spi.services.factories.xml.XMLFactory;
+import org.fabric3.services.xmlfactory.XMLFactory;
 
 /**
  * @version $Rev$ $Date$

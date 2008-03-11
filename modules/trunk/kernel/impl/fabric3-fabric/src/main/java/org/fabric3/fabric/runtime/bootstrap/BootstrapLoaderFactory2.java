@@ -63,7 +63,7 @@ import org.fabric3.loader.composite.PropertyValueLoader;
 import org.fabric3.loader.impl.DefaultLoaderHelper;
 import org.fabric3.loader.impl.LoaderRegistryImpl;
 import org.fabric3.monitor.MonitorFactory;
-import org.fabric3.spi.services.factories.xml.XMLFactory;
+import org.fabric3.services.xmlfactory.XMLFactory;
 import org.fabric3.api.annotation.Monitor;
 
 /**

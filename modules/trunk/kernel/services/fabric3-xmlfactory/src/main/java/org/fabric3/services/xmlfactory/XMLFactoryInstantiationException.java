@@ -14,7 +14,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.spi.services.factories.xml;
+package org.fabric3.services.xmlfactory;
 
 import org.fabric3.host.Fabric3RuntimeException;
 
@@ -23,14 +23,14 @@ import org.fabric3.host.Fabric3RuntimeException;
  *
  * @version $Rev$ $Date$
  */
-public class FactoryInstantiationException extends Fabric3RuntimeException {
+public class XMLFactoryInstantiationException extends Fabric3RuntimeException {
     private static final long serialVersionUID = -846195639643885514L;
 
-    public FactoryInstantiationException(String message, String identifier, Throwable cause) {
+    public XMLFactoryInstantiationException(String message, String identifier, Throwable cause) {
         super(message, identifier, cause);
     }
 
-    public FactoryInstantiationException(String message, Throwable cause) {
+    public XMLFactoryInstantiationException(String message, Throwable cause) {
         super(message, cause);
     }
 

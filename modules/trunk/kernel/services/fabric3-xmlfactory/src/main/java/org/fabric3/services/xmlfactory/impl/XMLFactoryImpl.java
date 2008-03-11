@@ -1,4 +1,4 @@
-package org.fabric3.fabric.services.factories.xml;
+package org.fabric3.services.xmlfactory.impl;
 
 import javax.xml.stream.FactoryConfigurationError;
 import javax.xml.stream.XMLInputFactory;
@@ -7,8 +7,8 @@ import javax.xml.stream.XMLOutputFactory;
 import org.osoa.sca.annotations.Constructor;
 import org.osoa.sca.annotations.Property;
 
-import org.fabric3.spi.services.factories.xml.FactoryInstantiationException;
-import org.fabric3.spi.services.factories.xml.XMLFactory;
+import org.fabric3.services.xmlfactory.XMLFactoryInstantiationException;
+import org.fabric3.services.xmlfactory.XMLFactory;
 
 public final class XMLFactoryImpl implements XMLFactory {
 
@@ -37,17 +37,17 @@ public final class XMLFactoryImpl implements XMLFactory {
         }
     }
 
-    public XMLInputFactory newInputFactoryInstance(String factoryName, ClassLoader cl)
-            throws FactoryInstantiationException {
+    private XMLInputFactory newInputFactoryInstance(String factoryName, ClassLoader cl)
+            throws XMLFactoryInstantiationException {
         try {
             Class clazz = cl.loadClass(factoryName);
             return (XMLInputFactory) clazz.newInstance();
         } catch (InstantiationException ie) {
-            throw new FactoryInstantiationException("Error instantiating factory", factoryName, ie);
+            throw new XMLFactoryInstantiationException("Error instantiating factory", factoryName, ie);
         } catch (IllegalAccessException iae) {
-            throw new FactoryInstantiationException("Error instantiating factory", factoryName, iae);
+            throw new XMLFactoryInstantiationException("Error instantiating factory", factoryName, iae);
         } catch (ClassNotFoundException cnfe) {
-            throw new FactoryInstantiationException("Error loading factory", factoryName, cnfe);
+            throw new XMLFactoryInstantiationException("Error loading factory", factoryName, cnfe);
         }
     }
 
@@ -55,17 +55,17 @@ public final class XMLFactoryImpl implements XMLFactory {
         return newOutputFactoryInstance(outputFactoryName, classLoader);
     }
 
-    public XMLOutputFactory newOutputFactoryInstance(String factoryName, ClassLoader cl)
+    private XMLOutputFactory newOutputFactoryInstance(String factoryName, ClassLoader cl)
             throws FactoryConfigurationError {
         try {
             Class clazz = cl.loadClass(factoryName);
             return (XMLOutputFactory) clazz.newInstance();
         } catch (InstantiationException ie) {
-            throw new FactoryInstantiationException("Error instantiating factory", factoryName, ie);
+            throw new XMLFactoryInstantiationException("Error instantiating factory", factoryName, ie);
         } catch (IllegalAccessException iae) {
-            throw new FactoryInstantiationException("Error instantiating factory", factoryName, iae);
+            throw new XMLFactoryInstantiationException("Error instantiating factory", factoryName, iae);
         } catch (ClassNotFoundException cnfe) {
-            throw new FactoryInstantiationException("Error loading factory", factoryName, cnfe);
+            throw new XMLFactoryInstantiationException("Error loading factory", factoryName, cnfe);
         }
     }
 
