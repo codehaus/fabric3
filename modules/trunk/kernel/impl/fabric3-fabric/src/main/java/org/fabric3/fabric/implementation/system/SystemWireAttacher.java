@@ -81,6 +81,11 @@ public class SystemWireAttacher extends PojoWireAttacher implements SourceWireAt
         throw new AssertionError();
     }
 
+    public void attachToTarget(PhysicalWireSourceDefinition source, SystemWireTargetDefinition target, Wire wire) throws WiringException {
+        // should never be called as the wire must be optimized
+        throw new AssertionError();
+    }
+
     public void attachObjectFactory(SystemWireSourceDefinition source, ObjectFactory<?> objectFactory) throws WiringException {
         URI sourceId = UriHelper.getDefragmentedName(source.getUri());
         SystemComponent<?> sourceComponent = (SystemComponent<?>) manager.getComponent(sourceId);
@@ -88,11 +93,6 @@ public class SystemWireAttacher extends PojoWireAttacher implements SourceWireAt
 
         Object key = getKey(source, sourceComponent, referenceSource);
         sourceComponent.attachReferenceToTarget(referenceSource, objectFactory, key);
-    }
-
-    public void attachToTarget(PhysicalWireSourceDefinition source, SystemWireTargetDefinition target, Wire wire) throws WiringException {
-        // should never be called as the wire must be optimized
-        throw new AssertionError();
     }
 
     public ObjectFactory<?> createObjectFactory(SystemWireTargetDefinition target) throws WiringException {

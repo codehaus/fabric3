@@ -27,7 +27,6 @@ import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 import org.osoa.sca.annotations.Service;
 
-import org.fabric3.pojo.reflection.InvokerInterceptor;
 import org.fabric3.pojo.wire.PojoWireAttacher;
 import org.fabric3.scdl.InjectableAttribute;
 import org.fabric3.scdl.InjectableAttributeType;
@@ -183,14 +182,4 @@ public class JavaWireAttacher extends PojoWireAttacher implements SourceWireAtta
         JavaComponent<?> targetComponent = (JavaComponent<?>) manager.getComponent(targetId);
         return targetComponent.createObjectFactory();
     }
-
-    private <T, CONTEXT> InvokerInterceptor<T, CONTEXT> createInterceptor(Method method,
-                                                                          boolean callback,
-                                                                          boolean endsConversation,
-                                                                          JavaComponent<T> component,
-                                                                          ScopeContainer<CONTEXT> scopeContainer) {
-        return new InvokerInterceptor<T, CONTEXT>(method, callback, endsConversation, component, scopeContainer);
-    }
-
-
 }

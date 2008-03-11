@@ -18,6 +18,7 @@
  */
 package org.fabric3.pojo.wire;
 
+import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.net.URI;
@@ -28,7 +29,10 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 import org.fabric3.pojo.implementation.PojoComponent;
+import org.fabric3.pojo.reflection.InvokerInterceptor;
 import org.fabric3.scdl.InjectableAttribute;
+import org.fabric3.spi.component.AtomicComponent;
+import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.model.type.JavaClass;
 import org.fabric3.spi.model.type.XSDSimpleType;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
@@ -45,7 +49,7 @@ public abstract class PojoWireAttacher {
 
     private TransformerRegistry<PullTransformer<?, ?>> transformerRegistry;
     private ClassLoaderRegistry classLoaderRegistry;
-    
+
     protected PojoWireAttacher(TransformerRegistry<PullTransformer<?, ?>> transformerRegistry, ClassLoaderRegistry classLoaderRegistry) {
         this.transformerRegistry = transformerRegistry;
         this.classLoaderRegistry = classLoaderRegistry;
@@ -53,40 +57,40 @@ public abstract class PojoWireAttacher {
 
     @SuppressWarnings("unchecked")
     protected Object getKey(PojoWireSourceDefinition sourceDefinition, PojoComponent<?> source, InjectableAttribute referenceSource) {
-        
-        if(! Map.class.isAssignableFrom(source.getMemberType(referenceSource))) {
+
+        if (!Map.class.isAssignableFrom(source.getMemberType(referenceSource))) {
             return null;
         }
-        
+
         Document keyDocument = sourceDefinition.getKey();
-        
-        
-        if(keyDocument != null) {
+
+
+        if (keyDocument != null) {
 
             Element element = keyDocument.getDocumentElement();
-            
+
             Class<?> formalType;
             Type type = source.getGerenricMemberType(referenceSource);
-            
-            if(type instanceof ParameterizedType) { 
+
+            if (type instanceof ParameterizedType) {
                 ParameterizedType genericType = (ParameterizedType) type;
                 Type typeArgument = genericType.getActualTypeArguments()[0];
-                if(typeArgument instanceof Class) {
+                if (typeArgument instanceof Class) {
                     formalType = (Class<?>) genericType.getActualTypeArguments()[0];
                 } else {
                     formalType = (Class<?>) ((ParameterizedType) typeArgument).getRawType();
                 }
-                if(Enum.class.isAssignableFrom(formalType)) {
+                if (Enum.class.isAssignableFrom(formalType)) {
                     Class<Enum> enumClass = (Class<Enum>) formalType;
                     return Enum.valueOf(enumClass, element.getTextContent());
                 }
             } else {
                 formalType = String.class;
             }
-            
+
             URI classLoaderId = sourceDefinition.getClassLoaderId();
             ClassLoader cl = classLoaderRegistry.getClassLoader(classLoaderId);
-            
+
             TransformContext context = new TransformContext(cl, cl, null, null);
             try {
                 return createKey(formalType, element, context);
@@ -95,13 +99,13 @@ public abstract class PojoWireAttacher {
                 throw new AssertionError(e);
             }
         }
-        
+
         return null;
-        
+
     }
 
     private <T> T createKey(Class<T> type, Element value, TransformContext context) {
-        
+
         JavaClass<T> targetType = new JavaClass<T>(type);
         PullTransformer<Node, T> transformer = getTransformer(SOURCE_TYPE, targetType);
         try {
@@ -112,8 +116,17 @@ public abstract class PojoWireAttacher {
     }
 
     @SuppressWarnings("unchecked")
-    private <T> PullTransformer<Node,T> getTransformer(XSDSimpleType source, JavaClass<T> target) {
-        return (PullTransformer<Node,T>) transformerRegistry.getTransformer(source, target);
+    private <T> PullTransformer<Node, T> getTransformer(XSDSimpleType source, JavaClass<T> target) {
+        return (PullTransformer<Node, T>) transformerRegistry.getTransformer(source, target);
     }
+
+    protected <T, CONTEXT> InvokerInterceptor<T, CONTEXT> createInterceptor(Method method,
+                                                                            boolean callback,
+                                                                            boolean endsConvesation,
+                                                                            AtomicComponent<T> component,
+                                                                            ScopeContainer<CONTEXT> scopeContainer) {
+        return new InvokerInterceptor<T, CONTEXT>(method, callback, endsConvesation, component, scopeContainer);
+    }
+
 
 }

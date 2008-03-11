@@ -29,6 +29,7 @@ import org.osoa.sca.annotations.Service;
 
 import org.fabric3.pojo.reflection.InvokerInterceptor;
 import org.fabric3.pojo.wire.PojoWireAttacher;
+import org.fabric3.pojo.implementation.PojoComponent;
 import org.fabric3.scdl.InjectableAttribute;
 import org.fabric3.scdl.InjectableAttributeType;
 import org.fabric3.scdl.Scope;
@@ -127,10 +128,6 @@ public class GroovyWireAttacher extends PojoWireAttacher implements SourceWireAt
         }
     }
 
-    private <T> ObjectFactory<T> createWireObjectFactory(Class<T> type, boolean isConversational, Wire wire) {
-        return proxyService.createObjectFactory(type, isConversational, wire, null);
-    }
-
     public void attachToTarget(PhysicalWireSourceDefinition sourceDefinition,
                                GroovyWireTargetDefinition targetDefinition,
                                Wire wire) throws WireAttachException {
@@ -167,30 +164,24 @@ public class GroovyWireAttacher extends PojoWireAttacher implements SourceWireAt
                 URI targetUri = targetDefinition.getUri();
                 throw new WireAttachException("No matching method found", sourceUri, targetUri, e);
             }
-            chain.addInterceptor(createInterceptor(method, operation.isEndsConversation(), target, scopeContainer));
+            chain.addInterceptor(createInterceptor(method, false, operation.isEndsConversation(), target, scopeContainer));
         }
 
         // TODO handle callbacks
     }
 
-    private <T, CONTEXT> InvokerInterceptor<T, CONTEXT> createInterceptor(Method method,
-                                                                          boolean endsConvesation,
-                                                                          GroovyComponent<T> component,
-                                                                          ScopeContainer<CONTEXT> scopeContainer) {
-        return new InvokerInterceptor<T, CONTEXT>(method, false, endsConvesation, component, scopeContainer);
-    }
-
     public void attachObjectFactory(GroovyWireSourceDefinition source, ObjectFactory<?> objectFactory) throws WiringException {
         URI sourceId = UriHelper.getDefragmentedName(source.getUri());
         GroovyComponent<?> sourceComponent = (GroovyComponent<?>) manager.getComponent(sourceId);
-        InjectableAttribute referenceSource = new InjectableAttribute(InjectableAttributeType.REFERENCE, source.getUri().getFragment());
+        InjectableAttribute attribute = source.getValueSource();
 
-        sourceComponent.attachReferenceToTarget(referenceSource, objectFactory, null);
+        Object key = getKey(source, sourceComponent, attribute);
+        sourceComponent.attachReferenceToTarget(attribute, objectFactory, key);
     }
 
     public ObjectFactory<?> createObjectFactory(GroovyWireTargetDefinition target) throws WiringException {
         URI targetId = UriHelper.getDefragmentedName(target.getUri());
-        GroovyComponent<?> targetComponent = (GroovyComponent<?>) manager.getComponent(targetId);
+        PojoComponent<?> targetComponent = (PojoComponent<?>) manager.getComponent(targetId);
         return targetComponent.createObjectFactory();
     }
 }
