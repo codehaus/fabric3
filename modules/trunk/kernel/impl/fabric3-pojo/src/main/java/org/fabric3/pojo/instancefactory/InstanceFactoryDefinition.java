@@ -37,7 +37,6 @@ public class InstanceFactoryDefinition extends ModelObject {
     private Signature constructor;
     private Signature initMethod;
     private Signature destroyMethod;
-    private Map<InjectableAttribute, InjectionSite> mappings = new HashMap<InjectableAttribute, InjectionSite>();
     private Map<InjectionSite, InjectableAttribute> construction = new HashMap<InjectionSite, InjectableAttribute>();
     private Map<InjectionSite, InjectableAttribute> postConstruction = new HashMap<InjectionSite, InjectableAttribute>();
     private Map<InjectionSite, InjectableAttribute> reinjection = new HashMap<InjectionSite, InjectableAttribute>();
