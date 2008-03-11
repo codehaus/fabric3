@@ -18,8 +18,6 @@ package org.fabric3.scdl;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
-import java.util.HashSet;
 
 /**
  * A component type associated with an implementation that supports injection.
@@ -28,7 +26,7 @@ import java.util.HashSet;
  */
 public class InjectingComponentType extends AbstractComponentType<ServiceDefinition, ReferenceDefinition, Property, ResourceDefinition> {
 
-    private final Map<InjectableAttribute, Set<InjectionSite>> injectionSites = new HashMap<InjectableAttribute, Set<InjectionSite>>();
+    private final Map<InjectionSite, InjectableAttribute> injectionSites = new HashMap<InjectionSite, InjectableAttribute>();
     private Signature constructor;
     private Signature initMethod;
     private Signature destroyMethod;
@@ -105,12 +103,7 @@ public class InjectingComponentType extends AbstractComponentType<ServiceDefinit
      * @param site   the injection site
      */
     public void addInjectionSite(InjectableAttribute source, InjectionSite site) {
-        Set<InjectionSite> sites = injectionSites.get(source);
-        if (sites == null) {
-            sites = new HashSet<InjectionSite>();
-            injectionSites.put(source, sites);
-        }
-        sites.add(site);
+        injectionSites.put(site, source);
     }
 
     /**
@@ -118,7 +111,7 @@ public class InjectingComponentType extends AbstractComponentType<ServiceDefinit
      *
      * @return the map of all injection mappings
      */
-    public Map<InjectableAttribute, Set<InjectionSite>> getInjectionSites() {
+    public Map<InjectionSite, InjectableAttribute> getInjectionSites() {
         return injectionSites;
     }
 

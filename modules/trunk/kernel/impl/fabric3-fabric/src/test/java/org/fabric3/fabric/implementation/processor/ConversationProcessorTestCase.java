@@ -28,6 +28,8 @@ import org.osoa.sca.annotations.Scope;
 
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.InjectableAttribute;
+import org.fabric3.scdl.FieldInjectionSite;
+import org.fabric3.scdl.MethodInjectionSite;
 
 /**
  * @version $Rev$ $Date$
@@ -88,14 +90,14 @@ public class ConversationProcessorTestCase extends TestCase {
         PojoComponentType type = new PojoComponentType(null);
         Field field = FooWithConversationIDField.class.getDeclaredField("conversationID");
         processor.visitField(field, type, null);
-        assertTrue(type.getInjectionSites().containsKey(InjectableAttribute.CONVERSATION_ID));
+        assertEquals(InjectableAttribute.CONVERSATION_ID, type.getInjectionSites().get(new FieldInjectionSite(field)));
     }
 
     public void testSetConversationIdMethod() throws Exception {
         PojoComponentType type = new PojoComponentType(null);
         Method method = FooWithConversationIDMethod.class.getDeclaredMethods()[0];
         processor.visitMethod(method, type, null);
-        assertTrue(type.getInjectionSites().containsKey(InjectableAttribute.CONVERSATION_ID));
+        assertEquals(InjectableAttribute.CONVERSATION_ID, type.getInjectionSites().get(new MethodInjectionSite(method, 0)));
     }
 
     @Scope("CONVERSATION")

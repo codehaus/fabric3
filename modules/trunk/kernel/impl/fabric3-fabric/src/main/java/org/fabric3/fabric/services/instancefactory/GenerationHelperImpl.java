@@ -18,7 +18,6 @@ package org.fabric3.fabric.services.instancefactory;
 
 import java.lang.reflect.Method;
 import java.util.Map;
-import java.util.Set;
 
 import org.w3c.dom.Document;
 
@@ -27,10 +26,11 @@ import org.fabric3.pojo.instancefactory.InstanceFactoryDefinition;
 import org.fabric3.pojo.instancefactory.InstanceFactoryGenerationHelper;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.ComponentDefinition;
+import org.fabric3.scdl.ConstructorInjectionSite;
 import org.fabric3.scdl.Implementation;
+import org.fabric3.scdl.InjectableAttribute;
 import org.fabric3.scdl.InjectionSite;
 import org.fabric3.scdl.Signature;
-import org.fabric3.scdl.InjectableAttribute;
 import org.fabric3.spi.model.instance.LogicalComponent;
 
 /**
@@ -55,11 +55,23 @@ public class GenerationHelperImpl implements InstanceFactoryGenerationHelper {
 
         Implementation<PojoComponentType> implementation = component.getDefinition().getImplementation();
         PojoComponentType type = implementation.getComponentType();
-        Map<InjectableAttribute, Set<InjectionSite>> mappings = type.getInjectionSites();
-        for (Map.Entry<InjectableAttribute, Set<InjectionSite>> entry : mappings.entrySet()) {
-            InjectableAttribute source = entry.getKey();
-            InjectionSite site = entry.getValue().iterator().next();
-            providerDefinition.addInjectionSite(source, site);
+        Map<InjectionSite, InjectableAttribute> mappings = type.getInjectionSites();
+
+        // add injections for all the active constructor args
+        Signature constructor = type.getConstructor();
+        for (int i = 0; i < constructor.getParameterTypes().size(); i++) {
+            InjectionSite site = new ConstructorInjectionSite(constructor, i);
+            InjectableAttribute attribute = mappings.get(site);
+            providerDefinition.addInjectionSite(attribute, site);
+        }
+
+        // add field/method injections for values not injected through the constructor
+        for (Map.Entry<InjectionSite, InjectableAttribute> entry : mappings.entrySet()) {
+            InjectionSite site = entry.getKey();
+            InjectableAttribute attribute = entry.getValue();
+            if (!providerDefinition.getInjectionSites().containsKey(attribute)) {
+                providerDefinition.addInjectionSite(attribute, site);
+            }
         }
     }
 

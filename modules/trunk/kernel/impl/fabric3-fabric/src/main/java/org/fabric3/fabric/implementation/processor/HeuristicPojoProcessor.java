@@ -35,6 +35,7 @@ import org.osoa.sca.annotations.Remotable;
 import org.osoa.sca.annotations.Service;
 import org.osoa.sca.annotations.ConversationID;
 import org.osoa.sca.annotations.Context;
+import org.osoa.sca.annotations.Callback;
 
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.java.InvalidServiceContractException;
@@ -103,7 +104,7 @@ public class HeuristicPojoProcessor extends ImplementationProcessorExtension {
         Set<Method> methods = getAllUniquePublicProtectedMethods(clazz);
 
         // if no references or properties have been defined infer them from the implementation
-        if (type.getReferences().isEmpty() && type.getProperties().isEmpty()) {
+        if (type.getReferences().isEmpty() && type.getProperties().isEmpty() && type.getResources().isEmpty()) {
             calcPropRefs(methods, services, type, clazz, context.getTypeMapping());
         }
 
@@ -133,7 +134,9 @@ public class HeuristicPojoProcessor extends ImplementationProcessorExtension {
                     || method.getReturnType() != void.class) {
                 continue;
             }
-            if (method.isAnnotationPresent(ConversationID.class) || method.isAnnotationPresent(Context.class)) {
+            if (method.isAnnotationPresent(ConversationID.class) ||
+                    method.isAnnotationPresent(Context.class) ||
+                    method.isAnnotationPresent(Callback.class)) {
                 // hack to avoid interpreting this method as a property
                 continue;
             }
@@ -159,7 +162,9 @@ public class HeuristicPojoProcessor extends ImplementationProcessorExtension {
                     || method.getReturnType() != void.class) {
                 continue;
             }
-            if (method.isAnnotationPresent(ConversationID.class) || method.isAnnotationPresent(Context.class)) {
+            if (method.isAnnotationPresent(ConversationID.class) ||
+                    method.isAnnotationPresent(Context.class) ||
+                    method.isAnnotationPresent(Callback.class)) {
                 // hack to avoid interpreting this method as a property
                 continue;
             }
@@ -177,7 +182,9 @@ public class HeuristicPojoProcessor extends ImplementationProcessorExtension {
         }
         Set<Field> fields = getAllPublicAndProtectedFields(clazz);
         for (Field field : fields) {
-            if (field.isAnnotationPresent(ConversationID.class) || field.isAnnotationPresent(Context.class)) {
+            if (field.isAnnotationPresent(ConversationID.class) ||
+                    field.isAnnotationPresent(Context.class) ||
+                    field.isAnnotationPresent(Callback.class)) {
                 // hack to avoid interpreting this method as a property
                 continue;
             }

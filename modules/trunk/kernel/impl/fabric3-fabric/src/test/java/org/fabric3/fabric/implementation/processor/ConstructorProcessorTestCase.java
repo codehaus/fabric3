@@ -20,30 +20,28 @@ package org.fabric3.fabric.implementation.processor;
 
 import java.lang.reflect.Constructor;
 import java.util.Collection;
-import java.util.List;
-import java.util.Set;
-import java.util.Map;
 import java.util.HashMap;
-import java.util.Collections;
-
-import org.osoa.sca.annotations.Property;
-import org.osoa.sca.annotations.Reference;
-import org.easymock.EasyMock;
-
-import org.fabric3.pojo.scdl.PojoComponentType;
-import org.fabric3.scdl.Multiplicity;
-import org.fabric3.scdl.Signature;
-import org.fabric3.scdl.InjectableAttribute;
-import org.fabric3.scdl.ConstructorInjectionSite;
-import org.fabric3.scdl.ReferenceDefinition;
-import org.fabric3.scdl.InjectableAttributeType;
-import org.fabric3.scdl.InjectionSite;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import junit.framework.TestCase;
-import org.fabric3.introspection.impl.contract.DefaultContractProcessor;
-import org.fabric3.introspection.impl.DefaultIntrospectionHelper;
+import org.easymock.EasyMock;
+import org.osoa.sca.annotations.Property;
+import org.osoa.sca.annotations.Reference;
+
 import org.fabric3.introspection.IntrospectionContext;
+import org.fabric3.introspection.impl.DefaultIntrospectionHelper;
+import org.fabric3.introspection.impl.contract.DefaultContractProcessor;
 import org.fabric3.introspection.java.TypeMapping;
+import org.fabric3.pojo.scdl.PojoComponentType;
+import org.fabric3.scdl.ConstructorInjectionSite;
+import org.fabric3.scdl.InjectableAttribute;
+import org.fabric3.scdl.InjectableAttributeType;
+import org.fabric3.scdl.InjectionSite;
+import org.fabric3.scdl.Multiplicity;
+import org.fabric3.scdl.ReferenceDefinition;
+import org.fabric3.scdl.Signature;
 
 /**
  * @version $Rev$ $Date$
@@ -92,10 +90,10 @@ public class ConstructorProcessorTestCase extends TestCase {
         assertTrue(type.getProperties().containsKey("foo"));
         assertTrue(type.getReferences().containsKey("bar"));
 
-        Map<InjectableAttribute, Set<InjectionSite>> expected = new HashMap<InjectableAttribute, Set<InjectionSite>>();
-        expected.put(new InjectableAttribute(InjectableAttributeType.REFERENCE, "Mixed[0]"), Collections.singleton((InjectionSite) new ConstructorInjectionSite(ctor1, 0)));
-        expected.put(new InjectableAttribute(InjectableAttributeType.PROPERTY, "foo"), Collections.singleton((InjectionSite) new ConstructorInjectionSite(ctor1, 1)));
-        expected.put(new InjectableAttribute(InjectableAttributeType.REFERENCE, "bar"), Collections.singleton((InjectionSite) new ConstructorInjectionSite(ctor1, 2)));
+        Map<InjectionSite, InjectableAttribute> expected = new HashMap<InjectionSite, InjectableAttribute>();
+        expected.put(new ConstructorInjectionSite(ctor1, 0), new InjectableAttribute(InjectableAttributeType.REFERENCE, "Mixed[0]"));
+        expected.put(new ConstructorInjectionSite(ctor1, 1), new InjectableAttribute(InjectableAttributeType.PROPERTY, "foo"));
+        expected.put(new ConstructorInjectionSite(ctor1, 2), new InjectableAttribute(InjectableAttributeType.REFERENCE, "bar"));
         assertEquals(expected, type.getInjectionSites());
     }
 

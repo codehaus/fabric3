@@ -32,6 +32,12 @@ public class ConstructorInjectionSite extends InjectionSite {
         this.param = param;
     }
 
+    public ConstructorInjectionSite(Signature signature, int param) {
+        super(ElementType.CONSTRUCTOR, signature.getParameterTypes().get(param));
+        this.signature = signature;
+        this.param = param;
+    }
+
     /**
      * Returns the signature that identifies the method.
      *

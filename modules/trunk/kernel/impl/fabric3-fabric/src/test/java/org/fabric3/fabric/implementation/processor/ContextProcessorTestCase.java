@@ -20,8 +20,6 @@ package org.fabric3.fabric.implementation.processor;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-import java.util.Map;
-import java.util.Set;
 
 import junit.framework.TestCase;
 import org.osoa.sca.ComponentContext;
@@ -30,8 +28,6 @@ import org.osoa.sca.annotations.Context;
 
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.FieldInjectionSite;
-import org.fabric3.scdl.InjectableAttribute;
-import org.fabric3.scdl.InjectionSite;
 import org.fabric3.scdl.MethodInjectionSite;
 
 /**
@@ -66,18 +62,14 @@ public class ContextProcessorTestCase extends TestCase {
         Method method = Foo.class.getMethod("setRequestContext", RequestContext.class);
         PojoComponentType type = new PojoComponentType(null);
         processor.visitMethod(method, type, null);
-        Map<InjectableAttribute, Set<InjectionSite>> mappings = type.getInjectionSites();
-        Set<InjectionSite> requestContextSite = mappings.get(InjectableAttribute.REQUEST_CONTEXT);
-        assertTrue(requestContextSite.contains(new MethodInjectionSite(method, 0)));
+        assertTrue(type.getInjectionSites().containsKey(new MethodInjectionSite(method, 0)));
     }
 
     public void testRequestContextField() throws Exception {
         Field field = Foo.class.getDeclaredField("requestContext");
         PojoComponentType type = new PojoComponentType(null);
         processor.visitField(field, type, null);
-        Map<InjectableAttribute, Set<InjectionSite>> mappings = type.getInjectionSites();
-        Set<InjectionSite> requestContextSite = mappings.get(InjectableAttribute.REQUEST_CONTEXT);
-        assertTrue(requestContextSite.contains(new FieldInjectionSite(field)));
+        assertTrue(type.getInjectionSites().containsKey(new FieldInjectionSite(field)));
     }
 
     public void testInvalidParamNum() throws Exception {
