@@ -64,17 +64,15 @@ public class ReflectiveInstanceFactoryBuilder<T> implements InstanceFactoryBuild
         try {
             @SuppressWarnings("unchecked")
             Class<T> implClass = (Class<T>) helper.loadClass(cl, ifpd.getImplementationClass());
-
-            Map<InjectableAttribute, InjectionSite> injectionSites = ifpd.getInjectionSites();
-
             Constructor<T> ctr = helper.getConstructor(implClass, ifpd.getConstructor());
+
+            Map<InjectionSite, InjectableAttribute> injectionSites = ifpd.getConstruction();
             InjectableAttribute[] cdiSources = new InjectableAttribute[ctr.getParameterTypes().length];
-            for (Map.Entry<InjectableAttribute, InjectionSite> entry : injectionSites.entrySet()) {
-                InjectionSite injectionSite = entry.getValue();
-                if (injectionSite.getElementType() == ElementType.CONSTRUCTOR) {
-                    ConstructorInjectionSite constructorSite = (ConstructorInjectionSite) injectionSite;
-                    cdiSources[constructorSite.getParam()] = entry.getKey();
-                }
+            for (Map.Entry<InjectionSite, InjectableAttribute> entry : injectionSites.entrySet()) {
+                InjectionSite site = entry.getKey();
+                InjectableAttribute attribute = entry.getValue();
+                ConstructorInjectionSite constructorSite = (ConstructorInjectionSite) site;
+                cdiSources[constructorSite.getParam()] = attribute;
             }
             for (int i = 0; i < cdiSources.length; i++) {
                 if (cdiSources[i] == null) {
@@ -86,7 +84,7 @@ public class ReflectiveInstanceFactoryBuilder<T> implements InstanceFactoryBuild
             Method initMethod = helper.getMethod(implClass, ifpd.getInitMethod());
             Method destroyMethod = helper.getMethod(implClass, ifpd.getDestroyMethod());
 
-            return new ReflectiveInstanceFactoryProvider<T>(ctr, Arrays.asList(cdiSources), injectionSites, initMethod, destroyMethod, cl);
+            return new ReflectiveInstanceFactoryProvider<T>(ctr, Arrays.asList(cdiSources), ifpd.getPostConstruction(), initMethod, destroyMethod, cl);
         } catch (ClassNotFoundException ex) {
             throw new InstanceFactoryBuilderException(ex);
         } catch (NoSuchMethodException ex) {

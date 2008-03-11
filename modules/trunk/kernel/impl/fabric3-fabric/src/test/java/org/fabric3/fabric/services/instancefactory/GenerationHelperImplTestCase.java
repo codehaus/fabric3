@@ -55,9 +55,11 @@ public class GenerationHelperImplTestCase extends TestCase {
         componentType.addInjectionSite(intProp, intSite);
         componentType.addInjectionSite(stringProp, stringSite);
         helper.processInjectionSites(logicalComponent, providerDefinition);
-        Map<InjectableAttribute,InjectionSite> mapping = providerDefinition.getInjectionSites();
-        assertEquals(intSite, mapping.get(intProp));
-        assertEquals(stringSite, mapping.get(stringProp));
+        Map<InjectionSite, InjectableAttribute> mapping = providerDefinition.getConstruction();
+        assertEquals(intProp, mapping.get(intSite));
+        assertEquals(stringProp, mapping.get(stringSite));
+        assertTrue(providerDefinition.getPostConstruction().isEmpty());
+        assertTrue(providerDefinition.getReinjection().isEmpty());
     }
 
     protected void setUp() throws Exception {

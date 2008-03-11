@@ -17,7 +17,10 @@
 package org.fabric3.fabric.services.instancefactory;
 
 import java.lang.reflect.Method;
+import java.lang.annotation.ElementType;
 import java.util.Map;
+import java.util.Set;
+import java.util.HashSet;
 
 import org.w3c.dom.Document;
 
@@ -58,20 +61,30 @@ public class GenerationHelperImpl implements InstanceFactoryGenerationHelper {
         Map<InjectionSite, InjectableAttribute> mappings = type.getInjectionSites();
 
         // add injections for all the active constructor args
+        Map<InjectionSite, InjectableAttribute> construction = providerDefinition.getConstruction();
         Signature constructor = type.getConstructor();
+        Set<InjectableAttribute> byConstruction = new HashSet<InjectableAttribute>(constructor.getParameterTypes().size());
         for (int i = 0; i < constructor.getParameterTypes().size(); i++) {
             InjectionSite site = new ConstructorInjectionSite(constructor, i);
             InjectableAttribute attribute = mappings.get(site);
-            providerDefinition.addInjectionSite(attribute, site);
+            construction.put(site, attribute);
+            byConstruction.add(attribute);
         }
 
-        // add field/method injections for values not injected through the constructor
+        // add field/method injections
+        Map<InjectionSite, InjectableAttribute> postConstruction = providerDefinition.getPostConstruction();
+        Map<InjectionSite, InjectableAttribute> reinjection = providerDefinition.getReinjection();
         for (Map.Entry<InjectionSite, InjectableAttribute> entry : mappings.entrySet()) {
             InjectionSite site = entry.getKey();
-            InjectableAttribute attribute = entry.getValue();
-            if (!providerDefinition.getInjectionSites().containsKey(attribute)) {
-                providerDefinition.addInjectionSite(attribute, site);
+            if (site.getElementType() == ElementType.CONSTRUCTOR) {
+                continue;
             }
+            
+            InjectableAttribute attribute = entry.getValue();
+            if (!byConstruction.contains(attribute)) {
+                postConstruction.put(site, attribute);
+            }
+            reinjection.put(site, attribute);
         }
     }
 

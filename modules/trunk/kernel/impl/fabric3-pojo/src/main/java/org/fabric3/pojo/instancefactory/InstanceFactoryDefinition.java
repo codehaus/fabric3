@@ -38,6 +38,9 @@ public class InstanceFactoryDefinition extends ModelObject {
     private Signature initMethod;
     private Signature destroyMethod;
     private Map<InjectableAttribute, InjectionSite> mappings = new HashMap<InjectableAttribute, InjectionSite>();
+    private Map<InjectionSite, InjectableAttribute> construction = new HashMap<InjectionSite, InjectableAttribute>();
+    private Map<InjectionSite, InjectableAttribute> postConstruction = new HashMap<InjectionSite, InjectableAttribute>();
+    private Map<InjectionSite, InjectableAttribute> reinjection = new HashMap<InjectionSite, InjectableAttribute>();
 
     /**
      * Returns the signature of the constrctor that should be used.
@@ -112,20 +115,26 @@ public class InstanceFactoryDefinition extends ModelObject {
     }
 
     /**
-     * Returns the injection sites for all the injectable values.
-     * @return the injection sites for all the injectable values
+     * Returns the map of injections to be performed during construction.
+     * @return the map of injections to be performed during construction
      */
-    public Map<InjectableAttribute, InjectionSite> getInjectionSites() {
-        return mappings;
+    public Map<InjectionSite, InjectableAttribute> getConstruction() {
+        return construction;
     }
 
     /**
-     * Adds an injection site.
-     *
-     * @param source the source of the value being injected
-     * @param site   the injection site
+     * Returns the map of injections to be performed after construction.
+     * @return the map of injections to be performed after construction
      */
-    public void addInjectionSite(InjectableAttribute source, InjectionSite site) {
-        mappings.put(source, site);
+    public Map<InjectionSite, InjectableAttribute> getPostConstruction() {
+        return postConstruction;
+    }
+
+    /**
+     * Returns the map of injections to be performed during reinjection.
+     * @return the map of injections to be performed during reinjection
+     */
+    public Map<InjectionSite, InjectableAttribute> getReinjection() {
+        return reinjection;
     }
 }

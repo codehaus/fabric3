@@ -21,6 +21,7 @@ package org.fabric3.fabric.services.instancefactory;
 import java.lang.reflect.Method;
 import java.lang.reflect.Field;
 import java.lang.reflect.Constructor;
+import java.util.Map;
 
 import junit.framework.TestCase;
 
@@ -66,7 +67,7 @@ public class ReflectiveIFProviderBuilderTestCase extends TestCase {
         InjectableAttribute injectableAttribute = new InjectableAttribute(InjectableAttributeType.REFERENCE, "xyz");
         Field field = Foo.class.getDeclaredField("xyz");
         InjectionSite injectionSite = new FieldInjectionSite(field);
-        definition.addInjectionSite(injectableAttribute, injectionSite);
+        definition.getPostConstruction().put(injectionSite, injectableAttribute);
 
         InstanceFactoryProvider provider = builder.build(definition, cl);
         Class<?> clazz = provider.getMemberType(injectableAttribute);
@@ -82,7 +83,7 @@ public class ReflectiveIFProviderBuilderTestCase extends TestCase {
         InjectableAttribute injectableAttribute = new InjectableAttribute(InjectableAttributeType.REFERENCE, "abc");
         Method method = Foo.class.getMethod("setAbc", Bar.class);
         InjectionSite injectionSite = new MethodInjectionSite(method, 0);
-        definition.addInjectionSite(injectableAttribute, injectionSite);
+        definition.getPostConstruction().put(injectionSite, injectableAttribute);
 
         InstanceFactoryProvider provider = builder.build(definition, cl);
         Class<?> clazz = provider.getMemberType(injectableAttribute);
@@ -100,8 +101,9 @@ public class ReflectiveIFProviderBuilderTestCase extends TestCase {
         definition.setConstructor(new Signature(constructor));
         definition.setInitMethod(new Signature("init"));
         definition.setDestroyMethod(new Signature("destroy"));
-        definition.addInjectionSite(new InjectableAttribute(InjectableAttributeType.PROPERTY, "a"), new ConstructorInjectionSite(constructor, 0));
-        definition.addInjectionSite(new InjectableAttribute(InjectableAttributeType.REFERENCE, "b"), new ConstructorInjectionSite(constructor, 1));
+        Map<InjectionSite,InjectableAttribute> construction = definition.getConstruction();
+        construction.put(new ConstructorInjectionSite(constructor, 0), new InjectableAttribute(InjectableAttributeType.PROPERTY, "a"));
+        construction.put(new ConstructorInjectionSite(constructor, 1), new InjectableAttribute(InjectableAttributeType.REFERENCE, "b"));
     }
 
     public static class Foo {

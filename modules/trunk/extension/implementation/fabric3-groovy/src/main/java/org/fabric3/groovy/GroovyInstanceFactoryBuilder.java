@@ -66,17 +66,15 @@ public class GroovyInstanceFactoryBuilder<T>
         GroovyClassLoader gcl = new GroovyClassLoader(cl);
         try {
             Class<T> implClass = getImplClass(ifpd, gcl);
-            
-            Map<InjectableAttribute, InjectionSite> injectionSites = ifpd.getInjectionSites();
-
             Constructor<T> ctr = helper.getConstructor(implClass, ifpd.getConstructor());
+
+            Map<InjectionSite, InjectableAttribute> injectionSites = ifpd.getConstruction();
             InjectableAttribute[] cdiSources = new InjectableAttribute[ctr.getParameterTypes().length];
-            for (Map.Entry<InjectableAttribute, InjectionSite> entry : injectionSites.entrySet()) {
-                InjectionSite injectionSite = entry.getValue();
-                if (injectionSite.getElementType() == ElementType.CONSTRUCTOR) {
-                    ConstructorInjectionSite constructorSite = (ConstructorInjectionSite) injectionSite;
-                    cdiSources[constructorSite.getParam()] = entry.getKey();
-                }
+            for (Map.Entry<InjectionSite, InjectableAttribute> entry : injectionSites.entrySet()) {
+                InjectionSite site = entry.getKey();
+                InjectableAttribute attribute = entry.getValue();
+                ConstructorInjectionSite constructorSite = (ConstructorInjectionSite) site;
+                cdiSources[constructorSite.getParam()] = attribute;
             }
             for (int i = 0; i < cdiSources.length; i++) {
                 if (cdiSources[i] == null) {
@@ -89,7 +87,7 @@ public class GroovyInstanceFactoryBuilder<T>
 
             return new ReflectiveInstanceFactoryProvider<T>(ctr,
                                                             Arrays.asList(cdiSources),
-                                                            injectionSites,
+                                                            ifpd.getPostConstruction(),
                                                             initMethod,
                                                             destroyMethod,
                                                             gcl);

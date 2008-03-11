@@ -49,7 +49,7 @@ public class ReflectiveInstanceFactoryProvider<T> implements InstanceFactoryProv
     private final Class<T> implementationClass;
     private final Constructor<T> constructor;
     private final List<InjectableAttribute> cdiSources;
-    private final Map<InjectableAttribute, InjectionSite> injectionSites;
+    private final Map<InjectionSite, InjectableAttribute> postConstruction;
     private final EventInvoker<T> initInvoker;
     private final EventInvoker<T> destroyInvoker;
     private final Map<InjectableAttribute, ObjectFactory<?>> factories = new HashMap<InjectableAttribute, ObjectFactory<?>>();
@@ -57,14 +57,14 @@ public class ReflectiveInstanceFactoryProvider<T> implements InstanceFactoryProv
 
     public ReflectiveInstanceFactoryProvider(Constructor<T> constructor,
                                              List<InjectableAttribute> cdiSources,
-                                             Map<InjectableAttribute, InjectionSite> injectionSites,
+                                             Map<InjectionSite, InjectableAttribute> postConstruction,
                                              Method initMethod,
                                              Method destroyMethod,
                                              ClassLoader cl) {
         this.implementationClass = constructor.getDeclaringClass();
         this.constructor = constructor;
         this.cdiSources = cdiSources;
-        this.injectionSites = injectionSites;
+        this.postConstruction = postConstruction;
         this.initInvoker = initMethod == null ? null : new MethodEventInvoker<T>(initMethod);
         this.destroyInvoker = destroyMethod == null ? null : new MethodEventInvoker<T>(destroyMethod);
         this.cl = cl;
@@ -75,7 +75,7 @@ public class ReflectiveInstanceFactoryProvider<T> implements InstanceFactoryProv
     }
 
     public Class<?> getMemberType(InjectableAttribute injectableAttribute) {
-        InjectionSite site = injectionSites.get(injectableAttribute);
+        InjectionSite site = findInjectionSite(injectableAttribute);
         if (site == null) {
             throw new AssertionError("No injection site for " + injectableAttribute + " in " + implementationClass);
         }
@@ -114,7 +114,7 @@ public class ReflectiveInstanceFactoryProvider<T> implements InstanceFactoryProv
     }
 
     public Type getGenericType(InjectableAttribute injectableAttribute) {
-        InjectionSite site = injectionSites.get(injectableAttribute);
+        InjectionSite site = findInjectionSite(injectableAttribute);
         if (site == null) {
             throw new AssertionError("No injection site for " + injectableAttribute);
         }
@@ -150,6 +150,24 @@ public class ReflectiveInstanceFactoryProvider<T> implements InstanceFactoryProv
         default:
             throw new AssertionError();
         }
+    }
+
+    // FIXME this is a hack until can replace getMemberType/getGenericType as they assume a single injection site
+    private InjectionSite findInjectionSite(InjectableAttribute attribute) {
+        // try constructor
+        for (int i = 0; i < cdiSources.size(); i++) {
+            InjectableAttribute injectableAttribute = cdiSources.get(i);
+            if (attribute.equals(injectableAttribute)) {
+                return new ConstructorInjectionSite(constructor, i);
+            }
+        }
+        // try postConstruction
+        for (Map.Entry<InjectionSite, InjectableAttribute> entry : postConstruction.entrySet()) {
+            if (entry.getValue().equals(attribute)) {
+                return entry.getKey();
+            }
+        }
+        throw new AssertionError();
     }
 
     private Field getField(String name) throws NoSuchFieldException {
@@ -188,10 +206,10 @@ public class ReflectiveInstanceFactoryProvider<T> implements InstanceFactoryProv
     }
 
     protected List<Injector<T>> getInjectors() {
-        List<Injector<T>> injectors = new ArrayList<Injector<T>>(injectionSites.size());
-        for (Map.Entry<InjectableAttribute, InjectionSite> entry : injectionSites.entrySet()) {
-            InjectableAttribute name = entry.getKey();
-            InjectionSite site = entry.getValue();
+        List<Injector<T>> injectors = new ArrayList<Injector<T>>(postConstruction.size());
+        for (Map.Entry<InjectionSite, InjectableAttribute> entry : postConstruction.entrySet()) {
+            InjectionSite site = entry.getKey();
+            InjectableAttribute name = entry.getValue();
             ObjectFactory<?> factory = factories.get(name);
             if (factory != null) {
                 switch (site.getElementType()) {

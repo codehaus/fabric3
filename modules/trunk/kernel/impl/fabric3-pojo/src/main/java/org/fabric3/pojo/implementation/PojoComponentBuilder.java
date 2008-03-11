@@ -144,10 +144,17 @@ public abstract class PojoComponentBuilder<T, PCD extends PojoComponentDefinitio
     protected Map<String, MultiplicityObjectFactory<?>> createMultiplicityReferenceFactories(InstanceFactoryDefinition providerDefinition) {
 
         Map<String, MultiplicityObjectFactory<?>> referenceFactories = new HashMap<String, MultiplicityObjectFactory<?>>();
-        for (Map.Entry<InjectableAttribute, InjectionSite> entry : providerDefinition.getInjectionSites().entrySet()) {
-            InjectableAttribute source = entry.getKey();
+        for (Map.Entry<InjectionSite, InjectableAttribute> entry : providerDefinition.getConstruction().entrySet()) {
+            InjectionSite site = entry.getKey();
+            InjectableAttribute source = entry.getValue();
             if (source.getValueType() == InjectableAttributeType.REFERENCE) {
-                InjectionSite site = entry.getValue();
+                addMultiplicityFactory(site.getType(), source, referenceFactories);
+            }
+        }
+        for (Map.Entry<InjectionSite, InjectableAttribute> entry : providerDefinition.getPostConstruction().entrySet()) {
+            InjectionSite site = entry.getKey();
+            InjectableAttribute source = entry.getValue();
+            if (source.getValueType() == InjectableAttributeType.REFERENCE) {
                 addMultiplicityFactory(site.getType(), source, referenceFactories);
             }
         }

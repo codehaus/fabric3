@@ -48,7 +48,7 @@ import org.fabric3.spi.component.TargetResolutionException;
 public class ReflectiveInstanceFactoryProviderTestCase extends TestCase {
     private Constructor<Foo> argConstructor;
     private List<InjectableAttribute> ctrNames;
-    private Map<InjectableAttribute, InjectionSite> sites;
+    private Map<InjectionSite, InjectableAttribute> sites;
     private ObjectFactory intFactory;
     private ObjectFactory stringFactory;
     private ReflectiveInstanceFactoryProvider<Foo> provider;
@@ -83,8 +83,8 @@ public class ReflectiveInstanceFactoryProviderTestCase extends TestCase {
     }
 
     public void testFieldInjectors() throws ObjectCreationException {
-        sites.put(intProperty, new FieldInjectionSite(intField));
-        sites.put(stringProperty, new FieldInjectionSite(stringField));
+        sites.put(new FieldInjectionSite(intField), intProperty);
+        sites.put(new FieldInjectionSite(stringField), stringProperty);
         List<Injector<Foo>> injectors = provider.getInjectors();
         assertEquals(2, injectors.size());
 
@@ -99,8 +99,8 @@ public class ReflectiveInstanceFactoryProviderTestCase extends TestCase {
     }
 
     public void testMethodInjectors() throws ObjectCreationException {
-        sites.put(intProperty, new MethodInjectionSite(intSetter, 0));
-        sites.put(stringProperty, new MethodInjectionSite(stringSetter, 0));
+        sites.put(new MethodInjectionSite(intSetter, 0), intProperty);
+        sites.put(new MethodInjectionSite(stringSetter, 0), stringProperty);
         List<Injector<Foo>> injectors = provider.getInjectors();
         assertEquals(2, injectors.size());
 
@@ -115,8 +115,8 @@ public class ReflectiveInstanceFactoryProviderTestCase extends TestCase {
     }
 
     public void testFactory() throws ObjectCreationException, TargetResolutionException {
-        sites.put(intProperty, new MethodInjectionSite(intSetter, 0));
-        sites.put(stringProperty, new MethodInjectionSite(stringSetter, 0));
+        sites.put(new MethodInjectionSite(intSetter, 0), intProperty);
+        sites.put(new MethodInjectionSite(stringSetter, 0), stringProperty);
         InstanceFactory<Foo> instanceFactory = provider.createFactory();
         InstanceWrapper<Foo> instanceWrapper = instanceFactory.newInstance(null);
         try {
@@ -140,7 +140,7 @@ public class ReflectiveInstanceFactoryProviderTestCase extends TestCase {
         intSetter = Foo.class.getMethod("setIntField", int.class);
         stringSetter = Foo.class.getMethod("setStringField", String.class);
         ctrNames = new ArrayList<InjectableAttribute>();
-        sites = new HashMap<InjectableAttribute, InjectionSite>();
+        sites = new HashMap<InjectionSite, InjectableAttribute>();
         provider = new ReflectiveInstanceFactoryProvider<Foo>(noArgConstructor,
                                                               ctrNames,
                                                               sites,
