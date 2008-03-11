@@ -90,6 +90,11 @@
         <reference name="wire" target="loader.Wire"/>
     </component>
 
+    <!-- Composite implementation type -->
+    <component name="composite.implementationLoader">
+        <system:implementation.system class="org.fabric3.loader.composite.ImplementationCompositeLoader"/>
+    </component>
+
     <component name="elementLoader.componentType">
         <system:implementation.system class="org.fabric3.loader.componentType.ComponentTypeLoader"/>
         <reference name="property" target="loader.Property"/>

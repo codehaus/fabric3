@@ -48,9 +48,6 @@
     <!-- Java interface definition language -->
     <include name="org.fabric3.fabric.InterfaceJava" scdlResource="org/fabric3/fabric/interfaceJava.composite"/>
 
-    <!-- include omposite implementation type -->
-    <include name="org.fabric3.fabric.Composite" scdlResource="org/fabric3/fabric/composite.composite"/>
-
     <!-- Pojo implementation type -->
     <include name="org.fabric3.fabric.PojoImplementation" scdlResource="org/fabric3/fabric/pojoImplementation.composite"/>
 
