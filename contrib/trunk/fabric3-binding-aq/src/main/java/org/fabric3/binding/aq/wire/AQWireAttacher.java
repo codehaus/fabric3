@@ -231,8 +231,9 @@ public class AQWireAttacher implements SourceWireAttacher<JmsWireSourceDefinitio
             ops.put(entry.getKey().getName(), entry);
         }
 
-        AQBindingMetadata metadata = sourceDefinition.getMetadata();
-        metadata.setDataSource(dataSourceRegistry.getDataSource("AQDataSource"));
+        AQBindingMetadata metadata = sourceDefinition.getMetadata();   
+        String datasourceName = (String)metadata.getDestination().getProperties().get("datasource");
+        metadata.setDataSource(dataSourceRegistry.getDataSource(datasourceName));
 
         CorrelationScheme correlationScheme = metadata.getCorrelationScheme();
 
@@ -285,7 +286,8 @@ public class AQWireAttacher implements SourceWireAttacher<JmsWireSourceDefinitio
         ClassLoader classLoader = classLoaderRegistry.getClassLoader(targetDefinition.getClassloaderURI());
 
         AQBindingMetadata metadata = targetDefinition.getMetadata();
-        metadata.setDataSource(dataSourceRegistry.getDataSource("AQDataSource"));
+        String datasourceName = (String)metadata.getDestination().getProperties().get("datasource");
+        metadata.setDataSource(dataSourceRegistry.getDataSource(datasourceName));
 
         CorrelationScheme correlationScheme = metadata.getCorrelationScheme();
 

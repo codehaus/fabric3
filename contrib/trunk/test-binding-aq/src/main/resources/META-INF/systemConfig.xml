@@ -2,8 +2,8 @@
     <testDsConfig>
         <key>AQDataSource</key>
         <driver>oracle.jdbc.driver.OracleDriver</driver>
-        <url>Your own URL</url>
-        <user></user>
-        <password></password>
-    </testDsConfig>
+        <url>jdbc:oracle:thin:@10.64.10.151:1521:EDPDEV</url>
+        <user>babur</user>
+        <password>babur</password>
+    </testDsConfig>    
 </config>
