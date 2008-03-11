@@ -22,7 +22,8 @@ import org.fabric3.pojo.instancefactory.InstanceFactoryGenerationHelper;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.ServiceContract;
-import org.fabric3.spi.generator.ClassLoaderGenerator;
+import org.fabric3.scdl.InjectableAttribute;
+import org.fabric3.scdl.InjectableAttributeType;
 import org.fabric3.spi.generator.ComponentGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.generator.GeneratorRegistry;
@@ -84,9 +85,20 @@ public class GroovyComponentGenerator implements ComponentGenerator<LogicalCompo
                                                            LogicalReference reference,
                                                            Policy policy)
             throws GenerationException {
+        URI uri = reference.getUri();
+        ServiceContract<?> serviceContract = reference.getDefinition().getServiceContract();
+        String interfaceName = serviceContract.getQualifiedInterfaceName();
+        URI classLoaderId = source.getParent().getUri();
+
         GroovyWireSourceDefinition wireDefinition = new GroovyWireSourceDefinition();
-        wireDefinition.setUri(reference.getUri());
+        wireDefinition.setUri(uri);
+        wireDefinition.setValueSource(new InjectableAttribute(InjectableAttributeType.REFERENCE, uri.getFragment()));
+        wireDefinition.setInterfaceName(interfaceName);
         wireDefinition.setConversational(reference.getDefinition().getServiceContract().isConversational());
+        // assume for now that any wire from a Groovy component can be optimized
+        wireDefinition.setOptimizable(true);
+
+        wireDefinition.setClassLoaderId(classLoaderId);
         return wireDefinition;
     }
 

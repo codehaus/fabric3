@@ -16,10 +16,10 @@
  */
 package org.fabric3.groovy;
 
-import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
+import org.fabric3.pojo.wire.PojoWireSourceDefinition;
 
 /**
  * @version $Rev$ $Date$
  */
-public class GroovyWireSourceDefinition extends PhysicalWireSourceDefinition {
+public class GroovyWireSourceDefinition extends PojoWireSourceDefinition {
 }

@@ -28,9 +28,14 @@ import org.osoa.sca.annotations.Reference;
 import org.osoa.sca.annotations.Service;
 
 import org.fabric3.pojo.reflection.InvokerInterceptor;
+import org.fabric3.pojo.wire.PojoWireAttacher;
 import org.fabric3.scdl.InjectableAttribute;
 import org.fabric3.scdl.InjectableAttributeType;
+import org.fabric3.scdl.Scope;
 import org.fabric3.spi.ObjectFactory;
+import org.fabric3.spi.transform.PullTransformer;
+import org.fabric3.spi.transform.TransformerRegistry;
+import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.SourceWireAttacher;
 import org.fabric3.spi.builder.component.SourceWireAttacherRegistry;
@@ -55,20 +60,25 @@ import org.fabric3.spi.wire.Wire;
  */
 @EagerInit
 @Service(interfaces={SourceWireAttacher.class, TargetWireAttacher.class})
-public class GroovyWireAttacher implements SourceWireAttacher<GroovyWireSourceDefinition>, TargetWireAttacher<GroovyWireTargetDefinition> {
+public class GroovyWireAttacher extends PojoWireAttacher implements SourceWireAttacher<GroovyWireSourceDefinition>, TargetWireAttacher<GroovyWireTargetDefinition> {
     private final SourceWireAttacherRegistry sourceWireAttacherRegistry;
     private final TargetWireAttacherRegistry targetWireAttacherRegistry;
     private final ComponentManager manager;
     private final ProxyService proxyService;
+    private final ClassLoaderRegistry classLoaderRegistry;
 
     public GroovyWireAttacher(@Reference ComponentManager manager,
                               @Reference SourceWireAttacherRegistry sourceWireAttacherRegistry,
                               @Reference TargetWireAttacherRegistry targetWireAttacherRegistry,
-                              @Reference ProxyService proxyService) {
+                              @Reference ProxyService proxyService,
+                              @Reference ClassLoaderRegistry classLoaderRegistry,
+                              @Reference(name = "transformerRegistry")TransformerRegistry<PullTransformer<?, ?>> transformerRegistry) {
+        super(transformerRegistry, classLoaderRegistry);
         this.sourceWireAttacherRegistry = sourceWireAttacherRegistry;
         this.targetWireAttacherRegistry = targetWireAttacherRegistry;
         this.manager = manager;
         this.proxyService = proxyService;
+        this.classLoaderRegistry = classLoaderRegistry;
     }
 
     @Init
@@ -85,17 +95,36 @@ public class GroovyWireAttacher implements SourceWireAttacher<GroovyWireSourceDe
 
     public void attachToSource(GroovyWireSourceDefinition sourceDefinition,
                                PhysicalWireTargetDefinition targetDefinition,
-                               Wire wire) {
+                               Wire wire) throws WireAttachException {
         URI sourceUri = sourceDefinition.getUri();
         URI sourceName = UriHelper.getDefragmentedName(sourceDefinition.getUri());
-        Component component = manager.getComponent(sourceName);
-        assert component instanceof GroovyComponent;
-        GroovyComponent<?> source = (GroovyComponent) component;
-        InjectableAttribute referenceSource = new InjectableAttribute(InjectableAttributeType.REFERENCE, sourceUri.getFragment());
+        GroovyComponent<?> source = (GroovyComponent) manager.getComponent(sourceName);
+        InjectableAttribute injectableAttribute = sourceDefinition.getValueSource();
 
-        Class<?> type = source.getMemberType(referenceSource);
-        ObjectFactory<?> factory = createWireObjectFactory(type, sourceDefinition.isConversational(), wire);
-        source.setObjectFactory(referenceSource, factory);
+        Class<?> type;
+        try {
+            type = classLoaderRegistry.loadClass(sourceDefinition.getClassLoaderId(), sourceDefinition.getInterfaceName());
+        } catch (ClassNotFoundException e) {
+            String name = sourceDefinition.getInterfaceName();
+            throw new WireAttachException("Unable to load interface class [" + name + "]", sourceUri, null, e);
+        }
+        if (InjectableAttributeType.CALLBACK.equals(injectableAttribute.getValueType())) {
+            URI targetUri = targetDefinition.getUri();
+            Scope scope = source.getScopeContainer().getScope();
+            ObjectFactory<?> factory = proxyService.createCallbackObjectFactory(type, scope, targetUri, wire);
+            // JFM TODO inject updates to object factory as this does not support a proxy fronting multiple callback wires
+            source.setObjectFactory(injectableAttribute, factory);
+        } else {
+            String callbackUri = null;
+            URI uri = targetDefinition.getCallbackUri();
+            if (uri != null) {
+                callbackUri = uri.toString();
+            }
+            boolean conversational = sourceDefinition.isConversational();
+            ObjectFactory<?> factory = proxyService.createObjectFactory(type, conversational, wire, callbackUri);
+            Object key = getKey(sourceDefinition, source, injectableAttribute);
+            source.attachReferenceToTarget(injectableAttribute, factory, key);
+        }
     }
 
     private <T> ObjectFactory<T> createWireObjectFactory(Class<T> type, boolean isConversational, Wire wire) {
