@@ -76,7 +76,6 @@ import org.fabric3.fabric.services.contribution.processor.JarClasspathProcessor;
 import org.fabric3.fabric.services.discovery.SingleVMDiscoveryService;
 import org.fabric3.fabric.services.documentloader.DocumentLoader;
 import org.fabric3.fabric.services.documentloader.DocumentLoaderImpl;
-import org.fabric3.fabric.services.event.EventServiceImpl;
 import org.fabric3.fabric.services.instancefactory.BuildHelperImpl;
 import org.fabric3.fabric.services.instancefactory.DefaultInstanceFactoryBuilderRegistry;
 import org.fabric3.fabric.services.instancefactory.GenerationHelperImpl;
@@ -110,7 +109,6 @@ import org.fabric3.spi.services.contribution.ArtifactResolverRegistry;
 import org.fabric3.spi.services.contribution.ClasspathProcessorRegistry;
 import org.fabric3.spi.services.contribution.MetaDataStore;
 import org.fabric3.spi.services.discovery.DiscoveryService;
-import org.fabric3.spi.services.event.EventService;
 import org.fabric3.spi.services.runtime.RuntimeInfoService;
 import org.fabric3.spi.transform.PullTransformer;
 import org.fabric3.spi.transform.TransformerRegistry;
@@ -150,15 +148,14 @@ public class BootstrapAssemblyFactory {
                                           LogicalComponentManager logicalComponentManager,
                                           MetaDataStore metaDataStore) throws InitializationException {
         
-        EventService eventService = new EventServiceImpl();
         Allocator allocator = new LocalAllocator();
 
         CommandExecutorRegistry commandRegistry  = 
-            createCommandExecutorRegistry(monitorFactory, classLoaderRegistry, scopeRegistry, componentManager, eventService);
+            createCommandExecutorRegistry(monitorFactory, classLoaderRegistry, scopeRegistry, componentManager);
 
         RuntimeRoutingService routingService = new RuntimeRoutingService(commandRegistry, scopeRegistry);
 
-        GeneratorRegistry generatorRegistry = createGeneratorRegistry(classLoaderRegistry);
+        GeneratorRegistry generatorRegistry = createGeneratorRegistry();
         PhysicalOperationHelper physicalOperationHelper = new PhysicalOperationHelperImpl();
         PhysicalWireGenerator wireGenerator = new PhysicalWireGeneratorImpl(generatorRegistry,
                                                                             new NullPolicyResolver(),
@@ -206,10 +203,9 @@ public class BootstrapAssemblyFactory {
     }
 
     private static CommandExecutorRegistry createCommandExecutorRegistry(MonitorFactory monitorFactory,
-                                               ClassLoaderRegistry classLoaderRegistry,
-                                               ScopeRegistry scopeRegistry,
-                                               ComponentManager componentManager,
-                                               EventService eventService) {
+                                                                         ClassLoaderRegistry classLoaderRegistry,
+                                                                         ScopeRegistry scopeRegistry,
+                                                                         ComponentManager componentManager) {
 
         InstanceFactoryBuilderRegistry providerRegistry = new DefaultInstanceFactoryBuilderRegistry();
         InstanceFactoryBuildHelper buildHelper = new BuildHelperImpl(classLoaderRegistry);
@@ -275,7 +271,7 @@ public class BootstrapAssemblyFactory {
 
     }
 
-    private static GeneratorRegistry createGeneratorRegistry(ClassLoaderRegistry classLoaderRegistry) {
+    private static GeneratorRegistry createGeneratorRegistry() {
         GeneratorRegistryImpl registry = new GeneratorRegistryImpl();
         GenerationHelperImpl helper = new GenerationHelperImpl();
         new SystemComponentGenerator(registry, helper);
