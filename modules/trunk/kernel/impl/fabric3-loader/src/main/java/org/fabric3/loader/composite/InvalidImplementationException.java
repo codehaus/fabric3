@@ -38,6 +38,6 @@ public class InvalidImplementationException extends CompositeLoaderException {
     }
 
     public String getMessage() {
-        return "Invalid implementation for component " + componentName;
+        return "Invalid implementation for component: " + componentName;
     }
 }

@@ -121,7 +121,7 @@ public class ComponentLoader implements TypeLoader<ComponentDefinition<?>> {
         try {
             impl = loadImplementation(reader, context);
         } catch (LoaderException e) {
-            throw new InvalidImplementationException("Invalid component implementation: " + name, e);
+            throw new InvalidImplementationException(name, e);
         }
         componentDefinition.setImplementation(impl);
         AbstractComponentType<?, ?, ?, ?> componentType = impl.getComponentType();
