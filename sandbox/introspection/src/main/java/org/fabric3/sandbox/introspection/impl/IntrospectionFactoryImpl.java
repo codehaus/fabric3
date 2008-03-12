@@ -32,8 +32,6 @@ import org.fabric3.fabric.implementation.processor.PreDestroyProcessor;
 import org.fabric3.fabric.implementation.processor.PropertyProcessor;
 import org.fabric3.fabric.implementation.processor.ReferenceProcessor;
 import org.fabric3.fabric.implementation.processor.ServiceProcessor;
-import org.fabric3.loader.impl.LoaderRegistryImpl;
-import org.fabric3.services.xmlfactory.impl.XMLFactoryImpl;
 import org.fabric3.introspection.impl.DefaultIntrospectionHelper;
 import org.fabric3.introspection.impl.contract.DefaultContractProcessor;
 import org.fabric3.introspection.java.ContractProcessor;
@@ -47,7 +45,6 @@ import org.fabric3.java.JavaImplementation;
 import org.fabric3.java.JavaImplementationLoader;
 import org.fabric3.loader.common.ComponentReferenceLoader;
 import org.fabric3.loader.common.ComponentServiceLoader;
-import org.fabric3.loader.impl.DefaultLoaderHelper;
 import org.fabric3.loader.common.PropertyLoader;
 import org.fabric3.loader.composite.ComponentLoader;
 import org.fabric3.loader.composite.CompositeLoader;
@@ -55,34 +52,45 @@ import org.fabric3.loader.composite.CompositeReferenceLoader;
 import org.fabric3.loader.composite.CompositeServiceLoader;
 import org.fabric3.loader.composite.IncludeLoader;
 import org.fabric3.loader.composite.PropertyValueLoader;
+import org.fabric3.loader.impl.DefaultLoaderHelper;
+import org.fabric3.loader.impl.LoaderRegistryImpl;
 import org.fabric3.monitor.MonitorFactory;
 import org.fabric3.monitor.impl.NullMonitorFactory;
 import org.fabric3.pojo.processor.ImplementationProcessorService;
 import org.fabric3.pojo.processor.Introspector;
 import org.fabric3.sandbox.introspection.IntrospectionFactory;
-import org.fabric3.spi.services.contribution.MetaDataStore;
 import org.fabric3.services.xmlfactory.XMLFactory;
+import org.fabric3.services.xmlfactory.impl.DefaultXMLFactoryImpl;
 
 /**
  * @version $Rev$ $Date$
  */
 public class IntrospectionFactoryImpl implements IntrospectionFactory {
-    private static final MonitorFactory monitorFactory = new NullMonitorFactory();
-
     private Loader loader;
 
+    /**
+     * Constructor specifying the monitor and xml factories to use.
+     *
+     * @param monitorFactory the factory for monitors
+     * @param xmlFactory the factory for XML parsers
+     */
+    public IntrospectionFactoryImpl(MonitorFactory monitorFactory, XMLFactory xmlFactory) {
+        loader = createLoader(monitorFactory, xmlFactory);
+    }
+
+    /**
+     * Default constructor which will use a non-logging monitor and the default StAX implementation.
+     */
     public IntrospectionFactoryImpl() {
-        loader = createLoader(monitorFactory, null);
+        this(new NullMonitorFactory(), new DefaultXMLFactoryImpl());
     }
 
     public Loader getLoader() {
         return loader;
     }
 
-    public static Loader createLoader(MonitorFactory monitorFactory,
-                                      MetaDataStore metaDataStore) {
+    public static Loader createLoader(MonitorFactory monitorFactory, XMLFactory xmlFactory) {
 
-        XMLFactory xmlFactory = new XMLFactoryImpl();
         LoaderRegistryImpl loader = new LoaderRegistryImpl(monitorFactory.getMonitor(LoaderRegistryImpl.Monitor.class), xmlFactory);
 
         IntrospectionHelper helper = new DefaultIntrospectionHelper();
@@ -105,7 +113,7 @@ public class IntrospectionFactoryImpl implements IntrospectionFactory {
                                                               componentServiceLoader,
                                                               loaderHelper);
 
-        IncludeLoader includeLoader = new IncludeLoader(loader, metaDataStore);
+        IncludeLoader includeLoader = new IncludeLoader(loader, null);
         CompositeLoader compositeLoader = new CompositeLoader(loader,
                                                               includeLoader,
                                                               propertyLoader,
