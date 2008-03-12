@@ -17,8 +17,8 @@
 package org.fabric3.fabric.runtime.bootstrap;
 
 import java.io.File;
-import java.io.IOException;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
 
@@ -40,33 +40,34 @@ import org.fabric3.fabric.services.contribution.MetaDataStoreImpl;
 import org.fabric3.fabric.services.contribution.ProcessorRegistryImpl;
 import org.fabric3.fabric.services.documentloader.DocumentLoader;
 import org.fabric3.fabric.services.documentloader.DocumentLoaderImpl;
-import org.fabric3.monitor.MonitorFactory;
 import org.fabric3.host.runtime.Fabric3Runtime;
 import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.host.runtime.InitializationException;
 import org.fabric3.host.runtime.ScdlBootstrapper;
+import org.fabric3.introspection.IntrospectionContext;
+import org.fabric3.introspection.impl.DefaultIntrospectionHelper;
+import org.fabric3.introspection.impl.contract.DefaultContractProcessor;
+import org.fabric3.introspection.java.ContractProcessor;
+import org.fabric3.introspection.java.IntrospectionHelper;
+import org.fabric3.introspection.java.InvalidServiceContractException;
+import org.fabric3.introspection.java.TypeMapping;
+import org.fabric3.introspection.xml.Loader;
+import org.fabric3.introspection.xml.LoaderException;
 import org.fabric3.loader.common.IntrospectionContextImpl;
+import org.fabric3.monitor.MonitorFactory;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.Composite;
 import org.fabric3.scdl.Implementation;
 import org.fabric3.scdl.ServiceContract;
 import org.fabric3.scdl.ServiceDefinition;
+import org.fabric3.services.xmlfactory.impl.XMLFactoryImpl;
 import org.fabric3.spi.assembly.ActivateException;
 import org.fabric3.spi.assembly.Assembly;
+import org.fabric3.spi.classloader.MultiParentClassLoader;
 import org.fabric3.spi.component.AtomicComponent;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.ScopeRegistry;
-import org.fabric3.spi.classloader.MultiParentClassLoader;
-import org.fabric3.introspection.xml.Loader;
-import org.fabric3.introspection.xml.LoaderException;
-import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.introspection.java.ContractProcessor;
-import org.fabric3.introspection.java.InvalidServiceContractException;
-import org.fabric3.introspection.java.IntrospectionHelper;
-import org.fabric3.introspection.java.TypeMapping;
-import org.fabric3.introspection.impl.contract.DefaultContractProcessor;
-import org.fabric3.introspection.impl.DefaultIntrospectionHelper;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 import org.fabric3.spi.runtime.RuntimeServices;
@@ -140,8 +141,8 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
     public void bootSystem(Fabric3Runtime<?> runtime) throws InitializationException {
         ClassLoaderRegistry classLoaderRegistry =
                 runtime.getSystemComponent(ClassLoaderRegistry.class, ComponentNames.CLASSLOADER_REGISTRY_URI);
-        Loader loader = BootstrapLoaderFactory.createLoader(runtime);
-//        Loader loader = BootstrapLoaderFactory2.createLoader(runtime.getMonitorFactory(), new XMLFactoryImpl());
+//        Loader loader = BootstrapLoaderFactory.createLoader(runtime);
+        Loader loader = BootstrapLoaderFactory2.createLoader(runtime.getMonitorFactory(), new XMLFactoryImpl());
         Assembly runtimeAssembly = runtime.getSystemComponent(Assembly.class, ComponentNames.RUNTIME_ASSEMBLY_URI);
         try {
 
