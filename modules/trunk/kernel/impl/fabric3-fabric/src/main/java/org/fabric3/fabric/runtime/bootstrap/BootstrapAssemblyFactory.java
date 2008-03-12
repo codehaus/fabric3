@@ -53,9 +53,6 @@ import org.fabric3.fabric.generator.GeneratorRegistryImpl;
 import org.fabric3.fabric.implementation.singleton.SingletonGenerator;
 import org.fabric3.fabric.implementation.singleton.SingletonWireAttacher;
 import org.fabric3.fabric.implementation.singleton.SingletonWireTargetDefinition;
-import org.fabric3.system.runtime.SystemComponentBuilder;
-import org.fabric3.system.control.SystemComponentGenerator;
-import org.fabric3.system.runtime.SystemWireAttacher;
 import org.fabric3.fabric.model.logical.AtomicComponentInstantiator;
 import org.fabric3.fabric.model.logical.CompositeComponentInstantiator;
 import org.fabric3.fabric.model.logical.LogicalModelGenerator;
@@ -115,6 +112,9 @@ import org.fabric3.spi.transform.TransformerRegistry;
 import org.fabric3.spi.wire.TargetPromotionService;
 import org.fabric3.spi.wire.TargetResolutionService;
 import org.fabric3.spi.wire.WiringService;
+import org.fabric3.system.control.SystemComponentGenerator;
+import org.fabric3.system.runtime.SystemComponentBuilder;
+import org.fabric3.system.runtime.SystemWireAttacher;
 import org.fabric3.transform.DefaultTransformerRegistry;
 import org.fabric3.transform.dom2java.String2Class;
 import org.fabric3.transform.dom2java.String2Integer;
@@ -147,47 +147,18 @@ public class BootstrapAssemblyFactory {
                                           ComponentManager componentManager,
                                           LogicalComponentManager logicalComponentManager,
                                           MetaDataStore metaDataStore) throws InitializationException {
-        
+
         Allocator allocator = new LocalAllocator();
 
-        CommandExecutorRegistry commandRegistry  = 
-            createCommandExecutorRegistry(monitorFactory, classLoaderRegistry, scopeRegistry, componentManager);
+        CommandExecutorRegistry commandRegistry =
+                createCommandExecutorRegistry(monitorFactory, classLoaderRegistry, scopeRegistry, componentManager);
 
         RuntimeRoutingService routingService = new RuntimeRoutingService(commandRegistry, scopeRegistry);
 
-        GeneratorRegistry generatorRegistry = createGeneratorRegistry();
-        PhysicalOperationHelper physicalOperationHelper = new PhysicalOperationHelperImpl();
-        PhysicalWireGenerator wireGenerator = new PhysicalWireGeneratorImpl(generatorRegistry,
-                                                                            new NullPolicyResolver(),
-                                                                            physicalOperationHelper);
-        
-        RuntimeInfoService infoService = new BootstrapRuntimeInfoService(classLoaderRegistry);
-        DiscoveryService discoveryService = new SingleVMDiscoveryService(infoService);
-        ClassLoaderGenerator classLoaderGenerator = new ClassLoaderGeneratorImpl(discoveryService);
-        
-        PhysicalModelGenerator physicalModelGenerator = createPhysicalModelGenerator(generatorRegistry, 
-                                                                                     wireGenerator, 
-                                                                                     logicalComponentManager,
-                                                                                     routingService,
-                                                                                     classLoaderGenerator);
-        
-        TargetPromotionService targetPromotionService = new DefaultTargetPromotionService();
-        List<TargetResolutionService> targetResolutionServices = new ArrayList<TargetResolutionService>();
-        targetResolutionServices.add(new ExplicitTargetResolutionService());
-        targetResolutionServices.add(new TypeBasedAutoWireService());
-        WiringService wiringService = new DefaultWiringService(targetPromotionService, targetResolutionServices);
-        
-        PromotionNormalizer normalizer = new PromotionNormalizerImpl();
-        DocumentLoader documentLoader = new DocumentLoaderImpl();
-        AtomicComponentInstantiator atomicComponentInstantiator = new AtomicComponentInstantiator(documentLoader);
+        PhysicalModelGenerator physicalModelGenerator =
+                createPhysicalModelGenerator(logicalComponentManager, routingService, classLoaderRegistry);
 
-        CompositeComponentInstantiator compositeComponentInstantiator =
-                new CompositeComponentInstantiator(atomicComponentInstantiator, documentLoader);
-        LogicalModelGenerator logicalModelGenerator = new LogicalModelGeneratorImpl(wiringService,
-                                                                                    normalizer,
-                                                                                    logicalComponentManager,
-                                                                                    atomicComponentInstantiator,
-                                                                                    compositeComponentInstantiator);
+        LogicalModelGenerator logicalModelGenerator = createLogicalModelGenerator(logicalComponentManager);
 
         Assembly runtimeAssembly = new RuntimeAssemblyImpl(allocator,
                                                            metaDataStore,
@@ -200,6 +171,26 @@ public class BootstrapAssemblyFactory {
             throw new InitializationException(e);
         }
         return runtimeAssembly;
+    }
+
+    private static LogicalModelGenerator createLogicalModelGenerator(LogicalComponentManager logicalComponentManager) {
+        TargetPromotionService targetPromotionService = new DefaultTargetPromotionService();
+        List<TargetResolutionService> targetResolutionServices = new ArrayList<TargetResolutionService>();
+        targetResolutionServices.add(new ExplicitTargetResolutionService());
+        targetResolutionServices.add(new TypeBasedAutoWireService());
+        WiringService wiringService = new DefaultWiringService(targetPromotionService, targetResolutionServices);
+
+        PromotionNormalizer normalizer = new PromotionNormalizerImpl();
+        DocumentLoader documentLoader = new DocumentLoaderImpl();
+        AtomicComponentInstantiator atomicComponentInstantiator = new AtomicComponentInstantiator(documentLoader);
+
+        CompositeComponentInstantiator compositeComponentInstantiator =
+                new CompositeComponentInstantiator(atomicComponentInstantiator, documentLoader);
+        return new LogicalModelGeneratorImpl(wiringService,
+                                             normalizer,
+                                             logicalComponentManager,
+                                             atomicComponentInstantiator,
+                                             compositeComponentInstantiator);
     }
 
     private static CommandExecutorRegistry createCommandExecutorRegistry(MonitorFactory monitorFactory,
@@ -221,7 +212,7 @@ public class BootstrapAssemblyFactory {
         transformerRegistry.register(new String2QName());
 
         ComponentBuilderRegistry registry = new DefaultComponentBuilderRegistry();
-        
+
         SystemComponentBuilder<?> builder = new SystemComponentBuilder<Object>(registry,
                                                                                scopeRegistry,
                                                                                providerRegistry,
@@ -238,14 +229,14 @@ public class BootstrapAssemblyFactory {
         ResourceContainerBuilderRegistry resourceRegistry = createResourceBuilderRegistry(classLoaderRegistry);
 
         CommandExecutorRegistryImpl commandRegistry = new CommandExecutorRegistryImpl();
-        
+
         commandRegistry.register(StartCompositeContextCommand.class, new StartCompositeContextCommandExecutor(scopeRegistry));
         commandRegistry.register(InitializeComponentCommand.class, new InitializeComponentCommandExecutor(scopeRegistry, componentManager));
         commandRegistry.register(ComponentBuildCommand.class, new ComponentBuildCommandExecutor(registry, componentManager));
         commandRegistry.register(WireAttachCommand.class, new WireAttachCommandExecutor(connector));
         commandRegistry.register(ComponentStartCommand.class, new ComponentStartCommandExecutor(componentManager));
         commandRegistry.register(ClassloaderProvisionCommand.class, new ClassloaderProvisionCommandExecutor(resourceRegistry));
-        
+
         return commandRegistry;
 
     }
@@ -271,6 +262,30 @@ public class BootstrapAssemblyFactory {
 
     }
 
+    private static PhysicalModelGenerator createPhysicalModelGenerator(LogicalComponentManager logicalComponentManager,
+                                                                       RoutingService routingService,
+                                                                       ClassLoaderRegistry classLoaderRegistry) {
+
+        GeneratorRegistry generatorRegistry = createGeneratorRegistry();
+        PhysicalOperationHelper physicalOperationHelper = new PhysicalOperationHelperImpl();
+        PhysicalWireGenerator wireGenerator = new PhysicalWireGeneratorImpl(generatorRegistry,
+                                                                            new NullPolicyResolver(),
+                                                                            physicalOperationHelper);
+
+        RuntimeInfoService infoService = new BootstrapRuntimeInfoService(classLoaderRegistry);
+        DiscoveryService discoveryService = new SingleVMDiscoveryService(infoService);
+        ClassLoaderGenerator classLoaderGenerator = new ClassLoaderGeneratorImpl(discoveryService);
+
+        List<CommandGenerator> commandGenerators = new ArrayList<CommandGenerator>();
+        commandGenerators.add(new ClassloaderProvisionCommandGenerator(classLoaderGenerator, 0));
+        commandGenerators.add(new ComponentBuildCommandGenerator(generatorRegistry, 1));
+        commandGenerators.add(new WireAttachCommandGenerator(wireGenerator, logicalComponentManager, 2));
+        commandGenerators.add(new ComponentStartCommandGenerator(3));
+        commandGenerators.add(new StartCompositeContextCommandGenerator(4));
+        commandGenerators.add(new InitializeComponentCommandGenerator(5));
+        return new PhysicalModelGeneratorImpl(commandGenerators, routingService);
+    }
+
     private static GeneratorRegistry createGeneratorRegistry() {
         GeneratorRegistryImpl registry = new GeneratorRegistryImpl();
         GenerationHelperImpl helper = new GenerationHelperImpl();
@@ -280,20 +295,4 @@ public class BootstrapAssemblyFactory {
         return registry;
     }
 
-    private static PhysicalModelGenerator createPhysicalModelGenerator(GeneratorRegistry generatorRegistry,
-                                                                       PhysicalWireGenerator physicalWireGenerator,
-                                                                       LogicalComponentManager logicalComponentManager,
-                                                                       RoutingService routingService,
-                                                                       ClassLoaderGenerator classLoaderGenerator) {
-        
-        List<CommandGenerator> commandGenerators = new ArrayList<CommandGenerator>();
-        commandGenerators.add(new ClassloaderProvisionCommandGenerator(classLoaderGenerator, 0));
-        commandGenerators.add(new ComponentBuildCommandGenerator(generatorRegistry, 1));
-        commandGenerators.add(new WireAttachCommandGenerator(physicalWireGenerator, logicalComponentManager, 2));
-        commandGenerators.add(new ComponentStartCommandGenerator(3));
-        commandGenerators.add(new StartCompositeContextCommandGenerator(4));
-        commandGenerators.add(new InitializeComponentCommandGenerator(5));
-        return new PhysicalModelGeneratorImpl(commandGenerators, routingService);
-    }
-    
 }
