@@ -57,6 +57,7 @@
     <orderEntry type="module" module-name="fabric3-monitor" exported="" />
     <orderEntry type="module" module-name="fabric3-scdl" exported="" />
     <orderEntry type="module" module-name="fabric3-spi" exported="" />
+    <orderEntry type="module" module-name="fabric3-xmlfactory" exported="" />
     <orderEntry type="module-library" exported="">
       <library name="stax:stax-api:1.0">
         <CLASSES>

@@ -4,7 +4,7 @@ import java.net.URI;
 
 import junit.framework.TestCase;
 
-import org.fabric3.fabric.implementation.system.SystemImplementation;
+import org.fabric3.system.scdl.SystemImplementation;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
@@ -121,7 +121,7 @@ public class DefaultTargetPromotionServiceTestCase extends TestCase {
         LogicalService logicalService = new LogicalService(URI.create("service"), null, domain);
         logicalService.setPromotedUri(URI.create("component#service1"));
         
-        LogicalComponent<SystemImplementation> logicalComponent = new LogicalComponent<SystemImplementation>(URI.create("component"), 
+        LogicalComponent<SystemImplementation> logicalComponent = new LogicalComponent<SystemImplementation>(URI.create("component"),
                                                                                                              URI.create("runtime"),
                                                                                                              null,
                                                                                                              domain);

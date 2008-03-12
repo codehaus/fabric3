@@ -84,6 +84,7 @@
     <orderEntry type="module" module-name="fabric3-monitor" exported="" />
     <orderEntry type="module" module-name="fabric3-scdl" exported="" />
     <orderEntry type="module" module-name="fabric3-spi" exported="" />
+    <orderEntry type="module" module-name="fabric3-xmlfactory" exported="" />
     <orderEntry type="module-library" exported="">
       <library name="org.codehaus.woodstox:wstx-asl:3.2.0">
         <CLASSES>

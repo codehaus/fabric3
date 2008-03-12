@@ -28,7 +28,7 @@ import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 import org.w3c.dom.Document;
 
-import org.fabric3.fabric.implementation.system.SystemImplementation;
+import org.fabric3.system.scdl.SystemImplementation;
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.xml.LoaderException;
 import org.fabric3.introspection.xml.LoaderHelper;

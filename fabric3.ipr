@@ -372,6 +372,7 @@
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/runtime/standalone/fabric3-standalone-host/fabric3-standalone-host.iml" filepath="$PROJECT_DIR$/modules/trunk/runtime/standalone/fabric3-standalone-host/fabric3-standalone-host.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/runtime/standalone/fabric3-standalone-server/fabric3-standalone-server.iml" filepath="$PROJECT_DIR$/modules/trunk/runtime/standalone/fabric3-standalone-server/fabric3-standalone-server.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/runtime/standalone/fabric3-standalone-shutdown/fabric3-standalone-shutdown.iml" filepath="$PROJECT_DIR$/modules/trunk/runtime/standalone/fabric3-standalone-shutdown/fabric3-standalone-shutdown.iml" />
+      <module fileurl="file://$PROJECT_DIR$/modules/trunk/kernel/impl/fabric3-system/fabric3-system.iml" filepath="$PROJECT_DIR$/modules/trunk/kernel/impl/fabric3-system/fabric3-system.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/kernel/impl/fabric3-transform/fabric3-transform.iml" filepath="$PROJECT_DIR$/modules/trunk/kernel/impl/fabric3-transform/fabric3-transform.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/other/fabric3-tx/fabric3-tx.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/other/fabric3-tx/fabric3-tx.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/other/fabric3-tx-jotm/fabric3-tx-jotm.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/other/fabric3-tx-jotm/fabric3-tx-jotm.iml" />

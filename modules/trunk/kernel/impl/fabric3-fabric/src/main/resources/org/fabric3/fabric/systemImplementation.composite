@@ -28,15 +28,15 @@
            autowire="true">
 
     <!-- System implementation type -->
-    <component name="org.fabric3.fabric.implementation.system.SystemImplementationLoader">
-        <system:implementation.system class="org.fabric3.fabric.implementation.system.SystemImplementationLoader"/>
+    <component name="org.fabric3.system.introspection.SystemImplementationLoader">
+        <system:implementation.system class="org.fabric3.system.introspection.SystemImplementationLoader"/>
     </component>
 
-    <component name="org.fabric3.fabric.implementation.system.SystemComponentTypeLoaderImpl">
-        <system:implementation.system class="org.fabric3.fabric.implementation.system.SystemComponentTypeLoaderImpl"/>
+    <component name="org.fabric3.system.introspection.SystemComponentTypeLoaderImpl">
+        <system:implementation.system class="org.fabric3.system.introspection.SystemComponentTypeLoaderImpl"/>
     </component>
 
-    <component name="org.fabric3.fabric.implementation.system.SystemComponentGenerator">
-        <system:implementation.system class="org.fabric3.fabric.implementation.system.SystemComponentGenerator"/>
+    <component name="org.fabric3.system.control.SystemComponentGenerator">
+        <system:implementation.system class="org.fabric3.system.control.SystemComponentGenerator"/>
     </component>
 </composite>
