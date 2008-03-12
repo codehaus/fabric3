@@ -60,6 +60,15 @@ import org.fabric3.services.xmlfactory.XMLFactory;
 import org.fabric3.system.scdl.SystemImplementation;
 
 /**
+ * Factory class for an implementation of Loader that can handle system SCDL.
+ *
+ * This loader can handle a constrained version of SCDL for bootstrapping a runtime. The constraints are:
+ * <ul>
+ * <li>The only implementation type allowed is system</li>
+ * <li>The only service contract type is a Java interface found through introspection</li>
+ * <li>Resolution of SCDL artifacts by QName is not supported; scdlLocation or scdlResource must be used</li>
+ * </ul>
+ *
  * @version $Rev$ $Date$
  */
 public class BootstrapLoaderFactory {
