@@ -54,7 +54,7 @@ public class JavaImplementationLoader implements TypeLoader<JavaImplementation> 
         JavaImplementation implementation = new JavaImplementation();
         String implClass = reader.getAttributeValue(null, "class");
         if (implClass == null) {
-            throw new InvalidValueException("Missing implementation class");
+            throw new MissingClassException();
         }
         loaderHelper.loadPolicySetsAndIntents(implementation, reader);
         LoaderUtil.skipToEndElement(reader);
