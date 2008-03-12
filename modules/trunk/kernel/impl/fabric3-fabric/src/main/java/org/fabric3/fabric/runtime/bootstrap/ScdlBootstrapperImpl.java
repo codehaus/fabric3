@@ -77,6 +77,7 @@ import org.fabric3.spi.runtime.component.RegistrationException;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.services.contribution.MetaDataStore;
 import org.fabric3.spi.services.contribution.ProcessorRegistry;
+import org.fabric3.system.introspection.BootstrapLoaderFactory;
 
 /**
  * Bootstrapper that initializes a runtime by reading a system SCDL file.
@@ -141,8 +142,7 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
     public void bootSystem(Fabric3Runtime<?> runtime) throws InitializationException {
         ClassLoaderRegistry classLoaderRegistry =
                 runtime.getSystemComponent(ClassLoaderRegistry.class, ComponentNames.CLASSLOADER_REGISTRY_URI);
-//        Loader loader = BootstrapLoaderFactory.createLoader(runtime);
-        Loader loader = BootstrapLoaderFactory2.createLoader(runtime.getMonitorFactory(), new XMLFactoryImpl());
+        Loader loader = BootstrapLoaderFactory.createLoader(runtime.getMonitorFactory(), new XMLFactoryImpl());
         Assembly runtimeAssembly = runtime.getSystemComponent(Assembly.class, ComponentNames.RUNTIME_ASSEMBLY_URI);
         try {
 
