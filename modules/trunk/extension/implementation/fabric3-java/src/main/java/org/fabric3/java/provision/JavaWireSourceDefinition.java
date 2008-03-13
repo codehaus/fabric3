@@ -16,15 +16,15 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.java;
+package org.fabric3.java.provision;
 
-import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
+import org.fabric3.pojo.wire.PojoWireSourceDefinition;
 
 /**
- * Models a Java physical wire target definition.
+ * Models a Java physical wire source definition.
  *
  * @version $Revision$ $Date$
  */
-public class JavaWireTargetDefinition extends PhysicalWireTargetDefinition {
+public class JavaWireSourceDefinition extends PojoWireSourceDefinition {
 
 }

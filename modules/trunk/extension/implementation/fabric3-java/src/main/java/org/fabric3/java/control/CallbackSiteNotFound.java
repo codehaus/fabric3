@@ -1,4 +1,4 @@
-package org.fabric3.java;
+package org.fabric3.java.control;
 
 import org.fabric3.spi.generator.GenerationException;
 

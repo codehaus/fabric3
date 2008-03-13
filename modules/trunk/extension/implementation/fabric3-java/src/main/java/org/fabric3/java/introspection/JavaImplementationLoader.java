@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.java;
+package org.fabric3.java.introspection;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
@@ -25,10 +25,10 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.xml.LoaderException;
-import org.fabric3.introspection.xml.LoaderUtil;
 import org.fabric3.introspection.xml.LoaderHelper;
+import org.fabric3.introspection.xml.LoaderUtil;
 import org.fabric3.introspection.xml.TypeLoader;
-import org.fabric3.introspection.xml.InvalidValueException;
+import org.fabric3.java.scdl.JavaImplementation;
 
 /**
  * Loads <implementation.java> in a composite.

@@ -2,9 +2,9 @@ package org.fabric3.junit;
 
 import java.net.URI;
 
-import org.fabric3.java.JavaComponentDefinition;
-import org.fabric3.java.JavaWireSourceDefinition;
-import org.fabric3.java.JavaWireTargetDefinition;
+import org.fabric3.java.provision.JavaComponentDefinition;
+import org.fabric3.java.provision.JavaWireSourceDefinition;
+import org.fabric3.java.provision.JavaWireTargetDefinition;
 import org.fabric3.pojo.instancefactory.InstanceFactoryDefinition;
 import org.fabric3.pojo.instancefactory.InstanceFactoryGenerationHelper;
 import org.fabric3.pojo.scdl.PojoComponentType;

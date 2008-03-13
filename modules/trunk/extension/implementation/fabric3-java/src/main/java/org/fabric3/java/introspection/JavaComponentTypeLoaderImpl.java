@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.java;
+package org.fabric3.java.introspection;
 
 import java.net.URL;
 
@@ -27,6 +27,7 @@ import org.fabric3.introspection.java.ImplementationNotFoundException;
 import org.fabric3.introspection.java.IntrospectionHelper;
 import org.fabric3.introspection.xml.LoaderException;
 import org.fabric3.introspection.xml.MissingResourceException;
+import org.fabric3.java.scdl.JavaImplementation;
 import org.fabric3.pojo.processor.Introspector;
 import org.fabric3.pojo.processor.JavaIntrospectionHelper;
 import org.fabric3.pojo.processor.ProcessingException;

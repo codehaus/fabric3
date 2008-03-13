@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.java;
+package org.fabric3.java.introspection;
 
 import junit.framework.TestCase;
 import org.easymock.EasyMock;
@@ -25,6 +25,7 @@ import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.java.IntrospectionHelper;
 import org.fabric3.pojo.processor.Introspector;
 import org.fabric3.pojo.scdl.PojoComponentType;
+import org.fabric3.java.introspection.JavaComponentTypeLoaderImpl;
 
 /**
  * @version $Rev$ $Date$

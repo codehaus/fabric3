@@ -16,10 +16,13 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.java;
+package org.fabric3.java.runtime;
 
 import java.net.URI;
 import java.util.Map;
+
+import org.osoa.sca.CallableReference;
+import org.osoa.sca.ServiceReference;
 
 import org.fabric3.pojo.implementation.PojoComponent;
 import org.fabric3.pojo.injection.MultiplicityObjectFactory;
@@ -28,8 +31,6 @@ import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.component.InstanceFactoryProvider;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.wire.ProxyService;
-import org.osoa.sca.CallableReference;
-import org.osoa.sca.ServiceReference;
 
 /**
  * The runtime instantiation of a Java component implementation.

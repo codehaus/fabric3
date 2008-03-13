@@ -16,10 +16,17 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.java;
+package org.fabric3.java.control;
 
 import java.net.URI;
 
+import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Reference;
+
+import org.fabric3.java.provision.JavaComponentDefinition;
+import org.fabric3.java.provision.JavaWireSourceDefinition;
+import org.fabric3.java.provision.JavaWireTargetDefinition;
+import org.fabric3.java.scdl.JavaImplementation;
 import org.fabric3.pojo.instancefactory.InstanceFactoryDefinition;
 import org.fabric3.pojo.instancefactory.InstanceFactoryGenerationHelper;
 import org.fabric3.pojo.scdl.PojoComponentType;
@@ -40,9 +47,6 @@ import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 import org.fabric3.spi.policy.Policy;
-
-import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Reference;
 
 /**
  * Generates a JavaComponentDefinition from a ComponentDefinition corresponding to a Java component implementation

@@ -14,14 +14,20 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.java;
+package org.fabric3.java.introspection;
 
-import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.xml.LoaderException;
 
 /**
+ * Exception thrown if the class attribute is not present on implementation.java
+ *
  * @version $Rev$ $Date$
  */
-public interface JavaComponentTypeLoader {
-    void load(JavaImplementation implementation, IntrospectionContext introspectionContext) throws LoaderException;
+public class MissingClassException extends LoaderException {
+    public MissingClassException() {
+    }
+
+    public String getMessage() {
+        return "No class attribute provided on implementation.java element";
+    }
 }

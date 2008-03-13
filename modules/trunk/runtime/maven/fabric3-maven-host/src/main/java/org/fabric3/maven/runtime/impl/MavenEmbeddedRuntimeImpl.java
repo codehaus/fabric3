@@ -39,7 +39,7 @@ import org.fabric3.fabric.util.FileHelper;
 import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.host.contribution.ContributionService;
 import org.fabric3.host.contribution.ContributionSource;
-import org.fabric3.java.JavaComponent;
+import org.fabric3.java.runtime.JavaComponent;
 import org.fabric3.maven.contribution.ModuleContributionSource;
 import org.fabric3.maven.runtime.MavenEmbeddedRuntime;
 import org.fabric3.maven.runtime.MavenHostInfo;

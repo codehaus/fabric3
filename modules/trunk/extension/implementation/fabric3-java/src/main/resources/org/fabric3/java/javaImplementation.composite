@@ -30,25 +30,25 @@
            autowire="true">
 
 
-    <component f3:key="sca:implementation.java" name="org.fabric3.java.JavaImplementationLoader">
-        <system:implementation.system class="org.fabric3.java.JavaImplementationLoader"/>
+    <component f3:key="sca:implementation.java" name="org.fabric3.java.introspection.JavaImplementationLoader">
+        <system:implementation.system class="org.fabric3.java.introspection.JavaImplementationLoader"/>
     </component>
 
-    <component name="org.fabric3.java.JavaComponentTypeLoaderImpl">
-        <system:implementation.system class="org.fabric3.java.JavaComponentTypeLoaderImpl"/>
+    <component name="org.fabric3.java.introspection.JavaComponentTypeLoaderImpl">
+        <system:implementation.system class="org.fabric3.java.introspection.JavaComponentTypeLoaderImpl"/>
     </component>
 
-    <component name="org.fabric3.java.JavaComponentGenerator">
-        <system:implementation.system class="org.fabric3.java.JavaComponentGenerator"/>
+    <component name="org.fabric3.java.control.JavaComponentGenerator">
+        <system:implementation.system class="org.fabric3.java.control.JavaComponentGenerator"/>
     </component>
 
-    <component name="org.fabric3.java.JavaComponentBuilder">
-        <system:implementation.system class="org.fabric3.java.JavaComponentBuilder"/>
+    <component name="org.fabric3.java.runtime.JavaComponentBuilder">
+        <system:implementation.system class="org.fabric3.java.runtime.JavaComponentBuilder"/>
         <reference name="transformerRegistry" target="pullTransformerRegistry"/>
     </component>
 
-    <component name="org.fabric3.java.JavaWireAttacher">
-        <system:implementation.system class="org.fabric3.java.JavaWireAttacher"/>
+    <component name="org.fabric3.java.runtime.JavaWireAttacher">
+        <system:implementation.system class="org.fabric3.java.runtime.JavaWireAttacher"/>
         <reference name="transformerRegistry" target="pullTransformerRegistry"/>
     </component>
 

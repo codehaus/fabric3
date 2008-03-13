@@ -14,7 +14,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.java;
+package org.fabric3.java.runtime;
 
 import java.lang.reflect.Method;
 import java.net.URI;
@@ -27,6 +27,8 @@ import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 import org.osoa.sca.annotations.Service;
 
+import org.fabric3.java.provision.JavaWireSourceDefinition;
+import org.fabric3.java.provision.JavaWireTargetDefinition;
 import org.fabric3.pojo.wire.PojoWireAttacher;
 import org.fabric3.scdl.InjectableAttribute;
 import org.fabric3.scdl.InjectableAttributeType;

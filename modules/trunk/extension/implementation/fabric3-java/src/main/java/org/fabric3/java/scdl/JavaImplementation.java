@@ -16,14 +16,36 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.java;
+package org.fabric3.java.scdl;
 
-import org.fabric3.pojo.implementation.PojoComponentDefinition;
+import javax.xml.namespace.QName;
+
+import org.osoa.sca.Constants;
+
+import org.fabric3.pojo.scdl.PojoComponentType;
+import org.fabric3.scdl.Implementation;
 
 /**
- * Represents the physical component definition for a Java implementation.
+ * Represents a Java component implementation type.
  *
- * @version $Rev$ $Date$
+ * @version $$Rev$$ $$Date$$
  */
-public class JavaComponentDefinition extends PojoComponentDefinition {
+public class JavaImplementation extends Implementation<PojoComponentType> {
+    private String implementationClass;
+    public static final QName IMPLEMENTATION_JAVA = new QName(Constants.SCA_NS, "implementation.java");
+
+    public JavaImplementation() {
+    }
+
+    public QName getType() {
+        return IMPLEMENTATION_JAVA;
+    }
+
+    public String getImplementationClass() {
+        return implementationClass;
+    }
+
+    public void setImplementationClass(String implementationClass) {
+        this.implementationClass = implementationClass;
+    }
 }
