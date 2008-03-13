@@ -21,6 +21,7 @@ import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
+import java.lang.reflect.WildcardType;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -79,6 +80,10 @@ public class TypeMapping {
             GenericArrayType arrayType = (GenericArrayType) actualType;
             Class<?> componentType = getRawType(arrayType.getGenericComponentType());
             return Array.newInstance(componentType, 0).getClass();
+        } else if (actualType instanceof WildcardType) {
+            WildcardType wildcardType = (WildcardType) actualType;
+            Type[] bounds = wildcardType.getUpperBounds();
+            return getRawType(bounds[0]);
         } else {
             throw new AssertionError();
         }
