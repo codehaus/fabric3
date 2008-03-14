@@ -26,8 +26,12 @@ import org.fabric3.sandbox.introspection.impl.IntrospectionFactoryImpl;
 import org.fabric3.introspection.xml.Loader;
 import org.fabric3.introspection.xml.LoaderException;
 import org.fabric3.introspection.IntrospectionContext;
+import org.fabric3.introspection.IntrospectionException;
+import org.fabric3.introspection.java.ImplementationProcessor;
 import org.fabric3.scdl.Composite;
 import org.fabric3.loader.common.IntrospectionContextImpl;
+import org.fabric3.java.scdl.JavaImplementation;
+import org.fabric3.pojo.scdl.PojoComponentType;
 
 /**
  * @version $Rev$ $Date$
@@ -41,6 +45,18 @@ public class PricingTestCase extends TestCase {
         Loader loader = factory.getLoader();
         Composite composite = loader.load(pricingComposite, Composite.class, context);
         assertEquals(new QName("PricingSystem"), composite.getName());
+    }
+
+    public void testIntrospectJava() throws IntrospectionException {
+
+        IntrospectionContext context = new IntrospectionContextImpl(getClass().getClassLoader(), null, null);
+        ImplementationProcessor<JavaImplementation> processor = factory.getImplementationProcessor(JavaImplementation.class);
+
+        JavaImplementation impl = new JavaImplementation();
+        impl.setImplementationClass("com.example.pricing.PricingServiceImpl");
+        processor.introspect(impl, context);
+        PojoComponentType componentType = impl.getComponentType();
+        assertTrue(componentType.getServices().containsKey("PricingService"));
     }
 
     protected void setUp() throws Exception {
