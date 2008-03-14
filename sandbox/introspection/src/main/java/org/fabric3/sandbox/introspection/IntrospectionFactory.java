@@ -17,6 +17,9 @@
 package org.fabric3.sandbox.introspection;
 
 import org.fabric3.introspection.xml.Loader;
+import org.fabric3.introspection.java.ImplementationProcessor;
+import org.fabric3.scdl.AbstractComponentType;
+import org.fabric3.scdl.Implementation;
 
 /**
  * @version $Rev$ $Date$
@@ -29,4 +32,12 @@ public interface IntrospectionFactory {
      * @return a Loader that can be used to introspect XML definitions
      */
     Loader getLoader();
+
+    /**
+     * Returns an ImplementationProcessor that can used used to introspect an implementation.
+     *
+     * @param implementationType the type of implementation that will be introspected
+     * @return an implementation processor for that type of implementation
+     */
+    <I extends Implementation<? extends AbstractComponentType<?,?,?,?>>> ImplementationProcessor<I> getImplementationProcessor(Class<I> implementationType);
 }

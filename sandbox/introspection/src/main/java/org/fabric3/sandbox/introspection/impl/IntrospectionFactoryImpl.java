@@ -18,30 +18,46 @@ package org.fabric3.sandbox.introspection.impl;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.lang.annotation.Annotation;
 import javax.xml.namespace.QName;
 
-import org.fabric3.fabric.implementation.IntrospectionRegistryImpl;
-import org.fabric3.fabric.implementation.processor.ConstructorProcessor;
-import org.fabric3.fabric.implementation.processor.DestroyProcessor;
-import org.fabric3.fabric.implementation.processor.EagerInitProcessor;
-import org.fabric3.fabric.implementation.processor.HeuristicPojoProcessor;
-import org.fabric3.fabric.implementation.processor.ImplementationProcessorServiceImpl;
-import org.fabric3.fabric.implementation.processor.InitProcessor;
-import org.fabric3.fabric.implementation.processor.PostConstructProcessor;
-import org.fabric3.fabric.implementation.processor.PreDestroyProcessor;
-import org.fabric3.fabric.implementation.processor.PropertyProcessor;
-import org.fabric3.fabric.implementation.processor.ReferenceProcessor;
-import org.fabric3.fabric.implementation.processor.ServiceProcessor;
+import org.osoa.sca.annotations.Callback;
+import org.osoa.sca.annotations.ConversationID;
+import org.osoa.sca.annotations.Destroy;
+import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Init;
+import org.osoa.sca.annotations.Property;
+import org.osoa.sca.annotations.Reference;
+import org.osoa.sca.annotations.Remotable;
+import org.osoa.sca.annotations.Service;
+import org.osoa.sca.annotations.Scope;
+
 import org.fabric3.introspection.impl.DefaultIntrospectionHelper;
+import org.fabric3.introspection.impl.DefaultClassWalker;
+import org.fabric3.introspection.impl.annotation.CallbackProcessor;
+import org.fabric3.introspection.impl.annotation.ServiceProcessor;
+import org.fabric3.introspection.impl.annotation.PropertyProcessor;
+import org.fabric3.introspection.impl.annotation.RemotableProcessor;
+import org.fabric3.introspection.impl.annotation.ReferenceProcessor;
+import org.fabric3.introspection.impl.annotation.EagerInitProcessor;
+import org.fabric3.introspection.impl.annotation.DestroyProcessor;
+import org.fabric3.introspection.impl.annotation.ScopeProcessor;
+import org.fabric3.introspection.impl.annotation.InitProcessor;
+import org.fabric3.introspection.impl.annotation.ConversationIDProcessor;
 import org.fabric3.introspection.impl.contract.DefaultContractProcessor;
-import org.fabric3.introspection.java.ContractProcessor;
+import org.fabric3.introspection.java.ImplementationProcessor;
 import org.fabric3.introspection.java.IntrospectionHelper;
+import org.fabric3.introspection.java.ContractProcessor;
+import org.fabric3.introspection.java.ClassWalker;
+import org.fabric3.introspection.java.AnnotationProcessor;
 import org.fabric3.introspection.xml.Loader;
 import org.fabric3.introspection.xml.LoaderHelper;
 import org.fabric3.introspection.xml.TypeLoader;
+import org.fabric3.java.introspection.JavaImplementationLoader;
 import org.fabric3.java.introspection.JavaImplementationProcessor;
 import org.fabric3.java.introspection.JavaImplementationProcessorImpl;
-import org.fabric3.java.introspection.JavaImplementationLoader;
+import org.fabric3.java.introspection.JavaHeuristic;
+import org.fabric3.java.introspection.JavaServiceHeuristic;
 import org.fabric3.java.scdl.JavaImplementation;
 import org.fabric3.loader.common.ComponentReferenceLoader;
 import org.fabric3.loader.common.ComponentServiceLoader;
@@ -56,9 +72,9 @@ import org.fabric3.loader.impl.DefaultLoaderHelper;
 import org.fabric3.loader.impl.LoaderRegistryImpl;
 import org.fabric3.monitor.MonitorFactory;
 import org.fabric3.monitor.impl.NullMonitorFactory;
-import org.fabric3.pojo.processor.ImplementationProcessorService;
-import org.fabric3.pojo.processor.Introspector;
 import org.fabric3.sandbox.introspection.IntrospectionFactory;
+import org.fabric3.scdl.AbstractComponentType;
+import org.fabric3.scdl.Implementation;
 import org.fabric3.services.xmlfactory.XMLFactory;
 import org.fabric3.services.xmlfactory.impl.DefaultXMLFactoryImpl;
 
@@ -66,7 +82,8 @@ import org.fabric3.services.xmlfactory.impl.DefaultXMLFactoryImpl;
  * @version $Rev$ $Date$
  */
 public class IntrospectionFactoryImpl implements IntrospectionFactory {
-    private Loader loader;
+    private final Loader loader;
+    private final JavaImplementationProcessor processor;
 
     /**
      * Constructor specifying the monitor and xml factories to use.
@@ -75,6 +92,7 @@ public class IntrospectionFactoryImpl implements IntrospectionFactory {
      * @param xmlFactory the factory for XML parsers
      */
     public IntrospectionFactoryImpl(MonitorFactory monitorFactory, XMLFactory xmlFactory) {
+        processor = createProcessor();
         loader = createLoader(monitorFactory, xmlFactory);
     }
 
@@ -89,14 +107,40 @@ public class IntrospectionFactoryImpl implements IntrospectionFactory {
         return loader;
     }
 
-    public static Loader createLoader(MonitorFactory monitorFactory, XMLFactory xmlFactory) {
+    public <I extends Implementation<? extends AbstractComponentType<?, ?, ?, ?>>> ImplementationProcessor<I> getImplementationProcessor(Class<I> implementationType) {
+        if (!JavaImplementation.class.equals(implementationType)) {
+            throw new UnsupportedOperationException();
+        }
+        return (ImplementationProcessor<I>) processor;
+    }
+
+    private JavaImplementationProcessor createProcessor() {
+        IntrospectionHelper helper = new DefaultIntrospectionHelper();
+        ContractProcessor contractProcessor = new DefaultContractProcessor(helper);
+
+        Map<Class<? extends Annotation>, AnnotationProcessor<? extends Annotation, JavaImplementation>> processors =
+                new HashMap<Class<? extends Annotation>, AnnotationProcessor<? extends Annotation, JavaImplementation>>();
+        processors.put(Callback.class, new CallbackProcessor<JavaImplementation>(contractProcessor, helper));
+        processors.put(ConversationID.class, new ConversationIDProcessor<JavaImplementation>());
+        processors.put(Destroy.class, new DestroyProcessor<JavaImplementation>());
+        processors.put(EagerInit.class, new EagerInitProcessor<JavaImplementation>());
+        processors.put(Init.class, new InitProcessor<JavaImplementation>());
+        processors.put(Property.class, new PropertyProcessor<JavaImplementation>(helper));
+        processors.put(Reference.class, new ReferenceProcessor<JavaImplementation>(contractProcessor, helper));
+        processors.put(Remotable.class, new RemotableProcessor<JavaImplementation>(contractProcessor));
+        processors.put(Scope.class, new ScopeProcessor<JavaImplementation>());
+        processors.put(Service.class, new ServiceProcessor<JavaImplementation>(contractProcessor));
+        ClassWalker<JavaImplementation> classWalker = new DefaultClassWalker<JavaImplementation>(processors);
+        JavaServiceHeuristic serviceHeuristic = new JavaServiceHeuristic(helper, contractProcessor);
+        JavaHeuristic heuristic = new JavaHeuristic(helper, contractProcessor, serviceHeuristic);
+        return new JavaImplementationProcessorImpl(classWalker, heuristic, helper);
+    }
+
+    private Loader createLoader(MonitorFactory monitorFactory, XMLFactory xmlFactory) {
 
         LoaderRegistryImpl loader = new LoaderRegistryImpl(monitorFactory.getMonitor(LoaderRegistryImpl.Monitor.class), xmlFactory);
 
-        IntrospectionHelper helper = new DefaultIntrospectionHelper();
         LoaderHelper loaderHelper = new DefaultLoaderHelper();
-
-        Introspector introspector = createIntrospector(monitorFactory, helper);
 
         PropertyLoader propertyLoader = new PropertyLoader(loaderHelper);
         PropertyValueLoader propertyValueLoader = new PropertyValueLoader(loaderHelper);
@@ -127,31 +171,8 @@ public class IntrospectionFactoryImpl implements IntrospectionFactory {
         Map<QName, TypeLoader<?>> mappedLoaders = new HashMap<QName, TypeLoader<?>>();
         loader.setLoaders(mappedLoaders);
 
-        JavaImplementationProcessor javaImplementationProcessor = new JavaImplementationProcessorImpl(introspector, helper);
-        JavaImplementationLoader javaLoader = new JavaImplementationLoader(javaImplementationProcessor, loaderHelper);
+        JavaImplementationLoader javaLoader = new JavaImplementationLoader(processor, loaderHelper);
         mappedLoaders.put(JavaImplementation.IMPLEMENTATION_JAVA, javaLoader);
         return loader;
-    }
-
-    private static Introspector createIntrospector(MonitorFactory monitorFactory, IntrospectionHelper helper) {
-
-        ContractProcessor contractProcessor = new DefaultContractProcessor(helper);
-        ImplementationProcessorService service = new ImplementationProcessorServiceImpl(contractProcessor, helper);
-
-        IntrospectionRegistryImpl.Monitor monitor = monitorFactory.getMonitor(IntrospectionRegistryImpl.Monitor.class);
-        IntrospectionRegistryImpl introspectionRegistry = new IntrospectionRegistryImpl(monitor, helper);
-        introspectionRegistry.registerProcessor(new ConstructorProcessor(service));
-        introspectionRegistry.registerProcessor(new DestroyProcessor());
-        introspectionRegistry.registerProcessor(new InitProcessor());
-        introspectionRegistry.registerProcessor(new PreDestroyProcessor());
-        introspectionRegistry.registerProcessor(new PostConstructProcessor());
-        introspectionRegistry.registerProcessor(new EagerInitProcessor());
-        introspectionRegistry.registerProcessor(new PropertyProcessor(helper));
-        introspectionRegistry.registerProcessor(new ReferenceProcessor(helper, contractProcessor));
-        introspectionRegistry.registerProcessor(new ServiceProcessor(service));
-        introspectionRegistry.registerProcessor(new HeuristicPojoProcessor(service));
-
-        return introspectionRegistry;
-
     }
 }
