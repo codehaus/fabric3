@@ -58,7 +58,7 @@ public class LaunchedComponentTypeLoaderImpl implements LaunchedComponentTypeLoa
             throw new MissingResourceException(className, e);
         }
         PojoComponentType componentType = loadByIntrospection(implementation, introspectionContext, implClass);
-        componentType.setImplementationScope(Scope.COMPOSITE);
+        componentType.setScope("COMPOSITE");
         implementation.setComponentType(componentType);
     }
 

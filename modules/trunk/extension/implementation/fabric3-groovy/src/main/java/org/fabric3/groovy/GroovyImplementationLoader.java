@@ -105,8 +105,8 @@ public class GroovyImplementationLoader implements TypeLoader<GroovyImplementati
         }
         PojoComponentType componentType = new PojoComponentType(implClass.getName());
         introspector.introspect(implClass, componentType, context);
-        if (componentType.getImplementationScope() == null) {
-            componentType.setImplementationScope(Scope.STATELESS);
+        if (componentType.getScope() == null) {
+            componentType.setScope("STATELESS");
         }
         GroovyImplementation impl = new GroovyImplementation(scriptName, className, componentType);
 

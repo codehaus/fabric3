@@ -34,8 +34,23 @@
         <system:implementation.system class="org.fabric3.java.introspection.JavaImplementationLoader"/>
     </component>
 
-    <component name="org.fabric3.java.introspection.JavaComponentTypeLoaderImpl">
-        <system:implementation.system class="org.fabric3.java.introspection.JavaComponentTypeLoaderImpl"/>
+    <component name="org.fabric3.java.introspection.JavaImplementationProcessorImpl">
+        <system:implementation.system class="org.fabric3.java.introspection.JavaImplementationProcessorImpl"/>
+        <reference name="classWalker" target="org.fabric3.java.ClassWalker"/>
+        <reference name="heuristic" target="org.fabric3.java.introspection.JavaHeuristic"/>
+    </component>
+
+    <component name="org.fabric3.java.ClassWalker">
+        <system:implementation.system class="org.fabric3.introspection.impl.DefaultClassWalker"/>
+    </component>
+
+    <component name="org.fabric3.java.introspection.JavaHeuristic">
+        <system:implementation.system class="org.fabric3.java.introspection.JavaHeuristic"/>
+        <reference name="service" target="org.fabric3.java.introspection.JavaServiceHeuristic"/>
+    </component>
+
+    <component name="org.fabric3.java.introspection.JavaServiceHeuristic">
+        <system:implementation.system class="org.fabric3.java.introspection.JavaServiceHeuristic"/>
     </component>
 
     <component name="org.fabric3.java.control.JavaComponentGenerator">

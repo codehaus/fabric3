@@ -70,7 +70,7 @@ public class GroovyComponentGenerator implements ComponentGenerator<LogicalCompo
         GroovyComponentDefinition physical = new GroovyComponentDefinition();
         physical.setComponentId(componentId);
         physical.setGroupId(component.getParent().getUri());
-        physical.setScope(type.getImplementationScope());
+        physical.setScope(type.getScope());
         physical.setInitLevel(helper.getInitLevel(definition, type));
         physical.setInstanceFactoryProviderDefinition(providerDefinition);
         helper.processPropertyValues(component, physical);

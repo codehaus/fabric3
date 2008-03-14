@@ -44,7 +44,6 @@ public class MockComponentGenerator implements ComponentGenerator<LogicalCompone
      * Initializes the generator registry.
      *
      * @param registry             Generator registry.
-     * @param classLoaderGenerator the classloader generator
      */
     public MockComponentGenerator(@Reference GeneratorRegistry registry) {
         this.registry = registry;
@@ -71,7 +70,7 @@ public class MockComponentGenerator implements ComponentGenerator<LogicalCompone
         componentDefinition.setInterfaces(implementationMock.getMockedInterfaces());
 
         componentDefinition.setComponentId(component.getUri());
-        componentDefinition.setScope(componentType.getImplementationScope());
+        componentDefinition.setScope(componentType.getScope());
 
         URI classLoaderId = component.getParent().getUri();
         componentDefinition.setClassLoaderId(classLoaderId);

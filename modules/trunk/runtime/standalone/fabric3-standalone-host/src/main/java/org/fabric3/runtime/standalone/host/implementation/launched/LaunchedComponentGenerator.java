@@ -80,7 +80,7 @@ public class LaunchedComponentGenerator implements ComponentGenerator<LogicalCom
         JavaComponentDefinition physical = new JavaComponentDefinition();
         physical.setComponentId(componentId);
         physical.setGroupId(component.getParent().getUri());
-        physical.setScope(type.getImplementationScope());
+        physical.setScope(type.getScope());
         physical.setInitLevel(helper.getInitLevel(definition, type));
         physical.setInstanceFactoryProviderDefinition(providerDefinition);
         helper.processPropertyValues(component, physical);

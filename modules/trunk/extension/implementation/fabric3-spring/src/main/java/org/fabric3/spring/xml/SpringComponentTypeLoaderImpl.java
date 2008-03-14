@@ -42,8 +42,8 @@ public class SpringComponentTypeLoaderImpl implements SpringComponentTypeLoader 
     public void load(SpringImplementation implementation, IntrospectionContext introspectionContext) throws LoaderException {
         SpringComponentType componentType = implementation.getComponentType();
 //        componentType = loadByIntrospection(implementation, introspectionContext);
-        if (componentType.getImplementationScope() == null) {
-            componentType.setImplementationScope(Scope.STATELESS);
+        if (componentType.getScope() == null) {
+            componentType.setScope("STATELESS");
         }
         implementation.setComponentType(componentType);
     }

@@ -22,6 +22,8 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Constructor;
 
+import org.osoa.sca.annotations.Reference;
+
 import org.fabric3.scdl.Implementation;
 import org.fabric3.scdl.InjectingComponentType;
 import org.fabric3.introspection.IntrospectionException;
@@ -36,7 +38,7 @@ public class DefaultClassWalker<I extends Implementation<? extends InjectingComp
 
     private final Map<Class<? extends Annotation>, AnnotationProcessor<? extends Annotation, I>> processors;
 
-    public DefaultClassWalker(Map<Class<? extends Annotation>, AnnotationProcessor<? extends Annotation, I>> processors) {
+    public DefaultClassWalker(@Reference Map<Class<? extends Annotation>, AnnotationProcessor<? extends Annotation, I>> processors) {
         this.processors = processors;
     }
 

@@ -25,7 +25,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.osoa.sca.annotations.Constructor;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.scdl.Signature;
@@ -35,7 +34,6 @@ import org.fabric3.pojo.processor.ProcessingException;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.DataType;
 import org.fabric3.scdl.Operation;
-import org.fabric3.scdl.Scope;
 import org.fabric3.scdl.ServiceContract;
 import org.fabric3.scdl.ServiceDefinition;
 import org.fabric3.introspection.IntrospectionContext;
@@ -62,8 +60,8 @@ public class JUnitComponentTypeLoaderImpl implements JUnitComponentTypeLoader {
             throw new MissingResourceException(className, e);
         }
         PojoComponentType componentType = loadByIntrospection(context, implClass);
-        if (componentType.getImplementationScope() == null) {
-            componentType.setImplementationScope(Scope.STATELESS);
+        if (componentType.getScope() == null) {
+            componentType.setScope("STATELESS");
         }
         implementation.setComponentType(componentType);
     }

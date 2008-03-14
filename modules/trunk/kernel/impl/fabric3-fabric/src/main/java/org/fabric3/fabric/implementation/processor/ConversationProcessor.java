@@ -54,7 +54,7 @@ public class ConversationProcessor extends ImplementationProcessorExtension {
         Scope scope = clazz.getAnnotation(Scope.class);
         if (scope == null) {
             // implicitly assume conversation
-            type.setImplementationScope(org.fabric3.scdl.Scope.CONVERSATION);
+            type.setScope("CONVERSATION");
         } else if (scope != null && !"CONVERSATION".equals(scope.value().toUpperCase())) {
             throw new InvalidConversationalImplementation(
                     "Service is marked with @ConversationAttributes but the scope is not @Scope(\"CONVERSATION\")",

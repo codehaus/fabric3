@@ -39,8 +39,8 @@ import org.fabric3.introspection.java.IntrospectionHelper;
 import org.fabric3.introspection.xml.Loader;
 import org.fabric3.introspection.xml.LoaderHelper;
 import org.fabric3.introspection.xml.TypeLoader;
-import org.fabric3.java.introspection.JavaComponentTypeLoader;
-import org.fabric3.java.introspection.JavaComponentTypeLoaderImpl;
+import org.fabric3.java.introspection.JavaImplementationProcessor;
+import org.fabric3.java.introspection.JavaImplementationProcessorImpl;
 import org.fabric3.java.introspection.JavaImplementationLoader;
 import org.fabric3.java.scdl.JavaImplementation;
 import org.fabric3.loader.common.ComponentReferenceLoader;
@@ -127,8 +127,8 @@ public class IntrospectionFactoryImpl implements IntrospectionFactory {
         Map<QName, TypeLoader<?>> mappedLoaders = new HashMap<QName, TypeLoader<?>>();
         loader.setLoaders(mappedLoaders);
 
-        JavaComponentTypeLoader javaComponentTypeLoader = new JavaComponentTypeLoaderImpl(introspector, helper);
-        JavaImplementationLoader javaLoader = new JavaImplementationLoader(javaComponentTypeLoader, loaderHelper);
+        JavaImplementationProcessor javaImplementationProcessor = new JavaImplementationProcessorImpl(introspector, helper);
+        JavaImplementationLoader javaLoader = new JavaImplementationLoader(javaImplementationProcessor, loaderHelper);
         mappedLoaders.put(JavaImplementation.IMPLEMENTATION_JAVA, javaLoader);
         return loader;
     }

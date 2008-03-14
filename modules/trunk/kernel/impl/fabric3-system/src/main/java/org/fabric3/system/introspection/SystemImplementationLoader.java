@@ -28,12 +28,14 @@ import org.osoa.sca.annotations.Reference;
 import org.osoa.sca.annotations.Constructor;
 
 import org.fabric3.introspection.IntrospectionContext;
+import org.fabric3.introspection.IntrospectionException;
 import org.fabric3.introspection.xml.InvalidValueException;
 import org.fabric3.introspection.xml.LoaderException;
 import org.fabric3.introspection.xml.LoaderRegistry;
 import org.fabric3.introspection.xml.LoaderUtil;
 import org.fabric3.introspection.xml.TypeLoader;
 import org.fabric3.system.scdl.SystemImplementation;
+import org.fabric3.pojo.processor.ProcessingException;
 
 /**
  * Loads information for a system implementation
@@ -44,29 +46,29 @@ import org.fabric3.system.scdl.SystemImplementation;
 public class SystemImplementationLoader implements TypeLoader<SystemImplementation> {
 
     private final LoaderRegistry registry;
-    private final SystemComponentTypeLoader componentTypeLoader;
+    private final SystemImplementationProcessor implementationProcessor;
 
     /**
      * Constructor used during bootstrap.
      *
-     * @param componentTypeLoader the component type loader to use
+     * @param implementationProcessor the component type loader to use
      */
-    public SystemImplementationLoader(SystemComponentTypeLoader componentTypeLoader) {
+    public SystemImplementationLoader(SystemImplementationProcessor implementationProcessor) {
         this.registry = null;
-        this.componentTypeLoader = componentTypeLoader;
+        this.implementationProcessor = implementationProcessor;
     }
 
     /**
      * Constructor to be used when loaded from SCDL.
      *
      * @param registry the loader registry to register with
-     * @param componentTypeLoader the component type loader to use
+     * @param implementationProcessor the component type loader to use
      */
     @Constructor
     public SystemImplementationLoader(@Reference LoaderRegistry registry,
-                                      @Reference SystemComponentTypeLoader componentTypeLoader) {
+                                      @Reference SystemImplementationProcessor implementationProcessor) {
         this.registry = registry;
-        this.componentTypeLoader = componentTypeLoader;
+        this.implementationProcessor = implementationProcessor;
     }
 
     @Init
@@ -91,7 +93,11 @@ public class SystemImplementationLoader implements TypeLoader<SystemImplementati
 
         SystemImplementation implementation = new SystemImplementation();
         implementation.setImplementationClass(implClass);
-        componentTypeLoader.load(implementation, introspectionContext);
+        try {
+            implementationProcessor.introspect(implementation, introspectionContext);
+        } catch (IntrospectionException e) {
+            throw new ProcessingException(e);
+        }
         return implementation;
     }
 

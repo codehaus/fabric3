@@ -17,8 +17,6 @@
 package org.fabric3.system.introspection;
 
 import java.lang.annotation.Annotation;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import javax.xml.namespace.QName;
@@ -129,9 +127,8 @@ public class BootstrapLoaderFactory {
         SystemConstructorHeuristic constructorHeuristic = new SystemConstructorHeuristic();
         SystemUnannotatedHeuristic unannotatedHeuristic = new SystemUnannotatedHeuristic(helper, contractProcessor);
         SystemHeuristic systemHeuristic = new SystemHeuristic(serviceHeuristic, constructorHeuristic, unannotatedHeuristic);
-        Collection<SystemHeuristic> heuristics = Collections.singletonList(systemHeuristic);
 
-        SystemComponentTypeLoader typeLoader = new SystemComponentTypeLoaderImpl2(classWalker, heuristics, helper);
-        return new SystemImplementationLoader(typeLoader);
+        SystemImplementationProcessor processor = new SystemImplementationProcessorImpl(classWalker, systemHeuristic, helper);
+        return new SystemImplementationLoader(processor);
     }
 }

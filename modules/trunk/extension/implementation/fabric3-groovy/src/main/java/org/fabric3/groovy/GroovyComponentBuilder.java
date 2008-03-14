@@ -61,7 +61,8 @@ public class GroovyComponentBuilder<T> extends PojoComponentBuilder<T, GroovyCom
         ClassLoader classLoader = classLoaderRegistry.getClassLoader(definition.getClassLoaderId());
 
         // get the scope container for this component
-        Scope<?> scope = definition.getScope();
+        String scopeName = definition.getScope();
+        Scope<?> scope = scopeRegistry.getScope(scopeName);
         ScopeContainer<?> scopeContainer = scopeRegistry.getScopeContainer(scope);
 
         // create the InstanceFactoryProvider based on the definition in the model

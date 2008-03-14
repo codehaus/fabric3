@@ -72,7 +72,7 @@ public class JUnitComponentGenerator implements ComponentGenerator<LogicalCompon
         URI classLoaderId = component.getParent().getUri();
         physical.setClassLoaderId(classLoaderId);
 
-        physical.setScope(type.getImplementationScope());
+        physical.setScope(type.getScope());
         physical.setInitLevel(level);
         physical.setInstanceFactoryProviderDefinition(providerDefinition);
         helper.processPropertyValues(component, physical);

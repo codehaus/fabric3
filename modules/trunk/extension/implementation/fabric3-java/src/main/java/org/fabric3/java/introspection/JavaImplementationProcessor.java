@@ -14,15 +14,15 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.system.introspection;
+package org.fabric3.java.introspection;
 
-import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.introspection.xml.LoaderException;
-import org.fabric3.system.scdl.SystemImplementation;
+import org.fabric3.introspection.java.ImplementationProcessor;
+import org.fabric3.java.scdl.JavaImplementation;
 
 /**
+ * Strongly typed ImplementationProcessor for Java implementations.
+ *
  * @version $Rev$ $Date$
  */
-public interface SystemComponentTypeLoader {
-    void load(SystemImplementation implementation, IntrospectionContext introspectionContext) throws LoaderException;
+public interface JavaImplementationProcessor extends ImplementationProcessor<JavaImplementation> {
 }

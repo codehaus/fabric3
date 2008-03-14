@@ -83,7 +83,7 @@ public class FeatureLoader implements TypeLoader<ComponentDefinition> {
 
         final Class<FeatureComponent> implClass = FeatureComponent.class;
         PojoComponentType componentType = getComponentType(implClass, context);
-        componentType.setImplementationScope(Scope.COMPOSITE);
+        componentType.setScope("COMPOSITE");
 
         final SystemImplementation featureImplementation = new SystemImplementation();
         featureImplementation.setImplementationClass(implClass.getName());

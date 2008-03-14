@@ -41,7 +41,13 @@
             <artifactId>fabric3-pojo</artifactId>
             <version>${project.version}</version>
         </dependency>
-        
+
+        <dependency>
+            <groupId>org.codehaus.fabric3</groupId>
+            <artifactId>fabric3-loader</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
         <dependency>
             <groupId>stax</groupId>
             <artifactId>stax-api</artifactId>

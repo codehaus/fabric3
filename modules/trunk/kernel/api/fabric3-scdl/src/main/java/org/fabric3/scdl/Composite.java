@@ -53,7 +53,7 @@ public class Composite extends AbstractComponentType<CompositeService, Composite
      */
     public Composite(QName name) {
         this.name = name;
-        setImplementationScope(Scope.COMPOSITE);
+        setScope("COMPOSITE");
     }
 
     /**

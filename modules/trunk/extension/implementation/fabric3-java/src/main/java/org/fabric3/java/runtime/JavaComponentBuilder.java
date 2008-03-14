@@ -79,7 +79,8 @@ public class JavaComponentBuilder<T> extends PojoComponentBuilder<T, JavaCompone
         ClassLoader classLoader = classLoaderRegistry.getClassLoader(definition.getClassLoaderId());
 
         // get the scope container for this component
-        Scope<?> scope = definition.getScope();
+        String scopeName = definition.getScope();
+        Scope<?> scope = scopeRegistry.getScope(scopeName);
         ScopeContainer<?> scopeContainer = scopeRegistry.getScopeContainer(scope);
 
         // create the InstanceFactoryProvider based on the definition in the model

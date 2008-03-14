@@ -44,7 +44,6 @@ public abstract class AbstractComponentType<S extends ServiceDefinition,
         RD extends ResourceDefinition>
         extends ModelObject {
     private String scope;
-    private Scope<?> implementationScope;
     private int initLevel;
     private long maxAge;
     private long maxIdleTime;
@@ -72,26 +71,6 @@ public abstract class AbstractComponentType<S extends ServiceDefinition,
      */
     public void setScope(String scope) {
         this.scope = scope;
-    }
-
-    /**
-     * Returns the component implementation scope.
-     *
-     * @return the component implementation scope
-     */
-    @Deprecated
-    public Scope<?> getImplementationScope() {
-        return implementationScope;
-    }
-
-    /**
-     * Sets the component implementation scope.
-     *
-     * @param implementationScope the component implementation scope
-     */
-    @Deprecated
-    public void setImplementationScope(Scope<?> implementationScope) {
-        this.implementationScope = implementationScope;
     }
 
     /**

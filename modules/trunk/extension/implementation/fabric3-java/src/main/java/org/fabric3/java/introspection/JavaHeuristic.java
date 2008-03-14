@@ -14,69 +14,98 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.system.introspection;
+package org.fabric3.java.introspection;
 
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Type;
-import java.lang.reflect.Method;
 import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.lang.reflect.Type;
 import java.util.Set;
 import java.util.Map;
 
 import org.osoa.sca.annotations.Reference;
 
+import org.fabric3.introspection.IntrospectionContext;
+import org.fabric3.introspection.IntrospectionException;
 import org.fabric3.introspection.java.ContractProcessor;
 import org.fabric3.introspection.java.HeuristicProcessor;
 import org.fabric3.introspection.java.IntrospectionHelper;
-import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.introspection.IntrospectionException;
 import org.fabric3.introspection.java.InvalidServiceContractException;
 import org.fabric3.introspection.java.TypeMapping;
 import org.fabric3.introspection.java.UnsupportedTypeException;
+import org.fabric3.java.scdl.JavaImplementation;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.ConstructorInjectionSite;
+import org.fabric3.scdl.FieldInjectionSite;
 import org.fabric3.scdl.InjectionSite;
+import org.fabric3.scdl.MethodInjectionSite;
 import org.fabric3.scdl.Multiplicity;
 import org.fabric3.scdl.Property;
 import org.fabric3.scdl.ReferenceDefinition;
 import org.fabric3.scdl.ServiceContract;
-import org.fabric3.scdl.MethodInjectionSite;
-import org.fabric3.scdl.FieldInjectionSite;
+import org.fabric3.scdl.Signature;
 import org.fabric3.scdl.InjectableAttribute;
-import org.fabric3.system.scdl.SystemImplementation;
 
 /**
- * Heuristic processor that locates unannotated Property and Reference dependencies.
- *
  * @version $Rev$ $Date$
  */
-public class SystemUnannotatedHeuristic implements HeuristicProcessor<SystemImplementation> {
+public class JavaHeuristic implements HeuristicProcessor<JavaImplementation> {
 
     private final IntrospectionHelper helper;
     private final ContractProcessor contractProcessor;
 
-    public SystemUnannotatedHeuristic(@Reference IntrospectionHelper helper,
-                                      @Reference ContractProcessor contractProcessor) {
+    private final HeuristicProcessor<JavaImplementation> serviceHeuristic;
+
+    public JavaHeuristic(@Reference IntrospectionHelper helper,
+                         @Reference ContractProcessor contractProcessor,
+                         @Reference(name = "service")HeuristicProcessor<JavaImplementation> serviceHeuristic) {
         this.helper = helper;
         this.contractProcessor = contractProcessor;
+        this.serviceHeuristic = serviceHeuristic;
     }
 
-    public void applyHeuristics(SystemImplementation implementation, Class<?> implClass, IntrospectionContext context) throws IntrospectionException {
+    public void applyHeuristics(JavaImplementation implementation, Class<?> implClass, IntrospectionContext context) throws IntrospectionException {
+
         PojoComponentType componentType = implementation.getComponentType();
 
-        // if any properties, references or resources have been defined already assume that was what the user intended and return
-        if (!(componentType.getProperties().isEmpty() && componentType.getReferences().isEmpty() && componentType.getResources().isEmpty())) {
-            return;
+        // apply service heuristic
+        serviceHeuristic.applyHeuristics(implementation, implClass, context);
+
+        if (componentType.getConstructor() == null) {
+            componentType.setConstructor(findConstructor(implClass));
         }
 
-        evaluateConstructor(implementation, implClass, context);
-        evaluateSetters(implementation, implClass, context);
-        evaluateFields(implementation, implClass, context);
+        if (componentType.getProperties().isEmpty() && componentType.getReferences().isEmpty() && componentType.getResources().isEmpty()) {
+            evaluateConstructor(implementation, implClass, context);
+            evaluateSetters(implementation, implClass, context);
+            evaluateFields(implementation, implClass, context);
+        }
     }
 
-    void evaluateConstructor(SystemImplementation implementation, Class<?> implClass, IntrospectionContext context) throws IntrospectionException {
+    Signature findConstructor(Class<?> implClass) throws IntrospectionException {
+        Constructor<?>[] constructors = implClass.getDeclaredConstructors();
+        Constructor<?> selected = null;
+        if (constructors.length == 1) {
+            selected = constructors[0];
+        } else {
+            for (Constructor<?> constructor : constructors) {
+                if (constructor.isAnnotationPresent(org.osoa.sca.annotations.Constructor.class)) {
+                    if (selected != null) {
+                        throw new AmbiguousConstructorException(implClass.getName());
+                    }
+                    selected = constructor;
+                }
+            }
+            if (selected == null) {
+                throw new NoConstructorException(implClass.getName());
+            }
+        }
+        return new Signature(selected);
+    }
+
+    void evaluateConstructor(JavaImplementation implementation, Class<?> implClass, IntrospectionContext context) throws IntrospectionException {
         PojoComponentType componentType = implementation.getComponentType();
-        Map<InjectionSite,InjectableAttribute> sites = componentType.getInjectionSites();
+        Map<InjectionSite, InjectableAttribute> sites = componentType.getInjectionSites();
         Constructor<?> constructor;
         try {
             constructor = componentType.getConstructor().getConstructor(implClass);
@@ -102,9 +131,9 @@ public class SystemUnannotatedHeuristic implements HeuristicProcessor<SystemImpl
         }
     }
 
-    void evaluateSetters(SystemImplementation implementation, Class<?> implClass, IntrospectionContext context) throws IntrospectionException {
+    void evaluateSetters(JavaImplementation implementation, Class<?> implClass, IntrospectionContext context) throws IntrospectionException {
         PojoComponentType componentType = implementation.getComponentType();
-        Map<InjectionSite,InjectableAttribute> sites = componentType.getInjectionSites();
+        Map<InjectionSite, InjectableAttribute> sites = componentType.getInjectionSites();
         TypeMapping typeMapping = context.getTypeMapping();
         Set<Method> setters = helper.getInjectionMethods(implClass, componentType.getServices().values());
         for (Method setter : setters) {
@@ -121,7 +150,7 @@ public class SystemUnannotatedHeuristic implements HeuristicProcessor<SystemImpl
         }
     }
 
-    void evaluateFields(SystemImplementation implementation, Class<?> implClass, IntrospectionContext context) throws IntrospectionException {
+    void evaluateFields(JavaImplementation implementation, Class<?> implClass, IntrospectionContext context) throws IntrospectionException {
         PojoComponentType componentType = implementation.getComponentType();
         Map<InjectionSite,InjectableAttribute> sites = componentType.getInjectionSites();
         TypeMapping typeMapping = context.getTypeMapping();
@@ -141,13 +170,17 @@ public class SystemUnannotatedHeuristic implements HeuristicProcessor<SystemImpl
     }
 
 
-    void processSite(PojoComponentType componentType, TypeMapping typeMapping, String name, Type parameterType, InjectionSite site) throws IntrospectionException {
+    void processSite(PojoComponentType componentType, TypeMapping typeMapping, String name, Type parameterType, InjectionSite site)
+            throws IntrospectionException {
         switch (helper.inferType(parameterType, typeMapping)) {
         case PROPERTY:
             addProperty(componentType, typeMapping, name, parameterType, site);
             break;
         case REFERENCE:
             addReference(componentType, typeMapping, name, parameterType, site);
+            break;
+        case CALLBACK:
+            // ignore
             break;
         default:
             throw new UnsupportedTypeException(site.toString());

@@ -79,7 +79,7 @@ public class WebappLoader implements TypeLoader<WebappImplementation> {
         }
         IntrospectionContext childContext = new IntrospectionContextImpl(context.getTargetClassLoader(), null, url);
         ComponentType componentType = registry.load(url, ComponentType.class, childContext);
-        componentType.setImplementationScope(Scope.COMPOSITE);
+        componentType.setScope("COMPOSITE");
         return componentType;
     }
 }

@@ -32,8 +32,33 @@
         <system:implementation.system class="org.fabric3.system.introspection.SystemImplementationLoader"/>
     </component>
 
-    <component name="org.fabric3.system.introspection.SystemComponentTypeLoaderImpl">
-        <system:implementation.system class="org.fabric3.system.introspection.SystemComponentTypeLoaderImpl"/>
+    <component name="org.fabric3.system.introspection.SystemImplementationProcessorImpl">
+        <system:implementation.system class="org.fabric3.system.introspection.SystemImplementationProcessorImpl"/>
+        <reference name="classWalker" target="org.fabric3.system.ClassWalker"/>
+        <reference name="heuristic" target="org.fabric3.system.introspection.SystemHeuristic"/>
+    </component>
+
+    <component name="org.fabric3.system.ClassWalker">
+        <system:implementation.system class="org.fabric3.introspection.impl.DefaultClassWalker"/>
+    </component>
+
+    <component name="org.fabric3.system.introspection.SystemHeuristic">
+        <system:implementation.system class="org.fabric3.system.introspection.SystemHeuristic"/>
+        <reference name="service" target="org.fabric3.system.introspection.SystemServiceHeuristic"/>
+        <reference name="constructor" target="org.fabric3.system.introspection.SystemConstructorHeuristic"/>
+        <reference name="injection" target="org.fabric3.system.introspection.SystemUnannotatedHeuristic"/>
+    </component>
+
+    <component name="org.fabric3.system.introspection.SystemServiceHeuristic">
+        <system:implementation.system class="org.fabric3.system.introspection.SystemServiceHeuristic"/>
+    </component>
+
+    <component name="org.fabric3.system.introspection.SystemConstructorHeuristic">
+        <system:implementation.system class="org.fabric3.system.introspection.SystemConstructorHeuristic"/>
+    </component>
+
+    <component name="org.fabric3.system.introspection.SystemUnannotatedHeuristic">
+        <system:implementation.system class="org.fabric3.system.introspection.SystemUnannotatedHeuristic"/>
     </component>
 
     <component name="org.fabric3.system.control.SystemComponentGenerator">

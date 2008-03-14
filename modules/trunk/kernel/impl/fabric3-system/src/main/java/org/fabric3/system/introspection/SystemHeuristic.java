@@ -33,9 +33,9 @@ public class SystemHeuristic implements HeuristicProcessor<SystemImplementation>
     private final HeuristicProcessor<SystemImplementation> constructorHeuristic;
     private final HeuristicProcessor<SystemImplementation> injectionHeuristic;
 
-    public SystemHeuristic(@Reference HeuristicProcessor<SystemImplementation> serviceHeuristic,
-                           @Reference HeuristicProcessor<SystemImplementation> constructorHeuristic,
-                           @Reference HeuristicProcessor<SystemImplementation> injectionHeuristic) {
+    public SystemHeuristic(@Reference(name="service") HeuristicProcessor<SystemImplementation> serviceHeuristic,
+                           @Reference(name="constructor") HeuristicProcessor<SystemImplementation> constructorHeuristic,
+                           @Reference(name="injection") HeuristicProcessor<SystemImplementation> injectionHeuristic) {
         this.serviceHeuristic = serviceHeuristic;
         this.constructorHeuristic = constructorHeuristic;
         this.injectionHeuristic = injectionHeuristic;

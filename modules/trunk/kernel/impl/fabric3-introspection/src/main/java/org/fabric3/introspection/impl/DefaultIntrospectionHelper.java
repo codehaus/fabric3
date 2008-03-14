@@ -36,8 +36,10 @@ import java.util.ArrayList;
 
 import org.osoa.sca.ComponentContext;
 import org.osoa.sca.RequestContext;
+import org.osoa.sca.ServiceReference;
 import org.osoa.sca.annotations.Remotable;
 import org.osoa.sca.annotations.Service;
+import org.osoa.sca.annotations.Callback;
 
 import org.fabric3.introspection.IntrospectionException;
 import org.fabric3.introspection.java.IntrospectionHelper;
@@ -53,15 +55,17 @@ import org.fabric3.scdl.DataType;
  * @version $Rev$ $Date$
  */
 public class DefaultIntrospectionHelper implements IntrospectionHelper {
-    // the Collection classes we understand and which all have a single type parameter
-    private static final Set<Class<?>> COLLECTIONS;
+    // the wrapper classes we understand and which all have a single type parameter
+    private static final Set<Class<?>> WRAPPERS;
     static {
-        COLLECTIONS = new HashSet<Class<?>>();
-        COLLECTIONS.add(Collection.class);
-        COLLECTIONS.add(List.class);
-        COLLECTIONS.add(Queue.class);
-        COLLECTIONS.add(Set.class);
-        COLLECTIONS.add(SortedSet.class); }
+        WRAPPERS = new HashSet<Class<?>>();
+        WRAPPERS.add(Collection.class);
+        WRAPPERS.add(List.class);
+        WRAPPERS.add(Queue.class);
+        WRAPPERS.add(Set.class);
+        WRAPPERS.add(SortedSet.class);
+        WRAPPERS.add(ServiceReference.class);
+    }
 
     public Class<?> loadClass(String name, ClassLoader cl) throws ImplementationNotFoundException {
         final Thread thread = Thread.currentThread();
@@ -131,7 +135,7 @@ public class DefaultIntrospectionHelper implements IntrospectionHelper {
             Class<?> clazz = (Class<?>) type;
             if (clazz.isArray()) {
                 return clazz.getComponentType();
-            } else if (COLLECTIONS.contains(clazz) || Map.class.equals(clazz)) {
+            } else if (WRAPPERS.contains(clazz) || Map.class.equals(clazz)) {
                 return Object.class;
             } else {
                 return clazz;
@@ -140,7 +144,7 @@ public class DefaultIntrospectionHelper implements IntrospectionHelper {
             ParameterizedType parameterizedType = (ParameterizedType) type;
             Class<?> clazz = (Class<?>) parameterizedType.getRawType();
             Type[] typeArguments = parameterizedType.getActualTypeArguments();
-            if (COLLECTIONS.contains(clazz)) {
+            if (WRAPPERS.contains(clazz)) {
                 return typeMapping.getRawType(typeArguments[0]);
             } else if (Map.class.equals(clazz)) {
                 return typeMapping.getRawType(typeArguments[1]);
@@ -161,7 +165,7 @@ public class DefaultIntrospectionHelper implements IntrospectionHelper {
             return true;
         } else {
             Class<?> clazz = typeMapping.getRawType(type);
-            return clazz.isArray() || COLLECTIONS.contains(clazz) || Map.class.equals(clazz);
+            return clazz.isArray() || WRAPPERS.contains(clazz) || Map.class.equals(clazz);
         }
     }
 
@@ -182,6 +186,11 @@ public class DefaultIntrospectionHelper implements IntrospectionHelper {
         // if it's Remotable or a local Service, it must be a reference
         if (isAnnotationPresent(rawType, Remotable.class) || isAnnotationPresent(rawType, Service.class)) {
             return InjectableAttributeType.REFERENCE;
+        }
+
+        // if it has a Callback anotation, it's a calback
+        if (isAnnotationPresent(rawType, Callback.class)) {
+            return InjectableAttributeType.CALLBACK;
         }
 
         // otherwise it's a property

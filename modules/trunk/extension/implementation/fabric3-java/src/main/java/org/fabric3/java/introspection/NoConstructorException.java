@@ -16,13 +16,17 @@
  */
 package org.fabric3.java.introspection;
 
-import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.introspection.xml.LoaderException;
-import org.fabric3.java.scdl.JavaImplementation;
+import org.fabric3.introspection.IntrospectionException;
 
 /**
  * @version $Rev$ $Date$
  */
-public interface JavaComponentTypeLoader {
-    void load(JavaImplementation implementation, IntrospectionContext introspectionContext) throws LoaderException;
+public class NoConstructorException extends IntrospectionException {
+    public NoConstructorException(String identifier) {
+        super(null, identifier);
+    }
+
+    public String getMessage() {
+        return "Multiple constructors present, use @Constructor to indicate which to use in class: " + getIdentifier();
+    }
 }

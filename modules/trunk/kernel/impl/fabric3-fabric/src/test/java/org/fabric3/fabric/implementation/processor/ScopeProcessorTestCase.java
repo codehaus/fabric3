@@ -18,13 +18,10 @@
  */
 package org.fabric3.fabric.implementation.processor;
 
-import org.fabric3.spi.component.ScopeRegistry;
-import org.fabric3.pojo.scdl.PojoComponentType;
-import org.fabric3.pojo.processor.ProcessingException;
-import org.fabric3.scdl.Scope;
-
 import junit.framework.TestCase;
-import org.easymock.EasyMock;
+
+import org.fabric3.pojo.processor.ProcessingException;
+import org.fabric3.pojo.scdl.PojoComponentType;
 
 /**
  * @version $Rev$ $Date$
@@ -33,29 +30,21 @@ public class ScopeProcessorTestCase extends TestCase {
 
     private ScopeProcessor processor;
     private PojoComponentType type;
-    private ScopeRegistry scopeRegistry;
 
     public void testScopeFromAnnotation() throws ProcessingException {
-        scopeRegistry.getScope("COMPOSITE");
-        EasyMock.expectLastCall().andReturn(Scope.COMPOSITE);
-        EasyMock.replay(scopeRegistry);
         processor.visitClass(Composite.class, type, null);
-        assertEquals(Scope.COMPOSITE, type.getImplementationScope());
-        EasyMock.verify(scopeRegistry);
+        assertEquals("COMPOSITE", type.getScope());
     }
 
     public void testScopeFromBareClass() throws ProcessingException {
-        EasyMock.replay(scopeRegistry);
         processor.visitClass(None.class, type, null);
-        assertNull(type.getImplementationScope());
-        EasyMock.verify(scopeRegistry);
+        assertNull(type.getScope());
     }
 
     protected void setUp() throws Exception {
         super.setUp();
-        scopeRegistry = EasyMock.createMock(ScopeRegistry.class);
         type = new PojoComponentType(null);
-        processor = new ScopeProcessor(scopeRegistry);
+        processor = new ScopeProcessor();
     }
 
     @org.osoa.sca.annotations.Scope("COMPOSITE")

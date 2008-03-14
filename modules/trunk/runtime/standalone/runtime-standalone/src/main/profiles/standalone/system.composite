@@ -42,6 +42,9 @@
     <!-- include loader configuration -->
     <include name="org.fabric3.fabric.Loader" scdlResource="org/fabric3/loader/loader.composite"/>
 
+    <!-- include annotation processors -->
+    <include xmlns:introspection="urn:org.codehaus.fabric3:fabric3-introspection" name="introspection:AnnotationProcessors" scdlResource="org/fabric3/introspection/impl/annotation/processors.composite"/>
+
     <!-- include implementation processor configuration -->
     <include name="org.fabric3.fabric.Implementation" scdlResource="org/fabric3/fabric/implementation.composite"/>
 

@@ -82,7 +82,7 @@ public class JavaComponentGenerator implements ComponentGenerator<LogicalCompone
         JavaComponentDefinition physical = new JavaComponentDefinition();
         physical.setComponentId(componentId);
         physical.setGroupId(component.getParent().getUri());
-        physical.setScope(type.getImplementationScope());
+        physical.setScope(type.getScope());
         physical.setInitLevel(helper.getInitLevel(definition, type));
         physical.setMaxAge(type.getMaxAge());
         physical.setMaxIdleTime(type.getMaxIdleTime());
@@ -176,8 +176,8 @@ public class JavaComponentGenerator implements ComponentGenerator<LogicalCompone
         wireDefinition.setUri(uri);
 
         // assume for now that only wires to composite scope components can be optimized
-        Scope<?> scope = target.getDefinition().getImplementation().getComponentType().getImplementationScope();
-        wireDefinition.setOptimizable(Scope.COMPOSITE.equals(scope));
+        String scope = target.getDefinition().getImplementation().getComponentType().getScope();
+        wireDefinition.setOptimizable("COMPOSITE".equals(scope));
         return wireDefinition;
     }
 }

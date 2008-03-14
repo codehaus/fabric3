@@ -14,20 +14,15 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.introspection.impl.annotation;
+package org.fabric3.system.introspection;
 
-import org.fabric3.introspection.IntrospectionException;
+import org.fabric3.introspection.java.ImplementationProcessor;
+import org.fabric3.system.scdl.SystemImplementation;
 
 /**
+ * Strongly typed ImplementationProcessor for System implementations.
+ *
  * @version $Rev$ $Date$
  */
-public class AmbiguousConstructorException extends IntrospectionException {
-
-    public AmbiguousConstructorException(String impl) {
-        super(null, impl);
-    }
-
-    public String getMessage() {
-        return "Multiple @Constructor annotations found on implementation class: " + getIdentifier(); 
-    }
+public interface SystemImplementationProcessor extends ImplementationProcessor<SystemImplementation> {
 }

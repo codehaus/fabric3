@@ -78,7 +78,7 @@ public class MockComponentTypeLoaderImpl implements MockComponentTypeLoader {
                 componentType.add(new ServiceDefinition(name, serviceContract));
             }
             componentType.add(controlService);
-            componentType.setImplementationScope(Scope.STATELESS);
+            componentType.setScope("STATELESS");
 
             return componentType;
 

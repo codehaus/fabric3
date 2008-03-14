@@ -24,16 +24,15 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
-
 import javax.xml.namespace.QName;
+
+import org.osoa.sca.Constants;
+import org.w3c.dom.Document;
 
 import org.fabric3.scdl.AbstractComponentType;
 import org.fabric3.scdl.Autowire;
 import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.Implementation;
-import org.fabric3.scdl.Scope;
-import org.osoa.sca.Constants;
-import org.w3c.dom.Document;
 
 /**
  * Represents an instantiated component in the service network.
@@ -261,16 +260,12 @@ public class LogicalComponent<I extends Implementation<?>> extends LogicalScaArt
         
         ComponentDefinition<? extends Implementation<?>> definition = getDefinition();
         AbstractComponentType<?, ?, ?, ?> componentType = definition.getImplementation().getComponentType();
-        Scope<?> scope = componentType.getImplementationScope();
-        if (scope == null || !scope.equals(Scope.COMPOSITE)) {
-            return false;
-        }
 
         Integer level = definition.getInitLevel();
         if (level == null) {
             level = componentType.getInitLevel();
         }
-        return level > 0;
+        return "COMPOSITE".equals(componentType.getScope()) && level > 0;
         
     }
 

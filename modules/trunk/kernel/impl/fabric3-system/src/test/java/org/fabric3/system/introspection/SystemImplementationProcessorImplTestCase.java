@@ -1,8 +1,6 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
+ * See the NOTICE file distributed with this work for information
+ * regarding copyright ownership.  This file is licensed
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
@@ -16,7 +14,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.java.introspection;
+package org.fabric3.system.introspection;
 
 import junit.framework.TestCase;
 import org.easymock.EasyMock;
@@ -24,22 +22,22 @@ import org.easymock.IMocksControl;
 
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.IntrospectionException;
+import org.fabric3.introspection.impl.DefaultIntrospectionHelper;
 import org.fabric3.introspection.java.ClassWalker;
 import org.fabric3.introspection.java.HeuristicProcessor;
 import org.fabric3.introspection.java.IntrospectionHelper;
-import org.fabric3.java.scdl.JavaImplementation;
 import org.fabric3.pojo.scdl.PojoComponentType;
+import org.fabric3.system.scdl.SystemImplementation;
 
 /**
  * @version $Rev$ $Date$
  */
-public class JavaComponentTypeLoaderTestCase extends TestCase {
-
-    private JavaImplementationProcessorImpl loader;
-    private ClassWalker<JavaImplementation> classWalker;
+public class SystemImplementationProcessorImplTestCase extends TestCase {
+    private SystemImplementationProcessorImpl loader;
+    private ClassWalker<SystemImplementation> classWalker;
     private IntrospectionContext context;
-    private JavaImplementation impl;
-    private HeuristicProcessor<JavaImplementation> heuristic;
+    private SystemImplementation impl;
+    private HeuristicProcessor<SystemImplementation> heuristic;
     private IMocksControl control;
 
     public void testSimple() throws IntrospectionException {
@@ -62,22 +60,18 @@ public class JavaComponentTypeLoaderTestCase extends TestCase {
     @SuppressWarnings("unchecked")
     protected void setUp() throws Exception {
         super.setUp();
-        ClassLoader cl = getClass().getClassLoader();
-        impl = new JavaImplementation();
-        IntrospectionHelper helper = EasyMock.createNiceMock(IntrospectionHelper.class);
-        EasyMock.expect(helper.loadClass(Simple.class.getName(), cl)).andStubReturn(Simple.class);
-        EasyMock.expect(helper.mapTypeParameters(Simple.class)).andStubReturn(null);
-        EasyMock.replay(helper);
+        impl = new SystemImplementation();
+        IntrospectionHelper helper = new DefaultIntrospectionHelper();
 
 
         context = EasyMock.createNiceMock(IntrospectionContext.class);
-        EasyMock.expect(context.getTargetClassLoader()).andStubReturn(cl);
+        EasyMock.expect(context.getTargetClassLoader()).andStubReturn(getClass().getClassLoader());
         EasyMock.replay(context);
 
         control = EasyMock.createControl();
         classWalker = control.createMock(ClassWalker.class);
         heuristic = control.createMock(HeuristicProcessor.class);
 
-        this.loader = new JavaImplementationProcessorImpl(classWalker, heuristic, helper);
+        this.loader = new SystemImplementationProcessorImpl(classWalker, heuristic, helper);
     }
 }

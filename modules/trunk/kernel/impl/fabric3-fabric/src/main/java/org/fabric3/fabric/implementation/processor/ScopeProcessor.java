@@ -33,10 +33,8 @@ import org.osoa.sca.annotations.Reference;
  * @version $Rev$ $Date$
  */
 public class ScopeProcessor extends ImplementationProcessorExtension {
-    private final ScopeRegistry scopeRegistry;
 
-    public ScopeProcessor(@Reference ScopeRegistry scopeRegistry) {
-        this.scopeRegistry = scopeRegistry;
+    public ScopeProcessor() {
     }
 
     public <T> void visitClass(Class<T> clazz,
@@ -49,11 +47,6 @@ public class ScopeProcessor extends ImplementationProcessorExtension {
         }
         
         String name = annotation.value();
-        Scope<?> scope = scopeRegistry.getScope(name);
-        if (scope == null) {
-            throw new UnknownScopeException("Unknown scope in @Scope annotation on " + clazz.getSimpleName(),
-                    clazz.getName());
-        }
-        type.setImplementationScope(scope);
+        type.setScope(name.toUpperCase());
     }
 }

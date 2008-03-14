@@ -14,29 +14,19 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.tests.function.callback.binding;
+package org.fabric3.java.introspection;
 
-import java.util.concurrent.TimeUnit;
-
-import junit.framework.TestCase;
-import org.osoa.sca.annotations.Reference;
-
-import org.fabric3.tests.function.callback.common.CallbackData;
+import org.fabric3.introspection.IntrospectionException;
 
 /**
- * Tests for stateless calbacks.
- *
- * @version $Rev: 2751 $ $Date: 2008-02-12 01:14:41 -0800 (Tue, 12 Feb 2008) $
+ * @version $Rev$ $Date$
  */
-public class BindingCallbackTest extends TestCase {
-    @Reference
-    protected ClientService client;
-
-    public void testCompositeCallback() throws Exception {
-        CallbackData data = new CallbackData(1);
-        client.invoke(data);
-        data.getLatch().await(2000, TimeUnit.SECONDS);
-        assertTrue(data.isCalledBack());
+public class AmbiguousConstructorException extends IntrospectionException {
+    public AmbiguousConstructorException(String identifier) {
+        super(null, identifier);
     }
 
+    public String getMessage() {
+        return "Multiple constructors with @Constructor present in class: " + getIdentifier();
+    }
 }
