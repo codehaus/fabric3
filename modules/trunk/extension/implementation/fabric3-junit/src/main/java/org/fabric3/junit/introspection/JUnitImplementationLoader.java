@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.junit;
+package org.fabric3.junit.introspection;
 
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
@@ -27,43 +27,50 @@ import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.introspection.IntrospectionContext;
+import org.fabric3.introspection.IntrospectionException;
 import org.fabric3.introspection.xml.LoaderException;
 import org.fabric3.introspection.xml.LoaderRegistry;
 import org.fabric3.introspection.xml.LoaderUtil;
 import org.fabric3.introspection.xml.TypeLoader;
+import org.fabric3.junit.scdl.JUnitImplementation;
+import org.fabric3.pojo.processor.ProcessingException;
 
 /**
  * @version $Rev$ $Date$
  */
 @EagerInit
-public class ImplementationJUnitLoader implements TypeLoader<ImplementationJUnit> {
+public class JUnitImplementationLoader implements TypeLoader<JUnitImplementation> {
 
     private final LoaderRegistry registry;
-    private final JUnitComponentTypeLoader componentTypeLoader;
+    private final JUnitImplementationProcessor implementationProcessor;
 
-    public ImplementationJUnitLoader(@Reference LoaderRegistry registry,
-                                     @Reference JUnitComponentTypeLoader componentTypeLoader) {
+    public JUnitImplementationLoader(@Reference LoaderRegistry registry,
+                                     @Reference JUnitImplementationProcessor implementationProcessor) {
         this.registry = registry;
-        this.componentTypeLoader = componentTypeLoader;
+        this.implementationProcessor = implementationProcessor;
     }
 
     @Init
     public void init() {
-        registry.registerLoader(ImplementationJUnit.IMPLEMENTATION_JUNIT, this);
+        registry.registerLoader(JUnitImplementation.IMPLEMENTATION_JUNIT, this);
     }
 
     @Destroy
     public void destroy() {
-        registry.unregisterLoader(ImplementationJUnit.IMPLEMENTATION_JUNIT);
+        registry.unregisterLoader(JUnitImplementation.IMPLEMENTATION_JUNIT);
     }
 
-    public ImplementationJUnit load(XMLStreamReader reader, IntrospectionContext introspectionContext)
+    public JUnitImplementation load(XMLStreamReader reader, IntrospectionContext introspectionContext)
             throws XMLStreamException, LoaderException {
         String className = reader.getAttributeValue(null, "class");
         LoaderUtil.skipToEndElement(reader);
 
-        ImplementationJUnit impl = new ImplementationJUnit(className);
-        componentTypeLoader.load(impl, introspectionContext);
+        JUnitImplementation impl = new JUnitImplementation(className);
+        try {
+            implementationProcessor.introspect(impl, introspectionContext);
+        } catch (IntrospectionException e) {
+            throw new ProcessingException(e);
+        }
         return impl;
     }
 

@@ -72,7 +72,7 @@
     <include name="org.fabric3.transform.Transform" scdlResource="org/fabric3/transform/transform.composite"/>
 
     <!-- include JUnit implementation type -->
-    <include name="org.fabric3.itest.JunitImplementation" scdlLocation="junitImplementation.composite"/>
+    <include xmlns:junit="urn:org.codehaus.fabric3:fabric3-junit" name="junit:JUnitImplementation" scdlResource="org/fabric3/junit/junitImplementation.composite"/>
 
     <component name="runtimeInfoService">
         <system:implementation.system class="org.fabric3.fabric.services.runtime.DefaultRuntimeInfoService"/>

@@ -1,4 +1,4 @@
-package org.fabric3.junit;
+package org.fabric3.junit.control;
 
 import java.net.URI;
 
@@ -24,6 +24,8 @@ import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 import org.fabric3.spi.policy.Policy;
+import org.fabric3.junit.scdl.JUnitImplementation;
+
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
@@ -32,7 +34,7 @@ import org.osoa.sca.annotations.Reference;
  * @version $Rev$ $Date$
  */
 @EagerInit
-public class JUnitComponentGenerator implements ComponentGenerator<LogicalComponent<ImplementationJUnit>> {
+public class JUnitComponentGenerator implements ComponentGenerator<LogicalComponent<JUnitImplementation>> {
 
     private final GeneratorRegistry registry;
     private final InstanceFactoryGenerationHelper helper;
@@ -46,14 +48,14 @@ public class JUnitComponentGenerator implements ComponentGenerator<LogicalCompon
 
     @Init
     public void init() {
-        registry.register(ImplementationJUnit.class, this);
+        registry.register(JUnitImplementation.class, this);
     }
 
-    public PhysicalComponentDefinition generate(LogicalComponent<ImplementationJUnit> component)
+    public PhysicalComponentDefinition generate(LogicalComponent<JUnitImplementation> component)
             throws GenerationException {
 
-        ComponentDefinition<ImplementationJUnit> definition = component.getDefinition();
-        ImplementationJUnit implementation = definition.getImplementation();
+        ComponentDefinition<JUnitImplementation> definition = component.getDefinition();
+        JUnitImplementation implementation = definition.getImplementation();
         PojoComponentType type = implementation.getComponentType();
         Integer level = helper.getInitLevel(definition, type);
         URI componentId = component.getUri();
@@ -79,7 +81,7 @@ public class JUnitComponentGenerator implements ComponentGenerator<LogicalCompon
         return physical;
     }
 
-    public PhysicalWireSourceDefinition generateWireSource(LogicalComponent<ImplementationJUnit> source,
+    public PhysicalWireSourceDefinition generateWireSource(LogicalComponent<JUnitImplementation> source,
                                                            LogicalReference reference,
                                                            Policy policy) throws GenerationException {
         URI uri = reference.getUri();
@@ -100,13 +102,13 @@ public class JUnitComponentGenerator implements ComponentGenerator<LogicalCompon
         return wireDefinition;
     }
 
-    public PhysicalWireSourceDefinition generateCallbackWireSource(LogicalComponent<ImplementationJUnit> source,
+    public PhysicalWireSourceDefinition generateCallbackWireSource(LogicalComponent<JUnitImplementation> source,
                                                                    ServiceContract<?> serviceContract,
                                                                    Policy policy) throws GenerationException {
         throw new UnsupportedOperationException();
     }
 
-    public PhysicalWireSourceDefinition generateResourceWireSource(LogicalComponent<ImplementationJUnit> source,
+    public PhysicalWireSourceDefinition generateResourceWireSource(LogicalComponent<JUnitImplementation> source,
                                                                    LogicalResource<?> resource)
             throws GenerationException {
 
@@ -129,7 +131,7 @@ public class JUnitComponentGenerator implements ComponentGenerator<LogicalCompon
     }
 
     public PhysicalWireTargetDefinition generateWireTarget(LogicalService service,
-                                                           LogicalComponent<ImplementationJUnit> target,
+                                                           LogicalComponent<JUnitImplementation> target,
                                                            Policy policy) throws GenerationException {
         JavaWireTargetDefinition wireDefinition = new JavaWireTargetDefinition();
         wireDefinition.setUri(service.getUri());

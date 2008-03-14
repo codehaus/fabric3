@@ -30,8 +30,8 @@
            autowire="true">
     
     <!-- Processor for Persistence Unit -->
-    <component name="org.fabric3.jpa.processor.PersistenceUnitAnnotationProcessor">
-        <system:implementation.system class="org.fabric3.jpa.processor.PersistenceUnitAnnotationProcessor"/>
+    <component f3:key="javax.persistence.PersistenceUnit" name="org.fabric3.jpa.introspection.PersistenceUnitProcessor">
+        <system:implementation.system class="org.fabric3.jpa.introspection.PersistenceUnitProcessor"/>
     </component>
     
     <!-- Wire Target Definition Generator -->

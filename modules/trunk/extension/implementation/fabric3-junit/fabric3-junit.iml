@@ -47,6 +47,7 @@
         </SOURCES>
       </library>
     </orderEntry>
+    <orderEntry type="module" module-name="fabric3-loader" />
     <orderEntryProperties />
   </component>
 </module>

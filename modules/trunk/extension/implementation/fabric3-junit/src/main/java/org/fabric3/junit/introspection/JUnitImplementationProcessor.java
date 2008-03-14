@@ -14,14 +14,15 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.junit;
+package org.fabric3.junit.introspection;
 
 import org.fabric3.introspection.IntrospectionContext;
+import org.fabric3.introspection.java.ImplementationProcessor;
 import org.fabric3.introspection.xml.LoaderException;
+import org.fabric3.junit.scdl.JUnitImplementation;
 
 /**
  * @version $Rev$ $Date$
  */
-public interface JUnitComponentTypeLoader {
-    void load(ImplementationJUnit implementation, IntrospectionContext context) throws LoaderException;
+public interface JUnitImplementationProcessor extends ImplementationProcessor<JUnitImplementation> {
 }

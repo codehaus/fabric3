@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.junit;
+package org.fabric3.junit.scdl;
 
 import javax.xml.namespace.QName;
 
@@ -25,9 +25,9 @@ import org.fabric3.scdl.Implementation;
 import org.fabric3.spi.Constants;
 
 /**
- * @version $Rev$ $Date$
+ * @version $Rev: 1837 $ $Date: 2007-11-06 12:42:26 +0000 (Tue, 06 Nov 2007) $
  */
-public class ImplementationJUnit extends Implementation<PojoComponentType> {
+public class JUnitImplementation extends Implementation<PojoComponentType> {
     public static final QName IMPLEMENTATION_JUNIT = new QName(Constants.FABRIC3_NS, "junit");
     private String implementationClass;
 
@@ -36,7 +36,7 @@ public class ImplementationJUnit extends Implementation<PojoComponentType> {
      *
      * @param className the name of the JUnit test class
      */
-    public ImplementationJUnit(String className) {
+    public JUnitImplementation(String className) {
         this.implementationClass = className;
     }
 

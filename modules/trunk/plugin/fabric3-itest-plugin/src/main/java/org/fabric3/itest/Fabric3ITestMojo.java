@@ -68,7 +68,7 @@ import org.fabric3.host.runtime.InitializationException;
 import org.fabric3.host.runtime.RuntimeLifecycleCoordinator;
 import org.fabric3.host.runtime.ScdlBootstrapper;
 import org.fabric3.host.runtime.ShutdownException;
-import org.fabric3.junit.ImplementationJUnit;
+import org.fabric3.junit.scdl.JUnitImplementation;
 import org.fabric3.maven.runtime.MavenCoordinator;
 import org.fabric3.maven.runtime.MavenEmbeddedRuntime;
 import org.fabric3.monitor.MonitorFactory;
@@ -661,7 +661,7 @@ public class Fabric3ITestMojo extends AbstractMojo {
             String name = entry.getKey();
             ComponentDefinition<? extends Implementation<?>> junitDefinition = entry.getValue();
             Implementation<?> implementation = junitDefinition.getImplementation();
-            if (ImplementationJUnit.class.isAssignableFrom(implementation.getClass())) {
+            if (JUnitImplementation.class.isAssignableFrom(implementation.getClass())) {
                 SCATestSet testSet = createTestSet(runtime, name, uriBase, junitDefinition);
                 suite.add(testSet);
             }
@@ -673,7 +673,7 @@ public class Fabric3ITestMojo extends AbstractMojo {
                                        String name,
                                        URI contextId,
                                        ComponentDefinition definition) throws MojoExecutionException {
-        ImplementationJUnit impl = (ImplementationJUnit) definition.getImplementation();
+        JUnitImplementation impl = (JUnitImplementation) definition.getImplementation();
         PojoComponentType componentType = impl.getComponentType();
         Map<String,ServiceDefinition> services = componentType.getServices();
         ServiceDefinition testService = services.get("testService");

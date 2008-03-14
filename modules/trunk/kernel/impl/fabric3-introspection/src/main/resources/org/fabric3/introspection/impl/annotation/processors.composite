@@ -33,6 +33,10 @@
         <system:implementation.system class="org.fabric3.introspection.impl.annotation.CallbackProcessor"/>
     </component>
 
+    <component f3:key="org.osoa.sca.annotations.Context" name="org.fabric3.introspection.impl.annotation.ContextProcessor">
+        <system:implementation.system class="org.fabric3.introspection.impl.annotation.ContextProcessor"/>
+    </component>
+
     <component f3:key="org.osoa.sca.annotations.ConversationID" name="org.fabric3.introspection.impl.annotation.ConversationIDProcessor">
         <system:implementation.system class="org.fabric3.introspection.impl.annotation.ConversationIDProcessor"/>
     </component>
