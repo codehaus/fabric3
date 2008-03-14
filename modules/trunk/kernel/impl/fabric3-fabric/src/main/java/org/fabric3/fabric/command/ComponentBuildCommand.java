@@ -47,7 +47,11 @@ public class ComponentBuildCommand extends AbstractCommand {
     public void addPhysicalComponentDefinitions(Set<PhysicalComponentDefinition> physicalComponentDefinitions) {
         this.physicalComponentDefinitions.addAll(physicalComponentDefinitions);
     }
-    
+
+    public String toString() {
+        return "ComponentBuild: " + physicalComponentDefinitions.toString();
+    }
+
     @Override
     public boolean equals(Object obj) {
         
