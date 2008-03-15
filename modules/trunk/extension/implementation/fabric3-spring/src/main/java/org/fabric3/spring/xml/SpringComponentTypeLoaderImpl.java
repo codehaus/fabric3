@@ -33,10 +33,8 @@ import org.fabric3.spring.SpringImplementation;
  * @version $Rev$ $Date$
  */
 public class SpringComponentTypeLoaderImpl implements SpringComponentTypeLoader {
-    private final Introspector introspector;
 
-    public SpringComponentTypeLoaderImpl(@Reference IntrospectionRegistry introspector) {
-        this.introspector = introspector;
+    public SpringComponentTypeLoaderImpl() {
     }
 
     public void load(SpringImplementation implementation, IntrospectionContext introspectionContext) throws LoaderException {
