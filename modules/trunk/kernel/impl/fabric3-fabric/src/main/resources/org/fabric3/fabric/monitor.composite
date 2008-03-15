@@ -20,9 +20,6 @@
            name="org.fabric3.fabric.Monitor"
            autowire="true">
 
-    <component name="implementation.Monitor">
-        <system:implementation.system class="org.fabric3.fabric.monitor.MonitorProcessor"/>
-    </component>
     <component name="MonitorWireGenerator">
         <system:implementation.system class="org.fabric3.fabric.monitor.MonitorWireGenerator"/>
     </component>
