@@ -28,19 +28,19 @@ import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 import org.w3c.dom.Document;
 
-import org.fabric3.system.scdl.SystemImplementation;
 import org.fabric3.introspection.IntrospectionContext;
+import org.fabric3.introspection.IntrospectionException;
 import org.fabric3.introspection.xml.LoaderException;
 import org.fabric3.introspection.xml.LoaderHelper;
 import org.fabric3.introspection.xml.LoaderRegistry;
 import org.fabric3.introspection.xml.TypeLoader;
-import org.fabric3.pojo.processor.Introspector;
-import org.fabric3.pojo.scdl.PojoComponentType;
+import org.fabric3.loader.common.IntrospectionContextImpl;
 import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.Implementation;
 import org.fabric3.scdl.PropertyValue;
-import org.fabric3.scdl.Scope;
 import org.fabric3.spi.Constants;
+import org.fabric3.system.introspection.SystemImplementationProcessor;
+import org.fabric3.system.scdl.SystemImplementation;
 
 /**
  * @version $Revision: 1 $ $Date: 2007-05-14 18:40:37 +0100 (Mon, 14 May 2007) $
@@ -51,16 +51,24 @@ public class FeatureLoader implements TypeLoader<ComponentDefinition> {
     // Qualified name of the root element.
     private static final QName QNAME = new QName(Constants.FABRIC3_SYSTEM_NS, "feature");
 
+    private final SystemImplementation featureImplementation;
+
     private LoaderRegistry registry;
-    private final Introspector introspector;
     private final LoaderHelper helper;
 
     public FeatureLoader(@Reference LoaderRegistry registry, 
-                         @Reference Introspector introspector,
+                         @Reference SystemImplementationProcessor processor,
                          @Reference LoaderHelper helper) {
         this.registry = registry;
-        this.introspector = introspector;
         this.helper = helper;
+
+        featureImplementation = new SystemImplementation(FeatureComponent.class.getName());
+        IntrospectionContext context = new IntrospectionContextImpl(getClass().getClassLoader(), null, null);
+        try {
+            processor.introspect(featureImplementation, context);
+        } catch (IntrospectionException e) {
+            throw new AssertionError();
+        }
     }
 
 
@@ -81,14 +89,6 @@ public class FeatureLoader implements TypeLoader<ComponentDefinition> {
         Document value = helper.loadValue(reader);
         PropertyValue propertyValue = new PropertyValue("feature", null, value);
 
-        final Class<FeatureComponent> implClass = FeatureComponent.class;
-        PojoComponentType componentType = getComponentType(implClass, context);
-        componentType.setScope("COMPOSITE");
-
-        final SystemImplementation featureImplementation = new SystemImplementation();
-        featureImplementation.setImplementationClass(implClass.getName());
-        featureImplementation.setComponentType(componentType);
-
         ComponentDefinition<Implementation<?>> def = new ComponentDefinition<Implementation<?>>(name);
         def.setImplementation(featureImplementation);
         def.add(propertyValue);
@@ -96,17 +96,4 @@ public class FeatureLoader implements TypeLoader<ComponentDefinition> {
         return def;
 
     }
-
-    /*
-    * Loads the component type for the reflection marshaller.
-    */
-    private PojoComponentType getComponentType(Class<FeatureComponent> implClass, IntrospectionContext context) throws LoaderException {
-
-        PojoComponentType componentType = new PojoComponentType(implClass.getName());
-        introspector.introspect(implClass, componentType, context);
-
-        return componentType;
-
-    }
-
 }
