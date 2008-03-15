@@ -23,30 +23,23 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.osoa.sca.annotations.Reference;
-
-import org.fabric3.pojo.processor.IntrospectionRegistry;
-import org.fabric3.pojo.processor.Introspector;
-import org.fabric3.pojo.scdl.PojoComponentType;
-import org.fabric3.pojo.processor.ProcessingException;
-import org.fabric3.scdl.DataType;
-import org.fabric3.scdl.Operation;
-import org.fabric3.scdl.Scope;
-import org.fabric3.scdl.ServiceContract;
-import org.fabric3.scdl.ServiceDefinition;
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.xml.LoaderException;
 import org.fabric3.introspection.xml.MissingResourceException;
+import org.fabric3.pojo.processor.ProcessingException;
+import org.fabric3.pojo.scdl.PojoComponentType;
+import org.fabric3.scdl.DataType;
+import org.fabric3.scdl.Operation;
+import org.fabric3.scdl.ServiceContract;
+import org.fabric3.scdl.ServiceDefinition;
 
 /**
  * @version $Revision$ $Date$
  */
 public class LaunchedComponentTypeLoaderImpl implements LaunchedComponentTypeLoader {
     private static final String SERVICE_NAME = "main";
-    private final Introspector introspector;
 
-    public LaunchedComponentTypeLoaderImpl(@Reference IntrospectionRegistry introspector) {
-        this.introspector = introspector;
+    public LaunchedComponentTypeLoaderImpl() {
     }
 
     public void load(Launched implementation, IntrospectionContext introspectionContext) throws LoaderException {
@@ -67,7 +60,8 @@ public class LaunchedComponentTypeLoaderImpl implements LaunchedComponentTypeLoa
             IntrospectionContext introspectionContext,
             Class<?> implClass) throws ProcessingException {
         PojoComponentType componentType = new PojoComponentType(implClass.getName());
-        introspector.introspect(implClass, componentType, introspectionContext);
+        // FIXME we need to introspect the implementation here
+//        introspector.introspect(implClass, componentType, introspectionContext);
 
         ServiceContract launchedContract = generateContract(implClass);
         ServiceDefinition testService = new ServiceDefinition(SERVICE_NAME, launchedContract);
