@@ -36,9 +36,28 @@ import org.fabric3.introspection.java.ClassWalker;
  */
 public class DefaultClassWalker<I extends Implementation<? extends InjectingComponentType>> implements ClassWalker<I> {
 
-    private final Map<Class<? extends Annotation>, AnnotationProcessor<? extends Annotation, I>> processors;
+    private Map<Class<? extends Annotation>, AnnotationProcessor<? extends Annotation, I>> processors;
 
-    public DefaultClassWalker(@Reference Map<Class<? extends Annotation>, AnnotationProcessor<? extends Annotation, I>> processors) {
+    /**
+     * Constructor used from the bootstrapper.
+     * 
+     * @param processors
+     */
+    public DefaultClassWalker(Map<Class<? extends Annotation>, AnnotationProcessor<? extends Annotation, I>> processors) {
+        this.processors = processors;
+    }
+    
+    /**
+     * Constructor used from the system SCDL. 
+     * 
+     * TODO This needs to be working once the re-injection is working properly.
+     */
+    @org.osoa.sca.annotations.Constructor
+    public DefaultClassWalker() {
+    }
+    
+    @Reference
+    public void setProcessors(Map<Class<? extends Annotation>, AnnotationProcessor<? extends Annotation, I>> processors) {
         this.processors = processors;
     }
 
