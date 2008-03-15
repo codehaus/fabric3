@@ -14,7 +14,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.introspection.java;
+package org.fabric3.introspection.helper;
 
 import java.lang.reflect.Array;
 import java.lang.reflect.GenericArrayType;

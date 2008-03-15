@@ -20,7 +20,7 @@ package org.fabric3.introspection.impl.contract;
 
 import java.lang.reflect.Method;
 
-import org.fabric3.introspection.java.InvalidServiceContractException;
+import org.fabric3.introspection.contract.InvalidServiceContractException;
 
 /**
  * Exception thrown to indicate that a service contract specification contains an overloaded method.

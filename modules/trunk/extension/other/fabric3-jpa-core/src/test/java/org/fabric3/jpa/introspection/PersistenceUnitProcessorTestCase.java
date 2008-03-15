@@ -23,8 +23,8 @@ import org.easymock.EasyMock;
 
 import org.fabric3.introspection.impl.DefaultIntrospectionHelper;
 import org.fabric3.introspection.impl.contract.DefaultContractProcessor;
-import org.fabric3.introspection.java.ContractProcessor;
-import org.fabric3.introspection.java.IntrospectionHelper;
+import org.fabric3.introspection.contract.ContractProcessor;
+import org.fabric3.introspection.helper.IntrospectionHelper;
 import org.fabric3.jpa.PersistenceUnitResource;
 
 /**

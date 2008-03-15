@@ -21,13 +21,13 @@ import java.util.Set;
 
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.introspection.java.ContractProcessor;
+import org.fabric3.introspection.contract.ContractProcessor;
 import org.fabric3.introspection.java.HeuristicProcessor;
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.IntrospectionException;
-import org.fabric3.introspection.java.IntrospectionHelper;
-import org.fabric3.introspection.java.InvalidServiceContractException;
-import org.fabric3.introspection.java.TypeMapping;
+import org.fabric3.introspection.helper.IntrospectionHelper;
+import org.fabric3.introspection.contract.InvalidServiceContractException;
+import org.fabric3.introspection.helper.TypeMapping;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.ServiceContract;
 import org.fabric3.scdl.ServiceDefinition;

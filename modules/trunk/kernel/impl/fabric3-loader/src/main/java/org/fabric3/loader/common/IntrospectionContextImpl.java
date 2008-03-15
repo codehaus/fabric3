@@ -22,7 +22,7 @@ import java.net.URI;
 import java.net.URL;
 
 import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.introspection.java.TypeMapping;
+import org.fabric3.introspection.helper.TypeMapping;
 import org.fabric3.spi.transform.TransformContext;
 
 /**

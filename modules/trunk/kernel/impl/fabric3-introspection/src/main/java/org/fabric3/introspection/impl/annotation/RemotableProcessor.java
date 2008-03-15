@@ -23,8 +23,8 @@ import org.osoa.sca.annotations.Remotable;
 
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.IntrospectionException;
+import org.fabric3.introspection.contract.ContractProcessor;
 import org.fabric3.introspection.java.AbstractAnnotationProcessor;
-import org.fabric3.introspection.java.ContractProcessor;
 import org.fabric3.scdl.Implementation;
 import org.fabric3.scdl.InjectingComponentType;
 import org.fabric3.scdl.ServiceContract;

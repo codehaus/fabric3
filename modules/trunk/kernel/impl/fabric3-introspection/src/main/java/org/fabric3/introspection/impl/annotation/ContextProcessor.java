@@ -27,8 +27,8 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.IntrospectionException;
+import org.fabric3.introspection.helper.IntrospectionHelper;
 import org.fabric3.introspection.java.AbstractAnnotationProcessor;
-import org.fabric3.introspection.java.IntrospectionHelper;
 import org.fabric3.scdl.FieldInjectionSite;
 import org.fabric3.scdl.Implementation;
 import org.fabric3.scdl.InjectableAttribute;

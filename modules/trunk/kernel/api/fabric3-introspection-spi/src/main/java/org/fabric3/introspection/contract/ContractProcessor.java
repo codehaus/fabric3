@@ -14,10 +14,11 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.introspection.java;
+package org.fabric3.introspection.contract;
 
 import java.lang.reflect.Type;
 
+import org.fabric3.introspection.helper.TypeMapping;
 import org.fabric3.scdl.ServiceContract;
 
 /**
@@ -29,8 +30,9 @@ public interface ContractProcessor {
     /**
      * Introspect a Java Type (e.g. a Class) and return the ServiceContract.
      *
-     * @param typeMapping
-     *@param type the Java Type to introspect @return the ServiceContract corresponding to the interface type
+     * @param typeMapping the type mapping for the interface
+     * @param type        the Java Type to introspect
+     * @return the ServiceContract corresponding to the interface type
      * @throws InvalidServiceContractException if the type does not define a valid service contract
      */
     ServiceContract<Type> introspect(TypeMapping typeMapping, Type type) throws InvalidServiceContractException;

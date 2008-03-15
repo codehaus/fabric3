@@ -24,9 +24,9 @@ import org.easymock.IMocksControl;
 
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.IntrospectionException;
+import org.fabric3.introspection.helper.IntrospectionHelper;
 import org.fabric3.introspection.java.ClassWalker;
 import org.fabric3.introspection.java.HeuristicProcessor;
-import org.fabric3.introspection.java.IntrospectionHelper;
 import org.fabric3.java.scdl.JavaImplementation;
 import org.fabric3.pojo.scdl.PojoComponentType;
 

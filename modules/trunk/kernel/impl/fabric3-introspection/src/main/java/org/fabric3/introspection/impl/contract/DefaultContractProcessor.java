@@ -32,18 +32,17 @@ import org.osoa.sca.annotations.OneWay;
 import org.osoa.sca.annotations.Remotable;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.introspection.java.ContractProcessor;
-import org.fabric3.introspection.java.IntrospectionHelper;
-import org.fabric3.introspection.java.InvalidServiceContractException;
-import org.fabric3.introspection.java.TypeMapping;
+import org.fabric3.introspection.contract.ContractProcessor;
+import org.fabric3.introspection.contract.InvalidServiceContractException;
+import org.fabric3.introspection.helper.IntrospectionHelper;
+import org.fabric3.introspection.helper.TypeMapping;
 import org.fabric3.scdl.DataType;
 import org.fabric3.scdl.Operation;
 import static org.fabric3.scdl.Operation.CONVERSATION_END;
 import static org.fabric3.scdl.Operation.NO_CONVERSATION;
-import org.fabric3.scdl.ServiceContract;
 
 /**
- * Default implementation of an InterfaceJavaIntrospector.
+ * Default implementation of a ContractProcessor for Java interfaces.
  *
  * @version $Rev$ $Date$
  */
@@ -57,7 +56,7 @@ public class DefaultContractProcessor implements ContractProcessor {
         this.helper = helper;
     }
 
-    public ServiceContract<Type> introspect(TypeMapping typeMapping, Type type) throws InvalidServiceContractException {
+    public JavaServiceContract introspect(TypeMapping typeMapping, Type type) throws InvalidServiceContractException {
         if (type instanceof Class) {
             return introspect(typeMapping, (Class<?>) type);
         } else {

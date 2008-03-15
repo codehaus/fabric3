@@ -14,7 +14,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.introspection.java;
+package org.fabric3.introspection.helper;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;
@@ -25,6 +25,7 @@ import java.util.Collection;
 import java.util.Set;
 
 import org.fabric3.introspection.IntrospectionException;
+import org.fabric3.introspection.java.ImplementationNotFoundException;
 import org.fabric3.scdl.InjectableAttributeType;
 import org.fabric3.scdl.ServiceDefinition;
 
@@ -42,7 +43,7 @@ public interface IntrospectionHelper {
      * @param name the name of the class to load
      * @param cl   the classloader to use to load it
      * @return the class
-     * @throws ImplementationNotFoundException if the class could not be found
+     * @throws org.fabric3.introspection.java.ImplementationNotFoundException if the class could not be found
      */
     Class<?> loadClass(String name, ClassLoader cl) throws ImplementationNotFoundException;
 

@@ -21,7 +21,7 @@ package org.fabric3.introspection;
 import java.net.URI;
 import java.net.URL;
 
-import org.fabric3.introspection.java.TypeMapping;
+import org.fabric3.introspection.helper.TypeMapping;
 
 /**
  * Context for the current introspection session. It provides information about the environment in which the

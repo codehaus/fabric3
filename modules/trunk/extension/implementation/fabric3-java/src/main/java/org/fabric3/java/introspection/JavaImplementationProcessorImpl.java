@@ -24,10 +24,10 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.IntrospectionException;
+import org.fabric3.introspection.helper.IntrospectionHelper;
 import org.fabric3.introspection.java.ClassWalker;
 import org.fabric3.introspection.java.HeuristicProcessor;
-import org.fabric3.introspection.java.IntrospectionHelper;
-import org.fabric3.introspection.java.TypeMapping;
+import org.fabric3.introspection.helper.TypeMapping;
 import org.fabric3.introspection.xml.LoaderException;
 import org.fabric3.java.scdl.JavaImplementation;
 import org.fabric3.loader.common.IntrospectionContextImpl;
@@ -43,7 +43,7 @@ public class JavaImplementationProcessorImpl implements JavaImplementationProces
 
     public JavaImplementationProcessorImpl(@Reference(name="classWalker") ClassWalker<JavaImplementation> classWalker,
                                        @Reference(name="heuristic") HeuristicProcessor<JavaImplementation> heuristic,
-                                       @Reference(name="helper") IntrospectionHelper helper) {
+                                       @Reference(name="helper")IntrospectionHelper helper) {
         this.classWalker = classWalker;
         this.heuristic = heuristic;
         this.helper = helper;

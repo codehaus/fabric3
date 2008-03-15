@@ -14,7 +14,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.introspection.java;
+package org.fabric3.introspection.contract;
 
 import org.fabric3.introspection.IntrospectionException;
 

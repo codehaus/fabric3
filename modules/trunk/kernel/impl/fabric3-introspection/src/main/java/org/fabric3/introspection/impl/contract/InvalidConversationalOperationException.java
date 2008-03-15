@@ -20,7 +20,7 @@ package org.fabric3.introspection.impl.contract;
 
 import java.lang.reflect.Method;
 
-import org.fabric3.introspection.java.InvalidServiceContractException;
+import org.fabric3.introspection.contract.InvalidServiceContractException;
 
 /**
  * Denotes an invalid conversational interface definition
