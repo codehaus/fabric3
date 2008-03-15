@@ -65,18 +65,15 @@ public class SpringImplementationLoader implements TypeLoader<SpringImplementati
 
     private final SpringComponentTypeLoader componentTypeLoader;
     private final LoaderHelper loaderHelper;
-    private final IntrospectionRegistry introspector;
     private final IntrospectionHelper introspectionHelper;
 
     private boolean debug = false;
 
     public SpringImplementationLoader(@Reference SpringComponentTypeLoader componentTypeLoader,
                                       @Reference LoaderHelper loaderHelper,
-                                      @Reference IntrospectionRegistry introspector,
                                       @Reference IntrospectionHelper introspectionHelper) {
         this.componentTypeLoader = componentTypeLoader;
         this.loaderHelper = loaderHelper;
-        this.introspector = introspector;
         this.introspectionHelper = introspectionHelper;
     }
 
@@ -213,7 +210,7 @@ public class SpringImplementationLoader implements TypeLoader<SpringImplementati
             }
 
             PojoComponentType pojoComponentType = new PojoComponentType(implClass.getName());
-            introspector.introspect(implClass, pojoComponentType, introspectionContext);
+//            introspector.introspect(implClass, pojoComponentType, introspectionContext);
             springComponentType.getServices().putAll(pojoComponentType.getServices());
 
             // TODO work around: Use @Reference in spring bean to create a reference for now
