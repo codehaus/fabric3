@@ -21,24 +21,39 @@
            name="GroovyExtension"
            autowire="true">
 
-    <component name="org.fabric3.groovy.GroovyImplementationLoader">
-        <system:implementation.system class="org.fabric3.groovy.GroovyImplementationLoader"/>
+    <component name="org.fabric3.groovy.introspection.GroovyImplementationLoader">
+        <system:implementation.system class="org.fabric3.groovy.introspection.GroovyImplementationLoader"/>
+        <reference name="implementationProcessor" target="org.fabric3.groovy.introspection.GroovyImplementationProcessor"/>
     </component>
 
-    <component name="org.fabric3.groovy.GroovyComponentGenerator">
-        <system:implementation.system class="org.fabric3.groovy.GroovyComponentGenerator"/>
+    <component name="org.fabric3.groovy.introspection.GroovyImplementationProcessor">
+        <system:implementation.system class="org.fabric3.groovy.introspection.GroovyImplementationProcessor"/>
+        <reference name="classWalker" target="org.fabric3.groovy.introspection.ClassWalker"/>
+        <reference name="heuristic" target="org.fabric3.groovy.introspection.GroovyHeuristic"/>
     </component>
 
-    <component name="org.fabric3.groovy.GroovyComponentBuilder">
-        <system:implementation.system class="org.fabric3.groovy.GroovyComponentBuilder"/>
+    <component name="org.fabric3.groovy.introspection.ClassWalker">
+        <system:implementation.system class="org.fabric3.introspection.impl.DefaultClassWalker"/>
+    </component>
+
+    <component name="org.fabric3.groovy.introspection.GroovyHeuristic">
+        <system:implementation.system class="org.fabric3.groovy.introspection.GroovyHeuristic"/>
+    </component>
+
+    <component name="org.fabric3.groovy.control.GroovyComponentGenerator">
+        <system:implementation.system class="org.fabric3.groovy.control.GroovyComponentGenerator"/>
+    </component>
+
+    <component name="org.fabric3.groovy.runtime.GroovyComponentBuilder">
+        <system:implementation.system class="org.fabric3.groovy.runtime.GroovyComponentBuilder"/>
         <reference name="transformerRegistry" target="pullTransformerRegistry"/>
     </component>
 
-    <component name="org.fabric3.groovy.GroovyInstanceFactoryBuilder">
-        <system:implementation.system class="org.fabric3.groovy.GroovyInstanceFactoryBuilder"/>
+    <component name="org.fabric3.groovy.runtime.GroovyInstanceFactoryBuilder">
+        <system:implementation.system class="org.fabric3.groovy.runtime.GroovyInstanceFactoryBuilder"/>
     </component>
 
-    <component name="org.fabric3.groovy.GroovyWireAttacher">
-        <system:implementation.system class="org.fabric3.groovy.GroovyWireAttacher"/>
+    <component name="org.fabric3.groovy.runtime.GroovyWireAttacher">
+        <system:implementation.system class="org.fabric3.groovy.runtime.GroovyWireAttacher"/>
     </component>
 </composite>

@@ -14,24 +14,12 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.introspection.java;
+package org.fabric3.groovy.provision;
 
-import org.fabric3.introspection.IntrospectionException;
+import org.fabric3.pojo.wire.PojoWireSourceDefinition;
 
 /**
  * @version $Rev$ $Date$
  */
-public class ImplementationNotFoundException extends IntrospectionException {
-
-    public ImplementationNotFoundException(String identifier) {
-        super(identifier);
-    }
-
-    public ImplementationNotFoundException(String identifier, Throwable cause) {
-        super(identifier, cause);
-    }
-
-    public String getMessage() {
-        return "Unable to load implementation class: " + getIdentifier();
-    }
+public class GroovyWireSourceDefinition extends PojoWireSourceDefinition {
 }

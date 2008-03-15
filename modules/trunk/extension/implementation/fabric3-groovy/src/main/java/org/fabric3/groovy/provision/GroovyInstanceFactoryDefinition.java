@@ -14,24 +14,31 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.introspection.java;
+package org.fabric3.groovy.provision;
 
-import org.fabric3.introspection.IntrospectionException;
+import org.fabric3.pojo.instancefactory.InstanceFactoryDefinition;
 
 /**
  * @version $Rev$ $Date$
  */
-public class ImplementationNotFoundException extends IntrospectionException {
+public class GroovyInstanceFactoryDefinition extends InstanceFactoryDefinition {
+    private String scriptName;
 
-    public ImplementationNotFoundException(String identifier) {
-        super(identifier);
+    /**
+     * Returns the name of a file resource containing the implementation as Groovy script.
+     *
+     * @return the name of the script file
+     */
+    public String getScriptName() {
+        return scriptName;
     }
 
-    public ImplementationNotFoundException(String identifier, Throwable cause) {
-        super(identifier, cause);
-    }
-
-    public String getMessage() {
-        return "Unable to load implementation class: " + getIdentifier();
+    /**
+     * Sets the name of a file resource containing the implementation as Groovy script.
+     *
+     * @param scriptName the name of the script file
+     */
+    public void setScriptName(String scriptName) {
+        this.scriptName = scriptName;
     }
 }
