@@ -20,6 +20,8 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 
+import org.osoa.sca.annotations.Reference;
+
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.IntrospectionException;
 import org.fabric3.introspection.java.AbstractAnnotationProcessor;
@@ -43,7 +45,8 @@ public class Fabric3ResourceProcessor<I extends Implementation<? extends Injecti
     private final IntrospectionHelper helper;
     private final ContractProcessor contractProcessor;
 
-    public Fabric3ResourceProcessor(IntrospectionHelper helper, ContractProcessor contractProcessor) {
+    public Fabric3ResourceProcessor(@Reference IntrospectionHelper helper,
+                                    @Reference ContractProcessor contractProcessor) {
         super(Resource.class);
         this.helper = helper;
         this.contractProcessor = contractProcessor;

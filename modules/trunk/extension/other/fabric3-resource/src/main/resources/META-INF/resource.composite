@@ -30,12 +30,12 @@
            autowire="true">
     
     <!-- Processor for F3 resources -->
-    <component name="org.fabric3.resource.introspection.Fabric3ResourceProcessor">
+    <component f3:key="org.fabric3.api.annotation.Resource" name="org.fabric3.resource.introspection.Fabric3ResourceProcessor">
         <system:implementation.system class="org.fabric3.resource.introspection.Fabric3ResourceProcessor"/>
     </component>
     
     <!-- Processor for JSR250 resources -->
-    <component name="org.fabric3.resource.introspection.JSR250ResourceProcessor">
+    <component f3:key="javax.annotation.Resource" name="org.fabric3.resource.introspection.JSR250ResourceProcessor">
         <system:implementation.system class="org.fabric3.resource.introspection.JSR250ResourceProcessor"/>
     </component>
     
