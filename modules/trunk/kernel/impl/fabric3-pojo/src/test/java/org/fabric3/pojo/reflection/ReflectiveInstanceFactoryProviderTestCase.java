@@ -22,6 +22,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -85,7 +86,7 @@ public class ReflectiveInstanceFactoryProviderTestCase extends TestCase {
     public void testFieldInjectors() throws ObjectCreationException {
         sites.put(new FieldInjectionSite(intField), intProperty);
         sites.put(new FieldInjectionSite(stringField), stringProperty);
-        List<Injector<Foo>> injectors = provider.getInjectors();
+        Collection<Injector<Foo>> injectors = provider.getInjectors().values();
         assertEquals(2, injectors.size());
 
         Foo foo = new Foo();
@@ -101,7 +102,7 @@ public class ReflectiveInstanceFactoryProviderTestCase extends TestCase {
     public void testMethodInjectors() throws ObjectCreationException {
         sites.put(new MethodInjectionSite(intSetter, 0), intProperty);
         sites.put(new MethodInjectionSite(stringSetter, 0), stringProperty);
-        List<Injector<Foo>> injectors = provider.getInjectors();
+        Collection<Injector<Foo>> injectors = provider.getInjectors().values();
         assertEquals(2, injectors.size());
 
         Foo foo = new Foo();

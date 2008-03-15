@@ -26,6 +26,7 @@ import org.osoa.sca.Conversation;
 import org.fabric3.fabric.wire.jdk.ConversationImpl;
 import org.fabric3.scdl.Scope;
 import org.fabric3.spi.ObjectCreationException;
+import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.invocation.WorkContext;
 import org.fabric3.spi.component.AtomicComponent;
 import org.fabric3.spi.component.GroupInitializationException;
@@ -109,6 +110,10 @@ public class StatefulScopeContainerTestCase extends TestCase {
             
             public void reinject() {
             }
+            
+            public void addObjectFactory(AtomicComponent<?> component, ObjectFactory<?> factory, String referenceName, Object key) {
+            }
+
         };
     }
 }

@@ -23,12 +23,18 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.ArrayList;
 
+import org.fabric3.pojo.injection.ListMultiplicityObjectFactory;
+import org.fabric3.pojo.injection.MapMultiplicityObjectFactory;
+import org.fabric3.pojo.injection.MultiplicityObjectFactory;
+import org.fabric3.pojo.injection.SetMultiplicityObjectFactory;
 import org.fabric3.scdl.ConstructorInjectionSite;
 import org.fabric3.scdl.FieldInjectionSite;
+import org.fabric3.scdl.InjectableAttributeType;
 import org.fabric3.scdl.InjectionSite;
 import org.fabric3.scdl.MethodInjectionSite;
 import org.fabric3.scdl.InjectableAttribute;
@@ -68,6 +74,7 @@ public class ReflectiveInstanceFactoryProvider<T> implements InstanceFactoryProv
         this.initInvoker = initMethod == null ? null : new MethodEventInvoker<T>(initMethod);
         this.destroyInvoker = destroyMethod == null ? null : new MethodEventInvoker<T>(destroyMethod);
         this.cl = cl;
+
     }
 
     public void setObjectFactory(InjectableAttribute name, ObjectFactory<?> objectFactory) {
@@ -188,7 +195,7 @@ public class ReflectiveInstanceFactoryProvider<T> implements InstanceFactoryProv
 
     public InstanceFactory<T> createFactory() {
         ObjectFactory<T> factory = new ReflectiveObjectFactory<T>(constructor, getArgumentFactories(cdiSources));
-        List<Injector<T>> injectors = getInjectors();
+        Map<InjectableAttribute, Injector<T>> injectors = getInjectors();
         return new ReflectiveInstanceFactory<T>(factory, injectors, initInvoker, destroyInvoker, cl);
     }
 
@@ -205,19 +212,24 @@ public class ReflectiveInstanceFactoryProvider<T> implements InstanceFactoryProv
         return argumentFactories;
     }
 
-    protected List<Injector<T>> getInjectors() {
-        List<Injector<T>> injectors = new ArrayList<Injector<T>>(postConstruction.size());
+    protected Map<InjectableAttribute, Injector<T>> getInjectors() {
+        Map<InjectableAttribute, Injector<T>> injectors = new LinkedHashMap<InjectableAttribute, Injector<T>>(postConstruction.size());
         for (Map.Entry<InjectionSite, InjectableAttribute> entry : postConstruction.entrySet()) {
             InjectionSite site = entry.getKey();
-            InjectableAttribute name = entry.getValue();
-            ObjectFactory<?> factory = factories.get(name);
+            InjectableAttribute attribute = entry.getValue();
+            InjectableAttributeType attributeType = attribute.getValueType();
+            ObjectFactory<?> factory = factories.get(attribute);
+            if (factory == null && attributeType == InjectableAttributeType.REFERENCE) {
+                factory = getObjectFactory(site.getType(), entry.getValue());
+                factories.put(attribute, factory);
+            }
             if (factory != null) {
                 switch (site.getElementType()) {
                 case FIELD:
                     try {
                         FieldInjectionSite fieldSite = (FieldInjectionSite) site;
                         Field field = getField(fieldSite.getName());
-                        injectors.add(new FieldInjector<T>(field, factory));
+                        injectors.put(attribute, new FieldInjector<T>(field, factory));
                     } catch (NoSuchFieldException e) {
                         throw new AssertionError(e);
                     }
@@ -226,7 +238,7 @@ public class ReflectiveInstanceFactoryProvider<T> implements InstanceFactoryProv
                     try {
                         MethodInjectionSite methodSite = (MethodInjectionSite) site;
                         Method method = methodSite.getSignature().getMethod(implementationClass);
-                        injectors.add(new MethodInjector<T>(method, factory));
+                        injectors.put(attribute, new MethodInjector<T>(method, factory));
                     } catch (ClassNotFoundException e) {
                         throw new AssertionError(e);
                     } catch (NoSuchMethodException e) {
@@ -237,5 +249,24 @@ public class ReflectiveInstanceFactoryProvider<T> implements InstanceFactoryProv
             }
         }
         return injectors;
+    }
+
+    /*
+    * Adds the multiplicty reference factories.
+    */
+    private ObjectFactory<?> getObjectFactory(String referenceType, InjectableAttribute injectableAttribute) {
+
+        if ("java.util.Map".equals(referenceType)) {
+            return new MapMultiplicityObjectFactory();
+        } else if ("java.util.Set".equals(referenceType)) {
+            return new SetMultiplicityObjectFactory();
+        } else if ("java.util.List".equals(referenceType)) {
+            return new ListMultiplicityObjectFactory();
+        } else if ("java.util.Collection".equals(referenceType)) {
+            return new ListMultiplicityObjectFactory();
+        } else {
+            return NULL_FACTORY;
+        }
+        
     }
 }

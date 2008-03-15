@@ -3,6 +3,7 @@ package org.fabric3.binding.ejb.transport;
 import javax.ejb.EJBLocalObject;
 import javax.ejb.EJBObject;
 
+import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.component.InstanceWrapper;
 import org.fabric3.spi.component.TargetDestructionException;
 import org.fabric3.spi.component.TargetInitializationException;
@@ -49,6 +50,11 @@ public class EjbStatefulInstanceWrapper implements InstanceWrapper {
     }
     
     public void reinject() {
+    }
+
+    public void addObjectFactory(String referenceName, ObjectFactory factory, Object key) {
+        // TODO Auto-generated method stub
+        
     }
     
 }

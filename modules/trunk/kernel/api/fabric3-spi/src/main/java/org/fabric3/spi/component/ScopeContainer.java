@@ -21,11 +21,11 @@ package org.fabric3.spi.component;
 import java.net.URI;
 import java.util.List;
 
-import org.osoa.sca.ConversationEndedException;
-
-import org.fabric3.spi.Lifecycle;
-import org.fabric3.spi.invocation.WorkContext;
 import org.fabric3.scdl.Scope;
+import org.fabric3.spi.Lifecycle;
+import org.fabric3.spi.ObjectFactory;
+import org.fabric3.spi.invocation.WorkContext;
+import org.osoa.sca.ConversationEndedException;
 
 
 /**
@@ -36,6 +36,13 @@ import org.fabric3.scdl.Scope;
  * composite component, or for HTTP Session scope it might be the HTTP session ID.
  */
 public interface ScopeContainer<KEY> extends Lifecycle {
+    
+    /**
+     * @param component
+     * @param factory
+     * @param referenceName
+     */
+    void addObjectFactory(AtomicComponent<?> component, ObjectFactory<?> factory, String referenceName, Object key);
 
     /**
      * Returns the Scope that this container supports.

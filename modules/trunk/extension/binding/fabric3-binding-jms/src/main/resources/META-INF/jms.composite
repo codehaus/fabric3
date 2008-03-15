@@ -37,7 +37,7 @@
     </component>
 
     <!-- JMS Binding Generator -->
-    <component name="JmsBindingGenerator">
+    <component name="JmsBindingGenerator" f3:key="org.fabric3.binding.jms.model.logical.JmsBindingDefinition">
         <system:implementation.system class="org.fabric3.binding.jms.model.physical.JmsBindingGenerator"/>
     </component>
 

@@ -27,7 +27,7 @@
     </component>
 
     <!-- Burlap Binding Generator -->
-    <component name="BurlapBindingGenerator">
+    <component name="BurlapBindingGenerator" f3:key="org.fabric3.binding.burlap.model.logical.BurlapBindingDefinition">
         <system:implementation.system class="org.fabric3.binding.burlap.model.physical.BurlapBindingGenerator"/>
     </component>
 

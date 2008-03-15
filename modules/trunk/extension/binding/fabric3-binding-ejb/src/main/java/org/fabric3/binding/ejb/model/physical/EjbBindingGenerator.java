@@ -38,15 +38,6 @@ import org.osoa.sca.annotations.Reference;
 @EagerInit
 public class EjbBindingGenerator implements BindingGenerator<EjbWireSourceDefinition, EjbWireTargetDefinition, EjbBindingDefinition> {
 
-    /**
-     * Injects the generator registry.
-     * 
-     * @param generatorRegistry Generator registry.
-     */
-    public EjbBindingGenerator(@Reference GeneratorRegistry generatorRegistry) {
-        generatorRegistry.register(EjbBindingDefinition.class, this);
-    }
-
     public EjbWireSourceDefinition generateWireSource(LogicalBinding<EjbBindingDefinition> logicalBinding,
                                                       Policy policy,
                                                       ServiceDefinition serviceDefinition)

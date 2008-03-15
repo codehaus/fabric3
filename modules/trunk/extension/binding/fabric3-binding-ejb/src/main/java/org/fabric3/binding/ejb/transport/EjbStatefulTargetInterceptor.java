@@ -64,7 +64,6 @@ public class EjbStatefulTargetInterceptor extends BaseEjbTargetInterceptor {
         try {
             wrap = (EjbStatefulInstanceWrapper)scopeContainer.getWrapper(statefulComponent, message.getWorkContext());
             sfsb = wrap.getInstance();
-//            if(sfsb != null) System.out.println("Got SFSB instance from wrapper");
 
         } catch(TargetResolutionException tre) {
             throw new ServiceRuntimeException(tre);
@@ -72,7 +71,6 @@ public class EjbStatefulTargetInterceptor extends BaseEjbTargetInterceptor {
 
         if(sfsb == null) {
             sfsb = resolver.resolveStatefulEjb();
-//            System.out.println("Resolved SFSB: "+sfsb);
 
             isHome = sfsb instanceof EJBHome || sfsb instanceof EJBLocalHome;
 

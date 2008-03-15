@@ -37,19 +37,6 @@ import org.osoa.sca.annotations.Reference;
 public class RmiBindingGenerator
         implements BindingGenerator<RmiWireSourceDefinition, RmiWireTargetDefinition, RmiBindingDefinition> {
 
-    private final ClassLoaderGenerator classLoaderGenerator;
-
-    /**
-     * Injects the generator registry.
-     *
-     * @param generatorRegistry Generator registry.
-     */
-    public RmiBindingGenerator(
-            @Reference GeneratorRegistry generatorRegistry, @Reference ClassLoaderGenerator classLoaderGenerator) {
-        generatorRegistry.register(RmiBindingDefinition.class, this);
-        this.classLoaderGenerator = classLoaderGenerator;
-    }
-
     public RmiWireSourceDefinition generateWireSource(
             LogicalBinding<RmiBindingDefinition> logicalBinding,
             Policy policy,

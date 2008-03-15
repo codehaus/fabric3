@@ -27,7 +27,7 @@
     </component>
 
     <!-- Hessian Binding Generator -->
-    <component name="HessianBindingGenerator">
+    <component name="HessianBindingGenerator" f3:key="org.fabric3.binding.hessian.model.logical.HessianBindingDefinition">
         <system:implementation.system class="org.fabric3.binding.hessian.model.physical.HessianBindingGenerator"/>
     </component>
 

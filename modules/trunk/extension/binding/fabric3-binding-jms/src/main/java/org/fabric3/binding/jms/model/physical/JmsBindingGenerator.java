@@ -54,23 +54,6 @@ public class JmsBindingGenerator implements BindingGenerator<JmsWireSourceDefini
     private static final QName TRANSACTED_ONEWAY_LOCAL = new QName(Constants.SCA_NS, "transactedOneWay.local");
     private static final QName TRANSACTED_ONEWAY_GLOBAL = new QName(Constants.SCA_NS, "transactedOneWay.global");
 
-    private GeneratorRegistry generatorRegistry;
-
-    /**
-     * Injects the classloader generator.
-     *
-     * @param classLoaderGenerator Classloader generator.
-     * @param generatorRegistry    the generator registry
-     */
-    public JmsBindingGenerator(@Reference GeneratorRegistry generatorRegistry) {
-        this.generatorRegistry = generatorRegistry;
-    }
-
-    @Init
-    public void start() {
-        generatorRegistry.register(JmsBindingDefinition.class, this);
-    }
-
 
     public JmsWireSourceDefinition generateWireSource(LogicalBinding<JmsBindingDefinition> logicalBinding,
                                                       Policy policy,

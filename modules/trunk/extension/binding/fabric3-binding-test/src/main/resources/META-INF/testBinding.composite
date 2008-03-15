@@ -40,7 +40,7 @@ destination uri the reference should flow invocations to as in:
         <system:implementation.system class="org.fabric3.binding.test.TestBindingLoader"/>
     </component>
 
-    <component name="TestBindingGenerator">
+    <component name="TestBindingGenerator" f3:key="org.fabric3.binding.test.TestBindingDefinition">
         <system:implementation.system class="org.fabric3.binding.test.TestBindingGenerator"/>
     </component>
 

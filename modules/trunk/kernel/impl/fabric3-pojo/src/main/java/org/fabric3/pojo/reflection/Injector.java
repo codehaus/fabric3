@@ -18,7 +18,9 @@
  */
 package org.fabric3.pojo.reflection;
 
+
 import org.fabric3.spi.ObjectCreationException;
+import org.fabric3.spi.ObjectFactory;
 
 /**
  * Implementations inject a pre-configured value on an instance
@@ -31,5 +33,7 @@ public interface Injector<T> {
      * Inject a value on the given instance
      */
     void inject(T instance) throws ObjectCreationException;
+    
+    void setObectFactory(ObjectFactory<?> objectFactory, Object key);
 
 }

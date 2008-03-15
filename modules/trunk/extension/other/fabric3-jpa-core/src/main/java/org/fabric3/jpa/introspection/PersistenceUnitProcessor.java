@@ -22,6 +22,7 @@ import java.lang.reflect.Type;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceUnit;
 
+import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.introspection.IntrospectionContext;
@@ -40,6 +41,7 @@ import org.fabric3.scdl.ServiceContract;
 /**
  * @version $Rev$ $Date$
  */
+@EagerInit
 public class PersistenceUnitProcessor<I extends Implementation<? extends InjectingComponentType>> extends AbstractAnnotationProcessor<PersistenceUnit, I> {
 
     private final ServiceContract<Type> factoryServiceContract;

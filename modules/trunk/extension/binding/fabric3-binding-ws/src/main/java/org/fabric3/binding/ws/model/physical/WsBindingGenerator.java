@@ -42,22 +42,12 @@ import org.osoa.sca.annotations.Reference;
  */
 @EagerInit
 public class WsBindingGenerator implements BindingGenerator<PhysicalWireSourceDefinition, PhysicalWireTargetDefinition, WsBindingDefinition> {
+    
     private Map<String, BindingGeneratorDelegate<WsBindingDefinition>> delegates;
-    private GeneratorRegistry generatorRegistry;
-
-    @Reference
-    public void setGeneratorRegistry(GeneratorRegistry generatorRegistry) {
-        this.generatorRegistry = generatorRegistry;
-    }
 
     @Reference
     public void setDelegates(Map<String, BindingGeneratorDelegate<WsBindingDefinition>> delegates) {
         this.delegates = delegates;
-    }
-
-    @Init
-    public void start() {
-        generatorRegistry.register(WsBindingDefinition.class, this);
     }
 
     public PhysicalWireSourceDefinition generateWireSource(LogicalBinding<WsBindingDefinition> logicalBinding,

@@ -27,7 +27,7 @@
     </component>
 
     <!-- Ws Binding Generator -->
-    <component name="WsBindingGenerator">
+    <component name="WsBindingGenerator" f3:key="org.fabric3.binding.ws.model.logical.WsBindingDefinition">
         <system:implementation.system class="org.fabric3.binding.ws.model.physical.WsBindingGenerator"/>
     </component>
 

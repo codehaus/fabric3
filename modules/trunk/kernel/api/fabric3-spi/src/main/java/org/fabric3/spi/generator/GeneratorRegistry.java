@@ -63,21 +63,6 @@ public interface GeneratorRegistry {
         throws GeneratorNotFoundException;
 
     /**
-     * Registers a binding generator.
-     *
-     * @param clazz the binding type the generator handles
-     * @param generator the generator to register
-     */
-    <T extends BindingDefinition> void register(Class<T> clazz, BindingGenerator<?, ?, T> generator);
-
-    /**
-     * Unregisters a binding generator
-     * @param clazz the binding type the generator handles
-     * @param generator the generator to unregister
-     */
-    <T extends BindingDefinition> void unregister(Class<T> clazz, BindingGenerator<?, ?, T> generator);
-
-    /**
      * Gets a binding generator for the specified binding class.
      * 
      * @param clazz The binding type type the generator handles.

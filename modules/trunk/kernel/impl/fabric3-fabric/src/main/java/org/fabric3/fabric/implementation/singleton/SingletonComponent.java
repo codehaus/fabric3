@@ -134,6 +134,11 @@ public class SingletonComponent<T> extends AbstractLifecycle implements AtomicCo
         
         public void reinject() {
         }
+
+        public void addObjectFactory(String referenceName, ObjectFactory<?> factory, Object key) {
+            // TODO Auto-generated method stub
+            
+        }
         
     }
 }

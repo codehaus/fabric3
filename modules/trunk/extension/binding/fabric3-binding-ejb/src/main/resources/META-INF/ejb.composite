@@ -27,7 +27,7 @@
     </component>
 
     <!-- EJB Binding Generator -->
-    <component name="EjbBindingGenerator">
+    <component name="EjbBindingGenerator" f3:key="org.fabric3.binding.ejb.model.logical.EjbBindingDefinition">
         <system:implementation.system class="org.fabric3.binding.ejb.model.physical.EjbBindingGenerator"/>
     </component>
 

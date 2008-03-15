@@ -36,6 +36,7 @@ import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.generator.InterceptorDefinitionGenerator;
 import org.fabric3.spi.generator.ResourceWireGenerator;
 import org.fabric3.spi.model.instance.LogicalComponent;
+import org.osoa.sca.annotations.Reference;
 
 /**
  * @version $Rev$ $Date$
@@ -55,6 +56,11 @@ public class GeneratorRegistryImpl implements GeneratorRegistry {
     
     private Map<Class<? extends ResourceDefinition>, ResourceWireGenerator<?, ? extends ResourceDefinition>> resourceWireGenerators =
         new ConcurrentHashMap<Class<? extends ResourceDefinition>, ResourceWireGenerator<?, ? extends ResourceDefinition>>();
+    
+    @Reference(required = false)
+    public void setBindingGenerators(Map<Class<? extends BindingDefinition>, BindingGenerator<?, ?, ? extends BindingDefinition>> bindingGenerators) {
+        this.bindingGenerators = bindingGenerators;
+    }
 
     public <T extends Implementation<?>> void register(Class<T> clazz, ComponentGenerator<LogicalComponent<T>> generator) {
         componentGenerators.put(clazz, generator);

@@ -19,8 +19,11 @@
 package org.fabric3.pojo.reflection;
 
 import java.util.List;
+import java.util.Map;
 
+import org.fabric3.scdl.InjectableAttribute;
 import org.fabric3.spi.ObjectCreationException;
+import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.component.InstanceWrapper;
 import org.fabric3.spi.component.TargetDestructionException;
 import org.fabric3.spi.component.TargetInitializationException;
@@ -35,19 +38,20 @@ public class ReflectiveInstanceWrapper<T> implements InstanceWrapper<T> {
     private final EventInvoker<T> initInvoker;
     private final EventInvoker<T> destroyInvoker;
     private boolean started;
-    private final List<Injector<T>> injectors;
+    private final Map<InjectableAttribute, Injector<T>> injectors;
 
     public ReflectiveInstanceWrapper(T instance,
                                      ClassLoader cl,
                                      EventInvoker<T> initInvoker,
                                      EventInvoker<T> destroyInvoker,
-                                     List<Injector<T>> injectors) {
+                                     Map<InjectableAttribute, Injector<T>> injectors) {
         this.instance = instance;
         this.cl = cl;
         this.initInvoker = initInvoker;
         this.destroyInvoker = destroyInvoker;
         this.started = false;
         this.injectors = injectors;
+        
     }
 
     public T getInstance() {
@@ -99,13 +103,24 @@ public class ReflectiveInstanceWrapper<T> implements InstanceWrapper<T> {
         
         try {
             if (injectors != null) {
-                for (Injector<T> injector : injectors) {
+                for (Injector<T> injector : injectors.values()) {
                     injector.inject(instance);
                 }
             }
         } catch (ObjectCreationException ex) {
             throw new TargetResolutionException("Unable to inject", ex);
         }
+    }
+
+    public void addObjectFactory(String referenceName, ObjectFactory<?> factory, Object key) {
+        
+        for (InjectableAttribute attribute : injectors.keySet()) {
+            if (attribute.getName().equals(referenceName)) {
+                injectors.get(attribute).setObectFactory(factory, key);
+            }
+        }
+        // TODO Auto-generated method stub
+        
     }
     
 }

@@ -35,6 +35,7 @@ import org.osoa.sca.annotations.Service;
 
 import org.fabric3.api.annotation.Monitor;
 import org.fabric3.scdl.Scope;
+import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.component.AtomicComponent;
 import org.fabric3.spi.component.ExpirationPolicy;
 import org.fabric3.spi.component.GroupInitializationException;
@@ -127,6 +128,10 @@ public class ConversationalScopeContainer extends StatefulScopeContainer<Convers
     }
     
     public void reinject() {
+    }
+    
+    public void addObjectFactory(AtomicComponent<?> component, ObjectFactory<?> factory, String referenceName, Object key) {
+        
     }
 
     /**

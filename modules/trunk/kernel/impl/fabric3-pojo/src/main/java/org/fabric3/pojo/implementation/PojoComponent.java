@@ -51,7 +51,7 @@ public abstract class PojoComponent<T> extends AbstractLifecycle implements Atom
     private final long maxIdleTime;
     private final long maxAge;
     private InstanceFactory<T> instanceFactory;
-    private final Map<String, MultiplicityObjectFactory<?>> referenceFactories;
+    private final Map<String, MultiplicityObjectFactory<?>> multiplicityReferenceFactories;
 
     public PojoComponent(URI componentId,
                          InstanceFactoryProvider<T> provider,
@@ -68,7 +68,7 @@ public abstract class PojoComponent<T> extends AbstractLifecycle implements Atom
         this.initLevel = initLevel;
         this.maxIdleTime = maxIdleTime;
         this.maxAge = maxAge;
-        this.referenceFactories = referenceFactories;
+        this.multiplicityReferenceFactories = referenceFactories;
     }
 
     public URI getUri() {
@@ -163,10 +163,12 @@ public abstract class PojoComponent<T> extends AbstractLifecycle implements Atom
      */
     public void attachReferenceToTarget(InjectableAttribute referenceSource, ObjectFactory<?> objectFactory, Object key) {
         
-        MultiplicityObjectFactory<?> factory = referenceFactories.get(referenceSource.getName());
+        MultiplicityObjectFactory<?> factory = multiplicityReferenceFactories.get(referenceSource.getName());
+
         if(factory != null) {
             factory.addObjectFactory(objectFactory, key);
             setObjectFactory(referenceSource, factory);
+            scopeContainer.addObjectFactory(this, objectFactory, referenceSource.getName(), key);
         } else {
             setObjectFactory(referenceSource, objectFactory);
         }

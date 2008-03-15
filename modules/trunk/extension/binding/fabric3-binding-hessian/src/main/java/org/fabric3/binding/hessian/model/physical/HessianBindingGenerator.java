@@ -40,18 +40,6 @@ import org.osoa.sca.annotations.Reference;
 @EagerInit
 public class HessianBindingGenerator implements BindingGenerator<HessianWireSourceDefinition, HessianWireTargetDefinition, HessianBindingDefinition> {
 
-    private GeneratorRegistry generatorRegistry;
-
-    public HessianBindingGenerator(@Reference GeneratorRegistry generatorRegistry) {
-
-        this.generatorRegistry = generatorRegistry;
-    }
-
-    @Init
-    public void start() {
-        generatorRegistry.register(HessianBindingDefinition.class, this);
-    }
-
     public HessianWireSourceDefinition generateWireSource(LogicalBinding<HessianBindingDefinition> logicalBinding,
                                                           Policy policy,
                                                           ServiceDefinition serviceDefinition)

@@ -24,6 +24,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import org.fabric3.api.annotation.Monitor;
 import org.fabric3.scdl.Scope;
+import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.component.AtomicComponent;
 import org.fabric3.spi.component.ExpirationPolicy;
 import org.fabric3.spi.component.GroupInitializationException;
@@ -33,8 +34,6 @@ import org.fabric3.spi.component.TargetDestructionException;
 import org.fabric3.spi.component.TargetInitializationException;
 import org.fabric3.spi.component.TargetResolutionException;
 import org.fabric3.spi.invocation.WorkContext;
-import org.fabric3.spi.services.event.Fabric3Event;
-import org.fabric3.spi.services.event.Fabric3EventListener;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Service;
 
@@ -63,6 +62,11 @@ public class CompositeScopeContainer extends AbstractScopeContainer<URI> {
         }
         
         public void reinject() {
+        }
+
+        public void addObjectFactory(String referenceName, ObjectFactory<?> factory, Object key) {
+            // TODO Auto-generated method stub
+            
         }
         
     };
@@ -130,6 +134,13 @@ public class CompositeScopeContainer extends AbstractScopeContainer<URI> {
     public void reinject() throws TargetResolutionException {
         for (InstanceWrapper<?> instanceWrapper : instanceWrappers.values()) {
             instanceWrapper.reinject();
+        }
+    }
+    
+    public void addObjectFactory(AtomicComponent<?> component, ObjectFactory<?> factory, String referenceName, Object key) {
+        InstanceWrapper<?> wrapper = instanceWrappers.get(component);
+        if (wrapper != null) {
+            wrapper.addObjectFactory(referenceName, factory, key);
         }
     }
 }

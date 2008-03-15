@@ -21,6 +21,7 @@ package org.fabric3.pojo.reflection;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
+import org.fabric3.pojo.injection.MultiplicityObjectFactory;
 import org.fabric3.spi.ObjectCreationException;
 import org.fabric3.spi.ObjectFactory;
 
@@ -31,7 +32,7 @@ import org.fabric3.spi.ObjectFactory;
  */
 public class MethodInjector<T> implements Injector<T> {
     private final Method method;
-    private final ObjectFactory<?> objectFactory;
+    private ObjectFactory<?> objectFactory;
 
     public MethodInjector(Method method, ObjectFactory<?> objectFactory) {
         assert method != null;
@@ -42,7 +43,9 @@ public class MethodInjector<T> implements Injector<T> {
     }
 
     public void inject(T instance) throws ObjectCreationException {
+        
         Object target = objectFactory.getInstance();
+        
         try {
             method.invoke(instance, target);
         } catch (IllegalAccessException e) {
@@ -54,5 +57,15 @@ public class MethodInjector<T> implements Injector<T> {
             String id = method.toString();
             throw new ObjectCreationException("Exception thrown by setter: " + id, id, e);
         }
+    }
+
+    public void setObectFactory(ObjectFactory<?> objectFactory, Object key) {
+        
+        if (this.objectFactory instanceof MultiplicityObjectFactory<?>) {
+            ((MultiplicityObjectFactory<?>) this.objectFactory).addObjectFactory(objectFactory, key);
+        } else {
+            this.objectFactory = objectFactory;
+        }
+        
     }
 }

@@ -20,6 +20,7 @@ package org.fabric3.pojo.reflection;
 
 import java.lang.reflect.Field;
 
+import org.fabric3.pojo.injection.MultiplicityObjectFactory;
 import org.fabric3.spi.ObjectCreationException;
 import org.fabric3.spi.ObjectFactory;
 
@@ -32,7 +33,7 @@ public class FieldInjector<T> implements Injector<T> {
 
     private final Field field;
 
-    private final ObjectFactory<?> objectFactory;
+    private ObjectFactory<?> objectFactory;
 
     /**
      * Create an injector and have it use the given <code>ObjectFactory</code> to inject a value on the instance using the reflected
@@ -57,5 +58,15 @@ public class FieldInjector<T> implements Injector<T> {
             String id = field.getName();
             throw new AssertionError("Field is not accessible:" + id);
         }
+    }
+
+    public void setObectFactory(ObjectFactory<?> objectFactory, Object key) {
+        
+        if (this.objectFactory instanceof MultiplicityObjectFactory<?>) {
+            ((MultiplicityObjectFactory<?>) this.objectFactory).addObjectFactory(objectFactory, key);
+        } else {
+            this.objectFactory = objectFactory;
+        }
+        
     }
 }

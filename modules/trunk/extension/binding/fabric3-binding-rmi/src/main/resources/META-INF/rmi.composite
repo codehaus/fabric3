@@ -31,7 +31,7 @@
     </component>
 
     <!-- Binding Generator -->
-    <component name="RMIBindingGenerator">
+    <component name="RMIBindingGenerator" f3:key="org.fabric3.binding.rmi.model.logical.RmiBindingDefinition">
         <system:implementation.system class="org.fabric3.binding.rmi.model.physical.RmiBindingGenerator"/>
     </component>
 

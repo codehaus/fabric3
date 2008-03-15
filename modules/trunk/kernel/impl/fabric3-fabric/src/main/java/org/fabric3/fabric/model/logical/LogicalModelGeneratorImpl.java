@@ -70,10 +70,6 @@ public class LogicalModelGeneratorImpl implements LogicalModelGenerator {
 
     @SuppressWarnings("unchecked")
     public void include(LogicalCompositeComponent parent, Composite composite) throws ActivateException {
-        
-        if (parent == null) {
-            System.err.println("Oops parent is null:" + composite.getName());
-        }
 
         // merge the property values into the parent
         for (Property property : composite.getProperties().values()) {

@@ -34,16 +34,6 @@ import org.osoa.sca.annotations.Reference;
  */
 @EagerInit
 public class TestBindingGenerator implements BindingGenerator<TestBindingSourceDefinition, TestBindingTargetDefinition, TestBindingDefinition> {
-    private GeneratorRegistry generatorRegistry;
-
-    public TestBindingGenerator(@Reference GeneratorRegistry generatorRegistry) {
-        this.generatorRegistry = generatorRegistry;
-    }
-
-    @Init
-    public void start() {
-        generatorRegistry.register(TestBindingDefinition.class, this);
-    }
 
     public TestBindingSourceDefinition generateWireSource(LogicalBinding<TestBindingDefinition> logicalBinding,
                                                           Policy policy,

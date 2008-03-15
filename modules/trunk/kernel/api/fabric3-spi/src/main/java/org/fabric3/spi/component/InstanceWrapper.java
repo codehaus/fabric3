@@ -18,6 +18,8 @@
  */
 package org.fabric3.spi.component;
 
+import org.fabric3.spi.ObjectFactory;
+
 
 /**
  * Provides lifecycle management for an implementation instance associated with an {@link
@@ -37,5 +39,7 @@ public interface InstanceWrapper<T> {
     void stop() throws TargetDestructionException;
     
     void reinject() throws TargetResolutionException;
+
+    void addObjectFactory(String referenceName, ObjectFactory<?> factory, Object key);
 
 }
