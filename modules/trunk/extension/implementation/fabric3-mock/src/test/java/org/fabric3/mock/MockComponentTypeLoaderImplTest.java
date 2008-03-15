@@ -21,7 +21,7 @@ import java.util.List;
 
 import org.easymock.EasyMock;
 import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.introspection.helper.IntrospectionHelper;
+import org.fabric3.introspection.IntrospectionHelper;
 import org.fabric3.introspection.contract.ContractProcessor;
 import org.fabric3.introspection.impl.contract.DefaultContractProcessor;
 import org.fabric3.introspection.impl.DefaultIntrospectionHelper;

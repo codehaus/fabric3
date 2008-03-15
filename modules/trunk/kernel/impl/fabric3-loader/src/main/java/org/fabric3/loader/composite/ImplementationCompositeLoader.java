@@ -31,7 +31,7 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.loader.common.IntrospectionContextImpl;
+import org.fabric3.introspection.DefaultIntrospectionContext;
 import org.fabric3.loader.common.MissingAttributeException;
 import org.fabric3.scdl.Composite;
 import org.fabric3.scdl.CompositeImplementation;
@@ -93,7 +93,7 @@ public class ImplementationCompositeLoader implements TypeLoader<CompositeImplem
             } catch (MalformedURLException e) {
                 throw new MissingResourceException(scdlLocation, scdlLocation, e);
             }
-            IntrospectionContext childContext = new IntrospectionContextImpl(cl, contributionUri, url);
+            IntrospectionContext childContext = new DefaultIntrospectionContext(cl, contributionUri, url);
             Composite composite = loader.load(url, Composite.class, childContext);
             impl.setName(composite.getName());
             impl.setComponentType(composite);
@@ -103,7 +103,7 @@ public class ImplementationCompositeLoader implements TypeLoader<CompositeImplem
             if (url == null) {
                 throw new MissingResourceException(scdlResource, scdlResource);
             }
-            IntrospectionContext childContext = new IntrospectionContextImpl(cl, contributionUri, url);
+            IntrospectionContext childContext = new DefaultIntrospectionContext(cl, contributionUri, url);
             Composite composite = loader.load(url, Composite.class, childContext);
             impl.setName(composite.getName());
             impl.setComponentType(composite);

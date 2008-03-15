@@ -30,7 +30,7 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.fabric.services.contribution.processor.Action;
 import org.fabric3.host.contribution.ContributionException;
-import org.fabric3.loader.common.IntrospectionContextImpl;
+import org.fabric3.introspection.DefaultIntrospectionContext;
 import org.fabric3.runtime.webapp.WebappHostInfo;
 import org.fabric3.introspection.xml.Loader;
 import org.fabric3.introspection.IntrospectionContext;
@@ -101,7 +101,7 @@ public class WarContributionProcessor implements ContributionProcessor {
 
             ClassLoader cl = getClass().getClassLoader();
             URI uri = contribution.getUri();
-            IntrospectionContext context = new IntrospectionContextImpl(cl, uri, null);
+            IntrospectionContext context = new DefaultIntrospectionContext(cl, uri, null);
             ContributionManifest manifest = loader.load(manifestURL, ContributionManifest.class, context);
             contribution.setManifest(manifest);
         } catch (LoaderException e) {

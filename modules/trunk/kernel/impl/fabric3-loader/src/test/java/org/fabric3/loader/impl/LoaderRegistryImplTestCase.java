@@ -28,7 +28,7 @@ import javax.xml.stream.XMLStreamReader;
 import junit.framework.TestCase;
 import org.easymock.EasyMock;
 
-import org.fabric3.loader.common.IntrospectionContextImpl;
+import org.fabric3.introspection.DefaultIntrospectionContext;
 import org.fabric3.scdl.ModelObject;
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.xml.LoaderException;
@@ -113,7 +113,7 @@ public class LoaderRegistryImplTestCase extends TestCase {
         super.setUp();
         name = new QName("http://mock", "test");
         ClassLoader cl = getClass().getClassLoader();
-        introspectionContext = new IntrospectionContextImpl(cl, null, null);
+        introspectionContext = new DefaultIntrospectionContext(cl, null, null);
         mockMonitor = EasyMock.createMock(LoaderRegistryImpl.Monitor.class);
         XMLInputFactory xmlInputFactory = XMLInputFactory.newInstance();
         XMLFactory xmlFactory = EasyMock.createMock(XMLFactory.class);

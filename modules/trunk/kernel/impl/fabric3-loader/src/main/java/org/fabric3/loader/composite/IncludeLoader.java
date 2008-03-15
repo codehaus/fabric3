@@ -28,7 +28,7 @@ import javax.xml.stream.XMLStreamReader;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.loader.common.MissingAttributeException;
-import org.fabric3.loader.common.IntrospectionContextImpl;
+import org.fabric3.introspection.DefaultIntrospectionContext;
 import org.fabric3.scdl.Composite;
 import org.fabric3.scdl.Include;
 import org.fabric3.introspection.xml.Loader;
@@ -109,7 +109,7 @@ public class IncludeLoader implements TypeLoader<Include> {
 
     private Include loadFromSideFile(QName name, ClassLoader cl, URI contributionUri, URL url) throws InvalidIncludeException {
         Include include = new Include();
-        IntrospectionContext childContext = new IntrospectionContextImpl(cl, contributionUri, url);
+        IntrospectionContext childContext = new DefaultIntrospectionContext(cl, contributionUri, url);
         Composite composite;
         try {
             composite = loader.load(url, Composite.class, childContext);

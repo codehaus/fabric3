@@ -23,10 +23,10 @@ import org.osoa.sca.annotations.Service;
 
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.IntrospectionException;
+import org.fabric3.introspection.TypeMapping;
 import org.fabric3.introspection.contract.ContractProcessor;
 import org.fabric3.introspection.java.AbstractAnnotationProcessor;
 import org.fabric3.introspection.contract.InvalidServiceContractException;
-import org.fabric3.introspection.helper.TypeMapping;
 import org.fabric3.scdl.Implementation;
 import org.fabric3.scdl.InjectingComponentType;
 import org.fabric3.scdl.ServiceContract;

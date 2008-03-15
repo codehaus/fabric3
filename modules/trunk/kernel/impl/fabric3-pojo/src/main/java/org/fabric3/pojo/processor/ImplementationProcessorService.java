@@ -24,7 +24,7 @@ import java.util.List;
 
 import org.fabric3.introspection.contract.InvalidServiceContractException;
 import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.introspection.helper.TypeMapping;
+import org.fabric3.introspection.TypeMapping;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.ServiceDefinition;
 import org.fabric3.scdl.ReferenceDefinition;

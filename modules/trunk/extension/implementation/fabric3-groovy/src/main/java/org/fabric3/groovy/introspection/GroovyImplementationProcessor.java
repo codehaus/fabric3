@@ -26,13 +26,13 @@ import org.osoa.sca.annotations.Reference;
 import org.fabric3.groovy.scdl.GroovyImplementation;
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.IntrospectionException;
-import org.fabric3.introspection.helper.IntrospectionHelper;
+import org.fabric3.introspection.IntrospectionHelper;
 import org.fabric3.introspection.java.ClassWalker;
 import org.fabric3.introspection.java.HeuristicProcessor;
 import org.fabric3.introspection.java.ImplementationNotFoundException;
 import org.fabric3.introspection.java.ImplementationProcessor;
-import org.fabric3.introspection.helper.TypeMapping;
-import org.fabric3.loader.common.IntrospectionContextImpl;
+import org.fabric3.introspection.TypeMapping;
+import org.fabric3.introspection.DefaultIntrospectionContext;
 import org.fabric3.pojo.scdl.PojoComponentType;
 
 /**
@@ -62,7 +62,7 @@ public class GroovyImplementationProcessor implements ImplementationProcessor<Gr
 
         TypeMapping typeMapping = helper.mapTypeParameters(implClass);
 
-        context = new IntrospectionContextImpl(context, typeMapping);
+        context = new DefaultIntrospectionContext(context, typeMapping);
         classWalker.walk(implementation, implClass, context);
 
         heuristic.applyHeuristics(implementation, implClass, context);

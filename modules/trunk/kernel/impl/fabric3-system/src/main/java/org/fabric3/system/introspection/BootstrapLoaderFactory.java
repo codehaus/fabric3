@@ -40,7 +40,7 @@ import org.fabric3.introspection.impl.contract.DefaultContractProcessor;
 import org.fabric3.introspection.java.AnnotationProcessor;
 import org.fabric3.introspection.java.ClassWalker;
 import org.fabric3.introspection.contract.ContractProcessor;
-import org.fabric3.introspection.helper.IntrospectionHelper;
+import org.fabric3.introspection.IntrospectionHelper;
 import org.fabric3.introspection.xml.Loader;
 import org.fabric3.introspection.xml.LoaderHelper;
 import org.fabric3.introspection.xml.TypeLoader;

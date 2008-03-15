@@ -33,7 +33,7 @@ import org.osoa.sca.annotations.Constructor;
 
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.xml.InvalidServiceException;
-import org.fabric3.loader.common.IntrospectionContextImpl;
+import org.fabric3.introspection.DefaultIntrospectionContext;
 import org.fabric3.scdl.Autowire;
 import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.Composite;
@@ -152,7 +152,7 @@ public class CompositeLoader implements TypeLoader<Composite> {
         String name = reader.getAttributeValue(null, "name");
         String targetNamespace = reader.getAttributeValue(null, "targetNamespace");
         boolean local = Boolean.valueOf(reader.getAttributeValue(null, "local"));
-        introspectionContext = new IntrospectionContextImpl(introspectionContext, targetNamespace);
+        introspectionContext = new DefaultIntrospectionContext(introspectionContext, targetNamespace);
         QName compositeName = new QName(targetNamespace, name);
         QName constrainingType = LoaderUtil.getQName(reader.getAttributeValue(null, "constrainingType"),
                                                      targetNamespace,

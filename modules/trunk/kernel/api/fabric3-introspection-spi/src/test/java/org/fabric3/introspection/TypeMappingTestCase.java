@@ -14,12 +14,14 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.introspection.helper;
+package org.fabric3.introspection;
 
 import java.lang.reflect.TypeVariable;
 import java.util.Collection;
 
 import junit.framework.TestCase;
+
+import org.fabric3.introspection.TypeMapping;
 
 /**
  * @version $Rev$ $Date$

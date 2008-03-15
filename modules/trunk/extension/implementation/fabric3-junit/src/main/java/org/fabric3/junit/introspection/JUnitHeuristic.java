@@ -27,11 +27,11 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.IntrospectionException;
-import org.fabric3.introspection.helper.IntrospectionHelper;
+import org.fabric3.introspection.IntrospectionHelper;
+import org.fabric3.introspection.TypeMapping;
 import org.fabric3.introspection.contract.ContractProcessor;
 import org.fabric3.introspection.contract.InvalidServiceContractException;
 import org.fabric3.introspection.java.HeuristicProcessor;
-import org.fabric3.introspection.helper.TypeMapping;
 import org.fabric3.introspection.java.UnsupportedTypeException;
 import org.fabric3.java.introspection.AmbiguousConstructorException;
 import org.fabric3.java.introspection.NoConstructorException;

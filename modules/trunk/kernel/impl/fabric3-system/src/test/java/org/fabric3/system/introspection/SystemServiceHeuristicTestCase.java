@@ -27,10 +27,10 @@ import org.easymock.classextension.EasyMock;
 import org.easymock.classextension.IMocksControl;
 
 import org.fabric3.introspection.contract.ContractProcessor;
-import org.fabric3.introspection.helper.IntrospectionHelper;
+import org.fabric3.introspection.IntrospectionHelper;
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.IntrospectionException;
-import org.fabric3.introspection.helper.TypeMapping;
+import org.fabric3.introspection.TypeMapping;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.ServiceContract;
 import org.fabric3.scdl.ServiceDefinition;

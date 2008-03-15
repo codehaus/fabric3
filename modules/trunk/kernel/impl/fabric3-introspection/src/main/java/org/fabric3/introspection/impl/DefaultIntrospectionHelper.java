@@ -42,8 +42,8 @@ import org.osoa.sca.annotations.Service;
 import org.osoa.sca.annotations.Callback;
 
 import org.fabric3.introspection.IntrospectionException;
-import org.fabric3.introspection.helper.IntrospectionHelper;
-import org.fabric3.introspection.helper.TypeMapping;
+import org.fabric3.introspection.IntrospectionHelper;
+import org.fabric3.introspection.TypeMapping;
 import org.fabric3.introspection.java.ImplementationNotFoundException;
 import org.fabric3.scdl.InjectableAttributeType;
 import org.fabric3.scdl.ServiceDefinition;

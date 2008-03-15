@@ -31,7 +31,7 @@ import org.osoa.sca.annotations.Reference;
 import org.fabric3.fabric.services.contribution.processor.Action;
 import org.fabric3.fabric.util.FileHelper;
 import org.fabric3.host.contribution.ContributionException;
-import org.fabric3.loader.common.IntrospectionContextImpl;
+import org.fabric3.introspection.DefaultIntrospectionContext;
 import org.fabric3.maven.runtime.MavenHostInfo;
 import org.fabric3.introspection.xml.Loader;
 import org.fabric3.introspection.IntrospectionContext;
@@ -102,7 +102,7 @@ public class ModuleContributionProcessor implements ContributionProcessor {
             URL manifestURL = new URL(sourceUrl.toExternalForm() + "/classes/META-INF/sca-contribution.xml");
             ClassLoader cl = getClass().getClassLoader();
             URI uri = contribution.getUri();
-            IntrospectionContext context = new IntrospectionContextImpl(cl, uri, null);
+            IntrospectionContext context = new DefaultIntrospectionContext(cl, uri, null);
             manifest = loader.load(manifestURL, ContributionManifest.class, context);
         } catch (LoaderException e) {
             if (e.getCause() instanceof FileNotFoundException) {

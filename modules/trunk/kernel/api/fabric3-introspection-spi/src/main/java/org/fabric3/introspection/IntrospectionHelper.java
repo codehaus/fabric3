@@ -14,7 +14,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.introspection.helper;
+package org.fabric3.introspection;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Constructor;

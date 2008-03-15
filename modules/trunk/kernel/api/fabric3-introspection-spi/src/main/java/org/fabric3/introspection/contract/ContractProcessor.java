@@ -18,7 +18,7 @@ package org.fabric3.introspection.contract;
 
 import java.lang.reflect.Type;
 
-import org.fabric3.introspection.helper.TypeMapping;
+import org.fabric3.introspection.TypeMapping;
 import org.fabric3.scdl.ServiceContract;
 
 /**

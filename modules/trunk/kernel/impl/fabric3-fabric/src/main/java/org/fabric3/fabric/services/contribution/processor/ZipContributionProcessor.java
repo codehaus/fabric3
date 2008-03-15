@@ -32,7 +32,7 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.host.contribution.Constants;
 import org.fabric3.host.contribution.ContributionException;
-import org.fabric3.loader.common.IntrospectionContextImpl;
+import org.fabric3.introspection.DefaultIntrospectionContext;
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.xml.Loader;
 import org.fabric3.introspection.xml.LoaderException;
@@ -73,7 +73,7 @@ public class ZipContributionProcessor extends ArchiveContributionProcessor imple
             URL manifestURL = new URL("jar:" + sourceUrl.toExternalForm() + "!/META-INF/sca-contribution.xml");
             ClassLoader cl = getClass().getClassLoader();
             URI uri = contribution.getUri();
-            IntrospectionContext context = new IntrospectionContextImpl(cl, uri, null);
+            IntrospectionContext context = new DefaultIntrospectionContext(cl, uri, null);
             manifest = loader.load(manifestURL, ContributionManifest.class, context);
         } catch (LoaderException e) {
             if (e.getCause() instanceof FileNotFoundException) {

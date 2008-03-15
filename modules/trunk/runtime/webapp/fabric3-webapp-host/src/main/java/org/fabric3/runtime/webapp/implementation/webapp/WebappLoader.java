@@ -28,9 +28,8 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.loader.common.IntrospectionContextImpl;
+import org.fabric3.introspection.DefaultIntrospectionContext;
 import org.fabric3.scdl.ComponentType;
-import org.fabric3.scdl.Scope;
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.xml.LoaderException;
 import org.fabric3.introspection.xml.LoaderRegistry;
@@ -77,7 +76,7 @@ public class WebappLoader implements TypeLoader<WebappImplementation> {
         } catch (MalformedURLException e) {
             throw new LoaderException(e.getMessage(), e);
         }
-        IntrospectionContext childContext = new IntrospectionContextImpl(context.getTargetClassLoader(), null, url);
+        IntrospectionContext childContext = new DefaultIntrospectionContext(context.getTargetClassLoader(), null, url);
         ComponentType componentType = registry.load(url, ComponentType.class, childContext);
         componentType.setScope("COMPOSITE");
         return componentType;

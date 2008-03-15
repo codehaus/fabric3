@@ -30,11 +30,11 @@ import org.w3c.dom.Document;
 
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.IntrospectionException;
+import org.fabric3.introspection.DefaultIntrospectionContext;
 import org.fabric3.introspection.xml.LoaderException;
 import org.fabric3.introspection.xml.LoaderHelper;
 import org.fabric3.introspection.xml.LoaderRegistry;
 import org.fabric3.introspection.xml.TypeLoader;
-import org.fabric3.loader.common.IntrospectionContextImpl;
 import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.Implementation;
 import org.fabric3.scdl.PropertyValue;
@@ -63,7 +63,7 @@ public class FeatureLoader implements TypeLoader<ComponentDefinition> {
         this.helper = helper;
 
         featureImplementation = new SystemImplementation(FeatureComponent.class.getName());
-        IntrospectionContext context = new IntrospectionContextImpl(getClass().getClassLoader(), null, null);
+        IntrospectionContext context = new DefaultIntrospectionContext(getClass().getClassLoader(), null, null);
         try {
             processor.introspect(featureImplementation, context);
         } catch (IntrospectionException e) {

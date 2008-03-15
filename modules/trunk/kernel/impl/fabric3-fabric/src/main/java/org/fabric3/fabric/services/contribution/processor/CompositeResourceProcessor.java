@@ -30,7 +30,7 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.host.contribution.Constants;
 import org.fabric3.host.contribution.ContributionException;
-import org.fabric3.loader.common.IntrospectionContextImpl;
+import org.fabric3.introspection.DefaultIntrospectionContext;
 import org.fabric3.scdl.Composite;
 import org.fabric3.introspection.xml.Loader;
 import org.fabric3.introspection.IntrospectionContext;
@@ -136,7 +136,7 @@ public class CompositeResourceProcessor implements ResourceProcessor {
      * @throws LoaderException if an error occurs processing the component type
      */
     private Composite processComponentType(URL url, ClassLoader loader, URI contributionUri) throws LoaderException {
-        IntrospectionContext context = new IntrospectionContextImpl(loader, contributionUri, url);
+        IntrospectionContext context = new DefaultIntrospectionContext(loader, contributionUri, url);
         return this.loader.load(url, Composite.class, context);
     }
 
