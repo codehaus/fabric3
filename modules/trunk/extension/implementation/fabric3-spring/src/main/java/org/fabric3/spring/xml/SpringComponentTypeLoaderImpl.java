@@ -18,12 +18,6 @@
  */
 package org.fabric3.spring.xml;
 
-import org.osoa.sca.annotations.Constructor;
-import org.osoa.sca.annotations.Reference;
-
-import org.fabric3.pojo.processor.IntrospectionRegistry;
-import org.fabric3.pojo.processor.Introspector;
-import org.fabric3.scdl.Scope;
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.xml.LoaderException;
 import org.fabric3.spring.SpringComponentType;
