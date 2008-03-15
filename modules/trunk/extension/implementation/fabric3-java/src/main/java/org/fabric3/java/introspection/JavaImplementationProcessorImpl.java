@@ -32,7 +32,6 @@ import org.fabric3.introspection.xml.LoaderException;
 import org.fabric3.java.scdl.JavaImplementation;
 import org.fabric3.loader.common.IntrospectionContextImpl;
 import org.fabric3.pojo.scdl.PojoComponentType;
-import org.fabric3.scdl.Scope;
 
 /**
  * @version $Rev$ $Date$
