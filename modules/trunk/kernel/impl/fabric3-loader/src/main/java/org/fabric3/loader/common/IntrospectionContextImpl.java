@@ -23,23 +23,34 @@ import java.net.URL;
 
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.helper.TypeMapping;
-import org.fabric3.spi.transform.TransformContext;
 
 /**
- * A holder that can be used during the load process to store information that is not part of the logical assembly
- * model. This should be regarded as transient and references to this context should not be stored inside the model.
+ * A holder that can be used during the load process to store information that is not part of the logical assembly model. This should be regarded as
+ * transient and references to this context should not be stored inside the model.
  *
  * @version $Rev$ $Date$
  */
-public class IntrospectionContextImpl extends TransformContext implements IntrospectionContext {
-    private String targetNamespace;
-    private URI contributionUri;
-    private TypeMapping typeMapping;
+public class IntrospectionContextImpl implements IntrospectionContext {
+    private final ClassLoader targetClassLoader;
+    private final URL sourceBase;
+    private final String targetNamespace;
+    private final URI contributionUri;
+    private final TypeMapping typeMapping;
 
-    public IntrospectionContextImpl(URI contributionUri, ClassLoader classLoader, String targetNamespace) {
-        super(null, classLoader, null, null);
+    public IntrospectionContextImpl(ClassLoader targetClassLoader,
+                                    URL sourceBase,
+                                    String targetNamespace,
+                                    URI contributionUri,
+                                    TypeMapping typeMapping) {
+        this.targetClassLoader = targetClassLoader;
+        this.sourceBase = sourceBase;
         this.targetNamespace = targetNamespace;
         this.contributionUri = contributionUri;
+        this.typeMapping = typeMapping;
+    }
+
+    public IntrospectionContextImpl(URI contributionUri, ClassLoader classLoader, String targetNamespace) {
+        this(classLoader, null, targetNamespace, contributionUri, null);
     }
 
     /**
@@ -50,8 +61,7 @@ public class IntrospectionContextImpl extends TransformContext implements Intros
      * @param scdlLocation    the location of the SCDL defining this composite
      */
     public IntrospectionContextImpl(ClassLoader classLoader, URI contributionUri, URL scdlLocation) {
-        super(null, classLoader, scdlLocation, null);
-        this.contributionUri = contributionUri;
+        this(classLoader, scdlLocation, null, contributionUri, null);
     }
 
     /**
@@ -61,23 +71,33 @@ public class IntrospectionContextImpl extends TransformContext implements Intros
      * @param targetNamespace Target namespace.
      */
     public IntrospectionContextImpl(IntrospectionContext parentContext, String targetNamespace) {
-        super(null, parentContext.getTargetClassLoader(), parentContext.getSourceBase(), null);
-        this.targetNamespace = targetNamespace;
-        this.contributionUri = parentContext.getContributionUri();
-        this.typeMapping = parentContext.getTypeMapping();
+        this(parentContext.getTargetClassLoader(),
+             parentContext.getSourceBase(),
+             targetNamespace,
+             parentContext.getContributionUri(),
+             parentContext.getTypeMapping());
     }
 
     /**
      * Initializes from a parent context.
      *
-     * @param parentContext   Parent context.
+     * @param parentContext Parent context.
      * @param typeMapping   mapping of formal types
      */
     public IntrospectionContextImpl(IntrospectionContext parentContext, TypeMapping typeMapping) {
-        super(null, parentContext.getTargetClassLoader(), parentContext.getSourceBase(), null);
-        this.targetNamespace = parentContext.getTargetNamespace();
-        this.contributionUri = parentContext.getContributionUri();
-        this.typeMapping = typeMapping;
+        this(parentContext.getTargetClassLoader(),
+             parentContext.getSourceBase(),
+             parentContext.getTargetNamespace(),
+             parentContext.getContributionUri(),
+             typeMapping);
+    }
+
+    public ClassLoader getTargetClassLoader() {
+        return targetClassLoader;
+    }
+
+    public URL getSourceBase() {
+        return sourceBase;
     }
 
     public String getTargetNamespace() {
