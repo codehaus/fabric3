@@ -50,7 +50,6 @@ import org.fabric3.introspection.xml.LoaderHelper;
 import org.fabric3.introspection.xml.LoaderUtil;
 import org.fabric3.introspection.xml.MissingResourceException;
 import org.fabric3.introspection.xml.TypeLoader;
-import org.fabric3.pojo.processor.IntrospectionRegistry;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.ReferenceDefinition;
 import org.fabric3.scdl.ServiceDefinition;
