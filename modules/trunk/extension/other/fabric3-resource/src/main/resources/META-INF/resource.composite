@@ -30,13 +30,13 @@
            autowire="true">
     
     <!-- Processor for F3 resources -->
-    <component name="org.fabric3.resource.processor.ResourceProcessor">
-        <system:implementation.system class="org.fabric3.resource.processor.ResourceProcessor"/>
+    <component name="org.fabric3.resource.introspection.Fabric3ResourceProcessor">
+        <system:implementation.system class="org.fabric3.resource.introspection.Fabric3ResourceProcessor"/>
     </component>
     
     <!-- Processor for JSR250 resources -->
-    <component name="org.fabric3.resource.processor.JSR250ResourceProcessor">
-        <system:implementation.system class="org.fabric3.resource.processor.JSR250ResourceProcessor"/>
+    <component name="org.fabric3.resource.introspection.JSR250ResourceProcessor">
+        <system:implementation.system class="org.fabric3.resource.introspection.JSR250ResourceProcessor"/>
     </component>
     
     <!-- Wire Target Definition Generator -->
