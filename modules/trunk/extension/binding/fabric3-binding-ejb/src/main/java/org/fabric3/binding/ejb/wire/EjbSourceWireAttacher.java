@@ -21,7 +21,6 @@ package org.fabric3.binding.ejb.wire;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -30,32 +29,23 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 import org.osoa.sca.annotations.Remotable;
-import org.osoa.sca.annotations.Service;
 
-import org.fabric3.binding.ejb.model.logical.EjbBindingDefinition;
 import org.fabric3.binding.ejb.model.physical.EjbWireSourceDefinition;
-import org.fabric3.binding.ejb.model.physical.EjbWireTargetDefinition;
 import org.fabric3.binding.ejb.spi.EjbRegistry;
 import org.fabric3.binding.ejb.transport.EjbHomeServiceHandler;
 import org.fabric3.binding.ejb.transport.EjbServiceHandler;
-import org.fabric3.binding.ejb.transport.EjbTargetInterceptorFactory;
 import org.fabric3.binding.rmi.wire.WireProxyGenerator;
 import org.fabric3.scdl.Signature;
+import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.SourceWireAttacher;
 import org.fabric3.spi.builder.component.SourceWireAttacherRegistry;
-import org.fabric3.spi.builder.component.TargetWireAttacher;
-import org.fabric3.spi.builder.component.TargetWireAttacherRegistry;
-import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.spi.classloader.MultiParentClassLoader;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
-import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
-import org.fabric3.spi.wire.Interceptor;
 import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.Wire;
-import org.fabric3.spi.ObjectFactory;
 
 
 /**
@@ -64,40 +54,31 @@ import org.fabric3.spi.ObjectFactory;
  * @version $Revision: 1 $ $Date: 2007-05-14 10:40:37 -0700 (Mon, 14 May 2007) $
  */
 @EagerInit
-@Service(interfaces={SourceWireAttacher.class, TargetWireAttacher.class})
-public class EjbWireAttacher implements SourceWireAttacher<EjbWireSourceDefinition>, TargetWireAttacher<EjbWireTargetDefinition> {
+public class EjbSourceWireAttacher implements SourceWireAttacher<EjbWireSourceDefinition> {
     private final SourceWireAttacherRegistry sourceWireAttacherRegistry;
-    private final TargetWireAttacherRegistry targetWireAttacherRegistry;
     private final EjbRegistry ejbRegistry;
     private final ClassLoaderRegistry classLoaderRegistry;
-    private final ScopeRegistry scopeRegistry;
     private ClassLoader cl;
 
     /**
      * Injects the wire attacher classLoaderRegistry and servlet host.
      */
-    public EjbWireAttacher(@Reference SourceWireAttacherRegistry sourceWireAttacherRegistry,
-                           @Reference TargetWireAttacherRegistry targetWireAttacherRegistry,
-                           @Reference ClassLoaderRegistry classLoaderRegistry,
-                           @Reference EjbRegistry ejbRegistry,
-                           @Reference ScopeRegistry scopeRegistry) {
+    public EjbSourceWireAttacher(@Reference SourceWireAttacherRegistry sourceWireAttacherRegistry,
+                                 @Reference ClassLoaderRegistry classLoaderRegistry,
+                                 @Reference EjbRegistry ejbRegistry) {
         this.sourceWireAttacherRegistry = sourceWireAttacherRegistry;
-        this.targetWireAttacherRegistry = targetWireAttacherRegistry;
         this.ejbRegistry = ejbRegistry;
         this.classLoaderRegistry = classLoaderRegistry;
-        this.scopeRegistry = scopeRegistry;
     }
 
     @Init
     public void start() {
         sourceWireAttacherRegistry.register(EjbWireSourceDefinition.class, this);
-        targetWireAttacherRegistry.register(EjbWireTargetDefinition.class, this);
     }
 
     @Destroy
     public void stop() {
         sourceWireAttacherRegistry.unregister(EjbWireSourceDefinition.class, this);
-        targetWireAttacherRegistry.unregister(EjbWireTargetDefinition.class, this);
     }
 
     public void attachToSource(EjbWireSourceDefinition sourceDefinition,
@@ -200,37 +181,6 @@ public class EjbWireAttacher implements SourceWireAttacher<EjbWireSourceDefiniti
 
     }
 
-    public void attachToTarget(PhysicalWireSourceDefinition sourceDefinition,
-                               EjbWireTargetDefinition targetDefinition,
-                               Wire wire) throws WiringException {
-
-        Class interfaceClass = loadClass(targetDefinition.getInterfaceName(), targetDefinition.getClassLoaderURI());
-        EjbResolver resolver = new EjbResolver(targetDefinition, ejbRegistry, interfaceClass);
-        EjbBindingDefinition bd = targetDefinition.getBindingDefinition();
-        EjbTargetInterceptorFactory interceptorFactory =
-                new EjbTargetInterceptorFactory(bd, resolver, scopeRegistry, getId(bd));
-
-        for (Map.Entry<PhysicalOperationDefinition, InvocationChain> entry : wire.getInvocationChains().entrySet()) {
-            PhysicalOperationDefinition op = entry.getKey();
-            Signature signature = new Signature(op.getName(), op.getParameters());
-
-            Interceptor targetInterceptor = interceptorFactory.getEjbTargetInterceptor(signature);
-            InvocationChain chain = entry.getValue();
-            chain.addInterceptor(targetInterceptor);
-        }
-
-
-    }
-
-    private URI getId(EjbBindingDefinition bd)
-            throws WiringException {
-        try {
-            return bd.getTargetUri() != null ? bd.getTargetUri() : new URI(bd.getEjbLink());
-        } catch (URISyntaxException se) {
-            throw new WiringException(se);
-        }
-    }
-
     private Class loadClass(String name, URI classLoaderURI)
             throws WiringException {
 
@@ -253,10 +203,6 @@ public class EjbWireAttacher implements SourceWireAttacher<EjbWireSourceDefiniti
     }
 
     public void attachObjectFactory(EjbWireSourceDefinition source, ObjectFactory<?> objectFactory) throws WiringException {
-        throw new AssertionError();
-    }
-
-    public ObjectFactory<?> createObjectFactory(EjbWireTargetDefinition target) throws WiringException {
         throw new AssertionError();
     }
 }

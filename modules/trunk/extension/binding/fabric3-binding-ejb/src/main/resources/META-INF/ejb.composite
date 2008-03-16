@@ -33,7 +33,7 @@
 
     <!-- EJB Wire Attacher -->
     <component name="EjbWireAttacher">
-        <system:implementation.system class="org.fabric3.binding.ejb.wire.EjbWireAttacher"/>
+        <system:implementation.system class="org.fabric3.binding.ejb.wire.EjbSourceWireAttacher"/>
     </component>
 
     <!-- EJB Registry -->
