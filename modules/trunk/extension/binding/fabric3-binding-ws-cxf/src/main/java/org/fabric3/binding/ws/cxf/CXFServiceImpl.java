@@ -42,6 +42,7 @@ import org.osoa.sca.annotations.Destroy;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Reference;
+import org.osoa.sca.annotations.EagerInit;
 
 import org.fabric3.api.annotation.Monitor;
 import org.fabric3.binding.ws.cxf.wire.CxfTargetInterceptor;
@@ -55,7 +56,27 @@ import org.fabric3.spi.wire.Wire;
  *
  * @version $Rev$ $Date$
  */
+@EagerInit
 public class CXFServiceImpl implements CXFService {
+    /*
+         Force initialization of CXF's StAXUtil class using our classloader (which should also be the TCCL).
+         StAXUtil loads and caches an XmlInputFactory loaded from the TCCL.
+    */
+    static {
+
+        ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
+        ClassLoader cl = CXFService.class.getClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader(cl);
+            Class.forName("org.apache.cxf.tools.util.StAXUtil", true, cl);
+            Class.forName("org.apache.cxf.staxutils.StaxUtils", true, cl);
+        } catch (ClassNotFoundException e) {
+            throw new AssertionError();
+        } finally {
+            Thread.currentThread().setContextClassLoader(oldCl);
+        }
+    }
+
     private Bus bus;
     private F3Dispatcher dispatcher;
     private ServletHost host;
