@@ -28,7 +28,7 @@ import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.BuilderException;
 import org.fabric3.spi.builder.component.SourceWireAttacher;
 import org.fabric3.spi.builder.component.TargetWireAttacher;
-import org.fabric3.spi.builder.interceptor.InterceptorBuilderRegistry;
+import org.fabric3.spi.builder.interceptor.InterceptorBuilder;
 import org.fabric3.spi.model.physical.PhysicalInterceptorDefinition;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireDefinition;
@@ -44,12 +44,16 @@ import org.fabric3.spi.wire.Wire;
  * @version $$Rev$$ $$Date$$
  */
 public class ConnectorImpl implements Connector {
-    private InterceptorBuilderRegistry interceptorBuilderRegistry;
+    private Map<Class<? extends PhysicalInterceptorDefinition>, InterceptorBuilder<?, ?>> interceptorBuilders;
     private Map<Class<? extends PhysicalWireSourceDefinition>, SourceWireAttacher<? extends PhysicalWireSourceDefinition>> sourceAttachers;
     private Map<Class<? extends PhysicalWireTargetDefinition>, TargetWireAttacher<? extends PhysicalWireTargetDefinition>> targetAttachers;
 
-    public ConnectorImpl(@Reference InterceptorBuilderRegistry interceptorBuilderRegistry) {
-        this.interceptorBuilderRegistry = interceptorBuilderRegistry;
+    public ConnectorImpl() {
+    }
+
+    @Reference
+    public void setInterceptorBuilders(Map<Class<? extends PhysicalInterceptorDefinition>, InterceptorBuilder<?, ?>> interceptorBuilders) {
+        this.interceptorBuilders = interceptorBuilders;
     }
 
     @Reference
@@ -79,17 +83,24 @@ public class ConnectorImpl implements Connector {
         }
     }
 
-    protected Wire createWire(PhysicalWireDefinition definition) throws BuilderException {
+    Wire createWire(PhysicalWireDefinition definition) throws BuilderException {
         Wire wire = new WireImpl();
         for (PhysicalOperationDefinition operation : definition.getOperations()) {
             InvocationChain chain = new InvocationChainImpl(operation);
             for (PhysicalInterceptorDefinition interceptorDefinition : operation.getInterceptors()) {
-                Interceptor interceptor = interceptorBuilderRegistry.build(interceptorDefinition);
+                InterceptorBuilder<? super PhysicalInterceptorDefinition, ?> builder = getBuilder(interceptorDefinition);
+                Interceptor interceptor = builder.build(interceptorDefinition);
                 chain.addInterceptor(interceptor);
             }
             wire.addInvocationChain(operation, chain);
         }
         return wire;
+    }
+
+    @SuppressWarnings("unchecked")
+    protected <PID extends PhysicalInterceptorDefinition> InterceptorBuilder<PID, ?> getBuilder(PID definition) {
+        return (InterceptorBuilder<PID, ?>) interceptorBuilders.get(definition.getClass());
+
     }
 
     @SuppressWarnings("unchecked")

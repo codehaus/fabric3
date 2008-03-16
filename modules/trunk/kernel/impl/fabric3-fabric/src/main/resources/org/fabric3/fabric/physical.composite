@@ -33,9 +33,4 @@
         <system:implementation.system class="org.fabric3.fabric.builder.component.DefaultComponentBuilderRegistry"/>
     </component>
 
-    <component name="interceptorBuilderRegistry">
-        <system:implementation.system
-                class="org.fabric3.fabric.builder.interceptor.InterceptorBuilderRegistryImpl"/>
-    </component>
-
 </composite>

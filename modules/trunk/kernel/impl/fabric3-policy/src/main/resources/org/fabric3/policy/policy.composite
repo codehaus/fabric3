@@ -23,6 +23,7 @@
     $Rev: 593 $ $Date: 2007-07-26 04:55:15 +0100 (Thu, 26 Jul 2007) $
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
+           xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
            xmlns:system="http://fabric3.org/xmlns/sca/system/2.0-alpha"
            name="org.fabric3.policy.Policy"
            autowire="true">
@@ -53,7 +54,7 @@
     </component>
     
     <!-- Simple interceptor builder -->
-    <component name="org.fabric3.fabric.policy.interceptor.simple.SimpleInterceptorBuilder">
+    <component f3:key="org.fabric3.fabric.policy.interceptor.simple.SimpleInterceptorDefinition" name="org.fabric3.fabric.policy.interceptor.simple.SimpleInterceptorBuilder">
         <system:implementation.system class="org.fabric3.fabric.policy.interceptor.simple.SimpleInterceptorBuilder"/>
     </component>
     

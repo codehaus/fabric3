@@ -240,7 +240,7 @@ public class BootstrapAssemblyFactory {
         targetAttachers.put(SystemWireTargetDefinition.class, new SystemTargetWireAttacher(componentManager));
         targetAttachers.put(MonitorWireTargetDefinition.class, new MonitorWireAttacher(monitorFactory, classLoaderRegistry));
 
-        ConnectorImpl connector = new ConnectorImpl(null);
+        ConnectorImpl connector = new ConnectorImpl();
         connector.setSourceAttachers(sourceAttachers);
         connector.setTargetAttachers(targetAttachers);
 

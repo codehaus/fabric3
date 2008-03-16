@@ -1,11 +1,9 @@
 package org.fabric3.security.authorization;
 
+import org.osoa.sca.annotations.Reference;
+
 import org.fabric3.spi.builder.BuilderException;
 import org.fabric3.spi.builder.interceptor.InterceptorBuilder;
-import org.fabric3.spi.builder.interceptor.InterceptorBuilderRegistry;
-import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Init;
-import org.osoa.sca.annotations.Reference;
 
 /**
  * Builder for the authorization interceptor. The builde is injected with the authorization 
@@ -19,29 +17,17 @@ import org.osoa.sca.annotations.Reference;
  * @version $Revision$ $Date$
  *
  */
-@EagerInit
 public class AuthorizationInterceptorBuilder implements InterceptorBuilder<AuthorizationInterceptorDefinition, AuthorizationInterceptor> {
     
     private AuthorizationService authorizationService;
-    private InterceptorBuilderRegistry registry;
 
     /**
      * Injects the required references.
      * 
-     * @param registry Interceptor builder registry.
      * @param authorizationService Authorization service extension provided by the user.
      */
-    public AuthorizationInterceptorBuilder(@Reference InterceptorBuilderRegistry registry, @Reference AuthorizationService authorizationService) {
-        this.registry = registry;
+    public AuthorizationInterceptorBuilder(@Reference AuthorizationService authorizationService) {
         this.authorizationService = authorizationService;
-    }
-
-    /**
-     * Registers with the interceptor builder registry.
-     */
-    @Init
-    public void init() {
-        registry.register(AuthorizationInterceptorDefinition.class, this);
     }
 
     /**

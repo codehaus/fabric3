@@ -16,45 +16,31 @@
  */
 package org.fabric3.binding.ws.axis2.databinding;
 
-import java.net.URI;
-import java.util.Set;
-import java.util.Map;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.lang.reflect.Method;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
+import java.net.URI;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.ws.WebFault;
-import javax.xml.namespace.QName;
 
-import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.spi.builder.BuilderException;
 import org.fabric3.spi.builder.interceptor.InterceptorBuilder;
-import org.fabric3.spi.builder.interceptor.InterceptorBuilderRegistry;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 
 /**
  * @version $Revision$ $Date$
  */
-@EagerInit
 public class JaxbInterceptorBuilder implements InterceptorBuilder<JaxbInterceptorDefinition, JaxbInterceptor> {
 
-    private InterceptorBuilderRegistry interceptorBuilderRegistry;
     private ClassLoaderRegistry classLoaderRegistry;
 
-    public JaxbInterceptorBuilder(@Reference InterceptorBuilderRegistry interceptorBuilderRegistry,
-                                  @Reference ClassLoaderRegistry classLoaderRegistry) {
-        this.interceptorBuilderRegistry = interceptorBuilderRegistry;
+    public JaxbInterceptorBuilder(@Reference ClassLoaderRegistry classLoaderRegistry) {
         this.classLoaderRegistry = classLoaderRegistry;
-    }
-
-    @Init
-    public void init() {
-        interceptorBuilderRegistry.register(JaxbInterceptorDefinition.class, this);
     }
 
     public JaxbInterceptor build(JaxbInterceptorDefinition definition) throws BuilderException {

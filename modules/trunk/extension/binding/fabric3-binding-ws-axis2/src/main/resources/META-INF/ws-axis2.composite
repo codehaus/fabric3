@@ -54,7 +54,7 @@
     <system:feature name="WsAxis2BindingFeature">{http://fabric3.org/xmlns/binding}ws-axis2</system:feature>
 
     <!-- Jaxb Databinding Interceptor Builder -->
-    <component name="jaxbInterceptorBuilder">
+    <component f3:key="org.fabric3.binding.ws.axis2.databinding.JaxbInterceptorDefinition" name="jaxbInterceptorBuilder">
         <system:implementation.system class="org.fabric3.binding.ws.axis2.databinding.JaxbInterceptorBuilder"/>
     </component>
 

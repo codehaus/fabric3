@@ -18,36 +18,21 @@
  */
 package org.fabric3.fabric.policy.interceptor.simple;
 
-import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Init;
-import org.osoa.sca.annotations.Reference;
-
 import org.fabric3.spi.builder.BuilderException;
 import org.fabric3.spi.builder.interceptor.InterceptorBuilder;
-import org.fabric3.spi.builder.interceptor.InterceptorBuilderRegistry;
 import org.fabric3.spi.wire.Interceptor;
 
 /**
  * Builder for simple interceptors.
  * <p/>
- * TODO Not sure whether the loader will have the class definition, probably not, the interceptor builder will need the
- * classloader passed in.
+ * TODO Not sure whether the loader will have the class definition, probably not, the interceptor builder will need the classloader passed in.
  *
  * @version $Revision$ $Date$
  */
-@EagerInit
 public class SimpleInterceptorBuilder implements InterceptorBuilder<SimpleInterceptorDefinition, Interceptor> {
-    private InterceptorBuilderRegistry registry;
 
-    public SimpleInterceptorBuilder(@Reference InterceptorBuilderRegistry registry) {
-        this.registry = registry;
+    public SimpleInterceptorBuilder() {
     }
-
-    @Init
-    public void init() {
-        registry.register(SimpleInterceptorDefinition.class, this);
-    }
-
 
     public Interceptor build(SimpleInterceptorDefinition definition) throws BuilderException {
 

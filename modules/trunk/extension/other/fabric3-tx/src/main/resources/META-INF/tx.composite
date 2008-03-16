@@ -23,7 +23,7 @@
            autowire="true">
 
     <!-- Tx Interceptor Builder -->
-    <component name="txInterceptorBuilder">
+    <component f3:key="org.fabric3.tx.interceptor.TxInterceptorDefinition" name="txInterceptorBuilder">
         <system:implementation.system class="org.fabric3.tx.interceptor.TxInterceptorBuilder"/>
     </component>
 
@@ -31,11 +31,6 @@
     <component name="txInterceptorGenerator">
         <system:implementation.system class="org.fabric3.tx.interceptor.TxInterceptorDefinitionGenerator"/>
     </component>
-
-    <!-- Tx Manager Proxy -->
-    <!-- component name="txManagerProxy">
-        <system:implementation.system class="org.fabric3.tx.proxy.TransactionManagerProxy"/>
-    </component-->
 
     <!-- Feature -->
     <system:feature name="TransactionFeature">{http://fabric3.org/xmlns/policy}transaction</system:feature>
