@@ -31,9 +31,12 @@
         <system:implementation.system class="org.fabric3.binding.burlap.model.physical.BurlapBindingGenerator"/>
     </component>
 
-    <!-- Burlap Wire Attacher -->
-    <component name="BurlapWireAttacher">
-        <system:implementation.system class="org.fabric3.binding.burlap.wire.BurlapWireAttacher"/>
+    <!-- Burlap Wire Attachers -->
+    <component name="org.fabric3.binding.burlap.wire.BurlapSourceWireAttacher">
+        <system:implementation.system class="org.fabric3.binding.burlap.wire.BurlapSourceWireAttacher"/>
+    </component>
+    <component name="org.fabric3.binding.burlap.wire.BurlapTargetWireAttacher">
+        <system:implementation.system class="org.fabric3.binding.burlap.wire.BurlapTargetWireAttacher"/>
     </component>
 
     <!-- Feature -->
