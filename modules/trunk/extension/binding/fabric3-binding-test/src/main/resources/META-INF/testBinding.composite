@@ -44,8 +44,11 @@ destination uri the reference should flow invocations to as in:
         <system:implementation.system class="org.fabric3.binding.test.TestBindingGenerator"/>
     </component>
 
-    <component name="TestBindingWireAttacher">
-        <system:implementation.system class="org.fabric3.binding.test.TestBindingWireAttacher"/>
+    <component name="org.fabric3.binding.test.TestBindingSourceWireAttacher">
+        <system:implementation.system class="org.fabric3.binding.test.TestBindingSourceWireAttacher"/>
+    </component>
+    <component name="org.fabric3.binding.test.TestBindingTargetWireAttacher">
+        <system:implementation.system class="org.fabric3.binding.test.TestBindingTargetWireAttacher"/>
     </component>
 
     <system:feature name="TestBindingFeature">{http://fabric3.org/xmlns/binding}test</system:feature>
