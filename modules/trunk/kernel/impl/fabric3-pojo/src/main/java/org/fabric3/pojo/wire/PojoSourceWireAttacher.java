@@ -119,14 +119,4 @@ public abstract class PojoSourceWireAttacher {
     private <T> PullTransformer<Node, T> getTransformer(XSDSimpleType source, JavaClass<T> target) {
         return (PullTransformer<Node, T>) transformerRegistry.getTransformer(source, target);
     }
-
-    protected <T, CONTEXT> InvokerInterceptor<T, CONTEXT> createInterceptor(Method method,
-                                                                            boolean callback,
-                                                                            boolean endsConvesation,
-                                                                            AtomicComponent<T> component,
-                                                                            ScopeContainer<CONTEXT> scopeContainer) {
-        return new InvokerInterceptor<T, CONTEXT>(method, callback, endsConvesation, component, scopeContainer);
-    }
-
-
 }

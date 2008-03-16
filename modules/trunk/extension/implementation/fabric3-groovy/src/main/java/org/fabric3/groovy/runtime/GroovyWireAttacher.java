@@ -27,33 +27,35 @@ import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 import org.osoa.sca.annotations.Service;
 
-import org.fabric3.pojo.wire.PojoSourceWireAttacher;
+import org.fabric3.groovy.provision.GroovyWireSourceDefinition;
+import org.fabric3.groovy.provision.GroovyWireTargetDefinition;
 import org.fabric3.pojo.implementation.PojoComponent;
+import org.fabric3.pojo.reflection.InvokerInterceptor;
+import org.fabric3.pojo.wire.PojoSourceWireAttacher;
 import org.fabric3.scdl.InjectableAttribute;
 import org.fabric3.scdl.InjectableAttributeType;
 import org.fabric3.scdl.Scope;
 import org.fabric3.spi.ObjectFactory;
-import org.fabric3.spi.transform.PullTransformer;
-import org.fabric3.spi.transform.TransformerRegistry;
-import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.SourceWireAttacher;
 import org.fabric3.spi.builder.component.SourceWireAttacherRegistry;
 import org.fabric3.spi.builder.component.TargetWireAttacher;
 import org.fabric3.spi.builder.component.TargetWireAttacherRegistry;
 import org.fabric3.spi.builder.component.WireAttachException;
+import org.fabric3.spi.component.AtomicComponent;
 import org.fabric3.spi.component.Component;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 import org.fabric3.spi.runtime.component.ComponentManager;
+import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
+import org.fabric3.spi.transform.PullTransformer;
+import org.fabric3.spi.transform.TransformerRegistry;
 import org.fabric3.spi.util.UriHelper;
 import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.ProxyService;
 import org.fabric3.spi.wire.Wire;
-import org.fabric3.groovy.provision.GroovyWireSourceDefinition;
-import org.fabric3.groovy.provision.GroovyWireTargetDefinition;
 
 /**
  * The component builder for Java implementation types. Responsible for creating the Component runtime artifact from a physical component definition
@@ -61,7 +63,7 @@ import org.fabric3.groovy.provision.GroovyWireTargetDefinition;
  * @version $Rev$ $Date$
  */
 @EagerInit
-@Service(interfaces={SourceWireAttacher.class, TargetWireAttacher.class})
+@Service(interfaces = {SourceWireAttacher.class, TargetWireAttacher.class})
 public class GroovyWireAttacher extends PojoSourceWireAttacher implements SourceWireAttacher<GroovyWireSourceDefinition>, TargetWireAttacher<GroovyWireTargetDefinition> {
     private final SourceWireAttacherRegistry sourceWireAttacherRegistry;
     private final TargetWireAttacherRegistry targetWireAttacherRegistry;
@@ -169,6 +171,14 @@ public class GroovyWireAttacher extends PojoSourceWireAttacher implements Source
         }
 
         // TODO handle callbacks
+    }
+
+    <T, CONTEXT> InvokerInterceptor<T, CONTEXT> createInterceptor(Method method,
+                                                                  boolean callback,
+                                                                  boolean endsConvesation,
+                                                                  AtomicComponent<T> component,
+                                                                  ScopeContainer<CONTEXT> scopeContainer) {
+        return new InvokerInterceptor<T, CONTEXT>(method, callback, endsConvesation, component, scopeContainer);
     }
 
     public void attachObjectFactory(GroovyWireSourceDefinition source, ObjectFactory<?> objectFactory) throws WiringException {
