@@ -23,11 +23,13 @@
            autowire="true">
 
     <!-- Axis wire attacher -->
-    <component name="Axis2WireAttacher">
-        <system:implementation.system class="org.fabric3.binding.ws.axis2.wire.Axis2WireAttacher"/>
-        <!--<property name="contextPath">/services/*</property>-->
+    <component name="org.fabric3.binding.ws.axis2.wire.Axis2SourceWireAttacher">
+        <system:implementation.system class="org.fabric3.binding.ws.axis2.wire.Axis2SourceWireAttacher"/>
     </component>
-    
+    <component name="org.fabric3.binding.ws.axis2.wire.Axis2TargetWireAttacher">
+        <system:implementation.system class="org.fabric3.binding.ws.axis2.wire.Axis2TargetWireAttacher"/>
+    </component>
+
     <!-- Axis service provisioner -->
     <component name="Axis2ServiceProvisioner">
         <system:implementation.system class="org.fabric3.binding.ws.axis2.Axis2ServiceProvisionerImpl"/>
