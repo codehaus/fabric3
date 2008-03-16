@@ -48,8 +48,12 @@
         <reference name="transformerRegistry" target="pullTransformerRegistry"/>
     </component>
 
-    <component name="org.fabric3.spring.SpringWireAttacher">
-        <system:implementation.system class="org.fabric3.spring.SpringWireAttacher"/>
+    <component name="org.fabric3.spring.SpringSourceWireAttacher">
+        <system:implementation.system class="org.fabric3.spring.SpringSourceWireAttacher"/>
         <reference name="transformerRegistry" target="pullTransformerRegistry"/>
+    </component>
+
+    <component name="org.fabric3.spring.SpringTargetWireAttacher">
+        <system:implementation.system class="org.fabric3.spring.SpringTargetWireAttacher"/>
     </component>
 </composite>
