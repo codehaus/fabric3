@@ -20,37 +20,27 @@ package org.fabric3.binding.hessian.wire;
 
 import java.net.MalformedURLException;
 import java.net.URI;
-import java.util.HashMap;
 import java.util.Map;
 
+import com.caucho.hessian.io.SerializerFactory;
 import org.osoa.sca.annotations.Destroy;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
-import org.osoa.sca.annotations.Service;
 
-import org.fabric3.binding.hessian.model.physical.HessianWireSourceDefinition;
+import org.fabric3.api.annotation.Monitor;
 import org.fabric3.binding.hessian.model.physical.HessianWireTargetDefinition;
-import org.fabric3.binding.hessian.transport.HessianServiceHandler;
 import org.fabric3.binding.hessian.transport.HessianTargetInterceptor;
-import org.fabric3.monitor.MonitorFactory;
+import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.WiringException;
-import org.fabric3.spi.builder.component.SourceWireAttacher;
-import org.fabric3.spi.builder.component.SourceWireAttacherRegistry;
 import org.fabric3.spi.builder.component.TargetWireAttacher;
 import org.fabric3.spi.builder.component.TargetWireAttacherRegistry;
 import org.fabric3.spi.builder.component.WireAttachException;
-import org.fabric3.spi.host.ServletHost;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
-import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.Wire;
-import org.fabric3.spi.ObjectFactory;
-import org.fabric3.api.annotation.Monitor;
-
-import com.caucho.hessian.io.SerializerFactory;
 
 /**
  * Wire attacher for Hessian binding.
@@ -58,32 +48,23 @@ import com.caucho.hessian.io.SerializerFactory;
  * @version $Revision$ $Date$
  */
 @EagerInit
-@Service(interfaces = {SourceWireAttacher.class, TargetWireAttacher.class})
-public class HessianWireAttacher implements SourceWireAttacher<HessianWireSourceDefinition>, TargetWireAttacher<HessianWireTargetDefinition> {
-    private final SourceWireAttacherRegistry sourceWireAttacherRegistry;
+public class HessianTargetWireAttacher implements TargetWireAttacher<HessianWireTargetDefinition> {
     private final TargetWireAttacherRegistry targetWireAttacherRegistry;
     private final ClassLoaderRegistry classLoaderRegistry;
-    private final ServletHost servletHost;
     private final HessianWireAttacherMonitor monitor;
     private final SerializerFactory serializerFactory;
 
     /**
      * Injects the wire attacher registry and servlet host.
      *
-     * @param sourceWireAttacherRegistry the registry for source wire attachers
      * @param targetWireAttacherRegistry the registry for target wire attachers
-     * @param servletHost                Servlet host.
      * @param classLoaderRegistry        the classloader registry
      * @param monitor                    the Hessian monitor
      */
-    public HessianWireAttacher(@Reference SourceWireAttacherRegistry sourceWireAttacherRegistry,
-                               @Reference TargetWireAttacherRegistry targetWireAttacherRegistry,
-                               @Reference ServletHost servletHost,
-                               @Reference ClassLoaderRegistry classLoaderRegistry,
-                               @Monitor HessianWireAttacherMonitor monitor) {
-        this.sourceWireAttacherRegistry = sourceWireAttacherRegistry;
+    public HessianTargetWireAttacher(@Reference TargetWireAttacherRegistry targetWireAttacherRegistry,
+                                     @Reference ClassLoaderRegistry classLoaderRegistry,
+                                     @Monitor HessianWireAttacherMonitor monitor) {
         this.targetWireAttacherRegistry = targetWireAttacherRegistry;
-        this.servletHost = servletHost;
         this.classLoaderRegistry = classLoaderRegistry;
         this.monitor = monitor;
         this.serializerFactory = new SerializerFactory();
@@ -91,7 +72,6 @@ public class HessianWireAttacher implements SourceWireAttacher<HessianWireSource
 
     @Init
     public void start() {
-        sourceWireAttacherRegistry.register(HessianWireSourceDefinition.class, this);
         targetWireAttacherRegistry.register(HessianWireTargetDefinition.class, this);
         monitor.extensionStarted();
     }
@@ -99,35 +79,7 @@ public class HessianWireAttacher implements SourceWireAttacher<HessianWireSource
     @Destroy
     public void stop() {
         this.monitor.extensionStopped();
-        sourceWireAttacherRegistry.unregister(HessianWireSourceDefinition.class, this);
         targetWireAttacherRegistry.unregister(HessianWireTargetDefinition.class, this);
-    }
-
-    public void attachToSource(HessianWireSourceDefinition sourceDefinition,
-                               PhysicalWireTargetDefinition targetDefinition,
-                               Wire wire) throws WiringException {
-
-        Map<String, Map.Entry<PhysicalOperationDefinition, InvocationChain>> ops =
-                new HashMap<String, Map.Entry<PhysicalOperationDefinition, InvocationChain>>();
-
-        for (Map.Entry<PhysicalOperationDefinition, InvocationChain> entry : wire.getInvocationChains().entrySet()) {
-            ops.put(entry.getKey().getName(), entry);
-        }
-        URI id = sourceDefinition.getClassLoaderId();
-        ClassLoader loader = classLoaderRegistry.getClassLoader(id);
-        if (loader == null) {
-            throw new WiringException("Classloader not found", id.toString());
-        }
-        String callbackUri = null;
-        if (targetDefinition.getCallbackUri() != null) {
-            callbackUri = targetDefinition.getCallbackUri().toString();
-        }
-        HessianServiceHandler handler = new HessianServiceHandler(ops, callbackUri, loader, serializerFactory);
-        URI uri = sourceDefinition.getUri();
-        String servicePath = uri.getPath();
-        servletHost.registerMapping(servicePath, handler);
-        monitor.provisionedEndpoint(uri);
-
     }
 
     public void attachToTarget(PhysicalWireSourceDefinition sourceDefinition,
@@ -148,10 +100,6 @@ public class HessianWireAttacher implements SourceWireAttacher<HessianWireSource
             throw new WireAttachException("Invalid URI", sourceDefinition.getUri(), uri, ex);
         }
 
-    }
-
-    public void attachObjectFactory(HessianWireSourceDefinition source, ObjectFactory<?> objectFactory) throws WiringException {
-        throw new AssertionError();
     }
 
     public ObjectFactory<?> createObjectFactory(HessianWireTargetDefinition target) throws WiringException {
