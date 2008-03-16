@@ -114,7 +114,10 @@ import org.fabric3.spi.wire.TargetResolutionService;
 import org.fabric3.spi.wire.WiringService;
 import org.fabric3.system.control.SystemComponentGenerator;
 import org.fabric3.system.runtime.SystemComponentBuilder;
-import org.fabric3.system.runtime.SystemWireAttacher;
+import org.fabric3.system.runtime.SystemSourceWireAttacher;
+import org.fabric3.system.runtime.SystemTargetWireAttacher;
+import org.fabric3.system.provision.SystemWireSourceDefinition;
+import org.fabric3.system.provision.SystemWireTargetDefinition;
 import org.fabric3.transform.DefaultTransformerRegistry;
 import org.fabric3.transform.dom2java.String2Class;
 import org.fabric3.transform.dom2java.String2Integer;
@@ -223,7 +226,8 @@ public class BootstrapAssemblyFactory {
         SingletonWireAttacher singletonWireAttacher = new SingletonWireAttacher(componentManager);
         ConnectorImpl connector = new ConnectorImpl(null);
         connector.register(SingletonWireTargetDefinition.class, singletonWireAttacher);
-        new SystemWireAttacher(componentManager, connector, connector, transformerRegistry, classLoaderRegistry).init();
+        connector.register(SystemWireSourceDefinition.class, new SystemSourceWireAttacher(componentManager, transformerRegistry, classLoaderRegistry));
+        connector.register(SystemWireTargetDefinition.class, new SystemTargetWireAttacher(componentManager));
         new MonitorWireAttacher(connector, monitorFactory, classLoaderRegistry).init();
 
         ResourceContainerBuilderRegistry resourceRegistry = createResourceBuilderRegistry(classLoaderRegistry);

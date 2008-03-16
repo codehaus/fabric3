@@ -43,14 +43,14 @@ import org.fabric3.spi.transform.TransformerRegistry;
 /**
  * @version $Revision$ $Date$
  */
-public abstract class PojoWireAttacher {
+public abstract class PojoSourceWireAttacher {
 
     private static final XSDSimpleType SOURCE_TYPE = new XSDSimpleType(Node.class, XSDSimpleType.STRING);
 
     private TransformerRegistry<PullTransformer<?, ?>> transformerRegistry;
     private ClassLoaderRegistry classLoaderRegistry;
 
-    protected PojoWireAttacher(TransformerRegistry<PullTransformer<?, ?>> transformerRegistry, ClassLoaderRegistry classLoaderRegistry) {
+    protected PojoSourceWireAttacher(TransformerRegistry<PullTransformer<?, ?>> transformerRegistry, ClassLoaderRegistry classLoaderRegistry) {
         this.transformerRegistry = transformerRegistry;
         this.classLoaderRegistry = classLoaderRegistry;
     }

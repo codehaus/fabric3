@@ -26,7 +26,7 @@ import org.osoa.sca.annotations.Reference;
 import org.osoa.sca.annotations.Service;
 
 import org.fabric3.scdl.Signature;
-import org.fabric3.pojo.wire.PojoWireAttacher;
+import org.fabric3.pojo.wire.PojoSourceWireAttacher;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.component.SourceWireAttacher;
 import org.fabric3.spi.builder.component.SourceWireAttacherRegistry;
@@ -59,7 +59,7 @@ import org.fabric3.spi.wire.Wire;
  */
 @EagerInit
 @Service(interfaces={SourceWireAttacher.class, TargetWireAttacher.class})
-public class SpringWireAttacher extends PojoWireAttacher implements SourceWireAttacher<SpringWireSourceDefinition>, TargetWireAttacher<SpringWireTargetDefinition> {
+public class SpringWireAttacher extends PojoSourceWireAttacher implements SourceWireAttacher<SpringWireSourceDefinition>, TargetWireAttacher<SpringWireTargetDefinition> {
     private final SourceWireAttacherRegistry sourceWireAttacherRegistry;
     private final TargetWireAttacherRegistry targetWireAttacherRegistry;
     private final ComponentManager manager;
