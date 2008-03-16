@@ -34,7 +34,6 @@ import org.fabric3.binding.hessian.transport.HessianTargetInterceptor;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.TargetWireAttacher;
-import org.fabric3.spi.builder.component.TargetWireAttacherRegistry;
 import org.fabric3.spi.builder.component.WireAttachException;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
@@ -49,22 +48,12 @@ import org.fabric3.spi.wire.Wire;
  */
 @EagerInit
 public class HessianTargetWireAttacher implements TargetWireAttacher<HessianWireTargetDefinition> {
-    private final TargetWireAttacherRegistry targetWireAttacherRegistry;
     private final ClassLoaderRegistry classLoaderRegistry;
     private final HessianWireAttacherMonitor monitor;
     private final SerializerFactory serializerFactory;
 
-    /**
-     * Injects the wire attacher registry and servlet host.
-     *
-     * @param targetWireAttacherRegistry the registry for target wire attachers
-     * @param classLoaderRegistry        the classloader registry
-     * @param monitor                    the Hessian monitor
-     */
-    public HessianTargetWireAttacher(@Reference TargetWireAttacherRegistry targetWireAttacherRegistry,
-                                     @Reference ClassLoaderRegistry classLoaderRegistry,
+    public HessianTargetWireAttacher(@Reference ClassLoaderRegistry classLoaderRegistry,
                                      @Monitor HessianWireAttacherMonitor monitor) {
-        this.targetWireAttacherRegistry = targetWireAttacherRegistry;
         this.classLoaderRegistry = classLoaderRegistry;
         this.monitor = monitor;
         this.serializerFactory = new SerializerFactory();
@@ -72,14 +61,12 @@ public class HessianTargetWireAttacher implements TargetWireAttacher<HessianWire
 
     @Init
     public void start() {
-        targetWireAttacherRegistry.register(HessianWireTargetDefinition.class, this);
         monitor.extensionStarted();
     }
 
     @Destroy
     public void stop() {
         this.monitor.extensionStopped();
-        targetWireAttacherRegistry.unregister(HessianWireTargetDefinition.class, this);
     }
 
     public void attachToTarget(PhysicalWireSourceDefinition sourceDefinition,

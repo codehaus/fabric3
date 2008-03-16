@@ -16,6 +16,7 @@
  under the License.
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
+           xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
            xmlns:system="http://fabric3.org/xmlns/sca/system/2.0-alpha"
            targetNamespace="org.codehaus.fabric3"
            name="GroovyExtension"
@@ -53,12 +54,12 @@
         <system:implementation.system class="org.fabric3.groovy.runtime.GroovyInstanceFactoryBuilder"/>
     </component>
 
-    <component name="org.fabric3.groovy.runtime.GroovySourceWireAttacher">
+    <component f3:key="org.fabric3.groovy.provision.GroovyWireSourceDefinition" name="org.fabric3.groovy.runtime.GroovySourceWireAttacher">
         <system:implementation.system class="org.fabric3.groovy.runtime.GroovySourceWireAttacher"/>
         <reference name="transformerRegistry" target="pullTransformerRegistry"/>
     </component>
 
-    <component name="org.fabric3.groovy.runtime.GroovyTargetWireAttacher">
+    <component f3:key="org.fabric3.groovy.provision.GroovyWireTargetDefinition" name="org.fabric3.groovy.runtime.GroovyTargetWireAttacher">
         <system:implementation.system class="org.fabric3.groovy.runtime.GroovyTargetWireAttacher"/>
     </component>
 </composite>

@@ -19,12 +19,9 @@ package org.fabric3.binding.ws.axis2.wire;
 import java.util.Map;
 import java.util.Set;
 
-import org.osoa.sca.annotations.Destroy;
 import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.binding.ws.axis2.Axis2ServiceProvisioner;
 import org.fabric3.binding.ws.axis2.config.F3Configurator;
 import org.fabric3.binding.ws.axis2.physical.Axis2WireTargetDefinition;
 import org.fabric3.binding.ws.axis2.policy.AxisPolicy;
@@ -32,7 +29,6 @@ import org.fabric3.binding.ws.axis2.policy.PolicyApplier;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.TargetWireAttacher;
-import org.fabric3.spi.builder.component.TargetWireAttacherRegistry;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.wire.Interceptor;
@@ -47,32 +43,13 @@ import org.fabric3.spi.wire.Wire;
 @EagerInit
 public class Axis2TargetWireAttacher implements TargetWireAttacher<Axis2WireTargetDefinition> {
 
-    private final TargetWireAttacherRegistry targetWireAttacherRegistry;
     private final PolicyApplier policyApplier;
     private final F3Configurator f3Configurator;
 
-    /**
-     * @param targetWireAttacherRegistry the registry for target wire attachers
-     */
-    public Axis2TargetWireAttacher(@Reference TargetWireAttacherRegistry targetWireAttacherRegistry,
-                                   @Reference PolicyApplier policyApplier,
+    public Axis2TargetWireAttacher(@Reference PolicyApplier policyApplier,
                                    @Reference F3Configurator f3Configurator) {
-        this.targetWireAttacherRegistry = targetWireAttacherRegistry;
         this.policyApplier = policyApplier;
         this.f3Configurator = f3Configurator;
-    }
-
-    /**
-     * Registers with the wire attacher registry.
-     */
-    @Init
-    public void start() {
-        targetWireAttacherRegistry.register(Axis2WireTargetDefinition.class, this);
-    }
-
-    @Destroy
-    public void stop() {
-        targetWireAttacherRegistry.unregister(Axis2WireTargetDefinition.class, this);
     }
 
     public void attachToTarget(PhysicalWireSourceDefinition source, Axis2WireTargetDefinition target, Wire wire)

@@ -21,9 +21,6 @@ import java.net.URI;
 import java.util.List;
 import java.util.Map;
 
-import org.osoa.sca.annotations.Destroy;
-import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.java.provision.JavaWireTargetDefinition;
@@ -31,7 +28,6 @@ import org.fabric3.pojo.reflection.InvokerInterceptor;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.TargetWireAttacher;
-import org.fabric3.spi.builder.component.TargetWireAttacherRegistry;
 import org.fabric3.spi.builder.component.WireAttachException;
 import org.fabric3.spi.component.AtomicComponent;
 import org.fabric3.spi.component.Component;
@@ -49,29 +45,15 @@ import org.fabric3.spi.wire.Wire;
  *
  * @version $Rev$ $Date$
  */
-@EagerInit
 public class JavaTargetWireAttacher implements TargetWireAttacher<JavaWireTargetDefinition> {
 
-    private final TargetWireAttacherRegistry targetWireAttacherRegistry;
     private final ComponentManager manager;
     private final ClassLoaderRegistry classLoaderRegistry;
 
     public JavaTargetWireAttacher(@Reference ComponentManager manager,
-                                  @Reference TargetWireAttacherRegistry targetWireAttacherRegistry,
                                   @Reference ClassLoaderRegistry classLoaderRegistry) {
-        this.targetWireAttacherRegistry = targetWireAttacherRegistry;
         this.manager = manager;
         this.classLoaderRegistry = classLoaderRegistry;
-    }
-
-    @Init
-    public void init() {
-        targetWireAttacherRegistry.register(JavaWireTargetDefinition.class, this);
-    }
-
-    @Destroy
-    public void destroy() {
-        targetWireAttacherRegistry.unregister(JavaWireTargetDefinition.class, this);
     }
 
     public void attachToTarget(PhysicalWireSourceDefinition sourceDefinition, JavaWireTargetDefinition targetDefinition, Wire wire)

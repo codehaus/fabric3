@@ -22,9 +22,6 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Map;
 
-import org.osoa.sca.annotations.Destroy;
-import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.binding.ejb.model.logical.EjbBindingDefinition;
@@ -35,7 +32,6 @@ import org.fabric3.scdl.Signature;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.TargetWireAttacher;
-import org.fabric3.spi.builder.component.TargetWireAttacherRegistry;
 import org.fabric3.spi.classloader.MultiParentClassLoader;
 import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
@@ -51,9 +47,7 @@ import org.fabric3.spi.wire.Wire;
  *
  * @version $Revision: 1 $ $Date: 2007-05-14 10:40:37 -0700 (Mon, 14 May 2007) $
  */
-@EagerInit
 public class EjbTargetWireAttacher implements TargetWireAttacher<EjbWireTargetDefinition> {
-    private final TargetWireAttacherRegistry targetWireAttacherRegistry;
     private final EjbRegistry ejbRegistry;
     private final ClassLoaderRegistry classLoaderRegistry;
     private final ScopeRegistry scopeRegistry;
@@ -62,24 +56,12 @@ public class EjbTargetWireAttacher implements TargetWireAttacher<EjbWireTargetDe
     /**
      * Injects the wire attacher classLoaderRegistry and servlet host.
      */
-    public EjbTargetWireAttacher(@Reference TargetWireAttacherRegistry targetWireAttacherRegistry,
-                                 @Reference ClassLoaderRegistry classLoaderRegistry,
+    public EjbTargetWireAttacher(@Reference ClassLoaderRegistry classLoaderRegistry,
                                  @Reference EjbRegistry ejbRegistry,
                                  @Reference ScopeRegistry scopeRegistry) {
-        this.targetWireAttacherRegistry = targetWireAttacherRegistry;
         this.ejbRegistry = ejbRegistry;
         this.classLoaderRegistry = classLoaderRegistry;
         this.scopeRegistry = scopeRegistry;
-    }
-
-    @Init
-    public void start() {
-        targetWireAttacherRegistry.register(EjbWireTargetDefinition.class, this);
-    }
-
-    @Destroy
-    public void stop() {
-        targetWireAttacherRegistry.unregister(EjbWireTargetDefinition.class, this);
     }
 
     public void attachToTarget(PhysicalWireSourceDefinition sourceDefinition,

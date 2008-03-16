@@ -23,9 +23,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.caucho.hessian.io.SerializerFactory;
-import org.osoa.sca.annotations.Destroy;
-import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.api.annotation.Monitor;
@@ -34,7 +31,6 @@ import org.fabric3.binding.hessian.transport.HessianServiceHandler;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.SourceWireAttacher;
-import org.fabric3.spi.builder.component.SourceWireAttacherRegistry;
 import org.fabric3.spi.host.ServletHost;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
@@ -47,9 +43,7 @@ import org.fabric3.spi.wire.Wire;
  *
  * @version $Revision$ $Date$
  */
-@EagerInit
 public class HessianSourceWireAttacher implements SourceWireAttacher<HessianWireSourceDefinition> {
-    private final SourceWireAttacherRegistry sourceWireAttacherRegistry;
     private final ClassLoaderRegistry classLoaderRegistry;
     private final ServletHost servletHost;
     private final HessianWireAttacherMonitor monitor;
@@ -58,32 +52,17 @@ public class HessianSourceWireAttacher implements SourceWireAttacher<HessianWire
     /**
      * Injects the wire attacher registry and servlet host.
      *
-     * @param sourceWireAttacherRegistry the registry for source wire attachers
      * @param servletHost                Servlet host.
      * @param classLoaderRegistry        the classloader registry
      * @param monitor                    the Hessian monitor
      */
-    public HessianSourceWireAttacher(@Reference SourceWireAttacherRegistry sourceWireAttacherRegistry,
-                                     @Reference ServletHost servletHost,
+    public HessianSourceWireAttacher(@Reference ServletHost servletHost,
                                      @Reference ClassLoaderRegistry classLoaderRegistry,
                                      @Monitor HessianWireAttacherMonitor monitor) {
-        this.sourceWireAttacherRegistry = sourceWireAttacherRegistry;
         this.servletHost = servletHost;
         this.classLoaderRegistry = classLoaderRegistry;
         this.monitor = monitor;
         this.serializerFactory = new SerializerFactory();
-    }
-
-    @Init
-    public void start() {
-        sourceWireAttacherRegistry.register(HessianWireSourceDefinition.class, this);
-        monitor.extensionStarted();
-    }
-
-    @Destroy
-    public void stop() {
-        this.monitor.extensionStopped();
-        sourceWireAttacherRegistry.unregister(HessianWireSourceDefinition.class, this);
     }
 
     public void attachToSource(HessianWireSourceDefinition sourceDefinition,

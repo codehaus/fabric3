@@ -23,10 +23,10 @@
            autowire="true">
 
     <!-- Axis wire attacher -->
-    <component name="org.fabric3.binding.ws.axis2.wire.Axis2SourceWireAttacher">
+    <component f3:key="org.fabric3.binding.ws.axis2.physical.Axis2WireSourceDefinition" name="org.fabric3.binding.ws.axis2.wire.Axis2SourceWireAttacher">
         <system:implementation.system class="org.fabric3.binding.ws.axis2.wire.Axis2SourceWireAttacher"/>
     </component>
-    <component name="org.fabric3.binding.ws.axis2.wire.Axis2TargetWireAttacher">
+    <component f3:key="org.fabric3.binding.ws.axis2.physical.Axis2WireTargetDefinition" name="org.fabric3.binding.ws.axis2.wire.Axis2TargetWireAttacher">
         <system:implementation.system class="org.fabric3.binding.ws.axis2.wire.Axis2TargetWireAttacher"/>
     </component>
 

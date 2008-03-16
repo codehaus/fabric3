@@ -19,6 +19,8 @@ package org.fabric3.fabric.runtime.bootstrap;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import org.fabric3.fabric.assembly.RuntimeAssemblyImpl;
 import org.fabric3.fabric.assembly.allocator.Allocator;
@@ -65,6 +67,7 @@ import org.fabric3.fabric.model.physical.PhysicalWireGenerator;
 import org.fabric3.fabric.model.physical.PhysicalWireGeneratorImpl;
 import org.fabric3.fabric.monitor.MonitorWireAttacher;
 import org.fabric3.fabric.monitor.MonitorWireGenerator;
+import org.fabric3.fabric.monitor.MonitorWireTargetDefinition;
 import org.fabric3.fabric.runtime.ComponentNames;
 import org.fabric3.fabric.services.contribution.ArtifactResolverRegistryImpl;
 import org.fabric3.fabric.services.contribution.ClasspathProcessorRegistryImpl;
@@ -92,6 +95,8 @@ import org.fabric3.pojo.instancefactory.InstanceFactoryBuilderRegistry;
 import org.fabric3.spi.assembly.Assembly;
 import org.fabric3.spi.assembly.AssemblyException;
 import org.fabric3.spi.builder.component.ComponentBuilderRegistry;
+import org.fabric3.spi.builder.component.SourceWireAttacher;
+import org.fabric3.spi.builder.component.TargetWireAttacher;
 import org.fabric3.spi.builder.resource.ResourceContainerBuilderRegistry;
 import org.fabric3.spi.command.CommandExecutorRegistry;
 import org.fabric3.spi.component.ScopeRegistry;
@@ -112,6 +117,8 @@ import org.fabric3.spi.transform.TransformerRegistry;
 import org.fabric3.spi.wire.TargetPromotionService;
 import org.fabric3.spi.wire.TargetResolutionService;
 import org.fabric3.spi.wire.WiringService;
+import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
+import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 import org.fabric3.system.control.SystemComponentGenerator;
 import org.fabric3.system.runtime.SystemComponentBuilder;
 import org.fabric3.system.runtime.SystemSourceWireAttacher;
@@ -223,12 +230,19 @@ public class BootstrapAssemblyFactory {
                                                                                transformerRegistry);
         builder.init();
 
-        SingletonWireAttacher singletonWireAttacher = new SingletonWireAttacher(componentManager);
+        Map<Class<? extends PhysicalWireSourceDefinition>, SourceWireAttacher<? extends PhysicalWireSourceDefinition>> sourceAttachers =
+                new ConcurrentHashMap<Class<? extends PhysicalWireSourceDefinition>, SourceWireAttacher<? extends PhysicalWireSourceDefinition>>();
+        sourceAttachers.put(SystemWireSourceDefinition.class, new SystemSourceWireAttacher(componentManager, transformerRegistry, classLoaderRegistry));
+
+        Map<Class<? extends PhysicalWireTargetDefinition>, TargetWireAttacher<? extends PhysicalWireTargetDefinition>> targetAttachers =
+                new ConcurrentHashMap<Class<? extends PhysicalWireTargetDefinition>, TargetWireAttacher<? extends PhysicalWireTargetDefinition>>();
+        targetAttachers.put(SingletonWireTargetDefinition.class, new SingletonWireAttacher(componentManager));
+        targetAttachers.put(SystemWireTargetDefinition.class, new SystemTargetWireAttacher(componentManager));
+        targetAttachers.put(MonitorWireTargetDefinition.class, new MonitorWireAttacher(monitorFactory, classLoaderRegistry));
+
         ConnectorImpl connector = new ConnectorImpl(null);
-        connector.register(SingletonWireTargetDefinition.class, singletonWireAttacher);
-        connector.register(SystemWireSourceDefinition.class, new SystemSourceWireAttacher(componentManager, transformerRegistry, classLoaderRegistry));
-        connector.register(SystemWireTargetDefinition.class, new SystemTargetWireAttacher(componentManager));
-        new MonitorWireAttacher(connector, monitorFactory, classLoaderRegistry).init();
+        connector.setSourceAttachers(sourceAttachers);
+        connector.setTargetAttachers(targetAttachers);
 
         ResourceContainerBuilderRegistry resourceRegistry = createResourceBuilderRegistry(classLoaderRegistry);
 

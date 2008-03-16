@@ -40,7 +40,7 @@
     </component>
     
     <!-- Wire Attacher for Persistence Unit Resources -->
-    <component name="org.fabric3.jpa.wire.PersistenceUnitWireAttacher">
+    <component f3:key="org.fabric3.jpa.generator.PersistenceUnitWireTargetDefinition" name="org.fabric3.jpa.wire.PersistenceUnitWireAttacher">
         <system:implementation.system class="org.fabric3.jpa.wire.PersistenceUnitWireAttacher"/>
     </component>
     

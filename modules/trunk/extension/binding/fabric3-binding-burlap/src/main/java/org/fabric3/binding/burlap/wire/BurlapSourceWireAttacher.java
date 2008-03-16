@@ -22,9 +22,6 @@ import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.osoa.sca.annotations.Destroy;
-import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.api.annotation.Monitor;
@@ -33,7 +30,6 @@ import org.fabric3.binding.burlap.transport.BurlapServiceHandler;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.SourceWireAttacher;
-import org.fabric3.spi.builder.component.SourceWireAttacherRegistry;
 import org.fabric3.spi.host.ServletHost;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
@@ -46,9 +42,7 @@ import org.fabric3.spi.wire.Wire;
  *
  * @version $Revision$ $Date$
  */
-@EagerInit
 public class BurlapSourceWireAttacher implements SourceWireAttacher<BurlapWireSourceDefinition> {
-    private final SourceWireAttacherRegistry sourceWireAttacherRegistry;
     private final ServletHost servletHost;
     private final ClassLoaderRegistry classLoaderRegistry;
     private final BurlapWireAttacherMonitor monitor;
@@ -56,31 +50,16 @@ public class BurlapSourceWireAttacher implements SourceWireAttacher<BurlapWireSo
     /**
      * Injects the wire attacher registry and servlet host.
      *
-     * @param sourceWireAttacherRegistry the registry for source wire attachers
      * @param servletHost                Servlet host.
      * @param classLoaderRegistry        the classloader registry to resolve the target classloader from
      * @param monitor                    the Burlap monitor
      */
-    public BurlapSourceWireAttacher(@Reference SourceWireAttacherRegistry sourceWireAttacherRegistry,
-                              @Reference ServletHost servletHost,
+    public BurlapSourceWireAttacher(@Reference ServletHost servletHost,
                               @Reference ClassLoaderRegistry classLoaderRegistry,
                               @Monitor BurlapWireAttacherMonitor monitor) {
-        this.sourceWireAttacherRegistry = sourceWireAttacherRegistry;
         this.servletHost = servletHost;
         this.classLoaderRegistry = classLoaderRegistry;
         this.monitor = monitor;
-    }
-
-    @Init
-    public void start() {
-        sourceWireAttacherRegistry.register(BurlapWireSourceDefinition.class, this);
-        monitor.extensionStarted();
-    }
-
-    @Destroy
-    public void stop() {
-        this.monitor.extensionStopped();
-        sourceWireAttacherRegistry.unregister(BurlapWireSourceDefinition.class, this);
     }
 
     public void attachToSource(BurlapWireSourceDefinition sourceDefinition,

@@ -45,7 +45,7 @@
     </component>
     
     <!-- Wire Attacher for System Sourced Resources -->
-    <component name="org.fabric3.resource.wire.SystemSourcedResourceWireAttacher">
+    <component f3:key="org.fabric3.resource.model.SystemSourcedWireTargetDefinition" name="org.fabric3.resource.wire.SystemSourcedResourceWireAttacher">
         <system:implementation.system class="org.fabric3.resource.wire.SystemSourcedResourceWireAttacher"/>
     </component>
     

@@ -50,7 +50,7 @@
     </component>
     
     <!-- Wire attacher -->
-    <component name="org.fabric3.mock.MockWireAttacher">
+    <component f3:key="org.fabric3.mock.MockWireTargetDefinition" name="org.fabric3.mock.MockWireAttacher">
         <system:implementation.system class="org.fabric3.mock.MockWireAttacher"/>
     </component>
     

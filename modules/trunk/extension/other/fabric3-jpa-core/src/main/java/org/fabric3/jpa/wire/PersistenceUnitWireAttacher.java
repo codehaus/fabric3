@@ -22,68 +22,46 @@ import java.net.URI;
 import java.util.Map;
 import javax.persistence.EntityManagerFactory;
 
-import org.osoa.sca.annotations.Destroy;
-import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.jpa.generator.PersistenceUnitWireTargetDefinition;
 import org.fabric3.jpa.provider.EmfBuilder;
+import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.TargetWireAttacher;
-import org.fabric3.spi.builder.component.TargetWireAttacherRegistry;
 import org.fabric3.spi.classloader.MultiParentClassLoader;
+import org.fabric3.spi.invocation.Message;
+import org.fabric3.spi.invocation.MessageImpl;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.wire.Interceptor;
 import org.fabric3.spi.wire.InvocationChain;
-import org.fabric3.spi.invocation.Message;
-import org.fabric3.spi.invocation.MessageImpl;
 import org.fabric3.spi.wire.Wire;
-import org.fabric3.spi.ObjectFactory;
 
 /**
  * Attaches the target side of entity manager factories.
- * 
+ *
  * @version $Revision$ $Date$
  */
-@EagerInit
 public class PersistenceUnitWireAttacher implements TargetWireAttacher<PersistenceUnitWireTargetDefinition> {
-    private final TargetWireAttacherRegistry targetWireAttacherRegistry;
     private final EmfBuilder emfBuilder;
     private final ClassLoaderRegistry classLoaderRegistry;
 
     /**
      * Injects the dependencies.
-     * 
-     * @param targetWireAttacherRegistry the registry for target wire attachers
+     *
      * @param classLoaderRegistry Classloader registry.
-     * @param emfBuilder Entity manager factory builder.
+     * @param emfBuilder          Entity manager factory builder.
      */
-    public PersistenceUnitWireAttacher(@Reference TargetWireAttacherRegistry targetWireAttacherRegistry,
-                                       @Reference ClassLoaderRegistry classLoaderRegistry, 
+    public PersistenceUnitWireAttacher(@Reference ClassLoaderRegistry classLoaderRegistry,
                                        @Reference EmfBuilder emfBuilder) {
-        this.targetWireAttacherRegistry = targetWireAttacherRegistry;
         this.emfBuilder = emfBuilder;
         this.classLoaderRegistry = classLoaderRegistry;
     }
 
-    /**
-     * Registers with the wire attacher registry.
-     */
-    @Init
-    public void start() {
-        targetWireAttacherRegistry.register(PersistenceUnitWireTargetDefinition.class, this);
-    }
-
-    @Destroy
-    public void stop() {
-        targetWireAttacherRegistry.unregister(PersistenceUnitWireTargetDefinition.class, this);
-    }
-
     public void attachToTarget(PhysicalWireSourceDefinition source, PersistenceUnitWireTargetDefinition target,
-            Wire wire) throws WiringException {
+                               Wire wire) throws WiringException {
 
         String unitName = target.getUnitName();
         URI classLoaderUri = target.getClassLoaderUri();
@@ -91,29 +69,29 @@ public class PersistenceUnitWireAttacher implements TargetWireAttacher<Persisten
         ClassLoader appCl = classLoaderRegistry.getClassLoader(classLoaderUri);
         ClassLoader systemCl = getClass().getClassLoader();
         ClassLoader hostCl = systemCl.getParent();
-        
+
         MultiParentClassLoader tccl = new MultiParentClassLoader(URI.create("JPA"), hostCl);
         tccl.addParent(appCl);
         tccl.addParent(systemCl);
-        
+
         ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
-        
+
         try {
 
             Thread.currentThread().setContextClassLoader(tccl);
-    
+
             final EntityManagerFactory entityManagerFactory = emfBuilder.build(unitName, tccl);
-    
+
             for (Map.Entry<PhysicalOperationDefinition, InvocationChain> entry : wire.getInvocationChains().entrySet()) {
-    
+
                 final PhysicalOperationDefinition op = entry.getKey();
                 final String opName = op.getName();
                 InvocationChain chain = entry.getValue();
-    
+
                 chain.addInterceptor(new EmfInterceptor(opName, entityManagerFactory));
-    
+
             }
-            
+
         } finally {
             Thread.currentThread().setContextClassLoader(oldCl);
         }

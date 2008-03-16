@@ -18,40 +18,22 @@ package org.fabric3.binding.test;
 
 import java.net.URI;
 
-import org.osoa.sca.annotations.Destroy;
-import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.SourceWireAttacher;
-import org.fabric3.spi.builder.component.SourceWireAttacherRegistry;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 import org.fabric3.spi.wire.Wire;
 
 /**
  * @version $Rev$ $Date$
  */
-@EagerInit
 public class TestBindingSourceWireAttacher implements SourceWireAttacher<TestBindingSourceDefinition> {
-    private final SourceWireAttacherRegistry sourceWireAttacherRegistry;
     private final BindingChannel channel;
 
-    public TestBindingSourceWireAttacher(@Reference SourceWireAttacherRegistry sourceWireAttacherRegistry,
-                                         @Reference BindingChannel channel) {
-        this.sourceWireAttacherRegistry = sourceWireAttacherRegistry;
+    public TestBindingSourceWireAttacher(@Reference BindingChannel channel) {
         this.channel = channel;
-    }
-
-    @Init
-    public void init() {
-        sourceWireAttacherRegistry.register(TestBindingSourceDefinition.class, this);
-    }
-
-    @Destroy
-    public void stop() {
-        sourceWireAttacherRegistry.unregister(TestBindingSourceDefinition.class, this);
     }
 
     public void attachToSource(TestBindingSourceDefinition source, PhysicalWireTargetDefinition target, Wire wire) throws WiringException {

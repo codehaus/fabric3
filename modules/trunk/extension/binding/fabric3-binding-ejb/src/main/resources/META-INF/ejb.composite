@@ -32,10 +32,10 @@
     </component>
 
     <!-- EJB Wire Attachers -->
-    <component name="org.fabric3.binding.ejb.wire.EjbSourceWireAttacher">
+    <component f3:key="org.fabric3.binding.ejb.model.physical.EjbWireSourceDefinition" name="org.fabric3.binding.ejb.wire.EjbSourceWireAttacher">
         <system:implementation.system class="org.fabric3.binding.ejb.wire.EjbSourceWireAttacher"/>
     </component>
-    <component name="org.fabric3.binding.ejb.wire.EjbTargetWireAttacher">
+    <component f3:key="org.fabric3.binding.ejb.model.physical.EjbWireTargetDefinition" name="org.fabric3.binding.ejb.wire.EjbTargetWireAttacher">
         <system:implementation.system class="org.fabric3.binding.ejb.wire.EjbTargetWireAttacher"/>
     </component>
 

@@ -18,9 +18,7 @@ package org.fabric3.groovy.runtime;
 
 import java.net.URI;
 
-import org.osoa.sca.annotations.Destroy;
 import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.groovy.provision.GroovyWireSourceDefinition;
@@ -31,7 +29,6 @@ import org.fabric3.scdl.Scope;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.SourceWireAttacher;
-import org.fabric3.spi.builder.component.SourceWireAttacherRegistry;
 import org.fabric3.spi.builder.component.WireAttachException;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 import org.fabric3.spi.runtime.component.ComponentManager;
@@ -49,31 +46,18 @@ import org.fabric3.spi.wire.Wire;
  */
 @EagerInit
 public class GroovySourceWireAttacher extends PojoSourceWireAttacher implements SourceWireAttacher<GroovyWireSourceDefinition> {
-    private final SourceWireAttacherRegistry sourceWireAttacherRegistry;
     private final ComponentManager manager;
     private final ProxyService proxyService;
     private final ClassLoaderRegistry classLoaderRegistry;
 
     public GroovySourceWireAttacher(@Reference ComponentManager manager,
-                                    @Reference SourceWireAttacherRegistry sourceWireAttacherRegistry,
                                     @Reference ProxyService proxyService,
                                     @Reference ClassLoaderRegistry classLoaderRegistry,
                                     @Reference(name = "transformerRegistry")TransformerRegistry<PullTransformer<?, ?>> transformerRegistry) {
         super(transformerRegistry, classLoaderRegistry);
-        this.sourceWireAttacherRegistry = sourceWireAttacherRegistry;
         this.manager = manager;
         this.proxyService = proxyService;
         this.classLoaderRegistry = classLoaderRegistry;
-    }
-
-    @Init
-    public void init() {
-        sourceWireAttacherRegistry.register(GroovyWireSourceDefinition.class, this);
-    }
-
-    @Destroy
-    public void destroy() {
-        sourceWireAttacherRegistry.unregister(GroovyWireSourceDefinition.class, this);
     }
 
     public void attachToSource(GroovyWireSourceDefinition sourceDefinition,

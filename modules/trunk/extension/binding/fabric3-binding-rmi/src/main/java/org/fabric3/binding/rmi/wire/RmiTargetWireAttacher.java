@@ -25,9 +25,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.WeakHashMap;
 
-import org.osoa.sca.annotations.Destroy;
-import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.binding.rmi.model.logical.RmiBindingDefinition;
@@ -36,7 +33,6 @@ import org.fabric3.binding.rmi.transport.RmiTargetInterceptor;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.TargetWireAttacher;
-import org.fabric3.spi.builder.component.TargetWireAttacherRegistry;
 import org.fabric3.spi.builder.component.WireAttachException;
 import org.fabric3.spi.classloader.MultiParentClassLoader;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
@@ -45,37 +41,22 @@ import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.Wire;
 
-@EagerInit
 public class RmiTargetWireAttacher implements TargetWireAttacher<RmiWireTargetDefinition> {
 
     static {
         System.setProperty("java.rmi.server.ignoreStubClasses", "true");
     }
 
-    private final TargetWireAttacherRegistry targetWireAttacherRegistry;
     private final ClassLoaderRegistry classLoaderRegistry;
     private final Map<String, CodeGenClassLoader> classLoaderMap = new WeakHashMap<String, CodeGenClassLoader>(11);
 
     /**
      * Injects the wire attacher classLoaderRegistry and servlet host.
      *
-     * @param targetWireAttacherRegistry the registry for target wire attachers
-     * @param classLoaderRegistry        the classloader registry for loading application classes
+     * @param classLoaderRegistry the classloader registry for loading application classes
      */
-    public RmiTargetWireAttacher(@Reference TargetWireAttacherRegistry targetWireAttacherRegistry,
-                                 @Reference ClassLoaderRegistry classLoaderRegistry) {
-        this.targetWireAttacherRegistry = targetWireAttacherRegistry;
+    public RmiTargetWireAttacher(@Reference ClassLoaderRegistry classLoaderRegistry) {
         this.classLoaderRegistry = classLoaderRegistry;
-    }
-
-    @Init
-    public void start() {
-        targetWireAttacherRegistry.register(RmiWireTargetDefinition.class, this);
-    }
-
-    @Destroy
-    public void stop() {
-        targetWireAttacherRegistry.unregister(RmiWireTargetDefinition.class, this);
     }
 
     private Class generateRemoteInterface(String name, URI uri)

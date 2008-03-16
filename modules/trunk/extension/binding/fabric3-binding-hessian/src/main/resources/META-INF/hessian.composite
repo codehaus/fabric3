@@ -32,10 +32,10 @@
     </component>
 
     <!-- Hessian Wire Attachers -->
-    <component name="org.fabric3.binding.hessian.wire.HessianSourceWireAttacher">
+    <component f3:key="org.fabric3.binding.hessian.model.physical.HessianWireSourceDefinition" name="org.fabric3.binding.hessian.wire.HessianSourceWireAttacher">
         <system:implementation.system class="org.fabric3.binding.hessian.wire.HessianSourceWireAttacher"/>
     </component>
-    <component name="org.fabric3.binding.hessian.wire.HessianTargetWireAttacher">
+    <component f3:key="org.fabric3.binding.hessian.model.physical.HessianWireTargetDefinition" name="org.fabric3.binding.hessian.wire.HessianTargetWireAttacher">
         <system:implementation.system class="org.fabric3.binding.hessian.wire.HessianTargetWireAttacher"/>
     </component>
 

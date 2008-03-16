@@ -21,10 +21,10 @@
            targetNamespace="org.codehaus.fabric3"
            name="RMIBindingExtension">
 
-    <component name="org.fabric3.binding.rmi.wire.RmiSourceWireAttacher">
+    <component f3:key="org.fabric3.binding.rmi.model.physical.RmiWireSourceDefinition" name="org.fabric3.binding.rmi.wire.RmiSourceWireAttacher">
         <system:implementation.system class="org.fabric3.binding.rmi.wire.RmiSourceWireAttacher"/>
     </component>
-    <component name="org.fabric3.binding.rmi.wire.RmiTargetWireAttacher">
+    <component f3:key="org.fabric3.binding.rmi.model.physical.RmiWireTargetDefinition" name="org.fabric3.binding.rmi.wire.RmiTargetWireAttacher">
         <system:implementation.system class="org.fabric3.binding.rmi.wire.RmiTargetWireAttacher"/>
     </component>
 

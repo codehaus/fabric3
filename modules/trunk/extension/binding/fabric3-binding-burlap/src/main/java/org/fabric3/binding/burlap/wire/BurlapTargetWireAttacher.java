@@ -33,7 +33,6 @@ import org.fabric3.binding.burlap.transport.BurlapTargetInterceptor;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.TargetWireAttacher;
-import org.fabric3.spi.builder.component.TargetWireAttacherRegistry;
 import org.fabric3.spi.builder.component.WireAttachException;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
@@ -48,35 +47,29 @@ import org.fabric3.spi.wire.Wire;
  */
 @EagerInit
 public class BurlapTargetWireAttacher implements TargetWireAttacher<BurlapWireTargetDefinition> {
-    private final TargetWireAttacherRegistry targetWireAttacherRegistry;
     private final ClassLoaderRegistry classLoaderRegistry;
     private final BurlapWireAttacherMonitor monitor;
 
     /**
      * Injects the wire attacher registry and servlet host.
      *
-     * @param targetWireAttacherRegistry the registry for target wire attachers
-     * @param classLoaderRegistry        the classloader registry to resolve the target classloader from
-     * @param monitor                    the Burlap monitor
+     * @param classLoaderRegistry the classloader registry to resolve the target classloader from
+     * @param monitor             the Burlap monitor
      */
-    public BurlapTargetWireAttacher(@Reference TargetWireAttacherRegistry targetWireAttacherRegistry,
-                                    @Reference ClassLoaderRegistry classLoaderRegistry,
+    public BurlapTargetWireAttacher(@Reference ClassLoaderRegistry classLoaderRegistry,
                                     @Monitor BurlapWireAttacherMonitor monitor) {
-        this.targetWireAttacherRegistry = targetWireAttacherRegistry;
         this.classLoaderRegistry = classLoaderRegistry;
         this.monitor = monitor;
     }
 
     @Init
     public void start() {
-        targetWireAttacherRegistry.register(BurlapWireTargetDefinition.class, this);
         monitor.extensionStarted();
     }
 
     @Destroy
     public void stop() {
         this.monitor.extensionStopped();
-        targetWireAttacherRegistry.unregister(BurlapWireTargetDefinition.class, this);
     }
 
     public void attachToTarget(PhysicalWireSourceDefinition sourceDefinition,

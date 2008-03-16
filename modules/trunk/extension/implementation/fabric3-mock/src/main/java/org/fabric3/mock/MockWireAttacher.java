@@ -22,52 +22,34 @@ import java.net.URI;
 import java.util.Map;
 
 import org.easymock.IMocksControl;
-import org.osoa.sca.annotations.Destroy;
-import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.SingletonObjectFactory;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.TargetWireAttacher;
-import org.fabric3.spi.builder.component.TargetWireAttacherRegistry;
 import org.fabric3.spi.builder.component.WireAttachException;
+import org.fabric3.spi.invocation.Message;
+import org.fabric3.spi.invocation.MessageImpl;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.wire.Interceptor;
 import org.fabric3.spi.wire.InvocationChain;
-import org.fabric3.spi.invocation.Message;
-import org.fabric3.spi.invocation.MessageImpl;
 import org.fabric3.spi.wire.Wire;
 
 /**
  * @version $Revision$ $Date$
  */
-@EagerInit
 public class MockWireAttacher implements TargetWireAttacher<MockWireTargetDefinition> {
 
-    private final TargetWireAttacherRegistry targetWireAttacherRegistry;
     private final ClassLoaderRegistry classLoaderRegistry;
     private final IMocksControl control;
 
-    public MockWireAttacher(@Reference TargetWireAttacherRegistry targetWireAttacherRegistry,
-                            @Reference ClassLoaderRegistry classLoaderRegistry,
+    public MockWireAttacher(@Reference ClassLoaderRegistry classLoaderRegistry,
                             @Reference IMocksControl control) {
-        this.targetWireAttacherRegistry = targetWireAttacherRegistry;
         this.classLoaderRegistry = classLoaderRegistry;
         this.control = control;
-    }
-
-    @Init
-    public void init() {
-        targetWireAttacherRegistry.register(MockWireTargetDefinition.class, this);
-    }
-
-    @Destroy
-    public void destroy() {
-        targetWireAttacherRegistry.unregister(MockWireTargetDefinition.class, this);
     }
 
     public void attachToTarget(PhysicalWireSourceDefinition wireSourceDefinition,

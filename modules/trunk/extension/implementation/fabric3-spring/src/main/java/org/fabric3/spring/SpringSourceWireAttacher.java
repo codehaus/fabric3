@@ -18,16 +18,13 @@ package org.fabric3.spring;
 
 import java.net.URI;
 
-import org.osoa.sca.annotations.Destroy;
 import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.pojo.wire.PojoSourceWireAttacher;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.SourceWireAttacher;
-import org.fabric3.spi.builder.component.SourceWireAttacherRegistry;
 import org.fabric3.spi.component.AtomicComponent;
 import org.fabric3.spi.component.Component;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
@@ -40,14 +37,13 @@ import org.fabric3.spi.wire.ProxyService;
 import org.fabric3.spi.wire.Wire;
 
 /**
- * The component builder for Spring implementation types. Responsible for creating the Component runtime artifact from a
- * physical component definition
+ * The component builder for Spring implementation types. Responsible for creating the Component runtime artifact from a physical component
+ * definition
  *
  * @version $Rev$ $Date$
  */
 @EagerInit
 public class SpringSourceWireAttacher extends PojoSourceWireAttacher implements SourceWireAttacher<SpringWireSourceDefinition> {
-    private final SourceWireAttacherRegistry sourceWireAttacherRegistry;
     private final ComponentManager manager;
     private final ProxyService proxyService;
     private final ClassLoaderRegistry classLoaderRegistry;
@@ -55,26 +51,14 @@ public class SpringSourceWireAttacher extends PojoSourceWireAttacher implements 
     private boolean debug = false;
 
     public SpringSourceWireAttacher(@Reference ComponentManager manager,
-                              @Reference SourceWireAttacherRegistry sourceWireAttacherRegistry,
-                              @Reference ProxyService proxyService,
-                              @Reference ClassLoaderRegistry classLoaderRegistry,
-                              @Reference(name = "transformerRegistry")
-                              TransformerRegistry<PullTransformer<?, ?>> transformerRegistry) {
+                                    @Reference ProxyService proxyService,
+                                    @Reference ClassLoaderRegistry classLoaderRegistry,
+                                    @Reference(name = "transformerRegistry")
+                                    TransformerRegistry<PullTransformer<?, ?>> transformerRegistry) {
         super(transformerRegistry, classLoaderRegistry);
-        this.sourceWireAttacherRegistry = sourceWireAttacherRegistry;
         this.manager = manager;
         this.proxyService = proxyService;
         this.classLoaderRegistry = classLoaderRegistry;
-    }
-
-    @Init
-    public void init() {
-        sourceWireAttacherRegistry.register(SpringWireSourceDefinition.class, this);
-    }
-
-    @Destroy
-    public void destroy() {
-        sourceWireAttacherRegistry.unregister(SpringWireSourceDefinition.class, this);
     }
 
     public void attachToSource(SpringWireSourceDefinition sourceDefinition,
@@ -102,21 +86,21 @@ public class SpringSourceWireAttacher extends PojoSourceWireAttacher implements 
                     "; targetUri=" + targetUri + "; targetName=" + UriHelper.getDefragmentedName(targetDefinition.getUri()) +
                     "; sourceUri.getFragment()=" + sourceUri.getFragment());
 
-            assert target instanceof AtomicComponent;
-            ObjectFactory<?> factory = null;
-            ClassLoader cl = classLoaderRegistry.getClassLoader(sourceDefinition.getClassLoaderId());
+        assert target instanceof AtomicComponent;
+        ObjectFactory<?> factory = null;
+        ClassLoader cl = classLoaderRegistry.getClassLoader(sourceDefinition.getClassLoaderId());
 
-            try {
-                factory = createWireObjectFactory(cl.loadClass(type.getName()),
-                                                  sourceDefinition.isConversational(),
-                                                  wire);
-            } catch (ClassNotFoundException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            }
+        try {
+            factory = createWireObjectFactory(cl.loadClass(type.getName()),
+                                              sourceDefinition.isConversational(),
+                                              wire);
+        } catch (ClassNotFoundException e) {
+            // TODO Auto-generated catch block
+            e.printStackTrace();
+        }
 
-            String refName = sourceUri.getFragment();
-            source.addRefNameToObjFactory(refName, factory);
+        String refName = sourceUri.getFragment();
+        source.addRefNameToObjFactory(refName, factory);
     }
 
     private <T> ObjectFactory<T> createWireObjectFactory(Class<T> type, boolean isConversational, Wire wire) {

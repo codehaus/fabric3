@@ -24,9 +24,7 @@ import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.osoa.sca.annotations.Destroy;
 import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 import org.osoa.sca.annotations.Remotable;
 
@@ -39,7 +37,6 @@ import org.fabric3.scdl.Signature;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.SourceWireAttacher;
-import org.fabric3.spi.builder.component.SourceWireAttacherRegistry;
 import org.fabric3.spi.classloader.MultiParentClassLoader;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
@@ -55,30 +52,20 @@ import org.fabric3.spi.wire.Wire;
  */
 @EagerInit
 public class EjbSourceWireAttacher implements SourceWireAttacher<EjbWireSourceDefinition> {
-    private final SourceWireAttacherRegistry sourceWireAttacherRegistry;
     private final EjbRegistry ejbRegistry;
     private final ClassLoaderRegistry classLoaderRegistry;
     private ClassLoader cl;
 
     /**
      * Injects the wire attacher classLoaderRegistry and servlet host.
+     *
+     * @param classLoaderRegistry the classloader registry
+     * @param ejbRegistry         the EJB registry
      */
-    public EjbSourceWireAttacher(@Reference SourceWireAttacherRegistry sourceWireAttacherRegistry,
-                                 @Reference ClassLoaderRegistry classLoaderRegistry,
+    public EjbSourceWireAttacher(@Reference ClassLoaderRegistry classLoaderRegistry,
                                  @Reference EjbRegistry ejbRegistry) {
-        this.sourceWireAttacherRegistry = sourceWireAttacherRegistry;
         this.ejbRegistry = ejbRegistry;
         this.classLoaderRegistry = classLoaderRegistry;
-    }
-
-    @Init
-    public void start() {
-        sourceWireAttacherRegistry.register(EjbWireSourceDefinition.class, this);
-    }
-
-    @Destroy
-    public void stop() {
-        sourceWireAttacherRegistry.unregister(EjbWireSourceDefinition.class, this);
     }
 
     public void attachToSource(EjbWireSourceDefinition sourceDefinition,
@@ -94,11 +81,11 @@ public class EjbSourceWireAttacher implements SourceWireAttacher<EjbWireSourceDe
             ops.put(signature, entry);
         }
 
-        Object ejbFacade = null;
+        Object ejbFacade;
         if (sourceDefinition.getBindingDefinition().isEjb3()) {
-            ejbFacade = generateEjb3Facade(sourceDefinition, wire, ops);
+            ejbFacade = generateEjb3Facade(sourceDefinition, ops);
         } else {
-            ejbFacade = generateEjb2Facade(sourceDefinition, wire, ops);
+            ejbFacade = generateEjb2Facade(sourceDefinition, ops);
         }
 
         URI uri = sourceDefinition.getBindingDefinition().getTargetUri();
@@ -113,7 +100,7 @@ public class EjbSourceWireAttacher implements SourceWireAttacher<EjbWireSourceDe
 
     }
 
-    private Object generateEjb3Facade(EjbWireSourceDefinition sourceDefinition, Wire wire,
+    private Object generateEjb3Facade(EjbWireSourceDefinition sourceDefinition,
                                       Map<Signature, Map.Entry<PhysicalOperationDefinition, InvocationChain>> ops)
             throws WiringException {
 
@@ -129,7 +116,7 @@ public class EjbSourceWireAttacher implements SourceWireAttacher<EjbWireSourceDe
         return proxy;
     }
 
-    private Object generateEjb2Facade(EjbWireSourceDefinition sourceDefinition, Wire wire,
+    private Object generateEjb2Facade(EjbWireSourceDefinition sourceDefinition,
                                       Map<Signature, Map.Entry<PhysicalOperationDefinition, InvocationChain>> ops)
             throws WiringException {
 

@@ -27,9 +27,6 @@ import javax.jms.ConnectionFactory;
 import javax.jms.Destination;
 import javax.jms.MessageListener;
 
-import org.osoa.sca.annotations.Destroy;
-import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Reference;
 
@@ -48,7 +45,6 @@ import org.fabric3.binding.jms.tx.TransactionHandler;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.SourceWireAttacher;
-import org.fabric3.spi.builder.component.SourceWireAttacherRegistry;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
@@ -60,9 +56,7 @@ import org.fabric3.spi.wire.Wire;
  *
  * @version $Revision$ $Date$
  */
-@EagerInit
 public class JmsSourceWireAttacher implements SourceWireAttacher<JmsWireSourceDefinition> {
-    private final SourceWireAttacherRegistry sourceWireAttacherRegistry;
 
     // JMS host
     private JmsHost jmsHost;
@@ -95,22 +89,8 @@ public class JmsSourceWireAttacher implements SourceWireAttacher<JmsWireSourceDe
     /**
      * Injects the wire attacher registries.
      *
-     * @param sourceWireAttacherRegistry the registry for source wire attachers
      */
-    public JmsSourceWireAttacher(@Reference SourceWireAttacherRegistry sourceWireAttacherRegistry) {
-
-        this.sourceWireAttacherRegistry = sourceWireAttacherRegistry;
-
-    }
-
-    @Init
-    public void start() {
-        sourceWireAttacherRegistry.register(JmsWireSourceDefinition.class, this);
-    }
-
-    @Destroy
-    public void stop() {
-        sourceWireAttacherRegistry.unregister(JmsWireSourceDefinition.class, this);
+    public JmsSourceWireAttacher() {
     }
 
     /**

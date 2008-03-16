@@ -32,10 +32,10 @@
     </component>
 
     <!-- Burlap Wire Attachers -->
-    <component name="org.fabric3.binding.burlap.wire.BurlapSourceWireAttacher">
+    <component f3:key="org.fabric3.binding.burlap.model.physical.BurlapWireSourceDefinition" name="org.fabric3.binding.burlap.wire.BurlapSourceWireAttacher">
         <system:implementation.system class="org.fabric3.binding.burlap.wire.BurlapSourceWireAttacher"/>
     </component>
-    <component name="org.fabric3.binding.burlap.wire.BurlapTargetWireAttacher">
+    <component f3:key="org.fabric3.binding.burlap.model.physical.BurlapWireTargetDefinition" name="org.fabric3.binding.burlap.wire.BurlapTargetWireAttacher">
         <system:implementation.system class="org.fabric3.binding.burlap.wire.BurlapTargetWireAttacher"/>
     </component>
 

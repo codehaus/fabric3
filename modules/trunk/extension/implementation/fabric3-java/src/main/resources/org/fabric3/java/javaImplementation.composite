@@ -62,12 +62,12 @@
         <reference name="transformerRegistry" target="pullTransformerRegistry"/>
     </component>
 
-    <component name="org.fabric3.java.runtime.JavaSourceWireAttacher">
+    <component f3:key="org.fabric3.java.provision.JavaWireSourceDefinition" name="org.fabric3.java.runtime.JavaSourceWireAttacher">
         <system:implementation.system class="org.fabric3.java.runtime.JavaSourceWireAttacher"/>
         <reference name="transformerRegistry" target="pullTransformerRegistry"/>
     </component>
 
-    <component name="org.fabric3.java.runtime.JavaTargetWireAttacher">
+    <component f3:key="org.fabric3.java.provision.JavaWireTargetDefinition" name="org.fabric3.java.runtime.JavaTargetWireAttacher">
         <system:implementation.system class="org.fabric3.java.runtime.JavaTargetWireAttacher"/>
     </component>
 

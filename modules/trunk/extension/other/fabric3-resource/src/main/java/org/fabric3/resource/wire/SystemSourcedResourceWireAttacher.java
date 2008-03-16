@@ -20,44 +20,26 @@ package org.fabric3.resource.wire;
 
 import java.net.URI;
 
-import org.osoa.sca.annotations.Destroy;
-import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.resource.model.SystemSourcedWireTargetDefinition;
+import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.TargetWireAttacher;
-import org.fabric3.spi.builder.component.TargetWireAttacherRegistry;
-import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
-import org.fabric3.spi.wire.Wire;
-import org.fabric3.spi.ObjectFactory;
-import org.fabric3.spi.runtime.component.ComponentManager;
 import org.fabric3.spi.component.AtomicComponent;
+import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
+import org.fabric3.spi.runtime.component.ComponentManager;
 import org.fabric3.spi.util.UriHelper;
+import org.fabric3.spi.wire.Wire;
 
 /**
  * @version $Revision$ $Date$
  */
-@EagerInit
 public class SystemSourcedResourceWireAttacher implements TargetWireAttacher<SystemSourcedWireTargetDefinition> {
     private final ComponentManager manager;
-    private final TargetWireAttacherRegistry targetWireAttacherRegistry;
 
-    public SystemSourcedResourceWireAttacher(@Reference ComponentManager manager,
-                                             @Reference TargetWireAttacherRegistry targetWireAttacherRegistry) {
+    public SystemSourcedResourceWireAttacher(@Reference ComponentManager manager) {
         this.manager = manager;
-        this.targetWireAttacherRegistry = targetWireAttacherRegistry;
-    }
-
-    @Init
-    public void start() {
-        targetWireAttacherRegistry.register(SystemSourcedWireTargetDefinition.class, this);
-    }
-
-    @Destroy
-    public void stop() {
-        targetWireAttacherRegistry.unregister(SystemSourcedWireTargetDefinition.class, this);
     }
 
     public void attachToTarget(PhysicalWireSourceDefinition source, SystemSourcedWireTargetDefinition target, Wire wire)

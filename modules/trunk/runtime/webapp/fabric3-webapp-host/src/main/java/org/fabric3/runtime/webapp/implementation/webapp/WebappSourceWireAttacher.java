@@ -20,15 +20,12 @@ package org.fabric3.runtime.webapp.implementation.webapp;
 
 import java.net.URI;
 
-import org.osoa.sca.annotations.Destroy;
 import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.SourceWireAttacher;
-import org.fabric3.spi.builder.component.SourceWireAttacherRegistry;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 import org.fabric3.spi.runtime.component.ComponentManager;
 import org.fabric3.spi.util.UriHelper;
@@ -42,24 +39,10 @@ import org.fabric3.spi.wire.Wire;
 @EagerInit
 public class WebappSourceWireAttacher implements SourceWireAttacher<WebappWireSourceDefinition> {
 
-    private final SourceWireAttacherRegistry sourceWireAttacherRegistry;
     private ComponentManager manager;
 
-    public WebappSourceWireAttacher(@Reference ComponentManager manager,
-                                    @Reference SourceWireAttacherRegistry sourceWireAttacherRegistry) {
+    public WebappSourceWireAttacher(@Reference ComponentManager manager) {
         this.manager = manager;
-        this.sourceWireAttacherRegistry = sourceWireAttacherRegistry;
-    }
-
-
-    @Init
-    public void init() {
-        sourceWireAttacherRegistry.register(WebappWireSourceDefinition.class, this);
-    }
-
-    @Destroy
-    public void destroy() {
-        sourceWireAttacherRegistry.unregister(WebappWireSourceDefinition.class, this);
     }
 
     public void attachToSource(WebappWireSourceDefinition sourceDefinition,

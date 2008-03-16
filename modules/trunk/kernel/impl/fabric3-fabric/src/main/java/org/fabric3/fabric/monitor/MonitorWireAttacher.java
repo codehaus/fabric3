@@ -16,9 +16,6 @@
  */
 package org.fabric3.fabric.monitor;
 
-import org.osoa.sca.annotations.Destroy;
-import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.monitor.MonitorFactory;
@@ -26,7 +23,6 @@ import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.SingletonObjectFactory;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.TargetWireAttacher;
-import org.fabric3.spi.builder.component.TargetWireAttacherRegistry;
 import org.fabric3.spi.builder.component.WireAttachException;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
@@ -39,28 +35,14 @@ import org.fabric3.spi.wire.Wire;
  *
  * @version $Rev$ $Date$
  */
-@EagerInit
 public class MonitorWireAttacher implements TargetWireAttacher<MonitorWireTargetDefinition> {
-    private final TargetWireAttacherRegistry wireAttacherRegistry;
     private final MonitorFactory monitorFactory;
     private final ClassLoaderRegistry classLoaderRegistry;
 
-    public MonitorWireAttacher(@Reference TargetWireAttacherRegistry wireAttacherRegistry,
-                               @Reference MonitorFactory monitorFactory,
+    public MonitorWireAttacher(@Reference MonitorFactory monitorFactory,
                                @Reference ClassLoaderRegistry classLoaderRegistry) {
-        this.wireAttacherRegistry = wireAttacherRegistry;
         this.monitorFactory = monitorFactory;
         this.classLoaderRegistry = classLoaderRegistry;
-    }
-
-    @Init
-    public void init() {
-        wireAttacherRegistry.register(MonitorWireTargetDefinition.class, this);
-    }
-
-    @Destroy
-    public void destroy() {
-        wireAttacherRegistry.unregister(MonitorWireTargetDefinition.class, this);
     }
 
     public void attachToTarget(PhysicalWireSourceDefinition source, MonitorWireTargetDefinition target, Wire wire) throws WiringException {

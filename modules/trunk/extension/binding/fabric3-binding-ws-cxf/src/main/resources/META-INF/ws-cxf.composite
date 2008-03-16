@@ -21,10 +21,10 @@
            targetNamespace="org.codehaus.fabric3"
            name="CXFWebServicesBindingExtension">
 
-    <component name="org.fabric3.binding.ws.cxf.wire.CxfSourceWireAttacher">
+    <component f3:key="org.fabric3.binding.ws.cxf.physical.CxfWireSourceDefinition" name="org.fabric3.binding.ws.cxf.wire.CxfSourceWireAttacher">
         <system:implementation.system class="org.fabric3.binding.ws.cxf.wire.CxfSourceWireAttacher"/>
     </component>
-    <component name="org.fabric3.binding.ws.cxf.wire.CxfTargetWireAttacher">
+    <component f3:key="org.fabric3.binding.ws.cxf.physical.CxfWireTargetDefinition" name="org.fabric3.binding.ws.cxf.wire.CxfTargetWireAttacher">
         <system:implementation.system class="org.fabric3.binding.ws.cxf.wire.CxfTargetWireAttacher"/>
     </component>
 

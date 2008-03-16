@@ -19,16 +19,12 @@ package org.fabric3.spring;
 import java.net.URI;
 import java.util.Map;
 
-import org.osoa.sca.annotations.Destroy;
-import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.scdl.Signature;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.TargetWireAttacher;
-import org.fabric3.spi.builder.component.TargetWireAttacherRegistry;
 import org.fabric3.spi.builder.component.WireAttachException;
 import org.fabric3.spi.component.Component;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
@@ -45,27 +41,13 @@ import org.fabric3.spi.wire.Wire;
  *
  * @version $Rev$ $Date$
  */
-@EagerInit
 public class SpringTargetWireAttacher implements TargetWireAttacher<SpringWireTargetDefinition> {
-    private final TargetWireAttacherRegistry targetWireAttacherRegistry;
     private final ComponentManager manager;
 
     private boolean debug = false;
 
-    public SpringTargetWireAttacher(@Reference ComponentManager manager,
-                                    @Reference TargetWireAttacherRegistry targetWireAttacherRegistry) {
-        this.targetWireAttacherRegistry = targetWireAttacherRegistry;
+    public SpringTargetWireAttacher(@Reference ComponentManager manager) {
         this.manager = manager;
-    }
-
-    @Init
-    public void init() {
-        targetWireAttacherRegistry.register(SpringWireTargetDefinition.class, this);
-    }
-
-    @Destroy
-    public void destroy() {
-        targetWireAttacherRegistry.unregister(SpringWireTargetDefinition.class, this);
     }
 
     public void attachToTarget(PhysicalWireSourceDefinition sourceDefinition,

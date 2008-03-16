@@ -19,15 +19,12 @@ package org.fabric3.binding.test;
 import java.net.URI;
 import java.util.Map;
 
-import org.osoa.sca.annotations.Destroy;
 import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.TargetWireAttacher;
-import org.fabric3.spi.builder.component.TargetWireAttacherRegistry;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.wire.Interceptor;
@@ -39,23 +36,10 @@ import org.fabric3.spi.wire.Wire;
  */
 @EagerInit
 public class TestBindingTargetWireAttacher implements TargetWireAttacher<TestBindingTargetDefinition> {
-    private final TargetWireAttacherRegistry targetWireAttacherRegistry;
     private final BindingChannel channel;
 
-    public TestBindingTargetWireAttacher(@Reference TargetWireAttacherRegistry targetWireAttacherRegistry,
-                                         @Reference BindingChannel channel) {
-        this.targetWireAttacherRegistry = targetWireAttacherRegistry;
+    public TestBindingTargetWireAttacher(@Reference BindingChannel channel) {
         this.channel = channel;
-    }
-
-    @Init
-    public void init() {
-        targetWireAttacherRegistry.register(TestBindingTargetDefinition.class, this);
-    }
-
-    @Destroy
-    public void stop() {
-        targetWireAttacherRegistry.unregister(TestBindingTargetDefinition.class, this);
     }
 
     public void attachToTarget(PhysicalWireSourceDefinition source, TestBindingTargetDefinition target, Wire wire) throws WiringException {

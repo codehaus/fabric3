@@ -21,9 +21,7 @@ package org.fabric3.binding.ws.cxf.wire;
 
 import java.net.URI;
 
-import org.osoa.sca.annotations.Destroy;
 import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.binding.ws.cxf.CXFService;
@@ -31,7 +29,6 @@ import org.fabric3.binding.ws.cxf.physical.CxfWireSourceDefinition;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.SourceWireAttacher;
-import org.fabric3.spi.builder.component.SourceWireAttacherRegistry;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.wire.Wire;
@@ -44,35 +41,21 @@ import org.fabric3.spi.wire.Wire;
 @EagerInit
 public class CxfSourceWireAttacher implements SourceWireAttacher<CxfWireSourceDefinition> {
 
-    private final SourceWireAttacherRegistry sourceWireAttacherRegistry;
     private final ClassLoaderRegistry classLoaderRegistry;
     private final CXFService cxfService;
 
     /**
      * Injects the wire attacher registry and servlet host.
      *
-     * @param sourceWireAttacherRegistry the registry for source wire attachers
-     * @param classLoaderRegistry        the classloader registry
-     * @param cxfService                 the CXF service
+     * @param classLoaderRegistry the classloader registry
+     * @param cxfService          the CXF service
      */
-    public CxfSourceWireAttacher(@Reference SourceWireAttacherRegistry sourceWireAttacherRegistry,
-                                 @Reference ClassLoaderRegistry classLoaderRegistry,
+    public CxfSourceWireAttacher(@Reference ClassLoaderRegistry classLoaderRegistry,
                                  @Reference CXFService cxfService) {
-        this.sourceWireAttacherRegistry = sourceWireAttacherRegistry;
         this.classLoaderRegistry = classLoaderRegistry;
         this.cxfService = cxfService;
     }
 
-
-    @Init
-    public void start() {
-        sourceWireAttacherRegistry.register(CxfWireSourceDefinition.class, this);
-    }
-
-    @Destroy
-    public void stop() {
-        sourceWireAttacherRegistry.unregister(CxfWireSourceDefinition.class, this);
-    }
 
     public void attachToSource(CxfWireSourceDefinition sourceDefinition,
                                PhysicalWireTargetDefinition targetDefinition,

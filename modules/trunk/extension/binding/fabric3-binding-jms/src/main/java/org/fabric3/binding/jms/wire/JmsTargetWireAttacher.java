@@ -24,9 +24,6 @@ import java.util.Map;
 import javax.jms.ConnectionFactory;
 import javax.jms.Destination;
 
-import org.osoa.sca.annotations.Destroy;
-import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.binding.jms.lookup.connectionfactory.ConnectionFactoryStrategy;
@@ -41,7 +38,6 @@ import org.fabric3.binding.jms.transport.Fabric3MessageReceiver;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.TargetWireAttacher;
-import org.fabric3.spi.builder.component.TargetWireAttacherRegistry;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
@@ -54,10 +50,7 @@ import org.fabric3.spi.wire.Wire;
  *
  * @version $Revision$ $Date$
  */
-@EagerInit
 public class JmsTargetWireAttacher implements TargetWireAttacher<JmsWireTargetDefinition> {
-    private final TargetWireAttacherRegistry targetWireAttacherRegistry;
-
     /**
      * Destination strategies.
      */
@@ -77,23 +70,8 @@ public class JmsTargetWireAttacher implements TargetWireAttacher<JmsWireTargetDe
 
     /**
      * Injects the wire attacher registries.
-     *
-     * @param targetWireAttacherRegistry the registry for target wire attachers
      */
-    public JmsTargetWireAttacher(@Reference TargetWireAttacherRegistry targetWireAttacherRegistry) {
-
-        this.targetWireAttacherRegistry = targetWireAttacherRegistry;
-
-    }
-
-    @Init
-    public void start() {
-        targetWireAttacherRegistry.register(JmsWireTargetDefinition.class, this);
-    }
-
-    @Destroy
-    public void stop() {
-        targetWireAttacherRegistry.unregister(JmsWireTargetDefinition.class, this);
+    public JmsTargetWireAttacher() {
     }
 
     /**

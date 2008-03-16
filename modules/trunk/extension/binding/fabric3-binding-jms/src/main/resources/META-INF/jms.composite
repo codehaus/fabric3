@@ -42,10 +42,10 @@
     </component>
 
     <!-- JMS Wire Attachers -->
-    <component name="org.fabric3.binding.jms.wire.JmsSourceWireAttacher">
+    <component f3:key="org.fabric3.binding.jms.model.physical.JmsWireSourceDefinition" name="org.fabric3.binding.jms.wire.JmsSourceWireAttacher">
         <system:implementation.system class="org.fabric3.binding.jms.wire.JmsSourceWireAttacher"/>
     </component>
-    <component name="org.fabric3.binding.jms.wire.JmsTargetWireAttacher">
+    <component f3:key="org.fabric3.binding.jms.model.physical.JmsWireTargetDefinition" name="org.fabric3.binding.jms.wire.JmsTargetWireAttacher">
         <system:implementation.system class="org.fabric3.binding.jms.wire.JmsTargetWireAttacher"/>
     </component>
 

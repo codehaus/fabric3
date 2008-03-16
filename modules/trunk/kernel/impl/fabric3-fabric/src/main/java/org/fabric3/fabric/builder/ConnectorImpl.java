@@ -19,20 +19,15 @@
 package org.fabric3.fabric.builder;
 
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
-import org.osoa.sca.annotations.Constructor;
 import org.osoa.sca.annotations.Reference;
-import org.osoa.sca.annotations.Service;
 
 import org.fabric3.fabric.wire.InvocationChainImpl;
 import org.fabric3.fabric.wire.WireImpl;
+import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.BuilderException;
-import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.SourceWireAttacher;
-import org.fabric3.spi.builder.component.SourceWireAttacherRegistry;
 import org.fabric3.spi.builder.component.TargetWireAttacher;
-import org.fabric3.spi.builder.component.TargetWireAttacherRegistry;
 import org.fabric3.spi.builder.interceptor.InterceptorBuilderRegistry;
 import org.fabric3.spi.model.physical.PhysicalInterceptorDefinition;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
@@ -42,49 +37,31 @@ import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 import org.fabric3.spi.wire.Interceptor;
 import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.Wire;
-import org.fabric3.spi.ObjectFactory;
 
 /**
  * The default connector implmentation
  *
  * @version $$Rev$$ $$Date$$
  */
-@Service(interfaces = {Connector.class, SourceWireAttacherRegistry.class, TargetWireAttacherRegistry.class})
-public class ConnectorImpl implements Connector, SourceWireAttacherRegistry, TargetWireAttacherRegistry {
+public class ConnectorImpl implements Connector {
     private InterceptorBuilderRegistry interceptorBuilderRegistry;
-    private final Map<Class<? extends PhysicalWireSourceDefinition>, SourceWireAttacher<? extends PhysicalWireSourceDefinition>> sourceAttachers;
-    private final Map<Class<? extends PhysicalWireTargetDefinition>, TargetWireAttacher<? extends PhysicalWireTargetDefinition>> targetAttachers;
+    private Map<Class<? extends PhysicalWireSourceDefinition>, SourceWireAttacher<? extends PhysicalWireSourceDefinition>> sourceAttachers;
+    private Map<Class<? extends PhysicalWireTargetDefinition>, TargetWireAttacher<? extends PhysicalWireTargetDefinition>> targetAttachers;
 
     public ConnectorImpl(@Reference InterceptorBuilderRegistry interceptorBuilderRegistry) {
         this.interceptorBuilderRegistry = interceptorBuilderRegistry;
-        sourceAttachers =
-                new ConcurrentHashMap<Class<? extends PhysicalWireSourceDefinition>, SourceWireAttacher<? extends PhysicalWireSourceDefinition>>();
-        targetAttachers =
-                new ConcurrentHashMap<Class<? extends PhysicalWireTargetDefinition>, TargetWireAttacher<? extends PhysicalWireTargetDefinition>>();
     }
 
-    public <PWSD extends PhysicalWireSourceDefinition> void register(Class<PWSD> type, SourceWireAttacher<PWSD> attacher) {
-        sourceAttachers.put(type, attacher);
+    @Reference
+    public void setSourceAttachers(Map<Class<? extends PhysicalWireSourceDefinition>, SourceWireAttacher<? extends PhysicalWireSourceDefinition>> sourceAttachers) {
+        this.sourceAttachers = sourceAttachers;
     }
 
-    public <PWSD extends PhysicalWireSourceDefinition> void unregister(Class<PWSD> type, SourceWireAttacher<PWSD> attacher) {
-        sourceAttachers.remove(type);
+    @Reference
+    public void setTargetAttachers(Map<Class<? extends PhysicalWireTargetDefinition>, TargetWireAttacher<? extends PhysicalWireTargetDefinition>> targetAttachers) {
+        this.targetAttachers = targetAttachers;
     }
 
-    public <PWSD extends PhysicalWireTargetDefinition> void register(Class<PWSD> type, TargetWireAttacher<PWSD> attacher) {
-        targetAttachers.put(type, attacher);
-    }
-
-    public <PWSD extends PhysicalWireTargetDefinition> void unregister(Class<PWSD> type, TargetWireAttacher<PWSD> attacher) {
-        targetAttachers.remove(type);
-    }
-
-    /**
-     * Wires a source and target component based on a wire defintion
-     *
-     * @param definition the wire definition
-     * @throws WiringException
-     */
     public void connect(PhysicalWireDefinition definition) throws BuilderException {
         PhysicalWireSourceDefinition sourceDefinition = definition.getSource();
         SourceWireAttacher<PhysicalWireSourceDefinition> sourceAttacher = getAttacher(sourceDefinition);

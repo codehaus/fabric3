@@ -23,6 +23,7 @@
     $Rev$ $Date$
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
+           xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
            xmlns:system="http://fabric3.org/xmlns/sca/system/2.0-alpha"
            name="org.fabric3.runtime.webapp.System"
            autowire="true">
@@ -82,7 +83,7 @@
         <system:implementation.system class="org.fabric3.runtime.webapp.implementation.webapp.WebappComponentBuilder"/>
     </component>
 
-    <component name="webappSourceWireAttacher">
+    <component f3:key="org.fabric3.runtime.webapp.implementation.webapp.WebappWireSourceDefinition" name="webappSourceWireAttacher">
         <system:implementation.system class="org.fabric3.runtime.webapp.implementation.webapp.WebappSourceWireAttacher"/>
     </component>
 
