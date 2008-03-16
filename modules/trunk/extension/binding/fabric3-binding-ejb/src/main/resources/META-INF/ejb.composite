@@ -31,9 +31,12 @@
         <system:implementation.system class="org.fabric3.binding.ejb.model.physical.EjbBindingGenerator"/>
     </component>
 
-    <!-- EJB Wire Attacher -->
-    <component name="EjbWireAttacher">
+    <!-- EJB Wire Attachers -->
+    <component name="org.fabric3.binding.ejb.wire.EjbSourceWireAttacher">
         <system:implementation.system class="org.fabric3.binding.ejb.wire.EjbSourceWireAttacher"/>
+    </component>
+    <component name="org.fabric3.binding.ejb.wire.EjbTargetWireAttacher">
+        <system:implementation.system class="org.fabric3.binding.ejb.wire.EjbTargetWireAttacher"/>
     </component>
 
     <!-- EJB Registry -->
