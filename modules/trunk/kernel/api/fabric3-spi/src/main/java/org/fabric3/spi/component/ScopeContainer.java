@@ -38,9 +38,11 @@ import org.osoa.sca.ConversationEndedException;
 public interface ScopeContainer<KEY> extends Lifecycle {
     
     /**
-     * @param component
-     * @param factory
-     * @param referenceName
+     * Adds an object factory to references of active instances for a component.
+     * 
+     * @param component Component with active instances, whose references need to be updated.
+     * @param factory Object factory for the reference.
+     * @param referenceName Name of the reference.
      */
     void addObjectFactory(AtomicComponent<?> component, ObjectFactory<?> factory, String referenceName, Object key);
 
