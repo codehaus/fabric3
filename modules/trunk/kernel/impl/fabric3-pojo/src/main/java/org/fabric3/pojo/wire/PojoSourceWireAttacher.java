@@ -18,7 +18,6 @@
  */
 package org.fabric3.pojo.wire;
 
-import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.net.URI;
@@ -29,10 +28,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 import org.fabric3.pojo.implementation.PojoComponent;
-import org.fabric3.pojo.reflection.InvokerInterceptor;
 import org.fabric3.scdl.InjectableAttribute;
-import org.fabric3.spi.component.AtomicComponent;
-import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.model.type.JavaClass;
 import org.fabric3.spi.model.type.XSDSimpleType;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;

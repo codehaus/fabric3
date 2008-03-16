@@ -53,7 +53,12 @@
         <system:implementation.system class="org.fabric3.groovy.runtime.GroovyInstanceFactoryBuilder"/>
     </component>
 
-    <component name="org.fabric3.groovy.runtime.GroovyWireAttacher">
-        <system:implementation.system class="org.fabric3.groovy.runtime.GroovyWireAttacher"/>
+    <component name="org.fabric3.groovy.runtime.GroovySourceWireAttacher">
+        <system:implementation.system class="org.fabric3.groovy.runtime.GroovySourceWireAttacher"/>
+        <reference name="transformerRegistry" target="pullTransformerRegistry"/>
+    </component>
+
+    <component name="org.fabric3.groovy.runtime.GroovyTargetWireAttacher">
+        <system:implementation.system class="org.fabric3.groovy.runtime.GroovyTargetWireAttacher"/>
     </component>
 </composite>
