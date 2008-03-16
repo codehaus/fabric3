@@ -41,11 +41,14 @@
         <system:implementation.system class="org.fabric3.binding.jms.model.physical.JmsBindingGenerator"/>
     </component>
 
-    <!-- JMS Wire Attacher -->
-    <component name="JmsWireAttacher">
-        <system:implementation.system class="org.fabric3.binding.jms.wire.JmsWireAttacher"/>
+    <!-- JMS Wire Attachers -->
+    <component name="org.fabric3.binding.jms.wire.JmsSourceWireAttacher">
+        <system:implementation.system class="org.fabric3.binding.jms.wire.JmsSourceWireAttacher"/>
     </component>
-    
+    <component name="org.fabric3.binding.jms.wire.JmsTargetWireAttacher">
+        <system:implementation.system class="org.fabric3.binding.jms.wire.JmsTargetWireAttacher"/>
+    </component>
+
     <!-- Always create destination strategy -->
     <component name="AlwaysCreateDestination" f3:key="always">
         <system:implementation.system class="org.fabric3.binding.jms.lookup.destination.AlwaysDestinationStrategy"/>
