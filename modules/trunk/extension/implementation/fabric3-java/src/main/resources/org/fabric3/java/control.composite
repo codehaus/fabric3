@@ -18,17 +18,18 @@
  * under the License.
 -->
 <!--
-    Configuration for Fabric3 Java extension.
-    
+    Configuration of components used during control.
+
     $Rev$ $Date$
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
-           xmlns:java="urn:maven:org.codehaus.fabric3:fabric3-java"
-           name="javaImplementation" targetNamespace="urn:maven:org.codehaus.fabric3:fabric3-java"
-        >
+           xmlns:sca="http://www.osoa.org/xmlns/sca/1.0"
+           xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
+           xmlns:system="http://fabric3.org/xmlns/sca/system/2.0-alpha"
+           name="control" targetNamespace="urn:maven:org.codehaus.fabric3:fabric3-java"
+           autowire="true">
 
-    <include name="java:introspection" scdlLocation="introspection.composite"/>
-    <include name="java:control" scdlLocation="control.composite"/>
-    <include name="java:runtime" scdlLocation="runtime.composite"/>
-
+    <component name="org.fabric3.java.control.JavaComponentGenerator">
+        <system:implementation.system class="org.fabric3.java.control.JavaComponentGenerator"/>
+    </component>
 </composite>
