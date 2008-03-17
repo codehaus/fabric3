@@ -24,11 +24,14 @@
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:system="http://fabric3.org/xmlns/sca/system/2.0-alpha"
-           name="org.fabric3.fabric.Implementation"
+           name="Helper" targetNamespace="urn:org.codehaus.fabric3:fabric3-introspection"
            autowire="true">
 
-    <!-- Foundation implementation processors -->
-    <component name="implementation.IntrospectionHelper">
+    <component name="org.fabric3.introspection.impl.DefaultIntrospectionHelper">
         <system:implementation.system class="org.fabric3.introspection.impl.DefaultIntrospectionHelper"/>
+    </component>
+
+    <component name="org.fabric3.introspection.impl.contract.DefaultContractProcessor">
+        <system:implementation.system class="org.fabric3.introspection.impl.contract.DefaultContractProcessor"/>
     </component>
 </composite>

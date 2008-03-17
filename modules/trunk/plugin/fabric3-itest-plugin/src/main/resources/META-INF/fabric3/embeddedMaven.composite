@@ -24,6 +24,8 @@
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:system="http://fabric3.org/xmlns/sca/system/2.0-alpha"
+           xmlns:introspection="urn:maven:org.codehaus.fabric3:fabric3-introspection"
+           xmlns:loader="urn:maven:org.codehaus.fabric3:fabric3-loader"
            name="org.fabric3.itest.EmbeddedMaven"
            autowire="true">
 
@@ -42,17 +44,10 @@
     <!-- include physical deployment configuration -->
     <include name="org.fabric3.fabric.Physical" scdlResource="org/fabric3/fabric/physical.composite"/>
 
-    <!-- include loader configuration -->
-    <include name="org.fabric3.fabric.Loader" scdlResource="org/fabric3/loader/loader.composite"/>
-
-    <!-- include annotation processors -->
-    <include xmlns:introspection="urn:org.codehaus.fabric3:fabric3-introspection" name="introspection:AnnotationProcessors" scdlResource="org/fabric3/introspection/impl/annotation/processors.composite"/>
-
-    <!-- include implementation processor configuration -->
-    <include name="org.fabric3.fabric.Implementation" scdlResource="org/fabric3/fabric/implementation.composite"/>
-
-    <!-- Java interface definition language -->
-    <include name="org.fabric3.fabric.InterfaceJava" scdlResource="org/fabric3/fabric/interfaceJava.composite"/>
+    <!-- Introspection Components -->
+    <include name="introspection:Helper" scdlResource="org/fabric3/introspection/impl/helper.composite"/>
+    <include name="introspection:AnnotationProcessors" scdlResource="org/fabric3/introspection/impl/annotation/processors.composite"/>
+    <include name="loader:loader" scdlResource="org/fabric3/loader/loader.composite"/>
 
     <!-- Pojo implementation type -->
     <include name="org.fabric3.fabric.PojoImplementation" scdlResource="org/fabric3/fabric/pojoImplementation.composite"/>
