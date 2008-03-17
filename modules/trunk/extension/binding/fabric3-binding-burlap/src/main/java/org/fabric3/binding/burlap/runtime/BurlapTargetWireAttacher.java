@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.binding.burlap.wire;
+package org.fabric3.binding.burlap.runtime;
 
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -28,8 +28,7 @@ import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.api.annotation.Monitor;
-import org.fabric3.binding.burlap.model.physical.BurlapWireTargetDefinition;
-import org.fabric3.binding.burlap.transport.BurlapTargetInterceptor;
+import org.fabric3.binding.burlap.provision.BurlapWireTargetDefinition;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.TargetWireAttacher;

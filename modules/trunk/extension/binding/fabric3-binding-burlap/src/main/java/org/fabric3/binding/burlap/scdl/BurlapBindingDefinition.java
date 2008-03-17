@@ -16,10 +16,11 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.binding.burlap.model.logical;
+package org.fabric3.binding.burlap.scdl;
 
 import java.net.URI;
 
+import org.fabric3.binding.burlap.introspection.BurlapBindingLoader;
 import org.fabric3.scdl.BindingDefinition;
 
 /**

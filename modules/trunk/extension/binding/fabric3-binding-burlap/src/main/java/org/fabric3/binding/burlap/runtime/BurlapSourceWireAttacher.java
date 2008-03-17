@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.binding.burlap.wire;
+package org.fabric3.binding.burlap.runtime;
 
 import java.net.URI;
 import java.util.HashMap;
@@ -25,8 +25,7 @@ import java.util.Map;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.api.annotation.Monitor;
-import org.fabric3.binding.burlap.model.physical.BurlapWireSourceDefinition;
-import org.fabric3.binding.burlap.transport.BurlapServiceHandler;
+import org.fabric3.binding.burlap.provision.BurlapWireSourceDefinition;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.SourceWireAttacher;

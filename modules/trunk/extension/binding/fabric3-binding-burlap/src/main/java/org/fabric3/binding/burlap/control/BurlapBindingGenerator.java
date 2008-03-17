@@ -16,11 +16,13 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.binding.burlap.model.physical;
+package org.fabric3.binding.burlap.control;
 
 import java.net.URI;
 
-import org.fabric3.binding.burlap.model.logical.BurlapBindingDefinition;
+import org.fabric3.binding.burlap.provision.BurlapWireSourceDefinition;
+import org.fabric3.binding.burlap.provision.BurlapWireTargetDefinition;
+import org.fabric3.binding.burlap.scdl.BurlapBindingDefinition;
 import org.fabric3.scdl.ReferenceDefinition;
 import org.fabric3.scdl.ServiceDefinition;
 import org.fabric3.spi.generator.BindingGenerator;

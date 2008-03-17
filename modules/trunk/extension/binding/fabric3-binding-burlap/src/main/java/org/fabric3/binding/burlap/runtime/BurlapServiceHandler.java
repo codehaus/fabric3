@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.binding.burlap.transport;
+package org.fabric3.binding.burlap.runtime;
 
 import java.io.IOException;
 import java.io.InputStream;
