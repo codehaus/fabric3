@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.binding.hessian.model.physical;
+package org.fabric3.binding.hessian.provision;
 
 import java.net.URI;
 

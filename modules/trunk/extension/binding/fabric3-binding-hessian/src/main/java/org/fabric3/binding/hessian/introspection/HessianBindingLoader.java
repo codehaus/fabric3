@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.binding.hessian.model.logical;
+package org.fabric3.binding.hessian.introspection;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -29,6 +29,7 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
+import org.fabric3.binding.hessian.scdl.HessianBindingDefinition;
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.xml.LoaderException;
 import org.fabric3.introspection.xml.LoaderRegistry;

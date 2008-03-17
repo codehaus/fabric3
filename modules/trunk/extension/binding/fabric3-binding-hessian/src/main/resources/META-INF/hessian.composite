@@ -23,20 +23,21 @@
 
     <!-- Hessian Binding Loader -->
     <component name="HessianBindingLoader">
-        <system:implementation.system class="org.fabric3.binding.hessian.model.logical.HessianBindingLoader"/>
+        <system:implementation.system class="org.fabric3.binding.hessian.introspection.HessianBindingLoader"/>
     </component>
 
     <!-- Hessian Binding Generator -->
-    <component name="HessianBindingGenerator" f3:key="org.fabric3.binding.hessian.model.logical.HessianBindingDefinition">
-        <system:implementation.system class="org.fabric3.binding.hessian.model.physical.HessianBindingGenerator"/>
+    <component name="HessianBindingGenerator" f3:key="org.fabric3.binding.hessian.scdl.HessianBindingDefinition">
+        <system:implementation.system class="org.fabric3.binding.hessian.control.HessianBindingGenerator"/>
     </component>
 
     <!-- Hessian Wire Attachers -->
-    <component f3:key="org.fabric3.binding.hessian.model.physical.HessianWireSourceDefinition" name="org.fabric3.binding.hessian.wire.HessianSourceWireAttacher">
-        <system:implementation.system class="org.fabric3.binding.hessian.wire.HessianSourceWireAttacher"/>
+    <component name="HessianSourceWireAttacher" f3:key="org.fabric3.binding.hessian.provision.HessianWireSourceDefinition">
+        <system:implementation.system class="org.fabric3.binding.hessian.runtime.HessianSourceWireAttacher"/>
     </component>
-    <component f3:key="org.fabric3.binding.hessian.model.physical.HessianWireTargetDefinition" name="org.fabric3.binding.hessian.wire.HessianTargetWireAttacher">
-        <system:implementation.system class="org.fabric3.binding.hessian.wire.HessianTargetWireAttacher"/>
+    
+    <component name="HessianTargetWireAttacher" f3:key="org.fabric3.binding.hessian.provision.HessianWireTargetDefinition">
+        <system:implementation.system class="org.fabric3.binding.hessian.runtime.HessianTargetWireAttacher"/>
     </component>
 
     <!-- Feature -->

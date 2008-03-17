@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.binding.hessian.wire;
+package org.fabric3.binding.hessian.runtime;
 
 import java.net.URI;
 import java.util.HashMap;
@@ -26,8 +26,7 @@ import com.caucho.hessian.io.SerializerFactory;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.api.annotation.Monitor;
-import org.fabric3.binding.hessian.model.physical.HessianWireSourceDefinition;
-import org.fabric3.binding.hessian.transport.HessianServiceHandler;
+import org.fabric3.binding.hessian.provision.HessianWireSourceDefinition;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.SourceWireAttacher;

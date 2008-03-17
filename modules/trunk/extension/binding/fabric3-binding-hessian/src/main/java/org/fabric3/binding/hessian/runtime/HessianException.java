@@ -16,18 +16,36 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.binding.hessian.model.logical;
+package org.fabric3.binding.hessian.runtime;
 
-import java.net.URI;
-
-import org.fabric3.scdl.BindingDefinition;
+import org.fabric3.host.Fabric3Exception;
 
 /**
  * @version $Revision$ $Date$
  */
-public class HessianBindingDefinition extends BindingDefinition {
-    
-    public HessianBindingDefinition(URI targetUri) {
-        super(targetUri, HessianBindingLoader.BINDING_QNAME);
+public class HessianException extends Fabric3Exception {
+
+    /**
+     * Serial version UID.
+     */
+    private static final long serialVersionUID = -4285476845353725562L;
+
+    /**
+     * Initializes the cause.
+     * 
+     * @param cause Root cause for the exception.
+     */
+    public HessianException(Throwable cause) {
+        super(cause);
     }
+
+    /**
+     * Initializes the message.
+     * 
+     * @param message Message for the exception.
+     */
+    public HessianException(String message) {
+        super(message);
+    }
+
 }

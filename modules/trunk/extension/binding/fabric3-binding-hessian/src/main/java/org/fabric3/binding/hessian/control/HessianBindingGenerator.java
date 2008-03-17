@@ -16,21 +16,20 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.binding.hessian.model.physical;
+package org.fabric3.binding.hessian.control;
 
 import java.net.URI;
 
-import org.fabric3.binding.hessian.model.logical.HessianBindingDefinition;
+import org.fabric3.binding.hessian.provision.HessianWireSourceDefinition;
+import org.fabric3.binding.hessian.provision.HessianWireTargetDefinition;
+import org.fabric3.binding.hessian.scdl.HessianBindingDefinition;
 import org.fabric3.scdl.ReferenceDefinition;
 import org.fabric3.scdl.ServiceDefinition;
 import org.fabric3.spi.generator.BindingGenerator;
 import org.fabric3.spi.generator.GenerationException;
-import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.policy.Policy;
 import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Init;
-import org.osoa.sca.annotations.Reference;
 
 /**
  * Implementation of the hessian binding generator.

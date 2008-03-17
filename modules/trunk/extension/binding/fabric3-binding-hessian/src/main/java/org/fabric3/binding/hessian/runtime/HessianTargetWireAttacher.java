@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.binding.hessian.wire;
+package org.fabric3.binding.hessian.runtime;
 
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -29,8 +29,7 @@ import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.api.annotation.Monitor;
-import org.fabric3.binding.hessian.model.physical.HessianWireTargetDefinition;
-import org.fabric3.binding.hessian.transport.HessianTargetInterceptor;
+import org.fabric3.binding.hessian.provision.HessianWireTargetDefinition;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.TargetWireAttacher;

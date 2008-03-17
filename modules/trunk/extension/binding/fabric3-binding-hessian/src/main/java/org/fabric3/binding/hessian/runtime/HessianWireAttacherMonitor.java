@@ -1,4 +1,4 @@
-package org.fabric3.binding.hessian.wire;
+package org.fabric3.binding.hessian.runtime;
 
 import java.net.URI;
 
