@@ -101,7 +101,7 @@ public class EjbSourceWireAttacher implements SourceWireAttacher<EjbWireSourceDe
                                       Map<Signature, Map.Entry<PhysicalOperationDefinition, InvocationChain>> ops)
             throws WiringException {
 
-        Class interfaceClass = loadClass(sourceDefinition.getInterfaceName(), sourceDefinition.getClassLoaderURI());
+        Class<?> interfaceClass = loadClass(sourceDefinition.getInterfaceName(), sourceDefinition.getClassLoaderURI());
 
         EjbServiceHandler handler = new EjbServiceHandler(ops);
 
@@ -122,11 +122,11 @@ public class EjbSourceWireAttacher implements SourceWireAttacher<EjbWireSourceDe
             throw new WiringException("Ejb 2.x bindings on services must specify a home interface name");
         }
 
-        Class homeInterfaceClass = loadClass(homeInterface, sourceDefinition.getClassLoaderURI());
+        Class<?> homeInterfaceClass = loadClass(homeInterface, sourceDefinition.getClassLoaderURI());
 
         // For 2.x beans, the EJBObject interface is not necessarily an interface implemented by the POJO
         // Rather than using the service interface from the implementation, use the EJBObject interface
-        Class interfaceClass = null;
+        Class<?> interfaceClass = null;
         for (Method m : homeInterfaceClass.getMethods()) {
             if (m.getName().startsWith("create")) {
                 interfaceClass = m.getReturnType();
@@ -153,7 +153,7 @@ public class EjbSourceWireAttacher implements SourceWireAttacher<EjbWireSourceDe
         return proxy;
     }
 
-    private Object generateRemoteWrapper(Class interfaceClass, Object delegate)
+    private Object generateRemoteWrapper(Class<?> interfaceClass, Object delegate)
             throws WiringException {
 
         WireProxyGenerator wpg = WireProxyGenerator.getInstance();
@@ -165,7 +165,7 @@ public class EjbSourceWireAttacher implements SourceWireAttacher<EjbWireSourceDe
 
     }
 
-    private Class loadClass(String name, URI classLoaderURI)
+    private Class<?> loadClass(String name, URI classLoaderURI)
             throws WiringException {
 
         if (cl == null) {

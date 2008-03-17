@@ -33,9 +33,9 @@ import org.fabric3.spi.builder.WiringException;
  */
 public class DefaultEjbRegistry implements EjbRegistry {
 
-    private final Map registeredLinks = new HashMap();
+    private final Map<String, Object> registeredLinks = new HashMap<String, Object>();
 
-    public Object resolveEjbLink(String ejbLink, Class interfaceClass) throws WiringException {
+    public Object resolveEjbLink(String ejbLink, Class<?> interfaceClass) throws WiringException {
         Object ejb = registeredLinks.get(ejbLink);
         if(ejb == null) {
             throw new WiringException("Unable to resolve ejb-link-name "+ejbLink);

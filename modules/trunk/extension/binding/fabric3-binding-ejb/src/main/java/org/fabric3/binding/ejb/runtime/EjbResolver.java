@@ -21,14 +21,14 @@ public class EjbResolver {
     
     private final URI uri;
     private final String ejbLink;
-    private final Class interfaceClass;
+    private final Class<?> interfaceClass;
 
     private final EjbRegistry ejbRegistry;
 
     private Object cachedReference = null;
 
 
-    public EjbResolver(EjbWireTargetDefinition wireTarget, EjbRegistry ejbRegistry, Class interfaceClass)
+    public EjbResolver(EjbWireTargetDefinition wireTarget, EjbRegistry ejbRegistry, Class<?> interfaceClass)
             throws WiringException {
 
         this.ejbRegistry = ejbRegistry;
@@ -49,12 +49,11 @@ public class EjbResolver {
 
         Object ejb = resolveEjb();
 
-        if(javax.ejb.EJBHome.class.isAssignableFrom(ejb.getClass()) ||
-                javax.ejb.EJBLocalHome.class.isAssignableFrom(ejb.getClass())) {
+        if(javax.ejb.EJBHome.class.isAssignableFrom(ejb.getClass()) || javax.ejb.EJBLocalHome.class.isAssignableFrom(ejb.getClass())) {
 
             try {
-                Method method = ejb.getClass().getMethod("create", null);
-                ejb = method.invoke(ejb, null);
+                Method method = ejb.getClass().getMethod("create");
+                ejb = method.invoke(ejb);
             } catch(NoSuchMethodException nsme) {
                 throw new ServiceRuntimeException("Invalid EJB 2.x binding: the object at the JNDI name "+
                         uri + " does not define a method with the signature create();");

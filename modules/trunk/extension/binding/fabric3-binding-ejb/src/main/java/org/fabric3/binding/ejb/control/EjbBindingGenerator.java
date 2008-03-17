@@ -26,11 +26,9 @@ import org.fabric3.scdl.ServiceContract;
 import org.fabric3.scdl.ServiceDefinition;
 import org.fabric3.spi.generator.BindingGenerator;
 import org.fabric3.spi.generator.GenerationException;
-import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.policy.Policy;
 import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Reference;
 
 /**
  * Implementation of the EJB binding generator.
