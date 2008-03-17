@@ -28,23 +28,27 @@
     </component>
 
     <!-- JMS Host -->
-    <component name="JMSHost">
+    <component name="AQHost">
         <system:implementation.system class="org.fabric3.binding.aq.host.standalone.StandaloneAQHost"/>
     </component>
 
     <!-- JMS Binding Loader -->
-    <component name="JMSBindingLoader">
+    <component name="AQBindingLoader">
         <system:implementation.system class="org.fabric3.binding.aq.model.logical.AQBindingLoader"/>
     </component>
 
     <!-- JMS Binding Generator -->
-    <component name="JmsBindingGenerator">
-        <system:implementation.system class="org.fabric3.binding.aq.model.physical.JmsBindingGenerator"/>
+    <component name="AQBindingGenerator"  f3:key="org.fabric3.binding.aq.model.logical.AQBindingDefinition">
+        <system:implementation.system class="org.fabric3.binding.aq.model.physical.AQBindingGenerator"/>
     </component>
 
-    <!-- JMS Wire Attacher -->
-    <component name="JmsWireAttacher">
-        <system:implementation.system class="org.fabric3.binding.aq.wire.AQWireAttacher"/>
+   <!-- JMS Wire Attachers -->
+    <component f3:key="org.fabric3.binding.aq.model.physical.AQWireSourceDefinition" name="org.fabric3.binding.aq.wire.AQSourceWireAttacher">
+        <system:implementation.system class="org.fabric3.binding.aq.wire.AQSourceWireAttacher"/>
+    </component>
+    
+    <component f3:key="org.fabric3.binding.aq.model.physical.AQWireTargetDefinition" name="org.fabric3.binding.aq.wire.AQTargetWireAttacher">
+        <system:implementation.system class="org.fabric3.binding.aq.wire.AQTargetWireAttacher"/>
     </component>
 
     <!-- Always create destination strategy -->

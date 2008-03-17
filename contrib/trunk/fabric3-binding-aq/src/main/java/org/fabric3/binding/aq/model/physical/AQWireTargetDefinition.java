@@ -27,7 +27,7 @@ import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 /**
  * @version $Revision$ $Date$
  */
-public class JmsWireTargetDefinition extends PhysicalWireTargetDefinition {
+public class AQWireTargetDefinition extends PhysicalWireTargetDefinition {
     
     /**
      * Metadata.
@@ -47,14 +47,14 @@ public class JmsWireTargetDefinition extends PhysicalWireTargetDefinition {
     /**
      * Default constructor.
      */
-    public JmsWireTargetDefinition() {
+    public AQWireTargetDefinition() {
     }
     
     /**
      * @param metadata Metadata to be initialized.
      * @param transactionType Transaction type.
      */
-    public JmsWireTargetDefinition(AQBindingMetadata metadata, TransactionType transactionType, URI classloaderUri) {
+    public AQWireTargetDefinition(AQBindingMetadata metadata, TransactionType transactionType, URI classloaderUri) {
         this.metadata = metadata;
         this.transactionType = transactionType;
         this.classloaderURI = classloaderUri;

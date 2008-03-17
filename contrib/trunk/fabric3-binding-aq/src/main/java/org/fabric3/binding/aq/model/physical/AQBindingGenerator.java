@@ -31,13 +31,10 @@ import org.fabric3.scdl.ServiceDefinition;
 import org.fabric3.scdl.definitions.Intent;
 import org.fabric3.spi.generator.BindingGenerator;
 import org.fabric3.spi.generator.GenerationException;
-import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.policy.Policy;
 import org.osoa.sca.Constants;
 import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Init;
-import org.osoa.sca.annotations.Reference;
 
 /**
  * Binding generator that creates the physical source and target definitions for wires. Message acknowledgement is
@@ -47,38 +44,18 @@ import org.osoa.sca.annotations.Reference;
  * @version $Revision$ $Date$
  */
 @EagerInit
-public class JmsBindingGenerator implements BindingGenerator<JmsWireSourceDefinition, JmsWireTargetDefinition, AQBindingDefinition> {
+public class AQBindingGenerator implements BindingGenerator<AQWireSourceDefinition, AQWireTargetDefinition, AQBindingDefinition> {
 
     // Transacted one way intent
     private static final QName TRANSACTED_ONEWAY = new QName(Constants.SCA_NS, "transactedOneWay");
     private static final QName TRANSACTED_ONEWAY_LOCAL = new QName(Constants.SCA_NS, "transactedOneWay.local");
-    private static final QName TRANSACTED_ONEWAY_GLOBAL = new QName(Constants.SCA_NS, "transactedOneWay.global");
-  
-    private GeneratorRegistry generatorRegistry;
-
-    /**
-     * Injects the class loader generator.
-     *
-     * @param classLoaderGenerator Classloader generator.
-     * @param generatorRegistry    the generator registry
-     */
-    public JmsBindingGenerator(@Reference GeneratorRegistry generatorRegistry) {        
-        this.generatorRegistry = generatorRegistry;
-    }
-
-    /**
-     * Assign Definition to the registry
-     */
-    @Init
-    public void start() {
-        generatorRegistry.register(AQBindingDefinition.class, this);
-    }
+    private static final QName TRANSACTED_ONEWAY_GLOBAL = new QName(Constants.SCA_NS, "transactedOneWay.global");   
 
 
     /**
      * @see org.fabric3.spi.generator.BindingGenerator#generateWireSource(org.fabric3.spi.model.instance.LogicalBinding, org.fabric3.spi.policy.Policy, org.fabric3.scdl.ServiceDefinition)
      */
-    public JmsWireSourceDefinition generateWireSource(final LogicalBinding<AQBindingDefinition> logicalBinding,
+    public AQWireSourceDefinition generateWireSource(final LogicalBinding<AQBindingDefinition> logicalBinding,
                                                       final Policy policy,                                                      
                                                       final ServiceDefinition serviceDefinition) throws GenerationException {
         /** Assign service contract and URI Classloader */
@@ -86,14 +63,14 @@ public class JmsBindingGenerator implements BindingGenerator<JmsWireSourceDefini
         final TransactionType transactionType = getTransactionType(policy, serviceContract);        
         final URI classloader = getClassloaderURI(logicalBinding);
         
-        return new JmsWireSourceDefinition(logicalBinding.getBinding().getMetadata(), transactionType, classloader);
+        return new AQWireSourceDefinition(logicalBinding.getBinding().getMetadata(), transactionType, classloader);
 
     }
 
     /**
      * @see org.fabric3.spi.generator.BindingGenerator#generateWireTarget(org.fabric3.spi.model.instance.LogicalBinding, org.fabric3.spi.policy.Policy, org.fabric3.scdl.ReferenceDefinition)
      */
-    public JmsWireTargetDefinition generateWireTarget(final LogicalBinding<AQBindingDefinition> logicalBinding,
+    public AQWireTargetDefinition generateWireTarget(final LogicalBinding<AQBindingDefinition> logicalBinding,
                                                       final Policy policy,                                                      
                                                       final ReferenceDefinition referenceDefinition)throws GenerationException {
         /** Assign service contract and URI Classloader */
@@ -101,7 +78,7 @@ public class JmsBindingGenerator implements BindingGenerator<JmsWireSourceDefini
         final TransactionType transactionType = getTransactionType(policy, serviceContract);        
         final URI classloader = getClassloaderURI(logicalBinding);
         
-        return new JmsWireTargetDefinition(logicalBinding.getBinding().getMetadata(), transactionType, classloader);
+        return new AQWireTargetDefinition(logicalBinding.getBinding().getMetadata(), transactionType, classloader);
 
     }
 
