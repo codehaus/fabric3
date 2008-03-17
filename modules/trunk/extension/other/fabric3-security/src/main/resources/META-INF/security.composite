@@ -30,7 +30,7 @@
            autowire="true">
 
     <!-- Authorization Interceptor Builder -->
-    <component name="authorizationInterceptorBuilder">
+    <component f3:key="org.fabric3.security.authorization.AuthorizationInterceptorDefinition" name="authorizationInterceptorBuilder">
         <system:implementation.system class="org.fabric3.security.authorization.AuthorizationInterceptorBuilder"/>
     </component>
 
