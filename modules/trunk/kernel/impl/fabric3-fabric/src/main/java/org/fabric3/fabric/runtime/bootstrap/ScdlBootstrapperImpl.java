@@ -62,6 +62,7 @@ import org.fabric3.scdl.Implementation;
 import org.fabric3.scdl.ServiceContract;
 import org.fabric3.scdl.ServiceDefinition;
 import org.fabric3.services.xmlfactory.impl.XMLFactoryImpl;
+import org.fabric3.services.xmlfactory.XMLFactory;
 import org.fabric3.spi.assembly.ActivateException;
 import org.fabric3.spi.assembly.Assembly;
 import org.fabric3.spi.classloader.MultiParentClassLoader;
@@ -93,6 +94,7 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
     private final DocumentLoader documentLoader;
     private final ComponentInstantiator instantiator;
 
+    private XMLFactory xmlFactory;
     private URL scdlLocation;
     private URL systemConfig;
     private LogicalCompositeComponent domain;
@@ -102,6 +104,11 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
         interfaceProcessorRegistry = new DefaultContractProcessor(helper);
         documentLoader = new DocumentLoaderImpl();
         instantiator = new AtomicComponentInstantiator(documentLoader);
+        xmlFactory = new XMLFactoryImpl();
+    }
+
+    public void setXmlFactory(XMLFactory xmlFactory) {
+        this.xmlFactory = xmlFactory;
     }
 
     public URL getScdlLocation() {
@@ -142,7 +149,7 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
     public void bootSystem(Fabric3Runtime<?> runtime) throws InitializationException {
         ClassLoaderRegistry classLoaderRegistry =
                 runtime.getSystemComponent(ClassLoaderRegistry.class, ComponentNames.CLASSLOADER_REGISTRY_URI);
-        Loader loader = BootstrapLoaderFactory.createLoader(runtime.getMonitorFactory(), new XMLFactoryImpl());
+        Loader loader = BootstrapLoaderFactory.createLoader(runtime.getMonitorFactory(), xmlFactory);
         Assembly runtimeAssembly = runtime.getSystemComponent(Assembly.class, ComponentNames.RUNTIME_ASSEMBLY_URI);
         try {
 

@@ -19,7 +19,6 @@ package org.fabric3.sandbox.introspection.impl;
 import org.fabric3.fabric.runtime.ComponentNames;
 import org.fabric3.fabric.runtime.bootstrap.ScdlBootstrapperImpl;
 import org.fabric3.host.runtime.InitializationException;
-import org.fabric3.host.runtime.ScdlBootstrapper;
 import org.fabric3.introspection.java.ImplementationProcessor;
 import org.fabric3.introspection.xml.Loader;
 import org.fabric3.monitor.MonitorFactory;
@@ -58,7 +57,8 @@ public class IntrospectionFactoryImpl implements IntrospectionFactory {
         runtime.initialize();
         ScopeContainer<?> container = runtime.getScopeContainer();
 
-        ScdlBootstrapper bootstrapper = new ScdlBootstrapperImpl();
+        ScdlBootstrapperImpl bootstrapper = new ScdlBootstrapperImpl();
+        bootstrapper.setXmlFactory(xmlFactory);
         bootstrapper.setScdlLocation(getClass().getResource("introspection.composite"));
         bootstrapper.bootPrimordial(runtime, classLoader, classLoader);
 
