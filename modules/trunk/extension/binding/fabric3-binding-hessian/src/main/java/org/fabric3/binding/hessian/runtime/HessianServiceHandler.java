@@ -100,6 +100,7 @@ public class HessianServiceHandler extends HttpServlet {
         if (!"callFrames".equals(header)) {
             throw new InvalidTransportException("CallFrames header not found");
         }
+        @SuppressWarnings("unchecked")
         List<CallFrame> callFrames = (List<CallFrame>) hessianInput.readObject();
         hessianInput.readMethod();
 
