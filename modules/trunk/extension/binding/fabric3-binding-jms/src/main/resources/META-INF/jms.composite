@@ -23,60 +23,60 @@
            
     <!-- JTA Transaction Handler -->
     <component name="JTATransactionHandler" f3:key="GLOBAL">
-        <system:implementation.system class="org.fabric3.binding.jms.tx.JtaTransactionHandler"/>
+        <system:implementation.system class="org.fabric3.binding.jms.runtime.tx.JtaTransactionHandler"/>
     </component>
 
     <!-- JMS Host -->
     <component name="JMSHost">
-        <system:implementation.system class="org.fabric3.binding.jms.host.standalone.StandaloneJmsHost"/>
+        <system:implementation.system class="org.fabric3.binding.jms.runtime.host.standalone.StandaloneJmsHost"/>
     </component>
 
     <!-- JMS Binding Loader -->
     <component name="JMSBindingLoader">
-        <system:implementation.system class="org.fabric3.binding.jms.model.logical.JmsBindingLoader"/>
+        <system:implementation.system class="org.fabric3.binding.jms.introspection.JmsBindingLoader"/>
     </component>
 
     <!-- JMS Binding Generator -->
-    <component name="JmsBindingGenerator" f3:key="org.fabric3.binding.jms.model.logical.JmsBindingDefinition">
-        <system:implementation.system class="org.fabric3.binding.jms.model.physical.JmsBindingGenerator"/>
+    <component name="JmsBindingGenerator" f3:key="org.fabric3.binding.jms.scdl.JmsBindingDefinition">
+        <system:implementation.system class="org.fabric3.binding.jms.control.JmsBindingGenerator"/>
     </component>
 
     <!-- JMS Wire Attachers -->
-    <component f3:key="org.fabric3.binding.jms.model.physical.JmsWireSourceDefinition" name="org.fabric3.binding.jms.wire.JmsSourceWireAttacher">
-        <system:implementation.system class="org.fabric3.binding.jms.wire.JmsSourceWireAttacher"/>
+    <component f3:key="org.fabric3.binding.jms.provision.JmsWireSourceDefinition" name="org.fabric3.binding.jms.runtime.JmsSourceWireAttacher">
+        <system:implementation.system class="org.fabric3.binding.jms.runtime.JmsSourceWireAttacher"/>
     </component>
-    <component f3:key="org.fabric3.binding.jms.model.physical.JmsWireTargetDefinition" name="org.fabric3.binding.jms.wire.JmsTargetWireAttacher">
-        <system:implementation.system class="org.fabric3.binding.jms.wire.JmsTargetWireAttacher"/>
+    <component f3:key="org.fabric3.binding.jms.provision.JmsWireTargetDefinition" name="org.fabric3.binding.jms.runtime.JmsTargetWireAttacher">
+        <system:implementation.system class="org.fabric3.binding.jms.runtime.JmsTargetWireAttacher"/>
     </component>
 
     <!-- Always create destination strategy -->
     <component name="AlwaysCreateDestination" f3:key="always">
-        <system:implementation.system class="org.fabric3.binding.jms.lookup.destination.AlwaysDestinationStrategy"/>
+        <system:implementation.system class="org.fabric3.binding.jms.runtime.lookup.destination.AlwaysDestinationStrategy"/>
     </component>
     
     <!-- Never create destination strategy -->
     <component name="NeverCreateDestination" f3:key="never">
-        <system:implementation.system class="org.fabric3.binding.jms.lookup.destination.NeverDestinationStrategy"/>
+        <system:implementation.system class="org.fabric3.binding.jms.runtime.lookup.destination.NeverDestinationStrategy"/>
     </component>
     
     <!-- If not exists create destination stragey -->
     <component name="IfNotExistCreateDestination" f3:key="ifnotexist">
-        <system:implementation.system class="org.fabric3.binding.jms.lookup.destination.IfNotExistDestinationStrategy"/>
+        <system:implementation.system class="org.fabric3.binding.jms.runtime.lookup.destination.IfNotExistDestinationStrategy"/>
     </component>
     
     <!-- Always create connection factory strategy -->
     <component name="AlwaysCreateConnectionFactory" f3:key="always">
-        <system:implementation.system class="org.fabric3.binding.jms.lookup.connectionfactory.AlwaysConnectionFactoryStrategy"/>
+        <system:implementation.system class="org.fabric3.binding.jms.runtime.lookup.connectionfactory.AlwaysConnectionFactoryStrategy"/>
     </component>
     
     <!-- Never create connection factory strategy -->
     <component name="NeverCreateConnectionFactory" f3:key="never">
-        <system:implementation.system class="org.fabric3.binding.jms.lookup.connectionfactory.NeverConnectionFactoryStrategy"/>
+        <system:implementation.system class="org.fabric3.binding.jms.runtime.lookup.connectionfactory.NeverConnectionFactoryStrategy"/>
     </component>
     
     <!-- If not exists create connection factory stragey -->
     <component name="IfNotExistCreateConnectionFactory" f3:key="ifnotexist">
-        <system:implementation.system class="org.fabric3.binding.jms.lookup.connectionfactory.IfNotExistConnectionFactoryStrategy"/>
+        <system:implementation.system class="org.fabric3.binding.jms.runtime.lookup.connectionfactory.IfNotExistConnectionFactoryStrategy"/>
     </component>
 
     <!-- Feature -->
