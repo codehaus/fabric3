@@ -16,11 +16,11 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.binding.ejb.model.physical;
+package org.fabric3.binding.ejb.provision;
 
 import java.net.URI;
 
-import org.fabric3.binding.ejb.model.logical.EjbBindingDefinition;
+import org.fabric3.binding.ejb.scdl.EjbBindingDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 
 /**

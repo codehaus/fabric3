@@ -16,9 +16,11 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.binding.ejb.model.physical;
+package org.fabric3.binding.ejb.control;
 
-import org.fabric3.binding.ejb.model.logical.EjbBindingDefinition;
+import org.fabric3.binding.ejb.provision.EjbWireSourceDefinition;
+import org.fabric3.binding.ejb.provision.EjbWireTargetDefinition;
+import org.fabric3.binding.ejb.scdl.EjbBindingDefinition;
 import org.fabric3.scdl.ReferenceDefinition;
 import org.fabric3.scdl.ServiceContract;
 import org.fabric3.scdl.ServiceDefinition;

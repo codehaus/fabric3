@@ -16,11 +16,12 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.binding.ejb.model.logical;
+package org.fabric3.binding.ejb.scdl;
 
 import java.net.URI;
 import javax.xml.namespace.QName;
 
+import org.fabric3.binding.ejb.introspection.EjbBindingLoader;
 import org.fabric3.scdl.BindingDefinition;
 
 /**

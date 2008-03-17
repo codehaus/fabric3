@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.binding.ejb.wire;
+package org.fabric3.binding.ejb.runtime;
 
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -24,10 +24,8 @@ import java.util.Map;
 
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.binding.ejb.model.logical.EjbBindingDefinition;
-import org.fabric3.binding.ejb.model.physical.EjbWireTargetDefinition;
-import org.fabric3.binding.ejb.spi.EjbRegistry;
-import org.fabric3.binding.ejb.transport.EjbTargetInterceptorFactory;
+import org.fabric3.binding.ejb.provision.EjbWireTargetDefinition;
+import org.fabric3.binding.ejb.scdl.EjbBindingDefinition;
 import org.fabric3.scdl.Signature;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.WiringException;

@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.binding.ejb.wire;
+package org.fabric3.binding.ejb.runtime;
 
 import java.util.Map;
 import java.util.HashMap;
@@ -25,7 +25,6 @@ import java.net.URI;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 
-import org.fabric3.binding.ejb.spi.EjbRegistry;
 import org.fabric3.spi.builder.WiringException;
 
 

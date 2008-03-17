@@ -16,14 +16,13 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.binding.ejb.transport;
+package org.fabric3.binding.ejb.runtime;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.InvocationTargetException;
 
 import org.osoa.sca.ServiceRuntimeException;
 
-import org.fabric3.binding.ejb.wire.EjbResolver;
 import org.fabric3.scdl.Signature;
 import org.fabric3.spi.wire.Interceptor;
 import org.fabric3.spi.invocation.Message;

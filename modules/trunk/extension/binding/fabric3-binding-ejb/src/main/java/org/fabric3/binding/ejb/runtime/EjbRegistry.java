@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.binding.ejb.spi;
+package org.fabric3.binding.ejb.runtime;
 
 import java.net.URI;
 import org.fabric3.spi.builder.WiringException;

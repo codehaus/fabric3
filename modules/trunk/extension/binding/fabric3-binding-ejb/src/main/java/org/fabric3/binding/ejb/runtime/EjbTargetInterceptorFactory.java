@@ -1,9 +1,8 @@
-package org.fabric3.binding.ejb.transport;
+package org.fabric3.binding.ejb.runtime;
 
 import java.net.URI;
 
-import org.fabric3.binding.ejb.model.logical.EjbBindingDefinition;
-import org.fabric3.binding.ejb.wire.EjbResolver;
+import org.fabric3.binding.ejb.scdl.EjbBindingDefinition;
 import org.fabric3.scdl.Signature;
 import org.fabric3.scdl.Scope;
 import org.fabric3.spi.component.ScopeContainer;

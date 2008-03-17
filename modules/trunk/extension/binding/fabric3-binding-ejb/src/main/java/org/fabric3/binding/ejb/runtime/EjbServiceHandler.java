@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.binding.ejb.transport;
+package org.fabric3.binding.ejb.runtime;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;

@@ -1,4 +1,4 @@
-package org.fabric3.binding.ejb.wire;
+package org.fabric3.binding.ejb.runtime;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -6,9 +6,8 @@ import java.net.URI;
 
 import org.osoa.sca.ServiceRuntimeException;
 
-import org.fabric3.binding.ejb.model.logical.EjbBindingDefinition;
-import org.fabric3.binding.ejb.model.physical.EjbWireTargetDefinition;
-import org.fabric3.binding.ejb.spi.EjbRegistry;
+import org.fabric3.binding.ejb.provision.EjbWireTargetDefinition;
+import org.fabric3.binding.ejb.scdl.EjbBindingDefinition;
 
 import org.fabric3.spi.builder.WiringException;
 

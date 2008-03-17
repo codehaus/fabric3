@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.binding.ejb.wire;
+package org.fabric3.binding.ejb.runtime;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
@@ -28,10 +28,7 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 import org.osoa.sca.annotations.Remotable;
 
-import org.fabric3.binding.ejb.model.physical.EjbWireSourceDefinition;
-import org.fabric3.binding.ejb.spi.EjbRegistry;
-import org.fabric3.binding.ejb.transport.EjbHomeServiceHandler;
-import org.fabric3.binding.ejb.transport.EjbServiceHandler;
+import org.fabric3.binding.ejb.provision.EjbWireSourceDefinition;
 import org.fabric3.binding.rmi.wire.WireProxyGenerator;
 import org.fabric3.scdl.Signature;
 import org.fabric3.spi.ObjectFactory;

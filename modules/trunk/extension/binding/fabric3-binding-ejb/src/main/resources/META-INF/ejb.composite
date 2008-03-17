@@ -23,24 +23,24 @@
 
     <!-- EJB Binding Loader -->
     <component name="EjbBindingLoader">
-        <system:implementation.system class="org.fabric3.binding.ejb.model.logical.EjbBindingLoader"/>
+        <system:implementation.system class="org.fabric3.binding.ejb.introspection.EjbBindingLoader"/>
     </component>
 
     <!-- EJB Binding Generator -->
-    <component name="EjbBindingGenerator" f3:key="org.fabric3.binding.ejb.model.logical.EjbBindingDefinition">
-        <system:implementation.system class="org.fabric3.binding.ejb.model.physical.EjbBindingGenerator"/>
+    <component name="EjbBindingGenerator" f3:key="org.fabric3.binding.ejb.scdl.EjbBindingDefinition">
+        <system:implementation.system class="org.fabric3.binding.ejb.control.EjbBindingGenerator"/>
     </component>
 
     <!-- EJB Wire Attachers -->
-    <component f3:key="org.fabric3.binding.ejb.model.physical.EjbWireSourceDefinition" name="org.fabric3.binding.ejb.wire.EjbSourceWireAttacher">
-        <system:implementation.system class="org.fabric3.binding.ejb.wire.EjbSourceWireAttacher"/>
+    <component f3:key="org.fabric3.binding.ejb.provision.EjbWireSourceDefinition" name="org.fabric3.binding.ejb.runtime.EjbSourceWireAttacher">
+        <system:implementation.system class="org.fabric3.binding.ejb.runtime.EjbSourceWireAttacher"/>
     </component>
-    <component f3:key="org.fabric3.binding.ejb.model.physical.EjbWireTargetDefinition" name="org.fabric3.binding.ejb.wire.EjbTargetWireAttacher">
-        <system:implementation.system class="org.fabric3.binding.ejb.wire.EjbTargetWireAttacher"/>
+    <component f3:key="org.fabric3.binding.ejb.provision.EjbWireTargetDefinition" name="org.fabric3.binding.ejb.runtime.EjbTargetWireAttacher">
+        <system:implementation.system class="org.fabric3.binding.ejb.runtime.EjbTargetWireAttacher"/>
     </component>
 
     <!-- EJB Registry -->
     <component name="EjbRegistry">
-        <system:implementation.system class="org.fabric3.binding.ejb.wire.DefaultEjbRegistry"/>
+        <system:implementation.system class="org.fabric3.binding.ejb.runtime.DefaultEjbRegistry"/>
     </component>
 </composite>

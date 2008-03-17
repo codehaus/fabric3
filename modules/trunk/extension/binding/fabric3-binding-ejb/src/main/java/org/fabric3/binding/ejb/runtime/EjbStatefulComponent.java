@@ -1,4 +1,4 @@
-package org.fabric3.binding.ejb.transport;
+package org.fabric3.binding.ejb.runtime;
 
 import java.net.URI;
 import java.util.Map;
