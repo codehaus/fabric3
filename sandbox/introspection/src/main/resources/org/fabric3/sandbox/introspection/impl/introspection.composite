@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ See the NOTICE file distributed with this work for information
+ regarding copyright ownership.  This file is licensed
+ to you under the Apache License, Version 2.0 (the
+ "License"); you may not use this file except in compliance
+ with the License.  You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing,
+ software distributed under the License is distributed on an
+ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ KIND, either express or implied.  See the License for the
+ specific language governing permissions and limitations
+ under the License.
+-->
+<composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
+           xmlns:system="http://fabric3.org/xmlns/sca/system/2.0-alpha"
+           xmlns:introspection="urn:org.codehaus.fabric3:fabric3-introspection"
+           xmlns:loader="urn:org.codehaus.fabric3:fabric3-loader"
+           xmlns:java="urn:maven:org.codehaus.fabric3:fabric3-java"
+           name="introspection" targetNamespace="urn:maven:org.codehaus.fabric3:fabric3-introspection-host"
+           autowire="true">
+
+    <component name="XMLFactory">
+        <system:implementation.system class="org.fabric3.services.xmlfactory.impl.DefaultXMLFactoryImpl"/>
+    </component>
+
+    <include name="introspection:Helper" scdlResource="org/fabric3/introspection/impl/helper.composite"/>
+    <include name="introspection:AnnotationProcessors" scdlResource="org/fabric3/introspection/impl/annotation/processors.composite"/>
+    <include name="loader:common" scdlResource="org/fabric3/loader/loaderCommon.composite"/>
+    <include name="loader:composite" scdlResource="org/fabric3/loader/compositeLoader.composite"/>
+    <include name="java:introspection" scdlResource="org/fabric3/java/introspection.composite"/>
+
+</composite>
