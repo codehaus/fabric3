@@ -50,6 +50,7 @@ public class OrderTestCase extends TestCase {
         PojoComponentType componentType = impl.getComponentType();
         assertTrue(componentType.getServices().containsKey("OrderService"));
         assertTrue(componentType.getReferences().containsKey("pricing"));
+        assertTrue(componentType.getReferences().containsKey("dao"));
     }
 
     protected void setUp() throws Exception {
