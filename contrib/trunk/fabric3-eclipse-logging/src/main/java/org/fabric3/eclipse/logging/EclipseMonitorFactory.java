@@ -31,7 +31,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 
 import org.eclipse.core.runtime.ILog;
-import org.eclipse.core.runtime.Plugin;
 import org.eclipse.core.runtime.Status;
 
 import org.fabric3.api.annotation.LogLevel;
@@ -41,12 +40,16 @@ import org.fabric3.monitor.MonitorFactory;
  * @version $Rev$ $Date$
  */
 public class EclipseMonitorFactory implements MonitorFactory {
-    private final Plugin plugin;
+    private final ILog log;
+    private final String pluginId;
+    private final boolean debug;
     private final String bundleName;
     private final Map<Class<?>, WeakReference<?>> proxies = new WeakHashMap<Class<?>, WeakReference<?>>();
 
-    public EclipseMonitorFactory(Plugin plugin) {
-        this.plugin = plugin;
+    public EclipseMonitorFactory(ILog log, String pluginId, boolean debug) {
+        this.log = log;
+        this.pluginId = pluginId;
+        this.debug = debug;
         bundleName = "f3";
     }
 
@@ -73,13 +76,11 @@ public class EclipseMonitorFactory implements MonitorFactory {
         Map<Method, MethodHandler> handlers = new ConcurrentHashMap<Method, MethodHandler>(methods.length);
         for (Method method : methods) {
             int level = getLevel(method);
-            if (plugin.isDebugging() || level != Status.OK) {
-                ILog logger = plugin.getLog();
-                String pluginId = plugin.getDescriptor().getUniqueIdentifier();
+            if (debug || level != Status.OK) {
                 int code = method.hashCode(); // TODO do we need a way to define specific codes for methods?
                 String format = getMessage(monitorInterface, method);
                 int throwable = getThrowableParameter(method);
-                MethodHandler handler = new MethodHandler(logger, level, pluginId, code, format, throwable);
+                MethodHandler handler = new MethodHandler(log, level, pluginId, code, format, throwable);
                 handlers.put(method, handler);
             }
         }
