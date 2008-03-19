@@ -157,7 +157,8 @@
                        </mavenImport>
                     </mavenImports>
                     <deployables>
-                        <deployable>META-INF/ws-cxf.composite</deployable>
+                        <deployable>org/fabric3/binding/ws/cxf/control.composite</deployable>
+                        <deployable>org/fabric3/binding/ws/cxf/runtime.composite</deployable>
                     </deployables>
                 </configuration>
             </plugin>

@@ -200,7 +200,8 @@
                        </mavenImport>
                     </mavenImports>
                     <deployables>
-                        <deployable>META-INF/ws-axis2.composite</deployable>
+                        <deployable>org/fabric3/binding/ws/axis2/control.composite</deployable>
+                        <deployable>org/fabric3/binding/ws/axis2/runtime.composite</deployable>
                     </deployables>
                 </configuration>
             </plugin>
