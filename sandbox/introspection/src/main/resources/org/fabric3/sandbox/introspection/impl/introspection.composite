@@ -20,6 +20,7 @@
            xmlns:introspection="urn:org.codehaus.fabric3:fabric3-introspection"
            xmlns:loader="urn:org.codehaus.fabric3:fabric3-loader"
            xmlns:java="urn:maven:org.codehaus.fabric3:fabric3-java"
+           xmlns:ws="urn:maven:org.codehaus.fabric3:fabric3-binding-ws"
            name="introspection" targetNamespace="urn:maven:org.codehaus.fabric3:fabric3-introspection-host"
            autowire="true">
 
@@ -32,5 +33,6 @@
     <include name="loader:common" scdlResource="org/fabric3/loader/loaderCommon.composite"/>
     <include name="loader:composite" scdlResource="org/fabric3/loader/compositeLoader.composite"/>
     <include name="java:introspection" scdlResource="org/fabric3/java/introspection.composite"/>
+    <include name="ws:introspection" scdlResource="org/fabric3/binding/ws/introspection.composite"/>
 
 </composite>

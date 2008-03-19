@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <composite name="PricingSystem" targetNamespace="" xmlns="http://www.osoa.org/xmlns/sca/1.0">
-    <service name="PricingService" promote="PricingService/PricingService"/>
+    <service name="PricingService" promote="PricingService/PricingService">
+        <binding.ws uri="http://localhost/pricing"/>
+    </service>
+    
     <component name="PricingService">
         <implementation.java class="com.example.pricing.PricingServiceImpl"/>
     </component>

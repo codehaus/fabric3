@@ -47,6 +47,11 @@
             <artifactId>fabric3-java</artifactId>
             <version>${project.version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.codehaus.fabric3</groupId>
+            <artifactId>fabric3-binding-ws</artifactId>
+            <version>${project.version}</version>
+        </dependency>
 
         <dependency>
             <groupId>stax</groupId>
