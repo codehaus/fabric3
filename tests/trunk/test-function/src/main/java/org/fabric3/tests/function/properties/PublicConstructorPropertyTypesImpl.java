@@ -20,6 +20,7 @@ import java.net.URI;
 import java.net.URL;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
@@ -55,6 +56,7 @@ public class PublicConstructorPropertyTypesImpl implements PropertyTypes {
     private final int[] intArray;
     private final Map<String, String> mapValue;
     private final Properties propertiesValue;
+    private final List<String> listValue;
 
     public PublicConstructorPropertyTypesImpl(@Property(name = "booleanPrimitive")boolean booleanPrimitive,
                                               @Property(name = "bytePrimitive")byte bytePrimitive,
@@ -78,7 +80,8 @@ public class PublicConstructorPropertyTypesImpl implements PropertyTypes {
                                               @Property(name = "calendarValue")Calendar calendarValue,
                                               @Property(name = "intArray") int[] intArray,
                                               @Property(name = "mapValue") Map<String, String> mapValue,
-                                              @Property(name = "propertiesValue") Properties propertiesValue) {
+                                              @Property(name = "propertiesValue") Properties propertiesValue,
+                                              @Property(name = "listValue") List<String> listValue) {
         this.booleanPrimitive = booleanPrimitive;
         this.bytePrimitive = bytePrimitive;
         this.shortPrimitive = shortPrimitive;
@@ -102,6 +105,7 @@ public class PublicConstructorPropertyTypesImpl implements PropertyTypes {
         this.intArray = intArray;
         this.mapValue = mapValue;
         this.propertiesValue = propertiesValue;
+        this.listValue = listValue;
     }
 
     public boolean getBooleanPrimitive() {
@@ -194,5 +198,9 @@ public class PublicConstructorPropertyTypesImpl implements PropertyTypes {
 
     public Properties getPropertiesValue() {
         return propertiesValue;
+    }
+    
+    public List<String> getListValue() {
+        return listValue;
     }
 }

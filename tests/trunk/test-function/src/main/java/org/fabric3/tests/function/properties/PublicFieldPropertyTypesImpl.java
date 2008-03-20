@@ -20,6 +20,7 @@ import java.net.URI;
 import java.net.URL;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
@@ -55,7 +56,7 @@ public class PublicFieldPropertyTypesImpl implements PropertyTypes {
     @Property public int[] intArray;
     @Property public Map<String, String> mapValue;
     @Property public Properties propertiesValue;
-
+    @Property public List<String> listValue;
 
     public boolean getBooleanPrimitive() {
         return booleanPrimitive;
@@ -147,5 +148,9 @@ public class PublicFieldPropertyTypesImpl implements PropertyTypes {
 
     public Properties getPropertiesValue() {
         return propertiesValue;
+    }
+    
+    public List<String> getListValue() {
+        return listValue;
     }
 }

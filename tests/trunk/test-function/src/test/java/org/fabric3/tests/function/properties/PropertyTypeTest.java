@@ -21,6 +21,7 @@ import java.net.URI;
 import java.net.URL;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.List;
 import java.util.TimeZone;
 import java.util.Map;
 import java.util.Properties;
@@ -140,5 +141,11 @@ public class PropertyTypeTest extends TestCase {
         Properties properties = service.getPropertiesValue();
         assertEquals("value1", properties.getProperty("prop1"));
         assertEquals("value2", properties.getProperty("prop2"));
+    }
+    
+    public void testList() {
+        List<String> list = service.getListValue();
+        assertEquals("value1", list.get(0));
+        assertEquals("value2", list.get(1));
     }
 }

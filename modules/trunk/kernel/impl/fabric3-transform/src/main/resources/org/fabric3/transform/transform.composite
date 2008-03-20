@@ -103,6 +103,11 @@
         <reference name="registry" target="pullTransformerRegistry"/>
     </component>
 
+    <component name="String2List">
+        <system:implementation.system class="org.fabric3.transform.dom2java.String2List"/>
+        <reference name="registry" target="pullTransformerRegistry"/>
+    </component>
+
     <component name="String2Properties">
         <system:implementation.system class="org.fabric3.transform.dom2java.String2Properties"/>
         <reference name="registry" target="pullTransformerRegistry"/>
