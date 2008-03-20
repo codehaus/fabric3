@@ -16,39 +16,26 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.jpa;
+package org.fabric3.jpa.runtime;
 
-import org.fabric3.scdl.InjectionSite;
-import org.fabric3.scdl.ServiceContract;
-import org.fabric3.scdl.ResourceDefinition;
+import javax.persistence.spi.PersistenceUnitInfo;
+
 
 /**
- * Represents an entity manager factory treated as a resource.
  *
  * @version $Revision$ $Date$
  */
-public final class PersistenceUnitResource extends ResourceDefinition {
-    
-    private final String unitName;
+public interface PersistenceUnitScanner {
 
     /**
-     * Initializes the resource name and persistence unit name.
+     * Scans the lassloader for the specified persistence unit and creates 
+     * an immutable representation of the information present in the matching 
+     * persistence.xml file.
      * 
-     * @param name Name of the resource.
      * @param unitName Persistence unit name.
-     * @param serviceContract the service contract for the persistence unit
+     * @param classLoader Classloader to scan.
+     * @return Persistence unit information.
      */
-    public PersistenceUnitResource(String name, String unitName, ServiceContract<?> serviceContract) {
-        super(name, serviceContract, true);
-        this.unitName = unitName;
-    }
-    
-    /**
-     * Gets the persistence unit name.
-     * @return Persistence unit name.
-     */
-    public final String getUnitName() {
-        return this.unitName;
-    }
+    public abstract PersistenceUnitInfo getPersistenceUnitInfo(String unitName, ClassLoader classLoader);
 
 }

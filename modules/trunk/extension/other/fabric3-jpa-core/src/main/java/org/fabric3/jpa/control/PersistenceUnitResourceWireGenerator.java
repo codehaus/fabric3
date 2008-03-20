@@ -16,11 +16,12 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.jpa.generator;
+package org.fabric3.jpa.control;
 
 import java.net.URI;
 
-import org.fabric3.jpa.PersistenceUnitResource;
+import org.fabric3.jpa.provision.PersistenceUnitWireTargetDefinition;
+import org.fabric3.jpa.scdl.PersistenceUnitResource;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.generator.ResourceWireGenerator;

@@ -16,11 +16,13 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.jpa.provider;
+package org.fabric3.jpa.runtime;
 
 import javax.persistence.spi.PersistenceUnitInfo;
 
 import org.fabric3.jpa.Fabric3JpaException;
+import org.fabric3.jpa.runtime.ClasspathPersistenceUnitScanner;
+import org.fabric3.jpa.runtime.PersistenceUnitScanner;
 
 import junit.framework.TestCase;
 

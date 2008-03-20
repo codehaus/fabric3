@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.jpa.provider;
+package org.fabric3.jpa.runtime;
 
 import java.io.File;
 import java.io.IOException;
@@ -46,7 +46,7 @@ public class ClasspathPersistenceUnitScanner implements PersistenceUnitScanner {
     private Map<String, PersistenceUnitInfo> persistenceUnitInfos = new HashMap<String, PersistenceUnitInfo>();
 
     /**
-     * @see org.fabric3.jpa.provider.PersistenceUnitScanner#getPersistenceUnitInfo(java.lang.String, java.lang.ClassLoader)
+     * @see org.fabric3.jpa.runtime.PersistenceUnitScanner#getPersistenceUnitInfo(java.lang.String, java.lang.ClassLoader)
      */
     public PersistenceUnitInfo getPersistenceUnitInfo(String unitName, ClassLoader classLoader) {
 

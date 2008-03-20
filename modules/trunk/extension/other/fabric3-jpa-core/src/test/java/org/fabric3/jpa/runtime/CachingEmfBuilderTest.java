@@ -16,26 +16,32 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.jpa.provider;
+package org.fabric3.jpa.runtime;
 
-import javax.persistence.spi.PersistenceUnitInfo;
+import javax.persistence.EntityManagerFactory;
 
+import org.fabric3.jpa.runtime.CachingEmfBuilder;
+import org.fabric3.jpa.runtime.ClasspathPersistenceUnitScanner;
+import org.fabric3.jpa.runtime.EmfBuilder;
+
+import junit.framework.TestCase;
 
 /**
  *
  * @version $Revision$ $Date$
  */
-public interface PersistenceUnitScanner {
+public class CachingEmfBuilderTest extends TestCase {
+    
+    private EmfBuilder emfBuilder;
 
-    /**
-     * Scans the lassloader for the specified persistence unit and creates 
-     * an immutable representation of the information present in the matching 
-     * persistence.xml file.
-     * 
-     * @param unitName Persistence unit name.
-     * @param classLoader Classloader to scan.
-     * @return Persistence unit information.
-     */
-    public abstract PersistenceUnitInfo getPersistenceUnitInfo(String unitName, ClassLoader classLoader);
+    protected void setUp() throws Exception {
+        emfBuilder = new CachingEmfBuilder(new ClasspathPersistenceUnitScanner());
+    }
+
+    public void testBuild() {
+        
+        EntityManagerFactory emf = emfBuilder.build("test", getClass().getClassLoader());
+        assertNotNull(emf);
+    }
 
 }

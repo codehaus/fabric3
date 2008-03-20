@@ -16,19 +16,19 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.jpa.provider;
+package org.fabric3.jpa.runtime;
 
-import static org.fabric3.jpa.provider.JpaConstants.CLASS;
-import static org.fabric3.jpa.provider.JpaConstants.EXCLUDE_UNLISTED_CLASSES;
-import static org.fabric3.jpa.provider.JpaConstants.JAR_FILE;
-import static org.fabric3.jpa.provider.JpaConstants.JTA_DATA_SOURCE;
-import static org.fabric3.jpa.provider.JpaConstants.MAPPING_FILE;
-import static org.fabric3.jpa.provider.JpaConstants.NON_JTA_DATA_SOURCE;
-import static org.fabric3.jpa.provider.JpaConstants.PROPERTY;
-import static org.fabric3.jpa.provider.JpaConstants.PROPERTY_NAME;
-import static org.fabric3.jpa.provider.JpaConstants.PROPERTY_VALUE;
-import static org.fabric3.jpa.provider.JpaConstants.PROVIDER;
-import static org.fabric3.jpa.provider.JpaConstants.TRANSACTION_TYPE;
+import static org.fabric3.jpa.runtime.JpaConstants.CLASS;
+import static org.fabric3.jpa.runtime.JpaConstants.EXCLUDE_UNLISTED_CLASSES;
+import static org.fabric3.jpa.runtime.JpaConstants.JAR_FILE;
+import static org.fabric3.jpa.runtime.JpaConstants.JTA_DATA_SOURCE;
+import static org.fabric3.jpa.runtime.JpaConstants.MAPPING_FILE;
+import static org.fabric3.jpa.runtime.JpaConstants.NON_JTA_DATA_SOURCE;
+import static org.fabric3.jpa.runtime.JpaConstants.PROPERTY;
+import static org.fabric3.jpa.runtime.JpaConstants.PROPERTY_NAME;
+import static org.fabric3.jpa.runtime.JpaConstants.PROPERTY_VALUE;
+import static org.fabric3.jpa.runtime.JpaConstants.PROVIDER;
+import static org.fabric3.jpa.runtime.JpaConstants.TRANSACTION_TYPE;
 
 import java.net.MalformedURLException;
 import java.net.URL;

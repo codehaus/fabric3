@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.jpa.wire;
+package org.fabric3.jpa.runtime;
 
 import java.net.URI;
 import java.util.Map;
@@ -24,8 +24,7 @@ import javax.persistence.EntityManagerFactory;
 
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.jpa.generator.PersistenceUnitWireTargetDefinition;
-import org.fabric3.jpa.provider.EmfBuilder;
+import org.fabric3.jpa.provision.PersistenceUnitWireTargetDefinition;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.TargetWireAttacher;

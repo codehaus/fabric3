@@ -31,7 +31,7 @@ import org.fabric3.introspection.TypeMapping;
 import org.fabric3.introspection.contract.ContractProcessor;
 import org.fabric3.introspection.java.AbstractAnnotationProcessor;
 import org.fabric3.introspection.contract.InvalidServiceContractException;
-import org.fabric3.jpa.PersistenceUnitResource;
+import org.fabric3.jpa.scdl.PersistenceUnitResource;
 import org.fabric3.scdl.FieldInjectionSite;
 import org.fabric3.scdl.Implementation;
 import org.fabric3.scdl.InjectingComponentType;

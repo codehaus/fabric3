@@ -17,7 +17,7 @@
  * under the License.    
  */
 
-package org.fabric3.jpa.provider;
+package org.fabric3.jpa.runtime;
 
 import java.io.IOException;
 import java.net.URL;
@@ -33,6 +33,7 @@ import javax.xml.parsers.DocumentBuilderFactory;
 
 import junit.framework.TestCase;
 
+import org.fabric3.jpa.runtime.PersistenceUnitInfoImpl;
 import org.w3c.dom.Document;
 
 public class PersistenceUnitInfoImplTestCase extends TestCase {

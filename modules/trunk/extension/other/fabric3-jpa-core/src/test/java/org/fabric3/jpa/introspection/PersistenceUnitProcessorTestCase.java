@@ -25,7 +25,7 @@ import org.fabric3.introspection.impl.DefaultIntrospectionHelper;
 import org.fabric3.introspection.impl.contract.DefaultContractProcessor;
 import org.fabric3.introspection.contract.ContractProcessor;
 import org.fabric3.introspection.IntrospectionHelper;
-import org.fabric3.jpa.PersistenceUnitResource;
+import org.fabric3.jpa.scdl.PersistenceUnitResource;
 
 /**
  * @version $Rev$ $Date$

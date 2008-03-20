@@ -35,23 +35,23 @@
     </component>
     
     <!-- Wire Target Definition Generator -->
-    <component name="org.fabric3.jpa.generator.PersistenceUnitResourceWireGenerator">
-        <system:implementation.system class="org.fabric3.jpa.generator.PersistenceUnitResourceWireGenerator"/>
+    <component name="org.fabric3.jpa.control.PersistenceUnitResourceWireGenerator">
+        <system:implementation.system class="org.fabric3.jpa.control.PersistenceUnitResourceWireGenerator"/>
     </component>
     
     <!-- Wire Attacher for Persistence Unit Resources -->
-    <component f3:key="org.fabric3.jpa.generator.PersistenceUnitWireTargetDefinition" name="org.fabric3.jpa.wire.PersistenceUnitWireAttacher">
-        <system:implementation.system class="org.fabric3.jpa.wire.PersistenceUnitWireAttacher"/>
+    <component f3:key="org.fabric3.jpa.provision.PersistenceUnitWireTargetDefinition" name="org.fabric3.jpa.runtime.PersistenceUnitWireAttacher">
+        <system:implementation.system class="org.fabric3.jpa.runtime.PersistenceUnitWireAttacher"/>
     </component>
     
     <!-- Persistence Unit Scanner -->
-    <component name="org.fabric3.jpa.provider.ClasspathPersistenceUnitScanner">
-        <system:implementation.system class="org.fabric3.jpa.provider.ClasspathPersistenceUnitScanner"/>
+    <component name="org.fabric3.jpa.runtime.ClasspathPersistenceUnitScanner">
+        <system:implementation.system class="org.fabric3.jpa.runtime.ClasspathPersistenceUnitScanner"/>
     </component>
     
     <!-- EMF Builder -->
-    <component name="org.fabric3.jpa.provider.CachingEmfBuilder">
-        <system:implementation.system class="org.fabric3.jpa.provider.CachingEmfBuilder"/>
+    <component name="org.fabric3.jpa.runtime.CachingEmfBuilder">
+        <system:implementation.system class="org.fabric3.jpa.runtime.CachingEmfBuilder"/>
     </component>
     
 </composite>

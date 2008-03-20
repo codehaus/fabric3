@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.jpa.provider;
+package org.fabric3.jpa.runtime;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -62,7 +62,7 @@ public class CachingEmfBuilder implements EmfBuilder {
     }
 
     /**
-     * @see org.fabric3.jpa.provider.EmfBuilder#build(java.lang.String, java.lang.ClassLoader)
+     * @see org.fabric3.jpa.runtime.EmfBuilder#build(java.lang.String, java.lang.ClassLoader)
      */
     public synchronized EntityManagerFactory build(String unitName, ClassLoader classLoader) {
         
