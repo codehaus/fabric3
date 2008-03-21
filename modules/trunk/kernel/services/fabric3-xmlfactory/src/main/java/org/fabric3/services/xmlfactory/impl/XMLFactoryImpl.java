@@ -1,3 +1,22 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+
 package org.fabric3.services.xmlfactory.impl;
 
 import javax.xml.stream.FactoryConfigurationError;
@@ -10,6 +29,12 @@ import org.osoa.sca.annotations.Property;
 import org.fabric3.services.xmlfactory.XMLFactoryInstantiationException;
 import org.fabric3.services.xmlfactory.XMLFactory;
 
+/**
+ * An implementation of XMLFactory that uses WoodStox stax parser for input &
+ * output factories.
+ * Alternately the runtime can be configured to use a different input and ouput factories
+ * as properties in the scdl file
+ */
 public final class XMLFactoryImpl implements XMLFactory {
 
     private final String inputFactoryName;
@@ -27,6 +52,11 @@ public final class XMLFactoryImpl implements XMLFactory {
         this.outputFactoryName = outputFactoryName;
     }
 
+    /**
+     * see XMLFactory
+     * @return
+     * @throws FactoryConfigurationError
+     */
     public XMLInputFactory newInputFactoryInstance() throws FactoryConfigurationError {
         ClassLoader oldCL = Thread.currentThread().getContextClassLoader();
         Thread.currentThread().setContextClassLoader(classLoader);
@@ -35,6 +65,15 @@ public final class XMLFactoryImpl implements XMLFactory {
         } finally {
             Thread.currentThread().setContextClassLoader(oldCL);
         }
+    }
+
+    /**
+     * see XMLFactory
+     * @return
+     * @throws FactoryConfigurationError
+     */
+    public XMLOutputFactory newOutputFactoryInstance() throws FactoryConfigurationError {
+        return newOutputFactoryInstance(outputFactoryName, classLoader);
     }
 
     private XMLInputFactory newInputFactoryInstance(String factoryName, ClassLoader cl)
@@ -49,10 +88,6 @@ public final class XMLFactoryImpl implements XMLFactory {
         } catch (ClassNotFoundException cnfe) {
             throw new XMLFactoryInstantiationException("Error loading factory", factoryName, cnfe);
         }
-    }
-
-    public XMLOutputFactory newOutputFactoryInstance() throws FactoryConfigurationError {
-        return newOutputFactoryInstance(outputFactoryName, classLoader);
     }
 
     private XMLOutputFactory newOutputFactoryInstance(String factoryName, ClassLoader cl)
