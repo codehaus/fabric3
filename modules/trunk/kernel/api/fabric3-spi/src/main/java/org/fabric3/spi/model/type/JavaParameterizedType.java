@@ -16,30 +16,20 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
+package org.fabric3.spi.model.type;
 
-package org.fabric3.transform.dom2java;
+import java.lang.reflect.ParameterizedType;
 
-import java.util.Map;
+import org.fabric3.scdl.DataType;
 
-import org.fabric3.transform.dom2java.generics.map.String2MapOfString2String;
-import org.w3c.dom.Node;
+/**
+ *
+ * @version $Revision$ $Date$
+ */
+public class JavaParameterizedType extends DataType<ParameterizedType> {
 
-public class String2MapTestCase extends BaseTransformTest {
-
-    public void testTransform() throws Exception {
-
-        String2MapOfString2String string2MapOfString2String = new String2MapOfString2String();
-
-        String xml = "<value><apple>yellow</apple><lime>green</lime><grape>black</grape></value>";
-
-        Node node = getNode(xml);
-        
-        Map<String, String> map = string2MapOfString2String.transform(node, null);
-
-        assertEquals(3, map.size());
-        assertEquals("yellow", map.get("apple"));
-        assertEquals("green", map.get("lime"));
-        assertEquals("black", map.get("grape"));
+    public JavaParameterizedType(ParameterizedType parameterizedType) {
+        super(parameterizedType, parameterizedType);
     }
 
 }

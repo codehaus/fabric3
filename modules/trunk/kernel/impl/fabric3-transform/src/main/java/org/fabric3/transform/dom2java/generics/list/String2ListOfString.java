@@ -14,14 +14,15 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.transform.dom2java;
+package org.fabric3.transform.dom2java.generics.list;
 
+import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 
 import org.fabric3.scdl.DataType;
-import org.fabric3.spi.model.type.JavaClass;
+import org.fabric3.spi.model.type.JavaParameterizedType;
 import org.fabric3.spi.transform.TransformContext;
 import org.fabric3.spi.transform.TransformationException;
 import org.fabric3.transform.AbstractPullTransformer;
@@ -34,13 +35,18 @@ import org.w3c.dom.Node;
  *
  * @version $Rev: 1570 $ $Date: 2007-10-20 14:24:19 +0100 (Sat, 20 Oct 2007) $
  */
-public class String2List extends AbstractPullTransformer<Node, List<String>> {
+public class String2ListOfString extends AbstractPullTransformer<Node, List<String>> {
     
-    /**
-     * Target class Map
-     */
-    @SuppressWarnings("unchecked")
-    private static final JavaClass<List> TARGET = new JavaClass<List>(List.class);
+    private static List<String> FIELD = null;
+    private static JavaParameterizedType TARGET = null;
+    
+    static {
+        try {
+            ParameterizedType parameterizedType = (ParameterizedType) String2ListOfString.class.getDeclaredField("FIELD").getGenericType();
+            TARGET = new JavaParameterizedType(parameterizedType);
+        } catch (NoSuchFieldException ignore) {
+        }
+    }
 
     /**
      * @see org.fabric3.spi.transform.Transformer#getTargetType()

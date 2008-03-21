@@ -28,8 +28,10 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 import org.fabric3.pojo.implementation.PojoComponent;
+import org.fabric3.scdl.DataType;
 import org.fabric3.scdl.InjectableAttribute;
 import org.fabric3.spi.model.type.JavaClass;
+import org.fabric3.spi.model.type.JavaParameterizedType;
 import org.fabric3.spi.model.type.XSDSimpleType;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.transform.PullTransformer;
@@ -65,20 +67,17 @@ public abstract class PojoSourceWireAttacher {
 
             Element element = keyDocument.getDocumentElement();
 
-            Class<?> formalType;
+            Type formalType = null;
             Type type = source.getGerenricMemberType(referenceSource);
 
             if (type instanceof ParameterizedType) {
                 ParameterizedType genericType = (ParameterizedType) type;
-                Type typeArgument = genericType.getActualTypeArguments()[0];
-                if (typeArgument instanceof Class) {
-                    formalType = (Class<?>) genericType.getActualTypeArguments()[0];
-                } else {
-                    formalType = (Class<?>) ((ParameterizedType) typeArgument).getRawType();
-                }
-                if (Enum.class.isAssignableFrom(formalType)) {
+                formalType = genericType.getActualTypeArguments()[0];
+                if (formalType instanceof ParameterizedType && ((ParameterizedType) formalType).getRawType().equals(Class.class)) {
+                    formalType = ((ParameterizedType) formalType).getRawType();
+                } else if (formalType instanceof Class<?> && Enum.class.isAssignableFrom((Class<?>) formalType)) {
                     Class<Enum> enumClass = (Class<Enum>) formalType;
-                    return Enum.valueOf(enumClass, element.getTextContent());
+                    return Enum.valueOf(enumClass, element.getTextContent());           
                 }
             } else {
                 formalType = String.class;
@@ -100,19 +99,24 @@ public abstract class PojoSourceWireAttacher {
 
     }
 
-    private <T> T createKey(Class<T> type, Element value, TransformContext context) {
-
-        JavaClass<T> targetType = new JavaClass<T>(type);
-        PullTransformer<Node, T> transformer = getTransformer(SOURCE_TYPE, targetType);
+    @SuppressWarnings("unchecked")
+    private Object createKey(Type type, Element value, TransformContext context) {
+        
+        DataType<?> targetType = null;
+        if (type instanceof Class<?>) {
+            targetType = new JavaClass((Class<?>) type);
+        } else {
+            targetType = new JavaParameterizedType((ParameterizedType) type);
+        }
+        PullTransformer<Node, ?> transformer = (PullTransformer<Node, ?>) transformerRegistry.getTransformer(SOURCE_TYPE, targetType);
         try {
-            return type.cast(transformer.transform(value, context));
+            if (transformer == null) {
+                System.err.println("No transformer for : " + type);
+            }
+            return transformer.transform(value, context);
         } catch (Exception e) {
             throw new AssertionError(e);
         }
     }
-
-    @SuppressWarnings("unchecked")
-    private <T> PullTransformer<Node, T> getTransformer(XSDSimpleType source, JavaClass<T> target) {
-        return (PullTransformer<Node, T>) transformerRegistry.getTransformer(source, target);
-    }
+    
 }

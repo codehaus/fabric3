@@ -98,13 +98,13 @@
         <reference name="registry" target="pullTransformerRegistry"/>
     </component>
 
-    <component name="String2Map">
-        <system:implementation.system class="org.fabric3.transform.dom2java.String2Map"/>
+    <component name="String2MapOfString2String">
+        <system:implementation.system class="org.fabric3.transform.dom2java.generics.map.String2MapOfString2String"/>
         <reference name="registry" target="pullTransformerRegistry"/>
     </component>
 
-    <component name="String2List">
-        <system:implementation.system class="org.fabric3.transform.dom2java.String2List"/>
+    <component name="String2ListOfString">
+        <system:implementation.system class="org.fabric3.transform.dom2java.generics.list.String2ListOfString"/>
         <reference name="registry" target="pullTransformerRegistry"/>
     </component>
 

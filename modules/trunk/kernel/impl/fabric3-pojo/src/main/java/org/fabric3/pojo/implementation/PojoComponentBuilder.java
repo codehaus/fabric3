@@ -18,6 +18,8 @@
  */
 package org.fabric3.pojo.implementation;
 
+import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -28,6 +30,7 @@ import org.fabric3.pojo.injection.MultiplicityObjectFactory;
 import org.fabric3.pojo.injection.SetMultiplicityObjectFactory;
 import org.fabric3.pojo.instancefactory.InstanceFactoryBuilderRegistry;
 import org.fabric3.pojo.instancefactory.InstanceFactoryDefinition;
+import org.fabric3.scdl.DataType;
 import org.fabric3.scdl.InjectableAttribute;
 import org.fabric3.scdl.InjectableAttributeType;
 import org.fabric3.scdl.InjectionSite;
@@ -40,6 +43,7 @@ import org.fabric3.spi.component.Component;
 import org.fabric3.spi.component.InstanceFactoryProvider;
 import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.spi.model.type.JavaClass;
+import org.fabric3.spi.model.type.JavaParameterizedType;
 import org.fabric3.spi.model.type.XSDSimpleType;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.transform.PullTransformer;
@@ -104,10 +108,16 @@ public abstract class PojoComponentBuilder<T, PCD extends PojoComponentDefinitio
             Document value = entry.getValue();
             Element element = value.getDocumentElement();
             InjectableAttribute source = new InjectableAttribute(InjectableAttributeType.PROPERTY, name);
-            Class<?> memberType = provider.getMemberType(source);
-            if (memberType.isPrimitive()) {
-                memberType = OBJECT_TYPES.get(memberType);
+            
+            Type memberType = provider.getGenericType(source);
+            if (memberType instanceof Class<?> || 
+                    (memberType instanceof ParameterizedType && ((ParameterizedType) memberType).getRawType().equals(Class.class))) {
+                memberType = provider.getMemberType(source);
+                if (((Class<?>)memberType).isPrimitive()) {
+                    memberType = OBJECT_TYPES.get(memberType);
+                }
             }
+            
             ObjectFactory<?> objectFactory = createObjectFactory(name, memberType, element, context);
             provider.setObjectFactory(source, objectFactory);
             factories.put(name, objectFactory);
@@ -115,24 +125,30 @@ public abstract class PojoComponentBuilder<T, PCD extends PojoComponentDefinitio
         return factories;
     }
 
-    protected <I> ObjectFactory<I> createObjectFactory(String name, Class<I> type, Element value, TransformContext context)
-            throws BuilderException {
-        JavaClass<I> targetType = new JavaClass<I>(type);
-        PullTransformer<Node, I> transformer = getTransformer(SOURCE_TYPE, targetType);
-        if (transformer == null) {
-            throw new PropertyTransformException("No transformer for property of type: " + type.getCanonicalName(), name, null);
+    @SuppressWarnings("unchecked")
+    private ObjectFactory<?> createObjectFactory(String name, Type type, Element value, TransformContext context) throws BuilderException {
+        
+        DataType<?> targetType = null;
+        
+        if (type instanceof Class<?>) {
+            targetType = new JavaClass((Class<?>)type);
+        } else if (type instanceof ParameterizedType) {
+            targetType = new JavaParameterizedType((ParameterizedType) type);
         }
+        
+        PullTransformer<Node, ?> transformer =  (PullTransformer<Node, ?>) transformerRegistry.getTransformer(SOURCE_TYPE, targetType);
+        if (transformer == null) {
+            System.err.println(type.getClass() + ":" + type + ":" + name);
+            throw new PropertyTransformException("No transformer for property of type: " + type, name, null);
+        }
+        
         try {
-            I instance = type.cast(transformer.transform(value, context));
-            return new SingletonObjectFactory<I>(instance);
+            Object instance = transformer.transform(value, context);
+            return new SingletonObjectFactory(instance);
         } catch (Exception e) {
             throw new PropertyTransformException("Unable to transform property value: " + name, name, e);
         }
-    }
-
-    @SuppressWarnings("unchecked")
-    protected <I> PullTransformer<Node, I> getTransformer(XSDSimpleType source, JavaClass<I> target) {
-        return (PullTransformer<Node, I>) transformerRegistry.getTransformer(source, target);
+        
     }
 
     /**

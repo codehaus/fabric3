@@ -14,33 +14,40 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.transform.dom2java;
+package org.fabric3.transform.dom2java.generics.map;
 
+import java.lang.reflect.ParameterizedType;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-
 import org.fabric3.scdl.DataType;
-import org.fabric3.spi.model.type.JavaClass;
+import org.fabric3.spi.model.type.JavaParameterizedType;
 import org.fabric3.spi.transform.TransformContext;
 import org.fabric3.spi.transform.TransformationException;
 import org.fabric3.transform.AbstractPullTransformer;
+import org.w3c.dom.Element;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /**
  * Expects the property to be dfined in the format,
  * <p/>
  * <code> <key1>value1</key1> <key2>value2</key2> </code>
  *
- * @version $Rev$ $Date$
+ * @version $Rev: 1570 $ $Date: 2007-10-20 14:24:19 +0100 (Sat, 20 Oct 2007) $
  */
-public class String2Map extends AbstractPullTransformer<Node, Map<String, String>> {
-    /**
-     * Target class Map
-     */
-    private static final JavaClass<Map> TARGET = new JavaClass<Map>(Map.class);
+public class String2MapOfString2String extends AbstractPullTransformer<Node, Map<String, String>> {
+    
+    private static Map<String, String> FIELD = null;
+    private static JavaParameterizedType TARGET = null;
+    
+    static {
+        try {
+            ParameterizedType parameterizedType = (ParameterizedType) String2MapOfString2String.class.getDeclaredField("FIELD").getGenericType();
+            TARGET = new JavaParameterizedType(parameterizedType);
+        } catch (NoSuchFieldException ignore) {
+        }
+    }
 
     /**
      * @see org.fabric3.spi.transform.Transformer#getTargetType()
@@ -67,4 +74,6 @@ public class String2Map extends AbstractPullTransformer<Node, Map<String, String
         }
         return map;
     }
+    
+    
 }
