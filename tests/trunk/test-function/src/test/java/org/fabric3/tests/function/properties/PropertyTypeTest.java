@@ -20,11 +20,14 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.TimeZone;
 import java.util.Map;
 import java.util.Properties;
+
+import javax.xml.namespace.QName;
 
 import junit.framework.TestCase;
 import org.osoa.sca.annotations.Reference;
@@ -147,5 +150,11 @@ public class PropertyTypeTest extends TestCase {
         List<String> list = service.getListValue();
         assertEquals("value1", list.get(0));
         assertEquals("value2", list.get(1));
+    }
+    
+    public void testMapOfQNameToClass() {
+        Map<QName, Class<?>> map = service.getMapOfQNameToClassValue();
+        assertEquals(map.get(new QName("urn:foo", "one")), String.class);
+        assertEquals(map.get(new QName("urn:foo", "two")), Date.class);
     }
 }

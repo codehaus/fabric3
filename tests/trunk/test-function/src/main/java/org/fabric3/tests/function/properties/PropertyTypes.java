@@ -24,6 +24,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import javax.xml.namespace.QName;
+
 /**
  * Test service for returning Properties with different types.
  *
@@ -77,5 +79,7 @@ public interface PropertyTypes {
     Properties getPropertiesValue();
     
     List<String> getListValue();
+    
+    Map<QName, Class<?>> getMapOfQNameToClassValue();
     
 }

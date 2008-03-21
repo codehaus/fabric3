@@ -103,6 +103,11 @@
         <reference name="registry" target="pullTransformerRegistry"/>
     </component>
 
+    <component name="String2MapOfQname2Class">
+        <system:implementation.system class="org.fabric3.transform.dom2java.generics.map.String2MapOfQName2Class"/>
+        <reference name="registry" target="pullTransformerRegistry"/>
+    </component>
+
     <component name="String2ListOfString">
         <system:implementation.system class="org.fabric3.transform.dom2java.generics.list.String2ListOfString"/>
         <reference name="registry" target="pullTransformerRegistry"/>

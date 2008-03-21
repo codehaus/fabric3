@@ -62,6 +62,10 @@ prop1=value1
 prop2=value2
         ]]></property>
         <property name="listValue">value1 value2</property>
+        <property name="mapOfQNameToClassValue" xmlns:foo="urn:foo">
+            <foo:one>java.lang.String</foo:one>
+            <foo:two>java.util.Date</foo:two>
+        </property>
     </component>
 
     <component name="ProtectedFieldPropertyTypesTest">
@@ -100,6 +104,10 @@ prop1=value1
 prop2=value2
         ]]></property>
         <property name="listValue">value1 value2</property>
+        <property name="mapOfQNameToClassValue" xmlns:foo="urn:foo">
+            <foo:one>java.lang.String</foo:one>
+            <foo:two>java.util.Date</foo:two>
+        </property>
     </component>
 
     <component name="PublicSetterPropertyTypesTest">
@@ -138,6 +146,10 @@ prop1=value1
 prop2=value2
         ]]></property>
         <property name="listValue">value1 value2</property>
+        <property name="mapOfQNameToClassValue" xmlns:foo="urn:foo">
+            <foo:one>java.lang.String</foo:one>
+            <foo:two>java.util.Date</foo:two>
+        </property>
     </component>
 
     <component name="ProtectedSetterPropertyTypesTest">
@@ -176,6 +188,10 @@ prop1=value1
 prop2=value2
         ]]></property>
         <property name="listValue">value1 value2</property>
+        <property name="mapOfQNameToClassValue" xmlns:foo="urn:foo">
+            <foo:one>java.lang.String</foo:one>
+            <foo:two>java.util.Date</foo:two>
+        </property>
     </component>
 
     <component name="PublicConstructorPropertyTypesTest">
@@ -214,6 +230,10 @@ prop1=value1
 prop2=value2
         ]]></property>
         <property name="listValue">value1 value2</property>
+        <property name="mapOfQNameToClassValue" xmlns:foo="urn:foo">
+            <foo:one>java.lang.String</foo:one>
+            <foo:two>java.util.Date</foo:two>
+        </property>
     </component>
 
     <component name="PropertyFromFileImpl">

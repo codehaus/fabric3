@@ -24,6 +24,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import javax.xml.namespace.QName;
+
 import org.osoa.sca.annotations.Property;
 
 /**
@@ -57,6 +59,7 @@ public class PublicSetterPropertyTypesImpl implements PropertyTypes {
     private Map<String, String> mapValue;
     private Properties propertiesValue;
     private List<String> listValue;
+    private Map<QName, Class<?>> mapOfQNameToClassValue;
 
     public boolean getBooleanPrimitive() {
         return booleanPrimitive;
@@ -272,5 +275,14 @@ public class PublicSetterPropertyTypesImpl implements PropertyTypes {
     
     public List<String> getListValue() {
         return listValue;
+    }
+    
+    @Property
+    public void setMapOfQNameToClassValue(Map<QName, Class<?>> mapOfQNameToClassValue) {
+        this.mapOfQNameToClassValue = mapOfQNameToClassValue;
+    }
+    
+    public Map<QName, Class<?>> getMapOfQNameToClassValue() {
+        return mapOfQNameToClassValue;
     }
 }

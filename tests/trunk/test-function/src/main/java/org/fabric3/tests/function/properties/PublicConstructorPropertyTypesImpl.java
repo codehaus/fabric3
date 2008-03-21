@@ -24,6 +24,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
+import javax.xml.namespace.QName;
+
 import org.osoa.sca.annotations.Property;
 
 /**
@@ -57,6 +59,7 @@ public class PublicConstructorPropertyTypesImpl implements PropertyTypes {
     private final Map<String, String> mapValue;
     private final Properties propertiesValue;
     private final List<String> listValue;
+    private final Map<QName, Class<?>> mapOfQNameToClassValue;
 
     public PublicConstructorPropertyTypesImpl(@Property(name = "booleanPrimitive")boolean booleanPrimitive,
                                               @Property(name = "bytePrimitive")byte bytePrimitive,
@@ -81,7 +84,8 @@ public class PublicConstructorPropertyTypesImpl implements PropertyTypes {
                                               @Property(name = "intArray") int[] intArray,
                                               @Property(name = "mapValue") Map<String, String> mapValue,
                                               @Property(name = "propertiesValue") Properties propertiesValue,
-                                              @Property(name = "listValue") List<String> listValue) {
+                                              @Property(name = "listValue") List<String> listValue,
+                                              @Property(name = "mapOfQNameToClassValue") Map<QName, Class<?>> mapOfQNameToClassValue) {
         this.booleanPrimitive = booleanPrimitive;
         this.bytePrimitive = bytePrimitive;
         this.shortPrimitive = shortPrimitive;
@@ -106,6 +110,7 @@ public class PublicConstructorPropertyTypesImpl implements PropertyTypes {
         this.mapValue = mapValue;
         this.propertiesValue = propertiesValue;
         this.listValue = listValue;
+        this.mapOfQNameToClassValue = mapOfQNameToClassValue;
     }
 
     public boolean getBooleanPrimitive() {
@@ -202,5 +207,9 @@ public class PublicConstructorPropertyTypesImpl implements PropertyTypes {
     
     public List<String> getListValue() {
         return listValue;
+    }
+    
+    public Map<QName, Class<?>> getMapOfQNameToClassValue() {
+        return mapOfQNameToClassValue;
     }
 }
