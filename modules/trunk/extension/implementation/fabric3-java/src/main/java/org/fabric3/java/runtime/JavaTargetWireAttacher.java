@@ -93,7 +93,14 @@ public class JavaTargetWireAttacher implements TargetWireAttacher<JavaWireTarget
                 URI targetUri = targetDefinition.getUri();
                 throw new WireAttachException("No matching method found", sourceUri, targetUri, e);
             }
-            chain.addInterceptor(createInterceptor(method, targetDefinition.isCallback(), operation.isEndsConversation(), target, scopeContainer));
+            boolean endsConversation = operation.isEndsConversation();
+            boolean callback = targetDefinition.isCallback();
+            if (callback) {
+                // callbacks do not expire the client (i.e. the callback target); they expire the forward implementation instance
+                endsConversation = false;
+            }
+            InvokerInterceptor<?, ?> interceptor = createInterceptor(method, callback, endsConversation, target, scopeContainer);
+            chain.addInterceptor(interceptor);
         }
     }
 

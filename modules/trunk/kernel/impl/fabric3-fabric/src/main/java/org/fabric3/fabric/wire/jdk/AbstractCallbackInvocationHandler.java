@@ -23,14 +23,13 @@ import java.lang.reflect.Method;
 
 import org.osoa.sca.ServiceUnavailableException;
 
-import org.fabric3.pojo.PojoWorkContextTunnel;
-import org.fabric3.spi.invocation.CallFrame;
 import org.fabric3.spi.component.TargetInvocationException;
-import org.fabric3.spi.invocation.WorkContext;
+import org.fabric3.spi.invocation.CallFrame;
+import org.fabric3.spi.invocation.Message;
 import org.fabric3.spi.invocation.MessageImpl;
+import org.fabric3.spi.invocation.WorkContext;
 import org.fabric3.spi.wire.Interceptor;
 import org.fabric3.spi.wire.InvocationChain;
-import org.fabric3.spi.invocation.Message;
 
 /**
  * Abstract callback handler implementation. Concrete classes must implement a strategy for mapping the callback target chain for the invoked callback
@@ -51,18 +50,12 @@ public abstract class AbstractCallbackInvocationHandler<T> implements Invocation
         this.interfaze = interfaze;
     }
 
-    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-        WorkContext workContext = PojoWorkContextTunnel.getThreadWorkContext();
+    protected Object invoke(InvocationChain chain, Object[] args, WorkContext workContext) throws Throwable {
         // Pop the call frame as we move back in the request stack. When the invocation is made on the callback target, the same call frame state
         // will be present as existed when the initial forward request to this proxy's instance was dispatched to. Consequently,
         // CallFrame#getForwardCorrelaltionId() will return the correlation id for the callback target.
         CallFrame frame = workContext.popCallFrame();
 
-        // find the invocation chain for the invoked operation
-        InvocationChain chain = getChain(frame, method);
-        if (chain == null) {
-            return handleProxyMethod(method);
-        }
         Interceptor headInterceptor = chain.getHeadInterceptor();
         assert headInterceptor != null;
 
@@ -96,9 +89,7 @@ public abstract class AbstractCallbackInvocationHandler<T> implements Invocation
         }
     }
 
-    protected abstract InvocationChain getChain(CallFrame frame, Method method);
-
-    private Object handleProxyMethod(Method method) throws TargetInvocationException {
+    protected Object handleProxyMethod(Method method) throws TargetInvocationException {
         if (method.getParameterTypes().length == 0 && "toString".equals(method.getName())) {
             return "[Proxy - " + Integer.toHexString(hashCode()) + "]";
         } else if (method.getDeclaringClass().equals(Object.class)

@@ -30,8 +30,8 @@ import org.osoa.sca.CallableReference;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.fabric.wire.NoMethodForOperationException;
-import org.fabric3.scdl.Scope;
 import org.fabric3.spi.ObjectFactory;
+import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.wire.InvocationChain;
@@ -57,12 +57,12 @@ public class JDKProxyService implements ProxyService {
         return new WireObjectFactory<T>(interfaze, conversational, callbackUri, this, mappings);
     }
 
-    public <T> ObjectFactory<T> createCallbackObjectFactory(Class<T> interfaze, Scope sourceScope, URI targetUri, Wire wire)
+    public <T> ObjectFactory<T> createCallbackObjectFactory(Class<T> interfaze, ScopeContainer container, URI targetUri, Wire wire)
             throws ProxyCreationException {
         Map<Method, InvocationChain> operationMappings = createInterfaceToWireMapping(interfaze, wire);
         Map<String, Map<Method, InvocationChain>> mappings = new HashMap<String, Map<Method, InvocationChain>>();
         mappings.put(targetUri.toString(), operationMappings);
-        return new CallbackWireObjectFactory<T>(interfaze, sourceScope, this, mappings);
+        return new CallbackWireObjectFactory<T>(interfaze, container, this, mappings);
     }
 
     public <T> T createProxy(Class<T> interfaze, boolean conversational, String callbackUri, Map<Method, InvocationChain> mappings)
@@ -77,9 +77,9 @@ public class JDKProxyService implements ProxyService {
         return interfaze.cast(Proxy.newProxyInstance(cl, new Class[]{interfaze}, handler));
     }
 
-    public <T> T createStatefullCallbackProxy(Class<T> interfaze, Map<Method, InvocationChain> mapping) {
+    public <T> T createStatefullCallbackProxy(Class<T> interfaze, Map<Method, InvocationChain> mapping, ScopeContainer<?> container) {
         ClassLoader cl = interfaze.getClassLoader();
-        StatefulCallbackInvocationHandler<T> handler = new StatefulCallbackInvocationHandler<T>(interfaze, mapping);
+        StatefulCallbackInvocationHandler<T> handler = new StatefulCallbackInvocationHandler<T>(interfaze, container, mapping);
         return interfaze.cast(Proxy.newProxyInstance(cl, new Class[]{interfaze}, handler));
     }
 

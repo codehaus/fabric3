@@ -21,7 +21,9 @@ package org.fabric3.fabric.wire.jdk;
 import java.lang.reflect.Method;
 import java.util.Map;
 
+import org.fabric3.pojo.PojoWorkContextTunnel;
 import org.fabric3.spi.invocation.CallFrame;
+import org.fabric3.spi.invocation.WorkContext;
 import org.fabric3.spi.wire.InvocationChain;
 
 /**
@@ -37,25 +39,31 @@ public class MultiThreadedCallbackInvocationHandler<T> extends AbstractCallbackI
     private Map<String, Map<Method, InvocationChain>> mappings;
 
     /**
-     * Constructor.
+     * Constructor. In multi-threaded instances such as composite scoped components, multiple forward invocations may be received simultaneously. As a
+     * result, since callback proxies stored in instance variables may represent multiple clients, they must map the correct one for the request being
+     * processed on the current thread. The mappings parameter keys a callback URI representing the client to the set of invocation chains for the
+     * callback service.
      *
-     * @param interfaze      the callback service interface implemented by the proxy
-     * @param mappings       the callback URI to invocation chain mappings
+     * @param interfaze the callback service interface implemented by the proxy
+     * @param mappings  the callback URI to invocation chain mappings
      */
     public MultiThreadedCallbackInvocationHandler(Class<T> interfaze, Map<String, Map<Method, InvocationChain>> mappings) {
         super(interfaze);
         this.mappings = mappings;
     }
 
-    protected InvocationChain getChain(CallFrame frame, Method method) {
+    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+        WorkContext workContext = PojoWorkContextTunnel.getThreadWorkContext();
+        CallFrame frame = workContext.peekCallFrame();
         String callbackUri = frame.getCallbackUri();
-        // In multi-threaded instances such as composite scoped components, multiple forward invocations may be received simultaneously.
-        // As a result, since callback proxies stored in instance variables may represent multiple clients, they must map the correct one for the
-        // request being processed on the current thread.
         Map<Method, InvocationChain> chains = mappings.get(callbackUri);
         // find the invocation chain for the invoked operation
-        return chains.get(method);
+        InvocationChain chain = chains.get(method);
+        // find the invocation chain for the invoked operation
+        if (chain == null) {
+            return handleProxyMethod(method);
+        }
+        return super.invoke(chain, args, workContext);
     }
-
 
 }

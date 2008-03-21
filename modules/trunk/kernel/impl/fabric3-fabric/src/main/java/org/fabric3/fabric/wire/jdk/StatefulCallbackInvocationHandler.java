@@ -21,8 +21,10 @@ package org.fabric3.fabric.wire.jdk;
 import java.lang.reflect.Method;
 import java.util.Map;
 
+import org.fabric3.pojo.PojoWorkContextTunnel;
+import org.fabric3.spi.component.ScopeContainer;
+import org.fabric3.spi.invocation.WorkContext;
 import org.fabric3.spi.wire.InvocationChain;
-import org.fabric3.spi.invocation.CallFrame;
 
 /**
  * Responsible for dispatching to a callback service from a component implementation instance that is not composite scope. Since only one client can
@@ -33,6 +35,7 @@ import org.fabric3.spi.invocation.CallFrame;
  */
 public class StatefulCallbackInvocationHandler<T> extends AbstractCallbackInvocationHandler<T> {
     private Map<Method, InvocationChain> chains;
+    private ScopeContainer scopeContainer;
 
     /**
      * Constructor.
@@ -45,8 +48,33 @@ public class StatefulCallbackInvocationHandler<T> extends AbstractCallbackInvoca
         this.chains = chains;
     }
 
-
-    protected InvocationChain getChain(CallFrame frame, Method method) {
-        return chains.get(method);
+    /**
+     * Constructor.
+     *
+     * @param interfaze      the callback service interface implemented by the proxy
+     * @param scopeContainer the conversational scope container
+     * @param chains         the invocation chain mappings for the callback wire
+     */
+    public StatefulCallbackInvocationHandler(Class<T> interfaze, ScopeContainer<?> scopeContainer, Map<Method, InvocationChain> chains) {
+        super(interfaze);
+        this.scopeContainer = scopeContainer;
+        this.chains = chains;
     }
+
+    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+        WorkContext workContext = PojoWorkContextTunnel.getThreadWorkContext();
+        // find the invocation chain for the invoked operation
+        InvocationChain chain = chains.get(method);
+        if (chain == null) {
+            return handleProxyMethod(method);
+        }
+        try {
+            return super.invoke(chain, args, workContext);
+        } finally {
+            if (chain.getPhysicalOperation().isEndsConversation()) {
+                scopeContainer.stopContext(workContext);
+            }
+        }
+    }
+
 }

@@ -25,6 +25,7 @@ import org.fabric3.pojo.PojoWorkContextTunnel;
 import org.fabric3.scdl.Scope;
 import org.fabric3.spi.ObjectCreationException;
 import org.fabric3.spi.ObjectFactory;
+import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.invocation.CallFrame;
 import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.ProxyService;
@@ -35,7 +36,7 @@ import org.fabric3.spi.wire.ProxyService;
  * @version $Rev$ $Date$
  */
 public class CallbackWireObjectFactory<T> implements ObjectFactory<T> {
-    private Scope sourceScope;
+    private ScopeContainer<?> container;
     private ProxyService proxyService;
     private Map<String, Map<Method, InvocationChain>> mappings;
     private Class<T> interfaze;
@@ -44,22 +45,22 @@ public class CallbackWireObjectFactory<T> implements ObjectFactory<T> {
      * Constructor.
      *
      * @param interfaze    the proxy interface
-     * @param sourceScope  the scope of the component implementation the proxy will be injected on
+     * @param container    the scope container of the component implementation the proxy will be injected on
      * @param proxyService the service for creating proxies
      * @param mappings     the callback URI to invocation chain mappings
      */
     public CallbackWireObjectFactory(Class<T> interfaze,
-                                     Scope sourceScope,
+                                     ScopeContainer<?> container,
                                      ProxyService proxyService,
                                      Map<String, Map<Method, InvocationChain>> mappings) {
         this.interfaze = interfaze;
-        this.sourceScope = sourceScope;
+        this.container = container;
         this.proxyService = proxyService;
         this.mappings = mappings;
     }
 
     public T getInstance() throws ObjectCreationException {
-        if (Scope.COMPOSITE.equals(sourceScope)) {
+        if (Scope.COMPOSITE.equals(container.getScope())) {
             return interfaze.cast(proxyService.createCallbackProxy(interfaze, mappings));
         } else {
             CallFrame frame = PojoWorkContextTunnel.getThreadWorkContext().peekCallFrame();
@@ -67,7 +68,7 @@ public class CallbackWireObjectFactory<T> implements ObjectFactory<T> {
             assert callbackUri != null;
             Map<Method, InvocationChain> mapping = mappings.get(callbackUri);
             assert mapping != null;
-            return interfaze.cast(proxyService.createStatefullCallbackProxy(interfaze, mapping));
+            return interfaze.cast(proxyService.createStatefullCallbackProxy(interfaze, mapping, container));
         }
     }
 

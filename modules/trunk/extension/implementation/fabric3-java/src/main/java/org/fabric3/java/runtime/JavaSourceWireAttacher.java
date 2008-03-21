@@ -26,11 +26,11 @@ import org.fabric3.java.provision.JavaWireTargetDefinition;
 import org.fabric3.pojo.wire.PojoSourceWireAttacher;
 import org.fabric3.scdl.InjectableAttribute;
 import org.fabric3.scdl.InjectableAttributeType;
-import org.fabric3.scdl.Scope;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.SourceWireAttacher;
 import org.fabric3.spi.builder.component.WireAttachException;
+import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 import org.fabric3.spi.runtime.component.ComponentManager;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
@@ -79,8 +79,8 @@ public class JavaSourceWireAttacher extends PojoSourceWireAttacher implements So
         }
         if (InjectableAttributeType.CALLBACK.equals(injectableAttribute.getValueType())) {
             URI targetUri = targetDefinition.getUri();
-            Scope scope = source.getScopeContainer().getScope();
-            ObjectFactory<?> factory = proxyService.createCallbackObjectFactory(type, scope, targetUri, wire);
+            ScopeContainer<?> container = source.getScopeContainer();
+            ObjectFactory<?> factory = proxyService.createCallbackObjectFactory(type, container, targetUri, wire);
             // JFM TODO inject updates to object factory as this does not support a proxy fronting multiple callback wires
             source.setObjectFactory(injectableAttribute, factory);
         } else {

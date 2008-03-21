@@ -25,7 +25,7 @@ import java.util.Map;
 import org.osoa.sca.CallableReference;
 
 import org.fabric3.spi.ObjectFactory;
-import org.fabric3.scdl.Scope;
+import org.fabric3.spi.component.ScopeContainer;
 
 /**
  * Creates proxies that implement Java interfaces and invocation handlers for fronting wires
@@ -49,14 +49,14 @@ public interface ProxyService {
     /**
      * Create an ObjectFactory that provides proxies for the callback wire.
      *
-     * @param interfaze      the interface the proxy implements
-     * @param sourceScope    the the scope of the component implementation where proxies created by the object factory will be injected
-     * @param targetUri      the callback service uri
-     * @param wire           the wire to proxy
+     * @param interfaze the interface the proxy implements
+     * @param container the the scope container that manages component implementations where proxies created by the object factory will be injected
+     * @param targetUri the callback service uri
+     * @param wire      the wire to proxy
      * @return an ObjectFactory that will create proxies
      * @throws ProxyCreationException if there was a problem creating the proxy
      */
-    <T> ObjectFactory<T> createCallbackObjectFactory(Class<T> interfaze, Scope sourceScope, URI targetUri, Wire wire)
+    <T> ObjectFactory<T> createCallbackObjectFactory(Class<T> interfaze, ScopeContainer container, URI targetUri, Wire wire)
             throws ProxyCreationException;
 
     /**
@@ -75,8 +75,8 @@ public interface ProxyService {
     /**
      * Creates a Java proxy for the callback invocations chains.
      *
-     * @param interfaze      the interface the proxy should implement
-     * @param mappings       the invocation chain mappings keyed by target URI @return the proxy
+     * @param interfaze the interface the proxy should implement
+     * @param mappings  the invocation chain mappings keyed by target URI @return the proxy
      * @return the proxy instance
      * @throws ProxyCreationException if an error is encountered during proxy generation
      */
@@ -86,11 +86,12 @@ public interface ProxyService {
     /**
      * Creates a callback proxy that allways returns to the same target service
      *
-     * @param interfaze      the service interface
-     * @param mapping        the invocation chain mapping for the callback service
+     * @param interfaze the service interface
+     * @param mapping   the invocation chain mapping for the callback service
+     * @param container the scope container that manages the implementation instance the proxy is injected on
      * @return the proxy instance
      */
-    <T> T createStatefullCallbackProxy(Class<T> interfaze, Map<Method, InvocationChain> mapping);
+    <T> T createStatefullCallbackProxy(Class<T> interfaze, Map<Method, InvocationChain> mapping, ScopeContainer<?> container);
 
     /**
      * Cast a proxy to a CallableReference.
