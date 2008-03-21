@@ -31,7 +31,7 @@
         <system:implementation.system class="org.fabric3.xapool.XaPoolDataSource"/>
         <property name="driver" source="$dataSourceConfig//driver"/>
         <property name="url" source="$dataSourceConfig//url"/>
-        <property name="dataSourceKey" source="$dataSourceConfig//key"/>
+        <property name="dataSourceKeys" source="$dataSourceConfig//keys"/>
         <property name="user" source="$dataSourceConfig//user"/>
         <property name="password" source="$dataSourceConfig//password"/>
     </component>

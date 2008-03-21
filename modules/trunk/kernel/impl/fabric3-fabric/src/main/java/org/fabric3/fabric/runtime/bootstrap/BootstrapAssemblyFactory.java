@@ -128,6 +128,7 @@ import org.fabric3.system.provision.SystemWireTargetDefinition;
 import org.fabric3.transform.DefaultTransformerRegistry;
 import org.fabric3.transform.dom2java.String2Class;
 import org.fabric3.transform.dom2java.String2Integer;
+import org.fabric3.transform.dom2java.String2List;
 import org.fabric3.transform.dom2java.String2Map;
 import org.fabric3.transform.dom2java.String2QName;
 import org.fabric3.transform.dom2java.String2String;
@@ -220,6 +221,7 @@ public class BootstrapAssemblyFactory {
         transformerRegistry.register(new String2Map());
         transformerRegistry.register(new String2Class(classLoaderRegistry));
         transformerRegistry.register(new String2QName());
+        transformerRegistry.register(new String2List());
 
         ComponentBuilderRegistry registry = new DefaultComponentBuilderRegistry();
 

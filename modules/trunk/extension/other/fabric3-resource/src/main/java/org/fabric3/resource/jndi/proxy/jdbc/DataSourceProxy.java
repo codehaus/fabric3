@@ -21,6 +21,7 @@ package org.fabric3.resource.jndi.proxy.jdbc;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.List;
 
 import javax.naming.NamingException;
 import javax.sql.DataSource;
@@ -39,11 +40,11 @@ import org.osoa.sca.annotations.Reference;
 public class DataSourceProxy extends AbstractProxy<DataSource> implements DataSource {
     
     private DataSourceRegistry dataSourceRegistry;
-    private String dataSourceKey;
+    private List<String> dataSourceKeys;
 
     @Property
-    public void setDataSourceKey(String dataSourceKey) {
-        this.dataSourceKey = dataSourceKey;
+    public void setDataSourceKeys(List<String> dataSourceKeys) {
+        this.dataSourceKeys = dataSourceKeys;
     }
 
     @Reference
@@ -54,9 +55,10 @@ public class DataSourceProxy extends AbstractProxy<DataSource> implements DataSo
     @Override
     @Init
     public void init() throws NamingException {
-        // TODO change this to map reference once re-evaluating references are done
         super.init();
-        dataSourceRegistry.registerDataSource(dataSourceKey, this);
+        for (String dataSourceKey : dataSourceKeys) {
+            dataSourceRegistry.registerDataSource(dataSourceKey, this);
+        }
     }
 
     public Connection getConnection() throws SQLException {

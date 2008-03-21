@@ -19,6 +19,7 @@ package org.fabric3.xapool;
 import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.SQLException;
+import java.util.List;
 
 import javax.sql.DataSource;
 import javax.transaction.TransactionManager;
@@ -40,7 +41,7 @@ public class XaPoolDataSource implements DataSource {
     private String password;
     private String url;
     private String driver;
-    private String dataSourceKey;
+    private List<String> dataSourceKeys;
 
     private StandardXADataSource delegate;
     private TransactionManager transactionManager;
@@ -66,9 +67,9 @@ public class XaPoolDataSource implements DataSource {
         delegate.setLogWriter(out);
     }
 
-    @Property
-    public void setDataSourceKey(String dataSourceKey) {
-        this.dataSourceKey = dataSourceKey;
+    @Property(required = true)
+    public void setDataSourceKeys(List<String> dataSourceKeys) {
+        this.dataSourceKeys = dataSourceKeys;
     }
 
     @Property
@@ -116,7 +117,9 @@ public class XaPoolDataSource implements DataSource {
         delegate.setPassword(password);
         delegate.setUser(user);
 
-        dataSourceRegistry.registerDataSource(dataSourceKey, this);
+        for (String dataSourceKey : dataSourceKeys) {
+            dataSourceRegistry.registerDataSource(dataSourceKey, this);
+        }
 
     }
 

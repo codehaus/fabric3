@@ -3,7 +3,7 @@
     <testDsConfig>
         <driver>org.apache.derby.jdbc.EmbeddedDriver</driver>
         <url>jdbc:derby:testDB;create=true</url>
-        <key>EmployeeDS</key>
+        <keys>EmployeeDS</keys>
     </testDsConfig>
 
 </config>
