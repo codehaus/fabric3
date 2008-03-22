@@ -27,7 +27,7 @@
     
     <groupId>org.codehaus.fabric3</groupId>
     <artifactId>fabric3-resource</artifactId>
-    <version>0.5-SNAPSHOT</version>
+    <version>0.5-ALPHA-1</version>
     <name>Fabric3 Resource</name>
     <description>Fabric3 Resource Framework.</description>
     <packaging>sca-contribution-jar</packaging>
@@ -125,9 +125,9 @@
     </build>
 
     <scm>
-        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/extension/other/fabric3-resource</connection>
-        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/trunk/extension/other/fabric3-resource</developerConnection>
-        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/trunk/extension/other/fabric3-resource</url>
+        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/tags/binding-test-harness-0.5-ALPHA-1</connection>
+        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/tags/binding-test-harness-0.5-ALPHA-1</developerConnection>
+        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/tags/binding-test-harness-0.5-ALPHA-1</url>
     </scm>
 
 </project>
