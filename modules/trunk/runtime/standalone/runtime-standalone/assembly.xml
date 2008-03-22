@@ -83,6 +83,7 @@
                 <include>org.codehaus.fabric3:fabric3-introspection-spi</include>
                 <include>org.codehaus.fabric3:fabric3-introspection</include>
                 <include>org.codehaus.fabric3:fabric3-spi</include>
+                <include>org.codehaus.fabric3:fabric3-xmlfactory</include>
                 <include>org.codehaus.fabric3:fabric3-util</include>
                 <include>org.codehaus.fabric3:fabric3-jmx</include>
                 <include>org.codehaus.fabric3:fabric3-policy-spi</include>
@@ -91,6 +92,7 @@
                 <include>org.codehaus.fabric3:fabric3-loader</include>
                 <include>org.codehaus.fabric3:fabric3-policy</include>
                 <include>org.codehaus.fabric3:fabric3-fabric</include>
+                <include>org.codehaus.fabric3:fabric3-system</include>
                 <include>org.codehaus.fabric3:fabric3-java</include>
                 <include>org.codehaus.fabric3:fabric3-loader</include>
                 <include>org.codehaus.fabric3.standalone:fabric3-standalone-host</include>
