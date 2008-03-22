@@ -27,7 +27,7 @@
 
     <groupId>org.codehaus.fabric3</groupId>
     <artifactId>fabric3-binding-ws-axis2</artifactId>
-    <version>0.5-SNAPSHOT</version>
+    <version>0.5-ALPHA-1</version>
     <packaging>sca-contribution-jar</packaging>
     <name>Fabric3 WS Binding (Axis2)</name>
     <description>Fabric3 WS Binding Implementation using Axis2.</description>
@@ -209,9 +209,9 @@
     </build>
 
     <scm>
-        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/extension/binding/fabric3-binding-ws-axis2</connection>
-        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/trunk/extension/binding/fabric3-binding-ws-axis2</developerConnection>
-        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/trunk/extension/binding/fabric3-binding-ws-axis2</url>
+        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/tags/binding-test-harness-0.5-ALPHA-1</connection>
+        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/tags/binding-test-harness-0.5-ALPHA-1</developerConnection>
+        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/tags/binding-test-harness-0.5-ALPHA-1</url>
     </scm>
 
 </project>

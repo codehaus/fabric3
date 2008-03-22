@@ -24,7 +24,7 @@
     </parent>
     <groupId>org.codehaus.fabric3.webapp</groupId>
     <artifactId>fabric3-webapp-host</artifactId>
-    <version>0.5-SNAPSHOT</version>
+    <version>0.5-ALPHA-1</version>
     <name>Fabric3 Webapp Runtime Host</name>
     <description>Fabric3 Webapp Runtime Host.</description>
 
@@ -117,9 +117,9 @@
     </dependencies>
 
     <scm>
-        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/runtime/wenapp/fabric3-webapp-host</connection>
-        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/trunk/runtime/webapp/fabric3-webapp-host</developerConnection>
-        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/trunk/runtime/webapp/fabric3-webapp-host</url>
+        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/tags/binding-test-harness-0.5-ALPHA-1</connection>
+        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/tags/binding-test-harness-0.5-ALPHA-1</developerConnection>
+        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/tags/binding-test-harness-0.5-ALPHA-1</url>
     </scm>
 
 </project>
