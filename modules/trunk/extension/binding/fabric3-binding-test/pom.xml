@@ -25,7 +25,7 @@
     </parent>
     <groupId>org.codehaus.fabric3</groupId>
     <artifactId>fabric3-binding-test</artifactId>
-    <version>0.5-SNAPSHOT</version>
+    <version>0.5ALPHA1-SNAPSHOT</version>
     <name>Fabric3 Test Binding Implementation</name>
     <packaging>sca-contribution-jar</packaging>
     <description>Provides a test binding</description>

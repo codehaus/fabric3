@@ -33,7 +33,7 @@
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-xapool</artifactId>
-            <version>0.5-SNAPSHOT</version>
+            <version>0.5ALPHA1-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.apache.derby</groupId>

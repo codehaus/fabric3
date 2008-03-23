@@ -27,7 +27,7 @@
     
     <groupId>org.codehaus.fabric3</groupId>
     <artifactId>fabric3-jpa-hibernate</artifactId>
-    <version>0.5-SNAPSHOT</version>
+    <version>0.5ALPHA1-SNAPSHOT</version>
     <name>Fabric3 JPA Integration (Hibernate)</name>
     <description>Fabric3 JPA Integration (Hibernate).</description>
     

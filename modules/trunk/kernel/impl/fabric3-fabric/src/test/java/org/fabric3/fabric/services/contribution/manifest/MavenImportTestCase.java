@@ -26,36 +26,36 @@ public class MavenImportTestCase extends TestCase {
     public void testParse1() {
         MavenImport imprt = new MavenImport();
         imprt.setVersion("4.0.2");
-        assertEquals(4,imprt.getMajorVersion());
-        assertEquals(0,imprt.getMinorVersion());
-        assertEquals(2,imprt.getRevision());
+        assertEquals("4",imprt.getMajorVersion());
+        assertEquals("0",imprt.getMinorVersion());
+        assertEquals("2",imprt.getRevision());
     }
 
     public void testParse2() {
         MavenImport imprt = new MavenImport();
         imprt.setVersion("4.0");
-        assertEquals(4,imprt.getMajorVersion());
-        assertEquals(0,imprt.getMinorVersion());
+        assertEquals("4",imprt.getMajorVersion());
+        assertEquals("0",imprt.getMinorVersion());
     }
 
     public void testParse3() {
         MavenImport imprt = new MavenImport();
         imprt.setVersion("4");
-        assertEquals(4,imprt.getMajorVersion());
+        assertEquals("4",imprt.getMajorVersion());
     }
 
     public void testParse4() {
         MavenImport imprt = new MavenImport();
         imprt.setVersion("4.0.2-SNAPSHOT");
-        assertEquals(4,imprt.getMajorVersion());
-        assertEquals(0,imprt.getMinorVersion());
-        assertEquals(2,imprt.getRevision());
+        assertEquals("4",imprt.getMajorVersion());
+        assertEquals("0",imprt.getMinorVersion());
+        assertEquals("2",imprt.getRevision());
     }
     public void testParse5() {
         MavenImport imprt = new MavenImport();
         imprt.setVersion("4.0-SNAPSHOT");
-        assertEquals(4,imprt.getMajorVersion());
-        assertEquals(0,imprt.getMinorVersion());
+        assertEquals("4",imprt.getMajorVersion());
+        assertEquals("0",imprt.getMinorVersion());
     }
 
 }

@@ -24,7 +24,7 @@
     </parent>
     <groupId>org.codehaus.fabric3</groupId>
     <artifactId>fabric3-bpel</artifactId>
-    <version>0.5-SNAPSHOT</version>
+    <version>0.5ALPHA1-SNAPSHOT</version>
     <name>Fabric3 BPEL</name>
     <description>Fabric3 BPEL Implementation Type Extension.</description>
     <packaging>sca-contribution-jar</packaging>

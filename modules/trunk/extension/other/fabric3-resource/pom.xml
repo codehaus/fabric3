@@ -27,7 +27,7 @@
     
     <groupId>org.codehaus.fabric3</groupId>
     <artifactId>fabric3-resource</artifactId>
-    <version>0.5-SNAPSHOT</version>
+    <version>0.5ALPHA1-SNAPSHOT</version>
     <name>Fabric3 Resource</name>
     <description>Fabric3 Resource Framework.</description>
     <packaging>sca-contribution-jar</packaging>

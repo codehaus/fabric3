@@ -34,9 +34,9 @@ public class MavenImport extends Import {
     private String artifactId;
     private String version = "unspecified";
     private String classifier = "jar";
-    private int majorVersion = -1;
-    private int minorVersion = -1;
-    private int revision = -1;
+    private String majorVersion = "";
+    private String minorVersion = "";
+    private String revision = "";
     private boolean snapshot;
 
     public String getGroupId() {
@@ -64,15 +64,15 @@ public class MavenImport extends Import {
         parseVersion();
     }
 
-    public int getMajorVersion() {
+    public String getMajorVersion() {
         return majorVersion;
     }
 
-    public int getMinorVersion() {
+    public String getMinorVersion() {
         return minorVersion;
     }
 
-    public int getRevision() {
+    public String getRevision() {
         return revision;
     }
 
@@ -93,28 +93,28 @@ public class MavenImport extends Import {
     }
 
     private void parseVersion() {
-        majorVersion = -1;
-        minorVersion = -1;
-        revision = -1;
+        majorVersion = "";
+        minorVersion = "";
+        revision = "";
         snapshot = false;
         String[] tokens = version.split("\\.|\\-");
         if (tokens.length < 2) {
-            majorVersion = Integer.parseInt(version);
+            majorVersion = version;
         } else if (tokens.length == 2) {
-            majorVersion = Integer.parseInt(tokens[0]);
-            minorVersion = Integer.parseInt(tokens[1]);
+            majorVersion = tokens[0];
+            minorVersion = tokens[1];
         } else if (tokens.length == 3) {
-            majorVersion = Integer.parseInt(tokens[0]);
-            minorVersion = Integer.parseInt(tokens[1]);
+            majorVersion = tokens[0];
+            minorVersion = tokens[1];
             if (!tokens[2].equals("SNAPSHOT")) {
-                revision = Integer.parseInt(tokens[2]);
+                revision = tokens[2];
             } else {
                 snapshot = true;
             }
         } else if (tokens.length == 4) {
-            majorVersion = Integer.parseInt(tokens[0]);
-            minorVersion = Integer.parseInt(tokens[1]);
-            revision = Integer.parseInt(tokens[2]);
+            majorVersion = tokens[0];
+            minorVersion = tokens[1];
+            revision = tokens[2];
             snapshot = true;
         } else {
             throw new IllegalArgumentException("Illegal Maven version number :" + version);

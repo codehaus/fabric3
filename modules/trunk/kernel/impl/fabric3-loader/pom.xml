@@ -24,7 +24,7 @@
     </parent>
     <groupId>org.codehaus.fabric3</groupId>
     <artifactId>fabric3-loader</artifactId>
-    <version>0.5-SNAPSHOT</version>
+    <version>0.5ALPHA1-SNAPSHOT</version>
     <name>Fabric3 SCDL Loader</name>
     <description>Fabric3 loader for SCDL XML files.</description>
 

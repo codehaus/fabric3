@@ -24,7 +24,7 @@
     </parent>
     <groupId>org.codehaus.fabric3.standalone</groupId>
     <artifactId>fabric3-standalone-server</artifactId>
-    <version>0.5-SNAPSHOT</version>
+    <version>0.5ALPHA1-SNAPSHOT</version>
     <name>Fabric3 Standalone Runtime Server</name>
     <description>Fabric3 Standalone Runtime Server Start Command.</description>
 

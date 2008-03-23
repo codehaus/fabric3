@@ -28,7 +28,7 @@
     </parent>
 
     <artifactId>runtime-standalone</artifactId>
-    <version>0.5-SNAPSHOT</version>
+    <version>0.5ALPHA1-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>Fabric3 Standalone Server Assembly</name>
     <description>Assembly distribution for Fabric3 Standalone Server.</description>
