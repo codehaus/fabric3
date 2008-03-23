@@ -24,7 +24,7 @@
     </parent>
     <groupId>org.codehaus.fabric3</groupId>
     <artifactId>fabric3-itest-plugin</artifactId>
-    <version>0.5ALPHA2-SNAPSHOT</version>
+    <version>0.5ALPHA1</version>
     <packaging>maven-plugin</packaging>
     <name>Fabric3 Integration Test Maven Plugin</name>
     <description>Fabric3 Integration Test Maven Plugin.</description>
@@ -177,8 +177,8 @@
     </reporting>
 
     <scm>
-        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/plugin/fabric3-itest-plugin</connection>
-        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/trunk/plugin/fabric3-itest-plugin</developerConnection>
-        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/trunk/plugin/fabric3-itest-plugin</url>
+        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/tags/binding-test-harness-0.5ALPHA1</connection>
+        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/tags/binding-test-harness-0.5ALPHA1</developerConnection>
+        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/tags/binding-test-harness-0.5ALPHA1</url>
     </scm>
 </project>

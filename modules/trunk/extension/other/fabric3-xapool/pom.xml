@@ -24,7 +24,7 @@
     </parent>
     <groupId>org.codehaus.fabric3</groupId>
     <artifactId>fabric3-xapool</artifactId>
-    <version>0.5ALPHA2-SNAPSHOT</version>
+    <version>0.5ALPHA1</version>
     <name>Fabric3 XA Pool DB Extension</name>
     <description>Fabric3 XA Pool DB Extension.</description>
     <packaging>jar</packaging>
@@ -67,9 +67,9 @@
     </dependencies>
 
     <scm>
-        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/extension/other/fabric3-xapool</connection>
-        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/trunk/extension/other/fabric3-xapool</developerConnection>
-        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/trunk/extension/other/fabric3-xapool</url>
+        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/tags/binding-test-harness-0.5ALPHA1</connection>
+        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/tags/binding-test-harness-0.5ALPHA1</developerConnection>
+        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/tags/binding-test-harness-0.5ALPHA1</url>
     </scm>
     
 </project>

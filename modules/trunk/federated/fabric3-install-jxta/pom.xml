@@ -28,7 +28,7 @@
     <groupId>org.codehaus.fabric3</groupId>
     <artifactId>fabric3-install-jxta</artifactId>
     <packaging>pom</packaging>
-    <version>0.5ALPHA2-SNAPSHOT</version>
+    <version>0.5ALPHA1</version>
     <name>Fabric3 JXTA Install</name>
     <description>Fabric3 Project to Install JXTA.</description>
 
@@ -58,9 +58,9 @@
     </build>
 
     <scm>
-        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/federated/fabric3-install-jxta</connection>
-        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/trunk/federated/fabric3-install-jxta</developerConnection>
-        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/trunk/federated/fabric3-install-jxta</url>
+        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/tags/binding-test-harness-0.5ALPHA1</connection>
+        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/tags/binding-test-harness-0.5ALPHA1</developerConnection>
+        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/tags/binding-test-harness-0.5ALPHA1</url>
     </scm>
 
 </project>

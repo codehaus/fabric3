@@ -24,7 +24,7 @@
     </parent>
     <groupId>org.codehaus.fabric3</groupId>
     <artifactId>fabric3-spring</artifactId>
-    <version>0.5ALPHA2-SNAPSHOT</version>
+    <version>0.5ALPHA1</version>
     <name>Fabric3 Spring</name>
     <description>Fabric3 Sping Implementation Type Extension.</description>
     <packaging>sca-contribution-jar</packaging>
@@ -88,9 +88,9 @@
     </build>
 
     <scm>
-        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/extension/implementation/fabric3-spring</connection>
-        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/trunk/extension/implementation/fabric3-spring</developerConnection>
-        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/trunk/extension/implementation/fabric3-spring</url>
+        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/tags/binding-test-harness-0.5ALPHA1</connection>
+        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/tags/binding-test-harness-0.5ALPHA1</developerConnection>
+        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/tags/binding-test-harness-0.5ALPHA1</url>
     </scm>
 
 </project>
