@@ -44,7 +44,7 @@
         <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/kernel/api/fabric3-api</connection>
         <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/trunk/kernel/api/fabric3-api</developerConnection>
         <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/trunk/kernel/api/fabric3-api</url>
-        <tag>https://svn.codehaus.org/fabric3/modules/tags</tag>
+        <tag>https://svn.codehaus.org/fabric3/modules/tags/fabric3-api</tag>
     </scm>
 
 </project>
