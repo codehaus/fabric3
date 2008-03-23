@@ -9,7 +9,7 @@
    http://www.apache.org/licenses/LICENSE-2.0
 
  Unless required by applicable law or agreed to in writing,
- software distributed under the License is distributed on an
+ software distributed under the License is distributed on an                 
  "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
  KIND, either express or implied.  See the License for the
  specific language governing permissions and limitations
@@ -23,36 +23,27 @@
         <version>4</version>
     </parent>
     <groupId>org.codehaus.fabric3</groupId>
-    <artifactId>fabric3-monitor</artifactId>
+    <artifactId>fabric3-monitor-api</artifactId>
     <version>0.5ALPHA1-SNAPSHOT</version>
-    <name>Fabric3 Monitor Support</name>
-    <description>Fabric3 Support for MonitorFactory implementations.</description>
+    <name>Fabric3 Monitor API</name>
+    <description>Fabric3 Monitor APIs for end user applications.</description>
 
     <dependencies>
         <dependency>
-            <groupId>org.codehaus.fabric3</groupId>
-            <artifactId>fabric3-api</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.codehaus.fabric3</groupId>
-            <artifactId>fabric3-monitor-api</artifactId>
-            <version>${project.version}</version>
+            <groupId>org.codehaus.fabric3.spec</groupId>
+            <artifactId>sca-api-r1.0</artifactId>
+            <version>0.2.1</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
         </dependency>
-        <dependency>
-            <groupId>org.easymock</groupId>
-            <artifactId>easymockclassextension</artifactId>
-        </dependency>
     </dependencies>
 
     <scm>
-        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/runtime/support/fabric3-monitor</connection>
-        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/trunk/runtime/support/fabric3-monitor</developerConnection>
-        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/trunk/runtime/support/fabric3-monitor</url>
+        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/kernel/api/fabric3-monitor-api</connection>
+        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/trunk/kernel/api/fabric3-monitor-api</developerConnection>
+        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/trunk/kernel/api/fabric3-monitor-api</url>
     </scm>
 
 </project>
