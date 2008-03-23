@@ -1,0 +1,94 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <!--parent>
+        <groupId>org.codehaus.fabric3</groupId>
+        <artifactId>fabric</artifactId>
+        <version>4</version>
+    </parent-->
+
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>org.codehaus.fabric3</groupId>
+    <artifactId>release</artifactId>
+    <version>0.5ALPHA1-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <name>Fabric3 Release</name>
+    <description>Fabric3 Release.</description>
+    
+	<modules>
+		<module>plugin/fabric3-contribution-plugin</module>
+		<module>extension/binding/binding-test-harness</module>
+		<module>kernel/api/fabric3-api</module>
+		<module>kernel/api/fabric3-monitor-api</module>
+		<module>kernel/api/fabric3-host-api</module>
+		<module>kernel/api/fabric3-scdl</module>
+		<module>kernel/api/fabric3-introspection-spi</module>
+		<module>kernel/services/fabric3-xmlfactory</module>
+		<module>kernel/api/fabric3-spi</module>
+		<module>extension/binding/fabric3-binding-burlap</module>
+		<module>kernel/impl/fabric3-pojo</module>
+		<module>extension/binding/fabric3-binding-rmi</module>
+		<module>extension/binding/fabric3-binding-ejb</module>
+		<module>extension/binding/fabric3-binding-hessian</module>
+		<module>extension/binding/fabric3-binding-http</module>
+		<module>extension/binding/fabric3-binding-jms</module>
+		<module>extension/binding/fabric3-binding-test</module>
+		<module>kernel/impl/fabric3-transform</module>
+		<module>extension/binding/fabric3-binding-ws</module>
+		<module>extension/binding/fabric3-binding-ws-axis2</module>
+		<module>extension/binding/fabric3-binding-ws-cxf</module>
+		<module>extension/implementation/fabric3-bpel</module>
+		<module>runtime/support/fabric3-monitor</module>
+		<module>kernel/impl/fabric3-loader</module>
+		<module>kernel/impl/fabric3-introspection</module>
+		<module>kernel/impl/fabric3-system</module>
+		<module>kernel/impl/fabric3-fabric</module>
+		<module>extension/implementation/fabric3-groovy</module>
+		<module>extension/implementation/fabric3-java</module>
+		<module>extension/implementation/fabric3-junit</module>
+		<module>extension/implementation/fabric3-mock</module>
+		<module>extension/implementation/fabric3-spring</module>
+		<module>extension/interface/fabric3-interface-wsdl</module>
+		<module>extension/other/fabric3-async-loader</module>
+		<module>extension/other/fabric3-async-runtime</module>
+		<module>extension/other/fabric3-console</module>
+		<module>extension/other/fabric3-contribution-scanner</module>
+		<module>extension/other/fabric3-contribution-scanner-spi</module>
+		<module>extension/other/fabric3-jetty</module>
+		<module>extension/other/fabric3-jpa-core</module>
+		<module>extension/other/fabric3-jpa-hibernate</module>
+		<module>extension/other/fabric3-jpa-spi</module>
+		<module>extension/other/fabric3-marshal-xstream</module>
+		<module>extension/other/fabric3-naming</module>
+		<module>extension/other/fabric3-resource</module>
+		<module>extension/other/fabric3-security</module>
+		<module>extension/other/fabric3-tx-jotm</module>
+		<module>extension/other/fabric3-tx</module>
+		<module>extension/other/fabric3-xapool</module>
+		<module>federated/fabric3-install-jxta</module>
+		<module>federated/fabric3-jxta</module>
+		<module>federated/fabric3-discovery-jxta</module>
+		<module>federated/fabric3-messaging-jxta</module>
+		<module>federated/fabric3-messaging</module>
+		<module>kernel/impl/fabric3-util</module>
+		<module>kernel/impl/fabric3-policy</module>
+		<module>runtime/maven/fabric3-maven-api</module>
+		<module>plugin/fabric3-itest-plugin</module>
+		<module>plugin/fabric3-webapp-plugin</module>
+		<module>runtime/maven/fabric3-maven-host</module>
+		<module>runtime/standalone/fabric3-jmx</module>
+		<module>runtime/standalone/fabric3-standalone-api</module>
+		<module>runtime/standalone/fabric3-standalone-host</module>
+		<module>runtime/standalone/fabric3-standalone-server</module>
+		<module>runtime/standalone/fabric3-standalone-shutdown</module>
+		<module>runtime/standalone/runtime-standalone</module>
+		<module>runtime/webapp/fabric3-webapp-api</module>
+		<module>runtime/webapp/fabric3-webapp-host</module>
+	</modules>
+
+    <scm>
+        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/</connection>
+        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/trunk/</developerConnection>
+        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/trunk/</url>
+    </scm>
+	
+</project>
