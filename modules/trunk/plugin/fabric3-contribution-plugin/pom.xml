@@ -24,7 +24,7 @@
 	</parent>
 	<groupId>org.codehaus.fabric3</groupId>
 	<artifactId>fabric3-contribution-plugin</artifactId>
-	<version>0.5ALPHA1</version>
+	<version>0.5ALPHA1-SNAPSHOT</version>
 	<packaging>maven-plugin</packaging>
 	<name>Fabric3 Contribution Plugin</name>
 	<description>Fabric3 Contribution Plugin.</description>
@@ -73,8 +73,8 @@
 	</build>
 
     <scm>
-        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/tags/binding-test-harness-0.5ALPHA1</connection>
-        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/tags/binding-test-harness-0.5ALPHA1</developerConnection>
-        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/tags/binding-test-harness-0.5ALPHA1</url>
+        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/plugin/fabric3-contribution-plugin</connection>
+        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/trunk/plugin/fabric3-contribution-plugin</developerConnection>
+        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/trunk/plugin/fabric3-contribution-plugin</url>
     </scm>
 </project>

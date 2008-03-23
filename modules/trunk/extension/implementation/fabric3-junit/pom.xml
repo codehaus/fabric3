@@ -24,7 +24,7 @@
     </parent>
     <groupId>org.codehaus.fabric3</groupId>
     <artifactId>fabric3-junit</artifactId>
-    <version>0.5ALPHA1</version>
+    <version>0.5ALPHA1-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>Fabric3 JUnit Extension</name>
     <description>Fabric3 JUnit Extension.</description>
@@ -41,9 +41,9 @@
     </dependencies>
 
     <scm>
-        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/tags/binding-test-harness-0.5ALPHA1</connection>
-        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/tags/binding-test-harness-0.5ALPHA1</developerConnection>
-        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/tags/binding-test-harness-0.5ALPHA1</url>
+        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/extension/implementation/fabric3-junit</connection>
+        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/trunk/extension/implementation/fabric3-junit</developerConnection>
+        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/trunk/extension/implementation/fabric3-junit</url>
     </scm>
 
 </project>
