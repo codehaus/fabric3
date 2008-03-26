@@ -51,15 +51,9 @@
 
 		<dependency>
 			<groupId>org.codehaus.fabric3</groupId>
-			<artifactId>fabric3-introspection-spi</artifactId>
-			<version>0.5-SNAPSHOT</version>
-		</dependency>
-
-		<dependency>
-			<groupId>org.codehaus.fabric3</groupId>
-			<artifactId>fabric3-extension</artifactId>
-			<version>0.5-SNAPSHOT</version>
-		</dependency>
+			<artifactId>fabric3-spi</artifactId>
+			<version>0.5ALPHA1-SNAPSHOT</version>
+		</dependency>	
 
 		<dependency>
 			<groupId>stax</groupId>
@@ -140,7 +134,7 @@
 			<plugin>
 				<groupId>org.codehaus.fabric3</groupId>
 				<artifactId>fabric3-contribution-plugin</artifactId>
-				<version>0.5-SNAPSHOT</version>
+				<version>0.5ALPHA1-SNAPSHOT</version>
 				<extensions>true</extensions>
 				<configuration>
 					<mavenImports>
