@@ -1,6 +1,6 @@
 <config>
     <testDsConfig>
-        <key>AQDataSource</key>
+        <keys>AQDataSource</keys>
         <driver>oracle.jdbc.driver.OracleDriver</driver>
         <url>{URL}</url>
         <user></user>
