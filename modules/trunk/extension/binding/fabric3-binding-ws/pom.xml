@@ -35,7 +35,7 @@
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-spi</artifactId>
-            <version>${project.version}</version>
+            <version>0.5ALPHA1</version>
             <scope>provided</scope>
         </dependency>
 
@@ -67,7 +67,7 @@
             <plugin>
                 <groupId>org.codehaus.fabric3</groupId>
                 <artifactId>fabric3-contribution-plugin</artifactId>
-                <version>${project.version}</version>
+                <version>0.5ALPHA1</version>
                 <extensions>true</extensions>
                 <configuration>
                     <mavenImports>
