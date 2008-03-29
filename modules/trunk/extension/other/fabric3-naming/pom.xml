@@ -27,7 +27,7 @@
     
     <groupId>org.codehaus.fabric3</groupId>
     <artifactId>fabric3-naming</artifactId>
-    <version>0.5ALPHA1-SNAPSHOT</version>
+    <version>0.5ALPHA1</version>
     <name>Fabric3 Naming</name>
     <description>Fabric3 JNDI Naming Support.</description>
     <packaging>sca-contribution-jar</packaging>
@@ -76,9 +76,9 @@
     </build>
 
     <scm>
-        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/extension/other/fabric3-naming</connection>
-        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/trunk/extension/other/fabric3-naming</developerConnection>
-        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/trunk/extension/other/fabric3-naming</url>
+        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/tags/fabric3-naming-0.5ALPHA1</connection>
+        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/tags/fabric3-naming-0.5ALPHA1</developerConnection>
+        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/tags/fabric3-naming-0.5ALPHA1</url>
     </scm>
 
 </project>
