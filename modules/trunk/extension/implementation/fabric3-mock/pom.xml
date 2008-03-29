@@ -27,7 +27,7 @@
 
     <groupId>org.codehaus.fabric3</groupId>
     <artifactId>fabric3-mock</artifactId>
-    <version>0.5ALPHA1</version>
+    <version>0.5ALPHA2-SNAPSHOT</version>
     <packaging>sca-contribution-jar</packaging>
     <name>Fabric3 Mock Extension</name>
     <description>Fabric3 extension for mocking references.</description>
@@ -104,9 +104,9 @@
     </build>
 
     <scm>
-        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/tags/fabric3-mock-0.5ALPHA1</connection>
-        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/tags/fabric3-mock-0.5ALPHA1</developerConnection>
-        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/tags/fabric3-mock-0.5ALPHA1</url>
+        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/extension/implementation/fabric3-mock</connection>
+        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/trunk/extension/implementation/fabric3-mock</developerConnection>
+        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/trunk/extension/implementation/fabric3-mock</url>
     </scm>
 
 </project>
