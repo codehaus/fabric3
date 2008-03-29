@@ -16,7 +16,7 @@
  */
 package org.fabric3.spi.policy;
 
-import java.util.Set;
+import java.util.List;
 
 import org.fabric3.scdl.Operation;
 import org.fabric3.scdl.definitions.PolicySet;
@@ -83,6 +83,6 @@ public interface PolicyResult {
      * @param operation Operation against which interceptors are defined.
      * @return Interceptors that are defined against the operation.
      */
-    public Set<PolicySet> getInterceptedPolicySets(Operation<?> operation);
+    public List<PolicySet> getInterceptedPolicySets(Operation<?> operation);
 
 }

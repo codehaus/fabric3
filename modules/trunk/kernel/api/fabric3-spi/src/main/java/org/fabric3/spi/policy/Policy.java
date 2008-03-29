@@ -16,7 +16,7 @@
  */
 package org.fabric3.spi.policy;
 
-import java.util.Set;
+import java.util.List;
 
 import org.fabric3.scdl.Operation;
 import org.fabric3.scdl.definitions.Intent;
@@ -34,7 +34,7 @@ public interface Policy {
      * @param operation Operation for which requested intents are provided.
      * @return Requested intents that are provided.
      */
-    public Set<Intent> getProvidedIntents(Operation<?> operation);
+    public List<Intent> getProvidedIntents(Operation<?> operation);
 
     /**
      * Policy sets that are provided by the binding or implemenenation for the
@@ -43,6 +43,6 @@ public interface Policy {
      * @param operation Operation for which requested intents are provided.
      * @return Resolved policy sets that are provided.
      */
-    public Set<PolicySet> getProvidedPolicySets(Operation<?> operation);
+    public List<PolicySet> getProvidedPolicySets(Operation<?> operation);
 
 }

@@ -19,6 +19,7 @@ package org.fabric3.fabric.model.physical;
 import java.net.URI;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -333,7 +334,7 @@ public class PhysicalWireGeneratorImpl implements PhysicalWireGenerator {
         for (Operation<?> operation : operations) {
             PhysicalOperationDefinition physicalOperation = physicalOperationHelper.mapOperation(operation);
             if (policyResult != null) {
-                Set<PolicySet> policies = policyResult.getInterceptedPolicySets(operation);
+                List<PolicySet> policies = policyResult.getInterceptedPolicySets(operation);
                 Set<PhysicalInterceptorDefinition> interceptors = generateInterceptorDefinitions(policies, operation, logicalBinding);
                 physicalOperation.setInterceptors(interceptors);
             }
@@ -345,7 +346,7 @@ public class PhysicalWireGeneratorImpl implements PhysicalWireGenerator {
     }
 
     @SuppressWarnings("unchecked")
-    private Set<PhysicalInterceptorDefinition> generateInterceptorDefinitions(Set<PolicySet> policies,
+    private Set<PhysicalInterceptorDefinition> generateInterceptorDefinitions(List<PolicySet> policies,
                                                                               Operation<?> operation,
                                                                               LogicalBinding<?> logicalBinding) throws GenerationException {
 
@@ -353,7 +354,7 @@ public class PhysicalWireGeneratorImpl implements PhysicalWireGenerator {
             return Collections.EMPTY_SET;
         }
 
-        Set<PhysicalInterceptorDefinition> interceptors = new HashSet<PhysicalInterceptorDefinition>();
+        Set<PhysicalInterceptorDefinition> interceptors = new LinkedHashSet<PhysicalInterceptorDefinition>();
         for (PolicySet policy : policies) {
             QName qName = policy.getExtensionName();
             InterceptorDefinitionGenerator idg = generatorRegistry.getInterceptorDefinitionGenerator(qName);

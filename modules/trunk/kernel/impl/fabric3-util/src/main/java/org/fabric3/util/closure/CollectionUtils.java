@@ -17,7 +17,7 @@
 package org.fabric3.util.closure;
 
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -49,7 +49,7 @@ public class CollectionUtils {
     
     public static <OBJECT> Set<OBJECT> filter(Set<OBJECT> source, Closure<OBJECT, Boolean> filter) {
         
-        HashSet<OBJECT> result = new HashSet<OBJECT>();
+        LinkedHashSet<OBJECT> result = new LinkedHashSet<OBJECT>();
         
         for (OBJECT object : source) {
             if (filter.execute(object)) {
@@ -63,7 +63,7 @@ public class CollectionUtils {
     
     public static <SOURCE, RESULT> Set<RESULT> transform(Set<SOURCE> source, Closure<SOURCE, RESULT> transformer) {
         
-        HashSet<RESULT> result = new HashSet<RESULT>();
+        LinkedHashSet<RESULT> result = new LinkedHashSet<RESULT>();
         
         for (SOURCE object : source) {
             result.add(transformer.execute(object));

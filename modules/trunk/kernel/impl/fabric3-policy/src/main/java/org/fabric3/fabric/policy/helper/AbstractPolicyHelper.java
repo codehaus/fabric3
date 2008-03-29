@@ -16,8 +16,8 @@
  */
 package org.fabric3.fabric.policy.helper;
 
-import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 import javax.xml.namespace.QName;
@@ -48,7 +48,7 @@ public class AbstractPolicyHelper {
      */
     protected Set<PolicySet> resolvePolicies(Set<Intent> requiredIntents, Element target, String operation) throws PolicyResolutionException {
 
-        Set<PolicySet> policies = new HashSet<PolicySet>();
+        Set<PolicySet> policies = new LinkedHashSet<PolicySet>();
         
         for (PolicySet policySet : definitionsRegistry.getAllDefinitions(PolicySet.class)) {
             Iterator<Intent> iterator = requiredIntents.iterator();
@@ -106,9 +106,9 @@ public class AbstractPolicyHelper {
 
         LogicalScaArtifact<?> temp = scaArtifact;
 
-        Set<QName> intentNames = new HashSet<QName>();
+        Set<QName> intentNames = new LinkedHashSet<QName>();
         while (temp != null) {
-            intentNames.addAll(scaArtifact.getIntents());
+            intentNames.addAll(temp.getIntents());
             temp = temp.getParent();
         }
         return intentNames;
@@ -120,7 +120,7 @@ public class AbstractPolicyHelper {
      */
     protected Set<Intent> resolveProfileIntents(Set<QName> intentNames) throws PolicyResolutionException {
 
-        Set<Intent> requiredIntents = new HashSet<Intent>();
+        Set<Intent> requiredIntents = new LinkedHashSet<Intent>();
 
         for (QName intentName : intentNames) {
 

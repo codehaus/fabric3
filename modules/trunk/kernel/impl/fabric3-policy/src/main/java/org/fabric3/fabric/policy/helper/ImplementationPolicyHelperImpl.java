@@ -17,7 +17,7 @@
 package org.fabric3.fabric.policy.helper;
 
 import java.util.Collections;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 import javax.xml.namespace.QName;
@@ -59,7 +59,7 @@ public class ImplementationPolicyHelperImpl extends AbstractPolicyHelper impleme
 
         Set<Intent> requiredIntents = getRequestedIntents(logicalComponent, operation);
         
-        Set<Intent> intentsToBeProvided = new HashSet<Intent>();
+        Set<Intent> intentsToBeProvided = new LinkedHashSet<Intent>();
         for(Intent intent : requiredIntents) {
             if(mayProvidedIntents.contains(intent.getName())) {
                 intentsToBeProvided.add(intent);
@@ -75,8 +75,8 @@ public class ImplementationPolicyHelperImpl extends AbstractPolicyHelper impleme
         QName type = implementation.getType();
         ImplementationType implementationType = definitionsRegistry.getDefinition(type, ImplementationType.class);
         
-        Set<QName> alwaysProvidedIntents = new HashSet<QName>();
-        Set<QName> mayProvidedIntents = new HashSet<QName>();
+        Set<QName> alwaysProvidedIntents = new LinkedHashSet<QName>();
+        Set<QName> mayProvidedIntents = new LinkedHashSet<QName>();
 
         // FIXME This should not happen, all implementation types should be registsred
         if(implementationType != null) {
@@ -106,7 +106,7 @@ public class ImplementationPolicyHelperImpl extends AbstractPolicyHelper impleme
     private Set<Intent> getRequestedIntents(LogicalComponent<?> logicalComponent, Operation<?> operation) throws PolicyResolutionException {
         
         // Aggregate all the intents from the ancestors
-        Set<QName> intentNames = new HashSet<QName>();
+        Set<QName> intentNames = new LinkedHashSet<QName>();
         intentNames.addAll(operation.getIntents());
         intentNames.addAll(logicalComponent.getDefinition().getImplementation().getIntents());
         intentNames.addAll(aggregateIntents(logicalComponent));

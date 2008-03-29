@@ -88,6 +88,7 @@ public class ComponentReferenceLoader implements TypeLoader<ComponentReference> 
         reference.getTargets().addAll(uris);
 
         loaderHelper.loadPolicySetsAndIntents(reference, reader);
+
         boolean callback = false;
         while (true) {
             switch (reader.next()) {

@@ -36,24 +36,24 @@ import org.fabric3.tx.TxException;
  * @version $Revision$ $Date$
  */
 public class TxInterceptor implements Interceptor {
-    
-    // Next interceptor
+
     private Interceptor next;
-    
-    // Transaction manager
     private TransactionManager transactionManager;
-    
-    // Transaction action
     private TxAction txAction;
+    private TxMonitor monitor;
     
     /**
      * Initializes the transaction manager.
      * 
      * @param transactionManager Transaction manager to be initialized.
+     * @param txAction Transaction action.
+     * @param monitor Transaction monitor.
      */
-    public TxInterceptor(TransactionManager transactionManager, TxAction txAction) {
+    public TxInterceptor(TransactionManager transactionManager, TxAction txAction, TxMonitor monitor) {
         this.transactionManager = transactionManager;
         this.txAction = txAction;
+        this.monitor = monitor;
+        monitor.interceptorInitialized(txAction);
     }
 
     /**
@@ -77,8 +77,12 @@ public class TxInterceptor implements Interceptor {
         
         Transaction transaction =  getTransaction();
             
-        if (txAction == TxAction.BEGIN && transaction == null) {
-            begin();
+        if (txAction == TxAction.BEGIN) {
+            if (transaction == null) {
+                begin();
+            } else {
+                monitor.joined(hashCode());
+            }
         } else if (txAction == TxAction.SUSPEND && transaction != null) {
             suspend();
         }
@@ -107,6 +111,7 @@ public class TxInterceptor implements Interceptor {
     
     private void setRollbackOnly() {
         try {
+            monitor.markedForRollback(hashCode());
             transactionManager.setRollbackOnly();
         } catch (SystemException e) {
             throw new TxException(e);
@@ -123,6 +128,7 @@ public class TxInterceptor implements Interceptor {
     
     private void rollback() {
         try {
+            monitor.rolledback(hashCode());
             transactionManager.rollback();
         } catch (SystemException e) {
             throw new TxException(e);
@@ -131,6 +137,7 @@ public class TxInterceptor implements Interceptor {
     
     private void begin() {
         try {
+            monitor.started(hashCode());
             transactionManager.begin();
         } catch (NotSupportedException e) {
             throw new TxException(e);
@@ -141,6 +148,7 @@ public class TxInterceptor implements Interceptor {
     
     private void suspend() {
         try {
+            monitor.suspended(hashCode());
             transactionManager.suspend();
         } catch (SystemException e) {
             throw new TxException(e);
@@ -149,6 +157,7 @@ public class TxInterceptor implements Interceptor {
     
     private void resume(Transaction transaction) {
         try {
+            monitor.resumed(hashCode());
             transactionManager.resume(transaction);
         } catch (SystemException e) {
             throw new TxException(e);
@@ -162,6 +171,7 @@ public class TxInterceptor implements Interceptor {
     private void commit() {
         try {
             if (transactionManager.getStatus() != Status.STATUS_MARKED_ROLLBACK) {
+                monitor.committed(hashCode());
                 transactionManager.commit();
             } else {
                 rollback();

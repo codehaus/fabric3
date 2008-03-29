@@ -18,23 +18,27 @@
  */
 package org.fabric3.fabric.policy;
 
-import javax.annotation.Resource;
-import javax.transaction.TransactionManager;
+import org.osoa.sca.annotations.Reference;
+import org.osoa.sca.annotations.Scope;
 
 /**
  * @version $Revision$ $Date$
  */
+@Scope("COMPOSITE")
 public class TransactionalServiceImpl implements TransactionalService {
+
+    private TransactionalService transactionalService;
     
-    private TransactionManager transactionManager;
+    @Reference(required = false)
+    public void setChildService(TransactionalService transactionalService) {
+        this.transactionalService = transactionalService;
+    }
     
-    @Resource(name = "transactionManager", mappedName="TransactionManager")
-    public void setTransactionManager(TransactionManager transactionManager) {
-        this.transactionManager = transactionManager;
+    public void call() throws Exception {
+        if (transactionalService != null) {
+            transactionalService.call();
+        }
     }
 
-    public boolean isInTransaction() throws Exception {
-        return transactionManager.getTransaction() != null;
-    }
 
 }

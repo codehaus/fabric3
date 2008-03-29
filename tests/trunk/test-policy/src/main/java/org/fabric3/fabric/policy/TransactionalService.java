@@ -23,7 +23,7 @@ package org.fabric3.fabric.policy;
  * @version $Revision$ $Date$
  */
 public interface TransactionalService {
-
-    boolean isInTransaction() throws Exception;
+    
+    void call() throws Exception;
 
 }

@@ -19,6 +19,7 @@
 package org.fabric3.spi.policy;
 
 import java.util.Collections;
+import java.util.List;
 import java.util.Set;
 
 import org.fabric3.scdl.Operation;
@@ -40,28 +41,28 @@ public class NullPolicyResolver implements PolicyResolver {
                                             LogicalComponent<?> target) throws PolicyResolutionException {
         return new PolicyResult() {
 
-            public Set<PolicySet> getInterceptedPolicySets(Operation<?> operation) {
-                return Collections.emptySet();
+            public List<PolicySet> getInterceptedPolicySets(Operation<?> operation) {
+                return Collections.emptyList();
             }
 
             public Policy getSourcePolicy() {
                 return new Policy() {
-                    public Set<Intent> getProvidedIntents(Operation<?> operation) {
-                        return Collections.emptySet();
+                    public List<Intent> getProvidedIntents(Operation<?> operation) {
+                        return Collections.emptyList();
                     }
-                    public Set<PolicySet> getProvidedPolicySets(Operation<?> operation) {
-                        return Collections.emptySet();
+                    public List<PolicySet> getProvidedPolicySets(Operation<?> operation) {
+                        return Collections.emptyList();
                     }
                 };
             }
 
             public Policy getTargetPolicy() {
                 return new Policy() {
-                    public Set<Intent> getProvidedIntents(Operation<?> operation) {
-                        return Collections.emptySet();
+                    public List<Intent> getProvidedIntents(Operation<?> operation) {
+                        return Collections.emptyList();
                     }
-                    public Set<PolicySet> getProvidedPolicySets(Operation<?> operation) {
-                        return Collections.emptySet();
+                    public List<PolicySet> getProvidedPolicySets(Operation<?> operation) {
+                        return Collections.emptyList();
                     }
                 };
             }

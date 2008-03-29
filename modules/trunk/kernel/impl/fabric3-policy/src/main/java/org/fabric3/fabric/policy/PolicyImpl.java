@@ -16,8 +16,9 @@
  */
 package org.fabric3.fabric.policy;
 
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -32,8 +33,8 @@ import org.fabric3.spi.policy.Policy;
  */
 public class PolicyImpl implements Policy {
     
-    private final Map<Operation<?>, Set<Intent>> intentMap = new HashMap<Operation<?>, Set<Intent>>();
-    private final Map<Operation<?>, Set<PolicySet>> policySetMap = new HashMap<Operation<?>, Set<PolicySet>>();
+    private final Map<Operation<?>, List<Intent>> intentMap = new HashMap<Operation<?>, List<Intent>>();
+    private final Map<Operation<?>, List<PolicySet>> policySetMap = new HashMap<Operation<?>, List<PolicySet>>();
     
     /**
      * Gets the intents that are provided by the component or binding types 
@@ -42,7 +43,7 @@ public class PolicyImpl implements Policy {
      * @param operation Operation against which the intent was requested.
      * @return All intents that are provided.
      */
-    public Set<Intent> getProvidedIntents(Operation<?> operation) {
+    public List<Intent> getProvidedIntents(Operation<?> operation) {
         return intentMap.get(operation);
     }
     
@@ -54,7 +55,7 @@ public class PolicyImpl implements Policy {
      * @param operation Operation against which the intent was requested.
      * @return Resolved policy sets.
      */
-    public Set<PolicySet> getProvidedPolicySets(Operation<?> operation) {
+    public List<PolicySet> getProvidedPolicySets(Operation<?> operation) {
         return policySetMap.get(operation);
     }
     
@@ -68,7 +69,7 @@ public class PolicyImpl implements Policy {
     void addIntents(Operation<?> operation, Set<Intent> intents) {
         
         if (!intentMap.containsKey(operation)) {
-            intentMap.put(operation, new HashSet<Intent>());
+            intentMap.put(operation, new ArrayList<Intent>());
         }
         
         intentMap.get(operation).addAll(intents);
@@ -85,7 +86,7 @@ public class PolicyImpl implements Policy {
     void addPolicySets(Operation<?> operation, Set<PolicySet> policySets) {
         
         if (!policySetMap.containsKey(operation)) {
-            policySetMap.put(operation, new HashSet<PolicySet>());
+            policySetMap.put(operation, new ArrayList<PolicySet>());
         }
         
         policySetMap.get(operation).addAll(policySets);

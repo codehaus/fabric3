@@ -17,14 +17,14 @@
 package org.fabric3.binding.ws.axis2.control;
 
 import java.net.URI;
-import java.util.Set;
+import java.util.List;
 
 import javax.xml.namespace.QName;
 
-import org.fabric3.binding.ws.axis2.provision.AxisPolicy;
 import org.fabric3.binding.ws.axis2.provision.Axis2PolicyAware;
 import org.fabric3.binding.ws.axis2.provision.Axis2WireSourceDefinition;
 import org.fabric3.binding.ws.axis2.provision.Axis2WireTargetDefinition;
+import org.fabric3.binding.ws.axis2.provision.AxisPolicy;
 import org.fabric3.binding.ws.scdl.WsBindingDefinition;
 import org.fabric3.scdl.Operation;
 import org.fabric3.scdl.ReferenceDefinition;
@@ -90,7 +90,7 @@ public class Axis2BindingGeneratorDelegate implements BindingGeneratorDelegate<W
         
         for (Operation<?> operation : serviceContract.getOperations()) {
             
-            Set<PolicySet> policySets = policy.getProvidedPolicySets(operation);
+            List<PolicySet> policySets = policy.getProvidedPolicySets(operation);
             if (policySets == null) {
                 continue;
             }

@@ -109,13 +109,6 @@ public class DefaultPolicyResolver implements PolicyResolver {
                 policyResult.addSourcePolicySets(operation, CollectionUtils.filter(policies, PROVIDED));
                 policyResult.addInterceptedPolicySets(operation, CollectionUtils.filter(policies, INTERCEPTION));
             }
-                
-            if (target != null) {
-                policyInfoset = policyInfosetBuilder.buildInfoSet(target);
-                policies = implementationPolicyHelper.resolveIntents(target, operation, policyInfoset);
-                policyResult.addTargetPolicySets(operation, CollectionUtils.filter(policies, PROVIDED));
-                policyResult.addInterceptedPolicySets(operation, CollectionUtils.filter(policies, INTERCEPTION));
-            }
 
             policyInfoset = policyInfosetBuilder.buildInfoSet(sourceBinding);
             policies = interactionPolicyHelper.resolveIntents(sourceBinding, operation, policyInfoset);
@@ -126,6 +119,13 @@ public class DefaultPolicyResolver implements PolicyResolver {
             policies = interactionPolicyHelper.resolveIntents(targetBinding, operation, policyInfoset);
             policyResult.addTargetPolicySets(operation, CollectionUtils.filter(policies, PROVIDED));
             policyResult.addInterceptedPolicySets(operation, CollectionUtils.filter(policies, INTERCEPTION));
+                
+            if (target != null) {
+                policyInfoset = policyInfosetBuilder.buildInfoSet(target);
+                policies = implementationPolicyHelper.resolveIntents(target, operation, policyInfoset);
+                policyResult.addTargetPolicySets(operation, CollectionUtils.filter(policies, PROVIDED));
+                policyResult.addInterceptedPolicySets(operation, CollectionUtils.filter(policies, INTERCEPTION));
+            }
                 
         }
         

@@ -17,7 +17,7 @@
 package org.fabric3.fabric.policy.helper;
 
 import java.util.Collections;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 import javax.xml.namespace.QName;
@@ -57,7 +57,7 @@ public class InteractionPolicyHelperImpl extends AbstractPolicyHelper implements
         
         Set<Intent> requiredIntents = getRequestedIntents(logicalBinding, operation);
         
-        Set<Intent> intentsToBeProvided = new HashSet<Intent>();
+        Set<Intent> intentsToBeProvided = new LinkedHashSet<Intent>();
         for(Intent intent : requiredIntents) {
             if(mayProvidedIntents.contains(intent.getName())) {
                 intentsToBeProvided.add(intent);
@@ -73,8 +73,8 @@ public class InteractionPolicyHelperImpl extends AbstractPolicyHelper implements
         QName type = logicalBinding.getBinding().getType();
         BindingType bindingType = definitionsRegistry.getDefinition(type, BindingType.class);
         
-        Set<QName> alwaysProvidedIntents = new HashSet<QName>();
-        Set<QName> mayProvidedIntents = new HashSet<QName>();
+        Set<QName> alwaysProvidedIntents = new LinkedHashSet<QName>();
+        Set<QName> mayProvidedIntents = new LinkedHashSet<QName>();
 
         // FIXME This should not happen, all binding types should be registsred
         if (bindingType != null) {
@@ -105,7 +105,7 @@ public class InteractionPolicyHelperImpl extends AbstractPolicyHelper implements
                                             Operation<?> operation) throws PolicyResolutionException {
         
         // Aggregate all the intents from the ancestors
-        Set<QName> intentNames = new HashSet<QName>();
+        Set<QName> intentNames = new LinkedHashSet<QName>();
         intentNames.addAll(operation.getIntents());
         intentNames.addAll(logicalBinding.getBinding().getIntents());
         intentNames.addAll(aggregateIntents(logicalBinding));

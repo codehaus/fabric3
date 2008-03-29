@@ -16,26 +16,38 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.fabric.policy;
+package org.fabric3.tx.interceptor;
 
-import org.osoa.sca.annotations.Reference;
-
-import junit.framework.TestCase;
+import org.fabric3.api.annotation.LogLevel;
 
 /**
+ *
  * @version $Revision$ $Date$
  */
-public class TransactionalServiceTest extends TestCase {
+public interface TxMonitor {
     
-    private TransactionalService transactionalService;
+    @LogLevel("INFO")
+    void started(int hashCode);
     
-    @Reference
-    public void setTransactionalService(TransactionalService transactionalService) {
-        this.transactionalService = transactionalService;
-    }
+    @LogLevel("INFO")
+    void committed(int hashCode);
     
-    public void testIsInTransaction() throws Exception {
-        transactionalService.call();
-    }
+    @LogLevel("INFO")
+    void suspended(int hashCode);
+    
+    @LogLevel("INFO")
+    void rolledback(int hashCode);
+    
+    @LogLevel("INFO")
+    void resumed(int hashCode);
+    
+    @LogLevel("INFO")
+    void markedForRollback(int hashCode);
+    
+    @LogLevel("INFO")
+    void interceptorInitialized(TxAction txAction);
+    
+    @LogLevel("INFO")
+    void joined(int hashCode);
 
 }

@@ -23,11 +23,17 @@
     <!-- Unit test -->
     <component name="TransactionalServiceTest">
         <f3:junit class="org.fabric3.fabric.policy.TransactionalServiceTest"/>
-        <reference name="transactionalService" target="TransactionalService"/>
+        <reference name="transactionalService" target="TransactionalService1"/>
     </component>
 
     <!-- Transactional Service Impl -->
-    <component name="TransactionalService">
+    <component name="TransactionalService1">
+        <implementation.java class="org.fabric3.fabric.policy.TransactionalServiceImpl" requires="sca:managedTransaction"/>
+        <reference name="childService" target="TransactionalService2" requires="sca:suspendsTransaction"/>
+    </component>
+
+    <!-- Transactional Service Impl -->
+    <component name="TransactionalService2">
         <implementation.java class="org.fabric3.fabric.policy.TransactionalServiceImpl" requires="sca:managedTransaction"/>
     </component>
     

@@ -122,6 +122,13 @@ public class LogicalReference extends Bindable {
     public void setIntents(Set<QName> intents) {
         definition.setIntents(intents);
     }
+    
+    /**
+     * @param intents Adds intents to the definition.
+     */
+    public void addIntents(Set<QName> intents) {
+        definition.addIntents(intents);
+    }
 
     /**
      * @return Policy sets declared on the SCA artifact.
@@ -135,6 +142,13 @@ public class LogicalReference extends Bindable {
      */
     public void setPolicySets(Set<QName> policySets) {
         definition.setPolicySets(policySets);
+    }
+    
+    /**
+     * @param policySets Adds policy sets to the definition.
+     */
+    public void addPolicySets(Set<QName> policySets) {
+        definition.addPolicySets(policySets);
     }
     
     @Override

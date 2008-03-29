@@ -16,8 +16,9 @@
  */
 package org.fabric3.fabric.policy;
 
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -36,7 +37,7 @@ public class PolicyResultImpl implements PolicyResult {
     private final PolicyImpl sourcePolicy = new PolicyImpl();
     private final PolicyImpl targetPolicy = new PolicyImpl();
     
-    private final Map<Operation<?>, Set<PolicySet>> interceptedPolicySets = new HashMap<Operation<?>, Set<PolicySet>>();
+    private final Map<Operation<?>, List<PolicySet>> interceptedPolicySets = new HashMap<Operation<?>, List<PolicySet>>();
     
     /**
      * @return Policies and intents provided at the source end.
@@ -59,7 +60,7 @@ public class PolicyResultImpl implements PolicyResult {
      * @param operation Operation against which the intent was requested.
      * @return Resolved policy sets.
      */
-    public Set<PolicySet> getInterceptedPolicySets(Operation<?> operation) {
+    public List<PolicySet> getInterceptedPolicySets(Operation<?> operation) {
         return interceptedPolicySets.get(operation);
     }
     
@@ -117,7 +118,7 @@ public class PolicyResultImpl implements PolicyResult {
     void addInterceptedPolicySets(Operation<?> operation, Set<PolicySet> policySets) {
         
         if (!interceptedPolicySets.containsKey(operation)) {
-            interceptedPolicySets.put(operation, new HashSet<PolicySet>());
+            interceptedPolicySets.put(operation, new ArrayList<PolicySet>());
         }
         
         interceptedPolicySets.get(operation).addAll(policySets);
