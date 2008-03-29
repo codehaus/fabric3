@@ -48,43 +48,43 @@
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-spi</artifactId>
-            <version>${project.version}</version>
+            <version>0.5ALPHA1</version>
         </dependency>
         
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-monitor</artifactId>
-            <version>${project.version}</version>
+            <version>0.5ALPHA1</version>
         </dependency>
         
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-pojo</artifactId>
-            <version>${project.version}</version>
+            <version>0.5ALPHA1</version>
         </dependency>
         
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-transform</artifactId>
-            <version>${project.version}</version>
+            <version>0.5ALPHA1</version>
         </dependency>
         
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-loader</artifactId>
-            <version>${project.version}</version>
+            <version>0.5ALPHA1</version>
         </dependency>
         
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-introspection</artifactId>
-            <version>${project.version}</version>
+            <version>0.5ALPHA1</version>
         </dependency>
 
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-system</artifactId>
-            <version>${project.version}</version>
+            <version>0.5ALPHA1</version>
         </dependency>
 
         <dependency>
