@@ -39,18 +39,6 @@
             <artifactId>junit</artifactId>
         </dependency>
     </dependencies>
-    
-    <build>
-        <plugins>
-            <plugin>
-                <artifactId>maven-release-plugin</artifactId>
-                <version>RELEASE</version>
-                <configuration>
-                    <tag>${project.artifactId}</tag>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
 
     <scm>
         <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/kernel/api/fabric3-api</connection>
