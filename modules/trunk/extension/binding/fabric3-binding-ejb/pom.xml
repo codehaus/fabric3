@@ -34,14 +34,14 @@
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-pojo</artifactId>
-            <version>${project.version}</version>
+            <version>0.5ALPHA1</version>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-binding-rmi</artifactId>
-            <version>${project.version}</version>
+            <version>0.5ALPHA1</version>
         </dependency>
 
         <dependency>
@@ -70,6 +70,7 @@
             <plugin>
                 <groupId>org.codehaus.fabric3</groupId>
                 <artifactId>fabric3-contribution-plugin</artifactId>
+                <version>0.5ALPHA1</version>
                 <extensions>true</extensions>
                 <configuration>
                     <deployables>
