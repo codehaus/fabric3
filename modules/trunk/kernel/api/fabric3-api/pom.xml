@@ -53,9 +53,9 @@
     </build>
 
     <scm>
-        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/kernel/api/fabric3-api</connection>
-        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/trunk/kernel/api/fabric3-api</developerConnection>
-        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/trunk/kernel/api/fabric3-api</url>
+        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk</connection>
+        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/trunk</developerConnection>
+        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/trunk</url>
     </scm>
 
 </project>
