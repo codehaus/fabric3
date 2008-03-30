@@ -25,7 +25,7 @@
     </parent>
     <groupId>org.codehaus.fabric3</groupId>
     <artifactId>fabric3-interface-wsdl</artifactId>
-    <version>0.5ALPHA1-SNAPSHOT</version>
+    <version>0.5ALPHA1</version>
     <name>Fabric3 WSDL Interface</name>
     <description>Fabric3 WSDL Interface.</description>
 
@@ -117,9 +117,9 @@
     </dependencies>
     
     <scm>
-        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/extension/interface/fabric3-interface-wsdl</connection>
-        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/trunk/extension/interface/fabric3-interface-wsdl</developerConnection>
-        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/trunk/extension/interface/fabric3-interface-wsdl</url>
+        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/tags/fabric3-interface-wsdl-0.5ALPHA1</connection>
+        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/tags/fabric3-interface-wsdl-0.5ALPHA1</developerConnection>
+        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/tags/fabric3-interface-wsdl-0.5ALPHA1</url>
     </scm>
 
 </project>
