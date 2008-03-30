@@ -44,10 +44,9 @@ import org.codehaus.plexus.util.FileUtils;
  * <p/>
  * Performs the following tasks.
  * <p/>
- * <ul> <li>Adds the boot dependencies transitively to WEB-INF/fabric3/boot</li> <li>By default boot libraries are
- * transitively resolved from webapp-host</li> <li>The version of boot libraries can be specified using
- * configuration/runTimeVersion element</li> <li>Boot libraries can be overridden using the configuration/bootLibs
- * element in the plugin</li> <li>Adds the extension artifacts specified using configuration/extensions to
+ * <ul> <li>Adds the boot dependencies transitively to WEB-INF/fabric3/boot</li> <li>By default boot libraries are transitively resolved from
+ * webapp-host</li> <li>The version of boot libraries can be specified using configuration/runTimeVersion element</li> <li>Boot libraries can be
+ * overridden using the configuration/bootLibs element in the plugin</li> <li>Adds the extension artifacts specified using configuration/extensions to
  * WEB-INF/fabric3/boot</li> </ul>
  *
  * @version $Rev$ $Date$
@@ -145,6 +144,7 @@ public class Fabric3WarMojo extends AbstractMojo {
 
     /**
      * POM
+     *
      * @parameter expression="${project}"
      * @readonly
      * @required
@@ -205,8 +205,9 @@ public class Fabric3WarMojo extends AbstractMojo {
     }
 
     /**
-     * Resolve the dependency for the given dependency from the dependencyManagement from the pom
-     * @param dependency
+     * Resolve the dependency for the given extension from the dependencyManagement from the pom
+     *
+     * @param extension the dependcy information for the extension
      */
     private void resolveDependencyVersion(Dependency extension) {
     	List<org.apache.maven.model.Dependency> dependencies = project.getDependencyManagement().getDependencies();
