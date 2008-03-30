@@ -24,7 +24,7 @@
     </parent>
     <groupId>org.codehaus.fabric3.standalone</groupId>
     <artifactId>fabric3-standalone-api</artifactId>
-    <version>0.5ALPHA1</version>
+    <version>0.5ALPHA2-SNAPSHOT</version>
     <name>Fabric3 Standalone Runtime API</name>
     <description>Fabric3 Standalone Runtime API.</description>
 
@@ -37,9 +37,9 @@
     </dependencies>
 
     <scm>
-        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/tags/fabric3-standalone-api-0.5ALPHA1</connection>
-        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/tags/fabric3-standalone-api-0.5ALPHA1</developerConnection>
-        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/tags/fabric3-standalone-api-0.5ALPHA1</url>
+        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/runtime/standalone/fabric3-standalone-api</connection>
+        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/trunk/runtime/standalone/fabric3-standalone-api</developerConnection>
+        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/trunk/runtime/standalone/fabric3-api</url>
     </scm>
 
 </project>
