@@ -53,51 +53,51 @@
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-spi</artifactId>
-            <version>${project.version}</version>
+            <version>0.5ALPHA1</version>
         </dependency>
 
         <!-- commands to be included in the bin directory -->
         <dependency>
             <groupId>org.codehaus.fabric3.standalone</groupId>
             <artifactId>fabric3-standalone-server</artifactId>
-            <version>${project.version}</version>
+            <version>0.5ALPHA1</version>
         </dependency>
 
         <dependency>
             <groupId>org.codehaus.fabric3.standalone</groupId>
             <artifactId>fabric3-standalone-shutdown</artifactId>
-            <version>${project.version}</version>
+            <version>0.5ALPHA1</version>
         </dependency>
 
         <!-- standalone runtime -->
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-introspection-spi</artifactId>
-            <version>${project.version}</version>
+            <version>0.5ALPHA1</version>
         </dependency>
 
        <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-xmlfactory</artifactId>
-            <version>${project.version}</version>
+            <version>0.5ALPHA1</version>
         </dependency>
 
        <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-introspection</artifactId>
-            <version>${project.version}</version>
+            <version>0.5ALPHA1</version>
         </dependency>
 
         <dependency>
             <groupId>org.codehaus.fabric3.standalone</groupId>
             <artifactId>fabric3-standalone-host</artifactId>
-            <version>${project.version}</version>
+            <version>0.5ALPHA1</version>
         </dependency>
 
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-java</artifactId>
-            <version>${project.version}</version>
+            <version>0.5ALPHA1</version>
         </dependency>
 
         <dependency>
@@ -109,19 +109,19 @@
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-jmx</artifactId>
-            <version>${project.version}</version>
+            <version>0.5ALPHA1</version>
         </dependency>
 
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-policy</artifactId>
-            <version>${project.version}</version>
+            <version>0.5ALPHA1</version>
         </dependency>
 
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-contribution-scanner-spi</artifactId>
-            <version>${project.version}</version>
+            <version>0.5ALPHA1</version>
         </dependency>
 
         <!-- provided scope dependencies that need to be resolved -->
@@ -150,37 +150,37 @@
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-async-loader</artifactId>
-            <version>${project.version}</version>
+            <version>0.5ALPHA1</version>
         </dependency>
 
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-async-runtime</artifactId>
-            <version>${project.version}</version>
+            <version>0.5ALPHA1</version>
         </dependency>
 
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-contribution-scanner</artifactId>
-            <version>${project.version}</version>
+            <version>0.5ALPHA1</version>
         </dependency>
 
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-jetty</artifactId>
-            <version>${project.version}</version>
+            <version>0.5ALPHA1</version>
         </dependency>
 
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-console</artifactId>
-            <version>${project.version}</version>
+            <version>0.5ALPHA1</version>
         </dependency>
 
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-resource</artifactId>
-            <version>${project.version}</version>
+            <version>0.5ALPHA1</version>
         </dependency>
 
     </dependencies>
