@@ -33,13 +33,13 @@
         <dependency>
             <groupId>org.codehaus.fabric3.standalone</groupId>
             <artifactId>fabric3-standalone-api</artifactId>
-            <version>${project.version}</version>
+            <version>0.5ALPHA1</version>
         </dependency>
 
         <dependency>
              <groupId>org.codehaus.fabric3</groupId>
              <artifactId>fabric3-api</artifactId>
-             <version>${project.version}</version>
+             <version>0.5ALPHA1</version>
          </dependency>
 
         <dependency>
