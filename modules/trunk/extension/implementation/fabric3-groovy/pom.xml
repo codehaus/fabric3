@@ -33,13 +33,13 @@
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-pojo</artifactId>
-            <version>0.5ALPHA1</version>
+            <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-fabric</artifactId>
-            <version>0.5ALPHA1</version>
+            <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>
         
@@ -83,7 +83,7 @@
             <plugin>
                 <groupId>org.codehaus.fabric3</groupId>
                 <artifactId>fabric3-contribution-plugin</artifactId>
-                <version>0.5ALPHA1</version>
+                <version>${project.version}</version>
                 <extensions>true</extensions>
                 <configuration>
                     <mavenImports>

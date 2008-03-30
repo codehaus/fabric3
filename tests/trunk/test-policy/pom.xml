@@ -68,24 +68,24 @@
             <plugin>
                 <groupId>org.codehaus.fabric3</groupId>
                 <artifactId>fabric3-itest-plugin</artifactId>
-                <version>0.5ALPHA1-SNAPSHOT</version>
+                <version>0.5ALPHA2-SNAPSHOT</version>
                 <configuration>
-                    <runtimeVersion>0.5ALPHA1-SNAPSHOT</runtimeVersion>
+                    <runtimeVersion>0.5ALPHA2-SNAPSHOT</runtimeVersion>
                     <extensions>
                         <dependency>
                             <groupId>org.codehaus.fabric3</groupId>
                             <artifactId>fabric3-tx</artifactId>
-                            <version>0.5ALPHA1-SNAPSHOT</version>
+                            <version>0.5ALPHA2-SNAPSHOT</version>
                         </dependency>
                         <dependency>
                             <groupId>org.codehaus.fabric3</groupId>
                             <artifactId>fabric3-tx-jotm</artifactId>
-                            <version>0.5ALPHA1-SNAPSHOT</version>
+                            <version>0.5ALPHA2-SNAPSHOT</version>
                         </dependency>
                         <dependency>
                             <groupId>org.codehaus.fabric3</groupId>
                             <artifactId>fabric3-resource</artifactId>
-                            <version>0.5ALPHA1-SNAPSHOT</version>
+                            <version>0.5ALPHA2-SNAPSHOT</version>
                         </dependency>
                     </extensions>
                     <shared>

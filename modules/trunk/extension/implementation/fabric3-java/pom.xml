@@ -33,19 +33,19 @@
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-spi</artifactId>
-            <version>0.5ALPHA1</version>
+            <version>${project.version}</version>
         </dependency>
         
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-pojo</artifactId>
-            <version>0.5ALPHA1</version>
+            <version>${project.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-loader</artifactId>
-            <version>0.5ALPHA1</version>
+            <version>${project.version}</version>
         </dependency>
 
         <dependency>
