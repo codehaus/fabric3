@@ -89,10 +89,10 @@ import org.fabric3.spi.classloader.MultiParentClassLoader;
  */
 public class Fabric3ITestMojo extends AbstractMojo {
 
-	private static final String SYSTEM_CONFIG_XML_FILE = "systemConfig.xml";
-	
-	private static final String DEFAULT_SYSTEM_CONFIG_DIR = "test-classes" + File.separator + "META-INF" + File.separator;
-	
+    private static final String SYSTEM_CONFIG_XML_FILE = "systemConfig.xml";
+
+    private static final String DEFAULT_SYSTEM_CONFIG_DIR = "test-classes" + File.separator + "META-INF" + File.separator;
+
     /**
      * POM
      *
@@ -117,9 +117,8 @@ public class Fabric3ITestMojo extends AbstractMojo {
     public String compositeName;
 
     /**
-     * The location if the SCDL that defines the test harness composite. The source for this would normally be placed in
-     * the test/resources directory and be copied by the resource plugin; this allows property substitution if
-     * required.
+     * The location if the SCDL that defines the test harness composite. The source for this would normally be placed in the test/resources directory
+     * and be copied by the resource plugin; this allows property substitution if required.
      *
      * @parameter expression="${project.build.testOutputDirectory}/itest.composite"
      */
@@ -170,8 +169,8 @@ public class Fabric3ITestMojo extends AbstractMojo {
     public String testDomain;
 
     /**
-     * The location of the SCDL that configures the Fabric3 runtime. This allows the default runtime configuration
-     * supplied in this plugin to be overridden.
+     * The location of the SCDL that configures the Fabric3 runtime. This allows the default runtime configuration supplied in this plugin to be
+     * overridden.
      *
      * @parameter
      */
@@ -208,7 +207,7 @@ public class Fabric3ITestMojo extends AbstractMojo {
     /**
      * The version of the runtime to use.
      *
-     * @parameter expression="0.4"
+     * @parameter expression="0.5"
      */
     public String runtimeVersion;
 
@@ -284,18 +283,16 @@ public class Fabric3ITestMojo extends AbstractMojo {
      * @readonly
      */
     public ArtifactFactory artifactFactory;
-    
+
     /**
-     * The sub-directory of the project's output directory which contains the systemConfig.xml file. Users 
-     * are limited to specifying the (relative) directory name in this param - the file name is fixed. 
-     * The fixed name is not required by the itest environment but using it retains the relationship between 
-     * the test config file and WEB-INF/systemConfig.xml which contains the same information for the deployed
-     * composite
-     * 
+     * The sub-directory of the project's output directory which contains the systemConfig.xml file. Users are limited to specifying the (relative)
+     * directory name in this param - the file name is fixed. The fixed name is not required by the itest environment but using it retains the
+     * relationship between the test config file and WEB-INF/systemConfig.xml which contains the same information for the deployed composite
+     *
      * @parameter
      */
     public String systemConfigDir;
-    
+
 
     /**
      * Build output directory.
@@ -304,7 +301,7 @@ public class Fabric3ITestMojo extends AbstractMojo {
      * @required
      */
     protected File outputDirectory;
-    
+
 
     @SuppressWarnings({"ThrowFromFinallyBlock", "unchecked"})
     public void execute() throws MojoExecutionException, MojoFailureException {
@@ -343,8 +340,6 @@ public class Fabric3ITestMojo extends AbstractMojo {
         }
 
         List<URL> extensionUrls = resolveDependencies(extensions);
-
-
         log.info("Starting Embedded Fabric3 Runtime ...");
         // FIXME this should probably be an isolated classloader
         MavenEmbeddedRuntime runtime;
@@ -400,9 +395,9 @@ public class Fabric3ITestMojo extends AbstractMojo {
         }
         List<URL> urls = new ArrayList<URL>(dependencies.length);
         for (Dependency dependency : dependencies) {
-        	if(dependency.getVersion() == null){
-        		resolveDependencyVersion(dependency);
-        	}
+            if (dependency.getVersion() == null) {
+                resolveDependencyVersion(dependency);
+            }
             Artifact artifact = createArtifact(dependency);
             try {
                 resolver.resolve(artifact, remoteRepositories, localRepository);
@@ -429,16 +424,16 @@ public class Fabric3ITestMojo extends AbstractMojo {
                                               dependency.getType());
     }
 
-    private void resolveDependencyVersion(Dependency extension){
+    private void resolveDependencyVersion(Dependency extension) {
 
-    	List<org.apache.maven.model.Dependency> dependencies = project.getDependencyManagement().getDependencies();
-		for(org.apache.maven.model.Dependency dependecy : dependencies) {
-			if(dependecy.getGroupId().equals(extension.getGroupId())
-				&& dependecy.getArtifactId().equals(extension.getArtifactId())){
-				extension.setVersion(dependecy.getVersion());
+        List<org.apache.maven.model.Dependency> dependencies = project.getDependencyManagement().getDependencies();
+        for (org.apache.maven.model.Dependency dependecy : dependencies) {
+            if (dependecy.getGroupId().equals(extension.getGroupId())
+                    && dependecy.getArtifactId().equals(extension.getArtifactId())) {
+                extension.setVersion(dependecy.getVersion());
 
-			}
-		}
+            }
+        }
     }
 
     private void shutdownRuntime(RuntimeLifecycleCoordinator<MavenEmbeddedRuntime, Bootstrapper> coordinator)
@@ -465,25 +460,25 @@ public class Fabric3ITestMojo extends AbstractMojo {
         future = coordinator.start();
         future.get();
     }
-   
-    private URL getSystemConfig() throws MalformedURLException, MojoExecutionException {
-    	File systemConfig = new File(outputDirectory, DEFAULT_SYSTEM_CONFIG_DIR + SYSTEM_CONFIG_XML_FILE);
-    	if(systemConfigDir != null) {
-    		systemConfig = new File(outputDirectory, systemConfigDir + File.separator + SYSTEM_CONFIG_XML_FILE);
-    		if(!systemConfig.exists()) {
-    			//The user has explicitly attempted to configure the system config location but the information is incorrect                    
-    			throw new MojoExecutionException("Failed to find the system config information in: " + systemConfig.getAbsolutePath()); 
-    		}               
-    	}
 
-    	Log log = getLog();
-    	if (log.isDebugEnabled()) {
-    		log.debug("Using system config information from: " + systemConfig.getAbsolutePath());   
-    	}                       
-              
+    private URL getSystemConfig() throws MalformedURLException, MojoExecutionException {
+        File systemConfig = new File(outputDirectory, DEFAULT_SYSTEM_CONFIG_DIR + SYSTEM_CONFIG_XML_FILE);
+        if (systemConfigDir != null) {
+            systemConfig = new File(outputDirectory, systemConfigDir + File.separator + SYSTEM_CONFIG_XML_FILE);
+            if (!systemConfig.exists()) {
+                //The user has explicitly attempted to configure the system config location but the information is incorrect
+                throw new MojoExecutionException("Failed to find the system config information in: " + systemConfig.getAbsolutePath());
+            }
+        }
+
+        Log log = getLog();
+        if (log.isDebugEnabled()) {
+            log.debug("Using system config information from: " + systemConfig.getAbsolutePath());
+        }
+
         return systemConfig.exists() ? systemConfig.toURL() : null;
-     }
-    
+    }
+
 
     private ClassLoader createBootClassLoader(ClassLoader parent, Set<Artifact> artifacts)
             throws MojoExecutionException {
@@ -526,9 +521,9 @@ public class Fabric3ITestMojo extends AbstractMojo {
 
     private void addArtifacts(Set<Artifact> artifacts, Dependency extension) throws MojoExecutionException {
 
-    	if (extension.getVersion() == null) {
-              resolveDependencyVersion(extension);
-    	}
+        if (extension.getVersion() == null) {
+            resolveDependencyVersion(extension);
+        }
         final List<Exclusion> exclusions = extension.getExclusions();
 
         Artifact artifact = createArtifact(extension);
@@ -570,13 +565,6 @@ public class Fabric3ITestMojo extends AbstractMojo {
         } catch (ArtifactMetadataRetrievalException e) {
             throw new MojoExecutionException(e.getMessage(), e);
         }
-    }
-
-    // this is a hack for now
-    private Set<Artifact> resolveArtifacts(Dependency dependency) throws MojoExecutionException {
-        Set<Artifact> artifacts = new HashSet<Artifact>();
-        addArtifacts(artifacts, dependency);
-        return artifacts;
     }
 
     public boolean runSurefire(SurefireTestSuite testSuite) throws MojoExecutionException {
@@ -675,7 +663,7 @@ public class Fabric3ITestMojo extends AbstractMojo {
                                        ComponentDefinition definition) throws MojoExecutionException {
         JUnitImplementation impl = (JUnitImplementation) definition.getImplementation();
         PojoComponentType componentType = impl.getComponentType();
-        Map<String,ServiceDefinition> services = componentType.getServices();
+        Map<String, ServiceDefinition> services = componentType.getServices();
         ServiceDefinition testService = services.get("testService");
         if (testService == null) {
             throw new MojoExecutionException("No testService defined on component: " + definition.getName());
@@ -685,8 +673,7 @@ public class Fabric3ITestMojo extends AbstractMojo {
     }
 
     /**
-     * Transitively calculates the set of artifacts to be included in the host classloader based on the artifacts
-     * associated with the Maven module.
+     * Transitively calculates the set of artifacts to be included in the host classloader based on the artifacts associated with the Maven module.
      *
      * @param runtimeArtifacts the artifacts associated with the Maven module
      * @return set of artifacts to be included in the host classloader
@@ -770,9 +757,8 @@ public class Fabric3ITestMojo extends AbstractMojo {
     }
 
     /**
-     * Calculates module dependencies based on the set of project artifacts. Module dependencies must be visible to
-     * implementation code in a composite and encompass project artifacts minus artifacts provided by the host
-     * classloader and those that are "provided scope".
+     * Calculates module dependencies based on the set of project artifacts. Module dependencies must be visible to implementation code in a composite
+     * and encompass project artifacts minus artifacts provided by the host classloader and those that are "provided scope".
      *
      * @param projectArtifacts the artifact set to determine module dependencies from
      * @param hostArtifacts    the set of host artifacts
