@@ -19,7 +19,6 @@
 package org.fabric3.runtime.webapp;
 
 import java.net.URI;
-import javax.servlet.ServletContext;
 import javax.servlet.ServletRequestListener;
 import javax.xml.namespace.QName;
 
@@ -42,5 +41,12 @@ public interface WebappRuntime extends ServletRequestListener, Fabric3Runtime<We
      * @throws InitializationException if there was a problem initializing the composite
      */
     void activate(QName qName, URI componentId) throws InitializationException;
+
+    /**
+     * Returns the ServletRequestInjector for the runtime.
+     *
+     * @return the ServletRequestInjector for the runtime
+     */
+    ServletRequestInjector getRequestInjector();
 
 }

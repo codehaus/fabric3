@@ -24,6 +24,7 @@ import javax.servlet.ServletRequestEvent;
 import javax.xml.namespace.QName;
 
 import org.fabric3.fabric.runtime.AbstractRuntime;
+import org.fabric3.fabric.runtime.ComponentNames;
 import static org.fabric3.fabric.runtime.ComponentNames.CONTRIBUTION_SERVICE_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.DISTRIBUTED_ASSEMBLY_URI;
 import org.fabric3.host.contribution.ContributionException;
@@ -48,6 +49,7 @@ import org.fabric3.spi.invocation.WorkContext;
  */
 
 public class WebappRuntimeImpl extends AbstractRuntime<WebappHostInfo> implements WebappRuntime {
+    private ServletRequestInjector requestInjector;
 
     public WebappRuntimeImpl() {
         super(WebappHostInfo.class);
@@ -71,6 +73,14 @@ public class WebappRuntimeImpl extends AbstractRuntime<WebappHostInfo> implement
             String identifier = qName.toString();
             throw new InitializationException("Error activating composite [" + identifier + "]", identifier, e);
         }
+    }
+
+    public ServletRequestInjector getRequestInjector() {
+        if (requestInjector == null) {
+            URI uri = URI.create(ComponentNames.RUNTIME_NAME + "/servletHost");
+            requestInjector = getSystemComponent(ServletRequestInjector.class, uri);
+        }
+        return requestInjector;
     }
 
     public void requestInitialized(ServletRequestEvent sre) {
