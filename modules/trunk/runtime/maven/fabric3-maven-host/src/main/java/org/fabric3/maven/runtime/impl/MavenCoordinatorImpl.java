@@ -252,17 +252,22 @@ public class MavenCoordinatorImpl implements MavenCoordinator {
     }
 
     private void synthesizeSPIContribution() throws InitializationException {
-        Contribution contribution = new Contribution(ComponentNames.BOOT_CLASSLOADER_ID);
-        ContributionManifest manifest = new ContributionManifest();
-        InputStream stream =
-                bootClassLoader.getResourceAsStream("META-INF/maven/org.codehaus.fabric3/fabric3-spi/pom.xml");
-        if (stream == null) {
-            throw new InitializationException("fabric3-spi jar is missing pom.xml file");
-        }
-        XmlManifestProcessor processor =
-                runtime.getSystemComponent(XmlManifestProcessor.class, ComponentNames.XML_MANIFEST_PROCESSOR);
-
         try {
+            Contribution contribution = new Contribution(ComponentNames.BOOT_CLASSLOADER_ID);
+            ContributionManifest manifest = new ContributionManifest();
+            InputStream stream =
+                    bootClassLoader.getResourceAsStream("META-INF/maven/org.codehaus.fabric3/fabric3-spi/pom.xml");
+            if (stream == null) {
+                throw new InitializationException("fabric3-spi jar is missing pom.xml file");
+            }
+            XmlManifestProcessor processor =
+                    runtime.getSystemComponent(XmlManifestProcessor.class, ComponentNames.XML_MANIFEST_PROCESSOR);
+
+            processor.process(manifest, stream);
+            stream = bootClassLoader.getResourceAsStream("META-INF/maven/org.codehaus.fabric3/fabric3-pojo/pom.xml");
+            if (stream == null) {
+                throw new InitializationException("fabric3-pojo jar is missing pom.xml file");
+            }
             processor.process(manifest, stream);
             contribution.setManifest(manifest);
             MetaDataStore store = runtime.getSystemComponent(MetaDataStore.class, ComponentNames.METADATA_STORE_URI);
