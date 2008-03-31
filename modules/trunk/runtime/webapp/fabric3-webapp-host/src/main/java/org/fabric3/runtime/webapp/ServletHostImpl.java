@@ -19,10 +19,9 @@
 package org.fabric3.runtime.webapp;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
+import java.util.HashMap;
 import javax.servlet.Servlet;
-import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
@@ -46,20 +45,15 @@ import org.fabric3.spi.host.ServletHost;
 public class ServletHostImpl implements ServletHost, ServletRequestInjector {
     protected Map<String, Servlet> servlets;
     protected ScopeRegistry registry;
+    private WebappHostInfo info;
 
-    public ServletHostImpl() {
-        this.servlets = new HashMap<String, Servlet>();
+    public ServletHostImpl(@Reference WebappHostInfo info) {
+        this.info = info;
+        servlets = new HashMap<String, Servlet>();
     }
 
-    @Reference(required = false)
-    public void setSessionScopeContainer(ScopeRegistry registry) {
-        this.registry = registry;
-    }
-
-    public void init(ServletConfig config) throws ServletException {
-        for (Servlet servlet : servlets.values()) {
-            servlet.init(config);
-        }
+    public ServletContext getServletContext() {
+        return info.getServletContext();
     }
 
     public void service(ServletRequest req, ServletResponse resp) throws ServletException, IOException {
@@ -75,7 +69,7 @@ public class ServletHostImpl implements ServletHost, ServletRequestInjector {
                     if (servlet != null) {
                         break;
                     }
-                    path = path.substring(0,i);
+                    path = path.substring(0, i);
                 }
             }
             if (servlet == null) {

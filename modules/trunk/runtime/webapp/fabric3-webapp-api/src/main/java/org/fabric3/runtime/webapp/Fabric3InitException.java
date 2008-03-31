@@ -26,6 +26,8 @@ import org.fabric3.host.Fabric3RuntimeException;
  * @version $Rev$ $Date$
  */
 public class Fabric3InitException extends Fabric3RuntimeException {
+    private static final long serialVersionUID = 5241730297358961743L;
+
     public Fabric3InitException(String string) {
         super(string);
     }

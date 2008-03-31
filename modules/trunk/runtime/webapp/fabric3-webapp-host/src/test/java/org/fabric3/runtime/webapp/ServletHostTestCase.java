@@ -44,7 +44,7 @@ public class ServletHostTestCase extends TestCase {
         servlet.service(req, res);
         EasyMock.expectLastCall();
         replay(servlet);
-        ServletHostImpl host = new ServletHostImpl();
+        ServletHostImpl host = new ServletHostImpl(null);
         host.registerMapping("foo", servlet);
         host.service(req, res);
         verify(servlet);
@@ -52,7 +52,7 @@ public class ServletHostTestCase extends TestCase {
 
     public void testDuplicateRegistration() throws Exception {
         Servlet servlet = createMock(Servlet.class);
-        ServletHostImpl host = new ServletHostImpl();
+        ServletHostImpl host = new ServletHostImpl(null);
         host.registerMapping("foo", servlet);
         assertEquals(true, host.isMappingRegistered("foo"));
         assertEquals(false, host.isMappingRegistered("bar"));
@@ -71,7 +71,7 @@ public class ServletHostTestCase extends TestCase {
         HttpServletResponse res = createMock(HttpServletResponse.class);
         Servlet servlet = createMock(Servlet.class);
         replay(servlet);
-        ServletHostImpl host = new ServletHostImpl();
+        ServletHostImpl host = new ServletHostImpl(null);
         host.registerMapping("foo", servlet);
         Servlet unregedServlet = host.unregisterMapping("foo");
         assertEquals(unregedServlet, servlet);

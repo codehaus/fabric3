@@ -24,6 +24,7 @@ package org.fabric3.runtime.webapp;
  * @version $Rev$ $Date$
  */
 public class InvalidResourcePath extends Fabric3InitException {
+    private static final long serialVersionUID = 3265371682263989964L;
 
     public InvalidResourcePath(String message, String identifier, Throwable cause) {
         super(message, identifier, cause);

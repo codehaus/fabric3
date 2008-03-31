@@ -20,11 +20,8 @@ package org.fabric3.runtime.webapp;
 
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
 import javax.servlet.ServletRequestEvent;
 import javax.servlet.ServletRequestListener;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
 
 import static org.fabric3.runtime.webapp.Constants.RUNTIME_ATTRIBUTE;
 
@@ -34,9 +31,11 @@ import static org.fabric3.runtime.webapp.Constants.RUNTIME_ATTRIBUTE;
  * @version $Rev$ $Date$
  */
 public class Fabric3RequestListener implements ServletRequestListener {
+    private WebappRuntime runtime;
+
     public void requestInitialized(ServletRequestEvent servletRequestEvent) {
         ServletContext context = servletRequestEvent.getServletContext();
-        WebappRuntime runtime = (WebappRuntime) context.getAttribute(RUNTIME_ATTRIBUTE);
+        WebappRuntime runtime = getRuntime(context);
         if (runtime != null) {
             runtime.requestInitialized(servletRequestEvent);
         } else {
@@ -46,9 +45,16 @@ public class Fabric3RequestListener implements ServletRequestListener {
 
     public void requestDestroyed(ServletRequestEvent servletRequestEvent) {
         ServletContext context = servletRequestEvent.getServletContext();
-        WebappRuntime runtime = (WebappRuntime) context.getAttribute(RUNTIME_ATTRIBUTE);
+        WebappRuntime runtime = getRuntime(context);
         if (runtime != null) {
             runtime.requestDestroyed(servletRequestEvent);
         }
+    }
+
+    private WebappRuntime getRuntime(ServletContext context) {
+        if (runtime == null) {
+            runtime = (WebappRuntime) context.getAttribute(RUNTIME_ATTRIBUTE);
+        }
+        return runtime;
     }
 }

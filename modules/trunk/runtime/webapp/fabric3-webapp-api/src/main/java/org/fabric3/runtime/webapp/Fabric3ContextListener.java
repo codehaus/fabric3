@@ -53,7 +53,7 @@ import static org.fabric3.runtime.webapp.Constants.COMPOSITE_NAMESPACE_PARAM;
  * system artifacts directly.
  * <p/>
  * The <code>web.xml</code> of a web application embedding Fabric3 must have entries for this listener and {@link
- * Fabric3SessionListener}. The latter notifies the runtime of session creation and expiration events through a
+ * Fabric3ContextListener}. The latter notifies the runtime of session creation and expiration events through a
  * "bridging" contract, {@link WebappRuntime}.
  *
  * @version $Rev$ $Date$
@@ -92,7 +92,6 @@ public class Fabric3ContextListener implements ServletContextListener {
             URL systemScdl = utils.getSystemScdl(bootClassLoader);
 
             runtime = utils.getRuntime(bootClassLoader);
-            runtime.setServletContext(servletContext);
             runtime.setHostInfo(info);
             runtime.setHostClassLoader(webappClassLoader);
             monitor = runtime.getMonitorFactory().getMonitor(WebAppMonitor.class);

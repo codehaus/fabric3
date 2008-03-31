@@ -21,40 +21,18 @@ package org.fabric3.runtime.webapp;
 import java.net.URI;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletRequestListener;
-import javax.servlet.http.HttpSessionListener;
 import javax.xml.namespace.QName;
 
 import org.fabric3.host.runtime.Fabric3Runtime;
 import org.fabric3.host.runtime.InitializationException;
 
 /**
- * The contract for artifacts loaded in the web application classloader to comminicate with the Fabric3 runtime loaded
- * in a child classloader. For example, filters and listeners may use this interface to notify the runtime of the web
- * container events.
+ * The contract for artifacts loaded in the web application classloader to comminicate with the Fabric3 runtime loaded in a child classloader. For
+ * example, filters and listeners may use this interface to notify the runtime of the web container events.
  *
  * @version $Rev$ $Date$
  */
-public interface WebappRuntime extends HttpSessionListener, ServletRequestListener, Fabric3Runtime<WebappHostInfo> {
-    /**
-     * Returns the ServletContext associated with this runtime.
-     *
-     * @return the ServletContext associated with this runtime
-     */
-    ServletContext getServletContext();
-
-    /**
-     * Sets the ServletContext associated with this runtime.
-     *
-     * @param servletContext the ServletContext associated with this runtime
-     */
-    void setServletContext(ServletContext servletContext);
-
-    /**
-     * Returns the request injector for the runtime
-     *
-     * @return the runtime's request injector
-     */
-    ServletRequestInjector getRequestInjector();
+public interface WebappRuntime extends ServletRequestListener, Fabric3Runtime<WebappHostInfo> {
 
     /**
      * Activates a composite in the domain.
