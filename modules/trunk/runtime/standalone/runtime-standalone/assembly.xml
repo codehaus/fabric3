@@ -94,7 +94,6 @@
                 <include>org.codehaus.fabric3:fabric3-policy</include>
                 <include>org.codehaus.fabric3:fabric3-fabric</include>
                 <include>org.codehaus.fabric3:fabric3-system</include>
-                <include>org.codehaus.fabric3:fabric3-java</include>
                 <include>org.codehaus.fabric3:fabric3-loader</include>
                 <include>org.codehaus.fabric3.standalone:fabric3-standalone-host</include>
                 <include>javax.servlet:servlet-api</include>
@@ -112,6 +111,8 @@
                 <!--<include>org.codehaus.fabric3:fabric3-console</include>-->
                 <include>org.codehaus.fabric3:fabric3-async-loader</include>
                 <include>org.codehaus.fabric3:fabric3-async-runtime</include>
+                <include>org.codehaus.fabric3:fabric3-jdk-proxy</include>
+                <include>org.codehaus.fabric3:fabric3-java</include>
                 <include>org.codehaus.fabric3:fabric3-jetty</include>
                 <include>org.codehaus.fabric3:fabric3-contribution-scanner-spi</include>
                 <include>org.codehaus.fabric3:fabric3-contribution-scanner</include>
