@@ -25,7 +25,7 @@ import java.util.Set;
 
 import javax.xml.namespace.QName;
 
-import org.fabric3.fabric.generator.PolicyException;
+import org.fabric3.fabric.model.physical.PolicyGenerationException;
 import org.fabric3.scdl.BindingDefinition;
 import org.fabric3.scdl.Implementation;
 import org.fabric3.scdl.Operation;
@@ -369,12 +369,12 @@ public class PhysicalWireGeneratorImpl implements PhysicalWireGenerator {
                                          LogicalBinding<?> sourceBinding,
                                          LogicalBinding<?> targetBinding,
                                          LogicalComponent<?> source,
-                                         LogicalComponent<?> target) throws PolicyException {
+                                         LogicalComponent<?> target) throws PolicyGenerationException {
 
         try {
             return policyResolver.resolvePolicies(serviceContract, sourceBinding, targetBinding, source, target);
         } catch (PolicyResolutionException e) {
-            throw new PolicyException(e);
+            throw new PolicyGenerationException(e);
         }
 
     }

@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.fabric.generator;
+package org.fabric3.fabric.model.physical;
 
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.policy.PolicyResolutionException;
@@ -24,9 +24,10 @@ import org.fabric3.spi.policy.PolicyResolutionException;
 /**
  * @version $Rev: 1 $ $Date: 2007-05-14 18:40:37 +0100 (Mon, 14 May 2007) $
  */
-public class PolicyException extends GenerationException {
-    
-    public PolicyException(PolicyResolutionException ex) {
+public class PolicyGenerationException extends GenerationException {
+    private static final long serialVersionUID = 8176001620286767338L;
+
+    public PolicyGenerationException(PolicyResolutionException ex) {
         super(ex);
     }
 
