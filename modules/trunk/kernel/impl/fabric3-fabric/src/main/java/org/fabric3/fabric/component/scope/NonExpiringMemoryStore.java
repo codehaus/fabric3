@@ -14,15 +14,15 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.fabric.services.store;
+package org.fabric3.fabric.component.scope;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.fabric3.spi.component.AtomicComponent;
+import org.fabric3.spi.component.InstanceWrapper;
 import org.fabric3.spi.component.InstanceWrapperStore;
 import org.fabric3.spi.component.StoreException;
-import org.fabric3.spi.component.InstanceWrapper;
-import org.fabric3.spi.component.AtomicComponent;
 
 /**
  * A simple store that just retains instances in memory without expiration. Basically, a HashMap.

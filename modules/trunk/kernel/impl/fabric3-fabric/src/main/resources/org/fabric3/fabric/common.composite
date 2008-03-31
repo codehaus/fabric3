@@ -109,7 +109,7 @@
     </component>
 
     <component name="memoryStore">
-        <system:implementation.system class="org.fabric3.fabric.services.store.NonExpiringMemoryStore"/>
+        <system:implementation.system class="org.fabric3.fabric.component.scope.NonExpiringMemoryStore"/>
     </component>
 
     <component name="DelegatingMarshalService">
