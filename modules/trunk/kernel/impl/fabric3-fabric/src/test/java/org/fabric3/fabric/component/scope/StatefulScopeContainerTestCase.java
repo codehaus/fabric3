@@ -21,29 +21,27 @@ import java.net.URI;
 import junit.framework.TestCase;
 import org.easymock.IMocksControl;
 import org.easymock.classextension.EasyMock;
-import org.osoa.sca.Conversation;
 
 import org.fabric3.scdl.Scope;
 import org.fabric3.spi.ObjectCreationException;
 import org.fabric3.spi.ObjectFactory;
-import org.fabric3.spi.wire.ConversationImpl;
-import org.fabric3.spi.invocation.WorkContext;
 import org.fabric3.spi.component.AtomicComponent;
+import org.fabric3.spi.component.ExpirationPolicy;
 import org.fabric3.spi.component.GroupInitializationException;
 import org.fabric3.spi.component.InstanceWrapper;
 import org.fabric3.spi.component.InstanceWrapperStore;
 import org.fabric3.spi.component.TargetResolutionException;
-import org.fabric3.spi.component.ExpirationPolicy;
+import org.fabric3.spi.invocation.WorkContext;
 
 /**
  * @version $Rev$ $Date$
  */
 public class StatefulScopeContainerTestCase extends TestCase {
-    private StatefulScopeContainer<Conversation> container;
+    private StatefulScopeContainer<MockId> container;
     private IMocksControl control;
-    private InstanceWrapperStore<Conversation> store;
-    private Scope<Conversation> scope;
-    private Conversation conversation;
+    private InstanceWrapperStore<MockId> store;
+    private Scope<MockId> scope;
+    private MockId conversation;
     private WorkContext workContext;
     private URI groupId;
     private AtomicComponent<Object> component;
@@ -83,14 +81,14 @@ public class StatefulScopeContainerTestCase extends TestCase {
     protected void setUp() throws Exception {
         super.setUp();
         groupId = URI.create("groupId");
-        conversation = new ConversationImpl("contextId");
-        scope = new Scope<Conversation>("TESTING", Conversation.class);
+        conversation = new MockId("contextId");
+        scope = new Scope<MockId>("TESTING", MockId.class);
         control = EasyMock.createControl();
         store = control.createMock(InstanceWrapperStore.class);
         workContext = control.createMock(WorkContext.class);
         component = control.createMock(AtomicComponent.class);
         wrapper = control.createMock(InstanceWrapper.class);
-        container = new StatefulScopeContainer<Conversation>(scope, null, store) {
+        container = new StatefulScopeContainer<MockId>(scope, null, store) {
 
             public void startContext(WorkContext workContext, URI groupId) throws GroupInitializationException {
                 super.startContext(workContext, conversation, groupId);
@@ -115,5 +113,17 @@ public class StatefulScopeContainerTestCase extends TestCase {
             }
 
         };
+    }
+
+    private class MockId {
+        private String id;
+        public MockId(String id) {
+            this.id = id;
+        }
+
+        public Object getId() {
+            return id;
+        }
+
     }
 }
