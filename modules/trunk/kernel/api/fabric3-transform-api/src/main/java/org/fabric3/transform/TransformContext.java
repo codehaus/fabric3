@@ -14,7 +14,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.spi.transform;
+package org.fabric3.transform;
 
 import java.net.URL;
 

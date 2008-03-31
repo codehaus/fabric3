@@ -20,8 +20,8 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.fabric3.scdl.DataType;
-import org.fabric3.spi.transform.Transformer;
-import org.fabric3.spi.transform.TransformerRegistry;
+import org.fabric3.transform.Transformer;
+import org.fabric3.transform.TransformerRegistry;
 
 /**
  * @version $Rev$ $Date$

@@ -14,19 +14,14 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.spi.transform;
+package org.fabric3.transform;
+
+import org.fabric3.scdl.DataType;
 
 /**
  * @version $Rev$ $Date$
  */
-public interface PushTransformer<SOURCE, TARGET> extends Transformer {
-    /**
-     * Transforms the source by writing it to the target.
-     *
-     * @param source the source instance
-     * @param target the target to be written to
-     * @param context the context for this transformation
-     * @throws Exception if there was a problem during the transformation
-     */
-    void transform(SOURCE source, TARGET target, TransformContext context) throws Exception;
+public interface Transformer {
+    DataType<?> getSourceType();
+    DataType<?> getTargetType();
 }

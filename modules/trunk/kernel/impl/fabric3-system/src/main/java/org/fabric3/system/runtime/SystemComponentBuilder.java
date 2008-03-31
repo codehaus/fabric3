@@ -32,8 +32,8 @@ import org.fabric3.spi.component.InstanceFactoryProvider;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
-import org.fabric3.spi.transform.PullTransformer;
-import org.fabric3.spi.transform.TransformerRegistry;
+import org.fabric3.transform.PullTransformer;
+import org.fabric3.transform.TransformerRegistry;
 import org.fabric3.system.provision.SystemComponentDefinition;
 
 import org.osoa.sca.annotations.EagerInit;

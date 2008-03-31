@@ -33,8 +33,9 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Text;
 
 import org.fabric3.scdl.DataType;
-import org.fabric3.spi.transform.TransformContext;
+import org.fabric3.transform.TransformContext;
 import org.fabric3.transform.AbstractPushTransformer;
+import org.fabric3.transform.TransformationException;
 
 /**
  * @version $Rev$ $Date$
@@ -52,57 +53,61 @@ public class Stream2Element2 extends AbstractPushTransformer<XMLStreamReader, El
         return null;
     }
 
-    public void transform(XMLStreamReader reader, Element element, TransformContext context) throws XMLStreamException {
+    public void transform(XMLStreamReader reader, Element element, TransformContext context) throws TransformationException {
 
-        Document document = element.getOwnerDocument();
-        int depth = 0;
-        while (true) {
-            int next = reader.next();
-            switch (next) {
-            case START_ELEMENT:
-                
-                Element child = document.createElementNS(reader.getNamespaceURI(), reader.getLocalName());
-                
-                for (int i = 0; i < reader.getAttributeCount(); i++) {
-                    child.setAttributeNS(reader.getAttributeNamespace(i),
-                                         reader.getAttributeLocalName(i),
-                                         reader.getAttributeValue(i));
-                }
-                
-                // Handle namespaces
-                for (int i = 0; i < reader.getNamespaceCount(); i++) {
-                    
-                    String prefix = reader.getNamespacePrefix(i);
-                    String uri = reader.getNamespaceURI(i);
-                    
-                    prefix = prefix == null ? "xmlns" : "xmlns:" + prefix; 
-                    
-                    child.setAttribute(prefix, uri);
-                    
-                }
+        try {
+            Document document = element.getOwnerDocument();
+            int depth = 0;
+            while (true) {
+                int next = reader.next();
+                switch (next) {
+                case START_ELEMENT:
 
-                element.appendChild(child);
-                element = child;
-                depth++;
-                break;
-            case CHARACTERS:
-            case CDATA:
-                Text text = document.createTextNode(reader.getText());
-                element.appendChild(text);
-                break;
-            case END_ELEMENT:
-                if (depth == 0) {
-                    return;
+                    Element child = document.createElementNS(reader.getNamespaceURI(), reader.getLocalName());
+
+                    for (int i = 0; i < reader.getAttributeCount(); i++) {
+                        child.setAttributeNS(reader.getAttributeNamespace(i),
+                                             reader.getAttributeLocalName(i),
+                                             reader.getAttributeValue(i));
+                    }
+
+                    // Handle namespaces
+                    for (int i = 0; i < reader.getNamespaceCount(); i++) {
+
+                        String prefix = reader.getNamespacePrefix(i);
+                        String uri = reader.getNamespaceURI(i);
+
+                        prefix = prefix == null ? "xmlns" : "xmlns:" + prefix;
+
+                        child.setAttribute(prefix, uri);
+
+                    }
+
+                    element.appendChild(child);
+                    element = child;
+                    depth++;
+                    break;
+                case CHARACTERS:
+                case CDATA:
+                    Text text = document.createTextNode(reader.getText());
+                    element.appendChild(text);
+                    break;
+                case END_ELEMENT:
+                    if (depth == 0) {
+                        return;
+                    }
+                    depth--;
+                    element = (Element) element.getParentNode();
+                case ENTITY_REFERENCE:
+                case COMMENT:
+                case SPACE:
+                case PROCESSING_INSTRUCTION:
+                case DTD:
+                    break;
                 }
-                depth--;
-                element = (Element) element.getParentNode();
-            case ENTITY_REFERENCE:
-            case COMMENT:
-            case SPACE:
-            case PROCESSING_INSTRUCTION:
-            case DTD:
-                break;
             }
+        } catch (XMLStreamException e) {
+            throw new TransformationException(e);
         }
     }
 }

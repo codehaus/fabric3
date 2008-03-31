@@ -14,15 +14,24 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.spi.transform;
-
-import org.fabric3.scdl.DataType;
+package org.fabric3.transform;
 
 /**
  * @version $Rev$ $Date$
  */
-public interface TransformerRegistry<T extends Transformer> {
-    void register(T transformer);
-    void unregister(T transformer);
-    T getTransformer(DataType<?> source, DataType<?> target);
+public class TransformationException extends Exception {
+    public TransformationException() {
+    }
+
+    public TransformationException(String string) {
+        super(string);
+    }
+
+    public TransformationException(String string, Throwable throwable) {
+        super(string, throwable);
+    }
+
+    public TransformationException(Throwable throwable) {
+        super(throwable);
+    }
 }

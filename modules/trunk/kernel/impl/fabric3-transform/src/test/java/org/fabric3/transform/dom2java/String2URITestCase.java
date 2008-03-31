@@ -21,7 +21,7 @@ package org.fabric3.transform.dom2java;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-import org.fabric3.spi.transform.TransformationException;
+import org.fabric3.transform.TransformationException;
 
 
 /**

@@ -23,8 +23,9 @@ import javax.xml.stream.XMLStreamWriter;
 import org.w3c.dom.Element;
 
 import org.fabric3.scdl.DataType;
-import org.fabric3.spi.transform.TransformContext;
 import org.fabric3.transform.AbstractPushTransformer;
+import org.fabric3.transform.TransformContext;
+import org.fabric3.transform.TransformationException;
 
 /**
  * @version $Rev$ $Date$
@@ -45,9 +46,16 @@ public class Stream2Element extends AbstractPushTransformer<XMLStreamReader, Ele
         return null;
     }
 
-    public void transform(XMLStreamReader reader, Element element, TransformContext context) throws XMLStreamException {
+    public void transform(XMLStreamReader reader, Element element, TransformContext context) throws TransformationException {
         XMLStreamWriter writer = new DOMStreamWriter(element.getOwnerDocument(), element);
-        streamTransformer.transform(reader, writer, null);
-        writer.close();
+        try {
+            streamTransformer.transform(reader, writer, null);
+        } finally {
+            try {
+                writer.close();
+            } catch (XMLStreamException e) {
+                // ignore
+            }
+        }
     }
 }

@@ -36,6 +36,7 @@ import org.fabric3.scdl.PolicyAware;
 import org.fabric3.introspection.xml.LoaderException;
 import org.fabric3.introspection.xml.LoaderHelper;
 import org.fabric3.transform.xml.Stream2Element2;
+import org.fabric3.transform.TransformationException;
 import org.fabric3.loader.common.InvalidPrefixException;
 
 /**
@@ -64,7 +65,11 @@ public class DefaultLoaderHelper implements LoaderHelper {
         Document value = builder.newDocument();
         Element root = value.createElement("value");
         value.appendChild(root);
-        stream2Element.transform(reader, root, null);
+        try {
+            stream2Element.transform(reader, root, null);
+        } catch (TransformationException e) {
+            throw (XMLStreamException) e.getCause();
+        }
         return value;
     }
     public void loadPolicySetsAndIntents(PolicyAware policyAware, XMLStreamReader reader) throws LoaderException {

@@ -14,14 +14,15 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.spi.transform;
+package org.fabric3.transform;
 
 import org.fabric3.scdl.DataType;
 
 /**
  * @version $Rev$ $Date$
  */
-public interface Transformer {
-    DataType<?> getSourceType();
-    DataType<?> getTargetType();
+public interface TransformerRegistry<T extends Transformer> {
+    void register(T transformer);
+    void unregister(T transformer);
+    T getTransformer(DataType<?> source, DataType<?> target);
 }

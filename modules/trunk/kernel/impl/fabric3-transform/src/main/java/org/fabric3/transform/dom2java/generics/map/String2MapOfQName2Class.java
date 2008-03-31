@@ -25,8 +25,10 @@ import javax.xml.namespace.QName;
 import org.fabric3.scdl.DataType;
 import org.fabric3.spi.model.type.JavaParameterizedType;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
-import org.fabric3.spi.transform.TransformContext;
+import org.fabric3.transform.TransformContext;
 import org.fabric3.transform.AbstractPullTransformer;
+import org.fabric3.transform.TransformationException;
+
 import org.osoa.sca.annotations.Reference;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -51,6 +53,7 @@ public class String2MapOfQName2Class extends AbstractPullTransformer<Node, Map<Q
             ParameterizedType parameterizedType = (ParameterizedType) String2MapOfQName2Class.class.getDeclaredField("FIELD").getGenericType();
             TARGET = new JavaParameterizedType(parameterizedType);
         } catch (NoSuchFieldException ignore) {
+            throw new AssertionError();
         }
     }
     
@@ -59,16 +62,16 @@ public class String2MapOfQName2Class extends AbstractPullTransformer<Node, Map<Q
     }
 
     /**
-     * @see org.fabric3.spi.transform.Transformer#getTargetType()
+     * @see org.fabric3.transform.Transformer#getTargetType()
      */
     public DataType<?> getTargetType() {
         return TARGET;
     }
 
     /**
-     * @see org.fabric3.spi.transform.PullTransformer#transform(java.lang.Object,org.fabric3.spi.transform.TransformContext)
+     * @see org.fabric3.transform.PullTransformer#transform(java.lang.Object, org.fabric3.transform.TransformContext)
      */
-    public Map<QName, Class<?>> transform(final Node node, final TransformContext context) throws Exception {
+    public Map<QName, Class<?>> transform(final Node node, final TransformContext context) throws TransformationException {
 
         final Map<QName, Class<?>> map = new HashMap<QName, Class<?>>();
         final NodeList nodeList = node.getChildNodes();
@@ -82,8 +85,13 @@ public class String2MapOfQName2Class extends AbstractPullTransformer<Node, Map<Q
                 String namespaceUri = element.getNamespaceURI();
                 QName qname = new QName(namespaceUri, localPart);
                 String classText = element.getTextContent();
-                
-                map.put(qname, classLoaderRegistry.loadClass(context.getTargetClassLoader(), classText));
+
+                try {
+                    Class<?> clazz = classLoaderRegistry.loadClass(context.getTargetClassLoader(), classText);
+                    map.put(qname, clazz);
+                } catch (ClassNotFoundException e) {
+                    throw new TransformationException(e);
+                }
             }
         }
         return map;

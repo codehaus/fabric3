@@ -25,8 +25,8 @@ import org.w3c.dom.Node;
 
 import org.fabric3.scdl.DataType;
 import org.fabric3.spi.model.type.JavaClass;
-import org.fabric3.spi.transform.TransformContext;
-import org.fabric3.spi.transform.TransformationException;
+import org.fabric3.transform.TransformContext;
+import org.fabric3.transform.TransformationException;
 import org.fabric3.transform.AbstractPullTransformer;
 
 /**
@@ -54,14 +54,14 @@ public class String2Date extends AbstractPullTransformer<Node, Date> {
     }
 
     /**
-     * @see org.fabric3.spi.transform.Transformer#getTargetType()
+     * @see org.fabric3.transform.Transformer#getTargetType()
      */
     public DataType<?> getTargetType() {
         return TARGET;
     }
 
     /**
-     * @see org.fabric3.spi.transform.PullTransformer#transform(java.lang.Object,org.fabric3.spi.transform.TransformContext)
+     * @see org.fabric3.transform.PullTransformer#transform(java.lang.Object, org.fabric3.transform.TransformContext)
      *      Applies transformation for Date
      */
     public Date transform(final Node node, final TransformContext context) throws TransformationException {

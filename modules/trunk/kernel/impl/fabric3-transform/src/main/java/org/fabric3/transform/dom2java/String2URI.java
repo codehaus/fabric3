@@ -21,9 +21,10 @@ import java.net.URISyntaxException;
 
 import org.fabric3.scdl.DataType;
 import org.fabric3.spi.model.type.JavaClass;
-import org.fabric3.spi.transform.TransformContext;
-import org.fabric3.spi.transform.TransformationException;
+import org.fabric3.transform.TransformContext;
+import org.fabric3.transform.TransformationException;
 import org.fabric3.transform.AbstractPullTransformer;
+
 import org.w3c.dom.Node;
 
 /**
@@ -33,7 +34,7 @@ public class String2URI extends AbstractPullTransformer<Node, URI> {
     private static final JavaClass<URI> TARGET = new JavaClass<URI>(URI.class);
 
     /**
-     * @see org.fabric3.spi.transform.Transformer#getTargetType()
+     * @see org.fabric3.transform.Transformer#getTargetType()
      */
     public DataType<?> getTargetType() {
         return TARGET;
@@ -41,7 +42,7 @@ public class String2URI extends AbstractPullTransformer<Node, URI> {
 
     /**
      * Transformation for URI
-     * @see org.fabric3.spi.transform.PullTransformer#transform(java.lang.Object, org.fabric3.spi.transform.TransformContext)
+     * @see org.fabric3.transform.PullTransformer#transform(java.lang.Object, org.fabric3.transform.TransformContext)
      */
     public URI transform(final Node node, final TransformContext context) throws TransformationException {
     	final String content = node.getTextContent();

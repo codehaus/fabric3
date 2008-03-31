@@ -29,7 +29,7 @@ import org.apache.commons.io.output.ByteArrayOutputStream;
 
 import org.fabric3.scdl.DataType;
 import org.fabric3.spi.model.type.JavaClass;
-import org.fabric3.spi.transform.TransformContext;
+import org.fabric3.transform.TransformContext;
 import org.fabric3.transform.AbstractPullTransformer;
 
 /**

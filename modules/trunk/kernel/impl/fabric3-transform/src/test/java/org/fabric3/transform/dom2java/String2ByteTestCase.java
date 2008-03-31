@@ -18,7 +18,7 @@
  */
 package org.fabric3.transform.dom2java;
 
-import org.fabric3.spi.transform.TransformationException;
+import org.fabric3.transform.TransformationException;
 
 /**
  * Tests String to Byte Transform

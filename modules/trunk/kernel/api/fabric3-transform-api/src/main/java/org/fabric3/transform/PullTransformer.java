@@ -16,22 +16,17 @@
  */
 package org.fabric3.transform;
 
-import org.fabric3.host.Fabric3Exception;
-
 /**
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
-public class TransformException extends Fabric3Exception {
-
-    private static final long serialVersionUID = -1094830945858416909L;
-    
+public interface PullTransformer<SOURCE, TARGET> extends Transformer {
     /**
-     * Initializes the message.
-     * 
-     * @param message Message for the exception.
+     * Transforms the source instance into a new instance of the target type.
+     *
+     * @param source the source instance
+     * @param context the context for this transformation
+     * @return a new instance of the target type
+     * @throws TransformationException if there was a problem during the transformation
      */
-    public TransformException(String message) {
-        super(message);
-    }
-
+    TARGET transform(SOURCE source, TransformContext context) throws TransformationException;
 }

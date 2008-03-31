@@ -25,11 +25,12 @@ import org.fabric3.spi.builder.BuilderException;
 import org.fabric3.spi.builder.component.ComponentBuilderRegistry;
 import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
-import org.fabric3.spi.transform.PullTransformer;
-import org.fabric3.spi.transform.TransformerRegistry;
+import org.fabric3.transform.PullTransformer;
+import org.fabric3.transform.TransformerRegistry;
 import org.fabric3.spi.wire.ProxyService;
 import org.fabric3.spring.applicationContext.SCAApplicationContext;
 import org.fabric3.spring.applicationContext.SCAParentApplicationContext;
+
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;

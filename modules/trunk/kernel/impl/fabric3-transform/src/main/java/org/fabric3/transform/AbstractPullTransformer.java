@@ -24,8 +24,8 @@ import org.w3c.dom.Node;
 
 import org.fabric3.scdl.DataType;
 import org.fabric3.spi.model.type.XSDSimpleType;
-import org.fabric3.spi.transform.PullTransformer;
-import org.fabric3.spi.transform.TransformerRegistry;
+import org.fabric3.transform.PullTransformer;
+import org.fabric3.transform.TransformerRegistry;
 
 /**
  * @version $Rev$ $Date$
@@ -61,7 +61,7 @@ public abstract class AbstractPullTransformer<SOURCE, TARGET> implements PullTra
     }
     
     /**
-     * @see org.fabric3.spi.transform.Transformer#getSourceType()
+     * @see Transformer#getSourceType()
      */
     public DataType<?> getSourceType() {
     	return DEFAULT_SOURCE;
