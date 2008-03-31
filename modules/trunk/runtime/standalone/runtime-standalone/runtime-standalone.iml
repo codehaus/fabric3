@@ -29,7 +29,7 @@
       </library>
     </orderEntry>
     <orderEntry type="module" module-name="fabric3-host-api" exported="" />
-    <orderEntry type="module" module-name="fabric3-monitor" exported="" />
+    <orderEntry type="module" module-name="fabric3-monitor-api" exported="" />
     <orderEntry type="module" module-name="fabric3-introspection-spi" exported="" />
     <orderEntry type="module" module-name="fabric3-scdl" exported="" />
     <orderEntry type="module" module-name="fabric3-xmlfactory" exported="" />
@@ -65,6 +65,7 @@
     <orderEntry type="module" module-name="fabric3-introspection" exported="" />
     <orderEntry type="module" module-name="fabric3-standalone-host" exported="" />
     <orderEntry type="module" module-name="fabric3-fabric" exported="" />
+    <orderEntry type="module" module-name="fabric3-monitor" exported="" />
     <orderEntry type="module" module-name="fabric3-pojo" exported="" />
     <orderEntry type="module" module-name="fabric3-transform" exported="" />
     <orderEntry type="module" module-name="fabric3-loader" exported="" />
@@ -73,6 +74,7 @@
     <orderEntry type="module" module-name="fabric3-jmx" exported="" />
     <orderEntry type="module" module-name="fabric3-policy" exported="" />
     <orderEntry type="module" module-name="fabric3-util" exported="" />
+    <orderEntry type="module" module-name="fabric3-jdk-proxy" exported="" />
     <orderEntry type="module" module-name="fabric3-contribution-scanner-spi" exported="" />
     <orderEntry type="module-library" exported="">
       <library name="org.codehaus.woodstox:wstx-asl:3.2.1">

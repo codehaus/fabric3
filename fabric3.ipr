@@ -360,6 +360,7 @@
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/federated/fabric3-messaging-jxta/fabric3-messaging-jxta.iml" filepath="$PROJECT_DIR$/modules/trunk/federated/fabric3-messaging-jxta/fabric3-messaging-jxta.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/implementation/fabric3-mock/fabric3-mock.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/implementation/fabric3-mock/fabric3-mock.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/runtime/support/fabric3-monitor/fabric3-monitor.iml" filepath="$PROJECT_DIR$/modules/trunk/runtime/support/fabric3-monitor/fabric3-monitor.iml" />
+      <module fileurl="file://$PROJECT_DIR$/modules/trunk/kernel/api/fabric3-monitor-api/fabric3-monitor-api.iml" filepath="$PROJECT_DIR$/modules/trunk/kernel/api/fabric3-monitor-api/fabric3-monitor-api.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/other/fabric3-naming/fabric3-naming.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/other/fabric3-naming/fabric3-naming.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/kernel/impl/fabric3-pojo/fabric3-pojo.iml" filepath="$PROJECT_DIR$/modules/trunk/kernel/impl/fabric3-pojo/fabric3-pojo.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/kernel/impl/fabric3-policy/fabric3-policy.iml" filepath="$PROJECT_DIR$/modules/trunk/kernel/impl/fabric3-policy/fabric3-policy.iml" />

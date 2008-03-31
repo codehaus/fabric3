@@ -32,6 +32,7 @@
       </library>
     </orderEntry>
     <orderEntry type="module" module-name="fabric3-host-api" exported="" />
+    <orderEntry type="module" module-name="fabric3-monitor-api" exported="" />
     <orderEntry type="module" module-name="fabric3-monitor" exported="" />
     <orderEntry type="module" module-name="fabric3-fabric" exported="" />
     <orderEntry type="module" module-name="fabric3-spi" exported="" />
@@ -56,6 +57,7 @@
         </SOURCES>
       </library>
     </orderEntry>
+    <orderEntry type="module" module-name="fabric3-jdk-proxy" exported="" />
     <orderEntry type="module" module-name="fabric3-java" exported="" />
     <orderEntry type="module-library" exported="">
       <library name="stax:stax-api:1.0">
@@ -70,6 +72,7 @@
         </SOURCES>
       </library>
     </orderEntry>
+    <orderEntry type="module" module-name="fabric3-web" exported="" />
     <orderEntry type="module" module-name="fabric3-policy" exported="" />
     <orderEntry type="module" module-name="fabric3-util" exported="" />
     <orderEntry type="module-library">
