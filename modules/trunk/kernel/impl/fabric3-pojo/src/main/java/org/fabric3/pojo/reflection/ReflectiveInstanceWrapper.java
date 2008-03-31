@@ -18,7 +18,6 @@
  */
 package org.fabric3.pojo.reflection;
 
-import java.util.List;
 import java.util.Map;
 
 import org.fabric3.scdl.InjectableAttribute;
@@ -51,7 +50,7 @@ public class ReflectiveInstanceWrapper<T> implements InstanceWrapper<T> {
         this.destroyInvoker = destroyInvoker;
         this.started = false;
         this.injectors = injectors;
-        
+
     }
 
     public T getInstance() {
@@ -98,9 +97,9 @@ public class ReflectiveInstanceWrapper<T> implements InstanceWrapper<T> {
             started = false;
         }
     }
-    
+
     public void reinject() throws TargetResolutionException {
-        
+
         try {
             if (injectors != null) {
                 for (Injector<T> injector : injectors.values()) {
@@ -113,14 +112,13 @@ public class ReflectiveInstanceWrapper<T> implements InstanceWrapper<T> {
     }
 
     public void addObjectFactory(String referenceName, ObjectFactory<?> factory, Object key) {
-        
+
         for (InjectableAttribute attribute : injectors.keySet()) {
             if (attribute.getName().equals(referenceName)) {
                 injectors.get(attribute).setObectFactory(factory, key);
             }
         }
-        // TODO Auto-generated method stub
-        
+
     }
-    
+
 }
