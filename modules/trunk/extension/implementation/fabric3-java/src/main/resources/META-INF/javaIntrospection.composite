@@ -47,9 +47,14 @@
     <component name="org.fabric3.java.introspection.JavaHeuristic">
         <system:implementation.system class="org.fabric3.java.introspection.JavaHeuristic"/>
         <reference name="service" target="org.fabric3.java.introspection.JavaServiceHeuristic"/>
+        <reference name="dataType" target="org.fabric3.java.introspection.JavaDataTypeHeuristic"/>
     </component>
 
     <component name="org.fabric3.java.introspection.JavaServiceHeuristic">
         <system:implementation.system class="org.fabric3.java.introspection.JavaServiceHeuristic"/>
+    </component>
+
+    <component name="org.fabric3.java.introspection.JavaDataTypeHeuristic">
+        <system:implementation.system class="org.fabric3.java.introspection.JavaDataTypeHeuristic"/>
     </component>
 </composite>

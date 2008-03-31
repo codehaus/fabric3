@@ -55,13 +55,16 @@ public class JavaHeuristic implements HeuristicProcessor<JavaImplementation> {
     private final ContractProcessor contractProcessor;
 
     private final HeuristicProcessor<JavaImplementation> serviceHeuristic;
+    private final HeuristicProcessor<JavaImplementation> dataTypeHeuristic;
 
     public JavaHeuristic(@Reference IntrospectionHelper helper,
                          @Reference ContractProcessor contractProcessor,
-                         @Reference(name = "service")HeuristicProcessor<JavaImplementation> serviceHeuristic) {
+                         @Reference(name = "service")HeuristicProcessor<JavaImplementation> serviceHeuristic,
+                         @Reference(name = "dataType")HeuristicProcessor<JavaImplementation> dataTypeHeuristic) {
         this.helper = helper;
         this.contractProcessor = contractProcessor;
         this.serviceHeuristic = serviceHeuristic;
+        this.dataTypeHeuristic = dataTypeHeuristic;
     }
 
     public void applyHeuristics(JavaImplementation implementation, Class<?> implClass, IntrospectionContext context) throws IntrospectionException {
@@ -80,6 +83,9 @@ public class JavaHeuristic implements HeuristicProcessor<JavaImplementation> {
             evaluateSetters(implementation, implClass, context);
             evaluateFields(implementation, implClass, context);
         }
+
+        // apply data type mapping heuristic
+        dataTypeHeuristic.applyHeuristics(implementation, implClass, context);
     }
 
     Signature findConstructor(Class<?> implClass) throws IntrospectionException {
