@@ -98,10 +98,6 @@
         <system:implementation.system class="org.fabric3.fabric.services.advertisement.FeatureLoader"/>
     </component>
 
-    <component name="proxyService">
-        <system:implementation.system class="org.fabric3.fabric.wire.jdk.JDKProxyService"/>
-    </component>
-
     <!-- Default scopes -->
     <component name="scope.stateless">
         <system:implementation.system class="org.fabric3.fabric.component.scope.StatelessScopeContainer"/>

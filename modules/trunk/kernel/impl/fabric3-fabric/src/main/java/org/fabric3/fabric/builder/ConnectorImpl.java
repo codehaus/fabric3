@@ -56,7 +56,7 @@ public class ConnectorImpl implements Connector {
         this.interceptorBuilders = interceptorBuilders;
     }
 
-    @Reference
+    @Reference(required = false)
     public void setSourceAttachers(Map<Class<? extends PhysicalWireSourceDefinition>, SourceWireAttacher<? extends PhysicalWireSourceDefinition>> sourceAttachers) {
         this.sourceAttachers = sourceAttachers;
     }

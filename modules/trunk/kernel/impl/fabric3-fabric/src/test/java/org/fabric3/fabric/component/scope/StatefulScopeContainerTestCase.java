@@ -23,10 +23,10 @@ import org.easymock.IMocksControl;
 import org.easymock.classextension.EasyMock;
 import org.osoa.sca.Conversation;
 
-import org.fabric3.fabric.wire.jdk.ConversationImpl;
 import org.fabric3.scdl.Scope;
 import org.fabric3.spi.ObjectCreationException;
 import org.fabric3.spi.ObjectFactory;
+import org.fabric3.spi.wire.ConversationImpl;
 import org.fabric3.spi.invocation.WorkContext;
 import org.fabric3.spi.component.AtomicComponent;
 import org.fabric3.spi.component.GroupInitializationException;
