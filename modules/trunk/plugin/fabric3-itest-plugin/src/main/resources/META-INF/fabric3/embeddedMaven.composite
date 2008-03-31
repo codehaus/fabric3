@@ -49,15 +49,6 @@
     <include name="introspection:AnnotationProcessors" scdlResource="org/fabric3/introspection/impl/annotation/processors.composite"/>
     <include name="loader:loader" scdlResource="org/fabric3/loader/loader.composite"/>
 
-    <!-- Pojo implementation type -->
-    <include name="org.fabric3.fabric.PojoImplementation" scdlResource="org/fabric3/fabric/pojoImplementation.composite"/>
-
-    <!-- System implementation type -->
-    <include name="org.fabric3.fabric.SystemImplementation" scdlResource="org/fabric3/fabric/systemImplementation.composite"/>
-
-    <!-- Java implementation type -->
-    <include name="org.fabric3.fabric.JavaImplementation" scdlResource="org/fabric3/java/javaImplementation.composite"/>
-
     <!-- include deployment configuration -->
     <include name="org.fabric3.fabric.Deployment" scdlResource="org/fabric3/fabric/deployment.composite"/>
 
@@ -66,8 +57,22 @@
     <!-- include transform configuration -->
     <include name="org.fabric3.transform.Transform" scdlResource="org/fabric3/transform/transform.composite"/>
 
+    <!-- proxy service implementation -->
+    <include name="org.fabric3.JDKProxy" scdlResource="META-INF/jdkproxy.composite"/>
+
+    <!-- Pojo implementation type -->
+    <include name="org.fabric3.fabric.PojoImplementation" scdlResource="org/fabric3/fabric/pojoImplementation.composite"/>
+
+    <!-- System implementation type -->
+    <include name="org.fabric3.fabric.SystemImplementation" scdlResource="org/fabric3/fabric/systemImplementation.composite"/>
+   
     <!-- include JUnit implementation type -->
     <include xmlns:junit="urn:org.codehaus.fabric3:fabric3-junit" name="junit:JUnitImplementation" scdlResource="org/fabric3/junit/junitImplementation.composite"/>
+
+    <!-- include Java implementation type -->
+    <include name="org.fabric3.JavaControl" scdlResource="META-INF/javaControl.composite"/>
+    <include name="org.fabric3.JavaIntrospection" scdlResource="META-INF/javaIntrospection.composite"/>
+    <include name="org.fabric3.JavaRuntime" scdlResource="META-INF/javaRuntime.composite"/>
 
     <component name="runtimeInfoService">
         <system:implementation.system class="org.fabric3.fabric.services.runtime.DefaultRuntimeInfoService"/>
