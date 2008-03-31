@@ -43,6 +43,12 @@
     </context-param>
 
     <servlet>
+        <servlet-name>Fabric3Servlet</servlet-name>
+        <servlet-class>org.fabric3.runtime.webapp.Fabric3Servlet</servlet-class>
+        <load-on-startup>1</load-on-startup>
+    </servlet>
+
+    <servlet>
         <servlet-name>TestServlet</servlet-name>
         <servlet-class>org.fabric3.runtime.webapp.smoketest.TestServlet</servlet-class>
     </servlet>
@@ -51,4 +57,10 @@
         <servlet-name>TestServlet</servlet-name>
         <url-pattern>/smoketest</url-pattern>
     </servlet-mapping>
+    
+    <servlet-mapping>
+        <servlet-name>Fabric3Servlet</servlet-name>
+        <url-pattern>/services</url-pattern>
+    </servlet-mapping>
+
 </web-app>
