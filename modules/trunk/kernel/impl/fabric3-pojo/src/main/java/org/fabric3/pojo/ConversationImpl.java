@@ -14,7 +14,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.spi.wire;
+package org.fabric3.pojo;
 
 import java.io.Serializable;
 
