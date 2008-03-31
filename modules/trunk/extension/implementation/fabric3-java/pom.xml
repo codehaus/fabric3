@@ -27,15 +27,16 @@
     <version>0.5ALPHA2-SNAPSHOT</version>
     <name>Fabric3 Java</name>
     <description>Fabric3 Java Component Implementation.</description>
-
+    <packaging>sca-contribution-jar</packaging>
+ 
     <dependencies>
-    
+
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-spi</artifactId>
             <version>${project.version}</version>
         </dependency>
-        
+
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-pojo</artifactId>
@@ -58,13 +59,40 @@
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
         </dependency>
-        
+
         <dependency>
             <groupId>org.easymock</groupId>
             <artifactId>easymockclassextension</artifactId>
         </dependency>
-		
+
     </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.fabric3</groupId>
+                <artifactId>fabric3-contribution-plugin</artifactId>
+                <version>${project.version}</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <mavenImports>
+                        <mavenImport>
+                            <groupId>org.codehaus.fabric3</groupId>
+                            <artifactId>fabric3-pojo</artifactId>
+                        </mavenImport>
+                        <mavenImport>
+                            <groupId>org.codehaus.fabric3</groupId>
+                            <artifactId>fabric3-spi</artifactId>
+                        </mavenImport>
+                    </mavenImports>
+                    <deployables>
+                        <deployable>META-INF/javaControl.composite</deployable>
+                        <deployable>META-INF/javaRuntime.composite</deployable>
+                        <deployable>META-INF/javaIntrospection.composite</deployable>
+                    </deployables>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
     <scm>
         <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/extension/implementation/fabric3-java</connection>
