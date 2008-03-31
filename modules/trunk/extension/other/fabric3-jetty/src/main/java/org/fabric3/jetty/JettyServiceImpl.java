@@ -22,6 +22,7 @@ import java.io.File;
 import java.io.IOException;
 import javax.resource.spi.work.Work;
 import javax.servlet.Servlet;
+import javax.servlet.ServletContext;
 
 import org.mortbay.jetty.Connector;
 import org.mortbay.jetty.Server;
@@ -235,6 +236,10 @@ public class JettyServiceImpl implements JettyService {
         server.stop();
         state = STOPPED;
         monitor.extensionStopped();
+    }
+
+    public ServletContext getServletContext() {
+        return servletHandler.getServletContext();
     }
 
     public void registerMapping(String path, Servlet servlet) {
