@@ -15,16 +15,24 @@ public class FileContributionSource implements ContributionSource {
     private URL location;
     private long timestamp;
     private byte[] checksum;
+    private String contentType;
+
 
     public FileContributionSource(URL location, long timestamp, byte[] checksum) {
         this(null, location, timestamp, checksum);
     }
 
     public FileContributionSource(URI uri, URL location, long timestamp, byte[] checksum) {
+       this(uri, location, timestamp, checksum, null);
+     }
+
+    public FileContributionSource(URI uri, URL location, long timestamp,
+                                  byte[] checksum, String contentType) {
         this.uri = uri;
         this.location = location;
         this.timestamp = timestamp;
         this.checksum = checksum;
+        this.contentType = contentType;
     }
 
     public boolean persist() {
@@ -50,4 +58,10 @@ public class FileContributionSource implements ContributionSource {
     public byte[] getChecksum() {
         return checksum;
     }
+
+    public String getContentType() {
+        return contentType;
+    }
 }
+
+

@@ -241,7 +241,10 @@ public class ContributionServiceImpl implements ContributionService {
 
         }
         try {
-            String type = contentTypeResolver.getContentType(source.getLocation());
+            String type = source.getContentType();
+            if (type == null) {
+              type = contentTypeResolver.getContentType(source.getLocation());
+            }
             byte[] checksum = source.getChecksum();
             long timestamp = source.getTimestamp();
             return new Contribution(contributionUri, locationUrl, checksum, timestamp, type);

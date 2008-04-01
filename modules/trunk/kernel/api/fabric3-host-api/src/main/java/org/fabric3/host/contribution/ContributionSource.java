@@ -71,4 +71,11 @@ public interface ContributionSource {
      * @return the source checksum
      */
     byte[] getChecksum();
+
+
+  /**
+   * Returns the content type of the source 
+   * @return
+   */
+    String getContentType();
 }

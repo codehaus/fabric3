@@ -30,6 +30,8 @@ import org.fabric3.host.contribution.ContributionSource;
  * @version $Rev$ $Date$
  */
 public class ModuleContributionSource implements ContributionSource {
+
+    public static final String CONTENT_TYPE = "application/vnd.fabric3.maven-project";
     private URI uri;
     private URL url;
     private long timestamp;
@@ -64,5 +66,9 @@ public class ModuleContributionSource implements ContributionSource {
 
     public byte[] getChecksum() {
         return checksum;
+    }
+
+    public String getContentType() {
+        return CONTENT_TYPE;
     }
 }

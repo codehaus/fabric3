@@ -28,6 +28,9 @@ import org.fabric3.host.contribution.ContributionSource;
  * @version $Rev$ $Date$
  */
 public class WarContributionSource implements ContributionSource {
+
+    private static final String CONTENT_TYPE = "application/vnd.fabric3.war";
+
     private URI contributionUri;
     private URL url;
     private byte[] checksum;
@@ -64,4 +67,7 @@ public class WarContributionSource implements ContributionSource {
         return checksum;
     }
 
+    public String getContentType() {
+        return CONTENT_TYPE;
+    }
 }
