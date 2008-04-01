@@ -32,7 +32,7 @@
     <include name="introspection:AnnotationProcessors" scdlResource="org/fabric3/introspection/impl/annotation/processors.composite"/>
     <include name="loader:common" scdlResource="org/fabric3/loader/loaderCommon.composite"/>
     <include name="loader:composite" scdlResource="org/fabric3/loader/compositeLoader.composite"/>
-    <include name="java:introspection" scdlResource="org/fabric3/java/introspection.composite"/>
+    <include name="java:introspection" scdlResource="META-INF/javaIntrospection.composite"/>
     <include name="ws:introspection" scdlResource="org/fabric3/binding/ws/introspection.composite"/>
 
 </composite>
