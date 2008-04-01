@@ -102,6 +102,29 @@ public class LogicalModelGeneratorImpl implements LogicalModelGenerator {
         return change;
     }
 
+    private void instantiateComponents(LogicalCompositeComponent parent,
+                                       Composite composite,
+                                       Collection<ComponentDefinition<? extends Implementation<?>>> definitions,
+                                       List<LogicalComponent<?>> components) throws InstantiationException {
+
+        for (ComponentDefinition<? extends Implementation<?>> definition : definitions) {
+            LogicalComponent<?> logicalComponent = instantiate(parent, definition);
+            // use autowire settings on the original composite as an override if they are not specified on the component
+            Autowire autowire;
+            if (definition.getAutowire() == Autowire.INHERITED) {
+                autowire = composite.getAutowire();
+            } else {
+                autowire = definition.getAutowire();
+            }
+            if (autowire == Autowire.ON || autowire == Autowire.OFF) {
+                logicalComponent.setAutowireOverride(autowire);
+            }
+            components.add(logicalComponent);
+            parent.addComponent(logicalComponent);
+        }
+
+    }
+
     @SuppressWarnings("unchecked")
     private LogicalComponent<?> instantiate(LogicalCompositeComponent parent, ComponentDefinition<?> definition) throws InstantiationException {
 
@@ -111,6 +134,51 @@ public class LogicalModelGeneratorImpl implements LogicalModelGenerator {
         } else {
             return atomicComponentInstantiator.instantiate(parent, (ComponentDefinition<Implementation<?>>) definition);
         }
+
+    }
+
+    private List<LogicalService> instantiateServices(LogicalComponent<CompositeImplementation> parent, Composite composite, String base) {
+        List<LogicalService> services = new ArrayList<LogicalService>();
+        // merge the composite service declarations into the parent
+        for (CompositeService compositeService : composite.getServices().values()) {
+            URI serviceURI = URI.create(base + '#' + compositeService.getName());
+            URI promotedURI = compositeService.getPromote();
+            LogicalService logicalService = new LogicalService(serviceURI, compositeService, parent);
+            logicalService.setPromotedUri(URI.create(base + "/" + promotedURI));
+            for (BindingDefinition binding : compositeService.getBindings()) {
+                logicalService.addBinding(new LogicalBinding<BindingDefinition>(binding, logicalService));
+            }
+            for (BindingDefinition binding : compositeService.getCallbackBindings()) {
+                logicalService.addCallbackBinding(new LogicalBinding<BindingDefinition>(binding, logicalService));
+            }
+            services.add(logicalService);
+            parent.addService(logicalService);
+        }
+        return services;
+
+    }
+
+    private List<LogicalReference> instantiateReferences(LogicalComponent<CompositeImplementation> parent, Composite composite, String base) {
+
+        // merge the composite reference definitions into the parent
+        List<LogicalReference> references = new ArrayList<LogicalReference>(composite.getReferences().size());
+        for (CompositeReference compositeReference : composite.getReferences().values()) {
+            URI referenceURi = URI.create(base + '#' + compositeReference.getName());
+            LogicalReference logicalReference = new LogicalReference(referenceURi, compositeReference, parent);
+            for (URI promotedUri : compositeReference.getPromotedUris()) {
+                URI resolvedUri = URI.create(base + "/" + promotedUri.toString());
+                logicalReference.addPromotedUri(resolvedUri);
+            }
+            for (BindingDefinition binding : compositeReference.getBindings()) {
+                logicalReference.addBinding(new LogicalBinding<BindingDefinition>(binding, logicalReference));
+            }
+            for (BindingDefinition binding : compositeReference.getCallbackBindings()) {
+                logicalReference.addCallbackBinding(new LogicalBinding<BindingDefinition>(binding, logicalReference));
+            }
+            references.add(logicalReference);
+            parent.addReference(logicalReference);
+        }
+        return references;
 
     }
 
@@ -142,74 +210,6 @@ public class LogicalModelGeneratorImpl implements LogicalModelGenerator {
             }
         } catch (WiringException e) {
             throw new ActivateException(e);
-        }
-
-    }
-
-    private List<LogicalReference> instantiateReferences(LogicalComponent<CompositeImplementation> parent, Composite composite, String base) {
-
-        // merge the composite reference definitions into the parent
-        List<LogicalReference> references = new ArrayList<LogicalReference>(composite.getReferences().size());
-        for (CompositeReference compositeReference : composite.getReferences().values()) {
-            URI referenceURi = URI.create(base + '#' + compositeReference.getName());
-            LogicalReference logicalReference = new LogicalReference(referenceURi, compositeReference, parent);
-            for (URI promotedUri : compositeReference.getPromotedUris()) {
-                URI resolvedUri = URI.create(base + "/" + promotedUri.toString());
-                logicalReference.addPromotedUri(resolvedUri);
-            }
-            for (BindingDefinition binding : compositeReference.getBindings()) {
-                logicalReference.addBinding(new LogicalBinding<BindingDefinition>(binding, logicalReference));
-            }
-            for (BindingDefinition binding : compositeReference.getCallbackBindings()) {
-                logicalReference.addCallbackBinding(new LogicalBinding<BindingDefinition>(binding, logicalReference));
-            }
-            references.add(logicalReference);
-            parent.addReference(logicalReference);
-        }
-        return references;
-
-    }
-
-    private List<LogicalService> instantiateServices(LogicalComponent<CompositeImplementation> parent, Composite composite, String base) {
-        List<LogicalService> services = new ArrayList<LogicalService>();
-        // merge the composite service declarations into the parent
-        for (CompositeService compositeService : composite.getServices().values()) {
-            URI serviceURI = URI.create(base + '#' + compositeService.getName());
-            URI promotedURI = compositeService.getPromote();
-            LogicalService logicalService = new LogicalService(serviceURI, compositeService, parent);
-            logicalService.setPromotedUri(URI.create(base + "/" + promotedURI));
-            for (BindingDefinition binding : compositeService.getBindings()) {
-                logicalService.addBinding(new LogicalBinding<BindingDefinition>(binding, logicalService));
-            }
-            for (BindingDefinition binding : compositeService.getCallbackBindings()) {
-                logicalService.addCallbackBinding(new LogicalBinding<BindingDefinition>(binding, logicalService));
-            }
-            services.add(logicalService);
-            parent.addService(logicalService);
-        }
-        return services;
-
-    }
-
-    private void instantiateComponents(LogicalCompositeComponent parent,
-                                       Composite composite,
-                                       Collection<ComponentDefinition<? extends Implementation<?>>> definitions,
-                                       List<LogicalComponent<?>> components) throws InstantiationException {
-
-        for (ComponentDefinition<? extends Implementation<?>> definition : definitions) {
-            LogicalComponent<?> logicalComponent = instantiate(parent, definition);
-            // use autowire settings on the original composite as an override if they are not specified on the component
-            Autowire autowire;
-            if (definition.getAutowire() == Autowire.INHERITED) {
-                autowire = composite.getAutowire();
-            } else {
-                autowire = definition.getAutowire();
-            }
-            if (autowire == Autowire.ON || autowire == Autowire.OFF) {
-                logicalComponent.setAutowireOverride(autowire);
-            }
-            components.add(logicalComponent);
-            parent.addComponent(logicalComponent);
         }
 
     }
