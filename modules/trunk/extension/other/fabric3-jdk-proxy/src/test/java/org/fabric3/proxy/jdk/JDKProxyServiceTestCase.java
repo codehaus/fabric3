@@ -33,7 +33,7 @@ public class JDKProxyServiceTestCase extends TestCase {
 
     public void testCastProxyToServiceReference() {
         Map<Method, InvocationChain> mapping = Collections.emptyMap();
-        JDKInvocationHandler<Foo> handler = new JDKInvocationHandler<Foo>(Foo.class, null, false, mapping);
+        JDKInvocationHandler<Foo> handler = new JDKInvocationHandler<Foo>(Foo.class, null, mapping);
         Foo proxy = handler.getService();
         ServiceReference<Foo> ref = proxyService.cast(proxy);
         assertSame(handler, ref);
@@ -41,7 +41,7 @@ public class JDKProxyServiceTestCase extends TestCase {
 
     protected void setUp() throws Exception {
         super.setUp();
-        proxyService = new JDKProxyService(null);
+        proxyService = new JDKProxyService();
     }
 
     public interface Foo {

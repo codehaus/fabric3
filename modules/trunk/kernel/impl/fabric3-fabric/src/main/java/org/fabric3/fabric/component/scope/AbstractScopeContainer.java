@@ -36,6 +36,7 @@ import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.spi.component.TargetDestructionException;
 import org.fabric3.spi.component.TargetResolutionException;
+import org.fabric3.spi.component.ConversationExpirationCallback;
 import org.fabric3.spi.invocation.WorkContext;
 import org.fabric3.scdl.Scope;
 import org.fabric3.spi.ObjectCreationException;
@@ -43,6 +44,7 @@ import org.fabric3.spi.ObjectCreationException;
 import org.osoa.sca.annotations.Destroy;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
+import org.osoa.sca.Conversation;
 
 /**
  * Implements functionality common to scope contexts.
@@ -141,6 +143,10 @@ public abstract class AbstractScopeContainer<KEY> extends AbstractLifecycle impl
         }
     }
 
+    public void registerCallback(Conversation conversation, ConversationExpirationCallback callback) {
+        throw new UnsupportedOperationException();
+    }
+
     public void initializeComponents(List<AtomicComponent<?>> components, URI groupId, WorkContext workContext) throws GroupInitializationException {
         List<Exception> causes = null;
         for (AtomicComponent<?> component : components) {
@@ -181,7 +187,11 @@ public abstract class AbstractScopeContainer<KEY> extends AbstractLifecycle impl
     }
 
     protected void stopContext(KEY contextId) {
-        shutdownComponents(destroyQueues.get(contextId));
+        List<InstanceWrapper<?>> list = destroyQueues.get(contextId);
+        if (list == null) {
+            throw new IllegalStateException("Context does not exist: " + contextId);
+        }
+        shutdownComponents(list);
         destroyQueues.remove(contextId);
     }
 

@@ -19,6 +19,8 @@ package org.fabric3.fabric.component.scope;
 import java.net.URI;
 import java.util.Iterator;
 import java.util.Map;
+import java.util.List;
+import java.util.ArrayList;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -43,6 +45,7 @@ import org.fabric3.spi.component.InstanceWrapper;
 import org.fabric3.spi.component.InstanceWrapperStore;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.TargetResolutionException;
+import org.fabric3.spi.component.ConversationExpirationCallback;
 import org.fabric3.spi.invocation.WorkContext;
 import org.fabric3.spi.invocation.CallFrame;
 
@@ -55,6 +58,7 @@ import org.fabric3.spi.invocation.CallFrame;
 @EagerInit
 public class ConversationalScopeContainer extends StatefulScopeContainer<Conversation> {
     private final ConcurrentHashMap<Conversation, ExpirationPolicy> expirationPolicies;
+    private final ConcurrentHashMap<Conversation, List<ConversationExpirationCallback>> expirationCallbacks;
     private ScheduledExecutorService executor;
     // TODO this should be part of the system configuration
     private long delay = 600;  // reap every 600 seconds
@@ -63,6 +67,7 @@ public class ConversationalScopeContainer extends StatefulScopeContainer<Convers
                                         @Reference(name = "store")InstanceWrapperStore<Conversation> store) {
         super(Scope.CONVERSATION, monitor, store);
         expirationPolicies = new ConcurrentHashMap<Conversation, ExpirationPolicy>();
+        expirationCallbacks = new ConcurrentHashMap<Conversation, List<ConversationExpirationCallback>>();
     }
 
     /**
@@ -89,6 +94,17 @@ public class ConversationalScopeContainer extends StatefulScopeContainer<Convers
         super.stop();
     }
 
+    public void registerCallback(Conversation conversation, ConversationExpirationCallback callback) {
+        List<ConversationExpirationCallback> callbacks = expirationCallbacks.get(conversation);
+        if (callbacks == null) {
+            callbacks = new ArrayList<ConversationExpirationCallback>();
+            expirationCallbacks.put(conversation, callbacks);
+        }
+        synchronized (callbacks) {
+            callbacks.add(callback);
+        }
+    }
+
     public void startContext(WorkContext workContext, URI groupId) throws GroupInitializationException {
         Conversation conversation = workContext.peekCallFrame().getConversation();
         assert conversation != null;
@@ -107,6 +123,7 @@ public class ConversationalScopeContainer extends StatefulScopeContainer<Convers
         assert conversation != null;
         super.stopContext(conversation);
         expirationPolicies.remove(conversation);
+        notifyExpirationCallbacks(conversation);
     }
 
     public <T> InstanceWrapper<T> getWrapper(AtomicComponent<T> component, WorkContext workContext) throws TargetResolutionException {
@@ -126,12 +143,23 @@ public class ConversationalScopeContainer extends StatefulScopeContainer<Convers
         }
         return wrapper;
     }
-    
+
     public void reinject() {
     }
-    
+
     public void addObjectFactory(AtomicComponent<?> component, ObjectFactory<?> factory, String referenceName, Object key) {
-        
+
+    }
+
+    private void notifyExpirationCallbacks(Conversation conversation) {
+        List<ConversationExpirationCallback> callbacks = expirationCallbacks.remove(conversation);
+        if (callbacks != null) {
+            synchronized (callbacks) {
+                for (ConversationExpirationCallback callback : callbacks) {
+                    callback.expire(conversation);
+                }
+            }
+        }
     }
 
     /**
@@ -145,6 +173,7 @@ public class ConversationalScopeContainer extends StatefulScopeContainer<Convers
                     Conversation conversation = entry.getKey();
                     iterator.remove();
                     stopContext(conversation);
+                    notifyExpirationCallbacks(conversation);
                 }
             }
         }

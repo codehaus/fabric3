@@ -20,6 +20,10 @@ import java.io.Serializable;
 
 import org.osoa.sca.Conversation;
 
+import org.fabric3.spi.component.ScopeContainer;
+import org.fabric3.spi.invocation.CallFrame;
+import org.fabric3.spi.invocation.WorkContext;
+
 /**
  * Implementation of specification Conversation interface.
  *
@@ -28,15 +32,17 @@ import org.osoa.sca.Conversation;
 public class ConversationImpl implements Conversation, Serializable {
     private static final long serialVersionUID = 8249514203064252385L;
     private final Object conversationId;
+    private transient ScopeContainer<Conversation> scopeContainer;
 
     /**
      * Constructor defining the conversation id.
      *
      * @param conversationID the conversation id
+     * @param scopeContainer the scope container that manages instances associated with this conversation
      */
-    public ConversationImpl(Object conversationID) {
-        assert conversationID != null;
+    public ConversationImpl(Object conversationID, ScopeContainer<Conversation> scopeContainer) {
         this.conversationId = conversationID;
+        this.scopeContainer = scopeContainer;
     }
 
     public Object getConversationID() {
@@ -44,6 +50,19 @@ public class ConversationImpl implements Conversation, Serializable {
     }
 
     public void end() {
+        if (scopeContainer == null) {
+            throw new UnsupportedOperationException("Remote conversation end not supported");
+        }
+        WorkContext workContext = PojoWorkContextTunnel.getThreadWorkContext();
+        try {
+            // Ensure that the conversation context is placed on the stack
+            // This may not be the case if end() is called from a client component intending to end the conversation with a reference target
+            CallFrame frame = new CallFrame(null, null, this, false);
+            workContext.addCallFrame(frame);
+            scopeContainer.stopContext(workContext);
+        } finally {
+            workContext.popCallFrame();
+        }
     }
 
     public boolean equals(Object o) {
@@ -60,5 +79,12 @@ public class ConversationImpl implements Conversation, Serializable {
 
     public int hashCode() {
         return conversationId.hashCode();
+    }
+
+    public String toString() {
+        if (conversationId == null) {
+            return "";
+        }
+        return conversationId.toString();
     }
 }

@@ -32,6 +32,8 @@ import org.fabric3.pojo.PojoWorkContextTunnel;
 import org.fabric3.pojo.ConversationImpl;
 import org.fabric3.spi.invocation.CallFrame;
 import org.fabric3.spi.component.TargetInvocationException;
+import org.fabric3.spi.component.ScopeContainer;
+import org.fabric3.spi.component.ConversationExpirationCallback;
 import org.fabric3.spi.invocation.WorkContext;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 import org.fabric3.spi.wire.Interceptor;
@@ -44,25 +46,55 @@ import org.fabric3.spi.invocation.MessageImpl;
  *
  * @version $Rev: 3021 $ $Date: 2008-03-03 19:28:04 -0800 (Mon, 03 Mar 2008) $
  */
-public final class JDKInvocationHandler<B> implements InvocationHandler, ServiceReference<B> {
+public final class JDKInvocationHandler<B> implements ConversationExpirationCallback, InvocationHandler, ServiceReference<B> {
     private final Class<B> businessInterface;
     private final B proxy;
     private final boolean conversational;
     private final Map<Method, InvocationChain> chains;
+    private final ScopeContainer<Conversation> scopeContainer;
 
-    private ConversationImpl conversation;
+    private Conversation conversation;
     private Object userConversationId;
     private String callbackUri;
 
-    public JDKInvocationHandler(Class<B> businessInterface, String callbackUri, boolean conversational, Map<Method, InvocationChain> mapping)
+    /**
+     * Creates a non-conversational wire proxy
+     *
+     * @param interfaze   the proxy interface
+     * @param callbackUri the callback uri or null if the wire is unidirectional
+     * @param mapping     the method to invocation chain mappings for the wire
+     * @throws NoMethodForOperationException if an error occurs creating the proxy
+     */
+    public JDKInvocationHandler(Class<B> interfaze, String callbackUri, Map<Method, InvocationChain> mapping)
             throws NoMethodForOperationException {
+        this(interfaze, callbackUri, mapping, null);
+    }
+
+    /**
+     * Creates a conversational wire proxy.
+     *
+     * @param interfaze      the proxy interface
+     * @param callbackUri    the callback uri or null if the wire is unidirectional
+     * @param mapping        the method to invocation chain mappings for the wire
+     * @param scopeContainer the conversational scope container
+     * @throws NoMethodForOperationException if an error occurs creating the proxy
+     */
+    public JDKInvocationHandler(Class<B> interfaze,
+                                String callbackUri,
+                                Map<Method, InvocationChain> mapping,
+                                ScopeContainer<Conversation> scopeContainer) throws NoMethodForOperationException {
         this.callbackUri = callbackUri;
         assert mapping != null;
-        this.businessInterface = businessInterface;
-        ClassLoader loader = businessInterface.getClassLoader();
-        this.proxy = businessInterface.cast(Proxy.newProxyInstance(loader, new Class[]{businessInterface}, this));
-        this.conversational = conversational;
+        this.businessInterface = interfaze;
+        ClassLoader loader = interfaze.getClassLoader();
+        this.proxy = interfaze.cast(Proxy.newProxyInstance(loader, new Class[]{interfaze}, this));
         this.chains = mapping;
+        this.scopeContainer = scopeContainer;
+        this.conversational = scopeContainer != null;
+    }
+
+    public void expire(Conversation conversation) {
+        this.conversation = null;
     }
 
     public B getService() {
@@ -123,7 +155,9 @@ public final class JDKInvocationHandler<B> implements InvocationHandler, Service
 
         WorkContext workContext = PojoWorkContextTunnel.getThreadWorkContext();
         if (conversational && conversation == null) {
-            conversation = new ConversationImpl(createConversationID());
+            conversation = new ConversationImpl(createConversationID(), scopeContainer);
+            // register this proxy to receive notifications when the conversation ends
+            scopeContainer.registerCallback(conversation, this);
             // mark the CallFrame as starting a conversation
             CallFrame frame = new CallFrame(callbackUri, null, conversation, true);
             workContext.addCallFrame(frame);

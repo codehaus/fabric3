@@ -27,10 +27,14 @@ import java.util.List;
 import java.util.Map;
 
 import org.osoa.sca.CallableReference;
+import org.osoa.sca.Conversation;
+import org.osoa.sca.annotations.Constructor;
 import org.osoa.sca.annotations.Reference;
 
+import org.fabric3.scdl.Scope;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.component.ScopeContainer;
+import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.wire.InvocationChain;
@@ -44,10 +48,16 @@ import org.fabric3.spi.wire.Wire;
  * @version $$Rev: 3150 $$ $$Date: 2008-03-21 14:12:51 -0700 (Fri, 21 Mar 2008) $$
  */
 public class JDKProxyService implements ProxyService {
-    private final ClassLoaderRegistry classLoaderRegistry;
+    private ClassLoaderRegistry classLoaderRegistry;
+    private ScopeContainer<Conversation> scopeContainer;
 
-    public JDKProxyService(@Reference ClassLoaderRegistry classLoaderRegistry) {
+    public JDKProxyService() {
+    }
+
+    @Constructor
+    public JDKProxyService(@Reference ClassLoaderRegistry classLoaderRegistry, @Reference ScopeRegistry scopeRegistry) {
         this.classLoaderRegistry = classLoaderRegistry;
+        this.scopeContainer = scopeRegistry.getScopeContainer(Scope.CONVERSATION);
     }
 
     public <T> ObjectFactory<T> createObjectFactory(Class<T> interfaze, boolean conversational, Wire wire, String callbackUri)
@@ -66,7 +76,14 @@ public class JDKProxyService implements ProxyService {
 
     public <T> T createProxy(Class<T> interfaze, boolean conversational, String callbackUri, Map<Method, InvocationChain> mappings)
             throws ProxyCreationException {
-        JDKInvocationHandler<T> handler = new JDKInvocationHandler<T>(interfaze, callbackUri, conversational, mappings);
+        JDKInvocationHandler<T> handler;
+        if (conversational) {
+            // create a conversational proxy
+            handler = new JDKInvocationHandler<T>(interfaze, callbackUri, mappings, scopeContainer);
+        } else {
+            // create a non-conversational proxy
+            handler = new JDKInvocationHandler<T>(interfaze, callbackUri, mappings);
+        }
         return handler.getService();
     }
 

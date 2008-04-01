@@ -25,7 +25,9 @@ import org.fabric3.scdl.Scope;
 import org.fabric3.spi.Lifecycle;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.invocation.WorkContext;
+
 import org.osoa.sca.ConversationEndedException;
+import org.osoa.sca.Conversation;
 
 
 /**
@@ -36,15 +38,6 @@ import org.osoa.sca.ConversationEndedException;
  * composite component, or for HTTP Session scope it might be the HTTP session ID.
  */
 public interface ScopeContainer<KEY> extends Lifecycle {
-    
-    /**
-     * Adds an object factory to references of active instances for a component.
-     * 
-     * @param component Component with active instances, whose references need to be updated.
-     * @param factory Object factory for the reference.
-     * @param referenceName Name of the reference.
-     */
-    void addObjectFactory(AtomicComponent<?> component, ObjectFactory<?> factory, String referenceName, Object key);
 
     /**
      * Returns the Scope that this container supports.
@@ -66,6 +59,24 @@ public interface ScopeContainer<KEY> extends Lifecycle {
      * @param component the component to unregister
      */
     void unregister(AtomicComponent<?> component);
+
+    /**
+     * Registers a callback object to receive notification when a conversation has expired.
+     *
+     * @param conversation the conversation to listen to
+     * @param callback     the callback instance that receives notifications
+     */
+    void registerCallback(Conversation conversation, ConversationExpirationCallback callback);
+
+    /**
+     * Adds an object factory to references of active instances for a component.
+     *
+     * @param component     Component with active instances, whose references need to be updated.
+     * @param factory       Object factory for the reference.
+     * @param referenceName Name of the reference.
+     * @param key           the component key
+     */
+    void addObjectFactory(AtomicComponent<?> component, ObjectFactory<?> factory, String referenceName, Object key);
 
     /**
      * Start a new, non-expiring context with the supplied group ID. The context will remain active until explicitly stopped.
@@ -126,9 +137,10 @@ public interface ScopeContainer<KEY> extends Lifecycle {
      * @throws GroupInitializationException if one or more components threw an exception during initialization
      */
     void initializeComponents(List<AtomicComponent<?>> components, URI groupId, WorkContext workContext) throws GroupInitializationException;
-    
+
     /**
      * Re-injects the targets.
+     *
      * @throws TargetResolutionException
      */
     void reinject() throws TargetResolutionException;
