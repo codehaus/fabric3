@@ -22,10 +22,10 @@ import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
-
 import javax.xml.namespace.QName;
 
-import org.fabric3.fabric.model.physical.PolicyGenerationException;
+import org.osoa.sca.annotations.Reference;
+
 import org.fabric3.scdl.BindingDefinition;
 import org.fabric3.scdl.Implementation;
 import org.fabric3.scdl.Operation;
@@ -57,7 +57,6 @@ import org.fabric3.spi.policy.Policy;
 import org.fabric3.spi.policy.PolicyResolutionException;
 import org.fabric3.spi.policy.PolicyResolver;
 import org.fabric3.spi.policy.PolicyResult;
-import org.osoa.sca.annotations.Reference;
 
 /**
  * @version $Revision$ $Date$
