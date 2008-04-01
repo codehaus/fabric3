@@ -71,6 +71,8 @@ public class LogicalModelGeneratorImpl implements LogicalModelGenerator {
     @SuppressWarnings("unchecked")
     public LogicalChange include(LogicalCompositeComponent parent, Composite composite) throws ActivateException {
 
+        LogicalChange change = new LogicalChange(parent);
+
         // merge the property values into the parent
         for (Property property : composite.getProperties().values()) {
             String name = property.getName();
@@ -97,7 +99,7 @@ public class LogicalModelGeneratorImpl implements LogicalModelGenerator {
         for (LogicalComponent<?> component : components) {
             normalize(component);
         }
-        return null;
+        return change;
     }
 
     @SuppressWarnings("unchecked")
