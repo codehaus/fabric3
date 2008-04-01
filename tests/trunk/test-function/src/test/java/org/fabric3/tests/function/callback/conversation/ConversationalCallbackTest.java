@@ -31,6 +31,9 @@ public class ConversationalCallbackTest extends TestCase {
     protected ConversationalClientService client;
 
     @Reference
+    protected ConversationalCallbackClientEndsService conversationalCallbackClientEndsService;
+
+    @Reference
     protected ConversationalClientService conversationalToCompositeClient;
 
     /**
@@ -38,7 +41,7 @@ public class ConversationalCallbackTest extends TestCase {
      *
      * @throws Throwable
      */
-    public void testConversationalCallback() throws Throwable {
+    public void txestConversationalCallback() throws Throwable {
         CallbackData data = new CallbackData(1);
         client.invoke(data);
         data.getLatch().await();
@@ -49,6 +52,12 @@ public class ConversationalCallbackTest extends TestCase {
         assertEquals(3, client.getCount());
     }
 
+    public void testCallbackEndsConversation() throws Throwable {
+        conversationalCallbackClientEndsService.invoke();
+        // the next call must create another conversation
+        conversationalCallbackClientEndsService.invoke();
+    }
+
     /**
      * Verifies a conversational client is called back when it invokes a composite-scoped component which in turn invokes another composite-scoped
      * component via a non-blocking operation. The fabric must route back to the orignal conversational client instance as the invocation sequence is
@@ -56,7 +65,7 @@ public class ConversationalCallbackTest extends TestCase {
      *
      * @throws Throwable
      */
-    public void testConversationalToCompositeCallback() throws Throwable {
+    public void txestConversationalToCompositeCallback() throws Throwable {
         CallbackData data = new CallbackData(1);
         conversationalToCompositeClient.invoke(data);
         data.getLatch().await();

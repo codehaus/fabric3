@@ -23,12 +23,17 @@
         <implementation.java class="org.fabric3.tests.function.conversation.ConversationalServiceImpl"/>
     </component>
 
+    <!--<component name="MaxAgeConversationalService">-->
+        <!--<implementation.java class="org.fabric3.tests.function.conversation.MaxAgeConversationalServiceImpl"/>-->
+    <!--</component>-->
+
     <component name="ConversationTest">
         <f3:junit class="org.fabric3.tests.function.conversation.ConversationTest"/>
         <reference name="service" target="ConversationalServiceImpl"/>
         <reference name="subService" target="ConversationalServiceImpl"/>
         <reference name="compositeService" target="CompositeServiceImpl"/>
         <reference name="compositeSubService" target="CompositeServiceImpl"/>
+        <!--<reference name="maxAgeService" target="MaxAgeConversationalService"/>-->
     </component>
 
     <component name="CompositeServiceImpl">

@@ -32,6 +32,9 @@ public class ConversationTest extends TestCase {
     @Reference
     public ConversationalService compositeService;
 
+//    @Reference
+//    public ConversationalService maxAgeService;
+
     @Reference
     public ConversationalSubservice compositeSubService;
 
@@ -79,5 +82,10 @@ public class ConversationTest extends TestCase {
         assertEquals("Hello", compositeSubService.getValue());
     }
 
+//    public void testExpiration() throws Exception{
+//        maxAgeService.setValue("Hello");
+//        Thread.sleep(4000);
+//        maxAgeService.setValue("Hello");
+//    }
 
 }
