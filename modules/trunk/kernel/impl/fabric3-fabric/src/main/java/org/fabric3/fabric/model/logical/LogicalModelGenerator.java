@@ -35,9 +35,9 @@ public interface LogicalModelGenerator {
      * 
      * @param domain Domain in which the composite is to be included.
      * @param composite Composite to be included in the domain.
-     * @return Components within the composite.
+     * @return the change that would result from this include operation
      * @throws ActivateException If unable to include the composite.
      */
-    void include(LogicalCompositeComponent domain, Composite composite) throws ActivateException;
+    LogicalChange include(LogicalCompositeComponent domain, Composite composite) throws ActivateException;
 
 }

@@ -69,7 +69,7 @@ public class LogicalModelGeneratorImpl implements LogicalModelGenerator {
     }
 
     @SuppressWarnings("unchecked")
-    public void include(LogicalCompositeComponent parent, Composite composite) throws ActivateException {
+    public LogicalChange include(LogicalCompositeComponent parent, Composite composite) throws ActivateException {
 
         // merge the property values into the parent
         for (Property property : composite.getProperties().values()) {
@@ -97,7 +97,7 @@ public class LogicalModelGeneratorImpl implements LogicalModelGenerator {
         for (LogicalComponent<?> component : components) {
             normalize(component);
         }
-
+        return null;
     }
 
     @SuppressWarnings("unchecked")
