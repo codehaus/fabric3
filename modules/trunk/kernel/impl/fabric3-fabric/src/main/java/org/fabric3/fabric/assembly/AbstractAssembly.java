@@ -27,6 +27,7 @@ import javax.xml.namespace.QName;
 import org.fabric3.fabric.assembly.allocator.AllocationException;
 import org.fabric3.fabric.assembly.allocator.Allocator;
 import org.fabric3.fabric.model.logical.LogicalModelGenerator;
+import org.fabric3.fabric.model.logical.LogicalChange;
 import org.fabric3.fabric.model.physical.PhysicalModelGenerator;
 import org.fabric3.fabric.services.routing.RoutingException;
 import org.fabric3.scdl.Composite;
@@ -94,7 +95,9 @@ public abstract class AbstractAssembly implements Assembly {
         
         LogicalCompositeComponent domain = logicalComponentManager.getDomain();
         
-        logicalModelGenerator.include(domain, composite);
+        LogicalChange change = logicalModelGenerator.include(domain, composite);
+        change.apply();
+        
         Collection<LogicalComponent<?>> components = domain.getComponents();
 
         // Allocate the components to runtime nodes
