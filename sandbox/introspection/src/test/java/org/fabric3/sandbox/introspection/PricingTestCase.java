@@ -18,6 +18,7 @@ package org.fabric3.sandbox.introspection;
 
 import java.net.URL;
 import java.util.List;
+import java.util.Map;
 
 import javax.xml.namespace.QName;
 
@@ -33,9 +34,11 @@ import org.fabric3.introspection.java.ImplementationProcessor;
 import org.fabric3.scdl.Composite;
 import org.fabric3.scdl.CompositeService;
 import org.fabric3.scdl.BindingDefinition;
+import org.fabric3.scdl.Property;
 import org.fabric3.java.scdl.JavaImplementation;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.binding.ws.scdl.WsBindingDefinition;
+import static javax.xml.XMLConstants.W3C_XML_SCHEMA_NS_URI;
 
 /**
  * @version $Rev$ $Date$
@@ -67,6 +70,11 @@ public class PricingTestCase extends TestCase {
         processor.introspect(impl, context);
         PojoComponentType componentType = impl.getComponentType();
         assertTrue(componentType.getServices().containsKey("PricingService"));
+        Map<String,Property> properties = componentType.getProperties();
+        Property name = properties.get("name");
+        assertEquals(new QName(W3C_XML_SCHEMA_NS_URI, "string"), name.getXmlType());
+        Property value = properties.get("value");
+        assertEquals(new QName(W3C_XML_SCHEMA_NS_URI, "int"), value.getXmlType());
     }
 
     protected void setUp() throws Exception {
