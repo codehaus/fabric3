@@ -76,13 +76,9 @@ public class LogicalModelGeneratorImpl implements LogicalModelGenerator {
         includeProperties(parent, composite);
 
         // instantiate all the components in the composite and add them to the parent
-        String base = parent.getUri().toString();
-        Collection<ComponentDefinition<? extends Implementation<?>>> definitions = composite.getComponents().values();
-
-        List<LogicalComponent<?>> newComponents = instantiateComponents(parent, composite, definitions);
-
-        List<LogicalService> services = instantiateServices(parent, composite, base);
-        List<LogicalReference> references = instantiateReferences(parent, composite, base);
+        List<LogicalComponent<?>> newComponents = instantiateComponents(parent, composite);
+        List<LogicalService> services = instantiateServices(parent, composite);
+        List<LogicalReference> references = instantiateReferences(parent, composite);
 
         resolveWires(parent.getComponents(), services, references);
 
@@ -104,9 +100,9 @@ public class LogicalModelGeneratorImpl implements LogicalModelGenerator {
     }
 
     private List<LogicalComponent<?>> instantiateComponents(LogicalCompositeComponent parent,
-                                       Composite composite,
-                                       Collection<ComponentDefinition<? extends Implementation<?>>> definitions) throws InstantiationException {
+                                       Composite composite) throws InstantiationException {
 
+        Collection<ComponentDefinition<? extends Implementation<?>>> definitions = composite.getComponents().values();
         List<LogicalComponent<?>> newComponents = new ArrayList<LogicalComponent<?>>(definitions.size());
         for (ComponentDefinition<? extends Implementation<?>> definition : definitions) {
             LogicalComponent<?> logicalComponent = instantiate(parent, definition);
@@ -138,7 +134,8 @@ public class LogicalModelGeneratorImpl implements LogicalModelGenerator {
 
     }
 
-    private List<LogicalService> instantiateServices(LogicalComponent<CompositeImplementation> parent, Composite composite, String base) {
+    private List<LogicalService> instantiateServices(LogicalComponent<CompositeImplementation> parent, Composite composite) {
+        String base = parent.getUri().toString();
         List<LogicalService> services = new ArrayList<LogicalService>();
         // merge the composite service declarations into the parent
         for (CompositeService compositeService : composite.getServices().values()) {
@@ -159,7 +156,8 @@ public class LogicalModelGeneratorImpl implements LogicalModelGenerator {
 
     }
 
-    private List<LogicalReference> instantiateReferences(LogicalComponent<CompositeImplementation> parent, Composite composite, String base) {
+    private List<LogicalReference> instantiateReferences(LogicalComponent<CompositeImplementation> parent, Composite composite) {
+        String base = parent.getUri().toString();
 
         // merge the composite reference definitions into the parent
         List<LogicalReference> references = new ArrayList<LogicalReference>(composite.getReferences().size());
