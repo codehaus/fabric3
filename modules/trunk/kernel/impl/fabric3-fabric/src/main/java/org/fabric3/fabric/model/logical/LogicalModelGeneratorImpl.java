@@ -78,9 +78,8 @@ public class LogicalModelGeneratorImpl implements LogicalModelGenerator {
         // instantiate all the components in the composite and add them to the parent
         String base = parent.getUri().toString();
         Collection<ComponentDefinition<? extends Implementation<?>>> definitions = composite.getComponents().values();
-        List<LogicalComponent<?>> components = new ArrayList<LogicalComponent<?>>(definitions.size());
 
-        instantiateComponents(parent, composite, definitions, components);
+        List<LogicalComponent<?>> newComponents = instantiateComponents(parent, composite, definitions);
 
         List<LogicalService> services = instantiateServices(parent, composite, base);
         List<LogicalReference> references = instantiateReferences(parent, composite, base);
@@ -88,7 +87,7 @@ public class LogicalModelGeneratorImpl implements LogicalModelGenerator {
         resolveWires(parent.getComponents(), services, references);
 
         // normalize bindings for each new component
-        for (LogicalComponent<?> component : components) {
+        for (LogicalComponent<?> component : newComponents) {
             normalize(component);
         }
         return change;
@@ -104,11 +103,11 @@ public class LogicalModelGeneratorImpl implements LogicalModelGenerator {
         }
     }
 
-    private void instantiateComponents(LogicalCompositeComponent parent,
+    private List<LogicalComponent<?>> instantiateComponents(LogicalCompositeComponent parent,
                                        Composite composite,
-                                       Collection<ComponentDefinition<? extends Implementation<?>>> definitions,
-                                       List<LogicalComponent<?>> components) throws InstantiationException {
+                                       Collection<ComponentDefinition<? extends Implementation<?>>> definitions) throws InstantiationException {
 
+        List<LogicalComponent<?>> newComponents = new ArrayList<LogicalComponent<?>>(definitions.size());
         for (ComponentDefinition<? extends Implementation<?>> definition : definitions) {
             LogicalComponent<?> logicalComponent = instantiate(parent, definition);
             // use autowire settings on the original composite as an override if they are not specified on the component
@@ -121,10 +120,10 @@ public class LogicalModelGeneratorImpl implements LogicalModelGenerator {
             if (autowire == Autowire.ON || autowire == Autowire.OFF) {
                 logicalComponent.setAutowireOverride(autowire);
             }
-            components.add(logicalComponent);
+            newComponents.add(logicalComponent);
             parent.addComponent(logicalComponent);
         }
-
+        return newComponents;
     }
 
     @SuppressWarnings("unchecked")
