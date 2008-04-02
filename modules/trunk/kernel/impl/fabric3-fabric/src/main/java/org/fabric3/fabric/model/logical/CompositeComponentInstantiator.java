@@ -19,8 +19,10 @@ package org.fabric3.fabric.model.logical;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.osoa.sca.annotations.Reference;
+import org.w3c.dom.Document;
 
 import org.fabric3.fabric.assembly.InstantiationException;
 import org.fabric3.fabric.services.documentloader.DocumentLoader;
@@ -55,13 +57,17 @@ public class CompositeComponentInstantiator extends AbstractComponentInstantiato
     }
 
     @SuppressWarnings("unchecked")
-    public <I extends Implementation<?>> LogicalComponent<I> instantiate(LogicalCompositeComponent parent, ComponentDefinition<I> definition)
+    public <I extends Implementation<?>> LogicalComponent<I> instantiate(LogicalCompositeComponent parent,
+                                                                         Map<String, Document> properties,
+                                                                         ComponentDefinition<I> definition)
             throws InstantiationException {
         ComponentDefinition<CompositeImplementation> def = (ComponentDefinition<CompositeImplementation>) definition;
-        return LogicalComponent.class.cast(instantiateComposite(parent, def));
+        return LogicalComponent.class.cast(instantiateComposite(parent, properties, def));
     }
 
-    public LogicalCompositeComponent instantiateComposite(LogicalCompositeComponent parent, ComponentDefinition<CompositeImplementation> definition)
+    public LogicalCompositeComponent instantiateComposite(LogicalCompositeComponent parent,
+                                                          Map<String, Document> properties,
+                                                          ComponentDefinition<CompositeImplementation> definition)
             throws InstantiationException {
 
         URI runtimeId = definition.getRuntimeId();
@@ -71,7 +77,7 @@ public class CompositeComponentInstantiator extends AbstractComponentInstantiato
         LogicalCompositeComponent component = new LogicalCompositeComponent(uri, runtimeId, definition, parent);
 
         initializeProperties(component, definition);
-        instantiateChildComponents(component, composite);
+        instantiateChildComponents(component, properties, composite);
         instantiateCompositeServices(component, composite);
         instantiateCompositeReferences(parent, component, composite);
 
@@ -79,16 +85,18 @@ public class CompositeComponentInstantiator extends AbstractComponentInstantiato
 
     }
 
-    private void instantiateChildComponents(LogicalCompositeComponent parent, Composite composite) throws InstantiationException {
+    private void instantiateChildComponents(LogicalCompositeComponent parent,
+                                            Map<String, Document> properties,
+                                            Composite composite) throws InstantiationException {
 
         // create the child components
         for (ComponentDefinition<? extends Implementation<?>> child : composite.getComponents().values()) {
 
-            LogicalComponent<? extends Implementation<?>> childComponent;
+            LogicalComponent<?> childComponent;
             if (child.getImplementation().isComposite()) {
-                childComponent = instantiate(parent, child);
+                childComponent = instantiate(parent, properties, child);
             } else {
-                childComponent = atomicComponentInstantiator.instantiate(parent, child);
+                childComponent = atomicComponentInstantiator.instantiate(parent, properties, child);
             }
             parent.addComponent(childComponent);
 

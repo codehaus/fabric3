@@ -20,6 +20,7 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 import org.fabric3.fabric.assembly.InstantiationException;
 import org.fabric3.fabric.assembly.normalizer.PromotionNormalizer;
@@ -43,6 +44,7 @@ import org.fabric3.spi.runtime.assembly.LogicalComponentManager;
 import org.fabric3.spi.wire.WiringService;
 
 import org.osoa.sca.annotations.Reference;
+import org.w3c.dom.Document;
 
 /**
  * @version $Revision$ $Date$
@@ -73,10 +75,10 @@ public class LogicalModelGeneratorImpl implements LogicalModelGenerator {
         LogicalChange change = new LogicalChange(parent);
 
         // merge the property values into the parent
-        includeProperties(parent, composite);
+        Map<String, Document> properties = includeProperties(parent, composite);
 
         // instantiate all the components in the composite and add them to the parent
-        List<LogicalComponent<?>> newComponents = instantiateComponents(parent, composite);
+        List<LogicalComponent<?>> newComponents = instantiateComponents(parent, properties, composite);
         List<LogicalService> services = instantiateServices(parent, composite);
         List<LogicalReference> references = instantiateReferences(parent, composite);
 
@@ -89,7 +91,7 @@ public class LogicalModelGeneratorImpl implements LogicalModelGenerator {
         return change;
     }
 
-    private void includeProperties(LogicalCompositeComponent parent, Composite composite) throws ActivateException {
+    private Map<String,Document> includeProperties(LogicalCompositeComponent parent, Composite composite) throws ActivateException {
         for (Property property : composite.getProperties().values()) {
             String name = property.getName();
             if (parent.getPropertyValues().containsKey(name)) {
@@ -97,15 +99,17 @@ public class LogicalModelGeneratorImpl implements LogicalModelGenerator {
             }
             parent.setPropertyValue(name, property.getDefaultValue());
         }
+        return parent.getPropertyValues();
     }
 
     private List<LogicalComponent<?>> instantiateComponents(LogicalCompositeComponent parent,
-                                       Composite composite) throws InstantiationException {
+                                                            Map<String, Document> properties,
+                                                            Composite composite) throws InstantiationException {
 
         Collection<ComponentDefinition<? extends Implementation<?>>> definitions = composite.getComponents().values();
         List<LogicalComponent<?>> newComponents = new ArrayList<LogicalComponent<?>>(definitions.size());
         for (ComponentDefinition<? extends Implementation<?>> definition : definitions) {
-            LogicalComponent<?> logicalComponent = instantiate(parent, definition);
+            LogicalComponent<?> logicalComponent = instantiate(parent, properties, definition);
             // use autowire settings on the original composite as an override if they are not specified on the component
             Autowire autowire;
             if (definition.getAutowire() == Autowire.INHERITED) {
@@ -123,12 +127,14 @@ public class LogicalModelGeneratorImpl implements LogicalModelGenerator {
     }
 
     @SuppressWarnings("unchecked")
-    private LogicalComponent<?> instantiate(LogicalCompositeComponent parent, ComponentDefinition<?> definition) throws InstantiationException {
+    private LogicalComponent<?> instantiate(LogicalCompositeComponent parent,
+                                            Map<String, Document> properties,
+                                            ComponentDefinition<?> definition) throws InstantiationException {
 
         if (definition.getImplementation().isComposite()) {
-            return compositeComponentInstantiator.instantiate(parent, (ComponentDefinition<CompositeImplementation>) definition);
+            return compositeComponentInstantiator.instantiate(parent, properties, (ComponentDefinition<CompositeImplementation>) definition);
         } else {
-            return atomicComponentInstantiator.instantiate(parent, (ComponentDefinition<Implementation<?>>) definition);
+            return atomicComponentInstantiator.instantiate(parent, properties, (ComponentDefinition<Implementation<?>>) definition);
         }
 
     }

@@ -17,6 +17,7 @@
 package org.fabric3.fabric.model.logical;
 
 import java.net.URI;
+import java.util.Map;
 
 import org.fabric3.fabric.assembly.InstantiationException;
 import org.fabric3.fabric.services.documentloader.DocumentLoader;
@@ -37,6 +38,7 @@ import org.fabric3.spi.model.instance.LogicalResource;
 import org.fabric3.spi.model.instance.LogicalService;
 
 import org.osoa.sca.annotations.Reference;
+import org.w3c.dom.Document;
 
 /**
  * @version $Revision$ $Date$
@@ -47,33 +49,22 @@ public class AtomicComponentInstantiator extends AbstractComponentInstantiator {
         super(documentLoader);
     }
 
-    public <I extends Implementation<?>> LogicalComponent<I> instantiate(LogicalCompositeComponent parent, ComponentDefinition<I> definition)
+    public <I extends Implementation<?>> LogicalComponent<I> instantiate(LogicalCompositeComponent parent,
+                                                                         Map<String, Document> properties,
+                                                                         ComponentDefinition<I> definition)
             throws InstantiationException {
-
-        URI runtimeId = definition.getRuntimeId();
-        URI uri = URI.create(parent.getUri() + "/" + definition.getName());
-        LogicalComponent<I> component = new LogicalComponent<I>(uri, runtimeId, definition, parent);
-
-        initializeProperties(component, definition);
 
         I impl = definition.getImplementation();
         AbstractComponentType<?, ?, ?, ?> componentType = impl.getComponentType();
 
+        URI runtimeId = definition.getRuntimeId();
+        URI uri = URI.create(parent.getUri() + "/" + definition.getName());
+        LogicalComponent<I> component = new LogicalComponent<I>(uri, runtimeId, definition, parent);
+        initializeProperties(component, definition);
         createServices(definition, component, componentType);
         createReferences(definition, component, componentType);
         createResources(component, componentType);
-
         return component;
-
-    }
-
-    private <I extends Implementation<?>> void createResources(LogicalComponent<I> component, AbstractComponentType<?, ?, ?, ?> componentType) {
-
-        for (ResourceDefinition resource : componentType.getResources().values()) {
-            URI resourceUri = component.getUri().resolve('#' + resource.getName());
-            LogicalResource<?> logicalResource = createLogicalResource(resource, resourceUri, component);
-            component.addResource(logicalResource);
-        }
 
     }
 
@@ -85,11 +76,12 @@ public class AtomicComponentInstantiator extends AbstractComponentInstantiator {
             String name = service.getName();
             URI serviceUri = component.getUri().resolve('#' + name);
             LogicalService logicalService = new LogicalService(serviceUri, service, component);
+
+            // service is configured in the component definition
             ComponentService componentService = definition.getServices().get(name);
             if (componentService != null) {
                 logicalService.addIntents(componentService.getIntents());
                 addOperationLevelIntentsAndPolicies(logicalService, componentService);
-                // service is configured in the component definition
                 for (BindingDefinition binding : componentService.getBindings()) {
                     logicalService.addBinding(new LogicalBinding<BindingDefinition>(binding, logicalService));
                 }
@@ -110,11 +102,12 @@ public class AtomicComponentInstantiator extends AbstractComponentInstantiator {
             String name = reference.getName();
             URI referenceUri = component.getUri().resolve('#' + name);
             LogicalReference logicalReference = new LogicalReference(referenceUri, reference, component);
+
+            // reference is configured in the component definition
             ComponentReference componentReference = definition.getReferences().get(name);
             if (componentReference != null) {
                 logicalReference.addIntents(componentReference.getIntents());
                 addOperationLevelIntentsAndPolicies(logicalReference, componentReference);
-                // reference is configured
                 for (BindingDefinition binding : componentReference.getBindings()) {
                     logicalReference.addBinding(new LogicalBinding<BindingDefinition>(binding, logicalReference));
                 }
@@ -127,13 +120,14 @@ public class AtomicComponentInstantiator extends AbstractComponentInstantiator {
 
     }
 
-    /*
-     * Creates a logical resource.
-     */
-    private <RD extends ResourceDefinition> LogicalResource<RD> createLogicalResource(RD resourceDefinition,
-                                                                                      URI resourceUri,
-                                                                                      LogicalComponent<?> component) {
-        return new LogicalResource<RD>(resourceUri, resourceDefinition, component);
+    private void createResources(LogicalComponent<?> component, AbstractComponentType<?, ?, ?, ?> componentType) {
+
+        for (ResourceDefinition resource : componentType.getResources().values()) {
+            URI resourceUri = component.getUri().resolve('#' + resource.getName());
+            LogicalResource<ResourceDefinition> logicalResource = new LogicalResource<ResourceDefinition>(resourceUri, resource, component);
+            component.addResource(logicalResource);
+        }
+
     }
 
 }

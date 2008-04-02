@@ -271,7 +271,7 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
             throws InvalidServiceContractException, InstantiationException {
 
         ComponentDefinition<Implementation<?>> definition = createDefinition(name, type, instance);
-        return instantiator.instantiate(domain, definition);
+        return instantiator.instantiate(domain, domain.getPropertyValues(), definition);
     }
 
     protected <S, I extends S> ComponentDefinition<Implementation<?>> createDefinition(String name,

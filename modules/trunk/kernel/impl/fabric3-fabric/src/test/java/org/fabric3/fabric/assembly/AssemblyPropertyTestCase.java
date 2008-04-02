@@ -17,6 +17,7 @@
 package org.fabric3.fabric.assembly;
 
 import java.net.URI;
+import java.util.Map;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.xpath.XPathExpressionException;
 
@@ -94,6 +95,7 @@ public class AssemblyPropertyTestCase extends TestCase {
         super.setUp();
         componentInstantiator = new AbstractComponentInstantiator(null) {
             public <I extends Implementation<?>> LogicalComponent<I> instantiate(LogicalCompositeComponent parent,
+                                                                                 Map<String, Document> properties,
                                                                                  ComponentDefinition<I> definition)
                     throws InstantiationException {
                 return null;
