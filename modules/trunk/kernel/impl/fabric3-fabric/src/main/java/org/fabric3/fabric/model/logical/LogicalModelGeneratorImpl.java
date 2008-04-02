@@ -43,7 +43,6 @@ import org.fabric3.spi.runtime.assembly.LogicalComponentManager;
 import org.fabric3.spi.wire.WiringService;
 
 import org.osoa.sca.annotations.Reference;
-import org.w3c.dom.Document;
 
 /**
  * @version $Revision$ $Date$
@@ -74,14 +73,7 @@ public class LogicalModelGeneratorImpl implements LogicalModelGenerator {
         LogicalChange change = new LogicalChange(parent);
 
         // merge the property values into the parent
-        for (Property property : composite.getProperties().values()) {
-            String name = property.getName();
-            if (parent != null && parent.getPropertyValues() != null && parent.getPropertyValues().containsKey(name)) {
-                throw new ActivateException("Duplicate property", name);
-            }
-            Document value = property.getDefaultValue();
-            parent.setPropertyValue(name, value);
-        }
+        includeProperties(parent, composite);
 
         // instantiate all the components in the composite and add them to the parent
         String base = parent.getUri().toString();
@@ -100,6 +92,16 @@ public class LogicalModelGeneratorImpl implements LogicalModelGenerator {
             normalize(component);
         }
         return change;
+    }
+
+    private void includeProperties(LogicalCompositeComponent parent, Composite composite) throws ActivateException {
+        for (Property property : composite.getProperties().values()) {
+            String name = property.getName();
+            if (parent.getPropertyValues().containsKey(name)) {
+                throw new ActivateException("Duplicate property", name);
+            }
+            parent.setPropertyValue(name, property.getDefaultValue());
+        }
     }
 
     private void instantiateComponents(LogicalCompositeComponent parent,
