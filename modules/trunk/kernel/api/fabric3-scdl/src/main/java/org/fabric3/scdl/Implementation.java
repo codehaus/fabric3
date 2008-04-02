@@ -42,9 +42,26 @@ public abstract class Implementation<T extends AbstractComponentType<?, ?, ?, ?>
     public void setComponentType(T componentType) {
         this.componentType = componentType;
     }
-    
+
+    /**
+     * Returns true if this implementation corresponds to the supplied XML element.
+     *
+     * @param type the QName of the implementation element
+     * @return true if this instance is of the supplied type
+     */
     public boolean isType(QName type) {
         return getType().equals(type);
+    }
+
+    /**
+     * Returns true if this implementation is a composite.
+     * <p/>
+     * This indicates whether this implementation can have children in the logical assembly.
+     *
+     * @return true if this implementation is a composite
+     */
+    public boolean isComposite() {
+        return false;
     }
 
     /**

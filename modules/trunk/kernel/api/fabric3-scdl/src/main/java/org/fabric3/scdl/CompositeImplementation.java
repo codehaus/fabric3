@@ -31,6 +31,10 @@ public class CompositeImplementation extends Implementation<Composite> {
     public static final QName IMPLEMENTATION_COMPOSITE = new QName(Constants.SCA_NS, "implementation.composite");
     private QName name;
 
+    public boolean isComposite() {
+        return true;
+    }
+
     public QName getType() {
         return IMPLEMENTATION_COMPOSITE;
     }

@@ -85,7 +85,7 @@ public class CompositeComponentInstantiator extends AbstractComponentInstantiato
         for (ComponentDefinition<? extends Implementation<?>> child : composite.getComponents().values()) {
 
             LogicalComponent<? extends Implementation<?>> childComponent;
-            if (CompositeImplementation.IMPLEMENTATION_COMPOSITE.equals(child.getImplementation().getType())) {
+            if (child.getImplementation().isComposite()) {
                 childComponent = instantiate(parent, child);
             } else {
                 childComponent = atomicComponentInstantiator.instantiate(parent, child);

@@ -125,8 +125,7 @@ public class LogicalModelGeneratorImpl implements LogicalModelGenerator {
     @SuppressWarnings("unchecked")
     private LogicalComponent<?> instantiate(LogicalCompositeComponent parent, ComponentDefinition<?> definition) throws InstantiationException {
 
-        Implementation<?> impl = definition.getImplementation();
-        if (CompositeImplementation.IMPLEMENTATION_COMPOSITE.equals(impl.getType())) {
+        if (definition.getImplementation().isComposite()) {
             return compositeComponentInstantiator.instantiate(parent, (ComponentDefinition<CompositeImplementation>) definition);
         } else {
             return atomicComponentInstantiator.instantiate(parent, (ComponentDefinition<Implementation<?>>) definition);
@@ -219,10 +218,7 @@ public class LogicalModelGeneratorImpl implements LogicalModelGenerator {
      * @param component the component to normalize
      */
     private void normalize(LogicalComponent<?> component) {
-
-        Implementation<?> implementation = component.getDefinition().getImplementation();
-
-        if (CompositeImplementation.IMPLEMENTATION_COMPOSITE.equals(implementation.getType())) {
+        if (component instanceof LogicalCompositeComponent) {
             LogicalCompositeComponent composite = (LogicalCompositeComponent) component;
             for (LogicalComponent<?> child : composite.getComponents()) {
                 normalize(child);
