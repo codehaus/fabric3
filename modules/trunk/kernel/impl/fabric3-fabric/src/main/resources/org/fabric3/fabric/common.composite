@@ -26,31 +26,10 @@
            name="org.fabric3.fabric.Common"
            autowire="true">
 
+    <include name="assembly" scdlLocation="assembly.composite"/>
+
     <component name="physicalOperationHelper">
         <system:implementation.system class="org.fabric3.fabric.model.physical.PhysicalOperationHelperImpl"/>
-    </component>
-
-    <component name="documentLoader">
-        <system:implementation.system class="org.fabric3.fabric.services.documentloader.DocumentLoaderImpl"/>
-    </component>
-
-    <component name="atomicComponentInstantiator">
-        <system:implementation.system class="org.fabric3.fabric.model.logical.AtomicComponentInstantiator"/>
-    </component>
-
-    <component name="compositeComponentInstantiator">
-        <system:implementation.system class="org.fabric3.fabric.model.logical.CompositeComponentInstantiator"/>
-        <reference name="atomicComponentInstantiator" target="atomicComponentInstantiator"/>
-    </component>
-
-    <component name="logicalComponentManager">
-        <system:implementation.system class="org.fabric3.fabric.services.domain.LogicalComponentManagerImpl"/>
-    </component>
-
-    <component name="logicalModelGenerator">
-        <system:implementation.system class="org.fabric3.fabric.model.logical.LogicalModelGeneratorImpl"/>
-        <reference name="atomicComponentInstantiator" target="atomicComponentInstantiator"/>
-        <reference name="compositeComponentInstantiator" target="compositeComponentInstantiator"/>
     </component>
 
     <component name="physicalModelGenerator">
@@ -64,26 +43,6 @@
     <component name="distributedAssembly">
         <system:implementation.system class="org.fabric3.fabric.assembly.DistributedAssemblyImpl"/>
         <reference name="logicalComponentManager" target="logicalComponentManager"/>
-    </component>
-
-    <component name="wiringService">
-        <system:implementation.system class="org.fabric3.fabric.wire.DefaultWiringService"/>
-    </component>
-
-    <component name="targetPromotionService">
-        <system:implementation.system class="org.fabric3.fabric.wire.promotion.DefaultTargetPromotionService"/>
-    </component>
-
-    <component name="explicitTargetResolutionService">
-        <system:implementation.system class="org.fabric3.fabric.wire.resolve.ExplicitTargetResolutionService"/>
-    </component>
-
-    <component name="typeBasedAutoWireService">
-        <system:implementation.system class="org.fabric3.fabric.wire.resolve.TypeBasedAutoWireService"/>
-    </component>
-
-    <component name="promotionNormalizer">
-        <system:implementation.system class="org.fabric3.fabric.assembly.normalizer.PromotionNormalizerImpl"/>
     </component>
 
     <component name="generatorRegistry">
