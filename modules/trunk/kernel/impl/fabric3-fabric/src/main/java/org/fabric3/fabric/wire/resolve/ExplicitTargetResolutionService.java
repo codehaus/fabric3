@@ -12,6 +12,7 @@ import org.fabric3.spi.model.instance.LogicalService;
 import org.fabric3.spi.util.UriHelper;
 import org.fabric3.spi.wire.TargetResolutionException;
 import org.fabric3.spi.wire.TargetResolutionService;
+import org.fabric3.spi.wire.PromotionException;
 
 /**
  * Resolution based on type based auto-wire.
@@ -21,7 +22,7 @@ import org.fabric3.spi.wire.TargetResolutionService;
  */
 public class ExplicitTargetResolutionService implements TargetResolutionService {
 
-    public void resolve(LogicalReference logicalReference, LogicalCompositeComponent context) throws TargetResolutionException {
+    public void resolve(LogicalReference logicalReference, LogicalCompositeComponent context) throws PromotionException {
         
         ComponentReference componentReference = logicalReference.getComponentReference();
         if (componentReference == null) {
@@ -46,7 +47,7 @@ public class ExplicitTargetResolutionService implements TargetResolutionService 
         
     }
     
-    private URI resolveByUri(LogicalReference reference, URI targetUri, LogicalCompositeComponent composite) throws TargetResolutionException {
+    private URI resolveByUri(LogicalReference reference, URI targetUri, LogicalCompositeComponent composite) throws PromotionException {
         
         URI targetComponentUri = UriHelper.getDefragmentedName(targetUri);
         LogicalComponent<?> targetComponent = composite.getComponent(targetComponentUri);

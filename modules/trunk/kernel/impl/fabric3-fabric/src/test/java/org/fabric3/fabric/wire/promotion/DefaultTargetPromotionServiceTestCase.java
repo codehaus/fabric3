@@ -10,6 +10,7 @@ import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalService;
 import org.fabric3.spi.wire.TargetPromotionService;
+import org.fabric3.spi.wire.PromotionException;
 
 public class DefaultTargetPromotionServiceTestCase extends TestCase {
     
@@ -25,8 +26,10 @@ public class DefaultTargetPromotionServiceTestCase extends TestCase {
             promotionService.promote(logicalService);
         } catch(PromotedComponentNotFoundException ex) {
             return;
+        } catch (PromotionException e) {
+            fail("Unexpected exception");
         }
-        
+
         fail("Expected exception");
         
     }
@@ -49,6 +52,8 @@ public class DefaultTargetPromotionServiceTestCase extends TestCase {
             promotionService.promote(logicalService);
         } catch(AmbiguousServiceException ex) {
             return;
+        } catch (PromotionException e) {
+            fail("Unexpected exception");
         }
         
         fail("Expected exception");
@@ -71,6 +76,8 @@ public class DefaultTargetPromotionServiceTestCase extends TestCase {
             promotionService.promote(logicalService);
         } catch(NoServiceOnComponentException ex) {
             return;
+        } catch (PromotionException e) {
+            fail("Unexpected exception");
         }
         
         fail("Expected exception");
@@ -93,6 +100,8 @@ public class DefaultTargetPromotionServiceTestCase extends TestCase {
             promotionService.promote(logicalService);
         } catch(ServiceNotFoundException ex) {
             return;
+        } catch (PromotionException e) {
+            fail("Unexpected exception");
         }
         
         fail("Expected exception");
@@ -110,8 +119,12 @@ public class DefaultTargetPromotionServiceTestCase extends TestCase {
                                                                                                              domain);
         logicalComponent.addService(new LogicalService(URI.create("component#service1"), null, domain));
         domain.addComponent(logicalComponent);
-        
-        promotionService.promote(logicalService);
+
+        try {
+            promotionService.promote(logicalService);
+        } catch (PromotionException e) {
+            fail("Unexpected exception");
+        }
         assertEquals(URI.create("component#service1"), logicalService.getPromotedUri());
         
     }
@@ -127,9 +140,13 @@ public class DefaultTargetPromotionServiceTestCase extends TestCase {
                                                                                                              domain);
         logicalComponent.addService(new LogicalService(URI.create("component#service1"), null, domain));
         domain.addComponent(logicalComponent);
-        
-        promotionService.promote(logicalService);
-        
+
+        try {
+            promotionService.promote(logicalService);
+        } catch (PromotionException e) {
+            fail("Unexpected exception");
+        }
+
     }
 
     public void testNoComponentForPromotedReference() {
@@ -141,6 +158,8 @@ public class DefaultTargetPromotionServiceTestCase extends TestCase {
             promotionService.promote(logicalReference);
         } catch(PromotedComponentNotFoundException ex) {
             return;
+        } catch (PromotionException e) {
+            fail("Unexpected exception");
         }
         
         fail("Expected exception");
@@ -165,6 +184,8 @@ public class DefaultTargetPromotionServiceTestCase extends TestCase {
             promotionService.promote(logicalReference);
         } catch(AmbiguousReferenceException ex) {
             return;
+        } catch (PromotionException e) {
+            fail("Unexpected exception");
         }
         
         fail("Expected exception");
@@ -188,6 +209,8 @@ public class DefaultTargetPromotionServiceTestCase extends TestCase {
             promotionService.promote(logicalReference);
         } catch(NoReferenceOnComponentException ex) {
             return;
+        } catch (PromotionException e) {
+            fail("Unexpected exception");
         }
         
         fail("Expected exception");
@@ -211,6 +234,8 @@ public class DefaultTargetPromotionServiceTestCase extends TestCase {
             promotionService.promote(logicalReference);
         } catch(ReferenceNotFoundException ex) {
             return;
+        } catch (PromotionException e) {
+            fail("Unexpected exception");
         }
         
         fail("Expected exception");
@@ -228,8 +253,12 @@ public class DefaultTargetPromotionServiceTestCase extends TestCase {
                                                                                                              domain);
         logicalComponent.addReference(new LogicalReference(URI.create("component#reference1"), null, domain));
         domain.addComponent(logicalComponent);
-        
-        promotionService.promote(logicalReference);
+
+        try {
+            promotionService.promote(logicalReference);
+        } catch (PromotionException e) {
+            fail("Unexpected exception");
+        }
         assertEquals(URI.create("component#reference1"), logicalReference.getPromotedUris().iterator().next());
         
     }
@@ -245,9 +274,13 @@ public class DefaultTargetPromotionServiceTestCase extends TestCase {
                                                                                                              domain);
         logicalComponent.addReference(new LogicalReference(URI.create("component#reference1"), null, domain));
         domain.addComponent(logicalComponent);
-        
-        promotionService.promote(logicalReference);
-        
+
+        try {
+            promotionService.promote(logicalReference);
+        } catch (PromotionException e) {
+            fail("Unexpected exception");
+        }
+
     }
 
 }

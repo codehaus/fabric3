@@ -20,12 +20,14 @@ package org.fabric3.spi.wire;
 
 import org.osoa.sca.ServiceRuntimeException;
 
+import org.fabric3.spi.assembly.ActivateException;
+
 /**
  * Any exception raised during promoting services and references.
  *
  * @version $Rev: 1567 $ $Date: 2007-10-20 11:34:49 +0100 (Sat, 20 Oct 2007) $
  */
-public class PromotionException extends ServiceRuntimeException {
+public class PromotionException extends ActivateException {
 
     /**
      * 
@@ -38,7 +40,7 @@ public class PromotionException extends ServiceRuntimeException {
      * @param message Exception message.
      */
     public PromotionException(String message) {
-        super(message);
+        super(message, null);
     }
 
     /**
@@ -48,7 +50,7 @@ public class PromotionException extends ServiceRuntimeException {
      * @param cause Exception cause.
      */
     public PromotionException(String message, Throwable cause) {
-        super(message, cause);
+        super(message, null, cause);
     }
 
 }

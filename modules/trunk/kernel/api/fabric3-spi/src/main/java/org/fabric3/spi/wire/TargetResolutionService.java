@@ -18,8 +18,8 @@ public interface TargetResolutionService {
      * 
      * @param reference Logical reference whose target needs to be resolved.
      * @param context Composite component within which the targets are resolved.
-     * @return True is the target was succesfully involved.
+     * @throws PromotionException if there was a problem resolving the reference target
      */
-    void resolve(LogicalReference reference, LogicalCompositeComponent context) throws TargetResolutionException;
+    void resolve(LogicalReference reference, LogicalCompositeComponent context) throws PromotionException;
     
 }

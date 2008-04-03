@@ -2,6 +2,8 @@ package org.fabric3.fabric.wire;
 
 import java.util.List;
 
+import org.osoa.sca.annotations.Reference;
+
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
@@ -9,10 +11,8 @@ import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalService;
 import org.fabric3.spi.wire.PromotionException;
 import org.fabric3.spi.wire.TargetPromotionService;
-import org.fabric3.spi.wire.TargetResolutionException;
 import org.fabric3.spi.wire.TargetResolutionService;
 import org.fabric3.spi.wire.WiringService;
-import org.osoa.sca.annotations.Reference;
 
 /**
  * Default implementation of the wiring service.
@@ -48,7 +48,7 @@ public class DefaultWiringService implements WiringService {
      * @throws WiringException Ifthe target for a required reference is unable to be wired.
      * @see org.fabric3.spi.wire.WiringService#wire(org.fabric3.spi.model.instance.LogicalComponent)
      */
-    public void wire(LogicalComponent<?> logicalComponent) throws WiringException {
+    public void wire(LogicalComponent<?> logicalComponent) throws PromotionException {
         
         if (logicalComponent instanceof LogicalCompositeComponent) {
             LogicalCompositeComponent compositeComponent = (LogicalCompositeComponent) logicalComponent;
@@ -67,40 +67,28 @@ public class DefaultWiringService implements WiringService {
      * 
      * @param logicalService Logical service whose promotion is handled.
      */
-    public void promote(LogicalService logicalService) throws WiringException {
-        try {
-            targetPromotionService.promote(logicalService);
-        } catch (PromotionException e) {
-            throw new WiringException(e);
-        }
+    public void promote(LogicalService logicalService) throws PromotionException {
+        targetPromotionService.promote(logicalService);
     }
     
     /**
      * Resolves the target for a logical reference.
-     * 
-     * @param reference Logical reference whose target needs to be resolved.
+     *
+     * @param logicalReference a reference to wire
      * @param context Composite component within which the targets are resolved.
-     * @return True is the target was succesfully involved.
      */
-    public void wire(LogicalReference logicalReference, LogicalCompositeComponent context) throws WiringException {
+    public void wire(LogicalReference logicalReference, LogicalCompositeComponent context) throws PromotionException {
         
-        try {
-            targetPromotionService.promote(logicalReference);
-            for (TargetResolutionService targetResolutionService : targetResolutionServices) {
-                targetResolutionService.resolve(logicalReference, context);
-            }
-        } catch (PromotionException e) {
-            throw new WiringException(e);
-        } catch (TargetResolutionException e) {
-            throw new WiringException(e);
+        targetPromotionService.promote(logicalReference);
+        for (TargetResolutionService targetResolutionService : targetResolutionServices) {
+            targetResolutionService.resolve(logicalReference, context);
         }
-        
     }
 
     /*
      * Handles promotions and target resolution on references.
      */
-    private void handleReferences(LogicalComponent<?> logicalComponent) throws WiringException {
+    private void handleReferences(LogicalComponent<?> logicalComponent) throws PromotionException {
         for (LogicalReference logicalReference : logicalComponent.getReferences()) {
             targetPromotionService.promote(logicalReference);
             for (TargetResolutionService targetResolutionService : targetResolutionServices) {
@@ -112,7 +100,7 @@ public class DefaultWiringService implements WiringService {
     /*
      * Handles promotions on services.
      */
-    private void handleServices(LogicalComponent<?> logicalComponent) {
+    private void handleServices(LogicalComponent<?> logicalComponent) throws PromotionException {
         for (LogicalService logicalService : logicalComponent.getServices()) {
             targetPromotionService.promote(logicalService);
         }

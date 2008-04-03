@@ -22,6 +22,9 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import org.osoa.sca.annotations.Reference;
+import org.w3c.dom.Document;
+
 import org.fabric3.fabric.assembly.InstantiationException;
 import org.fabric3.fabric.assembly.normalizer.PromotionNormalizer;
 import org.fabric3.scdl.Autowire;
@@ -34,7 +37,6 @@ import org.fabric3.scdl.CompositeService;
 import org.fabric3.scdl.Implementation;
 import org.fabric3.scdl.Property;
 import org.fabric3.spi.assembly.ActivateException;
-import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
@@ -42,9 +44,6 @@ import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalService;
 import org.fabric3.spi.runtime.assembly.LogicalComponentManager;
 import org.fabric3.spi.wire.WiringService;
-
-import org.osoa.sca.annotations.Reference;
-import org.w3c.dom.Document;
 
 /**
  * @version $Revision$ $Date$
@@ -91,7 +90,7 @@ public class LogicalModelGeneratorImpl implements LogicalModelGenerator {
         return change;
     }
 
-    private Map<String,Document> includeProperties(LogicalCompositeComponent parent, Composite composite) throws ActivateException {
+    private Map<String, Document> includeProperties(LogicalCompositeComponent parent, Composite composite) throws ActivateException {
         for (Property property : composite.getProperties().values()) {
             String name = property.getName();
             if (parent.getPropertyValues().containsKey(name)) {
@@ -190,30 +189,18 @@ public class LogicalModelGeneratorImpl implements LogicalModelGenerator {
             throws ActivateException {
 
         // resolve wires for composite services merged into the domain
-        try {
-            for (LogicalService service : services) {
-                wiringService.promote(service);
-            }
-        } catch (WiringException e) {
-            throw new ActivateException(e);
+        for (LogicalService service : services) {
+            wiringService.promote(service);
         }
 
         // resove composite references merged into the domain
         for (LogicalReference reference : references) {
-            try {
-                wiringService.wire(reference, logicalComponentManager.getDomain());
-            } catch (WiringException e) {
-                throw new ActivateException(e);
-            }
+            wiringService.wire(reference, logicalComponentManager.getDomain());
         }
 
         // resolve wires for each new component
-        try {
-            for (LogicalComponent<?> component : components) {
-                wiringService.wire(component);
-            }
-        } catch (WiringException e) {
-            throw new ActivateException(e);
+        for (LogicalComponent<?> component : components) {
+            wiringService.wire(component);
         }
 
     }
