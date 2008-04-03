@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<composite name="OrderSystem" targetNamespace="" xmlns="http://www.osoa.org/xmlns/sca/1.0">
+    <component name="OrderService">
+        <implementation.java class="com.example.order.OrderServiceImpl"/>
+        <reference name="pricing" target="PricingService"/>
+        <reference name="dao" target="InventoryDAO"/>
+    </component>
+
+    <component name="InventoryDAO">
+        <implementation.java class="com.example.inventory.InventoryDAOImpl"/>
+    </component>
+</composite>

@@ -18,8 +18,6 @@ package org.fabric3.sandbox.introspection;
 
 import java.net.URL;
 
-import javax.xml.namespace.QName;
-
 import junit.framework.TestCase;
 
 import org.fabric3.sandbox.introspection.impl.IntrospectionFactoryImpl;
@@ -32,12 +30,15 @@ import org.fabric3.introspection.java.ImplementationProcessor;
 import org.fabric3.scdl.Composite;
 import org.fabric3.java.scdl.JavaImplementation;
 import org.fabric3.pojo.scdl.PojoComponentType;
+import org.fabric3.spi.assembly.ActivateException;
 
 /**
  * @version $Rev$ $Date$
  */
 public class OrderTestCase extends TestCase {
     private IntrospectionFactory factory;
+    private IntrospectionContext context;
+    private Loader loader;
 
     public void testIntrospectJava() throws IntrospectionException {
 
@@ -53,9 +54,46 @@ public class OrderTestCase extends TestCase {
         assertTrue(componentType.getReferences().containsKey("dao"));
     }
 
+    public void testValidation() throws LoaderException, ActivateException {
+        // load the pricing composite and set as domain context
+        URL pricingURL = getClass().getResource("/pricing/pricing.composite");
+        context = new DefaultIntrospectionContext(getClass().getClassLoader(), null, pricingURL);
+        Composite pricingComposite = loader.load(pricingURL, Composite.class, context);
+        factory.initializeContext(pricingComposite);
+
+        // load the order composite
+        URL orderURL = getClass().getResource("/order/order.composite");
+        context = new DefaultIntrospectionContext(getClass().getClassLoader(), null, orderURL);
+        Composite orderComposite = loader.load(orderURL, Composite.class, context);
+
+        factory.validate(orderComposite);
+    }
+
+    public void testValidationWithMissingReference() throws LoaderException {
+        // initialize empty domain
+        try {
+            factory.initializeContext(null);
+        } catch (ActivateException e) {
+            fail();
+        }
+
+        // load the order composite
+        URL orderURL = getClass().getResource("/order/order.composite");
+        context = new DefaultIntrospectionContext(getClass().getClassLoader(), null, orderURL);
+        Composite orderComposite = loader.load(orderURL, Composite.class, context);
+
+        try {
+            factory.validate(orderComposite);
+            fail();
+        } catch (ActivateException e) {
+            // OK
+        }
+    }
+
     protected void setUp() throws Exception {
         super.setUp();
 
         factory = new IntrospectionFactoryImpl();
+        loader = factory.getLoader();
     }
 }

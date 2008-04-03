@@ -66,6 +66,11 @@ public class IntrospectionRuntimeImpl extends AbstractRuntime<IntrospectionHostI
         } catch (AssemblyException e) {
             throw new ActivateException(e);
         }
+        if (context != null) {
+            LogicalModelGenerator generator = getSystemComponent(LogicalModelGenerator.class, LOGICAL_MODEL_GENERATOR);
+            LogicalCompositeComponent domain = componentManager.getDomain();
+            generator.include(domain, context);
+        }
     }
 
     public void validate(Composite include) throws ActivateException {
