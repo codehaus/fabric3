@@ -24,7 +24,7 @@
 
     <!-- XAPool Datasource -->
     <component name="testDataSource">
-        <implementation.composite scdlResource="META-INF/xapool.composite"/>
+        <implementation.composite name="XaPoolDataSource" scdlResource="META-INF/xapool.composite"/>
         <property name="dataSourceConfig" source="$systemConfig//testDsConfig"/>
     </component>
     

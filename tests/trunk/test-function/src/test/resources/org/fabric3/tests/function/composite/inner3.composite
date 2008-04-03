@@ -25,7 +25,7 @@
     </component>
 
     <component name="InnerFour">
-        <implementation.composite scdlLocation="inner4.composite"/>
+        <implementation.composite name="InnerComposite4" scdlLocation="inner4.composite"/>
     </component>
 
 </composite>

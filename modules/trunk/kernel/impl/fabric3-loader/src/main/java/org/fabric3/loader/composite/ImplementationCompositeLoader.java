@@ -21,7 +21,6 @@ package org.fabric3.loader.composite;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
-import javax.xml.namespace.NamespaceContext;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
@@ -32,16 +31,16 @@ import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.introspection.DefaultIntrospectionContext;
-import org.fabric3.loader.common.MissingAttributeException;
-import org.fabric3.scdl.Composite;
-import org.fabric3.scdl.CompositeImplementation;
+import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.xml.Loader;
 import org.fabric3.introspection.xml.LoaderException;
-import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.xml.LoaderRegistry;
 import org.fabric3.introspection.xml.LoaderUtil;
 import org.fabric3.introspection.xml.MissingResourceException;
 import org.fabric3.introspection.xml.TypeLoader;
+import org.fabric3.loader.common.MissingAttributeException;
+import org.fabric3.scdl.Composite;
+import org.fabric3.scdl.CompositeImplementation;
 import org.fabric3.spi.services.contribution.MetaDataStore;
 import org.fabric3.spi.services.contribution.MetaDataStoreException;
 import org.fabric3.spi.services.contribution.QNameSymbol;
@@ -79,6 +78,10 @@ public class ImplementationCompositeLoader implements TypeLoader<CompositeImplem
 
         assert CompositeImplementation.IMPLEMENTATION_COMPOSITE.equals(reader.getName());
         String nameAttr = reader.getAttributeValue(null, "name");
+        if (nameAttr == null || nameAttr.length() == 0) {
+            throw new MissingAttributeException("Missing name attribute");
+        }
+        QName name = LoaderUtil.getQName(nameAttr, introspectionContext.getTargetNamespace(), reader.getNamespaceContext());
         String scdlLocation = reader.getAttributeValue(null, "scdlLocation");
         String scdlResource = reader.getAttributeValue(null, "scdlResource");
         LoaderUtil.skipToEndElement(reader);
@@ -108,27 +111,24 @@ public class ImplementationCompositeLoader implements TypeLoader<CompositeImplem
             impl.setName(composite.getName());
             impl.setComponentType(composite);
             return impl;
-        } else if (nameAttr != null) {
-            String targetNamespace = introspectionContext.getTargetNamespace();
-            NamespaceContext namespaceContext = reader.getNamespaceContext();
-            QName name = LoaderUtil.getQName(nameAttr, targetNamespace, namespaceContext);
-            QNameSymbol symbol = new QNameSymbol(name);
+        } else {
+            if (store == null) {
+                // throw error as this is invalid in a bootstrap environment
+                throw new UnsupportedOperationException("scdlLocation or scdlResource must be supplied as no MetaDataStore is available");
+            }
+
             try {
-                ResourceElement<QNameSymbol, Composite> element =
-                        store.resolve(contributionUri, Composite.class, symbol);
+                QNameSymbol symbol = new QNameSymbol(name);
+                ResourceElement<QNameSymbol, Composite> element = store.resolve(contributionUri, Composite.class, symbol);
                 if (element == null) {
                     String identifier = name.toString();
                     throw new MissingResourceException("Composite not found [" + identifier + "]", identifier);
                 }
                 impl.setComponentType(element.getValue());
+                return impl;
             } catch (MetaDataStoreException e) {
                 throw new LoaderException(e);
             }
-
-            return impl;
-
-        } else {
-            throw new MissingAttributeException("Implementaiton.composite must have a name, scdlLocation, or scdlResource");
         }
 
     }

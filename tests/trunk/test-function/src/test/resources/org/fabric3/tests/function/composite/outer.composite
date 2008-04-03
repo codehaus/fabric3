@@ -18,14 +18,14 @@
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0" xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha" name="OuterComposite">
 
     <component name="Inner">
-        <implementation.composite scdlLocation="inner.composite" />
+        <implementation.composite name="InnerComposite" scdlLocation="inner.composite" />
         <property name="ids">
             <one xmlns="">innerOne</one>
         </property>
     </component>
 
     <component name="Inner2">
-        <implementation.composite scdlLocation="inner2.composite" />
+        <implementation.composite name="InnerComposite2" scdlLocation="inner2.composite" />
         <service name="SourceService">
             <f3:binding.test uri="SourceService" />
         </service>
@@ -46,11 +46,11 @@
     </component>
 
     <component name="InnerIncluder">
-        <implementation.composite scdlLocation="include/innerIncluder.composite" />
+        <implementation.composite name="InnerIncluderComposite" scdlLocation="include/innerIncluder.composite" />
     </component>
 
     <component name="Autowire">
-        <implementation.composite scdlLocation="autowire.composite" />
+        <implementation.composite name="AutowireTestComposite" scdlLocation="autowire.composite" />
     </component>
     
 </composite>

@@ -26,7 +26,7 @@
 
 
     <component name="Autowire">
-        <implementation.composite scdlLocation="autowired.composite"/>
+        <implementation.composite name="AutowiredComposite" scdlLocation="autowired.composite"/>
         <reference name="promoted" target="target"/>
     </component>
 

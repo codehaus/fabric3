@@ -17,7 +17,7 @@
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
-           name="InnerComposite2">
+           name="InnerComposite2" targetNamespace="">
 
     <service name="two" promote="two#IdentityService"/>
     <service name="SourceService" promote="source"/>
@@ -32,7 +32,7 @@
     </component>
 
     <component name="InnerThree">
-        <implementation.composite scdlLocation="inner3.composite"/>
+        <implementation.composite name="InnerComposite3" scdlLocation="inner3.composite"/>
     </component>
 
 
