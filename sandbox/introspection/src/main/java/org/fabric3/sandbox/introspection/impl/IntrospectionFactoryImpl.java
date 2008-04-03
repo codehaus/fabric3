@@ -26,12 +26,14 @@ import org.fabric3.monitor.impl.NullMonitorFactory;
 import org.fabric3.sandbox.introspection.IntrospectionFactory;
 import org.fabric3.sandbox.introspection.IntrospectionRuntime;
 import org.fabric3.scdl.Implementation;
+import org.fabric3.scdl.Composite;
 import org.fabric3.services.xmlfactory.XMLFactory;
 import org.fabric3.services.xmlfactory.impl.DefaultXMLFactoryImpl;
 import org.fabric3.spi.component.GroupInitializationException;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.invocation.CallFrame;
 import org.fabric3.spi.invocation.WorkContext;
+import org.fabric3.spi.assembly.ActivateException;
 
 /**
  * @version $Rev$ $Date$
@@ -51,7 +53,7 @@ public class IntrospectionFactoryImpl implements IntrospectionFactory {
             throws InitializationException, GroupInitializationException {
         ClassLoader classLoader = getClass().getClassLoader();
 
-        runtime = new IntrospectionRuntimeImpl(monitorFactory, xmlFactory);
+        runtime = new IntrospectionRuntimeImpl(monitorFactory);
         runtime.setHostInfo(new IntrospectionHostInfoImpl());
         runtime.setHostClassLoader(classLoader);
         runtime.initialize();
@@ -85,5 +87,13 @@ public class IntrospectionFactoryImpl implements IntrospectionFactory {
 
     public <I extends Implementation<?>, IP extends ImplementationProcessor<I>> IP getImplementationProcessor(Class<I> implementationType) {
         return (IP) runtime.getImplementationProcessor(implementationType);
+    }
+
+    public void initializeContext(Composite context) throws ActivateException {
+        runtime.initializeContext(context);
+    }
+
+    public void validate(Composite include) throws ActivateException {
+        runtime.validate(include);
     }
 }

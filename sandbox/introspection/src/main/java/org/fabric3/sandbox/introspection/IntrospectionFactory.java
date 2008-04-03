@@ -19,6 +19,8 @@ package org.fabric3.sandbox.introspection;
 import org.fabric3.introspection.java.ImplementationProcessor;
 import org.fabric3.introspection.xml.Loader;
 import org.fabric3.scdl.Implementation;
+import org.fabric3.scdl.Composite;
+import org.fabric3.spi.assembly.ActivateException;
 
 /**
  * @version $Rev$ $Date$
@@ -41,4 +43,22 @@ public interface IntrospectionFactory {
      * @return an implementation processor for that type of implementation
      */
     <I extends Implementation<?>, IP extends ImplementationProcessor<I>> IP getImplementationProcessor(Class<I> implementationType);
+
+    /**
+     * Initialize the domain context against which validation should be performed.
+     *
+     * @param context the model of the domain
+     * @throws ActivateException if there was a problem activating the model
+     */
+    void initializeContext(Composite context) throws ActivateException;
+
+    /**
+     * Validate the attempt to include a composite into a domain.
+     *
+     * The supplied composite definition is validated against the domain context. The domain context is not modified.
+     *
+     * @param include a composite to validate for inclusion in the domain context
+     * @throws ActivateException if there was a problem including the composite
+     */
+    void validate(Composite include) throws ActivateException;
 }

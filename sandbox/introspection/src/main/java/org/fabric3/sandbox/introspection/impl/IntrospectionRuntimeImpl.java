@@ -26,9 +26,10 @@ import org.fabric3.monitor.MonitorFactory;
 import org.fabric3.sandbox.introspection.IntrospectionHostInfo;
 import org.fabric3.sandbox.introspection.IntrospectionRuntime;
 import org.fabric3.scdl.Implementation;
-import org.fabric3.services.xmlfactory.XMLFactory;
+import org.fabric3.scdl.Composite;
 import org.fabric3.java.scdl.JavaImplementation;
 import org.fabric3.java.introspection.JavaImplementationProcessor;
+import org.fabric3.spi.assembly.ActivateException;
 
 /**
  * @version $Rev$ $Date$
@@ -37,7 +38,7 @@ public class IntrospectionRuntimeImpl extends AbstractRuntime<IntrospectionHostI
     private static final URI LOADER_URI = URI.create(ComponentNames.RUNTIME_NAME + "/loader");
     private static final URI JAVA_PROCESSOR = URI.create(ComponentNames.RUNTIME_NAME + "/org.fabric3.java.introspection.JavaImplementationProcessorImpl");
 
-    public IntrospectionRuntimeImpl(MonitorFactory monitorFactory, XMLFactory xmlFactory) {
+    public IntrospectionRuntimeImpl(MonitorFactory monitorFactory) {
         super(IntrospectionHostInfo.class, monitorFactory);
     }
 
@@ -50,5 +51,11 @@ public class IntrospectionRuntimeImpl extends AbstractRuntime<IntrospectionHostI
             return (IP) getSystemComponent(JavaImplementationProcessor.class, JAVA_PROCESSOR);
         }
         return null;
+    }
+
+    public void initializeContext(Composite context) throws ActivateException {
+    }
+
+    public void validate(Composite include) throws ActivateException {
     }
 }
