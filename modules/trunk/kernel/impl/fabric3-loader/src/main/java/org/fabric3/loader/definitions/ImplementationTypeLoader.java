@@ -67,7 +67,7 @@ public class ImplementationTypeLoader implements TypeLoader<ImplementationType> 
             throws XMLStreamException, LoaderException {
 
         String name = reader.getAttributeValue(null, "name");
-        QName qName = new QName(context.getTargetNamespace(), name);
+        QName qName = helper.createQName(name, reader); 
 
         Set<QName> alwaysProvides = helper.parseListOfQNames(reader, "alwaysProvides");
         Set<QName> mayProvide = helper.parseListOfQNames(reader, "mayProvide");
