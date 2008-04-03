@@ -38,6 +38,8 @@ import org.fabric3.scdl.Property;
 import org.fabric3.java.scdl.JavaImplementation;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.binding.ws.scdl.WsBindingDefinition;
+import org.fabric3.spi.assembly.ActivateException;
+
 import static javax.xml.XMLConstants.W3C_XML_SCHEMA_NS_URI;
 
 /**
@@ -75,6 +77,17 @@ public class PricingTestCase extends TestCase {
         assertEquals(new QName(W3C_XML_SCHEMA_NS_URI, "string"), name.getXmlType());
         Property value = properties.get("value");
         assertEquals(new QName(W3C_XML_SCHEMA_NS_URI, "int"), value.getXmlType());
+    }
+
+    public void testValidate() throws LoaderException, ActivateException {
+        // load the pricing composite
+        URL pricingComposite = getClass().getResource("/pricing/pricing.composite");
+        IntrospectionContext context = new DefaultIntrospectionContext(getClass().getClassLoader(), null, pricingComposite);
+        Loader loader = factory.getLoader();
+        Composite composite = loader.load(pricingComposite, Composite.class, context);
+
+        factory.initializeContext(null);
+        factory.validate(composite);
     }
 
     protected void setUp() throws Exception {

@@ -20,6 +20,7 @@ import java.net.URI;
 
 import org.fabric3.fabric.runtime.AbstractRuntime;
 import org.fabric3.fabric.runtime.ComponentNames;
+import org.fabric3.fabric.model.logical.LogicalModelGenerator;
 import org.fabric3.introspection.java.ImplementationProcessor;
 import org.fabric3.introspection.xml.Loader;
 import org.fabric3.monitor.MonitorFactory;
@@ -30,6 +31,9 @@ import org.fabric3.scdl.Composite;
 import org.fabric3.java.scdl.JavaImplementation;
 import org.fabric3.java.introspection.JavaImplementationProcessor;
 import org.fabric3.spi.assembly.ActivateException;
+import org.fabric3.spi.assembly.AssemblyException;
+import org.fabric3.spi.runtime.assembly.LogicalComponentManager;
+import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 
 /**
  * @version $Rev$ $Date$
@@ -37,6 +41,8 @@ import org.fabric3.spi.assembly.ActivateException;
 public class IntrospectionRuntimeImpl extends AbstractRuntime<IntrospectionHostInfo> implements IntrospectionRuntime {
     private static final URI LOADER_URI = URI.create(ComponentNames.RUNTIME_NAME + "/loader");
     private static final URI JAVA_PROCESSOR = URI.create(ComponentNames.RUNTIME_NAME + "/org.fabric3.java.introspection.JavaImplementationProcessorImpl");
+    private static final URI LOGICAL_COMPONENT_MANAGER = URI.create(ComponentNames.RUNTIME_NAME + "/logicalComponentManager");
+    private static final URI LOGICAL_MODEL_GENERATOR = URI.create(ComponentNames.RUNTIME_NAME + "/logicalModelGenerator");
 
     public IntrospectionRuntimeImpl(MonitorFactory monitorFactory) {
         super(IntrospectionHostInfo.class, monitorFactory);
@@ -54,8 +60,18 @@ public class IntrospectionRuntimeImpl extends AbstractRuntime<IntrospectionHostI
     }
 
     public void initializeContext(Composite context) throws ActivateException {
+        LogicalComponentManager componentManager = getSystemComponent(LogicalComponentManager.class, LOGICAL_COMPONENT_MANAGER);
+        try {
+            componentManager.initialize();
+        } catch (AssemblyException e) {
+            throw new ActivateException(e);
+        }
     }
 
     public void validate(Composite include) throws ActivateException {
+        LogicalComponentManager componentManager = getSystemComponent(LogicalComponentManager.class, LOGICAL_COMPONENT_MANAGER);
+        LogicalModelGenerator generator = getSystemComponent(LogicalModelGenerator.class, LOGICAL_MODEL_GENERATOR);
+        LogicalCompositeComponent domain = componentManager.getDomain();
+        generator.include(domain, include);
     }
 }

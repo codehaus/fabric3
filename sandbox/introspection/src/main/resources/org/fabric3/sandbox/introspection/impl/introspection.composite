@@ -35,4 +35,9 @@
     <include name="java:introspection" scdlResource="META-INF/javaIntrospection.composite"/>
     <include name="ws:introspection" scdlResource="org/fabric3/binding/ws/introspection.composite"/>
 
+    <component name="assemblyRecoveryService">
+        <system:implementation.system class="org.fabric3.fabric.services.domain.NonPersistentLogicalComponentStore"/>
+    </component>
+
+    <include name="assembly" scdlResource="org/fabric3/fabric/assembly.composite"/>
 </composite>
