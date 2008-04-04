@@ -8,8 +8,6 @@ import junit.framework.TestCase;
 
 import org.easymock.classextension.EasyMock;
 import org.fabric3.fabric.assembly.normalizer.PromotionNormalizer;
-import org.fabric3.fabric.assembly.resolver.ResolutionException;
-import org.fabric3.fabric.assembly.resolver.WireResolver;
 import org.fabric3.fabric.model.logical.AtomicComponentInstantiator;
 import org.fabric3.fabric.model.logical.CompositeComponentInstantiator;
 import org.fabric3.fabric.model.logical.LogicalModelGenerator;
