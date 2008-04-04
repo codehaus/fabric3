@@ -182,17 +182,21 @@ public abstract class AbstractRuntime<I extends HostInfo> implements Fabric3Runt
 
     public <I> I getSystemComponent(Class<I> service, URI uri) {
 
-        // JFM FIXME WorkContext should be moved down to host-api and should be created by the host
         AtomicComponent<?> component = (AtomicComponent<?>) componentManager.getComponent(uri);
-        WorkContext workContext = new WorkContext();
-        PojoWorkContextTunnel.setThreadWorkContext(workContext);
+        if (component == null) {
+            return null;
+        }
 
+        WorkContext workContext = new WorkContext();
+        WorkContext oldContext = PojoWorkContextTunnel.setThreadWorkContext(workContext);
         try {
             InstanceWrapper<?> wrapper = scopeContainer.getWrapper(component, workContext);
             return service.cast(wrapper.getInstance());
         } catch (TargetResolutionException e) {
             // FIXME throw something better
             throw new AssertionError();
+        } finally {
+            PojoWorkContextTunnel.setThreadWorkContext(oldContext);
         }
     }
 

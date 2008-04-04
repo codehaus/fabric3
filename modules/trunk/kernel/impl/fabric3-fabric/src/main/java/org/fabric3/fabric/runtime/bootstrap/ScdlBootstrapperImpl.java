@@ -90,25 +90,38 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
     private static final URI HOST_CLASSLOADER_ID = URI.create("sca://./hostClassLoader");
     private static final String USER_CONFIG = System.getProperty("user.home") + "/.fabric3/config.xml";
 
+    private final XMLFactory xmlFactory;
     private final ContractProcessor interfaceProcessorRegistry;
     private final DocumentLoader documentLoader;
     private final ComponentInstantiator instantiator;
 
-    private XMLFactory xmlFactory;
     private URL scdlLocation;
     private URL systemConfig;
     private LogicalCompositeComponent domain;
+    private MetaDataStore metaDataStore;
+    private ClassLoaderRegistry classLoaderRegistry;
+    private ProcessorRegistry processorRegistry;
+    private ScopeRegistry scopeRegistry;
+
+    public ScdlBootstrapperImpl(XMLFactory xmlFactory, MetaDataStore metaDataStore) {
+        this(xmlFactory);
+        this.metaDataStore = metaDataStore;
+    }
 
     public ScdlBootstrapperImpl() {
+        this(new XMLFactoryImpl());
+        this.metaDataStore = new MetaDataStoreImpl(classLoaderRegistry, processorRegistry);
+    }
+
+    private ScdlBootstrapperImpl(XMLFactory xmlFactory) {
+        this.xmlFactory = xmlFactory;
+        classLoaderRegistry = new ClassLoaderRegistryImpl();
+        processorRegistry = new ProcessorRegistryImpl();
+        scopeRegistry = new ScopeRegistryImpl();
         IntrospectionHelper helper = new DefaultIntrospectionHelper();
         interfaceProcessorRegistry = new DefaultContractProcessor(helper);
         documentLoader = new DocumentLoaderImpl();
         instantiator = new AtomicComponentInstantiator(documentLoader);
-        xmlFactory = new XMLFactoryImpl();
-    }
-
-    public void setXmlFactory(XMLFactory xmlFactory) {
-        this.xmlFactory = xmlFactory;
     }
 
     public URL getScdlLocation() {
@@ -201,21 +214,16 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
 
         RuntimeServices runtimeServices = (RuntimeServices) runtime;
 
-        ClassLoaderRegistry classLoaderRegistry = new ClassLoaderRegistryImpl();
         registerSystemComponent(runtimeServices, "ClassLoaderRegistry", ClassLoaderRegistry.class, classLoaderRegistry);
 
-        ScopeRegistry scopeRegistry = new ScopeRegistryImpl();
         scopeRegistry.register(runtimeServices.getScopeContainer());
         registerSystemComponent(runtimeServices, "ScopeRegistry", ScopeRegistry.class, scopeRegistry);
 
-        ProcessorRegistry processorRegistry = new ProcessorRegistryImpl();
-        registerSystemComponent(runtimeServices,
-                                "ContributionProcessorRegistry",
-                                ProcessorRegistry.class,
-                                processorRegistry);
+        registerSystemComponent(runtimeServices, "ContributionProcessorRegistry", ProcessorRegistry.class, processorRegistry);
 
-        MetaDataStore metaDataStore = createMetaDataStore(classLoaderRegistry, processorRegistry);
-        registerSystemComponent(runtimeServices, "MetaDataStore", MetaDataStore.class, metaDataStore);
+        if (metaDataStore != null) {
+            registerSystemComponent(runtimeServices, "MetaDataStore", MetaDataStore.class, metaDataStore);
+        }
 
         Assembly runtimeAssembly = BootstrapAssemblyFactory.createAssembly(runtime);
         registerSystemComponent(runtimeServices, "RuntimeAssembly", Assembly.class, runtimeAssembly);
@@ -234,11 +242,6 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
         URI domainId = runtime.getHostInfo().getDomain();
         classLoaderRegistry.register(APPLICATION_CLASSLOADER_ID, appClassLoader);
         classLoaderRegistry.register(domainId, new MultiParentClassLoader(domainId, appClassLoader));
-    }
-
-    private MetaDataStore createMetaDataStore(ClassLoaderRegistry classLoaderRegistry,
-                                              ProcessorRegistry processorRegistry) throws InitializationException {
-        return new MetaDataStoreImpl(classLoaderRegistry, processorRegistry);
     }
 
     private <S, I extends S> void registerSystemComponent(RuntimeServices runtime,

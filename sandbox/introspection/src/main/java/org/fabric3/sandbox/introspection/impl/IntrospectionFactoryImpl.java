@@ -34,6 +34,7 @@ import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.invocation.CallFrame;
 import org.fabric3.spi.invocation.WorkContext;
 import org.fabric3.spi.assembly.ActivateException;
+import org.fabric3.spi.services.contribution.MetaDataStore;
 
 /**
  * @version $Rev$ $Date$
@@ -46,10 +47,11 @@ public class IntrospectionFactoryImpl implements IntrospectionFactory {
      *
      * @param monitorFactory the factory for monitors
      * @param xmlFactory     the factory for XML parsers
+     * @param metaDataStore  store used to resolve external artifacts
      * @throws InitializationException      if there was a problem initializing the runtime
      * @throws GroupInitializationException if there was a problem starting the runtime
      */
-    public IntrospectionFactoryImpl(MonitorFactory monitorFactory, XMLFactory xmlFactory)
+    public IntrospectionFactoryImpl(MonitorFactory monitorFactory, XMLFactory xmlFactory, MetaDataStore metaDataStore)
             throws InitializationException, GroupInitializationException {
         ClassLoader classLoader = getClass().getClassLoader();
 
@@ -59,8 +61,7 @@ public class IntrospectionFactoryImpl implements IntrospectionFactory {
         runtime.initialize();
         ScopeContainer<?> container = runtime.getScopeContainer();
 
-        ScdlBootstrapperImpl bootstrapper = new ScdlBootstrapperImpl();
-        bootstrapper.setXmlFactory(xmlFactory);
+        ScdlBootstrapperImpl bootstrapper = new ScdlBootstrapperImpl(xmlFactory, metaDataStore);
         bootstrapper.setScdlLocation(getClass().getResource("introspection.composite"));
         bootstrapper.bootPrimordial(runtime, classLoader, classLoader);
 
@@ -78,7 +79,7 @@ public class IntrospectionFactoryImpl implements IntrospectionFactory {
      * @throws GroupInitializationException if there was a problem starting the runtime
      */
     public IntrospectionFactoryImpl() throws InitializationException, GroupInitializationException {
-        this(new NullMonitorFactory(), new DefaultXMLFactoryImpl());
+        this(new NullMonitorFactory(), new DefaultXMLFactoryImpl(), null);
     }
 
     public Loader getLoader() {

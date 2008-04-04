@@ -51,7 +51,7 @@ public class IncludeLoader implements TypeLoader<Include> {
     private final Loader loader;
     private MetaDataStore store;
 
-    public IncludeLoader(@Reference Loader loader, @Reference MetaDataStore store) {
+    public IncludeLoader(@Reference Loader loader, @Reference(required = false) MetaDataStore store) {
         this.loader = loader;
         this.store = store;
     }

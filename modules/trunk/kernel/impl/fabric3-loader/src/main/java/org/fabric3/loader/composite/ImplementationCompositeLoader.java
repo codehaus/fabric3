@@ -57,7 +57,7 @@ public class ImplementationCompositeLoader implements TypeLoader<CompositeImplem
     private final LoaderRegistry registry;
     private final MetaDataStore store;
 
-    public ImplementationCompositeLoader(@Reference LoaderRegistry loader, @Reference MetaDataStore store) {
+    public ImplementationCompositeLoader(@Reference LoaderRegistry loader, @Reference(required = false) MetaDataStore store) {
         this.loader = loader;
         this.registry = loader;
         this.store = store;
