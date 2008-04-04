@@ -19,44 +19,42 @@
 package org.fabric3.fabric.command;
 
 import java.net.URI;
-import java.util.List;
+
+import org.osoa.sca.annotations.Property;
+import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.fabric.model.physical.PhysicalWireGenerator;
 import org.fabric3.scdl.CompositeImplementation;
-import org.fabric3.scdl.ServiceContract;
 import org.fabric3.spi.generator.CommandGenerator;
 import org.fabric3.spi.generator.GenerationException;
-import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
-import org.fabric3.spi.model.instance.LogicalResource;
 import org.fabric3.spi.model.instance.LogicalService;
 import org.fabric3.spi.model.instance.LogicalWire;
 import org.fabric3.spi.model.physical.PhysicalWireDefinition;
 import org.fabric3.spi.runtime.assembly.LogicalComponentManager;
 import org.fabric3.spi.util.UriHelper;
-import org.osoa.sca.annotations.Property;
-import org.osoa.sca.annotations.Reference;
 
 /**
+ * Generate commands to attach local wires between components.
+ *
  * @version $Revision$ $Date$
  */
-public class WireAttachCommandGenerator implements CommandGenerator {
+public class LocalWireCommandGenerator implements CommandGenerator {
 
     private final PhysicalWireGenerator physicalWireGenerator;
     private final LogicalComponentManager logicalComponentManager;
     private final int order;
 
-    public WireAttachCommandGenerator(@Reference PhysicalWireGenerator physicalWireGenerator,
-                                      @Reference(name = "logicalComponentManager")LogicalComponentManager logicalComponentManager,
-                                      @Property(name = "order")int order) {
+    public LocalWireCommandGenerator(@Reference PhysicalWireGenerator physicalWireGenerator,
+                                     @Reference(name = "logicalComponentManager")LogicalComponentManager logicalComponentManager,
+                                     @Property(name = "order")int order) {
         this.physicalWireGenerator = physicalWireGenerator;
         this.logicalComponentManager = logicalComponentManager;
         this.order = order;
     }
 
-    @SuppressWarnings("unchecked")
     public WireAttachCommand generate(LogicalComponent<?> component) throws GenerationException {
 
         WireAttachCommand command = new WireAttachCommand(order);
@@ -73,91 +71,15 @@ public class WireAttachCommandGenerator implements CommandGenerator {
         return command;
     }
 
-    @SuppressWarnings("unchecked")
     private void generatePhysicalWires(LogicalComponent<?> component, WireAttachCommand command) throws GenerationException {
-
-        generateReferenceWires(component, command);
-        generateServiceWires(component, command);
-        generateResourceWires(component, command);
-
-    }
-
-    @SuppressWarnings("unchecked")
-    private void generateResourceWires(LogicalComponent<?> component, WireAttachCommand command) throws GenerationException {
-        for (LogicalResource<?> resource : component.getResources()) {
-            PhysicalWireDefinition pwd = physicalWireGenerator.generateResourceWire(component, resource);
-            command.addPhysicalWireDefinition(pwd);
-        }
-    }
-
-    @SuppressWarnings("unchecked")
-    private void generateServiceWires(LogicalComponent<?> component, WireAttachCommand command) throws GenerationException {
-
-        for (LogicalService service : component.getServices()) {
-            List<LogicalBinding<?>> bindings = service.getBindings();
-            if (bindings.isEmpty()) {
-                continue;
-            }
-
-            ServiceContract<?> callbackContract = service.getDefinition().getServiceContract().getCallbackContract();
-            LogicalBinding<?> callbackBinding = null;
-            URI callbackUri = null;
-            if (callbackContract != null) {
-                List<LogicalBinding<?>> callbackBindings = service.getCallbackBindings();
-                if (callbackBindings.size() != 1) {
-                    String uri = service.getUri().toString();
-                    throw new UnsupportedOperationException("The runtime requires exactly one callback binding to be specified on service ["
-                            + uri + "]");
-                }
-                callbackBinding = callbackBindings.get(0);
-                // xcv FIXME should be on the logical binding
-                callbackUri = callbackBinding.getBinding().getTargetUri();
-            }
-
-            for (LogicalBinding<?> binding : service.getBindings()) {
-                PhysicalWireDefinition pwd = physicalWireGenerator.generateBoundServiceWire(service, binding, component, callbackUri);
-                command.addPhysicalWireDefinition(pwd);
-            }
-            // generate the callback command set
-            if (callbackContract != null) {
-                PhysicalWireDefinition callbackPwd = physicalWireGenerator.generateBoundCallbackServiceWire(component, service, callbackBinding);
-                command.addPhysicalWireDefinition(callbackPwd);
-            }
-        }
-
-    }
-
-    @SuppressWarnings("unchecked")
-    private void generateReferenceWires(LogicalComponent<?> component, WireAttachCommand command) throws GenerationException {
 
         for (LogicalReference logicalReference : component.getReferences()) {
             if (logicalReference.getBindings().isEmpty()) {
                 generateUnboundReferenceWires(logicalReference, command);
-            } else {
-                // TODO this should be extensible and moved out
-                LogicalBinding<?> logicalBinding = logicalReference.getBindings().get(0);
-                PhysicalWireDefinition pwd = physicalWireGenerator.generateBoundReferenceWire(component, logicalReference, logicalBinding);
-                command.addPhysicalWireDefinition(pwd);
-                if (logicalReference.getDefinition().getServiceContract().getCallbackContract() != null) {
-                    List<LogicalBinding<?>> callbackBindings = logicalReference.getCallbackBindings();
-                    if (callbackBindings.size() != 1) {
-                        String uri = logicalReference.getUri().toString();
-                        throw new UnsupportedOperationException("The runtime requires exactly one callback binding to be specified on reference ["
-                                + uri + "]");
-                    }
-                    LogicalBinding<?> callbackBinding = callbackBindings.get(0);
-                    // generate the callback wire
-                    PhysicalWireDefinition callbackPwd =
-                            physicalWireGenerator.generateBoundCallbackRerenceWire(logicalReference, callbackBinding, component);
-                    command.addPhysicalWireDefinition(callbackPwd);
-                }
-
             }
         }
-
     }
 
-    @SuppressWarnings("unchecked")
     private void generateUnboundReferenceWires(LogicalReference logicalReference, WireAttachCommand command) throws GenerationException {
 
         LogicalComponent<?> component = logicalReference.getParent();
