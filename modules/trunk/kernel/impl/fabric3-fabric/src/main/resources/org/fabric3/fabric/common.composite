@@ -95,12 +95,27 @@
         <property name="order">1</property>
     </component>
     
-    <component name="wireAttachCommandGenerator">
-        <system:implementation.system class="org.fabric3.fabric.command.WireAttachCommandGenerator"/>
+    <component name="org.fabric3.fabric.command.LocalWireCommandGenerator">
+        <system:implementation.system class="org.fabric3.fabric.command.LocalWireCommandGenerator"/>
         <property name="order">2</property>
         <reference name="logicalComponentManager" target="logicalComponentManager"/>
     </component>
     
+    <component name="org.fabric3.fabric.command.ReferenceWireCommandGenerator">
+        <system:implementation.system class="org.fabric3.fabric.command.ReferenceWireCommandGenerator"/>
+        <property name="order">2</property>
+    </component>
+
+    <component name="org.fabric3.fabric.command.ServiceWireCommandGenerator">
+        <system:implementation.system class="org.fabric3.fabric.command.ServiceWireCommandGenerator"/>
+        <property name="order">2</property>
+    </component>
+
+    <component name="org.fabric3.fabric.command.ResourceWireCommandGenerator">
+        <system:implementation.system class="org.fabric3.fabric.command.ResourceWireCommandGenerator"/>
+        <property name="order">2</property>
+    </component>
+
     <component name="componentStartCommandGenerator">
         <system:implementation.system class="org.fabric3.fabric.command.ComponentStartCommandGenerator"/>
         <property name="order">3</property>
