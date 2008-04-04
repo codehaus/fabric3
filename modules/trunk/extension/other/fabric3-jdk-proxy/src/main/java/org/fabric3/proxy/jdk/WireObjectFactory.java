@@ -25,15 +25,16 @@ import org.fabric3.spi.ObjectCreationException;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.ProxyService;
+import org.fabric3.spi.model.physical.InteractionType;
 
 /**
- * Creates a proxy for a wire that implements a provided interface 
+ * Creates a proxy for a wire that implements a provided interface
  *
  * @version $Rev: 2982 $ $Date: 2008-03-02 09:42:03 -0800 (Sun, 02 Mar 2008) $
  */
 public class WireObjectFactory<T> implements ObjectFactory<T> {
     private Class<T> interfaze;
-    private boolean conversational;
+    private InteractionType type;
     private String callbackUri;
     private ProxyService proxyService;
     // the cache of proxy interface method to operation mappings
@@ -42,20 +43,20 @@ public class WireObjectFactory<T> implements ObjectFactory<T> {
     /**
      * Constructor.
      *
-     * @param interfaze      the interface to inject on the client
-     * @param conversational if the wire is conversational
-     * @param callbackUri    the callback URI for the wire or null if the wire is unidirectional
-     * @param proxyService   the wire service to create the proxy
-     * @param mappings       proxy method to wire invocation chain mappings
+     * @param interfaze    the interface to inject on the client
+     * @param type         if the wire is stateless, conversational or propagates a conversational context
+     * @param callbackUri  the callback URI for the wire or null if the wire is unidirectional
+     * @param proxyService the wire service to create the proxy
+     * @param mappings     proxy method to wire invocation chain mappings
      * @throws NoMethodForOperationException if a method matching the operation cannot be found
      */
     public WireObjectFactory(Class<T> interfaze,
-                             boolean conversational,
+                             InteractionType type,
                              String callbackUri,
                              ProxyService proxyService,
                              Map<Method, InvocationChain> mappings) throws NoMethodForOperationException {
         this.interfaze = interfaze;
-        this.conversational = conversational;
+        this.type = type;
         this.callbackUri = callbackUri;
         this.proxyService = proxyService;
         this.mappings = mappings;
@@ -63,7 +64,7 @@ public class WireObjectFactory<T> implements ObjectFactory<T> {
 
 
     public T getInstance() throws ObjectCreationException {
-        return interfaze.cast(proxyService.createProxy(interfaze, conversational, callbackUri, mappings));
+        return interfaze.cast(proxyService.createProxy(interfaze, type, callbackUri, mappings));
     }
 }
 

@@ -2,9 +2,14 @@ package org.fabric3.junit.control;
 
 import java.net.URI;
 
+import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Init;
+import org.osoa.sca.annotations.Reference;
+
 import org.fabric3.java.provision.JavaComponentDefinition;
 import org.fabric3.java.provision.JavaWireSourceDefinition;
 import org.fabric3.java.provision.JavaWireTargetDefinition;
+import org.fabric3.junit.scdl.JUnitImplementation;
 import org.fabric3.pojo.instancefactory.InstanceFactoryDefinition;
 import org.fabric3.pojo.instancefactory.InstanceFactoryGenerationHelper;
 import org.fabric3.pojo.scdl.PojoComponentType;
@@ -23,12 +28,8 @@ import org.fabric3.spi.model.instance.LogicalService;
 import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
+import org.fabric3.spi.model.physical.InteractionType;
 import org.fabric3.spi.policy.Policy;
-import org.fabric3.junit.scdl.JUnitImplementation;
-
-import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Init;
-import org.osoa.sca.annotations.Reference;
 
 /**
  * @version $Rev$ $Date$
@@ -93,7 +94,9 @@ public class JUnitComponentGenerator implements ComponentGenerator<LogicalCompon
         wireDefinition.setUri(uri);
         wireDefinition.setValueSource(new InjectableAttribute(InjectableAttributeType.REFERENCE, uri.getFragment()));
         wireDefinition.setInterfaceName(interfaceName);
-        wireDefinition.setConversational(serviceContract.isConversational());
+        if (serviceContract.isConversational()) {
+            wireDefinition.setInteractionType(InteractionType.CONVERSATIONAL);
+        }
 
         // assume for now that any wire from a JUnit component can be optimized
         wireDefinition.setOptimizable(true);
@@ -120,7 +123,6 @@ public class JUnitComponentGenerator implements ComponentGenerator<LogicalCompon
         JavaWireSourceDefinition wireDefinition = new JavaWireSourceDefinition();
         wireDefinition.setUri(uri);
         wireDefinition.setValueSource(new InjectableAttribute(InjectableAttributeType.RESOURCE, uri.getFragment()));
-        wireDefinition.setConversational(false);
         wireDefinition.setClassLoaderId(classLoaderId);
         wireDefinition.setInterfaceName(interfaceName);
         return wireDefinition;

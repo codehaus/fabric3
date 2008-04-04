@@ -36,6 +36,7 @@ import org.fabric3.spi.invocation.CallFrame;
 import org.fabric3.spi.invocation.WorkContext;
 import org.fabric3.spi.invocation.MessageImpl;
 import org.fabric3.spi.invocation.Message;
+import org.fabric3.spi.invocation.ConversationContext;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 import org.fabric3.spi.wire.Interceptor;
 import org.fabric3.spi.wire.InvocationChain;
@@ -129,9 +130,9 @@ public class HessianServiceHandler extends HttpServlet {
         // Note that the callback URI is set to the callback address of this service so its callback wire can be mapped in the case of a
         // bidirectional service
         Object id = previous.getCorrelationId(Object.class);
-        boolean start = previous.isStartConversation();
+        ConversationContext context = previous.getConversationContext();
         Conversation conversation = previous.getConversation();
-        CallFrame frame = new CallFrame(callbackUri, id, conversation, start);
+        CallFrame frame = new CallFrame(callbackUri, id, conversation, context);
         callFrames.add(frame);
         Message input = new MessageImpl(args, false, workContext);
 

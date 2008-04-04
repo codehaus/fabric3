@@ -57,7 +57,7 @@ public class ConversationImpl implements Conversation, Serializable {
         try {
             // Ensure that the conversation context is placed on the stack
             // This may not be the case if end() is called from a client component intending to end the conversation with a reference target
-            CallFrame frame = new CallFrame(null, null, this, false);
+            CallFrame frame = new CallFrame(null, null, this, null);
             workContext.addCallFrame(frame);
             scopeContainer.stopContext(workContext);
         } finally {

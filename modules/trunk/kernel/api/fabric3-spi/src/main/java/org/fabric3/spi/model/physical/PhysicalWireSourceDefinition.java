@@ -23,8 +23,8 @@ import java.net.URI;
 
 import org.w3c.dom.Document;
 
-import org.fabric3.scdl.ModelObject;
 import org.fabric3.scdl.InjectableAttribute;
+import org.fabric3.scdl.ModelObject;
 
 /**
  * Represents a physical wire source definition.
@@ -35,8 +35,8 @@ public class PhysicalWireSourceDefinition extends ModelObject {
     private URI uri;
     private InjectableAttribute injectableAttribute;
     private boolean optimizable;
-    private boolean conversational;
     private Document key;
+    private InteractionType type = InteractionType.STATELESS;
 
     /**
      * Returns the URI of the physical component that is the source of invocations on this wire.
@@ -58,6 +58,7 @@ public class PhysicalWireSourceDefinition extends ModelObject {
 
     /**
      * Returns the value source for this wire. This identifies which reference or resource on the component this wire applies to.
+     *
      * @return the value source for this wire
      */
     public InjectableAttribute getValueSource() {
@@ -66,6 +67,7 @@ public class PhysicalWireSourceDefinition extends ModelObject {
 
     /**
      * Sets the value source for this wire.
+     *
      * @param injectableAttribute the value source for this wire
      */
     public void setValueSource(InjectableAttribute injectableAttribute) {
@@ -91,25 +93,21 @@ public class PhysicalWireSourceDefinition extends ModelObject {
     }
 
     /**
-     * Returns whether the service contract for this wire is conversational.
-     * <p/>
-     * If needed, this should be moved up to the PhysicalWireDefinition as it applies to both source and target.
+     * Returns the interaction style for the wire.
      *
-     * @return true if the service contract is conversational
+     * @return the interaction style for the wire
      */
-    @Deprecated
-    public boolean isConversational() {
-        return conversational;
+    public InteractionType getInteractionType() {
+        return type;
     }
 
     /**
-     * Sets whether the service contract for this wire is conversational.
+     * Sets the interaction style for the wire. If none is set, the default {@link InteractionType#STATELESS} is used.
      *
-     * @param conversational true if the service contract is conversational
+     * @param type the interaction style for the wire
      */
-    @Deprecated
-    public void setConversational(boolean conversational) {
-        this.conversational = conversational;
+    public void setInteractionType(InteractionType type) {
+        this.type = type;
     }
 
     /**

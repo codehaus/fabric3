@@ -36,10 +36,12 @@ import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.ConversationExpirationCallback;
 import org.fabric3.spi.invocation.WorkContext;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
+import org.fabric3.spi.model.physical.InteractionType;
 import org.fabric3.spi.wire.Interceptor;
 import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.invocation.Message;
 import org.fabric3.spi.invocation.MessageImpl;
+import org.fabric3.spi.invocation.ConversationContext;
 
 /**
  * Dispatches from a proxy to a wire.
@@ -49,7 +51,7 @@ import org.fabric3.spi.invocation.MessageImpl;
 public final class JDKInvocationHandler<B> implements ConversationExpirationCallback, InvocationHandler, ServiceReference<B> {
     private final Class<B> businessInterface;
     private final B proxy;
-    private final boolean conversational;
+    private final InteractionType type;
     private final Map<Method, InvocationChain> chains;
     private final ScopeContainer<Conversation> scopeContainer;
 
@@ -58,7 +60,7 @@ public final class JDKInvocationHandler<B> implements ConversationExpirationCall
     private String callbackUri;
 
     /**
-     * Creates a non-conversational wire proxy
+     * Creates a stateless wire proxy
      *
      * @param interfaze   the proxy interface
      * @param callbackUri the callback uri or null if the wire is unidirectional
@@ -67,19 +69,21 @@ public final class JDKInvocationHandler<B> implements ConversationExpirationCall
      */
     public JDKInvocationHandler(Class<B> interfaze, String callbackUri, Map<Method, InvocationChain> mapping)
             throws NoMethodForOperationException {
-        this(interfaze, callbackUri, mapping, null);
+        this(interfaze, InteractionType.STATELESS, callbackUri, mapping, null);
     }
 
     /**
-     * Creates a conversational wire proxy.
+     * Creates a wire proxy.
      *
      * @param interfaze      the proxy interface
+     * @param type           the interaction style for the wire
      * @param callbackUri    the callback uri or null if the wire is unidirectional
      * @param mapping        the method to invocation chain mappings for the wire
      * @param scopeContainer the conversational scope container
      * @throws NoMethodForOperationException if an error occurs creating the proxy
      */
     public JDKInvocationHandler(Class<B> interfaze,
+                                InteractionType type,
                                 String callbackUri,
                                 Map<Method, InvocationChain> mapping,
                                 ScopeContainer<Conversation> scopeContainer) throws NoMethodForOperationException {
@@ -90,8 +94,9 @@ public final class JDKInvocationHandler<B> implements ConversationExpirationCall
         this.proxy = interfaze.cast(Proxy.newProxyInstance(loader, new Class[]{interfaze}, this));
         this.chains = mapping;
         this.scopeContainer = scopeContainer;
-        this.conversational = scopeContainer != null;
+        this.type = type;
     }
+
 
     public void expire(Conversation conversation) {
         this.conversation = null;
@@ -106,7 +111,7 @@ public final class JDKInvocationHandler<B> implements ConversationExpirationCall
     }
 
     public boolean isConversational() {
-        return conversational;
+        return type != InteractionType.STATELESS;
     }
 
     public Class<B> getBusinessInterface() {
@@ -154,17 +159,20 @@ public final class JDKInvocationHandler<B> implements ConversationExpirationCall
         assert headInterceptor != null;
 
         WorkContext workContext = PojoWorkContextTunnel.getThreadWorkContext();
-        if (conversational && conversation == null) {
+        CallFrame frame;
+        if (InteractionType.CONVERSATIONAL == type && conversation == null) {
             conversation = new ConversationImpl(createConversationID(), scopeContainer);
             // register this proxy to receive notifications when the conversation ends
             scopeContainer.registerCallback(conversation, this);
             // mark the CallFrame as starting a conversation
-            CallFrame frame = new CallFrame(callbackUri, null, conversation, true);
-            workContext.addCallFrame(frame);
+            frame = new CallFrame(callbackUri, null, conversation, ConversationContext.NEW);
+        } else if (InteractionType.PROPAGATES_CONVERSATION == type && conversation == null) {
+            Conversation propagated = workContext.peekCallFrame().getConversation();
+            frame = new CallFrame(callbackUri, null, propagated, ConversationContext.PROPAGATE);
         } else {
-            CallFrame frame = new CallFrame(callbackUri, null, conversation, false);
-            workContext.addCallFrame(frame);
+            frame = new CallFrame(callbackUri, null, conversation, null);
         }
+        workContext.addCallFrame(frame);
         Message msg = new MessageImpl();
         msg.setBody(args);
         msg.setWorkContext(workContext);
@@ -189,7 +197,7 @@ public final class JDKInvocationHandler<B> implements ConversationExpirationCall
                 return body;
             }
         } finally {
-            if (conversational) {
+            if (InteractionType.CONVERSATIONAL == type || InteractionType.PROPAGATES_CONVERSATION == type) {
                 PhysicalOperationDefinition operation = chain.getPhysicalOperation();
                 if (operation.isEndsConversation()) {
                     conversation = null;

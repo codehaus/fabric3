@@ -28,13 +28,14 @@ import org.fabric3.spi.builder.component.SourceWireAttacher;
 import org.fabric3.spi.component.AtomicComponent;
 import org.fabric3.spi.component.Component;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
+import org.fabric3.spi.model.physical.InteractionType;
 import org.fabric3.spi.runtime.component.ComponentManager;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
-import org.fabric3.transform.PullTransformer;
-import org.fabric3.transform.TransformerRegistry;
 import org.fabric3.spi.util.UriHelper;
 import org.fabric3.spi.wire.ProxyService;
 import org.fabric3.spi.wire.Wire;
+import org.fabric3.transform.PullTransformer;
+import org.fabric3.transform.TransformerRegistry;
 
 /**
  * The component builder for Spring implementation types. Responsible for creating the Component runtime artifact from a physical component
@@ -92,10 +93,9 @@ public class SpringSourceWireAttacher extends PojoSourceWireAttacher implements 
 
         try {
             factory = createWireObjectFactory(cl.loadClass(type.getName()),
-                                              sourceDefinition.isConversational(),
+                                              sourceDefinition.getInteractionType(),
                                               wire);
         } catch (ClassNotFoundException e) {
-            // TODO Auto-generated catch block
             e.printStackTrace();
         }
 
@@ -103,8 +103,8 @@ public class SpringSourceWireAttacher extends PojoSourceWireAttacher implements 
         source.addRefNameToObjFactory(refName, factory);
     }
 
-    private <T> ObjectFactory<T> createWireObjectFactory(Class<T> type, boolean isConversational, Wire wire) {
-        return proxyService.createObjectFactory(type, isConversational, wire, null);
+    private <T> ObjectFactory<T> createWireObjectFactory(Class<T> type, InteractionType interactionType, Wire wire) {
+        return proxyService.createObjectFactory(type, interactionType, wire, null);
     }
 
     public void attachObjectFactory(SpringWireSourceDefinition source, ObjectFactory<?> objectFactory) throws WiringException {

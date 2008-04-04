@@ -35,7 +35,9 @@ import org.fabric3.spi.model.instance.LogicalService;
 import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
+import org.fabric3.spi.model.physical.InteractionType;
 import org.fabric3.spi.policy.Policy;
+
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
@@ -49,8 +51,8 @@ public class SpringComponentGenerator implements ComponentGenerator<LogicalCompo
 
 
     public SpringComponentGenerator(@Reference GeneratorRegistry registry,
-                                   @Reference ClassLoaderGenerator classLoaderGenerator,
-                                   @Reference InstanceFactoryGenerationHelper helper) {
+                                    @Reference ClassLoaderGenerator classLoaderGenerator,
+                                    @Reference InstanceFactoryGenerationHelper helper) {
 
         registry.register(SpringImplementation.class, this);
     }
@@ -74,7 +76,7 @@ public class SpringComponentGenerator implements ComponentGenerator<LogicalCompo
         // generate the classloader resource definition
         URI classLoaderId = component.getParent().getUri();
         physical.setClassLoaderId(classLoaderId);
-        
+
         // For Spring component: service name = spring bean id (name)
         // TODO Need to go through the whole list
         Iterator<String> i = componentDefinition.getServices().keySet().iterator();
@@ -82,7 +84,7 @@ public class SpringComponentGenerator implements ComponentGenerator<LogicalCompo
         if (i.hasNext())
             springBeanId = i.next();
         physical.setSpringBeanId(springBeanId);
-        
+
         physical.setReferences(type.getReferences());
 
         // resource is application-context.xml file
@@ -97,8 +99,10 @@ public class SpringComponentGenerator implements ComponentGenerator<LogicalCompo
                                                            Policy policy) throws GenerationException {
         SpringWireSourceDefinition wireDefinition = new SpringWireSourceDefinition();
         wireDefinition.setUri(reference.getUri());
-        wireDefinition.setConversational(reference.getDefinition().getServiceContract().isConversational());
-
+        boolean conversational = reference.getDefinition().getServiceContract().isConversational();
+        if (conversational) {
+            wireDefinition.setInteractionType(InteractionType.CONVERSATIONAL);
+        }
         URI classLoaderId = source.getParent().getUri();
         wireDefinition.setClassLoaderId(classLoaderId);
 
@@ -116,12 +120,8 @@ public class SpringComponentGenerator implements ComponentGenerator<LogicalCompo
         throw new UnsupportedOperationException();
     }
 
-    /**
-     * @see org.fabric3.spi.generator.ComponentGenerator#generateWireTarget(org.fabric3.spi.model.instance.LogicalService, 
-     *                                                                      org.fabric3.spi.model.instance.LogicalComponent)
-     */
     public PhysicalWireTargetDefinition generateWireTarget(LogicalService service,
-                                                           LogicalComponent<SpringImplementation> target,   
+                                                           LogicalComponent<SpringImplementation> target,
                                                            Policy policy) throws GenerationException {
         SpringWireTargetDefinition wireDefinition = new SpringWireTargetDefinition();
         URI uri;
@@ -135,21 +135,20 @@ public class SpringComponentGenerator implements ComponentGenerator<LogicalCompo
         ComponentDefinition<SpringImplementation> componentDefinition = target.getDefinition();
         SpringImplementation implementation = componentDefinition.getImplementation();
         String beanId = implementation.getBeanId(service.getDefinition().getName());
-        
+
         wireDefinition.setBeanId(beanId);
         wireDefinition.setUri(uri);
         return wireDefinition;
     }
-    
+
     /**
-     * @see org.fabric3.spi.generator.ComponentGenerator#generateResourceWireSource(org.fabric3.spi.model.instance.LogicalComponent, 
-     *                                                                              org.fabric3.spi.model.instance.LogicalResource)
+     * @see org.fabric3.spi.generator.ComponentGenerator#generateResourceWireSource(org.fabric3.spi.model.instance.LogicalComponent,
+     *      org.fabric3.spi.model.instance.LogicalResource)
      */
-    public PhysicalWireSourceDefinition generateResourceWireSource(LogicalComponent<SpringImplementation> source, 
+    public PhysicalWireSourceDefinition generateResourceWireSource(LogicalComponent<SpringImplementation> source,
                                                                    LogicalResource<?> resource) throws GenerationException {
         SpringWireSourceDefinition wireDefinition = new SpringWireSourceDefinition();
         wireDefinition.setUri(resource.getUri());
-        wireDefinition.setConversational(false);
         return wireDefinition;
     }
 

@@ -25,6 +25,7 @@ import java.util.Map;
 import org.osoa.sca.CallableReference;
 
 import org.fabric3.spi.ObjectFactory;
+import org.fabric3.spi.model.physical.InteractionType;
 import org.fabric3.spi.component.ScopeContainer;
 
 /**
@@ -37,14 +38,14 @@ public interface ProxyService {
     /**
      * Create an ObjectFactory that provides proxies for the forward wire.
      *
-     * @param interfaze      the interface the proxy implements
-     * @param conversational true if conversational
-     * @param wire           the wire to proxy @return an ObjectFactory that will create proxies
-     * @param callbackUri    the callback URI or null if the wire is unidirectional
+     * @param interfaze   the interface the proxy implements
+     * @param type        the proxy type, i.e. stateless, conversational or propagates conversations
+     * @param wire        the wire to proxy @return an ObjectFactory that will create proxies
+     * @param callbackUri the callback URI or null if the wire is unidirectional
      * @return the factory
      * @throws ProxyCreationException if there was a problem creating the proxy
      */
-    <T> ObjectFactory<T> createObjectFactory(Class<T> interfaze, boolean conversational, Wire wire, String callbackUri) throws ProxyCreationException;
+    <T> ObjectFactory<T> createObjectFactory(Class<T> interfaze, InteractionType type, Wire wire, String callbackUri) throws ProxyCreationException;
 
     /**
      * Create an ObjectFactory that provides proxies for the callback wire.
@@ -62,14 +63,14 @@ public interface ProxyService {
     /**
      * Creates a Java proxy for the given wire.
      *
-     * @param interfaze      the interface the proxy implements
-     * @param conversational true if conversational
-     * @param callbackUri    the callback URI fr the wire fronted by the proxy or null if the wire is unidirectional
-     * @param mappings       the method to invocation chain mappings
+     * @param interfaze   the interface the proxy implements
+     * @param type        the interaction style for the wire
+     * @param callbackUri the callback URI fr the wire fronted by the proxy or null if the wire is unidirectional
+     * @param mappings    the method to invocation chain mappings
      * @return the proxy
      * @throws ProxyCreationException if there was a problem creating the proxy
      */
-    <T> T createProxy(Class<T> interfaze, boolean conversational, String callbackUri, Map<Method, InvocationChain> mappings)
+    <T> T createProxy(Class<T> interfaze, InteractionType type, String callbackUri, Map<Method, InvocationChain> mappings)
             throws ProxyCreationException;
 
     /**

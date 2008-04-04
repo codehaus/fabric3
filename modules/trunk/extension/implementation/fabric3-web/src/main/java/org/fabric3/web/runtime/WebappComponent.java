@@ -31,6 +31,7 @@ import org.fabric3.scdl.PropertyValue;
 import org.fabric3.spi.AbstractLifecycle;
 import org.fabric3.spi.ObjectCreationException;
 import org.fabric3.spi.ObjectFactory;
+import org.fabric3.spi.model.physical.InteractionType;
 import org.fabric3.spi.component.AtomicComponent;
 import org.fabric3.spi.component.InstanceWrapper;
 import org.fabric3.spi.invocation.WorkContext;
@@ -113,7 +114,7 @@ public class WebappComponent<T> extends AbstractLifecycle implements AtomicCompo
     }
 
     protected <B> ObjectFactory<B> createWireFactory(Class<B> interfaze, Wire wire) {
-        return proxyService.createObjectFactory(interfaze, false, wire, null);
+        return proxyService.createObjectFactory(interfaze, InteractionType.STATELESS, wire, null);
     }
 
     public URI getGroupId() {

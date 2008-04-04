@@ -48,15 +48,6 @@ public class StatelessScopeContainer extends AbstractScopeContainer<Object> {
         super(Scope.STATELESS, monitor);
     }
 
-    public void startContext(WorkContext workContext, URI groupId) throws GroupInitializationException {
-        super.startContext(workContext, null, (URI) null);
-    }
-
-    public void startContext(WorkContext workContext, URI groupId, ExpirationPolicy policy) throws GroupInitializationException {
-        // scope does not support expiration
-        this.startContext(workContext, groupId);
-    }
-
     public <T> InstanceWrapper<T> getWrapper(AtomicComponent<T> component, WorkContext workContext) throws TargetResolutionException {
         InstanceWrapper<T> ctx = createInstance(component, workContext);
         ctx.start();
@@ -68,9 +59,17 @@ public class StatelessScopeContainer extends AbstractScopeContainer<Object> {
         wrapper.stop();
     }
 
+    public void startContext(WorkContext workContext, URI groupId) throws GroupInitializationException {
+        // do nothing
+    }
+
+    public void startContext(WorkContext workContext, URI groupId, ExpirationPolicy policy) throws GroupInitializationException {
+        // do nothing
+    }
+
     public void stopContext(WorkContext workContext) {
     }
-    
+
     public void reinject() {
     }
     

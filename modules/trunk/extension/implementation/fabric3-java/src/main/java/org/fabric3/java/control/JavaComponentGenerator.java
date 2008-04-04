@@ -19,6 +19,7 @@
 package org.fabric3.java.control;
 
 import java.net.URI;
+import javax.xml.namespace.QName;
 
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
@@ -34,8 +35,9 @@ import org.fabric3.scdl.CallbackDefinition;
 import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.InjectableAttribute;
 import org.fabric3.scdl.InjectableAttributeType;
-import org.fabric3.scdl.Scope;
+import org.fabric3.scdl.Operation;
 import org.fabric3.scdl.ServiceContract;
+import org.fabric3.scdl.definitions.Intent;
 import org.fabric3.spi.generator.ComponentGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.generator.GeneratorRegistry;
@@ -46,7 +48,9 @@ import org.fabric3.spi.model.instance.LogicalService;
 import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
+import org.fabric3.spi.model.physical.InteractionType;
 import org.fabric3.spi.policy.Policy;
+import org.fabric3.spi.Constants;
 
 /**
  * Generates a JavaComponentDefinition from a ComponentDefinition corresponding to a Java component implementation
@@ -55,6 +59,7 @@ import org.fabric3.spi.policy.Policy;
  */
 @EagerInit
 public class JavaComponentGenerator implements ComponentGenerator<LogicalComponent<JavaImplementation>> {
+    private static final QName PROPAGATES_CONVERSATION = new QName(Constants.FABRIC3_NS, "propagatesConversation");
     private final InstanceFactoryGenerationHelper helper;
 
     public JavaComponentGenerator(@Reference GeneratorRegistry registry,
@@ -108,12 +113,11 @@ public class JavaComponentGenerator implements ComponentGenerator<LogicalCompone
         wireDefinition.setUri(uri);
         wireDefinition.setValueSource(new InjectableAttribute(InjectableAttributeType.REFERENCE, uri.getFragment()));
         wireDefinition.setInterfaceName(interfaceName);
-        wireDefinition.setConversational(serviceContract.isConversational());
         // assume for now that any wire from a Java component can be optimized
         wireDefinition.setOptimizable(true);
 
         wireDefinition.setClassLoaderId(classLoaderId);
-
+        calculateConversationalPolicy(wireDefinition, serviceContract, policy);
         return wireDefinition;
     }
 
@@ -156,7 +160,6 @@ public class JavaComponentGenerator implements ComponentGenerator<LogicalCompone
         JavaWireSourceDefinition wireDefinition = new JavaWireSourceDefinition();
         wireDefinition.setUri(uri);
         wireDefinition.setValueSource(new InjectableAttribute(InjectableAttributeType.RESOURCE, uri.getFragment()));
-        wireDefinition.setConversational(false);
         wireDefinition.setClassLoaderId(classLoaderId);
         wireDefinition.setInterfaceName(interfaceName);
         return wireDefinition;
@@ -180,4 +183,21 @@ public class JavaComponentGenerator implements ComponentGenerator<LogicalCompone
         wireDefinition.setOptimizable("COMPOSITE".equals(scope));
         return wireDefinition;
     }
+
+    private void calculateConversationalPolicy(JavaWireSourceDefinition wireDefinition, ServiceContract<?> serviceContract, Policy policy) {
+        for (Operation<?> operation : serviceContract.getOperations()) {
+            for (Intent intent : policy.getProvidedIntents(operation)) {
+                if (PROPAGATES_CONVERSATION.equals(intent.getName())) {
+                    wireDefinition.setInteractionType(InteractionType.PROPAGATES_CONVERSATION);
+                    // conversational propagation is for the entire reference so set it an return
+                    return;
+                }
+            }
+        }
+        if (serviceContract.isConversational()) {
+            wireDefinition.setInteractionType(InteractionType.CONVERSATIONAL);
+        }
+
+    }
+
 }

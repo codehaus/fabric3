@@ -31,6 +31,7 @@ import org.fabric3.spi.component.GroupInitializationException;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.spi.invocation.WorkContext;
+import org.fabric3.spi.invocation.ConversationContext;
 import org.fabric3.spi.runtime.component.ComponentManager;
 
 import org.osoa.sca.annotations.Constructor;
@@ -77,7 +78,7 @@ public class InitializeComponentCommandExecutor implements CommandExecutor<Initi
                 throw new ComponentNotRegisteredException("Component not registered", uri.toString());
             }
             WorkContext workContext = new WorkContext();
-            CallFrame frame = new CallFrame(null, groupId, null, false);
+            CallFrame frame = new CallFrame(null, groupId);
             workContext.addCallFrame(frame);
             List<AtomicComponent<?>> atomicComponents = new ArrayList<AtomicComponent<?>>();
             atomicComponents.add((AtomicComponent<?>) component);

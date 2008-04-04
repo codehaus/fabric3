@@ -100,7 +100,6 @@ public class GroovyComponentGenerator implements ComponentGenerator<LogicalCompo
         wireDefinition.setUri(uri);
         wireDefinition.setValueSource(new InjectableAttribute(InjectableAttributeType.REFERENCE, uri.getFragment()));
         wireDefinition.setInterfaceName(interfaceName);
-        wireDefinition.setConversational(reference.getDefinition().getServiceContract().isConversational());
         // assume for now that any wire from a Groovy component can be optimized
         wireDefinition.setOptimizable(true);
 
@@ -134,7 +133,6 @@ public class GroovyComponentGenerator implements ComponentGenerator<LogicalCompo
                                                                    LogicalResource<?> resource) throws GenerationException {
         GroovyWireSourceDefinition wireDefinition = new GroovyWireSourceDefinition();
         wireDefinition.setUri(resource.getUri());
-        wireDefinition.setConversational(false);
         return wireDefinition;
     }
 }

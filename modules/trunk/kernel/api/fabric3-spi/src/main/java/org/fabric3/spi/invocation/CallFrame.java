@@ -38,7 +38,7 @@ public class CallFrame implements Serializable {
 
     private String callbackUri;
     private Object correlationId;
-    private boolean startConversation;
+    private ConversationContext conversationContext;
     private Conversation conversation;
 
     /**
@@ -47,20 +47,24 @@ public class CallFrame implements Serializable {
     public CallFrame() {
     }
 
+    public CallFrame(String callbackUri, Object correlationId) {
+        this(callbackUri, correlationId, null, null);
+    }
+
     /**
      * Constructor. Creates a CallFrame for an invocation to a stateful bidirectional service.
      *
-     * @param callbackUri       the URI the caller of the current service can be called back on
-     * @param correlationId     the key used to correlate the forward invocation with the target component implementation instance. For stateless
-     *                          targets, the id may be null.
-     * @param conversation      the conversaation associated with the invocation or null
-     * @param startConversation true if a conversation is to be started for this invocation
+     * @param callbackUri         the URI the caller of the current service can be called back on
+     * @param correlationId       the key used to correlate the forward invocation with the target component implementation instance. For stateless
+     *                            targets, the id may be null.
+     * @param conversation        the conversaation associated with the invocation or null
+     * @param conversationContext the type of conversational context
      */
-    public CallFrame(String callbackUri, Object correlationId, Conversation conversation, boolean startConversation) {
+    public CallFrame(String callbackUri, Object correlationId, Conversation conversation, ConversationContext conversationContext) {
         this.callbackUri = callbackUri;
         this.correlationId = correlationId;
         this.conversation = conversation;
-        this.startConversation = startConversation;
+        this.conversationContext = conversationContext;
     }
 
     /**
@@ -91,13 +95,8 @@ public class CallFrame implements Serializable {
         return conversation;
     }
 
-    /**
-     * Returns true if the invocation starts a conversation.
-     *
-     * @return true if the invocation starts a conversation
-     */
-    public boolean isStartConversation() {
-        return startConversation;
+    public ConversationContext getConversationContext() {
+        return conversationContext;
     }
 
     /**
@@ -107,14 +106,22 @@ public class CallFrame implements Serializable {
      */
     public CallFrame copy() {
         // data is immutable, return shallow copy
-        return new CallFrame(callbackUri, correlationId, conversation, startConversation);
+        return new CallFrame(callbackUri, correlationId, conversation, conversationContext);
     }
 
     public String toString() {
-        StringBuilder s = new StringBuilder().append("CallFrame [Callback URI:").append(callbackUri).append(" Correlation ID:").append(correlationId);
+        StringBuilder s =
+                new StringBuilder().append("CallFrame [Callback URI: ").append(callbackUri).append(" Correlation ID: ").append(correlationId);
         if (conversation != null) {
             s.append(" Conversation ID:").append(conversation.getConversationID());
-            s.append(" Start conversation:").append(startConversation);
+            switch (conversationContext) {
+            case PROPAGATE:
+                s.append(" Propagate conversation");
+                break;
+            case NEW:
+                s.append(" New conversation");
+                break;
+            }
         }
         return s.append("]").toString();
     }

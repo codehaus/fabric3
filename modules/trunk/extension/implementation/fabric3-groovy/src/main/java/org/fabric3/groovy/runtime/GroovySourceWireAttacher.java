@@ -87,8 +87,7 @@ public class GroovySourceWireAttacher extends PojoSourceWireAttacher implements 
             if (uri != null) {
                 callbackUri = uri.toString();
             }
-            boolean conversational = sourceDefinition.isConversational();
-            ObjectFactory<?> factory = proxyService.createObjectFactory(type, conversational, wire, callbackUri);
+            ObjectFactory<?> factory = proxyService.createObjectFactory(type, sourceDefinition.getInteractionType(), wire, callbackUri);
             Object key = getKey(sourceDefinition, source, injectableAttribute);
             source.attachReferenceToTarget(injectableAttribute, factory, key);
         }

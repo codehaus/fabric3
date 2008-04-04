@@ -30,6 +30,7 @@ import org.fabric3.spi.invocation.WorkContext;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.invocation.Message;
+import org.fabric3.spi.invocation.ConversationContext;
 import org.fabric3.spi.wire.Wire;
 
 /**
@@ -63,10 +64,10 @@ public class BindingChannelImpl implements BindingChannel {
             CallFrame previous = workContext.peekCallFrame();
             // copy correlation information from incoming frame
             Object id = previous.getCorrelationId(Object.class);
-            boolean start = previous.isStartConversation();
+            ConversationContext context = previous.getConversationContext();
             Conversation conversation = previous.getConversation();
             String callbackUri = holder.getCallbackUri();
-            CallFrame frame = new CallFrame(callbackUri, id, conversation, start);
+            CallFrame frame = new CallFrame(callbackUri, id, conversation, context);
             workContext.addCallFrame(frame);
             return chain.getHeadInterceptor().invoke(msg);
         } finally {

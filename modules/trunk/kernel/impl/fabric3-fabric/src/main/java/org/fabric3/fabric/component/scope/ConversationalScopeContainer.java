@@ -48,6 +48,7 @@ import org.fabric3.spi.component.TargetResolutionException;
 import org.fabric3.spi.component.ConversationExpirationCallback;
 import org.fabric3.spi.invocation.WorkContext;
 import org.fabric3.spi.invocation.CallFrame;
+import org.fabric3.spi.invocation.ConversationContext;
 
 /**
  * Scope container for the standard CONVERSATIONAL scope.
@@ -135,8 +136,10 @@ public class ConversationalScopeContainer extends StatefulScopeContainer<Convers
             // renew the conversation expiration if one is associated, i.e. it is an expiring conversation
             expirationPolicies.get(conversation).renew();
         }
-        boolean start = frame.isStartConversation();
-        InstanceWrapper<T> wrapper = super.getWrapper(component, workContext, conversation, start);
+        ConversationContext context = frame.getConversationContext();
+        // if the context is new or propagates a conversation and the target instance has not been created, create it
+        boolean create = (context == ConversationContext.NEW || context == ConversationContext.PROPAGATE);
+        InstanceWrapper<T> wrapper = super.getWrapper(component, workContext, conversation, create);
         if (wrapper == null) {
             // conversation has either been ended or timed out, throw an exception
             throw new ConversationEndedException("Conversation ended");
