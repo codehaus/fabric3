@@ -38,6 +38,7 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.binding.rmi.model.physical.RmiWireSourceDefinition;
 import org.fabric3.binding.rmi.transport.RmiServiceHandler;
+import org.fabric3.services.codegen.ProxyGenerator;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.SourceWireAttacher;
@@ -58,17 +59,19 @@ public class RmiSourceWireAttacher implements SourceWireAttacher<RmiWireSourceDe
 
     private final ClassLoaderRegistry classLoaderRegistry;
     private final Map<String, CodeGenClassLoader> classLoaderMap = new WeakHashMap<String, CodeGenClassLoader>(11);
-    private static final WireProxyGenerator PROXY_GENERATOR = WireProxyGenerator.getInstance();
     private final Map<Integer, Registry> registryMap = new ConcurrentHashMap<Integer, Registry>(11);
     private final Map<String, Remote> remoteObjects = new ConcurrentHashMap<String, Remote>(11);
+    private final ProxyGenerator generator;
 
     /**
      * Injects the wire attacher classLoaderRegistry and servlet host.
      *
      * @param classLoaderRegistry the classloader registry for loading application classes
      */
-    public RmiSourceWireAttacher(@Reference ClassLoaderRegistry classLoaderRegistry) {
+    public RmiSourceWireAttacher(@Reference ClassLoaderRegistry classLoaderRegistry,
+                                 @Reference ProxyGenerator generator) {
         this.classLoaderRegistry = classLoaderRegistry;
+        this.generator = generator;
     }
 
     public void attachToSource(RmiWireSourceDefinition sourceDefinition,
@@ -152,7 +155,7 @@ public class RmiSourceWireAttacher implements SourceWireAttacher<RmiWireSourceDe
                                  URI target) throws WireAttachException {
         try {
             Object proxy = Proxy.newProxyInstance(clazz.getClassLoader(), new Class[]{clazz}, handler);
-            return (Remote) PROXY_GENERATOR.generateRemoteWrapper(clazz, proxy);
+            return (Remote) generator.getWrapper(clazz, proxy);
         } catch (ClassNotFoundException cnfe) {
             throw new WireAttachException("Error attaching Rmi binding source", source, target, cnfe);
         } catch (IllegalAccessException iae) {

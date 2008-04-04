@@ -55,8 +55,7 @@ public class ProxyGeneratorImpl implements ProxyGenerator {
             InvocationTargetException,
             InstantiationException {
          assert clazz.isInterface();
-         CodeGenClassLoader target = getCodeGenClassLoader(clazz);
-         Class generated = generateProxy(clazz, target, targetNamespace, wsdlLocation, serviceName, portName);
+         Class generated = getWrapperClass(clazz, targetNamespace, wsdlLocation, serviceName, portName);
          return generated.getConstructors()[0].newInstance(delegate);
 
     }
@@ -73,8 +72,7 @@ public class ProxyGeneratorImpl implements ProxyGenerator {
      }
 
 
-    private Class generateProxy(Class clazz,
-                                CodeGenClassLoader cl,
+    public Class getWrapperClass(Class clazz,
                                 String targetNamespace,
                                 String wsdlLocation,
                                 String serviceName,
@@ -90,6 +88,7 @@ public class ProxyGeneratorImpl implements ProxyGenerator {
          byte[] b = new ServiceProxy(
                  internalClassName, internalInterfaceName, fieldName, clazz,
                  targetNamespace, wsdlLocation, serviceName, portName).generateByteCode();
+        CodeGenClassLoader cl = getCodeGenClassLoader(clazz);
          return cl.defineClass(className, b);
      }
 

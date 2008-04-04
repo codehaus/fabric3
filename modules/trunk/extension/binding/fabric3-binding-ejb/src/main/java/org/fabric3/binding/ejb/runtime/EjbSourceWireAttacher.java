@@ -29,8 +29,8 @@ import org.osoa.sca.annotations.Reference;
 import org.osoa.sca.annotations.Remotable;
 
 import org.fabric3.binding.ejb.provision.EjbWireSourceDefinition;
-import org.fabric3.binding.rmi.wire.WireProxyGenerator;
 import org.fabric3.scdl.Signature;
+import org.fabric3.services.codegen.ProxyGenerator;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.SourceWireAttacher;
@@ -51,6 +51,7 @@ import org.fabric3.spi.wire.Wire;
 public class EjbSourceWireAttacher implements SourceWireAttacher<EjbWireSourceDefinition> {
     private final EjbRegistry ejbRegistry;
     private final ClassLoaderRegistry classLoaderRegistry;
+    private final ProxyGenerator generator;
     private ClassLoader cl;
 
     /**
@@ -60,9 +61,11 @@ public class EjbSourceWireAttacher implements SourceWireAttacher<EjbWireSourceDe
      * @param ejbRegistry         the EJB registry
      */
     public EjbSourceWireAttacher(@Reference ClassLoaderRegistry classLoaderRegistry,
-                                 @Reference EjbRegistry ejbRegistry) {
+                                 @Reference EjbRegistry ejbRegistry,
+                                 @Reference ProxyGenerator generator) {
         this.ejbRegistry = ejbRegistry;
         this.classLoaderRegistry = classLoaderRegistry;
+        this.generator = generator;
     }
 
     public void attachToSource(EjbWireSourceDefinition sourceDefinition,
@@ -156,9 +159,8 @@ public class EjbSourceWireAttacher implements SourceWireAttacher<EjbWireSourceDe
     private Object generateRemoteWrapper(Class<?> interfaceClass, Object delegate)
             throws WiringException {
 
-        WireProxyGenerator wpg = WireProxyGenerator.getInstance();
         try {
-            return wpg.generateRemoteWrapper(interfaceClass, delegate);
+            return generator.getWrapper(interfaceClass, delegate);
         } catch (Exception e) {
             throw new WiringException(e);
         }

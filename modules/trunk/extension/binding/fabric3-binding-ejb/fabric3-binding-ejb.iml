@@ -34,7 +34,7 @@
     <orderEntry type="module" module-name="fabric3-introspection-spi" exported="" />
     <orderEntry type="module" module-name="fabric3-scdl" exported="" />
     <orderEntry type="module" module-name="fabric3-xmlfactory" exported="" />
-    <orderEntry type="module" module-name="fabric3-binding-rmi" exported="" />
+    <orderEntry type="module" module-name="fabric3-code-gen" exported="" />
     <orderEntry type="module-library" exported="">
       <library name="asm:asm:3.0">
         <CLASSES>

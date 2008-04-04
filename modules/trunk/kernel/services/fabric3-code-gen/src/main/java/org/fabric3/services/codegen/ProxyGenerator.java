@@ -62,4 +62,12 @@ public interface ProxyGenerator {
             ClassNotFoundException, IllegalAccessException,
             InvocationTargetException,
             InstantiationException;
+
+
+    Class getWrapperClass(Class clazz, 
+                           String targetNamespace,
+                           String wsdlLocation,
+                               String serviceName,
+                               String portName) throws
+            ClassNotFoundException;
 }
