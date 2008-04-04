@@ -9,11 +9,37 @@
       <sourceFolder url="file://$MODULE_DIR$/src/main/resources" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/test/java" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/src/test/resources" isTestSource="true" />
+      <excludeFolder url="file://$MODULE_DIR$/target/classes" />
+      <excludeFolder url="file://$MODULE_DIR$/target/maven-archiver" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module" module-name="fabric3-monitor" exported="" />
-    <orderEntry type="module" module-name="fabric3-api" exported="" />
+    <orderEntry type="module-library" exported="">
+      <library name="org.codehaus.fabric3:fabric3-monitor:0.5-SNAPSHOT">
+        <CLASSES>
+          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-monitor/0.5-SNAPSHOT/fabric3-monitor-0.5-SNAPSHOT.jar!/" />
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-monitor/0.5-SNAPSHOT/fabric3-monitor-0.5-SNAPSHOT-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-monitor/0.5-SNAPSHOT/fabric3-monitor-0.5-SNAPSHOT-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="org.codehaus.fabric3:fabric3-api:0.5-SNAPSHOT">
+        <CLASSES>
+          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-api/0.5-SNAPSHOT/fabric3-api-0.5-SNAPSHOT.jar!/" />
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-api/0.5-SNAPSHOT/fabric3-api-0.5-SNAPSHOT-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-api/0.5-SNAPSHOT/fabric3-api-0.5-SNAPSHOT-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
     <orderEntry type="module-library" exported="">
       <library name="org.codehaus.fabric3.spec:sca-api-r1.0:0.2.1">
         <CLASSES>

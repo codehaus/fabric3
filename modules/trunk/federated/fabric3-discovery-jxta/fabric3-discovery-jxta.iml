@@ -59,6 +59,7 @@
     <orderEntry type="module" module-name="fabric3-monitor-api" exported="" />
     <orderEntry type="module" module-name="fabric3-introspection-spi" exported="" />
     <orderEntry type="module" module-name="fabric3-scdl" exported="" />
+    <orderEntry type="module" module-name="fabric3-transform-api" exported="" />
     <orderEntry type="module" module-name="fabric3-xmlfactory" exported="" />
     <orderEntry type="module" module-name="fabric3-jxta" exported="" />
     <orderEntry type="module-library">
