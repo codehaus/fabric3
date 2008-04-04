@@ -232,7 +232,6 @@ public class CompositeLoader implements TypeLoader<Composite> {
                     break;
                 case END_ELEMENT:
                     assert COMPOSITE.equals(reader.getName());
-                    verifyCompositeCompleteness(type);
                     return type;
                 }
             }
@@ -241,15 +240,4 @@ public class CompositeLoader implements TypeLoader<Composite> {
             throw e;
         }
     }
-
-    protected void verifyCompositeCompleteness(Composite composite) throws InvalidServiceException {
-        // check if all of the composite services have been wired
-        for (CompositeService svcDefn : composite.getDeclaredServices().values()) {
-            if (svcDefn.getPromote() == null) {
-                String name = svcDefn.getName();
-                throw new InvalidServiceException("Composite service not wired to a target :" + name, name);
-            }
-        }
-    }
-
 }

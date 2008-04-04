@@ -83,7 +83,7 @@ public class CompositeLoaderDuplicateServiceTestCase extends TestCase {
     private <T> TypeLoader<CompositeService> createServiceLoader()
             throws XMLStreamException, LoaderException {
         TypeLoader loader = EasyMock.createMock(TypeLoader.class);
-        CompositeService value = new CompositeService(SERVICE_NAME, null);
+        CompositeService value = new CompositeService(SERVICE_NAME, null, null);
         EasyMock.expect(loader.load(EasyMock.isA(XMLStreamReader.class),
                                     EasyMock.isA(IntrospectionContext.class))).andReturn(value).times(2);
         EasyMock.replay(loader);
@@ -97,7 +97,7 @@ public class CompositeLoaderDuplicateServiceTestCase extends TestCase {
             }
         };
         ComponentType type = new ComponentType();
-        CompositeService service = new CompositeService(SERVICE_NAME, null);
+        CompositeService service = new CompositeService(SERVICE_NAME, null, null);
 
         type.add(service);
         impl.setComponentType(type);

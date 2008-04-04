@@ -19,32 +19,31 @@ package org.fabric3.scdl;
 import java.net.URI;
 
 /**
+ * Representation of a service exposed by a composite component type.
+ *
  * @version $Rev$ $Date$
  */
 public class CompositeService extends ServiceDefinition {
     private URI promote;
 
-    public CompositeService(String name, ServiceContract<?> serviceContract) {
+    /**
+     * Create a composite service definition.
+     *
+     * @param name            the name to assign to the service
+     * @param serviceContract the service contract to expose
+     * @param promote         the component service that is being promoted
+     */
+    public CompositeService(String name, ServiceContract<?> serviceContract, URI promote) {
         super(name, serviceContract);
+        this.promote = promote;
     }
 
     /**
-     * Returns the URI of the component service to promote.
+     * Returns the URI of the component service that is being promoted.
      *
-     * @return the URI of the component service to promote
+     * @return the URI of the component service that is being promoted
      */
     public URI getPromote() {
         return promote;
     }
-
-    /**
-     * Sets the URI of the component service to promote.
-     *
-     * @param promote the URI of the component service to promote
-     */
-    public void setPromote(URI promote) {
-        this.promote = promote;
-    }
-
-
 }
