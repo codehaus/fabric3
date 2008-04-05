@@ -97,6 +97,14 @@ public class StatefulScopeContainerTestCase extends TestCase {
 
             }
 
+            public void joinContext(WorkContext workContext) throws GroupInitializationException {
+
+            }
+
+            public void joinContext(WorkContext workContext, ExpirationPolicy policy) throws GroupInitializationException {
+
+            }
+
             public void stopContext(WorkContext workContext) {
                 super.stopContext(workContext, conversation);
             }

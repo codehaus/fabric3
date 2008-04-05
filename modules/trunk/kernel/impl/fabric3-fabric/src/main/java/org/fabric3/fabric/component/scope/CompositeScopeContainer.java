@@ -96,24 +96,25 @@ public class CompositeScopeContainer extends AbstractScopeContainer<URI> {
     }
 
     public void startContext(WorkContext workContext, ExpirationPolicy policy) throws GroupInitializationException {
-        // scope does not support expiration
-        this.startContext(workContext, workContext.peekCallFrame().getCorrelationId(URI.class));
+        // scope does not support expiration policies
+        startContext(workContext);
     }
 
     public void startContext(WorkContext workContext) throws GroupInitializationException {
         URI contextId = workContext.peekCallFrame().getCorrelationId(URI.class);
         super.startContext(workContext, contextId);
-        // get and clone initialization queue
-        List<AtomicComponent<?>> initQueue;
-        synchronized (initQueues) {
-            initQueue = initQueues.get(contextId);
-            if (initQueue != null) {
-                initQueue = new ArrayList<AtomicComponent<?>>(initQueue);
-            }
-        }
-        if (initQueue != null) {
-            initializeComponents(initQueue, workContext);
-        }
+        eagerInitialize(workContext, contextId);
+
+    }
+
+    public void joinContext(WorkContext workContext) throws GroupInitializationException {
+        URI contextId = workContext.peekCallFrame().getCorrelationId(URI.class);
+        super.joinContext(workContext, contextId);
+    }
+
+    public void joinContext(WorkContext workContext, ExpirationPolicy policy) throws GroupInitializationException {
+        // scope does not support expiration policies
+        joinContext(workContext);
     }
 
     public void stopContext(WorkContext workContext) {
@@ -171,6 +172,20 @@ public class CompositeScopeContainer extends AbstractScopeContainer<URI> {
     public void reinject() throws TargetResolutionException {
         for (InstanceWrapper<?> instanceWrapper : instanceWrappers.values()) {
             instanceWrapper.reinject();
+        }
+    }
+
+    private void eagerInitialize(WorkContext workContext, URI contextId) throws GroupInitializationException {
+        // get and clone initialization queue
+        List<AtomicComponent<?>> initQueue;
+        synchronized (initQueues) {
+            initQueue = initQueues.get(contextId);
+            if (initQueue != null) {
+                initQueue = new ArrayList<AtomicComponent<?>>(initQueue);
+            }
+        }
+        if (initQueue != null) {
+            initializeComponents(initQueue, workContext);
         }
     }
 

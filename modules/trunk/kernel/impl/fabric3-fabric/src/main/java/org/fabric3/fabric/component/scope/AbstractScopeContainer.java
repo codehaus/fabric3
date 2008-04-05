@@ -140,6 +140,22 @@ public abstract class AbstractScopeContainer<KEY> extends AbstractLifecycle impl
     }
 
     /**
+     * Joins an existing context.
+     *
+     * @param workContext the work context associated with the start operation
+     * @param contextId   the scope context id
+     * @return true if a local context was created
+     * @throws GroupInitializationException if an error occurs starting the context
+     */
+    protected boolean joinContext(WorkContext workContext, KEY contextId) throws GroupInitializationException {
+        if (destroyQueues.containsKey(contextId)) {
+            return false;
+        }
+        startContext(workContext, contextId);
+        return true;
+    }
+
+    /**
      * Stops a scope context and destroys all associated instances.
      *
      * @param workContext the work context associated with the stop operation

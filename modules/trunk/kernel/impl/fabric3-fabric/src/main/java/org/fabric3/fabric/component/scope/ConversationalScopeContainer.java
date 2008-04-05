@@ -118,6 +118,20 @@ public class ConversationalScopeContainer extends StatefulScopeContainer<Convers
         expirationPolicies.put(conversation, policy);
     }
 
+    public void joinContext(WorkContext workContext) throws GroupInitializationException {
+        Conversation conversation = workContext.peekCallFrame().getConversation();
+        assert conversation != null;
+        super.joinContext(workContext, conversation);
+    }
+
+    public void joinContext(WorkContext workContext, ExpirationPolicy policy) throws GroupInitializationException {
+        Conversation conversation = workContext.peekCallFrame().getConversation();
+        assert conversation != null;
+        if (super.joinContext(workContext, conversation)) {
+            expirationPolicies.put(conversation, policy);
+        }
+    }
+
     public void stopContext(WorkContext workContext) {
         Conversation conversation = workContext.peekCallFrame().getConversation();
         assert conversation != null;

@@ -93,33 +93,12 @@ public class InvokerInterceptor<T, CONTEXT> implements Interceptor {
         WorkContext workContext = msg.getWorkContext();
         InstanceWrapper<T> wrapper;
         try {
-            CallFrame frame = workContext.peekCallFrame();
-            // for now tolerate callframes not being set as bindings may not be adding them for incoming service invocations
-            if (frame != null) {
-                if (!callback) {
-                    // check if this is a callback. If so, do not start the conversation since it has already been done by the forward invocation
-                    if (conversationScope && ConversationContext.NEW == frame.getConversationContext()) {
-                        // start the conversation context
-                        if (component.getMaxAge() > 0) {
-                            ExpirationPolicy policy = new NonRenewableExpirationPolicy(System.currentTimeMillis() + component.getMaxAge());
-                            scopeContainer.startContext(workContext, policy);
-                        } else if (component.getMaxIdleTime() > 0) {
-                            long expire = System.currentTimeMillis() + component.getMaxIdleTime();
-                            ExpirationPolicy policy = new RenewableExpirationPolicy(expire, component.getMaxIdleTime());
-                            scopeContainer.startContext(workContext, policy);
-                        } else {
-                            scopeContainer.startContext(workContext);
-                        }
-                    }
-                }
-            }
+            startOrJoinContext(workContext);
             wrapper = scopeContainer.getWrapper(component, workContext);
         } catch (ConversationEndedException e) {
             msg.setBodyWithFault(e);
             return msg;
         } catch (TargetResolutionException e) {
-            throw new InvocationRuntimeException(e);
-        } catch (GroupInitializationException e) {
             throw new InvocationRuntimeException(e);
         }
 
@@ -145,6 +124,52 @@ public class InvokerInterceptor<T, CONTEXT> implements Interceptor {
             } catch (TargetDestructionException e) {
                 throw new InvocationRuntimeException(e);
             }
+        }
+    }
+
+    /**
+     * Starts or joins a scope context.
+     *
+     * @param workContext the current work context
+     * @throws InvocationRuntimeException if an error occurs starting or joining the context
+     */
+    private void startOrJoinContext(WorkContext workContext) throws InvocationRuntimeException {
+        // check if this is a callback. If so, do not start or join the conversation since it has already been done by the forward invocation
+        if (callback) {
+            return;
+        }
+        CallFrame frame = workContext.peekCallFrame();
+        if (frame == null) {
+            // for now tolerate callframes not being set as bindings may not be adding them for incoming service invocations
+            return;
+        }
+        try {
+            if (conversationScope && ConversationContext.NEW == frame.getConversationContext()) {
+                // start the conversation context
+                if (component.getMaxAge() > 0) {
+                    ExpirationPolicy policy = new NonRenewableExpirationPolicy(System.currentTimeMillis() + component.getMaxAge());
+                    scopeContainer.startContext(workContext, policy);
+                } else if (component.getMaxIdleTime() > 0) {
+                    long expire = System.currentTimeMillis() + component.getMaxIdleTime();
+                    ExpirationPolicy policy = new RenewableExpirationPolicy(expire, component.getMaxIdleTime());
+                    scopeContainer.startContext(workContext, policy);
+                } else {
+                    scopeContainer.startContext(workContext);
+                }
+            } else if (conversationScope && ConversationContext.PROPAGATE == frame.getConversationContext()) {
+                if (component.getMaxAge() > 0) {
+                    ExpirationPolicy policy = new NonRenewableExpirationPolicy(System.currentTimeMillis() + component.getMaxAge());
+                    scopeContainer.joinContext(workContext, policy);
+                } else if (component.getMaxIdleTime() > 0) {
+                    long expire = System.currentTimeMillis() + component.getMaxIdleTime();
+                    ExpirationPolicy policy = new RenewableExpirationPolicy(expire, component.getMaxIdleTime());
+                    scopeContainer.joinContext(workContext, policy);
+                } else {
+                    scopeContainer.joinContext(workContext);
+                }
+            }
+        } catch (GroupInitializationException e) {
+            throw new InvocationRuntimeException(e);
         }
     }
 }

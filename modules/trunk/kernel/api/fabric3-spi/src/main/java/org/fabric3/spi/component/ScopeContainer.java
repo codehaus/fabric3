@@ -86,6 +86,27 @@ public interface ScopeContainer<KEY> extends Lifecycle {
     public void startContext(WorkContext workContext, ExpirationPolicy policy) throws GroupInitializationException;
 
     /**
+     * Joins an existing context. Since a scope context may exist accross multiple JVMs (for example, when conversational context is propagated), this
+     * operation may result in the creation of a local context associated with the distributed scope context. When the scope context is contained in a
+     * single JVM, a new context will not need to be created.
+     *
+     * @param workContext the current WorkContext
+     * @throws GroupInitializationException if an exception was thrown by any eagerInit component
+     */
+    void joinContext(WorkContext workContext) throws GroupInitializationException;
+
+    /**
+     * Joins an existing context. Since a scope context may exist accross multiple JVMs (for example, when conversational context is propagated), this
+     * operation may result in the creation of a local context associated with the distributed scope context. This variant of joinContext sets an
+     * expiration policy for local contexts, if one needs to be created.
+     *
+     * @param workContext the current WorkContext
+     * @param policy      determines when the local context expires
+     * @throws GroupInitializationException if an exception was thrown by any eagerInit component
+     */
+    void joinContext(WorkContext workContext, ExpirationPolicy policy) throws GroupInitializationException;
+
+    /**
      * Stop the context associated with the current work context.
      *
      * @param workContext the current WorkContext

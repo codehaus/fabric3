@@ -18,23 +18,21 @@
  */
 package org.fabric3.fabric.component.scope;
 
-import java.net.URI;
-
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Service;
 
 import org.fabric3.api.annotation.Monitor;
 import org.fabric3.scdl.Scope;
-import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.ObjectCreationException;
+import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.component.AtomicComponent;
+import org.fabric3.spi.component.ExpirationPolicy;
 import org.fabric3.spi.component.GroupInitializationException;
 import org.fabric3.spi.component.InstanceWrapper;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.TargetDestructionException;
 import org.fabric3.spi.component.TargetResolutionException;
 import org.fabric3.spi.invocation.WorkContext;
-import org.fabric3.spi.component.ExpirationPolicy;
 
 /**
  * A scope context which manages stateless atomic component instances in a non-pooled fashion.
@@ -69,6 +67,14 @@ public class StatelessScopeContainer extends AbstractScopeContainer<Object> {
     }
 
     public void startContext(WorkContext workContext, ExpirationPolicy policy) throws GroupInitializationException {
+        // do nothing
+    }
+
+    public void joinContext(WorkContext workContext) throws GroupInitializationException {
+        // do nothing
+    }
+
+    public void joinContext(WorkContext workContext, ExpirationPolicy policy) throws GroupInitializationException {
         // do nothing
     }
 
