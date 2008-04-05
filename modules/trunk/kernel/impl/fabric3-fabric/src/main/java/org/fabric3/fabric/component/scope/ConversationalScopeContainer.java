@@ -16,11 +16,10 @@
  */
 package org.fabric3.fabric.component.scope;
 
-import java.net.URI;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -39,16 +38,16 @@ import org.fabric3.api.annotation.Monitor;
 import org.fabric3.scdl.Scope;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.component.AtomicComponent;
+import org.fabric3.spi.component.ConversationExpirationCallback;
 import org.fabric3.spi.component.ExpirationPolicy;
 import org.fabric3.spi.component.GroupInitializationException;
 import org.fabric3.spi.component.InstanceWrapper;
 import org.fabric3.spi.component.InstanceWrapperStore;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.TargetResolutionException;
-import org.fabric3.spi.component.ConversationExpirationCallback;
-import org.fabric3.spi.invocation.WorkContext;
 import org.fabric3.spi.invocation.CallFrame;
 import org.fabric3.spi.invocation.ConversationContext;
+import org.fabric3.spi.invocation.WorkContext;
 
 /**
  * Scope container for the standard CONVERSATIONAL scope.
@@ -106,23 +105,23 @@ public class ConversationalScopeContainer extends StatefulScopeContainer<Convers
         }
     }
 
-    public void startContext(WorkContext workContext, URI groupId) throws GroupInitializationException {
+    public void startContext(WorkContext workContext) throws GroupInitializationException {
         Conversation conversation = workContext.peekCallFrame().getConversation();
         assert conversation != null;
-        super.startContext(workContext, conversation, groupId);
+        super.startContext(workContext, conversation);
     }
 
-    public void startContext(WorkContext workContext, URI groupId, ExpirationPolicy policy) throws GroupInitializationException {
+    public void startContext(WorkContext workContext, ExpirationPolicy policy) throws GroupInitializationException {
         Conversation conversation = workContext.peekCallFrame().getConversation();
         assert conversation != null;
-        super.startContext(workContext, conversation, groupId);
+        super.startContext(workContext, conversation);
         expirationPolicies.put(conversation, policy);
     }
 
     public void stopContext(WorkContext workContext) {
         Conversation conversation = workContext.peekCallFrame().getConversation();
         assert conversation != null;
-        super.stopContext(conversation);
+        super.stopContext(workContext, conversation);
         expirationPolicies.remove(conversation);
         notifyExpirationCallbacks(conversation);
     }
@@ -175,7 +174,10 @@ public class ConversationalScopeContainer extends StatefulScopeContainer<Convers
                 if (entry.getValue().isExpired()) {
                     Conversation conversation = entry.getKey();
                     iterator.remove();
-                    stopContext(conversation);
+                    WorkContext workContext = new WorkContext();
+                    CallFrame frame = new CallFrame(null, conversation, conversation, null);
+                    workContext.addCallFrame(frame);
+                    stopContext(workContext, conversation);
                     notifyExpirationCallbacks(conversation);
                 }
             }

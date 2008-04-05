@@ -125,16 +125,16 @@ public class StandaloneCoordinator implements RuntimeLifecycleCoordinator<Standa
 
             // start the system context
             WorkContext workContext = new WorkContext();
-            CallFrame frame = new CallFrame();
+            CallFrame frame = new CallFrame(ComponentNames.RUNTIME_URI);
             workContext.addCallFrame(frame);
-            container.startContext(workContext, ComponentNames.RUNTIME_URI);
+            container.startContext(workContext);
             workContext.popCallFrame();
             // start the domain context
             URI groupId = runtime.getHostInfo().getDomain();
             workContext = new WorkContext();
-            frame = new CallFrame();
+            frame = new CallFrame(groupId);
             workContext.addCallFrame(frame);
-            container.startContext(workContext, groupId);
+            container.startContext(workContext);
             extensionsDirectory = new File(runtime.getHostInfo().getInstallDirectory(), "extensions");
         } catch (GroupInitializationException e) {
             state = State.ERROR;

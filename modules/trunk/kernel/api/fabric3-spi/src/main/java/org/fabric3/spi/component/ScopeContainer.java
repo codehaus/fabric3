@@ -18,16 +18,15 @@
  */
 package org.fabric3.spi.component;
 
-import java.net.URI;
 import java.util.List;
+
+import org.osoa.sca.Conversation;
+import org.osoa.sca.ConversationEndedException;
 
 import org.fabric3.scdl.Scope;
 import org.fabric3.spi.Lifecycle;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.invocation.WorkContext;
-
-import org.osoa.sca.ConversationEndedException;
-import org.osoa.sca.Conversation;
 
 
 /**
@@ -69,41 +68,39 @@ public interface ScopeContainer<KEY> extends Lifecycle {
     void registerCallback(Conversation conversation, ConversationExpirationCallback callback);
 
     /**
-     * Adds an object factory to references of active instances for a component.
-     *
-     * @param component     Component with active instances, whose references need to be updated.
-     * @param factory       Object factory for the reference.
-     * @param referenceName Name of the reference.
-     * @param key           the component key
-     */
-    void addObjectFactory(AtomicComponent<?> component, ObjectFactory<?> factory, String referenceName, Object key);
-
-    /**
-     * Start a new, non-expiring context with the supplied group ID. The context will remain active until explicitly stopped.
+     * Start a new, non-expiring context. The context will remain active until explicitly stopped.
      *
      * @param workContext the current WorkContext
-     * @param groupId     the group of components to initially associate with this context or null if the scope does not support eager initialization
      * @throws GroupInitializationException if an exception was thrown by any eagerInit component
      */
-    void startContext(WorkContext workContext, URI groupId) throws GroupInitializationException;
+    void startContext(WorkContext workContext) throws GroupInitializationException;
 
     /**
-     * Start a new context with the supplied group ID which expires according to the given ExpirationPolicy. The context will remain active until it
-     * is explicitly stopped or it expires.
+     * Start a new context which expires according to the given ExpirationPolicy. The context will remain active until it is explicitly stopped or it
+     * expires.
      *
      * @param workContext the current WorkContext
-     * @param groupId     the group of components to initially associate with this context or null if the scope does not support eager initialization
      * @param policy      determines when the context expires
      * @throws GroupInitializationException if an exception was thrown by any eagerInit component
      */
-    public void startContext(WorkContext workContext, URI groupId, ExpirationPolicy policy) throws GroupInitializationException;
+    public void startContext(WorkContext workContext, ExpirationPolicy policy) throws GroupInitializationException;
 
     /**
-     * Stop the context with the supplied ID.
+     * Stop the context associated with the current work context.
      *
      * @param workContext the current WorkContext
      */
     void stopContext(WorkContext workContext);
+
+    /**
+     * Initialise an ordered list of components. The list is traversed in order and the getWrapper() method called for each to associate an instance
+     * with the supplied context.
+     *
+     * @param components  the components to be initialized
+     * @param workContext the work context in which to initialize the components
+     * @throws GroupInitializationException if one or more components threw an exception during initialization
+     */
+    void initializeComponents(List<AtomicComponent<?>> components, WorkContext workContext) throws GroupInitializationException;
 
     /**
      * Returns an instance wrapper associated with the current scope context, creating one if necessary
@@ -128,20 +125,19 @@ public interface ScopeContainer<KEY> extends Lifecycle {
     <T> void returnWrapper(AtomicComponent<T> component, WorkContext workContext, InstanceWrapper<T> wrapper) throws TargetDestructionException;
 
     /**
-     * Initialise an ordered list of components. The list is traversed in order and the getWrapper() method called for each to associate an instance
-     * with the supplied context.
+     * Adds an object factory to references of active instances for a component.
      *
-     * @param components  the components to be initialized
-     * @param groupId     the group ID of the components to initialize
-     * @param workContext the work context in which to initialize the components
-     * @throws GroupInitializationException if one or more components threw an exception during initialization
+     * @param component     Component with active instances, whose references need to be updated.
+     * @param factory       Object factory for the reference.
+     * @param referenceName Name of the reference.
+     * @param key           the component key
      */
-    void initializeComponents(List<AtomicComponent<?>> components, URI groupId, WorkContext workContext) throws GroupInitializationException;
+    void addObjectFactory(AtomicComponent<?> component, ObjectFactory<?> factory, String referenceName, Object key);
 
     /**
-     * Re-injects the targets.
+     * Re-injects all live instances with updated wires.
      *
-     * @throws TargetResolutionException
+     * @throws TargetResolutionException if an error occurs during reinjection.
      */
     void reinject() throws TargetResolutionException;
 }

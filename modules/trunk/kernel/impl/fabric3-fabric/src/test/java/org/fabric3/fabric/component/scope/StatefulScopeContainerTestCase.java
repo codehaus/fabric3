@@ -16,14 +16,11 @@
  */
 package org.fabric3.fabric.component.scope;
 
-import java.net.URI;
-
 import junit.framework.TestCase;
 import org.easymock.IMocksControl;
 import org.easymock.classextension.EasyMock;
 
 import org.fabric3.scdl.Scope;
-import org.fabric3.spi.ObjectCreationException;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.component.AtomicComponent;
 import org.fabric3.spi.component.ExpirationPolicy;
@@ -31,6 +28,7 @@ import org.fabric3.spi.component.GroupInitializationException;
 import org.fabric3.spi.component.InstanceWrapper;
 import org.fabric3.spi.component.InstanceWrapperStore;
 import org.fabric3.spi.component.TargetResolutionException;
+import org.fabric3.spi.invocation.CallFrame;
 import org.fabric3.spi.invocation.WorkContext;
 
 /**
@@ -43,7 +41,6 @@ public class StatefulScopeContainerTestCase extends TestCase {
     private Scope<MockId> scope;
     private MockId conversation;
     private WorkContext workContext;
-    private URI groupId;
     private AtomicComponent<Object> component;
     private InstanceWrapper<Object> wrapper;
 
@@ -55,17 +52,19 @@ public class StatefulScopeContainerTestCase extends TestCase {
         store.startContext(conversation);
         store.stopContext(conversation);
         control.replay();
-        container.startContext(workContext, groupId);
+        container.startContext(workContext);
         container.stopContext(workContext);
         control.verify();
     }
 
-    public void testWrapperCreatedIfNotFound() throws TargetResolutionException, ObjectCreationException {
+    public void testWrapperCreatedIfNotFound() throws Exception {
         EasyMock.expect(store.getWrapper(component, conversation)).andReturn(null);
         EasyMock.expect(component.createInstanceWrapper(workContext)).andReturn(wrapper);
         wrapper.start();
         store.putWrapper(component, conversation, wrapper);
+        store.startContext(EasyMock.eq(conversation));
         control.replay();
+        container.startContext(workContext);
         assertSame(wrapper, container.getWrapper(component, workContext));
         control.verify();
     }
@@ -80,35 +79,35 @@ public class StatefulScopeContainerTestCase extends TestCase {
     @SuppressWarnings("unchecked")
     protected void setUp() throws Exception {
         super.setUp();
-        groupId = URI.create("groupId");
         conversation = new MockId("contextId");
         scope = new Scope<MockId>("TESTING", MockId.class);
         control = EasyMock.createControl();
         store = control.createMock(InstanceWrapperStore.class);
-        workContext = control.createMock(WorkContext.class);
+        workContext = new WorkContext();
+        workContext.addCallFrame(new CallFrame(conversation));
         component = control.createMock(AtomicComponent.class);
         wrapper = control.createMock(InstanceWrapper.class);
         container = new StatefulScopeContainer<MockId>(scope, null, store) {
 
-            public void startContext(WorkContext workContext, URI groupId) throws GroupInitializationException {
-                super.startContext(workContext, conversation, groupId);
+            public void startContext(WorkContext workContext) throws GroupInitializationException {
+                super.startContext(workContext, conversation);
             }
 
-            public void startContext(WorkContext workContext, URI groupId, ExpirationPolicy policy) throws GroupInitializationException {
+            public void startContext(WorkContext workContext, ExpirationPolicy policy) throws GroupInitializationException {
 
             }
 
             public void stopContext(WorkContext workContext) {
-                super.stopContext(conversation);
+                super.stopContext(workContext, conversation);
             }
 
             public <T> InstanceWrapper<T> getWrapper(AtomicComponent<T> component, WorkContext workContext) throws TargetResolutionException {
                 return super.getWrapper(component, workContext, conversation, true);
             }
-            
+
             public void reinject() {
             }
-            
+
             public void addObjectFactory(AtomicComponent<?> component, ObjectFactory<?> factory, String referenceName, Object key) {
             }
 
@@ -117,6 +116,7 @@ public class StatefulScopeContainerTestCase extends TestCase {
 
     private class MockId {
         private String id;
+
         public MockId(String id) {
             this.id = id;
         }

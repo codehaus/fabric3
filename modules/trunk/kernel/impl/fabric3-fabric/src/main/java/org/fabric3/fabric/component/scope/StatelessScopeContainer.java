@@ -26,6 +26,7 @@ import org.osoa.sca.annotations.Service;
 import org.fabric3.api.annotation.Monitor;
 import org.fabric3.scdl.Scope;
 import org.fabric3.spi.ObjectFactory;
+import org.fabric3.spi.ObjectCreationException;
 import org.fabric3.spi.component.AtomicComponent;
 import org.fabric3.spi.component.GroupInitializationException;
 import org.fabric3.spi.component.InstanceWrapper;
@@ -49,9 +50,13 @@ public class StatelessScopeContainer extends AbstractScopeContainer<Object> {
     }
 
     public <T> InstanceWrapper<T> getWrapper(AtomicComponent<T> component, WorkContext workContext) throws TargetResolutionException {
-        InstanceWrapper<T> ctx = createInstance(component, workContext);
-        ctx.start();
-        return ctx;
+        try {
+            InstanceWrapper<T> wrapper = component.createInstanceWrapper(workContext);
+            wrapper.start();
+            return wrapper;
+        } catch (ObjectCreationException e) {
+            throw new TargetResolutionException(e.getMessage(), component.getUri().toString(), e);
+        }
     }
 
     public <T> void returnWrapper(AtomicComponent<T> component, WorkContext workContext, InstanceWrapper<T> wrapper)
@@ -59,21 +64,21 @@ public class StatelessScopeContainer extends AbstractScopeContainer<Object> {
         wrapper.stop();
     }
 
-    public void startContext(WorkContext workContext, URI groupId) throws GroupInitializationException {
+    public void startContext(WorkContext workContext) throws GroupInitializationException {
         // do nothing
     }
 
-    public void startContext(WorkContext workContext, URI groupId, ExpirationPolicy policy) throws GroupInitializationException {
+    public void startContext(WorkContext workContext, ExpirationPolicy policy) throws GroupInitializationException {
         // do nothing
     }
 
     public void stopContext(WorkContext workContext) {
     }
 
-    public void reinject() {
-    }
-    
     public void addObjectFactory(AtomicComponent<?> component, ObjectFactory<?> factory, String referenceName, Object key) {
+    }
+
+    public void reinject() {
     }
 
 }

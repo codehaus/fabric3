@@ -47,8 +47,13 @@ public class CallFrame implements Serializable {
     public CallFrame() {
     }
 
-    public CallFrame(String callbackUri, Object correlationId) {
-        this(callbackUri, correlationId, null, null);
+    /**
+     * Creates a CallFrame for an invocation to a stateful unidirectional service
+     *
+     * @param correlationId the correlation id
+     */
+    public CallFrame(Object correlationId) {
+        this(null, correlationId, null, null);
     }
 
     /**

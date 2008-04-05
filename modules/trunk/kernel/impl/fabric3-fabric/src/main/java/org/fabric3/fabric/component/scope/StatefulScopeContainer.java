@@ -16,8 +16,9 @@
  */
 package org.fabric3.fabric.component.scope;
 
-import java.net.URI;
+import java.util.List;
 
+import org.fabric3.scdl.Scope;
 import org.fabric3.spi.component.AtomicComponent;
 import org.fabric3.spi.component.GroupInitializationException;
 import org.fabric3.spi.component.InstanceWrapper;
@@ -25,7 +26,7 @@ import org.fabric3.spi.component.InstanceWrapperStore;
 import org.fabric3.spi.component.TargetDestructionException;
 import org.fabric3.spi.component.TargetResolutionException;
 import org.fabric3.spi.invocation.WorkContext;
-import org.fabric3.scdl.Scope;
+import org.fabric3.spi.ObjectCreationException;
 
 /**
  * Scope container that manages instances in association with a backing store that is able to persist them across invocations.
@@ -45,13 +46,13 @@ public abstract class StatefulScopeContainer<KEY> extends AbstractScopeContainer
             throws TargetDestructionException {
     }
 
-    public void startContext(WorkContext workContext, KEY contextId, URI groupId) throws GroupInitializationException {
+    protected void startContext(WorkContext workContext, KEY contextId) throws GroupInitializationException {
         store.startContext(contextId);
-        super.startContext(workContext, contextId, groupId);
+        super.startContext(workContext, contextId);
     }
 
-    protected void stopContext(KEY contextId) {
-        super.stopContext(contextId);
+    protected void stopContext(WorkContext workContext, KEY contextId) {
+        super.stopContext(workContext, contextId);
         store.stopContext(contextId);
     }
 
@@ -71,9 +72,18 @@ public abstract class StatefulScopeContainer<KEY> extends AbstractScopeContainer
         assert contextId != null;
         InstanceWrapper<T> wrapper = store.getWrapper(component, contextId);
         if (wrapper == null && create) {
-            wrapper = createInstance(component, workContext);
+            try {
+                wrapper = component.createInstanceWrapper(workContext);
+            } catch (ObjectCreationException e) {
+                throw new TargetResolutionException(e.getMessage(), component.getUri().toString(), e);
+            }
             wrapper.start();
             store.putWrapper(component, contextId, wrapper);
+            List<InstanceWrapper<?>> queue = destroyQueues.get(contextId);
+            if (queue == null) {
+                throw new IllegalStateException("Instance context not found");
+            }
+            queue.add(wrapper);
         }
         return wrapper;
     }

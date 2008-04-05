@@ -20,24 +20,23 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.osoa.sca.annotations.Constructor;
+import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Init;
+import org.osoa.sca.annotations.Reference;
+
 import org.fabric3.scdl.Scope;
 import org.fabric3.spi.command.CommandExecutor;
 import org.fabric3.spi.command.CommandExecutorRegistry;
 import org.fabric3.spi.command.ExecutionException;
 import org.fabric3.spi.component.AtomicComponent;
-import org.fabric3.spi.invocation.CallFrame;
 import org.fabric3.spi.component.Component;
 import org.fabric3.spi.component.GroupInitializationException;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.ScopeRegistry;
+import org.fabric3.spi.invocation.CallFrame;
 import org.fabric3.spi.invocation.WorkContext;
-import org.fabric3.spi.invocation.ConversationContext;
 import org.fabric3.spi.runtime.component.ComponentManager;
-
-import org.osoa.sca.annotations.Constructor;
-import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Init;
-import org.osoa.sca.annotations.Reference;
 
 /**
  * Eagerly initializes a component on a service node.
@@ -78,12 +77,12 @@ public class InitializeComponentCommandExecutor implements CommandExecutor<Initi
                 throw new ComponentNotRegisteredException("Component not registered", uri.toString());
             }
             WorkContext workContext = new WorkContext();
-            CallFrame frame = new CallFrame(null, groupId);
+            CallFrame frame = new CallFrame(groupId);
             workContext.addCallFrame(frame);
             List<AtomicComponent<?>> atomicComponents = new ArrayList<AtomicComponent<?>>();
             atomicComponents.add((AtomicComponent<?>) component);
             try {
-                scopeContainer.initializeComponents(atomicComponents, groupId, workContext);
+                scopeContainer.initializeComponents(atomicComponents, workContext);
             } catch (GroupInitializationException e) {
                 throw new ExecutionException("Error starting components", e);
             }

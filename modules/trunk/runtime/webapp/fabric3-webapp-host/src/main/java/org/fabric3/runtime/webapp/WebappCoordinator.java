@@ -62,8 +62,8 @@ import org.fabric3.spi.assembly.AssemblyException;
 import org.fabric3.spi.component.GroupInitializationException;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.ScopeRegistry;
-import org.fabric3.spi.invocation.WorkContext;
 import org.fabric3.spi.invocation.CallFrame;
+import org.fabric3.spi.invocation.WorkContext;
 import org.fabric3.spi.services.contribution.Contribution;
 import org.fabric3.spi.services.contribution.ContributionManifest;
 import org.fabric3.spi.services.contribution.MetaDataStore;
@@ -125,16 +125,16 @@ public class WebappCoordinator implements RuntimeLifecycleCoordinator<WebappRunt
 
             // start the system context
             WorkContext workContext = new WorkContext();
-            CallFrame frame = new CallFrame();
+            CallFrame frame = new CallFrame(ComponentNames.RUNTIME_URI);
             workContext.addCallFrame(frame);
-            container.startContext(workContext, ComponentNames.RUNTIME_URI);
+            container.startContext(workContext);
             workContext.popCallFrame();
             // start the domain context
             URI domainUri = runtime.getHostInfo().getDomain();
             workContext = new WorkContext();
-            frame = new CallFrame();
+            frame = new CallFrame(domainUri);
             workContext.addCallFrame(frame);
-            container.startContext(workContext, domainUri);
+            container.startContext(workContext);
         } catch (GroupInitializationException e) {
             throw new InitializationException(e);
         }
@@ -293,7 +293,8 @@ public class WebappCoordinator implements RuntimeLifecycleCoordinator<WebappRunt
     /**
      * Processes extensions and includes them in the runtime domain
      *
-     * @throws InitializationException if an error occurs included the extensions
+     * @throws InitializationException       if an error occurs included the extensions
+     * @throws DefinitionActivationException if an error occurs activating an intent or policy set definition
      */
     private void includeExtensions() throws InitializationException, DefinitionActivationException {
         ServletContext context = runtime.getHostInfo().getServletContext();

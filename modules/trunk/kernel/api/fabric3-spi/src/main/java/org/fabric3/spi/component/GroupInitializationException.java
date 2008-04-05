@@ -32,11 +32,10 @@ public class GroupInitializationException extends ComponentException {
     /**
      * Exception indicating a problem initializing a group of components.
      *
-     * @param contextId an identified for the context being initialized
      * @param causes    the individual exceptions that occurred
      */
-    public GroupInitializationException(String contextId, List<Exception> causes) {
-        super("Error initializing components in group " + contextId, contextId);
+    public GroupInitializationException(List<Exception> causes) {
+        super("Error initializing components");
         this.causes = causes;
     }
 

@@ -49,15 +49,13 @@ public class CompositeScopeContainerTestCase<T> extends TestCase {
     public void testWrapperCreation() throws Exception {
 
         EasyMock.expect(component.isEagerInit()).andStubReturn(false);
-        CallFrame frame = new CallFrame();
-        EasyMock.expect(workContext.peekCallFrame()).andStubReturn(frame);
         EasyMock.expect(component.createInstanceWrapper(workContext)).andReturn(wrapper);
         EasyMock.expect(wrapper.isStarted()).andReturn(false);
         wrapper.start();
         EasyMock.expect(component.getGroupId()).andStubReturn(groupId);
         control.replay();
         scopeContainer.register(component);
-        scopeContainer.startContext(workContext, groupId);
+        scopeContainer.startContext(workContext);
         assertSame(wrapper, scopeContainer.getWrapper(component, workContext));
         assertSame(wrapper, scopeContainer.getWrapper(component, workContext));
         control.verify();
@@ -68,7 +66,8 @@ public class CompositeScopeContainerTestCase<T> extends TestCase {
         super.setUp();
         groupId = URI.create("groupId");
         control = EasyMock.createStrictControl();
-        workContext = control.createMock(WorkContext.class);
+        workContext = new WorkContext();
+        workContext.addCallFrame(new CallFrame(groupId));
         component = control.createMock(AtomicComponent.class);
         wrapper = control.createMock(InstanceWrapper.class);
         scopeContainer = new CompositeScopeContainer(EasyMock.createNiceMock(ScopeContainerMonitor.class));

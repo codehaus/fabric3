@@ -63,10 +63,10 @@ public class StartCompositeContextCommandExecutor implements CommandExecutor<Sta
         
         for (URI groupId : command.getGroupIds()) {
             WorkContext workContext = new WorkContext();
-            CallFrame frame = new CallFrame(null, groupId);
+            CallFrame frame = new CallFrame(groupId);
             workContext.addCallFrame(frame);
             try {
-                container.startContext(workContext, groupId);
+                container.startContext(workContext);
             } catch (GroupInitializationException e) {
                 throw new ExecutionException("Error executing command", e);
             }

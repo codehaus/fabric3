@@ -24,20 +24,20 @@ import java.lang.reflect.Method;
 import org.osoa.sca.ConversationEndedException;
 
 import org.fabric3.pojo.PojoWorkContextTunnel;
+import org.fabric3.scdl.Scope;
 import org.fabric3.spi.component.AtomicComponent;
-import org.fabric3.spi.invocation.CallFrame;
+import org.fabric3.spi.component.ExpirationPolicy;
 import org.fabric3.spi.component.GroupInitializationException;
 import org.fabric3.spi.component.InstanceWrapper;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.TargetDestructionException;
 import org.fabric3.spi.component.TargetResolutionException;
-import org.fabric3.spi.invocation.WorkContext;
-import org.fabric3.spi.invocation.Message;
+import org.fabric3.spi.invocation.CallFrame;
 import org.fabric3.spi.invocation.ConversationContext;
-import org.fabric3.spi.component.ExpirationPolicy;
+import org.fabric3.spi.invocation.Message;
+import org.fabric3.spi.invocation.WorkContext;
 import org.fabric3.spi.wire.Interceptor;
 import org.fabric3.spi.wire.InvocationRuntimeException;
-import org.fabric3.scdl.Scope;
 
 /**
  * Responsible for dispatching an invocation to a Java component implementation instance.
@@ -102,13 +102,13 @@ public class InvokerInterceptor<T, CONTEXT> implements Interceptor {
                         // start the conversation context
                         if (component.getMaxAge() > 0) {
                             ExpirationPolicy policy = new NonRenewableExpirationPolicy(System.currentTimeMillis() + component.getMaxAge());
-                            scopeContainer.startContext(workContext, null, policy);
+                            scopeContainer.startContext(workContext, policy);
                         } else if (component.getMaxIdleTime() > 0) {
                             long expire = System.currentTimeMillis() + component.getMaxIdleTime();
                             ExpirationPolicy policy = new RenewableExpirationPolicy(expire, component.getMaxIdleTime());
-                            scopeContainer.startContext(workContext, null, policy);
+                            scopeContainer.startContext(workContext, policy);
                         } else {
-                            scopeContainer.startContext(workContext, null);
+                            scopeContainer.startContext(workContext);
                         }
                     }
                 }

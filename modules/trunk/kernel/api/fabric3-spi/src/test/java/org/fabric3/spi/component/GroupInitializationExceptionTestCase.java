@@ -63,6 +63,6 @@ public class GroupInitializationExceptionTestCase extends TestCase {
         causes.add(cause2);
         writer = new PrintWriter(System.err);
         printer = new PrintStream(System.err);
-        e = new GroupInitializationException("test", causes);
+        e = new GroupInitializationException(causes);
     }
 }
