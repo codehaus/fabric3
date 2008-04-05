@@ -89,6 +89,7 @@
                 <include>org.codehaus.fabric3:fabric3-jmx</include>
                 <include>org.codehaus.fabric3:fabric3-policy-spi</include>
                 <include>org.codehaus.fabric3:fabric3-pojo</include>
+                <include>org.codehaus.fabric3:fabric3-transform-api</include>
                 <include>org.codehaus.fabric3:fabric3-transform</include>
                 <include>org.codehaus.fabric3:fabric3-loader</include>
                 <include>org.codehaus.fabric3:fabric3-policy</include>
