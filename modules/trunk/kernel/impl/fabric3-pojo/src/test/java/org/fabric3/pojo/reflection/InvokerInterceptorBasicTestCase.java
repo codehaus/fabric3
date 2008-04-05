@@ -129,7 +129,6 @@ public class InvokerInterceptorBasicTestCase extends TestCase {
         TargetResolutionException ex = new TargetResolutionException(null);
         EasyMock.expect(message.getBody()).andReturn(null);
         EasyMock.expect(message.getWorkContext()).andReturn(workContext);
-        EasyMock.expect(workContext.peekCallFrame()).andReturn(new CallFrame());
         try {
             EasyMock.expect(scopeContainer.getWrapper(component, workContext)).andThrow(ex);
         } catch (TargetResolutionException e) {
@@ -151,7 +150,6 @@ public class InvokerInterceptorBasicTestCase extends TestCase {
         EasyMock.expect(scopeContainer.getScope()).andReturn(Scope.COMPOSITE);
         EasyMock.expect(message.getBody()).andReturn(value);
         EasyMock.expect(message.getWorkContext()).andReturn(workContext);
-        EasyMock.expect(workContext.peekCallFrame()).andReturn(new CallFrame());
         EasyMock.expect(scopeContainer.getWrapper(component, workContext)).andReturn(wrapper);
         EasyMock.expect(wrapper.getInstance()).andReturn(bean);
         message.setBody(body);
@@ -162,7 +160,6 @@ public class InvokerInterceptorBasicTestCase extends TestCase {
         EasyMock.expect(scopeContainer.getScope()).andReturn(Scope.COMPOSITE);
         EasyMock.expect(message.getBody()).andReturn(value);
         EasyMock.expect(message.getWorkContext()).andReturn(workContext);
-        EasyMock.expect(workContext.peekCallFrame()).andReturn(new CallFrame());
         EasyMock.expect(scopeContainer.getWrapper(component, workContext)).andReturn(wrapper);
         EasyMock.expect(wrapper.getInstance()).andReturn(bean);
         message.setBodyWithFault(EasyMock.isA(fault));

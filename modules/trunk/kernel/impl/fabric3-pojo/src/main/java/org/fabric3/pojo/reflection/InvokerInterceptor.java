@@ -134,17 +134,18 @@ public class InvokerInterceptor<T, CONTEXT> implements Interceptor {
      * @throws InvocationRuntimeException if an error occurs starting or joining the context
      */
     private void startOrJoinContext(WorkContext workContext) throws InvocationRuntimeException {
-        // check if this is a callback. If so, do not start or join the conversation since it has already been done by the forward invocation
-        if (callback) {
+        // Check if this is a callback. If so, do not start or join the conversation since it has already been done by the forward invocation
+        // Also, if the target is not conversation scoped, no context needs to be started
+        if (callback || !conversationScope) {
             return;
         }
         CallFrame frame = workContext.peekCallFrame();
         if (frame == null) {
-            // for now tolerate callframes not being set as bindings may not be adding them for incoming service invocations
+            // For now tolerate callframes not being set as bindings may not be adding them for incoming service invocations
             return;
         }
         try {
-            if (conversationScope && ConversationContext.NEW == frame.getConversationContext()) {
+            if (ConversationContext.NEW == frame.getConversationContext()) {
                 // start the conversation context
                 if (component.getMaxAge() > 0) {
                     ExpirationPolicy policy = new NonRenewableExpirationPolicy(System.currentTimeMillis() + component.getMaxAge());
@@ -156,7 +157,7 @@ public class InvokerInterceptor<T, CONTEXT> implements Interceptor {
                 } else {
                     scopeContainer.startContext(workContext);
                 }
-            } else if (conversationScope && ConversationContext.PROPAGATE == frame.getConversationContext()) {
+            } else if (ConversationContext.PROPAGATE == frame.getConversationContext()) {
                 if (component.getMaxAge() > 0) {
                     ExpirationPolicy policy = new NonRenewableExpirationPolicy(System.currentTimeMillis() + component.getMaxAge());
                     scopeContainer.joinContext(workContext, policy);
