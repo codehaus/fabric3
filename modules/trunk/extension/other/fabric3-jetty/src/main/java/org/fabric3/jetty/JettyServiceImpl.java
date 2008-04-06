@@ -43,11 +43,9 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Reference;
-import org.osoa.sca.annotations.Service;
 
 import org.fabric3.api.annotation.Monitor;
 import org.fabric3.host.runtime.HostInfo;
-import org.fabric3.spi.host.ServletHost;
 import org.fabric3.spi.services.work.WorkScheduler;
 
 /**
@@ -55,7 +53,6 @@ import org.fabric3.spi.services.work.WorkScheduler;
  *
  * @version $$Rev$$ $$Date$$
  */
-@Service(ServletHost.class)
 @EagerInit
 public class JettyServiceImpl implements JettyService {
 
