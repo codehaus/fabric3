@@ -22,6 +22,7 @@ import org.fabric3.host.Fabric3Exception;
  * @version $Rev$ $Date$
  */
 public class JettyInitializationException extends Fabric3Exception {
+    private static final long serialVersionUID = 1918582897250667465L;
 
     public JettyInitializationException(String message, String identifier) {
         super(message, identifier);

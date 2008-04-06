@@ -31,6 +31,8 @@ public interface JettyService extends ServletHost {
 
     /**
      * Returns the active Jetty server
+     *
+     * @return the active Jetty server
      */
     Server getServer();
 
