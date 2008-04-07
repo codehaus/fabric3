@@ -66,8 +66,8 @@ public class IntrospectionFactoryImpl implements IntrospectionFactory {
         bootstrapper.bootPrimordial(runtime, classLoader, classLoader);
 
         WorkContext workContext = new WorkContext();
-        workContext.addCallFrame(new CallFrame());
-        container.startContext(workContext, ComponentNames.RUNTIME_URI);
+        workContext.addCallFrame(new CallFrame(ComponentNames.RUNTIME_URI));
+        container.startContext(workContext);
 
         bootstrapper.bootSystem(runtime);
     }
