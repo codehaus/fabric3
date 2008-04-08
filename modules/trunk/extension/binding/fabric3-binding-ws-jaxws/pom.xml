@@ -110,15 +110,8 @@
                 <version>${project.version}</version>
                 <extensions>true</extensions>
                 <configuration>
-                    <mavenImports>
-                        <mavenImport>
-                           <groupId>org.codehaus.fabric3</groupId>
-                           <artifactId>fabric3-spi</artifactId>
-                       </mavenImport>
-                    </mavenImports>
                     <deployables>
                         <deployable>META-INF/control.composite</deployable>
-                        <deployable>META-INF/introspection.composite</deployable>
                         <deployable>META-INF/runtime.composite</deployable>
                     </deployables>
                 </configuration>

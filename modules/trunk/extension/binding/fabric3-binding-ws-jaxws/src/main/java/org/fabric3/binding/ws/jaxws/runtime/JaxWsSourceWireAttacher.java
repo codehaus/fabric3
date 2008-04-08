@@ -58,7 +58,11 @@ public class JaxWsSourceWireAttacher implements SourceWireAttacher<JaxWsWireSour
         Map<Method, Map.Entry<PhysicalOperationDefinition, InvocationChain>> ops =
                 new HashMap<Method, Map.Entry<PhysicalOperationDefinition, InvocationChain>>();
         try {
-            ClassLoader cl = registry.getClassLoader(source.getClassloaderURI());
+            URI uri = source.getClassloaderURI();
+            ClassLoader cl = Thread.currentThread().getContextClassLoader();
+            if (uri != null) {
+                cl = registry.getClassLoader(uri);
+            }
             assert cl != null;
             clazz = cl.loadClass(source.getServiceInterface());
 
