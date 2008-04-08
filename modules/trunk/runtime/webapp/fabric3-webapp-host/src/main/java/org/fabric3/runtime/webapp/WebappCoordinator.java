@@ -412,6 +412,11 @@ public class WebappCoordinator implements RuntimeLifecycleCoordinator<WebappRunt
                 throw new InitializationException("fabric3-pojo jar is missing pom.xml file");
             }
             processor.process(manifest, stream);
+            stream = bootClassLoader.getResourceAsStream("META-INF/maven/org.codehaus.fabric3/fabric3-container-web-spi/pom.xml");
+            if (stream == null) {
+                throw new InitializationException("fabric3-container-web-spi jar is missing pom.xml file");
+            }
+            processor.process(manifest, stream);
             contribution.setManifest(manifest);
             MetaDataStore store = runtime.getSystemComponent(MetaDataStore.class, ComponentNames.METADATA_STORE_URI);
             store.store(contribution);

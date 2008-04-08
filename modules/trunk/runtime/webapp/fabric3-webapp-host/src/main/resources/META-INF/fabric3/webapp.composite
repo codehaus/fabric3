@@ -82,6 +82,10 @@
         <system:implementation.system class="org.fabric3.runtime.webapp.ServletHostImpl"/>
     </component>
 
+    <component name="WebApplicationActivator">
+        <system:implementation.system class="org.fabric3.runtime.webapp.activator.EmbeddedWebApplicationActivator"/>
+    </component>
+
     <!-- no recovery for the webapp runtime -->
     <component name="assemblyRecoveryService">
         <system:implementation.system class="org.fabric3.fabric.services.domain.NonPersistentLogicalComponentStore"/>

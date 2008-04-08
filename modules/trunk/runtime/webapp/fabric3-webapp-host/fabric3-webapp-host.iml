@@ -167,6 +167,7 @@
         </SOURCES>
       </library>
     </orderEntry>
+    <orderEntry type="module" module-name="fabric3-container-web-spi" />
     <orderEntryProperties />
   </component>
 </module>
