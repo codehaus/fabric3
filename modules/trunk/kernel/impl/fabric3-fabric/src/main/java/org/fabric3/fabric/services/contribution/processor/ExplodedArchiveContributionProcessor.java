@@ -37,32 +37,35 @@ import org.fabric3.introspection.xml.Loader;
 import org.fabric3.introspection.xml.LoaderException;
 import org.fabric3.spi.services.contenttype.ContentTypeResolutionException;
 import org.fabric3.spi.services.contenttype.ContentTypeResolver;
-import org.fabric3.spi.services.contribution.ArtifactLocationEncoder;
+import org.fabric3.spi.services.contribution.Action;
+import org.fabric3.spi.services.contribution.ArchiveContributionHandler;
 import org.fabric3.spi.services.contribution.Contribution;
 import org.fabric3.spi.services.contribution.ContributionManifest;
+import org.fabric3.spi.services.contribution.ProcessorRegistry;
 
 /**
  * Handles exploded archives on a filesystem.
  */
-public class ExplodedArchiveContributionProcessor extends ArchiveContributionProcessor {
+public class ExplodedArchiveContributionProcessor implements ArchiveContributionHandler {
     private Loader loader;
     private final ContentTypeResolver contentTypeResolver;
+    private ProcessorRegistry registry;
+
 
     public ExplodedArchiveContributionProcessor(@Reference Loader loader,
                                                 @Reference ContentTypeResolver contentTypeResolver,
-                                                @Reference ArtifactLocationEncoder encoder) {
-        super(encoder);
+                                                @Reference ProcessorRegistry registry) {
         this.loader = loader;
         this.contentTypeResolver = contentTypeResolver;
+        this.registry = registry;
     }
 
-    public String[] getContentTypes() {
-        return new String[]{Constants.FOLDER_CONTENT_TYPE};
+    public boolean canProcess(Contribution contribution) {
+        return Constants.FOLDER_CONTENT_TYPE.equals(contribution.getContentType());
     }
 
     public void processManifest(Contribution contribution) throws ContributionException {
         ContributionManifest manifest;
-
         try {
             URL sourceUrl = contribution.getLocation();
             URL manifestUrl = new URL(sourceUrl.toString() + "/META-INF/sca-contribution.xml");
@@ -103,7 +106,7 @@ public class ExplodedArchiveContributionProcessor extends ArchiveContributionPro
         });
     }
 
-    protected void iterateArtifacts(Contribution contribution, Action action)
+    public void iterateArtifacts(Contribution contribution, Action action)
             throws ContributionException {
         File root = FileHelper.toFile(contribution.getLocation());
         assert root.isDirectory();

@@ -18,9 +18,16 @@ package org.fabric3.fabric.services.contribution.processor;
 
 import java.net.URI;
 import java.net.URL;
+import java.util.List;
 
+import org.osoa.sca.annotations.Reference;
+
+import org.fabric3.fabric.services.contribution.UnsupportedContentTypeException;
+import org.fabric3.host.contribution.Constants;
 import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.spi.model.type.ContributionResourceDescription;
+import org.fabric3.spi.services.contribution.Action;
+import org.fabric3.spi.services.contribution.ArchiveContributionHandler;
 import org.fabric3.spi.services.contribution.ArtifactLocationEncoder;
 import org.fabric3.spi.services.contribution.Contribution;
 import org.fabric3.spi.services.contribution.Resource;
@@ -30,15 +37,32 @@ import org.fabric3.spi.services.contribution.Resource;
  *
  * @version $Rev$ $Date$
  */
-public abstract class ArchiveContributionProcessor extends AbstractContributionProcessor {
-    protected ArtifactLocationEncoder encoder;
+public class ArchiveContributionProcessor extends AbstractContributionProcessor {
+    private static final String[] CONTENT_TYPES = new String[]{Constants.ZIP_CONTENT_TYPE, "application/octet-stream"};
+    private ArtifactLocationEncoder encoder;
+    private List<ArchiveContributionHandler> handlers;
 
-    protected ArchiveContributionProcessor(ArtifactLocationEncoder encoder) {
+    public ArchiveContributionProcessor(@Reference ArtifactLocationEncoder encoder) {
         this.encoder = encoder;
     }
 
+    @Reference
+    public void setHandlers(List<ArchiveContributionHandler> handlers) {
+        this.handlers = handlers;
+    }
+
+    public String[] getContentTypes() {
+        return CONTENT_TYPES;
+    }
+
+    public void processManifest(Contribution contribution) throws ContributionException {
+        ArchiveContributionHandler handler = getHandler(contribution);
+        handler.processManifest(contribution);
+    }
+
     public void index(Contribution contribution) throws ContributionException {
-        iterateArtifacts(contribution, new Action() {
+        ArchiveContributionHandler handler = getHandler(contribution);
+        handler.iterateArtifacts(contribution, new Action() {
             public void process(Contribution contribution, String contentType, URL url)
                     throws ContributionException {
                 registry.indexResource(contribution, contentType, url);
@@ -66,6 +90,14 @@ public abstract class ArchiveContributionProcessor extends AbstractContributionP
         description.addArtifactUrl(encodedLocation);
     }
 
-    protected abstract void iterateArtifacts(Contribution contribution, Action action)
-            throws ContributionException;
+    private ArchiveContributionHandler getHandler(Contribution contribution) throws UnsupportedContentTypeException {
+        for (ArchiveContributionHandler handler : handlers) {
+            if (handler.canProcess(contribution)) {
+                return handler;
+            }
+        }
+        String source = contribution.getUri().toString();
+        throw new UnsupportedContentTypeException("Contribution type not supported: " + source, source);
+    }
+
 }

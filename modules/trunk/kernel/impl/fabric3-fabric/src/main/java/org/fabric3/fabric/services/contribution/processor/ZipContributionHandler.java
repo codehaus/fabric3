@@ -30,7 +30,6 @@ import java.util.zip.ZipInputStream;
 
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.host.contribution.Constants;
 import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.introspection.DefaultIntrospectionContext;
 import org.fabric3.introspection.IntrospectionContext;
@@ -38,32 +37,32 @@ import org.fabric3.introspection.xml.Loader;
 import org.fabric3.introspection.xml.LoaderException;
 import org.fabric3.spi.services.contenttype.ContentTypeResolutionException;
 import org.fabric3.spi.services.contenttype.ContentTypeResolver;
-import org.fabric3.spi.services.contribution.ArtifactLocationEncoder;
+import org.fabric3.spi.services.contribution.Action;
+import org.fabric3.spi.services.contribution.ArchiveContributionHandler;
 import org.fabric3.spi.services.contribution.Contribution;
 import org.fabric3.spi.services.contribution.ContributionManifest;
-import org.fabric3.spi.services.contribution.ContributionProcessor;
 import org.fabric3.spi.services.contribution.ProcessorRegistry;
 
 /**
  * Introspects a Zip-based contribution, delegating to ResourceProcessors for handling leaf-level children.
  */
-public class ZipContributionProcessor extends ArchiveContributionProcessor implements ContributionProcessor {
+public class ZipContributionHandler implements ArchiveContributionHandler {
     private final Loader loader;
     private final ContentTypeResolver contentTypeResolver;
+    private ProcessorRegistry registry;
 
-    public ZipContributionProcessor(@Reference ProcessorRegistry processorRegistry,
-                                    @Reference Loader loader,
-                                    @Reference ArtifactLocationEncoder encoder,
-                                    @Reference ContentTypeResolver contentTypeResolver) {
+    public ZipContributionHandler(@Reference ProcessorRegistry processorRegistry,
+                                  @Reference Loader loader,
+                                  @Reference ContentTypeResolver contentTypeResolver) {
 
-        super(encoder);
         this.registry = processorRegistry;
         this.loader = loader;
         this.contentTypeResolver = contentTypeResolver;
     }
 
-    public String[] getContentTypes() {
-        return new String[]{Constants.ZIP_CONTENT_TYPE, "application/octet-stream"};
+    public boolean canProcess(Contribution contribution) {
+        String sourceUrl = contribution.getLocation().toString();
+        return sourceUrl.endsWith(".jar") || sourceUrl.endsWith(".zip");
     }
 
     public void processManifest(Contribution contribution) throws ContributionException {
@@ -108,7 +107,7 @@ public class ZipContributionProcessor extends ArchiveContributionProcessor imple
         });
     }
 
-    protected void iterateArtifacts(Contribution contribution, Action action)
+    public void iterateArtifacts(Contribution contribution, Action action)
             throws ContributionException {
         URL location = contribution.getLocation();
         ZipInputStream zipStream = null;

@@ -14,7 +14,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.fabric.services.contribution.processor;
+package org.fabric3.spi.services.contribution;
 
 import java.net.URL;
 

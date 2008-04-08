@@ -51,9 +51,12 @@
         <system:implementation.system class="org.fabric3.fabric.services.contribution.DependencyServiceImpl"/>
     </component>
 
-    <component name="ZipContributionProcessor">
-        <system:implementation.system class="org.fabric3.fabric.services.contribution.processor.ZipContributionProcessor"/>
-        <!--<reference name="metaDataStore" target="MetadataStore"/>-->
+    <component name="ArchiveContributionProcessor">
+        <system:implementation.system class="org.fabric3.fabric.services.contribution.processor.ArchiveContributionProcessor"/>
+    </component>
+
+    <component name="ZipContributionHandler">
+        <system:implementation.system class="org.fabric3.fabric.services.contribution.processor.ZipContributionHandler"/>
     </component>
 
     <component name="XmlResourceProcessor">
