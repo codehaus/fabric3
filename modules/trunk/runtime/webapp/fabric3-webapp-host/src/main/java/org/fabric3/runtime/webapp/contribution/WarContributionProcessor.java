@@ -28,7 +28,7 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.fabric.services.contribution.processor.Action;
+import org.fabric3.spi.services.contribution.Action;
 import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.introspection.DefaultIntrospectionContext;
 import org.fabric3.runtime.webapp.WebappHostInfo;
@@ -45,7 +45,7 @@ import org.fabric3.spi.services.contribution.ProcessorRegistry;
 import org.fabric3.spi.services.contribution.Resource;
 
 /**
- * Processes a WAR contribution.
+ * Processes a WAR contribution in an embedded runtime.
  *
  * @version $Rev$ $Date$
  */
