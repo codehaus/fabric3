@@ -18,15 +18,15 @@
  */
 package org.fabric3.jetty;
 
-import java.io.File;
-import java.io.IOException;
 import javax.resource.spi.work.Work;
 import javax.servlet.Servlet;
 import javax.servlet.ServletContext;
 
 import org.mortbay.jetty.Connector;
 import org.mortbay.jetty.Server;
+import org.mortbay.jetty.Handler;
 import org.mortbay.jetty.handler.ContextHandler;
+import org.mortbay.jetty.handler.ContextHandlerCollection;
 import org.mortbay.jetty.nio.SelectChannelConnector;
 import org.mortbay.jetty.security.SslSocketConnector;
 import org.mortbay.jetty.servlet.ServletHandler;
@@ -79,6 +79,8 @@ public class JettyServiceImpl implements JettyService {
     private Server server;
     private Connector connector;
     private ServletHandler servletHandler;
+    private ContextHandlerCollection rootHandler;
+
     private HostInfo info;
 
     static {
@@ -169,46 +171,9 @@ public class JettyServiceImpl implements JettyService {
         try {
             state = STARTING;
             server = new Server();
-            if (scheduler == null) {
-                BoundedThreadPool threadPool = new BoundedThreadPool();
-                threadPool.setMaxThreads(100);
-                server.setThreadPool(threadPool);
-            } else {
-                server.setThreadPool(new Fabric3ThreadPool());
-            }
-            if (connector == null) {
-                if (isHttps) {
-                    Connector httpConnector = new SelectChannelConnector();
-                    httpConnector.setPort(httpPort);
-                    SslSocketConnector sslConnector = new SslSocketConnector();
-                    sslConnector.setPort(httpsPort);
-                    sslConnector.setKeystore(keystore);
-                    sslConnector.setPassword(certPassword);
-                    sslConnector.setKeyPassword(keyPassword);
-                    server.setConnectors(new Connector[]{httpConnector, sslConnector});
-                } else {
-                    SelectChannelConnector selectConnector = new SelectChannelConnector();
-                    selectConnector.setPort(httpPort);
-                    selectConnector.setSoLingerTime(-1);
-                    server.setConnectors(new Connector[]{selectConnector});
-                }
-            } else {
-                connector.setPort(httpPort);
-                connector.setMaxIdleTime(-1);
-                connector.setLowResourceMaxIdleTime(-1);
-                server.setConnectors(new Connector[]{connector});
-            }
-
-            ContextHandler contextHandler = new ContextHandler();
-            contextHandler.setContextPath(ROOT);
-            server.setHandler(contextHandler);
-
-            SessionHandler sessionHandler = new SessionHandler();
-            servletHandler = new ServletHandler();
-            sessionHandler.addHandler(servletHandler);
-
-            contextHandler.setHandler(sessionHandler);
-
+            initializeThreadPool();
+            initializeConnector();
+            initializeRootContextHandler();
             server.setStopAtShutdown(true);
             server.setSendServerVersion(sendServerVersion);
             monitor.extensionStarted();
@@ -249,7 +214,6 @@ public class JettyServiceImpl implements JettyService {
     }
 
     public Servlet unregisterMapping(String string) {
-//        throw new UnsupportedOperationException();
         return null;
     }
 
@@ -257,18 +221,64 @@ public class JettyServiceImpl implements JettyService {
         throw new UnsupportedOperationException();
     }
 
-    public void registerComposite(File compositeLocation) throws IOException {
-        throw new UnsupportedOperationException();
-    }
-
     public Server getServer() {
         return server;
+    }
+
+    public void registerHandler(Handler handler) {
+        rootHandler.addHandler(handler);
     }
 
     public int getHttpPort() {
         return httpPort;
     }
 
+    private void initializeConnector() {
+        if (connector == null) {
+            if (isHttps) {
+                Connector httpConnector = new SelectChannelConnector();
+                httpConnector.setPort(httpPort);
+                SslSocketConnector sslConnector = new SslSocketConnector();
+                sslConnector.setPort(httpsPort);
+                sslConnector.setKeystore(keystore);
+                sslConnector.setPassword(certPassword);
+                sslConnector.setKeyPassword(keyPassword);
+                server.setConnectors(new Connector[]{httpConnector, sslConnector});
+            } else {
+                SelectChannelConnector selectConnector = new SelectChannelConnector();
+                selectConnector.setPort(httpPort);
+                selectConnector.setSoLingerTime(-1);
+                server.setConnectors(new Connector[]{selectConnector});
+            }
+        } else {
+            connector.setPort(httpPort);
+            connector.setMaxIdleTime(-1);
+            connector.setLowResourceMaxIdleTime(-1);
+            server.setConnectors(new Connector[]{connector});
+        }
+    }
+
+    private void initializeThreadPool() {
+        if (scheduler == null) {
+            BoundedThreadPool threadPool = new BoundedThreadPool();
+            threadPool.setMaxThreads(100);
+            server.setThreadPool(threadPool);
+        } else {
+            server.setThreadPool(new Fabric3ThreadPool());
+        }
+    }
+
+    private void initializeRootContextHandler() {
+        // setup the root context handler which dispatches to other contexts based on the servlet path
+        rootHandler = new ContextHandlerCollection();
+        server.setHandler(rootHandler);
+        ContextHandler contextHandler = new ContextHandler(rootHandler, ROOT);
+        SessionHandler sessionHandler = new SessionHandler();
+        servletHandler = new ServletHandler();
+        sessionHandler.addHandler(servletHandler);
+        contextHandler.addHandler(sessionHandler);
+    }
+    
     /**
      * An integration wrapper to enable use of a {@link WorkScheduler} with Jetty
      */

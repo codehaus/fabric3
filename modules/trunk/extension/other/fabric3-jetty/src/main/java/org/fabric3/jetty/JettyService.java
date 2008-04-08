@@ -18,9 +18,10 @@
  */
 package org.fabric3.jetty;
 
-import org.fabric3.spi.host.ServletHost;
-
+import org.mortbay.jetty.Handler;
 import org.mortbay.jetty.Server;
+
+import org.fabric3.spi.host.ServletHost;
 
 /**
  * Implementations provide a Jetty transport service to the runtime
@@ -35,6 +36,13 @@ public interface JettyService extends ServletHost {
      * @return the active Jetty server
      */
     Server getServer();
+
+    /**
+     * Registers a handler with the Jetty service.
+     *
+     * @param handler the handler to register
+     */
+    void registerHandler(Handler handler);
 
 
 }
