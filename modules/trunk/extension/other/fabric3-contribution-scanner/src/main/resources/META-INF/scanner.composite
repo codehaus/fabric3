@@ -39,11 +39,11 @@
     </component>
 
     <component name="JarResourceFactory">
-        <system:implementation.system class="org.fabric3.scanner.scanner.factory.JarResourceFactory"/>
+        <system:implementation.system class="org.fabric3.scanner.scanner.JarResourceFactory"/>
     </component>
 
     <component name="ExplodedJarResourceFactory">
-        <system:implementation.system class="org.fabric3.scanner.scanner.factory.ExplodedJarResourceFactory"/>
+        <system:implementation.system class="org.fabric3.scanner.scanner.ExplodedJarResourceFactory"/>
     </component>
 
 </composite>

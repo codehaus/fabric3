@@ -1,4 +1,4 @@
-package org.fabric3.scanner.scanner.resource;
+package org.fabric3.spi.scanner;
 
 import java.io.BufferedInputStream;
 import java.io.File;
@@ -9,7 +9,7 @@ import java.net.URL;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-import org.fabric3.scanner.scanner.AbstractResource;
+import org.fabric3.spi.scanner.AbstractResource;
 
 /**
  * Represents a file that is to be contributed to a domain

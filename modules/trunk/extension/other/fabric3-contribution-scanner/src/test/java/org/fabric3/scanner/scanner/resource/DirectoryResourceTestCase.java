@@ -6,6 +6,7 @@ import junit.framework.TestCase;
 import org.easymock.EasyMock;
 
 import org.fabric3.spi.scanner.FileSystemResource;
+import org.fabric3.scanner.scanner.DirectoryResource;
 
 /**
  * @version $Rev$ $Date$

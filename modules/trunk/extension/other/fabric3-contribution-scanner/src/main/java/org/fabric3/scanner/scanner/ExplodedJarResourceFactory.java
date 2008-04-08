@@ -1,12 +1,12 @@
-package org.fabric3.scanner.scanner.factory;
+package org.fabric3.scanner.scanner;
 
 import java.io.File;
 
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.scanner.scanner.resource.DirectoryResource;
-import org.fabric3.scanner.scanner.resource.FileResource;
+import org.fabric3.scanner.scanner.DirectoryResource;
+import org.fabric3.spi.scanner.FileResource;
 import org.fabric3.spi.scanner.FileSystemResource;
 import org.fabric3.spi.scanner.FileSystemResourceFactory;
 import org.fabric3.spi.scanner.FileSystemResourceFactoryRegistry;

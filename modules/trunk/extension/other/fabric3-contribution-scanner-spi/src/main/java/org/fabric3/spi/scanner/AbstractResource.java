@@ -1,4 +1,4 @@
-package org.fabric3.scanner.scanner;
+package org.fabric3.spi.scanner;
 
 import java.io.IOException;
 

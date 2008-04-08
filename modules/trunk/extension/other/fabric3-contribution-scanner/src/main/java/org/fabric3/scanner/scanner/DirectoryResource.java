@@ -1,4 +1,4 @@
-package org.fabric3.scanner.scanner.resource;
+package org.fabric3.scanner.scanner;
 
 import java.io.File;
 import java.io.IOException;
@@ -9,7 +9,7 @@ import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.fabric3.scanner.scanner.AbstractResource;
+import org.fabric3.spi.scanner.AbstractResource;
 import org.fabric3.spi.scanner.FileSystemResource;
 
 /**

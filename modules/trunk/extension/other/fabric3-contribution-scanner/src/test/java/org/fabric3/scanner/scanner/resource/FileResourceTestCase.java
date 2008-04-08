@@ -6,6 +6,8 @@ import java.io.IOException;
 
 import junit.framework.TestCase;
 
+import org.fabric3.spi.scanner.FileResource;
+
 /**
  * @version $Rev$ $Date$
  */
