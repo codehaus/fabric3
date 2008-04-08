@@ -20,6 +20,8 @@ package org.fabric3.web.provision;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.net.URI;
+import java.net.URL;
 
 import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
 
@@ -28,12 +30,40 @@ import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
  */
 public class WebappComponentDefinition extends PhysicalComponentDefinition {
     private Map<String, String> referenceTypes = new HashMap<String, String>();
-
+    private URI classLoaderId;
+    private URL webArchiveUrl;
+    
     public Map<String, String> getReferenceTypes() {
         return referenceTypes;
     }
 
     public void setReferenceTypes(Map<String, String> referenceTypes) {
         this.referenceTypes = referenceTypes;
+    }
+    
+    /**
+     * Gets the classloader id.
+     *
+     * @return Classloader id.
+     */
+    public URI getClassLoaderId() {
+        return classLoaderId;
+    }
+
+    /**
+     * Set the classloader id.
+     *
+     * @param classLoaderId Classloader id.
+     */
+    public void setClassLoaderId(URI classLoaderId) {
+        this.classLoaderId = classLoaderId;
+    }
+
+    public URL getWebArchiveUrl() {
+        return webArchiveUrl;
+    }
+
+    public void setWebArchiveUrl(URL webArchiveUrl) {
+        this.webArchiveUrl = webArchiveUrl;
     }
 }

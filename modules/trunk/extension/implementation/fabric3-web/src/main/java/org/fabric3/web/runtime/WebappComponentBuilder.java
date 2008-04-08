@@ -29,12 +29,13 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
+import org.fabric3.container.web.spi.WebApplicationActivationException;
+import org.fabric3.container.web.spi.WebApplicationActivator;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.BuilderConfigException;
 import org.fabric3.spi.builder.BuilderException;
 import org.fabric3.spi.builder.component.ComponentBuilder;
 import org.fabric3.spi.builder.component.ComponentBuilderRegistry;
-import org.fabric3.spi.host.ServletHost;
 import org.fabric3.spi.wire.ProxyService;
 import org.fabric3.web.provision.WebappComponentDefinition;
 
@@ -43,14 +44,16 @@ import org.fabric3.web.provision.WebappComponentDefinition;
  */
 @EagerInit
 public class WebappComponentBuilder implements ComponentBuilder<WebappComponentDefinition, WebappComponent> {
-    private ServletHost host;
+    private WebApplicationActivator activator;
     private ProxyService proxyService;
     private ComponentBuilderRegistry builderRegistry;
 
-    public WebappComponentBuilder(@Reference ProxyService proxyService, @Reference ComponentBuilderRegistry registry, @Reference ServletHost host) {
+    public WebappComponentBuilder(@Reference ProxyService proxyService,
+                                  @Reference ComponentBuilderRegistry registry,
+                                  @Reference WebApplicationActivator activator) {
         this.proxyService = proxyService;
         this.builderRegistry = registry;
-        this.host = host;
+        this.activator = activator;
     }
 
     @Init
@@ -65,16 +68,21 @@ public class WebappComponentBuilder implements ComponentBuilder<WebappComponentD
     public WebappComponent build(WebappComponentDefinition definition) throws BuilderException {
         URI componentId = definition.getComponentId();
         URI groupId = definition.getGroupId();
-        ServletContext context = host.getServletContext();
+        ServletContext context;
         Map<String, ObjectFactory<?>> attributes = Collections.emptyMap();
-        Map<String, Class<?>> referenceTypes = loadReferenceTypes(definition.getReferenceTypes());
-        return new WebappComponent(componentId, context, proxyService, groupId, attributes, referenceTypes, null);
+        URI classLoaderId = definition.getClassLoaderId();
+        try {
+            ClassLoader cl = activator.getWebComponentClassLoader(classLoaderId);
+            // XCV FIXME! uri
+            context = activator.activate("/calculator", definition.getWebArchiveUrl(), classLoaderId);
+            Map<String, Class<?>> referenceTypes = loadReferenceTypes(definition.getReferenceTypes(), cl);
+            return new WebappComponent(componentId, context, proxyService, groupId, attributes, referenceTypes, null);
+        } catch (WebApplicationActivationException e) {
+            throw new WebComponentCreationException("Error activating web archive: " + definition.getWebArchiveUrl(), e);
+        }
     }
 
-    private Map<String, Class<?>> loadReferenceTypes(Map<String, String> references) throws BuilderException {
-        // assume that the TCCL is the webapp classloader
-        ClassLoader cl = Thread.currentThread().getContextClassLoader();
-
+    private Map<String, Class<?>> loadReferenceTypes(Map<String, String> references, ClassLoader cl) throws BuilderException {
         try {
             Map<String, Class<?>> referenceTypes = new HashMap<String, Class<?>>(references.size());
             for (Map.Entry<String, String> entry : references.entrySet()) {

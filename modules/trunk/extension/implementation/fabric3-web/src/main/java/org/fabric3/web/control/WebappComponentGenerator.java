@@ -19,13 +19,16 @@
 package org.fabric3.web.control;
 
 import java.net.URI;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.List;
 
 import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.ComponentType;
 import org.fabric3.scdl.ReferenceDefinition;
 import org.fabric3.scdl.ServiceContract;
+import org.fabric3.scdl.ResourceDescription;
 import org.fabric3.spi.generator.ComponentGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.generator.GeneratorRegistry;
@@ -36,6 +39,7 @@ import org.fabric3.spi.model.instance.LogicalService;
 import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
+import org.fabric3.spi.model.type.ContributionResourceDescription;
 import org.fabric3.spi.policy.Policy;
 import org.fabric3.web.introspection.WebappImplementation;
 import org.fabric3.web.provision.WebappWireSourceDefinition;
@@ -66,15 +70,12 @@ public class WebappComponentGenerator implements ComponentGenerator<LogicalCompo
         physical.setComponentId(componentId);
         physical.setGroupId(component.getParent().getUri());
 
-        Map<String, ReferenceDefinition> references = componentType.getReferences();
-        Map<String, String> referenceTypes = new HashMap<String, String>(references.size());
-        for (ReferenceDefinition referenceDefinition : references.values()) {
-            String name = referenceDefinition.getName();
-            ServiceContract<?> contract = referenceDefinition.getServiceContract();
-            String interfaceClass = contract.getQualifiedInterfaceName();
-            referenceTypes.put(name, interfaceClass);
-        }
+        Map<String, String> referenceTypes = generateReferenceTypes(componentType);
         physical.setReferenceTypes(referenceTypes);
+        URI classLoaderId = component.getParent().getUri();
+        physical.setClassLoaderId(classLoaderId);
+        URL archiveUrl = getArchiveUrl(definition.getImplementation().getResourceDescriptions());
+        physical.setWebArchiveUrl(archiveUrl);
         return physical;
     }
 
@@ -96,14 +97,39 @@ public class WebappComponentGenerator implements ComponentGenerator<LogicalCompo
     public PhysicalWireTargetDefinition generateWireTarget(LogicalService service,
                                                            LogicalComponent<WebappImplementation> arg1,
                                                            Policy policy) throws GenerationException {
-        // TODO Auto-generated method stub
         return null;
     }
 
     public PhysicalWireSourceDefinition generateResourceWireSource(LogicalComponent<WebappImplementation> source,
                                                                    LogicalResource<?> resource) throws GenerationException {
-        // TODO Auto-generated method stub
         return null;
     }
+
+    private Map<String, String> generateReferenceTypes(ComponentType componentType) {
+        Map<String, ReferenceDefinition> references = componentType.getReferences();
+        Map<String, String> referenceTypes = new HashMap<String, String>(references.size());
+        for (ReferenceDefinition referenceDefinition : references.values()) {
+            String name = referenceDefinition.getName();
+            ServiceContract<?> contract = referenceDefinition.getServiceContract();
+            String interfaceClass = contract.getQualifiedInterfaceName();
+            referenceTypes.put(name, interfaceClass);
+        }
+        return referenceTypes;
+    }
+
+    private URL getArchiveUrl(List<ResourceDescription<?>> descriptions) {
+        for (ResourceDescription<?> description : descriptions) {
+            if (description instanceof ContributionResourceDescription) {
+                ContributionResourceDescription contribDesc = (ContributionResourceDescription) description;
+                if (contribDesc.getArtifactUrls().isEmpty()) {
+                    return null;
+                }
+                // getting the first URL is ok since WAR files are self-contained
+                return contribDesc.getArtifactUrls().get(0);
+            }
+        }
+        throw new AssertionError("WAR URL not found");
+    }
+
 
 }
