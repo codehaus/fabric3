@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<composite name="Autowire" targetNamespace="" xmlns="http://www.osoa.org/xmlns/sca/1.0" autowire="true">
+
+    <component name="foo">
+        <implementation.java class="com.example.autowire.SourceImpl"/>
+    </component>
+
+    <component name="target1">
+        <implementation.java class="com.example.autowire.TargetImpl"/>
+    </component>
+    <component name="target2">
+        <implementation.java class="com.example.autowire.TargetImpl"/>
+    </component>
+</composite>
