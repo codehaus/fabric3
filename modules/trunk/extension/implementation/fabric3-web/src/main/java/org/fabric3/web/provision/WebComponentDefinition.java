@@ -29,7 +29,7 @@ import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
 /**
  * @version $Rev: 2803 $ $Date: 2008-02-17 05:57:55 -0800 (Sun, 17 Feb 2008) $
  */
-public class WebappComponentDefinition extends PhysicalComponentDefinition {
+public class WebComponentDefinition extends PhysicalComponentDefinition {
     private URI classLoaderId;
     private URL webArchiveUrl;
     // TODO document

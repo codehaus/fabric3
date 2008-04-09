@@ -35,19 +35,19 @@ import org.fabric3.spi.builder.BuilderException;
 import org.fabric3.spi.builder.component.ComponentBuilder;
 import org.fabric3.spi.builder.component.ComponentBuilderRegistry;
 import org.fabric3.spi.wire.ProxyService;
-import org.fabric3.web.provision.WebappComponentDefinition;
+import org.fabric3.web.provision.WebComponentDefinition;
 
 /**
  * Instantiates a web component on a runtime node.
  */
 @EagerInit
-public class WebappComponentBuilder implements ComponentBuilder<WebappComponentDefinition, WebappComponent> {
+public class WebComponentBuilder implements ComponentBuilder<WebComponentDefinition, WebComponent> {
     private WebApplicationActivator activator;
     private InjectorFactory injectorFactory;
     private ProxyService proxyService;
     private ComponentBuilderRegistry builderRegistry;
 
-    public WebappComponentBuilder(@Reference ProxyService proxyService,
+    public WebComponentBuilder(@Reference ProxyService proxyService,
                                   @Reference ComponentBuilderRegistry registry,
                                   @Reference WebApplicationActivator activator,
                                   @Reference InjectorFactory injectorFactory) {
@@ -59,14 +59,14 @@ public class WebappComponentBuilder implements ComponentBuilder<WebappComponentD
 
     @Init
     public void init() {
-        builderRegistry.register(WebappComponentDefinition.class, this);
+        builderRegistry.register(WebComponentDefinition.class, this);
     }
 
     @Destroy
     public void destroy() {
     }
 
-    public WebappComponent build(WebappComponentDefinition definition) throws BuilderException {
+    public WebComponent build(WebComponentDefinition definition) throws BuilderException {
         URI componentId = definition.getComponentId();
         URI groupId = definition.getGroupId();
         // TODO fix properties
@@ -75,7 +75,7 @@ public class WebappComponentBuilder implements ComponentBuilder<WebappComponentD
         Map<String, Map<String, InjectionSite>> injectorMappings = definition.getInjectionSiteMappings();
         ClassLoader cl = activator.getWebComponentClassLoader(classLoaderId);
         URL archiveUrl = definition.getWebArchiveUrl();
-        return new WebappComponent(componentId,
+        return new WebComponent(componentId,
                                    classLoaderId,
                                    groupId,
                                    archiveUrl,

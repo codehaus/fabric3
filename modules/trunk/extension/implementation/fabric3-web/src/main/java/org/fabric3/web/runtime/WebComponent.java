@@ -24,7 +24,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
-import javax.servlet.ServletContext;
 
 import org.osoa.sca.CallableReference;
 import org.osoa.sca.ComponentContext;
@@ -50,7 +49,7 @@ import org.fabric3.pojo.reflection.Injector;
  *
  * @version $Rev: 3020 $ $Date: 2008-03-03 19:16:33 -0800 (Mon, 03 Mar 2008) $
  */
-public class WebappComponent<T> extends AbstractLifecycle implements AtomicComponent<T> {
+public class WebComponent<T> extends AbstractLifecycle implements AtomicComponent<T> {
 
     private final URI uri;
     private final URI classLoaderId;
@@ -66,7 +65,7 @@ public class WebappComponent<T> extends AbstractLifecycle implements AtomicCompo
     private final URL archiveUrl;
     private ComponentContext context;
 
-    public WebappComponent(URI uri,
+    public WebComponent(URI uri,
                            URI classLoaderId,
                            URI groupId,
                            URL archiveUrl,
@@ -98,7 +97,7 @@ public class WebappComponent<T> extends AbstractLifecycle implements AtomicCompo
             Map<String, List<Injector<?>>> injectors = new HashMap<String, List<Injector<?>>>();
             injectorFactory.createInjectorMappings(injectors, siteMappings, referenceFactories, classLoader);
             injectorFactory.createInjectorMappings(injectors, siteMappings, propertyFactories, classLoader);
-            context = new WebappComponentContext(this);
+            context = new WebComponentContext(this);
             // activate the web application
             // XCV FIXME! uri
             activator.activate("/calculator", archiveUrl, classLoaderId, injectors, context);

@@ -26,18 +26,18 @@
            xmlns:sca="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
            xmlns:system="http://fabric3.org/xmlns/sca/system/2.0-alpha"
-           name="webRuntime" targetNamespace="urn:maven:org.codehaus.fabric3:fabric3-java"
+           name="WebRuntime" targetNamespace="urn:maven:org.codehaus.fabric3:fabric3-java"
            autowire="true">
 
-    <component name="webappPhysicalComponentBuilder">
-        <system:implementation.system class="org.fabric3.web.runtime.WebappComponentBuilder"/>
+    <component name="WebComponentBuilder">
+        <system:implementation.system class="org.fabric3.web.runtime.WebComponentBuilder"/>
     </component>
     <component name="InjectionFactory">
         <system:implementation.system class="org.fabric3.web.runtime.InjectorFactoryImpl"/>
     </component>
 
-    <component f3:key="org.fabric3.web.provision.WebappWireSourceDefinition" name="webappSourceWireAttacher">
-        <system:implementation.system class="org.fabric3.web.runtime.WebappSourceWireAttacher"/>
+    <component f3:key="org.fabric3.web.provision.WebComponentWireSourceDefinition" name="WebSourceWireAttacher">
+        <system:implementation.system class="org.fabric3.web.runtime.WebComponentSourceWireAttacher"/>
     </component>
 
 </composite>

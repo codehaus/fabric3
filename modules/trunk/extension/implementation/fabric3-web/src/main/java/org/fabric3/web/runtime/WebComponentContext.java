@@ -30,10 +30,10 @@ import org.fabric3.spi.ObjectCreationException;
  *
  * @version $Rev: 1363 $ $Date: 2007-09-20 16:16:35 -0700 (Thu, 20 Sep 2007) $
  */
-public class WebappComponentContext implements ComponentContext {
-    private final WebappComponent<?> component;
+public class WebComponentContext implements ComponentContext {
+    private final WebComponent<?> component;
 
-    public WebappComponentContext(WebappComponent<?> component) {
+    public WebComponentContext(WebComponent<?> component) {
         this.component = component;
     }
 

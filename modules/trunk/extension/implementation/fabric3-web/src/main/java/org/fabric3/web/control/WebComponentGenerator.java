@@ -43,9 +43,9 @@ import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 import org.fabric3.spi.model.type.ContributionResourceDescription;
 import org.fabric3.spi.policy.Policy;
-import org.fabric3.web.introspection.WebappImplementation;
-import org.fabric3.web.provision.WebappWireSourceDefinition;
-import org.fabric3.web.provision.WebappComponentDefinition;
+import org.fabric3.web.introspection.WebImplementation;
+import org.fabric3.web.provision.WebComponentWireSourceDefinition;
+import org.fabric3.web.provision.WebComponentDefinition;
 import org.fabric3.web.provision.WebContextInjectionSite;
 import org.fabric3.web.provision.WebConstants;
 
@@ -58,19 +58,19 @@ import org.osoa.sca.annotations.Reference;
  * @version $Rev: 2931 $ $Date: 2008-02-28 04:49:35 -0800 (Thu, 28 Feb 2008) $
  */
 @EagerInit
-public class WebappComponentGenerator implements ComponentGenerator<LogicalComponent<WebappImplementation>> {
+public class WebComponentGenerator implements ComponentGenerator<LogicalComponent<WebImplementation>> {
 
-    public WebappComponentGenerator(@Reference GeneratorRegistry registry) {
-        registry.register(WebappImplementation.class, this);
+    public WebComponentGenerator(@Reference GeneratorRegistry registry) {
+        registry.register(WebImplementation.class, this);
     }
 
-    public PhysicalComponentDefinition generate(LogicalComponent<WebappImplementation> component) {
-        ComponentDefinition<WebappImplementation> definition = component.getDefinition();
+    public PhysicalComponentDefinition generate(LogicalComponent<WebImplementation> component) {
+        ComponentDefinition<WebImplementation> definition = component.getDefinition();
         ComponentType componentType = definition.getImplementation().getComponentType();
 
         URI componentId = component.getUri();
 
-        WebappComponentDefinition physical = new WebappComponentDefinition();
+        WebComponentDefinition physical = new WebComponentDefinition();
         physical.setComponentId(componentId);
         physical.setGroupId(component.getParent().getUri());
         Map<String, Map<String, InjectionSite>> sites = generateInjectionSites(componentType);
@@ -82,11 +82,11 @@ public class WebappComponentGenerator implements ComponentGenerator<LogicalCompo
         return physical;
     }
 
-    public WebappWireSourceDefinition generateWireSource(LogicalComponent<WebappImplementation> source,
+    public WebComponentWireSourceDefinition generateWireSource(LogicalComponent<WebImplementation> source,
                                                          LogicalReference reference,
                                                          Policy policy) throws GenerationException {
 
-        WebappWireSourceDefinition sourceDefinition = new WebappWireSourceDefinition();
+        WebComponentWireSourceDefinition sourceDefinition = new WebComponentWireSourceDefinition();
         sourceDefinition.setUri(reference.getUri());
         return sourceDefinition;
     }
@@ -119,19 +119,19 @@ public class WebappComponentGenerator implements ComponentGenerator<LogicalCompo
         return mappings;
     }
 
-    public PhysicalWireSourceDefinition generateCallbackWireSource(LogicalComponent<WebappImplementation> source,
+    public PhysicalWireSourceDefinition generateCallbackWireSource(LogicalComponent<WebImplementation> source,
                                                                    ServiceContract<?> serviceContract,
                                                                    Policy policy) throws GenerationException {
         throw new UnsupportedOperationException();
     }
 
     public PhysicalWireTargetDefinition generateWireTarget(LogicalService service,
-                                                           LogicalComponent<WebappImplementation> arg1,
+                                                           LogicalComponent<WebImplementation> arg1,
                                                            Policy policy) throws GenerationException {
         return null;
     }
 
-    public PhysicalWireSourceDefinition generateResourceWireSource(LogicalComponent<WebappImplementation> source,
+    public PhysicalWireSourceDefinition generateResourceWireSource(LogicalComponent<WebImplementation> source,
                                                                    LogicalResource<?> resource) throws GenerationException {
         return null;
     }

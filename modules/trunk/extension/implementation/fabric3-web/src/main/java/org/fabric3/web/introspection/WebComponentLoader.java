@@ -42,30 +42,30 @@ import org.fabric3.scdl.ComponentType;
  * @version $Rev: 3105 $ $Date: 2008-03-15 09:47:31 -0700 (Sat, 15 Mar 2008) $
  */
 @EagerInit
-public class WebappLoader implements TypeLoader<WebappImplementation> {
+public class WebComponentLoader implements TypeLoader<WebImplementation> {
 
     private final LoaderRegistry registry;
 
-    public WebappLoader(@Reference LoaderRegistry registry
+    public WebComponentLoader(@Reference LoaderRegistry registry
     ) {
         this.registry = registry;
     }
 
     @Init
     public void init() {
-        registry.registerLoader(WebappImplementation.IMPLEMENTATION_WEBAPP, this);
+        registry.registerLoader(WebImplementation.IMPLEMENTATION_WEBAPP, this);
     }
 
     @Destroy
     public void destroy() {
-        registry.unregisterLoader(WebappImplementation.IMPLEMENTATION_WEBAPP);
+        registry.unregisterLoader(WebImplementation.IMPLEMENTATION_WEBAPP);
     }
 
-    public WebappImplementation load(XMLStreamReader reader, IntrospectionContext introspectionContext)
+    public WebImplementation load(XMLStreamReader reader, IntrospectionContext introspectionContext)
             throws XMLStreamException, LoaderException {
 
         ComponentType componentType = loadComponentType(introspectionContext);
-        WebappImplementation impl = new WebappImplementation();
+        WebImplementation impl = new WebImplementation();
         impl.setComponentType(componentType);
         LoaderUtil.skipToEndElement(reader);
         return impl;

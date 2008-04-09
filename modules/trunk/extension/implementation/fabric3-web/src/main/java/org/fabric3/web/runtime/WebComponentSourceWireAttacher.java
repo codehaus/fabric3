@@ -31,7 +31,7 @@ import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 import org.fabric3.spi.runtime.component.ComponentManager;
 import org.fabric3.spi.util.UriHelper;
 import org.fabric3.spi.wire.Wire;
-import org.fabric3.web.provision.WebappWireSourceDefinition;
+import org.fabric3.web.provision.WebComponentWireSourceDefinition;
 
 /**
  * Source WireAttacher for web components.
@@ -39,20 +39,20 @@ import org.fabric3.web.provision.WebappWireSourceDefinition;
  * @version $Rev: 955 $ $Date: 2007-08-31 23:10:21 +0100 (Fri, 31 Aug 2007) $
  */
 @EagerInit
-public class WebappSourceWireAttacher implements SourceWireAttacher<WebappWireSourceDefinition> {
+public class WebComponentSourceWireAttacher implements SourceWireAttacher<WebComponentWireSourceDefinition> {
 
     private ComponentManager manager;
 
-    public WebappSourceWireAttacher(@Reference ComponentManager manager) {
+    public WebComponentSourceWireAttacher(@Reference ComponentManager manager) {
         this.manager = manager;
     }
 
-    public void attachToSource(WebappWireSourceDefinition sourceDefinition,
+    public void attachToSource(WebComponentWireSourceDefinition sourceDefinition,
                                PhysicalWireTargetDefinition targetDefinition,
                                Wire wire) throws WiringException {
         URI sourceUri = UriHelper.getDefragmentedName(sourceDefinition.getUri());
         String referenceName = sourceDefinition.getUri().getFragment();
-        WebappComponent source = (WebappComponent) manager.getComponent(sourceUri);
+        WebComponent source = (WebComponent) manager.getComponent(sourceUri);
         try {
             source.attachWire(referenceName, wire);
         } catch (ObjectCreationException e) {
@@ -60,10 +60,10 @@ public class WebappSourceWireAttacher implements SourceWireAttacher<WebappWireSo
         }
     }
 
-    public void attachObjectFactory(WebappWireSourceDefinition sourceDefinition, ObjectFactory<?> objectFactory) throws WiringException {
+    public void attachObjectFactory(WebComponentWireSourceDefinition sourceDefinition, ObjectFactory<?> objectFactory) throws WiringException {
         URI sourceUri = UriHelper.getDefragmentedName(sourceDefinition.getUri());
         String referenceName = sourceDefinition.getUri().getFragment();
-        WebappComponent source = (WebappComponent) manager.getComponent(sourceUri);
+        WebComponent source = (WebComponent) manager.getComponent(sourceUri);
         try {
             source.attachWire(referenceName, objectFactory);
         } catch (ObjectCreationException e) {

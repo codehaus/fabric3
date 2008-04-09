@@ -18,21 +18,19 @@
  * under the License.
 -->
 <!--
-    Configuration of components used during introspection.
-    
+
     $Rev: 3127 $ $Date: 2008-03-17 03:35:09 -0700 (Mon, 17 Mar 2008) $
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:sca="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
            xmlns:system="http://fabric3.org/xmlns/sca/system/2.0-alpha"
-           name="webIntrospection" targetNamespace="urn:maven:org.codehaus.fabric3:fabric3-java"
+           name="WebIntrospection" targetNamespace="urn:maven:org.codehaus.fabric3:fabric3-java"
            autowire="true">
 
 
-    <!-- webapp component implementation -->
-    <component name="webappLoader">
-        <system:implementation.system class="org.fabric3.web.introspection.WebappLoader"/>
+    <component name="WebComponentLoader">
+        <system:implementation.system class="org.fabric3.web.introspection.WebComponentLoader"/>
     </component>
 
 </composite>
