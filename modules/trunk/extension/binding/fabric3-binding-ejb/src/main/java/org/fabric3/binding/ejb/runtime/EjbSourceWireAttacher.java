@@ -29,8 +29,8 @@ import org.osoa.sca.annotations.Reference;
 import org.osoa.sca.annotations.Remotable;
 
 import org.fabric3.binding.ejb.provision.EjbWireSourceDefinition;
+import org.fabric3.binding.codegen.ProxyGenerator;
 import org.fabric3.scdl.Signature;
-import org.fabric3.services.codegen.ProxyGenerator;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.SourceWireAttacher;
