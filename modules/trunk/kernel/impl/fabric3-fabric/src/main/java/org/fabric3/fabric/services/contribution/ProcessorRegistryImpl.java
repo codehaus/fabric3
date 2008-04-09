@@ -112,9 +112,8 @@ public class ProcessorRegistryImpl implements ProcessorRegistry {
     public void indexResource(Contribution contribution, String contentType, URL url) throws ContributionException {
         ResourceProcessor processor = resourceProcessorCache.get(contentType);
         if (processor == null) {
-            // FIXME for now, return null
+            // unknown type, skip
             return;
-            //throw new UnsupportedContentTypeException(contentType);
         }
         processor.index(contribution, url);
     }
