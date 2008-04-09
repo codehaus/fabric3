@@ -60,7 +60,7 @@
         </SOURCES>
       </library>
     </orderEntry>
-    <orderEntry type="module" module-name="fabric3-code-gen" exported="" />
+    <orderEntry type="module" module-name="fabric3-binding-codegen" exported="" />
     <orderEntry type="module-library" exported="">
       <library name="javax.xml.ws:jaxws-api:2.1">
         <CLASSES>

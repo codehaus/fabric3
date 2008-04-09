@@ -38,7 +38,7 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.binding.rmi.model.physical.RmiWireSourceDefinition;
 import org.fabric3.binding.rmi.transport.RmiServiceHandler;
-import org.fabric3.services.codegen.ProxyGenerator;
+import org.fabric3.binding.codegen.ProxyGenerator;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.SourceWireAttacher;
