@@ -12,6 +12,7 @@ import javax.xml.ws.Endpoint;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.binding.ws.jaxws.provision.JaxWsWireSourceDefinition;
+import org.fabric3.binding.codegen.ProxyGenerator;
 import org.fabric3.spi.builder.component.SourceWireAttacher;
 import org.fabric3.spi.builder.component.WireAttachException;
 import org.fabric3.spi.builder.WiringException;
@@ -22,7 +23,6 @@ import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.scdl.Signature;
-import org.fabric3.services.codegen.ProxyGenerator;
 
 /*
  * See the NOTICE file distributed with this work for information

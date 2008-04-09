@@ -100,7 +100,7 @@
         </SOURCES>
       </library>
     </orderEntry>
-    <orderEntry type="module" module-name="fabric3-code-gen" />
+    <orderEntry type="module" module-name="fabric3-binding-codegen" />
     <orderEntryProperties />
   </component>
 </module>
