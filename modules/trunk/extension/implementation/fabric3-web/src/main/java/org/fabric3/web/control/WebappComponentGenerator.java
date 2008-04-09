@@ -29,6 +29,8 @@ import org.fabric3.scdl.ComponentType;
 import org.fabric3.scdl.ReferenceDefinition;
 import org.fabric3.scdl.ServiceContract;
 import org.fabric3.scdl.ResourceDescription;
+import org.fabric3.scdl.InjectionSite;
+import org.fabric3.scdl.Property;
 import org.fabric3.spi.generator.ComponentGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.generator.GeneratorRegistry;
@@ -44,6 +46,8 @@ import org.fabric3.spi.policy.Policy;
 import org.fabric3.web.introspection.WebappImplementation;
 import org.fabric3.web.provision.WebappWireSourceDefinition;
 import org.fabric3.web.provision.WebappComponentDefinition;
+import org.fabric3.web.provision.WebContextInjectionSite;
+import org.fabric3.web.provision.WebConstants;
 
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
@@ -69,9 +73,8 @@ public class WebappComponentGenerator implements ComponentGenerator<LogicalCompo
         WebappComponentDefinition physical = new WebappComponentDefinition();
         physical.setComponentId(componentId);
         physical.setGroupId(component.getParent().getUri());
-
-        Map<String, String> referenceTypes = generateReferenceTypes(componentType);
-        physical.setReferenceTypes(referenceTypes);
+        Map<String, Map<String, InjectionSite>> sites = generateInjectionSites(componentType);
+        physical.setInjectionMappings(sites);
         URI classLoaderId = component.getParent().getUri();
         physical.setClassLoaderId(classLoaderId);
         URL archiveUrl = getArchiveUrl(definition.getImplementation().getResourceDescriptions());
@@ -86,6 +89,34 @@ public class WebappComponentGenerator implements ComponentGenerator<LogicalCompo
         WebappWireSourceDefinition sourceDefinition = new WebappWireSourceDefinition();
         sourceDefinition.setUri(reference.getUri());
         return sourceDefinition;
+    }
+
+    private Map<String, Map<String, InjectionSite>> generateInjectionSites(ComponentType componentType) {
+        Map<String, Map<String, InjectionSite>> mappings = new HashMap<String, Map<String, InjectionSite>>();
+        for (ReferenceDefinition definition : componentType.getReferences().values()) {
+            Map<String, InjectionSite> mapping = mappings.get(definition.getName());
+            if (mapping == null) {
+                mapping = new HashMap<String, InjectionSite>();
+                mappings.put(definition.getName(), mapping);
+            }
+            ServiceContract<?> contract = definition.getServiceContract();
+            String interfaceClass = contract.getQualifiedInterfaceName();
+            WebContextInjectionSite site = new WebContextInjectionSite(interfaceClass, WebContextInjectionSite.ContextType.SERVLET_CONTEXT);
+            // TODO support conversation injection
+            mapping.put(WebConstants.SERVLET_CONTEXT_SITE, site);
+        }
+        for (Property property : componentType.getProperties().values()) {
+            Map<String, InjectionSite> mapping = mappings.get(property.getName());
+            if (mapping == null) {
+                mapping = new HashMap<String, InjectionSite>();
+                mappings.put(property.getName(), mapping);
+            }
+            // we don't need to do the type mappings from schema to Java types so set Object as the type
+            WebContextInjectionSite site = new WebContextInjectionSite(Object.class.getName(), WebContextInjectionSite.ContextType.SERVLET_CONTEXT);
+            mapping.put(WebConstants.SERVLET_CONTEXT_SITE, site);
+        }
+
+        return mappings;
     }
 
     public PhysicalWireSourceDefinition generateCallbackWireSource(LogicalComponent<WebappImplementation> source,
@@ -104,19 +135,7 @@ public class WebappComponentGenerator implements ComponentGenerator<LogicalCompo
                                                                    LogicalResource<?> resource) throws GenerationException {
         return null;
     }
-
-    private Map<String, String> generateReferenceTypes(ComponentType componentType) {
-        Map<String, ReferenceDefinition> references = componentType.getReferences();
-        Map<String, String> referenceTypes = new HashMap<String, String>(references.size());
-        for (ReferenceDefinition referenceDefinition : references.values()) {
-            String name = referenceDefinition.getName();
-            ServiceContract<?> contract = referenceDefinition.getServiceContract();
-            String interfaceClass = contract.getQualifiedInterfaceName();
-            referenceTypes.put(name, interfaceClass);
-        }
-        return referenceTypes;
-    }
-
+    
     private URL getArchiveUrl(List<ResourceDescription<?>> descriptions) {
         for (ResourceDescription<?> description : descriptions) {
             if (description instanceof ContributionResourceDescription) {

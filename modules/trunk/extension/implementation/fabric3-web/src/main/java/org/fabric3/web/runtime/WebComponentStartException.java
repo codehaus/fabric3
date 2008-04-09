@@ -18,21 +18,23 @@
  */
 package org.fabric3.web.runtime;
 
-import org.fabric3.spi.builder.BuilderException;
+import org.fabric3.host.Fabric3RuntimeException;
 
 /**
- * Thrown when there is an error instantiating a web component.
- *
  * @version $Revision$ $Date$
  */
-public class WebComponentCreationException extends BuilderException {
-    private static final long serialVersionUID = -679264080783573274L;
+public class WebComponentStartException extends Fabric3RuntimeException {
+    private static final long serialVersionUID = 4561241524721587772L;
 
-    public WebComponentCreationException(String message, Throwable cause) {
+    public WebComponentStartException(String message) {
+        super(message);
+    }
+
+    public WebComponentStartException(String message, Throwable cause) {
         super(message, cause);
     }
 
-    public WebComponentCreationException(Throwable cause) {
+    public WebComponentStartException(Throwable cause) {
         super(cause);
     }
 }

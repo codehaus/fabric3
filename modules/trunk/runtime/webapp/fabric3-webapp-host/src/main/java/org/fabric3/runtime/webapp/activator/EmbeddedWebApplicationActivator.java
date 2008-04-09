@@ -20,13 +20,18 @@ package org.fabric3.runtime.webapp.activator;
 
 import java.net.URI;
 import java.net.URL;
+import java.util.List;
+import java.util.Map;
 import javax.servlet.ServletContext;
 
 import org.osoa.sca.annotations.Reference;
+import org.osoa.sca.ComponentContext;
 
-import org.fabric3.container.web.spi.WebApplicationActivator;
 import org.fabric3.container.web.spi.WebApplicationActivationException;
+import org.fabric3.container.web.spi.WebApplicationActivator;
+import org.fabric3.pojo.reflection.Injector;
 import org.fabric3.spi.host.ServletHost;
+import org.fabric3.spi.ObjectCreationException;
 
 /**
  * A WebApplicationActivator used in a runtime embedded in a WAR.
@@ -45,12 +50,38 @@ public class EmbeddedWebApplicationActivator implements WebApplicationActivator 
         return Thread.currentThread().getContextClassLoader();
     }
 
-    public ServletContext activate(String contextPath, URL url, URI parentClassLoaderId) throws WebApplicationActivationException {
-        // the web app has already been activated since it is embedded in a war
-        return host.getServletContext();
+    public ServletContext activate(String contextPath,
+                                   URL url,
+                                   URI parentClassLoaderId,
+                                   Map<String, List<Injector<?>>> injectors,
+                                   ComponentContext context)
+            throws WebApplicationActivationException {
+        // the web app has already been activated since it is embedded in a war. Just inject references and properties
+        try {
+            ServletContext servletContext = host.getServletContext();
+            injectServletContext(servletContext, injectors);
+            // TODO make an injector
+            servletContext.setAttribute(CONTEXT_ATTRIBUTE, context);
+            return servletContext;
+        } catch (ObjectCreationException e) {
+            throw new WebApplicationActivationException(e);
+        }
     }
 
     public void deactivate(URL url) throws WebApplicationActivationException {
         // do nothing
     }
+
+    @SuppressWarnings({"unchecked"})
+    private void injectServletContext(ServletContext servletContext, Map<String, List<Injector<?>>> injectors) throws ObjectCreationException {
+        List<Injector<?>> list = injectors.get(SERVLET_CONTEXT_SITE);
+        if (list == null) {
+            // nothing to inject
+            return;
+        }
+        for (Injector injector : list) {
+            injector.inject(servletContext);
+        }
+    }
+
 }

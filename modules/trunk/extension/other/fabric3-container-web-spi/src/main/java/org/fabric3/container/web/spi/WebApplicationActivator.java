@@ -20,7 +20,13 @@ package org.fabric3.container.web.spi;
 
 import java.net.URL;
 import java.net.URI;
+import java.util.List;
+import java.util.Map;
 import javax.servlet.ServletContext;
+
+import org.osoa.sca.ComponentContext;
+
+import org.fabric3.pojo.reflection.Injector;
 
 /**
  * Responsible for activating a web application in an embedded servlet container.
@@ -28,6 +34,10 @@ import javax.servlet.ServletContext;
  * @version $Revision$ $Date$
  */
 public interface WebApplicationActivator {
+    public static final String SERVLET_CONTEXT_SITE = "fabric3.servletContext";
+    public static final String SESSION_CONTEXT_SITE = "fabric3.sessionContext";
+    public static final String CONTEXT_ATTRIBUTE = "fabric3.context";
+
     /**
      * Returns the classloader to use for the web component corresponding the given id
      *
@@ -43,11 +53,14 @@ public interface WebApplicationActivator {
      *                            the embedded servlet container.
      * @param url                 a URL pointing to the WAR containing the web application assets
      * @param parentClassLoaderId the id for parent classloader to use for the web application
+     * @param injectors
+     * @param context
      * @return the servlet context associated with the activated web application
      * @throws WebApplicationActivationException
      *          if an error occurs activating the web application
      */
-    ServletContext activate(String contextPath, URL url, URI parentClassLoaderId) throws WebApplicationActivationException;
+    ServletContext activate(String contextPath, URL url, URI parentClassLoaderId, Map<String, List<Injector<?>>> injectors, ComponentContext context) throws
+            WebApplicationActivationException;
 
     /**
      * Removes an activated web application

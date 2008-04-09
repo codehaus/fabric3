@@ -18,29 +18,23 @@
  */
 package org.fabric3.web.provision;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.net.URI;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 
+import org.fabric3.scdl.InjectionSite;
 import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
 
 /**
  * @version $Rev: 2803 $ $Date: 2008-02-17 05:57:55 -0800 (Sun, 17 Feb 2008) $
  */
 public class WebappComponentDefinition extends PhysicalComponentDefinition {
-    private Map<String, String> referenceTypes = new HashMap<String, String>();
     private URI classLoaderId;
     private URL webArchiveUrl;
-    
-    public Map<String, String> getReferenceTypes() {
-        return referenceTypes;
-    }
+    // TODO document
+    private Map<String, Map<String, InjectionSite>> injectionSiteMappings = new HashMap<String, Map<String, InjectionSite>>();
 
-    public void setReferenceTypes(Map<String, String> referenceTypes) {
-        this.referenceTypes = referenceTypes;
-    }
-    
     /**
      * Gets the classloader id.
      *
@@ -65,5 +59,13 @@ public class WebappComponentDefinition extends PhysicalComponentDefinition {
 
     public void setWebArchiveUrl(URL webArchiveUrl) {
         this.webArchiveUrl = webArchiveUrl;
+    }
+
+    public Map<String, Map<String, InjectionSite>> getInjectionSiteMappings() {
+        return injectionSiteMappings;
+    }
+
+    public void setInjectionMappings(Map<String, Map<String, InjectionSite>> mappings) {
+        injectionSiteMappings = mappings;
     }
 }

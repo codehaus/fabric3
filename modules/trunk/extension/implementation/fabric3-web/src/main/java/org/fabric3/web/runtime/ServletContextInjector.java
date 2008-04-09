@@ -18,21 +18,27 @@
  */
 package org.fabric3.web.runtime;
 
-import org.fabric3.spi.builder.BuilderException;
+import javax.servlet.ServletContext;
+
+import org.fabric3.pojo.reflection.Injector;
+import org.fabric3.spi.ObjectCreationException;
+import org.fabric3.spi.ObjectFactory;
 
 /**
- * Thrown when there is an error instantiating a web component.
+ * Injects objects (reference proxies, properties, contexts) into a ServletContext.
  *
  * @version $Revision$ $Date$
  */
-public class WebComponentCreationException extends BuilderException {
-    private static final long serialVersionUID = -679264080783573274L;
+public class ServletContextInjector implements Injector<ServletContext> {
+    private ObjectFactory<?> objectFactory;
+    private String key;
 
-    public WebComponentCreationException(String message, Throwable cause) {
-        super(message, cause);
+    public void inject(ServletContext context) throws ObjectCreationException {
+        context.setAttribute(key, objectFactory.getInstance());
     }
 
-    public WebComponentCreationException(Throwable cause) {
-        super(cause);
+    public void setObectFactory(ObjectFactory<?> objectFactory, Object key) {
+        this.objectFactory = objectFactory;
+        this.key = key.toString();
     }
 }

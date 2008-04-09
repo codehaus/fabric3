@@ -20,14 +20,18 @@ package org.fabric3.container.web.jetty;
 
 import java.net.URL;
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Map;
+import java.util.List;
 import java.util.concurrent.ConcurrentHashMap;
+import java.io.IOException;
 
 import javax.servlet.ServletContext;
 
 import org.mortbay.jetty.webapp.WebAppClassLoader;
 import org.mortbay.jetty.webapp.WebAppContext;
 import org.osoa.sca.annotations.Reference;
+import org.osoa.sca.ComponentContext;
 
 import org.fabric3.api.annotation.Monitor;
 import org.fabric3.container.web.spi.WebApplicationActivationException;
@@ -36,6 +40,8 @@ import org.fabric3.jetty.JettyService;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.services.contribution.ArtifactResolverRegistry;
 import org.fabric3.spi.classloader.MultiParentClassLoader;
+import org.fabric3.spi.ObjectCreationException;
+import org.fabric3.pojo.reflection.Injector;
 
 /**
  * Activates a web application in an embedded Jetty instance.
@@ -64,7 +70,11 @@ public class JettyWebApplicationActivator implements WebApplicationActivator {
         return classLoaderRegistry.getClassLoader(componentId);
     }
 
-    public ServletContext activate(String contextPath, URL url, URI parentClassLoaderId) throws WebApplicationActivationException {
+    public ServletContext activate(String contextPath,
+                                   URL url,
+                                   URI parentClassLoaderId,
+                                   Map<String, List<Injector<?>>> injectors,
+                                   ComponentContext componentContext) throws WebApplicationActivationException {
         if (mappings.containsKey(url)) {
             throw new WebApplicationActivationException("Mapping already exists: " + url.toString());
         }
@@ -72,20 +82,16 @@ public class JettyWebApplicationActivator implements WebApplicationActivator {
             // resolve the url to a local artifact
             URL resolved = resolverRegistry.resolve(url);
             ClassLoader parentClassLoader = createParentClassLoader(parentClassLoaderId, url.toURI());
-            WebAppContext context = new WebAppContext(resolved.toExternalForm(), contextPath);
-            context.setParentLoaderPriority(true);
-            WebAppClassLoader webAppClassLoader;
-            webAppClassLoader = new WebAppClassLoader(parentClassLoader, context);
-            context.setClassLoader(webAppClassLoader);
-            context.addHandler(new WorkContextHandler());
+            WebAppContext context = createWebAppContext(contextPath, injectors, resolved, parentClassLoader);
             jettyService.registerHandler(context);  // the context needs to be registered before it is started
             context.start();
+            ServletContext servletContext = context.getServletContext();
+            injectServletContext(servletContext, injectors);
             mappings.put(url, context);
             monitor.activated(url);
-            return context.getServletContext();
+            return servletContext;
         } catch (Exception e) {
             throw new WebApplicationActivationException(e);
-
         }
     }
 
@@ -104,6 +110,33 @@ public class JettyWebApplicationActivator implements WebApplicationActivator {
         // we need to make user and web container extensions available for JSP compilation
         parentClassLoader.addParent(getClass().getClassLoader());
         return parentClassLoader;
+    }
+
+    private WebAppContext createWebAppContext(String contextPath,
+                                              Map<String, List<Injector<?>>> injectors,
+                                              URL resolved, ClassLoader parentClassLoader) throws IOException, URISyntaxException {
+        WebAppContext context = new WebAppContext(resolved.toExternalForm(), contextPath);
+        context.setParentLoaderPriority(true);
+        context.setServletHandler(new InjectingServletHandler(injectors));
+        WebAppClassLoader webAppClassLoader;
+        webAppClassLoader = new WebAppClassLoader(parentClassLoader, context);
+        context.setClassLoader(webAppClassLoader);
+        context.addHandler(new WorkContextHandler());
+        return context;
+    }
+
+    @SuppressWarnings({"unchecked"})
+    private void injectServletContext(ServletContext servletContext, Map<String, List<Injector<?>>> injectors) throws ObjectCreationException {
+        List<Injector<?>> list = injectors.get(SERVLET_CONTEXT_SITE);
+        if (list == null) {
+            // nothing to inject
+            return;
+        }
+        for (Injector injector : list) {
+            injector.inject(servletContext);
+        }
+        // TODO make an injector
+        servletContext.setAttribute(CONTEXT_ATTRIBUTE, servletContext);
     }
 
 }

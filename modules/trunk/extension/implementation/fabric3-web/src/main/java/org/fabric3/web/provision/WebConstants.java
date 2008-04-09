@@ -16,23 +16,14 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.web.runtime;
-
-import org.fabric3.spi.builder.BuilderException;
+package org.fabric3.web.provision;
 
 /**
- * Thrown when there is an error instantiating a web component.
- *
  * @version $Revision$ $Date$
  */
-public class WebComponentCreationException extends BuilderException {
-    private static final long serialVersionUID = -679264080783573274L;
+public interface WebConstants {
 
-    public WebComponentCreationException(String message, Throwable cause) {
-        super(message, cause);
-    }
+    String SERVLET_CONTEXT_SITE = "fabric3.servletContext";
+    String SESSION_CONTEXT_SITE = "fabric3.sessionContext";
 
-    public WebComponentCreationException(Throwable cause) {
-        super(cause);
-    }
 }

@@ -16,23 +16,33 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.web.runtime;
+package org.fabric3.web.provision;
 
-import org.fabric3.spi.builder.BuilderException;
+import java.lang.annotation.ElementType;
+
+import org.fabric3.scdl.InjectionSite;
 
 /**
- * Thrown when there is an error instantiating a web component.
+ * An injection site specialized for web applications.
  *
  * @version $Revision$ $Date$
  */
-public class WebComponentCreationException extends BuilderException {
-    private static final long serialVersionUID = -679264080783573274L;
+public class WebContextInjectionSite extends InjectionSite {
+    private ContextType contextType;
 
-    public WebComponentCreationException(String message, Throwable cause) {
-        super(message, cause);
+    public static enum ContextType {
+        SERVLET_CONTEXT,
+        SESSION_CONTEXT
     }
 
-    public WebComponentCreationException(Throwable cause) {
-        super(cause);
+    public WebContextInjectionSite(String type, ContextType contextType) {
+        super(ElementType.PARAMETER, type);
+        this.contextType = contextType;
     }
+
+    public ContextType getContextType() {
+        return contextType;
+    }
+
+
 }

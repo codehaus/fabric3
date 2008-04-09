@@ -32,6 +32,9 @@
     <component name="webappPhysicalComponentBuilder">
         <system:implementation.system class="org.fabric3.web.runtime.WebappComponentBuilder"/>
     </component>
+    <component name="InjectionFactory">
+        <system:implementation.system class="org.fabric3.web.runtime.InjectorFactoryImpl"/>
+    </component>
 
     <component f3:key="org.fabric3.web.provision.WebappWireSourceDefinition" name="webappSourceWireAttacher">
         <system:implementation.system class="org.fabric3.web.runtime.WebappSourceWireAttacher"/>
