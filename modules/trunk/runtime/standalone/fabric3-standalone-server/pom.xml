@@ -47,7 +47,13 @@
              <artifactId>geronimo-annotation_1.0_spec</artifactId>
              <version>1.1</version>
          </dependency>
-         
+
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+            <version>2.4</version>
+        </dependency>
+
         <!-- dependencies that are defined as provided in the spi module -->
         <dependency>
             <groupId>stax</groupId>
