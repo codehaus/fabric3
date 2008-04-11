@@ -19,6 +19,8 @@ package org.fabric3.fabric.services.contribution.processor;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.List;
+import java.util.ArrayList;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
@@ -46,6 +48,7 @@ import org.fabric3.services.xmlfactory.XMLFactory;
  */
 @EagerInit
 public class XmlContributionProcessor implements ContributionProcessor {
+    private static final List<String> CONTENT_TYPES = initializeContentTypes();
     private XMLInputFactory xmlFactory;
     private ProcessorRegistry processorRegistry;
     private XmlProcessorRegistry xmlProcessorRegistry;
@@ -66,8 +69,8 @@ public class XmlContributionProcessor implements ContributionProcessor {
         processorRegistry.register(this);
     }
 
-    public String[] getContentTypes() {
-        return new String[]{"application/xml"};
+    public List<String> getContentTypes() {
+        return CONTENT_TYPES;
     }
 
     public void processManifest(Contribution contribution) throws ContributionException {
@@ -143,4 +146,10 @@ public class XmlContributionProcessor implements ContributionProcessor {
             throws ContributionException {
     }
 
+
+    private static List<String> initializeContentTypes() {
+        List<String> list = new ArrayList<String>(1);
+        list.add("application/xml");
+        return list;
+    }
 }

@@ -19,6 +19,9 @@
 
 package org.fabric3.fabric.services.contribution.processor;
 
+import java.util.List;
+import java.util.ArrayList;
+
 import org.fabric3.host.contribution.Constants;
 import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.spi.services.contribution.Contribution;
@@ -26,8 +29,13 @@ import org.fabric3.spi.services.contribution.ContributionProcessor;
 
 public class CompositeContributionProcessor extends AbstractContributionProcessor implements ContributionProcessor {
 
-    public String[] getContentTypes() {
-        return new String[]{Constants.COMPOSITE_CONTENT_TYPE};
+    private static final List<String> CONTENT_TYPES = initializeContentTypes();
+
+    public CompositeContributionProcessor() {
+    }
+
+    public List<String> getContentTypes() {
+        return CONTENT_TYPES;
     }
 
     public void processManifest(Contribution contribution) throws ContributionException {
@@ -40,6 +48,12 @@ public class CompositeContributionProcessor extends AbstractContributionProcesso
 
     public void process(Contribution contribution, ClassLoader loader) throws ContributionException {
         throw new UnsupportedOperationException();
+    }
+
+    private static List<String> initializeContentTypes() {
+        List<String> list = new ArrayList<String>();
+        list.add(Constants.COMPOSITE_CONTENT_TYPE);
+        return list;
     }
 
 }

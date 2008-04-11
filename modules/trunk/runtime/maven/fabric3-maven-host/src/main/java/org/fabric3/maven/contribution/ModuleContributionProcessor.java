@@ -23,6 +23,8 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
+import java.util.List;
+import java.util.ArrayList;
 
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
@@ -53,7 +55,7 @@ import org.fabric3.spi.services.contribution.Resource;
  */
 @EagerInit
 public class ModuleContributionProcessor implements ContributionProcessor {
-    public static final String[] CONTENT_TYPES = {"application/vnd.fabric3.maven-project"};
+    public static final List<String> CONTENT_TYPES = initializeContentTypes();
 
     private ProcessorRegistry registry;
     private ContentTypeResolver contentTypeResolver;
@@ -73,7 +75,7 @@ public class ModuleContributionProcessor implements ContributionProcessor {
         this.loader = loader;
     }
 
-    public String[] getContentTypes() {
+    public List<String> getContentTypes() {
         return CONTENT_TYPES;
     }
 
@@ -191,6 +193,12 @@ public class ModuleContributionProcessor implements ContributionProcessor {
             }
         }
 
+    }
+
+    private static List<String> initializeContentTypes() {
+        List<String> list = new ArrayList<String>(1);
+        list.add("application/vnd.fabric3.maven-project");
+        return list;
     }
 
 }

@@ -18,6 +18,8 @@
  */
 package org.fabric3.spi.services.contribution;
 
+import java.util.List;
+
 import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.spi.model.type.ContributionResourceDescription;
 
@@ -40,7 +42,7 @@ public interface ContributionProcessor {
      *
      * @return the content type this implementation handles
      */
-    public abstract String[] getContentTypes();
+    public abstract List<String> getContentTypes();
 
     /**
      * Processses manifest information for the contribution, including imports and exports.

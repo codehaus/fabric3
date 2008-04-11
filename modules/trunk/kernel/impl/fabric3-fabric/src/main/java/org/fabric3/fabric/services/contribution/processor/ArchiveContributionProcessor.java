@@ -19,6 +19,7 @@ package org.fabric3.fabric.services.contribution.processor;
 import java.net.URI;
 import java.net.URL;
 import java.util.List;
+import java.util.ArrayList;
 
 import org.osoa.sca.annotations.Reference;
 
@@ -38,7 +39,8 @@ import org.fabric3.spi.services.contribution.Resource;
  * @version $Rev$ $Date$
  */
 public class ArchiveContributionProcessor extends AbstractContributionProcessor {
-    private static final String[] CONTENT_TYPES = new String[]{Constants.ZIP_CONTENT_TYPE, "application/octet-stream"};
+
+    private static final List<String> CONTENT_TYPES = initializeContentTypes();
     private ArtifactLocationEncoder encoder;
     private List<ArchiveContributionHandler> handlers;
 
@@ -46,12 +48,13 @@ public class ArchiveContributionProcessor extends AbstractContributionProcessor 
         this.encoder = encoder;
     }
 
+
     @Reference
     public void setHandlers(List<ArchiveContributionHandler> handlers) {
         this.handlers = handlers;
     }
 
-    public String[] getContentTypes() {
+    public List<String> getContentTypes() {
         return CONTENT_TYPES;
     }
 
@@ -100,4 +103,11 @@ public class ArchiveContributionProcessor extends AbstractContributionProcessor 
         throw new UnsupportedContentTypeException("Contribution type not supported: " + source, source);
     }
 
+
+    private static List<String> initializeContentTypes() {
+        List<String> list = new ArrayList<String>();
+        list.add(Constants.ZIP_CONTENT_TYPE);
+        list.add("application/octet-stream");
+        return list;
+    }
 }

@@ -22,6 +22,8 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import java.util.Set;
+import java.util.List;
+import java.util.ArrayList;
 import javax.servlet.ServletContext;
 
 import org.osoa.sca.annotations.EagerInit;
@@ -51,7 +53,8 @@ import org.fabric3.spi.services.contribution.Resource;
  */
 @EagerInit
 public class WarContributionProcessor implements ContributionProcessor {
-    public static final String[] CONTENT_TYPES = new String[]{"application/vnd.fabric3.war"};
+
+    public static final List<String> CONTENT_TYPES = initializeContentTypes();
 
     private WebappHostInfo info;
     private ProcessorRegistry registry;
@@ -68,7 +71,7 @@ public class WarContributionProcessor implements ContributionProcessor {
         this.loader = loader;
     }
 
-    public String[] getContentTypes() {
+    public List<String> getContentTypes() {
         return CONTENT_TYPES;
     }
 
@@ -165,6 +168,12 @@ public class WarContributionProcessor implements ContributionProcessor {
         } catch (MalformedURLException e) {
             throw new ContributionException(e);
         }
+    }
+
+    private static List<String> initializeContentTypes() {
+        List<String> list = new ArrayList<String>(1);
+        list.add("application/vnd.fabric3.war");
+        return list;
     }
 
 }
