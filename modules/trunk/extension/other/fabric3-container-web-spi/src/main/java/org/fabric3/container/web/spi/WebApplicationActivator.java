@@ -53,14 +53,15 @@ public interface WebApplicationActivator {
      *                            the embedded servlet container.
      * @param url                 a URL pointing to the WAR containing the web application assets
      * @param parentClassLoaderId the id for parent classloader to use for the web application
-     * @param injectors
-     * @param context
+     * @param injectors           the map of artifact ids to injectors. An artifact id identifies an artifact type such as a servlet class name or
+     *                            ServletContext.
+     * @param context             the component context for the web component
      * @return the servlet context associated with the activated web application
      * @throws WebApplicationActivationException
      *          if an error occurs activating the web application
      */
-    ServletContext activate(String contextPath, URL url, URI parentClassLoaderId, Map<String, List<Injector<?>>> injectors, ComponentContext context) throws
-            WebApplicationActivationException;
+    ServletContext activate(String contextPath, URL url, URI parentClassLoaderId, Map<String, List<Injector<?>>> injectors, ComponentContext context)
+            throws WebApplicationActivationException;
 
     /**
      * Removes an activated web application

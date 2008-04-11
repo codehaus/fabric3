@@ -33,4 +33,12 @@
         <system:implementation.system class="org.fabric3.web.introspection.WebComponentLoader"/>
     </component>
 
+    <component name="WebImplementationProcessor">
+        <system:implementation.system class="org.fabric3.web.introspection.WebImplementationIntrospectorImpl"/>
+    </component>
+
+    <component name="WebXmlIntrospector">
+        <system:implementation.system class="org.fabric3.web.introspection.WebXmlIntrospectorImpl"/>
+    </component>
+
 </composite>

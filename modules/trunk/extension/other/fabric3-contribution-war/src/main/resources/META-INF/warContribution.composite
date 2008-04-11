@@ -35,4 +35,14 @@
         <system:implementation.system class="org.fabric3.contribution.war.WarContributionHandler"/>
     </component>
 
+    <component name="WebXmlIndexer">
+        <system:implementation.system class="org.fabric3.contribution.war.WebXmlIndexer"/>
+        <property name="namespace">false</property>
+    </component>
+
+    <component name="WebXmlIndexerNamepsaceAware">
+        <system:implementation.system class="org.fabric3.contribution.war.WebXmlIndexer"/>
+        <property name="namespace">true</property>
+    </component>
+
 </composite>
