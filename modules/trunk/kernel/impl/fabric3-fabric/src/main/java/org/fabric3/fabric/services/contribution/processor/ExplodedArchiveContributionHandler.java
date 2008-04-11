@@ -46,13 +46,13 @@ import org.fabric3.spi.services.contribution.ProcessorRegistry;
 /**
  * Handles exploded archives on a filesystem.
  */
-public class ExplodedArchiveContributionProcessor implements ArchiveContributionHandler {
+public class ExplodedArchiveContributionHandler implements ArchiveContributionHandler {
     private Loader loader;
     private final ContentTypeResolver contentTypeResolver;
     private ProcessorRegistry registry;
 
 
-    public ExplodedArchiveContributionProcessor(@Reference Loader loader,
+    public ExplodedArchiveContributionHandler(@Reference Loader loader,
                                                 @Reference ContentTypeResolver contentTypeResolver,
                                                 @Reference ProcessorRegistry registry) {
         this.loader = loader;

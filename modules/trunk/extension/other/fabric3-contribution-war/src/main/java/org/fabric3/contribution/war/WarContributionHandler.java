@@ -51,13 +51,13 @@ import org.fabric3.api.annotation.Monitor;
  * Introspects a WAR contribution, delegating to ResourceProcessors for handling leaf-level children.
  */
 @EagerInit
-public class WarContributionProcessor implements ArchiveContributionHandler {
+public class WarContributionHandler implements ArchiveContributionHandler {
     private final Loader loader;
     private final ContentTypeResolver contentTypeResolver;
     private WarContributionMonitor monitor;
     private ProcessorRegistry registry;
 
-    public WarContributionProcessor(@Reference ProcessorRegistry processorRegistry,
+    public WarContributionHandler(@Reference ProcessorRegistry processorRegistry,
                                     @Reference Loader loader,
                                     @Reference ContentTypeResolver contentTypeResolver,
                                     @Monitor WarContributionMonitor monitor) {

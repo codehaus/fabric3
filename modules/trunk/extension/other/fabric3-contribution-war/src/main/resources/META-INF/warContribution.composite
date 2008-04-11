@@ -32,7 +32,7 @@
     </component>
 
     <component name="WarContributionProcessor">
-        <system:implementation.system class="org.fabric3.contribution.war.WarContributionProcessor"/>
+        <system:implementation.system class="org.fabric3.contribution.war.WarContributionHandler"/>
     </component>
 
 </composite>
