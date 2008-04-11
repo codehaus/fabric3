@@ -34,6 +34,7 @@ import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Destroy;
 
 import org.fabric3.host.contribution.ContributionException;
+import org.fabric3.host.contribution.Constants;
 import org.fabric3.spi.services.contribution.Action;
 import org.fabric3.spi.services.contribution.ArchiveContributionHandler;
 import org.fabric3.spi.services.contribution.Contribution;
@@ -76,6 +77,10 @@ public class WarContributionHandler implements ArchiveContributionHandler {
     @Destroy
     public void destroy() {
         monitor.extensionStopped();
+    }
+
+    public String getContentType() {
+        return Constants.ZIP_CONTENT_TYPE;
     }
 
     public boolean canProcess(Contribution contribution) {
