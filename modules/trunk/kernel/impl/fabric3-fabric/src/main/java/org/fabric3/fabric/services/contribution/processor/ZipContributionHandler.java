@@ -31,6 +31,7 @@ import java.util.zip.ZipInputStream;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.host.contribution.ContributionException;
+import org.fabric3.host.contribution.Constants;
 import org.fabric3.introspection.DefaultIntrospectionContext;
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.xml.Loader;
@@ -47,6 +48,7 @@ import org.fabric3.spi.services.contribution.ProcessorRegistry;
  * Introspects a Zip-based contribution, delegating to ResourceProcessors for handling leaf-level children.
  */
 public class ZipContributionHandler implements ArchiveContributionHandler {
+
     private final Loader loader;
     private final ContentTypeResolver contentTypeResolver;
     private ProcessorRegistry registry;
@@ -58,6 +60,10 @@ public class ZipContributionHandler implements ArchiveContributionHandler {
         this.registry = processorRegistry;
         this.loader = loader;
         this.contentTypeResolver = contentTypeResolver;
+    }
+
+    public String getContentType() {
+        return Constants.ZIP_CONTENT_TYPE;
     }
 
     public boolean canProcess(Contribution contribution) {

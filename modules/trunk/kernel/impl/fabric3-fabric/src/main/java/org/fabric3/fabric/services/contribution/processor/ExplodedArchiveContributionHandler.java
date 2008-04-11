@@ -60,6 +60,10 @@ public class ExplodedArchiveContributionHandler implements ArchiveContributionHa
         this.registry = registry;
     }
 
+    public String getContentType() {
+        return Constants.FOLDER_CONTENT_TYPE;
+    }
+
     public boolean canProcess(Contribution contribution) {
         return Constants.FOLDER_CONTENT_TYPE.equals(contribution.getContentType());
     }

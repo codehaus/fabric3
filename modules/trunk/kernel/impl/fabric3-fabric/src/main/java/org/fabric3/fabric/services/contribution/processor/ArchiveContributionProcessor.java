@@ -52,6 +52,10 @@ public class ArchiveContributionProcessor extends AbstractContributionProcessor 
     @Reference
     public void setHandlers(List<ArchiveContributionHandler> handlers) {
         this.handlers = handlers;
+        int size = handlers.size();
+        for (int i = 0; i < size; i++) {
+            CONTENT_TYPES.add(handlers.get(i).getContentType());
+        }
     }
 
     public List<String> getContentTypes() {
@@ -106,7 +110,6 @@ public class ArchiveContributionProcessor extends AbstractContributionProcessor 
 
     private static List<String> initializeContentTypes() {
         List<String> list = new ArrayList<String>();
-        list.add(Constants.ZIP_CONTENT_TYPE);
         list.add("application/octet-stream");
         return list;
     }

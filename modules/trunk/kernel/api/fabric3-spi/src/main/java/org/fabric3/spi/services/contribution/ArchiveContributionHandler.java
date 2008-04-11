@@ -28,6 +28,13 @@ import org.fabric3.host.contribution.ContributionException;
 public interface ArchiveContributionHandler {
 
     /**
+     * Returns the content type of the contribution that this handler can process
+     * @return
+     */
+
+    String getContentType();
+
+    /**
      * Returns true if the implementation can process the contribution archive.
      *
      * @param contribution the contribution
