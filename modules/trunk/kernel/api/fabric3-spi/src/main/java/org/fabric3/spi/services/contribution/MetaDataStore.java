@@ -52,6 +52,14 @@ public interface MetaDataStore {
     <S extends Symbol> ResourceElement<S, ?> resolve(S symbol);
 
     /**
+     * Resolves the containing resource for a resource element symbol against the entire domain symbol space.
+     *
+     * @param symbol the symbol used to represent the resource element.
+     * @return the resource or null if not found
+     */
+    public Resource resolveContainingResource(Symbol symbol);
+
+    /**
      * Resolves a resource element by its symbol against the given contribution uri.
      *
      * @param contributionUri the contribution URI to resolve against

@@ -2,16 +2,22 @@ package org.fabric3.fabric.services.contribution;
 
 import java.io.File;
 import java.net.URI;
+import java.net.URL;
 import java.util.List;
 import javax.xml.namespace.QName;
 
 import junit.framework.TestCase;
 
 import org.fabric3.fabric.util.FileHelper;
+import org.fabric3.fabric.services.classloading.ClassLoaderRegistryImpl;
 import org.fabric3.spi.services.contribution.Contribution;
 import org.fabric3.spi.services.contribution.ContributionManifest;
 import org.fabric3.spi.services.contribution.QNameExport;
 import org.fabric3.spi.services.contribution.QNameImport;
+import org.fabric3.spi.services.contribution.QNameSymbol;
+import org.fabric3.spi.services.contribution.ResourceElement;
+import org.fabric3.spi.services.contribution.Resource;
+import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 
 /**
  * @version $Rev$ $Date$
@@ -39,9 +45,25 @@ public class MetaDataStoreImplTestCase extends TestCase {
         assertEquals(2, contributions.size());
     }
 
+    public void testResolveContainingResource() throws Exception {
+        Contribution contribution = new Contribution(URI.create("resource"));
+        ContributionManifest manifest = new ContributionManifest();
+        contribution.setManifest(manifest);
+        QName qname = new QName("foo", "bar");
+        QNameSymbol symbol = new QNameSymbol(qname);
+        ResourceElement<QNameSymbol, Void> element = new ResourceElement<QNameSymbol, Void>(symbol);
+        Resource resource = new Resource(new URL("file://foo"), "resource");
+        resource.addResourceElement(element);
+        contribution.addResource(resource);
+        store.store(contribution);
+        assertEquals(resource, store.resolveContainingResource(symbol));
+    }
+
     protected void setUp() throws Exception {
         super.setUp();
-        store = new MetaDataStoreImpl(null, null);
+        ClassLoaderRegistry registry = new ClassLoaderRegistryImpl();
+        registry.register(URI.create("resource"), getClass().getClassLoader());
+        store = new MetaDataStoreImpl(registry, null);
         Contribution contribution = new Contribution(RESOURCE_URI);
         ContributionManifest manifest = new ContributionManifest();
         QNameExport export = new QNameExport(IMPORT_EXPORT_QNAME);
