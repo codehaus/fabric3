@@ -26,10 +26,13 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.osoa.sca.ComponentContext;
+
 /**
  * @version $Rev$ $Date$
  */
 public class TestServlet extends HttpServlet {
+    private static final long serialVersionUID = 7698155043124726164L;
 
     private ServletContext servletContext;
 
@@ -46,8 +49,15 @@ public class TestServlet extends HttpServlet {
             response.sendError(500, "No test specified");
             return;
         }
-
-        TestService test = (TestService) servletContext.getAttribute(testName);
+        // verify the component context was bound
+        ComponentContext context = (ComponentContext) servletContext.getAttribute("fabric3.componentContext");
+        TestService test = context.getService(TestService.class, testName);
+        if (test == null) {
+            response.sendError(500, "Unknown test: " + testName);
+            return;
+        }
+        // verify the reference was bound
+        test = (TestService) servletContext.getAttribute(testName);
         if (test == null) {
             response.sendError(500, "Unknown test: " + testName);
             return;

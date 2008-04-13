@@ -28,6 +28,7 @@
         <reference name="context" target="ContextTest"/>
         <reference name="composite" target="CompositeTest"/>
         <reference name="stateless" target="StatelessTest"/>
+        <!--<reference name="service" target="StatelessTest"/>-->
     </component>
 
     <component name="ContextTest">
