@@ -21,6 +21,8 @@ package org.fabric3.runtime.webapp;
 import java.net.MalformedURLException;
 import java.net.URI;
 import javax.servlet.ServletRequestEvent;
+import javax.servlet.http.HttpSessionEvent;
+import javax.servlet.http.HttpSessionListener;
 import javax.xml.namespace.QName;
 
 import org.fabric3.fabric.runtime.AbstractRuntime;
@@ -50,6 +52,7 @@ import org.fabric3.spi.invocation.WorkContext;
 
 public class WebappRuntimeImpl extends AbstractRuntime<WebappHostInfo> implements WebappRuntime {
     private ServletRequestInjector requestInjector;
+    private HttpSessionListener sessionListener;
 
     public WebappRuntimeImpl() {
         super(WebappHostInfo.class);
@@ -90,5 +93,21 @@ public class WebappRuntimeImpl extends AbstractRuntime<WebappHostInfo> implement
 
     public void requestDestroyed(ServletRequestEvent sre) {
         PojoWorkContextTunnel.setThreadWorkContext(null);
+    }
+
+    public void sessionCreated(HttpSessionEvent event) {
+        getSessionListener().sessionCreated(event);
+    }
+
+    public void sessionDestroyed(HttpSessionEvent event) {
+        getSessionListener().sessionDestroyed(event);
+    }
+
+    private HttpSessionListener getSessionListener() {
+        if (sessionListener == null) {
+            URI uri = URI.create(ComponentNames.RUNTIME_NAME + "/WebApplicationActivator");
+            sessionListener = getSystemComponent(HttpSessionListener.class, uri);
+        }
+        return sessionListener;
     }
 }

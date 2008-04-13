@@ -23,8 +23,12 @@ import java.net.URL;
 import java.util.List;
 import java.util.Map;
 import javax.servlet.ServletContext;
+import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpSessionListener;
+import javax.servlet.http.HttpSessionEvent;
 
 import org.osoa.sca.annotations.Reference;
+import org.osoa.sca.annotations.Service;
 import org.osoa.sca.ComponentContext;
 
 import org.fabric3.container.web.spi.WebApplicationActivationException;
@@ -38,8 +42,10 @@ import org.fabric3.spi.ObjectCreationException;
  *
  * @version $Revision$ $Date$
  */
-public class EmbeddedWebApplicationActivator implements WebApplicationActivator {
+@Service(interfaces = {WebApplicationActivator.class, HttpSessionListener.class})
+public class EmbeddedWebApplicationActivator implements WebApplicationActivator, HttpSessionListener {
     private ServletHost host;
+    private List<Injector<HttpSession>> sessionInjectors;
 
     public EmbeddedWebApplicationActivator(@Reference ServletHost host) {
         this.host = host;
@@ -50,16 +56,18 @@ public class EmbeddedWebApplicationActivator implements WebApplicationActivator 
         return Thread.currentThread().getContextClassLoader();
     }
 
+    @SuppressWarnings({"unchecked"})
     public ServletContext activate(String contextPath,
                                    URL url,
                                    URI parentClassLoaderId,
                                    Map<String, List<Injector<?>>> injectors,
                                    ComponentContext context) throws WebApplicationActivationException {
-        // the web app has already been activated since it is embedded in a war. Just inject references and properties
         try {
+            // the web app has already been activated since it is embedded in a war. Just inject references and properties
             ServletContext servletContext = host.getServletContext();
             injectServletContext(servletContext, injectors);
             servletContext.setAttribute(CONTEXT_ATTRIBUTE, context);
+            sessionInjectors = List.class.cast(injectors.get(SESSION_CONTEXT_SITE));
             return servletContext;
         } catch (ObjectCreationException e) {
             throw new WebApplicationActivationException(e);
@@ -82,4 +90,19 @@ public class EmbeddedWebApplicationActivator implements WebApplicationActivator 
         }
     }
 
+    public void sessionCreated(HttpSessionEvent event) {
+        HttpSession session = event.getSession();
+        // inject conversational proxies into the session
+        for (Injector<HttpSession> injector : sessionInjectors) {
+            try {
+                injector.inject(session);
+            } catch (ObjectCreationException e) {
+                throw new RuntimeInjectionException(e);
+            }
+        }
+    }
+
+    public void sessionDestroyed(HttpSessionEvent event) {
+        // do nothing
+    }
 }

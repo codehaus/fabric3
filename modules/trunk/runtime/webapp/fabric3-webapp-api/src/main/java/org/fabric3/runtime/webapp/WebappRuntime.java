@@ -20,6 +20,7 @@ package org.fabric3.runtime.webapp;
 
 import java.net.URI;
 import javax.servlet.ServletRequestListener;
+import javax.servlet.http.HttpSessionListener;
 import javax.xml.namespace.QName;
 
 import org.fabric3.host.runtime.Fabric3Runtime;
@@ -31,7 +32,7 @@ import org.fabric3.host.runtime.InitializationException;
  *
  * @version $Rev$ $Date$
  */
-public interface WebappRuntime extends ServletRequestListener, Fabric3Runtime<WebappHostInfo> {
+public interface WebappRuntime extends ServletRequestListener, HttpSessionListener, Fabric3Runtime<WebappHostInfo> {
 
     /**
      * Activates a composite in the domain.
