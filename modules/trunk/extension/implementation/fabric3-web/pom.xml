@@ -30,7 +30,6 @@
     <packaging>sca-contribution-jar</packaging>
  
     <dependencies>
-<!--XCV REMOVE-->
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-container-web-spi</artifactId>
