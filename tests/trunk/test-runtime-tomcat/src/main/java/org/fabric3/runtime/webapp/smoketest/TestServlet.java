@@ -33,8 +33,9 @@ import org.fabric3.runtime.webapp.Constants;
  * @version $Rev$ $Date$
  */
 public class TestServlet extends HttpServlet {
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-        throws ServletException, IOException {
+    private static final long serialVersionUID = 1532086282614089270L;
+
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         PrintWriter out = response.getWriter();
         String test = request.getParameter("test");
@@ -42,6 +43,11 @@ public class TestServlet extends HttpServlet {
             ComponentContext context = (ComponentContext) getServletContext().getAttribute(Constants.CONTEXT_ATTRIBUTE);
             if (context == null) {
                 response.sendError(500, "Context was not bound");
+                return;
+            }
+            HelloService service = context.getService(HelloService.class, "hello");
+            if (!"Hello World".equals(service.getGreeting())) {
+                response.sendError(500, "Failed to create HelloService");
                 return;
             }
             out.print("component URI is " + context.getURI());
