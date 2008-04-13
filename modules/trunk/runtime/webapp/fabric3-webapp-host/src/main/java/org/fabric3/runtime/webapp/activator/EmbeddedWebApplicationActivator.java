@@ -54,13 +54,11 @@ public class EmbeddedWebApplicationActivator implements WebApplicationActivator 
                                    URL url,
                                    URI parentClassLoaderId,
                                    Map<String, List<Injector<?>>> injectors,
-                                   ComponentContext context)
-            throws WebApplicationActivationException {
+                                   ComponentContext context) throws WebApplicationActivationException {
         // the web app has already been activated since it is embedded in a war. Just inject references and properties
         try {
             ServletContext servletContext = host.getServletContext();
             injectServletContext(servletContext, injectors);
-            // TODO make an injector
             servletContext.setAttribute(CONTEXT_ATTRIBUTE, context);
             return servletContext;
         } catch (ObjectCreationException e) {
