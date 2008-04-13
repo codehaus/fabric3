@@ -55,8 +55,6 @@ public class JavaInterfaceLoader implements TypeLoader<ServiceContract> {
     public ServiceContract load(XMLStreamReader reader, IntrospectionContext context)
             throws XMLStreamException, LoaderException {
 
-        String conversationalAttr = reader.getAttributeValue(null, "conversational");
-        boolean conversational = Boolean.parseBoolean(conversationalAttr);
         String name = reader.getAttributeValue(null, "interface");
         if (name == null) {
             // allow "class" as well as seems to be a common mistake
@@ -89,7 +87,6 @@ public class JavaInterfaceLoader implements TypeLoader<ServiceContract> {
                 ServiceContract<?> callbackContract = contractProcessor.introspect(typeMapping, callbackClass);
                 serviceContract.setCallbackContract(callbackContract);
             }
-            serviceContract.setConversational(conversational);
             return serviceContract;
         } catch (InvalidServiceContractException e) {
             throw new LoaderException("The Java interface is an invalid service contract: " + interfaceClass.getName(), e);
