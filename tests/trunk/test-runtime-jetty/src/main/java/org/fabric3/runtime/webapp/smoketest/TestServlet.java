@@ -76,5 +76,11 @@ public class TestServlet extends HttpServlet {
             response.sendError(500, "Counter expected to be 0");
             return;
         }
+        CounterService sessionCounter = (CounterService) request.getSession().getAttribute("counter");
+        if (sessionCounter.getCount() != 0) {
+            response.sendError(500, "Session counter expected to be 0");
+            return;
+        }
+
     }
 }
