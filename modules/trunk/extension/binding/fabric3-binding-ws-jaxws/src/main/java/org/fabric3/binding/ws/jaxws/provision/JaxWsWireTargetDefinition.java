@@ -23,10 +23,15 @@ import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 
 public class JaxWsWireTargetDefinition extends PhysicalWireTargetDefinition {
 
+  
     private String wsdlElement;
     private String referenceInterface;
     private URI classloaderURI;
     private String wsdlLocation;
+    private String serviceName;
+    private String portName;
+    private String namespaceURI;
+
 
     /**
      * @return Reference interface for the wire target.
@@ -70,6 +75,10 @@ public class JaxWsWireTargetDefinition extends PhysicalWireTargetDefinition {
      */
     public void setWsdlElement(String wsdlElement) {
         this.wsdlElement = wsdlElement;
+        String[] parsed = ProvisionHelper.parseWSDLElement(wsdlElement);
+        setNamespaceURI(parsed[0]);
+        setServiceName(parsed[1]);
+        setPortName(parsed[2]);
     }
 
     /**
@@ -86,5 +95,43 @@ public class JaxWsWireTargetDefinition extends PhysicalWireTargetDefinition {
         this.wsdlLocation = wsdlLocation;
     }
 
+
+    public void setNamespaceURI(String uri) {
+        this.namespaceURI = uri;
+    }
+
+    /**
+     * Get WSDL namespace uri
+     * @return wsdl namespace uri
+     */
+    public String getNamespaceURI() {
+        return namespaceURI;
+    }
+
+    /**
+     * Get WSDL Service Name
+    *
+    * @return service name
+    */
+    public String getServiceName() {
+       return serviceName;
+    }
+
+    public void setServiceName(String serviceName) {
+        this.serviceName = serviceName;
+    }
+
+    /**
+      * Get WSDL port name
+      *
+      * @return portname for the wsdl
+    */
+    public String getPortName() {
+        return portName;
+    }
+
+    public void setPortName(String portName) {
+        this.portName = portName;
+    }
 
 }

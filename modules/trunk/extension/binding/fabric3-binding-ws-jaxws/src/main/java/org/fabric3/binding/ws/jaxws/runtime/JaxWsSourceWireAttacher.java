@@ -24,6 +24,7 @@ import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.scdl.Signature;
 
+
 /*
  * See the NOTICE file distributed with this work for information
  * regarding copyright ownership.  This file is licensed
@@ -81,20 +82,12 @@ public class JaxWsSourceWireAttacher implements SourceWireAttacher<JaxWsWireSour
             throwWireAttachException(source.getUri(), target.getUri(), nsme);
         }
         ServiceHandler handler = new ServiceHandler(ops);
-        String wsdlElement = source.getWsdlElement();
-        String targetNamespace = null;
-        String serviceName;
-        String portName = null;
-        if (wsdlElement != null) {
-            int index = wsdlElement.indexOf("#wsdl.port");
-            int lastSlashIndex = wsdlElement.lastIndexOf("/");
-            targetNamespace = wsdlElement.substring(0, index);
-            serviceName = wsdlElement.substring(index + 11, lastSlashIndex);
-            portName = wsdlElement.substring(lastSlashIndex + 1, wsdlElement.length()
-                    - 1);
-        } else {
-            serviceName = source.getUri().toString();
-        }
+        String targetNamespace = source.getNamespaceURI();
+        String serviceName = source.getServiceName();
+        String portName = source.getPortName();
+        assert portName != null;
+        assert serviceName != null;
+        assert targetNamespace != null;
         Object proxy = generateProxy(clazz, handler, source, target,
                                      targetNamespace, source.getWsdlLocation(), serviceName, portName);
         try {

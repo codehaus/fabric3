@@ -1,6 +1,7 @@
 package org.fabric3.binding.ws.jaxws.control;
 
 import java.net.URI;
+import java.util.List;
 
 import org.osoa.sca.annotations.EagerInit;
 
@@ -46,6 +47,12 @@ public class JaxWsBindingGeneratorDelegate implements BindingGeneratorDelegate<W
         hwsd.setUri(logicalBinding.getBinding().getTargetUri());
         ServiceContract<?> contract = serviceDefinition.getServiceContract();
         hwsd.setServiceInterface(contract.getQualifiedInterfaceName());
+        String wsdlElement = logicalBinding.getBinding().getWsdlElement();
+        if (wsdlElement == null) {
+            //Handle when component name/service are not defined
+        } else {
+            hwsd.setWsdlElement(logicalBinding.getBinding().getWsdlElement());
+        }
         //URI classloaderId = logicalBinding.getParent().getParent().getParent().getUri();
         //hwsd.setClassloaderURI(classloaderId);
         return hwsd;
