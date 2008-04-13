@@ -66,8 +66,19 @@ public class WebImplementationIntrospectorImpl implements WebImplementationIntro
             TypeMapping typeMapping = helper.mapTypeParameters(artifact);
             context = new DefaultIntrospectionContext(context, typeMapping);
             classWalker.walk(artifactImpl, artifact, context);
+            validateComponentType(type);
             // TODO apply heuristics
             mergeComponentTypes(implementation.getComponentType(), type);
+        }
+    }
+
+    private void validateComponentType(PojoComponentType type) throws IntrospectionException {
+        for (ReferenceDefinition reference : type.getReferences().values()) {
+            if (reference.getServiceContract().isConversational()) {
+                throw new IllegalReferenceException("Cannot inject a conversational servce for reference " + reference.getName()
+                        + " on implementation " + type.getImplClass());
+            }
+
         }
     }
 

@@ -16,6 +16,17 @@
     <orderEntry type="module" module-name="fabric3-jetty" />
     <orderEntry type="module" module-name="fabric3-spi" />
     <orderEntry type="module" module-name="fabric3-pojo" />
+    <orderEntry type="module-library">
+      <library name="javax.servlet:servlet-api:2.4">
+        <CLASSES>
+          <root url="jar://$M2_REPO$/javax/servlet/servlet-api/2.4/servlet-api-2.4.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES>
+          <root url="jar://$M2_REPO$/javax/servlet/servlet-api/2.4/servlet-api-2.4-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
     <orderEntryProperties />
   </component>
 </module>

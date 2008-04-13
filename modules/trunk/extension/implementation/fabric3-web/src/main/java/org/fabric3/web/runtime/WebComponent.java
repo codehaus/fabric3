@@ -20,9 +20,9 @@ package org.fabric3.web.runtime;
 
 import java.net.URI;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.HashMap;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.osoa.sca.CallableReference;
@@ -31,18 +31,19 @@ import org.osoa.sca.ServiceReference;
 
 import org.fabric3.container.web.spi.WebApplicationActivationException;
 import org.fabric3.container.web.spi.WebApplicationActivator;
-import org.fabric3.scdl.PropertyValue;
+import org.fabric3.pojo.reflection.Injector;
 import org.fabric3.scdl.InjectionSite;
+import org.fabric3.scdl.PropertyValue;
 import org.fabric3.spi.AbstractLifecycle;
 import org.fabric3.spi.ObjectCreationException;
 import org.fabric3.spi.ObjectFactory;
+import org.fabric3.spi.SingletonObjectFactory;
 import org.fabric3.spi.component.AtomicComponent;
 import org.fabric3.spi.component.InstanceWrapper;
 import org.fabric3.spi.invocation.WorkContext;
 import org.fabric3.spi.model.physical.InteractionType;
 import org.fabric3.spi.wire.ProxyService;
 import org.fabric3.spi.wire.Wire;
-import org.fabric3.pojo.reflection.Injector;
 
 /**
  * A component whose implementation is a web applicaiton.
@@ -64,18 +65,21 @@ public class WebComponent<T> extends AbstractLifecycle implements AtomicComponen
     private final Map<String, ObjectFactory<?>> referenceFactories;
     private final URL archiveUrl;
     private ComponentContext context;
+    private String contextUrl;
 
     public WebComponent(URI uri,
-                           URI classLoaderId,
-                           URI groupId,
-                           URL archiveUrl,
-                           ClassLoader classLoader,
-                           InjectorFactory injectorFactory,
-                           WebApplicationActivator activator,
-                           ProxyService proxyService,
-                           Map<String, ObjectFactory<?>> propertyFactories,
-                           Map<String, Map<String, InjectionSite>> injectorMappings) throws WebComponentCreationException {
+                        String contextUrl,
+                        URI classLoaderId,
+                        URI groupId,
+                        URL archiveUrl,
+                        ClassLoader classLoader,
+                        InjectorFactory injectorFactory,
+                        WebApplicationActivator activator,
+                        ProxyService proxyService,
+                        Map<String, ObjectFactory<?>> propertyFactories,
+                        Map<String, Map<String, InjectionSite>> injectorMappings) throws WebComponentCreationException {
         this.uri = uri;
+        this.contextUrl = contextUrl;
         this.classLoaderId = classLoaderId;
         this.archiveUrl = archiveUrl;
         this.classLoader = classLoader;
@@ -98,9 +102,11 @@ public class WebComponent<T> extends AbstractLifecycle implements AtomicComponen
             injectorFactory.createInjectorMappings(injectors, siteMappings, referenceFactories, classLoader);
             injectorFactory.createInjectorMappings(injectors, siteMappings, propertyFactories, classLoader);
             context = new WebComponentContext(this);
+            Map<String, ObjectFactory<?>> contextFactories = new HashMap<String, ObjectFactory<?>>();
+            contextFactories.put("fabric3.context", new SingletonObjectFactory<ComponentContext>(context));
+            injectorFactory.createInjectorMappings(injectors, siteMappings, contextFactories, classLoader);
             // activate the web application
-            // XCV FIXME! uri
-            activator.activate("/calculator", archiveUrl, classLoaderId, injectors, context);
+            activator.activate(contextUrl, archiveUrl, classLoaderId, injectors, context);
         } catch (InjectionCreationException e) {
             throw new WebComponentStartException("Error starting web component: " + uri.toString(), e);
         } catch (WebApplicationActivationException e) {
@@ -120,7 +126,7 @@ public class WebComponent<T> extends AbstractLifecycle implements AtomicComponen
 
     }
 
-    public void attachWire(String name, Wire wire) throws ObjectCreationException {
+    public void attachWire(String name, InteractionType interactionType, Wire wire) throws ObjectCreationException {
         Map<String, InjectionSite> sites = siteMappings.get(name);
         if (sites == null || sites.isEmpty()) {
             throw new ObjectCreationException("Injection site not found for: " + name);
@@ -131,7 +137,7 @@ public class WebComponent<T> extends AbstractLifecycle implements AtomicComponen
         } catch (ClassNotFoundException e) {
             throw new ObjectCreationException("Reference type not found for: " + name, e);
         }
-        ObjectFactory<?> factory = createWireFactory(type, wire);
+        ObjectFactory<?> factory = createWireFactory(type, interactionType, wire);
         attachWire(name, factory);
     }
 
@@ -139,8 +145,8 @@ public class WebComponent<T> extends AbstractLifecycle implements AtomicComponen
         referenceFactories.put(name, factory);
     }
 
-    protected <B> ObjectFactory<B> createWireFactory(Class<B> interfaze, Wire wire) {
-        return proxyService.createObjectFactory(interfaze, InteractionType.STATELESS, wire, null);
+    protected <B> ObjectFactory<B> createWireFactory(Class<B> interfaze, InteractionType interactionType, Wire wire) {
+        return proxyService.createObjectFactory(interfaze, interactionType, wire, null);
     }
 
     public URI getGroupId() {

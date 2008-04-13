@@ -60,9 +60,9 @@ public class WebXmlIntrospectorImpl implements WebXmlIntrospector {
     public List<Class<?>> introspectArtifactClasses(IntrospectionContext context) throws IntrospectionException {
         List<Class<?>> artifacts = new ArrayList<Class<?>>();
         ClassLoader cl = context.getTargetClassLoader();
-        Resource resource = store.resolveContainingResource(WEB_APP_NAMESPACE);
+        Resource resource = store.resolveContainingResource(context.getContributionUri(), WEB_APP_NAMESPACE);
         if (resource == null) {
-            resource = store.resolveContainingResource(WEB_APP_NO_NAMESPACE);
+            resource = store.resolveContainingResource(context.getContributionUri(), WEB_APP_NO_NAMESPACE);
             if (resource == null) {
                 // tolerate no web.xml
                 return artifacts;

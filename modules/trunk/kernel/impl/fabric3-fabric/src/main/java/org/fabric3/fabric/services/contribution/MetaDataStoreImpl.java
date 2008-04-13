@@ -93,11 +93,9 @@ public class MetaDataStoreImpl implements MetaDataStore {
         return null;
     }
 
-    public Resource resolveContainingResource(Symbol symbol) {
-        for (Contribution contribution : cache.values()) {
-            URI contributionUri = contribution.getUri();
-            ClassLoader loader = classLoaderRegistry.getClassLoader(contributionUri);
-            assert loader != null;
+    public Resource resolveContainingResource(URI contributionUri, Symbol symbol) {
+        Contribution contribution = cache.get(contributionUri);
+        if (contribution != null) {
             for (Resource resource : contribution.getResources()) {
                 for (ResourceElement<?, ?> element : resource.getResourceElements()) {
                     if (element.getSymbol().equals(symbol)) {

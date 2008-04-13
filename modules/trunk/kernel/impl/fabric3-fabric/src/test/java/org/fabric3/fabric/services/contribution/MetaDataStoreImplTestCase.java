@@ -46,7 +46,8 @@ public class MetaDataStoreImplTestCase extends TestCase {
     }
 
     public void testResolveContainingResource() throws Exception {
-        Contribution contribution = new Contribution(URI.create("resource"));
+        URI uri = URI.create("resource");
+        Contribution contribution = new Contribution(uri);
         ContributionManifest manifest = new ContributionManifest();
         contribution.setManifest(manifest);
         QName qname = new QName("foo", "bar");
@@ -56,7 +57,7 @@ public class MetaDataStoreImplTestCase extends TestCase {
         resource.addResourceElement(element);
         contribution.addResource(resource);
         store.store(contribution);
-        assertEquals(resource, store.resolveContainingResource(symbol));
+        assertEquals(resource, store.resolveContainingResource(uri, symbol));
     }
 
     protected void setUp() throws Exception {

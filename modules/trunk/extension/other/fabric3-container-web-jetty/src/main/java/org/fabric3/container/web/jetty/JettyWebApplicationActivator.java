@@ -18,30 +18,30 @@
  */
 package org.fabric3.container.web.jetty;
 
-import java.net.URL;
+import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Map;
+import java.net.URL;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.io.IOException;
-
 import javax.servlet.ServletContext;
+import javax.servlet.http.HttpSession;
 
 import org.mortbay.jetty.webapp.WebAppClassLoader;
 import org.mortbay.jetty.webapp.WebAppContext;
-import org.osoa.sca.annotations.Reference;
 import org.osoa.sca.ComponentContext;
+import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.api.annotation.Monitor;
 import org.fabric3.container.web.spi.WebApplicationActivationException;
 import org.fabric3.container.web.spi.WebApplicationActivator;
 import org.fabric3.jetty.JettyService;
+import org.fabric3.pojo.reflection.Injector;
+import org.fabric3.spi.ObjectCreationException;
+import org.fabric3.spi.classloader.MultiParentClassLoader;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.services.contribution.ArtifactResolverRegistry;
-import org.fabric3.spi.classloader.MultiParentClassLoader;
-import org.fabric3.spi.ObjectCreationException;
-import org.fabric3.pojo.reflection.Injector;
 
 /**
  * Activates a web application in an embedded Jetty instance.
@@ -70,6 +70,7 @@ public class JettyWebApplicationActivator implements WebApplicationActivator {
         return classLoaderRegistry.getClassLoader(componentId);
     }
 
+    @SuppressWarnings({"unchecked"})
     public ServletContext activate(String contextPath,
                                    URL url,
                                    URI parentClassLoaderId,
@@ -82,9 +83,14 @@ public class JettyWebApplicationActivator implements WebApplicationActivator {
             // resolve the url to a local artifact
             URL resolved = resolverRegistry.resolve(url);
             ClassLoader parentClassLoader = createParentClassLoader(parentClassLoaderId, url.toURI());
-            WebAppContext context = createWebAppContext(contextPath, injectors, resolved, parentClassLoader);
+            WebAppContext context = createWebAppContext("/" + contextPath, injectors, resolved, parentClassLoader);
             jettyService.registerHandler(context);  // the context needs to be registered before it is started
             context.start();
+            // Setup the session listener to inject conversational reference proxies in newly created sessions
+            // Note the listener must be added after the context is started as Jetty web xml configurer clears event listeners
+            List<Injector<HttpSession>> sessionInjectors = List.class.cast(injectors.get(SESSION_CONTEXT_SITE));
+            InjectingSessionListener listener = new InjectingSessionListener(sessionInjectors);
+            context.getSessionHandler().addEventListener(listener);
             ServletContext servletContext = context.getServletContext();
             injectServletContext(servletContext, injectors);
             mappings.put(url, context);
@@ -117,6 +123,7 @@ public class JettyWebApplicationActivator implements WebApplicationActivator {
                                               URL resolved, ClassLoader parentClassLoader) throws IOException, URISyntaxException {
         WebAppContext context = new WebAppContext(resolved.toExternalForm(), contextPath);
         context.setParentLoaderPriority(true);
+
         context.setServletHandler(new InjectingServletHandler(injectors));
         WebAppClassLoader webAppClassLoader;
         webAppClassLoader = new WebAppClassLoader(parentClassLoader, context);
@@ -135,7 +142,6 @@ public class JettyWebApplicationActivator implements WebApplicationActivator {
         for (Injector injector : list) {
             injector.inject(servletContext);
         }
-        // TODO make an injector
         servletContext.setAttribute(CONTEXT_ATTRIBUTE, servletContext);
     }
 

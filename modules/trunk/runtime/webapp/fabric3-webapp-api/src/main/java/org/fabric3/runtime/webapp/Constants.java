@@ -63,7 +63,7 @@ public final class Constants {
     /**
      * Name of the context attribute that contains the ComponentContext.
      */
-    public static final String CONTEXT_ATTRIBUTE = "fabric3.context";
+    public static final String CONTEXT_ATTRIBUTE = "fabric3.componentContext";
 
     /**
      * Name of the parameter that defines the name of webapp resource containing bootstrap jars.

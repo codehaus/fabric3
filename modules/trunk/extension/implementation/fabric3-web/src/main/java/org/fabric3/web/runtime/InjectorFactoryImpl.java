@@ -67,7 +67,7 @@ public class InjectorFactoryImpl implements InjectorFactory {
                 } else if (site instanceof MethodInjectionSite) {
                     injector = createInjector(factory, artifactName, (MethodInjectionSite) site, classLoader);
                 } else {
-                    throw new UnsupportedOperationException("Unsupported injection site type" + site.getElementType());
+                    throw new UnsupportedOperationException("Unsupported injection site type: " + site.getElementType());
                 }
                 injectorList.add(injector);
             }
@@ -100,7 +100,9 @@ public class InjectorFactoryImpl implements InjectorFactory {
             injector.setObectFactory(factory, referenceName);
             return injector;
         } else {
-            throw new UnsupportedOperationException("Session context injection not supported");
+            Injector<?> injector = new HttpSessionInjector();
+            injector.setObectFactory(factory, referenceName);
+            return injector;
         }
     }
 

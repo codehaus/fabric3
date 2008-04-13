@@ -48,9 +48,9 @@ public class WebComponentBuilder implements ComponentBuilder<WebComponentDefinit
     private ComponentBuilderRegistry builderRegistry;
 
     public WebComponentBuilder(@Reference ProxyService proxyService,
-                                  @Reference ComponentBuilderRegistry registry,
-                                  @Reference WebApplicationActivator activator,
-                                  @Reference InjectorFactory injectorFactory) {
+                               @Reference ComponentBuilderRegistry registry,
+                               @Reference WebApplicationActivator activator,
+                               @Reference InjectorFactory injectorFactory) {
         this.proxyService = proxyService;
         this.builderRegistry = registry;
         this.activator = activator;
@@ -75,16 +75,18 @@ public class WebComponentBuilder implements ComponentBuilder<WebComponentDefinit
         Map<String, Map<String, InjectionSite>> injectorMappings = definition.getInjectionSiteMappings();
         ClassLoader cl = activator.getWebComponentClassLoader(classLoaderId);
         URL archiveUrl = definition.getWebArchiveUrl();
+        String contextUrl = definition.getContextUrl();
         return new WebComponent(componentId,
-                                   classLoaderId,
-                                   groupId,
-                                   archiveUrl,
-                                   cl,
-                                   injectorFactory,
-                                   activator,
-                                   proxyService,
-                                   propertyFactories,
-                                   injectorMappings);
+                                contextUrl,
+                                classLoaderId,
+                                groupId,
+                                archiveUrl,
+                                cl,
+                                injectorFactory,
+                                activator,
+                                proxyService,
+                                propertyFactories,
+                                injectorMappings);
     }
 
 }
