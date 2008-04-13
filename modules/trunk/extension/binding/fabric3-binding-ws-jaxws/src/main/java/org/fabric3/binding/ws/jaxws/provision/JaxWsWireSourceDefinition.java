@@ -27,6 +27,9 @@ public class JaxWsWireSourceDefinition  extends PhysicalWireSourceDefinition {
     private URI classloaderURI;
     private String wsdlElement;
     private String wsdlLocation;
+    private String serviceName;
+    private String portName;
+    private String namespaceURI;
 
     /**
      * @return Service interface for the wire source.
@@ -70,6 +73,10 @@ public class JaxWsWireSourceDefinition  extends PhysicalWireSourceDefinition {
      */
     public void setWsdlElement(String wsdlElement) {
         this.wsdlElement = wsdlElement;
+        String[] parsed = ProvisionHelper.parseWSDLElement(wsdlElement);
+        setNamespaceURI(parsed[0]);
+        setServiceName(parsed[1]);
+        setPortName(parsed[2]);
     }
 
     /**
@@ -85,5 +92,43 @@ public class JaxWsWireSourceDefinition  extends PhysicalWireSourceDefinition {
     public void setWsdlLocation(String wsdlLocation) {
         this.wsdlLocation = wsdlLocation;
     }
+
+
+    public void setNamespaceURI(String uri) {
+        this.namespaceURI = uri;
+    }
+
+   /**
+   * Get WSDL namespace uri
+   * @return wsdl namespace uri
+   */
+    public String getNamespaceURI() {
+        return namespaceURI;
+    }
+
+  /**
+   * Get WSDL Service Name
+   * @return service name
+   */
+    public String getServiceName() {
+       return serviceName;
+    }
+
+    public void setServiceName(String serviceName) {
+        this.serviceName = serviceName;
+    }
+
+  /**
+   * Get WSDL port name
+   * @return portname for the wsdl
+   */
+    public String getPortName() {
+        return portName;
+    }
+
+    public void setPortName(String portName) {
+        this.portName = portName;
+    }
+
 
 }
