@@ -23,6 +23,8 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.w3c.dom.Document;
+
 import org.fabric3.scdl.InjectionSite;
 import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
 
@@ -32,8 +34,10 @@ import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
 public class WebComponentDefinition extends PhysicalComponentDefinition {
     private URI classLoaderId;
     private URL webArchiveUrl;
-    // TODO document
+    private String contextUrl;
+    // map of resource id to injection site name/InjectionSite pair
     private Map<String, Map<String, InjectionSite>> injectionSiteMappings = new HashMap<String, Map<String, InjectionSite>>();
+    private final Map<String, Document> propertyValues = new HashMap<String, Document>();
 
     /**
      * Gets the classloader id.
@@ -68,4 +72,21 @@ public class WebComponentDefinition extends PhysicalComponentDefinition {
     public void setInjectionMappings(Map<String, Map<String, InjectionSite>> mappings) {
         injectionSiteMappings = mappings;
     }
+
+    public String getContextUrl() {
+        return contextUrl;
+    }
+
+    public void setContextUrl(String contextUrl) {
+        this.contextUrl = contextUrl;
+    }
+
+    public Map<String, Document> getPropertyValues() {
+        return propertyValues;
+    }
+
+    public void setPropertyValue(String name, Document value) {
+        propertyValues.put(name, value);
+    }
+
 }
