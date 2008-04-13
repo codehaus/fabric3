@@ -28,7 +28,7 @@
         <reference name="context" target="ContextTest"/>
         <reference name="composite" target="CompositeTest"/>
         <reference name="stateless" target="StatelessTest"/>
-        <!--<reference name="service" target="StatelessTest"/>-->
+        <reference name="counter" target="CounterService"/>
     </component>
 
     <component name="ContextTest">
@@ -41,6 +41,10 @@
 
     <component name="StatelessTest">
         <implementation.java class="org.fabric3.runtime.webapp.smoketest.StatelessTest"/>
+    </component>
+
+    <component name="CounterService">
+        <implementation.java class="org.fabric3.runtime.webapp.smoketest.CounterServiceImpl"/>
     </component>
 
 </composite>

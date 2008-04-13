@@ -64,5 +64,17 @@ public class TestServlet extends HttpServlet {
         }
 
         test.service(request, response, servletContext);
+
+        CounterService counter = context.getService(CounterService.class, "counter");
+        counter.increment();
+        if (counter.getCount() != 1) {
+            response.sendError(500, "Counter expected to be 1");
+            return;
+        }
+        counter.end();
+        if (counter.getCount() != 0) {
+            response.sendError(500, "Counter expected to be 0");
+            return;
+        }
     }
 }
