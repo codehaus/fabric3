@@ -60,20 +60,8 @@
     </orderEntry>
     <orderEntry type="module" module-name="fabric3-jdk-proxy" exported="" />
     <orderEntry type="module" module-name="fabric3-java" exported="" />
-    <orderEntry type="module-library" exported="">
-      <library name="stax:stax-api:1.0">
-        <CLASSES>
-          <root url="jar://$M2_REPO$/stax/stax-api/1.0/stax-api-1.0.jar!/" />
-        </CLASSES>
-        <JAVADOC>
-          <root url="jar://$M2_REPO$/stax/stax-api/1.0/stax-api-1.0-javadoc.jar!/" />
-        </JAVADOC>
-        <SOURCES>
-          <root url="jar://$M2_REPO$/stax/stax-api/1.0/stax-api-1.0-sources.jar!/" />
-        </SOURCES>
-      </library>
-    </orderEntry>
     <orderEntry type="module" module-name="fabric3-web" exported="" />
+    <orderEntry type="module" module-name="fabric3-container-web-spi" exported="" />
     <orderEntry type="module" module-name="fabric3-policy" exported="" />
     <orderEntry type="module" module-name="fabric3-util" exported="" />
     <orderEntry type="module-library">
@@ -86,6 +74,19 @@
         </JAVADOC>
         <SOURCES>
           <root url="jar://$M2_REPO$/javax/servlet/servlet-api/2.4/servlet-api-2.4-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="stax:stax-api:1.0">
+        <CLASSES>
+          <root url="jar://$M2_REPO$/stax/stax-api/1.0/stax-api-1.0.jar!/" />
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar://$M2_REPO$/stax/stax-api/1.0/stax-api-1.0-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$M2_REPO$/stax/stax-api/1.0/stax-api-1.0-sources.jar!/" />
         </SOURCES>
       </library>
     </orderEntry>
@@ -167,7 +168,6 @@
         </SOURCES>
       </library>
     </orderEntry>
-    <orderEntry type="module" module-name="fabric3-container-web-spi" />
     <orderEntryProperties />
   </component>
 </module>

@@ -33,7 +33,9 @@
     <orderEntry type="module" module-name="fabric3-monitor-api" exported="" />
     <orderEntry type="module" module-name="fabric3-introspection-spi" exported="" />
     <orderEntry type="module" module-name="fabric3-scdl" exported="" />
+    <orderEntry type="module" module-name="fabric3-transform-api" exported="" />
     <orderEntry type="module" module-name="fabric3-xmlfactory" exported="" />
+    <orderEntry type="module" module-name="fabric3-contribution-scanner-spi" exported="" />
     <orderEntry type="module-library">
       <library name="stax:stax-api:1.0">
         <CLASSES>
@@ -47,20 +49,6 @@
         </SOURCES>
       </library>
     </orderEntry>
-    <orderEntry type="module-library">
-      <library name="junit:junit:3.8.2">
-        <CLASSES>
-          <root url="jar://$M2_REPO$/junit/junit/3.8.2/junit-3.8.2.jar!/" />
-        </CLASSES>
-        <JAVADOC>
-          <root url="jar://$M2_REPO$/junit/junit/3.8.2/junit-3.8.2-javadoc.jar!/" />
-        </JAVADOC>
-        <SOURCES>
-          <root url="jar://$M2_REPO$/junit/junit/3.8.2/junit-3.8.2-sources.jar!/" />
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module" module-name="fabric3-contribution-scanner-spi" />
     <orderEntryProperties />
   </component>
 </module>

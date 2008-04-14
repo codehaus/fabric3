@@ -246,8 +246,6 @@
     <orderEntry type="module" module-name="fabric3-transform-api" exported="" />
     <orderEntry type="module" module-name="fabric3-xmlfactory" exported="" />
     <orderEntry type="module" module-name="fabric3-java" exported="" />
-    <orderEntry type="module" module-name="fabric3-loader" exported="" />
-    <orderEntry type="module" module-name="fabric3-transform" exported="" />
     <orderEntry type="module" module-name="fabric3-monitor" exported="" />
     <orderEntry type="module" module-name="fabric3-junit" exported="" />
     <orderEntry type="module" module-name="fabric3-maven-api" exported="" />
