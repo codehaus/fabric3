@@ -21,6 +21,7 @@ package org.fabric3.web.introspection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Map;
+import java.io.FileNotFoundException;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
@@ -76,13 +77,23 @@ public class WebComponentLoader implements TypeLoader<WebImplementation> {
         } catch (IntrospectionException e) {
             throw new LoaderException(e);
         }
-        ComponentType type = impl.getComponentType();
-        ComponentType componentType = loadComponentType(introspectionContext);
-        for (Map.Entry<String, ReferenceDefinition> entry : componentType.getReferences().entrySet()) {
-            type.add(entry.getValue());
-        }
-        for (Map.Entry<String, Property> entry : componentType.getProperties().entrySet()) {
-            type.add(entry.getValue());
+
+        try {
+            ComponentType type = impl.getComponentType();
+            // FIXME we should allow implementation to specify the component type;
+            ComponentType componentType = loadComponentType(introspectionContext);
+            for (Map.Entry<String, ReferenceDefinition> entry : componentType.getReferences().entrySet()) {
+                type.add(entry.getValue());
+            }
+            for (Map.Entry<String, Property> entry : componentType.getProperties().entrySet()) {
+                type.add(entry.getValue());
+            }
+        } catch (LoaderException e) {
+            if (e.getCause() instanceof FileNotFoundException) {
+                // ignore since we allow component types not to be specified in the web app 
+            } else {
+                throw e;
+            }
         }
         LoaderUtil.skipToEndElement(reader);
         return impl;
