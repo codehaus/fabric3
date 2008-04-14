@@ -20,6 +20,7 @@ package org.fabric3.scdl;
 
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -57,8 +58,8 @@ public class Composite extends AbstractComponentType<CompositeService, Composite
     }
 
     /**
-     * Returns the qualified name of this composite. The namespace portion of this name is the targetNamespace for other
-     * qualified names used in the composite.
+     * Returns the qualified name of this composite. The namespace portion of this name is the targetNamespace for other qualified names used in the
+     * composite.
      *
      * @return the qualified name of this composite
      */
@@ -86,6 +87,7 @@ public class Composite extends AbstractComponentType<CompositeService, Composite
 
     /**
      * Indicates that components in this composite should be co-located.
+     *
      * @return true if components in this composite should be co-located
      */
     public boolean isLocal() {
@@ -94,6 +96,7 @@ public class Composite extends AbstractComponentType<CompositeService, Composite
 
     /**
      * Sets whether components in this composite should be co-located.
+     *
      * @param local true if components in this composite should be co-located
      */
     public void setLocal(boolean local) {
@@ -189,6 +192,29 @@ public class Composite extends AbstractComponentType<CompositeService, Composite
             view.putAll(i.getIncluded().getComponents());
         }
         return Collections.unmodifiableMap(view);
+    }
+
+
+    /**
+     * Returns a collection of potential target services that match the supplied contract.
+     * <p/>
+     * This can be used to determine potential autowire targets for the service, based on compatibility of the contract.
+     *
+     * @param contract the candidate contract
+     * @return a collection of potential targets
+     */
+    public Collection<URI> getTargets(ServiceContract<?> contract) {
+        Collection<URI> targets = new ArrayList<URI>();
+        for (ComponentDefinition<? extends Implementation<?>> component : getComponents().values()) {
+            AbstractComponentType<?, ?, ?, ?> componentType = component.getComponentType();
+            for (ServiceDefinition service : (Collection<? extends ServiceDefinition>) componentType.getServices().values()) {
+                if (contract.isAssignableFrom(service.getServiceContract())) {
+                    URI uri = URI.create(component.getName() + '#' + service.getName()); 
+                    targets.add(uri);
+                }
+            }
+        }
+        return targets;
     }
 
 
