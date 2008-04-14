@@ -68,7 +68,6 @@ import org.fabric3.host.runtime.InitializationException;
 import org.fabric3.host.runtime.RuntimeLifecycleCoordinator;
 import org.fabric3.host.runtime.ScdlBootstrapper;
 import org.fabric3.host.runtime.ShutdownException;
-import org.fabric3.junit.scdl.JUnitImplementation;
 import org.fabric3.maven.runtime.MavenCoordinator;
 import org.fabric3.maven.runtime.MavenEmbeddedRuntime;
 import org.fabric3.monitor.MonitorFactory;
@@ -78,6 +77,7 @@ import org.fabric3.scdl.Composite;
 import org.fabric3.scdl.Implementation;
 import org.fabric3.scdl.Operation;
 import org.fabric3.scdl.ServiceDefinition;
+import org.fabric3.spi.Constants;
 import org.fabric3.spi.classloader.MultiParentClassLoader;
 
 /**
@@ -88,7 +88,7 @@ import org.fabric3.spi.classloader.MultiParentClassLoader;
  * @phase integration-test
  */
 public class Fabric3ITestMojo extends AbstractMojo {
-
+    public static final QName IMPLEMENTATION_JUNIT = new QName(Constants.FABRIC3_NS, "junit");
     private static final String SYSTEM_CONFIG_XML_FILE = "systemConfig.xml";
 
     private static final String DEFAULT_SYSTEM_CONFIG_DIR = "test-classes" + File.separator + "META-INF" + File.separator;
@@ -647,10 +647,10 @@ public class Fabric3ITestMojo extends AbstractMojo {
         Map<String, ComponentDefinition<? extends Implementation<?>>> components = composite.getComponents();
         for (Map.Entry<String, ComponentDefinition<? extends Implementation<?>>> entry : components.entrySet()) {
             String name = entry.getKey();
-            ComponentDefinition<? extends Implementation<?>> junitDefinition = entry.getValue();
-            Implementation<?> implementation = junitDefinition.getImplementation();
-            if (JUnitImplementation.class.isAssignableFrom(implementation.getClass())) {
-                SCATestSet testSet = createTestSet(runtime, name, uriBase, junitDefinition);
+            ComponentDefinition<? extends Implementation<?>> definition = entry.getValue();
+            Implementation<?> implementation = definition.getImplementation();
+            if (IMPLEMENTATION_JUNIT.equals(implementation.getType())) {
+                SCATestSet testSet = createTestSet(runtime, name, uriBase, definition);
                 suite.add(testSet);
             }
         }
@@ -661,8 +661,8 @@ public class Fabric3ITestMojo extends AbstractMojo {
                                        String name,
                                        URI contextId,
                                        ComponentDefinition definition) throws MojoExecutionException {
-        JUnitImplementation impl = (JUnitImplementation) definition.getImplementation();
-        PojoComponentType componentType = impl.getComponentType();
+        Implementation impl = definition.getImplementation();
+        PojoComponentType componentType = (PojoComponentType) impl.getComponentType();
         Map<String, ServiceDefinition> services = componentType.getServices();
         ServiceDefinition testService = services.get("testService");
         if (testService == null) {
