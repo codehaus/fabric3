@@ -59,11 +59,13 @@ public class WebComponentLoader implements TypeLoader<WebImplementation> {
 
     @Init
     public void init() {
+        registry.registerLoader(WebImplementation.IMPLEMENTATION_WEB, this);
         registry.registerLoader(WebImplementation.IMPLEMENTATION_WEBAPP, this);
     }
 
     @Destroy
     public void destroy() {
+        registry.unregisterLoader(WebImplementation.IMPLEMENTATION_WEB);
         registry.unregisterLoader(WebImplementation.IMPLEMENTATION_WEBAPP);
     }
 
