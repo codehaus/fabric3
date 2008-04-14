@@ -18,13 +18,11 @@
  * under the License.
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
-           xmlns:fabric3="http://fabric3.org/xmlns/sca/2.0-alpha"
-           xmlns:groovy="http://www.fabric3.org/xmlns/groovy/1.0"
            name="WebappSmoketestComposite"
            autowire="false">
 
     <component name="smoketest">
-        <fabric3:web/>
+        <implementation.web/>
         <reference name="context" target="ContextTest"/>
         <reference name="composite" target="CompositeTest"/>
         <reference name="stateless" target="StatelessTest"/>
