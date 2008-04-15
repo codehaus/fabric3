@@ -16,16 +16,17 @@
  */
 package org.fabric3.fabric.command;
 
-import org.fabric3.spi.builder.BuilderException;
-import org.fabric3.spi.builder.resource.ResourceContainerBuilderRegistry;
-import org.fabric3.spi.command.CommandExecutor;
-import org.fabric3.spi.command.CommandExecutorRegistry;
-import org.fabric3.spi.command.ExecutionException;
-import org.fabric3.spi.model.physical.PhysicalResourceContainerDefinition;
 import org.osoa.sca.annotations.Constructor;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
+
+import org.fabric3.fabric.classloader.ClassLoaderBuilder;
+import org.fabric3.spi.builder.BuilderException;
+import org.fabric3.spi.command.CommandExecutor;
+import org.fabric3.spi.command.CommandExecutorRegistry;
+import org.fabric3.spi.command.ExecutionException;
+import org.fabric3.spi.model.physical.PhysicalClassLoaderDefinition;
 
 /**
  * Eagerly initializes a component on a service node.
@@ -35,18 +36,18 @@ import org.osoa.sca.annotations.Reference;
 @EagerInit
 public class ClassloaderProvisionCommandExecutor implements CommandExecutor<ClassloaderProvisionCommand> {
 
-    private final ResourceContainerBuilderRegistry resourceContainerBuilderRegistry;
+    private ClassLoaderBuilder classLoaderBuilder;
     private CommandExecutorRegistry commandExecutorRegistry;
 
     @Constructor
     public ClassloaderProvisionCommandExecutor(@Reference CommandExecutorRegistry commandExecutorRegistry,
-                                               @Reference ResourceContainerBuilderRegistry resourceContainerBuilderRegistry) {
-        this.resourceContainerBuilderRegistry = resourceContainerBuilderRegistry;
+                                               @Reference ClassLoaderBuilder classLoaderBuilder) {
+        this.classLoaderBuilder = classLoaderBuilder;
         this.commandExecutorRegistry = commandExecutorRegistry;
     }
 
-    public ClassloaderProvisionCommandExecutor(ResourceContainerBuilderRegistry resourceContainerBuilderRegistry) {
-        this.resourceContainerBuilderRegistry = resourceContainerBuilderRegistry;
+    public ClassloaderProvisionCommandExecutor(ClassLoaderBuilder classLoaderBuilder) {
+        this.classLoaderBuilder = classLoaderBuilder;
     }
 
     @Init
@@ -55,14 +56,14 @@ public class ClassloaderProvisionCommandExecutor implements CommandExecutor<Clas
     }
 
     public void execute(ClassloaderProvisionCommand command) throws ExecutionException {
-        
+
         try {
-            for (PhysicalResourceContainerDefinition prcd : command.getPhysicalClassLoaderDefinitions()) {
-                resourceContainerBuilderRegistry.build(prcd);
+            for (PhysicalClassLoaderDefinition definition : command.getPhysicalClassLoaderDefinitions()) {
+                classLoaderBuilder.build(definition);
             }
         } catch (BuilderException e) {
             throw new ExecutionException(e.getMessage(), e);
         }
-        
+
     }
 }

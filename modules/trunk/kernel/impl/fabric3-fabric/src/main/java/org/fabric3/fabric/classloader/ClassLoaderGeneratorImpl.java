@@ -24,7 +24,6 @@ import java.util.List;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.spi.model.topology.ClassLoaderResourceDescription;
 import org.fabric3.scdl.CompositeImplementation;
 import org.fabric3.scdl.Implementation;
 import org.fabric3.scdl.ReferenceDefinition;
@@ -38,89 +37,44 @@ import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalResource;
 import org.fabric3.spi.model.instance.LogicalService;
-import org.fabric3.spi.model.physical.PhysicalResourceContainerDefinition;
+import org.fabric3.spi.model.physical.PhysicalClassLoaderDefinition;
+import org.fabric3.spi.model.topology.ClassLoaderResourceDescription;
 import org.fabric3.spi.model.topology.RuntimeInfo;
 import org.fabric3.spi.model.type.ContributionResourceDescription;
 import org.fabric3.spi.services.discovery.DiscoveryService;
-import org.fabric3.spi.util.UriHelper;
 
 /**
- * Default implementation of the ClassLoaderGenerator. This implementation groups components contained within a
- * composite deployed to the same participant in a common classloader. If components are being included in a composite,
- * the existing participant classloader will be updated with required resources and parent classloaders (e.g. when
- * resources are imported from other contributions). If a classloader does not exist on the participant, a new one
- * including parents, will be provisioned.
+ * Default implementation of the ClassLoaderGenerator. This implementation groups components contained within a composite deployed to the same
+ * participant in a common classloader. If components are being included in a composite, the existing participant classloader will be updated with
+ * required resources and parent classloaders (e.g. when resources are imported from other contributions). If a classloader does not exist on the
+ * participant, a new one including parents, will be provisioned.
  */
 @EagerInit
 public class ClassLoaderGeneratorImpl implements ClassLoaderGenerator {
-    
+
     private DiscoveryService discoveryService;
 
     public ClassLoaderGeneratorImpl(@Reference DiscoveryService discoveryService) {
         this.discoveryService = discoveryService;
     }
 
-    public PhysicalResourceContainerDefinition generate(LogicalComponent<?> component) throws GenerationException {
-        
+    public PhysicalClassLoaderDefinition generate(LogicalComponent<?> component) throws GenerationException {
+
         LogicalComponent<CompositeImplementation> parent = component.getParent();
         Implementation<?> impl = component.getDefinition().getImplementation();
-        
+
         List<ResourceDescription<?>> descriptions = impl.getResourceDescriptions();
-        
+
         return generate(parent, descriptions);
-        
+
     }
 
-    public PhysicalResourceContainerDefinition generate(LogicalResource<?> resource) throws GenerationException {
-        
-        LogicalComponent<?> component = resource.getParent();
-        LogicalComponent<CompositeImplementation> parent = component.getParent();
-        
-        List<ResourceDescription<?>> descriptions = resource.getResourceDefinition().getResourceDescriptions();
-        
-        return generate(parent, descriptions);
-        
-    }
+    private PhysicalClassLoaderDefinition generate(LogicalComponent<?> parent, List<ResourceDescription<?>> descriptions) throws GenerationException {
 
-    public PhysicalResourceContainerDefinition generate(LogicalBinding<?> binding) throws GenerationException {
-        
-        Bindable bindable = binding.getParent();
-        LogicalComponent<?> parent = bindable.getParent();
-        
-        List<ResourceDescription<?>> descriptions = new ArrayList<ResourceDescription<?>>();
-        
-        if (bindable instanceof LogicalReference) {
-            ReferenceDefinition definition = ((LogicalReference) bindable).getDefinition();
-            for (ResourceDescription<?> description : definition.getResourceDescriptions()) {
-                if (!descriptions.contains(description)) {
-                    descriptions.add(description);
-                }
-            }
-        } else if (bindable instanceof LogicalService) {
-            ServiceDefinition definition = ((LogicalService) bindable).getDefinition();
-            for (ResourceDescription<?> description : definition.getResourceDescriptions()) {
-                if (!descriptions.contains(description)) {
-                    descriptions.add(description);
-                }
-            }
-        }
-        
-        for (ResourceDescription<?> description : binding.getBinding().getResourceDescriptions()) {
-            if (!descriptions.contains(description)) {
-                descriptions.add(description);
-            }
-        }
-        
-        return generate(parent, descriptions);
-        
-    }
-
-    private PhysicalResourceContainerDefinition generate(LogicalComponent<?> parent, List<ResourceDescription<?>> descriptions) throws GenerationException {
-        
         URI runtimeId = parent.getRuntimeId();
-        
+
         RuntimeInfo info = discoveryService.getRuntimeInfo(runtimeId);
-        
+
         if (info == null) {
             String id = runtimeId.toString();
             throw new ClassLoaderGenerationException("Runtime not found [" + id + "]", id);
@@ -154,8 +108,8 @@ public class ClassLoaderGeneratorImpl implements ClassLoaderGenerator {
     }
 
     private void processPhysicalDefinition(RuntimeInfo info, PhysicalClassLoaderDefinition definition, List<ResourceDescription<?>> descriptions)
-        throws ClassLoaderGenerationException {
-        
+            throws ClassLoaderGenerationException {
+
         // Determine if a classloader exists on the target participant.
         ClassLoaderResourceDescription clDescription = info.getResourceDescription(ClassLoaderResourceDescription.class, definition.getUri());
         if (clDescription == null) {
@@ -166,7 +120,7 @@ public class ClassLoaderGeneratorImpl implements ClassLoaderGenerator {
     }
 
     private void processNew(PhysicalClassLoaderDefinition definition, List<ResourceDescription<?>> descriptions) {
-        
+
         for (ResourceDescription<?> description : descriptions) {
             if (description instanceof ContributionResourceDescription) {
                 ContributionResourceDescription contribDescription = (ContributionResourceDescription) description;
@@ -185,9 +139,10 @@ public class ClassLoaderGeneratorImpl implements ClassLoaderGenerator {
         }
     }
 
-    private void processUpdate(PhysicalClassLoaderDefinition definition, ClassLoaderResourceDescription clDescription, 
-            List<ResourceDescription<?>> descriptions) {
-        
+    private void processUpdate(PhysicalClassLoaderDefinition definition,
+                               ClassLoaderResourceDescription clDescription,
+                               List<ResourceDescription<?>> descriptions) {
+
         definition.setUpdate(true);
         for (ResourceDescription<?> description : descriptions) {
             if (description instanceof ContributionResourceDescription) {

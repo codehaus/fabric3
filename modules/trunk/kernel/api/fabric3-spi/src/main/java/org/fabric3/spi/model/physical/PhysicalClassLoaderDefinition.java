@@ -14,7 +14,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.fabric.classloader;
+package org.fabric3.spi.model.physical;
 
 import java.net.URI;
 import java.net.URL;
@@ -24,27 +24,33 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.fabric3.spi.model.physical.PhysicalResourceContainerDefinition;
-
 /**
- * A resource container definition used to provision composite classloaders on a service node from a physical change
- * set.
+ * A definition used to provision classloaders on a runtime.
  *
  * @version $Rev$ $Date$
  */
-public class PhysicalClassLoaderDefinition extends PhysicalResourceContainerDefinition {
-    
+public class PhysicalClassLoaderDefinition {
+    private URI uri;
     private List<URI> parentClassLoaders = new ArrayList<URI>();
     private Set<URL> urls = new LinkedHashSet<URL>();
     private boolean update;
 
-    protected PhysicalClassLoaderDefinition(URI name) {
-        super(name);
+    public PhysicalClassLoaderDefinition(URI uri) {
+        this.uri = uri;
     }
 
     /**
-     * Adds a remotely dereferenceable resource URL to the container definition. When a classloader is created, a copy
-     * of the resource will be avilable on the classpath.
+     * Returns the classloader uri.
+     *
+     * @return the classloader uri
+     */
+    public URI getUri() {
+        return uri;
+    }
+
+    /**
+     * Adds a remotely dereferenceable resource URL to the container definition. When a classloader is created, a copy of the resource will be
+     * avilable on the classpath.
      *
      * @param url the URL to add
      */
@@ -53,8 +59,7 @@ public class PhysicalClassLoaderDefinition extends PhysicalResourceContainerDefi
     }
 
     /**
-     * Returns the dereferenceable resource URLs for the container definition as an ordered Set. Order is guaranteed for
-     * set iteration.
+     * Returns the dereferenceable resource URLs for the container definition as an ordered Set. Order is guaranteed for set iteration.
      *
      * @return the resource URLs as an ordered Set
      */
@@ -90,28 +95,28 @@ public class PhysicalClassLoaderDefinition extends PhysicalResourceContainerDefi
 
     @Override
     public boolean equals(Object obj) {
-        
+
         if (obj == null || obj.getClass() != PhysicalClassLoaderDefinition.class) {
             return false;
         }
-        
+
         PhysicalClassLoaderDefinition other = (PhysicalClassLoaderDefinition) obj;
-        
-        return parentClassLoaders.equals(other.parentClassLoaders) && 
-               urls.equals(other.urls) && 
-               update == other.update && 
-               getUri().equals(other.getUri());
+
+        return parentClassLoaders.equals(other.parentClassLoaders) &&
+                urls.equals(other.urls) &&
+                update == other.update &&
+                uri.equals(other.uri);
     }
 
     @Override
     public int hashCode() {
-        
+
         int hash = 7;
-        hash = 31 * hash + getUri().hashCode();
+        hash = 31 * hash + uri.hashCode();
         hash = 31 * hash + parentClassLoaders.hashCode();
         hash = 31 * hash + urls.hashCode();
         hash = 31 * hash + (update ? 0 : 1);
-        
+
         return hash;
     }
 }

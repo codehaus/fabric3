@@ -29,8 +29,8 @@ import org.fabric3.fabric.assembly.normalizer.PromotionNormalizer;
 import org.fabric3.fabric.assembly.normalizer.PromotionNormalizerImpl;
 import org.fabric3.fabric.builder.ConnectorImpl;
 import org.fabric3.fabric.builder.component.DefaultComponentBuilderRegistry;
-import org.fabric3.fabric.builder.resource.ResourceContainerBuilderRegistryImpl;
 import org.fabric3.fabric.classloader.ClassLoaderBuilder;
+import org.fabric3.fabric.classloader.ClassLoaderBuilderImpl;
 import org.fabric3.fabric.classloader.ClassLoaderGeneratorImpl;
 import org.fabric3.fabric.command.ClassloaderProvisionCommand;
 import org.fabric3.fabric.command.ClassloaderProvisionCommandExecutor;
@@ -46,12 +46,12 @@ import org.fabric3.fabric.command.InitializeComponentCommand;
 import org.fabric3.fabric.command.InitializeComponentCommandExecutor;
 import org.fabric3.fabric.command.InitializeComponentCommandGenerator;
 import org.fabric3.fabric.command.LocalWireCommandGenerator;
+import org.fabric3.fabric.command.ResourceWireCommandGenerator;
 import org.fabric3.fabric.command.StartCompositeContextCommand;
 import org.fabric3.fabric.command.StartCompositeContextCommandExecutor;
 import org.fabric3.fabric.command.StartCompositeContextCommandGenerator;
 import org.fabric3.fabric.command.WireAttachCommand;
 import org.fabric3.fabric.command.WireAttachCommandExecutor;
-import org.fabric3.fabric.command.ResourceWireCommandGenerator;
 import org.fabric3.fabric.generator.GeneratorRegistryImpl;
 import org.fabric3.fabric.implementation.singleton.SingletonGenerator;
 import org.fabric3.fabric.implementation.singleton.SingletonWireAttacher;
@@ -98,7 +98,6 @@ import org.fabric3.spi.assembly.AssemblyException;
 import org.fabric3.spi.builder.component.ComponentBuilderRegistry;
 import org.fabric3.spi.builder.component.SourceWireAttacher;
 import org.fabric3.spi.builder.component.TargetWireAttacher;
-import org.fabric3.spi.builder.resource.ResourceContainerBuilderRegistry;
 import org.fabric3.spi.command.CommandExecutorRegistry;
 import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.spi.generator.ClassLoaderGenerator;
@@ -127,11 +126,11 @@ import org.fabric3.system.runtime.SystemTargetWireAttacher;
 import org.fabric3.transform.DefaultTransformerRegistry;
 import org.fabric3.transform.PullTransformer;
 import org.fabric3.transform.TransformerRegistry;
+import org.fabric3.transform.dom2java.String2Boolean;
 import org.fabric3.transform.dom2java.String2Class;
 import org.fabric3.transform.dom2java.String2Integer;
 import org.fabric3.transform.dom2java.String2QName;
 import org.fabric3.transform.dom2java.String2String;
-import org.fabric3.transform.dom2java.String2Boolean;
 import org.fabric3.transform.dom2java.generics.list.String2ListOfString;
 import org.fabric3.transform.dom2java.generics.map.String2MapOfString2String;
 
@@ -173,11 +172,8 @@ public class BootstrapAssemblyFactory {
 
         LogicalModelGenerator logicalModelGenerator = createLogicalModelGenerator(logicalComponentManager);
 
-        Assembly runtimeAssembly = new RuntimeAssemblyImpl(allocator,
-                                                           metaDataStore,
-                                                           physicalModelGenerator,
-                                                           logicalModelGenerator,
-                                                           logicalComponentManager);
+        Assembly runtimeAssembly =
+                new RuntimeAssemblyImpl(allocator, metaDataStore, physicalModelGenerator, logicalModelGenerator, logicalComponentManager);
         try {
             runtimeAssembly.initialize();
         } catch (AssemblyException e) {
@@ -237,7 +233,8 @@ public class BootstrapAssemblyFactory {
 
         Map<Class<? extends PhysicalWireSourceDefinition>, SourceWireAttacher<? extends PhysicalWireSourceDefinition>> sourceAttachers =
                 new ConcurrentHashMap<Class<? extends PhysicalWireSourceDefinition>, SourceWireAttacher<? extends PhysicalWireSourceDefinition>>();
-        sourceAttachers.put(SystemWireSourceDefinition.class, new SystemSourceWireAttacher(componentManager, transformerRegistry, classLoaderRegistry));
+        sourceAttachers.put(SystemWireSourceDefinition.class,
+                            new SystemSourceWireAttacher(componentManager, transformerRegistry, classLoaderRegistry));
 
         Map<Class<? extends PhysicalWireTargetDefinition>, TargetWireAttacher<? extends PhysicalWireTargetDefinition>> targetAttachers =
                 new ConcurrentHashMap<Class<? extends PhysicalWireTargetDefinition>, TargetWireAttacher<? extends PhysicalWireTargetDefinition>>();
@@ -249,7 +246,7 @@ public class BootstrapAssemblyFactory {
         connector.setSourceAttachers(sourceAttachers);
         connector.setTargetAttachers(targetAttachers);
 
-        ResourceContainerBuilderRegistry resourceRegistry = createResourceBuilderRegistry(classLoaderRegistry);
+        ClassLoaderBuilder classLoaderBuilder = createClassLoaderBuilder(classLoaderRegistry);
 
         CommandExecutorRegistryImpl commandRegistry = new CommandExecutorRegistryImpl();
 
@@ -258,15 +255,14 @@ public class BootstrapAssemblyFactory {
         commandRegistry.register(ComponentBuildCommand.class, new ComponentBuildCommandExecutor(registry, componentManager));
         commandRegistry.register(WireAttachCommand.class, new WireAttachCommandExecutor(connector));
         commandRegistry.register(ComponentStartCommand.class, new ComponentStartCommandExecutor(componentManager));
-        commandRegistry.register(ClassloaderProvisionCommand.class, new ClassloaderProvisionCommandExecutor(resourceRegistry));
+        commandRegistry.register(ClassloaderProvisionCommand.class, new ClassloaderProvisionCommandExecutor(classLoaderBuilder));
 
         return commandRegistry;
 
     }
 
-    private static ResourceContainerBuilderRegistry createResourceBuilderRegistry(ClassLoaderRegistry classLoaderRegistry) {
+    private static ClassLoaderBuilder createClassLoaderBuilder(ClassLoaderRegistry classLoaderRegistry) {
 
-        ResourceContainerBuilderRegistry resourceRegistry = new ResourceContainerBuilderRegistryImpl();
         ArtifactResolverRegistry artifactResolverRegistry = new ArtifactResolverRegistryImpl();
 
         FileSystemResolver resolver = new FileSystemResolver(artifactResolverRegistry);
@@ -275,14 +271,7 @@ public class BootstrapAssemblyFactory {
         ClasspathProcessorRegistry classpathProcessorRegistry = new ClasspathProcessorRegistryImpl();
         JarClasspathProcessor classpathProcessor = new JarClasspathProcessor(classpathProcessorRegistry);
         classpathProcessor.init();
-        ClassLoaderBuilder clBuilder = new ClassLoaderBuilder(resourceRegistry,
-                                                              classLoaderRegistry,
-                                                              artifactResolverRegistry,
-                                                              classpathProcessorRegistry);
-        clBuilder.init();
-
-        return resourceRegistry;
-
+        return new ClassLoaderBuilderImpl(classLoaderRegistry, artifactResolverRegistry, classpathProcessorRegistry);
     }
 
     private static PhysicalModelGenerator createPhysicalModelGenerator(LogicalComponentManager logicalComponentManager,
@@ -291,9 +280,7 @@ public class BootstrapAssemblyFactory {
 
         GeneratorRegistry generatorRegistry = createGeneratorRegistry();
         PhysicalOperationHelper physicalOperationHelper = new PhysicalOperationHelperImpl();
-        PhysicalWireGenerator wireGenerator = new PhysicalWireGeneratorImpl(generatorRegistry,
-                                                                            new NullPolicyResolver(),
-                                                                            physicalOperationHelper);
+        PhysicalWireGenerator wireGenerator = new PhysicalWireGeneratorImpl(generatorRegistry, new NullPolicyResolver(), physicalOperationHelper);
 
         RuntimeInfoService infoService = new BootstrapRuntimeInfoService(classLoaderRegistry);
         DiscoveryService discoveryService = new SingleVMDiscoveryService(infoService);

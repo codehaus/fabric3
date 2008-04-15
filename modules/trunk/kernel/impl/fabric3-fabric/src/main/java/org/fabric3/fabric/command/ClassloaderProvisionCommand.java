@@ -21,7 +21,7 @@ package org.fabric3.fabric.command;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
-import org.fabric3.fabric.classloader.PhysicalClassLoaderDefinition;
+import org.fabric3.spi.model.physical.PhysicalClassLoaderDefinition;
 import org.fabric3.spi.command.AbstractCommand;
 
 /**

@@ -159,12 +159,8 @@
         <system:implementation.system class="org.fabric3.fabric.classloader.ClassLoaderGeneratorImpl"/>
     </component>
 
-    <component name="resourceBuilderRegistry">
-        <system:implementation.system class="org.fabric3.fabric.builder.resource.ResourceContainerBuilderRegistryImpl"/>
-    </component>
-
     <component name="classLaoderBuilder">
-        <system:implementation.system class="org.fabric3.fabric.classloader.ClassLoaderBuilder"/>
+        <system:implementation.system class="org.fabric3.fabric.classloader.ClassLoaderBuilderImpl"/>
     </component>
 
     <!-- Definitions registry -->

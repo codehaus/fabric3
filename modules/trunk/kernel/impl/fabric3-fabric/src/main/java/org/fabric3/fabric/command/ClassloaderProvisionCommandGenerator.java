@@ -18,12 +18,13 @@
  */
 package org.fabric3.fabric.command;
 
-import org.fabric3.fabric.classloader.PhysicalClassLoaderDefinition;
+import org.fabric3.spi.model.physical.PhysicalClassLoaderDefinition;
 import org.fabric3.spi.generator.ClassLoaderGenerator;
 import org.fabric3.spi.generator.CommandGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
+
 import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Reference;
 
@@ -54,7 +55,7 @@ public class ClassloaderProvisionCommandGenerator implements CommandGenerator {
             }
             
         } else if (!component.isProvisioned()) {
-            PhysicalClassLoaderDefinition physicalClassLoaderDefinition = (PhysicalClassLoaderDefinition) classLoaderGenerator.generate(component);
+            PhysicalClassLoaderDefinition physicalClassLoaderDefinition = classLoaderGenerator.generate(component);
             command.addPhysicalClassLoaderDefinition(physicalClassLoaderDefinition);
         }
         
