@@ -24,6 +24,7 @@ package org.fabric3.spi.assembly;
  * @version $Rev$ $Date$
  */
 public class ActivateException extends AssemblyException {
+    private static final long serialVersionUID = -8846536703004740119L;
 
     public ActivateException(String message, String identifier) {
         super(message, identifier);

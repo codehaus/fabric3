@@ -26,6 +26,7 @@ import org.fabric3.host.Fabric3Exception;
  * @version $Rev$ $Date$
  */
 public class AssemblyException extends Fabric3Exception {
+    private static final long serialVersionUID = -2529045209367837417L;
 
     public AssemblyException(String message) {
         super(message);
