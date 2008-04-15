@@ -21,7 +21,7 @@ package org.fabric3.fabric.services.routing;
 import org.fabric3.spi.generator.CommandMap;
 
 /**
- * Implementations route physical change sets to a runtime node.
+ * Implementations route physical commands to a runtime node.
  *
  * @version $Rev$ $Date$
  */
@@ -30,8 +30,7 @@ public interface RoutingService {
     /**
      * Routes a command set to a runtime node
      *
-     * @param runtimeId the runtime node id
-     * @param set       the command set
+     * @param commandMap the command map to route
      * @throws RoutingException if an exception occurs during routing
      */
     void route(CommandMap commandMap) throws RoutingException;

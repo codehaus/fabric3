@@ -21,12 +21,10 @@ import org.fabric3.spi.command.CommandSet;
 
 /**
  * Event monitor for the routing service
+ *
  * @version $Rev$ $Date$
  */
 public interface RoutingMonitor {
-
-    @LogLevel("FINE")
-    void routeChangeSet(String runtimeId);
 
     @LogLevel("FINE")
     void routeCommandSet(String runtimeId, CommandSet set);
