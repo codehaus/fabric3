@@ -30,7 +30,7 @@ import org.fabric3.spi.model.physical.PhysicalWireDefinition;
 public interface Connector {
 
     /**
-     * Performs the connect operaiton.
+     * Performs the connect operation.
      *
      * @param definition metadata describing the wire to create
      * @throws BuilderException if an error connecting the components occurs.
