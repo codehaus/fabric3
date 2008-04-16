@@ -78,14 +78,11 @@ public class ClassLoaderBuilderImpl implements ClassLoaderBuilder {
         MultiParentClassLoader loader = new MultiParentClassLoader(name, classpath, null);
         for (URI uri : definition.getParentClassLoaders()) {
             ClassLoader parent = classLoaderRegistry.getClassLoader(uri);
-            /*if (parent == null) {
+            if (parent == null) {
                 String identifier = uri.toString();
                 throw new ClassLoaderBuilderException("Parent classloader not found [" + identifier + "]", identifier);
-            }*/
-            // TODO fix this
-            if (parent != null) {
-                loader.addParent(parent);
             }
+            loader.addParent(parent);
         }
 
         classLoaderRegistry.register(name, loader);

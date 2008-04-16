@@ -18,7 +18,6 @@ package org.fabric3.fabric.classloader;
 
 import java.net.URI;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 
 import org.osoa.sca.annotations.EagerInit;
@@ -26,17 +25,10 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.scdl.CompositeImplementation;
 import org.fabric3.scdl.Implementation;
-import org.fabric3.scdl.ReferenceDefinition;
 import org.fabric3.scdl.ResourceDescription;
-import org.fabric3.scdl.ServiceDefinition;
 import org.fabric3.spi.generator.ClassLoaderGenerator;
 import org.fabric3.spi.generator.GenerationException;
-import org.fabric3.spi.model.instance.Bindable;
-import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.instance.LogicalComponent;
-import org.fabric3.spi.model.instance.LogicalReference;
-import org.fabric3.spi.model.instance.LogicalResource;
-import org.fabric3.spi.model.instance.LogicalService;
 import org.fabric3.spi.model.physical.PhysicalClassLoaderDefinition;
 import org.fabric3.spi.model.topology.ClassLoaderResourceDescription;
 import org.fabric3.spi.model.topology.RuntimeInfo;
@@ -80,30 +72,15 @@ public class ClassLoaderGeneratorImpl implements ClassLoaderGenerator {
             throw new ClassLoaderGenerationException("Runtime not found [" + id + "]", id);
         }
 
-        //PhysicalChangeSet changeSet = context.getPhysicalChangeSet();
-        // check to see if the classloader definition has been created as part of the current changeset
         URI classLoaderUri = parent.getUri();
-
-        //PhysicalClassLoaderDefinition definition = changeSet.getResourceDefinition(PhysicalClassLoaderDefinition.class, classLoaderUri);
-        PhysicalClassLoaderDefinition definition = null;
-        if (definition == null) {
-            // classloader definition has not been created during generation, create one including parents if necessary.
-            definition = new PhysicalClassLoaderDefinition(classLoaderUri);
-            LogicalComponent<CompositeImplementation> grandParent = parent.getParent();
-            if (grandParent != null) {
-                // set the classloader hierarchy if we are not at the domain level
-                URI uri = grandParent.getUri();
-                definition.addParentClassLoader(uri);
-                if (discoveryService != null) {
-                    //generateClassLoaderHierarchy(uri, info);
-                }
-            }
-            //changeSet.addResourceDefinition(definition);
-            processPhysicalDefinition(info, definition, descriptions);
-        } else {
-            // process the existing definition
-            processPhysicalDefinition(info, definition, descriptions);
+        PhysicalClassLoaderDefinition definition = new PhysicalClassLoaderDefinition(classLoaderUri);
+        LogicalComponent<CompositeImplementation> grandParent = parent.getParent();
+        if (grandParent != null) {
+            // set the classloader hierarchy if we are not at the domain level
+            URI uri = grandParent.getUri();
+            definition.addParentClassLoader(uri);
         }
+        processPhysicalDefinition(info, definition, descriptions);
         return definition;
     }
 
@@ -165,39 +142,5 @@ public class ClassLoaderGeneratorImpl implements ClassLoaderGenerator {
             }
         }
     }
-
-    /**
-     * Generates parent classloaders if they are not present for a given uri and adds them to the current generator
-     * context.
-     *
-     * @param uri     the uri
-     * @param info    the current runtime info
-     * @param context the generator context
-     */
-    /*private void generateClassLoaderHierarchy(URI uri, RuntimeInfo info) {
-        
-        ClassLoaderResourceDescription desc = info.getResourceDescription(ClassLoaderResourceDescription.class, uri);
-        PhysicalChangeSet changeSet = context.getPhysicalChangeSet();
-        if (desc != null) {
-            return;
-        } else {
-            PhysicalClassLoaderDefinition definition = changeSet.getResourceDefinition(PhysicalClassLoaderDefinition.class, uri);
-            if (definition != null) {
-                return;
-            }
-        }
-
-        URI parentUri = URI.create(UriHelper.getParentName(uri));
-        if (parentUri != null) {
-            generateClassLoaderHierarchy(parentUri, info, context);
-        }
-
-        PhysicalClassLoaderDefinition definition = new PhysicalClassLoaderDefinition(uri);
-        // set the classloader hierarchy if we are not at the domain level
-        definition.addParentClassLoader(parentUri);
-        changeSet.addResourceDefinition(definition);
-        
-    }*/
-
 
 }
