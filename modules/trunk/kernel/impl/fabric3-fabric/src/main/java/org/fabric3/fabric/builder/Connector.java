@@ -23,17 +23,17 @@ import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.model.physical.PhysicalWireDefinition;
 
 /**
- * Implementations are responsible for creating a wires between source and target artifacts
+ * Connects a source to a target via wire.
  *
  * @version $$Rev$$ $$Date$$
  */
 public interface Connector {
 
     /**
-     * Placeholder for the connect operation using federated deployment
+     * Performs the connect operaiton.
      *
      * @param definition metadata describing the wire to create
-     * @throws WiringException
+     * @throws BuilderException if an error connecting the components occurs.
      */
     void connect(PhysicalWireDefinition definition) throws BuilderException;
 

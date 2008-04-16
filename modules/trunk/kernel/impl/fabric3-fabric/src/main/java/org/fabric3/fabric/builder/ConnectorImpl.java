@@ -39,7 +39,7 @@ import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.Wire;
 
 /**
- * The default connector implmentation
+ * The default connector implmentation.
  *
  * @version $$Rev$$ $$Date$$
  */
