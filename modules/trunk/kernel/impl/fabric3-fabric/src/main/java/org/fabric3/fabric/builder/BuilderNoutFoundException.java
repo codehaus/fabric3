@@ -16,32 +16,35 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.spi.builder;
+package org.fabric3.fabric.builder;
+
+import org.fabric3.spi.builder.BuilderException;
 
 /**
  * Represents an error processing an assembly model
  *
  * @version $Rev$ $Date$
  */
-public class BuilderConfigException extends BuilderException {
+public class BuilderNoutFoundException extends BuilderException {
+    private static final long serialVersionUID = 2604579115547966762L;
 
-    public BuilderConfigException() {
+    public BuilderNoutFoundException() {
         super();
     }
 
-    public BuilderConfigException(String message) {
+    public BuilderNoutFoundException(String message) {
         super(message);
     }
 
-    public BuilderConfigException(String message, String identifier) {
+    public BuilderNoutFoundException(String message, String identifier) {
         super(message, identifier);
     }
 
-    public BuilderConfigException(String message, Throwable cause) {
+    public BuilderNoutFoundException(String message, Throwable cause) {
         super(message, cause);
     }
 
-    public BuilderConfigException(Throwable cause) {
+    public BuilderNoutFoundException(Throwable cause) {
         super(cause);
     }
 

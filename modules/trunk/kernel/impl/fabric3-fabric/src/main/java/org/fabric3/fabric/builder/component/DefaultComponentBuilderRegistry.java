@@ -21,7 +21,7 @@ package org.fabric3.fabric.builder.component;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.fabric3.spi.builder.BuilderConfigException;
+import org.fabric3.fabric.builder.BuilderNoutFoundException;
 import org.fabric3.spi.builder.BuilderException;
 import org.fabric3.spi.builder.component.ComponentBuilder;
 import org.fabric3.spi.builder.component.ComponentBuilderRegistry;
@@ -66,7 +66,7 @@ public class DefaultComponentBuilderRegistry implements ComponentBuilderRegistry
 
         ComponentBuilder builder = registry.get(componentDefinition.getClass());
         if (builder == null) {
-            throw new BuilderConfigException("Builder not found for ", componentDefinition.getClass().getName());
+            throw new BuilderNoutFoundException("Builder not found for ", componentDefinition.getClass().getName());
         }
         return builder.build(componentDefinition);
 
