@@ -86,7 +86,7 @@
     <!-- default commands -->
 
     <component name="classloaderProvisionCommandGenerator">
-        <system:implementation.system class="org.fabric3.fabric.command.ClassloaderProvisionCommandGenerator"/>
+        <system:implementation.system class="org.fabric3.fabric.generator.classloader.ClassloaderProvisionCommandGenerator"/>
         <property name="order">0</property>
     </component>
     
@@ -156,11 +156,11 @@
     </component>
 
     <component name="classLoaderGenerator">
-        <system:implementation.system class="org.fabric3.fabric.classloader.ClassLoaderGeneratorImpl"/>
+        <system:implementation.system class="org.fabric3.fabric.generator.classloader.ClassLoaderGeneratorImpl"/>
     </component>
 
     <component name="classLaoderBuilder">
-        <system:implementation.system class="org.fabric3.fabric.classloader.ClassLoaderBuilderImpl"/>
+        <system:implementation.system class="org.fabric3.fabric.builder.classloader.ClassLoaderBuilderImpl"/>
     </component>
 
     <!-- Definitions registry -->

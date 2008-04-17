@@ -14,7 +14,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.fabric.classloader;
+package org.fabric3.fabric.generator.classloader;
 
 import java.net.URI;
 import java.net.URL;

@@ -25,9 +25,8 @@ import org.fabric3.spi.model.physical.PhysicalClassLoaderDefinition;
  * containing composite.
  * <p/>
  * The generator introspects the logical component for a {@link org.fabric3.spi.model.type.ContributionResourceDescription}.From this metadata it adds
- * the contribution that the artifacts for the component are containined in to the classloader definition. In addition, the generator adds any
- * required extensions to the classpath by introspecting for {@link org.fabric3.spi.model.type.ExtensionResourceDescription}. The classloader
- * definition is then added to the physical change set that will be sent to the service node.
+ * the contribution that the artifacts for the component are containined in to the classloader definition. The classloader definition is then added to
+ * the physical change set that will be sent to the service node.
  * <p/>
  * On the service node, a builder is responsible for matching the PhysicalClassLoaderDefinition to an existing classloader or creating a new one.
  * During this process, the contribution archive and required extensions may need to be provisioned to the node.

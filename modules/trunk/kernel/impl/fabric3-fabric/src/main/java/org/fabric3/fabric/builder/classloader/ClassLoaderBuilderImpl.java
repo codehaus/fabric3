@@ -14,7 +14,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.fabric.classloader;
+package org.fabric3.fabric.builder.classloader;
 
 import java.io.IOException;
 import java.net.URI;
@@ -27,11 +27,11 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.spi.classloader.MultiParentClassLoader;
+import org.fabric3.spi.model.physical.PhysicalClassLoaderDefinition;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.services.contribution.ArtifactResolverRegistry;
 import org.fabric3.spi.services.contribution.ClasspathProcessorRegistry;
 import org.fabric3.spi.services.contribution.ResolutionException;
-import org.fabric3.spi.model.physical.PhysicalClassLoaderDefinition;
 
 /**
  * Default implementation of ClassLoaderBuilder.
@@ -80,7 +80,7 @@ public class ClassLoaderBuilderImpl implements ClassLoaderBuilder {
             ClassLoader parent = classLoaderRegistry.getClassLoader(uri);
             if (parent == null) {
                 String identifier = uri.toString();
-                throw new ClassLoaderBuilderException("Parent classloader not found [" + identifier + "]", identifier);
+                throw new ClassLoaderNotFoundException("Parent classloader not found: " + identifier, identifier);
             }
             loader.addParent(parent);
         }

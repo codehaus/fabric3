@@ -21,7 +21,7 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.fabric.classloader.ClassLoaderBuilder;
+import org.fabric3.fabric.builder.classloader.ClassLoaderBuilder;
 import org.fabric3.spi.builder.BuilderException;
 import org.fabric3.spi.command.CommandExecutor;
 import org.fabric3.spi.command.CommandExecutorRegistry;

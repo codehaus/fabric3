@@ -14,7 +14,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.fabric.classloader;
+package org.fabric3.fabric.builder.classloader;
 
 /**
  * Thrown when a parent classloader cannot be found
