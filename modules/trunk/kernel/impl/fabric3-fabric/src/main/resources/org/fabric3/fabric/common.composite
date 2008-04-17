@@ -91,7 +91,7 @@
     </component>
     
     <component name="componentBuildCommandGenerator">
-        <system:implementation.system class="org.fabric3.fabric.command.ComponentBuildCommandGenerator"/>
+        <system:implementation.system class="org.fabric3.fabric.generator.component.ComponentBuildCommandGenerator"/>
         <property name="order">1</property>
     </component>
     
@@ -117,17 +117,17 @@
     </component>
 
     <component name="componentStartCommandGenerator">
-        <system:implementation.system class="org.fabric3.fabric.command.ComponentStartCommandGenerator"/>
+        <system:implementation.system class="org.fabric3.fabric.generator.component.ComponentStartCommandGenerator"/>
         <property name="order">3</property>
     </component>
 
     <component name="startCompositeContextCommandGenerator">
-        <system:implementation.system class="org.fabric3.fabric.command.StartCompositeContextCommandGenerator"/>
+        <system:implementation.system class="org.fabric3.fabric.generator.component.StartCompositeContextCommandGenerator"/>
         <property name="order">4</property>
     </component>
     
     <component name="initializeComponentCommandGenerator">
-        <system:implementation.system class="org.fabric3.fabric.command.InitializeComponentCommandGenerator"/>
+        <system:implementation.system class="org.fabric3.fabric.generator.component.InitializeComponentCommandGenerator"/>
         <property name="order">5</property>
     </component>
     

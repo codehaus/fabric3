@@ -16,8 +16,12 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.fabric.command;
+package org.fabric3.fabric.generator.component;
 
+import org.osoa.sca.annotations.Property;
+import org.osoa.sca.annotations.Reference;
+
+import org.fabric3.fabric.command.ComponentBuildCommand;
 import org.fabric3.fabric.implementation.singleton.SingletonImplementation;
 import org.fabric3.scdl.Implementation;
 import org.fabric3.spi.generator.CommandGenerator;
@@ -27,8 +31,6 @@ import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
-import org.osoa.sca.annotations.Property;
-import org.osoa.sca.annotations.Reference;
 
 /**
  *
