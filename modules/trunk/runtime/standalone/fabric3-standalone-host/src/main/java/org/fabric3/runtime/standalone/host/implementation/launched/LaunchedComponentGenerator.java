@@ -20,6 +20,9 @@ package org.fabric3.runtime.standalone.host.implementation.launched;
 
 import java.net.URI;
 
+import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Reference;
+
 import org.fabric3.java.provision.JavaComponentDefinition;
 import org.fabric3.java.provision.JavaWireSourceDefinition;
 import org.fabric3.java.provision.JavaWireTargetDefinition;
@@ -30,7 +33,6 @@ import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.InjectableAttribute;
 import org.fabric3.scdl.InjectableAttributeType;
 import org.fabric3.scdl.ServiceContract;
-import org.fabric3.spi.generator.ClassLoaderGenerator;
 import org.fabric3.spi.generator.ComponentGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.generator.GeneratorRegistry;
@@ -42,8 +44,6 @@ import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 import org.fabric3.spi.policy.Policy;
-import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Reference;
 
 /**
  * @version $Rev$ $Date$
@@ -51,12 +51,8 @@ import org.osoa.sca.annotations.Reference;
 @EagerInit
 public class LaunchedComponentGenerator implements ComponentGenerator<LogicalComponent<Launched>> {
     private final InstanceFactoryGenerationHelper helper;
-    private final ClassLoaderGenerator classLoaderGenerator;
 
-    public LaunchedComponentGenerator(@Reference GeneratorRegistry registry,
-                                      @Reference ClassLoaderGenerator classLoaderGenerator,
-                                      @Reference InstanceFactoryGenerationHelper helper) {
-        this.classLoaderGenerator = classLoaderGenerator;
+    public LaunchedComponentGenerator(@Reference GeneratorRegistry registry, @Reference InstanceFactoryGenerationHelper helper) {
         this.helper = helper;
         registry.register(Launched.class, this);
     }
