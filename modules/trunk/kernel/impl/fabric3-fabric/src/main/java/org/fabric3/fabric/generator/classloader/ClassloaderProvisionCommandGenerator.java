@@ -18,21 +18,20 @@
  */
 package org.fabric3.fabric.generator.classloader;
 
-import java.util.Collections;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
+import java.util.List;
 
-import org.fabric3.spi.model.physical.PhysicalClassLoaderDefinition;
-import org.fabric3.spi.generator.ClassLoaderGenerator;
+import org.osoa.sca.annotations.Property;
+import org.osoa.sca.annotations.Reference;
+
+import org.fabric3.fabric.command.ClassloaderProvisionCommand;
 import org.fabric3.spi.generator.CommandGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
-import org.fabric3.fabric.command.ClassloaderProvisionCommand;
-
-import org.osoa.sca.annotations.Property;
-import org.osoa.sca.annotations.Reference;
+import org.fabric3.spi.model.physical.PhysicalClassLoaderDefinition;
 
 /**
  * @version $Revision$ $Date$

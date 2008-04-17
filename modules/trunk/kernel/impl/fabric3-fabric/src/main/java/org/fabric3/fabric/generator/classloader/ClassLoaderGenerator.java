@@ -14,10 +14,11 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.spi.generator;
+package org.fabric3.fabric.generator.classloader;
 
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.physical.PhysicalClassLoaderDefinition;
+import org.fabric3.spi.generator.GenerationException;
 
 /**
  * Generates classloader definitions for components being provisioned to a runtime. Components contained in the same composite that are provisioned to
@@ -42,7 +43,7 @@ public interface ClassLoaderGenerator {
      *
      * @param component the logical component to generate the classloader definition from
      * @return the definition
-     * @throws GenerationException if an error occurs during the generation process
+     * @throws org.fabric3.spi.generator.GenerationException if an error occurs during the generation process
      */
     PhysicalClassLoaderDefinition generate(LogicalComponent<?> component) throws GenerationException;
 

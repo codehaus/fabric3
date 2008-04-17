@@ -20,22 +20,19 @@ package org.fabric3.binding.rmi.model.physical;
 
 import java.net.URI;
 
+import org.osoa.sca.annotations.EagerInit;
+
 import org.fabric3.binding.rmi.model.logical.RmiBindingDefinition;
 import org.fabric3.scdl.ReferenceDefinition;
 import org.fabric3.scdl.ServiceContract;
 import org.fabric3.scdl.ServiceDefinition;
 import org.fabric3.spi.generator.BindingGenerator;
-import org.fabric3.spi.generator.ClassLoaderGenerator;
 import org.fabric3.spi.generator.GenerationException;
-import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.policy.Policy;
-import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Reference;
 
 @EagerInit
-public class RmiBindingGenerator
-        implements BindingGenerator<RmiWireSourceDefinition, RmiWireTargetDefinition, RmiBindingDefinition> {
+public class RmiBindingGenerator implements BindingGenerator<RmiWireSourceDefinition, RmiWireTargetDefinition, RmiBindingDefinition> {
 
     public RmiWireSourceDefinition generateWireSource(
             LogicalBinding<RmiBindingDefinition> logicalBinding,
@@ -50,7 +47,7 @@ public class RmiBindingGenerator
         ewsd.setBindingDefinition(logicalBinding.getBinding());
         ServiceContract<?> contract = serviceDefinition.getServiceContract();
         ewsd.setInterfaceName(contract.getQualifiedInterfaceName());
-        
+
         URI classloaderId = logicalBinding.getParent().getParent().getParent().getUri();
         ewsd.setClassLoaderURI(classloaderId);
         return ewsd;
@@ -70,7 +67,7 @@ public class RmiBindingGenerator
         ewtd.setBindingDefinition(logicalBinding.getBinding());
         ServiceContract<?> contract = referenceDefinition.getServiceContract();
         ewtd.setInterfaceName(contract.getQualifiedInterfaceName());
-        
+
         URI classloaderId = logicalBinding.getParent().getParent().getParent().getUri();
         ewtd.setClassLoaderURI(classloaderId);
         return ewtd;

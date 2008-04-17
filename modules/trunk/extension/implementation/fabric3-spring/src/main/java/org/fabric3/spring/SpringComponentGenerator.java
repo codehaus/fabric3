@@ -21,10 +21,11 @@ package org.fabric3.spring;
 import java.net.URI;
 import java.util.Iterator;
 
-import org.fabric3.pojo.instancefactory.InstanceFactoryGenerationHelper;
+import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Reference;
+
 import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.ServiceContract;
-import org.fabric3.spi.generator.ClassLoaderGenerator;
 import org.fabric3.spi.generator.ComponentGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.generator.GeneratorRegistry;
@@ -32,14 +33,11 @@ import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalResource;
 import org.fabric3.spi.model.instance.LogicalService;
+import org.fabric3.spi.model.physical.InteractionType;
 import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
-import org.fabric3.spi.model.physical.InteractionType;
 import org.fabric3.spi.policy.Policy;
-
-import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Reference;
 
 /**
  * Generates a SpringComponentDefinition from a ComponentDefinition corresponding to a Spring component implementation
@@ -50,9 +48,7 @@ import org.osoa.sca.annotations.Reference;
 public class SpringComponentGenerator implements ComponentGenerator<LogicalComponent<SpringImplementation>> {
 
 
-    public SpringComponentGenerator(@Reference GeneratorRegistry registry,
-                                    @Reference ClassLoaderGenerator classLoaderGenerator,
-                                    @Reference InstanceFactoryGenerationHelper helper) {
+    public SpringComponentGenerator(@Reference GeneratorRegistry registry) {
 
         registry.register(SpringImplementation.class, this);
     }

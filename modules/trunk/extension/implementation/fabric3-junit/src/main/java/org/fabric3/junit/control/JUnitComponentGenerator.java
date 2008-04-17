@@ -17,7 +17,6 @@ import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.InjectableAttribute;
 import org.fabric3.scdl.InjectableAttributeType;
 import org.fabric3.scdl.ServiceContract;
-import org.fabric3.spi.generator.ClassLoaderGenerator;
 import org.fabric3.spi.generator.ComponentGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.generator.GeneratorRegistry;
@@ -25,10 +24,10 @@ import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalResource;
 import org.fabric3.spi.model.instance.LogicalService;
+import org.fabric3.spi.model.physical.InteractionType;
 import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
-import org.fabric3.spi.model.physical.InteractionType;
 import org.fabric3.spi.policy.Policy;
 
 /**
@@ -40,9 +39,7 @@ public class JUnitComponentGenerator implements ComponentGenerator<LogicalCompon
     private final GeneratorRegistry registry;
     private final InstanceFactoryGenerationHelper helper;
 
-    public JUnitComponentGenerator(@Reference GeneratorRegistry registry,
-                                   @Reference ClassLoaderGenerator classLoaderGenerator,
-                                   @Reference InstanceFactoryGenerationHelper helper) {
+    public JUnitComponentGenerator(@Reference GeneratorRegistry registry, @Reference InstanceFactoryGenerationHelper helper) {
         this.registry = registry;
         this.helper = helper;
     }
