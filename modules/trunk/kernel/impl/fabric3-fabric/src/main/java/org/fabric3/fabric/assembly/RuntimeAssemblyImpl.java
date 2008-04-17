@@ -21,8 +21,10 @@ package org.fabric3.fabric.assembly;
 import org.fabric3.fabric.assembly.allocator.Allocator;
 import org.fabric3.fabric.model.logical.LogicalModelGenerator;
 import org.fabric3.fabric.generator.PhysicalModelGenerator;
+import org.fabric3.fabric.services.routing.RoutingService;
 import org.fabric3.spi.runtime.assembly.LogicalComponentManager;
 import org.fabric3.spi.services.contribution.MetaDataStore;
+
 import org.osoa.sca.annotations.Reference;
 
 /**
@@ -31,13 +33,14 @@ import org.osoa.sca.annotations.Reference;
  * @version $Rev$ $Date$
  */
 public class RuntimeAssemblyImpl extends AbstractAssembly {
-    
+
     public RuntimeAssemblyImpl(@Reference Allocator allocator,
                                @Reference MetaDataStore metadataStore,
                                @Reference PhysicalModelGenerator physicalModelGenerator,
                                @Reference LogicalModelGenerator logicalModelGenerator,
-                               @Reference LogicalComponentManager logicalComponentManager) {
-        super(allocator, metadataStore, physicalModelGenerator, logicalModelGenerator, logicalComponentManager);
+                               @Reference LogicalComponentManager logicalComponentManager,
+                               @Reference RoutingService routingService) {
+        super(allocator, metadataStore, physicalModelGenerator, logicalModelGenerator, logicalComponentManager, routingService);
     }
 
 }

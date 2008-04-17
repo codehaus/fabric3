@@ -30,6 +30,7 @@ import org.fabric3.fabric.model.logical.LogicalModelGenerator;
 import org.fabric3.fabric.model.logical.LogicalChange;
 import org.fabric3.fabric.generator.PhysicalModelGenerator;
 import org.fabric3.fabric.services.routing.RoutingException;
+import org.fabric3.fabric.services.routing.RoutingService;
 import org.fabric3.scdl.Composite;
 import org.fabric3.spi.assembly.ActivateException;
 import org.fabric3.spi.assembly.Assembly;
@@ -50,54 +51,56 @@ import org.fabric3.spi.services.contribution.ResourceElement;
  * @version $Rev$ $Date$
  */
 public abstract class AbstractAssembly implements Assembly {
-
     public static final QName COMPOSITE = new QName(SCA_NS, "composite");
 
-    protected final PhysicalModelGenerator physicalModelGenerator;
+    private final PhysicalModelGenerator physicalModelGenerator;
     private final LogicalModelGenerator logicalModelGenerator;
-    protected final Allocator allocator;
+    private final Allocator allocator;
     private final MetaDataStore metadataStore;
-    protected final LogicalComponentManager logicalComponentManager;
+    private final LogicalComponentManager logicalComponentManager;
+    private RoutingService routingService;
 
     public AbstractAssembly(Allocator allocator,
                             MetaDataStore metadataStore,
                             PhysicalModelGenerator physicalModelGenerator,
                             LogicalModelGenerator logicalModelGenerator,
-                            LogicalComponentManager logicalComponentManager) {
-        this.allocator = allocator; 
+                            LogicalComponentManager logicalComponentManager,
+                            RoutingService routingService) {
+        this.allocator = allocator;
         this.metadataStore = metadataStore;
         this.physicalModelGenerator = physicalModelGenerator;
         this.logicalModelGenerator = logicalModelGenerator;
         this.logicalComponentManager = logicalComponentManager;
+        this.routingService = routingService;
     }
 
     public void initialize() throws AssemblyException {
     }
 
     public void includeInDomain(QName deployable) throws ActivateException {
-        
+
         ResourceElement<QNameSymbol, ?> element = metadataStore.resolve(new QNameSymbol(deployable));
         if (element == null) {
             throw new ArtifactNotFoundException("Deployable not found", deployable.toString());
         }
-        
+
         Object object = element.getValue();
         if (!(object instanceof Composite)) {
             throw new IllegalContributionTypeException("Deployable must be a composite", deployable.toString());
         }
-        
+
         Composite composite = (Composite) object;
         includeInDomain(composite);
-        
+
     }
 
     public void includeInDomain(Composite composite) throws ActivateException {
-        
+
         LogicalCompositeComponent domain = logicalComponentManager.getDomain();
-        
+
         LogicalChange change = logicalModelGenerator.include(domain, composite);
         change.apply();
-        
+
         Collection<LogicalComponent<?>> components = domain.getComponents();
 
         // Allocate the components to runtime nodes
@@ -114,20 +117,20 @@ public abstract class AbstractAssembly implements Assembly {
         try {
             // generate and provision any new components and new wires
             CommandMap commandMap = physicalModelGenerator.generate(components);
-            physicalModelGenerator.provision(commandMap);
+            routingService.route(commandMap);
         } catch (GenerationException e) {
             throw new ActivateException(e);
         } catch (RoutingException e) {
             throw new ActivateException(e);
         }
-        
+
         try {
             // record the operation
             logicalComponentManager.store();
         } catch (RecordException e) {
             throw new ActivateException("Error activating deployable", composite.getName().toString(), e);
         }
-        
+
     }
 
 }

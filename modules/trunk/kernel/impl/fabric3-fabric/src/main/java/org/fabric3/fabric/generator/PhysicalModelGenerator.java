@@ -18,7 +18,6 @@ package org.fabric3.fabric.generator;
 
 import java.util.Collection;
 
-import org.fabric3.fabric.services.routing.RoutingException;
 import org.fabric3.spi.generator.CommandMap;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.LogicalComponent;
@@ -38,13 +37,5 @@ public interface PhysicalModelGenerator {
      * @throws GenerationException If unable to generate the command map.
      */
     CommandMap generate(Collection<LogicalComponent<?>> components) throws GenerationException;
-
-    /**
-     * Provision the physical changeset to runtimes in a domain.
-     *
-     * @param commandMap the set of commands to provision.
-     * @throws RoutingException If unable to provision changesets.
-     */
-    void provision(CommandMap commandMap) throws RoutingException;
 
 }

@@ -21,9 +21,11 @@ package org.fabric3.fabric.assembly;
 import org.fabric3.fabric.assembly.allocator.Allocator;
 import org.fabric3.fabric.model.logical.LogicalModelGenerator;
 import org.fabric3.fabric.generator.PhysicalModelGenerator;
+import org.fabric3.fabric.services.routing.RoutingService;
 import org.fabric3.spi.assembly.AssemblyException;
 import org.fabric3.spi.runtime.assembly.LogicalComponentManager;
 import org.fabric3.spi.services.contribution.MetaDataStore;
+
 import org.osoa.sca.annotations.Reference;
 import org.osoa.sca.annotations.Service;
 
@@ -34,13 +36,16 @@ import org.osoa.sca.annotations.Service;
  */
 @Service(DistributedAssembly.class)
 public class DistributedAssemblyImpl extends AbstractAssembly implements DistributedAssembly {
-    
+    private LogicalComponentManager logicalComponentManager;
+
     public DistributedAssemblyImpl(@Reference Allocator allocator,
-                                   @Reference(name = "store") MetaDataStore metaDataStore,
+                                   @Reference(name = "store")MetaDataStore metaDataStore,
                                    @Reference PhysicalModelGenerator physicalModelGenerator,
                                    @Reference LogicalModelGenerator logicalModelGenerator,
-                                   @Reference(name="logicalComponentManager") LogicalComponentManager logicalComponentManager) {
-        super(allocator, metaDataStore, physicalModelGenerator, logicalModelGenerator, logicalComponentManager);
+                                   @Reference(name = "logicalComponentManager")LogicalComponentManager logicalComponentManager,
+                                   @Reference RoutingService routingService) {
+        super(allocator, metaDataStore, physicalModelGenerator, logicalModelGenerator, logicalComponentManager, routingService);
+        this.logicalComponentManager = logicalComponentManager;
     }
 
     public void initialize() throws AssemblyException {

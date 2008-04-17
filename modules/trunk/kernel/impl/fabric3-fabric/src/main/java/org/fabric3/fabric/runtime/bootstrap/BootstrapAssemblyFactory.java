@@ -82,7 +82,6 @@ import org.fabric3.fabric.services.instancefactory.BuildHelperImpl;
 import org.fabric3.fabric.services.instancefactory.DefaultInstanceFactoryBuilderRegistry;
 import org.fabric3.fabric.services.instancefactory.GenerationHelperImpl;
 import org.fabric3.fabric.services.instancefactory.ReflectiveInstanceFactoryBuilder;
-import org.fabric3.fabric.services.routing.RoutingService;
 import org.fabric3.fabric.services.routing.RuntimeRoutingService;
 import org.fabric3.fabric.services.runtime.BootstrapRuntimeInfoService;
 import org.fabric3.fabric.wire.DefaultWiringService;
@@ -168,12 +167,16 @@ public class BootstrapAssemblyFactory {
         RuntimeRoutingService routingService = new RuntimeRoutingService(commandRegistry, scopeRegistry);
 
         PhysicalModelGenerator physicalModelGenerator =
-                createPhysicalModelGenerator(logicalComponentManager, routingService, classLoaderRegistry);
+                createPhysicalModelGenerator(logicalComponentManager, classLoaderRegistry);
 
         LogicalModelGenerator logicalModelGenerator = createLogicalModelGenerator(logicalComponentManager);
 
-        Assembly runtimeAssembly =
-                new RuntimeAssemblyImpl(allocator, metaDataStore, physicalModelGenerator, logicalModelGenerator, logicalComponentManager);
+        Assembly runtimeAssembly = new RuntimeAssemblyImpl(allocator,
+                                                           metaDataStore,
+                                                           physicalModelGenerator,
+                                                           logicalModelGenerator,
+                                                           logicalComponentManager,
+                                                           routingService);
         try {
             runtimeAssembly.initialize();
         } catch (AssemblyException e) {
@@ -275,7 +278,6 @@ public class BootstrapAssemblyFactory {
     }
 
     private static PhysicalModelGenerator createPhysicalModelGenerator(LogicalComponentManager logicalComponentManager,
-                                                                       RoutingService routingService,
                                                                        ClassLoaderRegistry classLoaderRegistry) {
 
         GeneratorRegistry generatorRegistry = createGeneratorRegistry();
@@ -294,7 +296,7 @@ public class BootstrapAssemblyFactory {
         commandGenerators.add(new ComponentStartCommandGenerator(3));
         commandGenerators.add(new StartCompositeContextCommandGenerator(4));
         commandGenerators.add(new InitializeComponentCommandGenerator(5));
-        return new PhysicalModelGeneratorImpl(commandGenerators, routingService);
+        return new PhysicalModelGeneratorImpl(commandGenerators);
     }
 
     private static GeneratorRegistry createGeneratorRegistry() {

@@ -39,21 +39,14 @@ import org.fabric3.spi.model.instance.LogicalComponent;
 public class PhysicalModelGeneratorImpl implements PhysicalModelGenerator {
 
     private final List<CommandGenerator> commandGenerators;
-    private final RoutingService routingService;
 
-    /**
-     * @param generatorRegistry
-     */
-    public PhysicalModelGeneratorImpl(@Reference(name="commandGenerators") List<CommandGenerator> commandGenerators, 
-                                      @Reference RoutingService routingService) {
+    public PhysicalModelGeneratorImpl(@Reference(name = "commandGenerators")List<CommandGenerator> commandGenerators) {
         this.commandGenerators = commandGenerators;
-        this.routingService = routingService;
     }
 
     public CommandMap generate(Collection<LogicalComponent<?>> components) throws GenerationException {
-
         CommandMap commandMap = new CommandMap();
-        
+
         for (LogicalComponent<?> component : components) {
             for (CommandGenerator commandGenerator : commandGenerators) {
                 Command command = commandGenerator.generate(component);
@@ -61,13 +54,9 @@ public class PhysicalModelGeneratorImpl implements PhysicalModelGenerator {
             }
             component.setProvisioned(true);
         }
-        
+
         return commandMap;
 
-    }
-
-    public void provision(CommandMap commandMap) throws RoutingException {
-        routingService.route(commandMap);
     }
 
 }
