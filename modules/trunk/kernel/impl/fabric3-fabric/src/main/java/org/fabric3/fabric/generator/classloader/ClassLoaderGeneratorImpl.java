@@ -35,10 +35,10 @@ import org.fabric3.spi.model.type.ContributionResourceDescription;
 import org.fabric3.spi.services.discovery.DiscoveryService;
 
 /**
- * Default implementation of the ClassLoaderGenerator. This implementation groups components contained within a composite deployed to the same
- * participant in a common classloader. If components are being included in a composite, the existing participant classloader will be updated with
- * required resources and parent classloaders (e.g. when resources are imported from other contributions). If a classloader does not exist on the
- * participant, a new one including parents, will be provisioned.
+ * Default implementation of the ClassLoaderGenerator. This implementation groups components contained within a composite deployed to the same runtime
+ * in a common classloader. If components are being included in a composite, the existing classloader will be updated with required resources and
+ * parent classloaders (e.g. when resources are imported from other contributions). If a classloader does not exist on the runtime, a new one,
+ * including parents, will be provisioned.
  */
 @EagerInit
 public class ClassLoaderGeneratorImpl implements ClassLoaderGenerator {
