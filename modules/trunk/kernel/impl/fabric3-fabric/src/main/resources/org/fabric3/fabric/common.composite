@@ -33,7 +33,7 @@
     </component>
 
     <component name="physicalModelGenerator">
-        <system:implementation.system class="org.fabric3.fabric.model.physical.PhysicalModelGeneratorImpl"/>
+        <system:implementation.system class="org.fabric3.fabric.generator.PhysicalModelGeneratorImpl"/>
     </component>
 
     <component name="physicalWireGenerator">

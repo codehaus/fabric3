@@ -28,7 +28,7 @@ import org.fabric3.fabric.assembly.allocator.AllocationException;
 import org.fabric3.fabric.assembly.allocator.Allocator;
 import org.fabric3.fabric.model.logical.LogicalModelGenerator;
 import org.fabric3.fabric.model.logical.LogicalChange;
-import org.fabric3.fabric.model.physical.PhysicalModelGenerator;
+import org.fabric3.fabric.generator.PhysicalModelGenerator;
 import org.fabric3.fabric.services.routing.RoutingException;
 import org.fabric3.scdl.Composite;
 import org.fabric3.spi.assembly.ActivateException;

@@ -22,8 +22,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-
 import javax.xml.namespace.QName;
+
+import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.scdl.BindingDefinition;
 import org.fabric3.scdl.Implementation;
@@ -36,7 +37,6 @@ import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.generator.InterceptorDefinitionGenerator;
 import org.fabric3.spi.generator.ResourceWireGenerator;
 import org.fabric3.spi.model.instance.LogicalComponent;
-import org.osoa.sca.annotations.Reference;
 
 /**
  * @version $Rev$ $Date$

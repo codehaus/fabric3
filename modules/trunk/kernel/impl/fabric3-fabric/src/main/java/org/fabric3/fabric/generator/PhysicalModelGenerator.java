@@ -14,7 +14,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.fabric.model.physical;
+package org.fabric3.fabric.generator;
 
 import java.util.Collection;
 
@@ -24,31 +24,25 @@ import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.LogicalComponent;
 
 /**
- * Interface that abstracts the concerns of generating physical model 
- * from logical components. This is used from the assembly for 
- * creating physical model objects like component definitions, wire 
- * definitions etc from the logical model, before provisioning them to 
- * the participant nodes.
- * 
- * TODO Identify the contract required.
- * 
+ * Interface that abstracts the concerns of a generating commands to provision a set of componets to runtimes in a domain.
+ *
  * @version $Revision$ $Date$
  */
 public interface PhysicalModelGenerator {
 
     /**
-     * Generate the physical changeset for the set of logical components.
-     * 
-     * @param components Logical component set.
-     * @return Physical changeset for each allocated runtime.
-     * @throws GenerationException If unable to generate changeset.
+     * Generate the set of commands to provision a set of logical components and their wires.
+     *
+     * @param components the logical component set.
+     * @return the command map
+     * @throws GenerationException If unable to generate the command map.
      */
     CommandMap generate(Collection<LogicalComponent<?>> components) throws GenerationException;
 
     /**
-     * Provision the physical changeset to the participant nodes.
-     * 
-     * @param contexts Physical changesets to be provisioned.
+     * Provision the physical changeset to runtimes in a domain.
+     *
+     * @param commandMap the set of commands to provision.
      * @throws RoutingException If unable to provision changesets.
      */
     void provision(CommandMap commandMap) throws RoutingException;

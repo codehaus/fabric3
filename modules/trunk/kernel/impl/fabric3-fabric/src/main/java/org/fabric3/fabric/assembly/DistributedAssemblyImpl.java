@@ -20,7 +20,7 @@ package org.fabric3.fabric.assembly;
 
 import org.fabric3.fabric.assembly.allocator.Allocator;
 import org.fabric3.fabric.model.logical.LogicalModelGenerator;
-import org.fabric3.fabric.model.physical.PhysicalModelGenerator;
+import org.fabric3.fabric.generator.PhysicalModelGenerator;
 import org.fabric3.spi.assembly.AssemblyException;
 import org.fabric3.spi.runtime.assembly.LogicalComponentManager;
 import org.fabric3.spi.services.contribution.MetaDataStore;

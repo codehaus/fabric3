@@ -16,9 +16,9 @@
  */
 package org.fabric3.fabric.generator.classloader;
 
+import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.physical.PhysicalClassLoaderDefinition;
-import org.fabric3.spi.generator.GenerationException;
 
 /**
  * Generates classloader definitions for components being provisioned to a runtime. Components contained in the same composite that are provisioned to
