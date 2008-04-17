@@ -16,35 +16,40 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.fabric.command;
+package org.fabric3.fabric.generator.wire;
+
+import java.util.List;
 
 import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Reference;
 
+import org.fabric3.fabric.command.WireAttachCommand;
 import org.fabric3.fabric.model.physical.PhysicalWireGenerator;
 import org.fabric3.spi.generator.CommandGenerator;
 import org.fabric3.spi.generator.GenerationException;
+import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
-import org.fabric3.spi.model.instance.LogicalResource;
+import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.physical.PhysicalWireDefinition;
 
 /**
- * Generate commands to attach local wires between components and resources.
+ * Generate commands to attach component reference wires to their transports.
  *
  * @version $Revision$ $Date$
  */
-public class ResourceWireCommandGenerator implements CommandGenerator {
+public class ReferenceWireCommandGenerator implements CommandGenerator {
 
     private final PhysicalWireGenerator physicalWireGenerator;
     private final int order;
 
-    public ResourceWireCommandGenerator(@Reference PhysicalWireGenerator physicalWireGenerator,
-                                        @Property(name = "order")int order) {
+    public ReferenceWireCommandGenerator(@Reference PhysicalWireGenerator physicalWireGenerator,
+                                         @Property(name = "order")int order) {
         this.physicalWireGenerator = physicalWireGenerator;
         this.order = order;
     }
 
+    @SuppressWarnings("unchecked")
     public WireAttachCommand generate(LogicalComponent<?> component) throws GenerationException {
 
         WireAttachCommand command = new WireAttachCommand(order);
@@ -63,11 +68,29 @@ public class ResourceWireCommandGenerator implements CommandGenerator {
 
     private void generatePhysicalWires(LogicalComponent<?> component, WireAttachCommand command) throws GenerationException {
 
-        for (LogicalResource<?> resource : component.getResources()) {
-            PhysicalWireDefinition pwd = physicalWireGenerator.generateResourceWire(component, resource);
-            command.addPhysicalWireDefinition(pwd);
-        }
+        for (LogicalReference logicalReference : component.getReferences()) {
+            if (logicalReference.getBindings().isEmpty()) {
+                continue;
+            }
 
+            // TODO this should be extensible and moved out
+            LogicalBinding<?> logicalBinding = logicalReference.getBindings().get(0);
+            PhysicalWireDefinition pwd = physicalWireGenerator.generateBoundReferenceWire(component, logicalReference, logicalBinding);
+            command.addPhysicalWireDefinition(pwd);
+            if (logicalReference.getDefinition().getServiceContract().getCallbackContract() != null) {
+                List<LogicalBinding<?>> callbackBindings = logicalReference.getCallbackBindings();
+                if (callbackBindings.size() != 1) {
+                    String uri = logicalReference.getUri().toString();
+                    throw new UnsupportedOperationException("The runtime requires exactly one callback binding to be specified on reference ["
+                            + uri + "]");
+                }
+                LogicalBinding<?> callbackBinding = callbackBindings.get(0);
+                // generate the callback wire
+                PhysicalWireDefinition callbackPwd = physicalWireGenerator.generateBoundCallbackRerenceWire(logicalReference, callbackBinding,
+                                                                                                            component);
+                command.addPhysicalWireDefinition(callbackPwd);
+            }
+        }
     }
 
 }

@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.fabric.command;
+package org.fabric3.fabric.generator.wire;
 
 import java.net.URI;
 import java.util.List;
@@ -24,6 +24,7 @@ import java.util.List;
 import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Reference;
 
+import org.fabric3.fabric.command.WireAttachCommand;
 import org.fabric3.fabric.model.physical.PhysicalWireGenerator;
 import org.fabric3.scdl.ServiceContract;
 import org.fabric3.spi.generator.CommandGenerator;
