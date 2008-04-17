@@ -14,7 +14,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.fabric.model.physical;
+package org.fabric3.fabric.generator.wire;
 
 import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.ParameterizedType;
@@ -31,9 +31,6 @@ import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
  */
 public class PhysicalOperationHelperImpl implements PhysicalOperationHelper {
 
-    /**
-     * @see org.fabric3.fabric.model.physical.PhysicalOperationHelper#mapOperation(org.fabric3.scdl.Operation)
-     */
     @SuppressWarnings({"unchecked"})
     public PhysicalOperationDefinition mapOperation(Operation o) {
 
@@ -52,10 +49,6 @@ public class PhysicalOperationHelperImpl implements PhysicalOperationHelper {
 
     }
 
-    /**
-     * @see org.fabric3.fabric.model.physical.PhysicalOperationHelper#getClassName(java.lang.reflect.Type)
-     */
-    @SuppressWarnings("unchecked")
     public String getClassName(Type paramType) {
 
         // TODO this needs to be fixed

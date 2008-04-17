@@ -29,7 +29,7 @@
     <include name="assembly" scdlLocation="assembly.composite"/>
 
     <component name="physicalOperationHelper">
-        <system:implementation.system class="org.fabric3.fabric.model.physical.PhysicalOperationHelperImpl"/>
+        <system:implementation.system class="org.fabric3.fabric.generator.wire.PhysicalOperationHelperImpl"/>
     </component>
 
     <component name="physicalModelGenerator">
@@ -37,7 +37,7 @@
     </component>
 
     <component name="physicalWireGenerator">
-        <system:implementation.system class="org.fabric3.fabric.model.physical.PhysicalWireGeneratorImpl"/>
+        <system:implementation.system class="org.fabric3.fabric.generator.wire.PhysicalWireGeneratorImpl"/>
     </component>
 
     <component name="distributedAssembly">

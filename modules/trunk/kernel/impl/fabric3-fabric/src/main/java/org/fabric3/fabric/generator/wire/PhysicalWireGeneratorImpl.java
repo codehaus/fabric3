@@ -14,7 +14,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.fabric.model.physical;
+package org.fabric3.fabric.generator.wire;
 
 import java.net.URI;
 import java.util.Collections;
@@ -144,11 +144,11 @@ public class PhysicalWireGeneratorImpl implements PhysicalWireGenerator {
         boolean optimizable = sourceDefinition.isOptimizable() &&
                 targetDefinition.isOptimizable() &&
                 checkOptimization(serviceContract, operations);
-        
+
         wireDefinition.setOptimizable(optimizable);
 
         return wireDefinition;
-        
+
     }
 
     public <S extends LogicalComponent<?>, T extends LogicalComponent<?>> PhysicalWireDefinition generateUnboundCallbackWire(S source,
@@ -175,9 +175,9 @@ public class PhysicalWireGeneratorImpl implements PhysicalWireGenerator {
         PhysicalWireDefinition wireDefinition =
                 new PhysicalWireDefinition(sourceDefinition, targetDefinition, callbackOperations);
         wireDefinition.setOptimizable(false);
-        
+
         return wireDefinition;
-        
+
     }
 
     @SuppressWarnings("unchecked")
@@ -230,8 +230,8 @@ public class PhysicalWireGeneratorImpl implements PhysicalWireGenerator {
 
     @SuppressWarnings("unchecked")
     public <C extends LogicalComponent<?>> PhysicalWireDefinition generateBoundReferenceWire(C component,
-                                                                           LogicalReference reference,
-                                                                           LogicalBinding<?> binding) throws GenerationException {
+                                                                                             LogicalReference reference,
+                                                                                             LogicalBinding<?> binding) throws GenerationException {
 
         ReferenceDefinition referenceDefinition = reference.getDefinition();
         ServiceContract<?> contract = referenceDefinition.getServiceContract();
@@ -262,9 +262,9 @@ public class PhysicalWireGeneratorImpl implements PhysicalWireGenerator {
     }
 
     @SuppressWarnings({"unchecked"})
-    public <C extends LogicalComponent<?>> PhysicalWireDefinition generateBoundCallbackRerenceWire(LogicalReference reference, 
-                                                                                 LogicalBinding<?> binding, 
-                                                                                 C component) throws GenerationException {
+    public <C extends LogicalComponent<?>> PhysicalWireDefinition generateBoundCallbackRerenceWire(LogicalReference reference,
+                                                                                                   LogicalBinding<?> binding,
+                                                                                                   C component) throws GenerationException {
         ReferenceDefinition definition = reference.getDefinition();
         ServiceContract<?> contract = definition.getServiceContract();
         ServiceContract<?> callbackContract = contract.getCallbackContract();
@@ -291,7 +291,8 @@ public class PhysicalWireGeneratorImpl implements PhysicalWireGenerator {
 
     @SuppressWarnings({"unchecked"})
     public <C extends LogicalComponent<?>> PhysicalWireDefinition generateBoundCallbackServiceWire(C component, LogicalService service,
-                                                                                 LogicalBinding<?> binding) throws GenerationException {
+                                                                                                   LogicalBinding<?> binding)
+            throws GenerationException {
 
         // use the service contract from the binding's parent service if it is defined, otherwise default to the one
         // defined on the original component

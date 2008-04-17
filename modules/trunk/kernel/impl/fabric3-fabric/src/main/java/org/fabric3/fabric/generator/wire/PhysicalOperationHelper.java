@@ -14,7 +14,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.fabric.model.physical;
+package org.fabric3.fabric.generator.wire;
 
 import java.lang.reflect.Type;
 
@@ -26,10 +26,8 @@ import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
  */
 public interface PhysicalOperationHelper {
 
-    @SuppressWarnings( { "unchecked" })
     public abstract PhysicalOperationDefinition mapOperation(Operation o);
 
-    @SuppressWarnings("unchecked")
     public abstract String getClassName(Type paramType);
 
 }

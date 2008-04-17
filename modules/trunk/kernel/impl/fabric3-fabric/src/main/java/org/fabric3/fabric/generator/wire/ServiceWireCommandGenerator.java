@@ -25,7 +25,6 @@ import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.fabric.command.WireAttachCommand;
-import org.fabric3.fabric.model.physical.PhysicalWireGenerator;
 import org.fabric3.scdl.ServiceContract;
 import org.fabric3.spi.generator.CommandGenerator;
 import org.fabric3.spi.generator.GenerationException;

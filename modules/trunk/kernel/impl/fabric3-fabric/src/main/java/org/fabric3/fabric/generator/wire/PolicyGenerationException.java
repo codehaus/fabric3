@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.fabric.model.physical;
+package org.fabric3.fabric.generator.wire;
 
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.policy.PolicyResolutionException;
