@@ -29,7 +29,7 @@ import org.fabric3.spi.command.ExecutionException;
 import org.fabric3.spi.model.physical.PhysicalClassLoaderDefinition;
 
 /**
- * Eagerly initializes a component on a service node.
+ * Creates a classloader on a runtime corresponding to a PhysicalClassLoaderDefinition.
  *
  * @version $Rev: 2878 $ $Date: 2008-02-23 18:42:09 +0000 (Sat, 23 Feb 2008) $
  */
