@@ -70,4 +70,22 @@ public interface ProxyGenerator {
                                String serviceName,
                                String portName) throws
             ClassNotFoundException;
+
+    /**
+     * Generate a remote interface with jax-ws annotation
+     * @param clazz
+     * @param targetNamespace
+     * @param wsdlLocation
+     * @param serviceName
+     * @param portName
+     * @return
+     * @throws ClassNotFoundException
+     */
+
+    Class getWrapperInterface(Class clazz,
+                              String targetNamespace,
+                              String wsdlLocation,
+                              String serviceName,
+                              String portName)
+            throws ClassNotFoundException;
 }

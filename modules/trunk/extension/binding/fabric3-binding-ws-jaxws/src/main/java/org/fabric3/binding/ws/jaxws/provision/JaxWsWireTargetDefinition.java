@@ -79,6 +79,9 @@ public class JaxWsWireTargetDefinition extends PhysicalWireTargetDefinition {
         setNamespaceURI(parsed[0]);
         setServiceName(parsed[1]);
         setPortName(parsed[2]);
+        if (wsdlLocation == null) {
+            setWsdlLocation(namespaceURI  + serviceName + "/" + portName + "?wsdl");
+        }
     }
 
     /**

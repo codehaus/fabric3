@@ -5,6 +5,7 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.util.Map;
 import java.util.List;
+import java.util.HashMap;
 import java.lang.reflect.Method;
 import javax.xml.ws.Service;
 import javax.xml.namespace.QName;
@@ -41,6 +42,19 @@ import org.fabric3.spi.wire.InvocationChain;
 
 public class JaxWsTargetWireAttacher implements TargetWireAttacher<JaxWsWireTargetDefinition> {
 
+    private static final Map<String, Class<?>> PRIMITIVES_TYPES;
+
+    static {
+        PRIMITIVES_TYPES = new HashMap<String, Class<?>>();
+        PRIMITIVES_TYPES.put("boolean", Boolean.TYPE);
+        PRIMITIVES_TYPES.put("byte", Byte.TYPE);
+        PRIMITIVES_TYPES.put("short", Short.TYPE);
+        PRIMITIVES_TYPES.put("int", Integer.TYPE);
+        PRIMITIVES_TYPES.put("long", Long.TYPE);
+        PRIMITIVES_TYPES.put("float", Float.TYPE);
+        PRIMITIVES_TYPES.put("double", Double.TYPE);
+    }
+
     private final ClassLoaderRegistry registry;
     private final ProxyGenerator generator;
 
@@ -54,30 +68,23 @@ public class JaxWsTargetWireAttacher implements TargetWireAttacher<JaxWsWireTarg
                                JaxWsWireTargetDefinition target, Wire wire)
             throws WiringException {
 
-        Service service;
-        String wsdlElement = target.getWsdlElement();
-        String targetNamespace = null;
-        String serviceName = null;
-        String portName = null;
-        if (wsdlElement != null) {
-            int index = wsdlElement.indexOf("#wsdl.port");
-            int lastSlashIndex = wsdlElement.lastIndexOf("/");
-            targetNamespace = wsdlElement.substring(0, index);
-            serviceName = wsdlElement.substring(index + 11, lastSlashIndex);
-            portName = wsdlElement.substring(lastSlashIndex + 1, wsdlElement.length()
-                    - 1);
-        }
+        String wsdlLocation = target.getWsdlLocation();
+        String targetNamespace = target.getNamespaceURI();
+        String serviceName = target.getServiceName();
+        String portName = target.getPortName();
+        URI classLoaderURI = target.getClassloaderURI();
+        ClassLoader cl = classLoaderURI != null ? registry.getClassLoader(classLoaderURI) : null;
+        assert targetNamespace != null && serviceName != null && portName != null;
         try {
-            Class clazz = loadClass(target.getReferenceInterface(), target.getClassloaderURI());
-            QName qname = new QName(targetNamespace, serviceName);
-            service = Service.create(new URL(target.getWsdlLocation()), qname);
-            clazz = generator.getWrapperClass(clazz, targetNamespace, wsdlElement, serviceName, portName);
+            Class clazz = loadClass(cl, target.getReferenceInterface());
+            clazz = generator.getWrapperInterface(clazz, targetNamespace,
+              wsdlLocation, serviceName, portName);
             for (Map.Entry<PhysicalOperationDefinition, InvocationChain> entry :
                     wire.getInvocationChains().entrySet()) {
                 PhysicalOperationDefinition op = entry.getKey();
-                WsTargetInterceptor wti =
-                        new WsTargetInterceptor(locateMethod(op, clazz), service, clazz,
-                                                new QName(targetNamespace, portName));
+                WsTargetInterceptor wti = new WsTargetInterceptor(
+                        locateMethod(cl, op, clazz), clazz, wsdlLocation,
+                  serviceName, portName, targetNamespace);
                 InvocationChain chain = entry.getValue();
                 chain.addInterceptor(wti);
             }
@@ -86,11 +93,7 @@ public class JaxWsTargetWireAttacher implements TargetWireAttacher<JaxWsWireTarg
             AssertionError ae = new AssertionError("Unexpected exception");
             ae.initCause(cnfe);
             throw ae;
-        } catch (MalformedURLException mue) {
-            AssertionError ae = new AssertionError("Unexpected exception");
-            ae.initCause(mue);
-            throw ae;
-        }
+        } 
 
     }
 
@@ -99,16 +102,16 @@ public class JaxWsTargetWireAttacher implements TargetWireAttacher<JaxWsWireTarg
         throw new AssertionError();
     }
 
-    private static Method locateMethod(PhysicalOperationDefinition operation,
+    private static Method locateMethod(ClassLoader cl,
+                                       PhysicalOperationDefinition operation,
                                        Class clazz) {
         try {
             assert clazz.isInterface();
-            ClassLoader cl = clazz.getClassLoader();
             List<String> paramsAsString = operation.getParameters();
             Class[] params = new Class[paramsAsString.size()];
             int i = 0;
             for (String str : paramsAsString) {
-                params[i++] = cl.loadClass(str);
+                params[i++] = loadClass(cl, str);
             }
             return clazz.getMethod(operation.getName(), params);
         } catch (NoSuchMethodException e) {
@@ -125,13 +128,14 @@ public class JaxWsTargetWireAttacher implements TargetWireAttacher<JaxWsWireTarg
     }
 
 
-    private Class loadClass(String className, URI uri) throws ClassNotFoundException {
+    private static Class loadClass(ClassLoader loader, String className) throws ClassNotFoundException {
         ClassLoader cl = Thread.currentThread().getContextClassLoader();
-        if (uri != null) {
-          cl = registry.getClassLoader(uri);
+        if (loader != null) {
+          cl = loader;
         }
-        assert cl != null;
         try {
+            Class clazz = PRIMITIVES_TYPES.get(className);
+            if (clazz != null) return clazz;
             return cl.loadClass(className);
         } catch (ClassNotFoundException cnfe) {
             cl = Thread.currentThread().getContextClassLoader();
@@ -139,5 +143,4 @@ public class JaxWsTargetWireAttacher implements TargetWireAttacher<JaxWsWireTarg
         }
 
     }
-
 }

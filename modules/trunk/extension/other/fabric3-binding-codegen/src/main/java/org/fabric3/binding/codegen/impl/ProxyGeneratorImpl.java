@@ -4,6 +4,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import javax.jws.WebService;
+import javax.jws.WebMethod;
 
 import org.objectweb.asm.Opcodes;
 import org.objectweb.asm.ClassWriter;
@@ -35,6 +36,7 @@ public class ProxyGeneratorImpl implements ProxyGenerator {
 
     private static final String PROXY_SUFFIX = "_Fabric3SCAProxy";
 
+    private static final String INTERFACE_SUFFIX = "_Fabric3SCAGenInterface";
 
     public Object getWrapper(Class clazz, Object delegate)
             throws ClassNotFoundException,
@@ -93,6 +95,94 @@ public class ProxyGeneratorImpl implements ProxyGenerator {
      }
 
 
+    public Class getWrapperInterface(Class clazz,
+                                    String targetNamespace,
+                                    String wsdlLocation,
+                                    String serviceName,
+                                    String portName) throws ClassNotFoundException {
+        String interfaceName = clazz.getName();
+        String internalInterfaceName = interfaceName.replace('.', '/');
+        String internalClassName = internalInterfaceName + INTERFACE_SUFFIX;
+        String className = interfaceName + INTERFACE_SUFFIX;
+        byte[] b = new InterfaceGenerator(internalClassName, clazz,
+                                          targetNamespace, wsdlLocation, serviceName, portName).generateByteCode();
+        CodeGenClassLoader cl = getCodeGenClassLoader(clazz);
+        return cl.defineClass(className, b);
+    }
+
+    private static class InterfaceGenerator implements Opcodes {
+        private final ClassWriter cw = new ClassWriter(0);
+
+        private InterfaceGenerator(String className, Class clazz,
+                               String targetNamespace,
+                               String wsdlLocation,
+                               String serviceName,
+                               String portName) {
+            cw.visit(V1_5, ACC_INTERFACE | ACC_PUBLIC, className, null, "java/rmi/Remote", null);
+            AnnotationVisitor av = cw.visitAnnotation(getSignature(WebService.class), true);
+            if (targetNamespace != null)
+              av.visit("targetNamespace", targetNamespace);
+            if (wsdlLocation != null)
+              av.visit("wsdlLocation", wsdlLocation);
+            if (serviceName != null)
+              av.visit("serviceName", serviceName);
+            if (portName != null)
+              av.visit("portName", portName);
+            av.visitEnd();
+            Method[] methods = clazz.getMethods();
+            for (Method m : methods) {
+                addMethodCode(m);
+            }
+            cw.visitEnd();
+        }
+
+
+        private void addMethodCode(Method m) {
+            MethodVisitor mv;
+            mv = cw.visitMethod(ACC_PUBLIC | ACC_FINAL, m.getName(),
+                                computeSignature(m), null, null);
+            mv.visitAnnotation(getSignature(WebMethod.class), true);
+            mv.visitEnd();
+        }
+
+
+
+        private String computeSignature(Method m) {
+            StringBuilder sb = new StringBuilder("(");
+            Class[] parameters = m.getParameterTypes();
+
+            for (Class parameter : parameters) {
+                sb.append(getSignature(parameter));
+            }
+            sb.append(')');
+            sb.append(getSignature(m.getReturnType()));
+            return sb.toString();
+        }
+
+        private String getSignature(Class clazz) {
+            if (clazz == Void.TYPE) return "V";
+            if (clazz == Byte.TYPE) return "B";
+            else if (clazz == Character.TYPE) return "C";
+            else if (clazz == Double.TYPE) return "D";
+            else if (clazz == Float.TYPE) return "F";
+            else if (clazz == Integer.TYPE) return "I";
+            else if (clazz == Long.TYPE) return "J";
+            else if (clazz == Short.TYPE) return "S";
+            else if (clazz == Boolean.TYPE) return "Z";
+            else {
+                if (!clazz.getName().startsWith("[")) {
+                    return "L" + clazz.getName().replace('.', '/') + ";";
+                } else {
+                    return "[" + clazz.getName().replace('.', '/') + ";";
+                }
+            }
+        }
+
+        private byte[] generateByteCode() {
+            return cw.toByteArray();
+        }
+
+    }
 
      private static class ServiceProxy implements Opcodes {
 

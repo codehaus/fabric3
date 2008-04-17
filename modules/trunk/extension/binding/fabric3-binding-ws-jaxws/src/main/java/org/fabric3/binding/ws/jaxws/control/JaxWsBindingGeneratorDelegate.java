@@ -67,6 +67,12 @@ public class JaxWsBindingGeneratorDelegate implements BindingGeneratorDelegate<W
         hwtd.setUri(logicalBinding.getBinding().getTargetUri());
         ServiceContract<?> contract = referenceDefinition.getServiceContract();
         hwtd.setReferenceInterface(contract.getQualifiedInterfaceName());
+        String wsdlElement = logicalBinding.getBinding().getWsdlElement();
+        if (wsdlElement == null) {
+            //Handle when component name/service are not defined
+        } else {
+            hwtd.setWsdlElement(logicalBinding.getBinding().getWsdlElement());
+        }
 
         //URI classloaderId = logicalBinding.getParent().getParent().getParent().getUri();
         //hwtd.setClassloaderURI(classloaderId);
