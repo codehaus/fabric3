@@ -27,12 +27,11 @@ import org.fabric3.spi.model.physical.PhysicalClassLoaderDefinition;
  * <p/>
  * The generator introspects the logical component for a {@link org.fabric3.spi.model.type.ContributionResourceDescription}.From this metadata it adds
  * the contribution that the artifacts for the component are containined in to the classloader definition. The classloader definition is then added to
- * the physical change set that will be sent to the service node.
+ * the set of command that will be sent to a runtime.
  * <p/>
- * On the service node, a builder is responsible for matching the PhysicalClassLoaderDefinition to an existing classloader or creating a new one.
- * During this process, the contribution archive and required extensions may need to be provisioned to the node.
+ * On the runtime, a builder is responsible for matching the PhysicalClassLoaderDefinition to an existing classloader or creating a new one. During
+ * this process, the contribution archive and required extensions may need to be provisioned to the node.
  * <p/>
- * Component extension generators requiring classloader provisioning can use this service to create the required classloader definition.
  *
  * @version $Rev$ $Date$
  */
@@ -43,7 +42,8 @@ public interface ClassLoaderGenerator {
      *
      * @param component the logical component to generate the classloader definition from
      * @return the definition
-     * @throws org.fabric3.spi.generator.GenerationException if an error occurs during the generation process
+     * @throws org.fabric3.spi.generator.GenerationException
+     *          if an error occurs during the generation process
      */
     PhysicalClassLoaderDefinition generate(LogicalComponent<?> component) throws GenerationException;
 
