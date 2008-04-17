@@ -80,20 +80,6 @@ public interface Fabric3Runtime<I extends HostInfo> {
     void setMonitorFactory(MonitorFactory monitorFactory);
 
     /**
-     * Sets the ManagementService that this runtime should use.
-     *
-     * @param managementService the ManagementService that this runtime should use
-     */
-    void setManagementService(ManagementService<?> managementService);
-
-    /**
-     * Returns the ManagementService that this runtime is using.
-     *
-     * @return the ManagementService that this runtime is using
-     */
-    ManagementService<?> getManagementService();
-
-    /**
      * Initialize a runtime. An initialized runtime has has completed core service initialization, recovery operations,
      * and is ready to be started.
      *

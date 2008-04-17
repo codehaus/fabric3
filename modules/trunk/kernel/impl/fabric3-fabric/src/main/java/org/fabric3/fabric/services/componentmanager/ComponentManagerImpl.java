@@ -19,16 +19,14 @@
 package org.fabric3.fabric.services.componentmanager;
 
 import java.net.URI;
-import java.util.Map;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.fabric3.spi.component.AtomicComponent;
 import org.fabric3.spi.component.Component;
 import org.fabric3.spi.runtime.component.ComponentManager;
 import org.fabric3.spi.runtime.component.RegistrationException;
-import org.fabric3.spi.services.management.Fabric3ManagementService;
 
 /**
  * Default implementation of the component manager
@@ -36,15 +34,9 @@ import org.fabric3.spi.services.management.Fabric3ManagementService;
  * @version $Rev$ $Date$
  */
 public class ComponentManagerImpl implements ComponentManager {
-    private final Fabric3ManagementService managementService;
     private final Map<URI, Component> components;
 
     public ComponentManagerImpl() {
-        this(null);
-    }
-
-    public ComponentManagerImpl(Fabric3ManagementService managementService) {
-        this.managementService = managementService;
         components = new ConcurrentHashMap<URI, Component>();
     }
 
@@ -57,12 +49,6 @@ public class ComponentManagerImpl implements ComponentManager {
             throw new DuplicateComponentException("A component is already registered for: " + uri.toString());
         }
         components.put(uri, component);
-
-        if (managementService != null && component instanceof AtomicComponent) {
-            // FIXME shouldn't it take the canonical name and also not distinguish atomic components?
-            managementService.registerComponent(component.getUri().toString(), component);
-        }
-
     }
 
     public synchronized void unregister(Component component) throws RegistrationException {

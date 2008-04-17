@@ -18,20 +18,20 @@
  */
 package org.fabric3.jmx;
 
+import java.net.URI;
 import javax.management.JMException;
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
+import javax.management.StandardMBean;
 
-import org.fabric3.jmx.instrument.InstrumentedComponent;
-import org.fabric3.spi.component.Component;
-import org.fabric3.spi.services.management.Fabric3ManagementService;
+import org.fabric3.host.management.ManagementService;
 
 /**
  * JMX implementation of the management service.
  *
  * @version $Revision$ $Date$
  */
-public class JmxManagementService implements Fabric3ManagementService {
+public class JmxManagementService implements ManagementService {
 
     /**
      * MBean server used by the JMX management service.
@@ -47,7 +47,7 @@ public class JmxManagementService implements Fabric3ManagementService {
     /**
      * Constructor that initializes the MBeanServer and domain to use for registering components.
      *
-     * @param mBeanServer the MBeanServer components should be registered with
+     * @param mBeanServer      the MBeanServer components should be registered with
      * @param managementDomain the JMX domain to use when generating ObjectNames
      */
     public JmxManagementService(MBeanServer mBeanServer, String managementDomain) {
@@ -55,21 +55,13 @@ public class JmxManagementService implements Fabric3ManagementService {
         this.managementDomain = managementDomain;
     }
 
-    /**
-     * @throws JmxException In case of an unexpected JMX exception.
-     * @see org.fabric3.spi.services.management.Fabric3ManagementService#registerComponent(
-     *java.lang.String, org.fabric3.spi.component.Component)
-     */
-    public final void registerComponent(String name, Component component) throws JmxException {
-
-        try {   
-            name = name.replace(":", "-");
-            ObjectName on = new ObjectName(managementDomain + ":" + "type=component,name=" + name);
-            InstrumentedComponent mbean = new InstrumentedComponent(component);
-            mBeanServer.registerMBean(mbean, on);
-        } catch (JMException ex) {
-            throw new JmxException("Unable to register " + name, ex);
+    public <T> void registerService(URI component, String service, Class<T> managementInterface, T instance) {
+        try {
+            ObjectName name = new ObjectName(managementDomain + ":type=service,component=\"" + component.toString() + "\",service=" + service);
+            StandardMBean mbean = new StandardMBean(instance, managementInterface);
+            mBeanServer.registerMBean(mbean, name);
+        } catch (JMException e) {
+            throw new JmxException(e);
         }
-
     }
 }

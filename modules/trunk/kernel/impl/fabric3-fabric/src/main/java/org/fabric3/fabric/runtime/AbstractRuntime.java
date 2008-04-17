@@ -28,7 +28,6 @@ import static org.fabric3.fabric.runtime.ComponentNames.RUNTIME_URI;
 import org.fabric3.fabric.services.componentmanager.ComponentManagerImpl;
 import org.fabric3.fabric.services.domain.LogicalComponentManagerImpl;
 import org.fabric3.fabric.services.domain.NonPersistentLogicalComponentStore;
-import org.fabric3.host.management.ManagementService;
 import org.fabric3.host.runtime.Fabric3Runtime;
 import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.host.runtime.InitializationException;
@@ -51,7 +50,6 @@ import org.fabric3.spi.runtime.component.ComponentManager;
 import org.fabric3.spi.runtime.component.RegistrationException;
 import org.fabric3.spi.services.event.EventService;
 import org.fabric3.spi.services.event.RuntimeStart;
-import org.fabric3.spi.services.management.Fabric3ManagementService;
 
 /**
  * @version $Rev$ $Date$
@@ -60,7 +58,6 @@ public abstract class AbstractRuntime<I extends HostInfo> implements Fabric3Runt
     private String applicationName;
     private URL applicationScdl;
     private Class<I> hostInfoType;
-    private ManagementService<?> managementService;
 
     /**
      * Information provided by the host about its runtime environment.
@@ -142,14 +139,6 @@ public abstract class AbstractRuntime<I extends HostInfo> implements Fabric3Runt
         this.monitorFactory = monitorFactory;
     }
 
-    public ManagementService<?> getManagementService() {
-        return managementService;
-    }
-
-    public void setManagementService(ManagementService<?> managementService) {
-        this.managementService = managementService;
-    }
-
     public void initialize() throws InitializationException {
         LogicalComponentStore store = new NonPersistentLogicalComponentStore(RUNTIME_URI, Autowire.ON);
         logicalComponentManager = new LogicalComponentManagerImpl(store);
@@ -158,7 +147,7 @@ public abstract class AbstractRuntime<I extends HostInfo> implements Fabric3Runt
         } catch (AssemblyException e) {
             throw new InitializationException(e);
         }
-        componentManager = new ComponentManagerImpl((Fabric3ManagementService) getManagementService());
+        componentManager = new ComponentManagerImpl();
         scopeContainer = new CompositeScopeContainer(getMonitorFactory().getMonitor(ScopeContainerMonitor.class));
         scopeContainer.start();
     }

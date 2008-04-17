@@ -137,11 +137,10 @@ public class Fabric3Server implements Fabric3ServerMBean {
             ClassLoader hostLoader = hostInfo.getHostClassLoader();
 
             MBeanServer mBeanServer = agent.getMBeanServer();
-            ManagementService<?> managementService = createManagementService(mBeanServer, profileName, bootLoader);
+            ManagementService managementService = createManagementService(mBeanServer, profileName, bootLoader);
             Bootstrapper bootstrapper = BootstrapHelper.createBootstrapper(hostInfo);
             RuntimeLifecycleCoordinator<StandaloneRuntime, Bootstrapper> coordinator =
                     BootstrapHelper.createCoordinator(hostInfo);
-            runtime.setManagementService(managementService);
 
             // load the primordial system components
             coordinator.bootPrimordial(runtime, bootstrapper, bootLoader, hostLoader);
@@ -166,12 +165,12 @@ public class Fabric3Server implements Fabric3ServerMBean {
         }
     }
 
-    private ManagementService<?> createManagementService(MBeanServer mBeanServer, String profileName, ClassLoader cl)
+    private ManagementService createManagementService(MBeanServer mBeanServer, String profileName, ClassLoader cl)
             throws Exception {
         @SuppressWarnings("unchecked")
-        Class<ManagementService<?>> clazz =
-                (Class<ManagementService<?>>) cl.loadClass("org.fabric3.jmx.JmxManagementService");
-        Constructor<ManagementService<?>> ctr = clazz.getConstructor(MBeanServer.class, String.class);
+        Class<ManagementService> clazz =
+                (Class<ManagementService>) cl.loadClass("org.fabric3.jmx.JmxManagementService");
+        Constructor<ManagementService> ctr = clazz.getConstructor(MBeanServer.class, String.class);
         return ctr.newInstance(mBeanServer, profileName);
 
     }
