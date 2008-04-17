@@ -138,6 +138,8 @@ public class Fabric3Server implements Fabric3ServerMBean {
 
             MBeanServer mBeanServer = agent.getMBeanServer();
             ManagementService managementService = createManagementService(mBeanServer, profileName, bootLoader);
+            runtime.setManagementService(managementService);
+            
             Bootstrapper bootstrapper = BootstrapHelper.createBootstrapper(hostInfo);
             RuntimeLifecycleCoordinator<StandaloneRuntime, Bootstrapper> coordinator =
                     BootstrapHelper.createCoordinator(hostInfo);

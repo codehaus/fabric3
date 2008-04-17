@@ -32,6 +32,7 @@ import org.fabric3.host.runtime.Fabric3Runtime;
 import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.host.runtime.InitializationException;
 import org.fabric3.host.runtime.StartException;
+import org.fabric3.host.management.ManagementService;
 import org.fabric3.monitor.MonitorFactory;
 import org.fabric3.pojo.PojoWorkContextTunnel;
 import org.fabric3.scdl.Autowire;
@@ -58,6 +59,7 @@ public abstract class AbstractRuntime<I extends HostInfo> implements Fabric3Runt
     private String applicationName;
     private URL applicationScdl;
     private Class<I> hostInfoType;
+    private ManagementService managementService;
 
     /**
      * Information provided by the host about its runtime environment.
@@ -121,6 +123,14 @@ public abstract class AbstractRuntime<I extends HostInfo> implements Fabric3Runt
 
     public Class<I> getHostInfoType() {
         return hostInfoType;
+    }
+
+    public ManagementService getManagementService() {
+        return managementService;
+    }
+
+    public void setManagementService(ManagementService managementService) {
+        this.managementService = managementService;
     }
 
     public I getHostInfo() {

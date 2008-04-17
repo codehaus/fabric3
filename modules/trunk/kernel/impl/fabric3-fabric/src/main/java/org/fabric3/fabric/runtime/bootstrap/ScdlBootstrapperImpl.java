@@ -44,6 +44,7 @@ import org.fabric3.host.runtime.Fabric3Runtime;
 import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.host.runtime.InitializationException;
 import org.fabric3.host.runtime.ScdlBootstrapper;
+import org.fabric3.host.management.ManagementService;
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.impl.DefaultIntrospectionHelper;
 import org.fabric3.introspection.impl.contract.DefaultContractProcessor;
@@ -192,13 +193,16 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
 
     }
 
-    private <T extends HostInfo> void registerRuntimeComponents(Fabric3Runtime<T> runtime)
-            throws InitializationException {
+    private <T extends HostInfo> void registerRuntimeComponents(Fabric3Runtime<T> runtime) throws InitializationException {
         RuntimeServices runtimeServices = (RuntimeServices) runtime;
 
         // services available through the outward facing Fabric3Runtime API
         registerSystemComponent(runtimeServices, "MonitorFactory", MonitorFactory.class, runtime.getMonitorFactory());
         registerSystemComponent(runtimeServices, "HostInfo", runtime.getHostInfoType(), runtime.getHostInfo());
+        ManagementService managementService = runtime.getManagementService();
+        if (managementService != null) {
+            registerSystemComponent(runtimeServices, "ManagementService", ManagementService.class, managementService);
+        }
 
         // services available through the inward facing RuntimeServices SPI
         ComponentManager componentManager = runtimeServices.getComponentManager();
