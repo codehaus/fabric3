@@ -115,7 +115,7 @@ public class ReflectiveInstanceWrapper<T> implements InstanceWrapper<T> {
 
         for (InjectableAttribute attribute : injectors.keySet()) {
             if (attribute.getName().equals(referenceName)) {
-                injectors.get(attribute).setObectFactory(factory, key);
+                injectors.get(attribute).setObjectFactory(factory, key);
             }
         }
 

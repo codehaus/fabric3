@@ -97,11 +97,11 @@ public class InjectorFactoryImpl implements InjectorFactory {
     private Injector<?> createInjector(String referenceName, ObjectFactory<?> factory, WebContextInjectionSite site) {
         if (site.getContextType() == WebContextInjectionSite.ContextType.SERVLET_CONTEXT) {
             Injector<?> injector = new ServletContextInjector();
-            injector.setObectFactory(factory, referenceName);
+            injector.setObjectFactory(factory, referenceName);
             return injector;
         } else {
             Injector<?> injector = new HttpSessionInjector();
-            injector.setObectFactory(factory, referenceName);
+            injector.setObjectFactory(factory, referenceName);
             return injector;
         }
     }

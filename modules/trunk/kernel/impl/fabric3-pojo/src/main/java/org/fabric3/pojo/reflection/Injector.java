@@ -34,6 +34,6 @@ public interface Injector<T> {
      */
     void inject(T instance) throws ObjectCreationException;
     
-    void setObectFactory(ObjectFactory<?> objectFactory, Object key);
+    void setObjectFactory(ObjectFactory<?> objectFactory, Object key);
 
 }

@@ -37,7 +37,7 @@ public class HttpSessionInjector implements Injector<HttpSession> {
         session.setAttribute(name, objectFactory.getInstance());
     }
 
-    public void setObectFactory(ObjectFactory<?> objectFactory, Object name) {
+    public void setObjectFactory(ObjectFactory<?> objectFactory, Object name) {
         this.objectFactory = objectFactory;
         this.name = name.toString();
     }

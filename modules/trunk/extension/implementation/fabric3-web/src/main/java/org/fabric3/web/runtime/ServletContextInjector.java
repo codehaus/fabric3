@@ -37,7 +37,7 @@ public class ServletContextInjector implements Injector<ServletContext> {
         context.setAttribute(key, objectFactory.getInstance());
     }
 
-    public void setObectFactory(ObjectFactory<?> objectFactory, Object key) {
+    public void setObjectFactory(ObjectFactory<?> objectFactory, Object key) {
         this.objectFactory = objectFactory;
         this.key = key.toString();
     }
