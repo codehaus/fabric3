@@ -14,23 +14,15 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.spi.command;
-
-import org.fabric3.host.Fabric3Exception;
+package org.fabric3.fabric.executor;
 
 /**
  * @version $Rev$ $Date$
  */
-public class ExecutionException extends Fabric3Exception {
-    public ExecutionException(String message, String identifier) {
+public class ComponentNotRegisteredException extends InitializeException {
+    private static final long serialVersionUID = 3517203494921758959L;
+
+    public ComponentNotRegisteredException(String message, String identifier) {
         super(message, identifier);
-    }
-
-    public ExecutionException(String message, String identifier, Throwable cause) {
-        super(message, identifier, cause);
-    }
-
-    public ExecutionException(String message, Throwable cause) {
-        super(message, cause);
     }
 }

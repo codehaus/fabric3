@@ -14,19 +14,23 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.fabric.command;
+package org.fabric3.fabric.executor;
+
+import org.fabric3.spi.executor.ExecutionException;
 
 /**
+ * Thrown when an CommandExecutor cannot be found for a corresponding Command
+ *
  * @version $Rev$ $Date$
  */
-public class ComponentNotRegisteredException extends InitializeException{
+public class ExecutorNotFoundException extends ExecutionException {
 
     /**
-     * 
+     *
      */
-    private static final long serialVersionUID = 3517203494921758959L;
+    private static final long serialVersionUID = 2564999535495010867L;
 
-    public ComponentNotRegisteredException(String message, String identifier) {
+    public ExecutorNotFoundException(String message, String identifier) {
         super(message, identifier);
     }
 }

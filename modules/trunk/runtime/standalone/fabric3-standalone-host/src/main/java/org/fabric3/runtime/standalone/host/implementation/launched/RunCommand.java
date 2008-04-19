@@ -21,14 +21,14 @@ import java.net.URI;
 import org.fabric3.spi.command.AbstractCommand;
 
 /**
- * Runs <code>implementation.launched</code> components on a service node
+ * Runs <code>implementation.launched</code> components on a runtime.
  *
  * @version $Rev$ $Date$
  */
 public class RunCommand extends AbstractCommand {
     private final URI uri;
 
-    public RunCommand(int order,  URI uri) {
+    public RunCommand(int order, URI uri) {
         super(order);
         this.uri = uri;
     }

@@ -18,18 +18,16 @@
  */
 package org.fabric3.fabric.services.routing;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import java.util.Set;
 
 import org.fabric3.scdl.Scope;
 import org.fabric3.spi.command.Command;
-import org.fabric3.spi.command.CommandExecutorRegistry;
-import org.fabric3.spi.command.ExecutionException;
+import org.fabric3.spi.executor.CommandExecutorRegistry;
+import org.fabric3.spi.executor.ExecutionException;
 import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.spi.component.TargetResolutionException;
 import org.fabric3.spi.generator.CommandMap;
+
 import org.osoa.sca.annotations.Reference;
 
 /**

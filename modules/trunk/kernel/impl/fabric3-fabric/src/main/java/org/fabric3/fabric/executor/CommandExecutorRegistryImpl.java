@@ -14,7 +14,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.fabric.command;
+package org.fabric3.fabric.executor;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,9 +22,9 @@ import java.util.Map;
 import org.osoa.sca.annotations.EagerInit;
 
 import org.fabric3.spi.command.Command;
-import org.fabric3.spi.command.CommandExecutor;
-import org.fabric3.spi.command.CommandExecutorRegistry;
-import org.fabric3.spi.command.ExecutionException;
+import org.fabric3.spi.executor.CommandExecutor;
+import org.fabric3.spi.executor.CommandExecutorRegistry;
+import org.fabric3.spi.executor.ExecutionException;
 
 /**
  * Default implementation of the CommandExecutorRegistry
@@ -45,7 +45,7 @@ public class CommandExecutorRegistryImpl implements CommandExecutorRegistry {
         Class<? extends Command> clazz = command.getClass();
         CommandExecutor<T> executor = (CommandExecutor<T>) executors.get(clazz);
         if (executor == null) {
-            throw new ExecutorNotFoundException("No registered executor for command", clazz.getName());
+            throw new ExecutorNotFoundException("No registered executor for command: " + clazz.getName(), clazz.getName());
         }
         executor.execute(command);
     }

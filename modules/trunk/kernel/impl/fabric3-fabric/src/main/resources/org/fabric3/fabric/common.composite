@@ -80,7 +80,7 @@
     </component>
 
     <component name="commandExecutorRegistry">
-        <system:implementation.system class="org.fabric3.fabric.command.CommandExecutorRegistryImpl"/>
+        <system:implementation.system class="org.fabric3.fabric.executor.CommandExecutorRegistryImpl"/>
     </component>
 
     <!-- default commands -->
@@ -132,27 +132,27 @@
     </component>
     
     <component name="classloaderProvisionCommandExecutor">
-        <system:implementation.system class="org.fabric3.fabric.command.ClassloaderProvisionCommandExecutor"/>
+        <system:implementation.system class="org.fabric3.fabric.executor.ClassloaderProvisionCommandExecutor"/>
     </component>
 
     <component name="componentBuildCommandExecutor">
-        <system:implementation.system class="org.fabric3.fabric.command.ComponentBuildCommandExecutor"/>
+        <system:implementation.system class="org.fabric3.fabric.executor.ComponentBuildCommandExecutor"/>
     </component>
 
     <component name="wireAttachCommandExecutor">
-        <system:implementation.system class="org.fabric3.fabric.command.WireAttachCommandExecutor"/>
+        <system:implementation.system class="org.fabric3.fabric.executor.WireAttachCommandExecutor"/>
     </component>
 
     <component name="componentStartCommandExecutor">
-        <system:implementation.system class="org.fabric3.fabric.command.ComponentStartCommandExecutor"/>
+        <system:implementation.system class="org.fabric3.fabric.executor.ComponentStartCommandExecutor"/>
     </component>
     
     <component name="startCompositeContextCommandExecutor">
-        <system:implementation.system class="org.fabric3.fabric.command.StartCompositeContextCommandExecutor"/>
+        <system:implementation.system class="org.fabric3.fabric.executor.StartCompositeContextCommandExecutor"/>
     </component>
 
     <component name="initializeComponentCommandExecutor">
-        <system:implementation.system class="org.fabric3.fabric.command.InitializeComponentCommandExecutor"/>
+        <system:implementation.system class="org.fabric3.fabric.executor.InitializeComponentCommandExecutor"/>
     </component>
 
     <component name="classLoaderGenerator">

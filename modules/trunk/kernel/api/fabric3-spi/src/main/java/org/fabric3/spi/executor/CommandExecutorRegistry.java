@@ -14,27 +14,30 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.fabric.command;
+package org.fabric3.spi.executor;
 
-import org.fabric3.spi.command.ExecutionException;
+import org.fabric3.spi.command.Command;
 
 /**
- * Denotes an error executing the {@link org.fabric3.spi.command.InitializeComponentCommand}
+ * A registry of {@link CommandExecutor}s.
  *
  * @version $Rev$ $Date$
  */
-public class InitializeException extends ExecutionException {
+public interface CommandExecutorRegistry {
 
     /**
-     * 
+     * Register the command executor
+     *
+     * @param type     the type of command the executor handles
+     * @param executor the executor
      */
-    private static final long serialVersionUID = -276254239988931352L;
+    <T extends Command> void register(Class<T> type, CommandExecutor<T> executor);
 
-    public InitializeException(String message, String identifier) {
-        super(message, identifier);
-    }
-
-    public InitializeException(String message, String identifier, Throwable cause) {
-        super(message, identifier, cause);
-    }
+    /**
+     * Dispatches a command to an exececutor.
+     *
+     * @param command the command to dispatch
+     * @throws ExecutionException if there is an error executing the command
+     */
+    <T extends Command> void execute(T command) throws ExecutionException;
 }

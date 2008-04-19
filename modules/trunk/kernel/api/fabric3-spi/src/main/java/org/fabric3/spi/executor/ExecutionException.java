@@ -14,22 +14,27 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.spi.command;
+package org.fabric3.spi.executor;
+
+import org.fabric3.host.Fabric3Exception;
 
 /**
- * CommandExecutors are responsible for executing {@link Command}s sent to a service node, typically by performing an
- * operation or set of operations.
+ * Thrown when an error is encountered executing a Command on a runtime.
  *
  * @version $Rev$ $Date$
  */
-public interface CommandExecutor<T extends Command> {
+public class ExecutionException extends Fabric3Exception {
+    private static final long serialVersionUID = 7518538722801035000L;
 
-    /**
-     * Execute the command
-     *
-     * @param command the command to execute
-     * @throws ExecutionException if there is an error executing the command
-     */
-    void execute(T command) throws ExecutionException;
+    public ExecutionException(String message, String identifier) {
+        super(message, identifier);
+    }
 
+    public ExecutionException(String message, String identifier, Throwable cause) {
+        super(message, identifier, cause);
+    }
+
+    public ExecutionException(String message, Throwable cause) {
+        super(message, cause);
+    }
 }

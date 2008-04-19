@@ -23,8 +23,8 @@ import java.net.URI;
 import junit.framework.TestCase;
 
 import org.easymock.EasyMock;
-import org.fabric3.fabric.services.event.EventServiceImpl;
-import org.fabric3.spi.command.CommandExecutorRegistry;
+
+import org.fabric3.spi.executor.CommandExecutorRegistry;
 
 /**
  * @version $Rev$ $Date$

@@ -14,22 +14,23 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.fabric.command;
-
-import org.fabric3.spi.builder.BuilderException;
-import org.fabric3.spi.builder.component.ComponentBuilderRegistry;
-import org.fabric3.spi.command.CommandExecutor;
-import org.fabric3.spi.command.CommandExecutorRegistry;
-import org.fabric3.spi.command.ExecutionException;
-import org.fabric3.spi.component.Component;
-import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
-import org.fabric3.spi.runtime.component.ComponentManager;
-import org.fabric3.spi.runtime.component.RegistrationException;
+package org.fabric3.fabric.executor;
 
 import org.osoa.sca.annotations.Constructor;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
+
+import org.fabric3.fabric.command.ComponentBuildCommand;
+import org.fabric3.spi.builder.BuilderException;
+import org.fabric3.spi.builder.component.ComponentBuilderRegistry;
+import org.fabric3.spi.component.Component;
+import org.fabric3.spi.executor.CommandExecutor;
+import org.fabric3.spi.executor.CommandExecutorRegistry;
+import org.fabric3.spi.executor.ExecutionException;
+import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
+import org.fabric3.spi.runtime.component.ComponentManager;
+import org.fabric3.spi.runtime.component.RegistrationException;
 
 /**
  * Eagerly initializes a component on a service node.

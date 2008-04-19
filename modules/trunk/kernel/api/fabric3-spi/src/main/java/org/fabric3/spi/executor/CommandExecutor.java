@@ -14,28 +14,23 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.spi.command;
+package org.fabric3.spi.executor;
+
+import org.fabric3.spi.command.Command;
 
 /**
- * A registry of {@link CommandExecutor}s.
+ * CommandExecutors are responsible for executing {@link org.fabric3.spi.command.Command}s sent to a runtime.
  *
  * @version $Rev$ $Date$
  */
-public interface CommandExecutorRegistry {
+public interface CommandExecutor<T extends Command> {
 
     /**
-     * Register the command executor
+     * Execute the command.
      *
-     * @param type     the type of command the executor handles
-     * @param executor the executor
-     */
-    <T extends Command> void register(Class<T> type, CommandExecutor<T> executor);
-
-    /**
-     * Dispatches a command to an exececutor.
-     *
-     * @param command the command to dispatch
+     * @param command the command to execute
      * @throws ExecutionException if there is an error executing the command
      */
-    <T extends Command> void execute(T command) throws ExecutionException;
+    void execute(T command) throws ExecutionException;
+
 }
