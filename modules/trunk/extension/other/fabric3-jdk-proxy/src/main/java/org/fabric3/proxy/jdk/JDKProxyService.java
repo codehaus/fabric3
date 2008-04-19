@@ -50,7 +50,8 @@ import org.fabric3.spi.model.physical.InteractionType;
  */
 public class JDKProxyService implements ProxyService {
     private ClassLoaderRegistry classLoaderRegistry;
-    private ScopeContainer<Conversation> scopeContainer;
+    private ScopeRegistry scopeRegistry;
+    private ScopeContainer<Conversation> conversationalContainer;
 
     public JDKProxyService() {
     }
@@ -58,7 +59,7 @@ public class JDKProxyService implements ProxyService {
     @Constructor
     public JDKProxyService(@Reference ClassLoaderRegistry classLoaderRegistry, @Reference ScopeRegistry scopeRegistry) {
         this.classLoaderRegistry = classLoaderRegistry;
-        this.scopeContainer = scopeRegistry.getScopeContainer(Scope.CONVERSATION);
+        this.scopeRegistry = scopeRegistry;
     }
 
     public <T> ObjectFactory<T> createObjectFactory(Class<T> interfaze, InteractionType type, Wire wire, String callbackUri)
@@ -80,6 +81,7 @@ public class JDKProxyService implements ProxyService {
         JDKInvocationHandler<T> handler;
         if (InteractionType.CONVERSATIONAL == type || InteractionType.PROPAGATES_CONVERSATION == type) {
             // create a conversational proxy
+            ScopeContainer<Conversation> scopeContainer = getContainer();
             handler = new JDKInvocationHandler<T>(interfaze, type, callbackUri, mappings, scopeContainer);
         } else {
             // create a non-conversational proxy
@@ -150,5 +152,12 @@ public class JDKProxyService implements ProxyService {
             types[i] = classLoaderRegistry.loadClass(clazz.getClassLoader(), params.get(i));
         }
         return clazz.getMethod(name, types);
+    }
+
+    private ScopeContainer<Conversation> getContainer() {
+        if (conversationalContainer == null) {
+            conversationalContainer = scopeRegistry.getScopeContainer(Scope.CONVERSATION);
+        }
+        return conversationalContainer;
     }
 }
