@@ -27,14 +27,11 @@ import org.osoa.sca.annotations.Reference;
 import org.fabric3.api.annotation.Monitor;
 import org.fabric3.spi.command.Command;
 import org.fabric3.spi.command.CommandExecutorRegistry;
-import org.fabric3.spi.command.CommandSet;
 import org.fabric3.spi.command.ExecutionException;
 import org.fabric3.spi.services.marshaller.MarshalException;
 import org.fabric3.spi.services.marshaller.MarshalService;
 import org.fabric3.spi.services.messaging.MessagingEventService;
 import org.fabric3.spi.services.messaging.RequestListener;
-import org.fabric3.spi.services.runtime.RuntimeInfoService;
-import org.fabric3.spi.generator.CommandMap;
 
 /**
  * @version $Rev$ $Date$
@@ -58,7 +55,7 @@ public class CommandSetListener implements RequestListener {
 
     @Init
     public void init() {
-        QName qName = new QName(CommandSet.class.getName());
+        QName qName = new QName(Set.class.getName());
         eventService.registerRequestListener(qName, this);
     }
 
