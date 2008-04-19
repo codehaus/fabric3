@@ -44,14 +44,10 @@ public class StartCompositeContextCommandGenerator implements CommandGenerator {
 
     @SuppressWarnings("unchecked")
     public StartCompositeContextCommand generate(LogicalComponent<?> component) throws GenerationException {
-
-        StartCompositeContextCommand command = new StartCompositeContextCommand(order);
-
-        if (component instanceof LogicalCompositeComponent) {
-            command.addGroupId(component.getUri());
+        if (!component.isProvisioned() && component instanceof LogicalCompositeComponent) {
+            return new StartCompositeContextCommand(order, component.getUri());
         }
-
-        return command;
+        return null;
 
     }
 

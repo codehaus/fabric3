@@ -18,51 +18,44 @@
  */
 package org.fabric3.fabric.command;
 
-import java.util.LinkedHashSet;
-import java.util.Set;
-
-import org.fabric3.spi.model.physical.PhysicalClassLoaderDefinition;
 import org.fabric3.spi.command.AbstractCommand;
+import org.fabric3.spi.model.physical.PhysicalClassLoaderDefinition;
 
 /**
- *
  * @version $Revision$ $Date$
  */
 public class ClassloaderProvisionCommand extends AbstractCommand {
+    private PhysicalClassLoaderDefinition physicalClassLoaderDefinition;
 
-    private final Set<PhysicalClassLoaderDefinition> physicalClassLoaderDefinitions =  new LinkedHashSet<PhysicalClassLoaderDefinition>();
-
-    public ClassloaderProvisionCommand(int order) {
+    public ClassloaderProvisionCommand(int order, PhysicalClassLoaderDefinition definition) {
         super(order);
+        this.physicalClassLoaderDefinition = definition;
     }
 
-    public Set<PhysicalClassLoaderDefinition> getPhysicalClassLoaderDefinitions() {
-        return physicalClassLoaderDefinitions;
+    public PhysicalClassLoaderDefinition getClassLoaderDefinition() {
+        return physicalClassLoaderDefinition;
     }
-    
-    public void addPhysicalClassLoaderDefinition(PhysicalClassLoaderDefinition physicalClassLoaderDefinition) {
-        physicalClassLoaderDefinitions.add(physicalClassLoaderDefinition);
-    }
-    
-    public void addPhysicalClassLoaderDefinitions(Set<PhysicalClassLoaderDefinition> physicalClassLoaderDefinitions) {
-        this.physicalClassLoaderDefinitions.addAll(physicalClassLoaderDefinitions);
-    }
-    
-    @Override
-    public boolean equals(Object obj) {
-        
-        if (obj == null || obj.getClass() != ClassloaderProvisionCommand.class) {
+
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        
-        ClassloaderProvisionCommand other = (ClassloaderProvisionCommand) obj;
-        return physicalClassLoaderDefinitions.equals(other.physicalClassLoaderDefinitions);
-        
+
+        ClassloaderProvisionCommand that = (ClassloaderProvisionCommand) o;
+
+        if (physicalClassLoaderDefinition != null
+                ? !physicalClassLoaderDefinition.equals(that.physicalClassLoaderDefinition) : that.physicalClassLoaderDefinition != null) {
+
+            return false;
+        }
+
+        return true;
     }
 
-    @Override
     public int hashCode() {
-        return physicalClassLoaderDefinitions.hashCode();
+        return (physicalClassLoaderDefinition != null ? physicalClassLoaderDefinition.hashCode() : 0);
     }
-
 }

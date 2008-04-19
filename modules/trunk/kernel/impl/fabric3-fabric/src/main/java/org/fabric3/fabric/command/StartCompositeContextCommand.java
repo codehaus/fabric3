@@ -17,8 +17,6 @@
 package org.fabric3.fabric.command;
 
 import java.net.URI;
-import java.util.LinkedHashSet;
-import java.util.Set;
 
 import org.fabric3.spi.command.AbstractCommand;
 
@@ -28,39 +26,33 @@ import org.fabric3.spi.command.AbstractCommand;
  * @version $Rev$ $Date$
  */
 public class StartCompositeContextCommand extends AbstractCommand {
+    private final URI groupId;
 
-    private final Set<URI> groupIds = new LinkedHashSet<URI>();
-
-    public StartCompositeContextCommand(int order) {
+    public StartCompositeContextCommand(int order, URI groupId) {
         super(order);
+        this.groupId = groupId;
     }
 
-    public Set<URI> getGroupIds() {
-        return groupIds;
+    public URI getGroupId() {
+        return groupId;
     }
-    
-    public void addGroupId(URI groupId) {
-        groupIds.add(groupId);
-    }
-    
-    public void addGroupIds(Set<URI> groupIds) {
-        this.groupIds.addAll(groupIds);
-    }
-    
-    @Override
-    public boolean equals(Object obj) {
-        
-        if (obj == null || obj.getClass() != StartCompositeContextCommand.class) {
+
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        
-        StartCompositeContextCommand other = (StartCompositeContextCommand) obj;
-        return groupIds.equals(other.groupIds);
-        
+
+        StartCompositeContextCommand that = (StartCompositeContextCommand) o;
+
+        if (groupId != null ? !groupId.equals(that.groupId) : that.groupId != null) {
+            return false;
+        }
+
+        return true;
     }
 
-    @Override
     public int hashCode() {
-        return groupIds.hashCode();
+        return (groupId != null ? groupId.hashCode() : 0);
     }
 }

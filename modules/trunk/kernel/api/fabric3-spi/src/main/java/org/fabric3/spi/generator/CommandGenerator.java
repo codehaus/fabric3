@@ -20,7 +20,7 @@ import org.fabric3.spi.command.Command;
 import org.fabric3.spi.model.instance.LogicalComponent;
 
 /**
- * Generates CommandSets that must be applied on a service node after a PhysicalChangeSet has been provisioned.
+ * Generates a Command that must be applied to a runtime based on changes to a logical component.
  *
  * @version $Rev$ $Date$
  */
@@ -34,10 +34,10 @@ public interface CommandGenerator {
     int getOrder();
 
     /**
-     * Generates a command based ont he contents of a logical component
+     * Generates a command based on the contents of a logical component
      *
      * @param logicalComponent the logical component to generate the command from
-     * @return the generated command
+     * @return the generated command or null if no changes were detected
      * @throws GenerationException if an error occurs during generation
      */
     Command generate(LogicalComponent<?> logicalComponent) throws GenerationException;

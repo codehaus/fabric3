@@ -49,13 +49,11 @@ public class ResourceWireCommandGenerator implements CommandGenerator {
     }
 
     public WireAttachCommand generate(LogicalComponent<?> component) throws GenerationException {
-
-        WireAttachCommand command = new WireAttachCommand(order);
-
-        if (!(component instanceof LogicalCompositeComponent)) {
-            generatePhysicalWires(component, command);
+        if (component instanceof LogicalCompositeComponent) {
+            return null;
         }
-
+        WireAttachCommand command = new WireAttachCommand(order);
+        generatePhysicalWires(component, command);
         return command;
     }
 

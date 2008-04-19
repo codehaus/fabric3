@@ -45,10 +45,8 @@ public class ClassloaderProvisionCommandGenerator implements CommandGenerator {
 
     @SuppressWarnings("unchecked")
     public ClassloaderProvisionCommand generate(LogicalComponent<?> component) throws GenerationException {
-        ClassloaderProvisionCommand command = new ClassloaderProvisionCommand(order);
-        PhysicalClassLoaderDefinition physicalClassLoaderDefinition = classLoaderGenerator.generate(component);
-        command.addPhysicalClassLoaderDefinition(physicalClassLoaderDefinition);
-        return command;
+        PhysicalClassLoaderDefinition definition = classLoaderGenerator.generate(component);
+        return new ClassloaderProvisionCommand(order, definition);
     }
 
 }

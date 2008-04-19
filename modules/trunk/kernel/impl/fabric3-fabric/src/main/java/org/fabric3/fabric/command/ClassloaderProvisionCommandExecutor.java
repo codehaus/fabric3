@@ -56,11 +56,8 @@ public class ClassloaderProvisionCommandExecutor implements CommandExecutor<Clas
     }
 
     public void execute(ClassloaderProvisionCommand command) throws ExecutionException {
-
         try {
-            for (PhysicalClassLoaderDefinition definition : command.getPhysicalClassLoaderDefinitions()) {
-                classLoaderBuilder.build(definition);
-            }
+            classLoaderBuilder.build(command.getClassLoaderDefinition());
         } catch (BuilderException e) {
             throw new ExecutionException(e.getMessage(), e);
         }

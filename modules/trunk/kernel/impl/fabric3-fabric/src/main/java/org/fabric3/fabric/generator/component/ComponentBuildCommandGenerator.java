@@ -28,6 +28,7 @@ import org.fabric3.spi.generator.CommandGenerator;
 import org.fabric3.spi.generator.ComponentGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.generator.GeneratorRegistry;
+import org.fabric3.spi.generator.GeneratorNotFoundException;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
@@ -53,16 +54,19 @@ public class ComponentBuildCommandGenerator implements CommandGenerator {
 
     @SuppressWarnings("unchecked")
     public ComponentBuildCommand generate(LogicalComponent<?> component) throws GenerationException {
-        ComponentBuildCommand command = new ComponentBuildCommand(order);
         Implementation<?> implementation = component.getDefinition().getImplementation();
-        if (component instanceof LogicalCompositeComponent) {
-            return command;
-        } else if (!component.isProvisioned() && !implementation.isType(SingletonImplementation.IMPLEMENTATION_SINGLETON)) {
-            ComponentGenerator generator = generatorRegistry.getComponentGenerator(component.getDefinition().getImplementation().getClass());
-            PhysicalComponentDefinition physicalComponentDefinition = generator.generate(component);
-            command.addPhysicalComponentDefinition(physicalComponentDefinition);
+        if (!(component instanceof LogicalCompositeComponent)
+                && !component.isProvisioned()
+                && !implementation.isType(SingletonImplementation.IMPLEMENTATION_SINGLETON)) {
+            Class<? extends Implementation> type = implementation.getClass();
+            ComponentGenerator generator = generatorRegistry.getComponentGenerator(type);
+            if (generator == null) {
+                throw new GeneratorNotFoundException(type);
+            }
+            PhysicalComponentDefinition definition = generator.generate(component);
+            return new ComponentBuildCommand(order, definition);
         }
-        return command;
+        return null;
     }
 
 }

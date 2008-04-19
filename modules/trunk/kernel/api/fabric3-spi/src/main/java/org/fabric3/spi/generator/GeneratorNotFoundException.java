@@ -25,7 +25,7 @@ import javax.xml.namespace.QName;
  * @version $Rev$ $Date$
  */
 public class GeneratorNotFoundException extends GenerationException {
-    
+
     /**
      * Serial version UID.
      */
@@ -33,20 +33,20 @@ public class GeneratorNotFoundException extends GenerationException {
 
     /**
      * Initializes the message.
-     * 
+     *
      * @param type Type for which generator was not found.
      */
     public GeneratorNotFoundException(Class<?> type) {
-        super("Generator not registered for type", type.getName());
+        super("Generator not registered for type: " + type.getName(), type.getName());
     }
 
     /**
      * Initializes the message.
-     * 
+     *
      * @param type Type for which generator was not found.
      */
     public GeneratorNotFoundException(QName type) {
-        super("Generator not registered for type", type.toString());
+        super("Generator not registered for type: " + type.toString(), type.toString());
     }
 
 }

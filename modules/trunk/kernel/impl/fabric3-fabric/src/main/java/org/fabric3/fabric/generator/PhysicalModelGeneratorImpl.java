@@ -62,7 +62,9 @@ public class PhysicalModelGeneratorImpl implements PhysicalModelGenerator {
         for (CommandGenerator generator : commandGenerators) {
             for (LogicalComponent<?> component : sorted) {
                 Command command = generator.generate(component);
-                commandMap.addCommand(component.getRuntimeId(), command);
+                if (command != null) {
+                    commandMap.addCommand(component.getRuntimeId(), command);
+                }
             }
         }
         for (LogicalComponent<?> component : components) {

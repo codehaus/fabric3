@@ -17,9 +17,6 @@
 package org.fabric3.runtime.standalone.host.implementation.launched;
 
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 import org.fabric3.spi.command.AbstractCommand;
 
@@ -29,17 +26,33 @@ import org.fabric3.spi.command.AbstractCommand;
  * @version $Rev$ $Date$
  */
 public class RunCommand extends AbstractCommand {
-    private List<URI> components = new ArrayList<URI>();
+    private final URI uri;
 
-    public RunCommand(int order) {
+    public RunCommand(int order,  URI uri) {
         super(order);
+        this.uri = uri;
     }
 
-    public void addComponentUri(URI uri) {
-        components.add(uri);
+    public URI getComponentUri() {
+        return uri;
     }
 
-    public List<URI> getComponentUris() {
-        return Collections.unmodifiableList(components);
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+
+        RunCommand that = (RunCommand) o;
+
+        if (uri != null ? !uri.equals(that.uri) : that.uri != null) {
+            return false;
+        }
+
+        return true;
+    }
+
+    public int hashCode() {
+        return (uri != null ? uri.hashCode() : 0);
     }
 }

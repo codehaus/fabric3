@@ -16,53 +16,43 @@
  */
 package org.fabric3.fabric.command;
 
-import java.util.LinkedHashSet;
-import java.util.Set;
-
 import org.fabric3.spi.command.AbstractCommand;
 
 /**
- * A command to initialize a composite scoped component on a service node that is included in an activated composite.
- * For example, composite-scoped components included at the domain level.
+ * A command to initialize a composite scoped component on a service node that is included in an activated composite. For example, composite-scoped
+ * components included at the domain level.
  *
  * @version $Rev$ $Date$
  */
 public class InitializeComponentCommand extends AbstractCommand {
-    
-    private final Set<ComponentInitializationUri> uris = new LinkedHashSet<ComponentInitializationUri>();
-    
+    private final ComponentInitializationUri uri;
 
-    public InitializeComponentCommand(int order) {
+
+    public InitializeComponentCommand(int order, ComponentInitializationUri uri) {
         super(order);
+        this.uri = uri;
     }
 
-    public Set<ComponentInitializationUri> getUris() {
-        return uris;
+    public ComponentInitializationUri getUri() {
+        return uri;
     }
-    
-    public void addUri(ComponentInitializationUri uri) {
-        uris.add(uri);
-    }
-    
-    public void addUris(Set<ComponentInitializationUri> uris) {
-        this.uris.addAll(uris);
-    }
-    
-    @Override
-    public boolean equals(Object obj) {
-        
-        if (obj == null || obj.getClass() != InitializeComponentCommand.class) {
+
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        
-        InitializeComponentCommand other = (InitializeComponentCommand) obj;
-        return uris.equals(other.uris);
-        
+
+        InitializeComponentCommand that = (InitializeComponentCommand) o;
+
+        if (uri != null ? !uri.equals(that.uri) : that.uri != null) {
+            return false;
+        }
+
+        return true;
     }
 
-    @Override
     public int hashCode() {
-        return uris.hashCode();
+        return (uri != null ? uri.hashCode() : 0);
     }
-    
 }

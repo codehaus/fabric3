@@ -44,11 +44,10 @@ public class ComponentStartCommandGenerator implements CommandGenerator {
 
     @SuppressWarnings("unchecked")
     public ComponentStartCommand generate(LogicalComponent<?> component) throws GenerationException {
-        ComponentStartCommand command = new ComponentStartCommand(order);
-        // start a component if it is atomic
+        // start a component if it is atomic and not provisioned
         if (!(component instanceof LogicalCompositeComponent) && !component.isProvisioned()) {
-            command.addUri(component.getUri());
+            return new ComponentStartCommand(order, component.getUri());
         }
-        return command;
+        return null;
     }
 }

@@ -18,55 +18,46 @@
  */
 package org.fabric3.fabric.command;
 
-import java.util.LinkedHashSet;
-import java.util.Set;
-
 import org.fabric3.spi.command.AbstractCommand;
 import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
 
 /**
- *
  * @version $Revision$ $Date$
  */
 public class ComponentBuildCommand extends AbstractCommand {
+    private final PhysicalComponentDefinition definition;
 
-    private final Set<PhysicalComponentDefinition> physicalComponentDefinitions = new LinkedHashSet<PhysicalComponentDefinition>();
-
-    public ComponentBuildCommand(int order) {
+    public ComponentBuildCommand(int order, PhysicalComponentDefinition definition) {
         super(order);
+        this.definition = definition;
     }
 
-    public Set<PhysicalComponentDefinition> getPhysicalComponentDefinitions() {
-        return physicalComponentDefinitions;
-    }
-    
-    public void addPhysicalComponentDefinition(PhysicalComponentDefinition physicalComponentDefinition) {
-        physicalComponentDefinitions.add(physicalComponentDefinition);
-    }
-    
-    public void addPhysicalComponentDefinitions(Set<PhysicalComponentDefinition> physicalComponentDefinitions) {
-        this.physicalComponentDefinitions.addAll(physicalComponentDefinitions);
+    public PhysicalComponentDefinition getDefinition() {
+        return definition;
     }
 
     public String toString() {
-        return "ComponentBuild: " + physicalComponentDefinitions.toString();
+        return "ComponentBuild: " + definition.toString();
     }
 
-    @Override
-    public boolean equals(Object obj) {
-        
-        if (obj == null || obj.getClass() != ComponentBuildCommand.class) {
+    public boolean equals(Object o) {
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        
-        ComponentBuildCommand other = (ComponentBuildCommand) obj;
-        return physicalComponentDefinitions.equals(other.physicalComponentDefinitions);
-        
+
+        ComponentBuildCommand that = (ComponentBuildCommand) o;
+
+        if (definition != null ?
+                !definition.equals(that.definition) : that.definition != null) {
+            return false;
+        }
+        return true;
     }
 
-    @Override
     public int hashCode() {
-        return physicalComponentDefinitions.hashCode();
+        return (definition != null ? definition.hashCode() : 0);
     }
-
 }

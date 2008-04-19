@@ -68,25 +68,25 @@ public class InitializeComponentCommandExecutor implements CommandExecutor<Initi
     }
 
     public void execute(InitializeComponentCommand command) throws ExecutionException {
-        
-        for (ComponentInitializationUri componentInitializationUri : command.getUris()) {
-            URI groupId = componentInitializationUri.getGroupId();
-            URI uri = componentInitializationUri.getUri();
-            Component component = manager.getComponent(uri);
-            if (!(component instanceof AtomicComponent)) {
-                throw new ComponentNotRegisteredException("Component not registered", uri.toString());
-            }
-            WorkContext workContext = new WorkContext();
-            CallFrame frame = new CallFrame(groupId);
-            workContext.addCallFrame(frame);
-            List<AtomicComponent<?>> atomicComponents = new ArrayList<AtomicComponent<?>>();
-            atomicComponents.add((AtomicComponent<?>) component);
-            try {
-                scopeContainer.initializeComponents(atomicComponents, workContext);
-            } catch (GroupInitializationException e) {
-                throw new ExecutionException("Error starting components", e);
-            }
+
+        ComponentInitializationUri componentInitializationUri = command.getUri();
+        URI groupId = componentInitializationUri.getGroupId();
+        URI uri = componentInitializationUri.getUri();
+        Component component = manager.getComponent(uri);
+        if (!(component instanceof AtomicComponent)) {
+            throw new ComponentNotRegisteredException("Component not registered: " + uri.toString(), uri.toString());
         }
-        
+        WorkContext workContext = new WorkContext();
+        CallFrame frame = new CallFrame(groupId);
+        workContext.addCallFrame(frame);
+        List<AtomicComponent<?>> atomicComponents = new ArrayList<AtomicComponent<?>>();
+        atomicComponents.add((AtomicComponent<?>) component);
+        try {
+            scopeContainer.initializeComponents(atomicComponents, workContext);
+        } catch (GroupInitializationException e) {
+            throw new ExecutionException("Error starting components", e);
+        }
+
+
     }
 }

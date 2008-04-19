@@ -18,15 +18,16 @@ package org.fabric3.fabric.command;
 
 import java.net.URI;
 
+import org.osoa.sca.annotations.Constructor;
+import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Init;
+import org.osoa.sca.annotations.Reference;
+
 import org.fabric3.spi.command.CommandExecutor;
 import org.fabric3.spi.command.CommandExecutorRegistry;
 import org.fabric3.spi.command.ExecutionException;
 import org.fabric3.spi.component.Component;
 import org.fabric3.spi.runtime.component.ComponentManager;
-import org.osoa.sca.annotations.Constructor;
-import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Init;
-import org.osoa.sca.annotations.Reference;
 
 /**
  * Eagerly initializes a component on a service node.
@@ -40,7 +41,7 @@ public class ComponentStartCommandExecutor implements CommandExecutor<ComponentS
     private CommandExecutorRegistry commandExecutorRegistry;
 
     @Constructor
-    public ComponentStartCommandExecutor(@Reference ComponentManager componentManager, 
+    public ComponentStartCommandExecutor(@Reference ComponentManager componentManager,
                                          @Reference CommandExecutorRegistry commandExecutorRegistry) {
         this.componentManager = componentManager;
         this.commandExecutorRegistry = commandExecutorRegistry;
@@ -56,11 +57,8 @@ public class ComponentStartCommandExecutor implements CommandExecutor<ComponentS
     }
 
     public void execute(ComponentStartCommand command) throws ExecutionException {
-        
-        for (URI uri : command.getUris()) {
-            final Component component = componentManager.getComponent(uri);
-            component.start();
-        }
-        
+        URI uri = command.getUri();
+        Component component = componentManager.getComponent(uri);
+        component.start();
     }
 }

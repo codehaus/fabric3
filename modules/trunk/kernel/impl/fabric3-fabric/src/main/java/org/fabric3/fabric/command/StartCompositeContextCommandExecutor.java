@@ -30,8 +30,8 @@ import org.fabric3.spi.command.ExecutionException;
 import org.fabric3.spi.component.GroupInitializationException;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.ScopeRegistry;
-import org.fabric3.spi.invocation.WorkContext;
 import org.fabric3.spi.invocation.CallFrame;
+import org.fabric3.spi.invocation.WorkContext;
 
 /**
  * Executes a {@link StartCompositeContextCommand}.
@@ -60,18 +60,15 @@ public class StartCompositeContextCommandExecutor implements CommandExecutor<Sta
     }
 
     public void execute(StartCompositeContextCommand command) throws ExecutionException {
-        
-        for (URI groupId : command.getGroupIds()) {
-            WorkContext workContext = new WorkContext();
-            CallFrame frame = new CallFrame(groupId);
-            workContext.addCallFrame(frame);
-            try {
-                container.startContext(workContext);
-            } catch (GroupInitializationException e) {
-                throw new ExecutionException("Error executing command", e);
-            }
+        URI groupId = command.getGroupId();
+        WorkContext workContext = new WorkContext();
+        CallFrame frame = new CallFrame(groupId);
+        workContext.addCallFrame(frame);
+        try {
+            container.startContext(workContext);
+        } catch (GroupInitializationException e) {
+            throw new ExecutionException("Error executing command", e);
         }
-        
     }
 
 }

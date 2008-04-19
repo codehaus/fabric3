@@ -19,50 +19,40 @@
 package org.fabric3.fabric.command;
 
 import java.net.URI;
-import java.util.LinkedHashSet;
-import java.util.Set;
 
 import org.fabric3.spi.command.AbstractCommand;
 
 /**
- *
  * @version $Revision$ $Date$
  */
 public class ComponentStartCommand extends AbstractCommand {
-    
-    private final Set<URI> uris = new LinkedHashSet<URI>();
+    private final URI uri;
 
-    public ComponentStartCommand(int order) {
+    public ComponentStartCommand(int order, URI uri) {
         super(order);
+        this.uri = uri;
     }
 
-    public Set<URI> getUris() {
-        return uris;
+    public URI getUri() {
+        return uri;
     }
-    
-    public void addUri(URI uri) {
-        uris.add(uri);
-    }
-    
-    public void addUris(Set<URI> uris) {
-        this.uris.addAll(uris);
-    }
-    
-    @Override
-    public boolean equals(Object obj) {
-        
-        if (obj == null || obj.getClass() != ComponentStartCommand.class) {
+
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) {
             return false;
         }
-        
-        ComponentStartCommand other = (ComponentStartCommand) obj;
-        return uris.equals(other.uris);
-        
+
+        ComponentStartCommand that = (ComponentStartCommand) o;
+
+        if (uri != null ? !uri.equals(that.uri) : that.uri != null) {
+            return false;
+        }
+
+        return true;
     }
 
-    @Override
     public int hashCode() {
-        return uris.hashCode();
+        return (uri != null ? uri.hashCode() : 0);
     }
-
 }

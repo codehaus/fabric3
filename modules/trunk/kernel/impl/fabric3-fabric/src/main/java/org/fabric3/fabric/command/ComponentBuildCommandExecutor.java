@@ -25,6 +25,7 @@ import org.fabric3.spi.component.Component;
 import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
 import org.fabric3.spi.runtime.component.ComponentManager;
 import org.fabric3.spi.runtime.component.RegistrationException;
+
 import org.osoa.sca.annotations.Constructor;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
@@ -37,7 +38,7 @@ import org.osoa.sca.annotations.Reference;
  */
 @EagerInit
 public class ComponentBuildCommandExecutor implements CommandExecutor<ComponentBuildCommand> {
-    
+
     private final ComponentBuilderRegistry componentBuilderRegistry;
     private final ComponentManager componentManager;
     private CommandExecutorRegistry commandExecutorRegistry;
@@ -62,12 +63,12 @@ public class ComponentBuildCommandExecutor implements CommandExecutor<ComponentB
     }
 
     public void execute(ComponentBuildCommand command) throws ExecutionException {
-        
+
         try {
-            for (PhysicalComponentDefinition physicalComponentDefinition : command.getPhysicalComponentDefinitions()) {
-                final Component component = componentBuilderRegistry.build(physicalComponentDefinition);
-                componentManager.register(component);
-            }
+            PhysicalComponentDefinition physicalComponentDefinition = command.getDefinition();
+            Component component = componentBuilderRegistry.build(physicalComponentDefinition);
+            componentManager.register(component);
+
         } catch (BuilderException e) {
             throw new ExecutionException(e.getMessage(), e);
         } catch (RegistrationException e) {

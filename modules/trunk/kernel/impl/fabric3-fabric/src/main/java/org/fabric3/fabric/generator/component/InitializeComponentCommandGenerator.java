@@ -47,12 +47,12 @@ public class InitializeComponentCommandGenerator implements CommandGenerator {
 
     @SuppressWarnings("unchecked")
     public InitializeComponentCommand generate(LogicalComponent<?> component) throws GenerationException {
-        InitializeComponentCommand command = new InitializeComponentCommand(order);
         if (!(component instanceof LogicalCompositeComponent) && !component.isProvisioned() && component.isEagerInit()) {
             URI groupId = URI.create(component.getParent().getUri().toString() + "/");
-            command.addUri(new ComponentInitializationUri(groupId, component.getUri()));
+            ComponentInitializationUri uri = new ComponentInitializationUri(groupId, component.getUri());
+            return new InitializeComponentCommand(order, uri);
         }
-        return command;
+        return null;
     }
 
 }
