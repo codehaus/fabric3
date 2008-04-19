@@ -41,6 +41,7 @@ public class Contribution implements Serializable {
     private String contentType;
     private ContributionManifest manifest;
     private List<Resource> resources = new ArrayList<Resource>();
+    private List<URL> artifactUrls = new ArrayList<URL>();
     private List<URI> resolvedImports = new ArrayList<URI>();
 
     public Contribution(URI uri) {
@@ -180,4 +181,13 @@ public class Contribution implements Serializable {
     public List<URI> getResolvedImportUris() {
         return Collections.unmodifiableList(resolvedImports);
     }
+
+    public void addArtifactUrl(URL url) {
+        artifactUrls.add(url);
+    }
+
+    public List<URL> getArtifactUrls() {
+        return Collections.unmodifiableList(artifactUrls);
+    }
+
 }
