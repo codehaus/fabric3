@@ -1,27 +1,22 @@
 package org.fabric3.binding.ws.jaxws.runtime;
 
-import java.net.URL;
-import java.net.MalformedURLException;
-import java.net.URI;
-import java.util.Map;
-import java.util.List;
-import java.util.HashMap;
 import java.lang.reflect.Method;
-import javax.xml.ws.Service;
-import javax.xml.namespace.QName;
+import java.net.URI;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
-import org.osoa.sca.annotations.Reference;
-
-import org.fabric3.binding.ws.jaxws.provision.JaxWsWireTargetDefinition;
 import org.fabric3.binding.codegen.ProxyGenerator;
+import org.fabric3.binding.ws.jaxws.provision.JaxWsWireTargetDefinition;
 import org.fabric3.spi.ObjectFactory;
-import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.TargetWireAttacher;
-import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
-import org.fabric3.spi.wire.Wire;
+import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
+import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.wire.InvocationChain;
+import org.fabric3.spi.wire.Wire;
+import org.osoa.sca.annotations.Reference;
 
 /*
  * See the NOTICE file distributed with this work for information
@@ -58,15 +53,12 @@ public class JaxWsTargetWireAttacher implements TargetWireAttacher<JaxWsWireTarg
     private final ClassLoaderRegistry registry;
     private final ProxyGenerator generator;
 
-    public JaxWsTargetWireAttacher(@Reference ClassLoaderRegistry registry,
-                                   @Reference ProxyGenerator generator) {
+    public JaxWsTargetWireAttacher(@Reference ClassLoaderRegistry registry, @Reference ProxyGenerator generator) {
         this.registry = registry;
         this.generator = generator;
     }
 
-    public void attachToTarget(PhysicalWireSourceDefinition source,
-                               JaxWsWireTargetDefinition target, Wire wire)
-            throws WiringException {
+    public void attachToTarget(PhysicalWireSourceDefinition source, JaxWsWireTargetDefinition target, Wire wire) throws WiringException {
 
         String wsdlLocation = target.getWsdlLocation();
         String targetNamespace = target.getNamespaceURI();
@@ -76,15 +68,12 @@ public class JaxWsTargetWireAttacher implements TargetWireAttacher<JaxWsWireTarg
         ClassLoader cl = classLoaderURI != null ? registry.getClassLoader(classLoaderURI) : null;
         assert targetNamespace != null && serviceName != null && portName != null;
         try {
-            Class clazz = loadClass(cl, target.getReferenceInterface());
-            clazz = generator.getWrapperInterface(clazz, targetNamespace,
-              wsdlLocation, serviceName, portName);
-            for (Map.Entry<PhysicalOperationDefinition, InvocationChain> entry :
-                    wire.getInvocationChains().entrySet()) {
+            Class<?> clazz = loadClass(cl, target.getReferenceInterface());
+            clazz = generator.getWrapperInterface(clazz, targetNamespace, wsdlLocation, serviceName, portName);
+            for (Map.Entry<PhysicalOperationDefinition, InvocationChain> entry : wire.getInvocationChains().entrySet()) {
                 PhysicalOperationDefinition op = entry.getKey();
-                WsTargetInterceptor wti = new WsTargetInterceptor(
-                        locateMethod(cl, op, clazz), clazz, wsdlLocation,
-                  serviceName, portName, targetNamespace);
+                WsTargetInterceptor wti = new WsTargetInterceptor(locateMethod(cl, op, clazz), clazz, wsdlLocation, serviceName, portName,
+                        targetNamespace);
                 InvocationChain chain = entry.getValue();
                 chain.addInterceptor(wti);
             }
@@ -93,49 +82,45 @@ public class JaxWsTargetWireAttacher implements TargetWireAttacher<JaxWsWireTarg
             AssertionError ae = new AssertionError("Unexpected exception");
             ae.initCause(cnfe);
             throw ae;
-        } 
+        }
 
     }
-
 
     public ObjectFactory<?> createObjectFactory(JaxWsWireTargetDefinition definition) {
         throw new AssertionError();
     }
 
-    private static Method locateMethod(ClassLoader cl,
-                                       PhysicalOperationDefinition operation,
-                                       Class clazz) {
+    private static Method locateMethod(ClassLoader cl, PhysicalOperationDefinition operation, Class<?> clazz) {
         try {
             assert clazz.isInterface();
             List<String> paramsAsString = operation.getParameters();
-            Class[] params = new Class[paramsAsString.size()];
+            Class<?>[] params = new Class[paramsAsString.size()];
             int i = 0;
             for (String str : paramsAsString) {
                 params[i++] = loadClass(cl, str);
             }
             return clazz.getMethod(operation.getName(), params);
         } catch (NoSuchMethodException e) {
-            AssertionError we = new AssertionError("Failed to match operation "
-                    + operation.getName());
+            AssertionError we = new AssertionError("Failed to match operation " + operation.getName());
             we.initCause(e);
             throw we;
         } catch (ClassNotFoundException cnfe) {
-            AssertionError we = new AssertionError("Failed to match operation "
-                    + operation.getName());
+            AssertionError we = new AssertionError("Failed to match operation " + operation.getName());
             we.initCause(cnfe);
             throw we;
         }
     }
 
-
-    private static Class loadClass(ClassLoader loader, String className) throws ClassNotFoundException {
+    private static Class<?> loadClass(ClassLoader loader, String className) throws ClassNotFoundException {
         ClassLoader cl = Thread.currentThread().getContextClassLoader();
         if (loader != null) {
-          cl = loader;
+            cl = loader;
         }
         try {
-            Class clazz = PRIMITIVES_TYPES.get(className);
-            if (clazz != null) return clazz;
+            Class<?> clazz = PRIMITIVES_TYPES.get(className);
+            if (clazz != null) {
+                return clazz;
+            }
             return cl.loadClass(className);
         } catch (ClassNotFoundException cnfe) {
             cl = Thread.currentThread().getContextClassLoader();

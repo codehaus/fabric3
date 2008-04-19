@@ -1,28 +1,22 @@
 package org.fabric3.binding.ws.jaxws.runtime;
 
-import java.net.URI;
 import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
-import java.lang.reflect.InvocationTargetException;
-import java.util.Map;
+import java.net.URI;
 import java.util.HashMap;
-
-import javax.xml.ws.Endpoint;
-
-import org.osoa.sca.annotations.Reference;
+import java.util.Map;
 
 import org.fabric3.binding.ws.jaxws.provision.JaxWsWireSourceDefinition;
-import org.fabric3.binding.codegen.ProxyGenerator;
+import org.fabric3.scdl.Signature;
+import org.fabric3.spi.ObjectFactory;
+import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.SourceWireAttacher;
 import org.fabric3.spi.builder.component.WireAttachException;
-import org.fabric3.spi.builder.WiringException;
-import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
-import org.fabric3.spi.wire.Wire;
-import org.fabric3.spi.wire.InvocationChain;
-import org.fabric3.spi.ObjectFactory;
+import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
-import org.fabric3.scdl.Signature;
+import org.fabric3.spi.wire.InvocationChain;
+import org.fabric3.spi.wire.Wire;
+import org.osoa.sca.annotations.Reference;
 
 
 /*
@@ -56,7 +50,7 @@ public class JaxWsSourceWireAttacher implements SourceWireAttacher<JaxWsWireSour
     public void attachToSource(JaxWsWireSourceDefinition source,
                                PhysicalWireTargetDefinition target, Wire wire)
             throws WiringException {
-        Class clazz = null;
+        Class<?> clazz = null;
         Map<Method, Map.Entry<PhysicalOperationDefinition, InvocationChain>> ops =
                 new HashMap<Method, Map.Entry<PhysicalOperationDefinition, InvocationChain>>();
         try {

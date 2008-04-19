@@ -29,40 +29,36 @@ import org.fabric3.spi.wire.InvocationChain;
  * under the License.
  */
 
-
 public class ServiceHandler implements InvocationHandler {
 
-  /**
-   * Map of op names to operation definitions.
-   */
-  private final Map<Method, Map.Entry<PhysicalOperationDefinition, InvocationChain>> ops;
+    /**
+     * Map of op names to operation definitions.
+     */
+    private final Map<Method, Map.Entry<PhysicalOperationDefinition, InvocationChain>> ops;
 
-
-  public ServiceHandler(Map<Method, Map.Entry<PhysicalOperationDefinition, InvocationChain>> ops) {
-    this.ops = ops;
-  }
-
-  public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-    //FIXME prasad@bea.com Handle equals
-    if (method.getName().equals("equals")
-        && method.getParameterTypes().length == 1
-        && (method.getParameterTypes()[0]).equals(Object.class)) {
-      if (!Proxy.isProxyClass(args[0].getClass())) {
-        return false;
-      }
-      InvocationHandler h = Proxy.getInvocationHandler(args[0]);
-      return this.equals(h);
+    public ServiceHandler(Map<Method, Map.Entry<PhysicalOperationDefinition, InvocationChain>> ops) {
+        this.ops = ops;
     }
 
-    Interceptor head = ops.get(method).getValue().getHeadInterceptor();
+    public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
+        // FIXME prasad@bea.com Handle equals
+        if (method.getName().equals("equals") && method.getParameterTypes().length == 1 && (method.getParameterTypes()[0]).equals(Object.class)) {
+            if (!Proxy.isProxyClass(args[0].getClass())) {
+                return false;
+            }
+            InvocationHandler h = Proxy.getInvocationHandler(args[0]);
+            return this.equals(h);
+        }
 
-    Message input = new MessageImpl(args, false, new WorkContext());
+        Interceptor head = ops.get(method).getValue().getHeadInterceptor();
 
-    Message output = head.invoke(input);
-    if (output.isFault()) {
-      Throwable t = (Throwable) output.getBody();
-      throw t;
+        Message input = new MessageImpl(args, false, new WorkContext());
+
+        Message output = head.invoke(input);
+        if (output.isFault()) {
+            Throwable t = (Throwable) output.getBody();
+            throw t;
+        }
+        return output.getBody();
     }
-    return output.getBody();
-  }
 }

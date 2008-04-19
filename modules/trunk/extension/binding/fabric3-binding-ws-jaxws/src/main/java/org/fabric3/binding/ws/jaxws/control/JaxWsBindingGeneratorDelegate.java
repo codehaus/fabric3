@@ -1,9 +1,6 @@
 package org.fabric3.binding.ws.jaxws.control;
 
 import java.net.URI;
-import java.util.List;
-
-import org.osoa.sca.annotations.EagerInit;
 
 import org.fabric3.binding.ws.jaxws.provision.JaxWsWireSourceDefinition;
 import org.fabric3.binding.ws.jaxws.provision.JaxWsWireTargetDefinition;
@@ -15,6 +12,7 @@ import org.fabric3.spi.generator.BindingGeneratorDelegate;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.policy.Policy;
+import org.osoa.sca.annotations.EagerInit;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -43,6 +41,7 @@ public class JaxWsBindingGeneratorDelegate implements BindingGeneratorDelegate<W
             LogicalBinding<WsBindingDefinition> logicalBinding,
             Policy policy,
             ServiceDefinition serviceDefinition) throws GenerationException {
+        
         WsBindingDefinition wsdef = logicalBinding.getBinding();
         JaxWsWireSourceDefinition hwsd = new JaxWsWireSourceDefinition();
         hwsd.setUri(wsdef.getTargetUri());

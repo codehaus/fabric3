@@ -34,7 +34,7 @@ import org.fabric3.spi.invocation.MessageImpl;
 public class WsTargetInterceptor implements Interceptor {
 
     private final Method method;
-    private final Class interfazz;
+    private final Class<?> interfazz;
     private Interceptor next;
     private Object reference;
     private final QName portQName;
@@ -43,7 +43,7 @@ public class WsTargetInterceptor implements Interceptor {
     private Service service;
 
     public WsTargetInterceptor(Method method,
-                               Class interfazz,
+                               Class<?> interfazz,
                                String wsdlLocation,
                                String serviceName,
                                String portName,

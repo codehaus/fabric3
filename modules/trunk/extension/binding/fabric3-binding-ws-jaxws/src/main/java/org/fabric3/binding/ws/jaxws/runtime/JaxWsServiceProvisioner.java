@@ -35,7 +35,7 @@ public interface JaxWsServiceProvisioner {
      * @param targetUri
      * @throws WireAttachException
      */
-    void provision(Class clazz, InvocationHandler handler, JaxWsWireSourceDefinition source,
+    void provision(Class<?> clazz, InvocationHandler handler, JaxWsWireSourceDefinition source,
                    URI targetUri) throws WireAttachException;
     
 }
