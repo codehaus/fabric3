@@ -45,15 +45,16 @@ import org.fabric3.scdl.Signature;
 public class JaxWsSourceWireAttacher implements SourceWireAttacher<JaxWsWireSourceDefinition> {
 
     private final ClassLoaderRegistry registry;
-    private final ProxyGenerator generator;
+    private final JaxWsServiceProvisioner provisioner;
 
     public JaxWsSourceWireAttacher(@Reference ClassLoaderRegistry registry,
-                                   @Reference ProxyGenerator generator) {
+                                   @Reference JaxWsServiceProvisioner provisioner) {
         this.registry = registry;
-        this.generator = generator;
+        this.provisioner = provisioner;
     }
 
-    public void attachToSource(JaxWsWireSourceDefinition source, PhysicalWireTargetDefinition target, Wire wire)
+    public void attachToSource(JaxWsWireSourceDefinition source,
+                               PhysicalWireTargetDefinition target, Wire wire)
             throws WiringException {
         Class clazz = null;
         Map<Method, Map.Entry<PhysicalOperationDefinition, InvocationChain>> ops =
@@ -74,28 +75,13 @@ public class JaxWsSourceWireAttacher implements SourceWireAttacher<JaxWsWireSour
                         entry.getKey().getName(), entry.getKey().getParameters());
                 ops.put(signature.getMethod(clazz), entry);
             }
-
-
         } catch (ClassNotFoundException cnfe) {
             throwWireAttachException(source.getUri(), target.getUri(), cnfe);
         } catch (NoSuchMethodException nsme) {
             throwWireAttachException(source.getUri(), target.getUri(), nsme);
         }
         ServiceHandler handler = new ServiceHandler(ops);
-        String targetNamespace = source.getNamespaceURI();
-        String serviceName = source.getServiceName();
-        String portName = source.getPortName();
-        assert portName != null;
-        assert serviceName != null;
-        assert targetNamespace != null;
-        Object proxy = generateProxy(clazz, handler, source, target,
-                                     targetNamespace, source.getWsdlLocation(), serviceName, portName);
-        try {
-            Endpoint.publish(source.getUri().toString(), proxy);
-        } catch (Exception e) {
-            throwWireAttachException("Unexpected exception", source.getUri(),
-                                     target.getUri(), e);
-        }
+        provisioner.provision(clazz, handler, source, target.getUri());
     }
 
 
@@ -104,34 +90,6 @@ public class JaxWsSourceWireAttacher implements SourceWireAttacher<JaxWsWireSour
         throw new AssertionError();
     }
 
-    private Object generateProxy(Class interfaceClass, ServiceHandler handler,
-                                 JaxWsWireSourceDefinition sourceDefinition,
-                                 PhysicalWireTargetDefinition targetDefinition,
-                                 String targetNamespace,
-                                 String wsdlLocation,
-                                 String serviceName,
-                                 String portName)
-            throws WireAttachException {
-        try {
-            return generator.getWrapper(interfaceClass,
-                                        Proxy.newProxyInstance(interfaceClass.getClassLoader(),
-                                                                                   new Class[]{interfaceClass}, handler),
-                                        targetNamespace, wsdlLocation, serviceName, portName);
-        } catch (ClassNotFoundException cnfe) {
-            throwWireAttachException(sourceDefinition.getUri(),
-                                     targetDefinition.getUri(), cnfe);
-        } catch (IllegalAccessException iae) {
-            throwWireAttachException(sourceDefinition.getUri(),
-                                     targetDefinition.getUri(), iae);
-        } catch (InvocationTargetException ite) {
-            throwWireAttachException(sourceDefinition.getUri(),
-                                     targetDefinition.getUri(), ite);
-        } catch (InstantiationException ie) {
-            throwWireAttachException(sourceDefinition.getUri(),
-                                     targetDefinition.getUri(), ie);
-        }
-        return null;
-    }
 
 
     private void throwWireAttachException(

@@ -43,15 +43,21 @@ public class JaxWsBindingGeneratorDelegate implements BindingGeneratorDelegate<W
             LogicalBinding<WsBindingDefinition> logicalBinding,
             Policy policy,
             ServiceDefinition serviceDefinition) throws GenerationException {
+        WsBindingDefinition wsdef = logicalBinding.getBinding();
         JaxWsWireSourceDefinition hwsd = new JaxWsWireSourceDefinition();
-        hwsd.setUri(logicalBinding.getBinding().getTargetUri());
+        hwsd.setUri(wsdef.getTargetUri());
         ServiceContract<?> contract = serviceDefinition.getServiceContract();
         hwsd.setServiceInterface(contract.getQualifiedInterfaceName());
-        String wsdlElement = logicalBinding.getBinding().getWsdlElement();
+        String wsdlElement = wsdef.getWsdlElement();
         if (wsdlElement == null) {
-            //Handle when component name/service are not defined
+            hwsd.setPortName(serviceDefinition.getName());
+            URI uri = logicalBinding.getParent().getParent().getUri();
+            if (uri.getFragment() != null) {
+                hwsd.setServiceName(uri.getFragment());
+            }
+            hwsd.setNamespaceURI(wsdef.getTargetUri() + "");            
         } else {
-            hwsd.setWsdlElement(logicalBinding.getBinding().getWsdlElement());
+            hwsd.setWsdlElement(wsdef.getWsdlElement());
         }
         //URI classloaderId = logicalBinding.getParent().getParent().getParent().getUri();
         //hwsd.setClassloaderURI(classloaderId);
@@ -64,12 +70,18 @@ public class JaxWsBindingGeneratorDelegate implements BindingGeneratorDelegate<W
             Policy policy,
             ReferenceDefinition referenceDefinition) throws GenerationException {
         JaxWsWireTargetDefinition hwtd = new JaxWsWireTargetDefinition();
-        hwtd.setUri(logicalBinding.getBinding().getTargetUri());
+        WsBindingDefinition wsdef = logicalBinding.getBinding();
+        hwtd.setUri(wsdef.getTargetUri());
         ServiceContract<?> contract = referenceDefinition.getServiceContract();
         hwtd.setReferenceInterface(contract.getQualifiedInterfaceName());
-        String wsdlElement = logicalBinding.getBinding().getWsdlElement();
+        String wsdlElement = wsdef.getWsdlElement();
         if (wsdlElement == null) {
-            //Handle when component name/service are not defined
+            hwtd.setPortName(referenceDefinition.getName());
+            URI uri = logicalBinding.getParent().getParent().getUri();
+            if (uri.getFragment() != null) {
+                hwtd.setServiceName(uri.getFragment());
+            }
+            hwtd.setNamespaceURI(wsdef.getTargetUri() + "");
         } else {
             hwtd.setWsdlElement(logicalBinding.getBinding().getWsdlElement());
         }
