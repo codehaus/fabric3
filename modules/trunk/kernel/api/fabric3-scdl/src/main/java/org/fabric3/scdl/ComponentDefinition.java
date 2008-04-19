@@ -25,20 +25,17 @@ import java.util.Map;
 import org.w3c.dom.Document;
 
 /**
- * Represents a component. <p>A component is a configured instance of an implementation. The provided and consumed
- * services, as well as the available configuration properties are defined by the implementation (represented by its
- * componentType).</p> <p>Every component has a name which uniquely identifies it within the scope of the composite that
- * contains it; the name must be different from the names of all other components, services and references immediately
- * contained in the composite (directly or through an &lt;include&gt; element).</p> <p>A component may define a {@link
- * PropertyValue} that overrides the default value of a {@link org.fabric3.scdl.Property} specified in the
- * componentType.</p> <p>It may also define a {@link ComponentReference} for a {@link
- * org.fabric3.scdl.ReferenceDefinition} defined in the componentType. The ComponentReference must resolve to another
- * component or a reference in the enclosing composite.</p> <p>A component may define a {@link ComponentService} for a
- * {@link org.fabric3.scdl.ServiceDefinition} specified in the componentType.</p> <p>Components may specify an
- * initialization level that will determine the order in which it will be eagerly initialized relative to other
- * components from the enclosing composite that are in the same scope. This can be used to define a startup sequence for
- * components that are otherwise independent. Any initialization required to resolve references between components will
- * override this initialization order.</p>
+ * Represents a component. <p>A component is a configured instance of an implementation. The provided and consumed services, as well as the available
+ * configuration properties are defined by the implementation (represented by its componentType).</p> <p>Every component has a name which uniquely
+ * identifies it within the scope of the composite that contains it; the name must be different from the names of all other components, services and
+ * references immediately contained in the composite (directly or through an &lt;include&gt; element).</p> <p>A component may define a {@link
+ * PropertyValue} that overrides the default value of a {@link org.fabric3.scdl.Property} specified in the componentType.</p> <p>It may also define a
+ * {@link ComponentReference} for a {@link org.fabric3.scdl.ReferenceDefinition} defined in the componentType. The ComponentReference must resolve to
+ * another component or a reference in the enclosing composite.</p> <p>A component may define a {@link ComponentService} for a {@link
+ * org.fabric3.scdl.ServiceDefinition} specified in the componentType.</p> <p>Components may specify an initialization level that will determine the
+ * order in which it will be eagerly initialized relative to other components from the enclosing composite that are in the same scope. This can be
+ * used to define a startup sequence for components that are otherwise independent. Any initialization required to resolve references between
+ * components will override this initialization order.</p>
  *
  * @version $Rev$ $Date$
  */
@@ -53,6 +50,7 @@ public class ComponentDefinition<I extends Implementation<?>> extends AbstractPo
     private final Map<String, ComponentReference> references = new HashMap<String, ComponentReference>();
     private final Map<String, PropertyValue> propertyValues = new HashMap<String, PropertyValue>();
     private Document key;
+    private URI contributionUri;
 
     /**
      * Constructor specifying the component's name.
@@ -147,8 +145,8 @@ public class ComponentDefinition<I extends Implementation<?>> extends AbstractPo
     }
 
     /**
-     * Sets the initialization level of this component. If set to null then the level from the componentType is used. If
-     * set to zero or a negative value then the component will not be eagerly initialized.
+     * Sets the initialization level of this component. If set to null then the level from the componentType is used. If set to zero or a negative
+     * value then the component will not be eagerly initialized.
      *
      * @param initLevel the initialization level of this component
      */
@@ -166,8 +164,7 @@ public class ComponentDefinition<I extends Implementation<?>> extends AbstractPo
     }
 
     /**
-     * Add a reference target configuration to this component. Any existing configuration for the reference named in the
-     * target is replaced.
+     * Add a reference target configuration to this component. Any existing configuration for the reference named in the target is replaced.
      *
      * @param target the target to add
      */
@@ -203,8 +200,7 @@ public class ComponentDefinition<I extends Implementation<?>> extends AbstractPo
     }
 
     /**
-     * Add a property value configuration to this component. Any existing configuration for the property names in the
-     * property value is replaced.
+     * Add a property value configuration to this component. Any existing configuration for the property names in the property value is replaced.
      *
      * @param value the property value to add
      */
@@ -239,4 +235,21 @@ public class ComponentDefinition<I extends Implementation<?>> extends AbstractPo
         return getImplementation().getComponentType();
     }
 
+    /**
+     * Returns the URI of the contribution the component definition is contained in.
+     *
+     * @return the URI of the contribution the component definition is contained in.
+     */
+    public URI getContributionUri() {
+        return contributionUri;
+    }
+
+    /**
+     * Sets the URI of the contribution the component definition is contained in.
+     *
+     * @param contributionUri the URI of the contribution the component definition is contained in.
+     */
+    public void setContributionUri(URI contributionUri) {
+        this.contributionUri = contributionUri;
+    }
 }
