@@ -25,8 +25,8 @@
         <system:implementation.system class="org.fabric3.messaging.listener.PhysicalChangeSetListener"/>
     </component>
 
-    <component name="CommandSetListener">
-        <system:implementation.system class="org.fabric3.messaging.listener.CommandSetListener"/>
+    <component name="CommandMapListener">
+        <system:implementation.system class="org.fabric3.messaging.listener.CommandMapListener"/>
     </component>
 
 </composite>

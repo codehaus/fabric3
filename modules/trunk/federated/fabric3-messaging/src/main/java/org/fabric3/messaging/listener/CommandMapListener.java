@@ -16,6 +16,7 @@
  */
 package org.fabric3.messaging.listener;
 
+import java.util.Set;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamReader;
 
@@ -32,24 +33,29 @@ import org.fabric3.spi.services.marshaller.MarshalException;
 import org.fabric3.spi.services.marshaller.MarshalService;
 import org.fabric3.spi.services.messaging.MessagingEventService;
 import org.fabric3.spi.services.messaging.RequestListener;
+import org.fabric3.spi.services.runtime.RuntimeInfoService;
+import org.fabric3.spi.generator.CommandMap;
 
 /**
  * @version $Rev$ $Date$
  */
 @EagerInit
-public class CommandSetListener implements RequestListener {
+public class CommandMapListener implements RequestListener {
     private MessagingEventService eventService;
     private CommandExecutorRegistry executorRegistry;
     private MarshalService marshalService;
+    private RuntimeInfoService runtimeInfoService;
     private ListenerMonitor monitor;
 
-    public CommandSetListener(@Reference MessagingEventService eventService,
+    public CommandMapListener(@Reference MessagingEventService eventService,
                               @Reference CommandExecutorRegistry executorRegistry,
                               @Reference MarshalService marshalService,
+                              @Reference RuntimeInfoService runtimeInfoService,
                               @Monitor ListenerMonitor monitor) {
         this.eventService = eventService;
         this.executorRegistry = executorRegistry;
         this.marshalService = marshalService;
+        this.runtimeInfoService = runtimeInfoService;
         this.monitor = monitor;
     }
 
@@ -61,14 +67,9 @@ public class CommandSetListener implements RequestListener {
 
     public XMLStreamReader onRequest(XMLStreamReader reader) {
         try {
-            CommandSet set = marshalService.unmarshall(CommandSet.class, reader);
-            for (Command command : set.getCommands(CommandSet.Phase.FIRST)) {
-                executorRegistry.execute(command);
-            }
-            for (Command command : set.getCommands(CommandSet.Phase.STANDARD)) {
-                executorRegistry.execute(command);
-            }
-            for (Command command : set.getCommands(CommandSet.Phase.LAST)) {
+            CommandMap map = marshalService.unmarshall(CommandMap.class, reader);
+            Set<Command> commands = map.getCommandsForRuntime(runtimeInfoService.getCurrentRuntimeId());
+            for (Command command : commands) {
                 executorRegistry.execute(command);
             }
         } catch (MarshalException e) {
