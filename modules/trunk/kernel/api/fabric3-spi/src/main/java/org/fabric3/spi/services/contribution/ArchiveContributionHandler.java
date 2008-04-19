@@ -29,7 +29,8 @@ public interface ArchiveContributionHandler {
 
     /**
      * Returns the content type of the contribution that this handler can process
-     * @return
+     *
+     * @return the content type.
      */
 
     String getContentType();
