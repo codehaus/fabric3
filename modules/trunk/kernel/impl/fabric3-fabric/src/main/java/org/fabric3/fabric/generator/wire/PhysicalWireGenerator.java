@@ -27,7 +27,25 @@ import org.fabric3.spi.model.instance.LogicalService;
 import org.fabric3.spi.model.physical.PhysicalWireDefinition;
 
 /**
- * Generates physical wire definitions to provision a wire from a source to a target
+ * Generates physical wire definitions to provision a logical wire. The number of physical wires generated from a logical wire will vary. A
+ * unidirectional wire (i.e. no callback) to a collocated target service will generate one physical wire. A bidirectional wire (i.e. with a callback)
+ * to a collocated service will generate two physical wires. A unidirecitonal wire to a remote service offered by an SCA component will generate two
+ * physical wires:
+ * <pre>
+ * <ul>
+ * <li>One from the source reference to the transport
+ * <li>One from the transport on the target runtime to the target service.
+ * </ul>
+ * </pre>
+ * Likewise, a bidirectional wire to a remote service offered by an SCA component will generate four wires:
+ * <pre>
+ * <ul>
+ * <li>One from the source reference to the transport
+ * <li>One from the transport on the target runtime to the target service.
+ * <li>One from the callback site on the target to the transport
+ * <li>One from the transport on the source runtime to the callback service.
+ * </ul>
+ * </pre>
  *
  * @version $Revision$ $Date$
  */
@@ -41,8 +59,7 @@ public interface PhysicalWireGenerator {
      * @return the physical wire definition.
      * @throws GenerationException if an error ocurrs during generation
      */
-    <C extends LogicalComponent<?>> PhysicalWireDefinition generateResourceWire(C source, LogicalResource<?> resource)
-            throws GenerationException;
+    <C extends LogicalComponent<?>> PhysicalWireDefinition generateResourceWire(C source, LogicalResource<?> resource) throws GenerationException;
 
 
     /**
@@ -74,8 +91,7 @@ public interface PhysicalWireGenerator {
      */
     <C extends LogicalComponent<?>> PhysicalWireDefinition generateBoundReferenceWire(C source,
                                                                                       LogicalReference reference,
-                                                                                      LogicalBinding<?> binding)
-            throws GenerationException;
+                                                                                      LogicalBinding<?> binding) throws GenerationException;
 
     /**
      * Generates a PhysicalWireDefinition for an unbound wire. Unbound wires are direct connections between two components. A physical change set for

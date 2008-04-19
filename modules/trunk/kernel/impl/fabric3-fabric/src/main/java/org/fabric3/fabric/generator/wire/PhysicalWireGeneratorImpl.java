@@ -59,6 +59,8 @@ import org.fabric3.spi.policy.PolicyResolver;
 import org.fabric3.spi.policy.PolicyResult;
 
 /**
+ * Default implementation of PhysicalWireGenerator.
+ *
  * @version $Revision$ $Date$
  */
 public class PhysicalWireGeneratorImpl implements PhysicalWireGenerator {
@@ -68,9 +70,9 @@ public class PhysicalWireGeneratorImpl implements PhysicalWireGenerator {
     private final PhysicalOperationHelper physicalOperationHelper;
 
     /**
-     * Injects generator registry and assembly store.
+     * Constructor.
      *
-     * @param generatorRegistry       Generator registry.
+     * @param generatorRegistry       the generator registry.
      * @param policyResolver          the policy resolver
      * @param physicalOperationHelper the physical operation helper
      */
@@ -222,9 +224,7 @@ public class PhysicalWireGeneratorImpl implements PhysicalWireGenerator {
         PhysicalWireSourceDefinition sourceDefinition = sourceGenerator.generateWireSource(binding, sourcePolicy, service.getDefinition());
 
         Set<PhysicalOperationDefinition> operations = generateOperations(contract, policyResult, binding);
-        PhysicalWireDefinition wireDefinition = new PhysicalWireDefinition(sourceDefinition, targetDefinition, operations);
-
-        return wireDefinition;
+        return new PhysicalWireDefinition(sourceDefinition, targetDefinition, operations);
 
     }
 
@@ -391,8 +391,8 @@ public class PhysicalWireGeneratorImpl implements PhysicalWireGenerator {
         if (candidate == null) {
             String name = contract.getInterfaceName();
             URI uri = source.getUri();
-            throw new CallbackServiceNotFoundException("Callback service not found ["
-                    + name + "] on component [" + uri + "] originating from reference [" + sourceName + "]", name);
+            throw new CallbackServiceNotFoundException("Callback service not found: "
+                    + name + " on component: " + uri + " originating from reference :" + sourceName, name);
         }
         return URI.create(source.getUri().toString() + "#" + candidate.getDefinition().getName());
     }
