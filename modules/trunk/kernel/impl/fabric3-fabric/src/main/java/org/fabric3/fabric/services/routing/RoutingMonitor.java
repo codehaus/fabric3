@@ -17,7 +17,7 @@
 package org.fabric3.fabric.services.routing;
 
 import org.fabric3.api.annotation.LogLevel;
-import org.fabric3.spi.command.CommandSet;
+import org.fabric3.spi.generator.CommandMap;
 
 /**
  * Event monitor for the routing service
@@ -27,5 +27,5 @@ import org.fabric3.spi.command.CommandSet;
 public interface RoutingMonitor {
 
     @LogLevel("FINE")
-    void routeCommandSet(String runtimeId, CommandSet set);
+    void routeCommandMap(String runtimeId, CommandMap map);
 }
