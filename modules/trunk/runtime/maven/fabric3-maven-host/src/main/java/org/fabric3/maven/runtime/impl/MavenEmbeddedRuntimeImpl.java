@@ -39,29 +39,29 @@ import org.fabric3.fabric.util.FileHelper;
 import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.host.contribution.ContributionService;
 import org.fabric3.host.contribution.ContributionSource;
-import org.fabric3.java.runtime.JavaComponent;
 import org.fabric3.maven.contribution.ModuleContributionSource;
 import org.fabric3.maven.runtime.MavenEmbeddedRuntime;
 import org.fabric3.maven.runtime.MavenHostInfo;
 import org.fabric3.pojo.PojoWorkContextTunnel;
+import org.fabric3.pojo.implementation.PojoComponent;
 import org.fabric3.pojo.reflection.InvokerInterceptor;
 import org.fabric3.scdl.Composite;
 import org.fabric3.scdl.Operation;
 import org.fabric3.scdl.Scope;
+import org.fabric3.services.xmlfactory.XMLFactory;
 import org.fabric3.spi.ObjectCreationException;
-import org.fabric3.spi.invocation.WorkContext;
-import org.fabric3.spi.invocation.CallFrame;
-import org.fabric3.spi.invocation.MessageImpl;
-import org.fabric3.spi.invocation.Message;
 import org.fabric3.spi.assembly.ActivateException;
 import org.fabric3.spi.assembly.Assembly;
 import org.fabric3.spi.component.GroupInitializationException;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.ScopeRegistry;
+import org.fabric3.spi.invocation.CallFrame;
+import org.fabric3.spi.invocation.Message;
+import org.fabric3.spi.invocation.MessageImpl;
+import org.fabric3.spi.invocation.WorkContext;
 import org.fabric3.spi.services.contribution.MetaDataStore;
 import org.fabric3.spi.services.contribution.QNameSymbol;
 import org.fabric3.spi.services.contribution.ResourceElement;
-import org.fabric3.services.xmlfactory.XMLFactory;
 
 /**
  * Default Maven runtime implementation.
@@ -140,7 +140,7 @@ public class MavenEmbeddedRuntimeImpl extends AbstractRuntime<MavenHostInfo> imp
 
             // FIXME we should not be creating a InvokerInterceptor here
             // FIXME this should create a wire to the JUnit component and invoke the head interceptor on the chain
-            JavaComponent component = (JavaComponent) getComponentManager().getComponent(componentId);
+            PojoComponent component = (PojoComponent) getComponentManager().getComponent(componentId);
             PojoWorkContextTunnel.setThreadWorkContext(workContext);
             Object instance = component.createObjectFactory().getInstance();
             Method m = instance.getClass().getMethod(operation.getName());

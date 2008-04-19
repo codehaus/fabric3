@@ -23,24 +23,23 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.spi.services.contribution.Action;
 import org.fabric3.fabric.util.FileHelper;
 import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.introspection.DefaultIntrospectionContext;
-import org.fabric3.maven.runtime.MavenHostInfo;
-import org.fabric3.introspection.xml.Loader;
 import org.fabric3.introspection.IntrospectionContext;
+import org.fabric3.introspection.xml.Loader;
 import org.fabric3.introspection.xml.LoaderException;
-import org.fabric3.spi.model.type.ContributionResourceDescription;
+import org.fabric3.maven.runtime.MavenHostInfo;
 import org.fabric3.spi.services.contenttype.ContentTypeResolutionException;
 import org.fabric3.spi.services.contenttype.ContentTypeResolver;
+import org.fabric3.spi.services.contribution.Action;
 import org.fabric3.spi.services.contribution.ArtifactLocationEncoder;
 import org.fabric3.spi.services.contribution.Contribution;
 import org.fabric3.spi.services.contribution.ContributionManifest;
@@ -92,6 +91,7 @@ public class ModuleContributionProcessor implements ContributionProcessor {
             for (Resource resource : contribution.getResources()) {
                 registry.processResource(contributionUri, resource, loader);
             }
+            addUrls(contribution);
         } finally {
             Thread.currentThread().setContextClassLoader(oldClassloader);
         }
@@ -148,32 +148,13 @@ public class ModuleContributionProcessor implements ContributionProcessor {
         });
     }
 
-    public void updateContributionDescription(Contribution contribution, ContributionResourceDescription description)
-            throws ContributionException {
-        String file = contribution.getLocation().getFile();
-        try {
-            URL classes = new File(file, "classes").toURI().toURL();
-            URL testClasses = new File(file, "test-classes").toURI().toURL();
-            URL encodedClasses = encoder.encode(classes);
-            description.addArtifactUrl(encodedClasses);
-            URL encodedTestClasses = encoder.encode(testClasses);
-            description.addArtifactUrl(encodedTestClasses);
-            for (URL url : hostInfo.getDependencyUrls()) {
-                description.addArtifactUrl(encoder.encode(url));
-            }
-        } catch (MalformedURLException e) {
-            throw new ContributionException(e);
-        }
-    }
-
     private void iterateArtifacts(Contribution contribution, Action action) throws ContributionException {
         File root = FileHelper.toFile(contribution.getLocation());
         assert root.isDirectory();
         iterateArtifactsResursive(contribution, action, root);
     }
 
-    private void iterateArtifactsResursive(Contribution contribution, Action action, File dir)
-            throws ContributionException {
+    private void iterateArtifactsResursive(Contribution contribution, Action action, File dir) throws ContributionException {
         File[] files = dir.listFiles();
         for (File file : files) {
             if (file.isDirectory()) {
@@ -199,6 +180,23 @@ public class ModuleContributionProcessor implements ContributionProcessor {
         List<String> list = new ArrayList<String>(1);
         list.add("application/vnd.fabric3.maven-project");
         return list;
+    }
+
+    private void addUrls(Contribution contribution) throws ContributionException {
+        String file = contribution.getLocation().getFile();
+        try {
+            URL classes = new File(file, "classes").toURI().toURL();
+            URL testClasses = new File(file, "test-classes").toURI().toURL();
+            URL encodedClasses = encoder.encode(classes);
+            contribution.addArtifactUrl(encodedClasses);
+            URL encodedTestClasses = encoder.encode(testClasses);
+            contribution.addArtifactUrl(encodedTestClasses);
+            for (URL url : hostInfo.getDependencyUrls()) {
+                contribution.addArtifactUrl(encoder.encode(url));
+            }
+        } catch (MalformedURLException e) {
+            throw new ContributionException(e);
+        }
     }
 
 }
