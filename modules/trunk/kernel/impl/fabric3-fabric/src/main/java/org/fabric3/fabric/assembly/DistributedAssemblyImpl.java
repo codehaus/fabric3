@@ -18,24 +18,23 @@
  */
 package org.fabric3.fabric.assembly;
 
+import org.osoa.sca.annotations.Reference;
+
 import org.fabric3.fabric.assembly.allocator.Allocator;
-import org.fabric3.fabric.model.logical.LogicalModelGenerator;
 import org.fabric3.fabric.generator.PhysicalModelGenerator;
+import org.fabric3.fabric.model.logical.LogicalModelGenerator;
 import org.fabric3.fabric.services.routing.RoutingService;
+import org.fabric3.spi.assembly.Assembly;
 import org.fabric3.spi.assembly.AssemblyException;
 import org.fabric3.spi.runtime.assembly.LogicalComponentManager;
 import org.fabric3.spi.services.contribution.MetaDataStore;
-
-import org.osoa.sca.annotations.Reference;
-import org.osoa.sca.annotations.Service;
 
 /**
  * Default implementation of a DistributedAssembly
  *
  * @version $Rev$ $Date$
  */
-@Service(DistributedAssembly.class)
-public class DistributedAssemblyImpl extends AbstractAssembly implements DistributedAssembly {
+public class DistributedAssemblyImpl extends AbstractAssembly implements Assembly {
     private LogicalComponentManager logicalComponentManager;
 
     public DistributedAssemblyImpl(@Reference Allocator allocator,

@@ -30,7 +30,6 @@ import java.util.concurrent.FutureTask;
 import javax.servlet.ServletContext;
 import javax.xml.namespace.QName;
 
-import org.fabric3.fabric.assembly.DistributedAssembly;
 import org.fabric3.fabric.runtime.ComponentNames;
 import static org.fabric3.fabric.runtime.ComponentNames.CONTRIBUTION_SERVICE_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.DEFINITIONS_REGISTRY;
@@ -200,10 +199,10 @@ public class WebappCoordinator implements RuntimeLifecycleCoordinator<WebappRunt
         Callable<Void> callable = new Callable<Void>() {
             public Void call() throws AssemblyException, InitializationException {
                 try {
-                    DistributedAssembly assembly =
-                            runtime.getSystemComponent(DistributedAssembly.class, DISTRIBUTED_ASSEMBLY_URI);
+                    Assembly assembly = runtime.getSystemComponent(Assembly.class, DISTRIBUTED_ASSEMBLY_URI);
                     if (assembly == null) {
-                        throw new InitializationException("Assembly not found", DISTRIBUTED_ASSEMBLY_URI.toString());
+                        String name = DISTRIBUTED_ASSEMBLY_URI.toString();
+                        throw new InitializationException("Assembly not found: " + name, name);
                     }
                     assembly.initialize();
                     state = State.RECOVERED;

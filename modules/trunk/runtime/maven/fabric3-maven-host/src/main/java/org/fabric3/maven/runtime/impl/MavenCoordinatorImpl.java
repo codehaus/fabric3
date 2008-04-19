@@ -30,7 +30,6 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import javax.xml.namespace.QName;
 
-import org.fabric3.fabric.assembly.DistributedAssembly;
 import org.fabric3.fabric.runtime.ComponentNames;
 import static org.fabric3.fabric.runtime.ComponentNames.CONTRIBUTION_SERVICE_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.DEFINITIONS_REGISTRY;
@@ -60,8 +59,8 @@ import org.fabric3.spi.assembly.AssemblyException;
 import org.fabric3.spi.component.GroupInitializationException;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.ScopeRegistry;
-import org.fabric3.spi.invocation.WorkContext;
 import org.fabric3.spi.invocation.CallFrame;
+import org.fabric3.spi.invocation.WorkContext;
 import org.fabric3.spi.services.contribution.Contribution;
 import org.fabric3.spi.services.contribution.ContributionManifest;
 import org.fabric3.spi.services.contribution.MetaDataStore;
@@ -183,11 +182,10 @@ public class MavenCoordinatorImpl implements MavenCoordinator {
         if (state != State.DOMAIN_JOINED) {
             throw new IllegalStateException("Not in DOMAIN_JOINED state");
         }
-        DistributedAssembly assembly =
-                runtime.getSystemComponent(DistributedAssembly.class, DISTRIBUTED_ASSEMBLY_URI);
+        Assembly assembly = runtime.getSystemComponent(Assembly.class, DISTRIBUTED_ASSEMBLY_URI);
         if (assembly == null) {
-            InitializationException e =
-                    new InitializationException("Assembly not found", DISTRIBUTED_ASSEMBLY_URI.toString());
+            String name = DISTRIBUTED_ASSEMBLY_URI.toString();
+            InitializationException e = new InitializationException("Assembly not found: " + name, name);
             return new SyncFuture(new ExecutionException(e));
 
         }
