@@ -27,5 +27,5 @@ import org.fabric3.spi.generator.CommandMap;
 public interface RoutingMonitor {
 
     @LogLevel("FINE")
-    void routeCommandMap(String runtimeId, CommandMap map);
+    void routeCommands(String runtimeId);
 }

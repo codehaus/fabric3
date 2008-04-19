@@ -79,6 +79,7 @@ public class FederatedRoutingService implements RoutingService {
 
             Set<Command> commands = commandMap.getCommandsForRuntime(runtimeId);
             if (runtimeId != null) {
+                monitor.routeCommands(runtimeId.toString());
                 routeToDestination(runtimeId, commands);
             } else {
                 routeLocally(commands);
