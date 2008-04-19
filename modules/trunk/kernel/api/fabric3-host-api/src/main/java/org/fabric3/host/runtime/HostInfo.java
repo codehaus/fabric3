@@ -39,14 +39,6 @@ public interface HostInfo {
     URI getDomain();
 
     /**
-     * This method is deprecated; use {@link RuntimeInfoService#getRuntimeInfo} instead.
-     *
-     * @return the SCA domain associated with this runtime; may be null
-     */
-    @Deprecated
-    URI getRuntimeId();
-
-    /**
      * Gets the base URL for the runtime.
      *
      * @return The base URL for the runtime.

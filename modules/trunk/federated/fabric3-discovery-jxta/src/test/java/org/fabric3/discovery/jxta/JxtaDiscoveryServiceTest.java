@@ -42,7 +42,7 @@ public class JxtaDiscoveryServiceTest extends TestCase {
 
         JxtaDiscoveryService discoveryService = new JxtaDiscoveryService();
 
-        HostInfo hostInfo = new MyHostInfo(new URI("domain"), runtimeId);
+        HostInfo hostInfo = new MyHostInfo(new URI("domain"));
 
         NetworkConfigurator configurator = new NetworkConfigurator();
         configurator.setPrincipal("test-user");
@@ -85,11 +85,9 @@ public class JxtaDiscoveryServiceTest extends TestCase {
     private class MyHostInfo implements HostInfo {
 
         private URI domain;
-        private URI runtimeId;
 
-        public MyHostInfo(URI domain, URI runtimeId) {
+        public MyHostInfo(URI domain) {
             this.domain = domain;
-            this.runtimeId = runtimeId;
         }
 
         public URL getBaseURL() {
@@ -98,10 +96,6 @@ public class JxtaDiscoveryServiceTest extends TestCase {
 
         public URI getDomain() {
             return domain;
-        }
-
-        public URI getRuntimeId() {
-            return runtimeId;
         }
 
         public boolean isOnline() {

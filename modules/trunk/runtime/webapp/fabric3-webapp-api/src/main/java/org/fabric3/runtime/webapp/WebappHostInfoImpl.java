@@ -75,14 +75,4 @@ public class WebappHostInfoImpl implements WebappHostInfo {
         return domain;
     }
 
-    public URI getRuntimeId() {
-        if (id == null) {
-            String runtimeId = servletContext.getInitParameter("fabric3.runtimeId");
-            if (runtimeId == null) {
-                runtimeId = "localhost://fabric3";
-            }
-            id = URI.create(runtimeId);
-        }
-        return id;
-    }
 }

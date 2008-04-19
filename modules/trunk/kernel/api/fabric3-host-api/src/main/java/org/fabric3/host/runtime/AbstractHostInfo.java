@@ -44,27 +44,7 @@ public abstract class AbstractHostInfo implements HostInfo {
      */
     private final boolean online;
 
-    /**
-     * Runtime Id.
-     */
-    private URI runtimeId;
-
     private Properties properties;
-
-    /**
-     * Initializes the runtime info instance.
-     *
-     * @param domain    the SCA Domain that this runtime belongs to
-     * @param baseUrl   Base Url.
-     * @param online    Onlne indicator.
-     * @param runtimeId Runtime Id.
-     */
-    public AbstractHostInfo(final URI domain,
-                            final URL baseUrl,
-                            final boolean online,
-                            final URI runtimeId) {
-        this(domain, baseUrl, online, runtimeId, new Properties());
-    }
 
     /**
      * Initializes the runtime info instance.
@@ -72,18 +52,15 @@ public abstract class AbstractHostInfo implements HostInfo {
      * @param domain     the SCA Domain that this runtime belongs to
      * @param baseUrl    Base Url.
      * @param online     Onlne indicator.
-     * @param runtimeId  Runtime Id.
      * @param properties the runtime properties
      */
     public AbstractHostInfo(final URI domain,
                             final URL baseUrl,
                             final boolean online,
-                            final URI runtimeId,
                             final Properties properties) {
         this.domain = domain;
         this.baseUrl = baseUrl;
         this.online = online;
-        this.runtimeId = runtimeId;
         this.properties = properties;
     }
 
@@ -95,15 +72,6 @@ public abstract class AbstractHostInfo implements HostInfo {
      */
     public URI getDomain() {
         return domain;
-    }
-
-    /**
-     * Returns the unique runtime is in the SCA domain.
-     *
-     * @return the SCA domain associated with this runtime; may be null
-     */
-    public URI getRuntimeId() {
-        return runtimeId;
     }
 
     /**

@@ -55,7 +55,7 @@ public class StandaloneHostInfoImpl extends AbstractHostInfo implements Standalo
                                   final ClassLoader hostClassLoader,
                                   final ClassLoader bootClassLoader) {
         // TODO temporarily create a runtime id URI - will be moved out
-        super(domain, BootstrapHelper.toURL(installDirectory), online, URI.create(profileName), properties);
+        super(domain, BootstrapHelper.toURL(installDirectory), online, properties);
         this.profileName = profileName;
         this.profileDirectory = profileDirectory;
         this.installDirectory = installDirectory;
