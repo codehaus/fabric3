@@ -36,8 +36,6 @@ public final class ComponentNames {
 
     public static final URI SCOPE_REGISTRY_URI = URI.create(RUNTIME_NAME + "/ScopeRegistry");
 
-    public static final URI LOADER_URI = URI.create(RUNTIME_NAME + "/loader");
-
     public static final URI DISTRIBUTED_ASSEMBLY_URI = URI.create(RUNTIME_NAME + "/distributedAssembly");
 
     public static final URI RUNTIME_ASSEMBLY_URI = URI.create(RUNTIME_NAME + "/RuntimeAssembly");
