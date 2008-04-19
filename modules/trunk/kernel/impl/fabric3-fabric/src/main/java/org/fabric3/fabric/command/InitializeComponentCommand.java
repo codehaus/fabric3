@@ -19,8 +19,7 @@ package org.fabric3.fabric.command;
 import org.fabric3.spi.command.AbstractCommand;
 
 /**
- * A command to initialize a composite scoped component on a service node that is included in an activated composite. For example, composite-scoped
- * components included at the domain level.
+ * A command to initialize a composite scoped component on a runtime.
  *
  * @version $Rev$ $Date$
  */

@@ -23,6 +23,8 @@ import java.net.URI;
 import org.fabric3.spi.command.AbstractCommand;
 
 /**
+ * A command to start a component on a runtime.
+ *
  * @version $Revision$ $Date$
  */
 public class ComponentStartCommand extends AbstractCommand {

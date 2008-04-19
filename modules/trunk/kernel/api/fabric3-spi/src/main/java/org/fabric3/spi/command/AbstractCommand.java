@@ -19,17 +19,18 @@
 package org.fabric3.spi.command;
 
 /**
+ * Base abstract command implementation.
  *
  * @version $Revision$ $Date$
  */
 public abstract class AbstractCommand implements Command {
-    
+
     private final int order;
-    
+
     public AbstractCommand(int order) {
         this.order = order;
     }
-    
+
     public int getOrder() {
         return order;
     }

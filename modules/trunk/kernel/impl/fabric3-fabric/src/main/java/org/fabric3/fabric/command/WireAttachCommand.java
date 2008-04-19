@@ -25,6 +25,8 @@ import org.fabric3.spi.command.AbstractCommand;
 import org.fabric3.spi.model.physical.PhysicalWireDefinition;
 
 /**
+ * A command to attach a set of wires from a source component to a set of targets on a runtime. Valid targets can be a service offered by another
+ * component, a binding transport, or a resource.
  *
  * @version $Revision$ $Date$
  */
@@ -39,25 +41,25 @@ public class WireAttachCommand extends AbstractCommand {
     public Set<PhysicalWireDefinition> getPhysicalWireDefinitions() {
         return physicalWireDefinitions;
     }
-    
+
     public void addPhysicalWireDefinition(PhysicalWireDefinition physicalWireDefinition) {
         physicalWireDefinitions.add(physicalWireDefinition);
     }
-    
+
     public void addPhysicalWireDefinitions(Set<PhysicalWireDefinition> physicalWireDefinitions) {
         this.physicalWireDefinitions.addAll(physicalWireDefinitions);
     }
-    
+
     @Override
     public boolean equals(Object obj) {
-        
+
         if (obj == null || obj.getClass() != WireAttachCommand.class) {
             return false;
         }
-        
+
         WireAttachCommand other = (WireAttachCommand) obj;
         return physicalWireDefinitions.equals(other.physicalWireDefinitions);
-        
+
     }
 
     @Override

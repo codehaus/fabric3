@@ -22,6 +22,8 @@ import org.fabric3.spi.command.AbstractCommand;
 import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
 
 /**
+ * A command to instantiate a component on a runtime.
+ *
  * @version $Revision$ $Date$
  */
 public class ComponentBuildCommand extends AbstractCommand {

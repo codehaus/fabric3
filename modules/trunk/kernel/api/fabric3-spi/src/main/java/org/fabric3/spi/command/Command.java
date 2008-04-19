@@ -17,11 +17,16 @@
 package org.fabric3.spi.command;
 
 /**
- * Represents a command to be executed on a service node
+ * Represents a command to be executed on a runtime.
  *
  * @version $Rev$ $Date$
  */
 public interface Command extends Comparable<Command> {
-    
+
+    /**
+     * Returns the relative order the command must be exected in, 0 being the highest.
+     *
+     * @return the command execution order
+     */
     int getOrder();
 }

@@ -21,7 +21,7 @@ import java.net.URI;
 import org.fabric3.spi.command.AbstractCommand;
 
 /**
- * Starts a context with the composite container
+ * Starts a composite context on a runtime.
  *
  * @version $Rev$ $Date$
  */

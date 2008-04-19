@@ -22,6 +22,8 @@ import org.fabric3.spi.command.AbstractCommand;
 import org.fabric3.spi.model.physical.PhysicalClassLoaderDefinition;
 
 /**
+ * A command to create or update a classloader on a runtime.
+ *
  * @version $Revision$ $Date$
  */
 public class ClassloaderProvisionCommand extends AbstractCommand {
