@@ -23,9 +23,9 @@ import java.util.Map;
 
 import org.fabric3.spi.ObjectCreationException;
 import org.fabric3.spi.ObjectFactory;
-import org.fabric3.spi.wire.InvocationChain;
-import org.fabric3.spi.wire.ProxyService;
 import org.fabric3.spi.model.physical.InteractionType;
+import org.fabric3.spi.services.proxy.ProxyService;
+import org.fabric3.spi.wire.InvocationChain;
 
 /**
  * Creates a proxy for a wire that implements a provided interface

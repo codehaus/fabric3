@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.spi.wire;
+package org.fabric3.spi.services.proxy;
 
 import java.lang.reflect.Method;
 import java.net.URI;
@@ -25,8 +25,10 @@ import java.util.Map;
 import org.osoa.sca.CallableReference;
 
 import org.fabric3.spi.ObjectFactory;
-import org.fabric3.spi.model.physical.InteractionType;
 import org.fabric3.spi.component.ScopeContainer;
+import org.fabric3.spi.model.physical.InteractionType;
+import org.fabric3.spi.wire.InvocationChain;
+import org.fabric3.spi.wire.Wire;
 
 /**
  * Creates proxies that implement Java interfaces and invocation handlers for fronting wires
@@ -81,8 +83,7 @@ public interface ProxyService {
      * @return the proxy instance
      * @throws ProxyCreationException if an error is encountered during proxy generation
      */
-    <T> T createCallbackProxy(Class<T> interfaze, Map<String, Map<Method, InvocationChain>> mappings)
-            throws ProxyCreationException;
+    <T> T createCallbackProxy(Class<T> interfaze, Map<String, Map<Method, InvocationChain>> mappings) throws ProxyCreationException;
 
     /**
      * Creates a callback proxy that allways returns to the same target service

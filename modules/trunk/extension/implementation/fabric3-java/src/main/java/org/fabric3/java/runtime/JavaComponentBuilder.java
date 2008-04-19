@@ -45,7 +45,7 @@ import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.transform.PullTransformer;
 import org.fabric3.transform.TransformerRegistry;
-import org.fabric3.spi.wire.ProxyService;
+import org.fabric3.spi.services.proxy.ProxyService;
 
 /**
  * Builds a JavaComponent from a physical definition.

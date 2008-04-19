@@ -18,7 +18,7 @@
  */
 package org.fabric3.proxy.jdk;
 
-import org.fabric3.spi.wire.ProxyCreationException;
+import org.fabric3.spi.services.proxy.ProxyCreationException;
 
 /**
  * Thrown when an {@link org.fabric3.scdl.Operation} cannot be mapped to a method on an interface

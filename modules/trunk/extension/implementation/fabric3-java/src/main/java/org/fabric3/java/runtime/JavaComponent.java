@@ -28,9 +28,9 @@ import org.fabric3.pojo.implementation.PojoComponent;
 import org.fabric3.pojo.injection.MultiplicityObjectFactory;
 import org.fabric3.spi.ObjectCreationException;
 import org.fabric3.spi.ObjectFactory;
+import org.fabric3.spi.services.proxy.ProxyService;
 import org.fabric3.spi.component.InstanceFactoryProvider;
 import org.fabric3.spi.component.ScopeContainer;
-import org.fabric3.spi.wire.ProxyService;
 
 /**
  * The runtime instantiation of a Java component implementation.
