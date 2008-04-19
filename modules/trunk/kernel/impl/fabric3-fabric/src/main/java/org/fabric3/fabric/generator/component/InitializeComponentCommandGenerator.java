@@ -29,37 +29,30 @@ import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 
 /**
- * Generates a command to start the composite context on a service node. Child composite contexts will also be started
- * in a depth-first traversal order.
+ * Generates a command to initialize an atomic component marked to eagerly initialize.
  *
  * @version $Rev: 2767 $ $Date: 2008-02-15 13:29:02 +0000 (Fri, 15 Feb 2008) $
  */
 @EagerInit
 public class InitializeComponentCommandGenerator implements CommandGenerator {
-    
     private final int order;
-    
-    public InitializeComponentCommandGenerator(@Property(name = "order") int order) {
+
+    public InitializeComponentCommandGenerator(@Property(name = "order")int order) {
         this.order = order;
+    }
+
+    public int getOrder() {
+        return order;
     }
 
     @SuppressWarnings("unchecked")
     public InitializeComponentCommand generate(LogicalComponent<?> component) throws GenerationException {
-        
         InitializeComponentCommand command = new InitializeComponentCommand(order);
-        
-        if (component instanceof LogicalCompositeComponent) {
-            LogicalCompositeComponent compositeComponent = (LogicalCompositeComponent) component;
-            for (LogicalComponent<?> child : compositeComponent.getComponents()) {
-                command.addUris(generate(child).getUris());
-            }
-        } else if (!component.isProvisioned() && component.isEagerInit()) {
+        if (!(component instanceof LogicalCompositeComponent) && !component.isProvisioned() && component.isEagerInit()) {
             URI groupId = URI.create(component.getParent().getUri().toString() + "/");
             command.addUri(new ComponentInitializationUri(groupId, component.getUri()));
         }
-        
         return command;
-        
     }
 
 }

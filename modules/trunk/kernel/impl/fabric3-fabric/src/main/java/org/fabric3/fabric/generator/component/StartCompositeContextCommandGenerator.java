@@ -26,37 +26,33 @@ import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 
 /**
- * Generates a command to start the composite context on a service node. Child composite contexts will also be started
- * in a depth-first traversal order.
+ * Generates a command to start the composite context on a runtime.
  *
  * @version $Rev$ $Date$
  */
 @EagerInit
 public class StartCompositeContextCommandGenerator implements CommandGenerator {
-    
     private final int order;
-    
-    public StartCompositeContextCommandGenerator(@Property(name = "order") int order) {
+
+    public StartCompositeContextCommandGenerator(@Property(name = "order")int order) {
         this.order = order;
+    }
+
+    public int getOrder() {
+        return order;
     }
 
     @SuppressWarnings("unchecked")
     public StartCompositeContextCommand generate(LogicalComponent<?> component) throws GenerationException {
-        
+
         StartCompositeContextCommand command = new StartCompositeContextCommand(order);
-        
+
         if (component instanceof LogicalCompositeComponent) {
-            LogicalCompositeComponent compositeComponent = (LogicalCompositeComponent) component;
-            for (LogicalComponent<?> child : compositeComponent.getComponents()) {
-                if (child instanceof LogicalCompositeComponent) {
-                    command.addGroupIds(generate(child).getGroupIds());
-                }
-            }
             command.addGroupId(component.getUri());
         }
 
         return command;
-        
+
     }
 
 }

@@ -24,6 +24,10 @@ import org.fabric3.spi.generator.GenerationException;
 public class ClassLoaderGenerationException extends GenerationException {
     private static final long serialVersionUID = -4166302019763406629L;
 
+    public ClassLoaderGenerationException(String message) {
+        super(message);
+    }
+
     public ClassLoaderGenerationException(String message, String identifier) {
         super(message, identifier);
     }

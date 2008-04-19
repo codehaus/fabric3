@@ -18,45 +18,11 @@
  */
 package org.fabric3.scdl;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 /**
  * The base class for assembly model types
  *
  * @version $Rev$ $Date$
  */
 public abstract class ModelObject {
-    
-    private List<ResourceDescription<?>> resources;
-
-    protected ModelObject() {
-    }
-
-    /**
-     * Returns the collection of resource descriptions for the type.
-     *
-     * @return the collection of resource descriptions for the type
-     */
-    public List<ResourceDescription<?>> getResourceDescriptions() {
-        if (resources == null) {
-            return Collections.emptyList();
-        }
-        return Collections.unmodifiableList(resources);
-    }
-
-    /**
-     * Adds a resource description associated with the type. ResourceDescriptions identify runtime resources required by
-     * the type.
-     *
-     * @param description the resource description to add
-     */
-    public void addResourceDescription(ResourceDescription<?> description) {
-        if (resources == null) {
-            resources = new ArrayList<ResourceDescription<?>>();
-        }
-        resources.add(description);
-    }
 
 }

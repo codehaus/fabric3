@@ -21,7 +21,6 @@ package org.fabric3.web.control;
 import java.net.URI;
 import java.net.URL;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import org.osoa.sca.annotations.EagerInit;
@@ -34,7 +33,6 @@ import org.fabric3.scdl.InjectableAttribute;
 import org.fabric3.scdl.InjectionSite;
 import org.fabric3.scdl.Property;
 import org.fabric3.scdl.ReferenceDefinition;
-import org.fabric3.scdl.ResourceDescription;
 import org.fabric3.scdl.ServiceContract;
 import org.fabric3.spi.generator.ComponentGenerator;
 import org.fabric3.spi.generator.GenerationException;
@@ -47,8 +45,9 @@ import org.fabric3.spi.model.physical.InteractionType;
 import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
-import org.fabric3.spi.model.type.ContributionResourceDescription;
 import org.fabric3.spi.policy.Policy;
+import org.fabric3.spi.services.contribution.Contribution;
+import org.fabric3.spi.services.contribution.MetaDataStore;
 import org.fabric3.web.introspection.WebComponentType;
 import org.fabric3.web.introspection.WebImplementation;
 import org.fabric3.web.provision.WebComponentDefinition;
@@ -64,9 +63,11 @@ import org.fabric3.web.provision.WebContextInjectionSite;
 @EagerInit
 public class WebComponentGenerator implements ComponentGenerator<LogicalComponent<WebImplementation>> {
     private HostInfo info;
+    private MetaDataStore store;
 
-    public WebComponentGenerator(@Reference GeneratorRegistry registry, @Reference HostInfo info) {
+    public WebComponentGenerator(@Reference GeneratorRegistry registry, @Reference HostInfo info, @Reference MetaDataStore store) {
         this.info = info;
+        this.store = store;
         registry.register(WebImplementation.class, this);
     }
 
@@ -191,18 +192,12 @@ public class WebComponentGenerator implements ComponentGenerator<LogicalComponen
      * @return the web.xml URL.
      */
     private URL getWebXmlUrl(ComponentDefinition<WebImplementation> definition) {
-        List<ResourceDescription<?>> descriptions = definition.getImplementation().getResourceDescriptions();
-        for (ResourceDescription<?> description : descriptions) {
-            if (description instanceof ContributionResourceDescription) {
-                ContributionResourceDescription contribDesc = (ContributionResourceDescription) description;
-                if (contribDesc.getArtifactUrls().isEmpty()) {
-                    return null;
-                }
-                // getting the first URL is ok since WAR files are self-contained
-                return contribDesc.getArtifactUrls().get(0);
-            }
+        Contribution contribution = store.find(definition.getContributionUri());
+        if (contribution.getArtifactUrls().isEmpty()) {
+            return null;
         }
-        throw new AssertionError("WAR URL not found");
+        // getting the first URL is ok since WAR files are self-contained
+        return contribution.getArtifactUrls().get(0);
     }
 
     private void processPropertyValues(LogicalComponent<?> component, WebComponentDefinition physical) {

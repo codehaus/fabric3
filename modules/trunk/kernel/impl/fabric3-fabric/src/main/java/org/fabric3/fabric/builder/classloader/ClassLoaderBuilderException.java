@@ -24,15 +24,12 @@ import org.fabric3.spi.builder.BuilderException;
 public class ClassLoaderBuilderException extends BuilderException {
     private static final long serialVersionUID = 5397716085705723079L;
 
-    public ClassLoaderBuilderException(String message, String identifier) {
-        super(message, identifier);
+    public ClassLoaderBuilderException(String message) {
+        super(message);
     }
 
     public ClassLoaderBuilderException(String message, Throwable cause) {
         super(message, cause);
     }
 
-    public ClassLoaderBuilderException(String message, String identifier, Throwable cause) {
-        super(message, identifier, cause);
-    }
 }

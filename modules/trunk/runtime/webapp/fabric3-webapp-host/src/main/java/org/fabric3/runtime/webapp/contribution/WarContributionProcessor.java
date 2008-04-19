@@ -21,25 +21,24 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
-import java.util.Set;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 import javax.servlet.ServletContext;
 
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.spi.services.contribution.Action;
 import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.introspection.DefaultIntrospectionContext;
-import org.fabric3.runtime.webapp.WebappHostInfo;
-import org.fabric3.introspection.xml.Loader;
 import org.fabric3.introspection.IntrospectionContext;
+import org.fabric3.introspection.xml.Loader;
 import org.fabric3.introspection.xml.LoaderException;
-import org.fabric3.spi.model.type.ContributionResourceDescription;
+import org.fabric3.runtime.webapp.WebappHostInfo;
 import org.fabric3.spi.services.contenttype.ContentTypeResolutionException;
 import org.fabric3.spi.services.contenttype.ContentTypeResolver;
+import org.fabric3.spi.services.contribution.Action;
 import org.fabric3.spi.services.contribution.Contribution;
 import org.fabric3.spi.services.contribution.ContributionManifest;
 import org.fabric3.spi.services.contribution.ContributionProcessor;
@@ -140,11 +139,6 @@ public class WarContributionProcessor implements ContributionProcessor {
                 registry.indexResource(contribution, contentType, url);
             }
         });
-    }
-
-    public void updateContributionDescription(Contribution contribution, ContributionResourceDescription description)
-            throws ContributionException {
-        // do nothing since classes are local and on the host classloader's parent classpath
     }
 
     @SuppressWarnings({"unchecked"})

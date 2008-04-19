@@ -30,21 +30,21 @@ import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
 public interface ComponentBuilderRegistry {
 
     /**
-     * Registers a physical component builder.
+     * Registers a component builder.
      *
      * @param <PCD>           Type of the physical component definition.
      * @param definitionClass Class of the physical component definition.
      * @param builder         Builder for the physical component definition.
      */
     <PCD extends PhysicalComponentDefinition, C extends Component>
-            void register(Class<?> definitionClass,
-                          ComponentBuilder<PCD, C> builder);
+            void register(Class<?> definitionClass, ComponentBuilder<PCD, C> builder);
 
     /**
-     * Builds a physical component from component definition.
+     * Builds a physical component from a component definition.
      *
      * @param componentDefinition Component definition.
      * @return Component to be built.
+     * @throws BuilderException if an exception occurs during the build
      */
     Component build(PhysicalComponentDefinition componentDefinition) throws BuilderException;
 

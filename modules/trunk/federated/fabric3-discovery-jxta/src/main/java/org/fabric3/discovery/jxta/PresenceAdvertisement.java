@@ -19,9 +19,7 @@
 package org.fabric3.discovery.jxta;
 
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import javax.xml.namespace.QName;
 
@@ -35,8 +33,6 @@ import net.jxta.document.StructuredDocumentFactory;
 import net.jxta.id.ID;
 import net.jxta.id.IDFactory;
 
-import org.fabric3.scdl.ResourceDescription;
-import org.fabric3.spi.model.topology.ClassLoaderResourceDescription;
 import org.fabric3.spi.model.topology.RuntimeInfo;
 
 /**
@@ -57,7 +53,6 @@ public class PresenceAdvertisement extends Advertisement {
     private String messageDestination;
     private Set<QName> features = new HashSet<QName>();
     private Set<URI> components = new HashSet<URI>();
-    private List<ResourceDescription<?>> resourceDescriptions = new ArrayList<ResourceDescription<?>>();
 
     @SuppressWarnings("deprecation")
     public ID getID() {
@@ -88,9 +83,6 @@ public class PresenceAdvertisement extends Advertisement {
         runtimeInfo.setMessageDestination(messageDestination);
         for (URI component : components) {
             runtimeInfo.addComponent(component);
-        }
-        for (ResourceDescription<?> description : resourceDescriptions) {
-            runtimeInfo.addResourceDescription(description);
         }
         return runtimeInfo;
     }
@@ -135,26 +127,6 @@ public class PresenceAdvertisement extends Advertisement {
         for (URI component : components) {
             elem.appendChild(doc.createElement("component", component.toString()));
         }
-
-        // serialize resource descriptions
-        elem = doc.createElement("resourceDescriptions");
-        doc.appendChild(elem);
-        for (ResourceDescription<?> description : resourceDescriptions) {
-            // TODO this may need to be made extensible
-            if (!(ClassLoaderResourceDescription.class.isInstance(description))) {
-                String type = description.getClass().getName();
-                throw new UnknownResourceDescriptionType("Unknown resource type [" + type + "]", type);
-            }
-            ClassLoaderResourceDescription clr = ClassLoaderResourceDescription.class.cast(description);
-            Element clrElement = doc.createElement("classLoaderResourceDescription");
-            elem.appendChild(clrElement);
-            Element identifierElement = doc.createElement("identifier", clr.getIdentifier().toString());
-            clrElement.appendChild(identifierElement);
-            for (URI uri : clr.getParents()) {
-                Element parent = doc.createElement("parent", uri.toString());
-                clrElement.appendChild(parent);
-            }
-        }
         return doc;
     }
 
@@ -187,9 +159,6 @@ public class PresenceAdvertisement extends Advertisement {
         if (runtimeInfo.getComponents() != null) {
             components = runtimeInfo.getComponents();
         }
-        if (runtimeInfo.getResourceDescriptions() != null) {
-            resourceDescriptions = runtimeInfo.getResourceDescriptions();
-        }
     }
 
     /**
@@ -215,10 +184,6 @@ public class PresenceAdvertisement extends Advertisement {
 
     void setComponents(Set<URI> components) {
         this.components = components;
-    }
-
-    void setResourceDescriptions(List<ResourceDescription<?>> resourceDescriptions) {
-        this.resourceDescriptions = resourceDescriptions;
     }
 
 }

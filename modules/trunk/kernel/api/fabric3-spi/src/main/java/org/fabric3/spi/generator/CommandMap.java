@@ -21,7 +21,7 @@ package org.fabric3.spi.generator;
 import java.net.URI;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
@@ -32,7 +32,6 @@ import org.fabric3.spi.command.Command;
  * @version $Revision$ $Date$
  */
 public class CommandMap {
-    
     private Map<URI, Set<Command>> commands = new HashMap<URI, Set<Command>>();
     
     public void addCommand(URI runtimeId, Command command) {
@@ -51,13 +50,13 @@ public class CommandMap {
     
     public Set<Command> getCommandsForRuntime(URI runtimeId) {
         Set<Command> cmds = getCommandsForRuntimeInternal(runtimeId);
-        return new HashSet<Command>(cmds);
+        return new LinkedHashSet<Command>(cmds);
     }
 
     private  Set<Command> getCommandsForRuntimeInternal(URI runtimeId) {
         Set<Command> cmds = commands.get(runtimeId);
         if (cmds == null) {
-            cmds = new HashSet<Command>();
+            cmds = new LinkedHashSet<Command>();
             commands.put(runtimeId, cmds);
         }
         return cmds;

@@ -30,7 +30,7 @@
 
     <!-- include physical deployment configuration -->
     <include name="org.fabric3.fabric.Common" scdlResource="org/fabric3/fabric/common.composite"/>
-    
+
     <!-- include host services configuration -->
     <include name="org.fabric3.fabric.HostServices" scdlResource="org/fabric3/fabric/hostServices.composite"/>
 
@@ -78,7 +78,7 @@
     <component name="DiscoveryService">
         <system:implementation.system class="org.fabric3.fabric.services.discovery.SingleVMDiscoveryService"/>
     </component>
-    
+
     <component name="launchedLoader">
         <system:implementation.system class="org.fabric3.runtime.standalone.host.implementation.launched.LaunchedLoader"/>
     </component>
@@ -90,6 +90,6 @@
 	 <component name="assemblyRecoveryService">
         <system:implementation.system class="org.fabric3.fabric.services.domain.NonPersistentLogicalComponentStore"/>
     </component>
-	 
+
 
 </composite>

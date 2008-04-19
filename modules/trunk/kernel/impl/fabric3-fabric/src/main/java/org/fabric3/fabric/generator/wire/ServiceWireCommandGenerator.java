@@ -35,7 +35,7 @@ import org.fabric3.spi.model.instance.LogicalService;
 import org.fabric3.spi.model.physical.PhysicalWireDefinition;
 
 /**
- * Generate commands to connect component service wires to their transports.
+ * Generate a command to create a wire from a service endpoint to a component.
  *
  * @version $Revision$ $Date$
  */
@@ -44,10 +44,13 @@ public class ServiceWireCommandGenerator implements CommandGenerator {
     private final PhysicalWireGenerator physicalWireGenerator;
     private final int order;
 
-    public ServiceWireCommandGenerator(@Reference PhysicalWireGenerator physicalWireGenerator,
-                                       @Property(name = "order")int order) {
+    public ServiceWireCommandGenerator(@Reference PhysicalWireGenerator physicalWireGenerator, @Property(name = "order")int order) {
         this.physicalWireGenerator = physicalWireGenerator;
         this.order = order;
+    }
+
+    public int getOrder() {
+        return order;
     }
 
     @SuppressWarnings("unchecked")
@@ -55,12 +58,7 @@ public class ServiceWireCommandGenerator implements CommandGenerator {
 
         WireAttachCommand command = new WireAttachCommand(order);
 
-        if (component instanceof LogicalCompositeComponent) {
-            LogicalCompositeComponent compositeComponent = (LogicalCompositeComponent) component;
-            for (LogicalComponent<?> child : compositeComponent.getComponents()) {
-                command.addPhysicalWireDefinitions(generate(child).getPhysicalWireDefinitions());
-            }
-        } else {
+        if (!(component instanceof LogicalCompositeComponent)) {
             generatePhysicalWires(component, command);
         }
 
@@ -82,8 +80,7 @@ public class ServiceWireCommandGenerator implements CommandGenerator {
                 List<LogicalBinding<?>> callbackBindings = service.getCallbackBindings();
                 if (callbackBindings.size() != 1) {
                     String uri = service.getUri().toString();
-                    throw new UnsupportedOperationException("The runtime requires exactly one callback binding to be specified on service ["
-                            + uri + "]");
+                    throw new UnsupportedOperationException("The runtime requires exactly one callback binding to be specified on service: " + uri);
                 }
                 callbackBinding = callbackBindings.get(0);
                 // xcv FIXME should be on the logical binding
@@ -102,5 +99,6 @@ public class ServiceWireCommandGenerator implements CommandGenerator {
         }
 
     }
+
 
 }

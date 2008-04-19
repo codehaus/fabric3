@@ -18,10 +18,8 @@ package org.fabric3.discovery.jxta;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import javax.xml.namespace.QName;
 
@@ -30,8 +28,6 @@ import net.jxta.document.AdvertisementFactory;
 import net.jxta.document.Element;
 
 import org.fabric3.jxta.impl.Fabric3JxtaException;
-import org.fabric3.scdl.ResourceDescription;
-import org.fabric3.spi.model.topology.ClassLoaderResourceDescription;
 
 /**
  * Instantiates a PresenceAdvertisement from a serialized JXTA message.
@@ -76,9 +72,6 @@ public class Instantiator implements AdvertisementFactory.Instantiator {
         Set<URI> compenents = deserializeComponents(elem);
         adv.setComponents(compenents);
 
-        elem = (Element) element.getChildren("resourceDescriptions").nextElement();
-        List<ResourceDescription<?>> descriptions = deserializeResourceDescriptions(elem);
-        adv.setResourceDescriptions(descriptions);
         return adv;
 
     }
@@ -109,26 +102,6 @@ public class Instantiator implements AdvertisementFactory.Instantiator {
             }
         }
         return features;
-    }
-
-    private List<ResourceDescription<?>> deserializeResourceDescriptions(Element elem) {
-        List<ResourceDescription<?>> descriptions = new ArrayList<ResourceDescription<?>>();
-        Enumeration children = elem.getChildren("classLoaderResourceDescription");
-        while (children.hasMoreElements()) {
-            elem = (Element) children.nextElement();
-            if (elem != null) {
-                Element identifierElement = (Element) elem.getChildren("identifier").nextElement();
-                URI id = URI.create((String) identifierElement.getValue());
-                ClassLoaderResourceDescription desc = new ClassLoaderResourceDescription(id);
-                Enumeration parents = elem.getChildren("parent");
-                while (parents.hasMoreElements()) {
-                    Element parent = (Element) parents.nextElement();
-                    desc.addParent(URI.create((String) parent.getValue()));
-                }
-                descriptions.add(desc);
-            }
-        }
-        return descriptions;
     }
 
 }

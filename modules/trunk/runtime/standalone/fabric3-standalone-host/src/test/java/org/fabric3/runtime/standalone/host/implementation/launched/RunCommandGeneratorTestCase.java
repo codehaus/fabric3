@@ -44,7 +44,7 @@ public class RunCommandGeneratorTestCase extends TestCase {
 
     protected void setUp() throws Exception {
         super.setUp();
-        generator = new RunCommandGenerator(null);
+        generator = new RunCommandGenerator(null, 1);
 
         ComponentDefinition<CompositeImplementation> parentDefinition = createComposite("parent");
         composite = new LogicalCompositeComponent(PARENT, PARENT, parentDefinition, null);

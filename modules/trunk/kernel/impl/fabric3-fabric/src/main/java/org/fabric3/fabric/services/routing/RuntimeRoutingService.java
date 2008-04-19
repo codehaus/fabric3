@@ -51,10 +51,7 @@ public class RuntimeRoutingService implements RoutingService {
     public void route(CommandMap commandMap) throws RoutingException {
 
         Set<Command> commands = commandMap.getCommandsForRuntime(null);
-        List<Command> orderedCommands = new ArrayList<Command>(commands);
-        Collections.sort(orderedCommands);
-        
-        for (Command command : orderedCommands) {
+        for (Command command : commands) {
             try {
                 registry.execute(command);
             } catch (ExecutionException e) {

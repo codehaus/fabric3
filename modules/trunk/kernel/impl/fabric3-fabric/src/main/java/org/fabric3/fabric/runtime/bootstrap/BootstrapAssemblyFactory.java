@@ -29,31 +29,37 @@ import org.fabric3.fabric.assembly.normalizer.PromotionNormalizer;
 import org.fabric3.fabric.assembly.normalizer.PromotionNormalizerImpl;
 import org.fabric3.fabric.builder.ConnectorImpl;
 import org.fabric3.fabric.builder.classloader.ClassLoaderBuilder;
-import org.fabric3.fabric.builder.component.DefaultComponentBuilderRegistry;
 import org.fabric3.fabric.builder.classloader.ClassLoaderBuilderImpl;
-import org.fabric3.fabric.generator.classloader.ClassLoaderGeneratorImpl;
-import org.fabric3.fabric.generator.classloader.ClassloaderProvisionCommandGenerator;
-import org.fabric3.fabric.generator.classloader.ClassLoaderGenerator;
+import org.fabric3.fabric.builder.component.DefaultComponentBuilderRegistry;
 import org.fabric3.fabric.command.ClassloaderProvisionCommand;
 import org.fabric3.fabric.command.ClassloaderProvisionCommandExecutor;
 import org.fabric3.fabric.command.CommandExecutorRegistryImpl;
 import org.fabric3.fabric.command.ComponentBuildCommand;
 import org.fabric3.fabric.command.ComponentBuildCommandExecutor;
-import org.fabric3.fabric.generator.component.ComponentBuildCommandGenerator;
 import org.fabric3.fabric.command.ComponentStartCommand;
 import org.fabric3.fabric.command.ComponentStartCommandExecutor;
-import org.fabric3.fabric.generator.component.ComponentStartCommandGenerator;
 import org.fabric3.fabric.command.InitializeComponentCommand;
 import org.fabric3.fabric.command.InitializeComponentCommandExecutor;
-import org.fabric3.fabric.generator.component.InitializeComponentCommandGenerator;
-import org.fabric3.fabric.generator.wire.LocalWireCommandGenerator;
-import org.fabric3.fabric.generator.wire.ResourceWireCommandGenerator;
 import org.fabric3.fabric.command.StartCompositeContextCommand;
 import org.fabric3.fabric.command.StartCompositeContextCommandExecutor;
-import org.fabric3.fabric.generator.component.StartCompositeContextCommandGenerator;
 import org.fabric3.fabric.command.WireAttachCommand;
 import org.fabric3.fabric.command.WireAttachCommandExecutor;
 import org.fabric3.fabric.generator.GeneratorRegistryImpl;
+import org.fabric3.fabric.generator.PhysicalModelGenerator;
+import org.fabric3.fabric.generator.PhysicalModelGeneratorImpl;
+import org.fabric3.fabric.generator.classloader.ClassLoaderGenerator;
+import org.fabric3.fabric.generator.classloader.ClassLoaderGeneratorImpl;
+import org.fabric3.fabric.generator.classloader.ClassloaderProvisionCommandGenerator;
+import org.fabric3.fabric.generator.component.ComponentBuildCommandGenerator;
+import org.fabric3.fabric.generator.component.ComponentStartCommandGenerator;
+import org.fabric3.fabric.generator.component.InitializeComponentCommandGenerator;
+import org.fabric3.fabric.generator.component.StartCompositeContextCommandGenerator;
+import org.fabric3.fabric.generator.wire.LocalWireCommandGenerator;
+import org.fabric3.fabric.generator.wire.PhysicalOperationHelper;
+import org.fabric3.fabric.generator.wire.PhysicalOperationHelperImpl;
+import org.fabric3.fabric.generator.wire.PhysicalWireGenerator;
+import org.fabric3.fabric.generator.wire.PhysicalWireGeneratorImpl;
+import org.fabric3.fabric.generator.wire.ResourceWireCommandGenerator;
 import org.fabric3.fabric.implementation.singleton.SingletonGenerator;
 import org.fabric3.fabric.implementation.singleton.SingletonWireAttacher;
 import org.fabric3.fabric.implementation.singleton.SingletonWireTargetDefinition;
@@ -61,21 +67,13 @@ import org.fabric3.fabric.model.logical.AtomicComponentInstantiator;
 import org.fabric3.fabric.model.logical.CompositeComponentInstantiator;
 import org.fabric3.fabric.model.logical.LogicalModelGenerator;
 import org.fabric3.fabric.model.logical.LogicalModelGeneratorImpl;
-import org.fabric3.fabric.generator.PhysicalModelGenerator;
-import org.fabric3.fabric.generator.PhysicalModelGeneratorImpl;
-import org.fabric3.fabric.generator.wire.PhysicalOperationHelper;
-import org.fabric3.fabric.generator.wire.PhysicalOperationHelperImpl;
-import org.fabric3.fabric.generator.wire.PhysicalWireGenerator;
-import org.fabric3.fabric.generator.wire.PhysicalWireGeneratorImpl;
 import org.fabric3.fabric.monitor.MonitorWireAttacher;
 import org.fabric3.fabric.monitor.MonitorWireGenerator;
 import org.fabric3.fabric.monitor.MonitorWireTargetDefinition;
 import org.fabric3.fabric.runtime.ComponentNames;
 import org.fabric3.fabric.services.contribution.ArtifactResolverRegistryImpl;
-import org.fabric3.fabric.services.contribution.ClasspathProcessorRegistryImpl;
 import org.fabric3.fabric.services.contribution.FileSystemResolver;
 import org.fabric3.fabric.services.contribution.processor.JarClasspathProcessor;
-import org.fabric3.fabric.services.discovery.SingleVMDiscoveryService;
 import org.fabric3.fabric.services.documentloader.DocumentLoader;
 import org.fabric3.fabric.services.documentloader.DocumentLoaderImpl;
 import org.fabric3.fabric.services.instancefactory.BuildHelperImpl;
@@ -83,7 +81,6 @@ import org.fabric3.fabric.services.instancefactory.DefaultInstanceFactoryBuilder
 import org.fabric3.fabric.services.instancefactory.GenerationHelperImpl;
 import org.fabric3.fabric.services.instancefactory.ReflectiveInstanceFactoryBuilder;
 import org.fabric3.fabric.services.routing.RuntimeRoutingService;
-import org.fabric3.fabric.services.runtime.BootstrapRuntimeInfoService;
 import org.fabric3.fabric.wire.DefaultWiringService;
 import org.fabric3.fabric.wire.promotion.DefaultTargetPromotionService;
 import org.fabric3.fabric.wire.resolve.ExplicitTargetResolutionService;
@@ -111,8 +108,6 @@ import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.services.contribution.ArtifactResolverRegistry;
 import org.fabric3.spi.services.contribution.ClasspathProcessorRegistry;
 import org.fabric3.spi.services.contribution.MetaDataStore;
-import org.fabric3.spi.services.discovery.DiscoveryService;
-import org.fabric3.spi.services.runtime.RuntimeInfoService;
 import org.fabric3.spi.wire.TargetPromotionService;
 import org.fabric3.spi.wire.TargetResolutionService;
 import org.fabric3.spi.wire.WiringService;
@@ -149,7 +144,10 @@ public class BootstrapAssemblyFactory {
                 runtime.getSystemComponent(MetaDataStore.class, ComponentNames.METADATA_STORE_URI);
         ScopeRegistry scopeRegistry =
                 runtime.getSystemComponent(ScopeRegistry.class, ComponentNames.SCOPE_REGISTRY_URI);
-        return createAssembly(monitorFactory, classLoaderRegistry, scopeRegistry, componentManager, lcm, metaDataStore);
+
+        ClasspathProcessorRegistry cpRegistry = runtime.getSystemComponent(ClasspathProcessorRegistry.class,
+                                                                           URI.create(ComponentNames.RUNTIME_NAME + "/ClasspathProcessorRegistry"));
+        return createAssembly(monitorFactory, classLoaderRegistry, scopeRegistry, componentManager, lcm, metaDataStore, cpRegistry);
     }
 
     public static Assembly createAssembly(MonitorFactory monitorFactory,
@@ -157,17 +155,18 @@ public class BootstrapAssemblyFactory {
                                           ScopeRegistry scopeRegistry,
                                           ComponentManager componentManager,
                                           LogicalComponentManager logicalComponentManager,
-                                          MetaDataStore metaDataStore) throws InitializationException {
+                                          MetaDataStore metaDataStore,
+                                          ClasspathProcessorRegistry cpRegistry) throws InitializationException {
 
         Allocator allocator = new LocalAllocator();
 
         CommandExecutorRegistry commandRegistry =
-                createCommandExecutorRegistry(monitorFactory, classLoaderRegistry, scopeRegistry, componentManager);
+                createCommandExecutorRegistry(monitorFactory, classLoaderRegistry, scopeRegistry, componentManager, cpRegistry);
 
         RuntimeRoutingService routingService = new RuntimeRoutingService(commandRegistry, scopeRegistry);
 
         PhysicalModelGenerator physicalModelGenerator =
-                createPhysicalModelGenerator(logicalComponentManager, classLoaderRegistry);
+                createPhysicalModelGenerator(logicalComponentManager, metaDataStore);
 
         LogicalModelGenerator logicalModelGenerator = createLogicalModelGenerator(logicalComponentManager);
 
@@ -208,7 +207,8 @@ public class BootstrapAssemblyFactory {
     private static CommandExecutorRegistry createCommandExecutorRegistry(MonitorFactory monitorFactory,
                                                                          ClassLoaderRegistry classLoaderRegistry,
                                                                          ScopeRegistry scopeRegistry,
-                                                                         ComponentManager componentManager) {
+                                                                         ComponentManager componentManager,
+                                                                         ClasspathProcessorRegistry cpRegistry) {
 
         InstanceFactoryBuilderRegistry providerRegistry = new DefaultInstanceFactoryBuilderRegistry();
         InstanceFactoryBuildHelper buildHelper = new BuildHelperImpl(classLoaderRegistry);
@@ -249,7 +249,7 @@ public class BootstrapAssemblyFactory {
         connector.setSourceAttachers(sourceAttachers);
         connector.setTargetAttachers(targetAttachers);
 
-        ClassLoaderBuilder classLoaderBuilder = createClassLoaderBuilder(classLoaderRegistry);
+        ClassLoaderBuilder classLoaderBuilder = createClassLoaderBuilder(classLoaderRegistry, cpRegistry);
 
         CommandExecutorRegistryImpl commandRegistry = new CommandExecutorRegistryImpl();
 
@@ -264,29 +264,26 @@ public class BootstrapAssemblyFactory {
 
     }
 
-    private static ClassLoaderBuilder createClassLoaderBuilder(ClassLoaderRegistry classLoaderRegistry) {
+    private static ClassLoaderBuilder createClassLoaderBuilder(ClassLoaderRegistry classLoaderRegistry, ClasspathProcessorRegistry cpRegistry) {
 
         ArtifactResolverRegistry artifactResolverRegistry = new ArtifactResolverRegistryImpl();
 
         FileSystemResolver resolver = new FileSystemResolver(artifactResolverRegistry);
         resolver.init();
 
-        ClasspathProcessorRegistry classpathProcessorRegistry = new ClasspathProcessorRegistryImpl();
-        JarClasspathProcessor classpathProcessor = new JarClasspathProcessor(classpathProcessorRegistry);
+        JarClasspathProcessor classpathProcessor = new JarClasspathProcessor(cpRegistry);
         classpathProcessor.init();
-        return new ClassLoaderBuilderImpl(classLoaderRegistry, artifactResolverRegistry, classpathProcessorRegistry);
+        return new ClassLoaderBuilderImpl(classLoaderRegistry, artifactResolverRegistry, cpRegistry);
     }
 
     private static PhysicalModelGenerator createPhysicalModelGenerator(LogicalComponentManager logicalComponentManager,
-                                                                       ClassLoaderRegistry classLoaderRegistry) {
+                                                                       MetaDataStore metaDataStore) {
 
         GeneratorRegistry generatorRegistry = createGeneratorRegistry();
         PhysicalOperationHelper physicalOperationHelper = new PhysicalOperationHelperImpl();
         PhysicalWireGenerator wireGenerator = new PhysicalWireGeneratorImpl(generatorRegistry, new NullPolicyResolver(), physicalOperationHelper);
 
-        RuntimeInfoService infoService = new BootstrapRuntimeInfoService(classLoaderRegistry);
-        DiscoveryService discoveryService = new SingleVMDiscoveryService(infoService);
-        ClassLoaderGenerator classLoaderGenerator = new ClassLoaderGeneratorImpl(discoveryService);
+        ClassLoaderGenerator classLoaderGenerator = new ClassLoaderGeneratorImpl(metaDataStore);
 
         List<CommandGenerator> commandGenerators = new ArrayList<CommandGenerator>();
         commandGenerators.add(new ClassloaderProvisionCommandGenerator(classLoaderGenerator, 0));

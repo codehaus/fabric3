@@ -23,7 +23,6 @@ import java.net.URI;
 import java.net.URL;
 
 import org.fabric3.host.contribution.ContributionException;
-import org.fabric3.spi.model.type.ContributionResourceDescription;
 
 /**
  * The system registry of contribution processors
@@ -89,9 +88,7 @@ public interface ProcessorRegistry {
      * @param inputStream the input stream for the artifact
      * @throws ContributionException if there was a problem processing the artifact
      */
-    void processManifestArtifact(ContributionManifest manifest,
-                                 String contentType,
-                                 InputStream inputStream) throws ContributionException;
+    void processManifestArtifact(ContributionManifest manifest, String contentType, InputStream inputStream) throws ContributionException;
 
     /**
      * Dispatches to a {@link ContributionProcessor} to index a contribution.
@@ -129,15 +126,5 @@ public interface ProcessorRegistry {
      * @throws ContributionException if there was a problem loading the resoure
      */
     void processResource(URI contributionUri, Resource resource, ClassLoader loader) throws ContributionException;
-
-    /**
-     * Dispatches to a ContributionProcessor to update the resource description for the contribution.
-     *
-     * @param contribution the contribution to update
-     * @param description  the description
-     * @throws ContributionException if an error occurs updating the description
-     */
-    void updateContributionDescription(Contribution contribution, ContributionResourceDescription description)
-            throws ContributionException;
 
 }

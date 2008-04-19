@@ -25,9 +25,8 @@ import org.fabric3.spi.model.physical.PhysicalClassLoaderDefinition;
  * a node will share the same classloader. Each composite in a hierarchy will have its own classloader with a parent set to the classloader of the
  * containing composite.
  * <p/>
- * The generator introspects the logical component for a {@link org.fabric3.spi.model.type.ContributionResourceDescription}.From this metadata it adds
- * the contribution that the artifacts for the component are containined in to the classloader definition. The classloader definition is then added to
- * the set of command that will be sent to a runtime.
+ * The generator adds the contribution that the artifacts for the component are containined in to the classloader definition. The classloader
+ * definition is then added to the set of commands that will be sent to a runtime.
  * <p/>
  * On the runtime, a builder is responsible for matching the PhysicalClassLoaderDefinition to an existing classloader or creating a new one. During
  * this process, the contribution archive and required extensions may need to be provisioned to the node.

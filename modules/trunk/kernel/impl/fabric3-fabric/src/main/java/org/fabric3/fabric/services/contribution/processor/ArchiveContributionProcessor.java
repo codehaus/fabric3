@@ -18,15 +18,13 @@ package org.fabric3.fabric.services.contribution.processor;
 
 import java.net.URI;
 import java.net.URL;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.fabric.services.contribution.UnsupportedContentTypeException;
-import org.fabric3.host.contribution.Constants;
 import org.fabric3.host.contribution.ContributionException;
-import org.fabric3.spi.model.type.ContributionResourceDescription;
 import org.fabric3.spi.services.contribution.Action;
 import org.fabric3.spi.services.contribution.ArchiveContributionHandler;
 import org.fabric3.spi.services.contribution.ArtifactLocationEncoder;
@@ -86,15 +84,12 @@ public class ArchiveContributionProcessor extends AbstractContributionProcessor 
             for (Resource resource : contribution.getResources()) {
                 registry.processResource(contributionUri, resource, loader);
             }
+            // encode and add the the contribution url
+            URL encodedLocation = encoder.encode(contribution.getLocation());
+            contribution.addArtifactUrl(encodedLocation);
         } finally {
             Thread.currentThread().setContextClassLoader(oldClassloader);
         }
-    }
-
-    public void updateContributionDescription(Contribution contribution, ContributionResourceDescription description)
-            throws ContributionException {
-        URL encodedLocation = encoder.encode(contribution.getLocation());
-        description.addArtifactUrl(encodedLocation);
     }
 
     private ArchiveContributionHandler getHandler(Contribution contribution) throws UnsupportedContentTypeException {

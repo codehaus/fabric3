@@ -25,7 +25,21 @@ import org.fabric3.spi.model.instance.LogicalComponent;
  * @version $Rev$ $Date$
  */
 public interface CommandGenerator {
-    
+
+    /**
+     * Gets the order the command generator should be called in.
+     *
+     * @return an ascending  value where 0 is first
+     */
+    int getOrder();
+
+    /**
+     * Generates a command based ont he contents of a logical component
+     *
+     * @param logicalComponent the logical component to generate the command from
+     * @return the generated command
+     * @throws GenerationException if an error occurs during generation
+     */
     Command generate(LogicalComponent<?> logicalComponent) throws GenerationException;
 
 }

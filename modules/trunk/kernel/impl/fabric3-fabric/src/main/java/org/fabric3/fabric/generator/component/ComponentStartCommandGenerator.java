@@ -27,33 +27,28 @@ import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 
 /**
+ * Creates a command to start an atomic component on a runtime.
  *
  * @version $Revision$ $Date$
  */
 public class ComponentStartCommandGenerator implements CommandGenerator {
-
     private final int order;
 
-    public ComponentStartCommandGenerator(@Property(name="order") int order) {
+    public ComponentStartCommandGenerator(@Property(name = "order")int order) {
         this.order = order;
+    }
+
+    public int getOrder() {
+        return order;
     }
 
     @SuppressWarnings("unchecked")
     public ComponentStartCommand generate(LogicalComponent<?> component) throws GenerationException {
-        
         ComponentStartCommand command = new ComponentStartCommand(order);
-        
-        if (component instanceof LogicalCompositeComponent) {
-            LogicalCompositeComponent compositeComponent = (LogicalCompositeComponent) component;
-            for (LogicalComponent<?> child : compositeComponent.getComponents()) {
-                command.addUris(generate(child).getUris());
-            }
-        } else if (!component.isProvisioned()) {
+        // start a component if it is atomic
+        if (!(component instanceof LogicalCompositeComponent) && !component.isProvisioned()) {
             command.addUri(component.getUri());
         }
-        
         return command;
-        
     }
-
 }

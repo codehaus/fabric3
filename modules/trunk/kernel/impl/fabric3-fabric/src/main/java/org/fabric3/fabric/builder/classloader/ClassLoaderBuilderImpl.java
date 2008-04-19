@@ -80,13 +80,11 @@ public class ClassLoaderBuilderImpl implements ClassLoaderBuilder {
             ClassLoader parent = classLoaderRegistry.getClassLoader(uri);
             if (parent == null) {
                 String identifier = uri.toString();
-                throw new ClassLoaderNotFoundException("Parent classloader not found: " + identifier, identifier);
+                throw new ClassLoaderNotFoundException("Parent classloader not found: " + identifier);
             }
             loader.addParent(parent);
         }
-
         classLoaderRegistry.register(name, loader);
-
     }
 
     /**
@@ -101,36 +99,35 @@ public class ClassLoaderBuilderImpl implements ClassLoaderBuilder {
         ClassLoader cl = classLoaderRegistry.getClassLoader(definition.getUri());
         assert cl instanceof MultiParentClassLoader;
         MultiParentClassLoader loader = (MultiParentClassLoader) cl;
+        Set<URL> resourceUrls = definition.getResourceUrls();
 
-        List<URL> classpath = new ArrayList<URL>();
-        Set<URL> urls = definition.getResourceUrls();
-        URL[] loaderUrls = loader.getURLs();
+        for (URL url : resourceUrls) {
+            try {
+                // resolve the remote artifact URL and add it to the classloader
+                URL resolvedUrl = artifactResolverRegistry.resolve(url);
+                // introspect and expand if necessary
+                List<URL> processedUrls = classpathProcessorRegistry.process(resolvedUrl);
+                URL[] loaderUrls = loader.getURLs();
+                // check if URLs are already on the classpath, and if so do not add them
+                for (URL processedUrl : processedUrls) {
+                    boolean found = false;
+                    for (URL loaderUrl : loaderUrls) {
+                        if (loaderUrl.equals(processedUrl)) {
+                            found = true;
+                            break;
+                        }
+                    }
+                    if (!found) {
+                        // the URL is not on the classpath, update the classloader
+                        loader.addURL(processedUrl);
+                    }
 
-        for (URL url : urls) {
-
-            boolean found = false;
-            for (URL loaderUrl : loaderUrls) {
-                if (loaderUrl.equals(url)) {
-                    found = true;
-                    break;
                 }
+            } catch (ResolutionException e) {
+                throw new ClassLoaderBuilderException("Error resolving artifact: " + url.toString(), e);
+            } catch (IOException e) {
+                throw new ClassLoaderBuilderException("Error processing: " + url.toString(), e);
             }
-            if (!found) {
-                try {
-                    // resolve the remote artifact URL and add it to the classloader
-                    URL resolvedUrl = artifactResolverRegistry.resolve(url);
-                    // introspect and expand if necessary
-                    classpath.addAll(classpathProcessorRegistry.process(resolvedUrl));
-                } catch (ResolutionException e) {
-                    throw new ClassLoaderBuilderException("Error resolving artifact", e);
-                } catch (IOException e) {
-                    throw new ClassLoaderBuilderException("Error processing", url.toString(), e);
-                }
-            }
-        }
-
-        for (URL url : classpath) {
-            loader.addURL(url);
         }
 
         for (URI uri : definition.getParentClassLoaders()) {
@@ -160,12 +157,11 @@ public class ClassLoaderBuilderImpl implements ClassLoaderBuilder {
                 // introspect and expand if necessary
                 classpath.addAll(classpathProcessorRegistry.process(resolvedUrl));
             } catch (ResolutionException e) {
-                throw new ClassLoaderBuilderException("Error resolving artifact", e);
+                throw new ClassLoaderBuilderException("Error resolving artifact: " + url.toString(), e);
             } catch (IOException e) {
-                throw new ClassLoaderBuilderException("Error processing", url.toString(), e);
+                throw new ClassLoaderBuilderException("Error processing: " + url.toString(), e);
             }
         }
-
         return classpath.toArray(new URL[classpath.size()]);
 
     }

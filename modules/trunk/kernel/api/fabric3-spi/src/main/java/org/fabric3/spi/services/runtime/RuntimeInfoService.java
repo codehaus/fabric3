@@ -27,8 +27,7 @@ import org.fabric3.spi.model.topology.RuntimeInfo;
  * <p/>
  * Information about the runtime includes,
  * <p/>
- * <li>Runtime Id</li> <li>Components that are running in the runtime</li> <li>Features that are supported by the
- * runtime</li>
+ * <li>Runtime Id</li> <li>Components that are running in the runtime</li> <li>Features that are supported by the runtime</li>
  *
  * @version $Revsion$ $Date$
  */
@@ -49,8 +48,8 @@ public interface RuntimeInfoService {
     RuntimeInfo getRuntimeInfo();
 
     /**
-     * Register the opaque destination identifier to contact this runtime on. The identifier is registered by the
-     * participant messaging infrastructure.
+     * Register the opaque destination identifier to contact this runtime on. The identifier is registered by the participant messaging
+     * infrastructure.
      *
      * @param id the opaque identifier
      */

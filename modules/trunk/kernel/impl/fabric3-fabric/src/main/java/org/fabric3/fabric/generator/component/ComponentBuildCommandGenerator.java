@@ -33,38 +33,36 @@ import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
 
 /**
+ * Creates a command to build a component on a runtime.
  *
  * @version $Revision$ $Date$
  */
 public class ComponentBuildCommandGenerator implements CommandGenerator {
-    
+
     private final GeneratorRegistry generatorRegistry;
     private final int order;
 
-    public ComponentBuildCommandGenerator(@Reference GeneratorRegistry generatorRegistry, @Property(name="order") int order) {
+    public ComponentBuildCommandGenerator(@Reference GeneratorRegistry generatorRegistry, @Property(name = "order")int order) {
         this.generatorRegistry = generatorRegistry;
         this.order = order;
     }
 
+    public int getOrder() {
+        return order;
+    }
+
     @SuppressWarnings("unchecked")
     public ComponentBuildCommand generate(LogicalComponent<?> component) throws GenerationException {
-        
         ComponentBuildCommand command = new ComponentBuildCommand(order);
         Implementation<?> implementation = component.getDefinition().getImplementation();
-        
         if (component instanceof LogicalCompositeComponent) {
-            LogicalCompositeComponent compositeComponent = (LogicalCompositeComponent) component;
-            for (LogicalComponent<?> child : compositeComponent.getComponents()) {
-                command.addPhysicalComponentDefinitions(generate(child).getPhysicalComponentDefinitions());
-            }
+            return command;
         } else if (!component.isProvisioned() && !implementation.isType(SingletonImplementation.IMPLEMENTATION_SINGLETON)) {
-            ComponentGenerator generator =  generatorRegistry.getComponentGenerator(component.getDefinition().getImplementation().getClass());
+            ComponentGenerator generator = generatorRegistry.getComponentGenerator(component.getDefinition().getImplementation().getClass());
             PhysicalComponentDefinition physicalComponentDefinition = generator.generate(component);
             command.addPhysicalComponentDefinition(physicalComponentDefinition);
         }
-        
         return command;
-        
     }
 
 }

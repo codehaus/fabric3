@@ -33,7 +33,6 @@ public class PhysicalClassLoaderDefinition {
     private URI uri;
     private List<URI> parentClassLoaders = new ArrayList<URI>();
     private Set<URL> urls = new LinkedHashSet<URL>();
-    private boolean update;
 
     public PhysicalClassLoaderDefinition(URI uri) {
         this.uri = uri;
@@ -85,14 +84,6 @@ public class PhysicalClassLoaderDefinition {
         parentClassLoaders.add(uri);
     }
 
-    public boolean isUpdate() {
-        return update;
-    }
-
-    public void setUpdate(boolean update) {
-        this.update = update;
-    }
-
     @Override
     public boolean equals(Object obj) {
 
@@ -103,20 +94,14 @@ public class PhysicalClassLoaderDefinition {
         PhysicalClassLoaderDefinition other = (PhysicalClassLoaderDefinition) obj;
 
         return parentClassLoaders.equals(other.parentClassLoaders) &&
-                urls.equals(other.urls) &&
-                update == other.update &&
-                uri.equals(other.uri);
+                urls.equals(other.urls) && uri.equals(other.uri);
     }
 
-    @Override
     public int hashCode() {
-
-        int hash = 7;
-        hash = 31 * hash + uri.hashCode();
-        hash = 31 * hash + parentClassLoaders.hashCode();
-        hash = 31 * hash + urls.hashCode();
-        hash = 31 * hash + (update ? 0 : 1);
-
-        return hash;
+        int result;
+        result = (uri != null ? uri.hashCode() : 0);
+        result = 31 * result + (parentClassLoaders != null ? parentClassLoaders.hashCode() : 0);
+        result = 31 * result + (urls != null ? urls.hashCode() : 0);
+        return result;
     }
 }

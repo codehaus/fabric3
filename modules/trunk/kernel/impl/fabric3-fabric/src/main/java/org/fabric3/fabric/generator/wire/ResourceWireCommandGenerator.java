@@ -30,7 +30,7 @@ import org.fabric3.spi.model.instance.LogicalResource;
 import org.fabric3.spi.model.physical.PhysicalWireDefinition;
 
 /**
- * Generate commands to attach local wires between components and resources.
+ * Generate a command to attach local wires from a component to its resources.
  *
  * @version $Revision$ $Date$
  */
@@ -39,22 +39,20 @@ public class ResourceWireCommandGenerator implements CommandGenerator {
     private final PhysicalWireGenerator physicalWireGenerator;
     private final int order;
 
-    public ResourceWireCommandGenerator(@Reference PhysicalWireGenerator physicalWireGenerator,
-                                        @Property(name = "order")int order) {
+    public ResourceWireCommandGenerator(@Reference PhysicalWireGenerator physicalWireGenerator, @Property(name = "order")int order) {
         this.physicalWireGenerator = physicalWireGenerator;
         this.order = order;
+    }
+
+    public int getOrder() {
+        return order;
     }
 
     public WireAttachCommand generate(LogicalComponent<?> component) throws GenerationException {
 
         WireAttachCommand command = new WireAttachCommand(order);
 
-        if (component instanceof LogicalCompositeComponent) {
-            LogicalCompositeComponent compositeComponent = (LogicalCompositeComponent) component;
-            for (LogicalComponent<?> child : compositeComponent.getComponents()) {
-                command.addPhysicalWireDefinitions(generate(child).getPhysicalWireDefinitions());
-            }
-        } else {
+        if (!(component instanceof LogicalCompositeComponent)) {
             generatePhysicalWires(component, command);
         }
 
@@ -62,12 +60,10 @@ public class ResourceWireCommandGenerator implements CommandGenerator {
     }
 
     private void generatePhysicalWires(LogicalComponent<?> component, WireAttachCommand command) throws GenerationException {
-
         for (LogicalResource<?> resource : component.getResources()) {
             PhysicalWireDefinition pwd = physicalWireGenerator.generateResourceWire(component, resource);
             command.addPhysicalWireDefinition(pwd);
         }
-
     }
 
 }

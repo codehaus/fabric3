@@ -19,7 +19,9 @@ package org.fabric3.fabric.services.contribution;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.fabric3.spi.services.contribution.ClasspathProcessor;
 import org.fabric3.spi.services.contribution.ClasspathProcessorRegistry;
@@ -29,6 +31,8 @@ import org.fabric3.spi.services.contribution.ClasspathProcessorRegistry;
  */
 public class ClasspathProcessorRegistryImpl implements ClasspathProcessorRegistry {
     private List<ClasspathProcessor> processors = new ArrayList<ClasspathProcessor>();
+    // cache of previously processed artifact URLs
+    private Map<URL, List<URL>> cache = new HashMap<URL, List<URL>>();
 
     public void register(ClasspathProcessor processor) {
         processors.add(processor);
@@ -39,14 +43,23 @@ public class ClasspathProcessorRegistryImpl implements ClasspathProcessorRegistr
     }
 
     public List<URL> process(URL url) throws IOException {
+        List<URL> cached = cache.get(url);
+        if (cached != null) {
+            // artifact has already been processed, reuse it
+            return cached;
+        }
         for (ClasspathProcessor processor : processors) {
             if (processor.canProcess(url)) {
-                return processor.process(url);
+                List<URL> urls = processor.process(url);
+                cache.put(url, urls);
+                return urls;
+
             }
         }
         // artifact does not need to be expanded, just return its base url
-        List<URL> classpath = new ArrayList<URL>();
-        classpath.add(url);
-        return classpath;
+        List<URL> urls = new ArrayList<URL>();
+        urls.add(url);
+        cache.put(url, urls);
+        return urls;
     }
 }

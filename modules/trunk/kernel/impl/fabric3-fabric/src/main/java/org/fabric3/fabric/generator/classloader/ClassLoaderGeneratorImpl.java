@@ -18,21 +18,16 @@ package org.fabric3.fabric.generator.classloader;
 
 import java.net.URI;
 import java.net.URL;
-import java.util.List;
 
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.scdl.CompositeImplementation;
-import org.fabric3.scdl.Implementation;
-import org.fabric3.scdl.ResourceDescription;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.physical.PhysicalClassLoaderDefinition;
-import org.fabric3.spi.model.topology.ClassLoaderResourceDescription;
-import org.fabric3.spi.model.topology.RuntimeInfo;
-import org.fabric3.spi.model.type.ContributionResourceDescription;
-import org.fabric3.spi.services.discovery.DiscoveryService;
+import org.fabric3.spi.services.contribution.Contribution;
+import org.fabric3.spi.services.contribution.MetaDataStore;
 
 /**
  * Default implementation of the ClassLoaderGenerator. This implementation groups components contained within a composite deployed to the same runtime
@@ -42,35 +37,15 @@ import org.fabric3.spi.services.discovery.DiscoveryService;
  */
 @EagerInit
 public class ClassLoaderGeneratorImpl implements ClassLoaderGenerator {
+    private MetaDataStore store;
 
-    private DiscoveryService discoveryService;
-
-    public ClassLoaderGeneratorImpl(@Reference DiscoveryService discoveryService) {
-        this.discoveryService = discoveryService;
+    public ClassLoaderGeneratorImpl(@Reference MetaDataStore store) {
+        this.store = store;
     }
 
     public PhysicalClassLoaderDefinition generate(LogicalComponent<?> component) throws GenerationException {
 
         LogicalComponent<CompositeImplementation> parent = component.getParent();
-        Implementation<?> impl = component.getDefinition().getImplementation();
-
-        List<ResourceDescription<?>> descriptions = impl.getResourceDescriptions();
-
-        return generate(parent, descriptions);
-
-    }
-
-    private PhysicalClassLoaderDefinition generate(LogicalComponent<?> parent, List<ResourceDescription<?>> descriptions) throws GenerationException {
-
-        URI runtimeId = parent.getRuntimeId();
-
-        RuntimeInfo info = discoveryService.getRuntimeInfo(runtimeId);
-
-        if (info == null) {
-            String id = runtimeId.toString();
-            throw new ClassLoaderGenerationException("Runtime not found [" + id + "]", id);
-        }
-
         URI classLoaderUri = parent.getUri();
         PhysicalClassLoaderDefinition definition = new PhysicalClassLoaderDefinition(classLoaderUri);
         LogicalComponent<CompositeImplementation> grandParent = parent.getParent();
@@ -79,67 +54,23 @@ public class ClassLoaderGeneratorImpl implements ClassLoaderGenerator {
             URI uri = grandParent.getUri();
             definition.addParentClassLoader(uri);
         }
-        processPhysicalDefinition(info, definition, descriptions);
+        URI contributionUri = component.getDefinition().getContributionUri();
+        if (contributionUri == null) {
+            // the logical component is not provisioned as part of a contribution, e.g. a boostrap system service
+            return definition;
+        }
+        Contribution contribution = store.find(contributionUri);
+        for (URL url : contribution.getArtifactUrls()) {
+            if (!definition.getResourceUrls().contains(url)) {
+                definition.addResourceUrl(url);
+            }
+        }
+        for (URI uri : contribution.getResolvedImportUris()) {
+            if (!definition.getParentClassLoaders().contains(uri)) {
+                definition.addParentClassLoader(uri);
+            }
+        }
         return definition;
-    }
-
-    private void processPhysicalDefinition(RuntimeInfo info, PhysicalClassLoaderDefinition definition, List<ResourceDescription<?>> descriptions)
-            throws ClassLoaderGenerationException {
-
-        // Determine if a classloader exists on the target participant.
-        ClassLoaderResourceDescription clDescription = info.getResourceDescription(ClassLoaderResourceDescription.class, definition.getUri());
-        if (clDescription == null) {
-            processNew(definition, descriptions);
-        } else {
-            processUpdate(definition, clDescription, descriptions);
-        }
-    }
-
-    private void processNew(PhysicalClassLoaderDefinition definition, List<ResourceDescription<?>> descriptions) {
-
-        for (ResourceDescription<?> description : descriptions) {
-            if (description instanceof ContributionResourceDescription) {
-                ContributionResourceDescription contribDescription = (ContributionResourceDescription) description;
-                // add the contribution artifact urls to the classpath
-                for (URL url : contribDescription.getArtifactUrls()) {
-                    if (url != null && !definition.getResourceUrls().contains(url)) {
-                        definition.addResourceUrl(url);
-                    }
-                }
-                for (URI uri : contribDescription.getImportedUris()) {
-                    if (uri != null && !definition.getParentClassLoaders().contains(uri)) {
-                        definition.addParentClassLoader(uri);
-                    }
-                }
-            }
-        }
-    }
-
-    private void processUpdate(PhysicalClassLoaderDefinition definition,
-                               ClassLoaderResourceDescription clDescription,
-                               List<ResourceDescription<?>> descriptions) {
-
-        definition.setUpdate(true);
-        for (ResourceDescription<?> description : descriptions) {
-            if (description instanceof ContributionResourceDescription) {
-                ContributionResourceDescription contribDescription = (ContributionResourceDescription) description;
-                // add the contribution artifact urls to the classpath
-                for (URL url : contribDescription.getArtifactUrls()) {
-                    if (url != null
-                            && !clDescription.getClassPathUrls().contains(url)
-                            && !definition.getResourceUrls().contains(url)) {
-                        definition.addResourceUrl(url);
-                    }
-                }
-                for (URI uri : contribDescription.getImportedUris()) {
-                    if (uri != null
-                            && !clDescription.getParents().contains(uri)
-                            && !definition.getParentClassLoaders().contains(uri)) {
-                        definition.addParentClassLoader(uri);
-                    }
-                }
-            }
-        }
     }
 
 }

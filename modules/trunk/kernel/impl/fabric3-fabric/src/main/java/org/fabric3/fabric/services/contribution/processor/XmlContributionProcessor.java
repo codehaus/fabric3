@@ -19,8 +19,8 @@ package org.fabric3.fabric.services.contribution.processor;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
@@ -30,7 +30,7 @@ import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.host.contribution.ContributionException;
-import org.fabric3.spi.model.type.ContributionResourceDescription;
+import org.fabric3.services.xmlfactory.XMLFactory;
 import org.fabric3.spi.services.contribution.Contribution;
 import org.fabric3.spi.services.contribution.ContributionManifest;
 import org.fabric3.spi.services.contribution.ContributionProcessor;
@@ -38,11 +38,9 @@ import org.fabric3.spi.services.contribution.ProcessorRegistry;
 import org.fabric3.spi.services.contribution.Resource;
 import org.fabric3.spi.services.contribution.XmlIndexerRegistry;
 import org.fabric3.spi.services.contribution.XmlProcessorRegistry;
-import org.fabric3.services.xmlfactory.XMLFactory;
 
 /**
- * Processes an XML-based contribution. The implementaton dispatches to a specific XmlProcessor based on the QName of
- * the document element.
+ * Processes an XML-based contribution. The implementaton dispatches to a specific XmlProcessor based on the QName of the document element.
  *
  * @version $Rev$ $Date$
  */
@@ -141,11 +139,6 @@ public class XmlContributionProcessor implements ContributionProcessor {
             }
         }
     }
-
-    public void updateContributionDescription(Contribution contribution, ContributionResourceDescription description)
-            throws ContributionException {
-    }
-
 
     private static List<String> initializeContentTypes() {
         List<String> list = new ArrayList<String>(1);

@@ -25,9 +25,6 @@ import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 import org.osoa.sca.annotations.Service;
 
-import org.fabric3.host.contribution.ContributionException;
-import org.fabric3.spi.model.type.ContributionResourceDescription;
-import org.fabric3.spi.services.contribution.Contribution;
 import org.fabric3.spi.services.contribution.ContributionProcessor;
 import org.fabric3.spi.services.contribution.ProcessorRegistry;
 
@@ -67,10 +64,6 @@ public abstract class AbstractContributionProcessor implements ContributionProce
         for (String contentType : getContentTypes()) {
             registry.unregisterContributionProcessor(contentType);
         }
-    }
-
-    public void updateContributionDescription(Contribution contribution, ContributionResourceDescription description)
-            throws ContributionException {
     }
 
 }

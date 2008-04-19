@@ -33,7 +33,7 @@ import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.physical.PhysicalWireDefinition;
 
 /**
- * Generate commands to attach component reference wires to their transports.
+ * Generate a command to attach component reference wires to their transports.
  *
  * @version $Revision$ $Date$
  */
@@ -48,20 +48,18 @@ public class ReferenceWireCommandGenerator implements CommandGenerator {
         this.order = order;
     }
 
+    public int getOrder() {
+        return order;
+    }
+
     @SuppressWarnings("unchecked")
     public WireAttachCommand generate(LogicalComponent<?> component) throws GenerationException {
 
         WireAttachCommand command = new WireAttachCommand(order);
 
-        if (component instanceof LogicalCompositeComponent) {
-            LogicalCompositeComponent compositeComponent = (LogicalCompositeComponent) component;
-            for (LogicalComponent<?> child : compositeComponent.getComponents()) {
-                command.addPhysicalWireDefinitions(generate(child).getPhysicalWireDefinitions());
-            }
-        } else {
+        if (!(component instanceof LogicalCompositeComponent)) {
             generatePhysicalWires(component, command);
         }
-
         return command;
     }
 
@@ -80,12 +78,12 @@ public class ReferenceWireCommandGenerator implements CommandGenerator {
                 List<LogicalBinding<?>> callbackBindings = logicalReference.getCallbackBindings();
                 if (callbackBindings.size() != 1) {
                     String uri = logicalReference.getUri().toString();
-                    throw new UnsupportedOperationException("The runtime requires exactly one callback binding to be specified on reference ["
-                            + uri + "]");
+                    throw new UnsupportedOperationException("The runtime requires exactly one callback binding to be specified on reference: " + uri);
                 }
                 LogicalBinding<?> callbackBinding = callbackBindings.get(0);
                 // generate the callback wire
-                PhysicalWireDefinition callbackPwd = physicalWireGenerator.generateBoundCallbackRerenceWire(logicalReference, callbackBinding,
+                PhysicalWireDefinition callbackPwd = physicalWireGenerator.generateBoundCallbackRerenceWire(logicalReference,
+                                                                                                            callbackBinding,
                                                                                                             component);
                 command.addPhysicalWireDefinition(callbackPwd);
             }

@@ -30,10 +30,10 @@ import org.fabric3.spi.model.instance.LogicalComponent;
 public interface PhysicalModelGenerator {
 
     /**
-     * Generate the set of commands to provision a set of logical components and their wires.
+     * Generate commands to provision a set of components and their wires to runtimes in the domain based on the given set of logical components.
      *
      * @param components the logical component set.
-     * @return the command map
+     * @return the command map containing the generated commands
      * @throws GenerationException If unable to generate the command map.
      */
     CommandMap generate(Collection<LogicalComponent<?>> components) throws GenerationException;

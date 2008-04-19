@@ -60,10 +60,7 @@ public class LocalWireCommandGenerator implements CommandGenerator {
         WireAttachCommand command = new WireAttachCommand(order);
 
         if (component instanceof LogicalCompositeComponent) {
-            LogicalCompositeComponent compositeComponent = (LogicalCompositeComponent) component;
-            for (LogicalComponent<?> child : compositeComponent.getComponents()) {
-                command.addPhysicalWireDefinitions(generate(child).getPhysicalWireDefinitions());
-            }
+            return command;
         } else {
             generatePhysicalWires(component, command);
         }
@@ -120,6 +117,10 @@ public class LocalWireCommandGenerator implements CommandGenerator {
 
         }
 
+    }
+
+    public int getOrder() {
+        return order;
     }
 
 }

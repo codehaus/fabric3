@@ -21,18 +21,16 @@ package org.fabric3.spi.services.contribution;
 import java.util.List;
 
 import org.fabric3.host.contribution.ContributionException;
-import org.fabric3.spi.model.type.ContributionResourceDescription;
 
 /**
- * Interface for services that process contributions. Contribution processing occurs in several phases. Contribution
- * metadata is first processed, after which contained resources are indexed. Indexed {@link Resource}s contain 0..n
- * {@link ResourceElement}s, which are addressable parts. ResourceElements contain a key for a symbol space and a value.
- * When a resource is indexed, only ResourceElement keys are available; their values have not yet been loaded.
+ * Interface for services that process contributions. Contribution processing occurs in several phases. Contribution metadata is first processed,
+ * after which contained resources are indexed. Indexed {@link Resource}s contain 0..n {@link ResourceElement}s, which are addressable parts.
+ * ResourceElements contain a key for a symbol space and a value. When a resource is indexed, only ResourceElement keys are available; their values
+ * have not yet been loaded.
  * <p/>
- * The final processing phase is when the contribution is loaded. At this point, all contribution artifacts, including
- * those in depedent contributions, are made available through the provided classloader. Indexed Resources are iterated
- * and all ResourceElement values are loaded via the loader framework. As ResourceElements may refer to other
- * ResourceElements, loading may ocurr recursively.
+ * The final processing phase is when the contribution is loaded. At this point, all contribution artifacts, including those in depedent
+ * contributions, are made available through the provided classloader. Indexed Resources are iterated and all ResourceElement values are loaded via
+ * the loader framework. As ResourceElements may refer to other ResourceElements, loading may ocurr recursively.
  *
  * @version $Rev$ $Date$
  */
@@ -68,16 +66,5 @@ public interface ContributionProcessor {
      * @throws ContributionException if there was a problem loading the contribution resoruces
      */
     public void process(Contribution contribution, ClassLoader loader) throws ContributionException;
-
-    /**
-     * Updates the resource description for the contribution. Implementations may add required artifact URLs to the
-     * description.
-     *
-     * @param contribution the contribution to update
-     * @param description  the description
-     * @throws ContributionException if an error occurs updating the description
-     */
-    public void updateContributionDescription(Contribution contribution, ContributionResourceDescription description)
-            throws ContributionException;
 
 }

@@ -21,30 +21,28 @@ package org.fabric3.fabric.services.routing;
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
+import java.util.Set;
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamWriter;
 
+import org.osoa.sca.annotations.Reference;
+
 import org.fabric3.api.annotation.Monitor;
 import org.fabric3.scdl.Scope;
+import org.fabric3.services.xmlfactory.XMLFactory;
+import org.fabric3.services.xmlfactory.XMLFactoryInstantiationException;
 import org.fabric3.spi.command.Command;
 import org.fabric3.spi.command.CommandExecutorRegistry;
 import org.fabric3.spi.command.ExecutionException;
 import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.spi.component.TargetResolutionException;
 import org.fabric3.spi.generator.CommandMap;
-import org.fabric3.services.xmlfactory.XMLFactoryInstantiationException;
-import org.fabric3.services.xmlfactory.XMLFactory;
 import org.fabric3.spi.services.marshaller.MarshalException;
 import org.fabric3.spi.services.marshaller.MarshalService;
 import org.fabric3.spi.services.messaging.MessagingException;
 import org.fabric3.spi.services.messaging.MessagingService;
-import org.osoa.sca.annotations.Reference;
 
 /**
  * A routing service implementation that routes physical changesets across a domain
@@ -52,7 +50,7 @@ import org.osoa.sca.annotations.Reference;
  * @version $Rev$ $Date$
  */
 public class FederatedRoutingService implements RoutingService {
-    
+
     private final MarshalService marshalService;
     private final MessagingService messagingService;
     private final CommandExecutorRegistry executorRegistry;
@@ -76,25 +74,22 @@ public class FederatedRoutingService implements RoutingService {
     }
 
     public void route(CommandMap commandMap) throws RoutingException {
-        
+
         for (URI runtimeId : commandMap.getRuntimeIds()) {
-            
-            List<Command> commands = new ArrayList<Command>();
-            commands.addAll(commandMap.getCommandsForRuntime(runtimeId));
-            Collections.sort(commands);
-            
+
+            Set<Command> commands = commandMap.getCommandsForRuntime(runtimeId);
             if (runtimeId != null) {
                 routeToDestination(runtimeId, commands);
             } else {
                 routeLocally(commands);
             }
-            
+
         }
 
     }
 
-    private void routeLocally(List<Command> commands) throws RoutingException {
-        
+    private void routeLocally(Set<Command> commands) throws RoutingException {
+
         for (Command command : commands) {
             try {
                 executorRegistry.execute(command);
@@ -102,17 +97,17 @@ public class FederatedRoutingService implements RoutingService {
                 throw new RoutingException(e);
             }
         }
-        
+
         try {
             scopeRegistry.getScopeContainer(Scope.COMPOSITE).reinject();
         } catch (TargetResolutionException e) {
             throw new RoutingException(e);
         }
-        
+
     }
 
     private void routeToDestination(URI runtimeId, Object commandSet) throws RoutingException {
-        
+
         try {
             ByteArrayOutputStream out = new ByteArrayOutputStream();
             XMLOutputFactory factory = xmlFactory.newOutputFactoryInstance();
@@ -132,5 +127,5 @@ public class FederatedRoutingService implements RoutingService {
         }
 
     }
-    
+
 }

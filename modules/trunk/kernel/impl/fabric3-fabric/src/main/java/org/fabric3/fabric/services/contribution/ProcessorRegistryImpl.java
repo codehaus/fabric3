@@ -28,7 +28,6 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Service;
 
 import org.fabric3.host.contribution.ContributionException;
-import org.fabric3.spi.model.type.ContributionResourceDescription;
 import org.fabric3.spi.services.contribution.Contribution;
 import org.fabric3.spi.services.contribution.ContributionManifest;
 import org.fabric3.spi.services.contribution.ContributionProcessor;
@@ -128,8 +127,7 @@ public class ProcessorRegistryImpl implements ProcessorRegistry {
         processor.process(contribution, loader);
     }
 
-    public void processResource(URI contributionUri, Resource resource, ClassLoader loader)
-            throws ContributionException {
+    public void processResource(URI contributionUri, Resource resource, ClassLoader loader) throws ContributionException {
         ResourceProcessor processor = resourceProcessorCache.get(resource.getContentType());
         if (processor == null) {
             // FIXME for now, return null
@@ -137,17 +135,6 @@ public class ProcessorRegistryImpl implements ProcessorRegistry {
             //throw new UnsupportedContentTypeException(contentType);
         }
         processor.process(contributionUri, resource, loader);
-    }
-
-    public void updateContributionDescription(Contribution contribution, ContributionResourceDescription description)
-            throws ContributionException {
-        String contentType = contribution.getContentType();
-        ContributionProcessor processor = contributionProcessorCache.get(contentType);
-        if (processor == null) {
-            String source = contribution.getUri().toString();
-            throw new UnsupportedContentTypeException("Type " + contentType + "in contribution " + source + " not supported", contentType);
-        }
-        processor.updateContributionDescription(contribution, description);
     }
 
 }

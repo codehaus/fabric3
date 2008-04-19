@@ -24,7 +24,7 @@ package org.fabric3.fabric.builder.classloader;
 public class ClassLoaderNotFoundException extends ClassLoaderBuilderException {
     private static final long serialVersionUID = 2497112487706288679L;
 
-    public ClassLoaderNotFoundException(String message, String identifier) {
-        super(message, identifier);
+    public ClassLoaderNotFoundException(String message) {
+        super(message);
     }
 }

@@ -168,11 +168,6 @@
         <system:implementation.system class="org.fabric3.fabric.services.definitions.DefaultDefinitionsRegistry"/>
     </component>
 
-    <component name="ClasspathProcessorRegistry">
-        <system:implementation.system
-                class="org.fabric3.fabric.services.contribution.ClasspathProcessorRegistryImpl"/>
-    </component>
-
     <component name="JarClasspathProcessor">
         <system:implementation.system class="org.fabric3.fabric.services.contribution.processor.JarClasspathProcessor"/>
     </component>

@@ -19,14 +19,11 @@
 package org.fabric3.spi.model.topology;
 
 import java.net.URI;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import javax.xml.namespace.QName;
 
-import org.fabric3.scdl.ResourceDescription;
 import org.fabric3.spi.Constants;
 
 /**
@@ -43,7 +40,6 @@ public class RuntimeInfo {
     }
 
     private URI id;
-    private List<ResourceDescription<?>> resources;
     private Set<URI> components = new HashSet<URI>();
     private Set<QName> features;
     private long uptime;
@@ -51,7 +47,6 @@ public class RuntimeInfo {
     private String messageDestination;
 
     public RuntimeInfo() {
-        resources = new ArrayList<ResourceDescription<?>>();
         components = new HashSet<URI>();
     }
 
@@ -109,41 +104,6 @@ public class RuntimeInfo {
      */
     public URI getId() {
         return id;
-    }
-
-    /**
-     * Returns a list of resource descriptions for available runtime resources such as extensions.
-     *
-     * @return the list of resource descriptions
-     */
-    public List<ResourceDescription<?>> getResourceDescriptions() {
-        return Collections.unmodifiableList(resources);
-    }
-
-    /**
-     * Adds a resource description representing an available runtime resources.
-     *
-     * @param resource the resource description
-     */
-    public void addResourceDescription(ResourceDescription<?> resource) {
-        resources.add(resource);
-    }
-
-    /**
-     * Returns a ResourceDescription matching the type and identifier or null if not found.
-     *
-     * @param type       the type of ResourceDescription
-     * @param identifier the identifier
-     * @return the matching ResourceDescription or null
-     */
-    @SuppressWarnings({"unchecked"})
-    public <I, T extends ResourceDescription<I>> T getResourceDescription(Class<T> type, I identifier) {
-        for (ResourceDescription<?> resource : resources) {
-            if (resource.getClass().equals(type) && resource.getIdentifier().equals(identifier)) {
-                return (T) resource;
-            }
-        }
-        return null;
     }
 
     /**

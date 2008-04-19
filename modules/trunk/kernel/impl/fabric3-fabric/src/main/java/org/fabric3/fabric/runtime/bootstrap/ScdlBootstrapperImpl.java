@@ -38,6 +38,7 @@ import static org.fabric3.fabric.runtime.ComponentNames.RUNTIME_URI;
 import org.fabric3.fabric.services.classloading.ClassLoaderRegistryImpl;
 import org.fabric3.fabric.services.contribution.MetaDataStoreImpl;
 import org.fabric3.fabric.services.contribution.ProcessorRegistryImpl;
+import org.fabric3.fabric.services.contribution.ClasspathProcessorRegistryImpl;
 import org.fabric3.fabric.services.documentloader.DocumentLoader;
 import org.fabric3.fabric.services.documentloader.DocumentLoaderImpl;
 import org.fabric3.host.runtime.Fabric3Runtime;
@@ -79,6 +80,7 @@ import org.fabric3.spi.runtime.component.RegistrationException;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.services.contribution.MetaDataStore;
 import org.fabric3.spi.services.contribution.ProcessorRegistry;
+import org.fabric3.spi.services.contribution.ClasspathProcessorRegistry;
 import org.fabric3.system.introspection.BootstrapLoaderFactory;
 
 /**
@@ -228,6 +230,9 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
         if (metaDataStore != null) {
             registerSystemComponent(runtimeServices, "MetaDataStore", MetaDataStore.class, metaDataStore);
         }
+
+        ClasspathProcessorRegistryImpl instance = new ClasspathProcessorRegistryImpl();
+        registerSystemComponent(runtimeServices, "ClasspathProcessorRegistry", ClasspathProcessorRegistry.class, instance);
 
         Assembly runtimeAssembly = BootstrapAssemblyFactory.createAssembly(runtime);
         registerSystemComponent(runtimeServices, "RuntimeAssembly", Assembly.class, runtimeAssembly);
