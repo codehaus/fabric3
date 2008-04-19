@@ -40,22 +40,19 @@ import org.fabric3.spi.generator.CommandMap;
  * @version $Rev$ $Date$
  */
 @EagerInit
-public class CommandMapListener implements RequestListener {
+public class CommandSetListener implements RequestListener {
     private MessagingEventService eventService;
     private CommandExecutorRegistry executorRegistry;
     private MarshalService marshalService;
-    private RuntimeInfoService runtimeInfoService;
     private ListenerMonitor monitor;
 
-    public CommandMapListener(@Reference MessagingEventService eventService,
+    public CommandSetListener(@Reference MessagingEventService eventService,
                               @Reference CommandExecutorRegistry executorRegistry,
                               @Reference MarshalService marshalService,
-                              @Reference RuntimeInfoService runtimeInfoService,
                               @Monitor ListenerMonitor monitor) {
         this.eventService = eventService;
         this.executorRegistry = executorRegistry;
         this.marshalService = marshalService;
-        this.runtimeInfoService = runtimeInfoService;
         this.monitor = monitor;
     }
 
@@ -67,8 +64,7 @@ public class CommandMapListener implements RequestListener {
 
     public XMLStreamReader onRequest(XMLStreamReader reader) {
         try {
-            CommandMap map = marshalService.unmarshall(CommandMap.class, reader);
-            Set<Command> commands = map.getCommandsForRuntime(runtimeInfoService.getCurrentRuntimeId());
+            Set<Command> commands = marshalService.unmarshall(Set.class, reader);
             for (Command command : commands) {
                 executorRegistry.execute(command);
             }

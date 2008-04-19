@@ -26,7 +26,7 @@
     </component>
 
     <component name="CommandMapListener">
-        <system:implementation.system class="org.fabric3.messaging.listener.CommandMapListener"/>
+        <system:implementation.system class="org.fabric3.messaging.listener.CommandSetListener"/>
     </component>
 
 </composite>
