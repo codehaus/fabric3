@@ -24,18 +24,18 @@ import java.util.List;
 import java.util.Map;
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpSession;
-import javax.servlet.http.HttpSessionListener;
 import javax.servlet.http.HttpSessionEvent;
+import javax.servlet.http.HttpSessionListener;
 
+import org.osoa.sca.ComponentContext;
 import org.osoa.sca.annotations.Reference;
 import org.osoa.sca.annotations.Service;
-import org.osoa.sca.ComponentContext;
 
 import org.fabric3.container.web.spi.WebApplicationActivationException;
 import org.fabric3.container.web.spi.WebApplicationActivator;
 import org.fabric3.pojo.reflection.Injector;
-import org.fabric3.spi.host.ServletHost;
 import org.fabric3.spi.ObjectCreationException;
+import org.fabric3.spi.host.ServletHost;
 
 /**
  * A WebApplicationActivator used in a runtime embedded in a WAR.
@@ -66,7 +66,6 @@ public class EmbeddedWebApplicationActivator implements WebApplicationActivator,
             // the web app has already been activated since it is embedded in a war. Just inject references and properties
             ServletContext servletContext = host.getServletContext();
             injectServletContext(servletContext, injectors);
-            servletContext.setAttribute(CONTEXT_ATTRIBUTE, context);
             sessionInjectors = List.class.cast(injectors.get(SESSION_CONTEXT_SITE));
             return servletContext;
         } catch (ObjectCreationException e) {

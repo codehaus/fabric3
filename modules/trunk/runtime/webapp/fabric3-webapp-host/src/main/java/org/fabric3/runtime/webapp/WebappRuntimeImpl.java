@@ -21,8 +21,10 @@ package org.fabric3.runtime.webapp;
 import java.net.MalformedURLException;
 import java.net.URI;
 import javax.servlet.ServletRequestEvent;
+import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
+import javax.servlet.http.HttpServletRequest;
 import javax.xml.namespace.QName;
 
 import org.fabric3.fabric.runtime.AbstractRuntime;
@@ -37,6 +39,7 @@ import org.fabric3.runtime.webapp.contribution.WarContributionSource;
 import org.fabric3.spi.assembly.ActivateException;
 import org.fabric3.spi.assembly.Assembly;
 import org.fabric3.spi.invocation.WorkContext;
+import org.fabric3.container.web.spi.WebRequestTunnel;
 
 /**
  * Bootstrapper for the Fabric3 runtime in a web application host. This listener manages one runtime per servlet context; the lifecycle of that
@@ -89,10 +92,15 @@ public class WebappRuntimeImpl extends AbstractRuntime<WebappHostInfo> implement
     public void requestInitialized(ServletRequestEvent sre) {
         WorkContext workContext = new WorkContext();
         PojoWorkContextTunnel.setThreadWorkContext(workContext);
+        ServletRequest req = sre.getServletRequest();
+        if (req instanceof HttpServletRequest) {
+            WebRequestTunnel.setRequest(((HttpServletRequest) req));
+        }
     }
 
     public void requestDestroyed(ServletRequestEvent sre) {
         PojoWorkContextTunnel.setThreadWorkContext(null);
+        WebRequestTunnel.setRequest(null);
     }
 
     public void sessionCreated(HttpSessionEvent event) {

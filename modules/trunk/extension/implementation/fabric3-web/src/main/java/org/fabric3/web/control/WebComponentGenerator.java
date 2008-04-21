@@ -23,10 +23,12 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.osoa.sca.ComponentContext;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 import org.w3c.dom.Document;
 
+import static org.fabric3.container.web.spi.WebApplicationActivator.CONTEXT_ATTRIBUTE;
 import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.InjectableAttribute;
@@ -52,8 +54,11 @@ import org.fabric3.web.introspection.WebComponentType;
 import org.fabric3.web.introspection.WebImplementation;
 import org.fabric3.web.provision.WebComponentDefinition;
 import org.fabric3.web.provision.WebComponentWireSourceDefinition;
-import org.fabric3.web.provision.WebConstants;
+import static org.fabric3.web.provision.WebConstants.SERVLET_CONTEXT_SITE;
+import static org.fabric3.web.provision.WebConstants.SESSION_CONTEXT_SITE;
 import org.fabric3.web.provision.WebContextInjectionSite;
+import static org.fabric3.web.provision.WebContextInjectionSite.ContextType.SERVLET_CONTEXT;
+import static org.fabric3.web.provision.WebContextInjectionSite.ContextType.SESSION_CONTEXT;
 
 /**
  * Generates commands to provision a web component.
@@ -147,14 +152,13 @@ public class WebComponentGenerator implements ComponentGenerator<LogicalComponen
         }
         ServiceContract<?> contract = definition.getServiceContract();
         String interfaceClass = contract.getQualifiedInterfaceName();
-        // inject the reference into the servlet context
-        if (contract.isConversational()) {
-            // conversational service proxies are always injected into the session context
-            WebContextInjectionSite site = new WebContextInjectionSite(interfaceClass, WebContextInjectionSite.ContextType.SESSION_CONTEXT);
-            mapping.put(WebConstants.SESSION_CONTEXT_SITE, site);
-        } else {
-            WebContextInjectionSite site = new WebContextInjectionSite(interfaceClass, WebContextInjectionSite.ContextType.SERVLET_CONTEXT);
-            mapping.put(WebConstants.SERVLET_CONTEXT_SITE, site);
+        // inject the reference into the session context
+        WebContextInjectionSite site = new WebContextInjectionSite(interfaceClass, SESSION_CONTEXT);
+        mapping.put(SESSION_CONTEXT_SITE, site);
+        if (!contract.isConversational()) {
+            // if the target service is non-conversational, also inject the reference into the servlet context
+            WebContextInjectionSite servletContextsite = new WebContextInjectionSite(interfaceClass, SERVLET_CONTEXT);
+            mapping.put(SERVLET_CONTEXT_SITE, servletContextsite);
         }
     }
 
@@ -164,17 +168,20 @@ public class WebComponentGenerator implements ComponentGenerator<LogicalComponen
             mapping = new HashMap<String, InjectionSite>();
             mappings.put(property.getName(), mapping);
         }
-        // inject the property into the servlet context
+        // inject the property into the session context
         // we don't need to do the type mappings from schema to Java so set Object as the type
-        WebContextInjectionSite site = new WebContextInjectionSite(Object.class.getName(), WebContextInjectionSite.ContextType.SERVLET_CONTEXT);
-        mapping.put(WebConstants.SERVLET_CONTEXT_SITE, site);
+        WebContextInjectionSite site = new WebContextInjectionSite(Object.class.getName(), SERVLET_CONTEXT);
+        mapping.put(SESSION_CONTEXT_SITE, site);
     }
 
     private void generateContextInjectionMapping(WebComponentType type, Map<String, Map<String, InjectionSite>> mappings) {
-        Map<String, InjectionSite> mapping = mappings.get("fabric3.context");
+        Map<String, InjectionSite> mapping = mappings.get(CONTEXT_ATTRIBUTE);
         if (mapping == null) {
             mapping = new HashMap<String, InjectionSite>();
-            mappings.put("fabric3.context", mapping);
+            WebContextInjectionSite site =
+                    new WebContextInjectionSite(ComponentContext.class.getName(), SESSION_CONTEXT);
+            mapping.put(SESSION_CONTEXT_SITE, site);
+            mappings.put(CONTEXT_ATTRIBUTE, mapping);
         }
         for (Map.Entry<String, Map<InjectionSite, InjectableAttribute>> entry : type.getInjectionSites().entrySet()) {
             for (Map.Entry<InjectionSite, InjectableAttribute> siteMap : entry.getValue().entrySet()) {
@@ -183,6 +190,7 @@ public class WebComponentGenerator implements ComponentGenerator<LogicalComponen
                 }
             }
         }
+
     }
 
     /**

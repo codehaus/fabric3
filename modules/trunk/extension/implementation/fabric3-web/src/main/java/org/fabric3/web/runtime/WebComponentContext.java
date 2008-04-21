@@ -16,12 +16,16 @@
  */
 package org.fabric3.web.runtime;
 
+import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpServletRequest;
+
 import org.osoa.sca.CallableReference;
 import org.osoa.sca.ComponentContext;
 import org.osoa.sca.RequestContext;
 import org.osoa.sca.ServiceReference;
 import org.osoa.sca.ServiceRuntimeException;
 
+import org.fabric3.container.web.spi.WebRequestTunnel;
 import org.fabric3.host.Fabric3RuntimeException;
 import org.fabric3.spi.ObjectCreationException;
 
@@ -53,19 +57,29 @@ public class WebComponentContext implements ComponentContext {
         }
     }
 
-    public <B> B getService(Class<B> businessInterface, String referenceName) {
+    public <B> B getService(Class<B> interfaze, String referenceName) {
         try {
-            return component.getService(businessInterface, referenceName);
-        } catch (ObjectCreationException e) {
-            throw new ServiceRuntimeException(e.getMessage(), e);
+            return interfaze.cast(getSession().getAttribute(referenceName));
         } catch (Fabric3RuntimeException e) {
             throw new ServiceRuntimeException(e.getMessage(), e);
         }
     }
 
-    public <B> ServiceReference<B> getServiceReference(Class<B> businessInterface, String referenceName) {
+    // method is a proposed spec change
+    public <B> B createService(Class<B> interfaze, String referenceName) {
         try {
-            return component.getServiceReference(businessInterface, referenceName);
+            return component.getService(interfaze, referenceName);
+        } catch (Fabric3RuntimeException e) {
+            throw new ServiceRuntimeException(e.getMessage(), e);
+        } catch (ObjectCreationException e) {
+            throw new ServiceRuntimeException(e.getMessage(), e);
+        }
+    }
+
+    @SuppressWarnings({"unchecked"})
+    public <B> ServiceReference<B> getServiceReference(Class<B> interfaze, String referenceName) {
+        try {
+            return ServiceReference.class.cast(getSession().getAttribute(referenceName));
         } catch (Fabric3RuntimeException e) {
             throw new ServiceRuntimeException(e.getMessage(), e);
         }
@@ -92,4 +106,14 @@ public class WebComponentContext implements ComponentContext {
     public RequestContext getRequestContext() {
         return null;
     }
+
+    private HttpSession getSession() {
+        HttpServletRequest request = WebRequestTunnel.getRequest();
+        if (request == null) {
+            throw new ServiceRuntimeException("HTTP request not bound. Check filter configuration.");
+        }
+        return request.getSession(true);  // force creation of session 
+    }
+
+
 }

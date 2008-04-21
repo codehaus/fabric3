@@ -36,7 +36,7 @@ import org.fabric3.pojo.reflection.Injector;
 public interface WebApplicationActivator {
     public static final String SERVLET_CONTEXT_SITE = "fabric3.servletContext";
     public static final String SESSION_CONTEXT_SITE = "fabric3.sessionContext";
-    public static final String CONTEXT_ATTRIBUTE = "fabric3.componentContext";
+    public static final String CONTEXT_ATTRIBUTE = "org.osoa.sca.ComponentContext";
 
     /**
      * Returns the classloader to use for the web component corresponding the given id

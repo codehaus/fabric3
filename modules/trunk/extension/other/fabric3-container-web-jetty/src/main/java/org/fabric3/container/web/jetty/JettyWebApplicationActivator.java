@@ -142,7 +142,6 @@ public class JettyWebApplicationActivator implements WebApplicationActivator {
         for (Injector injector : list) {
             injector.inject(servletContext);
         }
-        servletContext.setAttribute(CONTEXT_ATTRIBUTE, servletContext);
     }
 
 }

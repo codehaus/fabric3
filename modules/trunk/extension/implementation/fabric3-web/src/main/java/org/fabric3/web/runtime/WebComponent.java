@@ -31,6 +31,7 @@ import org.osoa.sca.ServiceReference;
 
 import org.fabric3.container.web.spi.WebApplicationActivationException;
 import org.fabric3.container.web.spi.WebApplicationActivator;
+import static org.fabric3.container.web.spi.WebApplicationActivator.CONTEXT_ATTRIBUTE;
 import org.fabric3.pojo.reflection.Injector;
 import org.fabric3.scdl.InjectionSite;
 import org.fabric3.scdl.PropertyValue;
@@ -38,11 +39,11 @@ import org.fabric3.spi.AbstractLifecycle;
 import org.fabric3.spi.ObjectCreationException;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.SingletonObjectFactory;
-import org.fabric3.spi.services.proxy.ProxyService;
 import org.fabric3.spi.component.AtomicComponent;
 import org.fabric3.spi.component.InstanceWrapper;
 import org.fabric3.spi.invocation.WorkContext;
 import org.fabric3.spi.model.physical.InteractionType;
+import org.fabric3.spi.services.proxy.ProxyService;
 import org.fabric3.spi.wire.Wire;
 
 /**
@@ -103,7 +104,8 @@ public class WebComponent<T> extends AbstractLifecycle implements AtomicComponen
             injectorFactory.createInjectorMappings(injectors, siteMappings, propertyFactories, classLoader);
             context = new WebComponentContext(this);
             Map<String, ObjectFactory<?>> contextFactories = new HashMap<String, ObjectFactory<?>>();
-            contextFactories.put("fabric3.context", new SingletonObjectFactory<ComponentContext>(context));
+            SingletonObjectFactory<ComponentContext> componentContextFactory = new SingletonObjectFactory<ComponentContext>(context);
+            contextFactories.put(CONTEXT_ATTRIBUTE, componentContextFactory);
             injectorFactory.createInjectorMappings(injectors, siteMappings, contextFactories, classLoader);
             // activate the web application
             activator.activate(contextUrl, archiveUrl, classLoaderId, injectors, context);
