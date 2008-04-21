@@ -32,7 +32,7 @@ import org.fabric3.runtime.webapp.Constants;
  */
 public class ContextTest implements TestService {
     public void service(HttpServletRequest request, HttpServletResponse response, ServletContext context) throws IOException, ServletException {
-        ComponentContext componentContext = (ComponentContext) context.getAttribute(Constants.CONTEXT_ATTRIBUTE);
+        ComponentContext componentContext = (ComponentContext) request.getSession().getAttribute(Constants.CONTEXT_ATTRIBUTE);
         if (componentContext == null) {
             response.sendError(500, "Context was not bound");
         } else if (!"fabric3://./domain/smoketest".equals(componentContext.getURI())) {

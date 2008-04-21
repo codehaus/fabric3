@@ -25,6 +25,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.osoa.sca.ComponentContext;
 
@@ -41,22 +42,22 @@ public class TestServlet extends HttpServlet {
         servletContext = config.getServletContext();
     }
 
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+    protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 
         String testName = request.getParameter("test");
         if (testName == null || testName.length() == 0) {
             response.sendError(500, "No test specified");
             return;
         }
-        // verify the component context was bound
-        ComponentContext context = (ComponentContext) servletContext.getAttribute("fabric3.componentContext");
+        // verify the component context was bound to the session
+        HttpSession session = request.getSession();
+        ComponentContext context = (ComponentContext) session.getAttribute("org.osoa.sca.ComponentContext");
         TestService test = context.getService(TestService.class, testName);
         if (test == null) {
             response.sendError(500, "Unknown test: " + testName);
             return;
         }
-        // verify the reference was bound
+        // verify the reference was bound to the servlet context as it is non-conversational
         test = (TestService) servletContext.getAttribute(testName);
         if (test == null) {
             response.sendError(500, "Unknown test: " + testName);

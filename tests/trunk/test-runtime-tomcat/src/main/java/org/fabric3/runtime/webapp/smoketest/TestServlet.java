@@ -20,14 +20,13 @@ package org.fabric3.runtime.webapp.smoketest;
 
 import java.io.IOException;
 import java.io.PrintWriter;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.ServletException;
+import javax.servlet.http.HttpSession;
 
 import org.osoa.sca.ComponentContext;
-
-import org.fabric3.runtime.webapp.Constants;
 
 /**
  * @version $Rev$ $Date$
@@ -40,7 +39,8 @@ public class TestServlet extends HttpServlet {
         PrintWriter out = response.getWriter();
         String test = request.getParameter("test");
         if ("context".equals(test)) {
-            ComponentContext context = (ComponentContext) getServletContext().getAttribute(Constants.CONTEXT_ATTRIBUTE);
+            HttpSession session = request.getSession();
+            ComponentContext context = (ComponentContext) session.getAttribute("org.osoa.sca.ComponentContext");
             if (context == null) {
                 response.sendError(500, "Context was not bound");
                 return;
