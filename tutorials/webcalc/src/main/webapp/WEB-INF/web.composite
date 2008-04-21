@@ -18,12 +18,11 @@
  * under the License.
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
-           xmlns:fabric3="http://fabric3.org/xmlns/sca/2.0-alpha"
            name="WebCalculator"
            targetNamespace="http://fabric3.org/xmlns/sca/tutorials/0.5">
 
     <component name="calculator">
-        <fabric3:web/>
+        <implementation.web/>
         <reference name="calculatorService" target="CalculatorService"/>
     </component>
 
