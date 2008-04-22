@@ -19,15 +19,12 @@
 package org.fabric3.runtime.standalone.server;
 
 import java.io.File;
-import java.lang.reflect.Constructor;
 import java.net.MalformedURLException;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Future;
-import javax.management.MBeanServer;
 
 import org.fabric3.api.annotation.LogLevel;
-import org.fabric3.host.management.ManagementService;
 import org.fabric3.host.runtime.Bootstrapper;
 import org.fabric3.host.runtime.RuntimeLifecycleCoordinator;
 import org.fabric3.host.runtime.ShutdownException;
@@ -131,15 +128,12 @@ public class Fabric3Server implements Fabric3ServerMBean {
             throw new Fabric3ServerException(ex);
         }
 
+        runtime.setMBeanServer(agent.getMBeanServer());
         monitor = runtime.getMonitorFactory().getMonitor(ServerMonitor.class);
         try {
             ClassLoader bootLoader = hostInfo.getBootClassLoader();
             ClassLoader hostLoader = hostInfo.getHostClassLoader();
 
-            MBeanServer mBeanServer = agent.getMBeanServer();
-            ManagementService managementService = createManagementService(mBeanServer, profileName, bootLoader);
-            runtime.setManagementService(managementService);
-            
             Bootstrapper bootstrapper = BootstrapHelper.createBootstrapper(hostInfo);
             RuntimeLifecycleCoordinator<StandaloneRuntime, Bootstrapper> coordinator =
                     BootstrapHelper.createCoordinator(hostInfo);
@@ -165,16 +159,6 @@ public class Fabric3Server implements Fabric3ServerMBean {
             monitor.runError(ex);
             throw new Fabric3ServerException(ex);
         }
-    }
-
-    private ManagementService createManagementService(MBeanServer mBeanServer, String profileName, ClassLoader cl)
-            throws Exception {
-        @SuppressWarnings("unchecked")
-        Class<ManagementService> clazz =
-                (Class<ManagementService>) cl.loadClass("org.fabric3.jmx.JmxManagementService");
-        Constructor<ManagementService> ctr = clazz.getConstructor(MBeanServer.class, String.class);
-        return ctr.newInstance(mBeanServer, profileName);
-
     }
 
     /**

@@ -20,6 +20,7 @@ package org.fabric3.fabric.runtime;
 
 import java.net.URI;
 import java.net.URL;
+import javax.management.MBeanServer;
 
 import org.fabric3.fabric.component.scope.CompositeScopeContainer;
 import org.fabric3.fabric.component.scope.ScopeContainerMonitor;
@@ -32,7 +33,6 @@ import org.fabric3.host.runtime.Fabric3Runtime;
 import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.host.runtime.InitializationException;
 import org.fabric3.host.runtime.StartException;
-import org.fabric3.host.management.ManagementService;
 import org.fabric3.monitor.MonitorFactory;
 import org.fabric3.pojo.PojoWorkContextTunnel;
 import org.fabric3.scdl.Autowire;
@@ -59,7 +59,7 @@ public abstract class AbstractRuntime<I extends HostInfo> implements Fabric3Runt
     private String applicationName;
     private URL applicationScdl;
     private Class<I> hostInfoType;
-    private ManagementService managementService;
+    private MBeanServer mbServer;
 
     /**
      * Information provided by the host about its runtime environment.
@@ -125,14 +125,6 @@ public abstract class AbstractRuntime<I extends HostInfo> implements Fabric3Runt
         return hostInfoType;
     }
 
-    public ManagementService getManagementService() {
-        return managementService;
-    }
-
-    public void setManagementService(ManagementService managementService) {
-        this.managementService = managementService;
-    }
-
     public I getHostInfo() {
         return hostInfo;
     }
@@ -147,6 +139,14 @@ public abstract class AbstractRuntime<I extends HostInfo> implements Fabric3Runt
 
     public void setMonitorFactory(MonitorFactory monitorFactory) {
         this.monitorFactory = monitorFactory;
+    }
+
+    public MBeanServer getMBeanServer() {
+        return mbServer;
+    }
+
+    public void setMBeanServer(MBeanServer mbServer) {
+        this.mbServer = mbServer;
     }
 
     public void initialize() throws InitializationException {

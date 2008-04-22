@@ -19,8 +19,8 @@
 package org.fabric3.host.runtime;
 
 import java.net.URI;
+import javax.management.MBeanServer;
 
-import org.fabric3.host.management.ManagementService;
 import org.fabric3.monitor.MonitorFactory;
 
 /**
@@ -80,18 +80,20 @@ public interface Fabric3Runtime<I extends HostInfo> {
     void setMonitorFactory(MonitorFactory monitorFactory);
 
     /**
-     * Returns the management service this runtime is using.
+     * Returns the MBeanServer this runtime should use.
      *
-     * @return the management service this runtime is using
+     * @return the MBeanServer
      */
-    ManagementService getManagementService();
+    MBeanServer getMBeanServer();
 
     /**
-     * Sets the management service this runtime should use.
+     * Sets the MBeanServer this runtime should use.
      *
-     * @param managementService the management service this runtime should use
+     * This allows the host environment to specify an MBeanServer with which any manageable runtime components should be registered.
+     *
+     * @param mbServer the MBeanServer this runtime should use
      */
-    void setManagementService(ManagementService managementService);
+    void setMBeanServer(MBeanServer mbServer);
 
     /**
      * Initialize a runtime. An initialized runtime has has completed core service initialization, recovery operations, and is ready to be started.

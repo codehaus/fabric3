@@ -77,6 +77,14 @@ public class AtomicComponentInstantiator extends AbstractComponentInstantiator {
             URI serviceUri = component.getUri().resolve('#' + name);
             LogicalService logicalService = new LogicalService(serviceUri, service, component);
 
+            for (BindingDefinition binding : service.getBindings()) {
+                logicalService.addBinding(new LogicalBinding<BindingDefinition>(binding, logicalService));
+            }
+
+            for (BindingDefinition binding : service.getCallbackBindings()) {
+                logicalService.addCallbackBinding(new LogicalBinding<BindingDefinition>(binding, logicalService));
+            }
+
             // service is configured in the component definition
             ComponentService componentService = definition.getServices().get(name);
             if (componentService != null) {

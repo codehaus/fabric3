@@ -224,7 +224,13 @@ public class PhysicalWireGeneratorImpl implements PhysicalWireGenerator {
         PhysicalWireSourceDefinition sourceDefinition = sourceGenerator.generateWireSource(binding, sourcePolicy, service.getDefinition());
 
         Set<PhysicalOperationDefinition> operations = generateOperations(contract, policyResult, binding);
-        return new PhysicalWireDefinition(sourceDefinition, targetDefinition, operations);
+        PhysicalWireDefinition pwd = new PhysicalWireDefinition(sourceDefinition, targetDefinition, operations);
+        boolean optimizable = sourceDefinition.isOptimizable() &&
+                targetDefinition.isOptimizable() &&
+                checkOptimization(contract, operations);
+
+        pwd.setOptimizable(optimizable);
+        return pwd;
 
     }
 

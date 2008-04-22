@@ -21,12 +21,14 @@ package org.fabric3.spi.assembly;
 import javax.xml.namespace.QName;
 
 import org.fabric3.scdl.Composite;
+import org.fabric3.api.annotation.Management;
 
 /**
  * Manages a service network
  *
  * @version $Rev$ $Date$
  */
+@Management
 public interface Assembly {
 
     /**

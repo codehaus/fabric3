@@ -14,21 +14,19 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.host.management;
+package org.fabric3.jmx.scdl;
 
-import static java.lang.annotation.ElementType.TYPE;
-import java.lang.annotation.Retention;
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
-import java.lang.annotation.Target;
+import javax.xml.namespace.QName;
+
+import org.fabric3.scdl.BindingDefinition;
 
 /**
- * Annotation that can be applied to a service interface to indicate that it should be exposed to a management framework.
- * <p/>
- * This would typically be applied to system interfaces that should be exposed by a runtime.
- *
  * @version $Rev$ $Date$
  */
-@Target({TYPE})
-@Retention(RUNTIME)
-public @interface Management {
+public class JMXBinding extends BindingDefinition {
+    private static final QName TYPE = new QName("urn:maven:org.codehaus.fabric3:fabric3-system", "management");
+
+    public JMXBinding() {
+        super(TYPE);
+    }
 }

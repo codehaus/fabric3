@@ -22,6 +22,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import javax.management.MBeanServer;
+
 import org.fabric3.fabric.assembly.RuntimeAssemblyImpl;
 import org.fabric3.fabric.assembly.allocator.Allocator;
 import org.fabric3.fabric.assembly.allocator.LocalAllocator;
@@ -60,6 +62,7 @@ import org.fabric3.fabric.generator.wire.PhysicalOperationHelperImpl;
 import org.fabric3.fabric.generator.wire.PhysicalWireGenerator;
 import org.fabric3.fabric.generator.wire.PhysicalWireGeneratorImpl;
 import org.fabric3.fabric.generator.wire.ResourceWireCommandGenerator;
+import org.fabric3.fabric.generator.wire.ServiceWireCommandGenerator;
 import org.fabric3.fabric.implementation.singleton.SingletonGenerator;
 import org.fabric3.fabric.implementation.singleton.SingletonWireAttacher;
 import org.fabric3.fabric.implementation.singleton.SingletonWireTargetDefinition;
@@ -127,6 +130,10 @@ import org.fabric3.transform.dom2java.String2QName;
 import org.fabric3.transform.dom2java.String2String;
 import org.fabric3.transform.dom2java.generics.list.String2ListOfString;
 import org.fabric3.transform.dom2java.generics.map.String2MapOfString2String;
+import org.fabric3.jmx.control.JMXBindingGenerator;
+import org.fabric3.jmx.scdl.JMXBinding;
+import org.fabric3.jmx.provision.JMXWireSourceDefinition;
+import org.fabric3.jmx.runtime.JMXWireAttacher;
 
 /**
  * @version $Rev$ $Date$
@@ -134,6 +141,8 @@ import org.fabric3.transform.dom2java.generics.map.String2MapOfString2String;
 public class BootstrapAssemblyFactory {
     public static Assembly createAssembly(Fabric3Runtime<?> runtime) throws InitializationException {
         MonitorFactory monitorFactory = runtime.getMonitorFactory();
+        MBeanServer mbeanServer = runtime.getMBeanServer();
+        String jmxDomain = "fabric3";
         ClassLoaderRegistry classLoaderRegistry =
                 runtime.getSystemComponent(ClassLoaderRegistry.class, ComponentNames.CLASSLOADER_REGISTRY_URI);
         ComponentManager componentManager = runtime.getSystemComponent(ComponentManager.class,
@@ -147,7 +156,7 @@ public class BootstrapAssemblyFactory {
 
         ClasspathProcessorRegistry cpRegistry = runtime.getSystemComponent(ClasspathProcessorRegistry.class,
                                                                            URI.create(ComponentNames.RUNTIME_NAME + "/ClasspathProcessorRegistry"));
-        return createAssembly(monitorFactory, classLoaderRegistry, scopeRegistry, componentManager, lcm, metaDataStore, cpRegistry);
+        return createAssembly(monitorFactory, classLoaderRegistry, scopeRegistry, componentManager, lcm, metaDataStore, cpRegistry, mbeanServer, jmxDomain);
     }
 
     public static Assembly createAssembly(MonitorFactory monitorFactory,
@@ -156,12 +165,14 @@ public class BootstrapAssemblyFactory {
                                           ComponentManager componentManager,
                                           LogicalComponentManager logicalComponentManager,
                                           MetaDataStore metaDataStore,
-                                          ClasspathProcessorRegistry cpRegistry) throws InitializationException {
+                                          ClasspathProcessorRegistry cpRegistry,
+                                          MBeanServer mbServer,
+                                          String jmxDomain) throws InitializationException {
 
         Allocator allocator = new LocalAllocator();
 
         CommandExecutorRegistry commandRegistry =
-                createCommandExecutorRegistry(monitorFactory, classLoaderRegistry, scopeRegistry, componentManager, cpRegistry);
+                createCommandExecutorRegistry(monitorFactory, classLoaderRegistry, scopeRegistry, componentManager, cpRegistry, mbServer, jmxDomain);
 
         RuntimeRoutingService routingService = new RuntimeRoutingService(commandRegistry, scopeRegistry);
 
@@ -208,7 +219,9 @@ public class BootstrapAssemblyFactory {
                                                                          ClassLoaderRegistry classLoaderRegistry,
                                                                          ScopeRegistry scopeRegistry,
                                                                          ComponentManager componentManager,
-                                                                         ClasspathProcessorRegistry cpRegistry) {
+                                                                         ClasspathProcessorRegistry cpRegistry,
+                                                                         MBeanServer mbeanServer,
+                                                                         String jmxDomain) {
 
         InstanceFactoryBuilderRegistry providerRegistry = new DefaultInstanceFactoryBuilderRegistry();
         InstanceFactoryBuildHelper buildHelper = new BuildHelperImpl(classLoaderRegistry);
@@ -238,11 +251,12 @@ public class BootstrapAssemblyFactory {
                 new ConcurrentHashMap<Class<? extends PhysicalWireSourceDefinition>, SourceWireAttacher<? extends PhysicalWireSourceDefinition>>();
         sourceAttachers.put(SystemWireSourceDefinition.class,
                             new SystemSourceWireAttacher(componentManager, transformerRegistry, classLoaderRegistry));
+        sourceAttachers.put(JMXWireSourceDefinition.class, new JMXWireAttacher(mbeanServer, classLoaderRegistry, jmxDomain));
 
         Map<Class<? extends PhysicalWireTargetDefinition>, TargetWireAttacher<? extends PhysicalWireTargetDefinition>> targetAttachers =
                 new ConcurrentHashMap<Class<? extends PhysicalWireTargetDefinition>, TargetWireAttacher<? extends PhysicalWireTargetDefinition>>();
         targetAttachers.put(SingletonWireTargetDefinition.class, new SingletonWireAttacher(componentManager));
-        targetAttachers.put(SystemWireTargetDefinition.class, new SystemTargetWireAttacher(componentManager));
+        targetAttachers.put(SystemWireTargetDefinition.class, new SystemTargetWireAttacher(componentManager, classLoaderRegistry));
         targetAttachers.put(MonitorWireTargetDefinition.class, new MonitorWireAttacher(monitorFactory, classLoaderRegistry));
 
         ConnectorImpl connector = new ConnectorImpl();
@@ -289,6 +303,7 @@ public class BootstrapAssemblyFactory {
         commandGenerators.add(new ClassloaderProvisionCommandGenerator(classLoaderGenerator, 0));
         commandGenerators.add(new ComponentBuildCommandGenerator(generatorRegistry, 1));
         commandGenerators.add(new LocalWireCommandGenerator(wireGenerator, logicalComponentManager, 2));
+        commandGenerators.add(new ServiceWireCommandGenerator(wireGenerator, 2));
         commandGenerators.add(new ResourceWireCommandGenerator(wireGenerator, 2));
         commandGenerators.add(new ComponentStartCommandGenerator(3));
         commandGenerators.add(new StartCompositeContextCommandGenerator(4));
@@ -301,6 +316,7 @@ public class BootstrapAssemblyFactory {
         GenerationHelperImpl helper = new GenerationHelperImpl();
         new SystemComponentGenerator(registry, helper);
         new SingletonGenerator(registry);
+        registry.register(JMXBinding.class, new JMXBindingGenerator());
         new MonitorWireGenerator(registry).init();
         return registry;
     }

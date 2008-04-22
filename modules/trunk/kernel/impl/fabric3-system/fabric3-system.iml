@@ -41,6 +41,7 @@
     <orderEntry type="module" module-name="fabric3-transform" exported="" />
     <orderEntry type="module" module-name="fabric3-introspection" exported="" />
     <orderEntry type="module" module-name="fabric3-pojo" exported="" />
+    <orderEntry type="module" module-name="fabric3-jmx" exported="" />
     <orderEntry type="module-library">
       <library name="stax:stax-api:1.0">
         <CLASSES>
