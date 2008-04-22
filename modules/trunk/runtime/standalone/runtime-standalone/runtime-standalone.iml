@@ -84,8 +84,8 @@
     <orderEntry type="module" module-name="fabric3-transform" exported="" />
     <orderEntry type="module" module-name="fabric3-loader" exported="" />
     <orderEntry type="module" module-name="fabric3-system" exported="" />
-    <orderEntry type="module" module-name="fabric3-java" exported="" />
     <orderEntry type="module" module-name="fabric3-jmx" exported="" />
+    <orderEntry type="module" module-name="fabric3-java" exported="" />
     <orderEntry type="module" module-name="fabric3-policy" exported="" />
     <orderEntry type="module" module-name="fabric3-util" exported="" />
     <orderEntry type="module" module-name="fabric3-jdk-proxy" exported="" />
