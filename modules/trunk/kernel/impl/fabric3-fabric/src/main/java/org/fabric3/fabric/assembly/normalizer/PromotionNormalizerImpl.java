@@ -10,6 +10,7 @@ import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalService;
 import org.fabric3.spi.model.instance.LogicalWire;
+import org.fabric3.spi.model.instance.Bindable;
 import org.fabric3.spi.util.UriHelper;
 
 /**
@@ -30,10 +31,19 @@ public class PromotionNormalizerImpl implements PromotionNormalizer {
             URI serviceUri = service.getUri();
             List<LogicalBinding<?>> bindings = recurseServicePromotionPath(parent, serviceUri);
             if (bindings.isEmpty()) {
-                return;
+                continue;
             }
-            service.overrideBindings(bindings);
+            service.overrideBindings(resetParent(bindings, service));
         }
+    }
+
+    @SuppressWarnings({"unchecked"})
+    private List<LogicalBinding<?>> resetParent(List<LogicalBinding<?>> list, Bindable parent) {
+        List<LogicalBinding<?>> newList = new ArrayList<LogicalBinding<?>>();
+        for (LogicalBinding<?> binding : list) {
+            newList.add(new LogicalBinding(binding.getBinding(), parent));
+        }
+        return newList;
     }
 
     private List<LogicalBinding<?>> recurseServicePromotionPath(LogicalComponent<CompositeImplementation> parent,
