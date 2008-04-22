@@ -22,6 +22,7 @@ import java.util.Collection;
 import org.fabric3.spi.assembly.AssemblyException;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
+import org.fabric3.api.annotation.Management;
 
 /**
  * @version $Revision$ $Date$

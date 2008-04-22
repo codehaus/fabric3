@@ -26,6 +26,7 @@ import org.fabric3.spi.generator.BindingGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.instance.LogicalComponent;
+import org.fabric3.spi.model.instance.Bindable;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 import org.fabric3.spi.policy.Policy;
 
@@ -37,12 +38,13 @@ public class JMXBindingGenerator implements BindingGenerator<JMXWireSourceDefini
     public JMXWireSourceDefinition generateWireSource(LogicalBinding<JMXBinding> binding,
                                                       Policy policy,
                                                       ServiceDefinition serviceDefinition) throws GenerationException {
-        LogicalComponent<?> logicalComponent = binding.getParent().getParent();
+        Bindable logicalService = binding.getParent();
+        LogicalComponent<?> logicalComponent = logicalService.getParent();
 
         JMXWireSourceDefinition definition = new JMXWireSourceDefinition();
         URI uri = binding.getUri();
         if (uri == null) {
-            uri = logicalComponent.getUri();
+            uri = logicalService.getUri();
         }
         definition.setUri(uri);
         definition.setClassLoaderId(logicalComponent.getParent().getUri());

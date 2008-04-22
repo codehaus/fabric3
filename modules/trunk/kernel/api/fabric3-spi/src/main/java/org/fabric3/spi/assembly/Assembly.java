@@ -28,7 +28,6 @@ import org.fabric3.api.annotation.Management;
  *
  * @version $Rev$ $Date$
  */
-@Management
 public interface Assembly {
 
     /**

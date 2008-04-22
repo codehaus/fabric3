@@ -16,6 +16,8 @@
  */
 package org.fabric3.sandbox.introspection.impl;
 
+import javax.management.MBeanServer;
+
 import org.fabric3.fabric.runtime.ComponentNames;
 import org.fabric3.fabric.runtime.bootstrap.ScdlBootstrapperImpl;
 import org.fabric3.host.runtime.InitializationException;
@@ -25,15 +27,15 @@ import org.fabric3.monitor.MonitorFactory;
 import org.fabric3.monitor.impl.NullMonitorFactory;
 import org.fabric3.sandbox.introspection.IntrospectionFactory;
 import org.fabric3.sandbox.introspection.IntrospectionRuntime;
-import org.fabric3.scdl.Implementation;
 import org.fabric3.scdl.Composite;
+import org.fabric3.scdl.Implementation;
 import org.fabric3.services.xmlfactory.XMLFactory;
 import org.fabric3.services.xmlfactory.impl.DefaultXMLFactoryImpl;
+import org.fabric3.spi.assembly.ActivateException;
 import org.fabric3.spi.component.GroupInitializationException;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.invocation.CallFrame;
 import org.fabric3.spi.invocation.WorkContext;
-import org.fabric3.spi.assembly.ActivateException;
 import org.fabric3.spi.services.contribution.MetaDataStore;
 
 /**
@@ -48,16 +50,18 @@ public class IntrospectionFactoryImpl implements IntrospectionFactory {
      * @param monitorFactory the factory for monitors
      * @param xmlFactory     the factory for XML parsers
      * @param metaDataStore  store used to resolve external artifacts
+     * @param mbServer       the MBeanServer to use
      * @throws InitializationException      if there was a problem initializing the runtime
      * @throws GroupInitializationException if there was a problem starting the runtime
      */
-    public IntrospectionFactoryImpl(MonitorFactory monitorFactory, XMLFactory xmlFactory, MetaDataStore metaDataStore)
+    public IntrospectionFactoryImpl(MonitorFactory monitorFactory, XMLFactory xmlFactory, MetaDataStore metaDataStore, MBeanServer mbServer)
             throws InitializationException, GroupInitializationException {
         ClassLoader classLoader = getClass().getClassLoader();
 
         runtime = new IntrospectionRuntimeImpl(monitorFactory);
         runtime.setHostInfo(new IntrospectionHostInfoImpl());
         runtime.setHostClassLoader(classLoader);
+        runtime.setMBeanServer(mbServer);
         runtime.initialize();
         ScopeContainer<?> container = runtime.getScopeContainer();
 
@@ -79,7 +83,7 @@ public class IntrospectionFactoryImpl implements IntrospectionFactory {
      * @throws GroupInitializationException if there was a problem starting the runtime
      */
     public IntrospectionFactoryImpl() throws InitializationException, GroupInitializationException {
-        this(new NullMonitorFactory(), new DefaultXMLFactoryImpl(), null);
+        this(new NullMonitorFactory(), new DefaultXMLFactoryImpl(), null, null);
     }
 
     public Loader getLoader() {
