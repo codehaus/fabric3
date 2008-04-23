@@ -51,7 +51,8 @@ public class ExplicitTargetResolutionService implements TargetResolutionService 
         LogicalComponent<?> targetComponent = composite.getComponent(targetComponentUri);
 
         if (targetComponent == null) {
-            throw new TargetComponentNotFoundException(targetUri);
+            throw new TargetComponentNotFoundException("Target component not found: " + targetComponentUri.toString()
+                    + ". Originating reference is: " + reference.getUri());
         }
 
         String serviceName = targetUri.getFragment();
