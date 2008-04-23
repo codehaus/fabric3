@@ -29,6 +29,7 @@
     <!-- JMS Host -->
     <component name="JMSHost">
         <system:implementation.system class="org.fabric3.binding.jms.runtime.host.standalone.StandaloneJmsHost"/>
+        <property name="listenerMode">pull</property>
     </component>
 
     <!-- JMS Binding Loader -->

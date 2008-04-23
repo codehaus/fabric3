@@ -18,6 +18,8 @@
  */
 package org.fabric3.binding.jms.scdl;
 
+import java.net.URI;
+
 import org.fabric3.binding.jms.common.JmsBindingMetadata;
 import org.fabric3.binding.jms.introspection.JmsBindingLoader;
 import org.fabric3.scdl.BindingDefinition;
@@ -30,12 +32,18 @@ import org.fabric3.scdl.BindingDefinition;
  * @version $Revision$ $Date$
  */
 public class JmsBindingDefinition extends BindingDefinition {
-
+	
+    /***
+     * A generated URI overriding TargetUri in base class.
+     */
+	private URI generatedTargetUri;
+	
     /**
      * JMS binding metadata shared between logical and physical.
      */
     private JmsBindingMetadata metadata;
 
+    
     /**
      * @param metadata Metadata to be initialized.
      */
@@ -43,7 +51,15 @@ public class JmsBindingDefinition extends BindingDefinition {
         super(JmsBindingLoader.BINDING_QNAME);
         this.metadata = metadata;
     }
-
+    
+	/**
+	 * @param targetURI URI of binding target
+	 * @param metadata Metadata to be initialized.
+	 */
+    public JmsBindingDefinition(URI targetURI,JmsBindingMetadata metadata) {
+        super(targetURI,JmsBindingLoader.BINDING_QNAME);
+        this.metadata = metadata;
+    }
     /**
      * @return the metadata
      */
@@ -57,5 +73,14 @@ public class JmsBindingDefinition extends BindingDefinition {
     public void setMetadata(JmsBindingMetadata metadata) {
         this.metadata = metadata;
     }
+
+	public void setGeneratedTargetUri(URI generatedTargetUri) {
+		this.generatedTargetUri = generatedTargetUri;
+	}
+
+	@Override
+	public URI getTargetUri() {
+		return generatedTargetUri;
+	}
 
 }

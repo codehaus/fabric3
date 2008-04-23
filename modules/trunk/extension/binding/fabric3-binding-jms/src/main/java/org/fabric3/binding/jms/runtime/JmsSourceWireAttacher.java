@@ -6,29 +6,24 @@
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
- * under the License.    
+ * under the License.
  */
 package org.fabric3.binding.jms.runtime;
 
 import java.util.HashMap;
 import java.util.Hashtable;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Map;
+
 import javax.jms.ConnectionFactory;
 import javax.jms.Destination;
-import javax.jms.MessageListener;
-
-import org.osoa.sca.annotations.Property;
-import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.binding.jms.common.ConnectionFactoryDefinition;
 import org.fabric3.binding.jms.common.CorrelationScheme;
@@ -50,6 +45,9 @@ import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.Wire;
 
+import org.osoa.sca.annotations.Property;
+import org.osoa.sca.annotations.Reference;
+
 /**
  * Wire attacher for JMS binding.
  *
@@ -61,7 +59,7 @@ public class JmsSourceWireAttacher implements SourceWireAttacher<JmsWireSourceDe
     private JmsHost jmsHost;
 
     // Number of listeners
-    private int receiverCount = 1;
+    private int receiverCount = 3;
 
     /**
      * Destination strategies.
@@ -87,7 +85,6 @@ public class JmsSourceWireAttacher implements SourceWireAttacher<JmsWireSourceDe
 
     /**
      * Injects the wire attacher registries.
-     *
      */
     public JmsSourceWireAttacher() {
     }
@@ -166,49 +163,47 @@ public class JmsSourceWireAttacher implements SourceWireAttacher<JmsWireSourceDe
         }
 
         JmsBindingMetadata metadata = sourceDefinition.getMetadata();
-
         Hashtable<String, String> env = metadata.getEnv();
         CorrelationScheme correlationScheme = metadata.getCorrelationScheme();
-
-        ConnectionFactoryDefinition connectionFactoryDefinition = metadata.getConnectionFactory();
-        CreateOption create = connectionFactoryDefinition.getCreate();
-
-        ConnectionFactory reqCf =
-                connectionFactoryStrategies.get(create).getConnectionFactory(connectionFactoryDefinition, env);
-
-        connectionFactoryDefinition = metadata.getResponseConnectionFactory();
-        create = connectionFactoryDefinition.getCreate();
-        ConnectionFactory resCf =
-                connectionFactoryStrategies.get(create).getConnectionFactory(connectionFactoryDefinition, env);
-
-        DestinationDefinition destinationDefinition = metadata.getDestination();
-        create = destinationDefinition.getCreate();
-        Destination reqDestination =
-                destinationStrategies.get(create).getDestination(destinationDefinition, reqCf, env);
-
-        destinationDefinition = metadata.getResponseDestination();
-        create = destinationDefinition.getCreate();
-        Destination resDestination =
-                destinationStrategies.get(create).getDestination(destinationDefinition, resCf, env);
-
-        List<MessageListener> listeners = new LinkedList<MessageListener>();
-
         TransactionType transactionType = sourceDefinition.getTransactionType();
 
-        for (int i = 0; i < receiverCount; i++) {
-            MessageListener listener = new Fabric3MessageListener(resDestination,
-                                                                  resCf,
-                                                                  ops,
-                                                                  correlationScheme,
-                                                                  transactionHandler,
-                                                                  transactionType);
-            listeners.add(listener);
-        }
-        jmsHost.registerListener(reqDestination, reqCf, listeners, transactionType, transactionHandler, cl);
+        JMSObjectFactory requestJMSObjectFactory = buildGetObjectFactory(metadata.getConnectionFactory(), metadata.getDestination(), env);
 
+        JMSObjectFactory responseJMSObjectFactory =
+                buildGetObjectFactory(metadata.getResponseConnectionFactory(), metadata.getResponseDestination(), env);
+        String callbackUri = null;
+        if (targetDefinition.getCallbackUri() != null) {
+            callbackUri = targetDefinition.getCallbackUri().toString();
+        }
+        ResponseMessageListener messageListener =
+                new ResponseMessageListenerImpl(ops, correlationScheme, transactionHandler, transactionType, callbackUri);
+        jmsHost.registerResponseListener(requestJMSObjectFactory,
+                                         responseJMSObjectFactory,
+                                         messageListener,
+                                         transactionType,
+                                         transactionHandler,
+                                         receiverCount,
+                                         cl);
     }
 
     public void attachObjectFactory(JmsWireSourceDefinition source, ObjectFactory<?> objectFactory) throws WiringException {
         throw new AssertionError();
     }
+
+    /**
+     * Build a JMS ObjectFactory from definition.
+     */
+    private JMSObjectFactory buildGetObjectFactory(ConnectionFactoryDefinition connectionFactoryDefinition,
+                                                   DestinationDefinition destinationDefinition,
+                                                   Hashtable<String, String> env) {
+        CreateOption create = connectionFactoryDefinition.getCreate();
+
+        ConnectionFactory connectionFactory =
+                connectionFactoryStrategies.get(create).getConnectionFactory(connectionFactoryDefinition, env);
+        create = destinationDefinition.getCreate();
+        Destination reqDestination =
+                destinationStrategies.get(create).getDestination(destinationDefinition, connectionFactory, env);
+        return new JMSObjectFactory(connectionFactory, reqDestination, 1);
+    }
+
 }

@@ -6,19 +6,20 @@
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
- * under the License.    
+ * under the License.
  */
 package org.fabric3.binding.jms.control;
 
 import java.net.URI;
+import java.util.List;
 
 import javax.xml.namespace.QName;
 
@@ -26,6 +27,7 @@ import org.fabric3.binding.jms.common.TransactionType;
 import org.fabric3.binding.jms.provision.JmsWireSourceDefinition;
 import org.fabric3.binding.jms.provision.JmsWireTargetDefinition;
 import org.fabric3.binding.jms.scdl.JmsBindingDefinition;
+import org.fabric3.scdl.BindingDefinition;
 import org.fabric3.scdl.Operation;
 import org.fabric3.scdl.ReferenceDefinition;
 import org.fabric3.scdl.ServiceContract;
@@ -57,13 +59,15 @@ public class JmsBindingGenerator implements BindingGenerator<JmsWireSourceDefini
     public JmsWireSourceDefinition generateWireSource(LogicalBinding<JmsBindingDefinition> logicalBinding,
                                                       Policy policy,
                                                       ServiceDefinition serviceDefinition) throws GenerationException {
-        
+
         ServiceContract<?> serviceContract = serviceDefinition.getServiceContract();
 
         TransactionType transactionType = getTransactionType(policy, serviceContract);
-        
+
         URI classloaderId = logicalBinding.getParent().getParent().getParent().getUri();
-        return new JmsWireSourceDefinition(logicalBinding.getBinding().getMetadata(), transactionType, classloaderId);
+        JmsWireSourceDefinition result = new JmsWireSourceDefinition(logicalBinding.getBinding().getMetadata(), transactionType, classloaderId);
+        result.setUri(logicalBinding.getBinding().getTargetUri());
+        return result;
 
     }
 
@@ -71,13 +75,19 @@ public class JmsBindingGenerator implements BindingGenerator<JmsWireSourceDefini
                                                       Policy policy,
                                                       ReferenceDefinition referenceDefinition)
             throws GenerationException {
-        
+
         ServiceContract<?> serviceContract = referenceDefinition.getServiceContract();
 
         TransactionType transactionType = getTransactionType(policy, serviceContract);
-        
+
         URI classloaderId = logicalBinding.getParent().getParent().getParent().getUri();
-        return new JmsWireTargetDefinition(logicalBinding.getBinding().getMetadata(), transactionType, classloaderId);
+        JmsWireTargetDefinition result = new JmsWireTargetDefinition(logicalBinding.getBinding().getMetadata(), transactionType, classloaderId);
+        result.setUri(logicalBinding.getBinding().getTargetUri());
+        List<BindingDefinition> callbackBindings = referenceDefinition.getCallbackBindings();
+        if(callbackBindings!= null && !callbackBindings.isEmpty()){
+            BindingDefinition bindingDefinition = callbackBindings.get(0);
+        }
+        return result;
 
     }
 
@@ -85,7 +95,7 @@ public class JmsBindingGenerator implements BindingGenerator<JmsWireSourceDefini
      * Gets the transaction type.
      */
     private TransactionType getTransactionType(Policy policy, ServiceContract<?> serviceContract) {
-        
+
         // If any operation has the intent, return that
         for (Operation<?> operation : serviceContract.getOperations()) {
             for (Intent intent : policy.getProvidedIntents(operation)) {
@@ -98,8 +108,8 @@ public class JmsBindingGenerator implements BindingGenerator<JmsWireSourceDefini
                 }
             }
         }
-
-        return null;
+        //no transaction policy specified, use local
+        return TransactionType.LOCAL;
 
     }
 

@@ -18,9 +18,10 @@
  */
 package org.fabric3.binding.jms.introspection;
 
-import javax.xml.namespace.QName;
 import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
 import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
+
+import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
@@ -37,6 +38,7 @@ import org.fabric3.binding.jms.common.CreateOption;
 import org.fabric3.binding.jms.common.DestinationDefinition;
 import org.fabric3.binding.jms.common.DestinationType;
 import org.fabric3.binding.jms.common.JmsBindingMetadata;
+import org.fabric3.binding.jms.common.JmsURIMetadata;
 import org.fabric3.binding.jms.common.ResponseDefinition;
 import org.fabric3.binding.jms.scdl.JmsBindingDefinition;
 import org.fabric3.introspection.IntrospectionContext;
@@ -54,7 +56,8 @@ public class JmsBindingLoader implements TypeLoader<JmsBindingDefinition> {
     /**
      * Qualified name for the binding element.
      */
-    public static final QName BINDING_QNAME = new QName(Constants.SCA_NS, "binding.jms");
+    public static final QName BINDING_QNAME = new QName(Constants.SCA_NS,
+                                                        "binding.jms");
 
     private LoaderRegistry registry;
     private final LoaderHelper loaderHelper;
@@ -65,7 +68,9 @@ public class JmsBindingLoader implements TypeLoader<JmsBindingDefinition> {
      * @param registry     Loader registry.
      * @param loaderHelper the loaderHelper
      */
-    public JmsBindingLoader(@Reference LoaderRegistry registry, @Reference LoaderHelper loaderHelper) {
+    public JmsBindingLoader(@Reference
+    LoaderRegistry registry, @Reference
+    LoaderHelper loaderHelper) {
         this.registry = registry;
         this.loaderHelper = loaderHelper;
     }
@@ -80,21 +85,36 @@ public class JmsBindingLoader implements TypeLoader<JmsBindingDefinition> {
         registry.unregisterLoader(BINDING_QNAME);
     }
 
-    public JmsBindingDefinition load(XMLStreamReader reader, IntrospectionContext introspectionContext)
+    public JmsBindingDefinition load(XMLStreamReader reader,
+                                     IntrospectionContext introspectionContext)
             throws XMLStreamException, LoaderException {
 
-        JmsBindingMetadata metadata = new JmsBindingMetadata();
-        JmsBindingDefinition bd = new JmsBindingDefinition(metadata);
-
+        JmsBindingMetadata metadata;
+        String uri = reader.getAttributeValue(null, "uri");
+        JmsBindingDefinition bd;
+        if (uri != null) {
+            JmsURIMetadata uriMeta = JmsURIMetadata.parseURI(uri);
+            metadata = JmsLoaderHelper.getJmsMetadataFromURI(uriMeta);
+            bd = new JmsBindingDefinition(loaderHelper.getURI(uri), metadata);
+        } else {
+            metadata = new JmsBindingMetadata();
+            bd = new JmsBindingDefinition(metadata);
+        }
         final String correlationScheme = reader.getAttributeValue(null, "correlationScheme");
         if (correlationScheme != null) {
-            metadata.setCorrelationScheme(CorrelationScheme.valueOf(correlationScheme));
+            metadata.setCorrelationScheme(CorrelationScheme
+                    .valueOf(correlationScheme));
         }
         metadata.setJndiUrl(reader.getAttributeValue(null, "jndiURL"));
         metadata.setInitialContextFactory(reader.getAttributeValue(null, "initialContextFactory"));
-
         loaderHelper.loadPolicySetsAndIntents(bd, reader);
-
+        if (uri != null) {
+            while (true) {
+                if (END_ELEMENT == reader.next() && "binding.jms".equals(reader.getName().getLocalPart())) {
+                    return bd;
+                }
+            }
+        }
         String name = null;
         while (true) {
 
@@ -115,6 +135,7 @@ public class JmsBindingLoader implements TypeLoader<JmsBindingDefinition> {
             case END_ELEMENT:
                 name = reader.getName().getLocalPart();
                 if ("binding.jms".equals(name)) {
+                    bd.setGeneratedTargetUri(loaderHelper.getURI(JmsLoaderHelper.generateURI(metadata)));
                     return bd;
                 }
                 break;
@@ -131,7 +152,7 @@ public class JmsBindingLoader implements TypeLoader<JmsBindingDefinition> {
 
         ResponseDefinition response = new ResponseDefinition();
 
-        String name = null;
+        String name;
         while (true) {
 
             switch (reader.next()) {
@@ -204,13 +225,9 @@ public class JmsBindingLoader implements TypeLoader<JmsBindingDefinition> {
     /*
     * Loads properties. TODO Support property type.
     */
-    private void loadProperties(XMLStreamReader reader,
-                                AdministeredObjectDefinition parent,
-                                String parentName) throws XMLStreamException {
-
-        String name = null;
+    private void loadProperties(XMLStreamReader reader, AdministeredObjectDefinition parent, String parentName) throws XMLStreamException {
+        String name;
         while (true) {
-
             switch (reader.next()) {
             case START_ELEMENT:
                 name = reader.getName().getLocalPart();
