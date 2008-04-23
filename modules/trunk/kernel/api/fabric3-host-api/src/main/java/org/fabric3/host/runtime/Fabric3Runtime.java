@@ -88,12 +88,28 @@ public interface Fabric3Runtime<I extends HostInfo> {
 
     /**
      * Sets the MBeanServer this runtime should use.
-     *
+     * <p/>
      * This allows the host environment to specify an MBeanServer with which any manageable runtime components should be registered.
      *
      * @param mbServer the MBeanServer this runtime should use
      */
     void setMBeanServer(MBeanServer mbServer);
+
+    /**
+     * Returns the JMX domain this runtime should use.
+     *
+     * @return the JMX domain this runtime should use
+     */
+    String getJMXDomain();
+
+    /**
+     * Sets the JMX domain this runtime should use.
+     * <p/>
+     * This will be used as the domain portion of the ObjectName for all MBeans registered with the MBeanServer
+     *
+     * @param jmxDomain the JMX domain this runtime should use
+     */
+    void setJMXDomain(String jmxDomain);
 
     /**
      * Initialize a runtime. An initialized runtime has has completed core service initialization, recovery operations, and is ready to be started.

@@ -60,6 +60,7 @@ public abstract class AbstractRuntime<I extends HostInfo> implements Fabric3Runt
     private URL applicationScdl;
     private Class<I> hostInfoType;
     private MBeanServer mbServer;
+    private String jmxDomain;
 
     /**
      * Information provided by the host about its runtime environment.
@@ -147,6 +148,14 @@ public abstract class AbstractRuntime<I extends HostInfo> implements Fabric3Runt
 
     public void setMBeanServer(MBeanServer mbServer) {
         this.mbServer = mbServer;
+    }
+
+    public String getJMXDomain() {
+        return jmxDomain;
+    }
+
+    public void setJMXDomain(String jmxDomain) {
+        this.jmxDomain = jmxDomain;
     }
 
     public void initialize() throws InitializationException {

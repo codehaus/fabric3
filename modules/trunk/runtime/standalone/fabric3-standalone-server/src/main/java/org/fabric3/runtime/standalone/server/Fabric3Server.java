@@ -129,6 +129,7 @@ public class Fabric3Server implements Fabric3ServerMBean {
         }
 
         runtime.setMBeanServer(agent.getMBeanServer());
+        runtime.setJMXDomain(profileName);
         monitor = runtime.getMonitorFactory().getMonitor(ServerMonitor.class);
         try {
             ClassLoader bootLoader = hostInfo.getBootClassLoader();
