@@ -64,6 +64,9 @@ public class JMXWireAttacher implements SourceWireAttacher<JMXWireSourceDefiniti
     }
 
     public void attachObjectFactory(JMXWireSourceDefinition source, ObjectFactory<?> objectFactory) throws WiringException {
+        if (true) {
+            return;
+        }
         if (mBeanServer == null) {
             return;
         }

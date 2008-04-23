@@ -159,6 +159,9 @@ public class StandaloneCoordinator implements RuntimeLifecycleCoordinator<Standa
             activateIntents();
             includeExtensions();
             state = State.INITIALIZED;
+        } catch (DefinitionActivationException e) {
+            state = State.ERROR;
+            throw new InitializationException(e);
         } catch (InitializationException e) {
             state = State.ERROR;
             throw e;
@@ -310,7 +313,7 @@ public class StandaloneCoordinator implements RuntimeLifecycleCoordinator<Standa
      *
      * @throws InitializationException if an error occurs included the extensions
      */
-    private void includeExtensions() throws InitializationException {
+    private void includeExtensions() throws InitializationException, DefinitionActivationException {
         if (extensionsDirectory != null && extensionsDirectory.exists()) {
             // contribute and activate extensions if they exist in the runtime domain
             ContributionService contributionService = runtime.getSystemComponent(ContributionService.class,
@@ -337,10 +340,13 @@ public class StandaloneCoordinator implements RuntimeLifecycleCoordinator<Standa
             }
             try {
                 contributionUris = contributionService.contribute(sources);
+                includeExtensionContributions(contributionUris);
+                DefinitionsRegistry definitionsRegistry =
+                        runtime.getSystemComponent(DefinitionsRegistry.class, DEFINITIONS_REGISTRY);
+                definitionsRegistry.activateDefinitions(contributionUris);
             } catch (ContributionException e) {
                 throw new ExtensionInitializationException("Error loading extension", e);
             }
-            includeExtensionContributions(contributionUris);
         }
     }
 
