@@ -18,8 +18,6 @@
  */
 package org.fabric3.spi.wire;
 
-import org.osoa.sca.ServiceRuntimeException;
-
 import org.fabric3.spi.assembly.ActivateException;
 
 /**
@@ -28,10 +26,6 @@ import org.fabric3.spi.assembly.ActivateException;
  * @version $Rev: 1567 $ $Date: 2007-10-20 11:34:49 +0100 (Sat, 20 Oct 2007) $
  */
 public class PromotionException extends ActivateException {
-
-    /**
-     * 
-     */
     private static final long serialVersionUID = -5262124031513496306L;
 
     /**
