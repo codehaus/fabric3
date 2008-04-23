@@ -10,33 +10,31 @@ import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalService;
 import org.fabric3.spi.util.UriHelper;
-import org.fabric3.spi.wire.TargetResolutionException;
-import org.fabric3.spi.wire.TargetResolutionService;
 import org.fabric3.spi.wire.PromotionException;
+import org.fabric3.spi.wire.TargetResolutionService;
 
 /**
  * Resolution based on type based auto-wire.
- * 
- * @version $Revsion$ $Date$
  *
+ * @version $Revsion$ $Date$
  */
 public class ExplicitTargetResolutionService implements TargetResolutionService {
 
     public void resolve(LogicalReference logicalReference, LogicalCompositeComponent context) throws PromotionException {
-        
+
         ComponentReference componentReference = logicalReference.getComponentReference();
         if (componentReference == null) {
             return;
         }
-        
+
         List<URI> requestedTargets = componentReference.getTargets();
         if (requestedTargets.isEmpty()) {
             return;
         }
-        
+
         URI parentUri = context.getUri();
         URI componentUri = logicalReference.getParent().getUri();
-        
+
         List<URI> resolvedUris = new ArrayList<URI>();
         for (URI requestedTarget : requestedTargets) {
             URI resolved = parentUri.resolve(componentUri).resolve(requestedTarget);
@@ -44,22 +42,23 @@ public class ExplicitTargetResolutionService implements TargetResolutionService 
             resolvedUris.add(targetURI);
         }
         logicalReference.overrideTargets(resolvedUris);
-        
+
     }
-    
+
     private URI resolveByUri(LogicalReference reference, URI targetUri, LogicalCompositeComponent composite) throws PromotionException {
-        
+
         URI targetComponentUri = UriHelper.getDefragmentedName(targetUri);
         LogicalComponent<?> targetComponent = composite.getComponent(targetComponentUri);
-        
+
         if (targetComponent == null) {
             throw new TargetComponentNotFoundException(targetUri);
         }
-        
+
         String serviceName = targetUri.getFragment();
         if (serviceName != null) {
             if (targetComponent.getService(serviceName) == null) {
-                throw new ServiceNotFoundException(targetUri, serviceName);
+                throw new ServiceNotFoundException("Service " + serviceName + " not found on component: "
+                        + UriHelper.getDefragmentedName(targetUri) + ". Originating reference is: " + reference.getUri());
             }
             return targetUri;
         } else {
@@ -73,7 +72,7 @@ public class ExplicitTargetResolutionService implements TargetResolutionService 
             LogicalService targetService = targetComponent.getServices().iterator().next();
             return targetService.getUri();
         }
-        
+
     }
 
 }

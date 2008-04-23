@@ -122,7 +122,7 @@ public class ImplementationCompositeLoader implements TypeLoader<CompositeImplem
                 ResourceElement<QNameSymbol, Composite> element = store.resolve(contributionUri, Composite.class, symbol);
                 if (element == null) {
                     String identifier = name.toString();
-                    throw new MissingResourceException("Composite not found [" + identifier + "]", identifier);
+                    throw new MissingResourceException("Composite not found :" + identifier, identifier);
                 }
                 impl.setComponentType(element.getValue());
                 return impl;
