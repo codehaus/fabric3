@@ -63,17 +63,22 @@ public class ExplicitTargetResolutionService implements TargetResolutionService 
             }
             return targetUri;
         } else {
-            if (targetComponent.getServices().size() != 1) {
-                if (targetComponent.getServices().size() > 1) {
+            LogicalService target = null;
+            for (LogicalService service : targetComponent.getServices()) {
+                if (service.getDefinition().isManagement()) {
+                    continue;
+                }
+                if (target != null) {
                     throw new AmbiguousServiceException("More than one service available on component: " + targetUri
                             + ". Reference must explicitly specify a target service: " + reference.getUri());
-                } else {
-                    throw new NoServiceOnComponentException("No services available on component: "
-                            + targetUri + ". Originating reference is: " + reference.getUri());
                 }
+                target = service;
             }
-            LogicalService targetService = targetComponent.getServices().iterator().next();
-            return targetService.getUri();
+            if (target == null) {
+                throw new NoServiceOnComponentException("No services available on component: "
+                        + targetUri + ". Originating reference is: " + reference.getUri());
+            }
+            return target.getUri();
         }
 
     }

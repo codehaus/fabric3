@@ -35,6 +35,7 @@ public class LogicalBinding<BD extends BindingDefinition> extends LogicalScaArti
     private static final QName TYPE = new QName(Constants.SCA_NS, "binding");
     
     private final BD binding;
+    private boolean provisioned;
 
     /**
      * @param binding
@@ -81,5 +82,12 @@ public class LogicalBinding<BD extends BindingDefinition> extends LogicalScaArti
     public void setPolicySets(Set<QName> policySets) {
         binding.setPolicySets(policySets);
     }
-    
+
+    public boolean isProvisioned() {
+        return provisioned;
+    }
+
+    public void setProvisioned(boolean provisioned) {
+        this.provisioned = provisioned;
+    }
 }

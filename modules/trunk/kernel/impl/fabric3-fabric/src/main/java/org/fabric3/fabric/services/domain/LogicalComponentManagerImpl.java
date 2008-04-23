@@ -25,13 +25,14 @@ import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 import org.fabric3.spi.runtime.assembly.LogicalComponentManager;
 import org.fabric3.spi.runtime.assembly.LogicalComponentStore;
 import org.fabric3.spi.runtime.assembly.RecordException;
+import org.fabric3.spi.runtime.assembly.LogicalComponentManagerMBean;
 import org.fabric3.spi.util.UriHelper;
 import org.osoa.sca.annotations.Reference;
 
 /**
  * @version $Revision$ $Date$
  */
-public class LogicalComponentManagerImpl implements LogicalComponentManager {
+public class LogicalComponentManagerImpl implements LogicalComponentManager, LogicalComponentManagerMBean {
     
     private LogicalCompositeComponent domain;
     private final LogicalComponentStore logicalComponentStore;
@@ -70,11 +71,14 @@ public class LogicalComponentManagerImpl implements LogicalComponentManager {
     }
 
     public void initialize() throws AssemblyException {
-        domain = (LogicalCompositeComponent) logicalComponentStore.read();
+        domain = logicalComponentStore.read();
     }
     
     public void store() throws RecordException {
         logicalComponentStore.store(domain);
     }
 
+    public String getDomainURI() {
+        return domain.getUri().toString();
+    }
 }

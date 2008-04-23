@@ -53,7 +53,6 @@ public class ServiceWireCommandGenerator implements CommandGenerator {
         return order;
     }
 
-    @SuppressWarnings("unchecked")
     public WireAttachCommand generate(LogicalComponent<?> component) throws GenerationException {
         if (component instanceof LogicalCompositeComponent) {
             return null;
@@ -86,13 +85,17 @@ public class ServiceWireCommandGenerator implements CommandGenerator {
             }
 
             for (LogicalBinding<?> binding : service.getBindings()) {
-                PhysicalWireDefinition pwd = physicalWireGenerator.generateBoundServiceWire(service, binding, component, callbackUri);
-                command.addPhysicalWireDefinition(pwd);
+                if (!binding.isProvisioned()) {
+                    PhysicalWireDefinition pwd = physicalWireGenerator.generateBoundServiceWire(service, binding, component, callbackUri);
+                    command.addPhysicalWireDefinition(pwd);
+                    binding.setProvisioned(true);
+                }
             }
             // generate the callback command set
-            if (callbackContract != null) {
+            if (callbackBinding != null && !callbackBinding.isProvisioned()) {
                 PhysicalWireDefinition callbackPwd = physicalWireGenerator.generateBoundCallbackServiceWire(component, service, callbackBinding);
                 command.addPhysicalWireDefinition(callbackPwd);
+                callbackBinding.setProvisioned(true);
             }
         }
 
