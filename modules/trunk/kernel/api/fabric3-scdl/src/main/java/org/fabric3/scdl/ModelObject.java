@@ -18,11 +18,13 @@
  */
 package org.fabric3.scdl;
 
+import java.io.Serializable;
+
 /**
  * The base class for assembly model types
  *
  * @version $Rev$ $Date$
  */
-public abstract class ModelObject {
+public abstract class ModelObject implements Serializable {
 
 }

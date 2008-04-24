@@ -17,6 +17,7 @@
 package org.fabric3.spi.runtime.assembly;
 
 import org.fabric3.api.annotation.Management;
+import org.fabric3.scdl.Composite;
 
 /**
  * @version $Rev$ $Date$
@@ -30,4 +31,13 @@ public interface LogicalComponentManagerMBean {
      * @return the URI of this domain
      */
     String getDomainURI();
+
+    /**
+     * Returns the domain composite.
+     * <p/>
+     * The domain composite is a pseudo composite representing the active components in the domain.
+     *
+     * @return the domain composite
+     */
+    Composite getDomainComposite();
 }
