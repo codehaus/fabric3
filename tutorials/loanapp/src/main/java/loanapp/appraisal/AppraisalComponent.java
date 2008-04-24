@@ -21,7 +21,12 @@ package loanapp.appraisal;
 import org.osoa.sca.annotations.OneWay;
 import org.osoa.sca.annotations.Scope;
 import org.osoa.sca.annotations.Callback;
+import org.osoa.sca.annotations.Reference;
 import loanapp.message.PropertyLocation;
+import loanapp.notification.NotificationService;
+
+import java.util.Date;
+import java.util.Calendar;
 
 /**
  * @version $Revision$ $Date$
@@ -37,7 +42,8 @@ public class AppraisalComponent implements AppraisalService {
 
     @OneWay
     public void appraise(PropertyLocation propertyLocation) {
-        callback.dateSchedule(System.currentTimeMillis() + 10000);
+        Date date = new Date(System.currentTimeMillis()+ 1000);
+        callback.dateSchedule(date);
         AppraisalResult result = new AppraisalResult(AppraisalResult.APPROVED, new String[0]);
         callback.appraisalCompleted(result);
     }

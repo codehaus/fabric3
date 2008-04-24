@@ -32,6 +32,7 @@ import loanapp.risk.RiskAssessmentService;
 import loanapp.store.StoreException;
 import loanapp.store.StoreService;
 import loanapp.notification.NotificationService;
+import loanapp.acceptance.AcceptanceCoordinator;
 import org.fabric3.api.annotation.Monitor;
 import org.osoa.sca.annotations.ConversationAttributes;
 import org.osoa.sca.annotations.Reference;
@@ -56,6 +57,7 @@ public class RequestCoordinatorImpl implements RequestCoordinator, CreditService
     private StoreService storeService;
     private RequestCoordinatorMonitor monitor;
     private LoanApplication application;
+    private AcceptanceCoordinator acceptanceCoordinator;
 
     /**
      * Creates a new instance.
@@ -124,9 +126,22 @@ public class RequestCoordinatorImpl implements RequestCoordinator, CreditService
         } catch (StoreException e) {
             monitor.error(e);
         }
+
+        // xcv REMOVE
+        try {
+            acceptanceCoordinator.accept(application.getId());
+        } catch (LoanException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public void riskAssessmentError(Exception exception) {
         monitor.error(exception);
+    }
+
+    // XCV
+    @Reference
+    public void setAcceptanceCoordinator(AcceptanceCoordinator acceptanceCoordinator) {
+        this.acceptanceCoordinator = acceptanceCoordinator;
     }
 }

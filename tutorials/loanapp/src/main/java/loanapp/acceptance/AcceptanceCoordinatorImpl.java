@@ -25,9 +25,13 @@ import loanapp.loan.LoanException;
 import loanapp.appraisal.AppraisalService;
 import loanapp.appraisal.AppraisalCallback;
 import loanapp.appraisal.AppraisalResult;
+import loanapp.notification.NotificationService;
 import org.osoa.sca.annotations.Reference;
 import org.osoa.sca.annotations.Scope;
 import org.osoa.sca.annotations.Service;
+
+import java.util.Date;
+import java.util.Calendar;
 
 /**
  * Default implementation of the AcceptanceCoordinator.
@@ -38,12 +42,15 @@ import org.osoa.sca.annotations.Service;
 @Service(interfaces = {AcceptanceCoordinator.class, AppraisalCallback.class})
 public class AcceptanceCoordinatorImpl implements AcceptanceCoordinator, AppraisalCallback {
     private AppraisalService appraisalService;
+    private NotificationService notificationService;
     private StoreService storeService;
     private LoanApplication application;
 
     public AcceptanceCoordinatorImpl(@Reference(name = "appraisalService")AppraisalService appraisalService,
+                                     @Reference(name = "notificationService")NotificationService notificationService,
                                      @Reference(name = "storeService")StoreService storeService) {
         this.appraisalService = appraisalService;
+        this.notificationService = notificationService;
         this.storeService = storeService;
     }
 
@@ -54,14 +61,12 @@ public class AcceptanceCoordinatorImpl implements AcceptanceCoordinator, Apprais
         } catch (StoreException e) {
             throw new LoanException(e);
         }
-        if (application.getExpiration() <= System.currentTimeMillis()) {
-            throw new LoanOfferExpiredException("Loan expired: " + id);
-        }
+//        if (application.getExpiration() <= System.currentTimeMillis()) {
+//            throw new LoanOfferExpiredException("Loan expired: " + id);
+//        }
+        appraisalService.appraise(application.getPropertyLocation());
         // lock loan
         // send to appraisal service
-        // get callback from appraisal
-        // send to closing system
-        // get callback 
 
     }
 
@@ -69,11 +74,19 @@ public class AcceptanceCoordinatorImpl implements AcceptanceCoordinator, Apprais
 
     }
 
-    public void dateSchedule(long time) {
-
+    public void dateSchedule(Date time) {
+        notificationService.appraisalScheduled(application.getEmail(), application.getId(), time);
     }
 
     public void appraisalCompleted(AppraisalResult result) {
-
+        if (AppraisalResult.DECLINED == result.getResult()) {
+            // TODO notify
+            return;
+        }
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.MONTH, 1);
+        notificationService.fundingDateScheduled(application.getEmail(), application.getId(), calendar.getTime());
+        // send to closing system
+        // get callback
     }
 }

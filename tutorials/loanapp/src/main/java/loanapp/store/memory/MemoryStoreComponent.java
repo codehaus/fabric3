@@ -25,11 +25,14 @@ import loanapp.message.LoanApplication;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+import org.osoa.sca.annotations.Scope;
+
 /**
  * Simple in-memory StoreService that uses a Map for persistence.
  *
  * @version $Revision$ $Date$
  */
+@Scope("COMPOSITE")
 public class MemoryStoreComponent implements StoreService {
     private Map<String, LoanApplication> cache = new ConcurrentHashMap<String, LoanApplication>();
 
