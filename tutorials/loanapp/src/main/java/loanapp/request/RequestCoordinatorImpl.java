@@ -31,6 +31,7 @@ import loanapp.risk.RiskAssessmentCallback;
 import loanapp.risk.RiskAssessmentService;
 import loanapp.store.StoreException;
 import loanapp.store.StoreService;
+import loanapp.notification.NotificationService;
 import org.fabric3.api.annotation.Monitor;
 import org.osoa.sca.annotations.ConversationAttributes;
 import org.osoa.sca.annotations.Reference;
@@ -51,6 +52,7 @@ public class RequestCoordinatorImpl implements RequestCoordinator, CreditService
     private CreditService creditService;
     private RiskAssessmentService riskService;
     private PricingService pricingService;
+    private NotificationService notificationService;
     private StoreService storeService;
     private RequestCoordinatorMonitor monitor;
     private LoanApplication application;
@@ -58,20 +60,23 @@ public class RequestCoordinatorImpl implements RequestCoordinator, CreditService
     /**
      * Creates a new instance.
      *
-     * @param creditService  returns the applicant's credit score from a credit bureau
-     * @param riskService    scores the loan risk
-     * @param pricingService calculates loan options
-     * @param storeService   stores an application after it has been processed
-     * @param monitor        the monitor for recording errors
+     * @param creditService       returns the applicant's credit score from a credit bureau
+     * @param riskService         scores the loan risk
+     * @param pricingService      calculates loan options
+     * @param notificationService notifies the loan applicant of loan events
+     * @param storeService        stores an application after it has been processed
+     * @param monitor             the monitor for recording errors
      */
     public RequestCoordinatorImpl(@Reference(name = "creditService")CreditService creditService,
                                   @Reference(name = "riskService")RiskAssessmentService riskService,
                                   @Reference(name = "pricingService")PricingService pricingService,
+                                  @Reference(name = "notificationService")NotificationService notificationService,
                                   @Reference(name = "storeService")StoreService storeService,
                                   @Monitor RequestCoordinatorMonitor monitor) {
         this.creditService = creditService;
         this.riskService = riskService;
         this.pricingService = pricingService;
+        this.notificationService = notificationService;
         this.storeService = storeService;
         this.monitor = monitor;
     }
@@ -114,7 +119,8 @@ public class RequestCoordinatorImpl implements RequestCoordinator, CreditService
         }
         try {
             storeService.save(application);
-            // TODO send notification to client
+            // notify the client
+            notificationService.termsReady(application.getEmail(), application.getId());
         } catch (StoreException e) {
             monitor.error(e);
         }

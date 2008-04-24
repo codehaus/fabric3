@@ -39,6 +39,7 @@
         <reference name="creditService" target="CreditComponent/CreditService"/>
         <reference name="riskService" target="RiskAssessmentComponent"/>
         <reference name="pricingService" target="PricingComponent"/>
+        <reference name="notificationService" target="NotificationComponent"/>
         <reference name="storeService" target="StoreComponent"/>
     </component>
 

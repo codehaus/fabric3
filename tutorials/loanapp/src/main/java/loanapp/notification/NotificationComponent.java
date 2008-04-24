@@ -29,23 +29,23 @@ import java.util.Date;
 @Scope("COMPOSITE")
 public class NotificationComponent implements NotificationService {
     @OneWay
-    public void termsReady(String applicationId) {
+    public void termsReady(String email, String applicationId) {
         System.out.println("NotificationService: Loan terms are available at: ");
     }
 
     @OneWay
-    public void appraisalScheduled(String applicationId, Date date) {
+    public void appraisalScheduled(String email, String applicationId, Date date) {
         System.out.println("NotificationService: Appraisal scheduled for loan application "
                 + applicationId + " on " + date);
     }
 
     @OneWay
-    public void appraisalFinished(String applicationId) {
+    public void appraisalFinished(String email, String applicationId) {
         System.out.println("NotificationService: Appraisal finished for loan application " + applicationId);
     }
 
     @OneWay
-    public void fundingDateScheduled(String applicationId, Date date) {
+    public void fundingDateScheduled(String email, String applicationId, Date date) {
         System.out.println("NotificationService: Loan funding date scheduled for loan application "
                 + applicationId + " on " + date);
     }

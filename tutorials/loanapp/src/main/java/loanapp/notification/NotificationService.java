@@ -28,15 +28,15 @@ import java.util.Date;
 public interface NotificationService {
 
     @OneWay
-    void termsReady(String applicationId);
+    void termsReady(String email, String applicationId);
 
     @OneWay
-    void appraisalScheduled(String applicationId, Date date);
+    void appraisalScheduled(String email, String applicationId, Date date);
 
     @OneWay
-    void appraisalFinished(String applicationId);
+    void appraisalFinished(String email, String applicationId);
 
     @OneWay
-    void fundingDateScheduled(String applicationId, Date date);
+    void fundingDateScheduled(String email, String applicationId, Date date);
 
 }
