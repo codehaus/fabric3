@@ -7,7 +7,7 @@ import java.lang.annotation.ElementType;
  *
  * @version $Revision$ $Date$
  */
-public class InjectionSite {
+public class InjectionSite extends ModelObject {
 
     // Element type
     private ElementType elementType;

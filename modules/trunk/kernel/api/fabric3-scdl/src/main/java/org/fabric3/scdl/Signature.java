@@ -29,7 +29,7 @@ import java.util.Map;
  *
  * @version $Rev$ $Date$
  */
-public class Signature {
+public class Signature extends ModelObject {
     private static final Map<String, Class<?>> PRIMITIVES_TYPES;
 
     static {

@@ -28,7 +28,7 @@ import org.osoa.sca.Conversation;
  * @version $Rev$ $Date$
  * @param <T> the type of identifier used to identify instances of this scope
  */
-public class Scope<T> {
+public class Scope<T> extends ModelObject {
     public static final Scope<Object> STATELESS = new Scope<Object>("STATELESS", Object.class);
     public static final Scope<Thread> REQUEST = new Scope<Thread>("REQUEST", Thread.class);
     public static final Scope<Conversation> CONVERSATION = new Scope<Conversation>("CONVERSATION", Conversation.class);
