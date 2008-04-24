@@ -20,6 +20,6 @@
         <interface.java interface="loanapp.request.RequestCoordinator"/>
     </reference>
     <reference name="acceptanceCoordinator">
-        <interface.java interface="loanapp.request.AcceptanceCoordinator"/>
+        <interface.java interface="loanapp.acceptance.AcceptanceCoordinator"/>
     </reference>
 </componentType>

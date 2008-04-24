@@ -19,6 +19,7 @@ package org.fabric3.loanapp.webclient;
 import loanapp.loan.LoanException;
 import loanapp.message.LoanRequest;
 import loanapp.message.PropertyLocation;
+import loanapp.message.Address;
 import loanapp.request.RequestCoordinator;
 import loanapp.validation.ValidationService;
 import org.osoa.sca.ComponentContext;
@@ -49,19 +50,12 @@ public class LoanApplicationFormHandler extends HttpServlet {
     }
 
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String amount = req.getParameter("amount");
-        String down = req.getParameter("down");
-        String ssn = req.getParameter("ssn");
-        LoanRequest request = new LoanRequest();
-        request.setAmount(Double.valueOf(amount));
-        request.setDownPayment(Double.valueOf(down));
-        request.setSSN(ssn);
-        request.setPropertyLocation(populateLocation(req));
-        // invoke the loan application service
+        LoanRequest request = populateLoanRequest(req);
+        // process the application
         RequestCoordinator coordinator = context.getService(RequestCoordinator.class, "requestCoordinator");
-        String id = null;
         try {
-            id = coordinator.start(request);
+            String id = coordinator.start(request);
+            req.getSession().setAttribute("loanId", id);
         } catch (LoanException e) {
             throw new ServletException(e);
         }
@@ -69,7 +63,25 @@ public class LoanApplicationFormHandler extends HttpServlet {
 //        getServletContext().getRequestDispatcher("/result.jsp").forward(req, resp);
     }
 
+    private LoanRequest populateLoanRequest(HttpServletRequest req) {
+        // TODO handle invalid doubles
+        LoanRequest request = new LoanRequest();
+        request.setAmount(Double.valueOf(req.getParameter("amount")));
+        request.setDownPayment(Double.valueOf(req.getParameter("down")));
+        request.setSSN(req.getParameter("ssn"));
+        request.setPropertyLocation(populateLocation(req));
+        return request;
+    }
+
     private PropertyLocation populateLocation(HttpServletRequest req) {
+        // TODO handle invalid zip
+        PropertyLocation location = new PropertyLocation();
+        Address address = new Address();
+        address.setStreet(req.getParameter("street"));
+        address.setCity(req.getParameter("city"));
+        address.setState(req.getParameter("state"));
+        // address.setZip(Integer.parseInt(req.getParameter("zip")));
+        location.setAddress(address);
         return null;
     }
 
