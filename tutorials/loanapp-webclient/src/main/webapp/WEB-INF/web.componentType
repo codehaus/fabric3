@@ -16,7 +16,10 @@
  under the License.
 -->
 <componentType xmlns="http://www.osoa.org/xmlns/sca/1.0">
-    <reference name="loanService">
-        <interface.java interface="loanapp.loan.LoanService"/>
+    <reference name="requestCoordinator">
+        <interface.java interface="loanapp.request.RequestCoordinator"/>
+    </reference>
+    <reference name="acceptanceCoordinator">
+        <interface.java interface="loanapp.request.AcceptanceCoordinator"/>
     </reference>
 </componentType>

@@ -18,9 +18,8 @@
  */
 package loanapp.request;
 
-import loanapp.message.LoanApplication;
-import loanapp.message.LoanRequest;
 import loanapp.loan.LoanException;
+import loanapp.message.LoanRequest;
 import org.osoa.sca.annotations.Conversational;
 
 /**

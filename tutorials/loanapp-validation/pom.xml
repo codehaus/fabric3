@@ -23,11 +23,10 @@
         <version>2</version>
     </parent>
     <groupId>org.codehaus.fabric3.tutorials</groupId>
-    <artifactId>fabric3-tutorial-loanapp</artifactId>
+    <artifactId>fabric3-tutorial-loanapp-validation</artifactId>
     <version>0.5ALPHA2-SNAPSHOT</version>
-    <name>Fabric3 Loan App Sample</name>
-    <description>Fabric3 Loan Application Sample.</description>
-    <packaging>sca-contribution-jar</packaging>
+    <name>Fabric3 Loan App Validation</name>
+    <description>Fabric3 Loan App Validation.</description>
 
     <repositories>
         <repository>
@@ -41,55 +40,28 @@
                 <enabled>true</enabled>
             </snapshots>
         </repository>
+        <repository>
+            <id>java.net</id>
+            <url>http://download.java.net/maven/1</url>
+            <layout>legacy</layout>
+        </repository>
     </repositories>
 
     <dependencies>
-        <dependency>
-            <groupId>javax.xml.bind</groupId>
-            <artifactId>jaxb-api</artifactId>
-            <version>2.1</version>
-            <scope>provided</scope>
-        </dependency>
         <dependency>
             <groupId>org.codehaus.fabric3.spec</groupId>
             <artifactId>sca-api-r1.0</artifactId>
             <version>0.2</version>
             <scope>provided</scope>
         </dependency>
-        <dependency>
-            <groupId>org.codehaus.fabric3</groupId>
-            <artifactId>fabric3-api</artifactId>
-            <version>0.5ALPHA2-SNAPSHOT</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
+       <dependency>
             <groupId>org.codehaus.fabric3.tutorials</groupId>
             <artifactId>fabric3-tutorial-loanapp-common</artifactId>
             <version>0.5ALPHA2-SNAPSHOT</version>
         </dependency>
-        <dependency>
-            <groupId>org.codehaus.fabric3.tutorials</groupId>
-            <artifactId>fabric3-tutorial-loanapp-validation</artifactId>
-            <version>0.5ALPHA2-SNAPSHOT</version>
-        </dependency>
-        <dependency>
+         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
         </dependency>
     </dependencies>
-    <build>
-        <plugins>
-            <plugin>
-                <groupId>org.codehaus.fabric3</groupId>
-                <artifactId>fabric3-contribution-plugin</artifactId>
-                <version>RELEASE</version>
-                <extensions>true</extensions>
-                <configuration>
-                    <deployables>
-                        <deployable>META-INF/loanapp.composite</deployable>
-                    </deployables>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
 </project>

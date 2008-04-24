@@ -23,7 +23,14 @@
 
     <component name="lending">
         <implementation.web/>
-        <reference name="loanService" target="LoanComponent"/>
+        <reference name="requestCoordinator" target="RequestCoordinator/RequestCoordinator"/>
+        <reference name="acceptanceCoordinator" target="AcceptanceCoordinator/AcceptanceCoordinator"/>
+        <reference name="validationService" target="WebValidationComponent"/>
+    </component>
+
+    <component name="WebValidationComponent">
+        <implementation.composite name="tutorials:ValidationComposite"
+                                  scdlResource="loanapp/validation/impl/validation.composite"/>
     </component>
 
 </composite>

@@ -310,6 +310,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/loanapp/fabric3-tutorial-loanapp.iml" filepath="$PROJECT_DIR$/loanapp/fabric3-tutorial-loanapp.iml" />
       <module fileurl="file://$PROJECT_DIR$/loanapp-common/fabric3-tutorial-loanapp-common.iml" filepath="$PROJECT_DIR$/loanapp-common/fabric3-tutorial-loanapp-common.iml" />
+      <module fileurl="file://$PROJECT_DIR$/loanapp-validation/fabric3-tutorial-loanapp-validation.iml" filepath="$PROJECT_DIR$/loanapp-validation/fabric3-tutorial-loanapp-validation.iml" />
       <module fileurl="file://$PROJECT_DIR$/loanapp-webclient/fabric3-tutorial-loanapp-webclient.iml" filepath="$PROJECT_DIR$/loanapp-webclient/fabric3-tutorial-loanapp-webclient.iml" />
       <module fileurl="file://$PROJECT_DIR$/webcalc/fabric3-tutorial-webcalc.iml" filepath="$PROJECT_DIR$/webcalc/fabric3-tutorial-webcalc.iml" />
     </modules>

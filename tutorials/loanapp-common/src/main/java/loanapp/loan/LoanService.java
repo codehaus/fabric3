@@ -29,7 +29,7 @@ import loanapp.message.LoanRequest;
 public interface LoanService {
 
     /**
-     * Initiates the loan application process.
+     * Interface to the loan application process.
      *
      * @param request the loan request data
      * @return the loan tracking number
