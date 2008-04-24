@@ -26,5 +26,11 @@ import java.io.Serializable;
  * @version $Rev$ $Date$
  */
 public abstract class ModelObject implements Serializable {
-
+    /**
+     * Perform semantic validation on this model object
+     *
+     * @throws ValidationException if there is a semantic problem with this model object
+     */
+    void validate() throws ValidationException {
+    }
 }
