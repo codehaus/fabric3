@@ -21,15 +21,24 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import org.fabric3.scdl.validation.MissingPromotionException;
+
 /**
  * @version $Rev$ $Date$
  */
 public class CompositeReference extends ReferenceDefinition {
 
-    private final List<URI> promotedUris = new ArrayList<URI>();
+    private final List<URI> promotedUris;
 
-    public CompositeReference(String name, ServiceContract<?> serviceContract) {
-        super(name, serviceContract);
+    /**
+     * Construct a composite reference.
+     *
+     * @param name the name of the composite reference
+     * @param promotedUris the list of component references it promotes
+     */
+    public CompositeReference(String name, List<URI> promotedUris) {
+        super(name, null);
+        this.promotedUris = promotedUris;
     }
 
     /**
@@ -38,7 +47,7 @@ public class CompositeReference extends ReferenceDefinition {
      * @return the list of references this composite reference promotes
      */
     public List<URI> getPromotedUris() {
-        return Collections.unmodifiableList(promotedUris);
+        return promotedUris;
     }
 
     /**
@@ -50,4 +59,11 @@ public class CompositeReference extends ReferenceDefinition {
         promotedUris.add(uri);
     }
 
+    @Override
+    public void validate() throws ValidationException {
+        super.validate();
+        if (promotedUris == null || promotedUris.isEmpty()) {
+            throw new MissingPromotionException(this);
+        }
+    }
 }

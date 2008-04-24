@@ -1,12 +1,13 @@
 package org.fabric3.fabric.assembly;
 
 import java.net.URI;
-
+import java.util.Collections;
+import java.util.List;
 import javax.xml.namespace.QName;
 
 import junit.framework.TestCase;
-
 import org.easymock.classextension.EasyMock;
+
 import org.fabric3.fabric.assembly.normalizer.PromotionNormalizer;
 import org.fabric3.fabric.model.logical.AtomicComponentInstantiator;
 import org.fabric3.fabric.model.logical.CompositeComponentInstantiator;
@@ -97,7 +98,8 @@ public class InstantiationTestCase extends TestCase {
 
     private ComponentDefinition<?> createParentWithServiceAndReference() {
         CompositeService service = new CompositeService("service", null, null);
-        CompositeReference reference = new CompositeReference("reference", null);
+        List<URI> references = Collections.emptyList();
+        CompositeReference reference = new CompositeReference("reference", references);
         Composite type = new Composite(null);
         type.add(service);
         type.add(reference);

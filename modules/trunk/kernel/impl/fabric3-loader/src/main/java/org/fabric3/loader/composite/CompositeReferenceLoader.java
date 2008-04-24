@@ -18,6 +18,7 @@ package org.fabric3.loader.composite;
 
 import java.net.URI;
 import java.util.StringTokenizer;
+import java.util.List;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
@@ -37,7 +38,6 @@ import org.fabric3.introspection.xml.InvalidReferenceException;
 import org.fabric3.introspection.xml.InvalidValueException;
 import org.fabric3.introspection.xml.Loader;
 import org.fabric3.introspection.xml.LoaderException;
-import org.fabric3.introspection.xml.LoaderUtil;
 import org.fabric3.introspection.xml.LoaderHelper;
 import org.fabric3.introspection.xml.TypeLoader;
 import org.fabric3.introspection.xml.UnrecognizedElementException;
@@ -65,10 +65,9 @@ public class CompositeReferenceLoader implements TypeLoader<CompositeReference> 
             throw new InvalidValueException("Reference name not specified", name);
         }
 
-        CompositeReference referenceDefinition = new CompositeReference(name, null);
+        List<URI> promotedUris = loaderHelper.parseListOfUris(reader, "promote");
+        CompositeReference referenceDefinition = new CompositeReference(name, promotedUris);
         loaderHelper.loadPolicySetsAndIntents(referenceDefinition, reader);
-
-        setPromoted(reader, referenceDefinition, name);
 
         try {
             Multiplicity multiplicity = Multiplicity.fromString(reader.getAttributeValue(null, "multiplicity"));
@@ -107,23 +106,6 @@ public class CompositeReferenceLoader implements TypeLoader<CompositeReference> 
                 }
                 return referenceDefinition;
             }
-        }
-
-    }
-
-    /*
-     * Processes the promotes attribute.
-     */
-    private void setPromoted(XMLStreamReader reader, CompositeReference referenceDefinition, String name) throws InvalidReferenceException {
-
-        String promoted = reader.getAttributeValue(null, "promote");
-        if (promoted == null || promoted.trim().length() < 1) {
-            throw new InvalidReferenceException("No promoted reference specified on reference: " + name, name);
-        }
-        StringTokenizer tokenizer = new StringTokenizer(promoted, " ");
-        while (tokenizer.hasMoreTokens()) {
-            URI uri = loaderHelper.getURI(tokenizer.nextToken());
-            referenceDefinition.addPromotedUri(uri);
         }
 
     }

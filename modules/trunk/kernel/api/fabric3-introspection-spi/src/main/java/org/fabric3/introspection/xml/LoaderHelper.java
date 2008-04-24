@@ -19,10 +19,11 @@
 package org.fabric3.introspection.xml;
 
 import java.net.URI;
+import java.util.List;
 import java.util.Set;
 import javax.xml.namespace.QName;
-import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
 
 import org.w3c.dom.Document;
 
@@ -37,13 +38,14 @@ public interface LoaderHelper {
     /**
      * Load an XML value from a Stax stream.
      * <p/>
-     * The reader must be positioned at an element whose body contains an XML value. This will typically be an SCA
-     * &lt;property&gt; element (either in a &lt;composite&gt; or in a &lt;component&gt;). The resulting document
-     * comprises a &lt;value&gt; element whose body content will be that of the original &lt;property&gt; element.
+     * The reader must be positioned at an element whose body contains an XML value. This will typically be an SCA &lt;property&gt; element (either in
+     * a &lt;composite&gt; or in a &lt;component&gt;). The resulting document comprises a &lt;value&gt; element whose body content will be that of the
+     * original &lt;property&gt; element.
      *
      * @param reader a stream containing a property value
      * @return a standalone document containing the value
-     * @throws javax.xml.stream.XMLStreamException if there was a problem reading the stream
+     * @throws javax.xml.stream.XMLStreamException
+     *          if there was a problem reading the stream
      */
     Document loadValue(XMLStreamReader reader) throws XMLStreamException;
 
@@ -83,4 +85,14 @@ public interface LoaderHelper {
      * @throws LoaderException if a specified namespace prefix is invalid
      */
     QName createQName(String name, XMLStreamReader reader) throws LoaderException;
+
+    /**
+     * Parses a list of URIs contained in a attribute.
+     *
+     * @param reader    the XML stream reader
+     * @param attribute the attribute to parse
+     * @return the list of URIs contained in that attribute, or null if the attribute is not present
+     * @throws LoaderException if list contains a value that is not a valid URI
+     */
+    List<URI> parseListOfUris(XMLStreamReader reader, String attribute) throws LoaderException;
 }

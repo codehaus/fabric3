@@ -19,9 +19,12 @@
 package org.fabric3.loader.impl;
 
 import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.Set;
 import java.util.HashSet;
 import java.util.StringTokenizer;
+import java.util.List;
+import java.util.ArrayList;
 import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.namespace.QName;
@@ -123,6 +126,24 @@ public class DefaultLoaderHelper implements LoaderHelper {
             String uri = target.substring(0, index);
             String fragment = target.substring(index + 1);
             return URI.create(uri + '#' + fragment);
+        }
+    }
+
+    public List<URI> parseListOfUris(XMLStreamReader reader, String attribute) throws LoaderException {
+        String value = reader.getAttributeValue(null, attribute);
+        if (value == null || value.length() == 0) {
+            return null;
+        } else {
+            try {
+                String[] uris = value.split(" ");
+                List<URI> result = new ArrayList<URI>(uris.length);
+                for (String uri : uris) {
+                    result.add(new URI(uri));
+                }
+                return result;
+            } catch (URISyntaxException e) {
+                throw new LoaderException(e);
+            }
         }
     }
 }

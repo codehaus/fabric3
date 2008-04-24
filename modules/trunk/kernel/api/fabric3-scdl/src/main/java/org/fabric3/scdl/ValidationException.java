@@ -23,22 +23,37 @@ import java.util.List;
  */
 public abstract class ValidationException extends Exception {
 
+    private final ModelObject modelObject;
     private final List<ValidationException> causes;
 
     /**
      * Default constructor that initializes a null list of causes.
+     *
+     * @param modelObject the model object that raised this exception
      */
-    protected ValidationException() {
+    protected ValidationException(ModelObject modelObject) {
         causes = null;
+        this.modelObject = modelObject;
     }
 
     /**
      * Constructor that initializes the initial list of causes.
      *
+     * @param modelObject the model object that raised this exception
      * @param causes the underlying causes of this exception
      */
-    protected ValidationException(List<ValidationException> causes) {
+    protected ValidationException(ModelObject modelObject, List<ValidationException> causes) {
+        this.modelObject = modelObject;
         this.causes = causes;
+    }
+
+    /**
+     * Returns the model object that raised this exception.
+     *
+     * @return the model object that raised this exception
+     */
+    public ModelObject getModelObject() {
+        return modelObject;
     }
 
     /**
