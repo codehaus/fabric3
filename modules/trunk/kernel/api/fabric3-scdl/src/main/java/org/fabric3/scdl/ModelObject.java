@@ -31,6 +31,6 @@ public abstract class ModelObject implements Serializable {
      *
      * @throws ValidationException if there is a semantic problem with this model object
      */
-    void validate() throws ValidationException {
+    public void validate() throws ValidationException {
     }
 }

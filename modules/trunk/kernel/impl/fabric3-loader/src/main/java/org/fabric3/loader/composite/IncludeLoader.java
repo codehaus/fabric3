@@ -31,6 +31,7 @@ import org.fabric3.loader.common.MissingAttributeException;
 import org.fabric3.introspection.DefaultIntrospectionContext;
 import org.fabric3.scdl.Composite;
 import org.fabric3.scdl.Include;
+import org.fabric3.scdl.ValidationException;
 import org.fabric3.introspection.xml.Loader;
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.xml.LoaderException;
@@ -113,7 +114,10 @@ public class IncludeLoader implements TypeLoader<Include> {
         Composite composite;
         try {
             composite = loader.load(url, Composite.class, childContext);
+            composite.validate();
         } catch (LoaderException e) {
+            throw new InvalidIncludeException(name, e);
+        } catch (ValidationException e) {
             throw new InvalidIncludeException(name, e);
         }
 

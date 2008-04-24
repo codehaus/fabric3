@@ -20,8 +20,6 @@ package org.fabric3.loader.composite;
 
 import javax.xml.namespace.QName;
 
-import org.fabric3.introspection.xml.LoaderException;
-
 /**
  * Exception that indicates that the composite named in an include was not valid.
  *
@@ -31,7 +29,7 @@ public class InvalidIncludeException extends CompositeLoaderException {
     private static final long serialVersionUID = 2784600570114810462L;
     private final QName compositeName;
 
-    public InvalidIncludeException(QName compositeName, LoaderException cause) {
+    public InvalidIncludeException(QName compositeName, Exception cause) {
         super(cause);
         this.compositeName = compositeName;
     }

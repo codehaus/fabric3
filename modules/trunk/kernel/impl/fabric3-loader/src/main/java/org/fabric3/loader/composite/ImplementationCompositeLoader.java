@@ -41,6 +41,7 @@ import org.fabric3.introspection.xml.TypeLoader;
 import org.fabric3.loader.common.MissingAttributeException;
 import org.fabric3.scdl.Composite;
 import org.fabric3.scdl.CompositeImplementation;
+import org.fabric3.scdl.ValidationException;
 import org.fabric3.spi.services.contribution.MetaDataStore;
 import org.fabric3.spi.services.contribution.MetaDataStoreException;
 import org.fabric3.spi.services.contribution.QNameSymbol;
@@ -98,6 +99,11 @@ public class ImplementationCompositeLoader implements TypeLoader<CompositeImplem
             }
             IntrospectionContext childContext = new DefaultIntrospectionContext(cl, contributionUri, url);
             Composite composite = loader.load(url, Composite.class, childContext);
+            try {
+                composite.validate();
+            } catch (ValidationException e) {
+                throw new LoaderException(e.getMessage(), url.toString(), e);
+            }
             impl.setName(composite.getName());
             impl.setComponentType(composite);
             return impl;
@@ -108,6 +114,11 @@ public class ImplementationCompositeLoader implements TypeLoader<CompositeImplem
             }
             IntrospectionContext childContext = new DefaultIntrospectionContext(cl, contributionUri, url);
             Composite composite = loader.load(url, Composite.class, childContext);
+            try {
+                composite.validate();
+            } catch (ValidationException e) {
+                throw new LoaderException(e.getMessage(), url.toString(), e);
+            }
             impl.setName(composite.getName());
             impl.setComponentType(composite);
             return impl;

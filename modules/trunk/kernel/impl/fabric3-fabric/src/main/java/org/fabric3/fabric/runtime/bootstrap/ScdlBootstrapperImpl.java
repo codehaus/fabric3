@@ -63,6 +63,7 @@ import org.fabric3.scdl.Composite;
 import org.fabric3.scdl.Implementation;
 import org.fabric3.scdl.ServiceContract;
 import org.fabric3.scdl.ServiceDefinition;
+import org.fabric3.scdl.ValidationException;
 import org.fabric3.services.xmlfactory.XMLFactory;
 import org.fabric3.services.xmlfactory.impl.XMLFactoryImpl;
 import org.fabric3.spi.assembly.ActivateException;
@@ -173,6 +174,7 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
             ClassLoader bootCl = classLoaderRegistry.getClassLoader(BOOT_CLASSLOADER_ID);
             IntrospectionContext introspectionContext = new DefaultIntrospectionContext(bootCl, BOOT_CLASSLOADER_ID, scdlLocation);
             Composite composite = loader.load(scdlLocation, Composite.class, introspectionContext);
+            composite.validate();
 
             Document userConfig = loadUserConfig();
             if (userConfig != null) {
@@ -188,6 +190,8 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
             runtimeAssembly.includeInDomain(composite);
 
         } catch (LoaderException e) {
+            throw new InitializationException(e);
+        } catch (ValidationException e) {
             throw new InitializationException(e);
         } catch (ActivateException e) {
             throw new InitializationException(e);

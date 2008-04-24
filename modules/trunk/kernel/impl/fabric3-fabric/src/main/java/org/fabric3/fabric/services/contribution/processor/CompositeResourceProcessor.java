@@ -32,6 +32,7 @@ import org.fabric3.host.contribution.Constants;
 import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.introspection.DefaultIntrospectionContext;
 import org.fabric3.scdl.Composite;
+import org.fabric3.scdl.ValidationException;
 import org.fabric3.introspection.xml.Loader;
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.xml.LoaderException;
@@ -109,6 +110,7 @@ public class CompositeResourceProcessor implements ResourceProcessor {
         try {
             URL url = resource.getUrl();
             Composite composite = processComponentType(url, loader, contributionUri);
+            composite.validate();
             boolean found = false;
             for (ResourceElement element : resource.getResourceElements()) {
                 if (element.getSymbol().getKey().equals(composite.getName())) {
@@ -122,6 +124,8 @@ public class CompositeResourceProcessor implements ResourceProcessor {
                 throw new ResourceElementNotFoundException("Resource element not found: " + identifier, identifier);
             }
         } catch (LoaderException e) {
+            throw new ContributionException(e);
+        } catch (ValidationException e) {
             throw new ContributionException(e);
         }
     }

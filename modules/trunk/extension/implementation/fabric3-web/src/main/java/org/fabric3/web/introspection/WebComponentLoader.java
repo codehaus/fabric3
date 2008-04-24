@@ -40,6 +40,7 @@ import org.fabric3.introspection.xml.TypeLoader;
 import org.fabric3.scdl.ComponentType;
 import org.fabric3.scdl.ReferenceDefinition;
 import org.fabric3.scdl.Property;
+import org.fabric3.scdl.ValidationException;
 
 /**
  * Loads <code><implementation.web></code> from a composite.
@@ -84,6 +85,7 @@ public class WebComponentLoader implements TypeLoader<WebImplementation> {
             ComponentType type = impl.getComponentType();
             // FIXME we should allow implementation to specify the component type;
             ComponentType componentType = loadComponentType(introspectionContext);
+            componentType.validate();
             for (Map.Entry<String, ReferenceDefinition> entry : componentType.getReferences().entrySet()) {
                 type.add(entry.getValue());
             }
@@ -96,6 +98,8 @@ public class WebComponentLoader implements TypeLoader<WebImplementation> {
             } else {
                 throw e;
             }
+        } catch (ValidationException e) {
+            throw new LoaderException(e);
         }
         LoaderUtil.skipToEndElement(reader);
         return impl;

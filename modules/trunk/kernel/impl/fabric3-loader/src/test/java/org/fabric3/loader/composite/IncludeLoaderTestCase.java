@@ -60,6 +60,7 @@ public class IncludeLoaderTestCase extends TestCase {
     private String namespace;
     private QName name;
     private MetaDataStore store;
+    private Composite composite;
 
     public void testResolveQName() throws Exception {
         expect(reader.getAttributeValue(null, "name")).andReturn(name.getLocalPart());
@@ -99,7 +100,7 @@ public class IncludeLoaderTestCase extends TestCase {
                 eq(includeURL),
                 eq(Composite.class),
                 isA(IntrospectionContext.class)))
-                .andReturn(null);
+                .andReturn(composite);
         replay(registry, reader, namespaceContext, context, store);
 
         Include include = loader.load(reader, context);
@@ -124,7 +125,7 @@ public class IncludeLoaderTestCase extends TestCase {
                 eq(includeURL),
                 eq(Composite.class),
                 isA(IntrospectionContext.class)))
-                .andReturn(null);
+                .andReturn(composite);
         replay(registry, reader, namespaceContext, context, store);
 
         Include include = loader.load(reader, context);
@@ -152,7 +153,7 @@ public class IncludeLoaderTestCase extends TestCase {
                 eq(includeURL),
                 eq(Composite.class),
                 isA(IntrospectionContext.class)))
-                .andReturn(null);
+                .andReturn(composite);
         replay(registry, reader, namespaceContext, context, store);
 
         Include include = loader.load(reader, context);
@@ -174,5 +175,6 @@ public class IncludeLoaderTestCase extends TestCase {
         store = createMock(MetaDataStore.class);
         loader = new IncludeLoader(registry, store);
         name = new QName(namespace, "foo");
+        composite = new Composite(null);
     }
 }
