@@ -24,7 +24,7 @@
     </parent>
     <groupId>org.codehaus.fabric3.tutorials</groupId>
     <artifactId>fabric3-tutorial-loanapp-webclient</artifactId>
-    <version>0.3</version>
+    <version>0.5ALPHA2-SNAPSHOT</version>
     <packaging>war</packaging>
     <name>Fabric3 Tutorial Loan App Web Client</name>
     <description>Fabric3 loan application web-based client.</description>
@@ -47,7 +47,7 @@
         <dependency>
             <groupId>org.codehaus.fabric3.tutorials</groupId>
             <artifactId>fabric3-tutorial-loanapp-common</artifactId>
-            <version>0.3</version>
+            <version>0.5ALPHA2-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.codehaus.fabric3.spec</groupId>
@@ -56,65 +56,12 @@
         </dependency>
 
         <dependency>
-            <groupId>org.codehaus.fabric3.webapp</groupId>
-            <artifactId>fabric3-webapp-api</artifactId>
-            <version>0.3</version>
-        </dependency>
-
-        <dependency>
             <groupId>javax.servlet</groupId>
             <artifactId>servlet-api</artifactId>
             <version>2.4</version>
             <scope>provided</scope>
         </dependency>
-        <dependency>
-            <groupId>org.apache.geronimo.specs</groupId>
-            <artifactId>geronimo-j2ee-connector_1.5_spec</artifactId>
-            <version>1.0.1</version>
-        </dependency>
-        <dependency>
-            <groupId>javax.activation</groupId>
-            <artifactId>activation</artifactId>
-            <version>1.1</version>
-        </dependency>
 
     </dependencies>
 
-    <build>
-        <finalName>${artifactId}</finalName>
-        <plugins>
-            <plugin>
-                <groupId>org.codehaus.fabric3</groupId>
-                <artifactId>fabric3-webapp-plugin</artifactId>
-                <version>RELEASE</version>
-                <executions>
-                    <execution>
-                        <id>fabric3-war</id>
-                        <goals>
-                            <goal>fabric3-war</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <runTimeVersion>0.3</runTimeVersion>
-                    <extensions>
-                        <!--  Hessian extension  -->
-                        <!--<dependency>-->
-                            <!--<groupId>org.codehaus.fabric3</groupId>-->
-                            <!--<artifactId>fabric3-binding-hessian</artifactId>-->
-                            <!--<version>0.3</version>-->
-                        <!--</dependency>-->
-                        <!--  Web services extension
-                        <dependency>
-                            <groupId>org.codehaus.fabric3</groupId>
-                            <artifactId>fabric3-binding-ws</artifactId>
-                            <version>0.3</version>
-                        </dependency>   -->
-
-                    </extensions>
-
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
 </project>

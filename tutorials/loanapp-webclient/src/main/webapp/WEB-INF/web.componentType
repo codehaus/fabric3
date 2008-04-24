@@ -17,6 +17,6 @@
 -->
 <componentType xmlns="http://www.osoa.org/xmlns/sca/1.0">
     <reference name="loanService">
-        <interface.java interface="loanapp.loanservice.LoanApplicationService"/>
+        <interface.java interface="loanapp.loan.LoanService"/>
     </reference>
 </componentType>

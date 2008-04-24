@@ -31,13 +31,26 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 public class LoanApplication implements Serializable {
     private static final long serialVersionUID = -1205831596861744741L;
+    private String id;
+    private long expiration;
+
     private String ssn;
     private double amount;
     private double downPayment;
+    private PropertyLocation propertyLocation;
     private int creditScore;
     private int risk;
     private List<String> reasons = new ArrayList<String>();
     private int result;
+
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     /**
      * Sets the applicant's Social Security Number
@@ -55,6 +68,14 @@ public class LoanApplication implements Serializable {
      */
     public String getSSN() {
         return ssn;
+    }
+
+    public PropertyLocation getPropertyLocation() {
+        return propertyLocation;
+    }
+
+    public void setPropertyLocation(PropertyLocation location) {
+        this.propertyLocation = location;
     }
 
     /**
@@ -137,6 +158,10 @@ public class LoanApplication implements Serializable {
         reasons.add(reason);
     }
 
+    public void addRiskReasons(List<String> reasons) {
+        this.reasons.addAll(reasons);
+    }
+
     public int getResult() {
         return result;
     }
@@ -146,4 +171,11 @@ public class LoanApplication implements Serializable {
     }
 
 
+    public long getExpiration() {
+        return expiration;
+    }
+
+    public void setExpiration(long expiration) {
+        this.expiration = expiration;
+    }
 }

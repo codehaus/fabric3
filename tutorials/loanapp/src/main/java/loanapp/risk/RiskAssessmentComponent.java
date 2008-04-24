@@ -16,47 +16,49 @@
  */
 package loanapp.risk;
 
+import loanapp.message.LoanApplication;
 import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Scope;
+import org.osoa.sca.annotations.Callback;
 
-import loanapp.message.LoanApplication;
-import loanapp.message.LoanResult;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
+ * Implementation that performs risk assesment based on an applicant's credit score and loan amount.
+ *
  * @version $Rev$ $Date$
  */
-//@Scope("COMPOSITE")
+@Scope("COMPOSITE")
 public class RiskAssessmentComponent implements RiskAssessmentService {
+    private RiskAssessmentCallback callback;
     private double ratioMinimum;
-
 
     public RiskAssessmentComponent(@Property(name = "ratioMinimum", required = true)Double ratioMinimum) {
         this.ratioMinimum = ratioMinimum;
     }
 
-    public LoanApplication assessRisk(LoanApplication application) {
+    @Callback
+    public void setCallback(RiskAssessmentCallback callback) {
+        this.callback = callback;
+    }
+
+    public void assessRisk(LoanApplication application) {
         int score = application.getCreditScore();
+        int factor = 0;
+        List<String> reasons = new ArrayList<String>();
         if (score < 700) {
-            application.addRiskReason("Poor credit history");
-            application.setRisk(10);
-            application.setResult(LoanResult.DECLINED);
-            return application;
+            factor += 10;
+            reasons.add("Poor credit history");
         }
         double ratio = application.getDownPayment() / application.getAmount();
         if (ratio < ratioMinimum) {
             // less than a minimum percentage down, so assign it the highest risk
-            application.addRiskReason("Downpayment was to little");
-            application.addRiskReason("Suspect credit history");
-            application.setRisk(10);
-            application.setResult(LoanResult.DECLINED);
+            factor += 15;
+            reasons.add("Downpayment was too little");
+            reasons.add("Suspect credit history");
         }
-        if (score > 750) {
-            application.setRisk(1);
-            application.setResult(LoanResult.APPROVED);
-        } else {
-            application.setRisk(5);
-            application.setResult(LoanResult.APPROVED);
-        }
-        return application;
+        RiskAssessmentResult result = new RiskAssessmentResult(factor, reasons);
+        callback.onAssessment(result);
     }
 }

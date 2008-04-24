@@ -17,30 +17,48 @@
 -->
 
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
-           xmlns:hessian="http://www.fabric3.org/binding/hessian/0.2"
-           xmlns:burlap="http://www.fabric3.org/binding/burlap/0.2"
-           targetNamespace="http://fabric3.org/xmlns/sca/tutorials/0.3"
+           xmlns:tutorials="http://fabric3.org/xmlns/sca/tutorials/0.5"
+           targetNamespace="http://fabric3.org/xmlns/sca/tutorials/0.5"
            name="LoanAppComposite">
-    <service name="LoanApplicationService" promote="LoanApplicationComponent/LoanApplicationService">
+    <service name="LoanService" promote="LoanComponent">
         <!--<binding.ws uri="/loanService"/>-->
         <!--<binding.rmi serviceName="loanService"/>-->
         <!--<hessian:binding.hessian uri="/loanServiceHessian"/>-->
         <!--<burlap:binding.burlap uri="/loanServiceBurlap"/>-->
     </service>
 
-    <service name="RateService" promote="RateServiceComponent/RateService">
-        <binding.ws uri="/rateService"/>
-    </service>
-
-    <component name="LoanApplicationComponent">
-        <implementation.java class="loanapp.loanservice.LoanApplicationComponent"/>
-        <reference name="creditService" target="CreditCheckComponent"/>
-        <reference name="riskService" target="RiskAssessmentComponent"/>
-        <reference name="loanCalculator" target="LoanCalculatorComponent"/>
+    <component name="LoanComponent">
+        <implementation.java class="loanapp.loan.LoanComponent"/>
+        <reference name="validationService" target="ValidationComponent/ValidationService"/>
+        <reference name="requestCoordinator" target="RequestCoordinator/RequestCoordinator"/>
+        <reference name="acceptanceCoordinator" target="AcceptanceCoordinator/AcceptanceCoordinator"/>
     </component>
 
-    <component name="CreditCheckComponent">
-        <implementation.java class="loanapp.credit.CreditCheckComponent"/>
+    <component name="RequestCoordinator">
+        <implementation.java class="loanapp.request.RequestCoordinatorImpl"/>
+        <reference name="creditService" target="CreditComponent/CreditService"/>
+        <reference name="riskService" target="RiskAssessmentComponent"/>
+        <reference name="pricingService" target="PricingComponent"/>
+        <reference name="storeService" target="StoreComponent"/>
+    </component>
+
+    <component name="AcceptanceCoordinator">
+        <implementation.java class="loanapp.acceptance.AcceptanceCoordinatorImpl"/>
+        <reference name="appraisalService" target="AppraisalComponent"/>
+        <reference name="storeService" target="StoreComponent"/>
+    </component>
+
+    <component name="ValidationComponent">
+        <implementation.composite name="tutorials:ValidationComposite"/>
+    </component>
+
+    <component name="CreditComponent">
+        <implementation.composite name="tutorials:CreditComposite"/>
+    </component>
+
+    <component name="PricingComponent">
+        <implementation.composite name="tutorials:PricingComposite"/>
+        <reference name="rateService" target="RateComponent"/>
     </component>
 
     <component name="RiskAssessmentComponent">
@@ -48,13 +66,18 @@
         <property name="ratioMinimum">.10</property>
     </component>
 
-    <component name="LoanCalculatorComponent">
-        <implementation.java class="loanapp.calculator.LoanCalculatorComponent"/>
-        <reference name="rateService" target="RateServiceComponent"/>
+    <component name="RateComponent">
+        <implementation.java class="loanapp.rate.RateComponent"/>
     </component>
 
-    <component name="RateServiceComponent">
-        <implementation.java class="loanapp.rate.RateServiceComponent"/>
+    <component name="AppraisalComponent">
+        <implementation.java class="loanapp.appraisal.AppraisalComponent"/>
     </component>
+
+
+    <component name="StoreComponent">
+        <implementation.java class="loanapp.store.memory.MemoryStoreComponent"/>
+    </component>
+
 
 </composite>

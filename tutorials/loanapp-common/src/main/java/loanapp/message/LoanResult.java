@@ -12,19 +12,8 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 public class LoanResult implements Serializable {
     private static final long serialVersionUID = 8045590944866727036L;
-    public static final int APPROVED = 1;
-    public static final int DECLINED = -1;
-    private int result;
     private List<String> reasons = new ArrayList<String>();
     private List<LoanOption> options = new ArrayList<LoanOption>();
-
-    public int getResult() {
-        return result;
-    }
-
-    public void setResult(int result) {
-        this.result = result;
-    }
 
     public List<LoanOption> getOptions() {
         return Collections.unmodifiableList(options);

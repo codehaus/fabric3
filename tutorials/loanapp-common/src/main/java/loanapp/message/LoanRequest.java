@@ -30,6 +30,7 @@ public class LoanRequest implements Serializable {
     private String ssn;
     private double amount;
     private double downPayment;
+    private PropertyLocation propertyLocation;
 
     public String getSSN() {
         return ssn;
@@ -37,6 +38,14 @@ public class LoanRequest implements Serializable {
 
     public void setSSN(String ssn) {
         this.ssn = ssn;
+    }
+
+    public PropertyLocation getPropertyLocation() {
+        return propertyLocation;
+    }
+
+    public void setPropertyLocation(PropertyLocation location) {
+        this.propertyLocation = location;
     }
 
     public double getAmount() {

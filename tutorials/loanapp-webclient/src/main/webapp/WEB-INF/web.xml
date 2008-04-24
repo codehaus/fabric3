@@ -24,10 +24,6 @@
          xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
 
     <display-name>Fabric3 Loan Application Demo</display-name>
-    <!-- Require F3 listener -->
-    <listener>
-        <listener-class>org.fabric3.runtime.webapp.Fabric3ContextListener</listener-class>
-    </listener>
     <servlet>
         <servlet-name>LoanApplicationFormHandler</servlet-name>
         <servlet-class>org.fabric3.loanapp.webclient.LoanApplicationFormHandler</servlet-class>
@@ -36,9 +32,5 @@
         <servlet-name>LoanApplicationFormHandler</servlet-name>
         <url-pattern>/LoanApplicationFormHandler</url-pattern>
     </servlet-mapping>
-    <context-param>
-        <param-name>fabric3.component</param-name>
-        <param-value>loanapp</param-value>
-    </context-param>
 
 </web-app>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project relativePaths="false" version="4">
+<project relativePaths="true" version="4">
   <component name="AntConfiguration">
     <defaultAnt bundledAnt="true" />
   </component>
@@ -65,6 +65,22 @@
     <option name="PRINT_LINE_NUMBERS" value="false" />
     <option name="OPEN_IN_BROWSER" value="false" />
     <option name="OUTPUT_DIRECTORY" />
+  </component>
+  <component name="FacetAutodetectingManager">
+    <autodetection-disabled>
+      <facet-type id="web">
+        <modules>
+          <module name="fabric3-tutorial-webcalc" />
+          <module name="fabric3-tutorial-calculator-webclient">
+            <files>
+              <file url="file://$PROJECT_DIR$/calculator-webclient/src/main/webapp/WEB-INF/web.xml" />
+              <file url="file://$PROJECT_DIR$/calculator-webclient/target/fabric3-tutorial-calculator-webclient/WEB-INF/web.xml" />
+            </files>
+          </module>
+          <module name="fabric3-tutorial-loanapp-webclient" />
+        </modules>
+      </facet-type>
+    </autodetection-disabled>
   </component>
   <component name="IdProvider" IDEtalkID="ABC8AD97239DB5AE0A553570857AE87F" />
   <component name="InspectionProjectProfileManager">
@@ -289,15 +305,13 @@
       </item>
     </group>
   </component>
-  <component name="ProjectFileVersion" converted="false" />
+  <component name="ProjectFileVersion" converted="true" />
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/calculator/fabric3-tutorial-calculator.iml" filepath="$PROJECT_DIR$/calculator/fabric3-tutorial-calculator.iml" />
-      <module fileurl="file://$PROJECT_DIR$/calculator-webclient/fabric3-tutorial-calculator-webclient.iml" filepath="$PROJECT_DIR$/calculator-webclient/fabric3-tutorial-calculator-webclient.iml" />
       <module fileurl="file://$PROJECT_DIR$/loanapp/fabric3-tutorial-loanapp.iml" filepath="$PROJECT_DIR$/loanapp/fabric3-tutorial-loanapp.iml" />
-      <module fileurl="file://$PROJECT_DIR$/loanapp-client/fabric3-tutorial-loanapp-client.iml" filepath="$PROJECT_DIR$/loanapp-client/fabric3-tutorial-loanapp-client.iml" />
       <module fileurl="file://$PROJECT_DIR$/loanapp-common/fabric3-tutorial-loanapp-common.iml" filepath="$PROJECT_DIR$/loanapp-common/fabric3-tutorial-loanapp-common.iml" />
       <module fileurl="file://$PROJECT_DIR$/loanapp-webclient/fabric3-tutorial-loanapp-webclient.iml" filepath="$PROJECT_DIR$/loanapp-webclient/fabric3-tutorial-loanapp-webclient.iml" />
+      <module fileurl="file://$PROJECT_DIR$/webcalc/fabric3-tutorial-webcalc.iml" filepath="$PROJECT_DIR$/webcalc/fabric3-tutorial-webcalc.iml" />
     </modules>
   </component>
   <component name="ProjectRootManager" version="2" assert-keyword="true" jdk-15="true" project-jdk-name="1.5" project-jdk-type="JavaSDK">
@@ -329,6 +343,7 @@
     </option>
   </component>
   <UsedPathMacros>
+    <macro name="IDEA_HOME" />
     <macro name="M2_REPO" />
   </UsedPathMacros>
 </project>

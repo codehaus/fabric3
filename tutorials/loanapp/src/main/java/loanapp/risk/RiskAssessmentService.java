@@ -17,14 +17,25 @@
 package loanapp.risk;
 
 import org.osoa.sca.annotations.Remotable;
+import org.osoa.sca.annotations.OneWay;
+import org.osoa.sca.annotations.Callback;
 
 import loanapp.message.LoanApplication;
 
 /**
+ * Performs risk assessment against a loan application.
+ *
  * @version $Rev$ $Date$
  */
 @Remotable
+@Callback(RiskAssessmentCallback.class)
 public interface RiskAssessmentService {
 
-    LoanApplication assessRisk(LoanApplication loanApp);
+    /**
+     * Perform the risk assessment.
+     *
+     * @param application the application to assess
+     */
+    @OneWay
+    void assessRisk(LoanApplication application);
 }

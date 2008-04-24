@@ -32,5 +32,5 @@ public interface RateService {
      * @param score the credit score
      * @return a collection containing the current rates
      */
-    RateResults getRates(int score);
+    RateResults calculateRates(int score);
 }

@@ -16,26 +16,30 @@
  */
 package org.fabric3.loanapp.webclient;
 
-import java.io.IOException;
+import loanapp.loan.LoanException;
+import loanapp.loan.LoanService;
+import loanapp.message.LoanRequest;
+import org.osoa.sca.annotations.Reference;
+
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import loanapp.loanservice.LoanApplicationService;
-import loanapp.message.LoanRequest;
-import loanapp.message.LoanResult;
+import java.io.IOException;
 
 /**
  * @version $Rev$ $Date$
  */
 public class LoanApplicationFormHandler extends HttpServlet {
-    private LoanApplicationService loanService;
+    private static final long serialVersionUID = -1918315993336708875L;
+
+    @Reference
+    protected LoanService loanService;
 
     public void init(ServletConfig servletConfig) throws ServletException {
         super.init(servletConfig);
-        loanService = (LoanApplicationService) getServletContext().getAttribute("loanService");
+        loanService = (LoanService) getServletContext().getAttribute("loanService");
     }
 
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -47,9 +51,14 @@ public class LoanApplicationFormHandler extends HttpServlet {
         request.setDownPayment(Double.valueOf(down));
         request.setSSN(ssn);
         // invoke the loan application service
-        LoanResult result = loanService.apply(request);
-        req.setAttribute("loanResult", result);
-        getServletContext().getRequestDispatcher("/result.jsp").forward(req, resp);
+        String id = null;
+        try {
+            id = loanService.apply(request);
+        } catch (LoanException e) {
+            throw new ServletException(e);
+        }
+//        req.setAttribute("loanResult", result);
+//        getServletContext().getRequestDispatcher("/result.jsp").forward(req, resp);
     }
 
 }

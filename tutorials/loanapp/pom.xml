@@ -24,7 +24,7 @@
     </parent>
     <groupId>org.codehaus.fabric3.tutorials</groupId>
     <artifactId>fabric3-tutorial-loanapp</artifactId>
-    <version>0.3</version>
+    <version>0.5ALPHA2-SNAPSHOT</version>
     <name>Fabric3 Loan App Sample</name>
     <description>Fabric3 Loan Application Sample.</description>
     <packaging>sca-contribution-jar</packaging>
@@ -57,15 +57,15 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>org.codehaus.fabric3.tutorials</groupId>
-            <artifactId>fabric3-tutorial-loanapp-common</artifactId>
-            <version>0.3</version>
+            <groupId>org.codehaus.fabric3</groupId>
+            <artifactId>fabric3-api</artifactId>
+            <version>0.5ALPHA2-SNAPSHOT</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>org.codehaus.fabric3.development</groupId>
-            <artifactId>fabric3-development-api</artifactId>
-            <version>0.3</version>
-            <scope>provided</scope>
+            <groupId>org.codehaus.fabric3.tutorials</groupId>
+            <artifactId>fabric3-tutorial-loanapp-common</artifactId>
+            <version>0.5ALPHA2-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
@@ -79,6 +79,11 @@
                 <artifactId>fabric3-contribution-plugin</artifactId>
                 <version>RELEASE</version>
                 <extensions>true</extensions>
+                <configuration>
+                    <deployables>
+                        <deployable>META-INF/loanapp.composite</deployable>
+                    </deployables>
+                </configuration>
             </plugin>
         </plugins>
     </build>
