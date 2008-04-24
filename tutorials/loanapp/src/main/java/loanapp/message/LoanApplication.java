@@ -33,7 +33,7 @@ public class LoanApplication implements Serializable {
     private static final long serialVersionUID = -1205831596861744741L;
     private String id;
     private long expiration;
-
+    private int status;
     private String ssn;
     private String email;
     private double amount;
@@ -50,6 +50,24 @@ public class LoanApplication implements Serializable {
 
     public void setId(String id) {
         this.id = id;
+    }
+
+    /**
+     * Returns the loan status as defined in {@link loanapp.message.LoanStatus}.
+     *
+     * @return the loan status
+     */
+    public int getStatus() {
+        return status;
+    }
+
+    /**
+     * Sets the loan status as defined in {@link loanapp.message.LoanStatus}.
+     *
+     * @param status the loan status
+     */
+    public void setStatus(int status) {
+        this.status = status;
     }
 
     /**
@@ -174,4 +192,5 @@ public class LoanApplication implements Serializable {
     public LoanTerms getTerms() {
         return terms;
     }
+
 }

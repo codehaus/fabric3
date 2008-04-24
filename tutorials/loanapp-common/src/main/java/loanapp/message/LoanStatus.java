@@ -16,34 +16,18 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package loanapp.request;
-
-import loanapp.loan.LoanException;
-import loanapp.message.LoanRequest;
-import org.osoa.sca.annotations.Conversational;
+package loanapp.message;
 
 /**
- * Coordinator that proccesses new loan requests.
+ * Defines the loan application states
  *
  * @version $Revision$ $Date$
  */
-@Conversational
-public interface RequestCoordinator {
-
-    /**
-     * Apply for a loan
-     *
-     * @param request the loan application data
-     * @return the loan request id
-     * @throws LoanException thrown if an error with the loan application is found
-     */
-    String start(LoanRequest request) throws LoanException;
-
-    int getStatus(String id);
-
-    /**
-     * Cancel an in-process loan application
-     */
-    void cancel();
-
+public interface LoanStatus {
+    int NOT_SUBMITTED = 0;
+    int SUBMITTED = 1;
+    int AWAITING_ACCEPTANCE = 2;
+    int AWAITING_APPRAISAL = 3;
+    int SCHEDULED_FOR_FUNDING = 4;
+    int FUNDED = 5;
 }

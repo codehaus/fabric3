@@ -25,6 +25,7 @@ import loanapp.loan.LoanException;
 import loanapp.message.LoanApplication;
 import loanapp.message.LoanRequest;
 import loanapp.message.LoanTerms;
+import loanapp.message.LoanStatus;
 import loanapp.pricing.PricingService;
 import loanapp.risk.RiskAssessment;
 import loanapp.risk.RiskAssessmentCallback;
@@ -83,6 +84,13 @@ public class RequestCoordinatorImpl implements RequestCoordinator, CreditService
         this.monitor = monitor;
     }
 
+    public int getStatus(String id) {
+        if (application == null) {
+            return LoanStatus.NOT_SUBMITTED;
+        }
+        return application.getStatus();
+    }
+
     public String start(LoanRequest request) throws LoanException {
         // create a loan application and process it
         application = new LoanApplication();
@@ -93,6 +101,7 @@ public class RequestCoordinatorImpl implements RequestCoordinator, CreditService
         application.setPropertyLocation(request.getPropertyLocation());
         String id = UUID.randomUUID().toString();
         application.setId(id);
+        application.setStatus(LoanStatus.SUBMITTED);
         // pull the applicant's credit score
         creditService.score(application.getSSN());
         return id;
@@ -120,6 +129,7 @@ public class RequestCoordinatorImpl implements RequestCoordinator, CreditService
             application.setTerms(terms);
         }
         try {
+            application.setStatus(LoanStatus.AWAITING_ACCEPTANCE);
             storeService.save(application);
             // notify the client
             notificationService.termsReady(application.getEmail(), application.getId());

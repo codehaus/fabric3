@@ -17,9 +17,10 @@
 package org.fabric3.loanapp.webclient;
 
 import loanapp.loan.LoanException;
-import loanapp.message.LoanRequest;
-import loanapp.message.PropertyLocation;
 import loanapp.message.Address;
+import loanapp.message.LoanRequest;
+import loanapp.message.LoanStatus;
+import loanapp.message.PropertyLocation;
 import loanapp.request.RequestCoordinator;
 import loanapp.validation.ValidationService;
 import org.osoa.sca.ComponentContext;
@@ -50,11 +51,17 @@ public class LoanApplicationFormHandler extends HttpServlet {
     }
 
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        LoanRequest request = populateLoanRequest(req);
         // process the application
         RequestCoordinator coordinator = context.getService(RequestCoordinator.class, "requestCoordinator");
+        String id = (String) req.getSession().getAttribute("loanId");
+        if (id != null && LoanStatus.NOT_SUBMITTED != coordinator.getStatus(id)) {
+            // TODO send already submitted page
+            resp.getWriter().write("<html><body>Already submitted</body></html>");
+            return;
+        }
         try {
-            String id = coordinator.start(request);
+            LoanRequest request = populateLoanRequest(req);
+            id = coordinator.start(request);
             req.getSession().setAttribute("loanId", id);
         } catch (LoanException e) {
             throw new ServletException(e);
