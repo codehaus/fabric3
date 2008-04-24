@@ -6,10 +6,10 @@ import loanapp.credit.CreditServiceCallback;
 import loanapp.loan.LoanException;
 import loanapp.message.LoanApplication;
 import loanapp.message.LoanRequest;
-import loanapp.message.LoanResult;
+import loanapp.message.LoanTerms;
 import loanapp.pricing.PricingService;
+import loanapp.risk.RiskAssessment;
 import loanapp.risk.RiskAssessmentCallback;
-import loanapp.risk.RiskAssessmentResult;
 import loanapp.risk.RiskAssessmentService;
 import loanapp.store.StoreException;
 import loanapp.store.StoreService;
@@ -78,7 +78,7 @@ public class RequestCoordinatorImpl implements RequestCoordinator, CreditService
 
     public void onCreditScore(CreditScore result) {
         // assess the loan risk
-        application.setCreditScore(result.getScore());
+        application.setCreditScore(result);
         riskService.assessRisk(application);
     }
 
@@ -88,13 +88,13 @@ public class RequestCoordinatorImpl implements RequestCoordinator, CreditService
     }
 
 
-    public void onAssessment(RiskAssessmentResult assessmentResult) {
-        application.setRisk(assessmentResult.getRiskFactor());
-        application.addRiskReasons(assessmentResult.getReasons());
-        // todo determine whether to accept the loan
-
-        // calculate the options
-        LoanResult loanResult = pricingService.calculateOptions(application);
+    public void onAssessment(RiskAssessment assessment) {
+        application.setRiskAssessment(assessment);
+        if (RiskAssessment.APPROVED == assessment.getDecision()) {
+            // calculate the terms
+            LoanTerms terms = pricingService.calculateOptions(application);
+            application.setTerms(terms);
+        }
         try {
             storeService.save(application);
             // TODO send notification to client
@@ -102,8 +102,6 @@ public class RequestCoordinatorImpl implements RequestCoordinator, CreditService
             // TODO something better
             monitor.error(e);
         }
-
-
     }
 
     public void riskAssessmentError(Exception exception) {

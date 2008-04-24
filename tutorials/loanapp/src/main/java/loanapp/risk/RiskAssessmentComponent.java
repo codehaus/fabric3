@@ -44,8 +44,9 @@ public class RiskAssessmentComponent implements RiskAssessmentService {
     }
 
     public void assessRisk(LoanApplication application) {
-        int score = application.getCreditScore();
+        int score = application.getCreditScore().getScore();
         int factor = 0;
+        int decision;
         List<String> reasons = new ArrayList<String>();
         if (score < 700) {
             factor += 10;
@@ -58,7 +59,12 @@ public class RiskAssessmentComponent implements RiskAssessmentService {
             reasons.add("Downpayment was too little");
             reasons.add("Suspect credit history");
         }
-        RiskAssessmentResult result = new RiskAssessmentResult(factor, reasons);
+        if (factor > 24) {
+            decision = RiskAssessment.DECLINED;
+        } else {
+            decision = RiskAssessment.APPROVED;
+        }
+        RiskAssessment result = new RiskAssessment(decision, factor, reasons);
         callback.onAssessment(result);
     }
 }

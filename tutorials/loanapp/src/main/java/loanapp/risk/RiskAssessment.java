@@ -24,20 +24,29 @@ import java.util.Collections;
 /**
  * @version $Revision$ $Date$
  */
-public class RiskAssessmentResult {
-    private final int riskFactor;
+public class RiskAssessment {
+    public static final int APPROVED = 1;
+    public static final int DECLINED = -1;
+
+    private final int decision;
+    private final int factor;
     private final List<String> reasons;
 
-    public RiskAssessmentResult(int riskFactor, List<String> reasons) {
-        this.riskFactor = riskFactor;
+    public RiskAssessment(int decision, int factor, List<String> reasons) {
+        this.decision = decision;
+        this.factor = factor;
         this.reasons = reasons;
     }
 
     public int getRiskFactor() {
-        return riskFactor;
+        return factor;
     }
 
     public List<String> getReasons() {
         return Collections.unmodifiableList(reasons);
+    }
+
+    public int getDecision() {
+        return decision;
     }
 }

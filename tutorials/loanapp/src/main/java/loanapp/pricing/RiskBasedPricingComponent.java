@@ -17,7 +17,7 @@
 package loanapp.pricing;
 
 import loanapp.message.LoanApplication;
-import loanapp.message.LoanResult;
+import loanapp.message.LoanTerms;
 import loanapp.rate.RateResults;
 import loanapp.rate.RateService;
 import org.osoa.sca.annotations.Reference;
@@ -36,9 +36,9 @@ public class RiskBasedPricingComponent implements PricingService {
         this.rateService = rateService;
     }
 
-    public LoanResult calculateOptions(LoanApplication application) {
-        LoanResult result = new LoanResult();
-        RateResults rateResults = rateService.calculateRates(application.getRisk());
-        return result;
+    public LoanTerms calculateOptions(LoanApplication application) {
+        LoanTerms terms = new LoanTerms();
+        RateResults rateResults = rateService.calculateRates(application.getCreditScore().getScore());
+        return terms;
     }
 }

@@ -33,7 +33,7 @@ public interface RiskAssessmentCallback {
      * @param result the assessment result
      */
     @OneWay
-    void onAssessment(RiskAssessmentResult result);
+    void onAssessment(RiskAssessment result);
 
     /**
      * Notificaiton when a error was encountered during risk assessment.

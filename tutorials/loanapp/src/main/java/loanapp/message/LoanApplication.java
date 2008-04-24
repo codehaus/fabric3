@@ -16,10 +16,10 @@
  */
 package loanapp.message;
 
+import loanapp.risk.RiskAssessment;
+import loanapp.credit.CreditScore;
+
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -38,10 +38,9 @@ public class LoanApplication implements Serializable {
     private double amount;
     private double downPayment;
     private PropertyLocation propertyLocation;
-    private int creditScore;
-    private int risk;
-    private List<String> reasons = new ArrayList<String>();
-    private int result;
+    private RiskAssessment riskAssessment;
+    private LoanTerms terms;
+    private CreditScore creditScore;
 
 
     public String getId() {
@@ -119,7 +118,7 @@ public class LoanApplication implements Serializable {
      *
      * @return the applicant's credit score
      */
-    public int getCreditScore() {
+    public CreditScore getCreditScore() {
         return creditScore;
     }
 
@@ -128,46 +127,26 @@ public class LoanApplication implements Serializable {
      *
      * @param creditScore the applicant's credit score
      */
-    public void setCreditScore(int creditScore) {
+    public void setCreditScore(CreditScore creditScore) {
         this.creditScore = creditScore;
     }
 
     /**
-     * Returns the applicant's risk score.
+     * Returns the applicant's risk assesment.
      *
-     * @return the applicant's risk score
+     * @return the applicant's risk assesment
      */
-    public int getRisk() {
-        return risk;
+    public RiskAssessment getRiskAssessment() {
+        return riskAssessment;
     }
 
     /**
-     * Sets the applicant's risk score.
+     * Sets the applicant's risk assesment.
      *
-     * @param risk the applicant's risk score
+     * @param assessment the applicant's risk assesment
      */
-    public void setRisk(int risk) {
-        this.risk = risk;
-    }
-
-    public List<String> getRiskReasons() {
-        return Collections.unmodifiableList(reasons);
-    }
-
-    public void addRiskReason(String reason) {
-        reasons.add(reason);
-    }
-
-    public void addRiskReasons(List<String> reasons) {
-        this.reasons.addAll(reasons);
-    }
-
-    public int getResult() {
-        return result;
-    }
-
-    public void setResult(int result) {
-        this.result = result;
+    public void setRiskAssessment(RiskAssessment assessment) {
+        this.riskAssessment = assessment;
     }
 
 
@@ -177,5 +156,13 @@ public class LoanApplication implements Serializable {
 
     public void setExpiration(long expiration) {
         this.expiration = expiration;
+    }
+
+    public void setTerms(LoanTerms terms) {
+        this.terms = terms;
+    }
+
+    public LoanTerms getTerms() {
+        return terms;
     }
 }
