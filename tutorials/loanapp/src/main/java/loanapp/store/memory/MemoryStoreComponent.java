@@ -41,6 +41,10 @@ public class MemoryStoreComponent implements StoreService {
         save(application);
     }
 
+    public void remove(String id) throws StoreException {
+        cache.remove(id);
+    }
+
     public LoanApplication find(String id) throws StoreException {
         return cache.get(id);
     }

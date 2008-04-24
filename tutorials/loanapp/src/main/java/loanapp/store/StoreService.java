@@ -44,6 +44,14 @@ public interface StoreService {
     void update(LoanApplication application) throws StoreException;
 
     /**
+     * Deletes a loan application
+     *
+     * @param id the application id
+     * @throws StoreException if an exception deleting the application is encountered
+     */
+    void remove(String id) throws StoreException;
+
+    /**
      * Returns a loan application for the given id.
      *
      * @param id the application id.
