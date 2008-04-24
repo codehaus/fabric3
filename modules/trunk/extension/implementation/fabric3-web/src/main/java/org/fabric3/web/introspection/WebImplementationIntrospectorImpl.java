@@ -95,7 +95,7 @@ public class WebImplementationIntrospectorImpl implements WebImplementationIntro
             String name = entry.getKey();
             ReferenceDefinition reference = webType.getReferences().get(name);
             if (reference != null) {
-                if (!reference.getServiceContract().equals(entry.getValue().getServiceContract())) {
+                if (!reference.getServiceContract().isAssignableFrom(entry.getValue().getServiceContract())) {
                     // TODO display areas where it was not matching
                     throw new IncompatibleReferenceDefinitions("Reference contracts do not match for reference: " + name);
                 }
