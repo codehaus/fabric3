@@ -41,7 +41,6 @@
         <reference name="pricingService" target="PricingComponent"/>
         <reference name="notificationService" target="NotificationComponent"/>
         <reference name="storeService" target="StoreComponent"/>
-        <reference name="acceptanceCoordinator" target="AcceptanceCoordinator/AcceptanceCoordinator"/>
     </component>
 
     <component name="AcceptanceCoordinator">

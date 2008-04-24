@@ -63,6 +63,7 @@ public class LoanApplicationFormHandler extends HttpServlet {
             LoanRequest request = populateLoanRequest(req);
             id = coordinator.start(request);
             req.getSession().setAttribute("loanId", id);
+            resp.getWriter().write("<html><body>Loan request submitted: " + id + " </body></html>");
         } catch (LoanException e) {
             throw new ServletException(e);
         }

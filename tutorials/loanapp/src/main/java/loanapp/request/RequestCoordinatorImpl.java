@@ -24,23 +24,20 @@ import loanapp.credit.CreditServiceCallback;
 import loanapp.loan.LoanException;
 import loanapp.message.LoanApplication;
 import loanapp.message.LoanRequest;
-import loanapp.message.LoanTerms;
 import loanapp.message.LoanStatus;
+import loanapp.message.LoanTerms;
+import loanapp.notification.NotificationService;
 import loanapp.pricing.PricingService;
 import loanapp.risk.RiskAssessment;
 import loanapp.risk.RiskAssessmentCallback;
 import loanapp.risk.RiskAssessmentService;
 import loanapp.store.StoreException;
 import loanapp.store.StoreService;
-import loanapp.notification.NotificationService;
-import loanapp.acceptance.AcceptanceCoordinator;
 import org.fabric3.api.annotation.Monitor;
 import org.osoa.sca.annotations.ConversationAttributes;
 import org.osoa.sca.annotations.Reference;
 import org.osoa.sca.annotations.Scope;
 import org.osoa.sca.annotations.Service;
-
-import java.util.UUID;
 
 /**
  * Default implementation of the RequestCoordinator service.
@@ -58,7 +55,6 @@ public class RequestCoordinatorImpl implements RequestCoordinator, CreditService
     private StoreService storeService;
     private RequestCoordinatorMonitor monitor;
     private LoanApplication application;
-    private AcceptanceCoordinator acceptanceCoordinator;
 
     /**
      * Creates a new instance.
@@ -99,12 +95,15 @@ public class RequestCoordinatorImpl implements RequestCoordinator, CreditService
         application.setAmount(request.getAmount());
         application.setDownPayment(request.getDownPayment());
         application.setPropertyLocation(request.getPropertyLocation());
-        String id = UUID.randomUUID().toString();
-        application.setId(id);
         application.setStatus(LoanStatus.SUBMITTED);
+        try {
+            storeService.save(application);
+        } catch (StoreException e) {
+            throw new LoanException(e);
+        }
         // pull the applicant's credit score
         creditService.score(application.getSSN());
-        return id;
+        return application.getId();
     }
 
     public void cancel() {
@@ -130,28 +129,15 @@ public class RequestCoordinatorImpl implements RequestCoordinator, CreditService
         }
         try {
             application.setStatus(LoanStatus.AWAITING_ACCEPTANCE);
-            storeService.save(application);
+            storeService.update(application);
             // notify the client
             notificationService.termsReady(application.getEmail(), application.getId());
         } catch (StoreException e) {
             monitor.error(e);
         }
-
-        // xcv REMOVE
-        try {
-            acceptanceCoordinator.accept(application.getId());
-        } catch (LoanException e) {
-            throw new RuntimeException(e);
-        }
     }
 
     public void riskAssessmentError(Exception exception) {
         monitor.error(exception);
-    }
-
-    // XCV
-    @Reference
-    public void setAcceptanceCoordinator(AcceptanceCoordinator acceptanceCoordinator) {
-        this.acceptanceCoordinator = acceptanceCoordinator;
     }
 }

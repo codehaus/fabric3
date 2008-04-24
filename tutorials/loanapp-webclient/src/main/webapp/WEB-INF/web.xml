@@ -28,9 +28,17 @@
         <servlet-name>LoanApplicationFormHandler</servlet-name>
         <servlet-class>org.fabric3.loanapp.webclient.LoanApplicationFormHandler</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>LoanAcceptanceFormHandler</servlet-name>
+        <servlet-class>org.fabric3.loanapp.webclient.LoanAcceptanceFormHandler</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>LoanApplicationFormHandler</servlet-name>
         <url-pattern>/LoanApplicationFormHandler</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>LoanAcceptanceFormHandler</servlet-name>
+        <url-pattern>/LoanAcceptanceFormHandler</url-pattern>
     </servlet-mapping>
 
 </web-app>

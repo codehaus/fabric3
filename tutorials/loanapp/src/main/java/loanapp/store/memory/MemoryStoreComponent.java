@@ -34,14 +34,17 @@ import org.osoa.sca.annotations.Scope;
  */
 @Scope("COMPOSITE")
 public class MemoryStoreComponent implements StoreService {
+    private int counter;
     private Map<String, LoanApplication> cache = new ConcurrentHashMap<String, LoanApplication>();
 
     public void save(LoanApplication application) throws StoreException {
+        String id = String.valueOf(++counter);
+        application.setId(id);
         cache.put(application.getId(), application);
     }
 
     public void update(LoanApplication application) throws StoreException {
-        save(application);
+        cache.put(application.getId(), application);
     }
 
     public void remove(String id) throws StoreException {
