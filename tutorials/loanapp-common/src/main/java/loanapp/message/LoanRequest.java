@@ -28,6 +28,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 public class LoanRequest implements Serializable {
     private static final long serialVersionUID = -6182280155050660264L;
     private String ssn;
+    private String email;
     private double amount;
     private double downPayment;
     private PropertyLocation propertyLocation;
@@ -38,6 +39,14 @@ public class LoanRequest implements Serializable {
 
     public void setSSN(String ssn) {
         this.ssn = ssn;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public PropertyLocation getPropertyLocation() {

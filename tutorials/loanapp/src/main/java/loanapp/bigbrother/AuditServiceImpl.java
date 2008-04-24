@@ -17,6 +17,6 @@ public class AuditServiceImpl implements AuditService {
 
     public void recordResult(String ssn, CreditScore score) {
         System.out.println("AuditService: Credit result received for " + ssn + ". Score was "
-                + score.getScore());
+                + score.getScore() + ".");
     }
 }

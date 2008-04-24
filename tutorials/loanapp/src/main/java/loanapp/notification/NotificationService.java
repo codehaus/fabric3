@@ -16,39 +16,27 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package loanapp.risk;
+package loanapp.notification;
 
-import java.util.List;
-import java.util.Collections;
+import org.osoa.sca.annotations.OneWay;
+
+import java.util.Date;
 
 /**
- * Represents the risk associated with a loan calculated by a RiskAssessmentService.
- *
  * @version $Revision$ $Date$
  */
-public class RiskAssessment {
-    public static final int APPROVED = 1;
-    public static final int DECLINED = -1;
+public interface NotificationService {
 
-    private final int decision;
-    private final int factor;
-    private final List<String> reasons;
+    @OneWay
+    void termsReady(String applicationId);
 
-    public RiskAssessment(int decision, int factor, List<String> reasons) {
-        this.decision = decision;
-        this.factor = factor;
-        this.reasons = reasons;
-    }
+    @OneWay
+    void appraisalScheduled(String applicationId, Date date);
 
-    public int getRiskFactor() {
-        return factor;
-    }
+    @OneWay
+    void appraisalFinished(String applicationId);
 
-    public List<String> getReasons() {
-        return Collections.unmodifiableList(reasons);
-    }
+    @OneWay
+    void fundingDateScheduled(String applicationId, Date date);
 
-    public int getDecision() {
-        return decision;
-    }
 }

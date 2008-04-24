@@ -35,6 +35,7 @@ public class LoanApplication implements Serializable {
     private long expiration;
 
     private String ssn;
+    private String email;
     private double amount;
     private double downPayment;
     private PropertyLocation propertyLocation;
@@ -67,6 +68,14 @@ public class LoanApplication implements Serializable {
      */
     public String getSSN() {
         return ssn;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public PropertyLocation getPropertyLocation() {

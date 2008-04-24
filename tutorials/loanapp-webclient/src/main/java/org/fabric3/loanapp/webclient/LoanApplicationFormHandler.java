@@ -66,9 +66,10 @@ public class LoanApplicationFormHandler extends HttpServlet {
     private LoanRequest populateLoanRequest(HttpServletRequest req) {
         // TODO handle invalid doubles
         LoanRequest request = new LoanRequest();
+        request.setSSN(req.getParameter("ssn"));
+        request.setEmail(req.getParameter("email"));
         request.setAmount(Double.valueOf(req.getParameter("amount")));
         request.setDownPayment(Double.valueOf(req.getParameter("down")));
-        request.setSSN(req.getParameter("ssn"));
         request.setPropertyLocation(populateLocation(req));
         return request;
     }

@@ -1,3 +1,21 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
 package loanapp.request;
 
 import loanapp.credit.CreditScore;
@@ -61,9 +79,10 @@ public class RequestCoordinatorImpl implements RequestCoordinator, CreditService
     public String start(LoanRequest request) throws LoanException {
         // create a loan application and process it
         application = new LoanApplication();
+        application.setSSN(request.getSSN());
+        application.setEmail(request.getEmail());
         application.setAmount(request.getAmount());
         application.setDownPayment(request.getDownPayment());
-        application.setSSN(request.getSSN());
         application.setPropertyLocation(request.getPropertyLocation());
         String id = UUID.randomUUID().toString();
         application.setId(id);
@@ -73,7 +92,7 @@ public class RequestCoordinatorImpl implements RequestCoordinator, CreditService
     }
 
     public void cancel() {
-
+        throw new UnsupportedOperationException();
     }
 
     public void onCreditScore(CreditScore result) {
@@ -83,10 +102,8 @@ public class RequestCoordinatorImpl implements RequestCoordinator, CreditService
     }
 
     public void creditScoreError(Exception exception) {
-        // TODO something better
         monitor.error(exception);
     }
-
 
     public void onAssessment(RiskAssessment assessment) {
         application.setRiskAssessment(assessment);
@@ -99,13 +116,11 @@ public class RequestCoordinatorImpl implements RequestCoordinator, CreditService
             storeService.save(application);
             // TODO send notification to client
         } catch (StoreException e) {
-            // TODO something better
             monitor.error(e);
         }
     }
 
     public void riskAssessmentError(Exception exception) {
-        // TODO something better
         monitor.error(exception);
     }
 }
