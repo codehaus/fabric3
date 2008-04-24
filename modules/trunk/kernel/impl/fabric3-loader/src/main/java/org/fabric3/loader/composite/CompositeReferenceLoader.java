@@ -17,7 +17,6 @@
 package org.fabric3.loader.composite;
 
 import java.net.URI;
-import java.util.StringTokenizer;
 import java.util.List;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamConstants;
@@ -34,7 +33,6 @@ import org.fabric3.scdl.ModelObject;
 import org.fabric3.scdl.Multiplicity;
 import org.fabric3.scdl.OperationDefinition;
 import org.fabric3.scdl.ServiceContract;
-import org.fabric3.introspection.xml.InvalidReferenceException;
 import org.fabric3.introspection.xml.InvalidValueException;
 import org.fabric3.introspection.xml.Loader;
 import org.fabric3.introspection.xml.LoaderException;
