@@ -21,8 +21,6 @@ package org.fabric3.spi.model.physical;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.fabric3.scdl.ModelObject;
-
 /**
  * Model class representing the portable definition of a wire.
  * <p/>
@@ -31,7 +29,7 @@ import org.fabric3.scdl.ModelObject;
  *
  * @version $Rev$ $Date$
  */
-public class PhysicalWireDefinition extends ModelObject {
+public class PhysicalWireDefinition {
 
     // Source definition
     private PhysicalWireSourceDefinition source;

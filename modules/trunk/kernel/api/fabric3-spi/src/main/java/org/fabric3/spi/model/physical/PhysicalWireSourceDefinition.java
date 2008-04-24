@@ -24,14 +24,13 @@ import java.net.URI;
 import org.w3c.dom.Document;
 
 import org.fabric3.scdl.InjectableAttribute;
-import org.fabric3.scdl.ModelObject;
 
 /**
  * Represents a physical wire source definition.
  *
  * @version $Revision$ $Date$
  */
-public class PhysicalWireSourceDefinition extends ModelObject {
+public class PhysicalWireSourceDefinition {
     private URI uri;
     private InjectableAttribute injectableAttribute;
     private boolean optimizable;

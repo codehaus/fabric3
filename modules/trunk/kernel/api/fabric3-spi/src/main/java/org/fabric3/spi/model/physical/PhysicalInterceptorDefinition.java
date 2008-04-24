@@ -18,13 +18,11 @@
  */
 package org.fabric3.spi.model.physical;
 
-import org.fabric3.scdl.ModelObject;
-
 /**
  * Model class representing the portable definition of an interceptor. This class is used to describe the interceptors
  * around inbound and outbound wires on a physical component definition.
  *
  * @version $Rev$ $Date$
  */
-public class PhysicalInterceptorDefinition extends ModelObject {
+public class PhysicalInterceptorDefinition  {
 }

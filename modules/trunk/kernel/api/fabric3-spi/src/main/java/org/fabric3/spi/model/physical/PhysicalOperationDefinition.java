@@ -23,8 +23,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
-import org.fabric3.scdl.ModelObject;
-
 /**
  * Represents an operation.
  *
@@ -32,7 +30,7 @@ import org.fabric3.scdl.ModelObject;
  *          <p/>
  *          TODO Discuss with Jeremy/Jim on how to model MEPs, INOUT parameters, faults etc
  */
-public class PhysicalOperationDefinition extends ModelObject {
+public class PhysicalOperationDefinition  {
 
     // Parameters
     private List<String> parameterTypes = new LinkedList<String>();

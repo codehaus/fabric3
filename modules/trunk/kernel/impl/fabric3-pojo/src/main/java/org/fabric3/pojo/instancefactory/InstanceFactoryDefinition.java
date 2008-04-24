@@ -23,7 +23,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.fabric3.scdl.InjectionSite;
-import org.fabric3.scdl.ModelObject;
 import org.fabric3.scdl.Signature;
 import org.fabric3.scdl.InjectableAttribute;
 
@@ -32,7 +31,7 @@ import org.fabric3.scdl.InjectableAttribute;
  *
  * @version $Revsion$ $Date$
  */
-public class InstanceFactoryDefinition extends ModelObject {
+public class InstanceFactoryDefinition {
     private String implementationClass;
     private Signature constructor;
     private Signature initMethod;
