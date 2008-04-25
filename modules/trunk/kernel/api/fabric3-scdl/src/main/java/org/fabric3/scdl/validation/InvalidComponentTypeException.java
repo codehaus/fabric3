@@ -27,6 +27,8 @@ import org.fabric3.scdl.ValidationFailure;
  */
 public class InvalidComponentTypeException extends ValidationException {
 
+    private final ComponentType componentType;
+
     /**
      * Constructor indicating which composite is invalid and what the failures were.
      *
@@ -34,11 +36,12 @@ public class InvalidComponentTypeException extends ValidationException {
      * @param failures      the errors that were found during validation
      */
     public InvalidComponentTypeException(ComponentType componentType, List<ValidationFailure> failures) {
-        super(componentType, failures);
+        super(failures);
+        this.componentType = componentType;
     }
 
     @Override
     public ComponentType getModelObject() {
-        return (ComponentType) super.getModelObject();
+        return componentType;
     }
 }
