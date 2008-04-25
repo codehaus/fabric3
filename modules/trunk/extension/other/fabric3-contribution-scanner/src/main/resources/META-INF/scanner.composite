@@ -30,7 +30,6 @@
 
     <component name="ContributionDirectoryScanner">
         <system:implementation.system class="org.fabric3.scanner.scanner.ContributionDirectoryScanner"/>
-        <property name="persistent">false</property>
         <reference name="assembly" target="distributedAssembly"/>
     </component>
 

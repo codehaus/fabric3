@@ -16,15 +16,8 @@
  */
 package org.fabric3.scanner.scanner;
 
-import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
@@ -32,14 +25,11 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import javax.xml.stream.XMLInputFactory;
-import javax.xml.stream.XMLOutputFactory;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamReader;
-import javax.xml.stream.XMLStreamWriter;
+import javax.xml.namespace.QName;
 
 import org.osoa.sca.annotations.Destroy;
 import org.osoa.sca.annotations.EagerInit;
@@ -49,24 +39,28 @@ import org.osoa.sca.annotations.Reference;
 import org.osoa.sca.annotations.Service;
 
 import org.fabric3.api.annotation.Monitor;
-import org.fabric3.host.contribution.Constants;
 import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.host.contribution.ContributionService;
 import org.fabric3.host.contribution.ContributionSource;
 import org.fabric3.host.contribution.Deployable;
 import org.fabric3.host.contribution.FileContributionSource;
+import org.fabric3.scdl.Composite;
+import org.fabric3.scdl.Include;
+import static org.fabric3.spi.Constants.FABRIC3_SYSTEM_NS;
 import org.fabric3.spi.assembly.ActivateException;
 import org.fabric3.spi.assembly.Assembly;
-import org.fabric3.spi.services.marshaller.MarshalException;
-import org.fabric3.spi.services.marshaller.MarshalService;
 import org.fabric3.spi.scanner.FileSystemResource;
 import org.fabric3.spi.scanner.FileSystemResourceFactoryRegistry;
 import org.fabric3.spi.services.VoidService;
+import org.fabric3.spi.services.contribution.Contribution;
+import org.fabric3.spi.services.contribution.MetaDataStore;
+import org.fabric3.spi.services.contribution.QNameSymbol;
+import org.fabric3.spi.services.contribution.Resource;
+import org.fabric3.spi.services.contribution.ResourceElement;
 import org.fabric3.spi.services.event.EventService;
 import org.fabric3.spi.services.event.Fabric3Event;
 import org.fabric3.spi.services.event.Fabric3EventListener;
 import org.fabric3.spi.services.event.RuntimeStart;
-import org.fabric3.services.xmlfactory.XMLFactory;
 
 /**
  * Periodically scans a directory for new, updated, or removed contributions. New contributions are added to the domain and any deployable components
@@ -78,9 +72,7 @@ import org.fabric3.services.xmlfactory.XMLFactory;
  * removed files are determined by comparing the current directory contents with the contents from the previous pass. Changes or additions are also
  * determined by comparing the current directory state with that of the previous pass. Detected changes and additions are cached for the following
  * interval. Detected changes and additions from the previous interval are then checked using a checksum to see if they have changed again. If so,
- * they remain cached. If they have not changed, they are processed, contributed via the ContributionService and activated in the domain.
- * <p/>
- * The scanner is persistent and supports recovery on re-start.
+ * they remain cached. If they have not changed, they are processed, contributed via the ContributionService, and activated in the domain.
  * <p/>
  * Note update and remove are not fully implemented.
  */
@@ -91,16 +83,12 @@ public class ContributionDirectoryScanner implements Runnable, Fabric3EventListe
     private final Map<String, FileSystemResource> errorCache = new HashMap<String, FileSystemResource>();
     private final ContributionService contributionService;
     private final EventService eventService;
-    private final MarshalService marshallService;
-    private final XMLInputFactory xmlInputFactory;
-    private final XMLOutputFactory xmlOutputFactory;
+    private MetaDataStore metaDataStore;
     private final ScannerMonitor monitor;
     private final Assembly assembly;
     private Map<String, URI> processed = new HashMap<String, URI>();
     private FileSystemResourceFactoryRegistry registry;
     private String path = "../deploy";
-    private File processedIndex;
-    private boolean persistent = true;
 
     private long delay = 5000;
     private ScheduledExecutorService executor;
@@ -109,16 +97,13 @@ public class ContributionDirectoryScanner implements Runnable, Fabric3EventListe
                                         @Reference ContributionService contributionService,
                                         @Reference(name = "assembly")Assembly assembly,
                                         @Reference EventService eventService,
-                                        @Reference MarshalService service,
-                                        @Reference XMLFactory xmlFactory,
+                                        @Reference MetaDataStore metaDataStore,
                                         @Monitor ScannerMonitor monitor) {
         this.registry = registry;
         this.contributionService = contributionService;
         this.assembly = assembly;
         this.eventService = eventService;
-        this.marshallService = service;
-        this.xmlInputFactory = xmlFactory.newInputFactoryInstance();
-        this.xmlOutputFactory = xmlFactory.newOutputFactoryInstance();
+        this.metaDataStore = metaDataStore;
         this.monitor = monitor;
     }
 
@@ -132,32 +117,10 @@ public class ContributionDirectoryScanner implements Runnable, Fabric3EventListe
         this.delay = delay;
     }
 
-    @Property(required = false)
-    // JFM fix me when boolean types supported
-    public void setPersistent(String persistent) {
-        this.persistent = Boolean.valueOf(persistent);
-    }
-
     @Init
     public void init() {
-        processedIndex = new File(path + "/.processed");
         // register to be notified when the runtime starts so the scanner thread can be initialized
         eventService.subscribe(RuntimeStart.class, this);
-    }
-
-
-    public void onEvent(Fabric3Event event) {
-        executor = Executors.newSingleThreadScheduledExecutor();
-        try {
-            recover();
-            executor.scheduleWithFixedDelay(this, 10, delay, TimeUnit.MILLISECONDS);
-        } catch (FileNotFoundException e) {
-            monitor.recoveryError(e);
-        } catch (MarshalException e) {
-            monitor.recoveryError(e);
-        } catch (XMLStreamException e) {
-            monitor.recoveryError(e);
-        }
     }
 
     @Destroy
@@ -165,69 +128,35 @@ public class ContributionDirectoryScanner implements Runnable, Fabric3EventListe
         executor.shutdownNow();
     }
 
+    public void onEvent(Fabric3Event event) {
+        executor = Executors.newSingleThreadScheduledExecutor();
+        executor.scheduleWithFixedDelay(this, 10, delay, TimeUnit.MILLISECONDS);
+    }
+
     public synchronized void run() {
         File extensionDir = new File(path);
         if (!extensionDir.isDirectory()) {
-            // we don't have an extension directory, there's nothing to do
+            // there is no extension directory, return without processing
             return;
         }
         try {
             File[] files = extensionDir.listFiles();
-            remove(files);
-            addAndUpdate(files);
-            // persist changes
-            save();
-        } catch (FileNotFoundException e) {
-            monitor.recoveryError(e);
+            processRemovals(files);
+            processFiles(files);
         } catch (RuntimeException e) {
             monitor.error(e);
-        } catch (MarshalException e) {
-            monitor.error(e);
-        } catch (XMLStreamException e) {
-            monitor.error(e);
         }
 
     }
 
-    @SuppressWarnings({"unchecked"})
-    synchronized void recover() throws FileNotFoundException, XMLStreamException, MarshalException {
-        File extensionDir = new File(path);
-        if (!extensionDir.isDirectory()) {
-            // we don't have an extension directory, there's nothing to do
-            return;
-        }
-        if (!processedIndex.exists()) {
-            // no index which means there is nothing to recover
-            return;
-        }
-        InputStream is = null;
-        try {
-            is = new BufferedInputStream(new FileInputStream(processedIndex));
-            XMLStreamReader reader = xmlInputFactory.createXMLStreamReader(is);
-            processed = marshallService.unmarshall(HashMap.class, reader);
-        } finally {
-            try {
-                if (is != null) {
-                    is.close();
-                }
-            } catch (IOException e) {
-                monitor.error(e);
-            }
-        }
-        File[] files = extensionDir.listFiles();
-        remove(files);
-        // check for updates and additions
-        addAndUpdate(files);
-        save();
-    }
-
-    private void addAndUpdate(File[] files) {
+    private synchronized void processFiles(File[] files) {
+        boolean wait = false;
+        List<File> ignored = new ArrayList<File>();
         for (File file : files) {
             try {
                 String name = file.getName();
-                FileSystemResource cached;
                 FileSystemResource resource = null;
-                cached = errorCache.get(name);
+                FileSystemResource cached = errorCache.get(name);
                 if (cached != null) {
                     resource = registry.createResource(file);
                     assert resource != null;
@@ -242,39 +171,68 @@ public class ContributionDirectoryScanner implements Runnable, Fabric3EventListe
                 }
                 cached = cache.get(name);
                 if (cached == null) {
+                    // the file has been added
                     if (resource == null) {
                         resource = registry.createResource(file);
                     }
                     if (resource == null) {
                         // not a known type, ignore
+                        ignored.add(file);
                         continue;
                     }
                     resource.reset();
                     // cache the resource and wait to the next run to see if it has changed
                     cache.put(name, resource);
+                    wait = true;
                 } else {
-                    // cached
+                    // already cached from a previous run
                     if (cached.isChanged()) {
                         // contents are still being updated, wait until next run
-                        continue;
+                        wait = true;
                     }
-                    processCachedResource(name, file, cached);
                 }
             } catch (IOException e) {
                 monitor.error(e);
             }
         }
+        if (!wait) {
+            sortAndProcessChanges(files, ignored);
+        }
     }
 
-    private void processCachedResource(String name, File file, FileSystemResource cached) throws IOException {
-        cache.remove(name);
-        // check if it is in the store
-        URI artifactUri = processed.get(name);
-        URL location = file.toURI().normalize().toURL();
-        byte[] checksum = cached.getChecksum();
-        long timestamp = file.lastModified();
-        if (artifactUri != null) {
-            // updated
+    private void sortAndProcessChanges(File[] files, List<File> ignored) {
+        try {
+            List<File> updates = new ArrayList<File>();
+            List<File> additions = new ArrayList<File>();
+            for (File file : files) {
+                // check if it is in the store
+                String name = file.getName();
+                boolean isProcessed = processed.containsKey(name);
+                boolean isError = errorCache.containsKey(name);
+                if (!isError && isProcessed && !ignored.contains(file)) {
+                    // updated
+                    updates.add(file);
+                } else if (!isError && !isProcessed && !ignored.contains(file)) {
+                    // an addition
+                    additions.add(file);
+                }
+
+            }
+            processUpdates(updates);
+            processAdditions(additions);
+        } catch (IOException e) {
+            monitor.error(e);
+        }
+    }
+
+    private synchronized void processUpdates(List<File> files) throws IOException {
+        for (File file : files) {
+            String name = file.getName();
+            URI artifactUri = processed.get(name);
+            URL location = file.toURI().normalize().toURL();
+            FileSystemResource cached = cache.remove(name);
+            byte[] checksum = cached.getChecksum();
+            long timestamp = file.lastModified();
             long previousTimestamp = contributionService.getContributionTimestamp(artifactUri);
             if (timestamp > previousTimestamp) {
                 try {
@@ -284,37 +242,98 @@ public class ContributionDirectoryScanner implements Runnable, Fabric3EventListe
                     errorCache.put(name, cached);
                     monitor.error(e);
                 }
+                monitor.update(artifactUri.toString());
             }
-            monitor.update(location.toString());
             // TODO undeploy and redeploy
-        } else {
-            // added
+        }
+    }
+
+    private synchronized void processAdditions(List<File> files) throws IOException {
+        List<ContributionSource> sources = new ArrayList<ContributionSource>();
+        List<FileSystemResource> addedResources = new ArrayList<FileSystemResource>();
+        for (File file : files) {
+            String name = file.getName();
+            FileSystemResource cached = cache.remove(name);
+            addedResources.add(cached);
+            URL location = file.toURI().normalize().toURL();
+            byte[] checksum = cached.getChecksum();
+            long timestamp = file.lastModified();
             try {
-                ContributionSource source = new FileContributionSource(location, timestamp, checksum);
-                URI addedUri = contributionService.contribute(source);
-                List<Deployable> deployables = contributionService.getDeployables(addedUri);
-                for (Deployable deployable : deployables) {
-                    if (Constants.COMPOSITE_TYPE.equals(deployable.getType())) {
-                        // include composite deployables at the domain level
-                        assembly.includeInDomain(deployable.getName());
-                    }
-                }
-                processed.put(name, addedUri);
-                monitor.add(file.getName());
-            } catch (ContributionException e) {
-                errorCache.put(name, cached);
-                monitor.error(e);
-            } catch (ActivateException e) {
-                errorCache.put(name, cached);
-                monitor.error(e);
+                ContributionSource source = new FileContributionSource(URI.create(name), location, timestamp, checksum);
+                sources.add(source);
             } catch (NoClassDefFoundError e) {
                 errorCache.put(name, cached);
                 monitor.error(e);
             }
         }
+        if (!sources.isEmpty()) {
+            try {
+                // install contributions, which will be ordered transitively by import dependencies
+                List<URI> addedUris = contributionService.contribute(sources);
+                // activate the contributions by including deployables in a synthesized composite. This will ensure components are started according
+                // to dependencies even if a dependent component is defined in a different contribution.
+                Composite synthesized = synthesizeComposite(addedUris);
+                assembly.includeInDomain(synthesized);
+                for (URI uri : addedUris) {
+                    String name = uri.toString();
+                    // URI is the file name
+                    processed.put(name, uri);
+                    monitor.add(name);
+                }
+            } catch (ContributionException e) {
+                // FIXME for now, just error all additions
+                for (FileSystemResource cached : addedResources) {
+                    errorCache.put(cached.getName(), cached);
+                }
+                monitor.error(e);
+            } catch (ActivateException e) {
+                // FIXME for now, just error all additions
+                for (FileSystemResource cached : addedResources) {
+                    errorCache.put(cached.getName(), cached);
+                }
+                monitor.error(e);
+            }
+
+        }
     }
 
-    private void remove(File[] files) {
+    /**
+     * Synthesizes a composite by including deployables from contributions identified by the list of URIs
+     *
+     * @param contributionUris the contributions containing the deployables to include
+     * @return the synthesized composite
+     */
+    private Composite synthesizeComposite(List<URI> contributionUris) {
+        QName qName = new QName(FABRIC3_SYSTEM_NS, "ScannerComposite" + UUID.randomUUID().toString());
+        Composite composite = new Composite(qName);
+        for (URI uri : contributionUris) {
+            Contribution contribution = metaDataStore.find(uri);
+            assert contribution != null;
+            for (Resource resource : contribution.getResources()) {
+                for (ResourceElement<?, ?> entry : resource.getResourceElements()) {
+                    if (!(entry.getValue() instanceof Composite)) {
+                        continue;
+                    }
+                    @SuppressWarnings({"unchecked"})
+                    ResourceElement<QNameSymbol, Composite> element = (ResourceElement<QNameSymbol, Composite>) entry;
+                    QName name = element.getSymbol().getKey();
+                    Composite childComposite = element.getValue();
+                    for (Deployable deployable : contribution.getManifest().getDeployables()) {
+                        if (deployable.getName().equals(name)) {
+                            Include include = new Include();
+                            include.setName(name);
+                            include.setIncluded(childComposite);
+                            composite.add(include);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        return composite;
+    }
+
+    private synchronized void processRemovals(File[] files) {
         Map<String, File> index = new HashMap<String, File>(files.length);
         for (File file : files) {
             index.put(file.getName(), file);
@@ -344,32 +363,4 @@ public class ContributionDirectoryScanner implements Runnable, Fabric3EventListe
         }
     }
 
-    /**
-     * Persists the list of processed resources for recovery
-     *
-     * @throws FileNotFoundException if an error occurs opening the persisted file
-     * @throws XMLStreamException    if an error occurs creating the XML stream
-     * @throws MarshalException      if an error occurs marshalling
-     */
-    private synchronized void save() throws FileNotFoundException, XMLStreamException, MarshalException {
-        if (!persistent) {
-            return;
-        }
-        OutputStream os = null;
-        try {
-            os = new BufferedOutputStream(new FileOutputStream(processedIndex));
-            XMLStreamWriter writer = xmlOutputFactory.createXMLStreamWriter(os);
-            marshallService.marshall(processed, writer);
-        } catch (Error e) {
-            e.printStackTrace();
-        } finally {
-            if (os != null) {
-                try {
-                    os.close();
-                } catch (IOException e) {
-                    monitor.error(e);
-                }
-            }
-        }
-    }
 }
