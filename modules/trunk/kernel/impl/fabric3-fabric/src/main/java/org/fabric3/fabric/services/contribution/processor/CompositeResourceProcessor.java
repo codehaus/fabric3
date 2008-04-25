@@ -33,6 +33,8 @@ import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.introspection.DefaultIntrospectionContext;
 import org.fabric3.scdl.Composite;
 import org.fabric3.scdl.ValidationException;
+import org.fabric3.scdl.ValidationContext;
+import org.fabric3.scdl.validation.InvalidCompositeException;
 import org.fabric3.introspection.xml.Loader;
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.xml.LoaderException;
@@ -110,7 +112,11 @@ public class CompositeResourceProcessor implements ResourceProcessor {
         try {
             URL url = resource.getUrl();
             Composite composite = processComponentType(url, loader, contributionUri);
-            composite.validate();
+            ValidationContext validationContext = new ValidationContext();
+            composite.validate(validationContext);
+            if (validationContext.hasErrors()) {
+                throw new InvalidCompositeException(composite, validationContext.getErrors());
+            }
             boolean found = false;
             for (ResourceElement element : resource.getResourceElements()) {
                 if (element.getSymbol().getKey().equals(composite.getName())) {

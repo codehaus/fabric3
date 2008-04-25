@@ -119,6 +119,10 @@ public class DefaultLoaderHelper implements LoaderHelper {
     }
 
     public URI getURI(String target) {
+        if (target == null) {
+            return null;
+        }
+        
         int index = target.lastIndexOf('/');
         if (index == -1) {
             return URI.create(target);
@@ -134,16 +138,12 @@ public class DefaultLoaderHelper implements LoaderHelper {
         if (value == null || value.length() == 0) {
             return null;
         } else {
-            try {
-                String[] uris = value.split(" ");
-                List<URI> result = new ArrayList<URI>(uris.length);
-                for (String uri : uris) {
-                    result.add(new URI(uri));
-                }
-                return result;
-            } catch (URISyntaxException e) {
-                throw new LoaderException(e);
+            String[] uris = value.split(" ");
+            List<URI> result = new ArrayList<URI>(uris.length);
+            for (String uri : uris) {
+                result.add(getURI(uri));
             }
+            return result;
         }
     }
 }

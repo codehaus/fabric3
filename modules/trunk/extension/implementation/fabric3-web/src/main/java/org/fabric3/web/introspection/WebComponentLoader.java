@@ -41,6 +41,8 @@ import org.fabric3.scdl.ComponentType;
 import org.fabric3.scdl.ReferenceDefinition;
 import org.fabric3.scdl.Property;
 import org.fabric3.scdl.ValidationException;
+import org.fabric3.scdl.ValidationContext;
+import org.fabric3.scdl.validation.InvalidComponentTypeException;
 
 /**
  * Loads <code><implementation.web></code> from a composite.
@@ -85,7 +87,11 @@ public class WebComponentLoader implements TypeLoader<WebImplementation> {
             ComponentType type = impl.getComponentType();
             // FIXME we should allow implementation to specify the component type;
             ComponentType componentType = loadComponentType(introspectionContext);
-            componentType.validate();
+            ValidationContext validationContext = new ValidationContext();
+            componentType.validate(validationContext);
+            if (validationContext.hasErrors()) {
+                throw new InvalidComponentTypeException(componentType, validationContext.getErrors());
+            }
             for (Map.Entry<String, ReferenceDefinition> entry : componentType.getReferences().entrySet()) {
                 type.add(entry.getValue());
             }

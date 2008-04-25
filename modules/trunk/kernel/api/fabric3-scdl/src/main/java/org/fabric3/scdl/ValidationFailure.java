@@ -16,42 +16,29 @@
  */
 package org.fabric3.scdl;
 
-import java.util.List;
-
 /**
+ * Base class for validation failures.
+ *
  * @version $Rev$ $Date$
  */
-public abstract class ValidationException extends Exception {
-
+public abstract class ValidationFailure {
     private final ModelObject modelObject;
-    private final List<ValidationFailure> failures;
 
     /**
-     * Constructor that initializes the initial list of failures.
+     * Constructor that indicates which model object failed validation.
      *
-     * @param modelObject the model object that raised this exception
-     * @param failures    the underlying failures of this exception
+     * @param modelObject the model object that failed validation
      */
-    protected ValidationException(ModelObject modelObject, List<ValidationFailure> failures) {
+    protected ValidationFailure(ModelObject modelObject) {
         this.modelObject = modelObject;
-        this.failures = failures;
     }
 
     /**
-     * Returns the model object that raised this exception.
+     * Returns the model object that failed validation.
      *
-     * @return the model object that raised this exception
+     * @return the model object that failed validation
      */
     public ModelObject getModelObject() {
         return modelObject;
-    }
-
-    /**
-     * Returns a collection of underlying failures of this exception.
-     *
-     * @return a collection of underlying failures
-     */
-    public List<ValidationFailure> getFailures() {
-        return failures;
     }
 }

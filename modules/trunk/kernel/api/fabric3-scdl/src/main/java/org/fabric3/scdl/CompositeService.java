@@ -18,6 +18,8 @@ package org.fabric3.scdl;
 
 import java.net.URI;
 
+import org.fabric3.scdl.validation.MissingPromotion;
+
 /**
  * Representation of a service exposed by a composite component type.
  *
@@ -45,5 +47,13 @@ public class CompositeService extends ServiceDefinition {
      */
     public URI getPromote() {
         return promote;
+    }
+
+    @Override
+    public void validate(ValidationContext context) {
+        super.validate(context);
+        if (promote == null) {
+            context.addError(new MissingPromotion(this));
+        }
     }
 }

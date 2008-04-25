@@ -32,6 +32,8 @@ import org.fabric3.introspection.DefaultIntrospectionContext;
 import org.fabric3.scdl.Composite;
 import org.fabric3.scdl.Include;
 import org.fabric3.scdl.ValidationException;
+import org.fabric3.scdl.ValidationContext;
+import org.fabric3.scdl.validation.InvalidCompositeException;
 import org.fabric3.introspection.xml.Loader;
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.xml.LoaderException;
@@ -114,11 +116,14 @@ public class IncludeLoader implements TypeLoader<Include> {
         Composite composite;
         try {
             composite = loader.load(url, Composite.class, childContext);
-            composite.validate();
         } catch (LoaderException e) {
             throw new InvalidIncludeException(name, e);
-        } catch (ValidationException e) {
-            throw new InvalidIncludeException(name, e);
+        }
+        ValidationContext validationContext = new ValidationContext();
+        composite.validate(validationContext);
+        if (validationContext.hasErrors()) {
+            ValidationException ve = new InvalidCompositeException(composite, validationContext.getErrors());
+            throw new InvalidIncludeException(name, ve);
         }
 
         include.setName(name);

@@ -17,11 +17,9 @@
 package org.fabric3.scdl;
 
 import java.net.URI;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
-import org.fabric3.scdl.validation.MissingPromotionException;
+import org.fabric3.scdl.validation.MissingPromotion;
 
 /**
  * @version $Rev$ $Date$
@@ -33,7 +31,7 @@ public class CompositeReference extends ReferenceDefinition {
     /**
      * Construct a composite reference.
      *
-     * @param name the name of the composite reference
+     * @param name         the name of the composite reference
      * @param promotedUris the list of component references it promotes
      */
     public CompositeReference(String name, List<URI> promotedUris) {
@@ -60,10 +58,10 @@ public class CompositeReference extends ReferenceDefinition {
     }
 
     @Override
-    public void validate() throws ValidationException {
-        super.validate();
+    public void validate(ValidationContext context) {
+        super.validate(context);
         if (promotedUris == null || promotedUris.isEmpty()) {
-            throw new MissingPromotionException(this);
+            context.addError(new MissingPromotion(this));
         }
     }
 }

@@ -62,10 +62,6 @@ public class CompositeServiceLoader implements TypeLoader<CompositeService> {
             throw new MissingAttributeException("Service name not specified: ", name);
         }
         String promote = reader.getAttributeValue(null, "promote");
-        if (promote == null) {
-            throw new MissingAttributeException("Promote not specified", name);
-        }
-
         CompositeService def = new CompositeService(name, null, loaderHelper.getURI(promote));
 
         loaderHelper.loadPolicySetsAndIntents(def, reader);
