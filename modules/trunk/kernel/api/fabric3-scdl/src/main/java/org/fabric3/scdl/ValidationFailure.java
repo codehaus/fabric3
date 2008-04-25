@@ -21,15 +21,15 @@ package org.fabric3.scdl;
  *
  * @version $Rev$ $Date$
  */
-public abstract class ValidationFailure {
-    private final ModelObject modelObject;
+public abstract class ValidationFailure<T> {
+    private final T modelObject;
 
     /**
-     * Constructor that indicates which model object failed validation.
+     * Constructor specifying the model object associated with this failure.
      *
-     * @param modelObject the model object that failed validation
+     * @param modelObject the model object associated with this failure
      */
-    protected ValidationFailure(ModelObject modelObject) {
+    protected ValidationFailure(T modelObject) {
         this.modelObject = modelObject;
     }
 
@@ -38,7 +38,7 @@ public abstract class ValidationFailure {
      *
      * @return the model object that failed validation
      */
-    public ModelObject getModelObject() {
+    public T getModelObject() {
         return modelObject;
     }
 }

@@ -16,14 +16,17 @@
  */
 package org.fabric3.scdl.validation;
 
+import org.fabric3.scdl.ComponentDefinition;
+import org.fabric3.scdl.Implementation;
 import org.fabric3.scdl.ValidationFailure;
-import org.fabric3.scdl.ModelObject;
 
 /**
+ * Validation failure indicating that a component definition does not have an associated implementation.
+ *
  * @version $Rev$ $Date$
  */
-public class MissingImplementation extends ValidationFailure {
-    public MissingImplementation(ModelObject modelObject) {
-        super(modelObject);
+public class MissingImplementation extends ValidationFailure<ComponentDefinition<? extends Implementation<?>>> {
+    public MissingImplementation(ComponentDefinition<? extends Implementation<?>> component) {
+        super(component);
     }
 }

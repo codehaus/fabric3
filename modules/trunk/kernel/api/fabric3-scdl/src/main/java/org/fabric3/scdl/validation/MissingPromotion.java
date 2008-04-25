@@ -20,6 +20,8 @@ import org.fabric3.scdl.ModelObject;
 import org.fabric3.scdl.ValidationFailure;
 
 /**
+ * Validation failure indicating that a composite service or reference does not specify what it promotes.
+ *
  * @version $Rev$ $Date$
  */
 public class MissingPromotion extends ValidationFailure {

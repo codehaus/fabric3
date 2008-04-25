@@ -16,16 +16,16 @@
  */
 package org.fabric3.scdl.validation;
 
-import org.fabric3.scdl.Implementation;
+import org.fabric3.scdl.CompositeService;
 import org.fabric3.scdl.ValidationFailure;
 
 /**
- * Validation failure indicating that an implementation does not have an associated component type.
+ * Validation warning indicating that the component being promoted was not found in this composite.
  *
  * @version $Rev$ $Date$
  */
-public class MissingComponentType extends ValidationFailure<Implementation<?>> {
-    public MissingComponentType(Implementation<?> implementation) {
-        super(implementation);
+public class ServicePromotionTargetNotInComposite extends ValidationFailure<CompositeService> {
+    public ServicePromotionTargetNotInComposite(CompositeService service) {
+        super(service);
     }
 }

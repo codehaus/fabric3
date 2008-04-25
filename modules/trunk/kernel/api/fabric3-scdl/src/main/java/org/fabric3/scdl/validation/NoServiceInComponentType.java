@@ -16,16 +16,16 @@
  */
 package org.fabric3.scdl.validation;
 
-import org.fabric3.scdl.Implementation;
+import org.fabric3.scdl.ComponentService;
 import org.fabric3.scdl.ValidationFailure;
 
 /**
- * Validation failure indicating that an implementation does not have an associated component type.
+ * Validation warning indicating that a component is trying to configure a service not defined by the component type.
  *
  * @version $Rev$ $Date$
  */
-public class MissingComponentType extends ValidationFailure<Implementation<?>> {
-    public MissingComponentType(Implementation<?> implementation) {
-        super(implementation);
+public class NoServiceInComponentType extends ValidationFailure<ComponentService> {
+    public NoServiceInComponentType(ComponentService service) {
+        super(service);
     }
 }

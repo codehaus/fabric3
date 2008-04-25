@@ -16,16 +16,16 @@
  */
 package org.fabric3.scdl.validation;
 
-import org.fabric3.scdl.Implementation;
+import org.fabric3.scdl.ComponentReference;
 import org.fabric3.scdl.ValidationFailure;
 
 /**
- * Validation failure indicating that an implementation does not have an associated component type.
+ * Validation warning indicating that a component is trying to configure a reference not defined by the component type.
  *
  * @version $Rev$ $Date$
  */
-public class MissingComponentType extends ValidationFailure<Implementation<?>> {
-    public MissingComponentType(Implementation<?> implementation) {
-        super(implementation);
+public class NoReferenceInComponentType extends ValidationFailure<ComponentReference> {
+    public NoReferenceInComponentType(ComponentReference reference) {
+        super(reference);
     }
 }

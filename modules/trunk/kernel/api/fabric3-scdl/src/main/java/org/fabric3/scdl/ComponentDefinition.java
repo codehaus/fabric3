@@ -25,6 +25,9 @@ import java.util.Map;
 import org.w3c.dom.Document;
 
 import org.fabric3.scdl.validation.MissingImplementation;
+import org.fabric3.scdl.validation.NoPropertyInComponentType;
+import org.fabric3.scdl.validation.NoReferenceInComponentType;
+import org.fabric3.scdl.validation.NoServiceInComponentType;
 
 /**
  * Represents a component. <p>A component is a configured instance of an implementation. The provided and consumed services, as well as the available
@@ -258,19 +261,33 @@ public class ComponentDefinition<I extends Implementation<?>> extends AbstractPo
     @Override
     public void validate(ValidationContext context) {
         super.validate(context);
+
+        AbstractComponentType componentType;
         if (implementation == null) {
             context.addError(new MissingImplementation(this));
+            componentType = null;
         } else {
             implementation.validate(context);
+            componentType = implementation.getComponentType();
         }
+
         for (ComponentService service : services.values()) {
             service.validate(context);
+            if (componentType != null && !componentType.getServices().containsKey(service.getName())) {
+                context.addError(new NoServiceInComponentType(service));
+            }
         }
         for (ComponentReference reference : references.values()) {
             reference.validate(context);
+            if (componentType != null && !componentType.getReferences().containsKey(reference.getName())) {
+                context.addError(new NoReferenceInComponentType(reference));
+            }
         }
         for (PropertyValue propertyValue : propertyValues.values()) {
             propertyValue.validate(context);
+            if (componentType != null && !componentType.getProperties().containsKey(propertyValue.getName())) {
+                context.addError(new NoPropertyInComponentType(propertyValue));
+            }
         }
     }
 }
