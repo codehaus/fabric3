@@ -32,8 +32,12 @@ import java.util.Date;
 @Scope("COMPOSITE")
 public class NotificationComponent implements NotificationService {
 
-    public void termsReady(String email, String applicationId) {
-        System.out.println("NotificationService: Loan terms are available");
+    public void approved(String email, String applicationId) {
+        System.out.println("NotificationService: Loan has been approved for " + applicationId);
+    }
+
+    public void rejected(String email, String applicationId) {
+        System.out.println("NotificationService: Loan has been declined for " + applicationId);
     }
 
     public void appraisalScheduled(String email, String applicationId, Date date) {

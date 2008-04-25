@@ -28,7 +28,10 @@ import java.util.Date;
 public interface NotificationService {
 
     @OneWay
-    void termsReady(String email, String applicationId);
+    void approved(String email, String applicationId);
+
+    @OneWay
+    void rejected(String email, String applicationId);
 
     @OneWay
     void appraisalScheduled(String email, String applicationId, Date date);

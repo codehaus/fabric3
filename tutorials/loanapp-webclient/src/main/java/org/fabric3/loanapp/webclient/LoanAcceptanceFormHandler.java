@@ -51,23 +51,21 @@ public class LoanAcceptanceFormHandler extends HttpServlet {
         AcceptanceCoordinator coordinator = context.getService(AcceptanceCoordinator.class, "acceptanceCoordinator");
         String id = req.getParameter("loanId");
         if (id == null) {
-            // TODO route to an error page
             resp.getWriter().write("<html><body>Error no id submitted!</body></html>");
         }
         boolean accept = Boolean.parseBoolean(req.getParameter("acceptLoan"));
         try {
             if (accept) {
                 coordinator.accept(id);
+                resp.getWriter().write("<html><body>Loan terms accepted: " + id + " </body></html>");
             } else {
                 coordinator.decline(id);
+                resp.getWriter().write("<html><body>Loan terms declined: " + id + " </body></html>");
             }
         } catch (LoanException e) {
             throw new ServletException(e);
         }
         req.getSession().setAttribute("loanId", id);
-        resp.getWriter().write("<html><body>Loan request submitted: " + id + " </body></html>");
-//        req.setAttribute("loanResult", result);
-//        getServletContext().getRequestDispatcher("/result.jsp").forward(req, resp);
     }
 
 

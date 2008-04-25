@@ -34,7 +34,8 @@ public interface AcceptanceCoordinator {
      * Accepts the terms of a loan.
      *
      * @param loanId the loan id
-     * @throws LoanException if an exception occurs during processing.
+     * @throws LoanException if an exception during acceptance was encountered. Subtypes including
+     *                       LoanNotFoundException and LoanNotApprovedException may be thrown.
      */
     void accept(String loanId) throws LoanException;
 
@@ -42,7 +43,8 @@ public interface AcceptanceCoordinator {
      * Declines the terms of a loan.
      *
      * @param loanId the loan id
-     * @throws LoanException if an exception occurs during processing.
+     * @throws LoanException if an exception during acceptance was encountered. Subtypes including
+     *                       LoanNotFoundException and LoanNotApprovedException may be thrown.
      */
     void decline(String loanId) throws LoanException;
 }

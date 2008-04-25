@@ -16,20 +16,17 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package loanapp.message;
+package loanapp.acceptance;
+
+import loanapp.loan.LoanException;
 
 /**
- * Defines the loan application states
- *
  * @version $Revision$ $Date$
  */
-public interface LoanStatus {
-    int NOT_SUBMITTED = 0;
-    int SUBMITTED = 1;
-    int AWAITING_ACCEPTANCE = 2;
-    int AWAITING_APPRAISAL = 3;
-    int SCHEDULED_FOR_FUNDING = 4;
-    int FUNDED = 5;
-    int REJECTED = -1;
-    int DECLINED = -2;
+public class LoanNotApprovedException extends LoanException {
+    private static final long serialVersionUID = -4321376630328676084L;
+
+    public LoanNotApprovedException(String message) {
+        super(message);
+    }
 }

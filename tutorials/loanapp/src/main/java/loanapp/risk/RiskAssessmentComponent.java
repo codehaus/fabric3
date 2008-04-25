@@ -60,9 +60,9 @@ public class RiskAssessmentComponent implements RiskAssessmentService {
             reasons.add("Suspect credit history");
         }
         if (factor > 24) {
-            decision = RiskAssessment.DECLINED;
+            decision = RiskAssessment.REJECT;
         } else {
-            decision = RiskAssessment.APPROVED;
+            decision = RiskAssessment.APPROVE;
         }
         RiskAssessment result = new RiskAssessment(decision, factor, reasons);
         callback.onAssessment(result);

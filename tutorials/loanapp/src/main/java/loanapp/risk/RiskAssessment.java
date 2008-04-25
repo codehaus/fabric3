@@ -27,8 +27,8 @@ import java.util.Collections;
  * @version $Revision$ $Date$
  */
 public class RiskAssessment {
-    public static final int APPROVED = 1;
-    public static final int DECLINED = -1;
+    public static final int APPROVE = 1;
+    public static final int REJECT = -1;
 
     private final int decision;
     private final int factor;

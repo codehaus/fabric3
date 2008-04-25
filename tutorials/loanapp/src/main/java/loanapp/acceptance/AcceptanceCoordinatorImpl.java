@@ -21,6 +21,7 @@ package loanapp.acceptance;
 import loanapp.store.StoreService;
 import loanapp.store.StoreException;
 import loanapp.message.LoanApplication;
+import loanapp.message.LoanStatus;
 import loanapp.loan.LoanException;
 import loanapp.appraisal.AppraisalService;
 import loanapp.appraisal.AppraisalCallback;
@@ -56,22 +57,19 @@ public class AcceptanceCoordinatorImpl implements AcceptanceCoordinator, Apprais
 
 
     public void accept(String id) throws LoanException {
+        findApplication(id);
+        // TODO lock loan
+        appraisalService.appraise(application.getPropertyLocation());
+    }
+
+    public void decline(String id) throws LoanException {
+        findApplication(id);
+        application.setStatus(LoanStatus.DECLINED);
         try {
             application = storeService.find(id);
         } catch (StoreException e) {
             throw new LoanException(e);
         }
-//        if (application.getExpiration() <= System.currentTimeMillis()) {
-//            throw new LoanOfferExpiredException("Loan expired: " + id);
-//        }
-        appraisalService.appraise(application.getPropertyLocation());
-        // lock loan
-        // send to appraisal service
-
-    }
-
-    public void decline(String loanId) throws LoanException {
-
     }
 
     public void dateSchedule(Date time) {
@@ -79,6 +77,7 @@ public class AcceptanceCoordinatorImpl implements AcceptanceCoordinator, Apprais
     }
 
     public void appraisalCompleted(AppraisalResult result) {
+        // TODO add appraisal result
         if (AppraisalResult.DECLINED == result.getResult()) {
             // TODO notify
             return;
@@ -86,7 +85,22 @@ public class AcceptanceCoordinatorImpl implements AcceptanceCoordinator, Apprais
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.MONTH, 1);
         notificationService.fundingDateScheduled(application.getEmail(), application.getId(), calendar.getTime());
-        // send to closing system
-        // get callback
+        // TODO send to closing system
     }
+
+    private void findApplication(String id) throws LoanException {
+        try {
+            application = storeService.find(id);
+        } catch (StoreException e) {
+            throw new LoanException(e);
+        }
+        if (application == null) {
+            throw new LoanNotFoundException("No loan application on file with id " + id);
+        }
+        if (LoanStatus.AWAITING_ACCEPTANCE != application.getStatus()) {
+            throw new LoanNotApprovedException("Loan was not approved");
+        }
+    }
+
+
 }

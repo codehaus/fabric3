@@ -122,18 +122,29 @@ public class RequestCoordinatorImpl implements RequestCoordinator, CreditService
 
     public void onAssessment(RiskAssessment assessment) {
         application.setRiskAssessment(assessment);
-        if (RiskAssessment.APPROVED == assessment.getDecision()) {
+        if (RiskAssessment.APPROVE == assessment.getDecision()) {
             // calculate the terms
             LoanTerms terms = pricingService.calculateOptions(application);
             application.setTerms(terms);
-        }
-        try {
-            application.setStatus(LoanStatus.AWAITING_ACCEPTANCE);
-            storeService.update(application);
-            // notify the client
-            notificationService.termsReady(application.getEmail(), application.getId());
-        } catch (StoreException e) {
-            monitor.error(e);
+            try {
+                application.setStatus(LoanStatus.AWAITING_ACCEPTANCE);
+                storeService.update(application);
+                // notify the client
+                notificationService.approved(application.getEmail(), application.getId());
+            } catch (StoreException e) {
+                monitor.error(e);
+            }
+        } else {
+            // declined
+            try {
+                application.setStatus(LoanStatus.REJECTED);
+                storeService.update(application);
+                // notify the client
+                notificationService.rejected(application.getEmail(), application.getId());
+            } catch (StoreException e) {
+                monitor.error(e);
+            }
+
         }
     }
 
