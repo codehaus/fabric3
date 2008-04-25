@@ -21,6 +21,11 @@ import java.util.List;
 
 /**
  * Context for gathering the results of model validation.
+ * <p/>
+ * The context allows both errors and warnings to be gathered. Errors indicate problems that will definitely prevent the model object from being
+ * activated such as a missing implementation. Warnings indicate issues that are not in themselves fatal but which may result in an activation
+ * failure. For example, a composite service may promote a component that it does not contain. This is likely to be an error but would successfully
+ * activate if the component was defined by another composite that included this one.
  *
  * @version $Rev$ $Date$
  */
