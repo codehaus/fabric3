@@ -316,4 +316,18 @@ public class Composite extends AbstractComponentType<CompositeService, Composite
         Composite that = (Composite) o;
         return name.equals(that.name);
     }
+
+    @Override
+    public void validate(ValidationContext context) {
+        super.validate(context);
+        for (Include include : includes.values()) {
+            include.validate(context);
+        }
+        for (ComponentDefinition<? extends Implementation<?>> component : components.values()) {
+            component.validate(context);
+        }
+        for (WireDefinition wire : wires) {
+            wire.validate(context);
+        }
+    }
 }

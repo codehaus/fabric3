@@ -20,6 +20,8 @@ package org.fabric3.scdl;
 
 import javax.xml.namespace.QName;
 
+import org.fabric3.scdl.validation.MissingComponentType;
+
 /**
  * Represents a component implementation
  *
@@ -70,4 +72,14 @@ public abstract class Implementation<T extends AbstractComponentType<?, ?, ?, ?>
      * @return the SCDL XML element corresponding to this type
      */
     public abstract QName getType();
+
+    @Override
+    public void validate(ValidationContext context) {
+        super.validate(context);
+        if (componentType == null) {
+            context.addError(new MissingComponentType(this));
+        } else {
+            componentType.validate(context);
+        }
+    }
 }

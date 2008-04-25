@@ -84,4 +84,9 @@ public class Include extends ModelObject {
     public void setIncluded(Composite included) {
         this.included = included;
     }
+
+    @Override
+    public void validate(ValidationContext context) {
+        included.validate(context);
+    }
 }

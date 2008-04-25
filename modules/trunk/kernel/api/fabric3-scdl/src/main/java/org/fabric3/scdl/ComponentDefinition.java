@@ -24,6 +24,8 @@ import java.util.Map;
 
 import org.w3c.dom.Document;
 
+import org.fabric3.scdl.validation.MissingImplementation;
+
 /**
  * Represents a component. <p>A component is a configured instance of an implementation. The provided and consumed services, as well as the available
  * configuration properties are defined by the implementation (represented by its componentType).</p> <p>Every component has a name which uniquely
@@ -251,5 +253,24 @@ public class ComponentDefinition<I extends Implementation<?>> extends AbstractPo
      */
     public void setContributionUri(URI contributionUri) {
         this.contributionUri = contributionUri;
+    }
+
+    @Override
+    public void validate(ValidationContext context) {
+        super.validate(context);
+        if (implementation == null) {
+            context.addError(new MissingImplementation(this));
+        } else {
+            implementation.validate(context);
+        }
+        for (ComponentService service : services.values()) {
+            service.validate(context);
+        }
+        for (ComponentReference reference : references.values()) {
+            reference.validate(context);
+        }
+        for (PropertyValue propertyValue : propertyValues.values()) {
+            propertyValue.validate(context);
+        }
     }
 }

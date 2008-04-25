@@ -26,7 +26,6 @@ import org.w3c.dom.Document;
  * A component property as declared in the component type.
  *
  * @version $Rev$ $Date$
- * @param <T> the Java type of the property, if known
  */
 public class Property extends ModelObject {
     private String name;
