@@ -24,27 +24,27 @@ import org.osoa.sca.annotations.Scope;
 import java.util.Date;
 
 /**
+ * A NotificationService implementation that sends output to the console. In a more realistic implementation, an
+ * email or some other mechanism would be used.
+ *
  * @version $Revision$ $Date$
  */
 @Scope("COMPOSITE")
 public class NotificationComponent implements NotificationService {
-    @OneWay
+
     public void termsReady(String email, String applicationId) {
-        System.out.println("NotificationService: Loan terms are available at: ");
+        System.out.println("NotificationService: Loan terms are available");
     }
 
-    @OneWay
     public void appraisalScheduled(String email, String applicationId, Date date) {
         System.out.println("NotificationService: Appraisal scheduled for loan application "
                 + applicationId + " on " + date);
     }
 
-    @OneWay
     public void appraisalFinished(String email, String applicationId) {
         System.out.println("NotificationService: Appraisal finished for loan application " + applicationId);
     }
 
-    @OneWay
     public void fundingDateScheduled(String email, String applicationId, Date date) {
         System.out.println("NotificationService: Loan funding date scheduled for loan application "
                 + applicationId + " on " + date);
