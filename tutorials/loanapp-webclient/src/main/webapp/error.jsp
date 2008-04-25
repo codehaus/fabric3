@@ -19,10 +19,17 @@
 <html>
 <head><title>BigBank Loan Application</title></head>
 <body>
-<h3>Error</h3>
+<h1><font face="arial" color="darkblue">Big</font><font face="arial" color="gray">Bank</font><font size="4" face="arial"
+                                                                                                   color="darkblue">
+    Lending</font></h1>
+<img src="exclamation.gif" height="5%"><h3><font face="arial">Error</font></h3>
 <br>
 Sorry, there was an error processing your application.
 <br>
 <%=request.getAttribute("loanError")%>
+<br>
+<br>
+<br>
+<font face="arial" size="2"><i>Powered by <a href="http://www.fabric3.org">fabric3</a></i></font>
 </body>
 </html>

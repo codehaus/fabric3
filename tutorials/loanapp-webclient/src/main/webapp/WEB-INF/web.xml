@@ -23,10 +23,14 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
 
-    <display-name>Fabric3 Loan Application Demo</display-name>
+    <display-name>BigBank Loan Application Demo</display-name>
     <servlet>
         <servlet-name>LoanApplicationFormHandler</servlet-name>
         <servlet-class>org.fabric3.loanapp.webclient.LoanApplicationFormHandler</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>LoanSearchFormHandler</servlet-name>
+        <servlet-class>org.fabric3.loanapp.webclient.LoanSearchFormHandler</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>LoanAcceptanceFormHandler</servlet-name>
@@ -35,6 +39,10 @@
     <servlet-mapping>
         <servlet-name>LoanApplicationFormHandler</servlet-name>
         <url-pattern>/LoanApplicationFormHandler</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>LoanSearchFormHandler</servlet-name>
+        <url-pattern>/LoanSearchFormHandler</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>LoanAcceptanceFormHandler</servlet-name>

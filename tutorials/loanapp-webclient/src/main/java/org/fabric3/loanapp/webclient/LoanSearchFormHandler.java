@@ -35,7 +35,7 @@ import java.io.IOException;
 /**
  * @version $Rev$ $Date$
  */
-public class LoanAcceptanceFormHandler extends HttpServlet {
+public class LoanSearchFormHandler extends HttpServlet {
     private static final long serialVersionUID = -1918315993336708875L;
 
     @Context
@@ -51,24 +51,24 @@ public class LoanAcceptanceFormHandler extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         // process the application
         AcceptanceCoordinator coordinator = context.getService(AcceptanceCoordinator.class, "acceptanceCoordinator");
-        boolean accept = Boolean.parseBoolean(req.getParameter("acceptLoan"));
+        String id = req.getParameter("loanId");
         String page;
-        try {
-            if (accept) {
-                coordinator.accept();
-                page = "/accepted.jsp";
-            } else {
-                coordinator.decline();
-                page = "/declined.jsp";
+        if (id == null) {
+            req.setAttribute("loanError", "No loan id submitted");
+            page = "/error.jsp";
+        } else {
+            try {
+                coordinator.review(id);
+                page = "/reviewForm.jsp";
+            } catch (LoanNotApprovedException e) {
+                req.setAttribute("loanError", e.getMessage());
+                page = "/error.jsp";
+            } catch (LoanNotFoundException e) {
+                req.setAttribute("loanError", e.getMessage());
+                page = "/error.jsp";
+            } catch (LoanException e) {
+                throw new ServletException(e);
             }
-        } catch (LoanNotApprovedException e) {
-            req.setAttribute("loanError", e.getMessage());
-            page = "/error.jsp";
-        } catch (LoanNotFoundException e) {
-            req.setAttribute("loanError", e.getMessage());
-            page = "/error.jsp";
-        } catch (LoanException e) {
-            throw new ServletException(e);
         }
         getServletContext().getRequestDispatcher(page).forward(req, resp);
 

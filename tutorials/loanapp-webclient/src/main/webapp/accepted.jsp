@@ -17,11 +17,17 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%response.setHeader("Cache-Control", "no-cache"); %>
 <html>
-<head><title>BigBank Loan Application</title></head>
+<head><title>BigBank Loan Accepted</title></head>
 <body>
-<h3>Accepted</h3>
+<h1><font face="arial" color="darkblue">Big</font><font face="arial" color="gray">Bank</font><font size="4" face="arial"
+                                                                                                   color="darkblue">
+    Lending</font></h1>
+<img src="check.gif" height="5%"><h3><font face="arial"> Loan Accepted</font></h3>
 <br>
-You have accepted the loan terms. Your loan will now be scheduled for appraisal.
+You have accepted the following loan terms. Your property will now be scheduled for appraisal.
 <br>
+<br>
+<br>
+<font face="arial" size="2"><i>Powered by <a href="http://www.fabric3.org">fabric3</a></i></font>
 </body>
 </html>

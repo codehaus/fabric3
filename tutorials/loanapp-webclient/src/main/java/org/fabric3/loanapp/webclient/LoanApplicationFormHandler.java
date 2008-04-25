@@ -54,21 +54,21 @@ public class LoanApplicationFormHandler extends HttpServlet {
         // process the application
         RequestCoordinator coordinator = context.getService(RequestCoordinator.class, "requestCoordinator");
         String id = (String) req.getSession().getAttribute("loanId");
+        String page;
         if (id != null && LoanStatus.NOT_SUBMITTED != coordinator.getStatus(id)) {
-            // TODO send already submitted page
-            resp.getWriter().write("<html><body>Already submitted</body></html>");
-            return;
+            req.setAttribute("loanError", "A loan application has already been submitted");
+            page = "/error.jsp";
+        } else {
+            try {
+                LoanRequest request = populateLoanRequest(req);
+                id = coordinator.start(request);
+                req.getSession().setAttribute("loanId", id);
+                page = "/requestSubmitted.jsp";
+            } catch (LoanException e) {
+                throw new ServletException(e);
+            }
         }
-        try {
-            LoanRequest request = populateLoanRequest(req);
-            id = coordinator.start(request);
-            req.getSession().setAttribute("loanId", id);
-            resp.getWriter().write("<html><body>Loan request submitted: " + id + " </body></html>");
-        } catch (LoanException e) {
-            throw new ServletException(e);
-        }
-//        req.setAttribute("loanResult", result);
-//        getServletContext().getRequestDispatcher("/result.jsp").forward(req, resp);
+        getServletContext().getRequestDispatcher(page).forward(req, resp);
     }
 
     private LoanRequest populateLoanRequest(HttpServletRequest req) {

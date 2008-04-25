@@ -18,30 +18,31 @@ under the License.
 <%response.setHeader("Cache-Control", "no-cache"); %>
 <html>
 <head>
-    <title>BigBank Loan Terms Review Form</title>
+    <title>BigBank Loan Review Search</title>
 </head>
 <body>
 <h1><font face="arial" color="darkblue">Big</font><font face="arial" color="gray">Bank</font><font size="4" face="arial"
                                                                                                    color="darkblue">
     Lending</font></h1>
 
-<h3><font face="arial"> Loan Terms Review</font></h3>
+<h3><font face="arial"> Loan Search</font></h3>
 <br>
 
-<form action="LoanAcceptanceFormHandler" method="post">
+<form action="LoanSearchFormHandler" method="post">
     <table>
         <tr>
-            <td><input type="radio" name="acceptLoan" value="true" title="Accept">Accept</td>
-            <td><input type="radio" name="acceptLoan" value="false" title="Decline">Decline</td>
+            <td>Enter the loan id &nbsp;</td>
+            <td><input type="text" name="loanId" width="10"></td>
         </tr>
-
         <tr>
             <td align="right" colspan="3">
                 <button name="submit" type="submit">Submit</button>
             </td>
         </tr>
     </table>
-</form>
+<br>
 <font face="arial" size="2"><i>Powered by <a href="http://www.fabric3.org">fabric3</a></i></font>
+
+</form>
 </body>
 </html>

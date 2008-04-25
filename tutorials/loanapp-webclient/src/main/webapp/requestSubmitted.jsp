@@ -17,14 +17,15 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%response.setHeader("Cache-Control", "no-cache"); %>
 <html>
-<head><title>BigBank Loan Declined</title></head>
+<head><title>BigBank Loan Accepted</title></head>
 <body>
 <h1><font face="arial" color="darkblue">Big</font><font face="arial" color="gray">Bank</font><font size="4" face="arial"
                                                                                                    color="darkblue">
     Lending</font></h1>
-<img src="declined.gif" height="5%"><h3><font face="arial"> Loan Terms Declined</font></h3>
+
+<img src="info.gif" height="5%"><h3><font face="arial"> Loan Application Received</font></h3>
 <br>
-You have elected to decline the loan. Your application has been canceled.
+Your loan application has been received and is being processed. 
 <br>
 <br>
 <br>

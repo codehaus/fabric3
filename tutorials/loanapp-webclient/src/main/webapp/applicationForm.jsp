@@ -22,7 +22,12 @@ under the License.
     <META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
 </head>
 <body>
-<h2>BigBank Loan Application Form</h2>
+<h1><font face="arial" color="darkblue">Big</font><font face="arial" color="gray">Bank</font><font size="4" face="arial"
+                                                                                                   color="darkblue">
+    Lending</font></h1>
+
+<h3><font face="arial"> Loan Application Form</font></h3>
+<br>
 
 <form action="LoanApplicationFormHandler" method="post">
     <table>
@@ -46,7 +51,10 @@ under the License.
             <td><input type="text" name="down" width="5"></td>
         </tr>
         <tr>
-            <td><b>Property Information</b></td>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td><b>Property Information</b><br></td>
         </tr>
         <tr>
             <td>Street</td>
@@ -65,6 +73,12 @@ under the License.
             <td align="right" colspan="3">
                 <button name="submit" type="submit">Apply</button>
             </td>
+        </tr>
+        <tr>
+            <td>&nbsp;</td>
+        </tr>
+        <tr>
+            <td><font face="arial" size="2"><i>Powered by <a href="http://www.fabric3.org">fabric3</a></i></font></td>
         </tr>
     </table>
 </form>
