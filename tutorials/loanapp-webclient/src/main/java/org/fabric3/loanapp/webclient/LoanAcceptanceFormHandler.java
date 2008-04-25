@@ -17,6 +17,8 @@
 package org.fabric3.loanapp.webclient;
 
 import loanapp.acceptance.AcceptanceCoordinator;
+import loanapp.acceptance.LoanNotApprovedException;
+import loanapp.acceptance.LoanNotFoundException;
 import loanapp.loan.LoanException;
 import loanapp.validation.ValidationService;
 import org.osoa.sca.ComponentContext;
@@ -54,18 +56,30 @@ public class LoanAcceptanceFormHandler extends HttpServlet {
             resp.getWriter().write("<html><body>Error no id submitted!</body></html>");
         }
         boolean accept = Boolean.parseBoolean(req.getParameter("acceptLoan"));
+        String page;
         try {
+            coordinator.review(id);
             if (accept) {
-                coordinator.accept(id);
-                resp.getWriter().write("<html><body>Loan terms accepted: " + id + " </body></html>");
+                coordinator.accept();
+                page = "/accepted.jsp";
+                //resp.getWriter().write("<html><body>Loan terms accepted: " + id + " </body></html>");
             } else {
-                coordinator.decline(id);
-                resp.getWriter().write("<html><body>Loan terms declined: " + id + " </body></html>");
+                coordinator.decline();
+                page = "/declined.jsp";
+                //resp.getWriter().write("<html><body>Loan terms declined: " + id + " </body></html>");
             }
+        } catch (LoanNotApprovedException e) {
+            req.setAttribute("loanError", e.getMessage());
+            page = "/error.jsp";
+        } catch (LoanNotFoundException e) {
+            req.setAttribute("loanError", e.getMessage());
+            page = "/error.jsp";
         } catch (LoanException e) {
             throw new ServletException(e);
         }
-        req.getSession().setAttribute("loanId", id);
+//        req.getSession().setAttribute("loanId", id);
+        getServletContext().getRequestDispatcher(page).forward(req, resp);
+
     }
 
 

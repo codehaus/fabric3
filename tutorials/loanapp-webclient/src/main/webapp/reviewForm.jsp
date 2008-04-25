@@ -18,7 +18,7 @@ under the License.
 <%response.setHeader("Cache-Control", "no-cache"); %>
 <html>
 <head>
-    <title>BigBank Loan Loan Terms Review Form</title>
+    <title>BigBank Loan Terms Review Form</title>
     <META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
 </head>
 <body>

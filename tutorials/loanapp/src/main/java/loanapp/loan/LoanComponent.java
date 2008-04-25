@@ -60,11 +60,13 @@ public class LoanComponent implements LoanService {
     }
 
     public void decline(String id) throws LoanException {
-        acceptanceCoordinator.decline(id);
+        acceptanceCoordinator.review(id);
+        acceptanceCoordinator.decline();
     }
 
     public void accept(String id) throws LoanException {
-        acceptanceCoordinator.accept(id);
+        acceptanceCoordinator.review(id);
+        acceptanceCoordinator.accept();
     }
 
 }

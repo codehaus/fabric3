@@ -20,6 +20,7 @@ package loanapp.acceptance;
 
 import org.osoa.sca.annotations.Conversational;
 import loanapp.loan.LoanException;
+import loanapp.message.LoanTerms;
 
 /**
  * Coordinator that handles processing for loan terms that have been accepted by applicants. If a loan is accepted, an
@@ -29,22 +30,28 @@ import loanapp.loan.LoanException;
  */
 @Conversational
 public interface AcceptanceCoordinator {
+    /**
+     * Returns the terms of a loan.
+     *
+     * @param loanId the loan id
+     * @return the loan terms
+     * @throws LoanException if an exception during acceptance was encountered. Subtypes including
+     *                       LoanNotFoundException and LoanNotApprovedException may be thrown.
+     */
+    LoanTerms review(String loanId) throws LoanException;
 
     /**
      * Accepts the terms of a loan.
      *
-     * @param loanId the loan id
-     * @throws LoanException if an exception during acceptance was encountered. Subtypes including
-     *                       LoanNotFoundException and LoanNotApprovedException may be thrown.
+     * @throws LoanException if an exception during acceptance was encountered.
      */
-    void accept(String loanId) throws LoanException;
+    void accept() throws LoanException;
 
     /**
      * Declines the terms of a loan.
      *
-     * @param loanId the loan id
      * @throws LoanException if an exception during acceptance was encountered. Subtypes including
      *                       LoanNotFoundException and LoanNotApprovedException may be thrown.
      */
-    void decline(String loanId) throws LoanException;
+    void decline() throws LoanException;
 }

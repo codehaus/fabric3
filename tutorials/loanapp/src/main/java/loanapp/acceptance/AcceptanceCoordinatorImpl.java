@@ -22,6 +22,7 @@ import loanapp.store.StoreService;
 import loanapp.store.StoreException;
 import loanapp.message.LoanApplication;
 import loanapp.message.LoanStatus;
+import loanapp.message.LoanTerms;
 import loanapp.loan.LoanException;
 import loanapp.appraisal.AppraisalService;
 import loanapp.appraisal.AppraisalCallback;
@@ -56,17 +57,21 @@ public class AcceptanceCoordinatorImpl implements AcceptanceCoordinator, Apprais
     }
 
 
-    public void accept(String id) throws LoanException {
-        findApplication(id);
+    public LoanTerms review(String loanId) throws LoanException {
+        findApplication(loanId);
+        return application.getTerms();
+    }
+
+    public void accept() throws LoanException {
+        application.setStatus(LoanStatus.AWAITING_APPRAISAL);
         // TODO lock loan
         appraisalService.appraise(application.getPropertyLocation());
     }
 
-    public void decline(String id) throws LoanException {
-        findApplication(id);
+    public void decline() throws LoanException {
         application.setStatus(LoanStatus.DECLINED);
         try {
-            application = storeService.find(id);
+            storeService.update(application);
         } catch (StoreException e) {
             throw new LoanException(e);
         }
