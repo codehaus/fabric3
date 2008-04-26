@@ -95,6 +95,7 @@ public class InOutServiceProxyHandler extends AbstractInOutMessageReceiver {
      * @see org.apache.ws.security.processor.SignatureProcessor
      * @see org.apache.rampart.handler.RampartReceiver
      */
+    @SuppressWarnings("unchecked")
     private void attachSubjectToWorkContext(WorkContext workContext, MessageContext inMessage) {
         Vector<WSHandlerResult> wsHandlerResults = (Vector<WSHandlerResult>) inMessage.getProperty(WSHandlerConstants.RECV_RESULTS);
 

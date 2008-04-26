@@ -17,6 +17,7 @@
 package org.fabric3.fabric.policy.helper;
 
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -85,9 +86,10 @@ public class ImplementationPolicyHelperImpl extends AbstractPolicyHelper impleme
         }
 
         Set<Intent> requiredIntents = getRequestedIntents(logicalComponent, operation);
+        Set<Intent> requiredIntentsCopy = new HashSet<Intent>(requiredIntents);
         
         // Remove intents that are provided
-        for(Intent intent : requiredIntents) {
+        for(Intent intent : requiredIntentsCopy) {
             QName intentName = intent.getName();
             if(alwaysProvidedIntents.contains(intentName) || mayProvidedIntents.contains(intentName)) {
                 requiredIntents.remove(intent);
