@@ -78,11 +78,11 @@ public class CompositeLoader implements TypeLoader<Composite> {
     /**
      * Constructor used during bootstrap.
      *
-     * @param loader loader for extension elements
-     * @param includeLoader loader for include elements
-     * @param propertyLoader loader for composite property elements
+     * @param loader          loader for extension elements
+     * @param includeLoader   loader for include elements
+     * @param propertyLoader  loader for composite property elements
      * @param componentLoader loader for component elements
-     * @param loaderHelper helper
+     * @param loaderHelper    helper
      */
     public CompositeLoader(Loader loader,
                            TypeLoader<Include> includeLoader,
@@ -104,14 +104,14 @@ public class CompositeLoader implements TypeLoader<Composite> {
     /**
      * Constructor to be used when registering this component through SCDL.
      *
-     * @param registry the loader registry to register with; also used to load extension elements
-     * @param includeLoader loader for include elements
-     * @param propertyLoader loader for composite property elements
-     * @param serviceLoader loader for composite services
+     * @param registry        the loader registry to register with; also used to load extension elements
+     * @param includeLoader   loader for include elements
+     * @param propertyLoader  loader for composite property elements
+     * @param serviceLoader   loader for composite services
      * @param referenceLoader loader for composite references
      * @param componentLoader loader for component elements
-     * @param wireLoader loader for wire elements
-     * @param loaderHelper helper
+     * @param wireLoader      loader for wire elements
+     * @param loaderHelper    helper
      */
     @Constructor
     public CompositeLoader(@Reference LoaderRegistry registry,
@@ -209,6 +209,9 @@ public class CompositeLoader implements TypeLoader<Composite> {
                         String key = componentDefinition.getName();
                         if (type.getComponents().containsKey(key)) {
                             throw new DuplicateComponentNameException("Component with name already defined: " + key, key);
+                        }
+                        if (type.getAutowire() != Autowire.INHERITED && componentDefinition.getAutowire() == Autowire.INHERITED) {
+                            componentDefinition.setAutowire(type.getAutowire());
                         }
                         type.add(componentDefinition);
                     } else if (WIRE.equals(qname)) {
