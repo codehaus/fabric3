@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+-->
+<!-- Demonstrates the use of autowire to assemble services. To enable this composite, change the deployable entry in
+sca-contribution.xml -->
+<composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
+           name="AutoWireWebCalculator"
+           targetNamespace="http://fabric3.org/xmlns/sca/tutorials/0.5"
+           autowire="true">
+
+    <component name="calculator">
+        <implementation.web/>
+    </component>
+
+    <component name="CalculatorService">
+        <implementation.java class="org.fabric3.tutorials.webcalc.calculator.CalculatorServiceImpl"/>
+    </component>
+
+    <component name="AddService">
+        <implementation.java class="org.fabric3.tutorials.webcalc.calculator.AddServiceImpl"/>
+    </component>
+
+    <component name="SubtractService">
+        <implementation.java class="org.fabric3.tutorials.webcalc.calculator.SubtractServiceImpl"/>
+    </component>
+
+    <component name="MultiplyService">
+        <implementation.java class="org.fabric3.tutorials.webcalc.calculator.MultiplyServiceImpl"/>
+    </component>
+
+    <component name="DivideService">
+        <implementation.java class="org.fabric3.tutorials.webcalc.calculator.DivideServiceImpl"/>
+    </component>
+
+
+</composite>
