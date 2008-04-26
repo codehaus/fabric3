@@ -312,7 +312,6 @@
       <module fileurl="file://$PROJECT_DIR$/loanapp-common/fabric3-tutorial-loanapp-common.iml" filepath="$PROJECT_DIR$/loanapp-common/fabric3-tutorial-loanapp-common.iml" />
       <module fileurl="file://$PROJECT_DIR$/loanapp-validation/fabric3-tutorial-loanapp-validation.iml" filepath="$PROJECT_DIR$/loanapp-validation/fabric3-tutorial-loanapp-validation.iml" />
       <module fileurl="file://$PROJECT_DIR$/loanapp-webclient/fabric3-tutorial-loanapp-webclient.iml" filepath="$PROJECT_DIR$/loanapp-webclient/fabric3-tutorial-loanapp-webclient.iml" />
-      <module fileurl="file://$PROJECT_DIR$/webcalc/fabric3-tutorial-webcalc.iml" filepath="$PROJECT_DIR$/webcalc/fabric3-tutorial-webcalc.iml" />
     </modules>
   </component>
   <component name="ProjectRootManager" version="2" assert-keyword="true" jdk-15="true" project-jdk-name="1.5" project-jdk-type="JavaSDK">
