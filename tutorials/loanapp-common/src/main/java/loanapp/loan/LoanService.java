@@ -39,6 +39,6 @@ public interface LoanService {
 
     void decline(String id) throws LoanException;
 
-    void accept(String id) throws LoanException;
+    void accept(OptionSelection selection) throws LoanException;
 
 }

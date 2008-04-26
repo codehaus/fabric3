@@ -51,15 +51,17 @@ public class LoanAcceptanceFormHandler extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         // process the application
         AcceptanceCoordinator coordinator = context.getService(AcceptanceCoordinator.class, "acceptanceCoordinator");
-        boolean accept = Boolean.parseBoolean(req.getParameter("acceptLoan"));
+        String option = req.getParameter("acceptLoan");
+        assert option != null;
         String page;
         try {
-            if (accept) {
-                coordinator.accept();
-                page = "/accepted.jsp";
-            } else {
+            if ("decline".equalsIgnoreCase(option)) {
                 coordinator.decline();
                 page = "/declined.jsp";
+            } else {
+                coordinator.accept(option);
+                page = "/accepted.jsp";
+
             }
         } catch (LoanNotApprovedException e) {
             req.setAttribute("loanError", e.getMessage());

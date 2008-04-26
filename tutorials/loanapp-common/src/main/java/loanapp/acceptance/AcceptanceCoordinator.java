@@ -43,9 +43,10 @@ public interface AcceptanceCoordinator {
     /**
      * Accepts the terms of a loan.
      *
+     * @param type the type of option selected
      * @throws LoanException if an exception during acceptance was encountered.
      */
-    void accept() throws LoanException;
+    void accept(String type) throws LoanException;
 
     /**
      * Declines the terms of a loan.

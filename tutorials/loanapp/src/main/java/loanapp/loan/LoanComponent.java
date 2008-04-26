@@ -64,9 +64,9 @@ public class LoanComponent implements LoanService {
         acceptanceCoordinator.decline();
     }
 
-    public void accept(String id) throws LoanException {
-        acceptanceCoordinator.review(id);
-        acceptanceCoordinator.accept();
+    public void accept(OptionSelection selection) throws LoanException {
+        acceptanceCoordinator.review(selection.getId());
+        acceptanceCoordinator.accept(selection.getType());
     }
 
 }

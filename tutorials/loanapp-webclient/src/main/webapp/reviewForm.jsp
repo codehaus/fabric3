@@ -16,6 +16,7 @@ under the License.
 -->
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%response.setHeader("Cache-Control", "no-cache"); %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
 <head>
     <title>BigBank Loan Terms Review Form</title>
@@ -26,13 +27,21 @@ under the License.
     Lending</font></h1>
 
 <h3><font face="arial"> Loan Terms Review</font></h3>
+Please select a loan option:
+<br>
 <br>
 
 <form action="LoanAcceptanceFormHandler" method="post">
     <table>
+        <c:forEach items="${loanTerms.options}" var="option">
+            <tr>
+                <td><input type="radio" name="acceptLoan" value="${option.type}" title="${option.type}">${option.type}
+                    at ${option.rate}% and ${option.apr} APR
+                </td>
+            </tr>
+        </c:forEach>
         <tr>
-            <td><input type="radio" name="acceptLoan" value="true" title="Accept">Accept</td>
-            <td><input type="radio" name="acceptLoan" value="false" title="Decline">Decline</td>
+            <td><input type="radio" name="acceptLoan" value="decline" title="Decline">Decline the loan</td>
         </tr>
 
         <tr>

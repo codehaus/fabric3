@@ -23,6 +23,7 @@ import loanapp.store.StoreException;
 import loanapp.message.LoanApplication;
 import loanapp.message.LoanStatus;
 import loanapp.message.LoanTerms;
+import loanapp.message.LoanOption;
 import loanapp.loan.LoanException;
 import loanapp.appraisal.AppraisalService;
 import loanapp.appraisal.AppraisalCallback;
@@ -62,8 +63,25 @@ public class AcceptanceCoordinatorImpl implements AcceptanceCoordinator, Apprais
         return application.getTerms();
     }
 
-    public void accept() throws LoanException {
+    public void accept(String type) throws LoanException {
+        LoanTerms terms = application.getTerms();
+        boolean found = false;
+        for (LoanOption option : terms.getOptions()) {
+            if (option.getType().equals(type)) {
+                found = true;
+                break;
+            }
+        }
+        if (!found) {
+            throw new InvalidLoanOptionException("Invalid loan option selected for loan " + application.getId());
+        }
+        terms.setSelected(type);
         application.setStatus(LoanStatus.AWAITING_APPRAISAL);
+        try {
+            storeService.update(application);
+        } catch (StoreException e) {
+            throw new LoanException(e);
+        }
         // TODO lock loan
         appraisalService.appraise(application.getPropertyLocation());
     }
