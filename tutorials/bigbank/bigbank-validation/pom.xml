@@ -23,10 +23,10 @@
         <version>2</version>
     </parent>
     <groupId>org.codehaus.fabric3.tutorials</groupId>
-    <artifactId>fabric3-tutorial-loanapp-validation</artifactId>
+    <artifactId>fabric3-tutorial-bigbank-validation</artifactId>
     <version>0.5ALPHA2-SNAPSHOT</version>
-    <name>Fabric3 Loan App Validation</name>
-    <description>Fabric3 Loan App Validation.</description>
+    <name>Fabric3 BigBank Validation</name>
+    <description>Fabric3 BigBank Validation.</description>
 
     <repositories>
         <repository>
@@ -56,7 +56,7 @@
         </dependency>
        <dependency>
             <groupId>org.codehaus.fabric3.tutorials</groupId>
-            <artifactId>fabric3-tutorial-loanapp-common</artifactId>
+            <artifactId>fabric3-tutorial-bigbank-common</artifactId>
             <version>0.5ALPHA2-SNAPSHOT</version>
         </dependency>
          <dependency>

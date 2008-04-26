@@ -23,10 +23,10 @@
         <version>2</version>
     </parent>
     <groupId>org.codehaus.fabric3.tutorials</groupId>
-    <artifactId>fabric3-tutorial-loanapp</artifactId>
+    <artifactId>fabric3-tutorial-bigbank</artifactId>
     <version>0.5ALPHA2-SNAPSHOT</version>
-    <name>Fabric3 Loan App Sample</name>
-    <description>Fabric3 Loan Application Sample.</description>
+    <name>Fabric3 BigBank Sample</name>
+    <description>Fabric3 BigBank Sample.</description>
     <packaging>sca-contribution-jar</packaging>
 
     <repositories>
@@ -69,7 +69,7 @@
         </dependency>
         <dependency>
             <groupId>org.codehaus.fabric3.tutorials</groupId>
-            <artifactId>fabric3-tutorial-loanapp-validation</artifactId>
+            <artifactId>fabric3-tutorial-bigbank-validation</artifactId>
             <version>0.5ALPHA2-SNAPSHOT</version>
         </dependency>
         <dependency>

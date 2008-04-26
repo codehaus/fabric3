@@ -28,7 +28,7 @@
         </SOURCES>
       </library>
     </orderEntry>
-    <orderEntry type="module" module-name="fabric3-tutorial-loanapp-common" exported="" />
+    <orderEntry type="module" module-name="fabric3-bigbank-common" exported="" />
     <orderEntry type="module-library">
       <library name="junit:junit:3.8.2">
         <CLASSES>

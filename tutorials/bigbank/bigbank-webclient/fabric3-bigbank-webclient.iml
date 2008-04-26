@@ -49,6 +49,10 @@
             <attribute name="method" value="0" />
             <attribute name="URI" value="&lt;N/A&gt;" />
           </containerElement>
+          <containerElement type="module" name="fabric3-bigbank-webclient">
+            <attribute name="method" value="1" />
+            <attribute name="URI" value="/WEB-INF/classes" />
+          </containerElement>
         </packaging>
       </configuration>
     </facet>
@@ -72,13 +76,13 @@
           <setting name="BUILD_ONLY_WEB_RESOURCES" value="false" />
         </building>
         <packaging>
-          <containerElement type="module" name="fabric3-tutorial-loanapp-common">
+          <containerElement type="module" name="fabric3-bigbank-common">
             <attribute name="method" value="5" />
-            <attribute name="URI" value="/WEB-INF/lib/fabric3-tutorial-loanapp-common-0.5ALPHA2-SNAPSHOT.jar" />
+            <attribute name="URI" value="/WEB-INF/lib/fabric3-tutorial-bigbank-common-0.5ALPHA2-SNAPSHOT.jar" />
           </containerElement>
-          <containerElement type="module" name="fabric3-tutorial-loanapp-validation">
+          <containerElement type="module" name="fabric3-bigbank-validation">
             <attribute name="method" value="5" />
-            <attribute name="URI" value="/WEB-INF/lib/fabric3-tutorial-loanapp-validation-0.5ALPHA2-SNAPSHOT.jar" />
+            <attribute name="URI" value="/WEB-INF/lib/fabric3-tutorial-bigbank-validation-0.5ALPHA2-SNAPSHOT.jar" />
           </containerElement>
           <containerElement type="library" name="org.codehaus.fabric3.spec:sca-api-r1.0:0.2" level="module">
             <attribute name="method" value="1" />
@@ -92,7 +96,34 @@
             <attribute name="method" value="1" />
             <attribute name="URI" value="/WEB-INF/lib/standard-1.1.2.jar" />
           </containerElement>
-          <containerElement type="module" name="fabric3-tutorial-loanapp-webclient">
+          <containerElement type="module" name="fabric3-bigbank-webclient">
+            <attribute name="method" value="1" />
+            <attribute name="URI" value="/WEB-INF/classes" />
+          </containerElement>
+        </packaging>
+      </configuration>
+    </facet>
+    <facet type="web" name="Web2">
+      <configuration>
+        <descriptors>
+          <deploymentDescriptor name="web.xml" url="file://$MODULE_DIR$/target/fabric3-tutorial-bigbank-webclient-0.5ALPHA2-SNAPSHOT/WEB-INF/web.xml" optional="false" version="2.5" />
+        </descriptors>
+        <webroots>
+          <root url="file://$MODULE_DIR$/target/fabric3-tutorial-bigbank-webclient-0.5ALPHA2-SNAPSHOT" relative="/" />
+        </webroots>
+        <building>
+          <setting name="EXPLODED_URL" value="file://" />
+          <setting name="EXPLODED_ENABLED" value="false" />
+          <setting name="JAR_URL" value="file://" />
+          <setting name="JAR_ENABLED" value="false" />
+          <setting name="BUILD_MODULE_ON_FRAME_DEACTIVATION" value="false" />
+          <setting name="BUILD_EXTERNAL_DEPENDENCIES" value="false" />
+          <setting name="EXCLUDE_EXPLODED_DIRECTORY" value="true" />
+          <setting name="RUN_JASPER_VALIDATION" value="true" />
+          <setting name="BUILD_ONLY_WEB_RESOURCES" value="false" />
+        </building>
+        <packaging>
+          <containerElement type="module" name="fabric3-bigbank-webclient">
             <attribute name="method" value="1" />
             <attribute name="URI" value="/WEB-INF/classes" />
           </containerElement>
@@ -110,13 +141,13 @@
       <sourceFolder url="file://$MODULE_DIR$/src/test/java" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/src/test/resources" isTestSource="true" />
       <excludeFolder url="file://$MODULE_DIR$/target/classes" />
-      <excludeFolder url="file://$MODULE_DIR$/target/fabric3-tutorial-loanapp-webclient-0.5ALPHA2-SNAPSHOT" />
+      <excludeFolder url="file://$MODULE_DIR$/target/fabric3-tutorial-bigbank-webclient-0.5ALPHA2-SNAPSHOT" />
       <excludeFolder url="file://$MODULE_DIR$/target/war" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module" module-name="fabric3-tutorial-loanapp-common" exported="" />
-    <orderEntry type="module" module-name="fabric3-tutorial-loanapp-validation" exported="" />
+    <orderEntry type="module" module-name="fabric3-bigbank-common" exported="" />
+    <orderEntry type="module" module-name="fabric3-bigbank-validation" exported="" />
     <orderEntry type="module-library" exported="">
       <library name="org.codehaus.fabric3.spec:sca-api-r1.0:0.2">
         <CLASSES>

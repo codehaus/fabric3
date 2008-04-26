@@ -78,6 +78,7 @@
             </files>
           </module>
           <module name="fabric3-tutorial-bigbank-webclient" />
+          <module name="fabric3-bigbank-webclient" />
         </modules>
       </facet-type>
     </autodetection-disabled>
@@ -308,10 +309,10 @@
   <component name="ProjectFileVersion" converted="true" />
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/bigbank/fabric3-tutorial-loanapp.iml" filepath="$PROJECT_DIR$/bigbank/fabric3-tutorial-loanapp.iml" />
-      <module fileurl="file://$PROJECT_DIR$/bigbank-common/fabric3-tutorial-loanapp-common.iml" filepath="$PROJECT_DIR$/bigbank-common/fabric3-tutorial-loanapp-common.iml" />
-      <module fileurl="file://$PROJECT_DIR$/bigbank-validation/fabric3-tutorial-loanapp-validation.iml" filepath="$PROJECT_DIR$/bigbank-validation/fabric3-tutorial-loanapp-validation.iml" />
-      <module fileurl="file://$PROJECT_DIR$/bigbank-webclient/fabric3-tutorial-loanapp-webclient.iml" filepath="$PROJECT_DIR$/bigbank-webclient/fabric3-tutorial-loanapp-webclient.iml" />
+      <module fileurl="file://$PROJECT_DIR$/bigbank/fabric3-bigbank.iml" filepath="$PROJECT_DIR$/bigbank/fabric3-bigbank.iml" />
+      <module fileurl="file://$PROJECT_DIR$/bigbank-common/fabric3-bigbank-common.iml" filepath="$PROJECT_DIR$/bigbank-common/fabric3-bigbank-common.iml" />
+      <module fileurl="file://$PROJECT_DIR$/bigbank-validation/fabric3-bigbank-validation.iml" filepath="$PROJECT_DIR$/bigbank-validation/fabric3-bigbank-validation.iml" />
+      <module fileurl="file://$PROJECT_DIR$/bigbank-webclient/fabric3-bigbank-webclient.iml" filepath="$PROJECT_DIR$/bigbank-webclient/fabric3-bigbank-webclient.iml" />
     </modules>
   </component>
   <component name="ProjectRootManager" version="2" assert-keyword="true" jdk-15="true" project-jdk-name="1.5" project-jdk-type="JavaSDK">
