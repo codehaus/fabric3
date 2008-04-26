@@ -73,6 +73,8 @@
         <dependencySet>
             <includes>
                 <include>org.apache.geronimo.specs:geronimo-annotation_1.0_spec</include>
+                <!-- JSP must be on the host classpath as end-user tags may implement interfaces -->
+                <include>org.mortbay.jetty:jsp-api-2.1</include>
             </includes>
             <outputDirectory>profiles/standalone/host</outputDirectory>
         </dependencySet>

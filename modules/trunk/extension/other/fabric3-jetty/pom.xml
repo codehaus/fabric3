@@ -48,6 +48,13 @@
             <groupId>org.mortbay.jetty</groupId>
             <artifactId>jsp-2.1</artifactId>
             <version>6.1.3</version>
+            <!-- the JSP API classes need to be shared by applications and the extension since end-user classes may implement them -->
+            <exclusions>
+                <exclusion>
+                    <groupId>org.mortbay.jetty</groupId>
+                    <artifactId>jsp-api-2.1</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
@@ -66,7 +73,7 @@
             <artifactId>easymock</artifactId>
         </dependency>
     </dependencies>
-    
+
     <build>
         <plugins>
             <plugin>
@@ -77,9 +84,9 @@
                 <configuration>
                     <mavenImports>
                         <mavenImport>
-                           <groupId>org.codehaus.fabric3</groupId>
-                           <artifactId>fabric3-spi</artifactId>
-                       </mavenImport>
+                            <groupId>org.codehaus.fabric3</groupId>
+                            <artifactId>fabric3-spi</artifactId>
+                        </mavenImport>
                     </mavenImports>
                     <deployables>
                         <deployable>META-INF/jetty.composite</deployable>
