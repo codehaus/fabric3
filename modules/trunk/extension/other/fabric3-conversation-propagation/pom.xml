@@ -25,8 +25,8 @@
     <groupId>org.codehaus.fabric3</groupId>
     <artifactId>fabric3-conversation-propagation</artifactId>
     <version>0.5ALPHA2-SNAPSHOT</version>
-    <name>Fabric3 Conversation Propagation Definitions</name>
-    <description>Fabric3 Transaction Definitions.</description>
+    <name>Fabric3 Conversation Propagation Extension</name>
+    <description>Fabric3 Conversation Propagation Support.</description>
     <packaging>sca-contribution-jar</packaging>
 
     <dependencies>
