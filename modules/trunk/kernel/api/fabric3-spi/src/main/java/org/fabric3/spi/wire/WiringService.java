@@ -1,5 +1,6 @@
 package org.fabric3.spi.wire;
 
+import org.fabric3.spi.assembly.ActivateException;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
@@ -17,7 +18,7 @@ public interface WiringService {
      *
      * @param logicalComponent Logical component that needs to be wired.
      */
-    void wire(LogicalComponent<?> logicalComponent) throws PromotionException;
+    void wire(LogicalComponent<?> logicalComponent) throws ActivateException;
 
     /**
      * Handles the promotion on the specified logical service.
@@ -33,5 +34,5 @@ public interface WiringService {
      * @param context          Composite component within which the targets are resolved.
      * @return True is the target was succesfully involved.
      */
-    void wire(LogicalReference logicalReference, LogicalCompositeComponent context) throws PromotionException;
+    void wire(LogicalReference logicalReference, LogicalCompositeComponent context) throws ActivateException;
 }

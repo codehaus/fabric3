@@ -10,7 +10,7 @@ import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalService;
 import org.fabric3.spi.util.UriHelper;
-import org.fabric3.spi.wire.PromotionException;
+import org.fabric3.spi.wire.TargetResolutionException;
 import org.fabric3.spi.wire.TargetResolutionService;
 
 /**
@@ -20,7 +20,7 @@ import org.fabric3.spi.wire.TargetResolutionService;
  */
 public class ExplicitTargetResolutionService implements TargetResolutionService {
 
-    public void resolve(LogicalReference logicalReference, LogicalCompositeComponent context) throws PromotionException {
+    public void resolve(LogicalReference logicalReference, LogicalCompositeComponent context) throws TargetResolutionException {
 
         ComponentReference componentReference = logicalReference.getComponentReference();
         if (componentReference == null) {
@@ -45,7 +45,7 @@ public class ExplicitTargetResolutionService implements TargetResolutionService 
 
     }
 
-    private URI resolveByUri(LogicalReference reference, URI targetUri, LogicalCompositeComponent composite) throws PromotionException {
+    private URI resolveByUri(LogicalReference reference, URI targetUri, LogicalCompositeComponent composite) throws TargetResolutionException {
 
         URI targetComponentUri = UriHelper.getDefragmentedName(targetUri);
         LogicalComponent<?> targetComponent = composite.getComponent(targetComponentUri);

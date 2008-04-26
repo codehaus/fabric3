@@ -26,6 +26,10 @@ package org.fabric3.spi.assembly;
 public class ActivateException extends AssemblyException {
     private static final long serialVersionUID = -8846536703004740119L;
 
+    public ActivateException(String message) {
+        super(message);
+    }
+
     public ActivateException(String message, String identifier) {
         super(message, identifier);
     }
@@ -37,4 +41,6 @@ public class ActivateException extends AssemblyException {
     public ActivateException(Throwable cause) {
         super(cause);
     }
+
+
 }
