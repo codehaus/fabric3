@@ -24,7 +24,7 @@
     </parent>
     <groupId>org.codehaus.fabric3</groupId>
     <artifactId>fabric3-binding-ejb</artifactId>
-    <version>0.5ALPHA2-SNAPSHOT</version>
+    <version>0.5ALPHA2</version>
     <packaging>sca-contribution-jar</packaging>
     <name>Fabric3 EJB Binding</name>
     <description>Fabric3 EJB Binding Implementation.</description>
@@ -81,9 +81,9 @@
         </plugins>
     </build>
     <scm>
-        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/extension/binding/fabric3-binding-ejb</connection>
-        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/trunk/extension/binding/fabric3-binding-ejb</developerConnection>
-        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/trunk/extension/binding/fabric3-binding-ejb</url>
+        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/tags/fabric3-binding-ejb-0.5ALPHA2</connection>
+        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/tags/fabric3-binding-ejb-0.5ALPHA2</developerConnection>
+        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/tags/fabric3-binding-ejb-0.5ALPHA2</url>
     </scm>
 
 </project>
