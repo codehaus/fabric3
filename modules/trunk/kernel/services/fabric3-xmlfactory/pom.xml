@@ -38,7 +38,7 @@
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-host-api</artifactId>
-            <version>${project.version}</version>
+            <version>0.5ALPHA2</version>
         </dependency>
 
         <!-- mark the API as provided as it is included in Java6 -->
