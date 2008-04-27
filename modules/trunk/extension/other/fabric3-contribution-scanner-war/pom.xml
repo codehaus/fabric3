@@ -24,7 +24,7 @@
     </parent>
     <groupId>org.codehaus.fabric3</groupId>
     <artifactId>fabric3-contribution-scanner-war</artifactId>
-    <version>0.5ALPHA2-SNAPSHOT</version>
+    <version>0.5ALPHA2</version>
     <name>Fabric3 WAR Contribution Extension</name>
     <description>Fabric3 WAR Contribution Extension.</description>
     <packaging>sca-contribution-jar</packaging>
@@ -82,9 +82,9 @@
     </build>
 
     <scm>
-        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/extension/other/fabric3-contribution-war</connection>
-        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/trunk/extension/other/fabric3-contribution-war</developerConnection>
-        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/trunk/extension/other/fabric3-contribution-war</url>
+        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/tags/fabric3-contribution-scanner-war-0.5ALPHA2</connection>
+        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/tags/fabric3-contribution-scanner-war-0.5ALPHA2</developerConnection>
+        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/tags/fabric3-contribution-scanner-war-0.5ALPHA2</url>
     </scm>
 
 </project>
