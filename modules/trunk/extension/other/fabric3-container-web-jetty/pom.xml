@@ -34,26 +34,26 @@
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-spi</artifactId>
-            <version>${project.version}</version>
+            <version>0.5ALPHA2</version>
             <scope>provided</scope>
         </dependency>
         <!-- pojo dependency temporarily needed for PojoWorkContextTunnel -->
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-pojo</artifactId>
-            <version>${project.version}</version>
+            <version>0.5ALPHA2</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-container-web-spi</artifactId>
-            <version>${project.version}</version>
+            <version>0.5ALPHA2</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-jetty</artifactId>
-            <version>${project.version}</version>
+            <version>0.5ALPHA2</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -71,7 +71,7 @@
             <plugin>
                 <groupId>org.codehaus.fabric3</groupId>
                 <artifactId>fabric3-contribution-plugin</artifactId>
-                <version>${project.version}</version>
+                <version>0.5ALPHA2</version>
                 <extensions>true</extensions>
                 <configuration>
                     <mavenImports>
