@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ See the NOTICE file distributed with this work for information
+ regarding copyright ownership.  This file is licensed
+ to you under the Apache License, Version 2.0 (the
+ "License"); you may not use this file except in compliance
+ with the License.  You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing,
+ software distributed under the License is distributed on an
+ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ KIND, either express or implied.  See the License for the
+ specific language governing permissions and limitations
+ under the License.
+-->
+<!--
+    Composite containing standard annotation processors.
+
+    $Rev: 3079 $ $Date: 2008-03-13 10:30:59 +0000 (Thu, 13 Mar 2008) $
+-->
+<composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
+           xmlns:sca="http://www.osoa.org/xmlns/sca/1.0"
+           xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
+           xmlns:system="http://fabric3.org/xmlns/sca/system/2.0-alpha"
+           name="AnnotationProcessors" targetNamespace="urn:org.codehaus.fabric3:fabric3-introspection"
+           autowire="true">
+
+    <!-- OSOA Specification Annotations -->
+
+    <component f3:key="org.osoa.sca.annotations.Callback" name="org.fabric3.introspection.impl.annotation.CallbackProcessor">
+        <system:implementation.system class="org.fabric3.introspection.impl.annotation.CallbackProcessor"/>
+    </component>
+
+    <component f3:key="org.osoa.sca.annotations.Context" name="org.fabric3.introspection.impl.annotation.ContextProcessor">
+        <system:implementation.system class="org.fabric3.introspection.impl.annotation.ContextProcessor"/>
+    </component>
+
+    <component f3:key="org.osoa.sca.annotations.ConversationID" name="org.fabric3.introspection.impl.annotation.ConversationIDProcessor">
+        <system:implementation.system class="org.fabric3.introspection.impl.annotation.ConversationIDProcessor"/>
+    </component>
+
+    <component f3:key="org.osoa.sca.annotations.Destroy" name="org.fabric3.introspection.impl.annotation.DestroyProcessor">
+        <system:implementation.system class="org.fabric3.introspection.impl.annotation.DestroyProcessor"/>
+    </component>
+
+    <component f3:key="org.osoa.sca.annotations.EagerInit" name="org.fabric3.introspection.impl.annotation.EagerInitProcessor">
+        <system:implementation.system class="org.fabric3.introspection.impl.annotation.EagerInitProcessor"/>
+    </component>
+
+    <component f3:key="org.osoa.sca.annotations.Init" name="org.fabric3.introspection.impl.annotation.InitProcessor">
+        <system:implementation.system class="org.fabric3.introspection.impl.annotation.InitProcessor"/>
+    </component>
+
+    <component f3:key="org.osoa.sca.annotations.Property" name="org.fabric3.introspection.impl.annotation.PropertyProcessor">
+        <system:implementation.system class="org.fabric3.introspection.impl.annotation.PropertyProcessor"/>
+    </component>
+
+    <component f3:key="org.osoa.sca.annotations.Reference" name="org.fabric3.introspection.impl.annotation.ReferenceProcessor">
+        <system:implementation.system class="org.fabric3.introspection.impl.annotation.ReferenceProcessor"/>
+    </component>
+
+    <component f3:key="org.osoa.sca.annotations.Remotable" name="org.fabric3.introspection.impl.annotation.RemotableProcessor">
+        <system:implementation.system class="org.fabric3.introspection.impl.annotation.RemotableProcessor"/>
+    </component>
+
+    <component f3:key="org.osoa.sca.annotations.Scope" name="org.fabric3.introspection.impl.annotation.ScopeProcessor">
+        <system:implementation.system class="org.fabric3.introspection.impl.annotation.ScopeProcessor"/>
+    </component>
+
+    <component f3:key="org.osoa.sca.annotations.Service" name="org.fabric3.introspection.impl.annotation.ServiceProcessor">
+        <system:implementation.system class="org.fabric3.introspection.impl.annotation.ServiceProcessor"/>
+    </component>
+
+    <!-- Fabric3 Annotations -->
+
+    <component f3:key="org.fabric3.api.annotation.Monitor" name="org.fabric3.introspection.impl.annotation.MonitorProcessor">
+        <system:implementation.system class="org.fabric3.introspection.impl.annotation.MonitorProcessor"/>
+    </component>
+
+</composite>
