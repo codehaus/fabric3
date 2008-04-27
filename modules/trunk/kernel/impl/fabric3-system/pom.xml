@@ -32,22 +32,22 @@
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-loader</artifactId>
-            <version>${project.version}</version>
+            <version>0.5ALPHA2</version>
         </dependency>
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-introspection</artifactId>
-            <version>${project.version}</version>
+            <version>0.5ALPHA2</version>
         </dependency>
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-pojo</artifactId>
-            <version>${project.version}</version>
+            <version>0.5ALPHA2</version>
         </dependency>
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-jmx</artifactId>
-            <version>${project.version}</version>
+            <version>0.5ALPHA2</version>
         </dependency>
 
         <!-- mark the API as provided as it is included in Java6 -->
