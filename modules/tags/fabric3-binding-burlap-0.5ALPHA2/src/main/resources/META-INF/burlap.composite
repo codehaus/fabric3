@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ See the NOTICE file distributed with this work for information
+ regarding copyright ownership.  This file is licensed
+ to you under the Apache License, Version 2.0 (the
+ "License"); you may not use this file except in compliance
+ with the License.  You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing,
+ software distributed under the License is distributed on an
+ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ KIND, either express or implied.  See the License for the
+ specific language governing permissions and limitations
+ under the License.
+-->
+<composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
+           xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
+           xmlns:system="http://fabric3.org/xmlns/sca/system/2.0-alpha"
+           targetNamespace="org.codehaus.fabric3"
+           name="BurlapBindingExtension">
+
+    <!-- Burlap Binding Loader -->
+    <component name="BurlapBindingLoader">
+        <system:implementation.system class="org.fabric3.binding.burlap.introspection.BurlapBindingLoader"/>
+    </component>
+
+    <!-- Burlap Binding Generator -->
+    <component name="BurlapBindingGenerator" f3:key="org.fabric3.binding.burlap.scdl.BurlapBindingDefinition">
+        <system:implementation.system class="org.fabric3.binding.burlap.control.BurlapBindingGenerator"/>
+    </component>
+
+    <!-- Burlap Wire Attachers -->
+    <component f3:key="org.fabric3.binding.burlap.provision.BurlapWireSourceDefinition" name="org.fabric3.binding.burlap.runtime.BurlapSourceWireAttacher">
+        <system:implementation.system class="org.fabric3.binding.burlap.runtime.BurlapSourceWireAttacher"/>
+    </component>
+    <component f3:key="org.fabric3.binding.burlap.provision.BurlapWireTargetDefinition" name="org.fabric3.binding.burlap.runtime.BurlapTargetWireAttacher">
+        <system:implementation.system class="org.fabric3.binding.burlap.runtime.BurlapTargetWireAttacher"/>
+    </component>
+
+    <!-- Feature -->
+    <system:feature name="BurlapBindingFeature">{http://fabric3.org/xmlns/binding}burlap</system:feature>
+
+</composite>
