@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ See the NOTICE file distributed with this work for information
+ regarding copyright ownership.  This file is licensed
+ to you under the Apache License, Version 2.0 (the
+ "License"); you may not use this file except in compliance
+ with the License.  You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing,
+ software distributed under the License is distributed on an
+ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ KIND, either express or implied.  See the License for the
+ specific language governing permissions and limitations
+ under the License.
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.codehaus.fabric3</groupId>
+        <artifactId>fabric</artifactId>
+        <version>4</version>
+    </parent>
+    <groupId>org.codehaus.fabric3.standalone</groupId>
+    <artifactId>fabric3-standalone-server</artifactId>
+    <version>0.5ALPHA2</version>
+    <name>Fabric3 Standalone Runtime Server</name>
+    <description>Fabric3 Standalone Runtime Server Start Command.</description>
+
+    <dependencies>
+
+        <dependency>
+            <groupId>org.codehaus.fabric3.standalone</groupId>
+            <artifactId>fabric3-standalone-api</artifactId>
+            <version>0.5ALPHA2</version>
+        </dependency>
+
+        <dependency>
+             <groupId>org.codehaus.fabric3</groupId>
+             <artifactId>fabric3-api</artifactId>
+             <version>0.5ALPHA2</version>
+         </dependency>
+
+        <dependency>
+             <groupId>org.apache.geronimo.specs</groupId>
+             <artifactId>geronimo-annotation_1.0_spec</artifactId>
+             <version>1.1</version>
+         </dependency>
+
+        <dependency>
+            <groupId>javax.servlet</groupId>
+            <artifactId>servlet-api</artifactId>
+            <version>2.4</version>
+        </dependency>
+
+        <!-- dependencies that are defined as provided in the spi module -->
+        <dependency>
+            <groupId>stax</groupId>
+            <artifactId>stax-api</artifactId>
+            <!-- use version 1.0 as it is the version bundled in JDK 6 -->
+            <version>1.0</version>
+            <scope>runtime</scope>
+        </dependency>
+
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <mainClass>org.fabric3.runtime.standalone.server.Fabric3Server</mainClass>
+                            <addClasspath>true</addClasspath>
+                            <classpathPrefix>../lib/</classpathPrefix>
+                        </manifest>
+                    </archive>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <scm>
+        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/tags/fabric3-standalone-server-0.5ALPHA2</connection>
+        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/tags/fabric3-standalone-server-0.5ALPHA2</developerConnection>
+        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/tags/fabric3-standalone-server-0.5ALPHA2</url>
+    </scm>
+
+</project>
