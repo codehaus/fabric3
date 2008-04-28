@@ -4,7 +4,24 @@
   <classpathentry kind="src" path="src/test/java" output="target/test-classes"/>
   <classpathentry kind="output" path="target/classes"/>
   <classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-  <classpathentry kind="var" path="M2_REPO/junit/junit/3.8.2/junit-3.8.2.jar"/>
-  <classpathentry kind="var" path="M2_REPO/org/codehaus/fabric3/spec/sca-api-r1.0/0.1/sca-api-r1.0-0.1.jar"/>
-  <classpathentry kind="var" path="M2_REPO/org/codehaus/fabric3/tutorials/fabric3-tutorial-loanapp-common/0.1/fabric3-tutorial-loanapp-common-0.1.jar"/>
+  <classpathentry kind="var" path="M2_REPO/javax/activation/activation/1.1/activation-1.1.jar" sourcepath="M2_REPO/javax/activation/activation/1.1/activation-1.1-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/codehaus/fabric3/fabric3-api/0.5ALPHA2/fabric3-api-0.5ALPHA2.jar" sourcepath="M2_REPO/org/codehaus/fabric3/fabric3-api/0.5ALPHA2/fabric3-api-0.5ALPHA2-sources.jar">
+    <attributes>
+      <attribute value="jar:file:/Users/jim/.m2/repository/org/codehaus/fabric3/fabric3-api/0.5ALPHA2/fabric3-api-0.5ALPHA2-javadoc.jar!/" name="javadoc_location"/>
+    </attributes>
+  </classpathentry>
+  <classpathentry kind="var" path="M2_REPO/org/codehaus/fabric3/tutorials/fabric3-tutorial-bigbank-common/0.5ALPHA2/fabric3-tutorial-bigbank-common-0.5ALPHA2.jar"/>
+  <classpathentry kind="var" path="M2_REPO/org/codehaus/fabric3/tutorials/fabric3-tutorial-bigbank-validation/0.5ALPHA2/fabric3-tutorial-bigbank-validation-0.5ALPHA2.jar"/>
+  <classpathentry kind="var" path="M2_REPO/javax/xml/bind/jaxb-api/2.1/jaxb-api-2.1.jar" sourcepath="M2_REPO/javax/xml/bind/jaxb-api/2.1/jaxb-api-2.1-sources.jar"/>
+  <classpathentry kind="var" path="M2_REPO/junit/junit/3.8.2/junit-3.8.2.jar" sourcepath="M2_REPO/junit/junit/3.8.2/junit-3.8.2-sources.jar">
+    <attributes>
+      <attribute value="jar:file:/Users/jim/.m2/repository/junit/junit/3.8.2/junit-3.8.2-javadoc.jar!/" name="javadoc_location"/>
+    </attributes>
+  </classpathentry>
+  <classpathentry kind="var" path="M2_REPO/org/codehaus/fabric3/spec/sca-api-r1.0/0.2/sca-api-r1.0-0.2.jar" sourcepath="M2_REPO/org/codehaus/fabric3/spec/sca-api-r1.0/0.2/sca-api-r1.0-0.2-sources.jar">
+    <attributes>
+      <attribute value="jar:file:/Users/jim/.m2/repository/org/codehaus/fabric3/spec/sca-api-r1.0/0.2/sca-api-r1.0-0.2-javadoc.jar!/" name="javadoc_location"/>
+    </attributes>
+  </classpathentry>
+  <classpathentry kind="var" path="M2_REPO/javax/xml/stream/stax-api/1.0-2/stax-api-1.0-2.jar" sourcepath="M2_REPO/javax/xml/stream/stax-api/1.0-2/stax-api-1.0-2-sources.jar"/>
 </classpath>

@@ -1,6 +1,6 @@
 <projectDescription>
-  <name>fabric3-tutorial-loanapp</name>
-  <comment>Fabric3 Loan Application Sample.</comment>
+  <name>fabric3-tutorial-bigbank</name>
+  <comment>Fabric3 BigBank Sample.</comment>
   <projects/>
   <buildSpec>
     <buildCommand>
