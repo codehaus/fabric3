@@ -33,7 +33,7 @@
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-introspection-spi</artifactId>
-            <version>0.5ALPHA2</version>
+            <version>${project.version}</version>
         </dependency>
 
         <dependency>
