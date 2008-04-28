@@ -93,44 +93,44 @@
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-jdk-proxy</artifactId>
-            <version>0.5ALPHA2</version>
+            <version>${project.version}</version>
             <scope>runtime</scope>
         </dependency>
 
         <dependency>
 			<groupId>org.codehaus.fabric3</groupId>
 			<artifactId>fabric3-pojo</artifactId>
-			<version>0.5ALPHA2</version>
+			<version>${project.version}</version>
         </dependency>
 
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-spi</artifactId>
-            <version>0.5ALPHA2</version>
+            <version>${project.version}</version>
         </dependency>
         
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-java</artifactId>
-            <version>0.5ALPHA2</version>
+            <version>${project.version}</version>
         </dependency>
         
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-monitor</artifactId>
-            <version>0.5ALPHA2</version>
+            <version>${project.version}</version>
         </dependency>
         
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-junit</artifactId>
-            <version>0.5ALPHA2</version>
+            <version>${project.version}</version>
         </dependency>
         
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-maven-api</artifactId>
-            <version>0.5ALPHA2</version>
+            <version>${project.version}</version>
         </dependency>
 
         <dependency>
