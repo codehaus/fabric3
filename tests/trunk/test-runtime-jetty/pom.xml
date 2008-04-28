@@ -34,7 +34,7 @@
         <dependency>
             <groupId>org.codehaus.fabric3.webapp</groupId>
             <artifactId>fabric3-webapp-api</artifactId>
-            <version>0.5ALPHA2-SNAPSHOT</version>
+            <version>0.5ALPHA3-SNAPSHOT</version>
         </dependency>
 
         <dependency>
@@ -56,7 +56,7 @@
             <plugin>
                 <groupId>org.codehaus.fabric3</groupId>
                 <artifactId>fabric3-webapp-plugin</artifactId>
-                <version>0.5ALPHA2-SNAPSHOT</version>
+                <version>0.5ALPHA3-SNAPSHOT</version>
                 <executions>
                     <execution>
                         <id>fabric3-war</id>
@@ -67,13 +67,13 @@
                 </executions>
                 <configuration>
                     <!-- use the latest version of the runtime -->
-                    <runTimeVersion>0.5ALPHA2-SNAPSHOT</runTimeVersion>
+                    <runTimeVersion>0.5ALPHA3-SNAPSHOT</runTimeVersion>
                     <!-- include the Groovy extension to verify extensions are handled correctly -->
                     <extensions>
                         <dependency>
                             <groupId>org.codehaus.fabric3</groupId>
                             <artifactId>fabric3-groovy</artifactId>
-                            <version>0.5ALPHA2-SNAPSHOT</version>
+                            <version>0.5ALPHA3-SNAPSHOT</version>
                         </dependency>
                     </extensions>
                 </configuration>

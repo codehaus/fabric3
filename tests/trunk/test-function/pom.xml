@@ -38,7 +38,7 @@
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-monitor</artifactId>
-            <version>0.1</version>
+            <version>0.5ALPHA3-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
@@ -53,29 +53,29 @@
                 <groupId>org.codehaus.fabric3</groupId>
                 <artifactId>fabric3-itest-plugin</artifactId>
                 <!-- generally this should point to the latest plugin and kernel version -->
-                <version>0.5ALPHA2-SNAPSHOT</version>
+                <version>0.5ALPHA3-SNAPSHOT</version>
                 <configuration>
-                    <runtimeVersion>0.5ALPHA2-SNAPSHOT</runtimeVersion>
+                    <runtimeVersion>0.5ALPHA3-SNAPSHOT</runtimeVersion>
                     <extensions>
                         <dependency>
                             <groupId>org.codehaus.fabric3</groupId>
                             <artifactId>fabric3-binding-test</artifactId>
-                            <version>0.5ALPHA2-SNAPSHOT</version>
+                            <version>0.5ALPHA3-SNAPSHOT</version>
                         </dependency>
                         <dependency>
                             <groupId>org.codehaus.fabric3</groupId>
                             <artifactId>fabric3-async-loader</artifactId>
-                            <version>0.5ALPHA2-SNAPSHOT</version>
+                            <version>0.5ALPHA3-SNAPSHOT</version>
                         </dependency>
                         <dependency>
                             <groupId>org.codehaus.fabric3</groupId>
                             <artifactId>fabric3-async-runtime</artifactId>
-                            <version>0.5ALPHA2-SNAPSHOT</version>
+                            <version>0.5ALPHA3-SNAPSHOT</version>
                         </dependency>
                         <dependency>
                             <groupId>org.codehaus.fabric3</groupId>
                             <artifactId>fabric3-conversation-propagation</artifactId>
-                            <version>0.5ALPHA2-SNAPSHOT</version>
+                            <version>0.5ALPHA3-SNAPSHOT</version>
                         </dependency>
                     </extensions>
                     <compositeName>FunctionTestHarnessComposite</compositeName>
