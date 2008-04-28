@@ -23,11 +23,11 @@
         <packaging>
           <containerElement type="module" name="fabric3-webapp-api">
             <attribute name="method" value="5" />
-            <attribute name="URI" value="/WEB-INF/lib/fabric3-webapp-api-0.5ALPHA2-SNAPSHOT.jar" />
+            <attribute name="URI" value="/WEB-INF/lib/fabric3-webapp-api-0.5ALPHA3-SNAPSHOT.jar" />
           </containerElement>
           <containerElement type="module" name="fabric3-api">
             <attribute name="method" value="5" />
-            <attribute name="URI" value="/WEB-INF/lib/fabric3-api-0.5ALPHA2-SNAPSHOT.jar" />
+            <attribute name="URI" value="/WEB-INF/lib/fabric3-api-0.5ALPHA3-SNAPSHOT.jar" />
           </containerElement>
           <containerElement type="library" name="org.codehaus.fabric3.spec:sca-api-r1.0:0.2.1" level="module">
             <attribute name="method" value="1" />
@@ -35,15 +35,15 @@
           </containerElement>
           <containerElement type="module" name="fabric3-host-api">
             <attribute name="method" value="5" />
-            <attribute name="URI" value="/WEB-INF/lib/fabric3-host-api-0.5ALPHA2-SNAPSHOT.jar" />
+            <attribute name="URI" value="/WEB-INF/lib/fabric3-host-api-0.5ALPHA3-SNAPSHOT.jar" />
           </containerElement>
           <containerElement type="module" name="fabric3-monitor-api">
             <attribute name="method" value="5" />
-            <attribute name="URI" value="/WEB-INF/lib/fabric3-monitor-api-0.5ALPHA2-SNAPSHOT.jar" />
+            <attribute name="URI" value="/WEB-INF/lib/fabric3-monitor-api-0.5ALPHA3-SNAPSHOT.jar" />
           </containerElement>
           <containerElement type="module" name="fabric3-monitor">
             <attribute name="method" value="5" />
-            <attribute name="URI" value="/WEB-INF/lib/fabric3-monitor-0.5ALPHA2-SNAPSHOT.jar" />
+            <attribute name="URI" value="/WEB-INF/lib/fabric3-monitor-0.5ALPHA3-SNAPSHOT.jar" />
           </containerElement>
           <containerElement type="library" name="javax.activation:activation:1.1" level="module">
             <attribute name="method" value="1" />
