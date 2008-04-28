@@ -66,33 +66,20 @@
       </library>
     </orderEntry>
     <orderEntry type="module-library">
-      <library name="org.codehaus.fabric3:fabric3-api:0.5ALPHA2-SNAPSHOT">
+      <library name="org.codehaus.fabric3:fabric3-api:0.5ALPHA2">
         <CLASSES>
-          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-api/0.5ALPHA2-SNAPSHOT/fabric3-api-0.5ALPHA2-SNAPSHOT.jar!/" />
+          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-api/0.5ALPHA2/fabric3-api-0.5ALPHA2.jar!/" />
         </CLASSES>
         <JAVADOC>
-          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-api/0.5ALPHA2-SNAPSHOT/fabric3-api-0.5ALPHA2-SNAPSHOT-javadoc.jar!/" />
+          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-api/0.5ALPHA2/fabric3-api-0.5ALPHA2-javadoc.jar!/" />
         </JAVADOC>
         <SOURCES>
-          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-api/0.5ALPHA2-SNAPSHOT/fabric3-api-0.5ALPHA2-SNAPSHOT-sources.jar!/" />
+          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-api/0.5ALPHA2/fabric3-api-0.5ALPHA2-sources.jar!/" />
         </SOURCES>
       </library>
     </orderEntry>
-    <orderEntry type="module-library" exported="">
-      <library name="org.codehaus.fabric3.tutorials:fabric3-tutorial-loanapp-common:0.5ALPHA2-SNAPSHOT">
-        <CLASSES>
-          <root url="jar://$M2_REPO$/org/codehaus/fabric3/tutorials/fabric3-tutorial-loanapp-common/0.5ALPHA2-SNAPSHOT/fabric3-tutorial-loanapp-common-0.5ALPHA2-SNAPSHOT.jar!/" />
-        </CLASSES>
-        <JAVADOC>
-          <root url="jar://$M2_REPO$/org/codehaus/fabric3/tutorials/fabric3-tutorial-loanapp-common/0.5ALPHA2-SNAPSHOT/fabric3-tutorial-loanapp-common-0.5ALPHA2-SNAPSHOT-javadoc.jar!/" />
-        </JAVADOC>
-        <SOURCES>
-          <root url="jar://$M2_REPO$/org/codehaus/fabric3/tutorials/fabric3-tutorial-loanapp-common/0.5ALPHA2-SNAPSHOT/fabric3-tutorial-loanapp-common-0.5ALPHA2-SNAPSHOT-sources.jar!/" />
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module" module-name="fabric3-bigbank-validation" exported="" />
     <orderEntry type="module" module-name="fabric3-bigbank-common" exported="" />
+    <orderEntry type="module" module-name="fabric3-bigbank-validation" exported="" />
     <orderEntry type="module-library">
       <library name="junit:junit:3.8.2">
         <CLASSES>

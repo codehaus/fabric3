@@ -24,7 +24,7 @@
     </parent>
     <groupId>org.codehaus.fabric3.tutorials</groupId>
     <artifactId>fabric3-tutorial-webcalc</artifactId>
-    <version>0.5ALPHA2-SNAPSHOT</version>
+    <version>0.5ALPHA2</version>
     <packaging>war</packaging>
     <name>Fabric3 Web Calculator</name>
     <description>Demonstrates creating a service and wiring it to a servlet.</description>
