@@ -22,6 +22,7 @@ import org.fabric3.spi.generator.GenerationException;
  * @version $Rev$ $Date$
  */
 public class InvalidWebFaultException extends GenerationException {
+
     public InvalidWebFaultException(String identifier) {
         super(identifier);
     }

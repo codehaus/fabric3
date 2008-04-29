@@ -22,6 +22,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Map;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
+import javax.xml.ws.WebFault;
 
 import org.apache.axiom.om.OMElement;
 
@@ -98,13 +99,24 @@ public class JaxbInterceptor implements Interceptor {
     }
 
     private Object getFault(Object webFault) {
+        
+        WebFault annotation = webFault.getClass().getAnnotation(WebFault.class);
+        if (annotation == null) {
+            // this is an undeclared exception
+            if (webFault instanceof RuntimeException) {
+                throw (RuntimeException) webFault;
+            } else if (webFault instanceof Exception) {
+                throw new AssertionError((Exception) webFault);
+            }
+        }
+        
         try {
             Method getFaultInfo = webFault.getClass().getMethod("getFaultInfo");
             return getFaultInfo.invoke(webFault);
         } catch (Exception e) {
-            // should not occur as the user class is only meant to be a getter and the generator should have checked the signature
             throw new AssertionError(e);
         }
+
     }
 
     private Message interceptReference(Message message) {
