@@ -297,6 +297,7 @@ public class ContributionDirectoryScanner implements Runnable, Fabric3EventListe
                 for (FileSystemResource cached : addedResources) {
                     errorCache.put(cached.getName(), cached);
                 }
+                monitor.error(e);
                 throw e;
             }
 
