@@ -17,11 +17,12 @@
  * under the License.    
  */
 
-package org.fabric3.binding.aq.lookup.destination;
+package org.fabric3.binding.aq.destination;
 
+import javax.jms.Connection;
+import javax.jms.ConnectionFactory;
 import javax.jms.Destination;
 import javax.jms.JMSException;
-import javax.jms.QueueConnection;
 import javax.jms.QueueConnectionFactory;
 import javax.jms.Session;
 
@@ -30,23 +31,20 @@ import org.fabric3.binding.aq.helper.JmsHelper;
 import org.fabric3.binding.aq.model.DestinationDefinition;
 
 /**
- * The destination is never looked up, it is always created.
- *
+ * Default implementation for {@link DestinationFactory}
  */
-public class AlwaysDestinationStrategy implements DestinationStrategy {
+public class DefaultDestinationFactory implements DestinationFactory {
 
     /**
-     * @see org.fabric3.binding.aq.lookup.destination.DestinationStrategy#getDestination(org.fabric3.binding.aq.model.DestinationDefinition, javax.jms.ConnectionFactory, java.util.Hashtable)
+     * Creates a destination from a {@link DestinationDefinition} and {@link QueueConnectionFactory}
      */
-    public Destination getDestination(final DestinationDefinition definition, final QueueConnectionFactory cf) {
-        
+    public Destination getDestination(final DestinationDefinition definition, final ConnectionFactory connectionFactory) {        
         final String name = definition.getName();        
         final Destination queue;
-        QueueConnection connection = null;
-        
+        Connection connection = null;      
         try {                      
-            connection = cf.createQueueConnection();
-            queue = connection.createQueueSession(false, Session.AUTO_ACKNOWLEDGE).createQueue(name);            
+            connection = connectionFactory.createConnection();
+            queue = connection.createSession(true, Session.AUTO_ACKNOWLEDGE).createQueue(name);            
             return queue;
         } catch(JMSException ex) {
             throw new Fabric3AQException("Unable to create destination", ex);

@@ -20,14 +20,13 @@ package org.fabric3.binding.aq.wire;
 
 import java.util.Map;
 
+import javax.jms.ConnectionFactory;
 import javax.jms.Destination;
-import javax.jms.QueueConnectionFactory;
 
-import org.fabric3.binding.aq.connectionfactory.ConnectionFactoryStrategy;
-import org.fabric3.binding.aq.lookup.destination.DestinationStrategy;
+import org.fabric3.binding.aq.connectionfactory.ConnectionFactoryAccessor;
+import org.fabric3.binding.aq.destination.DestinationFactory;
 import org.fabric3.binding.aq.model.AQBindingMetadata;
 import org.fabric3.binding.aq.model.CorrelationScheme;
-import org.fabric3.binding.aq.model.CreateOption;
 import org.fabric3.binding.aq.model.DestinationDefinition;
 import org.fabric3.binding.aq.model.physical.AQWireTargetDefinition;
 import org.fabric3.binding.aq.transport.Fabric3MessageReceiver;
@@ -44,58 +43,44 @@ import org.fabric3.spi.wire.Wire;
 import org.osoa.sca.annotations.Reference;
 
 /**
- * Wire attacher for JMS binding.
- * 
- * @version $Revision$ $Date: 2008-01-12 22:32:35 +0000 (Sat, 12 Jan
- *          2008) $
+ * Wire attacher for AQ binding.
+ * @version $Revision$ $Date$
  */
 public class AQTargetWireAttacher implements  TargetWireAttacher<AQWireTargetDefinition> {   
-
-    /**
-     * Destination strategies.
-     */
-    private Map<CreateOption, DestinationStrategy> destinationStrategies;
-
-    /**
-     * Connection factory strategies.
-     */
-    private Map<CreateOption, ConnectionFactoryStrategy> connectionFactoryStrategies;   
-
-    /**
-     * Classloader registry.
-     */
+   
+    /*Connection factory strategies. */
+    private ConnectionFactoryAccessor connectionFactoryAccessor;
+    
+    /* Factory used for creating destinations */
+    private DestinationFactory destinationFactory;
+    
+    /* Registry that holds class loaders */
     private ClassLoaderRegistry classLoaderRegistry;
-
-    /** DataSource */
-    private DataSourceRegistry dataSourceRegistry;   
+    
+    /* Registry that holds data sources */
+    private DataSourceRegistry dataSourceRegistry;    
 
     /**
-     * Injects the destination strategies.
-     * 
-     * @param strategies
-     *            Destination strategies.
+     * Injects the Factory for retrieving Connection Factories
+     * @param connectionFactoryAccessor
      */
     @Reference
-    public void setDestinationStrategies(Map<CreateOption, DestinationStrategy> strategies) {
-        this.destinationStrategies = strategies;
+    public void setConnectionFactoryAccessor(final ConnectionFactoryAccessor connectionFactoryAccessor){
+        this.connectionFactoryAccessor = connectionFactoryAccessor;
+    }
+    
+    /**
+     * Injects the destination {@link DestinationFactory}
+     * @param  destinationFactory
+     */
+    @Reference
+    public void setDestinationFactory(final DestinationFactory destinationFactory) {
+        this.destinationFactory = destinationFactory;
     }
 
     /**
-     * Injects the connection factory strategies.
-     * 
-     * @param strategies
-     *            Connection factory strategies.
-     */
-    @Reference
-    public void setConnectionFactoryStrategies(Map<CreateOption, ConnectionFactoryStrategy> strategies) {
-        this.connectionFactoryStrategies = strategies;
-    }
-
-    /**
-     * Injects the classloader registry.
-     * 
+     * Injects the class loader registry.
      * @param classLoaderRegistry
-     *            Classloader registry.
      */
     @Reference
     public void setClassloaderRegistry(ClassLoaderRegistry classLoaderRegistry) {
@@ -103,8 +88,7 @@ public class AQTargetWireAttacher implements  TargetWireAttacher<AQWireTargetDef
     }   
 
     /**
-     * @param dataSource
-     *            The dataSource to set.
+     * @param dataSource - the dataSource to set.
      */
     @Reference
     protected void setDataSourceRegistry(DataSourceRegistry dataSourceRegistry) {
@@ -116,19 +100,20 @@ public class AQTargetWireAttacher implements  TargetWireAttacher<AQWireTargetDef
      *      org.fabric3.spi.model.physical.PhysicalWireTargetDefinition,
      *      org.fabric3.spi.wire.Wire)
      */
-    public void attachToTarget(PhysicalWireSourceDefinition sourceDefinition, AQWireTargetDefinition targetDefinition, Wire wire)
-            throws WiringException {
+    public void attachToTarget(final PhysicalWireSourceDefinition sourceDefinition, final AQWireTargetDefinition targetDefinition, final Wire wire)  throws WiringException {
+        
+        final ClassLoader classLoader = classLoaderRegistry.getClassLoader(targetDefinition.getClassloaderURI());
         
         boolean syncResponse = false; 
         
       
         /* TODO REFCATOR BELOW */
         Destination resDestination = null;
-        QueueConnectionFactory resCf = null;
+        ConnectionFactory resCf = null;
 
         /* TODO REFCATOR BELOW */
 
-        ClassLoader classLoader = classLoaderRegistry.getClassLoader(targetDefinition.getClassloaderURI());
+       
 
         AQBindingMetadata metadata = targetDefinition.getMetadata();
         String datasourceName = (String)metadata.getDestination().getProperties().get("datasource");
@@ -136,18 +121,18 @@ public class AQTargetWireAttacher implements  TargetWireAttacher<AQWireTargetDef
 
         CorrelationScheme correlationScheme = metadata.getCorrelationScheme();
 
-        QueueConnectionFactory reqCf = connectionFactoryStrategies.get(CreateOption.always).getConnectionFactory(metadata);
+        ConnectionFactory reqCf = connectionFactoryAccessor.getConnectionFactory(metadata);
 
         DestinationDefinition destinationDefinition = metadata.getDestination();
-        Destination reqDestination = destinationStrategies.get(CreateOption.exists).getDestination(destinationDefinition, reqCf);
+        Destination reqDestination = destinationFactory.getDestination(destinationDefinition, reqCf);
 
         /* TODO REFCATOR */
         destinationDefinition = metadata.getResponseDestination();
         
         if (destinationDefinition != null) {
-            resCf = connectionFactoryStrategies.get(CreateOption.always).getConnectionFactory(metadata);
+            resCf = connectionFactoryAccessor.getConnectionFactory(metadata);
 
-            resDestination = destinationStrategies.get(CreateOption.exists).getDestination(destinationDefinition, resCf);
+            resDestination = destinationFactory.getDestination(destinationDefinition, resCf);
             syncResponse = true;
         }
 

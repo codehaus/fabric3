@@ -17,29 +17,27 @@
  * under the License.    
  */
 
-package org.fabric3.binding.aq.lookup.destination;
+package org.fabric3.binding.aq.destination;
 
+import javax.jms.ConnectionFactory;
 import javax.jms.Destination;
 import javax.jms.QueueConnectionFactory;
 
 import org.fabric3.binding.aq.model.DestinationDefinition;
 
 /**
- * Strategy for looking up destinations.
- * 
+ * Factory used to create the Jms Destinations\
  * @version $Revsion$ $Date$
- *
  */
-public interface DestinationStrategy {
+public interface DestinationFactory {
 
   
     /**
-     * Gets the Queue
-     * @param definition
-     * @param cf
-     * @param env
-     * @return
+     * Gets the Queue from the a {@link DestinationDefinition} and {@link QueueConnectionFactory}
+     * @param definition - Meta information used to construct the destination
+     * @param connetcionFactory - connection used to get Queue from
+     * @return return the created {@link Destination}
      */
-    Destination getDestination(DestinationDefinition definition, QueueConnectionFactory cf);
+    Destination getDestination(DestinationDefinition definition,ConnectionFactory connectionFactory);
 
 }

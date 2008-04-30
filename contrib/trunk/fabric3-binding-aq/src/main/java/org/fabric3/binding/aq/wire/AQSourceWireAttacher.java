@@ -23,17 +23,16 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
+import javax.jms.ConnectionFactory;
 import javax.jms.Destination;
 import javax.jms.MessageListener;
-import javax.jms.QueueConnectionFactory;
 
 import org.fabric3.binding.aq.TransactionType;
-import org.fabric3.binding.aq.connectionfactory.ConnectionFactoryStrategy;
+import org.fabric3.binding.aq.connectionfactory.ConnectionFactoryAccessor;
+import org.fabric3.binding.aq.destination.DestinationFactory;
 import org.fabric3.binding.aq.host.AQHost;
-import org.fabric3.binding.aq.lookup.destination.DestinationStrategy;
 import org.fabric3.binding.aq.model.AQBindingMetadata;
 import org.fabric3.binding.aq.model.CorrelationScheme;
-import org.fabric3.binding.aq.model.CreateOption;
 import org.fabric3.binding.aq.model.DestinationDefinition;
 import org.fabric3.binding.aq.model.physical.AQWireSourceDefinition;
 import org.fabric3.binding.aq.transport.Fabric3MessageListener;
@@ -51,76 +50,56 @@ import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Reference;
 
 /**
- * Wire attacher for JMS binding.
- *
+ * AQ source wire attacher
  * @version $Revision: 3125 $ $Date: 2008-03-16 17:01:06 +0000 (Sun, 16 Mar 2008) $
  */
 public class AQSourceWireAttacher implements SourceWireAttacher<AQWireSourceDefinition> {
 
-    // JMS host
-    private AQHost aqHost;
-
-    // Number of listeners
+    /* */ 
     private int receiverCount = 1;
+   
+    /* */
+    private AQHost aqHost;
+      
+    /* Used for retrieving the ConnectionFactory*/
+    private ConnectionFactoryAccessor connectionFactoryAccessor;
+    
+    /* Factory used for creating destinations */
+    private DestinationFactory destinationFactory; 
 
-    /**
-     * Destination strategies.
-     */
-    private Map<CreateOption, DestinationStrategy> destinationStrategies =
-            new HashMap<CreateOption, DestinationStrategy>();
-
-    /**
-     * Connection factory strategies.
-     */
-    private Map<CreateOption, ConnectionFactoryStrategy> connectionFactoryStrategies =
-            new HashMap<CreateOption, ConnectionFactoryStrategy>();
-
-    /**
-     * Transaction handlers.
-     */
+    
     private TransactionHandler transactionHandler;
 
-    /**
-     * Classloader registry.
-     */
+    
     private ClassLoaderRegistry classLoaderRegistry;
 
-    /**
-     * DataSource Registry
-     */
+    
     private DataSourceRegistry dataSourceRegistry;
-
+    
+    
+    
     /**
-     * Injects the wire attacher registries.
-     *
+     * Injects the Factory for retrieving Connection Factories
+     * @param connectionFactoryAccessor
      */
-    public AQSourceWireAttacher() {
+    @Reference
+    public void setConnectionFactoryAccessor(final ConnectionFactoryAccessor connectionFactoryAccessor){
+        this.connectionFactoryAccessor = connectionFactoryAccessor;
     }
 
     /**
      * Injects the destination strategies.
-     *
      * @param strategies Destination strategies.
      */
     @Reference
-    public void setDestinationStrategies(Map<CreateOption, DestinationStrategy> strategies) {
-        this.destinationStrategies = strategies;
+    public void setDestinationFactory(final DestinationFactory destinationFactory) {
+        this.destinationFactory = destinationFactory;
     }
+   
 
     /**
-     * Injects the connection factory strategies.
-     *
-     * @param strategies Connection factory strategies.
-     */
-    @Reference
-    public void setConnectionFactoryStrategies(Map<CreateOption, ConnectionFactoryStrategy> strategies) {
-        this.connectionFactoryStrategies = strategies;
-    }
-
-    /**
-     * Injects the classloader registry.
-     *
-     * @param classLoaderRegistry Classloader registry.
+     * Injects the class loader registry.
+     * @param classLoaderRegistry 
      */
     @Reference
     public void setClassloaderRegistry(ClassLoaderRegistry classLoaderRegistry) {
@@ -176,7 +155,7 @@ public class AQSourceWireAttacher implements SourceWireAttacher<AQWireSourceDefi
         
         /** TODO REFCATOR BELOW */
         Destination resDestination = null;
-        QueueConnectionFactory resCf = null;
+        ConnectionFactory resCf = null;
 
         ClassLoader cl = classLoaderRegistry.getClassLoader(sourceDefinition.getClassloaderURI());
 
@@ -192,19 +171,19 @@ public class AQSourceWireAttacher implements SourceWireAttacher<AQWireSourceDefi
 
         CorrelationScheme correlationScheme = metadata.getCorrelationScheme();
 
-        QueueConnectionFactory reqCf = connectionFactoryStrategies.get(CreateOption.always).getConnectionFactory(metadata);
+        ConnectionFactory reqCf = connectionFactoryAccessor.getConnectionFactory(metadata);
 
         DestinationDefinition destinationDefinition = metadata.getDestination();
 
-        Destination reqDestination = destinationStrategies.get(CreateOption.exists).getDestination(destinationDefinition, reqCf);
+        Destination reqDestination = destinationFactory.getDestination(destinationDefinition, reqCf);
 
         /** TODO REFCATOR */
         destinationDefinition = metadata.getResponseDestination();
         
         if (destinationDefinition != null) {
-            resCf = connectionFactoryStrategies.get(CreateOption.always).getConnectionFactory(metadata);
+            resCf = connectionFactoryAccessor.getConnectionFactory(metadata);
 
-            resDestination = destinationStrategies.get(CreateOption.exists).getDestination(destinationDefinition, resCf);
+            resDestination = destinationFactory.getDestination(destinationDefinition, resCf);
         }
 
         List<MessageListener> listeners = new LinkedList<MessageListener>();

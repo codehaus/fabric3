@@ -50,16 +50,16 @@
     <component f3:key="org.fabric3.binding.aq.model.physical.AQWireTargetDefinition" name="org.fabric3.binding.aq.wire.AQTargetWireAttacher">
         <system:implementation.system class="org.fabric3.binding.aq.wire.AQTargetWireAttacher"/>
     </component>
-
-    <!-- Always create destination strategy -->
-    <component name="AlwaysCreateDestination" f3:key="exists">
-        <system:implementation.system class="org.fabric3.binding.aq.lookup.destination.AlwaysDestinationStrategy"/>
-    </component>    
-
-    <!-- Always create connection factory strategy -->
-    <component name="AlwaysCreateConnectionFactory" f3:key="always">
-        <system:implementation.system class="org.fabric3.binding.aq.connectionfactory.CreateConnectionFactory"/>
+    
+     <!-- Always create connection factory strategy -->
+    <component name="ConnectionFactory">
+        <system:implementation.system class="org.fabric3.binding.aq.connectionfactory.DefaultConnectionFactoryAccessor"/>
     </component> 
+
+    <!-- Destination Factory to be used for creating destinations -->
+    <component name="DestinationFactory">
+        <system:implementation.system class="org.fabric3.binding.aq.destination.DefaultDestinationFactory"/>
+    </component>   
 
     <!-- Feature -->
     <system:feature name="AQBindingFeature">{http://fabric3.org/xmlns/binding}aq</system:feature>

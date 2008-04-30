@@ -19,7 +19,7 @@
 package org.fabric3.binding.aq;
 
 /**
- * Runtime exception thrown with unexpected JMS errors.
+ * Runtime exception thrown with unexpected AQ JMS errors.
  * 
  * @version $Revision$ $Date$
  */
