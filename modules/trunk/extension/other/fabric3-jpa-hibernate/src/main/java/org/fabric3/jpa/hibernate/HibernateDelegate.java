@@ -23,7 +23,9 @@ import javax.persistence.spi.PersistenceUnitInfo;
 import javax.sql.DataSource;
 
 import org.fabric3.jpa.spi.delegate.EmfBuilderDelegate;
+import org.fabric3.jpa.spi.EmfBuilderException;
 import org.fabric3.spi.resource.DataSourceRegistry;
+
 import org.hibernate.ejb.Ejb3Configuration;
 import org.osoa.sca.annotations.Reference;
 
@@ -33,33 +35,25 @@ import org.osoa.sca.annotations.Reference;
 public class HibernateDelegate implements EmfBuilderDelegate {
 
     private DataSourceRegistry dataSourceRegistry;
-    
-    /**
-     * Creates the setting factor.
-     */
+
     @Reference
     public void setDataSourceRegistry(DataSourceRegistry dataSourceRegistry) {
         this.dataSourceRegistry = dataSourceRegistry;
     }
 
-    /**
-     * @see org.fabric3.jpa.spi.delegate.EmfBuilderDelegate#build(javax.persistence.spi.PersistenceUnitInfo, 
-     *                                                            java.lang.ClassLoader)
-     */
-    public EntityManagerFactory build(PersistenceUnitInfo info, ClassLoader classLoader, String dataSourceName) {
+    public EntityManagerFactory build(PersistenceUnitInfo info, ClassLoader classLoader, String dataSourceName) throws EmfBuilderException {
 
         Ejb3Configuration cfg = new Ejb3Configuration();
-        
-        if(dataSourceName != null) {
+
+        if (dataSourceName != null) {
             DataSource dataSource = dataSourceRegistry.getDataSource(dataSourceName);
-            // TODO handle error condition properly
-            if(dataSource == null) {
-                throw new AssertionError("Datasource not configured: " + dataSourceName);
+            if (dataSource == null) {
+                throw new DataSourceNotConfiguredException("Datasource not configured: " + dataSourceName);
             }
             cfg.setDataSource(dataSource);
         }
         cfg.configure(info, Collections.emptyMap());
-        
+
         return cfg.buildEntityManagerFactory();
     }
 
