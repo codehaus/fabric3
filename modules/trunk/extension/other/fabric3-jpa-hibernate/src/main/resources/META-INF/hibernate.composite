@@ -28,15 +28,20 @@
            targetNamespace="org.codehaus.fabric3"
            name="HibernateJpaExtension"
            autowire="true">
-    
+
     <!-- EMF Builder Delegate -->
     <component name="org.fabric3.jpa.hibernate.HibernateDelegate" f3:key="org.hibernate.ejb.HibernatePersistence">
         <system:implementation.system class="org.fabric3.jpa.hibernate.HibernateDelegate"/>
     </component>
-    
+
+    <component name="org.fabric3.jpa.hibernate.HibernateEmfClassLoaderService">
+        <system:implementation.system class="org.fabric3.jpa.hibernate.HibernateEmfClassLoaderService"/>
+    </component>
+
     <!-- Transaction manager lookup -->
     <component name="org.fabric3.jpa.hibernate.F3HibernateTransactionManagerLookup">
         <system:implementation.system class="org.fabric3.jpa.hibernate.F3HibernateTransactionManagerLookup"/>
     </component>
-    
+
+    <include name="JPACore" scdlResource="META-INF/jpa.composite"/>
 </composite>
