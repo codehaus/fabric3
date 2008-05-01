@@ -51,10 +51,9 @@ public final class BootstrapHelper {
     }
 
     /**
-     * Gets the installation directory based on the location of a class file. If the system property
-     * <code>fabric3.installDir</code> is set then its value is used as the location of the installation directory.
-     * Otherwise, we assume we are running from an executable jar containing the supplied class and the installation
-     * directory is assumed to be the parent of the directory containing that jar.
+     * Gets the installation directory based on the location of a class file. If the system property <code>fabric3.installDir</code> is set then its
+     * value is used as the location of the installation directory. Otherwise, we assume we are running from an executable jar containing the supplied
+     * class and the installation directory is assumed to be the parent of the directory containing that jar.
      *
      * @param clazz the class to use as a way to find the executable jar
      * @return directory where Fabric3 standalone server is installed.
@@ -104,9 +103,8 @@ public final class BootstrapHelper {
     }
 
     /**
-     * Get the directory associated with a runtime profile. If the system property <code>fabric3.profileDir.${profileName}</code>
-     * is set then its value is used as the value for the profile directory. Otherwise, the directory
-     * ${installDir}/profiles/${profileName} is used.
+     * Get the directory associated with a runtime profile. If the system property <code>fabric3.profileDir.${profileName}</code> is set then its
+     * value is used as the value for the profile directory. Otherwise, the directory ${installDir}/profiles/${profileName} is used.
      *
      * @param installDir  the installation directory
      * @param profileName tha name of the profile
@@ -130,8 +128,8 @@ public final class BootstrapHelper {
     }
 
     /**
-     * Gets the boot directory where all the boot libraries are stored. This is expected to be a directory named
-     * <code>boot</code> under the install directory.
+     * Gets the boot directory where all the boot libraries are stored. This is expected to be a directory named <code>boot</code> under the install
+     * directory.
      *
      * @param installDirectory Fabric3 install directory.
      * @param bootPath         Boot path for the runtime.
@@ -148,13 +146,14 @@ public final class BootstrapHelper {
     }
 
     /**
-     * Gets the boot directory for the specified profile. If the bootPath is not null then it is used to specify the
-     * location of the boot directory relative to the profile directory. Otherwise, if there is a directory named "boot"
-     * relative to the profile or install directory then it is used.
+     * Gets the boot directory for the specified profile. If the bootPath is not null then it is used to specify the location of the boot directory
+     * relative to the profile directory. Otherwise, if there is a directory named "boot" relative to the profile or install directory then it is
+     * used.
      *
-     * @param installDir the installation directory
-     * @param profileDir the profile directory
-     * @param bootPath   the path to the boot directory
+     * @param installDir  the installation directory
+     * @param profileDir  the profile directory
+     * @param path        the path to the boot directory
+     * @param defaultPath the default path
      * @return the boot directory
      * @throws FileNotFoundException if the boot directory does not exist
      */
@@ -176,9 +175,8 @@ public final class BootstrapHelper {
     }
 
     /**
-     * Create a classloader from all the jar files or subdirectories in a directory. The classpath for the returned
-     * classloader will comprise all jar files and subdirectories of the supplied directory. Hidden files and those that
-     * do not contain a valid manifest will be silently ignored.
+     * Create a classloader from all the jar files or subdirectories in a directory. The classpath for the returned classloader will comprise all jar
+     * files and subdirectories of the supplied directory. Hidden files and those that do not contain a valid manifest will be silently ignored.
      *
      * @param parent    the parent for the new classloader
      * @param directory the directory to scan
@@ -255,7 +253,7 @@ public final class BootstrapHelper {
     }
 
     public static StandaloneHostInfo createHostInfo(File installDir, String profile) throws IOException {
-        
+
         File profileDir = getProfileDirectory(installDir, profile);
 
         // load properties for this runtime
@@ -268,10 +266,10 @@ public final class BootstrapHelper {
         // create the classloader for booting the runtime
         String bootPath = props.getProperty("fabric3.bootDir", null);
         File bootDir = getDirectory(installDir, profileDir, bootPath, "boot");
-        
+
         String hostPath = props.getProperty("fabric3.hostDir", null);
         File hostDir = getDirectory(installDir, profileDir, hostPath, "host");
-        
+
         ClassLoader systemClassLoader = ClassLoader.getSystemClassLoader();
         ClassLoader hostClassLoader = createClassLoader(systemClassLoader, hostDir);
         ClassLoader bootClassLoader = createClassLoader(hostClassLoader, bootDir);
@@ -325,6 +323,13 @@ public final class BootstrapHelper {
         Class<?> implClass = Class.forName(className, true, hostInfo.getBootClassLoader());
         ScdlBootstrapper bootstrapper = (ScdlBootstrapper) implClass.newInstance();
         bootstrapper.setScdlLocation(systemSCDL);
+        // set the system configuration
+        File systemConfig = new File(hostInfo.getProfileDirectory(), "systemConfig.xml");
+        if (systemConfig.exists()) {
+            bootstrapper.setSystemConfig(systemConfig.toURI().toURL());
+        }
+
+
         return bootstrapper;
     }
 
