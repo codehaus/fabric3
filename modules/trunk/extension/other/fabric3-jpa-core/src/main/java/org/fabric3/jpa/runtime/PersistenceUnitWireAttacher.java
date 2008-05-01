@@ -25,16 +25,13 @@ import javax.persistence.EntityManagerFactory;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.jpa.provision.PersistenceUnitWireTargetDefinition;
+import org.fabric3.jpa.spi.classloading.EmfClassLoaderService;
+import org.fabric3.jpa.spi.EmfBuilderException;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.TargetWireAttacher;
-import org.fabric3.spi.classloader.MultiParentClassLoader;
-import org.fabric3.spi.invocation.Message;
-import org.fabric3.spi.invocation.MessageImpl;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
-import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
-import org.fabric3.spi.wire.Interceptor;
 import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.Wire;
 
@@ -45,41 +42,30 @@ import org.fabric3.spi.wire.Wire;
  */
 public class PersistenceUnitWireAttacher implements TargetWireAttacher<PersistenceUnitWireTargetDefinition> {
     private final EmfBuilder emfBuilder;
-    private final ClassLoaderRegistry classLoaderRegistry;
+    private EmfClassLoaderService classLoaderService;
 
     /**
      * Injects the dependencies.
      *
-     * @param classLoaderRegistry Classloader registry.
-     * @param emfBuilder          Entity manager factory builder.
+     * @param emfBuilder         Entity manager factory builder.
+     * @param classLoaderService the classloader service for returning EMF classloaders
      */
-    public PersistenceUnitWireAttacher(@Reference ClassLoaderRegistry classLoaderRegistry,
-                                       @Reference EmfBuilder emfBuilder) {
+    public PersistenceUnitWireAttacher(@Reference EmfBuilder emfBuilder, @Reference EmfClassLoaderService classLoaderService) {
         this.emfBuilder = emfBuilder;
-        this.classLoaderRegistry = classLoaderRegistry;
+        this.classLoaderService = classLoaderService;
     }
 
-    public void attachToTarget(PhysicalWireSourceDefinition source, PersistenceUnitWireTargetDefinition target,
-                               Wire wire) throws WiringException {
+    public void attachToTarget(PhysicalWireSourceDefinition source, PersistenceUnitWireTargetDefinition target, Wire wire) throws WiringException {
 
         String unitName = target.getUnitName();
         URI classLoaderUri = target.getClassLoaderUri();
-
-        ClassLoader appCl = classLoaderRegistry.getClassLoader(classLoaderUri);
-        ClassLoader systemCl = getClass().getClassLoader();
-        ClassLoader hostCl = systemCl.getParent();
-
-        MultiParentClassLoader tccl = new MultiParentClassLoader(URI.create("JPA"), hostCl);
-        tccl.addParent(appCl);
-        tccl.addParent(systemCl);
-
+        ClassLoader appCl = classLoaderService.getEmfClassLoader(classLoaderUri);
         ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
 
         try {
+            Thread.currentThread().setContextClassLoader(appCl);
 
-            Thread.currentThread().setContextClassLoader(tccl);
-
-            final EntityManagerFactory entityManagerFactory = emfBuilder.build(unitName, tccl);
+            final EntityManagerFactory entityManagerFactory = emfBuilder.build(unitName, appCl);
 
             for (Map.Entry<PhysicalOperationDefinition, InvocationChain> entry : wire.getInvocationChains().entrySet()) {
 
@@ -90,58 +76,15 @@ public class PersistenceUnitWireAttacher implements TargetWireAttacher<Persisten
                 chain.addInterceptor(new EmfInterceptor(opName, entityManagerFactory));
 
             }
-
+        } catch (EmfBuilderException e) {
+            throw new WiringException(e);
         } finally {
             Thread.currentThread().setContextClassLoader(oldCl);
         }
-
-    }
-
-    /*
-     * Target interceptor for entity manager factory.
-     */
-    private class EmfInterceptor implements Interceptor {
-
-        private Interceptor next;
-        private String opName;
-        private EntityManagerFactory entityManagerFactory;
-
-        private EmfInterceptor(String opName, EntityManagerFactory entityManagerFactory) {
-            this.opName = opName;
-            this.entityManagerFactory = entityManagerFactory;
-        }
-
-        public Interceptor getNext() {
-            return next;
-        }
-
-        public Message invoke(Message msg) {
-
-            Object ret = null;
-
-            // TODO cater for the overloaded createEntityManager method
-            if ("createEntityManager".equals(opName)) {
-                ret = entityManagerFactory.createEntityManager();
-            } else if ("close".equals(opName)) {
-                entityManagerFactory.close();
-            } else if ("isOpen".equals(opName)) {
-                ret = entityManagerFactory.isOpen();
-            }
-
-            Message result = new MessageImpl();
-            result.setBody(ret);
-
-            return result;
-
-        }
-
-        public void setNext(Interceptor next) {
-            this.next = next;
-        }
-
     }
 
     public ObjectFactory<?> createObjectFactory(PersistenceUnitWireTargetDefinition target) throws WiringException {
         throw new AssertionError();
     }
+
 }

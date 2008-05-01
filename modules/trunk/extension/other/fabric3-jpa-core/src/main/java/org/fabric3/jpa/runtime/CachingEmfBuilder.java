@@ -25,35 +25,36 @@ import java.util.Map;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.spi.PersistenceProvider;
 
-import org.fabric3.jpa.Fabric3JpaException;
 import org.fabric3.jpa.spi.delegate.EmfBuilderDelegate;
+import org.fabric3.jpa.spi.EmfBuilderException;
+
 import org.osoa.sca.annotations.Destroy;
 import org.osoa.sca.annotations.Reference;
 
 /**
- * Creates entity manager factories using the JPA provider SPI. Creation of entity manager 
- * factories are expensive operations and hence created instances are cached.
- * 
+ * Creates entity manager factories using the JPA provider SPI. Creation of entity manager factories are expensive operations and hence created
+ * instances are cached.
+ *
  * @version $Revision$ $Date$
  */
 public class CachingEmfBuilder implements EmfBuilder {
-    
+
     private Map<String, EntityManagerFactory> cache = new HashMap<String, EntityManagerFactory>();
     private PersistenceUnitScanner scanner;
     private Map<String, EmfBuilderDelegate> delegates = new HashMap<String, EmfBuilderDelegate>();
-    
+
     /**
      * Injects the scanner.
-     * 
+     *
      * @param scanner Injected scanner.
      */
     public CachingEmfBuilder(@Reference PersistenceUnitScanner scanner) {
         this.scanner = scanner;
     }
-    
+
     /**
      * Injects the delegates.
-     * 
+     *
      * @param delegates Provider specific delegates.
      */
     @Reference(required = false)
@@ -61,29 +62,26 @@ public class CachingEmfBuilder implements EmfBuilder {
         this.delegates = delegates;
     }
 
-    /**
-     * @see org.fabric3.jpa.runtime.EmfBuilder#build(java.lang.String, java.lang.ClassLoader)
-     */
-    public synchronized EntityManagerFactory build(String unitName, ClassLoader classLoader) {
-        
-        if(cache.containsKey(unitName)) {
+    public synchronized EntityManagerFactory build(String unitName, ClassLoader classLoader) throws EmfBuilderException {
+
+        if (cache.containsKey(unitName)) {
             return cache.get(unitName);
         }
-        
+
         EntityManagerFactory emf = createEntityManagerFactory(unitName, classLoader);
         cache.put(unitName, emf);
-        
+
         return emf;
-        
+
     }
-    
+
     /**
      * Closes the entity manager factories.
      */
     @Destroy
     public void destroy() {
         for (EntityManagerFactory emf : cache.values()) {
-            if(emf != null) {
+            if (emf != null) {
                 emf.close();
             }
         }
@@ -92,14 +90,14 @@ public class CachingEmfBuilder implements EmfBuilder {
     /*
      * Creates the entity manager factory using the JPA provider API.
      */
-    private EntityManagerFactory createEntityManagerFactory(String unitName, ClassLoader classLoader) {
-        
+    private EntityManagerFactory createEntityManagerFactory(String unitName, ClassLoader classLoader) throws EmfBuilderException {
+
         PersistenceUnitInfoImpl info = (PersistenceUnitInfoImpl) scanner.getPersistenceUnitInfo(unitName, classLoader);
         String providerClass = info.getPersistenceProviderClassName();
         String dataSourceName = info.getDataSourceName();
-        
+
         EmfBuilderDelegate delegate = delegates.get(providerClass);
-        if(delegate != null) {
+        if (delegate != null) {
             return delegate.build(info, classLoader, dataSourceName);
         }
 
@@ -108,11 +106,11 @@ public class CachingEmfBuilder implements EmfBuilder {
             PersistenceProvider provider = (PersistenceProvider) classLoader.loadClass(providerClass).newInstance();
             return provider.createContainerEntityManagerFactory(info, Collections.emptyMap());
         } catch (InstantiationException ex) {
-            throw new Fabric3JpaException(ex);
+            throw new EmfBuilderException(ex);
         } catch (IllegalAccessException ex) {
-            throw new Fabric3JpaException(ex);
+            throw new EmfBuilderException(ex);
         } catch (ClassNotFoundException ex) {
-            throw new Fabric3JpaException(ex);
+            throw new EmfBuilderException(ex);
         }
 
     }

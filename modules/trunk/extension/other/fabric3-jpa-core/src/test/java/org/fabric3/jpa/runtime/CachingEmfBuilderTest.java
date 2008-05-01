@@ -20,10 +20,6 @@ package org.fabric3.jpa.runtime;
 
 import javax.persistence.EntityManagerFactory;
 
-import org.fabric3.jpa.runtime.CachingEmfBuilder;
-import org.fabric3.jpa.runtime.ClasspathPersistenceUnitScanner;
-import org.fabric3.jpa.runtime.EmfBuilder;
-
 import junit.framework.TestCase;
 
 /**
@@ -38,7 +34,7 @@ public class CachingEmfBuilderTest extends TestCase {
         emfBuilder = new CachingEmfBuilder(new ClasspathPersistenceUnitScanner());
     }
 
-    public void testBuild() {
+    public void testBuild() throws Exception {
         
         EntityManagerFactory emf = emfBuilder.build("test", getClass().getClassLoader());
         assertNotNull(emf);

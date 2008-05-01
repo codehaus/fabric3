@@ -48,12 +48,14 @@
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-pojo</artifactId>
             <version>${project.version}</version>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-jpa-spi</artifactId>
             <version>${project.version}</version>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
@@ -91,7 +93,7 @@
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-introspection</artifactId>
             <version>${project.version}</version>
-            <scope>test</scope>
+            <scope>provided</scope>
         </dependency>
 
     </dependencies>
@@ -107,11 +109,15 @@
                     <mavenImports>
                         <mavenImport>
                            <groupId>org.codehaus.fabric3</groupId>
-                           <artifactId>fabric3-spi</artifactId>
+                           <artifactId>fabric3-pojo</artifactId>
+                       </mavenImport>
+                        <mavenImport>
+                           <groupId>org.codehaus.fabric3</groupId>
+                           <artifactId>fabric3-jpa-spi</artifactId>
                        </mavenImport>
                     </mavenImports>
                     <deployables>
-                        <deployable>META-INF/jpa.composite</deployable>
+                        <!--<deployable>META-INF/jpa.composite</deployable>-->
                     </deployables>
                 </configuration>
             </plugin>

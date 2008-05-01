@@ -20,21 +20,23 @@ package org.fabric3.jpa.runtime;
 
 import javax.persistence.EntityManagerFactory;
 
+import org.fabric3.jpa.spi.EmfBuilderException;
+
 /**
- * Abstraction for building entity manager factory instances for the specified 
- * persistence unit names.
- * 
+ * Abstraction for building entity manager factory instances for the specified persistence unit names.
+ *
  * @version $Revision$ $Date$
  */
 public interface EmfBuilder {
-    
+
     /**
      * Builds the entity manager factory.
-     * 
-     * @param unitName Persistence unit name.
+     *
+     * @param unitName    Persistence unit name.
      * @param classLoader Classloader to load the persistence XML.
      * @return Entity manager factory.
+     * @throws EmfBuilderException if an error occurs building the EMF
      */
-    EntityManagerFactory build(String unitName, ClassLoader classLoader);
+    EntityManagerFactory build(String unitName, ClassLoader classLoader) throws EmfBuilderException;
 
 }
