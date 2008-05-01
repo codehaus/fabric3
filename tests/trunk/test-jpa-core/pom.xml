@@ -68,16 +68,15 @@
                     <runtimeVersion>0.5ALPHA3-SNAPSHOT</runtimeVersion>
 		    <systemConfigDir>classes/META-INF</systemConfigDir>	
                     <extensions>
+                        <dependency>
+                            <groupId>org.codehaus.fabric3</groupId>
+                            <artifactId>fabric3-jpa-spi</artifactId>
+                            <version>0.5ALPHA3-SNAPSHOT</version>
+                        </dependency>
                         <!-- JPA Hibernate Extensions -->
                         <dependency>
                             <groupId>org.codehaus.fabric3</groupId>
                             <artifactId>fabric3-jpa-hibernate</artifactId>
-                            <version>0.5ALPHA3-SNAPSHOT</version>
-                        </dependency>
-                        <!-- JPA Core Components -->
-                        <dependency>
-                            <groupId>org.codehaus.fabric3</groupId>
-                            <artifactId>fabric3-jpa-core</artifactId>
                             <version>0.5ALPHA3-SNAPSHOT</version>
                         </dependency>
                         <!-- Transaction Manager Using JOTM -->
@@ -111,60 +110,6 @@
                             <groupId>javax.persistence</groupId>
                             <artifactId>persistence-api</artifactId>
                             <version>1.0</version>
-                        </dependency>
-                        <dependency>
-                            <groupId>log4j</groupId>
-                            <artifactId>log4j</artifactId>
-                            <version>1.2.15</version>
-                            <exclusions>
-                                <exclusion>
-                                    <groupId>javax.jms</groupId>
-                                    <artifactId>jms</artifactId>
-                                </exclusion>
-                                <exclusion>
-                                    <groupId>com.sun.jdmk</groupId>
-                                    <artifactId>jmxtools</artifactId>
-                                </exclusion>
-                                <exclusion>
-                                    <groupId>com.sun.jmx</groupId>
-                                    <artifactId>jmxri</artifactId>
-                                </exclusion>
-                            </exclusions>
-                        </dependency>
-                        <dependency>
-                            <groupId>org.hibernate</groupId>
-                            <artifactId>hibernate-entitymanager</artifactId>
-                            <version>3.3.1.ga</version>
-                            <exclusions>
-                                <exclusion>
-                                    <groupId>javax.transaction</groupId>
-                                    <artifactId>jta</artifactId>
-                                </exclusion>
-                            </exclusions>
-                        </dependency>
-                        <dependency>
-                            <groupId>concurrent</groupId>
-                            <artifactId>concurrent</artifactId>
-                            <version>1.3.4</version>
-                        </dependency>
-                        <dependency>
-                            <groupId>jotm</groupId>
-                            <artifactId>jotm</artifactId>
-                            <version>2.0.10</version>
-                            <exclusions>
-                                <exclusion>
-                                    <artifactId>jta</artifactId>
-                                    <groupId>javax.transaction</groupId>
-                                </exclusion>
-                                <exclusion>
-                                    <artifactId>connector</artifactId>
-                                    <groupId>javax.resource</groupId>
-                                </exclusion>
-                                <exclusion>
-                                    <artifactId>jts</artifactId>
-                                    <groupId>javax.jts</groupId>
-                                </exclusion>
-                            </exclusions>
                         </dependency>
                         <dependency>
                             <groupId>geronimo-spec</groupId>
