@@ -35,22 +35,16 @@ import org.fabric3.runtime.standalone.server.agent.Agent;
 import org.fabric3.runtime.standalone.server.agent.RmiAgent;
 
 /**
- * This class provides the commandline interface for starting the Fabric3 standalone server.
+ * This class provides the commandline interface for starting the Fabric3 standalone server. <p/> <p/> The class boots the Fabric3 server and also
+ * starts a JMX server and listens for shutdown command. The server itself is available by the object name
+ * <code>fabric3:type=server,name=fabric3Server </code>. It also allows a runtime to be booted given a bootpath. The JMX domain in which the runtime
+ * is registered si definied in the file <code>$bootPath/etc/runtime.properties</code>. The properties defined are <code>jmx.domain</code> and
+ * <code>offline</code>. </p> <p/> <p/> The install directory can be specified using the system property <code>fabric3.installDir</code>. If not
+ * specified it is asumed to be the directory from where the JAR file containing the main class is loaded. </p>
  * <p/>
  * <p/>
- * The class boots the Fabric3 server and also starts a JMX server and listens for shutdown command. The server itself
- * is available by the object name <code>fabric3:type=server,name=fabric3Server </code>. It also allows a runtime to be
- * booted given a bootpath. The JMX domain in which the runtime is registered si definied in the file
- * <code>$bootPath/etc/runtime.properties</code>. The properties defined are <code>jmx.domain</code> and
- * <code>offline</code>. </p>
- * <p/>
- * <p/>
- * The install directory can be specified using the system property <code>fabric3.installDir</code>. If not specified it
- * is asumed to be the directory from where the JAR file containing the main class is loaded. </p>
- * <p/>
- * <p/>
- * The administration port can be specified using the system property <code>fabric3.adminPort</code>.If not specified
- * the default port that is used is <code>1099</code>
+ * The administration port can be specified using the system property <code>fabric3.adminPort</code>.If not specified the default port that is used is
+ * <code>1099</code>
  *
  * @version $Rev$ $Date$
  */
@@ -162,9 +156,6 @@ public class Fabric3Server implements Fabric3ServerMBean {
         }
     }
 
-    /**
-     * @see org.fabric3.runtime.standalone.server.Fabric3ServerMBean#shutdownRuntime(java.lang.String)
-     */
     public final void shutdownRuntime(String bootPath) {
 
         try {
