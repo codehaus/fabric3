@@ -23,7 +23,7 @@ import org.fabric3.spi.services.contribution.MetaDataStore;
  * @version $Rev$ $Date$
  */
 public class ContributionLoaderImpl implements ContributionLoader {
-    private static final URI HOST_CLASSLOADER = URI.create("sca://./hostClassLoader");
+    private static final URI APP_CLASSLOADER = URI.create("sca://./applicationClassLoader");
     private final ClassLoaderRegistry classLoaderRegistry;
     private final MetaDataStore store;
     private final ClasspathProcessorRegistry classpathProcessorRegistry;
@@ -36,9 +36,8 @@ public class ContributionLoaderImpl implements ContributionLoader {
         this.classpathProcessorRegistry = classpathProcessorRegistry;
     }
 
-    public ClassLoader loadContribution(Contribution contribution)
-            throws ContributionLoadException, MatchingExportNotFoundException {
-        ClassLoader cl = classLoaderRegistry.getClassLoader(HOST_CLASSLOADER);
+    public ClassLoader loadContribution(Contribution contribution) throws ContributionLoadException, MatchingExportNotFoundException {
+        ClassLoader cl = classLoaderRegistry.getClassLoader(APP_CLASSLOADER);
         URI contributionUri = contribution.getUri();
         MultiParentClassLoader loader = new MultiParentClassLoader(contributionUri, cl);
         List<URL> classpath;
