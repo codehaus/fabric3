@@ -14,7 +14,7 @@ public class WeatherServiceTest extends TestCase {
         this.weatherService = weatherService;
     }
 
-    public void _testGetWeather() {
+    public void testGetWeather() {
         
         WeatherRequest weatherRequest = new WeatherRequest();
         weatherRequest.setCity("London");
