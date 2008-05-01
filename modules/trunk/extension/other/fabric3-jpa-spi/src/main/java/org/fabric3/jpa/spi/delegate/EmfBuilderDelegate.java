@@ -19,21 +19,24 @@ package org.fabric3.jpa.spi.delegate;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.spi.PersistenceUnitInfo;
 
+import org.fabric3.jpa.spi.EmfBuilderException;
+
 /**
- * Delegate interface for creating entity manager factories for adding 
- * provider specific hook-ins.
- * 
+ * Delegate interface for creating entity manager factories for adding provider specific hook-ins.
+ *
  * @version $Revision$ $Date$
  */
 public interface EmfBuilderDelegate {
-    
+
     /**
      * Builds the entity managed factory.
-     * 
-     * @param info Persistence unit info.
-     * @param classLoader Classloader to use.
+     *
+     * @param info           Persistence unit info.
+     * @param classLoader    Classloader to use.
+     * @param dataSourceName the data soruce name.
      * @return Entity manager factory.
+     * @throws EmfBuilderException if an error building the factory occurs
      */
-    EntityManagerFactory build(PersistenceUnitInfo info, ClassLoader classLoader, String dataSourceName);
+    EntityManagerFactory build(PersistenceUnitInfo info, ClassLoader classLoader, String dataSourceName) throws EmfBuilderException;
 
 }

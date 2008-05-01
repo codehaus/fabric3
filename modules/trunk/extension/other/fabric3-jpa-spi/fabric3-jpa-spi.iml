@@ -54,6 +54,7 @@
         </SOURCES>
       </library>
     </orderEntry>
+    <orderEntry type="module" module-name="fabric3-spi" />
     <orderEntryProperties />
   </component>
 </module>
