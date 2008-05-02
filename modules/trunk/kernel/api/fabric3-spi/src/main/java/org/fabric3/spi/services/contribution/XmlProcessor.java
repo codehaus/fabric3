@@ -40,7 +40,8 @@ public interface XmlProcessor {
      *
      * @param contribution the contribution metadata to update
      * @param reader       the reader positioned at the first element of the document
+     * @param loader       the classloader to perform resolution in
      * @throws ContributionException if an error occurs processing
      */
-    void processContent(Contribution contribution, XMLStreamReader reader) throws ContributionException;
+    void processContent(Contribution contribution, XMLStreamReader reader, ClassLoader loader) throws ContributionException;
 }
