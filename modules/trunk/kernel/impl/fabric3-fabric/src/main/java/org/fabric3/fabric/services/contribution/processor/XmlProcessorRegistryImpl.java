@@ -42,13 +42,13 @@ public class XmlProcessorRegistryImpl implements XmlProcessorRegistry {
         cache.remove(name);
     }
 
-    public void process(Contribution contribution, XMLStreamReader reader) throws ContributionException {
+    public void process(Contribution contribution, XMLStreamReader reader, ClassLoader loader) throws ContributionException {
         QName name = reader.getName();
         XmlProcessor processor = cache.get(name);
         if (processor == null) {
             String id = name.toString();
             throw new XmlProcessorTypeNotFoundException("XML processor not found for: " + id, id);
         }
-        processor.processContent(contribution, reader);
+        processor.processContent(contribution, reader, loader);
     }
 }

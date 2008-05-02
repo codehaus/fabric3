@@ -52,9 +52,8 @@ public class DefinitionsProcessor implements XmlProcessor {
         return DEFINITIONS;
     }
 
-    public void processContent(Contribution contribution, XMLStreamReader reader) throws ContributionException {
+    public void processContent(Contribution contribution, XMLStreamReader reader, ClassLoader cl) throws ContributionException {
         try {
-            ClassLoader cl = getClass().getClassLoader();
             URI uri = contribution.getUri();
             assert contribution.getResources().size() == 1;
             Resource resource = contribution.getResources().get(0);

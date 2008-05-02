@@ -21,6 +21,7 @@ import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import javax.xml.namespace.QName;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
@@ -37,6 +38,7 @@ import org.fabric3.spi.services.contribution.ContributionProcessor;
 import org.fabric3.spi.services.contribution.ProcessorRegistry;
 import org.fabric3.spi.services.contribution.Resource;
 import org.fabric3.spi.services.contribution.XmlIndexerRegistry;
+import org.fabric3.spi.services.contribution.XmlManifestProcessorRegistry;
 import org.fabric3.spi.services.contribution.XmlProcessorRegistry;
 
 /**
@@ -49,14 +51,17 @@ public class XmlContributionProcessor implements ContributionProcessor {
     private static final List<String> CONTENT_TYPES = initializeContentTypes();
     private XMLInputFactory xmlFactory;
     private ProcessorRegistry processorRegistry;
+    private XmlManifestProcessorRegistry manifestProcessorRegistry;
     private XmlProcessorRegistry xmlProcessorRegistry;
     private XmlIndexerRegistry xmlIndexerRegistry;
 
     public XmlContributionProcessor(@Reference ProcessorRegistry processorRegistry,
+                                    @Reference XmlManifestProcessorRegistry manifestProcessorRegistry,
                                     @Reference XmlProcessorRegistry xmlProcessorRegistry,
                                     @Reference XmlIndexerRegistry xmlIndexerRegistry,
                                     @Reference XMLFactory xmlFactory) {
         this.processorRegistry = processorRegistry;
+        this.manifestProcessorRegistry = manifestProcessorRegistry;
         this.xmlProcessorRegistry = xmlProcessorRegistry;
         this.xmlIndexerRegistry = xmlIndexerRegistry;
         this.xmlFactory = xmlFactory.newInputFactoryInstance();
@@ -74,6 +79,26 @@ public class XmlContributionProcessor implements ContributionProcessor {
     public void processManifest(Contribution contribution) throws ContributionException {
         ContributionManifest manifest = new ContributionManifest();
         contribution.setManifest(manifest);
+        InputStream stream = null;
+        XMLStreamReader reader = null;
+        try {
+            URL locationURL = contribution.getLocation();
+            stream = locationURL.openStream();
+            reader = xmlFactory.createXMLStreamReader(stream);
+            reader.nextTag();
+            QName name = reader.getName();
+            manifestProcessorRegistry.process(name, manifest, reader);
+        } catch (IOException e) {
+            String uri = contribution.getUri().toString();
+            throw new ContributionException("Error processing contribution " + uri, e);
+        } catch (XMLStreamException e) {
+            String uri = contribution.getUri().toString();
+            int line = e.getLocation().getLineNumber();
+            int col = e.getLocation().getColumnNumber();
+            throw new ContributionException("Error processing contribution " + uri + " [" + line + "," + col + "]", e);
+        } finally {
+            close(stream, reader);
+        }
     }
 
     public void index(Contribution contribution) throws ContributionException {
@@ -88,24 +113,15 @@ public class XmlContributionProcessor implements ContributionProcessor {
             xmlIndexerRegistry.index(resource, reader);
             contribution.addResource(resource);
         } catch (IOException e) {
-            throw new ContributionException(e);
+            String uri = contribution.getUri().toString();
+            throw new ContributionException("Error processing contribution " + uri, e);
         } catch (XMLStreamException e) {
-            throw new ContributionException(e);
+            String uri = contribution.getUri().toString();
+            int line = e.getLocation().getLineNumber();
+            int col = e.getLocation().getColumnNumber();
+            throw new ContributionException("Error processing contribution " + uri + " [" + line + "," + col + "]", e);
         } finally {
-            try {
-                if (reader != null) {
-                    reader.close();
-                }
-            } catch (XMLStreamException e) {
-                e.printStackTrace();
-            }
-            try {
-                if (stream != null) {
-                    stream.close();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            close(stream, reader);
         }
     }
 
@@ -117,26 +133,34 @@ public class XmlContributionProcessor implements ContributionProcessor {
             stream = locationURL.openStream();
             reader = xmlFactory.createXMLStreamReader(stream);
             reader.nextTag();
-            xmlProcessorRegistry.process(contribution, reader);
+            xmlProcessorRegistry.process(contribution, reader, loader);
         } catch (IOException e) {
-            throw new ContributionException(e);
+            String uri = contribution.getUri().toString();
+            throw new ContributionException("Error processing contribution " + uri, e);
         } catch (XMLStreamException e) {
-            throw new ContributionException(e);
+            String uri = contribution.getUri().toString();
+            int line = e.getLocation().getLineNumber();
+            int col = e.getLocation().getColumnNumber();
+            throw new ContributionException("Error processing contribution " + uri + " [" + line + "," + col + "]", e);
         } finally {
-            try {
-                if (reader != null) {
-                    reader.close();
-                }
-            } catch (XMLStreamException e) {
-                e.printStackTrace();
+            close(stream, reader);
+        }
+    }
+
+    private void close(InputStream stream, XMLStreamReader reader) {
+        try {
+            if (reader != null) {
+                reader.close();
             }
-            try {
-                if (stream != null) {
-                    stream.close();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
+        } catch (XMLStreamException e) {
+            e.printStackTrace();
+        }
+        try {
+            if (stream != null) {
+                stream.close();
             }
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 
