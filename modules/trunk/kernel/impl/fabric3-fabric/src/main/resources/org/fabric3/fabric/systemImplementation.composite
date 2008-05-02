@@ -32,6 +32,20 @@
         <system:implementation.system class="org.fabric3.system.introspection.SystemImplementationLoader"/>
     </component>
 
+    <component name="org.fabric3.system.runtime.SystemComponentBuilder">
+        <system:implementation.system class="org.fabric3.system.runtime.SystemComponentBuilder"/>
+        <reference name="transformerRegistry" target="pullTransformerRegistry"/>
+    </component>
+
+    <component name="org.fabric3.system.runtime.SystemSourceWireAttacher">
+        <system:implementation.system class="org.fabric3.system.runtime.SystemSourceWireAttacher"/>
+    </component>
+
+    <component name="org.fabric3.system.runtime.SystemTargetWireAttacher">
+        <system:implementation.system class="org.fabric3.system.runtime.SystemTargetWireAttacher"/>
+    </component>
+
+
     <component name="org.fabric3.system.introspection.SystemImplementationProcessorImpl">
         <system:implementation.system class="org.fabric3.system.introspection.SystemImplementationProcessorImpl"/>
         <reference name="classWalker" target="org.fabric3.system.ClassWalker"/>

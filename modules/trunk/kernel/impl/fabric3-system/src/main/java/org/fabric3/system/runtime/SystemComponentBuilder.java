@@ -51,7 +51,7 @@ public class SystemComponentBuilder<T> extends PojoComponentBuilder<T, SystemCom
             @Reference ScopeRegistry scopeRegistry,
             @Reference InstanceFactoryBuilderRegistry providerBuilders,
             @Reference ClassLoaderRegistry classLoaderRegistry,
-            @Reference TransformerRegistry<PullTransformer<?, ?>> transformerRegistry) {
+            @Reference(name = "transformerRegistry")TransformerRegistry<PullTransformer<?, ?>> transformerRegistry) {
         super(builderRegistry, scopeRegistry, providerBuilders, classLoaderRegistry, transformerRegistry);
     }
 
