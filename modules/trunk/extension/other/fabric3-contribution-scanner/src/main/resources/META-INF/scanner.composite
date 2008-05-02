@@ -41,6 +41,10 @@
         <system:implementation.system class="org.fabric3.scanner.scanner.JarResourceFactory"/>
     </component>
 
+    <component name="XmlResourceFactory">
+        <system:implementation.system class="org.fabric3.scanner.scanner.XmlResourceFactory"/>
+    </component>
+
     <component name="ExplodedJarResourceFactory">
         <system:implementation.system class="org.fabric3.scanner.scanner.ExplodedJarResourceFactory"/>
     </component>
