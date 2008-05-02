@@ -23,11 +23,23 @@
     $Rev$ $Date$
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
-           xmlns:loader="urn:maven:org.codehaus.fabric3:fabric3-loader"
-           name="loader" targetNamespace="urn:maven:org.codehaus.fabric3:fabric3-loader">
+           xmlns:sca="http://www.osoa.org/xmlns/sca/1.0"
+           xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
+           xmlns:system="http://fabric3.org/xmlns/sca/system/2.0-alpha"
+           name="xmlContributionLoader" targetNamespace="urn:maven:org.codehaus.fabric3:fabric3-loader"
+        >
 
-    <include name="loader:common" scdlLocation="loaderCommon.composite"/>
-    <include name="loader:composite" scdlLocation="compositeLoader.composite"/>
-    <include name="loader:definitions" scdlLocation="definitionsLoader.composite"/>
-    <include name="loader:xmlContribution" scdlLocation="xmlContributionLoader.composite"/>
+    <!-- Definitions SCDL loader implementation -->
+    <component name="XmlContributionTypeLoader">
+        <system:implementation.system class="org.fabric3.loader.xmlcontribution.XmlContributionTypeLoader"/>
+    </component>
+
+    <component name="XmlContributionTypeIndexer">
+        <system:implementation.system class="org.fabric3.loader.xmlcontribution.XmlContributionTypeIndexer"/>
+    </component>
+
+    <component name="XmlContributionTypeManifestProcessor">
+        <system:implementation.system class="org.fabric3.loader.xmlcontribution.XmlContributionTypeManifestProcessor"/>
+    </component>
+
 </composite>
