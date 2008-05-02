@@ -25,6 +25,7 @@
     <groupId>org.codehaus.fabric3</groupId>
     <artifactId>fabric3-binding-codegen</artifactId>
     <version>0.5ALPHA3-SNAPSHOT</version>
+    <packaging>sca-contribution-jar</packaging>
     <name>Fabric3 Code generation</name>
     <description>Fabric3 Code Generation.</description>
 
@@ -61,6 +62,23 @@
           <layout>legacy</layout>
        </repository>
     </repositories>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.fabric3</groupId>
+                <artifactId>fabric3-contribution-plugin</artifactId>
+                <version>${project.version}</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <deployables>
+                        <deployable>META-INF/codegen.composite</deployable>
+                    </deployables>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
     <scm>
         <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/extension/other/fabric3-binding-codegen</connection>
         <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/trunk/extension/other/fabric3-binding-codegen</developerConnection>
