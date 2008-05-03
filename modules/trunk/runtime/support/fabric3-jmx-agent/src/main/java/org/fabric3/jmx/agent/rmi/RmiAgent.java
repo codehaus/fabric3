@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.runtime.standalone.server.agent;
+package org.fabric3.jmx.agent.rmi;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -27,10 +27,14 @@ import java.rmi.server.UnicastRemoteObject;
 
 import javax.management.remote.JMXServiceURL;
 
+import org.fabric3.jmx.agent.AbstractAgent;
+import org.fabric3.jmx.agent.Agent;
+import org.fabric3.jmx.agent.ManagementException;
+
 /**
  * Utility for starting the JMX server with an RMI agent.
  * 
- * @version $Revsion$ $Date$
+ * @version $Revsion$ $Date: 2007-09-02 01:33:01 +0100 (Sun, 02 Sep 2007) $
  *
  */
 public class RmiAgent extends AbstractAgent {
@@ -84,7 +88,7 @@ public class RmiAgent extends AbstractAgent {
     }
 
     /**
-     * @see org.fabric3.runtime.standalone.server.agent.AbstractAgent#preStart()
+     * @see org.fabric3.jmx.agent.AbstractAgent#preStart()
      */
     @Override
     public void preStart() throws ManagementException {
@@ -104,7 +108,7 @@ public class RmiAgent extends AbstractAgent {
     }
 
     /**
-     * @see org.fabric3.runtime.standalone.server.agent.AbstractAgent#postStop()
+     * @see org.fabric3.jmx.agent.AbstractAgent#postStop()
      */
     @Override
     public void postStop() throws ManagementException {

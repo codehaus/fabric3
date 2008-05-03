@@ -71,6 +71,8 @@ public class JaxbInterceptor implements Interceptor {
     }
 
     private Message interceptService(Message message) {
+        
+        System.err.println("Intercepting service");
 
         Object[] payload = (Object[]) message.getBody();
 
@@ -120,6 +122,8 @@ public class JaxbInterceptor implements Interceptor {
     }
 
     private Message interceptReference(Message message) {
+        
+        System.err.println("Intercepting reference");
 
         Object[] payload = (Object[]) message.getBody();
 

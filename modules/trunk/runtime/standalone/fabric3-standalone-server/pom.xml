@@ -29,6 +29,12 @@
     <description>Fabric3 Standalone Runtime Server Start Command.</description>
 
     <dependencies>
+    
+        <dependency>
+            <groupId>org.codehaus.fabric3</groupId>
+            <artifactId>fabric3-jmx-agent</artifactId>
+            <version>${project.version}</version>
+        </dependency>
 
         <dependency>
             <groupId>org.codehaus.fabric3.standalone</groupId>

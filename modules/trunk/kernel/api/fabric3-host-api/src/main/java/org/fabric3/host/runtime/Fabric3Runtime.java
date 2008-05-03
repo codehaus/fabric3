@@ -19,6 +19,7 @@
 package org.fabric3.host.runtime;
 
 import java.net.URI;
+
 import javax.management.MBeanServer;
 
 import org.fabric3.monitor.MonitorFactory;
@@ -28,7 +29,7 @@ import org.fabric3.monitor.MonitorFactory;
  *
  * @version $Rev$ $Date$
  */
-public interface Fabric3Runtime<I extends HostInfo> {
+public interface Fabric3Runtime<HI extends HostInfo> {
 
     /**
      * Returns the host ClassLoader that is parent to all Fabric3 classloaders.
@@ -49,21 +50,21 @@ public interface Fabric3Runtime<I extends HostInfo> {
      *
      * @return the type of info supplied by the host
      */
-    Class<I> getHostInfoType();
+    Class<HI> getHostInfoType();
 
     /**
      * Returns the info this runtime will make available to service components.
      *
      * @return the info this runtime will make available to service components
      */
-    I getHostInfo();
+    HI getHostInfo();
 
     /**
      * Sets the info this runtime should make available to service components.
      *
      * @param hostInfo the information this runtime should make available to service components
      */
-    void setHostInfo(I hostInfo);
+    void setHostInfo(HI hostInfo);
 
     /**
      * Returns the MonitorFactory that this runtime is using.

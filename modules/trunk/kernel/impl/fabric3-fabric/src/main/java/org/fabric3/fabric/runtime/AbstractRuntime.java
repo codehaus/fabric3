@@ -18,14 +18,16 @@
  */
 package org.fabric3.fabric.runtime;
 
+import static org.fabric3.fabric.runtime.ComponentNames.EVENT_SERVICE_URI;
+import static org.fabric3.fabric.runtime.ComponentNames.RUNTIME_URI;
+
 import java.net.URI;
 import java.net.URL;
+
 import javax.management.MBeanServer;
 
 import org.fabric3.fabric.component.scope.CompositeScopeContainer;
 import org.fabric3.fabric.component.scope.ScopeContainerMonitor;
-import static org.fabric3.fabric.runtime.ComponentNames.EVENT_SERVICE_URI;
-import static org.fabric3.fabric.runtime.ComponentNames.RUNTIME_URI;
 import org.fabric3.fabric.services.componentmanager.ComponentManagerImpl;
 import org.fabric3.fabric.services.domain.LogicalComponentManagerImpl;
 import org.fabric3.fabric.services.domain.NonPersistentLogicalComponentStore;
@@ -55,17 +57,17 @@ import org.fabric3.spi.services.event.RuntimeStart;
 /**
  * @version $Rev$ $Date$
  */
-public abstract class AbstractRuntime<I extends HostInfo> implements Fabric3Runtime<I>, RuntimeServices {
+public abstract class AbstractRuntime<HI extends HostInfo> implements Fabric3Runtime<HI>, RuntimeServices {
     private String applicationName;
     private URL applicationScdl;
-    private Class<I> hostInfoType;
+    private Class<HI> hostInfoType;
     private MBeanServer mbServer;
     private String jmxDomain;
 
     /**
      * Information provided by the host about its runtime environment.
      */
-    private I hostInfo;
+    private HI hostInfo;
 
     /**
      * MonitorFactory provided by the host for directing events to its management framework.
@@ -89,12 +91,12 @@ public abstract class AbstractRuntime<I extends HostInfo> implements Fabric3Runt
 
     private ClassLoader hostClassLoader;
 
-    protected AbstractRuntime(Class<I> runtimeInfoType, MonitorFactory monitorFactory) {
+    protected AbstractRuntime(Class<HI> runtimeInfoType, MonitorFactory monitorFactory) {
         this.hostInfoType = runtimeInfoType;
         this.monitorFactory = monitorFactory;
     }
 
-    protected AbstractRuntime(Class<I> runtimeInfoType) {
+    protected AbstractRuntime(Class<HI> runtimeInfoType) {
         this.hostInfoType = runtimeInfoType;
     }
 
@@ -122,15 +124,15 @@ public abstract class AbstractRuntime<I extends HostInfo> implements Fabric3Runt
         this.hostClassLoader = hostClassLoader;
     }
 
-    public Class<I> getHostInfoType() {
+    public Class<HI> getHostInfoType() {
         return hostInfoType;
     }
 
-    public I getHostInfo() {
+    public HI getHostInfo() {
         return hostInfo;
     }
 
-    public void setHostInfo(I hostInfo) {
+    public void setHostInfo(HI hostInfo) {
         this.hostInfo = hostInfo;
     }
 

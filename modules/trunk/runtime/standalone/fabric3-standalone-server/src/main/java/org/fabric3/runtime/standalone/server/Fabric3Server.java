@@ -28,11 +28,11 @@ import org.fabric3.api.annotation.LogLevel;
 import org.fabric3.host.runtime.Bootstrapper;
 import org.fabric3.host.runtime.RuntimeLifecycleCoordinator;
 import org.fabric3.host.runtime.ShutdownException;
+import org.fabric3.jmx.agent.Agent;
+import org.fabric3.jmx.agent.rmi.RmiAgent;
 import org.fabric3.runtime.standalone.BootstrapHelper;
 import org.fabric3.runtime.standalone.StandaloneHostInfo;
 import org.fabric3.runtime.standalone.StandaloneRuntime;
-import org.fabric3.runtime.standalone.server.agent.Agent;
-import org.fabric3.runtime.standalone.server.agent.RmiAgent;
 
 /**
  * This class provides the commandline interface for starting the Fabric3 standalone server. <p/> <p/> The class boots the Fabric3 server and also

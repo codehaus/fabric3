@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.runtime.standalone.server.agent;
+package org.fabric3.jmx.agent;
 
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -65,14 +65,14 @@ public abstract class AbstractAgent implements Agent {
     }
 
     /**
-     * @see org.fabric3.runtime.standalone.server.agent.Agent#getMBeanServer()
+     * @see org.fabric3.jmx.agent.Agent#getMBeanServer()
      */
     public MBeanServer getMBeanServer() {
         return mBeanServer;
     }
 
     /**
-     * @see org.fabric3.runtime.standalone.server.agent.Agent#register(java.lang.Object,java.lang.String)
+     * @see org.fabric3.jmx.agent.Agent#register(java.lang.Object,java.lang.String)
      */
     public final void register(Object instance, String name) throws ManagementException {
 
@@ -85,7 +85,7 @@ public abstract class AbstractAgent implements Agent {
     }
 
     /**
-     * @see org.fabric3.runtime.standalone.server.agent.Agent#start()
+     * @see org.fabric3.jmx.agent.Agent#start()
      */
     public final void start() throws ManagementException {
 
@@ -125,7 +125,7 @@ public abstract class AbstractAgent implements Agent {
     }
 
     /**
-     * @see org.fabric3.runtime.standalone.server.agent.Agent#shutdown()
+     * @see org.fabric3.jmx.agent.Agent#shutdown()
      */
     public final void shutdown() throws ManagementException {
 
