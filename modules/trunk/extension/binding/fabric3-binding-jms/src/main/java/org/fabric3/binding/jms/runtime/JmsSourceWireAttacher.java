@@ -25,7 +25,6 @@ import java.util.Map;
 import javax.jms.ConnectionFactory;
 import javax.jms.Destination;
 
-import org.fabric3.api.annotation.Management;
 import org.fabric3.binding.jms.common.ConnectionFactoryDefinition;
 import org.fabric3.binding.jms.common.CorrelationScheme;
 import org.fabric3.binding.jms.common.CreateOption;
@@ -45,7 +44,6 @@ import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.Wire;
-
 import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Reference;
 
@@ -54,8 +52,7 @@ import org.osoa.sca.annotations.Reference;
  *
  * @version $Revision$ $Date$
  */
-@Management
-public class JmsSourceWireAttacher implements SourceWireAttacher<JmsWireSourceDefinition> {
+public class JmsSourceWireAttacher implements SourceWireAttacher<JmsWireSourceDefinition>, JmsSourceWireAttacherMBean {
 
     // JMS host
     private JmsHost jmsHost;
@@ -66,8 +63,7 @@ public class JmsSourceWireAttacher implements SourceWireAttacher<JmsWireSourceDe
     /**
      * Destination strategies.
      */
-    private Map<CreateOption, DestinationStrategy> destinationStrategies =
-            new HashMap<CreateOption, DestinationStrategy>();
+    private Map<CreateOption, DestinationStrategy> destinationStrategies = new HashMap<CreateOption, DestinationStrategy>();
 
     /**
      * Connection factory strategies.
