@@ -103,7 +103,7 @@ public class Fabric3Server implements Fabric3ServerMBean {
      */
     private Fabric3Server() throws MalformedURLException {
         installDirectory = BootstrapHelper.getInstallDirectory(Fabric3Server.class);
-        agent = RmiAgent.getInstance();
+        agent = RmiAgent.newInstance();
     }
 
     /**

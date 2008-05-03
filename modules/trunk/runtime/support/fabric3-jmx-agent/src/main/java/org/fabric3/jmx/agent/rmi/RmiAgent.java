@@ -39,20 +39,20 @@ import org.fabric3.jmx.agent.ManagementException;
  */
 public class RmiAgent extends AbstractAgent {
 
-    /** Administration port system property. */
     private static final String ADMIN_PORT_PROPERTY = "fabric3.adminPort";
-
-    /** Default admin port. */
     private static final int DEFAULT_ADMIN_PORT = 1099;
-
-    /** Instance */
-    private static final Agent INSTANCE = new RmiAgent();
     
     /** RMI registry. */
     private Registry registry;
-    
-    /** Listen port */
-    private int port = DEFAULT_ADMIN_PORT;
+
+    /**
+     * Initializes the listen port.
+     * @param port Listen port.
+     * @throws ManagementException
+     */
+    protected RmiAgent(int port) throws ManagementException {
+        super(port);
+    }
 
     /**
      * Gets the adaptor URL.
@@ -62,16 +62,7 @@ public class RmiAgent extends AbstractAgent {
     protected JMXServiceURL getAdaptorUrl() throws ManagementException {
         
         try {
-            
-            String portValue = System.getProperty(ADMIN_PORT_PROPERTY);
-            if(portValue != null) {
-                port = Integer.parseInt(portValue);
-            }
-            
-            // service:jmx:rmi:///jndi/rmi://localhost:1099/server
-            return new JMXServiceURL("service:jmx:rmi:///jndi/rmi://localhost:" + port + "/server");
-            
-            
+            return new JMXServiceURL("service:jmx:rmi:///jndi/rmi://localhost:" + getPort() + "/server");
         } catch (MalformedURLException ex) {
             throw new ManagementException(ex);
         }
@@ -79,12 +70,14 @@ public class RmiAgent extends AbstractAgent {
     }
 
     /**
-     * Returns the singleton agent instance.
+     * Returns the new agent instance.
      * @return Agent instance.
      * @throws ManagementException If unable to start the agent.
      */
-    public static Agent getInstance() throws ManagementException {
-        return INSTANCE;
+    public static Agent newInstance() throws ManagementException {
+        String portValue = System.getProperty(ADMIN_PORT_PROPERTY);
+        int port = portValue != null ?  Integer.parseInt(portValue) : DEFAULT_ADMIN_PORT;
+        return new RmiAgent(port);
     }
 
     /**
@@ -94,13 +87,7 @@ public class RmiAgent extends AbstractAgent {
     public void preStart() throws ManagementException {
 
         try {
-            
-            String portValue = System.getProperty(ADMIN_PORT_PROPERTY);
-            if(portValue != null) {
-                port = Integer.parseInt(portValue);
-            }
-            
-            registry = LocateRegistry.createRegistry(port);
+            registry = LocateRegistry.createRegistry(getPort());
         } catch (RemoteException ex) {
             throw new ManagementException(ex);
         }

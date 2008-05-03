@@ -68,6 +68,8 @@ import org.fabric3.host.runtime.InitializationException;
 import org.fabric3.host.runtime.RuntimeLifecycleCoordinator;
 import org.fabric3.host.runtime.ScdlBootstrapper;
 import org.fabric3.host.runtime.ShutdownException;
+import org.fabric3.jmx.agent.Agent;
+import org.fabric3.jmx.agent.rmi.RmiAgent;
 import org.fabric3.maven.runtime.MavenCoordinator;
 import org.fabric3.maven.runtime.MavenEmbeddedRuntime;
 import org.fabric3.monitor.MonitorFactory;
@@ -88,6 +90,7 @@ import org.fabric3.spi.classloader.MultiParentClassLoader;
  * @phase integration-test
  */
 public class Fabric3ITestMojo extends AbstractMojo {
+    
     public static final QName IMPLEMENTATION_JUNIT = new QName(Constants.FABRIC3_NS, "junit");
     private static final String SYSTEM_CONFIG_XML_FILE = "systemConfig.xml";
 
@@ -101,6 +104,13 @@ public class Fabric3ITestMojo extends AbstractMojo {
      * @required
      */
     protected MavenProject project;
+    
+    /**
+     * Optional parameter for management domain.
+     * 
+     * @parameter
+     */
+    public String managementDomain = "itest-host";
 
     /**
      * The optional target namespace of the composite to activate.
@@ -273,7 +283,7 @@ public class Fabric3ITestMojo extends AbstractMojo {
      * @readonly
      * @required
      */
-    public List remoteRepositories;
+    public List<String> remoteRepositories;
 
     /**
      * Used to look up Artifacts in the remote repository.
@@ -293,7 +303,6 @@ public class Fabric3ITestMojo extends AbstractMojo {
      */
     public String systemConfigDir;
 
-
     /**
      * Build output directory.
      *
@@ -301,9 +310,12 @@ public class Fabric3ITestMojo extends AbstractMojo {
      * @required
      */
     protected File outputDirectory;
+    
+    // JMX management agent
+    private Agent agent;
 
 
-    @SuppressWarnings({"ThrowFromFinallyBlock", "unchecked"})
+    @SuppressWarnings("unchecked")
     public void execute() throws MojoExecutionException, MojoFailureException {
         Log log = getLog();
         if (!testScdl.exists()) {
@@ -382,6 +394,7 @@ public class Fabric3ITestMojo extends AbstractMojo {
         } finally {
             log.info("Stopping Fabric3 Runtime ...");
             try {
+                agent.shutdown();
                 shutdownRuntime(coordinator);
             } catch (Exception e) {
                 // ignore
@@ -424,6 +437,7 @@ public class Fabric3ITestMojo extends AbstractMojo {
                                               dependency.getType());
     }
 
+    @SuppressWarnings("unchecked")
     private void resolveDependencyVersion(Dependency extension) {
 
         List<org.apache.maven.model.Dependency> dependencies = project.getDependencyManagement().getDependencies();
@@ -519,6 +533,7 @@ public class Fabric3ITestMojo extends AbstractMojo {
         return artifacts;
     }
 
+    @SuppressWarnings("unchecked")
     private void addArtifacts(Set<Artifact> artifacts, Dependency extension) throws MojoExecutionException {
 
         if (extension.getVersion() == null) {
@@ -615,7 +630,14 @@ public class Fabric3ITestMojo extends AbstractMojo {
         runtime.setMonitorFactory(monitorFactory);
         runtime.setHostInfo(hostInfo);
         runtime.setHostClassLoader(hostClassLoader);
+        
+        runtime.setJMXDomain(managementDomain);
+        agent = RmiAgent.newInstance();
+        agent.start();
+        runtime.setMBeanServer(agent.getMBeanServer());
+
         return runtime;
+        
     }
 
     protected <T> T createHostComponent(Class<T> type, String impl, ClassLoader cl) throws Exception {
@@ -660,8 +682,8 @@ public class Fabric3ITestMojo extends AbstractMojo {
     protected SCATestSet createTestSet(MavenEmbeddedRuntime runtime,
                                        String name,
                                        URI contextId,
-                                       ComponentDefinition definition) throws MojoExecutionException {
-        Implementation impl = definition.getImplementation();
+                                       ComponentDefinition<?> definition) throws MojoExecutionException {
+        Implementation<?> impl = definition.getImplementation();
         PojoComponentType componentType = (PojoComponentType) impl.getComponentType();
         Map<String, ServiceDefinition> services = componentType.getServices();
         ServiceDefinition testService = services.get("testService");

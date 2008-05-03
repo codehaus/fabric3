@@ -51,17 +51,23 @@ public abstract class AbstractAgent implements Agent {
     private AtomicBoolean started = new AtomicBoolean();
 
     /**
-     * RMI connector adaptor.
+     * Connector adaptor.
      */
     private JMXConnectorServer connectorServer;
+    
+    /**
+     * Listen port for the agent.
+     */
+    private int port;
 
     /**
      * Initialies the server.
      *
      * @throws ManagementException If unable to start the agent.
      */
-    protected AbstractAgent() throws ManagementException {
+    protected AbstractAgent(int port) throws ManagementException {
         mBeanServer = MBeanServerFactory.createMBeanServer(DOMAIN);
+        this.port = port;
     }
 
     /**
@@ -147,14 +153,13 @@ public abstract class AbstractAgent implements Agent {
         }
 
     }
-
+    
     /**
-     * Gets the underlying MBean server.
-     *
-     * @return A reference to the mbean server.
+     * Returns the listen port for the agent.
+     * @return The listen port for the agent.
      */
-    protected MBeanServer getMbeanServer() {
-        return mBeanServer;
+    protected int getPort() {
+        return port;
     }
 
     /**
