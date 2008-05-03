@@ -25,6 +25,7 @@ import java.util.Map;
 import javax.jms.ConnectionFactory;
 import javax.jms.Destination;
 
+import org.fabric3.api.annotation.Management;
 import org.fabric3.binding.jms.common.ConnectionFactoryDefinition;
 import org.fabric3.binding.jms.common.CorrelationScheme;
 import org.fabric3.binding.jms.common.CreateOption;
@@ -53,6 +54,7 @@ import org.osoa.sca.annotations.Reference;
  *
  * @version $Revision$ $Date$
  */
+@Management
 public class JmsSourceWireAttacher implements SourceWireAttacher<JmsWireSourceDefinition> {
 
     // JMS host
