@@ -92,8 +92,6 @@ public class DefaultPolicyResolver implements PolicyResolver {
             
         for (Operation<?> operation : serviceContract.getOperations()) {
             
-            System.err.println(operation.getName());
-            
             policyResult.addSourceIntents(operation, interactionPolicyHelper.getProvidedIntents(sourceBinding, operation));
             if (source != null) {
                 policyResult.addSourceIntents(operation, implementationPolicyHelper.getProvidedIntents(source, operation));
