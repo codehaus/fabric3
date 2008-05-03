@@ -23,6 +23,9 @@ import javax.xml.ws.WebFault;
  */
 @WebFault
 public class WeatherException extends Exception {
+
+    private static final long serialVersionUID = -5442856978625675327L;
+    
     private BadWeatherFault faultInfo;
 
     public WeatherException(String message, BadWeatherFault faultInfo) {
