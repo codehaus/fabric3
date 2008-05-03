@@ -17,12 +17,10 @@
 package org.fabric3.jmx.runtime;
 
 import java.util.Map;
+
 import javax.management.Attribute;
-import javax.management.AttributeList;
 import javax.management.AttributeNotFoundException;
-import javax.management.DynamicMBean;
 import javax.management.InvalidAttributeValueException;
-import javax.management.JMException;
 import javax.management.MBeanException;
 import javax.management.MBeanInfo;
 import javax.management.ReflectionException;
