@@ -24,14 +24,18 @@
     <component name="WeatherTest">
         <f3:junit class="org.fabric3.tests.binding.axis.jaxb.WeatherServiceTest"/>
         <reference name="weatherService">
-            <binding.ws uri="http://localhost:8900/axis2/weatherService" f3:impl="axis2" requires="f3-axis:dataBinding.jaxb"/>
+            <binding.ws uri="http://localhost:8900/axis2/weatherService" f3:impl="axis2"/>
+            <operation name="getWeather"  requires="f3-axis:dataBinding.jaxb"/>
+            <operation name="getBadWeather"  requires="f3-axis:dataBinding.jaxb"/>
         </reference>
     </component>
 
     <component name="WeatherService">
         <implementation.java class="org.fabric3.tests.binding.axis.jaxb.WeatherServiceImpl"/>
         <service name="WeatherService">
-            <binding.ws uri="weatherService" f3:impl="axis2" requires="f3-axis:dataBinding.jaxb"/>
+            <binding.ws uri="weatherService" f3:impl="axis2"/>
+            <operation name="getWeather"  requires="f3-axis:dataBinding.jaxb"/>
+            <operation name="getBadWeather"  requires="f3-axis:dataBinding.jaxb"/>
         </service>
     </component>
     
