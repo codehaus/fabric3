@@ -34,11 +34,16 @@ import org.fabric3.host.runtime.InitializationException;
 import org.fabric3.host.runtime.RuntimeLifecycleCoordinator;
 import org.fabric3.host.runtime.ScdlBootstrapper;
 import org.fabric3.host.runtime.ShutdownException;
+import org.fabric3.jmx.agent.Agent;
+import org.fabric3.jmx.agent.rmi.RmiAgent;
+
 import static org.fabric3.runtime.webapp.Constants.APPLICATION_SCDL_PATH_DEFAULT;
 import static org.fabric3.runtime.webapp.Constants.APPLICATION_SCDL_PATH_PARAM;
 import static org.fabric3.runtime.webapp.Constants.COMPONENT_PARAM;
 import static org.fabric3.runtime.webapp.Constants.COMPOSITE_PARAM;
 import static org.fabric3.runtime.webapp.Constants.DOMAIN_PARAM;
+import static org.fabric3.runtime.webapp.Constants.MANAGEMENT_DOMAIN_PARAM;
+import static org.fabric3.runtime.webapp.Constants.DEFAULT_MANAGEMENT_DOMAIN;
 import static org.fabric3.runtime.webapp.Constants.ONLINE_PARAM;
 import static org.fabric3.runtime.webapp.Constants.RUNTIME_ATTRIBUTE;
 import static org.fabric3.runtime.webapp.Constants.COMPOSITE_NAMESPACE_PARAM;
@@ -59,15 +64,20 @@ import static org.fabric3.runtime.webapp.Constants.COMPOSITE_NAMESPACE_PARAM;
  * @version $Rev$ $Date$
  */
 public class Fabric3ContextListener implements ServletContextListener {
+    
     private RuntimeLifecycleCoordinator<WebappRuntime, Bootstrapper> coordinator;
+    private Agent agent;
 
     public void contextInitialized(ServletContextEvent event) {
+        
         ClassLoader webappClassLoader = Thread.currentThread().getContextClassLoader();
         ServletContext servletContext = event.getServletContext();
         WebappUtil utils = getUtils(servletContext);
         WebappRuntime runtime;
         WebAppMonitor monitor = null;
+        
         try {
+            
             // FIXME work this out from the servlet context
             URI domain = new URI(utils.getInitParameter(DOMAIN_PARAM, "fabric3://./domain"));
             String defaultComposite = "WebappComposite";
@@ -95,6 +105,12 @@ public class Fabric3ContextListener implements ServletContextListener {
             runtime.setHostInfo(info);
             runtime.setHostClassLoader(webappClassLoader);
             monitor = runtime.getMonitorFactory().getMonitor(WebAppMonitor.class);
+            String managementDomain = utils.getInitParameter(MANAGEMENT_DOMAIN_PARAM, DEFAULT_MANAGEMENT_DOMAIN);
+            runtime.setJMXDomain(managementDomain);
+            agent = RmiAgent.newInstance();
+            agent.start();
+            runtime.setMBeanServer(agent.getMBeanServer());
+            
             // initiate the runtime bootstrap sequence
             ScdlBootstrapper bootstrapper = utils.getBootstrapper(bootClassLoader);
             bootstrapper.setScdlLocation(systemScdl);
@@ -108,9 +124,11 @@ public class Fabric3ContextListener implements ServletContextListener {
             Future<Void> startFuture = coordinator.start();
             startFuture.get();
             servletContext.setAttribute(RUNTIME_ATTRIBUTE, runtime);
+            
             // deploy the application composite
             QName qName = new QName(compositeNamespace, compositeName);
             runtime.activate(qName, componentId);
+            
         } catch (Fabric3RuntimeException e) {
             if (monitor != null) {
                 monitor.runError(e);
@@ -129,14 +147,23 @@ public class Fabric3ContextListener implements ServletContextListener {
     }
 
     public void contextDestroyed(ServletContextEvent event) {
+        
         ServletContext servletContext = event.getServletContext();
         WebappRuntime runtime = (WebappRuntime) servletContext.getAttribute(RUNTIME_ATTRIBUTE);
+        
         if (runtime != null) {
             servletContext.removeAttribute(RUNTIME_ATTRIBUTE);
         }
+        
         try {
+            
+            if (agent != null) {
+                agent.shutdown();
+            }
+            
             Future<Void> future = coordinator.shutdown();
             future.get();
+            
         } catch (ShutdownException e) {
             servletContext.log("Error shutting runtume down", e);
         } catch (ExecutionException e) {
@@ -144,6 +171,7 @@ public class Fabric3ContextListener implements ServletContextListener {
         } catch (InterruptedException e) {
             servletContext.log("Error shutting runtume down", e);
         }
+        
     }
 
     public interface WebAppMonitor {

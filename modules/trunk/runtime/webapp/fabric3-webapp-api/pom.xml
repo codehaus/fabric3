@@ -29,6 +29,12 @@
     <description>Fabric3 Webapp Runtime API.</description>
 
     <dependencies>
+
+        <dependency>
+            <groupId>org.codehaus.fabric3</groupId>
+            <artifactId>fabric3-jmx-agent</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     
         <dependency>
             <groupId>javax.servlet</groupId>

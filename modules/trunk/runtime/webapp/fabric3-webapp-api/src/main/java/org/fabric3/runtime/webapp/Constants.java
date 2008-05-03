@@ -24,6 +24,16 @@ package org.fabric3.runtime.webapp;
  * @version $Rev$ $Date$
  */
 public final class Constants {
+    
+    /**
+     * Default management domain.
+     */
+    public static final String DEFAULT_MANAGEMENT_DOMAIN = "webapp-host";
+
+    /**
+     * Name of the servlet context-param that should contain the JMX management domain.
+     */
+    public static final String MANAGEMENT_DOMAIN_PARAM = "fabric3.management.domain";
 
     /**
      * Name of the servlet context-param that should contain the component id for the webapp.
