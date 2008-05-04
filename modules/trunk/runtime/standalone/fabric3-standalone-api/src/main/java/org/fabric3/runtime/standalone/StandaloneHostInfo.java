@@ -19,7 +19,6 @@
 package org.fabric3.runtime.standalone;
 
 import java.io.File;
-import java.net.URI;
 
 import org.fabric3.host.runtime.HostInfo;
 
@@ -27,8 +26,6 @@ import org.fabric3.host.runtime.HostInfo;
  * @version $Rev$ $Date$
  */
 public interface StandaloneHostInfo extends HostInfo {
-
-    URI STANDALONE_COMPONENT_URI = URI.create("sca://StandaloneHostInfo");
 
     /**
      * Returns the directory containing this runtime's configuration.
