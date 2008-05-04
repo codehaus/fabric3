@@ -23,6 +23,8 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.logging.Formatter;
 import java.util.logging.LogRecord;
+import java.io.StringWriter;
+import java.io.PrintWriter;
 
 /**
  * @version $Revision$ $Date$
@@ -43,6 +45,18 @@ public class Fabric3LogFormatter extends Formatter {
                 .append("] ")
                 .append(message)
                 .append(SEPARATOR);
+        if (record.getThrown() != null) {
+            try {
+                StringWriter sw = new StringWriter();
+                PrintWriter pw = new PrintWriter(sw);
+                record.getThrown().printStackTrace(pw);
+                pw.close();
+                output.append(sw.toString());
+            } catch (Exception ex) {
+                // ignore
+            }
+        }
+
         return output.toString();
     }
 
