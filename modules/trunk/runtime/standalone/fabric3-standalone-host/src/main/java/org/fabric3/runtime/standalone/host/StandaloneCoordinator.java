@@ -332,7 +332,7 @@ public class StandaloneCoordinator implements RuntimeLifecycleCoordinator<Standa
         File[] files = dir.listFiles(new FileFilter() {
             public boolean accept(File pathname) {
                 String name = pathname.getName();
-                return name.endsWith(".jar") || name.endsWith(".zip");
+                return name.endsWith(".jar") || name.endsWith(".zip") || name.endsWith(".xml");
             }
         });
         for (File file : files) {
