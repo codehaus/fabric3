@@ -52,9 +52,9 @@ public class StandalonePullJmsHost implements JmsHost, StandalonePullJmsHostMBea
     private long readTimeout = 1000L;
     private JMSRuntimeMonitor monitor;
     private int receiverCount = 3;
-    private Map<Destination, List<ConsumerWorker>> consumerWorkerMap = new HashMap<Destination, List<ConsumerWorker>>();
-    private Map<Destination, Connection> connectionMap = new HashMap<Destination, Connection>();
-    private Map<Destination, ConsumerWorkerTemplate> templateMap = new HashMap<Destination, ConsumerWorkerTemplate>();
+    private Map<String, List<ConsumerWorker>> consumerWorkerMap = new HashMap<String, List<ConsumerWorker>>();
+    private Map<String, Connection> connectionMap = new HashMap<String, Connection>();
+    private Map<String, ConsumerWorkerTemplate> templateMap = new HashMap<String, ConsumerWorkerTemplate>();
 
     /**
      * Injects the monitor.
@@ -133,7 +133,7 @@ public class StandalonePullJmsHost implements JmsHost, StandalonePullJmsHostMBea
                                                                          readTimeout,
                                                                          cl,
                                                                          monitor);
-            templateMap.put(requestDestination, template);
+            templateMap.put(requestDestination.toString(), template);
             
             for (int i = 0; i < receiverCount; i++) {
                 ConsumerWorker work = new ConsumerWorker(template);
@@ -142,8 +142,8 @@ public class StandalonePullJmsHost implements JmsHost, StandalonePullJmsHostMBea
             }
             
             connection.start();
-            connectionMap.put(requestDestination, connection);
-            consumerWorkerMap.put(requestDestination, consumerWorkers);
+            connectionMap.put(requestDestination.toString(), connection);
+            consumerWorkerMap.put(requestDestination.toString(), consumerWorkers);
             
         } catch (JMSException ex) {
             throw new Fabric3JmsException("Unable to activate service", ex);
@@ -155,8 +155,8 @@ public class StandalonePullJmsHost implements JmsHost, StandalonePullJmsHostMBea
 
     public int getReceiverCount(String destination) {
         
-        for (Map.Entry<Destination, List<ConsumerWorker>> entry : consumerWorkerMap.entrySet()) {
-            if (destination.equals(entry.toString())) {
+        for (Map.Entry<String, List<ConsumerWorker>> entry : consumerWorkerMap.entrySet()) {
+            if (destination.equals(entry.getKey())) {
                 return entry.getValue().size();
             }
         }
@@ -166,8 +166,8 @@ public class StandalonePullJmsHost implements JmsHost, StandalonePullJmsHostMBea
 
     public void setReceiverCount(String destination, int receiverCount) {
         
-        for (Map.Entry<Destination, List<ConsumerWorker>> entry : consumerWorkerMap.entrySet()) {
-            if (destination.equals(entry.toString())) {
+        for (Map.Entry<String, List<ConsumerWorker>> entry : consumerWorkerMap.entrySet()) {
+            if (destination.equals(entry.getKey().toString())) {
                 if (receiverCount != entry.getValue().size()) { 
                     ConsumerWorkerTemplate template = templateMap.get(destination);
                     for (ConsumerWorker consumerWorker : entry.getValue()) {
@@ -191,8 +191,8 @@ public class StandalonePullJmsHost implements JmsHost, StandalonePullJmsHostMBea
     public List<String> getReceivers() {
         
         List<String> receivers = new ArrayList<String>();
-        for (Destination destination : connectionMap.keySet()) {
-            receivers.add(destination.toString());
+        for (String destination : connectionMap.keySet()) {
+            receivers.add(destination);
         }
         return receivers;
         
