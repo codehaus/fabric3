@@ -19,12 +19,13 @@
 package org.fabric3.binding.jms.runtime.host.standalone;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.jms.Connection;
+import javax.jms.Destination;
 import javax.jms.JMSException;
-import javax.jms.MessageConsumer;
-import javax.jms.Session;
 
 import org.fabric3.api.annotation.Monitor;
 import org.fabric3.binding.jms.common.Fabric3JmsException;
@@ -36,7 +37,6 @@ import org.fabric3.binding.jms.runtime.helper.JmsHelper;
 import org.fabric3.binding.jms.runtime.host.JmsHost;
 import org.fabric3.binding.jms.runtime.tx.TransactionHandler;
 import org.fabric3.spi.services.work.WorkScheduler;
-
 import org.osoa.sca.annotations.Destroy;
 import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Reference;
@@ -46,14 +46,15 @@ import org.osoa.sca.annotations.Reference;
  *
  * @version $Revsion$ $Date: 2007-05-22 00:19:04 +0100 (Tue, 22 May 2007) $
  */
-public class StandalonePullJmsHost implements JmsHost {
+public class StandalonePullJmsHost implements JmsHost, StandalonePullJmsHostMBean {
 
     private WorkScheduler workScheduler;
-    private Connection connection;
     private long readTimeout = 1000L;
     private JMSRuntimeMonitor monitor;
     private int receiverCount = 3;
-    private List<ConsumerWorker> consumerWorkers = new ArrayList<ConsumerWorker>();
+    private Map<Destination, List<ConsumerWorker>> consumerWorkerMap = new HashMap<Destination, List<ConsumerWorker>>();
+    private Map<Destination, Connection> connectionMap = new HashMap<Destination, Connection>();
+    private Map<Destination, ConsumerWorkerTemplate> templateMap = new HashMap<Destination, ConsumerWorkerTemplate>();
 
     /**
      * Injects the monitor.
@@ -97,11 +98,17 @@ public class StandalonePullJmsHost implements JmsHost {
      */
     @Destroy
     public void stop() throws JMSException {
-        for (ConsumerWorker worker : consumerWorkers) {
-            worker.inActivate();
+        
+        for (List<ConsumerWorker> consumerWorkers : consumerWorkerMap.values()) {
+            for (ConsumerWorker worker : consumerWorkers) {
+                worker.inactivate();
+            }
         }
-        JmsHelper.closeQuietly(connection);
+        for (Connection connection : connectionMap.values()) {
+            JmsHelper.closeQuietly(connection);
+        }
         monitor.jmsRuntimeStop();
+        
     }
 
     public void registerResponseListener(JMSObjectFactory requestJMSObjectFactory,
@@ -110,27 +117,85 @@ public class StandalonePullJmsHost implements JmsHost {
                                          TransactionType transactionType,
                                          TransactionHandler transactionHandler,
                                          ClassLoader cl) {
+        
+        Destination requestDestination = responseJMSObjectFactory.getDestination();
+        
         try {
-            connection = requestJMSObjectFactory.getConnection();
+            
+            Connection connection = requestJMSObjectFactory.getConnection();
+            List<ConsumerWorker> consumerWorkers = new ArrayList<ConsumerWorker>();
+            
+            ConsumerWorkerTemplate template = new ConsumerWorkerTemplate(transactionHandler,
+                                                                         transactionType,
+                                                                         messageListener,
+                                                                         responseJMSObjectFactory,
+                                                                         requestJMSObjectFactory,
+                                                                         readTimeout,
+                                                                         cl,
+                                                                         monitor);
+            templateMap.put(requestDestination, template);
+            
             for (int i = 0; i < receiverCount; i++) {
-                final Session session = requestJMSObjectFactory.createSession();
-                final MessageConsumer consumer = session.createConsumer(requestJMSObjectFactory.getDestination());
-                ConsumerWorker work = new ConsumerWorker(session,
-                                                         transactionHandler,
-                                                         transactionType,
-                                                         consumer,
-                                                         messageListener,
-                                                         responseJMSObjectFactory,
-                                                         readTimeout,
-                                                         cl);
+                ConsumerWorker work = new ConsumerWorker(template);
                 workScheduler.scheduleWork(work);
                 consumerWorkers.add(work);
             }
+            
             connection.start();
+            connectionMap.put(requestDestination, connection);
+            consumerWorkerMap.put(requestDestination, consumerWorkers);
+            
         } catch (JMSException ex) {
             throw new Fabric3JmsException("Unable to activate service", ex);
         }
+        
         monitor.registerListener(requestJMSObjectFactory.getDestination());
+        
+    }
+
+    public int getReceiverCount(String destination) {
+        
+        for (Map.Entry<Destination, List<ConsumerWorker>> entry : consumerWorkerMap.entrySet()) {
+            if (destination.equals(entry.toString())) {
+                return entry.getValue().size();
+            }
+        }
+        throw new IllegalArgumentException("Unknown receiver:" + destination);
+        
+    }
+
+    public void setReceiverCount(String destination, int receiverCount) {
+        
+        for (Map.Entry<Destination, List<ConsumerWorker>> entry : consumerWorkerMap.entrySet()) {
+            if (destination.equals(entry.toString())) {
+                if (receiverCount != entry.getValue().size()) { 
+                    ConsumerWorkerTemplate template = templateMap.get(destination);
+                    for (ConsumerWorker consumerWorker : entry.getValue()) {
+                        consumerWorker.inactivate();
+                    }
+                    entry.getValue().clear();
+                    for (int i = 0;i < receiverCount;i++) {
+                        ConsumerWorker consumerWorker = new ConsumerWorker(template);
+                        workScheduler.scheduleWork(consumerWorker);
+                        entry.getValue().add(consumerWorker);
+                    }
+                }
+                return;
+            }
+        }
+        
+        throw new IllegalArgumentException("Unknown receiver:" + destination);
+        
+    }
+
+    public List<String> getReceivers() {
+        
+        List<String> receivers = new ArrayList<String>();
+        for (Destination destination : connectionMap.keySet()) {
+            receivers.add(destination.toString());
+        }
+        return receivers;
+        
     }
 
 }

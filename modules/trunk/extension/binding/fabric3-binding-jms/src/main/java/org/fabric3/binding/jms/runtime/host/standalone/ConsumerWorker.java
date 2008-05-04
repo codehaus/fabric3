@@ -25,6 +25,7 @@ import javax.jms.Message;
 import javax.jms.MessageConsumer;
 import javax.jms.Session;
 
+import org.fabric3.binding.jms.common.Fabric3JmsException;
 import org.fabric3.binding.jms.common.TransactionType;
 import org.fabric3.binding.jms.runtime.JMSObjectFactory;
 import org.fabric3.binding.jms.runtime.JMSRuntimeMonitor;
@@ -48,6 +49,7 @@ public class ConsumerWorker implements Runnable {
     private final ClassLoader cl;
     private final AtomicBoolean active = new AtomicBoolean(true);
     private final JMSObjectFactory responseJMSObjectFactory;
+    private final JMSObjectFactory requestJMSObjectFactory;
     private JMSRuntimeMonitor monitor;
 
     /**
@@ -57,22 +59,25 @@ public class ConsumerWorker implements Runnable {
      * @param listener           Delegate message listener.
      * @param readTimeout        Read timeout.
      */
-    public ConsumerWorker(Session session,
-                          TransactionHandler transactionHandler,
-                          TransactionType transactionType,
-                          MessageConsumer consumer,
-                          ResponseMessageListener listener,
-                          JMSObjectFactory responseJMSObjectFactory,
-                          long readTimeout,
-                          ClassLoader cl) {
-        this.session = session;
-        this.transactionHandler = transactionHandler;
-        this.transactionType = transactionType;
-        this.consumer = consumer;
-        this.listener = listener;
-        this.responseJMSObjectFactory = responseJMSObjectFactory;
-        this.readTimeout = readTimeout;
-        this.cl = cl;
+    public ConsumerWorker(ConsumerWorkerTemplate template) {
+        
+        try {
+            
+            transactionHandler = template.getTransactionHandler();
+            transactionType = template.getTransactionType();
+            listener = template.getListener();
+            responseJMSObjectFactory = template.getResponseJMSObjectFactory();
+            requestJMSObjectFactory = template.getRequestJMSObjectFactory();
+            session = requestJMSObjectFactory.createSession();
+            consumer = session.createConsumer(requestJMSObjectFactory.getDestination());
+            readTimeout = template.getReadTimeout();
+            cl = template.getCl();
+            monitor = template.getMonitor();
+            
+        } catch (JMSException e) {
+            throw new Fabric3JmsException("Unale to create consumer", e);
+        }
+        
     }
 
     /**
@@ -141,14 +146,8 @@ public class ConsumerWorker implements Runnable {
     /**
      * Notify worker to stop.
      */
-    public void inActivate() {
+    public void inactivate() {
         active.set(false);
     }
 
-    /**
-     * Setter for monitor
-     */
-    public void setMonitor(JMSRuntimeMonitor monitor) {
-        this.monitor = monitor;
-    }
 }
