@@ -82,7 +82,8 @@ import org.fabric3.spi.services.work.WorkScheduler;
  * @version $Rev$ $Date$
  */
 public class WebappCoordinator implements RuntimeLifecycleCoordinator<WebappRuntime, Bootstrapper> {
-    public static final String EXTENSIONS_DIR = "/WEB-INF/fabric3/extensions";
+    private static final String EXTENSIONS_DIR = "/WEB-INF/fabric3/extensions";
+    private static final String USER_EXTENSIONS_DIR = "/WEB-INF/fabric3/user";
     private ClassLoader bootClassLoader;
 
     private enum State {
@@ -155,7 +156,10 @@ public class WebappCoordinator implements RuntimeLifecycleCoordinator<WebappRunt
         try {
             synthesizeSPIContribution();
             activateIntents();
-            includeExtensions();
+            // activate runtime extensions
+            includeExtensions(EXTENSIONS_DIR);
+            // activate user extensions
+            includeExtensions(USER_EXTENSIONS_DIR);
         } catch (DefinitionActivationException e) {
             throw new InitializationException(e);
         }
@@ -292,12 +296,13 @@ public class WebappCoordinator implements RuntimeLifecycleCoordinator<WebappRunt
     /**
      * Processes extensions and includes them in the runtime domain
      *
+     * @param extensionPath the path to the extensions
      * @throws InitializationException       if an error occurs included the extensions
      * @throws DefinitionActivationException if an error occurs activating an intent or policy set definition
      */
-    private void includeExtensions() throws InitializationException, DefinitionActivationException {
+    private void includeExtensions(String extensionPath) throws InitializationException, DefinitionActivationException {
         ServletContext context = runtime.getHostInfo().getServletContext();
-        Set paths = context.getResourcePaths(EXTENSIONS_DIR);
+        Set paths = context.getResourcePaths(extensionPath);
         if (paths == null) {
             return;
         }

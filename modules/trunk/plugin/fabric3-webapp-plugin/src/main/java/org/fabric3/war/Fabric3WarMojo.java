@@ -66,9 +66,14 @@ public class Fabric3WarMojo extends AbstractMojo {
     private static final String BOOT_PATH = FABRIC3_PATH + "/boot";
 
     /**
-     * Fabric3 boot path.
+     * Fabric3 extensions path.
      */
     private static final String EXTENSIONS_PATH = FABRIC3_PATH + "/extensions";
+
+    /**
+     * Fabric3 user extensions path.
+     */
+    private static final String USER_EXTENSIONS_PATH = FABRIC3_PATH + "/user";
 
     /**
      * The directory where the webapp is built.
@@ -136,6 +141,13 @@ public class Fabric3WarMojo extends AbstractMojo {
     public Dependency[] extensions;
 
     /**
+     * Set of user extension artifacts that should be deployed to the runtime.
+     *
+     * @parameter
+     */
+    public Dependency[] userExtensions;
+
+    /**
      * The default version of the runtime to use.
      *
      * @parameter expression="RELEASE"
@@ -178,9 +190,9 @@ public class Fabric3WarMojo extends AbstractMojo {
         File bootDir = new File(webappDirectory, BOOT_PATH);
         bootDir.mkdirs();
         for (Dependency dependency : bootLibs) {
-        	if(dependency.getVersion() == null){
-        		resolveDependencyVersion(dependency);
-        	}
+            if (dependency.getVersion() == null) {
+                resolveDependencyVersion(dependency);
+            }
             for (Artifact artifact : resolveArtifact(dependency.getArtifact(artifactFactory), true)) {
                 FileUtils.copyFileToDirectoryIfModified(artifact.getFile(), bootDir);
             }
@@ -189,19 +201,31 @@ public class Fabric3WarMojo extends AbstractMojo {
 
     private void installExtensions() throws ArtifactNotFoundException, ArtifactResolutionException, IOException,
             ArtifactMetadataRetrievalException {
-        if (extensions == null) {
-            return;
-        }
-
-        File bootDir = new File(webappDirectory, EXTENSIONS_PATH);
-        for (Dependency dependency : extensions) {
-        	if(dependency.getVersion() == null){
-        		resolveDependencyVersion(dependency);
-        	}
-            for (Artifact artifact : resolveArtifact(dependency.getArtifact(artifactFactory), false)) {
-                FileUtils.copyFileToDirectoryIfModified(artifact.getFile(), bootDir);
+        if (extensions != null) {
+            // copy extensions
+            File extensionsDir = new File(webappDirectory, EXTENSIONS_PATH);
+            for (Dependency dependency : extensions) {
+                if (dependency.getVersion() == null) {
+                    resolveDependencyVersion(dependency);
+                }
+                for (Artifact artifact : resolveArtifact(dependency.getArtifact(artifactFactory), false)) {
+                    FileUtils.copyFileToDirectoryIfModified(artifact.getFile(), extensionsDir);
+                }
             }
         }
+        if (userExtensions != null) {
+            // copy user extensions
+            File userExtensionsDir = new File(webappDirectory, USER_EXTENSIONS_PATH);
+            for (Dependency dependency : userExtensions) {
+                if (dependency.getVersion() == null) {
+                    resolveDependencyVersion(dependency);
+                }
+                for (Artifact artifact : resolveArtifact(dependency.getArtifact(artifactFactory), false)) {
+                    FileUtils.copyFileToDirectoryIfModified(artifact.getFile(), userExtensionsDir);
+                }
+            }
+        }
+
     }
 
     /**
@@ -210,17 +234,17 @@ public class Fabric3WarMojo extends AbstractMojo {
      * @param extension the dependcy information for the extension
      */
     private void resolveDependencyVersion(Dependency extension) {
-    	List<org.apache.maven.model.Dependency> dependencies = project.getDependencyManagement().getDependencies();
-		for(org.apache.maven.model.Dependency dependecy : dependencies) {
-			if(dependecy.getGroupId().equals(extension.getGroupId())
-				&& dependecy.getArtifactId().equals(extension.getArtifactId())){
-				extension.setVersion(dependecy.getVersion());
+        List<org.apache.maven.model.Dependency> dependencies = project.getDependencyManagement().getDependencies();
+        for (org.apache.maven.model.Dependency dependecy : dependencies) {
+            if (dependecy.getGroupId().equals(extension.getGroupId())
+                    && dependecy.getArtifactId().equals(extension.getArtifactId())) {
+                extension.setVersion(dependecy.getVersion());
 
-			}
-		}
-	}
+            }
+        }
+    }
 
-	/**
+    /**
      * Resolves the specified artifact.
      *
      * @param artifact   Artifact to be resolved.

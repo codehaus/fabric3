@@ -77,7 +77,7 @@ public class WebappRuntimeImpl extends AbstractRuntime<WebappHostInfo> implement
             throw new InitializationException("Error processing project", e);
         } catch (ActivateException e) {
             String identifier = qName.toString();
-            throw new InitializationException("Error activating composite [" + identifier + "]", identifier, e);
+            throw new InitializationException("Error activating composite: " + identifier, identifier, e);
         }
     }
 
