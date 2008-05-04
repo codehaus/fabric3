@@ -54,6 +54,9 @@
   <component name="CompilerConfiguration">
     <option name="DEFAULT_COMPILER" value="Javac" />
     <option name="DEPLOY_AFTER_MAKE" value="0" />
+    <excludeFromCompile>
+      <file url="file://$PROJECT_DIR$/modules/trunk/extension/other/fabric3-jpa-core/src/test/resources/META-INF/persistence.xml" />
+    </excludeFromCompile>
     <resourceExtensions>
       <entry name=".+\.(properties|xml|html|dtd|tld)" />
       <entry name=".+\.(gif|png|jpeg|jpg)" />
@@ -355,6 +358,7 @@
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/other/fabric3-jdk-proxy/fabric3-jdk-proxy.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/other/fabric3-jdk-proxy/fabric3-jdk-proxy.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/other/fabric3-jetty/fabric3-jetty.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/other/fabric3-jetty/fabric3-jetty.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/kernel/impl/fabric3-jmx/fabric3-jmx.iml" filepath="$PROJECT_DIR$/modules/trunk/kernel/impl/fabric3-jmx/fabric3-jmx.iml" />
+      <module fileurl="file://$PROJECT_DIR$/modules/trunk/runtime/support/fabric3-jmx-agent/fabric3-jmx-agent.iml" filepath="$PROJECT_DIR$/modules/trunk/runtime/support/fabric3-jmx-agent/fabric3-jmx-agent.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/other/fabric3-jpa-core/fabric3-jpa-core.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/other/fabric3-jpa-core/fabric3-jpa-core.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/other/fabric3-jpa-hibernate/fabric3-jpa-hibernate.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/other/fabric3-jpa-hibernate/fabric3-jpa-hibernate.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/other/fabric3-jpa-spi/fabric3-jpa-spi.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/other/fabric3-jpa-spi/fabric3-jpa-spi.iml" />
@@ -403,6 +407,7 @@
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-binding-hessian/test-binding-hessian.iml" filepath="$PROJECT_DIR$/tests/trunk/test-binding-hessian/test-binding-hessian.iml" />
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-binding-jms/test-binding-jms.iml" filepath="$PROJECT_DIR$/tests/trunk/test-binding-jms/test-binding-jms.iml" />
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-clover/test-clover.iml" filepath="$PROJECT_DIR$/tests/trunk/test-clover/test-clover.iml" />
+      <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-ds-extension/test-ds-extension.iml" filepath="$PROJECT_DIR$/tests/trunk/test-ds-extension/test-ds-extension.iml" />
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-function/test-function.iml" filepath="$PROJECT_DIR$/tests/trunk/test-function/test-function.iml" />
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-groovy/test-groovy.iml" filepath="$PROJECT_DIR$/tests/trunk/test-groovy/test-groovy.iml" />
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-interop-cxf-axis2/test-interop-cxf-axis2.iml" filepath="$PROJECT_DIR$/tests/trunk/test-interop-cxf-axis2/test-interop-cxf-axis2.iml" />
