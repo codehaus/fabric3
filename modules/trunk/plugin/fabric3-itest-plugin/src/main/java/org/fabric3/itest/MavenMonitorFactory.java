@@ -57,6 +57,10 @@ public class MavenMonitorFactory implements MonitorFactory {
         return getMonitor(monitorInterface);
     }
 
+    public void setConfiguration(Properties configuration) {
+
+    }
+
     public void setLevels(Properties levels) {
 
     }

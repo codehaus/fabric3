@@ -153,7 +153,10 @@ public class Fabric3Server implements Fabric3ServerMBean {
             bootedRuntimes.put(jmxDomain, coordinator);
             monitor.started(jmxDomain);
         } catch (Exception ex) {
-            monitor.runError(ex);
+            if (monitor != null) {
+                // there could have been an error initializing the monitor
+                monitor.runError(ex);
+            }  
             throw new Fabric3ServerException(ex);
         }
     }

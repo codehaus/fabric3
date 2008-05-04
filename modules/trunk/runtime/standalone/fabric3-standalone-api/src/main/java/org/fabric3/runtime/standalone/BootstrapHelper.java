@@ -241,12 +241,16 @@ public final class BootstrapHelper {
             String monitorFactoryName = properties.getProperty("fabric3.monitorFactoryClass",
                                                                "org.fabric3.monitor.impl.JavaLoggingMonitorFactory");
             String bundleName = properties.getProperty("fabric3.monitorBundle", "f3");
-            Level level = Level.parse(properties.getProperty("fabric3.defaultLevel", "INFO"));
+            Level level = Level.parse(properties.getProperty("fabric3.defaultLevel", "FINE"));
 
+            String formatterClass = properties.getProperty("fabric3.jdkLogFormatter", "org.fabric3.monitor.impl.Fabric3LogFormatter");
+            Properties configuration = new Properties();
+            configuration.setProperty("fabric3.jdkLogFormatter", formatterClass);
             Class<?> monitorClass = Class.forName(monitorFactoryName, true, bootClassLoader);
             MonitorFactory monitorFactory = (MonitorFactory) monitorClass.newInstance();
             monitorFactory.setBundleName(bundleName);
             monitorFactory.setDefaultLevel(level);
+            monitorFactory.setConfiguration(configuration);
             return monitorFactory;
         } catch (ClassNotFoundException e) {
             throw new BootstrapException(e);

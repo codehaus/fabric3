@@ -46,6 +46,8 @@ public interface MonitorFactory {
      */
     <T> T getMonitor(Class<T> monitorInterface, URI componentId);
 
+    void setConfiguration(Properties configuration);
+
     /**
      * Sets the definition of custom levels for specific monitored methods, may be null or empty
      *
@@ -66,4 +68,5 @@ public interface MonitorFactory {
      * @param bundleName the name of a resource bundle that will be passed to the logger
      */
     void setBundleName(String bundleName);
+    
 }

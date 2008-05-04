@@ -32,6 +32,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
+import java.util.logging.Formatter;
+import java.util.logging.Handler;
 import java.net.URI;
 
 import org.fabric3.api.annotation.LogLevel;
@@ -48,6 +50,7 @@ public class JavaLoggingMonitorFactory implements MonitorFactory {
     private Level defaultLevel;
     private String bundleName;
     private final Map<Class<?>, WeakReference<?>> proxies = new WeakHashMap<Class<?>, WeakReference<?>>();
+    private Formatter formatter;
 
     /**
      * Construct a MonitorFactory that will monitor the specified methods at the specified levels and generate messages using java.util.logging.
@@ -75,6 +78,22 @@ public class JavaLoggingMonitorFactory implements MonitorFactory {
         return getMonitor(monitorInterface);
     }
 
+    public void setConfiguration(Properties configuration) {
+        String formatterClass = (String) configuration.get("fabric3.jdkLogFormatter");
+        if (formatterClass != null) {
+            try {
+                Class<Formatter> clazz = (Class<Formatter>) Class.forName(formatterClass);
+                formatter = clazz.newInstance();
+            } catch (ClassNotFoundException e) {
+                throw new IllegalArgumentException("Invalid formatter class", e);
+            } catch (IllegalAccessException e) {
+                throw new IllegalArgumentException("Invalid formatter class", e);
+            } catch (InstantiationException e) {
+                throw new IllegalArgumentException("Invalid formatter class", e);
+            }
+        }
+    }
+
     public synchronized <T> T getMonitor(Class<T> monitorInterface) {
         T monitor = getCachedMonitor(monitorInterface);
         if (monitor == null) {
@@ -92,6 +111,7 @@ public class JavaLoggingMonitorFactory implements MonitorFactory {
     protected <T> T createMonitor(Class<T> monitorInterface) {
         String className = monitorInterface.getName();
         Logger logger = Logger.getLogger(className);
+        setFormatter(logger);
         ResourceBundle bundle = locateBundle(monitorInterface, bundleName);
 
         Method[] methods = monitorInterface.getMethods();
@@ -138,6 +158,19 @@ public class JavaLoggingMonitorFactory implements MonitorFactory {
                                               new Class<?>[]{monitorInterface},
                                               handler);
         return monitorInterface.cast(proxy);
+    }
+
+    private void setFormatter(Logger logger) {
+        if (formatter != null) {
+            Logger parent = logger.getParent();
+            if (parent != null && logger.getUseParentHandlers()) {
+                setFormatter(parent);
+            } else {
+                for (Handler handler : logger.getHandlers()) {
+                    handler.setFormatter(formatter);
+                }
+            }
+        }
     }
 
     protected <T> ResourceBundle locateBundle(Class<T> monitorInterface, String bundleName) {
@@ -189,8 +222,8 @@ public class JavaLoggingMonitorFactory implements MonitorFactory {
 
             LogRecord logRecord = new LogRecord(level, key);
             logRecord.setLoggerName(className);
-            logRecord.setSourceClassName(className);
-            logRecord.setSourceMethodName(methodName);
+            //logRecord.setSourceClassName(className);
+            //logRecord.setSourceMethodName(methodName);
             logRecord.setParameters(args);
             if (args != null && throwable >= 0) {
                 logRecord.setThrown((Throwable) args[throwable]);
