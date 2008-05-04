@@ -64,6 +64,7 @@
                 <include>org.codehaus.fabric3.standalone:fabric3-standalone-api</include>
                 <include>org.codehaus.fabric3:fabric3-monitor-api</include>
                 <include>org.apache.geronimo.specs:geronimo-annotation_1.0_spec</include>
+                <include>org.codehaus.fabric3:fabric3-jmx-agent</include>
                 <include>javax.servlet:servlet-api</include>
             </includes>
             <outputDirectory>lib</outputDirectory>
