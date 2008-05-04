@@ -64,11 +64,7 @@ public class ArchiveStoreImpl implements ArchiveStore {
      */
     public ArchiveStoreImpl(@Reference HostInfo hostInfo) throws IOException {
         archiveUriToUrl = new ConcurrentHashMap<URI, URL>();
-        URL url = hostInfo.getBaseURL();
-        if (url != null) {
-            String pathname = url.getFile();
-            baseDir = new File(pathname);
-        }
+        baseDir = hostInfo.getBaseDir();
     }
 
     @Property(required = false)

@@ -16,37 +16,34 @@
  */
 package org.fabric3.fabric.services.domain;
 
-import static java.io.File.separator;
-
 import java.io.File;
+import static java.io.File.separator;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URI;
-import java.net.URL;
-
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamWriter;
+
+import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Reference;
+import org.osoa.sca.annotations.Service;
 
 import org.fabric3.fabric.util.FileHelper;
 import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.Composite;
 import org.fabric3.scdl.CompositeImplementation;
-import org.fabric3.spi.services.marshaller.MarshalException;
-import org.fabric3.spi.services.marshaller.MarshalService;
+import org.fabric3.services.xmlfactory.XMLFactory;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 import org.fabric3.spi.runtime.assembly.LogicalComponentStore;
 import org.fabric3.spi.runtime.assembly.RecordException;
 import org.fabric3.spi.runtime.assembly.RecoveryException;
-import org.fabric3.services.xmlfactory.XMLFactory;
-
-import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Reference;
-import org.osoa.sca.annotations.Service;
+import org.fabric3.spi.services.marshaller.MarshalException;
+import org.fabric3.spi.services.marshaller.MarshalService;
 
 /**
  * Default implementation of the LogicalComponentStore that persists the logical domain model to disk. The
@@ -70,13 +67,10 @@ public class LogicalComponentStoreImpl implements LogicalComponentStore {
         outputFactory = factory.newOutputFactoryInstance();
         inputFactory = factory.newInputFactoryInstance();
         domainUri = hostInfo.getDomain();
-        URL url = hostInfo.getBaseURL();
-        if (url == null) {
+        File baseDir  = hostInfo.getBaseDir();
+        if (baseDir == null) {
             throw new FileNotFoundException("No base directory found");
         }
-        String pathname = url.getFile();
-        File baseDir = new File(pathname);
-
         File root = new File(baseDir, "stores" + separator + "assembly");
         FileHelper.forceMkdir(root);
         if (!root.exists() || !root.isDirectory() || !root.canRead()) {

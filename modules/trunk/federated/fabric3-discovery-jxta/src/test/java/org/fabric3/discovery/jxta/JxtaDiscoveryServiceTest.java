@@ -20,6 +20,7 @@ package org.fabric3.discovery.jxta;
 
 import java.net.URI;
 import java.net.URL;
+import java.io.File;
 
 import junit.framework.TestCase;
 import net.jxta.platform.NetworkConfigurator;
@@ -90,7 +91,7 @@ public class JxtaDiscoveryServiceTest extends TestCase {
             this.domain = domain;
         }
 
-        public URL getBaseURL() {
+        public File getBaseDir() {
             return null;
         }
 

@@ -18,8 +18,8 @@
  */
 package org.fabric3.host.runtime;
 
+import java.io.File;
 import java.net.URI;
-import java.net.URL;
 
 /**
  * Interface that provides information on the host environment. This allows the runtime to access information about the
@@ -39,11 +39,11 @@ public interface HostInfo {
     URI getDomain();
 
     /**
-     * Gets the base URL for the runtime.
+     * Gets the base directory for the runtime.
      *
-     * @return The base URL for the runtime.
+     * @return The base directory for the runtime.
      */
-    URL getBaseURL();
+    File getBaseDir();
 
     /**
      * Returns whether the host considers itself "online" or connected to the internet. This can be used by services to

@@ -31,25 +31,18 @@ public interface StandaloneHostInfo extends HostInfo {
     URI STANDALONE_COMPONENT_URI = URI.create("sca://StandaloneHostInfo");
 
     /**
-     * Return the directory where the standalone distribution was installed.
+     * Returns the directory containing this runtime's configuration.
      *
-     * @return the directory where the standalone distribution was installed
+     * @return the directory containing this runtime's configuration
      */
-    File getInstallDirectory();
+    File getConfigDirectory();
 
     /**
-     * Returns the name of this runtime's profile.
+     * Returns the runtime extensions directory.
      *
-     * @return the name of this runtime's profile
+     * @return the runtime extensions directory
      */
-    String getProfileName();
-
-    /**
-     * Returns the directory containing this runtime's profile.
-     *
-     * @return the directory containing this runtime's profile
-     */
-    File getProfileDirectory();
+    File getExtensionsDirectory();
 
     /**
      * Returns the host's ClassLoader.
@@ -66,4 +59,5 @@ public interface StandaloneHostInfo extends HostInfo {
      * @return the runtime boot ClassLoader
      */
     ClassLoader getBootClassLoader();
+
 }

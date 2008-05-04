@@ -134,7 +134,7 @@ public class StandaloneCoordinator implements RuntimeLifecycleCoordinator<Standa
             frame = new CallFrame(groupId);
             workContext.addCallFrame(frame);
             container.startContext(workContext);
-            extensionsDirectory = new File(runtime.getHostInfo().getInstallDirectory(), "extensions");
+            extensionsDirectory = runtime.getHostInfo().getExtensionsDirectory();
         } catch (GroupInitializationException e) {
             state = State.ERROR;
             throw new InitializationException(e);
@@ -283,14 +283,13 @@ public class StandaloneCoordinator implements RuntimeLifecycleCoordinator<Standa
      * @throws InitializationException if an error occurs activating the intents
      */
     private void activateIntents() throws InitializationException {
-        File dir = runtime.getHostInfo().getProfileDirectory();
+        File dir = runtime.getHostInfo().getConfigDirectory();
         try {
             File file = new File(dir, INTENTS_FILE);
             if (!file.exists()) {
                 return;
             }
-            ContributionService contributionService = runtime.getSystemComponent(ContributionService.class,
-                                                                                 CONTRIBUTION_SERVICE_URI);
+            ContributionService contributionService = runtime.getSystemComponent(ContributionService.class, CONTRIBUTION_SERVICE_URI);
             URI contribuUri = file.toURI();
             URL location = contribuUri.toURL();
             ContributionSource source = new FileContributionSource(contribuUri, location, -1, new byte[0]);
@@ -311,7 +310,8 @@ public class StandaloneCoordinator implements RuntimeLifecycleCoordinator<Standa
     /**
      * Processes extensions and includes them in the runtime domain
      *
-     * @throws InitializationException if an error occurs included the extensions
+     * @throws InitializationException       if an error occurs included the extensions
+     * @throws DefinitionActivationException if an error activating policy definitions occurs
      */
     private void includeExtensions() throws InitializationException, DefinitionActivationException {
         if (extensionsDirectory != null && extensionsDirectory.exists()) {

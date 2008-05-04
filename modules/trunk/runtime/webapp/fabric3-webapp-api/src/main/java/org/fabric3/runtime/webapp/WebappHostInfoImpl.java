@@ -29,19 +29,14 @@ import javax.servlet.ServletContext;
 public class WebappHostInfoImpl implements WebappHostInfo {
     private final ServletContext servletContext;
     private final URI domain;
-    private final URL baseURL;
+    private final File baseDir;
     private final URL intentsLocation;
     private final boolean online;
-    private URI id;
 
-    public WebappHostInfoImpl(ServletContext servletContext,
-                              URI domain,
-                              URL baseURL,
-                              URL intentsLocation,
-                              boolean online) {
+    public WebappHostInfoImpl(ServletContext servletContext, URI domain, File baseDir, URL intentsLocation, boolean online) {
         this.servletContext = servletContext;
         this.domain = domain;
-        this.baseURL = baseURL;
+        this.baseDir = baseDir;
         this.intentsLocation = intentsLocation;
         this.online = online;
     }
@@ -54,8 +49,8 @@ public class WebappHostInfoImpl implements WebappHostInfo {
         return intentsLocation;
     }
 
-    public URL getBaseURL() {
-        return baseURL;
+    public File getBaseDir() {
+        return baseDir;
     }
 
     public File getInstallDirectory() {

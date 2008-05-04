@@ -20,8 +20,10 @@ package org.fabric3.runtime.webapp;
 
 import java.net.URI;
 import java.net.URL;
+import java.net.URLDecoder;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
+import java.io.File;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
@@ -47,19 +49,17 @@ import static org.fabric3.runtime.webapp.Constants.DEFAULT_MANAGEMENT_DOMAIN;
 import static org.fabric3.runtime.webapp.Constants.ONLINE_PARAM;
 import static org.fabric3.runtime.webapp.Constants.RUNTIME_ATTRIBUTE;
 import static org.fabric3.runtime.webapp.Constants.COMPOSITE_NAMESPACE_PARAM;
+import static org.fabric3.runtime.webapp.Constants.BASE_DIR;
 
 /**
- * Launches a Fabric3 runtime in a web application, loading information from servlet context parameters. This listener
- * manages one runtime per servlet context; the lifecycle of that runtime corresponds to the the lifecycle of the
- * associated servlet context.
+ * Launches a Fabric3 runtime in a web application, loading information from servlet context parameters. This listener manages one runtime per servlet
+ * context; the lifecycle of that runtime corresponds to the the lifecycle of the associated servlet context.
  * <p/>
- * The runtime is launched in a child classloader of the web application, thereby providing isolation between
- * application and system artifacts. Application code only has access to the SCA API and may not reference Fabric3
- * system artifacts directly.
+ * The runtime is launched in a child classloader of the web application, thereby providing isolation between application and system artifacts.
+ * Application code only has access to the SCA API and may not reference Fabric3 system artifacts directly.
  * <p/>
- * The <code>web.xml</code> of a web application embedding Fabric3 must have entries for this listener and {@link
- * Fabric3ContextListener}. The latter notifies the runtime of session creation and expiration events through a
- * "bridging" contract, {@link WebappRuntime}.
+ * The <code>web.xml</code> of a web application embedding Fabric3 must have entries for this listener and {@link Fabric3ContextListener}. The latter
+ * notifies the runtime of session creation and expiration events through a "bridging" contract, {@link WebappRuntime}.
  *
  * @version $Rev$ $Date$
  */
@@ -77,7 +77,6 @@ public class Fabric3ContextListener implements ServletContextListener {
         WebAppMonitor monitor = null;
         
         try {
-            
             // FIXME work this out from the servlet context
             URI domain = new URI(utils.getInitParameter(DOMAIN_PARAM, "fabric3://./domain"));
             String defaultComposite = "WebappComposite";
@@ -93,12 +92,15 @@ public class Fabric3ContextListener implements ServletContextListener {
             boolean online = Boolean.valueOf(utils.getInitParameter(ONLINE_PARAM, "true"));
             ClassLoader bootClassLoader = utils.getBootClassLoader(webappClassLoader);
             URL intentsLocation = utils.getIntentsLocation(bootClassLoader);
-            URL baseDir = servletContext.getResource("/WEB-INF/fabric3/");
-            WebappHostInfo info = new WebappHostInfoImpl(servletContext,
-                                                         domain,
-                                                         baseDir,
-                                                         intentsLocation,
-                                                         online);
+
+            String baseDirParam = utils.getInitParameter(BASE_DIR, null);
+            File baseDir;
+            if (baseDirParam == null) {
+                baseDir = new File(URLDecoder.decode(servletContext.getResource("/WEB-INF/fabric3/").getFile(), "UTF-8"));
+            } else {
+                baseDir = new File(baseDirParam);
+            }
+            WebappHostInfo info = new WebappHostInfoImpl(servletContext, domain, baseDir, intentsLocation, online);
             URL systemScdl = utils.getSystemScdl(bootClassLoader);
 
             runtime = utils.getRuntime(bootClassLoader);
@@ -128,7 +130,6 @@ public class Fabric3ContextListener implements ServletContextListener {
             // deploy the application composite
             QName qName = new QName(compositeNamespace, compositeName);
             runtime.activate(qName, componentId);
-            
         } catch (Fabric3RuntimeException e) {
             if (monitor != null) {
                 monitor.runError(e);

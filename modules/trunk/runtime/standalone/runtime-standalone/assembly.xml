@@ -76,7 +76,7 @@
                 <!-- JSP must be on the host classpath as end-user tags may implement interfaces -->
                 <include>org.mortbay.jetty:jsp-api-2.1</include>
             </includes>
-            <outputDirectory>profiles/standalone/host</outputDirectory>
+            <outputDirectory>host</outputDirectory>
         </dependencySet>
 
         <!-- copy boot dependencies to standalone profile -->
@@ -105,7 +105,7 @@
                 <include>org.apache.tuscany:commonj-api_r1.1</include>
                 <include>javax.activation:activation</include>
             </includes>
-            <outputDirectory>profiles/standalone/boot</outputDirectory>
+            <outputDirectory>boot</outputDirectory>
         </dependencySet>
 
         <!-- copy extension modules to the extensions directory-->

@@ -51,6 +51,11 @@ public final class Constants {
     public static final String COMPOSITE_PARAM = "fabric3.composite";
 
     /**
+     * Servlet context-param name for the base runtime directory.
+     */
+    public static final String BASE_DIR = "fabric3.baseDir";
+
+    /**
      * Name of the servlet context-param that should contain the component id for the webapp.
      */
     public static final String COMPONENT_PARAM = "fabric3.component";

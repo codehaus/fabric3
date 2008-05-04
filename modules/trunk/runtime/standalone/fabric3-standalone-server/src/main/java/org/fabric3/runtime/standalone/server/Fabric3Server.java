@@ -49,10 +49,8 @@ import org.fabric3.runtime.standalone.StandaloneRuntime;
  * @version $Rev$ $Date$
  */
 public class Fabric3Server implements Fabric3ServerMBean {
+    private static final String JMX_DOMAIN = "fabric3.jmx";
 
-    /**
-     * Agent
-     */
     private final Agent agent;
 
     /**
@@ -76,20 +74,9 @@ public class Fabric3Server implements Fabric3ServerMBean {
     public static void main(String[] args) throws Exception {
         Fabric3Server server = new Fabric3Server();
         server.start();
-
-        // Start any runtimes specified in the cli
-        if (args.length > 0) {
-            for (String profile : args) {
-                server.startRuntime(profile);
-            }
-        } else {
-            System.out.println("No profiles specified on command line.");
-        }
-        System.out.println("Waiting for JMX Commands.");
-
+        String jmxDomain = System.getProperty(JMX_DOMAIN, "standalone");
+        server.startRuntime(jmxDomain);
         server.run();
-
-        System.out.println("Shutdown");
         for (String bootPath : server.bootedRuntimes.keySet()) {
             server.shutdownRuntime(bootPath);
         }
@@ -109,13 +96,13 @@ public class Fabric3Server implements Fabric3ServerMBean {
     /**
      * Starts a runtime specified by the bootpath.
      *
-     * @param profileName Profile for the runtime.
+     * @param jmxDomain the domain name for the runtime.
      */
-    public final void startRuntime(final String profileName) {
+    public final void startRuntime(final String jmxDomain) {
         final StandaloneHostInfo hostInfo;
         final StandaloneRuntime runtime;
         try {
-            hostInfo = BootstrapHelper.createHostInfo(installDirectory, profileName);
+            hostInfo = BootstrapHelper.createHostInfo(installDirectory);
             runtime = BootstrapHelper.createRuntime(hostInfo);
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -123,15 +110,14 @@ public class Fabric3Server implements Fabric3ServerMBean {
         }
 
         runtime.setMBeanServer(agent.getMBeanServer());
-        runtime.setJMXDomain(profileName);
+        runtime.setJMXDomain(jmxDomain);
         monitor = runtime.getMonitorFactory().getMonitor(ServerMonitor.class);
         try {
             ClassLoader bootLoader = hostInfo.getBootClassLoader();
             ClassLoader hostLoader = hostInfo.getHostClassLoader();
 
             Bootstrapper bootstrapper = BootstrapHelper.createBootstrapper(hostInfo);
-            RuntimeLifecycleCoordinator<StandaloneRuntime, Bootstrapper> coordinator =
-                    BootstrapHelper.createCoordinator(hostInfo);
+            RuntimeLifecycleCoordinator<StandaloneRuntime, Bootstrapper> coordinator = BootstrapHelper.createCoordinator(hostInfo);
 
             // load the primordial system components
             coordinator.bootPrimordial(runtime, bootstrapper, bootLoader, hostLoader);
@@ -148,8 +134,8 @@ public class Fabric3Server implements Fabric3ServerMBean {
             // start the runtime receiving requests
             future = coordinator.start();
             future.get();
-            bootedRuntimes.put(profileName, coordinator);
-            monitor.started(profileName);
+            bootedRuntimes.put(jmxDomain, coordinator);
+            monitor.started(jmxDomain);
         } catch (Exception ex) {
             monitor.runError(ex);
             throw new Fabric3ServerException(ex);

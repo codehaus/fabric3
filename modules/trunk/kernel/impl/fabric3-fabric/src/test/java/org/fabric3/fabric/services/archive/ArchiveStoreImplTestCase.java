@@ -59,7 +59,7 @@ public class ArchiveStoreImplTestCase extends TestCase {
     protected void setUp() throws Exception {
         super.setUp();
         HostInfo info = EasyMock.createMock(HostInfo.class);
-        EasyMock.expect(info.getBaseURL()).andReturn(null).atLeastOnce();
+        EasyMock.expect(info.getBaseDir()).andReturn(null).atLeastOnce();
         EasyMock.replay(info);
         this.repository = new ArchiveStoreImpl(info);
         repository.setRepository("target/repository/");

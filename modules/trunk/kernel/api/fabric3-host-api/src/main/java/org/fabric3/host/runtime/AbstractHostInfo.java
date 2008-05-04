@@ -18,8 +18,8 @@
  */
 package org.fabric3.host.runtime;
 
+import java.io.File;
 import java.net.URI;
-import java.net.URL;
 import java.util.Properties;
 
 /**
@@ -37,7 +37,7 @@ public abstract class AbstractHostInfo implements HostInfo {
     /**
      * Base URL.
      */
-    private final URL baseUrl;
+    private final File baseDir;
 
     /**
      * Online indicator.
@@ -49,46 +49,26 @@ public abstract class AbstractHostInfo implements HostInfo {
     /**
      * Initializes the runtime info instance.
      *
-     * @param domain     the SCA Domain that this runtime belongs to
-     * @param baseUrl    Base Url.
+     * @param domain     the SCA Domain that this runtime belongs to.
+     * @param baseDir    the base runtime directory.
      * @param online     Onlne indicator.
      * @param properties the runtime properties
      */
-    public AbstractHostInfo(final URI domain,
-                            final URL baseUrl,
-                            final boolean online,
-                            final Properties properties) {
+    public AbstractHostInfo(final URI domain, final File baseDir, final boolean online, final Properties properties) {
         this.domain = domain;
-        this.baseUrl = baseUrl;
+        this.baseDir = baseDir;
         this.online = online;
         this.properties = properties;
     }
 
-    /**
-     * Returns the SCA domain associated with this runtime. A null domain indicates that this is a standalone runtime
-     * with a self-contained assembly.
-     *
-     * @return the SCA domain associated with this runtime; may be null
-     */
     public URI getDomain() {
         return domain;
     }
 
-    /**
-     * Gets the base URL for the runtime.
-     *
-     * @return The base URL for the runtime.
-     */
-    public final URL getBaseURL() {
-        return baseUrl;
+    public final File getBaseDir() {
+        return baseDir;
     }
 
-    /**
-     * Returns whether the runtime considers itself "online" or connected to the internet. This can be used by services
-     * to enable access to remote resources.
-     *
-     * @return true if the runtime is online.
-     */
     public final boolean isOnline() {
         return online;
     }

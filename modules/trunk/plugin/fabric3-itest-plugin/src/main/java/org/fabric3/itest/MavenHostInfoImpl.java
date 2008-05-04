@@ -22,6 +22,7 @@ import java.net.URI;
 import java.net.URL;
 import java.util.Properties;
 import java.util.Set;
+import java.io.File;
 
 import org.fabric3.maven.runtime.MavenHostInfo;
 
@@ -39,7 +40,7 @@ public class MavenHostInfoImpl implements MavenHostInfo {
         this.dependencyUrls = dependencyUrls;
     }
 
-    public URL getBaseURL() {
+    public File getBaseDir() {
         return null;
     }
 

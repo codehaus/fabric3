@@ -103,31 +103,6 @@ public final class BootstrapHelper {
     }
 
     /**
-     * Get the directory associated with a runtime profile. If the system property <code>fabric3.profileDir.${profileName}</code> is set then its
-     * value is used as the value for the profile directory. Otherwise, the directory ${installDir}/profiles/${profileName} is used.
-     *
-     * @param installDir  the installation directory
-     * @param profileName tha name of the profile
-     * @return the directory for the the specified profile
-     * @throws FileNotFoundException if the directory does not exist
-     */
-    public static File getProfileDirectory(File installDir, String profileName) throws FileNotFoundException {
-        String propName = "fabric3.profileDir." + profileName;
-        String profilePath = System.getProperty(propName);
-        File profileDir;
-        if (profilePath != null) {
-            profileDir = new File(profilePath);
-        } else {
-            profileDir = new File(new File(installDir, "profiles"), profileName);
-        }
-
-        if (!profileDir.isDirectory()) {
-            throw new FileNotFoundException("Unable to locate profile directory: " + profileDir.toString());
-        }
-        return profileDir;
-    }
-
-    /**
      * Gets the boot directory where all the boot libraries are stored. This is expected to be a directory named <code>boot</code> under the install
      * directory.
      *
@@ -146,32 +121,27 @@ public final class BootstrapHelper {
     }
 
     /**
-     * Gets the boot directory for the specified profile. If the bootPath is not null then it is used to specify the location of the boot directory
+     * Gets the directory for the specified profile. If the bootPath is not null then it is used to specify the location of the boot directory
      * relative to the profile directory. Otherwise, if there is a directory named "boot" relative to the profile or install directory then it is
      * used.
      *
      * @param installDir  the installation directory
-     * @param profileDir  the profile directory
      * @param path        the path to the boot directory
      * @param defaultPath the default path
      * @return the boot directory
      * @throws FileNotFoundException if the boot directory does not exist
      */
-    public static File getDirectory(File installDir, File profileDir, String path, String defaultPath)
-            throws FileNotFoundException {
-        File bootDir;
+    public static File getDirectory(File installDir, String path, String defaultPath) throws FileNotFoundException {
+        File dir;
         if (path != null) {
-            bootDir = new File(profileDir, path);
+            dir = new File(path);
         } else {
-            bootDir = new File(profileDir, defaultPath);
-            if (!bootDir.isDirectory()) {
-                bootDir = new File(installDir, defaultPath);
-            }
+            dir = new File(installDir, defaultPath);
         }
-        if (!bootDir.isDirectory()) {
-            throw new FileNotFoundException("Unable to locate boot directory: " + bootDir);
+        if (!dir.isDirectory()) {
+            throw new FileNotFoundException("Unable to locate boot directory: " + dir);
         }
-        return bootDir;
+        return dir;
     }
 
     /**
@@ -237,27 +207,11 @@ public final class BootstrapHelper {
         }
     }
 
-    /**
-     * Convert a File to a URL. Equivalent to file.toURI().toURL()
-     *
-     * @param file the file to convert
-     * @return the URL for the File
-     */
-    public static URL toURL(File file) {
-        try {
-            return file.toURI().toURL();
-        } catch (MalformedURLException e) {
-            // toURI should have escaped this
-            throw new AssertionError();
-        }
-    }
+    public static StandaloneHostInfo createHostInfo(File baseDir) throws BootstrapException, IOException {
 
-    public static StandaloneHostInfo createHostInfo(File installDir, String profile) throws IOException {
-
-        File profileDir = getProfileDirectory(installDir, profile);
-
+        File configDir = getDirectory(baseDir, null, "config");
         // load properties for this runtime
-        File propFile = new File(profileDir, "etc/runtime.properties");
+        File propFile = new File(configDir, "runtime.properties");
         Properties props = loadProperties(propFile, System.getProperties());
 
         // online unless the offline property is set
@@ -265,10 +219,13 @@ public final class BootstrapHelper {
 
         // create the classloader for booting the runtime
         String bootPath = props.getProperty("fabric3.bootDir", null);
-        File bootDir = getDirectory(installDir, profileDir, bootPath, "boot");
+        File bootDir = getDirectory(baseDir, bootPath, "boot");
 
         String hostPath = props.getProperty("fabric3.hostDir", null);
-        File hostDir = getDirectory(installDir, profileDir, hostPath, "host");
+        File hostDir = getDirectory(baseDir, hostPath, "host");
+
+        String extensionsPath = props.getProperty("fabric3.extensionsDir", null);
+        File extensionsDir = getDirectory(baseDir, extensionsPath, "extensions");
 
         ClassLoader systemClassLoader = ClassLoader.getSystemClassLoader();
         ClassLoader hostClassLoader = createClassLoader(systemClassLoader, hostDir);
@@ -278,67 +235,88 @@ public final class BootstrapHelper {
 
             // set the domain from runtime properties
             String domainName = props.getProperty("domain");
-            URI domain = null;
+            URI domain;
             if (domainName != null) {
                 domain = new URI(domainName);
+            } else {
+                throw new BootstrapException("Domain URI was not set. Ensure it is set as a system property or in runtime.properties.");
             }
 
-            return new StandaloneHostInfoImpl(domain,
-                                              profile,
-                                              installDir,
-                                              profileDir,
-                                              online,
-                                              props,
-                                              hostClassLoader,
-                                              bootClassLoader);
+            return new StandaloneHostInfoImpl(domain, baseDir, extensionsDir, configDir, online, props, hostClassLoader, bootClassLoader);
         } catch (URISyntaxException ex) {
             throw new IOException(ex.getMessage());
         }
 
     }
 
-    public static StandaloneRuntime createRuntime(StandaloneHostInfo hostInfo) throws Exception {
+    public static StandaloneRuntime createRuntime(StandaloneHostInfo hostInfo) throws BootstrapException {
         ClassLoader hostClassLoader = ClassLoader.getSystemClassLoader();
 
         // locate the implementation
         String className = hostInfo.getProperty("fabric3.runtimeClass",
                                                 "org.fabric3.runtime.standalone.host.StandaloneRuntimeImpl");
-        Class<?> implClass = Class.forName(className, true, hostInfo.getBootClassLoader());
+        try {
+            Class<?> implClass = Class.forName(className, true, hostInfo.getBootClassLoader());
 
-        StandaloneRuntime runtime = (StandaloneRuntime) implClass.newInstance();
-        runtime.setHostClassLoader(hostClassLoader);
-        runtime.setHostInfo(hostInfo);
-        return runtime;
+            StandaloneRuntime runtime = (StandaloneRuntime) implClass.newInstance();
+            runtime.setHostClassLoader(hostClassLoader);
+            runtime.setHostInfo(hostInfo);
+
+            return runtime;
+        } catch (IllegalAccessException e) {
+            throw new BootstrapException(e);
+        } catch (InstantiationException e) {
+            throw new BootstrapException(e);
+        } catch (ClassNotFoundException e) {
+            throw new BootstrapException(e);
+        }
     }
 
-    public static Bootstrapper createBootstrapper(StandaloneHostInfo hostInfo) throws Exception {
-        // locate the system SCDL
-        File profileDir = hostInfo.getProfileDirectory();
-        URL profileURL = toURL(profileDir);
-        URL systemSCDL = new URL(profileURL, hostInfo.getProperty("fabric3.systemSCDL", "system.composite"));
+    public static Bootstrapper createBootstrapper(StandaloneHostInfo hostInfo) throws BootstrapException {
+        try {
+            // locate the system SCDL
+            File configDir = hostInfo.getConfigDirectory();
+            URL configUrl = configDir.toURI().toURL();
+            URL systemSCDL = new URL(configUrl, hostInfo.getProperty("fabric3.systemSCDL", "system.composite"));
 
-        // locate the implementation
-        String className = hostInfo.getProperty("fabric3.bootstrapperClass",
-                                                "org.fabric3.fabric.runtime.bootstrap.ScdlBootstrapperImpl");
-        Class<?> implClass = Class.forName(className, true, hostInfo.getBootClassLoader());
-        ScdlBootstrapper bootstrapper = (ScdlBootstrapper) implClass.newInstance();
-        bootstrapper.setScdlLocation(systemSCDL);
-        // set the system configuration
-        File systemConfig = new File(hostInfo.getProfileDirectory(), "systemConfig.xml");
-        if (systemConfig.exists()) {
-            bootstrapper.setSystemConfig(systemConfig.toURI().toURL());
+            // locate the implementation
+            String className = hostInfo.getProperty("fabric3.bootstrapperClass",
+                                                    "org.fabric3.fabric.runtime.bootstrap.ScdlBootstrapperImpl");
+            Class<?> implClass = Class.forName(className, true, hostInfo.getBootClassLoader());
+            ScdlBootstrapper bootstrapper = (ScdlBootstrapper) implClass.newInstance();
+            bootstrapper.setScdlLocation(systemSCDL);
+            // set the system configuration
+            File systemConfig = new File(hostInfo.getConfigDirectory(), "systemConfig.xml");
+            if (systemConfig.exists()) {
+                bootstrapper.setSystemConfig(systemConfig.toURI().toURL());
+            }
+            return bootstrapper;
+        } catch (IllegalAccessException e) {
+            throw new BootstrapException(e);
+        } catch (MalformedURLException e) {
+            throw new BootstrapException(e);
+        } catch (InstantiationException e) {
+            throw new BootstrapException(e);
+        } catch (ClassNotFoundException e) {
+            throw new BootstrapException(e);
         }
 
-
-        return bootstrapper;
     }
 
     @SuppressWarnings({"unchecked"})
     public static RuntimeLifecycleCoordinator<StandaloneRuntime, Bootstrapper> createCoordinator(StandaloneHostInfo hostInfo)
-            throws Exception {
+            throws BootstrapException {
         String className = hostInfo.getProperty("fabric3.coordinatorClass",
                                                 "org.fabric3.runtime.standalone.host.StandaloneCoordinator");
-        Class<?> implClass = Class.forName(className, true, hostInfo.getBootClassLoader());
-        return (RuntimeLifecycleCoordinator<StandaloneRuntime, Bootstrapper>) implClass.newInstance();
+        try {
+            Class<?> implClass = Class.forName(className, true, hostInfo.getBootClassLoader());
+            return (RuntimeLifecycleCoordinator<StandaloneRuntime, Bootstrapper>) implClass.newInstance();
+        } catch (ClassNotFoundException e) {
+            throw new BootstrapException(e);
+        } catch (IllegalAccessException e) {
+            throw new BootstrapException(e);
+        } catch (InstantiationException e) {
+            throw new BootstrapException(e);
+        }
     }
 }
