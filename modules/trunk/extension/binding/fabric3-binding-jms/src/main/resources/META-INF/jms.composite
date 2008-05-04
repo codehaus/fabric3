@@ -28,8 +28,7 @@
 
     <!-- JMS Host -->
     <component name="JMSHost">
-        <system:implementation.system class="org.fabric3.binding.jms.runtime.host.standalone.StandaloneJmsHost"/>
-        <property name="listenerMode">pull</property>
+        <system:implementation.system class="org.fabric3.binding.jms.runtime.host.standalone.StandalonePullJmsHost"/>
     </component>
 
     <!-- JMS Binding Loader -->
@@ -42,10 +41,12 @@
         <system:implementation.system class="org.fabric3.binding.jms.control.JmsBindingGenerator"/>
     </component>
 
-    <!-- JMS Wire Attachers -->
+    <!-- JMS Source Wire Attacher -->
     <component f3:key="org.fabric3.binding.jms.provision.JmsWireSourceDefinition" name="org.fabric3.binding.jms.runtime.JmsSourceWireAttacher">
         <system:implementation.system class="org.fabric3.binding.jms.runtime.JmsSourceWireAttacher"/>
     </component>
+
+    <!-- JMS Target Wire Attacher -->
     <component f3:key="org.fabric3.binding.jms.provision.JmsWireTargetDefinition" name="org.fabric3.binding.jms.runtime.JmsTargetWireAttacher">
         <system:implementation.system class="org.fabric3.binding.jms.runtime.JmsTargetWireAttacher"/>
     </component>

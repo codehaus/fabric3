@@ -30,19 +30,19 @@ public interface JmsHost {
 
     /**
      * Register a <code>ResponseMessageListener<code> which handle inbound message and send response.
-     * @param requestJMSObjectFactory JMS objects used for request
-     * @param responseJMSObjectFactory JMS objects used for response
-     * @param messageListener ResponseMessageListenerImpl
-     * @param transactionType Transaction type
-     * @param transactionHandler Transaction handler
-     * @param receiverCount concurrent inbound message could be handled.
+     * 
+     * @param requestJMSObjectFactory Factory for creating JMS objects for request.
+     * @param responseJMSObjectFactory Factory for creating JMS objects for response.
+     * @param messageListener Message listener.
+     * @param transactionType Transaction type.
+     * @param transactionHandler Transaction handler.
+     * @param cl Classloader to use.
      */
     public void registerResponseListener(JMSObjectFactory requestJMSObjectFactory,
-            JMSObjectFactory responseJMSObjectFactory,
-            ResponseMessageListener messageListener,
-            TransactionType transactionType,
-            TransactionHandler transactionHandler,
-            int receiverCount,
-            ClassLoader cl);
+                                         JMSObjectFactory responseJMSObjectFactory,
+                                         ResponseMessageListener messageListener,
+                                         TransactionType transactionType,
+                                         TransactionHandler transactionHandler,
+                                         ClassLoader cl);
 
 }

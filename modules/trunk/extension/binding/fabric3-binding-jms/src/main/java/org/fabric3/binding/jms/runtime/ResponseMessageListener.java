@@ -36,7 +36,6 @@ public interface ResponseMessageListener {
      * @param responseDestination JMSDestination to which the response is sent
      * @see javax.jms.MessageListener#onMessage(javax.jms.Message)
      */
-    public abstract void onMessage(Message request, Session responseSession,
-            Destination responseDestination);
+    public abstract void onMessage(Message request, Session responseSession, Destination responseDestination);
 
 }
