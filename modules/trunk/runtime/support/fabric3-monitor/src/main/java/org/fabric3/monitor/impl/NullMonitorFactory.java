@@ -22,6 +22,8 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.net.URI;
+import java.util.Properties;
+import java.util.logging.Level;
 
 import org.fabric3.monitor.MonitorFactory;
 
@@ -56,5 +58,17 @@ public class NullMonitorFactory implements MonitorFactory {
 
     public <T> T getMonitor(Class<T> monitorInterface, URI componentId) {
         return getMonitor(monitorInterface);
+    }
+
+    public void setLevels(Properties levels) {
+
+    }
+
+    public void setDefaultLevel(Level defaultLevel) {
+
+    }
+
+    public void setBundleName(String bundleName) {
+
     }
 }

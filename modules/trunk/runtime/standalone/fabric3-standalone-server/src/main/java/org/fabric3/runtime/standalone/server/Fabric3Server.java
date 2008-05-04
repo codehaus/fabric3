@@ -34,6 +34,7 @@ import org.fabric3.jmx.agent.rmi.RmiAgent;
 import org.fabric3.runtime.standalone.BootstrapHelper;
 import org.fabric3.runtime.standalone.StandaloneHostInfo;
 import org.fabric3.runtime.standalone.StandaloneRuntime;
+import org.fabric3.monitor.MonitorFactory;
 
 /**
  * This class provides the commandline interface for starting the Fabric3 standalone server. <p/> <p/> The class boots the Fabric3 server and also
@@ -123,7 +124,8 @@ public class Fabric3Server implements Fabric3ServerMBean {
 
             // create the HostInfo and runtime
             hostInfo = BootstrapHelper.createHostInfo(installDirectory, configDir, props);
-            runtime = BootstrapHelper.createRuntime(hostInfo, bootLoader);
+            MonitorFactory monitorFactory = BootstrapHelper.createMonitorFactory(bootLoader, props);
+            runtime = BootstrapHelper.createRuntime(hostInfo, bootLoader, monitorFactory);
 
             runtime.setMBeanServer(agent.getMBeanServer());
             runtime.setJMXDomain(jmxDomain);

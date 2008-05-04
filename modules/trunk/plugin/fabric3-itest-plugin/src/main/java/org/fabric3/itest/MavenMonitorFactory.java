@@ -29,6 +29,7 @@ import java.util.Map;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 import java.util.WeakHashMap;
+import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 
@@ -42,8 +43,8 @@ import org.fabric3.monitor.MonitorFactory;
  */
 public class MavenMonitorFactory implements MonitorFactory {
     private final Log log;
-    private final String bundleName;
-    private final Level defaultLevel;
+    private String bundleName;
+    private Level defaultLevel;
     private final Map<Class<?>, WeakReference<?>> proxies = new WeakHashMap<Class<?>, WeakReference<?>>();
 
     public MavenMonitorFactory(Log log, String bundleName) {
@@ -54,6 +55,18 @@ public class MavenMonitorFactory implements MonitorFactory {
 
     public synchronized <T> T getMonitor(Class<T> monitorInterface, URI componentId) {
         return getMonitor(monitorInterface);
+    }
+
+    public void setLevels(Properties levels) {
+
+    }
+
+    public void setDefaultLevel(Level defaultLevel) {
+        this.defaultLevel = defaultLevel;
+    }
+
+    public void setBundleName(String bundleName) {
+        this.bundleName = bundleName;
     }
 
     public synchronized <T> T getMonitor(Class<T> monitorInterface) {

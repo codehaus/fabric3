@@ -29,11 +29,15 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Properties;
+import java.util.logging.Level;
 import java.util.jar.JarFile;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 
 import org.fabric3.host.runtime.Bootstrapper;
 import org.fabric3.host.runtime.RuntimeLifecycleCoordinator;
 import org.fabric3.host.runtime.ScdlBootstrapper;
+import org.fabric3.monitor.MonitorFactory;
 
 /**
  * Utility class for boostrap related operations.
@@ -232,7 +236,29 @@ public final class BootstrapHelper {
 
     }
 
-    public static StandaloneRuntime createRuntime(StandaloneHostInfo hostInfo, ClassLoader bootClassLoader) throws BootstrapException {
+    public static MonitorFactory createMonitorFactory(ClassLoader bootClassLoader, Properties properties) throws BootstrapException {
+        try {
+            String monitorFactoryName = properties.getProperty("fabric3.monitorFactoryClass",
+                                                               "org.fabric3.monitor.impl.JavaLoggingMonitorFactory");
+            String bundleName = properties.getProperty("fabric3.monitorBundle", "f3");
+            Level level = Level.parse(properties.getProperty("fabric3.defaultLevel", "INFO"));
+
+            Class<?> monitorClass = Class.forName(monitorFactoryName, true, bootClassLoader);
+            MonitorFactory monitorFactory = (MonitorFactory) monitorClass.newInstance();
+            monitorFactory.setBundleName(bundleName);
+            monitorFactory.setDefaultLevel(level);
+            return monitorFactory;
+        } catch (ClassNotFoundException e) {
+            throw new BootstrapException(e);
+        } catch (IllegalAccessException e) {
+            throw new BootstrapException(e);
+        } catch (InstantiationException e) {
+            throw new BootstrapException(e);
+        }
+    }
+
+    public static StandaloneRuntime createRuntime(StandaloneHostInfo hostInfo, ClassLoader bootClassLoader, MonitorFactory monitorFactory)
+            throws BootstrapException {
         ClassLoader hostClassLoader = ClassLoader.getSystemClassLoader();
 
         // locate the implementation
@@ -240,8 +266,8 @@ public final class BootstrapHelper {
                                                 "org.fabric3.runtime.standalone.host.StandaloneRuntimeImpl");
         try {
             Class<?> implClass = Class.forName(className, true, bootClassLoader);
-
-            StandaloneRuntime runtime = (StandaloneRuntime) implClass.newInstance();
+            Constructor<?> ctor = implClass.getConstructor(MonitorFactory.class);
+            StandaloneRuntime runtime = (StandaloneRuntime) ctor.newInstance(monitorFactory);
             runtime.setHostClassLoader(hostClassLoader);
             runtime.setHostInfo(hostInfo);
 
@@ -251,6 +277,10 @@ public final class BootstrapHelper {
         } catch (InstantiationException e) {
             throw new BootstrapException(e);
         } catch (ClassNotFoundException e) {
+            throw new BootstrapException(e);
+        } catch (NoSuchMethodException e) {
+            throw new BootstrapException(e);
+        } catch (InvocationTargetException e) {
             throw new BootstrapException(e);
         }
     }

@@ -53,9 +53,9 @@ import org.fabric3.monitor.impl.JavaLoggingMonitorFactory;
  * @version $Rev$ $Date$
  */
 public class WebappUtilImpl implements WebappUtil {
-    
+
     private static final String SYSTEM_CONFIG = "/WEB-INF/systemConfig.xml";
-    
+
     private final ServletContext servletContext;
 
     public WebappUtilImpl(ServletContext servletContext) {
@@ -66,7 +66,9 @@ public class WebappUtilImpl implements WebappUtil {
         try {
             String className = getInitParameter(RUNTIME_PARAM, RUNTIME_DEFAULT);
             String level = getInitParameter(SYSTEM_MONITORING_PARAM, SYSTEM_MONITORING_DEFAULT);
-            MonitorFactory factory = new JavaLoggingMonitorFactory(null, Level.parse(level), "f3");
+            MonitorFactory factory = new JavaLoggingMonitorFactory();
+            factory.setDefaultLevel(Level.parse(level));
+            factory.setBundleName("f3");
             WebappRuntime runtime = (WebappRuntime) bootClassLoader.loadClass(className).newInstance();
             runtime.setMonitorFactory(factory);
             return runtime;

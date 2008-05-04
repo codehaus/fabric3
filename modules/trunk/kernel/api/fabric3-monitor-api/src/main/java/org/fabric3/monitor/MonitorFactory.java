@@ -19,11 +19,12 @@
 package org.fabric3.monitor;
 
 import java.net.URI;
+import java.util.Properties;
+import java.util.logging.Level;
 
 /**
- * A MonitorFactory creates implementations of components' monitor interfaces that interface with a its monitoring
- * scheme. For example, a implementation may create versions that emit appropriate logging events or which send
- * notifications to a management API.
+ * A MonitorFactory creates implementations of components' monitor interfaces that interface with a its monitoring scheme. For example, a
+ * implementation may create versions that emit appropriate logging events or which send notifications to a management API.
  *
  * @version $Rev$ $Date$
  */
@@ -44,4 +45,25 @@ public interface MonitorFactory {
      * @return an implementation of the monitoring interface; will not be null
      */
     <T> T getMonitor(Class<T> monitorInterface, URI componentId);
+
+    /**
+     * Sets the definition of custom levels for specific monitored methods, may be null or empty
+     *
+     * @param levels definition of custom levels for specific monitored methods, may be null or empty
+     */
+    void setLevels(Properties levels);
+
+    /**
+     * Sets the default log level to use.
+     *
+     * @param defaultLevel the default log level to use
+     */
+    void setDefaultLevel(Level defaultLevel);
+
+    /**
+     * Sets the name of a resource bundle that will be used.
+     *
+     * @param bundleName the name of a resource bundle that will be passed to the logger
+     */
+    void setBundleName(String bundleName);
 }

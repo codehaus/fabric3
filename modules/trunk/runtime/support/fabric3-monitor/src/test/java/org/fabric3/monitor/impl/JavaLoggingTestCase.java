@@ -107,7 +107,10 @@ public class JavaLoggingTestCase extends TestCase {
         levels.setProperty(sourceClass + "#eventWithNoArgs", "INFO");
         levels.setProperty(sourceClass + "#eventWithOneArg", "INFO");
         levels.setProperty(sourceClass + "#eventWithThrowable", "WARNING");
-        factory = new JavaLoggingMonitorFactory(levels, Level.FINE, "TestMessages");
+        factory = new JavaLoggingMonitorFactory();
+        factory.setLevels(levels);
+        factory.setDefaultLevel(Level.FINE);
+        factory.setBundleName("TestMessages");
     }
 
     protected void tearDown() throws Exception {
