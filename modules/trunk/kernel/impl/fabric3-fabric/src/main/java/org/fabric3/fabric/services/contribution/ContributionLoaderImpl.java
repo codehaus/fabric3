@@ -55,7 +55,8 @@ public class ContributionLoaderImpl implements ContributionLoader {
         for (Import imprt : manifest.getImports()) {
             Contribution imported = store.resolve(imprt);
             if (imported == null) {
-                throw new MatchingExportNotFoundException(imprt.toString());
+                String id = imprt.toString();
+                throw new MatchingExportNotFoundException("No matching export found for: " + id, id);
             }
             // add the resolved URI to the contribution
             URI importedUri = imported.getUri();
@@ -65,7 +66,7 @@ public class ContributionLoaderImpl implements ContributionLoader {
             if (importedLoader == null) {
                 // TODO load in a transient classloader
                 String uri = importedUri.toString();
-                throw new ContributionLoadException("imported classloader could not be found: " + uri, uri);
+                throw new ContributionLoadException("Imported classloader could not be found: " + uri, uri);
             }
             loader.addParent(importedLoader);
         }
