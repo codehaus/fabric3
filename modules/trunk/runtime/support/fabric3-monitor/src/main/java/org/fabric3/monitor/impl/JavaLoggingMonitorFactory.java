@@ -222,8 +222,6 @@ public class JavaLoggingMonitorFactory implements MonitorFactory {
 
             LogRecord logRecord = new LogRecord(level, key);
             logRecord.setLoggerName(className);
-            //logRecord.setSourceClassName(className);
-            //logRecord.setSourceMethodName(methodName);
             logRecord.setParameters(args);
             if (args != null && throwable >= 0) {
                 logRecord.setThrown((Throwable) args[throwable]);
