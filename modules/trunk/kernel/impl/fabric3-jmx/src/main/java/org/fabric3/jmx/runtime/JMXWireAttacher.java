@@ -70,7 +70,6 @@ public class JMXWireAttacher implements SourceWireAttacher<JMXWireSourceDefiniti
         
         URI uri = source.getUri();
         String component = UriHelper.getDefragmentedNameAsString(uri);
-        System.err.println("***************:" + component);
         String service = uri.getFragment();
         try {
             Class<?> managementInterface = classLoaderRegistry.loadClass(source.getClassLoaderId(), source.getInterfaceName());
