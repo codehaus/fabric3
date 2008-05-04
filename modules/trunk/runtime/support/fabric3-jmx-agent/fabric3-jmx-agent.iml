@@ -82,7 +82,7 @@
         </SOURCES>
       </library>
     </orderEntry>
-    <orderEntry type="module" module-name="fabric3-jmx" />
+    <orderEntry type="module" module-name="fabric3-host-api" />
     <orderEntryProperties />
   </component>
 </module>
