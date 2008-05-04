@@ -16,7 +16,6 @@
  */
 package org.fabric3.maven.runtime;
 
-import java.net.URI;
 import java.net.URL;
 import java.util.List;
 
@@ -24,12 +23,30 @@ import org.fabric3.host.runtime.Bootstrapper;
 import org.fabric3.host.runtime.RuntimeLifecycleCoordinator;
 
 /**
+ * Manages booting the Maven runtime.
+ *
  * @version $Rev$ $Date$
  */
 public interface MavenCoordinator extends RuntimeLifecycleCoordinator<MavenEmbeddedRuntime, Bootstrapper> {
+
+    /**
+     * The list of URLs for runtime extensions
+     *
+     * @param extensions the urls
+     */
     void setExtensions(List<URL> extensions);
 
+    /**
+     * A URL pointing to the baseline intent definitions
+     *
+     * @param intentsLocation the url
+     */
     void setIntentsLocation(URL intentsLocation);
 
-    void setUserExtensions(List<URL> extensionUrls);
+    /**
+     * The list of URLs for runtime user extensions
+     *
+     * @param extensions the urls
+     */
+    void setUserExtensions(List<URL> extensions);
 }
