@@ -44,20 +44,4 @@ public interface StandaloneHostInfo extends HostInfo {
      */
     File getExtensionsDirectory();
 
-    /**
-     * Returns the host's ClassLoader.
-     * This is the root classloader for the runtime supplied by the host environment.
-     *
-     * @return the host's ClassLoader
-     */
-    ClassLoader getHostClassLoader();
-
-    /**
-     * Returns the runtime boot ClassLoader.
-     * This is the classloader used to load runtime components.
-     *
-     * @return the runtime boot ClassLoader
-     */
-    ClassLoader getBootClassLoader();
-
 }

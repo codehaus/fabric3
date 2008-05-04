@@ -30,35 +30,26 @@ import org.fabric3.host.runtime.AbstractHostInfo;
 public class StandaloneHostInfoImpl extends AbstractHostInfo implements StandaloneHostInfo {
     private final File extensionsDirectory;
     private File configDirectory;
-    private final ClassLoader hostClassLoader;
-    private final ClassLoader bootClassLoader;
 
     /**
      * Initializes the base URL, install directory, application root directory and online mode.
      *
-     * @param domain          the SCA domain this runtime belongs to
-     * @param baseDir         directory containing the standalone installation
-     * @param extensionsDir   directory containing the standalone extensions
-     * @param configDir       directory containing the standalone configuration
-     * @param online          true if this runtime should consider itself online
-     * @param properties      properties for this runtime
-     * @param hostClassLoader the runtime host's classloader
-     * @param bootClassLoader the runtime bootstrap classloader
+     * @param domain        the SCA domain this runtime belongs to
+     * @param baseDir       directory containing the standalone installation
+     * @param extensionsDir directory containing the standalone extensions
+     * @param configDir     directory containing the standalone configuration
+     * @param online        true if this runtime should consider itself online
+     * @param properties    properties for this runtime
      */
     public StandaloneHostInfoImpl(final URI domain,
                                   final File baseDir,
                                   final File extensionsDir,
                                   final File configDir,
                                   final boolean online,
-                                  final Properties properties,
-                                  final ClassLoader hostClassLoader,
-                                  final ClassLoader bootClassLoader) {
+                                  final Properties properties) {
         super(domain, baseDir, online, properties);
         this.extensionsDirectory = extensionsDir;
         this.configDirectory = configDir;
-        this.hostClassLoader = hostClassLoader;
-        this.bootClassLoader = bootClassLoader;
-
     }
 
     public File getExtensionsDirectory() {
@@ -67,13 +58,5 @@ public class StandaloneHostInfoImpl extends AbstractHostInfo implements Standalo
 
     public File getConfigDirectory() {
         return configDirectory;
-    }
-
-    public ClassLoader getHostClassLoader() {
-        return hostClassLoader;
-    }
-
-    public ClassLoader getBootClassLoader() {
-        return bootClassLoader;
     }
 }

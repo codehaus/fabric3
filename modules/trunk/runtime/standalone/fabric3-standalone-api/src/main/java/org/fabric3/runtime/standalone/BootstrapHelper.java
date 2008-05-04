@@ -207,29 +207,12 @@ public final class BootstrapHelper {
         }
     }
 
-    public static StandaloneHostInfo createHostInfo(File baseDir) throws BootstrapException, IOException {
-
-        File configDir = getDirectory(baseDir, null, "config");
-        // load properties for this runtime
-        File propFile = new File(configDir, "runtime.properties");
-        Properties props = loadProperties(propFile, System.getProperties());
+    public static StandaloneHostInfo createHostInfo(File baseDir, File configDir, Properties props) throws BootstrapException, IOException {
 
         // online unless the offline property is set
         boolean online = !Boolean.parseBoolean(props.getProperty("offline", "false"));
-
-        // create the classloader for booting the runtime
-        String bootPath = props.getProperty("fabric3.bootDir", null);
-        File bootDir = getDirectory(baseDir, bootPath, "boot");
-
-        String hostPath = props.getProperty("fabric3.hostDir", null);
-        File hostDir = getDirectory(baseDir, hostPath, "host");
-
         String extensionsPath = props.getProperty("fabric3.extensionsDir", null);
         File extensionsDir = getDirectory(baseDir, extensionsPath, "extensions");
-
-        ClassLoader systemClassLoader = ClassLoader.getSystemClassLoader();
-        ClassLoader hostClassLoader = createClassLoader(systemClassLoader, hostDir);
-        ClassLoader bootClassLoader = createClassLoader(hostClassLoader, bootDir);
 
         try {
 
@@ -242,21 +225,21 @@ public final class BootstrapHelper {
                 throw new BootstrapException("Domain URI was not set. Ensure it is set as a system property or in runtime.properties.");
             }
 
-            return new StandaloneHostInfoImpl(domain, baseDir, extensionsDir, configDir, online, props, hostClassLoader, bootClassLoader);
+            return new StandaloneHostInfoImpl(domain, baseDir, extensionsDir, configDir, online, props);
         } catch (URISyntaxException ex) {
             throw new IOException(ex.getMessage());
         }
 
     }
 
-    public static StandaloneRuntime createRuntime(StandaloneHostInfo hostInfo) throws BootstrapException {
+    public static StandaloneRuntime createRuntime(StandaloneHostInfo hostInfo, ClassLoader bootClassLoader) throws BootstrapException {
         ClassLoader hostClassLoader = ClassLoader.getSystemClassLoader();
 
         // locate the implementation
         String className = hostInfo.getProperty("fabric3.runtimeClass",
                                                 "org.fabric3.runtime.standalone.host.StandaloneRuntimeImpl");
         try {
-            Class<?> implClass = Class.forName(className, true, hostInfo.getBootClassLoader());
+            Class<?> implClass = Class.forName(className, true, bootClassLoader);
 
             StandaloneRuntime runtime = (StandaloneRuntime) implClass.newInstance();
             runtime.setHostClassLoader(hostClassLoader);
@@ -272,7 +255,7 @@ public final class BootstrapHelper {
         }
     }
 
-    public static Bootstrapper createBootstrapper(StandaloneHostInfo hostInfo) throws BootstrapException {
+    public static Bootstrapper createBootstrapper(StandaloneHostInfo hostInfo, ClassLoader bootClassLoader) throws BootstrapException {
         try {
             // locate the system SCDL
             File configDir = hostInfo.getConfigDirectory();
@@ -282,7 +265,7 @@ public final class BootstrapHelper {
             // locate the implementation
             String className = hostInfo.getProperty("fabric3.bootstrapperClass",
                                                     "org.fabric3.fabric.runtime.bootstrap.ScdlBootstrapperImpl");
-            Class<?> implClass = Class.forName(className, true, hostInfo.getBootClassLoader());
+            Class<?> implClass = Class.forName(className, true, bootClassLoader);
             ScdlBootstrapper bootstrapper = (ScdlBootstrapper) implClass.newInstance();
             bootstrapper.setScdlLocation(systemSCDL);
             // set the system configuration
@@ -304,12 +287,13 @@ public final class BootstrapHelper {
     }
 
     @SuppressWarnings({"unchecked"})
-    public static RuntimeLifecycleCoordinator<StandaloneRuntime, Bootstrapper> createCoordinator(StandaloneHostInfo hostInfo)
+    public static RuntimeLifecycleCoordinator<StandaloneRuntime, Bootstrapper> createCoordinator(StandaloneHostInfo hostInfo,
+                                                                                                 ClassLoader bootClassLoader)
             throws BootstrapException {
         String className = hostInfo.getProperty("fabric3.coordinatorClass",
                                                 "org.fabric3.runtime.standalone.host.StandaloneCoordinator");
         try {
-            Class<?> implClass = Class.forName(className, true, hostInfo.getBootClassLoader());
+            Class<?> implClass = Class.forName(className, true, bootClassLoader);
             return (RuntimeLifecycleCoordinator<StandaloneRuntime, Bootstrapper>) implClass.newInstance();
         } catch (ClassNotFoundException e) {
             throw new BootstrapException(e);

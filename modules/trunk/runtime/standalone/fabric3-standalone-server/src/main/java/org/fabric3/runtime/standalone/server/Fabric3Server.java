@@ -21,6 +21,7 @@ package org.fabric3.runtime.standalone.server;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.util.Map;
+import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Future;
 
@@ -102,22 +103,35 @@ public class Fabric3Server implements Fabric3ServerMBean {
         final StandaloneHostInfo hostInfo;
         final StandaloneRuntime runtime;
         try {
-            hostInfo = BootstrapHelper.createHostInfo(installDirectory);
-            runtime = BootstrapHelper.createRuntime(hostInfo);
-        } catch (Exception ex) {
-            ex.printStackTrace();
-            throw new Fabric3ServerException(ex);
-        }
 
-        runtime.setMBeanServer(agent.getMBeanServer());
-        runtime.setJMXDomain(jmxDomain);
-        monitor = runtime.getMonitorFactory().getMonitor(ServerMonitor.class);
-        try {
-            ClassLoader bootLoader = hostInfo.getBootClassLoader();
-            ClassLoader hostLoader = hostInfo.getHostClassLoader();
+            File configDir = BootstrapHelper.getDirectory(installDirectory, null, "config");
 
-            Bootstrapper bootstrapper = BootstrapHelper.createBootstrapper(hostInfo);
-            RuntimeLifecycleCoordinator<StandaloneRuntime, Bootstrapper> coordinator = BootstrapHelper.createCoordinator(hostInfo);
+            // load properties for this runtime
+            File propFile = new File(configDir, "runtime.properties");
+            Properties props = BootstrapHelper.loadProperties(propFile, System.getProperties());
+
+            // create the classloaders for booting the runtime
+            String bootPath = props.getProperty("fabric3.bootDir", null);
+            File bootDir = BootstrapHelper.getDirectory(installDirectory, bootPath, "boot");
+
+            String hostPath = props.getProperty("fabric3.hostDir", null);
+            File hostDir = BootstrapHelper.getDirectory(installDirectory, hostPath, "host");
+
+            ClassLoader systemClassLoader = ClassLoader.getSystemClassLoader();
+            ClassLoader hostLoader = BootstrapHelper.createClassLoader(systemClassLoader, hostDir);
+            ClassLoader bootLoader = BootstrapHelper.createClassLoader(hostLoader, bootDir);
+
+            // create the HostInfo and runtime
+            hostInfo = BootstrapHelper.createHostInfo(installDirectory, configDir, props);
+            runtime = BootstrapHelper.createRuntime(hostInfo, bootLoader);
+
+            runtime.setMBeanServer(agent.getMBeanServer());
+            runtime.setJMXDomain(jmxDomain);
+            monitor = runtime.getMonitorFactory().getMonitor(ServerMonitor.class);
+
+            // boot the runtime
+            Bootstrapper bootstrapper = BootstrapHelper.createBootstrapper(hostInfo, bootLoader);
+            RuntimeLifecycleCoordinator<StandaloneRuntime, Bootstrapper> coordinator = BootstrapHelper.createCoordinator(hostInfo, bootLoader);
 
             // load the primordial system components
             coordinator.bootPrimordial(runtime, bootstrapper, bootLoader, hostLoader);
