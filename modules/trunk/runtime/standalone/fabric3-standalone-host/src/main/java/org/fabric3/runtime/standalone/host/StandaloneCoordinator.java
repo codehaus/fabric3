@@ -100,6 +100,7 @@ public class StandaloneCoordinator implements RuntimeLifecycleCoordinator<Standa
 
     private State state = State.UNINITIALIZED;
     private File extensionsDirectory;
+    private File userExtensionsDirectory;
     private StandaloneRuntime runtime;
     private Bootstrapper bootstrapper;
     private WorkScheduler scheduler;
@@ -135,6 +136,7 @@ public class StandaloneCoordinator implements RuntimeLifecycleCoordinator<Standa
             workContext.addCallFrame(frame);
             container.startContext(workContext);
             extensionsDirectory = runtime.getHostInfo().getExtensionsDirectory();
+            userExtensionsDirectory = runtime.getHostInfo().getUserExtensionsDirectory();
         } catch (GroupInitializationException e) {
             state = State.ERROR;
             throw new InitializationException(e);
@@ -157,7 +159,14 @@ public class StandaloneCoordinator implements RuntimeLifecycleCoordinator<Standa
             }
             synthesizeSPIContribution();
             activateIntents();
-            includeExtensions();
+            // include runtime extenions
+            if (extensionsDirectory != null && extensionsDirectory.exists()) {
+                includeExtensions(extensionsDirectory);
+            }
+            // include user extenions
+            if (userExtensionsDirectory != null && userExtensionsDirectory.exists()) {
+                includeExtensions(userExtensionsDirectory);
+            }
             state = State.INITIALIZED;
         } catch (DefinitionActivationException e) {
             state = State.ERROR;
@@ -310,50 +319,50 @@ public class StandaloneCoordinator implements RuntimeLifecycleCoordinator<Standa
     /**
      * Processes extensions and includes them in the runtime domain
      *
+     * @param dir the extensions directory
      * @throws InitializationException       if an error occurs included the extensions
      * @throws DefinitionActivationException if an error activating policy definitions occurs
      */
-    private void includeExtensions() throws InitializationException, DefinitionActivationException {
-        if (extensionsDirectory != null && extensionsDirectory.exists()) {
-            // contribute and activate extensions if they exist in the runtime domain
-            ContributionService contributionService = runtime.getSystemComponent(ContributionService.class,
-                                                                                 CONTRIBUTION_SERVICE_URI);
-            List<URI> contributionUris;
-            List<ContributionSource> sources = new ArrayList<ContributionSource>();
-            File[] files = extensionsDirectory.listFiles(new FileFilter() {
-                public boolean accept(File pathname) {
-                    String name = pathname.getName();
-                    return name.endsWith(".jar") || name.endsWith(".zip");
-                }
-            });
-            for (File file : files) {
-                try {
-                    URI uri = file.toURI();
-                    ContributionSource source = new FileContributionSource(uri, uri.toURL(), -1, new byte[0]);
-                    sources.add(source);
-                } catch (MalformedURLException e) {
-                    throw new ExtensionInitializationException("Error loading extension", file.getName(), e);
-                } catch (IOException e) {
-                    throw new ExtensionInitializationException("Error loading extension", file.getName(), e);
-                }
-
+    private void includeExtensions(File dir) throws InitializationException, DefinitionActivationException {
+        // contribute and activate extensions if they exist in the runtime domain
+        ContributionService contributionService = runtime.getSystemComponent(ContributionService.class,
+                                                                             CONTRIBUTION_SERVICE_URI);
+        List<URI> contributionUris;
+        List<ContributionSource> sources = new ArrayList<ContributionSource>();
+        File[] files = dir.listFiles(new FileFilter() {
+            public boolean accept(File pathname) {
+                String name = pathname.getName();
+                return name.endsWith(".jar") || name.endsWith(".zip");
             }
+        });
+        for (File file : files) {
             try {
-                contributionUris = contributionService.contribute(sources);
-                includeExtensionContributions(contributionUris);
-                DefinitionsRegistry definitionsRegistry =
-                        runtime.getSystemComponent(DefinitionsRegistry.class, DEFINITIONS_REGISTRY);
-                definitionsRegistry.activateDefinitions(contributionUris);
-            } catch (ContributionException e) {
-                throw new ExtensionInitializationException("Error loading extension", e);
+                URI uri = file.toURI();
+                ContributionSource source = new FileContributionSource(uri, uri.toURL(), -1, new byte[0]);
+                sources.add(source);
+            } catch (MalformedURLException e) {
+                throw new ExtensionInitializationException("Error loading extension", file.getName(), e);
+            } catch (IOException e) {
+                throw new ExtensionInitializationException("Error loading extension", file.getName(), e);
             }
+
+        }
+        try {
+            contributionUris = contributionService.contribute(sources);
+            includeExtensionContributions(contributionUris);
+            DefinitionsRegistry definitionsRegistry =
+                    runtime.getSystemComponent(DefinitionsRegistry.class, DEFINITIONS_REGISTRY);
+            definitionsRegistry.activateDefinitions(contributionUris);
+        } catch (ContributionException e) {
+            throw new ExtensionInitializationException("Error loading extension", e);
         }
     }
 
+
     /*
-     FIXME this code was in AbstractRuntime but isn't really runtime functionality
-     FIXME it is now duplicated in all coordinators and should be refactored into one place
-     */
+    FIXME this code was in AbstractRuntime but isn't really runtime functionality
+    FIXME it is now duplicated in all coordinators and should be refactored into one place
+    */
     public void includeExtensionContributions(List<URI> contributionUris) throws InitializationException {
         Assembly assembly = runtime.getSystemComponent(Assembly.class, RUNTIME_ASSEMBLY_URI);
         Composite composite = createExtensionComposite(contributionUris);
