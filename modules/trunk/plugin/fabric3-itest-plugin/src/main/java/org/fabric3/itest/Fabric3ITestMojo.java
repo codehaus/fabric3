@@ -222,11 +222,18 @@ public class Fabric3ITestMojo extends AbstractMojo {
     public String runtimeVersion;
 
     /**
-     * Set of extension artifacts that should be deployed to the runtime.
+     * Set of runtime extension artifacts that should be deployed to the runtime.
      *
      * @parameter
      */
     public Dependency[] extensions;
+
+    /**
+     * Set of user extension artifacts that should be deployed to the runtime.
+     *
+     * @parameter
+     */
+    public Dependency[] userExtensions;
 
     /**
      * Libraries available to application and runtime.
@@ -351,7 +358,6 @@ public class Fabric3ITestMojo extends AbstractMojo {
             intentsLocation = bootClassLoader.getResource("META-INF/fabric3/intents.xml");
         }
 
-        List<URL> extensionUrls = resolveDependencies(extensions);
         log.info("Starting Embedded Fabric3 Runtime ...");
         // FIXME this should probably be an isolated classloader
         MavenEmbeddedRuntime runtime;
@@ -363,8 +369,12 @@ public class Fabric3ITestMojo extends AbstractMojo {
             throw new MojoExecutionException("Error creating fabric3 runtime", e);
         }
         try {
+            List<URL> extensionUrls = resolveDependencies(extensions);
             coordinator.setExtensions(extensionUrls);
             coordinator.setIntentsLocation(intentsLocation);
+            List<URL> userExtensionUrls = resolveDependencies(userExtensions);
+            coordinator.setUserExtensions(userExtensionUrls);
+
             bootRuntime(coordinator, runtime, bootClassLoader, hostClassLoader);
         } catch (InitializationException e) {
             throw new MojoExecutionException("Error initializing Fabric3 Runtime", e);

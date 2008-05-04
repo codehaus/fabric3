@@ -96,6 +96,7 @@ public class MavenCoordinatorImpl implements MavenCoordinator {
     private Bootstrapper bootstrapper;
     private URL intentsLocation;
     private List<URL> extensions;
+    private List<URL> userExtensions;
 
     /**
      * Default constructor expected by the plugin.
@@ -105,6 +106,10 @@ public class MavenCoordinatorImpl implements MavenCoordinator {
 
     public void setExtensions(List<URL> extensions) {
         this.extensions = extensions;
+    }
+
+    public void setUserExtensions(List<URL> extensions) {
+        this.userExtensions = extensions;
     }
 
     public void setIntentsLocation(URL intentsLocation) {
@@ -160,7 +165,8 @@ public class MavenCoordinatorImpl implements MavenCoordinator {
 
         try {
             activateIntents();
-            includeExtensions(contributionService);
+            includeExtensions(extensions, contributionService);
+            includeExtensions(userExtensions, contributionService);
         } catch (DefinitionActivationException e) {
             throw new InitializationException(e);
         }
@@ -277,10 +283,9 @@ public class MavenCoordinatorImpl implements MavenCoordinator {
         }
     }
 
-    private void includeExtensions(ContributionService contributionService)
-            throws InitializationException, DefinitionActivationException {
-        List<ContributionSource> sources = new ArrayList<ContributionSource>(extensions.size());
-        for (URL extensionURL : extensions) {
+    private void includeExtensions(List<URL> extensionUrls, ContributionService contributionService) throws InitializationException, DefinitionActivationException {
+        List<ContributionSource> sources = new ArrayList<ContributionSource>(extensionUrls.size());
+        for (URL extensionURL : extensionUrls) {
             try {
                 URI uri = extensionURL.toURI();
                 ContributionSource source = new FileContributionSource(uri, extensionURL, -1, new byte[0]);

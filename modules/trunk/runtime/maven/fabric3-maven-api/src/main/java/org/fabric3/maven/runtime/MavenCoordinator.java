@@ -30,4 +30,6 @@ public interface MavenCoordinator extends RuntimeLifecycleCoordinator<MavenEmbed
     void setExtensions(List<URL> extensions);
 
     void setIntentsLocation(URL intentsLocation);
+
+    void setUserExtensions(List<URL> extensionUrls);
 }
