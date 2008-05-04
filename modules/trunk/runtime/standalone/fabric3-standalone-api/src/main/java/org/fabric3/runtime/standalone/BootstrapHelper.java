@@ -218,6 +218,9 @@ public final class BootstrapHelper {
         String extensionsPath = props.getProperty("fabric3.extensionsDir", null);
         File extensionsDir = getDirectory(baseDir, extensionsPath, "extensions");
 
+        String userExtensionsPath = props.getProperty("fabric3.userExtensionsDir", null);
+        File userExtensionsDir = getDirectory(baseDir, userExtensionsPath, "user");
+
         try {
 
             // set the domain from runtime properties
@@ -229,7 +232,7 @@ public final class BootstrapHelper {
                 throw new BootstrapException("Domain URI was not set. Ensure it is set as a system property or in runtime.properties.");
             }
 
-            return new StandaloneHostInfoImpl(domain, baseDir, extensionsDir, configDir, online, props);
+            return new StandaloneHostInfoImpl(domain, baseDir, extensionsDir, userExtensionsDir, configDir, online, props);
         } catch (URISyntaxException ex) {
             throw new IOException(ex.getMessage());
         }
