@@ -32,7 +32,9 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
+import org.fabric3.host.contribution.Constants;
 import org.fabric3.host.contribution.ContributionException;
+import org.fabric3.host.contribution.Deployable;
 import org.fabric3.introspection.DefaultIntrospectionContext;
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.xml.LoaderException;
@@ -40,6 +42,7 @@ import org.fabric3.introspection.xml.LoaderRegistry;
 import org.fabric3.scdl.Composite;
 import static org.fabric3.spi.Constants.FABRIC3_NS;
 import org.fabric3.spi.services.contribution.Contribution;
+import org.fabric3.spi.services.contribution.ContributionManifest;
 import org.fabric3.spi.services.contribution.QNameSymbol;
 import org.fabric3.spi.services.contribution.Resource;
 import org.fabric3.spi.services.contribution.ResourceElement;
@@ -119,6 +122,14 @@ public class XmlContributionTypeLoader implements XmlProcessor {
                             if (!found) {
                                 String id = composite.getName().toString();
                                 throw new ResourceElementNotFoundException("Composite not found: " + id, id);
+                            }
+                        }
+                        ContributionManifest manifest = contribution.getManifest();
+                        // if no deployables are specified, assume all composites are
+                        if (manifest.getDeployables().isEmpty()) {
+                            for (Composite composite : composites) {
+                                Deployable deployable = new Deployable(composite.getName(), Constants.COMPOSITE_TYPE);
+                                manifest.addDeployable(deployable);
                             }
                         }
                         return;
