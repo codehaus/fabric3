@@ -26,11 +26,10 @@ import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
+import static org.osoa.sca.Constants.SCA_NS;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
-import org.osoa.sca.Constants;
-import static org.osoa.sca.Constants.SCA_NS;
 
 import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.host.contribution.Deployable;
@@ -55,8 +54,7 @@ public class XmlContributionTypeManifestProcessor implements XmlElementManifestP
     private XmlManifestProcessorRegistry manifestProcessorRegistry;
     private Loader loader;
 
-    public XmlContributionTypeManifestProcessor(@Reference XmlManifestProcessorRegistry manifestProcessorRegistry,
-                                                @Reference Loader loader) {
+    public XmlContributionTypeManifestProcessor(@Reference XmlManifestProcessorRegistry manifestProcessorRegistry, @Reference Loader loader) {
         this.manifestProcessorRegistry = manifestProcessorRegistry;
         this.loader = loader;
     }
