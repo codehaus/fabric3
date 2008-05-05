@@ -69,6 +69,22 @@ public class MetaDataStoreImpl implements MetaDataStore {
         return cache.get(contributionUri);
     }
 
+    public void remove(URI contributionUri) {
+        Contribution contribution = find(contributionUri);
+        if (contribution != null) {
+            if (contribution.getManifest() == null) {
+                return;
+            }
+            List<Export> exports = contribution.getManifest().getExports();
+            if (exports.size() > 0) {
+                for (Export export : exports) {
+                    exportsToContributionCache.remove(export.getType());                    
+                }
+            }
+        }
+        cache.remove(contributionUri);
+    }
+
     @SuppressWarnings({"unchecked"})
     public <S extends Symbol> ResourceElement<S, ?> resolve(S symbol) {
         for (Contribution contribution : cache.values()) {

@@ -159,11 +159,7 @@ public class ContributionServiceImpl implements ContributionService {
     }
 
     public List<Deployable> getDeployables(URI contributionUri) throws ContributionException {
-        Contribution contribution = metaDataStore.find(contributionUri);
-        if (contribution == null) {
-            String uri = contributionUri.toString();
-            throw new ContributionNotFoundException("No contribution found for: " + uri, uri);
-        }
+        Contribution contribution = find(contributionUri);
         List<Deployable> list = new ArrayList<Deployable>();
         if (contribution.getManifest() != null) {
             for (Deployable deployable : contribution.getManifest().getDeployables()) {
@@ -174,7 +170,8 @@ public class ContributionServiceImpl implements ContributionService {
     }
 
     public void remove(URI contributionUri) throws ContributionException {
-        throw new UnsupportedOperationException();
+        //Work in progress
+        metaDataStore.remove(contributionUri);
     }
 
     public <T> T resolve(URI contributionUri, Class<T> definitionType, QName name) {
@@ -183,6 +180,15 @@ public class ContributionServiceImpl implements ContributionService {
 
     public URL resolve(URI contribution, String namespace, URI uri, URI baseURI) {
         throw new UnsupportedOperationException();
+    }
+
+    private Contribution find(URI contributionUri) throws ContributionNotFoundException {
+        Contribution contribution = metaDataStore.find(contributionUri);
+        if (contribution == null) {
+            String uri = contributionUri.toString();
+            throw new ContributionNotFoundException("No contribution found for: " + uri, uri);
+        }
+        return contribution;
     }
 
     private void update(URI uri, byte[] checksum, long timestamp) throws ContributionException, IOException {

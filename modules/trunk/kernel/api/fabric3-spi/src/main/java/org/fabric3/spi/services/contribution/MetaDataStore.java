@@ -43,6 +43,14 @@ public interface MetaDataStore {
      */
     Contribution find(URI contributionUri);
 
+
+    /**
+     * Removes the contribution metadata
+     * @param contributionUri the contribution uri
+     */
+    void remove(URI contributionUri);
+
+
     /**
      * Resolves a resource element by its symbol against the entire domain symbol space.
      *
