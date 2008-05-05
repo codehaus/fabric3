@@ -147,20 +147,23 @@ public class WarContributionProcessor implements ContributionProcessor {
         Set<String> metaInfpaths = context.getResourcePaths("/META-INF/");
         Set<String> webInfpaths = context.getResourcePaths("/WEB-INF/");
         try {
-            for (String path : metaInfpaths) {
-                URL entryUrl = context.getResource(path);
-                String contentType = contentTypeResolver.getContentType(entryUrl);
-                action.process(contribution, contentType, entryUrl);
-            }
-            for (String path : webInfpaths) {
-                URL entryUrl = context.getResource(path);
-                String contentType = contentTypeResolver.getContentType(entryUrl);
-                action.process(contribution, contentType, entryUrl);
-            }
+            processResources(metaInfpaths, action, contribution, context);
+            processResources(webInfpaths, action, contribution, context);
         } catch (ContentTypeResolutionException e) {
             throw new ContributionException(e);
         } catch (MalformedURLException e) {
             throw new ContributionException(e);
+        }
+    }
+
+    private void processResources(Set<String> paths, Action action, Contribution contribution,
+                                  ServletContext context) throws MalformedURLException,
+            ContributionException, ContentTypeResolutionException {
+        if (paths == null || paths.isEmpty()) return;
+        for (String path : paths) {
+            URL entryUrl = context.getResource(path);
+            String contentType = contentTypeResolver.getContentType(entryUrl);
+            action.process(contribution, contentType, entryUrl);
         }
     }
 
