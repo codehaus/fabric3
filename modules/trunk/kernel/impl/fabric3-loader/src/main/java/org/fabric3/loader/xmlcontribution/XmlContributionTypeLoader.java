@@ -64,8 +64,7 @@ public class XmlContributionTypeLoader implements XmlProcessor {
     private XmlProcessorRegistry processorRegistry;
     private LoaderRegistry loaderRegistry;
 
-    public XmlContributionTypeLoader(@Reference XmlProcessorRegistry processorRegistry,
-                                     @Reference LoaderRegistry registry) {
+    public XmlContributionTypeLoader(@Reference XmlProcessorRegistry processorRegistry, @Reference LoaderRegistry registry) {
         this.processorRegistry = processorRegistry;
         this.loaderRegistry = registry;
     }
