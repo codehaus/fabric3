@@ -18,6 +18,8 @@
  */
 package org.fabric3.binding.jms.runtime.host;
 
+import java.net.URI;
+
 import org.fabric3.binding.jms.common.TransactionType;
 import org.fabric3.binding.jms.runtime.JMSObjectFactory;
 import org.fabric3.binding.jms.runtime.ResponseMessageListener;
@@ -37,12 +39,14 @@ public interface JmsHost {
      * @param transactionType Transaction type.
      * @param transactionHandler Transaction handler.
      * @param cl Classloader to use.
+     * @param componentUri URI of the service to which the binding is attached.
      */
     public void registerResponseListener(JMSObjectFactory requestJMSObjectFactory,
                                          JMSObjectFactory responseJMSObjectFactory,
                                          ResponseMessageListener messageListener,
                                          TransactionType transactionType,
                                          TransactionHandler transactionHandler,
-                                         ClassLoader cl);
+                                         ClassLoader cl,
+                                         URI serviceUri);
 
 }

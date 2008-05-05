@@ -18,6 +18,7 @@
  */
 package org.fabric3.binding.jms.runtime;
 
+import java.net.URI;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
@@ -109,6 +110,8 @@ public class JmsSourceWireAttacher implements SourceWireAttacher<JmsWireSourceDe
     }
 
     public void attachToSource(JmsWireSourceDefinition source, PhysicalWireTargetDefinition target, Wire wire) throws WiringException {
+        
+        URI serviceUri = target.getUri();
 
         ClassLoader cl = classLoaderRegistry.getClassLoader(source.getClassloaderURI());
 
@@ -136,7 +139,7 @@ public class JmsSourceWireAttacher implements SourceWireAttacher<JmsWireSourceDe
         ResponseMessageListener messageListener =
                 new ResponseMessageListenerImpl(ops, correlationScheme, transactionHandler, transactionType, callbackUri);
         jmsHost.registerResponseListener(
-                requestJMSObjectFactory, responseJMSObjectFactory, messageListener, transactionType, transactionHandler, cl);
+                requestJMSObjectFactory, responseJMSObjectFactory, messageListener, transactionType, transactionHandler, cl, serviceUri);
     }
 
     public void attachObjectFactory(JmsWireSourceDefinition source, ObjectFactory<?> objectFactory) throws WiringException {

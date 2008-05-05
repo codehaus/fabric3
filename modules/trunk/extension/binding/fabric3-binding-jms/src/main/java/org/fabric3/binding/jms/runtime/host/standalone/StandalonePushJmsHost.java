@@ -18,6 +18,7 @@
  */
 package org.fabric3.binding.jms.runtime.host.standalone;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -94,7 +95,8 @@ public class StandalonePushJmsHost implements JmsHost {
                                          ResponseMessageListener messageListener, 
                                          TransactionType transactionType,
                                          TransactionHandler transactionHandler,
-                                         ClassLoader cl) {
+                                         ClassLoader cl,
+                                         URI serviceUri) {
         JMSMessageListenerInvoker invoker = new JMSMessageListenerInvoker(
                 requestJMSObjectFactory, responseJMSObjectFactory, messageListener, transactionType, transactionHandler, workScheduler);
         invoker.start(receiverCount);

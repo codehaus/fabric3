@@ -18,13 +18,13 @@
  */
 package org.fabric3.binding.jms.runtime.host.standalone;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.jms.Connection;
-import javax.jms.Destination;
 import javax.jms.JMSException;
 
 import org.fabric3.api.annotation.Monitor;
@@ -52,9 +52,9 @@ public class StandalonePullJmsHost implements JmsHost, StandalonePullJmsHostMBea
     private long readTimeout = 1000L;
     private JMSRuntimeMonitor monitor;
     private int receiverCount = 3;
-    private Map<String, List<ConsumerWorker>> consumerWorkerMap = new HashMap<String, List<ConsumerWorker>>();
-    private Map<String, Connection> connectionMap = new HashMap<String, Connection>();
-    private Map<String, ConsumerWorkerTemplate> templateMap = new HashMap<String, ConsumerWorkerTemplate>();
+    private Map<URI, List<ConsumerWorker>> consumerWorkerMap = new HashMap<URI, List<ConsumerWorker>>();
+    private Map<URI, Connection> connectionMap = new HashMap<URI, Connection>();
+    private Map<URI, ConsumerWorkerTemplate> templateMap = new HashMap<URI, ConsumerWorkerTemplate>();
 
     /**
      * Injects the monitor.
@@ -116,9 +116,8 @@ public class StandalonePullJmsHost implements JmsHost, StandalonePullJmsHostMBea
                                          ResponseMessageListener messageListener,
                                          TransactionType transactionType,
                                          TransactionHandler transactionHandler,
-                                         ClassLoader cl) {
-        
-        Destination requestDestination = responseJMSObjectFactory.getDestination();
+                                         ClassLoader cl,
+                                         URI serviceUri) {
         
         try {
             
@@ -133,7 +132,7 @@ public class StandalonePullJmsHost implements JmsHost, StandalonePullJmsHostMBea
                                                                          readTimeout,
                                                                          cl,
                                                                          monitor);
-            templateMap.put(requestDestination.toString(), template);
+            templateMap.put(serviceUri, template);
             
             for (int i = 0; i < receiverCount; i++) {
                 ConsumerWorker work = new ConsumerWorker(template);
@@ -142,8 +141,8 @@ public class StandalonePullJmsHost implements JmsHost, StandalonePullJmsHostMBea
             }
             
             connection.start();
-            connectionMap.put(requestDestination.toString(), connection);
-            consumerWorkerMap.put(requestDestination.toString(), consumerWorkers);
+            connectionMap.put(serviceUri, connection);
+            consumerWorkerMap.put(serviceUri, consumerWorkers);
             
         } catch (JMSException ex) {
             throw new Fabric3JmsException("Unable to activate service", ex);
@@ -152,50 +151,56 @@ public class StandalonePullJmsHost implements JmsHost, StandalonePullJmsHostMBea
         monitor.registerListener(requestJMSObjectFactory.getDestination());
         
     }
+    
+    // ---------------------------------- Start of management operations -------------------
 
-    public int getReceiverCount(String destination) {
+    public int getReceiverCount(String service) {
         
-        for (Map.Entry<String, List<ConsumerWorker>> entry : consumerWorkerMap.entrySet()) {
-            if (destination.equals(entry.getKey())) {
-                return entry.getValue().size();
-            }
+        URI serviceUri = URI.create(service);
+        List<ConsumerWorker> consumerWorkers = consumerWorkerMap.get(serviceUri);
+        if (consumerWorkers == null) {
+            throw new IllegalArgumentException("Unknown service:" + service);
         }
-        throw new IllegalArgumentException("Unknown receiver:" + destination);
+        return consumerWorkers.size();
         
     }
 
-    public void setReceiverCount(String destination, int receiverCount) {
+    public void setReceiverCount(String service, int receiverCount) {
         
-        for (Map.Entry<String, List<ConsumerWorker>> entry : consumerWorkerMap.entrySet()) {
-            if (destination.equals(entry.getKey().toString())) {
-                if (receiverCount != entry.getValue().size()) { 
-                    ConsumerWorkerTemplate template = templateMap.get(destination);
-                    for (ConsumerWorker consumerWorker : entry.getValue()) {
-                        consumerWorker.inactivate();
-                    }
-                    entry.getValue().clear();
-                    for (int i = 0;i < receiverCount;i++) {
-                        ConsumerWorker consumerWorker = new ConsumerWorker(template);
-                        workScheduler.scheduleWork(consumerWorker);
-                        entry.getValue().add(consumerWorker);
-                    }
-                }
-                return;
-            }
+        URI serviceUri = URI.create(service);
+        List<ConsumerWorker> consumerWorkers = consumerWorkerMap.get(serviceUri);
+        if (consumerWorkers == null) {
+            throw new IllegalArgumentException("Unknown service:" + service);
         }
         
-        throw new IllegalArgumentException("Unknown receiver:" + destination);
+        if (receiverCount == consumerWorkers.size()) { 
+            return;
+        }
+        
+        ConsumerWorkerTemplate template = templateMap.get(serviceUri);
+        for (ConsumerWorker consumerWorker : consumerWorkers) {
+            consumerWorker.inactivate();
+        }
+        consumerWorkers.clear();
+        
+        for (int i = 0;i < receiverCount;i++) {
+            ConsumerWorker consumerWorker = new ConsumerWorker(template);
+            workScheduler.scheduleWork(consumerWorker);
+            consumerWorkers.add(consumerWorker);
+        }
         
     }
 
     public List<String> getReceivers() {
         
         List<String> receivers = new ArrayList<String>();
-        for (String destination : connectionMap.keySet()) {
-            receivers.add(destination);
+        for (URI destination : connectionMap.keySet()) {
+            receivers.add(destination.toString());
         }
         return receivers;
         
     }
+    
+    // ---------------------------------- End of management operations -------------------
 
 }

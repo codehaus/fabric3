@@ -24,9 +24,6 @@ import org.fabric3.api.annotation.Management;
 
 /**
  * Management interface for the standalone pull JMS host.
- * 
- * TODO Currently this relies on the toString of Destination and assumes 
- * only one instance of the binding uses a given destination.
  *
  * @version $Revision$ $Date$
  */
@@ -34,22 +31,22 @@ import org.fabric3.api.annotation.Management;
 public interface StandalonePullJmsHostMBean {
     
     /**
-     * Gets the number of receivers for a destination.
-     * @param destination String representation of the destination.
+     * Gets the number of services for a destination.
+     * @param destination String representation of the service.
      * @return Receiver count.
      */
-    int getReceiverCount(String destination);
+    int getReceiverCount(String service);
     
     /**
-     * Sets the number of receivers for a destination.
-     * @param destination String representation of the destination.
+     * Sets the number of services for a destination.
+     * @param destination String representation of the service.
      * @param receiverCount Receiver count.
      */
-    void setReceiverCount(String destination, int receiverCount);
+    void setReceiverCount(String service, int receiverCount);
     
     /**
-     * Returns the list of current destinations.
-     * @return All the current destinations.
+     * Returns the list of current services.
+     * @return All the current services.
      */
     List<String> getReceivers();
 
