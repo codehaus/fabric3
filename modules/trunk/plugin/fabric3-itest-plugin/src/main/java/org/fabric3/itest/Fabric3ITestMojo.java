@@ -90,7 +90,7 @@ import org.fabric3.spi.classloader.MultiParentClassLoader;
  * @phase integration-test
  */
 public class Fabric3ITestMojo extends AbstractMojo {
-    
+
     public static final QName IMPLEMENTATION_JUNIT = new QName(Constants.FABRIC3_NS, "junit");
     private static final String SYSTEM_CONFIG_XML_FILE = "systemConfig.xml";
 
@@ -104,10 +104,10 @@ public class Fabric3ITestMojo extends AbstractMojo {
      * @required
      */
     protected MavenProject project;
-    
+
     /**
      * Optional parameter for management domain.
-     * 
+     *
      * @parameter
      */
     public String managementDomain = "itest-host";
@@ -236,6 +236,13 @@ public class Fabric3ITestMojo extends AbstractMojo {
     public Dependency[] userExtensions;
 
     /**
+     * Set of user extension artifacts that are not Maven artifacts.
+     *
+     * @parameter
+     */
+    public File[] userExtensionsArchives;
+
+    /**
      * Libraries available to application and runtime.
      *
      * @parameter
@@ -317,7 +324,7 @@ public class Fabric3ITestMojo extends AbstractMojo {
      * @required
      */
     protected File outputDirectory;
-    
+
     // JMX management agent
     private Agent agent;
 
@@ -373,6 +380,15 @@ public class Fabric3ITestMojo extends AbstractMojo {
             coordinator.setExtensions(extensionUrls);
             coordinator.setIntentsLocation(intentsLocation);
             List<URL> userExtensionUrls = resolveDependencies(userExtensions);
+            // add extensions that are not Maven artifacts
+            if (userExtensionsArchives != null) {
+                for (File entry : userExtensionsArchives) {
+                    if (!entry.exists()) {
+                        throw new MojoExecutionException("User extension does not exist: " + entry.getName());
+                    }
+                    userExtensionUrls.add(entry.toURI().toURL());
+                }
+            }
             coordinator.setUserExtensions(userExtensionUrls);
 
             bootRuntime(coordinator, runtime, bootClassLoader, hostClassLoader);
@@ -413,10 +429,10 @@ public class Fabric3ITestMojo extends AbstractMojo {
     }
 
     private List<URL> resolveDependencies(Dependency[] dependencies) throws MojoExecutionException {
+        List<URL> urls = new ArrayList<URL>();
         if (dependencies == null) {
-            return Collections.emptyList();
+            return urls;
         }
-        List<URL> urls = new ArrayList<URL>(dependencies.length);
         for (Dependency dependency : dependencies) {
             if (dependency.getVersion() == null) {
                 resolveDependencyVersion(dependency);
@@ -640,14 +656,14 @@ public class Fabric3ITestMojo extends AbstractMojo {
         runtime.setMonitorFactory(monitorFactory);
         runtime.setHostInfo(hostInfo);
         runtime.setHostClassLoader(hostClassLoader);
-        
+
         runtime.setJMXDomain(managementDomain);
         agent = RmiAgent.newInstance();
         agent.start();
         runtime.setMBeanServer(agent.getMBeanServer());
 
         return runtime;
-        
+
     }
 
     protected <T> T createHostComponent(Class<T> type, String impl, ClassLoader cl) throws Exception {
