@@ -20,7 +20,7 @@ package org.fabric3.jpa.runtime;
 
 import javax.persistence.spi.PersistenceUnitInfo;
 
-import org.fabric3.jpa.Fabric3JpaException;
+import org.fabric3.jpa.runtime.Fabric3JpaRuntimeException;
 import org.fabric3.jpa.runtime.ClasspathPersistenceUnitScanner;
 import org.fabric3.jpa.runtime.PersistenceUnitScanner;
 
@@ -47,7 +47,7 @@ public class ClasspathPersistenceUnitScannerTestCase extends TestCase {
         try {
             scanner.getPersistenceUnitInfo("test1", getClass().getClassLoader());
             fail("Expected Exception");
-        } catch(Fabric3JpaException ex) {
+        } catch(Fabric3JpaRuntimeException ex) {
         }
     }
 

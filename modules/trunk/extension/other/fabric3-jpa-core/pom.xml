@@ -64,6 +64,12 @@
             <version>1.0</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>geronimo-spec</groupId>
+            <artifactId>geronimo-spec-jta</artifactId>
+            <version>1.0.1B-rc4</version>
+            <scope>provided</scope>
+        </dependency>
 
         <dependency>
             <groupId>stax</groupId>

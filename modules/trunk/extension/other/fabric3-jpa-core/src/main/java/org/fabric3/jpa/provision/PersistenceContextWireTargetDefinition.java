@@ -23,14 +23,15 @@ import java.net.URI;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 
 /**
- * Contains attach point metadata for an EntityManagerFactory resource.
+ * Contains attach point metadata for an EntityManager resource.
  *
  * @version $Revision$ $Date$
  */
-public class PersistenceUnitWireTargetDefinition extends PhysicalWireTargetDefinition {
-
+public class PersistenceContextWireTargetDefinition extends PhysicalWireTargetDefinition {
     private String unitName;
+    private boolean extended;
     private URI classLoaderUri;
+    private boolean caching = true;
 
     /**
      * @return The persistence unit name.
@@ -60,4 +61,19 @@ public class PersistenceUnitWireTargetDefinition extends PhysicalWireTargetDefin
         this.classLoaderUri = classLoaderUri;
     }
 
+    public boolean isCaching() {
+        return caching;
+    }
+
+    public void setCaching(boolean caching) {
+        this.caching = caching;
+    }
+
+    public boolean isExtended() {
+        return extended;
+    }
+
+    public void setExtended(boolean extended) {
+        this.extended = extended;
+    }
 }

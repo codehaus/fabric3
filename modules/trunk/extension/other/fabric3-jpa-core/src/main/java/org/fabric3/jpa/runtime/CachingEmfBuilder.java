@@ -30,6 +30,7 @@ import org.fabric3.jpa.spi.EmfBuilderException;
 
 import org.osoa.sca.annotations.Destroy;
 import org.osoa.sca.annotations.Reference;
+import org.osoa.sca.annotations.Service;
 
 /**
  * Creates entity manager factories using the JPA provider SPI. Creation of entity manager factories are expensive operations and hence created
@@ -37,7 +38,8 @@ import org.osoa.sca.annotations.Reference;
  *
  * @version $Revision$ $Date$
  */
-public class CachingEmfBuilder implements EmfBuilder {
+@Service(interfaces = {EmfBuilder.class, EmfCache.class})
+public class CachingEmfBuilder implements EmfBuilder, EmfCache {
 
     private Map<String, EntityManagerFactory> cache = new HashMap<String, EntityManagerFactory>();
     private PersistenceUnitScanner scanner;
@@ -87,9 +89,13 @@ public class CachingEmfBuilder implements EmfBuilder {
         }
     }
 
+    public EntityManagerFactory getEmf(String unitName) {
+        return cache.get(unitName);
+    }
+
     /*
-     * Creates the entity manager factory using the JPA provider API.
-     */
+    * Creates the entity manager factory using the JPA provider API.
+    */
     private EntityManagerFactory createEntityManagerFactory(String unitName, ClassLoader classLoader) throws EmfBuilderException {
 
         PersistenceUnitInfoImpl info = (PersistenceUnitInfoImpl) scanner.getPersistenceUnitInfo(unitName, classLoader);

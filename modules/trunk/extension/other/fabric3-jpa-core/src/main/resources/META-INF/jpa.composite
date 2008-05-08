@@ -28,30 +28,46 @@
            targetNamespace="org.codehaus.fabric3"
            name="JpaExtension"
            autowire="true">
-    
-    <!-- Processor for Persistence Unit -->
+
+    <!-- Processors for PersistenceUnit and PersistenceContext-->
     <component f3:key="javax.persistence.PersistenceUnit" name="org.fabric3.jpa.introspection.PersistenceUnitProcessor">
         <system:implementation.system class="org.fabric3.jpa.introspection.PersistenceUnitProcessor"/>
     </component>
-    
+
+    <component f3:key="javax.persistence.PersistenceContext" name="org.fabric3.jpa.introspection.PersistenceContextProcessor">
+        <system:implementation.system class="org.fabric3.jpa.introspection.PersistenceContextProcessor"/>
+    </component>
+
     <!-- Wire Target Definition Generator -->
     <component name="org.fabric3.jpa.control.PersistenceUnitResourceWireGenerator">
         <system:implementation.system class="org.fabric3.jpa.control.PersistenceUnitResourceWireGenerator"/>
     </component>
-    
-    <!-- Wire Attacher for Persistence Unit Resources -->
+
+    <component name="org.fabric3.jpa.control.PersistenceContextResourceWireGenerator">
+        <system:implementation.system class="org.fabric3.jpa.control.PersistenceContextResourceWireGenerator"/>
+    </component>
+
+    <!-- Wire attachers for PersistenceUnit and PersistenceContext resources -->
     <component f3:key="org.fabric3.jpa.provision.PersistenceUnitWireTargetDefinition" name="org.fabric3.jpa.runtime.PersistenceUnitWireAttacher">
         <system:implementation.system class="org.fabric3.jpa.runtime.PersistenceUnitWireAttacher"/>
     </component>
-    
+
+    <component f3:key="org.fabric3.jpa.provision.PersistenceContextWireTargetDefinition" name="org.fabric3.jpa.runtime.PersistenceContextWireAttacher">
+        <system:implementation.system class="org.fabric3.jpa.runtime.PersistenceContextWireAttacher"/>
+    </component>
+
     <!-- Persistence Unit Scanner -->
     <component name="org.fabric3.jpa.runtime.ClasspathPersistenceUnitScanner">
         <system:implementation.system class="org.fabric3.jpa.runtime.ClasspathPersistenceUnitScanner"/>
     </component>
-    
+
     <!-- EMF Builder -->
     <component name="org.fabric3.jpa.runtime.CachingEmfBuilder">
         <system:implementation.system class="org.fabric3.jpa.runtime.CachingEmfBuilder"/>
     </component>
-    
+
+    <component name="org.fabric3.jpa.runtime.EntityManagerService">
+        <system:implementation.system class="org.fabric3.jpa.runtime.EntityManagerServiceImpl"/>
+    </component>
+
 </composite>

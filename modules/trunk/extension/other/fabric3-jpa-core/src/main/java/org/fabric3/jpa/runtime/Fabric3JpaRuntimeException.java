@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.jpa;
+package org.fabric3.jpa.runtime;
 
 import org.fabric3.host.Fabric3RuntimeException;
 
@@ -24,20 +24,20 @@ import org.fabric3.host.Fabric3RuntimeException;
  *
  * @version $Revision$ $Date$
  */
-@SuppressWarnings("serial")
-public class Fabric3JpaException extends Fabric3RuntimeException {
+public class Fabric3JpaRuntimeException extends Fabric3RuntimeException {
+    private static final long serialVersionUID = 2897143398279023346L;
 
     /**
      * @param cause Root cause of the exception.
      */
-    public Fabric3JpaException(Throwable cause) {
+    public Fabric3JpaRuntimeException(Throwable cause) {
         super(cause);
     }
 
     /**
      * @param message Message for the exception.
      */
-    public Fabric3JpaException(String message) {
+    public Fabric3JpaRuntimeException(String message) {
         super(message);
     }
 

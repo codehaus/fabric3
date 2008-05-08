@@ -18,6 +18,8 @@
  */
 package org.fabric3.jpa.scdl;
 
+import javax.persistence.PersistenceContextType;
+
 import org.fabric3.scdl.ResourceDefinition;
 import org.fabric3.scdl.ServiceContract;
 
@@ -26,28 +28,40 @@ import org.fabric3.scdl.ServiceContract;
  *
  * @version $Revision$ $Date$
  */
-public final class PersistenceUnitResource extends ResourceDefinition {
-    private static final long serialVersionUID = 8935762119919982256L;
+public final class PersistenceContextResource extends ResourceDefinition {
+    private static final long serialVersionUID = -8717050996527626286L;
     private final String unitName;
+    private final PersistenceContextType type;
 
     /**
-     * Initializes the resource name and persistence unit name.
-     * 
-     * @param name Name of the resource.
-     * @param unitName Persistence unit name.
+     * Constructor.
+     *
+     * @param name            Name of the resource.
+     * @param unitName        Persistence unit name.
+     * @param type            the PersistenceContextType
      * @param serviceContract the service contract for the persistence unit
      */
-    public PersistenceUnitResource(String name, String unitName, ServiceContract<?> serviceContract) {
+    public PersistenceContextResource(String name, String unitName, PersistenceContextType type, ServiceContract<?> serviceContract) {
         super(name, serviceContract, true);
         this.unitName = unitName;
+        this.type = type;
     }
-    
+
     /**
-     * Gets the persistence unit name.
-     * @return Persistence unit name.
+     * Returns the persistence unit name.
+     *
+     * @return the persistence unit name.
      */
     public final String getUnitName() {
         return this.unitName;
     }
 
+    /**
+     * Returns the persistence context type.
+     *
+     * @return the persistence context type
+     */
+    public PersistenceContextType getType() {
+        return type;
+    }
 }

@@ -31,7 +31,8 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
-import org.fabric3.jpa.Fabric3JpaException;
+import org.fabric3.jpa.runtime.Fabric3JpaRuntimeException;
+
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
@@ -77,16 +78,16 @@ public class ClasspathPersistenceUnitScanner implements PersistenceUnitScanner {
                 }
 
             } catch (IOException ex) {
-                throw new Fabric3JpaException(ex);
+                throw new Fabric3JpaRuntimeException(ex);
             } catch (ParserConfigurationException ex) {
-                throw new Fabric3JpaException(ex);
+                throw new Fabric3JpaRuntimeException(ex);
             } catch (SAXException ex) {
-                throw new Fabric3JpaException(ex);
+                throw new Fabric3JpaRuntimeException(ex);
             }
 
         }
 
-        throw new Fabric3JpaException("Unable to find persistence unit: " + unitName);
+        throw new Fabric3JpaRuntimeException("Unable to find persistence unit: " + unitName);
 
     }
 
@@ -106,7 +107,7 @@ public class ClasspathPersistenceUnitScanner implements PersistenceUnitScanner {
 			rootJarUrl = "file:" + rootJarUrl;
 			return new URL(rootJarUrl);
 		} else {
-			throw new Fabric3JpaException("Unable to handle protocol: "	+ protocol);
+			throw new Fabric3JpaRuntimeException("Unable to handle protocol: "	+ protocol);
 		}
 	}
 

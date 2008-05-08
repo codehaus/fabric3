@@ -6,58 +6,42 @@
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
- * under the License.    
+ * under the License.
  */
-package org.fabric3.jpa.provision;
+package org.fabric3.jpa.runtime;
 
-import java.net.URI;
+import javax.transaction.TransactionManager;
 
-import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
+import org.fabric3.spi.ObjectFactory;
+import org.fabric3.spi.ObjectCreationException;
 
 /**
- * Contains attach point metadata for an EntityManagerFactory resource.
+ * Creates MultiThreadedEntityManagerProxy instances.
  *
  * @version $Revision$ $Date$
  */
-public class PersistenceUnitWireTargetDefinition extends PhysicalWireTargetDefinition {
-
+public class MultiThreadedEntityManagerProxyFactory implements ObjectFactory<MultiThreadedEntityManagerProxy> {
     private String unitName;
-    private URI classLoaderUri;
+    private EntityManagerService service;
+    private TransactionManager tm;
+    private boolean extended;
 
-    /**
-     * @return The persistence unit name.
-     */
-    public String getUnitName() {
-        return unitName;
-    }
-
-    /**
-     * @param unitName The persistence unit name.
-     */
-    public void setUnitName(String unitName) {
+    public MultiThreadedEntityManagerProxyFactory(String unitName, boolean extended, EntityManagerService service, TransactionManager tm) {
+        this.service = service;
+        this.tm = tm;
+        this.extended = extended;
         this.unitName = unitName;
     }
 
-    /**
-     * @return The classloader URI.
-     */
-    public URI getClassLoaderUri() {
-        return classLoaderUri;
+    public MultiThreadedEntityManagerProxy getInstance() throws ObjectCreationException {
+        return new MultiThreadedEntityManagerProxy(unitName, extended, service, tm);
     }
-
-    /**
-     * @param classLoaderUri The classloader URI.
-     */
-    public void setClassLoaderUri(URI classLoaderUri) {
-        this.classLoaderUri = classLoaderUri;
-    }
-
 }

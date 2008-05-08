@@ -46,7 +46,8 @@ import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
-import org.fabric3.jpa.Fabric3JpaException;
+import org.fabric3.jpa.runtime.Fabric3JpaRuntimeException;
+
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -144,7 +145,7 @@ class PersistenceUnitInfoImpl implements PersistenceUnitInfo {
             }
             return jarUrls;
         } catch (MalformedURLException ex) {
-            throw new Fabric3JpaException(ex);
+            throw new Fabric3JpaRuntimeException(ex);
         }
 
     }
@@ -250,7 +251,7 @@ class PersistenceUnitInfoImpl implements PersistenceUnitInfo {
             }
             return data;
         } catch (XPathExpressionException ex) {
-            throw new Fabric3JpaException(ex);
+            throw new Fabric3JpaRuntimeException(ex);
         }
 
     }
@@ -269,7 +270,7 @@ class PersistenceUnitInfoImpl implements PersistenceUnitInfo {
             }
             return data;
         } catch (XPathExpressionException ex) {
-            throw new Fabric3JpaException(ex);
+            throw new Fabric3JpaRuntimeException(ex);
         }
 
     }
@@ -284,7 +285,7 @@ class PersistenceUnitInfoImpl implements PersistenceUnitInfo {
             String val = xpath.evaluate(namedNodeExpression, context);
             return "".equals(val) ? null : val;
         } catch (XPathExpressionException ex) {
-            throw new Fabric3JpaException(ex);
+            throw new Fabric3JpaRuntimeException(ex);
         }
 
     }
@@ -319,7 +320,7 @@ class PersistenceUnitInfoImpl implements PersistenceUnitInfo {
             	unitNames.add(nodeList.item(i).getTextContent());
             }            
         } catch (XPathExpressionException ex) {
-            throw new Fabric3JpaException(ex);
+            throw new Fabric3JpaRuntimeException(ex);
         }
         
         return unitNames;

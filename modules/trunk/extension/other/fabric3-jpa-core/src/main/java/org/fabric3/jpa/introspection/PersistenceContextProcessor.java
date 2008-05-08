@@ -19,8 +19,9 @@ package org.fabric3.jpa.introspection;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.PersistenceUnit;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceContextType;
 
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
@@ -29,9 +30,9 @@ import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.IntrospectionException;
 import org.fabric3.introspection.TypeMapping;
 import org.fabric3.introspection.contract.ContractProcessor;
-import org.fabric3.introspection.java.AbstractAnnotationProcessor;
 import org.fabric3.introspection.contract.InvalidServiceContractException;
-import org.fabric3.jpa.scdl.PersistenceUnitResource;
+import org.fabric3.introspection.java.AbstractAnnotationProcessor;
+import org.fabric3.jpa.scdl.PersistenceContextResource;
 import org.fabric3.scdl.FieldInjectionSite;
 import org.fabric3.scdl.Implementation;
 import org.fabric3.scdl.InjectingComponentType;
@@ -39,33 +40,36 @@ import org.fabric3.scdl.MethodInjectionSite;
 import org.fabric3.scdl.ServiceContract;
 
 /**
+ * Processes @PersistenceContext annotations.
+ *
  * @version $Rev$ $Date$
  */
 @EagerInit
-public class PersistenceUnitProcessor<I extends Implementation<? extends InjectingComponentType>> extends AbstractAnnotationProcessor<PersistenceUnit, I> {
-
+public class PersistenceContextProcessor<I extends Implementation<? extends InjectingComponentType>> extends AbstractAnnotationProcessor<PersistenceContext, I> {
     private final ServiceContract<Type> factoryServiceContract;
 
-    public PersistenceUnitProcessor(@Reference ContractProcessor contractProcessor) throws InvalidServiceContractException {
-        super(PersistenceUnit.class);
-        factoryServiceContract = contractProcessor.introspect(new TypeMapping(), EntityManagerFactory.class);
+    public PersistenceContextProcessor(@Reference ContractProcessor contractProcessor) throws InvalidServiceContractException {
+        super(PersistenceContext.class);
+        factoryServiceContract = contractProcessor.introspect(new TypeMapping(), EntityManager.class);
     }
 
-    public void visitField(PersistenceUnit annotation, Field field, I implementation, IntrospectionContext context) throws IntrospectionException {
+    public void visitField(PersistenceContext annotation, Field field, I implementation, IntrospectionContext context) throws IntrospectionException {
         FieldInjectionSite site = new FieldInjectionSite(field);
-        PersistenceUnitResource definition = createDefinition(annotation);
+        PersistenceContextResource definition = createDefinition(annotation);
         implementation.getComponentType().add(definition, site);
     }
 
-    public void visitMethod(PersistenceUnit annotation, Method method, I implementation, IntrospectionContext context) throws IntrospectionException {
+    public void visitMethod(PersistenceContext annotation, Method method, I implementation, IntrospectionContext context)
+            throws IntrospectionException {
         MethodInjectionSite site = new MethodInjectionSite(method, 0);
-        PersistenceUnitResource definition = createDefinition(annotation);
+        PersistenceContextResource definition = createDefinition(annotation);
         implementation.getComponentType().add(definition, site);
     }
 
-    PersistenceUnitResource createDefinition(PersistenceUnit annotation) {
+    private PersistenceContextResource createDefinition(PersistenceContext annotation) {
         String name = annotation.name();
         String unitName = annotation.unitName();
-        return new PersistenceUnitResource(name, unitName, factoryServiceContract);
+        PersistenceContextType type = annotation.type();
+        return new PersistenceContextResource(name, unitName, type, factoryServiceContract);
     }
 }
