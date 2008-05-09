@@ -11,6 +11,7 @@ import org.fabric3.spi.executor.CommandExecutor;
 import org.fabric3.spi.executor.CommandExecutorRegistry;
 import org.fabric3.spi.executor.ExecutionException;
 import org.fabric3.spi.runtime.component.ComponentManager;
+import org.fabric3.spi.runtime.component.RegistrationException;
 import org.fabric3.spi.component.Component;
 
 /*
@@ -50,6 +51,11 @@ public class ComponentStopCommandExecutor implements CommandExecutor<ComponentSt
         URI uri = command.getUri();
         Component component = componentManager.getComponent(uri);
         component.stop();
+        try {
+            componentManager.unregister(component);
+        } catch (RegistrationException re) {
+            throw new ExecutionException("Unexpected exception unregistering component", re);
+        }
     }
 }
 
