@@ -35,9 +35,9 @@ public interface LoanService {
      * @return the loan tracking number
      * @throws LoanException
      */
-    String apply(LoanRequest request) throws LoanException;
+    long apply(LoanRequest request) throws LoanException;
 
-    void decline(String id) throws LoanException;
+    void decline(long id) throws LoanException;
 
     void accept(OptionSelection selection) throws LoanException;
 

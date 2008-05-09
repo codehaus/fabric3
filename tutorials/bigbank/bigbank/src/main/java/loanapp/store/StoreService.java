@@ -49,7 +49,7 @@ public interface StoreService {
      * @param id the application id
      * @throws StoreException if an exception deleting the application is encountered
      */
-    void remove(String id) throws StoreException;
+    void remove(long id) throws StoreException;
 
     /**
      * Returns a loan application for the given id.
@@ -58,5 +58,5 @@ public interface StoreService {
      * @return the loan application or null if not found
      * @throws StoreException if an exception retrieving the application is encountered
      */
-    LoanApplication find(String id) throws StoreException;
+    LoanApplication find(long id) throws StoreException;
 }

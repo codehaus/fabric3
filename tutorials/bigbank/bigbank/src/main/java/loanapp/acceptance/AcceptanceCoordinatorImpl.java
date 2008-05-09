@@ -58,7 +58,7 @@ public class AcceptanceCoordinatorImpl implements AcceptanceCoordinator, Apprais
     }
 
 
-    public LoanTerms review(String loanId) throws LoanException {
+    public LoanTerms review(long loanId) throws LoanException {
         findApplication(loanId);
         return application.getTerms();
     }
@@ -111,7 +111,7 @@ public class AcceptanceCoordinatorImpl implements AcceptanceCoordinator, Apprais
         // TODO send to closing system
     }
 
-    private void findApplication(String id) throws LoanException {
+    private void findApplication(long id) throws LoanException {
         try {
             application = storeService.find(id);
         } catch (StoreException e) {

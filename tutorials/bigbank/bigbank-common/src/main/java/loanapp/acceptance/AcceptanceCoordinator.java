@@ -38,7 +38,7 @@ public interface AcceptanceCoordinator {
      * @throws LoanException if an exception during acceptance was encountered. Subtypes including
      *                       LoanNotFoundException and LoanNotApprovedException may be thrown.
      */
-    LoanTerms review(String loanId) throws LoanException;
+    LoanTerms review(long loanId) throws LoanException;
 
     /**
      * Accepts the terms of a loan.

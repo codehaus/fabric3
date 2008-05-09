@@ -80,17 +80,17 @@ public class RequestCoordinatorImpl implements RequestCoordinator, CreditService
         this.monitor = monitor;
     }
 
-    public int getStatus(String id) {
+    public int getStatus(long id) {
         if (application == null) {
             return LoanStatus.NOT_SUBMITTED;
         }
         return application.getStatus();
     }
 
-    public String start(LoanRequest request) throws LoanException {
+    public long start(LoanRequest request) throws LoanException {
         // create a loan application and process it
         application = new LoanApplication();
-        application.setSSN(request.getSSN());
+        application.setSsn(request.getSSN());
         application.setEmail(request.getEmail());
         application.setAmount(request.getAmount());
         application.setDownPayment(request.getDownPayment());
@@ -102,7 +102,7 @@ public class RequestCoordinatorImpl implements RequestCoordinator, CreditService
             throw new LoanException(e);
         }
         // pull the applicant's credit score
-        creditService.score(application.getSSN());
+        creditService.score(application.getSsn());
         return application.getId();
     }
 

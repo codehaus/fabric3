@@ -17,6 +17,7 @@
 -->
 
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
+           xmlns:sca="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:tutorials="http://fabric3.org/xmlns/sca/tutorials/0.5"
            targetNamespace="http://fabric3.org/xmlns/sca/tutorials/0.5"
            name="LoanAppComposite">
@@ -81,8 +82,12 @@
         <implementation.java class="loanapp.notification.NotificationComponent"/>
     </component>
 
-    <component name="StoreComponent">
-        <implementation.java class="loanapp.store.memory.MemoryStoreComponent"/>
+    <!--<component name="StoreComponent">-->
+    <!--<implementation.java class="loanapp.store.memory.MemoryStoreComponent"/>-->
+    <!--</component>-->
+
+    <component name="StoreComponent" requires="sca:managedTransaction">
+        <implementation.java class="loanapp.store.persistent.JPAStore"/>
     </component>
 
 

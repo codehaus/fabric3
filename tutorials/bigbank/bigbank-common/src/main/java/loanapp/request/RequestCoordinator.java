@@ -37,9 +37,9 @@ public interface RequestCoordinator {
      * @return the loan request id
      * @throws LoanException thrown if an error with the loan application is found
      */
-    String start(LoanRequest request) throws LoanException;
+    long start(LoanRequest request) throws LoanException;
 
-    int getStatus(String id);
+    int getStatus(long id);
 
     /**
      * Cancel an in-process loan application

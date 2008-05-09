@@ -16,42 +16,48 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package loanapp.store.memory;
+package loanapp.store.persistent;
 
-import loanapp.store.StoreService;
-import loanapp.store.StoreException;
 import loanapp.message.LoanApplication;
+import loanapp.store.StoreException;
+import loanapp.store.StoreService;
+import loanapp.store.ApplicationNotFoundException;
 
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-
-import org.osoa.sca.annotations.Scope;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 
 /**
- * Simple in-memory StoreService that uses a Map for persistence.
+ * Demonstrates using JPA persistence. By default, the persistence context is transaction-scoped. As this component
+ * implementation requires managed transactions, operations will be invoked in the context of a transaction resulting
+ * in persistence context changes being written to the database when the transaction completes.
  *
  * @version $Revision$ $Date$
  */
-@Scope("COMPOSITE")
-public class MemoryStoreComponent implements StoreService {
-    private long counter;
-    private Map<Long, LoanApplication> cache = new ConcurrentHashMap<Long, LoanApplication>();
+public class JPAStore implements StoreService {
+    private EntityManager em;
+
+    @PersistenceContext(name = "loanApplicationEmf", unitName = "loanApplication")
+    public void setEm(EntityManager em) {
+        this.em = em;
+    }
 
     public void save(LoanApplication application) throws StoreException {
-        long id = ++counter;
-        application.setId(id);
-        cache.put(application.getId(), application);
+        em.persist(application);
     }
 
     public void update(LoanApplication application) throws StoreException {
-        cache.put(application.getId(), application);
+        em.merge(application);
     }
 
     public void remove(long id) throws StoreException {
-        cache.remove(id);
+        LoanApplication application = em.find(LoanApplication.class, id);
+        if (application == null) {
+            throw new ApplicationNotFoundException("Loan application not found: " + id);
+        }
+        em.remove(application);
     }
 
     public LoanApplication find(long id) throws StoreException {
-        return cache.get(id);
+        return em.find(LoanApplication.class, id);
     }
 }

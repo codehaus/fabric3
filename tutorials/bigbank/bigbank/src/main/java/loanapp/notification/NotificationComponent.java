@@ -18,7 +18,6 @@
  */
 package loanapp.notification;
 
-import org.osoa.sca.annotations.OneWay;
 import org.osoa.sca.annotations.Scope;
 
 import java.util.Date;
@@ -32,24 +31,24 @@ import java.util.Date;
 @Scope("COMPOSITE")
 public class NotificationComponent implements NotificationService {
 
-    public void approved(String email, String applicationId) {
+    public void approved(String email, long applicationId) {
         System.out.println("NotificationService: Loan has been approved for " + applicationId);
     }
 
-    public void rejected(String email, String applicationId) {
+    public void rejected(String email, long applicationId) {
         System.out.println("NotificationService: Loan has been declined for " + applicationId);
     }
 
-    public void appraisalScheduled(String email, String applicationId, Date date) {
+    public void appraisalScheduled(String email, long applicationId, Date date) {
         System.out.println("NotificationService: Appraisal scheduled for loan application "
                 + applicationId + " on " + date);
     }
 
-    public void appraisalFinished(String email, String applicationId) {
+    public void appraisalFinished(String email, long applicationId) {
         System.out.println("NotificationService: Appraisal finished for loan application " + applicationId);
     }
 
-    public void fundingDateScheduled(String email, String applicationId, Date date) {
+    public void fundingDateScheduled(String email, long applicationId, Date date) {
         System.out.println("NotificationService: Loan funding date scheduled for loan application "
                 + applicationId + " on " + date);
     }

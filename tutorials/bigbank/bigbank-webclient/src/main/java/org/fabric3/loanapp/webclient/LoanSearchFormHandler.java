@@ -52,12 +52,9 @@ public class LoanSearchFormHandler extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         // process the application
         AcceptanceCoordinator coordinator = context.getService(AcceptanceCoordinator.class, "acceptanceCoordinator");
-        String id = req.getParameter("loanId");
         String page;
-        if (id == null) {
-            req.setAttribute("loanError", "No loan id submitted");
-            page = "/error.jsp";
-        } else {
+        try {
+            long id = Long.parseLong(req.getParameter("loanId"));
             try {
                 LoanTerms terms = coordinator.review(id);
                 req.setAttribute("loanTerms", terms);
@@ -71,6 +68,10 @@ public class LoanSearchFormHandler extends HttpServlet {
             } catch (LoanException e) {
                 throw new ServletException(e);
             }
+        } catch (NumberFormatException e) {
+            req.setAttribute("loanError", "No loan id submitted");
+            page = "/error.jsp";
+
         }
         getServletContext().getRequestDispatcher(page).forward(req, resp);
 

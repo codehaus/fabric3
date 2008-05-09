@@ -18,8 +18,8 @@
  */
 package loanapp.risk;
 
-import java.util.List;
 import java.util.Collections;
+import java.util.List;
 
 /**
  * Represents the risk associated with a loan calculated by a RiskAssessmentService.
@@ -30,9 +30,9 @@ public class RiskAssessment {
     public static final int APPROVE = 1;
     public static final int REJECT = -1;
 
-    private final int decision;
-    private final int factor;
-    private final List<String> reasons;
+    private int decision;
+    private int factor;
+    private List<String> reasons;
 
     public RiskAssessment(int decision, int factor, List<String> reasons) {
         this.decision = decision;
@@ -40,15 +40,31 @@ public class RiskAssessment {
         this.reasons = reasons;
     }
 
+    public RiskAssessment() {
+    }
+
     public int getRiskFactor() {
         return factor;
+    }
+
+    public void setRiskFactor(int factor) {
+        this.factor = factor;
     }
 
     public List<String> getReasons() {
         return Collections.unmodifiableList(reasons);
     }
 
+    public void setReasons(List<String> reasons) {
+        this.reasons = reasons;
+    }
+
     public int getDecision() {
         return decision;
     }
+
+    public void setDecision(int decision) {
+        this.decision = decision;
+    }
+
 }

@@ -28,18 +28,18 @@ import java.util.Date;
 public interface NotificationService {
 
     @OneWay
-    void approved(String email, String applicationId);
+    void approved(String email, long applicationId);
 
     @OneWay
-    void rejected(String email, String applicationId);
+    void rejected(String email, long applicationId);
 
     @OneWay
-    void appraisalScheduled(String email, String applicationId, Date date);
+    void appraisalScheduled(String email, long applicationId, Date date);
 
     @OneWay
-    void appraisalFinished(String email, String applicationId);
+    void appraisalFinished(String email, long applicationId);
 
     @OneWay
-    void fundingDateScheduled(String email, String applicationId, Date date);
+    void fundingDateScheduled(String email, long applicationId, Date date);
 
 }

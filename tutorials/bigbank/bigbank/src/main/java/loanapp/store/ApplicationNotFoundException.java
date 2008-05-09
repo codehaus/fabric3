@@ -16,32 +16,15 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package loanapp.appraisal;
-
-import loanapp.message.PropertyLocation;
-import org.osoa.sca.annotations.Callback;
-import org.osoa.sca.annotations.OneWay;
-import org.osoa.sca.annotations.Scope;
-
-import java.util.Date;
+package loanapp.store;
 
 /**
  * @version $Revision$ $Date$
  */
-@Scope("COMPOSITE")
-public class AppraisalComponent implements AppraisalService {
-    private AppraisalCallback callback;
+public class ApplicationNotFoundException extends StoreException {
+    private static final long serialVersionUID = 4416685817482438364L;
 
-    @Callback
-    public void setCallback(AppraisalCallback callback) {
-        this.callback = callback;
-    }
-
-    @OneWay
-    public void appraise(PropertyLocation propertyLocation) {
-        Date date = new Date(System.currentTimeMillis()+ 1000);
-        callback.dateSchedule(date);
-        AppraisalResult result = new AppraisalResult(AppraisalResult.APPROVED, new String[0]);
-        callback.appraisalCompleted(result);
+    public ApplicationNotFoundException(String message) {
+        super(message);
     }
 }

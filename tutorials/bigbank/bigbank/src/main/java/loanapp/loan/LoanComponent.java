@@ -49,7 +49,7 @@ public class LoanComponent implements LoanService {
         this.acceptanceCoordinator = acceptanceCoordinator;
     }
 
-    public String apply(LoanRequest request) throws LoanException {
+    public long apply(LoanRequest request) throws LoanException {
         // validate the loan request
         ValidationResult result = validationService.validateRequest(request);
         if (!result.isValid()) {
@@ -59,7 +59,7 @@ public class LoanComponent implements LoanService {
         return requestCoordinator.start(request);
     }
 
-    public void decline(String id) throws LoanException {
+    public void decline(long id) throws LoanException {
         acceptanceCoordinator.review(id);
         acceptanceCoordinator.decline();
     }

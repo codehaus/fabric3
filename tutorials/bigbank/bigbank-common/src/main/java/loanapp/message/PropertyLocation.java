@@ -28,6 +28,7 @@ public class PropertyLocation implements Serializable {
     private Address address;
     private double value;
 
+
     public Address getAddress() {
         return address;
     }

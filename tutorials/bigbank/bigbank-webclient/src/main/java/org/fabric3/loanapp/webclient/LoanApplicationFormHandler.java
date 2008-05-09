@@ -53,7 +53,7 @@ public class LoanApplicationFormHandler extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         // process the application
         RequestCoordinator coordinator = context.getService(RequestCoordinator.class, "requestCoordinator");
-        String id = (String) req.getSession().getAttribute("loanId");
+        Long id = (Long) req.getSession().getAttribute("loanId");
         String page;
         if (id != null && LoanStatus.NOT_SUBMITTED != coordinator.getStatus(id)) {
             req.setAttribute("loanError", "A loan application has already been submitted");

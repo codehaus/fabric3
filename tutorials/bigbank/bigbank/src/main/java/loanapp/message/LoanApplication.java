@@ -16,11 +16,12 @@
  */
 package loanapp.message;
 
-import loanapp.risk.RiskAssessment;
 import loanapp.credit.CreditScore;
+import loanapp.risk.RiskAssessment;
 
-import java.io.Serializable;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.persistence.*;
+import java.io.Serializable;
 
 /**
  * Encapsulates loan application data. Contained data is built up as the application progresses through the loan
@@ -29,27 +30,48 @@ import javax.xml.bind.annotation.XmlRootElement;
  * @version $Rev$ $Date$
  */
 @XmlRootElement
+@Entity
 public class LoanApplication implements Serializable {
     private static final long serialVersionUID = -1205831596861744741L;
-    private String id;
+    private long id;
+    private long version;
     private long expiration;
     private int status;
     private String ssn;
     private String email;
     private double amount;
     private double downPayment;
-    private PropertyLocation propertyLocation;
-    private RiskAssessment riskAssessment;
-    private LoanTerms terms;
-    private CreditScore creditScore;
+    private transient PropertyLocation propertyLocation;
+    private transient RiskAssessment riskAssessment;
+    private transient LoanTerms terms;
+    private transient CreditScore creditScore;
 
 
-    public String getId() {
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    public long getId() {
         return id;
     }
 
-    public void setId(String id) {
+    public void setId(long id) {
         this.id = id;
+    }
+
+    @Version
+    public long getVersion() {
+        return version;
+    }
+
+    public void setVersion(long version) {
+        this.version = version;
+    }
+
+    public String getSsn() {
+        return ssn;
+    }
+
+    public void setSsn(String ssn) {
+        this.ssn = ssn;
     }
 
     /**
@@ -70,23 +92,6 @@ public class LoanApplication implements Serializable {
         this.status = status;
     }
 
-    /**
-     * Sets the applicant's Social Security Number
-     *
-     * @param ssn the applicant's SSN;
-     */
-    public void setSSN(String ssn) {
-        this.ssn = ssn;
-    }
-
-    /**
-     * Returns the applicant's Social Security Number
-     *
-     * @return the applicant's SSN;
-     */
-    public String getSSN() {
-        return ssn;
-    }
 
     public String getEmail() {
         return email;
@@ -96,6 +101,7 @@ public class LoanApplication implements Serializable {
         this.email = email;
     }
 
+    @Transient
     public PropertyLocation getPropertyLocation() {
         return propertyLocation;
     }
@@ -145,6 +151,7 @@ public class LoanApplication implements Serializable {
      *
      * @return the applicant's credit score
      */
+    @Transient
     public CreditScore getCreditScore() {
         return creditScore;
     }
@@ -163,6 +170,7 @@ public class LoanApplication implements Serializable {
      *
      * @return the applicant's risk assesment
      */
+    @Transient
     public RiskAssessment getRiskAssessment() {
         return riskAssessment;
     }
@@ -189,6 +197,7 @@ public class LoanApplication implements Serializable {
         this.terms = terms;
     }
 
+    @Transient
     public LoanTerms getTerms() {
         return terms;
     }
