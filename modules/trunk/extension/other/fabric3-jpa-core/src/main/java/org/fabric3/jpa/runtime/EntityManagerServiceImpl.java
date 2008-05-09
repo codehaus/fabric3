@@ -33,6 +33,8 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.ConversationExpirationCallback;
+import org.fabric3.spi.component.ScopeRegistry;
+import org.fabric3.scdl.Scope;
 
 /**
  * Implementation that manages a cache of EntityManagers.
@@ -42,18 +44,16 @@ import org.fabric3.spi.component.ConversationExpirationCallback;
 public class EntityManagerServiceImpl implements EntityManagerService {
     public static final Object JOINED = new Object();
     private Map<Object, EntityManager> cache = new ConcurrentHashMap<Object, EntityManager>();
-    // tracks which transactions have joined entity managers
+    // tracks which entity managers have joined transactions
     private Map<Transaction, Object> joinedTransaction = new ConcurrentHashMap<Transaction, Object>();
     private EmfCache emfCache;
     private TransactionManager tm;
     private ScopeContainer<Conversation> scopeContainer;
 
-    public EntityManagerServiceImpl(@Reference EmfCache emfCache,
-                                    @Reference TransactionManager tm,
-                                    @Reference ScopeContainer<Conversation> scopeContainer) {
+    public EntityManagerServiceImpl(@Reference EmfCache emfCache, @Reference TransactionManager tm, @Reference ScopeRegistry registry) {
         this.emfCache = emfCache;
         this.tm = tm;
-        this.scopeContainer = scopeContainer;
+        this.scopeContainer = registry.getScopeContainer(Scope.CONVERSATION);
     }
 
     public EntityManager getEntityManager(String unitName, EntityManagerProxy proxy, Transaction transaction) throws EntityManagerCreationException {

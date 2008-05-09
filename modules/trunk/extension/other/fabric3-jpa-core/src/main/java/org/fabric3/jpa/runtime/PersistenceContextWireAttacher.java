@@ -61,10 +61,10 @@ public class PersistenceContextWireAttacher implements TargetWireAttacher<Persis
         this.tm = tm;
     }
 
-    public ObjectFactory<?> createObjectFactory(PersistenceContextWireTargetDefinition target) throws WiringException {
-        String unitName = target.getUnitName();
-        boolean extended = target.isExtended();
-        URI classLoaderUri = target.getClassLoaderUri();
+    public ObjectFactory<?> createObjectFactory(PersistenceContextWireTargetDefinition definition) throws WiringException {
+        String unitName = definition.getUnitName();
+        boolean extended = definition.isExtended();
+        URI classLoaderUri = definition.getClassLoaderUri();
         ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
         try {
             // get the classloader for the entity manager factory
@@ -72,7 +72,11 @@ public class PersistenceContextWireAttacher implements TargetWireAttacher<Persis
             Thread.currentThread().setContextClassLoader(appCl);
             // eagerly build the the EntityManagerFactory
             emfBuilder.build(unitName, appCl);
-            return new StatefulEntityManagerProxyFactory(unitName, extended, emService, tm);
+            if (definition.isMultiThreaded()) {
+                return new MultiThreadedEntityManagerProxyFactory(unitName, extended, emService, tm);
+            } else {
+                return new StatefulEntityManagerProxyFactory(unitName, extended, emService, tm);
+            }
         } catch (EmfBuilderException e) {
             throw new WiringException(e);
         } finally {

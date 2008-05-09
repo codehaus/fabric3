@@ -37,6 +37,7 @@ import org.fabric3.scdl.FieldInjectionSite;
 import org.fabric3.scdl.Implementation;
 import org.fabric3.scdl.InjectingComponentType;
 import org.fabric3.scdl.MethodInjectionSite;
+import org.fabric3.scdl.Scope;
 import org.fabric3.scdl.ServiceContract;
 
 /**
@@ -55,21 +56,24 @@ public class PersistenceContextProcessor<I extends Implementation<? extends Inje
 
     public void visitField(PersistenceContext annotation, Field field, I implementation, IntrospectionContext context) throws IntrospectionException {
         FieldInjectionSite site = new FieldInjectionSite(field);
-        PersistenceContextResource definition = createDefinition(annotation);
-        implementation.getComponentType().add(definition, site);
+        InjectingComponentType componentType = implementation.getComponentType();
+        PersistenceContextResource definition = createDefinition(annotation, componentType);
+        componentType.add(definition, site);
     }
 
     public void visitMethod(PersistenceContext annotation, Method method, I implementation, IntrospectionContext context)
             throws IntrospectionException {
         MethodInjectionSite site = new MethodInjectionSite(method, 0);
-        PersistenceContextResource definition = createDefinition(annotation);
-        implementation.getComponentType().add(definition, site);
+        InjectingComponentType componentType = implementation.getComponentType();
+        PersistenceContextResource definition = createDefinition(annotation, componentType);
+        componentType.add(definition, site);
     }
 
-    private PersistenceContextResource createDefinition(PersistenceContext annotation) {
+    private PersistenceContextResource createDefinition(PersistenceContext annotation, InjectingComponentType componentType) {
         String name = annotation.name();
         String unitName = annotation.unitName();
         PersistenceContextType type = annotation.type();
-        return new PersistenceContextResource(name, unitName, type, factoryServiceContract);
+        boolean multiThreaded = Scope.COMPOSITE.getScope().equals(componentType.getScope());
+        return new PersistenceContextResource(name, unitName, type, factoryServiceContract, multiThreaded);
     }
 }

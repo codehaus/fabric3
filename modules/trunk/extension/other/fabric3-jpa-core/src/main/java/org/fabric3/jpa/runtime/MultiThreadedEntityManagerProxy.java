@@ -164,7 +164,6 @@ public class MultiThreadedEntityManagerProxy implements EntityManagerProxy {
                 throw new IllegalStateException("No conversational context associated with the current thread");
             }
             try {
-                // TODO FIXME need to handle joinsTransaction properly
                 return emService.getEntityManager(unitName, this, conversation);
             } catch (EntityManagerCreationException e) {
                 throw new ServiceRuntimeException(e);

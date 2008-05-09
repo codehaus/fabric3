@@ -31,7 +31,7 @@ public class PersistenceContextWireTargetDefinition extends PhysicalWireTargetDe
     private String unitName;
     private boolean extended;
     private URI classLoaderUri;
-    private boolean caching = true;
+    private boolean multiThreaded = true;
 
     /**
      * @return The persistence unit name.
@@ -61,12 +61,12 @@ public class PersistenceContextWireTargetDefinition extends PhysicalWireTargetDe
         this.classLoaderUri = classLoaderUri;
     }
 
-    public boolean isCaching() {
-        return caching;
+    public boolean isMultiThreaded() {
+        return multiThreaded;
     }
 
-    public void setCaching(boolean caching) {
-        this.caching = caching;
+    public void setMultiThreaded(boolean multiThreaded) {
+        this.multiThreaded = multiThreaded;
     }
 
     public boolean isExtended() {
