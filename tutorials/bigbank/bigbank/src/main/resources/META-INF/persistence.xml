@@ -27,6 +27,9 @@
         <!--<mapping-file>META-INF/mappings.xml</mapping-file>-->
         <class>loanapp.message.LoanApplication</class>
         <class>loanapp.message.PropertyInfo</class>
+        <class>loanapp.credit.CreditScore</class>
+        <class>loanapp.risk.RiskAssessment</class>
+        <class>loanapp.risk.RiskReason</class>
         <properties>
             <property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect"/>
             <property name="hibernate.transaction.manager_lookup_class"

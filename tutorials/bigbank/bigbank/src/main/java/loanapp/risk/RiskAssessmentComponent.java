@@ -47,17 +47,17 @@ public class RiskAssessmentComponent implements RiskAssessmentService {
         int score = application.getCreditScore().getScore();
         int factor = 0;
         int decision;
-        List<String> reasons = new ArrayList<String>();
+        List<RiskReason> reasons = new ArrayList<RiskReason>();
         if (score < 700) {
             factor += 10;
-            reasons.add("Poor credit history");
+            reasons.add(new RiskReason("Poor credit history"));
         }
         double ratio = application.getDownPayment() / application.getAmount();
         if (ratio < ratioMinimum) {
             // less than a minimum percentage down, so assign it the highest risk
             factor += 15;
-            reasons.add("Downpayment was too little");
-            reasons.add("Suspect credit history");
+            reasons.add(new RiskReason("Downpayment was too little"));
+            reasons.add(new RiskReason("Suspect credit history"));
         }
         if (factor > 24) {
             decision = RiskAssessment.REJECT;

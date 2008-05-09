@@ -18,6 +18,8 @@
  */
 package loanapp.risk;
 
+import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Collections;
 import java.util.List;
 
@@ -26,21 +28,43 @@ import java.util.List;
  *
  * @version $Revision$ $Date$
  */
-public class RiskAssessment {
+@Entity
+public class RiskAssessment implements Serializable {
+    private static final long serialVersionUID = 1427555176373119897L;
     public static final int APPROVE = 1;
     public static final int REJECT = -1;
-
+    private long id;
+    private long version;
     private int decision;
     private int factor;
-    private List<String> reasons;
+    private List<RiskReason> reasons;
 
-    public RiskAssessment(int decision, int factor, List<String> reasons) {
+    public RiskAssessment(int decision, int factor, List<RiskReason> reasons) {
         this.decision = decision;
         this.factor = factor;
         this.reasons = reasons;
     }
 
     public RiskAssessment() {
+    }
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    @Version
+    public long getVersion() {
+        return version;
+    }
+
+    public void setVersion(long version) {
+        this.version = version;
     }
 
     public int getRiskFactor() {
@@ -51,20 +75,21 @@ public class RiskAssessment {
         this.factor = factor;
     }
 
-    public List<String> getReasons() {
-        return Collections.unmodifiableList(reasons);
-    }
-
-    public void setReasons(List<String> reasons) {
-        this.reasons = reasons;
-    }
-
     public int getDecision() {
         return decision;
     }
 
     public void setDecision(int decision) {
         this.decision = decision;
+    }
+
+    @OneToMany(cascade = CascadeType.ALL)
+    public List<RiskReason> getReasons() {
+        return Collections.unmodifiableList(reasons);
+    }
+
+    public void setReasons(List<RiskReason> reasons) {
+        this.reasons = reasons;
     }
 
 }

@@ -101,15 +101,6 @@ public class LoanApplication implements Serializable {
         this.email = email;
     }
 
-    @OneToOne(cascade = CascadeType.ALL)
-    public PropertyInfo getPropertyInfo() {
-        return propertyInfo;
-    }
-
-    public void setPropertyInfo(PropertyInfo propertyInfo) {
-        this.propertyInfo = propertyInfo;
-    }
-
     /**
      * Returns the loan amount.
      *
@@ -146,12 +137,21 @@ public class LoanApplication implements Serializable {
         this.downPayment = downPayment;
     }
 
+    @OneToOne(cascade = CascadeType.ALL)
+    public PropertyInfo getPropertyInfo() {
+        return propertyInfo;
+    }
+
+    public void setPropertyInfo(PropertyInfo propertyInfo) {
+        this.propertyInfo = propertyInfo;
+    }
+
     /**
      * Returns the applicant's credit score
      *
      * @return the applicant's credit score
      */
-    @Transient
+    @OneToOne(cascade = CascadeType.ALL)
     public CreditScore getCreditScore() {
         return creditScore;
     }
@@ -170,7 +170,7 @@ public class LoanApplication implements Serializable {
      *
      * @return the applicant's risk assesment
      */
-    @Transient
+    @OneToOne(cascade = CascadeType.ALL)
     public RiskAssessment getRiskAssessment() {
         return riskAssessment;
     }

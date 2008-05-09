@@ -18,6 +18,7 @@
  */
 package loanapp.credit;
 
+import javax.persistence.*;
 import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 
@@ -25,22 +26,45 @@ import java.io.Serializable;
  * @version $Revision$ $Date$
  */
 @XmlRootElement
+@Entity
 public class CreditScore implements Serializable {
     private static final long serialVersionUID = -452032042185332788L;
+    private long id;
+    private long version;
     private int score;
-    private int[] reasons;
 
-    public CreditScore(int score, int[] reasons) {
+    public CreditScore() {
+    }
+
+    public CreditScore(int score) {
         this.score = score;
-        this.reasons = reasons;
+    }
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    @Version
+    public long getVersion() {
+        return version;
+    }
+
+    public void setVersion(long version) {
+        this.version = version;
     }
 
     public int getScore() {
         return score;
     }
 
-    public int[] getReasons() {
-        return reasons;
+    public void setScore(int score) {
+        this.score = score;
     }
 
 }
