@@ -31,7 +31,7 @@ public class LoanRequest implements Serializable {
     private String email;
     private double amount;
     private double downPayment;
-    private PropertyLocation propertyLocation;
+    private Address propertyLocation;
 
     public String getSSN() {
         return ssn;
@@ -49,11 +49,11 @@ public class LoanRequest implements Serializable {
         this.email = email;
     }
 
-    public PropertyLocation getPropertyLocation() {
+    public Address getPropertyAddress() {
         return propertyLocation;
     }
 
-    public void setPropertyLocation(PropertyLocation location) {
+    public void setPropertyAddress(Address location) {
         this.propertyLocation = location;
     }
 

@@ -22,10 +22,7 @@ import loanapp.credit.CreditScore;
 import loanapp.credit.CreditService;
 import loanapp.credit.CreditServiceCallback;
 import loanapp.loan.LoanException;
-import loanapp.message.LoanApplication;
-import loanapp.message.LoanRequest;
-import loanapp.message.LoanStatus;
-import loanapp.message.LoanTerms;
+import loanapp.message.*;
 import loanapp.notification.NotificationService;
 import loanapp.pricing.PricingService;
 import loanapp.risk.RiskAssessment;
@@ -94,7 +91,9 @@ public class RequestCoordinatorImpl implements RequestCoordinator, CreditService
         application.setEmail(request.getEmail());
         application.setAmount(request.getAmount());
         application.setDownPayment(request.getDownPayment());
-        application.setPropertyLocation(request.getPropertyLocation());
+        PropertyInfo info = new PropertyInfo();
+        info.setAddress(request.getPropertyAddress());
+        application.setPropertyInfo(info);
         application.setStatus(LoanStatus.SUBMITTED);
         try {
             storeService.save(application);

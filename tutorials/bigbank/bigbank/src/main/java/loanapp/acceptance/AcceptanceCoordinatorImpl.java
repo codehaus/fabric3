@@ -83,7 +83,7 @@ public class AcceptanceCoordinatorImpl implements AcceptanceCoordinator, Apprais
             throw new LoanException(e);
         }
         // TODO lock loan
-        appraisalService.appraise(application.getPropertyLocation());
+        appraisalService.appraise(application.getPropertyInfo());
     }
 
     public void decline() throws LoanException {

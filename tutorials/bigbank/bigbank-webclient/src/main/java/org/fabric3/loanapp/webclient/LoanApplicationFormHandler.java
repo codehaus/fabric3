@@ -20,7 +20,6 @@ import loanapp.loan.LoanException;
 import loanapp.message.Address;
 import loanapp.message.LoanRequest;
 import loanapp.message.LoanStatus;
-import loanapp.message.PropertyLocation;
 import loanapp.request.RequestCoordinator;
 import loanapp.validation.ValidationService;
 import org.osoa.sca.ComponentContext;
@@ -78,20 +77,18 @@ public class LoanApplicationFormHandler extends HttpServlet {
         request.setEmail(req.getParameter("email"));
         request.setAmount(Double.valueOf(req.getParameter("amount")));
         request.setDownPayment(Double.valueOf(req.getParameter("down")));
-        request.setPropertyLocation(populateLocation(req));
+        request.setPropertyAddress(populateLocation(req));
         return request;
     }
 
-    private PropertyLocation populateLocation(HttpServletRequest req) {
+    private Address populateLocation(HttpServletRequest req) {
         // TODO handle invalid zip
-        PropertyLocation location = new PropertyLocation();
         Address address = new Address();
         address.setStreet(req.getParameter("street"));
         address.setCity(req.getParameter("city"));
         address.setState(req.getParameter("state"));
         // address.setZip(Integer.parseInt(req.getParameter("zip")));
-        location.setAddress(address);
-        return null;
+        return address;
     }
 
 }

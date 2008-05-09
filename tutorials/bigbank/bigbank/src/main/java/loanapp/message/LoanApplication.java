@@ -41,7 +41,7 @@ public class LoanApplication implements Serializable {
     private String email;
     private double amount;
     private double downPayment;
-    private transient PropertyLocation propertyLocation;
+    private transient PropertyInfo propertyInfo;
     private transient RiskAssessment riskAssessment;
     private transient LoanTerms terms;
     private transient CreditScore creditScore;
@@ -102,12 +102,12 @@ public class LoanApplication implements Serializable {
     }
 
     @Transient
-    public PropertyLocation getPropertyLocation() {
-        return propertyLocation;
+    public PropertyInfo getPropertyInfo() {
+        return propertyInfo;
     }
 
-    public void setPropertyLocation(PropertyLocation location) {
-        this.propertyLocation = location;
+    public void setPropertyInfo(PropertyInfo propertyInfo) {
+        this.propertyInfo = propertyInfo;
     }
 
     /**

@@ -23,7 +23,7 @@ import java.io.Serializable;
 /**
  * @version $Revision$ $Date$
  */
-public class PropertyLocation implements Serializable {
+public class PropertyInfo implements Serializable {
     private static final long serialVersionUID = 352188795118067210L;
     private Address address;
     private double value;
