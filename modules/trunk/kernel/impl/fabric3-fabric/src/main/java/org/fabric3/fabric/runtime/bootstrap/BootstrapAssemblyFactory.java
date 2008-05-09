@@ -53,7 +53,7 @@ import org.fabric3.fabric.generator.classloader.ClassLoaderGenerator;
 import org.fabric3.fabric.generator.classloader.ClassLoaderGeneratorImpl;
 import org.fabric3.fabric.generator.classloader.ClassloaderProvisionCommandGenerator;
 import org.fabric3.fabric.generator.component.ComponentBuildCommandGenerator;
-import org.fabric3.fabric.generator.component.ComponentStartCommandGenerator;
+import org.fabric3.fabric.generator.component.StartComponentCommandGenerator;
 import org.fabric3.fabric.generator.component.InitializeComponentCommandGenerator;
 import org.fabric3.fabric.generator.component.StartCompositeContextCommandGenerator;
 import org.fabric3.fabric.generator.wire.LocalWireCommandGenerator;
@@ -305,7 +305,7 @@ public class BootstrapAssemblyFactory {
         commandGenerators.add(new LocalWireCommandGenerator(wireGenerator, logicalComponentManager, 2));
         commandGenerators.add(new ServiceWireCommandGenerator(wireGenerator, 2));
         commandGenerators.add(new ResourceWireCommandGenerator(wireGenerator, 2));
-        commandGenerators.add(new ComponentStartCommandGenerator(3));
+        commandGenerators.add(new StartComponentCommandGenerator(3));
         commandGenerators.add(new StartCompositeContextCommandGenerator(4));
         commandGenerators.add(new InitializeComponentCommandGenerator(5));
         return new PhysicalModelGeneratorImpl(commandGenerators);

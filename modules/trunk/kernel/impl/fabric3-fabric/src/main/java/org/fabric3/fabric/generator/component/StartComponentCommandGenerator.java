@@ -31,10 +31,10 @@ import org.fabric3.spi.model.instance.LogicalCompositeComponent;
  *
  * @version $Revision$ $Date$
  */
-public class ComponentStartCommandGenerator implements AddCommandGenerator {
+public class StartComponentCommandGenerator implements AddCommandGenerator {
     private final int order;
 
-    public ComponentStartCommandGenerator(@Property(name = "order")int order) {
+    public StartComponentCommandGenerator(@Property(name = "order")int order) {
         this.order = order;
     }
 

@@ -117,7 +117,7 @@
     </component>
 
     <component name="componentStartCommandGenerator">
-        <system:implementation.system class="org.fabric3.fabric.generator.component.ComponentStartCommandGenerator"/>
+        <system:implementation.system class="org.fabric3.fabric.generator.component.StartComponentCommandGenerator"/>
         <property name="order">3</property>
     </component>
 
