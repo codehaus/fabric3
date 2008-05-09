@@ -100,7 +100,7 @@ import org.fabric3.spi.builder.component.SourceWireAttacher;
 import org.fabric3.spi.builder.component.TargetWireAttacher;
 import org.fabric3.spi.executor.CommandExecutorRegistry;
 import org.fabric3.spi.component.ScopeRegistry;
-import org.fabric3.spi.generator.CommandGenerator;
+import org.fabric3.spi.generator.AddCommandGenerator;
 import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
@@ -299,7 +299,7 @@ public class BootstrapAssemblyFactory {
 
         ClassLoaderGenerator classLoaderGenerator = new ClassLoaderGeneratorImpl(metaDataStore);
 
-        List<CommandGenerator> commandGenerators = new ArrayList<CommandGenerator>();
+        List<AddCommandGenerator> commandGenerators = new ArrayList<AddCommandGenerator>();
         commandGenerators.add(new ClassloaderProvisionCommandGenerator(classLoaderGenerator, 0));
         commandGenerators.add(new ComponentBuildCommandGenerator(generatorRegistry, 1));
         commandGenerators.add(new LocalWireCommandGenerator(wireGenerator, logicalComponentManager, 2));

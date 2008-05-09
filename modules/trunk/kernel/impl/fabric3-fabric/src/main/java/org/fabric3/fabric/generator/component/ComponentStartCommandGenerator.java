@@ -21,7 +21,7 @@ package org.fabric3.fabric.generator.component;
 import org.osoa.sca.annotations.Property;
 
 import org.fabric3.fabric.command.ComponentStartCommand;
-import org.fabric3.spi.generator.CommandGenerator;
+import org.fabric3.spi.generator.AddCommandGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
@@ -31,7 +31,7 @@ import org.fabric3.spi.model.instance.LogicalCompositeComponent;
  *
  * @version $Revision$ $Date$
  */
-public class ComponentStartCommandGenerator implements CommandGenerator {
+public class ComponentStartCommandGenerator implements AddCommandGenerator {
     private final int order;
 
     public ComponentStartCommandGenerator(@Property(name = "order")int order) {

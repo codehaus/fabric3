@@ -22,7 +22,7 @@ import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.fabric.command.WireAttachCommand;
-import org.fabric3.spi.generator.CommandGenerator;
+import org.fabric3.spi.generator.AddCommandGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
@@ -34,7 +34,7 @@ import org.fabric3.spi.model.physical.PhysicalWireDefinition;
  *
  * @version $Revision$ $Date$
  */
-public class ResourceWireCommandGenerator implements CommandGenerator {
+public class ResourceWireCommandGenerator implements AddCommandGenerator {
 
     private final PhysicalWireGenerator physicalWireGenerator;
     private final int order;

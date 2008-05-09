@@ -20,7 +20,7 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Property;
 
 import org.fabric3.fabric.command.StartCompositeContextCommand;
-import org.fabric3.spi.generator.CommandGenerator;
+import org.fabric3.spi.generator.AddCommandGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
@@ -31,7 +31,7 @@ import org.fabric3.spi.model.instance.LogicalCompositeComponent;
  * @version $Rev$ $Date$
  */
 @EagerInit
-public class StartCompositeContextCommandGenerator implements CommandGenerator {
+public class StartCompositeContextCommandGenerator implements AddCommandGenerator {
     private final int order;
 
     public StartCompositeContextCommandGenerator(@Property(name = "order")int order) {

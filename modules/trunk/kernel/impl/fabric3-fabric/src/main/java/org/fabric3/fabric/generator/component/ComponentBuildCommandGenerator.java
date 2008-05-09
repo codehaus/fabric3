@@ -24,7 +24,7 @@ import org.osoa.sca.annotations.Reference;
 import org.fabric3.fabric.command.ComponentBuildCommand;
 import org.fabric3.fabric.implementation.singleton.SingletonImplementation;
 import org.fabric3.scdl.Implementation;
-import org.fabric3.spi.generator.CommandGenerator;
+import org.fabric3.spi.generator.AddCommandGenerator;
 import org.fabric3.spi.generator.ComponentGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.generator.GeneratorRegistry;
@@ -38,7 +38,7 @@ import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
  *
  * @version $Revision$ $Date$
  */
-public class ComponentBuildCommandGenerator implements CommandGenerator {
+public class ComponentBuildCommandGenerator implements AddCommandGenerator {
 
     private final GeneratorRegistry generatorRegistry;
     private final int order;

@@ -26,7 +26,7 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.spi.command.Command;
-import org.fabric3.spi.generator.CommandGenerator;
+import org.fabric3.spi.generator.AddCommandGenerator;
 import org.fabric3.spi.generator.CommandMap;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.LogicalComponent;
@@ -48,9 +48,9 @@ public class PhysicalModelGeneratorImpl implements PhysicalModelGenerator {
         }
     };
 
-    private final List<CommandGenerator> commandGenerators;
+    private final List<AddCommandGenerator> commandGenerators;
 
-    public PhysicalModelGeneratorImpl(@Reference(name = "commandGenerators")List<CommandGenerator> commandGenerators) {
+    public PhysicalModelGeneratorImpl(@Reference(name = "commandGenerators")List<AddCommandGenerator> commandGenerators) {
         // sort the command generators
         this.commandGenerators = sort(commandGenerators);
     }
@@ -59,7 +59,7 @@ public class PhysicalModelGeneratorImpl implements PhysicalModelGenerator {
         Collection<LogicalComponent<?>> sorted = topologicalSort(components);
 
         CommandMap commandMap = new CommandMap();
-        for (CommandGenerator generator : commandGenerators) {
+        for (AddCommandGenerator generator : commandGenerators) {
             for (LogicalComponent<?> component : sorted) {
                 Command command = generator.generate(component);
                 if (command != null) {
@@ -107,14 +107,14 @@ public class PhysicalModelGeneratorImpl implements PhysicalModelGenerator {
 
     }
 
-    private List<CommandGenerator> sort(List<CommandGenerator> commandGenerators) {
-        Comparator<CommandGenerator> generatorComparator = new Comparator<CommandGenerator>() {
+    private List<AddCommandGenerator> sort(List<AddCommandGenerator> commandGenerators) {
+        Comparator<AddCommandGenerator> generatorComparator = new Comparator<AddCommandGenerator>() {
 
-            public int compare(CommandGenerator first, CommandGenerator second) {
+            public int compare(AddCommandGenerator first, AddCommandGenerator second) {
                 return first.getOrder() - second.getOrder();
             }
         };
-        List<CommandGenerator> sorted = new ArrayList<CommandGenerator>(commandGenerators);
+        List<AddCommandGenerator> sorted = new ArrayList<AddCommandGenerator>(commandGenerators);
         Collections.sort(sorted, generatorComparator);
         return sorted;
     }

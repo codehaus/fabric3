@@ -22,7 +22,7 @@ import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.fabric.command.ClassloaderProvisionCommand;
-import org.fabric3.spi.generator.CommandGenerator;
+import org.fabric3.spi.generator.AddCommandGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.physical.PhysicalClassLoaderDefinition;
@@ -30,7 +30,7 @@ import org.fabric3.spi.model.physical.PhysicalClassLoaderDefinition;
 /**
  * @version $Revision$ $Date$
  */
-public class ClassloaderProvisionCommandGenerator implements CommandGenerator {
+public class ClassloaderProvisionCommandGenerator implements AddCommandGenerator {
     private final ClassLoaderGenerator classLoaderGenerator;
     private final int order;
 

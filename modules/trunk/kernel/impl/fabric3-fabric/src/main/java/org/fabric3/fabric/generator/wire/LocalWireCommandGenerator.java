@@ -25,7 +25,7 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.fabric.command.WireAttachCommand;
 import org.fabric3.scdl.CompositeImplementation;
-import org.fabric3.spi.generator.CommandGenerator;
+import org.fabric3.spi.generator.AddCommandGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
@@ -41,7 +41,7 @@ import org.fabric3.spi.util.UriHelper;
  *
  * @version $Revision$ $Date$
  */
-public class LocalWireCommandGenerator implements CommandGenerator {
+public class LocalWireCommandGenerator implements AddCommandGenerator {
 
     private final PhysicalWireGenerator physicalWireGenerator;
     private final LogicalComponentManager logicalComponentManager;

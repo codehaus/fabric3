@@ -23,7 +23,7 @@ import org.osoa.sca.annotations.Property;
 
 import org.fabric3.fabric.command.ComponentInitializationUri;
 import org.fabric3.fabric.command.InitializeComponentCommand;
-import org.fabric3.spi.generator.CommandGenerator;
+import org.fabric3.spi.generator.AddCommandGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
@@ -34,7 +34,7 @@ import org.fabric3.spi.model.instance.LogicalCompositeComponent;
  * @version $Rev: 2767 $ $Date: 2008-02-15 13:29:02 +0000 (Fri, 15 Feb 2008) $
  */
 @EagerInit
-public class InitializeComponentCommandGenerator implements CommandGenerator {
+public class InitializeComponentCommandGenerator implements AddCommandGenerator {
     private final int order;
 
     public InitializeComponentCommandGenerator(@Property(name = "order")int order) {
