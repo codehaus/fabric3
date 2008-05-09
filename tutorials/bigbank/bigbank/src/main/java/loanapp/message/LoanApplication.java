@@ -101,7 +101,7 @@ public class LoanApplication implements Serializable {
         this.email = email;
     }
 
-    @Transient
+    @OneToOne(cascade = CascadeType.ALL)
     public PropertyInfo getPropertyInfo() {
         return propertyInfo;
     }

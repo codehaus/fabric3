@@ -18,15 +18,38 @@
  */
 package loanapp.message;
 
+import javax.persistence.*;
 import java.io.Serializable;
 
 /**
  * @version $Revision$ $Date$
  */
+@Entity
 public class PropertyInfo implements Serializable {
-    private static final long serialVersionUID = 352188795118067210L;
+    private static final long serialVersionUID = -372091544226598099L;
+    private long id;
+    private long version;
     private Address address;
     private double value;
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    public long getId() {
+        return id;
+    }
+
+    public void setId(long id) {
+        this.id = id;
+    }
+
+    @Version
+    public long getVersion() {
+        return version;
+    }
+
+    public void setVersion(long version) {
+        this.version = version;
+    }
 
 
     public Address getAddress() {
