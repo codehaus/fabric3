@@ -1,6 +1,8 @@
 /*
- * See the NOTICE file distributed with this work for information
- * regarding copyright ownership.  This file is licensed
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
@@ -16,18 +18,23 @@
  */
 package org.fabric3.jpa.service;
 
-import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContextType;
+
+import org.osoa.sca.annotations.Scope;
+import org.osoa.sca.annotations.EndsConversation;
 
 import org.fabric3.jpa.model.Employee;
 
 /**
  * @version $Revision$ $Date$
  */
-public class EmployeeServiceImpl implements EmployeeService {
+@Scope("CONVERSATION")
+public class ConversationEmployeeServiceImpl implements ConversationEmployeeService {
     private EntityManager em;
 
-    @PersistenceContext(name = "employeeEmf", unitName = "employee")
+    @PersistenceContext(name = "employeeEmf", unitName = "employee", type = PersistenceContextType.EXTENDED)
     public void setEntityManager(EntityManager em) {
         this.em = em;
     }
@@ -39,8 +46,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     public Employee findEmployee(Long id) {
-        Employee e = em.find(Employee.class, id);
-        return e;
+        return em.find(Employee.class, id);
     }
 
     public void removeEmployee(Long id) {
@@ -48,4 +54,13 @@ public class EmployeeServiceImpl implements EmployeeService {
         em.remove(employee);
     }
 
+
+    public Employee updateEmployee(Employee employee) {
+        return em.merge(employee);
+    }
+
+    @EndsConversation
+    public void end() {
+        // no-op
+    }
 }

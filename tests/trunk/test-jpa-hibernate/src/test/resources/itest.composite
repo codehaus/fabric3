@@ -19,16 +19,32 @@
            xmlns:sca="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
            name="JpaTestComposite">
-    
+
     <!-- Unit test -->
-    <component name="org.fabric3.jpa.service.EmployeeServiceImplTest">
+    <component name="EmployeeServiceImplTest">
         <f3:junit class="org.fabric3.jpa.service.EmployeeServiceImplTest"/>
-        <reference name="employeeService" target="org.fabric3.jpa.service.EmployeeServiceImpl"/>
+        <reference name="employeeService" target="EmployeeService"/>
+        <reference name="employeeEMFService" target="EmployeeEMFService"/>
+        <reference name="employeeMultiThreadedService" target="EmployeeMultiThreadedService"/>
+        <reference name="conversationEmployeeService" target="ConversationEmployeeService"/>
     </component>
 
     <!-- Employee Service -->
-    <component name="org.fabric3.jpa.service.EmployeeServiceImpl" requires="sca:managedTransaction">
+
+    <component name="EmployeeService" requires="sca:managedTransaction">
         <implementation.java class="org.fabric3.jpa.service.EmployeeServiceImpl"/>
     </component>
-    
+
+    <component name="EmployeeEMFService" requires="sca:managedTransaction">
+        <implementation.java class="org.fabric3.jpa.service.EmployeeServiceEMFImpl"/>
+    </component>
+
+    <component name="EmployeeMultiThreadedService" requires="sca:managedTransaction">
+        <implementation.java class="org.fabric3.jpa.service.EmployeeServiceEMFImpl"/>
+    </component>
+
+    <component name="ConversationEmployeeService" requires="sca:managedTransaction">
+        <implementation.java class="org.fabric3.jpa.service.ConversationEmployeeServiceImpl"/>
+    </component>
+
 </composite>

@@ -19,12 +19,18 @@ package org.fabric3.jpa.service;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
+import org.osoa.sca.annotations.Scope;
+
 import org.fabric3.jpa.model.Employee;
 
 /**
+ * Exercises multi-threaded EntityManager operation
+ *
  * @version $Revision$ $Date$
  */
-public class EmployeeServiceImpl implements EmployeeService {
+@Scope("COMPOSITE")
+public class MultiThreadedEmployeeServiceImpl implements EmployeeService {
+
     private EntityManager em;
 
     @PersistenceContext(name = "employeeEmf", unitName = "employee")
@@ -39,8 +45,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     public Employee findEmployee(Long id) {
-        Employee e = em.find(Employee.class, id);
-        return e;
+        return em.find(Employee.class, id);
     }
 
     public void removeEmployee(Long id) {

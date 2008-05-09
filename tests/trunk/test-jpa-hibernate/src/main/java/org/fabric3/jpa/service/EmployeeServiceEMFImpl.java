@@ -17,35 +17,42 @@
 package org.fabric3.jpa.service;
 
 import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.PersistenceUnit;
 
 import org.fabric3.jpa.model.Employee;
 
 /**
+ * Exercises injecting an EntityManagerFactory.
+ *
  * @version $Revision$ $Date$
  */
-public class EmployeeServiceImpl implements EmployeeService {
-    private EntityManager em;
+public class EmployeeServiceEMFImpl implements EmployeeService {
+    private EntityManagerFactory emf;
 
-    @PersistenceContext(name = "employeeEmf", unitName = "employee")
-    public void setEntityManager(EntityManager em) {
-        this.em = em;
+    @PersistenceUnit(name = "employeeEmf", unitName = "employee")
+    public void setEntityManagerFactory(EntityManagerFactory emf) {
+        this.emf = emf;
     }
 
     public Employee createEmployee(Long id, String name) {
+        EntityManager em = emf.createEntityManager();
         Employee employee = new Employee(id, name);
         em.persist(employee);
+        em.flush();
         return employee;
+
     }
 
     public Employee findEmployee(Long id) {
-        Employee e = em.find(Employee.class, id);
-        return e;
+        return emf.createEntityManager().find(Employee.class, id);
     }
 
     public void removeEmployee(Long id) {
+        EntityManager em = emf.createEntityManager();
         Employee employee = em.find(Employee.class, id);
         em.remove(employee);
+        em.flush();
     }
 
 }
