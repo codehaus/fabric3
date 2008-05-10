@@ -82,13 +82,13 @@
         <implementation.java class="loanapp.notification.NotificationComponent"/>
     </component>
 
-    <component name="StoreComponent">
-    <implementation.java class="loanapp.store.memory.MemoryStoreComponent"/>
-    </component>
-
-    <!--<component name="StoreComponent" requires="sca:managedTransaction">-->
-        <!--<implementation.java class="loanapp.store.persistent.JPAStore"/>-->
+    <!--<component name="StoreComponent">-->
+    <!--<implementation.java class="loanapp.store.memory.MemoryStoreComponent"/>-->
     <!--</component>-->
+
+    <component name="StoreComponent" requires="sca:managedTransaction">
+        <implementation.java class="loanapp.store.persistent.JPAStore"/>
+    </component>
 
 
 </composite>
