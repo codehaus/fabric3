@@ -29,8 +29,11 @@ import org.fabric3.spi.command.Command;
 import org.fabric3.spi.generator.AddCommandGenerator;
 import org.fabric3.spi.generator.CommandMap;
 import org.fabric3.spi.generator.GenerationException;
+import org.fabric3.spi.generator.RemoveCommandGenerator;
+import org.fabric3.spi.generator.CommandGenerator;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
+import org.fabric3.fabric.model.logical.LogicalChange;
 
 /**
  * Default implementation of the physical model generator. This implementation topologically sorts components according to their position in the
@@ -48,18 +51,22 @@ public class PhysicalModelGeneratorImpl implements PhysicalModelGenerator {
         }
     };
 
-    private final List<AddCommandGenerator> commandGenerators;
+    private static final List<LogicalComponent<?>> EMPTY_LIST = new ArrayList<LogicalComponent<?>>();
+    private final List<CommandGenerator> addCommandGenerators;
+    private final List<CommandGenerator> removeCommandGenerators;
 
-    public PhysicalModelGeneratorImpl(@Reference(name = "commandGenerators")List<AddCommandGenerator> commandGenerators) {
+    public PhysicalModelGeneratorImpl(@Reference(name = "addCommandGenerators")List<AddCommandGenerator> addGenerators,
+                                      @Reference(name = "removeCommandGenerators")List<RemoveCommandGenerator> removeGenerators) {
         // sort the command generators
-        this.commandGenerators = sort(commandGenerators);
+        this.addCommandGenerators = sort(addGenerators);
+        this.removeCommandGenerators = sort(removeGenerators);
     }
 
     public CommandMap generate(Collection<LogicalComponent<?>> components) throws GenerationException {
         Collection<LogicalComponent<?>> sorted = topologicalSort(components);
 
         CommandMap commandMap = new CommandMap();
-        for (AddCommandGenerator generator : commandGenerators) {
+        for (CommandGenerator generator : addCommandGenerators) {
             for (LogicalComponent<?> component : sorted) {
                 Command command = generator.generate(component);
                 if (command != null) {
@@ -68,6 +75,33 @@ public class PhysicalModelGeneratorImpl implements PhysicalModelGenerator {
             }
         }
         for (LogicalComponent<?> component : components) {
+            component.setProvisioned(true);
+        }
+        return commandMap;
+    }
+
+
+    public CommandMap generate(LogicalChange change) throws GenerationException {
+        Collection<LogicalComponent<?>> addedComponents = topologicalSort(change.getAddedComponents());
+        Collection<LogicalComponent<?>> deletedComponents = change.getDeletedComponents();
+        CommandMap commandMap = new CommandMap();
+        for (CommandGenerator generator : removeCommandGenerators) {
+            for (LogicalComponent<?> component : deletedComponents) {
+                Command command = generator.generate(component);
+                if (command != null) {
+                    commandMap.addCommand(component.getRuntimeId(), command);
+                }
+            }
+        }
+        for (CommandGenerator generator : addCommandGenerators) {
+            for (LogicalComponent<?> component : addedComponents) {
+                Command command = generator.generate(component);
+                if (command != null) {
+                    commandMap.addCommand(component.getRuntimeId(), command);
+                }
+            }
+        }
+        for (LogicalComponent<?> component : addedComponents) {
             component.setProvisioned(true);
         }
         return commandMap;
@@ -107,16 +141,17 @@ public class PhysicalModelGeneratorImpl implements PhysicalModelGenerator {
 
     }
 
-    private List<AddCommandGenerator> sort(List<AddCommandGenerator> commandGenerators) {
-        Comparator<AddCommandGenerator> generatorComparator = new Comparator<AddCommandGenerator>() {
+    private List<CommandGenerator> sort(List<? extends CommandGenerator> commandGenerators) {
+        Comparator<CommandGenerator> generatorComparator = new Comparator<CommandGenerator>() {
 
-            public int compare(AddCommandGenerator first, AddCommandGenerator second) {
+            public int compare(CommandGenerator first, CommandGenerator second) {
                 return first.getOrder() - second.getOrder();
             }
         };
-        List<AddCommandGenerator> sorted = new ArrayList<AddCommandGenerator>(commandGenerators);
+        List<CommandGenerator> sorted = new ArrayList<CommandGenerator>(commandGenerators);
         Collections.sort(sorted, generatorComparator);
         return sorted;
     }
+
 
 }

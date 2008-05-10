@@ -56,6 +56,8 @@ import org.fabric3.fabric.generator.component.ComponentBuildCommandGenerator;
 import org.fabric3.fabric.generator.component.StartComponentCommandGenerator;
 import org.fabric3.fabric.generator.component.InitializeComponentCommandGenerator;
 import org.fabric3.fabric.generator.component.StartCompositeContextCommandGenerator;
+import org.fabric3.fabric.generator.component.StopCompositeContextCommandGenerator;
+import org.fabric3.fabric.generator.component.StopComponentCommandGenerator;
 import org.fabric3.fabric.generator.wire.LocalWireCommandGenerator;
 import org.fabric3.fabric.generator.wire.PhysicalOperationHelper;
 import org.fabric3.fabric.generator.wire.PhysicalOperationHelperImpl;
@@ -102,6 +104,7 @@ import org.fabric3.spi.executor.CommandExecutorRegistry;
 import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.spi.generator.AddCommandGenerator;
 import org.fabric3.spi.generator.GeneratorRegistry;
+import org.fabric3.spi.generator.RemoveCommandGenerator;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 import org.fabric3.spi.policy.NullPolicyResolver;
@@ -308,7 +311,10 @@ public class BootstrapAssemblyFactory {
         commandGenerators.add(new StartComponentCommandGenerator(3));
         commandGenerators.add(new StartCompositeContextCommandGenerator(4));
         commandGenerators.add(new InitializeComponentCommandGenerator(5));
-        return new PhysicalModelGeneratorImpl(commandGenerators);
+        List<RemoveCommandGenerator> removeCmdGenerator = new ArrayList<RemoveCommandGenerator>(2);
+        removeCmdGenerator.add(new StopCompositeContextCommandGenerator(0));
+        removeCmdGenerator.add(new StopComponentCommandGenerator(1));
+        return new PhysicalModelGeneratorImpl(commandGenerators, removeCmdGenerator);
     }
 
     private static GeneratorRegistry createGeneratorRegistry() {

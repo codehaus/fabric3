@@ -25,15 +25,24 @@ import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalWire;
+import org.fabric3.spi.model.instance.LogicalService;
 
 /**
  * @version $Rev$ $Date$
  */
 public class LogicalChange {
+
     private final LogicalCompositeComponent parent;
     private final List<Command> phase1 = new ArrayList<Command>();
     private final List<Command> phase2 = new ArrayList<Command>();
     private final List<Command> phase3 = new ArrayList<Command>();
+
+    private final List<String> deletedProperties = new ArrayList<String>();
+    private final List<LogicalComponent<?>> deletedComponents =
+            new ArrayList<LogicalComponent<?>>();
+    
+    private final List<LogicalComponent<?>> addedComponents =
+            new ArrayList<LogicalComponent<?>>();
 
     /**
      * Construct change specifiying the context to which it applies.
@@ -73,6 +82,10 @@ public class LogicalChange {
         });
     }
 
+    public void removeProperty(final String name) {
+        deletedProperties.add(name);
+    }
+
     /**
      * Change that adds a component to the parent context.
      *
@@ -84,6 +97,32 @@ public class LogicalChange {
                 parent.addComponent(component);
             }
         });
+        addedComponents.add(component);
+    }
+
+    /**
+     * Change that removes a component from the parent context
+     * @param component
+     */
+    public void removeComponent(final LogicalComponent<?> component) {
+        deletedComponents.add(component);
+    }
+
+    /**
+     * Return the list of new components added to the parent context
+     * @return
+     */
+    public List<LogicalComponent<?>> getAddedComponents() {
+        return addedComponents;
+    }
+
+    /**
+     * Return the list of deleted components from the parent context
+      * @return
+     */
+
+    public List<LogicalComponent<?>> getDeletedComponents() {
+        return deletedComponents;
     }
 
     /**

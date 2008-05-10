@@ -18,6 +18,9 @@ package org.fabric3.fabric.generator.component;
  * specific language governing permissions and limitations
  * under the License.
  */
+
+import org.osoa.sca.annotations.Property;
+
 import org.fabric3.fabric.command.StopCompositeContextCommand;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.generator.RemoveCommandGenerator;
@@ -35,7 +38,7 @@ public class StopCompositeContextCommandGenerator implements RemoveCommandGenera
 
     private final int order;
 
-    public StopCompositeContextCommandGenerator(int order) {
+    public StopCompositeContextCommandGenerator(@Property(name = "order")int order) {
         this.order = order;
     }
 
