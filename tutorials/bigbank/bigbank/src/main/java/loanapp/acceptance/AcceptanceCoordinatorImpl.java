@@ -18,23 +18,21 @@
  */
 package loanapp.acceptance;
 
-import loanapp.store.StoreService;
-import loanapp.store.StoreException;
-import loanapp.message.LoanApplication;
-import loanapp.message.LoanStatus;
-import loanapp.message.LoanTerms;
-import loanapp.message.LoanOption;
-import loanapp.loan.LoanException;
-import loanapp.appraisal.AppraisalService;
 import loanapp.appraisal.AppraisalCallback;
 import loanapp.appraisal.AppraisalResult;
+import loanapp.appraisal.AppraisalService;
+import loanapp.loan.LoanException;
+import loanapp.message.*;
 import loanapp.notification.NotificationService;
+import loanapp.store.StoreException;
+import loanapp.store.StoreService;
 import org.osoa.sca.annotations.Reference;
 import org.osoa.sca.annotations.Scope;
 import org.osoa.sca.annotations.Service;
 
-import java.util.Date;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.List;
 
 /**
  * Default implementation of the AcceptanceCoordinator.
@@ -58,16 +56,20 @@ public class AcceptanceCoordinatorImpl implements AcceptanceCoordinator, Apprais
     }
 
 
-    public LoanTerms review(long loanId) throws LoanException {
+    public LoanOptions review(long loanId) throws LoanException {
         findApplication(loanId);
-        return application.getTerms();
+        LoanOptions options = new LoanOptions();
+        for (Term term : application.getTerms()) {
+            options.addOption(new LoanOption(term.getType(), term.getRate(), term.getApr()));
+        }
+        return options;
     }
 
     public void accept(String type) throws LoanException {
-        LoanTerms terms = application.getTerms();
+        List<Term> terms = application.getTerms();
         boolean found = false;
-        for (LoanOption option : terms.getOptions()) {
-            if (option.getType().equals(type)) {
+        for (Term term : terms) {
+            if (term.getType().equals(type)) {
                 found = true;
                 break;
             }
@@ -75,7 +77,7 @@ public class AcceptanceCoordinatorImpl implements AcceptanceCoordinator, Apprais
         if (!found) {
             throw new InvalidLoanOptionException("Invalid loan option selected for loan " + application.getId());
         }
-        terms.setSelected(type);
+        application.setTypeSelected(type);
         application.setStatus(LoanStatus.AWAITING_APPRAISAL);
         try {
             storeService.update(application);

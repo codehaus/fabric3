@@ -16,10 +16,9 @@
  */
 package loanapp.pricing;
 
-import org.osoa.sca.annotations.Remotable;
-
 import loanapp.message.LoanApplication;
-import loanapp.message.LoanTerms;
+import loanapp.message.Term;
+import org.osoa.sca.annotations.Remotable;
 
 /**
  * Implementations compile a set of different loan options that fit the characteristics of an applicant and loan
@@ -36,5 +35,5 @@ public interface PricingService {
      * @param application the loan application data
      * @return a set of loan options
      */
-    LoanTerms calculateOptions(LoanApplication application);
+    Term[] calculateOptions(LoanApplication application);
 }

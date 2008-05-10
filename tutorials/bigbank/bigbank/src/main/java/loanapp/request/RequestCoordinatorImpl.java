@@ -36,6 +36,8 @@ import org.osoa.sca.annotations.Reference;
 import org.osoa.sca.annotations.Scope;
 import org.osoa.sca.annotations.Service;
 
+import java.util.Arrays;
+
 /**
  * Default implementation of the RequestCoordinator service.
  *
@@ -123,8 +125,8 @@ public class RequestCoordinatorImpl implements RequestCoordinator, CreditService
         application.setRiskAssessment(assessment);
         if (RiskAssessment.APPROVE == assessment.getDecision()) {
             // calculate the terms
-            LoanTerms terms = pricingService.calculateOptions(application);
-            application.setTerms(terms);
+            Term[] terms = pricingService.calculateOptions(application);
+            application.setTerms(Arrays.asList(terms));
             try {
                 application.setStatus(LoanStatus.AWAITING_ACCEPTANCE);
                 storeService.update(application);

@@ -16,14 +16,11 @@
  */
 package loanapp.rate;
 
-import org.osoa.sca.annotations.Remotable;
-
 /**
  * Service that returns rates for a given credit score.
  *
  * @version $Rev$ $Date$
  */
-@Remotable
 public interface RateService {
 
     /**

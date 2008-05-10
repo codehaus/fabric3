@@ -21,7 +21,7 @@ import loanapp.acceptance.LoanNotApprovedException;
 import loanapp.acceptance.LoanNotFoundException;
 import loanapp.loan.LoanException;
 import loanapp.validation.ValidationService;
-import loanapp.message.LoanTerms;
+import loanapp.message.LoanOptions;
 import org.osoa.sca.ComponentContext;
 import org.osoa.sca.annotations.Context;
 import org.osoa.sca.annotations.Reference;
@@ -56,8 +56,8 @@ public class LoanSearchFormHandler extends HttpServlet {
         try {
             long id = Long.parseLong(req.getParameter("loanId"));
             try {
-                LoanTerms terms = coordinator.review(id);
-                req.setAttribute("loanTerms", terms);
+                LoanOptions options = coordinator.review(id);
+                req.setAttribute("loanTerms", options);
                 page = "/reviewForm.jsp";
             } catch (LoanNotApprovedException e) {
                 req.setAttribute("loanError", e.getMessage());

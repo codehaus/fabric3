@@ -25,7 +25,7 @@
 
 <img src="info.gif" height="5%"><h3><font face="arial"> Loan Application Received</font></h3>
 <br>
-Your loan application has been received and is being processed. 
+Your loan application has been received and is being processed. Loan id: ${loanId}.
 <br>
 <br>
 <br>

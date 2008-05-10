@@ -18,10 +18,12 @@ package loanapp.message;
 
 import loanapp.credit.CreditScore;
 import loanapp.risk.RiskAssessment;
+import loanapp.rate.Rate;
 
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * Encapsulates loan application data. Contained data is built up as the application progresses through the loan
@@ -41,10 +43,11 @@ public class LoanApplication implements Serializable {
     private String email;
     private double amount;
     private double downPayment;
-    private transient PropertyInfo propertyInfo;
-    private transient RiskAssessment riskAssessment;
-    private transient LoanTerms terms;
-    private transient CreditScore creditScore;
+    private String typeSelected;
+    private PropertyInfo propertyInfo;
+    private RiskAssessment riskAssessment;
+    private List<Term> terms;
+    private CreditScore creditScore;
 
 
     @Id
@@ -193,13 +196,36 @@ public class LoanApplication implements Serializable {
         this.expiration = expiration;
     }
 
-    public void setTerms(LoanTerms terms) {
+    public void setTerms(List<Term> terms) {
         this.terms = terms;
     }
 
-    @Transient
-    public LoanTerms getTerms() {
+    @OneToMany(cascade = CascadeType.ALL)
+    public List<Term> getTerms() {
         return terms;
     }
 
+    public String getTypeSelected() {
+        return typeSelected;
+    }
+
+    public void setTypeSelected(String typeSelected) {
+        this.typeSelected = typeSelected;
+    }
+
+    @Transient
+    public Term getSelectedOption() {
+        if (typeSelected == null) {
+            return null;
+        }
+        for (Term term : terms) {
+            if (term.getType().equals(typeSelected)) {
+                return term;
+            }
+        }
+        return null;
+    }
+
+
 }
+

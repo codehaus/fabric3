@@ -17,13 +17,15 @@
 package loanapp.pricing;
 
 import loanapp.message.LoanApplication;
-import loanapp.message.LoanTerms;
-import loanapp.message.LoanOption;
+import loanapp.message.Term;
+import loanapp.rate.Rate;
 import loanapp.rate.RateResults;
 import loanapp.rate.RateService;
-import loanapp.rate.Rate;
 import org.osoa.sca.annotations.Reference;
 import org.osoa.sca.annotations.Scope;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Default implementation of the PricingService that uses a RateService to compile up-to-date loan options.
@@ -38,12 +40,12 @@ public class RiskBasedPricingComponent implements PricingService {
         this.rateService = rateService;
     }
 
-    public LoanTerms calculateOptions(LoanApplication application) {
-        LoanTerms terms = new LoanTerms();
+    public Term[] calculateOptions(LoanApplication application) {
+        List<Term> terms = new ArrayList<Term>();
         RateResults rateResults = rateService.calculateRates(application.getRiskAssessment().getRiskFactor());
         for (Rate rate : rateResults.getRates()) {
-            terms.addOption(new LoanOption(rate.getType(), rate.getRate(), rate.getApr()));
+            terms.add(new Term(rate.getType(), rate.getRate(), rate.getApr()));
         }
-        return terms;
+        return terms.toArray(new Term[terms.size()]);
     }
 }

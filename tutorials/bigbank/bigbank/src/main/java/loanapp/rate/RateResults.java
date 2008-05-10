@@ -16,20 +16,16 @@
  */
 package loanapp.rate;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  * A collection of current loan Rates.
  *
  * @version $Rev$ $Date$
  */
-@XmlRootElement
-public class RateResults implements Serializable {
-    private static final long serialVersionUID = -8117214455334146925L;
+public class RateResults {
     private List<Rate> rates = new ArrayList<Rate>();
 
     public void addRate(Rate rate) {
