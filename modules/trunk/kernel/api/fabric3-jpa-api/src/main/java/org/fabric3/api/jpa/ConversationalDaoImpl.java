@@ -31,7 +31,7 @@ import org.osoa.sca.annotations.Scope;
  * @version $Revision$ $Date$
  */
 @Scope("CONVERSATION")
-public class Fabric3ConversationalDaoImpl<ENTITY, KEY> implements Fabric3ConversationalDao<ENTITY, KEY> {
+public class ConversationalDaoImpl<ENTITY, KEY> implements ConversationalDao<ENTITY, KEY> {
     
     protected EntityManager entityManager;
 

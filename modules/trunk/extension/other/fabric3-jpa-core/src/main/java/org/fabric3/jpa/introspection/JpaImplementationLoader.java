@@ -26,7 +26,7 @@ import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
-import org.fabric3.api.jpa.Fabric3ConversationalDaoImpl;
+import org.fabric3.api.jpa.ConversationalDaoImpl;
 import org.fabric3.introspection.DefaultIntrospectionContext;
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.IntrospectionException;
@@ -95,7 +95,7 @@ public class JpaImplementationLoader implements TypeLoader<JavaImplementation> {
             }
             
             JavaImplementation implementation = new JavaImplementation();
-            implementation.setImplementationClass(Fabric3ConversationalDaoImpl.class.getName());
+            implementation.setImplementationClass(ConversationalDaoImpl.class.getName());
             
             URI contributionUri = context.getContributionUri();
             String targetNs = context.getTargetNamespace();
@@ -106,7 +106,7 @@ public class JpaImplementationLoader implements TypeLoader<JavaImplementation> {
             PojoComponentType pojoComponentType = implementation.getComponentType();
             
             PersistenceUnitResource resource = new PersistenceUnitResource("unit", persistenceUnit, factoryServiceContract);
-            FieldInjectionSite site = new FieldInjectionSite(Fabric3ConversationalDaoImpl.class.getDeclaredField("entityManager"));
+            FieldInjectionSite site = new FieldInjectionSite(ConversationalDaoImpl.class.getDeclaredField("entityManager"));
             pojoComponentType.add(resource, site);
             
             return implementation; 

@@ -31,7 +31,7 @@ import org.osoa.sca.annotations.EndsConversation;
  * @version $Revision$ $Date$
  */
 @Conversational
-public interface Fabric3ConversationalDao<ENTITY, KEY> {
+public interface ConversationalDao<ENTITY, KEY> {
     
     /**
      * Merges the state of the entity.
