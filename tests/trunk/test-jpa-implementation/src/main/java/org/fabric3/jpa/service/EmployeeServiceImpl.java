@@ -20,6 +20,7 @@ package org.fabric3.jpa.service;
 
 import java.util.List;
 
+import org.fabric3.api.jpa.Fabric3ConversationalDao;
 import org.fabric3.jpa.model.Employee;
 import org.osoa.sca.annotations.Reference;
 
@@ -29,7 +30,7 @@ import org.osoa.sca.annotations.Reference;
  */
 public class EmployeeServiceImpl implements EmployeeService {
     
-    @Reference protected Fabric3Dao<Employee, Long> employeeDao;
+    @Reference protected Fabric3ConversationalDao<Employee, Long> employeeDao;
 
     public void createEmployees(List<Employee> employees) {
         

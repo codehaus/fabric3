@@ -35,9 +35,6 @@
     <!-- Employee DAO -->
     <component name="EmployeeDao">
         <f3:implementation.jpa persistenceUnit="employee"/>
-        <service name="Fabric3Dao">
-        	<interface.java class="org.fabric3.jpa.service.Fabric3Dao"/>
-        </service>
     </component>
 
 </composite>

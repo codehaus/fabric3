@@ -49,6 +49,11 @@
             <artifactId>persistence-api</artifactId>
             <version>1.0</version>
         </dependency>
+        <dependency>
+            <groupId>org.codehaus.fabric3</groupId>
+            <artifactId>fabric3-jpa-api</artifactId>
+            <version>0.5ALPHA3-SNAPSHOT</version>
+        </dependency>
     </dependencies>
 
     <build>
@@ -103,6 +108,11 @@
                     </extensions>
                     <!-- API classes need to be shared between the application and extension classloaders -->
                     <shared>
+                        <dependency>
+                            <groupId>org.codehaus.fabric3</groupId>
+                            <artifactId>fabric3-jpa-api</artifactId>
+                            <version>0.5ALPHA3-SNAPSHOT</version>
+                        </dependency>
                         <dependency>
                             <groupId>javax.persistence</groupId>
                             <artifactId>persistence-api</artifactId>
