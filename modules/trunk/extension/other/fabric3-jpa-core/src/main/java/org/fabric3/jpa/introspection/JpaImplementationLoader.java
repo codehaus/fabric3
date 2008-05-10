@@ -19,11 +19,13 @@
 package org.fabric3.jpa.introspection;
 
 import java.lang.reflect.Type;
+import java.net.URI;
 
 import javax.persistence.EntityManager;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
+import org.fabric3.introspection.DefaultIntrospectionContext;
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.IntrospectionException;
 import org.fabric3.introspection.TypeMapping;
@@ -92,7 +94,12 @@ public class JpaImplementationLoader implements TypeLoader<JpaImplementation> {
             JavaImplementation implementation = new JavaImplementation();
             implementation.setImplementationClass(Fabric3ConversationalDaoImpl.class.getName());
             
-            implementationProcessor.introspect(implementation, context);
+            URI contributionUri = context.getContributionUri();
+            String targetNs = context.getTargetNamespace();
+            ClassLoader cl = getClass().getClassLoader();
+            
+            IntrospectionContext newContext = new DefaultIntrospectionContext(contributionUri, cl, targetNs);
+            implementationProcessor.introspect(implementation, newContext);
             PojoComponentType pojoComponentType = implementation.getComponentType();
             
             PersistenceUnitResource resource = new PersistenceUnitResource("unit", persistenceUnit, factoryServiceContract);
