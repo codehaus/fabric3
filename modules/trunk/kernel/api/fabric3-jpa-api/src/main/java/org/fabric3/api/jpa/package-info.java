@@ -16,27 +16,10 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.api.annotation;
-
-import static java.lang.annotation.ElementType.ANNOTATION_TYPE;
-import java.lang.annotation.Retention;
-import static java.lang.annotation.RetentionPolicy.RUNTIME;
-import java.lang.annotation.Target;
 
 /**
- * A key/value pair to represent information pertaining to a {@link DataType}
+ * Overview of fabric3 JPA Application Programming Interface.
+ *
+ * This package contains the API for using the Fabric3 JPA support.
  */
-@Target(ANNOTATION_TYPE)
-@Retention(RUNTIME)
-public @interface DataContext {
-    /**
-     * @return key for the context entry
-     */
-    String key();
-
-    /**
-     * @return key for the context value
-     */
-    String value();
-
-}
+package org.fabric3.api.jpa;
