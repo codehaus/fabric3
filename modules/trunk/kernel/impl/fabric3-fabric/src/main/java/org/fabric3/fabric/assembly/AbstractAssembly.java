@@ -133,4 +133,59 @@ public abstract class AbstractAssembly implements Assembly {
 
     }
 
+    public void excludeFromDomain(QName deployable) throws ActivateException {
+
+        ResourceElement<QNameSymbol, ?> element = metadataStore.resolve(new QNameSymbol(deployable));
+        if (element == null) {
+            throw new ArtifactNotFoundException("Deployable not found", deployable.toString());
+        }
+
+        Object object = element.getValue();
+        if (!(object instanceof Composite)) {
+            throw new IllegalContributionTypeException("Deployable must be a composite", deployable.toString());
+        }
+
+        Composite composite = (Composite) object;
+        excludeFromDomain(composite);
+
+    }
+
+    public void excludeFromDomain(Composite composite) throws ActivateException {
+
+        LogicalCompositeComponent domain = logicalComponentManager.getDomain();
+
+        LogicalChange change = logicalModelGenerator.include(domain, composite);
+        change.apply();
+
+        Collection<LogicalComponent<?>> components = change.getAddedComponents();
+
+        // Allocate the components to runtime nodes
+        try {
+            for (LogicalComponent<?> component : components) {
+                if (!component.isProvisioned()) {
+                    allocator.allocate(component, false);
+                }
+            }
+        } catch (AllocationException e) {
+            throw new ActivateException(e);
+        }
+
+        try {
+            // generate and provision any new components and new wires
+            CommandMap commandMap = physicalModelGenerator.generate(change);
+            routingService.route(commandMap);
+        } catch (GenerationException e) {
+            throw new ActivateException(e);
+        } catch (RoutingException e) {
+            throw new ActivateException(e);
+        }
+
+        try {
+            // record the operation
+            logicalComponentManager.store();
+        } catch (RecordException e) {
+            throw new ActivateException("Error activating deployable", composite.getName().toString(), e);
+        }
+
+    }
 }

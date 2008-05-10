@@ -53,4 +53,21 @@ public interface Assembly {
      */
     void includeInDomain(Composite composite) throws ActivateException;
 
+
+    /**
+     * Exclude a deployable Composite from the domain.
+     *
+     * @param deployable the name of the deployable composite to include
+     * @throws ActivateException if an error is encountered during activation
+     */
+    void excludeFromDomain(QName deployable) throws ActivateException;
+
+    /**
+     * Exclude a Composite from the domain.
+     *
+     * @param composite the composite to include
+     * @throws ActivateException if an error is encountered during activation
+     */
+    void excludeFromDomain(Composite composite) throws ActivateException;
+
 }

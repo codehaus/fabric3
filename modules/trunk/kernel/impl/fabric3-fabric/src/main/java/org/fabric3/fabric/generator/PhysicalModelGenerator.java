@@ -21,6 +21,7 @@ import java.util.Collection;
 import org.fabric3.spi.generator.CommandMap;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.LogicalComponent;
+import org.fabric3.fabric.model.logical.LogicalChange;
 
 /**
  * Interface that abstracts the concerns of a generating commands to provision a set of componets to runtimes in a domain.
@@ -37,5 +38,14 @@ public interface PhysicalModelGenerator {
      * @throws GenerationException If unable to generate the command map.
      */
     CommandMap generate(Collection<LogicalComponent<?>> components) throws GenerationException;
+
+
+    /**
+     * Generate commands to provision a set of components and their wires to runtimes in the domain based on the given set of logical components.     *
+     * @param change LogicalChange that encapsulates changes to components, properties & wires
+     * @return the command map containing the generated commands
+     * @throws GenerationException
+     */
+    CommandMap generate(LogicalChange change) throws GenerationException;
 
 }
