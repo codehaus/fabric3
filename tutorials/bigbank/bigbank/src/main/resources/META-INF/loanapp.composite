@@ -83,7 +83,7 @@
     </component>
 
     <component name="StoreComponent" requires="sca:managedTransaction">
-        <implementation.java class="loanapp.store.persistent.JPAStore"/>
+        <implementation.java class="loanapp.store.persistent.JPAStoreComponent"/>
     </component>
 
     <!-- Alternative in-memory store implementation -->

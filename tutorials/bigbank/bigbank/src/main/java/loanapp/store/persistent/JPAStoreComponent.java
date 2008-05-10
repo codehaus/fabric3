@@ -34,7 +34,7 @@ import javax.persistence.PersistenceException;
  *
  * @version $Revision$ $Date$
  */
-public class JPAStore implements StoreService {
+public class JPAStoreComponent implements StoreService {
     private EntityManager em;
 
     @PersistenceContext(name = "loanApplicationEmf", unitName = "loanApplication")
