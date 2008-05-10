@@ -29,29 +29,32 @@
            name="JpaExtension"
            autowire="true">
 
-    <!-- Processors for PersistenceUnit and PersistenceContext-->
+    <!-- Persistence Unit Annotation Processor -->
     <component f3:key="javax.persistence.PersistenceUnit" name="org.fabric3.jpa.introspection.PersistenceUnitProcessor">
         <system:implementation.system class="org.fabric3.jpa.introspection.PersistenceUnitProcessor"/>
     </component>
 
+    <!-- Persistence Context Annotation Processor -->
     <component f3:key="javax.persistence.PersistenceContext" name="org.fabric3.jpa.introspection.PersistenceContextProcessor">
         <system:implementation.system class="org.fabric3.jpa.introspection.PersistenceContextProcessor"/>
     </component>
 
-    <!-- Wire Target Definition Generator -->
+    <!-- Persistence Unit Wire Target Definition Generator -->
     <component name="org.fabric3.jpa.control.PersistenceUnitResourceWireGenerator">
         <system:implementation.system class="org.fabric3.jpa.control.PersistenceUnitResourceWireGenerator"/>
     </component>
 
+    <!-- Persistence Context Wire Target Definition Generator -->
     <component name="org.fabric3.jpa.control.PersistenceContextResourceWireGenerator">
         <system:implementation.system class="org.fabric3.jpa.control.PersistenceContextResourceWireGenerator"/>
     </component>
 
-    <!-- Wire attachers for PersistenceUnit and PersistenceContext resources -->
+    <!-- Persistence Unit Wire Target Attacher -->
     <component f3:key="org.fabric3.jpa.provision.PersistenceUnitWireTargetDefinition" name="org.fabric3.jpa.runtime.PersistenceUnitWireAttacher">
         <system:implementation.system class="org.fabric3.jpa.runtime.PersistenceUnitWireAttacher"/>
     </component>
 
+    <!-- Persistence Context Wire Target Attacher -->
     <component f3:key="org.fabric3.jpa.provision.PersistenceContextWireTargetDefinition" name="org.fabric3.jpa.runtime.PersistenceContextWireAttacher">
         <system:implementation.system class="org.fabric3.jpa.runtime.PersistenceContextWireAttacher"/>
     </component>
@@ -66,8 +69,14 @@
         <system:implementation.system class="org.fabric3.jpa.runtime.CachingEmfBuilder"/>
     </component>
 
+    <!-- Entity Manager Service -->
     <component name="org.fabric3.jpa.runtime.EntityManagerService">
         <system:implementation.system class="org.fabric3.jpa.runtime.EntityManagerServiceImpl"/>
+    </component>
+    
+    <!-- JPA Implementation Loader -->
+    <component name="org.fabric3.jpa.introspection.JpaImplementationLoader">
+        <system:implementation.system class="org.fabric3.jpa.introspection.JpaImplementationLoader"/>
     </component>
 
 </composite>
