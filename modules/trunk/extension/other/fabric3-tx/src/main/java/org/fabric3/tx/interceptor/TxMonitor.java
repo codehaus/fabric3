@@ -26,28 +26,28 @@ import org.fabric3.api.annotation.LogLevel;
  */
 public interface TxMonitor {
     
-    @LogLevel("INFO")
+    @LogLevel("FINE")
     void started(int hashCode);
     
-    @LogLevel("INFO")
+    @LogLevel("FINE")
     void committed(int hashCode);
     
-    @LogLevel("INFO")
+    @LogLevel("FINE")
     void suspended(int hashCode);
     
-    @LogLevel("INFO")
+    @LogLevel("WARNING")
     void rolledback(int hashCode);
     
-    @LogLevel("INFO")
+    @LogLevel("FINE")
     void resumed(int hashCode);
     
-    @LogLevel("INFO")
+    @LogLevel("FINE")
     void markedForRollback(int hashCode);
     
-    @LogLevel("INFO")
+    @LogLevel("FINE")
     void interceptorInitialized(TxAction txAction);
     
-    @LogLevel("INFO")
+    @LogLevel("FINE")
     void joined(int hashCode);
 
 }

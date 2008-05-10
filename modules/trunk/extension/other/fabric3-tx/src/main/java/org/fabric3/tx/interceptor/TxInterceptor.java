@@ -56,23 +56,14 @@ public class TxInterceptor implements Interceptor {
         monitor.interceptorInitialized(txAction);
     }
 
-    /**
-     * @see org.fabric3.spi.wire.Interceptor#getNext()
-     */
     public Interceptor getNext() {
         return next;
     }
 
-    /**
-     * @see org.fabric3.spi.wire.Interceptor#setNext(org.fabric3.spi.wire.Interceptor)
-     */
     public void setNext(Interceptor next) {
         this.next = next;
     }
 
-    /**
-     * @see org.fabric3.spi.wire.Interceptor#invoke(org.fabric3.spi.invocation.Message)
-     */
     public Message invoke(Message message) {
         
         Transaction transaction =  getTransaction();
@@ -87,7 +78,7 @@ public class TxInterceptor implements Interceptor {
             suspend();
         }
 
-        Message ret = null;
+        Message ret;
         try {
             ret = next.invoke(message);
         } catch (RuntimeException e) {
