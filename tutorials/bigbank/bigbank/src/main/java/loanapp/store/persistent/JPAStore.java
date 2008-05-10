@@ -25,6 +25,7 @@ import loanapp.store.ApplicationNotFoundException;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceException;
 
 /**
  * Demonstrates using JPA persistence. By default, the persistence context is transaction-scoped. As this component
@@ -42,11 +43,19 @@ public class JPAStore implements StoreService {
     }
 
     public void save(LoanApplication application) throws StoreException {
-        em.persist(application);
+        try {
+            em.persist(application);
+        } catch (PersistenceException e) {
+            throw new StoreException(e);
+        }
     }
 
     public void update(LoanApplication application) throws StoreException {
-        em.merge(application);
+        try {
+            em.merge(application);
+        } catch (PersistenceException e) {
+            throw new StoreException(e);
+        }
     }
 
     public void remove(long id) throws StoreException {
@@ -54,10 +63,18 @@ public class JPAStore implements StoreService {
         if (application == null) {
             throw new ApplicationNotFoundException("Loan application not found: " + id);
         }
-        em.remove(application);
+        try {
+            em.remove(application);
+        } catch (PersistenceException e) {
+            throw new StoreException(e);
+        }
     }
 
     public LoanApplication find(long id) throws StoreException {
-        return em.find(LoanApplication.class, id);
+        try {
+            return em.find(LoanApplication.class, id);
+        } catch (PersistenceException e) {
+            throw new StoreException(e);
+        }
     }
 }

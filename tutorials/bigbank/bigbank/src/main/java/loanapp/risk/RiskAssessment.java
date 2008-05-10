@@ -85,7 +85,7 @@ public class RiskAssessment implements Serializable {
 
     @OneToMany(cascade = CascadeType.ALL)
     public List<RiskReason> getReasons() {
-        return reasons;
+        return Collections.unmodifiableList(reasons);
     }
 
     public void setReasons(List<RiskReason> reasons) {

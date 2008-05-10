@@ -32,7 +32,7 @@ public interface RequestCoordinatorMonitor {
      *
      * @param e the error
      */
-    @LogLevel("ERROR")
+    @LogLevel("WARNING")
     void error(Exception e);
 
 }

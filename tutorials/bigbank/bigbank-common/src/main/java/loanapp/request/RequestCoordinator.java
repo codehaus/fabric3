@@ -39,6 +39,12 @@ public interface RequestCoordinator {
      */
     long start(LoanRequest request) throws LoanException;
 
+    /**
+     * Returns the status for a loan application
+     *
+     * @param id the loan id
+     * @return the status
+     */
     int getStatus(long id);
 
     /**
