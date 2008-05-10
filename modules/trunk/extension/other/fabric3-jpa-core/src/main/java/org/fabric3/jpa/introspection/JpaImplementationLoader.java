@@ -22,6 +22,7 @@ import java.lang.reflect.Type;
 import java.net.URI;
 
 import javax.persistence.EntityManager;
+import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
@@ -36,13 +37,12 @@ import org.fabric3.introspection.xml.LoaderRegistry;
 import org.fabric3.introspection.xml.TypeLoader;
 import org.fabric3.java.introspection.JavaImplementationProcessor;
 import org.fabric3.java.scdl.JavaImplementation;
-import org.fabric3.jpa.scdl.JpaImplementation;
 import org.fabric3.jpa.scdl.PersistenceUnitResource;
 import org.fabric3.pojo.processor.ProcessingException;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.FieldInjectionSite;
 import org.fabric3.scdl.ServiceContract;
-import org.fabric3.scdl.ServiceDefinition;
+import org.fabric3.spi.Constants;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
@@ -53,7 +53,9 @@ import org.osoa.sca.annotations.Reference;
  * @version $Revision$ $Date$
  */
 @EagerInit
-public class JpaImplementationLoader implements TypeLoader<JpaImplementation> {
+public class JpaImplementationLoader implements TypeLoader<JavaImplementation> {
+    
+    public static final QName IMPLEMENTATION_JPA = new QName(Constants.FABRIC3_NS, "implementation.jpa");
     
     private final LoaderRegistry loaderRegistry;
     private final JavaImplementationProcessor implementationProcessor;
@@ -72,7 +74,7 @@ public class JpaImplementationLoader implements TypeLoader<JpaImplementation> {
      */
     @Init
     public void start() {
-        loaderRegistry.registerLoader(JpaImplementation.IMPLEMENTATION_JPA, this);
+        loaderRegistry.registerLoader(IMPLEMENTATION_JPA, this);
     }
 
     /**
@@ -82,7 +84,7 @@ public class JpaImplementationLoader implements TypeLoader<JpaImplementation> {
      * @param context Introspection context.
      * @return An instance of the JPA implemenation.
      */
-    public JpaImplementation load(XMLStreamReader reader, IntrospectionContext context) throws XMLStreamException, LoaderException {
+    public JavaImplementation load(XMLStreamReader reader, IntrospectionContext context) throws XMLStreamException, LoaderException {
         
         try {
         
@@ -106,7 +108,7 @@ public class JpaImplementationLoader implements TypeLoader<JpaImplementation> {
             FieldInjectionSite site = new FieldInjectionSite(Fabric3ConversationalDaoImpl.class.getDeclaredField("entityManager"));
             pojoComponentType.add(resource, site);
             
-            return new JpaImplementation(persistenceUnit); 
+            return implementation; 
             
         } catch (IntrospectionException e) {
             throw new ProcessingException(e);
