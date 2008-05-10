@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.jpa.introspection;
+package org.fabric3.api.jpa;
 
 import java.util.List;
 
@@ -24,7 +24,6 @@ import javax.persistence.EntityManager;
 import javax.persistence.LockModeType;
 import javax.persistence.Query;
 
-import org.fabric3.api.jpa.Fabric3ConversationalDao;
 import org.osoa.sca.annotations.Scope;
 
 /**
