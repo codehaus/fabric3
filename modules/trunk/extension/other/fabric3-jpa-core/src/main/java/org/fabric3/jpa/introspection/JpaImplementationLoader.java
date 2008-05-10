@@ -22,10 +22,13 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
 import org.fabric3.introspection.IntrospectionContext;
+import org.fabric3.introspection.impl.contract.JavaServiceContract;
 import org.fabric3.introspection.xml.LoaderException;
 import org.fabric3.introspection.xml.LoaderRegistry;
 import org.fabric3.introspection.xml.TypeLoader;
 import org.fabric3.jpa.scdl.JpaImplementation;
+import org.fabric3.scdl.ServiceContract;
+import org.fabric3.scdl.ServiceDefinition;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
@@ -70,7 +73,16 @@ public class JpaImplementationLoader implements TypeLoader<JpaImplementation> {
         if (persistenceUnit == null) {
             throw new LoaderException("Missing attribute: persistenceUnit");
         }
+        
+        JpaImplementation jpaImplementation = new JpaImplementation(persistenceUnit);
+        
+        JpaComponentType componentType = new JpaComponentType();
+        ServiceContract<?> serviceContract = new JavaServiceContract(null);
+        ServiceDefinition serviceDefinition = new ServiceDefinition("fabric3Dao", serviceContract);
+        jpaImplementation.setComponentType(componentType);
+        
         return new JpaImplementation(persistenceUnit);
+        
         
     }
 

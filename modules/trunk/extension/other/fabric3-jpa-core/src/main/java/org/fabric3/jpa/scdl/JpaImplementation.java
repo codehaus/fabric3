@@ -20,6 +20,7 @@ package org.fabric3.jpa.scdl;
 
 import javax.xml.namespace.QName;
 
+import org.fabric3.jpa.introspection.JpaComponentType;
 import org.fabric3.scdl.Implementation;
 import org.fabric3.spi.Constants;
 
@@ -27,7 +28,7 @@ import org.fabric3.spi.Constants;
  *
  * @version $Revision$ $Date$
  */
-public class JpaImplementation extends Implementation<org.fabric3.pojo.scdl.PojoComponentType> {
+public class JpaImplementation extends Implementation<JpaComponentType> {
     
     public static final QName IMPLEMENTATION_JPA = new QName(Constants.FABRIC3_NS, "implementation.jpa");
     private static final long serialVersionUID = -3466389594315779802L;
