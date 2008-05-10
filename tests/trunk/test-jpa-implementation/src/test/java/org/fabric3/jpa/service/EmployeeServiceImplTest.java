@@ -16,6 +16,9 @@
  */
 package org.fabric3.jpa.service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.fabric3.jpa.model.Employee;
 
 import org.osoa.sca.annotations.Reference;
@@ -26,74 +29,19 @@ import junit.framework.TestCase;
  * @version $Revision$ $Date$
  */
 public class EmployeeServiceImplTest extends TestCase {
-    @Reference
-    protected EmployeeService employeeService;
-
-    @Reference
-    protected EmployeeService employeeMultiThreadedService;
-
-    @Reference
-    protected EmployeeService employeeEMFService;
-
-    @Reference
-    protected ConversationEmployeeService conversationEmployeeService;
-
-    public void testCreateEmployee() {
-        Employee employee;
-
-        employeeService.createEmployee(123l, "Barney Rubble");
-        employee = employeeService.findEmployee(123L);
-
-        assertNotNull(employee);
-        assertEquals("Barney Rubble", employee.getName());
-
+    
+    @Reference protected EmployeeService employeeService;
+    
+    public void testCreation() {
+        
+        List<Employee> employees = new ArrayList<Employee>();
+        employees.add(new Employee(1L, "Meeraj Kunnumpurath"));
+        employees.add(new Employee(2L, "Jeremy Boynes"));
+        employees.add(new Employee(3L, "Jim Marino"));
+        
+        employeeService.createEmployees(employees);
+        
     }
-
-    public void testCreateEMFEmployee() throws Exception {
-        employeeEMFService.createEmployee(123l, "Barney Rubble");
-        Employee employee = employeeEMFService.findEmployee(123L);
-
-        assertNotNull(employee);
-        assertEquals("Barney Rubble", employee.getName());
-
-    }
-
-    public void testCreateMultiThreadedEmployee() {
-        employeeMultiThreadedService.createEmployee(123l, "Barney Rubble");
-        Employee employee = employeeMultiThreadedService.findEmployee(123L);
-
-        assertNotNull(employee);
-        assertEquals("Barney Rubble", employee.getName());
-
-    }
-
-    public void testExtendedPersistenceContext() {
-        conversationEmployeeService.createEmployee(123l, "Barney Rubble");
-        Employee employee = conversationEmployeeService.findEmployee(123L);
-
-        assertNotNull(employee);
-        assertEquals("Barney Rubble", employee.getName());
-        // verify the object has not be detached
-        employee.setName("Fred Flintstone");
-        Employee employee2 = conversationEmployeeService.updateEmployee(employee);
-        // the merge operation should use the same persistent entity since it is never detached for extended persistence contexts
-        assertSame(employee, employee2);
-        employee = conversationEmployeeService.findEmployee(123L);
-        assertEquals("Fred Flintstone", employee.getName());
-        // end the conversation, which should also close the EntityManager/persistence context
-        conversationEmployeeService.end();
-        employee2 = conversationEmployeeService.findEmployee(123L);
-        // employee2 should be loaded in a different persistence context and not the same as the original
-        assertNotSame(employee, employee2);
-    }
-
-    protected void setUp() throws Exception {
-        super.setUp();
-        Employee employee = employeeService.findEmployee(123L);
-        if (employee != null) {
-            employeeService.removeEmployee(123L);
-        }
-    }
-
-
+    
+    
 }

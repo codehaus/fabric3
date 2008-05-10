@@ -24,27 +24,20 @@
     <component name="EmployeeServiceImplTest">
         <f3:junit class="org.fabric3.jpa.service.EmployeeServiceImplTest"/>
         <reference name="employeeService" target="EmployeeService"/>
-        <reference name="employeeEMFService" target="EmployeeEMFService"/>
-        <reference name="employeeMultiThreadedService" target="EmployeeMultiThreadedService"/>
-        <reference name="conversationEmployeeService" target="ConversationEmployeeService"/>
     </component>
 
     <!-- Employee Service -->
-
     <component name="EmployeeService" requires="sca:managedTransaction">
         <implementation.java class="org.fabric3.jpa.service.EmployeeServiceImpl"/>
+        <reference name="employeeDao" target="EmployeeDao"/>
     </component>
 
-    <component name="EmployeeEMFService" requires="sca:managedTransaction">
-        <implementation.java class="org.fabric3.jpa.service.EmployeeServiceEMFImpl"/>
-    </component>
-
-    <component name="EmployeeMultiThreadedService" requires="sca:managedTransaction">
-        <implementation.java class="org.fabric3.jpa.service.EmployeeServiceEMFImpl"/>
-    </component>
-
-    <component name="ConversationEmployeeService" requires="sca:managedTransaction">
-        <implementation.java class="org.fabric3.jpa.service.ConversationEmployeeServiceImpl"/>
+    <!-- Employee DAO -->
+    <component name="EmployeeDao">
+        <f3:implementation.jpa persistenceUnit="employee"/>
+        <service name="Fabric3Dao">
+        	<interface.java class="org.fabric3.jpa.service.Fabric3Dao"/>
+        </service>
     </component>
 
 </composite>
