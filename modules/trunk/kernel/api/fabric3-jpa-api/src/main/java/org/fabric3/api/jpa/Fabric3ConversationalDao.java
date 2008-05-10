@@ -18,6 +18,10 @@
  */
 package org.fabric3.api.jpa;
 
+import java.util.List;
+
+import javax.persistence.LockModeType;
+
 import org.osoa.sca.annotations.Conversational;
 import org.osoa.sca.annotations.EndsConversation;
 
@@ -33,7 +37,7 @@ public interface Fabric3ConversationalDao<ENTITY, KEY> {
      * Merges the state of the entity.
      * @param entity Entity to be merged.
      */
-    void merge(ENTITY entity);
+    ENTITY merge(ENTITY entity);
     
     /**
      * Persists the state of the entity.
@@ -60,6 +64,28 @@ public interface Fabric3ConversationalDao<ENTITY, KEY> {
      * @return Entity instance.
      */
     ENTITY findById(Class<ENTITY> clazz, KEY key);
+    
+    /**
+     * Finds entities defined by the named query.
+     * @param namedQuery Named query to use.
+     * @param clazz Entity clazz.
+     * @param args arguments to the query.
+     * @return Entity instance.
+     */
+    List<ENTITY> findByNamedQuery(String namedQuery, Class<ENTITY> clazz, Object ... args);
+    
+    /**
+     * Flushes the current entity manager.
+     */
+    void flush();
+    
+    /**
+     * Locks the current entity.
+     * 
+     * @param entity Entity to be locked.
+     * @param lockModeType Lock mode type.
+     */
+    void lock(ENTITY entity, LockModeType lockModeType);
     
     /**
      * Ends the conversation.

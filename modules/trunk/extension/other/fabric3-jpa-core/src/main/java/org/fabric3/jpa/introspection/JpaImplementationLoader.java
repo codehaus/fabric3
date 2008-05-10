@@ -18,19 +18,27 @@
  */
 package org.fabric3.jpa.introspection;
 
+import java.lang.reflect.Type;
+
+import javax.persistence.EntityManager;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
 import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.introspection.IntrospectionHelper;
+import org.fabric3.introspection.IntrospectionException;
 import org.fabric3.introspection.TypeMapping;
 import org.fabric3.introspection.contract.ContractProcessor;
 import org.fabric3.introspection.contract.InvalidServiceContractException;
-import org.fabric3.introspection.impl.contract.JavaServiceContract;
 import org.fabric3.introspection.xml.LoaderException;
 import org.fabric3.introspection.xml.LoaderRegistry;
 import org.fabric3.introspection.xml.TypeLoader;
+import org.fabric3.java.introspection.JavaImplementationProcessor;
+import org.fabric3.java.scdl.JavaImplementation;
 import org.fabric3.jpa.scdl.JpaImplementation;
+import org.fabric3.jpa.scdl.PersistenceUnitResource;
+import org.fabric3.pojo.processor.ProcessingException;
+import org.fabric3.pojo.scdl.PojoComponentType;
+import org.fabric3.scdl.FieldInjectionSite;
 import org.fabric3.scdl.ServiceContract;
 import org.fabric3.scdl.ServiceDefinition;
 import org.osoa.sca.annotations.EagerInit;
@@ -46,15 +54,15 @@ import org.osoa.sca.annotations.Reference;
 public class JpaImplementationLoader implements TypeLoader<JpaImplementation> {
     
     private final LoaderRegistry loaderRegistry;
-    private final ContractProcessor contractProcessor;
-    private final IntrospectionHelper helper;
+    private final JavaImplementationProcessor implementationProcessor;
+    private final ServiceContract<Type> factoryServiceContract;
 
-    public JpaImplementationLoader(@Reference ContractProcessor contractProcessor,
-                                   @Reference IntrospectionHelper helper,
-                                   @Reference LoaderRegistry loaderRegistry) {
-        this.contractProcessor = contractProcessor;
-        this.helper = helper;
+    public JpaImplementationLoader(@Reference JavaImplementationProcessor implementationProcessor,
+                                   @Reference LoaderRegistry loaderRegistry,
+                                   @Reference ContractProcessor contractProcessor) throws InvalidServiceContractException {
+        this.implementationProcessor = implementationProcessor;
         this.loaderRegistry = loaderRegistry;
+        factoryServiceContract = contractProcessor.introspect(new TypeMapping(), EntityManager.class);
     }
     
     /**
@@ -74,36 +82,31 @@ public class JpaImplementationLoader implements TypeLoader<JpaImplementation> {
      */
     public JpaImplementation load(XMLStreamReader reader, IntrospectionContext context) throws XMLStreamException, LoaderException {
         
-        String persistenceUnit = reader.getAttributeValue(null, "persistenceUnit");
-        if (persistenceUnit == null) {
-            throw new LoaderException("Missing attribute: persistenceUnit");
-        }
-        
-        JpaImplementation jpaImplementation = new JpaImplementation(persistenceUnit);
-        
-        JpaComponentType componentType = new JpaComponentType();
-        
-        ServiceContract<?> serviceContract = getDefaultServiceContract();
-        ServiceDefinition serviceDefinition = new ServiceDefinition("fabric3Dao", serviceContract);
-        componentType.add(serviceDefinition);
-        jpaImplementation.setComponentType(componentType);
-        
-        return new JpaImplementation(persistenceUnit);
-        
-        
-    }
-    
-    private ServiceContract<?> getDefaultServiceContract() throws LoaderException {
-        
-        Class<?> interfaceClass = null; // Set to the default one from f3-jpa-api
-
         try {
-            TypeMapping typeMapping = helper.mapTypeParameters(interfaceClass);
-            ServiceContract<?> serviceContract = contractProcessor.introspect(typeMapping, interfaceClass);
-            return serviceContract;
-        } catch (InvalidServiceContractException e) {
-            throw new LoaderException("The Java interface is an invalid service contract: " + interfaceClass.getName(), e);
+        
+            String persistenceUnit = reader.getAttributeValue(null, "persistenceUnit");
+            if (persistenceUnit == null) {
+                throw new LoaderException("Missing attribute: persistenceUnit");
+            }
+            
+            JavaImplementation implementation = new JavaImplementation();
+            implementation.setImplementationClass(Fabric3ConversationalDaoImpl.class.getName());
+            
+            implementationProcessor.introspect(implementation, context);
+            PojoComponentType pojoComponentType = implementation.getComponentType();
+            
+            PersistenceUnitResource resource = new PersistenceUnitResource("unit", persistenceUnit, factoryServiceContract);
+            FieldInjectionSite site = new FieldInjectionSite(Fabric3ConversationalDaoImpl.class.getDeclaredField("entityManager"));
+            pojoComponentType.add(resource, site);
+            
+            return new JpaImplementation(persistenceUnit); 
+            
+        } catch (IntrospectionException e) {
+            throw new ProcessingException(e);
+        } catch (NoSuchFieldException e) {
+            throw new ProcessingException(e);
         }
+        
     }
 
 }
