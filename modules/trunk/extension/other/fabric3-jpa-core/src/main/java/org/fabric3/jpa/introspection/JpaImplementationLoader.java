@@ -22,6 +22,10 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
 import org.fabric3.introspection.IntrospectionContext;
+import org.fabric3.introspection.IntrospectionHelper;
+import org.fabric3.introspection.TypeMapping;
+import org.fabric3.introspection.contract.ContractProcessor;
+import org.fabric3.introspection.contract.InvalidServiceContractException;
 import org.fabric3.introspection.impl.contract.JavaServiceContract;
 import org.fabric3.introspection.xml.LoaderException;
 import org.fabric3.introspection.xml.LoaderRegistry;
@@ -41,14 +45,15 @@ import org.osoa.sca.annotations.Reference;
 @EagerInit
 public class JpaImplementationLoader implements TypeLoader<JpaImplementation> {
     
-    private LoaderRegistry loaderRegistry;
-    
-    /**
-     * Initializes the loader registry.
-     * 
-     * @param loaderRegistry Loader registry.
-     */
-    public JpaImplementationLoader(@Reference LoaderRegistry loaderRegistry) {
+    private final LoaderRegistry loaderRegistry;
+    private final ContractProcessor contractProcessor;
+    private final IntrospectionHelper helper;
+
+    public JpaImplementationLoader(@Reference ContractProcessor contractProcessor,
+                                   @Reference IntrospectionHelper helper,
+                                   @Reference LoaderRegistry loaderRegistry) {
+        this.contractProcessor = contractProcessor;
+        this.helper = helper;
         this.loaderRegistry = loaderRegistry;
     }
     
@@ -77,13 +82,28 @@ public class JpaImplementationLoader implements TypeLoader<JpaImplementation> {
         JpaImplementation jpaImplementation = new JpaImplementation(persistenceUnit);
         
         JpaComponentType componentType = new JpaComponentType();
-        ServiceContract<?> serviceContract = new JavaServiceContract(null);
+        
+        ServiceContract<?> serviceContract = getDefaultServiceContract();
         ServiceDefinition serviceDefinition = new ServiceDefinition("fabric3Dao", serviceContract);
+        componentType.add(serviceDefinition);
         jpaImplementation.setComponentType(componentType);
         
         return new JpaImplementation(persistenceUnit);
         
         
+    }
+    
+    private ServiceContract<?> getDefaultServiceContract() throws LoaderException {
+        
+        Class<?> interfaceClass = null; // Set to the default one from f3-jpa-api
+
+        try {
+            TypeMapping typeMapping = helper.mapTypeParameters(interfaceClass);
+            ServiceContract<?> serviceContract = contractProcessor.introspect(typeMapping, interfaceClass);
+            return serviceContract;
+        } catch (InvalidServiceContractException e) {
+            throw new LoaderException("The Java interface is an invalid service contract: " + interfaceClass.getName(), e);
+        }
     }
 
 }
