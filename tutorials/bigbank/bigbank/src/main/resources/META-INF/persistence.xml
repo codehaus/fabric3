@@ -25,11 +25,12 @@
         <provider>org.hibernate.ejb.HibernatePersistence</provider>
         <jta-data-source>LoanApplicationDS</jta-data-source>
         <!--<mapping-file>META-INF/mappings.xml</mapping-file>-->
-        <class>loanapp.message.LoanApplication</class>
-        <class>loanapp.message.PropertyInfo</class>
-        <class>loanapp.credit.CreditScore</class>
-        <class>loanapp.risk.RiskAssessment</class>
-        <class>loanapp.risk.RiskReason</class>
+        <class>loanapp.domain.LoanRecord</class>
+        <class>loanapp.domain.PropertyInfo</class>
+        <class>loanapp.domain.RiskInfo</class>
+        <class>loanapp.domain.RiskReasonInfo</class>
+        <class>loanapp.domain.TermInfo</class>
+        <class>loanapp.message.Address</class>
         <properties>
             <property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect"/>
             <property name="hibernate.transaction.manager_lookup_class"

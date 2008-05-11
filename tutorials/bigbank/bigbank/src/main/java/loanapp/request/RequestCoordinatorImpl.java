@@ -21,11 +21,15 @@ package loanapp.request;
 import loanapp.credit.CreditScore;
 import loanapp.credit.CreditService;
 import loanapp.credit.CreditServiceCallback;
+import loanapp.domain.LoanRecord;
 import loanapp.loan.LoanException;
-import loanapp.message.*;
+import loanapp.message.LoanApplication;
+import loanapp.message.LoanRequest;
+import loanapp.message.LoanStatus;
+import loanapp.message.RiskAssessment;
+import loanapp.message.Term;
 import loanapp.notification.NotificationService;
 import loanapp.pricing.PricingService;
-import loanapp.risk.RiskAssessment;
 import loanapp.risk.RiskAssessmentCallback;
 import loanapp.risk.RiskAssessmentService;
 import loanapp.store.StoreException;
@@ -36,7 +40,7 @@ import org.osoa.sca.annotations.Reference;
 import org.osoa.sca.annotations.Scope;
 import org.osoa.sca.annotations.Service;
 
-import java.util.Arrays;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * Default implementation of the RequestCoordinator service.
@@ -47,6 +51,8 @@ import java.util.Arrays;
 @ConversationAttributes(maxIdleTime = "2 hours")
 @Service(interfaces = {RequestCoordinator.class, CreditServiceCallback.class, RiskAssessmentCallback.class})
 public class RequestCoordinatorImpl implements RequestCoordinator, CreditServiceCallback, RiskAssessmentCallback {
+    // simple counter
+    private static final AtomicLong SEQUENCE = new AtomicLong(1);
     private CreditService creditService;
     private RiskAssessmentService riskService;
     private PricingService pricingService;
@@ -89,22 +95,16 @@ public class RequestCoordinatorImpl implements RequestCoordinator, CreditService
     public long start(LoanRequest request) throws LoanException {
         // create a loan application and process it
         application = new LoanApplication();
+        application.setNumber(SEQUENCE.getAndIncrement());
         application.setSsn(request.getSSN());
         application.setEmail(request.getEmail());
         application.setAmount(request.getAmount());
         application.setDownPayment(request.getDownPayment());
-        PropertyInfo info = new PropertyInfo();
-        info.setAddress(request.getPropertyAddress());
-        application.setPropertyInfo(info);
+        application.setPropertyAddress(request.getPropertyAddress());
         application.setStatus(LoanStatus.SUBMITTED);
-        try {
-            storeService.save(application);
-        } catch (StoreException e) {
-            throw new LoanException(e);
-        }
         // pull the applicant's credit score
         creditService.score(application.getSsn());
-        return application.getId();
+        return application.getNumber();
     }
 
     public void cancel() {
@@ -113,7 +113,7 @@ public class RequestCoordinatorImpl implements RequestCoordinator, CreditService
 
     public void onCreditScore(CreditScore result) {
         // assess the loan risk
-        application.setCreditScore(result);
+        application.setCreditScore(result.getScore());
         riskService.assessRisk(application);
     }
 
@@ -126,12 +126,12 @@ public class RequestCoordinatorImpl implements RequestCoordinator, CreditService
         if (RiskAssessment.APPROVE == assessment.getDecision()) {
             // calculate the terms
             Term[] terms = pricingService.calculateOptions(application);
-            application.setTerms(Arrays.asList(terms));
+            application.setTerms(terms);
             try {
                 application.setStatus(LoanStatus.AWAITING_ACCEPTANCE);
-                storeService.update(application);
+                storeService.save(new LoanRecord(application));
                 // notify the client
-                notificationService.approved(application.getEmail(), application.getId());
+                notificationService.approved(application.getEmail(), application.getNumber());
             } catch (StoreException e) {
                 monitor.error(e);
             }
@@ -139,9 +139,9 @@ public class RequestCoordinatorImpl implements RequestCoordinator, CreditService
             // declined
             try {
                 application.setStatus(LoanStatus.REJECTED);
-                storeService.update(application);
+                storeService.save(new LoanRecord(application));
                 // notify the client
-                notificationService.rejected(application.getEmail(), application.getId());
+                notificationService.rejected(application.getEmail(), application.getNumber());
             } catch (StoreException e) {
                 monitor.error(e);
             }
@@ -152,4 +152,6 @@ public class RequestCoordinatorImpl implements RequestCoordinator, CreditService
     public void riskAssessmentError(Exception exception) {
         monitor.error(exception);
     }
+
+
 }

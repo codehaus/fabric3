@@ -17,6 +17,8 @@
 package loanapp.risk;
 
 import loanapp.message.LoanApplication;
+import loanapp.message.RiskAssessment;
+import loanapp.message.RiskReason;
 import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Scope;
 import org.osoa.sca.annotations.Callback;
@@ -44,7 +46,7 @@ public class RiskAssessmentComponent implements RiskAssessmentService {
     }
 
     public void assessRisk(LoanApplication application) {
-        int score = application.getCreditScore().getScore();
+        int score = application.getCreditScore();
         int factor = 0;
         int decision;
         List<RiskReason> reasons = new ArrayList<RiskReason>();
@@ -64,7 +66,7 @@ public class RiskAssessmentComponent implements RiskAssessmentService {
         } else {
             decision = RiskAssessment.APPROVE;
         }
-        RiskAssessment result = new RiskAssessment(decision, factor, reasons);
+        RiskAssessment result = new RiskAssessment(decision, factor, reasons.toArray(new RiskReason[reasons.size()]));
         callback.onAssessment(result);
     }
 }

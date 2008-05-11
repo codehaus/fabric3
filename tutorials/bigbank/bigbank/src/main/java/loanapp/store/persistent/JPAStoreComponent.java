@@ -18,14 +18,16 @@
  */
 package loanapp.store.persistent;
 
+import loanapp.domain.LoanRecord;
 import loanapp.message.LoanApplication;
+import loanapp.store.ApplicationNotFoundException;
 import loanapp.store.StoreException;
 import loanapp.store.StoreService;
-import loanapp.store.ApplicationNotFoundException;
 
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceException;
+import javax.persistence.Query;
 
 /**
  * Demonstrates using JPA persistence. By default, the persistence context is transaction-scoped. As this component
@@ -42,17 +44,17 @@ public class JPAStoreComponent implements StoreService {
         this.em = em;
     }
 
-    public void save(LoanApplication application) throws StoreException {
+    public void save(LoanRecord record) throws StoreException {
         try {
-            em.persist(application);
+            em.persist(record);
         } catch (PersistenceException e) {
             throw new StoreException(e);
         }
     }
 
-    public void update(LoanApplication application) throws StoreException {
+    public void update(LoanRecord record) throws StoreException {
         try {
-            em.merge(application);
+            em.merge(record);
         } catch (PersistenceException e) {
             throw new StoreException(e);
         }
@@ -70,9 +72,11 @@ public class JPAStoreComponent implements StoreService {
         }
     }
 
-    public LoanApplication find(long id) throws StoreException {
+    public LoanRecord find(long id) throws StoreException {
         try {
-            return em.find(LoanApplication.class, id);
+            Query query = em.createQuery("SELECT r FROM LoanRecord r WHERE r.loanNumber = :number");
+            query.setParameter("number", id);
+            return (LoanRecord) query.getSingleResult();
         } catch (PersistenceException e) {
             throw new StoreException(e);
         }

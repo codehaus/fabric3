@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package loanapp.message;
+package loanapp.domain;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -25,12 +25,22 @@ import java.io.Serializable;
  * @version $Revision$ $Date$
  */
 @Entity
-public class PropertyInfo implements Serializable {
-    private static final long serialVersionUID = -372091544226598099L;
+public class TermInfo implements Serializable {
+    private static final long serialVersionUID = -3157707604835927354L;
+    private String type;
+    private float rate;
+    private float apr;
     private long id;
     private long version;
-    private Address address;
-    private double value;
+
+    public TermInfo() {
+    }
+
+    public TermInfo(String type, float rate, float apr) {
+        this.type = type;
+        this.rate = rate;
+        this.apr = apr;
+    }
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
@@ -51,20 +61,28 @@ public class PropertyInfo implements Serializable {
         this.version = version;
     }
 
-
-    public Address getAddress() {
-        return address;
+    public String getType() {
+        return type;
     }
 
-    public void setAddress(Address address) {
-        this.address = address;
+    public void setType(String type) {
+        this.type = type;
     }
 
-    public double getValue() {
-        return value;
+    public float getRate() {
+        return rate;
     }
 
-    public void setValue(double value) {
-        this.value = value;
+    public void setRate(float rate) {
+        this.rate = rate;
     }
+
+    public float getApr() {
+        return apr;
+    }
+
+    public void setApr(float apr) {
+        this.apr = apr;
+    }
+
 }

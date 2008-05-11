@@ -19,6 +19,7 @@
 package loanapp.risk;
 
 import org.osoa.sca.annotations.OneWay;
+import loanapp.message.RiskAssessment;
 
 /**
  * Interface to receive risk assessment callbacks.

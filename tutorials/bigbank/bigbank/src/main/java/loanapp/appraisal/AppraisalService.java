@@ -18,7 +18,8 @@
  */
 package loanapp.appraisal;
 
-import loanapp.message.PropertyInfo;
+import loanapp.domain.PropertyInfo;
+import loanapp.message.Address;
 import org.osoa.sca.annotations.OneWay;
 import org.osoa.sca.annotations.Callback;
 
@@ -31,6 +32,6 @@ import org.osoa.sca.annotations.Callback;
 public interface AppraisalService {
 
     @OneWay
-    void appraise(PropertyInfo propertyInfo);
+    void appraise(Address address);
 
 }

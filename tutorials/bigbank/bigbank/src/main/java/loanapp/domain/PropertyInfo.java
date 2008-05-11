@@ -16,36 +16,29 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package loanapp.risk;
+package loanapp.domain;
+
+import loanapp.message.Address;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.Collections;
-import java.util.List;
 
 /**
- * Represents the risk associated with a loan calculated by a RiskAssessmentService.
- *
  * @version $Revision$ $Date$
  */
 @Entity
-public class RiskAssessment implements Serializable {
-    private static final long serialVersionUID = 1427555176373119897L;
-    public static final int APPROVE = 1;
-    public static final int REJECT = -1;
+public class PropertyInfo implements Serializable {
+    private static final long serialVersionUID = -372091544226598099L;
     private long id;
     private long version;
-    private int decision;
-    private int factor;
-    private List<RiskReason> reasons;
+    private Address address;
+    private double value;
 
-    public RiskAssessment(int decision, int factor, List<RiskReason> reasons) {
-        this.decision = decision;
-        this.factor = factor;
-        this.reasons = reasons;
+    public PropertyInfo(Address address) {
+        this.address = address;
     }
 
-    public RiskAssessment() {
+    public PropertyInfo() {
     }
 
     @Id
@@ -67,29 +60,20 @@ public class RiskAssessment implements Serializable {
         this.version = version;
     }
 
-    public int getRiskFactor() {
-        return factor;
+
+    public Address getAddress() {
+        return address;
     }
 
-    public void setRiskFactor(int factor) {
-        this.factor = factor;
+    public void setAddress(Address address) {
+        this.address = address;
     }
 
-    public int getDecision() {
-        return decision;
+    public double getValue() {
+        return value;
     }
 
-    public void setDecision(int decision) {
-        this.decision = decision;
+    public void setValue(double value) {
+        this.value = value;
     }
-
-    @OneToMany(cascade = CascadeType.ALL)
-    public List<RiskReason> getReasons() {
-        return Collections.unmodifiableList(reasons);
-    }
-
-    public void setReasons(List<RiskReason> reasons) {
-        this.reasons = reasons;
-    }
-
 }

@@ -18,7 +18,7 @@
  */
 package loanapp.store;
 
-import loanapp.message.LoanApplication;
+import loanapp.domain.LoanRecord;
 
 /**
  * Persists and retrieves loan application data.
@@ -30,18 +30,18 @@ public interface StoreService {
     /**
      * Save a new loan application.
      *
-     * @param application the application.
+     * @param record the loan record.
      * @throws StoreException if an exception saving the application is encountered
      */
-    void save(LoanApplication application) throws StoreException;
+    void save(LoanRecord record) throws StoreException;
 
     /**
      * Updates an existing loan application.
      *
-     * @param application the application.
+     * @param record the loan record.
      * @throws StoreException if an exception updating the application is encountered
      */
-    void update(LoanApplication application) throws StoreException;
+    void update(LoanRecord record) throws StoreException;
 
     /**
      * Deletes a loan application
@@ -58,5 +58,5 @@ public interface StoreService {
      * @return the loan application or null if not found
      * @throws StoreException if an exception retrieving the application is encountered
      */
-    LoanApplication find(long id) throws StoreException;
+    LoanRecord find(long id) throws StoreException;
 }

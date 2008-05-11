@@ -18,14 +18,13 @@
  */
 package loanapp.store.memory;
 
-import loanapp.store.StoreService;
+import loanapp.domain.LoanRecord;
 import loanapp.store.StoreException;
-import loanapp.message.LoanApplication;
+import loanapp.store.StoreService;
+import org.osoa.sca.annotations.Scope;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-
-import org.osoa.sca.annotations.Scope;
 
 /**
  * Simple in-memory StoreService that uses a Map for persistence.
@@ -35,23 +34,23 @@ import org.osoa.sca.annotations.Scope;
 @Scope("COMPOSITE")
 public class MemoryStoreComponent implements StoreService {
     private long counter;
-    private Map<Long, LoanApplication> cache = new ConcurrentHashMap<Long, LoanApplication>();
+    private Map<Long, LoanRecord> cache = new ConcurrentHashMap<Long, LoanRecord>();
 
-    public void save(LoanApplication application) throws StoreException {
+    public void save(LoanRecord record) throws StoreException {
         long id = ++counter;
-        application.setId(id);
-        cache.put(application.getId(), application);
+        record.setId(id);
+        cache.put(record.getId(), record);
     }
 
-    public void update(LoanApplication application) throws StoreException {
-        cache.put(application.getId(), application);
+    public void update(LoanRecord record) throws StoreException {
+        cache.put(record.getId(), record);
     }
 
     public void remove(long id) throws StoreException {
         cache.remove(id);
     }
 
-    public LoanApplication find(long id) throws StoreException {
+    public LoanRecord find(long id) throws StoreException {
         return cache.get(id);
     }
 }

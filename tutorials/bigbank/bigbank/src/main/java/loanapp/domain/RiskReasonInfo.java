@@ -1,4 +1,4 @@
-package loanapp.risk;
+package loanapp.domain;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -7,16 +7,16 @@ import java.io.Serializable;
  * @version $Revision$ $Date$
  */
 @Entity
-public class RiskReason implements Serializable {
+public class RiskReasonInfo implements Serializable {
     private static final long serialVersionUID = -1781028701570454727L;
     private long id;
     private long version;
     private String description;
 
-    public RiskReason() {
+    public RiskReasonInfo() {
     }
 
-    public RiskReason(String description) {
+    public RiskReasonInfo(String description) {
         this.description = description;
     }
 

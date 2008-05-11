@@ -18,47 +18,21 @@
  */
 package loanapp.message;
 
-import javax.persistence.*;
 import java.io.Serializable;
 
 /**
  * @version $Revision$ $Date$
  */
-@Entity
 public class Term implements Serializable {
     private static final long serialVersionUID = -3157707604835927354L;
     private String type;
     private float rate;
     private float apr;
-    private long id;
-    private long version;
-
-    public Term() {
-    }
 
     public Term(String type, float rate, float apr) {
         this.type = type;
         this.rate = rate;
         this.apr = apr;
-    }
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    @Version
-    public long getVersion() {
-        return version;
-    }
-
-    public void setVersion(long version) {
-        this.version = version;
     }
 
     public String getType() {

@@ -18,7 +18,7 @@
  */
 package loanapp.appraisal;
 
-import loanapp.message.PropertyInfo;
+import loanapp.message.Address;
 import org.osoa.sca.annotations.Callback;
 import org.osoa.sca.annotations.OneWay;
 import org.osoa.sca.annotations.Scope;
@@ -38,7 +38,7 @@ public class AppraisalComponent implements AppraisalService {
     }
 
     @OneWay
-    public void appraise(PropertyInfo propertyInfo) {
+    public void appraise(Address address) {
         Date date = new Date(System.currentTimeMillis()+ 1000);
         callback.dateSchedule(date);
         AppraisalResult result = new AppraisalResult(AppraisalResult.APPROVED, new String[0]);

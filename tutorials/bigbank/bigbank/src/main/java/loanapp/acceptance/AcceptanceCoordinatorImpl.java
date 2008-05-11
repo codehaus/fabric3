@@ -21,8 +21,12 @@ package loanapp.acceptance;
 import loanapp.appraisal.AppraisalCallback;
 import loanapp.appraisal.AppraisalResult;
 import loanapp.appraisal.AppraisalService;
+import loanapp.domain.LoanRecord;
+import loanapp.domain.TermInfo;
 import loanapp.loan.LoanException;
-import loanapp.message.*;
+import loanapp.message.LoanOption;
+import loanapp.message.LoanOptions;
+import loanapp.message.LoanStatus;
 import loanapp.notification.NotificationService;
 import loanapp.store.StoreException;
 import loanapp.store.StoreService;
@@ -45,7 +49,7 @@ public class AcceptanceCoordinatorImpl implements AcceptanceCoordinator, Apprais
     private AppraisalService appraisalService;
     private NotificationService notificationService;
     private StoreService storeService;
-    private LoanApplication application;
+    private LoanRecord application;
 
     public AcceptanceCoordinatorImpl(@Reference(name = "appraisalService")AppraisalService appraisalService,
                                      @Reference(name = "notificationService")NotificationService notificationService,
@@ -57,18 +61,18 @@ public class AcceptanceCoordinatorImpl implements AcceptanceCoordinator, Apprais
 
 
     public LoanOptions review(long loanId) throws LoanException {
-        findApplication(loanId);
+        findRecord(loanId);
         LoanOptions options = new LoanOptions();
-        for (Term term : application.getTerms()) {
+        for (TermInfo term : application.getTerms()) {
             options.addOption(new LoanOption(term.getType(), term.getRate(), term.getApr()));
         }
         return options;
     }
 
     public void accept(String type) throws LoanException {
-        List<Term> terms = application.getTerms();
+        List<TermInfo> terms = application.getTerms();
         boolean found = false;
-        for (Term term : terms) {
+        for (TermInfo term : terms) {
             if (term.getType().equals(type)) {
                 found = true;
                 break;
@@ -85,7 +89,7 @@ public class AcceptanceCoordinatorImpl implements AcceptanceCoordinator, Apprais
             throw new LoanException(e);
         }
         // TODO lock loan
-        appraisalService.appraise(application.getPropertyInfo());
+        appraisalService.appraise(application.getPropertyInfo().getAddress());
     }
 
     public void decline() throws LoanException {
@@ -113,7 +117,7 @@ public class AcceptanceCoordinatorImpl implements AcceptanceCoordinator, Apprais
         // TODO send to closing system
     }
 
-    private void findApplication(long id) throws LoanException {
+    private void findRecord(long id) throws LoanException {
         try {
             application = storeService.find(id);
         } catch (StoreException e) {

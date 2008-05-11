@@ -16,14 +16,8 @@
  */
 package loanapp.message;
 
-import loanapp.credit.CreditScore;
-import loanapp.risk.RiskAssessment;
-import loanapp.rate.Rate;
-
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.persistence.*;
 import java.io.Serializable;
-import java.util.List;
 
 /**
  * Encapsulates loan application data. Contained data is built up as the application progresses through the loan
@@ -32,41 +26,26 @@ import java.util.List;
  * @version $Rev$ $Date$
  */
 @XmlRootElement
-@Entity
 public class LoanApplication implements Serializable {
     private static final long serialVersionUID = -1205831596861744741L;
-    private long id;
-    private long version;
+    private long number;
     private long expiration;
     private int status;
     private String ssn;
     private String email;
     private double amount;
     private double downPayment;
-    private String typeSelected;
-    private PropertyInfo propertyInfo;
+    private Address propertyAddress;
     private RiskAssessment riskAssessment;
-    private List<Term> terms;
-    private CreditScore creditScore;
+    private Term[] terms;
+    private int creditScore;
 
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    public long getId() {
-        return id;
+    public long getNumber() {
+        return number;
     }
 
-    public void setId(long id) {
-        this.id = id;
-    }
-
-    @Version
-    public long getVersion() {
-        return version;
-    }
-
-    public void setVersion(long version) {
-        this.version = version;
+    public void setNumber(long number) {
+        this.number = number;
     }
 
     public String getSsn() {
@@ -140,13 +119,12 @@ public class LoanApplication implements Serializable {
         this.downPayment = downPayment;
     }
 
-    @OneToOne(cascade = CascadeType.ALL)
-    public PropertyInfo getPropertyInfo() {
-        return propertyInfo;
+    public Address getPropertyAddress() {
+        return propertyAddress;
     }
 
-    public void setPropertyInfo(PropertyInfo propertyInfo) {
-        this.propertyInfo = propertyInfo;
+    public void setPropertyAddress(Address address) {
+        this.propertyAddress = address;
     }
 
     /**
@@ -154,8 +132,7 @@ public class LoanApplication implements Serializable {
      *
      * @return the applicant's credit score
      */
-    @OneToOne(cascade = CascadeType.ALL)
-    public CreditScore getCreditScore() {
+    public int getCreditScore() {
         return creditScore;
     }
 
@@ -164,7 +141,7 @@ public class LoanApplication implements Serializable {
      *
      * @param creditScore the applicant's credit score
      */
-    public void setCreditScore(CreditScore creditScore) {
+    public void setCreditScore(int creditScore) {
         this.creditScore = creditScore;
     }
 
@@ -173,7 +150,6 @@ public class LoanApplication implements Serializable {
      *
      * @return the applicant's risk assesment
      */
-    @OneToOne(cascade = CascadeType.ALL)
     public RiskAssessment getRiskAssessment() {
         return riskAssessment;
     }
@@ -196,36 +172,13 @@ public class LoanApplication implements Serializable {
         this.expiration = expiration;
     }
 
-    public void setTerms(List<Term> terms) {
+    public void setTerms(Term[] terms) {
         this.terms = terms;
     }
 
-    @OneToMany(cascade = CascadeType.ALL)
-    public List<Term> getTerms() {
+    public Term[] getTerms() {
         return terms;
     }
-
-    public String getTypeSelected() {
-        return typeSelected;
-    }
-
-    public void setTypeSelected(String typeSelected) {
-        this.typeSelected = typeSelected;
-    }
-
-    @Transient
-    public Term getSelectedOption() {
-        if (typeSelected == null) {
-            return null;
-        }
-        for (Term term : terms) {
-            if (term.getType().equals(typeSelected)) {
-                return term;
-            }
-        }
-        return null;
-    }
-
 
 }
 
