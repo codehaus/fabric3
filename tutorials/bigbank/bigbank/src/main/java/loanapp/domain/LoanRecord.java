@@ -30,7 +30,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
-import javax.persistence.Transient;
 import javax.persistence.Version;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -250,19 +249,6 @@ public class LoanRecord implements Serializable {
 
     public void setTypeSelected(String typeSelected) {
         this.typeSelected = typeSelected;
-    }
-
-    @Transient
-    public TermInfo getSelectedOption() {
-        if (typeSelected == null) {
-            return null;
-        }
-        for (TermInfo term : terms) {
-            if (term.getType().equals(typeSelected)) {
-                return term;
-            }
-        }
-        return null;
     }
 
 }
