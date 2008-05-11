@@ -19,6 +19,8 @@
 package org.fabric3.pojo.reflection;
 
 import java.util.Map;
+import java.util.Set;
+import java.util.HashSet;
 
 import org.fabric3.scdl.InjectableAttribute;
 import org.fabric3.spi.ObjectCreationException;
@@ -38,6 +40,7 @@ public class ReflectiveInstanceWrapper<T> implements InstanceWrapper<T> {
     private final EventInvoker<T> destroyInvoker;
     private boolean started;
     private final Map<InjectableAttribute, Injector<T>> injectors;
+    private final Set<Injector<T>> updatedInjectors;
 
     public ReflectiveInstanceWrapper(T instance,
                                      ClassLoader cl,
@@ -50,7 +53,7 @@ public class ReflectiveInstanceWrapper<T> implements InstanceWrapper<T> {
         this.destroyInvoker = destroyInvoker;
         this.started = false;
         this.injectors = injectors;
-
+        this.updatedInjectors = new HashSet<Injector<T>>();
     }
 
     public T getInstance() {
@@ -99,23 +102,24 @@ public class ReflectiveInstanceWrapper<T> implements InstanceWrapper<T> {
     }
 
     public void reinject() throws TargetResolutionException {
-
         try {
-            if (injectors != null) {
-                for (Injector<T> injector : injectors.values()) {
-                    injector.inject(instance);
-                }
+            for (Injector<T> injector : updatedInjectors) {
+                injector.inject(instance);
             }
+            updatedInjectors.clear();
         } catch (ObjectCreationException ex) {
             throw new TargetResolutionException("Unable to inject", ex);
         }
     }
 
     public void addObjectFactory(String referenceName, ObjectFactory<?> factory, Object key) {
-
         for (InjectableAttribute attribute : injectors.keySet()) {
             if (attribute.getName().equals(referenceName)) {
-                injectors.get(attribute).setObjectFactory(factory, key);
+                Injector<T> injector = injectors.get(attribute);
+                injector.setObjectFactory(factory, key);
+                if (instance != null) {
+                    updatedInjectors.add(injector);
+                }
             }
         }
 
