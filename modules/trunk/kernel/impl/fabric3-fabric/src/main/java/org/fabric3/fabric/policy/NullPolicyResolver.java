@@ -16,11 +16,10 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.spi.policy;
+package org.fabric3.fabric.policy;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.Set;
 
 import org.fabric3.scdl.Operation;
 import org.fabric3.scdl.ServiceContract;
@@ -28,6 +27,10 @@ import org.fabric3.scdl.definitions.Intent;
 import org.fabric3.scdl.definitions.PolicySet;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.instance.LogicalComponent;
+import org.fabric3.spi.policy.Policy;
+import org.fabric3.spi.policy.PolicyResolutionException;
+import org.fabric3.spi.policy.PolicyResolver;
+import org.fabric3.spi.policy.PolicyResult;
 
 /**
  * @version $Revision$ $Date$
