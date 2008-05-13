@@ -27,6 +27,10 @@ package org.fabric3.binding.jms.common;
 public class DestinationDefinition extends AdministeredObjectDefinition {
     
     /**
+     *
+     */
+    private static final long serialVersionUID = 2175092846182913179L;
+    /**
      * Destination definition.
      */
     private DestinationType destinationType = DestinationType.queue;

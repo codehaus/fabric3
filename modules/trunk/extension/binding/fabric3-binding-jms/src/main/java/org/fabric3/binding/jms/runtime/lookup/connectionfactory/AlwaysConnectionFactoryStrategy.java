@@ -25,7 +25,7 @@ import java.beans.PropertyDescriptor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Hashtable;
-import java.util.Properties;
+import java.util.Map;
 
 import javax.jms.ConnectionFactory;
 
@@ -48,11 +48,11 @@ public class AlwaysConnectionFactoryStrategy implements ConnectionFactoryStrateg
         try {            
             
             ConnectionFactory cf =  (ConnectionFactory) Class.forName(definition.getName()).newInstance(); 
-            Properties props = definition.getProperties();
+            Map<String, String> props = definition.getProperties();
             // TODO We may need to factor this into provider specific classes rather than making the general assumption on bean style props
             for(PropertyDescriptor pd : Introspector.getBeanInfo(cf.getClass()).getPropertyDescriptors()) {
                 String propName = pd.getName();
-                String propValue = props.getProperty(propName);
+                String propValue = props.get(propName);
                 Method writeMethod = pd.getWriteMethod();
                 if(propValue != null && writeMethod != null) {
                     writeMethod.invoke(cf, propValue);

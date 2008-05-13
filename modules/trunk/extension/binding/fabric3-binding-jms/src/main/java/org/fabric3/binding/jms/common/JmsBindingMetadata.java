@@ -18,9 +18,14 @@
  */
 package org.fabric3.binding.jms.common;
 
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.Hashtable;
+import java.util.Map;
 
 import javax.naming.Context;
+
+import org.fabric3.scdl.ModelObject;
 
 /**
  * Logical model object for JMS binding definition. TODO Support for overriding
@@ -29,7 +34,12 @@ import javax.naming.Context;
  * 
  * @version $Revision$ $Date$
  */
-public class JmsBindingMetadata {
+public class JmsBindingMetadata extends ModelObject {
+
+    /**
+     *
+     */
+    private static final long serialVersionUID = 4623441503097788831L;
 
     /**
      * Correlation scheme.
@@ -61,6 +71,16 @@ public class JmsBindingMetadata {
      * Response definition.
      */
     private ResponseDefinition response;
+
+    /**
+     * Header properties
+     */
+    private HeadersDefinition headers;
+
+    /**
+     * operation properties
+     */
+    private Map<String,OperationPropertiesDefinition> operationProperties;
 
     /**
      * @return the connectionFactory
@@ -176,6 +196,29 @@ public class JmsBindingMetadata {
         
         return props;
         
+    }
+
+    public HeadersDefinition getHeaders() {
+        return headers;
+    }
+
+    public void setHeaders(HeadersDefinition headers) {
+        this.headers = headers;
+    }
+
+    public Map<String,OperationPropertiesDefinition> getOperationProperties() {
+        if(operationProperties==null){
+            return Collections.emptyMap();
+        }else{
+            return Collections.unmodifiableMap(operationProperties);
+        }
+    }
+
+    public void addOperationProperties(String name, OperationPropertiesDefinition operationProperties) {
+        if(this.operationProperties==null){
+            this.operationProperties = new HashMap<String, OperationPropertiesDefinition>();
+        }
+        this.operationProperties.put(name, operationProperties);
     }
 
 }

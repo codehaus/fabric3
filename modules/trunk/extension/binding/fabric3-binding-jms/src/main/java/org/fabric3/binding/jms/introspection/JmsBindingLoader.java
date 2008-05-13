@@ -29,20 +29,23 @@ import org.osoa.sca.Constants;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.binding.jms.common.AdministeredObjectDefinition;
 import org.fabric3.binding.jms.common.ConnectionFactoryDefinition;
 import org.fabric3.binding.jms.common.CorrelationScheme;
 import org.fabric3.binding.jms.common.CreateOption;
 import org.fabric3.binding.jms.common.DestinationDefinition;
 import org.fabric3.binding.jms.common.DestinationType;
+import org.fabric3.binding.jms.common.HeadersDefinition;
 import org.fabric3.binding.jms.common.JmsBindingMetadata;
 import org.fabric3.binding.jms.common.JmsURIMetadata;
+import org.fabric3.binding.jms.common.OperationPropertiesDefinition;
+import org.fabric3.binding.jms.common.PropertyAwareObject;
 import org.fabric3.binding.jms.common.ResponseDefinition;
 import org.fabric3.binding.jms.scdl.JmsBindingDefinition;
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.xml.LoaderException;
 import org.fabric3.introspection.xml.LoaderHelper;
 import org.fabric3.introspection.xml.TypeLoader;
+
 
 /**
  * @version $Revision$ $Date$
@@ -112,6 +115,12 @@ public class JmsBindingLoader implements TypeLoader<JmsBindingDefinition> {
                 } else if ("response".equals(name)) {
                     ResponseDefinition response = loadResponse(reader);
                     metadata.setResponse(response);
+                } else if ("headers".equals(name)) {
+                    HeadersDefinition headers = loadHeaders(reader);
+                    metadata.setHeaders(headers);
+                } else if ("operationProperties".equals(name)) {
+                    OperationPropertiesDefinition operationProperties = loadOperationProperties(reader);
+                    metadata.addOperationProperties(operationProperties.getName(),operationProperties);
                 }
                 break;
             case END_ELEMENT:
@@ -205,18 +214,81 @@ public class JmsBindingLoader implements TypeLoader<JmsBindingDefinition> {
     }
 
     /*
-    * Loads properties. TODO Support property type.
+     * Loads headers.
+     */
+    private HeadersDefinition loadHeaders(XMLStreamReader reader) throws XMLStreamException, LoaderException {
+      HeadersDefinition headers = new HeadersDefinition();
+      headers.setJMSCorrelationId(reader.getAttributeValue(null, "JMSCorrelationId"));
+      String  deliveryMode= reader.getAttributeValue(null, "JMSDeliveryMode");
+      if (deliveryMode != null) {
+          try {
+              headers.setJMSDeliveryMode(Integer.valueOf(deliveryMode));
+            } catch (NumberFormatException nfe) {
+                throw new LoaderException(deliveryMode + "is not a legal int value for JMSDeliveryMode" + nfe);
+            }
+        }
+      String priority = reader.getAttributeValue(null, "JMSPriority");
+      if(priority!=null){
+          try {
+                headers.setJMSPriority(Integer.valueOf(priority));
+            } catch (NumberFormatException nfe) {
+                throw new LoaderException(priority + "is not a legal int value for JMSPriority" + nfe);
+            }
+      }
+      String timeToLive = reader.getAttributeValue(null, "JMSTimeToLive");
+      if(timeToLive!=null){
+          try {
+              headers.setJMSTimeToLive(Long.valueOf(timeToLive));
+          } catch (NumberFormatException nfe) {
+              throw new LoaderException(timeToLive + "is not a legal long value for JMSTimeToLive" + nfe);
+          }
+      }
+      headers.setJMSType(reader.getAttributeValue(null, "JMSType"));
+      loadProperties(reader, headers, "headers");
+      return headers;
+    }
+
+    /*
+     * Loads operation properties.
+     */
+    private OperationPropertiesDefinition loadOperationProperties(XMLStreamReader reader) throws XMLStreamException, LoaderException {
+      OperationPropertiesDefinition optProperties = new OperationPropertiesDefinition();
+      optProperties.setName(reader.getAttributeValue(null, "name"));
+      optProperties.setNativeOperation(reader.getAttributeValue(null, "nativeOperation"));
+      String name;
+      while (true) {
+          switch (reader.next()) {
+          case START_ELEMENT:
+              name = reader.getName().getLocalPart();
+              if ("headers".equals(name)) {
+                  HeadersDefinition headersDefinition = loadHeaders(reader);
+                  optProperties.setHeaders(headersDefinition);
+              }else if ("property".equals(name)) {
+                  loadProperty(reader, optProperties);
+              }
+              break;
+          case END_ELEMENT:
+              name = reader.getName().getLocalPart();
+              if ("operationProperties".equals(name)) {
+                  return optProperties;
+              }
+              break;
+          }
+      }
+
+    }
+
+    /*
+    * Loads properties.
     */
-    private void loadProperties(XMLStreamReader reader, AdministeredObjectDefinition parent, String parentName) throws XMLStreamException {
+    private void loadProperties(XMLStreamReader reader, PropertyAwareObject parent, String parentName) throws XMLStreamException {
         String name;
         while (true) {
             switch (reader.next()) {
             case START_ELEMENT:
                 name = reader.getName().getLocalPart();
                 if ("property".equals(name)) {
-                    final String key = reader.getAttributeValue(null, "name");
-                    final String value = reader.getElementText();
-                    parent.addProperty(key, value);
+                    loadProperty(reader, parent);
                 }
                 break;
             case END_ELEMENT:
@@ -226,9 +298,17 @@ public class JmsBindingLoader implements TypeLoader<JmsBindingDefinition> {
                 }
                 break;
             }
-
         }
-
     }
+
+    /**
+     * Loads a property. TODO Support property type.
+     */
+    private void loadProperty(XMLStreamReader reader, PropertyAwareObject parent) throws XMLStreamException {
+        final String key = reader.getAttributeValue(null, "name");
+        final String value = reader.getElementText();
+        parent.addProperty(key, value);
+    }
+
 
 }

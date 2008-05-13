@@ -19,7 +19,9 @@
 package org.fabric3.binding.jms.control;
 
 import java.net.URI;
-import java.util.List;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.Set;
 
 import javax.xml.namespace.QName;
 
@@ -27,7 +29,6 @@ import org.fabric3.binding.jms.common.TransactionType;
 import org.fabric3.binding.jms.provision.JmsWireSourceDefinition;
 import org.fabric3.binding.jms.provision.JmsWireTargetDefinition;
 import org.fabric3.binding.jms.scdl.JmsBindingDefinition;
-import org.fabric3.scdl.BindingDefinition;
 import org.fabric3.scdl.Operation;
 import org.fabric3.scdl.ReferenceDefinition;
 import org.fabric3.scdl.ServiceContract;
@@ -54,6 +55,7 @@ public class JmsBindingGenerator implements BindingGenerator<JmsWireSourceDefini
     private static final QName TRANSACTED_ONEWAY = new QName(Constants.SCA_NS, "transactedOneWay");
     private static final QName TRANSACTED_ONEWAY_LOCAL = new QName(Constants.SCA_NS, "transactedOneWay.local");
     private static final QName TRANSACTED_ONEWAY_GLOBAL = new QName(Constants.SCA_NS, "transactedOneWay.global");
+    private static final QName ONEWAY = new QName(Constants.SCA_NS, "oneWay");
 
 
     public JmsWireSourceDefinition generateWireSource(LogicalBinding<JmsBindingDefinition> logicalBinding,
@@ -63,10 +65,14 @@ public class JmsBindingGenerator implements BindingGenerator<JmsWireSourceDefini
         ServiceContract<?> serviceContract = serviceDefinition.getServiceContract();
 
         TransactionType transactionType = getTransactionType(policy, serviceContract);
+        Set<String> oneWayOperations = getOneWayOperations(policy, serviceContract);
 
         URI classloaderId = logicalBinding.getParent().getParent().getParent().getUri();
+
         JmsWireSourceDefinition result = new JmsWireSourceDefinition(logicalBinding.getBinding().getMetadata(), transactionType, classloaderId);
         result.setUri(logicalBinding.getBinding().getTargetUri());
+        result.setOneWayOperations(oneWayOperations);
+
         return result;
 
     }
@@ -79,16 +85,14 @@ public class JmsBindingGenerator implements BindingGenerator<JmsWireSourceDefini
         ServiceContract<?> serviceContract = referenceDefinition.getServiceContract();
 
         TransactionType transactionType = getTransactionType(policy, serviceContract);
+        Set<String> oneWayOperations = getOneWayOperations(policy, serviceContract);
 
         URI classloaderId = logicalBinding.getParent().getParent().getParent().getUri();
-        JmsWireTargetDefinition result = new JmsWireTargetDefinition(logicalBinding.getBinding().getMetadata(), transactionType, classloaderId);
-        result.setUri(logicalBinding.getBinding().getTargetUri());
-        List<BindingDefinition> callbackBindings = referenceDefinition.getCallbackBindings();
-        if(callbackBindings!= null && !callbackBindings.isEmpty()){
-            BindingDefinition bindingDefinition = callbackBindings.get(0);
-        }
-        return result;
 
+        JmsWireTargetDefinition result = new JmsWireTargetDefinition(logicalBinding.getBinding().getMetadata(), transactionType, classloaderId);
+        result.setOneWayOperations(oneWayOperations);
+        result.setUri(logicalBinding.getBinding().getTargetUri());
+        return result;
     }
 
     /*
@@ -111,6 +115,30 @@ public class JmsBindingGenerator implements BindingGenerator<JmsWireSourceDefini
         //no transaction policy specified, use local
         return TransactionType.LOCAL;
 
+    }
+
+    /*
+     * Gets one way method names.
+     */
+    private Set<String> getOneWayOperations(Policy policy, ServiceContract<?> serviceContract) {
+        Set<String> result= null;
+        // If any operation has the intent, return that
+        for (Operation<?> operation : serviceContract.getOperations()) {
+            for (Intent intent : policy.getProvidedIntents(operation)) {
+                if (ONEWAY.equals(intent.getName())) {
+                    if(result==null){
+                        result = new HashSet<String>();
+                    }
+                    result.add(operation.getName());
+                    break;
+                }
+            }
+        }
+        if(result!=null){
+            return result;
+        }else{
+            return Collections.emptySet();
+        }
     }
 
 }
