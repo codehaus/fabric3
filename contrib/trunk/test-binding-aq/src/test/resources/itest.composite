@@ -19,7 +19,7 @@
 	xmlns:sca="http://www.osoa.org/xmlns/sca/1.0"
 	xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha" name="AQTest">
 
-	<component name="HowAreyou_Test">
+	<!-- component name="HowAreyou_Test">
 		<f3:junit class="org.fabric3.binding.aq.test.AQBindingTest" />
 		<reference name="helloService">
 			<binding.aq correlationScheme="RequestMsgIDToCorrelID">
@@ -31,7 +31,7 @@
 				</response>
 			</binding.aq>
 		</reference>
-	</component>
+	</component-->
 
 	<component name="EchoTest">
 		<f3:junit
@@ -45,12 +45,12 @@
 		</reference>
 	</component>
 
-	<component name="HelloService">
+	<!-- component name="HelloService">
 		<implementation.java
 			class="org.fabric3.binding.aq.test.HelloServiceImpl" />
 		<service name="HelloService">
 			<binding.aq correlationScheme="RequestMsgIDToCorrelID"
-				requires="sca:transactedOneWay.local">
+				requires="sca:transactedOneWay.global">
 				<destination name="REQ_Q" type="queue" create="always">
 					<property name="datasource">AQDataSource</property>
 				</destination>
@@ -59,14 +59,14 @@
 				</response>
 			</binding.aq>
 		</service>
-	</component>
+	</component -->
 
 	<component name="EchoService">
 		<implementation.java
 			class="org.fabric3.binding.aq.test.EchoServiceImpl" />
 		<service name="EchoService">
 			<binding.aq correlationScheme="RequestMsgIDToCorrelID"
-				requires="sca:transactedOneWay.local">
+				requires="sca:transactedOneWay.global">
 				<destination name="FIRE_FORGET_Q" type="queue" create="always" >
 					<property name="datasource">AQDataSource</property>
 				</destination>
