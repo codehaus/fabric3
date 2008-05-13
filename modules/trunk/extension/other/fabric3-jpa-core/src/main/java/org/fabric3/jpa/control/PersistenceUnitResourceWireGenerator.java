@@ -62,7 +62,7 @@ public class PersistenceUnitResourceWireGenerator implements ResourceWireGenerat
         URI classLoaderUri = logicalResource.getParent().getParent().getUri();
             
         PersistenceUnitWireTargetDefinition pwtd = new PersistenceUnitWireTargetDefinition();
-        pwtd.setOptimizable(false);
+        pwtd.setOptimizable(true);
         pwtd.setUnitName(logicalResource.getResourceDefinition().getUnitName());
         pwtd.setClassLoaderUri(classLoaderUri);
             

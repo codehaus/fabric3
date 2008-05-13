@@ -19,21 +19,19 @@
 package org.fabric3.jpa.runtime;
 
 import java.net.URI;
-import java.util.Map;
+
 import javax.persistence.EntityManagerFactory;
 
-import org.osoa.sca.annotations.Reference;
-
 import org.fabric3.jpa.provision.PersistenceUnitWireTargetDefinition;
-import org.fabric3.jpa.spi.classloading.EmfClassLoaderService;
 import org.fabric3.jpa.spi.EmfBuilderException;
+import org.fabric3.jpa.spi.classloading.EmfClassLoaderService;
+import org.fabric3.spi.ObjectCreationException;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.TargetWireAttacher;
-import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
-import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.Wire;
+import org.osoa.sca.annotations.Reference;
 
 /**
  * Attaches the target side of entity manager factories.
@@ -57,7 +55,7 @@ public class PersistenceUnitWireAttacher implements TargetWireAttacher<Persisten
 
     public void attachToTarget(PhysicalWireSourceDefinition source, PersistenceUnitWireTargetDefinition target, Wire wire) throws WiringException {
 
-        String unitName = target.getUnitName();
+        /*String unitName = target.getUnitName();
         URI classLoaderUri = target.getClassLoaderUri();
         ClassLoader appCl = classLoaderService.getEmfClassLoader(classLoaderUri);
         ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
@@ -80,11 +78,36 @@ public class PersistenceUnitWireAttacher implements TargetWireAttacher<Persisten
             throw new WiringException(e);
         } finally {
             Thread.currentThread().setContextClassLoader(oldCl);
-        }
+        }*/
+        throw new AssertionError();
+        
     }
 
     public ObjectFactory<?> createObjectFactory(PersistenceUnitWireTargetDefinition target) throws WiringException {
-        throw new AssertionError();
+        
+        final String unitName = target.getUnitName();
+        URI classLoaderUri = target.getClassLoaderUri();
+        final ClassLoader appCl = classLoaderService.getEmfClassLoader(classLoaderUri);
+        ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
+
+        try {
+            
+            Thread.currentThread().setContextClassLoader(appCl);
+
+            return new ObjectFactory<EntityManagerFactory>() {
+                public EntityManagerFactory getInstance() throws ObjectCreationException {
+                    try {
+                        return emfBuilder.build(unitName, appCl);
+                    } catch (EmfBuilderException e) {
+                        throw new ObjectCreationException(e);
+                    }
+                }                
+            };
+
+        } finally {
+            Thread.currentThread().setContextClassLoader(oldCl);
+        }
+        
     }
 
 }
