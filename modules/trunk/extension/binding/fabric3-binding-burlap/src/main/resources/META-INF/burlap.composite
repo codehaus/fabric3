@@ -16,13 +16,14 @@
  under the License.
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
+           xmlns:burlap="http://www.fabric3.org/binding/burlap/0.2"
            xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
            xmlns:system="http://fabric3.org/xmlns/sca/system/2.0-alpha"
            targetNamespace="org.codehaus.fabric3"
            name="BurlapBindingExtension">
 
     <!-- Burlap Binding Loader -->
-    <component name="BurlapBindingLoader">
+    <component name="BurlapBindingLoader" f3:key="burlap:binding.burlap">
         <system:implementation.system class="org.fabric3.binding.burlap.introspection.BurlapBindingLoader"/>
     </component>
 
