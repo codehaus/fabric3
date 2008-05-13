@@ -23,7 +23,6 @@ import javax.jms.Connection;
 import javax.jms.ConnectionFactory;
 import javax.jms.Destination;
 import javax.jms.JMSException;
-import javax.jms.QueueConnectionFactory;
 import javax.jms.Session;
 
 import org.fabric3.binding.aq.Fabric3AQException;
@@ -36,7 +35,7 @@ import org.fabric3.binding.aq.model.DestinationDefinition;
 public class DefaultDestinationFactory implements DestinationFactory<ConnectionFactory> {
 
     /**
-     * Creates a destination from a {@link DestinationDefinition} and {@link QueueConnectionFactory}
+     * Creates a destination from a {@link DestinationDefinition} and {@link ConnectionFactory}
      */
     public Destination getDestination(final DestinationDefinition definition, final ConnectionFactory connectionFactory) {        
         final String name = definition.getName();        
