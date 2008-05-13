@@ -35,12 +35,9 @@ import org.fabric3.binding.aq.model.ResponseDefinition;
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.xml.LoaderException;
 import org.fabric3.introspection.xml.LoaderHelper;
-import org.fabric3.introspection.xml.LoaderRegistry;
 import org.fabric3.introspection.xml.TypeLoader;
 import org.osoa.sca.Constants;
-import org.osoa.sca.annotations.Destroy;
 import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
 /**
@@ -51,9 +48,6 @@ public class AQBindingLoader implements TypeLoader<AQBindingDefinition> {
 
     /** Qualified name for the binding element. */
     public static final QName BINDING_QNAME = new QName(Constants.SCA_NS, "binding.aq");
-
-    /** Registry*/
-    private final LoaderRegistry registry;
     
     /** Assits in Loading XML with Policies */
     private final LoaderHelper loaderHelper;  
@@ -61,30 +55,12 @@ public class AQBindingLoader implements TypeLoader<AQBindingDefinition> {
 
     /**
      * COnstructor
-     * @param registry Loader registry.
+     * @param LoaderHelper loaderHelper
      */
-    public AQBindingLoader(@Reference LoaderRegistry registry, @Reference LoaderHelper loaderHelper) {        
-          this.registry = registry;
+    public AQBindingLoader(@Reference LoaderHelper loaderHelper) {        
           this.loaderHelper = loaderHelper;
           
     }
-       
-    /**
-     * Loader AQ Loder into the registry
-     */
-    @Init
-    public void start() {
-        registry.registerLoader(BINDING_QNAME, this);
-    }
-
-    /**
-     * Unload
-     */
-    @Destroy
-    public void stop() {
-        registry.unregisterLoader(BINDING_QNAME);
-    }
-
    
     /**
      * @see org.fabric3.introspection.xml.TypeLoader#load(javax.xml.stream.XMLStreamReader, org.fabric3.introspection.IntrospectionContext)
