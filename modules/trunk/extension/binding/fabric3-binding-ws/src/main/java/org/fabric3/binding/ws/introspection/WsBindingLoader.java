@@ -25,14 +25,11 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
 import org.osoa.sca.Constants;
-import org.osoa.sca.annotations.Destroy;
 import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.xml.LoaderException;
-import org.fabric3.introspection.xml.LoaderRegistry;
 import org.fabric3.introspection.xml.LoaderUtil;
 import org.fabric3.introspection.xml.LoaderHelper;
 import org.fabric3.introspection.xml.TypeLoader;
@@ -49,28 +46,15 @@ public class WsBindingLoader implements TypeLoader<WsBindingDefinition> {
      */
     public static final QName BINDING_QNAME = new QName(Constants.SCA_NS, "binding.ws");
 
-    private LoaderRegistry registry;
     private final LoaderHelper loaderHelper;
 
     /**
      * Constructor.
      *
-     * @param registry     Loader registry.
      * @param loaderHelper the policy helper
      */
-    public WsBindingLoader(@Reference LoaderRegistry registry, @Reference LoaderHelper loaderHelper) {
-        this.registry = registry;
+    public WsBindingLoader(@Reference LoaderHelper loaderHelper) {
         this.loaderHelper = loaderHelper;
-    }
-
-    @Init
-    public void start() {
-        registry.registerLoader(BINDING_QNAME, this);
-    }
-
-    @Destroy
-    public void stop() {
-        registry.unregisterLoader(BINDING_QNAME);
     }
 
     public WsBindingDefinition load(XMLStreamReader reader, IntrospectionContext introspectionContext)

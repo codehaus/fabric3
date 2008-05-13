@@ -16,6 +16,7 @@
  under the License.
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
+           xmlns:sca="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
            xmlns:system="http://fabric3.org/xmlns/sca/system/2.0-alpha"
            targetNamespace="org.codehaus.fabric3"
@@ -29,7 +30,7 @@
     </component>
 
     <!-- Binding Loader -->
-    <component name="RMIBindingLoader">
+    <component name="RMIBindingLoader" f3:key="sca:binding.rmi">
         <system:implementation.system class="org.fabric3.binding.rmi.model.logical.RmiBindingLoader"/>
     </component>
 

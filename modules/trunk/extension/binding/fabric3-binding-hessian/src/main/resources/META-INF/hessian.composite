@@ -18,11 +18,12 @@
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
            xmlns:system="http://fabric3.org/xmlns/sca/system/2.0-alpha"
+		   xmlns:hessian="http://www.fabric3.org/binding/hessian/0.2"
            targetNamespace="org.codehaus.fabric3"
            name="HessianBindingExtension">
 
     <!-- Hessian Binding Loader -->
-    <component name="HessianBindingLoader">
+    <component name="HessianBindingLoader" f3:key="hessian:binding.hessian">
         <system:implementation.system class="org.fabric3.binding.hessian.introspection.HessianBindingLoader"/>
     </component>
 

@@ -36,7 +36,7 @@ destination uri the reference should flow invocations to as in:
         <system:implementation.system class="org.fabric3.binding.test.BindingChannelImpl"/>
     </component>
 
-    <component name="TestBindingLoader">
+    <component name="TestBindingLoader" f3:key="f3:binding.test">
         <system:implementation.system class="org.fabric3.binding.test.TestBindingLoader"/>
     </component>
 

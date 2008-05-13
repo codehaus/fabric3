@@ -16,13 +16,14 @@
  under the License.
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
+           xmlns:sca="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
            xmlns:system="http://fabric3.org/xmlns/sca/system/2.0-alpha"
            targetNamespace="urn:maven:org.codehaus.fabric3:fabric3-binding-ws"
            name="introspection">
 
     <!-- Ws Binding Loader -->
-    <component name="org.fabric3.binding.ws.introspection.WsBindingLoader">
+    <component name="org.fabric3.binding.ws.introspection.WsBindingLoader" f3:key="sca:binding.ws">
         <system:implementation.system class="org.fabric3.binding.ws.introspection.WsBindingLoader"/>
     </component>
 
