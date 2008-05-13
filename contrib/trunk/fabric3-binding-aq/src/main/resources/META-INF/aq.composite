@@ -16,9 +16,9 @@
  under the License.
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
-           xmlns="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
            xmlns:system="http://fabric3.org/xmlns/sca/system/2.0-alpha"
+           xmlns:sca="http://www.osoa.org/xmlns/sca/1.0"
            targetNamespace="org.codehaus.fabric3"
            name="AQBindingExtension"
            autowire="true">
@@ -34,7 +34,7 @@
     </component>
 
     <!-- JMS Binding Loader -->
-    <component name="AQBindingLoader" f3:key="sca:binding.aq">
+    <component f3:key="sca:binding.aq" name="AQBindingLoader">
         <system:implementation.system class="org.fabric3.binding.aq.model.logical.AQBindingLoader"/>
     </component>
 
@@ -46,20 +46,33 @@
    <!-- JMS Wire Attachers -->
     <component f3:key="org.fabric3.binding.aq.model.physical.AQWireSourceDefinition" name="org.fabric3.binding.aq.wire.AQSourceWireAttacher">
         <system:implementation.system class="org.fabric3.binding.aq.wire.AQSourceWireAttacher"/>
+        <reference name="connectionFactoryAccessor" target="XAConnectionFactory"/>
+        <reference name="destinationFactory" target="XAFactory"/>
     </component>
     
     <component f3:key="org.fabric3.binding.aq.model.physical.AQWireTargetDefinition" name="org.fabric3.binding.aq.wire.AQTargetWireAttacher">
         <system:implementation.system class="org.fabric3.binding.aq.wire.AQTargetWireAttacher"/>
+        <reference name="connectionFactoryAccessor" target="ConnectionFactory"/>
+        <reference name="destinationFactory" target="DestinationFactory"/>
     </component>
     
      <!-- Always create connection factory strategy -->
     <component name="ConnectionFactory">
         <system:implementation.system class="org.fabric3.binding.aq.connectionfactory.DefaultConnectionFactoryAccessor"/>
+    </component>
+    
+    <!-- Always create connection factory strategy -->
+    <component name="XAConnectionFactory">
+        <system:implementation.system class="org.fabric3.binding.aq.connectionfactory.XAConnectionFactoryAccessor"/>
     </component> 
 
     <!-- Destination Factory to be used for creating destinations -->
     <component name="DestinationFactory">
         <system:implementation.system class="org.fabric3.binding.aq.destination.DefaultDestinationFactory"/>
+    </component>
+    
+    <component name="XAFactory">
+        <system:implementation.system class="org.fabric3.binding.aq.destination.XADestinationFactory"/>
     </component>   
 
     <!-- Feature -->
