@@ -30,15 +30,14 @@ import org.fabric3.scdl.BindingDefinition;
  */
 public class AQBindingDefinition extends BindingDefinition {
 
-    /**
-     * JMS binding metadata shared between logical and physical.
-     */
+    
+    private static final long serialVersionUID = 2226007278215138678L;  
     private AQBindingMetadata metadata;
 
     /**
      * @param metadata Metadata to be initialized.
      */
-    public AQBindingDefinition(AQBindingMetadata metadata) {
+    public AQBindingDefinition(final AQBindingMetadata metadata) {
         super(AQBindingLoader.BINDING_QNAME);
         this.metadata = metadata;
     }
@@ -53,7 +52,7 @@ public class AQBindingDefinition extends BindingDefinition {
     /**
      * @param metadata the metadata to set
      */
-    public void setMetadata(AQBindingMetadata metadata) {
+    public void setMetadata(final AQBindingMetadata metadata) {
         this.metadata = metadata;
     }
 

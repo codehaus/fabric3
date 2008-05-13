@@ -47,23 +47,22 @@ import org.osoa.sca.annotations.Reference;
 public class AQBindingLoader implements TypeLoader<AQBindingDefinition> {
 
     /** Qualified name for the binding element. */
-    public static final QName BINDING_QNAME = new QName(Constants.SCA_NS, "binding.aq");
+    public static final QName BINDING_QNAME = new QName(Constants.SCA_NS, "binding.aq");    
     
-    /** Assits in Loading XML with Policies */
+    /** Assists in Loading XML with Policies */
     private final LoaderHelper loaderHelper;  
               
 
     /**
-     * COnstructor
-     * @param LoaderHelper loaderHelper
+     * Constructor
+     * @param LoaderHelper
      */
-    public AQBindingLoader(@Reference LoaderHelper loaderHelper) {        
-          this.loaderHelper = loaderHelper;
-          
+    public AQBindingLoader(final @Reference LoaderHelper loaderHelper) {                  
+          this.loaderHelper = loaderHelper;          
     }
-   
+    
     /**
-     * @see org.fabric3.introspection.xml.TypeLoader#load(javax.xml.stream.XMLStreamReader, org.fabric3.introspection.IntrospectionContext)
+     * 
      */
     public AQBindingDefinition load(final XMLStreamReader reader, final IntrospectionContext loaderContext)
         throws XMLStreamException, LoaderException {             
@@ -160,7 +159,7 @@ public class AQBindingLoader implements TypeLoader<AQBindingDefinition> {
     }
 
     /*
-     * Loads properties. TODO Support property type.
+     * 
      */
     private void loadProperties(XMLStreamReader reader, AdministeredObjectDefinition parent, String parentName) throws XMLStreamException {
 
