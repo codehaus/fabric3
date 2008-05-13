@@ -21,6 +21,8 @@ package org.fabric3.binding.aq.connectionfactory;
 
 import javax.jms.ConnectionFactory;
 import javax.jms.JMSException;
+import javax.jms.XAQueueConnectionFactory;
+import javax.sql.XADataSource;
 
 import oracle.jms.AQjmsFactory;
 
@@ -31,28 +33,24 @@ import org.fabric3.binding.aq.model.AQBindingMetadata;
  * Default implementation that gets the {@link ConnectionFactory} from the
  * {@link AQjmsFactory}
  * 
- * @version $Revision: 2902 $ $Date: 2007-09-15 13:05:03 +0100 (Sat, 15 Sep
- *          2007) $
+ * @version $Revision: 2902 $ $Date: 2007-09-15 13:05:03 +0100 (Sat, 15 Sep 2007) $
  */
-public class DefaultConnectionFactoryAccessor implements ConnectionFactoryAccessor<ConnectionFactory> {
+public class XAConnectionFactoryAccessor implements ConnectionFactoryAccessor<XAQueueConnectionFactory> {
 
     /**
      * Gets a QueueConnectionFactory from {@link AQjmsFactory}
      * 
-     * @param metadata -
-     *            meta information used to the QueueConnectionFactory
+     * @param metadata - meta information used to the QueueConnectionFactory
      * @return QueueConnectionFactory
      */
-    public ConnectionFactory getConnectionFactory(final AQBindingMetadata metadata) {
-        final ConnectionFactory connectionFactory;
+    public XAQueueConnectionFactory getConnectionFactory(final AQBindingMetadata metadata) {
+        final XAQueueConnectionFactory connectionFactory;
         try {
-            connectionFactory = AQjmsFactory.getConnectionFactory(metadata.getDataSource());            
+            connectionFactory = AQjmsFactory.getXAQueueConnectionFactory((XADataSource) metadata.getDataSource());           
         } catch (JMSException je) {
             throw new Fabric3AQException("Unable to create AQ connection factory ", je);
         }
-
         return connectionFactory;
     }
 
-    
 }

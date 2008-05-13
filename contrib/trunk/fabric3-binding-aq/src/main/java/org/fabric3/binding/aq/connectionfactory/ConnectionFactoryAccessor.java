@@ -27,7 +27,7 @@ import org.fabric3.binding.aq.model.AQBindingMetadata;
  * The Connection Factory Accessor is used to retrieve a {@link ConnectionFactory}
  * @version $Revsion$ $Date: 2008-02-26 09:26:36 +0000 (Tue, 26 Feb 2008) $
  */
-public interface ConnectionFactoryAccessor {
+public interface ConnectionFactoryAccessor<CF extends ConnectionFactory> {
    
     
     /**
@@ -35,7 +35,7 @@ public interface ConnectionFactoryAccessor {
      * @param metadata is used to get a {@link ConnectionFactory}
      * @return ConnectionFactory 
      */
-    ConnectionFactory getConnectionFactory(AQBindingMetadata metadata);
+    CF getConnectionFactory(AQBindingMetadata metadata);
     
 
 }
