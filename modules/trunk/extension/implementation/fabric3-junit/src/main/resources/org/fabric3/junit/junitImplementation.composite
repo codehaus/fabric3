@@ -16,11 +16,12 @@
  under the License.
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
+           xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
            xmlns:system="http://fabric3.org/xmlns/sca/system/2.0-alpha"
            name="JUnitImplementation" targetNamespace="urn:org.codehaus.fabric3:fabric3-junit"
            autowire="true">
 
-    <component name="org.fabric3.junit.introspection.JUnitImplementationLoader">
+    <component name="org.fabric3.junit.introspection.JUnitImplementationLoader" f3:key="f3:junit">
         <system:implementation.system class="org.fabric3.junit.introspection.JUnitImplementationLoader"/>
     </component>
 

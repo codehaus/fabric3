@@ -21,15 +21,12 @@ package org.fabric3.junit.introspection;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
-import org.osoa.sca.annotations.Destroy;
 import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.IntrospectionException;
 import org.fabric3.introspection.xml.LoaderException;
-import org.fabric3.introspection.xml.LoaderRegistry;
 import org.fabric3.introspection.xml.LoaderUtil;
 import org.fabric3.introspection.xml.TypeLoader;
 import org.fabric3.junit.scdl.JUnitImplementation;
@@ -41,23 +38,10 @@ import org.fabric3.pojo.processor.ProcessingException;
 @EagerInit
 public class JUnitImplementationLoader implements TypeLoader<JUnitImplementation> {
 
-    private final LoaderRegistry registry;
     private final JUnitImplementationProcessor implementationProcessor;
 
-    public JUnitImplementationLoader(@Reference LoaderRegistry registry,
-                                     @Reference JUnitImplementationProcessor implementationProcessor) {
-        this.registry = registry;
+    public JUnitImplementationLoader(@Reference JUnitImplementationProcessor implementationProcessor) {
         this.implementationProcessor = implementationProcessor;
-    }
-
-    @Init
-    public void init() {
-        registry.registerLoader(JUnitImplementation.IMPLEMENTATION_JUNIT, this);
-    }
-
-    @Destroy
-    public void destroy() {
-        registry.unregisterLoader(JUnitImplementation.IMPLEMENTATION_JUNIT);
     }
 
     public JUnitImplementation load(XMLStreamReader reader, IntrospectionContext introspectionContext)
