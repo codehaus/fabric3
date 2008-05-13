@@ -20,11 +20,9 @@ import loanapp.acceptance.AcceptanceCoordinator;
 import loanapp.acceptance.LoanNotApprovedException;
 import loanapp.acceptance.LoanNotFoundException;
 import loanapp.loan.LoanException;
-import loanapp.validation.ValidationService;
 import loanapp.message.LoanOptions;
 import org.osoa.sca.ComponentContext;
 import org.osoa.sca.annotations.Context;
-import org.osoa.sca.annotations.Reference;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
@@ -41,9 +39,6 @@ public class LoanSearchFormHandler extends HttpServlet {
 
     @Context
     protected ComponentContext context;
-
-    @Reference
-    protected ValidationService validationService;
 
     public void init(ServletConfig servletConfig) throws ServletException {
         super.init(servletConfig);

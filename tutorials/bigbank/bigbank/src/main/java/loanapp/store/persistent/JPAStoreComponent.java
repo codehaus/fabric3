@@ -40,7 +40,7 @@ public class JPAStoreComponent implements StoreService {
     private EntityManager em;
 
     @PersistenceContext(name = "loanApplicationEmf", unitName = "loanApplication")
-    public void setEm(EntityManager em) {
+    public void setEntityManager(EntityManager em) {
         this.em = em;
     }
 
