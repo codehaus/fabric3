@@ -29,7 +29,7 @@ import org.fabric3.binding.aq.model.DestinationDefinition;
  * Factory used to create the Jms Destinations\
  * @version $Revsion$ $Date$
  */
-public interface DestinationFactory {
+public interface DestinationFactory<CF extends ConnectionFactory> {
 
   
     /**
@@ -38,6 +38,6 @@ public interface DestinationFactory {
      * @param connetcionFactory - connection used to get Queue from
      * @return return the created {@link Destination}
      */
-    Destination getDestination(DestinationDefinition definition,ConnectionFactory connectionFactory);
+    Destination getDestination(DestinationDefinition definition, CF connectionFactory);
 
 }

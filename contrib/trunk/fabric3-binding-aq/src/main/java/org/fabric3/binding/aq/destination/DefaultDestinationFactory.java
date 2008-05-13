@@ -33,7 +33,7 @@ import org.fabric3.binding.aq.model.DestinationDefinition;
 /**
  * Default implementation for {@link DestinationFactory}
  */
-public class DefaultDestinationFactory implements DestinationFactory {
+public class DefaultDestinationFactory implements DestinationFactory<ConnectionFactory> {
 
     /**
      * Creates a destination from a {@link DestinationDefinition} and {@link QueueConnectionFactory}
