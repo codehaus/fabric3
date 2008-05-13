@@ -18,20 +18,30 @@
  */
 package org.fabric3.binding.aq.tx;
 
-import javax.jms.Connection;
 import javax.jms.Session;
+
 
 /**
  * @version $Revision$ $Date$
  */
 public interface TransactionHandler {
     
-    void enlist(Session session) throws JmsTxException;
     
-    void commit() throws JmsTxException;
+    /**
+     * Start the global transaction
+     * @throws AQJmsTxException
+     */
+    void enlist(Session session) throws AQJmsTxException;
     
-    void rollback() throws JmsTxException;
+    /**
+     * Commits global transaction
+     * @throws AQJmsTxException
+     */
+    void commit() throws AQJmsTxException;
     
-    Session createSession(Connection con) throws JmsTxException;
-
+    /**
+     * Rollback's the global transaction 
+     * @throws AQJmsTxException
+     */
+    void rollback() throws AQJmsTxException;
 }

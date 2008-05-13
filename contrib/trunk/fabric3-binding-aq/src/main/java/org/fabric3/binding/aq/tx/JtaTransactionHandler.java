@@ -18,105 +18,120 @@
  */
 package org.fabric3.binding.aq.tx;
 
-import javax.jms.Connection;
-import javax.jms.JMSException;
 import javax.jms.Session;
 import javax.jms.XASession;
-import javax.transaction.Transaction;
+import javax.transaction.HeuristicMixedException;
+import javax.transaction.HeuristicRollbackException;
+import javax.transaction.NotSupportedException;
+import javax.transaction.RollbackException;
+import javax.transaction.SystemException;
 import javax.transaction.TransactionManager;
 import javax.transaction.xa.XAResource;
 
 import org.osoa.sca.annotations.Reference;
 
 /**
- * @version $Revision$ $Date$
+ * @version $Revision$ $Date: 2008-02-26 09:26:36 +0000 (Tue, 26 Feb
+ *          2008) $
+ * Handling the JTA transactions         
  */
 public class JtaTransactionHandler implements TransactionHandler {
-    
+
     private TransactionManager transactionManager;
-    
+
+    /**
+     * Injects the Transaction Manager
+     * 
+     * @param transactionManager
+     */
     @Reference
     public void setTransactionManager(TransactionManager transactionManager) {
         this.transactionManager = transactionManager;
     }
 
     /**
-     * @see org.fabric3.binding.aq.tx.TransactionHandler#begin(javax.jms.Session)
+     * Begin a transaction
+     * @throws AQJmsTxException
      */
-    public void enlist(Session session) throws JmsTxException {
-        
-        if(transactionManager == null) {
-            throw new IllegalStateException("No transaction manager available");
-        }
-        
-        try {
-            
-            Transaction transaction = transactionManager.getTransaction();
-            if(transaction == null) {
-                transactionManager.begin();
-            }
-            
-            if(!(session instanceof XASession)) {
-                throw new JmsTxException("XA session required for global transactions");
-            }
-            
-            XASession xaSession = (XASession) session;
-            XAResource xaResource = xaSession.getXAResource();
-            
-            transactionManager.getTransaction().enlistResource(xaResource);
+    public void enlist(final Session session) throws AQJmsTxException {
 
-        } catch (Exception e) {
-            throw new JmsTxException(e);
+        assertOnTransactionManager();
+        try {
+            if (transactionManager.getTransaction() == null) {
+                transactionManager.begin();
+            }            
+            enlistResource(session);
+        } catch (SystemException e) {
+            throw new AQJmsTxException(e);
+        } catch (NotSupportedException e) {
+            throw new AQJmsTxException("Transaction Not Supported ", e);
+        } catch (IllegalStateException ie) {
+            throw new AQJmsTxException(ie);
+        } catch (RollbackException re) {
+            throw new AQJmsTxException(re);
         }
-        
-    }
+    }    
 
     /**
-     * @see org.fabric3.binding.aq.tx.TransactionHandler#commit(javax.jms.Session)
+     * Commits the Transaction
+     * @throws AQJmsTxException
      */
-    public void commit() throws JmsTxException {
-        
-        if(transactionManager == null) {
-            throw new IllegalStateException("No transaction manager available");
-        }
-        
+    public void commit() throws AQJmsTxException {
+
+        assertOnTransactionManager();
         try {
             transactionManager.commit();
-        } catch (Exception e) {
-            throw new JmsTxException(e);
+        } catch (IllegalStateException e) {
+            throw new AQJmsTxException(e);
+        } catch (SecurityException e) {
+            throw new AQJmsTxException(e);
+        } catch (HeuristicMixedException e) {
+            throw new AQJmsTxException(e);
+        } catch (HeuristicRollbackException e) {
+            throw new AQJmsTxException(e);
+        } catch (RollbackException e) {
+            throw new AQJmsTxException(e);
+        } catch (SystemException e) {
+            throw new AQJmsTxException(e);
         }
-        
-        
+
     }
 
     /**
-     * @see org.fabric3.binding.aq.tx.TransactionHandler#rollback(javax.jms.Session)
+     * roll's back the transaction
+     * @throws AQJmsTxException
      */
-    public void rollback() throws JmsTxException {
-        
-        if(transactionManager == null) {
-            throw new IllegalStateException("No transaction manager available");
-        }
-        
+    public void rollback() throws AQJmsTxException {
+
+        assertOnTransactionManager();
         try {
             transactionManager.rollback();
-        } catch (Exception e) {
-            throw new JmsTxException(e);
+        } catch (IllegalStateException e) {
+            throw new AQJmsTxException(e);
+        } catch (SecurityException e) {
+            throw new AQJmsTxException(e);
+        } catch (SystemException e) {
+            throw new AQJmsTxException(e);
         }
-        
+
     }
 
-    /**
-     * @see org.fabric3.binding.aq.tx.TransactionHandler#createSession(javax.jms.Connection)
+    /*
+     * @throws IllegalStateException when the injected
+     * {@link TransactionManager} is null
      */
-    public Session createSession(Connection con) throws JmsTxException {
-        
-        try {   
-            return con.createSession(false, Session.SESSION_TRANSACTED);
-        } catch(JMSException e) {
-            throw new JmsTxException(e);
+    private void assertOnTransactionManager() {
+        if (transactionManager == null) {
+            throw new IllegalStateException("No transaction manager available");
         }
-        
     }
-
+    
+   /*
+    * Enlists the session resource
+    */
+   private void enlistResource(final Session session) throws RollbackException, SystemException {
+       final XASession xaSession = (XASession) session;
+       final XAResource xaResource = xaSession.getXAResource();       
+       transactionManager.getTransaction().enlistResource(xaResource);
+   }
 }
