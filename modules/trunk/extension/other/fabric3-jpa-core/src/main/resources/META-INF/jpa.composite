@@ -75,7 +75,7 @@
     </component>
     
     <!-- JPA Implementation Loader -->
-    <component name="org.fabric3.jpa.introspection.JpaImplementationLoader">
+    <component name="org.fabric3.jpa.introspection.JpaImplementationLoader" f3:key="f3:implementation.jpa">
         <system:implementation.system class="org.fabric3.jpa.introspection.JpaImplementationLoader"/>
     </component>
 

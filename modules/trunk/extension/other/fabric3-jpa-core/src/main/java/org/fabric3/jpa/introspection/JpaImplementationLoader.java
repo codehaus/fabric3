@@ -34,7 +34,6 @@ import org.fabric3.introspection.TypeMapping;
 import org.fabric3.introspection.contract.ContractProcessor;
 import org.fabric3.introspection.contract.InvalidServiceContractException;
 import org.fabric3.introspection.xml.LoaderException;
-import org.fabric3.introspection.xml.LoaderRegistry;
 import org.fabric3.introspection.xml.TypeLoader;
 import org.fabric3.java.introspection.JavaImplementationProcessor;
 import org.fabric3.java.scdl.JavaImplementation;
@@ -45,7 +44,6 @@ import org.fabric3.scdl.FieldInjectionSite;
 import org.fabric3.scdl.ServiceContract;
 import org.fabric3.spi.Constants;
 import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
 /**
@@ -58,24 +56,13 @@ public class JpaImplementationLoader implements TypeLoader<JavaImplementation> {
     
     public static final QName IMPLEMENTATION_JPA = new QName(Constants.FABRIC3_NS, "implementation.jpa");
     
-    private final LoaderRegistry loaderRegistry;
     private final JavaImplementationProcessor implementationProcessor;
     private final ServiceContract<Type> factoryServiceContract;
 
     public JpaImplementationLoader(@Reference JavaImplementationProcessor implementationProcessor,
-                                   @Reference LoaderRegistry loaderRegistry,
                                    @Reference ContractProcessor contractProcessor) throws InvalidServiceContractException {
         this.implementationProcessor = implementationProcessor;
-        this.loaderRegistry = loaderRegistry;
         factoryServiceContract = contractProcessor.introspect(new TypeMapping(), EntityManager.class);
-    }
-    
-    /**
-     * Self registers with the registry.
-     */
-    @Init
-    public void start() {
-        loaderRegistry.registerLoader(IMPLEMENTATION_JPA, this);
     }
 
     /**
