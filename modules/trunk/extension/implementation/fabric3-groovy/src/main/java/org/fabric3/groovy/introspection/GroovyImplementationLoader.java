@@ -19,9 +19,7 @@ package org.fabric3.groovy.introspection;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
-import org.osoa.sca.annotations.Destroy;
 import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.groovy.scdl.GroovyImplementation;
@@ -29,7 +27,6 @@ import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.IntrospectionException;
 import org.fabric3.introspection.xml.LoaderException;
 import org.fabric3.introspection.xml.LoaderHelper;
-import org.fabric3.introspection.xml.LoaderRegistry;
 import org.fabric3.introspection.xml.LoaderUtil;
 import org.fabric3.introspection.xml.MissingResourceException;
 import org.fabric3.introspection.xml.TypeLoader;
@@ -41,26 +38,13 @@ import org.fabric3.pojo.processor.ProcessingException;
 @EagerInit
 public class GroovyImplementationLoader implements TypeLoader<GroovyImplementation> {
 
-    private final LoaderRegistry registry;
     private final GroovyImplementationProcessor processor;
     private final LoaderHelper loaderHelper;
 
-    public GroovyImplementationLoader(@Reference LoaderRegistry registry,
-                                      @Reference(name = "implementationProcessor")GroovyImplementationProcessor processor,
+    public GroovyImplementationLoader(@Reference(name = "implementationProcessor")GroovyImplementationProcessor processor,
                                       @Reference LoaderHelper loaderHelper) {
-        this.registry = registry;
         this.processor = processor;
         this.loaderHelper = loaderHelper;
-    }
-
-    @Init
-    public void init() {
-        registry.registerLoader(GroovyImplementation.IMPLEMENTATION_GROOVY, this);
-    }
-
-    @Destroy
-    public void destroy() {
-        registry.unregisterLoader(GroovyImplementation.IMPLEMENTATION_GROOVY);
     }
 
     public GroovyImplementation load(XMLStreamReader reader, IntrospectionContext context)

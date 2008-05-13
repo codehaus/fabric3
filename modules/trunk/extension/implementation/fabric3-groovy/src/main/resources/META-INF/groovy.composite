@@ -17,12 +17,13 @@
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
+           xmlns:groovy="http://www.fabric3.org/xmlns/groovy/1.0"
            xmlns:system="http://fabric3.org/xmlns/sca/system/2.0-alpha"
            targetNamespace="org.codehaus.fabric3"
            name="GroovyExtension"
            autowire="true">
 
-    <component name="org.fabric3.groovy.introspection.GroovyImplementationLoader">
+    <component name="org.fabric3.groovy.introspection.GroovyImplementationLoader" f3:key="groovy:groovy">
         <system:implementation.system class="org.fabric3.groovy.introspection.GroovyImplementationLoader"/>
         <reference name="implementationProcessor" target="org.fabric3.groovy.introspection.GroovyImplementationProcessor"/>
     </component>
