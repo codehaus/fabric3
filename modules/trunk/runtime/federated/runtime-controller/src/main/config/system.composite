@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ * 
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.    
+-->
+<!--
+    Default system configuration for the launcher environment.
+
+    $Rev: 329 $ $Date: 2007-06-30 14:33:48 +0100 (Sat, 30 Jun 2007) $
+-->
+<composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
+           xmlns:system="http://fabric3.org/xmlns/sca/system/2.0-alpha"
+           xmlns:introspection="urn:maven:org.codehaus.fabric3:fabric3-introspection"
+           name="org.fabric3.launcher.System"
+           autowire="true">
+
+    <!-- include physical deployment configuration -->
+    <include name="org.fabric3.fabric.Common" scdlResource="org/fabric3/fabric/common.composite"/>
+
+    <!-- include host services configuration -->
+    <include name="org.fabric3.fabric.HostServices" scdlResource="org/fabric3/fabric/hostServices.composite"/>
+
+    <!-- include monitor configuration -->
+    <include name="org.fabric3.fabric.Monitor" scdlResource="org/fabric3/fabric/monitor.composite"/>
+
+    <!-- include physical deployment configuration -->
+    <include name="org.fabric3.fabric.Physical" scdlResource="org/fabric3/fabric/physical.composite"/>
+
+    <!-- Introspection Components -->
+    <include name="introspection:Helper" scdlResource="org/fabric3/introspection/impl/helper.composite"/>
+    <include name="introspection:AnnotationProcessors" scdlResource="org/fabric3/introspection/impl/annotation/processors.composite"/>
+    <include name="loader:loader" scdlResource="org/fabric3/loader/loader.composite"/>
+
+    <!-- Pojo implementation type -->
+    <include name="org.fabric3.fabric.PojoImplementation" scdlResource="org/fabric3/fabric/pojoImplementation.composite"/>
+
+    <!-- System implementation type -->
+    <include name="org.fabric3.fabric.SystemImplementation" scdlResource="org/fabric3/fabric/systemImplementation.composite"/>
+
+    <!-- include deployment configuration -->
+    <include name="org.fabric3.fabric.Deployment" scdlResource="org/fabric3/fabric/deployment.composite"/>
+    <include name="org.fabric3.fabric.Stores" scdlResource="org/fabric3/fabric/nonPersistentStore.composite"/>
+
+    <include name="org.fabric3.fabric.FileSystemResolver" scdlResource="org/fabric3/fabric/fileSystemResolver.composite"/>
+
+    <!-- include transform configuration -->
+    <include name="org.fabric3.transform.Transform" scdlResource="org/fabric3/transform/transform.composite"/>
+
+    <!-- include policy configuration -->
+    <include name="org.fabric3.policy.Policy" scdlResource="org/fabric3/policy/policy.composite"/>
+
+    <component name="RuntimeInfoService">
+        <system:implementation.system class="org.fabric3.fabric.services.runtime.DefaultRuntimeInfoService"/>
+        <property name="scheme">jxta</property>
+        <property name="runtimeId">controller</property>
+    </component>
+
+    <component name="MessagingEventService">
+        <system:implementation.system class="org.fabric3.fabric.services.messaging.MessagingEventServiceImpl"/>
+    </component>
+
+    <component name="launchedLoader">
+        <system:implementation.system class="org.fabric3.runtime.standalone.host.implementation.launched.LaunchedLoader"/>
+    </component>
+
+    <component name="launchedComponentLoader">
+        <system:implementation.system class="org.fabric3.runtime.standalone.host.implementation.launched.LaunchedComponentTypeLoaderImpl"/>
+    </component>
+
+    <component name="assemblyRecoveryService">
+        <system:implementation.system class="org.fabric3.fabric.services.domain.NonPersistentLogicalComponentStore"/>
+    </component>
+
+    <component name="DiscoveryServiceRegistry">
+        <system:implementation.system class="org.fabric3.fabric.services.discovery.DiscoveryServiceRegistryImpl"/>
+    </component>
+
+    <component name="DelegatingDiscoveryService">
+        <system:implementation.system class="org.fabric3.fabric.services.discovery.DelegatingDiscoveryService"/>
+    </component>
+
+    <component name="MessagingServiceRegistry">
+        <system:implementation.system class="org.fabric3.fabric.services.messaging.MessagingServiceRegistryImpl"/>
+    </component>
+
+    <component name="DelegatingMessagingService">
+        <system:implementation.system class="org.fabric3.fabric.services.messaging.DelegatingMessagingService"/>
+    </component>
+
+</composite>
