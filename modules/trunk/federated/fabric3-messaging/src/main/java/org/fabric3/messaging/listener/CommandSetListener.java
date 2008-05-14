@@ -17,6 +17,7 @@
 package org.fabric3.messaging.listener;
 
 import java.util.Set;
+import java.util.LinkedHashSet;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamReader;
 
@@ -55,16 +56,17 @@ public class CommandSetListener implements RequestListener {
 
     @Init
     public void init() {
-        QName qName = new QName(Set.class.getName());
+        QName qName = new QName(null, "linked-hash-set");
         eventService.registerRequestListener(qName, this);
     }
 
     public XMLStreamReader onRequest(XMLStreamReader reader) {
         try {
-            Set<Command> commands = marshalService.unmarshall(Set.class, reader);
+            LinkedHashSet<Command> commands = marshalService.unmarshall(LinkedHashSet.class, reader);
             for (Command command : commands) {
                 executorRegistry.execute(command);
             }
+            monitor.executed();
         } catch (MarshalException e) {
             monitor.error(e);
         } catch (ExecutionException e) {

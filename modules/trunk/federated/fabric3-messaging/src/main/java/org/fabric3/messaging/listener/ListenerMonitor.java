@@ -16,10 +16,16 @@
  */
 package org.fabric3.messaging.listener;
 
+import org.fabric3.api.annotation.LogLevel;
+
 /**
  * @version $Rev$ $Date$
  */
 public interface ListenerMonitor {
 
+    @LogLevel("INFO")
+    void executed();
+
+    @LogLevel("SEVERE")
     void error(Throwable e);
 }
