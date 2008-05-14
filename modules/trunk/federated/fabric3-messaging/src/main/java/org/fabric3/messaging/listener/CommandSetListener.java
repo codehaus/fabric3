@@ -16,7 +16,6 @@
  */
 package org.fabric3.messaging.listener;
 
-import java.util.Set;
 import java.util.LinkedHashSet;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamReader;
