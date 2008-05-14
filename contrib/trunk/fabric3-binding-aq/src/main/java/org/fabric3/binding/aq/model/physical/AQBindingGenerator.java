@@ -87,19 +87,20 @@ public class AQBindingGenerator implements BindingGenerator<AQWireSourceDefiniti
      */
     private TransactionType getTransactionType(Policy policy, ServiceContract<?> serviceContract) {
         
-        // If any operation has the intent, return that
+        TransactionType transactionType = null;
+        
         for (Operation<?> operation : serviceContract.getOperations()) {
             for (Intent intent : policy.getProvidedIntents(operation)) {
                 if (TRANSACTED_ONEWAY_GLOBAL.equals(intent.getName())) {
-                    return TransactionType.GLOBAL;
+                    transactionType =TransactionType.GLOBAL;
                 } else if (TRANSACTED_ONEWAY_LOCAL.equals(intent.getName())) {
-                    return TransactionType.LOCAL;
+                    transactionType = TransactionType.LOCAL;
                 } else if (TRANSACTED_ONEWAY.equals(intent.getName())) {
-                    return TransactionType.GLOBAL;
+                    transactionType = TransactionType.GLOBAL;
                 }
             }
         }
-        return null;
+        return transactionType;
     }
     
     /**

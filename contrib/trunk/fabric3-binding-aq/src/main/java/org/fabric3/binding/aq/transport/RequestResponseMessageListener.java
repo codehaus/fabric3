@@ -49,7 +49,7 @@ import org.fabric3.spi.wire.InvocationChain;
  * 
  * @version $Revison$ $Date$
  */
-public class Fabric3MessageListener implements MessageListener {
+public class RequestResponseMessageListener implements MessageListener {
 
     /**
      * Destination for sending response.
@@ -95,7 +95,7 @@ public class Fabric3MessageListener implements MessageListener {
      * @param transactionHandler
      *            Transaction handler.
      */
-    public Fabric3MessageListener(Destination respDestination, ConnectionFactory respConnectionFactory,
+    public RequestResponseMessageListener(Destination respDestination, ConnectionFactory respConnectionFactory,
             Map<String, Entry<PhysicalOperationDefinition, InvocationChain>> ops, CorrelationScheme correlationScheme,
             TransactionHandler transactionHandler, TransactionType transactionType) {
         this.respDestination = respDestination;
