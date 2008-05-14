@@ -52,8 +52,8 @@
     
     <component f3:key="org.fabric3.binding.aq.model.physical.AQWireTargetDefinition" name="org.fabric3.binding.aq.wire.AQTargetWireAttacher">
         <system:implementation.system class="org.fabric3.binding.aq.wire.AQTargetWireAttacher"/>
-        <reference name="connectionFactoryAccessor" target="ConnectionFactory"/>
-        <reference name="destinationFactory" target="DestinationFactory"/>
+        <reference name="connectionFactoryAccessor" target="XAConnectionFactory"/>
+        <reference name="destinationFactory" target="XAFactory"/>
     </component>
     
      <!-- Always create connection factory strategy -->

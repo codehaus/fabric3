@@ -16,20 +16,21 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.binding.aq.wire;
+package org.fabric3.binding.aq.wire.interceptor;
 
-import javax.jms.Connection;
-import javax.jms.ConnectionFactory;
 import javax.jms.Destination;
 import javax.jms.JMSException;
 import javax.jms.MessageProducer;
 import javax.jms.ObjectMessage;
-import javax.jms.Session;
+import javax.jms.XAConnection;
+import javax.jms.XAQueueConnectionFactory;
+import javax.jms.XASession;
 
 import org.fabric3.binding.aq.Fabric3AQException;
 import org.fabric3.binding.aq.helper.JmsHelper;
 import org.fabric3.binding.aq.model.CorrelationScheme;
 import org.fabric3.binding.aq.transport.Fabric3MessageReceiver;
+import org.fabric3.binding.aq.tx.TransactionHandler;
 import org.fabric3.spi.invocation.Message;
 import org.fabric3.spi.invocation.MessageImpl;
 import org.fabric3.spi.wire.Interceptor;
@@ -58,7 +59,7 @@ public class AQTargetInterceptor implements Interceptor {
     /**
      * Request connection factory.
      */
-    private ConnectionFactory connectionFactory;
+    private XAQueueConnectionFactory connectionFactory;
 
     /**
      * Correlation scheme.
@@ -78,6 +79,8 @@ public class AQTargetInterceptor implements Interceptor {
     /** Whether to process reponse */
     private final boolean processResp;
 
+    private TransactionHandler transactionHandler;
+
     /**
      * @param methodName
      *            Method name.
@@ -90,8 +93,8 @@ public class AQTargetInterceptor implements Interceptor {
      * @param messageReceiver
      *            Message receiver for response.
      */
-    public AQTargetInterceptor(String methodName, Destination destination, ConnectionFactory connectionFactory,
-            CorrelationScheme correlationScheme, Fabric3MessageReceiver messageReceiver, ClassLoader classLoader, boolean processResp) {
+    public AQTargetInterceptor(String methodName, Destination destination, XAQueueConnectionFactory connectionFactory,
+            CorrelationScheme correlationScheme, Fabric3MessageReceiver messageReceiver, ClassLoader classLoader, boolean processResp, TransactionHandler transactionHandler) {
         this.methodName = methodName;
         this.destination = destination;
         this.connectionFactory = connectionFactory;
@@ -99,14 +102,8 @@ public class AQTargetInterceptor implements Interceptor {
         this.messageReceiver = messageReceiver;
         this.cl = classLoader;
         this.processResp = processResp;
-    }
-
-    /**
-     * @see org.fabric3.spi.wire.Interceptor#getNext()
-     */
-    public Interceptor getNext() {
-        return next;
-    }
+        this.transactionHandler = transactionHandler;
+    }   
 
     /**
      * @see org.fabric3.spi.wire.Interceptor#invoke(org.fabric3.spi.wire.Message)
@@ -114,7 +111,7 @@ public class AQTargetInterceptor implements Interceptor {
     public Message invoke(Message message) {
 
         final Message response = new MessageImpl();
-        Connection connection = null;
+        XAConnection connection = null;
 
         ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
 
@@ -122,17 +119,16 @@ public class AQTargetInterceptor implements Interceptor {
 
             Thread.currentThread().setContextClassLoader(cl);
 
-            connection = connectionFactory.createConnection();
-            Session session = connection.createSession(true, Session.SESSION_TRANSACTED);
-
+            connection = connectionFactory.createXAConnection();
+            XASession session = connection.createXASession();
             MessageProducer producer = session.createProducer(destination);
-
             Object[] payload = (Object[]) message.getBody();
             javax.jms.Message jmsMessage = session.createObjectMessage(payload);
             jmsMessage.setStringProperty("scaOperationName", methodName);
-
+            
+            transactionHandler.enlist(session);            
             producer.send(jmsMessage);
-
+            System.err.println("SENDING Message"); 
             String correlationId = null;
             switch (correlationScheme) {
             case None:
@@ -142,7 +138,7 @@ public class AQTargetInterceptor implements Interceptor {
             case RequestMsgIDToCorrelID:
                 correlationId = jmsMessage.getJMSMessageID();
             }
-            session.commit();
+            transactionHandler.commit();
             
             if (processResp) {
                 ObjectMessage responseMessage = (ObjectMessage) messageReceiver.receive(correlationId);
@@ -165,4 +161,10 @@ public class AQTargetInterceptor implements Interceptor {
         this.next = next;
     }   
 
+    /**
+     * @see org.fabric3.spi.wire.Interceptor#getNext()
+     */
+    public Interceptor getNext() {
+        return next;
+    }
 }
