@@ -22,6 +22,7 @@ import java.lang.reflect.Type;
 import java.net.URI;
 
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContextType;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
@@ -37,7 +38,7 @@ import org.fabric3.introspection.xml.LoaderException;
 import org.fabric3.introspection.xml.TypeLoader;
 import org.fabric3.java.introspection.JavaImplementationProcessor;
 import org.fabric3.java.scdl.JavaImplementation;
-import org.fabric3.jpa.scdl.PersistenceUnitResource;
+import org.fabric3.jpa.scdl.PersistenceContextResource;
 import org.fabric3.pojo.processor.ProcessingException;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.FieldInjectionSite;
@@ -92,7 +93,8 @@ public class JpaImplementationLoader implements TypeLoader<JavaImplementation> {
             implementationProcessor.introspect(implementation, newContext);
             PojoComponentType pojoComponentType = implementation.getComponentType();
             
-            PersistenceUnitResource resource = new PersistenceUnitResource("unit", persistenceUnit, factoryServiceContract);
+            PersistenceContextResource resource = new PersistenceContextResource(
+                    "unit", persistenceUnit, PersistenceContextType.TRANSACTION, factoryServiceContract, false);
             FieldInjectionSite site = new FieldInjectionSite(ConversationalDaoImpl.class.getDeclaredField("entityManager"));
             pojoComponentType.add(resource, site);
             
