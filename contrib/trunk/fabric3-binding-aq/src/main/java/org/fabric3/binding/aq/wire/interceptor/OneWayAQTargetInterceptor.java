@@ -94,8 +94,7 @@ public class OneWayAQTargetInterceptor implements Interceptor {
             jmsMessage.setStringProperty("scaOperationName", methodName);
             
             transactionHandler.enlist(session);            
-            producer.send(jmsMessage);
-            System.err.println("SENDING Message"); 
+            producer.send(jmsMessage); 
             transactionHandler.commit();
                         
             return empty;
