@@ -58,7 +58,7 @@
 
                 <module>test-ds-extension</module>
                 <module>test-jpa-hibernate</module>
-                <!--module>test-jpa-implementation</module-->
+                <module>test-jpa-implementation</module>
             </modules>
         </profile>
     </profiles>
