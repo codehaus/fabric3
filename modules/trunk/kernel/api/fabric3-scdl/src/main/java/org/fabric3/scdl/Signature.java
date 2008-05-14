@@ -87,7 +87,7 @@ public class Signature extends ModelObject {
     }
 
     public Signature(Constructor constructor) {
-        name = "<init>";
+        name = "init";
         setParameterTypes(constructor.getParameterTypes());
         isConstructor = true;
     }
