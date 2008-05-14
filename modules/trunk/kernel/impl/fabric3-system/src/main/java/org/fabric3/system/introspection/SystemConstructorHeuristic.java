@@ -47,8 +47,8 @@ public class SystemConstructorHeuristic implements HeuristicProcessor<SystemImpl
     /**
      * Find the constructor to use.
      * <p/>
-     * For now, we require that the class have a single constructor or one annotated with @Constructor. If there is more than one, then an
-     * org.osoa.sca.annotations.Constructor annotation must be used.
+     * For now, we require that the class have a single constructor or one annotated with @Constructor. If there is more than one, the default
+     * constructor will be selected or an org.osoa.sca.annotations.Constructor annotation must be used.
      *
      * @param implClass the class we are inspecting
      * @return the signature of the constructor to use
@@ -69,7 +69,11 @@ public class SystemConstructorHeuristic implements HeuristicProcessor<SystemImpl
                 }
             }
             if (selected == null) {
-                throw new NoConstructorException(implClass.getName());
+                try {
+                    selected = implClass.getConstructor();
+                } catch (NoSuchMethodException e) {
+                    throw new NoConstructorException(implClass.getName());
+                }
             }
         }
         return new Signature(selected);
