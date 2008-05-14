@@ -54,33 +54,7 @@ public class PersistenceUnitWireAttacher implements TargetWireAttacher<Persisten
     }
 
     public void attachToTarget(PhysicalWireSourceDefinition source, PersistenceUnitWireTargetDefinition target, Wire wire) throws WiringException {
-
-        /*String unitName = target.getUnitName();
-        URI classLoaderUri = target.getClassLoaderUri();
-        ClassLoader appCl = classLoaderService.getEmfClassLoader(classLoaderUri);
-        ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
-
-        try {
-            Thread.currentThread().setContextClassLoader(appCl);
-
-            final EntityManagerFactory entityManagerFactory = emfBuilder.build(unitName, appCl);
-
-            for (Map.Entry<PhysicalOperationDefinition, InvocationChain> entry : wire.getInvocationChains().entrySet()) {
-
-                final PhysicalOperationDefinition op = entry.getKey();
-                final String opName = op.getName();
-                InvocationChain chain = entry.getValue();
-
-                chain.addInterceptor(new EmfInterceptor(opName, entityManagerFactory));
-
-            }
-        } catch (EmfBuilderException e) {
-            throw new WiringException(e);
-        } finally {
-            Thread.currentThread().setContextClassLoader(oldCl);
-        }*/
         throw new AssertionError();
-        
     }
 
     public ObjectFactory<?> createObjectFactory(PersistenceUnitWireTargetDefinition target) throws WiringException {
