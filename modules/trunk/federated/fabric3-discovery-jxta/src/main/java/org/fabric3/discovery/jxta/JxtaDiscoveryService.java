@@ -42,25 +42,25 @@ import org.fabric3.spi.services.discovery.DiscoveryService;
 import org.fabric3.spi.services.discovery.DiscoveryServiceRegistry;
 import org.fabric3.spi.services.runtime.RuntimeInfoService;
 import org.fabric3.spi.services.work.WorkScheduler;
+import org.fabric3.api.annotation.Monitor;
 
 /**
- * JXTA implementation of the discovery service. <p/> <p/> The implementation uses the JXTA PDP to broadcast
- * advertisements on the current node and receive advertisements from the nodes participating in the same domain.
- * Requests for advertisements from remote nodes and publishing advertisements for the current node are performed in a
- * different thread using the work scheduler. This is done every 2 seconds by default, however, this can be configured
- * through the <code>interval</code> property. </p> <p/> <p/> A remote node from which no advertisment has been received
- * for the 10 seconds by default is expelled from the current domain view. However, this can be overridden using the
- * property <code>expirationThreshold</code>. </p> <p/> <p/> The advertisements include serialized information on the
- * <code>RuntimeInfo</code> of the node broadcasting the advertisement. Currently, serialization is performed using
- * xstream and transported using the description attribute of the peer discovery advertisement. However, it is worth
- * investigating using custom advertisements. </p> <p/> <p/> The discovery service is injected with the
- * <code>AdvertisementService</code>. Services within local nodes should use this service as a mediator for locally
- * advertising their features. These features are then broadcasted to the wider domain by the discovery service. </p>
+ * JXTA implementation of the discovery service. <p/> <p/> The implementation uses the JXTA PDP to broadcast advertisements on the current node and
+ * receive advertisements from the nodes participating in the same domain. Requests for advertisements from remote nodes and publishing advertisements
+ * for the current node are performed in a different thread using the work scheduler. This is done every 2 seconds by default, however, this can be
+ * configured through the <code>interval</code> property. </p> <p/> <p/> A remote node from which no advertisment has been received for the 10 seconds
+ * by default is expelled from the current domain view. However, this can be overridden using the property <code>expirationThreshold</code>. </p> <p/>
+ * <p/> The advertisements include serialized information on the <code>RuntimeInfo</code> of the node broadcasting the advertisement. Currently,
+ * serialization is performed using xstream and transported using the description attribute of the peer discovery advertisement. However, it is worth
+ * investigating using custom advertisements. </p> <p/> <p/> The discovery service is injected with the <code>AdvertisementService</code>. Services
+ * within local nodes should use this service as a mediator for locally advertising their features. These features are then broadcasted to the wider
+ * domain by the discovery service. </p>
  *
  * @version $Revsion$ $Date$
  */
 @EagerInit
 public class JxtaDiscoveryService implements DiscoveryService {
+    private DiscoveryMonitor monitor;
 
     // Polling interval
     private long interval = 2000L;
@@ -98,6 +98,11 @@ public class JxtaDiscoveryService implements DiscoveryService {
 
     public RuntimeInfo getRuntimeInfo(URI runtimeId) {
         return participatingRuntimes.get(runtimeId).getFirst();
+    }
+
+    @Monitor
+    public void setMonitor(DiscoveryMonitor monitor) {
+        this.monitor = monitor;
     }
 
     /**
@@ -263,9 +268,13 @@ public class JxtaDiscoveryService implements DiscoveryService {
                     continue;
                 }
 
-                participatingRuntimes.put(runtimeInfo1.getId(),
-                                          new TwosTuple<RuntimeInfo, Long>(runtimeInfo1,
-                                                                           System.currentTimeMillis()));
+                long now = System.currentTimeMillis();
+                TwosTuple<RuntimeInfo, Long> tuple = new TwosTuple<RuntimeInfo, Long>(runtimeInfo1, now);
+                URI id = runtimeInfo1.getId();
+                if (!participatingRuntimes.containsKey(id)) {
+                    monitor.discovered(id.toString());
+                }
+                participatingRuntimes.put(id, tuple);
             }
 
         }
@@ -279,9 +288,9 @@ public class JxtaDiscoveryService implements DiscoveryService {
 
         for (TwosTuple<RuntimeInfo, Long> tuple : participatingRuntimes.values()) {
             if (System.currentTimeMillis() - tuple.getSecond() > expirationThreshold) {
-                participatingRuntimes.remove(tuple.getFirst().getId());
-            } else {
-                System.err.println(runtimeInfoService.getCurrentRuntimeId() + ":" + tuple.getFirst().getId());
+                URI id = tuple.getFirst().getId();
+                participatingRuntimes.remove(id);
+                monitor.expired(id.toString());
             }
 
         }
