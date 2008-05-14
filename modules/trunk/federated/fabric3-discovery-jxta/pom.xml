@@ -102,6 +102,10 @@
                            <groupId>org.codehaus.fabric3</groupId>
                            <artifactId>fabric3-spi</artifactId>
                        </mavenImport>
+                        <mavenImport>
+                           <groupId>org.codehaus.fabric3</groupId>
+                           <artifactId>fabric3-jxta</artifactId>
+                       </mavenImport>
                     </mavenImports>
                     <deployables>
                         <deployable>META-INF/jxta.discovery.composite</deployable>
