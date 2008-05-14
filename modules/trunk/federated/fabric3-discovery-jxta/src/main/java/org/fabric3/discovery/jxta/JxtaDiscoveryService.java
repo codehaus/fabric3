@@ -66,7 +66,7 @@ public class JxtaDiscoveryService implements DiscoveryService {
     private long interval = 2000L;
 
     // Expiration threshold
-    private long expirationThreshold = 10000L;
+    private long expirationThreshold = 1000000L;
 
     // JXTA Service
     private JxtaService jxtaService;
