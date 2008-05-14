@@ -25,8 +25,8 @@ import javax.persistence.EntityManagerFactory;
 import org.fabric3.jpa.provision.PersistenceUnitWireTargetDefinition;
 import org.fabric3.jpa.spi.EmfBuilderException;
 import org.fabric3.jpa.spi.classloading.EmfClassLoaderService;
-import org.fabric3.spi.ObjectCreationException;
 import org.fabric3.spi.ObjectFactory;
+import org.fabric3.spi.SingletonObjectFactory;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.TargetWireAttacher;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
@@ -39,6 +39,7 @@ import org.osoa.sca.annotations.Reference;
  * @version $Revision$ $Date$
  */
 public class PersistenceUnitWireAttacher implements TargetWireAttacher<PersistenceUnitWireTargetDefinition> {
+    
     private final EmfBuilder emfBuilder;
     private EmfClassLoaderService classLoaderService;
 
@@ -64,20 +65,12 @@ public class PersistenceUnitWireAttacher implements TargetWireAttacher<Persisten
         final ClassLoader appCl = classLoaderService.getEmfClassLoader(classLoaderUri);
         ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
 
-        try {
-            
+        try {            
             Thread.currentThread().setContextClassLoader(appCl);
-
-            return new ObjectFactory<EntityManagerFactory>() {
-                public EntityManagerFactory getInstance() throws ObjectCreationException {
-                    try {
-                        return emfBuilder.build(unitName, appCl);
-                    } catch (EmfBuilderException e) {
-                        throw new ObjectCreationException(e);
-                    }
-                }                
-            };
-
+            EntityManagerFactory entityManagerFactory = emfBuilder.build(unitName, appCl);
+            return new SingletonObjectFactory<EntityManagerFactory>(entityManagerFactory);
+        } catch (EmfBuilderException e) {
+            throw new WiringException(e);
         } finally {
             Thread.currentThread().setContextClassLoader(oldCl);
         }
