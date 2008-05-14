@@ -151,7 +151,7 @@ public class JxtaDiscoveryService implements DiscoveryService {
     }
 
     @Reference
-    public void setDiscoverySericeRegistry(DiscoveryServiceRegistry registry) {
+    public void setDiscoveryServiceRegistry(DiscoveryServiceRegistry registry) {
         this.registry = registry;
     }
 
