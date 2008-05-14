@@ -21,10 +21,6 @@
            name="MessagingComposite"
            autowire="true">
 
-    <component name="PhysicalChangeSetListener">
-        <system:implementation.system class="org.fabric3.messaging.listener.PhysicalChangeSetListener"/>
-    </component>
-
     <component name="CommandMapListener">
         <system:implementation.system class="org.fabric3.messaging.listener.CommandSetListener"/>
     </component>
