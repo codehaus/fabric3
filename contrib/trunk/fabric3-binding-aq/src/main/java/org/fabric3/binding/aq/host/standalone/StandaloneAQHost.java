@@ -76,7 +76,7 @@ public class StandaloneAQHost implements AQHost {
      */
     @Destroy
     public void stop() throws JMSException {
-        monitor.stopOnAQHost(" Stoping AQ");       
+        monitor.stopOnAQHost(" Stoping ");       
         pollingConsumer.stopConsumption();
         JmsHelper.closeQuietly(connection);        
         monitor.stopOnAQHost(" Stopped ");
