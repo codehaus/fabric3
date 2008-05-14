@@ -18,20 +18,19 @@
  */
 package org.fabric3.binding.aq.host.standalone;
 
-import java.util.List;
-
-import javax.jms.Connection;
-import javax.jms.ConnectionFactory;
 import javax.jms.Destination;
 import javax.jms.JMSException;
 import javax.jms.MessageConsumer;
 import javax.jms.MessageListener;
 import javax.jms.Session;
+import javax.jms.XAConnection;
+import javax.jms.XAQueueConnectionFactory;
 
+import org.fabric3.api.annotation.Monitor;
 import org.fabric3.binding.aq.Fabric3AQException;
-import org.fabric3.binding.aq.TransactionType;
 import org.fabric3.binding.aq.helper.JmsHelper;
 import org.fabric3.binding.aq.host.AQHost;
+import org.fabric3.binding.aq.monitor.AQMonitor;
 import org.fabric3.binding.aq.tx.TransactionHandler;
 import org.fabric3.spi.services.work.WorkScheduler;
 import org.osoa.sca.annotations.Destroy;
@@ -44,29 +43,43 @@ import org.osoa.sca.annotations.Reference;
  * @version $Revsion$ $Date$
  */
 public class StandaloneAQHost implements AQHost {
-    
-    /**
-     * Work scheduler.
-     */
+
     private WorkScheduler workScheduler;
+    private PollingConsumer pollingConsumer; 
+    private XAConnection connection;
+    private AQMonitor monitor;    
+    private int receiverCount = 5;
+    private long readTimeout = 1000L;
+       
 
     /**
-     * Receiver connection.
+     * Registers the listeners to start on consuming messages     
      */
-    private Connection connection;
+    public void registerListener( final XAQueueConnectionFactory connectionFactory, final Destination destination, final MessageListener listener, final TransactionHandler transactionHandler, final ClassLoader cl) {
+        try {
+            connection = connectionFactory.createXAConnection();
+            for (int i = 0; i < receiverCount; i++) {
+                final Session session = connection.createXASession();
+                final MessageConsumer consumer = session.createConsumer(destination);
+                pollingConsumer = new ConsumerWorker(session, consumer, listener, transactionHandler, readTimeout, cl);
+                workScheduler.scheduleWork(pollingConsumer);
+            }
+            connection.start();
+        } catch (JMSException ex) {
+            throw new Fabric3AQException("Unable to activate service", ex);
+        }
+    }
     
     /**
-     * Read timeout.
+     * Stops the receiver threads.
+     * @throws JMSException
      */
-    private long readTimeout = 1000L;
-    
-    /**
-     * Sets the read timeout.
-     * @param readTimeout Read timeout for blocking receive.
-     */
-    @Property
-    public void setReadTimeout(long readTimeout) {
-        this.readTimeout = readTimeout;
+    @Destroy
+    public void stop() throws JMSException {
+        monitor.stopOnAQHost(" Stoping AQ");       
+        pollingConsumer.stopConsumption();
+        JmsHelper.closeQuietly(connection);        
+        monitor.stopOnAQHost(" Stopped ");
     }
     
     /**
@@ -74,48 +87,34 @@ public class StandaloneAQHost implements AQHost {
      * @param workScheduler Work scheduler to be used.
      */
     @Reference
-    public void setWorkScheduler(WorkScheduler workScheduler) {
+    protected void setWorkScheduler(final WorkScheduler workScheduler) {
         this.workScheduler = workScheduler;
     }
 
     /**
-     * Stops the receiver threads.
-     * @throws JMSException 
+     * Sets the Receiver Count
+     * @param receiver count
      */
-    @Destroy
-    public void stop() throws JMSException {
-        JmsHelper.closeQuietly(connection);
+    @Property
+    protected void setReceiverCount(final int recieverCount) {
+        this.readTimeout = recieverCount;
     }
 
     /**
-     * @see org.fabric3.binding.aq.host.AQHost#registerListener(javax.jms.Destination, 
-     *                                                          javax.jms.ConnectionFactory, 
-     *                                                          java.util.List, 
-     *                                                          org.fabric3.binding.aq.TransactionType, 
-     *                                                          org.fabric3.binding.aq.tx.TransactionHandler)
+     * Sets the read timeout.
+     * @param readTimeout Read timeout for blocking receive.
      */
-    public void registerListener(final Destination destination, 
-                                 final ConnectionFactory connectionFactory, 
-                                 final List<MessageListener> listeners, 
-                                 final TransactionType transactionType,
-                                 final TransactionHandler transactionHandler,
-                                 final ClassLoader cl) {
-        
-        try {
-
-            connection = connectionFactory.createConnection();
-            for (final MessageListener listener : listeners) {
-                final Session session = connection.createSession(transactionType == TransactionType.LOCAL, Session.SESSION_TRANSACTED);
-                final MessageConsumer consumer = session.createConsumer(destination);
-                Runnable work = new ConsumerWorker(session, transactionHandler, transactionType, consumer ,listener, readTimeout, cl);
-                workScheduler.scheduleWork(work);
-            }
-            
-            connection.start();
-            
-        } catch (JMSException ex) {
-            throw new Fabric3AQException("Unable to activate service", ex);
-        }       
+    @Property
+    protected void setReadTimeout(final long readTimeout) {
+        this.readTimeout = readTimeout;
     }
-     
+    
+    /**
+     * Sets the Monitor
+     * @param monitor
+     */
+    @Monitor
+    protected void setMonitor(AQMonitor monitor){
+        this.monitor = monitor;
+    }
 }

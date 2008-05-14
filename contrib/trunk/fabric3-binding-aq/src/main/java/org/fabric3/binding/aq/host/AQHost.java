@@ -18,13 +18,10 @@
  */
 package org.fabric3.binding.aq.host;
 
-import java.util.List;
-
-import javax.jms.ConnectionFactory;
 import javax.jms.Destination;
 import javax.jms.MessageListener;
+import javax.jms.XAQueueConnectionFactory;
 
-import org.fabric3.binding.aq.TransactionType;
 import org.fabric3.binding.aq.tx.TransactionHandler;
 
 /**
@@ -32,17 +29,19 @@ import org.fabric3.binding.aq.tx.TransactionHandler;
  */
 public interface AQHost {
     
+    
     /**
-     * @param destination Destination to listen on.
-     * @param factory Factory to create connections.
-     * @param listeners Message listeners.
-     * @param transactionType Transaction type.
+     * Register Listeners to start consuming messages
+     * @param connectionFactory
+     * @param destination
+     * @param listener
+     * @param transactionHandler
+     * @param classloader
      */
-    void registerListener(Destination destination, 
-                          ConnectionFactory connectionFactory, 
-                          List<MessageListener> listeners, 
-                          TransactionType transactionType,
+    void registerListener(XAQueueConnectionFactory connectionFactory,
+                          Destination destination,                                              
+                          MessageListener listener,
                           TransactionHandler transactionHandler,
-                          ClassLoader cl);
+                          ClassLoader classloader);
 
 }

@@ -18,27 +18,28 @@
  */
 package org.fabric3.binding.aq.host.standalone;
 
+import java.util.concurrent.atomic.AtomicBoolean;
+
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageConsumer;
 import javax.jms.MessageListener;
 import javax.jms.Session;
 
-import org.fabric3.binding.aq.TransactionType;
 import org.fabric3.binding.aq.tx.TransactionHandler;
 
 /**
  * @version $Revision$ $Date$
  */
-public class ConsumerWorker implements Runnable {
-    
+public class ConsumerWorker implements PollingConsumer {
+
     private final Session session;
     private final TransactionHandler transactionHandler;
     private final MessageConsumer consumer;
     private final MessageListener listener;
-    private final long readTimeout;
-    private final TransactionType transactionType;
+    private final long readTimeout; 
     private final ClassLoader cl;
+    private final AtomicBoolean consume;
 
     /**
      * @param session Session used to receive messages.
@@ -47,65 +48,57 @@ public class ConsumerWorker implements Runnable {
      * @param listener Delegate message listener.
      * @param readTimeout Read timeout.
      */
-    public ConsumerWorker(Session session, 
-                          TransactionHandler transactionHandler, 
-                          TransactionType transactionType,
-                          MessageConsumer consumer, 
-                          MessageListener listener,
-                          long readTimeout,
-                          ClassLoader cl) {
+    public ConsumerWorker(final Session session, final MessageConsumer consumer, final MessageListener listener, final TransactionHandler transactionHandler, final long readTimeout, final ClassLoader cl) {
         this.session = session;
-        this.transactionHandler = transactionHandler;
-        this.transactionType = transactionType;
+        this.transactionHandler = transactionHandler; 
         this.consumer = consumer;
         this.listener = listener;
         this.readTimeout = readTimeout;
+        consume = new AtomicBoolean(true);
         this.cl = cl;
     }
 
     /**
-     * @see java.lang.Runnable#run()
+     * Run's the unit of work
      */
     public void run() {
-        
-        ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
-        
-        try {
-            
-            Thread.currentThread().setContextClassLoader(cl);
-            
-            if(transactionType == TransactionType.GLOBAL) {
-                transactionHandler.enlist(session);
-            }
-            Message message = consumer.receive(readTimeout);
-            if(message != null) {
-                listener.onMessage(message);
-            }
-            if(transactionType == TransactionType.GLOBAL) {
+        final ClassLoader oldClassLoader = Thread.currentThread().getContextClassLoader();
+        assignClassLoader(cl);        
+        try {                        
+            transactionHandler.enlist(session);
+
+            while (consume.get()) {
+                consumeMessage();
                 transactionHandler.commit();
-            } else {                
-                session.commit();              
             }
-            
-        } catch(Exception ex) {
-            
-            if(transactionType == TransactionType.GLOBAL) {
-                transactionHandler.rollback();
-            } else {
-                try {
-                    session.rollback();
-                } catch (JMSException e) {
-                    // TODO use the monitor
-                    e.printStackTrace();
-                }
-            }
-            // TODO use the monitor
-            ex.printStackTrace();
-            
+        } catch (JMSException ex) {
+            transactionHandler.rollback();
         } finally {
-            Thread.currentThread().setContextClassLoader(oldCl);
+            assignClassLoader(oldClassLoader);
         }
-        
+    }
+    
+    /**
+     * Stop Consuming Data
+     */
+    public void stopConsumption() {
+        consume.set(false);
     }
 
+    /*
+     * Consumes the Message
+     */
+    private void consumeMessage() throws JMSException {
+        final Message message = consumer.receive(readTimeout);
+        if (message != null) {
+            listener.onMessage(message);
+        }
+    }
+
+    /*
+     * Restores the Classloader
+     */
+    private void assignClassLoader(final ClassLoader classLoader) {
+        Thread.currentThread().setContextClassLoader(classLoader);
+    }    
 }
