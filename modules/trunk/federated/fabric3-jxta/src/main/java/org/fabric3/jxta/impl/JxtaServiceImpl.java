@@ -112,9 +112,12 @@ public class JxtaServiceImpl implements JxtaService {
         try {
 
             URI runtimeId = runtimeInfoService.getCurrentRuntimeId();
-            String id = runtimeId.getAuthority();
+            File dir = new File(System.getProperty("java.io.tmpdir"), ".f3");
+            dir.mkdir();
+
+            String id = runtimeId.getSchemeSpecificPart();
             networkConfigurator.setName(id);
-            networkConfigurator.setHome(new File(id));
+            networkConfigurator.setHome(new File(dir, id));
             networkConfigurator.setMode(NetworkConfigurator.EDGE_NODE);
 
             if (networkConfigurator.exists()) {
