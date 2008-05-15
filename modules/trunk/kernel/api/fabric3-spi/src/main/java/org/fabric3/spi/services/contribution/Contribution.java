@@ -41,7 +41,7 @@ public class Contribution implements Serializable {
     private String contentType;
     private ContributionManifest manifest;
     private List<Resource> resources = new ArrayList<Resource>();
-    private List<URL> artifactUrls = new ArrayList<URL>();
+    private List<URL> dependencyUrls = new ArrayList<URL>();
     private List<URI> resolvedImports = new ArrayList<URI>();
 
     public Contribution(URI uri) {
@@ -182,12 +182,22 @@ public class Contribution implements Serializable {
         return Collections.unmodifiableList(resolvedImports);
     }
 
-    public void addArtifactUrl(URL url) {
-        artifactUrls.add(url);
+    /**
+     * Adds a url of a dependency of the contribution.
+     *
+     * @param url of a dependency
+     */
+    public void addDependencyUrl(URL url) {
+        dependencyUrls.add(url);
     }
 
-    public List<URL> getArtifactUrls() {
-        return Collections.unmodifiableList(artifactUrls);
+    /**
+     * Returns a collection of urls to dependencies of the contribution.
+     *
+     * @return a collection of urls to dependencies of the contribution.
+     */
+    public List<URL> getDependencyUrls() {
+        return Collections.unmodifiableList(dependencyUrls);
     }
 
 }

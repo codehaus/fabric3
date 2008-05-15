@@ -183,10 +183,10 @@ public class ModuleContributionProcessor implements ContributionProcessor {
         try {
             URL classes = new File(file, "classes").toURI().toURL();
             URL testClasses = new File(file, "test-classes").toURI().toURL();
-            contribution.addArtifactUrl(classes);
-            contribution.addArtifactUrl(testClasses);
+            contribution.addDependencyUrl(classes);
+            contribution.addDependencyUrl(testClasses);
             for (URL url : hostInfo.getDependencyUrls()) {
-                contribution.addArtifactUrl(url);
+                contribution.addDependencyUrl(url);
             }
         } catch (MalformedURLException e) {
             throw new ContributionException(e);
