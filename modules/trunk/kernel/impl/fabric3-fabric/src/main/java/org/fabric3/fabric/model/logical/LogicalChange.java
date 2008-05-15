@@ -18,6 +18,7 @@ package org.fabric3.fabric.model.logical;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.net.URI;
 
 import org.w3c.dom.Document;
 
@@ -40,9 +41,9 @@ public class LogicalChange {
     private final List<String> deletedProperties = new ArrayList<String>();
     private final List<LogicalComponent<?>> deletedComponents =
             new ArrayList<LogicalComponent<?>>();
-    
     private final List<LogicalComponent<?>> addedComponents =
             new ArrayList<LogicalComponent<?>>();
+    private final List<URI> deletedServices = new ArrayList<URI>();
 
     /**
      * Construct change specifiying the context to which it applies.
@@ -108,6 +109,10 @@ public class LogicalChange {
         deletedComponents.add(component);
     }
 
+
+    public void removeService(URI uri) {
+        deletedServices.add(uri);        
+    }
     /**
      * Return the list of new components added to the parent context
      * @return

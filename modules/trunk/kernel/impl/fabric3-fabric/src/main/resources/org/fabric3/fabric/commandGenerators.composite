@@ -75,14 +75,25 @@
         <property name="order">5</property>
     </component>
 
+
+    <component name="stopCompositeContextCommandGenerator">
+        <system:implementation.system class="org.fabric3.fabric.generator.component.StopCompositeContextCommandGenerator"/>
+        <property name="order">0</property>
+    </component>
+
     <component name="stopComponentCommandGenerator">
         <system:implementation.system class="org.fabric3.fabric.generator.component.StopComponentCommandGenerator"/>
         <property name="order">1</property>
     </component>
 
-    <component name="stopCompositeContextCommandGenerator">
-        <system:implementation.system class="org.fabric3.fabric.generator.component.StopCompositeContextCommandGenerator"/>
-        <property name="order">0</property>
+    <component name="detachWireCommandGenerator">
+        <system:implementation.system class="org.fabric3.fabric.generator.wire.DetachWireCommandGenerator"/>
+        <property name="order">2</property>
+    </component>
+
+    <component name="unprovisionClassloaderCommandGenerator">
+        <system:implementation.system class="org.fabric3.fabric.generator.classloader.UnprovisionClassloaderCommandGenerator"/>
+        <property name="order">3</property>
     </component>
 
 </composite>

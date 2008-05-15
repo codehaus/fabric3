@@ -89,6 +89,14 @@ public class LogicalCompositeComponent extends LogicalComponent<CompositeImpleme
         return copyOfComponents;
     }
 
+  /**
+   * Remove the child component based on the uri
+   * @param uri
+   */
+    public void removeComponent(URI uri) {
+        components.remove(uri);
+    }
+
     /**
      * Returns a child component with the given URI.
      *

@@ -6,7 +6,7 @@ import org.osoa.sca.annotations.Reference;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.EagerInit;
 
-import org.fabric3.fabric.command.ComponentStopCommand;
+import org.fabric3.fabric.command.StopComponentCommand;
 import org.fabric3.spi.executor.CommandExecutor;
 import org.fabric3.spi.executor.CommandExecutorRegistry;
 import org.fabric3.spi.executor.ExecutionException;
@@ -31,12 +31,12 @@ import org.fabric3.spi.component.Component;
  * under the License.
  */
 @EagerInit
-public class ComponentStopCommandExecutor implements CommandExecutor<ComponentStopCommand> {
+public class StopComponentCommandExecutor implements CommandExecutor<StopComponentCommand> {
 
     private final ComponentManager componentManager;
     private final CommandExecutorRegistry commandExecutorRegistry;
 
-    public ComponentStopCommandExecutor(@Reference ComponentManager componentManager,
+    public StopComponentCommandExecutor(@Reference ComponentManager componentManager,
                                          @Reference CommandExecutorRegistry commandExecutorRegistry) {
         this.componentManager = componentManager;
         this.commandExecutorRegistry = commandExecutorRegistry;
@@ -44,10 +44,10 @@ public class ComponentStopCommandExecutor implements CommandExecutor<ComponentSt
 
     @Init
     public void init() {
-        commandExecutorRegistry.register(ComponentStopCommand.class, this);
+        commandExecutorRegistry.register(StopComponentCommand.class, this);
     }
 
-    public void execute(ComponentStopCommand command) throws ExecutionException {
+    public void execute(StopComponentCommand command) throws ExecutionException {
         URI uri = command.getUri();
         Component component = componentManager.getComponent(uri);
         component.stop();

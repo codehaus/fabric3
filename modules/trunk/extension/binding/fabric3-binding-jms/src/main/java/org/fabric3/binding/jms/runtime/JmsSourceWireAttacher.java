@@ -142,6 +142,10 @@ public class JmsSourceWireAttacher implements SourceWireAttacher<JmsWireSourceDe
                 requestJMSObjectFactory, responseJMSObjectFactory, messageListener, transactionType, transactionHandler, cl, serviceUri);
     }
 
+    public void detachFromSource(JmsWireSourceDefinition source, PhysicalWireTargetDefinition target, Wire wire) throws WiringException {
+        throw new AssertionError();
+    }
+
     public void attachObjectFactory(JmsWireSourceDefinition source, ObjectFactory<?> objectFactory) throws WiringException {
         throw new AssertionError();
     }

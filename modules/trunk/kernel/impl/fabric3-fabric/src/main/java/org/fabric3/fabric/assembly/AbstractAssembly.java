@@ -154,7 +154,7 @@ public abstract class AbstractAssembly implements Assembly {
 
         LogicalCompositeComponent domain = logicalComponentManager.getDomain();
 
-        LogicalChange change = logicalModelGenerator.include(domain, composite);
+        LogicalChange change = logicalModelGenerator.exclude(domain, composite);
         change.apply();
 
         Collection<LogicalComponent<?>> components = change.getAddedComponents();

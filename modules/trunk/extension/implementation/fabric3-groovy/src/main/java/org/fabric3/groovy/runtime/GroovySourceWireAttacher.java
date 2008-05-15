@@ -93,6 +93,10 @@ public class GroovySourceWireAttacher extends PojoSourceWireAttacher implements 
         }
     }
 
+    public void detachFromSource(GroovyWireSourceDefinition source, PhysicalWireTargetDefinition target, Wire wire) throws WiringException {
+        throw new AssertionError();
+    }
+
     public void attachObjectFactory(GroovyWireSourceDefinition source, ObjectFactory<?> objectFactory) throws WiringException {
         URI sourceId = UriHelper.getDefragmentedName(source.getUri());
         GroovyComponent<?> sourceComponent = (GroovyComponent<?>) manager.getComponent(sourceId);

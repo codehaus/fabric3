@@ -38,14 +38,14 @@ import org.fabric3.fabric.executor.ClassloaderProvisionCommandExecutor;
 import org.fabric3.fabric.executor.CommandExecutorRegistryImpl;
 import org.fabric3.fabric.command.ComponentBuildCommand;
 import org.fabric3.fabric.executor.ComponentBuildCommandExecutor;
-import org.fabric3.fabric.command.ComponentStartCommand;
-import org.fabric3.fabric.executor.ComponentStartCommandExecutor;
+import org.fabric3.fabric.command.StartComponentCommand;
 import org.fabric3.fabric.command.InitializeComponentCommand;
 import org.fabric3.fabric.executor.InitializeComponentCommandExecutor;
 import org.fabric3.fabric.command.StartCompositeContextCommand;
 import org.fabric3.fabric.executor.StartCompositeContextCommandExecutor;
 import org.fabric3.fabric.command.WireAttachCommand;
 import org.fabric3.fabric.executor.WireAttachCommandExecutor;
+import org.fabric3.fabric.executor.StartComponentCommandExecutor;
 import org.fabric3.fabric.generator.GeneratorRegistryImpl;
 import org.fabric3.fabric.generator.PhysicalModelGenerator;
 import org.fabric3.fabric.generator.PhysicalModelGeneratorImpl;
@@ -274,7 +274,7 @@ public class BootstrapAssemblyFactory {
         commandRegistry.register(InitializeComponentCommand.class, new InitializeComponentCommandExecutor(scopeRegistry, componentManager));
         commandRegistry.register(ComponentBuildCommand.class, new ComponentBuildCommandExecutor(registry, componentManager));
         commandRegistry.register(WireAttachCommand.class, new WireAttachCommandExecutor(connector));
-        commandRegistry.register(ComponentStartCommand.class, new ComponentStartCommandExecutor(componentManager));
+        commandRegistry.register(StartComponentCommand.class, new StartComponentCommandExecutor(componentManager));
         commandRegistry.register(ClassloaderProvisionCommand.class, new ClassloaderProvisionCommandExecutor(classLoaderBuilder));
 
         return commandRegistry;

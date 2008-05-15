@@ -82,6 +82,12 @@ public class CxfSourceWireAttacher implements SourceWireAttacher<CxfWireSourceDe
 
     }
 
+    public void detachFromSource(CxfWireSourceDefinition sourceDefinition,
+                               PhysicalWireTargetDefinition targetDefinition,
+                               Wire wire) throws WiringException {
+        throw new AssertionError();
+    }
+
     public void attachObjectFactory(CxfWireSourceDefinition source, ObjectFactory<?> objectFactory) throws WiringException {
         throw new AssertionError();
     }

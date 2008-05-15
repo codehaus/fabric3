@@ -11,6 +11,8 @@ import org.fabric3.spi.executor.CommandExecutor;
 import org.fabric3.spi.executor.CommandExecutorRegistry;
 import org.fabric3.spi.executor.ExecutionException;
 import org.fabric3.spi.model.physical.PhysicalWireDefinition;
+import org.fabric3.spi.builder.WiringException;
+import org.fabric3.spi.builder.BuilderException;
 
 /*
  * See the NOTICE file distributed with this work for information
@@ -36,9 +38,9 @@ public class WireDetachCommandExecutor implements CommandExecutor<WireDetachComm
     private final Connector connector;
 
     @Constructor
-    public WireDetachCommandExecutor(@Reference CommandExecutorRegistry commandExecutorRegistry,
+    public WireDetachCommandExecutor(@Reference CommandExecutorRegistry registry,
                                      @Reference Connector connector) {
-        this.commandExecutorRegistry = commandExecutorRegistry;
+        this.commandExecutorRegistry = registry;
         this.connector = connector;
     }
 
@@ -48,13 +50,13 @@ public class WireDetachCommandExecutor implements CommandExecutor<WireDetachComm
     }
 
     public void execute(WireDetachCommand command) throws ExecutionException {
-/*
-
         for (PhysicalWireDefinition physicalWireDefinition : command.getPhysicalWireDefinitions()) {
-                //call disconnect
-            connector.disconnect(physicalWireDefinition);
+          try {
+              connector.disconnect(physicalWireDefinition);
+          } catch (BuilderException be) {
+            throw new AssertionError(be);
+          }
         }
-*/
 
     }
 }

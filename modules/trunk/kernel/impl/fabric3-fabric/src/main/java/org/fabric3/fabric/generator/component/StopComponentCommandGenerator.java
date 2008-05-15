@@ -20,7 +20,7 @@ package org.fabric3.fabric.generator.component;
 
 import org.osoa.sca.annotations.Property;
 
-import org.fabric3.fabric.command.ComponentStopCommand;
+import org.fabric3.fabric.command.StopComponentCommand;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.generator.RemoveCommandGenerator;
 import org.fabric3.spi.model.instance.LogicalComponent;
@@ -44,10 +44,10 @@ public class StopComponentCommandGenerator implements RemoveCommandGenerator {
     }
 
     @SuppressWarnings("unchecked")
-    public ComponentStopCommand generate(LogicalComponent<?> component) throws GenerationException {
+    public StopComponentCommand generate(LogicalComponent<?> component) throws GenerationException {
         // start a component if it is atomic and not provisioned
         if (!(component instanceof LogicalCompositeComponent) && component.isProvisioned()) {
-            return new ComponentStopCommand(order, component.getUri());
+            return new StopComponentCommand(order, component.getUri());
         }
         return null;
     }

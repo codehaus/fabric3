@@ -23,7 +23,7 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.fabric.command.ComponentStartCommand;
+import org.fabric3.fabric.command.StartComponentCommand;
 import org.fabric3.spi.component.Component;
 import org.fabric3.spi.executor.CommandExecutor;
 import org.fabric3.spi.executor.CommandExecutorRegistry;
@@ -36,28 +36,28 @@ import org.fabric3.spi.runtime.component.ComponentManager;
  * @version $Rev: 2878 $ $Date: 2008-02-23 18:42:09 +0000 (Sat, 23 Feb 2008) $
  */
 @EagerInit
-public class ComponentStartCommandExecutor implements CommandExecutor<ComponentStartCommand> {
+public class StartComponentCommandExecutor implements CommandExecutor<StartComponentCommand> {
 
     private final ComponentManager componentManager;
     private CommandExecutorRegistry commandExecutorRegistry;
 
     @Constructor
-    public ComponentStartCommandExecutor(@Reference ComponentManager componentManager,
+    public StartComponentCommandExecutor(@Reference ComponentManager componentManager,
                                          @Reference CommandExecutorRegistry commandExecutorRegistry) {
         this.componentManager = componentManager;
         this.commandExecutorRegistry = commandExecutorRegistry;
     }
 
-    public ComponentStartCommandExecutor(ComponentManager componentManager) {
+    public StartComponentCommandExecutor(ComponentManager componentManager) {
         this.componentManager = componentManager;
     }
 
     @Init
     public void init() {
-        commandExecutorRegistry.register(ComponentStartCommand.class, this);
+        commandExecutorRegistry.register(StartComponentCommand.class, this);
     }
 
-    public void execute(ComponentStartCommand command) throws ExecutionException {
+    public void execute(StartComponentCommand command) throws ExecutionException {
         URI uri = command.getUri();
         Component component = componentManager.getComponent(uri);
         component.start();

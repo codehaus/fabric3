@@ -100,6 +100,12 @@ public class EjbSourceWireAttacher implements SourceWireAttacher<EjbWireSourceDe
 
     }
 
+    public void detachFromSource(EjbWireSourceDefinition sourceDefinition,
+                               PhysicalWireTargetDefinition targetDefinition,
+                               Wire wire) throws WiringException {
+        throw new AssertionError();
+    }
+
     private Object generateEjb3Facade(EjbWireSourceDefinition sourceDefinition,
                                       Map<Signature, Map.Entry<PhysicalOperationDefinition, InvocationChain>> ops)
             throws WiringException {

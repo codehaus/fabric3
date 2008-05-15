@@ -28,6 +28,10 @@
 
     <include name="assembly" scdlLocation="assembly.composite"/>
 
+    <include name="org.fabric3.fabric.CommandGenerators" scdlLocation="commandGenerators.composite"/>
+
+    <include name="org.fabric3.fabric.CommonExecutors" scdlLocation="commandExecutors.composite"/>
+    
     <component name="physicalOperationHelper">
         <system:implementation.system class="org.fabric3.fabric.generator.wire.PhysicalOperationHelperImpl"/>
     </component>
@@ -77,93 +81,6 @@
 
     <component name="eventService">
         <system:implementation.system class="org.fabric3.fabric.services.event.EventServiceImpl"/>
-    </component>
-
-    <component name="commandExecutorRegistry">
-        <system:implementation.system class="org.fabric3.fabric.executor.CommandExecutorRegistryImpl"/>
-    </component>
-
-    <!-- default commands -->
-
-    <component name="classloaderProvisionCommandGenerator">
-        <system:implementation.system class="org.fabric3.fabric.generator.classloader.ClassloaderProvisionCommandGenerator"/>
-        <property name="order">0</property>
-    </component>
-    
-    <component name="componentBuildCommandGenerator">
-        <system:implementation.system class="org.fabric3.fabric.generator.component.ComponentBuildCommandGenerator"/>
-        <property name="order">1</property>
-    </component>
-    
-    <component name="org.fabric3.fabric.generator.wire.LocalWireCommandGenerator">
-        <system:implementation.system class="org.fabric3.fabric.generator.wire.LocalWireCommandGenerator"/>
-        <property name="order">2</property>
-        <reference name="logicalComponentManager" target="logicalComponentManager"/>
-    </component>
-    
-    <component name="org.fabric3.fabric.generator.wire.ReferenceWireCommandGenerator">
-        <system:implementation.system class="org.fabric3.fabric.generator.wire.ReferenceWireCommandGenerator"/>
-        <property name="order">2</property>
-    </component>
-
-    <component name="org.fabric3.fabric.generator.wire.ServiceWireCommandGenerator">
-        <system:implementation.system class="org.fabric3.fabric.generator.wire.ServiceWireCommandGenerator"/>
-        <property name="order">2</property>
-    </component>
-
-    <component name="org.fabric3.fabric.generator.wire.ResourceWireCommandGenerator">
-        <system:implementation.system class="org.fabric3.fabric.generator.wire.ResourceWireCommandGenerator"/>
-        <property name="order">2</property>
-    </component>
-
-    <component name="startComponentCommandGenerator">
-        <system:implementation.system class="org.fabric3.fabric.generator.component.StartComponentCommandGenerator"/>
-        <property name="order">3</property>
-    </component>
-
-    <component name="startCompositeContextCommandGenerator">
-        <system:implementation.system class="org.fabric3.fabric.generator.component.StartCompositeContextCommandGenerator"/>
-        <property name="order">4</property>
-    </component>
-
-    <component name="initializeComponentCommandGenerator">
-        <system:implementation.system class="org.fabric3.fabric.generator.component.InitializeComponentCommandGenerator"/>
-        <property name="order">5</property>
-    </component>
-
-    <component name="stopComponentCommandGenerator">
-        <system:implementation.system class="org.fabric3.fabric.generator.component.StopComponentCommandGenerator"/>
-        <property name="order">1</property>
-    </component>
-
-    <component name="stopCompositeContextCommandGenerator">
-        <system:implementation.system class="org.fabric3.fabric.generator.component.StopCompositeContextCommandGenerator"/>
-        <property name="order">0</property>
-    </component>
-
-    
-    <component name="classloaderProvisionCommandExecutor">
-        <system:implementation.system class="org.fabric3.fabric.executor.ClassloaderProvisionCommandExecutor"/>
-    </component>
-
-    <component name="componentBuildCommandExecutor">
-        <system:implementation.system class="org.fabric3.fabric.executor.ComponentBuildCommandExecutor"/>
-    </component>
-
-    <component name="wireAttachCommandExecutor">
-        <system:implementation.system class="org.fabric3.fabric.executor.WireAttachCommandExecutor"/>
-    </component>
-
-    <component name="componentStartCommandExecutor">
-        <system:implementation.system class="org.fabric3.fabric.executor.ComponentStartCommandExecutor"/>
-    </component>
-    
-    <component name="startCompositeContextCommandExecutor">
-        <system:implementation.system class="org.fabric3.fabric.executor.StartCompositeContextCommandExecutor"/>
-    </component>
-
-    <component name="initializeComponentCommandExecutor">
-        <system:implementation.system class="org.fabric3.fabric.executor.InitializeComponentCommandExecutor"/>
     </component>
 
     <component name="classLoaderGenerator">

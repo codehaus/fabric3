@@ -103,6 +103,10 @@ public class SpringSourceWireAttacher extends PojoSourceWireAttacher implements 
         source.addRefNameToObjFactory(refName, factory);
     }
 
+    public void detachFromSource(SpringWireSourceDefinition source, PhysicalWireTargetDefinition target, Wire wire) throws WiringException {
+        throw new AssertionError();
+    }
+
     private <T> ObjectFactory<T> createWireObjectFactory(Class<T> type, InteractionType interactionType, Wire wire) {
         return proxyService.createObjectFactory(type, interactionType, wire, null);
     }

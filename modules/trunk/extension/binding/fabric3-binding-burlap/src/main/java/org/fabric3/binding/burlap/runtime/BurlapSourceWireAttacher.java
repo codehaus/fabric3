@@ -83,6 +83,12 @@ public class BurlapSourceWireAttacher implements SourceWireAttacher<BurlapWireSo
         monitor.provisionedEndpoint(uri);
     }
 
+    public void detachFromSource(BurlapWireSourceDefinition sourceDefinition,
+                               PhysicalWireTargetDefinition targetDefinition,
+                               Wire wire) throws WiringException {
+        throw new AssertionError();
+    }
+
     public void attachObjectFactory(BurlapWireSourceDefinition source, ObjectFactory<?> objectFactory) throws WiringException {
         throw new AssertionError();
     }

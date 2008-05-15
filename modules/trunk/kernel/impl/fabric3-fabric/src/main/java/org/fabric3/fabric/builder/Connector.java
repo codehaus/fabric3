@@ -37,4 +37,10 @@ public interface Connector {
      */
     void connect(PhysicalWireDefinition definition) throws BuilderException;
 
+
+    /**
+     * Performs the disconnect operation
+     * @param definition
+     */
+    void disconnect(PhysicalWireDefinition definition) throws BuilderException;
 }

@@ -18,6 +18,8 @@
  */
 package org.fabric3.fabric.builder.classloader;
 
+import java.net.URI;
+
 import org.fabric3.spi.model.physical.PhysicalClassLoaderDefinition;
 
 /**
@@ -28,4 +30,12 @@ import org.fabric3.spi.model.physical.PhysicalClassLoaderDefinition;
 public interface ClassLoaderBuilder {
 
     void build(PhysicalClassLoaderDefinition definition) throws ClassLoaderBuilderException;
+
+
+    /**
+     * Unregister & destroy the classloader
+     * @param uri classloader uri
+     */
+
+    void destroy(URI uri);
 }

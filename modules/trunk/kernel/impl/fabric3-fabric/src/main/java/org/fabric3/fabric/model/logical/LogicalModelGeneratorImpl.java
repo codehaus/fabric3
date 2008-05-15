@@ -21,6 +21,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.osoa.sca.annotations.Reference;
 import org.w3c.dom.Document;
@@ -44,6 +45,7 @@ import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalService;
 import org.fabric3.spi.runtime.assembly.LogicalComponentManager;
 import org.fabric3.spi.wire.WiringService;
+import org.fabric3.spi.util.UriHelper;
 
 /**
  * @version $Revision$ $Date$
@@ -55,6 +57,7 @@ public class LogicalModelGeneratorImpl implements LogicalModelGenerator {
     private final LogicalComponentManager logicalComponentManager;
     private final ComponentInstantiator atomicComponentInstantiator;
     private final ComponentInstantiator compositeComponentInstantiator;
+
 
     public LogicalModelGeneratorImpl(@Reference WiringService wiringService,
                                      @Reference PromotionNormalizer promotionNormalizer,
@@ -90,6 +93,17 @@ public class LogicalModelGeneratorImpl implements LogicalModelGenerator {
         return change;
     }
 
+    public LogicalChange exclude(LogicalCompositeComponent parent, Composite composite) throws ActivateException {
+        LogicalChange change = new LogicalChange(parent);
+        // merge the property values into the parent
+        excludeProperties(parent, composite, change);
+        //merge the component values into the parent
+        excludeComponents(parent, composite, change);
+        //merge the service values into the parent
+        excludeServices(parent, composite, change);
+        return change;
+    }
+
     private Map<String, Document> includeProperties(LogicalCompositeComponent parent, Composite composite) throws ActivateException {
         for (Property property : composite.getProperties().values()) {
             String name = property.getName();
@@ -99,6 +113,30 @@ public class LogicalModelGeneratorImpl implements LogicalModelGenerator {
             parent.setPropertyValue(name, property.getDefaultValue());
         }
         return parent.getPropertyValues();
+    }
+
+    private Map<String, Document> excludeProperties(LogicalCompositeComponent parent, Composite composite,
+                                                    LogicalChange change) {
+        Map<String, Document> map = parent.getPropertyValues();
+        for (Property property : composite.getProperties().values()) {
+            String name = property.getName();
+            change.removeProperty(name);
+        }
+        return map;
+    }
+
+    private void excludeComponents(LogicalCompositeComponent parent, Composite composite, LogicalChange change) {
+        Set<String> keys = composite.getComponents().keySet();
+        for (String key : keys) {
+            List<LogicalComponent<?>> list = parent.getComponents();
+            for (LogicalComponent<?> component : list) {
+                URI uri = component.getUri();
+                if (UriHelper.getBaseName(uri).equals(key)) {
+                    change.removeComponent(component);
+                    parent.removeComponent(uri);
+                }                
+            }
+        }
     }
 
     private List<LogicalComponent<?>> instantiateComponents(LogicalCompositeComponent parent,
@@ -160,9 +198,20 @@ public class LogicalModelGeneratorImpl implements LogicalModelGenerator {
 
     }
 
+    private void excludeServices(LogicalComponent<CompositeImplementation> parent, Composite composite,
+                                                 LogicalChange change) {
+        String base = parent.getUri().toString();
+        // merge the composite service declarations into the parent
+        for (CompositeService compositeService : composite.getServices().values()) {
+            URI serviceURI = URI.create(base + '#' + compositeService.getName());
+            change.removeService(serviceURI);
+
+        }
+
+    }
+
     private List<LogicalReference> instantiateReferences(LogicalComponent<CompositeImplementation> parent, Composite composite) {
         String base = parent.getUri().toString();
-
         // merge the composite reference definitions into the parent
         List<LogicalReference> references = new ArrayList<LogicalReference>(composite.getReferences().size());
         for (CompositeReference compositeReference : composite.getReferences().values()) {

@@ -20,12 +20,12 @@ import org.fabric3.spi.command.AbstractCommand;
  * specific language governing permissions and limitations
  * under the License.
  */
-public class ComponentStopCommand extends AbstractCommand {
+public class StopComponentCommand extends AbstractCommand {
 
 
     private final URI uri;
 
-    public ComponentStopCommand(int order, URI uri) {
+    public StopComponentCommand(int order, URI uri) {
         super(order);
         this.uri = uri;
         assert uri != null;
@@ -42,7 +42,7 @@ public class ComponentStopCommand extends AbstractCommand {
     public boolean equals(Object object) {
         if (this == object) return true;
         try {
-            ComponentStopCommand csc = (ComponentStopCommand) object;
+            StopComponentCommand csc = (StopComponentCommand) object;
             return uri.equals(csc.uri);
         } catch (ClassCastException cse) {
             return false;

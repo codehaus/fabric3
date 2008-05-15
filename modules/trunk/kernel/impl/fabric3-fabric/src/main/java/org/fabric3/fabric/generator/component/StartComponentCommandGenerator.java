@@ -20,7 +20,7 @@ package org.fabric3.fabric.generator.component;
 
 import org.osoa.sca.annotations.Property;
 
-import org.fabric3.fabric.command.ComponentStartCommand;
+import org.fabric3.fabric.command.StartComponentCommand;
 import org.fabric3.spi.generator.AddCommandGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.LogicalComponent;
@@ -43,10 +43,10 @@ public class StartComponentCommandGenerator implements AddCommandGenerator {
     }
 
     @SuppressWarnings("unchecked")
-    public ComponentStartCommand generate(LogicalComponent<?> component) throws GenerationException {
+    public StartComponentCommand generate(LogicalComponent<?> component) throws GenerationException {
         // start a component if it is atomic and not provisioned
         if (!(component instanceof LogicalCompositeComponent) && !component.isProvisioned()) {
-            return new ComponentStartCommand(order, component.getUri());
+            return new StartComponentCommand(order, component.getUri());
         }
         return null;
     }

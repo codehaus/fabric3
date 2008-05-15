@@ -96,6 +96,11 @@ public class JavaSourceWireAttacher extends PojoSourceWireAttacher implements So
         }
     }
 
+    public void detachFromSource(JavaWireSourceDefinition source, PhysicalWireTargetDefinition target, Wire wire) throws WiringException {
+        throw new AssertionError();
+    }
+
+
     public void attachObjectFactory(JavaWireSourceDefinition source, ObjectFactory<?> objectFactory) throws WiringException {
         URI sourceId = UriHelper.getDefragmentedName(source.getUri());
         JavaComponent<?> sourceComponent = (JavaComponent<?>) manager.getComponent(sourceId);

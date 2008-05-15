@@ -25,6 +25,7 @@ import java.lang.reflect.Proxy;
 import java.net.URI;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
+import java.rmi.NotBoundException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.registry.Registry;
 import java.rmi.server.UnicastRemoteObject;
@@ -114,6 +115,26 @@ public class RmiSourceWireAttacher implements SourceWireAttacher<RmiWireSourceDe
             }
         }
 
+
+    }
+
+    public void detachFromSource(RmiWireSourceDefinition source, PhysicalWireTargetDefinition target, Wire wire) throws WireAttachException {
+        String serviceName = source.getBindingDefinition().getServiceName();
+        int port = source.getBindingDefinition().getPort();
+        if (serviceName != null) {
+            try {
+                Registry registry = findOrCreateRegistry(port);
+                registry.unbind(serviceName);
+                //TODO We should have a way to remove objects from map upon undeploy
+                remoteObjects.remove(serviceName);
+            } catch (NotBoundException nbe) {
+                throw new WireAttachException("Error while performing unbind operation JNDI name: " + serviceName,
+                                              source.getUri(), target.getUri(), nbe);                
+            } catch (RemoteException re) {
+                throw new WireAttachException("Error binding Rmi binding to JNDI name: " + serviceName,
+                                              source.getUri(), target.getUri(), re);
+            }
+        }
 
     }
 

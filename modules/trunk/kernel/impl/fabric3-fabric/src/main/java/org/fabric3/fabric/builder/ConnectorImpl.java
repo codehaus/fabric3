@@ -83,6 +83,21 @@ public class ConnectorImpl implements Connector {
         }
     }
 
+    public void disconnect(PhysicalWireDefinition definition) throws BuilderException {
+        PhysicalWireSourceDefinition sourceDefinition = definition.getSource();
+        SourceWireAttacher<PhysicalWireSourceDefinition> sourceAttacher =
+          getAttacher(sourceDefinition);
+
+        PhysicalWireTargetDefinition targetDefinition = definition.getTarget();
+
+        if (definition.isOptimizable()) {
+            sourceAttacher.attachObjectFactory(sourceDefinition, null);
+        } else {
+            Wire wire = createWire(definition);
+            sourceAttacher.detachFromSource(sourceDefinition, targetDefinition, wire);
+        }
+    }
+
     Wire createWire(PhysicalWireDefinition definition) throws BuilderException {
         Wire wire = new WireImpl();
         for (PhysicalOperationDefinition operation : definition.getOperations()) {
@@ -96,6 +111,9 @@ public class ConnectorImpl implements Connector {
         }
         return wire;
     }
+
+
+
 
     @SuppressWarnings("unchecked")
     protected <PID extends PhysicalInterceptorDefinition> InterceptorBuilder<PID, ?> getBuilder(PID definition) {

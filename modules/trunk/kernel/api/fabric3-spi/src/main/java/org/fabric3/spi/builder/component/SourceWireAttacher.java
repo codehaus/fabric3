@@ -41,6 +41,14 @@ public interface SourceWireAttacher<PWSD extends PhysicalWireSourceDefinition> {
      */
     void attachToSource(PWSD source, PhysicalWireTargetDefinition target, Wire wire) throws WiringException;
 
+
+    /**
+     * Detach a wire from a source component
+     * @param source
+     * @param target
+     * @param wire
+     */
+    void detachFromSource(PWSD source, PhysicalWireTargetDefinition target, Wire wire) throws WiringException;
     /**
      * Attaches an ObjectFactory to a source component.
      *

@@ -5,6 +5,7 @@ import java.net.URI;
 
 import org.fabric3.binding.ws.jaxws.provision.JaxWsWireSourceDefinition;
 import org.fabric3.spi.builder.component.WireAttachException;
+import org.fabric3.spi.builder.WiringException;
 
 /*
  * See the NOTICE file distributed with this work for information
@@ -37,5 +38,16 @@ public interface JaxWsServiceProvisioner {
      */
     void provision(Class<?> clazz, InvocationHandler handler, JaxWsWireSourceDefinition source,
                    URI targetUri) throws WireAttachException;
+
+
+    /**
+     * Unprovision JAX_WS service previously generated. Failing to stop the service should result
+     * in WiringException
+     * @param source source definition of the web service
+     * @param targetUri
+     * @throws WiringException
+     */
+    void unprovision(JaxWsWireSourceDefinition source,
+                   URI targetUri) throws WiringException;
     
 }

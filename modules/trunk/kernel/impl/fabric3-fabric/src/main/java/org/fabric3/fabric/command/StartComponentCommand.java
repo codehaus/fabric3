@@ -27,10 +27,10 @@ import org.fabric3.spi.command.AbstractCommand;
  *
  * @version $Revision$ $Date$
  */
-public class ComponentStartCommand extends AbstractCommand {
+public class StartComponentCommand extends AbstractCommand {
     private final URI uri;
 
-    public ComponentStartCommand(int order, URI uri) {
+    public StartComponentCommand(int order, URI uri) {
         super(order);
         this.uri = uri;
     }
@@ -45,7 +45,7 @@ public class ComponentStartCommand extends AbstractCommand {
             return false;
         }
 
-        ComponentStartCommand that = (ComponentStartCommand) o;
+        StartComponentCommand that = (StartComponentCommand) o;
 
         if (uri != null ? !uri.equals(that.uri) : that.uri != null) {
             return false;

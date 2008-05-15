@@ -59,6 +59,10 @@ public class WebComponentSourceWireAttacher implements SourceWireAttacher<WebCom
         }
     }
 
+    public void detachFromSource(WebComponentWireSourceDefinition source, PhysicalWireTargetDefinition target, Wire wire) throws WiringException {
+        throw new AssertionError();
+    }
+
     public void attachObjectFactory(WebComponentWireSourceDefinition source, ObjectFactory<?> objectFactory) throws WiringException {
         URI sourceUri = UriHelper.getDefragmentedName(source.getUri());
         String referenceName = source.getUri().getFragment();

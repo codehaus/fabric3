@@ -63,6 +63,10 @@ public class ClassLoaderBuilderImpl implements ClassLoaderBuilder {
 
     }
 
+    public void destroy(URI uri) {
+        classLoaderRegistry.unregister(uri);
+    }
+
     /**
      * Creates a new classloader from a PhysicalClassLoaderDefinition.
      *

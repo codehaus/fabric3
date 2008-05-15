@@ -46,7 +46,7 @@
     </component>
 
     <component name="componentStartCommandExecutor">
-        <system:implementation.system class="org.fabric3.fabric.executor.ComponentStartCommandExecutor"/>
+        <system:implementation.system class="org.fabric3.fabric.executor.StartComponentCommandExecutor"/>
     </component>
     
     <component name="startCompositeContextCommandExecutor">
@@ -58,7 +58,7 @@
     </component>
 
     <component name="componentStopCommandExecutor">
-        <system:implementation.system class="org.fabric3.fabric.executor.ComponentStopCommandExecutor"/>
+        <system:implementation.system class="org.fabric3.fabric.executor.StopComponentCommandExecutor"/>
     </component>
 
     <component name="stopCompositeContextCommandExecutor">
@@ -69,4 +69,9 @@
         <system:implementation.system class="org.fabric3.fabric.executor.WireDetachCommandExecutor"/>
     </component>
 
+    <component name="unprovisionClassloaderCommandExecutor">
+        <system:implementation.system class="org.fabric3.fabric.executor.UnprovisionClassloaderCommandExecutor"/>
+    </component>
+
+    
 </composite>
