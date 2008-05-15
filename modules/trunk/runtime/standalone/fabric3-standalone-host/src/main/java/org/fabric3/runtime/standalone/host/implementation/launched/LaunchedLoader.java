@@ -21,14 +21,11 @@ package org.fabric3.runtime.standalone.host.implementation.launched;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
-import org.osoa.sca.annotations.Destroy;
 import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.xml.LoaderException;
-import org.fabric3.introspection.xml.LoaderRegistry;
 import org.fabric3.introspection.xml.LoaderUtil;
 import org.fabric3.introspection.xml.TypeLoader;
 
@@ -38,23 +35,12 @@ import org.fabric3.introspection.xml.TypeLoader;
 @EagerInit
 public class LaunchedLoader implements TypeLoader<Launched> {
 
-    private LoaderRegistry registry;
     private final LaunchedComponentTypeLoader componentTypeLoader;
 
-    public LaunchedLoader(@Reference LoaderRegistry registry, @Reference LaunchedComponentTypeLoader componentTypeLoader) {
-        this.registry = registry;
+    public LaunchedLoader(@Reference LaunchedComponentTypeLoader componentTypeLoader) {
         this.componentTypeLoader = componentTypeLoader;
     }
 
-    @Init
-    public void start() {
-        registry.registerLoader(Launched.IMPLEMENTATION_LAUNCHED, this);
-    }
-
-    @Destroy
-    public void stop() {
-        registry.unregisterLoader(Launched.IMPLEMENTATION_LAUNCHED);
-    }
 
     public Launched load(XMLStreamReader reader, IntrospectionContext introspectionContext) throws XMLStreamException, LoaderException {
         String className = reader.getAttributeValue(null, "class");
