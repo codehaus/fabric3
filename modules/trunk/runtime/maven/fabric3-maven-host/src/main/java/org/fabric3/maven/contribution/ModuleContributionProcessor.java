@@ -40,7 +40,6 @@ import org.fabric3.maven.runtime.MavenHostInfo;
 import org.fabric3.spi.services.contenttype.ContentTypeResolutionException;
 import org.fabric3.spi.services.contenttype.ContentTypeResolver;
 import org.fabric3.spi.services.contribution.Action;
-import org.fabric3.spi.services.contribution.ArtifactLocationEncoder;
 import org.fabric3.spi.services.contribution.Contribution;
 import org.fabric3.spi.services.contribution.ContributionManifest;
 import org.fabric3.spi.services.contribution.ContributionProcessor;
@@ -58,18 +57,15 @@ public class ModuleContributionProcessor implements ContributionProcessor {
 
     private ProcessorRegistry registry;
     private ContentTypeResolver contentTypeResolver;
-    private ArtifactLocationEncoder encoder;
     private MavenHostInfo hostInfo;
     private Loader loader;
 
     public ModuleContributionProcessor(@Reference ProcessorRegistry registry,
                                        @Reference ContentTypeResolver contentTypeResolver,
-                                       @Reference ArtifactLocationEncoder encoder,
                                        @Reference MavenHostInfo hostInfo,
                                        @Reference Loader loader) {
         this.registry = registry;
         this.contentTypeResolver = contentTypeResolver;
-        this.encoder = encoder;
         this.hostInfo = hostInfo;
         this.loader = loader;
     }
@@ -187,12 +183,10 @@ public class ModuleContributionProcessor implements ContributionProcessor {
         try {
             URL classes = new File(file, "classes").toURI().toURL();
             URL testClasses = new File(file, "test-classes").toURI().toURL();
-            URL encodedClasses = encoder.encode(classes);
-            contribution.addArtifactUrl(encodedClasses);
-            URL encodedTestClasses = encoder.encode(testClasses);
-            contribution.addArtifactUrl(encodedTestClasses);
+            contribution.addArtifactUrl(classes);
+            contribution.addArtifactUrl(testClasses);
             for (URL url : hostInfo.getDependencyUrls()) {
-                contribution.addArtifactUrl(encoder.encode(url));
+                contribution.addArtifactUrl(url);
             }
         } catch (MalformedURLException e) {
             throw new ContributionException(e);

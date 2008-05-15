@@ -31,4 +31,8 @@ public class ClassLoaderGenerationException extends GenerationException {
     public ClassLoaderGenerationException(String message, String identifier) {
         super(message, identifier);
     }
+
+    public ClassLoaderGenerationException(Throwable cause) {
+        super(cause);
+    }
 }

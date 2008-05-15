@@ -1,6 +1,8 @@
 /*
- * See the NOTICE file distributed with this work for information
- * regarding copyright ownership.  This file is licensed
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
@@ -16,23 +18,15 @@
  */
 package org.fabric3.spi.services.contribution;
 
-import java.net.URL;
-import java.net.MalformedURLException;
+import org.fabric3.api.annotation.LogLevel;
 
 /**
- * Implementations encode a local contribution URL so that it may be dereferenced remotely, e.g. over HTTP.
+ * Receives callbacks for ArtifactResolver events.
  *
- * @version $Rev$ $Date$
+ * @version $Revision$ $Date$
  */
-public interface ArtifactLocationEncoder {
+public interface ArtifactResolverMonitor {
 
-    /**
-     * Encode the local contribution URL.
-     *
-     * @param url the URL to encode
-     * @return the encoded URL
-     * @throws MalformedURLException if the local URL is invalid
-     */
-    URL encode(URL url) throws MalformedURLException;
-
+    @LogLevel("SEVERE")
+    void resolutionError(Throwable e);
 }

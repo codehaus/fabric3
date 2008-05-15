@@ -18,9 +18,11 @@ package org.fabric3.fabric.generator.classloader;
 
 import java.net.URI;
 import java.net.URL;
+import java.net.MalformedURLException;
 
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
+import org.osoa.sca.annotations.Constructor;
 
 import org.fabric3.scdl.CompositeImplementation;
 import org.fabric3.spi.generator.GenerationException;
@@ -28,6 +30,7 @@ import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.physical.PhysicalClassLoaderDefinition;
 import org.fabric3.spi.services.contribution.Contribution;
 import org.fabric3.spi.services.contribution.MetaDataStore;
+import org.fabric3.spi.services.contribution.ArtifactLocationEncoder;
 
 /**
  * Default implementation of the ClassLoaderGenerator. This implementation groups components contained within a composite deployed to the same runtime
@@ -38,9 +41,16 @@ import org.fabric3.spi.services.contribution.MetaDataStore;
 @EagerInit
 public class ClassLoaderGeneratorImpl implements ClassLoaderGenerator {
     private MetaDataStore store;
+    private ArtifactLocationEncoder encoder;
 
-    public ClassLoaderGeneratorImpl(@Reference MetaDataStore store) {
+    public ClassLoaderGeneratorImpl(MetaDataStore store) {
         this.store = store;
+    }
+
+    @Constructor
+    public ClassLoaderGeneratorImpl(@Reference MetaDataStore store, @Reference ArtifactLocationEncoder encoder) {
+        this.store = store;
+        this.encoder = encoder;
     }
 
     public PhysicalClassLoaderDefinition generate(LogicalComponent<?> component) throws GenerationException {
@@ -60,10 +70,11 @@ public class ClassLoaderGeneratorImpl implements ClassLoaderGenerator {
             return definition;
         }
         Contribution contribution = store.find(contributionUri);
+        URL location = contribution.getLocation();
+        URI runtimeId = component.getRuntimeId();
+        updateUrl(runtimeId, definition, location);
         for (URL url : contribution.getArtifactUrls()) {
-            if (!definition.getResourceUrls().contains(url)) {
-                definition.addResourceUrl(url);
-            }
+            updateUrl(runtimeId, definition, url);
         }
         for (URI uri : contribution.getResolvedImportUris()) {
             if (!definition.getParentClassLoaders().contains(uri)) {
@@ -71,6 +82,20 @@ public class ClassLoaderGeneratorImpl implements ClassLoaderGenerator {
             }
         }
         return definition;
+    }
+
+    private void updateUrl(URI runtimeId, PhysicalClassLoaderDefinition definition, URL location) throws ClassLoaderGenerationException {
+        if (runtimeId != null) {
+            // if the target runtime is not this one, encode the artifact URL so it can be dereferenced from another VM
+            try {
+                location = encoder.encode(location);
+            } catch (MalformedURLException e) {
+                throw new ClassLoaderGenerationException(e);
+            }
+        }
+        if (!definition.getResourceUrls().contains(location)) {
+            definition.addResourceUrl(location);
+        }
     }
 
 }

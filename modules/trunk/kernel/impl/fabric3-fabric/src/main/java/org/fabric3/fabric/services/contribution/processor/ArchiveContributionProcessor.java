@@ -27,7 +27,6 @@ import org.fabric3.fabric.services.contribution.UnsupportedContentTypeException;
 import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.spi.services.contribution.Action;
 import org.fabric3.spi.services.contribution.ArchiveContributionHandler;
-import org.fabric3.spi.services.contribution.ArtifactLocationEncoder;
 import org.fabric3.spi.services.contribution.Contribution;
 import org.fabric3.spi.services.contribution.Resource;
 
@@ -39,13 +38,7 @@ import org.fabric3.spi.services.contribution.Resource;
 public class ArchiveContributionProcessor extends AbstractContributionProcessor {
 
     private static final List<String> CONTENT_TYPES = initializeContentTypes();
-    private ArtifactLocationEncoder encoder;
     private List<ArchiveContributionHandler> handlers;
-
-    public ArchiveContributionProcessor(@Reference ArtifactLocationEncoder encoder) {
-        this.encoder = encoder;
-    }
-
 
     @Reference
     public void setHandlers(List<ArchiveContributionHandler> handlers) {
@@ -84,9 +77,6 @@ public class ArchiveContributionProcessor extends AbstractContributionProcessor 
             for (Resource resource : contribution.getResources()) {
                 registry.processResource(contributionUri, resource, loader);
             }
-            // encode and add the the contribution url
-            URL encodedLocation = encoder.encode(contribution.getLocation());
-            contribution.addArtifactUrl(encodedLocation);
         } finally {
             Thread.currentThread().setContextClassLoader(oldClassloader);
         }
