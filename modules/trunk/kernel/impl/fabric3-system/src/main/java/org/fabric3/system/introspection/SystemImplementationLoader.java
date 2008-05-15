@@ -21,17 +21,13 @@ package org.fabric3.system.introspection;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
-import org.osoa.sca.annotations.Destroy;
 import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
-import org.osoa.sca.annotations.Constructor;
 
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.IntrospectionException;
 import org.fabric3.introspection.xml.InvalidValueException;
 import org.fabric3.introspection.xml.LoaderException;
-import org.fabric3.introspection.xml.LoaderRegistry;
 import org.fabric3.introspection.xml.LoaderUtil;
 import org.fabric3.introspection.xml.TypeLoader;
 import org.fabric3.system.scdl.SystemImplementation;
@@ -45,42 +41,16 @@ import org.fabric3.pojo.processor.ProcessingException;
 @EagerInit
 public class SystemImplementationLoader implements TypeLoader<SystemImplementation> {
 
-    private final LoaderRegistry registry;
     private final SystemImplementationProcessor implementationProcessor;
 
     /**
-     * Constructor used during bootstrap.
+     * Constructor used during bootstrap and load scdl.
      *
      * @param implementationProcessor the component type loader to use
      */
-    public SystemImplementationLoader(SystemImplementationProcessor implementationProcessor) {
-        this.registry = null;
+    public SystemImplementationLoader(@Reference SystemImplementationProcessor implementationProcessor) {
         this.implementationProcessor = implementationProcessor;
     }
-
-    /**
-     * Constructor to be used when loaded from SCDL.
-     *
-     * @param registry the loader registry to register with
-     * @param implementationProcessor the component type loader to use
-     */
-    @Constructor
-    public SystemImplementationLoader(@Reference LoaderRegistry registry,
-                                      @Reference SystemImplementationProcessor implementationProcessor) {
-        this.registry = registry;
-        this.implementationProcessor = implementationProcessor;
-    }
-
-    @Init
-    public void start() {
-        registry.registerLoader(SystemImplementation.IMPLEMENTATION_SYSTEM, this);
-    }
-
-    @Destroy
-    public void stop() {
-        registry.unregisterLoader(SystemImplementation.IMPLEMENTATION_SYSTEM);
-    }
-
 
     public SystemImplementation load(XMLStreamReader reader, IntrospectionContext introspectionContext)
             throws XMLStreamException, LoaderException {
