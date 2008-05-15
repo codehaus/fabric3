@@ -16,20 +16,14 @@
  */
 package org.fabric3.fabric.services.contribution.manifest;
 
-import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
-import static org.osoa.sca.Constants.SCA_NS;
-import org.osoa.sca.annotations.Destroy;
 import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Init;
-import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.fabric.services.contribution.MissingPackageException;
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.xml.LoaderException;
-import org.fabric3.introspection.xml.LoaderRegistry;
 import org.fabric3.introspection.xml.TypeLoader;
 
 /**
@@ -39,22 +33,8 @@ import org.fabric3.introspection.xml.TypeLoader;
  */
 @EagerInit
 public class JavaExportLoader implements TypeLoader<JavaExport> {
-    private static final QName EXPORT = new QName(SCA_NS, "export.java");
-    private LoaderRegistry registry;
+    //private static final QName EXPORT = new QName(SCA_NS, "export.java");
 
-    public JavaExportLoader(@Reference LoaderRegistry registry) {
-        this.registry = registry;
-    }
-
-    @Init
-    public void start() {
-        registry.registerLoader(EXPORT, this);
-    }
-
-    @Destroy
-    public void stop() {
-        registry.unregisterLoader(EXPORT);
-    }
 
     public JavaExport load(XMLStreamReader reader, IntrospectionContext context) throws XMLStreamException, LoaderException {
         String packageName = reader.getAttributeValue(null, "package");

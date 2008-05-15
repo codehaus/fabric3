@@ -25,7 +25,7 @@ import org.easymock.EasyMock;
  * @version $Rev$ $Date$
  */
 public class JavaImportLoaderTestCase extends TestCase {
-    private JavaImportLoader loader = new JavaImportLoader(null);
+    private JavaImportLoader loader = new JavaImportLoader();
     private XMLStreamReader reader;
 
     public void testRead() throws Exception {

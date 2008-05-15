@@ -42,15 +42,15 @@
         <system:implementation.system class="org.fabric3.loader.definitions.IntentLoader"/>
     </component>
 
-    <component name="loader.policySet">
+    <component name="loader.policySet" f3:key="sca:policySet">
         <system:implementation.system class="org.fabric3.loader.definitions.PolicySetLoader"/>
     </component>
 
-    <component name="loader.bindingType">
+    <component name="loader.bindingType" f3:key="sca:bindingType">
         <system:implementation.system class="org.fabric3.loader.definitions.BindingTypeLoader"/>
     </component>
 
-    <component name="loader.implementationType">
+    <component name="loader.implementationType" f3:key="sca:implementationType">
         <system:implementation.system class="org.fabric3.loader.definitions.ImplementationTypeLoader"/>
     </component>
 

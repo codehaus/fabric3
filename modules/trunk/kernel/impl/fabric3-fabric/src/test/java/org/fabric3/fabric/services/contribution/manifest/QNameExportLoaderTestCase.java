@@ -31,7 +31,7 @@ import org.fabric3.spi.services.contribution.QNameExport;
  */
 public class QNameExportLoaderTestCase extends TestCase {
     private static final QName QNAME = new QName("namespace");
-    private QNameExportLoader loader = new QNameExportLoader(null);
+    private QNameExportLoader loader = new QNameExportLoader();
     private XMLStreamReader reader;
 
     public void testRead() throws Exception {

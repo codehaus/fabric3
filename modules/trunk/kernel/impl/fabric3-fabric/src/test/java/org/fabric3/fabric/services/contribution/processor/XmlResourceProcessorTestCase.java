@@ -17,14 +17,10 @@
 package org.fabric3.fabric.services.contribution.processor;
 
 import javax.xml.namespace.QName;
-import javax.xml.stream.XMLStreamReader;
 
 import junit.framework.TestCase;
-import org.easymock.EasyMock;
 
 import org.fabric3.services.xmlfactory.impl.XMLFactoryImpl;
-import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.introspection.xml.LoaderRegistry;
 import org.fabric3.services.xmlfactory.XMLFactory;
 
 /**
@@ -39,7 +35,7 @@ public class XmlResourceProcessorTestCase extends TestCase {
             "<definitions xmlns=\"foo\"/>").getBytes();
 
     private XmlResourceProcessor processor;
-    private LoaderRegistry registry;
+//    private LoaderRegistry registry;
 
     public void testDispatch() throws Exception {
 //        InputStream stream = new ByteArrayInputStream(XML);
@@ -57,11 +53,11 @@ public class XmlResourceProcessorTestCase extends TestCase {
     protected void setUp() throws Exception {
         super.setUp();
         XMLFactory factory = new XMLFactoryImpl();
-        registry = EasyMock.createMock(LoaderRegistry.class);
-        EasyMock.expect(registry.load(EasyMock.isA(XMLStreamReader.class),
-                                      EasyMock.isA(Class.class),
-                                      EasyMock.isA(IntrospectionContext.class))).andReturn(null);
-        EasyMock.replay(registry);
+//        registry = EasyMock.createMock(LoaderRegistry.class);
+//        EasyMock.expect(registry.load(EasyMock.isA(XMLStreamReader.class),
+//                                      EasyMock.isA(Class.class),
+//                                      EasyMock.isA(IntrospectionContext.class))).andReturn(null);
+//        EasyMock.replay(registry);
         processor = new XmlResourceProcessor(null, null, null, factory);
 
 

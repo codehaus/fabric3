@@ -30,7 +30,7 @@
         >
 
     <!-- Common SCDL loader implementations -->
-    <component name="loader.Operation">
+    <component name="loader.Operation" f3:key="sca:operation">
         <system:implementation.system class="org.fabric3.loader.common.OperationLoader"/>
     </component>
     <component name="loader.ComponentReference">

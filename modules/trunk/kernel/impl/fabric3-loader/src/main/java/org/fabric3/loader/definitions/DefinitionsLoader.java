@@ -40,8 +40,8 @@ import org.fabric3.scdl.definitions.ImplementationType;
 import org.fabric3.scdl.definitions.Intent;
 import org.fabric3.scdl.definitions.PolicySet;
 import org.fabric3.introspection.IntrospectionContext;
+import org.fabric3.introspection.xml.Loader;
 import org.fabric3.introspection.xml.LoaderException;
-import org.fabric3.introspection.xml.LoaderRegistry;
 import org.fabric3.spi.services.contribution.QNameSymbol;
 import org.fabric3.spi.services.contribution.Resource;
 import org.fabric3.spi.services.contribution.ResourceElement;
@@ -67,12 +67,12 @@ public class DefinitionsLoader implements XmlResourceElementLoader {
     private static final QName DEFINITIONS = new QName(SCA_NS, "definitions");
 
     private XmlResourceElementLoaderRegistry elementLoaderRegistry;
-    private LoaderRegistry loaderRegistry;
+    private Loader loaderRegistry;
 
     public DefinitionsLoader(@Reference XmlResourceElementLoaderRegistry elementLoaderRegistry,
-                             @Reference LoaderRegistry registry) {
+                             @Reference Loader loader) {
         this.elementLoaderRegistry = elementLoaderRegistry;
-        this.loaderRegistry = registry;
+        this.loaderRegistry = loader;
     }
 
     @Init

@@ -16,20 +16,14 @@
  */
 package org.fabric3.fabric.services.contribution.manifest;
 
-import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
-import org.osoa.sca.Constants;
-import org.osoa.sca.annotations.Destroy;
 import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Init;
-import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.fabric.services.contribution.MissingPackageException;
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.xml.LoaderException;
-import org.fabric3.introspection.xml.LoaderRegistry;
 import org.fabric3.introspection.xml.TypeLoader;
 
 /**
@@ -39,27 +33,7 @@ import org.fabric3.introspection.xml.TypeLoader;
  */
 @EagerInit
 public class JavaImportLoader implements TypeLoader<JavaImport> {
-    private static final QName IMPORT = new QName(Constants.SCA_NS, "import.java");
-    private LoaderRegistry registry;
-
-    /**
-     * Constructor specifies the registry to register with.
-     *
-     * @param registry the LoaderRegistry this loader should register with
-     */
-    public JavaImportLoader(@Reference LoaderRegistry registry) {
-        this.registry = registry;
-    }
-
-    @Init
-    public void start() {
-        registry.registerLoader(IMPORT, this);
-    }
-
-    @Destroy
-    public void stop() {
-        registry.unregisterLoader(IMPORT);
-    }
+    //private static final QName IMPORT = new QName(Constants.SCA_NS, "import.java");
 
     public JavaImport load(XMLStreamReader reader, IntrospectionContext context) throws LoaderException, XMLStreamException {
         String packageName = reader.getAttributeValue(null, "package");

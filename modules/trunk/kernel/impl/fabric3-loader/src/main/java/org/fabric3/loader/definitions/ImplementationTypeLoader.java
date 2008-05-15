@@ -23,15 +23,12 @@ import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
-import org.osoa.sca.annotations.Destroy;
 import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.xml.LoaderException;
 import org.fabric3.introspection.xml.LoaderHelper;
-import org.fabric3.introspection.xml.LoaderRegistry;
 import org.fabric3.introspection.xml.LoaderUtil;
 import org.fabric3.introspection.xml.TypeLoader;
 import org.fabric3.scdl.definitions.ImplementationType;
@@ -44,23 +41,10 @@ import org.fabric3.scdl.definitions.ImplementationType;
 @EagerInit
 public class ImplementationTypeLoader implements TypeLoader<ImplementationType> {
 
-    private final LoaderRegistry registry;
     private final LoaderHelper helper;
 
-    public ImplementationTypeLoader(@Reference LoaderRegistry registry,
-                                    @Reference LoaderHelper helper) {
-        this.registry = registry;
+    public ImplementationTypeLoader(@Reference LoaderHelper helper) {
         this.helper = helper;
-    }
-
-    @Init
-    public void init() {
-        registry.registerLoader(DefinitionsLoader.IMPLEMENTATION_TYPE, this);
-    }
-
-    @Destroy
-    public void destroy() {
-        registry.unregisterLoader(DefinitionsLoader.IMPLEMENTATION_TYPE);
     }
 
     public ImplementationType load(XMLStreamReader reader, IntrospectionContext context)

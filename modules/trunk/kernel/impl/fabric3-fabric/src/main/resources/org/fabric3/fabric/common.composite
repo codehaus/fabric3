@@ -53,7 +53,7 @@
         <system:implementation.system class="org.fabric3.fabric.services.advertisement.DefaultAdvertismentService"/>
     </component>
 
-    <component name="featureLoader">
+    <component name="featureLoader" f3:key="system:feature">
         <system:implementation.system class="org.fabric3.fabric.services.advertisement.FeatureLoader"/>
     </component>
 

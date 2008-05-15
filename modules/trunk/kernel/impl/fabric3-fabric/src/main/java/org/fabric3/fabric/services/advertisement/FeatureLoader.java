@@ -18,13 +18,10 @@
  */
 package org.fabric3.fabric.services.advertisement;
 
-import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
-import org.osoa.sca.annotations.Destroy;
 import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 import org.w3c.dom.Document;
 
@@ -33,7 +30,6 @@ import org.fabric3.introspection.IntrospectionException;
 import org.fabric3.introspection.DefaultIntrospectionContext;
 import org.fabric3.introspection.xml.LoaderException;
 import org.fabric3.introspection.xml.LoaderHelper;
-import org.fabric3.introspection.xml.LoaderRegistry;
 import org.fabric3.introspection.xml.TypeLoader;
 import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.Implementation;
@@ -49,17 +45,14 @@ import org.fabric3.system.scdl.SystemImplementation;
 public class FeatureLoader implements TypeLoader<ComponentDefinition> {
 
     // Qualified name of the root element.
-    private static final QName QNAME = new QName(Constants.FABRIC3_SYSTEM_NS, "feature");
+    //private static final QName QNAME = new QName(Constants.FABRIC3_SYSTEM_NS, "feature");
 
     private final SystemImplementation featureImplementation;
 
-    private LoaderRegistry registry;
     private final LoaderHelper helper;
 
-    public FeatureLoader(@Reference LoaderRegistry registry, 
-                         @Reference SystemImplementationProcessor processor,
+    public FeatureLoader(@Reference SystemImplementationProcessor processor,
                          @Reference LoaderHelper helper) {
-        this.registry = registry;
         this.helper = helper;
 
         featureImplementation = new SystemImplementation(FeatureComponent.class.getName());
@@ -70,18 +63,6 @@ public class FeatureLoader implements TypeLoader<ComponentDefinition> {
             throw new AssertionError();
         }
     }
-
-
-    @Init
-    public void start() {
-        registry.registerLoader(QNAME, this);
-    }
-
-    @Destroy
-    public void stop() {
-        registry.unregisterLoader(QNAME);
-    }
-
 
     public ComponentDefinition load(XMLStreamReader reader, IntrospectionContext context) throws XMLStreamException, LoaderException {
 

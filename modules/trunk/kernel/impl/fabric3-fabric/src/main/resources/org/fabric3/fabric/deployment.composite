@@ -23,6 +23,9 @@
     $Rev$ $Date$
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0" xmlns:system="http://fabric3.org/xmlns/sca/system/2.0-alpha"
+           xmlns:sca="http://www.osoa.org/xmlns/sca/1.0"
+           xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
+           xmlns:f3maven="http://fabric3.org/xmlns/sca/2.0-alpha/maven"
            name="org.fabric3.fabric.Deployment"
            autowire="true">
 
@@ -101,22 +104,22 @@
                 class="org.fabric3.fabric.services.contribution.manifest.ContributionElementLoader"/>
     </component>
 
-    <component name="QNameExportLoader">
+    <component name="QNameExportLoader" f3:key="sca:export">
         <system:implementation.system
                 class="org.fabric3.fabric.services.contribution.manifest.QNameExportLoader"/>
     </component>
 
-    <component name="QNameImportLoader">
+    <component name="QNameImportLoader" f3:key="sca:import">
         <system:implementation.system
                 class="org.fabric3.fabric.services.contribution.manifest.QNameImportLoader"/>
     </component>
 
-    <component name="MavenImportLoader">
+    <component name="MavenImportLoader" f3:key="f3maven:import">
         <system:implementation.system
                 class="org.fabric3.fabric.services.contribution.manifest.MavenImportLoader"/>
     </component>
 
-    <component name="MavenExportLoader">
+    <component name="MavenExportLoader" f3:key="f3maven:export">
         <system:implementation.system
                 class="org.fabric3.fabric.services.contribution.manifest.MavenExportLoader"/>
     </component>
@@ -126,12 +129,12 @@
                 class="org.fabric3.fabric.services.contribution.manifest.MavenPOMProcessor"/>
     </component>
 
-    <component name="JavaExportLoader">
+    <component name="JavaExportLoader" f3:key="sca:export.java">
         <system:implementation.system
                 class="org.fabric3.fabric.services.contribution.manifest.JavaExportLoader"/>
     </component>
 
-    <component name="JavaImportLoader">
+    <component name="JavaImportLoader"  f3:key="sca:import.java">
         <system:implementation.system
                 class="org.fabric3.fabric.services.contribution.manifest.JavaImportLoader"/>
     </component>

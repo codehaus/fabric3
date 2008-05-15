@@ -113,8 +113,8 @@ public class DefinitionsLoaderTestCase extends TestCase {
         loader = new DefinitionsLoader(null, loaderRegistry);
         LoaderHelper helper = new DefaultLoaderHelper();
         IntentLoader intentLoader = new IntentLoader(helper);
-        PolicySetLoader policySetLoader = new PolicySetLoader(loaderRegistry, helper);
-        policySetLoader.init();
+        PolicySetLoader policySetLoader = new PolicySetLoader(helper);
+        loaderRegistry.registerLoader(DefinitionsLoader.POLICY_SET, policySetLoader);
         loaderRegistry.registerLoader(DefinitionsLoader.INTENT, intentLoader);
 
         // setup indexed resource

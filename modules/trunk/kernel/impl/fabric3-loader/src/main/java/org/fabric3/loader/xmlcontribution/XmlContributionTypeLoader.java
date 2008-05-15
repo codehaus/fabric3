@@ -38,7 +38,7 @@ import org.fabric3.host.contribution.Deployable;
 import org.fabric3.introspection.DefaultIntrospectionContext;
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.xml.LoaderException;
-import org.fabric3.introspection.xml.LoaderRegistry;
+import org.fabric3.introspection.xml.Loader;
 import org.fabric3.scdl.Composite;
 import static org.fabric3.spi.Constants.FABRIC3_NS;
 import org.fabric3.spi.services.contribution.Contribution;
@@ -62,11 +62,11 @@ public class XmlContributionTypeLoader implements XmlProcessor {
     static final QName COMPOSITE = new QName(SCA_NS, "composite");
 
     private XmlProcessorRegistry processorRegistry;
-    private LoaderRegistry loaderRegistry;
+    private Loader loader;
 
-    public XmlContributionTypeLoader(@Reference XmlProcessorRegistry processorRegistry, @Reference LoaderRegistry registry) {
+    public XmlContributionTypeLoader(@Reference XmlProcessorRegistry processorRegistry, @Reference Loader loader) {
         this.processorRegistry = processorRegistry;
-        this.loaderRegistry = registry;
+        this.loader = loader;
     }
 
     @Init
@@ -78,12 +78,12 @@ public class XmlContributionTypeLoader implements XmlProcessor {
         return XML_CONTRIBUTION;
     }
 
-    public void processContent(Contribution contribution, XMLStreamReader reader, ClassLoader loader) throws ContributionException {
+    public void processContent(Contribution contribution, XMLStreamReader reader, ClassLoader classLoader) throws ContributionException {
         List<Composite> composites = new ArrayList<Composite>();
         String targetNamespace = reader.getAttributeValue(null, "targetNamespace");
         URI contributionUri = contribution.getUri();
         try {
-            IntrospectionContext context = new DefaultIntrospectionContext(contributionUri, loader, targetNamespace);
+            IntrospectionContext context = new DefaultIntrospectionContext(contributionUri, classLoader, targetNamespace);
             while (true) {
                 switch (reader.next()) {
                 case START_ELEMENT:
@@ -91,7 +91,7 @@ public class XmlContributionTypeLoader implements XmlProcessor {
                     Composite definition = null;
                     if (COMPOSITE.equals(qname)) {
                         try {
-                            definition = loaderRegistry.load(reader, Composite.class, context);
+                            definition = loader.load(reader, Composite.class, context);
                         } catch (LoaderException e) {
                             throw new ContributionException("Error processing contribution: " + contributionUri.toString(), e);
                         }

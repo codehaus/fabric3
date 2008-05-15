@@ -25,7 +25,7 @@ import org.easymock.EasyMock;
  * @version $Rev$ $Date$
  */
 public class MavenExportLoaderTestCase extends TestCase {
-    private MavenExportLoader loader = new MavenExportLoader(null);
+    private MavenExportLoader loader = new MavenExportLoader();
     private XMLStreamReader reader;
 
     public void testRead() throws Exception {

@@ -25,9 +25,7 @@ import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
-import org.osoa.sca.annotations.Destroy;
 import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -35,7 +33,6 @@ import org.w3c.dom.NodeList;
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.xml.LoaderException;
 import org.fabric3.introspection.xml.LoaderHelper;
-import org.fabric3.introspection.xml.LoaderRegistry;
 import org.fabric3.introspection.xml.TypeLoader;
 import org.fabric3.scdl.definitions.PolicyPhase;
 import org.fabric3.scdl.definitions.PolicySet;
@@ -50,24 +47,11 @@ import org.fabric3.transform.xml.Stream2Document;
 @EagerInit
 public class PolicySetLoader implements TypeLoader<PolicySet> {
 
-    private LoaderRegistry registry;
     private final LoaderHelper helper;
     private Stream2Document transformer = new Stream2Document();
 
-    public PolicySetLoader(@Reference LoaderRegistry registry,
-                           @Reference LoaderHelper helper) {
-        this.registry = registry;
+    public PolicySetLoader(@Reference LoaderHelper helper) {
         this.helper = helper;
-    }
-    
-    @Init
-    public void init() {
-        registry.registerLoader(DefinitionsLoader.POLICY_SET, this);
-    }
-
-    @Destroy
-    public void destroy() {
-        registry.unregisterLoader(DefinitionsLoader.POLICY_SET);
     }
 
     public PolicySet load(XMLStreamReader reader, IntrospectionContext context) throws XMLStreamException, LoaderException {

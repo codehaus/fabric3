@@ -33,7 +33,7 @@ import org.fabric3.spi.services.contribution.QNameImport;
 public class QNameImportLoaderTestCase extends TestCase {
     private static final QName QNAME = new QName("namespace");
     private static final URI LOCATION = URI.create("location");
-    private QNameImportLoader loader = new QNameImportLoader(null);
+    private QNameImportLoader loader = new QNameImportLoader();
     private XMLStreamReader reader;
 
     public void testRead() throws Exception {

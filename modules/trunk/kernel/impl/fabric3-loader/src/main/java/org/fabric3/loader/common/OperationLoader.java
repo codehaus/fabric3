@@ -16,7 +16,6 @@
  */
 package org.fabric3.loader.common;
 
-import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
@@ -24,14 +23,11 @@ import org.fabric3.scdl.OperationDefinition;
 import org.fabric3.introspection.xml.InvalidValueException;
 import org.fabric3.introspection.xml.LoaderException;
 import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.introspection.xml.LoaderRegistry;
 import org.fabric3.introspection.xml.LoaderUtil;
 import org.fabric3.introspection.xml.LoaderHelper;
 import org.fabric3.introspection.xml.TypeLoader;
 
-import org.osoa.sca.Constants;
 import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
 /**
@@ -43,16 +39,9 @@ import org.osoa.sca.annotations.Reference;
 public class OperationLoader implements TypeLoader<OperationDefinition> {
 
     private final LoaderHelper loaderHelper;
-    private final LoaderRegistry loaderRegistry;
 
-    public OperationLoader(@Reference LoaderHelper loaderHelper, @Reference LoaderRegistry loaderRegistry) {
+    public OperationLoader(@Reference LoaderHelper loaderHelper) {
         this.loaderHelper = loaderHelper;
-        this.loaderRegistry = loaderRegistry;
-    }
-    
-    @Init
-    public void start() {
-        loaderRegistry.registerLoader(new QName(Constants.SCA_NS, "operation"), this);
     }
 
     public OperationDefinition load(XMLStreamReader reader, IntrospectionContext context) throws LoaderException, XMLStreamException {
