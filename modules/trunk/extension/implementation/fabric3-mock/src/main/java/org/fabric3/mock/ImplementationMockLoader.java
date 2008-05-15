@@ -25,12 +25,9 @@ import javax.xml.stream.XMLStreamReader;
 
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.xml.LoaderException;
-import org.fabric3.introspection.xml.LoaderRegistry;
 import org.fabric3.introspection.xml.TypeLoader;
 
-import org.osoa.sca.annotations.Destroy;
 import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
 /**
@@ -50,8 +47,6 @@ import org.osoa.sca.annotations.Reference;
 @EagerInit
 public class ImplementationMockLoader implements TypeLoader<ImplementationMock> {
 
-    @SuppressWarnings("deprecation")
-    private final LoaderRegistry registry;
     private final MockComponentTypeLoader componentTypeLoader;
 
     /**
@@ -61,27 +56,8 @@ public class ImplementationMockLoader implements TypeLoader<ImplementationMock> 
      * @param componentTypeLoader Component type loader.
      */
     @SuppressWarnings("deprecation")
-    public ImplementationMockLoader(@Reference LoaderRegistry registry, @Reference MockComponentTypeLoader componentTypeLoader) {
-        this.registry = registry;
+    public ImplementationMockLoader(@Reference MockComponentTypeLoader componentTypeLoader) {
         this.componentTypeLoader = componentTypeLoader;
-    }
-
-    /**
-     * Registers with loader registry.
-     */
-    @SuppressWarnings("deprecation")
-    @Init
-    public void init() {
-        registry.registerLoader(ImplementationMock.IMPLEMENTATION_MOCK, this);
-    }
-
-    /**
-     * Unregisters with the loader registry.
-     */
-    @SuppressWarnings("deprecation")
-    @Destroy
-    public void destroy() {
-        registry.unregisterLoader(ImplementationMock.IMPLEMENTATION_MOCK);
     }
 
     /**

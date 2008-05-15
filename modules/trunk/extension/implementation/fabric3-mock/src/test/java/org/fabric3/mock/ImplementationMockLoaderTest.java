@@ -25,7 +25,6 @@ import javax.xml.stream.XMLStreamReader;
 
 import org.easymock.EasyMock;
 import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.introspection.xml.LoaderRegistry;
 
 import junit.framework.TestCase;
 
@@ -37,10 +36,9 @@ public class ImplementationMockLoaderTest extends TestCase {
     public void testLoad() throws Exception {
         
         MockComponentTypeLoader componentTypeLoader = EasyMock.createMock(MockComponentTypeLoader.class);
-        LoaderRegistry loaderRegistry = EasyMock.createMock(LoaderRegistry.class);
         IntrospectionContext context = EasyMock.createMock(IntrospectionContext.class);
         
-        ImplementationMockLoader loader = new ImplementationMockLoader(loaderRegistry, componentTypeLoader);
+        ImplementationMockLoader loader = new ImplementationMockLoader(componentTypeLoader);
         
         InputStream stream = getClass().getClassLoader().getResourceAsStream("META-INF/mock.composite");
         XMLStreamReader reader = XMLInputFactory.newInstance().createXMLStreamReader(stream);

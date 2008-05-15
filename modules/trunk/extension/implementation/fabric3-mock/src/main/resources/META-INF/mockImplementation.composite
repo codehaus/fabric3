@@ -30,7 +30,7 @@
            autowire="true">
     
     <!-- Implementation loader -->
-    <component name="org.fabric3.mock.ImplementationMockLoader">
+    <component name="org.fabric3.mock.ImplementationMockLoader" f3:key="f3:implementation.mock">
         <system:implementation.system class="org.fabric3.mock.ImplementationMockLoader"/>
     </component>
     
