@@ -201,11 +201,8 @@ public class WebComponentGenerator implements ComponentGenerator<LogicalComponen
      */
     private URL getWebXmlUrl(ComponentDefinition<WebImplementation> definition) {
         Contribution contribution = store.find(definition.getContributionUri());
-        if (contribution.getArtifactUrls().isEmpty()) {
-            return null;
-        }
         // getting the first URL is ok since WAR files are self-contained
-        return contribution.getArtifactUrls().get(0);
+        return contribution.getLocation();
     }
 
     private void processPropertyValues(LogicalComponent<?> component, WebComponentDefinition physical) {
