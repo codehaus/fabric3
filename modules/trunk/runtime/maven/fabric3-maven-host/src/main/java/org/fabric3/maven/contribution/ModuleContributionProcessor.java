@@ -36,7 +36,6 @@ import org.fabric3.introspection.DefaultIntrospectionContext;
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.xml.Loader;
 import org.fabric3.introspection.xml.LoaderException;
-import org.fabric3.maven.runtime.MavenHostInfo;
 import org.fabric3.spi.services.contenttype.ContentTypeResolutionException;
 import org.fabric3.spi.services.contenttype.ContentTypeResolver;
 import org.fabric3.spi.services.contribution.Action;
@@ -57,16 +56,13 @@ public class ModuleContributionProcessor implements ContributionProcessor {
 
     private ProcessorRegistry registry;
     private ContentTypeResolver contentTypeResolver;
-    private MavenHostInfo hostInfo;
     private Loader loader;
 
     public ModuleContributionProcessor(@Reference ProcessorRegistry registry,
                                        @Reference ContentTypeResolver contentTypeResolver,
-                                       @Reference MavenHostInfo hostInfo,
                                        @Reference Loader loader) {
         this.registry = registry;
         this.contentTypeResolver = contentTypeResolver;
-        this.hostInfo = hostInfo;
         this.loader = loader;
     }
 
@@ -87,7 +83,6 @@ public class ModuleContributionProcessor implements ContributionProcessor {
             for (Resource resource : contribution.getResources()) {
                 registry.processResource(contributionUri, resource, loader);
             }
-            addUrls(contribution);
         } finally {
             Thread.currentThread().setContextClassLoader(oldClassloader);
         }
@@ -176,21 +171,6 @@ public class ModuleContributionProcessor implements ContributionProcessor {
         List<String> list = new ArrayList<String>(1);
         list.add("application/vnd.fabric3.maven-project");
         return list;
-    }
-
-    private void addUrls(Contribution contribution) throws ContributionException {
-        String file = contribution.getLocation().getFile();
-        try {
-            URL classes = new File(file, "classes").toURI().toURL();
-            URL testClasses = new File(file, "test-classes").toURI().toURL();
-            contribution.addDependencyUrl(classes);
-            contribution.addDependencyUrl(testClasses);
-            for (URL url : hostInfo.getDependencyUrls()) {
-                contribution.addDependencyUrl(url);
-            }
-        } catch (MalformedURLException e) {
-            throw new ContributionException(e);
-        }
     }
 
 }
