@@ -27,6 +27,7 @@ import org.easymock.EasyMock;
 
 import org.fabric3.spi.services.archive.ArchiveStore;
 import org.fabric3.spi.services.contribution.ArtifactResolverRegistry;
+import org.fabric3.spi.services.contribution.ArtifactResolverMonitor;
 
 
 /**
@@ -53,7 +54,7 @@ public class HttpResolverTestCase extends TestCase {
         registry.register(EasyMock.eq("http"), EasyMock.isA(HttpResolver.class));
         EasyMock.replay(registry);
         store = EasyMock.createMock(ArchiveStore.class);
-        resolver = new HttpResolver(registry, store);
+        resolver = new HttpResolver(registry, store, EasyMock.createNiceMock(ArtifactResolverMonitor.class));
         file = new File("test.txt");
         FileOutputStream stream = new FileOutputStream(file);
         stream.write("test".getBytes());

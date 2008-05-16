@@ -31,6 +31,8 @@ import org.fabric3.spi.services.archive.ArchiveStoreException;
 import org.fabric3.spi.services.contribution.ArtifactResolver;
 import org.fabric3.spi.services.contribution.ArtifactResolverRegistry;
 import org.fabric3.spi.services.contribution.ResolutionException;
+import org.fabric3.spi.services.contribution.ArtifactResolverMonitor;
+import org.fabric3.api.annotation.Monitor;
 
 /**
  * Resolves artifacts for the <code>http://</code> scheme, storing them in a local archive store.
@@ -43,11 +45,14 @@ public class HttpResolver implements ArtifactResolver {
 
     private ArtifactResolverRegistry registry;
     private ArchiveStore store;
+    private ArtifactResolverMonitor monitor;
 
     public HttpResolver(@Reference ArtifactResolverRegistry registry,
-                        @Reference(name = "localArchiveStore")ArchiveStore store) {
+                        @Reference(name = "localArchiveStore")ArchiveStore store,
+                        @Monitor ArtifactResolverMonitor monitor) {
         this.registry = registry;
         this.store = store;
+        this.monitor = monitor;
     }
 
     @Init
@@ -82,8 +87,7 @@ public class HttpResolver implements ArtifactResolver {
                     stream.close();
                 }
             } catch (IOException e) {
-                // TODO log exception
-                e.printStackTrace();
+                monitor.resolutionError(e);
             }
         }
     }
