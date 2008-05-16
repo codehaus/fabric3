@@ -73,9 +73,6 @@ public class ClassLoaderGeneratorImpl implements ClassLoaderGenerator {
         URL location = contribution.getLocation();
         URI runtimeId = component.getRuntimeId();
         updateUrl(runtimeId, definition, location);
-        for (URL url : contribution.getDependencyUrls()) {
-            updateUrl(runtimeId, definition, url);
-        }
         for (URI uri : contribution.getResolvedImportUris()) {
             if (!definition.getParentClassLoaders().contains(uri)) {
                 definition.addParentClassLoader(uri);
