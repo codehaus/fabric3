@@ -31,11 +31,12 @@ import net.jxta.resolver.QueryHandler;
 import net.jxta.resolver.ResolverService;
 
 import org.fabric3.messaging.jxta.JxtaException;
+import org.fabric3.messaging.jxta.MessagingMonitor;
 import org.fabric3.spi.services.messaging.MessagingEventService;
 
 /**
- * Generic quety handler for Fabric3 PRP (Peer Resolver Protocol) messages. The <code>processQuery</code> method is
- * invoked on the receiver and the <code> processResponse</code> is invoked on the sender when the receiver responds.
+ * Generic quety handler for Fabric3 PRP (Peer Resolver Protocol) messages. The <code>processQuery</code> method is invoked on the receiver and the
+ * <code> processResponse</code> is invoked on the sender when the receiver responds.
  *
  * @version $Revision$ $Date$
  */
@@ -45,6 +46,7 @@ public class Fabric3QueryHandler implements QueryHandler {
      * Discovery service.
      */
     private final MessagingEventService eventService;
+    private MessagingMonitor monitor;
 
     private final XMLInputFactory xmlFactory;
 
@@ -52,9 +54,11 @@ public class Fabric3QueryHandler implements QueryHandler {
      * Initializes the JXTA resolver service and Fabric3 discovery service.
      *
      * @param eventService messaging event service.
+     * @param monitor      the monitor
      */
-    public Fabric3QueryHandler(MessagingEventService eventService) {
+    public Fabric3QueryHandler(MessagingEventService eventService, MessagingMonitor monitor) {
         this.eventService = eventService;
+        this.monitor = monitor;
         xmlFactory = XMLInputFactory.newInstance("javax.xml.stream.XMLInputFactory", getClass().getClassLoader());
     }
 
@@ -71,8 +75,10 @@ public class Fabric3QueryHandler implements QueryHandler {
             XMLStreamReader xmlReader = xmlFactory.createXMLStreamReader(reader);
             eventService.publish(messageType, xmlReader);
             return ResolverService.OK;
-        } catch (XMLStreamException ex) {
-            throw new JxtaException(ex);
+        } catch (Exception e) {
+            // log any exceptions
+            monitor.error(e);
+            throw new JxtaException(e);
         }
 
     }
