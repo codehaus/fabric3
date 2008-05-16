@@ -45,6 +45,17 @@ public interface AQMonitor {
      */
     @LogLevel("INFO")
     void stopOnAQHost(String message);
-
-
+    
+    /**
+     * Log message to stop when consumers are stopped
+     */
+    @LogLevel("INFO")
+    void stopConsumer(String message);
+    
+    /**
+     * Logs the Exception
+     * @param exception
+     */
+    @LogLevel("INFO")
+    void onException(Throwable exception);
 }

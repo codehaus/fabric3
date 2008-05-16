@@ -20,12 +20,17 @@ package org.fabric3.binding.aq.host.standalone;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
+import javax.jms.Destination;
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageConsumer;
 import javax.jms.MessageListener;
 import javax.jms.Session;
+import javax.jms.XAConnection;
 
+import org.fabric3.binding.aq.helper.JmsHelper;
+import org.fabric3.binding.aq.host.PollingConsumer;
+import org.fabric3.binding.aq.monitor.AQMonitor;
 import org.fabric3.binding.aq.tx.TransactionHandler;
 
 /**
@@ -40,6 +45,7 @@ public class ConsumerWorker implements PollingConsumer {
     private final long readTimeout; 
     private final ClassLoader cl;
     private final AtomicBoolean consume;
+    private final AQMonitor monitor;
 
     /**
      * @param session Session used to receive messages.
@@ -47,15 +53,17 @@ public class ConsumerWorker implements PollingConsumer {
      * @param consumer Message consumer.
      * @param listener Delegate message listener.
      * @param readTimeout Read timeout.
+     * @throws JMSException 
      */
-    public ConsumerWorker(final Session session, final MessageConsumer consumer, final MessageListener listener, final TransactionHandler transactionHandler, final long readTimeout, final ClassLoader cl) {
-        this.session = session;
+    public ConsumerWorker(XAConnection connection, Destination destination, final MessageListener listener, final TransactionHandler transactionHandler, final long readTimeout, final ClassLoader cl, final AQMonitor monitor) throws JMSException {
+        this.session = connection.createXASession();        
         this.transactionHandler = transactionHandler; 
-        this.consumer = consumer;
+        this.consumer = session.createConsumer(destination);
         this.listener = listener;
-        this.readTimeout = readTimeout;
-        consume = new AtomicBoolean(true);
+        this.readTimeout = readTimeout;        
         this.cl = cl;
+        this.monitor = monitor;
+        consume = new AtomicBoolean(true);
     }
 
     /**
@@ -64,15 +72,15 @@ public class ConsumerWorker implements PollingConsumer {
     public void run() {
         final ClassLoader oldClassLoader = Thread.currentThread().getContextClassLoader();
         assignClassLoader(cl);        
-        try {                        
-            transactionHandler.enlist(session);
-
+        try {                                    
             while (consume.get()) {
+                transactionHandler.enlist(session);
                 consumeMessage();
                 transactionHandler.commit();
             }
         } catch (JMSException ex) {
-            transactionHandler.rollback();
+            monitor.onException(ex);
+            transactionHandler.rollback();            
         } finally {
             assignClassLoader(oldClassLoader);
         }
@@ -80,9 +88,12 @@ public class ConsumerWorker implements PollingConsumer {
     
     /**
      * Stop Consuming Data
+     * @throws JMSException 
      */
-    public void stopConsumption() {
-        consume.set(false);
+    public void stopConsumption()  {
+        consume.set(false);        
+        JmsHelper.closeQuietly(consumer);        
+        JmsHelper.closeQuietly(session);               
     }
 
     /*

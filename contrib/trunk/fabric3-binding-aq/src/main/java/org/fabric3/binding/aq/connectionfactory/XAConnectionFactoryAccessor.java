@@ -44,13 +44,13 @@ public class XAConnectionFactoryAccessor implements ConnectionFactoryAccessor<XA
      * @return QueueConnectionFactory
      */
     public XAQueueConnectionFactory getConnectionFactory(final AQBindingMetadata metadata) {
-        final XAQueueConnectionFactory connectionFactory;
+        final XADataSource xaDataSource = (XADataSource)metadata.getDataSource();
+        final XAQueueConnectionFactory connectionFactory;       
         try {
-            connectionFactory = AQjmsFactory.getXAQueueConnectionFactory((XADataSource) metadata.getDataSource());           
+            connectionFactory = AQjmsFactory.getXAQueueConnectionFactory(xaDataSource);           
         } catch (JMSException je) {
             throw new Fabric3AQException("Unable to create AQ connection factory ", je);
         }
         return connectionFactory;
-    }
-
+    }   
 }

@@ -1,4 +1,4 @@
-package org.fabric3.binding.aq.host.standalone;
+package org.fabric3.binding.aq.host;
 
 /**
  * Marker Interface for Polling consumers

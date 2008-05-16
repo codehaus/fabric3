@@ -30,7 +30,7 @@
 
     <!-- JMS Host -->
     <component name="AQHost">
-        <system:implementation.system class="org.fabric3.binding.aq.host.standalone.StandaloneAQHost"/>
+        <system:implementation.system class="org.fabric3.binding.aq.host.standalone.DefaultAQHost"/>
     </component>
 
     <!-- JMS Binding Loader -->

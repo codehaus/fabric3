@@ -5,6 +5,6 @@
     targetNamespace="http://www.osoa.org/xmlns/sca/1.0"
     xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha">
 
-    <bindingType name="binding.aq" mayProvide="sca:transactedOneWay sca:transactedOneWay.global sca:transactedOneWay.local sca:oneWay"/>
+    <bindingType name="binding.aq" mayProvide="sca:transactedOneWay sca:transactedOneWay.global"/>
 
 </definitions>
