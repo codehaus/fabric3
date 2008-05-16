@@ -127,9 +127,9 @@ public class JmsSourceWireAttacher implements SourceWireAttacher<JmsWireSourceDe
         CorrelationScheme correlationScheme = metadata.getCorrelationScheme();
         TransactionType transactionType = source.getTransactionType();
 
-        JMSObjectFactory requestJMSObjectFactory = buildGetObjectFactory(metadata.getConnectionFactory(), metadata.getDestination(), env);
+        JMSObjectFactory requestJMSObjectFactory = buildObjectFactory(metadata.getConnectionFactory(), metadata.getDestination(), env);
         JMSObjectFactory responseJMSObjectFactory =
-                buildGetObjectFactory(metadata.getResponseConnectionFactory(), metadata.getResponseDestination(), env);
+                buildObjectFactory(metadata.getResponseConnectionFactory(), metadata.getResponseDestination(), env);
         
         String callbackUri = null;
         if (target.getCallbackUri() != null) {
@@ -143,7 +143,7 @@ public class JmsSourceWireAttacher implements SourceWireAttacher<JmsWireSourceDe
     }
 
     public void detachFromSource(JmsWireSourceDefinition source, PhysicalWireTargetDefinition target, Wire wire) throws WiringException {
-        throw new AssertionError();
+        jmsHost.unregisterListener(target.getUri());
     }
 
     public void attachObjectFactory(JmsWireSourceDefinition source, ObjectFactory<?> objectFactory) throws WiringException {
@@ -153,7 +153,7 @@ public class JmsSourceWireAttacher implements SourceWireAttacher<JmsWireSourceDe
     /**
      * Build a JMS ObjectFactory from definition.
      */
-    private JMSObjectFactory buildGetObjectFactory(ConnectionFactoryDefinition connectionFactoryDefinition,
+    private JMSObjectFactory buildObjectFactory(ConnectionFactoryDefinition connectionFactoryDefinition,
                                                    DestinationDefinition destinationDefinition,
                                                    Hashtable<String, String> env) {
         CreateOption create = connectionFactoryDefinition.getCreate();

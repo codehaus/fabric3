@@ -48,5 +48,10 @@ public interface JmsHost {
                                          TransactionHandler transactionHandler,
                                          ClassLoader cl,
                                          URI serviceUri);
-
+    /**
+     * Unregister message listener at the endpoint at serviceUri
+     * 
+     * @param serviceUri URI of the service to which the binding is attached.
+     */
+    public void unregisterListener(URI serviceUri);
 }

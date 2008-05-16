@@ -112,9 +112,7 @@ public class JMSMessageListenerInvoker implements MessageListener {
                 }
             }catch(Exception ne){
                 //ignore
-                ne.printStackTrace();
             }
-            e.printStackTrace();
             throw e;
         }
     }

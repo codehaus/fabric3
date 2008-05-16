@@ -110,7 +110,16 @@ public class StandalonePullJmsHost implements JmsHost, StandalonePullJmsHostMBea
         monitor.jmsRuntimeStop();
         
     }
-
+    
+    public void unregisterListener(URI serviceUri){
+    	List<ConsumerWorker> workers = consumerWorkerMap.remove(serviceUri);
+    	for (ConsumerWorker consumerWorker : workers) {
+    		consumerWorker.inactivate();
+		}
+    	JmsHelper.closeQuietly(connectionMap.remove(serviceUri));
+    	templateMap.remove(serviceUri);
+    }
+    
     public void registerResponseListener(JMSObjectFactory requestJMSObjectFactory,
                                          JMSObjectFactory responseJMSObjectFactory,
                                          ResponseMessageListener messageListener,

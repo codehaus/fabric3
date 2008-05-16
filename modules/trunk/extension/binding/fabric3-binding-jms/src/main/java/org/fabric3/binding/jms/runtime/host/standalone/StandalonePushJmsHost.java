@@ -20,7 +20,9 @@ package org.fabric3.binding.jms.runtime.host.standalone;
 
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.jms.Connection;
 import javax.jms.JMSException;
@@ -49,7 +51,7 @@ public class StandalonePushJmsHost implements JmsHost {
     private Connection connection;
     private JMSRuntimeMonitor monitor;
     private int receiverCount = 3;
-    private List<JMSMessageListenerInvoker> jmsMessageListenerInvokers = new ArrayList<JMSMessageListenerInvoker>();
+    private Map<URI,JMSMessageListenerInvoker> jmsMessageListenerInvokers = new HashMap<URI,JMSMessageListenerInvoker>();
 
     /**
      * Injects the monitor.
@@ -83,10 +85,11 @@ public class StandalonePushJmsHost implements JmsHost {
      */
     @Destroy
     public void stop() throws JMSException {
-        for (JMSMessageListenerInvoker invoker : jmsMessageListenerInvokers) {
+        for (JMSMessageListenerInvoker invoker : jmsMessageListenerInvokers.values()) {
             invoker.stop();
         }
         JmsHelper.closeQuietly(connection);
+        jmsMessageListenerInvokers.clear();
         monitor.jmsRuntimeStop();
     }
 
@@ -100,8 +103,13 @@ public class StandalonePushJmsHost implements JmsHost {
         JMSMessageListenerInvoker invoker = new JMSMessageListenerInvoker(
                 requestJMSObjectFactory, responseJMSObjectFactory, messageListener, transactionType, transactionHandler, workScheduler);
         invoker.start(receiverCount);
-        jmsMessageListenerInvokers.add(invoker);
+        jmsMessageListenerInvokers.put(serviceUri,invoker);
 
+    }
+    
+    public void unregisterListener(URI serviceUri){
+    	JMSMessageListenerInvoker invoker = jmsMessageListenerInvokers.remove(serviceUri);
+    	invoker.stop();  	
     }
 
 }
