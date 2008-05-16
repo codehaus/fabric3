@@ -38,4 +38,10 @@ public interface DefaultAQHostMBean {
      * @param receivers
      */
     void setReceivers(String blah, int receivers);
+    
+    /**
+     * Returns the Destination to Consume Messages on
+     * @return
+     */
+    String getDestination();
 }

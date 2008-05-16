@@ -101,7 +101,7 @@ public class ConsumerWorker implements PollingConsumer {
      */
     private void consumeMessage() throws JMSException {
         final Message message = consumer.receive(readTimeout);
-        if (message != null) {
+        if (message != null) {            
             listener.onMessage(message);
         }
     }

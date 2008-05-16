@@ -113,6 +113,13 @@ public class DefaultAQHost implements AQHost, DefaultAQHostMBean {
     public int getReceiverCount() {
         return receiverCount;
     }
+    
+    /**
+     * Return the Destination
+     */
+    public String getDestination() {
+        return workData.getDestination().toString();
+    }
 
     /**
      * Injects the work scheduler.
@@ -171,5 +178,5 @@ public class DefaultAQHost implements AQHost, DefaultAQHostMBean {
             monitor.stopConsumer(++i + " Stopping ");
             consumer.stopConsumption();
         }
-    }
+    }   
 }
