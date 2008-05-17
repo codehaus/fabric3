@@ -19,7 +19,6 @@
 package org.fabric3.runtime.webapp.activator;
 
 import java.net.URI;
-import java.net.URL;
 import java.util.List;
 import java.util.Map;
 import javax.servlet.ServletContext;
@@ -58,7 +57,7 @@ public class EmbeddedWebApplicationActivator implements WebApplicationActivator,
 
     @SuppressWarnings({"unchecked"})
     public ServletContext activate(String contextPath,
-                                   URL url,
+                                   URI uri,
                                    URI parentClassLoaderId,
                                    Map<String, List<Injector<?>>> injectors,
                                    ComponentContext context) throws WebApplicationActivationException {
@@ -73,7 +72,7 @@ public class EmbeddedWebApplicationActivator implements WebApplicationActivator,
         }
     }
 
-    public void deactivate(URL url) throws WebApplicationActivationException {
+    public void deactivate(URI uri) throws WebApplicationActivationException {
         // do nothing
     }
 

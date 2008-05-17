@@ -20,6 +20,7 @@ package org.fabric3.runtime.webapp;
 
 import java.net.MalformedURLException;
 import java.net.URI;
+import java.net.URISyntaxException;
 import javax.servlet.ServletRequestEvent;
 import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpSessionEvent;
@@ -66,7 +67,7 @@ public class WebappRuntimeImpl extends AbstractRuntime<WebappHostInfo> implement
             // contribute the war to the application domain
             Assembly assembly = getSystemComponent(Assembly.class, DISTRIBUTED_ASSEMBLY_URI);
             ContributionService contributionService = getSystemComponent(ContributionService.class, CONTRIBUTION_SERVICE_URI);
-            URI contributionUri = URI.create(qName.getLocalPart());
+            URI contributionUri = new URI("file", qName.getLocalPart(), null);
             WarContributionSource source = new WarContributionSource(contributionUri);
             contributionService.contribute(source);
             // activate the deployable composite in the domain
@@ -78,6 +79,8 @@ public class WebappRuntimeImpl extends AbstractRuntime<WebappHostInfo> implement
         } catch (ActivateException e) {
             String identifier = qName.toString();
             throw new InitializationException("Error activating composite: " + identifier, identifier, e);
+        } catch (URISyntaxException e) {
+            throw new InitializationException("Error processing project", e);
         }
     }
 
