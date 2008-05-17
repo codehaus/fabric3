@@ -17,11 +17,9 @@
 package org.fabric3.maven.runtime.impl;
 
 import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -235,10 +233,7 @@ public class MavenCoordinatorImpl implements MavenCoordinator {
             ContributionService contributionService = runtime.getSystemComponent(ContributionService.class,
                                                                                  CONTRIBUTION_SERVICE_URI);
 
-            ContributionSource source = new FileContributionSource(new URI(URLEncoder.encode(intentsLocation.toString(), "UTF-8")),
-                                                                   intentsLocation,
-                                                                   -1,
-                                                                   new byte[0]);
+            ContributionSource source = new FileContributionSource(URI.create("contribution://systemIntents"), intentsLocation, -1, new byte[0]);
             URI uri = contributionService.contribute(source);
             DefinitionsRegistry definitionsRegistry = runtime.getSystemComponent(DefinitionsRegistry.class, DEFINITIONS_REGISTRY);
             List<URI> intents = new ArrayList<URI>();
@@ -247,10 +242,6 @@ public class MavenCoordinatorImpl implements MavenCoordinator {
         } catch (ContributionException e) {
             throw new InitializationException(e);
         } catch (DefinitionActivationException e) {
-            throw new InitializationException(e);
-        } catch (URISyntaxException e) {
-            throw new InitializationException(e);
-        } catch (UnsupportedEncodingException e) {
             throw new InitializationException(e);
         }
     }
@@ -283,16 +274,17 @@ public class MavenCoordinatorImpl implements MavenCoordinator {
         }
     }
 
-    private void includeExtensions(List<URL> extensionUrls, ContributionService contributionService) throws InitializationException, DefinitionActivationException {
+    private void includeExtensions(List<URL> extensionUrls, ContributionService contributionService)
+            throws InitializationException, DefinitionActivationException {
         List<ContributionSource> sources = new ArrayList<ContributionSource>(extensionUrls.size());
-        for (URL extensionURL : extensionUrls) {
+        for (URL extensionUrl : extensionUrls) {
             try {
-                URI uri = extensionURL.toURI();
-                ContributionSource source = new FileContributionSource(uri, extensionURL, -1, new byte[0]);
+                URI uri = extensionUrl.toURI();
+                ContributionSource source = new FileContributionSource(uri, extensionUrl, -1, new byte[0]);
                 sources.add(source);
             } catch (URISyntaxException e) {
-                // should not happen as the URL was created from a URI
-                throw new AssertionError();
+                // should not happen
+                throw new IllegalArgumentException(e);
             }
         }
 

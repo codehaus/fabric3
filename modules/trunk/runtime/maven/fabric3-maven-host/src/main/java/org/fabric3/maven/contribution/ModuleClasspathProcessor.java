@@ -53,6 +53,10 @@ public class ModuleClasspathProcessor implements ClasspathProcessor {
     }
 
     public boolean canProcess(URL url) {
+        if ("file".equals(url.getProtocol())) {
+            // assume exploded directories are maven modules
+            return true;
+        }
         try {
             URLConnection conn = url.openConnection();
             return CONTENT_TYPE.equals(conn.getContentType());

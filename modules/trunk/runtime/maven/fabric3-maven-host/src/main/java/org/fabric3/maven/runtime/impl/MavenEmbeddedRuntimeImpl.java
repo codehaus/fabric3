@@ -24,6 +24,7 @@ import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
+import java.net.URISyntaxException;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
@@ -75,13 +76,15 @@ public class MavenEmbeddedRuntimeImpl extends AbstractRuntime<MavenHostInfo> imp
 
     public Composite activate(URL url, QName qName) throws CompositeActivationException {
         try {
-            URI contributionUri = URI.create(qName.getLocalPart());
+            URI contributionUri = url.toURI();
             ModuleContributionSource source =
                     new ModuleContributionSource(contributionUri, FileHelper.toFile(url).toString());
             return activate(source, qName);
         } catch (MalformedURLException e) {
             String identifier = url.toString();
             throw new CompositeActivationException("Invalid project directory: " + identifier, identifier, e);
+        } catch (URISyntaxException e) {
+            throw new CompositeActivationException("Error activating test contribution", e);
         }
     }
 
