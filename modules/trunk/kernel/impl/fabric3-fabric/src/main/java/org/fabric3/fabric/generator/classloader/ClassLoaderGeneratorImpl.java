@@ -28,7 +28,7 @@ import org.fabric3.scdl.CompositeImplementation;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.physical.PhysicalClassLoaderDefinition;
-import org.fabric3.spi.services.contribution.ArtifactLocationEncoder;
+import org.fabric3.spi.services.contribution.ContributionUriEncoder;
 import org.fabric3.spi.services.contribution.Contribution;
 import org.fabric3.spi.services.contribution.MetaDataStore;
 
@@ -41,7 +41,7 @@ import org.fabric3.spi.services.contribution.MetaDataStore;
 @EagerInit
 public class ClassLoaderGeneratorImpl implements ClassLoaderGenerator {
     private MetaDataStore store;
-    private ArtifactLocationEncoder encoder;
+    private ContributionUriEncoder encoder;
 
     @Constructor
     public ClassLoaderGeneratorImpl(@Reference MetaDataStore store) {
@@ -55,7 +55,7 @@ public class ClassLoaderGeneratorImpl implements ClassLoaderGenerator {
      * @param encoders the encoder to inject
      */
     @Reference(required = false)
-    public void setEncoder(List<ArtifactLocationEncoder> encoders) {
+    public void setEncoder(List<ContributionUriEncoder> encoders) {
         if (encoders == null || encoders.isEmpty()) {
             return;
         }

@@ -18,14 +18,14 @@ package org.fabric3.fabric.services.contribution;
 
 import java.net.URI;
 
-import org.fabric3.spi.services.contribution.ArtifactLocationEncoder;
+import org.fabric3.spi.services.contribution.ContributionUriEncoder;
 
 /**
  * Enocdes an internal contribution URL using the filesystem protocol.
  *
  * @version $Rev$ $Date$
  */
-public class FSArtifactLocationEncoder implements ArtifactLocationEncoder {
+public class FSContributionUriEncoder implements ContributionUriEncoder {
 
     public URI encode(URI uri) {
         return uri;

@@ -29,15 +29,15 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.spi.host.ServletHost;
-import org.fabric3.spi.services.contribution.ArtifactLocationEncoder;
+import org.fabric3.spi.services.contribution.ContributionUriEncoder;
 import org.fabric3.spi.services.contribution.MetaDataStore;
 
 /**
- * Encodes a local URI so that it can be dereferenced via HTTP. The encoding maps from the contribution URI to an HTTP-based URI.
+ * Encodes a contribution URI so it can be dereferenced in a domain via HTTP. The encoding maps from the contribution URI to an HTTP-based URI.
  *
  * @version $Revision$ $Date$
  */
-public class HTTPArtifactLocationEncoder implements ArtifactLocationEncoder {
+public class HTTPContributionUriEncoder implements ContributionUriEncoder {
     private HostInfo info;
     private ServletHost host;
     private MetaDataStore store;
@@ -45,7 +45,7 @@ public class HTTPArtifactLocationEncoder implements ArtifactLocationEncoder {
     private int port;
     private String mappingPath = "/contribution";
 
-    public HTTPArtifactLocationEncoder(@Reference HostInfo info, @Reference ServletHost host, @Reference MetaDataStore store) {
+    public HTTPContributionUriEncoder(@Reference HostInfo info, @Reference ServletHost host, @Reference MetaDataStore store) {
         this.info = info;
         this.host = host;
         this.store = store;

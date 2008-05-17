@@ -24,13 +24,13 @@ import java.net.URISyntaxException;
  *
  * @version $Rev$ $Date$
  */
-public interface ArtifactLocationEncoder {
+public interface ContributionUriEncoder {
 
     /**
-     * Encode the local contribution URL.
+     * Encode the local contribution URI.
      *
      * @param uri the uri to encode
-     * @return the encoded URL
+     * @return the encoded URI which may be dereferenced in the domain
      * @throws URISyntaxException if the URI is invalid
      */
     URI encode(URI uri) throws URISyntaxException;

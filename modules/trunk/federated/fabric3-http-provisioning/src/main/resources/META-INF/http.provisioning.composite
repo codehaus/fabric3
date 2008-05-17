@@ -22,7 +22,7 @@
            autowire="true">
 
     <component name="HTTPArtifactLocationEncoder">
-        <system:implementation.system class="org.fabric3.provisioning.http.HTTPArtifactLocationEncoder"/>
+        <system:implementation.system class="org.fabric3.provisioning.http.HTTPContributionUriEncoder"/>
     </component>
 
 </composite>

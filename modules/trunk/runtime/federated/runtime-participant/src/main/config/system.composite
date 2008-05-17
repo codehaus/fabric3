@@ -110,7 +110,7 @@
 
     <component name="FSArtifactLocationEncoder">
         <system:implementation.system
-                class="org.fabric3.fabric.services.contribution.FSArtifactLocationEncoder"/>
+                class="org.fabric3.fabric.services.contribution.FSContributionUriEncoder"/>
     </component>
 
 </composite>

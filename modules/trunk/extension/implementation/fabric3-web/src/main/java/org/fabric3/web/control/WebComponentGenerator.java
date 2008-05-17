@@ -48,7 +48,7 @@ import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 import org.fabric3.spi.policy.Policy;
-import org.fabric3.spi.services.contribution.ArtifactLocationEncoder;
+import org.fabric3.spi.services.contribution.ContributionUriEncoder;
 import org.fabric3.web.introspection.WebComponentType;
 import org.fabric3.web.introspection.WebImplementation;
 import org.fabric3.web.provision.WebComponentDefinition;
@@ -67,9 +67,9 @@ import static org.fabric3.web.provision.WebContextInjectionSite.ContextType.SESS
 @EagerInit
 public class WebComponentGenerator implements ComponentGenerator<LogicalComponent<WebImplementation>> {
     private HostInfo info;
-    private ArtifactLocationEncoder encoder;
+    private ContributionUriEncoder encoder;
 
-    public WebComponentGenerator(@Reference GeneratorRegistry registry, @Reference HostInfo info, @Reference ArtifactLocationEncoder encoder) {
+    public WebComponentGenerator(@Reference GeneratorRegistry registry, @Reference HostInfo info, @Reference ContributionUriEncoder encoder) {
         this.info = info;
         this.encoder = encoder;
         registry.register(WebImplementation.class, this);
