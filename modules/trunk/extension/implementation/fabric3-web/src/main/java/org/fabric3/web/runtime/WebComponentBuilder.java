@@ -19,7 +19,6 @@
 package org.fabric3.web.runtime;
 
 import java.net.URI;
-import java.net.URL;
 import java.util.Collections;
 import java.util.Map;
 
@@ -74,13 +73,13 @@ public class WebComponentBuilder implements ComponentBuilder<WebComponentDefinit
         URI classLoaderId = definition.getClassLoaderId();
         Map<String, Map<String, InjectionSite>> injectorMappings = definition.getInjectionSiteMappings();
         ClassLoader cl = activator.getWebComponentClassLoader(classLoaderId);
-        URL archiveUrl = definition.getWebArchiveUrl();
+        URI archiveUri = definition.getContributionUri();
         String contextUrl = definition.getContextUrl();
         return new WebComponent(componentId,
                                 contextUrl,
                                 classLoaderId,
                                 groupId,
-                                archiveUrl,
+                                archiveUri,
                                 cl,
                                 injectorFactory,
                                 activator,

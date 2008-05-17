@@ -19,7 +19,7 @@
 package org.fabric3.web.control;
 
 import java.net.URI;
-import java.net.URL;
+import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -48,8 +48,7 @@ import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 import org.fabric3.spi.policy.Policy;
-import org.fabric3.spi.services.contribution.Contribution;
-import org.fabric3.spi.services.contribution.MetaDataStore;
+import org.fabric3.spi.services.contribution.ArtifactLocationEncoder;
 import org.fabric3.web.introspection.WebComponentType;
 import org.fabric3.web.introspection.WebImplementation;
 import org.fabric3.web.provision.WebComponentDefinition;
@@ -68,15 +67,15 @@ import static org.fabric3.web.provision.WebContextInjectionSite.ContextType.SESS
 @EagerInit
 public class WebComponentGenerator implements ComponentGenerator<LogicalComponent<WebImplementation>> {
     private HostInfo info;
-    private MetaDataStore store;
+    private ArtifactLocationEncoder encoder;
 
-    public WebComponentGenerator(@Reference GeneratorRegistry registry, @Reference HostInfo info, @Reference MetaDataStore store) {
+    public WebComponentGenerator(@Reference GeneratorRegistry registry, @Reference HostInfo info, @Reference ArtifactLocationEncoder encoder) {
         this.info = info;
-        this.store = store;
+        this.encoder = encoder;
         registry.register(WebImplementation.class, this);
     }
 
-    public PhysicalComponentDefinition generate(LogicalComponent<WebImplementation> component) {
+    public PhysicalComponentDefinition generate(LogicalComponent<WebImplementation> component) throws GenerationException {
         ComponentDefinition<WebImplementation> definition = component.getDefinition();
         WebComponentType componentType = definition.getImplementation().getComponentType();
         URI componentId = component.getUri();
@@ -91,8 +90,17 @@ public class WebComponentGenerator implements ComponentGenerator<LogicalComponen
         processPropertyValues(component, physical);
         URI classLoaderId = component.getParent().getUri();
         physical.setClassLoaderId(classLoaderId);
-        URL archiveUrl = getWebXmlUrl(definition);
-        physical.setWebArchiveUrl(archiveUrl);
+        if (component.getRuntimeId() == null) {
+            physical.setContributionUri(definition.getContributionUri());
+        } else {
+            URI encoded;
+            try {
+                encoded = encoder.encode(definition.getContributionUri());
+            } catch (URISyntaxException e) {
+                throw new GenerationException(e);
+            }
+            physical.setContributionUri(encoded);
+        }
         return physical;
     }
 
@@ -191,18 +199,6 @@ public class WebComponentGenerator implements ComponentGenerator<LogicalComponen
             }
         }
 
-    }
-
-    /**
-     * Returns the URL for the web.xml descriptor for the component.
-     *
-     * @param definition the component definition
-     * @return the web.xml URL.
-     */
-    private URL getWebXmlUrl(ComponentDefinition<WebImplementation> definition) {
-        Contribution contribution = store.find(definition.getContributionUri());
-        // getting the first URL is ok since WAR files are self-contained
-        return contribution.getLocation();
     }
 
     private void processPropertyValues(LogicalComponent<?> component, WebComponentDefinition physical) {

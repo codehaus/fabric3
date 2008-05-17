@@ -19,7 +19,6 @@
 package org.fabric3.web.runtime;
 
 import java.net.URI;
-import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -64,7 +63,7 @@ public class WebComponent<T> extends AbstractLifecycle implements AtomicComponen
     private final URI groupId;
     private final Map<String, ObjectFactory<?>> propertyFactories;
     private final Map<String, ObjectFactory<?>> referenceFactories;
-    private final URL archiveUrl;
+    private final URI archiveUri;
     private ComponentContext context;
     private String contextUrl;
 
@@ -72,7 +71,7 @@ public class WebComponent<T> extends AbstractLifecycle implements AtomicComponen
                         String contextUrl,
                         URI classLoaderId,
                         URI groupId,
-                        URL archiveUrl,
+                        URI archiveUri,
                         ClassLoader classLoader,
                         InjectorFactory injectorFactory,
                         WebApplicationActivator activator,
@@ -82,7 +81,7 @@ public class WebComponent<T> extends AbstractLifecycle implements AtomicComponen
         this.uri = uri;
         this.contextUrl = contextUrl;
         this.classLoaderId = classLoaderId;
-        this.archiveUrl = archiveUrl;
+        this.archiveUri = archiveUri;
         this.classLoader = classLoader;
         this.injectorFactory = injectorFactory;
         this.activator = activator;
@@ -108,7 +107,7 @@ public class WebComponent<T> extends AbstractLifecycle implements AtomicComponen
             contextFactories.put(CONTEXT_ATTRIBUTE, componentContextFactory);
             injectorFactory.createInjectorMappings(injectors, siteMappings, contextFactories, classLoader);
             // activate the web application
-            activator.activate(contextUrl, archiveUrl, classLoaderId, injectors, context);
+            activator.activate(contextUrl, archiveUri, classLoaderId, injectors, context);
         } catch (InjectionCreationException e) {
             throw new WebComponentStartException("Error starting web component: " + uri.toString(), e);
         } catch (WebApplicationActivationException e) {

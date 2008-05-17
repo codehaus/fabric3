@@ -19,7 +19,6 @@
 package org.fabric3.web.provision;
 
 import java.net.URI;
-import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -33,7 +32,7 @@ import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
  */
 public class WebComponentDefinition extends PhysicalComponentDefinition {
     private URI classLoaderId;
-    private URL webArchiveUrl;
+    private URI contributionUri;
     private String contextUrl;
     // map of resource id to injection site name/InjectionSite pair
     private Map<String, Map<String, InjectionSite>> injectionSiteMappings = new HashMap<String, Map<String, InjectionSite>>();
@@ -57,12 +56,12 @@ public class WebComponentDefinition extends PhysicalComponentDefinition {
         this.classLoaderId = classLoaderId;
     }
 
-    public URL getWebArchiveUrl() {
-        return webArchiveUrl;
+    public URI getContributionUri() {
+        return contributionUri;
     }
 
-    public void setWebArchiveUrl(URL webArchiveUrl) {
-        this.webArchiveUrl = webArchiveUrl;
+    public void setContributionUri(URI contributionUri) {
+        this.contributionUri = contributionUri;
     }
 
     public Map<String, Map<String, InjectionSite>> getInjectionSiteMappings() {
