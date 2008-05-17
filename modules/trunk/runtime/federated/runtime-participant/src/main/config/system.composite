@@ -55,7 +55,6 @@
     <include name="org.fabric3.fabric.Deployment" scdlResource="org/fabric3/fabric/deployment.composite"/>
     <include name="org.fabric3.fabric.Stores" scdlResource="org/fabric3/fabric/nonPersistentStore.composite"/>
 
-    <include name="org.fabric3.fabric.FileSystemResolver" scdlResource="org/fabric3/fabric/fileSystemResolver.composite"/>
 
     <!-- include transform configuration -->
     <include name="org.fabric3.transform.Transform" scdlResource="org/fabric3/transform/transform.composite"/>
@@ -99,6 +98,19 @@
 
     <component name="DelegatingMessagingService">
         <system:implementation.system class="org.fabric3.fabric.services.messaging.DelegatingMessagingService"/>
+    </component>
+
+
+    <!-- -->
+
+    <component name="HttpResolver">
+        <system:implementation.system
+                class="org.fabric3.fabric.services.contribution.HttpResolver"/>
+    </component>
+
+    <component name="FSArtifactLocationEncoder">
+        <system:implementation.system
+                class="org.fabric3.fabric.services.contribution.FSArtifactLocationEncoder"/>
     </component>
 
 </composite>

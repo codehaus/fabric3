@@ -127,6 +127,7 @@
                 <include>org.codehaus.fabric3:fabric3-discovery-jxta</include>
                 <include>org.codehaus.fabric3:fabric3-messaging</include>
                 <include>org.codehaus.fabric3:fabric3-messaging-jxta</include>
+                <include>org.codehaus.fabric3:fabric3-http-provisioning</include>
 
             </includes>
             <outputDirectory>extensions</outputDirectory>

@@ -167,9 +167,9 @@
         </dependency>
 
         <!--<dependency>-->
-            <!--<groupId>org.codehaus.fabric3</groupId>-->
-            <!--<artifactId>fabric3-async-runtime</artifactId>-->
-            <!--<version>${project.version}</version>-->
+        <!--<groupId>org.codehaus.fabric3</groupId>-->
+        <!--<artifactId>fabric3-async-runtime</artifactId>-->
+        <!--<version>${project.version}</version>-->
         <!--</dependency>-->
 
         <dependency>
@@ -190,40 +190,46 @@
             <version>${project.version}</version>
         </dependency>
 
-       <!-- <dependency>
-            <groupId>org.codehaus.fabric3</groupId>
-            <artifactId>fabric3-console</artifactId>
-            <version>${project.version}</version>
-        </dependency> -->
+        <!-- <dependency>
+           <groupId>org.codehaus.fabric3</groupId>
+           <artifactId>fabric3-console</artifactId>
+           <version>${project.version}</version>
+       </dependency> -->
         <dependency>
-             <groupId>org.codehaus.fabric3</groupId>
-             <artifactId>fabric3-marshal-xstream</artifactId>
-             <version>${project.version}</version>
-         </dependency>
+            <groupId>org.codehaus.fabric3</groupId>
+            <artifactId>fabric3-marshal-xstream</artifactId>
+            <version>${project.version}</version>
+        </dependency>
 
-         <dependency>
-             <groupId>org.codehaus.fabric3</groupId>
-             <artifactId>fabric3-jxta</artifactId>
-             <version>${project.version}</version>
-         </dependency>
+        <dependency>
+            <groupId>org.codehaus.fabric3</groupId>
+            <artifactId>fabric3-jxta</artifactId>
+            <version>${project.version}</version>
+        </dependency>
 
-         <dependency>
-             <groupId>org.codehaus.fabric3</groupId>
-             <artifactId>fabric3-messaging</artifactId>
-             <version>${project.version}</version>
-         </dependency>
+        <dependency>
+            <groupId>org.codehaus.fabric3</groupId>
+            <artifactId>fabric3-messaging</artifactId>
+            <version>${project.version}</version>
+        </dependency>
 
-         <dependency>
-             <groupId>org.codehaus.fabric3</groupId>
-             <artifactId>fabric3-messaging-jxta</artifactId>
-             <version>${project.version}</version>
-         </dependency>
+        <dependency>
+            <groupId>org.codehaus.fabric3</groupId>
+            <artifactId>fabric3-messaging-jxta</artifactId>
+            <version>${project.version}</version>
+        </dependency>
 
-         <dependency>
-             <groupId>org.codehaus.fabric3</groupId>
-             <artifactId>fabric3-discovery-jxta</artifactId>
-             <version>${project.version}</version>
-         </dependency>
+        <dependency>
+            <groupId>org.codehaus.fabric3</groupId>
+            <artifactId>fabric3-discovery-jxta</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.codehaus.fabric3</groupId>
+            <artifactId>fabric3-http-provisioning</artifactId>
+            <version>${project.version}</version>
+        </dependency>
 
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
