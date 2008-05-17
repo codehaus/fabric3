@@ -16,15 +16,14 @@
  */
 package org.fabric3.fabric.services.contribution;
 
-import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.spi.services.contribution.ContributionUriResolver;
 import org.fabric3.spi.services.contribution.Contribution;
+import org.fabric3.spi.services.contribution.ContributionUriResolver;
 import org.fabric3.spi.services.contribution.MetaDataStore;
 import org.fabric3.spi.services.contribution.ResolutionException;
 
@@ -42,18 +41,11 @@ public class LocalContributionUriResolver implements ContributionUriResolver {
     }
 
     public URL resolve(URI uri) throws ResolutionException {
-        if (store != null) {
-            Contribution contribution = store.find(uri);
-            if (contribution == null) {
-                String id = uri.toString();
-                throw new ResolutionException("Contribution not found: " + id, id);
-            }
-            return contribution.getLocation();
+        Contribution contribution = store.find(uri);
+        if (contribution == null) {
+            String id = uri.toString();
+            throw new ResolutionException("Contribution not found: " + id, id);
         }
-        try {
-            return uri.toURL();
-        } catch (MalformedURLException e) {
-            throw new ResolutionException(e);
-        }
+        return contribution.getLocation();
     }
 }
