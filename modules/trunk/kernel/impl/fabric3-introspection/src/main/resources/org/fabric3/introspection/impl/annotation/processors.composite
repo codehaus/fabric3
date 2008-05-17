@@ -78,5 +78,21 @@
     <component f3:key="org.fabric3.api.annotation.Monitor" name="org.fabric3.introspection.impl.annotation.MonitorProcessor">
         <system:implementation.system class="org.fabric3.introspection.impl.annotation.MonitorProcessor"/>
     </component>
+    
+    <component f3:key="org.fabric3.api.annotation.scope.Conversation" name="org.fabric3.introspection.impl.annotation.ConversationProcessor">
+        <system:implementation.system class="org.fabric3.introspection.impl.annotation.ConversationProcessor"/>
+    </component>  
+        
+    <component f3:key="org.fabric3.api.annotation.scope.Composite" name="org.fabric3.introspection.impl.annotation.CompositeProcessor">
+        <system:implementation.system class="org.fabric3.introspection.impl.annotation.CompositeProcessor"/>
+    </component>
+    
+    <component f3:key="org.fabric3.api.annotation.scope.Request" name="org.fabric3.introspection.impl.annotation.RequestProcessor">
+        <system:implementation.system class="org.fabric3.introspection.impl.annotation.RequestProcessor"/>
+    </component>    
+    
+    <component f3:key="org.fabric3.api.annotation.scope.Stateless" name="org.fabric3.introspection.impl.annotation.StatelessProcessor">
+        <system:implementation.system class="org.fabric3.introspection.impl.annotation.StatelessProcessor"/>
+    </component>                       
 
 </composite>
