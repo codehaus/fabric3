@@ -155,9 +155,9 @@ public class JettyServiceImpl implements JettyService {
         String http = info.getProperty("http.port", null);
         if (http != null) {
             try {
-                httpPort = Integer.parseInt(http);
+                httpPort = Integer.parseInt(http.trim());
             } catch (NumberFormatException e) {
-                throw new JettyInitializationException("Invalid HTTP port", http);
+                throw new JettyInitializationException("Invalid HTTP port: " + http, http);
             }
         }
         String https = info.getProperty("https.port", null);
@@ -278,7 +278,7 @@ public class JettyServiceImpl implements JettyService {
         sessionHandler.addHandler(servletHandler);
         contextHandler.addHandler(sessionHandler);
     }
-    
+
     /**
      * An integration wrapper to enable use of a {@link WorkScheduler} with Jetty
      */
