@@ -106,12 +106,6 @@
             <version>${project.version}</version>
         </dependency>
 
-        <dependency>
-            <groupId>org.codehaus.fabric3</groupId>
-            <artifactId>fabric3-contribution-scanner-spi</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
         <!-- provided scope dependencies that need to be resolved -->
         <dependency>
             <groupId>org.apache.geronimo.specs</groupId>
@@ -171,12 +165,6 @@
             <!--<artifactId>fabric3-async-runtime</artifactId>-->
             <!--<version>${project.version}</version>-->
         <!--</dependency>-->
-
-        <dependency>
-            <groupId>org.codehaus.fabric3</groupId>
-            <artifactId>fabric3-contribution-scanner</artifactId>
-            <version>${project.version}</version>
-        </dependency>
 
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
