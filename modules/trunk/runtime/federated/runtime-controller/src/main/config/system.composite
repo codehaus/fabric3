@@ -100,8 +100,7 @@
     </component>
 
     <component name="HttpContributionUriResolver">
-        <system:implementation.system
-                class="org.fabric3.fabric.services.contribution.HttpContributionUriResolver"/>
+        <system:implementation.system class="org.fabric3.fabric.services.contribution.HttpContributionUriResolver"/>
     </component>
 
 
