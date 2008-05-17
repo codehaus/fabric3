@@ -26,12 +26,12 @@
            name="org.fabric3.fabric.FileSystemResolver"
            autowire="true">
 
-    <component name="FSArtifactLocationEncoder">
+    <component name="LocalContributionUriEncoder">
         <system:implementation.system
-                class="org.fabric3.fabric.services.contribution.FSContributionUriEncoder"/>
+                class="org.fabric3.fabric.services.contribution.LocalContributionUriEncoder"/>
     </component>
 
-    <component name="FileSystemResolver">
+    <component name="LocalContributionUriResolver">
         <system:implementation.system
                 class="org.fabric3.fabric.services.contribution.LocalContributionUriResolver"/>
     </component>

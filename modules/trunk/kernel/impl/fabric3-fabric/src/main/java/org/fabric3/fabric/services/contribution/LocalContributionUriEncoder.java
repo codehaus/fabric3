@@ -21,11 +21,12 @@ import java.net.URI;
 import org.fabric3.spi.services.contribution.ContributionUriEncoder;
 
 /**
- * Enocdes an internal contribution URL using the filesystem protocol.
+ * An no-op encoder used when provisioning contributions to the same VM. Locally provisioned contribution URIs do not need to be encoded as they can
+ * be directly resolved against the local contribution store.
  *
  * @version $Rev$ $Date$
  */
-public class FSContributionUriEncoder implements ContributionUriEncoder {
+public class LocalContributionUriEncoder implements ContributionUriEncoder {
 
     public URI encode(URI uri) {
         return uri;

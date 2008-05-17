@@ -103,14 +103,14 @@
 
     <!-- -->
 
-    <component name="HttpResolver">
+    <component name="HttpContributionUriResolver">
         <system:implementation.system
                 class="org.fabric3.fabric.services.contribution.HttpContributionUriResolver"/>
     </component>
 
     <component name="FSArtifactLocationEncoder">
         <system:implementation.system
-                class="org.fabric3.fabric.services.contribution.FSContributionUriEncoder"/>
+                class="org.fabric3.fabric.services.contribution.LocalContributionUriEncoder"/>
     </component>
 
 </composite>

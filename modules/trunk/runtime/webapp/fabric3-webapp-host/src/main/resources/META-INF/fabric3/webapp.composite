@@ -53,7 +53,7 @@
     <include name="org.fabric3.fabric.Deployment" scdlResource="org/fabric3/fabric/deployment.composite"/>
     <include name="org.fabric3.fabric.Stores" scdlResource="org/fabric3/fabric/nonPersistentStore.composite"/>
 
-    <include name="org.fabric3.fabric.FileSystemResolver" scdlResource="org/fabric3/fabric/fileSystemResolver.composite"/>
+    <include name="org.fabric3.fabric.FileSystemResolver" scdlResource="org/fabric3/fabric/localProvisioning.composite"/>
     
     <!-- proxy service implementation -->
     <include name="org.fabric3.JDKProxy" scdlResource="META-INF/jdkproxy.composite"/>
