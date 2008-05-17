@@ -33,7 +33,7 @@
 
     <component name="FileSystemResolver">
         <system:implementation.system
-                class="org.fabric3.fabric.services.contribution.FileSystemResolver"/>
+                class="org.fabric3.fabric.services.contribution.LocalContributionUriResolver"/>
     </component>
 
 </composite>

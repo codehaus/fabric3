@@ -23,7 +23,7 @@ import java.net.URL;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.spi.services.contribution.ArtifactResolver;
+import org.fabric3.spi.services.contribution.ContributionUriResolver;
 import org.fabric3.spi.services.contribution.Contribution;
 import org.fabric3.spi.services.contribution.MetaDataStore;
 import org.fabric3.spi.services.contribution.ResolutionException;
@@ -34,10 +34,10 @@ import org.fabric3.spi.services.contribution.ResolutionException;
  * @version $Rev$ $Date$
  */
 @EagerInit
-public class FileSystemResolver implements ArtifactResolver {
+public class LocalContributionUriResolver implements ContributionUriResolver {
     private MetaDataStore store;
 
-    public FileSystemResolver(@Reference MetaDataStore store) {
+    public LocalContributionUriResolver(@Reference MetaDataStore store) {
         this.store = store;
     }
 

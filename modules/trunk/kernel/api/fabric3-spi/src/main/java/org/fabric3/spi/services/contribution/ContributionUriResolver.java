@@ -23,14 +23,14 @@ import java.net.URI;
 
 
 /**
- * Implementations resolve contribution artifacts to a local cache
+ * Implementations resolve contribution artifacts in a domain to a local cache
  *
  * @version $Rev$ $Date$
  */
-public interface ArtifactResolver {
+public interface ContributionUriResolver {
 
     /**
-     * Resolves the contribution artifact, returning a local URL where it may be dereferenced 
+     * Resolves the contribution artifact associated with the URI, returning a local URL by which it may be dereferenced
      *
      * @param contributionURI the contribution URI
      * @return the local dereferenceable URL for the artifact

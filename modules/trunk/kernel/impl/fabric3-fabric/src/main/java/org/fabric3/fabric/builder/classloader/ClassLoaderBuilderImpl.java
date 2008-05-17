@@ -30,8 +30,8 @@ import org.fabric3.spi.classloader.MultiParentClassLoader;
 import org.fabric3.spi.model.physical.PhysicalClassLoaderDefinition;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.services.contribution.ClasspathProcessorRegistry;
+import org.fabric3.spi.services.contribution.ContributionUriResolver;
 import org.fabric3.spi.services.contribution.ResolutionException;
-import org.fabric3.spi.services.contribution.ArtifactResolver;
 
 /**
  * Default implementation of ClassLoaderBuilder.
@@ -42,14 +42,14 @@ import org.fabric3.spi.services.contribution.ArtifactResolver;
 public class ClassLoaderBuilderImpl implements ClassLoaderBuilder {
 
     private ClassLoaderRegistry classLoaderRegistry;
-    private ArtifactResolver artifactResolver;
+    private ContributionUriResolver contributionUriResolver;
     private ClasspathProcessorRegistry classpathProcessorRegistry;
 
     public ClassLoaderBuilderImpl(@Reference ClassLoaderRegistry classLoaderRegistry,
-                                  @Reference ArtifactResolver artifactResolver,
+                                  @Reference ContributionUriResolver contributionUriResolver,
                                   @Reference ClasspathProcessorRegistry classpathProcessorRegistry) {
         this.classLoaderRegistry = classLoaderRegistry;
-        this.artifactResolver = artifactResolver;
+        this.contributionUriResolver = contributionUriResolver;
         this.classpathProcessorRegistry = classpathProcessorRegistry;
     }
 
@@ -108,7 +108,7 @@ public class ClassLoaderBuilderImpl implements ClassLoaderBuilder {
         for (URI uri : uris) {
             try {
                 // resolve the remote artifact URL and add it to the classloader
-                URL resolvedUrl = artifactResolver.resolve(uri);
+                URL resolvedUrl = contributionUriResolver.resolve(uri);
                 // introspect and expand if necessary
                 List<URL> processedUrls = classpathProcessorRegistry.process(resolvedUrl);
                 URL[] loaderUrls = loader.getURLs();
@@ -156,8 +156,8 @@ public class ClassLoaderBuilderImpl implements ClassLoaderBuilder {
 
         for (URI uri : uris) {
             try {
-                // resolve the remote artifact URLs and cache them locally
-                URL resolvedUrl = artifactResolver.resolve(uri);
+                // resolve the remote contributions and cache them locally
+                URL resolvedUrl = contributionUriResolver.resolve(uri);
                 // introspect and expand if necessary
                 classpath.addAll(classpathProcessorRegistry.process(resolvedUrl));
             } catch (ResolutionException e) {

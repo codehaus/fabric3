@@ -105,7 +105,7 @@
 
     <component name="HttpResolver">
         <system:implementation.system
-                class="org.fabric3.fabric.services.contribution.HttpResolver"/>
+                class="org.fabric3.fabric.services.contribution.HttpContributionUriResolver"/>
     </component>
 
     <component name="FSArtifactLocationEncoder">

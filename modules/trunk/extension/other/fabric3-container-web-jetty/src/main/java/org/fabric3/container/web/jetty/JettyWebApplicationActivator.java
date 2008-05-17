@@ -41,7 +41,7 @@ import org.fabric3.pojo.reflection.Injector;
 import org.fabric3.spi.ObjectCreationException;
 import org.fabric3.spi.classloader.MultiParentClassLoader;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
-import org.fabric3.spi.services.contribution.ArtifactResolver;
+import org.fabric3.spi.services.contribution.ContributionUriResolver;
 
 /**
  * Activates a web application in an embedded Jetty instance.
@@ -51,18 +51,18 @@ import org.fabric3.spi.services.contribution.ArtifactResolver;
 public class JettyWebApplicationActivator implements WebApplicationActivator {
     private JettyService jettyService;
     private ClassLoaderRegistry classLoaderRegistry;
-    private ArtifactResolver artifactResolver;
+    private ContributionUriResolver contributionUriResolver;
     private WebApplicationActivatorMonitor monitor;
     private Map<URI, WebAppContext> mappings;
 
     public JettyWebApplicationActivator(@Reference JettyService jettyService,
                                         @Reference ClassLoaderRegistry classLoaderRegistry,
-                                        @Reference ArtifactResolver artifactResolver,
+                                        @Reference ContributionUriResolver contributionUriResolver,
                                         @Monitor WebApplicationActivatorMonitor monitor) {
         this.jettyService = jettyService;
         this.monitor = monitor;
         this.classLoaderRegistry = classLoaderRegistry;
-        this.artifactResolver = artifactResolver;
+        this.contributionUriResolver = contributionUriResolver;
         mappings = new ConcurrentHashMap<URI, WebAppContext>();
     }
 
@@ -81,7 +81,7 @@ public class JettyWebApplicationActivator implements WebApplicationActivator {
         }
         try {
             // resolve the url to a local artifact
-            URL resolved = artifactResolver.resolve(uri);
+            URL resolved = contributionUriResolver.resolve(uri);
             ClassLoader parentClassLoader = createParentClassLoader(parentClassLoaderId, uri);
             WebAppContext context = createWebAppContext("/" + contextPath, injectors, resolved, parentClassLoader);
             jettyService.registerHandler(context);  // the context needs to be registered before it is started

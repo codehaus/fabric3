@@ -76,7 +76,7 @@ import org.fabric3.fabric.monitor.MonitorWireGenerator;
 import org.fabric3.fabric.monitor.MonitorWireTargetDefinition;
 import org.fabric3.fabric.policy.NullPolicyResolver;
 import org.fabric3.fabric.runtime.ComponentNames;
-import org.fabric3.fabric.services.contribution.FileSystemResolver;
+import org.fabric3.fabric.services.contribution.LocalContributionUriResolver;
 import org.fabric3.fabric.services.contribution.processor.JarClasspathProcessor;
 import org.fabric3.fabric.services.documentloader.DocumentLoader;
 import org.fabric3.fabric.services.documentloader.DocumentLoaderImpl;
@@ -298,7 +298,7 @@ public class BootstrapAssemblyFactory {
                                                                ClasspathProcessorRegistry cpRegistry,
                                                                MetaDataStore metaDataStore) {
 
-        FileSystemResolver resolver = new FileSystemResolver(metaDataStore);
+        LocalContributionUriResolver resolver = new LocalContributionUriResolver(metaDataStore);
 
         JarClasspathProcessor classpathProcessor = new JarClasspathProcessor(cpRegistry);
         classpathProcessor.init();

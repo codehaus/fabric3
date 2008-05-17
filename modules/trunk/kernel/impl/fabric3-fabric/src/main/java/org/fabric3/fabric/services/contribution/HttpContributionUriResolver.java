@@ -27,26 +27,26 @@ import org.osoa.sca.annotations.Reference;
 import org.fabric3.api.annotation.Monitor;
 import org.fabric3.spi.services.archive.ArchiveStore;
 import org.fabric3.spi.services.archive.ArchiveStoreException;
-import org.fabric3.spi.services.contribution.ArtifactResolver;
+import org.fabric3.spi.services.contribution.ContributionUriResolver;
 import org.fabric3.spi.services.contribution.ArtifactResolverMonitor;
 import org.fabric3.spi.services.contribution.ResolutionException;
 import org.fabric3.spi.services.contribution.MetaDataStore;
 import org.fabric3.spi.services.contribution.Contribution;
 
 /**
- * Resolves artifacts for the <code>http://</code> scheme, storing them in a local archive store.
+ * Resolves contributions using the <code>http</code> scheme, copying them to a local archive store.
  *
  * @version $Rev$ $Date$
  */
 @EagerInit
-public class HttpResolver implements ArtifactResolver {
+public class HttpContributionUriResolver implements ContributionUriResolver {
     private static final String HTTP_SCHEME = "http";
 
     private ArchiveStore archiveStore;
     private MetaDataStore metaDataStore;
     private ArtifactResolverMonitor monitor;
 
-    public HttpResolver(@Reference ArchiveStore archiveStore, @Reference MetaDataStore metaDataStore, @Monitor ArtifactResolverMonitor monitor) {
+    public HttpContributionUriResolver(@Reference ArchiveStore archiveStore, @Reference MetaDataStore metaDataStore, @Monitor ArtifactResolverMonitor monitor) {
         this.archiveStore = archiveStore;
         this.metaDataStore = metaDataStore;
         this.monitor = monitor;
@@ -54,7 +54,7 @@ public class HttpResolver implements ArtifactResolver {
 
     public URL resolve(URI uri) throws ResolutionException {
         if (!HTTP_SCHEME.equals(uri.getScheme())) {
-            // the contribution is being provisioned locally
+            // the contribution is being provisioned locally, resolve it directly
             Contribution contribution = metaDataStore.find(uri);
             if (contribution == null) {
                 String id = uri.toString();
