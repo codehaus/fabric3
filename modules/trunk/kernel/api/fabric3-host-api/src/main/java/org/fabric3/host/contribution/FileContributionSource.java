@@ -23,11 +23,10 @@ public class FileContributionSource implements ContributionSource {
     }
 
     public FileContributionSource(URI uri, URL location, long timestamp, byte[] checksum) {
-       this(uri, location, timestamp, checksum, null);
-     }
+        this(uri, location, timestamp, checksum, null);
+    }
 
-    public FileContributionSource(URI uri, URL location, long timestamp,
-                                  byte[] checksum, String contentType) {
+    public FileContributionSource(URI uri, URL location, long timestamp, byte[] checksum, String contentType) {
         this.uri = uri;
         this.location = location;
         this.timestamp = timestamp;
