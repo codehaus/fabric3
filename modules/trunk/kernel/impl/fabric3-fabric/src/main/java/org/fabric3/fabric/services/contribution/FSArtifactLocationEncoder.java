@@ -16,7 +16,7 @@
  */
 package org.fabric3.fabric.services.contribution;
 
-import java.net.URL;
+import java.net.URI;
 
 import org.fabric3.spi.services.contribution.ArtifactLocationEncoder;
 
@@ -27,7 +27,7 @@ import org.fabric3.spi.services.contribution.ArtifactLocationEncoder;
  */
 public class FSArtifactLocationEncoder implements ArtifactLocationEncoder {
 
-    public URL encode(URL url) {
-        return url;
+    public URI encode(URI uri) {
+        return uri;
     }
 }

@@ -29,9 +29,9 @@ import org.osoa.sca.annotations.Reference;
 import org.fabric3.spi.classloader.MultiParentClassLoader;
 import org.fabric3.spi.model.physical.PhysicalClassLoaderDefinition;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
-import org.fabric3.spi.services.contribution.ArtifactResolverRegistry;
 import org.fabric3.spi.services.contribution.ClasspathProcessorRegistry;
 import org.fabric3.spi.services.contribution.ResolutionException;
+import org.fabric3.spi.services.contribution.ArtifactResolver;
 
 /**
  * Default implementation of ClassLoaderBuilder.
@@ -42,14 +42,14 @@ import org.fabric3.spi.services.contribution.ResolutionException;
 public class ClassLoaderBuilderImpl implements ClassLoaderBuilder {
 
     private ClassLoaderRegistry classLoaderRegistry;
-    private ArtifactResolverRegistry artifactResolverRegistry;
+    private ArtifactResolver artifactResolver;
     private ClasspathProcessorRegistry classpathProcessorRegistry;
 
     public ClassLoaderBuilderImpl(@Reference ClassLoaderRegistry classLoaderRegistry,
-                                  @Reference ArtifactResolverRegistry artifactResolverRegistry,
+                                  @Reference ArtifactResolver artifactResolver,
                                   @Reference ClasspathProcessorRegistry classpathProcessorRegistry) {
         this.classLoaderRegistry = classLoaderRegistry;
-        this.artifactResolverRegistry = artifactResolverRegistry;
+        this.artifactResolver = artifactResolver;
         this.classpathProcessorRegistry = classpathProcessorRegistry;
     }
 
@@ -76,7 +76,7 @@ public class ClassLoaderBuilderImpl implements ClassLoaderBuilder {
     private void createClassLoader(PhysicalClassLoaderDefinition definition) throws ClassLoaderBuilderException {
 
         URI name = definition.getUri();
-        URL[] classpath = resolveClasspath(definition.getResourceUrls());
+        URL[] classpath = resolveClasspath(definition.getContributionUris());
 
         // build the classloader using the locally cached resources
         MultiParentClassLoader loader = new MultiParentClassLoader(name, classpath, null);
@@ -103,12 +103,12 @@ public class ClassLoaderBuilderImpl implements ClassLoaderBuilder {
         ClassLoader cl = classLoaderRegistry.getClassLoader(definition.getUri());
         assert cl instanceof MultiParentClassLoader;
         MultiParentClassLoader loader = (MultiParentClassLoader) cl;
-        Set<URL> resourceUrls = definition.getResourceUrls();
+        Set<URI> uris = definition.getContributionUris();
 
-        for (URL url : resourceUrls) {
+        for (URI uri : uris) {
             try {
                 // resolve the remote artifact URL and add it to the classloader
-                URL resolvedUrl = artifactResolverRegistry.resolve(url);
+                URL resolvedUrl = artifactResolver.resolve(uri);
                 // introspect and expand if necessary
                 List<URL> processedUrls = classpathProcessorRegistry.process(resolvedUrl);
                 URL[] loaderUrls = loader.getURLs();
@@ -128,9 +128,9 @@ public class ClassLoaderBuilderImpl implements ClassLoaderBuilder {
 
                 }
             } catch (ResolutionException e) {
-                throw new ClassLoaderBuilderException("Error resolving artifact: " + url.toString(), e);
+                throw new ClassLoaderBuilderException("Error resolving artifact: " + uri.toString(), e);
             } catch (IOException e) {
-                throw new ClassLoaderBuilderException("Error processing: " + url.toString(), e);
+                throw new ClassLoaderBuilderException("Error processing: " + uri.toString(), e);
             }
         }
 
@@ -146,24 +146,24 @@ public class ClassLoaderBuilderImpl implements ClassLoaderBuilder {
     /**
      * Resolves classpath urls
      *
-     * @param urls urls to resolve
+     * @param uris urls to resolve
      * @return the resolved classpath urls
      * @throws ClassLoaderBuilderException if an error occurs resolving a url
      */
-    private URL[] resolveClasspath(Set<URL> urls) throws ClassLoaderBuilderException {
+    private URL[] resolveClasspath(Set<URI> uris) throws ClassLoaderBuilderException {
 
         List<URL> classpath = new ArrayList<URL>();
 
-        for (URL url : urls) {
+        for (URI uri : uris) {
             try {
                 // resolve the remote artifact URLs and cache them locally
-                URL resolvedUrl = artifactResolverRegistry.resolve(url);
+                URL resolvedUrl = artifactResolver.resolve(uri);
                 // introspect and expand if necessary
                 classpath.addAll(classpathProcessorRegistry.process(resolvedUrl));
             } catch (ResolutionException e) {
-                throw new ClassLoaderBuilderException("Error resolving artifact: " + url.toString(), e);
+                throw new ClassLoaderBuilderException("Error resolving artifact: " + uri.toString(), e);
             } catch (IOException e) {
-                throw new ClassLoaderBuilderException("Error processing: " + url.toString(), e);
+                throw new ClassLoaderBuilderException("Error processing: " + uri.toString(), e);
             }
         }
         return classpath.toArray(new URL[classpath.size()]);

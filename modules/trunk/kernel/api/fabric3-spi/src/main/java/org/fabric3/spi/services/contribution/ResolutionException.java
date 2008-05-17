@@ -22,8 +22,9 @@ import org.fabric3.host.contribution.ContributionException;
  * @version $Rev$ $Date$
  */
 public class ResolutionException extends ContributionException {
+    private static final long serialVersionUID = -1175837242576928094L;
 
-    protected ResolutionException(String message, String identifier) {
+    public ResolutionException(String message, String identifier) {
         super(message, identifier);
     }
 
@@ -33,5 +34,9 @@ public class ResolutionException extends ContributionException {
 
     public ResolutionException(String message, Throwable cause) {
         super(message, cause);
+    }
+
+    public ResolutionException(Throwable cause) {
+        super(cause);
     }
 }

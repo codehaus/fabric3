@@ -16,38 +16,44 @@
  */
 package org.fabric3.fabric.services.contribution;
 
+import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 
 import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.spi.services.contribution.ArtifactResolver;
-import org.fabric3.spi.services.contribution.ArtifactResolverRegistry;
+import org.fabric3.spi.services.contribution.Contribution;
+import org.fabric3.spi.services.contribution.MetaDataStore;
 import org.fabric3.spi.services.contribution.ResolutionException;
 
 /**
- * Resolves artifacts for the <code>file://</code> scheme. Since a file system is accessible as a "local" resource, this
- * implementation simply returns the artifact URL.
+ * Resolves contribution URIs locally (i.e. in the same runtime VM).
  *
  * @version $Rev$ $Date$
  */
 @EagerInit
 public class FileSystemResolver implements ArtifactResolver {
-    public static final String FILE_SCHEME = "file";
+    private MetaDataStore store;
 
-    private ArtifactResolverRegistry registry;
-
-    public FileSystemResolver(@Reference ArtifactResolverRegistry registry) {
-        this.registry = registry;
+    public FileSystemResolver(@Reference MetaDataStore store) {
+        this.store = store;
     }
 
-    @Init
-    public void init() {
-        registry.register(FILE_SCHEME, this);
-    }
-
-    public URL resolve(URL url) throws ResolutionException {
-        return url;
+    public URL resolve(URI uri) throws ResolutionException {
+        if (store != null) {
+            Contribution contribution = store.find(uri);
+            if (contribution == null) {
+                String id = uri.toString();
+                throw new ResolutionException("Contribution not found: " + id, id);
+            }
+            return contribution.getLocation();
+        }
+        try {
+            return uri.toURL();
+        } catch (MalformedURLException e) {
+            throw new ResolutionException(e);
+        }
     }
 }

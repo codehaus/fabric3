@@ -17,7 +17,6 @@
 package org.fabric3.spi.model.physical;
 
 import java.net.URI;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.LinkedHashSet;
@@ -32,7 +31,7 @@ import java.util.Set;
 public class PhysicalClassLoaderDefinition {
     private URI uri;
     private List<URI> parentClassLoaders = new ArrayList<URI>();
-    private Set<URL> urls = new LinkedHashSet<URL>();
+    private Set<URI> contributionUris = new LinkedHashSet<URI>();
 
     public PhysicalClassLoaderDefinition(URI uri) {
         this.uri = uri;
@@ -48,22 +47,21 @@ public class PhysicalClassLoaderDefinition {
     }
 
     /**
-     * Adds a remotely dereferenceable resource URL to the container definition. When a classloader is created, a copy of the resource will be
-     * avilable on the classpath.
+     * Associates the classloader with a contribution. When a classloader is created, a copy of the contribution will be avilable on the classpath.
      *
-     * @param url the URL to add
+     * @param uri the URI to add
      */
-    public void addResourceUrl(URL url) {
-        urls.add(url);
+    public void addContributionUri(URI uri) {
+        contributionUris.add(uri);
     }
 
     /**
-     * Returns the dereferenceable resource URLs for the container definition as an ordered Set. Order is guaranteed for set iteration.
+     * Returns the URIs of contributions associated with this classloader as an ordered Set. Order is guaranteed for set iteration.
      *
-     * @return the resource URLs as an ordered Set
+     * @return the URIs as an ordered Set
      */
-    public Set<URL> getResourceUrls() {
-        return Collections.unmodifiableSet(urls);
+    public Set<URI> getContributionUris() {
+        return Collections.unmodifiableSet(contributionUris);
     }
 
     /**
@@ -94,14 +92,14 @@ public class PhysicalClassLoaderDefinition {
         PhysicalClassLoaderDefinition other = (PhysicalClassLoaderDefinition) obj;
 
         return parentClassLoaders.equals(other.parentClassLoaders) &&
-                urls.equals(other.urls) && uri.equals(other.uri);
+                contributionUris.equals(other.contributionUris) && uri.equals(other.uri);
     }
 
     public int hashCode() {
         int result;
         result = (uri != null ? uri.hashCode() : 0);
         result = 31 * result + (parentClassLoaders != null ? parentClassLoaders.hashCode() : 0);
-        result = 31 * result + (urls != null ? urls.hashCode() : 0);
+        result = 31 * result + (contributionUris != null ? contributionUris.hashCode() : 0);
         return result;
     }
 }

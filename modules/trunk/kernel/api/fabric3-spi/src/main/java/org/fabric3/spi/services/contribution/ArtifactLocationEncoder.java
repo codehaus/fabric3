@@ -16,11 +16,11 @@
  */
 package org.fabric3.spi.services.contribution;
 
-import java.net.URL;
-import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 /**
- * Implementations encode a local contribution URL so that it may be dereferenced remotely, e.g. over HTTP.
+ * Implementations encode a contribution URI so that it may be dereferenced remotely in a domain, e.g. over HTTP.
  *
  * @version $Rev$ $Date$
  */
@@ -29,10 +29,10 @@ public interface ArtifactLocationEncoder {
     /**
      * Encode the local contribution URL.
      *
-     * @param url the URL to encode
+     * @param uri the uri to encode
      * @return the encoded URL
-     * @throws MalformedURLException if the local URL is invalid
+     * @throws URISyntaxException if the URI is invalid
      */
-    URL encode(URL url) throws MalformedURLException;
+    URI encode(URI uri) throws URISyntaxException;
 
 }

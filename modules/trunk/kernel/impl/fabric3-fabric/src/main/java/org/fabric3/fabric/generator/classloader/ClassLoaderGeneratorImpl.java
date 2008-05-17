@@ -17,20 +17,20 @@
 package org.fabric3.fabric.generator.classloader;
 
 import java.net.URI;
-import java.net.URL;
-import java.net.MalformedURLException;
+import java.net.URISyntaxException;
+import java.util.List;
 
+import org.osoa.sca.annotations.Constructor;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
-import org.osoa.sca.annotations.Constructor;
 
 import org.fabric3.scdl.CompositeImplementation;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.physical.PhysicalClassLoaderDefinition;
+import org.fabric3.spi.services.contribution.ArtifactLocationEncoder;
 import org.fabric3.spi.services.contribution.Contribution;
 import org.fabric3.spi.services.contribution.MetaDataStore;
-import org.fabric3.spi.services.contribution.ArtifactLocationEncoder;
 
 /**
  * Default implementation of the ClassLoaderGenerator. This implementation groups components contained within a composite deployed to the same runtime
@@ -43,14 +43,24 @@ public class ClassLoaderGeneratorImpl implements ClassLoaderGenerator {
     private MetaDataStore store;
     private ArtifactLocationEncoder encoder;
 
-    public ClassLoaderGeneratorImpl(MetaDataStore store) {
+    @Constructor
+    public ClassLoaderGeneratorImpl(@Reference MetaDataStore store) {
         this.store = store;
     }
 
-    @Constructor
-    public ClassLoaderGeneratorImpl(@Reference MetaDataStore store, @Reference ArtifactLocationEncoder encoder) {
-        this.store = store;
-        this.encoder = encoder;
+    /**
+     * Setter for injecting the ArtifactLocationEncoder. This is done lazily as the encoder is suppolied by an extension which is intialized after the
+     * ClassLoaderGenerator which is needed during bootstrap.
+     *
+     * @param encoders the encoder to inject
+     */
+    @Reference(required = false)
+    public void setEncoder(List<ArtifactLocationEncoder> encoders) {
+        if (encoders == null || encoders.isEmpty()) {
+            return;
+        }
+        // workaround for FABRICTHREE-262: only multiplicity references can be reinjected
+        this.encoder = encoders.get(0);
     }
 
     public PhysicalClassLoaderDefinition generate(LogicalComponent<?> component) throws GenerationException {
@@ -70,9 +80,8 @@ public class ClassLoaderGeneratorImpl implements ClassLoaderGenerator {
             return definition;
         }
         Contribution contribution = store.find(contributionUri);
-        URL location = contribution.getLocation();
         URI runtimeId = component.getRuntimeId();
-        updateUrl(runtimeId, definition, location);
+        updateUrl(runtimeId, definition, contributionUri);
         for (URI uri : contribution.getResolvedImportUris()) {
             if (!definition.getParentClassLoaders().contains(uri)) {
                 definition.addParentClassLoader(uri);
@@ -81,17 +90,17 @@ public class ClassLoaderGeneratorImpl implements ClassLoaderGenerator {
         return definition;
     }
 
-    private void updateUrl(URI runtimeId, PhysicalClassLoaderDefinition definition, URL location) throws ClassLoaderGenerationException {
+    private void updateUrl(URI runtimeId, PhysicalClassLoaderDefinition definition, URI contributionUri) throws ClassLoaderGenerationException {
         if (runtimeId != null) {
-            // if the target runtime is not this one, encode the artifact URL so it can be dereferenced from another VM
+            // if the target runtime is not the current one, encode the contribution URI so it can be dereferenced from another VM
             try {
-                location = encoder.encode(location);
-            } catch (MalformedURLException e) {
+                contributionUri = encoder.encode(contributionUri);
+            } catch (URISyntaxException e) {
                 throw new ClassLoaderGenerationException(e);
             }
         }
-        if (!definition.getResourceUrls().contains(location)) {
-            definition.addResourceUrl(location);
+        if (!definition.getContributionUris().contains(contributionUri)) {
+            definition.addContributionUri(contributionUri);
         }
     }
 

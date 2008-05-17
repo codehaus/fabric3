@@ -68,7 +68,7 @@ public class ContributionServiceImpl implements ContributionService {
     private ContributionLoader contributionLoader;
     private ContentTypeResolver contentTypeResolver;
     private DependencyService dependencyService;
-    private String uriPrefix = "file://contribution/";
+    private String uriPrefix = "contribution://";
     private ContributionServiceMonitor monitor;
 
     public ContributionServiceImpl(@Reference ProcessorRegistry processorRegistry,

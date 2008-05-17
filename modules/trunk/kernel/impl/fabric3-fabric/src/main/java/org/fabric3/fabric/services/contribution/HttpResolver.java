@@ -19,20 +19,19 @@ package org.fabric3.fabric.services.contribution;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
 
 import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
+import org.fabric3.api.annotation.Monitor;
 import org.fabric3.spi.services.archive.ArchiveStore;
 import org.fabric3.spi.services.archive.ArchiveStoreException;
 import org.fabric3.spi.services.contribution.ArtifactResolver;
-import org.fabric3.spi.services.contribution.ArtifactResolverRegistry;
-import org.fabric3.spi.services.contribution.ResolutionException;
 import org.fabric3.spi.services.contribution.ArtifactResolverMonitor;
-import org.fabric3.api.annotation.Monitor;
+import org.fabric3.spi.services.contribution.ResolutionException;
+import org.fabric3.spi.services.contribution.MetaDataStore;
+import org.fabric3.spi.services.contribution.Contribution;
 
 /**
  * Resolves artifacts for the <code>http://</code> scheme, storing them in a local archive store.
@@ -41,45 +40,44 @@ import org.fabric3.api.annotation.Monitor;
  */
 @EagerInit
 public class HttpResolver implements ArtifactResolver {
-    public static final String HTTP_SCHEME = "http";
+    private static final String HTTP_SCHEME = "http";
 
-    private ArtifactResolverRegistry registry;
-    private ArchiveStore store;
+    private ArchiveStore archiveStore;
+    private MetaDataStore metaDataStore;
     private ArtifactResolverMonitor monitor;
 
-    public HttpResolver(@Reference ArtifactResolverRegistry registry,
-                        @Reference(name = "localArchiveStore")ArchiveStore store,
-                        @Monitor ArtifactResolverMonitor monitor) {
-        this.registry = registry;
-        this.store = store;
+    public HttpResolver(@Reference ArchiveStore archiveStore, @Reference MetaDataStore metaDataStore, @Monitor ArtifactResolverMonitor monitor) {
+        this.archiveStore = archiveStore;
+        this.metaDataStore = metaDataStore;
         this.monitor = monitor;
     }
 
-    @Init
-    public void init() {
-        registry.register(HTTP_SCHEME, this);
-    }
-
-    public URL resolve(URL url) throws ResolutionException {
+    public URL resolve(URI uri) throws ResolutionException {
+        if (!HTTP_SCHEME.equals(uri.getScheme())) {
+            // the contribution is being provisioned locally
+            Contribution contribution = metaDataStore.find(uri);
+            if (contribution == null) {
+                String id = uri.toString();
+                throw new ResolutionException("Contribution not fould: " + id, id);
+            }
+            return contribution.getLocation();
+        }
         InputStream stream = null;
         try {
-            URI uri = url.toURI();
             // check to see if the archive is cached locally
-            URL localURL = store.find(uri);
+            URL localURL = archiveStore.find(uri);
             if (localURL == null) {
                 // resolve remotely
+                URL url = uri.toURL();
                 stream = url.openStream();
-                localURL = store.store(url.toURI(), stream);
+                localURL = archiveStore.store(uri, stream);
             }
             return localURL;
-        } catch (URISyntaxException e) {
-            String identifier = url.toString();
-            throw new ResolutionException("URL cannot be converted to URI: " + identifier, identifier, e);
         } catch (IOException e) {
-            String identifier = url.toString();
+            String identifier = uri.toString();
             throw new ResolutionException("Error resolving artifact: " + identifier, identifier, e);
         } catch (ArchiveStoreException e) {
-            String identifier = url.toString();
+            String identifier = uri.toString();
             throw new ResolutionException("Error resolving artifact: " + identifier, identifier, e);
         } finally {
             try {

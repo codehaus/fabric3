@@ -26,11 +26,6 @@
            name="org.fabric3.fabric.FileSystemResolver"
            autowire="true">
 
-    <component name="ArtifactResolverRegistry">
-        <system:implementation.system
-                class="org.fabric3.fabric.services.contribution.ArtifactResolverRegistryImpl"/>
-    </component>
-
     <component name="FSArtifactLocationEncoder">
         <system:implementation.system
                 class="org.fabric3.fabric.services.contribution.FSArtifactLocationEncoder"/>

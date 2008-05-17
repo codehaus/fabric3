@@ -19,6 +19,7 @@
 package org.fabric3.spi.services.contribution;
 
 import java.net.URL;
+import java.net.URI;
 
 
 /**
@@ -31,10 +32,10 @@ public interface ArtifactResolver {
     /**
      * Resolves the contribution artifact, returning a local URL where it may be dereferenced 
      *
-     * @param contributionURL the contribution URL
+     * @param contributionURI the contribution URI
      * @return the local dereferenceable URL for the artifact
      * @throws ResolutionException if an error occurs resolving the artifact
      */
-    URL resolve(URL contributionURL) throws ResolutionException;
+    URL resolve(URI contributionURI) throws ResolutionException;
 
 }
