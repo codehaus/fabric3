@@ -41,7 +41,7 @@ import org.fabric3.pojo.reflection.Injector;
 import org.fabric3.spi.ObjectCreationException;
 import org.fabric3.spi.classloader.MultiParentClassLoader;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
-import org.fabric3.spi.services.contribution.ArtifactResolverRegistry;
+import org.fabric3.spi.services.contribution.ArtifactResolver;
 
 /**
  * Activates a web application in an embedded Jetty instance.
@@ -51,19 +51,19 @@ import org.fabric3.spi.services.contribution.ArtifactResolverRegistry;
 public class JettyWebApplicationActivator implements WebApplicationActivator {
     private JettyService jettyService;
     private ClassLoaderRegistry classLoaderRegistry;
-    private ArtifactResolverRegistry resolverRegistry;
+    private ArtifactResolver artifactResolver;
     private WebApplicationActivatorMonitor monitor;
-    private Map<URL, WebAppContext> mappings;
+    private Map<URI, WebAppContext> mappings;
 
     public JettyWebApplicationActivator(@Reference JettyService jettyService,
                                         @Reference ClassLoaderRegistry classLoaderRegistry,
-                                        @Reference ArtifactResolverRegistry resolverRegistry,
+                                        @Reference ArtifactResolver artifactResolver,
                                         @Monitor WebApplicationActivatorMonitor monitor) {
         this.jettyService = jettyService;
         this.monitor = monitor;
         this.classLoaderRegistry = classLoaderRegistry;
-        this.resolverRegistry = resolverRegistry;
-        mappings = new ConcurrentHashMap<URL, WebAppContext>();
+        this.artifactResolver = artifactResolver;
+        mappings = new ConcurrentHashMap<URI, WebAppContext>();
     }
 
     public ClassLoader getWebComponentClassLoader(URI componentId) {
@@ -72,17 +72,17 @@ public class JettyWebApplicationActivator implements WebApplicationActivator {
 
     @SuppressWarnings({"unchecked"})
     public ServletContext activate(String contextPath,
-                                   URL url,
+                                   URI uri,
                                    URI parentClassLoaderId,
                                    Map<String, List<Injector<?>>> injectors,
                                    ComponentContext componentContext) throws WebApplicationActivationException {
-        if (mappings.containsKey(url)) {
-            throw new WebApplicationActivationException("Mapping already exists: " + url.toString());
+        if (mappings.containsKey(uri)) {
+            throw new WebApplicationActivationException("Mapping already exists: " + uri.toString());
         }
         try {
             // resolve the url to a local artifact
-            URL resolved = resolverRegistry.resolve(url);
-            ClassLoader parentClassLoader = createParentClassLoader(parentClassLoaderId, url.toURI());
+            URL resolved = artifactResolver.resolve(uri);
+            ClassLoader parentClassLoader = createParentClassLoader(parentClassLoaderId, uri);
             WebAppContext context = createWebAppContext("/" + contextPath, injectors, resolved, parentClassLoader);
             jettyService.registerHandler(context);  // the context needs to be registered before it is started
             context.start();
@@ -93,21 +93,21 @@ public class JettyWebApplicationActivator implements WebApplicationActivator {
             context.getSessionHandler().addEventListener(listener);
             ServletContext servletContext = context.getServletContext();
             injectServletContext(servletContext, injectors);
-            mappings.put(url, context);
-            monitor.activated(url);
+            mappings.put(uri, context);
+            monitor.activated(uri);
             return servletContext;
         } catch (Exception e) {
             throw new WebApplicationActivationException(e);
         }
     }
 
-    public void deactivate(URL url) throws WebApplicationActivationException {
-        WebAppContext context = mappings.get(url);
+    public void deactivate(URI uri) throws WebApplicationActivationException {
+        WebAppContext context = mappings.get(uri);
         if (context == null) {
-            throw new WebApplicationActivationException("Mapping does not exist: " + url.toString());
+            throw new WebApplicationActivationException("Mapping does not exist: " + uri.toString());
         }
         jettyService.getServer().removeLifeCycle(context);
-        monitor.deactivated(url);
+        monitor.deactivated(uri);
     }
 
     private ClassLoader createParentClassLoader(URI parentClassLoaderId, URI id) {

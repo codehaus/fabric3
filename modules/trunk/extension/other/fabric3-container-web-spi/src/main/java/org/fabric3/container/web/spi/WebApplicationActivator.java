@@ -18,7 +18,6 @@
  */
 package org.fabric3.container.web.spi;
 
-import java.net.URL;
 import java.net.URI;
 import java.util.List;
 import java.util.Map;
@@ -51,7 +50,7 @@ public interface WebApplicationActivator {
      *
      * @param contextPath         the context path the web application will be available at. The context path is relative to the absolute address of
      *                            the embedded servlet container.
-     * @param url                 a URL pointing to the WAR containing the web application assets
+     * @param uri                 the URI of the contribution containing the web application assets
      * @param parentClassLoaderId the id for parent classloader to use for the web application
      * @param injectors           the map of artifact ids to injectors. An artifact id identifies an artifact type such as a servlet class name or
      *                            ServletContext.
@@ -60,16 +59,16 @@ public interface WebApplicationActivator {
      * @throws WebApplicationActivationException
      *          if an error occurs activating the web application
      */
-    ServletContext activate(String contextPath, URL url, URI parentClassLoaderId, Map<String, List<Injector<?>>> injectors, ComponentContext context)
+    ServletContext activate(String contextPath, URI uri, URI parentClassLoaderId, Map<String, List<Injector<?>>> injectors, ComponentContext context)
             throws WebApplicationActivationException;
 
     /**
      * Removes an activated web application
      *
-     * @param url the URL the web application was activated with
+     * @param uri the URI the web application was activated with
      * @throws WebApplicationActivationException
      *          if an error occurs activating the web application
      */
-    void deactivate(URL url) throws WebApplicationActivationException;
+    void deactivate(URI uri) throws WebApplicationActivationException;
 
 }

@@ -1,6 +1,6 @@
 package org.fabric3.container.web.jetty;
 
-import java.net.URL;
+import java.net.URI;
 
 /**
  * Receives events related to web application activation and deactivation.
@@ -12,14 +12,14 @@ public interface WebApplicationActivatorMonitor {
     /**
      * The web application has been activated
      *
-     * @param url the WAR url
+     * @param uri the WAR uri
      */
-    void activated(URL url);
+    void activated(URI uri);
 
     /**
      * The web application has been deactivated
      *
-     * @param url the WAR url
+     * @param uri the WAR uri
      */
-    void deactivated(URL url);
+    void deactivated(URI uri);
 }
