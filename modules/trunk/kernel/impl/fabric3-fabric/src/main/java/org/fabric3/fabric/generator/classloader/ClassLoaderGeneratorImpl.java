@@ -81,7 +81,7 @@ public class ClassLoaderGeneratorImpl implements ClassLoaderGenerator {
         }
         Contribution contribution = store.find(contributionUri);
         URI runtimeId = component.getRuntimeId();
-        updateUrl(runtimeId, definition, contributionUri);
+        updateContributionUris(runtimeId, definition, contributionUri);
         for (URI uri : contribution.getResolvedImportUris()) {
             if (!definition.getParentClassLoaders().contains(uri)) {
                 definition.addParentClassLoader(uri);
@@ -90,7 +90,7 @@ public class ClassLoaderGeneratorImpl implements ClassLoaderGenerator {
         return definition;
     }
 
-    private void updateUrl(URI runtimeId, PhysicalClassLoaderDefinition definition, URI contributionUri) throws ClassLoaderGenerationException {
+    private void updateContributionUris(URI runtimeId, PhysicalClassLoaderDefinition definition, URI contributionUri) throws ClassLoaderGenerationException {
         if (runtimeId != null) {
             // if the target runtime is not the current one, encode the contribution URI so it can be dereferenced from another VM
             try {
