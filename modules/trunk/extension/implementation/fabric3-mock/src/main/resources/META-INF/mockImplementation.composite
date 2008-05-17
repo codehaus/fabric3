@@ -49,9 +49,14 @@
         <system:implementation.system class="org.fabric3.mock.MockComponentBuilder"/>
     </component>
     
-    <!-- Wire attacher -->
-    <component f3:key="org.fabric3.mock.MockWireTargetDefinition" name="org.fabric3.mock.MockWireAttacher">
-        <system:implementation.system class="org.fabric3.mock.MockWireAttacher"/>
+    <!-- Target Wire attacher -->
+    <component f3:key="org.fabric3.mock.MockWireTargetDefinition" name="org.fabric3.mock.MockTargetWireAttacher">
+        <system:implementation.system class="org.fabric3.mock.MockTargetWireAttacher"/>
+    </component>
+    
+    <!-- Source Wire attacher -->
+    <component f3:key="org.fabric3.mock.MockWireSourceDefinition" name="org.fabric3.mock.MockSourceWireAttacher">
+        <system:implementation.system class="org.fabric3.mock.MockSourceWireAttacher"/>
     </component>
     
     <!-- IMock control -->

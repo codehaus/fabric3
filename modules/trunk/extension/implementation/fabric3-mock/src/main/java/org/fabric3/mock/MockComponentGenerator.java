@@ -28,6 +28,7 @@ import org.fabric3.spi.model.instance.LogicalResource;
 import org.fabric3.spi.model.instance.LogicalService;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.policy.Policy;
+
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
@@ -43,7 +44,7 @@ public class MockComponentGenerator implements ComponentGenerator<LogicalCompone
     /**
      * Initializes the generator registry.
      *
-     * @param registry             Generator registry.
+     * @param registry Generator registry.
      */
     public MockComponentGenerator(@Reference GeneratorRegistry registry) {
         this.registry = registry;
@@ -112,7 +113,7 @@ public class MockComponentGenerator implements ComponentGenerator<LogicalCompone
     public PhysicalWireSourceDefinition generateCallbackWireSource(LogicalComponent<ImplementationMock> source,
                                                                    ServiceContract<?> serviceContract,
                                                                    Policy policy) throws GenerationException {
-        throw new UnsupportedOperationException();
+        return new MockWireSourceDefinition();
     }
 
 }

@@ -41,13 +41,12 @@ import org.fabric3.spi.wire.Wire;
 /**
  * @version $Revision$ $Date$
  */
-public class MockWireAttacher implements TargetWireAttacher<MockWireTargetDefinition> {
+public class MockTargetWireAttacher implements TargetWireAttacher<MockWireTargetDefinition> {
 
     private final ClassLoaderRegistry classLoaderRegistry;
     private final IMocksControl control;
 
-    public MockWireAttacher(@Reference ClassLoaderRegistry classLoaderRegistry,
-                            @Reference IMocksControl control) {
+    public MockTargetWireAttacher(@Reference ClassLoaderRegistry classLoaderRegistry, @Reference IMocksControl control) {
         this.classLoaderRegistry = classLoaderRegistry;
         this.control = control;
     }
