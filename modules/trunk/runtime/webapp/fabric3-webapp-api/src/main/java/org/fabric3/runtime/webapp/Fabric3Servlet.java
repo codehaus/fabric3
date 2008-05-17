@@ -42,6 +42,7 @@ public class Fabric3Servlet extends HttpServlet {
             throw new ServletException("Fabric3 runtime not configured for web application");
         }
         requestInjector = runtime.getRequestInjector();
+        requestInjector.init(config);
     }
 
     @Override

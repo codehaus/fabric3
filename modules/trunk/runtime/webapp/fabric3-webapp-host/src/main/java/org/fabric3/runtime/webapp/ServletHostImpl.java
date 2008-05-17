@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.util.Map;
 import java.util.HashMap;
 import javax.servlet.Servlet;
+import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRequest;
@@ -56,6 +57,12 @@ public class ServletHostImpl implements ServletHost, ServletRequestInjector {
         return info.getServletContext();
     }
 
+    public void init(ServletConfig config) throws ServletException {
+        for (Servlet servlet : servlets.values()) {
+            servlet.init(config);
+        }
+    }
+    
     public void service(ServletRequest req, ServletResponse resp) throws ServletException, IOException {
         assert req instanceof HttpServletRequest;
         String path = ((HttpServletRequest) req).getPathInfo();
