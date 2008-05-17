@@ -34,4 +34,6 @@
     <include name="CallbackComposite"/>
     <include name="OrderingComposite"/>
     <include name="GenericTestComposite"/>
+    <include name="ScopeComposite"/>
+
 </composite>
