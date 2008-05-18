@@ -24,6 +24,7 @@ import java.util.List;
  * @version $Rev$ $Date$
  */
 public abstract class ValidationException extends Exception {
+    private static final long serialVersionUID = -9097590343387033730L;
 
     private final List<ValidationFailure> failures;
 
