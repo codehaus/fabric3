@@ -107,20 +107,6 @@ public abstract class Fabric3Exception extends Exception {
         return identifier;
     }
 
-    public PrintWriter appendBaseMessage(PrintWriter writer) {
-        if (identifier == null) {
-            if (super.getMessage() == null) {
-                return writer;
-            }
-            return writer.append(super.getMessage());
-        }
-        if (super.getMessage() != null) {
-            writer.append(super.getMessage());
-        }
-        writer.append(" [").append(identifier).append(']');
-        return writer;
-    }
-
     protected void printStackTraceElements(PrintWriter writer) {
         for (StackTraceElement element : getStackTrace()) {
             writer.print("\tat ");

@@ -18,8 +18,6 @@
  */
 package org.fabric3.host;
 
-import java.io.PrintWriter;
-
 /**
  * The root unchecked exception for the fabric3 runtime.
  *
@@ -108,20 +106,6 @@ public abstract class Fabric3RuntimeException extends RuntimeException {
      */
     public String getIdentifier() {
         return identifier;
-    }
-
-    public PrintWriter appendBaseMessage(PrintWriter writer) {
-        if (identifier == null) {
-            if (super.getMessage() == null) {
-                return writer;
-            }
-            return writer.append(super.getMessage());
-        }
-        if (super.getMessage() != null) {
-            writer.append(super.getMessage());
-        }
-        writer.append(" [").append(identifier).append(']');
-        return writer;
     }
 
 }
