@@ -19,7 +19,6 @@
 package org.fabric3.pojo.scdl;
 
 import org.fabric3.scdl.InjectingComponentType;
-import org.fabric3.scdl.Signature;
 
 /**
  * A component type specialization for POJO implementations
@@ -27,6 +26,7 @@ import org.fabric3.scdl.Signature;
  * @version $$Rev$$ $$Date$$
  */
 public class PojoComponentType extends InjectingComponentType {
+    private static final long serialVersionUID = -6062732949895208924L;
     private String implClass;
 
     /**
