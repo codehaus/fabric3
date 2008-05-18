@@ -28,8 +28,8 @@ import javax.xml.namespace.QName;
  *
  * @version $Revision$ $Date$
  */
-public abstract class LogicalScaArtifact<P extends LogicalScaArtifact<?>> extends Referenceable {
-
+public abstract class LogicalScaArtifact<P extends LogicalScaArtifact<?>> {
+    private final URI uri;
     private final P parent;
     private final QName type;
 
@@ -39,11 +39,20 @@ public abstract class LogicalScaArtifact<P extends LogicalScaArtifact<?>> extend
      * @param type Type of this artifact.
      */
     public LogicalScaArtifact(final URI uri, final P parent, final QName type) {
-        super(uri);
+        this.uri = uri;
         this.parent = parent;
         this.type = type;
     }
-    
+
+    /**
+     * Returns the uri.
+     *
+     * @return the uri
+     */
+    public URI getUri() {
+        return uri;
+    }
+
     /**
      * @return Type of this SCA artifact.
      */
@@ -56,6 +65,10 @@ public abstract class LogicalScaArtifact<P extends LogicalScaArtifact<?>> extend
      */
     public final P getParent() {
         return parent;
+    }
+
+    public String toString() {
+        return uri.toString();
     }
 
     /**
