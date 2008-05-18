@@ -26,6 +26,7 @@ import org.fabric3.scdl.ValidationFailure;
  * @version $Rev$ $Date$
  */
 public class InvalidCompositeException extends ValidationException {
+    private static final long serialVersionUID = -2678786389599538999L;
 
     private final Composite composite;
 

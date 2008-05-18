@@ -26,6 +26,7 @@ import org.fabric3.scdl.ValidationFailure;
  * @version $Rev$ $Date$
  */
 public class InvalidComponentTypeException extends ValidationException {
+    private static final long serialVersionUID = -6420864691508500117L;
 
     private final ComponentType componentType;
 
