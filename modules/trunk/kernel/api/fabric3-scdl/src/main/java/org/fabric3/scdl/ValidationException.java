@@ -17,6 +17,7 @@
 package org.fabric3.scdl;
 
 import java.util.List;
+import java.util.Collections;
 
 /**
  * Base class for exceptions indicating a model object has failed validation.
@@ -50,6 +51,6 @@ public abstract class ValidationException extends Exception {
      * @return a collection of underlying failures
      */
     public List<ValidationFailure> getFailures() {
-        return failures;
+        return Collections.unmodifiableList(failures);
     }
 }
