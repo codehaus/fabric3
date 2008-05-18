@@ -16,15 +16,22 @@
  */
 package org.fabric3.tests.mock;
 
+import junit.framework.TestCase;
+
+import org.easymock.EasyMock;
 import org.easymock.IMocksControl;
 import org.osoa.sca.annotations.Reference;
-
-import junit.framework.TestCase;
 
 /**
  * @version $Revision$ $Date$
  */
 public class MockTest extends TestCase {
+    
+    private static final String ARG1 = "VALUE1";
+    private static final String ARG2 = "VALUE2";
+    private static final Long ARG3 = 1L;
+    
+    private OverloadedService mockedOverloadedService;
     
     private MockService1 mockService1;
     private MockService2 mockService2;
@@ -50,6 +57,11 @@ public class MockTest extends TestCase {
     public void setUserComponent(UserComponent userComponent) {
         this.userComponent = userComponent;
     }
+    
+    @Reference
+    public void setOverloadedService(OverloadedService mockedOverloadedService) {
+        this.mockedOverloadedService = mockedOverloadedService;
+    }    
     
     public void testMock() {
         
@@ -96,5 +108,18 @@ public class MockTest extends TestCase {
         mock.doMock0(1);
         control.verify();
     }
+    
+    public void testMockingOverloadedInvocation() throws Exception {
+        
+        control.reset();
+        
+        mockedOverloadedService.doWork(ARG1, ARG2);
+        mockedOverloadedService.doWork(ARG1, ARG2, ARG3);        
+        control.replay();
+        
+        mockedOverloadedService.doWork(ARG1, ARG2);
+        mockedOverloadedService.doWork(ARG1, ARG2, ARG3);        
+        control.verify();        
+    }   
 
 }
