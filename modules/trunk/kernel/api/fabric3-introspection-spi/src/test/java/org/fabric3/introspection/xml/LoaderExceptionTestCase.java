@@ -20,8 +20,6 @@ package org.fabric3.introspection.xml;
 
 import junit.framework.TestCase;
 
-import org.fabric3.introspection.xml.LoaderException;
-
 /**
  * @version $Rev$ $Date$
  */

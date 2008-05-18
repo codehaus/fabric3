@@ -16,13 +16,11 @@
  */
 package org.fabric3.introspection.xml;
 
-import javax.xml.namespace.QName;
 import javax.xml.namespace.NamespaceContext;
+import javax.xml.namespace.QName;
 
 import junit.framework.TestCase;
 import org.easymock.EasyMock;
-
-import org.fabric3.introspection.xml.LoaderUtil;
 
 /**
  * @version $Rev$ $Date$
