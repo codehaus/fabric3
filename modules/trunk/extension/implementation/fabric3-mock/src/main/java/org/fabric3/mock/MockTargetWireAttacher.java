@@ -16,9 +16,12 @@
  */
 package org.fabric3.mock;
 
+import java.lang.reflect.Array;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 
 import org.easymock.IMocksControl;
@@ -61,20 +64,42 @@ public class MockTargetWireAttacher implements TargetWireAttacher<MockWireTarget
         for (Map.Entry<PhysicalOperationDefinition, InvocationChain> entry : wire.getInvocationChains().entrySet()) {
             PhysicalOperationDefinition op = entry.getKey();
             InvocationChain chain = entry.getValue();
-
-            for (Method method : mockedInterface.getMethods()) {
-                if (op.getName().equals(method.getName())) {
-                    chain.addInterceptor(new MockTargetInterceptor(mock, method));
-                }
-            }
+ 
+            //Each invocation chain has a single physical operation associated with it. This physical operation needs a
+            //single interceptor to re-direct the invocation to the mock 
+            Method operationMethod = getOperationMethod(mockedInterface, op, wireSourceDefinition, wireTargetDefinition);
+            chain.addInterceptor(new MockTargetInterceptor(mock, operationMethod));
         }
 
     }
-
+    
     public ObjectFactory<?> createObjectFactory(MockWireTargetDefinition target) throws WiringException {
         Class<?> mockedInterface = loadInterface(target);
         Object mock = createMock(mockedInterface);
         return new SingletonObjectFactory<Object>(mock);
+    }    
+
+    private Method getOperationMethod(Class<?> mockedInterface, PhysicalOperationDefinition op, 
+                                            PhysicalWireSourceDefinition wireSourceDefinition, 
+                                            MockWireTargetDefinition wireTargetDefinition) throws WireAttachException {
+        List<String> parameters = op.getParameters();
+        for (Method method : mockedInterface.getMethods()) {
+            if(method.getName().equals(op.getName())) {                    
+                Class<?>[] parameterTypes = method.getParameterTypes();
+                if(parameterTypes.length == parameters.size()) {
+                    List<String> methodParameters = new ArrayList<String>(); 
+                    for (Class<?> parameter : parameterTypes) {
+                        methodParameters.add(parameter.getName());
+                    }
+                    
+                    if(parameters.equals(methodParameters)) {
+                        return method;
+                    }
+                }
+            }
+        }
+        
+        throw new WireAttachException("Failed to match method: " + op.getName() + " " + op.getParameters()  , wireSourceDefinition.getUri(), wireTargetDefinition.getUri(), null);
     }
 
     private Object createMock(Class<?> mockedInterface) {
