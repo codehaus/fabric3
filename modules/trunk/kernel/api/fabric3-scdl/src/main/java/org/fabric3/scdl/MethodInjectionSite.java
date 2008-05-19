@@ -23,17 +23,21 @@ import java.lang.annotation.ElementType;
  * @version $Rev$ $Date$
  */
 public class MethodInjectionSite extends InjectionSite {
+    private static final long serialVersionUID = -2222837362065034249L;
     private Signature signature;
     private int param;
+    private int modifiers;
 
     public MethodInjectionSite(Method method, int param) {
         super(ElementType.METHOD, method.getParameterTypes()[param].getName());
         this.signature = new Signature(method);
         this.param = param;
+        this.modifiers = method.getModifiers();
     }
 
     /**
      * Returns the signature that identifies the method.
+     *
      * @return the signature that identifies the method
      */
     public Signature getSignature() {
@@ -42,13 +46,22 @@ public class MethodInjectionSite extends InjectionSite {
 
     /**
      * Returns the index of the parameter being injected.
-     *
+     * <p/>
      * This will be 0 for a normal setter method.
      *
      * @return the index of the parameter being injected
      */
     public int getParam() {
         return param;
+    }
+
+    /**
+     * Returns the field modifiers.
+     *
+     * @return the field modifiers
+     */
+    public int getModifiers() {
+        return modifiers;
     }
 
     public String toString() {
