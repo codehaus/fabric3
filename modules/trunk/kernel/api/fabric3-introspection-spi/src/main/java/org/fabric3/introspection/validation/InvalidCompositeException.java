@@ -14,12 +14,11 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.scdl.validation;
+package org.fabric3.introspection.validation;
 
 import java.util.List;
 
 import org.fabric3.scdl.Composite;
-import org.fabric3.scdl.ValidationException;
 import org.fabric3.scdl.ValidationFailure;
 
 /**

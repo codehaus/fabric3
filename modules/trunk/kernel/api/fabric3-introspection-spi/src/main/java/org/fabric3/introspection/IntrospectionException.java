@@ -22,6 +22,8 @@ import org.fabric3.host.Fabric3Exception;
  * @version $Rev$ $Date$
  */
 public abstract class IntrospectionException extends Fabric3Exception {
+    private static final long serialVersionUID = -7824532555093050899L;
+
     protected IntrospectionException() {
     }
 

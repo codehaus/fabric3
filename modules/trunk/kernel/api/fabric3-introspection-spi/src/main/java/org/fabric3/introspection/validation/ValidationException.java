@@ -14,17 +14,21 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.scdl;
+package org.fabric3.introspection.validation;
 
-import java.util.List;
 import java.util.Collections;
+import java.util.List;
+
+import org.fabric3.scdl.ModelObject;
+import org.fabric3.scdl.ValidationFailure;
+import org.fabric3.introspection.IntrospectionException;
 
 /**
  * Base class for exceptions indicating a model object has failed validation.
  *
  * @version $Rev$ $Date$
  */
-public abstract class ValidationException extends Exception {
+public abstract class ValidationException extends IntrospectionException {
     private static final long serialVersionUID = -9097590343387033730L;
 
     private final List<ValidationFailure> failures;
