@@ -33,6 +33,10 @@ public class EmployeeServiceImplTest extends TestCase {
     @Reference protected EmployeeService employeeService;
     
     public void testCreation() {
+
+        for (Employee employee : employeeService.findAll()) {
+            employeeService.remove(employee);
+        }
         
         List<Employee> employees = new ArrayList<Employee>();
         employees.add(new Employee(1L, "Meeraj Kunnumpurath"));
@@ -40,6 +44,9 @@ public class EmployeeServiceImplTest extends TestCase {
         employees.add(new Employee(3L, "Jim Marino"));
         
         employeeService.createEmployees(employees);
+        
+        employees = employeeService.findAll();
+        assertEquals(3, employees.size());
         
     }
     

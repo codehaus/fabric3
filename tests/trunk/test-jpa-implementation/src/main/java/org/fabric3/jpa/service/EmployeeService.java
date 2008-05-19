@@ -29,5 +29,7 @@ import org.fabric3.jpa.model.Employee;
 public interface EmployeeService {
     
     void createEmployees(List<Employee> employees);
+    void remove(Employee employee);
+    List<Employee> findAll();
 
 }

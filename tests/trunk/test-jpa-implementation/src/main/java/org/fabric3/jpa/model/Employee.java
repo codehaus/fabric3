@@ -20,11 +20,13 @@ package org.fabric3.jpa.model;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.NamedQuery;
 
 /**
  * @version $Revision$ $Date$
  */
 @Entity
+@NamedQuery (name = "findAll", query = "SELECT o FROM Employee o")
 public class Employee {
 
     @Id

@@ -41,4 +41,13 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     }
 
+    public void remove(Employee employee) {
+        employee = employeeDao.merge(employee);
+        employeeDao.remove(employee);
+    }
+
+    public List<Employee> findAll() {
+        return employeeDao.findByNamedQuery("findAll", Employee.class);
+    }
+
 }
