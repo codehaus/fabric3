@@ -16,17 +16,20 @@
  */
 package org.fabric3.scdl;
 
-import java.lang.reflect.Field;
 import java.lang.annotation.ElementType;
+import java.lang.reflect.Field;
 
 /**
  * @version $Rev$ $Date$
  */
 public class FieldInjectionSite extends InjectionSite {
+    private static final long serialVersionUID = -6502983302874808563L;
     private String name;
+    int modifiers;
 
     public FieldInjectionSite(Field field) {
         super(ElementType.FIELD, field.getType().getName());
+        this.modifiers = field.getModifiers();
         name = field.getName();
     }
 
@@ -37,6 +40,15 @@ public class FieldInjectionSite extends InjectionSite {
      */
     public String getName() {
         return name;
+    }
+
+    /**
+     * Returns the field modifiers.
+     *
+     * @return the field modifiers
+     */
+    public int getModifiers() {
+        return modifiers;
     }
 
     public String toString() {
