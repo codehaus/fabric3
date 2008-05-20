@@ -18,6 +18,8 @@
  */
 package org.fabric3.fabric.services.contribution.manifest;
 
+import javax.xml.stream.XMLStreamReader;
+
 import org.fabric3.spi.services.contribution.ManifestLoadException;
 
 /**
@@ -26,7 +28,7 @@ import org.fabric3.spi.services.contribution.ManifestLoadException;
 public class InvalidManifestTypeException extends ManifestLoadException {
     private static final long serialVersionUID = 4785115370845898721L;
 
-    public InvalidManifestTypeException(String message, String identifier) {
-        super(message, identifier);
+    public InvalidManifestTypeException(String message, XMLStreamReader reader) {
+        super(message, reader);
     }
 }

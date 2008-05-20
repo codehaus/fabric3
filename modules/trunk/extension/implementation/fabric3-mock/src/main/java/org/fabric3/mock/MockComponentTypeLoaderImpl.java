@@ -82,9 +82,9 @@ public class MockComponentTypeLoaderImpl implements MockComponentTypeLoader {
             return componentType;
 
         } catch (ClassNotFoundException ex) {
-            throw new LoaderException(ex);
+            throw new LoaderException("Class not found", ex);
         } catch (InvalidServiceContractException e) {
-            throw new LoaderException(e);
+            throw new LoaderException("Class not found", e);
         }
 
     }

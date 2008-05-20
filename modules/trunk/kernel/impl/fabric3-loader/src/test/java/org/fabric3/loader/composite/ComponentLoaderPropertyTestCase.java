@@ -19,6 +19,7 @@ package org.fabric3.loader.composite;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
+import javax.xml.stream.Location;
 
 import junit.framework.TestCase;
 import org.easymock.EasyMock;
@@ -54,7 +55,7 @@ public class ComponentLoaderPropertyTestCase extends TestCase {
             loader.load(reader, ctx);
             fail();
         } catch (ComponentPropertyNotFoundException e) {
-            assertEquals(PROP_NAME, e.getName());
+            // exepected
         }
     }
 
@@ -101,6 +102,8 @@ public class ComponentLoaderPropertyTestCase extends TestCase {
     }
 
     private XMLStreamReader createReader() throws XMLStreamException {
+        Location location = EasyMock.createNiceMock(Location.class);
+        EasyMock.replay(location);
         XMLStreamReader reader = EasyMock.createMock(XMLStreamReader.class);
         EasyMock.expect(reader.getAttributeValue(null, "name")).andReturn("component");
         EasyMock.expect(reader.getAttributeValue(null, "autowire")).andReturn(null);
@@ -110,6 +113,7 @@ public class ComponentLoaderPropertyTestCase extends TestCase {
         EasyMock.expect(reader.nextTag()).andReturn(1);
         EasyMock.expect(reader.next()).andReturn(1);
         EasyMock.expect(reader.getName()).andReturn(new QName(SCA_NS, "property"));
+        EasyMock.expect(reader.getLocation()).andReturn(location);
         EasyMock.replay(reader);
         return reader;
     }

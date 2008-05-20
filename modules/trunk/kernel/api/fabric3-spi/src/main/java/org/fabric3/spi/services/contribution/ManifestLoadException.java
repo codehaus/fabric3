@@ -18,6 +18,8 @@
  */
 package org.fabric3.spi.services.contribution;
 
+import javax.xml.stream.XMLStreamReader;
+
 import org.fabric3.introspection.xml.LoaderException;
 
 /**
@@ -26,9 +28,10 @@ import org.fabric3.introspection.xml.LoaderException;
  * @version $Rev$ $Date$
  */
 public abstract class ManifestLoadException extends LoaderException {
+    private static final long serialVersionUID = -7331970246311745476L;
 
-    public ManifestLoadException(String message, String identifier) {
-        super(message, identifier);
+    public ManifestLoadException(String message, XMLStreamReader reader) {
+        super(message, reader);
     }
 
 }

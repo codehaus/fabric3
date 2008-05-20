@@ -19,6 +19,7 @@ package org.fabric3.loader.composite;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
+import javax.xml.stream.Location;
 
 import junit.framework.TestCase;
 import org.easymock.EasyMock;
@@ -55,7 +56,7 @@ public class ComponentLoaderDuplicateReferenceTestCase extends TestCase {
             loader.load(reader, ctx);
             fail();
         } catch (DuplicateConfiguredReferenceException e) {
-            assertEquals(REF_NAME, e.getIdentifier());
+            // expected
         }
     }
 
@@ -105,6 +106,9 @@ public class ComponentLoaderDuplicateReferenceTestCase extends TestCase {
     }
 
     private XMLStreamReader createReader() throws XMLStreamException {
+        Location location = EasyMock.createNiceMock(Location.class);
+        EasyMock.replay(location);
+
         XMLStreamReader reader = EasyMock.createMock(XMLStreamReader.class);
         EasyMock.expect(reader.getAttributeValue(null, "name")).andReturn("component");
         EasyMock.expect(reader.getAttributeValue(null, "autowire")).andReturn(null);
@@ -117,6 +121,7 @@ public class ComponentLoaderDuplicateReferenceTestCase extends TestCase {
         EasyMock.expect(reader.nextTag()).andReturn(1);
         EasyMock.expect(reader.next()).andReturn(1);
         EasyMock.expect(reader.getName()).andReturn(new QName(SCA_NS, "reference"));
+        EasyMock.expect(reader.getLocation()).andReturn(location);
         EasyMock.replay(reader);
         return reader;
     }

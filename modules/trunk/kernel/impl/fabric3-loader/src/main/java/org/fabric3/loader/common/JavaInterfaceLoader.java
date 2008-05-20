@@ -61,13 +61,13 @@ public class JavaInterfaceLoader implements TypeLoader<ServiceContract> {
             name = reader.getAttributeValue(null, "class");
         }
         if (name == null) {
-            throw new InvalidValueException("interface name not supplied");
+            throw new InvalidValueException("interface name not supplied", reader);
         }
         Class<?> interfaceClass;
         try {
             interfaceClass = helper.loadClass(name, context.getTargetClassLoader());
         } catch (ImplementationNotFoundException e) {
-            throw new MissingResourceException(null, name, e);
+            throw new MissingResourceException("Interface not found:" + name, reader, e);
         }
 
         name = reader.getAttributeValue(null, "callbackInterface");
@@ -75,7 +75,7 @@ public class JavaInterfaceLoader implements TypeLoader<ServiceContract> {
         try {
             callbackClass = (name != null) ? helper.loadClass(name, context.getTargetClassLoader()) : null;
         } catch (ImplementationNotFoundException e) {
-            throw new MissingResourceException(null, name, e);
+            throw new MissingResourceException("Callback interface not found:" + name, reader, e);
         }
 
         LoaderUtil.skipToEndElement(reader);
@@ -89,7 +89,7 @@ public class JavaInterfaceLoader implements TypeLoader<ServiceContract> {
             }
             return serviceContract;
         } catch (InvalidServiceContractException e) {
-            throw new LoaderException("The Java interface is an invalid service contract: " + interfaceClass.getName(), e);
+            throw new LoaderException("The Java interface is an invalid service contract: " + interfaceClass.getName(), reader, e);
         }
     }
 }

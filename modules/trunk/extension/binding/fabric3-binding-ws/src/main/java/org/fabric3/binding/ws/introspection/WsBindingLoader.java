@@ -33,6 +33,7 @@ import org.fabric3.introspection.xml.LoaderException;
 import org.fabric3.introspection.xml.LoaderUtil;
 import org.fabric3.introspection.xml.LoaderHelper;
 import org.fabric3.introspection.xml.TypeLoader;
+import org.fabric3.introspection.xml.MissingAttributeException;
 import org.fabric3.binding.ws.scdl.WsBindingDefinition;
 
 /**
@@ -70,17 +71,16 @@ public class WsBindingLoader implements TypeLoader<WsBindingDefinition> {
             String wsdlLocation = reader.getAttributeValue("http://www.w3.org/2004/08/wsdl-instance", "wsdlLocation");
 
             if (uri == null) {
-                throw new LoaderException("The uri attribute is not specified");
+                throw new MissingAttributeException("The uri attribute is not specified", reader);
             }
-            bd = new WsBindingDefinition(new URI(uri), implementation,
-                                         wsdlLocation, wsdlElement);
+            bd = new WsBindingDefinition(new URI(uri), implementation, wsdlLocation, wsdlElement);
 
             loaderHelper.loadPolicySetsAndIntents(bd, reader);
 
             // TODO Add rest of the WSDL support
 
         } catch (URISyntaxException ex) {
-            throw new LoaderException(ex);
+            throw new LoaderException(reader, ex);
         }
 
         LoaderUtil.skipToEndElement(reader);

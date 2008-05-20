@@ -27,7 +27,7 @@ import javax.xml.stream.XMLStreamReader;
 
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.loader.common.MissingAttributeException;
+import org.fabric3.introspection.xml.MissingAttributeException;
 import org.fabric3.introspection.DefaultIntrospectionContext;
 import org.fabric3.scdl.Composite;
 import org.fabric3.scdl.Include;
@@ -54,7 +54,7 @@ public class IncludeLoader implements TypeLoader<Include> {
     private final Loader loader;
     private MetaDataStore store;
 
-    public IncludeLoader(@Reference Loader loader, @Reference(required = false) MetaDataStore store) {
+    public IncludeLoader(@Reference Loader loader, @Reference(required = false)MetaDataStore store) {
         this.loader = loader;
         this.store = store;
     }
@@ -63,7 +63,7 @@ public class IncludeLoader implements TypeLoader<Include> {
 
         String nameAttr = reader.getAttributeValue(null, "name");
         if (nameAttr == null || nameAttr.length() == 0) {
-            throw new MissingAttributeException("Missing name attribute");
+            throw new MissingAttributeException("Missing name attribute", reader);
         }
         QName name = LoaderUtil.getQName(nameAttr, introspectionContext.getTargetNamespace(), reader.getNamespaceContext());
         String scdlLocation = reader.getAttributeValue(null, "scdlLocation");
@@ -76,16 +76,16 @@ public class IncludeLoader implements TypeLoader<Include> {
         if (scdlLocation != null) {
             try {
                 url = new URL(introspectionContext.getSourceBase(), scdlLocation);
-                return loadFromSideFile(name, cl, contributionUri, url);
+                return loadFromSideFile(name, cl, contributionUri, url, reader);
             } catch (MalformedURLException e) {
-                throw new MissingResourceException(scdlLocation, name.toString(), e);
+                throw new MissingResourceException("Composite file not found: " + name.toString(), reader, e);
             }
         } else if (scdlResource != null) {
             url = cl.getResource(scdlResource);
             if (url == null) {
-                throw new MissingResourceException(scdlResource, name.toString());
+                throw new MissingResourceException("Composite file not found: " + scdlResource, reader);
             }
-            return loadFromSideFile(name, cl, contributionUri, url);
+            return loadFromSideFile(name, cl, contributionUri, url, reader);
         } else {
             if (store == null) {
                 // throw error as this is invalid in a bootstrap environment
@@ -96,8 +96,7 @@ public class IncludeLoader implements TypeLoader<Include> {
                 QNameSymbol symbol = new QNameSymbol(name);
                 ResourceElement<QNameSymbol, Composite> element = store.resolve(contributionUri, Composite.class, symbol);
                 if (element == null) {
-                    String identifier = name.toString();
-                    throw new MissingResourceException("Composite not found [" + identifier + "]", identifier);
+                    throw new MissingResourceException("Composite not found :" + name, reader);
                 }
                 Composite composite = element.getValue();
                 Include include = new Include();
@@ -105,25 +104,26 @@ public class IncludeLoader implements TypeLoader<Include> {
                 include.setIncluded(composite);
                 return include;
             } catch (MetaDataStoreException e) {
-                throw new LoaderException(e);
+                throw new LoaderException(reader, e);
             }
         }
     }
 
-    private Include loadFromSideFile(QName name, ClassLoader cl, URI contributionUri, URL url) throws InvalidIncludeException {
+    private Include loadFromSideFile(QName name, ClassLoader cl, URI contributionUri, URL url, XMLStreamReader reader)
+            throws InvalidIncludeException {
         Include include = new Include();
         IntrospectionContext childContext = new DefaultIntrospectionContext(cl, contributionUri, url);
         Composite composite;
         try {
             composite = loader.load(url, Composite.class, childContext);
         } catch (LoaderException e) {
-            throw new InvalidIncludeException(name, e);
+            throw new InvalidIncludeException("Invalid compoiste: " + name, reader, e);
         }
         ValidationContext validationContext = new ValidationContext();
         composite.validate(validationContext);
         if (validationContext.hasErrors()) {
             ValidationException ve = new InvalidCompositeException(composite, validationContext.getErrors());
-            throw new InvalidIncludeException(name, ve);
+            throw new InvalidIncludeException("Invalid compoiste: " + name, reader, ve);
         }
 
         include.setName(name);

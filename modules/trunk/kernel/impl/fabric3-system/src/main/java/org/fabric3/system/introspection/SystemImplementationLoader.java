@@ -31,7 +31,6 @@ import org.fabric3.introspection.xml.LoaderException;
 import org.fabric3.introspection.xml.LoaderUtil;
 import org.fabric3.introspection.xml.TypeLoader;
 import org.fabric3.system.scdl.SystemImplementation;
-import org.fabric3.pojo.processor.ProcessingException;
 
 /**
  * Loads information for a system implementation
@@ -57,7 +56,7 @@ public class SystemImplementationLoader implements TypeLoader<SystemImplementati
         assert SystemImplementation.IMPLEMENTATION_SYSTEM.equals(reader.getName());
         String implClass = reader.getAttributeValue(null, "class");
         if (implClass == null) {
-            throw new InvalidValueException("Missing implementation class");
+            throw new InvalidValueException("Missing implementation class", reader);
         }
         LoaderUtil.skipToEndElement(reader);
 
@@ -66,7 +65,7 @@ public class SystemImplementationLoader implements TypeLoader<SystemImplementati
         try {
             implementationProcessor.introspect(implementation, introspectionContext);
         } catch (IntrospectionException e) {
-            throw new ProcessingException(e);
+            throw new LoaderException(reader, e);
         }
         return implementation;
     }

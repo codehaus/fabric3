@@ -16,6 +16,8 @@
  */
 package org.fabric3.fabric.services.contribution;
 
+import javax.xml.stream.XMLStreamReader;
+
 import org.fabric3.introspection.xml.LoaderException;
 
 /**
@@ -26,7 +28,7 @@ import org.fabric3.introspection.xml.LoaderException;
 public class MissingPackageException extends LoaderException {
     private static final long serialVersionUID = 2448827235127768791L;
 
-    public MissingPackageException(String message) {
-        super(message);
+    public MissingPackageException(String message, XMLStreamReader reader) {
+        super(message, reader);
     }
 }

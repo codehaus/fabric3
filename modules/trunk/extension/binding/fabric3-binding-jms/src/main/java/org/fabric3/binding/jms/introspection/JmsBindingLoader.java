@@ -18,6 +18,7 @@
  */
 package org.fabric3.binding.jms.introspection;
 
+import java.net.URISyntaxException;
 import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
 import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
 
@@ -45,6 +46,7 @@ import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.xml.LoaderException;
 import org.fabric3.introspection.xml.LoaderHelper;
 import org.fabric3.introspection.xml.TypeLoader;
+import org.fabric3.introspection.xml.InvalidValueException;
 
 
 /**
@@ -63,6 +65,7 @@ public class JmsBindingLoader implements TypeLoader<JmsBindingDefinition> {
 
     /**
      * Constructor.
+     *
      * @param loaderHelper the loaderHelper
      */
     public JmsBindingLoader(@Reference
@@ -70,15 +73,19 @@ public class JmsBindingLoader implements TypeLoader<JmsBindingDefinition> {
         this.loaderHelper = loaderHelper;
     }
 
-    public JmsBindingDefinition load(XMLStreamReader reader,
-                                     IntrospectionContext introspectionContext)
+    public JmsBindingDefinition load(XMLStreamReader reader, IntrospectionContext introspectionContext)
             throws XMLStreamException, LoaderException {
 
         JmsBindingMetadata metadata;
         String uri = reader.getAttributeValue(null, "uri");
         JmsBindingDefinition bd;
         if (uri != null) {
-            JmsURIMetadata uriMeta = JmsURIMetadata.parseURI(uri);
+            JmsURIMetadata uriMeta = null;
+            try {
+                uriMeta = JmsURIMetadata.parseURI(uri);
+            } catch (URISyntaxException e) {
+                throw new LoaderException(reader, e);
+            }
             metadata = JmsLoaderHelper.getJmsMetadataFromURI(uriMeta);
             bd = new JmsBindingDefinition(loaderHelper.getURI(uri), metadata);
         } else {
@@ -120,7 +127,7 @@ public class JmsBindingLoader implements TypeLoader<JmsBindingDefinition> {
                     metadata.setHeaders(headers);
                 } else if ("operationProperties".equals(name)) {
                     OperationPropertiesDefinition operationProperties = loadOperationProperties(reader);
-                    metadata.addOperationProperties(operationProperties.getName(),operationProperties);
+                    metadata.addOperationProperties(operationProperties.getName(), operationProperties);
                 }
                 break;
             case END_ELEMENT:
@@ -217,64 +224,64 @@ public class JmsBindingLoader implements TypeLoader<JmsBindingDefinition> {
      * Loads headers.
      */
     private HeadersDefinition loadHeaders(XMLStreamReader reader) throws XMLStreamException, LoaderException {
-      HeadersDefinition headers = new HeadersDefinition();
-      headers.setJMSCorrelationId(reader.getAttributeValue(null, "JMSCorrelationId"));
-      String  deliveryMode= reader.getAttributeValue(null, "JMSDeliveryMode");
-      if (deliveryMode != null) {
-          try {
-              headers.setJMSDeliveryMode(Integer.valueOf(deliveryMode));
+        HeadersDefinition headers = new HeadersDefinition();
+        headers.setJMSCorrelationId(reader.getAttributeValue(null, "JMSCorrelationId"));
+        String deliveryMode = reader.getAttributeValue(null, "JMSDeliveryMode");
+        if (deliveryMode != null) {
+            try {
+                headers.setJMSDeliveryMode(Integer.valueOf(deliveryMode));
             } catch (NumberFormatException nfe) {
-                throw new LoaderException(deliveryMode + "is not a legal int value for JMSDeliveryMode" + nfe);
+                throw new InvalidValueException(deliveryMode + "is not a legal int value for JMSDeliveryMode", reader, nfe);
             }
         }
-      String priority = reader.getAttributeValue(null, "JMSPriority");
-      if(priority!=null){
-          try {
+        String priority = reader.getAttributeValue(null, "JMSPriority");
+        if (priority != null) {
+            try {
                 headers.setJMSPriority(Integer.valueOf(priority));
             } catch (NumberFormatException nfe) {
-                throw new LoaderException(priority + "is not a legal int value for JMSPriority" + nfe);
+                throw new InvalidValueException(priority + "is not a legal int value for JMSPriority", reader, nfe);
             }
-      }
-      String timeToLive = reader.getAttributeValue(null, "JMSTimeToLive");
-      if(timeToLive!=null){
-          try {
-              headers.setJMSTimeToLive(Long.valueOf(timeToLive));
-          } catch (NumberFormatException nfe) {
-              throw new LoaderException(timeToLive + "is not a legal long value for JMSTimeToLive" + nfe);
-          }
-      }
-      headers.setJMSType(reader.getAttributeValue(null, "JMSType"));
-      loadProperties(reader, headers, "headers");
-      return headers;
+        }
+        String timeToLive = reader.getAttributeValue(null, "JMSTimeToLive");
+        if (timeToLive != null) {
+            try {
+                headers.setJMSTimeToLive(Long.valueOf(timeToLive));
+            } catch (NumberFormatException nfe) {
+                throw new InvalidValueException(timeToLive + "is not a legal long value for JMSTimeToLive", reader, nfe);
+            }
+        }
+        headers.setJMSType(reader.getAttributeValue(null, "JMSType"));
+        loadProperties(reader, headers, "headers");
+        return headers;
     }
 
     /*
      * Loads operation properties.
      */
     private OperationPropertiesDefinition loadOperationProperties(XMLStreamReader reader) throws XMLStreamException, LoaderException {
-      OperationPropertiesDefinition optProperties = new OperationPropertiesDefinition();
-      optProperties.setName(reader.getAttributeValue(null, "name"));
-      optProperties.setNativeOperation(reader.getAttributeValue(null, "nativeOperation"));
-      String name;
-      while (true) {
-          switch (reader.next()) {
-          case START_ELEMENT:
-              name = reader.getName().getLocalPart();
-              if ("headers".equals(name)) {
-                  HeadersDefinition headersDefinition = loadHeaders(reader);
-                  optProperties.setHeaders(headersDefinition);
-              }else if ("property".equals(name)) {
-                  loadProperty(reader, optProperties);
-              }
-              break;
-          case END_ELEMENT:
-              name = reader.getName().getLocalPart();
-              if ("operationProperties".equals(name)) {
-                  return optProperties;
-              }
-              break;
-          }
-      }
+        OperationPropertiesDefinition optProperties = new OperationPropertiesDefinition();
+        optProperties.setName(reader.getAttributeValue(null, "name"));
+        optProperties.setNativeOperation(reader.getAttributeValue(null, "nativeOperation"));
+        String name;
+        while (true) {
+            switch (reader.next()) {
+            case START_ELEMENT:
+                name = reader.getName().getLocalPart();
+                if ("headers".equals(name)) {
+                    HeadersDefinition headersDefinition = loadHeaders(reader);
+                    optProperties.setHeaders(headersDefinition);
+                } else if ("property".equals(name)) {
+                    loadProperty(reader, optProperties);
+                }
+                break;
+            case END_ELEMENT:
+                name = reader.getName().getLocalPart();
+                if ("operationProperties".equals(name)) {
+                    return optProperties;
+                }
+                break;
+            }
+        }
 
     }
 

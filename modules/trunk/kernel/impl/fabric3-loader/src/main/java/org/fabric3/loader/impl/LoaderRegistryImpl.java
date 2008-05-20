@@ -24,7 +24,6 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 import javax.xml.namespace.QName;
-import javax.xml.stream.Location;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
@@ -84,7 +83,7 @@ public class LoaderRegistryImpl implements LoaderRegistry {
             loader = mappedLoaders.get(name);
         }
         if (loader == null) {
-            throw new UnrecognizedElementException(name);
+            throw new UnrecognizedElementException(reader);
         }
         return type.cast(loader.load(reader, introspectionContext));
     }
@@ -94,9 +93,7 @@ public class LoaderRegistryImpl implements LoaderRegistry {
         try {
             stream = url.openStream();
         } catch (IOException e) {
-            LoaderException sfe = new LoaderException(e);
-            sfe.setResourceURI(url.toString());
-            throw sfe;
+            throw new LoaderException("Invalid URL: " + url.toString(), e);
         }
         try {
             return load(url, stream, type, ctx);
@@ -114,7 +111,7 @@ public class LoaderRegistryImpl implements LoaderRegistry {
         try {
             reader = xmlFactory.createXMLStreamReader(url.toString(), stream);
         } catch (XMLStreamException e) {
-            throw new InvalidConfigurationException("Invalid or missing resource", url.toString(), e);
+            throw new InvalidConfigurationException("Invalid or missing resource:" + url.toString(), e);
         }
 
         try {
@@ -122,14 +119,8 @@ public class LoaderRegistryImpl implements LoaderRegistry {
                 reader.nextTag();
                 return load(reader, type, ctx);
             } catch (XMLStreamException e) {
-                throw new InvalidConfigurationException("Invalid or missing resource", url.toString(), e);
+                throw new InvalidConfigurationException("Invalid or missing resource: " + url.toString(), e);
             }
-        } catch (LoaderException e) {
-            Location location = reader.getLocation();
-            e.setResourceURI(location.getSystemId());
-            e.setLine(location.getLineNumber());
-            e.setColumn(location.getColumnNumber());
-            throw e;
         } finally {
             if (reader != null) {
                 try {

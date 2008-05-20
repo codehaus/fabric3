@@ -26,7 +26,7 @@ import javax.xml.stream.XMLStreamReader;
 import org.osoa.sca.annotations.EagerInit;
 
 import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.loader.common.MissingAttributeException;
+import org.fabric3.introspection.xml.MissingAttributeException;
 import org.fabric3.introspection.xml.TypeLoader;
 import org.fabric3.spi.services.contribution.QNameImport;
 
@@ -42,7 +42,7 @@ public class QNameImportLoader implements TypeLoader<QNameImport> {
     public QNameImport load(XMLStreamReader reader, IntrospectionContext context) throws MissingAttributeException, XMLStreamException {
         String ns = reader.getAttributeValue(null, "namespace");
         if (ns == null) {
-            throw new MissingAttributeException("Namespace attribute must be specified", "namespace");
+            throw new MissingAttributeException("The namespace attribute must be specified", reader);
         }
         String location = reader.getAttributeValue(null, "location");
         QNameImport contributionImport = new QNameImport(new QName(ns));

@@ -62,18 +62,19 @@ public class ComponentReferenceLoader implements TypeLoader<ComponentReference> 
     public ComponentReference load(XMLStreamReader reader, IntrospectionContext context) throws XMLStreamException, LoaderException {
         String name = reader.getAttributeValue(null, "name");
         if (name == null) {
-            throw new InvalidReferenceException("No reference name specified");
+            throw new InvalidReferenceException("No reference name specified", reader);
         }
         ComponentReference reference = new ComponentReference(name);
 
         boolean autowire = Boolean.parseBoolean(reader.getAttributeValue(null, "autowire"));
         reference.setAutowire(autowire);
 
+        String value = reader.getAttributeValue(null, "multiplicity");
         try {
-            Multiplicity multiplicity = Multiplicity.fromString(reader.getAttributeValue(null, "multiplicity"));
+            Multiplicity multiplicity = Multiplicity.fromString(value);
             reference.setMultiplicity(multiplicity);
         } catch (IllegalArgumentException e) {
-            throw new InvalidValueException(reader.getAttributeValue(null, "multiplicity"), "multiplicity");
+            throw new InvalidValueException("Invalid multiplicity value: " + value, reader);
         }
 
         String target = reader.getAttributeValue(null, "target");
@@ -109,7 +110,7 @@ public class ComponentReferenceLoader implements TypeLoader<ComponentReference> 
                 } else if (type instanceof OperationDefinition) {
                     reference.addOperation((OperationDefinition) type);
                 } else {
-                    throw new UnrecognizedElementException(reader.getName());
+                    throw new UnrecognizedElementException(reader);
                 }
                 break;
             case XMLStreamConstants.END_ELEMENT:

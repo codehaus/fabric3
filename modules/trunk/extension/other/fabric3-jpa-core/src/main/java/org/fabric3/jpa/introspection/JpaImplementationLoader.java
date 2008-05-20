@@ -35,11 +35,11 @@ import org.fabric3.introspection.TypeMapping;
 import org.fabric3.introspection.contract.ContractProcessor;
 import org.fabric3.introspection.contract.InvalidServiceContractException;
 import org.fabric3.introspection.xml.LoaderException;
+import org.fabric3.introspection.xml.MissingAttributeException;
 import org.fabric3.introspection.xml.TypeLoader;
 import org.fabric3.java.introspection.JavaImplementationProcessor;
 import org.fabric3.java.scdl.JavaImplementation;
 import org.fabric3.jpa.scdl.PersistenceContextResource;
-import org.fabric3.pojo.processor.ProcessingException;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.FieldInjectionSite;
 import org.fabric3.scdl.ServiceContract;
@@ -79,7 +79,7 @@ public class JpaImplementationLoader implements TypeLoader<JavaImplementation> {
         
             String persistenceUnit = reader.getAttributeValue(null, "persistenceUnit");
             if (persistenceUnit == null) {
-                throw new LoaderException("Missing attribute: persistenceUnit");
+                throw new MissingAttributeException("Missing attribute: persistenceUnit", reader);
             }
             
             JavaImplementation implementation = new JavaImplementation();
@@ -101,9 +101,9 @@ public class JpaImplementationLoader implements TypeLoader<JavaImplementation> {
             return implementation; 
             
         } catch (IntrospectionException e) {
-            throw new ProcessingException(e);
+            throw new LoaderException(reader, e);
         } catch (NoSuchFieldException e) {
-            throw new ProcessingException(e);
+            throw new LoaderException(reader, e);
         }
         
     }

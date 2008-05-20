@@ -18,10 +18,10 @@
  */
 package org.fabric3.web.introspection;
 
+import java.io.FileNotFoundException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Map;
-import java.io.FileNotFoundException;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
@@ -34,14 +34,14 @@ import org.fabric3.introspection.DefaultIntrospectionContext;
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.IntrospectionException;
 import org.fabric3.introspection.validation.InvalidComponentTypeException;
+import org.fabric3.introspection.validation.ValidationException;
 import org.fabric3.introspection.xml.LoaderException;
 import org.fabric3.introspection.xml.LoaderRegistry;
 import org.fabric3.introspection.xml.LoaderUtil;
 import org.fabric3.introspection.xml.TypeLoader;
 import org.fabric3.scdl.ComponentType;
-import org.fabric3.scdl.ReferenceDefinition;
 import org.fabric3.scdl.Property;
-import org.fabric3.introspection.validation.ValidationException;
+import org.fabric3.scdl.ReferenceDefinition;
 import org.fabric3.scdl.ValidationContext;
 
 /**
@@ -80,7 +80,7 @@ public class WebComponentLoader implements TypeLoader<WebImplementation> {
             // intropect
             introspector.introspect(impl, introspectionContext);
         } catch (IntrospectionException e) {
-            throw new LoaderException(e);
+            throw new LoaderException(reader, e);
         }
 
         try {
@@ -105,7 +105,7 @@ public class WebComponentLoader implements TypeLoader<WebImplementation> {
                 throw e;
             }
         } catch (ValidationException e) {
-            throw new LoaderException(e);
+            throw new LoaderException(reader, e);
         }
         LoaderUtil.skipToEndElement(reader);
         return impl;

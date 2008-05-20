@@ -32,7 +32,7 @@ import org.fabric3.introspection.xml.LoaderException;
 import org.fabric3.introspection.xml.LoaderHelper;
 import org.fabric3.introspection.xml.LoaderUtil;
 import org.fabric3.introspection.xml.TypeLoader;
-import org.fabric3.loader.common.MissingAttributeException;
+import org.fabric3.introspection.xml.MissingAttributeException;
 import org.fabric3.scdl.DataType;
 import org.fabric3.scdl.PropertyValue;
 import org.fabric3.spi.model.type.XSDSimpleType;
@@ -51,7 +51,7 @@ public class PropertyValueLoader implements TypeLoader<PropertyValue> {
             throws XMLStreamException, LoaderException {
         String name = reader.getAttributeValue(null, "name");
         if (name == null || name.length() == 0) {
-            throw new MissingAttributeException("Missing name attribute");
+            throw new MissingAttributeException("Missing name attribute", reader);
         }
 
         String source = reader.getAttributeValue(null, "source");
@@ -68,8 +68,7 @@ public class PropertyValueLoader implements TypeLoader<PropertyValue> {
                 LoaderUtil.skipToEndElement(reader);
                 return new PropertyValue(name, uri);
             } catch (URISyntaxException e) {
-                throw new InvalidValueException(file, name, e);
-
+                throw new InvalidValueException("File specified for property " + name + "is invalid: " + file, reader, e);
             }
         } else {
             return loadInlinePropertyValue(name, reader, context);
@@ -83,7 +82,7 @@ public class PropertyValueLoader implements TypeLoader<PropertyValue> {
         String element = reader.getAttributeValue(null, "element");
         if (type != null) {
             if (element != null) {
-                throw new InvalidValueException("Cannot supply both type and element for property ", name);
+                throw new InvalidValueException("Cannot supply both type and element for property: " + name, reader);
             }
             // TODO support type attribute
             throw new UnsupportedOperationException();

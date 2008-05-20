@@ -16,28 +16,18 @@
  */
 package org.fabric3.loader.composite;
 
+import javax.xml.stream.XMLStreamReader;
+
+import org.fabric3.introspection.xml.LoaderException;
+
 /**
  * @version $Rev$ $Date$
  */
-public class ComponentReferenceNotFoundException extends CompositeLoaderException {
+public class ComponentReferenceNotFoundException extends LoaderException {
     private static final long serialVersionUID = -8504271004179432246L;
-    private final String componentName;
-    private final String name;
 
-    public ComponentReferenceNotFoundException(String componentName, String name) {
-        this.componentName = componentName;
-        this.name = name;
+    public ComponentReferenceNotFoundException(String message, XMLStreamReader reader) {
+        super(message, reader);
     }
 
-    public String getComponentName() {
-        return componentName;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getMessage() {
-        return "The component type for component " + componentName + " does not have a reference " + name;
-    }
 }

@@ -106,7 +106,7 @@ public class DefaultLoaderHelper implements LoaderHelper {
             String localPart = name.substring(index + 1);
             String ns = reader.getNamespaceContext().getNamespaceURI(prefix);
             if (ns == null) {
-                throw new InvalidPrefixException("Invalid prefix: " + prefix, prefix);
+                throw new InvalidPrefixException("Invalid prefix: " + prefix, reader);
             }
             qName = new QName(ns, localPart, prefix);
         } else {

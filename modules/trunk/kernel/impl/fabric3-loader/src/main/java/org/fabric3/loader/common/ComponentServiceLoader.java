@@ -35,6 +35,7 @@ import org.fabric3.introspection.xml.LoaderException;
 import org.fabric3.introspection.xml.LoaderHelper;
 import org.fabric3.introspection.xml.TypeLoader;
 import org.fabric3.introspection.xml.UnrecognizedElementException;
+import org.fabric3.introspection.xml.MissingAttributeException;
 
 /**
  * Loads a service definition from an XML-based assembly file
@@ -57,7 +58,7 @@ public class ComponentServiceLoader implements TypeLoader<ComponentService> {
 
         String name = reader.getAttributeValue(null, "name");
         if (name == null) {
-            throw new MissingAttributeException("Missing name attribute");
+            throw new MissingAttributeException("Missing name attribute", reader);
         }
         ComponentService def = new ComponentService(name, null);
 
@@ -84,7 +85,7 @@ public class ComponentServiceLoader implements TypeLoader<ComponentService> {
                 } else if (type instanceof OperationDefinition) {
                     def.addOperation((OperationDefinition) type);
                 } else {
-                    throw new UnrecognizedElementException(reader.getName());
+                    throw new UnrecognizedElementException(reader);
                 }
                 break;
             case XMLStreamConstants.END_ELEMENT:

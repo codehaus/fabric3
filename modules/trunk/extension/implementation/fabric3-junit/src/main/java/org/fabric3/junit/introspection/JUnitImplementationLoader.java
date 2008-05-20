@@ -30,7 +30,6 @@ import org.fabric3.introspection.xml.LoaderException;
 import org.fabric3.introspection.xml.LoaderUtil;
 import org.fabric3.introspection.xml.TypeLoader;
 import org.fabric3.junit.scdl.JUnitImplementation;
-import org.fabric3.pojo.processor.ProcessingException;
 
 /**
  * @version $Rev$ $Date$
@@ -53,7 +52,7 @@ public class JUnitImplementationLoader implements TypeLoader<JUnitImplementation
         try {
             implementationProcessor.introspect(impl, introspectionContext);
         } catch (IntrospectionException e) {
-            throw new ProcessingException(e);
+            throw new LoaderException(reader, e);
         }
         return impl;
     }

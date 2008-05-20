@@ -50,7 +50,7 @@ public class EjbBindingLoader implements TypeLoader<EjbBindingDefinition> {
 
         String uri = reader.getAttributeValue(null, "uri");
 
-        EjbBindingDefinition bd = new EjbBindingDefinition(createURI(uri));
+        EjbBindingDefinition bd = new EjbBindingDefinition(createURI(uri, reader));
 
         String homeInterface = reader.getAttributeValue(null, "homeInterface");
         bd.setHomeInterface(homeInterface);
@@ -71,7 +71,7 @@ public class EjbBindingLoader implements TypeLoader<EjbBindingDefinition> {
         bd.setEjb3(isEjb3);
 
         if (!isEjb3 && homeInterface == null) {
-            throw new LoaderException("homeInterface must be specified for EJB 2.x bindings");
+            throw new LoaderException("homeInterface must be specified for EJB 2.x bindings", reader);
         }
 
         bd.setName(reader.getAttributeValue(null, "name"));
@@ -82,7 +82,7 @@ public class EjbBindingLoader implements TypeLoader<EjbBindingDefinition> {
 
     }
 
-    private URI createURI(String uri) throws LoaderException {
+    private URI createURI(String uri, XMLStreamReader reader) throws LoaderException {
         if (uri == null) return null;
 
         // In EJB 3, the @Stateless & @Stateful annotations contain an attribute named mappedName.
@@ -106,7 +106,7 @@ public class EjbBindingLoader implements TypeLoader<EjbBindingDefinition> {
         try {
             return new URI(uri);
         } catch (URISyntaxException ex) {
-            throw new LoaderException(ex);
+            throw new LoaderException(reader, ex);
         }
     }
 

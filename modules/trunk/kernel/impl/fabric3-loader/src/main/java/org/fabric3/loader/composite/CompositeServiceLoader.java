@@ -28,7 +28,7 @@ import static org.osoa.sca.Constants.SCA_NS;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.loader.common.MissingAttributeException;
+import org.fabric3.introspection.xml.MissingAttributeException;
 import org.fabric3.scdl.BindingDefinition;
 import org.fabric3.scdl.CompositeService;
 import org.fabric3.scdl.ModelObject;
@@ -59,7 +59,7 @@ public class CompositeServiceLoader implements TypeLoader<CompositeService> {
             throws XMLStreamException, LoaderException {
         String name = reader.getAttributeValue(null, "name");
         if (name == null) {
-            throw new MissingAttributeException("Service name not specified: ", name);
+            throw new MissingAttributeException("Service name not specified", reader);
         }
         String promote = reader.getAttributeValue(null, "promote");
         CompositeService def = new CompositeService(name, null, loaderHelper.getURI(promote));
@@ -86,7 +86,7 @@ public class CompositeServiceLoader implements TypeLoader<CompositeService> {
                 } else if (type instanceof OperationDefinition) {
                     def.addOperation((OperationDefinition) type);
                 } else {
-                    throw new UnrecognizedElementException(reader.getName());
+                    throw new UnrecognizedElementException(reader);
                 }
                 break;
             case END_ELEMENT:

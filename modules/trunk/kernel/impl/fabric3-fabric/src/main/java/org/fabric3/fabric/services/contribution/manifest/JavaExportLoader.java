@@ -39,7 +39,7 @@ public class JavaExportLoader implements TypeLoader<JavaExport> {
     public JavaExport load(XMLStreamReader reader, IntrospectionContext context) throws XMLStreamException, LoaderException {
         String packageName = reader.getAttributeValue(null, "package");
         if (packageName == null) {
-            throw new MissingPackageException("No package name specified");
+            throw new MissingPackageException("No package name specified", reader);
         }
         return new JavaExport(packageName);
     }

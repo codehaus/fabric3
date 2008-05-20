@@ -30,7 +30,6 @@ import org.fabric3.introspection.xml.LoaderHelper;
 import org.fabric3.introspection.xml.LoaderUtil;
 import org.fabric3.introspection.xml.MissingResourceException;
 import org.fabric3.introspection.xml.TypeLoader;
-import org.fabric3.pojo.processor.ProcessingException;
 
 /**
  * @version $Rev$ $Date$
@@ -54,7 +53,7 @@ public class GroovyImplementationLoader implements TypeLoader<GroovyImplementati
         String scriptName = reader.getAttributeValue(null, "script");
 
         if (className == null && scriptName == null) {
-            throw new MissingResourceException("No Groovy script or class name");
+            throw new MissingResourceException("No Groovy script or class name", reader);
         }
 
 /*
@@ -70,7 +69,7 @@ public class GroovyImplementationLoader implements TypeLoader<GroovyImplementati
         try {
             processor.introspect(impl, context);
         } catch (IntrospectionException e) {
-            throw new ProcessingException(e);
+            throw new LoaderException(reader, e);
         }
 
         LoaderUtil.skipToEndElement(reader);

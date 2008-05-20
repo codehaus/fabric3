@@ -19,6 +19,7 @@
 package org.fabric3.introspection.xml;
 
 import javax.xml.namespace.QName;
+import javax.xml.stream.XMLStreamReader;
 
 /**
  * Exception that indicates an element was encountered that could not be handled.
@@ -30,14 +31,13 @@ public class UnrecognizedElementException extends LoaderException {
     private final QName element;
 
     /**
-     * Constructor that indicates which resource could not be found. The supplied parameter is also returned as the
-     * message.
+     * Constructor that indicates which resource could not be found. The supplied parameter is also returned as the message.
      *
-     * @param element the element that could not be handled
+     * @param reader the StAX reader positioned on the unrecognized element
      */
-    public UnrecognizedElementException(QName element) {
-        super("Unrecognized element", element.toString());
-        this.element = element;
+    public UnrecognizedElementException(XMLStreamReader reader) {
+        super("Unrecognized element", reader);
+        this.element = reader.getName();
     }
 
     public QName getElement() {

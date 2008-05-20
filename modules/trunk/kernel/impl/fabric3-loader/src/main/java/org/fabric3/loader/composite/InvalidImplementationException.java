@@ -18,6 +18,8 @@
  */
 package org.fabric3.loader.composite;
 
+import javax.xml.stream.XMLStreamReader;
+
 import org.fabric3.introspection.xml.LoaderException;
 
 /**
@@ -25,19 +27,11 @@ import org.fabric3.introspection.xml.LoaderException;
  *
  * @version $Rev$ $Date$
  */
-public class InvalidImplementationException extends CompositeLoaderException {
-    private final String componentName;
+public class InvalidImplementationException extends LoaderException {
+    private static final long serialVersionUID = 8580878285554313793L;
 
-    public InvalidImplementationException(String componentName, LoaderException cause) {
-        super(cause);
-        this.componentName = componentName;
+    public InvalidImplementationException(String message, XMLStreamReader reader, LoaderException cause) {
+        super(message, reader, cause);
     }
 
-    public String getComponentName() {
-        return componentName;
-    }
-
-    public String getMessage() {
-        return "Invalid implementation for component: " + componentName;
-    }
 }

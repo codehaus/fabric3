@@ -18,26 +18,16 @@
  */
 package org.fabric3.introspection.xml;
 
+import javax.xml.stream.XMLStreamReader;
+
 /**
  * @version $Rev$ $Date$
  */
 public class InvalidReferenceException extends LoaderException {
     private static final long serialVersionUID = -4346666572527197558L;
 
-    public InvalidReferenceException(String message) {
-        super(message);
-    }
-
-    public InvalidReferenceException(String message, String identifier) {
-        super(message, identifier);
-    }
-
-    public InvalidReferenceException(String message, String identifier, Throwable cause) {
-        super(message, identifier, cause);
-    }
-
-    public InvalidReferenceException(Throwable cause) {
-        super(cause);
+    public InvalidReferenceException(String message, XMLStreamReader reader) {
+        super(message, reader);
     }
 
 }

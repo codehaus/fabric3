@@ -16,6 +16,8 @@
  */
 package org.fabric3.loader.composite;
 
+import javax.xml.stream.XMLStreamReader;
+
 import org.fabric3.introspection.xml.LoaderException;
 
 /**
@@ -24,7 +26,7 @@ import org.fabric3.introspection.xml.LoaderException;
 public class DuplicateReferenceException extends LoaderException {
     private static final long serialVersionUID = -1635475341693729845L;
 
-    public DuplicateReferenceException(String message, String identifier) {
-        super(message, identifier);
+    public DuplicateReferenceException(String message, XMLStreamReader reader) {
+        super(message, reader);
     }
 }

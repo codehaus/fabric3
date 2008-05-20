@@ -19,6 +19,7 @@ package org.fabric3.loader.composite;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
+import javax.xml.stream.Location;
 
 import junit.framework.TestCase;
 import org.easymock.EasyMock;
@@ -53,7 +54,7 @@ public class CompositeLoaderDuplicatePropertyTestCase extends TestCase {
         try {
             loader.load(reader, ctx);
         } catch (DuplicatePropertyException e) {
-            assertEquals(PROP_NAME, e.getIdentifier());
+            // fail
         }
     }
 
@@ -106,6 +107,8 @@ public class CompositeLoaderDuplicatePropertyTestCase extends TestCase {
 
     private XMLStreamReader createReader() throws XMLStreamException {
         XMLStreamReader reader = EasyMock.createMock(XMLStreamReader.class);
+        Location location = EasyMock.createNiceMock(Location.class);
+        EasyMock.replay(location);
         EasyMock.expect(reader.getNamespaceContext()).andStubReturn(null);
         EasyMock.expect(reader.getAttributeValue(null, "name")).andReturn("comppsite");
         EasyMock.expect(reader.getAttributeValue(null, "targetNamespace")).andReturn("http:///somenamepace");
@@ -119,6 +122,7 @@ public class CompositeLoaderDuplicatePropertyTestCase extends TestCase {
         EasyMock.expect(reader.nextTag()).andReturn(1);
         EasyMock.expect(reader.next()).andReturn(1);
         EasyMock.expect(reader.getName()).andReturn(new QName(SCA_NS, "property"));
+        EasyMock.expect(reader.getLocation()).andReturn(location);
         EasyMock.replay(reader);
         return reader;
     }

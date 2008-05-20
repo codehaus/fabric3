@@ -16,28 +16,19 @@
  */
 package org.fabric3.loader.composite;
 
+import javax.xml.stream.XMLStreamReader;
+
+import org.fabric3.introspection.xml.LoaderException;
+
 /**
  * @version $Rev$ $Date$
  */
-public class ComponentPropertyNotFoundException extends CompositeLoaderException {
+public class ComponentPropertyNotFoundException extends LoaderException {
     private static final long serialVersionUID = -6052356261652955167L;
-    private final String componentName;
-    private final String name;
 
-    public ComponentPropertyNotFoundException(String componentName, String name) {
-        this.componentName = componentName;
-        this.name = name;
+    public ComponentPropertyNotFoundException(String message, XMLStreamReader reader) {
+        super(message, reader);
     }
 
-    public String getComponentName() {
-        return componentName;
-    }
 
-    public String getName() {
-        return name;
-    }
-
-    public String getMessage() {
-        return "The component type for component " + componentName + " does not have a property " + name;
-    }
 }

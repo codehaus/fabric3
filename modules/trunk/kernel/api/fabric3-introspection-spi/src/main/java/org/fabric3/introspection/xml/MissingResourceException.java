@@ -18,9 +18,10 @@
  */
 package org.fabric3.introspection.xml;
 
+import javax.xml.stream.XMLStreamReader;
+
 /**
- * Exception that indicates an expected resource could not be found. The message should be set to the name of the
- * resource.
+ * Exception that indicates an expected resource could not be found. The message should be set to the name of the resource.
  *
  * @version $Rev$ $Date$
  */
@@ -28,40 +29,24 @@ public class MissingResourceException extends LoaderException {
     private static final long serialVersionUID = 3775013318397916445L;
 
     /**
-     * Constructor that indicates which resource could not be found. The supplied parameter is also returned as the
-     * message.
+     * Constructor that indicates which resource could not be found.
      *
-     * @param resource the resource that could not be found
+     * @param message the message
+     * @param reader  the StAX reader
      */
-    public MissingResourceException(String resource) {
-        super("Missing resource", resource);
-    }
-
-    public MissingResourceException(String message, String identifier) {
-        super(message, identifier);
+    public MissingResourceException(String message, XMLStreamReader reader) {
+        super(message, reader);
     }
 
     /**
-     * Constructor that indicates which resource could not be found. The supplied parameter is also returned as the
-     * message.
+     * Constructor that indicates which resource could not be found.
      *
-     * @param resource the resource that could not be found
-     * @param cause    the error thrown resolving the resource
+     * @param message the message
+     * @param reader  the StAX reader
+     * @param cause   the error thrown resolving the resource
      */
-    public MissingResourceException(String resource, Throwable cause) {
-        super("Missing resource", resource, cause);
+    public MissingResourceException(String message, XMLStreamReader reader, Throwable cause) {
+        super(message, reader, cause);
     }
 
-
-    /**
-     * Constructor that indicates which resource could not be found. The supplied parameter is also returned as the
-     * message.
-     *
-     * @param message    the message set on the exception
-     * @param identifier the resource that could not be found
-     * @param cause      the error thrown resolving the resource
-     */
-    public MissingResourceException(String message, String identifier, Throwable cause) {
-        super(message, identifier, cause);
-    }
 }

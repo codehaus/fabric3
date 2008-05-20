@@ -60,18 +60,19 @@ public class CompositeReferenceLoader implements TypeLoader<CompositeReference> 
 
         String name = reader.getAttributeValue(null, "name");
         if (name == null) {
-            throw new InvalidValueException("Reference name not specified", name);
+            throw new InvalidValueException("Reference name not specified", reader);
         }
 
         List<URI> promotedUris = loaderHelper.parseListOfUris(reader, "promote");
         CompositeReference referenceDefinition = new CompositeReference(name, promotedUris);
         loaderHelper.loadPolicySetsAndIntents(referenceDefinition, reader);
 
+        String value = reader.getAttributeValue(null, "multiplicity");
         try {
-            Multiplicity multiplicity = Multiplicity.fromString(reader.getAttributeValue(null, "multiplicity"));
+            Multiplicity multiplicity = Multiplicity.fromString(value);
             referenceDefinition.setMultiplicity(multiplicity);
         } catch (IllegalArgumentException e) {
-            throw new InvalidValueException(reader.getAttributeValue(null, "multiplicity"), "multiplicity");
+            throw new InvalidValueException("Invalid multiplicity value: " + value, reader);
         }
         boolean callback = false;
         while (true) {
@@ -94,7 +95,7 @@ public class CompositeReferenceLoader implements TypeLoader<CompositeReference> 
                 } else if (type instanceof OperationDefinition) {
                     referenceDefinition.addOperation((OperationDefinition) type);
                 } else {
-                    throw new UnrecognizedElementException(reader.getName());
+                    throw new UnrecognizedElementException(reader);
                 }
                 break;
             case XMLStreamConstants.END_ELEMENT:

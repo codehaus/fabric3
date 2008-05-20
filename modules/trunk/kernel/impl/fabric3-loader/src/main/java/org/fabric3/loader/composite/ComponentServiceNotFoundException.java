@@ -16,28 +16,18 @@
  */
 package org.fabric3.loader.composite;
 
+import javax.xml.stream.XMLStreamReader;
+
+import org.fabric3.introspection.xml.LoaderException;
+
 /**
  * @version $Rev$ $Date$
  */
-public class ComponentServiceNotFoundException extends CompositeLoaderException {
+public class ComponentServiceNotFoundException extends LoaderException {
     private static final long serialVersionUID = 2466623032616409398L;
-    private final String componentName;
-    private final String name;
 
-    public ComponentServiceNotFoundException(String componentName, String name) {
-        this.componentName = componentName;
-        this.name = name;
+    public ComponentServiceNotFoundException(String message, XMLStreamReader reader) {
+        super(message, reader);
     }
 
-    public String getComponentName() {
-        return componentName;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getMessage() {
-        return "The component type for component " + componentName + " does not have a service " + name;
-    }
 }

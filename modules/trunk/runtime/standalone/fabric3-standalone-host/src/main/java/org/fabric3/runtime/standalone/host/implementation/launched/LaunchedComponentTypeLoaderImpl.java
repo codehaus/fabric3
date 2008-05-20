@@ -26,7 +26,6 @@ import java.util.List;
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.xml.LoaderException;
 import org.fabric3.introspection.xml.MissingResourceException;
-import org.fabric3.pojo.processor.ProcessingException;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.DataType;
 import org.fabric3.scdl.Operation;
@@ -43,22 +42,23 @@ public class LaunchedComponentTypeLoaderImpl implements LaunchedComponentTypeLoa
     }
 
     public void load(Launched implementation, IntrospectionContext introspectionContext) throws LoaderException {
-        String className = implementation.getImplementationClass();
-        Class<?> implClass;
-        try {
-            implClass = introspectionContext.getTargetClassLoader().loadClass(className);
-        } catch (ClassNotFoundException e) {
-            throw new MissingResourceException(className, e);
-        }
-        PojoComponentType componentType = loadByIntrospection(implementation, introspectionContext, implClass);
-        componentType.setScope("COMPOSITE");
-        implementation.setComponentType(componentType);
+        throw new UnsupportedOperationException();
+//        String className = implementation.getImplementationClass();
+//        Class<?> implClass;
+//        try {
+//            implClass = introspectionContext.getTargetClassLoader().loadClass(className);
+//        } catch (ClassNotFoundException e) {
+//            throw new MissingResourceException(className, e);
+//        }
+//        PojoComponentType componentType = loadByIntrospection(implementation, introspectionContext, implClass);
+//        componentType.setScope("COMPOSITE");
+//        implementation.setComponentType(componentType);
     }
 
     protected PojoComponentType loadByIntrospection(
             Launched implementation,
             IntrospectionContext introspectionContext,
-            Class<?> implClass) throws ProcessingException {
+            Class<?> implClass) {
         PojoComponentType componentType = new PojoComponentType(implClass.getName());
         // FIXME we need to introspect the implementation here
 //        introspector.introspect(implClass, componentType, introspectionContext);

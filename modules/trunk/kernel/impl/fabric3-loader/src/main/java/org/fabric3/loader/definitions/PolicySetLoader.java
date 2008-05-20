@@ -91,7 +91,7 @@ public class PolicySetLoader implements TypeLoader<PolicySet> {
             return new PolicySet(qName, provides, appliesTo, extension, phase);
             
         } catch(Exception ex) {
-            throw new LoaderException(ex);
+            throw new LoaderException(reader, ex);
         }
         
     }

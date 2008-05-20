@@ -33,16 +33,16 @@ import org.osoa.sca.annotations.Reference;
 import org.fabric3.introspection.DefaultIntrospectionContext;
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.validation.InvalidCompositeException;
+import org.fabric3.introspection.validation.ValidationException;
 import org.fabric3.introspection.xml.Loader;
 import org.fabric3.introspection.xml.LoaderException;
 import org.fabric3.introspection.xml.LoaderRegistry;
 import org.fabric3.introspection.xml.LoaderUtil;
+import org.fabric3.introspection.xml.MissingAttributeException;
 import org.fabric3.introspection.xml.MissingResourceException;
 import org.fabric3.introspection.xml.TypeLoader;
-import org.fabric3.loader.common.MissingAttributeException;
 import org.fabric3.scdl.Composite;
 import org.fabric3.scdl.CompositeImplementation;
-import org.fabric3.introspection.validation.ValidationException;
 import org.fabric3.scdl.ValidationContext;
 import org.fabric3.spi.services.contribution.MetaDataStore;
 import org.fabric3.spi.services.contribution.MetaDataStoreException;
@@ -60,7 +60,7 @@ public class ImplementationCompositeLoader implements TypeLoader<CompositeImplem
     private final LoaderRegistry registry;
     private final MetaDataStore store;
 
-    public ImplementationCompositeLoader(@Reference LoaderRegistry loader, @Reference(required = false) MetaDataStore store) {
+    public ImplementationCompositeLoader(@Reference LoaderRegistry loader, @Reference(required = false)MetaDataStore store) {
         this.loader = loader;
         this.registry = loader;
         this.store = store;
@@ -82,7 +82,7 @@ public class ImplementationCompositeLoader implements TypeLoader<CompositeImplem
         assert CompositeImplementation.IMPLEMENTATION_COMPOSITE.equals(reader.getName());
         String nameAttr = reader.getAttributeValue(null, "name");
         if (nameAttr == null || nameAttr.length() == 0) {
-            throw new MissingAttributeException("Missing name attribute");
+            throw new MissingAttributeException("Missing name attribute", reader);
         }
         QName name = LoaderUtil.getQName(nameAttr, introspectionContext.getTargetNamespace(), reader.getNamespaceContext());
         String scdlLocation = reader.getAttributeValue(null, "scdlLocation");
@@ -97,22 +97,22 @@ public class ImplementationCompositeLoader implements TypeLoader<CompositeImplem
             try {
                 url = new URL(introspectionContext.getSourceBase(), scdlLocation);
             } catch (MalformedURLException e) {
-                throw new MissingResourceException(scdlLocation, scdlLocation, e);
+                throw new MissingResourceException("SCDL location is invalid: " + scdlLocation, reader, e);
             }
             IntrospectionContext childContext = new DefaultIntrospectionContext(cl, contributionUri, url);
             Composite composite = loader.load(url, Composite.class, childContext);
-            validate(composite, url);
+            validate(composite, url, reader);
             impl.setName(composite.getName());
             impl.setComponentType(composite);
             return impl;
         } else if (scdlResource != null) {
             url = cl.getResource(scdlResource);
             if (url == null) {
-                throw new MissingResourceException(scdlResource, scdlResource);
+                throw new MissingResourceException("SCDL not found: " + scdlResource, reader);
             }
             IntrospectionContext childContext = new DefaultIntrospectionContext(cl, contributionUri, url);
             Composite composite = loader.load(url, Composite.class, childContext);
-            validate(composite, url);
+            validate(composite, url, reader);
             impl.setName(composite.getName());
             impl.setComponentType(composite);
             return impl;
@@ -126,24 +126,23 @@ public class ImplementationCompositeLoader implements TypeLoader<CompositeImplem
                 QNameSymbol symbol = new QNameSymbol(name);
                 ResourceElement<QNameSymbol, Composite> element = store.resolve(contributionUri, Composite.class, symbol);
                 if (element == null) {
-                    String identifier = name.toString();
-                    throw new MissingResourceException("Composite not found :" + identifier, identifier);
+                    throw new MissingResourceException("Composite not found :" + name, reader);
                 }
                 impl.setComponentType(element.getValue());
                 return impl;
             } catch (MetaDataStoreException e) {
-                throw new LoaderException(e);
+                throw new LoaderException(reader, e);
             }
         }
 
     }
 
-    private void validate(Composite composite, URL url) throws LoaderException {
+    private void validate(Composite composite, URL url, XMLStreamReader reader) throws LoaderException {
         ValidationContext validationContext = new ValidationContext();
         composite.validate(validationContext);
         if (validationContext.hasErrors()) {
             ValidationException ve = new InvalidCompositeException(composite, validationContext.getErrors());
-            throw new LoaderException("Invalid composite", url.toString(), ve);
+            throw new LoaderException("Invalid composite: " + url.toString(), reader, ve);
         }
     }
 }

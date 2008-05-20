@@ -18,6 +18,9 @@
  */
 package org.fabric3.introspection.xml;
 
+import javax.xml.stream.XMLStreamReader;
+import javax.xml.stream.Location;
+
 import org.fabric3.introspection.IntrospectionException;
 
 /**
@@ -29,31 +32,39 @@ import org.fabric3.introspection.IntrospectionException;
 public class LoaderException extends IntrospectionException {
     public static final int UNDEFINED = -1;
     private static final long serialVersionUID = -7459051598906813461L;
-    private String resourceURI;
-    private int line = UNDEFINED;
-    private int column = UNDEFINED;
+    private final String resourceURI;
+    private final int line;
+    private final int column;
 
-    public LoaderException() {
-    }
-
-    public LoaderException(String message) {
+    public LoaderException(String message, XMLStreamReader reader) {
         super(message);
+        Location location = reader.getLocation();
+        line = location.getLineNumber();
+        column = location.getColumnNumber();
+        resourceURI = location.getSystemId();
     }
 
-    public LoaderException(String message, String identifier) {
-        super(message, identifier);
+    public LoaderException(String message, XMLStreamReader reader, Throwable cause) {
+        super(message, cause);
+        Location location = reader.getLocation();
+        line = location.getLineNumber();
+        column = location.getColumnNumber();
+        resourceURI = location.getSystemId();
+    }
+
+    public LoaderException(XMLStreamReader reader, Throwable cause) {
+        super(cause);
+        Location location = reader.getLocation();
+        line = location.getLineNumber();
+        column = location.getColumnNumber();
+        resourceURI = location.getSystemId();
     }
 
     public LoaderException(String message, Throwable cause) {
         super(message, cause);
-    }
-
-    public LoaderException(String message, String identifier, Throwable cause) {
-        super(message, identifier, cause);
-    }
-
-    public LoaderException(Throwable cause) {
-        super(cause);
+        line = UNDEFINED;
+        column = UNDEFINED;
+        resourceURI = null;
     }
 
     /**
@@ -65,29 +76,12 @@ public class LoaderException extends IntrospectionException {
         return resourceURI;
     }
 
-    /**
-     * Sets the location of the resource that was being loaded.
-     *
-     * @param resourceURI the location of the resource that was being loaded
-     */
-    public void setResourceURI(String resourceURI) {
-        this.resourceURI = resourceURI;
-    }
-
     public int getLine() {
         return line;
     }
 
-    public void setLine(int line) {
-        this.line = line;
-    }
-
     public int getColumn() {
         return column;
-    }
-
-    public void setColumn(int column) {
-        this.column = column;
     }
 
     public String toString() {

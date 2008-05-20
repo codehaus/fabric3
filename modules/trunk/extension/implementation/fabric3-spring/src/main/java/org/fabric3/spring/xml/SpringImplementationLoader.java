@@ -89,13 +89,13 @@ public class SpringImplementationLoader implements TypeLoader<SpringImplementati
         
         String location = reader.getAttributeValue(null, "location");
         if (location == null) {
-          throw new MissingResourceException("implementation.spring does not have required attribute 'location'");
+          throw new MissingResourceException("implementation.spring does not have required attribute 'location'", reader);
         }
         
         if (debug)
             System.out.println("####################location=" + location);
 
-        loadSpringAppContextXML(location, implementation, introspectionContext);
+        loadSpringAppContextXML(location, implementation, reader, introspectionContext);
         
 
         loaderHelper.loadPolicySetsAndIntents(implementation, reader);
@@ -107,10 +107,10 @@ public class SpringImplementationLoader implements TypeLoader<SpringImplementati
 
     }
 
-    private void loadSpringAppContextXML(String location, SpringImplementation implementation, IntrospectionContext introspectionContext)
+    private void loadSpringAppContextXML(String location, SpringImplementation implementation, XMLStreamReader originalReader, IntrospectionContext introspectionContext)
             throws LoaderException {
 
-        Resource ac = getApplicationContextResource(location);
+        Resource ac = getApplicationContextResource(location, originalReader);
         implementation.setResource(ac);
         
         if (debug)
@@ -184,15 +184,15 @@ public class SpringImplementationLoader implements TypeLoader<SpringImplementati
             }
 
         } catch (IOException e) {
-            throw new LoaderException(e);
+            throw new LoaderException(originalReader, e);
         } catch (XMLStreamException e) {
-            throw new LoaderException(e);
+            throw new LoaderException(originalReader, e);
         }
         
-        generateSpringComponentType(beans, implementation, introspectionContext);
+        generateSpringComponentType(beans, implementation, reader, introspectionContext);
     }
     
-    protected void generateSpringComponentType(List<SpringBeanElement> beanElements, SpringImplementation implementation, IntrospectionContext introspectionContext)
+    protected void generateSpringComponentType(List<SpringBeanElement> beanElements, SpringImplementation implementation, XMLStreamReader reader, IntrospectionContext introspectionContext)
             throws LoaderException {
         SpringComponentType springComponentType = implementation.getComponentType();
         
@@ -205,7 +205,7 @@ public class SpringImplementationLoader implements TypeLoader<SpringImplementati
             try {
                 implClass = introspectionHelper.loadClass(beanElement.getClassName(), introspectionContext.getTargetClassLoader());
             } catch (ImplementationNotFoundException e) {
-                throw new MissingResourceException(null, beanElement.getClassName(), e);
+                throw new MissingResourceException("Bean class not found: " + beanElement.getClassName(), reader, e);
             }
 
             PojoComponentType pojoComponentType = new PojoComponentType(implClass.getName());
@@ -232,14 +232,12 @@ public class SpringImplementationLoader implements TypeLoader<SpringImplementati
         implementation.setComponentType(springComponentType);
     }
 
-    protected Resource getApplicationContextResource(String location)
-            throws LoaderException {
+    protected Resource getApplicationContextResource(String location, XMLStreamReader reader) throws LoaderException {
 
         File locationFile = new File(location);
 
         if (!locationFile.exists()) {
-            throw new MissingResourceException("File or directory " + location
-                    + " doesn't exist.");
+            throw new MissingResourceException("File or directory " + location + " doesn't exist", reader);
         }
 
         if (locationFile.isFile()) {
@@ -270,7 +268,7 @@ public class SpringImplementationLoader implements TypeLoader<SpringImplementati
                 }
 
             } catch (IOException e) {
-                throw new MissingResourceException("Error reading file " + location, e);
+                throw new MissingResourceException("Error reading file: " + location, reader, e);
             }
             
         } else if (locationFile.isDirectory()) {
@@ -281,7 +279,7 @@ public class SpringImplementationLoader implements TypeLoader<SpringImplementati
                     try {
                         mf = new Manifest(new FileInputStream(mfFile));
                     } catch (IOException e) {
-                        throw new MissingResourceException("Error reading file " + location + "META-INF/MANIFEST.MF", e);
+                        throw new MissingResourceException("Error reading file: " + location + "META-INF/MANIFEST.MF", reader, e);
                     }
 
                     Attributes attributes = mf.getMainAttributes();
@@ -303,12 +301,12 @@ public class SpringImplementationLoader implements TypeLoader<SpringImplementati
                     return new UrlResource(acFile.toURL());
                 }
             } catch (MalformedURLException e) {
-                throw new MissingResourceException("Error path cannot be parsed as a URL", e);
+                throw new MissingResourceException("Path cannot be parsed as a URL", reader, e);
             }
             
         } else {
             throw new MissingResourceException("Specified location '" + location
-                + "' for implementation.spring is not a file or a directory.");
+                + "' for implementation.spring is not a file or a directory", reader);
         }
 
         return null;

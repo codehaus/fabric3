@@ -29,8 +29,8 @@ import org.fabric3.introspection.xml.LoaderException;
 import org.fabric3.introspection.xml.LoaderHelper;
 import org.fabric3.introspection.xml.LoaderUtil;
 import org.fabric3.introspection.xml.TypeLoader;
+import org.fabric3.introspection.xml.MissingAttributeException;
 import org.fabric3.java.scdl.JavaImplementation;
-import org.fabric3.pojo.processor.ProcessingException;
 
 /**
  * Loads <implementation.java> in a composite.
@@ -56,7 +56,7 @@ public class JavaImplementationLoader implements TypeLoader<JavaImplementation> 
         JavaImplementation implementation = new JavaImplementation();
         String implClass = reader.getAttributeValue(null, "class");
         if (implClass == null) {
-            throw new MissingClassException();
+            throw new MissingAttributeException("The class attribute was not specified", reader);
         }
         loaderHelper.loadPolicySetsAndIntents(implementation, reader);
         LoaderUtil.skipToEndElement(reader);
@@ -65,7 +65,7 @@ public class JavaImplementationLoader implements TypeLoader<JavaImplementation> 
         try {
             implementationProcessor.introspect(implementation, introspectionContext);
         } catch (IntrospectionException e) {
-            throw new ProcessingException(e);
+            throw new LoaderException(reader, e);
 
         }
         return implementation;

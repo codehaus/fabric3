@@ -51,7 +51,6 @@ public class BurlapBindingLoader implements TypeLoader<BurlapBindingDefinition> 
     /**
      * Constructor.
      *
-     * @param registry     Loader registry.
      * @param loaderHelper the policy helper
      */
     public BurlapBindingLoader(@Reference LoaderHelper loaderHelper) {
@@ -67,14 +66,14 @@ public class BurlapBindingLoader implements TypeLoader<BurlapBindingDefinition> 
 
             String uri = reader.getAttributeValue(null, "uri");
             if (uri == null) {
-                throw new LoaderException("The uri attribute is not specified");
+                throw new LoaderException("The uri attribute is not specified", reader);
             }
             bd = new BurlapBindingDefinition(new URI(uri));
 
             loaderHelper.loadPolicySetsAndIntents(bd, reader);
 
         } catch (URISyntaxException ex) {
-            throw new LoaderException(ex);
+            throw new LoaderException(reader, ex);
         }
 
         LoaderUtil.skipToEndElement(reader);

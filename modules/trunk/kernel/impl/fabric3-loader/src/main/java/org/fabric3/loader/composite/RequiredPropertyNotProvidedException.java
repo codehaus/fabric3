@@ -16,6 +16,8 @@
  */
 package org.fabric3.loader.composite;
 
+import javax.xml.stream.XMLStreamReader;
+
 import org.fabric3.introspection.xml.LoaderException;
 
 /**
@@ -23,23 +25,9 @@ import org.fabric3.introspection.xml.LoaderException;
  */
 public class RequiredPropertyNotProvidedException extends LoaderException {
     private static final long serialVersionUID = -7988707297586061655L;
-    private final String componentName;
-    private final String name;
 
-    public RequiredPropertyNotProvidedException(String componentName, String name) {
-        this.componentName = componentName;
-        this.name = name;
+    public RequiredPropertyNotProvidedException(String message, XMLStreamReader reader) {
+        super(message, reader);
     }
 
-    public String getComponentName() {
-        return componentName;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public String getMessage() {
-        return "Component '" + componentName + "' has a property '" + name + "' which requires that a value is supplied";
-    }
 }

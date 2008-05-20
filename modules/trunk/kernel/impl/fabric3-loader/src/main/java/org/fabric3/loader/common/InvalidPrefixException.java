@@ -18,6 +18,8 @@
  */
 package org.fabric3.loader.common;
 
+import javax.xml.stream.XMLStreamReader;
+
 import org.fabric3.introspection.xml.LoaderException;
 
 /**
@@ -28,8 +30,8 @@ import org.fabric3.introspection.xml.LoaderException;
 public class InvalidPrefixException extends LoaderException {
     private static final long serialVersionUID = -4896928793798546890L;
 
-    public InvalidPrefixException(String message, String identifier) {
-        super(message, identifier);
+    public InvalidPrefixException(String message, XMLStreamReader reader) {
+        super(message, reader);
     }
 
 }

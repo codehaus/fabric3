@@ -16,9 +16,9 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.loader.common;
+package org.fabric3.introspection.xml;
 
-import org.fabric3.introspection.xml.LoaderException;
+import javax.xml.stream.XMLStreamReader;
 
 /**
  * Denotes a missing attribute
@@ -28,12 +28,8 @@ import org.fabric3.introspection.xml.LoaderException;
 public class MissingAttributeException extends LoaderException {
     private static final long serialVersionUID = 1L;
 
-    public MissingAttributeException(String message) {
-        super(message);
-    }
-
-    public MissingAttributeException(String message, String identifier) {
-        super(message, identifier);
+    public MissingAttributeException(String message, XMLStreamReader reader) {
+        super(message, reader);
     }
 
 }

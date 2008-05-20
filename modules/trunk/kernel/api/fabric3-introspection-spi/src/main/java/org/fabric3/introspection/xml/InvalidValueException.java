@@ -18,28 +18,22 @@
  */
 package org.fabric3.introspection.xml;
 
+import javax.xml.stream.XMLStreamReader;
+
 /**
- * Exception that indicates the loader encountered an invalid value.
- * The message should be set to the invalid value.
+ * Exception that indicates the loader encountered an invalid value. The message should be set to the invalid value.
  *
  * @version $Rev$ $Date$
  */
 public class InvalidValueException extends LoaderException {
     private static final long serialVersionUID = 754253893069141986L;
 
-    public InvalidValueException(String message) {
-        super(message);
+    public InvalidValueException(String message, XMLStreamReader reader) {
+        super(message, reader);
     }
 
-    public InvalidValueException(String message, String identifier) {
-        super(message, identifier);
+    public InvalidValueException(String message, XMLStreamReader reader, Throwable cause) {
+        super(message, reader, cause);
     }
 
-    public InvalidValueException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
-    public InvalidValueException(String message, String identifier, Throwable cause) {
-        super(message, identifier, cause);
-    }
 }

@@ -24,17 +24,10 @@ package org.fabric3.introspection.xml;
  * @version $Rev$ $Date$
  */
 public class InvalidConfigurationException extends LoaderException {
+    private static final long serialVersionUID = 4920100037120175252L;
 
-    public InvalidConfigurationException(String message) {
-        super(message);
-    }
-
-    public InvalidConfigurationException(String message, String identifier) {
-        super(message, identifier);
-    }
-
-    public InvalidConfigurationException(String message, String identifier, Throwable cause) {
-        super(message, identifier, cause);
+    public InvalidConfigurationException(String message, Throwable cause) {
+        super(message, cause);
     }
 
 }

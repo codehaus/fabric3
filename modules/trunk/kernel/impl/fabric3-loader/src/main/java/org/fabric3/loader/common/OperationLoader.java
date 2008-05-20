@@ -48,7 +48,7 @@ public class OperationLoader implements TypeLoader<OperationDefinition> {
         
         String name = reader.getAttributeValue(null, "name");
         if (name == null) {
-            throw new InvalidValueException("operation name not supplied");
+            throw new InvalidValueException("Operation name not supplied", reader);
         }
         
         OperationDefinition operationDefinition = new OperationDefinition();

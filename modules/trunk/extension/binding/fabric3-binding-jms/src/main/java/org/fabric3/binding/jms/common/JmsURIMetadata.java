@@ -18,15 +18,12 @@
  */
 package org.fabric3.binding.jms.common;
 
+import java.net.URISyntaxException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.StringTokenizer;
 import java.util.regex.Pattern;
-/**
- * Model object which wraps properties configured in /binding.jms/@uri
- */
-import org.fabric3.introspection.xml.LoaderException;
 
 public class JmsURIMetadata {
     public final static String CONNECTIONFACORYNAME = "connectionFactoryName";
@@ -62,15 +59,14 @@ public class JmsURIMetadata {
      *
      * @param uri string for /binding.jms/@uri
      * @return a JmsURIMetadata
-     * @throws LoaderException Thrown when <code>uri</code> is not a valid format required by /binding.jms/@uri.
+     * @throws URISyntaxException Thrown when <code>uri</code> is not a valid format required by /binding.jms/@uri.
      */
-    public static JmsURIMetadata parseURI(String uri) throws LoaderException {
+    public static JmsURIMetadata parseURI(String uri) throws URISyntaxException {
         //TODO have a better validation
         boolean matches = Pattern.matches(
                 "jms:(.*?)[\\?(.*?)=(.*?)((&(.*?)=(.*?))*)]?", uri);
         if (!matches) {
-            throw new LoaderException(uri
-                    + " is not a valid URI format for binding.jms");
+            throw new URISyntaxException(uri, "Not a valid URI format for binding.jms");
         }
         return doParse(uri);
     }

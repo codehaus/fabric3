@@ -33,7 +33,7 @@ import org.osoa.sca.annotations.Reference;
 import org.fabric3.host.contribution.Constants;
 import org.fabric3.host.contribution.Deployable;
 import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.loader.common.MissingAttributeException;
+import org.fabric3.introspection.xml.MissingAttributeException;
 import org.fabric3.introspection.xml.LoaderException;
 import org.fabric3.introspection.xml.LoaderRegistry;
 import org.fabric3.introspection.xml.TypeLoader;
@@ -84,7 +84,7 @@ public class ContributionElementLoader implements TypeLoader<ContributionManifes
                 } else if (DEPLOYABLE.equals(element)) {
                     String name = reader.getAttributeValue(null, "composite");
                     if (name == null) {
-                        throw new MissingAttributeException("Composite attribute must be specified", "composite");
+                        throw new MissingAttributeException("Composite attribute must be specified", reader);
                     }
                     QName qName = helper.createQName(name, reader);
                     Deployable deployable = new Deployable(qName, Constants.COMPOSITE_TYPE);
@@ -97,7 +97,7 @@ public class ContributionElementLoader implements TypeLoader<ContributionManifes
                         contribution.addImport((Import) o);
                     } else if (o != null) {
                         String type = o.getClass().getName();
-                        throw new InvalidManifestTypeException("Unrecognized type: " + type, type);
+                        throw new InvalidManifestTypeException("Unrecognized type: " + type, reader);
                     }
                 }
                 break;

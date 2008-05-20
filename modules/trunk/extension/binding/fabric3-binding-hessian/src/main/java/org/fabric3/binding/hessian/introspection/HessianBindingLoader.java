@@ -30,8 +30,8 @@ import org.osoa.sca.annotations.Reference;
 import org.fabric3.binding.hessian.scdl.HessianBindingDefinition;
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.xml.LoaderException;
-import org.fabric3.introspection.xml.LoaderUtil;
 import org.fabric3.introspection.xml.LoaderHelper;
+import org.fabric3.introspection.xml.LoaderUtil;
 import org.fabric3.introspection.xml.TypeLoader;
 
 /**
@@ -59,20 +59,20 @@ public class HessianBindingLoader implements TypeLoader<HessianBindingDefinition
     public HessianBindingDefinition load(XMLStreamReader reader, IntrospectionContext introspectionContext)
             throws XMLStreamException, LoaderException {
 
-        HessianBindingDefinition bd = null;
+        HessianBindingDefinition bd;
 
         try {
 
             String uri = reader.getAttributeValue(null, "uri");
             if (uri == null) {
-                throw new LoaderException("The uri attribute is not specified");
+                throw new LoaderException("The uri attribute is not specified", reader);
             }
             bd = new HessianBindingDefinition(new URI(uri));
 
             loaderHelper.loadPolicySetsAndIntents(bd, reader);
 
         } catch (URISyntaxException ex) {
-            throw new LoaderException(ex);
+            throw new LoaderException(reader, ex);
         }
 
         LoaderUtil.skipToEndElement(reader);

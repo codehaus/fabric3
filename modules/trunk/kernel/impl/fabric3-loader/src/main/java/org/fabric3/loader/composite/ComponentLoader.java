@@ -52,7 +52,7 @@ import org.fabric3.introspection.xml.LoaderException;
 import org.fabric3.introspection.xml.LoaderUtil;
 import org.fabric3.introspection.xml.LoaderHelper;
 import org.fabric3.introspection.xml.TypeLoader;
-import org.fabric3.loader.common.MissingAttributeException;
+import org.fabric3.introspection.xml.MissingAttributeException;
 
 /**
  * Loads a component definition from an XML-based assembly file
@@ -101,7 +101,7 @@ public class ComponentLoader implements TypeLoader<ComponentDefinition<?>> {
 
         String name = reader.getAttributeValue(null, "name");
         if (name == null) {
-            throw new MissingAttributeException("Component name not specified");
+            throw new MissingAttributeException("Component name not specified", reader);
         }
 
         Autowire autowire = Autowire.fromString(reader.getAttributeValue(null, "autowire"));
@@ -121,7 +121,7 @@ public class ComponentLoader implements TypeLoader<ComponentDefinition<?>> {
         try {
             impl = loadImplementation(reader, context);
         } catch (LoaderException e) {
-            throw new InvalidImplementationException(name, e);
+            throw new InvalidImplementationException("Invalid implementation for component: " + name, reader, e);
         }
         componentDefinition.setImplementation(impl);
         AbstractComponentType<?, ?, ?, ?> componentType = impl.getComponentType();
@@ -134,33 +134,36 @@ public class ComponentLoader implements TypeLoader<ComponentDefinition<?>> {
                     PropertyValue value = propertyValueLoader.load(reader, context);
                     if (!componentType.hasProperty(value.getName())) {
                         // ensure the property exists
-                        throw new ComponentPropertyNotFoundException(name, value.getName());
+                        throw new ComponentPropertyNotFoundException("The component type for component " + name + " does not have a property "
+                                + value.getName(), reader);
                     }
                     if (componentDefinition.getPropertyValues().containsKey(value.getName())) {
                         String id = value.getName();
-                        throw new DuplicateConfiguredPropertyException("The property is configured more than once: " + id, id);
+                        throw new DuplicateConfiguredPropertyException("The property is configured more than once: " + id, reader);
                     }
                     componentDefinition.add(value);
                 } else if (REFERENCE.equals(qname)) {
                     ComponentReference reference = referenceLoader.load(reader, context);
                     if (!componentType.hasReference(reference.getName())) {
                         // ensure the reference exists
-                        throw new ComponentReferenceNotFoundException(name, reference.getName());
+                        throw new ComponentReferenceNotFoundException("The component type for component " + name + " does not have a reference "
+                                + reference.getName(), reader);
                     }
                     String refKey = reference.getName();
                     if (componentDefinition.getReferences().containsKey(refKey)) {
-                        throw new DuplicateConfiguredReferenceException("The reference is configured more than once: " + refKey, refKey);
+                        throw new DuplicateConfiguredReferenceException("The reference is configured more than once: " + refKey, reader);
                     }
                     componentDefinition.add(reference);
                 } else if (SERVICE.equals(qname)) {
                     ComponentService service = serviceLoader.load(reader, context);
                     if (!componentType.hasService(service.getName())) {
                         // ensure the service exists
-                        throw new ComponentServiceNotFoundException(name, service.getName());
+                        throw new ComponentServiceNotFoundException("The component type for component " + name + " does not have a service "
+                                + service.getName(), reader);
                     }
                     if (componentDefinition.getServices().containsKey(service.getName())) {
                         String id = service.getName();
-                        throw new DuplicateConfiguredServiceException("Service configured more than once: " + id, id);
+                        throw new DuplicateConfiguredServiceException("Service configured more than once: " + id, reader);
                     }
                     componentDefinition.add(service);
                 } else {
@@ -170,19 +173,22 @@ public class ComponentLoader implements TypeLoader<ComponentDefinition<?>> {
                 break;
             case END_ELEMENT:
                 assert COMPONENT.equals(reader.getName());
-                validateRequiredProperties(componentDefinition);
+                validateRequiredProperties(componentDefinition, reader);
                 return componentDefinition;
             }
         }
     }
 
-    private void validateRequiredProperties(ComponentDefinition<? extends Implementation<?>> definition) throws RequiredPropertyNotProvidedException {
+    private void validateRequiredProperties(ComponentDefinition<? extends Implementation<?>> definition, XMLStreamReader reader)
+            throws RequiredPropertyNotProvidedException {
         AbstractComponentType<?, ?, ?, ?> type = definition.getImplementation().getComponentType();
         Map<String, ? extends Property> properties = type.getProperties();
         Map<String, PropertyValue> values = definition.getPropertyValues();
         for (Property property : properties.values()) {
             if (property.isRequired() && !values.containsKey(property.getName())) {
-                throw new RequiredPropertyNotProvidedException(definition.getName(), property.getName());
+                String msg =
+                        "Component '" + definition.getName() + "' has a property '" + property.getName() + "' which requires that a value is supplied";
+                throw new RequiredPropertyNotProvidedException(msg, reader);
             }
         }
     }
@@ -231,7 +237,7 @@ public class ComponentLoader implements TypeLoader<ComponentDefinition<?>> {
             try {
                 return Integer.valueOf(initLevel);
             } catch (NumberFormatException e) {
-                throw new InvalidValueException("Invalid initialization level: " + initLevel, e);
+                throw new InvalidValueException("Invalid initialization level: " + initLevel, reader, e);
             }
         }
     }
@@ -247,7 +253,7 @@ public class ComponentLoader implements TypeLoader<ComponentDefinition<?>> {
             try {
                 return new URI(runtimeAttr);
             } catch (URISyntaxException e) {
-                throw new InvalidValueException("Invalid runtime id value: " + runtimeAttr, e);
+                throw new InvalidValueException("Invalid runtime id value: " + runtimeAttr, reader, e);
             }
         }
     }

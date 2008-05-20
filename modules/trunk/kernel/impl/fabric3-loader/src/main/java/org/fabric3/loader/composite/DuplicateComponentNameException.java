@@ -16,6 +16,8 @@
  */
 package org.fabric3.loader.composite;
 
+import javax.xml.stream.XMLStreamReader;
+
 import org.fabric3.introspection.xml.LoaderException;
 
 /**
@@ -27,7 +29,7 @@ public class DuplicateComponentNameException extends LoaderException {
 
     private static final long serialVersionUID = -3671246953971435103L;
 
-    public DuplicateComponentNameException(String message, String identifier) {
-        super(message, identifier);
+    public DuplicateComponentNameException(String message, XMLStreamReader reader) {
+        super(message, reader);
     }
 }

@@ -19,26 +19,20 @@
 package org.fabric3.loader.composite;
 
 import javax.xml.namespace.QName;
+import javax.xml.stream.XMLStreamReader;
+
+import org.fabric3.introspection.xml.LoaderException;
 
 /**
  * Exception that indicates that the composite named in an include was not valid.
  *
  * @version $Rev$ $Date$
  */
-public class InvalidIncludeException extends CompositeLoaderException {
+public class InvalidIncludeException extends LoaderException {
     private static final long serialVersionUID = 2784600570114810462L;
-    private final QName compositeName;
 
-    public InvalidIncludeException(QName compositeName, Exception cause) {
-        super(cause);
-        this.compositeName = compositeName;
+    public InvalidIncludeException(String message, XMLStreamReader reader, Exception cause) {
+        super(message, reader, cause);
     }
 
-    public QName getCompositeName() {
-        return compositeName;
-    }
-
-    public String getMessage() {
-        return "Invalid composite with name " + compositeName;
-    }
 }

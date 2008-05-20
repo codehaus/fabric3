@@ -374,6 +374,7 @@
       </library>
     </orderEntry>
     <orderEntry type="module" module-name="fabric3-introspection" exported="" />
+    <orderEntry type="module" module-name="fabric3-java" />
     <orderEntryProperties />
   </component>
 </module>

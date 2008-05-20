@@ -35,6 +35,7 @@ import org.fabric3.idl.wsdl.processor.WsdlProcessor;
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.xml.LoaderException;
 import org.fabric3.introspection.xml.LoaderRegistry;
+import org.fabric3.introspection.xml.MissingAttributeException;
 import org.fabric3.introspection.xml.TypeLoader;
 
 /**
@@ -112,7 +113,7 @@ public class InterfaceWsdlLoader implements TypeLoader<WsdlContract>, Constants 
 
         String interfaze = reader.getAttributeValue(null, "interface");
         if (interfaze == null) {
-            throw new LoaderException("Interface is required");
+            throw new MissingAttributeException("Interface is required", reader);
         }
         QName interfaceQName = getQName(interfaze);
         wsdlContract.setQname(interfaceQName);
@@ -128,11 +129,11 @@ public class InterfaceWsdlLoader implements TypeLoader<WsdlContract>, Constants 
         String wsdlLocation = reader.getAttributeValue(null, "wsdlLocation");
         if (wsdlLocation == null) {
             // We don't support auto dereferecing of namespace URI
-            throw new LoaderException("WSDL Location is required");
+            throw new MissingAttributeException("WSDL Location is required", reader);
         }
         URL wsdlUrl = getWsdlUrl(wsdlLocation);
         if (wsdlUrl == null) {
-            throw new LoaderException("Unable to locate WSDL " + wsdlLocation);
+            throw new LoaderException("Unable to locate WSDL: " + wsdlLocation, reader);
         }
         return wsdlUrl;
 
