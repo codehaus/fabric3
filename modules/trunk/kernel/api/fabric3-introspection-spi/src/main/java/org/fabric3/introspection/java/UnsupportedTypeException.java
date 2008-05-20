@@ -22,6 +22,7 @@ import org.fabric3.introspection.IntrospectionException;
  * @version $Rev$ $Date$
  */
 public class UnsupportedTypeException extends IntrospectionException {
+    private static final long serialVersionUID = -7114890246946721638L;
 
     public UnsupportedTypeException(String identifier) {
         super(null, identifier);

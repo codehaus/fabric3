@@ -29,7 +29,6 @@ import static org.osoa.sca.Constants.SCA_NS;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.introspection.xml.InvalidReferenceException;
 import org.fabric3.introspection.xml.InvalidValueException;
 import org.fabric3.introspection.xml.Loader;
 import org.fabric3.introspection.xml.LoaderException;
