@@ -41,4 +41,8 @@ public abstract class ValidationFailure<T> {
     public T getModelObject() {
         return modelObject;
     }
+
+    public String getMessage() {
+        return "";
+    }
 }

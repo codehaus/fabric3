@@ -1,6 +1,8 @@
 /*
- * See the NOTICE file distributed with this work for information
- * regarding copyright ownership.  This file is licensed
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
@@ -16,17 +18,18 @@
  */
 package org.fabric3.java.introspection;
 
-import org.fabric3.introspection.IntrospectionException;
+import org.fabric3.java.scdl.JavaImplementation;
+import org.fabric3.scdl.ValidationFailure;
 
 /**
- * @version $Rev$ $Date$
+ * @version $Revision$ $Date$
  */
-public class NoConstructorException extends IntrospectionException {
-    public NoConstructorException(String identifier) {
-        super(null, identifier);
+public class ImplementationNotFound extends ValidationFailure<JavaImplementation> {
+    public ImplementationNotFound(JavaImplementation implementation) {
+        super(implementation);
     }
 
     public String getMessage() {
-        return "Multiple constructors present, use @Constructor to indicate which to use in class: " + getIdentifier();
+        return "Implementation class not found: " + getModelObject().getImplementationClass();
     }
 }

@@ -17,7 +17,6 @@
 package org.fabric3.introspection.java;
 
 import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.introspection.IntrospectionException;
 import org.fabric3.scdl.AbstractComponentType;
 import org.fabric3.scdl.Implementation;
 
@@ -30,11 +29,11 @@ import org.fabric3.scdl.Implementation;
 public interface ImplementationProcessor<I extends Implementation<? extends AbstractComponentType<?, ?, ?, ?>>> {
 
     /**
-     * Introspects an implementation and derives the associated component type.
+     * Introspects an implementation and derives the associated component type. If errors or warnings are encountered, they will be collated in the
+     * IntrospectionContext.
      *
      * @param implementation the implmentation to inspect
      * @param context        the introspection context
-     * @throws IntrospectionException if there is a problem during introspection
      */
-    void introspect(I implementation, IntrospectionContext context) throws IntrospectionException;
+    void introspect(I implementation, IntrospectionContext context);
 }

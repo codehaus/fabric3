@@ -24,16 +24,16 @@ import groovy.lang.GroovyCodeSource;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.groovy.scdl.GroovyImplementation;
+import org.fabric3.introspection.DefaultIntrospectionContext;
 import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.introspection.IntrospectionException;
 import org.fabric3.introspection.IntrospectionHelper;
+import org.fabric3.introspection.TypeMapping;
 import org.fabric3.introspection.java.ClassWalker;
 import org.fabric3.introspection.java.HeuristicProcessor;
 import org.fabric3.introspection.java.ImplementationNotFoundException;
 import org.fabric3.introspection.java.ImplementationProcessor;
-import org.fabric3.introspection.TypeMapping;
-import org.fabric3.introspection.DefaultIntrospectionContext;
 import org.fabric3.pojo.scdl.PojoComponentType;
+import org.fabric3.scdl.validation.MissingResource;
 
 /**
  * @version $Rev$ $Date$
@@ -52,10 +52,24 @@ public class GroovyImplementationProcessor implements ImplementationProcessor<Gr
         this.helper = helper;
     }
 
-    public void introspect(GroovyImplementation implementation, IntrospectionContext context) throws IntrospectionException {
+    public void introspect(GroovyImplementation implementation, IntrospectionContext context) {
 
-        Class<?> implClass = loadImplementation(implementation, context);
-
+        Class<?> implClass;
+        try {
+            implClass = loadImplementation(implementation, context);
+        } catch (ClassNotFoundException e) {
+            context.addError(new MissingResource("Groovy class not found: ", implementation.getClassName()));
+            return;
+        } catch (ImplementationNotFoundException e) {
+            context.addError(new MissingResource("Groovy script not found: ", implementation.getScriptName()));
+            return;
+        } catch (IOException e) {
+            context.addError(new InvalidGroovySource(implementation.getScriptName(), e));
+            return;
+        }
+        if (implClass == null) {
+            return;
+        }
         PojoComponentType componentType = new PojoComponentType(implClass.getName());
         componentType.setScope("STATELESS");
         implementation.setComponentType(componentType);
@@ -68,7 +82,20 @@ public class GroovyImplementationProcessor implements ImplementationProcessor<Gr
         heuristic.applyHeuristics(implementation, implClass, context);
     }
 
-    Class<?> loadImplementation(GroovyImplementation implementation, IntrospectionContext context) throws ImplementationNotFoundException {
+
+    /**
+     * Introspects the implementation artiact.
+     *
+     * @param implementation the artifact to introspect
+     * @param context        the context where errors are reported
+     * @return the loaded implementation class, or null if there was an error introspecting it. Errors will be reported in the IntrospectionContext
+     * @throws ClassNotFoundException if the class was not on the classpath
+     * @throws java.io.IOException    if there was an error reading the Groovy script file
+     * @throws ImplementationNotFoundException
+     *                                if the Groovy script file is not found
+     */
+    private Class<?> loadImplementation(GroovyImplementation implementation, IntrospectionContext context)
+            throws ClassNotFoundException, ImplementationNotFoundException, IOException {
         ClassLoader old = Thread.currentThread().getContextClassLoader();
         try {
             // Set TCCL to the extension classloader as implementations may need access to Groovy classes. Also, Groovy
@@ -79,26 +106,18 @@ public class GroovyImplementationProcessor implements ImplementationProcessor<Gr
             // if user supplied a class name, use it as the implementation
             String className = implementation.getClassName();
             if (className != null) {
-                try {
-                    return gcl.loadClass(className);
-                } catch (ClassNotFoundException e) {
-                    throw new ImplementationNotFoundException(className, e);
-                }
+                return gcl.loadClass(className);
             }
 
             // if user supplied a script name, compile it and use the resulting class as the implementation
             String scriptName = implementation.getScriptName();
             if (scriptName != null) {
-                try {
-                    URL scriptURL = gcl.getResource(scriptName);
-                    if (scriptURL == null) {
-                        throw new ImplementationNotFoundException(scriptName);
-                    }
-                    GroovyCodeSource codeSource = new GroovyCodeSource(scriptURL);
-                    return gcl.parseClass(codeSource);
-                } catch (IOException e) {
-                    throw new ImplementationNotFoundException(scriptName, e);
+                URL scriptURL = gcl.getResource(scriptName);
+                if (scriptURL == null) {
+                    throw new ImplementationNotFoundException(scriptName);
                 }
+                GroovyCodeSource codeSource = new GroovyCodeSource(scriptURL);
+                return gcl.parseClass(codeSource);
             }
             // we should not have been called without an implementation artifact
             throw new AssertionError();

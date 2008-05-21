@@ -23,12 +23,11 @@ import java.lang.reflect.Type;
 
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.introspection.java.AbstractAnnotationProcessor;
-import org.fabric3.introspection.contract.ContractProcessor;
 import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.introspection.IntrospectionException;
 import org.fabric3.introspection.IntrospectionHelper;
 import org.fabric3.introspection.TypeMapping;
+import org.fabric3.introspection.contract.ContractProcessor;
+import org.fabric3.introspection.java.AbstractAnnotationProcessor;
 import org.fabric3.scdl.ConstructorInjectionSite;
 import org.fabric3.scdl.FieldInjectionSite;
 import org.fabric3.scdl.Implementation;
@@ -45,43 +44,46 @@ public class ReferenceProcessor<I extends Implementation<? extends InjectingComp
     private final ContractProcessor contractProcessor;
     private final IntrospectionHelper helper;
 
-    public ReferenceProcessor(@Reference ContractProcessor contractProcessor,
-                              @Reference IntrospectionHelper helper) {
+    public ReferenceProcessor(@Reference ContractProcessor contractProcessor, @Reference IntrospectionHelper helper) {
         super(Reference.class);
         this.contractProcessor = contractProcessor;
         this.helper = helper;
     }
 
-    public void visitField(Reference annotation, Field field, I implementation, IntrospectionContext context) throws IntrospectionException {
+    public void visitField(Reference annotation, Field field, I implementation, IntrospectionContext context) {
 
         String name = helper.getSiteName(field, annotation.name());
         Type type = field.getGenericType();
         FieldInjectionSite site = new FieldInjectionSite(field);
-        ReferenceDefinition definition = createDefinition(name, annotation.required(), type, context.getTypeMapping());
+        ReferenceDefinition definition = createDefinition(name, annotation.required(), type, context.getTypeMapping(), context);
         implementation.getComponentType().add(definition, site);
     }
 
-    public void visitMethod(Reference annotation, Method method, I implementation, IntrospectionContext context) throws IntrospectionException {
+    public void visitMethod(Reference annotation, Method method, I implementation, IntrospectionContext context) {
 
         String name = helper.getSiteName(method, annotation.name());
         Type type = helper.getGenericType(method);
         MethodInjectionSite site = new MethodInjectionSite(method, 0);
-        ReferenceDefinition definition = createDefinition(name, annotation.required(), type, context.getTypeMapping());
+        ReferenceDefinition definition = createDefinition(name, annotation.required(), type, context.getTypeMapping(), context);
         implementation.getComponentType().add(definition, site);
     }
 
-    public void visitConstructorParameter(Reference annotation, Constructor<?> constructor, int index, I implementation, IntrospectionContext context)
-            throws IntrospectionException {
+    public void visitConstructorParameter(Reference annotation,
+                                          Constructor<?> constructor,
+                                          int index,
+                                          I implementation,
+                                          IntrospectionContext context) {
 
         String name = helper.getSiteName(constructor, index, annotation.name());
         Type type = helper.getGenericType(constructor, index);
         ConstructorInjectionSite site = new ConstructorInjectionSite(constructor, index);
-        ReferenceDefinition definition = createDefinition(name, annotation.required(), type, context.getTypeMapping());
+        ReferenceDefinition definition = createDefinition(name, annotation.required(), type, context.getTypeMapping(), context);
         implementation.getComponentType().add(definition, site);
     }
 
-    ReferenceDefinition createDefinition(String name, boolean required, Type type, TypeMapping typeMapping) throws IntrospectionException {
-        ServiceContract<Type> contract = contractProcessor.introspect(typeMapping, helper.getBaseType(type, typeMapping));
+    ReferenceDefinition createDefinition(String name, boolean required, Type type, TypeMapping typeMapping, IntrospectionContext context){
+        Type baseType = helper.getBaseType(type, typeMapping);
+        ServiceContract<Type> contract = contractProcessor.introspect(typeMapping, baseType, context);
         Multiplicity multiplicity = multiplicity(required, type, typeMapping);
         return new ReferenceDefinition(name, contract, multiplicity);
     }

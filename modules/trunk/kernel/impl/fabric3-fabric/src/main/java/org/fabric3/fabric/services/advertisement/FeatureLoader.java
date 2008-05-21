@@ -25,16 +25,14 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 import org.w3c.dom.Document;
 
-import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.introspection.IntrospectionException;
 import org.fabric3.introspection.DefaultIntrospectionContext;
+import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.xml.LoaderException;
 import org.fabric3.introspection.xml.LoaderHelper;
 import org.fabric3.introspection.xml.TypeLoader;
 import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.Implementation;
 import org.fabric3.scdl.PropertyValue;
-import org.fabric3.spi.Constants;
 import org.fabric3.system.introspection.SystemImplementationProcessor;
 import org.fabric3.system.scdl.SystemImplementation;
 
@@ -51,17 +49,12 @@ public class FeatureLoader implements TypeLoader<ComponentDefinition> {
 
     private final LoaderHelper helper;
 
-    public FeatureLoader(@Reference SystemImplementationProcessor processor,
-                         @Reference LoaderHelper helper) {
+    public FeatureLoader(@Reference SystemImplementationProcessor processor, @Reference LoaderHelper helper) {
         this.helper = helper;
 
         featureImplementation = new SystemImplementation(FeatureComponent.class.getName());
         IntrospectionContext context = new DefaultIntrospectionContext(getClass().getClassLoader(), null, null);
-        try {
-            processor.introspect(featureImplementation, context);
-        } catch (IntrospectionException e) {
-            throw new AssertionError();
-        }
+        processor.introspect(featureImplementation, context);
     }
 
     public ComponentDefinition load(XMLStreamReader reader, IntrospectionContext context) throws XMLStreamException, LoaderException {

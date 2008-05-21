@@ -22,13 +22,12 @@ import java.lang.reflect.Type;
 
 import org.osoa.sca.annotations.Reference;
 
+import org.fabric3.api.annotation.Resource;
 import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.introspection.IntrospectionException;
 import org.fabric3.introspection.IntrospectionHelper;
-import org.fabric3.introspection.java.AbstractAnnotationProcessor;
-import org.fabric3.introspection.contract.ContractProcessor;
-import org.fabric3.introspection.contract.InvalidServiceContractException;
 import org.fabric3.introspection.TypeMapping;
+import org.fabric3.introspection.contract.ContractProcessor;
+import org.fabric3.introspection.java.AbstractAnnotationProcessor;
 import org.fabric3.resource.model.SystemSourcedResource;
 import org.fabric3.scdl.FieldInjectionSite;
 import org.fabric3.scdl.Implementation;
@@ -36,7 +35,6 @@ import org.fabric3.scdl.InjectingComponentType;
 import org.fabric3.scdl.MethodInjectionSite;
 import org.fabric3.scdl.ResourceDefinition;
 import org.fabric3.scdl.ServiceContract;
-import org.fabric3.api.annotation.Resource;
 
 /**
  * @version $Rev$ $Date$
@@ -52,25 +50,29 @@ public class Fabric3ResourceProcessor<I extends Implementation<? extends Injecti
         this.contractProcessor = contractProcessor;
     }
 
-    public void visitField(Resource annotation, Field field, I implementation, IntrospectionContext context) throws IntrospectionException {
+    public void visitField(Resource annotation, Field field, I implementation, IntrospectionContext context) {
         String name = helper.getSiteName(field, annotation.name());
         Type type = field.getGenericType();
         FieldInjectionSite site = new FieldInjectionSite(field);
-        ResourceDefinition definition = createResource(name, type, annotation.optional(), annotation.mappedName(), context.getTypeMapping());
+        ResourceDefinition definition = createResource(name, type, annotation.optional(), annotation.mappedName(), context.getTypeMapping(), context);
         implementation.getComponentType().add(definition, site);
     }
 
-    public void visitMethod(Resource annotation, Method method, I implementation, IntrospectionContext context) throws IntrospectionException {
+    public void visitMethod(Resource annotation, Method method, I implementation, IntrospectionContext context) {
         String name = helper.getSiteName(method, annotation.name());
         Type type = helper.getGenericType(method);
         MethodInjectionSite site = new MethodInjectionSite(method, 0);
-        ResourceDefinition definition = createResource(name, type, annotation.optional(), annotation.mappedName(), context.getTypeMapping());
+        ResourceDefinition definition = createResource(name, type, annotation.optional(), annotation.mappedName(), context.getTypeMapping(), context);
         implementation.getComponentType().add(definition, site);
     }
 
-    SystemSourcedResource createResource(String name, Type type, boolean optional, String mappedName, TypeMapping typeMapping)
-            throws InvalidServiceContractException {
-        ServiceContract<Type> serviceContract = contractProcessor.introspect(typeMapping, type);
+    SystemSourcedResource createResource(String name,
+                                         Type type,
+                                         boolean optional,
+                                         String mappedName,
+                                         TypeMapping typeMapping,
+                                         IntrospectionContext context) {
+        ServiceContract<Type> serviceContract = contractProcessor.introspect(typeMapping, type, context);
         return new SystemSourcedResource(name, optional, mappedName, serviceContract);
     }
 }

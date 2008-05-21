@@ -21,10 +21,9 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
+import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.scdl.Implementation;
 import org.fabric3.scdl.InjectingComponentType;
-import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.introspection.IntrospectionException;
 
 /**
  * Abstract base class for annotation processors that provides default implementations of the interface methods that simply return.
@@ -47,27 +46,24 @@ public abstract class AbstractAnnotationProcessor<A extends Annotation, I extend
         return type;
     }
 
-    public void visitPackage(A annotation, Package javaPackage, I implementation, IntrospectionContext context) throws IntrospectionException {
+    public void visitPackage(A annotation, Package javaPackage, I implementation, IntrospectionContext context) {
     }
 
-    public void visitType(A annotation, Class<?> type, I implementation, IntrospectionContext context) throws IntrospectionException {
+    public void visitType(A annotation, Class<?> type, I implementation, IntrospectionContext context) {
     }
 
-    public void visitField(A annotation, Field field, I implementation, IntrospectionContext context) throws IntrospectionException {
+    public void visitField(A annotation, Field field, I implementation, IntrospectionContext context) {
     }
 
-    public void visitMethod(A annotation, Method method, I implementation, IntrospectionContext context) throws IntrospectionException {
+    public void visitMethod(A annotation, Method method, I implementation, IntrospectionContext context) {
     }
 
-    public void visitMethodParameter(A annotation, Method method, int index, I implementation, IntrospectionContext context)
-            throws IntrospectionException {
+    public void visitMethodParameter(A annotation, Method method, int index, I implementation, IntrospectionContext context){
     }
 
-    public void visitConstructor(A annotation, Constructor<?> constructor, I implementation, IntrospectionContext context)
-            throws IntrospectionException {
+    public void visitConstructor(A annotation, Constructor<?> constructor, I implementation, IntrospectionContext context){
     }
 
-    public void visitConstructorParameter(A annotation, Constructor<?> constructor, int index, I implementation, IntrospectionContext context)
-            throws IntrospectionException {
+    public void visitConstructorParameter(A annotation, Constructor<?> constructor, int index, I implementation, IntrospectionContext context){
     }
 }

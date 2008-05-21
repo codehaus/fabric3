@@ -28,7 +28,6 @@ import org.fabric3.introspection.IntrospectionHelper;
 import org.fabric3.introspection.TypeMapping;
 import org.fabric3.introspection.contract.ContractProcessor;
 import org.fabric3.introspection.java.ImplementationNotFoundException;
-import org.fabric3.introspection.contract.InvalidServiceContractException;
 import org.fabric3.introspection.xml.InvalidValueException;
 import org.fabric3.introspection.xml.LoaderException;
 import org.fabric3.introspection.xml.LoaderUtil;
@@ -52,8 +51,7 @@ public class JavaInterfaceLoader implements TypeLoader<ServiceContract> {
         this.helper = helper;
     }
 
-    public ServiceContract load(XMLStreamReader reader, IntrospectionContext context)
-            throws XMLStreamException, LoaderException {
+    public ServiceContract load(XMLStreamReader reader, IntrospectionContext context) throws XMLStreamException, LoaderException {
 
         String name = reader.getAttributeValue(null, "interface");
         if (name == null) {
@@ -80,16 +78,12 @@ public class JavaInterfaceLoader implements TypeLoader<ServiceContract> {
 
         LoaderUtil.skipToEndElement(reader);
 
-        try {
-            TypeMapping typeMapping = helper.mapTypeParameters(interfaceClass);
-            ServiceContract<?> serviceContract = contractProcessor.introspect(typeMapping, interfaceClass);
-            if (callbackClass != null) {
-                ServiceContract<?> callbackContract = contractProcessor.introspect(typeMapping, callbackClass);
-                serviceContract.setCallbackContract(callbackContract);
-            }
-            return serviceContract;
-        } catch (InvalidServiceContractException e) {
-            throw new LoaderException("The Java interface is an invalid service contract: " + interfaceClass.getName(), reader, e);
+        TypeMapping typeMapping = helper.mapTypeParameters(interfaceClass);
+        ServiceContract<?> serviceContract = contractProcessor.introspect(typeMapping, interfaceClass, context);
+        if (callbackClass != null) {
+            ServiceContract<?> callbackContract = contractProcessor.introspect(typeMapping, callbackClass, context);
+            serviceContract.setCallbackContract(callbackContract);
         }
+        return serviceContract;
     }
 }

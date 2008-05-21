@@ -24,7 +24,6 @@ import java.util.Collections;
 import java.util.List;
 
 import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.introspection.IntrospectionException;
 import org.fabric3.introspection.java.HeuristicProcessor;
 import org.fabric3.junit.scdl.JUnitImplementation;
 import org.fabric3.junit.scdl.JUnitServiceContract;
@@ -38,7 +37,7 @@ import org.fabric3.scdl.ServiceDefinition;
 public class JUnitServiceHeuristic implements HeuristicProcessor<JUnitImplementation> {
     private static final String TEST_SERVICE_NAME = "testService";
 
-    public void applyHeuristics(JUnitImplementation implementation, Class<?> implClass, IntrospectionContext context) throws IntrospectionException {
+    public void applyHeuristics(JUnitImplementation implementation, Class<?> implClass, IntrospectionContext context) {
 
         JUnitServiceContract testContract = generateTestContract(implClass);
         ServiceDefinition testService = new ServiceDefinition(TEST_SERVICE_NAME, testContract);

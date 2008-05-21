@@ -17,32 +17,31 @@
 package org.fabric3.system.introspection;
 
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Type;
-import java.lang.reflect.Method;
 import java.lang.reflect.Field;
-import java.util.Set;
+import java.lang.reflect.Method;
+import java.lang.reflect.Type;
 import java.util.Map;
+import java.util.Set;
 
 import org.osoa.sca.annotations.Reference;
 
+import org.fabric3.introspection.IntrospectionContext;
+import org.fabric3.introspection.IntrospectionHelper;
+import org.fabric3.introspection.TypeMapping;
 import org.fabric3.introspection.contract.ContractProcessor;
 import org.fabric3.introspection.java.HeuristicProcessor;
-import org.fabric3.introspection.IntrospectionHelper;
-import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.introspection.IntrospectionException;
-import org.fabric3.introspection.TypeMapping;
-import org.fabric3.introspection.contract.InvalidServiceContractException;
-import org.fabric3.introspection.java.UnsupportedTypeException;
+import org.fabric3.introspection.java.UnknownInjectionType;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.ConstructorInjectionSite;
+import org.fabric3.scdl.FieldInjectionSite;
+import org.fabric3.scdl.InjectableAttribute;
+import org.fabric3.scdl.InjectableAttributeType;
 import org.fabric3.scdl.InjectionSite;
+import org.fabric3.scdl.MethodInjectionSite;
 import org.fabric3.scdl.Multiplicity;
 import org.fabric3.scdl.Property;
 import org.fabric3.scdl.ReferenceDefinition;
 import org.fabric3.scdl.ServiceContract;
-import org.fabric3.scdl.MethodInjectionSite;
-import org.fabric3.scdl.FieldInjectionSite;
-import org.fabric3.scdl.InjectableAttribute;
 import org.fabric3.system.scdl.SystemImplementation;
 
 /**
@@ -55,13 +54,12 @@ public class SystemUnannotatedHeuristic implements HeuristicProcessor<SystemImpl
     private final IntrospectionHelper helper;
     private final ContractProcessor contractProcessor;
 
-    public SystemUnannotatedHeuristic(@Reference IntrospectionHelper helper,
-                                      @Reference ContractProcessor contractProcessor) {
+    public SystemUnannotatedHeuristic(@Reference IntrospectionHelper helper, @Reference ContractProcessor contractProcessor) {
         this.helper = helper;
         this.contractProcessor = contractProcessor;
     }
 
-    public void applyHeuristics(SystemImplementation implementation, Class<?> implClass, IntrospectionContext context) throws IntrospectionException {
+    public void applyHeuristics(SystemImplementation implementation, Class<?> implClass, IntrospectionContext context) {
         PojoComponentType componentType = implementation.getComponentType();
 
         // if any properties, references or resources have been defined already assume that was what the user intended and return
@@ -74,9 +72,9 @@ public class SystemUnannotatedHeuristic implements HeuristicProcessor<SystemImpl
         evaluateFields(implementation, implClass, context);
     }
 
-    void evaluateConstructor(SystemImplementation implementation, Class<?> implClass, IntrospectionContext context) throws IntrospectionException {
+    void evaluateConstructor(SystemImplementation implementation, Class<?> implClass, IntrospectionContext context) {
         PojoComponentType componentType = implementation.getComponentType();
-        Map<InjectionSite,InjectableAttribute> sites = componentType.getInjectionSites();
+        Map<InjectionSite, InjectableAttribute> sites = componentType.getInjectionSites();
         Constructor<?> constructor;
         try {
             constructor = componentType.getConstructor().getConstructor(implClass);
@@ -98,13 +96,13 @@ public class SystemUnannotatedHeuristic implements HeuristicProcessor<SystemImpl
 
             Type parameterType = parameterTypes[i];
             String name = helper.getSiteName(constructor, i, null);
-            processSite(componentType, typeMapping, name, parameterType, site);
+            processSite(componentType, typeMapping, name, parameterType, site, context);
         }
     }
 
-    void evaluateSetters(SystemImplementation implementation, Class<?> implClass, IntrospectionContext context) throws IntrospectionException {
+    void evaluateSetters(SystemImplementation implementation, Class<?> implClass, IntrospectionContext context) {
         PojoComponentType componentType = implementation.getComponentType();
-        Map<InjectionSite,InjectableAttribute> sites = componentType.getInjectionSites();
+        Map<InjectionSite, InjectableAttribute> sites = componentType.getInjectionSites();
         TypeMapping typeMapping = context.getTypeMapping();
         Set<Method> setters = helper.getInjectionMethods(implClass, componentType.getServices().values());
         for (Method setter : setters) {
@@ -117,13 +115,13 @@ public class SystemUnannotatedHeuristic implements HeuristicProcessor<SystemImpl
 
             String name = helper.getSiteName(setter, null);
             Type parameterType = setter.getGenericParameterTypes()[0];
-            processSite(componentType, typeMapping, name, parameterType, site);
+            processSite(componentType, typeMapping, name, parameterType, site, context);
         }
     }
 
-    void evaluateFields(SystemImplementation implementation, Class<?> implClass, IntrospectionContext context) throws IntrospectionException {
+    void evaluateFields(SystemImplementation implementation, Class<?> implClass, IntrospectionContext context) {
         PojoComponentType componentType = implementation.getComponentType();
-        Map<InjectionSite,InjectableAttribute> sites = componentType.getInjectionSites();
+        Map<InjectionSite, InjectableAttribute> sites = componentType.getInjectionSites();
         TypeMapping typeMapping = context.getTypeMapping();
         Set<Field> fields = helper.getInjectionFields(implClass);
         for (Field field : fields) {
@@ -136,33 +134,43 @@ public class SystemUnannotatedHeuristic implements HeuristicProcessor<SystemImpl
 
             String name = helper.getSiteName(field, null);
             Type parameterType = field.getGenericType();
-            processSite(componentType, typeMapping, name, parameterType, site);
+            processSite(componentType, typeMapping, name, parameterType, site, context);
         }
     }
 
 
-    void processSite(PojoComponentType componentType, TypeMapping typeMapping, String name, Type parameterType, InjectionSite site) throws IntrospectionException {
-        switch (helper.inferType(parameterType, typeMapping)) {
+    private void processSite(PojoComponentType componentType,
+                             TypeMapping typeMapping,
+                             String name,
+                             Type parameterType,
+                             InjectionSite site,
+                             IntrospectionContext context) {
+        InjectableAttributeType type = helper.inferType(parameterType, typeMapping);
+        switch (type) {
         case PROPERTY:
             addProperty(componentType, typeMapping, name, parameterType, site);
             break;
         case REFERENCE:
-            addReference(componentType, typeMapping, name, parameterType, site);
+            addReference(componentType, typeMapping, name, parameterType, site, context);
             break;
         default:
-            throw new UnsupportedTypeException(site.toString());
+            context.addError(new UnknownInjectionType(site, type, componentType.getImplClass()));
         }
     }
 
-    void addProperty(PojoComponentType componentType, TypeMapping typeMapping, String name, Type parameterType, InjectionSite site) {
+    private void addProperty(PojoComponentType componentType, TypeMapping typeMapping, String name, Type parameterType, InjectionSite site) {
         Property property = new Property(name, null);
         property.setMany(helper.isManyValued(typeMapping, parameterType));
         componentType.add(property, site);
     }
 
-    void addReference(PojoComponentType componentType, TypeMapping typeMapping, String name, Type parameterType, InjectionSite site) throws
-            InvalidServiceContractException {
-        ServiceContract<Type> contract = contractProcessor.introspect(typeMapping, parameterType);
+    private void addReference(PojoComponentType componentType,
+                              TypeMapping typeMapping,
+                              String name,
+                              Type parameterType,
+                              InjectionSite site,
+                              IntrospectionContext context) {
+        ServiceContract<Type> contract = contractProcessor.introspect(typeMapping, parameterType, context);
         Multiplicity multiplicity = helper.isManyValued(typeMapping, parameterType) ? Multiplicity.ONE_N : Multiplicity.ONE_ONE;
         ReferenceDefinition reference = new ReferenceDefinition(name, contract, multiplicity);
         componentType.add(reference, site);

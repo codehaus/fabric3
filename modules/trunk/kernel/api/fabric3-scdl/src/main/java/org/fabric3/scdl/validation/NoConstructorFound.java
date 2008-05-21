@@ -14,21 +14,19 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.introspection.java;
+package org.fabric3.scdl.validation;
 
-import org.fabric3.introspection.IntrospectionException;
+import org.fabric3.scdl.ValidationFailure;
 
 /**
  * @version $Rev$ $Date$
  */
-public class UnsupportedTypeException extends IntrospectionException {
-    private static final long serialVersionUID = -7114890246946721638L;
-
-    public UnsupportedTypeException(String identifier) {
-        super(null, identifier);
+public class NoConstructorFound extends ValidationFailure<Class<?>> {
+    public NoConstructorFound(Class<?> clazz) {
+        super(clazz);
     }
 
     public String getMessage() {
-        return "Injection not supported for location: " + getIdentifier();
+        return "The class has multiple constructors, use @Constructor to indicate which to use: " + getModelObject();
     }
 }

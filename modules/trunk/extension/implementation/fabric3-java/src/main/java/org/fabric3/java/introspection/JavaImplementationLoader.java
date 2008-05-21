@@ -41,15 +41,13 @@ public class JavaImplementationLoader implements TypeLoader<JavaImplementation> 
     private final LoaderHelper loaderHelper;
 
 
-    public JavaImplementationLoader(@Reference JavaImplementationProcessor implementationProcessor,
-                                    @Reference LoaderHelper loaderHelper) {
+    public JavaImplementationLoader(@Reference JavaImplementationProcessor implementationProcessor, @Reference LoaderHelper loaderHelper) {
         this.implementationProcessor = implementationProcessor;
         this.loaderHelper = loaderHelper;
     }
 
 
-    public JavaImplementation load(XMLStreamReader reader, IntrospectionContext introspectionContext)
-            throws XMLStreamException, LoaderException {
+    public JavaImplementation load(XMLStreamReader reader, IntrospectionContext introspectionContext) throws XMLStreamException, LoaderException {
 
         assert JavaImplementation.IMPLEMENTATION_JAVA.equals(reader.getName());
 
@@ -62,12 +60,7 @@ public class JavaImplementationLoader implements TypeLoader<JavaImplementation> 
         LoaderUtil.skipToEndElement(reader);
 
         implementation.setImplementationClass(implClass);
-        try {
-            implementationProcessor.introspect(implementation, introspectionContext);
-        } catch (IntrospectionException e) {
-            throw new LoaderException(reader, e);
-
-        }
+        implementationProcessor.introspect(implementation, introspectionContext);
         return implementation;
     }
 

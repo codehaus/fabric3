@@ -22,11 +22,9 @@ import org.osoa.sca.annotations.Reference;
 import org.osoa.sca.annotations.Service;
 
 import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.introspection.IntrospectionException;
 import org.fabric3.introspection.TypeMapping;
 import org.fabric3.introspection.contract.ContractProcessor;
 import org.fabric3.introspection.java.AbstractAnnotationProcessor;
-import org.fabric3.introspection.contract.InvalidServiceContractException;
 import org.fabric3.scdl.Implementation;
 import org.fabric3.scdl.InjectingComponentType;
 import org.fabric3.scdl.ServiceContract;
@@ -44,24 +42,24 @@ public class ServiceProcessor<I extends Implementation<? extends InjectingCompon
         this.contractProcessor = contractProcessor;
     }
 
-    public void visitType(Service annotation, Class<?> type, I implementation, IntrospectionContext context) throws IntrospectionException {
+    public void visitType(Service annotation, Class<?> type, I implementation, IntrospectionContext context) {
         TypeMapping typeMapping = context.getTypeMapping();
         InjectingComponentType componentType = implementation.getComponentType();
 
         for (Class<?> service : annotation.interfaces()) {
-            ServiceDefinition definition = createDefinition(service, typeMapping);
+            ServiceDefinition definition = createDefinition(service, typeMapping, context);
             componentType.add(definition);
         }
 
         Class<?> service = annotation.value();
         if (!Void.class.equals(service)) {
-            ServiceDefinition definition = createDefinition(service, typeMapping);
+            ServiceDefinition definition = createDefinition(service, typeMapping, context);
             componentType.add(definition);
         }
     }
 
-    ServiceDefinition createDefinition(Class<?> service, TypeMapping typeMapping) throws InvalidServiceContractException {
-        ServiceContract<Type> serviceContract = contractProcessor.introspect(typeMapping, service);
+    private ServiceDefinition createDefinition(Class<?> service, TypeMapping typeMapping, IntrospectionContext context) {
+        ServiceContract<Type> serviceContract = contractProcessor.introspect(typeMapping, service, context);
         return new ServiceDefinition(serviceContract.getInterfaceName(), serviceContract);
     }
 }

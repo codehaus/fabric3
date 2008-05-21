@@ -29,17 +29,18 @@ import org.osoa.sca.annotations.Callback;
 import org.osoa.sca.annotations.Conversational;
 import org.osoa.sca.annotations.EndsConversation;
 import org.osoa.sca.annotations.OneWay;
-import org.osoa.sca.annotations.Remotable;
 import org.osoa.sca.annotations.Reference;
+import org.osoa.sca.annotations.Remotable;
 
-import org.fabric3.introspection.contract.ContractProcessor;
-import org.fabric3.introspection.contract.InvalidServiceContractException;
 import org.fabric3.introspection.IntrospectionHelper;
 import org.fabric3.introspection.TypeMapping;
+import org.fabric3.introspection.contract.ContractProcessor;
 import org.fabric3.scdl.DataType;
 import org.fabric3.scdl.Operation;
 import static org.fabric3.scdl.Operation.CONVERSATION_END;
 import static org.fabric3.scdl.Operation.NO_CONVERSATION;
+import org.fabric3.scdl.ServiceContract;
+import org.fabric3.scdl.ValidationContext;
 
 /**
  * Default implementation of a ContractProcessor for Java interfaces.
@@ -56,37 +57,38 @@ public class DefaultContractProcessor implements ContractProcessor {
         this.helper = helper;
     }
 
-    public JavaServiceContract introspect(TypeMapping typeMapping, Type type) throws InvalidServiceContractException {
+    public ServiceContract<Type> introspect(TypeMapping typeMapping, Type type, ValidationContext context) {
         if (type instanceof Class) {
-            return introspect(typeMapping, (Class<?>) type);
+            return introspect(typeMapping, (Class<?>) type, context);
         } else {
             throw new UnsupportedOperationException("Interface introspection is only supported for classes");
         }
     }
 
-    public JavaServiceContract introspect(TypeMapping typeMapping, Class<?> interfaze) throws InvalidServiceContractException {
-        JavaServiceContract contract = introspectInterface(typeMapping, interfaze);
+    private JavaServiceContract introspect(TypeMapping typeMapping, Class<?> interfaze, ValidationContext context) {
+        JavaServiceContract contract = introspectInterface(typeMapping, interfaze, context);
         Callback callback = interfaze.getAnnotation(Callback.class);
         if (callback != null) {
             Class<?> callbackClass = callback.value();
             if (Void.class.equals(callbackClass)) {
-                throw new MissingCallbackException(interfaze.getName());
+                context.addError(new MissingCallback(interfaze));
+                return contract;
             }
-            JavaServiceContract callbackContract = introspectInterface(typeMapping, callbackClass);
+            JavaServiceContract callbackContract = introspectInterface(typeMapping, callbackClass, context);
             contract.setCallbackContract(callbackContract);
         }
         return contract;
     }
 
     /**
-     * Introspects a class, returning its service contract.
+     * Introspects a class, returning its service contract. Errors and warnings are reported in the ValidationContext.
      *
-     * @param interfaze the interface to introspect
+     * @param typeMapping generics mappings
+     * @param interfaze   the interface to introspect
+     * @param context     the current validation context to report errors
      * @return the service contract
-     * @throws InvalidServiceContractException
-     *          if the class is an invalid service inteface or contains invalid service meatadata
      */
-    private JavaServiceContract introspectInterface(TypeMapping typeMapping, Class<?> interfaze) throws InvalidServiceContractException {
+    private JavaServiceContract introspectInterface(TypeMapping typeMapping, Class<?> interfaze, ValidationContext context) {
         JavaServiceContract contract = new JavaServiceContract(interfaze);
         contract.setInterfaceName(interfaze.getSimpleName());
 
@@ -98,7 +100,8 @@ public class DefaultContractProcessor implements ContractProcessor {
         boolean conversational = helper.isAnnotationPresent(interfaze, Conversational.class);
         contract.setConversational(conversational);
 
-        contract.setOperations(getOperations(typeMapping, interfaze, remotable, conversational));
+        List<Operation<Type>> operations = getOperations(typeMapping, interfaze, remotable, conversational, context);
+        contract.setOperations(operations);
 
         return contract;
     }
@@ -106,17 +109,23 @@ public class DefaultContractProcessor implements ContractProcessor {
     private <T> List<Operation<Type>> getOperations(TypeMapping typeMapping,
                                                     Class<T> type,
                                                     boolean remotable,
-                                                    boolean conversational)
-            throws InvalidServiceContractException {
+                                                    boolean conversational,
+                                                    ValidationContext context) {
         Method[] methods = type.getMethods();
         List<Operation<Type>> operations = new ArrayList<Operation<Type>>(methods.length);
         for (Method method : methods) {
             String name = method.getName();
             if (remotable) {
+                boolean error = false;
                 for (Operation<Type> operation : operations) {
                     if (operation.getName().equals(name)) {
-                        throw new OverloadedOperationException(method);
+                        context.addError(new OverloadedOperation(method));
+                        error = true;
+                        break;
                     }
+                }
+                if (error) {
+                    continue;
                 }
             }
 
@@ -127,10 +136,7 @@ public class DefaultContractProcessor implements ContractProcessor {
             int conversationSequence = NO_CONVERSATION;
             if (method.isAnnotationPresent(EndsConversation.class)) {
                 if (!conversational) {
-                    throw new InvalidConversationalOperationException(
-                            "Method is marked as end conversation but contract is not conversational",
-                            method.getDeclaringClass().getName(),
-                            method);
+                    context.addError(new InvalidConversationalOperation(method));
                 }
                 conversationSequence = CONVERSATION_END;
             } else if (conversational) {
@@ -150,13 +156,8 @@ public class DefaultContractProcessor implements ContractProcessor {
                 faultDataTypes.add(new DataType<Type>(actualType, actualType));
             }
 
-            DataType<List<DataType<Type>>> inputType =
-                    new DataType<List<DataType<Type>>>(Object[].class, paramDataTypes);
-            Operation<Type> operation = new Operation<Type>(name,
-                                                            inputType,
-                                                            returnDataType,
-                                                            faultDataTypes,
-                                                            conversationSequence);
+            DataType<List<DataType<Type>>> inputType = new DataType<List<DataType<Type>>>(Object[].class, paramDataTypes);
+            Operation<Type> operation = new Operation<Type>(name, inputType, returnDataType, faultDataTypes, conversationSequence);
 
             // TODO this should be refactored to its own processor
             if (method.isAnnotationPresent(OneWay.class)) {

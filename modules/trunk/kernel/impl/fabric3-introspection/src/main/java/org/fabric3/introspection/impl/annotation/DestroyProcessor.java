@@ -20,9 +20,8 @@ import java.lang.reflect.Method;
 
 import org.osoa.sca.annotations.Destroy;
 
-import org.fabric3.introspection.java.AbstractAnnotationProcessor;
 import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.introspection.IntrospectionException;
+import org.fabric3.introspection.java.AbstractAnnotationProcessor;
 import org.fabric3.scdl.Implementation;
 import org.fabric3.scdl.InjectingComponentType;
 import org.fabric3.scdl.Signature;
@@ -36,7 +35,7 @@ public class DestroyProcessor<I extends Implementation<? extends InjectingCompon
         super(Destroy.class);
     }
 
-    public void visitMethod(Destroy annotation, Method method, I implementation, IntrospectionContext context) throws IntrospectionException {
+    public void visitMethod(Destroy annotation, Method method, I implementation, IntrospectionContext context) {
         implementation.getComponentType().setDestroyMethod(new Signature(method));
     }
 }

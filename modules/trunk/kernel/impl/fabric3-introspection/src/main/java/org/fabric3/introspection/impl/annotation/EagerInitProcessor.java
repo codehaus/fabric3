@@ -18,9 +18,8 @@ package org.fabric3.introspection.impl.annotation;
 
 import org.osoa.sca.annotations.EagerInit;
 
-import org.fabric3.introspection.java.AbstractAnnotationProcessor;
 import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.introspection.IntrospectionException;
+import org.fabric3.introspection.java.AbstractAnnotationProcessor;
 import org.fabric3.scdl.Implementation;
 import org.fabric3.scdl.InjectingComponentType;
 
@@ -33,7 +32,7 @@ public class EagerInitProcessor<I extends Implementation<? extends InjectingComp
         super(EagerInit.class);
     }
 
-    public void visitType(EagerInit annotation, Class<?> type, I implementation, IntrospectionContext context) throws IntrospectionException {
+    public void visitType(EagerInit annotation, Class<?> type, I implementation, IntrospectionContext context) {
         InjectingComponentType componentType = implementation.getComponentType();
         componentType.setInitLevel(50);
     }

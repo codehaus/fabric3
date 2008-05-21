@@ -22,7 +22,6 @@ import org.osoa.sca.annotations.Reference;
 import org.osoa.sca.annotations.Remotable;
 
 import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.introspection.IntrospectionException;
 import org.fabric3.introspection.contract.ContractProcessor;
 import org.fabric3.introspection.java.AbstractAnnotationProcessor;
 import org.fabric3.scdl.Implementation;
@@ -42,8 +41,8 @@ public class RemotableProcessor<I extends Implementation<? extends InjectingComp
         this.contractProcessor = contractProcessor;
     }
 
-    public void visitType(Remotable annotation, Class<?> type, I implementation, IntrospectionContext context) throws IntrospectionException {
-        ServiceContract<Type> serviceContract = contractProcessor.introspect(context.getTypeMapping(), type);
+    public void visitType(Remotable annotation, Class<?> type, I implementation, IntrospectionContext context) {
+        ServiceContract<Type> serviceContract = contractProcessor.introspect(context.getTypeMapping(), type, context);
         ServiceDefinition definition = new ServiceDefinition(serviceContract.getInterfaceName(), serviceContract);
         implementation.getComponentType().add(definition);
     }

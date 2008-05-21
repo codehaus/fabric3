@@ -24,7 +24,6 @@ import java.lang.reflect.Type;
 import java.util.Collection;
 import java.util.Set;
 
-import org.fabric3.introspection.IntrospectionException;
 import org.fabric3.introspection.java.ImplementationNotFoundException;
 import org.fabric3.scdl.InjectableAttributeType;
 import org.fabric3.scdl.ServiceDefinition;
@@ -53,9 +52,8 @@ public interface IntrospectionHelper {
      * @param field    the field to inspect
      * @param override an override specified in an annotation
      * @return the name of the injection site
-     * @throws org.fabric3.introspection.IntrospectionException if the field is not a valid injection site
      */
-    String getSiteName(Field field, String override) throws IntrospectionException;
+    String getSiteName(Field field, String override);
 
     /**
      * Derive the name of an injection site from a setter method.
@@ -63,9 +61,8 @@ public interface IntrospectionHelper {
      * @param setter   the setter method to inspect
      * @param override an override specified in an annotation
      * @return the name of the injection site
-     * @throws IntrospectionException if the method is not a valid injection site
      */
-    String getSiteName(Method setter, String override) throws IntrospectionException;
+    String getSiteName(Method setter, String override);
 
     /**
      * Derive the name of an injection site from a setter method.
@@ -74,18 +71,16 @@ public interface IntrospectionHelper {
      * @param index       the index of the constructor parameter to inspect
      * @param override    an override specified in an annotation
      * @return the name of the injection site
-     * @throws IntrospectionException if the method is not a valid injection site
      */
-    String getSiteName(Constructor<?> constructor, int index, String override) throws IntrospectionException;
+    String getSiteName(Constructor<?> constructor, int index, String override);
 
     /**
      * Returns the generic type of a setter method.
      *
      * @param setter the method to inspect
      * @return the type of value the setter method injects
-     * @throws IntrospectionException if there was a problem determining the type
      */
-    Type getGenericType(Method setter) throws IntrospectionException;
+    Type getGenericType(Method setter);
 
     /**
      * Returns the generic type of a method parameter.
@@ -93,9 +88,8 @@ public interface IntrospectionHelper {
      * @param method the method to inspect
      * @param index  the parameter index
      * @return the type of value the method injects
-     * @throws IntrospectionException if there was a problem determining the type
      */
-    Type getGenericType(Method method, int index) throws IntrospectionException;
+    Type getGenericType(Method method, int index);
 
     /**
      * Returns the generic type of a constructor parameter.
@@ -103,9 +97,8 @@ public interface IntrospectionHelper {
      * @param constructor the constructor to inspect
      * @param index       the parameter index
      * @return the type of value the constructor injects
-     * @throws IntrospectionException if there was a problem determining the type
      */
-    Type getGenericType(Constructor<?> constructor, int index) throws IntrospectionException;
+    Type getGenericType(Constructor<?> constructor, int index);
 
     /**
      * Returns true if the supplied type should be treated as many-valued.

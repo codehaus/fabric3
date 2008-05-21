@@ -24,12 +24,10 @@ import org.osoa.sca.annotations.Callback;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.introspection.IntrospectionException;
-import org.fabric3.introspection.contract.ContractProcessor;
-import org.fabric3.introspection.java.AbstractAnnotationProcessor;
-import org.fabric3.introspection.contract.InvalidServiceContractException;
 import org.fabric3.introspection.IntrospectionHelper;
 import org.fabric3.introspection.TypeMapping;
+import org.fabric3.introspection.contract.ContractProcessor;
+import org.fabric3.introspection.java.AbstractAnnotationProcessor;
 import org.fabric3.scdl.CallbackDefinition;
 import org.fabric3.scdl.FieldInjectionSite;
 import org.fabric3.scdl.Implementation;
@@ -51,26 +49,27 @@ public class CallbackProcessor<I extends Implementation<? extends InjectingCompo
     }
 
 
-    public void visitField(Callback annotation, Field field, I implementation, IntrospectionContext context) throws IntrospectionException {
+    public void visitField(Callback annotation, Field field, I implementation, IntrospectionContext context) {
 
         String name = helper.getSiteName(field, null);
         Type type = field.getGenericType();
         FieldInjectionSite site = new FieldInjectionSite(field);
-        CallbackDefinition definition = createDefinition(name, type, context.getTypeMapping());
+        CallbackDefinition definition = createDefinition(name, type, context.getTypeMapping(), context);
         implementation.getComponentType().add(definition, site);
     }
 
-    public void visitMethod(Callback annotation, Method method, I implementation, IntrospectionContext context) throws IntrospectionException {
+    public void visitMethod(Callback annotation, Method method, I implementation, IntrospectionContext context) {
 
         String name = helper.getSiteName(method, null);
         Type type = helper.getGenericType(method);
         MethodInjectionSite site = new MethodInjectionSite(method, 0);
-        CallbackDefinition definition = createDefinition(name, type, context.getTypeMapping());
+        CallbackDefinition definition = createDefinition(name, type, context.getTypeMapping(), context);
         implementation.getComponentType().add(definition, site);
     }
 
-    CallbackDefinition createDefinition(String name, Type type, TypeMapping typeMapping) throws InvalidServiceContractException {
-        ServiceContract<Type> contract = contractProcessor.introspect(typeMapping, helper.getBaseType(type, typeMapping));
+    CallbackDefinition createDefinition(String name, Type type, TypeMapping typeMapping, IntrospectionContext context) {
+        Type baseType = helper.getBaseType(type, typeMapping);
+        ServiceContract<Type> contract = contractProcessor.introspect(typeMapping, baseType, context);
         return new CallbackDefinition(name, contract);
     }
 }

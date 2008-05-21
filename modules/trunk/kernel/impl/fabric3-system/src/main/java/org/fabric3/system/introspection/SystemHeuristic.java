@@ -18,9 +18,8 @@ package org.fabric3.system.introspection;
 
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.introspection.java.HeuristicProcessor;
 import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.introspection.IntrospectionException;
+import org.fabric3.introspection.java.HeuristicProcessor;
 import org.fabric3.system.scdl.SystemImplementation;
 
 /**
@@ -41,7 +40,7 @@ public class SystemHeuristic implements HeuristicProcessor<SystemImplementation>
         this.injectionHeuristic = injectionHeuristic;
     }
 
-    public void applyHeuristics(SystemImplementation implementation, Class<?> implClass, IntrospectionContext context) throws IntrospectionException {
+    public void applyHeuristics(SystemImplementation implementation, Class<?> implClass, IntrospectionContext context) {
         serviceHeuristic.applyHeuristics(implementation, implClass, context);
         constructorHeuristic.applyHeuristics(implementation, implClass, context);
         injectionHeuristic.applyHeuristics(implementation, implClass, context);

@@ -23,7 +23,6 @@ import javax.xml.namespace.QName;
 
 import org.fabric3.api.annotation.PropagatesConversation;
 import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.introspection.IntrospectionException;
 import org.fabric3.introspection.java.AbstractAnnotationProcessor;
 import org.fabric3.scdl.Implementation;
 import org.fabric3.scdl.InjectingComponentType;
@@ -39,22 +38,19 @@ public class ConversationPropagationProcessor<I extends Implementation<? extends
         super(PropagatesConversation.class);
     }
 
-    public void visitField(PropagatesConversation annotation, Field field, I implementation, IntrospectionContext context)
-            throws IntrospectionException {
+    public void visitField(PropagatesConversation annotation, Field field, I implementation, IntrospectionContext context) {
     }
 
-    public void visitMethod(PropagatesConversation annotation, Method method, I implementation, IntrospectionContext context)
-            throws IntrospectionException {
+    public void visitMethod(PropagatesConversation annotation, Method method, I implementation, IntrospectionContext context) {
     }
 
     public void visitConstructorParameter(PropagatesConversation annotation,
                                           Constructor<?> constructor,
                                           int index,
                                           I implementation,
-                                          IntrospectionContext context) throws IntrospectionException {
+                                          IntrospectionContext context) {
     }
 
-    public void visitType(PropagatesConversation annotation, Class<?> type, I implementation, IntrospectionContext context)
-            throws IntrospectionException {
+    public void visitType(PropagatesConversation annotation, Class<?> type, I implementation, IntrospectionContext context) {
     }
 }

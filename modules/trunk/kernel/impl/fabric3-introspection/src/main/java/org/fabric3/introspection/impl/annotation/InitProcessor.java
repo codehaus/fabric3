@@ -20,9 +20,8 @@ import java.lang.reflect.Method;
 
 import org.osoa.sca.annotations.Init;
 
-import org.fabric3.introspection.java.AbstractAnnotationProcessor;
 import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.introspection.IntrospectionException;
+import org.fabric3.introspection.java.AbstractAnnotationProcessor;
 import org.fabric3.scdl.Implementation;
 import org.fabric3.scdl.InjectingComponentType;
 import org.fabric3.scdl.Signature;
@@ -36,7 +35,7 @@ public class InitProcessor<I extends Implementation<? extends InjectingComponent
         super(Init.class);
     }
 
-    public void visitMethod(Init annotation, Method method, I implementation, IntrospectionContext context) throws IntrospectionException {
+    public void visitMethod(Init annotation, Method method, I implementation, IntrospectionContext context) {
         implementation.getComponentType().setInitMethod(new Signature(method));
     }
 }

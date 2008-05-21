@@ -16,31 +16,29 @@
  */
 package org.fabric3.java.introspection;
 
-import java.util.Map;
+import java.awt.*;
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.net.URI;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
-import java.math.BigInteger;
-import java.math.BigDecimal;
-import java.net.URI;
-import java.awt.*;
-
+import static javax.xml.XMLConstants.W3C_XML_SCHEMA_NS_URI;
+import javax.xml.datatype.Duration;
+import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.namespace.QName;
+import javax.xml.transform.Source;
 
 import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.introspection.IntrospectionException;
 import org.fabric3.introspection.java.HeuristicProcessor;
 import org.fabric3.java.scdl.JavaImplementation;
 import org.fabric3.pojo.scdl.PojoComponentType;
-import org.fabric3.scdl.Property;
-import org.fabric3.scdl.InjectionSite;
 import org.fabric3.scdl.InjectableAttribute;
 import org.fabric3.scdl.InjectableAttributeType;
-import static javax.xml.XMLConstants.W3C_XML_SCHEMA_NS_URI;
-import javax.xml.datatype.XMLGregorianCalendar;
-import javax.xml.datatype.Duration;
-import javax.xml.transform.Source;
+import org.fabric3.scdl.InjectionSite;
+import org.fabric3.scdl.Property;
 
 /**
  * Heuristic that determines the XML type of Java properties.
@@ -75,7 +73,7 @@ public class JavaDataTypeHeuristic implements HeuristicProcessor<JavaImplementat
         JAXB_MAPPING.put(byte[].class.getName(), new QName(W3C_XML_SCHEMA_NS_URI, "base64Binary"));
     }
 
-    public void applyHeuristics(JavaImplementation implementation, Class<?> implClass, IntrospectionContext context) throws IntrospectionException {
+    public void applyHeuristics(JavaImplementation implementation, Class<?> implClass, IntrospectionContext context) {
 
         PojoComponentType componentType = implementation.getComponentType();
         Map<String, Property> properties = componentType.getProperties();

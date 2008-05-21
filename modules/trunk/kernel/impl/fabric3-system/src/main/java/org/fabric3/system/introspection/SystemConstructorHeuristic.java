@@ -18,11 +18,12 @@ package org.fabric3.system.introspection;
 
 import java.lang.reflect.Constructor;
 
-import org.fabric3.introspection.java.HeuristicProcessor;
 import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.introspection.IntrospectionException;
+import org.fabric3.introspection.java.HeuristicProcessor;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.Signature;
+import org.fabric3.scdl.validation.AmbiguousConstructor;
+import org.fabric3.scdl.validation.NoConstructorFound;
 import org.fabric3.system.scdl.SystemImplementation;
 
 /**
@@ -32,7 +33,7 @@ import org.fabric3.system.scdl.SystemImplementation;
  */
 public class SystemConstructorHeuristic implements HeuristicProcessor<SystemImplementation> {
 
-    public void applyHeuristics(SystemImplementation implementation, Class<?> implClass, IntrospectionContext context) throws IntrospectionException {
+    public void applyHeuristics(SystemImplementation implementation, Class<?> implClass, IntrospectionContext context) {
         PojoComponentType componentType = implementation.getComponentType();
 
         // if there is already a defined constructor then do nothing
@@ -40,7 +41,7 @@ public class SystemConstructorHeuristic implements HeuristicProcessor<SystemImpl
             return;
         }
 
-        Signature signature = findConstructor(implClass);
+        Signature signature = findConstructor(implClass, context);
         componentType.setConstructor(signature);
     }
 
@@ -51,10 +52,10 @@ public class SystemConstructorHeuristic implements HeuristicProcessor<SystemImpl
      * constructor will be selected or an org.osoa.sca.annotations.Constructor annotation must be used.
      *
      * @param implClass the class we are inspecting
+     * @param context   the introspection context to report errors and warnings
      * @return the signature of the constructor to use
-     * @throws IntrospectionException if there is a problem with the user's class
      */
-    Signature findConstructor(Class<?> implClass) throws IntrospectionException {
+    Signature findConstructor(Class<?> implClass, IntrospectionContext context) {
         Constructor<?>[] constructors = implClass.getDeclaredConstructors();
         Constructor<?> selected = null;
         if (constructors.length == 1) {
@@ -63,7 +64,8 @@ public class SystemConstructorHeuristic implements HeuristicProcessor<SystemImpl
             for (Constructor<?> constructor : constructors) {
                 if (constructor.isAnnotationPresent(org.osoa.sca.annotations.Constructor.class)) {
                     if (selected != null) {
-                        throw new AmbiguousConstructorException(implClass.getName());
+                        context.addError(new AmbiguousConstructor(implClass));
+                        return null;
                     }
                     selected = constructor;
                 }
@@ -72,7 +74,8 @@ public class SystemConstructorHeuristic implements HeuristicProcessor<SystemImpl
                 try {
                     selected = implClass.getConstructor();
                 } catch (NoSuchMethodException e) {
-                    throw new NoConstructorException(implClass.getName());
+                    context.addError(new NoConstructorFound(implClass));
+                    return null;
                 }
             }
         }

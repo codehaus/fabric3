@@ -21,10 +21,11 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.GenericArrayType;
 import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.lang.reflect.TypeVariable;
-import java.lang.reflect.Modifier;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -32,24 +33,22 @@ import java.util.Map;
 import java.util.Queue;
 import java.util.Set;
 import java.util.SortedSet;
-import java.util.ArrayList;
 
 import org.osoa.sca.ComponentContext;
 import org.osoa.sca.RequestContext;
 import org.osoa.sca.ServiceReference;
+import org.osoa.sca.annotations.Callback;
 import org.osoa.sca.annotations.Remotable;
 import org.osoa.sca.annotations.Service;
-import org.osoa.sca.annotations.Callback;
 
-import org.fabric3.introspection.IntrospectionException;
 import org.fabric3.introspection.IntrospectionHelper;
 import org.fabric3.introspection.TypeMapping;
 import org.fabric3.introspection.java.ImplementationNotFoundException;
+import org.fabric3.scdl.DataType;
 import org.fabric3.scdl.InjectableAttributeType;
+import org.fabric3.scdl.Operation;
 import org.fabric3.scdl.ServiceDefinition;
 import org.fabric3.scdl.Signature;
-import org.fabric3.scdl.Operation;
-import org.fabric3.scdl.DataType;
 
 /**
  * @version $Rev$ $Date$
@@ -83,14 +82,14 @@ public class DefaultIntrospectionHelper implements IntrospectionHelper {
         }
     }
 
-    public String getSiteName(Field field, String override) throws IntrospectionException {
+    public String getSiteName(Field field, String override) {
         if (override != null && override.length() != 0) {
             return override;
         }
         return field.getName();
     }
 
-    public String getSiteName(Method setter, String override) throws IntrospectionException {
+    public String getSiteName(Method setter, String override) {
         if (override != null && override.length() != 0) {
             return override;
         }
@@ -103,7 +102,7 @@ public class DefaultIntrospectionHelper implements IntrospectionHelper {
         }
     }
 
-    public String getSiteName(Constructor<?> constructor, int index, String override) throws IntrospectionException {
+    public String getSiteName(Constructor<?> constructor, int index, String override) {
         if (override != null && override.length() != 0) {
             return override;
         }
@@ -118,15 +117,15 @@ public class DefaultIntrospectionHelper implements IntrospectionHelper {
         return constructor.getDeclaringClass().getSimpleName() + "[" + index + ']';
     }
 
-    public Type getGenericType(Method setter) throws IntrospectionException {
+    public Type getGenericType(Method setter) {
         return getGenericType(setter, 0);
     }
 
-    public Type getGenericType(Method method, int index) throws IntrospectionException {
+    public Type getGenericType(Method method, int index) {
         return method.getGenericParameterTypes()[index];
     }
 
-    public Type getGenericType(Constructor<?> constructor, int index) throws IntrospectionException {
+    public Type getGenericType(Constructor<?> constructor, int index) {
         return constructor.getGenericParameterTypes()[index];
     }
 
@@ -258,7 +257,7 @@ public class DefaultIntrospectionHelper implements IntrospectionHelper {
         return methods;
     }
 
-    boolean isSetter(Method method) {
+    private boolean isSetter(Method method) {
         // it must return void
         if (!Void.TYPE.equals(method.getReturnType())) {
             return false;
@@ -271,11 +270,8 @@ public class DefaultIntrospectionHelper implements IntrospectionHelper {
 
         // it's name must begin with "set" but not be "set"
         String name = method.getName();
-        if (name.length() < 4 || !name.startsWith("set")) {
-            return false;
-        }
+        return !(name.length() < 4 || !name.startsWith("set"));
 
-        return true;
     }
 
     private Set<Signature> getOperations(Collection<ServiceDefinition> services) {

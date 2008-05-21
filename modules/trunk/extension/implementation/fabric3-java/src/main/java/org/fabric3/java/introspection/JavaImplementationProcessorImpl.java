@@ -22,15 +22,15 @@ import java.net.URL;
 
 import org.osoa.sca.annotations.Reference;
 
+import org.fabric3.introspection.DefaultIntrospectionContext;
 import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.introspection.IntrospectionException;
 import org.fabric3.introspection.IntrospectionHelper;
+import org.fabric3.introspection.TypeMapping;
 import org.fabric3.introspection.java.ClassWalker;
 import org.fabric3.introspection.java.HeuristicProcessor;
-import org.fabric3.introspection.TypeMapping;
+import org.fabric3.introspection.java.ImplementationNotFoundException;
 import org.fabric3.introspection.xml.LoaderException;
 import org.fabric3.java.scdl.JavaImplementation;
-import org.fabric3.introspection.DefaultIntrospectionContext;
 import org.fabric3.pojo.scdl.PojoComponentType;
 
 /**
@@ -41,28 +41,42 @@ public class JavaImplementationProcessorImpl implements JavaImplementationProces
     private final HeuristicProcessor<JavaImplementation> heuristic;
     private final IntrospectionHelper helper;
 
-    public JavaImplementationProcessorImpl(@Reference(name="classWalker") ClassWalker<JavaImplementation> classWalker,
-                                       @Reference(name="heuristic") HeuristicProcessor<JavaImplementation> heuristic,
-                                       @Reference(name="helper")IntrospectionHelper helper) {
+    public JavaImplementationProcessorImpl(@Reference(name = "classWalker")ClassWalker<JavaImplementation> classWalker,
+                                           @Reference(name = "heuristic")HeuristicProcessor<JavaImplementation> heuristic,
+                                           @Reference(name = "helper")IntrospectionHelper helper) {
         this.classWalker = classWalker;
         this.heuristic = heuristic;
         this.helper = helper;
     }
 
-    public void introspect(JavaImplementation implementation, IntrospectionContext context) throws IntrospectionException {
+    public void introspect(JavaImplementation implementation, IntrospectionContext context) {
         String implClassName = implementation.getImplementationClass();
         PojoComponentType componentType = new PojoComponentType(implClassName);
         componentType.setScope("STATELESS");
         implementation.setComponentType(componentType);
 
         ClassLoader cl = context.getTargetClassLoader();
-        Class<?> implClass = helper.loadClass(implClassName, cl);
+
+        Class<?> implClass;
+        try {
+            implClass = helper.loadClass(implClassName, cl);
+        } catch (ImplementationNotFoundException e) {
+            context.addError(new ImplementationNotFound(implementation));
+            return;
+        }
         TypeMapping typeMapping = helper.mapTypeParameters(implClass);
 
-        context = new DefaultIntrospectionContext(context, typeMapping);
-        classWalker.walk(implementation, implClass, context);
+        IntrospectionContext newContext = new DefaultIntrospectionContext(context, typeMapping);
+        classWalker.walk(implementation, implClass, newContext);
 
-        heuristic.applyHeuristics(implementation, implClass, context);
+        heuristic.applyHeuristics(implementation, implClass, newContext);
+        if (newContext.hasErrors()) {
+            context.addErrors(newContext.getErrors());
+        }
+        if (newContext.hasWarnings()) {
+            context.addErrors(newContext.getWarnings());
+        }
+
     }
 
     PojoComponentType loadFromSidefile(URL url, IntrospectionContext introspectionContext) throws LoaderException {

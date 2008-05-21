@@ -23,11 +23,10 @@ import java.lang.reflect.Type;
 
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.introspection.java.AbstractAnnotationProcessor;
 import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.introspection.IntrospectionException;
 import org.fabric3.introspection.IntrospectionHelper;
 import org.fabric3.introspection.TypeMapping;
+import org.fabric3.introspection.java.AbstractAnnotationProcessor;
 import org.fabric3.scdl.ConstructorInjectionSite;
 import org.fabric3.scdl.FieldInjectionSite;
 import org.fabric3.scdl.Implementation;
@@ -46,7 +45,7 @@ public class PropertyProcessor<I extends Implementation<? extends InjectingCompo
         this.helper = helper;
     }
 
-    public void visitField(org.osoa.sca.annotations.Property annotation, Field field, I implementation, IntrospectionContext context) throws IntrospectionException {
+    public void visitField(org.osoa.sca.annotations.Property annotation, Field field, I implementation, IntrospectionContext context) {
         String name = helper.getSiteName(field, annotation.name());
         Type type = field.getGenericType();
         FieldInjectionSite site = new FieldInjectionSite(field);
@@ -54,7 +53,7 @@ public class PropertyProcessor<I extends Implementation<? extends InjectingCompo
         implementation.getComponentType().add(property, site);
     }
 
-    public void visitMethod(org.osoa.sca.annotations.Property annotation, Method method, I implementation, IntrospectionContext context) throws IntrospectionException {
+    public void visitMethod(org.osoa.sca.annotations.Property annotation, Method method, I implementation, IntrospectionContext context) {
         String name = helper.getSiteName(method, annotation.name());
         Type type = helper.getGenericType(method);
         MethodInjectionSite site = new MethodInjectionSite(method, 0);
@@ -62,8 +61,11 @@ public class PropertyProcessor<I extends Implementation<? extends InjectingCompo
         implementation.getComponentType().add(property, site);
     }
 
-    public void visitConstructorParameter(org.osoa.sca.annotations.Property annotation, Constructor<?> constructor, int index, I implementation, IntrospectionContext context)
-            throws IntrospectionException {
+    public void visitConstructorParameter(org.osoa.sca.annotations.Property annotation,
+                                          Constructor<?> constructor,
+                                          int index,
+                                          I implementation,
+                                          IntrospectionContext context) {
         String name = helper.getSiteName(constructor, index, annotation.name());
         Type type = helper.getGenericType(constructor, index);
         ConstructorInjectionSite site = new ConstructorInjectionSite(constructor, index);

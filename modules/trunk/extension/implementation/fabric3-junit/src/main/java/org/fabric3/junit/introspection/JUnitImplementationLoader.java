@@ -25,7 +25,6 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.introspection.IntrospectionException;
 import org.fabric3.introspection.xml.LoaderException;
 import org.fabric3.introspection.xml.LoaderUtil;
 import org.fabric3.introspection.xml.TypeLoader;
@@ -49,11 +48,7 @@ public class JUnitImplementationLoader implements TypeLoader<JUnitImplementation
         LoaderUtil.skipToEndElement(reader);
 
         JUnitImplementation impl = new JUnitImplementation(className);
-        try {
-            implementationProcessor.introspect(impl, introspectionContext);
-        } catch (IntrospectionException e) {
-            throw new LoaderException(reader, e);
-        }
+        implementationProcessor.introspect(impl, introspectionContext);
         return impl;
     }
 

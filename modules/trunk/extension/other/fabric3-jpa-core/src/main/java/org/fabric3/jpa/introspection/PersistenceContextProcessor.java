@@ -27,18 +27,18 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.introspection.IntrospectionException;
 import org.fabric3.introspection.TypeMapping;
 import org.fabric3.introspection.contract.ContractProcessor;
-import org.fabric3.introspection.contract.InvalidServiceContractException;
 import org.fabric3.introspection.java.AbstractAnnotationProcessor;
 import org.fabric3.jpa.scdl.PersistenceContextResource;
+import org.fabric3.scdl.DefaultValidationContext;
 import org.fabric3.scdl.FieldInjectionSite;
 import org.fabric3.scdl.Implementation;
 import org.fabric3.scdl.InjectingComponentType;
 import org.fabric3.scdl.MethodInjectionSite;
 import org.fabric3.scdl.Scope;
 import org.fabric3.scdl.ServiceContract;
+import org.fabric3.scdl.ValidationContext;
 
 /**
  * Processes @PersistenceContext annotations.
@@ -49,20 +49,21 @@ import org.fabric3.scdl.ServiceContract;
 public class PersistenceContextProcessor<I extends Implementation<? extends InjectingComponentType>> extends AbstractAnnotationProcessor<PersistenceContext, I> {
     private final ServiceContract<Type> factoryServiceContract;
 
-    public PersistenceContextProcessor(@Reference ContractProcessor contractProcessor) throws InvalidServiceContractException {
+    public PersistenceContextProcessor(@Reference ContractProcessor contractProcessor) {
         super(PersistenceContext.class);
-        factoryServiceContract = contractProcessor.introspect(new TypeMapping(), EntityManager.class);
+        ValidationContext context = new DefaultValidationContext();
+        factoryServiceContract = contractProcessor.introspect(new TypeMapping(), EntityManager.class, context);
+        assert !context.hasErrors(); // should not happen
     }
 
-    public void visitField(PersistenceContext annotation, Field field, I implementation, IntrospectionContext context) throws IntrospectionException {
+    public void visitField(PersistenceContext annotation, Field field, I implementation, IntrospectionContext context) {
         FieldInjectionSite site = new FieldInjectionSite(field);
         InjectingComponentType componentType = implementation.getComponentType();
         PersistenceContextResource definition = createDefinition(annotation, componentType);
         componentType.add(definition, site);
     }
 
-    public void visitMethod(PersistenceContext annotation, Method method, I implementation, IntrospectionContext context)
-            throws IntrospectionException {
+    public void visitMethod(PersistenceContext annotation, Method method, I implementation, IntrospectionContext context) {
         MethodInjectionSite site = new MethodInjectionSite(method, 0);
         InjectingComponentType componentType = implementation.getComponentType();
         PersistenceContextResource definition = createDefinition(annotation, componentType);

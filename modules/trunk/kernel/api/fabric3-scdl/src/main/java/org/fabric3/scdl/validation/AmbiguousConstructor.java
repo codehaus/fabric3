@@ -14,19 +14,19 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.system.introspection;
+package org.fabric3.scdl.validation;
 
-import org.fabric3.introspection.IntrospectionException;
+import org.fabric3.scdl.ValidationFailure;
 
 /**
  * @version $Rev$ $Date$
  */
-public class AmbiguousConstructorException extends IntrospectionException {
-    public AmbiguousConstructorException(String identifier) {
-        super(null, identifier);
+public class AmbiguousConstructor extends ValidationFailure<Class<?>> {
+    public AmbiguousConstructor(Class<?> clazz) {
+        super(clazz);
     }
 
     public String getMessage() {
-        return "Multiple constructors with @Constructor present in class: " + getIdentifier();
+        return "Multiple constructors are annotated with @Constructor in class: " + getModelObject();
     }
 }

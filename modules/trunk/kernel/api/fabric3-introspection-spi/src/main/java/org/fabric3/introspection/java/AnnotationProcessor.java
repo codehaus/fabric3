@@ -21,10 +21,9 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 
+import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.scdl.Implementation;
 import org.fabric3.scdl.InjectingComponentType;
-import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.introspection.IntrospectionException;
 
 /**
  * Interface for processors that handle annotations attached to Java declarations.
@@ -41,82 +40,77 @@ public interface AnnotationProcessor<A extends Annotation, I extends Implementat
     Class<A> getType();
 
     /**
-     * Visit an annotation attached to a package declaration.
+     * Visit an annotation on a package declaration. If errors or warnings are encountered, they will be collated in the IntrospectionContext.
      *
      * @param annotation     the annotation
      * @param javaPackage    the package
      * @param implementation the implementation being introspected
      * @param context        the current introspection context
-     * @throws org.fabric3.introspection.IntrospectionException if there was a problem with the declaration
      */
-    void visitPackage(A annotation, Package javaPackage, I implementation, IntrospectionContext context) throws IntrospectionException;
+    void visitPackage(A annotation, Package javaPackage, I implementation, IntrospectionContext context);
 
     /**
-     * Visit an annotation attached to a class or interface declaration.
+     * Visit an annotation on a class or interface declaration.  If errors or warnings are encountered, they will be collated in the
+     * IntrospectionContext.
      *
      * @param annotation     the annotation
      * @param type           the class or interface
      * @param implementation the implementation being introspected
      * @param context        the current introspection context
-     * @throws IntrospectionException if there was a problem with the declaration
      */
-    void visitType(A annotation, Class<?> type, I implementation, IntrospectionContext context) throws IntrospectionException;
+    void visitType(A annotation, Class<?> type, I implementation, IntrospectionContext context);
 
     /**
-     * Visit an annotation attached to a field declaration.
+     * Visit an annotation on a field declaration. If errors or warnings are encountered, they will be collated in the IntrospectionContext.
      *
      * @param annotation     the annotation
      * @param field          the field
      * @param implementation the implementation being introspected
      * @param context        the current introspection context
-     * @throws IntrospectionException if there was a problem with the declaration
      */
-    void visitField(A annotation, Field field, I implementation, IntrospectionContext context) throws IntrospectionException;
+    void visitField(A annotation, Field field, I implementation, IntrospectionContext context);
 
     /**
-     * Visit an annotation attached to a method declaration.
+     * Visit an annotation on a method declaration. If errors or warnings are encountered, they will be collated in the IntrospectionContext.
      *
      * @param annotation     the annotation
      * @param method         the method declaration
      * @param implementation the implementation being introspected
      * @param context        the current introspection context
-     * @throws IntrospectionException if there was a problem with the declaration
      */
-    void visitMethod(A annotation, Method method, I implementation, IntrospectionContext context) throws IntrospectionException;
+    void visitMethod(A annotation, Method method, I implementation, IntrospectionContext context);
 
     /**
-     * Visit an annotation attached to a method parameter declaration.
+     * Visit an annotation on a method parameter declaration. If errors or warnings are encountered, they will be collated in the
+     * IntrospectionContext.
      *
      * @param annotation     the annotation
      * @param method         the method declaration
      * @param index          the index of the method parameter
      * @param implementation the implementation being introspected
      * @param context        the current introspection context
-     * @throws IntrospectionException if there was a problem with the declaration
      */
-    void visitMethodParameter(A annotation, Method method, int index, I implementation, IntrospectionContext context) throws IntrospectionException;
+    void visitMethodParameter(A annotation, Method method, int index, I implementation, IntrospectionContext context);
 
     /**
-     * Visit an annotation attached to a constructor declaration.
+     * Visit an annotation on a constructor declaration. If errors or warnings are encountered, they will be collated in the IntrospectionContext.
      *
      * @param annotation     the annotation
      * @param constructor    the constructor
      * @param implementation the implementation being introspected
      * @param context        the current introspection context
-     * @throws IntrospectionException if there was a problem with the declaration
      */
-    void visitConstructor(A annotation, Constructor<?> constructor, I implementation, IntrospectionContext context) throws IntrospectionException;
+    void visitConstructor(A annotation, Constructor<?> constructor, I implementation, IntrospectionContext context);
 
     /**
-     * Visit an annotation attached to a constructor parameter declaration.
+     * Visit an annotation on a constructor parameter declaration. If errors or warnings are encountered, they will be collated in the
+     * IntrospectionContext.
      *
      * @param annotation     the annotation
      * @param constructor    the constructor
      * @param index          the index of the constructor parameter
      * @param implementation the implementation being introspected
      * @param context        the current introspection context
-     * @throws IntrospectionException if there was a problem with the declaration
      */
-    void visitConstructorParameter(A annotation, Constructor<?> constructor, int index, I implementation, IntrospectionContext context)
-            throws IntrospectionException;
+    void visitConstructorParameter(A annotation, Constructor<?> constructor, int index, I implementation, IntrospectionContext context);
 }

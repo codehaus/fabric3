@@ -20,6 +20,7 @@ import java.lang.reflect.Type;
 
 import org.fabric3.introspection.TypeMapping;
 import org.fabric3.scdl.ServiceContract;
+import org.fabric3.scdl.ValidationContext;
 
 /**
  * Interface for processors that can construct a ServiceContract from a Java type.
@@ -28,12 +29,13 @@ import org.fabric3.scdl.ServiceContract;
  */
 public interface ContractProcessor {
     /**
-     * Introspect a Java Type (e.g. a Class) and return the ServiceContract.
+     * Introspect a Java Type (e.g. a Class) and return the ServiceContract. If validation errors or warnings are encountered, they will be reported
+     * in the ValidationContext.
      *
      * @param typeMapping the type mapping for the interface
      * @param type        the Java Type to introspect
+     * @param context     the validation context for reporting errors and warnings
      * @return the ServiceContract corresponding to the interface type
-     * @throws InvalidServiceContractException if the type does not define a valid service contract
      */
-    ServiceContract<Type> introspect(TypeMapping typeMapping, Type type) throws InvalidServiceContractException;
+    ServiceContract<Type> introspect(TypeMapping typeMapping, Type type, ValidationContext context);
 }

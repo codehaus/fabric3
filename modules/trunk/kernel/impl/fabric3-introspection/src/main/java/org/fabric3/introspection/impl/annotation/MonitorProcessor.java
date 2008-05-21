@@ -25,12 +25,10 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.api.annotation.Monitor;
 import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.introspection.IntrospectionException;
 import org.fabric3.introspection.IntrospectionHelper;
-import org.fabric3.introspection.java.AbstractAnnotationProcessor;
-import org.fabric3.introspection.contract.ContractProcessor;
-import org.fabric3.introspection.contract.InvalidServiceContractException;
 import org.fabric3.introspection.TypeMapping;
+import org.fabric3.introspection.contract.ContractProcessor;
+import org.fabric3.introspection.java.AbstractAnnotationProcessor;
 import org.fabric3.scdl.ConstructorInjectionSite;
 import org.fabric3.scdl.FieldInjectionSite;
 import org.fabric3.scdl.Implementation;
@@ -53,34 +51,33 @@ public class MonitorProcessor<I extends Implementation<? extends InjectingCompon
         this.contractProcessor = contractProcessor;
     }
 
-    public void visitField(Monitor annotation, Field field, I implementation, IntrospectionContext context) throws IntrospectionException {
+    public void visitField(Monitor annotation, Field field, I implementation, IntrospectionContext context) {
         String name = helper.getSiteName(field, null);
         Type type = field.getGenericType();
         FieldInjectionSite site = new FieldInjectionSite(field);
-        MonitorResource resource = createDefinition(name, type, context.getTypeMapping());
+        MonitorResource resource = createDefinition(name, type, context.getTypeMapping(), context);
         implementation.getComponentType().add(resource, site);
     }
 
-    public void visitMethod(Monitor annotation, Method method, I implementation, IntrospectionContext context) throws IntrospectionException {
+    public void visitMethod(Monitor annotation, Method method, I implementation, IntrospectionContext context) {
         String name = helper.getSiteName(method, null);
         Type type = helper.getGenericType(method);
         MethodInjectionSite site = new MethodInjectionSite(method, 0);
-        MonitorResource resource = createDefinition(name, type, context.getTypeMapping());
+        MonitorResource resource = createDefinition(name, type, context.getTypeMapping(), context);
         implementation.getComponentType().add(resource, site);
     }
 
-    public void visitConstructorParameter(Monitor annotation, Constructor<?> constructor, int index, I implementation, IntrospectionContext context)
-            throws IntrospectionException {
+    public void visitConstructorParameter(Monitor annotation, Constructor<?> constructor, int index, I implementation, IntrospectionContext context) {
         String name = helper.getSiteName(constructor, index, null);
         Type type = helper.getGenericType(constructor, index);
         ConstructorInjectionSite site = new ConstructorInjectionSite(constructor, index);
-        MonitorResource resource = createDefinition(name, type, context.getTypeMapping());
+        MonitorResource resource = createDefinition(name, type, context.getTypeMapping(), context);
         implementation.getComponentType().add(resource, site);
     }
 
 
-    MonitorResource createDefinition(String name, Type type, TypeMapping typeMapping) throws InvalidServiceContractException {
-        ServiceContract<?> contract = contractProcessor.introspect(typeMapping, type);
+    MonitorResource createDefinition(String name, Type type, TypeMapping typeMapping, IntrospectionContext context) {
+        ServiceContract<?> contract = contractProcessor.introspect(typeMapping, type, context);
         return new MonitorResource(name, false, contract);
     }
 }

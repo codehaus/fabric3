@@ -16,10 +16,9 @@
  */
 package org.fabric3.introspection.java;
 
+import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.scdl.AbstractComponentType;
 import org.fabric3.scdl.Implementation;
-import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.introspection.IntrospectionException;
 
 /**
  * Interface for processors that provide heuristic introspection of component implementations.
@@ -29,12 +28,12 @@ import org.fabric3.introspection.IntrospectionException;
 public interface HeuristicProcessor<I extends Implementation<? extends AbstractComponentType>> {
 
     /**
-     * Apply heuristics to an implementation and update the component type accordingly.
+     * Apply heuristics to an implementation and update the component type accordingly. If errors or warnings are encountered, they will be collated
+     * in the IntrospectionContext.
      *
      * @param implementation the implementation to inspect
      * @param implClass      the implementation class
      * @param context        the current introspection context
-     * @throws org.fabric3.introspection.IntrospectionException if there was a problem during introspection
      */
-    void applyHeuristics(I implementation, Class<?> implClass, IntrospectionContext context) throws IntrospectionException;
+    void applyHeuristics(I implementation, Class<?> implClass, IntrospectionContext context);
 }

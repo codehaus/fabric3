@@ -17,6 +17,7 @@
 package org.fabric3.system.introspection;
 
 import java.lang.reflect.Type;
+import java.net.URI;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Map;
@@ -26,11 +27,12 @@ import junit.framework.TestCase;
 import org.easymock.classextension.EasyMock;
 import org.easymock.classextension.IMocksControl;
 
-import org.fabric3.introspection.contract.ContractProcessor;
-import org.fabric3.introspection.IntrospectionHelper;
+import org.fabric3.introspection.DefaultIntrospectionContext;
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.IntrospectionException;
+import org.fabric3.introspection.IntrospectionHelper;
 import org.fabric3.introspection.TypeMapping;
+import org.fabric3.introspection.contract.ContractProcessor;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.ServiceContract;
 import org.fabric3.scdl.ServiceDefinition;
@@ -55,11 +57,12 @@ public class SystemServiceHeuristicTestCase extends TestCase {
 
     public void testNoInterface() throws IntrospectionException {
         EasyMock.expect(helper.getImplementedInterfaces(NoInterface.class)).andReturn(NOCLASSES);
-        EasyMock.expect(contractProcessor.introspect(typeMapping, NoInterface.class)).andReturn(noInterfaceContract);
+        IntrospectionContext context = new DefaultIntrospectionContext(null, null, null, null, typeMapping);
+        EasyMock.expect(contractProcessor.introspect(typeMapping, NoInterface.class, context)).andReturn(noInterfaceContract);
         control.replay();
 
         heuristic.applyHeuristics(impl, NoInterface.class, context);
-        Map<String,ServiceDefinition> services = componentType.getServices();
+        Map<String, ServiceDefinition> services = componentType.getServices();
         assertEquals(1, services.size());
         assertEquals(noInterfaceContract, services.get("NoInterface").getServiceContract());
         control.verify();
@@ -69,12 +72,14 @@ public class SystemServiceHeuristicTestCase extends TestCase {
         Set<Class<?>> interfaces = new HashSet<Class<?>>();
         interfaces.add(ServiceInterface.class);
 
+        IntrospectionContext context = new DefaultIntrospectionContext(null, null, null, null, typeMapping);
         EasyMock.expect(helper.getImplementedInterfaces(OneInterface.class)).andReturn(interfaces);
-        EasyMock.expect(contractProcessor.introspect(typeMapping, ServiceInterface.class)).andReturn(serviceInterfaceContract);
+        EasyMock.expect(contractProcessor.introspect(typeMapping, ServiceInterface.class, context)).andReturn(
+                serviceInterfaceContract);
         control.replay();
 
         heuristic.applyHeuristics(impl, OneInterface.class, context);
-        Map<String,ServiceDefinition> services = componentType.getServices();
+        Map<String, ServiceDefinition> services = componentType.getServices();
         assertEquals(1, services.size());
         assertEquals(serviceInterfaceContract, services.get("ServiceInterface").getServiceContract());
         control.verify();

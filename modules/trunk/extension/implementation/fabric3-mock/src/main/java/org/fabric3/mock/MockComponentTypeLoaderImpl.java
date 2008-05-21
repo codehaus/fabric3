@@ -22,14 +22,15 @@ import java.util.List;
 import org.easymock.IMocksControl;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.introspection.contract.ContractProcessor;
-import org.fabric3.introspection.IntrospectionHelper;
 import org.fabric3.introspection.IntrospectionContext;
+import org.fabric3.introspection.IntrospectionHelper;
 import org.fabric3.introspection.TypeMapping;
+import org.fabric3.introspection.contract.ContractProcessor;
 import org.fabric3.introspection.xml.LoaderException;
-import org.fabric3.introspection.contract.InvalidServiceContractException;
+import org.fabric3.scdl.DefaultValidationContext;
 import org.fabric3.scdl.ServiceContract;
 import org.fabric3.scdl.ServiceDefinition;
+import org.fabric3.scdl.ValidationContext;
 
 /**
  * @version $Revision$ $Date$
@@ -39,16 +40,13 @@ public class MockComponentTypeLoaderImpl implements MockComponentTypeLoader {
     private final IntrospectionHelper helper;
     private final ServiceDefinition controlService;
 
-    public MockComponentTypeLoaderImpl(@Reference IntrospectionHelper helper,
-                                       @Reference ContractProcessor contractProcessor) {
+    public MockComponentTypeLoaderImpl(@Reference IntrospectionHelper helper, @Reference ContractProcessor contractProcessor) {
         this.helper = helper;
         this.contractProcessor = contractProcessor;
-        try {
-            ServiceContract<Type> controlServiceContract = introspect(IMocksControl.class);
-            controlService = new ServiceDefinition("mockControl", controlServiceContract);
-        } catch (InvalidServiceContractException e) {
-            throw new AssertionError(e);
-        }
+        ValidationContext context = new DefaultValidationContext();
+        ServiceContract<Type> controlServiceContract = introspect(IMocksControl.class, context);
+        assert !context.hasErrors(); // should not happen
+        controlService = new ServiceDefinition("mockControl", controlServiceContract);
     }
 
     /**
@@ -68,7 +66,7 @@ public class MockComponentTypeLoaderImpl implements MockComponentTypeLoader {
             for (String mockedInterface : mockedInterfaces) {
                 Class<?> interfaceClass = classLoader.loadClass(mockedInterface);
 
-                ServiceContract<Type> serviceContract = introspect(interfaceClass);
+                ServiceContract<Type> serviceContract = introspect(interfaceClass, introspectionContext);
                 String name = interfaceClass.getName();
                 int index = name.lastIndexOf('.');
                 if (index != -1) {
@@ -83,15 +81,13 @@ public class MockComponentTypeLoaderImpl implements MockComponentTypeLoader {
 
         } catch (ClassNotFoundException ex) {
             throw new LoaderException("Class not found", ex);
-        } catch (InvalidServiceContractException e) {
-            throw new LoaderException("Class not found", e);
         }
 
     }
 
-    private ServiceContract<Type> introspect(Class<?> interfaceClass) throws InvalidServiceContractException {
+    private ServiceContract<Type> introspect(Class<?> interfaceClass, ValidationContext context) {
         TypeMapping typeMapping = helper.mapTypeParameters(interfaceClass);
-        return contractProcessor.introspect(typeMapping, interfaceClass);
+        return contractProcessor.introspect(typeMapping, interfaceClass, context);
     }
 
 }

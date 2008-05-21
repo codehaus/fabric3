@@ -22,7 +22,6 @@ import java.lang.reflect.Method;
 import org.osoa.sca.annotations.ConversationID;
 
 import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.introspection.IntrospectionException;
 import org.fabric3.introspection.java.AbstractAnnotationProcessor;
 import org.fabric3.scdl.FieldInjectionSite;
 import org.fabric3.scdl.Implementation;
@@ -40,12 +39,12 @@ public class ConversationIDProcessor<I extends Implementation<? extends Injectin
         super(ConversationID.class);
     }
 
-    public void visitField(ConversationID annotation, Field field, I implementation, IntrospectionContext context) throws IntrospectionException {
+    public void visitField(ConversationID annotation, Field field, I implementation, IntrospectionContext context) {
         InjectionSite site = new FieldInjectionSite(field);
         implementation.getComponentType().addInjectionSite(InjectableAttribute.CONVERSATION_ID, site);
     }
 
-    public void visitMethod(ConversationID annotation, Method method, I implementation, IntrospectionContext context) throws IntrospectionException {
+    public void visitMethod(ConversationID annotation, Method method, I implementation, IntrospectionContext context) {
         InjectionSite site = new MethodInjectionSite(method, 0);
         implementation.getComponentType().addInjectionSite(InjectableAttribute.CONVERSATION_ID, site);
     }

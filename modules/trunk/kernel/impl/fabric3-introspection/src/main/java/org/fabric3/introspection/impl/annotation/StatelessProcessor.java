@@ -16,13 +16,13 @@
  */
 package org.fabric3.introspection.impl.annotation;
 
+import org.osoa.sca.annotations.Scope;
+
 import org.fabric3.api.annotation.scope.Stateless;
 import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.introspection.IntrospectionException;
 import org.fabric3.introspection.java.AbstractAnnotationProcessor;
 import org.fabric3.scdl.Implementation;
 import org.fabric3.scdl.InjectingComponentType;
-import org.osoa.sca.annotations.Scope;
 
 
 public class StatelessProcessor<I extends Implementation<? extends InjectingComponentType>> extends AbstractAnnotationProcessor<Stateless, I> {
@@ -31,7 +31,7 @@ public class StatelessProcessor<I extends Implementation<? extends InjectingComp
         super(Stateless.class);
     }
 
-    public void visitType(Stateless annotation, Class<?> type, I implementation, IntrospectionContext context) throws IntrospectionException {
+    public void visitType(Stateless annotation, Class<?> type, I implementation, IntrospectionContext context) {
         Scope scopeMetaAnnotation = annotation.annotationType().getAnnotation(Scope.class);
         String scopeName = scopeMetaAnnotation.value();
         implementation.getComponentType().setScope(scopeName);

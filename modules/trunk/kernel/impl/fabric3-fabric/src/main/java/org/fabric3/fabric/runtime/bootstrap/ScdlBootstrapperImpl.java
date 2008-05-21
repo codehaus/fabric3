@@ -64,6 +64,8 @@ import org.fabric3.scdl.Composite;
 import org.fabric3.scdl.Implementation;
 import org.fabric3.scdl.ServiceContract;
 import org.fabric3.scdl.ServiceDefinition;
+import org.fabric3.scdl.ValidationContext;
+import org.fabric3.scdl.DefaultValidationContext;
 import org.fabric3.services.xmlfactory.XMLFactory;
 import org.fabric3.services.xmlfactory.impl.XMLFactoryImpl;
 import org.fabric3.spi.assembly.ActivateException;
@@ -135,7 +137,7 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
     public void setScdlLocation(URL scdlLocation) {
         this.scdlLocation = scdlLocation;
     }
-    
+
     public void setSystemConfig(URL systemConfig) {
         this.systemConfig = systemConfig;
     }
@@ -183,7 +185,7 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
             if (userConfig != null) {
                 domain.setPropertyValue("userConfig", userConfig);
             }
-            
+
             Document systemConfig = loadSystemConfig();
             if (systemConfig != null) {
                 domain.setPropertyValue("systemConfig", systemConfig);
@@ -291,14 +293,16 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
         return instantiator.instantiate(domain, domain.getPropertyValues(), definition);
     }
 
-    protected <S, I extends S> ComponentDefinition<Implementation<?>> createDefinition(String name,
-                                                                                       Class<S> type,
-                                                                                       I instance)
+    protected <S, I extends S> ComponentDefinition<Implementation<?>> createDefinition(String name, Class<S> type, I instance)
             throws InvalidServiceContractException {
 
         String implClassName = instance.getClass().getName();
 
-        ServiceContract<?> contract = interfaceProcessorRegistry.introspect(new TypeMapping(), type);
+        ValidationContext context = new DefaultValidationContext();
+        ServiceContract<?> contract = interfaceProcessorRegistry.introspect(new TypeMapping(), type, context);
+        if (context.hasErrors()) {
+            throw new InvalidServiceContractException(context.getErrors());
+        }
         String serviceName = contract.getInterfaceName();
         ServiceDefinition service = new ServiceDefinition(serviceName, contract);
 

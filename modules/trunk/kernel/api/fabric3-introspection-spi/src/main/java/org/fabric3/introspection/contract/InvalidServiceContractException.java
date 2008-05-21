@@ -16,12 +16,19 @@
  */
 package org.fabric3.introspection.contract;
 
+import java.util.List;
+
 import org.fabric3.introspection.IntrospectionException;
+import org.fabric3.introspection.xml.XmlValidationFailure;
+import org.fabric3.scdl.ValidationFailure;
 
 /**
  * @version $Rev$ $Date$
  */
-public abstract class InvalidServiceContractException extends IntrospectionException {
+public class InvalidServiceContractException extends IntrospectionException {
+    private static final long serialVersionUID = 4367622270403828483L;
+    private List<ValidationFailure> errors;
+
     protected InvalidServiceContractException() {
     }
 
@@ -44,4 +51,32 @@ public abstract class InvalidServiceContractException extends IntrospectionExcep
     protected InvalidServiceContractException(Throwable cause) {
         super(cause);
     }
+
+    public InvalidServiceContractException(List<ValidationFailure> errors) {
+        this.errors = errors;
+    }
+
+    // xcv temp remove
+    public String getMessage() {
+        if (errors == null) {
+            return super.getMessage();
+        }
+        StringBuilder b = new StringBuilder();
+        if (errors.size() == 1) {
+            b.append("1 error was detected: \n");
+        } else {
+            b.append(errors.size()).append(" errors were detected: \n");
+        }
+        for (ValidationFailure failure : errors) {
+            if (failure instanceof XmlValidationFailure) {
+                b.append("ERROR: ").append(((XmlValidationFailure) failure).getMessage()).append("\n");
+            } else {
+                b.append("ERROR: ").append(failure);
+            }
+            b.append("\n");
+        }
+        return b.toString();
+    }
+
+
 }

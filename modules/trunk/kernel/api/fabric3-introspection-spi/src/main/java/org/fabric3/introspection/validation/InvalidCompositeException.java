@@ -20,7 +20,6 @@ import java.util.List;
 
 import org.fabric3.scdl.Composite;
 import org.fabric3.scdl.ValidationFailure;
-import org.fabric3.introspection.xml.XmlValidationFailure;
 
 /**
  * @version $Rev$ $Date$
@@ -46,7 +45,6 @@ public class InvalidCompositeException extends ValidationException {
         return composite;
     }
 
-    // xcv temp remove
     public String getMessage() {
         StringBuilder b = new StringBuilder();
         if (getFailures().size() == 1) {
@@ -55,12 +53,7 @@ public class InvalidCompositeException extends ValidationException {
             b.append(getFailures().size()).append(" errors were detected: \n");
         }
         for (ValidationFailure failure : getFailures()) {
-            if (failure instanceof XmlValidationFailure) {
-                b.append("ERROR: ").append(((XmlValidationFailure) failure).getMessage()).append("\n");
-            } else {
-                b.append("ERROR: ").append(failure);
-            }
-            b.append("\n");
+            b.append("ERROR: ").append(failure.getMessage()).append("\n\n");
         }
         return b.toString();
     }

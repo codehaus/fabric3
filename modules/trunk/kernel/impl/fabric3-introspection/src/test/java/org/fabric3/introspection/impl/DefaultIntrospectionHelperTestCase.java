@@ -28,10 +28,11 @@ import java.util.Set;
 import junit.framework.TestCase;
 
 import org.fabric3.introspection.TypeMapping;
-import org.fabric3.introspection.contract.InvalidServiceContractException;
 import org.fabric3.introspection.impl.contract.DefaultContractProcessor;
-import org.fabric3.scdl.ServiceDefinition;
+import org.fabric3.scdl.DefaultValidationContext;
 import org.fabric3.scdl.ServiceContract;
+import org.fabric3.scdl.ServiceDefinition;
+import org.fabric3.scdl.ValidationContext;
 
 /**
  * @version $Rev$ $Date$
@@ -135,26 +136,47 @@ public class DefaultIntrospectionHelperTestCase extends TestCase {
         public final int finalBase = 0;
 
         // these methods should be found
-        public void setPublicBase(int value) { }
-        public void setPublicOverride(int value) { }
-        protected void setProtectedBase(int value) { }
+        public void setPublicBase(int value) {
+        }
+
+        public void setPublicOverride(int value) {
+        }
+
+        protected void setProtectedBase(int value) {
+        }
 
         // these methods should not
-        void setPackageBase(int value) { }
-        private void setPrivateBase(int value) { }
-        public static void setStatic(int value) { }
+        void setPackageBase(int value) {
+        }
+
+        private void setPrivateBase(int value) {
+        }
+
+        public static void setStatic(int value) {
+        }
+
         public abstract void setAbstract(int value);
-        public void set(int value){}
-        public void setNoValue(){}
-        public int setIntReturn(int value){return 0;}
+
+        public void set(int value) {
+        }
+
+        public void setNoValue() {
+        }
+
+        public int setIntReturn(int value) {
+            return 0;
+        }
     }
 
     private static class InjectionSubClass extends InjectionBase {
         public int publicSub;
         protected Object protectedBase; // field that obscures the one in the superclass (yuck)
 
-        public void setAbstract(int value) {}
-        public void setPublicOverride(int value) {}
+        public void setAbstract(int value) {
+        }
+
+        public void setPublicOverride(int value) {
+        }
     }
 
     private static interface InterfaceWithSetter {
@@ -201,10 +223,11 @@ public class DefaultIntrospectionHelperTestCase extends TestCase {
         assertEquals(expected, helper.getInjectionMethods(InjectionSubClass.class, services));
     }
 
-    public void testGetInjectionMethodsExcludesService() throws NoSuchMethodException, InvalidServiceContractException {
+    public void testGetInjectionMethodsExcludesService() throws NoSuchMethodException {
         Set<Method> expected = Collections.emptySet();
         Set<ServiceDefinition> services = new HashSet<ServiceDefinition>();
-        ServiceContract<?> contract = new DefaultContractProcessor(helper).introspect(new TypeMapping(), InterfaceWithSetter.class);
+        ValidationContext context = new DefaultValidationContext();
+        ServiceContract<?> contract = new DefaultContractProcessor(helper).introspect(new TypeMapping(), InterfaceWithSetter.class, context);
         ServiceDefinition definition = new ServiceDefinition("InterfaceWithSetter", contract);
         services.add(definition);
         assertEquals(expected, helper.getInjectionMethods(InjectionWithInterface.class, services));

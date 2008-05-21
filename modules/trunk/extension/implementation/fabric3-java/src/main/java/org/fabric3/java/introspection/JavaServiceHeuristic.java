@@ -16,22 +16,20 @@
  */
 package org.fabric3.java.introspection;
 
-import java.util.Set;
 import java.lang.reflect.Type;
+import java.util.Set;
 
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.java.scdl.JavaImplementation;
-import org.fabric3.introspection.java.HeuristicProcessor;
-import org.fabric3.introspection.IntrospectionHelper;
-import org.fabric3.introspection.contract.ContractProcessor;
-import org.fabric3.introspection.TypeMapping;
-import org.fabric3.introspection.contract.InvalidServiceContractException;
 import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.introspection.IntrospectionException;
+import org.fabric3.introspection.IntrospectionHelper;
+import org.fabric3.introspection.TypeMapping;
+import org.fabric3.introspection.contract.ContractProcessor;
+import org.fabric3.introspection.java.HeuristicProcessor;
+import org.fabric3.java.scdl.JavaImplementation;
 import org.fabric3.pojo.scdl.PojoComponentType;
-import org.fabric3.scdl.ServiceDefinition;
 import org.fabric3.scdl.ServiceContract;
+import org.fabric3.scdl.ServiceDefinition;
 
 /**
  * @version $Rev$ $Date$
@@ -47,7 +45,7 @@ public class JavaServiceHeuristic implements HeuristicProcessor<JavaImplementati
         this.contractProcessor = contractProcessor;
     }
 
-    public void applyHeuristics(JavaImplementation implementation, Class<?> implClass, IntrospectionContext context) throws IntrospectionException {
+    public void applyHeuristics(JavaImplementation implementation, Class<?> implClass, IntrospectionContext context) {
         PojoComponentType componentType = implementation.getComponentType();
         TypeMapping typeMapping = context.getTypeMapping();
 
@@ -60,14 +58,16 @@ public class JavaServiceHeuristic implements HeuristicProcessor<JavaImplementati
         Set<Class<?>> interfaces = helper.getImplementedInterfaces(implClass);
         if (interfaces.size() == 1) {
             Class<?> service = interfaces.iterator().next();
-            componentType.add(createServiceDefinition(service, typeMapping));
+            ServiceDefinition serviceDefinition = createServiceDefinition(service, typeMapping, context);
+            componentType.add(serviceDefinition);
         } else {
-            componentType.add(createServiceDefinition(implClass, typeMapping));
+            ServiceDefinition serviceDefinition = createServiceDefinition(implClass, typeMapping, context);
+            componentType.add(serviceDefinition);
         }
     }
 
-    ServiceDefinition createServiceDefinition(Class<?> serviceInterface, TypeMapping typeMapping) throws InvalidServiceContractException {
-        ServiceContract<Type> contract = contractProcessor.introspect(typeMapping, serviceInterface);
+    ServiceDefinition createServiceDefinition(Class<?> serviceInterface, TypeMapping typeMapping, IntrospectionContext context) {
+        ServiceContract<Type> contract = contractProcessor.introspect(typeMapping, serviceInterface, context);
         return new ServiceDefinition(contract.getInterfaceName(), contract);
     }
 }

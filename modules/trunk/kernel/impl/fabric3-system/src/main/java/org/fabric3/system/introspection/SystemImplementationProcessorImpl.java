@@ -20,14 +20,15 @@ package org.fabric3.system.introspection;
 
 import org.osoa.sca.annotations.Reference;
 
+import org.fabric3.introspection.DefaultIntrospectionContext;
 import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.introspection.IntrospectionException;
 import org.fabric3.introspection.IntrospectionHelper;
+import org.fabric3.introspection.TypeMapping;
 import org.fabric3.introspection.java.ClassWalker;
 import org.fabric3.introspection.java.HeuristicProcessor;
-import org.fabric3.introspection.TypeMapping;
-import org.fabric3.introspection.DefaultIntrospectionContext;
+import org.fabric3.introspection.java.ImplementationNotFoundException;
 import org.fabric3.pojo.scdl.PojoComponentType;
+import org.fabric3.scdl.validation.MissingResource;
 import org.fabric3.system.scdl.SystemImplementation;
 
 /**
@@ -42,20 +43,26 @@ public class SystemImplementationProcessorImpl implements SystemImplementationPr
 
     public SystemImplementationProcessorImpl(@Reference(name = "classWalker")ClassWalker<SystemImplementation> classWalker,
                                              @Reference(name = "heuristic")HeuristicProcessor<SystemImplementation> heuristic,
-                                             @Reference(name = "helper") IntrospectionHelper helper) {
+                                             @Reference(name = "helper")IntrospectionHelper helper) {
         this.classWalker = classWalker;
         this.heuristic = heuristic;
         this.helper = helper;
     }
 
-    public void introspect(SystemImplementation implementation, IntrospectionContext context) throws IntrospectionException {
+    public void introspect(SystemImplementation implementation, IntrospectionContext context) {
         String implClassName = implementation.getImplementationClass();
         PojoComponentType componentType = new PojoComponentType(implClassName);
         componentType.setScope("COMPOSITE");
         implementation.setComponentType(componentType);
 
         ClassLoader cl = context.getTargetClassLoader();
-        Class<?> implClass = helper.loadClass(implClassName, cl);
+        Class<?> implClass;
+        try {
+            implClass = helper.loadClass(implClassName, cl);
+        } catch (ImplementationNotFoundException e) {
+            context.addError(new MissingResource("System implementation class not found on classpath: ", implClassName));
+            return;
+        }
         TypeMapping typeMapping = helper.mapTypeParameters(implClass);
 
         context = new DefaultIntrospectionContext(context, typeMapping);

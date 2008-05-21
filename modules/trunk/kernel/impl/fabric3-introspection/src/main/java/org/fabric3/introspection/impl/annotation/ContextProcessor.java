@@ -26,7 +26,6 @@ import org.osoa.sca.annotations.Context;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.introspection.IntrospectionException;
 import org.fabric3.introspection.IntrospectionHelper;
 import org.fabric3.introspection.java.AbstractAnnotationProcessor;
 import org.fabric3.scdl.FieldInjectionSite;
@@ -47,7 +46,7 @@ public class ContextProcessor<I extends Implementation<? extends InjectingCompon
     }
 
 
-    public void visitField(Context annotation, Field field, I implementation, IntrospectionContext context) throws IntrospectionException {
+    public void visitField(Context annotation, Field field, I implementation, IntrospectionContext context) {
 
         Type type = field.getGenericType();
         FieldInjectionSite site = new FieldInjectionSite(field);
@@ -57,7 +56,7 @@ public class ContextProcessor<I extends Implementation<? extends InjectingCompon
         }
     }
 
-    public void visitMethod(Context annotation, Method method, I implementation, IntrospectionContext context) throws IntrospectionException {
+    public void visitMethod(Context annotation, Method method, I implementation, IntrospectionContext context) {
 
         Type type = helper.getGenericType(method);
         MethodInjectionSite site = new MethodInjectionSite(method, 0);

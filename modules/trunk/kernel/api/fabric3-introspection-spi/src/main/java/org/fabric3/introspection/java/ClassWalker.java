@@ -22,19 +22,20 @@ import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.IntrospectionException;
 
 /**
- * Interface to a service that walks a Java class and updates the implementation definition based on annotations found.
+ * Interface to a service that walks a Java class and updates the implementation definition based on annotations found.  Errors and warnings are
+ * reported in the IntrospectionContext.
  *
  * @version $Rev$ $Date$
  * @param <I> the type of implementation that the clas is for
  */
 public interface ClassWalker<I extends Implementation<? extends InjectingComponentType>> {
     /**
-     * Walk a class and update the implementation definition.
+     * Walk a class and update the implementation definition. If errors or warnings are encountered, they will be collated in the
+     * IntrospectionContext.
      *
      * @param implementation the implementation definition
      * @param clazz          the Java class to walk
      * @param context        the current introspection context
-     * @throws org.fabric3.introspection.IntrospectionException if there was a fatal problem with an annotation
      */
-    void walk(I implementation, Class<?> clazz, IntrospectionContext context) throws IntrospectionException;
+    void walk(I implementation, Class<?> clazz, IntrospectionContext context);
 }

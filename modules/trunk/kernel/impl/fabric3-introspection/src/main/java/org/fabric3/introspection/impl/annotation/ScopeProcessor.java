@@ -18,9 +18,8 @@ package org.fabric3.introspection.impl.annotation;
 
 import org.osoa.sca.annotations.Scope;
 
-import org.fabric3.introspection.java.AbstractAnnotationProcessor;
 import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.introspection.IntrospectionException;
+import org.fabric3.introspection.java.AbstractAnnotationProcessor;
 import org.fabric3.scdl.Implementation;
 import org.fabric3.scdl.InjectingComponentType;
 
@@ -33,7 +32,7 @@ public class ScopeProcessor<I extends Implementation<? extends InjectingComponen
         super(Scope.class);
     }
 
-    public void visitType(Scope annotation, Class<?> type, I implementation, IntrospectionContext context) throws IntrospectionException {
+    public void visitType(Scope annotation, Class<?> type, I implementation, IntrospectionContext context) {
         String scopeName = annotation.value();
         implementation.getComponentType().setScope(scopeName);
     }
