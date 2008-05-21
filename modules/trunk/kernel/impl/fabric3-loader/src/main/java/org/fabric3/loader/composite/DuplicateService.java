@@ -18,15 +18,13 @@ package org.fabric3.loader.composite;
 
 import javax.xml.stream.XMLStreamReader;
 
-import org.fabric3.introspection.xml.LoaderException;
+import org.fabric3.introspection.xml.XmlValidationFailure;
 
 /**
  * @version $Rev$ $Date$
  */
-public class DuplicateServiceException extends LoaderException {
-    private static final long serialVersionUID = 6690233199134874915L;
-
-    public DuplicateServiceException(String message, XMLStreamReader reader) {
-        super(message, reader);
+public class DuplicateService extends XmlValidationFailure<String> {
+    public DuplicateService(String serviceName, XMLStreamReader reader) {
+        super("More than one promoted service with the name " + serviceName + "was found in the composite ", serviceName, reader);
     }
 }

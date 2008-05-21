@@ -16,6 +16,7 @@
  */
 package org.fabric3.loader.composite;
 
+import java.net.URI;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
@@ -25,53 +26,50 @@ import junit.framework.TestCase;
 import org.easymock.EasyMock;
 import static org.osoa.sca.Constants.SCA_NS;
 
+import org.fabric3.scdl.ComponentReference;
 import org.fabric3.scdl.ComponentType;
 import org.fabric3.scdl.Implementation;
-import org.fabric3.scdl.Property;
+import org.fabric3.scdl.ReferenceDefinition;
+import org.fabric3.introspection.xml.Loader;
 import org.fabric3.introspection.IntrospectionContext;
+import org.fabric3.introspection.DefaultIntrospectionContext;
 import org.fabric3.introspection.xml.LoaderException;
-import org.fabric3.introspection.xml.LoaderRegistry;
 import org.fabric3.introspection.xml.LoaderHelper;
 import org.fabric3.introspection.xml.TypeLoader;
 
 /**
  * @version $Rev$ $Date$
  */
-public class CompositeLoaderDuplicatePropertyTestCase extends TestCase {
-    public static final String PROP_NAME = "notThere";
+public class DuplicateComponentReferenceTestCase extends TestCase {
+    public static final String REF_NAME = "notThere";
 
-    private CompositeLoader loader;
+    private ComponentLoader loader;
     private XMLStreamReader reader;
     private IntrospectionContext ctx;
 
     /**
-     * Verifies an exception is thrown if an attempt is made to configure a property twice.
+     * Verifies an exception is thrown if an attempt is made to configure a reference more than once.
      *
      * @throws Exception on test failure
      */
-    public void testDuplicateProperty() throws Exception {
-        EasyMock.replay(ctx);
-        try {
-            loader.load(reader, ctx);
-        } catch (DuplicatePropertyException e) {
-            // fail
-        }
+    public void testNoReference() throws Exception {
+        loader.load(reader, ctx);
+        assertTrue(ctx.getErrors().get(0) instanceof DuplicateComponentReference);
     }
 
     protected void setUp() throws Exception {
         super.setUp();
-        TypeLoader<Property> propLoader = createPropertyLoader();
-        LoaderRegistry registry = createRegistry();
+        TypeLoader<ComponentReference> referenceLoader = createReferenceLoader();
+        Loader registry = createRegistry();
         LoaderHelper helper = EasyMock.createNiceMock(LoaderHelper.class);
         EasyMock.replay(helper);
-        loader = new CompositeLoader(registry, null, propLoader, null, null, null, null, helper);
+        loader = new ComponentLoader(registry, null, referenceLoader, null, helper);
         reader = createReader();
-        ctx = EasyMock.createNiceMock(IntrospectionContext.class);
+        ctx = new DefaultIntrospectionContext(URI.create("parent"), getClass().getClassLoader(), "foo");
     }
 
-
-    private LoaderRegistry createRegistry() throws XMLStreamException, LoaderException {
-        LoaderRegistry registry = EasyMock.createMock(LoaderRegistry.class);
+    private Loader createRegistry() throws XMLStreamException, LoaderException {
+        Loader registry = EasyMock.createMock(Loader.class);
         Implementation impl = createImpl();
         EasyMock.expect(registry.load(EasyMock.isA(XMLStreamReader.class),
                                       EasyMock.eq(Implementation.class),
@@ -82,13 +80,13 @@ public class CompositeLoaderDuplicatePropertyTestCase extends TestCase {
     }
 
     @SuppressWarnings({"unchecked"})
-    private <T> TypeLoader<Property> createPropertyLoader() throws XMLStreamException, LoaderException {
-        TypeLoader loader = EasyMock.createMock(TypeLoader.class);
-        Property value = new Property(PROP_NAME, null);
-        EasyMock.expect(loader.load(EasyMock.isA(XMLStreamReader.class),
-                                    EasyMock.isA(IntrospectionContext.class))).andReturn(value).times(2);
-        EasyMock.replay(loader);
-        return (TypeLoader<Property>) loader;
+    private TypeLoader<ComponentReference> createReferenceLoader() throws XMLStreamException, LoaderException {
+        TypeLoader<ComponentReference> referenceLoader = EasyMock.createMock(TypeLoader.class);
+        ComponentReference reference = new ComponentReference(REF_NAME);
+        EasyMock.expect(referenceLoader.load(EasyMock.isA(XMLStreamReader.class),
+                                             EasyMock.isA(IntrospectionContext.class))).andReturn(reference).times(2);
+        EasyMock.replay(referenceLoader);
+        return referenceLoader;
     }
 
     private Implementation createImpl() {
@@ -98,31 +96,31 @@ public class CompositeLoaderDuplicatePropertyTestCase extends TestCase {
             }
         };
         ComponentType type = new ComponentType();
-        Property property = new Property(PROP_NAME, null);
-
-        type.add(property);
+        ReferenceDefinition definition = new ReferenceDefinition(REF_NAME, null);
+        type.add(definition);
         impl.setComponentType(type);
         return impl;
     }
 
     private XMLStreamReader createReader() throws XMLStreamException {
-        XMLStreamReader reader = EasyMock.createMock(XMLStreamReader.class);
         Location location = EasyMock.createNiceMock(Location.class);
         EasyMock.replay(location);
-        EasyMock.expect(reader.getNamespaceContext()).andStubReturn(null);
-        EasyMock.expect(reader.getAttributeValue(null, "name")).andReturn("comppsite");
-        EasyMock.expect(reader.getAttributeValue(null, "targetNamespace")).andReturn("http:///somenamepace");
-        EasyMock.expect(reader.getAttributeValue(null, "local")).andReturn(null);
-        EasyMock.expect(reader.getAttributeValue(null, "constrainingType")).andReturn(null);
-        EasyMock.expect(reader.getAttributeValue(null, "autowire")).andReturn("true");
 
+        XMLStreamReader reader = EasyMock.createMock(XMLStreamReader.class);
+        EasyMock.expect(reader.getAttributeValue(null, "name")).andReturn("component");
+        EasyMock.expect(reader.getAttributeValue(null, "autowire")).andReturn(null);
+        EasyMock.expect(reader.getAttributeValue(null, "runtimeId")).andReturn(null);
+        EasyMock.expect(reader.getAttributeValue(null, "initLevel")).andReturn(null);
+        EasyMock.expect(reader.getAttributeValue(EasyMock.isA(String.class), EasyMock.eq("key"))).andReturn(null);
         EasyMock.expect(reader.nextTag()).andReturn(1);
         EasyMock.expect(reader.next()).andReturn(1);
-        EasyMock.expect(reader.getName()).andReturn(new QName(SCA_NS, "property"));
+        EasyMock.expect(reader.getName()).andReturn(new QName(SCA_NS, "reference"));
         EasyMock.expect(reader.nextTag()).andReturn(1);
         EasyMock.expect(reader.next()).andReturn(1);
-        EasyMock.expect(reader.getName()).andReturn(new QName(SCA_NS, "property"));
+        EasyMock.expect(reader.getName()).andReturn(new QName(SCA_NS, "reference"));
         EasyMock.expect(reader.getLocation()).andReturn(location);
+        EasyMock.expect(reader.next()).andReturn(2);
+        EasyMock.expect(reader.getName()).andReturn(new QName(SCA_NS, "component"));
         EasyMock.replay(reader);
         return reader;
     }

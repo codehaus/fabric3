@@ -16,61 +16,60 @@
  */
 package org.fabric3.loader.composite;
 
+import java.net.URI;
 import javax.xml.namespace.QName;
+import javax.xml.stream.Location;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
-import javax.xml.stream.Location;
 
 import junit.framework.TestCase;
 import org.easymock.EasyMock;
 import static org.osoa.sca.Constants.SCA_NS;
 
-import org.fabric3.scdl.ComponentType;
-import org.fabric3.scdl.CompositeService;
-import org.fabric3.scdl.Implementation;
 import org.fabric3.introspection.IntrospectionContext;
+import org.fabric3.introspection.DefaultIntrospectionContext;
+import org.fabric3.introspection.xml.Loader;
 import org.fabric3.introspection.xml.LoaderException;
-import org.fabric3.introspection.xml.LoaderRegistry;
 import org.fabric3.introspection.xml.LoaderHelper;
 import org.fabric3.introspection.xml.TypeLoader;
+import org.fabric3.scdl.ComponentService;
+import org.fabric3.scdl.ComponentType;
+import org.fabric3.scdl.Implementation;
+import org.fabric3.scdl.ServiceDefinition;
 
 /**
  * @version $Rev$ $Date$
  */
-public class CompositeLoaderDuplicateServiceTestCase extends TestCase {
+public class DuplicateComponentServiceTestCase extends TestCase {
     public static final String SERVICE_NAME = "notThere";
 
-    private CompositeLoader loader;
+    private ComponentLoader loader;
     private XMLStreamReader reader;
     private IntrospectionContext ctx;
 
     /**
-     * Verifies an exception is thrown if an attempt is made to configure a service twice.
+     * Verifies an exception is thrown if an attempt is made to configure a service more than once.
      *
      * @throws Exception on test failure
      */
-    public void testDuplicateService() throws Exception {
-        EasyMock.replay(ctx);
-        try {
-            loader.load(reader, ctx);
-        } catch (DuplicateServiceException e) {
-            // expected
-        }
+    public void testNoService() throws Exception {
+        loader.load(reader, ctx);
+        assertTrue(ctx.getErrors().get(0) instanceof DuplicateComponentService);
     }
 
     protected void setUp() throws Exception {
         super.setUp();
-        TypeLoader<CompositeService> serviceLoader = createServiceLoader();
-        LoaderRegistry registry = createRegistry();
+        TypeLoader<ComponentService> serviceLoader = createServiceLoader();
+        Loader registry = createRegistry();
         LoaderHelper helper = EasyMock.createNiceMock(LoaderHelper.class);
         EasyMock.replay(helper);
-        loader = new CompositeLoader(registry, null, null, serviceLoader, null, null, null, helper);
+        loader = new ComponentLoader(registry, null, null, serviceLoader, helper);
         reader = createReader();
-        ctx = EasyMock.createNiceMock(IntrospectionContext.class);
+        ctx = new DefaultIntrospectionContext(URI.create("parent"), getClass().getClassLoader(), "foo");
     }
 
-    private LoaderRegistry createRegistry() throws XMLStreamException, LoaderException {
-        LoaderRegistry registry = EasyMock.createMock(LoaderRegistry.class);
+    private Loader createRegistry() throws XMLStreamException, LoaderException {
+        Loader registry = EasyMock.createMock(Loader.class);
         Implementation impl = createImpl();
         EasyMock.expect(registry.load(EasyMock.isA(XMLStreamReader.class),
                                       EasyMock.eq(Implementation.class),
@@ -81,14 +80,13 @@ public class CompositeLoaderDuplicateServiceTestCase extends TestCase {
     }
 
     @SuppressWarnings({"unchecked"})
-    private <T> TypeLoader<CompositeService> createServiceLoader()
-            throws XMLStreamException, LoaderException {
-        TypeLoader loader = EasyMock.createMock(TypeLoader.class);
-        CompositeService value = new CompositeService(SERVICE_NAME, null, null);
+    private TypeLoader<ComponentService> createServiceLoader() throws XMLStreamException, LoaderException {
+        TypeLoader<ComponentService> loader = EasyMock.createMock(TypeLoader.class);
+        ComponentService service = new ComponentService(SERVICE_NAME, null);
         EasyMock.expect(loader.load(EasyMock.isA(XMLStreamReader.class),
-                                    EasyMock.isA(IntrospectionContext.class))).andReturn(value).times(2);
+                                    EasyMock.isA(IntrospectionContext.class))).andReturn(service).times(2);
         EasyMock.replay(loader);
-        return (TypeLoader<CompositeService>) loader;
+        return loader;
     }
 
     private Implementation createImpl() {
@@ -98,9 +96,8 @@ public class CompositeLoaderDuplicateServiceTestCase extends TestCase {
             }
         };
         ComponentType type = new ComponentType();
-        CompositeService service = new CompositeService(SERVICE_NAME, null, null);
-
-        type.add(service);
+        ServiceDefinition definition = new ServiceDefinition(SERVICE_NAME, null);
+        type.add(definition);
         impl.setComponentType(type);
         return impl;
     }
@@ -109,13 +106,11 @@ public class CompositeLoaderDuplicateServiceTestCase extends TestCase {
         Location location = EasyMock.createNiceMock(Location.class);
         EasyMock.replay(location);
         XMLStreamReader reader = EasyMock.createMock(XMLStreamReader.class);
-        EasyMock.expect(reader.getNamespaceContext()).andStubReturn(null);
-        EasyMock.expect(reader.getAttributeValue(null, "name")).andReturn("comppsite");
-        EasyMock.expect(reader.getAttributeValue(null, "targetNamespace")).andReturn("http:///somenamepace");
-        EasyMock.expect(reader.getAttributeValue(null, "local")).andReturn(null);
-        EasyMock.expect(reader.getAttributeValue(null, "constrainingType")).andReturn(null);
-        EasyMock.expect(reader.getAttributeValue(null, "autowire")).andReturn("true");
-
+        EasyMock.expect(reader.getAttributeValue(null, "name")).andReturn("component");
+        EasyMock.expect(reader.getAttributeValue(null, "autowire")).andReturn(null);
+        EasyMock.expect(reader.getAttributeValue(null, "runtimeId")).andReturn(null);
+        EasyMock.expect(reader.getAttributeValue(null, "initLevel")).andReturn(null);
+        EasyMock.expect(reader.getAttributeValue(EasyMock.isA(String.class), EasyMock.eq("key"))).andReturn(null);
         EasyMock.expect(reader.nextTag()).andReturn(1);
         EasyMock.expect(reader.next()).andReturn(1);
         EasyMock.expect(reader.getName()).andReturn(new QName(SCA_NS, "service"));
@@ -123,6 +118,8 @@ public class CompositeLoaderDuplicateServiceTestCase extends TestCase {
         EasyMock.expect(reader.next()).andReturn(1);
         EasyMock.expect(reader.getName()).andReturn(new QName(SCA_NS, "service"));
         EasyMock.expect(reader.getLocation()).andReturn(location);
+        EasyMock.expect(reader.next()).andReturn(2);
+        EasyMock.expect(reader.getName()).andReturn(new QName(SCA_NS, "component"));
         EasyMock.replay(reader);
         return reader;
     }

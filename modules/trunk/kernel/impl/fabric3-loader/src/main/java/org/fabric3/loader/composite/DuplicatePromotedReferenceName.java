@@ -18,15 +18,14 @@ package org.fabric3.loader.composite;
 
 import javax.xml.stream.XMLStreamReader;
 
-import org.fabric3.introspection.xml.LoaderException;
+import org.fabric3.introspection.xml.XmlValidationFailure;
 
 /**
  * @version $Rev$ $Date$
  */
-public class DuplicatePropertyException extends LoaderException {
-    private static final long serialVersionUID = 7204784279912209282L;
-
-    public DuplicatePropertyException(String message, XMLStreamReader reader) {
-        super(message, reader);
+public class DuplicatePromotedReferenceName extends XmlValidationFailure<String> {
+    public DuplicatePromotedReferenceName(String referenceName, XMLStreamReader reader) {
+        super("More than one promoted reference with the name " + referenceName + "was found in the composite ", referenceName, reader);
     }
+
 }

@@ -1,6 +1,8 @@
 /*
- * See the NOTICE file distributed with this work for information
- * regarding copyright ownership.  This file is licensed
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
@@ -18,15 +20,15 @@ package org.fabric3.loader.composite;
 
 import javax.xml.stream.XMLStreamReader;
 
-import org.fabric3.introspection.xml.LoaderException;
+import org.fabric3.introspection.xml.XmlValidationFailure;
 
 /**
  * @version $Rev$ $Date$
  */
-public class DuplicateConfiguredServiceException extends LoaderException {
-    private static final long serialVersionUID = 316549203790360060L;
+public class DuplicateInclude extends XmlValidationFailure<String> {
 
-    public DuplicateConfiguredServiceException(String message, XMLStreamReader reader) {
-        super(message, reader);
+    public DuplicateInclude(String includeName, XMLStreamReader reader) {
+        super("An included composite with the name" + includeName + "is already specified", includeName, reader);
     }
+
 }

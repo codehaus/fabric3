@@ -18,15 +18,20 @@ package org.fabric3.loader.composite;
 
 import javax.xml.stream.XMLStreamReader;
 
-import org.fabric3.introspection.xml.LoaderException;
+import org.fabric3.introspection.xml.XmlValidationFailure;
 
 /**
  * @version $Rev$ $Date$
  */
-public class DuplicateConfiguredReferenceException extends LoaderException {
-    private static final long serialVersionUID = -1878104671590284532L;
+public class DuplicateComponentService extends XmlValidationFailure<String> {
+    private String componentName;
 
-    public DuplicateConfiguredReferenceException(String message, XMLStreamReader reader) {
-        super(message, reader);
+    public DuplicateComponentService(String referenceName, String componentName, XMLStreamReader reader) {
+        super("The service " + referenceName + "is configured more than once on the component ", referenceName, reader);
+        this.componentName = componentName;
+    }
+
+    public String getComponentName() {
+        return componentName;
     }
 }

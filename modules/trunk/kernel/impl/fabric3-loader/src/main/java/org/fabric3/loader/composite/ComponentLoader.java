@@ -176,9 +176,11 @@ public class ComponentLoader implements TypeLoader<ComponentDefinition<?>> {
         }
         if (componentDefinition.getServices().containsKey(service.getName())) {
             String id = service.getName();
-            throw new DuplicateConfiguredServiceException("Service configured more than once: " + id, reader);
+            DuplicateComponentService failure = new DuplicateComponentService(id, componentDefinition.getName(), reader);
+            context.addError(failure);
+        } else {
+            componentDefinition.add(service);
         }
-        componentDefinition.add(service);
     }
 
     private void parseReference(ComponentDefinition<Implementation<?>> componentDefinition,
@@ -199,9 +201,11 @@ public class ComponentLoader implements TypeLoader<ComponentDefinition<?>> {
         }
         String refKey = reference.getName();
         if (componentDefinition.getReferences().containsKey(refKey)) {
-            throw new DuplicateConfiguredReferenceException("The reference is configured more than once: " + refKey, reader);
+            DuplicateComponentReference failure = new DuplicateComponentReference(refKey, componentDefinition.getName(), reader);
+            context.addError(failure);
+        } else {
+            componentDefinition.add(reference);
         }
-        componentDefinition.add(reference);
     }
 
     private void parseProperty(ComponentDefinition<Implementation<?>> componentDefinition,
@@ -224,7 +228,6 @@ public class ComponentLoader implements TypeLoader<ComponentDefinition<?>> {
             String id = value.getName();
             DuplicateConfiguredProperty failure = new DuplicateConfiguredProperty(id, componentDefinition, reader);
             context.addError(failure);
-            return;
         } else {
             componentDefinition.add(value);
         }

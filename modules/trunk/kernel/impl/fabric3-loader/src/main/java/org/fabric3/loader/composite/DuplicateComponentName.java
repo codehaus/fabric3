@@ -18,18 +18,16 @@ package org.fabric3.loader.composite;
 
 import javax.xml.stream.XMLStreamReader;
 
-import org.fabric3.introspection.xml.LoaderException;
+import org.fabric3.introspection.xml.XmlValidationFailure;
 
 /**
  * Denotes a duplicate component name in a composite.
  *
  * @version $Rev$ $Date$
  */
-public class DuplicateComponentNameException extends LoaderException {
+public class DuplicateComponentName extends XmlValidationFailure<String> {
 
-    private static final long serialVersionUID = -3671246953971435103L;
-
-    public DuplicateComponentNameException(String message, XMLStreamReader reader) {
-        super(message, reader);
+    public DuplicateComponentName(String name, XMLStreamReader reader) {
+        super("More than one component configured with name: " + name, name, reader);
     }
 }

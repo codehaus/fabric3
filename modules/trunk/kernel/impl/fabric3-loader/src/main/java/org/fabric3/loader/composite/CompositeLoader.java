@@ -175,12 +175,15 @@ public class CompositeLoader implements TypeLoader<Composite> {
                     QName includeName = include.getName();
                     if (type.getIncludes().containsKey(includeName)) {
                         String identifier = includeName.toString();
-                        throw new DuplicateIncludeException("Include already defined with name: " + identifier, reader);
+                        DuplicateInclude failure = new DuplicateInclude(identifier, reader);
+                        introspectionContext.addError(failure);
+                        continue;
                     }
                     for (ComponentDefinition definition : include.getIncluded().getComponents().values()) {
                         String key = definition.getName();
                         if (type.getComponents().containsKey(key)) {
-                            throw new DuplicateComponentNameException("Component with name already defined: " + key, reader);
+                            DuplicateComponentName failure = new DuplicateComponentName(key, reader);
+                            introspectionContext.addError(failure);
                         }
                     }
                     type.add(include);
@@ -188,28 +191,36 @@ public class CompositeLoader implements TypeLoader<Composite> {
                     Property property = propertyLoader.load(reader, childContext);
                     String key = property.getName();
                     if (type.getProperties().containsKey(key)) {
-                        throw new DuplicatePropertyException("Property already defined: " + key, reader);
+                        DuplicateProperty failure = new DuplicateProperty(key, reader);
+                        introspectionContext.addError(failure);
+                    } else {
+                        type.add(property);
                     }
-                    type.add(property);
                 } else if (SERVICE.equals(qname)) {
                     CompositeService service = serviceLoader.load(reader, childContext);
                     if (type.getServices().containsKey(service.getName())) {
                         String key = service.getName();
-                        throw new DuplicateServiceException("Service already defined: " + key, reader);
+                        DuplicateService failure = new DuplicateService(key, reader);
+                        introspectionContext.addError(failure);
+                    } else {
+                        type.add(service);
                     }
-                    type.add(service);
                 } else if (REFERENCE.equals(qname)) {
                     CompositeReference reference = referenceLoader.load(reader, childContext);
                     if (type.getReferences().containsKey(reference.getName())) {
                         String key = reference.getName();
-                        throw new DuplicateReferenceException("Reference already defined: " + key, reader);
+                        DuplicatePromotedReferenceName failure = new DuplicatePromotedReferenceName(key, reader);
+                        introspectionContext.addError(failure);
+                    } else {
+                        type.add(reference);
                     }
-                    type.add(reference);
                 } else if (COMPONENT.equals(qname)) {
                     ComponentDefinition<?> componentDefinition = componentLoader.load(reader, childContext);
                     String key = componentDefinition.getName();
                     if (type.getComponents().containsKey(key)) {
-                        throw new DuplicateComponentNameException("Component with name already defined: " + key, reader);
+                        DuplicateComponentName failure = new DuplicateComponentName(key, reader);
+                        introspectionContext.addError(failure);
+                        continue;
                     }
                     if (type.getAutowire() != Autowire.INHERITED && componentDefinition.getAutowire() == Autowire.INHERITED) {
                         componentDefinition.setAutowire(type.getAutowire());
@@ -238,7 +249,7 @@ public class CompositeLoader implements TypeLoader<Composite> {
                     } else if (modelObject instanceof ComponentDefinition) {
                         type.add((ComponentDefinition<?>) modelObject);
                     } else {
-                        // Unknown extension element
+                        // Unknown extension element, throw an error
                         throw new UnrecognizedTypeException(reader);
                     }
                 }
