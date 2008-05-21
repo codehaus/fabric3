@@ -152,7 +152,7 @@ public class ComponentLoader implements TypeLoader<ComponentDefinition<?>> {
                 break;
             case END_ELEMENT:
                 assert COMPONENT.equals(reader.getName());
-                validateRequiredProperties(componentDefinition, reader);
+                validateRequiredProperties(componentDefinition, reader, context);
                 return componentDefinition;
             }
         }
@@ -233,16 +233,16 @@ public class ComponentLoader implements TypeLoader<ComponentDefinition<?>> {
         }
     }
 
-    private void validateRequiredProperties(ComponentDefinition<? extends Implementation<?>> definition, XMLStreamReader reader)
-            throws RequiredPropertyNotProvidedException {
+    private void validateRequiredProperties(ComponentDefinition<? extends Implementation<?>> definition,
+                                            XMLStreamReader reader,
+                                            IntrospectionContext context) {
         AbstractComponentType<?, ?, ?, ?> type = definition.getImplementation().getComponentType();
         Map<String, ? extends Property> properties = type.getProperties();
         Map<String, PropertyValue> values = definition.getPropertyValues();
         for (Property property : properties.values()) {
             if (property.isRequired() && !values.containsKey(property.getName())) {
-                String msg =
-                        "Component '" + definition.getName() + "' has a property '" + property.getName() + "' which requires that a value is supplied";
-                throw new RequiredPropertyNotProvidedException(msg, reader);
+                RequiredPropertyNotProvided failure = new RequiredPropertyNotProvided(property, definition.getName(), reader);
+                context.addError(failure);
             }
         }
     }
