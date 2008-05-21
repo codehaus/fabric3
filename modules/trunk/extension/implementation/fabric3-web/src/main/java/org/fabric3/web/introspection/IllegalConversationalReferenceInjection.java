@@ -18,17 +18,23 @@
  */
 package org.fabric3.web.introspection;
 
-import org.fabric3.introspection.IntrospectionException;
+import org.fabric3.scdl.ReferenceDefinition;
+import org.fabric3.scdl.ValidationFailure;
 
 /**
  * Denotes an illegal reference declaration.
  *
  * @version $Revision$ $Date$
  */
-public class IllegalReferenceException extends IntrospectionException {
-    private static final long serialVersionUID = -4750367244833327406L;
+public class IllegalConversationalReferenceInjection extends ValidationFailure<ReferenceDefinition> {
+    private String servletName;
 
-    public IllegalReferenceException(String message) {
-        super(message);
+    public IllegalConversationalReferenceInjection(ReferenceDefinition definition, String servletName) {
+        super(definition);
+        this.servletName = servletName;
+    }
+
+    public String getMessage() {
+        return "Cannot inject a conversational serivce for reference " + getModelObject().getName() + " on servlet " + servletName;
     }
 }

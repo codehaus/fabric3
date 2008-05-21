@@ -18,17 +18,20 @@
  */
 package org.fabric3.web.introspection;
 
-import org.fabric3.introspection.IntrospectionException;
+import org.fabric3.scdl.ValidationFailure;
 
 /**
- * Thrown when a web component contains incompatible reference definitions in different artifacts.
+ * Raised when a web component contains incompatible reference definitions in different artifacts.
  *
  * @version $Revision$ $Date$
  */
-public class IncompatibleReferenceDefinitions extends IntrospectionException {
-    private static final long serialVersionUID = 5777518044294732584L;
+public class IncompatibleReferenceDefinitions extends ValidationFailure<String> {
 
-    public IncompatibleReferenceDefinitions(String message) {
-        super(message);
+    public IncompatibleReferenceDefinitions(String name) {
+        super(name);
+    }
+
+    public String getMessage() {
+        return "Reference contracts do not match for reference: " + getModelObject();
     }
 }

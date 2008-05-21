@@ -66,17 +66,17 @@ public class WebImplementationIntrospectorImpl implements WebImplementationIntro
             TypeMapping typeMapping = helper.mapTypeParameters(artifact);
             context = new DefaultIntrospectionContext(context, typeMapping);
             classWalker.walk(artifactImpl, artifact, context);
-            validateComponentType(type);
+            validateComponentType(type, context);
             // TODO apply heuristics
-            mergeComponentTypes(implementation.getComponentType(), type);
+            mergeComponentTypes(implementation.getComponentType(), type, context);
         }
     }
 
-    private void validateComponentType(PojoComponentType type) throws IntrospectionException {
+    private void validateComponentType(PojoComponentType type, IntrospectionContext context) {
         for (ReferenceDefinition reference : type.getReferences().values()) {
             if (reference.getServiceContract().isConversational()) {
-                throw new IllegalReferenceException("Cannot inject a conversational servce for reference " + reference.getName()
-                        + " on implementation " + type.getImplClass());
+                IllegalConversationalReferenceInjection failure = new IllegalConversationalReferenceInjection(reference, type.getImplClass());
+                context.addError(failure);
             }
 
         }
@@ -87,17 +87,17 @@ public class WebImplementationIntrospectorImpl implements WebImplementationIntro
      *
      * @param webType  the web component type to merge into
      * @param pojoType the POJO component to merge
-     * @throws IncompatibleReferenceDefinitions
-     *          if a reference is already defined and the two definitions are incompatible
+     * @param context  the introspection context
      */
-    private void mergeComponentTypes(WebComponentType webType, PojoComponentType pojoType) throws IncompatibleReferenceDefinitions {
+    private void mergeComponentTypes(WebComponentType webType, PojoComponentType pojoType, IntrospectionContext context) {
         for (Map.Entry<String, ReferenceDefinition> entry : pojoType.getReferences().entrySet()) {
             String name = entry.getKey();
             ReferenceDefinition reference = webType.getReferences().get(name);
             if (reference != null) {
                 if (!reference.getServiceContract().isAssignableFrom(entry.getValue().getServiceContract())) {
                     // TODO display areas where it was not matching
-                    throw new IncompatibleReferenceDefinitions("Reference contracts do not match for reference: " + name);
+                    IncompatibleReferenceDefinitions failure = new IncompatibleReferenceDefinitions(name);
+                    context.addError(failure);
                 }
 
             } else {
