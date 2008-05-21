@@ -44,8 +44,7 @@ public class CallbackProcessor<I extends Implementation<? extends InjectingCompo
     private final IntrospectionHelper helper;
     private final ContractProcessor contractProcessor;
 
-    public CallbackProcessor(@Reference ContractProcessor contractProcessor,
-                             @Reference IntrospectionHelper helper) {
+    public CallbackProcessor(@Reference ContractProcessor contractProcessor, @Reference IntrospectionHelper helper) {
         super(Callback.class);
         this.contractProcessor = contractProcessor;
         this.helper = helper;
