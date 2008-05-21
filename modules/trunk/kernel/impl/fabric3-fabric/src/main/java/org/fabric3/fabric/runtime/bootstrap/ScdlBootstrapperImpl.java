@@ -52,7 +52,6 @@ import org.fabric3.introspection.IntrospectionException;
 import org.fabric3.introspection.IntrospectionHelper;
 import org.fabric3.introspection.TypeMapping;
 import org.fabric3.introspection.contract.ContractProcessor;
-import org.fabric3.introspection.contract.InvalidServiceContractException;
 import org.fabric3.introspection.impl.DefaultIntrospectionHelper;
 import org.fabric3.introspection.impl.contract.DefaultContractProcessor;
 import org.fabric3.introspection.validation.InvalidCompositeException;
@@ -61,11 +60,11 @@ import org.fabric3.monitor.MonitorFactory;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.Composite;
+import org.fabric3.scdl.DefaultValidationContext;
 import org.fabric3.scdl.Implementation;
 import org.fabric3.scdl.ServiceContract;
 import org.fabric3.scdl.ServiceDefinition;
 import org.fabric3.scdl.ValidationContext;
-import org.fabric3.scdl.DefaultValidationContext;
 import org.fabric3.services.xmlfactory.XMLFactory;
 import org.fabric3.services.xmlfactory.impl.XMLFactoryImpl;
 import org.fabric3.spi.assembly.ActivateException;
@@ -270,8 +269,6 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
             LogicalComponent<?> logical = createLogicalComponent(name, type, instance);
             AtomicComponent<I> physical = createPhysicalComponent(name, instance);
             runtime.registerComponent(logical, physical);
-        } catch (InvalidServiceContractException e) {
-            throw new InitializationException(e);
         } catch (InstantiationException e) {
             throw new InitializationException(e);
         } catch (RegistrationException e) {
@@ -287,21 +284,21 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
     protected <S, I extends S> LogicalComponent<Implementation<?>> createLogicalComponent(String name,
                                                                                           Class<S> type,
                                                                                           I instance)
-            throws InvalidServiceContractException, InstantiationException {
+            throws InvalidSystemServiceContractException, InstantiationException {
 
         ComponentDefinition<Implementation<?>> definition = createDefinition(name, type, instance);
         return instantiator.instantiate(domain, domain.getPropertyValues(), definition);
     }
 
     protected <S, I extends S> ComponentDefinition<Implementation<?>> createDefinition(String name, Class<S> type, I instance)
-            throws InvalidServiceContractException {
+            throws InvalidSystemServiceContractException {
 
         String implClassName = instance.getClass().getName();
 
         ValidationContext context = new DefaultValidationContext();
         ServiceContract<?> contract = interfaceProcessorRegistry.introspect(new TypeMapping(), type, context);
         if (context.hasErrors()) {
-            throw new InvalidServiceContractException(context.getErrors());
+            throw new InvalidSystemServiceContractException(context.getErrors());
         }
         String serviceName = contract.getInterfaceName();
         ServiceDefinition service = new ServiceDefinition(serviceName, contract);

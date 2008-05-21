@@ -14,49 +14,26 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.introspection.contract;
+package org.fabric3.fabric.runtime.bootstrap;
 
 import java.util.List;
 
-import org.fabric3.introspection.IntrospectionException;
+import org.fabric3.host.runtime.InitializationException;
 import org.fabric3.introspection.xml.XmlValidationFailure;
 import org.fabric3.scdl.ValidationFailure;
 
 /**
  * @version $Rev$ $Date$
  */
-public class InvalidServiceContractException extends IntrospectionException {
+public class InvalidSystemServiceContractException extends InitializationException {
     private static final long serialVersionUID = 4367622270403828483L;
     private List<ValidationFailure> errors;
 
-    protected InvalidServiceContractException() {
-    }
-
-    protected InvalidServiceContractException(String message) {
-        super(message);
-    }
-
-    protected InvalidServiceContractException(String message, String identifier) {
-        super(message, identifier);
-    }
-
-    protected InvalidServiceContractException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
-    protected InvalidServiceContractException(String message, String identifier, Throwable cause) {
-        super(message, identifier, cause);
-    }
-
-    protected InvalidServiceContractException(Throwable cause) {
-        super(cause);
-    }
-
-    public InvalidServiceContractException(List<ValidationFailure> errors) {
+    public InvalidSystemServiceContractException(List<ValidationFailure> errors) {
+        super("System service contract has errors");
         this.errors = errors;
     }
 
-    // xcv temp remove
     public String getMessage() {
         if (errors == null) {
             return super.getMessage();
@@ -69,7 +46,7 @@ public class InvalidServiceContractException extends IntrospectionException {
         }
         for (ValidationFailure failure : errors) {
             if (failure instanceof XmlValidationFailure) {
-                b.append("ERROR: ").append(((XmlValidationFailure) failure).getMessage()).append("\n");
+                b.append("ERROR: ").append(failure.getMessage()).append("\n");
             } else {
                 b.append("ERROR: ").append(failure);
             }
