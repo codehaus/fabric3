@@ -31,11 +31,10 @@ import org.fabric3.introspection.IntrospectionContext;
  */
 public interface Loader {
     /**
-     * Parse the supplied XML stream, dispatching to the appropriate registered loader for each element encountered in
-     * the stream.
+     * Parse the supplied XML stream, dispatching to the appropriate registered loader for each element encountered in the stream.
      * <p/>
-     * This method must be called with the XML cursor positioned on a START_ELEMENT event. When this method returns, the
-     * stream will be positioned on the corresponding END_ELEMENT event.
+     * This method must be called with the XML cursor positioned on a START_ELEMENT event. When this method returns, the stream will be positioned on
+     * the corresponding END_ELEMENT event.
      *
      * @param reader  the XML stream to parse
      * @param type    the type of Java object that should be returned
@@ -45,8 +44,7 @@ public interface Loader {
      * @throws XMLStreamException if there was a problem reading the stream
      * @throws ClassCastException if the XML type cannot be cast to the expected output type
      */
-    <OUTPUT> OUTPUT load(XMLStreamReader reader, Class<OUTPUT> type, IntrospectionContext context)
-            throws XMLStreamException, LoaderException;
+    <OUTPUT> OUTPUT load(XMLStreamReader reader, Class<OUTPUT> type, IntrospectionContext context) throws XMLStreamException, LoaderException;
 
     /**
      * Load a model object from a specified location.
