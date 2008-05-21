@@ -36,23 +36,25 @@ import org.osoa.sca.annotations.Reference;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
+import org.fabric3.introspection.IntrospectionContext;
+import org.fabric3.introspection.xml.InvalidValueException;
+import org.fabric3.introspection.xml.Loader;
+import org.fabric3.introspection.xml.LoaderException;
+import org.fabric3.introspection.xml.LoaderHelper;
+import org.fabric3.introspection.xml.LoaderUtil;
+import org.fabric3.introspection.xml.MissingAttributeException;
+import org.fabric3.introspection.xml.TypeLoader;
+import org.fabric3.introspection.xml.UnrecognizedElement;
+import org.fabric3.introspection.xml.UnrecognizedElementException;
+import org.fabric3.scdl.AbstractComponentType;
 import org.fabric3.scdl.Autowire;
 import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.ComponentReference;
 import org.fabric3.scdl.ComponentService;
 import org.fabric3.scdl.Implementation;
-import org.fabric3.scdl.PropertyValue;
-import org.fabric3.scdl.AbstractComponentType;
 import org.fabric3.scdl.Property;
+import org.fabric3.scdl.PropertyValue;
 import org.fabric3.spi.Constants;
-import org.fabric3.introspection.xml.InvalidValueException;
-import org.fabric3.introspection.xml.Loader;
-import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.introspection.xml.LoaderException;
-import org.fabric3.introspection.xml.LoaderUtil;
-import org.fabric3.introspection.xml.LoaderHelper;
-import org.fabric3.introspection.xml.TypeLoader;
-import org.fabric3.introspection.xml.MissingAttributeException;
 
 /**
  * Loads a component definition from an XML-based assembly file
@@ -119,7 +121,13 @@ public class ComponentLoader implements TypeLoader<ComponentDefinition<?>> {
 
         Implementation<?> impl;
         try {
-            impl = loadImplementation(reader, context);
+            reader.nextTag();
+            impl = loader.load(reader, Implementation.class, context);
+            // TODO when the loader registry is replaced this try..catch must be replaced with a check for a loader and an
+            // UnrecognizedElement added to the context if none is found
+        } catch (UnrecognizedElementException e) {
+            context.addError(new UnrecognizedElement(reader));
+            return componentDefinition;
         } catch (LoaderException e) {
             throw new InvalidImplementationException("Invalid implementation for component: " + name, reader, e);
         }
@@ -131,43 +139,14 @@ public class ComponentLoader implements TypeLoader<ComponentDefinition<?>> {
             case START_ELEMENT:
                 QName qname = reader.getName();
                 if (PROPERTY.equals(qname)) {
-                    PropertyValue value = propertyValueLoader.load(reader, context);
-                    if (!componentType.hasProperty(value.getName())) {
-                        // ensure the property exists
-                        throw new ComponentPropertyNotFoundException("The component type for component " + name + " does not have a property "
-                                + value.getName(), reader);
-                    }
-                    if (componentDefinition.getPropertyValues().containsKey(value.getName())) {
-                        String id = value.getName();
-                        throw new DuplicateConfiguredPropertyException("The property is configured more than once: " + id, reader);
-                    }
-                    componentDefinition.add(value);
+                    parseProperty(componentDefinition, componentType, reader, context);
                 } else if (REFERENCE.equals(qname)) {
-                    ComponentReference reference = referenceLoader.load(reader, context);
-                    if (!componentType.hasReference(reference.getName())) {
-                        // ensure the reference exists
-                        throw new ComponentReferenceNotFoundException("The component type for component " + name + " does not have a reference "
-                                + reference.getName(), reader);
-                    }
-                    String refKey = reference.getName();
-                    if (componentDefinition.getReferences().containsKey(refKey)) {
-                        throw new DuplicateConfiguredReferenceException("The reference is configured more than once: " + refKey, reader);
-                    }
-                    componentDefinition.add(reference);
+                    parseReference(componentDefinition, componentType, reader, context);
                 } else if (SERVICE.equals(qname)) {
-                    ComponentService service = serviceLoader.load(reader, context);
-                    if (!componentType.hasService(service.getName())) {
-                        // ensure the service exists
-                        throw new ComponentServiceNotFoundException("The component type for component " + name + " does not have a service "
-                                + service.getName(), reader);
-                    }
-                    if (componentDefinition.getServices().containsKey(service.getName())) {
-                        String id = service.getName();
-                        throw new DuplicateConfiguredServiceException("Service configured more than once: " + id, reader);
-                    }
-                    componentDefinition.add(service);
+                    parseService(componentDefinition, componentType, reader, context);
                 } else {
-                    // Unknown extension element - ignore
+                    // Unknown extension element - issue an error and continue
+                    context.addError(new UnrecognizedElement(reader));
                     LoaderUtil.skipToEndElement(reader);
                 }
                 break;
@@ -176,6 +155,78 @@ public class ComponentLoader implements TypeLoader<ComponentDefinition<?>> {
                 validateRequiredProperties(componentDefinition, reader);
                 return componentDefinition;
             }
+        }
+    }
+
+    private void parseService(ComponentDefinition<Implementation<?>> componentDefinition,
+                              AbstractComponentType<?, ?, ?, ?> componentType,
+                              XMLStreamReader reader,
+                              IntrospectionContext context) throws XMLStreamException, LoaderException {
+        ComponentService service = serviceLoader.load(reader, context);
+        // xcv is this null check good?
+        if (service == null) {
+            // there was an error with the service configuration, just skip it
+            return;
+        }
+        if (!componentType.hasService(service.getName())) {
+            // ensure the service exists
+            ComponentServiceNotFound failure = new ComponentServiceNotFound(service.getName(), componentDefinition, reader);
+            context.addError(failure);
+            return;
+        }
+        if (componentDefinition.getServices().containsKey(service.getName())) {
+            String id = service.getName();
+            throw new DuplicateConfiguredServiceException("Service configured more than once: " + id, reader);
+        }
+        componentDefinition.add(service);
+    }
+
+    private void parseReference(ComponentDefinition<Implementation<?>> componentDefinition,
+                                AbstractComponentType<?, ?, ?, ?> componentType,
+                                XMLStreamReader reader,
+                                IntrospectionContext context) throws XMLStreamException, LoaderException {
+        ComponentReference reference = referenceLoader.load(reader, context);
+        // xcv is this null check good?
+        if (reference == null) {
+            // there was an error with the reference configuration, just skip it
+            return;
+        }
+        if (!componentType.hasReference(reference.getName())) {
+            // ensure the reference exists
+            ComponentReferenceNotFound failure = new ComponentReferenceNotFound(reference.getName(), componentDefinition, reader);
+            context.addError(failure);
+            return;
+        }
+        String refKey = reference.getName();
+        if (componentDefinition.getReferences().containsKey(refKey)) {
+            throw new DuplicateConfiguredReferenceException("The reference is configured more than once: " + refKey, reader);
+        }
+        componentDefinition.add(reference);
+    }
+
+    private void parseProperty(ComponentDefinition<Implementation<?>> componentDefinition,
+                               AbstractComponentType<?, ?, ?, ?> componentType,
+                               XMLStreamReader reader,
+                               IntrospectionContext context) throws XMLStreamException, LoaderException {
+        PropertyValue value = propertyValueLoader.load(reader, context);
+        // xcv is this null check good?
+        if (value == null) {
+            // there was an error with the property configuration, just skip it
+            return;
+        }
+        if (!componentType.hasProperty(value.getName())) {
+            // ensure the property exists
+            ComponentPropertyNotFound failure = new ComponentPropertyNotFound(value.getName(), componentDefinition, reader);
+            context.addError(failure);
+            return;
+        }
+        if (componentDefinition.getPropertyValues().containsKey(value.getName())) {
+            String id = value.getName();
+            DuplicateConfiguredProperty failure = new DuplicateConfiguredProperty(id, componentDefinition, reader);
+            context.addError(failure);
+            return;
+        } else {
+            componentDefinition.add(value);
         }
     }
 
@@ -256,15 +307,6 @@ public class ComponentLoader implements TypeLoader<ComponentDefinition<?>> {
                 throw new InvalidValueException("Invalid runtime id value: " + runtimeAttr, reader, e);
             }
         }
-    }
-
-    /*
-     * Loads the component implementation.
-     */
-    private Implementation<?> loadImplementation(XMLStreamReader reader, IntrospectionContext context)
-            throws XMLStreamException, LoaderException {
-        reader.nextTag();
-        return loader.load(reader, Implementation.class, context);
     }
 
 }

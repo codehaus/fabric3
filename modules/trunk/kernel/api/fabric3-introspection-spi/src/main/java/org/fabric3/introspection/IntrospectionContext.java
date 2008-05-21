@@ -21,6 +21,8 @@ package org.fabric3.introspection;
 import java.net.URI;
 import java.net.URL;
 
+import org.fabric3.scdl.ValidationContext;
+
 /**
  * Context for the current introspection session.
  * <p/>
@@ -28,7 +30,7 @@ import java.net.URL;
  *
  * @version $Rev$ $Date$
  */
-public interface IntrospectionContext {
+public interface IntrospectionContext extends ValidationContext {
 
     /**
      * Returns a class loader that can be used to load application resources.

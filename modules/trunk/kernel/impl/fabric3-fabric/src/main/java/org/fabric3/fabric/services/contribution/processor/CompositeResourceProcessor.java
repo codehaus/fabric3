@@ -31,13 +31,12 @@ import org.osoa.sca.annotations.Reference;
 import org.fabric3.host.contribution.Constants;
 import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.introspection.DefaultIntrospectionContext;
-import org.fabric3.scdl.Composite;
-import org.fabric3.introspection.validation.ValidationException;
-import org.fabric3.scdl.ValidationContext;
+import org.fabric3.introspection.IntrospectionContext;
+import org.fabric3.introspection.IntrospectionException;
 import org.fabric3.introspection.validation.InvalidCompositeException;
 import org.fabric3.introspection.xml.Loader;
-import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.introspection.xml.LoaderException;
+import org.fabric3.scdl.Composite;
+import org.fabric3.services.xmlfactory.XMLFactory;
 import org.fabric3.spi.services.contribution.Contribution;
 import org.fabric3.spi.services.contribution.ProcessorRegistry;
 import org.fabric3.spi.services.contribution.QNameSymbol;
@@ -45,7 +44,6 @@ import org.fabric3.spi.services.contribution.Resource;
 import org.fabric3.spi.services.contribution.ResourceElement;
 import org.fabric3.spi.services.contribution.ResourceElementNotFoundException;
 import org.fabric3.spi.services.contribution.ResourceProcessor;
-import org.fabric3.services.xmlfactory.XMLFactory;
 
 /**
  * Introspects a composite SCDL file in a contribution and produces a Composite type. This implementation assumes the CCL has all necessary artifacts
@@ -108,14 +106,14 @@ public class CompositeResourceProcessor implements ResourceProcessor {
     }
 
     @SuppressWarnings({"unchecked"})
-    public void process(URI contributionUri, Resource resource, ClassLoader loader) throws ContributionException {
+    public void process(URI contributionUri, Resource resource, ClassLoader classLoader) throws ContributionException {
         try {
             URL url = resource.getUrl();
-            Composite composite = processComponentType(url, loader, contributionUri);
-            ValidationContext validationContext = new ValidationContext();
-            composite.validate(validationContext);
-            if (validationContext.hasErrors()) {
-                throw new InvalidCompositeException(composite, validationContext.getErrors());
+            IntrospectionContext introspectionContext = new DefaultIntrospectionContext(classLoader, contributionUri, url);
+            Composite composite = loader.load(url, Composite.class, introspectionContext);
+            composite.validate(introspectionContext);
+            if (introspectionContext.hasErrors()) {
+                throw new InvalidCompositeException(composite, introspectionContext.getErrors());
             }
             boolean found = false;
             for (ResourceElement element : resource.getResourceElements()) {
@@ -129,25 +127,9 @@ public class CompositeResourceProcessor implements ResourceProcessor {
                 String identifier = composite.getName().toString();
                 throw new ResourceElementNotFoundException("Resource element not found: " + identifier, identifier);
             }
-        } catch (LoaderException e) {
-            throw new ContributionException(e);
-        } catch (ValidationException e) {
+        } catch (IntrospectionException e) {
             throw new ContributionException(e);
         }
-    }
-
-    /**
-     * Loads a composite component type at the given URL
-     *
-     * @param url             the url for the component type artifact
-     * @param loader          the classloader to load resources with
-     * @param contributionUri the current contribution uri
-     * @return the component type
-     * @throws LoaderException if an error occurs processing the component type
-     */
-    private Composite processComponentType(URL url, ClassLoader loader, URI contributionUri) throws LoaderException {
-        IntrospectionContext context = new DefaultIntrospectionContext(loader, contributionUri, url);
-        return this.loader.load(url, Composite.class, context);
     }
 
 

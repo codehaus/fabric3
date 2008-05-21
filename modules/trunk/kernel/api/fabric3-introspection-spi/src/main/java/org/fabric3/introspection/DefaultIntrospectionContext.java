@@ -20,6 +20,10 @@ package org.fabric3.introspection;
 
 import java.net.URI;
 import java.net.URL;
+import java.util.List;
+import java.util.ArrayList;
+
+import org.fabric3.scdl.ValidationFailure;
 
 /**
  * Default implementation of an IntrospectionContext.
@@ -27,6 +31,8 @@ import java.net.URL;
  * @version $Rev$ $Date$
  */
 public class DefaultIntrospectionContext implements IntrospectionContext {
+    private final List<ValidationFailure> errors = new ArrayList<ValidationFailure>();
+    private final List<ValidationFailure> warnings = new ArrayList<ValidationFailure>();
     private final ClassLoader targetClassLoader;
     private final URL sourceBase;
     private final String targetNamespace;
@@ -34,10 +40,10 @@ public class DefaultIntrospectionContext implements IntrospectionContext {
     private final TypeMapping typeMapping;
 
     public DefaultIntrospectionContext(ClassLoader targetClassLoader,
-                                    URL sourceBase,
-                                    String targetNamespace,
-                                    URI contributionUri,
-                                    TypeMapping typeMapping) {
+                                       URL sourceBase,
+                                       String targetNamespace,
+                                       URI contributionUri,
+                                       TypeMapping typeMapping) {
         this.targetClassLoader = targetClassLoader;
         this.sourceBase = sourceBase;
         this.targetNamespace = targetNamespace;
@@ -86,6 +92,38 @@ public class DefaultIntrospectionContext implements IntrospectionContext {
              parentContext.getTargetNamespace(),
              parentContext.getContributionUri(),
              typeMapping);
+    }
+
+    public boolean hasErrors() {
+        return !errors.isEmpty();
+    }
+
+    public List<ValidationFailure> getErrors() {
+        return errors;
+    }
+
+    public void addError(ValidationFailure e) {
+        errors.add(e);
+    }
+
+    public void addErrors(List<ValidationFailure> errors) {
+        this.errors.addAll(errors);
+    }
+
+    public boolean hasWarnings() {
+        return !warnings.isEmpty();
+    }
+
+    public List<ValidationFailure> getWarnings() {
+        return warnings;
+    }
+
+    public void addWarning(ValidationFailure e) {
+        warnings.add(e);
+    }
+
+    public void addWarnings(List<ValidationFailure> warnings) {
+        this.warnings.addAll(warnings);
     }
 
     public ClassLoader getTargetClassLoader() {

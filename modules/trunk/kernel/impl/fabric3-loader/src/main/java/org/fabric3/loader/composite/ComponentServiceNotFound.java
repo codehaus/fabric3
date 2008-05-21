@@ -19,16 +19,29 @@ package org.fabric3.loader.composite;
 import javax.xml.stream.XMLStreamReader;
 
 import org.fabric3.introspection.xml.LoaderException;
+import org.fabric3.introspection.xml.XmlValidationFailure;
+import org.fabric3.scdl.ComponentDefinition;
 
 /**
+ * A validation failure indicating an attempt to configure a non-existent component service.
+ *
  * @version $Rev$ $Date$
  */
-public class ComponentPropertyNotFoundException extends LoaderException {
-    private static final long serialVersionUID = -6052356261652955167L;
+public class ComponentServiceNotFound extends XmlValidationFailure<ComponentDefinition> {
+    private String serviceName;
+    private ComponentDefinition definition;
 
-    public ComponentPropertyNotFoundException(String message, XMLStreamReader reader) {
-        super(message, reader);
+    public ComponentServiceNotFound(String serviceName, ComponentDefinition definition, XMLStreamReader reader) {
+        super("The component " + definition.getName() + " does not have a service " + serviceName, definition, reader);
+        this.serviceName = serviceName;
+        this.definition = definition;
     }
 
+    public String getServiceName() {
+        return serviceName;
+    }
 
+    public ComponentDefinition getComponentDefinition() {
+        return definition;
+    }
 }

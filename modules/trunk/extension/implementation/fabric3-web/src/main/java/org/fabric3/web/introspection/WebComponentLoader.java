@@ -33,8 +33,6 @@ import org.osoa.sca.annotations.Reference;
 import org.fabric3.introspection.DefaultIntrospectionContext;
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.IntrospectionException;
-import org.fabric3.introspection.validation.InvalidComponentTypeException;
-import org.fabric3.introspection.validation.ValidationException;
 import org.fabric3.introspection.xml.LoaderException;
 import org.fabric3.introspection.xml.LoaderRegistry;
 import org.fabric3.introspection.xml.LoaderUtil;
@@ -42,7 +40,6 @@ import org.fabric3.introspection.xml.TypeLoader;
 import org.fabric3.scdl.ComponentType;
 import org.fabric3.scdl.Property;
 import org.fabric3.scdl.ReferenceDefinition;
-import org.fabric3.scdl.ValidationContext;
 
 /**
  * Loads <code><implementation.web></code> from a composite.
@@ -87,11 +84,6 @@ public class WebComponentLoader implements TypeLoader<WebImplementation> {
             ComponentType type = impl.getComponentType();
             // FIXME we should allow implementation to specify the component type;
             ComponentType componentType = loadComponentType(introspectionContext);
-            ValidationContext validationContext = new ValidationContext();
-            componentType.validate(validationContext);
-            if (validationContext.hasErrors()) {
-                throw new InvalidComponentTypeException(componentType, validationContext.getErrors());
-            }
             for (Map.Entry<String, ReferenceDefinition> entry : componentType.getReferences().entrySet()) {
                 type.add(entry.getValue());
             }
@@ -104,8 +96,6 @@ public class WebComponentLoader implements TypeLoader<WebImplementation> {
             } else {
                 throw e;
             }
-        } catch (ValidationException e) {
-            throw new LoaderException(reader, e);
         }
         LoaderUtil.skipToEndElement(reader);
         return impl;

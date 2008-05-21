@@ -37,9 +37,9 @@ import static org.fabric3.fabric.runtime.ComponentNames.APPLICATION_CLASSLOADER_
 import static org.fabric3.fabric.runtime.ComponentNames.BOOT_CLASSLOADER_ID;
 import static org.fabric3.fabric.runtime.ComponentNames.RUNTIME_URI;
 import org.fabric3.fabric.services.classloading.ClassLoaderRegistryImpl;
+import org.fabric3.fabric.services.contribution.ClasspathProcessorRegistryImpl;
 import org.fabric3.fabric.services.contribution.MetaDataStoreImpl;
 import org.fabric3.fabric.services.contribution.ProcessorRegistryImpl;
-import org.fabric3.fabric.services.contribution.ClasspathProcessorRegistryImpl;
 import org.fabric3.fabric.services.documentloader.DocumentLoader;
 import org.fabric3.fabric.services.documentloader.DocumentLoaderImpl;
 import org.fabric3.host.runtime.Fabric3Runtime;
@@ -48,14 +48,15 @@ import org.fabric3.host.runtime.InitializationException;
 import org.fabric3.host.runtime.ScdlBootstrapper;
 import org.fabric3.introspection.DefaultIntrospectionContext;
 import org.fabric3.introspection.IntrospectionContext;
+import org.fabric3.introspection.IntrospectionException;
 import org.fabric3.introspection.IntrospectionHelper;
 import org.fabric3.introspection.TypeMapping;
 import org.fabric3.introspection.contract.ContractProcessor;
 import org.fabric3.introspection.contract.InvalidServiceContractException;
 import org.fabric3.introspection.impl.DefaultIntrospectionHelper;
 import org.fabric3.introspection.impl.contract.DefaultContractProcessor;
+import org.fabric3.introspection.validation.InvalidCompositeException;
 import org.fabric3.introspection.xml.Loader;
-import org.fabric3.introspection.xml.LoaderException;
 import org.fabric3.monitor.MonitorFactory;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.ComponentDefinition;
@@ -63,9 +64,6 @@ import org.fabric3.scdl.Composite;
 import org.fabric3.scdl.Implementation;
 import org.fabric3.scdl.ServiceContract;
 import org.fabric3.scdl.ServiceDefinition;
-import org.fabric3.introspection.validation.ValidationException;
-import org.fabric3.scdl.ValidationContext;
-import org.fabric3.introspection.validation.InvalidCompositeException;
 import org.fabric3.services.xmlfactory.XMLFactory;
 import org.fabric3.services.xmlfactory.impl.XMLFactoryImpl;
 import org.fabric3.spi.assembly.ActivateException;
@@ -81,9 +79,9 @@ import org.fabric3.spi.runtime.assembly.LogicalComponentManager;
 import org.fabric3.spi.runtime.component.ComponentManager;
 import org.fabric3.spi.runtime.component.RegistrationException;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
+import org.fabric3.spi.services.contribution.ClasspathProcessorRegistry;
 import org.fabric3.spi.services.contribution.MetaDataStore;
 import org.fabric3.spi.services.contribution.ProcessorRegistry;
-import org.fabric3.spi.services.contribution.ClasspathProcessorRegistry;
 import org.fabric3.system.introspection.BootstrapLoaderFactory;
 
 /**
@@ -176,10 +174,9 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
             ClassLoader bootCl = classLoaderRegistry.getClassLoader(BOOT_CLASSLOADER_ID);
             IntrospectionContext introspectionContext = new DefaultIntrospectionContext(bootCl, BOOT_CLASSLOADER_ID, scdlLocation);
             Composite composite = loader.load(scdlLocation, Composite.class, introspectionContext);
-            ValidationContext validationContext = new ValidationContext();
-            composite.validate(validationContext);
-            if (validationContext.hasErrors()) {
-                throw new InvalidCompositeException(composite, validationContext.getErrors());
+            composite.validate(introspectionContext);
+            if (introspectionContext.hasErrors()) {
+                throw new InvalidCompositeException(composite, introspectionContext.getErrors());
             }
 
             Document userConfig = loadUserConfig();
@@ -195,9 +192,7 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
             // include in the runtime domain assembly
             runtimeAssembly.includeInDomain(composite);
 
-        } catch (LoaderException e) {
-            throw new InitializationException(e);
-        } catch (ValidationException e) {
+        } catch (IntrospectionException e) {
             throw new InitializationException(e);
         } catch (ActivateException e) {
             throw new InitializationException(e);

@@ -39,6 +39,9 @@ import org.fabric3.introspection.xml.LoaderHelper;
 import org.fabric3.introspection.xml.LoaderRegistry;
 import org.fabric3.introspection.xml.LoaderUtil;
 import org.fabric3.introspection.xml.TypeLoader;
+import org.fabric3.introspection.xml.UnrecognizedElement;
+import org.fabric3.introspection.xml.UnrecognizedElementException;
+import org.fabric3.introspection.xml.UnrecognizedTypeException;
 import org.fabric3.scdl.Autowire;
 import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.Composite;
@@ -151,7 +154,7 @@ public class CompositeLoader implements TypeLoader<Composite> {
         String name = reader.getAttributeValue(null, "name");
         String targetNamespace = reader.getAttributeValue(null, "targetNamespace");
         boolean local = Boolean.valueOf(reader.getAttributeValue(null, "local"));
-        introspectionContext = new DefaultIntrospectionContext(introspectionContext, targetNamespace);
+        IntrospectionContext childContext = new DefaultIntrospectionContext(introspectionContext, targetNamespace);
         QName compositeName = new QName(targetNamespace, name);
         QName constrainingType = LoaderUtil.getQName(reader.getAttributeValue(null, "constrainingType"),
                                                      targetNamespace,
@@ -168,11 +171,11 @@ public class CompositeLoader implements TypeLoader<Composite> {
             case START_ELEMENT:
                 QName qname = reader.getName();
                 if (INCLUDE.equals(qname)) {
-                    Include include = includeLoader.load(reader, introspectionContext);
+                    Include include = includeLoader.load(reader, childContext);
                     QName includeName = include.getName();
                     if (type.getIncludes().containsKey(includeName)) {
                         String identifier = includeName.toString();
-                        throw new DuplicateIncludeException("Include already defined with name :" + identifier, reader);
+                        throw new DuplicateIncludeException("Include already defined with name: " + identifier, reader);
                     }
                     for (ComponentDefinition definition : include.getIncluded().getComponents().values()) {
                         String key = definition.getName();
@@ -182,28 +185,28 @@ public class CompositeLoader implements TypeLoader<Composite> {
                     }
                     type.add(include);
                 } else if (PROPERTY.equals(qname)) {
-                    Property property = propertyLoader.load(reader, introspectionContext);
+                    Property property = propertyLoader.load(reader, childContext);
                     String key = property.getName();
                     if (type.getProperties().containsKey(key)) {
                         throw new DuplicatePropertyException("Property already defined: " + key, reader);
                     }
                     type.add(property);
                 } else if (SERVICE.equals(qname)) {
-                    CompositeService service = serviceLoader.load(reader, introspectionContext);
+                    CompositeService service = serviceLoader.load(reader, childContext);
                     if (type.getServices().containsKey(service.getName())) {
                         String key = service.getName();
                         throw new DuplicateServiceException("Service already defined: " + key, reader);
                     }
                     type.add(service);
                 } else if (REFERENCE.equals(qname)) {
-                    CompositeReference reference = referenceLoader.load(reader, introspectionContext);
+                    CompositeReference reference = referenceLoader.load(reader, childContext);
                     if (type.getReferences().containsKey(reference.getName())) {
                         String key = reference.getName();
                         throw new DuplicateReferenceException("Reference already defined: " + key, reader);
                     }
                     type.add(reference);
                 } else if (COMPONENT.equals(qname)) {
-                    ComponentDefinition<?> componentDefinition = componentLoader.load(reader, introspectionContext);
+                    ComponentDefinition<?> componentDefinition = componentLoader.load(reader, childContext);
                     String key = componentDefinition.getName();
                     if (type.getComponents().containsKey(key)) {
                         throw new DuplicateComponentNameException("Component with name already defined: " + key, reader);
@@ -213,11 +216,19 @@ public class CompositeLoader implements TypeLoader<Composite> {
                     }
                     type.add(componentDefinition);
                 } else if (WIRE.equals(qname)) {
-                    WireDefinition wire = wireLoader.load(reader, introspectionContext);
+                    WireDefinition wire = wireLoader.load(reader, childContext);
                     type.add(wire);
                 } else {
                     // Extension element - for now try to load and see if we can handle it
-                    ModelObject modelObject = loader.load(reader, ModelObject.class, introspectionContext);
+                    ModelObject modelObject;
+                    try {
+                        modelObject = loader.load(reader, ModelObject.class, childContext);
+                        // TODO when the loader registry is replaced this try..catch must be replaced with a check for a loader and an
+                        // UnrecognizedElement added to the context if none is found
+                    } catch (UnrecognizedElementException e) {
+                        childContext.addError(new UnrecognizedElement(reader));
+                        continue;
+                    }
                     if (modelObject instanceof Property) {
                         type.add((Property) modelObject);
                     } else if (modelObject instanceof CompositeService) {
@@ -227,12 +238,19 @@ public class CompositeLoader implements TypeLoader<Composite> {
                     } else if (modelObject instanceof ComponentDefinition) {
                         type.add((ComponentDefinition<?>) modelObject);
                     } else {
-                        // Unknown extension element, ignore
+                        // Unknown extension element
+                        throw new UnrecognizedTypeException(reader);
                     }
                 }
                 break;
             case END_ELEMENT:
                 assert COMPOSITE.equals(reader.getName());
+                if (childContext.hasErrors()) {
+                    introspectionContext.addErrors(childContext.getErrors());
+                }
+                if (childContext.hasWarnings()) {
+                    introspectionContext.addWarnings(childContext.getWarnings());
+                }
                 return type;
             }
         }

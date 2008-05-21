@@ -34,7 +34,9 @@ import org.fabric3.introspection.xml.Loader;
 import org.fabric3.introspection.xml.LoaderException;
 import org.fabric3.introspection.xml.LoaderHelper;
 import org.fabric3.introspection.xml.TypeLoader;
+import org.fabric3.introspection.xml.UnrecognizedTypeException;
 import org.fabric3.introspection.xml.UnrecognizedElementException;
+import org.fabric3.introspection.xml.UnrecognizedElement;
 import org.fabric3.scdl.BindingDefinition;
 import org.fabric3.scdl.ComponentReference;
 import org.fabric3.scdl.ModelObject;
@@ -61,7 +63,9 @@ public class ComponentReferenceLoader implements TypeLoader<ComponentReference> 
     public ComponentReference load(XMLStreamReader reader, IntrospectionContext context) throws XMLStreamException, LoaderException {
         String name = reader.getAttributeValue(null, "name");
         if (name == null) {
-            throw new InvalidReferenceException("No reference name specified", reader);
+            MissingReferenceName failure = new MissingReferenceName(reader);
+            context.addError(failure);
+            return null;
         }
         ComponentReference reference = new ComponentReference(name);
 
@@ -97,7 +101,15 @@ public class ComponentReferenceLoader implements TypeLoader<ComponentReference> 
                 if (callback) {
                     reader.nextTag();
                 }
-                ModelObject type = loader.load(reader, ModelObject.class, context);
+                ModelObject type;
+                try {
+                    type = loader.load(reader, ModelObject.class, context);
+                    // TODO when the loader registry is replaced this try..catch must be replaced with a check for a loader and an
+                    // UnrecognizedElement added to the context if none is found
+                } catch (UnrecognizedElementException e) {
+                    context.addError(new UnrecognizedElement(reader));
+                    continue;
+                }
                 if (type instanceof ServiceContract) {
                     reference.setServiceContract((ServiceContract<?>) type);
                 } else if (type instanceof BindingDefinition) {
@@ -109,7 +121,7 @@ public class ComponentReferenceLoader implements TypeLoader<ComponentReference> 
                 } else if (type instanceof OperationDefinition) {
                     reference.addOperation((OperationDefinition) type);
                 } else {
-                    throw new UnrecognizedElementException(reader);
+                    throw new UnrecognizedTypeException(reader);
                 }
                 break;
             case XMLStreamConstants.END_ELEMENT:

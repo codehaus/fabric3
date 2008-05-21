@@ -32,8 +32,6 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.introspection.DefaultIntrospectionContext;
 import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.introspection.validation.InvalidCompositeException;
-import org.fabric3.introspection.validation.ValidationException;
 import org.fabric3.introspection.xml.Loader;
 import org.fabric3.introspection.xml.LoaderException;
 import org.fabric3.introspection.xml.LoaderRegistry;
@@ -43,7 +41,6 @@ import org.fabric3.introspection.xml.MissingResourceException;
 import org.fabric3.introspection.xml.TypeLoader;
 import org.fabric3.scdl.Composite;
 import org.fabric3.scdl.CompositeImplementation;
-import org.fabric3.scdl.ValidationContext;
 import org.fabric3.spi.services.contribution.MetaDataStore;
 import org.fabric3.spi.services.contribution.MetaDataStoreException;
 import org.fabric3.spi.services.contribution.QNameSymbol;
@@ -101,7 +98,6 @@ public class ImplementationCompositeLoader implements TypeLoader<CompositeImplem
             }
             IntrospectionContext childContext = new DefaultIntrospectionContext(cl, contributionUri, url);
             Composite composite = loader.load(url, Composite.class, childContext);
-            validate(composite, url, reader);
             impl.setName(composite.getName());
             impl.setComponentType(composite);
             return impl;
@@ -112,7 +108,6 @@ public class ImplementationCompositeLoader implements TypeLoader<CompositeImplem
             }
             IntrospectionContext childContext = new DefaultIntrospectionContext(cl, contributionUri, url);
             Composite composite = loader.load(url, Composite.class, childContext);
-            validate(composite, url, reader);
             impl.setName(composite.getName());
             impl.setComponentType(composite);
             return impl;
@@ -137,12 +132,11 @@ public class ImplementationCompositeLoader implements TypeLoader<CompositeImplem
 
     }
 
-    private void validate(Composite composite, URL url, XMLStreamReader reader) throws LoaderException {
-        ValidationContext validationContext = new ValidationContext();
-        composite.validate(validationContext);
-        if (validationContext.hasErrors()) {
-            ValidationException ve = new InvalidCompositeException(composite, validationContext.getErrors());
-            throw new LoaderException("Invalid composite: " + url.toString(), reader, ve);
-        }
-    }
+//    private void validate(Composite composite, URL url, XMLStreamReader reader, IntrospectionContext introspectionContext) throws LoaderException {
+//        composite.validate(introspectionContext);
+//        if (introspectionContext.hasErrors()) {
+//            ValidationException ve = new InvalidCompositeException(composite, introspectionContext.getErrors());
+//            throw new LoaderException("Invalid composite: " + url.toString(), reader, ve);
+//        }
+//    }
 }

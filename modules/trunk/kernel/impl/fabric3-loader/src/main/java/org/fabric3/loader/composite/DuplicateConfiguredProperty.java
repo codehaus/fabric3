@@ -19,15 +19,27 @@ package org.fabric3.loader.composite;
 import javax.xml.stream.XMLStreamReader;
 
 import org.fabric3.introspection.xml.LoaderException;
+import org.fabric3.introspection.xml.XmlValidationFailure;
+import org.fabric3.scdl.ComponentDefinition;
 
 /**
  * @version $Rev$ $Date$
  */
-public class ComponentReferenceNotFoundException extends LoaderException {
-    private static final long serialVersionUID = -8504271004179432246L;
+public class DuplicateConfiguredProperty extends XmlValidationFailure<ComponentDefinition> {
+    private String propertyName;
+    private ComponentDefinition definition;
 
-    public ComponentReferenceNotFoundException(String message, XMLStreamReader reader) {
-        super(message, reader);
+    public DuplicateConfiguredProperty(String propertyName, ComponentDefinition definition, XMLStreamReader reader) {
+        super("The property " + propertyName + " on component " + definition.getName() + "is configured more than once", definition, reader);
+        this.propertyName = propertyName;
+        this.definition = definition;
     }
 
+    public String getPropertyName() {
+        return propertyName;
+    }
+
+    public ComponentDefinition getComponentDefinition() {
+        return definition;
+    }
 }

@@ -30,16 +30,19 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.scdl.ComponentType;
-import org.fabric3.scdl.ModelObject;
-import org.fabric3.scdl.Property;
-import org.fabric3.scdl.ReferenceDefinition;
-import org.fabric3.scdl.ServiceDefinition;
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.xml.LoaderException;
 import org.fabric3.introspection.xml.LoaderRegistry;
 import org.fabric3.introspection.xml.LoaderUtil;
 import org.fabric3.introspection.xml.TypeLoader;
+import org.fabric3.introspection.xml.UnrecognizedElement;
+import org.fabric3.introspection.xml.UnrecognizedElementException;
+import org.fabric3.introspection.xml.UnrecognizedTypeException;
+import org.fabric3.scdl.ComponentType;
+import org.fabric3.scdl.ModelObject;
+import org.fabric3.scdl.Property;
+import org.fabric3.scdl.ReferenceDefinition;
+import org.fabric3.scdl.ServiceDefinition;
 
 /**
  * Loads a generic component type.
@@ -106,7 +109,15 @@ public class ComponentTypeLoader implements TypeLoader<ComponentType> {
                     type.add(reference);
                 } else {
                     // Extension element - for now try to load and see if we can handle it
-                    ModelObject modelObject = registry.load(reader, ModelObject.class, introspectionContext);
+                    ModelObject modelObject;
+                    try {
+                        modelObject = registry.load(reader, ModelObject.class, introspectionContext);
+                        // TODO when the loader registry is replaced this try..catch must be replaced with a check for a loader and an
+                        // UnrecognizedElement added to the context if none is found
+                    } catch (UnrecognizedElementException e) {
+                        introspectionContext.addError(new UnrecognizedElement(reader));
+                        continue;
+                    }
                     if (modelObject instanceof Property) {
                         type.add((Property) modelObject);
                     } else if (modelObject instanceof ServiceDefinition) {
@@ -114,7 +125,8 @@ public class ComponentTypeLoader implements TypeLoader<ComponentType> {
                     } else if (modelObject instanceof ReferenceDefinition) {
                         type.add((ReferenceDefinition) modelObject);
                     } else {
-                        // Unknown extension element, ignore
+                        // Unknown extension element
+                        throw new UnrecognizedTypeException(reader);
                     }
                 }
                 break;

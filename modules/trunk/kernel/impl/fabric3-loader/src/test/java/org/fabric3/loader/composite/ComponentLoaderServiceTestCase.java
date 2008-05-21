@@ -16,23 +16,25 @@
  */
 package org.fabric3.loader.composite;
 
+import java.net.URI;
 import javax.xml.namespace.QName;
+import javax.xml.stream.Location;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
-import javax.xml.stream.Location;
 
 import junit.framework.TestCase;
 import org.easymock.EasyMock;
 import static org.osoa.sca.Constants.SCA_NS;
 
-import org.fabric3.scdl.ComponentService;
-import org.fabric3.scdl.ComponentType;
-import org.fabric3.scdl.Implementation;
-import org.fabric3.introspection.xml.Loader;
 import org.fabric3.introspection.IntrospectionContext;
+import org.fabric3.introspection.DefaultIntrospectionContext;
+import org.fabric3.introspection.xml.Loader;
 import org.fabric3.introspection.xml.LoaderException;
 import org.fabric3.introspection.xml.LoaderHelper;
 import org.fabric3.introspection.xml.TypeLoader;
+import org.fabric3.scdl.ComponentService;
+import org.fabric3.scdl.ComponentType;
+import org.fabric3.scdl.Implementation;
 
 /**
  * @version $Rev$ $Date$
@@ -50,12 +52,8 @@ public class ComponentLoaderServiceTestCase extends TestCase {
      * @throws Exception on test failure
      */
     public void testNoService() throws Exception {
-        EasyMock.replay(ctx);
-        try {
-            loader.load(reader, ctx);
-        } catch (ComponentServiceNotFoundException e) {
-            // expected
-        }
+        loader.load(reader, ctx);
+        assertTrue(ctx.getErrors().get(0) instanceof ComponentServiceNotFound);
     }
 
     protected void setUp() throws Exception {
@@ -66,7 +64,7 @@ public class ComponentLoaderServiceTestCase extends TestCase {
         EasyMock.replay(helper);
         loader = new ComponentLoader(registry, null, null, serviceLoader, helper);
         reader = createReader();
-        ctx = EasyMock.createNiceMock(IntrospectionContext.class);
+        ctx = new DefaultIntrospectionContext(URI.create("parent"), getClass().getClassLoader(), "foo");
     }
 
     private Loader createRegistry() throws XMLStreamException, LoaderException {
@@ -113,6 +111,8 @@ public class ComponentLoaderServiceTestCase extends TestCase {
         EasyMock.expect(reader.next()).andReturn(1);
         EasyMock.expect(reader.getName()).andReturn(new QName(SCA_NS, "service"));
         EasyMock.expect(reader.getLocation()).andReturn(location);
+        EasyMock.expect(reader.next()).andReturn(2);
+        EasyMock.expect(reader.getName()).andReturn(new QName(SCA_NS, "component"));
         EasyMock.replay(reader);
         return reader;
     }

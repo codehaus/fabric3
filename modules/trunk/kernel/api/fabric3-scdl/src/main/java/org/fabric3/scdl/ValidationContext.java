@@ -16,7 +16,6 @@
  */
 package org.fabric3.scdl;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -29,61 +28,63 @@ import java.util.List;
  *
  * @version $Rev$ $Date$
  */
-public class ValidationContext {
-    private final List<ValidationFailure> errors = new ArrayList<ValidationFailure>();
-    private final List<ValidationFailure> warnings = new ArrayList<ValidationFailure>();
+public interface ValidationContext {
 
     /**
      * Returns true if the validation has detected any fatal errors.
      *
      * @return true if the validation has detected any fatal errors
      */
-    public boolean hasErrors() {
-        return !errors.isEmpty();
-    }
+    boolean hasErrors();
 
     /**
      * Returns the list of fatal errors detected during validation.
      *
      * @return the list of fatal errors detected during validation
      */
-    public List<ValidationFailure> getErrors() {
-        return errors;
-    }
+    List<ValidationFailure> getErrors();
 
     /**
      * Add a fatal error to the validation results.
      *
      * @param e the fatal error that has been found
      */
-    public void addError(ValidationFailure e) {
-        errors.add(e);
-    }
+    void addError(ValidationFailure e);
+
+    /**
+     * Add a collection of fatal errors to the validation results.
+     *
+     * @param errors the fatal errors that have been found
+     */
+    void addErrors(List<ValidationFailure> errors);
 
     /**
      * Returns true if the validation has detected any non-fatal warnings.
      *
      * @return true if the validation has detected any non-fatal warnings
      */
-    public boolean hasWarnings() {
-        return !warnings.isEmpty();
-    }
+    boolean hasWarnings();
 
     /**
      * Returns the list of non-fatal warnings detected during validation.
      *
      * @return the list of non-fatal warnings detected during validation
      */
-    public List<ValidationFailure> getWarnings() {
-        return warnings;
-    }
+    List<ValidationFailure> getWarnings();
 
     /**
      * Add a non-fatal warning to the validation results.
      *
      * @param e the non-fatal warning that has been found
      */
-    public void addWarning(ValidationFailure e) {
-        warnings.add(e);
-    }
+    void addWarning(ValidationFailure e);
+
+
+    /**
+     * Add a collection of non-fatal warnings to the validation results.
+     *
+     * @param warnings the non-fatal warnings that have been found
+     */
+    void addWarnings(List<ValidationFailure> warnings);
+
 }

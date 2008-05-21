@@ -22,33 +22,25 @@ import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamReader;
 
 /**
- * Exception that indicates an element was encountered that could not be handled.
+ * Failure that indicates an element was encountered that could not be handled.
  *
  * @version $Rev$ $Date$
  */
-public class UnrecognizedElementException extends LoaderException {
-    private static final long serialVersionUID = 2549543622209829032L;
-    private final QName element;
+public class UnrecognizedElement extends XmlValidationFailure<QName> {
 
     /**
      * Constructor that indicates which resource could not be found. The supplied parameter is also returned as the message.
      *
      * @param reader the StAX reader positioned on the unrecognized element
      */
-    public UnrecognizedElementException(XMLStreamReader reader) {
-        super("Unrecognized element", reader);
-        this.element = reader.getName();
-    }
-
-    public QName getElement() {
-        return element;
+    public UnrecognizedElement(XMLStreamReader reader) {
+        super("Unrecognized element", reader.getName(), reader);
     }
 
     public String getMessage() {
-        StringBuffer b = new StringBuffer("The element ").append(getElement());
-        return b.append(
-                " was not recognized. If this is not a typo, check to ensure extensions are configured properly.").toString();
-
-
+        StringBuffer b = new StringBuffer("The element ").append(getModelObject()).append(" specified in ").append(getResourceURI()).append(
+                " at ").append(getLine()).append(",").append(getColumn()).append(" was not recognized. If this is not a typo, check to").append(
+                " ensure extensions are configured properly.");
+        return b.toString();
     }
 }

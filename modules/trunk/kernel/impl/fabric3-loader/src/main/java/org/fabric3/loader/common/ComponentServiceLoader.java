@@ -16,26 +16,28 @@
  */
 package org.fabric3.loader.common;
 
+import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
-import javax.xml.namespace.QName;
 
-import org.osoa.sca.annotations.Reference;
 import static org.osoa.sca.Constants.SCA_NS;
+import org.osoa.sca.annotations.Reference;
 
+import org.fabric3.introspection.IntrospectionContext;
+import org.fabric3.introspection.xml.Loader;
+import org.fabric3.introspection.xml.LoaderException;
+import org.fabric3.introspection.xml.LoaderHelper;
+import org.fabric3.introspection.xml.MissingAttributeException;
+import org.fabric3.introspection.xml.TypeLoader;
+import org.fabric3.introspection.xml.UnrecognizedTypeException;
+import org.fabric3.introspection.xml.UnrecognizedElementException;
+import org.fabric3.introspection.xml.UnrecognizedElement;
 import org.fabric3.scdl.BindingDefinition;
 import org.fabric3.scdl.ComponentService;
 import org.fabric3.scdl.ModelObject;
 import org.fabric3.scdl.OperationDefinition;
 import org.fabric3.scdl.ServiceContract;
-import org.fabric3.introspection.xml.Loader;
-import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.introspection.xml.LoaderException;
-import org.fabric3.introspection.xml.LoaderHelper;
-import org.fabric3.introspection.xml.TypeLoader;
-import org.fabric3.introspection.xml.UnrecognizedElementException;
-import org.fabric3.introspection.xml.MissingAttributeException;
 
 /**
  * Loads a service definition from an XML-based assembly file
@@ -73,7 +75,15 @@ public class ComponentServiceLoader implements TypeLoader<ComponentService> {
                 if (callback) {
                     reader.nextTag();
                 }
-                ModelObject type = loader.load(reader, ModelObject.class, context);
+                ModelObject type;
+                try {
+                    type = loader.load(reader, ModelObject.class, context);
+                    // TODO when the loader registry is replaced this try..catch must be replaced with a check for a loader and an
+                    // UnrecognizedElement added to the context if none is found
+                } catch (UnrecognizedElementException e) {
+                    context.addError(new UnrecognizedElement(reader));
+                    continue;
+                }
                 if (type instanceof ServiceContract) {
                     def.setServiceContract((ServiceContract<?>) type);
                 } else if (type instanceof BindingDefinition) {
@@ -85,7 +95,7 @@ public class ComponentServiceLoader implements TypeLoader<ComponentService> {
                 } else if (type instanceof OperationDefinition) {
                     def.addOperation((OperationDefinition) type);
                 } else {
-                    throw new UnrecognizedElementException(reader);
+                    throw new UnrecognizedTypeException(reader);
                 }
                 break;
             case XMLStreamConstants.END_ELEMENT:
