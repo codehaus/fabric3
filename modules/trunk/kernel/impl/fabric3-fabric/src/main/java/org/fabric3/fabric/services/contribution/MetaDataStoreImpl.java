@@ -204,7 +204,7 @@ public class MetaDataStoreImpl implements MetaDataStore {
                             processorRegistry.processResource(contributionUri, resource, loader);
                         } catch (ContributionException e) {
                             String identifier = resource.getUrl().toString();
-                            throw new MetaDataStoreException("Error resolving resurce: " + identifier, identifier, e);
+                            throw new MetaDataStoreException("Error resolving resource: " + identifier, identifier, e);
                         }
                     }
                     if (!type.isInstance(element.getValue())) {
