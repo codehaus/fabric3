@@ -36,7 +36,6 @@ import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.xml.LoaderException;
 import org.fabric3.introspection.xml.LoaderHelper;
 import org.fabric3.introspection.xml.LoaderRegistry;
-import org.fabric3.introspection.xml.MissingAttributeException;
 import org.fabric3.introspection.xml.TypeLoader;
 import org.fabric3.spi.services.contribution.ContributionManifest;
 import org.fabric3.spi.services.contribution.Export;
@@ -84,7 +83,7 @@ public class ContributionElementLoader implements TypeLoader<ContributionManifes
                 } else if (DEPLOYABLE.equals(element)) {
                     String name = reader.getAttributeValue(null, "composite");
                     if (name == null) {
-                        throw new MissingAttributeException("Composite attribute must be specified", reader);
+                        throw new MissingMainifestAttributeException("Composite attribute must be specified", reader);
                     }
                     QName qName = helper.createQName(name, reader);
                     Deployable deployable = new Deployable(qName, Constants.COMPOSITE_TYPE);

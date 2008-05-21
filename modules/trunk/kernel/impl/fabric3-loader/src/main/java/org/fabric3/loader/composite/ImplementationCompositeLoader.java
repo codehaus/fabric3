@@ -36,7 +36,7 @@ import org.fabric3.introspection.xml.Loader;
 import org.fabric3.introspection.xml.LoaderException;
 import org.fabric3.introspection.xml.LoaderRegistry;
 import org.fabric3.introspection.xml.LoaderUtil;
-import org.fabric3.introspection.xml.MissingAttributeException;
+import org.fabric3.introspection.xml.MissingAttribute;
 import org.fabric3.introspection.xml.MissingResourceException;
 import org.fabric3.introspection.xml.TypeLoader;
 import org.fabric3.scdl.Composite;
@@ -79,7 +79,9 @@ public class ImplementationCompositeLoader implements TypeLoader<CompositeImplem
         assert CompositeImplementation.IMPLEMENTATION_COMPOSITE.equals(reader.getName());
         String nameAttr = reader.getAttributeValue(null, "name");
         if (nameAttr == null || nameAttr.length() == 0) {
-            throw new MissingAttributeException("Missing name attribute", reader);
+            MissingAttribute failure = new MissingAttribute("Missing name attribute", "name", reader);
+            introspectionContext.addError(failure);
+            return null;
         }
         QName name = LoaderUtil.getQName(nameAttr, introspectionContext.getTargetNamespace(), reader.getNamespaceContext());
         String scdlLocation = reader.getAttributeValue(null, "scdlLocation");

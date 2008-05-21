@@ -42,7 +42,7 @@ import org.fabric3.introspection.xml.Loader;
 import org.fabric3.introspection.xml.LoaderException;
 import org.fabric3.introspection.xml.LoaderHelper;
 import org.fabric3.introspection.xml.LoaderUtil;
-import org.fabric3.introspection.xml.MissingAttributeException;
+import org.fabric3.introspection.xml.MissingAttribute;
 import org.fabric3.introspection.xml.TypeLoader;
 import org.fabric3.introspection.xml.UnrecognizedElement;
 import org.fabric3.introspection.xml.UnrecognizedElementException;
@@ -103,7 +103,9 @@ public class ComponentLoader implements TypeLoader<ComponentDefinition<?>> {
 
         String name = reader.getAttributeValue(null, "name");
         if (name == null) {
-            throw new MissingAttributeException("Component name not specified", reader);
+            MissingAttribute failure = new MissingAttribute("Component name not specified", "name", reader);
+            context.addError(failure);
+            return null;
         }
 
         Autowire autowire = Autowire.fromString(reader.getAttributeValue(null, "autowire"));

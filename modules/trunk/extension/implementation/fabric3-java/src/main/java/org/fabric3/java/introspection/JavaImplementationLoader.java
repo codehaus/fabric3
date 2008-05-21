@@ -24,12 +24,11 @@ import javax.xml.stream.XMLStreamReader;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.introspection.IntrospectionException;
 import org.fabric3.introspection.xml.LoaderException;
 import org.fabric3.introspection.xml.LoaderHelper;
 import org.fabric3.introspection.xml.LoaderUtil;
 import org.fabric3.introspection.xml.TypeLoader;
-import org.fabric3.introspection.xml.MissingAttributeException;
+import org.fabric3.introspection.xml.MissingAttribute;
 import org.fabric3.java.scdl.JavaImplementation;
 
 /**
@@ -54,9 +53,13 @@ public class JavaImplementationLoader implements TypeLoader<JavaImplementation> 
         JavaImplementation implementation = new JavaImplementation();
         String implClass = reader.getAttributeValue(null, "class");
         if (implClass == null) {
-            throw new MissingAttributeException("The class attribute was not specified", reader);
+            MissingAttribute failure = new MissingAttribute("The class attribute was not specified", "class", reader);
+            introspectionContext.addError(failure);
+            LoaderUtil.skipToEndElement(reader);
+            return implementation;
         }
         loaderHelper.loadPolicySetsAndIntents(implementation, reader);
+
         LoaderUtil.skipToEndElement(reader);
 
         implementation.setImplementationClass(implClass);

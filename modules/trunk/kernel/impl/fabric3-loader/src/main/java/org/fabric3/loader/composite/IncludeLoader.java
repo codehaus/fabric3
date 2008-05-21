@@ -32,7 +32,7 @@ import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.xml.Loader;
 import org.fabric3.introspection.xml.LoaderException;
 import org.fabric3.introspection.xml.LoaderUtil;
-import org.fabric3.introspection.xml.MissingAttributeException;
+import org.fabric3.introspection.xml.MissingAttribute;
 import org.fabric3.introspection.xml.MissingResourceException;
 import org.fabric3.introspection.xml.TypeLoader;
 import org.fabric3.scdl.Composite;
@@ -60,7 +60,9 @@ public class IncludeLoader implements TypeLoader<Include> {
 
         String nameAttr = reader.getAttributeValue(null, "name");
         if (nameAttr == null || nameAttr.length() == 0) {
-            throw new MissingAttributeException("Missing name attribute", reader);
+            MissingAttribute failure = new MissingAttribute("Missing name attribute", "name", reader);
+            context.addError(failure);
+            return null;
         }
         QName name = LoaderUtil.getQName(nameAttr, context.getTargetNamespace(), reader.getNamespaceContext());
         String scdlLocation = reader.getAttributeValue(null, "scdlLocation");

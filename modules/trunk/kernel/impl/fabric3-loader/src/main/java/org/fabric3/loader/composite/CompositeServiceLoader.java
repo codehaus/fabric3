@@ -31,7 +31,7 @@ import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.xml.Loader;
 import org.fabric3.introspection.xml.LoaderException;
 import org.fabric3.introspection.xml.LoaderHelper;
-import org.fabric3.introspection.xml.MissingAttributeException;
+import org.fabric3.introspection.xml.MissingAttribute;
 import org.fabric3.introspection.xml.TypeLoader;
 import org.fabric3.introspection.xml.UnrecognizedTypeException;
 import org.fabric3.scdl.BindingDefinition;
@@ -59,7 +59,9 @@ public class CompositeServiceLoader implements TypeLoader<CompositeService> {
             throws XMLStreamException, LoaderException {
         String name = reader.getAttributeValue(null, "name");
         if (name == null) {
-            throw new MissingAttributeException("Service name not specified", reader);
+            MissingAttribute failure = new MissingAttribute("Service name not specified", "name", reader);
+            context.addError(failure);
+            return null;
         }
         String promote = reader.getAttributeValue(null, "promote");
         CompositeService def = new CompositeService(name, null, loaderHelper.getURI(promote));

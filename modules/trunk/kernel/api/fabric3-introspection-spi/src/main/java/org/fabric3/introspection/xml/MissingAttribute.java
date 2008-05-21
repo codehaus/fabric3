@@ -25,11 +25,10 @@ import javax.xml.stream.XMLStreamReader;
  *
  * @version $Rev$ $Date$
  */
-public class MissingAttributeException extends LoaderException {
-    private static final long serialVersionUID = 1L;
+public class MissingAttribute extends XmlValidationFailure<String> {
 
-    public MissingAttributeException(String message, XMLStreamReader reader) {
-        super(message, reader);
+    public MissingAttribute(String message, String attributeName, XMLStreamReader reader) {
+        super(message, attributeName, reader);
     }
 
 }

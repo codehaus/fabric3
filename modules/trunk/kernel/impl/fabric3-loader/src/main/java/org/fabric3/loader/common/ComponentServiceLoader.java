@@ -28,7 +28,7 @@ import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.xml.Loader;
 import org.fabric3.introspection.xml.LoaderException;
 import org.fabric3.introspection.xml.LoaderHelper;
-import org.fabric3.introspection.xml.MissingAttributeException;
+import org.fabric3.introspection.xml.MissingAttribute;
 import org.fabric3.introspection.xml.TypeLoader;
 import org.fabric3.introspection.xml.UnrecognizedTypeException;
 import org.fabric3.introspection.xml.UnrecognizedElementException;
@@ -55,12 +55,13 @@ public class ComponentServiceLoader implements TypeLoader<ComponentService> {
         this.loaderHelper = loaderHelper;
     }
 
-    public ComponentService load(XMLStreamReader reader, IntrospectionContext context)
-            throws XMLStreamException, LoaderException {
+    public ComponentService load(XMLStreamReader reader, IntrospectionContext context) throws XMLStreamException, LoaderException {
 
         String name = reader.getAttributeValue(null, "name");
         if (name == null) {
-            throw new MissingAttributeException("Missing name attribute", reader);
+            MissingAttribute failure = new MissingAttribute("Missing name attribute", "name", reader);
+            context.addError(failure);
+            return null;
         }
         ComponentService def = new ComponentService(name, null);
 

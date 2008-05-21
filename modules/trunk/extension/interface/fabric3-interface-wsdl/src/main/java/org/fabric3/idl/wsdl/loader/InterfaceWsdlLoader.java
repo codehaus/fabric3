@@ -35,7 +35,7 @@ import org.fabric3.idl.wsdl.processor.WsdlProcessor;
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.xml.LoaderException;
 import org.fabric3.introspection.xml.LoaderRegistry;
-import org.fabric3.introspection.xml.MissingAttributeException;
+import org.fabric3.introspection.xml.MissingAttribute;
 import org.fabric3.introspection.xml.TypeLoader;
 
 /**
@@ -80,9 +80,12 @@ public class InterfaceWsdlLoader implements TypeLoader<WsdlContract>, Constants 
 
         WsdlContract wsdlContract = new WsdlContract();
 
-        URL wsdlUrl = resolveWsdl(reader);
-
-        processInterface(reader, wsdlContract, wsdlUrl);
+        URL wsdlUrl = resolveWsdl(reader, context);
+        if (wsdlUrl == null) {
+            // there was a problem, return an empty contract
+            return wsdlContract;
+        }
+        processInterface(reader, wsdlContract, wsdlUrl, context);
 
         processCallbackInterface(reader, wsdlContract, wsdlUrl);
 
@@ -108,12 +111,13 @@ public class InterfaceWsdlLoader implements TypeLoader<WsdlContract>, Constants 
      * Processes the interface.
      */
     @SuppressWarnings("unchecked")
-    private void processInterface(XMLStreamReader reader, WsdlContract wsdlContract, URL wsdlUrl)
-            throws LoaderException {
+    private void processInterface(XMLStreamReader reader, WsdlContract wsdlContract, URL wsdlUrl, IntrospectionContext context) {
 
         String interfaze = reader.getAttributeValue(null, "interface");
         if (interfaze == null) {
-            throw new MissingAttributeException("Interface is required", reader);
+            MissingAttribute failure = new MissingAttribute("Interface attribute is required", "interface", reader);
+            context.addError(failure);
+            return;
         }
         QName interfaceQName = getQName(interfaze);
         wsdlContract.setQname(interfaceQName);
@@ -124,16 +128,19 @@ public class InterfaceWsdlLoader implements TypeLoader<WsdlContract>, Constants 
     /*
      * Resolves the WSDL.
      */
-    private URL resolveWsdl(XMLStreamReader reader) throws LoaderException {
+    private URL resolveWsdl(XMLStreamReader reader, IntrospectionContext context) {
 
         String wsdlLocation = reader.getAttributeValue(null, "wsdlLocation");
         if (wsdlLocation == null) {
             // We don't support auto dereferecing of namespace URI
-            throw new MissingAttributeException("WSDL Location is required", reader);
+            MissingAttribute failure = new MissingAttribute("wsdlLocation Location is required", "wsdlLocation", reader);
+            context.addError(failure);
+            return null;
         }
         URL wsdlUrl = getWsdlUrl(wsdlLocation);
         if (wsdlUrl == null) {
-            throw new LoaderException("Unable to locate WSDL: " + wsdlLocation, reader);
+            InvalidWSDLLocation failure = new InvalidWSDLLocation("Unable to locate WSDL: " + wsdlLocation, wsdlLocation, reader);
+            context.addError(failure);
         }
         return wsdlUrl;
 

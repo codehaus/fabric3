@@ -26,23 +26,23 @@ import org.fabric3.binding.ws.introspection.WsBindingLoader;
 
 /**
  * Logical binding definition for web services.
- * 
+ *
  * @version $Revision$ $Date$
  */
 public class WsBindingDefinition extends BindingDefinition {
-    
+    private static final long serialVersionUID = -2097314069798596206L;
+
     private final String implementation;
     private final String wsdlLocation;
     private final String wsdlElement;
 
-    public WsBindingDefinition(URI targetUri, String implementation,
-                               String wsdlLocation, String wsdlElement) {
+    public WsBindingDefinition(URI targetUri, String implementation, String wsdlLocation, String wsdlElement) {
         super(targetUri, WsBindingLoader.BINDING_QNAME);
         this.implementation = implementation;
         this.wsdlElement = wsdlElement;
         this.wsdlLocation = wsdlLocation;
     }
-    
+
     public String getImplementation() {
         return implementation;
     }

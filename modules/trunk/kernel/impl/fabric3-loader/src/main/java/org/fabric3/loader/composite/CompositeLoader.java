@@ -172,6 +172,10 @@ public class CompositeLoader implements TypeLoader<Composite> {
                 QName qname = reader.getName();
                 if (INCLUDE.equals(qname)) {
                     Include include = includeLoader.load(reader, childContext);
+                    if (include == null) {
+                        // errror encountered loading the include
+                        continue;
+                    }
                     QName includeName = include.getName();
                     if (type.getIncludes().containsKey(includeName)) {
                         String identifier = includeName.toString();
@@ -189,6 +193,10 @@ public class CompositeLoader implements TypeLoader<Composite> {
                     type.add(include);
                 } else if (PROPERTY.equals(qname)) {
                     Property property = propertyLoader.load(reader, childContext);
+                    if (property == null) {
+                        // errror encountered loading the property
+                        continue;
+                    }
                     String key = property.getName();
                     if (type.getProperties().containsKey(key)) {
                         DuplicateProperty failure = new DuplicateProperty(key, reader);
@@ -198,6 +206,10 @@ public class CompositeLoader implements TypeLoader<Composite> {
                     }
                 } else if (SERVICE.equals(qname)) {
                     CompositeService service = serviceLoader.load(reader, childContext);
+                    if (service == null) {
+                        // errror encountered loading the service
+                        continue;
+                    }
                     if (type.getServices().containsKey(service.getName())) {
                         String key = service.getName();
                         DuplicateService failure = new DuplicateService(key, reader);
@@ -207,6 +219,10 @@ public class CompositeLoader implements TypeLoader<Composite> {
                     }
                 } else if (REFERENCE.equals(qname)) {
                     CompositeReference reference = referenceLoader.load(reader, childContext);
+                    if (reference == null) {
+                        // errror encountered loading the reference
+                        continue;
+                    }
                     if (type.getReferences().containsKey(reference.getName())) {
                         String key = reference.getName();
                         DuplicatePromotedReferenceName failure = new DuplicatePromotedReferenceName(key, reader);
@@ -216,6 +232,10 @@ public class CompositeLoader implements TypeLoader<Composite> {
                     }
                 } else if (COMPONENT.equals(qname)) {
                     ComponentDefinition<?> componentDefinition = componentLoader.load(reader, childContext);
+                    if (componentDefinition == null) {
+                        // errror encountered loading the componentDefinition
+                        continue;
+                    }
                     String key = componentDefinition.getName();
                     if (type.getComponents().containsKey(key)) {
                         DuplicateComponentName failure = new DuplicateComponentName(key, reader);
@@ -228,6 +248,10 @@ public class CompositeLoader implements TypeLoader<Composite> {
                     type.add(componentDefinition);
                 } else if (WIRE.equals(qname)) {
                     WireDefinition wire = wireLoader.load(reader, childContext);
+                    if (wire == null) {
+                        // errror encountered loading the wire
+                        continue;
+                    }
                     type.add(wire);
                 } else {
                     // Extension element - for now try to load and see if we can handle it

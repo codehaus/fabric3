@@ -29,7 +29,7 @@ import org.fabric3.spi.Constants;
 import org.fabric3.introspection.xml.LoaderException;
 import org.fabric3.introspection.xml.LoaderUtil;
 import org.fabric3.introspection.xml.TypeLoader;
-import org.fabric3.introspection.xml.MissingAttributeException;
+import org.fabric3.introspection.xml.MissingAttribute;
 
 /**
  * Parses <code>binding.test</code> for services and references. A uri to bind the service to or target a reference must be provided as an attribute.
@@ -48,9 +48,13 @@ public class TestBindingLoader implements TypeLoader<TestBindingDefinition> {
         try {
             String uri = reader.getAttributeValue(null, "uri");
             if (uri == null) {
-                throw new MissingAttributeException("The uri attribute is not specified", reader);
+                MissingAttribute failure = new MissingAttribute("The uri attribute is not specified", "uri", reader);
+                context.addError(failure);
+                // return a dummy binding
+                definition = new TestBindingDefinition(null);
+            } else {
+                definition = new TestBindingDefinition(new URI(uri));
             }
-            definition = new TestBindingDefinition(new URI(uri));
         } catch (URISyntaxException ex) {
             throw new LoaderException(reader, ex);
         }

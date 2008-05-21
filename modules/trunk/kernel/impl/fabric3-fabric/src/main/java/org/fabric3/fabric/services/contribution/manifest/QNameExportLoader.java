@@ -25,7 +25,6 @@ import javax.xml.stream.XMLStreamReader;
 import org.osoa.sca.annotations.EagerInit;
 
 import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.introspection.xml.MissingAttributeException;
 import org.fabric3.introspection.xml.TypeLoader;
 import org.fabric3.spi.services.contribution.QNameExport;
 
@@ -38,10 +37,10 @@ import org.fabric3.spi.services.contribution.QNameExport;
 public class QNameExportLoader implements TypeLoader<QNameExport> {
     //private static final QName EXPORT = new QName(SCA_NS, "export");
 
-    public QNameExport load(XMLStreamReader reader, IntrospectionContext context) throws MissingAttributeException, XMLStreamException {
+    public QNameExport load(XMLStreamReader reader, IntrospectionContext context) throws MissingMainifestAttributeException, XMLStreamException {
         String ns = reader.getAttributeValue(null, "namespace");
         if (ns == null) {
-            throw new MissingAttributeException("The namespace attribute must be specified", reader);
+            throw new MissingMainifestAttributeException("The namespace attribute must be specified", reader);
         }
         return new QNameExport(new QName(ns));
     }

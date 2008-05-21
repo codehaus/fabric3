@@ -28,13 +28,13 @@ import org.osoa.sca.Constants;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
+import org.fabric3.binding.ws.scdl.WsBindingDefinition;
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.xml.LoaderException;
-import org.fabric3.introspection.xml.LoaderUtil;
 import org.fabric3.introspection.xml.LoaderHelper;
+import org.fabric3.introspection.xml.LoaderUtil;
+import org.fabric3.introspection.xml.MissingAttribute;
 import org.fabric3.introspection.xml.TypeLoader;
-import org.fabric3.introspection.xml.MissingAttributeException;
-import org.fabric3.binding.ws.scdl.WsBindingDefinition;
 
 /**
  * @version $Revision$ $Date$
@@ -71,10 +71,12 @@ public class WsBindingLoader implements TypeLoader<WsBindingDefinition> {
             String wsdlLocation = reader.getAttributeValue("http://www.w3.org/2004/08/wsdl-instance", "wsdlLocation");
 
             if (uri == null) {
-                throw new MissingAttributeException("The uri attribute is not specified", reader);
+                MissingAttribute failure = new MissingAttribute("The uri attribute is not specified", "uri", reader);
+                introspectionContext.addError(failure);
+                bd = new WsBindingDefinition(null, implementation, wsdlLocation, wsdlElement);
+            } else {
+                bd = new WsBindingDefinition(new URI(uri), implementation, wsdlLocation, wsdlElement);
             }
-            bd = new WsBindingDefinition(new URI(uri), implementation, wsdlLocation, wsdlElement);
-
             loaderHelper.loadPolicySetsAndIntents(bd, reader);
 
             // TODO Add rest of the WSDL support

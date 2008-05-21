@@ -36,7 +36,7 @@ import org.fabric3.introspection.IntrospectionException;
 import org.fabric3.introspection.TypeMapping;
 import org.fabric3.introspection.contract.ContractProcessor;
 import org.fabric3.introspection.xml.LoaderException;
-import org.fabric3.introspection.xml.MissingAttributeException;
+import org.fabric3.introspection.xml.MissingAttribute;
 import org.fabric3.introspection.xml.TypeLoader;
 import org.fabric3.java.introspection.JavaImplementationProcessor;
 import org.fabric3.java.scdl.JavaImplementation;
@@ -79,12 +79,14 @@ public class JpaImplementationLoader implements TypeLoader<JavaImplementation> {
 
         try {
 
+            JavaImplementation implementation = new JavaImplementation();
             String persistenceUnit = reader.getAttributeValue(null, "persistenceUnit");
             if (persistenceUnit == null) {
-                throw new MissingAttributeException("Missing attribute: persistenceUnit", reader);
+                MissingAttribute failure = new MissingAttribute("Missing attribute: persistenceUnit", "persistenceUnit", reader);
+                context.addError(failure);
+                return implementation;
             }
 
-            JavaImplementation implementation = new JavaImplementation();
             implementation.setImplementationClass(ConversationalDaoImpl.class.getName());
 
             URI contributionUri = context.getContributionUri();
@@ -102,8 +104,6 @@ public class JpaImplementationLoader implements TypeLoader<JavaImplementation> {
 
             return implementation;
 
-        } catch (IntrospectionException e) {
-            throw new LoaderException(reader, e);
         } catch (NoSuchFieldException e) {
             throw new LoaderException(reader, e);
         }

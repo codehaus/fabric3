@@ -32,7 +32,7 @@ import org.fabric3.introspection.xml.LoaderException;
 import org.fabric3.introspection.xml.LoaderHelper;
 import org.fabric3.introspection.xml.LoaderUtil;
 import org.fabric3.introspection.xml.TypeLoader;
-import org.fabric3.introspection.xml.MissingAttributeException;
+import org.fabric3.introspection.xml.MissingAttribute;
 import org.fabric3.scdl.DataType;
 import org.fabric3.scdl.PropertyValue;
 import org.fabric3.spi.model.type.XSDSimpleType;
@@ -51,7 +51,9 @@ public class PropertyValueLoader implements TypeLoader<PropertyValue> {
             throws XMLStreamException, LoaderException {
         String name = reader.getAttributeValue(null, "name");
         if (name == null || name.length() == 0) {
-            throw new MissingAttributeException("Missing name attribute", reader);
+            MissingAttribute failure = new MissingAttribute("Missing name attribute", "name", reader);
+            context.addError(failure);
+            return null;
         }
 
         String source = reader.getAttributeValue(null, "source");
