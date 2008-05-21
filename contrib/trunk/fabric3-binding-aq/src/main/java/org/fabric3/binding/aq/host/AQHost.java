@@ -18,6 +18,8 @@
  */
 package org.fabric3.binding.aq.host;
 
+import java.net.URI;
+
 import javax.jms.Destination;
 import javax.jms.MessageListener;
 import javax.jms.XAQueueConnectionFactory;
@@ -42,6 +44,7 @@ public interface AQHost {
                           Destination destination,                                              
                           MessageListener listener,
                           TransactionHandler transactionHandler,
-                          ClassLoader classloader);
+                          ClassLoader classloader,
+                          URI namespace);
 
 }

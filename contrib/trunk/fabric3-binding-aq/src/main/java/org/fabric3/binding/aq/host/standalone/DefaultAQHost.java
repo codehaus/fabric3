@@ -18,6 +18,7 @@
  */
 package org.fabric3.binding.aq.host.standalone;
 
+import java.net.URI;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -65,14 +66,16 @@ public class DefaultAQHost implements AQHost, DefaultAQHostMBean {
     /**
      * Registers the listeners to start on consuming messages
      */
-    public void registerListener(final XAQueueConnectionFactory connectionFactory, final Destination destination, final MessageListener listener, final TransactionHandler transactionHandler, final ClassLoader classLoader) {
+    public void registerListener(final XAQueueConnectionFactory connectionFactory, final Destination destination, final MessageListener listener, final TransactionHandler transactionHandler, final ClassLoader classLoader,
+                                 final URI namespace) {
+        /* Set the target URI */
         workData.setConnectionFactory(connectionFactory);
         workData.setDestination(destination);
         workData.setListener(listener);
         workData.setClassLoader(classLoader);
         workData.setTxHandler(transactionHandler);
         try {
-            prepareWorkSchedule();
+            prepareWorkSchedule(namespace);
         } catch (JMSException ex) {
             throw new Fabric3AQException("Unable to Start serviceing Requests", ex);
         }
@@ -94,15 +97,15 @@ public class DefaultAQHost implements AQHost, DefaultAQHostMBean {
      * Sets The Number Of receivers
      * @return count
      */
-    public void setReceivers(final String serviceUri, final int receivers) {        
+    public void setReceivers(final String namespace, final int receivers) {        
         receiverCount = receivers;
         try {
             stop();
             consumers.clear();
-            prepareWorkSchedule();
+            prepareWorkSchedule(URI.create(namespace));
         } catch (JMSException je) {
            monitor.onException(je);
-           throw new Fabric3AQException("Unable to Start serviceing Requests from Managment Console", je);
+           throw new Fabric3AQException("Unable to Start servicing Requests from Managment Console", je);
         }
     }
 
@@ -151,7 +154,8 @@ public class DefaultAQHost implements AQHost, DefaultAQHostMBean {
     /*
      * Prepares the work schedule
      */
-    private void prepareWorkSchedule() throws JMSException {
+    private void prepareWorkSchedule(final URI serviceNamespace) throws JMSException {
+        /* TODO ADD INFO TO MAP */
         connection = workData.getConnectionFactory().createXAConnection();
         for (int i = 0; i < receiverCount; i++) {
             startConsumption();

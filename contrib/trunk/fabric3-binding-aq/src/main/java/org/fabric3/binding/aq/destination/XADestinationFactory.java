@@ -21,6 +21,7 @@ package org.fabric3.binding.aq.destination;
 
 import javax.jms.Destination;
 import javax.jms.JMSException;
+import javax.jms.Session;
 import javax.jms.XAConnection;
 import javax.jms.XAQueueConnectionFactory;
 
@@ -42,7 +43,7 @@ public class XADestinationFactory implements DestinationFactory<XAQueueConnectio
         XAConnection connection = null;      
         try {                      
             connection = connectionFactory.createXAConnection();
-            queue = connection.createXASession().createQueue(name);            
+            queue = connection.createSession(false, Session.AUTO_ACKNOWLEDGE).createQueue(name);            
             return queue;
         } catch(JMSException ex) {
             throw new Fabric3AQException("Unable to create destination", ex);

@@ -1,6 +1,7 @@
 package org.fabric3.binding.aq.test;
 
 
+
 /**
  * This Mesaage is One way
  */

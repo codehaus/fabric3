@@ -94,5 +94,5 @@ class WorkData {
      */
     TransactionHandler getTxHandler(){
         return transactionHandler;
-    }
+    }       
 }

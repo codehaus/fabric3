@@ -20,16 +20,18 @@ package org.fabric3.binding.aq.wire;
 
 import java.util.Map;
 
-import javax.jms.ConnectionFactory;
 import javax.jms.Destination;
+import javax.jms.XAQueueConnectionFactory;
 
+import org.fabric3.api.annotation.Monitor;
 import org.fabric3.binding.aq.connectionfactory.ConnectionFactoryAccessor;
 import org.fabric3.binding.aq.destination.DestinationFactory;
 import org.fabric3.binding.aq.model.AQBindingMetadata;
-import org.fabric3.binding.aq.model.CorrelationScheme;
 import org.fabric3.binding.aq.model.DestinationDefinition;
 import org.fabric3.binding.aq.model.physical.AQWireTargetDefinition;
-import org.fabric3.binding.aq.transport.Fabric3MessageReceiver;
+import org.fabric3.binding.aq.monitor.AQMonitor;
+import org.fabric3.binding.aq.tx.TransactionHandler;
+import org.fabric3.binding.aq.wire.interceptor.OneWayAQTargetInterceptor;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.TargetWireAttacher;
@@ -49,51 +51,21 @@ import org.osoa.sca.annotations.Reference;
 public class AQTargetWireAttacher implements  TargetWireAttacher<AQWireTargetDefinition> {   
    
     /*Connection factory strategies. */
-    private ConnectionFactoryAccessor connectionFactoryAccessor;
+    private ConnectionFactoryAccessor<XAQueueConnectionFactory> connectionFactoryAccessor;
     
     /* Factory used for creating destinations */
-    private DestinationFactory destinationFactory;
+    private DestinationFactory<XAQueueConnectionFactory> destinationFactory;
     
     /* Registry that holds class loaders */
     private ClassLoaderRegistry classLoaderRegistry;
     
     /* Registry that holds data sources */
-    private DataSourceRegistry dataSourceRegistry;    
+    private DataSourceRegistry dataSourceRegistry;
 
-    /**
-     * Injects the Factory for retrieving Connection Factories
-     * @param connectionFactoryAccessor
-     */
-    @Reference
-    public void setConnectionFactoryAccessor(final ConnectionFactoryAccessor connectionFactoryAccessor){
-        this.connectionFactoryAccessor = connectionFactoryAccessor;
-    }
+    private TransactionHandler transactionHandler;
+
+    private AQMonitor monitor;    
     
-    /**
-     * Injects the destination {@link DestinationFactory}
-     * @param  destinationFactory
-     */
-    @Reference
-    public void setDestinationFactory(final DestinationFactory destinationFactory) {
-        this.destinationFactory = destinationFactory;
-    }
-
-    /**
-     * Injects the class loader registry.
-     * @param classLoaderRegistry
-     */
-    @Reference
-    public void setClassloaderRegistry(ClassLoaderRegistry classLoaderRegistry) {
-        this.classLoaderRegistry = classLoaderRegistry;
-    }   
-
-    /**
-     * @param dataSource - the dataSource to set.
-     */
-    @Reference
-    protected void setDataSourceRegistry(DataSourceRegistry dataSourceRegistry) {
-        this.dataSourceRegistry = dataSourceRegistry;
-    }
 
     /**
      * @see org.fabric3.spi.builder.component.TargetWireAttacher#attachToTarget(org.fabric3.spi.model.physical.PhysicalWireSourceDefinition,
@@ -101,56 +73,84 @@ public class AQTargetWireAttacher implements  TargetWireAttacher<AQWireTargetDef
      *      org.fabric3.spi.wire.Wire)
      */
     public void attachToTarget(final PhysicalWireSourceDefinition sourceDefinition, final AQWireTargetDefinition targetDefinition, final Wire wire)  throws WiringException {
+        monitor.onTargetWire(" Still Refactoring ");
         
-        final ClassLoader classLoader = classLoaderRegistry.getClassLoader(targetDefinition.getClassloaderURI());
-        
-        boolean syncResponse = false; 
-        
-      
-        /* TODO REFCATOR BELOW */
-        Destination resDestination = null;
-        ConnectionFactory resCf = null;
-
-        /* TODO REFCATOR BELOW */
-
-       
-
+        final ClassLoader classLoader = classLoaderRegistry.getClassLoader(targetDefinition.getClassloaderURI());               
+     
         AQBindingMetadata metadata = targetDefinition.getMetadata();
         String datasourceName = (String)metadata.getDestination().getProperties().get("datasource");
         metadata.setDataSource(dataSourceRegistry.getDataSource(datasourceName));
+        
 
-        CorrelationScheme correlationScheme = metadata.getCorrelationScheme();
-
-        ConnectionFactory reqCf = connectionFactoryAccessor.getConnectionFactory(metadata);
+        XAQueueConnectionFactory reqCf = connectionFactoryAccessor.getConnectionFactory(metadata);
 
         DestinationDefinition destinationDefinition = metadata.getDestination();
-        Destination reqDestination = destinationFactory.getDestination(destinationDefinition, reqCf);
-
-        /* TODO REFCATOR */
-        destinationDefinition = metadata.getResponseDestination();
-        
-        if (destinationDefinition != null) {
-            resCf = connectionFactoryAccessor.getConnectionFactory(metadata);
-
-            resDestination = destinationFactory.getDestination(destinationDefinition, resCf);
-            syncResponse = true;
-        }
-
+        Destination reqDestination = destinationFactory.getDestination(destinationDefinition, reqCf);      
+                
+         
         for (Map.Entry<PhysicalOperationDefinition, InvocationChain> entry : wire.getInvocationChains().entrySet()) {
 
             PhysicalOperationDefinition op = entry.getKey();
-            InvocationChain chain = entry.getValue();
-
-            Fabric3MessageReceiver messageReceiver = new Fabric3MessageReceiver(resDestination, resCf);
-            Interceptor interceptor = new AQTargetInterceptor(op.getName(), reqDestination, reqCf, correlationScheme, messageReceiver, classLoader,syncResponse);
-
+            InvocationChain chain = entry.getValue();            
+            Interceptor interceptor = new OneWayAQTargetInterceptor(op.getName(), reqCf, reqDestination, transactionHandler, classLoader);             
             chain.addInterceptor(interceptor);
-
         }
-
     }
 
     public ObjectFactory<?> createObjectFactory(AQWireTargetDefinition target) throws WiringException {
         throw new AssertionError();
+    }       
+    
+    /**
+     * Injects the Factory for retrieving Connection Factories
+     * @param connectionFactoryAccessor
+     */
+    @Reference
+    protected void setConnectionFactoryAccessor(final ConnectionFactoryAccessor<XAQueueConnectionFactory> connectionFactoryAccessor){
+        this.connectionFactoryAccessor = connectionFactoryAccessor;
+    }
+            
+    /**
+     * Injects the destination {@link DestinationFactory}
+     * @param  destinationFactory
+     */
+    @Reference
+    protected void setDestinationFactory(final DestinationFactory<XAQueueConnectionFactory> destinationFactory) {
+        this.destinationFactory = destinationFactory;
+    }
+    
+    /**
+     * @param dataSource - the dataSource to set.
+     */
+    @Reference
+    protected void setDataSourceRegistry(DataSourceRegistry dataSourceRegistry) {
+        this.dataSourceRegistry = dataSourceRegistry;
+    }
+    
+    /**
+     * Injects the transaction handler.
+     * @param transactionHandler Transaction handler.
+     */
+    @Reference(required = true)
+    protected void setTransactionHandler(TransactionHandler transactionHandler) {
+        this.transactionHandler = transactionHandler;
+    }
+
+    /**
+     * Injects the class loader registry.
+     * @param classLoaderRegistry
+     */
+    @Reference
+    protected void setClassloaderRegistry(ClassLoaderRegistry classLoaderRegistry) {
+        this.classLoaderRegistry = classLoaderRegistry;
+    }
+    
+    /**
+     * Injects the monitor
+     * @param monitor
+     */
+    @Monitor
+    protected void setMonitor(final AQMonitor monitor){
+        this.monitor = monitor;
     }
 }

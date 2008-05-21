@@ -16,32 +16,17 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.binding.aq.host.standalone;
-
-import org.fabric3.api.annotation.Management;
+package org.fabric3.binding.aq.wire;
 
 /**
- * MBean
- * @version $Revsion$ $Date: 2008-05-14 19:31:12 +0100 (Wed, 14 May 2008) $
+ * State of start and stopping the the wire attachers 
  */
-@Management
-public interface DefaultAQHostMBean {
+public enum ConsumeState {
     
-    /**
-     * Gets theNUmber of Receivers
-     * @return receivers
-     */
-    int getReceiverCount();
+    /* STARTED STATE */
+    start,
     
-    /**
-     * Sets the Number of Receivers
-     * @param receivers
-     */
-    void setReceivers(String serviceNamespace, int receivers);
-    
-    /**
-     * Returns the Destination to Consume Messages on
-     * @return
-     */
-    String getDestination();
+    /* STOPPED STATE */
+    stopped;
+
 }

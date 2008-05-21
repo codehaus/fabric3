@@ -16,32 +16,35 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.binding.aq.host.standalone;
+package org.fabric3.binding.aq.wire;
+
+import java.util.List;
 
 import org.fabric3.api.annotation.Management;
 
+
 /**
- * MBean
- * @version $Revsion$ $Date: 2008-05-14 19:31:12 +0100 (Wed, 14 May 2008) $
+ *  MBean for Source Wire Attacher
+ * @version $Revision: 3125 $ $Date: 2008-03-16 17:01:06 +0000 (Sun, 16 Mar 2008) $
  */
 @Management
-public interface DefaultAQHostMBean {
+public interface AQSourceWireAttacherMBean {
     
     /**
-     * Gets theNUmber of Receivers
-     * @return receivers
+     * Start the wire attacher
      */
-    int getReceiverCount();
+    void start(String serviceNamespace);
     
     /**
-     * Sets the Number of Receivers
-     * @param receivers
+     * Stop the wire attacher
      */
-    void setReceivers(String serviceNamespace, int receivers);
+    void stop();
+    
     
     /**
-     * Returns the Destination to Consume Messages on
+     * Gets the List Service names regsistered
      * @return
      */
-    String getDestination();
+    List<String> getServiceNames();
+    
 }

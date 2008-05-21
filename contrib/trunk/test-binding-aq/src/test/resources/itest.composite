@@ -38,7 +38,7 @@
 			class="org.fabric3.binding.aq.test.AQBindingAsyncTest" />
 		<reference name="echoService">
 			<binding.aq correlationScheme="RequestMsgIDToCorrelID">
-				<destination name="FIRE_FORGET_Q" type="queue" create="always">
+				<destination name="FIRE_FORGET_Q" type="queue">
 					<property name="datasource">AQDataSource</property>
 				</destination>
 			</binding.aq>
@@ -59,7 +59,7 @@
 				</response>
 			</binding.aq>
 		</service>
-	</component -->
+	</component-->
 
 	<component name="EchoService">
 		<implementation.java
@@ -67,11 +67,26 @@
 		<service name="EchoService">
 			<binding.aq correlationScheme="RequestMsgIDToCorrelID"
 				requires="sca:transactedOneWay.global">
-				<destination name="FIRE_FORGET_Q" type="queue" create="always" >
+				<destination name="FIRE_FORGET_Q" type="queue">
 					<property name="datasource">AQDataSource</property>
+                    <property name="initialState">stopped</property>     
 				</destination>
 			</binding.aq>
 		</service>
 	</component>
+     
+     <component name="EchoServiceTwo">
+          <implementation.java
+               class="org.fabric3.binding.aq.test.EchoServiceImpl" />
+          <service name="EchoService">
+               <binding.aq correlationScheme="RequestMsgIDToCorrelID"
+                    requires="sca:transactedOneWay.global">
+                    <destination name="ABDUL_VIEW" type="queue">
+                         <property name="datasource">AQDataSource</property>
+                    <property name="initialState">start</property>     
+                    </destination>
+               </binding.aq>
+          </service>
+     </component>
 
 </composite>
