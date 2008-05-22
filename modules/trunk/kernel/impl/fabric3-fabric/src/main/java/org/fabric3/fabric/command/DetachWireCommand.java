@@ -23,12 +23,12 @@ import org.fabric3.spi.model.physical.PhysicalWireDefinition;
  * under the License.
  */
 
-public class WireDetachCommand extends AbstractCommand {
+public class DetachWireCommand extends AbstractCommand {
 
     private final Set<PhysicalWireDefinition> physicalWireDefinitions =
             new LinkedHashSet<PhysicalWireDefinition>();
 
-    public WireDetachCommand(int order) {
+    public DetachWireCommand(int order) {
         super(order);
     }
 
@@ -48,7 +48,7 @@ public class WireDetachCommand extends AbstractCommand {
     public boolean equals(Object obj) {
         if (this == obj) return true;
         try {
-            WireDetachCommand other = (WireDetachCommand) obj;
+            DetachWireCommand other = (DetachWireCommand) obj;
             return physicalWireDefinitions.equals(other.physicalWireDefinitions);   
         } catch (ClassCastException cce) {
             return false;

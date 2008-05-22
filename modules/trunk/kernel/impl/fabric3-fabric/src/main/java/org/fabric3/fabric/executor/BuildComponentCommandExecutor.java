@@ -21,7 +21,7 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.fabric.command.ComponentBuildCommand;
+import org.fabric3.fabric.command.BuildComponentCommand;
 import org.fabric3.spi.builder.BuilderException;
 import org.fabric3.spi.builder.component.ComponentBuilderRegistry;
 import org.fabric3.spi.component.Component;
@@ -38,14 +38,14 @@ import org.fabric3.spi.runtime.component.RegistrationException;
  * @version $Rev: 2878 $ $Date: 2008-02-23 18:42:09 +0000 (Sat, 23 Feb 2008) $
  */
 @EagerInit
-public class ComponentBuildCommandExecutor implements CommandExecutor<ComponentBuildCommand> {
+public class BuildComponentCommandExecutor implements CommandExecutor<BuildComponentCommand> {
 
     private final ComponentBuilderRegistry componentBuilderRegistry;
     private final ComponentManager componentManager;
     private CommandExecutorRegistry commandExecutorRegistry;
 
     @Constructor
-    public ComponentBuildCommandExecutor(@Reference ComponentBuilderRegistry componentBuilderRegistry,
+    public BuildComponentCommandExecutor(@Reference ComponentBuilderRegistry componentBuilderRegistry,
                                          @Reference ComponentManager componentManager,
                                          @Reference CommandExecutorRegistry commandExecutorRegistry) {
         this.componentBuilderRegistry = componentBuilderRegistry;
@@ -53,17 +53,17 @@ public class ComponentBuildCommandExecutor implements CommandExecutor<ComponentB
         this.commandExecutorRegistry = commandExecutorRegistry;
     }
 
-    public ComponentBuildCommandExecutor(ComponentBuilderRegistry componentBuilderRegistry, ComponentManager componentManager) {
+    public BuildComponentCommandExecutor(ComponentBuilderRegistry componentBuilderRegistry, ComponentManager componentManager) {
         this.componentBuilderRegistry = componentBuilderRegistry;
         this.componentManager = componentManager;
     }
 
     @Init
     public void init() {
-        commandExecutorRegistry.register(ComponentBuildCommand.class, this);
+        commandExecutorRegistry.register(BuildComponentCommand.class, this);
     }
 
-    public void execute(ComponentBuildCommand command) throws ExecutionException {
+    public void execute(BuildComponentCommand command) throws ExecutionException {
 
         try {
             PhysicalComponentDefinition physicalComponentDefinition = command.getDefinition();

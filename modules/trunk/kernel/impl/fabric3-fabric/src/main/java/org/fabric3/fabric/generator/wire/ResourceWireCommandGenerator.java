@@ -21,7 +21,7 @@ package org.fabric3.fabric.generator.wire;
 import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.fabric.command.WireAttachCommand;
+import org.fabric3.fabric.command.AttachWireCommand;
 import org.fabric3.spi.generator.AddCommandGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.LogicalComponent;
@@ -48,16 +48,16 @@ public class ResourceWireCommandGenerator implements AddCommandGenerator {
         return order;
     }
 
-    public WireAttachCommand generate(LogicalComponent<?> component) throws GenerationException {
+    public AttachWireCommand generate(LogicalComponent<?> component) throws GenerationException {
         if (component instanceof LogicalCompositeComponent) {
             return null;
         }
-        WireAttachCommand command = new WireAttachCommand(order);
+        AttachWireCommand command = new AttachWireCommand(order);
         generatePhysicalWires(component, command);
         return command;
     }
 
-    private void generatePhysicalWires(LogicalComponent<?> component, WireAttachCommand command) throws GenerationException {
+    private void generatePhysicalWires(LogicalComponent<?> component, AttachWireCommand command) throws GenerationException {
         for (LogicalResource<?> resource : component.getResources()) {
             PhysicalWireDefinition pwd = physicalWireGenerator.generateResourceWire(component, resource);
             command.addPhysicalWireDefinition(pwd);

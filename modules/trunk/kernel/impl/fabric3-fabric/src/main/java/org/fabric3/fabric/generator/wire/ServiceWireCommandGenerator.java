@@ -24,7 +24,7 @@ import java.util.List;
 import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.fabric.command.WireAttachCommand;
+import org.fabric3.fabric.command.AttachWireCommand;
 import org.fabric3.scdl.ServiceContract;
 import org.fabric3.spi.generator.AddCommandGenerator;
 import org.fabric3.spi.generator.GenerationException;
@@ -53,16 +53,16 @@ public class ServiceWireCommandGenerator implements AddCommandGenerator {
         return order;
     }
 
-    public WireAttachCommand generate(LogicalComponent<?> component) throws GenerationException {
+    public AttachWireCommand generate(LogicalComponent<?> component) throws GenerationException {
         if (component instanceof LogicalCompositeComponent) {
             return null;
         }
-        WireAttachCommand command = new WireAttachCommand(order);
+        AttachWireCommand command = new AttachWireCommand(order);
         generatePhysicalWires(component, command);
         return command;
     }
 
-    private void generatePhysicalWires(LogicalComponent<?> component, WireAttachCommand command) throws GenerationException {
+    private void generatePhysicalWires(LogicalComponent<?> component, AttachWireCommand command) throws GenerationException {
 
         for (LogicalService service : component.getServices()) {
             List<LogicalBinding<?>> bindings = service.getBindings();

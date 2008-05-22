@@ -19,27 +19,23 @@
 package org.fabric3.fabric.command;
 
 import org.fabric3.spi.command.AbstractCommand;
-import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
+import org.fabric3.spi.model.physical.PhysicalClassLoaderDefinition;
 
 /**
- * A command to instantiate a component on a runtime.
+ * A command to create or update a classloader on a runtime.
  *
  * @version $Revision$ $Date$
  */
-public class ComponentBuildCommand extends AbstractCommand {
-    private final PhysicalComponentDefinition definition;
+public class ProvisionClassloaderCommand extends AbstractCommand {
+    private PhysicalClassLoaderDefinition physicalClassLoaderDefinition;
 
-    public ComponentBuildCommand(int order, PhysicalComponentDefinition definition) {
+    public ProvisionClassloaderCommand(int order, PhysicalClassLoaderDefinition definition) {
         super(order);
-        this.definition = definition;
+        this.physicalClassLoaderDefinition = definition;
     }
 
-    public PhysicalComponentDefinition getDefinition() {
-        return definition;
-    }
-
-    public String toString() {
-        return "ComponentBuild: " + definition.toString();
+    public PhysicalClassLoaderDefinition getClassLoaderDefinition() {
+        return physicalClassLoaderDefinition;
     }
 
     public boolean equals(Object o) {
@@ -50,16 +46,18 @@ public class ComponentBuildCommand extends AbstractCommand {
             return false;
         }
 
-        ComponentBuildCommand that = (ComponentBuildCommand) o;
+        ProvisionClassloaderCommand that = (ProvisionClassloaderCommand) o;
 
-        if (definition != null ?
-                !definition.equals(that.definition) : that.definition != null) {
+        if (physicalClassLoaderDefinition != null
+                ? !physicalClassLoaderDefinition.equals(that.physicalClassLoaderDefinition) : that.physicalClassLoaderDefinition != null) {
+
             return false;
         }
+
         return true;
     }
 
     public int hashCode() {
-        return (definition != null ? definition.hashCode() : 0);
+        return (physicalClassLoaderDefinition != null ? physicalClassLoaderDefinition.hashCode() : 0);
     }
 }

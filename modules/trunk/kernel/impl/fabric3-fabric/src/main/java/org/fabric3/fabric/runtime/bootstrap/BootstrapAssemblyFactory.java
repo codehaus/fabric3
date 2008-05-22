@@ -32,26 +32,26 @@ import org.fabric3.fabric.builder.ConnectorImpl;
 import org.fabric3.fabric.builder.classloader.ClassLoaderBuilder;
 import org.fabric3.fabric.builder.classloader.ClassLoaderBuilderImpl;
 import org.fabric3.fabric.builder.component.DefaultComponentBuilderRegistry;
-import org.fabric3.fabric.command.ClassloaderProvisionCommand;
-import org.fabric3.fabric.command.ComponentBuildCommand;
+import org.fabric3.fabric.command.ProvisionClassloaderCommand;
+import org.fabric3.fabric.command.BuildComponentCommand;
 import org.fabric3.fabric.command.InitializeComponentCommand;
 import org.fabric3.fabric.command.StartComponentCommand;
 import org.fabric3.fabric.command.StartCompositeContextCommand;
-import org.fabric3.fabric.command.WireAttachCommand;
-import org.fabric3.fabric.executor.ClassloaderProvisionCommandExecutor;
+import org.fabric3.fabric.command.AttachWireCommand;
+import org.fabric3.fabric.executor.ProvisionClassloaderCommandExecutor;
 import org.fabric3.fabric.executor.CommandExecutorRegistryImpl;
-import org.fabric3.fabric.executor.ComponentBuildCommandExecutor;
+import org.fabric3.fabric.executor.BuildComponentCommandExecutor;
 import org.fabric3.fabric.executor.InitializeComponentCommandExecutor;
 import org.fabric3.fabric.executor.StartComponentCommandExecutor;
 import org.fabric3.fabric.executor.StartCompositeContextCommandExecutor;
-import org.fabric3.fabric.executor.WireAttachCommandExecutor;
+import org.fabric3.fabric.executor.AttachWireCommandExecutor;
 import org.fabric3.fabric.generator.GeneratorRegistryImpl;
 import org.fabric3.fabric.generator.PhysicalModelGenerator;
 import org.fabric3.fabric.generator.PhysicalModelGeneratorImpl;
 import org.fabric3.fabric.generator.classloader.ClassLoaderGenerator;
 import org.fabric3.fabric.generator.classloader.ClassLoaderGeneratorImpl;
-import org.fabric3.fabric.generator.classloader.ClassloaderProvisionCommandGenerator;
-import org.fabric3.fabric.generator.component.ComponentBuildCommandGenerator;
+import org.fabric3.fabric.generator.classloader.ProvisionClassloaderCommandGenerator;
+import org.fabric3.fabric.generator.component.BuildComponentCommandGenerator;
 import org.fabric3.fabric.generator.component.InitializeComponentCommandGenerator;
 import org.fabric3.fabric.generator.component.StartComponentCommandGenerator;
 import org.fabric3.fabric.generator.component.StartCompositeContextCommandGenerator;
@@ -285,10 +285,10 @@ public class BootstrapAssemblyFactory {
 
         commandRegistry.register(StartCompositeContextCommand.class, new StartCompositeContextCommandExecutor(scopeRegistry));
         commandRegistry.register(InitializeComponentCommand.class, new InitializeComponentCommandExecutor(scopeRegistry, componentManager));
-        commandRegistry.register(ComponentBuildCommand.class, new ComponentBuildCommandExecutor(registry, componentManager));
-        commandRegistry.register(WireAttachCommand.class, new WireAttachCommandExecutor(connector));
+        commandRegistry.register(BuildComponentCommand.class, new BuildComponentCommandExecutor(registry, componentManager));
+        commandRegistry.register(AttachWireCommand.class, new AttachWireCommandExecutor(connector));
         commandRegistry.register(StartComponentCommand.class, new StartComponentCommandExecutor(componentManager));
-        commandRegistry.register(ClassloaderProvisionCommand.class, new ClassloaderProvisionCommandExecutor(classLoaderBuilder));
+        commandRegistry.register(ProvisionClassloaderCommand.class, new ProvisionClassloaderCommandExecutor(classLoaderBuilder));
 
         return commandRegistry;
 
@@ -315,8 +315,8 @@ public class BootstrapAssemblyFactory {
         ClassLoaderGenerator classLoaderGenerator = new ClassLoaderGeneratorImpl(metaDataStore);
 
         List<AddCommandGenerator> commandGenerators = new ArrayList<AddCommandGenerator>();
-        commandGenerators.add(new ClassloaderProvisionCommandGenerator(classLoaderGenerator, 0));
-        commandGenerators.add(new ComponentBuildCommandGenerator(generatorRegistry, 1));
+        commandGenerators.add(new ProvisionClassloaderCommandGenerator(classLoaderGenerator, 0));
+        commandGenerators.add(new BuildComponentCommandGenerator(generatorRegistry, 1));
         commandGenerators.add(new LocalWireCommandGenerator(wireGenerator, logicalComponentManager, 2));
         commandGenerators.add(new ServiceWireCommandGenerator(wireGenerator, 2));
         commandGenerators.add(new ResourceWireCommandGenerator(wireGenerator, 2));

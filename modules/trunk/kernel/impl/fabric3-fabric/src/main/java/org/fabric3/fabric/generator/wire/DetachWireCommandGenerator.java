@@ -13,8 +13,7 @@ import org.fabric3.spi.model.instance.LogicalService;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.physical.PhysicalWireDefinition;
-import org.fabric3.fabric.command.WireDetachCommand;
-import org.fabric3.fabric.command.WireAttachCommand;
+import org.fabric3.fabric.command.DetachWireCommand;
 import org.fabric3.scdl.ServiceContract;
 
 /**
@@ -34,16 +33,16 @@ public class DetachWireCommandGenerator implements RemoveCommandGenerator {
         return order;
     }
 
-    public WireDetachCommand generate(LogicalComponent<?> component) throws GenerationException {
+    public DetachWireCommand generate(LogicalComponent<?> component) throws GenerationException {
         if (component instanceof LogicalCompositeComponent) {
             return null;
         }
-        WireDetachCommand command = new WireDetachCommand(order);
+        DetachWireCommand command = new DetachWireCommand(order);
         generatePhysicalWires(component, command);
         return command;
     }
 
-    private void generatePhysicalWires(LogicalComponent<?> component, WireDetachCommand command) throws GenerationException {
+    private void generatePhysicalWires(LogicalComponent<?> component, DetachWireCommand command) throws GenerationException {
 
         for (LogicalService service : component.getServices()) {
             List<LogicalBinding<?>> bindings = service.getBindings();

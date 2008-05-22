@@ -6,12 +6,11 @@ import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.fabric.builder.Connector;
-import org.fabric3.fabric.command.WireDetachCommand;
+import org.fabric3.fabric.command.DetachWireCommand;
 import org.fabric3.spi.executor.CommandExecutor;
 import org.fabric3.spi.executor.CommandExecutorRegistry;
 import org.fabric3.spi.executor.ExecutionException;
 import org.fabric3.spi.model.physical.PhysicalWireDefinition;
-import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.BuilderException;
 
 /*
@@ -31,14 +30,14 @@ import org.fabric3.spi.builder.BuilderException;
  * under the License.
  */
 @EagerInit
-public class WireDetachCommandExecutor implements CommandExecutor<WireDetachCommand> {
+public class DetachWireCommandExecutor implements CommandExecutor<DetachWireCommand> {
 
 
     private CommandExecutorRegistry commandExecutorRegistry;
     private final Connector connector;
 
     @Constructor
-    public WireDetachCommandExecutor(@Reference CommandExecutorRegistry registry,
+    public DetachWireCommandExecutor(@Reference CommandExecutorRegistry registry,
                                      @Reference Connector connector) {
         this.commandExecutorRegistry = registry;
         this.connector = connector;
@@ -46,10 +45,10 @@ public class WireDetachCommandExecutor implements CommandExecutor<WireDetachComm
 
     @Init
     public void init() {
-        commandExecutorRegistry.register(WireDetachCommand.class, this);
+        commandExecutorRegistry.register(DetachWireCommand.class, this);
     }
 
-    public void execute(WireDetachCommand command) throws ExecutionException {
+    public void execute(DetachWireCommand command) throws ExecutionException {
         for (PhysicalWireDefinition physicalWireDefinition : command.getPhysicalWireDefinitions()) {
           try {
               connector.disconnect(physicalWireDefinition);

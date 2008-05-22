@@ -21,49 +21,45 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.fabric.builder.Connector;
-import org.fabric3.fabric.command.WireAttachCommand;
+import org.fabric3.fabric.builder.classloader.ClassLoaderBuilder;
+import org.fabric3.fabric.command.ProvisionClassloaderCommand;
 import org.fabric3.spi.builder.BuilderException;
 import org.fabric3.spi.executor.CommandExecutor;
 import org.fabric3.spi.executor.CommandExecutorRegistry;
 import org.fabric3.spi.executor.ExecutionException;
-import org.fabric3.spi.model.physical.PhysicalWireDefinition;
 
 /**
- * Eagerly initializes a component on a service node.
+ * Creates a classloader on a runtime corresponding to a PhysicalClassLoaderDefinition.
  *
  * @version $Rev: 2878 $ $Date: 2008-02-23 18:42:09 +0000 (Sat, 23 Feb 2008) $
  */
 @EagerInit
-public class WireAttachCommandExecutor implements CommandExecutor<WireAttachCommand> {
+public class ProvisionClassloaderCommandExecutor implements CommandExecutor<ProvisionClassloaderCommand> {
 
+    private ClassLoaderBuilder classLoaderBuilder;
     private CommandExecutorRegistry commandExecutorRegistry;
-    private final Connector connector;
 
     @Constructor
-    public WireAttachCommandExecutor(@Reference CommandExecutorRegistry commandExecutorRegistry,
-                                     @Reference Connector connector) {
+    public ProvisionClassloaderCommandExecutor(@Reference CommandExecutorRegistry commandExecutorRegistry,
+                                               @Reference ClassLoaderBuilder classLoaderBuilder) {
+        this.classLoaderBuilder = classLoaderBuilder;
         this.commandExecutorRegistry = commandExecutorRegistry;
-        this.connector = connector;
     }
 
-    public WireAttachCommandExecutor(Connector connector) {
-        this.connector = connector;
+    public ProvisionClassloaderCommandExecutor(ClassLoaderBuilder classLoaderBuilder) {
+        this.classLoaderBuilder = classLoaderBuilder;
     }
 
     @Init
     public void init() {
-        commandExecutorRegistry.register(WireAttachCommand.class, this);
+        commandExecutorRegistry.register(ProvisionClassloaderCommand.class, this);
     }
 
-    public void execute(WireAttachCommand command) throws ExecutionException {
-
-        for (PhysicalWireDefinition physicalWireDefinition : command.getPhysicalWireDefinitions()) {
-            try {
-                connector.connect(physicalWireDefinition);
-            } catch (BuilderException e) {
-                throw new ExecutionException(e.getMessage(), e);
-            }
+    public void execute(ProvisionClassloaderCommand command) throws ExecutionException {
+        try {
+            classLoaderBuilder.build(command.getClassLoaderDefinition());
+        } catch (BuilderException e) {
+            throw new ExecutionException(e.getMessage(), e);
         }
 
     }

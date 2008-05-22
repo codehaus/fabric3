@@ -30,11 +30,11 @@ import org.fabric3.spi.model.physical.PhysicalWireDefinition;
  *
  * @version $Revision$ $Date$
  */
-public class WireAttachCommand extends AbstractCommand {
+public class AttachWireCommand extends AbstractCommand {
 
     private final Set<PhysicalWireDefinition> physicalWireDefinitions = new LinkedHashSet<PhysicalWireDefinition>();
 
-    public WireAttachCommand(int order) {
+    public AttachWireCommand(int order) {
         super(order);
     }
 
@@ -53,11 +53,11 @@ public class WireAttachCommand extends AbstractCommand {
     @Override
     public boolean equals(Object obj) {
 
-        if (obj == null || obj.getClass() != WireAttachCommand.class) {
+        if (obj == null || obj.getClass() != AttachWireCommand.class) {
             return false;
         }
 
-        WireAttachCommand other = (WireAttachCommand) obj;
+        AttachWireCommand other = (AttachWireCommand) obj;
         return physicalWireDefinitions.equals(other.physicalWireDefinitions);
 
     }

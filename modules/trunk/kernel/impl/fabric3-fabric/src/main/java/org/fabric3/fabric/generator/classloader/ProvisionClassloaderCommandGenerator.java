@@ -21,7 +21,7 @@ package org.fabric3.fabric.generator.classloader;
 import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.fabric.command.ClassloaderProvisionCommand;
+import org.fabric3.fabric.command.ProvisionClassloaderCommand;
 import org.fabric3.spi.generator.AddCommandGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.LogicalComponent;
@@ -30,11 +30,11 @@ import org.fabric3.spi.model.physical.PhysicalClassLoaderDefinition;
 /**
  * @version $Revision$ $Date$
  */
-public class ClassloaderProvisionCommandGenerator implements AddCommandGenerator {
+public class ProvisionClassloaderCommandGenerator implements AddCommandGenerator {
     private final ClassLoaderGenerator classLoaderGenerator;
     private final int order;
 
-    public ClassloaderProvisionCommandGenerator(@Reference ClassLoaderGenerator classLoaderGenerator, @Property(name = "order")int order) {
+    public ProvisionClassloaderCommandGenerator(@Reference ClassLoaderGenerator classLoaderGenerator, @Property(name = "order")int order) {
         this.classLoaderGenerator = classLoaderGenerator;
         this.order = order;
     }
@@ -44,9 +44,9 @@ public class ClassloaderProvisionCommandGenerator implements AddCommandGenerator
     }
 
     @SuppressWarnings("unchecked")
-    public ClassloaderProvisionCommand generate(LogicalComponent<?> component) throws GenerationException {
+    public ProvisionClassloaderCommand generate(LogicalComponent<?> component) throws GenerationException {
         PhysicalClassLoaderDefinition definition = classLoaderGenerator.generate(component);
-        return new ClassloaderProvisionCommand(order, definition);
+        return new ProvisionClassloaderCommand(order, definition);
     }
 
 }
