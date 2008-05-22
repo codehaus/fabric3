@@ -49,7 +49,7 @@ import org.fabric3.introspection.xml.LoaderException;
 import org.fabric3.introspection.xml.LoaderHelper;
 import org.fabric3.introspection.xml.LoaderUtil;
 import org.fabric3.introspection.xml.MissingAttribute;
-import org.fabric3.introspection.xml.MissingResourceException;
+import org.fabric3.introspection.xml.ResourceNotFound;
 import org.fabric3.introspection.xml.TypeLoader;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.ReferenceDefinition;
@@ -215,7 +215,10 @@ public class SpringImplementationLoader implements TypeLoader<SpringImplementati
             try {
                 implClass = introspectionHelper.loadClass(beanElement.getClassName(), introspectionContext.getTargetClassLoader());
             } catch (ImplementationNotFoundException e) {
-                throw new MissingResourceException("Bean class not found: " + beanElement.getClassName(), reader, e);
+                String bean = beanElement.getClassName();
+                ResourceNotFound failure = new ResourceNotFound("Bean class not found: " + bean, bean, reader);
+                introspectionContext.addError(failure);
+                return;
             }
 
             PojoComponentType pojoComponentType = new PojoComponentType(implClass.getName());

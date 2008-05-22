@@ -33,7 +33,6 @@ import org.fabric3.introspection.xml.Loader;
 import org.fabric3.introspection.xml.LoaderException;
 import org.fabric3.introspection.xml.LoaderUtil;
 import org.fabric3.introspection.xml.MissingAttribute;
-import org.fabric3.introspection.xml.MissingResourceException;
 import org.fabric3.introspection.xml.TypeLoader;
 import org.fabric3.scdl.Composite;
 import org.fabric3.scdl.Include;
@@ -77,7 +76,9 @@ public class IncludeLoader implements TypeLoader<Include> {
                 url = new URL(context.getSourceBase(), scdlLocation);
                 return loadFromSideFile(name, cl, contributionUri, url, reader, context);
             } catch (MalformedURLException e) {
-                throw new MissingResourceException("Composite file not found: " + name.toString(), reader, e);
+                MissingComposite failure = new MissingComposite("Error parsing composite url: " + scdlResource, scdlResource, reader);
+                context.addError(failure);
+                return null;
             }
         } else if (scdlResource != null) {
             url = cl.getResource(scdlResource);
@@ -114,14 +115,14 @@ public class IncludeLoader implements TypeLoader<Include> {
     }
 
     private Include loadFromSideFile(QName name, ClassLoader cl, URI contributionUri, URL url, XMLStreamReader reader, IntrospectionContext context)
-            throws InvalidIncludeException {
+            throws LoaderException {
         Include include = new Include();
         IntrospectionContext childContext = new DefaultIntrospectionContext(cl, contributionUri, url);
         Composite composite;
         try {
             composite = loader.load(url, Composite.class, childContext);
         } catch (LoaderException e) {
-            throw new InvalidIncludeException("Invalid composite: " + name, reader, e);
+            throw new LoaderException("Invalid composite: " + name, reader, e);
         }
         include.setName(name);
         include.setScdlLocation(url);

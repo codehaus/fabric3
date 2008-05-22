@@ -25,7 +25,6 @@ import java.util.List;
 
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.xml.LoaderException;
-import org.fabric3.introspection.xml.MissingResourceException;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.DataType;
 import org.fabric3.scdl.Operation;

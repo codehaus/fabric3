@@ -31,7 +31,7 @@ import org.fabric3.introspection.java.ImplementationNotFoundException;
 import org.fabric3.introspection.xml.LoaderException;
 import org.fabric3.introspection.xml.LoaderUtil;
 import org.fabric3.introspection.xml.MissingAttribute;
-import org.fabric3.introspection.xml.MissingResourceException;
+import org.fabric3.introspection.xml.ResourceNotFound;
 import org.fabric3.introspection.xml.TypeLoader;
 import org.fabric3.scdl.ServiceContract;
 
@@ -67,7 +67,9 @@ public class JavaInterfaceLoader implements TypeLoader<ServiceContract> {
         try {
             interfaceClass = helper.loadClass(name, context.getTargetClassLoader());
         } catch (ImplementationNotFoundException e) {
-            throw new MissingResourceException("Interface not found:" + name, reader, e);
+            ResourceNotFound failure = new ResourceNotFound("Interface not found: " + name, name, reader);
+            context.addError(failure);
+            return null;
         }
 
         name = reader.getAttributeValue(null, "callbackInterface");
@@ -75,7 +77,9 @@ public class JavaInterfaceLoader implements TypeLoader<ServiceContract> {
         try {
             callbackClass = (name != null) ? helper.loadClass(name, context.getTargetClassLoader()) : null;
         } catch (ImplementationNotFoundException e) {
-            throw new MissingResourceException("Callback interface not found:" + name, reader, e);
+            ResourceNotFound failure = new ResourceNotFound("Callback interface not found: " + name, name, reader);
+            context.addError(failure);
+            return null;
         }
 
         LoaderUtil.skipToEndElement(reader);

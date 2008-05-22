@@ -27,10 +27,8 @@ import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.xml.LoaderException;
 import org.fabric3.introspection.xml.LoaderHelper;
 import org.fabric3.introspection.xml.LoaderUtil;
-import org.fabric3.introspection.xml.MissingResourceException;
-import org.fabric3.introspection.xml.TypeLoader;
 import org.fabric3.introspection.xml.MissingAttribute;
-import org.fabric3.scdl.validation.MissingResource;
+import org.fabric3.introspection.xml.TypeLoader;
 
 /**
  * @version $Rev$ $Date$

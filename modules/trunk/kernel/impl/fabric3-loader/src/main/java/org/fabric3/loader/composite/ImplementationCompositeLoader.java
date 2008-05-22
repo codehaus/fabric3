@@ -37,11 +37,9 @@ import org.fabric3.introspection.xml.LoaderException;
 import org.fabric3.introspection.xml.LoaderRegistry;
 import org.fabric3.introspection.xml.LoaderUtil;
 import org.fabric3.introspection.xml.MissingAttribute;
-import org.fabric3.introspection.xml.MissingResourceException;
 import org.fabric3.introspection.xml.TypeLoader;
 import org.fabric3.scdl.Composite;
 import org.fabric3.scdl.CompositeImplementation;
-import org.fabric3.scdl.validation.MissingResource;
 import org.fabric3.spi.services.contribution.MetaDataStore;
 import org.fabric3.spi.services.contribution.MetaDataStoreException;
 import org.fabric3.spi.services.contribution.QNameSymbol;
@@ -97,7 +95,9 @@ public class ImplementationCompositeLoader implements TypeLoader<CompositeImplem
             try {
                 url = new URL(introspectionContext.getSourceBase(), scdlLocation);
             } catch (MalformedURLException e) {
-                throw new MissingResourceException("SCDL location is invalid: " + scdlLocation, reader, e);
+                MissingComposite failure = new MissingComposite("Composite file not found: " + scdlLocation, scdlLocation, reader);
+                introspectionContext.addError(failure);
+                return impl;
             }
             IntrospectionContext childContext = new DefaultIntrospectionContext(cl, contributionUri, url);
             Composite composite = loader.load(url, Composite.class, childContext);
