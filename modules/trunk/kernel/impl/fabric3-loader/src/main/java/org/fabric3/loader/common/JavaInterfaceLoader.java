@@ -28,9 +28,9 @@ import org.fabric3.introspection.IntrospectionHelper;
 import org.fabric3.introspection.TypeMapping;
 import org.fabric3.introspection.contract.ContractProcessor;
 import org.fabric3.introspection.java.ImplementationNotFoundException;
-import org.fabric3.introspection.xml.InvalidValueException;
 import org.fabric3.introspection.xml.LoaderException;
 import org.fabric3.introspection.xml.LoaderUtil;
+import org.fabric3.introspection.xml.MissingAttribute;
 import org.fabric3.introspection.xml.MissingResourceException;
 import org.fabric3.introspection.xml.TypeLoader;
 import org.fabric3.scdl.ServiceContract;
@@ -59,7 +59,9 @@ public class JavaInterfaceLoader implements TypeLoader<ServiceContract> {
             name = reader.getAttributeValue(null, "class");
         }
         if (name == null) {
-            throw new InvalidValueException("interface name not supplied", reader);
+            MissingAttribute failure = new MissingAttribute("An interface must be specified using the class attribute", "class", reader);
+            context.addError(failure);
+            return null;
         }
         Class<?> interfaceClass;
         try {

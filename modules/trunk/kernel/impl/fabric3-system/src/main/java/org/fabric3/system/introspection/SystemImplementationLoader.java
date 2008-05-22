@@ -25,9 +25,9 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.introspection.xml.InvalidValueException;
 import org.fabric3.introspection.xml.LoaderException;
 import org.fabric3.introspection.xml.LoaderUtil;
+import org.fabric3.introspection.xml.MissingAttribute;
 import org.fabric3.introspection.xml.TypeLoader;
 import org.fabric3.system.scdl.SystemImplementation;
 
@@ -54,7 +54,9 @@ public class SystemImplementationLoader implements TypeLoader<SystemImplementati
         assert SystemImplementation.IMPLEMENTATION_SYSTEM.equals(reader.getName());
         String implClass = reader.getAttributeValue(null, "class");
         if (implClass == null) {
-            throw new InvalidValueException("Missing implementation class", reader);
+            MissingAttribute failure = new MissingAttribute("Implementation class must be specified using the class attribute", "class", reader);
+            introspectionContext.addError(failure);
+            return null;
         }
         LoaderUtil.skipToEndElement(reader);
 

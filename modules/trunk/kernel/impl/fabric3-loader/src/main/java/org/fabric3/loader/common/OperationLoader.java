@@ -19,16 +19,16 @@ package org.fabric3.loader.common;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
-import org.fabric3.scdl.OperationDefinition;
-import org.fabric3.introspection.xml.InvalidValueException;
-import org.fabric3.introspection.xml.LoaderException;
-import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.introspection.xml.LoaderUtil;
-import org.fabric3.introspection.xml.LoaderHelper;
-import org.fabric3.introspection.xml.TypeLoader;
-
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
+
+import org.fabric3.introspection.IntrospectionContext;
+import org.fabric3.introspection.xml.LoaderException;
+import org.fabric3.introspection.xml.LoaderHelper;
+import org.fabric3.introspection.xml.LoaderUtil;
+import org.fabric3.introspection.xml.MissingAttribute;
+import org.fabric3.introspection.xml.TypeLoader;
+import org.fabric3.scdl.OperationDefinition;
 
 /**
  * Loads an operation definition from the SCDL.
@@ -45,21 +45,21 @@ public class OperationLoader implements TypeLoader<OperationDefinition> {
     }
 
     public OperationDefinition load(XMLStreamReader reader, IntrospectionContext context) throws LoaderException, XMLStreamException {
-        
+
+        OperationDefinition operationDefinition = new OperationDefinition();
         String name = reader.getAttributeValue(null, "name");
         if (name == null) {
-            throw new InvalidValueException("Operation name not supplied", reader);
+            MissingAttribute failure = new MissingAttribute("Operation name not specified", "name", reader);
+            context.addError(failure);
         }
-        
-        OperationDefinition operationDefinition = new OperationDefinition();
         operationDefinition.setName(name);
-        
+
         loaderHelper.loadPolicySetsAndIntents(operationDefinition, reader);
 
         LoaderUtil.skipToEndElement(reader);
-        
+
         return operationDefinition;
-        
+
     }
-    
+
 }

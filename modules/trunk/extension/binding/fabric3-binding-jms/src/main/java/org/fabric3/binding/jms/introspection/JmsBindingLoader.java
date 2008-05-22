@@ -19,10 +19,9 @@
 package org.fabric3.binding.jms.introspection;
 
 import java.net.URISyntaxException;
+import javax.xml.namespace.QName;
 import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
 import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
-
-import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
@@ -43,10 +42,10 @@ import org.fabric3.binding.jms.common.PropertyAwareObject;
 import org.fabric3.binding.jms.common.ResponseDefinition;
 import org.fabric3.binding.jms.scdl.JmsBindingDefinition;
 import org.fabric3.introspection.IntrospectionContext;
+import org.fabric3.introspection.xml.InvalidValue;
 import org.fabric3.introspection.xml.LoaderException;
 import org.fabric3.introspection.xml.LoaderHelper;
 import org.fabric3.introspection.xml.TypeLoader;
-import org.fabric3.introspection.xml.InvalidValueException;
 
 
 /**
@@ -58,8 +57,7 @@ public class JmsBindingLoader implements TypeLoader<JmsBindingDefinition> {
     /**
      * Qualified name for the binding element.
      */
-    public static final QName BINDING_QNAME = new QName(Constants.SCA_NS,
-                                                        "binding.jms");
+    public static final QName BINDING_QNAME = new QName(Constants.SCA_NS, "binding.jms");
 
     private final LoaderHelper loaderHelper;
 
@@ -68,25 +66,24 @@ public class JmsBindingLoader implements TypeLoader<JmsBindingDefinition> {
      *
      * @param loaderHelper the loaderHelper
      */
-    public JmsBindingLoader(@Reference
-    LoaderHelper loaderHelper) {
+    public JmsBindingLoader(@Reference LoaderHelper loaderHelper) {
         this.loaderHelper = loaderHelper;
     }
 
-    public JmsBindingDefinition load(XMLStreamReader reader, IntrospectionContext introspectionContext)
-            throws XMLStreamException, LoaderException {
+    public JmsBindingDefinition load(XMLStreamReader reader, IntrospectionContext introspectionContext) throws XMLStreamException, LoaderException {
 
-        JmsBindingMetadata metadata;
+        JmsBindingMetadata metadata = null;
         String uri = reader.getAttributeValue(null, "uri");
         JmsBindingDefinition bd;
         if (uri != null) {
-            JmsURIMetadata uriMeta = null;
+            JmsURIMetadata uriMeta;
             try {
                 uriMeta = JmsURIMetadata.parseURI(uri);
+                metadata = JmsLoaderHelper.getJmsMetadataFromURI(uriMeta);
             } catch (URISyntaxException e) {
-                throw new LoaderException(reader, e);
+                InvalidValue failure = new InvalidValue("Invalid JMS binding URI: " + uri, uri, reader, e);
+                introspectionContext.addError(failure);
             }
-            metadata = JmsLoaderHelper.getJmsMetadataFromURI(uriMeta);
             bd = new JmsBindingDefinition(loaderHelper.getURI(uri), metadata);
         } else {
             metadata = new JmsBindingMetadata();
@@ -94,8 +91,7 @@ public class JmsBindingLoader implements TypeLoader<JmsBindingDefinition> {
         }
         final String correlationScheme = reader.getAttributeValue(null, "correlationScheme");
         if (correlationScheme != null) {
-            metadata.setCorrelationScheme(CorrelationScheme
-                    .valueOf(correlationScheme));
+            metadata.setCorrelationScheme(CorrelationScheme.valueOf(correlationScheme));
         }
         metadata.setJndiUrl(reader.getAttributeValue(null, "jndiURL"));
         metadata.setInitialContextFactory(reader.getAttributeValue(null, "initialContextFactory"));
@@ -107,7 +103,7 @@ public class JmsBindingLoader implements TypeLoader<JmsBindingDefinition> {
                 }
             }
         }
-        String name = null;
+        String name;
         while (true) {
 
             switch (reader.next()) {
@@ -123,10 +119,10 @@ public class JmsBindingLoader implements TypeLoader<JmsBindingDefinition> {
                     ResponseDefinition response = loadResponse(reader);
                     metadata.setResponse(response);
                 } else if ("headers".equals(name)) {
-                    HeadersDefinition headers = loadHeaders(reader);
+                    HeadersDefinition headers = loadHeaders(reader, introspectionContext);
                     metadata.setHeaders(headers);
                 } else if ("operationProperties".equals(name)) {
-                    OperationPropertiesDefinition operationProperties = loadOperationProperties(reader);
+                    OperationPropertiesDefinition operationProperties = loadOperationProperties(reader, introspectionContext);
                     metadata.addOperationProperties(operationProperties.getName(), operationProperties);
                 }
                 break;
@@ -223,7 +219,7 @@ public class JmsBindingLoader implements TypeLoader<JmsBindingDefinition> {
     /*
      * Loads headers.
      */
-    private HeadersDefinition loadHeaders(XMLStreamReader reader) throws XMLStreamException, LoaderException {
+    private HeadersDefinition loadHeaders(XMLStreamReader reader, IntrospectionContext introspectionContext) throws XMLStreamException {
         HeadersDefinition headers = new HeadersDefinition();
         headers.setJMSCorrelationId(reader.getAttributeValue(null, "JMSCorrelationId"));
         String deliveryMode = reader.getAttributeValue(null, "JMSDeliveryMode");
@@ -231,7 +227,9 @@ public class JmsBindingLoader implements TypeLoader<JmsBindingDefinition> {
             try {
                 headers.setJMSDeliveryMode(Integer.valueOf(deliveryMode));
             } catch (NumberFormatException nfe) {
-                throw new InvalidValueException(deliveryMode + "is not a legal int value for JMSDeliveryMode", reader, nfe);
+                InvalidValue failure =
+                        new InvalidValue(deliveryMode + " is not a legal int value for JMSDeliveryMode", deliveryMode, reader, nfe);
+                introspectionContext.addError(failure);
             }
         }
         String priority = reader.getAttributeValue(null, "JMSPriority");
@@ -239,7 +237,9 @@ public class JmsBindingLoader implements TypeLoader<JmsBindingDefinition> {
             try {
                 headers.setJMSPriority(Integer.valueOf(priority));
             } catch (NumberFormatException nfe) {
-                throw new InvalidValueException(priority + "is not a legal int value for JMSPriority", reader, nfe);
+                InvalidValue failure =
+                        new InvalidValue(priority + " is not a legal int value for JMSPriority", priority, reader, nfe);
+                introspectionContext.addError(failure);
             }
         }
         String timeToLive = reader.getAttributeValue(null, "JMSTimeToLive");
@@ -247,7 +247,9 @@ public class JmsBindingLoader implements TypeLoader<JmsBindingDefinition> {
             try {
                 headers.setJMSTimeToLive(Long.valueOf(timeToLive));
             } catch (NumberFormatException nfe) {
-                throw new InvalidValueException(timeToLive + "is not a legal long value for JMSTimeToLive", reader, nfe);
+                InvalidValue failure =
+                        new InvalidValue(timeToLive + " is not a legal int value for JMSTimeToLive", timeToLive, reader, nfe);
+                introspectionContext.addError(failure);
             }
         }
         headers.setJMSType(reader.getAttributeValue(null, "JMSType"));
@@ -258,7 +260,8 @@ public class JmsBindingLoader implements TypeLoader<JmsBindingDefinition> {
     /*
      * Loads operation properties.
      */
-    private OperationPropertiesDefinition loadOperationProperties(XMLStreamReader reader) throws XMLStreamException, LoaderException {
+    private OperationPropertiesDefinition loadOperationProperties(XMLStreamReader reader, IntrospectionContext introspectionContext)
+            throws XMLStreamException {
         OperationPropertiesDefinition optProperties = new OperationPropertiesDefinition();
         optProperties.setName(reader.getAttributeValue(null, "name"));
         optProperties.setNativeOperation(reader.getAttributeValue(null, "nativeOperation"));
@@ -268,7 +271,7 @@ public class JmsBindingLoader implements TypeLoader<JmsBindingDefinition> {
             case START_ELEMENT:
                 name = reader.getName().getLocalPart();
                 if ("headers".equals(name)) {
-                    HeadersDefinition headersDefinition = loadHeaders(reader);
+                    HeadersDefinition headersDefinition = loadHeaders(reader, introspectionContext);
                     optProperties.setHeaders(headersDefinition);
                 } else if ("property".equals(name)) {
                     loadProperty(reader, optProperties);

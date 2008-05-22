@@ -29,7 +29,7 @@ import static org.osoa.sca.Constants.SCA_NS;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.introspection.xml.InvalidValueException;
+import org.fabric3.introspection.xml.InvalidValue;
 import org.fabric3.introspection.xml.Loader;
 import org.fabric3.introspection.xml.LoaderException;
 import org.fabric3.introspection.xml.LoaderHelper;
@@ -77,7 +77,8 @@ public class ComponentReferenceLoader implements TypeLoader<ComponentReference> 
             Multiplicity multiplicity = Multiplicity.fromString(value);
             reference.setMultiplicity(multiplicity);
         } catch (IllegalArgumentException e) {
-            throw new InvalidValueException("Invalid multiplicity value: " + value, reader);
+            InvalidValue failure = new InvalidValue("Invalid multiplicity value: " + value, value, reader);
+            context.addError(failure);
         }
 
         String target = reader.getAttributeValue(null, "target");

@@ -27,7 +27,7 @@ import static org.osoa.sca.Constants.SCA_NS;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.introspection.xml.InvalidValueException;
+import org.fabric3.introspection.xml.InvalidValue;
 import org.fabric3.introspection.xml.Loader;
 import org.fabric3.introspection.xml.LoaderException;
 import org.fabric3.introspection.xml.LoaderHelper;
@@ -35,6 +35,7 @@ import org.fabric3.introspection.xml.TypeLoader;
 import org.fabric3.introspection.xml.UnrecognizedTypeException;
 import org.fabric3.introspection.xml.UnrecognizedElementException;
 import org.fabric3.introspection.xml.UnrecognizedElement;
+import org.fabric3.introspection.xml.MissingAttribute;
 import org.fabric3.scdl.BindingDefinition;
 import org.fabric3.scdl.CompositeReference;
 import org.fabric3.scdl.ModelObject;
@@ -62,7 +63,9 @@ public class CompositeReferenceLoader implements TypeLoader<CompositeReference> 
 
         String name = reader.getAttributeValue(null, "name");
         if (name == null) {
-            throw new InvalidValueException("Reference name not specified", reader);
+            MissingAttribute failure = new MissingAttribute("Reference name not specified", "name", reader);
+            context.addError(failure);
+            return null;
         }
 
         List<URI> promotedUris = loaderHelper.parseListOfUris(reader, "promote");
@@ -74,7 +77,8 @@ public class CompositeReferenceLoader implements TypeLoader<CompositeReference> 
             Multiplicity multiplicity = Multiplicity.fromString(value);
             referenceDefinition.setMultiplicity(multiplicity);
         } catch (IllegalArgumentException e) {
-            throw new InvalidValueException("Invalid multiplicity value: " + value, reader);
+            InvalidValue failure = new InvalidValue("Invalid multiplicity value: " + value, value, reader);
+            context.addError(failure);
         }
         boolean callback = false;
         while (true) {

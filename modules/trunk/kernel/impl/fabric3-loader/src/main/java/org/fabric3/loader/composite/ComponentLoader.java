@@ -37,7 +37,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
 import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.introspection.xml.InvalidValueException;
+import org.fabric3.introspection.xml.InvalidValue;
 import org.fabric3.introspection.xml.Loader;
 import org.fabric3.introspection.xml.LoaderException;
 import org.fabric3.introspection.xml.LoaderHelper;
@@ -98,8 +98,7 @@ public class ComponentLoader implements TypeLoader<ComponentDefinition<?>> {
         this.loaderHelper = loaderHelper;
     }
 
-    public ComponentDefinition<?> load(XMLStreamReader reader, IntrospectionContext context)
-            throws XMLStreamException, LoaderException {
+    public ComponentDefinition<?> load(XMLStreamReader reader, IntrospectionContext context) throws XMLStreamException, LoaderException {
 
         String name = reader.getAttributeValue(null, "name");
         if (name == null) {
@@ -108,16 +107,12 @@ public class ComponentLoader implements TypeLoader<ComponentDefinition<?>> {
             return null;
         }
 
-        Autowire autowire = Autowire.fromString(reader.getAttributeValue(null, "autowire"));
-        URI runtimeId = loadRuntimeId(reader);
-        Integer initLevel = loadInitLevel(reader);
-        Document key = loadKey(reader);
-
         ComponentDefinition<Implementation<?>> componentDefinition = new ComponentDefinition<Implementation<?>>(name);
+        Autowire autowire = Autowire.fromString(reader.getAttributeValue(null, "autowire"));
         componentDefinition.setAutowire(autowire);
-        componentDefinition.setRuntimeId(runtimeId);
-        componentDefinition.setInitLevel(initLevel);
-        componentDefinition.setKey(key);
+        loadRuntimeId(componentDefinition, reader, context);
+        loadInitLevel(componentDefinition, reader, context);
+        loadKey(componentDefinition, reader);
 
         loaderHelper.loadPolicySetsAndIntents(componentDefinition, reader);
 
@@ -215,7 +210,6 @@ public class ComponentLoader implements TypeLoader<ComponentDefinition<?>> {
                                XMLStreamReader reader,
                                IntrospectionContext context) throws XMLStreamException, LoaderException {
         PropertyValue value = propertyValueLoader.load(reader, context);
-        // xcv is this null check good?
         if (value == null) {
             // there was an error with the property configuration, just skip it
             return;
@@ -252,14 +246,14 @@ public class ComponentLoader implements TypeLoader<ComponentDefinition<?>> {
     /**
      * Loads the key when the component is wired to a map based reference.
      *
-     * @param reader a reader positioned on the element containing the key definition
-     * @return a Document containing the key value.
+     * @param componentDefinition the component definition
+     * @param reader              a reader positioned on the element containing the key definition @return a Document containing the key value.
      */
-    private Document loadKey(XMLStreamReader reader) {
+    private void loadKey(ComponentDefinition<Implementation<?>> componentDefinition, XMLStreamReader reader) {
 
         String key = reader.getAttributeValue(Constants.FABRIC3_NS, "key");
         if (key == null) {
-            return null;
+            return;
         }
 
         // create a document with a root element to hold the key value
@@ -279,21 +273,21 @@ public class ComponentLoader implements TypeLoader<ComponentDefinition<?>> {
         }
         // set the text value
         element.appendChild(document.createTextNode(key));
-        return document;
+        componentDefinition.setKey(document);
     }
 
     /*
      * Loads the init level.
      */
-    private Integer loadInitLevel(XMLStreamReader reader) throws InvalidValueException {
+    private void loadInitLevel(ComponentDefinition<Implementation<?>> componentDefinition, XMLStreamReader reader, IntrospectionContext context) {
         String initLevel = reader.getAttributeValue(null, "initLevel");
-        if (initLevel == null || initLevel.length() == 0) {
-            return null;
-        } else {
+        if (initLevel != null && initLevel.length() != 0) {
             try {
-                return Integer.valueOf(initLevel);
+                Integer level = Integer.valueOf(initLevel);
+                componentDefinition.setInitLevel(level);
             } catch (NumberFormatException e) {
-                throw new InvalidValueException("Invalid initialization level: " + initLevel, reader, e);
+                InvalidValue failure = new InvalidValue("Component initialization level must be an integer: " + initLevel, initLevel, reader);
+                context.addError(failure);
             }
         }
     }
@@ -301,15 +295,14 @@ public class ComponentLoader implements TypeLoader<ComponentDefinition<?>> {
     /*
      * Loads the runtime id.
      */
-    private URI loadRuntimeId(XMLStreamReader reader) throws InvalidValueException {
+    private void loadRuntimeId(ComponentDefinition<Implementation<?>> componentDefinition, XMLStreamReader reader, IntrospectionContext context) {
         String runtimeAttr = reader.getAttributeValue(null, "runtimeId");
-        if (runtimeAttr == null) {
-            return null;
-        } else {
+        if (runtimeAttr != null) {
             try {
-                return new URI(runtimeAttr);
+                componentDefinition.setRuntimeId(new URI(runtimeAttr));
             } catch (URISyntaxException e) {
-                throw new InvalidValueException("Invalid runtime id value: " + runtimeAttr, reader, e);
+                InvalidValue failure = new InvalidValue("Component runtime ID must be a valid URI: " + runtimeAttr, runtimeAttr, reader);
+                context.addError(failure);
             }
         }
     }
