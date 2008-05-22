@@ -27,7 +27,6 @@ import static org.osoa.sca.Constants.SCA_NS;
 import org.osoa.sca.annotations.EagerInit;
 
 import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.introspection.xml.LoaderException;
 import org.fabric3.introspection.xml.LoaderUtil;
 import org.fabric3.introspection.xml.TypeLoader;
 
@@ -39,8 +38,7 @@ public class RmiBindingLoader implements TypeLoader<RmiBindingDefinition> {
      */
     public static final QName BINDING_QNAME = new QName(SCA_NS, "binding.rmi");
 
-    public RmiBindingDefinition load(XMLStreamReader reader, IntrospectionContext introspectionContext)
-            throws XMLStreamException, LoaderException {
+    public RmiBindingDefinition load(XMLStreamReader reader, IntrospectionContext introspectionContext) throws XMLStreamException {
         String uri = reader.getAttributeValue(null, "uri");
         String name = reader.getAttributeValue(null, "name");
         assert name != null && name.length() > 0;

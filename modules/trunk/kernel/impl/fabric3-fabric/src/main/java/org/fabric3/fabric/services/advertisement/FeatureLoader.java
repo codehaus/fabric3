@@ -27,7 +27,6 @@ import org.w3c.dom.Document;
 
 import org.fabric3.introspection.DefaultIntrospectionContext;
 import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.introspection.xml.LoaderException;
 import org.fabric3.introspection.xml.LoaderHelper;
 import org.fabric3.introspection.xml.TypeLoader;
 import org.fabric3.scdl.ComponentDefinition;
@@ -57,7 +56,7 @@ public class FeatureLoader implements TypeLoader<ComponentDefinition> {
         processor.introspect(featureImplementation, context);
     }
 
-    public ComponentDefinition load(XMLStreamReader reader, IntrospectionContext context) throws XMLStreamException, LoaderException {
+    public ComponentDefinition load(XMLStreamReader reader, IntrospectionContext context) throws XMLStreamException {
 
         String name = reader.getAttributeValue(null, "name");
         Document value = helper.loadValue(reader);

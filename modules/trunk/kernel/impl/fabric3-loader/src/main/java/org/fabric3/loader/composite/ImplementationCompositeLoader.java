@@ -41,6 +41,7 @@ import org.fabric3.introspection.xml.MissingResourceException;
 import org.fabric3.introspection.xml.TypeLoader;
 import org.fabric3.scdl.Composite;
 import org.fabric3.scdl.CompositeImplementation;
+import org.fabric3.scdl.validation.MissingResource;
 import org.fabric3.spi.services.contribution.MetaDataStore;
 import org.fabric3.spi.services.contribution.MetaDataStoreException;
 import org.fabric3.spi.services.contribution.QNameSymbol;
@@ -106,7 +107,9 @@ public class ImplementationCompositeLoader implements TypeLoader<CompositeImplem
         } else if (scdlResource != null) {
             url = cl.getResource(scdlResource);
             if (url == null) {
-                throw new MissingResourceException("SCDL not found: " + scdlResource, reader);
+                MissingComposite failure = new MissingComposite("Composite file not found: " + scdlResource, scdlResource, reader);
+                introspectionContext.addError(failure);
+                return impl;
             }
             IntrospectionContext childContext = new DefaultIntrospectionContext(cl, contributionUri, url);
             Composite composite = loader.load(url, Composite.class, childContext);
@@ -123,7 +126,10 @@ public class ImplementationCompositeLoader implements TypeLoader<CompositeImplem
                 QNameSymbol symbol = new QNameSymbol(name);
                 ResourceElement<QNameSymbol, Composite> element = store.resolve(contributionUri, Composite.class, symbol);
                 if (element == null) {
-                    throw new MissingResourceException("Composite not found :" + name, reader);
+                    String id = name.toString();
+                    MissingComposite failure = new MissingComposite("Composite with qualified name not found: " + id, id, reader);
+                    introspectionContext.addError(failure);
+                    return impl;
                 }
                 impl.setComponentType(element.getValue());
                 return impl;

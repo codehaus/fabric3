@@ -32,7 +32,6 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.introspection.DefaultIntrospectionContext;
 import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.introspection.IntrospectionException;
 import org.fabric3.introspection.xml.LoaderException;
 import org.fabric3.introspection.xml.LoaderRegistry;
 import org.fabric3.introspection.xml.LoaderUtil;
@@ -73,12 +72,7 @@ public class WebComponentLoader implements TypeLoader<WebImplementation> {
             throws XMLStreamException, LoaderException {
 
         WebImplementation impl = new WebImplementation();
-        try {
-            // intropect
-            introspector.introspect(impl, introspectionContext);
-        } catch (IntrospectionException e) {
-            throw new LoaderException(reader, e);
-        }
+        introspector.introspect(impl, introspectionContext);
 
         try {
             ComponentType type = impl.getComponentType();
@@ -106,6 +100,7 @@ public class WebComponentLoader implements TypeLoader<WebImplementation> {
         try {
             url = new URL(context.getSourceBase(), "web.componentType");
         } catch (MalformedURLException e) {
+            // this should not happen
             throw new LoaderException(e.getMessage(), e);
         }
         IntrospectionContext childContext = new DefaultIntrospectionContext(context.getTargetClassLoader(), null, url);

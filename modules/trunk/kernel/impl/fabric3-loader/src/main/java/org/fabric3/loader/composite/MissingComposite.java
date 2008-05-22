@@ -16,27 +16,18 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.web.introspection;
+package org.fabric3.loader.composite;
 
-import java.util.List;
+import javax.xml.stream.XMLStreamReader;
 
-import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.introspection.IntrospectionException;
+import org.fabric3.introspection.xml.XmlValidationFailure;
 
 /**
- * Introspects a web.xml descriptor.
- *
  * @version $Revision$ $Date$
  */
-public interface WebXmlIntrospector {
+public class MissingComposite extends XmlValidationFailure<String>{
 
-    /**
-     * Returns the loaded classes for servlets, filters, and listeners configured in the web.xml. Errors will be collated in the
-     * IntrospectionContext.
-     *
-     * @param context the introspection context. Classes will be loaded in the target classloader associated with the context.
-     * @return the collection of loaded classes
-     */
-    List<Class<?>> introspectArtifactClasses(IntrospectionContext context);
-
+    protected MissingComposite(String message, String modelObject, XMLStreamReader reader) {
+        super(message, modelObject, reader);
+    }
 }

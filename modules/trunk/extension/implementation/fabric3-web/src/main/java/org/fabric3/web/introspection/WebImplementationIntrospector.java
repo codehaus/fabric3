@@ -33,8 +33,7 @@ public interface WebImplementationIntrospector {
      *
      * @param implementation the web component implementation
      * @param context        the current introspection context
-     * @throws IntrospectionException if an error is encountered during introspection
      */
-    void introspect(WebImplementation implementation, IntrospectionContext context) throws IntrospectionException;
+    void introspect(WebImplementation implementation, IntrospectionContext context);
 
 }

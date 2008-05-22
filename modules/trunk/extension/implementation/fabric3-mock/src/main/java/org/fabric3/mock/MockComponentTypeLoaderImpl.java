@@ -26,11 +26,11 @@ import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.IntrospectionHelper;
 import org.fabric3.introspection.TypeMapping;
 import org.fabric3.introspection.contract.ContractProcessor;
-import org.fabric3.introspection.xml.LoaderException;
 import org.fabric3.scdl.DefaultValidationContext;
 import org.fabric3.scdl.ServiceContract;
 import org.fabric3.scdl.ServiceDefinition;
 import org.fabric3.scdl.ValidationContext;
+import org.fabric3.scdl.validation.MissingResource;
 
 /**
  * @version $Revision$ $Date$
@@ -56,32 +56,34 @@ public class MockComponentTypeLoaderImpl implements MockComponentTypeLoader {
      * @param introspectionContext Loader context.
      * @return Mock component type.
      */
-    public MockComponentType load(List<String> mockedInterfaces, IntrospectionContext introspectionContext) throws LoaderException {
+    public MockComponentType load(List<String> mockedInterfaces, IntrospectionContext introspectionContext) {
 
-        try {
+        MockComponentType componentType = new MockComponentType();
 
-            MockComponentType componentType = new MockComponentType();
-
-            ClassLoader classLoader = introspectionContext.getTargetClassLoader();
-            for (String mockedInterface : mockedInterfaces) {
-                Class<?> interfaceClass = classLoader.loadClass(mockedInterface);
-
-                ServiceContract<Type> serviceContract = introspect(interfaceClass, introspectionContext);
-                String name = interfaceClass.getName();
-                int index = name.lastIndexOf('.');
-                if (index != -1) {
-                    name = name.substring(index + 1);
-                }
-                componentType.add(new ServiceDefinition(name, serviceContract));
+        ClassLoader classLoader = introspectionContext.getTargetClassLoader();
+        for (String mockedInterface : mockedInterfaces) {
+            Class<?> interfaceClass = null;
+            try {
+                interfaceClass = classLoader.loadClass(mockedInterface);
+            } catch (ClassNotFoundException e) {
+                MissingResource failure = new MissingResource("Mock interface not found: " + mockedInterface, mockedInterface);
+                introspectionContext.addError(failure);
+                continue;
             }
-            componentType.add(controlService);
-            componentType.setScope("STATELESS");
 
-            return componentType;
-
-        } catch (ClassNotFoundException ex) {
-            throw new LoaderException("Class not found", ex);
+            ServiceContract<Type> serviceContract = introspect(interfaceClass, introspectionContext);
+            String name = interfaceClass.getName();
+            int index = name.lastIndexOf('.');
+            if (index != -1) {
+                name = name.substring(index + 1);
+            }
+            componentType.add(new ServiceDefinition(name, serviceContract));
         }
+        componentType.add(controlService);
+        componentType.setScope("STATELESS");
+
+        return componentType;
+
 
     }
 

@@ -29,6 +29,8 @@ import org.fabric3.introspection.xml.LoaderHelper;
 import org.fabric3.introspection.xml.LoaderUtil;
 import org.fabric3.introspection.xml.MissingResourceException;
 import org.fabric3.introspection.xml.TypeLoader;
+import org.fabric3.introspection.xml.MissingAttribute;
+import org.fabric3.scdl.validation.MissingResource;
 
 /**
  * @version $Rev$ $Date$
@@ -51,7 +53,9 @@ public class GroovyImplementationLoader implements TypeLoader<GroovyImplementati
         String scriptName = reader.getAttributeValue(null, "script");
 
         if (className == null && scriptName == null) {
-            throw new MissingResourceException("No Groovy script or class name", reader);
+            MissingAttribute failure = new MissingAttribute("No Groovy script or class name specified", "class", reader);
+            context.addError(failure);
+            return null;
         }
 
 /*

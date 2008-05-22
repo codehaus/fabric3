@@ -25,7 +25,6 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.introspection.DefaultIntrospectionContext;
 import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.introspection.IntrospectionException;
 import org.fabric3.introspection.IntrospectionHelper;
 import org.fabric3.introspection.TypeMapping;
 import org.fabric3.introspection.java.ClassWalker;
@@ -52,7 +51,7 @@ public class WebImplementationIntrospectorImpl implements WebImplementationIntro
         this.xmlIntrospector = xmlIntrospector;
     }
 
-    public void introspect(WebImplementation implementation, IntrospectionContext context) throws IntrospectionException {
+    public void introspect(WebImplementation implementation, IntrospectionContext context) {
         WebComponentType componentType = new WebComponentType();
         componentType.setScope("STATELESS");
         implementation.setComponentType(componentType);

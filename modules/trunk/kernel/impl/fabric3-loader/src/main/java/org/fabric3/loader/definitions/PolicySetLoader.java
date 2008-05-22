@@ -37,6 +37,7 @@ import org.fabric3.introspection.xml.TypeLoader;
 import org.fabric3.scdl.definitions.PolicyPhase;
 import org.fabric3.scdl.definitions.PolicySet;
 import org.fabric3.spi.Constants;
+import org.fabric3.transform.TransformationException;
 import org.fabric3.transform.xml.Stream2Document;
 
 /**
@@ -90,7 +91,7 @@ public class PolicySetLoader implements TypeLoader<PolicySet> {
             
             return new PolicySet(qName, provides, appliesTo, extension, phase);
             
-        } catch(Exception ex) {
+        } catch(TransformationException ex) {
             throw new LoaderException(reader, ex);
         }
         

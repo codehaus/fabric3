@@ -30,6 +30,7 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.binding.ws.scdl.WsBindingDefinition;
 import org.fabric3.introspection.IntrospectionContext;
+import org.fabric3.introspection.xml.InvalidValue;
 import org.fabric3.introspection.xml.LoaderException;
 import org.fabric3.introspection.xml.LoaderHelper;
 import org.fabric3.introspection.xml.LoaderUtil;
@@ -62,10 +63,10 @@ public class WsBindingLoader implements TypeLoader<WsBindingDefinition> {
             throws XMLStreamException, LoaderException {
 
         WsBindingDefinition bd = null;
-
+        String uri = null;
         try {
 
-            String uri = reader.getAttributeValue(null, "uri");
+            uri = reader.getAttributeValue(null, "uri");
             String implementation = reader.getAttributeValue(org.fabric3.spi.Constants.FABRIC3_NS, "impl");
             String wsdlElement = reader.getAttributeValue(null, "wsdlElement");
             String wsdlLocation = reader.getAttributeValue("http://www.w3.org/2004/08/wsdl-instance", "wsdlLocation");
@@ -82,7 +83,8 @@ public class WsBindingLoader implements TypeLoader<WsBindingDefinition> {
             // TODO Add rest of the WSDL support
 
         } catch (URISyntaxException ex) {
-            throw new LoaderException(reader, ex);
+            InvalidValue failure = new InvalidValue("The web services binding URI is not a valid: " + uri, "uri", reader);
+            introspectionContext.addError(failure);
         }
 
         LoaderUtil.skipToEndElement(reader);

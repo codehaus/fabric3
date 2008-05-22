@@ -18,27 +18,26 @@
  */
 package org.fabric3.web.introspection;
 
-import java.util.List;
-import java.util.ArrayList;
-import java.io.InputStream;
 import java.io.IOException;
-
+import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 import javax.xml.namespace.QName;
-import javax.xml.stream.XMLStreamReader;
-import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLInputFactory;
-import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
-import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
 import static javax.xml.stream.XMLStreamConstants.END_DOCUMENT;
+import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
+import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
 
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.introspection.IntrospectionException;
-import org.fabric3.spi.services.contribution.QNameSymbol;
-import org.fabric3.spi.services.contribution.MetaDataStore;
-import org.fabric3.spi.services.contribution.Resource;
+import org.fabric3.scdl.validation.MissingResource;
 import org.fabric3.services.xmlfactory.XMLFactory;
+import org.fabric3.spi.services.contribution.MetaDataStore;
+import org.fabric3.spi.services.contribution.QNameSymbol;
+import org.fabric3.spi.services.contribution.Resource;
 
 /**
  * Default implementation of WebXmlIntrospector.
@@ -57,7 +56,7 @@ public class WebXmlIntrospectorImpl implements WebXmlIntrospector {
         this.xmlFactory = factory.newInputFactoryInstance();
     }
 
-    public List<Class<?>> introspectArtifactClasses(IntrospectionContext context) throws IntrospectionException {
+    public List<Class<?>> introspectArtifactClasses(IntrospectionContext context) {
         List<Class<?>> artifacts = new ArrayList<Class<?>>();
         ClassLoader cl = context.getTargetClassLoader();
         Resource resource = store.resolveContainingResource(context.getContributionUri(), WEB_APP_NAMESPACE);
@@ -80,10 +79,20 @@ public class WebXmlIntrospectorImpl implements WebXmlIntrospector {
                     String name = reader.getName().getLocalPart();
                     if (name.equals("servlet-class")) {
                         String className = reader.getElementText();
-                        artifacts.add(cl.loadClass(className.trim()));
+                        try {
+                            artifacts.add(cl.loadClass(className.trim()));
+                        } catch (ClassNotFoundException e) {
+                            MissingResource failure = new MissingResource("Servlet class not found: " + className, className);
+                            context.addError(failure);
+                        }
                     } else if (name.equals("filter-class")) {
                         String className = reader.getElementText();
-                        artifacts.add(cl.loadClass(className.trim()));
+                        try {
+                            artifacts.add(cl.loadClass(className.trim()));
+                        } catch (ClassNotFoundException e) {
+                            MissingResource failure = new MissingResource("Filter class not found: " + className, className);
+                            context.addError(failure);
+                        }
                     }
                     break;
                 case END_ELEMENT:
@@ -96,11 +105,11 @@ public class WebXmlIntrospectorImpl implements WebXmlIntrospector {
                 }
             }
         } catch (XMLStreamException e) {
-            throw new InvalidWebManifestException("Error reading web.xml", e);
-        } catch (ClassNotFoundException e) {
-            throw new InvalidWebManifestException("Class referenced in web.xml not found", e);
+            InvalidWebManifest failure = new InvalidWebManifest("Error reading web.xml", e);
+            context.addError(failure);
         } catch (IOException e) {
-            throw new InvalidWebManifestException("Class referenced in web.xml not found", e);
+            InvalidWebManifest failure = new InvalidWebManifest("Error reading web.xml", e);
+            context.addError(failure);
         } finally {
             try {
                 if (xmlStream != null) {
@@ -110,6 +119,7 @@ public class WebXmlIntrospectorImpl implements WebXmlIntrospector {
                 // ignore
             }
         }
+        return artifacts;
 
     }
 }

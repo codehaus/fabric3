@@ -82,7 +82,9 @@ public class IncludeLoader implements TypeLoader<Include> {
         } else if (scdlResource != null) {
             url = cl.getResource(scdlResource);
             if (url == null) {
-                throw new MissingResourceException("Composite file not found: " + scdlResource, reader);
+                MissingComposite failure = new MissingComposite("Composite file not found: " + scdlResource, scdlResource, reader);
+                context.addError(failure);
+                return null;
             }
             return loadFromSideFile(name, cl, contributionUri, url, reader, context);
         } else {
@@ -95,7 +97,10 @@ public class IncludeLoader implements TypeLoader<Include> {
                 QNameSymbol symbol = new QNameSymbol(name);
                 ResourceElement<QNameSymbol, Composite> element = store.resolve(contributionUri, Composite.class, symbol);
                 if (element == null) {
-                    throw new MissingResourceException("Composite not found: " + name, reader);
+                    String id = name.toString();
+                    MissingComposite failure = new MissingComposite("Composite file not found: " + id, id, reader);
+                    context.addError(failure);
+                    return null;
                 }
                 Composite composite = element.getValue();
                 Include include = new Include();

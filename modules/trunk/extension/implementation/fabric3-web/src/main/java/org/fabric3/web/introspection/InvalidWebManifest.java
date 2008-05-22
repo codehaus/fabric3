@@ -18,17 +18,28 @@
  */
 package org.fabric3.web.introspection;
 
-import org.fabric3.introspection.IntrospectionException;
+import org.fabric3.scdl.ValidationFailure;
 
 /**
  * Thrown when a web.xml file is invalid.
  *
  * @version $Revision$ $Date$
  */
-public class InvalidWebManifestException extends IntrospectionException {
-    private static final long serialVersionUID = 2017154436293046237L;
+public class InvalidWebManifest extends ValidationFailure<Void> {
+    private String message;
+    private Throwable cause;
 
-    public InvalidWebManifestException(String message, Throwable cause) {
-        super(message, cause);
+    public InvalidWebManifest(String message, Throwable cause) {
+        super(null);
+        this.message = message;
+        this.cause = cause;
+    }
+
+    public Throwable getCause() {
+        return cause;
+    }
+
+    public String getMessage() {
+        return message + ". Original cause was: \n" + cause.toString();
     }
 }

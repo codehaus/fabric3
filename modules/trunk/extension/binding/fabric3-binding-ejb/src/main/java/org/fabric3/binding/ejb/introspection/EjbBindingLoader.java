@@ -29,8 +29,9 @@ import org.osoa.sca.annotations.EagerInit;
 
 import org.fabric3.binding.ejb.scdl.EjbBindingDefinition;
 import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.introspection.xml.LoaderException;
+import org.fabric3.introspection.xml.InvalidValue;
 import org.fabric3.introspection.xml.LoaderUtil;
+import org.fabric3.introspection.xml.MissingAttribute;
 import org.fabric3.introspection.xml.TypeLoader;
 
 
@@ -45,12 +46,19 @@ public class EjbBindingLoader implements TypeLoader<EjbBindingDefinition> {
      */
     public static final QName BINDING_QNAME = new QName(SCA_NS, "binding.ejb");
 
-    public EjbBindingDefinition load(XMLStreamReader reader, IntrospectionContext introspectionContext)
-            throws XMLStreamException, LoaderException {
+    public EjbBindingDefinition load(XMLStreamReader reader, IntrospectionContext introspectionContext) throws XMLStreamException {
 
         String uri = reader.getAttributeValue(null, "uri");
 
-        EjbBindingDefinition bd = new EjbBindingDefinition(createURI(uri, reader));
+        URI targetUri;
+        try {
+            targetUri = createURI(uri);
+        } catch (URISyntaxException e) {
+            InvalidValue failure = new InvalidValue("Invalid EJB binding URI: " + uri, "uri", reader);
+            introspectionContext.addError(failure);
+            return null;
+        }
+        EjbBindingDefinition bd = new EjbBindingDefinition(targetUri);
 
         String homeInterface = reader.getAttributeValue(null, "homeInterface");
         bd.setHomeInterface(homeInterface);
@@ -61,7 +69,7 @@ public class EjbBindingLoader implements TypeLoader<EjbBindingDefinition> {
             bd.setStateless(false);
         }
 
-        boolean isEjb3 = true;
+        boolean isEjb3;
         String ejbVersion = reader.getAttributeValue(null, "ejb-version");
         if (ejbVersion != null) {
             isEjb3 = "EJB3".equalsIgnoreCase(ejbVersion);
@@ -71,7 +79,8 @@ public class EjbBindingLoader implements TypeLoader<EjbBindingDefinition> {
         bd.setEjb3(isEjb3);
 
         if (!isEjb3 && homeInterface == null) {
-            throw new LoaderException("homeInterface must be specified for EJB 2.x bindings", reader);
+            MissingAttribute failure = new MissingAttribute("homeInterface must be specified for EJB 2.x bindings", "homeInterface", reader);
+            introspectionContext.addError(failure);
         }
 
         bd.setName(reader.getAttributeValue(null, "name"));
@@ -82,7 +91,7 @@ public class EjbBindingLoader implements TypeLoader<EjbBindingDefinition> {
 
     }
 
-    private URI createURI(String uri, XMLStreamReader reader) throws LoaderException {
+    private URI createURI(String uri) throws URISyntaxException {
         if (uri == null) return null;
 
         // In EJB 3, the @Stateless & @Stateful annotations contain an attribute named mappedName.
@@ -103,11 +112,7 @@ public class EjbBindingLoader implements TypeLoader<EjbBindingDefinition> {
             }
         }
 
-        try {
-            return new URI(uri);
-        } catch (URISyntaxException ex) {
-            throw new LoaderException(reader, ex);
-        }
+        return new URI(uri);
     }
 
 }

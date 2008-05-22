@@ -33,6 +33,8 @@ import org.fabric3.introspection.xml.LoaderException;
 import org.fabric3.introspection.xml.LoaderHelper;
 import org.fabric3.introspection.xml.LoaderUtil;
 import org.fabric3.introspection.xml.TypeLoader;
+import org.fabric3.introspection.xml.InvalidValue;
+import org.fabric3.introspection.xml.MissingAttribute;
 
 /**
  * @version $Revision$ $Date$
@@ -59,20 +61,23 @@ public class HessianBindingLoader implements TypeLoader<HessianBindingDefinition
     public HessianBindingDefinition load(XMLStreamReader reader, IntrospectionContext introspectionContext)
             throws XMLStreamException, LoaderException {
 
-        HessianBindingDefinition bd;
-
+        HessianBindingDefinition bd = null;
+        String uri = null;
         try {
 
-            String uri = reader.getAttributeValue(null, "uri");
+            uri = reader.getAttributeValue(null, "uri");
             if (uri == null) {
-                throw new LoaderException("The uri attribute is not specified", reader);
+                MissingAttribute failure = new MissingAttribute("A binding URI must be specified ", "uri", reader);
+                introspectionContext.addError(failure);
+                return null;
             }
             bd = new HessianBindingDefinition(new URI(uri));
 
             loaderHelper.loadPolicySetsAndIntents(bd, reader);
 
         } catch (URISyntaxException ex) {
-            throw new LoaderException(reader, ex);
+            InvalidValue failure = new InvalidValue("The Hessian binding URI is not valid: " + uri, "uri", reader);
+            introspectionContext.addError(failure);
         }
 
         LoaderUtil.skipToEndElement(reader);
