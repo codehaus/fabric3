@@ -46,38 +46,30 @@ public class AQBindingAsyncTest extends TestCase {
 
     /**
      * test Hello
-     * @throws IOException 
+     * 
+     * @throws IOException
      */
     public void testEchoService() throws IOException {
         System.out.println("Calling Echo Service");
-        /*Do Not want a LOOP */
+        /* Do Not want a LOOP */
         echoService.areYouThere("Any One There One");
         echoService.areYouThere("Any One There Two");
         echoService.areYouThere("Any One There Three");
         echoService.areYouThere("Any One There Four");
-        echoService.areYouThere("Any One There Five");         
+        echoService.areYouThere("Any One There Five");
         echoService.areYouThere("Any One There Six");
         echoService.areYouThere("Any One There Seven");
         echoService.areYouThere("Any One There Eight");
         echoService.areYouThere("Any One There Nine");
-        System.err.println("Press Start on JMX Console and let me know when you have finished");
-        BufferedReader read = new BufferedReader(new InputStreamReader(System.in));
-        String msg = read.readLine();
-        if(!msg.equals("finish")){            
-           throw new RuntimeException("Message is No valid");    
-        }        
-    }
-
-    /**
-     * Sleeping
-     * @param i
-     */
-    private void sleep(long val) {
-        try {
-            Thread.sleep(val);
-        } catch (InterruptedException e) {            
-            e.printStackTrace();
+        System.err.println("Press Start on JMX Console");
+        boolean val = true;
+        while (val) {
+            System.err.println("Type 'finish' to exit");
+            BufferedReader read = new BufferedReader(new InputStreamReader(System.in));
+            String msg = read.readLine();
+            if (msg.equals("finish")) {
+                val = false;
+            }
         }
-        
     }
 }

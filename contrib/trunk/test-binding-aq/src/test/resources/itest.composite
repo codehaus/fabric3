@@ -17,21 +17,7 @@
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
 	xmlns:sca="http://www.osoa.org/xmlns/sca/1.0"
-	xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha" name="AQTest">
-
-	<!-- component name="HowAreyou_Test">
-		<f3:junit class="org.fabric3.binding.aq.test.AQBindingTest" />
-		<reference name="helloService">
-			<binding.aq correlationScheme="RequestMsgIDToCorrelID">
-				<destination name="REQ_Q" type="queue" create="always">
-					<property name="datasource">AQDataSource</property>
-				</destination>
-				<response>
-					<destination name="RES_Q" type="queue" create="always" />
-				</response>
-			</binding.aq>
-		</reference>
-	</component-->
+	xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha" name="AQTest">	
 
 	<component name="EchoTest">
 		<f3:junit
@@ -45,22 +31,6 @@
 		</reference>
 	</component>
 
-	<!-- component name="HelloService">
-		<implementation.java
-			class="org.fabric3.binding.aq.test.HelloServiceImpl" />
-		<service name="HelloService">
-			<binding.aq correlationScheme="RequestMsgIDToCorrelID"
-				requires="sca:transactedOneWay.global">
-				<destination name="REQ_Q" type="queue" create="always">
-					<property name="datasource">AQDataSource</property>
-				</destination>
-				<response>
-					<destination name="RES_Q" type="queue" create="always" />
-				</response>
-			</binding.aq>
-		</service>
-	</component-->
-
 	<component name="EchoService">
 		<implementation.java
 			class="org.fabric3.binding.aq.test.EchoServiceImpl" />
@@ -73,20 +43,6 @@
 				</destination>
 			</binding.aq>
 		</service>
-	</component>
-     
-     <component name="EchoServiceTwo">
-          <implementation.java
-               class="org.fabric3.binding.aq.test.EchoServiceImpl" />
-          <service name="EchoService">
-               <binding.aq correlationScheme="RequestMsgIDToCorrelID"
-                    requires="sca:transactedOneWay.global">
-                    <destination name="ABDUL_VIEW" type="queue">
-                         <property name="datasource">AQDataSource</property>
-                    <property name="initialState">start</property>     
-                    </destination>
-               </binding.aq>
-          </service>
-     </component>
+	</component>        
 
 </composite>
