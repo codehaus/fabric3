@@ -60,7 +60,7 @@ import org.osoa.sca.annotations.Reference;
 public class AQSourceWireAttacher implements SourceWireAttacher<AQWireSourceDefinition>, AQSourceWireAttacherMBean {
 
     private final Map<URI, WireSourceData> data;    
-    private final Map<URI, AtomicBoolean> state;    
+    private final Map<URI, AtomicBoolean> processState;    
     private ConnectionFactoryAccessor<XAQueueConnectionFactory> connectionFactoryAccessor;
     private DestinationFactory<XAQueueConnectionFactory> destinationFactory;
     private DataSourceRegistry dataSourceRegistry;
@@ -74,7 +74,7 @@ public class AQSourceWireAttacher implements SourceWireAttacher<AQWireSourceDefi
      */
     public AQSourceWireAttacher() {        
         data  = new ConcurrentHashMap<URI, WireSourceData>();        
-        state = new ConcurrentHashMap<URI, AtomicBoolean>();         
+        processState = new ConcurrentHashMap<URI, AtomicBoolean>();         
     }
     
 
@@ -85,19 +85,17 @@ public class AQSourceWireAttacher implements SourceWireAttacher<AQWireSourceDefi
         final URI serviceNamespace = targetDefinition.getUri();
         setInitialState(sourceDefinition.getMetadata(), serviceNamespace);
         setWireSourceData(sourceDefinition, targetDefinition, wire);
-        if (getState(serviceNamespace).get()) {
-            start(serviceNamespace);
+        
+        if (getProcessState(serviceNamespace).get()) {
+            startProcessing(serviceNamespace);
         }
     }
 
     /**
      * Unregister the AQ host
      */
-    public void detachFromSource(final AQWireSourceDefinition sourceDefinition, final PhysicalWireTargetDefinition wireTargetDefinition,
-                                 final Wire wire) throws WiringException {
-        
-        final URI service = wireTargetDefinition.getUri();
-        monitor.onSourceWire("UnRegistering AQ Host " + " for " + service);
+    public void detachFromSource(final AQWireSourceDefinition sourceDefinition, final PhysicalWireTargetDefinition wireTargetDefinition, final Wire wire) throws WiringException {        
+        final URI service = wireTargetDefinition.getUri();       
         aqHost.unRegisterListener(service);
     }
 
@@ -115,7 +113,7 @@ public class AQSourceWireAttacher implements SourceWireAttacher<AQWireSourceDefi
     public void destroy(){
         monitor.onSourceWire(" Cleaning ");
         data.clear();
-        state.clear();
+        processState.clear();
     }
 
     /**
@@ -123,8 +121,8 @@ public class AQSourceWireAttacher implements SourceWireAttacher<AQWireSourceDefi
      */
     public void start(final String serviceNamespace) {
        final URI service = URI.create(serviceNamespace); 
-       getState(service).set(true);
-       start(service);   
+       getProcessState(service).set(true);
+       startProcessing(service);   
     }
 
     /**
@@ -132,7 +130,7 @@ public class AQSourceWireAttacher implements SourceWireAttacher<AQWireSourceDefi
      */
     public void stop(final String serviceNamespace) {
         final URI service = URI.create(serviceNamespace);
-        getState(service).set(false);
+        getProcessState(service).set(false);
         aqHost.unRegisterListener(service);
     }
 
@@ -150,7 +148,7 @@ public class AQSourceWireAttacher implements SourceWireAttacher<AQWireSourceDefi
     /**
      * Start the process for to listen on the queues
      */
-    private void start(final URI serviceNamespace) {
+    private void startProcessing(final URI serviceNamespace) {
         monitor.onSourceWire(" Attaching Source for " + serviceNamespace);
         final WireSourceData sourceData = getWireSourceData(serviceNamespace);
         
@@ -166,7 +164,6 @@ public class AQSourceWireAttacher implements SourceWireAttacher<AQWireSourceDefi
 
     /**
      * Injects the Factory for retrieving Connection Factories
-     * 
      * @param connectionFactoryAccessor
      */
     @Reference
@@ -176,9 +173,7 @@ public class AQSourceWireAttacher implements SourceWireAttacher<AQWireSourceDefi
 
     /**
      * Injects the transaction handler.
-     * 
-     * @param transactionHandler
-     *            Transaction handler.
+     * @param transactionHandler Transaction handler.
      */
     @Reference(required = true)
     protected void setTransactionHandler(TransactionHandler transactionHandler) {
@@ -186,8 +181,7 @@ public class AQSourceWireAttacher implements SourceWireAttacher<AQWireSourceDefi
     }
 
     /**
-     * @param dataSource
-     *            The dataSource to set.
+     * @param dataSource The dataSource to set.
      */
     @Reference(required = true)
     protected void setDataSourceRegistry(DataSourceRegistry dataSourceRegistry) {
@@ -197,8 +191,7 @@ public class AQSourceWireAttacher implements SourceWireAttacher<AQWireSourceDefi
     /**
      * Injected JMS host.
      * 
-     * @param jmsHost
-     *            JMS Host to use.
+     * @param jmsHost JMS Host to use.
      */
     @Reference(required = true)
     protected void setJmsHost(AQHost aqHost) {
@@ -253,14 +246,14 @@ public class AQSourceWireAttacher implements SourceWireAttacher<AQWireSourceDefi
         final ConsumeState consumeState = ConsumeState.valueOf(initialState);
         final boolean startState = consumeState == ConsumeState.start ? true : false;
         final AtomicBoolean start = new AtomicBoolean(startState); 
-        state.put(serviceNamespace, start);      
+        processState.put(serviceNamespace, start);      
     }
     
     /*
      * Returns Consume State      
      */
-    private AtomicBoolean getState(final URI serviceNamespace){
-       final AtomicBoolean consumeState = state.get(serviceNamespace);
+    private AtomicBoolean getProcessState(final URI serviceNamespace){
+       final AtomicBoolean consumeState = processState.get(serviceNamespace);
        return consumeState;
     }
 
@@ -272,10 +265,8 @@ public class AQSourceWireAttacher implements SourceWireAttacher<AQWireSourceDefi
         data.put(targetDefinition.getUri(), wireData);
     }
     
-    /**
-     * Logic for getting the wire source data
-     * @param serviceNamespace
-     * @return
+    /*
+     * Logic for getting the wire source data 
      */
     private WireSourceData getWireSourceData(final URI serviceNamespace) {
         final WireSourceData sourceData = data.get(serviceNamespace);
