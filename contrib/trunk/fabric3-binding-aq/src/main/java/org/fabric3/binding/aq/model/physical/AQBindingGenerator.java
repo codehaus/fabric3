@@ -46,9 +46,7 @@ import org.osoa.sca.annotations.EagerInit;
 @EagerInit
 public class AQBindingGenerator implements BindingGenerator<AQWireSourceDefinition, AQWireTargetDefinition, AQBindingDefinition> {
 
-    // Transacted one way intent
-    private static final QName TRANSACTED_ONEWAY = new QName(Constants.SCA_NS, "transactedOneWay");
-    private static final QName TRANSACTED_ONEWAY_LOCAL = new QName(Constants.SCA_NS, "transactedOneWay.local");
+    /*Transacted one way intent*/    
     private static final QName TRANSACTED_ONEWAY_GLOBAL = new QName(Constants.SCA_NS, "transactedOneWay.global");   
 
 
@@ -93,10 +91,6 @@ public class AQBindingGenerator implements BindingGenerator<AQWireSourceDefiniti
             for (Intent intent : policy.getProvidedIntents(operation)) {
                 if (TRANSACTED_ONEWAY_GLOBAL.equals(intent.getName())) {
                     transactionType =TransactionType.GLOBAL;
-                } else if (TRANSACTED_ONEWAY_LOCAL.equals(intent.getName())) {
-                    transactionType = TransactionType.LOCAL;
-                } else if (TRANSACTED_ONEWAY.equals(intent.getName())) {
-                    transactionType = TransactionType.GLOBAL;
                 }
             }
         }
