@@ -21,10 +21,13 @@ package org.fabric3.binding.aq.host.standalone;
 import java.net.URI;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.jms.Destination;
 import javax.jms.JMSException;
 import javax.jms.MessageListener;
+import javax.jms.Queue;
 import javax.jms.XAConnection;
 import javax.jms.XAQueueConnectionFactory;
 
@@ -47,10 +50,10 @@ import org.osoa.sca.annotations.Reference;
  */
 public class DefaultAQHost implements AQHost, DefaultAQHostMBean {
 
-    private final List<PollingConsumer> consumers;
-    private final WorkData workData;
+    private final Map<URI, XAConnection> connections;
+    private final Map<URI, List<PollingConsumer>> consumers;
+    private final Map<URI, WorkData> workData;
     private WorkScheduler workScheduler;
-    private XAConnection connection;
     private AQMonitor monitor;
     private int receiverCount = 1;
     private long readTimeout = 5000L;
@@ -59,37 +62,50 @@ public class DefaultAQHost implements AQHost, DefaultAQHostMBean {
      * Constructor
      */
     public DefaultAQHost() {
-        consumers = new LinkedList<PollingConsumer>();
-        workData = new WorkData();
+        connections = new ConcurrentHashMap<URI, XAConnection>();
+        consumers = new ConcurrentHashMap<URI, List<PollingConsumer>>();
+        workData = new ConcurrentHashMap<URI, WorkData>();
     }
 
     /**
      * Registers the listeners to start on consuming messages
      */
-    public void registerListener(final XAQueueConnectionFactory connectionFactory, final Destination destination, final MessageListener listener, final TransactionHandler transactionHandler, final ClassLoader classLoader,
-                                 final URI namespace) {
+    public void registerListener(final XAQueueConnectionFactory connectionFactory, final Destination destination, final MessageListener listener, final TransactionHandler transactionHandler, 
+                                                                                   final ClassLoader classLoader, final URI namespace) {
+        
+        final WorkData data = new WorkData();
         /* Set the target URI */
-        workData.setConnectionFactory(connectionFactory);
-        workData.setDestination(destination);
-        workData.setListener(listener);
-        workData.setClassLoader(classLoader);
-        workData.setTxHandler(transactionHandler);
+        data.setConnectionFactory(connectionFactory);
+        data.setDestination(destination);
+        data.setListener(listener);
+        data.setClassLoader(classLoader);
+        data.setTxHandler(transactionHandler);
+        workData.put(namespace, data);
         try {
             prepareWorkSchedule(namespace);
         } catch (JMSException ex) {
             throw new Fabric3AQException("Unable to Start serviceing Requests", ex);
         }
     }
+    
+    /**
+     * Unregisters the Listeners
+     */
+    public void unRegisterListener(final URI serviceName) {
+        monitor.onAQHost("Unregistering AQ host for " + serviceName);
+        workData.remove(serviceName);
+        stopProcessingOnService(serviceName);
+    }
 
     /**
      * Stops the receiver threads.
-     * 
      * @throws JMSException
      */
     @Destroy
     public void stop() throws JMSException {
+        workData.clear();
         stopConsumers();
-        JmsHelper.closeQuietly(connection);
+        closeConnections();
         monitor.stopOnAQHost(" Stopped ");
     }
 
@@ -97,15 +113,18 @@ public class DefaultAQHost implements AQHost, DefaultAQHostMBean {
      * Sets The Number Of receivers
      * @return count
      */
-    public void setReceivers(final String namespace, final int receivers) {        
-        receiverCount = receivers;
+    public void setReceivers(final String namespace, final int receivers) {
+        final URI serviceName = URI.create(namespace);
+        if(!workData.containsKey(serviceName)){
+            throw new IllegalStateException("Please start the AQ Source Wire Attacher");
+        }       
         try {
-            stop();
-            consumers.clear();
-            prepareWorkSchedule(URI.create(namespace));
+            stopProcessingOnService(serviceName);
+            receiverCount = receivers;
+            prepareWorkSchedule(serviceName);
         } catch (JMSException je) {
-           monitor.onException(je);
-           throw new Fabric3AQException("Unable to Start servicing Requests from Managment Console", je);
+            monitor.onException(je);
+            throw new Fabric3AQException("Unable to Start servicing Requests from Managment Console", je);
         }
     }
 
@@ -116,17 +135,24 @@ public class DefaultAQHost implements AQHost, DefaultAQHostMBean {
     public int getReceiverCount() {
         return receiverCount;
     }
-    
+
     /**
-     * Return the Destination
+     * Returns the Destinations
+     * @return Llist of names 
      */
-    public String getDestination() {
-        return workData.getDestination().toString();
-    }
+    public List<String> getDestination()  {
+        final List<String> destinations = new LinkedList<String>();
+        for(WorkData data : workData.values()){
+            destinations.add(destinationName(data.getDestination()));
+        }
+        return destinations;
+    }    
 
     /**
      * Injects the work scheduler.
-     * @param workScheduler Work scheduler to be used.
+     * 
+     * @param workScheduler
+     *            Work scheduler to be used.
      */
     @Reference
     protected void setWorkScheduler(final WorkScheduler workScheduler) {
@@ -135,7 +161,9 @@ public class DefaultAQHost implements AQHost, DefaultAQHostMBean {
 
     /**
      * Sets the read timeout.
-     * @param readTimeout Read timeout for blocking receive.
+     * 
+     * @param readTimeout
+     *            Read timeout for blocking receive.
      */
     @Property
     protected void setReadTimeout(final long readTimeout) {
@@ -144,6 +172,7 @@ public class DefaultAQHost implements AQHost, DefaultAQHostMBean {
 
     /**
      * Sets the Monitor
+     * 
      * @param monitor
      */
     @Monitor
@@ -155,32 +184,90 @@ public class DefaultAQHost implements AQHost, DefaultAQHostMBean {
      * Prepares the work schedule
      */
     private void prepareWorkSchedule(final URI serviceNamespace) throws JMSException {
-        /* TODO ADD INFO TO MAP */
-        connection = workData.getConnectionFactory().createXAConnection();
+        final List<PollingConsumer> consumerList = new LinkedList<PollingConsumer>();
+        final WorkData data = workData.get(serviceNamespace);
+        final XAConnection connection = data.getConnectionFactory().createXAConnection();
+
         for (int i = 0; i < receiverCount; i++) {
-            startConsumption();
+            startConsumption(serviceNamespace, connection, data, consumerList);
         }
+
         connection.start();
+        consumers.put(serviceNamespace, consumerList);
+        connections.put(serviceNamespace, connection);
+        monitor.onAQHost(" Started ");
     }
 
     /*
      * Start the Consumers to process Messages
      */
-    private void startConsumption() throws JMSException {        
-        final PollingConsumer pollingConsumer = new ConsumerWorker(connection, workData.getDestination(), workData.getListener(), 
-                                                                   workData.getTxHandler(), readTimeout, workData.getClassLoader(), monitor);
+    private void startConsumption(final URI serviceName, final XAConnection connection, final WorkData data, final List<PollingConsumer> list) throws JMSException {
+        final PollingConsumer pollingConsumer = new ConsumerWorker(connection, data.getDestination(), data.getListener(), data.getTxHandler(), 
+                                                                   readTimeout, data.getClassLoader(), monitor);
         workScheduler.scheduleWork(pollingConsumer);
-        consumers.add(pollingConsumer);
+        list.add(pollingConsumer);
     }
-
+        
     /*
      * Stops Consumption Of messages
      */
     private void stopConsumers() {
+        for (List<PollingConsumer> consumerList : consumers.values()) {
+            stopConsumers(consumerList);
+        }
+        consumers.clear();
+    }
+
+    /*
+     * Closes the Connections
+     */
+    private void closeConnections() {
+        for (XAConnection connection : connections.values()) {
+            closeConnections(connection);
+        }
+        connections.clear();
+    }
+    
+    /*
+     * Stop all Processing for a given service
+     */
+    private void stopProcessingOnService(final URI serviceName){
+        final List<PollingConsumer> consumerList = consumers.get(serviceName);
+        final XAConnection connection = connections.get(serviceName);
+        stopConsumers(consumerList);
+        closeConnections(connection);
+        consumers.remove(serviceName);
+        connections.remove(serviceName);
+    }
+
+    /*
+     * Stop Individual Consumer
+     */
+    private void stopConsumers(final List<PollingConsumer> consumerList) {
         int i = 0;
-        for (PollingConsumer consumer : consumers) {
+        for (PollingConsumer consumer : consumerList) {
             monitor.stopConsumer(++i + " Stopping ");
             consumer.stopConsumption();
         }
-    }   
+        consumerList.clear();
+    }
+
+    /*
+     * Stops the Individual Connection
+     */
+    private void closeConnections(final XAConnection connection) {
+        monitor.stopConnection(" Stopping ");
+        JmsHelper.closeQuietly(connection);
+    }
+    
+    /*
+     * returns the name of the destination
+     */
+    private String destinationName(final Destination destination) {
+       try {
+           return ((Queue)destination).getQueueName();
+       }catch(JMSException je) {
+           throw new IllegalStateException("Error when getting Name");
+       }
+    }
 }

@@ -18,6 +18,8 @@
  */
 package org.fabric3.binding.aq.host.standalone;
 
+import java.util.List;
+
 import org.fabric3.api.annotation.Management;
 
 /**
@@ -43,5 +45,5 @@ public interface DefaultAQHostMBean {
      * Returns the Destination to Consume Messages on
      * @return
      */
-    String getDestination();
+    List<String> getDestination();
 }

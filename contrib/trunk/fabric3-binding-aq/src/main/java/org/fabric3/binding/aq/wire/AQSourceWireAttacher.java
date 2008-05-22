@@ -59,9 +59,8 @@ import org.osoa.sca.annotations.Reference;
  */
 public class AQSourceWireAttacher implements SourceWireAttacher<AQWireSourceDefinition>, AQSourceWireAttacherMBean {
 
-    private final Map<URI, WireSourceData> data;
-    private final Map<URI, AQHost> hosts;
-    private final AtomicBoolean start;    
+    private final Map<URI, WireSourceData> data;    
+    private final Map<URI, AtomicBoolean> state;    
     private ConnectionFactoryAccessor<XAQueueConnectionFactory> connectionFactoryAccessor;
     private DestinationFactory<XAQueueConnectionFactory> destinationFactory;
     private DataSourceRegistry dataSourceRegistry;
@@ -74,9 +73,8 @@ public class AQSourceWireAttacher implements SourceWireAttacher<AQWireSourceDefi
      * Constructor
      */
     public AQSourceWireAttacher() {        
-        data  = new ConcurrentHashMap<URI, WireSourceData>();
-        hosts = new ConcurrentHashMap<URI, AQHost>();
-        start = new AtomicBoolean();         
+        data  = new ConcurrentHashMap<URI, WireSourceData>();        
+        state = new ConcurrentHashMap<URI, AtomicBoolean>();         
     }
     
 
@@ -84,10 +82,11 @@ public class AQSourceWireAttacher implements SourceWireAttacher<AQWireSourceDefi
      * Attaches the AQ binding
      */
     public void attachToSource(final AQWireSourceDefinition sourceDefinition, final PhysicalWireTargetDefinition targetDefinition, final Wire wire) throws WiringException {
-        setInitialState(sourceDefinition.getMetadata());
+        final URI serviceNamespace = targetDefinition.getUri();
+        setInitialState(sourceDefinition.getMetadata(), serviceNamespace);
         setWireSourceData(sourceDefinition, targetDefinition, wire);
-        if (start.get()) {
-            start(targetDefinition.getUri());
+        if (getState(serviceNamespace).get()) {
+            start(serviceNamespace);
         }
     }
 
@@ -95,8 +94,11 @@ public class AQSourceWireAttacher implements SourceWireAttacher<AQWireSourceDefi
      * Unregister the AQ host
      */
     public void detachFromSource(final AQWireSourceDefinition sourceDefinition, final PhysicalWireTargetDefinition wireTargetDefinition,
-            final Wire wire) throws WiringException {
-
+                                 final Wire wire) throws WiringException {
+        
+        final URI service = wireTargetDefinition.getUri();
+        monitor.onSourceWire("UnRegistering AQ Host " + " for " + service);
+        aqHost.unRegisterListener(service);
     }
 
     /**
@@ -113,25 +115,25 @@ public class AQSourceWireAttacher implements SourceWireAttacher<AQWireSourceDefi
     public void destroy(){
         monitor.onSourceWire(" Cleaning ");
         data.clear();
-        hosts.clear();
+        state.clear();
     }
 
     /**
      * start from the jmx console
      */
     public void start(final String serviceNamespace) {
-       start.set(true);
-       start(URI.create(serviceNamespace));   
+       final URI service = URI.create(serviceNamespace); 
+       getState(service).set(true);
+       start(service);   
     }
 
     /**
      * stop from jmx console
      */
-    public void stop() {
-        /* Get the operation names */
-        for (Map.Entry<URI, AQHost> entry : hosts.entrySet()) {
-            monitor.onSourceWire(" Unregister " + entry.getValue().getClass().getName() + " for " + entry.getKey());
-        }        
+    public void stop(final String serviceNamespace) {
+        final URI service = URI.create(serviceNamespace);
+        getState(service).set(false);
+        aqHost.unRegisterListener(service);
     }
 
     /**
@@ -159,8 +161,7 @@ public class AQSourceWireAttacher implements SourceWireAttacher<AQWireSourceDefi
         final Destination reqDestination = getDestination(sourceDefinition.getMetadata(), requestConnectionFactory);
         final MessageListener listener = new OneWayMessageListener(ops);
 
-        aqHost.registerListener(requestConnectionFactory, reqDestination, listener, transactionHandler, classloader, serviceNamespace);
-        hosts.put(serviceNamespace, aqHost);
+        aqHost.registerListener(requestConnectionFactory, reqDestination, listener, transactionHandler, classloader, serviceNamespace);       
     }    
 
     /**
@@ -206,9 +207,7 @@ public class AQSourceWireAttacher implements SourceWireAttacher<AQWireSourceDefi
 
     /**
      * Injects the destination strategies.
-     * 
-     * @param strategies
-     *            Destination strategies.
+     * @param strategiesDestination strategies.
      */
     @Reference
     protected void setDestinationFactory(final DestinationFactory<XAQueueConnectionFactory> destinationFactory) {
@@ -217,7 +216,6 @@ public class AQSourceWireAttacher implements SourceWireAttacher<AQWireSourceDefi
 
     /**
      * Injects the class loader registry.
-     * 
      * @param classLoaderRegistry
      */
     @Reference
@@ -227,7 +225,6 @@ public class AQSourceWireAttacher implements SourceWireAttacher<AQWireSourceDefi
 
     /**
      * Injects the monitor
-     * 
      * @param monitor
      */
     @Monitor
@@ -251,12 +248,20 @@ public class AQSourceWireAttacher implements SourceWireAttacher<AQWireSourceDefi
     /*
      * Sets the initial state start or stopped
      */
-    private void setInitialState(final AQBindingMetadata metadata) {
-        final String state = (String) metadata.getDestination().getProperties().get("initialState");
-        final ConsumeState consumeState = ConsumeState.valueOf(state);
+    private void setInitialState(final AQBindingMetadata metadata, final URI serviceNamespace) {
+        final String initialState = (String) metadata.getDestination().getProperties().get("initialState");
+        final ConsumeState consumeState = ConsumeState.valueOf(initialState);
         final boolean startState = consumeState == ConsumeState.start ? true : false;
-        start.set(startState);
-        monitor.onSourceWire("In " + consumeState.name() + " State ");
+        final AtomicBoolean start = new AtomicBoolean(startState); 
+        state.put(serviceNamespace, start);      
+    }
+    
+    /*
+     * Returns Consume State      
+     */
+    private AtomicBoolean getState(final URI serviceNamespace){
+       final AtomicBoolean consumeState = state.get(serviceNamespace);
+       return consumeState;
     }
 
     /*

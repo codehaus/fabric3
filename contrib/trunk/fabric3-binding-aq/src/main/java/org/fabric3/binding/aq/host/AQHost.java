@@ -46,5 +46,12 @@ public interface AQHost {
                           TransactionHandler transactionHandler,
                           ClassLoader classloader,
                           URI namespace);
+    
+    
+    /**
+     * Unregisters the listeners for this service
+     * @param serviceName
+     */
+    void unRegisterListener(URI serviceName);
 
 }

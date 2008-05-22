@@ -25,6 +25,10 @@ import org.fabric3.scdl.ModelObject;
  */
 public class ResponseDefinition extends ModelObject {
 
+
+    private static final long serialVersionUID = -6826108838147277500L;
+    
+    
     /**
      * Destination.
      */

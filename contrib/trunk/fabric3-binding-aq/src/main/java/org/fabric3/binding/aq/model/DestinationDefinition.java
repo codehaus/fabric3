@@ -25,6 +25,8 @@ package org.fabric3.binding.aq.model;
  * @version $Revision$ $Date$
  */
 public class DestinationDefinition extends AdministeredObjectDefinition {
+   
+    private static final long serialVersionUID = -4093899385955375237L;
     
     /**
      * Destination definition.

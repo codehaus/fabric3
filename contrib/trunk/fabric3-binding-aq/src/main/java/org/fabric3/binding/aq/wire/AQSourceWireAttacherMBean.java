@@ -38,11 +38,10 @@ public interface AQSourceWireAttacherMBean {
     /**
      * Stop the wire attacher
      */
-    void stop();
-    
-    
+    void stop(String serviceNamespace);
+        
     /**
-     * Gets the List Service names regsistered
+     * Gets the List Service names
      * @return
      */
     List<String> getServiceNames();

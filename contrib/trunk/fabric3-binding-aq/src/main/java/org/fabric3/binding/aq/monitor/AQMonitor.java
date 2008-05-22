@@ -41,16 +41,29 @@ public interface AQMonitor {
     void onTargetWire(String message);
     
     /**
-     * Log message to stop on AQ
+     * Message in AQ Host
      */
     @LogLevel("INFO")
-    void stopOnAQHost(String message);
+    void onAQHost(String message);
+    
     
     /**
      * Log message to stop when consumers are stopped
      */
     @LogLevel("INFO")
     void stopConsumer(String message);
+    
+    /**
+     * Logs messages for stop on COnnection
+     */
+    @LogLevel("INFO")
+    void stopConnection(String message);
+    
+    /**
+     * Log message to stop on AQ
+     */
+    @LogLevel("INFO")
+    void stopOnAQHost(String message);        
     
     /**
      * Logs the Exception

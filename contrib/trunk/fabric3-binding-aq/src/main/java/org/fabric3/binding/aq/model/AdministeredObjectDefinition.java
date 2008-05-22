@@ -29,6 +29,9 @@ import org.fabric3.scdl.ModelObject;
  */
 public class AdministeredObjectDefinition extends ModelObject {
 
+  
+    private static final long serialVersionUID = -4185839724999915674L;
+
     /**
      * Destination type.
      */
