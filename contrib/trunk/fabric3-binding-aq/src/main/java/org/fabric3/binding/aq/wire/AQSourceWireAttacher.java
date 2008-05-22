@@ -146,7 +146,7 @@ public class AQSourceWireAttacher implements SourceWireAttacher<AQWireSourceDefi
     }
 
     /**
-     * Start the process for to listen on the queues
+     * Start the process to listen on the queues
      */
     private void startProcessing(final URI serviceNamespace) {
         monitor.onSourceWire(" Attaching Source for " + serviceNamespace);
