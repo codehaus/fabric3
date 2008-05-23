@@ -33,6 +33,6 @@ public class MissingCallback extends ValidationFailure<Class<?>> {
     }
 
     public String getMessage() {
-        return "No interface was specified in the @Callback annotation on the service interface " + getModelObject().getName();
+        return "No interface was specified in the @Callback annotation on the service interface " + getValidatable().getName();
     }
 }

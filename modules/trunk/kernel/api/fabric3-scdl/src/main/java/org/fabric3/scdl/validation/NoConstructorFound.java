@@ -27,6 +27,6 @@ public class NoConstructorFound extends ValidationFailure<Class<?>> {
     }
 
     public String getMessage() {
-        return "The class has multiple constructors, use @Constructor to indicate which to use: " + getModelObject();
+        return "The class has multiple constructors, use @Constructor to indicate which to use: " + getValidatable();
     }
 }

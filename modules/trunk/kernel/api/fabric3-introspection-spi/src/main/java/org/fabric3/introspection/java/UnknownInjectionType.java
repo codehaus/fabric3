@@ -43,7 +43,7 @@ public class UnknownInjectionType extends ValidationFailure<InjectionSite> {
     }
 
     public String getMessage() {
-        InjectionSite site = getModelObject();
+        InjectionSite site = getValidatable();
         if (site instanceof FieldInjectionSite) {
             FieldInjectionSite field = (FieldInjectionSite) site;
             return "Unknow injection type " + type + " on field " + field.getName() + " in class " + clazz;

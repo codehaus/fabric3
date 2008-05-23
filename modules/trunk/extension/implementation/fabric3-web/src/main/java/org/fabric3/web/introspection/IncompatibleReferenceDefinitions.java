@@ -32,6 +32,6 @@ public class IncompatibleReferenceDefinitions extends ValidationFailure<String> 
     }
 
     public String getMessage() {
-        return "Reference contracts do not match for reference: " + getModelObject();
+        return "Reference contracts do not match for reference: " + getValidatable();
     }
 }

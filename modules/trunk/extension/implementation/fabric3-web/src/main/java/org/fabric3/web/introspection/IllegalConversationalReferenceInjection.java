@@ -35,6 +35,6 @@ public class IllegalConversationalReferenceInjection extends ValidationFailure<R
     }
 
     public String getMessage() {
-        return "Cannot inject a conversational serivce for reference " + getModelObject().getName() + " on servlet " + servletName;
+        return "Cannot inject a conversational serivce for reference " + getValidatable().getName() + " on servlet " + servletName;
     }
 }

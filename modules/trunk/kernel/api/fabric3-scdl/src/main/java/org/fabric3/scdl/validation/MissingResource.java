@@ -34,6 +34,6 @@ public class MissingResource extends ValidationFailure<String> {
     }
 
     public String getMessage() {
-        return description + ": " + getModelObject();
+        return description + ": " + getValidatable();
     }
 }

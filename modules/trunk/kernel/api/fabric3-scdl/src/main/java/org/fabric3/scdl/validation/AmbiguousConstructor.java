@@ -27,6 +27,6 @@ public class AmbiguousConstructor extends ValidationFailure<Class<?>> {
     }
 
     public String getMessage() {
-        return "Multiple constructors are annotated with @Constructor in class: " + getModelObject();
+        return "Multiple constructors are annotated with @Constructor in class: " + getValidatable();
     }
 }

@@ -34,6 +34,6 @@ public class InvalidConversationalOperation extends ValidationFailure<Method> {
     }
 
     public String getMessage() {
-        return "Method is marked as end conversation but contract is not conversational: " + getModelObject();
+        return "Method is marked as end conversation but contract is not conversational: " + getValidatable();
     }
 }

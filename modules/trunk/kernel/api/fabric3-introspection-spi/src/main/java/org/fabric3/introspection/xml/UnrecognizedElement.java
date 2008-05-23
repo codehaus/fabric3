@@ -38,7 +38,7 @@ public class UnrecognizedElement extends XmlValidationFailure<QName> {
     }
 
     public String getMessage() {
-        StringBuffer b = new StringBuffer("The element ").append(getModelObject()).append(" specified in ").append(getResourceURI()).append(
+        StringBuffer b = new StringBuffer("The element ").append(getValidatable()).append(" specified in ").append(getResourceURI()).append(
                 " at ").append(getLine()).append(",").append(getColumn()).append(" was not recognized. If this is not a typo, check to").append(
                 " ensure extensions are configured properly.");
         return b.toString();

@@ -34,7 +34,7 @@ public class OverloadedOperation extends ValidationFailure<Method> {
     }
 
     public String getMessage() {
-        return "Overloaded operation not allowed on remotable interface: " + getModelObject();
+        return "Overloaded operation not allowed on remotable interface: " + getValidatable();
     }
 
 }

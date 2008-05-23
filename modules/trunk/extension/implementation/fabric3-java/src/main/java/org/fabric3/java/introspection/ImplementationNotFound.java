@@ -30,6 +30,6 @@ public class ImplementationNotFound extends ValidationFailure<JavaImplementation
     }
 
     public String getMessage() {
-        return "Implementation class not found: " + getModelObject().getImplementationClass();
+        return "Implementation class not found: " + getValidatable().getImplementationClass();
     }
 }
