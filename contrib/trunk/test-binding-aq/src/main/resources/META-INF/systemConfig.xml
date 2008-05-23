@@ -1,9 +1,9 @@
 <config>
-    <testDsConfig>
+    <aqDsConfig>
         <keys>AQDataSource</keys>
         <driver>oracle.jdbc.driver.OracleDriver</driver>
-        <url>{URL}</url>
-        <user></user>
-        <password></password>
-    </testDsConfig>    
+        <url>$OwnURL</url>
+        <user>$Username</user>
+        <password>$Password</password>
+    </aqDsConfig>    
 </config>
