@@ -33,7 +33,6 @@ import org.fabric3.binding.aq.model.DestinationDefinition;
 import org.fabric3.binding.aq.model.DestinationType;
 import org.fabric3.binding.aq.model.ResponseDefinition;
 import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.introspection.xml.LoaderException;
 import org.fabric3.introspection.xml.LoaderHelper;
 import org.fabric3.introspection.xml.TypeLoader;
 import org.osoa.sca.Constants;
