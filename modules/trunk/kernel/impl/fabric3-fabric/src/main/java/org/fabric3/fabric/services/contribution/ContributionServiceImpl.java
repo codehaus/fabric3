@@ -39,12 +39,13 @@ import org.fabric3.host.contribution.ContributionNotFoundException;
 import org.fabric3.host.contribution.ContributionService;
 import org.fabric3.host.contribution.ContributionSource;
 import org.fabric3.host.contribution.Deployable;
+import org.fabric3.introspection.validation.InvalidContributionException;
 import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.Composite;
 import org.fabric3.scdl.CompositeImplementation;
+import org.fabric3.scdl.DefaultValidationContext;
 import org.fabric3.scdl.Implementation;
 import org.fabric3.scdl.ValidationContext;
-import org.fabric3.scdl.DefaultValidationContext;
 import org.fabric3.spi.services.archive.ArchiveStore;
 import org.fabric3.spi.services.archive.ArchiveStoreException;
 import org.fabric3.spi.services.contenttype.ContentTypeResolutionException;
@@ -55,7 +56,6 @@ import org.fabric3.spi.services.contribution.MetaDataStoreException;
 import org.fabric3.spi.services.contribution.ProcessorRegistry;
 import org.fabric3.spi.services.contribution.Resource;
 import org.fabric3.spi.services.contribution.ResourceElement;
-import org.fabric3.introspection.validation.InvalidCompositeException;
 
 /**
  * Default ContributionService implementation
@@ -271,7 +271,7 @@ public class ContributionServiceImpl implements ContributionService {
             processorRegistry.processContribution(contribution, context, loader);
             if (context.hasErrors()) {
                 // xcv should throw a different, specific exception
-                throw new ContributionException(new InvalidCompositeException(null, context.getErrors()));
+                throw new ContributionException(new InvalidContributionException(context.getErrors()));
             }
             addContributionUri(contribution);
         } catch (MetaDataStoreException e) {
