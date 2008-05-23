@@ -20,6 +20,7 @@ import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamReader;
 
 import org.fabric3.host.contribution.ContributionException;
+import org.fabric3.scdl.ValidationContext;
 
 /**
  * A registry of XmlElementManifestProcessors.
@@ -47,8 +48,9 @@ public interface XmlManifestProcessorRegistry {
      * @param name     the document element type to dispatch on
      * @param manifest the manifest being processed
      * @param reader   the reader position on the document element start tag
+     * @param context  the context to which validation errors and warnings are reported
      * @throws ContributionException if an error occurs during processing
      */
-    void process(QName name, ContributionManifest manifest, XMLStreamReader reader) throws ContributionException;
+    void process(QName name, ContributionManifest manifest, XMLStreamReader reader, ValidationContext context) throws ContributionException;
 
 }

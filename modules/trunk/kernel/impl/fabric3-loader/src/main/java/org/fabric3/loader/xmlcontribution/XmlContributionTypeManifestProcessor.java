@@ -35,9 +35,9 @@ import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.host.contribution.Deployable;
 import org.fabric3.introspection.DefaultIntrospectionContext;
 import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.introspection.validation.InvalidContributionException;
 import org.fabric3.introspection.xml.Loader;
 import org.fabric3.introspection.xml.LoaderException;
+import org.fabric3.scdl.ValidationContext;
 import static org.fabric3.spi.Constants.FABRIC3_NS;
 import org.fabric3.spi.services.contribution.ContributionManifest;
 import org.fabric3.spi.services.contribution.Export;
@@ -69,7 +69,7 @@ public class XmlContributionTypeManifestProcessor implements XmlElementManifestP
         return XML_CONTRIBUTION;
     }
 
-    public void process(ContributionManifest manifest, XMLStreamReader reader) throws ContributionException {
+    public void process(ContributionManifest manifest, XMLStreamReader reader, ValidationContext context) throws ContributionException {
         try {
             while (true) {
                 int i = reader.next();
@@ -78,11 +78,13 @@ public class XmlContributionTypeManifestProcessor implements XmlElementManifestP
                     QName qname = reader.getName();
                     if (SCA_CONTRIBUTION.equals(qname)) {
                         ClassLoader cl = getClass().getClassLoader();
-                        IntrospectionContext context = new DefaultIntrospectionContext(cl, null, null);
-                        ContributionManifest embeddedManifest = loader.load(reader, ContributionManifest.class, context);
-                        if (context.hasErrors()) {
-                            // xcv fixme
-                            throw new ContributionException(new InvalidContributionException(context.getErrors()));
+                        IntrospectionContext childContext = new DefaultIntrospectionContext(cl, null, null);
+                        ContributionManifest embeddedManifest = loader.load(reader, ContributionManifest.class, childContext);
+                        if (childContext.hasErrors()) {
+                            context.addErrors(childContext.getErrors());
+                        }
+                        if (childContext.hasWarnings()) {
+                            context.addErrors(childContext.getWarnings());
                         }
 
                         // merge the contents

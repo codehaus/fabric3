@@ -27,16 +27,16 @@ import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.host.contribution.ContributionException;
+import org.fabric3.scdl.ValidationContext;
+import org.fabric3.services.xmlfactory.XMLFactory;
 import org.fabric3.spi.services.contribution.ContributionManifest;
 import org.fabric3.spi.services.contribution.ManifestProcessor;
 import org.fabric3.spi.services.contribution.ProcessorRegistry;
 import org.fabric3.spi.services.contribution.XmlManifestProcessorRegistry;
-import org.fabric3.services.xmlfactory.XMLFactory;
 
 /**
- * Processes XML artifacts in a contribution that contain manifest information. Dispatches to {@link
- * org.fabric3.spi.services.contribution.XmlElementManifestProcessor} based on the document element type for further
- * processing.
+ * Processes XML artifacts in a contribution that contain manifest information. Dispatches to {@link org.fabric3.spi.services.contribution.XmlElementManifestProcessor}
+ * based on the document element type for further processing.
  *
  * @version $Rev$ $Date$
  */
@@ -63,7 +63,7 @@ public class XmlManifestProcessor implements ManifestProcessor {
         return "application/xml";
     }
 
-    public void process(ContributionManifest manifest, InputStream stream) throws ContributionException {
+    public void process(ContributionManifest manifest, InputStream stream, ValidationContext context) throws ContributionException {
         XMLStreamReader reader = null;
         try {
             reader = xmlFactory.createXMLStreamReader(stream);
@@ -73,7 +73,7 @@ public class XmlManifestProcessor implements ManifestProcessor {
             if (XMLStreamConstants.END_DOCUMENT == reader.getEventType()) {
                 return;
             }
-            manifestProcessorRegistry.process(reader.getName(), manifest, reader);
+            manifestProcessorRegistry.process(reader.getName(), manifest, reader, context);
         } catch (XMLStreamException e) {
             throw new ContributionException(e);
         } finally {

@@ -46,10 +46,11 @@ public interface ContributionProcessor {
     /**
      * Processses manifest information for the contribution, including imports and exports.
      *
-     * @param contribution The contribution that will be used to hold the results from the processing
+     * @param contribution the contribution that will be used to hold the results from the processing
+     * @param context      the context to which validation errors and warnings are reported
      * @throws ContributionException if there was a problem with the contribution
      */
-    void processManifest(Contribution contribution) throws ContributionException;
+    void processManifest(Contribution contribution, ValidationContext context) throws ContributionException;
 
     /**
      * Indexes all contribution resources

@@ -25,6 +25,7 @@ import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.spi.services.contribution.ContributionManifest;
 import org.fabric3.spi.services.contribution.XmlElementManifestProcessor;
 import org.fabric3.spi.services.contribution.XmlManifestProcessorRegistry;
+import org.fabric3.scdl.ValidationContext;
 
 /**
  * Default implementation of XmlManifestProcessorRegistry.
@@ -43,12 +44,11 @@ public class XmlManifestProcessorRegistryImpl implements XmlManifestProcessorReg
         cache.remove(name);
     }
 
-    public void process(QName name, ContributionManifest manifest, XMLStreamReader reader)
-            throws ContributionException {
+    public void process(QName name, ContributionManifest manifest, XMLStreamReader reader, ValidationContext context) throws ContributionException {
         XmlElementManifestProcessor processor = cache.get(name);
         if (processor == null) {
             return;
         }
-        processor.process(manifest, reader);
+        processor.process(manifest, reader, context);
     }
 }

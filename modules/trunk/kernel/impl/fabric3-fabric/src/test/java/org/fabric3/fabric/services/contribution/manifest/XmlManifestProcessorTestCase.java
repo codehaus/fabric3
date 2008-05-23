@@ -28,6 +28,8 @@ import org.fabric3.services.xmlfactory.impl.XMLFactoryImpl;
 import org.fabric3.spi.services.contribution.ContributionManifest;
 import org.fabric3.spi.services.contribution.XmlManifestProcessorRegistry;
 import org.fabric3.services.xmlfactory.XMLFactory;
+import org.fabric3.scdl.ValidationContext;
+import org.fabric3.scdl.DefaultValidationContext;
 
 /**
  * @version $Rev$ $Date$
@@ -44,13 +46,17 @@ public class XmlManifestProcessorTestCase extends TestCase {
 
     public void testDispatch() throws Exception {
         InputStream stream = new ByteArrayInputStream(XML);
-        processor.process(new ContributionManifest(), stream);
+        ContributionManifest manifest = new ContributionManifest();
+        ValidationContext context = new DefaultValidationContext();
+        processor.process(manifest, stream, context);
         EasyMock.verify(registry);
     }
 
     public void testDTDDispatch() throws Exception {
         InputStream stream = new ByteArrayInputStream(XML_DTD);
-        processor.process(new ContributionManifest(), stream);
+        ContributionManifest manifest = new ContributionManifest();
+        ValidationContext context = new DefaultValidationContext();
+        processor.process(manifest, stream, context);
         EasyMock.verify(registry);
     }
 
@@ -60,7 +66,8 @@ public class XmlManifestProcessorTestCase extends TestCase {
         registry = EasyMock.createMock(XmlManifestProcessorRegistry.class);
         registry.process(EasyMock.eq(QNAME),
                          EasyMock.isA(ContributionManifest.class),
-                         EasyMock.isA(XMLStreamReader.class));
+                         EasyMock.isA(XMLStreamReader.class),
+                         EasyMock.isA(ValidationContext.class));
         EasyMock.replay(registry);
         processor = new XmlManifestProcessor(null, registry, factory);
 

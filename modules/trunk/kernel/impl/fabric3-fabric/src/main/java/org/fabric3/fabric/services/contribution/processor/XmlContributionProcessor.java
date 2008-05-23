@@ -77,7 +77,7 @@ public class XmlContributionProcessor implements ContributionProcessor {
         return CONTENT_TYPES;
     }
 
-    public void processManifest(Contribution contribution) throws ContributionException {
+    public void processManifest(Contribution contribution, ValidationContext context) throws ContributionException {
         ContributionManifest manifest = new ContributionManifest();
         contribution.setManifest(manifest);
         InputStream stream = null;
@@ -88,7 +88,7 @@ public class XmlContributionProcessor implements ContributionProcessor {
             reader = xmlFactory.createXMLStreamReader(stream);
             reader.nextTag();
             QName name = reader.getName();
-            manifestProcessorRegistry.process(name, manifest, reader);
+            manifestProcessorRegistry.process(name, manifest, reader, context);
         } catch (IOException e) {
             String uri = contribution.getUri().toString();
             throw new ContributionException("Error processing contribution " + uri, e);

@@ -56,6 +56,8 @@ import org.fabric3.runtime.standalone.StandaloneRuntime;
 import org.fabric3.scdl.Composite;
 import org.fabric3.scdl.Include;
 import org.fabric3.scdl.Scope;
+import org.fabric3.scdl.ValidationContext;
+import org.fabric3.scdl.DefaultValidationContext;
 import org.fabric3.spi.assembly.ActivateException;
 import org.fabric3.spi.assembly.Assembly;
 import org.fabric3.spi.assembly.AssemblyException;
@@ -76,6 +78,7 @@ import org.fabric3.spi.services.definitions.DefinitionsRegistry;
 import org.fabric3.spi.services.discovery.DiscoveryException;
 import org.fabric3.spi.services.discovery.DiscoveryService;
 import org.fabric3.spi.services.work.WorkScheduler;
+import org.fabric3.introspection.validation.InvalidContributionException;
 
 /**
  * Implementation of a coordinator for the standalone runtime.
@@ -426,14 +429,24 @@ public class StandaloneCoordinator implements RuntimeLifecycleCoordinator<Standa
             if (stream == null) {
                 throw new InitializationException("fabric3-spi jar is missing pom.xml file");
             }
+            ValidationContext context = new DefaultValidationContext();
             XmlManifestProcessor processor =
                     runtime.getSystemComponent(XmlManifestProcessor.class, ComponentNames.XML_MANIFEST_PROCESSOR);
-            processor.process(manifest, stream);
+            processor.process(manifest, stream, context);
+            if (context.hasErrors()) {
+                context.addErrors(context.getErrors());
+                throw new InitializationException(new InvalidContributionException(context.getErrors()));
+            }
             stream = bootClassLoader.getResourceAsStream("META-INF/maven/org.codehaus.fabric3/fabric3-pojo/pom.xml");
             if (stream == null) {
                 throw new InitializationException("fabric3-pojo jar is missing pom.xml file");
             }
-            processor.process(manifest, stream);
+            context = new DefaultValidationContext();
+            processor.process(manifest, stream, context);
+            if (context.hasErrors()) {
+                context.addErrors(context.getErrors());
+                throw new InitializationException(new InvalidContributionException(context.getErrors()));
+            }
             contribution.setManifest(manifest);
             MetaDataStore store = runtime.getSystemComponent(MetaDataStore.class, ComponentNames.METADATA_STORE_URI);
             store.store(contribution);

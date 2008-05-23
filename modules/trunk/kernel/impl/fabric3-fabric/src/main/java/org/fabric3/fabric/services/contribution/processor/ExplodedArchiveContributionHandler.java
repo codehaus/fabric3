@@ -33,9 +33,9 @@ import org.fabric3.host.contribution.Constants;
 import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.introspection.DefaultIntrospectionContext;
 import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.introspection.validation.InvalidContributionException;
 import org.fabric3.introspection.xml.Loader;
 import org.fabric3.introspection.xml.LoaderException;
+import org.fabric3.scdl.ValidationContext;
 import org.fabric3.spi.services.contenttype.ContentTypeResolutionException;
 import org.fabric3.spi.services.contenttype.ContentTypeResolver;
 import org.fabric3.spi.services.contribution.Action;
@@ -69,19 +69,21 @@ public class ExplodedArchiveContributionHandler implements ArchiveContributionHa
         return Constants.FOLDER_CONTENT_TYPE.equals(contribution.getContentType());
     }
 
-    public void processManifest(Contribution contribution) throws ContributionException {
+    public void processManifest(Contribution contribution, final ValidationContext context) throws ContributionException {
         ContributionManifest manifest;
         try {
             URL sourceUrl = contribution.getLocation();
             URL manifestUrl = new URL(sourceUrl.toString() + "/META-INF/sca-contribution.xml");
             ClassLoader cl = getClass().getClassLoader();
             URI uri = contribution.getUri();
-            IntrospectionContext context = new DefaultIntrospectionContext(cl, uri, null);
-            manifest = loader.load(manifestUrl, ContributionManifest.class, context);
-            if (context.hasErrors()) {
-                throw new InvalidContributionException(context.getErrors());
+            IntrospectionContext childContext = new DefaultIntrospectionContext(cl, uri, null);
+            manifest = loader.load(manifestUrl, ContributionManifest.class, childContext);
+            if (childContext.hasErrors()) {
+                context.addErrors(childContext.getErrors());
             }
-
+            if (childContext.hasWarnings()) {
+                context.addErrors(childContext.getWarnings());
+            }
         } catch (LoaderException e) {
             if (e.getCause() instanceof FileNotFoundException) {
                 manifest = new ContributionManifest();
@@ -90,9 +92,6 @@ public class ExplodedArchiveContributionHandler implements ArchiveContributionHa
             }
         } catch (MalformedURLException e) {
             manifest = new ContributionManifest();
-        } catch (InvalidContributionException e) {
-            //xcv fixme
-            throw new ContributionException(e);
         }
         contribution.setManifest(manifest);
 
@@ -102,7 +101,7 @@ public class ExplodedArchiveContributionHandler implements ArchiveContributionHa
                 InputStream stream = null;
                 try {
                     stream = url.openStream();
-                    registry.processManifestArtifact(contribution.getManifest(), contentType, stream);
+                    registry.processManifestArtifact(contribution.getManifest(), contentType, stream, context);
                 } catch (IOException e) {
                     throw new ContributionException(e);
                 } finally {

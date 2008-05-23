@@ -104,7 +104,13 @@ public class ContributionServiceImpl implements ContributionService {
         }
         for (Contribution contribution : contributions) {
             // process any SCA manifest information, including imports and exports
-            processorRegistry.processManifest(contribution);
+            ValidationContext context = new DefaultValidationContext();
+            processorRegistry.processManifest(contribution, context);
+            if (context.hasErrors()) {
+                context.addErrors(context.getErrors());
+                throw new ContributionException(new InvalidContributionException(context.getErrors()));
+            }
+
         }
         // order the contributions based on their dependencies
         contributions = dependencyService.order(contributions);
@@ -122,7 +128,12 @@ public class ContributionServiceImpl implements ContributionService {
 
     public URI contribute(ContributionSource source) throws ContributionException {
         Contribution contribution = store(source);
-        processorRegistry.processManifest(contribution);
+        ValidationContext context = new DefaultValidationContext();
+        processorRegistry.processManifest(contribution, context);
+        if (context.hasErrors()) {
+            context.addErrors(context.getErrors());
+            throw new ContributionException(new InvalidContributionException(context.getErrors()));
+        }
         ClassLoader loader = contributionLoader.loadContribution(contribution);
         processContents(contribution, loader);
         return contribution.getUri();

@@ -25,6 +25,8 @@ import junit.framework.TestCase;
 import org.easymock.EasyMock;
 
 import org.fabric3.spi.services.contribution.ContributionManifest;
+import org.fabric3.scdl.ValidationContext;
+import org.fabric3.scdl.DefaultValidationContext;
 
 /**
  * @version $Rev$ $Date$
@@ -36,7 +38,8 @@ public class MavenPOMProcessorTestCase extends TestCase {
 
     public void testParse() throws Exception {
         ContributionManifest manifest = new ContributionManifest();
-        processor.process(manifest, reader);
+        ValidationContext context = new DefaultValidationContext();
+        processor.process(manifest, reader, context);
         MavenExport export = (MavenExport) manifest.getExports().get(0);
         assertEquals("foo", export.getGroupId());
         assertEquals("bar", export.getArtifactId());

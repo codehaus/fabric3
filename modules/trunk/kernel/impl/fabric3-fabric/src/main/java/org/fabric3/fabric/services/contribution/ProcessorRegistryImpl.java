@@ -79,23 +79,22 @@ public class ProcessorRegistryImpl implements ProcessorRegistry {
         manifestProcessorCache.remove(contentType);
     }
 
-    public void processManifest(Contribution contribution) throws ContributionException {
+    public void processManifest(Contribution contribution, ValidationContext context) throws ContributionException {
         String contentType = contribution.getContentType();
         ContributionProcessor processor = contributionProcessorCache.get(contentType);
         if (processor == null) {
             String source = contribution.getUri().toString();
             throw new UnsupportedContentTypeException("Type " + contentType + "in contribution " + source + " not supported", contentType);
         }
-        processor.processManifest(contribution);
+        processor.processManifest(contribution, context);
 
     }
 
-    public void processManifestArtifact(ContributionManifest manifest,
-                                        String contentType,
-                                        InputStream inputStream) throws ContributionException {
+    public void processManifestArtifact(ContributionManifest manifest, String contentType, InputStream inputStream, ValidationContext context)
+            throws ContributionException {
         ManifestProcessor processor = manifestProcessorCache.get(contentType);
         if (processor != null) {
-            processor.process(manifest, inputStream);
+            processor.process(manifest, inputStream, context);
         }
     }
 

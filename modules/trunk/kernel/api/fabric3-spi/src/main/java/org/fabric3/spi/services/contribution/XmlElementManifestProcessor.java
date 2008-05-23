@@ -20,11 +20,11 @@ import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamReader;
 
 import org.fabric3.host.contribution.ContributionException;
+import org.fabric3.scdl.ValidationContext;
 
 /**
- * Processes an XML-based entry that contains manifest information. Invoked when a contribution is introspected and an
- * XML content type is encountered with a document element type corresponding to the one handled by the processor
- * implementation.
+ * Processes an XML-based entry that contains manifest information. Invoked when a contribution is introspected and an XML content type is encountered
+ * with a document element type corresponding to the one handled by the processor implementation.
  *
  * @version $Rev$ $Date$
  */
@@ -42,7 +42,8 @@ public interface XmlElementManifestProcessor {
      *
      * @param manifest the contribution manifest to update
      * @param reader   the reader positioned at the first element of the document
+     * @param context  the context to which validation errors and warnings are reported
      * @throws ContributionException if an error occurs processing
      */
-    void process(ContributionManifest manifest, XMLStreamReader reader) throws ContributionException;
+    void process(ContributionManifest manifest, XMLStreamReader reader, ValidationContext context) throws ContributionException;
 }

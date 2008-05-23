@@ -27,6 +27,7 @@ import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.host.contribution.ContributionException;
+import org.fabric3.scdl.ValidationContext;
 import org.fabric3.spi.services.contribution.ContributionManifest;
 import org.fabric3.spi.services.contribution.XmlElementManifestProcessor;
 import org.fabric3.spi.services.contribution.XmlManifestProcessorRegistry;
@@ -62,7 +63,7 @@ public class MavenPOMProcessor implements XmlElementManifestProcessor {
         return PROJECT;
     }
 
-    public void process(ContributionManifest manifest, XMLStreamReader reader) throws ContributionException {
+    public void process(ContributionManifest manifest, XMLStreamReader reader, ValidationContext context) throws ContributionException {
         String groupId = null;
         String artifactId = null;
         String version;
@@ -88,13 +89,13 @@ public class MavenPOMProcessor implements XmlElementManifestProcessor {
                     } else if (VERSION.equals(qname)) {
                         version = reader.getElementText();
                         if (groupId == null) {
-                            throw new InvalidPOMException("Group id not specified");
+                            context.addError(new InvalidPOM("Group id not specified", "groupId", reader));
                         }
                         if (artifactId == null) {
-                            throw new InvalidPOMException("Artifact id not specified");
+                            context.addError(new InvalidPOM("Artifact id not specified", "artifactId", reader));
                         }
                         if (version == null) {
-                            throw new InvalidPOMException("Version not specified");
+                            context.addError(new InvalidPOM("Version not specified", "version", reader));
                         }
 
                         MavenExport export = new MavenExport();
@@ -110,13 +111,13 @@ public class MavenPOMProcessor implements XmlElementManifestProcessor {
                         return;
                     } else if (DEPENDENCIES.equals(qname)) {
                         // if we reached here, version was never specified
-                        throw new InvalidPOMException("Version not specified");
+                        context.addError(new InvalidPOM("Version not specified", "version", reader));
                     }
                     break;
                 case END_ELEMENT:
                     if (PROJECT.equals(reader.getName())) {
                         // if we reached here, version was never specified and there are no dependencies
-                        throw new InvalidPOMException("Version not specified");
+                        context.addError(new InvalidPOM("Version not specified", "version", reader));
                     }
                 }
 

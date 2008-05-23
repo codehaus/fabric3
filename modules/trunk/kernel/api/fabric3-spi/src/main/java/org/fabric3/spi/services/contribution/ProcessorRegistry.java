@@ -76,10 +76,11 @@ public interface ProcessorRegistry {
     /**
      * Dispatches to a {@link ContributionProcessor} to process manifest information in a contribution.
      *
-     * @param contribution The contribution
+     * @param contribution the contribution
+     * @param context      the context to which validation errors and warnings are reported
      * @throws ContributionException if there was a problem processing the manifest
      */
-    void processManifest(Contribution contribution) throws ContributionException;
+    void processManifest(Contribution contribution, ValidationContext context) throws ContributionException;
 
     /**
      * Dispatches to a {@link ManifestProcessor} to process a manifest artifact contaned in a contribution.
@@ -87,9 +88,11 @@ public interface ProcessorRegistry {
      * @param manifest    the manifest to update
      * @param contentType the artifact MIME type
      * @param inputStream the input stream for the artifact
+     * @param context     the context to which validation errors and warnings are reported
      * @throws ContributionException if there was a problem processing the artifact
      */
-    void processManifestArtifact(ContributionManifest manifest, String contentType, InputStream inputStream) throws ContributionException;
+    void processManifestArtifact(ContributionManifest manifest, String contentType, InputStream inputStream, ValidationContext context)
+            throws ContributionException;
 
     /**
      * Dispatches to a {@link ContributionProcessor} to index a contribution.

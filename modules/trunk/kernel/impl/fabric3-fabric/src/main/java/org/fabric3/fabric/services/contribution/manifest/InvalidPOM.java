@@ -16,17 +16,18 @@
  */
 package org.fabric3.fabric.services.contribution.manifest;
 
-import org.fabric3.host.contribution.ContributionException;
+import javax.xml.stream.XMLStreamReader;
+
+import org.fabric3.introspection.xml.XmlValidationFailure;
 
 /**
  * Raised when an attempt is made to parse an invalid Maven POM.
  *
  * @version $Rev$ $Date$
  */
-public class InvalidPOMException extends ContributionException {
-    private static final long serialVersionUID = -6660171466496984645L;
+public class InvalidPOM extends XmlValidationFailure<String> {
 
-    public InvalidPOMException(String message) {
-        super(message, (String) null);
+    public InvalidPOM(String message, String element, XMLStreamReader reader) {
+        super(message, element, reader);
     }
 }

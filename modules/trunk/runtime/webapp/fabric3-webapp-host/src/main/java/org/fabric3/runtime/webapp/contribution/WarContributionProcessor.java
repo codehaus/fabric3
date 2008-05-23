@@ -87,7 +87,7 @@ public class WarContributionProcessor implements ContributionProcessor {
         }
     }
 
-    public void processManifest(Contribution contribution) throws ContributionException {
+    public void processManifest(Contribution contribution, final ValidationContext context) throws ContributionException {
         URL manifestURL;
         try {
             manifestURL = info.getServletContext().getResource("/WEB-INF/sca-contribution.xml");
@@ -104,8 +104,14 @@ public class WarContributionProcessor implements ContributionProcessor {
 
             ClassLoader cl = getClass().getClassLoader();
             URI uri = contribution.getUri();
-            IntrospectionContext context = new DefaultIntrospectionContext(cl, uri, null);
-            ContributionManifest manifest = loader.load(manifestURL, ContributionManifest.class, context);
+            IntrospectionContext childContext = new DefaultIntrospectionContext(cl, uri, null);
+            ContributionManifest manifest = loader.load(manifestURL, ContributionManifest.class, childContext);
+            if (childContext.hasErrors()) {
+                context.addErrors(childContext.getErrors());
+            }
+            if (childContext.hasWarnings()) {
+                context.addErrors(childContext.getWarnings());
+            }
             contribution.setManifest(manifest);
         } catch (LoaderException e) {
             throw new ContributionException(e);
@@ -117,7 +123,7 @@ public class WarContributionProcessor implements ContributionProcessor {
                 InputStream stream = null;
                 try {
                     stream = url.openStream();
-                    registry.processManifestArtifact(contribution.getManifest(), contentType, stream);
+                    registry.processManifestArtifact(contribution.getManifest(), contentType, stream, context);
                 } catch (IOException e) {
                     throw new ContributionException(e);
                 } finally {

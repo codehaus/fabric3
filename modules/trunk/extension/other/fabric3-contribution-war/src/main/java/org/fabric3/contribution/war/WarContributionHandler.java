@@ -19,35 +19,35 @@
 
 package org.fabric3.contribution.war;
 
-import java.net.URL;
-import java.net.URI;
-import java.net.MalformedURLException;
 import java.io.FileNotFoundException;
-import java.io.InputStream;
 import java.io.IOException;
-import java.util.zip.ZipInputStream;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URL;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 
-import org.osoa.sca.annotations.Reference;
+import org.osoa.sca.annotations.Destroy;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
-import org.osoa.sca.annotations.Destroy;
+import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.host.contribution.ContributionException;
+import org.fabric3.api.annotation.Monitor;
 import org.fabric3.host.contribution.Constants;
+import org.fabric3.host.contribution.ContributionException;
+import org.fabric3.introspection.DefaultIntrospectionContext;
+import org.fabric3.introspection.IntrospectionContext;
+import org.fabric3.introspection.xml.Loader;
+import org.fabric3.introspection.xml.LoaderException;
+import org.fabric3.scdl.ValidationContext;
+import org.fabric3.spi.services.contenttype.ContentTypeResolutionException;
+import org.fabric3.spi.services.contenttype.ContentTypeResolver;
 import org.fabric3.spi.services.contribution.Action;
 import org.fabric3.spi.services.contribution.ArchiveContributionHandler;
 import org.fabric3.spi.services.contribution.Contribution;
-import org.fabric3.spi.services.contribution.ProcessorRegistry;
 import org.fabric3.spi.services.contribution.ContributionManifest;
-import org.fabric3.spi.services.contenttype.ContentTypeResolver;
-import org.fabric3.spi.services.contenttype.ContentTypeResolutionException;
-import org.fabric3.introspection.xml.Loader;
-import org.fabric3.introspection.xml.LoaderException;
-import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.introspection.DefaultIntrospectionContext;
-import org.fabric3.introspection.validation.InvalidContributionException;
-import org.fabric3.api.annotation.Monitor;
+import org.fabric3.spi.services.contribution.ProcessorRegistry;
 
 /**
  * Introspects a WAR contribution, delegating to ResourceProcessors for handling leaf-level children.
@@ -89,17 +89,20 @@ public class WarContributionHandler implements ArchiveContributionHandler {
         return sourceUrl.endsWith(".war");
     }
 
-    public void processManifest(Contribution contribution) throws ContributionException {
+    public void processManifest(Contribution contribution, final ValidationContext context) throws ContributionException {
         ContributionManifest manifest;
         try {
             URL sourceUrl = contribution.getLocation();
             URL manifestURL = new URL("jar:" + sourceUrl.toExternalForm() + "!/WEB-INF/sca-contribution.xml");
             ClassLoader cl = getClass().getClassLoader();
             URI uri = contribution.getUri();
-            IntrospectionContext context = new DefaultIntrospectionContext(cl, uri, null);
-            manifest = loader.load(manifestURL, ContributionManifest.class, context);
-            if (context.hasErrors()) {
-                throw new InvalidContributionException(context.getErrors());
+            IntrospectionContext childContext = new DefaultIntrospectionContext(cl, uri, null);
+            manifest = loader.load(manifestURL, ContributionManifest.class, childContext);
+            if (childContext.hasErrors()) {
+                context.addErrors(childContext.getErrors());
+            }
+            if (childContext.hasWarnings()) {
+                context.addErrors(childContext.getWarnings());
             }
         } catch (LoaderException e) {
             if (e.getCause() instanceof FileNotFoundException) {
@@ -109,9 +112,6 @@ public class WarContributionHandler implements ArchiveContributionHandler {
             }
         } catch (MalformedURLException e) {
             manifest = new ContributionManifest();
-        } catch (InvalidContributionException e) {
-            //xcv fixme
-            throw new ContributionException(e);
         }
         contribution.setManifest(manifest);
 
@@ -120,7 +120,7 @@ public class WarContributionHandler implements ArchiveContributionHandler {
                 InputStream stream = null;
                 try {
                     stream = url.openStream();
-                    registry.processManifestArtifact(contribution.getManifest(), contentType, stream);
+                    registry.processManifestArtifact(contribution.getManifest(), contentType, stream, context);
                 } catch (IOException e) {
                     throw new ContributionException(e);
                 } finally {

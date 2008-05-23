@@ -54,9 +54,9 @@ public class ArchiveContributionProcessor extends AbstractContributionProcessor 
         return CONTENT_TYPES;
     }
 
-    public void processManifest(Contribution contribution) throws ContributionException {
+    public void processManifest(Contribution contribution, ValidationContext context) throws ContributionException {
         ArchiveContributionHandler handler = getHandler(contribution);
-        handler.processManifest(contribution);
+        handler.processManifest(contribution, context);
     }
 
     public void index(Contribution contribution) throws ContributionException {

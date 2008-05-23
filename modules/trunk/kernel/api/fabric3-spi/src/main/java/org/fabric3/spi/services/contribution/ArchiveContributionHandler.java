@@ -19,6 +19,7 @@
 package org.fabric3.spi.services.contribution;
 
 import org.fabric3.host.contribution.ContributionException;
+import org.fabric3.scdl.ValidationContext;
 
 /**
  * Responsible for handling the specifics of an archive-based contribution.
@@ -47,9 +48,10 @@ public interface ArchiveContributionHandler {
      * Processes the manifest
      *
      * @param contribution the contribution
+     * @param context      the context to which validation errors and warnings are reported
      * @throws ContributionException if an error occurs processing the manifest
      */
-    void processManifest(Contribution contribution) throws ContributionException;
+    void processManifest(Contribution contribution, ValidationContext context) throws ContributionException;
 
     /**
      * Iterates through a contribution calling the supplied action when a contained artifact is encountered.
