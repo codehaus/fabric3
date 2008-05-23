@@ -20,6 +20,8 @@ package org.fabric3.spi.services.contribution;
 
 import java.net.URI;
 
+import org.fabric3.scdl.ValidationContext;
+
 /**
  * Implementations store contribution metadata
  *
@@ -46,6 +48,7 @@ public interface MetaDataStore {
 
     /**
      * Removes the contribution metadata
+     *
      * @param contributionUri the contribution uri
      */
     void remove(URI contributionUri);
@@ -56,8 +59,9 @@ public interface MetaDataStore {
      *
      * @param symbol the symbol used to represent the resource element.
      * @return the resource element or null if not found
+     * @throws MetaDataStoreException if an error occurs during resolution
      */
-    <S extends Symbol> ResourceElement<S, ?> resolve(S symbol);
+    <S extends Symbol> ResourceElement<S, ?> resolve(S symbol) throws MetaDataStoreException;
 
     /**
      * Resolves the containing resource for a resource element symbol against the given contribution symbol space.
@@ -74,10 +78,12 @@ public interface MetaDataStore {
      * @param contributionUri the contribution URI to resolve against
      * @param type            the class representing the resource
      * @param symbol          the symbol used to represent the resource element.
+     * @param context         the context to which validation errors and warnings are reported
      * @return the resource element or null if not found
      * @throws MetaDataStoreException if an error occurs during resolution
      */
-    <S extends Symbol, V> ResourceElement<S, V> resolve(URI contributionUri, Class<V> type, S symbol) throws MetaDataStoreException;
+    <S extends Symbol, V> ResourceElement<S, V> resolve(URI contributionUri, Class<V> type, S symbol, ValidationContext context)
+            throws MetaDataStoreException;
 
     /**
      * Resolves an import to a matching export

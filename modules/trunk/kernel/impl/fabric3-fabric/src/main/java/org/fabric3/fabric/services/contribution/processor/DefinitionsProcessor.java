@@ -26,6 +26,7 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.host.contribution.ContributionException;
+import org.fabric3.scdl.ValidationContext;
 import org.fabric3.spi.services.contribution.Contribution;
 import org.fabric3.spi.services.contribution.Resource;
 import org.fabric3.spi.services.contribution.XmlProcessor;
@@ -52,12 +53,13 @@ public class DefinitionsProcessor implements XmlProcessor {
         return DEFINITIONS;
     }
 
-    public void processContent(Contribution contribution, XMLStreamReader reader, ClassLoader cl) throws ContributionException {
+    public void processContent(Contribution contribution, ValidationContext context, XMLStreamReader reader, ClassLoader cl)
+            throws ContributionException {
         try {
             URI uri = contribution.getUri();
             assert contribution.getResources().size() == 1;
             Resource resource = contribution.getResources().get(0);
-            loader.load(reader, uri, resource, cl);
+            loader.load(reader, uri, resource, context, cl);
         } catch (XMLStreamException e) {
             throw new ContributionException(e);
         }

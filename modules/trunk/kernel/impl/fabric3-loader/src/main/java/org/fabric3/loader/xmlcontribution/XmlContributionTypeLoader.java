@@ -37,10 +37,10 @@ import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.host.contribution.Deployable;
 import org.fabric3.introspection.DefaultIntrospectionContext;
 import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.introspection.validation.InvalidContributionException;
 import org.fabric3.introspection.xml.Loader;
 import org.fabric3.introspection.xml.UnrecognizedElementException;
 import org.fabric3.scdl.Composite;
+import org.fabric3.scdl.ValidationContext;
 import static org.fabric3.spi.Constants.FABRIC3_NS;
 import org.fabric3.spi.services.contribution.Contribution;
 import org.fabric3.spi.services.contribution.ContributionManifest;
@@ -79,12 +79,13 @@ public class XmlContributionTypeLoader implements XmlProcessor {
         return XML_CONTRIBUTION;
     }
 
-    public void processContent(Contribution contribution, XMLStreamReader reader, ClassLoader classLoader) throws ContributionException {
+    public void processContent(Contribution contribution, ValidationContext context, XMLStreamReader reader, ClassLoader classLoader)
+            throws ContributionException {
         List<Composite> composites = new ArrayList<Composite>();
         String targetNamespace = reader.getAttributeValue(null, "targetNamespace");
         URI contributionUri = contribution.getUri();
         try {
-            IntrospectionContext context = new DefaultIntrospectionContext(contributionUri, classLoader, targetNamespace);
+            IntrospectionContext introspectionContext = new DefaultIntrospectionContext(contributionUri, classLoader, targetNamespace);
             while (true) {
                 switch (reader.next()) {
                 case START_ELEMENT:
@@ -92,11 +93,7 @@ public class XmlContributionTypeLoader implements XmlProcessor {
                     Composite definition = null;
                     if (COMPOSITE.equals(qname)) {
                         try {
-                            definition = loader.load(reader, Composite.class, context);
-                            if (context.hasErrors()) {
-                                throw new ContributionException(new InvalidContributionException(context.getErrors()));
-                            }
-
+                            definition = loader.load(reader, Composite.class, introspectionContext);
                         } catch (UnrecognizedElementException e) {
                             throw new ContributionException("Error processing contribution: " + contributionUri.toString(), e);
                         }
@@ -125,6 +122,7 @@ public class XmlContributionTypeLoader implements XmlProcessor {
                             }
                             if (!found) {
                                 String id = composite.getName().toString();
+                                // xcv should this be thrown?
                                 throw new ResourceElementNotFoundException("Composite not found: " + id, id);
                             }
                         }
@@ -135,6 +133,12 @@ public class XmlContributionTypeLoader implements XmlProcessor {
                                 Deployable deployable = new Deployable(composite.getName(), Constants.COMPOSITE_TYPE);
                                 manifest.addDeployable(deployable);
                             }
+                        }
+                        if (introspectionContext.hasErrors()) {
+                            context.addErrors(introspectionContext.getErrors());
+                        }
+                        if (introspectionContext.hasWarnings()) {
+                            context.addErrors(introspectionContext.getWarnings());
                         }
                         return;
                     }

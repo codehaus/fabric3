@@ -39,6 +39,9 @@ import org.fabric3.spi.services.contribution.ProcessorRegistry;
 import org.fabric3.spi.services.contribution.Resource;
 import org.fabric3.spi.services.contribution.ResourceElement;
 import org.fabric3.spi.services.contribution.Symbol;
+import org.fabric3.scdl.ValidationContext;
+import org.fabric3.scdl.DefaultValidationContext;
+import org.fabric3.introspection.validation.InvalidContributionException;
 
 /**
  * Default IndexStore implementation
@@ -78,7 +81,7 @@ public class MetaDataStoreImpl implements MetaDataStore {
             List<Export> exports = contribution.getManifest().getExports();
             if (exports.size() > 0) {
                 for (Export export : exports) {
-                    exportsToContributionCache.remove(export.getType());                    
+                    exportsToContributionCache.remove(export.getType());
                 }
             }
         }
@@ -86,20 +89,26 @@ public class MetaDataStoreImpl implements MetaDataStore {
     }
 
     @SuppressWarnings({"unchecked"})
-    public <S extends Symbol> ResourceElement<S, ?> resolve(S symbol) {
+    public <S extends Symbol> ResourceElement<S, ?> resolve(S symbol) throws MetaDataStoreException {
         for (Contribution contribution : cache.values()) {
             URI contributionUri = contribution.getUri();
             ClassLoader loader = classLoaderRegistry.getClassLoader(contributionUri);
             assert loader != null;
+            ValidationContext context = new DefaultValidationContext();
             for (Resource resource : contribution.getResources()) {
                 for (ResourceElement<?, ?> element : resource.getResourceElements()) {
                     if (element.getSymbol().equals(symbol)) {
                         if (element.getValue() == null) {
                             try {
-                                processorRegistry.processResource(contributionUri, resource, loader);
+                                processorRegistry.processResource(contributionUri, resource, context, loader);
                             } catch (ContributionException e) {
-                                throw new AssertionError("Error resolving resurce");
+                                throw new AssertionError("Error resolving resource");
                             }
+                        }
+                        if (context.hasErrors()) {
+                            // xcv kind of hacky
+                            InvalidContributionException cause = new InvalidContributionException(context.getErrors());
+                            throw new MetaDataStoreException("There were errors resolving the contribution resource", cause);
                         }
                         return (ResourceElement<S, ?>) element;
                     }
@@ -123,14 +132,14 @@ public class MetaDataStoreImpl implements MetaDataStore {
         return null;
     }
 
-    public <S extends Symbol, V> ResourceElement<S, V> resolve(URI contributionUri, Class<V> type, S symbol)
+    public <S extends Symbol, V> ResourceElement<S, V> resolve(URI contributionUri, Class<V> type, S symbol, ValidationContext context)
             throws MetaDataStoreException {
         Contribution contribution = find(contributionUri);
         if (contribution == null) {
             String identifier = contributionUri.toString();
             throw new ContributionResolutionException("Contribution not found: " + identifier, identifier);
         }
-        ResourceElement<S, V> element = resolveInternal(contribution, type, symbol);
+        ResourceElement<S, V> element = resolveInternal(contribution, type, symbol, context);
         if (element != null) {
             return element;
         }
@@ -140,7 +149,7 @@ public class MetaDataStoreImpl implements MetaDataStore {
                 String identifier = contributionUri.toString();
                 throw new ContributionResolutionException("Dependent contibution not found: " + identifier, identifier);
             }
-            element = resolveInternal(resolved, type, symbol);
+            element = resolveInternal(resolved, type, symbol, context);
             if (element != null) {
                 return element;
             }
@@ -192,7 +201,8 @@ public class MetaDataStoreImpl implements MetaDataStore {
     @SuppressWarnings({"unchecked"})
     private <S extends Symbol, V> ResourceElement<S, V> resolveInternal(Contribution contribution,
                                                                         Class<V> type,
-                                                                        S symbol) throws MetaDataStoreException {
+                                                                        S symbol,
+                                                                        ValidationContext context) throws MetaDataStoreException {
         URI contributionUri = contribution.getUri();
         ClassLoader loader = classLoaderRegistry.getClassLoader(contributionUri);
         assert loader != null;
@@ -201,7 +211,7 @@ public class MetaDataStoreImpl implements MetaDataStore {
                 if (element.getSymbol().equals(symbol)) {
                     if (element.getValue() == null) {
                         try {
-                            processorRegistry.processResource(contributionUri, resource, loader);
+                            processorRegistry.processResource(contributionUri, resource, context, loader);
                         } catch (ContributionException e) {
                             String identifier = resource.getUrl().toString();
                             throw new MetaDataStoreException("Error resolving resource: " + identifier, identifier, e);

@@ -44,6 +44,7 @@ import org.fabric3.spi.services.contribution.ContributionManifest;
 import org.fabric3.spi.services.contribution.ContributionProcessor;
 import org.fabric3.spi.services.contribution.ProcessorRegistry;
 import org.fabric3.spi.services.contribution.Resource;
+import org.fabric3.scdl.ValidationContext;
 
 /**
  * Processes a WAR contribution in an embedded runtime.
@@ -79,10 +80,10 @@ public class WarContributionProcessor implements ContributionProcessor {
         registry.register(this);
     }
 
-    public void process(Contribution contribution, ClassLoader loader) throws ContributionException {
+    public void process(Contribution contribution, ValidationContext context, ClassLoader loader) throws ContributionException {
         URI contributionUri = contribution.getUri();
         for (Resource resource : contribution.getResources()) {
-            registry.processResource(contributionUri, resource, loader);
+            registry.processResource(contributionUri, resource, context, loader);
         }
     }
 

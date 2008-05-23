@@ -22,6 +22,7 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
 import org.fabric3.host.contribution.ContributionException;
+import org.fabric3.scdl.ValidationContext;
 
 /**
  * Loads the value of a ResourceElement from an XML artifact.
@@ -43,11 +44,12 @@ public interface XmlResourceElementLoader {
      * @param reader          the reader positioned on the first element
      * @param contributionUri the current contribution URI
      * @param resource        the resource that contains the element
+     * @param context         the context to which validation errors and warnings are reported
      * @param loader          the classloader to load artifacts in
      * @throws ContributionException if a general load error occurs
      * @throws XMLStreamException    if there is an error reading the XML stream
      */
-    void load(XMLStreamReader reader, URI contributionUri, Resource resource, ClassLoader loader)
+    void load(XMLStreamReader reader, URI contributionUri, Resource resource, ValidationContext context, ClassLoader loader)
             throws ContributionException, XMLStreamException;
 
 }

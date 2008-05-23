@@ -146,7 +146,7 @@ public class ImplementationCompositeLoader implements TypeLoader<CompositeImplem
 
             try {
                 QNameSymbol symbol = new QNameSymbol(name);
-                ResourceElement<QNameSymbol, Composite> element = store.resolve(contributionUri, Composite.class, symbol);
+                ResourceElement<QNameSymbol, Composite> element = store.resolve(contributionUri, Composite.class, symbol, introspectionContext);
                 if (element == null) {
                     String id = name.toString();
                     MissingComposite failure = new MissingComposite("Composite with qualified name not found: " + id, id, reader);

@@ -21,6 +21,7 @@ package org.fabric3.spi.services.contribution;
 import java.util.List;
 
 import org.fabric3.host.contribution.ContributionException;
+import org.fabric3.scdl.ValidationContext;
 
 /**
  * Interface for services that process contributions. Contribution processing occurs in several phases. Contribution metadata is first processed,
@@ -61,10 +62,11 @@ public interface ContributionProcessor {
     /**
      * Loads all resources in the contribution.
      *
-     * @param contribution The contribution
+     * @param contribution the contribution
+     * @param context      the context to which validation errors and warnings are reported
      * @param loader       the classloader contribution resources must be loaded in
      * @throws ContributionException if there was a problem loading the contribution resoruces
      */
-    public void process(Contribution contribution, ClassLoader loader) throws ContributionException;
+    public void process(Contribution contribution, ValidationContext context, ClassLoader loader) throws ContributionException;
 
 }

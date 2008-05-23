@@ -40,6 +40,7 @@ import org.fabric3.spi.services.contribution.Resource;
 import org.fabric3.spi.services.contribution.XmlIndexerRegistry;
 import org.fabric3.spi.services.contribution.XmlManifestProcessorRegistry;
 import org.fabric3.spi.services.contribution.XmlProcessorRegistry;
+import org.fabric3.scdl.ValidationContext;
 
 /**
  * Processes an XML-based contribution. The implementaton dispatches to a specific XmlProcessor based on the QName of the document element.
@@ -125,7 +126,7 @@ public class XmlContributionProcessor implements ContributionProcessor {
         }
     }
 
-    public void process(Contribution contribution, ClassLoader loader) throws ContributionException {
+    public void process(Contribution contribution, ValidationContext context, ClassLoader loader) throws ContributionException {
         URL locationURL = contribution.getLocation();
         InputStream stream = null;
         XMLStreamReader reader = null;
@@ -133,7 +134,7 @@ public class XmlContributionProcessor implements ContributionProcessor {
             stream = locationURL.openStream();
             reader = xmlFactory.createXMLStreamReader(stream);
             reader.nextTag();
-            xmlProcessorRegistry.process(contribution, reader, loader);
+            xmlProcessorRegistry.process(contribution, reader, context, loader);
         } catch (IOException e) {
             String uri = contribution.getUri().toString();
             throw new ContributionException("Error processing contribution " + uri, e);

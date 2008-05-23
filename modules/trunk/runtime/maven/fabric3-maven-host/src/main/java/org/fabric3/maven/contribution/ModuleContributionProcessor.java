@@ -45,6 +45,7 @@ import org.fabric3.spi.services.contribution.ContributionManifest;
 import org.fabric3.spi.services.contribution.ContributionProcessor;
 import org.fabric3.spi.services.contribution.ProcessorRegistry;
 import org.fabric3.spi.services.contribution.Resource;
+import org.fabric3.scdl.ValidationContext;
 
 /**
  * Processes a Maven module directory.
@@ -76,13 +77,13 @@ public class ModuleContributionProcessor implements ContributionProcessor {
         registry.register(this);
     }
 
-    public void process(Contribution contribution, ClassLoader loader) throws ContributionException {
+    public void process(Contribution contribution, ValidationContext context, ClassLoader loader) throws ContributionException {
         ClassLoader oldClassloader = Thread.currentThread().getContextClassLoader();
         URI contributionUri = contribution.getUri();
         try {
             Thread.currentThread().setContextClassLoader(loader);
             for (Resource resource : contribution.getResources()) {
-                registry.processResource(contributionUri, resource, loader);
+                registry.processResource(contributionUri, resource, context, loader);
             }
         } finally {
             Thread.currentThread().setContextClassLoader(oldClassloader);

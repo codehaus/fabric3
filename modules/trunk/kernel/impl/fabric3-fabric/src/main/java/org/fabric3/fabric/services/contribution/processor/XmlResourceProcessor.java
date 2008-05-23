@@ -37,6 +37,7 @@ import org.fabric3.spi.services.contribution.ResourceProcessor;
 import org.fabric3.spi.services.contribution.XmlIndexerRegistry;
 import org.fabric3.spi.services.contribution.XmlResourceElementLoaderRegistry;
 import org.fabric3.services.xmlfactory.XMLFactory;
+import org.fabric3.scdl.ValidationContext;
 
 /**
  * Processes an XML-based resource in a contribution, delegating to a an XMLIndexer to index the resource and a Loader
@@ -104,7 +105,7 @@ public class XmlResourceProcessor implements ResourceProcessor {
         }
     }
 
-    public void process(URI contributionUri, Resource resource, ClassLoader loader) throws ContributionException {
+    public void process(URI contributionUri, Resource resource, ValidationContext context, ClassLoader loader) throws ContributionException {
         InputStream stream = null;
         XMLStreamReader reader = null;
         try {
@@ -113,7 +114,7 @@ public class XmlResourceProcessor implements ResourceProcessor {
             if (skipToFirstTag(reader)) {
                 return;
             }
-            elementLoaderRegistry.load(reader, contributionUri, resource, loader);
+            elementLoaderRegistry.load(reader, contributionUri, resource, context, loader);
         } catch (XMLStreamException e) {
             throw new ContributionException(e);
         } catch (IOException e) {

@@ -29,6 +29,7 @@ import org.fabric3.spi.services.contribution.Action;
 import org.fabric3.spi.services.contribution.ArchiveContributionHandler;
 import org.fabric3.spi.services.contribution.Contribution;
 import org.fabric3.spi.services.contribution.Resource;
+import org.fabric3.scdl.ValidationContext;
 
 /**
  * Handles common processing for contribution archives
@@ -69,13 +70,13 @@ public class ArchiveContributionProcessor extends AbstractContributionProcessor 
 
     }
 
-    public void process(Contribution contribution, ClassLoader loader) throws ContributionException {
+    public void process(Contribution contribution, ValidationContext context, ClassLoader loader) throws ContributionException {
         ClassLoader oldClassloader = Thread.currentThread().getContextClassLoader();
         URI contributionUri = contribution.getUri();
         try {
             Thread.currentThread().setContextClassLoader(loader);
             for (Resource resource : contribution.getResources()) {
-                registry.processResource(contributionUri, resource, loader);
+                registry.processResource(contributionUri, resource, context, loader);
             }
         } finally {
             Thread.currentThread().setContextClassLoader(oldClassloader);

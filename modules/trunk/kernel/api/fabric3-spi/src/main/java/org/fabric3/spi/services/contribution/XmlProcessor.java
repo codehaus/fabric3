@@ -20,6 +20,7 @@ import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamReader;
 
 import org.fabric3.host.contribution.ContributionException;
+import org.fabric3.scdl.ValidationContext;
 
 /**
  * Processes an XML-based contribution
@@ -39,9 +40,11 @@ public interface XmlProcessor {
      * Processes the XML contribution
      *
      * @param contribution the contribution metadata to update
+     * @param context      the context to which validation errors and warnings are reported
      * @param reader       the reader positioned at the first element of the document
      * @param loader       the classloader to perform resolution in
      * @throws ContributionException if an error occurs processing
      */
-    void processContent(Contribution contribution, XMLStreamReader reader, ClassLoader loader) throws ContributionException;
+    void processContent(Contribution contribution, ValidationContext context, XMLStreamReader reader, ClassLoader loader)
+            throws ContributionException;
 }

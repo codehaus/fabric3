@@ -37,6 +37,7 @@ import org.fabric3.introspection.xml.LoaderHelper;
 import org.fabric3.introspection.xml.LoaderRegistry;
 import org.fabric3.introspection.xml.TypeLoader;
 import org.fabric3.loader.impl.DefaultLoaderHelper;
+import org.fabric3.scdl.DefaultValidationContext;
 import org.fabric3.scdl.definitions.AbstractDefinition;
 import org.fabric3.scdl.definitions.Intent;
 import org.fabric3.scdl.definitions.PolicySet;
@@ -67,7 +68,7 @@ public class DefinitionsLoaderTestCase extends TestCase {
     @SuppressWarnings({"unchecked", "deprecation"})
     public void testLoad() throws Exception {
 
-        loader.load(reader, null, resource, null);
+        loader.load(reader, null, resource, new DefaultValidationContext(), null);
 
         List<ResourceElement<?, ?>> resourceElements = resource.getResourceElements();
         assertNotNull(resourceElements);

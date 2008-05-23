@@ -25,6 +25,7 @@ import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.spi.services.contribution.Contribution;
 import org.fabric3.spi.services.contribution.XmlProcessor;
 import org.fabric3.spi.services.contribution.XmlProcessorRegistry;
+import org.fabric3.scdl.ValidationContext;
 
 /**
  * Default impelmentation of an XmlProcessorRegistry.
@@ -42,13 +43,14 @@ public class XmlProcessorRegistryImpl implements XmlProcessorRegistry {
         cache.remove(name);
     }
 
-    public void process(Contribution contribution, XMLStreamReader reader, ClassLoader loader) throws ContributionException {
+    public void process(Contribution contribution, XMLStreamReader reader, ValidationContext context, ClassLoader loader)
+            throws ContributionException {
         QName name = reader.getName();
         XmlProcessor processor = cache.get(name);
         if (processor == null) {
             String id = name.toString();
             throw new XmlProcessorTypeNotFoundException("XML processor not found for: " + id, id);
         }
-        processor.processContent(contribution, reader, loader);
+        processor.processContent(contribution, context, reader, loader);
     }
 }

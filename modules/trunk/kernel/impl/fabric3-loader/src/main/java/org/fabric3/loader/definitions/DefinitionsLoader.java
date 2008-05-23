@@ -42,6 +42,7 @@ import org.fabric3.scdl.definitions.BindingType;
 import org.fabric3.scdl.definitions.ImplementationType;
 import org.fabric3.scdl.definitions.Intent;
 import org.fabric3.scdl.definitions.PolicySet;
+import org.fabric3.scdl.ValidationContext;
 import org.fabric3.spi.services.contribution.QNameSymbol;
 import org.fabric3.spi.services.contribution.Resource;
 import org.fabric3.spi.services.contribution.ResourceElement;
@@ -84,14 +85,14 @@ public class DefinitionsLoader implements XmlResourceElementLoader {
         return DEFINITIONS;
     }
 
-    public void load(XMLStreamReader reader, URI contributionUri, Resource resource, ClassLoader loader)
+    public void load(XMLStreamReader reader, URI contributionUri, Resource resource, ValidationContext context, ClassLoader loader)
             throws ContributionException, XMLStreamException {
 
         List<AbstractDefinition> definitions = new ArrayList<AbstractDefinition>();
 
         String targetNamespace = reader.getAttributeValue(null, "targetNamespace");
 
-        IntrospectionContext context = new DefaultIntrospectionContext(contributionUri, loader, targetNamespace);
+        IntrospectionContext introspectionContext = new DefaultIntrospectionContext(contributionUri, loader, targetNamespace);
 
         while (true) {
             switch (reader.next()) {
@@ -100,25 +101,25 @@ public class DefinitionsLoader implements XmlResourceElementLoader {
                 AbstractDefinition definition = null;
                 if (INTENT.equals(qname)) {
                     try {
-                        definition = loaderRegistry.load(reader, Intent.class, context);
+                        definition = loaderRegistry.load(reader, Intent.class, introspectionContext);
                     } catch (UnrecognizedElementException e) {
                         throw new ContributionException(e);
                     }
                 } else if (POLICY_SET.equals(qname)) {
                     try {
-                        definition = loaderRegistry.load(reader, PolicySet.class, context);
+                        definition = loaderRegistry.load(reader, PolicySet.class, introspectionContext);
                     } catch (UnrecognizedElementException e) {
                         throw new ContributionException(e);
                     }
                 } else if (BINDING_TYPE.equals(qname)) {
                     try {
-                        definition = loaderRegistry.load(reader, BindingType.class, context);
+                        definition = loaderRegistry.load(reader, BindingType.class, introspectionContext);
                     } catch (UnrecognizedElementException e) {
                         throw new ContributionException(e);
                     }
                 } else if (IMPLEMENTATION_TYPE.equals(qname)) {
                     try {
-                        definition = loaderRegistry.load(reader, ImplementationType.class, context);
+                        definition = loaderRegistry.load(reader, ImplementationType.class, introspectionContext);
                     } catch (UnrecognizedElementException e) {
                         throw new ContributionException(e);
                     }
@@ -141,8 +142,15 @@ public class DefinitionsLoader implements XmlResourceElementLoader {
                     }
                     if (!found) {
                         String id = candidate.toString();
+                        // xcv should not throw?
                         throw new ResourceElementNotFoundException("Definition not found: " + id, id);
                     }
+                }
+                if (introspectionContext.hasErrors()) {
+                    context.addErrors(introspectionContext.getErrors());
+                }
+                if (introspectionContext.hasWarnings()) {
+                    context.addErrors(introspectionContext.getWarnings());
                 }
                 return;
             }

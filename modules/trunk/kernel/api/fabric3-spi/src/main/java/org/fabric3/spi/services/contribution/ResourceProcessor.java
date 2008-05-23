@@ -20,6 +20,7 @@ import java.net.URI;
 import java.net.URL;
 
 import org.fabric3.host.contribution.ContributionException;
+import org.fabric3.scdl.ValidationContext;
 
 /**
  * Implmentations process a contribution resource for a MIME type.
@@ -49,9 +50,11 @@ public interface ResourceProcessor {
      *
      * @param contributionUri the URI of the active contribution
      * @param resource        the resource to process
-     * @param loader          the classloader contribution the resource must be loaded in
-     * @throws ContributionException if an error occurs during introspection
+     * @param context         the context to which validation errors and warnings are reported
+     * @param loader          the classloader contribution the resource must be loaded in @throws ContributionException if an error occurs during
+     *                        introspection
+     * @throws ContributionException if an error processing the contribution occurs
      */
-    void process(URI contributionUri, Resource resource, ClassLoader loader) throws ContributionException;
+    void process(URI contributionUri, Resource resource, ValidationContext context, ClassLoader loader) throws ContributionException;
 
 }

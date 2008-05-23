@@ -32,10 +32,10 @@ import org.fabric3.host.contribution.Constants;
 import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.introspection.DefaultIntrospectionContext;
 import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.introspection.IntrospectionException;
-import org.fabric3.introspection.validation.InvalidCompositeException;
 import org.fabric3.introspection.xml.Loader;
+import org.fabric3.introspection.xml.LoaderException;
 import org.fabric3.scdl.Composite;
+import org.fabric3.scdl.ValidationContext;
 import org.fabric3.services.xmlfactory.XMLFactory;
 import org.fabric3.spi.services.contribution.Contribution;
 import org.fabric3.spi.services.contribution.ProcessorRegistry;
@@ -106,30 +106,38 @@ public class CompositeResourceProcessor implements ResourceProcessor {
     }
 
     @SuppressWarnings({"unchecked"})
-    public void process(URI contributionUri, Resource resource, ClassLoader classLoader) throws ContributionException {
+    public void process(URI contributionUri, Resource resource, ValidationContext context, ClassLoader classLoader) throws ContributionException {
+        URL url = resource.getUrl();
+        IntrospectionContext introspectionContext = new DefaultIntrospectionContext(classLoader, contributionUri, url);
+        Composite composite;
         try {
-            URL url = resource.getUrl();
-            IntrospectionContext introspectionContext = new DefaultIntrospectionContext(classLoader, contributionUri, url);
-            Composite composite = loader.load(url, Composite.class, introspectionContext);
-            composite.validate(introspectionContext);
-            if (introspectionContext.hasErrors()) {
-                throw new InvalidCompositeException(composite, introspectionContext.getErrors());
-            }
-            boolean found = false;
-            for (ResourceElement element : resource.getResourceElements()) {
-                if (element.getSymbol().getKey().equals(composite.getName())) {
-                    element.setValue(composite);
-                    found = true;
-                    break;
-                }
-            }
-            if (!found) {
-                String identifier = composite.getName().toString();
-                throw new ResourceElementNotFoundException("Resource element not found: " + identifier, identifier);
-            }
-        } catch (IntrospectionException e) {
+            composite = loader.load(url, Composite.class, introspectionContext);
+        } catch (LoaderException e) {
+            // xcv this should use a ValidaitonFaulure, not throw an exception
+//            ElementLoadFailure failure = new ElementLoadFailure("Error loading element", e, reader);
+//            introspectionContext.addError(failure);
             throw new ContributionException(e);
         }
+        composite.validate(introspectionContext);
+        boolean found = false;
+        for (ResourceElement element : resource.getResourceElements()) {
+            if (element.getSymbol().getKey().equals(composite.getName())) {
+                element.setValue(composite);
+                found = true;
+                break;
+            }
+        }
+        if (!found) {
+            String identifier = composite.getName().toString();
+            throw new ResourceElementNotFoundException("Resource element not found: " + identifier, identifier);
+        }
+        if (introspectionContext.hasErrors()) {
+            context.addErrors(introspectionContext.getErrors());
+        }
+        if (introspectionContext.hasWarnings()) {
+            context.addErrors(introspectionContext.getWarnings());
+        }
+
     }
 
 

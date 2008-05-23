@@ -44,6 +44,7 @@ import org.fabric3.spi.runtime.assembly.RecordException;
 import org.fabric3.spi.services.contribution.MetaDataStore;
 import org.fabric3.spi.services.contribution.QNameSymbol;
 import org.fabric3.spi.services.contribution.ResourceElement;
+import org.fabric3.spi.services.contribution.MetaDataStoreException;
 
 /**
  * Base class for abstract assemblies
@@ -79,7 +80,12 @@ public abstract class AbstractAssembly implements Assembly {
 
     public void includeInDomain(QName deployable) throws ActivateException {
 
-        ResourceElement<QNameSymbol, ?> element = metadataStore.resolve(new QNameSymbol(deployable));
+        ResourceElement<QNameSymbol, ?> element = null;
+        try {
+            element = metadataStore.resolve(new QNameSymbol(deployable));
+        } catch (MetaDataStoreException e) {
+            throw new ActivateException(e);
+        }
         if (element == null) {
             throw new ArtifactNotFoundException("Deployable not found", deployable.toString());
         }
@@ -135,7 +141,12 @@ public abstract class AbstractAssembly implements Assembly {
 
     public void excludeFromDomain(QName deployable) throws ActivateException {
 
-        ResourceElement<QNameSymbol, ?> element = metadataStore.resolve(new QNameSymbol(deployable));
+        ResourceElement<QNameSymbol, ?> element = null;
+        try {
+            element = metadataStore.resolve(new QNameSymbol(deployable));
+        } catch (MetaDataStoreException e) {
+            throw new ActivateException(e);
+        }
         if (element == null) {
             throw new ArtifactNotFoundException("Deployable not found", deployable.toString());
         }

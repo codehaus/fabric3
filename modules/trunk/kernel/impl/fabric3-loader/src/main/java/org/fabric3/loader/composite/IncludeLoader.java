@@ -98,7 +98,7 @@ public class IncludeLoader implements TypeLoader<Include> {
 
             try {
                 QNameSymbol symbol = new QNameSymbol(name);
-                ResourceElement<QNameSymbol, Composite> element = store.resolve(contributionUri, Composite.class, symbol);
+                ResourceElement<QNameSymbol, Composite> element = store.resolve(contributionUri, Composite.class, symbol, context);
                 if (element == null) {
                     String id = name.toString();
                     MissingComposite failure = new MissingComposite("Composite file not found: " + id, id, reader);

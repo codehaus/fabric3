@@ -23,6 +23,7 @@ import java.net.URI;
 import java.net.URL;
 
 import org.fabric3.host.contribution.ContributionException;
+import org.fabric3.scdl.ValidationContext;
 
 /**
  * The system registry of contribution processors
@@ -112,19 +113,21 @@ public interface ProcessorRegistry {
      * Loads all indexed resources in a contribution.
      *
      * @param contribution The contribution
+     * @param context      the context to which validation errors and warnings are reported
      * @param loader       the classloader conribution resources must be laoded in
      * @throws ContributionException if there was a problem loading resources in the contribution
      */
-    void processContribution(Contribution contribution, ClassLoader loader) throws ContributionException;
+    void processContribution(Contribution contribution, ValidationContext context, ClassLoader loader) throws ContributionException;
 
     /**
      * Loads a contained resource in a contribution.
      *
      * @param contributionUri the URI of the active contribution
      * @param resource        the resource to process
+     * @param context         the context to which validation errors and warnings are reported
      * @param loader          the classloader contribution the resource must be loaded in
      * @throws ContributionException if there was a problem loading the resoure
      */
-    void processResource(URI contributionUri, Resource resource, ClassLoader loader) throws ContributionException;
+    void processResource(URI contributionUri, Resource resource, ValidationContext context, ClassLoader loader) throws ContributionException;
 
 }

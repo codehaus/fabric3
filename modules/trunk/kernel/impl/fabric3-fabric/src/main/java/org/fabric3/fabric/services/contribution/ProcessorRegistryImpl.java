@@ -35,6 +35,7 @@ import org.fabric3.spi.services.contribution.ManifestProcessor;
 import org.fabric3.spi.services.contribution.ProcessorRegistry;
 import org.fabric3.spi.services.contribution.Resource;
 import org.fabric3.spi.services.contribution.ResourceProcessor;
+import org.fabric3.scdl.ValidationContext;
 
 /**
  * Default implementation of ProcessorRegistry
@@ -117,24 +118,24 @@ public class ProcessorRegistryImpl implements ProcessorRegistry {
         processor.index(contribution, url);
     }
 
-    public void processContribution(Contribution contribution, ClassLoader loader) throws ContributionException {
+    public void processContribution(Contribution contribution, ValidationContext context, ClassLoader loader) throws ContributionException {
         String contentType = contribution.getContentType();
         ContributionProcessor processor = contributionProcessorCache.get(contentType);
         if (processor == null) {
             String source = contribution.getUri().toString();
             throw new UnsupportedContentTypeException("Type " + contentType + "in contribution " + source + " not supported", contentType);
         }
-        processor.process(contribution, loader);
+        processor.process(contribution, context, loader);
     }
 
-    public void processResource(URI contributionUri, Resource resource, ClassLoader loader) throws ContributionException {
+    public void processResource(URI contributionUri, Resource resource, ValidationContext context, ClassLoader loader) throws ContributionException {
         ResourceProcessor processor = resourceProcessorCache.get(resource.getContentType());
         if (processor == null) {
             // FIXME for now, return null
             return;
             //throw new UnsupportedContentTypeException(contentType);
         }
-        processor.process(contributionUri, resource, loader);
+        processor.process(contributionUri, resource, context, loader);
     }
 
 }

@@ -24,6 +24,7 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
 import org.fabric3.host.contribution.ContributionException;
+import org.fabric3.scdl.ValidationContext;
 import org.fabric3.spi.services.contribution.Resource;
 import org.fabric3.spi.services.contribution.XmlResourceElementLoader;
 import org.fabric3.spi.services.contribution.XmlResourceElementLoaderRegistry;
@@ -45,7 +46,7 @@ public class XmlResourceElementLoaderRegistryImpl implements XmlResourceElementL
     }
 
     @SuppressWarnings({"unchecked"})
-    public void load(XMLStreamReader reader, URI contributionUri, Resource resource, ClassLoader loader)
+    public void load(XMLStreamReader reader, URI contributionUri, Resource resource, ValidationContext context,  ClassLoader loader)
             throws ContributionException, XMLStreamException {
         try {
             QName name = reader.getName();
@@ -53,7 +54,7 @@ public class XmlResourceElementLoaderRegistryImpl implements XmlResourceElementL
             if (elementLoader == null) {
                 return;
             }
-            elementLoader.load(reader, contributionUri, resource, loader);
+            elementLoader.load(reader, contributionUri, resource, context, loader);
         } finally {
             try {
                 if (reader != null) {
