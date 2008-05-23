@@ -31,7 +31,6 @@ import org.osoa.sca.annotations.Reference;
 import org.fabric3.binding.ws.scdl.WsBindingDefinition;
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.xml.InvalidValue;
-import org.fabric3.introspection.xml.LoaderException;
 import org.fabric3.introspection.xml.LoaderHelper;
 import org.fabric3.introspection.xml.LoaderUtil;
 import org.fabric3.introspection.xml.MissingAttribute;
@@ -59,8 +58,7 @@ public class WsBindingLoader implements TypeLoader<WsBindingDefinition> {
         this.loaderHelper = loaderHelper;
     }
 
-    public WsBindingDefinition load(XMLStreamReader reader, IntrospectionContext introspectionContext)
-            throws XMLStreamException, LoaderException {
+    public WsBindingDefinition load(XMLStreamReader reader, IntrospectionContext introspectionContext) throws XMLStreamException {
 
         WsBindingDefinition bd = null;
         String uri = null;
@@ -78,7 +76,7 @@ public class WsBindingLoader implements TypeLoader<WsBindingDefinition> {
             } else {
                 bd = new WsBindingDefinition(new URI(uri), implementation, wsdlLocation, wsdlElement);
             }
-            loaderHelper.loadPolicySetsAndIntents(bd, reader);
+            loaderHelper.loadPolicySetsAndIntents(bd, reader, introspectionContext);
 
             // TODO Add rest of the WSDL support
 

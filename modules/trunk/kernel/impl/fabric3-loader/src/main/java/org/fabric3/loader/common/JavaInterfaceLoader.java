@@ -28,7 +28,6 @@ import org.fabric3.introspection.IntrospectionHelper;
 import org.fabric3.introspection.TypeMapping;
 import org.fabric3.introspection.contract.ContractProcessor;
 import org.fabric3.introspection.java.ImplementationNotFoundException;
-import org.fabric3.introspection.xml.LoaderException;
 import org.fabric3.introspection.xml.LoaderUtil;
 import org.fabric3.introspection.xml.MissingAttribute;
 import org.fabric3.introspection.xml.ResourceNotFound;
@@ -51,7 +50,7 @@ public class JavaInterfaceLoader implements TypeLoader<ServiceContract> {
         this.helper = helper;
     }
 
-    public ServiceContract load(XMLStreamReader reader, IntrospectionContext context) throws XMLStreamException, LoaderException {
+    public ServiceContract load(XMLStreamReader reader, IntrospectionContext context) throws XMLStreamException {
 
         String name = reader.getAttributeValue(null, "interface");
         if (name == null) {

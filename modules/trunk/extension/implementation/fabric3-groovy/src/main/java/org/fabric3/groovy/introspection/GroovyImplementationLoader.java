@@ -24,7 +24,6 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.groovy.scdl.GroovyImplementation;
 import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.introspection.xml.LoaderException;
 import org.fabric3.introspection.xml.LoaderHelper;
 import org.fabric3.introspection.xml.LoaderUtil;
 import org.fabric3.introspection.xml.MissingAttribute;
@@ -45,7 +44,7 @@ public class GroovyImplementationLoader implements TypeLoader<GroovyImplementati
         this.loaderHelper = loaderHelper;
     }
 
-    public GroovyImplementation load(XMLStreamReader reader, IntrospectionContext context) throws XMLStreamException, LoaderException {
+    public GroovyImplementation load(XMLStreamReader reader, IntrospectionContext context) throws XMLStreamException {
 
         String className = reader.getAttributeValue(null, "class");
         String scriptName = reader.getAttributeValue(null, "script");
@@ -65,7 +64,7 @@ public class GroovyImplementationLoader implements TypeLoader<GroovyImplementati
 */
 
         GroovyImplementation impl = new GroovyImplementation(scriptName, className);
-        loaderHelper.loadPolicySetsAndIntents(impl, reader);
+        loaderHelper.loadPolicySetsAndIntents(impl, reader, context);
         processor.introspect(impl, context);
         LoaderUtil.skipToEndElement(reader);
         return impl;

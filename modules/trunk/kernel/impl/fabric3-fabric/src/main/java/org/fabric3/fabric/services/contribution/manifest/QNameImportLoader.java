@@ -36,12 +36,13 @@ import org.fabric3.spi.services.contribution.QNameImport;
  */
 @EagerInit
 public class QNameImportLoader implements TypeLoader<QNameImport> {
-    //private static final QName IMPORT = new QName(SCA_NS, "import");
 
-    public QNameImport load(XMLStreamReader reader, IntrospectionContext context) throws MissingMainifestAttributeException, XMLStreamException {
+    public QNameImport load(XMLStreamReader reader, IntrospectionContext context) throws XMLStreamException {
         String ns = reader.getAttributeValue(null, "namespace");
         if (ns == null) {
-            throw new MissingMainifestAttributeException("The namespace attribute must be specified", reader);
+            MissingMainifestAttribute failure = new MissingMainifestAttribute("The namespace attribute must be specified", "namespace", reader);
+            context.addError(failure);
+            return null;
         }
         String location = reader.getAttributeValue(null, "location");
         QNameImport contributionImport = new QNameImport(new QName(ns));

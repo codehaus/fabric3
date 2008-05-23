@@ -32,6 +32,7 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.introspection.DefaultIntrospectionContext;
 import org.fabric3.introspection.IntrospectionContext;
+import org.fabric3.introspection.xml.ElementLoadFailure;
 import org.fabric3.introspection.xml.Loader;
 import org.fabric3.introspection.xml.LoaderException;
 import org.fabric3.introspection.xml.LoaderRegistry;
@@ -72,8 +73,7 @@ public class ImplementationCompositeLoader implements TypeLoader<CompositeImplem
         registry.unregisterLoader(CompositeImplementation.IMPLEMENTATION_COMPOSITE);
     }
 
-    public CompositeImplementation load(XMLStreamReader reader, IntrospectionContext introspectionContext)
-            throws XMLStreamException, LoaderException {
+    public CompositeImplementation load(XMLStreamReader reader, IntrospectionContext introspectionContext) throws XMLStreamException {
 
         assert CompositeImplementation.IMPLEMENTATION_COMPOSITE.equals(reader.getName());
         String nameAttr = reader.getAttributeValue(null, "name");
@@ -100,7 +100,18 @@ public class ImplementationCompositeLoader implements TypeLoader<CompositeImplem
                 return impl;
             }
             IntrospectionContext childContext = new DefaultIntrospectionContext(cl, contributionUri, url);
-            Composite composite = loader.load(url, Composite.class, childContext);
+            Composite composite;
+            try {
+                composite = loader.load(url, Composite.class, childContext);
+                if (composite == null) {
+                    // error loading composite, return
+                    return null;
+                }
+            } catch (LoaderException e) {
+                ElementLoadFailure failure = new ElementLoadFailure("Error loading element", e, reader);
+                introspectionContext.addError(failure);
+                return null;
+            }
             impl.setName(composite.getName());
             impl.setComponentType(composite);
             return impl;
@@ -112,7 +123,18 @@ public class ImplementationCompositeLoader implements TypeLoader<CompositeImplem
                 return impl;
             }
             IntrospectionContext childContext = new DefaultIntrospectionContext(cl, contributionUri, url);
-            Composite composite = loader.load(url, Composite.class, childContext);
+            Composite composite = null;
+            try {
+                composite = loader.load(url, Composite.class, childContext);
+                if (composite == null) {
+                    // error loading composite, return
+                    return null;
+                }
+            } catch (LoaderException e) {
+                ElementLoadFailure failure = new ElementLoadFailure("Error loading element", e, reader);
+                introspectionContext.addError(failure);
+                return null;
+            }
             impl.setName(composite.getName());
             impl.setComponentType(composite);
             return impl;
@@ -134,17 +156,13 @@ public class ImplementationCompositeLoader implements TypeLoader<CompositeImplem
                 impl.setComponentType(element.getValue());
                 return impl;
             } catch (MetaDataStoreException e) {
-                throw new LoaderException(reader, e);
+                ElementLoadFailure failure = new ElementLoadFailure("Error loading element", e, reader);
+                introspectionContext.addError(failure);
+                return null;
+
             }
         }
 
     }
 
-//    private void validate(Composite composite, URL url, XMLStreamReader reader, IntrospectionContext introspectionContext) throws LoaderException {
-//        composite.validate(introspectionContext);
-//        if (introspectionContext.hasErrors()) {
-//            ValidationException ve = new InvalidCompositeException(composite, introspectionContext.getErrors());
-//            throw new LoaderException("Invalid composite: " + url.toString(), reader, ve);
-//        }
-//    }
 }

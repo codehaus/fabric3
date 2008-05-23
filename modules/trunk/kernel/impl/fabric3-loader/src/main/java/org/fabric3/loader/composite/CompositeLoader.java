@@ -18,6 +18,7 @@
  */
 package org.fabric3.loader.composite;
 
+import javax.xml.namespace.NamespaceContext;
 import javax.xml.namespace.QName;
 import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
 import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
@@ -34,14 +35,12 @@ import org.osoa.sca.annotations.Reference;
 import org.fabric3.introspection.DefaultIntrospectionContext;
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.xml.Loader;
-import org.fabric3.introspection.xml.LoaderException;
 import org.fabric3.introspection.xml.LoaderHelper;
 import org.fabric3.introspection.xml.LoaderRegistry;
 import org.fabric3.introspection.xml.LoaderUtil;
 import org.fabric3.introspection.xml.TypeLoader;
 import org.fabric3.introspection.xml.UnrecognizedElement;
 import org.fabric3.introspection.xml.UnrecognizedElementException;
-import org.fabric3.introspection.xml.UnrecognizedTypeException;
 import org.fabric3.scdl.Autowire;
 import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.Composite;
@@ -149,22 +148,21 @@ public class CompositeLoader implements TypeLoader<Composite> {
         registry.unregisterLoader(COMPOSITE);
     }
 
-    public Composite load(XMLStreamReader reader, IntrospectionContext introspectionContext)
-            throws XMLStreamException, LoaderException {
+    public Composite load(XMLStreamReader reader, IntrospectionContext introspectionContext) throws XMLStreamException {
         String name = reader.getAttributeValue(null, "name");
         String targetNamespace = reader.getAttributeValue(null, "targetNamespace");
         boolean local = Boolean.valueOf(reader.getAttributeValue(null, "local"));
         IntrospectionContext childContext = new DefaultIntrospectionContext(introspectionContext, targetNamespace);
         QName compositeName = new QName(targetNamespace, name);
-        QName constrainingType = LoaderUtil.getQName(reader.getAttributeValue(null, "constrainingType"),
-                                                     targetNamespace,
-                                                     reader.getNamespaceContext());
+        NamespaceContext namespace = reader.getNamespaceContext();
+        String constrainingTypeAttrbute = reader.getAttributeValue(null, "constrainingType");
+        QName constrainingType = LoaderUtil.getQName(constrainingTypeAttrbute, targetNamespace, namespace);
 
         Composite type = new Composite(compositeName);
         type.setLocal(local);
         type.setAutowire(Autowire.fromString(reader.getAttributeValue(null, "autowire")));
         type.setConstrainingType(constrainingType);
-        loaderHelper.loadPolicySetsAndIntents(type, reader);
+        loaderHelper.loadPolicySetsAndIntents(type, reader, introspectionContext);
 
         while (true) {
             switch (reader.next()) {
@@ -261,7 +259,8 @@ public class CompositeLoader implements TypeLoader<Composite> {
                         // TODO when the loader registry is replaced this try..catch must be replaced with a check for a loader and an
                         // UnrecognizedElement added to the context if none is found
                     } catch (UnrecognizedElementException e) {
-                        childContext.addError(new UnrecognizedElement(reader));
+                        UnrecognizedElement failure = new UnrecognizedElement(reader);
+                        introspectionContext.addError(failure);
                         continue;
                     }
                     if (modelObject instanceof Property) {
@@ -273,8 +272,8 @@ public class CompositeLoader implements TypeLoader<Composite> {
                     } else if (modelObject instanceof ComponentDefinition) {
                         type.add((ComponentDefinition<?>) modelObject);
                     } else {
-                        // Unknown extension element, throw an error
-                        throw new UnrecognizedTypeException(reader);
+                        childContext.addError(new UnrecognizedElement(reader));
+                        continue;
                     }
                 }
                 break;

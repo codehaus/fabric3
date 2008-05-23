@@ -23,7 +23,6 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.introspection.xml.LoaderException;
 import org.fabric3.introspection.xml.LoaderHelper;
 import org.fabric3.introspection.xml.LoaderUtil;
 import org.fabric3.introspection.xml.MissingAttribute;
@@ -44,7 +43,7 @@ public class OperationLoader implements TypeLoader<OperationDefinition> {
         this.loaderHelper = loaderHelper;
     }
 
-    public OperationDefinition load(XMLStreamReader reader, IntrospectionContext context) throws LoaderException, XMLStreamException {
+    public OperationDefinition load(XMLStreamReader reader, IntrospectionContext context) throws XMLStreamException {
 
         OperationDefinition operationDefinition = new OperationDefinition();
         String name = reader.getAttributeValue(null, "name");
@@ -54,7 +53,7 @@ public class OperationLoader implements TypeLoader<OperationDefinition> {
         }
         operationDefinition.setName(name);
 
-        loaderHelper.loadPolicySetsAndIntents(operationDefinition, reader);
+        loaderHelper.loadPolicySetsAndIntents(operationDefinition, reader, context);
 
         LoaderUtil.skipToEndElement(reader);
 

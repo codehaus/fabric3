@@ -34,14 +34,14 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.introspection.DefaultIntrospectionContext;
+import org.fabric3.introspection.IntrospectionContext;
+import org.fabric3.introspection.xml.Loader;
+import org.fabric3.introspection.xml.UnrecognizedElementException;
 import org.fabric3.scdl.definitions.AbstractDefinition;
 import org.fabric3.scdl.definitions.BindingType;
 import org.fabric3.scdl.definitions.ImplementationType;
 import org.fabric3.scdl.definitions.Intent;
 import org.fabric3.scdl.definitions.PolicySet;
-import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.introspection.xml.Loader;
-import org.fabric3.introspection.xml.LoaderException;
 import org.fabric3.spi.services.contribution.QNameSymbol;
 import org.fabric3.spi.services.contribution.Resource;
 import org.fabric3.spi.services.contribution.ResourceElement;
@@ -101,27 +101,26 @@ public class DefinitionsLoader implements XmlResourceElementLoader {
                 if (INTENT.equals(qname)) {
                     try {
                         definition = loaderRegistry.load(reader, Intent.class, context);
-                    } catch (LoaderException e) {
+                    } catch (UnrecognizedElementException e) {
                         throw new ContributionException(e);
                     }
                 } else if (POLICY_SET.equals(qname)) {
                     try {
                         definition = loaderRegistry.load(reader, PolicySet.class, context);
-                    } catch (LoaderException e) {
+                    } catch (UnrecognizedElementException e) {
                         throw new ContributionException(e);
                     }
                 } else if (BINDING_TYPE.equals(qname)) {
                     try {
                         definition = loaderRegistry.load(reader, BindingType.class, context);
-                    } catch (LoaderException e) {
+                    } catch (UnrecognizedElementException e) {
                         throw new ContributionException(e);
                     }
                 } else if (IMPLEMENTATION_TYPE.equals(qname)) {
                     try {
                         definition = loaderRegistry.load(reader, ImplementationType.class, context);
-                    } catch (LoaderException e) {
+                    } catch (UnrecognizedElementException e) {
                         throw new ContributionException(e);
-
                     }
                 }
                 if (definition != null) {

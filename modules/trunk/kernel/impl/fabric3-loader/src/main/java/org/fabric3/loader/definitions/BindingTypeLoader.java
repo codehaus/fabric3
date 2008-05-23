@@ -27,10 +27,11 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.introspection.xml.LoaderException;
+import org.fabric3.introspection.xml.InvalidPrefixException;
 import org.fabric3.introspection.xml.LoaderHelper;
 import org.fabric3.introspection.xml.LoaderUtil;
 import org.fabric3.introspection.xml.TypeLoader;
+import org.fabric3.loader.impl.InvalidQNamePrefix;
 import org.fabric3.scdl.definitions.BindingType;
 
 /**
@@ -47,18 +48,22 @@ public class BindingTypeLoader implements TypeLoader<BindingType> {
         this.helper = helper;
     }
 
-    public BindingType load(XMLStreamReader reader, IntrospectionContext context) throws XMLStreamException, LoaderException {
+    public BindingType load(XMLStreamReader reader, IntrospectionContext context) throws XMLStreamException {
 
 
         String name = reader.getAttributeValue(null, "name");
         QName qName = new QName(context.getTargetNamespace(), name);
 
-        Set<QName> alwaysProvides = helper.parseListOfQNames(reader, "alwaysProvides");
-        Set<QName> mayProvide = helper.parseListOfQNames(reader, "mayProvide");
-
-        LoaderUtil.skipToEndElement(reader);
-
-        return new BindingType(qName, alwaysProvides, mayProvide);
+        Set<QName> alwaysProvides;
+        try {
+            alwaysProvides = helper.parseListOfQNames(reader, "alwaysProvides");
+            Set<QName> mayProvide = helper.parseListOfQNames(reader, "mayProvide");
+            LoaderUtil.skipToEndElement(reader);
+            return new BindingType(qName, alwaysProvides, mayProvide);
+        } catch (InvalidPrefixException e) {
+            context.addError(new InvalidQNamePrefix(e.getPrefix(), reader));
+        }
+        return null;
 
 
     }

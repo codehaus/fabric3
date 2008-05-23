@@ -29,12 +29,11 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.binding.hessian.scdl.HessianBindingDefinition;
 import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.introspection.xml.LoaderException;
+import org.fabric3.introspection.xml.InvalidValue;
 import org.fabric3.introspection.xml.LoaderHelper;
 import org.fabric3.introspection.xml.LoaderUtil;
-import org.fabric3.introspection.xml.TypeLoader;
-import org.fabric3.introspection.xml.InvalidValue;
 import org.fabric3.introspection.xml.MissingAttribute;
+import org.fabric3.introspection.xml.TypeLoader;
 
 /**
  * @version $Revision$ $Date$
@@ -58,8 +57,7 @@ public class HessianBindingLoader implements TypeLoader<HessianBindingDefinition
         this.loaderHelper = loaderHelper;
     }
 
-    public HessianBindingDefinition load(XMLStreamReader reader, IntrospectionContext introspectionContext)
-            throws XMLStreamException, LoaderException {
+    public HessianBindingDefinition load(XMLStreamReader reader, IntrospectionContext introspectionContext) throws XMLStreamException {
 
         HessianBindingDefinition bd = null;
         String uri = null;
@@ -73,7 +71,7 @@ public class HessianBindingLoader implements TypeLoader<HessianBindingDefinition
             }
             bd = new HessianBindingDefinition(new URI(uri));
 
-            loaderHelper.loadPolicySetsAndIntents(bd, reader);
+            loaderHelper.loadPolicySetsAndIntents(bd, reader, introspectionContext);
 
         } catch (URISyntaxException ex) {
             InvalidValue failure = new InvalidValue("The Hessian binding URI is not valid: " + uri, "uri", reader);

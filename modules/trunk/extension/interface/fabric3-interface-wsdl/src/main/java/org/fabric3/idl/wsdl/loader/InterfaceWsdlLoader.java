@@ -33,7 +33,6 @@ import org.osoa.sca.annotations.Init;
 import org.fabric3.idl.wsdl.WsdlContract;
 import org.fabric3.idl.wsdl.processor.WsdlProcessor;
 import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.introspection.xml.LoaderException;
 import org.fabric3.introspection.xml.LoaderRegistry;
 import org.fabric3.introspection.xml.MissingAttribute;
 import org.fabric3.introspection.xml.TypeLoader;
@@ -76,7 +75,7 @@ public class InterfaceWsdlLoader implements TypeLoader<WsdlContract>, Constants 
         registry.unregisterLoader(QNAME);
     }
 
-    public WsdlContract load(XMLStreamReader reader, IntrospectionContext context) throws XMLStreamException, LoaderException {
+    public WsdlContract load(XMLStreamReader reader, IntrospectionContext context) throws XMLStreamException {
 
         WsdlContract wsdlContract = new WsdlContract();
 

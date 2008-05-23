@@ -34,16 +34,16 @@ import javax.xml.stream.XMLStreamReader;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 
-import org.fabric3.introspection.xml.LoaderException;
+import org.fabric3.introspection.xml.InvalidPrefixException;
 import org.fabric3.introspection.xml.LoaderHelper;
-import org.fabric3.loader.common.InvalidPrefixException;
+import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.scdl.PolicyAware;
 import org.fabric3.transform.TransformationException;
 import org.fabric3.transform.xml.Stream2Element2;
 
 /**
  * Default implementation of the loader helper.
- * 
+ *
  * @version $Revision$ $Date$
  */
 public class DefaultLoaderHelper implements LoaderHelper {
@@ -74,10 +74,15 @@ public class DefaultLoaderHelper implements LoaderHelper {
         }
         return value;
     }
-    public void loadPolicySetsAndIntents(PolicyAware policyAware, XMLStreamReader reader) throws LoaderException {
-        
-        policyAware.setIntents(parseListOfQNames(reader, "requires"));
-        policyAware.setPolicySets(parseListOfQNames(reader, "policySets"));
+
+    public void loadPolicySetsAndIntents(PolicyAware policyAware, XMLStreamReader reader, IntrospectionContext context) {
+
+        try {
+            policyAware.setIntents(parseListOfQNames(reader, "requires"));
+            policyAware.setPolicySets(parseListOfQNames(reader, "policySets"));
+        } catch (InvalidPrefixException e) {
+            context.addError(new InvalidQNamePrefix(e.getPrefix(), reader));
+        }
 
     }
 
@@ -106,7 +111,7 @@ public class DefaultLoaderHelper implements LoaderHelper {
             String localPart = name.substring(index + 1);
             String ns = reader.getNamespaceContext().getNamespaceURI(prefix);
             if (ns == null) {
-                throw new InvalidPrefixException("Invalid prefix: " + prefix, reader);
+                throw new InvalidPrefixException("Invalid prefix: " + prefix, prefix, reader);
             }
             qName = new QName(ns, localPart, prefix);
         } else {
@@ -121,7 +126,7 @@ public class DefaultLoaderHelper implements LoaderHelper {
         if (target == null) {
             return null;
         }
-        
+
         int index = target.lastIndexOf('/');
         if (index == -1) {
             return URI.create(target);
@@ -132,7 +137,7 @@ public class DefaultLoaderHelper implements LoaderHelper {
         }
     }
 
-    public List<URI> parseListOfUris(XMLStreamReader reader, String attribute) throws LoaderException {
+    public List<URI> parseListOfUris(XMLStreamReader reader, String attribute) {
         String value = reader.getAttributeValue(null, attribute);
         if (value == null || value.length() == 0) {
             return null;

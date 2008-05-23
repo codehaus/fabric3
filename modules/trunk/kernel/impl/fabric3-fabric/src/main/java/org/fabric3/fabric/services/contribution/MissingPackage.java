@@ -1,8 +1,6 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
+ * See the NOTICE file distributed with this work for information
+ * regarding copyright ownership.  This file is licensed
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
@@ -16,22 +14,20 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.loader.common;
+package org.fabric3.fabric.services.contribution;
 
 import javax.xml.stream.XMLStreamReader;
 
-import org.fabric3.introspection.xml.LoaderException;
+import org.fabric3.introspection.xml.XmlValidationFailure;
 
 /**
- * Denotes an invalid QName prefix.
+ * Thrown when a package name on <code>import.java</code> or <code>export.java</code> is not specified
  *
  * @version $Rev$ $Date$
  */
-public class InvalidPrefixException extends LoaderException {
-    private static final long serialVersionUID = -4896928793798546890L;
+public class MissingPackage extends XmlValidationFailure<String> {
 
-    public InvalidPrefixException(String message, XMLStreamReader reader) {
-        super(message, reader);
+    public MissingPackage(String message, XMLStreamReader reader) {
+        super(message, null, reader);
     }
-
 }

@@ -37,8 +37,9 @@ import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.host.contribution.Deployable;
 import org.fabric3.introspection.DefaultIntrospectionContext;
 import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.introspection.xml.LoaderException;
+import org.fabric3.introspection.validation.InvalidContributionException;
 import org.fabric3.introspection.xml.Loader;
+import org.fabric3.introspection.xml.UnrecognizedElementException;
 import org.fabric3.scdl.Composite;
 import static org.fabric3.spi.Constants.FABRIC3_NS;
 import org.fabric3.spi.services.contribution.Contribution;
@@ -92,7 +93,11 @@ public class XmlContributionTypeLoader implements XmlProcessor {
                     if (COMPOSITE.equals(qname)) {
                         try {
                             definition = loader.load(reader, Composite.class, context);
-                        } catch (LoaderException e) {
+                            if (context.hasErrors()) {
+                                throw new ContributionException(new InvalidContributionException(context.getErrors()));
+                            }
+
+                        } catch (UnrecognizedElementException e) {
                             throw new ContributionException("Error processing contribution: " + contributionUri.toString(), e);
                         }
                     }

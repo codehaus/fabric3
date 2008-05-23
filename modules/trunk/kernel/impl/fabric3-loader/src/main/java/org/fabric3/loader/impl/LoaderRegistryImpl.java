@@ -74,7 +74,7 @@ public class LoaderRegistryImpl implements LoaderRegistry {
     }
 
     public <O> O load(XMLStreamReader reader, Class<O> type, IntrospectionContext introspectionContext)
-            throws XMLStreamException, LoaderException {
+            throws XMLStreamException, UnrecognizedElementException {
         QName name = reader.getName();
         monitor.elementLoad(name);
         TypeLoader<?> loader = loaders.get(name);
@@ -95,7 +95,11 @@ public class LoaderRegistryImpl implements LoaderRegistry {
             throw new LoaderException("Invalid URL: " + url.toString(), e);
         }
         try {
-            return load(url, stream, type, ctx);
+            try {
+                return load(url, stream, type, ctx);
+            } catch (XMLStreamException e) {
+                throw new LoaderException("Invalid URL: " + url.toString(), e);
+            }
         } finally {
             try {
                 stream.close();
@@ -105,21 +109,13 @@ public class LoaderRegistryImpl implements LoaderRegistry {
         }
     }
 
-    private <O> O load(URL url, InputStream stream, Class<O> type, IntrospectionContext ctx) throws LoaderException {
+    private <O> O load(URL url, InputStream stream, Class<O> type, IntrospectionContext ctx) throws XMLStreamException, UnrecognizedElementException {
         XMLStreamReader reader;
-        try {
-            reader = xmlFactory.createXMLStreamReader(url.toString(), stream);
-        } catch (XMLStreamException e) {
-            throw new InvalidConfigurationException("Invalid or missing resource:" + url.toString(), e);
-        }
+        reader = xmlFactory.createXMLStreamReader(url.toString(), stream);
 
         try {
-            try {
-                reader.nextTag();
-                return load(reader, type, ctx);
-            } catch (XMLStreamException e) {
-                throw new InvalidConfigurationException("Invalid or missing resource: " + url.toString(), e);
-            }
+            reader.nextTag();
+            return load(reader, type, ctx);
         } finally {
             if (reader != null) {
                 try {

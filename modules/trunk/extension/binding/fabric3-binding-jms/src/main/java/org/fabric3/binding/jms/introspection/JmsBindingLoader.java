@@ -43,7 +43,6 @@ import org.fabric3.binding.jms.common.ResponseDefinition;
 import org.fabric3.binding.jms.scdl.JmsBindingDefinition;
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.xml.InvalidValue;
-import org.fabric3.introspection.xml.LoaderException;
 import org.fabric3.introspection.xml.LoaderHelper;
 import org.fabric3.introspection.xml.TypeLoader;
 
@@ -70,7 +69,7 @@ public class JmsBindingLoader implements TypeLoader<JmsBindingDefinition> {
         this.loaderHelper = loaderHelper;
     }
 
-    public JmsBindingDefinition load(XMLStreamReader reader, IntrospectionContext introspectionContext) throws XMLStreamException, LoaderException {
+    public JmsBindingDefinition load(XMLStreamReader reader, IntrospectionContext introspectionContext) throws XMLStreamException {
 
         JmsBindingMetadata metadata = null;
         String uri = reader.getAttributeValue(null, "uri");
@@ -95,7 +94,7 @@ public class JmsBindingLoader implements TypeLoader<JmsBindingDefinition> {
         }
         metadata.setJndiUrl(reader.getAttributeValue(null, "jndiURL"));
         metadata.setInitialContextFactory(reader.getAttributeValue(null, "initialContextFactory"));
-        loaderHelper.loadPolicySetsAndIntents(bd, reader);
+        loaderHelper.loadPolicySetsAndIntents(bd, reader, introspectionContext);
         if (uri != null) {
             while (true) {
                 if (END_ELEMENT == reader.next() && "binding.jms".equals(reader.getName().getLocalPart())) {

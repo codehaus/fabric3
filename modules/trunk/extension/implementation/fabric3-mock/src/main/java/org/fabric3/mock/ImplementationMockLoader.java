@@ -19,29 +19,22 @@ package org.fabric3.mock;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
-
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
-
-import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.introspection.xml.LoaderException;
-import org.fabric3.introspection.xml.TypeLoader;
 
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
+import org.fabric3.introspection.IntrospectionContext;
+import org.fabric3.introspection.xml.TypeLoader;
+
 /**
  * Loads implementation.mock from the scdl. The XML fragment is expeced to look like,
- * 
- * <implementation.mock>
- *         org.fabric3.mock.Foo
- *         org.fabric3.mock.Bar
- *         org.fabric3.mock.Baz
- * </implementation.mock>
- * 
- * The implementation.mock element is expected to have a delimitted list of fully qualified named of the interfaces
- * that need to be mocked.
- * 
+ * <p/>
+ * <implementation.mock> org.fabric3.mock.Foo org.fabric3.mock.Bar org.fabric3.mock.Baz </implementation.mock>
+ * <p/>
+ * The implementation.mock element is expected to have a delimitted list of fully qualified named of the interfaces that need to be mocked.
+ *
  * @version $Revision$ $Date$
  */
 @EagerInit
@@ -51,8 +44,7 @@ public class ImplementationMockLoader implements TypeLoader<ImplementationMock> 
 
     /**
      * Initializes the loader registry.
-     * 
-     * @param registry Loader registry that is injected.
+     *
      * @param componentTypeLoader Component type loader.
      */
     @SuppressWarnings("deprecation")
@@ -62,32 +54,30 @@ public class ImplementationMockLoader implements TypeLoader<ImplementationMock> 
 
     /**
      * Loads implementation.mock element from the SCDL.
-     * 
-     * @param reader StAX reader using which the scdl is loaded.
+     *
+     * @param reader  StAX reader using which the scdl is loaded.
      * @param context Loader context containing contextual information.
      * @return An instance of mock implementation.
-     * @throws LoaderException If unable to load implementation.mock from the SCDL.
      */
-    public ImplementationMock load(XMLStreamReader reader, IntrospectionContext context) throws XMLStreamException,
-            LoaderException {
-        
+    public ImplementationMock load(XMLStreamReader reader, IntrospectionContext context) throws XMLStreamException {
+
         assert reader.getName().equals(ImplementationMock.IMPLEMENTATION_MOCK);
-        
+
         String textualContent = reader.getElementText().trim();
-        
+
         List<String> mockedInterfaces = new ArrayList<String>();
-        
+
         StringTokenizer tok = new StringTokenizer(textualContent);
-        while(tok.hasMoreElements()) {
+        while (tok.hasMoreElements()) {
             mockedInterfaces.add(tok.nextToken().trim());
         }
-        
+
         MockComponentType componentType = componentTypeLoader.load(mockedInterfaces, context);
-        
+
         assert reader.getName().equals(ImplementationMock.IMPLEMENTATION_MOCK);
-        
+
         return new ImplementationMock(mockedInterfaces, componentType);
-        
+
     }
 
 }

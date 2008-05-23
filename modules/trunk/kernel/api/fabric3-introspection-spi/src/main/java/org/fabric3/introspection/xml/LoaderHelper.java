@@ -28,6 +28,7 @@ import javax.xml.stream.XMLStreamReader;
 import org.w3c.dom.Document;
 
 import org.fabric3.scdl.PolicyAware;
+import org.fabric3.introspection.IntrospectionContext;
 
 /**
  * Interface for the helper class for loading intents and policy sets into elements aginst which intents and policies can be declared.
@@ -50,13 +51,14 @@ public interface LoaderHelper {
     Document loadValue(XMLStreamReader reader) throws XMLStreamException;
 
     /**
-     * Loads policy sets and intents defined against bindings, implementations, services, references and components.
+     * Loads policy sets and intents defined against bindings, implementations, services, references and components. Errors will be collated in the
+     * IntrospectionContext.
      *
      * @param policyAware Element against which policy sets and intents are declared.
      * @param reader      XML stream reader from where the attributes are read.
-     * @throws LoaderException if there was a problem with the policy set or intents
+     * @param context     the introspection context.
      */
-    void loadPolicySetsAndIntents(PolicyAware policyAware, XMLStreamReader reader) throws LoaderException;
+    void loadPolicySetsAndIntents(PolicyAware policyAware, XMLStreamReader reader, IntrospectionContext context);
 
     /**
      * Convert a component URI in the form ${componentName}/${serviceName} to a URI of the form ${componentName}#${serviceName}
@@ -72,9 +74,9 @@ public interface LoaderHelper {
      * @param reader    XML stream reader.
      * @param attribute Attribute that contains the list of qualified names.
      * @return Set containing the qualified names.
-     * @throws LoaderException If the qualified name cannot be resolved.
+     * @throws InvalidPrefixException If the qualified name cannot be resolved.
      */
-    Set<QName> parseListOfQNames(XMLStreamReader reader, String attribute) throws LoaderException;
+    Set<QName> parseListOfQNames(XMLStreamReader reader, String attribute) throws InvalidPrefixException;
 
     /**
      * Constructs a QName from the given name. If a namespace prefix is not specified in the name, the namespace context is used
@@ -82,9 +84,9 @@ public interface LoaderHelper {
      * @param name   the name to parse
      * @param reader the XML stream reader
      * @return the parsed QName
-     * @throws LoaderException if a specified namespace prefix is invalid
+     * @throws InvalidPrefixException if a specified namespace prefix is invalid
      */
-    QName createQName(String name, XMLStreamReader reader) throws LoaderException;
+    QName createQName(String name, XMLStreamReader reader) throws InvalidPrefixException;
 
     /**
      * Parses a list of URIs contained in a attribute.
@@ -92,7 +94,6 @@ public interface LoaderHelper {
      * @param reader    the XML stream reader
      * @param attribute the attribute to parse
      * @return the list of URIs contained in that attribute, or null if the attribute is not present
-     * @throws LoaderException if list contains a value that is not a valid URI
      */
-    List<URI> parseListOfUris(XMLStreamReader reader, String attribute) throws LoaderException;
+    List<URI> parseListOfUris(XMLStreamReader reader, String attribute);
 }

@@ -48,17 +48,17 @@ import org.fabric3.spi.services.contribution.ResourceElement;
  * @version $Revision$ $Date$
  */
 public class DefinitionsLoaderTestCase extends TestCase {
-    
+
     public static final QName TRANSACTIONAL_QNAME =
             new QName("http://fabric3.org/xmlns/sca/2.0-alpha", "transactional");
     public static final QName BINDING_QNAME = new QName("http://www.osoa.org/xmlns/sca/1.0", "binding");
     public static final QName TRX_POLICY_QNAME =
             new QName("http://fabric3.org/xmlns/sca/2.0-alpha", "transactionalPolicy");
     public static final QName SERVER_SEC_POLICY =
-        new QName("http://fabric3.org/xmlns/sca/2.0-alpha", "testServerPolicy");
+            new QName("http://fabric3.org/xmlns/sca/2.0-alpha", "testServerPolicy");
     public static final QName CLIENT_SEC_POLICY =
-        new QName("http://fabric3.org/xmlns/sca/2.0-alpha", "testClientPolicy");
-    
+            new QName("http://fabric3.org/xmlns/sca/2.0-alpha", "testClientPolicy");
+
     private DefinitionsLoader loader;
     private Resource resource;
     private XMLStreamReader reader;
@@ -127,10 +127,10 @@ public class DefinitionsLoaderTestCase extends TestCase {
                 new ResourceElement<QNameSymbol, AbstractDefinition>(new QNameSymbol(TRX_POLICY_QNAME));
         resource.addResourceElement(element);
         element =
-            new ResourceElement<QNameSymbol, AbstractDefinition>(new QNameSymbol(SERVER_SEC_POLICY));
+                new ResourceElement<QNameSymbol, AbstractDefinition>(new QNameSymbol(SERVER_SEC_POLICY));
         resource.addResourceElement(element);
         element =
-            new ResourceElement<QNameSymbol, AbstractDefinition>(new QNameSymbol(CLIENT_SEC_POLICY));
+                new ResourceElement<QNameSymbol, AbstractDefinition>(new QNameSymbol(CLIENT_SEC_POLICY));
         resource.addResourceElement(element);
 
         // setup reader
@@ -146,8 +146,7 @@ public class DefinitionsLoaderTestCase extends TestCase {
 
         private Map<QName, TypeLoader<?>> loaders = new HashMap<QName, TypeLoader<?>>();
 
-        public void registerLoader(QName element, TypeLoader<?> loader)
-                throws IllegalStateException {
+        public void registerLoader(QName element, TypeLoader<?> loader) throws IllegalStateException {
             loaders.put(element, loader);
         }
 
@@ -155,15 +154,11 @@ public class DefinitionsLoaderTestCase extends TestCase {
         }
 
         @SuppressWarnings("unchecked")
-        public <OUTPUT> OUTPUT load(XMLStreamReader reader, Class<OUTPUT> type,
-                                    IntrospectionContext context) throws XMLStreamException,
-                LoaderException {
+        public <OUTPUT> OUTPUT load(XMLStreamReader reader, Class<OUTPUT> type, IntrospectionContext context) throws XMLStreamException {
             return (OUTPUT) loaders.get(reader.getName()).load(reader, context);
         }
 
-        public <OUTPUT> OUTPUT load(URL url, Class<OUTPUT> type,
-                                    IntrospectionContext context) throws LoaderException {
-            // TODO Auto-generated method stub
+        public <OUTPUT> OUTPUT load(URL url, Class<OUTPUT> type, IntrospectionContext context) throws LoaderException {
             return null;
         }
 

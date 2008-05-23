@@ -29,12 +29,11 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.binding.burlap.scdl.BurlapBindingDefinition;
 import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.introspection.xml.LoaderException;
-import org.fabric3.introspection.xml.LoaderUtil;
-import org.fabric3.introspection.xml.LoaderHelper;
-import org.fabric3.introspection.xml.TypeLoader;
 import org.fabric3.introspection.xml.InvalidValue;
+import org.fabric3.introspection.xml.LoaderHelper;
+import org.fabric3.introspection.xml.LoaderUtil;
 import org.fabric3.introspection.xml.MissingAttribute;
+import org.fabric3.introspection.xml.TypeLoader;
 
 /**
  * @version $Revision$ $Date$
@@ -59,8 +58,7 @@ public class BurlapBindingLoader implements TypeLoader<BurlapBindingDefinition> 
         this.loaderHelper = loaderHelper;
     }
 
-    public BurlapBindingDefinition load(XMLStreamReader reader, IntrospectionContext introspectionContext)
-            throws XMLStreamException, LoaderException {
+    public BurlapBindingDefinition load(XMLStreamReader reader, IntrospectionContext introspectionContext) throws XMLStreamException {
 
         BurlapBindingDefinition bd = null;
         String uri = null;
@@ -74,7 +72,7 @@ public class BurlapBindingLoader implements TypeLoader<BurlapBindingDefinition> 
             }
             bd = new BurlapBindingDefinition(new URI(uri));
 
-            loaderHelper.loadPolicySetsAndIntents(bd, reader);
+            loaderHelper.loadPolicySetsAndIntents(bd, reader, introspectionContext);
 
         } catch (URISyntaxException ex) {
             InvalidValue failure = new InvalidValue("The Burlap binding URI is not valid: " + uri, "uri", reader);

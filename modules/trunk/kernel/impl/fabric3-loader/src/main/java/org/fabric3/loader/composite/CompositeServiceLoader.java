@@ -29,11 +29,11 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.xml.Loader;
-import org.fabric3.introspection.xml.LoaderException;
 import org.fabric3.introspection.xml.LoaderHelper;
 import org.fabric3.introspection.xml.MissingAttribute;
 import org.fabric3.introspection.xml.TypeLoader;
-import org.fabric3.introspection.xml.UnrecognizedTypeException;
+import org.fabric3.introspection.xml.UnrecognizedElement;
+import org.fabric3.introspection.xml.UnrecognizedElementException;
 import org.fabric3.scdl.BindingDefinition;
 import org.fabric3.scdl.CompositeService;
 import org.fabric3.scdl.ModelObject;
@@ -55,8 +55,7 @@ public class CompositeServiceLoader implements TypeLoader<CompositeService> {
         this.loaderHelper = loaderHelper;
     }
 
-    public CompositeService load(XMLStreamReader reader, IntrospectionContext context)
-            throws XMLStreamException, LoaderException {
+    public CompositeService load(XMLStreamReader reader, IntrospectionContext context) throws XMLStreamException {
         String name = reader.getAttributeValue(null, "name");
         if (name == null) {
             MissingAttribute failure = new MissingAttribute("Service name not specified", "name", reader);
@@ -66,7 +65,7 @@ public class CompositeServiceLoader implements TypeLoader<CompositeService> {
         String promote = reader.getAttributeValue(null, "promote");
         CompositeService def = new CompositeService(name, null, loaderHelper.getURI(promote));
 
-        loaderHelper.loadPolicySetsAndIntents(def, reader);
+        loaderHelper.loadPolicySetsAndIntents(def, reader, context);
         boolean callback = false;
         while (true) {
             int i = reader.next();
@@ -76,7 +75,15 @@ public class CompositeServiceLoader implements TypeLoader<CompositeService> {
                 if (callback) {
                     reader.nextTag();
                 }
-                ModelObject type = loader.load(reader, ModelObject.class, context);
+                ModelObject type;
+                try {
+                    type = loader.load(reader, ModelObject.class, context);
+                } catch (UnrecognizedElementException e) {
+                    UnrecognizedElement failure = new UnrecognizedElement(reader);
+                    context.addError(failure);
+                    continue;
+
+                }
                 if (type instanceof ServiceContract) {
                     def.setServiceContract((ServiceContract<?>) type);
                 } else if (type instanceof BindingDefinition) {
@@ -88,7 +95,8 @@ public class CompositeServiceLoader implements TypeLoader<CompositeService> {
                 } else if (type instanceof OperationDefinition) {
                     def.addOperation((OperationDefinition) type);
                 } else {
-                    throw new UnrecognizedTypeException(reader);
+                    context.addError(new UnrecognizedElement(reader));
+                    continue;
                 }
                 break;
             case END_ELEMENT:

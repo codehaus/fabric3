@@ -25,7 +25,6 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.introspection.xml.LoaderException;
 import org.fabric3.introspection.xml.LoaderUtil;
 import org.fabric3.introspection.xml.TypeLoader;
 import org.fabric3.junit.scdl.JUnitImplementation;
@@ -42,8 +41,7 @@ public class JUnitImplementationLoader implements TypeLoader<JUnitImplementation
         this.implementationProcessor = implementationProcessor;
     }
 
-    public JUnitImplementation load(XMLStreamReader reader, IntrospectionContext introspectionContext)
-            throws XMLStreamException, LoaderException {
+    public JUnitImplementation load(XMLStreamReader reader, IntrospectionContext introspectionContext) throws XMLStreamException {
         String className = reader.getAttributeValue(null, "class");
         LoaderUtil.skipToEndElement(reader);
 

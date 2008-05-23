@@ -26,13 +26,11 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.xml.Loader;
-import org.fabric3.introspection.xml.LoaderException;
 import org.fabric3.introspection.xml.LoaderHelper;
 import org.fabric3.introspection.xml.MissingAttribute;
 import org.fabric3.introspection.xml.TypeLoader;
-import org.fabric3.introspection.xml.UnrecognizedTypeException;
-import org.fabric3.introspection.xml.UnrecognizedElementException;
 import org.fabric3.introspection.xml.UnrecognizedElement;
+import org.fabric3.introspection.xml.UnrecognizedElementException;
 import org.fabric3.scdl.BindingDefinition;
 import org.fabric3.scdl.ComponentService;
 import org.fabric3.scdl.ModelObject;
@@ -55,7 +53,7 @@ public class ComponentServiceLoader implements TypeLoader<ComponentService> {
         this.loaderHelper = loaderHelper;
     }
 
-    public ComponentService load(XMLStreamReader reader, IntrospectionContext context) throws XMLStreamException, LoaderException {
+    public ComponentService load(XMLStreamReader reader, IntrospectionContext context) throws XMLStreamException {
 
         String name = reader.getAttributeValue(null, "name");
         if (name == null) {
@@ -65,7 +63,7 @@ public class ComponentServiceLoader implements TypeLoader<ComponentService> {
         }
         ComponentService def = new ComponentService(name, null);
 
-        loaderHelper.loadPolicySetsAndIntents(def, reader);
+        loaderHelper.loadPolicySetsAndIntents(def, reader, context);
 
         boolean callback = false;
         while (true) {
@@ -82,7 +80,8 @@ public class ComponentServiceLoader implements TypeLoader<ComponentService> {
                     // TODO when the loader registry is replaced this try..catch must be replaced with a check for a loader and an
                     // UnrecognizedElement added to the context if none is found
                 } catch (UnrecognizedElementException e) {
-                    context.addError(new UnrecognizedElement(reader));
+                    UnrecognizedElement failure = new UnrecognizedElement(reader);
+                    context.addError(failure);
                     continue;
                 }
                 if (type instanceof ServiceContract) {
@@ -95,8 +94,12 @@ public class ComponentServiceLoader implements TypeLoader<ComponentService> {
                     }
                 } else if (type instanceof OperationDefinition) {
                     def.addOperation((OperationDefinition) type);
+                } else if (type == null) {
+                    // error loading, the element, ignore as an error will have been reported
+                    break;
                 } else {
-                    throw new UnrecognizedTypeException(reader);
+                    context.addError(new UnrecognizedElement(reader));
+                    continue;
                 }
                 break;
             case XMLStreamConstants.END_ELEMENT:

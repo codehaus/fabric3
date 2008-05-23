@@ -25,6 +25,7 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.introspection.IntrospectionContext;
+import org.fabric3.introspection.xml.ElementLoadFailure;
 import org.fabric3.introspection.xml.LoaderException;
 import org.fabric3.introspection.xml.LoaderUtil;
 import org.fabric3.introspection.xml.TypeLoader;
@@ -42,13 +43,20 @@ public class LaunchedLoader implements TypeLoader<Launched> {
     }
 
 
-    public Launched load(XMLStreamReader reader, IntrospectionContext introspectionContext) throws XMLStreamException, LoaderException {
+    public Launched load(XMLStreamReader reader, IntrospectionContext introspectionContext) throws XMLStreamException {
         String className = reader.getAttributeValue(null, "class");
         String factoryName = reader.getAttributeValue(null, "factory");
         LoaderUtil.skipToEndElement(reader);
 
         Launched impl = new Launched(className, factoryName);
-        componentTypeLoader.load(impl, introspectionContext);
+        try {
+            componentTypeLoader.load(impl, introspectionContext);
+        } catch (LoaderException e) {
+            ElementLoadFailure failure = new ElementLoadFailure("Error loading componentType", e, reader);
+            introspectionContext.addError(failure);
+            return null;
+
+        }
         return impl;
     }
 }

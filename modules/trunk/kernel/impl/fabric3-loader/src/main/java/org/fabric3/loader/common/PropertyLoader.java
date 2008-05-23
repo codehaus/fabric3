@@ -26,11 +26,10 @@ import javax.xml.stream.XMLStreamReader;
 import org.osoa.sca.annotations.Reference;
 import org.w3c.dom.Document;
 
-import org.fabric3.scdl.Property;
 import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.introspection.xml.LoaderException;
-import org.fabric3.introspection.xml.TypeLoader;
 import org.fabric3.introspection.xml.LoaderHelper;
+import org.fabric3.introspection.xml.TypeLoader;
+import org.fabric3.scdl.Property;
 
 /**
  * Loads a property declaration from an XML-based assembly file
@@ -49,7 +48,7 @@ public class PropertyLoader implements TypeLoader<Property> {
         this.helper = helper;
     }
 
-    public Property load(XMLStreamReader reader, IntrospectionContext ctx) throws XMLStreamException, LoaderException {
+    public Property load(XMLStreamReader reader, IntrospectionContext ctx) throws XMLStreamException {
         String name = reader.getAttributeValue(null, NAME);
         boolean many = Boolean.parseBoolean(reader.getAttributeValue(null, MANY));
         boolean mustSupply = Boolean.parseBoolean(reader.getAttributeValue(null, MUST_SUPPLY));

@@ -32,10 +32,8 @@ import org.osoa.sca.annotations.Reference;
 import org.fabric3.api.jpa.ConversationalDaoImpl;
 import org.fabric3.introspection.DefaultIntrospectionContext;
 import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.introspection.IntrospectionException;
 import org.fabric3.introspection.TypeMapping;
 import org.fabric3.introspection.contract.ContractProcessor;
-import org.fabric3.introspection.xml.LoaderException;
 import org.fabric3.introspection.xml.MissingAttribute;
 import org.fabric3.introspection.xml.TypeLoader;
 import org.fabric3.java.introspection.JavaImplementationProcessor;
@@ -75,7 +73,7 @@ public class JpaImplementationLoader implements TypeLoader<JavaImplementation> {
      * @param context Introspection context.
      * @return An instance of the JPA implemenation.
      */
-    public JavaImplementation load(XMLStreamReader reader, IntrospectionContext context) throws XMLStreamException, LoaderException {
+    public JavaImplementation load(XMLStreamReader reader, IntrospectionContext context) throws XMLStreamException {
 
         try {
 
@@ -105,7 +103,8 @@ public class JpaImplementationLoader implements TypeLoader<JavaImplementation> {
             return implementation;
 
         } catch (NoSuchFieldException e) {
-            throw new LoaderException(reader, e);
+            // this should not happen
+            throw new AssertionError(e);
         }
 
     }

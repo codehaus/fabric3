@@ -46,6 +46,7 @@ import org.fabric3.introspection.xml.Loader;
 import org.fabric3.introspection.xml.LoaderException;
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.DefaultIntrospectionContext;
+import org.fabric3.introspection.validation.InvalidContributionException;
 import org.fabric3.api.annotation.Monitor;
 
 /**
@@ -59,9 +60,9 @@ public class WarContributionHandler implements ArchiveContributionHandler {
     private ProcessorRegistry registry;
 
     public WarContributionHandler(@Reference ProcessorRegistry processorRegistry,
-                                    @Reference Loader loader,
-                                    @Reference ContentTypeResolver contentTypeResolver,
-                                    @Monitor WarContributionMonitor monitor) {
+                                  @Reference Loader loader,
+                                  @Reference ContentTypeResolver contentTypeResolver,
+                                  @Monitor WarContributionMonitor monitor) {
 
         this.registry = processorRegistry;
         this.loader = loader;
@@ -97,6 +98,9 @@ public class WarContributionHandler implements ArchiveContributionHandler {
             URI uri = contribution.getUri();
             IntrospectionContext context = new DefaultIntrospectionContext(cl, uri, null);
             manifest = loader.load(manifestURL, ContributionManifest.class, context);
+            if (context.hasErrors()) {
+                throw new InvalidContributionException(context.getErrors());
+            }
         } catch (LoaderException e) {
             if (e.getCause() instanceof FileNotFoundException) {
                 manifest = new ContributionManifest();
@@ -105,6 +109,9 @@ public class WarContributionHandler implements ArchiveContributionHandler {
             }
         } catch (MalformedURLException e) {
             manifest = new ContributionManifest();
+        } catch (InvalidContributionException e) {
+            //xcv fixme
+            throw new ContributionException(e);
         }
         contribution.setManifest(manifest);
 

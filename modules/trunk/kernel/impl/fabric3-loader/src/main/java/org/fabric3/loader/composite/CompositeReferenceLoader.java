@@ -29,13 +29,11 @@ import org.osoa.sca.annotations.Reference;
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.xml.InvalidValue;
 import org.fabric3.introspection.xml.Loader;
-import org.fabric3.introspection.xml.LoaderException;
 import org.fabric3.introspection.xml.LoaderHelper;
-import org.fabric3.introspection.xml.TypeLoader;
-import org.fabric3.introspection.xml.UnrecognizedTypeException;
-import org.fabric3.introspection.xml.UnrecognizedElementException;
-import org.fabric3.introspection.xml.UnrecognizedElement;
 import org.fabric3.introspection.xml.MissingAttribute;
+import org.fabric3.introspection.xml.TypeLoader;
+import org.fabric3.introspection.xml.UnrecognizedElement;
+import org.fabric3.introspection.xml.UnrecognizedElementException;
 import org.fabric3.scdl.BindingDefinition;
 import org.fabric3.scdl.CompositeReference;
 import org.fabric3.scdl.ModelObject;
@@ -58,8 +56,7 @@ public class CompositeReferenceLoader implements TypeLoader<CompositeReference> 
         this.loaderHelper = loaderHelper;
     }
 
-    public CompositeReference load(XMLStreamReader reader, IntrospectionContext context)
-            throws XMLStreamException, LoaderException {
+    public CompositeReference load(XMLStreamReader reader, IntrospectionContext context) throws XMLStreamException {
 
         String name = reader.getAttributeValue(null, "name");
         if (name == null) {
@@ -70,7 +67,7 @@ public class CompositeReferenceLoader implements TypeLoader<CompositeReference> 
 
         List<URI> promotedUris = loaderHelper.parseListOfUris(reader, "promote");
         CompositeReference referenceDefinition = new CompositeReference(name, promotedUris);
-        loaderHelper.loadPolicySetsAndIntents(referenceDefinition, reader);
+        loaderHelper.loadPolicySetsAndIntents(referenceDefinition, reader, context);
 
         String value = reader.getAttributeValue(null, "multiplicity");
         try {
@@ -94,7 +91,8 @@ public class CompositeReferenceLoader implements TypeLoader<CompositeReference> 
                     // TODO when the loader registry is replaced this try..catch must be replaced with a check for a loader and an
                     // UnrecognizedElement added to the context if none is found
                 } catch (UnrecognizedElementException e) {
-                    context.addError(new UnrecognizedElement(reader));
+                    UnrecognizedElement failure = new UnrecognizedElement(reader);
+                    context.addError(failure);
                     continue;
                 }
                 if (type instanceof ServiceContract) {
@@ -109,7 +107,8 @@ public class CompositeReferenceLoader implements TypeLoader<CompositeReference> 
                 } else if (type instanceof OperationDefinition) {
                     referenceDefinition.addOperation((OperationDefinition) type);
                 } else {
-                    throw new UnrecognizedTypeException(reader);
+                    context.addError(new UnrecognizedElement(reader));
+                    continue;
                 }
                 break;
             case XMLStreamConstants.END_ELEMENT:

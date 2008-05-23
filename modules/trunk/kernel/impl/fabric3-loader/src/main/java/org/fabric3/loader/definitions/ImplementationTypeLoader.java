@@ -27,10 +27,11 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.introspection.xml.LoaderException;
+import org.fabric3.introspection.xml.InvalidPrefixException;
 import org.fabric3.introspection.xml.LoaderHelper;
 import org.fabric3.introspection.xml.LoaderUtil;
 import org.fabric3.introspection.xml.TypeLoader;
+import org.fabric3.loader.impl.InvalidQNamePrefix;
 import org.fabric3.scdl.definitions.ImplementationType;
 
 /**
@@ -47,19 +48,23 @@ public class ImplementationTypeLoader implements TypeLoader<ImplementationType> 
         this.helper = helper;
     }
 
-    public ImplementationType load(XMLStreamReader reader, IntrospectionContext context)
-            throws XMLStreamException, LoaderException {
+    public ImplementationType load(XMLStreamReader reader, IntrospectionContext context) throws XMLStreamException {
 
-        String name = reader.getAttributeValue(null, "name");
-        QName qName = helper.createQName(name, reader); 
+        try {
+            String name = reader.getAttributeValue(null, "name");
+            QName qName = helper.createQName(name, reader);
+            Set<QName> alwaysProvides = helper.parseListOfQNames(reader, "alwaysProvides");
+            Set<QName> mayProvide = helper.parseListOfQNames(reader, "mayProvide");
 
-        Set<QName> alwaysProvides = helper.parseListOfQNames(reader, "alwaysProvides");
-        Set<QName> mayProvide = helper.parseListOfQNames(reader, "mayProvide");
+            LoaderUtil.skipToEndElement(reader);
 
-        LoaderUtil.skipToEndElement(reader);
+            return new ImplementationType(qName, alwaysProvides, mayProvide);
 
-        return new ImplementationType(qName, alwaysProvides, mayProvide);
+        } catch (InvalidPrefixException e) {
+            context.addError(new InvalidQNamePrefix(e.getPrefix(), reader));
 
+        }
+        return null;
     }
 
 }

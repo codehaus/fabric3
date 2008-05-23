@@ -45,6 +45,7 @@ import org.springframework.core.io.UrlResource;
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.IntrospectionHelper;
 import org.fabric3.introspection.java.ImplementationNotFoundException;
+import org.fabric3.introspection.xml.InvalidValue;
 import org.fabric3.introspection.xml.LoaderException;
 import org.fabric3.introspection.xml.LoaderHelper;
 import org.fabric3.introspection.xml.LoaderUtil;
@@ -79,8 +80,7 @@ public class SpringImplementationLoader implements TypeLoader<SpringImplementati
     }
 
 
-    public SpringImplementation load(XMLStreamReader reader, IntrospectionContext introspectionContext)
-            throws XMLStreamException, LoaderException {
+    public SpringImplementation load(XMLStreamReader reader, IntrospectionContext introspectionContext) throws XMLStreamException {
 
         assert SpringImplementation.IMPLEMENTATION_SPRING.equals(reader.getName());
 
@@ -102,11 +102,18 @@ public class SpringImplementationLoader implements TypeLoader<SpringImplementati
         loadSpringAppContextXML(location, implementation, reader, introspectionContext);
 
 
-        loaderHelper.loadPolicySetsAndIntents(implementation, reader);
+        loaderHelper.loadPolicySetsAndIntents(implementation, reader, introspectionContext);
         LoaderUtil.skipToEndElement(reader);
 
         implementation.setLocation(location);
-        componentTypeLoader.load(implementation, introspectionContext);
+        try {
+            componentTypeLoader.load(implementation, introspectionContext);
+        } catch (LoaderException e) {
+            InvalidValue failure = new InvalidValue("Error parsing property value", null, reader);
+            introspectionContext.addError(failure);
+            return null;
+
+        }
         return implementation;
 
     }
@@ -114,8 +121,7 @@ public class SpringImplementationLoader implements TypeLoader<SpringImplementati
     private void loadSpringAppContextXML(String location,
                                          SpringImplementation implementation,
                                          XMLStreamReader originalReader,
-                                         IntrospectionContext introspectionContext)
-            throws LoaderException {
+                                         IntrospectionContext introspectionContext) {
 
         Resource ac = getApplicationContextResource(location, originalReader, introspectionContext);
         implementation.setResource(ac);
@@ -191,9 +197,15 @@ public class SpringImplementationLoader implements TypeLoader<SpringImplementati
             }
 
         } catch (IOException e) {
-            throw new LoaderException(originalReader, e);
+            InvalidApplicationContextFile failure =
+                    new InvalidApplicationContextFile("Error loading application context: " + location, location, e, originalReader);
+            introspectionContext.addError(failure);
+            return;
         } catch (XMLStreamException e) {
-            throw new LoaderException(originalReader, e);
+            InvalidApplicationContextFile failure =
+                    new InvalidApplicationContextFile("Error loading application context: " + location, location, e, originalReader);
+            introspectionContext.addError(failure);
+            return;
         }
 
         generateSpringComponentType(beans, implementation, reader, introspectionContext);
@@ -202,8 +214,7 @@ public class SpringImplementationLoader implements TypeLoader<SpringImplementati
     protected void generateSpringComponentType(List<SpringBeanElement> beanElements,
                                                SpringImplementation implementation,
                                                XMLStreamReader reader,
-                                               IntrospectionContext introspectionContext)
-            throws LoaderException {
+                                               IntrospectionContext introspectionContext) {
         SpringComponentType springComponentType = implementation.getComponentType();
 
         // don't need this if explicit service is declared, not DONE

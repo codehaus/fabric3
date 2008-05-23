@@ -37,10 +37,12 @@ import org.fabric3.spi.services.contribution.QNameExport;
 public class QNameExportLoader implements TypeLoader<QNameExport> {
     //private static final QName EXPORT = new QName(SCA_NS, "export");
 
-    public QNameExport load(XMLStreamReader reader, IntrospectionContext context) throws MissingMainifestAttributeException, XMLStreamException {
+    public QNameExport load(XMLStreamReader reader, IntrospectionContext context) throws XMLStreamException {
         String ns = reader.getAttributeValue(null, "namespace");
         if (ns == null) {
-            throw new MissingMainifestAttributeException("The namespace attribute must be specified", reader);
+            MissingMainifestAttribute failure = new MissingMainifestAttribute("The namespace attribute must be specified", "namespace", reader);
+            context.addError(failure);
+            return null;
         }
         return new QNameExport(new QName(ns));
     }

@@ -25,7 +25,6 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.introspection.xml.LoaderException;
 import org.fabric3.introspection.xml.LoaderUtil;
 import org.fabric3.introspection.xml.MissingAttribute;
 import org.fabric3.introspection.xml.TypeLoader;
@@ -50,7 +49,7 @@ public class SystemImplementationLoader implements TypeLoader<SystemImplementati
         this.implementationProcessor = implementationProcessor;
     }
 
-    public SystemImplementation load(XMLStreamReader reader, IntrospectionContext introspectionContext) throws XMLStreamException, LoaderException {
+    public SystemImplementation load(XMLStreamReader reader, IntrospectionContext introspectionContext) throws XMLStreamException {
         assert SystemImplementation.IMPLEMENTATION_SYSTEM.equals(reader.getName());
         String implClass = reader.getAttributeValue(null, "class");
         if (implClass == null) {

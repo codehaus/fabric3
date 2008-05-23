@@ -31,12 +31,10 @@ import org.osoa.sca.annotations.Reference;
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.xml.InvalidValue;
 import org.fabric3.introspection.xml.Loader;
-import org.fabric3.introspection.xml.LoaderException;
 import org.fabric3.introspection.xml.LoaderHelper;
 import org.fabric3.introspection.xml.TypeLoader;
-import org.fabric3.introspection.xml.UnrecognizedTypeException;
-import org.fabric3.introspection.xml.UnrecognizedElementException;
 import org.fabric3.introspection.xml.UnrecognizedElement;
+import org.fabric3.introspection.xml.UnrecognizedElementException;
 import org.fabric3.scdl.BindingDefinition;
 import org.fabric3.scdl.ComponentReference;
 import org.fabric3.scdl.ModelObject;
@@ -60,7 +58,7 @@ public class ComponentReferenceLoader implements TypeLoader<ComponentReference> 
         this.loaderHelper = loaderHelper;
     }
 
-    public ComponentReference load(XMLStreamReader reader, IntrospectionContext context) throws XMLStreamException, LoaderException {
+    public ComponentReference load(XMLStreamReader reader, IntrospectionContext context) throws XMLStreamException {
         String name = reader.getAttributeValue(null, "name");
         if (name == null) {
             MissingReferenceName failure = new MissingReferenceName(reader);
@@ -92,7 +90,7 @@ public class ComponentReferenceLoader implements TypeLoader<ComponentReference> 
         }
         reference.getTargets().addAll(uris);
 
-        loaderHelper.loadPolicySetsAndIntents(reference, reader);
+        loaderHelper.loadPolicySetsAndIntents(reference, reader, context);
 
         boolean callback = false;
         while (true) {
@@ -108,7 +106,8 @@ public class ComponentReferenceLoader implements TypeLoader<ComponentReference> 
                     // TODO when the loader registry is replaced this try..catch must be replaced with a check for a loader and an
                     // UnrecognizedElement added to the context if none is found
                 } catch (UnrecognizedElementException e) {
-                    context.addError(new UnrecognizedElement(reader));
+                    UnrecognizedElement failure = new UnrecognizedElement(reader);
+                    context.addError(failure);
                     continue;
                 }
                 if (type instanceof ServiceContract) {
@@ -121,8 +120,12 @@ public class ComponentReferenceLoader implements TypeLoader<ComponentReference> 
                     }
                 } else if (type instanceof OperationDefinition) {
                     reference.addOperation((OperationDefinition) type);
+                }else if (type == null) {
+                    // error loading, the element, ignore as an error will have been reported
+                    break;
                 } else {
-                    throw new UnrecognizedTypeException(reader);
+                    context.addError(new UnrecognizedElement(reader));
+                    continue;
                 }
                 break;
             case XMLStreamConstants.END_ELEMENT:

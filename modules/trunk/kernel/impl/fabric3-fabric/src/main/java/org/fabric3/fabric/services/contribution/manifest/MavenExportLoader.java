@@ -22,7 +22,6 @@ import javax.xml.stream.XMLStreamReader;
 import org.osoa.sca.annotations.EagerInit;
 
 import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.introspection.xml.LoaderException;
 import org.fabric3.introspection.xml.TypeLoader;
 
 /**
@@ -32,17 +31,19 @@ import org.fabric3.introspection.xml.TypeLoader;
  */
 @EagerInit
 public class MavenExportLoader implements TypeLoader<MavenExport> {
-    //private static final QName IMPORT = new QName(Constants.FABRIC3_MAVEN_NS, "export");
 
-    public MavenExport load(XMLStreamReader reader, IntrospectionContext context)
-            throws XMLStreamException, LoaderException {
+    public MavenExport load(XMLStreamReader reader, IntrospectionContext context) throws XMLStreamException {
         String groupId = reader.getAttributeValue(null, "groupId");
         if (groupId == null) {
-            throw new MissingMainifestAttributeException("The groupId attribute must be specified", reader);
+            MissingMainifestAttribute failure = new MissingMainifestAttribute("The groupId attribute must be specified", "groupId", reader);
+            context.addError(failure);
+            return null;
         }
         String artifactId = reader.getAttributeValue(null, "artifactId");
         if (artifactId == null) {
-            throw new MissingMainifestAttributeException("The artifictId attribute must be specified", reader);
+            MissingMainifestAttribute failure = new MissingMainifestAttribute("The artifictId attribute must be specified", "artifictId", reader);
+            context.addError(failure);
+            return null;
         }
         String version = reader.getAttributeValue(null, "version");
         String classifier = reader.getAttributeValue(null, "classifier");

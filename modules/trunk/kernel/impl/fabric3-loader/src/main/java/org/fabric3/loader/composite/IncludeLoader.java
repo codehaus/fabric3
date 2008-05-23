@@ -34,6 +34,8 @@ import org.fabric3.introspection.xml.LoaderException;
 import org.fabric3.introspection.xml.LoaderUtil;
 import org.fabric3.introspection.xml.MissingAttribute;
 import org.fabric3.introspection.xml.TypeLoader;
+import org.fabric3.introspection.xml.InvalidValue;
+import org.fabric3.introspection.xml.ElementLoadFailure;
 import org.fabric3.scdl.Composite;
 import org.fabric3.scdl.Include;
 import org.fabric3.spi.services.contribution.MetaDataStore;
@@ -55,7 +57,7 @@ public class IncludeLoader implements TypeLoader<Include> {
         this.store = store;
     }
 
-    public Include load(XMLStreamReader reader, IntrospectionContext context) throws XMLStreamException, LoaderException {
+    public Include load(XMLStreamReader reader, IntrospectionContext context) throws XMLStreamException {
 
         String nameAttr = reader.getAttributeValue(null, "name");
         if (nameAttr == null || nameAttr.length() == 0) {
@@ -109,20 +111,23 @@ public class IncludeLoader implements TypeLoader<Include> {
                 include.setIncluded(composite);
                 return include;
             } catch (MetaDataStoreException e) {
-                throw new LoaderException(reader, e);
+                ElementLoadFailure failure = new ElementLoadFailure("Error loading element", e, reader);
+                context.addError(failure);
+                return null;
             }
         }
     }
 
-    private Include loadFromSideFile(QName name, ClassLoader cl, URI contributionUri, URL url, XMLStreamReader reader, IntrospectionContext context)
-            throws LoaderException {
+    private Include loadFromSideFile(QName name, ClassLoader cl, URI contributionUri, URL url, XMLStreamReader reader, IntrospectionContext context) {
         Include include = new Include();
         IntrospectionContext childContext = new DefaultIntrospectionContext(cl, contributionUri, url);
         Composite composite;
         try {
             composite = loader.load(url, Composite.class, childContext);
         } catch (LoaderException e) {
-            throw new LoaderException("Invalid composite: " + name, reader, e);
+            InvalidValue failure = new InvalidValue("Error loading include", null, reader);
+            context.addError(failure);
+            return include;
         }
         include.setName(name);
         include.setScdlLocation(url);

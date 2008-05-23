@@ -24,11 +24,10 @@ import javax.xml.stream.XMLStreamReader;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.introspection.xml.LoaderException;
 import org.fabric3.introspection.xml.LoaderHelper;
 import org.fabric3.introspection.xml.LoaderUtil;
-import org.fabric3.introspection.xml.TypeLoader;
 import org.fabric3.introspection.xml.MissingAttribute;
+import org.fabric3.introspection.xml.TypeLoader;
 import org.fabric3.java.scdl.JavaImplementation;
 
 /**
@@ -46,7 +45,7 @@ public class JavaImplementationLoader implements TypeLoader<JavaImplementation> 
     }
 
 
-    public JavaImplementation load(XMLStreamReader reader, IntrospectionContext introspectionContext) throws XMLStreamException, LoaderException {
+    public JavaImplementation load(XMLStreamReader reader, IntrospectionContext introspectionContext) throws XMLStreamException {
 
         assert JavaImplementation.IMPLEMENTATION_JAVA.equals(reader.getName());
 
@@ -58,7 +57,7 @@ public class JavaImplementationLoader implements TypeLoader<JavaImplementation> 
             LoaderUtil.skipToEndElement(reader);
             return implementation;
         }
-        loaderHelper.loadPolicySetsAndIntents(implementation, reader);
+        loaderHelper.loadPolicySetsAndIntents(implementation, reader, introspectionContext);
 
         LoaderUtil.skipToEndElement(reader);
 

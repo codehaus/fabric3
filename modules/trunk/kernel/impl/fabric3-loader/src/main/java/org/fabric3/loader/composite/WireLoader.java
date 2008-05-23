@@ -23,7 +23,6 @@ import javax.xml.stream.XMLStreamReader;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.introspection.xml.LoaderException;
 import org.fabric3.introspection.xml.LoaderHelper;
 import org.fabric3.introspection.xml.LoaderUtil;
 import org.fabric3.introspection.xml.TypeLoader;
@@ -39,8 +38,7 @@ public class WireLoader implements TypeLoader<WireDefinition> {
         this.helper = helper;
     }
 
-    public WireDefinition load(XMLStreamReader reader, IntrospectionContext context)
-            throws XMLStreamException, LoaderException {
+    public WireDefinition load(XMLStreamReader reader, IntrospectionContext context) throws XMLStreamException {
 
         String source = reader.getAttributeValue(null, "source");
         String target = reader.getAttributeValue(null, "target");

@@ -6,37 +6,32 @@
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
- * 
+ *
  *   http://www.apache.org/licenses/LICENSE-2.0
- * 
+ *
  * Unless required by applicable law or agreed to in writing,
  * software distributed under the License is distributed on an
  * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
- * under the License.    
+ * under the License.
  */
 package org.fabric3.introspection.xml;
 
-import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
-import org.fabric3.introspection.IntrospectionContext;
-
 /**
- * Deserializes an element from a StAX input stream.
- *
- * @version $Rev$ $Date$
+ * @version $Revision$ $Date$
  */
-public interface TypeLoader<OUTPUT> {
-    /**
-     * Deserializes an element in an XML stream. When this method returns the stream will be positioned on the corresponding END_ELEMENT. Errors and
-     * warnings will be reported to the IntrospectionContext.
-     *
-     * @param reader  the XML stream reader positioned on the applicable START_ELEMENT
-     * @param context the context for the load operation
-     * @return the deserialized object for that element
-     * @throws XMLStreamException if an error reading the XML stream occurs
-     */
-    OUTPUT load(XMLStreamReader reader, IntrospectionContext context) throws XMLStreamException;
+public class ElementLoadFailure extends XmlValidationFailure<Void> {
+    private Throwable cause;
+
+    public ElementLoadFailure(String message, Throwable cause, XMLStreamReader reader) {
+        super(message, null, reader);
+        this.cause = cause;
+    }
+
+    public String getMessage() {
+        return super.getMessage() + ". Original error was: \n" + cause;
+    }
 }

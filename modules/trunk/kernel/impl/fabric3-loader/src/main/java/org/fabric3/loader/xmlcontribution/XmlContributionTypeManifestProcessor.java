@@ -35,6 +35,7 @@ import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.host.contribution.Deployable;
 import org.fabric3.introspection.DefaultIntrospectionContext;
 import org.fabric3.introspection.IntrospectionContext;
+import org.fabric3.introspection.validation.InvalidContributionException;
 import org.fabric3.introspection.xml.Loader;
 import org.fabric3.introspection.xml.LoaderException;
 import static org.fabric3.spi.Constants.FABRIC3_NS;
@@ -79,6 +80,11 @@ public class XmlContributionTypeManifestProcessor implements XmlElementManifestP
                         ClassLoader cl = getClass().getClassLoader();
                         IntrospectionContext context = new DefaultIntrospectionContext(cl, null, null);
                         ContributionManifest embeddedManifest = loader.load(reader, ContributionManifest.class, context);
+                        if (context.hasErrors()) {
+                            // xcv fixme
+                            throw new ContributionException(new InvalidContributionException(context.getErrors()));
+                        }
+
                         // merge the contents
                         for (Deployable deployable : embeddedManifest.getDeployables()) {
                             manifest.addDeployable(deployable);

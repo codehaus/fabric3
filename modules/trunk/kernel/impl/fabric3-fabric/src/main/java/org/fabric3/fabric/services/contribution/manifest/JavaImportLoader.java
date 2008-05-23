@@ -21,9 +21,8 @@ import javax.xml.stream.XMLStreamReader;
 
 import org.osoa.sca.annotations.EagerInit;
 
-import org.fabric3.fabric.services.contribution.MissingPackageException;
+import org.fabric3.fabric.services.contribution.MissingPackage;
 import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.introspection.xml.LoaderException;
 import org.fabric3.introspection.xml.TypeLoader;
 
 /**
@@ -33,12 +32,13 @@ import org.fabric3.introspection.xml.TypeLoader;
  */
 @EagerInit
 public class JavaImportLoader implements TypeLoader<JavaImport> {
-    //private static final QName IMPORT = new QName(Constants.SCA_NS, "import.java");
 
-    public JavaImport load(XMLStreamReader reader, IntrospectionContext context) throws LoaderException, XMLStreamException {
+    public JavaImport load(XMLStreamReader reader, IntrospectionContext context) throws XMLStreamException {
         String packageName = reader.getAttributeValue(null, "package");
         if (packageName == null) {
-            throw new MissingPackageException("No package name specified", reader);
+            MissingPackage failure = new MissingPackage("No package name specified", reader);
+            context.addError(failure);
+            return null;
         }
         return new JavaImport(packageName);
     }

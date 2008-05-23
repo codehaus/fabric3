@@ -29,11 +29,12 @@ import javax.xml.stream.XMLStreamReader;
 
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.scdl.definitions.Intent;
 import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.introspection.xml.LoaderException;
-import org.fabric3.introspection.xml.TypeLoader;
+import org.fabric3.introspection.xml.InvalidPrefixException;
 import org.fabric3.introspection.xml.LoaderHelper;
+import org.fabric3.introspection.xml.TypeLoader;
+import org.fabric3.loader.impl.InvalidQNamePrefix;
+import org.fabric3.scdl.definitions.Intent;
 
 /**
  * Loader for definitions.
@@ -48,7 +49,7 @@ public class IntentLoader implements TypeLoader<Intent> {
         this.helper = helper;
     }
 
-    public Intent load(XMLStreamReader reader, IntrospectionContext context) throws XMLStreamException, LoaderException {
+    public Intent load(XMLStreamReader reader, IntrospectionContext context) throws XMLStreamException {
         
         String name = reader.getAttributeValue(null, "name");
         QName qName = new QName(context.getTargetNamespace(), name);
@@ -56,7 +57,12 @@ public class IntentLoader implements TypeLoader<Intent> {
         String constrainsVal = reader.getAttributeValue(null, "constrains");
         QName constrains = null;
         if(constrainsVal != null) {
-            constrains = helper.createQName(constrainsVal, reader);
+            try {
+                constrains = helper.createQName(constrainsVal, reader);
+            } catch (InvalidPrefixException e) {
+                context.addError(new InvalidQNamePrefix(e.getPrefix(), reader));
+                return null;
+            }
         }
         
         String description = null;
@@ -66,7 +72,13 @@ public class IntentLoader implements TypeLoader<Intent> {
         if(requiresVal != null) {
             StringTokenizer tok = new StringTokenizer(requiresVal);
             while(tok.hasMoreElements()) {
-                requires.add(helper.createQName(tok.nextToken(), reader));
+                try {
+                    QName id = helper.createQName(tok.nextToken(), reader);
+                    requires.add(id);
+                } catch (InvalidPrefixException e) {
+                    context.addError(new InvalidQNamePrefix(e.getPrefix(), reader));
+                    return null;
+                }
             }
         }
         

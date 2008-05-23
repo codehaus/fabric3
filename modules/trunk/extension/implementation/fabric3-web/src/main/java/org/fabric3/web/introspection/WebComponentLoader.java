@@ -32,6 +32,7 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.introspection.DefaultIntrospectionContext;
 import org.fabric3.introspection.IntrospectionContext;
+import org.fabric3.introspection.xml.ElementLoadFailure;
 import org.fabric3.introspection.xml.LoaderException;
 import org.fabric3.introspection.xml.LoaderRegistry;
 import org.fabric3.introspection.xml.LoaderUtil;
@@ -68,8 +69,7 @@ public class WebComponentLoader implements TypeLoader<WebImplementation> {
         registry.unregisterLoader(WebImplementation.IMPLEMENTATION_WEBAPP);
     }
 
-    public WebImplementation load(XMLStreamReader reader, IntrospectionContext introspectionContext)
-            throws XMLStreamException, LoaderException {
+    public WebImplementation load(XMLStreamReader reader, IntrospectionContext introspectionContext) throws XMLStreamException {
 
         WebImplementation impl = new WebImplementation();
         introspector.introspect(impl, introspectionContext);
@@ -88,7 +88,9 @@ public class WebComponentLoader implements TypeLoader<WebImplementation> {
             if (e.getCause() instanceof FileNotFoundException) {
                 // ignore since we allow component types not to be specified in the web app 
             } else {
-                throw e;
+                ElementLoadFailure failure = new ElementLoadFailure("Error loading web.componentType", e, reader);
+                introspectionContext.addError(failure);
+                return null;
             }
         }
         LoaderUtil.skipToEndElement(reader);
@@ -106,6 +108,12 @@ public class WebComponentLoader implements TypeLoader<WebImplementation> {
         IntrospectionContext childContext = new DefaultIntrospectionContext(context.getTargetClassLoader(), null, url);
         ComponentType componentType = registry.load(url, ComponentType.class, childContext);
         componentType.setScope("COMPOSITE");
+        if (childContext.hasErrors()) {
+            context.addErrors(childContext.getErrors());
+        }
+        if (childContext.hasWarnings()) {
+            context.addErrors(childContext.getWarnings());
+        }
         return componentType;
     }
 }

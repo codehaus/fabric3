@@ -34,6 +34,7 @@ import org.fabric3.fabric.util.FileHelper;
 import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.introspection.DefaultIntrospectionContext;
 import org.fabric3.introspection.IntrospectionContext;
+import org.fabric3.introspection.validation.InvalidContributionException;
 import org.fabric3.introspection.xml.Loader;
 import org.fabric3.introspection.xml.LoaderException;
 import org.fabric3.spi.services.contenttype.ContentTypeResolutionException;
@@ -97,6 +98,9 @@ public class ModuleContributionProcessor implements ContributionProcessor {
             URI uri = contribution.getUri();
             IntrospectionContext context = new DefaultIntrospectionContext(cl, uri, null);
             manifest = loader.load(manifestURL, ContributionManifest.class, context);
+            if (context.hasErrors()) {
+                throw new InvalidContributionException(context.getErrors());
+            }
         } catch (LoaderException e) {
             if (e.getCause() instanceof FileNotFoundException) {
                 manifest = new ContributionManifest();
@@ -105,6 +109,9 @@ public class ModuleContributionProcessor implements ContributionProcessor {
             }
         } catch (MalformedURLException e) {
             manifest = new ContributionManifest();
+        } catch (InvalidContributionException e) {
+            // xcv fixme
+            throw new ContributionException(e);
         }
         contribution.setManifest(manifest);
 

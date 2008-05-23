@@ -33,13 +33,13 @@ import static org.easymock.EasyMock.verify;
 
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.xml.LoaderException;
+import org.fabric3.introspection.xml.LoaderHelper;
+import org.fabric3.introspection.xml.LoaderRegistry;
 import org.fabric3.scdl.BindingDefinition;
 import org.fabric3.scdl.CompositeService;
 import org.fabric3.scdl.ModelObject;
 import org.fabric3.scdl.ServiceContract;
 import org.fabric3.scdl.ServiceDefinition;
-import org.fabric3.introspection.xml.LoaderRegistry;
-import org.fabric3.introspection.xml.LoaderHelper;
 
 /**
  * Verifies loading of a service definition from an XML-based assembly
@@ -60,11 +60,13 @@ public class CompositeServiceLoaderTestCase extends TestCase {
     private LoaderRegistry mockRegistry;
     private LoaderHelper mockLoaderHelper;
 
-    public void testPromotedComponent() throws LoaderException, XMLStreamException {
+    public void testPromotedComponent() throws XMLStreamException {
         expect(mockReader.getAttributeValue(null, "name")).andReturn(serviceName);
         expect(mockReader.getAttributeValue(null, "promote")).andReturn(componentName);
         expect(mockLoaderHelper.getURI(componentName)).andReturn(componentURI);
-        mockLoaderHelper.loadPolicySetsAndIntents(EasyMock.isA(CompositeService.class), EasyMock.same(mockReader));
+        mockLoaderHelper.loadPolicySetsAndIntents(EasyMock.isA(CompositeService.class),
+                                                  EasyMock.same(mockReader),
+                                                  EasyMock.same(introspectionContext));
         expect(mockReader.next()).andReturn(END_ELEMENT);
         replay(mockReader, mockLoaderHelper);
         CompositeService serviceDefinition = loader.load(mockReader, introspectionContext);
@@ -74,11 +76,13 @@ public class CompositeServiceLoaderTestCase extends TestCase {
         verify(mockReader, mockLoaderHelper);
     }
 
-    public void testPromotedService() throws LoaderException, XMLStreamException {
+    public void testPromotedService() throws XMLStreamException {
         expect(mockReader.getAttributeValue(null, "name")).andReturn(serviceName);
         expect(mockReader.getAttributeValue(null, "promote")).andReturn(componentServiceName);
         expect(mockLoaderHelper.getURI(componentServiceName)).andReturn(componentServiceURI);
-        mockLoaderHelper.loadPolicySetsAndIntents(EasyMock.isA(CompositeService.class), EasyMock.same(mockReader));
+        mockLoaderHelper.loadPolicySetsAndIntents(EasyMock.isA(CompositeService.class),
+                                                  EasyMock.same(mockReader),
+                                                  EasyMock.same(introspectionContext));
         expect(mockReader.next()).andReturn(END_ELEMENT);
         replay(mockReader, mockLoaderHelper);
         CompositeService serviceDefinition = loader.load(mockReader, introspectionContext);
@@ -92,7 +96,9 @@ public class CompositeServiceLoaderTestCase extends TestCase {
         expect(mockReader.getAttributeValue(null, "name")).andReturn(serviceName);
         expect(mockReader.getAttributeValue(null, "promote")).andReturn(componentName);
         expect(mockLoaderHelper.getURI(componentName)).andReturn(componentURI);
-        mockLoaderHelper.loadPolicySetsAndIntents(EasyMock.isA(CompositeService.class), EasyMock.same(mockReader));
+        mockLoaderHelper.loadPolicySetsAndIntents(EasyMock.isA(CompositeService.class),
+                                                  EasyMock.same(mockReader),
+                                                  EasyMock.same(introspectionContext));
 
         expect(mockReader.next()).andReturn(START_ELEMENT);
         expect(mockReader.getName()).andReturn(NAME);
@@ -125,7 +131,9 @@ public class CompositeServiceLoaderTestCase extends TestCase {
         expect(mockReader.getAttributeValue(null, "name")).andReturn(serviceName);
         expect(mockReader.getAttributeValue(null, "promote")).andReturn(componentName);
         expect(mockLoaderHelper.getURI(componentName)).andReturn(componentURI);
-        mockLoaderHelper.loadPolicySetsAndIntents(EasyMock.isA(CompositeService.class), EasyMock.same(mockReader));
+        mockLoaderHelper.loadPolicySetsAndIntents(EasyMock.isA(CompositeService.class),
+                                                  EasyMock.same(mockReader),
+                                                  EasyMock.same(introspectionContext));
 
         expect(mockReader.next()).andReturn(START_ELEMENT);
         expect(mockReader.getName()).andReturn(NAME);

@@ -33,10 +33,13 @@ import org.osoa.sca.annotations.Reference;
 import org.fabric3.host.contribution.Constants;
 import org.fabric3.host.contribution.Deployable;
 import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.introspection.xml.LoaderException;
+import org.fabric3.introspection.xml.InvalidPrefixException;
 import org.fabric3.introspection.xml.LoaderHelper;
 import org.fabric3.introspection.xml.LoaderRegistry;
 import org.fabric3.introspection.xml.TypeLoader;
+import org.fabric3.introspection.xml.UnrecognizedElement;
+import org.fabric3.introspection.xml.UnrecognizedElementException;
+import org.fabric3.loader.impl.InvalidQNamePrefix;
 import org.fabric3.spi.services.contribution.ContributionManifest;
 import org.fabric3.spi.services.contribution.Export;
 import org.fabric3.spi.services.contribution.Import;
@@ -71,7 +74,7 @@ public class ContributionElementLoader implements TypeLoader<ContributionManifes
     }
 
 
-    public ContributionManifest load(XMLStreamReader reader, IntrospectionContext context) throws XMLStreamException, LoaderException {
+    public ContributionManifest load(XMLStreamReader reader, IntrospectionContext context) throws XMLStreamException {
         ContributionManifest contribution = new ContributionManifest();
         while (true) {
             int event = reader.next();
@@ -83,20 +86,36 @@ public class ContributionElementLoader implements TypeLoader<ContributionManifes
                 } else if (DEPLOYABLE.equals(element)) {
                     String name = reader.getAttributeValue(null, "composite");
                     if (name == null) {
-                        throw new MissingMainifestAttributeException("Composite attribute must be specified", reader);
+                        MissingMainifestAttribute failure = new MissingMainifestAttribute("Composite attribute must be specified", "composite", reader);
+                        context.addError(failure);
+                        return null;
                     }
-                    QName qName = helper.createQName(name, reader);
+                    QName qName;
+                    try {
+                        qName = helper.createQName(name, reader);
+                    } catch (InvalidPrefixException e) {
+                        context.addError(new InvalidQNamePrefix(e.getPrefix(), reader));
+                        return null;
+                    }
                     Deployable deployable = new Deployable(qName, Constants.COMPOSITE_TYPE);
                     contribution.addDeployable(deployable);
                 } else {
-                    Object o = registry.load(reader, Object.class, context);
+                    Object o;
+                    try {
+                        o = registry.load(reader, Object.class, context);
+                    } catch (UnrecognizedElementException e) {
+                        UnrecognizedElement failure = new UnrecognizedElement(reader);
+                        context.addError(failure);
+                        return null;
+                    }
                     if (o instanceof Export) {
                         contribution.addExport((Export) o);
                     } else if (o instanceof Import) {
                         contribution.addImport((Import) o);
                     } else if (o != null) {
-                        String type = o.getClass().getName();
-                        throw new InvalidManifestTypeException("Unrecognized type: " + type, reader);
+                        UnrecognizedElement failure = new UnrecognizedElement(reader);
+                        context.addError(failure);
+                        return null;
                     }
                 }
                 break;

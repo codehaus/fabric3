@@ -39,7 +39,6 @@ import org.w3c.dom.Element;
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.xml.InvalidValue;
 import org.fabric3.introspection.xml.Loader;
-import org.fabric3.introspection.xml.LoaderException;
 import org.fabric3.introspection.xml.LoaderHelper;
 import org.fabric3.introspection.xml.LoaderUtil;
 import org.fabric3.introspection.xml.MissingAttribute;
@@ -98,7 +97,7 @@ public class ComponentLoader implements TypeLoader<ComponentDefinition<?>> {
         this.loaderHelper = loaderHelper;
     }
 
-    public ComponentDefinition<?> load(XMLStreamReader reader, IntrospectionContext context) throws XMLStreamException, LoaderException {
+    public ComponentDefinition<?> load(XMLStreamReader reader, IntrospectionContext context) throws XMLStreamException {
 
         String name = reader.getAttributeValue(null, "name");
         if (name == null) {
@@ -114,7 +113,7 @@ public class ComponentLoader implements TypeLoader<ComponentDefinition<?>> {
         loadInitLevel(componentDefinition, reader, context);
         loadKey(componentDefinition, reader);
 
-        loaderHelper.loadPolicySetsAndIntents(componentDefinition, reader);
+        loaderHelper.loadPolicySetsAndIntents(componentDefinition, reader, context);
 
         Implementation<?> impl;
         try {
@@ -123,10 +122,9 @@ public class ComponentLoader implements TypeLoader<ComponentDefinition<?>> {
             // TODO when the loader registry is replaced this try..catch must be replaced with a check for a loader and an
             // UnrecognizedElement added to the context if none is found
         } catch (UnrecognizedElementException e) {
-            context.addError(new UnrecognizedElement(reader));
-            return componentDefinition;
-        } catch (LoaderException e) {
-            throw new InvalidImplementationException("Invalid implementation for component: " + name, reader, e);
+            UnrecognizedElement failure = new UnrecognizedElement(reader);
+            context.addError(failure);
+            return null;
         }
         componentDefinition.setImplementation(impl);
         AbstractComponentType<?, ?, ?, ?> componentType = impl.getComponentType();
@@ -158,9 +156,9 @@ public class ComponentLoader implements TypeLoader<ComponentDefinition<?>> {
     private void parseService(ComponentDefinition<Implementation<?>> componentDefinition,
                               AbstractComponentType<?, ?, ?, ?> componentType,
                               XMLStreamReader reader,
-                              IntrospectionContext context) throws XMLStreamException, LoaderException {
-        ComponentService service = serviceLoader.load(reader, context);
-        // xcv is this null check good?
+                              IntrospectionContext context) throws XMLStreamException {
+        ComponentService service;
+        service = serviceLoader.load(reader, context);
         if (service == null) {
             // there was an error with the service configuration, just skip it
             return;
@@ -183,9 +181,9 @@ public class ComponentLoader implements TypeLoader<ComponentDefinition<?>> {
     private void parseReference(ComponentDefinition<Implementation<?>> componentDefinition,
                                 AbstractComponentType<?, ?, ?, ?> componentType,
                                 XMLStreamReader reader,
-                                IntrospectionContext context) throws XMLStreamException, LoaderException {
-        ComponentReference reference = referenceLoader.load(reader, context);
-        // xcv is this null check good?
+                                IntrospectionContext context) throws XMLStreamException {
+        ComponentReference reference;
+        reference = referenceLoader.load(reader, context);
         if (reference == null) {
             // there was an error with the reference configuration, just skip it
             return;
@@ -208,8 +206,9 @@ public class ComponentLoader implements TypeLoader<ComponentDefinition<?>> {
     private void parseProperty(ComponentDefinition<Implementation<?>> componentDefinition,
                                AbstractComponentType<?, ?, ?, ?> componentType,
                                XMLStreamReader reader,
-                               IntrospectionContext context) throws XMLStreamException, LoaderException {
-        PropertyValue value = propertyValueLoader.load(reader, context);
+                               IntrospectionContext context) throws XMLStreamException {
+        PropertyValue value;
+        value = propertyValueLoader.load(reader, context);
         if (value == null) {
             // there was an error with the property configuration, just skip it
             return;

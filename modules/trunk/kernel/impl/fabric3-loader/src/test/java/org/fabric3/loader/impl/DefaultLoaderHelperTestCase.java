@@ -29,7 +29,7 @@ import org.w3c.dom.NodeList;
 import org.w3c.dom.Element;
 
 import org.fabric3.loader.impl.DefaultLoaderHelper;
-import org.fabric3.loader.common.InvalidPrefixException;
+import org.fabric3.introspection.xml.InvalidPrefixException;
 
 /**
  * @version $Rev$ $Date$

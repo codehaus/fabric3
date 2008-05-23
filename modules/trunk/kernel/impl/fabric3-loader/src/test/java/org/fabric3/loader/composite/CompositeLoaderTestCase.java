@@ -83,7 +83,9 @@ public class CompositeLoaderTestCase extends TestCase {
         EasyMock.expect(introspectionContext.getTypeMapping()).andStubReturn(null);
 
         LoaderHelper loaderHelper = EasyMock.createMock(LoaderHelper.class);
-        loaderHelper.loadPolicySetsAndIntents(EasyMock.isA(PolicyAware.class), EasyMock.isA(XMLStreamReader.class));
+        loaderHelper.loadPolicySetsAndIntents(EasyMock.isA(PolicyAware.class),
+                                              EasyMock.isA(XMLStreamReader.class),
+                                              EasyMock.same(introspectionContext));
         EasyMock.replay(loaderHelper);
 
         loader = new CompositeLoader(null, null, null, null, null, null, null, loaderHelper);
