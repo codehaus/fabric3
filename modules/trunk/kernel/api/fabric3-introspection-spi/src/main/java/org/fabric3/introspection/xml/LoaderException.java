@@ -44,22 +44,6 @@ public class LoaderException extends IntrospectionException {
         resourceURI = location.getSystemId();
     }
 
-    public LoaderException(String message, XMLStreamReader reader, Throwable cause) {
-        super(message, cause);
-        Location location = reader.getLocation();
-        line = location.getLineNumber();
-        column = location.getColumnNumber();
-        resourceURI = location.getSystemId();
-    }
-
-    public LoaderException(XMLStreamReader reader, Throwable cause) {
-        super(cause);
-        Location location = reader.getLocation();
-        line = location.getLineNumber();
-        column = location.getColumnNumber();
-        resourceURI = location.getSystemId();
-    }
-
     public LoaderException(String message, Throwable cause) {
         super(message, cause);
         line = UNDEFINED;
