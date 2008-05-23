@@ -34,6 +34,7 @@ import org.fabric3.introspection.DefaultIntrospectionContext;
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.xml.Loader;
 import org.fabric3.introspection.xml.LoaderException;
+import org.fabric3.introspection.xml.MissingAttribute;
 import org.fabric3.scdl.Composite;
 import org.fabric3.scdl.ValidationContext;
 import org.fabric3.services.xmlfactory.XMLFactory;
@@ -68,7 +69,7 @@ public class CompositeResourceProcessor implements ResourceProcessor {
         return Constants.COMPOSITE_CONTENT_TYPE;
     }
 
-    public void index(Contribution contribution, URL url) throws ContributionException {
+    public void index(Contribution contribution, URL url, ValidationContext context) throws ContributionException {
         XMLStreamReader reader = null;
         InputStream stream = null;
         try {
@@ -76,6 +77,10 @@ public class CompositeResourceProcessor implements ResourceProcessor {
             reader = xmlFactory.createXMLStreamReader(stream);
             reader.nextTag();
             String name = reader.getAttributeValue(null, "name");
+            if (name == null) {
+                context.addError(new MissingAttribute("Composite name not specified", "name", reader));
+                return;
+            }
             Resource resource = new Resource(url, Constants.COMPOSITE_CONTENT_TYPE);
             String targetNamespace = reader.getAttributeValue(null, "targetNamespace");
             QName compositeName = new QName(targetNamespace, name);
@@ -113,9 +118,6 @@ public class CompositeResourceProcessor implements ResourceProcessor {
         try {
             composite = loader.load(url, Composite.class, introspectionContext);
         } catch (LoaderException e) {
-            // xcv this should use a ValidaitonFaulure, not throw an exception
-//            ElementLoadFailure failure = new ElementLoadFailure("Error loading element", e, reader);
-//            introspectionContext.addError(failure);
             throw new ContributionException(e);
         }
         composite.validate(introspectionContext);

@@ -276,12 +276,15 @@ public class ContributionServiceImpl implements ContributionService {
      */
     private void processContents(Contribution contribution, ClassLoader loader) throws ContributionException {
         try {
-            processorRegistry.indexContribution(contribution);
-            metaDataStore.store(contribution);
             ValidationContext context = new DefaultValidationContext();
+            processorRegistry.indexContribution(contribution, context);
+            if (context.hasErrors()) {
+                throw new ContributionException(new InvalidContributionException(context.getErrors()));
+            }
+            metaDataStore.store(contribution);
+            context = new DefaultValidationContext();
             processorRegistry.processContribution(contribution, context, loader);
             if (context.hasErrors()) {
-                // xcv should throw a different, specific exception
                 throw new ContributionException(new InvalidContributionException(context.getErrors()));
             }
             addContributionUri(contribution);

@@ -40,8 +40,8 @@ import org.fabric3.services.xmlfactory.XMLFactory;
 import org.fabric3.scdl.ValidationContext;
 
 /**
- * Processes an XML-based resource in a contribution, delegating to a an XMLIndexer to index the resource and a Loader
- * to load it based on the root element QName.
+ * Processes an XML-based resource in a contribution, delegating to a an XMLIndexer to index the resource and a Loader to load it based on the root
+ * element QName.
  *
  * @version $Rev$ $Date$
  */
@@ -71,7 +71,7 @@ public class XmlResourceProcessor implements ResourceProcessor {
         return "application/xml";
     }
 
-    public void index(Contribution contribution, URL url) throws ContributionException {
+    public void index(Contribution contribution, URL url, ValidationContext context) throws ContributionException {
         XMLStreamReader reader = null;
         InputStream stream = null;
         try {
@@ -81,7 +81,7 @@ public class XmlResourceProcessor implements ResourceProcessor {
                 return;
             }
             Resource resource = new Resource(url, "application/xml");
-            indexerRegistry.index(resource, reader);
+            indexerRegistry.index(resource, reader, context);
             contribution.addResource(resource);
         } catch (XMLStreamException e) {
             throw new ContributionException(e);

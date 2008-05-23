@@ -139,11 +139,11 @@ public class WarContributionProcessor implements ContributionProcessor {
         });
     }
 
-    public void index(Contribution contribution) throws ContributionException {
+    public void index(Contribution contribution, final ValidationContext context) throws ContributionException {
         iterateArtifacts(contribution, new Action() {
             public void process(Contribution contribution, String contentType, URL url)
                     throws ContributionException {
-                registry.indexResource(contribution, contentType, url);
+                registry.indexResource(contribution, contentType, url, context);
             }
         });
     }

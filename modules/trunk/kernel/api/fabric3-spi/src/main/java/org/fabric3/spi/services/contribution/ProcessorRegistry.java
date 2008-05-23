@@ -98,9 +98,10 @@ public interface ProcessorRegistry {
      * Dispatches to a {@link ContributionProcessor} to index a contribution.
      *
      * @param contribution the contribution to index
+     * @param context      the context to which validation errors and warnings are reported
      * @throws ContributionException if there was a problem indexing the contribution
      */
-    void indexContribution(Contribution contribution) throws ContributionException;
+    void indexContribution(Contribution contribution, ValidationContext context) throws ContributionException;
 
     /**
      * Dispatches to a {@link ResourceProcessor} to index a resource contained in a contribution.
@@ -108,9 +109,10 @@ public interface ProcessorRegistry {
      * @param contribution the cntaining contribution
      * @param contentType  the content type of the resource to process
      * @param url          a dereferenceable URL for the resource
+     * @param context      the context to which validation errors and warnings are reported
      * @throws ContributionException if there was a problem indexing the contribution
      */
-    void indexResource(Contribution contribution, String contentType, URL url) throws ContributionException;
+    void indexResource(Contribution contribution, String contentType, URL url, ValidationContext context) throws ContributionException;
 
     /**
      * Loads all indexed resources in a contribution.

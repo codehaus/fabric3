@@ -102,7 +102,7 @@ public class XmlContributionProcessor implements ContributionProcessor {
         }
     }
 
-    public void index(Contribution contribution) throws ContributionException {
+    public void index(Contribution contribution, ValidationContext context) throws ContributionException {
         InputStream stream = null;
         XMLStreamReader reader = null;
         try {
@@ -111,7 +111,7 @@ public class XmlContributionProcessor implements ContributionProcessor {
             reader = xmlFactory.createXMLStreamReader(stream);
             reader.nextTag();
             Resource resource = new Resource(contribution.getLocation(), "application/xml");
-            xmlIndexerRegistry.index(resource, reader);
+            xmlIndexerRegistry.index(resource, reader, context);
             contribution.addResource(resource);
         } catch (IOException e) {
             String uri = contribution.getUri().toString();

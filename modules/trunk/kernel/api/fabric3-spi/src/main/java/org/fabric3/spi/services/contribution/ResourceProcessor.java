@@ -41,9 +41,10 @@ public interface ResourceProcessor {
      *
      * @param contribution the containing contribution
      * @param url          a dereferenceable url to the resource
+     * @param context      the context to which validation errors and warnings are reported
      * @throws ContributionException if an error occurs during indexing
      */
-    void index(Contribution contribution, URL url) throws ContributionException;
+    void index(Contribution contribution, URL url, ValidationContext context) throws ContributionException;
 
     /**
      * Loads the the Resource

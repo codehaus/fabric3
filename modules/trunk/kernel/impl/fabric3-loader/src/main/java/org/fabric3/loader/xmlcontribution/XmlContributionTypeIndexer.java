@@ -31,12 +31,14 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.scdl.Composite;
+import org.fabric3.scdl.ValidationContext;
 import static org.fabric3.spi.Constants.FABRIC3_NS;
 import org.fabric3.spi.services.contribution.QNameSymbol;
 import org.fabric3.spi.services.contribution.Resource;
 import org.fabric3.spi.services.contribution.ResourceElement;
 import org.fabric3.spi.services.contribution.XmlIndexer;
 import org.fabric3.spi.services.contribution.XmlIndexerRegistry;
+import org.fabric3.introspection.xml.MissingAttribute;
 
 /**
  * Indexer for the <xmlContribution> type.
@@ -63,7 +65,7 @@ public class XmlContributionTypeIndexer implements XmlIndexer {
         return XML_CONTRIBUTION;
     }
 
-    public void index(Resource resource, XMLStreamReader reader) throws ContributionException {
+    public void index(Resource resource, XMLStreamReader reader, ValidationContext context) throws ContributionException {
 
         while (true) {
             try {
@@ -72,6 +74,10 @@ public class XmlContributionTypeIndexer implements XmlIndexer {
                     QName qname = reader.getName();
                     if (COMPOSITE.equals(qname)) {
                         String name = reader.getAttributeValue(null, "name");
+                        if (name == null) {
+                            context.addError(new MissingAttribute("Composite name not specified", "name", reader));
+                            return;
+                        }
                         String targetNamespace = reader.getAttributeValue(null, "targetNamespace");
                         QName compositeName = new QName(targetNamespace, name);
                         QNameSymbol symbol = new QNameSymbol(compositeName);

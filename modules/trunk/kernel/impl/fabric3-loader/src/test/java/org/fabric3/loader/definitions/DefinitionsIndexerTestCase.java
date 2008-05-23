@@ -29,6 +29,8 @@ import junit.framework.TestCase;
 import org.fabric3.spi.services.contribution.QNameSymbol;
 import org.fabric3.spi.services.contribution.Resource;
 import org.fabric3.spi.services.contribution.ResourceElement;
+import org.fabric3.scdl.ValidationContext;
+import org.fabric3.scdl.DefaultValidationContext;
 
 /**
  * @version $Revision$ $Date$
@@ -39,7 +41,8 @@ public class DefinitionsIndexerTestCase extends TestCase {
 
     public void testIndex() throws Exception {
         Resource resource = new Resource(null, "foo");
-        loader.index(resource, reader);
+        ValidationContext context = new DefaultValidationContext();
+        loader.index(resource, reader, context);
 
         List<ResourceElement<?, ?>> resourceElements = resource.getResourceElements();
         assertNotNull(resourceElements);

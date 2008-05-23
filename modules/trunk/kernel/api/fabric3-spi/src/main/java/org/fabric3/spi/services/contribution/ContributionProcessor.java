@@ -56,9 +56,10 @@ public interface ContributionProcessor {
      * Indexes all contribution resources
      *
      * @param contribution the contribution to index
+     * @param context      the context to which validation errors and warnings are reported
      * @throws ContributionException if there was a problem indexing
      */
-    void index(Contribution contribution) throws ContributionException;
+    void index(Contribution contribution, ValidationContext context) throws ContributionException;
 
     /**
      * Loads all resources in the contribution.

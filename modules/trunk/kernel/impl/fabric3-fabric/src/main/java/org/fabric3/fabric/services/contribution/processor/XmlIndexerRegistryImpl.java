@@ -25,6 +25,7 @@ import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.spi.services.contribution.Resource;
 import org.fabric3.spi.services.contribution.XmlIndexer;
 import org.fabric3.spi.services.contribution.XmlIndexerRegistry;
+import org.fabric3.scdl.ValidationContext;
 
 /**
  * Default impelmentation of an XmlIndexerRegistry.
@@ -42,12 +43,12 @@ public class XmlIndexerRegistryImpl implements XmlIndexerRegistry {
         cache.remove(name);
     }
 
-    public void index(Resource resource, XMLStreamReader reader) throws ContributionException {
+    public void index(Resource resource, XMLStreamReader reader, ValidationContext context) throws ContributionException {
         QName name = reader.getName();
         XmlIndexer indexer = cache.get(name);
         if (indexer == null) {
             return;
         }
-        indexer.index(resource, reader);
+        indexer.index(resource, reader, context);
     }
 }

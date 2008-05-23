@@ -20,6 +20,7 @@ import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamReader;
 
 import org.fabric3.host.contribution.ContributionException;
+import org.fabric3.scdl.ValidationContext;
 
 /**
  * Implementations index an XML resource corresponding to a given document element QName.
@@ -40,8 +41,9 @@ public interface XmlIndexer {
      *
      * @param resource the resource being indexed
      * @param reader   the reader positioned on the document element
+     * @param context  the context to which validation errors and warnings are reported
      * @throws ContributionException if an error occurs during indexing
      */
-    void index(Resource resource, XMLStreamReader reader) throws ContributionException;
+    void index(Resource resource, XMLStreamReader reader, ValidationContext context) throws ContributionException;
 
 }

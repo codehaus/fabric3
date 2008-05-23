@@ -32,7 +32,9 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.scdl.definitions.AbstractDefinition;
+import org.fabric3.scdl.ValidationContext;
 import org.fabric3.introspection.xml.LoaderUtil;
+import org.fabric3.introspection.xml.MissingAttribute;
 import org.fabric3.spi.services.contribution.QNameSymbol;
 import org.fabric3.spi.services.contribution.Resource;
 import org.fabric3.spi.services.contribution.ResourceElement;
@@ -67,7 +69,7 @@ public class DefinitionsIndexer implements XmlIndexer {
         return DEFINITIONS;
     }
 
-    public void index(Resource resource, XMLStreamReader reader) throws ContributionException {
+    public void index(Resource resource, XMLStreamReader reader, ValidationContext context) throws ContributionException {
         String targetNamespace = reader.getAttributeValue(null, "targetNamespace");
 
         while (true) {
@@ -82,6 +84,10 @@ public class DefinitionsIndexer implements XmlIndexer {
                         continue;
                     }
                     String nameAttr = reader.getAttributeValue(null, "name");
+                    if (nameAttr == null) {
+                        context.addError(new MissingAttribute("Definition name not specified", "name", reader));
+                        return;
+                    }
                     NamespaceContext namespaceContext = reader.getNamespaceContext();
                     QName name = LoaderUtil.getQName(nameAttr, targetNamespace, namespaceContext);
                     QNameSymbol symbol = new QNameSymbol(name);

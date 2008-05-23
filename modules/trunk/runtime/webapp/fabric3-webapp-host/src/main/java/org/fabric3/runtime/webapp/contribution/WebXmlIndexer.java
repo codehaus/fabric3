@@ -32,6 +32,7 @@ import org.fabric3.spi.services.contribution.XmlIndexerRegistry;
 import org.fabric3.spi.services.contribution.QNameSymbol;
 import org.fabric3.spi.services.contribution.ResourceElement;
 import org.fabric3.host.contribution.ContributionException;
+import org.fabric3.scdl.ValidationContext;
 
 /**
  * Adds an index entry for the web.xml descriptor to the symbol space of a WAR contribution.
@@ -64,7 +65,7 @@ public class WebXmlIndexer implements XmlIndexer {
         }
     }
 
-    public void index(Resource resource, XMLStreamReader reader) throws ContributionException {
+    public void index(Resource resource, XMLStreamReader reader, ValidationContext context) throws ContributionException {
         QNameSymbol symbol;
         if (namespace) {
             symbol = new QNameSymbol(WEB_APP_NAMESPACE);

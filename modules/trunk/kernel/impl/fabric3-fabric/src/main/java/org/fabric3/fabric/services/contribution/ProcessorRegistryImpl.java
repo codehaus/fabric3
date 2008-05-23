@@ -98,23 +98,23 @@ public class ProcessorRegistryImpl implements ProcessorRegistry {
         }
     }
 
-    public void indexContribution(Contribution contribution) throws ContributionException {
+    public void indexContribution(Contribution contribution, ValidationContext context) throws ContributionException {
         String contentType = contribution.getContentType();
         ContributionProcessor processor = contributionProcessorCache.get(contentType);
         if (processor == null) {
             String source = contribution.getUri().toString();
             throw new UnsupportedContentTypeException("Type " + contentType + "in contribution " + source + " not supported", contentType);
         }
-        processor.index(contribution);
+        processor.index(contribution, context);
     }
 
-    public void indexResource(Contribution contribution, String contentType, URL url) throws ContributionException {
+    public void indexResource(Contribution contribution, String contentType, URL url, ValidationContext context) throws ContributionException {
         ResourceProcessor processor = resourceProcessorCache.get(contentType);
         if (processor == null) {
             // unknown type, skip
             return;
         }
-        processor.index(contribution, url);
+        processor.index(contribution, url, context);
     }
 
     public void processContribution(Contribution contribution, ValidationContext context, ClassLoader loader) throws ContributionException {
