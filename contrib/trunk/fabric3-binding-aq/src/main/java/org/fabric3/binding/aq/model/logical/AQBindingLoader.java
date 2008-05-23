@@ -65,7 +65,7 @@ public class AQBindingLoader implements TypeLoader<AQBindingDefinition> {
      * 
      */
     public AQBindingDefinition load(final XMLStreamReader reader, final IntrospectionContext loaderContext)
-        throws XMLStreamException, LoaderException {             
+        throws XMLStreamException {             
         
         final AQBindingMetadata metadata = new AQBindingMetadata();
         final AQBindingDefinition bd = new AQBindingDefinition(metadata);               
@@ -75,7 +75,7 @@ public class AQBindingLoader implements TypeLoader<AQBindingDefinition> {
             metadata.setCorrelationScheme(CorrelationScheme.valueOf(correlationScheme));
         }        
 
-        loaderHelper.loadPolicySetsAndIntents(bd, reader);
+        loaderHelper.loadPolicySetsAndIntents(bd, reader, loaderContext);
 
         String name = null;
         while (true) {
