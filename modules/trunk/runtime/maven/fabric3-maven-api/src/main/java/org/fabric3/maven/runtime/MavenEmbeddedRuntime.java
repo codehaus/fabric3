@@ -23,6 +23,7 @@ import javax.xml.namespace.QName;
 import org.apache.maven.surefire.testset.TestSetFailedException;
 
 import org.fabric3.host.contribution.ContributionSource;
+import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.host.runtime.Fabric3Runtime;
 import org.fabric3.scdl.Composite;
 import org.fabric3.scdl.Operation;
@@ -40,40 +41,46 @@ public interface MavenEmbeddedRuntime extends Fabric3Runtime<MavenHostInfo> {
      * @param base      the module output directory location
      * @param composite the composite qname to activate
      * @return the activated composite's component type
-     * @throws Exception if an error ocurrs
+     * @throws ContributionException        if a contribution is thrown. The cause may a ValidationException resulting from  errors in the
+     *                                      contribution. In this case the errors should be reported back to the user.
+     * @throws CompositeActivationException if there is an error activating the test composite
      */
-    Composite activate(URL base, QName composite) throws Exception;
+    Composite activate(URL base, QName composite) throws ContributionException, CompositeActivationException;
 
     /**
      * Activates a composite by qualified name contained in the contribution source.
      *
-     * @param source the source of the contribution
+     * @param source    the source of the contribution
      * @param composite the composite qname to activate
      * @return the activated composite's component type
-     * @throws Exception if an error ocurrs
+     * @throws ContributionException        if a contribution is thrown. The cause may a ValidationException resulting from  errors in the
+     *                                      contribution. In this case the errors should be reported back to the user.
+     * @throws CompositeActivationException if there is an error activating the test composite
      */
-    Composite activate(ContributionSource source, QName composite) throws Exception;
+    Composite activate(ContributionSource source, QName composite) throws ContributionException, CompositeActivationException;
 
     /**
      * Activates a composite pointed to by the SCDL location.
      * <p/>
-     * Note this method preserves backward compatibility through specifying the composite by location. When possible,
-     * use {@link #activate(java.net.URL, javax.xml.namespace.QName)} instead.
+     * Note this method preserves backward compatibility through specifying the composite by location. When possible, use {@link
+     * #activate(java.net.URL, javax.xml.namespace.QName)} instead.
      *
      * @param base         the module output directory location
      * @param scdlLocation the composite file location
      * @return the activated composite's component type
-     * @throws Exception if an error ocurrs
+     * @throws CompositeActivationException if there is an error activating the test composite
+     * @throws ContributionException        if a contribution is thrown. The cause may a ValidationException resulting from  errors in the
+     *                                      contribution. In this case the errors should be reported back to the user.
      */
-    Composite activate(URL base, URL scdlLocation) throws Exception;
+    Composite activate(URL base, URL scdlLocation) throws ContributionException, CompositeActivationException;
 
     /**
      * Starts the component context
      *
      * @param compositeId the context id
-     * @throws Exception if an error ocurrs
+     * @throws ContextStartException if an error starting the context is encountered
      */
-    void startContext(URI compositeId) throws Exception;
+    void startContext(URI compositeId) throws ContextStartException;
 
     /**
      * @param contextId     the context id assocated with the test

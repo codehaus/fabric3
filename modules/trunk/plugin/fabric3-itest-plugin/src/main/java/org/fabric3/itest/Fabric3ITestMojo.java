@@ -63,15 +63,19 @@ import org.apache.maven.surefire.suite.SurefireTestSuite;
 import org.apache.maven.surefire.testset.TestSetFailedException;
 
 import org.fabric3.api.annotation.LogLevel;
+import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.host.runtime.Bootstrapper;
 import org.fabric3.host.runtime.InitializationException;
 import org.fabric3.host.runtime.RuntimeLifecycleCoordinator;
 import org.fabric3.host.runtime.ScdlBootstrapper;
 import org.fabric3.host.runtime.ShutdownException;
+import org.fabric3.introspection.validation.ValidationException;
 import org.fabric3.jmx.agent.Agent;
 import org.fabric3.jmx.agent.rmi.RmiAgent;
 import org.fabric3.maven.runtime.MavenCoordinator;
 import org.fabric3.maven.runtime.MavenEmbeddedRuntime;
+import org.fabric3.maven.runtime.CompositeActivationException;
+import org.fabric3.maven.runtime.ContextStartException;
 import org.fabric3.monitor.MonitorFactory;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.ComponentDefinition;
@@ -79,6 +83,7 @@ import org.fabric3.scdl.Composite;
 import org.fabric3.scdl.Implementation;
 import org.fabric3.scdl.Operation;
 import org.fabric3.scdl.ServiceDefinition;
+import org.fabric3.scdl.ValidationFailure;
 import org.fabric3.spi.Constants;
 import org.fabric3.spi.classloader.MultiParentClassLoader;
 
@@ -376,21 +381,7 @@ public class Fabric3ITestMojo extends AbstractMojo {
             throw new MojoExecutionException("Error creating fabric3 runtime", e);
         }
         try {
-            List<URL> extensionUrls = resolveDependencies(extensions);
-            coordinator.setExtensions(extensionUrls);
-            coordinator.setIntentsLocation(intentsLocation);
-            List<URL> userExtensionUrls = resolveDependencies(userExtensions);
-            // add extensions that are not Maven artifacts
-            if (userExtensionsArchives != null) {
-                for (File entry : userExtensionsArchives) {
-                    if (!entry.exists()) {
-                        throw new MojoExecutionException("User extension does not exist: " + entry.getName());
-                    }
-                    userExtensionUrls.add(entry.toURI().toURL());
-                }
-            }
-            coordinator.setUserExtensions(userExtensionUrls);
-
+            processExtensions(coordinator);
             bootRuntime(coordinator, runtime, bootClassLoader, hostClassLoader);
         } catch (InitializationException e) {
             throw new MojoExecutionException("Error initializing Fabric3 Runtime", e);
@@ -399,24 +390,7 @@ public class Fabric3ITestMojo extends AbstractMojo {
         }
 
         try {
-            SurefireTestSuite testSuite;
-            log.info("Deploying test SCDL from " + testScdl);
-            try {
-                if (compositeName == null) {
-                    testSuite = createTestSuite(runtime, testScdlURL);
-                } else {
-                    testSuite = createTestSuite(runtime);
-                }
-            } catch (Exception e) {
-                throw new MojoExecutionException("Error deploying test component: " + testScdl, e);
-            }
-            log.info("Executing tests...");
-
-            boolean success = runSurefire(testSuite);
-            if (!success) {
-                String msg = "There were test failures";
-                throw new MojoFailureException(msg);
-            }
+            executeTests(log, testScdlURL, runtime);
         } finally {
             log.info("Stopping Fabric3 Runtime ...");
             try {
@@ -476,10 +450,21 @@ public class Fabric3ITestMojo extends AbstractMojo {
         }
     }
 
-    private void shutdownRuntime(RuntimeLifecycleCoordinator<MavenEmbeddedRuntime, Bootstrapper> coordinator)
-            throws ShutdownException, InterruptedException, ExecutionException {
-        Future<Void> future = coordinator.shutdown();
-        future.get();
+    private void processExtensions(MavenCoordinator coordinator) throws MojoExecutionException, MalformedURLException {
+        List<URL> extensionUrls = resolveDependencies(extensions);
+        coordinator.setExtensions(extensionUrls);
+        coordinator.setIntentsLocation(intentsLocation);
+        List<URL> userExtensionUrls = resolveDependencies(userExtensions);
+        // add extensions that are not Maven artifacts
+        if (userExtensionsArchives != null) {
+            for (File entry : userExtensionsArchives) {
+                if (!entry.exists()) {
+                    throw new MojoExecutionException("User extension does not exist: " + entry.getName());
+                }
+                userExtensionUrls.add(entry.toURI().toURL());
+            }
+        }
+        coordinator.setUserExtensions(userExtensionUrls);
     }
 
     private void bootRuntime(RuntimeLifecycleCoordinator<MavenEmbeddedRuntime, Bootstrapper> coordinator,
@@ -498,6 +483,36 @@ public class Fabric3ITestMojo extends AbstractMojo {
         future = coordinator.recover();
         future.get();
         future = coordinator.start();
+        future.get();
+    }
+
+    private void executeTests(Log log, URL testScdlURL, MavenEmbeddedRuntime runtime) throws MojoExecutionException, MojoFailureException {
+        SurefireTestSuite testSuite;
+        log.info("Deploying test composite from " + testScdl);
+        try {
+            if (compositeName == null) {
+                testSuite = createTestSuite(runtime, testScdlURL);
+            } else {
+                testSuite = createTestSuite(runtime);
+            }
+        } catch (MojoExecutionException e) {
+            throw e;
+        } catch (Exception e) {
+            // trap any other exception
+            throw new MojoExecutionException("Error deploying test composite: " + testScdl, e);
+        }
+        log.info("Executing tests...");
+
+        boolean success = runSurefire(testSuite);
+        if (!success) {
+            String msg = "There were test failures";
+            throw new MojoFailureException(msg);
+        }
+    }
+
+    private void shutdownRuntime(RuntimeLifecycleCoordinator<MavenEmbeddedRuntime, Bootstrapper> coordinator)
+            throws ShutdownException, InterruptedException, ExecutionException {
+        Future<Void> future = coordinator.shutdown();
         future.get();
     }
 
@@ -672,19 +687,47 @@ public class Fabric3ITestMojo extends AbstractMojo {
 
     }
 
-    protected SurefireTestSuite createTestSuite(MavenEmbeddedRuntime runtime, URL testScdlURL) throws Exception {
+    protected SurefireTestSuite createTestSuite(MavenEmbeddedRuntime runtime, URL testScdlURL)
+            throws CompositeActivationException, ContributionException, ContextStartException, MojoExecutionException {
         URI domain = URI.create(testDomain);
-        Composite composite = runtime.activate(buildDirectory.toURI().toURL(), testScdlURL);
+        Composite composite;
+        try {
+            composite = runtime.activate(getBuildDirectoryUrl(), testScdlURL);
+        } catch (ContributionException e) {
+            if (e.getCause() instanceof ValidationException) {
+                // print out the validaiton errors
+                ValidationException cause = (ValidationException) e.getCause();
+                reportContributionErrors(cause);
+                String msg = "Contribution errors were found";
+                throw new MojoExecutionException(msg);
+            } else {
+                throw e;
+            }
+        }
         runtime.startContext(domain);
         return createTestSuite(runtime, composite, domain);
     }
 
-    protected SurefireTestSuite createTestSuite(MavenEmbeddedRuntime runtime) throws Exception {
+    protected SurefireTestSuite createTestSuite(MavenEmbeddedRuntime runtime)
+            throws ContributionException, CompositeActivationException, ContextStartException, MojoExecutionException {
         URI domain = URI.create(testDomain);
         QName qName = new QName(compositeNamespace, compositeName);
-        Composite composite = runtime.activate(buildDirectory.toURI().toURL(), qName);
-        runtime.startContext(domain);
-        return createTestSuite(runtime, composite, domain);
+        try {
+            Composite composite;
+            composite = runtime.activate(getBuildDirectoryUrl(), qName);
+            runtime.startContext(domain);
+            return createTestSuite(runtime, composite, domain);
+        } catch (ContributionException e) {
+            if (e.getCause() instanceof ValidationException) {
+                // print out the validaiton errors
+                ValidationException cause = (ValidationException) e.getCause();
+                reportContributionErrors(cause);
+                String msg = "Contribution errors were found";
+                throw new MojoExecutionException(msg);
+            } else {
+                throw e;
+            }
+        }
     }
 
     protected SurefireTestSuite createTestSuite(MavenEmbeddedRuntime runtime,
@@ -703,6 +746,24 @@ public class Fabric3ITestMojo extends AbstractMojo {
             }
         }
         return suite;
+    }
+
+    protected void reportContributionErrors(ValidationException cause) {
+        StringBuilder b = new StringBuilder("\n\n");
+        b.append("-------------------------------------------------------\n");
+        b.append("CONTRIBUTION ERRORS\n");
+        b.append("-------------------------------------------------------\n\n");
+        int number = cause.getFailures().size();
+        if (number == 1) {
+            b.append("1 error was found \n\n");
+        } else {
+            b.append(number).append(" errors were found \n\n");
+        }
+
+        for (ValidationFailure failure : cause.getFailures()) {
+            b.append("ERROR: ").append(failure.getMessage()).append("\n\n");
+        }
+        getLog().error(b);
     }
 
     protected SCATestSet createTestSet(MavenEmbeddedRuntime runtime,
@@ -831,6 +892,15 @@ public class Fabric3ITestMojo extends AbstractMojo {
 
         }
         return urls;
+    }
+
+    private URL getBuildDirectoryUrl() {
+        try {
+            return buildDirectory.toURI().toURL();
+        } catch (MalformedURLException e) {
+            // this should not happen
+            throw new AssertionError();
+        }
     }
 
     public interface MojoMonitor {

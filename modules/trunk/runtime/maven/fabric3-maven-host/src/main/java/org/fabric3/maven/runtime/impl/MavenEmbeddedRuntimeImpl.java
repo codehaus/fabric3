@@ -43,6 +43,8 @@ import org.fabric3.host.contribution.ContributionSource;
 import org.fabric3.maven.contribution.ModuleContributionSource;
 import org.fabric3.maven.runtime.MavenEmbeddedRuntime;
 import org.fabric3.maven.runtime.MavenHostInfo;
+import org.fabric3.maven.runtime.CompositeActivationException;
+import org.fabric3.maven.runtime.ContextStartException;
 import org.fabric3.pojo.PojoWorkContextTunnel;
 import org.fabric3.pojo.implementation.PojoComponent;
 import org.fabric3.pojo.reflection.InvokerInterceptor;
@@ -74,7 +76,7 @@ public class MavenEmbeddedRuntimeImpl extends AbstractRuntime<MavenHostInfo> imp
         super(MavenHostInfo.class, null);
     }
 
-    public Composite activate(URL url, QName qName) throws CompositeActivationException {
+    public Composite activate(URL url, QName qName) throws ContributionException, CompositeActivationException {
         try {
             URI contributionUri = url.toURI();
             ModuleContributionSource source =
@@ -88,7 +90,7 @@ public class MavenEmbeddedRuntimeImpl extends AbstractRuntime<MavenHostInfo> imp
         }
     }
 
-    public Composite activate(ContributionSource source, QName qName) throws CompositeActivationException {
+    public Composite activate(ContributionSource source, QName qName) throws CompositeActivationException, ContributionException {
         try {
             // contribute the Maven project to the application domain
             Assembly assembly = getSystemComponent(Assembly.class, DISTRIBUTED_ASSEMBLY_URI);
@@ -101,25 +103,34 @@ public class MavenEmbeddedRuntimeImpl extends AbstractRuntime<MavenHostInfo> imp
             ResourceElement<?, ?> element = store.resolve(new QNameSymbol(qName));
             assert element != null;
             return (Composite) element.getValue();
-        } catch (ContributionException e) {
-            throw new CompositeActivationException("Error processing project", e);
         } catch (ActivateException e) {
             String identifier = qName.toString();
             throw new CompositeActivationException("Error activating composite:" + identifier, identifier, e);
         }
     }
 
-    public Composite activate(URL url, URL scdlLocation) throws Exception {
-        QName name = parseCompositeQName(scdlLocation);
+    public Composite activate(URL url, URL scdlLocation) throws ContributionException, CompositeActivationException {
+        QName name;
+        try {
+            name = parseCompositeQName(scdlLocation);
+        } catch (IOException e) {
+            throw new ContributionException(e);
+        } catch (XMLStreamException e) {
+            throw new ContributionException(e);
+        }
         return activate(url, name);
     }
 
-    public void startContext(URI groupId) throws GroupInitializationException {
+    public void startContext(URI groupId) throws ContextStartException {
         WorkContext workContext = new WorkContext();
         CallFrame frame = new CallFrame(groupId);
         workContext.addCallFrame(frame);
         ScopeRegistry scopeRegistry = getSystemComponent(ScopeRegistry.class, ComponentNames.SCOPE_REGISTRY_URI);
-        scopeRegistry.getScopeContainer(Scope.COMPOSITE).startContext(workContext);
+        try {
+            scopeRegistry.getScopeContainer(Scope.COMPOSITE).startContext(workContext);
+        } catch (GroupInitializationException e) {
+            throw new ContextStartException(e);
+        }
     }
 
     public void destroy() {

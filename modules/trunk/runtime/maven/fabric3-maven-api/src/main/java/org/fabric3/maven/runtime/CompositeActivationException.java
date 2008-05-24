@@ -14,7 +14,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.maven.runtime.impl;
+package org.fabric3.maven.runtime;
 
 import org.fabric3.host.Fabric3Exception;
 
