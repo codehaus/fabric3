@@ -271,6 +271,9 @@ public class CompositeLoader implements TypeLoader<Composite> {
                         type.add((CompositeReference) modelObject);
                     } else if (modelObject instanceof ComponentDefinition) {
                         type.add((ComponentDefinition<?>) modelObject);
+                    }else if (type == null) {
+                        // there was an error loading the element, ingore it as the errors will have been reported
+                        continue;
                     } else {
                         childContext.addError(new UnrecognizedElement(reader));
                         continue;

@@ -106,6 +106,9 @@ public class CompositeReferenceLoader implements TypeLoader<CompositeReference> 
                     }
                 } else if (type instanceof OperationDefinition) {
                     referenceDefinition.addOperation((OperationDefinition) type);
+                }else if (type == null) {
+                    // there was an error loading the element, ingore it as the errors will have been reported
+                    continue;
                 } else {
                     context.addError(new UnrecognizedElement(reader));
                     continue;

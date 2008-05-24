@@ -94,6 +94,9 @@ public class CompositeServiceLoader implements TypeLoader<CompositeService> {
                     }
                 } else if (type instanceof OperationDefinition) {
                     def.addOperation((OperationDefinition) type);
+                } else if (type == null) {
+                    // there was an error loading the element, ingore it as the errors will have been reported
+                    continue;
                 } else {
                     context.addError(new UnrecognizedElement(reader));
                     continue;
