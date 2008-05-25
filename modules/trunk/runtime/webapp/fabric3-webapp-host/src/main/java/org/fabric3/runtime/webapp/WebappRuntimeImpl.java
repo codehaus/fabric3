@@ -21,13 +21,14 @@ package org.fabric3.runtime.webapp;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import javax.servlet.ServletRequestEvent;
 import javax.servlet.ServletRequest;
+import javax.servlet.ServletRequestEvent;
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
-import javax.servlet.http.HttpServletRequest;
 import javax.xml.namespace.QName;
 
+import org.fabric3.container.web.spi.WebRequestTunnel;
 import org.fabric3.fabric.runtime.AbstractRuntime;
 import org.fabric3.fabric.runtime.ComponentNames;
 import static org.fabric3.fabric.runtime.ComponentNames.CONTRIBUTION_SERVICE_URI;
@@ -40,7 +41,6 @@ import org.fabric3.runtime.webapp.contribution.WarContributionSource;
 import org.fabric3.spi.assembly.ActivateException;
 import org.fabric3.spi.assembly.Assembly;
 import org.fabric3.spi.invocation.WorkContext;
-import org.fabric3.container.web.spi.WebRequestTunnel;
 
 /**
  * Bootstrapper for the Fabric3 runtime in a web application host. This listener manages one runtime per servlet context; the lifecycle of that
@@ -62,7 +62,7 @@ public class WebappRuntimeImpl extends AbstractRuntime<WebappHostInfo> implement
         super(WebappHostInfo.class);
     }
 
-    public void activate(QName qName, URI componentId) throws InitializationException {
+    public void activate(QName qName, URI componentId) throws ContributionException, InitializationException {
         try {
             // contribute the war to the application domain
             Assembly assembly = getSystemComponent(Assembly.class, DISTRIBUTED_ASSEMBLY_URI);
@@ -74,8 +74,6 @@ public class WebappRuntimeImpl extends AbstractRuntime<WebappHostInfo> implement
             assembly.includeInDomain(qName);
         } catch (MalformedURLException e) {
             throw new InitializationException("Invalid web archive", e);
-        } catch (ContributionException e) {
-            throw new InitializationException("Error processing project", e);
         } catch (ActivateException e) {
             String identifier = qName.toString();
             throw new InitializationException("Error activating composite: " + identifier, identifier, e);

@@ -18,6 +18,26 @@
  */
 package org.fabric3.runtime.webapp;
 
+import java.io.File;
+import java.net.URI;
+import java.net.URL;
+import java.net.URLDecoder;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.Future;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletContextEvent;
+import javax.servlet.ServletContextListener;
+import javax.xml.namespace.QName;
+
+import org.fabric3.host.Fabric3RuntimeException;
+import org.fabric3.host.contribution.ValidationException;
+import org.fabric3.host.runtime.Bootstrapper;
+import org.fabric3.host.runtime.InitializationException;
+import org.fabric3.host.runtime.RuntimeLifecycleCoordinator;
+import org.fabric3.host.runtime.ScdlBootstrapper;
+import org.fabric3.host.runtime.ShutdownException;
+import org.fabric3.jmx.agent.Agent;
+import org.fabric3.jmx.agent.rmi.RmiAgent;
 import static org.fabric3.runtime.webapp.Constants.APPLICATION_SCDL_PATH_DEFAULT;
 import static org.fabric3.runtime.webapp.Constants.APPLICATION_SCDL_PATH_PARAM;
 import static org.fabric3.runtime.webapp.Constants.BASE_DIR;
@@ -29,28 +49,6 @@ import static org.fabric3.runtime.webapp.Constants.DOMAIN_PARAM;
 import static org.fabric3.runtime.webapp.Constants.MANAGEMENT_DOMAIN_PARAM;
 import static org.fabric3.runtime.webapp.Constants.ONLINE_PARAM;
 import static org.fabric3.runtime.webapp.Constants.RUNTIME_ATTRIBUTE;
-
-import java.io.File;
-import java.net.URI;
-import java.net.URL;
-import java.net.URLDecoder;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
-
-import javax.servlet.ServletContext;
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
-import javax.xml.namespace.QName;
-
-import org.fabric3.api.annotation.logging.Severe;
-import org.fabric3.host.Fabric3RuntimeException;
-import org.fabric3.host.runtime.Bootstrapper;
-import org.fabric3.host.runtime.InitializationException;
-import org.fabric3.host.runtime.RuntimeLifecycleCoordinator;
-import org.fabric3.host.runtime.ScdlBootstrapper;
-import org.fabric3.host.runtime.ShutdownException;
-import org.fabric3.jmx.agent.Agent;
-import org.fabric3.jmx.agent.rmi.RmiAgent;
 
 /**
  * Launches a Fabric3 runtime in a web application, loading information from servlet context parameters. This listener manages one runtime per servlet
@@ -65,18 +63,18 @@ import org.fabric3.jmx.agent.rmi.RmiAgent;
  * @version $Rev$ $Date$
  */
 public class Fabric3ContextListener implements ServletContextListener {
-    
+
     private RuntimeLifecycleCoordinator<WebappRuntime, Bootstrapper> coordinator;
     private Agent agent;
 
     public void contextInitialized(ServletContextEvent event) {
-        
+
         ClassLoader webappClassLoader = Thread.currentThread().getContextClassLoader();
         ServletContext servletContext = event.getServletContext();
         WebappUtil utils = getUtils(servletContext);
         WebappRuntime runtime;
         WebAppMonitor monitor = null;
-        
+
         try {
             // FIXME work this out from the servlet context
             URI domain = new URI(utils.getInitParameter(DOMAIN_PARAM, "fabric3://./domain"));
@@ -113,7 +111,7 @@ public class Fabric3ContextListener implements ServletContextListener {
             agent = RmiAgent.newInstance();
             agent.start();
             runtime.setMBeanServer(agent.getMBeanServer());
-            
+
             // initiate the runtime bootstrap sequence
             ScdlBootstrapper bootstrapper = utils.getBootstrapper(bootClassLoader);
             bootstrapper.setScdlLocation(systemScdl);
@@ -127,10 +125,14 @@ public class Fabric3ContextListener implements ServletContextListener {
             Future<Void> startFuture = coordinator.start();
             startFuture.get();
             servletContext.setAttribute(RUNTIME_ATTRIBUTE, runtime);
-            
+
             // deploy the application composite
             QName qName = new QName(compositeNamespace, compositeName);
             runtime.activate(qName, componentId);
+        } catch (ValidationException e) {
+            // print out the validation errors
+            monitor.contributionErrors(e.getMessage());
+            throw new Fabric3InitException("Errors were detected in the web application contribution");
         } catch (Fabric3RuntimeException e) {
             if (monitor != null) {
                 monitor.runError(e);
@@ -149,23 +151,23 @@ public class Fabric3ContextListener implements ServletContextListener {
     }
 
     public void contextDestroyed(ServletContextEvent event) {
-        
+
         ServletContext servletContext = event.getServletContext();
         WebappRuntime runtime = (WebappRuntime) servletContext.getAttribute(RUNTIME_ATTRIBUTE);
-        
+
         if (runtime != null) {
             servletContext.removeAttribute(RUNTIME_ATTRIBUTE);
         }
-        
+
         try {
-            
+
             if (agent != null) {
                 agent.shutdown();
             }
-            
+
             Future<Void> future = coordinator.shutdown();
             future.get();
-            
+
         } catch (ShutdownException e) {
             servletContext.log("Error shutting runtume down", e);
         } catch (ExecutionException e) {
@@ -173,12 +175,8 @@ public class Fabric3ContextListener implements ServletContextListener {
         } catch (InterruptedException e) {
             servletContext.log("Error shutting runtume down", e);
         }
-        
+
     }
 
-    public interface WebAppMonitor {
-        @Severe
-        void runError(Throwable e);
-    }
 
 }

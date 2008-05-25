@@ -46,6 +46,7 @@ import org.fabric3.host.contribution.ContributionService;
 import org.fabric3.host.contribution.ContributionSource;
 import org.fabric3.host.contribution.Deployable;
 import org.fabric3.host.contribution.FileContributionSource;
+import org.fabric3.host.contribution.ValidationException;
 import org.fabric3.host.runtime.Bootstrapper;
 import org.fabric3.host.runtime.CoordinatorMonitor;
 import org.fabric3.host.runtime.InitializationException;
@@ -289,6 +290,10 @@ public class WebappCoordinator implements RuntimeLifecycleCoordinator<WebappRunt
             List<URI> intents = new ArrayList<URI>();
             intents.add(uri);
             definitionsRegistry.activateDefinitions(intents);
+        } catch (ValidationException e) {
+            // print out the validation errors
+            monitor.intentErrors(e.getMessage());
+            throw new ExtensionInitializationException("Errors were detected in one or more intent definitions");
         } catch (ContributionException e) {
             throw new InitializationException(e);
         } catch (DefinitionActivationException e) {
@@ -331,6 +336,10 @@ public class WebappCoordinator implements RuntimeLifecycleCoordinator<WebappRunt
                 try {
                     ContributionSource source = new FileContributionSource(file, -1, new byte[0]);
                     contributionUris.add(contributionService.contribute(source));
+                } catch (ValidationException e) {
+                    // print out the validation errors
+                    monitor.extensionErrors(e.getMessage());
+                    throw new ExtensionInitializationException("Errors were detected in one or more extensions");
                 } catch (ContributionException e) {
                     throw new ExtensionInitializationException("Error loading extension", file.toString(), e);
                 }
