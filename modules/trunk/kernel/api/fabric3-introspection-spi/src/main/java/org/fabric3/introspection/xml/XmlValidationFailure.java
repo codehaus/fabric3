@@ -58,10 +58,8 @@ public abstract class XmlValidationFailure<T> extends ValidationFailure<T> {
     public String getMessage() {
         StringBuilder builder = new StringBuilder();
         builder.append(message);
-        builder.append(" in ");
-        builder.append(resourceURI == null ? "unknown" : resourceURI);
         if (line != -1) {
-            builder.append(" at ").append(line).append(',').append(column);
+            builder.append(" [").append(line).append(',').append(column).append("]");
         }
         return builder.toString();
     }
