@@ -18,7 +18,7 @@
  */
 package org.fabric3.contribution.war;
 
-import org.fabric3.api.annotation.LogLevel;
+import org.fabric3.api.annotation.logging.Info;
 
 /**
  * Monitor interface for the WAR contribution extension.
@@ -29,14 +29,13 @@ public interface WarContributionMonitor {
     /**
      * Called after the extension is initialized
      */
-    @LogLevel("INFO")
+    @Info
     void extensionStarted();
 
     /**
      * Called after the extension is stopped
      */
-    @LogLevel("INFO")
+    @Info
     void extensionStopped();
-
 
 }

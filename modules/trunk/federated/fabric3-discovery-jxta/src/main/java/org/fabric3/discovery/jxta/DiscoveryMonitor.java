@@ -18,17 +18,17 @@
  */
 package org.fabric3.discovery.jxta;
 
-import org.fabric3.api.annotation.LogLevel;
+import org.fabric3.api.annotation.logging.Info;
 
 /**
  * @version $Revision$ $Date$
  */
 public interface DiscoveryMonitor {
 
-    @LogLevel("INFO")
+    @Info
     void discovered(String runtimeId);
 
-    @LogLevel("INFO")
+    @Info
     void expired(String runtimeId);
 
 }

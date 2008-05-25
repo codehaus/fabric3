@@ -18,7 +18,7 @@
  */
 package org.fabric3.spi.services.contribution;
 
-import org.fabric3.api.annotation.LogLevel;
+import org.fabric3.api.annotation.logging.Severe;
 
 /**
  * Receives callbacks for ArtifactResolver events.
@@ -27,6 +27,6 @@ import org.fabric3.api.annotation.LogLevel;
  */
 public interface ArtifactResolverMonitor {
 
-    @LogLevel("SEVERE")
+    @Severe
     void resolutionError(Throwable e);
 }

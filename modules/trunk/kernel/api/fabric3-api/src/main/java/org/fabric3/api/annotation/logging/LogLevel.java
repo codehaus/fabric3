@@ -16,39 +16,26 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.tx.interceptor;
+package org.fabric3.api.annotation.logging;
 
-import org.fabric3.api.annotation.logging.Fine;
-import org.fabric3.api.annotation.logging.Warning;
+import static java.lang.annotation.ElementType.METHOD;
+import static java.lang.annotation.ElementType.TYPE;
+import java.lang.annotation.Retention;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
+import java.lang.annotation.Target;
 
 /**
+ * Annotation that can be applied to methods in a monitoring interface to indicate to logging frameworks the severity of
+ * the event.
  *
- * @version $Revision$ $Date$
+ * @version $Rev: 1 $ $Date: 2007-05-14 18:40:37 +0100 (Mon, 14 May 2007) $
  */
-public interface TxMonitor {
+@Target({METHOD, TYPE})
+@Retention(RUNTIME)
+public @interface LogLevel {
     
-    @Fine
-    void started(int hashCode);
-    
-    @Fine
-    void committed(int hashCode);
-    
-    @Fine
-    void suspended(int hashCode);
-    
-    @Warning
-    void rolledback(int hashCode);
-    
-    @Fine
-    void resumed(int hashCode);
-    
-    @Fine
-    void markedForRollback(int hashCode);
-    
-    @Fine
-    void interceptorInitialized(TxAction txAction);
-    
-    @Fine
-    void joined(int hashCode);
-
+    /**
+     * The log level as specified by {@link LogLevels}.
+     */
+    @SuppressWarnings({"JavaDoc"}) LogLevels value();
 }

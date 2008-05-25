@@ -16,7 +16,7 @@
  */
 package org.fabric3.fabric.services.contribution;
 
-import org.fabric3.api.annotation.LogLevel;
+import org.fabric3.api.annotation.logging.Severe;
 
 /**
  * Receives callback events from the ContributionService
@@ -25,7 +25,7 @@ import org.fabric3.api.annotation.LogLevel;
  */
 public interface ContributionServiceMonitor {
 
-    @LogLevel("SEVERE")
+    @Severe
     void error(String message, Throwable e);
 
 }

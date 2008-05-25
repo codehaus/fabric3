@@ -18,7 +18,9 @@
  */
 package org.fabric3.scanner.scanner;
 
-import org.fabric3.api.annotation.LogLevel;
+import org.fabric3.api.annotation.logging.Fine;
+import org.fabric3.api.annotation.logging.Info;
+import org.fabric3.api.annotation.logging.Severe;
 
 /**
  * Monitoring interface for the DirectoryScanner
@@ -32,7 +34,7 @@ public interface ScannerMonitor {
      *
      * @param name the name of the resource
      */
-    @LogLevel("INFO")
+    @Info
     void add(String name);
 
     /**
@@ -40,7 +42,7 @@ public interface ScannerMonitor {
      *
      * @param name the name of the resource
      */
-    @LogLevel("FINE")
+    @Fine
     void remove(String name);
 
     /**
@@ -48,7 +50,7 @@ public interface ScannerMonitor {
      *
      * @param name the name of the resource
      */
-    @LogLevel("FINE")
+    @Fine
     void update(String name);
 
     /**
@@ -56,7 +58,7 @@ public interface ScannerMonitor {
      *
      * @param e the error
      */
-    @LogLevel("SEVERE")
+    @Severe
     void error(Throwable e);
 
     /**
@@ -64,7 +66,7 @@ public interface ScannerMonitor {
      *
      * @param e the error
      */
-    @LogLevel("SEVERE")
+    @Severe
     void recoveryError(Throwable e);
 
     /**
@@ -73,7 +75,7 @@ public interface ScannerMonitor {
      * @param filename the file being removed
      * @param e        the error
      */
-    @LogLevel("SEVERE")
+    @Severe
     void removalError(String filename, Throwable e);
 
     /**
@@ -81,6 +83,6 @@ public interface ScannerMonitor {
      *
      * @param description a description of the errors
      */
-    @LogLevel("SEVERE")
+    @Severe
     void contributionErrors(String description);
 }

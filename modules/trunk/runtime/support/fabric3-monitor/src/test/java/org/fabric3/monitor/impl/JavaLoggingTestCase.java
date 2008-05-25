@@ -28,7 +28,12 @@ import java.util.logging.Logger;
 
 import junit.framework.TestCase;
 
-import org.fabric3.api.annotation.LogLevel;
+import org.fabric3.api.annotation.logging.Fine;
+import org.fabric3.api.annotation.logging.Info;
+import org.fabric3.api.annotation.logging.LogLevel;
+import org.fabric3.api.annotation.logging.LogLevels;
+import org.fabric3.api.annotation.logging.Severe;
+import org.fabric3.api.annotation.logging.Warning;
 import org.fabric3.monitor.MonitorFactory;
 
 /**
@@ -75,15 +80,51 @@ public class JavaLoggingTestCase extends TestCase {
     /**
      * Test the correct record is written for an event defined by annotation.
      */
-    public void testEventWithAnnotation() {
+    public void testEventWithInfoAnnotation() {
         Monitor mon = factory.getMonitor(Monitor.class);
-        mon.eventWithAnnotation();
+        mon.eventWithInfoAnnotation();
         assertEquals(1, HANDLER.logs.size());
         LogRecord record = HANDLER.logs.get(0);
         assertEquals(Level.INFO, record.getLevel());
         assertEquals(LOGGER.getName(), record.getLoggerName());
-        assertEquals(Monitor.class.getName() + "#eventWithAnnotation", record.getMessage());
+        assertEquals(Monitor.class.getName() + "#eventWithInfoAnnotation", record.getMessage());
     }
+    
+    /**
+     * Test the correct record is written for an event defined by annotation.
+     */
+    public void testEventWithSevereAnnotation() {
+        Monitor mon = factory.getMonitor(Monitor.class);
+        mon.eventWithSevereAnnotation();
+        assertEquals(1, HANDLER.logs.size());
+        LogRecord record = HANDLER.logs.get(0);
+        assertEquals(Level.SEVERE, record.getLevel());
+        assertEquals(LOGGER.getName(), record.getLoggerName());
+        assertEquals(Monitor.class.getName() + "#eventWithSevereAnnotation", record.getMessage());
+    }
+    
+    /**
+     * Test the correct record is written for an event defined by annotation.
+     */
+    public void testEventWithWarningAnnotation() {
+        Monitor mon = factory.getMonitor(Monitor.class);
+        mon.eventWithWarningAnnotation();
+        assertEquals(1, HANDLER.logs.size());
+        LogRecord record = HANDLER.logs.get(0);
+        assertEquals(Level.WARNING, record.getLevel());
+        assertEquals(LOGGER.getName(), record.getLoggerName());
+        assertEquals(Monitor.class.getName() + "#eventWithWarningAnnotation", record.getMessage());
+    }
+    
+    /**
+     * Test the correct record is written for an event defined by annotation.
+     */
+    public void testEventWithFineAnnotation() {
+        Monitor mon = factory.getMonitor(Monitor.class);
+        mon.eventWithFineAnnotation();
+        //Logger log level is info
+        assertEquals(0, HANDLER.logs.size());
+    }         
 
     /**
      * Test the argument is logged.
@@ -141,16 +182,25 @@ public class JavaLoggingTestCase extends TestCase {
     public static interface Monitor {
         void eventNotToLog();
 
-        @LogLevel("INFO")
+        @LogLevel(LogLevels.INFO)
         void eventWithNoArgs();
 
-        @LogLevel("INFO")
+        @LogLevel(LogLevels.INFO)
         void eventWithOneArg(String msg);
 
-        @LogLevel("WARNING")
+        @LogLevel(LogLevels.WARNING)
         void eventWithThrowable(Exception e);
 
-        @LogLevel("INFO")
-        void eventWithAnnotation();
+        @Info
+        void eventWithInfoAnnotation();
+        
+        @Severe
+        void eventWithSevereAnnotation();
+        
+        @Warning
+        void eventWithWarningAnnotation();
+        
+        @Fine
+        void eventWithFineAnnotation();
     }
 }

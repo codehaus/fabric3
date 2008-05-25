@@ -18,6 +18,7 @@
  */
 package org.fabric3.itest;
 
+import java.lang.annotation.Annotation;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -35,7 +36,8 @@ import java.util.logging.Level;
 
 import org.apache.maven.plugin.logging.Log;
 
-import org.fabric3.api.annotation.LogLevel;
+import org.fabric3.api.annotation.logging.LogLevel;
+import org.fabric3.api.annotation.logging.LogLevels;
 import org.fabric3.monitor.MonitorFactory;
 
 /**
@@ -114,32 +116,10 @@ public class MavenMonitorFactory implements MonitorFactory {
         Method[] methods = monitorInterface.getMethods();
         Map<Method, MethodHandler> handlers = new ConcurrentHashMap<Method, MethodHandler>(methods.length);
         for (Method method : methods) {
-            String levelName = null;
-            LogLevel annotation = method.getAnnotation(LogLevel.class);
-            if (annotation != null) {
-                levelName = annotation.value();
-            }
-
-            Level methodLevel;
-            if (levelName == null) {
-                methodLevel = defaultLevel;
-            } else {
-                try {
-                    methodLevel = Level.parse(levelName);
-                } catch (IllegalArgumentException e) {
-                    methodLevel = defaultLevel;
-                }
-            }
-
-            int value = methodLevel.intValue();
-            int throwable = -1;
-            for (int i = 0; i < method.getParameterTypes().length; i++) {
-                Class<?> paramType = method.getParameterTypes()[i];
-                if (Throwable.class.isAssignableFrom(paramType)) {
-                    throwable = i;
-                    break;
-                }
-            }
+            
+            LogLevels level = getLogLevelFromAnnotation(method);
+            int value = translateLogLevel(level).intValue();
+            int throwable = getExceptionParameterIndex(method);
 
             String message = getMessage(monitorInterface, method);
 
@@ -203,6 +183,61 @@ public class MavenMonitorFactory implements MonitorFactory {
         }
         return message;
     }
+    
+    private LogLevels getLogLevelFromAnnotation(Method method) {
+        LogLevels level = null;
+        
+        LogLevel annotation = method.getAnnotation(LogLevel.class);
+        if (annotation != null) {
+            level = annotation.value();
+        }
+        
+        if(level == null) {
+            for (Annotation methodAnnotation : method.getDeclaredAnnotations()) {
+                Class<? extends Annotation> annotationType = methodAnnotation.annotationType();
+                
+                LogLevel logLevel = null;
+                if((logLevel = annotationType.getAnnotation(LogLevel.class)) != null) {
+                    level = logLevel.value();
+                    break;
+                }
+            }            
+        }
+        
+        return level;
+    }    
+    
+    private Level translateLogLevel(LogLevels level) {
+        Level result = null;
+        if (level == null) {
+            result = defaultLevel;
+        } 
+        else {
+            try {
+                //Because the LogLevels' values are based on the Level's logging levels, 
+                //no translation is required, just a pass-through mapping
+                result = Level.parse(level.toString());
+            } catch (IllegalArgumentException e) {
+                //TODO: Add error reporting for unsupported log level
+                result = defaultLevel;
+            }
+        }
+        return result;
+    }    
+    
+    private int getExceptionParameterIndex(Method method) {
+        
+        int result = -1;
+        for (int i = 0; i < method.getParameterTypes().length; i++) {
+            Class<?> paramType = method.getParameterTypes()[i];
+            if (Throwable.class.isAssignableFrom(paramType)) {
+                result = i;
+                break;
+            }
+        }
+        
+        return result;
+    }    
 
     private static class Handler implements InvocationHandler {
         private final Map<Method, MethodHandler> handlers;

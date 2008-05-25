@@ -18,13 +18,13 @@
  */
 package org.fabric3.messaging.jxta;
 
-import org.fabric3.api.annotation.LogLevel;
+import org.fabric3.api.annotation.logging.Severe;
 
 /**
  * @version $Revision$ $Date$
  */
 public interface MessagingMonitor {
 
-    @LogLevel("SEVERE")
+    @Severe
     void error(Throwable e);
 }

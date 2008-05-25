@@ -14,17 +14,28 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.fabric.services.routing;
 
-import org.fabric3.api.annotation.logging.Fine;
+package org.fabric3.api.annotation.logging;
 
 /**
- * Event monitor for the routing service
- *
- * @version $Rev$ $Date$
- */
-public interface RoutingMonitor {
+* Defines logging levels recognised by the {@link LogLevel} annotation.
+* The log levels supported by the logging implementation underlying any given
+* monitor factory implementation may not match the levels defined here and so
+* monitor factories may be required to carry out a mapping between levels 
+**/  
+public enum LogLevels {
 
-    @Fine
-    void routeCommands(String runtimeId);
+    SEVERE,
+    
+    WARNING,
+    
+    INFO,
+    
+    CONFIG,
+    
+    FINE,
+    
+    FINER,
+    
+    FINEST    
 }

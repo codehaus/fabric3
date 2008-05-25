@@ -33,6 +33,7 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
+
 import javax.xml.namespace.QName;
 
 import org.apache.maven.artifact.Artifact;
@@ -61,8 +62,7 @@ import org.apache.maven.surefire.report.ReporterManager;
 import org.apache.maven.surefire.report.XMLReporter;
 import org.apache.maven.surefire.suite.SurefireTestSuite;
 import org.apache.maven.surefire.testset.TestSetFailedException;
-
-import org.fabric3.api.annotation.LogLevel;
+import org.fabric3.api.annotation.logging.Severe;
 import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.host.contribution.ValidationException;
 import org.fabric3.host.runtime.Bootstrapper;
@@ -885,7 +885,7 @@ public class Fabric3ITestMojo extends AbstractMojo {
     }
 
     public interface MojoMonitor {
-        @LogLevel("SEVERE")
+        @Severe
         void runError(Exception e);
     }
 

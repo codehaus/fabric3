@@ -14,17 +14,19 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.fabric.services.routing;
 
-import org.fabric3.api.annotation.logging.Fine;
+package org.fabric3.api.annotation.logging;
 
-/**
- * Event monitor for the routing service
- *
- * @version $Rev$ $Date$
- */
-public interface RoutingMonitor {
+import static java.lang.annotation.ElementType.METHOD;
+import static java.lang.annotation.RetentionPolicy.RUNTIME;
 
-    @Fine
-    void routeCommands(String runtimeId);
+import java.lang.annotation.Retention;
+import java.lang.annotation.Target;
+
+
+@LogLevel(LogLevels.FINER)
+@Target({METHOD})
+@Retention(RUNTIME)
+public @interface Finer {
+
 }

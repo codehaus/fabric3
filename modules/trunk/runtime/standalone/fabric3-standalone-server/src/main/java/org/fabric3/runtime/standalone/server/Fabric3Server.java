@@ -25,16 +25,17 @@ import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Future;
 
-import org.fabric3.api.annotation.LogLevel;
+import org.fabric3.api.annotation.logging.Info;
+import org.fabric3.api.annotation.logging.Severe;
 import org.fabric3.host.runtime.Bootstrapper;
 import org.fabric3.host.runtime.RuntimeLifecycleCoordinator;
 import org.fabric3.host.runtime.ShutdownException;
 import org.fabric3.jmx.agent.Agent;
 import org.fabric3.jmx.agent.rmi.RmiAgent;
+import org.fabric3.monitor.MonitorFactory;
 import org.fabric3.runtime.standalone.BootstrapHelper;
 import org.fabric3.runtime.standalone.StandaloneHostInfo;
 import org.fabric3.runtime.standalone.StandaloneRuntime;
-import org.fabric3.monitor.MonitorFactory;
 
 /**
  * This class provides the commandline interface for starting the Fabric3 standalone server. <p/> <p/> The class boots the Fabric3 server and also
@@ -197,13 +198,13 @@ public class Fabric3Server implements Fabric3ServerMBean {
     }
 
     public interface ServerMonitor {
-        @LogLevel("SEVERE")
+        @Severe
         void runError(Exception e);
 
-        @LogLevel("INFO")
+        @Info
         void started(String profile);
 
-        @LogLevel("INFO")
+        @Info
         void stopped(String profile);
 
     }

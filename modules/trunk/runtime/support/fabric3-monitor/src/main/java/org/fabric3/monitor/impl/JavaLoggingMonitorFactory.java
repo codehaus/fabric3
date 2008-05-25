@@ -18,6 +18,7 @@
  */
 package org.fabric3.monitor.impl;
 
+import java.lang.annotation.Annotation;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -36,7 +37,8 @@ import java.util.logging.Formatter;
 import java.util.logging.Handler;
 import java.net.URI;
 
-import org.fabric3.api.annotation.LogLevel;
+import org.fabric3.api.annotation.logging.LogLevel;
+import org.fabric3.api.annotation.logging.LogLevels;
 import org.fabric3.monitor.MonitorFactory;
 
 /**
@@ -119,36 +121,11 @@ public class JavaLoggingMonitorFactory implements MonitorFactory {
         for (Method method : methods) {
             String methodName = method.getName();
             String key = className + '#' + methodName;
-            String levelName = null;
-            if (levels != null) {
-                levelName = levels.getProperty(key);
-            }
-            if (levelName == null) {
-                LogLevel annotation = method.getAnnotation(LogLevel.class);
-                if (annotation != null) {
-                    levelName = annotation.value();
-                }
-            }
-
-            Level methodLevel;
-            if (levelName == null) {
-                methodLevel = defaultLevel;
-            } else {
-                try {
-                    methodLevel = Level.parse(levelName);
-                } catch (IllegalArgumentException e) {
-                    methodLevel = defaultLevel;
-                }
-            }
-
-            int throwable = -1;
-            for (int i = 0; i < method.getParameterTypes().length; i++) {
-                Class<?> paramType = method.getParameterTypes()[i];
-                if (Throwable.class.isAssignableFrom(paramType)) {
-                    throwable = i;
-                    break;
-                }
-            }
+            
+            LogLevels level = getLogLevel(method, key);            
+            Level methodLevel = translateLogLevel(level);
+            int throwable = getExceptionParameterIndex(method);
+            
             MethodInfo info = new MethodInfo(logger, methodLevel, methodName, bundle, throwable);
             methodInfo.put(method, info);
         }
@@ -160,17 +137,27 @@ public class JavaLoggingMonitorFactory implements MonitorFactory {
         return monitorInterface.cast(proxy);
     }
 
-    private void setFormatter(Logger logger) {
-        if (formatter != null) {
-            Logger parent = logger.getParent();
-            if (parent != null && logger.getUseParentHandlers()) {
-                setFormatter(parent);
-            } else {
-                for (Handler handler : logger.getHandlers()) {
-                    handler.setFormatter(formatter);
-                }
+    private LogLevels getLogLevel(Method method, String key) {
+        LogLevels level = getLogLevelFromConfig(key);            
+        if (level == null) {
+            level = getLogLevelFromAnnotation(method);
+        }
+        return level;
+    }
+
+    private int getExceptionParameterIndex(Method method) {
+        int result = -1;
+        for (int i = 0; i < method.getParameterTypes().length; i++) {
+            Class<?> paramType = method.getParameterTypes()[i];
+            if (Throwable.class.isAssignableFrom(paramType)) {
+                result = i;
+                break;
             }
         }
+        
+        //The position in the monitor interface's parameter list of the first throwable
+        //is used when creating the LogRecord in the MethodInfo (could be calculated there)
+        return result;
     }
 
     protected <T> ResourceBundle locateBundle(Class<T> monitorInterface, String bundleName) {
@@ -195,6 +182,72 @@ public class JavaLoggingMonitorFactory implements MonitorFactory {
             return null;
         }
     }
+    
+    private Level translateLogLevel(LogLevels level) {
+        Level result = null;
+        if (level == null) {
+            result = defaultLevel;
+        } 
+        else {
+            try {
+                //Because the LogLevels' values are based on the Level's logging levels, 
+                //no translation is required, just a pass-through mapping
+                result = Level.parse(level.toString());
+            } catch (IllegalArgumentException e) {
+                //TODO: Add error reporting for unsupported log level
+                result = defaultLevel;
+            }
+        }
+        return result;
+    }
+
+    private LogLevels getLogLevelFromAnnotation(Method method) {
+        LogLevels level = null;
+        
+        LogLevel annotation = method.getAnnotation(LogLevel.class);
+        if (annotation != null) {
+            level = annotation.value();
+        }
+        
+        if(level == null) {
+            for (Annotation methodAnnotation : method.getDeclaredAnnotations()) {
+                Class<? extends Annotation> annotationType = methodAnnotation.annotationType();
+                
+                LogLevel logLevel = null;
+                if((logLevel = annotationType.getAnnotation(LogLevel.class)) != null) {
+                    level = logLevel.value();
+                    break;
+                }
+            }            
+        }
+        
+        return level;
+    }
+
+    private LogLevels getLogLevelFromConfig(String key) {
+        LogLevels result = null;
+        if (levels != null && levels.getProperty(key) != null) {
+            try {
+                result = Enum.valueOf(LogLevels.class, levels.getProperty(key));                    
+            } catch (IllegalArgumentException e) {
+                //TODO: Add error reporting for unsupported log level
+            }                
+        }
+        return result;
+    }
+
+    private void setFormatter(Logger logger) {
+        if (formatter != null) {
+            Logger parent = logger.getParent();
+            if (parent != null && logger.getUseParentHandlers()) {
+                setFormatter(parent);
+            } else {
+                for (Handler handler : logger.getHandlers()) {
+                    handler.setFormatter(formatter);
+                }
+            }
+        }
+    }    
 
     private static class MethodInfo {
         private final Logger logger;

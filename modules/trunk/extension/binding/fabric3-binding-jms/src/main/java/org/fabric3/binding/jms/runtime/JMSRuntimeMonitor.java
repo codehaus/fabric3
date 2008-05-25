@@ -19,7 +19,9 @@
 package org.fabric3.binding.jms.runtime;
 
 
-import org.fabric3.api.annotation.LogLevel;
+import org.fabric3.api.annotation.logging.Info;
+import org.fabric3.api.annotation.logging.LogLevel;
+import org.fabric3.api.annotation.logging.LogLevels;
 
 /**
  * Monitor interface for JMS Host.
@@ -32,7 +34,7 @@ public interface JMSRuntimeMonitor {
      *
      * @param address the endpoint address
      */
-    @LogLevel("INFO")
+    @Info
     void registerListener(Object destination);
 
     /**
@@ -40,14 +42,14 @@ public interface JMSRuntimeMonitor {
      *
      * @param address the endpoint address
      */
-    @LogLevel("INFO")
+    @Info
     void jmsListenerError(Exception address);
 
 
     /**
      * Callback indicating the extension has been stopped.
      */
-    @LogLevel("INFO")
+    @Info
     void jmsRuntimeStop();
 
 

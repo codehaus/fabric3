@@ -18,18 +18,31 @@
  */
 package org.fabric3.runtime.webapp;
 
+import static org.fabric3.runtime.webapp.Constants.APPLICATION_SCDL_PATH_DEFAULT;
+import static org.fabric3.runtime.webapp.Constants.APPLICATION_SCDL_PATH_PARAM;
+import static org.fabric3.runtime.webapp.Constants.BASE_DIR;
+import static org.fabric3.runtime.webapp.Constants.COMPONENT_PARAM;
+import static org.fabric3.runtime.webapp.Constants.COMPOSITE_NAMESPACE_PARAM;
+import static org.fabric3.runtime.webapp.Constants.COMPOSITE_PARAM;
+import static org.fabric3.runtime.webapp.Constants.DEFAULT_MANAGEMENT_DOMAIN;
+import static org.fabric3.runtime.webapp.Constants.DOMAIN_PARAM;
+import static org.fabric3.runtime.webapp.Constants.MANAGEMENT_DOMAIN_PARAM;
+import static org.fabric3.runtime.webapp.Constants.ONLINE_PARAM;
+import static org.fabric3.runtime.webapp.Constants.RUNTIME_ATTRIBUTE;
+
+import java.io.File;
 import java.net.URI;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
-import java.io.File;
+
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.xml.namespace.QName;
 
-import org.fabric3.api.annotation.LogLevel;
+import org.fabric3.api.annotation.logging.Severe;
 import org.fabric3.host.Fabric3RuntimeException;
 import org.fabric3.host.runtime.Bootstrapper;
 import org.fabric3.host.runtime.InitializationException;
@@ -38,18 +51,6 @@ import org.fabric3.host.runtime.ScdlBootstrapper;
 import org.fabric3.host.runtime.ShutdownException;
 import org.fabric3.jmx.agent.Agent;
 import org.fabric3.jmx.agent.rmi.RmiAgent;
-
-import static org.fabric3.runtime.webapp.Constants.APPLICATION_SCDL_PATH_DEFAULT;
-import static org.fabric3.runtime.webapp.Constants.APPLICATION_SCDL_PATH_PARAM;
-import static org.fabric3.runtime.webapp.Constants.COMPONENT_PARAM;
-import static org.fabric3.runtime.webapp.Constants.COMPOSITE_PARAM;
-import static org.fabric3.runtime.webapp.Constants.DOMAIN_PARAM;
-import static org.fabric3.runtime.webapp.Constants.MANAGEMENT_DOMAIN_PARAM;
-import static org.fabric3.runtime.webapp.Constants.DEFAULT_MANAGEMENT_DOMAIN;
-import static org.fabric3.runtime.webapp.Constants.ONLINE_PARAM;
-import static org.fabric3.runtime.webapp.Constants.RUNTIME_ATTRIBUTE;
-import static org.fabric3.runtime.webapp.Constants.COMPOSITE_NAMESPACE_PARAM;
-import static org.fabric3.runtime.webapp.Constants.BASE_DIR;
 
 /**
  * Launches a Fabric3 runtime in a web application, loading information from servlet context parameters. This listener manages one runtime per servlet
@@ -176,7 +177,7 @@ public class Fabric3ContextListener implements ServletContextListener {
     }
 
     public interface WebAppMonitor {
-        @LogLevel("SEVERE")
+        @Severe
         void runError(Throwable e);
     }
 

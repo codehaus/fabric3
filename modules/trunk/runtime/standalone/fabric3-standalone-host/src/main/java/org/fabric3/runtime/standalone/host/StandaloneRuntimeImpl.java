@@ -18,7 +18,7 @@
  */
 package org.fabric3.runtime.standalone.host;
 
-import org.fabric3.api.annotation.LogLevel;
+import org.fabric3.api.annotation.logging.Severe;
 import org.fabric3.fabric.runtime.AbstractRuntime;
 import org.fabric3.monitor.MonitorFactory;
 import org.fabric3.runtime.standalone.StandaloneHostInfo;
@@ -37,7 +37,7 @@ public class StandaloneRuntimeImpl extends AbstractRuntime<StandaloneHostInfo> i
 
 
     public interface StandaloneMonitor {
-        @LogLevel("SEVERE")
+        @Severe
         void runError(Exception e);
     }
 }

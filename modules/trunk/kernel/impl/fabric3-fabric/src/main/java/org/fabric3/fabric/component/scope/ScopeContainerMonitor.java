@@ -20,7 +20,7 @@ package org.fabric3.fabric.component.scope;
 
 import java.net.URI;
 
-import org.fabric3.api.annotation.LogLevel;
+import org.fabric3.api.annotation.logging.Severe;
 import org.fabric3.spi.component.TargetDestructionException;
 
 /**
@@ -30,10 +30,10 @@ import org.fabric3.spi.component.TargetDestructionException;
  */
 public interface ScopeContainerMonitor {
 
-    @LogLevel("SEVERE")
+    @Severe
     void eagerInitializationError(URI componentId, Exception e);
 
-    @LogLevel("SEVERE")
+    @Severe
     void destructionError(TargetDestructionException e);
 
 }

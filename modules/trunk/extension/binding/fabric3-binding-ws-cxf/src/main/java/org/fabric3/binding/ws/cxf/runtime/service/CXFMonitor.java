@@ -16,7 +16,7 @@
  */
 package org.fabric3.binding.ws.cxf.runtime.service;
 
-import org.fabric3.api.annotation.LogLevel;
+import org.fabric3.api.annotation.logging.Info;
 
 /**
  * Callbacks for the web services extension
@@ -29,19 +29,19 @@ public interface CXFMonitor {
      *
      * @param address the endpoint address
      */
-    @LogLevel("INFO")
+    @Info
     void endpointProvisioned(String address);
 
     /**
      * Callback indicating the CXF extension has been initialized.
      */
-    @LogLevel("INFO")
+    @Info
     void extensionStarted();
 
     /**
      * Callback indicating the CXF extension has been stopped.
      */
-    @LogLevel("INFO")
+    @Info
     void extensionStopped();
 
 }

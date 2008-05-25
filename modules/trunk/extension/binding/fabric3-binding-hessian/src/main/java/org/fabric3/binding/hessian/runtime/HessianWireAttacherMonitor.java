@@ -2,7 +2,9 @@ package org.fabric3.binding.hessian.runtime;
 
 import java.net.URI;
 
-import org.fabric3.api.annotation.LogLevel;
+import org.fabric3.api.annotation.logging.Info;
+import org.fabric3.api.annotation.logging.LogLevel;
+import org.fabric3.api.annotation.logging.LogLevels;
 
 /**
  * @version $Rev$ $Date$
@@ -14,7 +16,7 @@ public interface HessianWireAttacherMonitor {
      *
      * @param address the endpoint address
      */
-    @LogLevel("INFO")
+    @Info
     void provisionedEndpoint(URI address);
 
     /**
@@ -22,19 +24,19 @@ public interface HessianWireAttacherMonitor {
      *
      * @param address the endpoint address
      */
-    @LogLevel("INFO")
+    @Info
     void removedEndpoint(URI address);
 
     /**
      * Callback indicating the extension has been initialized.
      */
-    @LogLevel("INFO")
+    @Info
     void extensionStarted();
 
     /**
      * Callback indicating the extension has been stopped.
      */
-    @LogLevel("INFO")
+    @Info
     void extensionStopped();
 
 

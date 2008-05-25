@@ -16,7 +16,10 @@
  */
 package org.fabric3.host.runtime;
 
-import org.fabric3.api.annotation.LogLevel;
+import org.fabric3.api.annotation.logging.Info;
+import org.fabric3.api.annotation.logging.LogLevel;
+import org.fabric3.api.annotation.logging.LogLevels;
+import org.fabric3.api.annotation.logging.Severe;
 
 /**
  * Event monitor interface for the bootstrap sequence
@@ -30,7 +33,7 @@ public interface CoordinatorMonitor {
      *
      * @param message a message
      */
-    @LogLevel("INFO")
+    @Info
     void initialized(String message);
 
     /**
@@ -38,7 +41,7 @@ public interface CoordinatorMonitor {
      *
      * @param message a message
      */
-    @LogLevel("INFO")
+    @Info
     void joinedDomain(String message);
 
     /**
@@ -46,7 +49,7 @@ public interface CoordinatorMonitor {
      *
      * @param message a message
      */
-    @LogLevel("INFO")
+    @Info
     void recovered(String message);
 
     /**
@@ -54,7 +57,7 @@ public interface CoordinatorMonitor {
      *
      * @param message a message
      */
-    @LogLevel("INFO")
+    @Info
     void started(String message);
 
     /**
@@ -62,7 +65,7 @@ public interface CoordinatorMonitor {
      *
      * @param e the exception
      */
-    @LogLevel("SEVERE")
+    @Severe
     void error(Throwable e);
 
     /**
@@ -70,7 +73,7 @@ public interface CoordinatorMonitor {
      *
      * @param description a description of the errors
      */
-    @LogLevel("SEVERE")
+    @Severe
     void intentErrors(String description);
 
 
@@ -79,7 +82,7 @@ public interface CoordinatorMonitor {
      *
      * @param description a description of the errors
      */
-    @LogLevel("SEVERE")
+    @Severe
     void extensionErrors(String description);
 
     /**
@@ -87,7 +90,7 @@ public interface CoordinatorMonitor {
      *
      * @param description a description of the errors
      */
-    @LogLevel("SEVERE")
+    @Severe
     void contributionErrors(String description);
 
 }
