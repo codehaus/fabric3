@@ -41,6 +41,7 @@ import org.fabric3.introspection.xml.LoaderUtil;
 import org.fabric3.introspection.xml.TypeLoader;
 import org.fabric3.introspection.xml.UnrecognizedElement;
 import org.fabric3.introspection.xml.UnrecognizedElementException;
+import org.fabric3.scdl.ArtifactValidationFailure;
 import org.fabric3.scdl.Autowire;
 import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.Composite;
@@ -162,8 +163,7 @@ public class CompositeLoader implements TypeLoader<Composite> {
         type.setLocal(local);
         type.setAutowire(Autowire.fromString(reader.getAttributeValue(null, "autowire")));
         type.setConstrainingType(constrainingType);
-        loaderHelper.loadPolicySetsAndIntents(type, reader, introspectionContext);
-
+        loaderHelper.loadPolicySetsAndIntents(type, reader, childContext);
         while (true) {
             switch (reader.next()) {
             case START_ELEMENT:
@@ -178,14 +178,14 @@ public class CompositeLoader implements TypeLoader<Composite> {
                     if (type.getIncludes().containsKey(includeName)) {
                         String identifier = includeName.toString();
                         DuplicateInclude failure = new DuplicateInclude(identifier, reader);
-                        introspectionContext.addError(failure);
+                        childContext.addError(failure);
                         continue;
                     }
                     for (ComponentDefinition definition : include.getIncluded().getComponents().values()) {
                         String key = definition.getName();
                         if (type.getComponents().containsKey(key)) {
                             DuplicateComponentName failure = new DuplicateComponentName(key, reader);
-                            introspectionContext.addError(failure);
+                            childContext.addError(failure);
                         }
                     }
                     type.add(include);
@@ -198,7 +198,7 @@ public class CompositeLoader implements TypeLoader<Composite> {
                     String key = property.getName();
                     if (type.getProperties().containsKey(key)) {
                         DuplicateProperty failure = new DuplicateProperty(key, reader);
-                        introspectionContext.addError(failure);
+                        childContext.addError(failure);
                     } else {
                         type.add(property);
                     }
@@ -211,7 +211,7 @@ public class CompositeLoader implements TypeLoader<Composite> {
                     if (type.getServices().containsKey(service.getName())) {
                         String key = service.getName();
                         DuplicateService failure = new DuplicateService(key, reader);
-                        introspectionContext.addError(failure);
+                        childContext.addError(failure);
                     } else {
                         type.add(service);
                     }
@@ -224,7 +224,7 @@ public class CompositeLoader implements TypeLoader<Composite> {
                     if (type.getReferences().containsKey(reference.getName())) {
                         String key = reference.getName();
                         DuplicatePromotedReferenceName failure = new DuplicatePromotedReferenceName(key, reader);
-                        introspectionContext.addError(failure);
+                        childContext.addError(failure);
                     } else {
                         type.add(reference);
                     }
@@ -237,7 +237,7 @@ public class CompositeLoader implements TypeLoader<Composite> {
                     String key = componentDefinition.getName();
                     if (type.getComponents().containsKey(key)) {
                         DuplicateComponentName failure = new DuplicateComponentName(key, reader);
-                        introspectionContext.addError(failure);
+                        childContext.addError(failure);
                         continue;
                     }
                     if (type.getAutowire() != Autowire.INHERITED && componentDefinition.getAutowire() == Autowire.INHERITED) {
@@ -260,7 +260,7 @@ public class CompositeLoader implements TypeLoader<Composite> {
                         // UnrecognizedElement added to the context if none is found
                     } catch (UnrecognizedElementException e) {
                         UnrecognizedElement failure = new UnrecognizedElement(reader);
-                        introspectionContext.addError(failure);
+                        childContext.addError(failure);
                         continue;
                     }
                     if (modelObject instanceof Property) {
@@ -271,7 +271,7 @@ public class CompositeLoader implements TypeLoader<Composite> {
                         type.add((CompositeReference) modelObject);
                     } else if (modelObject instanceof ComponentDefinition) {
                         type.add((ComponentDefinition<?>) modelObject);
-                    }else if (type == null) {
+                    } else if (type == null) {
                         // there was an error loading the element, ingore it as the errors will have been reported
                         continue;
                     } else {
@@ -282,11 +282,16 @@ public class CompositeLoader implements TypeLoader<Composite> {
                 break;
             case END_ELEMENT:
                 assert COMPOSITE.equals(reader.getName());
-                if (childContext.hasErrors()) {
-                    introspectionContext.addErrors(childContext.getErrors());
-                }
-                if (childContext.hasWarnings()) {
-                    introspectionContext.addWarnings(childContext.getWarnings());
+                if (childContext.hasErrors() || childContext.hasWarnings()) {
+                    ArtifactValidationFailure artifactFailure = new ArtifactValidationFailure(compositeName.toString());
+                    if (childContext.hasErrors()) {
+                        artifactFailure.addFailures(childContext.getErrors());
+                        introspectionContext.addError(artifactFailure);
+                    }
+                    if (childContext.hasWarnings()) {
+                        artifactFailure.addFailures(childContext.getWarnings());
+                        introspectionContext.addWarning(artifactFailure);
+                    }
                 }
                 return type;
             }

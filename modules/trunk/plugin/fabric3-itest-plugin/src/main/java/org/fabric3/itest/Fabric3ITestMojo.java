@@ -72,10 +72,10 @@ import org.fabric3.host.runtime.ShutdownException;
 import org.fabric3.introspection.validation.ValidationException;
 import org.fabric3.jmx.agent.Agent;
 import org.fabric3.jmx.agent.rmi.RmiAgent;
-import org.fabric3.maven.runtime.MavenCoordinator;
-import org.fabric3.maven.runtime.MavenEmbeddedRuntime;
 import org.fabric3.maven.runtime.CompositeActivationException;
 import org.fabric3.maven.runtime.ContextStartException;
+import org.fabric3.maven.runtime.MavenCoordinator;
+import org.fabric3.maven.runtime.MavenEmbeddedRuntime;
 import org.fabric3.monitor.MonitorFactory;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.ComponentDefinition;
@@ -83,7 +83,6 @@ import org.fabric3.scdl.Composite;
 import org.fabric3.scdl.Implementation;
 import org.fabric3.scdl.Operation;
 import org.fabric3.scdl.ServiceDefinition;
-import org.fabric3.scdl.ValidationFailure;
 import org.fabric3.spi.Constants;
 import org.fabric3.spi.classloader.MultiParentClassLoader;
 
@@ -753,18 +752,10 @@ public class Fabric3ITestMojo extends AbstractMojo {
         b.append("-------------------------------------------------------\n");
         b.append("CONTRIBUTION ERRORS\n");
         b.append("-------------------------------------------------------\n\n");
-        int number = cause.getFailures().size();
-        if (number == 1) {
-            b.append("1 error was found \n\n");
-        } else {
-            b.append(number).append(" errors were found \n\n");
-        }
-
-        for (ValidationFailure failure : cause.getFailures()) {
-            b.append("ERROR: ").append(failure.getMessage()).append("\n\n");
-        }
+        b.append(cause.getMessage());
         getLog().error(b);
     }
+
 
     protected SCATestSet createTestSet(MavenEmbeddedRuntime runtime,
                                        String name,

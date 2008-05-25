@@ -26,15 +26,17 @@ import junit.framework.TestCase;
 import org.easymock.EasyMock;
 import static org.osoa.sca.Constants.SCA_NS;
 
-import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.DefaultIntrospectionContext;
+import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.xml.LoaderException;
 import org.fabric3.introspection.xml.LoaderHelper;
 import org.fabric3.introspection.xml.LoaderRegistry;
 import org.fabric3.introspection.xml.TypeLoader;
+import org.fabric3.scdl.ArtifactValidationFailure;
 import org.fabric3.scdl.ComponentType;
 import org.fabric3.scdl.CompositeService;
 import org.fabric3.scdl.Implementation;
+import org.fabric3.scdl.ValidationFailure;
 
 /**
  * @version $Rev$ $Date$
@@ -53,7 +55,9 @@ public class DuplicateServiceTestCase extends TestCase {
      */
     public void testDuplicateService() throws Exception {
         loader.load(reader, ctx);
-        assertTrue(ctx.getErrors().get(0) instanceof DuplicateService);
+        ValidationFailure failure = ctx.getErrors().get(0);
+        assertTrue(failure instanceof ArtifactValidationFailure);
+        assertTrue(((ArtifactValidationFailure) failure).getFailures().get(0) instanceof DuplicateService);
     }
 
     protected void setUp() throws Exception {

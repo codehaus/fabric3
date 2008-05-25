@@ -35,6 +35,8 @@ import org.fabric3.introspection.xml.TypeLoader;
 import org.fabric3.scdl.ComponentType;
 import org.fabric3.scdl.CompositeReference;
 import org.fabric3.scdl.Implementation;
+import org.fabric3.scdl.ValidationFailure;
+import org.fabric3.scdl.ArtifactValidationFailure;
 
 /**
  * @version $Rev$ $Date$
@@ -53,7 +55,10 @@ public class DuplicatePromotedReferenceNameTestCase extends TestCase {
      */
     public void testDuplicateReference() throws Exception {
         loader.load(reader, ctx);
-        assertTrue(ctx.getErrors().get(0) instanceof DuplicatePromotedReferenceName);
+        ValidationFailure failure = ctx.getErrors().get(0);
+        assertTrue(failure instanceof ArtifactValidationFailure);
+        assertTrue(((ArtifactValidationFailure) failure).getFailures().get(0) instanceof DuplicatePromotedReferenceName);
+
     }
 
     protected void setUp() throws Exception {

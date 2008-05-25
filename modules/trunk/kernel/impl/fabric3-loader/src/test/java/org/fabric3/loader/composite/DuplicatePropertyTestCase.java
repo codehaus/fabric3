@@ -35,6 +35,8 @@ import org.fabric3.introspection.xml.TypeLoader;
 import org.fabric3.scdl.ComponentType;
 import org.fabric3.scdl.Implementation;
 import org.fabric3.scdl.Property;
+import org.fabric3.scdl.ArtifactValidationFailure;
+import org.fabric3.scdl.ValidationFailure;
 
 /**
  * @version $Rev$ $Date$
@@ -53,7 +55,9 @@ public class DuplicatePropertyTestCase extends TestCase {
      */
     public void testDuplicateProperty() throws Exception {
         loader.load(reader, ctx);
-        assertTrue(ctx.getErrors().get(0) instanceof DuplicateProperty);
+        ValidationFailure failure = ctx.getErrors().get(0);
+        assertTrue(failure instanceof ArtifactValidationFailure);
+        assertTrue(((ArtifactValidationFailure) failure).getFailures().get(0) instanceof DuplicateProperty);
     }
 
     protected void setUp() throws Exception {
