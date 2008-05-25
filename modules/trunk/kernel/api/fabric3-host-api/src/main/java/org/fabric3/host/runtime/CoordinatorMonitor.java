@@ -17,8 +17,6 @@
 package org.fabric3.host.runtime;
 
 import org.fabric3.api.annotation.logging.Info;
-import org.fabric3.api.annotation.logging.LogLevel;
-import org.fabric3.api.annotation.logging.LogLevels;
 import org.fabric3.api.annotation.logging.Severe;
 
 /**
@@ -84,13 +82,5 @@ public interface CoordinatorMonitor {
      */
     @Severe
     void extensionErrors(String description);
-
-    /**
-     * Called when errors are encountered processing contributions
-     *
-     * @param description a description of the errors
-     */
-    @Severe
-    void contributionErrors(String description);
 
 }
