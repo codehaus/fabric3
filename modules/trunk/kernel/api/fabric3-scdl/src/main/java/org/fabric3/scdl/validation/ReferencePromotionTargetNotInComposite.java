@@ -17,7 +17,7 @@
 package org.fabric3.scdl.validation;
 
 import org.fabric3.scdl.CompositeReference;
-import org.fabric3.scdl.ValidationFailure;
+import org.fabric3.host.contribution.ValidationFailure;
 
 /**
  * Validation warning indicating that the component being promoted was not found in this composite.

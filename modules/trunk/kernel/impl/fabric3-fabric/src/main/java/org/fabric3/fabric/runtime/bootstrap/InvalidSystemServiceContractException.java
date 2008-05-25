@@ -19,8 +19,8 @@ package org.fabric3.fabric.runtime.bootstrap;
 import java.util.List;
 
 import org.fabric3.host.runtime.InitializationException;
+import org.fabric3.host.contribution.ValidationFailure;
 import org.fabric3.introspection.xml.XmlValidationFailure;
-import org.fabric3.scdl.ValidationFailure;
 
 /**
  * @version $Rev$ $Date$

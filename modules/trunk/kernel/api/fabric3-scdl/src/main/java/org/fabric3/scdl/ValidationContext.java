@@ -18,6 +18,8 @@ package org.fabric3.scdl;
 
 import java.util.List;
 
+import org.fabric3.host.contribution.ValidationFailure;
+
 /**
  * Context for gathering the results of model validation.
  * <p/>

@@ -28,6 +28,10 @@ import org.fabric3.host.Fabric3Exception;
 public class ContributionException extends Fabric3Exception {
     private static final long serialVersionUID = -719954756993485191L;
 
+    public ContributionException(String message) {
+        super(message);
+    }
+
     public ContributionException(Throwable cause) {
         super(cause);
     }

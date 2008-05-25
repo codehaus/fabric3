@@ -52,12 +52,13 @@ import org.fabric3.host.runtime.InitializationException;
 import org.fabric3.host.runtime.RuntimeLifecycleCoordinator;
 import org.fabric3.host.runtime.ShutdownException;
 import org.fabric3.host.runtime.StartException;
+import org.fabric3.introspection.validation.InvalidContributionException;
 import org.fabric3.runtime.standalone.StandaloneRuntime;
 import org.fabric3.scdl.Composite;
+import org.fabric3.scdl.DefaultValidationContext;
 import org.fabric3.scdl.Include;
 import org.fabric3.scdl.Scope;
 import org.fabric3.scdl.ValidationContext;
-import org.fabric3.scdl.DefaultValidationContext;
 import org.fabric3.spi.assembly.ActivateException;
 import org.fabric3.spi.assembly.Assembly;
 import org.fabric3.spi.assembly.AssemblyException;
@@ -78,7 +79,6 @@ import org.fabric3.spi.services.definitions.DefinitionsRegistry;
 import org.fabric3.spi.services.discovery.DiscoveryException;
 import org.fabric3.spi.services.discovery.DiscoveryService;
 import org.fabric3.spi.services.work.WorkScheduler;
-import org.fabric3.introspection.validation.InvalidContributionException;
 
 /**
  * Implementation of a coordinator for the standalone runtime.
@@ -435,7 +435,7 @@ public class StandaloneCoordinator implements RuntimeLifecycleCoordinator<Standa
             processor.process(manifest, stream, context);
             if (context.hasErrors()) {
                 context.addErrors(context.getErrors());
-                throw new InitializationException(new InvalidContributionException(context.getErrors()));
+                throw new InvalidContributionException(context.getErrors());
             }
             stream = bootClassLoader.getResourceAsStream("META-INF/maven/org.codehaus.fabric3/fabric3-pojo/pom.xml");
             if (stream == null) {
@@ -445,7 +445,7 @@ public class StandaloneCoordinator implements RuntimeLifecycleCoordinator<Standa
             processor.process(manifest, stream, context);
             if (context.hasErrors()) {
                 context.addErrors(context.getErrors());
-                throw new InitializationException(new InvalidContributionException(context.getErrors()));
+                throw new InvalidContributionException(context.getErrors());
             }
             contribution.setManifest(manifest);
             MetaDataStore store = runtime.getSystemComponent(MetaDataStore.class, ComponentNames.METADATA_STORE_URI);

@@ -39,15 +39,15 @@ import org.fabric3.host.contribution.ContributionNotFoundException;
 import org.fabric3.host.contribution.ContributionService;
 import org.fabric3.host.contribution.ContributionSource;
 import org.fabric3.host.contribution.Deployable;
+import org.fabric3.host.contribution.ValidationFailure;
 import org.fabric3.introspection.validation.InvalidContributionException;
+import org.fabric3.scdl.ArtifactValidationFailure;
 import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.Composite;
 import org.fabric3.scdl.CompositeImplementation;
 import org.fabric3.scdl.DefaultValidationContext;
 import org.fabric3.scdl.Implementation;
 import org.fabric3.scdl.ValidationContext;
-import org.fabric3.scdl.ArtifactValidationFailure;
-import org.fabric3.scdl.ValidationFailure;
 import org.fabric3.spi.services.archive.ArchiveStore;
 import org.fabric3.spi.services.archive.ArchiveStoreException;
 import org.fabric3.spi.services.contenttype.ContentTypeResolutionException;
@@ -113,7 +113,7 @@ public class ContributionServiceImpl implements ContributionService {
                 failure.addFailures(context.getErrors());
                 List<ValidationFailure> failures = new ArrayList<ValidationFailure>();
                 failures.add(failure);
-                throw new ContributionException(new InvalidContributionException(failures));
+                throw new InvalidContributionException(failures);
             }
 
         }
@@ -140,7 +140,7 @@ public class ContributionServiceImpl implements ContributionService {
             failure.addFailures(context.getErrors());
             List<ValidationFailure> failures = new ArrayList<ValidationFailure>();
             failures.add(failure);
-            throw new ContributionException(new InvalidContributionException(failures));
+            throw new InvalidContributionException(failures);
         }
         ClassLoader loader = contributionLoader.loadContribution(contribution);
         processContents(contribution, loader);
@@ -287,13 +287,13 @@ public class ContributionServiceImpl implements ContributionService {
             ValidationContext context = new DefaultValidationContext();
             processorRegistry.indexContribution(contribution, context);
             if (context.hasErrors()) {
-                throw new ContributionException(new InvalidContributionException(context.getErrors()));
+                throw new InvalidContributionException(context.getErrors());
             }
             metaDataStore.store(contribution);
             context = new DefaultValidationContext();
             processorRegistry.processContribution(contribution, context, loader);
             if (context.hasErrors()) {
-                throw new ContributionException(new InvalidContributionException(context.getErrors()));
+                throw new InvalidContributionException(context.getErrors());
             }
             addContributionUri(contribution);
         } catch (MetaDataStoreException e) {

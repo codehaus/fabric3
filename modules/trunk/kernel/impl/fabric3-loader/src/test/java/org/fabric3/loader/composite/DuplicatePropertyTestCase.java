@@ -36,7 +36,7 @@ import org.fabric3.scdl.ComponentType;
 import org.fabric3.scdl.Implementation;
 import org.fabric3.scdl.Property;
 import org.fabric3.scdl.ArtifactValidationFailure;
-import org.fabric3.scdl.ValidationFailure;
+import org.fabric3.host.contribution.ValidationFailure;
 
 /**
  * @version $Rev$ $Date$

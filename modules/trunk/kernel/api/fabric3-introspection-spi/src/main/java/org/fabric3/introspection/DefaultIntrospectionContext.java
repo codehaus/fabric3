@@ -23,7 +23,7 @@ import java.net.URL;
 import java.util.List;
 import java.util.ArrayList;
 
-import org.fabric3.scdl.ValidationFailure;
+import org.fabric3.host.contribution.ValidationFailure;
 
 /**
  * Default implementation of an IntrospectionContext.

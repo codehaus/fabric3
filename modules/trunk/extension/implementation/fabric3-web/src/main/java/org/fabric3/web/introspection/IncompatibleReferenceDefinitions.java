@@ -18,7 +18,7 @@
  */
 package org.fabric3.web.introspection;
 
-import org.fabric3.scdl.ValidationFailure;
+import org.fabric3.host.contribution.ValidationFailure;
 
 /**
  * Raised when a web component contains incompatible reference definitions in different artifacts.

@@ -64,12 +64,12 @@ import org.apache.maven.surefire.testset.TestSetFailedException;
 
 import org.fabric3.api.annotation.LogLevel;
 import org.fabric3.host.contribution.ContributionException;
+import org.fabric3.host.contribution.ValidationException;
 import org.fabric3.host.runtime.Bootstrapper;
 import org.fabric3.host.runtime.InitializationException;
 import org.fabric3.host.runtime.RuntimeLifecycleCoordinator;
 import org.fabric3.host.runtime.ScdlBootstrapper;
 import org.fabric3.host.runtime.ShutdownException;
-import org.fabric3.introspection.validation.ValidationException;
 import org.fabric3.jmx.agent.Agent;
 import org.fabric3.jmx.agent.rmi.RmiAgent;
 import org.fabric3.maven.runtime.CompositeActivationException;
@@ -692,16 +692,11 @@ public class Fabric3ITestMojo extends AbstractMojo {
         Composite composite;
         try {
             composite = runtime.activate(getBuildDirectoryUrl(), testScdlURL);
-        } catch (ContributionException e) {
-            if (e.getCause() instanceof ValidationException) {
-                // print out the validaiton errors
-                ValidationException cause = (ValidationException) e.getCause();
-                reportContributionErrors(cause);
-                String msg = "Contribution errors were found";
-                throw new MojoExecutionException(msg);
-            } else {
-                throw e;
-            }
+        } catch (ValidationException e) {
+            // print out the validaiton errors
+            reportContributionErrors(e);
+            String msg = "Contribution errors were found";
+            throw new MojoExecutionException(msg);
         }
         runtime.startContext(domain);
         return createTestSuite(runtime, composite, domain);
@@ -716,16 +711,11 @@ public class Fabric3ITestMojo extends AbstractMojo {
             composite = runtime.activate(getBuildDirectoryUrl(), qName);
             runtime.startContext(domain);
             return createTestSuite(runtime, composite, domain);
-        } catch (ContributionException e) {
-            if (e.getCause() instanceof ValidationException) {
-                // print out the validaiton errors
-                ValidationException cause = (ValidationException) e.getCause();
-                reportContributionErrors(cause);
-                String msg = "Contribution errors were found";
-                throw new MojoExecutionException(msg);
-            } else {
-                throw e;
-            }
+        } catch (ValidationException e) {
+            // print out the validaiton errors
+            reportContributionErrors(e);
+            String msg = "Contribution errors were found";
+            throw new MojoExecutionException(msg);
         }
     }
 

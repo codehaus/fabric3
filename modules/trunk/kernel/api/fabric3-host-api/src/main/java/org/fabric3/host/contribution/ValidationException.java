@@ -14,21 +14,17 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.introspection.validation;
+package org.fabric3.host.contribution;
 
 import java.util.Collections;
 import java.util.List;
 
-import org.fabric3.scdl.ModelObject;
-import org.fabric3.scdl.ValidationFailure;
-import org.fabric3.introspection.IntrospectionException;
-
 /**
- * Base class for exceptions indicating a model object has failed validation.
+ * Base class for exceptions indicating a contribution has failed validation.
  *
  * @version $Rev$ $Date$
  */
-public abstract class ValidationException extends IntrospectionException {
+public abstract class ValidationException extends ContributionException {
     private static final long serialVersionUID = -9097590343387033730L;
 
     private final List<ValidationFailure> failures;
@@ -39,15 +35,9 @@ public abstract class ValidationException extends IntrospectionException {
      * @param failures the underlying failures of this exception
      */
     protected ValidationException(List<ValidationFailure> failures) {
+        super("Validation errors were found");
         this.failures = failures;
     }
-
-    /**
-     * Returns the model object that raised this exception.
-     *
-     * @return the model object that raised this exception
-     */
-    public abstract ModelObject getModelObject();
 
     /**
      * Returns a collection of underlying failures of this exception.

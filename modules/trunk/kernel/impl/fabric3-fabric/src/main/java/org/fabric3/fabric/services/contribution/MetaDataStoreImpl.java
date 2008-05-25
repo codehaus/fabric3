@@ -29,6 +29,7 @@ import org.osoa.sca.Constants;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.host.contribution.ContributionException;
+import org.fabric3.scdl.ValidationContext;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.services.contribution.Contribution;
 import org.fabric3.spi.services.contribution.Export;
@@ -39,9 +40,6 @@ import org.fabric3.spi.services.contribution.ProcessorRegistry;
 import org.fabric3.spi.services.contribution.Resource;
 import org.fabric3.spi.services.contribution.ResourceElement;
 import org.fabric3.spi.services.contribution.Symbol;
-import org.fabric3.scdl.ValidationContext;
-import org.fabric3.scdl.DefaultValidationContext;
-import org.fabric3.introspection.validation.InvalidContributionException;
 
 /**
  * Default IndexStore implementation
@@ -94,21 +92,13 @@ public class MetaDataStoreImpl implements MetaDataStore {
             URI contributionUri = contribution.getUri();
             ClassLoader loader = classLoaderRegistry.getClassLoader(contributionUri);
             assert loader != null;
-            ValidationContext context = new DefaultValidationContext();
+            //ValidationContext context = new DefaultValidationContext();
             for (Resource resource : contribution.getResources()) {
                 for (ResourceElement<?, ?> element : resource.getResourceElements()) {
                     if (element.getSymbol().equals(symbol)) {
                         if (!resource.isProcessed()) {
-                            try {
-                                processorRegistry.processResource(contributionUri, resource, context, loader);
-                            } catch (ContributionException e) {
-                                throw new AssertionError("Error resolving resource");
-                            }
-                        }
-                        if (context.hasErrors()) {
-                            // xcv kind of hacky
-                            InvalidContributionException cause = new InvalidContributionException(context.getErrors());
-                            throw new MetaDataStoreException("There were errors resolving the contribution resource", cause);
+                            // this is a programming error as resolve(Symbol) should only be called after contribution resources have been processed
+                            throw new MetaDataStoreException("Attempt to resolve a resource before it is processed");
                         }
                         return (ResourceElement<S, ?>) element;
                     }

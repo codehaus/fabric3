@@ -17,9 +17,10 @@
 package org.fabric3.introspection.validation;
 
 import java.util.List;
+import javax.xml.namespace.QName;
 
-import org.fabric3.scdl.Composite;
-import org.fabric3.scdl.ValidationFailure;
+import org.fabric3.host.contribution.ValidationFailure;
+import org.fabric3.host.contribution.ValidationException;
 
 /**
  * @version $Rev$ $Date$
@@ -27,22 +28,21 @@ import org.fabric3.scdl.ValidationFailure;
 public class InvalidCompositeException extends ValidationException {
     private static final long serialVersionUID = -2678786389599538999L;
 
-    private final Composite composite;
+    private final QName name;
 
     /**
      * Constructor indicating which composite is invalid and what the failures were.
      *
-     * @param composite the composite that failed validation
+     * @param name the qualified name of the composite that failed validation
      * @param failures  the errors that were found during validation
      */
-    public InvalidCompositeException(Composite composite, List<ValidationFailure> failures) {
+    public InvalidCompositeException(QName name, List<ValidationFailure> failures) {
         super(failures);
-        this.composite = composite;
+        this.name = name;
     }
 
-    @Override
-    public Composite getModelObject() {
-        return composite;
+    public QName getCompositeName() {
+        return name;
     }
 
     public String getMessage() {

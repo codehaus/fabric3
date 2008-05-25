@@ -18,7 +18,7 @@ package org.fabric3.scdl.validation;
 
 import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.Implementation;
-import org.fabric3.scdl.ValidationFailure;
+import org.fabric3.host.contribution.ValidationFailure;
 
 /**
  * Validation failure indicating that a component definition does not have an associated implementation.

@@ -32,7 +32,7 @@ import javax.xml.namespace.QName;
 public interface ContributionService {
 
     /**
-     * Contribute an artifact to the SCA Domain, placing it in the specified store.
+     * Contribute an artifact to the SCA Domain.
      *
      * @param source the contribution source
      * @return a URI that uniquely identifies this contribution within the SCA Domain
@@ -50,7 +50,7 @@ public interface ContributionService {
     List<URI> contribute(List<ContributionSource> sources) throws ContributionException;
 
     /**
-     * Updates a previously contributed artifact if its timestamp and checksum have changed
+     * Updates a previously contributed artifact if its timestamp and checksum have changed.
      *
      * @param source the contribution source
      * @throws ContributionException if an error occurs during the update procecedure, for example, a previuous
@@ -67,7 +67,7 @@ public interface ContributionService {
     boolean exists(URI uri);
 
     /**
-     * Returns the contribution timestamp
+     * Returns the contribution timestamp.
      *
      * @param uri the contribution URI
      * @return the timestamp or -1 if no contribution was found
@@ -75,7 +75,7 @@ public interface ContributionService {
     long getContributionTimestamp(URI uri);
 
     /**
-     * Returns a list of deployables in a contribution
+     * Returns a list of deployables in a contribution.
      *
      * @param uri the URI of the contribution to search
      * @return a list of deployables in a contribution. If no deployables are found, an empty list is returned.
@@ -84,7 +84,7 @@ public interface ContributionService {
     public List<Deployable> getDeployables(URI uri) throws ContributionException;
 
     /**
-     * Remove a contribution from the SCA domain
+     * Remove a contribution from the SCA domain.
      *
      * @param uri The URI of the contribution
      * @throws ContributionException if there was a problem with the contribution

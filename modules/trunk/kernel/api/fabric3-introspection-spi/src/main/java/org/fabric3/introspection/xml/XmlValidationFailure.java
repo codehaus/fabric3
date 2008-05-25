@@ -21,7 +21,7 @@ package org.fabric3.introspection.xml;
 import javax.xml.stream.Location;
 import javax.xml.stream.XMLStreamReader;
 
-import org.fabric3.scdl.ValidationFailure;
+import org.fabric3.host.contribution.ValidationFailure;
 
 /**
  * Base class for validation failures occuring in XML artifacts.

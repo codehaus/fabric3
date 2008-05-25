@@ -18,7 +18,7 @@
  */
 package org.fabric3.web.introspection;
 
-import org.fabric3.scdl.ValidationFailure;
+import org.fabric3.host.contribution.ValidationFailure;
 
 /**
  * Thrown when a web.xml file is invalid.

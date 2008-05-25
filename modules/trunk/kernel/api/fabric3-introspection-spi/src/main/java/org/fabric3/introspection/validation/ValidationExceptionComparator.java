@@ -3,7 +3,7 @@ package org.fabric3.introspection.validation;
 import java.util.Comparator;
 
 import org.fabric3.scdl.ArtifactValidationFailure;
-import org.fabric3.scdl.ValidationFailure;
+import org.fabric3.host.contribution.ValidationFailure;
 
 /**
  * Orders ValidationFailures. ArtifactValidationFailures are ordered after other types.

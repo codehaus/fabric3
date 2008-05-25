@@ -421,7 +421,7 @@ public class WebappCoordinator implements RuntimeLifecycleCoordinator<WebappRunt
             }
             if (context.hasErrors()) {
                 context.addErrors(context.getErrors());
-                throw new InitializationException(new InvalidContributionException(context.getErrors()));
+                throw new InvalidContributionException(context.getErrors());
             }
             context = new DefaultValidationContext();
             processor.process(manifest, stream, context);
@@ -431,13 +431,13 @@ public class WebappCoordinator implements RuntimeLifecycleCoordinator<WebappRunt
             }
             if (context.hasErrors()) {
                 context.addErrors(context.getErrors());
-                throw new InitializationException(new InvalidContributionException(context.getErrors()));
+                throw new InvalidContributionException(context.getErrors());
             }
             context = new DefaultValidationContext();
             processor.process(manifest, stream, context);
             if (context.hasErrors()) {
                 context.addErrors(context.getErrors());
-                throw new InitializationException(new InvalidContributionException(context.getErrors()));
+                throw new InvalidContributionException(context.getErrors());
             }
             contribution.setManifest(manifest);
             MetaDataStore store = runtime.getSystemComponent(MetaDataStore.class, ComponentNames.METADATA_STORE_URI);

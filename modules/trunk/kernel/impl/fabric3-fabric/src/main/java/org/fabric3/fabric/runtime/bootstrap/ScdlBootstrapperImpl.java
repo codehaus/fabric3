@@ -42,13 +42,13 @@ import org.fabric3.fabric.services.contribution.MetaDataStoreImpl;
 import org.fabric3.fabric.services.contribution.ProcessorRegistryImpl;
 import org.fabric3.fabric.services.documentloader.DocumentLoader;
 import org.fabric3.fabric.services.documentloader.DocumentLoaderImpl;
+import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.host.runtime.Fabric3Runtime;
 import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.host.runtime.InitializationException;
 import org.fabric3.host.runtime.ScdlBootstrapper;
 import org.fabric3.introspection.DefaultIntrospectionContext;
 import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.introspection.IntrospectionException;
 import org.fabric3.introspection.IntrospectionHelper;
 import org.fabric3.introspection.TypeMapping;
 import org.fabric3.introspection.contract.ContractProcessor;
@@ -56,6 +56,7 @@ import org.fabric3.introspection.impl.DefaultIntrospectionHelper;
 import org.fabric3.introspection.impl.contract.DefaultContractProcessor;
 import org.fabric3.introspection.validation.InvalidCompositeException;
 import org.fabric3.introspection.xml.Loader;
+import org.fabric3.introspection.xml.LoaderException;
 import org.fabric3.monitor.MonitorFactory;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.ComponentDefinition;
@@ -177,7 +178,7 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
             Composite composite = loader.load(scdlLocation, Composite.class, introspectionContext);
             composite.validate(introspectionContext);
             if (introspectionContext.hasErrors()) {
-                throw new InvalidCompositeException(composite, introspectionContext.getErrors());
+                throw new InvalidCompositeException(composite.getName(), introspectionContext.getErrors());
             }
 
             Document userConfig = loadUserConfig();
@@ -193,9 +194,11 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
             // include in the runtime domain assembly
             runtimeAssembly.includeInDomain(composite);
 
-        } catch (IntrospectionException e) {
+        } catch (ContributionException e) {
             throw new InitializationException(e);
         } catch (ActivateException e) {
+            throw new InitializationException(e);
+        } catch (LoaderException e) {
             throw new InitializationException(e);
         }
 

@@ -17,7 +17,7 @@
 package org.fabric3.scdl.validation;
 
 import org.fabric3.scdl.PropertyValue;
-import org.fabric3.scdl.ValidationFailure;
+import org.fabric3.host.contribution.ValidationFailure;
 
 /**
  * Validation warning indicating that a component is trying to configure a property not defined by the component type.

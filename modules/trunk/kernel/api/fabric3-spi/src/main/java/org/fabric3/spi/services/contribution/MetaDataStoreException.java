@@ -24,6 +24,10 @@ import org.fabric3.host.contribution.ContributionException;
 public class MetaDataStoreException extends ContributionException {
     private static final long serialVersionUID = 5509464593295262830L;
 
+    public MetaDataStoreException(String message) {
+        super(message);
+    }
+
     public MetaDataStoreException(String message, Throwable cause) {
         super(message, cause);
     }

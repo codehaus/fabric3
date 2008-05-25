@@ -18,7 +18,7 @@
  */
 package org.fabric3.scdl.validation;
 
-import org.fabric3.scdl.ValidationFailure;
+import org.fabric3.host.contribution.ValidationFailure;
 
 /**
  * Denotes a missing resource such as a class file.

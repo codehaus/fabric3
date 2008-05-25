@@ -19,7 +19,7 @@
 package org.fabric3.java.introspection;
 
 import org.fabric3.java.scdl.JavaImplementation;
-import org.fabric3.scdl.ValidationFailure;
+import org.fabric3.host.contribution.ValidationFailure;
 
 /**
  * @version $Revision$ $Date$
