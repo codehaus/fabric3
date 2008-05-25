@@ -109,7 +109,7 @@ public class ContributionServiceImpl implements ContributionService {
             ValidationContext context = new DefaultValidationContext();
             processorRegistry.processManifest(contribution, context);
             if (context.hasErrors()) {
-                ArtifactValidationFailure failure = new ArtifactValidationFailure("contribution manifest (sca-contribution.xml)");
+                ArtifactValidationFailure failure = new ArtifactValidationFailure("the contribution manifest (sca-contribution.xml)");
                 failure.addFailures(context.getErrors());
                 List<ValidationFailure> failures = new ArrayList<ValidationFailure>();
                 failures.add(failure);
@@ -136,7 +136,7 @@ public class ContributionServiceImpl implements ContributionService {
         ValidationContext context = new DefaultValidationContext();
         processorRegistry.processManifest(contribution, context);
         if (context.hasErrors()) {
-            ArtifactValidationFailure failure = new ArtifactValidationFailure("contribution manifest (sca-contribution.xml)");
+            ArtifactValidationFailure failure = new ArtifactValidationFailure("the contribution manifest (sca-contribution.xml)");
             failure.addFailures(context.getErrors());
             List<ValidationFailure> failures = new ArrayList<ValidationFailure>();
             failures.add(failure);
