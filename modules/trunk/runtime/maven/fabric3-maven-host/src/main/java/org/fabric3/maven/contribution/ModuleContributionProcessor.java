@@ -82,7 +82,9 @@ public class ModuleContributionProcessor implements ContributionProcessor {
         try {
             Thread.currentThread().setContextClassLoader(loader);
             for (Resource resource : contribution.getResources()) {
-                registry.processResource(contributionUri, resource, context, loader);
+                if (!resource.isProcessed()) {
+                    registry.processResource(contributionUri, resource, context, loader);
+                }
             }
         } finally {
             Thread.currentThread().setContextClassLoader(oldClassloader);
