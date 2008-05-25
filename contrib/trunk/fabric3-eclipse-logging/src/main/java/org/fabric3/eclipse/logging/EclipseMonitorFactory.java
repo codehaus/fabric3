@@ -93,58 +93,26 @@ public class EclipseMonitorFactory implements MonitorFactory {
     }
 
     private int getLevel(Method method) {
-        LogLevels levels = getLogLevelFromAnnotation(method);
+        LogLevels levels = LogLevels.getAnnotatedLogLevel(method);
+        return translateLogLevel(levels);
+    }
+    
+    private int translateLogLevel(LogLevels levels) {
+        
+        int result = Status.OK;
+        
         if (levels != null) {
             try {
-                Level level = translateLogLevel(levels);
+                Level level = Level.parse(levels.toString());
                 if(level != null) {
                     if (level.intValue() >= Level.SEVERE.intValue()) {
-                        return Status.ERROR;
+                        result = Status.ERROR;
                     } else if (level.intValue() >= Level.WARNING.intValue()) {
-                        return Status.WARNING;
+                        result = Status.WARNING;
                     } else if (level.intValue() >= Level.INFO.intValue()) {
-                        return Status.INFO;
-                    } else {
-                        return Status.OK;
-                    }                    
-                }
-            } catch (IllegalArgumentException e) {
-                return Status.OK;
-            }
-        }
-        return Status.OK;
-    }
-    
-    private LogLevels getLogLevelFromAnnotation(Method method) {
-        
-        LogLevels level = null;        
-        LogLevel annotation = method.getAnnotation(LogLevel.class);
-        if (annotation != null) {
-            level = annotation.value();
-        }
-        
-        if(level == null) {
-            for (Annotation methodAnnotation : method.getDeclaredAnnotations()) {
-                Class<? extends Annotation> annotationType = methodAnnotation.annotationType();
-                
-                LogLevel logLevel = null;
-                if((logLevel = annotationType.getAnnotation(LogLevel.class)) != null) {
-                    level = logLevel.value();
-                    break;
-                }
-            }            
-        }
-        
-        return level;
-    }
-    
-    private Level translateLogLevel(LogLevels level) {
-        Level result = null;
-        if (level != null) {
-            try {
-                //Because the LogLevels' values are based on the Level's logging levels, 
-                //no translation is required, just a pass-through mapping
-                result = Level.parse(level.toString());
+                        result = Status.INFO;
+                    }                   
+                }                 
             } catch (IllegalArgumentException e) {
                 //TODO: Add error reporting for unsupported log level
             }
