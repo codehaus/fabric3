@@ -712,7 +712,7 @@ public class Fabric3ITestMojo extends AbstractMojo {
             runtime.startContext(domain);
             return createTestSuite(runtime, composite, domain);
         } catch (ValidationException e) {
-            // print out the validaiton errors
+            // print out the validation errors
             reportContributionErrors(e);
             String msg = "Contribution errors were found";
             throw new MojoExecutionException(msg);
