@@ -46,6 +46,7 @@ import org.fabric3.host.contribution.ContributionService;
 import org.fabric3.host.contribution.ContributionSource;
 import org.fabric3.host.contribution.Deployable;
 import org.fabric3.host.contribution.FileContributionSource;
+import org.fabric3.host.contribution.ValidationException;
 import org.fabric3.host.runtime.Bootstrapper;
 import org.fabric3.host.runtime.CoordinatorMonitor;
 import org.fabric3.host.runtime.InitializationException;
@@ -312,6 +313,15 @@ public class StandaloneCoordinator implements RuntimeLifecycleCoordinator<Standa
             definitionsRegistry.activateDefinitions(intents);
         } catch (MalformedURLException e) {
             throw new InitializationException(e);
+        } catch (ValidationException e) {
+            // print out the validation errors
+            StringBuilder b = new StringBuilder("\n\n");
+            b.append("-------------------------------------------------------\n");
+            b.append("INTENT ERRORS\n");
+            b.append("-------------------------------------------------------\n\n");
+            b.append(e.getMessage());
+            monitor.intentErrors(b.toString());
+            throw new ExtensionInitializationException("Errors were detected in one or more intent definitions");
         } catch (ContributionException e) {
             throw new InitializationException(e);
         } catch (DefinitionActivationException e) {
@@ -356,6 +366,15 @@ public class StandaloneCoordinator implements RuntimeLifecycleCoordinator<Standa
             DefinitionsRegistry definitionsRegistry =
                     runtime.getSystemComponent(DefinitionsRegistry.class, DEFINITIONS_REGISTRY);
             definitionsRegistry.activateDefinitions(contributionUris);
+        } catch (ValidationException e) {
+            // print out the validation errors
+            StringBuilder b = new StringBuilder("\n\n");
+            b.append("-------------------------------------------------------\n");
+            b.append("EXTENSION ERRORS\n");
+            b.append("-------------------------------------------------------\n\n");
+            b.append(e.getMessage());
+            monitor.extensionErrors(b.toString());
+            throw new ExtensionInitializationException("Errors were detected in one or more extensions");
         } catch (ContributionException e) {
             throw new ExtensionInitializationException("Error loading extension", e);
         }

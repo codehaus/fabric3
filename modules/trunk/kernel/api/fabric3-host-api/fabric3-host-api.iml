@@ -41,6 +41,7 @@
         </SOURCES>
       </library>
     </orderEntry>
+    <orderEntry type="module" module-name="fabric3-api" exported="" />
     <orderEntryProperties />
   </component>
 </module>

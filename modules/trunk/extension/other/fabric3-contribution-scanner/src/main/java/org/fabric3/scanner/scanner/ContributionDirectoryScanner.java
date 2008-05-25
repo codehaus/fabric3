@@ -44,6 +44,7 @@ import org.fabric3.host.contribution.ContributionService;
 import org.fabric3.host.contribution.ContributionSource;
 import org.fabric3.host.contribution.Deployable;
 import org.fabric3.host.contribution.FileContributionSource;
+import org.fabric3.host.contribution.ValidationException;
 import org.fabric3.scdl.Composite;
 import org.fabric3.scdl.Include;
 import static org.fabric3.spi.Constants.FABRIC3_SYSTEM_NS;
@@ -279,6 +280,13 @@ public class ContributionDirectoryScanner implements Runnable, Fabric3EventListe
                     // URI is the file name
                     processed.put(name, uri);
                     monitor.add(name);
+                }
+            } catch (ValidationException e) {
+                // print out the validation errors
+                monitor.contributionErrors(e.getMessage());
+                // FIXME for now, just error all additions
+                for (FileSystemResource cached : addedResources) {
+                    errorCache.put(cached.getName(), cached);
                 }
             } catch (ContributionException e) {
                 // FIXME for now, just error all additions

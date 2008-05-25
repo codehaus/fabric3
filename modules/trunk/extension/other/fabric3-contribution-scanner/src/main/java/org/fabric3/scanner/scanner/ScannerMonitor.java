@@ -76,4 +76,11 @@ public interface ScannerMonitor {
     @LogLevel("SEVERE")
     void removalError(String filename, Throwable e);
 
+    /**
+     * Called when errors are encountered processing contributions
+     *
+     * @param description a description of the errors
+     */
+    @LogLevel("SEVERE")
+    void contributionErrors(String description);
 }

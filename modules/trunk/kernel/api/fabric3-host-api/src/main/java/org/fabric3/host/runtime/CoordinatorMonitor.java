@@ -16,6 +16,8 @@
  */
 package org.fabric3.host.runtime;
 
+import org.fabric3.api.annotation.LogLevel;
+
 /**
  * Event monitor interface for the bootstrap sequence
  *
@@ -28,6 +30,7 @@ public interface CoordinatorMonitor {
      *
      * @param message a message
      */
+    @LogLevel("INFO")
     void initialized(String message);
 
     /**
@@ -35,6 +38,7 @@ public interface CoordinatorMonitor {
      *
      * @param message a message
      */
+    @LogLevel("INFO")
     void joinedDomain(String message);
 
     /**
@@ -42,6 +46,7 @@ public interface CoordinatorMonitor {
      *
      * @param message a message
      */
+    @LogLevel("INFO")
     void recovered(String message);
 
     /**
@@ -49,6 +54,7 @@ public interface CoordinatorMonitor {
      *
      * @param message a message
      */
+    @LogLevel("INFO")
     void started(String message);
 
     /**
@@ -56,5 +62,32 @@ public interface CoordinatorMonitor {
      *
      * @param e the exception
      */
+    @LogLevel("SEVERE")
     void error(Throwable e);
+
+    /**
+     * Called when errors are encountered processing policy intents
+     *
+     * @param description a description of the errors
+     */
+    @LogLevel("SEVERE")
+    void intentErrors(String description);
+
+
+    /**
+     * Called when errors are encountered processing extensions
+     *
+     * @param description a description of the errors
+     */
+    @LogLevel("SEVERE")
+    void extensionErrors(String description);
+
+    /**
+     * Called when errors are encountered processing contributions
+     *
+     * @param description a description of the errors
+     */
+    @LogLevel("SEVERE")
+    void contributionErrors(String description);
+
 }
