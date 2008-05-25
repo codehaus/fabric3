@@ -346,10 +346,12 @@
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/other/fabric3-contribution-scanner-war/fabric3-contribution-scanner-war.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/other/fabric3-contribution-scanner-war/fabric3-contribution-scanner-war.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/other/fabric3-contribution-war/fabric3-contribution-war.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/other/fabric3-contribution-war/fabric3-contribution-war.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/other/fabric3-conversation-propagation/fabric3-conversation-propagation.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/other/fabric3-conversation-propagation/fabric3-conversation-propagation.iml" />
+      <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/other/fabric3-db-h2/fabric3-db-h2.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/other/fabric3-db-h2/fabric3-db-h2.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/federated/fabric3-discovery-jxta/fabric3-discovery-jxta.iml" filepath="$PROJECT_DIR$/modules/trunk/federated/fabric3-discovery-jxta/fabric3-discovery-jxta.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/kernel/impl/fabric3-fabric/fabric3-fabric.iml" filepath="$PROJECT_DIR$/modules/trunk/kernel/impl/fabric3-fabric/fabric3-fabric.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/implementation/fabric3-groovy/fabric3-groovy.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/implementation/fabric3-groovy/fabric3-groovy.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/kernel/api/fabric3-host-api/fabric3-host-api.iml" filepath="$PROJECT_DIR$/modules/trunk/kernel/api/fabric3-host-api/fabric3-host-api.iml" />
+      <module fileurl="file://$PROJECT_DIR$/modules/trunk/federated/fabric3-http-provisioning/fabric3-http-provisioning.iml" filepath="$PROJECT_DIR$/modules/trunk/federated/fabric3-http-provisioning/fabric3-http-provisioning.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/interface/fabric3-interface-wsdl/fabric3-interface-wsdl.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/interface/fabric3-interface-wsdl/fabric3-interface-wsdl.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/kernel/impl/fabric3-introspection/fabric3-introspection.iml" filepath="$PROJECT_DIR$/modules/trunk/kernel/impl/fabric3-introspection/fabric3-introspection.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/kernel/api/fabric3-introspection-spi/fabric3-introspection-spi.iml" filepath="$PROJECT_DIR$/modules/trunk/kernel/api/fabric3-introspection-spi/fabric3-introspection-spi.iml" />
@@ -359,6 +361,7 @@
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/other/fabric3-jetty/fabric3-jetty.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/other/fabric3-jetty/fabric3-jetty.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/kernel/impl/fabric3-jmx/fabric3-jmx.iml" filepath="$PROJECT_DIR$/modules/trunk/kernel/impl/fabric3-jmx/fabric3-jmx.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/runtime/support/fabric3-jmx-agent/fabric3-jmx-agent.iml" filepath="$PROJECT_DIR$/modules/trunk/runtime/support/fabric3-jmx-agent/fabric3-jmx-agent.iml" />
+      <module fileurl="file://$PROJECT_DIR$/modules/trunk/kernel/api/fabric3-jpa-api/fabric3-jpa-api.iml" filepath="$PROJECT_DIR$/modules/trunk/kernel/api/fabric3-jpa-api/fabric3-jpa-api.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/other/fabric3-jpa-core/fabric3-jpa-core.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/other/fabric3-jpa-core/fabric3-jpa-core.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/other/fabric3-jpa-hibernate/fabric3-jpa-hibernate.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/other/fabric3-jpa-hibernate/fabric3-jpa-hibernate.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/other/fabric3-jpa-spi/fabric3-jpa-spi.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/other/fabric3-jpa-spi/fabric3-jpa-spi.iml" />
@@ -377,6 +380,7 @@
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/kernel/impl/fabric3-pojo/fabric3-pojo.iml" filepath="$PROJECT_DIR$/modules/trunk/kernel/impl/fabric3-pojo/fabric3-pojo.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/kernel/impl/fabric3-policy/fabric3-policy.iml" filepath="$PROJECT_DIR$/modules/trunk/kernel/impl/fabric3-policy/fabric3-policy.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/other/fabric3-resource/fabric3-resource.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/other/fabric3-resource/fabric3-resource.iml" />
+      <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/other/fabric3-sca-taglib/fabric3-sca-taglib.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/other/fabric3-sca-taglib/fabric3-sca-taglib.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/kernel/api/fabric3-scdl/fabric3-scdl.iml" filepath="$PROJECT_DIR$/modules/trunk/kernel/api/fabric3-scdl/fabric3-scdl.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/other/fabric3-security/fabric3-security.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/other/fabric3-security/fabric3-security.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/kernel/api/fabric3-spi/fabric3-spi.iml" filepath="$PROJECT_DIR$/modules/trunk/kernel/api/fabric3-spi/fabric3-spi.iml" />
@@ -398,6 +402,8 @@
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/other/fabric3-xapool/fabric3-xapool.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/other/fabric3-xapool/fabric3-xapool.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/kernel/services/fabric3-xmlfactory/fabric3-xmlfactory.iml" filepath="$PROJECT_DIR$/modules/trunk/kernel/services/fabric3-xmlfactory/fabric3-xmlfactory.iml" />
       <module fileurl="file://$PROJECT_DIR$/parent-pom/trunk/parent-pom.iml" filepath="$PROJECT_DIR$/parent-pom/trunk/parent-pom.iml" />
+      <module fileurl="file://$PROJECT_DIR$/modules/trunk/runtime/federated/runtime-controller/runtime-controller.iml" filepath="$PROJECT_DIR$/modules/trunk/runtime/federated/runtime-controller/runtime-controller.iml" />
+      <module fileurl="file://$PROJECT_DIR$/modules/trunk/runtime/federated/runtime-participant/runtime-participant.iml" filepath="$PROJECT_DIR$/modules/trunk/runtime/federated/runtime-participant/runtime-participant.iml" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/runtime/standalone/runtime-standalone/runtime-standalone.iml" filepath="$PROJECT_DIR$/modules/trunk/runtime/standalone/runtime-standalone/runtime-standalone.iml" />
       <module fileurl="file://$PROJECT_DIR$/spec/trunk/sca-spec.iml" filepath="$PROJECT_DIR$/spec/trunk/sca-spec.iml" />
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-binding-axis2/test-binding-axis2.iml" filepath="$PROJECT_DIR$/tests/trunk/test-binding-axis2/test-binding-axis2.iml" />
