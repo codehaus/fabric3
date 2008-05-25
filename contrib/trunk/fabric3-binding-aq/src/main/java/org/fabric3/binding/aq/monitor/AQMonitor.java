@@ -19,7 +19,7 @@
 package org.fabric3.binding.aq.monitor;
 
 
-import org.fabric3.api.annotation.LogLevel;
+import org.fabric3.api.annotation.logging.Info;
 
 /**
  * Monitor interface for AQ
@@ -31,44 +31,44 @@ public interface AQMonitor {
     /**
      * Message when in Source Wire
      */
-    @LogLevel("INFO")
+    @Info
     void onSourceWire(String message);
     
     /**
      * Message when in Target
      */
-    @LogLevel("INFO")
+    @Info
     void onTargetWire(String message);
     
     /**
      * Message in AQ Host
      */
-    @LogLevel("INFO")
+    @Info
     void onAQHost(String message);
     
     
     /**
      * Log message to stop when consumers are stopped
      */
-    @LogLevel("INFO")
+    @Info
     void stopConsumer(String message);
     
     /**
      * Logs messages for stop on COnnection
      */
-    @LogLevel("INFO")
+    @Info
     void stopConnection(String message);
     
     /**
      * Log message to stop on AQ
      */
-    @LogLevel("INFO")
+    @Info
     void stopOnAQHost(String message);        
     
     /**
      * Logs the Exception
      * @param exception
      */
-    @LogLevel("INFO")
+    @Info
     void onException(Throwable exception);
 }

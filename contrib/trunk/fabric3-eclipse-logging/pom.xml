@@ -24,7 +24,7 @@
     </parent>
     <groupId>org.codehaus.fabric3</groupId>
     <artifactId>fabric3-eclipse-logging</artifactId>
-    <version>0.5-SNAPSHOT</version>
+    <version>0.5ALPHA3-SNAPSHOT</version>
     <name>Fabric3 Eclipse Logging</name>
     <description>Fabric3 Integration with Eclipse Logging.</description>
 

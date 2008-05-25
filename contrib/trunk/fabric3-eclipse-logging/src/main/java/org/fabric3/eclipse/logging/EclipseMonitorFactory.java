@@ -16,6 +16,7 @@
  */
 package org.fabric3.eclipse.logging;
 
+import java.lang.annotation.Annotation;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -25,6 +26,7 @@ import java.text.MessageFormat;
 import java.util.Locale;
 import java.util.Map;
 import java.util.MissingResourceException;
+import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.WeakHashMap;
 import java.util.concurrent.ConcurrentHashMap;
@@ -33,7 +35,8 @@ import java.util.logging.Level;
 import org.eclipse.core.runtime.ILog;
 import org.eclipse.core.runtime.Status;
 
-import org.fabric3.api.annotation.LogLevel;
+import org.fabric3.api.annotation.logging.LogLevel;
+import org.fabric3.api.annotation.logging.LogLevels;
 import org.fabric3.monitor.MonitorFactory;
 
 /**
@@ -90,18 +93,20 @@ public class EclipseMonitorFactory implements MonitorFactory {
     }
 
     private int getLevel(Method method) {
-        LogLevel annotation = method.getAnnotation(LogLevel.class);
-        if (annotation != null) {
+        LogLevels levels = getLogLevelFromAnnotation(method);
+        if (levels != null) {
             try {
-                Level level = Level.parse(annotation.value());
-                if (level.intValue() >= Level.SEVERE.intValue()) {
-                    return Status.ERROR;
-                } else if (level.intValue() >= Level.WARNING.intValue()) {
-                    return Status.WARNING;
-                } else if (level.intValue() >= Level.INFO.intValue()) {
-                    return Status.INFO;
-                } else {
-                    return Status.OK;
+                Level level = translateLogLevel(levels);
+                if(level != null) {
+                    if (level.intValue() >= Level.SEVERE.intValue()) {
+                        return Status.ERROR;
+                    } else if (level.intValue() >= Level.WARNING.intValue()) {
+                        return Status.WARNING;
+                    } else if (level.intValue() >= Level.INFO.intValue()) {
+                        return Status.INFO;
+                    } else {
+                        return Status.OK;
+                    }                    
                 }
             } catch (IllegalArgumentException e) {
                 return Status.OK;
@@ -109,7 +114,45 @@ public class EclipseMonitorFactory implements MonitorFactory {
         }
         return Status.OK;
     }
+    
+    private LogLevels getLogLevelFromAnnotation(Method method) {
+        
+        LogLevels level = null;        
+        LogLevel annotation = method.getAnnotation(LogLevel.class);
+        if (annotation != null) {
+            level = annotation.value();
+        }
+        
+        if(level == null) {
+            for (Annotation methodAnnotation : method.getDeclaredAnnotations()) {
+                Class<? extends Annotation> annotationType = methodAnnotation.annotationType();
+                
+                LogLevel logLevel = null;
+                if((logLevel = annotationType.getAnnotation(LogLevel.class)) != null) {
+                    level = logLevel.value();
+                    break;
+                }
+            }            
+        }
+        
+        return level;
+    }
+    
+    private Level translateLogLevel(LogLevels level) {
+        Level result = null;
+        if (level != null) {
+            try {
+                //Because the LogLevels' values are based on the Level's logging levels, 
+                //no translation is required, just a pass-through mapping
+                result = Level.parse(level.toString());
+            } catch (IllegalArgumentException e) {
+                //TODO: Add error reporting for unsupported log level
+            }
+        } 
 
+        return result;
+    }    
+    
     private int getThrowableParameter(Method method) {
         for (int i = 0; i < method.getParameterTypes().length; i++) {
             Class<?> paramType = method.getParameterTypes()[i];
@@ -211,5 +254,25 @@ public class EclipseMonitorFactory implements MonitorFactory {
             }
             return null;
         }
+    }
+
+    public void setBundleName(String arg0) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    public void setConfiguration(Properties arg0) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    public void setDefaultLevel(Level arg0) {
+        // TODO Auto-generated method stub
+        
+    }
+
+    public void setLevels(Properties arg0) {
+        // TODO Auto-generated method stub
+        
     }
 }
