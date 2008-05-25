@@ -18,7 +18,7 @@
  */
 package loanapp.request;
 
-import org.fabric3.api.annotation.LogLevel;
+import org.fabric3.api.annotation.logging.Warning;
 
 /**
  * Records errors during loan request processing.
@@ -32,7 +32,7 @@ public interface RequestCoordinatorMonitor {
      *
      * @param e the error
      */
-    @LogLevel("WARNING")
+    @Warning
     void error(Exception e);
 
 }
