@@ -140,7 +140,7 @@ public class JavaLoggingMonitorFactory implements MonitorFactory {
     private LogLevels getLogLevel(Method method, String key) {
         LogLevels level = getLogLevelFromConfig(key);            
         if (level == null) {
-            level = getLogLevelFromAnnotation(method);
+            level = LogLevels.getAnnotatedLogLevel(method);
         }
         return level;
     }
@@ -199,29 +199,6 @@ public class JavaLoggingMonitorFactory implements MonitorFactory {
             }
         }
         return result;
-    }
-
-    private LogLevels getLogLevelFromAnnotation(Method method) {
-        LogLevels level = null;
-        
-        LogLevel annotation = method.getAnnotation(LogLevel.class);
-        if (annotation != null) {
-            level = annotation.value();
-        }
-        
-        if(level == null) {
-            for (Annotation methodAnnotation : method.getDeclaredAnnotations()) {
-                Class<? extends Annotation> annotationType = methodAnnotation.annotationType();
-                
-                LogLevel logLevel = null;
-                if((logLevel = annotationType.getAnnotation(LogLevel.class)) != null) {
-                    level = logLevel.value();
-                    break;
-                }
-            }            
-        }
-        
-        return level;
     }
 
     private LogLevels getLogLevelFromConfig(String key) {

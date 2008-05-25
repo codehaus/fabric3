@@ -17,6 +17,9 @@
 
 package org.fabric3.api.annotation.logging;
 
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
+
 /**
 * Defines logging levels recognised by the {@link LogLevel} annotation.
 * The log levels supported by the logging implementation underlying any given
@@ -37,5 +40,36 @@ public enum LogLevels {
     
     FINER,
     
-    FINEST    
+    FINEST;
+    
+    /**
+     * Encapsulates the logic used to read monitor method log level annotations. 
+     * Argument <code>Method</code> instances should be annotated with a {@link LogLevel} directly
+     * or with one of the level annotations which have a {@link LogLevel} meta-annotation.  
+     * @param the annotated monitor method  
+     * @return the <code>LogLevels</code> value defined by a direct {@link LogLevel} annotation 
+     */
+    public static LogLevels getAnnotatedLogLevel(Method method) {
+        LogLevels level = null;
+        
+        LogLevel annotation = method.getAnnotation(LogLevel.class);
+        if (annotation != null) {
+            level = annotation.value();
+        }
+        
+        if (level == null) {
+            for (Annotation methodAnnotation : method.getDeclaredAnnotations()) {
+                Class<? extends Annotation> annotationType = methodAnnotation.annotationType();
+                
+                LogLevel logLevel = annotationType.getAnnotation(LogLevel.class);
+                if (logLevel != null) {
+                    level = logLevel.value();
+                    break;
+                }
+            }            
+        }
+        
+        return level;
+    }  
+    
 }

@@ -18,7 +18,6 @@
  */
 package org.fabric3.itest;
 
-import java.lang.annotation.Annotation;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -28,15 +27,13 @@ import java.text.MessageFormat;
 import java.util.Locale;
 import java.util.Map;
 import java.util.MissingResourceException;
+import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.WeakHashMap;
-import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 
 import org.apache.maven.plugin.logging.Log;
-
-import org.fabric3.api.annotation.logging.LogLevel;
 import org.fabric3.api.annotation.logging.LogLevels;
 import org.fabric3.monitor.MonitorFactory;
 
@@ -117,7 +114,7 @@ public class MavenMonitorFactory implements MonitorFactory {
         Map<Method, MethodHandler> handlers = new ConcurrentHashMap<Method, MethodHandler>(methods.length);
         for (Method method : methods) {
             
-            LogLevels level = getLogLevelFromAnnotation(method);
+            LogLevels level = LogLevels.getAnnotatedLogLevel(method);
             int value = translateLogLevel(level).intValue();
             int throwable = getExceptionParameterIndex(method);
 
@@ -182,30 +179,7 @@ public class MavenMonitorFactory implements MonitorFactory {
             message = builder.toString();
         }
         return message;
-    }
-    
-    private LogLevels getLogLevelFromAnnotation(Method method) {
-        LogLevels level = null;
-        
-        LogLevel annotation = method.getAnnotation(LogLevel.class);
-        if (annotation != null) {
-            level = annotation.value();
-        }
-        
-        if(level == null) {
-            for (Annotation methodAnnotation : method.getDeclaredAnnotations()) {
-                Class<? extends Annotation> annotationType = methodAnnotation.annotationType();
-                
-                LogLevel logLevel = null;
-                if((logLevel = annotationType.getAnnotation(LogLevel.class)) != null) {
-                    level = logLevel.value();
-                    break;
-                }
-            }            
-        }
-        
-        return level;
-    }    
+    }  
     
     private Level translateLogLevel(LogLevels level) {
         Level result = null;
