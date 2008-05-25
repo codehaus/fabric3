@@ -85,7 +85,7 @@ public class XmlContributionTypeLoader implements XmlProcessor {
         String targetNamespace = reader.getAttributeValue(null, "targetNamespace");
         URI contributionUri = contribution.getUri();
         try {
-            IntrospectionContext introspectionContext = new DefaultIntrospectionContext(contributionUri, classLoader, targetNamespace);
+            IntrospectionContext childContext = new DefaultIntrospectionContext(contributionUri, classLoader, targetNamespace);
             while (true) {
                 switch (reader.next()) {
                 case START_ELEMENT:
@@ -93,7 +93,7 @@ public class XmlContributionTypeLoader implements XmlProcessor {
                     Composite definition = null;
                     if (COMPOSITE.equals(qname)) {
                         try {
-                            definition = loader.load(reader, Composite.class, introspectionContext);
+                            definition = loader.load(reader, Composite.class, childContext);
                         } catch (UnrecognizedElementException e) {
                             throw new ContributionException("Error processing contribution: " + contributionUri.toString(), e);
                         }
@@ -134,11 +134,11 @@ public class XmlContributionTypeLoader implements XmlProcessor {
                                 manifest.addDeployable(deployable);
                             }
                         }
-                        if (introspectionContext.hasErrors()) {
-                            context.addErrors(introspectionContext.getErrors());
+                        if (childContext.hasErrors()) {
+                            context.addErrors(childContext.getErrors());
                         }
-                        if (introspectionContext.hasWarnings()) {
-                            context.addErrors(introspectionContext.getWarnings());
+                        if (childContext.hasWarnings()) {
+                            context.addWarnings(childContext.getWarnings());
                         }
                         return;
                     }

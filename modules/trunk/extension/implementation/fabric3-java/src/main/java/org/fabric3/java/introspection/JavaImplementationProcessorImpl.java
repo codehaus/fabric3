@@ -74,7 +74,7 @@ public class JavaImplementationProcessorImpl implements JavaImplementationProces
             context.addErrors(newContext.getErrors());
         }
         if (newContext.hasWarnings()) {
-            context.addErrors(newContext.getWarnings());
+            context.addWarnings(newContext.getWarnings());
         }
 
     }

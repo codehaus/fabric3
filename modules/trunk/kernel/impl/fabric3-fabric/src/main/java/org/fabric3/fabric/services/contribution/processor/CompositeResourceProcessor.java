@@ -113,15 +113,15 @@ public class CompositeResourceProcessor implements ResourceProcessor {
     @SuppressWarnings({"unchecked"})
     public void process(URI contributionUri, Resource resource, ValidationContext context, ClassLoader classLoader) throws ContributionException {
         URL url = resource.getUrl();
-        IntrospectionContext introspectionContext = new DefaultIntrospectionContext(classLoader, contributionUri, url);
+        IntrospectionContext childContext = new DefaultIntrospectionContext(classLoader, contributionUri, url);
         Composite composite;
         try {
             // check to see if the resoruce has already been evaluated
-            composite = loader.load(url, Composite.class, introspectionContext);
+            composite = loader.load(url, Composite.class, childContext);
         } catch (LoaderException e) {
             throw new ContributionException(e);
         }
-        composite.validate(introspectionContext);
+        composite.validate(childContext);
         boolean found = false;
         for (ResourceElement element : resource.getResourceElements()) {
             if (element.getSymbol().getKey().equals(composite.getName())) {
@@ -134,11 +134,11 @@ public class CompositeResourceProcessor implements ResourceProcessor {
             String identifier = composite.getName().toString();
             throw new ResourceElementNotFoundException("Resource element not found: " + identifier, identifier);
         }
-        if (introspectionContext.hasErrors()) {
-            context.addErrors(introspectionContext.getErrors());
+        if (childContext.hasErrors()) {
+            context.addErrors(childContext.getErrors());
         }
-        if (introspectionContext.hasWarnings()) {
-            context.addWarnings(introspectionContext.getWarnings());
+        if (childContext.hasWarnings()) {
+            context.addWarnings(childContext.getWarnings());
         }
         resource.setProcessed(true);
 

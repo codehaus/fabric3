@@ -82,7 +82,7 @@ public class ExplodedArchiveContributionHandler implements ArchiveContributionHa
                 context.addErrors(childContext.getErrors());
             }
             if (childContext.hasWarnings()) {
-                context.addErrors(childContext.getWarnings());
+                context.addWarnings(childContext.getWarnings());
             }
         } catch (LoaderException e) {
             if (e.getCause() instanceof FileNotFoundException) {

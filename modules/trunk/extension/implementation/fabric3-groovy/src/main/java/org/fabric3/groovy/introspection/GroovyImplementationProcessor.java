@@ -76,10 +76,16 @@ public class GroovyImplementationProcessor implements ImplementationProcessor<Gr
 
         TypeMapping typeMapping = helper.mapTypeParameters(implClass);
 
-        context = new DefaultIntrospectionContext(context, typeMapping);
-        classWalker.walk(implementation, implClass, context);
+        IntrospectionContext childContext = new DefaultIntrospectionContext(context, typeMapping);
+        classWalker.walk(implementation, implClass, childContext);
 
-        heuristic.applyHeuristics(implementation, implClass, context);
+        heuristic.applyHeuristics(implementation, implClass, childContext);
+        if (childContext.hasErrors()) {
+            context.addErrors(childContext.getErrors());
+        }
+        if (childContext.hasWarnings()) {
+            context.addWarnings(childContext.getWarnings());
+        }
     }
 
 

@@ -112,7 +112,7 @@ public class WarContributionProcessor implements ContributionProcessor {
                 context.addErrors(childContext.getErrors());
             }
             if (childContext.hasWarnings()) {
-                context.addErrors(childContext.getWarnings());
+                context.addWarnings(childContext.getWarnings());
             }
             contribution.setManifest(manifest);
         } catch (LoaderException e) {

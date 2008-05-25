@@ -85,7 +85,7 @@ public class ZipContributionHandler implements ArchiveContributionHandler {
                 context.addErrors(childContext.getErrors());
             }
             if (childContext.hasWarnings()) {
-                context.addErrors(childContext.getWarnings());
+                context.addWarnings(childContext.getWarnings());
             }
         } catch (LoaderException e) {
             if (e.getCause() instanceof FileNotFoundException) {

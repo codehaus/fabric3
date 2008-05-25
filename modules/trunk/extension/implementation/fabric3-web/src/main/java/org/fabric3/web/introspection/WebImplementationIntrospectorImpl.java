@@ -63,8 +63,14 @@ public class WebImplementationIntrospectorImpl implements WebImplementationIntro
             PojoComponentType type = new PojoComponentType(artifact.getName());
             artifactImpl.setComponentType(type);
             TypeMapping typeMapping = helper.mapTypeParameters(artifact);
-            context = new DefaultIntrospectionContext(context, typeMapping);
-            classWalker.walk(artifactImpl, artifact, context);
+            IntrospectionContext childContext = new DefaultIntrospectionContext(context, typeMapping);
+            classWalker.walk(artifactImpl, artifact, childContext);
+            if (childContext.hasErrors()) {
+                context.addErrors(childContext.getErrors());
+            }
+            if (childContext.hasWarnings()) {
+                context.addWarnings(childContext.getWarnings());
+            }
             validateComponentType(type, context);
             // TODO apply heuristics
             mergeComponentTypes(implementation.getComponentType(), type, context);

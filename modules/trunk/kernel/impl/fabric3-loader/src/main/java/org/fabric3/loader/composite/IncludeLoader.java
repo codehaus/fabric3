@@ -129,6 +129,12 @@ public class IncludeLoader implements TypeLoader<Include> {
             context.addError(failure);
             return include;
         }
+        if (childContext.hasErrors()) {
+            context.addErrors(childContext.getErrors());
+        }
+        if (childContext.hasWarnings()) {
+            context.addWarnings(childContext.getWarnings());
+        }
         include.setName(name);
         include.setScdlLocation(url);
         include.setIncluded(composite);

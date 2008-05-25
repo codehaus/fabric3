@@ -84,7 +84,7 @@ public class XmlContributionTypeManifestProcessor implements XmlElementManifestP
                             context.addErrors(childContext.getErrors());
                         }
                         if (childContext.hasWarnings()) {
-                            context.addErrors(childContext.getWarnings());
+                            context.addWarnings(childContext.getWarnings());
                         }
 
                         // merge the contents

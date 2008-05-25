@@ -92,7 +92,7 @@ public class DefinitionsLoader implements XmlResourceElementLoader {
 
         String targetNamespace = reader.getAttributeValue(null, "targetNamespace");
 
-        IntrospectionContext introspectionContext = new DefaultIntrospectionContext(contributionUri, loader, targetNamespace);
+        IntrospectionContext childContext = new DefaultIntrospectionContext(contributionUri, loader, targetNamespace);
 
         while (true) {
             switch (reader.next()) {
@@ -101,25 +101,25 @@ public class DefinitionsLoader implements XmlResourceElementLoader {
                 AbstractDefinition definition = null;
                 if (INTENT.equals(qname)) {
                     try {
-                        definition = loaderRegistry.load(reader, Intent.class, introspectionContext);
+                        definition = loaderRegistry.load(reader, Intent.class, childContext);
                     } catch (UnrecognizedElementException e) {
                         throw new ContributionException(e);
                     }
                 } else if (POLICY_SET.equals(qname)) {
                     try {
-                        definition = loaderRegistry.load(reader, PolicySet.class, introspectionContext);
+                        definition = loaderRegistry.load(reader, PolicySet.class, childContext);
                     } catch (UnrecognizedElementException e) {
                         throw new ContributionException(e);
                     }
                 } else if (BINDING_TYPE.equals(qname)) {
                     try {
-                        definition = loaderRegistry.load(reader, BindingType.class, introspectionContext);
+                        definition = loaderRegistry.load(reader, BindingType.class, childContext);
                     } catch (UnrecognizedElementException e) {
                         throw new ContributionException(e);
                     }
                 } else if (IMPLEMENTATION_TYPE.equals(qname)) {
                     try {
-                        definition = loaderRegistry.load(reader, ImplementationType.class, introspectionContext);
+                        definition = loaderRegistry.load(reader, ImplementationType.class, childContext);
                     } catch (UnrecognizedElementException e) {
                         throw new ContributionException(e);
                     }
@@ -146,11 +146,11 @@ public class DefinitionsLoader implements XmlResourceElementLoader {
                         throw new ResourceElementNotFoundException("Definition not found: " + id, id);
                     }
                 }
-                if (introspectionContext.hasErrors()) {
-                    context.addErrors(introspectionContext.getErrors());
+                if (childContext.hasErrors()) {
+                    context.addErrors(childContext.getErrors());
                 }
-                if (introspectionContext.hasWarnings()) {
-                    context.addErrors(introspectionContext.getWarnings());
+                if (childContext.hasWarnings()) {
+                    context.addWarnings(childContext.getWarnings());
                 }
                 return;
             }

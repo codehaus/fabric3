@@ -112,7 +112,7 @@ public class WebComponentLoader implements TypeLoader<WebImplementation> {
             context.addErrors(childContext.getErrors());
         }
         if (childContext.hasWarnings()) {
-            context.addErrors(childContext.getWarnings());
+            context.addWarnings(childContext.getWarnings());
         }
         return componentType;
     }

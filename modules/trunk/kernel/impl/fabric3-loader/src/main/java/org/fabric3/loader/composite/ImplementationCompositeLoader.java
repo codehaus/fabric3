@@ -103,10 +103,17 @@ public class ImplementationCompositeLoader implements TypeLoader<CompositeImplem
             Composite composite;
             try {
                 composite = loader.load(url, Composite.class, childContext);
+                if (childContext.hasErrors()) {
+                    introspectionContext.addErrors(childContext.getErrors());
+                }
+                if (childContext.hasWarnings()) {
+                    introspectionContext.addWarnings(childContext.getWarnings());
+                }
                 if (composite == null) {
                     // error loading composite, return
                     return null;
                 }
+
             } catch (LoaderException e) {
                 ElementLoadFailure failure = new ElementLoadFailure("Error loading element", e, reader);
                 introspectionContext.addError(failure);
@@ -114,6 +121,7 @@ public class ImplementationCompositeLoader implements TypeLoader<CompositeImplem
             }
             impl.setName(composite.getName());
             impl.setComponentType(composite);
+
             return impl;
         } else if (scdlResource != null) {
             url = cl.getResource(scdlResource);
@@ -123,9 +131,15 @@ public class ImplementationCompositeLoader implements TypeLoader<CompositeImplem
                 return impl;
             }
             IntrospectionContext childContext = new DefaultIntrospectionContext(cl, contributionUri, url);
-            Composite composite = null;
+            Composite composite;
             try {
                 composite = loader.load(url, Composite.class, childContext);
+                if (childContext.hasErrors()) {
+                    introspectionContext.addErrors(childContext.getErrors());
+                }
+                if (childContext.hasWarnings()) {
+                    introspectionContext.addWarnings(childContext.getWarnings());
+                }
                 if (composite == null) {
                     // error loading composite, return
                     return null;

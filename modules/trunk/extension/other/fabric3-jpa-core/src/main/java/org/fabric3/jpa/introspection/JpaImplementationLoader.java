@@ -91,8 +91,15 @@ public class JpaImplementationLoader implements TypeLoader<JavaImplementation> {
             String targetNs = context.getTargetNamespace();
             ClassLoader cl = getClass().getClassLoader();
 
-            IntrospectionContext newContext = new DefaultIntrospectionContext(contributionUri, cl, targetNs);
-            implementationProcessor.introspect(implementation, newContext);
+            IntrospectionContext childContext = new DefaultIntrospectionContext(contributionUri, cl, targetNs);
+            implementationProcessor.introspect(implementation, childContext);
+            if (childContext.hasErrors()) {
+                context.addErrors(childContext.getErrors());
+            }
+            if (childContext.hasWarnings()) {
+                context.addWarnings(childContext.getWarnings());
+            }
+
             PojoComponentType pojoComponentType = implementation.getComponentType();
 
             PersistenceContextResource resource = new PersistenceContextResource(
