@@ -37,13 +37,11 @@ public class MavenImportLoader implements TypeLoader<MavenImport> {
         if (groupId == null) {
             MissingMainifestAttribute failure = new MissingMainifestAttribute("The groupId attribute must be specified", "groupId", reader);
             context.addError(failure);
-            return null;
         }
         String artifactId = reader.getAttributeValue(null, "artifactId");
         if (artifactId == null) {
             MissingMainifestAttribute failure = new MissingMainifestAttribute("The artifactId attribute must be specified", "artifactId", reader);
             context.addError(failure);
-            return null;
         }
         String version = reader.getAttributeValue(null, "version");
         String classifier = reader.getAttributeValue(null, "classifier");
