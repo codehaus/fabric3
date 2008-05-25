@@ -112,9 +112,11 @@ public class XmlResourceProcessor implements ResourceProcessor {
             stream = resource.getUrl().openStream();
             reader = xmlFactory.createXMLStreamReader(stream);
             if (skipToFirstTag(reader)) {
+                resource.setProcessed(true);
                 return;
             }
             elementLoaderRegistry.load(reader, contributionUri, resource, context, loader);
+            resource.setProcessed(true);
         } catch (XMLStreamException e) {
             throw new ContributionException(e);
         } catch (IOException e) {
