@@ -315,12 +315,7 @@ public class StandaloneCoordinator implements RuntimeLifecycleCoordinator<Standa
             throw new InitializationException(e);
         } catch (ValidationException e) {
             // print out the validation errors
-            StringBuilder b = new StringBuilder("\n\n");
-            b.append("-------------------------------------------------------\n");
-            b.append("INTENT ERRORS\n");
-            b.append("-------------------------------------------------------\n\n");
-            b.append(e.getMessage());
-            monitor.intentErrors(b.toString());
+            monitor.intentErrors(e.getMessage());
             throw new ExtensionInitializationException("Errors were detected in one or more intent definitions");
         } catch (ContributionException e) {
             throw new InitializationException(e);
@@ -368,12 +363,7 @@ public class StandaloneCoordinator implements RuntimeLifecycleCoordinator<Standa
             definitionsRegistry.activateDefinitions(contributionUris);
         } catch (ValidationException e) {
             // print out the validation errors
-            StringBuilder b = new StringBuilder("\n\n");
-            b.append("-------------------------------------------------------\n");
-            b.append("EXTENSION ERRORS\n");
-            b.append("-------------------------------------------------------\n\n");
-            b.append(e.getMessage());
-            monitor.extensionErrors(b.toString());
+            monitor.extensionErrors(e.getMessage());
             throw new ExtensionInitializationException("Errors were detected in one or more extensions");
         } catch (ContributionException e) {
             throw new ExtensionInitializationException("Error loading extension", e);
