@@ -28,6 +28,19 @@
       </library>
     </orderEntry>
     <orderEntry type="module-library">
+      <library name="javax.persistence:persistence-api:1.0">
+        <CLASSES>
+          <root url="jar://$M2_REPO$/javax/persistence/persistence-api/1.0/persistence-api-1.0.jar!/" />
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar://$M2_REPO$/javax/persistence/persistence-api/1.0/persistence-api-1.0-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$M2_REPO$/javax/persistence/persistence-api/1.0/persistence-api-1.0-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
       <library name="junit:junit:3.8.2">
         <CLASSES>
           <root url="jar://$M2_REPO$/junit/junit/3.8.2/junit-3.8.2.jar!/" />
