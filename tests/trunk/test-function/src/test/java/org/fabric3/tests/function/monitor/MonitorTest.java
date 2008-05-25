@@ -19,7 +19,7 @@ package org.fabric3.tests.function.monitor;
 import junit.framework.TestCase;
 
 import org.fabric3.api.annotation.Monitor;
-import org.fabric3.api.annotation.LogLevel;
+import org.fabric3.api.annotation.logging.Info;
 
 /**
  * @version $Rev$ $Date$
@@ -35,7 +35,7 @@ public class MonitorTest extends TestCase {
     }
 
     public static interface MyMonitor {
-        @LogLevel("INFO")
+        @Info
         void wasCalled();
     }
 }
