@@ -46,6 +46,8 @@ import org.fabric3.scdl.CompositeImplementation;
 import org.fabric3.scdl.DefaultValidationContext;
 import org.fabric3.scdl.Implementation;
 import org.fabric3.scdl.ValidationContext;
+import org.fabric3.scdl.ArtifactValidationFailure;
+import org.fabric3.scdl.ValidationFailure;
 import org.fabric3.spi.services.archive.ArchiveStore;
 import org.fabric3.spi.services.archive.ArchiveStoreException;
 import org.fabric3.spi.services.contenttype.ContentTypeResolutionException;
@@ -107,8 +109,11 @@ public class ContributionServiceImpl implements ContributionService {
             ValidationContext context = new DefaultValidationContext();
             processorRegistry.processManifest(contribution, context);
             if (context.hasErrors()) {
-                context.addErrors(context.getErrors());
-                throw new ContributionException(new InvalidContributionException(context.getErrors()));
+                ArtifactValidationFailure failure = new ArtifactValidationFailure("contribution manifest (sca-contribution.xml)");
+                failure.addFailures(context.getErrors());
+                List<ValidationFailure> failures = new ArrayList<ValidationFailure>();
+                failures.add(failure);
+                throw new ContributionException(new InvalidContributionException(failures));
             }
 
         }
@@ -131,8 +136,11 @@ public class ContributionServiceImpl implements ContributionService {
         ValidationContext context = new DefaultValidationContext();
         processorRegistry.processManifest(contribution, context);
         if (context.hasErrors()) {
-            context.addErrors(context.getErrors());
-            throw new ContributionException(new InvalidContributionException(context.getErrors()));
+            ArtifactValidationFailure failure = new ArtifactValidationFailure("contribution manifest (sca-contribution.xml)");
+            failure.addFailures(context.getErrors());
+            List<ValidationFailure> failures = new ArrayList<ValidationFailure>();
+            failures.add(failure);
+            throw new ContributionException(new InvalidContributionException(failures));
         }
         ClassLoader loader = contributionLoader.loadContribution(contribution);
         processContents(contribution, loader);
