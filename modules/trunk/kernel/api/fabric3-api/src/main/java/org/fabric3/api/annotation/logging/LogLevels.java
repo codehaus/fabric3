@@ -47,7 +47,7 @@ public enum LogLevels {
      * Argument <code>Method</code> instances should be annotated with a {@link LogLevel} directly
      * or with one of the level annotations which have a {@link LogLevel} meta-annotation.  
      * @param the annotated monitor method  
-     * @return the <code>LogLevels</code> value defined by a direct {@link LogLevel} annotation 
+     * @return the annotated <code>LogLevels</code> value 
      */
     public static LogLevels getAnnotatedLogLevel(Method method) {
         LogLevels level = null;
