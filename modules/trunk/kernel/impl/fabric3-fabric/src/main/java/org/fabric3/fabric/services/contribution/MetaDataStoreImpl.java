@@ -98,7 +98,7 @@ public class MetaDataStoreImpl implements MetaDataStore {
             for (Resource resource : contribution.getResources()) {
                 for (ResourceElement<?, ?> element : resource.getResourceElements()) {
                     if (element.getSymbol().equals(symbol)) {
-                        if (element.getValue() == null) {
+                        if (!resource.isProcessed()) {
                             try {
                                 processorRegistry.processResource(contributionUri, resource, context, loader);
                             } catch (ContributionException e) {
@@ -209,7 +209,7 @@ public class MetaDataStoreImpl implements MetaDataStore {
         for (Resource resource : contribution.getResources()) {
             for (ResourceElement<?, ?> element : resource.getResourceElements()) {
                 if (element.getSymbol().equals(symbol)) {
-                    if (element.getValue() == null) {
+                    if (!resource.isProcessed()) {
                         try {
                             processorRegistry.processResource(contributionUri, resource, context, loader);
                         } catch (ContributionException e) {
