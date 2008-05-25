@@ -116,6 +116,7 @@ public class CompositeResourceProcessor implements ResourceProcessor {
         IntrospectionContext introspectionContext = new DefaultIntrospectionContext(classLoader, contributionUri, url);
         Composite composite;
         try {
+            // check to see if the resoruce has already been evaluated
             composite = loader.load(url, Composite.class, introspectionContext);
         } catch (LoaderException e) {
             throw new ContributionException(e);
@@ -137,8 +138,9 @@ public class CompositeResourceProcessor implements ResourceProcessor {
             context.addErrors(introspectionContext.getErrors());
         }
         if (introspectionContext.hasWarnings()) {
-            context.addErrors(introspectionContext.getWarnings());
+            context.addWarnings(introspectionContext.getWarnings());
         }
+        resource.setProcessed(true);
 
     }
 
