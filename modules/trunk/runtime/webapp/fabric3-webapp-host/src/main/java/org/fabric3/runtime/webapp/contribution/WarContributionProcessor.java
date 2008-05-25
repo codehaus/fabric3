@@ -83,7 +83,9 @@ public class WarContributionProcessor implements ContributionProcessor {
     public void process(Contribution contribution, ValidationContext context, ClassLoader loader) throws ContributionException {
         URI contributionUri = contribution.getUri();
         for (Resource resource : contribution.getResources()) {
-            registry.processResource(contributionUri, resource, context, loader);
+            if (!resource.isProcessed()) {
+                registry.processResource(contributionUri, resource, context, loader);
+            }
         }
     }
 
