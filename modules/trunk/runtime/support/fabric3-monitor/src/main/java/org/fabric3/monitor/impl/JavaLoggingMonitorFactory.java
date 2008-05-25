@@ -156,7 +156,7 @@ public class JavaLoggingMonitorFactory implements MonitorFactory {
         }
         
         //The position in the monitor interface's parameter list of the first throwable
-        //is used when creating the LogRecord in the MethodInfo (could be calculated there)
+        //is used when creating the LogRecord in the MethodInfo
         return result;
     }
 
