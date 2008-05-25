@@ -31,6 +31,7 @@ public class Resource {
     private List<ResourceElement<?, ?>> elements = new ArrayList<ResourceElement<?, ?>>();
     private URL url;
     private String contentType;
+    private boolean processed;
 
     public Resource(URL url, String contentType) {
         this.url = url;
@@ -77,4 +78,21 @@ public class Resource {
         return Collections.unmodifiableList(elements);
     }
 
+    /**
+     * Returns true if the resource has been fully processed.
+     *
+     * @return true if the resource has been fully processed
+     */
+    public boolean isProcessed() {
+        return processed;
+    }
+
+    /**
+     * Sets if the resource has been processed.
+     *
+     * @param processed if the resource has been processed
+     */
+    public void setProcessed(boolean processed) {
+        this.processed = processed;
+    }
 }
