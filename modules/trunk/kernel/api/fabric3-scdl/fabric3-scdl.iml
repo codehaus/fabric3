@@ -29,6 +29,8 @@
         </SOURCES>
       </library>
     </orderEntry>
+    <orderEntry type="module" module-name="fabric3-host-api" exported="" />
+    <orderEntry type="module" module-name="fabric3-monitor-api" exported="" />
     <orderEntry type="module-library">
       <library name="junit:junit:3.8.2">
         <CLASSES>

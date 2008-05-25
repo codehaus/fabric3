@@ -25,10 +25,8 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module" module-name="fabric3-pojo" exported="" />
-    <orderEntry type="module" module-name="fabric3-spi" exported="" />
-    <orderEntry type="module" module-name="fabric3-api" exported="" />
-    <orderEntry type="module-library" exported="">
+    <orderEntry type="module" module-name="fabric3-jpa-api" exported="" />
+    <orderEntry type="module-library">
       <library name="org.codehaus.fabric3.spec:sca-api-r1.0:0.2.1">
         <CLASSES>
           <root url="jar://$M2_REPO$/org/codehaus/fabric3/spec/sca-api-r1.0/0.2.1/sca-api-r1.0-0.2.1.jar!/" />
@@ -41,12 +39,16 @@
         </SOURCES>
       </library>
     </orderEntry>
+    <orderEntry type="module" module-name="fabric3-pojo" exported="" />
+    <orderEntry type="module" module-name="fabric3-spi" exported="" />
+    <orderEntry type="module" module-name="fabric3-api" exported="" />
     <orderEntry type="module" module-name="fabric3-host-api" exported="" />
     <orderEntry type="module" module-name="fabric3-monitor-api" exported="" />
     <orderEntry type="module" module-name="fabric3-introspection-spi" exported="" />
     <orderEntry type="module" module-name="fabric3-scdl" exported="" />
     <orderEntry type="module" module-name="fabric3-transform-api" exported="" />
     <orderEntry type="module" module-name="fabric3-xmlfactory" exported="" />
+    <orderEntry type="module" module-name="fabric3-java" exported="" />
     <orderEntry type="module" module-name="fabric3-jpa-spi" exported="" />
     <orderEntry type="module-library">
       <library name="javax.persistence:persistence-api:1.0">
@@ -58,6 +60,19 @@
         </JAVADOC>
         <SOURCES>
           <root url="jar://$M2_REPO$/javax/persistence/persistence-api/1.0/persistence-api-1.0-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="geronimo-spec:geronimo-spec-jta:1.0.1B-rc4">
+        <CLASSES>
+          <root url="jar://$M2_REPO$/geronimo-spec/geronimo-spec-jta/1.0.1B-rc4/geronimo-spec-jta-1.0.1B-rc4.jar!/" />
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar://$M2_REPO$/geronimo-spec/geronimo-spec-jta/1.0.1B-rc4/geronimo-spec-jta-1.0.1B-rc4-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$M2_REPO$/geronimo-spec/geronimo-spec-jta/1.0.1B-rc4/geronimo-spec-jta-1.0.1B-rc4-sources.jar!/" />
         </SOURCES>
       </library>
     </orderEntry>
@@ -374,7 +389,6 @@
       </library>
     </orderEntry>
     <orderEntry type="module" module-name="fabric3-introspection" exported="" />
-    <orderEntry type="module" module-name="fabric3-java" />
     <orderEntryProperties />
   </component>
 </module>

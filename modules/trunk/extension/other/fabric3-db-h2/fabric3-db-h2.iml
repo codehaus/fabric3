@@ -14,50 +14,43 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="module" module-name="fabric3-spi" exported="" />
-    <orderEntry type="module" module-name="fabric3-api" exported="" />
-    <orderEntry type="module-library">
-      <library name="org.codehaus.fabric3.spec:sca-api-r1.0:0.2.1">
+    <orderEntry type="module-library" exported="">
+      <library name="com.h2database:h2:1.0.71">
         <CLASSES>
-          <root url="jar://$M2_REPO$/org/codehaus/fabric3/spec/sca-api-r1.0/0.2.1/sca-api-r1.0-0.2.1.jar!/" />
+          <root url="jar://$M2_REPO$/com/h2database/h2/1.0.71/h2-1.0.71.jar!/" />
         </CLASSES>
         <JAVADOC>
-          <root url="jar://$M2_REPO$/org/codehaus/fabric3/spec/sca-api-r1.0/0.2.1/sca-api-r1.0-0.2.1-javadoc.jar!/" />
+          <root url="jar://$M2_REPO$/com/h2database/h2/1.0.71/h2-1.0.71-javadoc.jar!/" />
         </JAVADOC>
         <SOURCES>
-          <root url="jar://$M2_REPO$/org/codehaus/fabric3/spec/sca-api-r1.0/0.2.1/sca-api-r1.0-0.2.1-sources.jar!/" />
+          <root url="jar://$M2_REPO$/com/h2database/h2/1.0.71/h2-1.0.71-sources.jar!/" />
         </SOURCES>
       </library>
     </orderEntry>
-    <orderEntry type="module" module-name="fabric3-host-api" exported="" />
-    <orderEntry type="module" module-name="fabric3-monitor-api" exported="" />
-    <orderEntry type="module" module-name="fabric3-introspection-spi" exported="" />
-    <orderEntry type="module" module-name="fabric3-scdl" exported="" />
-    <orderEntry type="module" module-name="fabric3-transform-api" exported="" />
-    <orderEntry type="module" module-name="fabric3-xmlfactory" exported="" />
-    <orderEntry type="module-library">
-      <library name="stax:stax-api:1.0">
+    <orderEntry type="module" module-name="fabric3-xapool" exported="" />
+    <orderEntry type="module-library" exported="">
+      <library name="com.experlog:xapool:1.5.0">
         <CLASSES>
-          <root url="jar://$M2_REPO$/stax/stax-api/1.0/stax-api-1.0.jar!/" />
+          <root url="jar://$M2_REPO$/com/experlog/xapool/1.5.0/xapool-1.5.0.jar!/" />
         </CLASSES>
         <JAVADOC>
-          <root url="jar://$M2_REPO$/stax/stax-api/1.0/stax-api-1.0-javadoc.jar!/" />
+          <root url="jar://$M2_REPO$/com/experlog/xapool/1.5.0/xapool-1.5.0-javadoc.jar!/" />
         </JAVADOC>
         <SOURCES>
-          <root url="jar://$M2_REPO$/stax/stax-api/1.0/stax-api-1.0-sources.jar!/" />
+          <root url="jar://$M2_REPO$/com/experlog/xapool/1.5.0/xapool-1.5.0-sources.jar!/" />
         </SOURCES>
       </library>
     </orderEntry>
-    <orderEntry type="module-library">
-      <library name="junit:junit:3.8.2">
+    <orderEntry type="module-library" exported="">
+      <library name="commons-logging:commons-logging:1.1.1">
         <CLASSES>
-          <root url="jar://$M2_REPO$/junit/junit/3.8.2/junit-3.8.2.jar!/" />
+          <root url="jar://$M2_REPO$/commons-logging/commons-logging/1.1.1/commons-logging-1.1.1.jar!/" />
         </CLASSES>
         <JAVADOC>
-          <root url="jar://$M2_REPO$/junit/junit/3.8.2/junit-3.8.2-javadoc.jar!/" />
+          <root url="jar://$M2_REPO$/commons-logging/commons-logging/1.1.1/commons-logging-1.1.1-javadoc.jar!/" />
         </JAVADOC>
         <SOURCES>
-          <root url="jar://$M2_REPO$/junit/junit/3.8.2/junit-3.8.2-sources.jar!/" />
+          <root url="jar://$M2_REPO$/commons-logging/commons-logging/1.1.1/commons-logging-1.1.1-sources.jar!/" />
         </SOURCES>
       </library>
     </orderEntry>

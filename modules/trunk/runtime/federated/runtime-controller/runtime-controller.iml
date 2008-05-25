@@ -35,6 +35,7 @@
     <orderEntry type="module" module-name="fabric3-transform-api" exported="" />
     <orderEntry type="module" module-name="fabric3-xmlfactory" exported="" />
     <orderEntry type="module" module-name="fabric3-standalone-server" exported="" />
+    <orderEntry type="module" module-name="fabric3-jmx-agent" exported="" />
     <orderEntry type="module" module-name="fabric3-standalone-api" exported="" />
     <orderEntry type="module-library" exported="">
       <library name="org.apache.geronimo.specs:geronimo-annotation_1.0_spec:1.1">
@@ -156,7 +157,6 @@
     </orderEntry>
     <orderEntry type="module" module-name="fabric3-jdk-proxy" exported="" />
     <orderEntry type="module" module-name="fabric3-async-loader" exported="" />
-    <orderEntry type="module" module-name="fabric3-async-runtime" exported="" />
     <orderEntry type="module" module-name="fabric3-contribution-scanner" exported="" />
     <orderEntry type="module" module-name="fabric3-conversation-propagation" exported="" />
     <orderEntry type="module" module-name="fabric3-jetty" exported="" />
@@ -251,6 +251,64 @@
         </SOURCES>
       </library>
     </orderEntry>
+    <orderEntry type="module" module-name="fabric3-marshal-xstream" exported="" />
+    <orderEntry type="module-library" exported="">
+      <library name="com.thoughtworks.xstream:xstream:1.2">
+        <CLASSES>
+          <root url="jar://$M2_REPO$/com/thoughtworks/xstream/xstream/1.2/xstream-1.2.jar!/" />
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar://$M2_REPO$/com/thoughtworks/xstream/xstream/1.2/xstream-1.2-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$M2_REPO$/com/thoughtworks/xstream/xstream/1.2/xstream-1.2-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module" module-name="fabric3-jxta" exported="" />
+    <orderEntry type="module-library" exported="">
+      <library name="bouncycastle:bcprov-jdk14:124">
+        <CLASSES>
+          <root url="jar://$M2_REPO$/bouncycastle/bcprov-jdk14/124/bcprov-jdk14-124.jar!/" />
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar://$M2_REPO$/bouncycastle/bcprov-jdk14/124/bcprov-jdk14-124-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$M2_REPO$/bouncycastle/bcprov-jdk14/124/bcprov-jdk14-124-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="org.jxta.platform:jxta:2.4.1">
+        <CLASSES>
+          <root url="jar://$M2_REPO$/org/jxta/platform/jxta/2.4.1/jxta-2.4.1.jar!/" />
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar://$M2_REPO$/org/jxta/platform/jxta/2.4.1/jxta-2.4.1-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$M2_REPO$/org/jxta/platform/jxta/2.4.1/jxta-2.4.1-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library" exported="">
+      <library name="log4j:log4j:1.2.13">
+        <CLASSES>
+          <root url="jar://$M2_REPO$/log4j/log4j/1.2.13/log4j-1.2.13.jar!/" />
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar://$M2_REPO$/log4j/log4j/1.2.13/log4j-1.2.13-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$M2_REPO$/log4j/log4j/1.2.13/log4j-1.2.13-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
+    <orderEntry type="module" module-name="fabric3-messaging" exported="" />
+    <orderEntry type="module" module-name="fabric3-messaging-jxta" exported="" />
+    <orderEntry type="module" module-name="fabric3-discovery-jxta" exported="" />
+    <orderEntry type="module" module-name="fabric3-http-provisioning" exported="" />
     <orderEntry type="module" module-name="fabric3-resource" exported="" />
     <orderEntryProperties />
   </component>

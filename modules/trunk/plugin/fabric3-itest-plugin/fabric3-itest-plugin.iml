@@ -222,10 +222,9 @@
         </SOURCES>
       </library>
     </orderEntry>
-    <orderEntry type="module" module-name="fabric3-jdk-proxy" exported="" />
-    <orderEntry type="module" module-name="fabric3-pojo" exported="" />
-    <orderEntry type="module" module-name="fabric3-spi" exported="" />
-    <orderEntry type="module" module-name="fabric3-api" exported="" />
+    <orderEntry type="module" module-name="fabric3-jmx-agent" exported="" />
+    <orderEntry type="module" module-name="fabric3-host-api" exported="" />
+    <orderEntry type="module" module-name="fabric3-monitor-api" exported="" />
     <orderEntry type="module-library" exported="">
       <library name="org.codehaus.fabric3.spec:sca-api-r1.0:0.2.1">
         <CLASSES>
@@ -239,8 +238,10 @@
         </SOURCES>
       </library>
     </orderEntry>
-    <orderEntry type="module" module-name="fabric3-host-api" exported="" />
-    <orderEntry type="module" module-name="fabric3-monitor-api" exported="" />
+    <orderEntry type="module" module-name="fabric3-jdk-proxy" exported="" />
+    <orderEntry type="module" module-name="fabric3-pojo" exported="" />
+    <orderEntry type="module" module-name="fabric3-spi" exported="" />
+    <orderEntry type="module" module-name="fabric3-api" exported="" />
     <orderEntry type="module" module-name="fabric3-introspection-spi" exported="" />
     <orderEntry type="module" module-name="fabric3-scdl" exported="" />
     <orderEntry type="module" module-name="fabric3-transform-api" exported="" />
@@ -301,7 +302,6 @@
         </SOURCES>
       </library>
     </orderEntry>
-    <orderEntry type="module" module-name="fabric3-jmx-agent" />
     <orderEntryProperties />
   </component>
 </module>
