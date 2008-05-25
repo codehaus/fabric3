@@ -25,10 +25,11 @@ import org.fabric3.host.Fabric3RuntimeException;
  * 
  * @version $Revision$ $Date$
  */
-@SuppressWarnings("serial")
 public class JmxException extends Fabric3RuntimeException {
 
-    /**
+	private static final long serialVersionUID = -37382269762178444L;
+
+	/**
      * Initializes the root cause.
      * @param cause Initializes the root cause.
      */
