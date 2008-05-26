@@ -17,6 +17,7 @@
 package org.fabric3.fabric.services.contribution;
 
 import org.fabric3.api.annotation.logging.Severe;
+import org.fabric3.api.annotation.logging.Info;
 
 /**
  * Receives callback events from the ContributionService
@@ -27,5 +28,8 @@ public interface ContributionServiceMonitor {
 
     @Severe
     void error(String message, Throwable e);
+
+    @Info
+    void contributionWarnings(String message);
 
 }
