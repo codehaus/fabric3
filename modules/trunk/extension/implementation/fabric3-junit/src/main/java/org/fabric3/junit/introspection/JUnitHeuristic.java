@@ -30,6 +30,7 @@ import org.fabric3.introspection.IntrospectionHelper;
 import org.fabric3.introspection.TypeMapping;
 import org.fabric3.introspection.contract.ContractProcessor;
 import org.fabric3.introspection.java.HeuristicProcessor;
+import org.fabric3.introspection.java.NoConstructorFound;
 import org.fabric3.introspection.java.UnknownInjectionType;
 import org.fabric3.junit.scdl.JUnitImplementation;
 import org.fabric3.pojo.scdl.PojoComponentType;
@@ -45,7 +46,6 @@ import org.fabric3.scdl.ReferenceDefinition;
 import org.fabric3.scdl.ServiceContract;
 import org.fabric3.scdl.Signature;
 import org.fabric3.scdl.validation.AmbiguousConstructor;
-import org.fabric3.scdl.validation.NoConstructorFound;
 
 /**
  * @version $Rev$ $Date$

@@ -14,7 +14,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.scdl.validation;
+package org.fabric3.introspection.java;
 
 import org.fabric3.host.contribution.ValidationFailure;
 
@@ -27,6 +27,6 @@ public class NoConstructorFound extends ValidationFailure<Class<?>> {
     }
 
     public String getMessage() {
-        return "The class has multiple constructors, use @Constructor to indicate which to use: " + getValidatable();
+        return "The class has multiple constructors, use @Constructor to select one: " + getValidatable();
     }
 }
