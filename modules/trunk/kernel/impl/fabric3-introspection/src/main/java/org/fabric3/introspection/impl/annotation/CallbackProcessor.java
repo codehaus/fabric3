@@ -19,6 +19,7 @@ package org.fabric3.introspection.impl.annotation;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
+import java.lang.reflect.Modifier;
 
 import org.osoa.sca.annotations.Callback;
 import org.osoa.sca.annotations.Reference;
@@ -50,6 +51,7 @@ public class CallbackProcessor<I extends Implementation<? extends InjectingCompo
 
 
     public void visitField(Callback annotation, Field field, I implementation, IntrospectionContext context) {
+        validate(field, context);
 
         String name = helper.getSiteName(field, null);
         Type type = field.getGenericType();
@@ -59,6 +61,7 @@ public class CallbackProcessor<I extends Implementation<? extends InjectingCompo
     }
 
     public void visitMethod(Callback annotation, Method method, I implementation, IntrospectionContext context) {
+        validate(method, context);
 
         String name = helper.getSiteName(method, null);
         Type type = helper.getGenericType(method);
@@ -67,7 +70,26 @@ public class CallbackProcessor<I extends Implementation<? extends InjectingCompo
         implementation.getComponentType().add(definition, site);
     }
 
-    CallbackDefinition createDefinition(String name, Type type, TypeMapping typeMapping, IntrospectionContext context) {
+    private void validate(Field field, IntrospectionContext context) {
+        if (!Modifier.isProtected(field.getModifiers()) && !Modifier.isPublic(field.getModifiers())) {
+            Class<?> clazz = field.getDeclaringClass();
+            InvalidAccessor warning =
+                    new InvalidAccessor("Illegal callback. The field " + field.getName() + " on " + clazz.getName()
+                            + " is annotated with @Callback and must be public or protected.", clazz);
+            context.addError(warning);
+        }
+    }
+
+    private void validate(Method method, IntrospectionContext context) {
+        if (!Modifier.isProtected(method.getModifiers()) && !Modifier.isPublic(method.getModifiers())) {
+            Class<?> clazz = method.getDeclaringClass();
+            InvalidAccessor warning = new InvalidAccessor("Illegal callback. The method " + method
+                    + " is annotated with @Callback and must be public or protected.", clazz);
+            context.addError(warning);
+        }
+    }
+
+    private CallbackDefinition createDefinition(String name, Type type, TypeMapping typeMapping, IntrospectionContext context) {
         Type baseType = helper.getBaseType(type, typeMapping);
         ServiceContract<Type> contract = contractProcessor.introspect(typeMapping, baseType, context);
         return new CallbackDefinition(name, contract);

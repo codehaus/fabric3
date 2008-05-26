@@ -22,6 +22,10 @@ import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.java.AbstractAnnotationProcessor;
 import org.fabric3.scdl.Implementation;
 import org.fabric3.scdl.InjectingComponentType;
+import static org.fabric3.scdl.Scope.COMPOSITE;
+import static org.fabric3.scdl.Scope.CONVERSATION;
+import static org.fabric3.scdl.Scope.REQUEST;
+import static org.fabric3.scdl.Scope.STATELESS;
 
 /**
  * @version $Rev$ $Date$
@@ -34,6 +38,14 @@ public class ScopeProcessor<I extends Implementation<? extends InjectingComponen
 
     public void visitType(Scope annotation, Class<?> type, I implementation, IntrospectionContext context) {
         String scopeName = annotation.value();
+        if (!COMPOSITE.getScope().equals(scopeName)
+                && !CONVERSATION.getScope().equals(scopeName)
+                && !REQUEST.getScope().equals(scopeName)
+                && !STATELESS.getScope().equals(scopeName)) {
+            InvalidScope failure = new InvalidScope(type, scopeName);
+            context.addError(failure);
+            return;
+        }
         implementation.getComponentType().setScope(scopeName);
     }
 }

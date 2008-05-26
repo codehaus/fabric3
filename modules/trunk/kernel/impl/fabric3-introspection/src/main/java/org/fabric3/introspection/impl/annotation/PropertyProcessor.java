@@ -20,6 +20,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
+import java.lang.reflect.Modifier;
 
 import org.osoa.sca.annotations.Reference;
 
@@ -46,6 +47,7 @@ public class PropertyProcessor<I extends Implementation<? extends InjectingCompo
     }
 
     public void visitField(org.osoa.sca.annotations.Property annotation, Field field, I implementation, IntrospectionContext context) {
+        validate(annotation, field, context);
         String name = helper.getSiteName(field, annotation.name());
         Type type = field.getGenericType();
         FieldInjectionSite site = new FieldInjectionSite(field);
@@ -54,11 +56,45 @@ public class PropertyProcessor<I extends Implementation<? extends InjectingCompo
     }
 
     public void visitMethod(org.osoa.sca.annotations.Property annotation, Method method, I implementation, IntrospectionContext context) {
+        validate(annotation, method, context);
         String name = helper.getSiteName(method, annotation.name());
         Type type = helper.getGenericType(method);
         MethodInjectionSite site = new MethodInjectionSite(method, 0);
         Property property = createDefinition(name, annotation.required(), type, context.getTypeMapping());
         implementation.getComponentType().add(property, site);
+    }
+
+    private void validate(org.osoa.sca.annotations.Property annotation, Field field, IntrospectionContext context) {
+        if (!Modifier.isProtected(field.getModifiers()) && !Modifier.isPublic(field.getModifiers())) {
+            Class<?> clazz = field.getDeclaringClass();
+            if (annotation.required()) {
+                InvalidAccessor error =
+                        new InvalidAccessor("Invalid required property. The field " + field.getName() + " on " + clazz.getName()
+                                + " is annotated with @Property but properties must be public or protected.", clazz);
+                context.addError(error);
+            } else {
+                InvalidAccessor warning =
+                        new InvalidAccessor("Ignoring the field " + field.getName() + " annotated with @Property on " + clazz.getName()
+                                + ". Properties must be public or protected.", clazz);
+                context.addWarning(warning);
+            }
+        }
+    }
+
+    private void validate(org.osoa.sca.annotations.Property annotation, Method method, IntrospectionContext context) {
+        if (!Modifier.isProtected(method.getModifiers()) && !Modifier.isPublic(method.getModifiers())) {
+            Class<?> clazz = method.getDeclaringClass();
+            if (annotation.required()) {
+                InvalidAccessor error =
+                        new InvalidAccessor("Invalid required property. The method " + method
+                                + " is annotated with @Property and must be public or protected.", clazz);
+                context.addError(error);
+            } else {
+                InvalidAccessor warning =
+                        new InvalidAccessor("Ignoring " + method + " annotated with @Property. Property " + "must be public or protected.", clazz);
+                context.addWarning(warning);
+            }
+        }
     }
 
     public void visitConstructorParameter(org.osoa.sca.annotations.Property annotation,

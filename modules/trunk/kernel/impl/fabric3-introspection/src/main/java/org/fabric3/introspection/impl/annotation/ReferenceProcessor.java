@@ -52,13 +52,7 @@ public class ReferenceProcessor<I extends Implementation<? extends InjectingComp
     }
 
     public void visitField(Reference annotation, Field field, I implementation, IntrospectionContext context) {
-        if (!Modifier.isProtected(field.getModifiers()) && !Modifier.isPublic(field.getModifiers())) {
-            Class<?> clazz = field.getDeclaringClass();
-            InvalidAccessor warning =
-                    new InvalidAccessor("Ignoring the field " + field.getName() + " on class " + clazz.getName()
-                            + ". It is annotated with as @Reference but references must be public or protected.", clazz);
-            context.addWarning(warning);
-        }
+        validate(annotation, field, context);
         String name = helper.getSiteName(field, annotation.name());
         Type type = field.getGenericType();
         FieldInjectionSite site = new FieldInjectionSite(field);
@@ -67,19 +61,46 @@ public class ReferenceProcessor<I extends Implementation<? extends InjectingComp
     }
 
     public void visitMethod(Reference annotation, Method method, I implementation, IntrospectionContext context) {
-        if (!Modifier.isProtected(method.getModifiers()) && !Modifier.isPublic(method.getModifiers())) {
-            Class<?> clazz = method.getDeclaringClass();
-            InvalidAccessor warning =
-                    new InvalidAccessor("Ignoring the method  " + ". It is annotated with as @Reference but references must be public or protected.",
-                                        clazz);
-            context.addWarning(warning);
-        }
+        validate(annotation, method, context);
 
         String name = helper.getSiteName(method, annotation.name());
         Type type = helper.getGenericType(method);
         MethodInjectionSite site = new MethodInjectionSite(method, 0);
         ReferenceDefinition definition = createDefinition(name, annotation.required(), type, context.getTypeMapping(), context);
         implementation.getComponentType().add(definition, site);
+    }
+
+    private void validate(Reference annotation, Field field, IntrospectionContext context) {
+        if (!Modifier.isProtected(field.getModifiers()) && !Modifier.isPublic(field.getModifiers())) {
+            Class<?> clazz = field.getDeclaringClass();
+            if (annotation.required()) {
+                InvalidAccessor error =
+                        new InvalidAccessor("Invalid required reference. The field " + field.getName() + " on " + clazz.getName()
+                                + " is annotated with @Reference and must be public or protected.", clazz);
+                context.addError(error);
+            } else {
+                InvalidAccessor warning =
+                        new InvalidAccessor("Ignoring the field " + field.getName() + " annotated with @Reference on " + clazz.getName()
+                                + ". References must be public or protected.", clazz);
+                context.addWarning(warning);
+            }
+        }
+    }
+
+    private void validate(Reference annotation, Method method, IntrospectionContext context) {
+        if (!Modifier.isProtected(method.getModifiers()) && !Modifier.isPublic(method.getModifiers())) {
+            Class<?> clazz = method.getDeclaringClass();
+            if (annotation.required()) {
+                InvalidAccessor error =
+                        new InvalidAccessor("Invalid required reference. The method " + method + " on " + clazz.getName()
+                                + " is annotated with @Reference and must be public or protected.", clazz);
+                context.addError(error);
+            } else {
+                InvalidAccessor warning =
+                        new InvalidAccessor("Ignoring " + method + " annotated with @Reference. References " + "must be public or protected.", clazz);
+                context.addWarning(warning);
+            }
+        }
     }
 
     public void visitConstructorParameter(Reference annotation,
