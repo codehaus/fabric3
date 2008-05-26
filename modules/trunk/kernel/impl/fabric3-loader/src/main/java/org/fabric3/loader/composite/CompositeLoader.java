@@ -283,12 +283,13 @@ public class CompositeLoader implements TypeLoader<Composite> {
             case END_ELEMENT:
                 assert COMPOSITE.equals(reader.getName());
                 if (childContext.hasErrors() || childContext.hasWarnings()) {
-                    ArtifactValidationFailure artifactFailure = new ArtifactValidationFailure(compositeName.toString());
                     if (childContext.hasErrors()) {
+                        ArtifactValidationFailure artifactFailure = new ArtifactValidationFailure(compositeName.toString());
                         artifactFailure.addFailures(childContext.getErrors());
                         introspectionContext.addError(artifactFailure);
                     }
                     if (childContext.hasWarnings()) {
+                        ArtifactValidationFailure artifactFailure = new ArtifactValidationFailure(compositeName.toString());
                         artifactFailure.addFailures(childContext.getWarnings());
                         introspectionContext.addWarning(artifactFailure);
                     }
