@@ -41,6 +41,7 @@ import org.fabric3.host.contribution.ContributionSource;
 import org.fabric3.host.contribution.Deployable;
 import org.fabric3.host.contribution.ValidationFailure;
 import org.fabric3.introspection.validation.InvalidContributionException;
+import org.fabric3.introspection.validation.ValidationUtils;
 import org.fabric3.scdl.ArtifactValidationFailure;
 import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.Composite;
@@ -109,11 +110,17 @@ public class ContributionServiceImpl implements ContributionService {
             ValidationContext context = new DefaultValidationContext();
             processorRegistry.processManifest(contribution, context);
             if (context.hasErrors()) {
-                ArtifactValidationFailure failure = new ArtifactValidationFailure("the contribution manifest (sca-contribution.xml)");
-                failure.addFailures(context.getErrors());
-                List<ValidationFailure> failures = new ArrayList<ValidationFailure>();
-                failures.add(failure);
-                throw new InvalidContributionException(failures);
+                ArtifactValidationFailure error = new ArtifactValidationFailure("the contribution manifest (sca-contribution.xml)");
+                error.addFailures(context.getErrors());
+                List<ValidationFailure> errors = new ArrayList<ValidationFailure>();
+                errors.add(error);
+
+                ArtifactValidationFailure warning = new ArtifactValidationFailure("the contribution manifest (sca-contribution.xml)");
+                warning.addFailures(context.getWarnings());
+                List<ValidationFailure> warnings = new ArrayList<ValidationFailure>();
+                warnings.add(warning);
+
+                throw new InvalidContributionException(errors, warnings);
             }
 
         }
@@ -140,7 +147,11 @@ public class ContributionServiceImpl implements ContributionService {
             failure.addFailures(context.getErrors());
             List<ValidationFailure> failures = new ArrayList<ValidationFailure>();
             failures.add(failure);
-            throw new InvalidContributionException(failures);
+            ArtifactValidationFailure warning = new ArtifactValidationFailure("the contribution manifest (sca-contribution.xml)");
+            warning.addFailures(context.getWarnings());
+            List<ValidationFailure> warnings = new ArrayList<ValidationFailure>();
+            warnings.add(warning);
+            throw new InvalidContributionException(failures, warnings);
         }
         ClassLoader loader = contributionLoader.loadContribution(contribution);
         processContents(contribution, loader);
@@ -287,13 +298,16 @@ public class ContributionServiceImpl implements ContributionService {
             ValidationContext context = new DefaultValidationContext();
             processorRegistry.indexContribution(contribution, context);
             if (context.hasErrors()) {
-                throw new InvalidContributionException(context.getErrors());
+                throw new InvalidContributionException(context.getErrors(), context.getWarnings());
             }
             metaDataStore.store(contribution);
             context = new DefaultValidationContext();
             processorRegistry.processContribution(contribution, context, loader);
             if (context.hasErrors()) {
-                throw new InvalidContributionException(context.getErrors());
+                throw new InvalidContributionException(context.getErrors(), context.getWarnings());
+            } else if (context.hasWarnings()) {
+                // there were just warnings, report them
+                monitor.contributionWarnings(ValidationUtils.outputWarnings(context.getWarnings()));
             }
             addContributionUri(contribution);
         } catch (MetaDataStoreException e) {

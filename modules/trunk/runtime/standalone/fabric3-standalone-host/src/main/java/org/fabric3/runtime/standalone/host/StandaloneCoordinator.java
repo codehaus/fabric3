@@ -444,7 +444,7 @@ public class StandaloneCoordinator implements RuntimeLifecycleCoordinator<Standa
             processor.process(manifest, stream, context);
             if (context.hasErrors()) {
                 context.addErrors(context.getErrors());
-                throw new InvalidContributionException(context.getErrors());
+                throw new InvalidContributionException(context.getErrors(), context.getWarnings());
             }
             stream = bootClassLoader.getResourceAsStream("META-INF/maven/org.codehaus.fabric3/fabric3-pojo/pom.xml");
             if (stream == null) {
@@ -454,7 +454,7 @@ public class StandaloneCoordinator implements RuntimeLifecycleCoordinator<Standa
             processor.process(manifest, stream, context);
             if (context.hasErrors()) {
                 context.addErrors(context.getErrors());
-                throw new InvalidContributionException(context.getErrors());
+                throw new InvalidContributionException(context.getErrors(), context.getWarnings());
             }
             contribution.setManifest(manifest);
             MetaDataStore store = runtime.getSystemComponent(MetaDataStore.class, ComponentNames.METADATA_STORE_URI);

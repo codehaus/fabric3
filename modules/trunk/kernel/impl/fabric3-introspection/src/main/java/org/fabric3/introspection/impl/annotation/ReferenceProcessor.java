@@ -20,6 +20,7 @@ import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
+import java.lang.reflect.Modifier;
 
 import org.osoa.sca.annotations.Reference;
 
@@ -51,7 +52,13 @@ public class ReferenceProcessor<I extends Implementation<? extends InjectingComp
     }
 
     public void visitField(Reference annotation, Field field, I implementation, IntrospectionContext context) {
-
+        if (!Modifier.isProtected(field.getModifiers()) && !Modifier.isPublic(field.getModifiers())) {
+            Class<?> clazz = field.getDeclaringClass();
+            InvalidAccessor warning =
+                    new InvalidAccessor("Ignoring the field " + field.getName() + " on class " + clazz.getName()
+                            + ". It is annotated with as @Reference but references must be public or protected.", clazz);
+            context.addWarning(warning);
+        }
         String name = helper.getSiteName(field, annotation.name());
         Type type = field.getGenericType();
         FieldInjectionSite site = new FieldInjectionSite(field);
@@ -60,6 +67,13 @@ public class ReferenceProcessor<I extends Implementation<? extends InjectingComp
     }
 
     public void visitMethod(Reference annotation, Method method, I implementation, IntrospectionContext context) {
+        if (!Modifier.isProtected(method.getModifiers()) && !Modifier.isPublic(method.getModifiers())) {
+            Class<?> clazz = method.getDeclaringClass();
+            InvalidAccessor warning =
+                    new InvalidAccessor("Ignoring the method  " + ". It is annotated with as @Reference but references must be public or protected.",
+                                        clazz);
+            context.addWarning(warning);
+        }
 
         String name = helper.getSiteName(method, annotation.name());
         Type type = helper.getGenericType(method);
@@ -81,7 +95,7 @@ public class ReferenceProcessor<I extends Implementation<? extends InjectingComp
         implementation.getComponentType().add(definition, site);
     }
 
-    ReferenceDefinition createDefinition(String name, boolean required, Type type, TypeMapping typeMapping, IntrospectionContext context){
+    ReferenceDefinition createDefinition(String name, boolean required, Type type, TypeMapping typeMapping, IntrospectionContext context) {
         Type baseType = helper.getBaseType(type, typeMapping);
         ServiceContract<Type> contract = contractProcessor.introspect(typeMapping, baseType, context);
         Multiplicity multiplicity = multiplicity(required, type, typeMapping);

@@ -104,7 +104,11 @@ public final class ValidationUtils {
                 writer.write("1 warning was found \n\n");
             }
         } else {
-            writer.write(count + " errors were found \n\n");
+            if (type == TYPE.ERROR) {
+                writer.write(count + " errors were found \n\n");
+            } else {
+                writer.write(count + " warnings were found \n\n");
+            }
         }
         writer.flush();
     }

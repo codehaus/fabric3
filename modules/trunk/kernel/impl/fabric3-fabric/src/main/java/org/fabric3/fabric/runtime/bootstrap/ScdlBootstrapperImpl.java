@@ -21,7 +21,9 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
+import java.util.List;
 import javax.management.MBeanServer;
+import javax.xml.namespace.QName;
 
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
@@ -43,6 +45,7 @@ import org.fabric3.fabric.services.contribution.ProcessorRegistryImpl;
 import org.fabric3.fabric.services.documentloader.DocumentLoader;
 import org.fabric3.fabric.services.documentloader.DocumentLoaderImpl;
 import org.fabric3.host.contribution.ContributionException;
+import org.fabric3.host.contribution.ValidationFailure;
 import org.fabric3.host.runtime.Fabric3Runtime;
 import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.host.runtime.InitializationException;
@@ -178,7 +181,10 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
             Composite composite = loader.load(scdlLocation, Composite.class, introspectionContext);
             composite.validate(introspectionContext);
             if (introspectionContext.hasErrors()) {
-                throw new InvalidCompositeException(composite.getName(), introspectionContext.getErrors());
+                QName name = composite.getName();
+                List<ValidationFailure> errors = introspectionContext.getErrors();
+                List<ValidationFailure> warnings = introspectionContext.getWarnings();
+                throw new InvalidCompositeException(name, errors, warnings);
             }
 
             Document userConfig = loadUserConfig();

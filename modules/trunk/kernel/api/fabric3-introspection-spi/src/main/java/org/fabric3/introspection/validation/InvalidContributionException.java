@@ -18,71 +18,50 @@
  */
 package org.fabric3.introspection.validation;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
+import java.util.ArrayList;
+import java.io.ByteArrayOutputStream;
+import java.io.PrintWriter;
 
-import org.fabric3.scdl.ArtifactValidationFailure;
-import org.fabric3.host.contribution.ValidationFailure;
 import org.fabric3.host.contribution.ValidationException;
+import org.fabric3.host.contribution.ValidationFailure;
 
 /**
  * @version $Revision$ $Date$
  */
 public class InvalidContributionException extends ValidationException {
     private static final long serialVersionUID = -5729273092766880963L;
-    private static ValidationExceptionComparator COMPARATOR = new ValidationExceptionComparator();
 
     /**
-     * Constructor indicating which composite is invalid and what the failures were.
+     * Constructor.
      *
-     * @param failures the errors that were found during validation
+     * @param errors   the errors that were found during validation
+     * @param warnings the warnings that were found during validation
      */
-    public InvalidContributionException(List<ValidationFailure> failures) {
-        super(failures);
+    public InvalidContributionException(List<ValidationFailure> errors, List<ValidationFailure> warnings) {
+        super(errors, warnings);
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param errors the errors that were found during validation
+     */
+    public InvalidContributionException(List<ValidationFailure> errors) {
+        super(errors, new ArrayList<ValidationFailure>());
     }
 
     public String getMessage() {
-        StringBuilder b = new StringBuilder();
-        int count = 0;
-        List<ValidationFailure> sorted = new ArrayList<ValidationFailure>(getFailures());
-        // sort the errors so that ArtifactValidationFailures are evaluated last. This is done so that nested failures are printed after all
-        // failures in the parent artifact.
-        Collections.sort(sorted, COMPARATOR);
-        for (ValidationFailure failure : sorted) {
-            count = reportContributionError(failure, b, count);
+        ByteArrayOutputStream bas = new ByteArrayOutputStream();
+        PrintWriter writer = new PrintWriter(bas);
+        if (!getErrors().isEmpty()) {
+            ValidationUtils.writeErrors(writer, getErrors());
+            writer.write("\n");
         }
-        if (count == 1) {
-            b.append("1 error was found \n\n");
-        } else {
-            b.append(count).append(" errors were found \n\n");
+        if (!getWarnings().isEmpty()) {
+            ValidationUtils.writeWarnings(writer, getWarnings());
         }
-        return b.toString();
-    }
-
-    protected int reportContributionError(ValidationFailure failure, StringBuilder b, int count) {
-        if (failure instanceof ArtifactValidationFailure) {
-            ArtifactValidationFailure artifactFailure = (ArtifactValidationFailure) failure;
-            if (!errorsOnlyInContainedArtifacts(artifactFailure)) {
-                b.append("Errors in ").append(artifactFailure.getArtifactName()).append("\n\n");
-            }
-            for (ValidationFailure childFailure : artifactFailure.getFailures()) {
-                count = reportContributionError(childFailure, b, count);
-            }
-        } else {
-            b.append("  ERROR: ").append(failure.getMessage()).append("\n\n");
-            ++count;
-        }
-        return count;
-    }
-
-    private boolean errorsOnlyInContainedArtifacts(ArtifactValidationFailure artifactFailure) {
-        for (ValidationFailure failure : artifactFailure.getFailures()) {
-            if (!(failure instanceof ArtifactValidationFailure)) {
-                return false;
-            }
-        }
-        return true;
+        return bas.toString();
     }
 
 }

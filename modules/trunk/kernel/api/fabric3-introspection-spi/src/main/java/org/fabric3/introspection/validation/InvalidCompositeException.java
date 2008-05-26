@@ -17,6 +17,8 @@
 package org.fabric3.introspection.validation;
 
 import java.util.List;
+import java.io.ByteArrayOutputStream;
+import java.io.PrintWriter;
 import javax.xml.namespace.QName;
 
 import org.fabric3.host.contribution.ValidationFailure;
@@ -31,13 +33,14 @@ public class InvalidCompositeException extends ValidationException {
     private final QName name;
 
     /**
-     * Constructor indicating which composite is invalid and what the failures were.
+     * Constructor.
      *
-     * @param name the qualified name of the composite that failed validation
-     * @param failures  the errors that were found during validation
+     * @param name     the qualified name of the composite that failed validation
+     * @param errors   the errors that were found during validation
+     * @param warnings the warnings that were found during validation
      */
-    public InvalidCompositeException(QName name, List<ValidationFailure> failures) {
-        super(failures);
+    public InvalidCompositeException(QName name, List<ValidationFailure> errors, List<ValidationFailure> warnings) {
+        super(errors, warnings);
         this.name = name;
     }
 
@@ -46,15 +49,12 @@ public class InvalidCompositeException extends ValidationException {
     }
 
     public String getMessage() {
-        StringBuilder b = new StringBuilder();
-        if (getFailures().size() == 1) {
-            b.append("1 error was detected: \n");
-        } else {
-            b.append(getFailures().size()).append(" errors were detected: \n");
-        }
-        for (ValidationFailure failure : getFailures()) {
-            b.append("ERROR: ").append(failure.getMessage()).append("\n\n");
-        }
-        return b.toString();
+        ByteArrayOutputStream bas = new ByteArrayOutputStream();
+        PrintWriter writer = new PrintWriter(bas);
+        ValidationUtils.writeErrors(writer, getErrors());
+        writer.write("\n");
+        ValidationUtils.writeWarnings(writer, getErrors());
+        return bas.toString();
     }
+
 }

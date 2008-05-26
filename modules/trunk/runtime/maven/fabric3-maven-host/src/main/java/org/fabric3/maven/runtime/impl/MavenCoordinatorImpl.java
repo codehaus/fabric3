@@ -269,13 +269,13 @@ public class MavenCoordinatorImpl implements MavenCoordinator {
             }
             if (context.hasErrors()) {
                 context.addErrors(context.getErrors());
-                throw new InvalidContributionException(context.getErrors());
+                throw new InvalidContributionException(context.getErrors(), context.getWarnings());
             }
             context = new DefaultValidationContext();
             processor.process(manifest, stream, context);
             if (context.hasErrors()) {
                 context.addErrors(context.getErrors());
-                throw new InvalidContributionException(context.getErrors());
+                throw new InvalidContributionException(context.getErrors(), context.getWarnings());
             }
             contribution.setManifest(manifest);
             MetaDataStore store = runtime.getSystemComponent(MetaDataStore.class, ComponentNames.METADATA_STORE_URI);
