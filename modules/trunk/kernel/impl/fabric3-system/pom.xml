@@ -24,7 +24,7 @@
     </parent>
     <groupId>org.codehaus.fabric3</groupId>
     <artifactId>fabric3-system</artifactId>
-    <version>0.5BETA1-SNAPSHOT</version>
+    <version>0.5BETA1</version>
     <name>Fabric3 System Implementation Type</name>
     <description>Fabric3 System Implementation Type.</description>
 
@@ -70,9 +70,9 @@
     </dependencies>
 
     <scm>
-        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/kernel/impl/fabric3-system</connection>
-        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/trunk/kernel/impl/fabric3-system</developerConnection>
-        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/trunk/kernel/impl/fabric3-system</url>
+        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/tags/fabric3-system-0.5BETA1</connection>
+        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/tags/fabric3-system-0.5BETA1</developerConnection>
+        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/tags/fabric3-system-0.5BETA1</url>
     </scm>
 
 </project>
