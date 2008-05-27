@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ See the NOTICE file distributed with this work for information
+ regarding copyright ownership.  This file is licensed
+ to you under the Apache License, Version 2.0 (the
+ "License"); you may not use this file except in compliance
+ with the License.  You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing,
+ software distributed under the License is distributed on an
+ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ KIND, either express or implied.  See the License for the
+ specific language governing permissions and limitations
+ under the License.
+-->
+<composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
+           xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
+           xmlns:sca="http://www.osoa.org/xmlns/sca/1.0"
+           xmlns:system="http://fabric3.org/xmlns/sca/system/2.0-alpha"
+           targetNamespace="org.codehaus.fabric3"
+           name="JMSBindingExtension">
+
+    <!-- JTA Transaction Handler -->
+    <component name="JTATransactionHandler" f3:key="GLOBAL">
+        <system:implementation.system class="org.fabric3.binding.jms.runtime.tx.JtaTransactionHandler"/>
+    </component>
+
+    <!-- JMS Host -->
+    <component name="JMSHost">
+        <system:implementation.system class="org.fabric3.binding.jms.runtime.host.standalone.StandalonePullJmsHost"/>
+    </component>
+
+    <!-- JMS Binding Loader -->
+    <component f3:key="sca:binding.jms" name="JMSBindingLoader">
+        <system:implementation.system class="org.fabric3.binding.jms.introspection.JmsBindingLoader"/>
+    </component>
+
+    <!-- JMS Binding Generator -->
+    <component name="JmsBindingGenerator" f3:key="org.fabric3.binding.jms.scdl.JmsBindingDefinition">
+        <system:implementation.system class="org.fabric3.binding.jms.control.JmsBindingGenerator"/>
+    </component>
+
+    <!-- JMS Source Wire Attacher -->
+    <component f3:key="org.fabric3.binding.jms.provision.JmsWireSourceDefinition" name="org.fabric3.binding.jms.runtime.JmsSourceWireAttacher">
+        <system:implementation.system class="org.fabric3.binding.jms.runtime.JmsSourceWireAttacher"/>
+    </component>
+
+    <!-- JMS Target Wire Attacher -->
+    <component f3:key="org.fabric3.binding.jms.provision.JmsWireTargetDefinition" name="org.fabric3.binding.jms.runtime.JmsTargetWireAttacher">
+        <system:implementation.system class="org.fabric3.binding.jms.runtime.JmsTargetWireAttacher"/>
+    </component>
+
+    <!-- Always create destination strategy -->
+    <component name="AlwaysCreateDestination" f3:key="always">
+        <system:implementation.system class="org.fabric3.binding.jms.runtime.lookup.destination.AlwaysDestinationStrategy"/>
+    </component>
+
+    <!-- Never create destination strategy -->
+    <component name="NeverCreateDestination" f3:key="never">
+        <system:implementation.system class="org.fabric3.binding.jms.runtime.lookup.destination.NeverDestinationStrategy"/>
+    </component>
+
+    <!-- If not exists create destination stragey -->
+    <component name="IfNotExistCreateDestination" f3:key="ifnotexist">
+        <system:implementation.system class="org.fabric3.binding.jms.runtime.lookup.destination.IfNotExistDestinationStrategy"/>
+    </component>
+
+    <!-- Always create connection factory strategy -->
+    <component name="AlwaysCreateConnectionFactory" f3:key="always">
+        <system:implementation.system class="org.fabric3.binding.jms.runtime.lookup.connectionfactory.AlwaysConnectionFactoryStrategy"/>
+    </component>
+
+    <!-- Never create connection factory strategy -->
+    <component name="NeverCreateConnectionFactory" f3:key="never">
+        <system:implementation.system class="org.fabric3.binding.jms.runtime.lookup.connectionfactory.NeverConnectionFactoryStrategy"/>
+    </component>
+
+    <!-- If not exists create connection factory stragey -->
+    <component name="IfNotExistCreateConnectionFactory" f3:key="ifnotexist">
+        <system:implementation.system class="org.fabric3.binding.jms.runtime.lookup.connectionfactory.IfNotExistConnectionFactoryStrategy"/>
+    </component>
+
+    <!-- Feature -->
+    <system:feature name="JmsBindingFeature">{http://fabric3.org/xmlns/binding}jms</system:feature>
+
+</composite>
