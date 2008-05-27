@@ -24,7 +24,7 @@
     </parent>
     <groupId>org.codehaus.fabric3</groupId>
     <artifactId>fabric3-introspection</artifactId>
-    <version>0.5ALPHA3-SNAPSHOT</version>
+    <version>0.5BETA1-SNAPSHOT</version>
     <name>Fabric3 Introspection</name>
     <description>Fabric3 Introspection Implementation.</description>
 
@@ -33,7 +33,7 @@
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-introspection-spi</artifactId>
-            <version>${project.version}</version>
+            <version>0.5BETA1</version>
         </dependency>
 
         <dependency>
