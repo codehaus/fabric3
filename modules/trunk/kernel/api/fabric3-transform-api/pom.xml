@@ -24,7 +24,7 @@
     </parent>
     <groupId>org.codehaus.fabric3</groupId>
     <artifactId>fabric3-transform-api</artifactId>
-    <version>0.5ALPHA3-SNAPSHOT</version>
+    <version>0.5BETA1-SNAPSHOT</version>
     <name>Fabric3 Data Transformation API</name>
     <description>Fabric3 Data Transformation API.</description>
 
@@ -32,7 +32,7 @@
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-scdl</artifactId>
-            <version>${project.version}</version>
+            <version>0.5BETA1</version>
         </dependency>
 
         <dependency>
