@@ -24,7 +24,7 @@
     </parent>
     <groupId>org.codehaus.fabric3</groupId>
     <artifactId>fabric3-binding-rmi</artifactId>
-    <version>0.5ALPHA3-SNAPSHOT</version>
+    <version>0.5BETA1-SNAPSHOT</version>
     <packaging>sca-contribution-jar</packaging>
     <name>Fabric3 RMI Binding</name>
     <description>Fabric3 RMI Binding Implementation.</description>
@@ -33,7 +33,7 @@
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-spi</artifactId>
-            <version>${project.version}</version>
+            <version>0.5BETA1</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -50,30 +50,30 @@
         </dependency>
 
         <dependency>
-                  <groupId>org.codehaus.fabric3</groupId>
-                  <artifactId>fabric3-binding-codegen</artifactId>
-                  <version>${project.version}</version>
-              </dependency>
+            <groupId>org.codehaus.fabric3</groupId>
+            <artifactId>fabric3-binding-codegen</artifactId>
+            <version>0.5BETA1</version>
+        </dependency>
 
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
         </dependency>
     </dependencies>
-    
+
     <build>
         <plugins>
             <plugin>
                 <groupId>org.codehaus.fabric3</groupId>
                 <artifactId>fabric3-contribution-plugin</artifactId>
-                <version>${project.version}</version>
+                <version>0.5BETA1</version>
                 <extensions>true</extensions>
                 <configuration>
                     <mavenImports>
                         <mavenImport>
-                           <groupId>org.codehaus.fabric3</groupId>
-                           <artifactId>fabric3-spi</artifactId>
-                       </mavenImport>
+                            <groupId>org.codehaus.fabric3</groupId>
+                            <artifactId>fabric3-spi</artifactId>
+                        </mavenImport>
                     </mavenImports>
                     <deployables>
                         <deployable>META-INF/rmi.composite</deployable>
@@ -88,5 +88,5 @@
         <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/trunk/extension/binding/fabric3-binding-rmi</developerConnection>
         <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/trunk/extension/binding/fabric3-binding-rmi</url>
     </scm>
-    
+
 </project>
