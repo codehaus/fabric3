@@ -24,7 +24,7 @@
     </parent>
     <groupId>org.codehaus.fabric3</groupId>
     <artifactId>fabric3-policy</artifactId>
-    <version>0.5BETA1</version>
+    <version>0.5BETA2-SNAPSHOT</version>
     <name>Fabric3 Policy</name>
     <description>Fabric3 Policy.</description>
 
@@ -64,9 +64,9 @@
     
 
     <scm>
-        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/tags/fabric3-policy-0.5BETA1</connection>
-        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/tags/fabric3-policy-0.5BETA1</developerConnection>
-        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/tags/fabric3-policy-0.5BETA1</url>
+        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/kernel/impl/fabric3-policy</connection>
+        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/trunk/kernel/impl/fabric3-policy</developerConnection>
+        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/trunk/kernel/impl/fabric3-policy</url>
     </scm>
 
 </project>
