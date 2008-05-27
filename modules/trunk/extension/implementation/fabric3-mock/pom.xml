@@ -27,7 +27,7 @@
 
     <groupId>org.codehaus.fabric3</groupId>
     <artifactId>fabric3-mock</artifactId>
-    <version>0.5ALPHA3-SNAPSHOT</version>
+    <version>0.5BETA1-SNAPSHOT</version>
     <packaging>sca-contribution-jar</packaging>
     <name>Fabric3 Mock Extension</name>
     <description>Fabric3 extension for mocking references.</description>
@@ -37,14 +37,14 @@
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-pojo</artifactId>
-            <version>${project.version}</version>
+            <version>0.5BETA1</version>
             <scope>provided</scope>
         </dependency>
         
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-introspection-spi</artifactId>
-            <version>${project.version}</version>
+            <version>0.5BETA1</version>
             <scope>provided</scope>
         </dependency>
 
@@ -64,7 +64,7 @@
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-introspection</artifactId>
-            <version>${project.version}</version>
+            <version>0.5BETA1</version>
             <scope>test</scope>
         </dependency>
 
@@ -86,7 +86,7 @@
             <plugin>
                 <groupId>org.codehaus.fabric3</groupId>
                 <artifactId>fabric3-contribution-plugin</artifactId>
-                <version>${project.version}</version>
+                <version>0.5BETA1</version>
                 <extensions>true</extensions>
                 <configuration>
                     <mavenImports>
