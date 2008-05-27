@@ -23,7 +23,7 @@
         <version>4</version>
     </parent>
     <groupId>org.codehaus.fabric3.spec</groupId>
-    <artifactId>sca-taglib-r0.9</artifactId>
+    <artifactId>fabric3-sca-taglib</artifactId>
     <version>0.5ALPHA3-SNAPSHOT</version>
     <name>Fabric3 SCA Tag Library</name>
     <description>Fabric3 SCA Library.</description>
