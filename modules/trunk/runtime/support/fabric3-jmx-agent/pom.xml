@@ -24,7 +24,7 @@
     </parent>
     <groupId>org.codehaus.fabric3</groupId>
     <artifactId>fabric3-jmx-agent</artifactId>
-    <version>0.5BETA1-SNAPSHOT</version>
+    <version>0.5BETA1</version>
     <name>Fabric3 JMX Remote Agents</name>
     <description>Fabric3 Remote JMX Agents.</description>
 
@@ -45,9 +45,9 @@
     </dependencies>
 
     <scm>
-        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/runtime/support/fabric3-jmx-agent</connection>
-        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/trunk/runtime/support/fabric3-jmx-agent</developerConnection>
-        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/trunk/runtime/support/fabric3-jmx-agent</url>
+        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/tags/fabric3-jmx-agent-0.5BETA1</connection>
+        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/tags/fabric3-jmx-agent-0.5BETA1</developerConnection>
+        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/tags/fabric3-jmx-agent-0.5BETA1</url>
     </scm>
 
 </project>
