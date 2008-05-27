@@ -24,7 +24,7 @@
     </parent>
     <groupId>org.codehaus.fabric3</groupId>
     <artifactId>fabric3-transform-api</artifactId>
-    <version>0.5BETA1</version>
+    <version>0.5BETA2-SNAPSHOT</version>
     <name>Fabric3 Data Transformation API</name>
     <description>Fabric3 Data Transformation API.</description>
 
@@ -48,9 +48,9 @@
     </dependencies>
 
     <scm>
-        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/tags/fabric3-transform-api-0.5BETA1</connection>
-        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/tags/fabric3-transform-api-0.5BETA1</developerConnection>
-        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/tags/fabric3-transform-api-0.5BETA1</url>
+        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/kernel/api/fabric3-transform-api</connection>
+        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/trunk/kernel/api/fabric3-transform-api</developerConnection>
+        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/trunk/kernel/api/fabric3-transform-api</url>
     </scm>
 
 </project>
