@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ See the NOTICE file distributed with this work for information
+ regarding copyright ownership.  This file is licensed
+ to you under the Apache License, Version 2.0 (the
+ "License"); you may not use this file except in compliance
+ with the License.  You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing,
+ software distributed under the License is distributed on an
+ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ KIND, either express or implied.  See the License for the
+ specific language governing permissions and limitations
+ under the License.
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>org.codehaus.fabric3</groupId>
+        <artifactId>fabric</artifactId>
+        <version>4</version>
+    </parent>
+    <groupId>org.codehaus.fabric3</groupId>
+    <artifactId>fabric3-webapp-plugin</artifactId>
+    <version>0.5BETA1</version>
+    <packaging>maven-plugin</packaging>
+    <name>Fabric3 Webapp Plugin</name>
+    <description>Fabric3 Webapp Plugin.</description>
+
+    <distributionManagement>
+        <site>
+            <id>dav.codehaus.org</id>
+            <name>Fabric3 Website</name>
+            <url>dav:https://dav.codehaus.org/fabric3/fabric3-webapp-plugin</url>
+        </site>
+    </distributionManagement>
+
+    <dependencies>
+    
+        <dependency>
+            <groupId>org.apache.maven</groupId>
+            <artifactId>maven-plugin-api</artifactId>
+            <version>2.0</version>
+        </dependency>
+        
+         <dependency>
+            <groupId>org.apache.maven</groupId>
+            <artifactId>maven-project</artifactId>
+            <version>2.0.4</version>
+            <scope>compile</scope>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.apache.maven</groupId>
+            <artifactId>maven-artifact</artifactId>
+            <version>2.0</version>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.codehaus.plexus</groupId>
+            <artifactId>plexus-utils</artifactId>
+            <version>1.4.1</version>
+        </dependency>
+        
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-plugin-plugin</artifactId>
+                <version>2.2</version>
+                <configuration>
+                    <goalPrefix>fabric3</goalPrefix>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-plugin-plugin</artifactId>
+                <version>2.2</version>
+            </plugin>
+        </plugins>
+    </reporting>
+
+    <scm>
+        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/tags/fabric3-webapp-plugin-0.5BETA1</connection>
+        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/tags/fabric3-webapp-plugin-0.5BETA1</developerConnection>
+        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/tags/fabric3-webapp-plugin-0.5BETA1</url>
+    </scm>
+</project>
