@@ -16,10 +16,9 @@
  */
 package org.fabric3.introspection.java;
 
+import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.scdl.Implementation;
 import org.fabric3.scdl.InjectingComponentType;
-import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.introspection.IntrospectionException;
 
 /**
  * Interface to a service that walks a Java class and updates the implementation definition based on annotations found.  Errors and warnings are
