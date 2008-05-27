@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ See the NOTICE file distributed with this work for information
+ regarding copyright ownership.  This file is licensed
+ to you under the Apache License, Version 2.0 (the
+ "License"); you may not use this file except in compliance
+ with the License.  You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing,
+ software distributed under the License is distributed on an
+ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ KIND, either express or implied.  See the License for the
+ specific language governing permissions and limitations
+ under the License.
+-->
+<!--
+    Default system configuration for common components.
+
+    $Rev$ $Date$
+-->
+<composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
+           xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
+           xmlns:system="http://fabric3.org/xmlns/sca/system/2.0-alpha"
+           name="org.fabric3.fabric.Common"
+           autowire="true">
+
+    <include name="assembly" scdlLocation="assembly.composite"/>
+
+    <include name="org.fabric3.fabric.CommandGenerators" scdlLocation="commandGenerators.composite"/>
+
+    <include name="org.fabric3.fabric.CommonExecutors" scdlLocation="commandExecutors.composite"/>
+    
+    <component name="physicalOperationHelper">
+        <system:implementation.system class="org.fabric3.fabric.generator.wire.PhysicalOperationHelperImpl"/>
+    </component>
+
+    <component name="physicalModelGenerator">
+        <system:implementation.system class="org.fabric3.fabric.generator.PhysicalModelGeneratorImpl"/>
+    </component>
+
+    <component name="physicalWireGenerator">
+        <system:implementation.system class="org.fabric3.fabric.generator.wire.PhysicalWireGeneratorImpl"/>
+    </component>
+
+    <component name="distributedAssembly">
+        <system:implementation.system class="org.fabric3.fabric.assembly.DistributedAssemblyImpl"/>
+        <reference name="logicalComponentManager" target="logicalComponentManager"/>
+    </component>
+
+    <component name="generatorRegistry">
+        <system:implementation.system class="org.fabric3.fabric.generator.GeneratorRegistryImpl"/>
+    </component>
+
+    <component name="advertismentService">
+        <system:implementation.system class="org.fabric3.fabric.services.advertisement.DefaultAdvertismentService"/>
+    </component>
+
+    <component name="featureLoader" f3:key="system:feature">
+        <system:implementation.system class="org.fabric3.fabric.services.advertisement.FeatureLoader"/>
+    </component>
+
+    <!-- Default scopes -->
+    <component name="scope.stateless">
+        <system:implementation.system class="org.fabric3.fabric.component.scope.StatelessScopeContainer"/>
+    </component>
+
+    <component name="scope.conversation">
+        <system:implementation.system class="org.fabric3.fabric.component.scope.ConversationalScopeContainer"/>
+        <reference name="store" target="memoryStore"/>
+    </component>
+
+    <component name="memoryStore">
+        <system:implementation.system class="org.fabric3.fabric.component.scope.NonExpiringMemoryStore"/>
+    </component>
+
+    <component name="DelegatingMarshalService">
+        <system:implementation.system class="org.fabric3.fabric.services.marshaller.DelegatingMarshalServiceImpl"/>
+    </component>
+
+    <component name="eventService">
+        <system:implementation.system class="org.fabric3.fabric.services.event.EventServiceImpl"/>
+    </component>
+
+    <component name="classLoaderGenerator">
+        <system:implementation.system class="org.fabric3.fabric.generator.classloader.ClassLoaderGeneratorImpl"/>
+    </component>
+
+    <component name="classLaoderBuilder">
+        <system:implementation.system class="org.fabric3.fabric.builder.classloader.ClassLoaderBuilderImpl"/>
+    </component>
+
+    <!-- Definitions registry -->
+    <component name="definitionsRegistry">
+        <system:implementation.system class="org.fabric3.fabric.services.definitions.DefaultDefinitionsRegistry"/>
+    </component>
+
+    <component name="JarClasspathProcessor">
+        <system:implementation.system class="org.fabric3.fabric.services.contribution.processor.JarClasspathProcessor"/>
+    </component>
+
+</composite>
