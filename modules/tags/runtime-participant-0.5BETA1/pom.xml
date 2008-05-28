@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.codehaus.fabric3</groupId>
+        <artifactId>fabric</artifactId>
+        <version>4</version>
+    </parent>
+
+    <artifactId>runtime-participant</artifactId>
+    <version>0.5BETA1</version>
+    <packaging>pom</packaging>
+    <name>Fabric3 Participant Assembly</name>
+    <description>Assembly distribution for the Fabric3 Participant Runtime.</description>
+
+    <repositories>
+        <!-- repo needed for the Apache Tuscany version of the commonj API -->
+        <repository>
+            <id>apache.incubator</id>
+            <name>Apache Incubator Repository</name>
+            <url>http://people.apache.org/repo/m2-incubating-repository</url>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
+
+    <dependencies>
+        <!-- force fabric3-spi dependency as Maven calculates an earlier version in transitive dependency -->
+        <dependency>
+            <groupId>org.codehaus.fabric3</groupId>
+            <artifactId>fabric3-spi</artifactId>
+            <version>0.5BETA1</version>
+        </dependency>
+
+        <!-- commands to be included in the bin directory -->
+        <dependency>
+            <groupId>org.codehaus.fabric3.standalone</groupId>
+            <artifactId>fabric3-standalone-server</artifactId>
+            <version>0.5BETA1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.codehaus.fabric3.standalone</groupId>
+            <artifactId>fabric3-standalone-shutdown</artifactId>
+            <version>0.5BETA1</version>
+        </dependency>
+
+        <!-- standalone runtime -->
+        <dependency>
+            <groupId>org.codehaus.fabric3</groupId>
+            <artifactId>fabric3-introspection-spi</artifactId>
+            <version>0.5BETA1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.codehaus.fabric3</groupId>
+            <artifactId>fabric3-xmlfactory</artifactId>
+            <version>0.5BETA1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.codehaus.fabric3</groupId>
+            <artifactId>fabric3-introspection</artifactId>
+            <version>0.5BETA1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.codehaus.fabric3.standalone</groupId>
+            <artifactId>fabric3-standalone-host</artifactId>
+            <version>0.5BETA1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.codehaus.fabric3</groupId>
+            <artifactId>fabric3-jmx</artifactId>
+            <version>0.5BETA1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.codehaus.fabric3</groupId>
+            <artifactId>fabric3-policy</artifactId>
+            <version>0.5BETA1</version>
+        </dependency>
+
+        <!-- provided scope dependencies that need to be resolved -->
+        <dependency>
+            <groupId>org.apache.geronimo.specs</groupId>
+            <artifactId>geronimo-annotation_1.0_spec</artifactId>
+            <version>1.1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.codehaus.woodstox</groupId>
+            <artifactId>wstx-asl</artifactId>
+            <version>3.2.1</version>
+            <scope>runtime</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.tuscany</groupId>
+            <artifactId>commonj-api_r1.1</artifactId>
+            <version>1.0-incubator-M2</version>
+            <scope>runtime</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>javax.activation</groupId>
+            <artifactId>activation</artifactId>
+            <version>1.1</version>
+            <scope>runtime</scope>
+        </dependency>
+
+        <!-- use the JSP implementation provided by Jetty as the javax.servlet.jsp:jsp-api:2.1 module is is incompatible with Jetty -->
+        <dependency>
+            <groupId>org.mortbay.jetty</groupId>
+            <artifactId>jsp-api-2.1</artifactId>
+            <version>6.1.3</version>
+        </dependency>
+
+        <!-- extensions -->
+        <dependency>
+            <groupId>org.codehaus.fabric3</groupId>
+            <artifactId>fabric3-java</artifactId>
+            <version>0.5BETA1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.codehaus.fabric3</groupId>
+            <artifactId>fabric3-jdk-proxy</artifactId>
+            <version>0.5BETA1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.codehaus.fabric3</groupId>
+            <artifactId>fabric3-async-runtime</artifactId>
+            <version>0.5BETA1</version>
+        </dependency>
+
+        <!--<dependency>-->
+            <!--<groupId>org.codehaus.fabric3</groupId>-->
+            <!--<artifactId>fabric3-async-runtime</artifactId>-->
+            <!--<version>0.5BETA1</version>-->
+        <!--</dependency>-->
+
+        <dependency>
+            <groupId>org.codehaus.fabric3</groupId>
+            <artifactId>fabric3-conversation-propagation</artifactId>
+            <version>0.5BETA1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.codehaus.fabric3</groupId>
+            <artifactId>fabric3-jetty</artifactId>
+            <version>0.5BETA1</version>
+        </dependency>
+
+        <dependency>
+             <groupId>org.codehaus.fabric3</groupId>
+             <artifactId>fabric3-marshal-xstream</artifactId>
+             <version>0.5BETA1</version>
+         </dependency>
+
+         <dependency>
+             <groupId>org.codehaus.fabric3</groupId>
+             <artifactId>fabric3-jxta</artifactId>
+             <version>0.5BETA1</version>
+         </dependency>
+
+         <dependency>
+             <groupId>org.codehaus.fabric3</groupId>
+             <artifactId>fabric3-messaging</artifactId>
+             <version>0.5BETA1</version>
+         </dependency>
+
+         <dependency>
+             <groupId>org.codehaus.fabric3</groupId>
+             <artifactId>fabric3-messaging-jxta</artifactId>
+             <version>0.5BETA1</version>
+         </dependency>
+
+         <dependency>
+             <groupId>org.codehaus.fabric3</groupId>
+             <artifactId>fabric3-discovery-jxta</artifactId>
+             <version>0.5BETA1</version>
+         </dependency>
+
+        <dependency>
+            <groupId>org.codehaus.fabric3</groupId>
+            <artifactId>fabric3-resource</artifactId>
+            <version>0.5BETA1</version>
+        </dependency>
+
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>2.2-beta-1</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <descriptors>
+                        <descriptor>assembly.xml</descriptor>
+                    </descriptors>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
+    <scm>
+        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/tags/runtime-participant-0.5BETA1</connection>
+        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/tags/runtime-participant-0.5BETA1</developerConnection>
+        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/tags/runtime-participant-0.5BETA1</url>
+    </scm>
+
+</project>
