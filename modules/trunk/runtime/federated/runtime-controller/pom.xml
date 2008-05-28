@@ -28,7 +28,7 @@
     </parent>
 
     <artifactId>runtime-controller</artifactId>
-    <version>0.5BETA1-SNAPSHOT</version>
+    <version>0.5BETA1</version>
     <packaging>pom</packaging>
     <name>Fabric3 Controller Assembly</name>
     <description>Assembly distribution for the Fabric3 Controller.</description>
@@ -263,9 +263,9 @@
     </build>
 
     <scm>
-        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/runtime/federared/runtime-controller</connection>
-        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/trunk/runtime/federated/runtime-controller</developerConnection>
-        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/trunk/runtime/controller/runtime-controller</url>
+        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/tags/runtime-controller-0.5BETA1</connection>
+        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/tags/runtime-controller-0.5BETA1</developerConnection>
+        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/tags/runtime-controller-0.5BETA1</url>
     </scm>
 
 </project>
