@@ -27,7 +27,7 @@
         <version>4</version>
     </parent>
     <artifactId>profile-jpa</artifactId>
-    <version>0.5ALPHA3-SNAPSHOT</version>
+    <version>0.5BETA1-SNAPSHOT</version>
     <packaging>pom</packaging>
     <name>Fabric3 JPA Extension Pofile</name>
     <description>Assembly distribution for Fabric3 Persistence Extensions.</description>
@@ -50,12 +50,18 @@
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-jpa-hibernate</artifactId>
-            <version>0.5ALPHA3-SNAPSHOT</version>
+            <version>0.5BETA1</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.codehaus.fabric3</groupId>
+            <artifactId>fabric3-jpa-api</artifactId>
+            <version>0.5BETA1</version>
         </dependency>
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-jpa-spi</artifactId>
-            <version>0.5ALPHA3-SNAPSHOT</version>
+            <version>0.5BETA1</version>
         </dependency>
 
         <dependency>
@@ -66,12 +72,12 @@
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-tx</artifactId>
-            <version>0.5ALPHA3-SNAPSHOT</version>
+            <version>0.5BETA1</version>
         </dependency>
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-tx-jotm</artifactId>
-            <version>0.5ALPHA3-SNAPSHOT</version>
+            <version>0.5BETA1</version>
         </dependency>
         <dependency>
             <groupId>geronimo-spec</groupId>
