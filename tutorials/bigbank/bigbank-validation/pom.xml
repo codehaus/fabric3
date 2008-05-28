@@ -24,7 +24,7 @@
     </parent>
     <groupId>org.codehaus.fabric3.tutorials</groupId>
     <artifactId>fabric3-tutorial-bigbank-validation</artifactId>
-    <version>0.5ALPHA2</version>
+    <version>0.5BETA1</version>
     <name>Fabric3 BigBank Validation</name>
     <description>Fabric3 BigBank Validation.</description>
 
@@ -57,7 +57,7 @@
        <dependency>
             <groupId>org.codehaus.fabric3.tutorials</groupId>
             <artifactId>fabric3-tutorial-bigbank-common</artifactId>
-            <version>0.5ALPHA2</version>
+            <version>0.5BETA1</version>
         </dependency>
          <dependency>
             <groupId>junit</groupId>
