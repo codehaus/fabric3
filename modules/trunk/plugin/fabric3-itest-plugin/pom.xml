@@ -24,7 +24,7 @@
     </parent>
     <groupId>org.codehaus.fabric3</groupId>
     <artifactId>fabric3-itest-plugin</artifactId>
-    <version>0.5ALPHA3-SNAPSHOT</version>
+    <version>0.5BETA1-SNAPSHOT</version>
     <packaging>maven-plugin</packaging>
     <name>Fabric3 Integration Test Maven Plugin</name>
     <description>Fabric3 Integration Test Maven Plugin.</description>
@@ -93,50 +93,50 @@
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-jmx-agent</artifactId>
-            <version>${project.version}</version>
+            <version>0.5BETA1</version>
         </dependency>
 
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-jdk-proxy</artifactId>
-            <version>${project.version}</version>
+            <version>0.5BETA1</version>
             <scope>runtime</scope>
         </dependency>
 
         <dependency>
 			<groupId>org.codehaus.fabric3</groupId>
 			<artifactId>fabric3-pojo</artifactId>
-			<version>${project.version}</version>
+			<version>0.5BETA1</version>
         </dependency>
 
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-spi</artifactId>
-            <version>${project.version}</version>
+            <version>0.5BETA1</version>
         </dependency>
         
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-java</artifactId>
-            <version>${project.version}</version>
+            <version>0.5BETA1</version>
         </dependency>
         
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-monitor</artifactId>
-            <version>${project.version}</version>
+            <version>0.5BETA1</version>
         </dependency>
         
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-junit</artifactId>
-            <version>${project.version}</version>
+            <version>0.5BETA1</version>
         </dependency>
         
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-maven-api</artifactId>
-            <version>${project.version}</version>
+            <version>0.5BETA1</version>
         </dependency>
 
         <dependency>
