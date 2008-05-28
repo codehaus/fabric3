@@ -27,7 +27,7 @@
     </parent>
     <groupId>org.codehaus.fabric3</groupId>
     <artifactId>fabric3-jxta</artifactId>
-    <version>0.5BETA1</version>
+    <version>0.5BETA2-SNAPSHOT</version>
     <name>Fabric3 JXTA Service</name>
     <description>Fabric3 JXTA ServiceA.</description>
     <packaging>sca-contribution-jar</packaging>
@@ -119,9 +119,9 @@
     </build>
 
     <scm>
-        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/tags/fabric3-jxta-0.5BETA1</connection>
-        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/tags/fabric3-jxta-0.5BETA1</developerConnection>
-        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/tags/fabric3-jxta-0.5BETA1</url>
+        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/federated/fabric3-jxta</connection>
+        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/trunk/federated/fabric3-jxta</developerConnection>
+        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/trunk/federated/fabric3-jxta</url>
 
     </scm>
 </project>
