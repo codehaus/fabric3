@@ -27,7 +27,7 @@
     </parent>
     <groupId>org.codehaus.fabric3</groupId>
     <artifactId>fabric3-http-provisioning</artifactId>
-    <version>0.5ALPHA3-SNAPSHOT</version>
+    <version>0.5BETA1-SNAPSHOT</version>
     <name>Fabric3 HTTP Provisioning</name>
     <description>Fabric3 HTTP-based Artifact Provisioning</description>
     <packaging>sca-contribution-jar</packaging>
@@ -37,7 +37,7 @@
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-spi</artifactId>
-            <version>${project.version}</version>
+            <version>0.5BETA1</version>
             <scope>provided</scope>
         </dependency>
 
@@ -60,7 +60,7 @@
             <plugin>
                 <groupId>org.codehaus.fabric3</groupId>
                 <artifactId>fabric3-contribution-plugin</artifactId>
-                <version>${project.version}</version>
+                <version>0.5BETA1</version>
                 <extensions>true</extensions>
                 <configuration>
                     <mavenImports>
