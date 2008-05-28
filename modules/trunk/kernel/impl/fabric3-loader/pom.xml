@@ -33,13 +33,13 @@
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-spi</artifactId>
-            <version>0.5BETA1</version>
+            <version>${project.version}</version>
         </dependency>
         
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-transform</artifactId>
-            <version>0.5BETA1</version>
+            <version>${project.version}</version>
         </dependency>
         
         <dependency>
