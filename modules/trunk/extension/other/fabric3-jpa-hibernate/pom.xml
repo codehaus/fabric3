@@ -27,7 +27,7 @@
     
     <groupId>org.codehaus.fabric3</groupId>
     <artifactId>fabric3-jpa-hibernate</artifactId>
-    <version>0.5ALPHA3-SNAPSHOT</version>
+    <version>0.5BETA1-SNAPSHOT</version>
     <name>Fabric3 JPA Integration (Hibernate)</name>
     <description>Fabric3 JPA Integration (Hibernate).</description>
     
@@ -49,14 +49,14 @@
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-jpa-spi</artifactId>
-            <version>${project.version}</version>
+            <version>0.5BETA1</version>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-jpa-core</artifactId>
-            <version>${project.version}</version>
+            <version>0.5BETA1</version>
         </dependency>
 
         <dependency>
@@ -69,7 +69,7 @@
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-pojo</artifactId>
-            <version>${project.version}</version>
+            <version>0.5BETA1</version>
             <scope>provided</scope>
         </dependency>
 
@@ -120,7 +120,7 @@
             <plugin>
                 <groupId>org.codehaus.fabric3</groupId>
                 <artifactId>fabric3-contribution-plugin</artifactId>
-                <version>${project.version}</version>
+                <version>0.5BETA1</version>
                 <extensions>true</extensions>
                 <configuration>
                     <mavenImports>
