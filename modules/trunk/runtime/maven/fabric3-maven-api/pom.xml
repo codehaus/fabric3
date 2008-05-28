@@ -24,7 +24,7 @@
     </parent>
     <groupId>org.codehaus.fabric3</groupId>
     <artifactId>fabric3-maven-api</artifactId>
-    <version>0.5BETA1-SNAPSHOT</version>
+    <version>0.5BETA1</version>
     <name>Fabric3 Maven API</name>
     <description>Fabric3 Maven Runtime Host API.</description>
 
@@ -49,9 +49,9 @@
     </dependencies>
 
     <scm>
-        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/runtime/maven/fabric3-maven-api</connection>
-        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/trunk/runtime/maven/fabric3-maven-api</developerConnection>
-        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/trunk/runtime/maven/fabric3-maven-api</url>
+        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/tags/fabric3-maven-api-0.5BETA1</connection>
+        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/tags/fabric3-maven-api-0.5BETA1</developerConnection>
+        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/tags/fabric3-maven-api-0.5BETA1</url>
     </scm>
 
 </project>
