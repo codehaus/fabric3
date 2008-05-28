@@ -28,7 +28,7 @@
     </parent>
 
     <artifactId>runtime-standalone</artifactId>
-    <version>0.5BETA1-SNAPSHOT</version>
+    <version>0.5BETA1</version>
     <packaging>pom</packaging>
     <name>Fabric3 Standalone Server Assembly</name>
     <description>Assembly distribution for Fabric3 Standalone Server.</description>
@@ -228,9 +228,9 @@
     </build>
 
     <scm>
-        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/runtime/standalone/runtime-standalone</connection>
-        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/trunk/runtime/standalone/runtime-standalone</developerConnection>
-        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/trunk/runtime/standalone/runtime-standalone</url>
+        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/tags/runtime-standalone-0.5BETA1</connection>
+        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/tags/runtime-standalone-0.5BETA1</developerConnection>
+        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/tags/runtime-standalone-0.5BETA1</url>
     </scm>
 
 </project>
