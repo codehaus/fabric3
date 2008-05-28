@@ -34,7 +34,7 @@
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
         </dependency>
-    </repositories>
+    </dependencies>
 
     <scm>
         <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/extension/other/fabric3-ftp-api</connection>

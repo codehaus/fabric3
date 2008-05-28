@@ -69,6 +69,7 @@
                            <groupId>org.codehaus.fabric3</groupId>
                            <artifactId>fabric3-spi</artifactId>
                        </mavenImport>
+                    </mavenImports>
                 </configuration>
             </plugin>
         </plugins>
