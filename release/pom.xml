@@ -24,23 +24,24 @@
 		<module>../modules/trunk/kernel/api/fabric3-scdl</module>
 		<module>../modules/trunk/kernel/api/fabric3-introspection-spi</module>
 		<module>../modules/trunk/kernel/services/fabric3-xmlfactory</module>
+		<module>../modules/trunk/kernel/api/fabric3-transform-api</module>
 		<module>../modules/trunk/kernel/api/fabric3-spi</module>
 		<module>../modules/trunk/extension/binding/fabric3-binding-burlap</module>
 		<module>../modules/trunk/kernel/impl/fabric3-pojo</module>
+		<module>../modules/trunk/extension/other/fabric3-binding-codegen</module>
 		<module>../modules/trunk/extension/binding/fabric3-binding-rmi</module>
 		<module>../modules/trunk/extension/binding/fabric3-binding-ejb</module>
 		<module>../modules/trunk/extension/binding/fabric3-binding-hessian</module>
-		<module>../modules/trunk/extension/binding/fabric3-binding-http</module>
 		<module>../modules/trunk/extension/binding/fabric3-binding-jms</module>
 		<module>../modules/trunk/extension/binding/fabric3-binding-test</module>
 		<module>../modules/trunk/kernel/impl/fabric3-transform</module>
 		<module>../modules/trunk/extension/binding/fabric3-binding-ws</module>
 		<module>../modules/trunk/extension/binding/fabric3-binding-ws-axis2</module>
 		<module>../modules/trunk/extension/binding/fabric3-binding-ws-cxf</module>
-		<module>../modules/trunk/extension/implementation/fabric3-bpel</module>
 		<module>../modules/trunk/runtime/support/fabric3-monitor</module>
 		<module>../modules/trunk/kernel/impl/fabric3-loader</module>
 		<module>../modules/trunk/kernel/impl/fabric3-introspection</module>
+		<module>../modules/trunk/kernel/impl/fabric3-jmx</module>
 		<module>../modules/trunk/kernel/impl/fabric3-system</module>
 		<module>../modules/trunk/kernel/impl/fabric3-fabric</module>
 		<module>../modules/trunk/extension/implementation/fabric3-groovy</module>
@@ -55,9 +56,10 @@
 		<module>../modules/trunk/extension/other/fabric3-contribution-scanner</module>
 		<module>../modules/trunk/extension/other/fabric3-contribution-scanner-spi</module>
 		<module>../modules/trunk/extension/other/fabric3-jetty</module>
+		<module>../modules/trunk/kernel/api/fabric3-jpa-api</module>
+		<module>../modules/trunk/extension/other/fabric3-jpa-spi</module>
 		<module>../modules/trunk/extension/other/fabric3-jpa-core</module>
 		<module>../modules/trunk/extension/other/fabric3-jpa-hibernate</module>
-		<module>../modules/trunk/extension/other/fabric3-jpa-spi</module>
 		<module>../modules/trunk/extension/other/fabric3-marshal-xstream</module>
 		<module>../modules/trunk/extension/other/fabric3-naming</module>
 		<module>../modules/trunk/extension/other/fabric3-resource</module>
@@ -65,6 +67,8 @@
 		<module>../modules/trunk/extension/other/fabric3-tx-jotm</module>
 		<module>../modules/trunk/extension/other/fabric3-tx</module>
 		<module>../modules/trunk/extension/other/fabric3-xapool</module>
+		<module>../modules/trunk/extension/other/fabric3-jdk-proxy</module>
+		<module>../modules/trunk/extension/other/fabric3-conversation-propagation</module>
 		<module>../modules/trunk/federated/fabric3-install-jxta</module>
 		<module>../modules/trunk/federated/fabric3-jxta</module>
 		<module>../modules/trunk/federated/fabric3-discovery-jxta</module>
@@ -73,16 +77,18 @@
 		<module>../modules/trunk/kernel/impl/fabric3-util</module>
 		<module>../modules/trunk/kernel/impl/fabric3-policy</module>
 		<module>../modules/trunk/runtime/maven/fabric3-maven-api</module>
+		<module>../modules/trunk/runtime/support/fabric3-jmx-agent</module>
 		<module>../modules/trunk/plugin/fabric3-itest-plugin</module>
 		<module>../modules/trunk/plugin/fabric3-webapp-plugin</module>
 		<module>../modules/trunk/runtime/maven/fabric3-maven-host</module>
-		<module>../modules/trunk/runtime/standalone/fabric3-jmx</module>
 		<module>../modules/trunk/runtime/standalone/fabric3-standalone-api</module>
 		<module>../modules/trunk/runtime/standalone/fabric3-standalone-host</module>
 		<module>../modules/trunk/runtime/standalone/fabric3-standalone-server</module>
 		<module>../modules/trunk/runtime/standalone/fabric3-standalone-shutdown</module>
 		<module>../modules/trunk/runtime/standalone/runtime-standalone</module>
 		<module>../modules/trunk/runtime/webapp/fabric3-webapp-api</module>
+		<module>../modules/trunk/extension/other/fabric3-container-web-spi</module>
+		<module>../modules/trunk/extension/implementation/fabric3-web</module>
 		<module>../modules/trunk/runtime/webapp/fabric3-webapp-host</module>
 	</modules>
 
