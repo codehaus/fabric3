@@ -23,6 +23,8 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import org.apache.mina.common.IoHandler;
 import org.apache.mina.transport.socket.SocketAcceptor;
@@ -43,7 +45,7 @@ public class F3FtpHost implements FtpHost {
     
     private Map<String, FtpLet> ftpLets = new HashMap<String, FtpLet>();
     private int commandPort = 21;
-    private SocketAcceptor socketAcceptor;
+    private SocketAcceptor acceptor;
     private IoHandler ftpHandler;
     
     /**
@@ -79,10 +81,11 @@ public class F3FtpHost implements FtpHost {
      */
     @Init
     public void start() throws IOException {
+
         InetSocketAddress socketAddress = new InetSocketAddress(InetAddress.getLocalHost(), commandPort);
-        socketAcceptor = new NioSocketAcceptor();
-        socketAcceptor.setHandler(ftpHandler);
-        socketAcceptor.bind(socketAddress);
+        acceptor = new NioSocketAcceptor();
+        acceptor.setHandler(ftpHandler);
+        acceptor.bind(socketAddress);
     }
     
     /**
@@ -90,7 +93,7 @@ public class F3FtpHost implements FtpHost {
      */
     @Destroy
     public void stop() {
-        socketAcceptor.unbind();
+        acceptor.unbind();
     }
 
 }

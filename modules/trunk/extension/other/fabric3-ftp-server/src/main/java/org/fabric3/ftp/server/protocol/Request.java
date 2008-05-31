@@ -16,14 +16,34 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.ftp.server.command;
+package org.fabric3.ftp.server.protocol;
 
 /**
  *
  * @version $Revision$ $Date$
  */
-public interface FtpCommand {
+public class Request {
     
-    void execute();
+    private String command;
+    private String argument;
+    
+    public Request(String message) {
+        
+        message = message.trim();
+        int index = message.indexOf(" ");
+        if (index != -1) {
+            command = message.substring(0, index).toUpperCase();
+            argument = message.substring(index + 1);
+        }
+        
+    }
+    
+    public String getCommand() {
+        return command;
+    }
+    
+    public String getArgument() {
+        return argument;
+    }
 
 }

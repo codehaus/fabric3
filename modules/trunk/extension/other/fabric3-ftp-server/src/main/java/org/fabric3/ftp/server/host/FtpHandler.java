@@ -23,7 +23,7 @@ import java.util.Map;
 import org.apache.mina.common.IdleStatus;
 import org.apache.mina.common.IoHandler;
 import org.apache.mina.common.IoSession;
-import org.fabric3.ftp.server.command.FtpCommand;
+import org.fabric3.ftp.server.protocol.FtpCommand;
 import org.osoa.sca.annotations.Reference;
 
 /**
@@ -47,6 +47,7 @@ public class FtpHandler implements IoHandler {
     }
 
     public void messageReceived(IoSession session, Object message) throws Exception {
+        System.err.println(message);
         FtpCommand ftpCommand = ftpCommands.get(message);
         ftpCommand.execute();
     }
@@ -58,6 +59,8 @@ public class FtpHandler implements IoHandler {
     }
 
     public void sessionCreated(IoSession session) throws Exception {
+        System.err.println("Session created");
+        session.write("220 Service ready for new user.\r\n");
     }
 
     public void sessionIdle(IoSession session, IdleStatus idleStatus) throws Exception {
