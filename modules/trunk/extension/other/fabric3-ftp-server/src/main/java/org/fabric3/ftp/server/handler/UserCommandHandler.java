@@ -16,41 +16,32 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.ftp.server.protocol;
+package org.fabric3.ftp.server.handler;
 
-import org.apache.mina.common.IoSession;
+import org.fabric3.ftp.server.protocol.DefaultResponse;
+import org.fabric3.ftp.server.protocol.FtpSession;
+import org.fabric3.ftp.server.protocol.Request;
+import org.fabric3.ftp.server.protocol.RequestHandler;
+import org.fabric3.ftp.server.protocol.Response;
 import org.fabric3.ftp.server.security.User;
 
 /**
- *
+ * Handles the <code>USER</code> command.
+ * 
  * @version $Revision$ $Date$
  */
-public class FtpSession {
-    
-    private static final String USER = "org.fabric3.ftp.server.user";
-    
-    private IoSession ioSession;
+public class UserCommandHandler implements RequestHandler {
 
-    public FtpSession(IoSession ioSession) {
-        this.ioSession = ioSession;
+    public Response service(Request request) {
+        
+        FtpSession ftpSession = request.getSession();
+        String userName = request.getArgument();
+        
+        User user = new User(userName);
+        ftpSession.setUser(user);
+        
+        return new DefaultResponse(331, "User name okay, need password for " + userName + ".");
+        
     }
-    
-    public void setUser(User user) {
-        ioSession.setAttribute(USER, user);
-    }
-    
-    public User getUser() {
-        return (User) ioSession.getAttribute(USER);
-    }
-    
-    public void setAuthenticated() {
-        getUser().setAuthenticated();
-    }
-    
-    public boolean isAuthenticated() {
-        return getUser().isAuthenticated();
-    }
-    
-    
 
 }

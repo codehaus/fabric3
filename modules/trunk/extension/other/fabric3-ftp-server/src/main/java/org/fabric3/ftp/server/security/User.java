@@ -16,41 +16,50 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.ftp.server.protocol;
-
-import org.apache.mina.common.IoSession;
-import org.fabric3.ftp.server.security.User;
+package org.fabric3.ftp.server.security;
 
 /**
- *
+ * Represents a connected user.
+ * 
  * @version $Revision$ $Date$
  */
-public class FtpSession {
+public class User {
     
-    private static final String USER = "org.fabric3.ftp.server.user";
-    
-    private IoSession ioSession;
+    private final String name;
+    private boolean authenticated;
 
-    public FtpSession(IoSession ioSession) {
-        this.ioSession = ioSession;
+    /**
+     * Initializes the user name.
+     * 
+     * @param name Name of the user.
+     */
+    public User(String name) {
+        this.name = name;
     }
     
-    public void setUser(User user) {
-        ioSession.setAttribute(USER, user);
-    }
-    
-    public User getUser() {
-        return (User) ioSession.getAttribute(USER);
-    }
-    
-    public void setAuthenticated() {
-        getUser().setAuthenticated();
-    }
-    
+    /**
+     * Checks whether the user is authenticated.
+     * 
+     * @return True if the user is authenticated.
+     */
     public boolean isAuthenticated() {
-        return getUser().isAuthenticated();
+        return authenticated;
     }
-    
-    
+
+    /**
+     * Sets the user as authenticated.
+     */
+    public void setAuthenticated() {
+        this.authenticated = true;
+    }
+
+    /**
+     * Gets the name of the logged on user.
+     * 
+     * @return Name of the logged on user.
+     */
+    public String getName() {
+        return name;
+    }
 
 }

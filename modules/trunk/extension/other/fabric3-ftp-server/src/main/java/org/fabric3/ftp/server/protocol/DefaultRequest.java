@@ -37,6 +37,8 @@ public class DefaultRequest implements Request {
             argument = message.substring(index + 1);
         }
         
+        this.session = session;
+        
     }
     
     /* (non-Javadoc)

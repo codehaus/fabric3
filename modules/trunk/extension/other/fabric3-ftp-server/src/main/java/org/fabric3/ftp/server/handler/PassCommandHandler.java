@@ -16,41 +16,33 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.ftp.server.protocol;
+package org.fabric3.ftp.server.handler;
 
-import org.apache.mina.common.IoSession;
-import org.fabric3.ftp.server.security.User;
+import org.fabric3.ftp.server.protocol.Request;
+import org.fabric3.ftp.server.protocol.RequestHandler;
+import org.fabric3.ftp.server.protocol.Response;
+import org.fabric3.ftp.server.security.UserManager;
 
 /**
- *
+ * Handles the <code>USER</code> command.
+ * 
  * @version $Revision$ $Date$
  */
-public class FtpSession {
+public class PassCommandHandler implements RequestHandler {
     
-    private static final String USER = "org.fabric3.ftp.server.user";
+    private UserManager userManager;
     
-    private IoSession ioSession;
+    /**
+     * Injects the user manager.
+     * 
+     * @param userManager Injects the user manager.
+     */
+    public void setUserManager(UserManager userManager) {
+        this.userManager = userManager;
+    }
 
-    public FtpSession(IoSession ioSession) {
-        this.ioSession = ioSession;
+    public Response service(Request request) {
+        return null;
     }
-    
-    public void setUser(User user) {
-        ioSession.setAttribute(USER, user);
-    }
-    
-    public User getUser() {
-        return (User) ioSession.getAttribute(USER);
-    }
-    
-    public void setAuthenticated() {
-        getUser().setAuthenticated();
-    }
-    
-    public boolean isAuthenticated() {
-        return getUser().isAuthenticated();
-    }
-    
-    
 
 }

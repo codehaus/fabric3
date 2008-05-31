@@ -20,11 +20,15 @@ package org.fabric3.ftp.server.host;
 
 import java.io.IOException;
 import java.net.InetAddress;
+import java.util.HashMap;
+import java.util.Map;
 
 import junit.framework.TestCase;
 
 import org.apache.commons.net.ftp.FTPClient;
 import org.fabric3.ftp.server.codec.CodecFactory;
+import org.fabric3.ftp.server.handler.UserCommandHandler;
+import org.fabric3.ftp.server.protocol.RequestHandler;
 
 /**
  *
@@ -34,14 +38,21 @@ public class F3FtpHostTest extends TestCase {
 
     public void testConnect() throws IOException {
         
+        Map<String, RequestHandler> requestHandlers = new HashMap<String, RequestHandler>();
+        requestHandlers.put("USER", new UserCommandHandler());
+        
         F3FtpHost ftpHost = new F3FtpHost();
+        
         FtpHandler ftpHandler = new FtpHandler();
+        ftpHandler.setFtpCommands(requestHandlers);
+        
         ftpHost.setFtpHandler(ftpHandler);
         ftpHost.setCommandPort(1234);
         ftpHost.setCodecFactory(new CodecFactory());
         ftpHost.start();
         FTPClient ftpClient = new FTPClient();
         ftpClient.connect(InetAddress.getLocalHost(), 1234);
+        ftpClient.user("meeraj");
         ftpHost.stop();
         
     }

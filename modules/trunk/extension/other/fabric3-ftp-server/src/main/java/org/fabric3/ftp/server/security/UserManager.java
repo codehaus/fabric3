@@ -16,41 +16,32 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.ftp.server.protocol;
+package org.fabric3.ftp.server.security;
 
-import org.apache.mina.common.IoSession;
-import org.fabric3.ftp.server.security.User;
+import java.security.cert.X509Certificate;
 
 /**
- *
+ * Interface that abstracts logging in users.
+ * 
  * @version $Revision$ $Date$
  */
-public class FtpSession {
+public interface UserManager {
     
-    private static final String USER = "org.fabric3.ftp.server.user";
+    /**
+     * Logins a user using user name and password.
+     * 
+     * @param user Name of the user.
+     * @param password Password for the user.
+     * @return True if the user name and password are valid.
+     */
+    boolean login(String user, String password);
     
-    private IoSession ioSession;
-
-    public FtpSession(IoSession ioSession) {
-        this.ioSession = ioSession;
-    }
-    
-    public void setUser(User user) {
-        ioSession.setAttribute(USER, user);
-    }
-    
-    public User getUser() {
-        return (User) ioSession.getAttribute(USER);
-    }
-    
-    public void setAuthenticated() {
-        getUser().setAuthenticated();
-    }
-    
-    public boolean isAuthenticated() {
-        return getUser().isAuthenticated();
-    }
-    
-    
+    /**
+     * Login a user using X509 certificate.
+     * 
+     * @param certificate Certificate of the logging in user.
+     * @return True if the user name and password are valid.
+     */
+    boolean login(X509Certificate certificate);
 
 }
