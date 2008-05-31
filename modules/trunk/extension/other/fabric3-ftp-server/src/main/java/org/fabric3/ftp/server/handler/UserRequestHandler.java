@@ -40,7 +40,7 @@ public class UserRequestHandler implements RequestHandler {
         User user = new User(userName);
         ftpSession.setUser(user);
         
-        return new DefaultResponse(331, "User name okay, need password for " + userName + ".");
+        return new DefaultResponse(331, "User name okay, need password for " + userName);
         
     }
 

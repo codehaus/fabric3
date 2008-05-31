@@ -52,20 +52,20 @@ public class PassRequestHandler implements RequestHandler {
         User user = session.getUser();
         
         if (user == null) {
-            return new DefaultResponse(503, "Login with USER first.");
+            return new DefaultResponse(503, "Login with USER first");
         }
         
         String userName = user.getName();
         String password = request.getArgument();
         
         if (password == null) {
-            return new DefaultResponse(501, "Syntax error in parameters or arguments.");
+            return new DefaultResponse(501, "Syntax error in parameters or arguments");
         }
         
         if (userManager.login(userName, password)) {
-            return new DefaultResponse(230, "User logged in, proceed.");
+            return new DefaultResponse(230, "User logged in, proceed");
         } else {
-            return new DefaultResponse(530, "Authentication failed.");
+            return new DefaultResponse(530, "Authentication failed");
         }
 
     }

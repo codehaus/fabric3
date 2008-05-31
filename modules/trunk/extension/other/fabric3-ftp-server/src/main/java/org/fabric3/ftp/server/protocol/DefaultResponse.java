@@ -41,7 +41,7 @@ public class DefaultResponse implements Response {
             stringBuilder.append(" ");
             stringBuilder.append(message);
         }
-        stringBuilder.append("\r\n");
+        stringBuilder.append(".\r\n");
 
         return stringBuilder.toString();
         
