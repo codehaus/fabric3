@@ -28,8 +28,8 @@ import junit.framework.TestCase;
 
 import org.apache.commons.net.ftp.FTPClient;
 import org.fabric3.ftp.server.codec.CodecFactory;
-import org.fabric3.ftp.server.handler.PassCommandHandler;
-import org.fabric3.ftp.server.handler.UserCommandHandler;
+import org.fabric3.ftp.server.handler.PassRequestHandler;
+import org.fabric3.ftp.server.handler.UserRequestHandler;
 import org.fabric3.ftp.server.protocol.RequestHandler;
 import org.fabric3.ftp.server.security.FileSystemUserManager;
 
@@ -48,8 +48,8 @@ public class F3FtpHostTest extends TestCase {
         userManager.setUsers(users);
         
         Map<String, RequestHandler> requestHandlers = new HashMap<String, RequestHandler>();
-        requestHandlers.put("USER", new UserCommandHandler());
-        PassCommandHandler passCommandHandler = new PassCommandHandler();
+        requestHandlers.put("USER", new UserRequestHandler());
+        PassRequestHandler passCommandHandler = new PassRequestHandler();
         passCommandHandler.setUserManager(userManager);
         requestHandlers.put("PASS", passCommandHandler);
         

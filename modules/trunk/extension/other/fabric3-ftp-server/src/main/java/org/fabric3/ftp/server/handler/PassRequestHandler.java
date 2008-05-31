@@ -28,11 +28,11 @@ import org.fabric3.ftp.server.security.UserManager;
 import org.osoa.sca.annotations.Reference;
 
 /**
- * Handles the <code>USER</code> command.
+ * Handles the <code>PASS</code> command.
  * 
  * @version $Revision$ $Date$
  */
-public class PassCommandHandler implements RequestHandler {
+public class PassRequestHandler implements RequestHandler {
     
     private UserManager userManager;
     

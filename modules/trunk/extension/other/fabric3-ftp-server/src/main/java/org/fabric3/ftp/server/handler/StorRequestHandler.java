@@ -18,30 +18,20 @@
  */
 package org.fabric3.ftp.server.handler;
 
-import org.fabric3.ftp.server.protocol.DefaultResponse;
-import org.fabric3.ftp.server.protocol.FtpSession;
 import org.fabric3.ftp.server.protocol.Request;
 import org.fabric3.ftp.server.protocol.RequestHandler;
 import org.fabric3.ftp.server.protocol.Response;
-import org.fabric3.ftp.server.security.User;
 
 /**
- * Handles the <code>USER</code> command.
- * 
+ * Handles the <code>STOR</code> command.
+ *
  * @version $Revision$ $Date$
  */
-public class UserCommandHandler implements RequestHandler {
+public class StorRequestHandler implements RequestHandler {
 
     public Response service(Request request) {
-        
-        FtpSession ftpSession = request.getSession();
-        String userName = request.getArgument();
-        
-        User user = new User(userName);
-        ftpSession.setUser(user);
-        
-        return new DefaultResponse(331, "User name okay, need password for " + userName + ".");
-        
+        // TODO Auto-generated method stub
+        return null;
     }
 
 }
