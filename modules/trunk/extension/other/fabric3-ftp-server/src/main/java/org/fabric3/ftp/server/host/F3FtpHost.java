@@ -94,6 +94,7 @@ public class F3FtpHost implements FtpHost {
     @Destroy
     public void stop() {
         acceptor.unbind();
+        acceptor.dispose();
     }
     
     /**

@@ -19,6 +19,7 @@
 package org.fabric3.ftp.server.host;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.InetAddress;
 import java.util.HashMap;
 import java.util.Map;
@@ -27,21 +28,32 @@ import junit.framework.TestCase;
 
 import org.apache.commons.net.ftp.FTPClient;
 import org.fabric3.ftp.server.codec.CodecFactory;
+import org.fabric3.ftp.server.handler.PassCommandHandler;
 import org.fabric3.ftp.server.handler.UserCommandHandler;
 import org.fabric3.ftp.server.protocol.RequestHandler;
+import org.fabric3.ftp.server.security.FileSystemUserManager;
 
 /**
  *
  * @version $Revision$ $Date$
  */
 public class F3FtpHostTest extends TestCase {
-
-    public void testConnect() throws IOException {
+    
+    private F3FtpHost ftpHost;
+    
+    public void setUp() throws Exception {
+        
+        InputStream users = getClass().getClassLoader().getResourceAsStream("user.properties");
+        FileSystemUserManager userManager = new FileSystemUserManager();
+        userManager.setUsers(users);
         
         Map<String, RequestHandler> requestHandlers = new HashMap<String, RequestHandler>();
         requestHandlers.put("USER", new UserCommandHandler());
+        PassCommandHandler passCommandHandler = new PassCommandHandler();
+        passCommandHandler.setUserManager(userManager);
+        requestHandlers.put("PASS", passCommandHandler);
         
-        F3FtpHost ftpHost = new F3FtpHost();
+        ftpHost = new F3FtpHost();
         
         FtpHandler ftpHandler = new FtpHandler();
         ftpHandler.setFtpCommands(requestHandlers);
@@ -50,11 +62,25 @@ public class F3FtpHostTest extends TestCase {
         ftpHost.setCommandPort(1234);
         ftpHost.setCodecFactory(new CodecFactory());
         ftpHost.start();
+        
+    }
+    
+    public void tearDown() throws Exception {
+        ftpHost.stop();
+    }
+
+    public void testValidLogin() throws IOException {
         FTPClient ftpClient = new FTPClient();
         ftpClient.connect(InetAddress.getLocalHost(), 1234);
         ftpClient.user("meeraj");
-        ftpHost.stop();
-        
+        assertEquals(230, ftpClient.pass("password"));        
+    }
+
+    public void testInvalidLogin() throws IOException {
+        FTPClient ftpClient = new FTPClient();
+        ftpClient.connect(InetAddress.getLocalHost(), 1234);
+        ftpClient.user("meeraj");
+        assertEquals(530, ftpClient.pass("password1"));        
     }
 
 }

@@ -18,10 +18,14 @@
  */
 package org.fabric3.ftp.server.handler;
 
+import org.fabric3.ftp.server.protocol.DefaultResponse;
+import org.fabric3.ftp.server.protocol.FtpSession;
 import org.fabric3.ftp.server.protocol.Request;
 import org.fabric3.ftp.server.protocol.RequestHandler;
 import org.fabric3.ftp.server.protocol.Response;
+import org.fabric3.ftp.server.security.User;
 import org.fabric3.ftp.server.security.UserManager;
+import org.osoa.sca.annotations.Reference;
 
 /**
  * Handles the <code>USER</code> command.
@@ -37,12 +41,33 @@ public class PassCommandHandler implements RequestHandler {
      * 
      * @param userManager Injects the user manager.
      */
+    @Reference
     public void setUserManager(UserManager userManager) {
         this.userManager = userManager;
     }
 
     public Response service(Request request) {
-        return null;
+        
+        FtpSession session = request.getSession();
+        User user = session.getUser();
+        
+        if (user == null) {
+            return new DefaultResponse(503, "Login with USER first.");
+        }
+        
+        String userName = user.getName();
+        String password = request.getArgument();
+        
+        if (password == null) {
+            return new DefaultResponse(501, "Syntax error in parameters or arguments.");
+        }
+        
+        if (userManager.login(userName, password)) {
+            return new DefaultResponse(230, "User logged in, proceed.");
+        } else {
+            return new DefaultResponse(530, "Authentication failed.");
+        }
+
     }
 
 }
