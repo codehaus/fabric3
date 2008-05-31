@@ -22,6 +22,6 @@ package org.fabric3.ftp.server.protocol;
  *
  * @version $Revision$ $Date$
  */
-public class Response {
+public class DefaultResponse {
 
 }

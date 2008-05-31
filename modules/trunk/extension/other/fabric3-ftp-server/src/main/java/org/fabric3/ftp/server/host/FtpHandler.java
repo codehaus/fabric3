@@ -23,7 +23,7 @@ import java.util.Map;
 import org.apache.mina.common.IdleStatus;
 import org.apache.mina.common.IoHandler;
 import org.apache.mina.common.IoSession;
-import org.fabric3.ftp.server.protocol.FtpCommand;
+import org.fabric3.ftp.server.protocol.RequestHandler;
 import org.osoa.sca.annotations.Reference;
 
 /**
@@ -32,14 +32,14 @@ import org.osoa.sca.annotations.Reference;
  */
 public class FtpHandler implements IoHandler {
     
-    private Map<String, FtpCommand> ftpCommands;
+    private Map<String, RequestHandler> ftpCommands;
 
     /**
      * Injects the FTP commands.
      * @param ftpCommands FTP commands.
      */
     @Reference
-    public void setFtpCommands(Map<String, FtpCommand> ftpCommands) {
+    public void setFtpCommands(Map<String, RequestHandler> ftpCommands) {
         this.ftpCommands = ftpCommands;
     }
 
@@ -48,7 +48,7 @@ public class FtpHandler implements IoHandler {
 
     public void messageReceived(IoSession session, Object message) throws Exception {
         System.err.println(message);
-        FtpCommand ftpCommand = ftpCommands.get(message);
+        RequestHandler ftpCommand = ftpCommands.get(message);
         ftpCommand.execute();
     }
 
