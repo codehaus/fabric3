@@ -22,8 +22,6 @@ package org.fabric3.ftp.server.protocol;
  *
  * @version $Revision$ $Date$
  */
-public interface RequestHandler {
-    
-    Response service(Request request);
+public interface Response {
 
 }

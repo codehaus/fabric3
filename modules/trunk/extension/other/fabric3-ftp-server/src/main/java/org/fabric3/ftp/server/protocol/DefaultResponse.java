@@ -22,6 +22,29 @@ package org.fabric3.ftp.server.protocol;
  *
  * @version $Revision$ $Date$
  */
-public class DefaultResponse {
+public class DefaultResponse implements Response {
+    
+    private int code;
+    private String message;
+    
+    public DefaultResponse(int code, String message) {
+        this.code = code;
+        this.message = message;
+    }
+
+    @Override
+    public String toString() {
+        
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append(code);
+        if (null != message) {
+            stringBuilder.append(" ");
+            stringBuilder.append(message);
+        }
+        stringBuilder.append("\r\n");
+
+        return stringBuilder.toString();
+        
+    }
 
 }

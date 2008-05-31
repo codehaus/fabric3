@@ -23,7 +23,12 @@ import java.util.Map;
 import org.apache.mina.common.IdleStatus;
 import org.apache.mina.common.IoHandler;
 import org.apache.mina.common.IoSession;
+import org.fabric3.ftp.server.protocol.DefaultRequest;
+import org.fabric3.ftp.server.protocol.DefaultResponse;
+import org.fabric3.ftp.server.protocol.FtpSession;
+import org.fabric3.ftp.server.protocol.Request;
 import org.fabric3.ftp.server.protocol.RequestHandler;
+import org.fabric3.ftp.server.protocol.Response;
 import org.osoa.sca.annotations.Reference;
 
 /**
@@ -32,7 +37,7 @@ import org.osoa.sca.annotations.Reference;
  */
 public class FtpHandler implements IoHandler {
     
-    private Map<String, RequestHandler> ftpCommands;
+    private Map<String, RequestHandler> requestHandlers;
 
     /**
      * Injects the FTP commands.
@@ -40,16 +45,22 @@ public class FtpHandler implements IoHandler {
      */
     @Reference
     public void setFtpCommands(Map<String, RequestHandler> ftpCommands) {
-        this.ftpCommands = ftpCommands;
+        this.requestHandlers = ftpCommands;
     }
 
     public void exceptionCaught(IoSession session, Throwable throwable) throws Exception {
     }
 
     public void messageReceived(IoSession session, Object message) throws Exception {
-        System.err.println(message);
-        RequestHandler ftpCommand = ftpCommands.get(message);
-        ftpCommand.execute();
+        
+        FtpSession ftpSession = new FtpSession(session);
+        Request request = new DefaultRequest(message.toString(), ftpSession);
+        
+        RequestHandler requestHandler = requestHandlers.get(request.getCommand());
+        Response response = requestHandler.service(request);
+        
+        session.write(response);
+        
     }
 
     public void messageSent(IoSession session, Object arg1) throws Exception {
@@ -59,8 +70,8 @@ public class FtpHandler implements IoHandler {
     }
 
     public void sessionCreated(IoSession session) throws Exception {
-        System.err.println("Session created");
-        session.write("220 Service ready for new user.\r\n");
+        Response response = new DefaultResponse(220, "Service ready for new user.");
+        session.write(response);
     }
 
     public void sessionIdle(IoSession session, IdleStatus idleStatus) throws Exception {

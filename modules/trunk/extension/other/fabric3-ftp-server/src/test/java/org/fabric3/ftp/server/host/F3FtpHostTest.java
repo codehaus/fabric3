@@ -16,14 +16,34 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.ftp.server.protocol;
+package org.fabric3.ftp.server.host;
+
+import java.io.IOException;
+import java.net.InetAddress;
+
+import junit.framework.TestCase;
+
+import org.apache.commons.net.ftp.FTPClient;
+import org.fabric3.ftp.server.codec.CodecFactory;
 
 /**
  *
  * @version $Revision$ $Date$
  */
-public interface RequestHandler {
-    
-    Response service(Request request);
+public class F3FtpHostTest extends TestCase {
+
+    public void testConnect() throws IOException {
+        
+        F3FtpHost ftpHost = new F3FtpHost();
+        FtpHandler ftpHandler = new FtpHandler();
+        ftpHost.setFtpHandler(ftpHandler);
+        ftpHost.setCommandPort(1234);
+        ftpHost.setCodecFactory(new CodecFactory());
+        ftpHost.start();
+        FTPClient ftpClient = new FTPClient();
+        ftpClient.connect(InetAddress.getLocalHost(), 1234);
+        ftpHost.stop();
+        
+    }
 
 }

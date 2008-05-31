@@ -21,12 +21,10 @@ package org.fabric3.ftp.server.host;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import org.apache.mina.common.IoHandler;
+import org.apache.mina.filter.codec.ProtocolCodecFactory;
+import org.apache.mina.filter.codec.ProtocolCodecFilter;
 import org.apache.mina.transport.socket.SocketAcceptor;
 import org.apache.mina.transport.socket.nio.NioSocketAcceptor;
 import org.fabric3.ftp.api.FtpLet;
@@ -42,28 +40,29 @@ import org.osoa.sca.annotations.Reference;
  * @version $Revision$ $Date$
  */
 public class F3FtpHost implements FtpHost {
-    
-    private Map<String, FtpLet> ftpLets = new HashMap<String, FtpLet>();
+
     private int commandPort = 21;
     private SocketAcceptor acceptor;
     private IoHandler ftpHandler;
-    
-    /**
-     * Registers an FTP let for the specified path.
-     * 
-     * @param path Path on which the FtpLet is listening.
-     * @param ftpLet FtpLet listening for the upload request.
-     */
-    public void registerFtpLet(String path, FtpLet ftpLet) {
-        ftpLets.put(path, ftpLet);
-    }
+    private ProtocolCodecFactory codecFactory;
+
 
     /**
      * Sets the handler for the FTP commands.
+     * @param ftpHandler FTP Handler.
      */
     @Reference
     public void setFtpHandler(IoHandler ftpHandler) {
         this.ftpHandler = ftpHandler;
+    }
+
+    /**
+     * Sets the protocol codec factory.
+     * @param ftpHandler FTP Handler.
+     */
+    @Reference
+    public void setCodecFactory(ProtocolCodecFactory codecFactory) {
+        this.codecFactory = codecFactory;
     }
 
     /**
@@ -84,6 +83,7 @@ public class F3FtpHost implements FtpHost {
 
         InetSocketAddress socketAddress = new InetSocketAddress(InetAddress.getLocalHost(), commandPort);
         acceptor = new NioSocketAcceptor();
+        acceptor.getFilterChain().addLast("codec", new ProtocolCodecFilter(codecFactory));
         acceptor.setHandler(ftpHandler);
         acceptor.bind(socketAddress);
     }
@@ -94,6 +94,16 @@ public class F3FtpHost implements FtpHost {
     @Destroy
     public void stop() {
         acceptor.unbind();
+    }
+    
+    /**
+     * Registers an FTP let for the specified path.
+     * 
+     * @param path Path on which the FtpLet is listening.
+     * @param ftpLet FtpLet listening for the upload request.
+     */
+    public void registerFtpLet(String path, FtpLet ftpLet) {
+        throw new UnsupportedOperationException();
     }
 
 }

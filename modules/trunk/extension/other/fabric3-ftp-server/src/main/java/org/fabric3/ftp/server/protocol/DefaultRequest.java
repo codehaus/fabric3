@@ -22,12 +22,13 @@ package org.fabric3.ftp.server.protocol;
  *
  * @version $Revision$ $Date$
  */
-public class DefaultRequest {
+public class DefaultRequest implements Request {
     
     private String command;
     private String argument;
+    private FtpSession session;
     
-    public DefaultRequest(String message) {
+    public DefaultRequest(String message, FtpSession session) {
         
         message = message.trim();
         int index = message.indexOf(" ");
@@ -38,12 +39,25 @@ public class DefaultRequest {
         
     }
     
+    /* (non-Javadoc)
+     * @see org.fabric3.ftp.server.protocol.Request#getCommand()
+     */
     public String getCommand() {
         return command;
     }
     
+    /* (non-Javadoc)
+     * @see org.fabric3.ftp.server.protocol.Request#getArgument()
+     */
     public String getArgument() {
         return argument;
+    }
+    
+    /* (non-Javadoc)
+     * @see org.fabric3.ftp.server.protocol.Request#getSession()
+     */
+    public FtpSession getSession() {
+        return session;
     }
 
 }

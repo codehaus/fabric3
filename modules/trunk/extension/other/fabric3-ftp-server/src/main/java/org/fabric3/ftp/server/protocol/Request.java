@@ -22,8 +22,12 @@ package org.fabric3.ftp.server.protocol;
  *
  * @version $Revision$ $Date$
  */
-public interface RequestHandler {
-    
-    Response service(Request request);
+public interface Request {
+
+    public abstract String getCommand();
+
+    public abstract String getArgument();
+
+    public abstract FtpSession getSession();
 
 }
