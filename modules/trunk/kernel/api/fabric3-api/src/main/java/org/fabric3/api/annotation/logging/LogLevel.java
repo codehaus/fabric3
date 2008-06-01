@@ -19,7 +19,7 @@
 package org.fabric3.api.annotation.logging;
 
 import static java.lang.annotation.ElementType.METHOD;
-import static java.lang.annotation.ElementType.TYPE;
+import static java.lang.annotation.ElementType.ANNOTATION_TYPE;
 import java.lang.annotation.Retention;
 import static java.lang.annotation.RetentionPolicy.RUNTIME;
 import java.lang.annotation.Target;
@@ -30,7 +30,7 @@ import java.lang.annotation.Target;
  *
  * @version $Rev: 1 $ $Date: 2007-05-14 18:40:37 +0100 (Mon, 14 May 2007) $
  */
-@Target({METHOD, TYPE})
+@Target({METHOD, ANNOTATION_TYPE})
 @Retention(RUNTIME)
 public @interface LogLevel {
     
