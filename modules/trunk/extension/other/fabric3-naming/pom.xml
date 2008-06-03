@@ -21,13 +21,12 @@
     
     <parent>
         <groupId>org.codehaus.fabric3</groupId>
-        <artifactId>fabric</artifactId>
-        <version>4</version>
+        <artifactId>fabric3-extension-other-parent-pom</artifactId>
+        <version>0.5BETA2-SNAPSHOT</version>
     </parent>
     
     <groupId>org.codehaus.fabric3</groupId>
     <artifactId>fabric3-naming</artifactId>
-    <version>0.5BETA2-SNAPSHOT</version>
     <name>Fabric3 Naming</name>
     <description>Fabric3 JNDI Naming Support.</description>
     <packaging>sca-contribution-jar</packaging>

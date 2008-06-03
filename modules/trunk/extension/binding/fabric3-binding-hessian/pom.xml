@@ -19,12 +19,11 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.codehaus.fabric3</groupId>
-        <artifactId>fabric</artifactId>
-        <version>4</version>
+        <artifactId>fabric3-extension-binding-parent-pom</artifactId>
+        <version>0.5BETA2-SNAPSHOT</version>
     </parent>
     <groupId>org.codehaus.fabric3</groupId>
     <artifactId>fabric3-binding-hessian</artifactId>
-    <version>0.5BETA2-SNAPSHOT</version>
     <name>Fabric3 Hessian Binding</name>
     <description>Fabric3 Hessian Binding Implementation.</description>
     <packaging>sca-contribution-jar</packaging>

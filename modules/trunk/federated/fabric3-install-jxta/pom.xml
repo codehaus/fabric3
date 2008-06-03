@@ -22,13 +22,12 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.codehaus.fabric3</groupId>
-        <artifactId>fabric</artifactId>
-        <version>4</version>
+        <artifactId>fabric3-federated-parent-pom</artifactId>
+        <version>0.5BETA2-SNAPSHOT</version>
     </parent>
     <groupId>org.codehaus.fabric3</groupId>
     <artifactId>fabric3-install-jxta</artifactId>
     <packaging>pom</packaging>
-    <version>0.5BETA2-SNAPSHOT</version>
     <name>Fabric3 JXTA Install</name>
     <description>Fabric3 Project to Install JXTA.</description>
 
