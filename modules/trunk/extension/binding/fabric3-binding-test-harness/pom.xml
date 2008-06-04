@@ -23,7 +23,7 @@
         <version>0.5BETA2-SNAPSHOT</version>
     </parent>
     <groupId>org.codehaus.fabric3</groupId>
-    <artifactId>0fabric3-binding-test-harness</artifactId>
+    <artifactId>fabric3-binding-test-harness</artifactId>
     <name>Fabric3 Binding Test Harness</name>
     <description>Fabric3 Test Harness for Binding Extensions.</description>
 
