@@ -41,5 +41,6 @@
 		<module>fabric3-binding-ws-axis2</module>
 		<module>fabric3-binding-ws-cxf</module>
 		<module>fabric3-binding-ws-jaxws</module>
+                <module>fabric3-ftp-binding</module>
 	</modules>
 </project>
