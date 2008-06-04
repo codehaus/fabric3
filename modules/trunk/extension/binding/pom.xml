@@ -30,7 +30,7 @@
 	<packaging>pom</packaging>
 
 	<modules>
-		<module>binding-test-harness</module>
+		<module>fabric3-binding-test-harness</module>
 		<module>fabric3-binding-burlap</module>
 		<module>fabric3-binding-ejb</module>
 		<module>fabric3-binding-hessian</module>

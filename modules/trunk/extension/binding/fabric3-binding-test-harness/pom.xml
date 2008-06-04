@@ -23,7 +23,7 @@
         <version>0.5BETA2-SNAPSHOT</version>
     </parent>
     <groupId>org.codehaus.fabric3</groupId>
-    <artifactId>binding-test-harness</artifactId>
+    <artifactId>0fabric3-binding-test-harness</artifactId>
     <name>Fabric3 Binding Test Harness</name>
     <description>Fabric3 Test Harness for Binding Extensions.</description>
 
@@ -41,9 +41,9 @@
     </dependencies>
 
     <scm>
-        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/extension/binding/binding-test-harness</connection>
-        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/trunk/extension/binding/binding-test-harness</developerConnection>
-        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/trunk/extension/binding/binding-test-harness</url>
+        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/extension/binding/fabric3-binding-test-harness</connection>
+        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/trunk/extension/binding/fabric3-binding-test-harness</developerConnection>
+        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/trunk/extension/binding/fabric3-binding-test-harness</url>
     </scm>
 
 </project>
