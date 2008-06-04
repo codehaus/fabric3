@@ -42,7 +42,7 @@
             <plugin>
                 <groupId>org.codehaus.fabric3</groupId>
                 <artifactId>fabric3-contribution-plugin</artifactId>
-                <version>0.5ALPHA3-SNAPSHOT</version>
+                <version>0.5BETA2-SNAPSHOT</version>
                 <extensions>true</extensions>
                 <configuration>
                     <mavenImports>

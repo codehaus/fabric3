@@ -52,7 +52,7 @@
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-jpa-api</artifactId>
-            <version>0.5ALPHA3-SNAPSHOT</version>
+            <version>0.5BETA2-SNAPSHOT</version>
         </dependency>
     </dependencies>
 
@@ -64,40 +64,40 @@
             <plugin>
                 <groupId>org.codehaus.fabric3</groupId>
                 <artifactId>fabric3-itest-plugin</artifactId>
-                <version>0.5ALPHA3-SNAPSHOT</version>
+                <version>0.5BETA2-SNAPSHOT</version>
                 <configuration>
-                    <runtimeVersion>0.5ALPHA3-SNAPSHOT</runtimeVersion>
+                    <runtimeVersion>0.5BETA2-SNAPSHOT</runtimeVersion>
                     <systemConfigDir>classes/META-INF</systemConfigDir>
                     <extensions>
                         <!-- JPA Hibernate Extensions -->
                         <dependency>
                             <groupId>org.codehaus.fabric3</groupId>
                             <artifactId>fabric3-jpa-hibernate</artifactId>
-                            <version>0.5ALPHA3-SNAPSHOT</version>
+                            <version>0.5BETA2-SNAPSHOT</version>
                         </dependency>
                         <!-- JPA Core Components -->
                         <dependency>
                             <groupId>org.codehaus.fabric3</groupId>
                             <artifactId>fabric3-jpa-spi</artifactId>
-                            <version>0.5ALPHA3-SNAPSHOT</version>
+                            <version>0.5BETA2-SNAPSHOT</version>
                         </dependency>
                         <!-- Transaction Manager Using JOTM -->
                         <dependency>
                             <groupId>org.codehaus.fabric3</groupId>
                             <artifactId>fabric3-tx-jotm</artifactId>
-                            <version>0.5ALPHA3-SNAPSHOT</version>
+                            <version>0.5BETA2-SNAPSHOT</version>
                         </dependency>
                         <!-- Declarative Transaction Policies -->
                         <dependency>
                             <groupId>org.codehaus.fabric3</groupId>
                             <artifactId>fabric3-tx</artifactId>
-                            <version>0.5ALPHA3-SNAPSHOT</version>
+                            <version>0.5BETA2-SNAPSHOT</version>
                         </dependency>
                         <!-- JSR 250 Resource Support and Datasource Management -->
                         <dependency>
                             <groupId>org.codehaus.fabric3</groupId>
                             <artifactId>fabric3-resource</artifactId>
-                            <version>0.5ALPHA3-SNAPSHOT</version>
+                            <version>0.5BETA2-SNAPSHOT</version>
                         </dependency>
                         <!-- Test Extension to Install the Datasource -->
                         <dependency>
@@ -111,7 +111,7 @@
                         <dependency>
                             <groupId>org.codehaus.fabric3</groupId>
                             <artifactId>fabric3-jpa-api</artifactId>
-                            <version>0.5ALPHA3-SNAPSHOT</version>
+                            <version>0.5BETA2-SNAPSHOT</version>
                         </dependency>
                         <dependency>
                             <groupId>javax.persistence</groupId>
