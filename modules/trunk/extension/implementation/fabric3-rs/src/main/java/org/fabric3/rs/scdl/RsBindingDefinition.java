@@ -21,7 +21,7 @@ import javax.xml.namespace.QName;
 import org.fabric3.scdl.BindingDefinition;
 
 /**
- * @version $Rev: 3092 $ $Date: 2008-03-15 06:44:25 -0500 (Sat, 15 Mar 2008) $
+ * @version $Rev$ $Date$
  */
 public class RsBindingDefinition extends BindingDefinition {
 
