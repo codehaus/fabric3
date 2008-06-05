@@ -18,9 +18,11 @@
  */
 package org.fabric3.ftp.server.handler;
 
+import org.fabric3.ftp.server.passive.PassiveConnectionService;
 import org.fabric3.ftp.server.protocol.Request;
 import org.fabric3.ftp.server.protocol.RequestHandler;
 import org.fabric3.ftp.server.protocol.Response;
+import org.osoa.sca.annotations.Reference;
 
 /**
  * Handles the <code>PASV</code> command.
@@ -28,8 +30,25 @@ import org.fabric3.ftp.server.protocol.Response;
  * @version $Revision$ $Date$
  */
 public class PasvRequestHandler implements RequestHandler {
+    
+    private PassiveConnectionService passiveConnectionService;
+    
+    /**
+     * Injects the passive connection service.
+     * @param passiveConnectionService Passive connection service.
+     */
+    @Reference
+    public void setPassivePortService(PassiveConnectionService passiveConnectionService) {
+        this.passiveConnectionService = passiveConnectionService;
+    }
 
     public Response service(Request request) {
+        
+        try {
+            int passivePort = passiveConnectionService.acquire();
+        } catch (InterruptedException e) {
+            // TODO: handle exception
+        }
         // TODO Auto-generated method stub
         return null;
     }

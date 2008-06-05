@@ -28,6 +28,7 @@ import org.fabric3.ftp.server.security.User;
 public class FtpSession {
     
     private static final String USER = "org.fabric3.ftp.server.user";
+    private static final String PASSIVE_PORT = "org.fabric3.ftp.server.passive.port";
     
     private IoSession ioSession;
 
@@ -51,6 +52,12 @@ public class FtpSession {
         return getUser().isAuthenticated();
     }
     
+    public int getPassivePort() {
+        return (Integer) ioSession.getAttribute(PASSIVE_PORT);
+    }
     
+    public void setPassivePort(int passivePort) {
+        ioSession.setAttribute(PASSIVE_PORT, passivePort);
+    }
 
 }
