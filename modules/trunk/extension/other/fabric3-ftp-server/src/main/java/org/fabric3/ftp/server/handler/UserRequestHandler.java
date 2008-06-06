@@ -22,7 +22,6 @@ import org.fabric3.ftp.server.protocol.DefaultResponse;
 import org.fabric3.ftp.server.protocol.FtpSession;
 import org.fabric3.ftp.server.protocol.Request;
 import org.fabric3.ftp.server.protocol.RequestHandler;
-import org.fabric3.ftp.server.protocol.Response;
 import org.fabric3.ftp.server.security.User;
 
 /**
@@ -32,15 +31,15 @@ import org.fabric3.ftp.server.security.User;
  */
 public class UserRequestHandler implements RequestHandler {
 
-    public Response service(Request request) {
+    public void service(Request request) {
         
-        FtpSession ftpSession = request.getSession();
+        FtpSession session = request.getSession();
         String userName = request.getArgument();
         
         User user = new User(userName);
-        ftpSession.setUser(user);
+        session.setUser(user);
         
-        return new DefaultResponse(331, "User name okay, need password for " + userName);
+        session.write(new DefaultResponse(331, "User name okay, need password for " + userName));
         
     }
 

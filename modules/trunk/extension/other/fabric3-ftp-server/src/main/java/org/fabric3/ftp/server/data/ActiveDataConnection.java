@@ -31,9 +31,8 @@ public class ActiveDataConnection implements DataConnection {
 
     /**
      * Closes the data connection.
-     * @throws IOException If unable to close connection.
      */
-    public void close() throws IOException {
+    public void close() {
         throw new UnsupportedOperationException();
     }
     

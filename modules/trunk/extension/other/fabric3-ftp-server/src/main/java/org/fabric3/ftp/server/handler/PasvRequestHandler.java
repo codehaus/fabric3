@@ -23,7 +23,6 @@ import org.fabric3.ftp.server.protocol.DefaultResponse;
 import org.fabric3.ftp.server.protocol.FtpSession;
 import org.fabric3.ftp.server.protocol.Request;
 import org.fabric3.ftp.server.protocol.RequestHandler;
-import org.fabric3.ftp.server.protocol.Response;
 import org.osoa.sca.annotations.Reference;
 
 /**
@@ -32,9 +31,9 @@ import org.osoa.sca.annotations.Reference;
  * @version $Revision$ $Date$
  */
 public class PasvRequestHandler implements RequestHandler {
-    
+
     private PassiveConnectionService passiveConnectionService;
-    
+
     /**
      * Injects the passive connection service.
      * @param passiveConnectionService Passive connection service.
@@ -44,24 +43,24 @@ public class PasvRequestHandler implements RequestHandler {
         this.passiveConnectionService = passiveConnectionService;
     }
 
-    public Response service(Request request) {
-        
-        FtpSession ftpSession = request.getSession();
-        
+    public void service(Request request) {
+
+        FtpSession session = request.getSession();
+
         try {
 
             int passivePort = passiveConnectionService.acquire();
             String passiveAddress = passiveConnectionService.getPassiveAddress();
-            
-            String socketAddress = passiveAddress.replace('.', ',') + ',' + (passivePort >> 8) + ',' + (passivePort & 0xFF);            
-            ftpSession.setPassivePort(passivePort);
-            
-            return new DefaultResponse(227, "Entering Passive Mode (" + socketAddress + ")");
-            
+
+            String socketAddress = passiveAddress.replace('.', ',') + ',' + (passivePort >> 8) + ',' + (passivePort & 0xFF);
+            session.setPassivePort(passivePort);
+
+            session.write(new DefaultResponse(227, "Entering Passive Mode (" + socketAddress + ")"));
+
         } catch (InterruptedException e) {
-            return new DefaultResponse(427, "Can't open passive connection");
+            session.write(new DefaultResponse(427, "Can't open passive connection"));
         }
-        
+
     }
 
 }

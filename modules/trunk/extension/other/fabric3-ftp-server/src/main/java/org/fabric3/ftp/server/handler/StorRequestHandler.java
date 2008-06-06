@@ -18,20 +18,72 @@
  */
 package org.fabric3.ftp.server.handler;
 
+import java.io.IOException;
+import java.io.InputStream;
+
+import org.fabric3.ftp.server.data.DataConnection;
+import org.fabric3.ftp.server.data.PassiveDataConnection;
+import org.fabric3.ftp.server.protocol.DefaultResponse;
+import org.fabric3.ftp.server.protocol.FtpSession;
 import org.fabric3.ftp.server.protocol.Request;
 import org.fabric3.ftp.server.protocol.RequestHandler;
-import org.fabric3.ftp.server.protocol.Response;
 
 /**
  * Handles the <code>STOR</code> command.
+ * 
+ * TODO Add mechanism to register the FTPlet.
  *
  * @version $Revision$ $Date$
  */
 public class StorRequestHandler implements RequestHandler {
 
-    public Response service(Request request) {
-        // TODO Auto-generated method stub
-        return null;
+    public void service(Request request) {
+        
+        FtpSession session = request.getSession();
+        int passivePort = session.getPassivePort();
+        
+        if (0 == passivePort) {
+            session.write(new DefaultResponse(503, "PASV must be issued first"));
+        }
+        
+        String fileName = request.getArgument();
+        if (null == fileName) {
+            session.write(new DefaultResponse(501, "Syntax error in parameters or arguments"));
+        }
+        
+        session.write(new DefaultResponse(150, "File status okay; about to open data connection")).awaitUninterruptibly();
+        
+        DataConnection dataConnection = new PassiveDataConnection(passivePort);
+        try {
+            dataConnection.open();
+        } catch (IOException ex) {
+            session.write(new DefaultResponse(425, "Can't open data connection"));
+            return;
+        }
+        
+        boolean success = false;
+        try {
+            InputStream in = dataConnection.getInputStream();
+            // TODO Temporary
+            int read = in.read();
+            while (read != -1) {
+                System.err.print(read);
+                read = in.read();
+            }
+            success = true;
+        } catch (IOException ex) {
+            session.write(new DefaultResponse(426, "Data connection error"));
+            return;
+        }
+        
+        try {
+            if (success) {
+                session.write(new DefaultResponse(226, "Transfer complete"));
+            }
+        } finally {
+            dataConnection.close();
+        }
+
     }
 
 }

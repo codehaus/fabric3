@@ -46,16 +46,19 @@ public class PassiveDataConnection implements DataConnection {
 
     /**
      * Closes the data connection.
-     * @throws IOException If unable to close connection.
      */
-    public void close() throws IOException {
+    public void close() {
         try {
             if (socket != null) {
                 socket.close();
             }
+        } catch (IOException ignore1) {
         } finally {
-            if (serverSocket != null) {
-                serverSocket.close();
+            try {
+                if (serverSocket != null) {
+                    serverSocket.close();
+                }
+            } catch (IOException ignore2) {
             }
         }
     }

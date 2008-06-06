@@ -68,9 +68,7 @@ public class FtpHandler implements IoHandler {
         Request request = new DefaultRequest(message.toString(), ftpSession);
 
         RequestHandler requestHandler = requestHandlers.get(request.getCommand());
-        Response response = requestHandler.service(request);
-        
-        session.write(response);
+        requestHandler.service(request);
         
     }
 

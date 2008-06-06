@@ -47,9 +47,8 @@ public interface DataConnection {
     
     /**
      * Closes a data connection.
-     * @throws IOException If unable to close connection.
      */
-    void close() throws IOException;
+    void close();
     
     /**
      * Opens a data connection.

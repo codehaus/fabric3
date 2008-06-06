@@ -46,26 +46,26 @@ public class PassRequestHandler implements RequestHandler {
         this.userManager = userManager;
     }
 
-    public Response service(Request request) {
+    public void service(Request request) {
         
         FtpSession session = request.getSession();
         User user = session.getUser();
         
         if (user == null) {
-            return new DefaultResponse(503, "Login with USER first");
+            session.write(new DefaultResponse(503, "Login with USER first"));
         }
         
         String userName = user.getName();
         String password = request.getArgument();
         
         if (password == null) {
-            return new DefaultResponse(501, "Syntax error in parameters or arguments");
+            session.write(new DefaultResponse(501, "Syntax error in parameters or arguments"));
         }
         
         if (userManager.login(userName, password)) {
-            return new DefaultResponse(230, "User logged in, proceed");
+            session.write(new DefaultResponse(230, "User logged in, proceed"));
         } else {
-            return new DefaultResponse(530, "Authentication failed");
+            session.write(new DefaultResponse(530, "Authentication failed"));
         }
 
     }

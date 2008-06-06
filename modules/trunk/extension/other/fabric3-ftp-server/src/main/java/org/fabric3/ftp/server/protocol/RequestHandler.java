@@ -19,11 +19,17 @@
 package org.fabric3.ftp.server.protocol;
 
 /**
- *
+ * Handler for incoming FTP requests.
+ * 
  * @version $Revision$ $Date$
  */
 public interface RequestHandler {
     
-    Response service(Request request);
+    /**
+     * Services an FTP request.
+     * 
+     * @param request FTP request to be serviced.
+     */
+    void service(Request request);
 
 }

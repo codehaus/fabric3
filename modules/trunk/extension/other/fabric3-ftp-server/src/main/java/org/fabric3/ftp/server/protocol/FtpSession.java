@@ -19,6 +19,7 @@
 package org.fabric3.ftp.server.protocol;
 
 import org.apache.mina.common.IoSession;
+import org.apache.mina.common.WriteFuture;
 import org.fabric3.ftp.server.security.User;
 
 /**
@@ -58,6 +59,10 @@ public class FtpSession {
     
     public void setPassivePort(int passivePort) {
         ioSession.setAttribute(PASSIVE_PORT, passivePort);
+    }
+    
+    public WriteFuture write(Object object) {
+        return ioSession.write(object);
     }
 
 }
