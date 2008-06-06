@@ -18,12 +18,14 @@
 package org.fabric3.introspection.impl.annotation;
 
 import java.net.URI;
+import java.lang.reflect.Method;
 import javax.xml.namespace.QName;
 
 import junit.framework.TestCase;
 
 import org.fabric3.scdl.Implementation;
 import org.fabric3.scdl.InjectingComponentType;
+import org.fabric3.scdl.AbstractComponentType;
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.DefaultIntrospectionContext;
 
@@ -34,27 +36,33 @@ import org.osoa.sca.annotations.Init;
 public class InitProcessorTestCase extends TestCase {
 
     public void testInvalidInit() throws Exception {
+        TestInvalidInitClass componentToProcess = new TestInvalidInitClass();
+        Init annotation = componentToProcess.getClass().getAnnotation(Init.class);
+        InitProcessor<Implementation<? extends InjectingComponentType>> processor =
+                new InitProcessor<Implementation<? extends InjectingComponentType>>();
+        IntrospectionContext context = new DefaultIntrospectionContext((URI) null, null, null);
+        processor.visitMethod(annotation, TestInvalidInitClass.class.getDeclaredMethod("init"), new TestImplementation(), context);
+        assertEquals(1, context.getWarnings().size());
+        assertTrue(context.getWarnings().get(0) instanceof InvalidAccessor);
+    }
+
+    public void testInit() throws Exception {
         TestClass componentToProcess = new TestClass();
         Init annotation = componentToProcess.getClass().getAnnotation(Init.class);
         InitProcessor<Implementation<? extends InjectingComponentType>> processor =
                 new InitProcessor<Implementation<? extends InjectingComponentType>>();
         IntrospectionContext context = new DefaultIntrospectionContext((URI) null, null, null);
-        processor.visitMethod(annotation, TestClass.class.getMethod("init"), new TestImplementation(), context);
-        assertEquals(1, context.getWarnings().size());
-        assertTrue(context.getWarnings().get(0) instanceof InitializerNotSupported);
+        TestImplementation impl = new TestImplementation();
+        InjectingComponentType componentType = new InjectingComponentType() {
+
+        };
+        impl.setComponentType(componentType);
+        Method method = TestClass.class.getDeclaredMethod("init");
+        processor.visitMethod(annotation, method, impl, context);
+        assertEquals(0, context.getWarnings().size());
+        assertEquals(method, impl.getComponentType().getInitMethod().getMethod(TestClass.class));
     }
 
-
-    public void testInvalidStatelessInit() throws Exception {
-        TestStatelessClass componentToProcess = new TestStatelessClass();
-        Init annotation = componentToProcess.getClass().getAnnotation(Init.class);
-        InitProcessor<Implementation<? extends InjectingComponentType>> processor =
-                new InitProcessor<Implementation<? extends InjectingComponentType>>();
-        IntrospectionContext context = new DefaultIntrospectionContext((URI) null, null, null);
-        processor.visitMethod(annotation, TestStatelessClass.class.getMethod("init"), new TestImplementation(), context);
-        assertEquals(1, context.getWarnings().size());
-        assertTrue(context.getWarnings().get(0) instanceof InitializerNotSupported);
-    }
 
     @Scope("CONVERSATION")
     public static class TestClass {
@@ -64,19 +72,21 @@ public class InitProcessorTestCase extends TestCase {
         }
     }
 
-    public static class TestStatelessClass {
+    @Scope("CONVERSATION")
+    public static class TestInvalidInitClass {
         @Init
-        public void init() {
+        private void init() {
 
         }
     }
 
-    public static class TestImplementation extends Implementation {
+    public static class TestImplementation extends Implementation<InjectingComponentType> {
         private static final long serialVersionUID = 2759280710238779821L;
 
         public QName getType() {
             return null;
         }
+
     }
 
 }
