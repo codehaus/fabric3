@@ -18,7 +18,6 @@
  */
 package org.fabric3.ftp.server.passive;
 
-import java.net.InetAddress;
 import java.util.Stack;
 
 import org.osoa.sca.annotations.EagerInit;
@@ -34,7 +33,7 @@ public class PassiveConnectionServiceImpl implements PassiveConnectionService {
     
     private int minPort;
     private int maxPort;
-    private InetAddress passiveAddress;
+    private String passiveAddress;
     private Stack<Integer> ports = new Stack<Integer>();
     
     /**
@@ -60,7 +59,7 @@ public class PassiveConnectionServiceImpl implements PassiveConnectionService {
      * @param passiveAddress Passive address.
      */
     @Property
-    public void setPassiveAddress(InetAddress passiveAddress) {
+    public void setPassiveAddress(String passiveAddress) {
         this.passiveAddress = passiveAddress;
     }
     
@@ -101,7 +100,7 @@ public class PassiveConnectionServiceImpl implements PassiveConnectionService {
      * 
      * @return Passive address.
      */
-    public InetAddress getPassiveAddress() {
+    public String getPassiveAddress() {
         return passiveAddress;
     }
 

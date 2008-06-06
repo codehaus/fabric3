@@ -29,7 +29,9 @@ import junit.framework.TestCase;
 import org.apache.commons.net.ftp.FTPClient;
 import org.fabric3.ftp.server.codec.CodecFactory;
 import org.fabric3.ftp.server.handler.PassRequestHandler;
+import org.fabric3.ftp.server.handler.PasvRequestHandler;
 import org.fabric3.ftp.server.handler.UserRequestHandler;
+import org.fabric3.ftp.server.passive.PassiveConnectionServiceImpl;
 import org.fabric3.ftp.server.protocol.RequestHandler;
 import org.fabric3.ftp.server.security.FileSystemUserManager;
 
@@ -43,15 +45,25 @@ public class F3FtpHostTest extends TestCase {
     
     public void setUp() throws Exception {
         
+        Map<String, RequestHandler> requestHandlers = new HashMap<String, RequestHandler>();
+        
         InputStream users = getClass().getClassLoader().getResourceAsStream("user.properties");
         FileSystemUserManager userManager = new FileSystemUserManager();
         userManager.setUsers(users);
-        
-        Map<String, RequestHandler> requestHandlers = new HashMap<String, RequestHandler>();
         requestHandlers.put("USER", new UserRequestHandler());
+        
         PassRequestHandler passCommandHandler = new PassRequestHandler();
         passCommandHandler.setUserManager(userManager);
         requestHandlers.put("PASS", passCommandHandler);
+        
+        PassiveConnectionServiceImpl passiveConnectionService = new PassiveConnectionServiceImpl();
+        passiveConnectionService.setMinPort(3000);
+        passiveConnectionService.setMaxPort(4000);
+        passiveConnectionService.setPassiveAddress("127.0.0.1");
+        passiveConnectionService.init();
+        PasvRequestHandler pasvRequestHandler = new PasvRequestHandler();
+        pasvRequestHandler.setPassivePortService(passiveConnectionService);
+        requestHandlers.put("PASV", pasvRequestHandler);
         
         ftpHost = new F3FtpHost();
         
@@ -81,6 +93,14 @@ public class F3FtpHostTest extends TestCase {
         ftpClient.connect(InetAddress.getLocalHost(), 1234);
         ftpClient.user("meeraj");
         assertEquals(530, ftpClient.pass("password1"));        
+    }
+
+    public void testPasv() throws IOException {
+        FTPClient ftpClient = new FTPClient();
+        ftpClient.connect(InetAddress.getLocalHost(), 1234);
+        ftpClient.user("meeraj");
+        assertEquals(230, ftpClient.pass("password"));  
+        assertEquals(227, ftpClient.pasv());
     }
 
 }

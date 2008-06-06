@@ -19,6 +19,8 @@
 package org.fabric3.ftp.server.handler;
 
 import org.fabric3.ftp.server.passive.PassiveConnectionService;
+import org.fabric3.ftp.server.protocol.DefaultResponse;
+import org.fabric3.ftp.server.protocol.FtpSession;
 import org.fabric3.ftp.server.protocol.Request;
 import org.fabric3.ftp.server.protocol.RequestHandler;
 import org.fabric3.ftp.server.protocol.Response;
@@ -44,13 +46,22 @@ public class PasvRequestHandler implements RequestHandler {
 
     public Response service(Request request) {
         
+        FtpSession ftpSession = request.getSession();
+        
         try {
+
             int passivePort = passiveConnectionService.acquire();
+            String passiveAddress = passiveConnectionService.getPassiveAddress();
+            
+            String socketAddress = passiveAddress.replace('.', ',') + ',' + (passivePort >> 8) + ',' + (passivePort & 0xFF);            
+            ftpSession.setPassivePort(passivePort);
+            
+            return new DefaultResponse(227, "Entering Passive Mode (" + socketAddress + ")");
+            
         } catch (InterruptedException e) {
-            // TODO: handle exception
+            return new DefaultResponse(427, "Can't open passive connection");
         }
-        // TODO Auto-generated method stub
-        return null;
+        
     }
 
 }

@@ -18,7 +18,6 @@
  */
 package org.fabric3.ftp.server.passive;
 
-import java.net.InetAddress;
 
 /**
  *
@@ -45,6 +44,6 @@ public interface PassiveConnectionService {
      * 
      * @return Passive address.
      */
-    InetAddress getPassiveAddress();
+    String getPassiveAddress();
 
 }

@@ -35,6 +35,8 @@ public class DefaultRequest implements Request {
         if (index != -1) {
             command = message.substring(0, index).toUpperCase();
             argument = message.substring(index + 1);
+        } else {
+            command = message.trim();
         }
         
         this.session = session;
