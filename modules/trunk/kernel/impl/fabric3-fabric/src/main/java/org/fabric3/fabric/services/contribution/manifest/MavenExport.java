@@ -96,7 +96,6 @@ public class MavenExport extends Export {
             assert imprt.getArtifactId() != null;
             assert imprt.getGroupId() != null;
             if (imprt.getArtifactId().equals(artifactId)
-                    && imprt.getClassifier().equals(classifier)
                     && imprt.getGroupId().equals(groupId)) {
                 if (matchVersion(imprt)) {
                     return EXACT_MATCH;

@@ -16,23 +16,49 @@
  */
 package org.fabric3.fabric.services.contribution.manifest;
 
-import javax.xml.namespace.QName;
-import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
-import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
+import java.io.ByteArrayInputStream;
+import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamReader;
 
 import junit.framework.TestCase;
-import org.easymock.EasyMock;
 
-import org.fabric3.spi.services.contribution.ContributionManifest;
-import org.fabric3.scdl.ValidationContext;
 import org.fabric3.scdl.DefaultValidationContext;
+import org.fabric3.scdl.ValidationContext;
+import org.fabric3.spi.services.contribution.ContributionManifest;
 
 /**
  * @version $Rev$ $Date$
  */
 public class MavenPOMProcessorTestCase extends TestCase {
     public static final String NS = "http://maven.apache.org/POM/4.0.0";
+    public static final String POM =
+            "<project xmlns=\"http://maven.apache.org/POM/4.0.0\" xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" xsi:schemaLocation=\"http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd\">\n" +
+                    "    <modelVersion>4.0.0</modelVersion>\n" +
+                    "    <parent>\n" +
+                    "        <groupId>org.codehaus.fabric3</groupId>\n" +
+                    "        <artifactId>fabric3-kernel-impl-parent-pom</artifactId>\n" +
+                    "        <version>0.5BETA2-SNAPSHOT</version>\n" +
+                    "    </parent>\n" +
+                    "    <groupId>foo</groupId>\n" +
+                    "    <artifactId>bar</artifactId>\n" +
+                    "    <name>Test Pom</name>\n" +
+                    "    <package>jar</package>" +
+                    "    <version>1.0-SNAPSHOT</version>\n" +
+                    "    <description>test pom</description>\n" +
+                    "\n" +
+                    "    <dependencies>\n" +
+                    "\n" +
+                    "        <dependency>\n" +
+                    "            <groupId>org.codehaus.fabric3</groupId>\n" +
+                    "            <artifactId>fabric3-spi</artifactId>\n" +
+                    "            <version>${project.version}</version>\n" +
+                    "        </dependency>\n" +
+                    "\t\t\n" +
+                    "    </dependencies>\n" +
+                    "\n" +
+                    "\n" +
+                    "</project>";
+
     private MavenPOMProcessor processor = new MavenPOMProcessor(null);
     private XMLStreamReader reader;
 
@@ -45,46 +71,14 @@ public class MavenPOMProcessorTestCase extends TestCase {
         assertEquals("bar", export.getArtifactId());
         assertEquals("1.0-SNAPSHOT", export.getVersion());
         assertEquals("jar", export.getClassifier());
-        EasyMock.verify(reader);
     }
 
 
     protected void setUp() throws Exception {
         super.setUp();
-        reader = EasyMock.createMock(XMLStreamReader.class);
-        EasyMock.expect(reader.next()).andReturn(START_ELEMENT);
-        EasyMock.expect(reader.getName()).andReturn(new QName(NS, "modelVersion"));
-        EasyMock.expect(reader.next()).andReturn(END_ELEMENT);
-        EasyMock.expect(reader.getName()).andReturn(new QName(NS, "modelVersion"));
-
-        EasyMock.expect(reader.next()).andReturn(START_ELEMENT);
-        EasyMock.expect(reader.getName()).andReturn(new QName(NS, "parent"));
-        EasyMock.expect(reader.next()).andReturn(END_ELEMENT);
-        EasyMock.expect(reader.getName()).andReturn(new QName(NS, "parent"));
-
-        EasyMock.expect(reader.next()).andReturn(START_ELEMENT);
-        EasyMock.expect(reader.getName()).andReturn(new QName(NS, "groupId"));
-        EasyMock.expect(reader.getElementText()).andReturn("foo");
-        EasyMock.expect(reader.next()).andReturn(END_ELEMENT);
-        EasyMock.expect(reader.getName()).andReturn(new QName(NS, "groupId"));
-
-        EasyMock.expect(reader.next()).andReturn(START_ELEMENT);
-        EasyMock.expect(reader.getName()).andReturn(new QName(NS, "artifactId"));
-        EasyMock.expect(reader.getElementText()).andReturn("bar");
-        EasyMock.expect(reader.next()).andReturn(END_ELEMENT);
-        EasyMock.expect(reader.getName()).andReturn(new QName(NS, "artifactId"));
-
-        EasyMock.expect(reader.next()).andReturn(START_ELEMENT);
-        EasyMock.expect(reader.getName()).andReturn(new QName(NS, "packaging"));
-        EasyMock.expect(reader.getElementText()).andReturn("jar");
-        EasyMock.expect(reader.next()).andReturn(END_ELEMENT);
-        EasyMock.expect(reader.getName()).andReturn(new QName(NS, "packaging"));
-
-        EasyMock.expect(reader.next()).andReturn(START_ELEMENT);
-        EasyMock.expect(reader.getName()).andReturn(new QName(NS, "version"));
-        EasyMock.expect(reader.getElementText()).andReturn("1.0-SNAPSHOT");
-
-        EasyMock.replay(reader);
+        ByteArrayInputStream b = new ByteArrayInputStream(POM.getBytes());
+        reader = XMLInputFactory.newInstance().createXMLStreamReader(b);
+        reader.nextTag();
     }
 
 

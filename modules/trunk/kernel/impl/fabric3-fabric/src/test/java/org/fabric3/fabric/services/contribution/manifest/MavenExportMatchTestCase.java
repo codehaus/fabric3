@@ -46,17 +46,6 @@ public class MavenExportMatchTestCase extends TestCase {
         assertEquals(Export.EXACT_MATCH, export.match(imprt));
     }
 
-    public void testNoMatchClassifier() {
-        MavenExport export = new MavenExport();
-        export.setGroupId("bar");
-        export.setArtifactId("foo");
-        MavenImport imprt = new MavenImport();
-        imprt.setGroupId("bar");
-        imprt.setArtifactId("foo");
-        imprt.setClassifier("pom");
-        assertEquals(Export.NO_MATCH, export.match(imprt));
-    }
-
     public void testNoMatchVersion() {
         MavenExport export = new MavenExport();
         export.setGroupId("bar");
