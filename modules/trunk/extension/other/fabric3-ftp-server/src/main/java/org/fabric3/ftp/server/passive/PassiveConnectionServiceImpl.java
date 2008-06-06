@@ -92,7 +92,7 @@ public class PassiveConnectionServiceImpl implements PassiveConnectionService {
      */
     public synchronized void release(int port) {
         ports.push(port);
-        notify();
+        notifyAll();
     }
     
     /**

@@ -23,6 +23,7 @@ import java.util.Map;
 import org.apache.mina.common.IdleStatus;
 import org.apache.mina.common.IoHandler;
 import org.apache.mina.common.IoSession;
+import org.fabric3.ftp.server.passive.PassiveConnectionService;
 import org.fabric3.ftp.server.protocol.DefaultRequest;
 import org.fabric3.ftp.server.protocol.DefaultResponse;
 import org.fabric3.ftp.server.protocol.FtpSession;
@@ -38,6 +39,16 @@ import org.osoa.sca.annotations.Reference;
 public class FtpHandler implements IoHandler {
     
     private Map<String, RequestHandler> requestHandlers;
+    private PassiveConnectionService passiveConnectionService;
+    
+    /**
+     * Injects the passive connection service.
+     * @param passiveConnectionService Passive connection service.
+     */
+    @Reference
+    public void setPassivePortService(PassiveConnectionService passiveConnectionService) {
+        this.passiveConnectionService = passiveConnectionService;
+    }
 
     /**
      * Injects the FTP commands.
@@ -67,6 +78,14 @@ public class FtpHandler implements IoHandler {
     }
 
     public void sessionClosed(IoSession session) throws Exception {
+        
+        FtpSession ftpSession = new FtpSession(session);
+        int passivePort = ftpSession.getPassivePort();
+        
+        if (0 != passivePort) {
+            passiveConnectionService.release(passivePort);
+        }
+        
     }
 
     public void sessionCreated(IoSession session) throws Exception {
