@@ -19,6 +19,8 @@
            xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
            name="AutowiredComposite">
 
+    <service name="source" promote="autowired"/>
+    
     <reference name="promoted" promote="autowired/target"/>
     
     <component name="autowired">

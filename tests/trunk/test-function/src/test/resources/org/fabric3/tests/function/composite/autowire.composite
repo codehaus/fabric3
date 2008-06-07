@@ -30,6 +30,10 @@
         <reference name="promoted" target="target"/>
     </component>
 
+    <component name="client" autowire="true">
+        <implementation.java name="target" class="org.fabric3.tests.function.common.ClientImpl"/>
+    </component>
+
     <component name="target">
         <implementation.java name="target" class="org.fabric3.tests.function.common.TargetImpl"/>
     </component>
