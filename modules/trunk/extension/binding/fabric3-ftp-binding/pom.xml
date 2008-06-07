@@ -26,7 +26,7 @@
     </parent>
 
     <groupId>org.codehaus.fabric3</groupId>
-    <artifactId>fabric3-ftp-binding</artifactId>
+    <artifactId>fabric3-binding-ftp</artifactId>
     <name>Fabric3 FTP Binding</name>
     <description>Fabric3 FTP Binding.</description>
 
