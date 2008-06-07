@@ -21,10 +21,13 @@ package org.fabric3.ftp.server.host;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import org.apache.mina.common.IoHandler;
 import org.apache.mina.filter.codec.ProtocolCodecFactory;
 import org.apache.mina.filter.codec.ProtocolCodecFilter;
+import org.apache.mina.filter.executor.ExecutorFilter;
 import org.apache.mina.transport.socket.SocketAcceptor;
 import org.apache.mina.transport.socket.nio.NioSocketAcceptor;
 import org.fabric3.ftp.api.FtpLet;
@@ -81,8 +84,10 @@ public class F3FtpHost implements FtpHost {
     @Init
     public void start() throws IOException {
 
+        ExecutorService filterExecutor = Executors.newCachedThreadPool();
         InetSocketAddress socketAddress = new InetSocketAddress(InetAddress.getLocalHost(), commandPort);
         acceptor = new NioSocketAcceptor();
+        acceptor.getFilterChain().addLast("threadPool", new ExecutorFilter(filterExecutor));
         acceptor.getFilterChain().addLast("codec", new ProtocolCodecFilter(codecFactory));
         acceptor.setHandler(ftpHandler);
         acceptor.bind(socketAddress);

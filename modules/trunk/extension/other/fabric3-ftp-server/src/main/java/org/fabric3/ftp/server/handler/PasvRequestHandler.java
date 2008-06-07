@@ -18,6 +18,11 @@
  */
 package org.fabric3.ftp.server.handler;
 
+import java.io.IOException;
+import java.net.InetAddress;
+
+import org.fabric3.ftp.server.data.DataConnection;
+import org.fabric3.ftp.server.data.PassiveDataConnection;
 import org.fabric3.ftp.server.passive.PassiveConnectionService;
 import org.fabric3.ftp.server.protocol.DefaultResponse;
 import org.fabric3.ftp.server.protocol.FtpSession;
@@ -46,18 +51,26 @@ public class PasvRequestHandler implements RequestHandler {
     public void service(Request request) {
 
         FtpSession session = request.getSession();
+        int passivePort = 0;
 
         try {
 
-            int passivePort = passiveConnectionService.acquire();
-            String passiveAddress = passiveConnectionService.getPassiveAddress();
+            passivePort = passiveConnectionService.acquire();
+            InetAddress localAddress = InetAddress.getLocalHost();
 
-            String socketAddress = passiveAddress.replace('.', ',') + ',' + (passivePort >> 8) + ',' + (passivePort & 0xFF);
+            String socketAddress = localAddress.getHostAddress().replace('.', ',') + ',' + (passivePort >> 8) + ',' + (passivePort & 0xFF);
             session.setPassivePort(passivePort);
+
+            DataConnection dataConnection = new PassiveDataConnection(passivePort);
+            dataConnection.initialize();
+            session.setDataConnection(dataConnection);
 
             session.write(new DefaultResponse(227, "Entering Passive Mode (" + socketAddress + ")"));
 
         } catch (InterruptedException e) {
+            session.write(new DefaultResponse(427, "Can't open passive connection"));
+        } catch (IOException e) {
+            passiveConnectionService.release(passivePort);
             session.write(new DefaultResponse(427, "Can't open passive connection"));
         }
 

@@ -55,5 +55,11 @@ public interface DataConnection {
      * @throws IOException If unable to open connection.
      */
     void open() throws IOException;
+    
+    /**
+     * Initializes a data connection.
+     * @throws IOException If unable to open connection.
+     */
+    void initialize() throws IOException;
 
 }

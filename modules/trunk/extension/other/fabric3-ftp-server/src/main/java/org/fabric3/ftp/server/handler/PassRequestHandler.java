@@ -22,7 +22,6 @@ import org.fabric3.ftp.server.protocol.DefaultResponse;
 import org.fabric3.ftp.server.protocol.FtpSession;
 import org.fabric3.ftp.server.protocol.Request;
 import org.fabric3.ftp.server.protocol.RequestHandler;
-import org.fabric3.ftp.server.protocol.Response;
 import org.fabric3.ftp.server.security.User;
 import org.fabric3.ftp.server.security.UserManager;
 import org.osoa.sca.annotations.Reference;

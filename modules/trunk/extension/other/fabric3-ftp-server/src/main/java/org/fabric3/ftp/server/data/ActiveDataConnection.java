@@ -28,6 +28,14 @@ import java.io.OutputStream;
  * @version $Revision$ $Date$
  */
 public class ActiveDataConnection implements DataConnection {
+    
+    /**
+     * Initializes a data connection.
+     * @throws IOException If unable to open connection.
+     */
+    public void initialize() throws IOException {
+        throw new UnsupportedOperationException();
+    }
 
     /**
      * Closes the data connection.

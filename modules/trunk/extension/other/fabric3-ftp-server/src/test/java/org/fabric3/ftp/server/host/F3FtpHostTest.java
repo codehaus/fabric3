@@ -18,6 +18,7 @@
  */
 package org.fabric3.ftp.server.host;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetAddress;
@@ -30,6 +31,7 @@ import org.apache.commons.net.ftp.FTPClient;
 import org.fabric3.ftp.server.codec.CodecFactory;
 import org.fabric3.ftp.server.handler.PassRequestHandler;
 import org.fabric3.ftp.server.handler.PasvRequestHandler;
+import org.fabric3.ftp.server.handler.StorRequestHandler;
 import org.fabric3.ftp.server.handler.UserRequestHandler;
 import org.fabric3.ftp.server.passive.PassiveConnectionServiceImpl;
 import org.fabric3.ftp.server.protocol.RequestHandler;
@@ -57,13 +59,17 @@ public class F3FtpHostTest extends TestCase {
         requestHandlers.put("PASS", passCommandHandler);
         
         PassiveConnectionServiceImpl passiveConnectionService = new PassiveConnectionServiceImpl();
-        passiveConnectionService.setMinPort(3000);
-        passiveConnectionService.setMaxPort(4000);
+        passiveConnectionService.setMinPort(50000);
+        passiveConnectionService.setMaxPort(60000);
         passiveConnectionService.setPassiveAddress("127.0.0.1");
         passiveConnectionService.init();
         PasvRequestHandler pasvRequestHandler = new PasvRequestHandler();
         pasvRequestHandler.setPassivePortService(passiveConnectionService);
         requestHandlers.put("PASV", pasvRequestHandler);
+        
+        StorRequestHandler storRequestHandler = new StorRequestHandler();
+        storRequestHandler.setPassivePortService(passiveConnectionService);
+        requestHandlers.put("STOR", storRequestHandler);
         
         ftpHost = new F3FtpHost();
         
@@ -101,6 +107,15 @@ public class F3FtpHostTest extends TestCase {
         ftpClient.user("meeraj");
         assertEquals(230, ftpClient.pass("password"));  
         assertEquals(227, ftpClient.pasv());
+    }
+    
+    public void testStor() throws IOException {
+        FTPClient ftpClient = new FTPClient();
+        ftpClient.connect(InetAddress.getLocalHost(), 1234);
+        ftpClient.user("meeraj");
+        ftpClient.pass("password");
+        ftpClient.enterLocalPassiveMode();
+        ftpClient.storeFile("/resource/test.dat", new ByteArrayInputStream("TEST\r\n".getBytes()));
     }
 
 }

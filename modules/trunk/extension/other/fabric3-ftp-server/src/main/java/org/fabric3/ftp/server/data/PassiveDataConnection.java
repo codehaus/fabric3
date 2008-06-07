@@ -21,6 +21,7 @@ package org.fabric3.ftp.server.data;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
 
@@ -88,8 +89,15 @@ public class PassiveDataConnection implements DataConnection {
      * @throws IOException If unable to open connection.
      */
     public void open() throws IOException {
-        serverSocket = new ServerSocket(passivePort);
         socket = serverSocket.accept();
+    }
+    
+    /**
+     * Initializes a data connection.
+     * @throws IOException If unable to open connection.
+     */
+    public void initialize() throws IOException {
+        serverSocket = new ServerSocket(passivePort, 1, InetAddress.getLocalHost());
     }
 
 }
