@@ -24,27 +24,53 @@
            
     <property name="ftpServerConfig" type="f3:ftpServerConfig"/>
     <reference name="ftpLets" promote="storRequestHandler/ftpLets"/>
+    <service name="ftpHost" promote="org.fabric3.ftp.server.F3FtpHost/FtpHost"/>
 
     <!-- FTP Server -->
-    <component name="xaPoolDataSource">
+    <component name="org.fabric3.ftp.server.F3FtpHost">
         <system:implementation.system class="org.fabric3.ftp.server.F3FtpHost"/>
         <property name="commandPort" source="$dataSourceConfig//commandPort"/>
     </component>
     
     <!-- Protocol codec factory -->
+    <component name="org.fabric3.ftp.codec.CodecFactory">
+        <system:implementation.system class="org.fabric3.ftp.codec.CodecFactory"/>
+    </component>
     
     <!-- FTP Handler -->
+    <component name="org.fabric3.ftp.host.FtpHandler">
+        <system:implementation.system class="org.fabric3.ftp.host.FtpHandler"/>
+    </component>
     
     <!-- USER Request Handler -->
+    <component name="org.fabric3.ftp.handler.UserRequestHandler" f3:key="USER">
+        <system:implementation.system class="org.fabric3.ftp.handler.UserRequestHandler"/>
+    </component>
     
     <!-- PASS Request Handler -->
+    <component name="org.fabric3.ftp.handler.PassRequestHandler" f3:key="PASS">
+        <system:implementation.system class="org.fabric3.ftp.handler.PassRequestHandler"/>
+    </component>
     
     <!-- PASV Request Handler -->
+    <component name="org.fabric3.ftp.handler.PasvRequestHandler" f3:key="PASV">
+        <system:implementation.system class="org.fabric3.ftp.handler.PasvRequestHandler"/>
+    </component>
     
     <!-- STOR Request Handler -->
+    <component name="org.fabric3.ftp.handler.StorRequestHandler" f3:key="STOR">
+        <system:implementation.system class="org.fabric3.ftp.handler.StorRequestHandler"/>
+    </component>
     
     <!-- User Manager -->
+    <!-- TODO May be this should be promoted out -->
+    <component name="org.fabric3.ftp.security.UserManager">
+        <system:implementation.system class="org.fabric3.ftp.security.FileSystemUserManager"/>
+    </component>
     
     <!-- Passive Connection Service -->
+    <component name="org.fabric3.ftp.passive.PassiveConnectionService">
+        <system:implementation.system class="org.fabric3.ftp.passive.PassiveConnectionServiceImpl"/>
+    </component>
     
 </composite>
