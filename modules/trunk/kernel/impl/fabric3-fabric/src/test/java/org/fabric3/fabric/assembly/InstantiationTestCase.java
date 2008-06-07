@@ -9,10 +9,10 @@ import junit.framework.TestCase;
 import org.easymock.classextension.EasyMock;
 
 import org.fabric3.fabric.assembly.normalizer.PromotionNormalizer;
-import org.fabric3.fabric.model.logical.AtomicComponentInstantiator;
-import org.fabric3.fabric.model.logical.CompositeComponentInstantiator;
-import org.fabric3.fabric.model.logical.LogicalModelInstantiator;
-import org.fabric3.fabric.model.logical.LogicalModelInstantiatorImpl;
+import org.fabric3.fabric.instantiator.AtomicComponentInstantiator;
+import org.fabric3.fabric.instantiator.CompositeComponentInstantiator;
+import org.fabric3.fabric.instantiator.LogicalModelInstantiator;
+import org.fabric3.fabric.instantiator.LogicalModelInstantiatorImpl;
 import org.fabric3.scdl.AbstractComponentType;
 import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.ComponentType;

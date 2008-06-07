@@ -14,10 +14,13 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.fabric.model.logical;
+package org.fabric3.fabric.instantiator;
 
 import java.net.URI;
 import java.util.Map;
+
+import org.osoa.sca.annotations.Reference;
+import org.w3c.dom.Document;
 
 import org.fabric3.fabric.assembly.InstantiationException;
 import org.fabric3.fabric.services.documentloader.DocumentLoader;
@@ -36,9 +39,6 @@ import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalResource;
 import org.fabric3.spi.model.instance.LogicalService;
-
-import org.osoa.sca.annotations.Reference;
-import org.w3c.dom.Document;
 
 /**
  * @version $Revision$ $Date$

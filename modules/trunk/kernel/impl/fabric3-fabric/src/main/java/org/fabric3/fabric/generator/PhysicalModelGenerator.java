@@ -21,7 +21,7 @@ import java.util.Collection;
 import org.fabric3.spi.generator.CommandMap;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.LogicalComponent;
-import org.fabric3.fabric.model.logical.LogicalChange;
+import org.fabric3.fabric.instantiator.LogicalChange;
 
 /**
  * Interface that abstracts the concerns of a generating commands to provision a set of componets to runtimes in a domain.

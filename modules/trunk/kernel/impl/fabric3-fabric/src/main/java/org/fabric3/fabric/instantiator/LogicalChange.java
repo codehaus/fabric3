@@ -14,11 +14,11 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.fabric.model.logical;
+package org.fabric3.fabric.instantiator;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
-import java.net.URI;
 
 import org.w3c.dom.Document;
 
@@ -26,7 +26,6 @@ import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalWire;
-import org.fabric3.spi.model.instance.LogicalService;
 
 /**
  * @version $Rev$ $Date$
@@ -39,10 +38,8 @@ public class LogicalChange {
     private final List<Command> phase3 = new ArrayList<Command>();
 
     private final List<String> deletedProperties = new ArrayList<String>();
-    private final List<LogicalComponent<?>> deletedComponents =
-            new ArrayList<LogicalComponent<?>>();
-    private final List<LogicalComponent<?>> addedComponents =
-            new ArrayList<LogicalComponent<?>>();
+    private final List<LogicalComponent<?>> deletedComponents = new ArrayList<LogicalComponent<?>>();
+    private final List<LogicalComponent<?>> addedComponents = new ArrayList<LogicalComponent<?>>();
     private final List<URI> deletedServices = new ArrayList<URI>();
 
     /**
@@ -103,6 +100,7 @@ public class LogicalChange {
 
     /**
      * Change that removes a component from the parent context
+     *
      * @param component
      */
     public void removeComponent(final LogicalComponent<?> component) {
@@ -111,10 +109,12 @@ public class LogicalChange {
 
 
     public void removeService(URI uri) {
-        deletedServices.add(uri);        
+        deletedServices.add(uri);
     }
+
     /**
      * Return the list of new components added to the parent context
+     *
      * @return
      */
     public List<LogicalComponent<?>> getAddedComponents() {
@@ -123,7 +123,8 @@ public class LogicalChange {
 
     /**
      * Return the list of deleted components from the parent context
-      * @return
+     *
+     * @return
      */
 
     public List<LogicalComponent<?>> getDeletedComponents() {

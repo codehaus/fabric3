@@ -14,7 +14,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.fabric.model.logical;
+package org.fabric3.fabric.instantiator;
 
 import java.util.Map;
 
@@ -35,13 +35,13 @@ public interface ComponentInstantiator {
      * Instantiates a logical component from a component definition
      *
      * @param parent     the parent logical component
-     * @param properties
-     *@param definition the component definition to instantiate from @return the instantiated logical component
+     * @param properties the collection of properties associated with the component
+     * @param definition the component definition to instantiate from @return the instantiated logical component
+     * @return an instantiated logical component
      * @throws InstantiationException if an error occurs during instantiation
      */
     <I extends Implementation<?>> LogicalComponent<I> instantiate(LogicalCompositeComponent parent,
                                                                   Map<String, Document> properties,
-                                                                  ComponentDefinition<I> definition)
-            throws InstantiationException;
+                                                                  ComponentDefinition<I> definition) throws InstantiationException;
 
 }

@@ -19,7 +19,7 @@
 package org.fabric3.fabric.assembly;
 
 import org.fabric3.fabric.assembly.allocator.Allocator;
-import org.fabric3.fabric.model.logical.LogicalModelInstantiator;
+import org.fabric3.fabric.instantiator.LogicalModelInstantiator;
 import org.fabric3.fabric.generator.PhysicalModelGenerator;
 import org.fabric3.fabric.services.routing.RoutingService;
 import org.fabric3.spi.runtime.assembly.LogicalComponentManager;

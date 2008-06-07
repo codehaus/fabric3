@@ -14,7 +14,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.fabric.model.logical;
+package org.fabric3.fabric.instantiator;
 
 import java.net.URI;
 import java.util.ArrayList;

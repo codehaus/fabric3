@@ -14,7 +14,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.fabric.model.logical;
+package org.fabric3.fabric.instantiator;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -44,8 +44,8 @@ import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalService;
 import org.fabric3.spi.runtime.assembly.LogicalComponentManager;
-import org.fabric3.spi.wire.WiringService;
 import org.fabric3.spi.util.UriHelper;
+import org.fabric3.spi.wire.WiringService;
 
 /**
  * @version $Revision$ $Date$
@@ -60,10 +60,10 @@ public class LogicalModelInstantiatorImpl implements LogicalModelInstantiator {
 
 
     public LogicalModelInstantiatorImpl(@Reference WiringService wiringService,
-                                     @Reference PromotionNormalizer promotionNormalizer,
-                                     @Reference LogicalComponentManager logicalComponentManager,
-                                     @Reference(name = "atomicComponentInstantiator")ComponentInstantiator atomicComponentInstantiator,
-                                     @Reference(name = "compositeComponentInstantiator")ComponentInstantiator compositeComponentInstantiator) {
+                                        @Reference PromotionNormalizer promotionNormalizer,
+                                        @Reference LogicalComponentManager logicalComponentManager,
+                                        @Reference(name = "atomicComponentInstantiator")ComponentInstantiator atomicComponentInstantiator,
+                                        @Reference(name = "compositeComponentInstantiator")ComponentInstantiator compositeComponentInstantiator) {
         this.wiringService = wiringService;
         this.promotionNormalizer = promotionNormalizer;
         this.logicalComponentManager = logicalComponentManager;
@@ -134,7 +134,7 @@ public class LogicalModelInstantiatorImpl implements LogicalModelInstantiator {
                 if (UriHelper.getBaseName(uri).equals(key)) {
                     change.removeComponent(component);
                     parent.removeComponent(uri);
-                }                
+                }
             }
         }
     }
@@ -199,7 +199,7 @@ public class LogicalModelInstantiatorImpl implements LogicalModelInstantiator {
     }
 
     private void excludeServices(LogicalComponent<CompositeImplementation> parent, Composite composite,
-                                                 LogicalChange change) {
+                                 LogicalChange change) {
         String base = parent.getUri().toString();
         // merge the composite service declarations into the parent
         for (CompositeService compositeService : composite.getServices().values()) {

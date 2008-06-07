@@ -33,7 +33,7 @@ import org.fabric3.spi.generator.RemoveCommandGenerator;
 import org.fabric3.spi.generator.CommandGenerator;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
-import org.fabric3.fabric.model.logical.LogicalChange;
+import org.fabric3.fabric.instantiator.LogicalChange;
 
 /**
  * Default implementation of the physical model generator. This implementation topologically sorts components according to their position in the
