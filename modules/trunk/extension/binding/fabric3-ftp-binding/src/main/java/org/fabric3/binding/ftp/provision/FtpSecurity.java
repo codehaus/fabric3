@@ -16,42 +16,30 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.binding.ftp.scdl;
-
-import java.net.URI;
-
-import org.fabric3.binding.ftp.common.Constants;
-import org.fabric3.binding.ftp.introspection.FtpBindingLoader;
-import org.fabric3.scdl.BindingDefinition;
+package org.fabric3.binding.ftp.provision;
 
 /**
- * Binding definition loaded from the SCDL.
- * 
+ *
  * @version $Revision$ $Date$
  */
-public class FtpBindingDefinition extends BindingDefinition {
-
-    private static final long serialVersionUID = -889044951554792780L;
+public class FtpSecurity {
     
-    private final TransferMode transferMode;
-
-    /**
-     * Initializes the binding type.
-     * 
-     * @param URI Target URI.
-     */
-    public FtpBindingDefinition(URI uri, TransferMode transferMode) {
-        super(uri, Constants.BINDING_QNAME);
-        this.transferMode = transferMode;
+    private final String user;
+    private final String password;
+    
+    public FtpSecurity(String user, String password) {
+        this.user = user;
+        this.password = password;
     }
 
-    /**
-     * Gets the transfer mode.
-     * 
-     * @return File transfer mode.
-     */
-    public TransferMode getTransferMode() {
-        return transferMode;
+    public String getUser() {
+        return user;
     }
+
+    public String getPassword() {
+        return password;
+    }
+    
+    
 
 }

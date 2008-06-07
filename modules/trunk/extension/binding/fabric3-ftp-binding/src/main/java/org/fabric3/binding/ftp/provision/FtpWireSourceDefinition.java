@@ -18,6 +18,8 @@
  */
 package org.fabric3.binding.ftp.provision;
 
+import java.net.URI;
+
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 
 /**
@@ -25,5 +27,26 @@ import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
  * @version $Revision$ $Date$
  */
 public class FtpWireSourceDefinition extends PhysicalWireSourceDefinition {
+    
+    private final URI classLoaderId;
+
+    /**
+     * Initializes the classloader id.
+     *
+     * @param classLoaderId the classloader id to deserialize parameters in
+     */
+
+    public FtpWireSourceDefinition(URI classLoaderId) {
+        this.classLoaderId = classLoaderId;
+    }
+
+    /**
+     * Returns the classloader id to deserialize parameters in.
+     *
+     * @return the classloader id to deserialize parameters in
+     */
+    public URI getClassLoaderId() {
+        return classLoaderId;
+    }
 
 }

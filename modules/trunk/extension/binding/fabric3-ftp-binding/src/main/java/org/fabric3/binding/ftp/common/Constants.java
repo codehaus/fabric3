@@ -16,42 +16,24 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.binding.ftp.scdl;
+package org.fabric3.binding.ftp.common;
 
-import java.net.URI;
-
-import org.fabric3.binding.ftp.common.Constants;
-import org.fabric3.binding.ftp.introspection.FtpBindingLoader;
-import org.fabric3.scdl.BindingDefinition;
+import javax.xml.namespace.QName;
 
 /**
- * Binding definition loaded from the SCDL.
- * 
+ *
  * @version $Revision$ $Date$
  */
-public class FtpBindingDefinition extends BindingDefinition {
-
-    private static final long serialVersionUID = -889044951554792780L;
-    
-    private final TransferMode transferMode;
+public interface Constants {
 
     /**
-     * Initializes the binding type.
-     * 
-     * @param URI Target URI.
+     * Qualified name for the binding element.
      */
-    public FtpBindingDefinition(URI uri, TransferMode transferMode) {
-        super(uri, Constants.BINDING_QNAME);
-        this.transferMode = transferMode;
-    }
+    public static final QName BINDING_QNAME = new QName("urn:org.fabric3:binding:ftp", "binding.ftp");
 
     /**
-     * Gets the transfer mode.
-     * 
-     * @return File transfer mode.
+     * Qualified name for the policy element.
      */
-    public TransferMode getTransferMode() {
-        return transferMode;
-    }
+    public static final QName POLICY_QNAME = new QName("urn:org.fabric3:binding:ftp", "securrity");
 
 }

@@ -18,6 +18,10 @@
  */
 package org.fabric3.binding.ftp.provision;
 
+import java.net.URI;
+import java.util.Map;
+
+import org.fabric3.scdl.Operation;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 
 /**
@@ -25,5 +29,51 @@ import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
  * @version $Revision$ $Date$
  */
 public class FtpWireTargetDefinition extends PhysicalWireTargetDefinition {
+    
+    private final URI classLoaderId;
+    private final boolean active;
+    private final Map<Operation<?>, FtpSecurity> security;
+
+    /**
+     * Initializes the classloader id and transfer mode.
+     *
+     * @param classLoaderId the classloader id to deserialize parameters in
+     * @param active FTP transfer mode
+     * @param security Security parameters
+     */
+
+    public FtpWireTargetDefinition(URI classLoaderId, boolean active, Map<Operation<?>, FtpSecurity> security) {
+        this.classLoaderId = classLoaderId;
+        this.active = active;
+        this.security = security;
+    }
+
+    /**
+     * Returns the classloader id to deserialize parameters in.
+     *
+     * @return the classloader id to deserialize parameters in
+     */
+    public URI getClassLoaderId() {
+        return classLoaderId;
+    }
+    
+    /**
+     * Gets the FTP transfer mode.
+     * 
+     * @return True if user wants active transfer mode.
+     */
+    public boolean isActive() {
+        return active;
+    }
+
+    /**
+     * Get the security parameters.
+     * 
+     * @return Get the security parameters.
+     */
+    public Map<Operation<?>, FtpSecurity> getSecurity() {
+        return security;
+    }
+
 
 }

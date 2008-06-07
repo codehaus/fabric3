@@ -18,15 +18,28 @@
  */
 package org.fabric3.binding.ftp.control;
 
+import java.net.URI;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.xml.namespace.QName;
+
+import org.fabric3.binding.ftp.common.Constants;
+import org.fabric3.binding.ftp.provision.FtpSecurity;
 import org.fabric3.binding.ftp.provision.FtpWireSourceDefinition;
 import org.fabric3.binding.ftp.provision.FtpWireTargetDefinition;
 import org.fabric3.binding.ftp.scdl.FtpBindingDefinition;
+import org.fabric3.binding.ftp.scdl.TransferMode;
+import org.fabric3.scdl.Operation;
 import org.fabric3.scdl.ReferenceDefinition;
 import org.fabric3.scdl.ServiceDefinition;
+import org.fabric3.scdl.definitions.PolicySet;
 import org.fabric3.spi.generator.BindingGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.policy.Policy;
+import org.w3c.dom.Element;
 
 /**
  *
@@ -39,13 +52,70 @@ public class FtpBindingGenerator implements BindingGenerator<FtpWireSourceDefini
     public FtpWireSourceDefinition generateWireSource(LogicalBinding<FtpBindingDefinition> binding, 
                                                       Policy policy, 
                                                       ServiceDefinition serviceDefinition) throws GenerationException {
-        return null;
+
+
+        URI id = binding.getParent().getParent().getParent().getUri();
+        FtpWireSourceDefinition hwsd = new FtpWireSourceDefinition(id);
+        hwsd.setUri(binding.getBinding().getTargetUri());
+        
+        return hwsd;
+        
     }
 
     public FtpWireTargetDefinition generateWireTarget(LogicalBinding<FtpBindingDefinition> binding, 
                                                       Policy policy,
                                                       ReferenceDefinition referenceDefinition) throws GenerationException {
-        return null;
+
+
+        URI id = binding.getParent().getParent().getParent().getUri();
+        boolean active = binding.getBinding().getTransferMode() == TransferMode.ACTIVE;
+        
+        Map<Operation<?>, FtpSecurity> security = processPolicies(policy, referenceDefinition);
+
+        FtpWireTargetDefinition hwtd = new FtpWireTargetDefinition(id, active, security);
+        hwtd.setUri(binding.getBinding().getTargetUri());
+        
+        return hwtd;
+        
+    }
+
+    private Map<Operation<?>, FtpSecurity> processPolicies(Policy policy, ReferenceDefinition referenceDefinition) throws GenerationException {
+        
+        Map<Operation<?>, FtpSecurity> security = new HashMap<Operation<?>, FtpSecurity>();
+        
+        for (Operation<?> operation : referenceDefinition.getServiceContract().getOperations()) {
+            
+            List<PolicySet> policySets = policy.getProvidedPolicySets(operation);
+            if (policySets.size() == 0) {
+                continue;
+            }
+            if (policySets.size() != 1) {
+                throw new GenerationException("Invalid policy configuration, only supports security policy");
+            }
+            
+            PolicySet policySet = policySets.iterator().next();
+            
+            QName policyQName = policySet.getExtensionName();
+            if (!policyQName.equals(Constants.POLICY_QNAME)) {
+                throw new GenerationException("Unexpected policy element " + policyQName);
+            }
+            
+            Element policyElement = policySet.getExtension();
+            String user = policyElement.getAttribute("user");
+            if (user == null) {
+                throw new GenerationException("User name not specified in security policy");
+            }
+            String password = policyElement.getAttribute("password");
+            if (password == null) {
+                throw new GenerationException("Password not specified in security policy");
+            }
+            
+            security.put(operation, new FtpSecurity(user, password));
+            
+        }
+        
+        return security;
+        
     }
     
 }

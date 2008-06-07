@@ -26,6 +26,7 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
 import org.fabric3.binding.ftp.scdl.FtpBindingDefinition;
+import org.fabric3.binding.ftp.scdl.TransferMode;
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.xml.InvalidValue;
 import org.fabric3.introspection.xml.LoaderHelper;
@@ -39,11 +40,6 @@ import org.osoa.sca.annotations.Reference;
  * @version $Revision$ $Date$
  */
 public class FtpBindingLoader implements TypeLoader<FtpBindingDefinition> {
-
-    /**
-     * Qualified name for the binding element.
-     */
-    public static final QName BINDING_QNAME = new QName("urn:org.fabric3:binding:ftp", "binding.ftp");
 
     private final LoaderHelper loaderHelper;
 
@@ -64,12 +60,13 @@ public class FtpBindingLoader implements TypeLoader<FtpBindingDefinition> {
         try {
 
             uri = reader.getAttributeValue(null, "uri");
+            String transferMode = reader.getAttributeValue(null, "mode");
             if (uri == null) {
                 MissingAttribute failure = new MissingAttribute("A binding URI must be specified ", "uri", reader);
                 introspectionContext.addError(failure);
                 return null;
             }
-            bd = new FtpBindingDefinition(new URI(uri));
+            bd = new FtpBindingDefinition(new URI(uri), TransferMode.valueOf(transferMode));
 
             loaderHelper.loadPolicySetsAndIntents(bd, reader, introspectionContext);
 
