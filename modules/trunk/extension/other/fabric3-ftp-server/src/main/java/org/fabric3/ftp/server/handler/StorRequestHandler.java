@@ -62,6 +62,7 @@ public class StorRequestHandler implements RequestHandler {
         
         String fileName = request.getArgument();
         if (null == fileName) {
+            closeDataConnection(session, passivePort);
             session.write(new DefaultResponse(501, "Syntax error in parameters or arguments"));
             return;
         }
@@ -75,12 +76,21 @@ public class StorRequestHandler implements RequestHandler {
         } catch (IOException ex) {
             session.write(new DefaultResponse(425, "Can't open data connection"));
             return;
+        } finally {
+            closeDataConnection(session, passivePort);
         }
         
+        transfer(session, passivePort, dataConnection);
+
+    }
+
+    private void transfer(FtpSession session, int passivePort, DataConnection dataConnection) {
+        
         boolean success = false;
+        
         try {
             InputStream in = dataConnection.getInputStream();
-            // TODO Temporary
+            // TODO Temporary -> integrate with FTP lets
             int read = in.read();
             while (read != -1) {
                 System.err.print((char)read);
@@ -90,6 +100,8 @@ public class StorRequestHandler implements RequestHandler {
         } catch (IOException ex) {
             session.write(new DefaultResponse(426, "Data connection error"));
             return;
+        } finally {
+            closeDataConnection(session, passivePort);
         }
         
         try {
@@ -97,10 +109,14 @@ public class StorRequestHandler implements RequestHandler {
                 session.write(new DefaultResponse(226, "Transfer complete"));
             }
         } finally {
-            session.closeDataConnection();
-            passiveConnectionService.release(passivePort);
+            closeDataConnection(session, passivePort);
         }
+        
+    }
 
+    private void closeDataConnection(FtpSession session, int passivePort) {
+        session.closeDataConnection();
+        passiveConnectionService.release(passivePort);
     }
 
 }
