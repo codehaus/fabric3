@@ -29,6 +29,7 @@ import junit.framework.TestCase;
 
 import org.apache.commons.net.ftp.FTPClient;
 import org.fabric3.ftp.server.codec.CodecFactory;
+import org.fabric3.ftp.server.ftplet.DefaultFtpLetContainer;
 import org.fabric3.ftp.server.handler.PassRequestHandler;
 import org.fabric3.ftp.server.handler.PasvRequestHandler;
 import org.fabric3.ftp.server.handler.StorRequestHandler;
@@ -36,6 +37,7 @@ import org.fabric3.ftp.server.handler.UserRequestHandler;
 import org.fabric3.ftp.server.passive.PassiveConnectionServiceImpl;
 import org.fabric3.ftp.server.protocol.RequestHandler;
 import org.fabric3.ftp.server.security.FileSystemUserManager;
+import org.fabric3.ftp.spi.FtpLetContainer;
 
 /**
  *
@@ -69,6 +71,9 @@ public class F3FtpHostTest extends TestCase {
         
         StorRequestHandler storRequestHandler = new StorRequestHandler();
         storRequestHandler.setPassivePortService(passiveConnectionService);
+        FtpLetContainer ftpLetContainer = new DefaultFtpLetContainer();
+        ftpLetContainer.registerFtpLet("/", new DummyFtpLet());
+        storRequestHandler.setFtpLetContainer(ftpLetContainer);
         requestHandlers.put("STOR", storRequestHandler);
         
         ftpHost = new F3FtpHost();
@@ -99,14 +104,6 @@ public class F3FtpHostTest extends TestCase {
         ftpClient.connect(InetAddress.getLocalHost(), 1234);
         ftpClient.user("meeraj");
         assertEquals(530, ftpClient.pass("password1"));        
-    }
-
-    public void testPasv() throws IOException {
-        FTPClient ftpClient = new FTPClient();
-        ftpClient.connect(InetAddress.getLocalHost(), 1234);
-        ftpClient.user("meeraj");
-        assertEquals(230, ftpClient.pass("password"));  
-        assertEquals(227, ftpClient.pasv());
     }
     
     public void testStor() throws IOException {

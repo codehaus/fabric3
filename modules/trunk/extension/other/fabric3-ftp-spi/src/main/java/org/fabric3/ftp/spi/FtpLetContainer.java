@@ -21,11 +21,11 @@ package org.fabric3.ftp.spi;
 import org.fabric3.ftp.api.FtpLet;
 
 /**
- * SPI for integrating an in-process FTP host.
- *
+ * SPI for the FTP let container.
+ * 
  * @version $Revision$ $Date$
  */
-public interface FtpHost {
+public interface FtpLetContainer {
     
     /**
      * Registers an FTP let for the specified path.
@@ -34,5 +34,13 @@ public interface FtpHost {
      * @param ftpLet FtpLet listening for the upload request.
      */
     void registerFtpLet(String path, FtpLet ftpLet);
+    
+    /**
+     * Gets a registered FTP let for the file name.
+     * 
+     * @param fileName Fully qualified name for the file name.
+     * @return FTP let that is registered, null if none registered.
+     */
+    FtpLet getFtpLet(String fileName);
 
 }

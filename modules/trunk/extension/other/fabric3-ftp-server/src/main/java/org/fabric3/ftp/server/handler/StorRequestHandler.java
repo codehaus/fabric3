@@ -21,12 +21,14 @@ package org.fabric3.ftp.server.handler;
 import java.io.IOException;
 import java.io.InputStream;
 
+import org.fabric3.ftp.api.FtpLet;
 import org.fabric3.ftp.server.data.DataConnection;
 import org.fabric3.ftp.server.passive.PassiveConnectionService;
 import org.fabric3.ftp.server.protocol.DefaultResponse;
 import org.fabric3.ftp.server.protocol.FtpSession;
 import org.fabric3.ftp.server.protocol.Request;
 import org.fabric3.ftp.server.protocol.RequestHandler;
+import org.fabric3.ftp.spi.FtpLetContainer;
 import org.osoa.sca.annotations.Reference;
 
 /**
@@ -39,6 +41,16 @@ import org.osoa.sca.annotations.Reference;
 public class StorRequestHandler implements RequestHandler {
 
     private PassiveConnectionService passiveConnectionService;
+    private FtpLetContainer ftpLetContainer;
+    
+    /**
+     * Injects the FtpLet container.
+     * @param ftpLetContainer Ftplet container.
+     */
+    @Reference
+    public void setFtpLetContainer(FtpLetContainer ftpLetContainer) {
+        this.ftpLetContainer = ftpLetContainer;
+    }
 
     /**
      * Injects the passive connection service.
@@ -79,33 +91,26 @@ public class StorRequestHandler implements RequestHandler {
             return;
         }
         
-        transfer(session, passivePort, dataConnection);
+        transfer(session, passivePort, dataConnection, fileName);
 
     }
 
-    private void transfer(FtpSession session, int passivePort, DataConnection dataConnection) {
-        
-        boolean success = false;
+    private void transfer(FtpSession session, int passivePort, DataConnection dataConnection, String fileName) {
         
         try {
-            InputStream in = dataConnection.getInputStream();
-            // TODO Temporary -> integrate with FTP lets
-            int read = in.read();
-            while (read != -1) {
-                System.err.print((char)read);
-                read = in.read();
+            
+            InputStream uploadData = dataConnection.getInputStream();
+            
+            FtpLet ftpLet = ftpLetContainer.getFtpLet(fileName);
+            if (ftpLet != null) {
+                ftpLet.onUpload(fileName, uploadData);
+            } else {
+                throw new IOException("No registered ");
             }
-            success = true;
-        } catch (IOException ex) {
-            closeDataConnection(session, passivePort);
+            session.write(new DefaultResponse(226, "Transfer complete"));
+        } catch (Exception ex) {
             session.write(new DefaultResponse(426, "Data connection error"));
             return;
-        }
-        
-        try {
-            if (success) {
-                session.write(new DefaultResponse(226, "Transfer complete"));
-            }
         } finally {
             closeDataConnection(session, passivePort);
         }

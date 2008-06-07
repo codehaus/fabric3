@@ -16,27 +16,25 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.ftp.api;
+package org.fabric3.ftp.server.host;
 
 import java.io.InputStream;
 
+import org.fabric3.ftp.api.FtpLet;
+
 /**
- * 
- * Interface for receiving FTP callbacks.
- * 
- * Note: The concept is borrowed from Apache MINA FTP Server.
  *
  * @version $Revision$ $Date$
  */
-public interface FtpLet {
-    
-    /**
-     * Callback when data is uploaded by the remote FTP client.
-     * 
-     * @param path Name of the file being uploaded.
-     * @param uploadData Stream of data that is being uploaded.
-     * @throws Exception If unable to handle the data.
-     */
-    void onUpload(String fileName, InputStream uploadData) throws Exception;
+public class DummyFtpLet implements FtpLet {
+
+    public void onUpload(String fileName, InputStream uploadData) throws Exception {
+        
+        int data = uploadData.read();
+        while (data != -1) {
+            System.err.print((char) data);
+            data = uploadData.read();
+        }
+    }
 
 }
