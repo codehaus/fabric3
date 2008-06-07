@@ -74,10 +74,9 @@ public class StorRequestHandler implements RequestHandler {
         try {
             dataConnection.open();
         } catch (IOException ex) {
+            closeDataConnection(session, passivePort);
             session.write(new DefaultResponse(425, "Can't open data connection"));
             return;
-        } finally {
-            closeDataConnection(session, passivePort);
         }
         
         transfer(session, passivePort, dataConnection);
@@ -98,10 +97,9 @@ public class StorRequestHandler implements RequestHandler {
             }
             success = true;
         } catch (IOException ex) {
+            closeDataConnection(session, passivePort);
             session.write(new DefaultResponse(426, "Data connection error"));
             return;
-        } finally {
-            closeDataConnection(session, passivePort);
         }
         
         try {
