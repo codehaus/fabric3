@@ -18,13 +18,19 @@
  */
 package org.fabric3.binding.ftp.introspection;
 
+import java.net.URI;
+import java.net.URISyntaxException;
+
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
 import org.fabric3.binding.ftp.scdl.FtpBindingDefinition;
 import org.fabric3.introspection.IntrospectionContext;
+import org.fabric3.introspection.xml.InvalidValue;
 import org.fabric3.introspection.xml.LoaderHelper;
+import org.fabric3.introspection.xml.LoaderUtil;
+import org.fabric3.introspection.xml.MissingAttribute;
 import org.fabric3.introspection.xml.TypeLoader;
 import org.osoa.sca.annotations.Reference;
 
@@ -37,7 +43,7 @@ public class FtpBindingLoader implements TypeLoader<FtpBindingDefinition> {
     /**
      * Qualified name for the binding element.
      */
-    public static final QName BINDING_QNAME = new QName("http://www.fabric3.org/binding/hessian/0.2", "binding.hessian");
+    public static final QName BINDING_QNAME = new QName("urn:org.fabric3:binding:ftp", "binding.ftp");
 
     private final LoaderHelper loaderHelper;
 
@@ -51,7 +57,30 @@ public class FtpBindingLoader implements TypeLoader<FtpBindingDefinition> {
     }
 
     public FtpBindingDefinition load(XMLStreamReader reader, IntrospectionContext introspectionContext) throws XMLStreamException {
-        return null;
+
+        FtpBindingDefinition bd = null;
+        String uri = null;
+        
+        try {
+
+            uri = reader.getAttributeValue(null, "uri");
+            if (uri == null) {
+                MissingAttribute failure = new MissingAttribute("A binding URI must be specified ", "uri", reader);
+                introspectionContext.addError(failure);
+                return null;
+            }
+            bd = new FtpBindingDefinition(new URI(uri));
+
+            loaderHelper.loadPolicySetsAndIntents(bd, reader, introspectionContext);
+
+        } catch (URISyntaxException ex) {
+            InvalidValue failure = new InvalidValue("The FTP binding URI is not valid: " + uri, "uri", reader);
+            introspectionContext.addError(failure);
+        }
+
+        LoaderUtil.skipToEndElement(reader);
+        return bd;
+
     }
     
 }

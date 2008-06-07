@@ -18,6 +18,9 @@
  */
 package org.fabric3.binding.ftp.scdl;
 
+import java.net.URI;
+
+import org.fabric3.binding.ftp.introspection.FtpBindingLoader;
 import org.fabric3.scdl.BindingDefinition;
 
 /**
@@ -26,17 +29,16 @@ import org.fabric3.scdl.BindingDefinition;
  * @version $Revision$ $Date$
  */
 public class FtpBindingDefinition extends BindingDefinition {
-    
-    /**
-     * Serial version UID.
-     */
-    private static final long serialVersionUID = -2274671439374413830L;
+
+    private static final long serialVersionUID = -889044951554792780L;
 
     /**
      * Initializes the binding type.
+     * 
+     * @param classLoaderId Classloader Id.
      */
-    public FtpBindingDefinition() {
-        super(null);
+    public FtpBindingDefinition(URI classLoaderId) {
+        super(classLoaderId, FtpBindingLoader.BINDING_QNAME);
     }
 
 }
