@@ -14,7 +14,7 @@ import org.fabric3.spi.wire.TargetResolutionException;
 import org.fabric3.spi.wire.TargetResolutionService;
 
 /**
- * Resolution based on type based auto-wire.
+ * Resolution based on an explicit target uri.
  *
  * @version $Revsion$ $Date$
  */
