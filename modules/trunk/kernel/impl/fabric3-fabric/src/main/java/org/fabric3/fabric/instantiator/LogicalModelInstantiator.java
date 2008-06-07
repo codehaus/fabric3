@@ -21,7 +21,7 @@ import org.fabric3.spi.assembly.ActivateException;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 
 /**
- * Interface that abstracts the concerns of instantiating and maintaining logical components within a domain.
+ * Implementations instantiate logical components within a domain.
  *
  * @version $Revision$ $Date$
  */
