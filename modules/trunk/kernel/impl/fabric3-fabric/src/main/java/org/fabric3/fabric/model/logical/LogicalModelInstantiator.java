@@ -21,19 +21,16 @@ import org.fabric3.spi.assembly.ActivateException;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 
 /**
- * Interface that abstracts the concerns of instantiating and maintaining 
- * logical components within the assembly.
- * 
- * TODO Identify the contract required.
- * 
+ * Interface that abstracts the concerns of instantiating and maintaining logical components within a domain.
+ *
  * @version $Revision$ $Date$
  */
-public interface LogicalModelGenerator {
+public interface LogicalModelInstantiator {
 
     /**
      * Include the composite into the domain.
-     * 
-     * @param domain Domain in which the composite is to be included.
+     *
+     * @param domain    Domain in which the composite is to be included.
      * @param composite Composite to be included in the domain.
      * @return the change that would result from this include operation
      * @throws ActivateException If unable to include the composite.
@@ -41,10 +38,10 @@ public interface LogicalModelGenerator {
     LogicalChange include(LogicalCompositeComponent domain, Composite composite) throws ActivateException;
 
 
-  /**
+    /**
      * Exclude the composite from the domain.
      *
-     * @param domain Domain in which the composite is to be included.
+     * @param domain    Domain in which the composite is to be included.
      * @param composite Composite to be included in the domain.
      * @return the change that would result from this include operation
      * @throws ActivateException If unable to include the composite.

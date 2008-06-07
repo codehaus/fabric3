@@ -26,7 +26,7 @@ import javax.xml.namespace.QName;
 
 import org.fabric3.fabric.assembly.allocator.AllocationException;
 import org.fabric3.fabric.assembly.allocator.Allocator;
-import org.fabric3.fabric.model.logical.LogicalModelGenerator;
+import org.fabric3.fabric.model.logical.LogicalModelInstantiator;
 import org.fabric3.fabric.model.logical.LogicalChange;
 import org.fabric3.fabric.generator.PhysicalModelGenerator;
 import org.fabric3.fabric.services.routing.RoutingException;
@@ -55,7 +55,7 @@ public abstract class AbstractAssembly implements Assembly {
     public static final QName COMPOSITE = new QName(SCA_NS, "composite");
 
     private final PhysicalModelGenerator physicalModelGenerator;
-    private final LogicalModelGenerator logicalModelGenerator;
+    private final LogicalModelInstantiator logicalModelInstantiator;
     private final Allocator allocator;
     private final MetaDataStore metadataStore;
     private final LogicalComponentManager logicalComponentManager;
@@ -64,13 +64,13 @@ public abstract class AbstractAssembly implements Assembly {
     public AbstractAssembly(Allocator allocator,
                             MetaDataStore metadataStore,
                             PhysicalModelGenerator physicalModelGenerator,
-                            LogicalModelGenerator logicalModelGenerator,
+                            LogicalModelInstantiator logicalModelInstantiator,
                             LogicalComponentManager logicalComponentManager,
                             RoutingService routingService) {
         this.allocator = allocator;
         this.metadataStore = metadataStore;
         this.physicalModelGenerator = physicalModelGenerator;
-        this.logicalModelGenerator = logicalModelGenerator;
+        this.logicalModelInstantiator = logicalModelInstantiator;
         this.logicalComponentManager = logicalComponentManager;
         this.routingService = routingService;
     }
@@ -104,7 +104,7 @@ public abstract class AbstractAssembly implements Assembly {
 
         LogicalCompositeComponent domain = logicalComponentManager.getDomain();
 
-        LogicalChange change = logicalModelGenerator.include(domain, composite);
+        LogicalChange change = logicalModelInstantiator.include(domain, composite);
         change.apply();
 
         Collection<LogicalComponent<?>> components = domain.getComponents();
@@ -165,7 +165,7 @@ public abstract class AbstractAssembly implements Assembly {
 
         LogicalCompositeComponent domain = logicalComponentManager.getDomain();
 
-        LogicalChange change = logicalModelGenerator.exclude(domain, composite);
+        LogicalChange change = logicalModelInstantiator.exclude(domain, composite);
         change.apply();
 
         Collection<LogicalComponent<?>> components = change.getAddedComponents();

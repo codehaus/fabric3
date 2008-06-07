@@ -19,7 +19,7 @@
 package org.fabric3.fabric.assembly;
 
 import org.fabric3.fabric.assembly.allocator.Allocator;
-import org.fabric3.fabric.model.logical.LogicalModelGenerator;
+import org.fabric3.fabric.model.logical.LogicalModelInstantiator;
 import org.fabric3.fabric.generator.PhysicalModelGenerator;
 import org.fabric3.fabric.services.routing.RoutingService;
 import org.fabric3.spi.runtime.assembly.LogicalComponentManager;
@@ -37,10 +37,10 @@ public class RuntimeAssemblyImpl extends AbstractAssembly {
     public RuntimeAssemblyImpl(@Reference Allocator allocator,
                                @Reference MetaDataStore metadataStore,
                                @Reference PhysicalModelGenerator physicalModelGenerator,
-                               @Reference LogicalModelGenerator logicalModelGenerator,
+                               @Reference LogicalModelInstantiator logicalModelInstantiator,
                                @Reference LogicalComponentManager logicalComponentManager,
                                @Reference RoutingService routingService) {
-        super(allocator, metadataStore, physicalModelGenerator, logicalModelGenerator, logicalComponentManager, routingService);
+        super(allocator, metadataStore, physicalModelGenerator, logicalModelInstantiator, logicalComponentManager, routingService);
     }
 
 }

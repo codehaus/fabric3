@@ -50,7 +50,7 @@ import org.fabric3.spi.util.UriHelper;
 /**
  * @version $Revision$ $Date$
  */
-public class LogicalModelGeneratorImpl implements LogicalModelGenerator {
+public class LogicalModelInstantiatorImpl implements LogicalModelInstantiator {
 
     private final WiringService wiringService;
     private final PromotionNormalizer promotionNormalizer;
@@ -59,7 +59,7 @@ public class LogicalModelGeneratorImpl implements LogicalModelGenerator {
     private final ComponentInstantiator compositeComponentInstantiator;
 
 
-    public LogicalModelGeneratorImpl(@Reference WiringService wiringService,
+    public LogicalModelInstantiatorImpl(@Reference WiringService wiringService,
                                      @Reference PromotionNormalizer promotionNormalizer,
                                      @Reference LogicalComponentManager logicalComponentManager,
                                      @Reference(name = "atomicComponentInstantiator")ComponentInstantiator atomicComponentInstantiator,

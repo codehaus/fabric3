@@ -22,7 +22,7 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.fabric.assembly.allocator.Allocator;
 import org.fabric3.fabric.generator.PhysicalModelGenerator;
-import org.fabric3.fabric.model.logical.LogicalModelGenerator;
+import org.fabric3.fabric.model.logical.LogicalModelInstantiator;
 import org.fabric3.fabric.services.routing.RoutingService;
 import org.fabric3.spi.assembly.Assembly;
 import org.fabric3.spi.assembly.AssemblyException;
@@ -40,10 +40,10 @@ public class DistributedAssemblyImpl extends AbstractAssembly implements Assembl
     public DistributedAssemblyImpl(@Reference Allocator allocator,
                                    @Reference(name = "store")MetaDataStore metaDataStore,
                                    @Reference PhysicalModelGenerator physicalModelGenerator,
-                                   @Reference LogicalModelGenerator logicalModelGenerator,
+                                   @Reference LogicalModelInstantiator logicalModelInstantiator,
                                    @Reference(name = "logicalComponentManager")LogicalComponentManager logicalComponentManager,
                                    @Reference RoutingService routingService) {
-        super(allocator, metaDataStore, physicalModelGenerator, logicalModelGenerator, logicalComponentManager, routingService);
+        super(allocator, metaDataStore, physicalModelGenerator, logicalModelInstantiator, logicalComponentManager, routingService);
         this.logicalComponentManager = logicalComponentManager;
     }
 

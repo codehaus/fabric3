@@ -11,8 +11,8 @@ import org.easymock.classextension.EasyMock;
 import org.fabric3.fabric.assembly.normalizer.PromotionNormalizer;
 import org.fabric3.fabric.model.logical.AtomicComponentInstantiator;
 import org.fabric3.fabric.model.logical.CompositeComponentInstantiator;
-import org.fabric3.fabric.model.logical.LogicalModelGenerator;
-import org.fabric3.fabric.model.logical.LogicalModelGeneratorImpl;
+import org.fabric3.fabric.model.logical.LogicalModelInstantiator;
+import org.fabric3.fabric.model.logical.LogicalModelInstantiatorImpl;
 import org.fabric3.scdl.AbstractComponentType;
 import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.ComponentType;
@@ -38,14 +38,14 @@ public class InstantiationTestCase extends TestCase {
     public static final String SERVICE_URI = COMPONENT_URI + "#service";
     public static final String REFERENCE_URI = COMPONENT_URI + "#reference";
 
-    private LogicalModelGenerator logicalModelGenerator;
+    private LogicalModelInstantiator logicalModelInstantiator;
     private LogicalCompositeComponent parent;
 
     public void testInstantiateChildren() throws Exception {
         ComponentDefinition<?> definition = createParentWithChild();
         Composite composite = new Composite(null);
         composite.add(definition);
-        logicalModelGenerator.include(parent, composite);
+        logicalModelInstantiator.include(parent, composite);
         LogicalCompositeComponent logicalComponent = (LogicalCompositeComponent) parent.getComponents().iterator().next();
         assertEquals(COMPONENT_URI, logicalComponent.getUri().toString());
         LogicalComponent<?> logicalChild = logicalComponent.getComponent(URI.create(CHILD_URI));
@@ -56,7 +56,7 @@ public class InstantiationTestCase extends TestCase {
         ComponentDefinition<?> definition = createParentWithServiceAndReference();
         Composite composite = new Composite(null);
         composite.add(definition);
-        logicalModelGenerator.include(parent, composite);
+        logicalModelInstantiator.include(parent, composite);
         LogicalCompositeComponent logicalComponent = (LogicalCompositeComponent) parent.getComponents().iterator().next();
         LogicalService logicalService = logicalComponent.getService("service");
         assertEquals(SERVICE_URI, logicalService.getUri().toString());
@@ -73,7 +73,7 @@ public class InstantiationTestCase extends TestCase {
         WiringService wiringService = EasyMock.createMock(WiringService.class);
         PromotionNormalizer normalizer = EasyMock.createMock(PromotionNormalizer.class);
         
-        logicalModelGenerator = new LogicalModelGeneratorImpl(wiringService, normalizer, null, atomicComponentInstantiator, compositeComponentInstantiator);
+        logicalModelInstantiator = new LogicalModelInstantiatorImpl(wiringService, normalizer, null, atomicComponentInstantiator, compositeComponentInstantiator);
         parent = new LogicalCompositeComponent(PARENT_URI, null, null, null);
     }
 

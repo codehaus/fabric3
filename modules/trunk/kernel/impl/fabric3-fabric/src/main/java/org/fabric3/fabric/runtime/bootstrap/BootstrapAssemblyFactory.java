@@ -69,8 +69,8 @@ import org.fabric3.fabric.implementation.singleton.SingletonWireAttacher;
 import org.fabric3.fabric.implementation.singleton.SingletonWireTargetDefinition;
 import org.fabric3.fabric.model.logical.AtomicComponentInstantiator;
 import org.fabric3.fabric.model.logical.CompositeComponentInstantiator;
-import org.fabric3.fabric.model.logical.LogicalModelGenerator;
-import org.fabric3.fabric.model.logical.LogicalModelGeneratorImpl;
+import org.fabric3.fabric.model.logical.LogicalModelInstantiator;
+import org.fabric3.fabric.model.logical.LogicalModelInstantiatorImpl;
 import org.fabric3.fabric.monitor.MonitorWireAttacher;
 import org.fabric3.fabric.monitor.MonitorWireGenerator;
 import org.fabric3.fabric.monitor.MonitorWireTargetDefinition;
@@ -194,12 +194,12 @@ public class BootstrapAssemblyFactory {
         PhysicalModelGenerator physicalModelGenerator =
                 createPhysicalModelGenerator(logicalComponentManager, metaDataStore);
 
-        LogicalModelGenerator logicalModelGenerator = createLogicalModelGenerator(logicalComponentManager);
+        LogicalModelInstantiator logicalModelInstantiator = createLogicalModelGenerator(logicalComponentManager);
 
         Assembly runtimeAssembly = new RuntimeAssemblyImpl(allocator,
                                                            metaDataStore,
                                                            physicalModelGenerator,
-                                                           logicalModelGenerator,
+                                                           logicalModelInstantiator,
                                                            logicalComponentManager,
                                                            routingService);
         try {
@@ -210,7 +210,7 @@ public class BootstrapAssemblyFactory {
         return runtimeAssembly;
     }
 
-    private static LogicalModelGenerator createLogicalModelGenerator(LogicalComponentManager logicalComponentManager) {
+    private static LogicalModelInstantiator createLogicalModelGenerator(LogicalComponentManager logicalComponentManager) {
         TargetPromotionService targetPromotionService = new DefaultTargetPromotionService();
         List<TargetResolutionService> targetResolutionServices = new ArrayList<TargetResolutionService>();
         targetResolutionServices.add(new ExplicitTargetResolutionService());
@@ -223,7 +223,7 @@ public class BootstrapAssemblyFactory {
 
         CompositeComponentInstantiator compositeComponentInstantiator =
                 new CompositeComponentInstantiator(atomicComponentInstantiator, documentLoader);
-        return new LogicalModelGeneratorImpl(wiringService,
+        return new LogicalModelInstantiatorImpl(wiringService,
                                              normalizer,
                                              logicalComponentManager,
                                              atomicComponentInstantiator,
