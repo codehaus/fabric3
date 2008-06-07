@@ -45,6 +45,7 @@ import org.fabric3.scdl.Multiplicity;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
+import org.fabric3.spi.model.instance.LogicalService;
 import org.fabric3.spi.wire.TargetPromotionService;
 import org.fabric3.spi.wire.TargetResolutionException;
 import org.fabric3.spi.wire.TargetResolutionService;
@@ -138,8 +139,8 @@ public class DefaultWiringServiceTestCase extends TestCase {
     }
 
     private LogicalCompositeComponent createWiredComposite(LogicalCompositeComponent parent,
-                                                                           Class<?> sourceClass,
-                                                                           Class<?> targetClass) {
+                                                           Class<?> sourceClass,
+                                                           Class<?> targetClass) {
         LogicalCompositeComponent composite = createComposite("composite", parent);
         LogicalComponent<?> source = createSourceAtomic(sourceClass, composite);
         composite.addComponent(source);
@@ -196,7 +197,10 @@ public class DefaultWiringServiceTestCase extends TestCase {
         ComponentDefinition<MockAtomicImpl> definition = new ComponentDefinition<MockAtomicImpl>(uri.toString());
         definition.setImplementation(impl);
         URI id = URI.create("runtime");
-        return new LogicalComponent<MockAtomicImpl>(uri, id, definition, parent);
+        LogicalComponent component = new LogicalComponent<MockAtomicImpl>(uri, id, definition, parent);
+        LogicalService logicalService = new LogicalService(TARGET_URI, service, parent);
+        component.addService(logicalService);
+        return component;
     }
 
     private class MockAtomicImpl extends Implementation<MockComponentType> {

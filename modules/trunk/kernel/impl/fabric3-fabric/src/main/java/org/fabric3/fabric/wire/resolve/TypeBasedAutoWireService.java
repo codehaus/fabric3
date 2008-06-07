@@ -1,8 +1,26 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
 package org.fabric3.fabric.wire.resolve;
 
 import java.net.URI;
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Collection;
 import java.util.List;
 
 import org.fabric3.scdl.AbstractComponentType;
@@ -13,63 +31,68 @@ import org.fabric3.scdl.Composite;
 import org.fabric3.scdl.Implementation;
 import org.fabric3.scdl.ReferenceDefinition;
 import org.fabric3.scdl.ServiceContract;
-import org.fabric3.scdl.ServiceDefinition;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
+import org.fabric3.spi.model.instance.LogicalService;
 import org.fabric3.spi.util.UriHelper;
 import org.fabric3.spi.wire.TargetResolutionException;
 import org.fabric3.spi.wire.TargetResolutionService;
 
 /**
  * Resolution based on an explicitly requested target.
- * 
+ *
  * @version $Revsion$ $Date$
- * 
  */
 public class TypeBasedAutoWireService implements TargetResolutionService {
 
-    public void resolve(LogicalReference logicalReference, LogicalCompositeComponent context) throws TargetResolutionException {
+    public void resolve(LogicalReference logicalReference, LogicalCompositeComponent compositeComponent) throws TargetResolutionException {
 
         ComponentReference componentReference = logicalReference.getComponentReference();
         LogicalComponent<?> component = logicalReference.getParent();
-        ReferenceDefinition referenceDefinition = logicalReference.getDefinition();
-        String referenceName = referenceDefinition.getName();
 
         if (componentReference == null) {
-            if (!logicalReference.getBindings().isEmpty() || isPromoted(context, component, referenceName)) {
+            // this is a reference on an atomic component, not a composite reference
+            if (!logicalReference.getBindings().isEmpty() || isPromoted(compositeComponent, logicalReference)) {
                 return;
             }
             ServiceContract<?> requiredContract = determineContract(logicalReference);
 
-            Autowire autowire = calculateAutowire(context, component);
+            Autowire autowire = calculateAutowire(compositeComponent, component);
             if (autowire == Autowire.ON) {
-                resolveByType(context, component, referenceName, requiredContract);
+                resolveByType(compositeComponent, component, logicalReference, requiredContract);
             }
 
         } else {
-
+            // the reference is a composite
             List<URI> uris = componentReference.getTargets();
-            if (!uris.isEmpty() || isPromoted(context, component, referenceName)) {
+            if (!uris.isEmpty() || isPromoted(compositeComponent, logicalReference)) {
                 return;
             }
 
             if (componentReference.isAutowire()) {
+                ReferenceDefinition referenceDefinition = logicalReference.getDefinition();
                 ServiceContract<?> requiredContract = referenceDefinition.getServiceContract();
-                String fragment = componentReference.getName();
-                List<URI> targetUris = resolveByType(component.getParent(), component, referenceName, requiredContract);
-                if (targetUris.isEmpty()) {
-                    targetUris = resolveByType(context, component, fragment, requiredContract);
+                boolean resolved = resolveByType(component.getParent(), component, logicalReference, requiredContract);
+                if (!resolved) {
+                    resolveByType(compositeComponent, component, logicalReference, requiredContract);
                 }
             }
         }
-        
+
         if (logicalReference.getWires().isEmpty() && logicalReference.getDefinition().isRequired() && logicalReference.getBindings().isEmpty()) {
             throw new TargetResolutionException("Unable to resolve reference " + logicalReference.getUri());
         }
 
     }
 
+    /**
+     * Determines the autowire setting for a component
+     *
+     * @param composite the parent the component inherits its default autowire setting from
+     * @param component the component
+     * @return the autowire setting
+     */
     private Autowire calculateAutowire(LogicalComponent<?> composite, LogicalComponent<?> component) {
 
         ComponentDefinition<? extends Implementation<?>> definition = component.getDefinition();
@@ -113,42 +136,52 @@ public class TypeBasedAutoWireService implements TargetResolutionService {
 
     }
 
-    private List<URI> resolveByType(LogicalCompositeComponent composite, LogicalComponent<?> component, String name, ServiceContract<?> contract) {
-        
+    /**
+     * Attempts to resolve a reference against a composite using the autowire matching algorithm. If the reference is resolved, the target URI (or
+     * URIs) is added to the reference.
+     *
+     * @param composite        the composite to resolve against
+     * @param component        the component containing the reference
+     * @param logicalReference the logical reference
+     * @param contract         the contract to match against
+     * @return true if the reference has been resolved.
+     * @throws TargetResolutionException if an error occurs during resolution
+     */
+    private boolean resolveByType(LogicalCompositeComponent composite,
+                                  LogicalComponent<?> component,
+                                  LogicalReference logicalReference,
+                                  ServiceContract<?> contract) throws TargetResolutionException {
+
         List<URI> candidates = new ArrayList<URI>();
-        
+
         for (LogicalComponent<?> child : composite.getComponents()) {
-            ComponentDefinition<? extends Implementation<?>> candidate = child.getDefinition();
-            Implementation<?> candidateImpl = candidate.getImplementation();
-            AbstractComponentType<?, ?, ?, ?> candidateType = candidateImpl.getComponentType();
-            for (ServiceDefinition service : candidateType.getServices().values()) {
-                ServiceContract<?> targetContract = service.getServiceContract();
+            for (LogicalService service : child.getServices()) {
+                ServiceContract<?> targetContract = determineContract(service);
                 if (targetContract == null) {
-                    continue;
+                    // This is a programming error since a non-composite service must have a service contract
+                    throw new ServiceContractNotFoundException("No service contract specified on service: " + service.getUri());
                 }
                 if (contract.isAssignableFrom(targetContract)) {
-                    candidates.add(URI.create(child.getUri().toString() + '#' + service.getName()));
+                    candidates.add(service.getUri());
                     break;
                 }
             }
         }
-        
+
         if (candidates.isEmpty()) {
-            return Collections.emptyList();
+            return false;
         }
 
         for (URI target : candidates) {
-            LogicalReference logicalReference = component.getReference(name);
-            assert logicalReference != null;
             logicalReference.addTargetUri(component.getUri().resolve(target));
         }
 
-        return candidates;
-        
+        return true;
+
     }
-    
-    private boolean isPromoted(LogicalComponent<?> composite, LogicalComponent<?> component, String referenceName) {
-        
+
+    private boolean isPromoted(LogicalComponent<?> composite, LogicalReference logicalReference) {
+        LogicalComponent<?> component = logicalReference.getParent();
         for (LogicalReference compositeReference : composite.getReferences()) {
             List<URI> uris = compositeReference.getPromotedUris();
             if (component.getReferences().size() == 1) {
@@ -163,22 +196,27 @@ public class TypeBasedAutoWireService implements TargetResolutionService {
                     }
                 }
             } else {
-                URI refUri = URI.create(component.getUri().toString() + "#" + referenceName);
                 for (URI uri : uris) {
-                    if (refUri.equals(uri)) {
+                    if (logicalReference.getUri().equals(uri)) {
                         return true;
                     }
                 }
 
             }
         }
-        
+
         return false;
 
     }
-    
+
+    /**
+     * Determines the service contract for a promoted reference
+     *
+     * @param reference the reference to determine the contract for
+     * @return the service contract
+     */
     private ServiceContract<?> determineContract(LogicalReference reference) {
-        
+
         ServiceContract<?> contract = reference.getDefinition().getServiceContract();
         if (contract != null) {
             return contract;
@@ -192,16 +230,59 @@ public class TypeBasedAutoWireService implements TargetResolutionService {
         LogicalCompositeComponent parent = (LogicalCompositeComponent) reference.getParent();
         LogicalComponent<?> promotedComponent = parent.getComponent(defragmented);
         LogicalReference promotedReference;
-        
+
         if (promotedReferenceName == null) {
+            // if the component has only one reference, the SCA specification allows it to be used as a default
             assert promotedComponent.getReferences().size() == 1;
             promotedReference = promotedComponent.getReferences().iterator().next();
         } else {
             promotedReference = promotedComponent.getReference(promotedReferenceName);
         }
-        
+
         return determineContract(promotedReference);
-        
+
     }
 
+    /**
+     * Returns the service contract for a service. Promoted services often do not specify a service contract explicitly, instead using a service
+     * contract defined further down in the promotion hieratchy. In these cases, the service contract is often inferred from the implementation (e.g.
+     * a Java class) or explicitly declared within the component definition in a composite file.
+     *
+     * @param service the composite service to determine the service contract for.
+     * @return the service contract or null if none is found
+     */
+    private ServiceContract<?> determineContract(LogicalService service) {
+        ServiceContract<?> contract = service.getDefinition().getServiceContract();
+        if (contract != null) {
+            return contract;
+        }
+        if (!(service.getParent() instanceof LogicalCompositeComponent)) {
+            return null;
+        }
+        LogicalCompositeComponent parent = (LogicalCompositeComponent) service.getParent();
+        URI promotedUri = service.getPromotedUri();
+        LogicalComponent<?> promoted = parent.getComponent(UriHelper.getDefragmentedName(promotedUri));
+        assert promoted != null;
+        String serviceName = promotedUri.getFragment();
+        LogicalService promotedService;
+        if (serviceName == null && promoted.getServices().size() == 1) {
+            // select the default service as a service name was not specified
+            Collection<LogicalService> services = promoted.getServices();
+            promotedService = services.iterator().next();
+        } else if (serviceName == null) {
+            // programing error
+            throw new AssertionError("Service must be specified");
+        } else {
+            promotedService = promoted.getService(serviceName);
+        }
+        assert promotedService != null;
+        contract = promotedService.getDefinition().getServiceContract();
+        if (contract != null) {
+            return contract;
+        } else {
+            // this is another promoted service, so recurse further into the promotion hierarchy
+            contract = determineContract(promotedService);
+        }
+        return contract;
+    }
 }
