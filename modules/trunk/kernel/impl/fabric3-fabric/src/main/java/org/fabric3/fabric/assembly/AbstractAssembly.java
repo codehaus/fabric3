@@ -18,17 +18,16 @@
  */
 package org.fabric3.fabric.assembly;
 
-import static org.osoa.sca.Constants.SCA_NS;
-
 import java.util.Collection;
-
 import javax.xml.namespace.QName;
+
+import static org.osoa.sca.Constants.SCA_NS;
 
 import org.fabric3.fabric.allocator.AllocationException;
 import org.fabric3.fabric.allocator.Allocator;
-import org.fabric3.fabric.instantiator.LogicalModelInstantiator;
-import org.fabric3.fabric.instantiator.LogicalChange;
 import org.fabric3.fabric.generator.PhysicalModelGenerator;
+import org.fabric3.fabric.instantiator.LogicalChange;
+import org.fabric3.fabric.instantiator.LogicalModelInstantiator;
 import org.fabric3.fabric.services.routing.RoutingException;
 import org.fabric3.fabric.services.routing.RoutingService;
 import org.fabric3.scdl.Composite;
@@ -42,9 +41,9 @@ import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 import org.fabric3.spi.runtime.assembly.LogicalComponentManager;
 import org.fabric3.spi.runtime.assembly.RecordException;
 import org.fabric3.spi.services.contribution.MetaDataStore;
+import org.fabric3.spi.services.contribution.MetaDataStoreException;
 import org.fabric3.spi.services.contribution.QNameSymbol;
 import org.fabric3.spi.services.contribution.ResourceElement;
-import org.fabric3.spi.services.contribution.MetaDataStoreException;
 
 /**
  * Base class for abstract assemblies
@@ -87,12 +86,14 @@ public abstract class AbstractAssembly implements Assembly {
             throw new ActivateException(e);
         }
         if (element == null) {
-            throw new DeployableNotFoundException("Deployable not found", deployable.toString());
+            String id = deployable.toString();
+            throw new DeployableNotFoundException("Deployable not found: " + id, id);
         }
 
         Object object = element.getValue();
         if (!(object instanceof Composite)) {
-            throw new IllegalDeployableTypeException("Deployable must be a composite", deployable.toString());
+            String id = deployable.toString();
+            throw new IllegalDeployableTypeException("Deployable must be a composite:" + id, id);
         }
 
         Composite composite = (Composite) object;
@@ -134,7 +135,8 @@ public abstract class AbstractAssembly implements Assembly {
             // record the operation
             logicalComponentManager.store();
         } catch (RecordException e) {
-            throw new ActivateException("Error activating deployable", composite.getName().toString(), e);
+            String id = composite.getName().toString();
+            throw new ActivateException("Error activating deployable: " + id, id, e);
         }
 
     }
@@ -148,12 +150,14 @@ public abstract class AbstractAssembly implements Assembly {
             throw new ActivateException(e);
         }
         if (element == null) {
-            throw new DeployableNotFoundException("Deployable not found", deployable.toString());
+            String id = deployable.toString();
+            throw new DeployableNotFoundException("Deployable not found " + id, id);
         }
 
         Object object = element.getValue();
         if (!(object instanceof Composite)) {
-            throw new IllegalDeployableTypeException("Deployable must be a composite", deployable.toString());
+            String id = deployable.toString();
+            throw new IllegalDeployableTypeException("Deployable must be a composite: " + id, id);
         }
 
         Composite composite = (Composite) object;
@@ -195,7 +199,8 @@ public abstract class AbstractAssembly implements Assembly {
             // record the operation
             logicalComponentManager.store();
         } catch (RecordException e) {
-            throw new ActivateException("Error activating deployable", composite.getName().toString(), e);
+            String id = composite.getName().toString();
+            throw new ActivateException("Error activating deployable: " + id, id, e);
         }
 
     }
