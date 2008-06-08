@@ -39,26 +39,23 @@
 
             <modules>
                 <module>test-function</module>
-
                 <module>test-groovy</module>
                 <module>test-policy</module>
                 <module>test-mock</module>
                 <module>test-security-policy</module>
-
                 <module>test-runtime-jetty</module>
-                <!--module>test-runtime-tomcat</module-->
-
                 <module>test-binding-cxf</module>
                 <module>test-binding-axis2</module>
                 <module>test-binding-axis2-jaxb</module>
                 <module>test-binding-burlap</module>
                 <module>test-binding-hessian</module>
                 <module>test-binding-jms</module>
-                <!--<module>test-interop-cxf-axis2</module>-->
-
                 <module>test-ds-extension</module>
                 <module>test-jpa-hibernate</module>
                 <module>test-jpa-implementation</module>
+                <module>test-ftp-security-policy</module>
+                <module>test-ftp-server-extension</module>
+                <module>test-binding-ftp</module>
             </modules>
         </profile>
     </profiles>
