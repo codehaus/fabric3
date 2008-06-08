@@ -36,7 +36,7 @@ import org.fabric3.spi.model.instance.LogicalService;
  *
  * @version $Revision$ $Date$
  */
-public class DefaultWiringService implements WiringService {
+public class DefaultResolutionService implements ResolutionService {
 
     private final PromotionResolutionService promotionResolutionService;
     private final List<TargetResolutionService> targetResolutionServices;
@@ -44,11 +44,11 @@ public class DefaultWiringService implements WiringService {
     /**
      * Injects the references required for wiring components.
      *
-     * @param promotionResolutionService   Service for handling promotions.
-     * @param targetResolutionServices An ordered list of target resolution services.
+     * @param promotionResolutionService Service for handling promotions.
+     * @param targetResolutionServices   An ordered list of target resolution services.
      */
-    public DefaultWiringService(@Reference PromotionResolutionService promotionResolutionService,
-                                @Reference List<TargetResolutionService> targetResolutionServices) {
+    public DefaultResolutionService(@Reference PromotionResolutionService promotionResolutionService,
+                                    @Reference List<TargetResolutionService> targetResolutionServices) {
         this.promotionResolutionService = promotionResolutionService;
         this.targetResolutionServices = targetResolutionServices;
     }
@@ -62,17 +62,17 @@ public class DefaultWiringService implements WiringService {
      * @param logicalComponent Logical component that needs to be wired.
      * @throws ActivateException Ifthe target for a required reference is unable to be wired.
      */
-    public void wire(LogicalComponent<?> logicalComponent) throws ActivateException {
+    public void resolve(LogicalComponent<?> logicalComponent) throws ActivateException {
 
         if (logicalComponent instanceof LogicalCompositeComponent) {
             LogicalCompositeComponent compositeComponent = (LogicalCompositeComponent) logicalComponent;
             for (LogicalComponent<?> child : compositeComponent.getComponents()) {
-                wire(child);
+                resolve(child);
             }
         }
 
-        handleReferences(logicalComponent);
-        handleServices(logicalComponent);
+        resolveReferences(logicalComponent);
+        resolveServices(logicalComponent);
 
     }
 
@@ -81,7 +81,7 @@ public class DefaultWiringService implements WiringService {
      *
      * @param logicalService Logical service whose promotion is handled.
      */
-    public void promote(LogicalService logicalService) throws PromotionException {
+    public void resolve(LogicalService logicalService) throws PromotionException {
         promotionResolutionService.resolve(logicalService);
     }
 
@@ -91,7 +91,7 @@ public class DefaultWiringService implements WiringService {
      * @param logicalReference a reference to wire
      * @param context          Composite component within which the targets are resolved.
      */
-    public void wire(LogicalReference logicalReference, LogicalCompositeComponent context) throws ActivateException {
+    public void resolve(LogicalReference logicalReference, LogicalCompositeComponent context) throws ActivateException {
 
         promotionResolutionService.resolve(logicalReference);
         for (TargetResolutionService targetResolutionService : targetResolutionServices) {
@@ -102,7 +102,7 @@ public class DefaultWiringService implements WiringService {
     /*
      * Handles promotions and target resolution on references.
      */
-    private void handleReferences(LogicalComponent<?> logicalComponent) throws TargetResolutionException, PromotionException {
+    private void resolveReferences(LogicalComponent<?> logicalComponent) throws TargetResolutionException, PromotionException {
         for (LogicalReference logicalReference : logicalComponent.getReferences()) {
             promotionResolutionService.resolve(logicalReference);
             for (TargetResolutionService targetResolutionService : targetResolutionServices) {
@@ -114,7 +114,7 @@ public class DefaultWiringService implements WiringService {
     /*
      * Handles promotions on services.
      */
-    private void handleServices(LogicalComponent<?> logicalComponent) throws PromotionException {
+    private void resolveServices(LogicalComponent<?> logicalComponent) throws PromotionException {
         for (LogicalService logicalService : logicalComponent.getServices()) {
             promotionResolutionService.resolve(logicalService);
         }

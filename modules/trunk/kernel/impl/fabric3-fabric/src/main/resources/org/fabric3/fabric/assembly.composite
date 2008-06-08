@@ -46,7 +46,7 @@
     </component>
 
     <component name="wiringService">
-        <system:implementation.system class="org.fabric3.fabric.instantiator.DefaultWiringService"/>
+        <system:implementation.system class="org.fabric3.fabric.instantiator.DefaultResolutionService"/>
     </component>
 
     <component name="promotionNormalizer">

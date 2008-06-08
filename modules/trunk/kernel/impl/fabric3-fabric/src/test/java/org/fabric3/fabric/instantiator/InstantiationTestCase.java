@@ -83,11 +83,11 @@ public class InstantiationTestCase extends TestCase {
 
         AtomicComponentInstantiator atomicComponentInstantiator = new AtomicComponentInstantiator(null);
         CompositeComponentInstantiator compositeComponentInstantiator = new CompositeComponentInstantiator(atomicComponentInstantiator, null);
-        WiringService wiringService = EasyMock.createMock(WiringService.class);
+        ResolutionService resolutionService = EasyMock.createMock(ResolutionService.class);
         PromotionNormalizer normalizer = EasyMock.createMock(PromotionNormalizer.class);
 
         logicalModelInstantiator =
-                new LogicalModelInstantiatorImpl(wiringService, normalizer, null, atomicComponentInstantiator, compositeComponentInstantiator);
+                new LogicalModelInstantiatorImpl(resolutionService, normalizer, null, atomicComponentInstantiator, compositeComponentInstantiator);
         parent = new LogicalCompositeComponent(PARENT_URI, null, null, null);
     }
 

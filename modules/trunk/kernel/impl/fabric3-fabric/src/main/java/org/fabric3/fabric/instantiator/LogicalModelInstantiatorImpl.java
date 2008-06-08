@@ -50,19 +50,19 @@ import org.fabric3.spi.util.UriHelper;
  */
 public class LogicalModelInstantiatorImpl implements LogicalModelInstantiator {
 
-    private final WiringService wiringService;
+    private final ResolutionService resolutionService;
     private final PromotionNormalizer promotionNormalizer;
     private final LogicalComponentManager logicalComponentManager;
     private final ComponentInstantiator atomicComponentInstantiator;
     private final ComponentInstantiator compositeComponentInstantiator;
 
 
-    public LogicalModelInstantiatorImpl(@Reference WiringService wiringService,
+    public LogicalModelInstantiatorImpl(@Reference ResolutionService resolutionService,
                                         @Reference PromotionNormalizer promotionNormalizer,
                                         @Reference LogicalComponentManager logicalComponentManager,
                                         @Reference(name = "atomicComponentInstantiator")ComponentInstantiator atomicComponentInstantiator,
                                         @Reference(name = "compositeComponentInstantiator")ComponentInstantiator compositeComponentInstantiator) {
-        this.wiringService = wiringService;
+        this.resolutionService = resolutionService;
         this.promotionNormalizer = promotionNormalizer;
         this.logicalComponentManager = logicalComponentManager;
         this.atomicComponentInstantiator = atomicComponentInstantiator;
@@ -82,7 +82,7 @@ public class LogicalModelInstantiatorImpl implements LogicalModelInstantiator {
         List<LogicalService> services = instantiateServices(parent, composite);
         List<LogicalReference> references = instantiateReferences(parent, composite);
 
-        resolveWires(parent.getComponents(), services, references);
+        resolve(parent.getComponents(), services, references);
 
         // normalize bindings for each new component
         for (LogicalComponent<?> component : newComponents) {
@@ -113,32 +113,8 @@ public class LogicalModelInstantiatorImpl implements LogicalModelInstantiator {
         return parent.getPropertyValues();
     }
 
-    private Map<String, Document> excludeProperties(LogicalCompositeComponent parent, Composite composite, LogicalChange change) {
-        Map<String, Document> map = parent.getPropertyValues();
-        for (Property property : composite.getProperties().values()) {
-            String name = property.getName();
-            change.removeProperty(name);
-        }
-        return map;
-    }
-
-    private void excludeComponents(LogicalCompositeComponent parent, Composite composite, LogicalChange change) {
-        Set<String> keys = composite.getComponents().keySet();
-        for (String key : keys) {
-            List<LogicalComponent<?>> list = parent.getComponents();
-            for (LogicalComponent<?> component : list) {
-                URI uri = component.getUri();
-                if (UriHelper.getBaseName(uri).equals(key)) {
-                    change.removeComponent(component);
-                    parent.removeComponent(uri);
-                }
-            }
-        }
-    }
-
-    private List<LogicalComponent<?>> instantiateComponents(LogicalCompositeComponent parent,
-                                                            Map<String, Document> properties,
-                                                            Composite composite) throws InstantiationException {
+    private List<LogicalComponent<?>> instantiateComponents(LogicalCompositeComponent parent, Map<String, Document> properties, Composite composite)
+            throws InstantiationException {
 
         Collection<ComponentDefinition<? extends Implementation<?>>> definitions = composite.getComponents().values();
         List<LogicalComponent<?>> newComponents = new ArrayList<LogicalComponent<?>>(definitions.size());
@@ -161,9 +137,8 @@ public class LogicalModelInstantiatorImpl implements LogicalModelInstantiator {
     }
 
     @SuppressWarnings("unchecked")
-    private LogicalComponent<?> instantiate(LogicalCompositeComponent parent,
-                                            Map<String, Document> properties,
-                                            ComponentDefinition<?> definition) throws InstantiationException {
+    private LogicalComponent<?> instantiate(LogicalCompositeComponent parent, Map<String, Document> properties, ComponentDefinition<?> definition)
+            throws InstantiationException {
 
         if (definition.getImplementation().isComposite()) {
             return compositeComponentInstantiator.instantiate(parent, properties, (ComponentDefinition<CompositeImplementation>) definition);
@@ -195,17 +170,6 @@ public class LogicalModelInstantiatorImpl implements LogicalModelInstantiator {
 
     }
 
-    private void excludeServices(LogicalComponent<CompositeImplementation> parent, Composite composite, LogicalChange change) {
-        String base = parent.getUri().toString();
-        // merge the composite service declarations into the parent
-        for (CompositeService compositeService : composite.getServices().values()) {
-            URI serviceURI = URI.create(base + '#' + compositeService.getName());
-            change.removeService(serviceURI);
-
-        }
-
-    }
-
     private List<LogicalReference> instantiateReferences(LogicalComponent<CompositeImplementation> parent, Composite composite) {
         String base = parent.getUri().toString();
         // merge the composite reference definitions into the parent
@@ -230,22 +194,22 @@ public class LogicalModelInstantiatorImpl implements LogicalModelInstantiator {
 
     }
 
-    private void resolveWires(Collection<LogicalComponent<?>> components, List<LogicalService> services, List<LogicalReference> references)
+    private void resolve(Collection<LogicalComponent<?>> components, List<LogicalService> services, List<LogicalReference> references)
             throws ActivateException {
 
         // resolve wires for composite services merged into the domain
         for (LogicalService service : services) {
-            wiringService.promote(service);
+            resolutionService.resolve(service);
         }
 
         // resove composite references merged into the domain
         for (LogicalReference reference : references) {
-            wiringService.wire(reference, logicalComponentManager.getDomain());
+            resolutionService.resolve(reference, logicalComponentManager.getDomain());
         }
 
         // resolve wires for each new component
         for (LogicalComponent<?> component : components) {
-            wiringService.wire(component);
+            resolutionService.resolve(component);
         }
 
     }
@@ -265,6 +229,40 @@ public class LogicalModelInstantiatorImpl implements LogicalModelInstantiator {
             promotionNormalizer.normalize(component);
         }
 
+    }
+
+    private void excludeServices(LogicalComponent<CompositeImplementation> parent, Composite composite, LogicalChange change) {
+        String base = parent.getUri().toString();
+        // merge the composite service declarations into the parent
+        for (CompositeService compositeService : composite.getServices().values()) {
+            URI serviceURI = URI.create(base + '#' + compositeService.getName());
+            change.removeService(serviceURI);
+
+        }
+
+    }
+
+    private Map<String, Document> excludeProperties(LogicalCompositeComponent parent, Composite composite, LogicalChange change) {
+        Map<String, Document> map = parent.getPropertyValues();
+        for (Property property : composite.getProperties().values()) {
+            String name = property.getName();
+            change.removeProperty(name);
+        }
+        return map;
+    }
+
+    private void excludeComponents(LogicalCompositeComponent parent, Composite composite, LogicalChange change) {
+        Set<String> keys = composite.getComponents().keySet();
+        for (String key : keys) {
+            List<LogicalComponent<?>> list = parent.getComponents();
+            for (LogicalComponent<?> component : list) {
+                URI uri = component.getUri();
+                if (UriHelper.getBaseName(uri).equals(key)) {
+                    change.removeComponent(component);
+                    parent.removeComponent(uri);
+                }
+            }
+        }
     }
 
 }

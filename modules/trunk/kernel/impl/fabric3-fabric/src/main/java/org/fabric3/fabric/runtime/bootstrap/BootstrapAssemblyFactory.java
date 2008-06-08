@@ -71,8 +71,8 @@ import org.fabric3.fabric.instantiator.AtomicComponentInstantiator;
 import org.fabric3.fabric.instantiator.CompositeComponentInstantiator;
 import org.fabric3.fabric.instantiator.LogicalModelInstantiator;
 import org.fabric3.fabric.instantiator.LogicalModelInstantiatorImpl;
-import org.fabric3.fabric.instantiator.WiringService;
-import org.fabric3.fabric.instantiator.DefaultWiringService;
+import org.fabric3.fabric.instantiator.ResolutionService;
+import org.fabric3.fabric.instantiator.DefaultResolutionService;
 import org.fabric3.fabric.instantiator.target.TargetResolutionService;
 import org.fabric3.fabric.monitor.MonitorWireAttacher;
 import org.fabric3.fabric.monitor.MonitorWireGenerator;
@@ -215,7 +215,7 @@ public class BootstrapAssemblyFactory {
         List<TargetResolutionService> targetResolutionServices = new ArrayList<TargetResolutionService>();
         targetResolutionServices.add(new ExplicitTargetResolutionService());
         targetResolutionServices.add(new TypeBasedAutoWireService());
-        WiringService wiringService = new DefaultWiringService(promotionResolutionService, targetResolutionServices);
+        ResolutionService resolutionService = new DefaultResolutionService(promotionResolutionService, targetResolutionServices);
 
         PromotionNormalizer normalizer = new PromotionNormalizerImpl();
         DocumentLoader documentLoader = new DocumentLoaderImpl();
@@ -223,7 +223,7 @@ public class BootstrapAssemblyFactory {
 
         CompositeComponentInstantiator compositeComponentInstantiator =
                 new CompositeComponentInstantiator(atomicComponentInstantiator, documentLoader);
-        return new LogicalModelInstantiatorImpl(wiringService,
+        return new LogicalModelInstantiatorImpl(resolutionService,
                                              normalizer,
                                              logicalComponentManager,
                                              atomicComponentInstantiator,
