@@ -16,22 +16,20 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.fabric.wire;
+package org.fabric3.fabric.instantiator;
 
 import java.util.List;
 
 import org.osoa.sca.annotations.Reference;
 
+import org.fabric3.fabric.instantiator.promotion.TargetPromotionService;
+import org.fabric3.fabric.instantiator.resolve.TargetResolutionException;
+import org.fabric3.fabric.instantiator.resolve.TargetResolutionService;
 import org.fabric3.spi.assembly.ActivateException;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalService;
-import org.fabric3.spi.wire.PromotionException;
-import org.fabric3.spi.wire.TargetPromotionService;
-import org.fabric3.spi.wire.TargetResolutionException;
-import org.fabric3.spi.wire.TargetResolutionService;
-import org.fabric3.spi.wire.WiringService;
 
 /**
  * Default implementation of the wiring service.

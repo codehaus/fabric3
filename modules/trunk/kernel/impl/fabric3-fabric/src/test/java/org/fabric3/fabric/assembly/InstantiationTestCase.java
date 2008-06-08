@@ -13,6 +13,7 @@ import org.fabric3.fabric.instantiator.AtomicComponentInstantiator;
 import org.fabric3.fabric.instantiator.CompositeComponentInstantiator;
 import org.fabric3.fabric.instantiator.LogicalModelInstantiator;
 import org.fabric3.fabric.instantiator.LogicalModelInstantiatorImpl;
+import org.fabric3.fabric.instantiator.WiringService;
 import org.fabric3.scdl.AbstractComponentType;
 import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.ComponentType;
@@ -25,7 +26,6 @@ import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalService;
-import org.fabric3.spi.wire.WiringService;
 
 /**
  * @version $Rev$ $Date$

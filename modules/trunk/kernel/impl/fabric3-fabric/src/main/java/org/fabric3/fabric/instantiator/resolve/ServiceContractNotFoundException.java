@@ -16,14 +16,14 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.fabric.wire.resolve;
+package org.fabric3.fabric.instantiator.resolve;
 
-import org.fabric3.spi.wire.TargetResolutionException;
+import org.fabric3.fabric.instantiator.resolve.TargetResolutionException;
 
-public class ServiceNotFoundException extends TargetResolutionException {
-    private static final long serialVersionUID = -6600598658356829665L;
+public class ServiceContractNotFoundException extends TargetResolutionException {
+    private static final long serialVersionUID = -6846855704775404977L;
 
-    public ServiceNotFoundException(String message) {
+    public ServiceContractNotFoundException(String message) {
         super(message);
     }
 

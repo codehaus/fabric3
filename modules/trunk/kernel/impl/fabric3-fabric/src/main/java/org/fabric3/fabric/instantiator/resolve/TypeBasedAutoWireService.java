@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.fabric.wire.resolve;
+package org.fabric3.fabric.instantiator.resolve;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -36,8 +36,8 @@ import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalService;
 import org.fabric3.spi.util.UriHelper;
-import org.fabric3.spi.wire.TargetResolutionException;
-import org.fabric3.spi.wire.TargetResolutionService;
+import org.fabric3.fabric.instantiator.resolve.TargetResolutionException;
+import org.fabric3.fabric.instantiator.resolve.TargetResolutionService;
 
 /**
  * Resolution based on an explicitly requested target.
@@ -145,7 +145,7 @@ public class TypeBasedAutoWireService implements TargetResolutionService {
      * @param logicalReference the logical reference
      * @param contract         the contract to match against
      * @return true if the reference has been resolved.
-     * @throws TargetResolutionException if an error occurs during resolution
+     * @throws org.fabric3.fabric.instantiator.resolve.TargetResolutionException if an error occurs during resolution
      */
     private boolean resolveByType(LogicalCompositeComponent composite,
                                   LogicalComponent<?> component,

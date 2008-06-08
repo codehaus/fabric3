@@ -16,19 +16,21 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.fabric.wire;
+package org.fabric3.fabric.instantiator;
 
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.xml.namespace.QName;
 
 import junit.framework.TestCase;
 
-import org.fabric3.fabric.wire.promotion.DefaultTargetPromotionService;
-import org.fabric3.fabric.wire.resolve.ExplicitTargetResolutionService;
-import org.fabric3.fabric.wire.resolve.TypeBasedAutoWireService;
+import org.fabric3.fabric.instantiator.promotion.DefaultTargetPromotionService;
+import org.fabric3.fabric.instantiator.promotion.TargetPromotionService;
+import org.fabric3.fabric.instantiator.resolve.ExplicitTargetResolutionService;
+import org.fabric3.fabric.instantiator.resolve.TargetResolutionException;
+import org.fabric3.fabric.instantiator.resolve.TargetResolutionService;
+import org.fabric3.fabric.instantiator.resolve.TypeBasedAutoWireService;
 import org.fabric3.introspection.impl.contract.JavaServiceContract;
 import org.fabric3.scdl.AbstractComponentType;
 import org.fabric3.scdl.ComponentDefinition;
@@ -36,19 +38,16 @@ import org.fabric3.scdl.ComponentReference;
 import org.fabric3.scdl.Composite;
 import org.fabric3.scdl.CompositeImplementation;
 import org.fabric3.scdl.Implementation;
+import org.fabric3.scdl.Multiplicity;
 import org.fabric3.scdl.Property;
 import org.fabric3.scdl.ReferenceDefinition;
 import org.fabric3.scdl.ResourceDefinition;
 import org.fabric3.scdl.ServiceContract;
 import org.fabric3.scdl.ServiceDefinition;
-import org.fabric3.scdl.Multiplicity;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalService;
-import org.fabric3.spi.wire.TargetPromotionService;
-import org.fabric3.spi.wire.TargetResolutionException;
-import org.fabric3.spi.wire.TargetResolutionService;
 
 /**
  * @version $Rev: 2852 $ $Date: 2008-02-21 23:24:40 +0000 (Thu, 21 Feb 2008) $

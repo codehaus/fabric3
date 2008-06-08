@@ -46,7 +46,7 @@
     </component>
 
     <component name="wiringService">
-        <system:implementation.system class="org.fabric3.fabric.wire.DefaultWiringService"/>
+        <system:implementation.system class="org.fabric3.fabric.instantiator.DefaultWiringService"/>
     </component>
 
     <component name="promotionNormalizer">
@@ -58,15 +58,15 @@
     </component>
 
     <component name="targetPromotionService">
-        <system:implementation.system class="org.fabric3.fabric.wire.promotion.DefaultTargetPromotionService"/>
+        <system:implementation.system class="org.fabric3.fabric.instantiator.promotion.DefaultTargetPromotionService"/>
     </component>
 
     <component name="explicitTargetResolutionService">
-        <system:implementation.system class="org.fabric3.fabric.wire.resolve.ExplicitTargetResolutionService"/>
+        <system:implementation.system class="org.fabric3.fabric.instantiator.resolve.ExplicitTargetResolutionService"/>
     </component>
 
     <component name="typeBasedAutoWireService">
-        <system:implementation.system class="org.fabric3.fabric.wire.resolve.TypeBasedAutoWireService"/>
+        <system:implementation.system class="org.fabric3.fabric.instantiator.resolve.TypeBasedAutoWireService"/>
     </component>
 
 </composite>

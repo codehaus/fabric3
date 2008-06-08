@@ -1,14 +1,10 @@
-package org.fabric3.fabric.wire.promotion;
+package org.fabric3.fabric.instantiator.promotion;
 
 import java.net.URI;
 
-import org.fabric3.spi.wire.PromotionException;
+import org.fabric3.fabric.instantiator.PromotionException;
 
 public class PromotedComponentNotFoundException extends PromotionException {
-
-    /**
-     * 
-     */
     private static final long serialVersionUID = -6600598658356829665L;
     
     /**

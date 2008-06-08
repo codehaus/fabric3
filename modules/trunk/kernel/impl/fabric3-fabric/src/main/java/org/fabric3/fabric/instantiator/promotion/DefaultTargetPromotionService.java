@@ -1,4 +1,4 @@
-package org.fabric3.fabric.wire.promotion;
+package org.fabric3.fabric.instantiator.promotion;
 
 import java.net.URI;
 import java.util.Collection;
@@ -9,8 +9,8 @@ import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalService;
 import org.fabric3.spi.util.UriHelper;
-import org.fabric3.spi.wire.PromotionException;
-import org.fabric3.spi.wire.TargetPromotionService;
+import org.fabric3.fabric.instantiator.PromotionException;
+import org.fabric3.fabric.instantiator.promotion.TargetPromotionService;
 
 /**
  * Default implementation of the promotion service.
@@ -20,19 +20,6 @@ import org.fabric3.spi.wire.TargetPromotionService;
  */
 public class DefaultTargetPromotionService implements TargetPromotionService {
     
-    /**
-     * Handles the promotion on the specified logical service. 
-     * 
-     * Promoted URIs are os the general form <code>componentId#serviceName</code>, 
-     * where the service name is optional. If the  promoted URI doesn't contain a 
-     * fragment for the service name, the promoted component is expected to have 
-     * exactly one service. If the service fragment is present the promoted 
-     * component is required to have a service by the name. If the service fragment 
-     * was not specified, the promoted URI is set to the URI of the promoted 
-     * service.
-     * 
-     * @param logicalService Logical service whose promotion is handled.
-     */
     public void promote(LogicalService logicalService) throws PromotionException {
 
         URI promotedUri = logicalService.getPromotedUri();
@@ -67,19 +54,6 @@ public class DefaultTargetPromotionService implements TargetPromotionService {
         
     }
     
-    /**
-     * Handles all the promotions on the specified logical reference. 
-     * 
-     * Promoted URIs are os the general form <code>componentId#referenceName</code>, 
-     * where the reference name is optional. If the  promoted URI doesn't contain a 
-     * fragment for the reference name, the promoted component is expected to have 
-     * exactly one reference. If the reference fragment is present the promoted 
-     * component is required to have a reference by the name. If the reference fragment 
-     * was not specified, the promoted URI is set to the URI of the promoted 
-     * reference.
-     * 
-     * @param logicalReference Logical reference whose promotion is handled.
-     */
     public void promote(LogicalReference logicalReference) throws PromotionException {
         
         List<URI> promotedUris = logicalReference.getPromotedUris();

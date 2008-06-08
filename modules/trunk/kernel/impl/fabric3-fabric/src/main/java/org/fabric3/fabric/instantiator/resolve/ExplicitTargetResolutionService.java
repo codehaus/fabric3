@@ -1,4 +1,4 @@
-package org.fabric3.fabric.wire.resolve;
+package org.fabric3.fabric.instantiator.resolve;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -10,8 +10,8 @@ import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalService;
 import org.fabric3.spi.util.UriHelper;
-import org.fabric3.spi.wire.TargetResolutionException;
-import org.fabric3.spi.wire.TargetResolutionService;
+import org.fabric3.fabric.instantiator.resolve.TargetResolutionException;
+import org.fabric3.fabric.instantiator.resolve.TargetResolutionService;
 
 /**
  * Resolution based on an explicit target uri.

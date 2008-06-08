@@ -16,17 +16,16 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.spi.wire;
+package org.fabric3.fabric.instantiator;
 
 import org.fabric3.spi.assembly.ActivateException;
 
 /**
- * Any exception raised during resolving reference targets.
+ * Any exception raised during promoting services and references.
  *
  * @version $Rev: 1567 $ $Date: 2007-10-20 11:34:49 +0100 (Sat, 20 Oct 2007) $
  */
-public class TargetResolutionException extends ActivateException {
-
+public class PromotionException extends ActivateException {
     private static final long serialVersionUID = -5262124031513496306L;
 
     /**
@@ -34,9 +33,18 @@ public class TargetResolutionException extends ActivateException {
      *
      * @param message Exception message.
      */
-    public TargetResolutionException(String message) {
-        super(message);
+    public PromotionException(String message) {
+        super(message, null);
     }
 
+    /**
+     * Initializes the exception cause and message.
+     *
+     * @param message Exception message.
+     * @param cause   Exception cause.
+     */
+    public PromotionException(String message, Throwable cause) {
+        super(message, null, cause);
+    }
 
 }

@@ -45,7 +45,6 @@ import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalService;
 import org.fabric3.spi.runtime.assembly.LogicalComponentManager;
 import org.fabric3.spi.util.UriHelper;
-import org.fabric3.spi.wire.WiringService;
 
 /**
  * @version $Revision$ $Date$

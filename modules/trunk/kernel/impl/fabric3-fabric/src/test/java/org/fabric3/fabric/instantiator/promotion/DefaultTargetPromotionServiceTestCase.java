@@ -1,4 +1,4 @@
-package org.fabric3.fabric.wire.promotion;
+package org.fabric3.fabric.instantiator.promotion;
 
 import java.net.URI;
 
@@ -9,8 +9,8 @@ import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalService;
-import org.fabric3.spi.wire.TargetPromotionService;
-import org.fabric3.spi.wire.PromotionException;
+import org.fabric3.fabric.instantiator.promotion.TargetPromotionService;
+import org.fabric3.fabric.instantiator.PromotionException;
 
 public class DefaultTargetPromotionServiceTestCase extends TestCase {
     
