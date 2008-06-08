@@ -21,9 +21,10 @@ import org.fabric3.spi.assembly.ActivateException;
 /**
  * @version $Rev$ $Date$
  */
-public class IllegalContributionTypeException extends ActivateException {
+public class IllegalDeployableTypeException extends ActivateException {
+    private static final long serialVersionUID = -4209666034283825327L;
 
-    public IllegalContributionTypeException(String message, String identifier) {
+    public IllegalDeployableTypeException(String message, String identifier) {
         super(message, identifier);
     }
 }

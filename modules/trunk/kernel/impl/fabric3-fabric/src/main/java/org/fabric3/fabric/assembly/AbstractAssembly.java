@@ -87,12 +87,12 @@ public abstract class AbstractAssembly implements Assembly {
             throw new ActivateException(e);
         }
         if (element == null) {
-            throw new ArtifactNotFoundException("Deployable not found", deployable.toString());
+            throw new DeployableNotFoundException("Deployable not found", deployable.toString());
         }
 
         Object object = element.getValue();
         if (!(object instanceof Composite)) {
-            throw new IllegalContributionTypeException("Deployable must be a composite", deployable.toString());
+            throw new IllegalDeployableTypeException("Deployable must be a composite", deployable.toString());
         }
 
         Composite composite = (Composite) object;
@@ -148,12 +148,12 @@ public abstract class AbstractAssembly implements Assembly {
             throw new ActivateException(e);
         }
         if (element == null) {
-            throw new ArtifactNotFoundException("Deployable not found", deployable.toString());
+            throw new DeployableNotFoundException("Deployable not found", deployable.toString());
         }
 
         Object object = element.getValue();
         if (!(object instanceof Composite)) {
-            throw new IllegalContributionTypeException("Deployable must be a composite", deployable.toString());
+            throw new IllegalDeployableTypeException("Deployable must be a composite", deployable.toString());
         }
 
         Composite composite = (Composite) object;

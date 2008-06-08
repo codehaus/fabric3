@@ -14,7 +14,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.fabric.assembly;
+package org.fabric3.fabric.instantiator;
 
 import java.net.URI;
 import java.util.Map;
@@ -27,7 +27,6 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import org.fabric3.fabric.instantiator.AbstractComponentInstantiator;
 import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.CompositeImplementation;
 import org.fabric3.scdl.Implementation;
@@ -97,7 +96,7 @@ public class AssemblyPropertyTestCase extends TestCase {
             public <I extends Implementation<?>> LogicalComponent<I> instantiate(LogicalCompositeComponent parent,
                                                                                  Map<String, Document> properties,
                                                                                  ComponentDefinition<I> definition)
-                    throws InstantiationException {
+                    throws org.fabric3.fabric.instantiator.InstantiationException {
                 return null;
             }
         };

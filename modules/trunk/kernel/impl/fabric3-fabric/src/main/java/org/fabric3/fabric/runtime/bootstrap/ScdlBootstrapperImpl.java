@@ -28,12 +28,11 @@ import javax.xml.namespace.QName;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
-import org.fabric3.fabric.assembly.InstantiationException;
+import org.fabric3.fabric.instantiator.InstantiationException;
 import org.fabric3.fabric.component.scope.ScopeRegistryImpl;
 import org.fabric3.fabric.implementation.singleton.SingletonComponent;
 import org.fabric3.fabric.implementation.singleton.SingletonImplementation;
-import org.fabric3.fabric.instantiator.AtomicComponentInstantiator;
-import org.fabric3.fabric.instantiator.ComponentInstantiator;
+import org.fabric3.fabric.instantiator.*;
 import org.fabric3.fabric.runtime.ComponentNames;
 import static org.fabric3.fabric.runtime.ComponentNames.APPLICATION_CLASSLOADER_ID;
 import static org.fabric3.fabric.runtime.ComponentNames.BOOT_CLASSLOADER_ID;
@@ -293,7 +292,7 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
     protected <S, I extends S> LogicalComponent<Implementation<?>> createLogicalComponent(String name,
                                                                                           Class<S> type,
                                                                                           I instance)
-            throws InvalidSystemServiceContractException, InstantiationException {
+            throws InvalidSystemServiceContractException, org.fabric3.fabric.instantiator.InstantiationException {
 
         ComponentDefinition<Implementation<?>> definition = createDefinition(name, type, instance);
         return instantiator.instantiate(domain, domain.getPropertyValues(), definition);

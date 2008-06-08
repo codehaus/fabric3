@@ -21,7 +21,7 @@ import java.net.URI;
 /**
  * @version $Rev$ $Date$
  */
-public class InvalidPropertyFileException extends org.fabric3.fabric.assembly.InstantiationException {
+public class InvalidPropertyFileException extends org.fabric3.fabric.instantiator.InstantiationException {
     private final URI file;
 
     public InvalidPropertyFileException(String message, String name, Throwable cause, URI file) {

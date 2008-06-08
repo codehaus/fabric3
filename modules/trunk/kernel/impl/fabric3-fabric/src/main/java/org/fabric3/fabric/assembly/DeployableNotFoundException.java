@@ -21,20 +21,12 @@ package org.fabric3.fabric.assembly;
 import org.fabric3.spi.assembly.ActivateException;
 
 /**
- * Denotes an exception instanitating a LogicalComponent
- *
  * @version $Rev$ $Date$
  */
-public class InstantiationException extends ActivateException {
-    public InstantiationException(String message, String identifier) {
+public class DeployableNotFoundException extends ActivateException {
+    private static final long serialVersionUID = -8572491242992185157L;
+
+    public DeployableNotFoundException(String message, String identifier) {
         super(message, identifier);
-    }
-
-    public InstantiationException(String message, String identifier, Throwable cause) {
-        super(message, identifier, cause);
-    }
-
-    public InstantiationException(Throwable cause) {
-        super(cause);
     }
 }
