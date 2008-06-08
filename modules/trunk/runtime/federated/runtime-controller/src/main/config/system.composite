@@ -80,7 +80,7 @@
     </component>
 
     <component name="assemblyRecoveryService">
-        <system:implementation.system class="org.fabric3.fabric.services.domain.NonPersistentLogicalComponentStore"/>
+        <system:implementation.system class="org.fabric3.fabric.services.lcm.NonPersistentLogicalComponentStore"/>
     </component>
 
     <component name="DiscoveryServiceRegistry">

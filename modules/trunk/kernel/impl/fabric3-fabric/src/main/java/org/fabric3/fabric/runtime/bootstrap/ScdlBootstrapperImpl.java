@@ -80,7 +80,7 @@ import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 import org.fabric3.spi.runtime.RuntimeServices;
-import org.fabric3.spi.runtime.assembly.LogicalComponentManager;
+import org.fabric3.spi.services.lcm.LogicalComponentManager;
 import org.fabric3.spi.services.componentmanager.ComponentManager;
 import org.fabric3.spi.services.componentmanager.RegistrationException;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;

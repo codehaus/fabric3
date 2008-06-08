@@ -112,7 +112,7 @@ import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.generator.RemoveCommandGenerator;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
-import org.fabric3.spi.runtime.assembly.LogicalComponentManager;
+import org.fabric3.spi.services.lcm.LogicalComponentManager;
 import org.fabric3.spi.services.componentmanager.ComponentManager;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.services.contribution.ClasspathProcessorRegistry;

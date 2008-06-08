@@ -14,30 +14,20 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.spi.runtime.assembly;
+package org.fabric3.spi.services.lcm;
 
-import org.fabric3.api.annotation.Management;
-import org.fabric3.scdl.Composite;
+import org.fabric3.spi.assembly.AssemblyException;
+
 
 /**
  * @version $Rev$ $Date$
  */
-@Management
-public interface LogicalComponentManagerMBean {
+public class RecoveryException extends AssemblyException {
+    public RecoveryException(String message, Throwable cause) {
+        super(message, cause);
+    }
 
-    /**
-     * Returns the URI of this domain.
-     *
-     * @return the URI of this domain
-     */
-    String getDomainURI();
-
-    /**
-     * Returns the domain composite.
-     * <p/>
-     * The domain composite is a pseudo composite representing the active components in the domain.
-     *
-     * @return the domain composite
-     */
-    Composite getDomainComposite();
+    public RecoveryException(String message, String identifier, Throwable cause) {
+        super(message, identifier, cause);
+    }
 }

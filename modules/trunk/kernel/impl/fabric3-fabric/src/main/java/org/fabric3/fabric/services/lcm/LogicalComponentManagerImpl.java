@@ -14,7 +14,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.fabric.services.domain;
+package org.fabric3.fabric.services.lcm;
 
 import java.net.URI;
 import java.util.Collection;
@@ -26,10 +26,10 @@ import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 import org.fabric3.spi.model.instance.LogicalService;
 import org.fabric3.spi.model.instance.LogicalReference;
-import org.fabric3.spi.runtime.assembly.LogicalComponentManager;
-import org.fabric3.spi.runtime.assembly.LogicalComponentStore;
-import org.fabric3.spi.runtime.assembly.RecordException;
-import org.fabric3.spi.runtime.assembly.LogicalComponentManagerMBean;
+import org.fabric3.spi.services.lcm.LogicalComponentManager;
+import org.fabric3.spi.services.lcm.LogicalComponentStore;
+import org.fabric3.spi.services.lcm.RecordException;
+import org.fabric3.spi.services.lcm.LogicalComponentManagerMBean;
 import org.fabric3.spi.util.UriHelper;
 import org.fabric3.scdl.Composite;
 import org.fabric3.scdl.CompositeReference;

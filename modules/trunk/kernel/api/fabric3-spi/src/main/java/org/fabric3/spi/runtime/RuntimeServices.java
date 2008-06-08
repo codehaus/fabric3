@@ -19,7 +19,7 @@ package org.fabric3.spi.runtime;
 import org.fabric3.spi.component.AtomicComponent;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.model.instance.LogicalComponent;
-import org.fabric3.spi.runtime.assembly.LogicalComponentManager;
+import org.fabric3.spi.services.lcm.LogicalComponentManager;
 import org.fabric3.spi.services.componentmanager.ComponentManager;
 import org.fabric3.spi.services.componentmanager.RegistrationException;
 

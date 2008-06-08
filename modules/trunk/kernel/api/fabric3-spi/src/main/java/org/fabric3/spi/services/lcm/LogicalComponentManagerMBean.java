@@ -14,23 +14,30 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.spi.runtime.assembly;
+package org.fabric3.spi.services.lcm;
 
-import org.fabric3.spi.assembly.AssemblyException;
-
+import org.fabric3.api.annotation.Management;
+import org.fabric3.scdl.Composite;
 
 /**
- * Denotes an exception recording an assembly operation
- *
  * @version $Rev$ $Date$
  */
-public class RecordException extends AssemblyException {
+@Management
+public interface LogicalComponentManagerMBean {
 
-    public RecordException(String message, Throwable cause) {
-        super(message, cause);
-    }
+    /**
+     * Returns the URI of this domain.
+     *
+     * @return the URI of this domain
+     */
+    String getDomainURI();
 
-    public RecordException(String message, String identifier, Throwable cause) {
-        super(message, identifier, cause);
-    }
+    /**
+     * Returns the domain composite.
+     * <p/>
+     * The domain composite is a pseudo composite representing the active components in the domain.
+     *
+     * @return the domain composite
+     */
+    Composite getDomainComposite();
 }

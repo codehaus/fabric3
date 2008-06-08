@@ -42,7 +42,7 @@
     </component>
 
     <component name="logicalComponentManager">
-        <system:implementation.system class="org.fabric3.fabric.services.domain.LogicalComponentManagerImpl"/>
+        <system:implementation.system class="org.fabric3.fabric.services.lcm.LogicalComponentManagerImpl"/>
     </component>
 
     <component name="wiringService">

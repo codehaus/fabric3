@@ -14,20 +14,23 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.spi.runtime.assembly;
+package org.fabric3.spi.services.lcm;
 
 import org.fabric3.spi.assembly.AssemblyException;
 
 
 /**
+ * Denotes an exception recording an assembly operation
+ *
  * @version $Rev$ $Date$
  */
-public class RecoveryException extends AssemblyException {
-    public RecoveryException(String message, Throwable cause) {
+public class RecordException extends AssemblyException {
+
+    public RecordException(String message, Throwable cause) {
         super(message, cause);
     }
 
-    public RecoveryException(String message, String identifier, Throwable cause) {
+    public RecordException(String message, String identifier, Throwable cause) {
         super(message, identifier, cause);
     }
 }

@@ -14,7 +14,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.fabric.services.domain;
+package org.fabric3.fabric.services.lcm;
 
 import java.io.File;
 import static java.io.File.separator;
@@ -39,9 +39,9 @@ import org.fabric3.scdl.Composite;
 import org.fabric3.scdl.CompositeImplementation;
 import org.fabric3.services.xmlfactory.XMLFactory;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
-import org.fabric3.spi.runtime.assembly.LogicalComponentStore;
-import org.fabric3.spi.runtime.assembly.RecordException;
-import org.fabric3.spi.runtime.assembly.RecoveryException;
+import org.fabric3.spi.services.lcm.LogicalComponentStore;
+import org.fabric3.spi.services.lcm.RecordException;
+import org.fabric3.spi.services.lcm.RecoveryException;
 import org.fabric3.spi.services.marshaller.MarshalException;
 import org.fabric3.spi.services.marshaller.MarshalService;
 

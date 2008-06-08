@@ -14,7 +14,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.spi.runtime.assembly;
+package org.fabric3.spi.services.lcm;
 
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 

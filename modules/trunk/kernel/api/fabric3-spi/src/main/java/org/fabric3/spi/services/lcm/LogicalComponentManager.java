@@ -14,7 +14,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.spi.runtime.assembly;
+package org.fabric3.spi.services.lcm;
 
 import java.net.URI;
 import java.util.Collection;
@@ -22,7 +22,6 @@ import java.util.Collection;
 import org.fabric3.spi.assembly.AssemblyException;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
-import org.fabric3.api.annotation.Management;
 
 /**
  * @version $Revision$ $Date$
