@@ -62,11 +62,11 @@
     </component>
 
     <component name="explicitTargetResolutionService">
-        <system:implementation.system class="org.fabric3.fabric.instantiator.resolve.ExplicitTargetResolutionService"/>
+        <system:implementation.system class="org.fabric3.fabric.instantiator.target.ExplicitTargetResolutionService"/>
     </component>
 
     <component name="typeBasedAutoWireService">
-        <system:implementation.system class="org.fabric3.fabric.instantiator.resolve.TypeBasedAutoWireService"/>
+        <system:implementation.system class="org.fabric3.fabric.instantiator.target.TypeBasedAutoWireService"/>
     </component>
 
 </composite>

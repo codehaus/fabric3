@@ -23,8 +23,8 @@ import java.util.List;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.fabric.instantiator.promotion.PromotionResolutionService;
-import org.fabric3.fabric.instantiator.resolve.TargetResolutionException;
-import org.fabric3.fabric.instantiator.resolve.TargetResolutionService;
+import org.fabric3.fabric.instantiator.target.TargetResolutionException;
+import org.fabric3.fabric.instantiator.target.TargetResolutionService;
 import org.fabric3.spi.assembly.ActivateException;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;

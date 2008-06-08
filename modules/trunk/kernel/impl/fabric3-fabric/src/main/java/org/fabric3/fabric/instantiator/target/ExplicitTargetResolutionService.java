@@ -1,4 +1,4 @@
-package org.fabric3.fabric.instantiator.resolve;
+package org.fabric3.fabric.instantiator.target;
 
 import java.net.URI;
 import java.util.ArrayList;

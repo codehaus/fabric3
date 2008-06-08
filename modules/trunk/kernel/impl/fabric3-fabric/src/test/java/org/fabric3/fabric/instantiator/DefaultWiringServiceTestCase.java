@@ -27,10 +27,10 @@ import junit.framework.TestCase;
 
 import org.fabric3.fabric.instantiator.promotion.DefaultPromotionResolutionService;
 import org.fabric3.fabric.instantiator.promotion.PromotionResolutionService;
-import org.fabric3.fabric.instantiator.resolve.ExplicitTargetResolutionService;
-import org.fabric3.fabric.instantiator.resolve.TargetResolutionException;
-import org.fabric3.fabric.instantiator.resolve.TargetResolutionService;
-import org.fabric3.fabric.instantiator.resolve.TypeBasedAutoWireService;
+import org.fabric3.fabric.instantiator.target.ExplicitTargetResolutionService;
+import org.fabric3.fabric.instantiator.target.TargetResolutionException;
+import org.fabric3.fabric.instantiator.target.TargetResolutionService;
+import org.fabric3.fabric.instantiator.target.TypeBasedAutoWireService;
 import org.fabric3.introspection.impl.contract.JavaServiceContract;
 import org.fabric3.scdl.AbstractComponentType;
 import org.fabric3.scdl.ComponentDefinition;

@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.fabric.instantiator.resolve;
+package org.fabric3.fabric.instantiator.target;
 
 public class ServiceContractNotFoundException extends TargetResolutionException {
     private static final long serialVersionUID = -6846855704775404977L;

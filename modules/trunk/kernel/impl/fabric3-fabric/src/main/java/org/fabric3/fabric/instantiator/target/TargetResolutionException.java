@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.fabric.instantiator.resolve;
+package org.fabric3.fabric.instantiator.target;
 
 import org.fabric3.spi.assembly.ActivateException;
 

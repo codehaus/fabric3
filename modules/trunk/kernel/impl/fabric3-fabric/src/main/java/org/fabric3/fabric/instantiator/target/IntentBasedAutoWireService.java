@@ -1,4 +1,4 @@
-package org.fabric3.fabric.instantiator.resolve;
+package org.fabric3.fabric.instantiator.target;
 
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
