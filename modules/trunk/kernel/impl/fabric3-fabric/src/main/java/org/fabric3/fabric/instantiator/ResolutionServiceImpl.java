@@ -36,7 +36,7 @@ import org.fabric3.spi.model.instance.LogicalService;
  *
  * @version $Revision$ $Date$
  */
-public class DefaultResolutionService implements ResolutionService {
+public class ResolutionServiceImpl implements ResolutionService {
 
     private final PromotionResolutionService promotionResolutionService;
     private final List<TargetResolutionService> targetResolutionServices;
@@ -47,7 +47,7 @@ public class DefaultResolutionService implements ResolutionService {
      * @param promotionResolutionService Service for handling promotions.
      * @param targetResolutionServices   An ordered list of target resolution services.
      */
-    public DefaultResolutionService(@Reference PromotionResolutionService promotionResolutionService,
+    public ResolutionServiceImpl(@Reference PromotionResolutionService promotionResolutionService,
                                     @Reference List<TargetResolutionService> targetResolutionServices) {
         this.promotionResolutionService = promotionResolutionService;
         this.targetResolutionServices = targetResolutionServices;

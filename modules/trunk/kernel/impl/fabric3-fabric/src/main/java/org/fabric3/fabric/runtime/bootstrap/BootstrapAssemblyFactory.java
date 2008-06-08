@@ -72,7 +72,7 @@ import org.fabric3.fabric.instantiator.CompositeComponentInstantiator;
 import org.fabric3.fabric.instantiator.LogicalModelInstantiator;
 import org.fabric3.fabric.instantiator.LogicalModelInstantiatorImpl;
 import org.fabric3.fabric.instantiator.ResolutionService;
-import org.fabric3.fabric.instantiator.DefaultResolutionService;
+import org.fabric3.fabric.instantiator.ResolutionServiceImpl;
 import org.fabric3.fabric.instantiator.target.TargetResolutionService;
 import org.fabric3.fabric.monitor.MonitorWireAttacher;
 import org.fabric3.fabric.monitor.MonitorWireGenerator;
@@ -215,7 +215,7 @@ public class BootstrapAssemblyFactory {
         List<TargetResolutionService> targetResolutionServices = new ArrayList<TargetResolutionService>();
         targetResolutionServices.add(new ExplicitTargetResolutionService());
         targetResolutionServices.add(new TypeBasedAutoWireService());
-        ResolutionService resolutionService = new DefaultResolutionService(promotionResolutionService, targetResolutionServices);
+        ResolutionService resolutionService = new ResolutionServiceImpl(promotionResolutionService, targetResolutionServices);
 
         PromotionNormalizer normalizer = new PromotionNormalizerImpl();
         DocumentLoader documentLoader = new DocumentLoaderImpl();

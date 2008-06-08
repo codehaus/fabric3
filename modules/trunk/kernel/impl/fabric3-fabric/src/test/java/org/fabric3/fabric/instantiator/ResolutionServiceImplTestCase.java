@@ -52,32 +52,32 @@ import org.fabric3.spi.model.instance.LogicalService;
 /**
  * @version $Rev: 2852 $ $Date: 2008-02-21 23:24:40 +0000 (Thu, 21 Feb 2008) $
  */
-public class DefaultresolutionServiceTestCase extends TestCase {
+public class ResolutionServiceImplTestCase extends TestCase {
     private static final URI REFERENCE_URI = URI.create("source#ref");
     private static final URI SOURCE_URI = URI.create("source");
     private static final URI TARGET_URI = URI.create("target#service");
     private LogicalCompositeComponent domain;
-    private DefaultResolutionService wiringService;
+    private ResolutionServiceImpl resolutionService;
 
     public void testAutowireAtomicToAtomic() throws Exception {
         LogicalCompositeComponent composite = createWiredComposite(domain, Foo.class, Foo.class);
-        wiringService.resolve(composite);
+        resolutionService.resolve(composite);
         LogicalComponent<?> source = composite.getComponent(SOURCE_URI);
         assertEquals(TARGET_URI, source.getReference("ref").getWires().iterator().next().getTargetUri());
     }
 
     public void testAutowireAtomicToAtomicRequiresSuperInterface() throws Exception {
         LogicalCompositeComponent composite = createWiredComposite(domain, SuperFoo.class, Foo.class);
-        wiringService.resolve(composite);
+        resolutionService.resolve(composite);
         LogicalComponent<?> source = composite.getComponent(SOURCE_URI);
-        wiringService.resolve(composite);
+        resolutionService.resolve(composite);
         assertEquals(TARGET_URI, source.getReference("ref").getWires().iterator().next().getTargetUri());
     }
 
     public void testAutowireAtomicToAtomicRequiresSubInterface() throws Exception {
         LogicalComponent<CompositeImplementation> composite = createWiredComposite(domain, Foo.class, SuperFoo.class);
         try {
-            wiringService.resolve(composite);
+            resolutionService.resolve(composite);
             fail();
         } catch (TargetResolutionException e) {
             // expected
@@ -87,7 +87,7 @@ public class DefaultresolutionServiceTestCase extends TestCase {
     public void testAutowireAtomicToAtomicIncompatibleInterfaces() throws Exception {
         LogicalComponent<CompositeImplementation> composite = createWiredComposite(domain, Foo.class, String.class);
         try {
-            wiringService.resolve(composite);
+            resolutionService.resolve(composite);
             fail();
         } catch (TargetResolutionException e) {
             // expected
@@ -99,7 +99,7 @@ public class DefaultresolutionServiceTestCase extends TestCase {
         LogicalCompositeComponent parent = createComposite("parent", composite);
         parent.addComponent(composite);
         parent.getDefinition().getImplementation().getComponentType().add(composite.getDefinition());
-        wiringService.resolve(parent);
+        resolutionService.resolve(parent);
         LogicalComponent<?> source = composite.getComponent(SOURCE_URI);
         assertEquals(TARGET_URI, source.getReference("ref").getWires().iterator().next().getTargetUri());
     }
@@ -110,7 +110,7 @@ public class DefaultresolutionServiceTestCase extends TestCase {
         composite.addComponent(source);
         LogicalComponent<?> target = createTargetAtomic(Foo.class, composite);
         composite.addComponent(target);
-        wiringService.resolve(source);
+        resolutionService.resolve(source);
     }
 
     public void testAutowireToSiblingIncludeInComposite() throws Exception {
@@ -121,7 +121,7 @@ public class DefaultresolutionServiceTestCase extends TestCase {
         LogicalComponent<?> target = createTargetAtomic(Foo.class, composite);
         parent.addComponent(composite);
         composite.addComponent(target);
-        wiringService.resolve(composite);
+        resolutionService.resolve(composite);
     }
 
 
@@ -131,7 +131,7 @@ public class DefaultresolutionServiceTestCase extends TestCase {
         List<TargetResolutionService> targetResolutionServices = new ArrayList<TargetResolutionService>();
         targetResolutionServices.add(new ExplicitTargetResolutionService());
         targetResolutionServices.add(new TypeBasedAutoWireService());
-        wiringService = new DefaultResolutionService(promotionResolutionService, targetResolutionServices);
+        resolutionService = new ResolutionServiceImpl(promotionResolutionService, targetResolutionServices);
         URI domainUri = URI.create("fabric3://./runtime");
         URI runtimeUri = URI.create("runtime");
         domain = new LogicalCompositeComponent(domainUri, runtimeUri, null, null);
