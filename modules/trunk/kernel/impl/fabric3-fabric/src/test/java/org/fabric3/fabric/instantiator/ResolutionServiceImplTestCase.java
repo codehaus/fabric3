@@ -28,7 +28,6 @@ import junit.framework.TestCase;
 import org.fabric3.fabric.instantiator.promotion.DefaultPromotionResolutionService;
 import org.fabric3.fabric.instantiator.promotion.PromotionResolutionService;
 import org.fabric3.fabric.instantiator.target.ExplicitTargetResolutionService;
-import org.fabric3.fabric.instantiator.target.TargetResolutionException;
 import org.fabric3.fabric.instantiator.target.TargetResolutionService;
 import org.fabric3.fabric.instantiator.target.TypeBasedAutoWireService;
 import org.fabric3.introspection.impl.contract.JavaServiceContract;
@@ -79,7 +78,7 @@ public class ResolutionServiceImplTestCase extends TestCase {
         try {
             resolutionService.resolve(composite);
             fail();
-        } catch (TargetResolutionException e) {
+        } catch (LogicalInstantiationException e) {
             // expected
         }
     }
@@ -89,7 +88,7 @@ public class ResolutionServiceImplTestCase extends TestCase {
         try {
             resolutionService.resolve(composite);
             fail();
-        } catch (TargetResolutionException e) {
+        } catch (LogicalInstantiationException e) {
             // expected
         }
     }

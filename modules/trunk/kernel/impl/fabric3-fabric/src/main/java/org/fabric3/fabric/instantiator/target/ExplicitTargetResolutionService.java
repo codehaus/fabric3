@@ -4,6 +4,10 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.fabric3.fabric.instantiator.AmbiguousServiceException;
+import org.fabric3.fabric.instantiator.LogicalInstantiationException;
+import org.fabric3.fabric.instantiator.NoServiceOnComponentException;
+import org.fabric3.fabric.instantiator.ServiceNotFoundException;
 import org.fabric3.scdl.ComponentReference;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
@@ -18,7 +22,7 @@ import org.fabric3.spi.util.UriHelper;
  */
 public class ExplicitTargetResolutionService implements TargetResolutionService {
 
-    public void resolve(LogicalReference logicalReference, LogicalCompositeComponent context) throws TargetResolutionException {
+    public void resolve(LogicalReference logicalReference, LogicalCompositeComponent context) throws LogicalInstantiationException {
 
         ComponentReference componentReference = logicalReference.getComponentReference();
         if (componentReference == null) {
@@ -43,7 +47,7 @@ public class ExplicitTargetResolutionService implements TargetResolutionService 
 
     }
 
-    private URI resolveByUri(LogicalReference reference, URI targetUri, LogicalCompositeComponent composite) throws TargetResolutionException {
+    private URI resolveByUri(LogicalReference reference, URI targetUri, LogicalCompositeComponent composite) throws LogicalInstantiationException {
 
         URI targetComponentUri = UriHelper.getDefragmentedName(targetUri);
         LogicalComponent<?> targetComponent = composite.getComponent(targetComponentUri);

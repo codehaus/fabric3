@@ -16,13 +16,12 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.fabric.instantiator.target;
+package org.fabric3.fabric.instantiator;
 
-public class ServiceNotFoundException extends TargetResolutionException {
+public class ReferenceNotFoundException extends LogicalInstantiationException {
     private static final long serialVersionUID = -6600598658356829665L;
 
-    public ServiceNotFoundException(String message) {
+    public ReferenceNotFoundException(String message) {
         super(message);
     }
-
 }

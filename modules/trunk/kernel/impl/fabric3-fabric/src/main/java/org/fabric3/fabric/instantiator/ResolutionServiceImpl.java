@@ -23,9 +23,7 @@ import java.util.List;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.fabric.instantiator.promotion.PromotionResolutionService;
-import org.fabric3.fabric.instantiator.target.TargetResolutionException;
 import org.fabric3.fabric.instantiator.target.TargetResolutionService;
-import org.fabric3.spi.assembly.ActivateException;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
@@ -59,9 +57,9 @@ public class ResolutionServiceImpl implements ResolutionService {
      * percieved order for resolution is explicit target, intent based autowire, and type based autowire.
      *
      * @param logicalComponent Logical component that needs to be wired.
-     * @throws ActivateException Ifthe target for a required reference is unable to be wired.
+     * @throws LogicalInstantiationException Ifthe target for a required reference is unable to be wired.
      */
-    public void resolve(LogicalComponent<?> logicalComponent) throws ActivateException {
+    public void resolve(LogicalComponent<?> logicalComponent) throws LogicalInstantiationException {
         if (logicalComponent instanceof LogicalCompositeComponent) {
             LogicalCompositeComponent compositeComponent = (LogicalCompositeComponent) logicalComponent;
             for (LogicalComponent<?> child : compositeComponent.getComponents()) {
@@ -73,11 +71,11 @@ public class ResolutionServiceImpl implements ResolutionService {
         resolveServices(logicalComponent);
     }
 
-    public void resolve(LogicalService logicalService) throws PromotionException {
+    public void resolve(LogicalService logicalService) throws LogicalInstantiationException {
         promotionResolutionService.resolve(logicalService);
     }
 
-    public void resolve(LogicalReference logicalReference, LogicalCompositeComponent context) throws ActivateException {
+    public void resolve(LogicalReference logicalReference, LogicalCompositeComponent context) throws LogicalInstantiationException {
 
         promotionResolutionService.resolve(logicalReference);
         for (TargetResolutionService targetResolutionService : targetResolutionServices) {
@@ -88,7 +86,7 @@ public class ResolutionServiceImpl implements ResolutionService {
     /*
      * Handles promotions and target resolution on references.
      */
-    private void resolveReferences(LogicalComponent<?> logicalComponent) throws TargetResolutionException, PromotionException {
+    private void resolveReferences(LogicalComponent<?> logicalComponent) throws LogicalInstantiationException {
         for (LogicalReference logicalReference : logicalComponent.getReferences()) {
             promotionResolutionService.resolve(logicalReference);
             for (TargetResolutionService targetResolutionService : targetResolutionServices) {
@@ -100,7 +98,7 @@ public class ResolutionServiceImpl implements ResolutionService {
     /*
      * Handles promotions on services.
      */
-    private void resolveServices(LogicalComponent<?> logicalComponent) throws PromotionException {
+    private void resolveServices(LogicalComponent<?> logicalComponent) throws LogicalInstantiationException {
         for (LogicalService logicalService : logicalComponent.getServices()) {
             promotionResolutionService.resolve(logicalService);
         }

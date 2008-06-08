@@ -18,7 +18,9 @@
  */
 package org.fabric3.fabric.instantiator.target;
 
-public class TargetComponentNotFoundException extends TargetResolutionException {
+import org.fabric3.fabric.instantiator.LogicalInstantiationException;
+
+public class TargetComponentNotFoundException extends LogicalInstantiationException {
     private static final long serialVersionUID = -6600598658356829665L;
 
     public TargetComponentNotFoundException(String message) {

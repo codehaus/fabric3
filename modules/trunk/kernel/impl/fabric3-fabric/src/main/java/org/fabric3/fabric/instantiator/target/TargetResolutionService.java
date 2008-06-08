@@ -18,6 +18,7 @@
  */
 package org.fabric3.fabric.instantiator.target;
 
+import org.fabric3.fabric.instantiator.LogicalInstantiationException;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
 
@@ -34,8 +35,8 @@ public interface TargetResolutionService {
      *
      * @param reference Logical reference whose target needs to be resolved.
      * @param context   Composite component within which the targets are resolved.
-     * @throws TargetResolutionException if there was a problem resolving the reference target
+     * @throws LogicalInstantiationException if there was a problem resolving the reference target
      */
-    void resolve(LogicalReference reference, LogicalCompositeComponent context) throws TargetResolutionException;
+    void resolve(LogicalReference reference, LogicalCompositeComponent context) throws LogicalInstantiationException;
 
 }

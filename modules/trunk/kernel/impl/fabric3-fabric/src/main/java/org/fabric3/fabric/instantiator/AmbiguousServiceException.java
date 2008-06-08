@@ -18,29 +18,11 @@
  */
 package org.fabric3.fabric.instantiator;
 
-import org.fabric3.spi.assembly.ActivateException;
+public class AmbiguousServiceException extends LogicalInstantiationException {
+    private static final long serialVersionUID = -6600598658356829665L;
 
-/**
- * Denotes an exception instanitating a LogicalComponent
- *
- * @version $Rev$ $Date$
- */
-public class LogicalInstantiationException extends ActivateException {
-    private static final long serialVersionUID = 4771407392907205266L;
-
-    public LogicalInstantiationException(String message, String identifier) {
-        super(message, identifier);
-    }
-
-    public LogicalInstantiationException(String message, String identifier, Throwable cause) {
-        super(message, identifier, cause);
-    }
-
-    public LogicalInstantiationException(Throwable cause) {
-        super(cause);
-    }
-
-    public LogicalInstantiationException(String message) {
+    public AmbiguousServiceException(String message) {
         super(message);
+
     }
 }

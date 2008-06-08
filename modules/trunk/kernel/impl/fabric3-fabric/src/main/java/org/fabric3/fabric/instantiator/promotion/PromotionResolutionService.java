@@ -18,12 +18,13 @@
  */
 package org.fabric3.fabric.instantiator.promotion;
 
-import org.fabric3.fabric.instantiator.PromotionException;
+import org.fabric3.fabric.instantiator.LogicalInstantiationException;
 import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalService;
 
 /**
- * Resolves promoted services and references by setting the resolved promotio URI of the logical component service or reference that is being promoted.
+ * Resolves promoted services and references by setting the resolved promotio URI of the logical component service or reference that is being
+ * promoted.
  *
  * @version $Revision$ $Date$
  */
@@ -38,9 +39,9 @@ public interface PromotionResolutionService {
      * the promoted service.
      *
      * @param logicalService Logical service whose promotion is handled.
-     * @throws PromotionException if an error occurs processing the promoted exception
+     * @throws LogicalInstantiationException if an error occurs processing the promoted exception
      */
-    void resolve(LogicalService logicalService) throws PromotionException;
+    void resolve(LogicalService logicalService) throws LogicalInstantiationException;
 
     /**
      * Handles all promotions on the specified logical reference.
@@ -51,8 +52,8 @@ public interface PromotionResolutionService {
      * set to the URI of the promoted reference.
      *
      * @param logicalReference Logical reference whose promotion is handled.
-     * @throws PromotionException if an error occurs processing the promoted exception
+     * @throws LogicalInstantiationException if an error occurs processing the promoted exception
      */
-    void resolve(LogicalReference logicalReference) throws PromotionException;
+    void resolve(LogicalReference logicalReference) throws LogicalInstantiationException;
 
 }

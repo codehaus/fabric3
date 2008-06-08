@@ -23,6 +23,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.fabric3.fabric.instantiator.LogicalInstantiationException;
+import org.fabric3.fabric.instantiator.ReferenceNotFoundException;
 import org.fabric3.scdl.AbstractComponentType;
 import org.fabric3.scdl.Autowire;
 import org.fabric3.scdl.ComponentDefinition;
@@ -44,7 +46,7 @@ import org.fabric3.spi.util.UriHelper;
  */
 public class TypeBasedAutoWireService implements TargetResolutionService {
 
-    public void resolve(LogicalReference logicalReference, LogicalCompositeComponent compositeComponent) throws TargetResolutionException {
+    public void resolve(LogicalReference logicalReference, LogicalCompositeComponent compositeComponent) throws LogicalInstantiationException {
 
         ComponentReference componentReference = logicalReference.getComponentReference();
         LogicalComponent<?> component = logicalReference.getParent();
@@ -79,7 +81,7 @@ public class TypeBasedAutoWireService implements TargetResolutionService {
         }
 
         if (logicalReference.getWires().isEmpty() && logicalReference.getDefinition().isRequired() && logicalReference.getBindings().isEmpty()) {
-            throw new TargetResolutionException("Unable to resolve reference " + logicalReference.getUri());
+            throw new ReferenceNotFoundException("Unable to resolve reference " + logicalReference.getUri());
         }
 
     }
@@ -143,13 +145,12 @@ public class TypeBasedAutoWireService implements TargetResolutionService {
      * @param logicalReference the logical reference
      * @param contract         the contract to match against
      * @return true if the reference has been resolved.
-     * @throws org.fabric3.fabric.instantiator.target.TargetResolutionException
-     *          if an error occurs during resolution
+     * @throws LogicalInstantiationException if an error occurs during resolution
      */
     private boolean resolveByType(LogicalCompositeComponent composite,
                                   LogicalComponent<?> component,
                                   LogicalReference logicalReference,
-                                  ServiceContract<?> contract) throws TargetResolutionException {
+                                  ServiceContract<?> contract) throws LogicalInstantiationException {
 
         List<URI> candidates = new ArrayList<URI>();
 

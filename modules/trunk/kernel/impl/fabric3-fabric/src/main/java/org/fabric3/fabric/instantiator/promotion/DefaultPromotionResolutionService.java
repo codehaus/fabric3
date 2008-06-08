@@ -22,7 +22,14 @@ import java.net.URI;
 import java.util.Collection;
 import java.util.List;
 
-import org.fabric3.fabric.instantiator.PromotionException;
+import org.fabric3.fabric.instantiator.AmbiguousReferenceException;
+import org.fabric3.fabric.instantiator.AmbiguousServiceException;
+import org.fabric3.fabric.instantiator.LogicalInstantiationException;
+import org.fabric3.fabric.instantiator.NoReferenceOnComponentException;
+import org.fabric3.fabric.instantiator.NoServiceOnComponentException;
+import org.fabric3.fabric.instantiator.PromotedComponentNotFoundException;
+import org.fabric3.fabric.instantiator.ReferenceNotFoundException;
+import org.fabric3.fabric.instantiator.ServiceNotFoundException;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
@@ -36,7 +43,7 @@ import org.fabric3.spi.util.UriHelper;
  */
 public class DefaultPromotionResolutionService implements PromotionResolutionService {
 
-    public void resolve(LogicalService logicalService) throws PromotionException {
+    public void resolve(LogicalService logicalService) throws LogicalInstantiationException {
 
         URI promotedUri = logicalService.getPromotedUri();
 
@@ -57,20 +64,20 @@ public class DefaultPromotionResolutionService implements PromotionResolutionSer
         if (promotedServiceName == null) {
             Collection<LogicalService> componentServices = promotedComponent.getServices();
             if (componentServices.size() == 0) {
-                throw new NoServiceOnComponentException(promotedComponentUri);
+                throw new NoServiceOnComponentException("No services available on component: " + promotedComponentUri);
             } else if (componentServices.size() != 1) {
-                throw new AmbiguousServiceException(promotedComponentUri);
+                throw new AmbiguousServiceException("More than one service available on component: " + promotedComponentUri);
             }
             logicalService.setPromotedUri(componentServices.iterator().next().getUri());
         } else {
             if (promotedComponent.getService(promotedServiceName) == null) {
-                throw new ServiceNotFoundException(promotedComponentUri, promotedServiceName);
+                throw new ServiceNotFoundException("Service " + promotedServiceName + " not found on component " + promotedComponentUri);
             }
         }
 
     }
 
-    public void resolve(LogicalReference logicalReference) throws PromotionException {
+    public void resolve(LogicalReference logicalReference) throws LogicalInstantiationException {
 
         List<URI> promotedUris = logicalReference.getPromotedUris();
 
@@ -97,7 +104,7 @@ public class DefaultPromotionResolutionService implements PromotionResolutionSer
                 }
                 logicalReference.setPromotedUri(i, componentReferences.iterator().next().getUri());
             } else if (promotedComponent.getReference(promotedReferenceName) == null) {
-                throw new ReferenceNotFoundException(promotedComponentUri, promotedReferenceName);
+                throw new ReferenceNotFoundException("Reference " + promotedReferenceName + " not found on component " + promotedComponentUri);
             }
 
         }

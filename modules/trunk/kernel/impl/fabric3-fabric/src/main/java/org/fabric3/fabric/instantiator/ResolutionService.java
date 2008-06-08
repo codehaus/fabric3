@@ -39,24 +39,24 @@ public interface ResolutionService {
      * will be resolved.
      *
      * @param logicalComponent logical component to be resolved.
-     * @throws ActivateException if a reslution error occurs.
+     * @throws LogicalInstantiationException if a resolution error occurs.
      */
-    void resolve(LogicalComponent<?> logicalComponent) throws ActivateException;
+    void resolve(LogicalComponent<?> logicalComponent) throws LogicalInstantiationException;
 
     /**
      * Resolves the promotion on the specified logical service.
      *
      * @param logicalService Logical service whose promotion is to be resolved.
-     * @throws PromotionException if a reslution error occurs.
+     * @throws LogicalInstantiationException if a resolution error occurs.
      */
-    void resolve(LogicalService logicalService) throws PromotionException;
+    void resolve(LogicalService logicalService) throws LogicalInstantiationException;
 
     /**
      * Resolves the logical reference against the given composite.
      *
      * @param logicalReference Logical reference to be resolved.
      * @param composite        Composite component against which the targets are resolved.
-     * @throws ActivateException if a reslution error occurs.
+     * @throws LogicalInstantiationException if a resolution error occurs.
      */
-    void resolve(LogicalReference logicalReference, LogicalCompositeComponent composite) throws ActivateException;
+    void resolve(LogicalReference logicalReference, LogicalCompositeComponent composite) throws LogicalInstantiationException;
 }

@@ -4,7 +4,14 @@ import java.net.URI;
 
 import junit.framework.TestCase;
 
-import org.fabric3.fabric.instantiator.PromotionException;
+import org.fabric3.fabric.instantiator.LogicalInstantiationException;
+import org.fabric3.fabric.instantiator.AmbiguousReferenceException;
+import org.fabric3.fabric.instantiator.AmbiguousServiceException;
+import org.fabric3.fabric.instantiator.NoReferenceOnComponentException;
+import org.fabric3.fabric.instantiator.NoServiceOnComponentException;
+import org.fabric3.fabric.instantiator.PromotedComponentNotFoundException;
+import org.fabric3.fabric.instantiator.ReferenceNotFoundException;
+import org.fabric3.fabric.instantiator.ServiceNotFoundException;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
@@ -25,7 +32,7 @@ public class DefaultTargetPromotionServiceTestCase extends TestCase {
             promotionResolutionService.resolve(logicalService);
         } catch (PromotedComponentNotFoundException ex) {
             return;
-        } catch (PromotionException e) {
+        } catch (LogicalInstantiationException e) {
             fail("Unexpected exception");
         }
 
@@ -51,7 +58,7 @@ public class DefaultTargetPromotionServiceTestCase extends TestCase {
             promotionResolutionService.resolve(logicalService);
         } catch (AmbiguousServiceException ex) {
             return;
-        } catch (PromotionException e) {
+        } catch (LogicalInstantiationException e) {
             fail("Unexpected exception");
         }
 
@@ -75,7 +82,7 @@ public class DefaultTargetPromotionServiceTestCase extends TestCase {
             promotionResolutionService.resolve(logicalService);
         } catch (NoServiceOnComponentException ex) {
             return;
-        } catch (PromotionException e) {
+        } catch (LogicalInstantiationException e) {
             fail("Unexpected exception");
         }
 
@@ -99,7 +106,7 @@ public class DefaultTargetPromotionServiceTestCase extends TestCase {
             promotionResolutionService.resolve(logicalService);
         } catch (ServiceNotFoundException ex) {
             return;
-        } catch (PromotionException e) {
+        } catch (LogicalInstantiationException e) {
             fail("Unexpected exception");
         }
 
@@ -121,7 +128,7 @@ public class DefaultTargetPromotionServiceTestCase extends TestCase {
 
         try {
             promotionResolutionService.resolve(logicalService);
-        } catch (PromotionException e) {
+        } catch (LogicalInstantiationException e) {
             fail("Unexpected exception");
         }
         assertEquals(URI.create("component#service1"), logicalService.getPromotedUri());
@@ -142,7 +149,7 @@ public class DefaultTargetPromotionServiceTestCase extends TestCase {
 
         try {
             promotionResolutionService.resolve(logicalService);
-        } catch (PromotionException e) {
+        } catch (LogicalInstantiationException e) {
             fail("Unexpected exception");
         }
 
@@ -157,7 +164,7 @@ public class DefaultTargetPromotionServiceTestCase extends TestCase {
             promotionResolutionService.resolve(logicalReference);
         } catch (PromotedComponentNotFoundException ex) {
             return;
-        } catch (PromotionException e) {
+        } catch (LogicalInstantiationException e) {
             fail("Unexpected exception");
         }
 
@@ -183,7 +190,7 @@ public class DefaultTargetPromotionServiceTestCase extends TestCase {
             promotionResolutionService.resolve(logicalReference);
         } catch (AmbiguousReferenceException ex) {
             return;
-        } catch (PromotionException e) {
+        } catch (LogicalInstantiationException e) {
             fail("Unexpected exception");
         }
 
@@ -208,7 +215,7 @@ public class DefaultTargetPromotionServiceTestCase extends TestCase {
             promotionResolutionService.resolve(logicalReference);
         } catch (NoReferenceOnComponentException ex) {
             return;
-        } catch (PromotionException e) {
+        } catch (LogicalInstantiationException e) {
             fail("Unexpected exception");
         }
 
@@ -233,7 +240,7 @@ public class DefaultTargetPromotionServiceTestCase extends TestCase {
             promotionResolutionService.resolve(logicalReference);
         } catch (ReferenceNotFoundException ex) {
             return;
-        } catch (PromotionException e) {
+        } catch (LogicalInstantiationException e) {
             fail("Unexpected exception");
         }
 
@@ -255,7 +262,7 @@ public class DefaultTargetPromotionServiceTestCase extends TestCase {
 
         try {
             promotionResolutionService.resolve(logicalReference);
-        } catch (PromotionException e) {
+        } catch (LogicalInstantiationException e) {
             fail("Unexpected exception");
         }
         assertEquals(URI.create("component#reference1"), logicalReference.getPromotedUris().iterator().next());
@@ -276,7 +283,7 @@ public class DefaultTargetPromotionServiceTestCase extends TestCase {
 
         try {
             promotionResolutionService.resolve(logicalReference);
-        } catch (PromotionException e) {
+        } catch (LogicalInstantiationException e) {
             fail("Unexpected exception");
         }
 

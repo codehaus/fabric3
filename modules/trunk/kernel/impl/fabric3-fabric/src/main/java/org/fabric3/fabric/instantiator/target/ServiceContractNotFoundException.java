@@ -18,7 +18,9 @@
  */
 package org.fabric3.fabric.instantiator.target;
 
-public class ServiceContractNotFoundException extends TargetResolutionException {
+import org.fabric3.fabric.instantiator.LogicalInstantiationException;
+
+public class ServiceContractNotFoundException extends LogicalInstantiationException {
     private static final long serialVersionUID = -6846855704775404977L;
 
     public ServiceContractNotFoundException(String message) {
