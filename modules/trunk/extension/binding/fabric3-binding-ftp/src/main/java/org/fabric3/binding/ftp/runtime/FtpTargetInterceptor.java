@@ -18,28 +18,73 @@
  */
 package org.fabric3.binding.ftp.runtime;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.InetAddress;
+import java.net.URI;
+
+import org.apache.commons.net.ftp.FTPClient;
+import org.fabric3.binding.ftp.provision.FtpSecurity;
 import org.fabric3.spi.invocation.Message;
 import org.fabric3.spi.wire.Interceptor;
+import org.osoa.sca.ServiceUnavailableException;
 
 /**
  *
  * @version $Revision$ $Date$
  */
 public class FtpTargetInterceptor implements Interceptor {
+    
+    private Interceptor next;
+    private final URI uri;
+    private final FtpSecurity security;
+    private final boolean active;
+
+    public FtpTargetInterceptor(URI uri, FtpSecurity security, boolean active) {
+        this.uri = uri;
+        this.security = security;
+        this.active = active;
+    }
 
     public Interceptor getNext() {
-        // TODO Auto-generated method stub
-        return null;
+        return next;
     }
 
     public Message invoke(Message msg) {
-        // TODO Auto-generated method stub
+        
+        FTPClient ftpClient = new FTPClient();
+        
+        try {
+            
+            ftpClient.connect(InetAddress.getByName(uri.toString()));
+            
+            if (ftpClient.login(security.getUser(), security.getPassword())) {
+                throw new ServiceUnavailableException("Invalid credentials");
+            }
+            
+            Object[] args = (Object[]) msg.getBody();
+            String fileName = (String) args[0];
+            InputStream data = (InputStream) args[1];
+            
+            if (active) {
+                ftpClient.enterLocalActiveMode();
+            } else {
+                ftpClient.enterLocalPassiveMode();
+            }
+            
+            if (ftpClient.storeFile(fileName, data)) {
+                throw new ServiceUnavailableException("Unable to upload data");
+            }
+            
+        } catch (IOException e) {
+           throw new ServiceUnavailableException(e);
+        }
+
         return null;
     }
 
     public void setNext(Interceptor next) {
-        // TODO Auto-generated method stub
-
+        this.next = next;
     }
 
 }

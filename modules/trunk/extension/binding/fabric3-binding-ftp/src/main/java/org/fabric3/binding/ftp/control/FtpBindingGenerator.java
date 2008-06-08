@@ -33,6 +33,7 @@ import org.fabric3.binding.ftp.scdl.FtpBindingDefinition;
 import org.fabric3.binding.ftp.scdl.TransferMode;
 import org.fabric3.scdl.Operation;
 import org.fabric3.scdl.ReferenceDefinition;
+import org.fabric3.scdl.ServiceContract;
 import org.fabric3.scdl.ServiceDefinition;
 import org.fabric3.scdl.definitions.PolicySet;
 import org.fabric3.spi.generator.BindingGenerator;
@@ -52,6 +53,11 @@ public class FtpBindingGenerator implements BindingGenerator<FtpWireSourceDefini
     public FtpWireSourceDefinition generateWireSource(LogicalBinding<FtpBindingDefinition> binding, 
                                                       Policy policy, 
                                                       ServiceDefinition serviceDefinition) throws GenerationException {
+        
+        ServiceContract<?> serviceContract = serviceDefinition.getServiceContract();
+        if (serviceContract.getOperations().size() != 1) {
+            throw new GenerationException("Expects only one operation");
+        }
 
 
         URI id = binding.getParent().getParent().getParent().getUri();
@@ -65,12 +71,16 @@ public class FtpBindingGenerator implements BindingGenerator<FtpWireSourceDefini
     public FtpWireTargetDefinition generateWireTarget(LogicalBinding<FtpBindingDefinition> binding, 
                                                       Policy policy,
                                                       ReferenceDefinition referenceDefinition) throws GenerationException {
-
+        
+        ServiceContract<?> serviceContract = referenceDefinition.getServiceContract();
+        if (serviceContract.getOperations().size() != 1) {
+            throw new GenerationException("Expects only one operation");
+        }
 
         URI id = binding.getParent().getParent().getParent().getUri();
         boolean active = binding.getBinding().getTransferMode() == TransferMode.ACTIVE;
         
-        Map<Operation<?>, FtpSecurity> security = processPolicies(policy, referenceDefinition);
+        FtpSecurity security = processPolicies(policy, serviceContract.getOperations().iterator().next());
 
         FtpWireTargetDefinition hwtd = new FtpWireTargetDefinition(id, active, security);
         hwtd.setUri(binding.getBinding().getTargetUri());
@@ -79,42 +89,34 @@ public class FtpBindingGenerator implements BindingGenerator<FtpWireSourceDefini
         
     }
 
-    private Map<Operation<?>, FtpSecurity> processPolicies(Policy policy, ReferenceDefinition referenceDefinition) throws GenerationException {
+    private FtpSecurity processPolicies(Policy policy, Operation<?> operation) throws GenerationException {
         
-        Map<Operation<?>, FtpSecurity> security = new HashMap<Operation<?>, FtpSecurity>();
-        
-        for (Operation<?> operation : referenceDefinition.getServiceContract().getOperations()) {
-            
-            List<PolicySet> policySets = policy.getProvidedPolicySets(operation);
-            if (policySets.size() == 0) {
-                continue;
-            }
-            if (policySets.size() != 1) {
-                throw new GenerationException("Invalid policy configuration, only supports security policy");
-            }
-            
-            PolicySet policySet = policySets.iterator().next();
-            
-            QName policyQName = policySet.getExtensionName();
-            if (!policyQName.equals(Constants.POLICY_QNAME)) {
-                throw new GenerationException("Unexpected policy element " + policyQName);
-            }
-            
-            Element policyElement = policySet.getExtension();
-            String user = policyElement.getAttribute("user");
-            if (user == null) {
-                throw new GenerationException("User name not specified in security policy");
-            }
-            String password = policyElement.getAttribute("password");
-            if (password == null) {
-                throw new GenerationException("Password not specified in security policy");
-            }
-            
-            security.put(operation, new FtpSecurity(user, password));
-            
+        List<PolicySet> policySets = policy.getProvidedPolicySets(operation);
+        if (policySets.size() == 0) {
+            return null;
+        }
+        if (policySets.size() != 1) {
+            throw new GenerationException("Invalid policy configuration, only supports security policy");
         }
         
-        return security;
+        PolicySet policySet = policySets.iterator().next();
+        
+        QName policyQName = policySet.getExtensionName();
+        if (!policyQName.equals(Constants.POLICY_QNAME)) {
+            throw new GenerationException("Unexpected policy element " + policyQName);
+        }
+        
+        Element policyElement = policySet.getExtension();
+        String user = policyElement.getAttribute("user");
+        if (user == null) {
+            throw new GenerationException("User name not specified in security policy");
+        }
+        String password = policyElement.getAttribute("password");
+        if (password == null) {
+            throw new GenerationException("Password not specified in security policy");
+        }
+            
+        return new FtpSecurity(user, password);
         
     }
     

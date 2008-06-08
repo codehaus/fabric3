@@ -18,32 +18,63 @@
  */
 package org.fabric3.binding.ftp.runtime;
 
+import java.io.InputStream;
+import java.net.URI;
+
 import org.fabric3.binding.ftp.provision.FtpWireSourceDefinition;
+import org.fabric3.ftp.api.FtpLet;
+import org.fabric3.ftp.spi.FtpLetContainer;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.SourceWireAttacher;
+import org.fabric3.spi.invocation.Message;
+import org.fabric3.spi.invocation.MessageImpl;
+import org.fabric3.spi.invocation.WorkContext;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
+import org.fabric3.spi.wire.Interceptor;
 import org.fabric3.spi.wire.Wire;
+import org.osoa.sca.annotations.Reference;
 
 /**
  *
  * @version $Revision$ $Date$
  */
 public class FtpSourceWireAttacher implements SourceWireAttacher<FtpWireSourceDefinition> {
+    
+    private final FtpLetContainer ftpLetContainer;
 
-    public void attachObjectFactory(FtpWireSourceDefinition source, ObjectFactory<?> objectFactory) throws WiringException {
-        // TODO Auto-generated method stub
-        
+    /**
+     * Injects the references.
+     * 
+     * @param ftpLetContainer FtpLet container.
+     */
+    public FtpSourceWireAttacher(@Reference FtpLetContainer ftpLetContainer) {
+        this.ftpLetContainer = ftpLetContainer;
     }
 
     public void attachToSource(FtpWireSourceDefinition source, PhysicalWireTargetDefinition target, Wire wire) throws WiringException {
-        // TODO Auto-generated method stub
         
+        final Interceptor head = wire.getInvocationChains().values().iterator().next().getHeadInterceptor();
+        
+        URI uri = source.getUri();
+        String servicePath = uri.getPath();
+        ftpLetContainer.registerFtpLet(servicePath, new FtpLet() {
+            public void onUpload(String fileName, InputStream uploadData) throws Exception {
+                Object[] args = new Object[] {fileName, uploadData};
+                WorkContext workContext = new WorkContext();
+                Message input = new MessageImpl(args, false, workContext);
+                head.invoke(input);
+            }            
+        });
+
     }
 
     public void detachFromSource(FtpWireSourceDefinition source, PhysicalWireTargetDefinition target, Wire wire) throws WiringException {
-        // TODO Auto-generated method stub
-        
+        throw new AssertionError();
+    }
+
+    public void attachObjectFactory(FtpWireSourceDefinition source, ObjectFactory<?> objectFactory) throws WiringException {
+        throw new AssertionError();
     }
 
 }

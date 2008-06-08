@@ -59,6 +59,11 @@
             <!-- use version 1.0 as it is the version bundled in JDK 6 -->
             <version>1.0</version>
         </dependency>
+        <dependency>
+            <groupId>commons-net</groupId>
+            <artifactId>commons-net</artifactId>
+            <version>1.4.1</version>
+        </dependency>
     </dependencies>
     
     <build>

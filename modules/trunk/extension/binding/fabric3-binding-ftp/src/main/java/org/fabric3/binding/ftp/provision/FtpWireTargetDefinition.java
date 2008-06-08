@@ -32,7 +32,7 @@ public class FtpWireTargetDefinition extends PhysicalWireTargetDefinition {
     
     private final URI classLoaderId;
     private final boolean active;
-    private final Map<Operation<?>, FtpSecurity> security;
+    private final FtpSecurity security;
 
     /**
      * Initializes the classloader id and transfer mode.
@@ -42,7 +42,7 @@ public class FtpWireTargetDefinition extends PhysicalWireTargetDefinition {
      * @param security Security parameters
      */
 
-    public FtpWireTargetDefinition(URI classLoaderId, boolean active, Map<Operation<?>, FtpSecurity> security) {
+    public FtpWireTargetDefinition(URI classLoaderId, boolean active, FtpSecurity security) {
         this.classLoaderId = classLoaderId;
         this.active = active;
         this.security = security;
@@ -71,7 +71,7 @@ public class FtpWireTargetDefinition extends PhysicalWireTargetDefinition {
      * 
      * @return Get the security parameters.
      */
-    public Map<Operation<?>, FtpSecurity> getSecurity() {
+    public FtpSecurity getSecurity() {
         return security;
     }
 
