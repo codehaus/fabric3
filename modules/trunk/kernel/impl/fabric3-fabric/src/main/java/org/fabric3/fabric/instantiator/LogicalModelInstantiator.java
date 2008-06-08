@@ -17,7 +17,6 @@
 package org.fabric3.fabric.instantiator;
 
 import org.fabric3.scdl.Composite;
-import org.fabric3.spi.assembly.ActivateException;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 
 /**
@@ -33,9 +32,9 @@ public interface LogicalModelInstantiator {
      * @param domain    Domain in which the composite is to be included.
      * @param composite Composite to be included in the domain.
      * @return the change that would result from this include operation
-     * @throws ActivateException If unable to include the composite.
+     * @throws LogicalInstantiationException If unable to include the composite.
      */
-    LogicalChange include(LogicalCompositeComponent domain, Composite composite) throws ActivateException;
+    LogicalChange include(LogicalCompositeComponent domain, Composite composite) throws LogicalInstantiationException;
 
 
     /**
@@ -44,7 +43,7 @@ public interface LogicalModelInstantiator {
      * @param domain    Domain in which the composite is to be included.
      * @param composite Composite to be included in the domain.
      * @return the change that would result from this include operation
-     * @throws ActivateException If unable to include the composite.
+     * @throws LogicalInstantiationException If unable to include the composite.
      */
-    LogicalChange exclude(LogicalCompositeComponent domain, Composite composite) throws ActivateException;
+    LogicalChange exclude(LogicalCompositeComponent domain, Composite composite) throws LogicalInstantiationException;
 }

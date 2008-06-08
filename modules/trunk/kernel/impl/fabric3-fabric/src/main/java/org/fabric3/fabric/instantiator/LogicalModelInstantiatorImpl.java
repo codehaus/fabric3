@@ -26,8 +26,8 @@ import java.util.Set;
 import org.osoa.sca.annotations.Reference;
 import org.w3c.dom.Document;
 
-import org.fabric3.fabric.instantiator.normalize.PromotionNormalizer;
 import org.fabric3.fabric.instantiator.component.ComponentInstantiator;
+import org.fabric3.fabric.instantiator.normalize.PromotionNormalizer;
 import org.fabric3.scdl.Autowire;
 import org.fabric3.scdl.BindingDefinition;
 import org.fabric3.scdl.ComponentDefinition;
@@ -37,7 +37,6 @@ import org.fabric3.scdl.CompositeReference;
 import org.fabric3.scdl.CompositeService;
 import org.fabric3.scdl.Implementation;
 import org.fabric3.scdl.Property;
-import org.fabric3.spi.assembly.ActivateException;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
@@ -71,7 +70,7 @@ public class LogicalModelInstantiatorImpl implements LogicalModelInstantiator {
     }
 
     @SuppressWarnings("unchecked")
-    public LogicalChange include(LogicalCompositeComponent parent, Composite composite) throws ActivateException {
+    public LogicalChange include(LogicalCompositeComponent parent, Composite composite) throws LogicalInstantiationException {
 
         LogicalChange change = new LogicalChange(parent);
 
@@ -92,7 +91,7 @@ public class LogicalModelInstantiatorImpl implements LogicalModelInstantiator {
         return change;
     }
 
-    public LogicalChange exclude(LogicalCompositeComponent parent, Composite composite) throws ActivateException {
+    public LogicalChange exclude(LogicalCompositeComponent parent, Composite composite) throws LogicalInstantiationException {
         LogicalChange change = new LogicalChange(parent);
         // merge the property values into the parent
         excludeProperties(parent, composite, change);
@@ -103,11 +102,11 @@ public class LogicalModelInstantiatorImpl implements LogicalModelInstantiator {
         return change;
     }
 
-    private Map<String, Document> includeProperties(LogicalCompositeComponent parent, Composite composite) throws ActivateException {
+    private Map<String, Document> includeProperties(LogicalCompositeComponent parent, Composite composite) throws LogicalInstantiationException {
         for (Property property : composite.getProperties().values()) {
             String name = property.getName();
             if (parent.getPropertyValues().containsKey(name)) {
-                throw new ActivateException("Duplicate property", name);
+                throw new DuplicatePropertyException("Duplicate property: " + name);
             }
             parent.setPropertyValue(name, property.getDefaultValue());
         }
@@ -196,7 +195,7 @@ public class LogicalModelInstantiatorImpl implements LogicalModelInstantiator {
     }
 
     private void resolve(Collection<LogicalComponent<?>> components, List<LogicalService> services, List<LogicalReference> references)
-            throws ActivateException {
+            throws LogicalInstantiationException {
 
         // resolve wires for composite services merged into the domain
         for (LogicalService service : services) {

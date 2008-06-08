@@ -18,29 +18,13 @@
  */
 package org.fabric3.fabric.instantiator;
 
-import org.fabric3.host.Fabric3Exception;
-
 /**
- * Denotes an exception instanitating a LogicalComponent
- *
- * @version $Rev$ $Date$
+ * @version $Revision$ $Date$
  */
-public class LogicalInstantiationException extends Fabric3Exception {
-    private static final long serialVersionUID = 4771407392907205266L;
+public class DuplicatePropertyException extends LogicalInstantiationException {
+    private static final long serialVersionUID = -5227440153839859219L;
 
-    public LogicalInstantiationException(String message, String identifier) {
-        super(message, identifier);
-    }
-
-    public LogicalInstantiationException(String message, String identifier, Throwable cause) {
-        super(message, identifier, cause);
-    }
-
-    public LogicalInstantiationException(Throwable cause) {
-        super(cause);
-    }
-
-    public LogicalInstantiationException(String message) {
+    public DuplicatePropertyException(String message) {
         super(message);
     }
 }

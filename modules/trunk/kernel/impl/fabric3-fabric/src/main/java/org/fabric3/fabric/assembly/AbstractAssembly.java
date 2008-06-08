@@ -28,6 +28,7 @@ import org.fabric3.fabric.allocator.Allocator;
 import org.fabric3.fabric.generator.PhysicalModelGenerator;
 import org.fabric3.fabric.instantiator.LogicalChange;
 import org.fabric3.fabric.instantiator.LogicalModelInstantiator;
+import org.fabric3.fabric.instantiator.LogicalInstantiationException;
 import org.fabric3.fabric.services.routing.RoutingException;
 import org.fabric3.fabric.services.routing.RoutingService;
 import org.fabric3.scdl.Composite;
@@ -105,7 +106,12 @@ public abstract class AbstractAssembly implements Assembly {
 
         LogicalCompositeComponent domain = logicalComponentManager.getDomain();
 
-        LogicalChange change = logicalModelInstantiator.include(domain, composite);
+        LogicalChange change = null;
+        try {
+            change = logicalModelInstantiator.include(domain, composite);
+        } catch (LogicalInstantiationException e) {
+            throw new ActivateException(e);
+        }
         change.apply();
 
         Collection<LogicalComponent<?>> components = domain.getComponents();
@@ -169,7 +175,12 @@ public abstract class AbstractAssembly implements Assembly {
 
         LogicalCompositeComponent domain = logicalComponentManager.getDomain();
 
-        LogicalChange change = logicalModelInstantiator.exclude(domain, composite);
+        LogicalChange change;
+        try {
+            change = logicalModelInstantiator.exclude(domain, composite);
+        } catch (LogicalInstantiationException e) {
+            throw new ActivateException(e);
+        }
         change.apply();
 
         Collection<LogicalComponent<?>> components = change.getAddedComponents();
