@@ -25,7 +25,7 @@ import org.fabric3.spi.command.Command;
 import org.fabric3.spi.executor.CommandExecutorRegistry;
 import org.fabric3.spi.executor.ExecutionException;
 import org.fabric3.spi.component.ScopeRegistry;
-import org.fabric3.spi.component.TargetResolutionException;
+import org.fabric3.spi.component.InstanceLifecycleException;
 import org.fabric3.spi.generator.CommandMap;
 
 import org.osoa.sca.annotations.Reference;
@@ -61,7 +61,7 @@ public class RuntimeRoutingService implements RoutingService {
             if (scopeRegistry != null) {
                 scopeRegistry.getScopeContainer(Scope.COMPOSITE).reinject();
             }
-        } catch (TargetResolutionException e) {
+        } catch (InstanceLifecycleException e) {
             throw new RoutingException(e);
         }
 

@@ -34,11 +34,11 @@ public interface InstanceWrapper<T> {
 
     boolean isStarted();
 
-    void start() throws TargetInitializationException;
+    void start() throws InstanceInitializationException;
 
-    void stop() throws TargetDestructionException;
+    void stop() throws InstanceDestructionException;
     
-    void reinject() throws TargetResolutionException;
+    void reinject() throws InstanceLifecycleException;
 
     void addObjectFactory(String referenceName, ObjectFactory<?> factory, Object key);
 

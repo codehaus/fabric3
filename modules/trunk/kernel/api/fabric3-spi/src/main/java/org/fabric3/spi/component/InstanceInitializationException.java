@@ -19,26 +19,22 @@
 package org.fabric3.spi.component;
 
 /**
- * Raised when an error is encountered during a target invocation
+ * Denotes an error initializing a component instance.
  *
  * @version $Rev$ $Date$
  */
-public class TargetInvocationException extends TargetException {
-    private static final long serialVersionUID = -487975880014726227L;
+public class InstanceInitializationException extends InstanceLifecycleException {
+    private static final long serialVersionUID = 987684568823134235L;
 
-    public TargetInvocationException(String message) {
-        super(message);
-    }
-
-    public TargetInvocationException(String message, String identifier) {
+    public InstanceInitializationException(String message, String identifier) {
         super(message, identifier);
     }
 
-    public TargetInvocationException(String message, Throwable cause) {
-        super(message, cause);
+    public InstanceInitializationException(String message, String identifier, Throwable cause) {
+        super(message, identifier, cause);
     }
 
-    public TargetInvocationException(String message, String identifier, Throwable cause) {
-        super(message, identifier, cause);
+    public InstanceInitializationException(String message, Throwable cause) {
+        super(message, cause);
     }
 }

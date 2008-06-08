@@ -27,7 +27,7 @@ import org.fabric3.spi.component.ExpirationPolicy;
 import org.fabric3.spi.component.GroupInitializationException;
 import org.fabric3.spi.component.InstanceWrapper;
 import org.fabric3.spi.component.InstanceWrapperStore;
-import org.fabric3.spi.component.TargetResolutionException;
+import org.fabric3.spi.component.InstanceLifecycleException;
 import org.fabric3.spi.invocation.CallFrame;
 import org.fabric3.spi.invocation.WorkContext;
 
@@ -69,7 +69,7 @@ public class StatefulScopeContainerTestCase extends TestCase {
         control.verify();
     }
 
-    public void testWrapperReturnedIfFound() throws TargetResolutionException {
+    public void testWrapperReturnedIfFound() throws InstanceLifecycleException {
         EasyMock.expect(store.getWrapper(component, conversation)).andReturn(wrapper);
         control.replay();
         assertSame(wrapper, container.getWrapper(component, workContext));
@@ -109,7 +109,7 @@ public class StatefulScopeContainerTestCase extends TestCase {
                 super.stopContext(workContext, conversation);
             }
 
-            public <T> InstanceWrapper<T> getWrapper(AtomicComponent<T> component, WorkContext workContext) throws TargetResolutionException {
+            public <T> InstanceWrapper<T> getWrapper(AtomicComponent<T> component, WorkContext workContext) throws InstanceLifecycleException {
                 return super.getWrapper(component, workContext, conversation, true);
             }
 

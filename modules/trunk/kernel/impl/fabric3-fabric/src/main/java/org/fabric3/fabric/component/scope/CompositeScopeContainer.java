@@ -36,9 +36,9 @@ import org.fabric3.spi.component.ExpirationPolicy;
 import org.fabric3.spi.component.GroupInitializationException;
 import org.fabric3.spi.component.InstanceWrapper;
 import org.fabric3.spi.component.ScopeContainer;
-import org.fabric3.spi.component.TargetDestructionException;
-import org.fabric3.spi.component.TargetInitializationException;
-import org.fabric3.spi.component.TargetResolutionException;
+import org.fabric3.spi.component.InstanceDestructionException;
+import org.fabric3.spi.component.InstanceInitializationException;
+import org.fabric3.spi.component.InstanceLifecycleException;
 import org.fabric3.spi.invocation.WorkContext;
 
 import org.osoa.sca.annotations.EagerInit;
@@ -130,7 +130,7 @@ public class CompositeScopeContainer extends AbstractScopeContainer<URI> {
         instanceWrappers.clear();
     }
 
-    public <T> InstanceWrapper<T> getWrapper(AtomicComponent<T> component, WorkContext workContext) throws TargetResolutionException {
+    public <T> InstanceWrapper<T> getWrapper(AtomicComponent<T> component, WorkContext workContext) throws InstanceLifecycleException {
 
         assert instanceWrappers.containsKey(component);
         @SuppressWarnings("unchecked")
@@ -143,7 +143,7 @@ public class CompositeScopeContainer extends AbstractScopeContainer<URI> {
         try {
             wrapper = component.createInstanceWrapper(workContext);
         } catch (ObjectCreationException e) {
-            throw new TargetResolutionException(e.getMessage(), component.getUri().toString(), e);
+            throw new InstanceLifecycleException(e.getMessage(), component.getUri().toString(), e);
         }
         // some component instances such as system singletons may already be started
         if (!wrapper.isStarted()) {
@@ -159,7 +159,7 @@ public class CompositeScopeContainer extends AbstractScopeContainer<URI> {
     }
 
     public <T> void returnWrapper(AtomicComponent<T> component, WorkContext workContext, InstanceWrapper<T> wrapper)
-            throws TargetDestructionException {
+            throws InstanceDestructionException {
     }
 
     public void addObjectFactory(AtomicComponent<?> component, ObjectFactory<?> factory, String referenceName, Object key) {
@@ -169,7 +169,7 @@ public class CompositeScopeContainer extends AbstractScopeContainer<URI> {
         }
     }
 
-    public void reinject() throws TargetResolutionException {
+    public void reinject() throws InstanceLifecycleException {
         for (InstanceWrapper<?> instanceWrapper : instanceWrappers.values()) {
             instanceWrapper.reinject();
         }
@@ -204,10 +204,10 @@ public class CompositeScopeContainer extends AbstractScopeContainer<URI> {
             return true;
         }
 
-        public void start() throws TargetInitializationException {
+        public void start() throws InstanceInitializationException {
         }
 
-        public void stop() throws TargetDestructionException {
+        public void stop() throws InstanceDestructionException {
         }
 
         public void reinject() {

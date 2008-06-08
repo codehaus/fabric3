@@ -26,10 +26,9 @@ import org.easymock.IMocksControl;
 import org.easymock.classextension.EasyMock;
 
 import org.fabric3.spi.component.AtomicComponent;
-import org.fabric3.spi.invocation.CallFrame;
 import org.fabric3.spi.component.InstanceWrapper;
 import org.fabric3.spi.component.ScopeContainer;
-import org.fabric3.spi.component.TargetResolutionException;
+import org.fabric3.spi.component.InstanceLifecycleException;
 import org.fabric3.spi.invocation.WorkContext;
 import org.fabric3.spi.invocation.Message;
 import org.fabric3.spi.wire.InvocationRuntimeException;
@@ -126,12 +125,12 @@ public class InvokerInterceptorBasicTestCase extends TestCase {
 
     public void testFailureGettingWrapperThrowsException() {
         EasyMock.expect(scopeContainer.getScope()).andReturn(Scope.COMPOSITE);
-        TargetResolutionException ex = new TargetResolutionException(null);
+        InstanceLifecycleException ex = new InstanceLifecycleException(null);
         EasyMock.expect(message.getBody()).andReturn(null);
         EasyMock.expect(message.getWorkContext()).andReturn(workContext);
         try {
             EasyMock.expect(scopeContainer.getWrapper(component, workContext)).andThrow(ex);
-        } catch (TargetResolutionException e) {
+        } catch (InstanceLifecycleException e) {
             throw new AssertionError();
         }
         control.replay();

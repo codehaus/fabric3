@@ -26,9 +26,9 @@ import org.fabric3.scdl.InjectableAttribute;
 import org.fabric3.spi.ObjectCreationException;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.component.InstanceWrapper;
-import org.fabric3.spi.component.TargetDestructionException;
-import org.fabric3.spi.component.TargetInitializationException;
-import org.fabric3.spi.component.TargetResolutionException;
+import org.fabric3.spi.component.InstanceDestructionException;
+import org.fabric3.spi.component.InstanceInitializationException;
+import org.fabric3.spi.component.InstanceLifecycleException;
 
 /**
  * @version $Rev$ $Date$
@@ -65,7 +65,7 @@ public class ReflectiveInstanceWrapper<T> implements InstanceWrapper<T> {
         return started;
     }
 
-    public void start() throws TargetInitializationException {
+    public void start() throws InstanceInitializationException {
         assert !started;
         if (initInvoker != null) {
             ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
@@ -73,7 +73,7 @@ public class ReflectiveInstanceWrapper<T> implements InstanceWrapper<T> {
                 Thread.currentThread().setContextClassLoader(cl);
                 initInvoker.invokeEvent(instance);
             } catch (ObjectCallbackException e) {
-                throw new TargetInitializationException(e.getMessage(), e);
+                throw new InstanceInitializationException(e.getMessage(), e);
             } finally {
                 Thread.currentThread().setContextClassLoader(oldCl);
             }
@@ -82,7 +82,7 @@ public class ReflectiveInstanceWrapper<T> implements InstanceWrapper<T> {
     }
 
 
-    public void stop() throws TargetDestructionException {
+    public void stop() throws InstanceDestructionException {
         assert started;
         try {
             if (destroyInvoker != null) {
@@ -95,20 +95,20 @@ public class ReflectiveInstanceWrapper<T> implements InstanceWrapper<T> {
                 }
             }
         } catch (ObjectCallbackException e) {
-            throw new TargetDestructionException(e.getMessage(), e);
+            throw new InstanceDestructionException(e.getMessage(), e);
         } finally {
             started = false;
         }
     }
 
-    public void reinject() throws TargetResolutionException {
+    public void reinject() throws InstanceLifecycleException {
         try {
             for (Injector<T> injector : updatedInjectors) {
                 injector.inject(instance);
             }
             updatedInjectors.clear();
         } catch (ObjectCreationException ex) {
-            throw new TargetResolutionException("Unable to inject", ex);
+            throw new InstanceLifecycleException("Unable to inject", ex);
         }
     }
 

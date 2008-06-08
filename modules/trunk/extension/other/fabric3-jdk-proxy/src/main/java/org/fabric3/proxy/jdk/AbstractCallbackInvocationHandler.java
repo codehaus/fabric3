@@ -23,7 +23,7 @@ import java.lang.reflect.Method;
 
 import org.osoa.sca.ServiceUnavailableException;
 
-import org.fabric3.spi.component.TargetInvocationException;
+import org.fabric3.spi.component.InstanceInvocationException;
 import org.fabric3.spi.invocation.CallFrame;
 import org.fabric3.spi.invocation.Message;
 import org.fabric3.spi.invocation.MessageImpl;
@@ -89,7 +89,7 @@ public abstract class AbstractCallbackInvocationHandler<T> implements Invocation
         }
     }
 
-    protected Object handleProxyMethod(Method method) throws TargetInvocationException {
+    protected Object handleProxyMethod(Method method) throws InstanceInvocationException {
         if (method.getParameterTypes().length == 0 && "toString".equals(method.getName())) {
             return "[Proxy - " + Integer.toHexString(hashCode()) + "]";
         } else if (method.getDeclaringClass().equals(Object.class)
@@ -102,7 +102,7 @@ public abstract class AbstractCallbackInvocationHandler<T> implements Invocation
             // TODO beter hash algorithm
         }
         String op = method.getName();
-        throw new TargetInvocationException("Operation not configured: " + op, op);
+        throw new InstanceInvocationException("Operation not configured: " + op, op);
     }
 
 }

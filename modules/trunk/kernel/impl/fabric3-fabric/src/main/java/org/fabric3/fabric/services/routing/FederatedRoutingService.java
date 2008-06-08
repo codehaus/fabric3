@@ -37,7 +37,7 @@ import org.fabric3.spi.command.Command;
 import org.fabric3.spi.executor.CommandExecutorRegistry;
 import org.fabric3.spi.executor.ExecutionException;
 import org.fabric3.spi.component.ScopeRegistry;
-import org.fabric3.spi.component.TargetResolutionException;
+import org.fabric3.spi.component.InstanceLifecycleException;
 import org.fabric3.spi.generator.CommandMap;
 import org.fabric3.spi.services.marshaller.MarshalException;
 import org.fabric3.spi.services.marshaller.MarshalService;
@@ -101,7 +101,7 @@ public class FederatedRoutingService implements RoutingService {
 
         try {
             scopeRegistry.getScopeContainer(Scope.COMPOSITE).reinject();
-        } catch (TargetResolutionException e) {
+        } catch (InstanceLifecycleException e) {
             throw new RoutingException(e);
         }
 

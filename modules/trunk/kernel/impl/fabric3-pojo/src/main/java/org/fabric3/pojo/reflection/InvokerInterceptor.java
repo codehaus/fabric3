@@ -30,8 +30,8 @@ import org.fabric3.spi.component.ExpirationPolicy;
 import org.fabric3.spi.component.GroupInitializationException;
 import org.fabric3.spi.component.InstanceWrapper;
 import org.fabric3.spi.component.ScopeContainer;
-import org.fabric3.spi.component.TargetDestructionException;
-import org.fabric3.spi.component.TargetResolutionException;
+import org.fabric3.spi.component.InstanceDestructionException;
+import org.fabric3.spi.component.InstanceLifecycleException;
 import org.fabric3.spi.invocation.CallFrame;
 import org.fabric3.spi.invocation.ConversationContext;
 import org.fabric3.spi.invocation.Message;
@@ -98,7 +98,7 @@ public class InvokerInterceptor<T, CONTEXT> implements Interceptor {
         } catch (ConversationEndedException e) {
             msg.setBodyWithFault(e);
             return msg;
-        } catch (TargetResolutionException e) {
+        } catch (InstanceLifecycleException e) {
             throw new InvocationRuntimeException(e);
         }
 
@@ -121,7 +121,7 @@ public class InvokerInterceptor<T, CONTEXT> implements Interceptor {
                 if (conversationScope && endConversation) {
                     scopeContainer.stopContext(workContext);
                 }
-            } catch (TargetDestructionException e) {
+            } catch (InstanceDestructionException e) {
                 throw new InvocationRuntimeException(e);
             }
         }

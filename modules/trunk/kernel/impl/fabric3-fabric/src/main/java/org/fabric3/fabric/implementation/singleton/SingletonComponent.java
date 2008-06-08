@@ -30,8 +30,8 @@ import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.invocation.WorkContext;
 import org.fabric3.spi.component.AtomicComponent;
 import org.fabric3.spi.component.InstanceWrapper;
-import org.fabric3.spi.component.TargetInitializationException;
-import org.fabric3.spi.component.TargetDestructionException;
+import org.fabric3.spi.component.InstanceInitializationException;
+import org.fabric3.spi.component.InstanceDestructionException;
 import org.fabric3.scdl.PropertyValue;
 
 /**
@@ -126,10 +126,10 @@ public class SingletonComponent<T> extends AbstractLifecycle implements AtomicCo
             return true;
         }
 
-        public void start() throws TargetInitializationException {
+        public void start() throws InstanceInitializationException {
         }
 
-        public void stop() throws TargetDestructionException {
+        public void stop() throws InstanceDestructionException {
         }
         
         public void reinject() {

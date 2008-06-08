@@ -44,7 +44,7 @@ import org.fabric3.spi.component.GroupInitializationException;
 import org.fabric3.spi.component.InstanceWrapper;
 import org.fabric3.spi.component.InstanceWrapperStore;
 import org.fabric3.spi.component.ScopeContainer;
-import org.fabric3.spi.component.TargetResolutionException;
+import org.fabric3.spi.component.InstanceLifecycleException;
 import org.fabric3.spi.invocation.CallFrame;
 import org.fabric3.spi.invocation.ConversationContext;
 import org.fabric3.spi.invocation.WorkContext;
@@ -140,7 +140,7 @@ public class ConversationalScopeContainer extends StatefulScopeContainer<Convers
         notifyExpirationCallbacks(conversation);
     }
 
-    public <T> InstanceWrapper<T> getWrapper(AtomicComponent<T> component, WorkContext workContext) throws TargetResolutionException {
+    public <T> InstanceWrapper<T> getWrapper(AtomicComponent<T> component, WorkContext workContext) throws InstanceLifecycleException {
         CallFrame frame = workContext.peekCallFrame();
         Conversation conversation = frame.getConversation();
         assert conversation != null;

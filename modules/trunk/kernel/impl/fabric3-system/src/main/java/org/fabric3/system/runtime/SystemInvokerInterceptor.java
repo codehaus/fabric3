@@ -23,8 +23,8 @@ import org.fabric3.pojo.PojoWorkContextTunnel;
 import org.fabric3.spi.component.AtomicComponent;
 import org.fabric3.spi.component.InstanceWrapper;
 import org.fabric3.spi.component.ScopeContainer;
-import org.fabric3.spi.component.TargetDestructionException;
-import org.fabric3.spi.component.TargetResolutionException;
+import org.fabric3.spi.component.InstanceDestructionException;
+import org.fabric3.spi.component.InstanceLifecycleException;
 import org.fabric3.spi.invocation.Message;
 import org.fabric3.spi.invocation.WorkContext;
 import org.fabric3.spi.wire.Interceptor;
@@ -59,7 +59,7 @@ public class SystemInvokerInterceptor<T> implements Interceptor {
         InstanceWrapper<T> wrapper;
         try {
             wrapper = scopeContainer.getWrapper(component, workContext);
-        } catch (TargetResolutionException e) {
+        } catch (InstanceLifecycleException e) {
             throw new InvocationRuntimeException(e);
         }
 
@@ -79,7 +79,7 @@ public class SystemInvokerInterceptor<T> implements Interceptor {
         } finally {
             try {
                 scopeContainer.returnWrapper(component, workContext, wrapper);
-            } catch (TargetDestructionException e) {
+            } catch (InstanceDestructionException e) {
                 throw new InvocationRuntimeException(e);
             }
         }

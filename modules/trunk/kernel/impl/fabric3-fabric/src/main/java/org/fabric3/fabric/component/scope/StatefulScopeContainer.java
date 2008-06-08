@@ -23,8 +23,8 @@ import org.fabric3.spi.component.AtomicComponent;
 import org.fabric3.spi.component.GroupInitializationException;
 import org.fabric3.spi.component.InstanceWrapper;
 import org.fabric3.spi.component.InstanceWrapperStore;
-import org.fabric3.spi.component.TargetDestructionException;
-import org.fabric3.spi.component.TargetResolutionException;
+import org.fabric3.spi.component.InstanceDestructionException;
+import org.fabric3.spi.component.InstanceLifecycleException;
 import org.fabric3.spi.invocation.WorkContext;
 import org.fabric3.spi.ObjectCreationException;
 
@@ -43,7 +43,7 @@ public abstract class StatefulScopeContainer<KEY> extends AbstractScopeContainer
     }
 
     public <T> void returnWrapper(AtomicComponent<T> component, WorkContext workContext, InstanceWrapper<T> wrapper)
-            throws TargetDestructionException {
+            throws InstanceDestructionException {
     }
 
     protected void startContext(WorkContext workContext, KEY contextId) throws GroupInitializationException {
@@ -65,17 +65,17 @@ public abstract class StatefulScopeContainer<KEY> extends AbstractScopeContainer
      * @param contextId   the correlation key for the component implementation instance
      * @param create      true if an instance should be created
      * @return an instance wrapper or null if not found an create is set to false
-     * @throws TargetResolutionException if an error occurs returning the wrapper
+     * @throws org.fabric3.spi.component.InstanceLifecycleException if an error occurs returning the wrapper
      */
     protected <T> InstanceWrapper<T> getWrapper(AtomicComponent<T> component, WorkContext workContext, KEY contextId, boolean create)
-            throws TargetResolutionException {
+            throws InstanceLifecycleException {
         assert contextId != null;
         InstanceWrapper<T> wrapper = store.getWrapper(component, contextId);
         if (wrapper == null && create) {
             try {
                 wrapper = component.createInstanceWrapper(workContext);
             } catch (ObjectCreationException e) {
-                throw new TargetResolutionException(e.getMessage(), component.getUri().toString(), e);
+                throw new InstanceLifecycleException(e.getMessage(), component.getUri().toString(), e);
             }
             wrapper.start();
             store.putWrapper(component, contextId, wrapper);

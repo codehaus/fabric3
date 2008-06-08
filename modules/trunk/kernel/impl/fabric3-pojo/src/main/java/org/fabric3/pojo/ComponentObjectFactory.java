@@ -23,7 +23,7 @@ import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.invocation.WorkContext;
 import org.fabric3.spi.component.AtomicComponent;
 import org.fabric3.spi.component.ScopeContainer;
-import org.fabric3.spi.component.TargetResolutionException;
+import org.fabric3.spi.component.InstanceLifecycleException;
 
 /**
  * @version $Rev$ $Date$
@@ -41,7 +41,7 @@ public class ComponentObjectFactory<T, CONTEXT> implements ObjectFactory<T> {
         WorkContext workContext = PojoWorkContextTunnel.getThreadWorkContext();
         try {
             return scopeContainer.getWrapper(component, workContext).getInstance();
-        } catch (TargetResolutionException e) {
+        } catch (InstanceLifecycleException e) {
             throw new ObjectCreationException(e);
         }
     }

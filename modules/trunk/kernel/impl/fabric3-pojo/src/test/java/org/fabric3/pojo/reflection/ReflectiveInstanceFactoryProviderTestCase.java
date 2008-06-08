@@ -40,8 +40,8 @@ import org.fabric3.spi.ObjectCreationException;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.component.InstanceFactory;
 import org.fabric3.spi.component.InstanceWrapper;
-import org.fabric3.spi.component.TargetInitializationException;
-import org.fabric3.spi.component.TargetResolutionException;
+import org.fabric3.spi.component.InstanceInitializationException;
+import org.fabric3.spi.component.InstanceLifecycleException;
 
 /**
  * @version $Rev$ $Date$
@@ -115,14 +115,14 @@ public class ReflectiveInstanceFactoryProviderTestCase extends TestCase {
         assertEquals("Hello", foo.stringField);
     }
 
-    public void testFactory() throws ObjectCreationException, TargetResolutionException {
+    public void testFactory() throws ObjectCreationException, InstanceLifecycleException {
         sites.put(new MethodInjectionSite(intSetter, 0), intProperty);
         sites.put(new MethodInjectionSite(stringSetter, 0), stringProperty);
         InstanceFactory<Foo> instanceFactory = provider.createFactory();
         InstanceWrapper<Foo> instanceWrapper = instanceFactory.newInstance(null);
         try {
             instanceWrapper.start();
-        } catch (TargetInitializationException e) {
+        } catch (InstanceInitializationException e) {
             fail();
         }
         Foo foo = instanceWrapper.getInstance();

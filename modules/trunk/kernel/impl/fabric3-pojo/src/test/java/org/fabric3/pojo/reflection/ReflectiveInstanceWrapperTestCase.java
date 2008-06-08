@@ -22,8 +22,8 @@ import junit.framework.TestCase;
 import org.easymock.EasyMock;
 import static org.easymock.EasyMock.createMock;
 
-import org.fabric3.spi.component.TargetDestructionException;
-import org.fabric3.spi.component.TargetInitializationException;
+import org.fabric3.spi.component.InstanceDestructionException;
+import org.fabric3.spi.component.InstanceInitializationException;
 
 /**
  * @version $Rev$ $Date$
@@ -39,12 +39,12 @@ public class ReflectiveInstanceWrapperTestCase extends TestCase {
         wrapper = new ReflectiveInstanceWrapper<Object>(instance, cl, null, null, null);
         try {
             wrapper.start();
-        } catch (TargetInitializationException e) {
+        } catch (InstanceInitializationException e) {
             fail();
         }
         try {
             wrapper.stop();
-        } catch (TargetDestructionException e) {
+        } catch (InstanceDestructionException e) {
             fail();
         }
     }
@@ -55,7 +55,7 @@ public class ReflectiveInstanceWrapperTestCase extends TestCase {
         wrapper = new ReflectiveInstanceWrapper<Object>(instance, cl, initInvoker, null, null);
         try {
             wrapper.start();
-        } catch (TargetInitializationException e) {
+        } catch (InstanceInitializationException e) {
             fail();
         }
         EasyMock.verify(initInvoker);
@@ -68,9 +68,9 @@ public class ReflectiveInstanceWrapperTestCase extends TestCase {
         try {
             wrapper.start();
             wrapper.stop();
-        } catch (TargetDestructionException e) {
+        } catch (InstanceDestructionException e) {
             fail();
-        } catch (TargetInitializationException e) {
+        } catch (InstanceInitializationException e) {
             fail();
         }
         EasyMock.verify(destroyInvoker);

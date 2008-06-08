@@ -30,8 +30,8 @@ import org.fabric3.spi.component.ExpirationPolicy;
 import org.fabric3.spi.component.GroupInitializationException;
 import org.fabric3.spi.component.InstanceWrapper;
 import org.fabric3.spi.component.ScopeContainer;
-import org.fabric3.spi.component.TargetDestructionException;
-import org.fabric3.spi.component.TargetResolutionException;
+import org.fabric3.spi.component.InstanceDestructionException;
+import org.fabric3.spi.component.InstanceLifecycleException;
 import org.fabric3.spi.invocation.WorkContext;
 
 /**
@@ -47,18 +47,18 @@ public class StatelessScopeContainer extends AbstractScopeContainer<Object> {
         super(Scope.STATELESS, monitor);
     }
 
-    public <T> InstanceWrapper<T> getWrapper(AtomicComponent<T> component, WorkContext workContext) throws TargetResolutionException {
+    public <T> InstanceWrapper<T> getWrapper(AtomicComponent<T> component, WorkContext workContext) throws InstanceLifecycleException {
         try {
             InstanceWrapper<T> wrapper = component.createInstanceWrapper(workContext);
             wrapper.start();
             return wrapper;
         } catch (ObjectCreationException e) {
-            throw new TargetResolutionException(e.getMessage(), component.getUri().toString(), e);
+            throw new InstanceLifecycleException(e.getMessage(), component.getUri().toString(), e);
         }
     }
 
     public <T> void returnWrapper(AtomicComponent<T> component, WorkContext workContext, InstanceWrapper<T> wrapper)
-            throws TargetDestructionException {
+            throws InstanceDestructionException {
         wrapper.stop();
     }
 

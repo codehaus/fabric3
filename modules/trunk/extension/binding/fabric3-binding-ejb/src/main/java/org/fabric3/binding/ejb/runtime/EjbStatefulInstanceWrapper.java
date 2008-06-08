@@ -5,8 +5,8 @@ import javax.ejb.EJBObject;
 
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.component.InstanceWrapper;
-import org.fabric3.spi.component.TargetDestructionException;
-import org.fabric3.spi.component.TargetInitializationException;
+import org.fabric3.spi.component.InstanceDestructionException;
+import org.fabric3.spi.component.InstanceInitializationException;
 
 /**
  * @version $Revision Date: Oct 29, 2007 Time: 5:01:22 PM
@@ -28,11 +28,11 @@ public class EjbStatefulInstanceWrapper implements InstanceWrapper {
         return started;
     }
 
-    public void start() throws TargetInitializationException {
+    public void start() throws InstanceInitializationException {
         started = true;
     }
 
-    public void stop() throws TargetDestructionException {
+    public void stop() throws InstanceDestructionException {
 
         try {
             if(instance instanceof EJBObject) {
@@ -42,7 +42,7 @@ public class EjbStatefulInstanceWrapper implements InstanceWrapper {
                 ((EJBLocalObject)instance).remove();
             }
         } catch(Exception e) {
-            throw new TargetDestructionException("Error removing target EJB", e);
+            throw new InstanceDestructionException("Error removing target EJB", e);
         }
 
         

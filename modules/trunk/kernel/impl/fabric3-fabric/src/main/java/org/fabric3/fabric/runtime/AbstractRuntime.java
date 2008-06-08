@@ -42,7 +42,7 @@ import org.fabric3.spi.assembly.AssemblyException;
 import org.fabric3.spi.component.AtomicComponent;
 import org.fabric3.spi.component.InstanceWrapper;
 import org.fabric3.spi.component.ScopeContainer;
-import org.fabric3.spi.component.TargetResolutionException;
+import org.fabric3.spi.component.InstanceLifecycleException;
 import org.fabric3.spi.invocation.WorkContext;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
@@ -202,7 +202,7 @@ public abstract class AbstractRuntime<HI extends HostInfo> implements Fabric3Run
         try {
             InstanceWrapper<?> wrapper = scopeContainer.getWrapper(component, workContext);
             return service.cast(wrapper.getInstance());
-        } catch (TargetResolutionException e) {
+        } catch (InstanceLifecycleException e) {
             // FIXME throw something better
             throw new AssertionError();
         } finally {

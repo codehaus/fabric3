@@ -25,8 +25,8 @@ import org.osoa.sca.ServiceRuntimeException;
 
 import org.fabric3.scdl.Signature;
 import org.fabric3.spi.component.ScopeContainer;
-import org.fabric3.spi.component.TargetDestructionException;
-import org.fabric3.spi.component.TargetResolutionException;
+import org.fabric3.spi.component.InstanceDestructionException;
+import org.fabric3.spi.component.InstanceLifecycleException;
 import org.fabric3.spi.invocation.Message;
 import org.fabric3.spi.invocation.MessageImpl;
 
@@ -64,7 +64,7 @@ public class EjbStatefulTargetInterceptor extends BaseEjbTargetInterceptor {
             wrap = (EjbStatefulInstanceWrapper)scopeContainer.getWrapper(statefulComponent, message.getWorkContext());
             sfsb = wrap.getInstance();
 
-        } catch(TargetResolutionException tre) {
+        } catch(InstanceLifecycleException tre) {
             throw new ServiceRuntimeException(tre);
         }
 
@@ -95,7 +95,7 @@ public class EjbStatefulTargetInterceptor extends BaseEjbTargetInterceptor {
 
         try {
             scopeContainer.returnWrapper(statefulComponent, message.getWorkContext(), wrap);
-        } catch(TargetDestructionException tde) {
+        } catch(InstanceDestructionException tde) {
             throw new ServiceRuntimeException(tde);
         }
 

@@ -37,7 +37,7 @@ import org.fabric3.spi.component.GroupInitializationException;
 import org.fabric3.spi.component.InstanceWrapper;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.ScopeRegistry;
-import org.fabric3.spi.component.TargetDestructionException;
+import org.fabric3.spi.component.InstanceDestructionException;
 import org.fabric3.spi.invocation.WorkContext;
 
 /**
@@ -187,7 +187,7 @@ public abstract class AbstractScopeContainer<KEY> extends AbstractLifecycle impl
             }
             try {
                 toDestroy.stop();
-            } catch (TargetDestructionException e) {
+            } catch (InstanceDestructionException e) {
                 // log the error from destroy but continue
                 monitor.destructionError(e);
             }

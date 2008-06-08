@@ -31,7 +31,7 @@ import org.osoa.sca.ServiceUnavailableException;
 import org.fabric3.pojo.PojoWorkContextTunnel;
 import org.fabric3.pojo.ConversationImpl;
 import org.fabric3.spi.invocation.CallFrame;
-import org.fabric3.spi.component.TargetInvocationException;
+import org.fabric3.spi.component.InstanceInvocationException;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.ConversationExpirationCallback;
 import org.fabric3.spi.invocation.WorkContext;
@@ -221,7 +221,7 @@ public final class JDKInvocationHandler<B> implements ConversationExpirationCall
         }
     }
 
-    private Object handleProxyMethod(Method method) throws TargetInvocationException {
+    private Object handleProxyMethod(Method method) throws InstanceInvocationException {
         if (method.getParameterTypes().length == 0 && "toString".equals(method.getName())) {
             return "[Proxy - " + Integer.toHexString(hashCode()) + "]";
         } else if (method.getDeclaringClass().equals(Object.class)
@@ -234,6 +234,6 @@ public final class JDKInvocationHandler<B> implements ConversationExpirationCall
             // TODO beter hash algorithm
         }
         String op = method.getName();
-        throw new TargetInvocationException("Operation not configured: " + op, op);
+        throw new InstanceInvocationException("Operation not configured: " + op, op);
     }
 }

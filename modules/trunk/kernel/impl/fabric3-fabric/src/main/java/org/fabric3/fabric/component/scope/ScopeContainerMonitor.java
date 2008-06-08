@@ -21,7 +21,7 @@ package org.fabric3.fabric.component.scope;
 import java.net.URI;
 
 import org.fabric3.api.annotation.logging.Severe;
-import org.fabric3.spi.component.TargetDestructionException;
+import org.fabric3.spi.component.InstanceDestructionException;
 
 /**
  * Defines monitor events for scope containers
@@ -34,6 +34,6 @@ public interface ScopeContainerMonitor {
     void eagerInitializationError(URI componentId, Exception e);
 
     @Severe
-    void destructionError(TargetDestructionException e);
+    void destructionError(InstanceDestructionException e);
 
 }

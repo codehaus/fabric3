@@ -19,23 +19,23 @@
 package org.fabric3.spi.component;
 
 /**
- * Denotes an error destroying a target
+ * Denotes an error destroying a component instance
  *
  * @version $Rev$ $Date$
  */
-public class TargetDestructionException extends TargetResolutionException {
+public class InstanceDestructionException extends InstanceLifecycleException {
     private static final long serialVersionUID = -2273266145088833083L;
 
-    public TargetDestructionException(String message, String identifier) {
+    public InstanceDestructionException(String message, String identifier) {
         super(message, identifier);
     }
 
-    public TargetDestructionException(String message, String identifier, Throwable cause) {
+    public InstanceDestructionException(String message, String identifier, Throwable cause) {
         super(message, identifier, cause);
     }
 
 
-    public TargetDestructionException(String message, Throwable cause) {
+    public InstanceDestructionException(String message, Throwable cause) {
         super(message, cause);
     }
 }
