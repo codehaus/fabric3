@@ -23,8 +23,7 @@
            autowire="true">
            
     <property name="ftpServerConfig" type="f3:ftpServerConfig"/>
-    <reference name="ftpLets" promote="storRequestHandler/ftpLets"/>
-    <service name="ftpHost" promote="org.fabric3.ftp.server.F3FtpHost/FtpHost"/>
+    <service name="ftpContainer" promote="org.fabric3.ftp.ftplet.DefaultFtpLetContainer/FtpLetContainer"/>
 
     <!-- FTP Server -->
     <component name="org.fabric3.ftp.server.F3FtpHost">
@@ -64,13 +63,22 @@
     
     <!-- User Manager -->
     <!-- TODO May be this should be promoted out -->
-    <component name="org.fabric3.ftp.security.UserManager">
+    <component name="org.fabric3.ftp.security.FileSystemUserManager">
         <system:implementation.system class="org.fabric3.ftp.security.FileSystemUserManager"/>
+        <property name="userFile" source="$dataSourceConfig//userFile"/>
     </component>
     
     <!-- Passive Connection Service -->
     <component name="org.fabric3.ftp.passive.PassiveConnectionService">
         <system:implementation.system class="org.fabric3.ftp.passive.PassiveConnectionServiceImpl"/>
+        <property name="minPort" source="$dataSourceConfig//minPort"/>
+        <property name="maxPort" source="$dataSourceConfig//maxPort"/>
+        <property name="pasiveAddress" source="$dataSourceConfig//passiveAddress"/>
+    </component>
+    
+    <!-- FtpLet container -->
+    <component name="org.fabric3.ftp.ftplet.DefaultFtpLetContainer">
+        <system:implementation.system class="org.fabric3.ftp.ftplet.DefaultFtpLetContainer"/>
     </component>
     
 </composite>
