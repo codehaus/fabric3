@@ -60,7 +60,7 @@ public class SystemImplementationProcessorImpl implements SystemImplementationPr
         try {
             implClass = helper.loadClass(implClassName, cl);
         } catch (ImplementationNotFoundException e) {
-            context.addError(new MissingResource("System implementation class not found on classpath: ", implClassName));
+            context.addError(new MissingResource("System implementation class not found on classpath", implClassName));
             return;
         }
         TypeMapping typeMapping = helper.mapTypeParameters(implClass);
