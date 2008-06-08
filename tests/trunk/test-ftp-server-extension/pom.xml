@@ -52,7 +52,7 @@
                        </mavenImport>
                     </mavenImports>
                     <deployables>
-                        <!--deployable>META-INF/ds.composite</deployablei-->
+                        <deployable>META-INF/test-ftp-server.composite</deployable>
                     </deployables>
                 </configuration>
             </plugin>

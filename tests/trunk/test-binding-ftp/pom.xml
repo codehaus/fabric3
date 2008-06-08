@@ -29,6 +29,24 @@
     <packaging>jar</packaging>
     <description>Fabric3 FTP Binding Test.</description>
 
+    <dependencies>
+        <dependency>
+            <groupId>org.codehaus.fabric3.spec</groupId>
+            <artifactId>sca-api-r1.0</artifactId>
+            <version>0.2.1</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.ws.commons.axiom</groupId>
+            <artifactId>axiom-api</artifactId>
+            <version>1.2.5</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+        </dependency>
+    </dependencies>
+
     <build>
         <defaultGoal>verify</defaultGoal>
         <plugins>
@@ -40,12 +58,12 @@
                     <runtimeVersion>0.5BETA2-SNAPSHOT</runtimeVersion>
                     <extensions>
                         <dependency>
-                            <groupId>org.codehaus.fabric3</groupId>
+                            <groupId>org.codehaus.fabric3.tests</groupId>
                             <artifactId>test-ftp-security-policy</artifactId>
                             <version>0.1-SNAPSHOT</version>
                         </dependency>
                         <dependency>
-                            <groupId>org.codehaus.fabric3</groupId>
+                            <groupId>org.codehaus.fabric3.tests</groupId>
                             <artifactId>test-ftp-server-extension</artifactId>
                             <version>0.1-SNAPSHOT</version>
                         </dependency>

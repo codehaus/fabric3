@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="ASCII"?>
+<definitions xmlns="http://www.osoa.org/xmlns/sca/1.0"
+    xmlns:sca="http://www.osoa.org/xmlns/sca/1.0"
+    targetNamespace="http://fabric3.org/xmlns/sca/2.0-alpha"
+    xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
+    xmlns:ftp="urn:org.fabric3:binding:security">
+    
+    <!-- Authentication policy -->
+    <policySet name="authenticationPolicy" 
+               provides="sca:authentication.message"
+               appliesTo="@name='ftpDataTransferService' and ../@name='DataTransferTest'">
+        <ftp:security user="meeraj" password="password"/>
+    </policySet>
+    
+</definitions>
