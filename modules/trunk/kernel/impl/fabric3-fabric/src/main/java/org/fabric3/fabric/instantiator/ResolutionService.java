@@ -52,9 +52,9 @@ public interface ResolutionService {
     void resolve(LogicalService logicalService) throws PromotionException;
 
     /**
-     * Resolves the target for a logical reference against the given composite.
+     * Resolves the logical reference against the given composite.
      *
-     * @param logicalReference Logical reference whose target needs to be resolved.
+     * @param logicalReference Logical reference to be resolved.
      * @param composite        Composite component against which the targets are resolved.
      * @throws ActivateException if a reslution error occurs.
      */

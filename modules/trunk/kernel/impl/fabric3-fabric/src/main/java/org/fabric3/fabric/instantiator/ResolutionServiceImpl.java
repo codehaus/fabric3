@@ -48,22 +48,20 @@ public class ResolutionServiceImpl implements ResolutionService {
      * @param targetResolutionServices   An ordered list of target resolution services.
      */
     public ResolutionServiceImpl(@Reference PromotionResolutionService promotionResolutionService,
-                                    @Reference List<TargetResolutionService> targetResolutionServices) {
+                                 @Reference List<TargetResolutionService> targetResolutionServices) {
         this.promotionResolutionService = promotionResolutionService;
         this.targetResolutionServices = targetResolutionServices;
     }
 
     /**
-     * Recursively wire components. If this is a composite component, all the child components are wired. For atomic components, promotions on
-     * services and references are handled first. Then for promoted references, targets are resolved in the context of the containing composite using
-     * an ordered list of target resolution services. A percieved order for resolution is explicit target, intent based autowire and type based
-     * autowire.
+     * Resolve reference targets and promotions for a component. If this is a composite component, all the child components will be resolved. For
+     * promoted references, targets are resolved in the context of the containing composite using an ordered list of target resolution services. A
+     * percieved order for resolution is explicit target, intent based autowire, and type based autowire.
      *
      * @param logicalComponent Logical component that needs to be wired.
      * @throws ActivateException Ifthe target for a required reference is unable to be wired.
      */
     public void resolve(LogicalComponent<?> logicalComponent) throws ActivateException {
-
         if (logicalComponent instanceof LogicalCompositeComponent) {
             LogicalCompositeComponent compositeComponent = (LogicalCompositeComponent) logicalComponent;
             for (LogicalComponent<?> child : compositeComponent.getComponents()) {
@@ -73,24 +71,12 @@ public class ResolutionServiceImpl implements ResolutionService {
 
         resolveReferences(logicalComponent);
         resolveServices(logicalComponent);
-
     }
 
-    /**
-     * Handles the promotion on the specified logical service.
-     *
-     * @param logicalService Logical service whose promotion is handled.
-     */
     public void resolve(LogicalService logicalService) throws PromotionException {
         promotionResolutionService.resolve(logicalService);
     }
 
-    /**
-     * Resolves the target for a logical reference.
-     *
-     * @param logicalReference a reference to wire
-     * @param context          Composite component within which the targets are resolved.
-     */
     public void resolve(LogicalReference logicalReference, LogicalCompositeComponent context) throws ActivateException {
 
         promotionResolutionService.resolve(logicalReference);
