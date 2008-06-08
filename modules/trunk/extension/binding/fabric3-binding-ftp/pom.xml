@@ -80,15 +80,18 @@
                            <artifactId>fabric3-spi</artifactId>
                        </mavenImport>
                     </mavenImports>
+                    <deployables>
+                        <deployable>META-INF/ftpbinding.composite</deployable>
+                    </deployables>
                 </configuration>
             </plugin>
         </plugins>
     </build>
 
     <scm>
-        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/extension/binding/fabric3-ftp-binding</connection>
-        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/trunk/extension/binding/fabric3-ftp-binding</developerConnection>
-        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/trunk/extension/binding/fabric3-ftp-binding</url>
+        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/extension/binding/fabric3-binding-ftp</connection>
+        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/trunk/extension/binding/fabric3-binding-ftp</developerConnection>
+        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/trunk/extension/binding/fabric3-binding-ftp</url>
     </scm>
 
 </project>

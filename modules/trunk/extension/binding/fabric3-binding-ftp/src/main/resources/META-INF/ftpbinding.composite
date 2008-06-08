@@ -19,7 +19,30 @@
            xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
            xmlns:system="http://fabric3.org/xmlns/sca/system/2.0-alpha"
            targetNamespace="org.codehaus.fabric3"
-           name="FtpBinding"
-           autowire="true">
+           name="FtpBindingExtension"
+           autowire="true"
+		   xmlns:ftp="urn:org.fabric3:binding:ftp">
+
+    <!-- Ftp Binding Loader -->
+    <component name="FtpBindingLoader" f3:key="ftp:binding.ftp">
+        <system:implementation.system class="org.fabric3.binding.ftp.introspection.FtpBindingLoader"/>
+    </component>
+
+    <!-- Ftp Binding Generator -->
+    <component name="FtpBindingGenerator" f3:key="org.fabric3.binding.ftp.scdl.FtpBindingDefinition">
+        <system:implementation.system class="org.fabric3.binding.ftp.control.FtpBindingGenerator"/>
+    </component>
+
+    <!-- Ftp Wire Attachers -->
+    <component name="FtpSourceWireAttacher" f3:key="org.fabric3.binding.ftp.provision.FtpWireSourceDefinition">
+        <system:implementation.system class="org.fabric3.binding.ftp.runtime.FtpSourceWireAttacher"/>
+    </component>
+    
+    <component name="FtpTargetWireAttacher" f3:key="org.fabric3.binding.ftp.provision.FtpWireTargetDefinition">
+        <system:implementation.system class="org.fabric3.binding.ftp.runtime.FtpTargetWireAttacher"/>
+    </component>
+
+    <!-- Feature -->
+    <system:feature name="FtpBindingFeature">{http://fabric3.org/xmlns/binding}ftpBinding</system:feature>
     
 </composite>
