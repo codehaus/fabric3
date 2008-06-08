@@ -16,14 +16,14 @@
  */
 package org.fabric3.fabric.allocator;
 
-import org.fabric3.spi.assembly.AssemblyException;
+import org.fabric3.host.Fabric3Exception;
 
 /**
  * Denotes an error allocating a component to a service node.
  *
  * @version $Rev$ $Date$
  */
-public class AllocationException extends AssemblyException {
+public class AllocationException extends Fabric3Exception {
     private static final long serialVersionUID = 3960592897460184482L;
 
     public AllocationException(String message, String identifier) {
