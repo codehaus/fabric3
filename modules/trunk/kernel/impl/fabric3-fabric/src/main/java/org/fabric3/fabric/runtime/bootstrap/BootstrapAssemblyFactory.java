@@ -88,7 +88,7 @@ import org.fabric3.fabric.services.instancefactory.DefaultInstanceFactoryBuilder
 import org.fabric3.fabric.services.instancefactory.GenerationHelperImpl;
 import org.fabric3.fabric.services.instancefactory.ReflectiveInstanceFactoryBuilder;
 import org.fabric3.fabric.services.routing.RuntimeRoutingService;
-import org.fabric3.fabric.instantiator.promotion.DefaultTargetPromotionService;
+import org.fabric3.fabric.instantiator.promotion.DefaultPromotionResolutionService;
 import org.fabric3.fabric.instantiator.resolve.ExplicitTargetResolutionService;
 import org.fabric3.fabric.instantiator.resolve.TypeBasedAutoWireService;
 import org.fabric3.host.runtime.Fabric3Runtime;
@@ -117,7 +117,7 @@ import org.fabric3.spi.runtime.component.ComponentManager;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.services.contribution.ClasspathProcessorRegistry;
 import org.fabric3.spi.services.contribution.MetaDataStore;
-import org.fabric3.fabric.instantiator.promotion.TargetPromotionService;
+import org.fabric3.fabric.instantiator.promotion.PromotionResolutionService;
 import org.fabric3.system.control.SystemComponentGenerator;
 import org.fabric3.system.provision.SystemWireSourceDefinition;
 import org.fabric3.system.provision.SystemWireTargetDefinition;
@@ -211,11 +211,11 @@ public class BootstrapAssemblyFactory {
     }
 
     private static LogicalModelInstantiator createLogicalModelGenerator(LogicalComponentManager logicalComponentManager) {
-        TargetPromotionService targetPromotionService = new DefaultTargetPromotionService();
+        PromotionResolutionService promotionResolutionService = new DefaultPromotionResolutionService();
         List<TargetResolutionService> targetResolutionServices = new ArrayList<TargetResolutionService>();
         targetResolutionServices.add(new ExplicitTargetResolutionService());
         targetResolutionServices.add(new TypeBasedAutoWireService());
-        WiringService wiringService = new DefaultWiringService(targetPromotionService, targetResolutionServices);
+        WiringService wiringService = new DefaultWiringService(promotionResolutionService, targetResolutionServices);
 
         PromotionNormalizer normalizer = new PromotionNormalizerImpl();
         DocumentLoader documentLoader = new DocumentLoaderImpl();

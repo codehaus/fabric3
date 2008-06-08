@@ -22,7 +22,7 @@ import java.util.List;
 
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.fabric.instantiator.promotion.TargetPromotionService;
+import org.fabric3.fabric.instantiator.promotion.PromotionResolutionService;
 import org.fabric3.fabric.instantiator.resolve.TargetResolutionException;
 import org.fabric3.fabric.instantiator.resolve.TargetResolutionService;
 import org.fabric3.spi.assembly.ActivateException;
@@ -38,18 +38,18 @@ import org.fabric3.spi.model.instance.LogicalService;
  */
 public class DefaultWiringService implements WiringService {
 
-    private final TargetPromotionService targetPromotionService;
+    private final PromotionResolutionService promotionResolutionService;
     private final List<TargetResolutionService> targetResolutionServices;
 
     /**
      * Injects the references required for wiring components.
      *
-     * @param targetPromotionService   Service for handling promotions.
+     * @param promotionResolutionService   Service for handling promotions.
      * @param targetResolutionServices An ordered list of target resolution services.
      */
-    public DefaultWiringService(@Reference TargetPromotionService targetPromotionService,
+    public DefaultWiringService(@Reference PromotionResolutionService promotionResolutionService,
                                 @Reference List<TargetResolutionService> targetResolutionServices) {
-        this.targetPromotionService = targetPromotionService;
+        this.promotionResolutionService = promotionResolutionService;
         this.targetResolutionServices = targetResolutionServices;
     }
 
@@ -82,7 +82,7 @@ public class DefaultWiringService implements WiringService {
      * @param logicalService Logical service whose promotion is handled.
      */
     public void promote(LogicalService logicalService) throws PromotionException {
-        targetPromotionService.promote(logicalService);
+        promotionResolutionService.resolve(logicalService);
     }
 
     /**
@@ -93,7 +93,7 @@ public class DefaultWiringService implements WiringService {
      */
     public void wire(LogicalReference logicalReference, LogicalCompositeComponent context) throws ActivateException {
 
-        targetPromotionService.promote(logicalReference);
+        promotionResolutionService.resolve(logicalReference);
         for (TargetResolutionService targetResolutionService : targetResolutionServices) {
             targetResolutionService.resolve(logicalReference, context);
         }
@@ -104,7 +104,7 @@ public class DefaultWiringService implements WiringService {
      */
     private void handleReferences(LogicalComponent<?> logicalComponent) throws TargetResolutionException, PromotionException {
         for (LogicalReference logicalReference : logicalComponent.getReferences()) {
-            targetPromotionService.promote(logicalReference);
+            promotionResolutionService.resolve(logicalReference);
             for (TargetResolutionService targetResolutionService : targetResolutionServices) {
                 targetResolutionService.resolve(logicalReference, logicalComponent.getParent());
             }
@@ -116,7 +116,7 @@ public class DefaultWiringService implements WiringService {
      */
     private void handleServices(LogicalComponent<?> logicalComponent) throws PromotionException {
         for (LogicalService logicalService : logicalComponent.getServices()) {
-            targetPromotionService.promote(logicalService);
+            promotionResolutionService.resolve(logicalService);
         }
     }
 

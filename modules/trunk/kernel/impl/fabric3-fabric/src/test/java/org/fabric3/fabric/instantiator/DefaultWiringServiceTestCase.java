@@ -25,8 +25,8 @@ import javax.xml.namespace.QName;
 
 import junit.framework.TestCase;
 
-import org.fabric3.fabric.instantiator.promotion.DefaultTargetPromotionService;
-import org.fabric3.fabric.instantiator.promotion.TargetPromotionService;
+import org.fabric3.fabric.instantiator.promotion.DefaultPromotionResolutionService;
+import org.fabric3.fabric.instantiator.promotion.PromotionResolutionService;
 import org.fabric3.fabric.instantiator.resolve.ExplicitTargetResolutionService;
 import org.fabric3.fabric.instantiator.resolve.TargetResolutionException;
 import org.fabric3.fabric.instantiator.resolve.TargetResolutionService;
@@ -127,11 +127,11 @@ public class DefaultWiringServiceTestCase extends TestCase {
 
     protected void setUp() throws Exception {
         super.setUp();
-        TargetPromotionService targetPromotionService = new DefaultTargetPromotionService();
+        PromotionResolutionService promotionResolutionService = new DefaultPromotionResolutionService();
         List<TargetResolutionService> targetResolutionServices = new ArrayList<TargetResolutionService>();
         targetResolutionServices.add(new ExplicitTargetResolutionService());
         targetResolutionServices.add(new TypeBasedAutoWireService());
-        wiringService = new DefaultWiringService(targetPromotionService, targetResolutionServices);
+        wiringService = new DefaultWiringService(promotionResolutionService, targetResolutionServices);
         URI domainUri = URI.create("fabric3://./runtime");
         URI runtimeUri = URI.create("runtime");
         domain = new LogicalCompositeComponent(domainUri, runtimeUri, null, null);

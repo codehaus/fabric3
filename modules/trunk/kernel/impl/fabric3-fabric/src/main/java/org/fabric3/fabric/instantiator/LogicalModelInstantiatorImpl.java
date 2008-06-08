@@ -113,8 +113,7 @@ public class LogicalModelInstantiatorImpl implements LogicalModelInstantiator {
         return parent.getPropertyValues();
     }
 
-    private Map<String, Document> excludeProperties(LogicalCompositeComponent parent, Composite composite,
-                                                    LogicalChange change) {
+    private Map<String, Document> excludeProperties(LogicalCompositeComponent parent, Composite composite, LogicalChange change) {
         Map<String, Document> map = parent.getPropertyValues();
         for (Property property : composite.getProperties().values()) {
             String name = property.getName();
@@ -196,8 +195,7 @@ public class LogicalModelInstantiatorImpl implements LogicalModelInstantiator {
 
     }
 
-    private void excludeServices(LogicalComponent<CompositeImplementation> parent, Composite composite,
-                                 LogicalChange change) {
+    private void excludeServices(LogicalComponent<CompositeImplementation> parent, Composite composite, LogicalChange change) {
         String base = parent.getUri().toString();
         // merge the composite service declarations into the parent
         for (CompositeService compositeService : composite.getServices().values()) {

@@ -23,14 +23,14 @@ import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalService;
 
 /**
- * Processes promoted services and references.
+ * Resolves promoted services and references by setting the resolved promotio URI of the logical component service or reference that is being promoted.
  *
  * @version $Revision$ $Date$
  */
-public interface TargetPromotionService {
+public interface PromotionResolutionService {
 
     /**
-     * Handles the promotion on the specified logical service.
+     * Handles promotion on the specified logical service.
      * <p/>
      * Promoted URIs are of the general form <code>componentId#serviceName</code>, where the service name is optional. If the  promoted URI doesn't
      * contain a fragment for the service name, the promoted component is expected to have exactly one service. If the service fragment is present the
@@ -38,13 +38,12 @@ public interface TargetPromotionService {
      * the promoted service.
      *
      * @param logicalService Logical service whose promotion is handled.
-     * @throws org.fabric3.fabric.instantiator.PromotionException
-     *          if an error occurs processing the promoted exception
+     * @throws PromotionException if an error occurs processing the promoted exception
      */
-    void promote(LogicalService logicalService) throws PromotionException;
+    void resolve(LogicalService logicalService) throws PromotionException;
 
     /**
-     * Handles all the promotions on the specified logical reference.
+     * Handles all promotions on the specified logical reference.
      * <p/>
      * Promoted URIs are of the general form <code>componentId#referenceName</code>, where the reference name is optional. If the  promoted URI
      * doesn't contain a fragment for the reference name, the promoted component is expected to have exactly one reference. If the reference fragment
@@ -54,6 +53,6 @@ public interface TargetPromotionService {
      * @param logicalReference Logical reference whose promotion is handled.
      * @throws PromotionException if an error occurs processing the promoted exception
      */
-    void promote(LogicalReference logicalReference) throws PromotionException;
+    void resolve(LogicalReference logicalReference) throws PromotionException;
 
 }

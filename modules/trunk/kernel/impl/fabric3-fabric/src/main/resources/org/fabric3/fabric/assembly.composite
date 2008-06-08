@@ -58,7 +58,7 @@
     </component>
 
     <component name="targetPromotionService">
-        <system:implementation.system class="org.fabric3.fabric.instantiator.promotion.DefaultTargetPromotionService"/>
+        <system:implementation.system class="org.fabric3.fabric.instantiator.promotion.DefaultPromotionResolutionService"/>
     </component>
 
     <component name="explicitTargetResolutionService">
