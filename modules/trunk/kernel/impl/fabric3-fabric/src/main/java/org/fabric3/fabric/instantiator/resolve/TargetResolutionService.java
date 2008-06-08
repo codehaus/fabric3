@@ -20,7 +20,6 @@ package org.fabric3.fabric.instantiator.resolve;
 
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
-import org.fabric3.fabric.instantiator.resolve.TargetResolutionException;
 
 /**
  * Abstraction for resolving targets for references. Possible implementations include explicit targets, intent based auto-wiring, type based
@@ -35,8 +34,7 @@ public interface TargetResolutionService {
      *
      * @param reference Logical reference whose target needs to be resolved.
      * @param context   Composite component within which the targets are resolved.
-     * @throws TargetResolutionException
-     *          if there was a problem resolving the reference target
+     * @throws TargetResolutionException if there was a problem resolving the reference target
      */
     void resolve(LogicalReference reference, LogicalCompositeComponent context) throws TargetResolutionException;
 

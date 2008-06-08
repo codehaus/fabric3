@@ -18,9 +18,9 @@
  */
 package org.fabric3.fabric.instantiator.promotion;
 
+import org.fabric3.fabric.instantiator.PromotionException;
 import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalService;
-import org.fabric3.fabric.instantiator.PromotionException;
 
 /**
  * Processes promoted services and references.
@@ -38,7 +38,8 @@ public interface TargetPromotionService {
      * the promoted service.
      *
      * @param logicalService Logical service whose promotion is handled.
-     * @throws org.fabric3.fabric.instantiator.PromotionException if an error occurs processing the promoted exception
+     * @throws org.fabric3.fabric.instantiator.PromotionException
+     *          if an error occurs processing the promoted exception
      */
     void promote(LogicalService logicalService) throws PromotionException;
 

@@ -80,13 +80,14 @@ public class InstantiationTestCase extends TestCase {
 
     protected void setUp() throws Exception {
         super.setUp();
-        
+
         AtomicComponentInstantiator atomicComponentInstantiator = new AtomicComponentInstantiator(null);
         CompositeComponentInstantiator compositeComponentInstantiator = new CompositeComponentInstantiator(atomicComponentInstantiator, null);
         WiringService wiringService = EasyMock.createMock(WiringService.class);
         PromotionNormalizer normalizer = EasyMock.createMock(PromotionNormalizer.class);
-        
-        logicalModelInstantiator = new LogicalModelInstantiatorImpl(wiringService, normalizer, null, atomicComponentInstantiator, compositeComponentInstantiator);
+
+        logicalModelInstantiator =
+                new LogicalModelInstantiatorImpl(wiringService, normalizer, null, atomicComponentInstantiator, compositeComponentInstantiator);
         parent = new LogicalCompositeComponent(PARENT_URI, null, null, null);
     }
 
@@ -102,8 +103,8 @@ public class InstantiationTestCase extends TestCase {
         type.add(child);
         CompositeImplementation implementation = new CompositeImplementation();
         implementation.setComponentType(type);
-        ComponentDefinition<CompositeImplementation> definition = 
-            new ComponentDefinition<CompositeImplementation>("component");
+        ComponentDefinition<CompositeImplementation> definition =
+                new ComponentDefinition<CompositeImplementation>("component");
         definition.setImplementation(implementation);
         return definition;
 
@@ -118,8 +119,8 @@ public class InstantiationTestCase extends TestCase {
         type.add(reference);
         CompositeImplementation implementation = new CompositeImplementation();
         implementation.setComponentType(type);
-        ComponentDefinition<CompositeImplementation> definition = 
-            new ComponentDefinition<CompositeImplementation>("component");
+        ComponentDefinition<CompositeImplementation> definition =
+                new ComponentDefinition<CompositeImplementation>("component");
         definition.setImplementation(implementation);
         return definition;
 
@@ -130,5 +131,5 @@ public class InstantiationTestCase extends TestCase {
             return null;
         }
     }
-    
+
 }

@@ -26,7 +26,6 @@ import java.util.Set;
 import org.osoa.sca.annotations.Reference;
 import org.w3c.dom.Document;
 
-import org.fabric3.fabric.instantiator.InstantiationException;
 import org.fabric3.fabric.instantiator.normalize.PromotionNormalizer;
 import org.fabric3.scdl.Autowire;
 import org.fabric3.scdl.BindingDefinition;

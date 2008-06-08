@@ -14,7 +14,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.fabric.assembly;
+package org.fabric3.fabric.instantiator;
 
 import java.net.URI;
 
@@ -23,6 +23,7 @@ import java.net.URI;
  */
 public class InvalidPropertyFileException extends org.fabric3.fabric.instantiator.InstantiationException {
     private final URI file;
+    private static final long serialVersionUID = 872041329228366387L;
 
     public InvalidPropertyFileException(String message, String name, Throwable cause, URI file) {
         super(message, name, cause);
