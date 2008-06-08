@@ -40,7 +40,7 @@ import org.fabric3.scdl.CompositeImplementation;
 import org.fabric3.services.xmlfactory.XMLFactory;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 import org.fabric3.spi.services.lcm.LogicalComponentStore;
-import org.fabric3.spi.services.lcm.RecordException;
+import org.fabric3.spi.services.lcm.StoreException;
 import org.fabric3.spi.services.lcm.RecoveryException;
 import org.fabric3.spi.services.marshaller.MarshalException;
 import org.fabric3.spi.services.marshaller.MarshalService;
@@ -79,16 +79,16 @@ public class LogicalComponentStoreImpl implements LogicalComponentStore {
         serializedFile = new File(root, "assembly.ser");
     }
 
-    public void store(LogicalCompositeComponent domain) throws RecordException {
+    public void store(LogicalCompositeComponent domain) throws StoreException {
         FileOutputStream fos = null;
         try {
             fos = new FileOutputStream(serializedFile);
             XMLStreamWriter writer = outputFactory.createXMLStreamWriter(fos);
             marshalService.marshall(domain, writer);
         } catch (FileNotFoundException e) {
-            throw new RecordException("Error serializing assembly", e);
+            throw new StoreException("Error serializing assembly", e);
         } catch (MarshalException e) {
-            throw new RecordException("Error serializing assembly", e);
+            throw new StoreException("Error serializing assembly", e);
         } catch (XMLStreamException e) {
             e.printStackTrace();
         } finally {

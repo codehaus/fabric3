@@ -39,7 +39,7 @@ import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 import org.fabric3.spi.services.lcm.LogicalComponentManager;
-import org.fabric3.spi.services.lcm.RecordException;
+import org.fabric3.spi.services.lcm.StoreException;
 import org.fabric3.spi.services.contribution.MetaDataStore;
 import org.fabric3.spi.services.contribution.MetaDataStoreException;
 import org.fabric3.spi.services.contribution.QNameSymbol;
@@ -134,7 +134,7 @@ public abstract class AbstractAssembly implements Assembly {
         try {
             // record the operation
             logicalComponentManager.store();
-        } catch (RecordException e) {
+        } catch (StoreException e) {
             String id = composite.getName().toString();
             throw new ActivateException("Error activating deployable: " + id, id, e);
         }
@@ -198,7 +198,7 @@ public abstract class AbstractAssembly implements Assembly {
         try {
             // record the operation
             logicalComponentManager.store();
-        } catch (RecordException e) {
+        } catch (StoreException e) {
             String id = composite.getName().toString();
             throw new ActivateException("Error activating deployable: " + id, id, e);
         }

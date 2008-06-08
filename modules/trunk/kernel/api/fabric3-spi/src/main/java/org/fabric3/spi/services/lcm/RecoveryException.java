@@ -16,13 +16,15 @@
  */
 package org.fabric3.spi.services.lcm;
 
-import org.fabric3.spi.assembly.AssemblyException;
+import org.fabric3.host.Fabric3Exception;
 
 
 /**
  * @version $Rev$ $Date$
  */
-public class RecoveryException extends AssemblyException {
+public class RecoveryException extends Fabric3Exception {
+    private static final long serialVersionUID = -7196926074584212395L;
+
     public RecoveryException(String message, Throwable cause) {
         super(message, cause);
     }

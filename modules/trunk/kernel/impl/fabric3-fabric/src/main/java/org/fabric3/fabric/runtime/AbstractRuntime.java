@@ -18,16 +18,14 @@
  */
 package org.fabric3.fabric.runtime;
 
-import static org.fabric3.fabric.runtime.ComponentNames.EVENT_SERVICE_URI;
-import static org.fabric3.fabric.runtime.ComponentNames.RUNTIME_URI;
-
 import java.net.URI;
 import java.net.URL;
-
 import javax.management.MBeanServer;
 
 import org.fabric3.fabric.component.scope.CompositeScopeContainer;
 import org.fabric3.fabric.component.scope.ScopeContainerMonitor;
+import static org.fabric3.fabric.runtime.ComponentNames.EVENT_SERVICE_URI;
+import static org.fabric3.fabric.runtime.ComponentNames.RUNTIME_URI;
 import org.fabric3.fabric.services.componentmanager.ComponentManagerImpl;
 import org.fabric3.fabric.services.lcm.LogicalComponentManagerImpl;
 import org.fabric3.fabric.services.lcm.NonPersistentLogicalComponentStore;
@@ -38,21 +36,21 @@ import org.fabric3.host.runtime.StartException;
 import org.fabric3.monitor.MonitorFactory;
 import org.fabric3.pojo.PojoWorkContextTunnel;
 import org.fabric3.scdl.Autowire;
-import org.fabric3.spi.assembly.AssemblyException;
 import org.fabric3.spi.component.AtomicComponent;
+import org.fabric3.spi.component.InstanceLifecycleException;
 import org.fabric3.spi.component.InstanceWrapper;
 import org.fabric3.spi.component.ScopeContainer;
-import org.fabric3.spi.component.InstanceLifecycleException;
 import org.fabric3.spi.invocation.WorkContext;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 import org.fabric3.spi.runtime.RuntimeServices;
-import org.fabric3.spi.services.lcm.LogicalComponentManager;
-import org.fabric3.spi.services.lcm.LogicalComponentStore;
 import org.fabric3.spi.services.componentmanager.ComponentManager;
 import org.fabric3.spi.services.componentmanager.RegistrationException;
 import org.fabric3.spi.services.event.EventService;
 import org.fabric3.spi.services.event.RuntimeStart;
+import org.fabric3.spi.services.lcm.LogicalComponentManager;
+import org.fabric3.spi.services.lcm.LogicalComponentStore;
+import org.fabric3.spi.services.lcm.RecoveryException;
 
 /**
  * @version $Rev$ $Date$
@@ -165,7 +163,7 @@ public abstract class AbstractRuntime<HI extends HostInfo> implements Fabric3Run
         logicalComponentManager = new LogicalComponentManagerImpl(store);
         try {
             logicalComponentManager.initialize();
-        } catch (AssemblyException e) {
+        } catch (RecoveryException e) {
             throw new InitializationException(e);
         }
         componentManager = new ComponentManagerImpl();

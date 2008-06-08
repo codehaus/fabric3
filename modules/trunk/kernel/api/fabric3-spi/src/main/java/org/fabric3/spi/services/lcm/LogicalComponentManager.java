@@ -19,7 +19,6 @@ package org.fabric3.spi.services.lcm;
 import java.net.URI;
 import java.util.Collection;
 
-import org.fabric3.spi.assembly.AssemblyException;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 
@@ -52,15 +51,15 @@ public interface LogicalComponentManager {
 
     /**
      * Initializes the domain service.
-     * @throws AssemblyException if there was a problem initializing the components
+     * @throws RecoveryException if there was a problem initializing the components
      */
-    void initialize() throws AssemblyException;
+    void initialize() throws RecoveryException;
 
     /**
      * Stores the domain using assembly store.
      *
-     * @throws RecordException If unable to store the domain.
+     * @throws StoreException If unable to store the domain.
      */
-    void store() throws RecordException;
+    void store() throws StoreException;
 
 }

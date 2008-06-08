@@ -29,9 +29,9 @@ public interface LogicalComponentStore {
      * Stores the domain model.
      *
      * @param domain the domain model
-     * @throws RecordException if an error occurs storing the domain
+     * @throws StoreException if an error occurs storing the domain
      */
-    void store(LogicalCompositeComponent domain) throws RecordException;
+    void store(LogicalCompositeComponent domain) throws StoreException;
 
     /**
      * Reads the domain model from the store.

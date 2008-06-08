@@ -26,8 +26,9 @@ import org.fabric3.fabric.instantiator.LogicalModelInstantiator;
 import org.fabric3.fabric.services.routing.RoutingService;
 import org.fabric3.spi.assembly.Assembly;
 import org.fabric3.spi.assembly.AssemblyException;
-import org.fabric3.spi.services.lcm.LogicalComponentManager;
 import org.fabric3.spi.services.contribution.MetaDataStore;
+import org.fabric3.spi.services.lcm.LogicalComponentManager;
+import org.fabric3.spi.services.lcm.RecoveryException;
 
 /**
  * Default implementation of a DistributedAssembly
@@ -48,6 +49,10 @@ public class DistributedAssemblyImpl extends AbstractAssembly implements Assembl
     }
 
     public void initialize() throws AssemblyException {
-        logicalComponentManager.initialize();
+        try {
+            logicalComponentManager.initialize();
+        } catch (RecoveryException e) {
+            throw new AssemblyException(e);
+        }
     }
 }

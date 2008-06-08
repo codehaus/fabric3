@@ -21,15 +21,15 @@ import java.util.Collection;
 
 import javax.xml.namespace.QName;
 
-import org.fabric3.spi.assembly.AssemblyException;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 import org.fabric3.spi.model.instance.LogicalService;
 import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.services.lcm.LogicalComponentManager;
 import org.fabric3.spi.services.lcm.LogicalComponentStore;
-import org.fabric3.spi.services.lcm.RecordException;
+import org.fabric3.spi.services.lcm.StoreException;
 import org.fabric3.spi.services.lcm.LogicalComponentManagerMBean;
+import org.fabric3.spi.services.lcm.RecoveryException;
 import org.fabric3.spi.util.UriHelper;
 import org.fabric3.scdl.Composite;
 import org.fabric3.scdl.CompositeReference;
@@ -78,11 +78,11 @@ public class LogicalComponentManagerImpl implements LogicalComponentManager, Log
         return domain;
     }
 
-    public void initialize() throws AssemblyException {
+    public void initialize() throws RecoveryException {
         domain = logicalComponentStore.read();
     }
     
-    public void store() throws RecordException {
+    public void store() throws StoreException {
         logicalComponentStore.store(domain);
     }
 

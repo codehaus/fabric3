@@ -16,7 +16,7 @@
  */
 package org.fabric3.spi.services.lcm;
 
-import org.fabric3.spi.assembly.AssemblyException;
+import org.fabric3.host.Fabric3Exception;
 
 
 /**
@@ -24,13 +24,14 @@ import org.fabric3.spi.assembly.AssemblyException;
  *
  * @version $Rev$ $Date$
  */
-public class RecordException extends AssemblyException {
+public class StoreException extends Fabric3Exception {
+    private static final long serialVersionUID = 652954682135057498L;
 
-    public RecordException(String message, Throwable cause) {
+    public StoreException(String message, Throwable cause) {
         super(message, cause);
     }
 
-    public RecordException(String message, String identifier, Throwable cause) {
+    public StoreException(String message, String identifier, Throwable cause) {
         super(message, identifier, cause);
     }
 }
