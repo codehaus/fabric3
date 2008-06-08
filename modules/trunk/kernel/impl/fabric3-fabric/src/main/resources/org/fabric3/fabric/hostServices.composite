@@ -43,7 +43,7 @@
     </component>
 
     <component name="allocator">
-        <system:implementation.system class="org.fabric3.fabric.assembly.allocator.DefaultAllocator"/>
+        <system:implementation.system class="org.fabric3.fabric.allocator.DefaultAllocator"/>
     </component>
 
     <component name="runtimeRoutingService">

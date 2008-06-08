@@ -24,8 +24,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import javax.management.MBeanServer;
 
 import org.fabric3.fabric.assembly.RuntimeAssemblyImpl;
-import org.fabric3.fabric.assembly.allocator.Allocator;
-import org.fabric3.fabric.assembly.allocator.LocalAllocator;
+import org.fabric3.fabric.allocator.Allocator;
+import org.fabric3.fabric.allocator.LocalAllocator;
 import org.fabric3.fabric.instantiator.normalize.PromotionNormalizer;
 import org.fabric3.fabric.instantiator.normalize.PromotionNormalizerImpl;
 import org.fabric3.fabric.builder.ConnectorImpl;

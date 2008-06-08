@@ -14,7 +14,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.fabric.assembly.allocator;
+package org.fabric3.fabric.allocator;
 
 import org.fabric3.spi.assembly.AssemblyException;
 
@@ -24,6 +24,7 @@ import org.fabric3.spi.assembly.AssemblyException;
  * @version $Rev$ $Date$
  */
 public class AllocationException extends AssemblyException {
+    private static final long serialVersionUID = 3960592897460184482L;
 
     public AllocationException(String message, String identifier) {
         super(message, identifier);

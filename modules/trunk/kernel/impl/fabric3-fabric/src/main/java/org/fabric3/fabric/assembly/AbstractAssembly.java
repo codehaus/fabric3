@@ -24,8 +24,8 @@ import java.util.Collection;
 
 import javax.xml.namespace.QName;
 
-import org.fabric3.fabric.assembly.allocator.AllocationException;
-import org.fabric3.fabric.assembly.allocator.Allocator;
+import org.fabric3.fabric.allocator.AllocationException;
+import org.fabric3.fabric.allocator.Allocator;
 import org.fabric3.fabric.instantiator.LogicalModelInstantiator;
 import org.fabric3.fabric.instantiator.LogicalChange;
 import org.fabric3.fabric.generator.PhysicalModelGenerator;

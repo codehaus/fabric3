@@ -14,7 +14,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.fabric.assembly.allocator;
+package org.fabric3.fabric.allocator;
 
 import org.fabric3.spi.model.instance.LogicalComponent;
 

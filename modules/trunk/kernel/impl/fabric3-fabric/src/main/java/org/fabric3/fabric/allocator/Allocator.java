@@ -14,7 +14,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.fabric.assembly.allocator;
+package org.fabric3.fabric.allocator;
 
 import org.fabric3.spi.model.instance.LogicalComponent;
 
@@ -29,10 +29,9 @@ public interface Allocator {
      * Performs the allocation. Composites are recursed and their children are allocated.
      *
      * @param component           the component to allocate
-     * @param synchronizeTopology true if the allocator should attempt to synchronize its view of the domain topology
-     *                            with service nodes components have been pre-allocated to. Synchronization will attempt
-     *                            to poll a set number of times for runtimes components are pre-allocated to. If a
-     *                            runtime is not found, corresponding pre-allocated components will be marked for
+     * @param synchronizeTopology true if the allocator should attempt to synchronize its view of the domain topology with service nodes components
+     *                            have been pre-allocated to. Synchronization will attempt to poll a set number of times for runtimes components are
+     *                            pre-allocated to. If a runtime is not found, corresponding pre-allocated components will be marked for
      *                            re-allocation.
      * @throws AllocationException if an error during allocation occurs
      */

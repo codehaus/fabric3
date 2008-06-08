@@ -20,7 +20,7 @@ package org.fabric3.fabric.assembly;
 
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.fabric.assembly.allocator.Allocator;
+import org.fabric3.fabric.allocator.Allocator;
 import org.fabric3.fabric.generator.PhysicalModelGenerator;
 import org.fabric3.fabric.instantiator.LogicalModelInstantiator;
 import org.fabric3.fabric.services.routing.RoutingService;

@@ -14,7 +14,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.fabric.assembly.allocator;
+package org.fabric3.fabric.allocator;
 
 import java.net.URI;
 import java.util.HashMap;
@@ -79,7 +79,7 @@ public class DefaultAllocator implements Allocator {
     }
 
     public void allocate(Set<RuntimeInfo> runtimes, LogicalComponent<?> component) throws AllocationException {
-        
+
         if (CompositeImplementation.class.isInstance(component.getDefinition().getImplementation())) {
             LogicalCompositeComponent composite = (LogicalCompositeComponent) component;
             for (LogicalComponent<?> child : composite.getComponents()) {
@@ -93,7 +93,7 @@ public class DefaultAllocator implements Allocator {
         } else {
             assign(runtimes, component);
         }
-        
+
     }
 
 
@@ -131,10 +131,9 @@ public class DefaultAllocator implements Allocator {
 
 
     /**
-     * Attempts to synchrnize the domain topological view with runtime nodes the component or its children have been
-     * pre-allocated to. The list of runtimes are periodically queried a set number of times. It is assumed the list of
-     * runtimes will be asynchronously updated as new nodes are discovered. If a pre-allocated runtime is not found for
-     * a component, the latter is marked for re-allocation.
+     * Attempts to synchrnize the domain topological view with runtime nodes the component or its children have been pre-allocated to. The list of
+     * runtimes are periodically queried a set number of times. It is assumed the list of runtimes will be asynchronously updated as new nodes are
+     * discovered. If a pre-allocated runtime is not found for a component, the latter is marked for re-allocation.
      *
      * @param component to synchronize the domain topology with
      */
@@ -184,7 +183,7 @@ public class DefaultAllocator implements Allocator {
 
     @SuppressWarnings({"unchecked"})
     private void calculatePreallocatedRuntimes(LogicalComponent<?> component, Set<URI> runtimes) {
-        
+
         if (component instanceof LogicalCompositeComponent) {
             LogicalCompositeComponent composite = (LogicalCompositeComponent) component;
             for (LogicalComponent<?> child : composite.getComponents()) {
@@ -201,8 +200,7 @@ public class DefaultAllocator implements Allocator {
     }
 
     /**
-     * Marks a component or its children for re-allocation if its pre-allocated runtime is in the set of non-responding
-     * runtimes.
+     * Marks a component or its children for re-allocation if its pre-allocated runtime is in the set of non-responding runtimes.
      *
      * @param component             the component to evaluate
      * @param nonRespondingRuntimes the list of non-responding runtimes
@@ -226,14 +224,14 @@ public class DefaultAllocator implements Allocator {
             }
         }
 
-        
+
         if (component instanceof LogicalCompositeComponent) {
             LogicalCompositeComponent composite = (LogicalCompositeComponent) component;
             for (LogicalComponent<?> child : composite.getComponents()) {
                 markForReallocation(child, nonRespondingRuntimes);
             }
         }
-        
+
     }
 
 
