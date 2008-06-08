@@ -14,7 +14,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.fabric.instantiator;
+package org.fabric3.fabric.instantiator.component;
 
 import java.io.IOException;
 import java.net.URI;
@@ -36,6 +36,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import org.fabric3.fabric.instantiator.LogicalInstantiationException;
 import org.fabric3.fabric.services.documentloader.DocumentLoader;
 import org.fabric3.scdl.AbstractComponentType;
 import org.fabric3.scdl.ComponentDefinition;
@@ -94,7 +95,8 @@ public abstract class AbstractComponentInstantiator implements ComponentInstanti
      *
      * @param component  the component to initialize
      * @param definition the definition of the component
-     * @throws LogicalInstantiationException if there was a problem initializing a property value
+     * @throws org.fabric3.fabric.instantiator.LogicalInstantiationException
+     *          if there was a problem initializing a property value
      */
     protected <I extends Implementation<?>> void initializeProperties(LogicalComponent<I> component,
                                                                       ComponentDefinition<I> definition)

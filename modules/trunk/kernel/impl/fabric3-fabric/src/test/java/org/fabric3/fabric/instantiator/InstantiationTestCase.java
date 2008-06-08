@@ -27,6 +27,8 @@ import junit.framework.TestCase;
 import org.easymock.classextension.EasyMock;
 
 import org.fabric3.fabric.instantiator.normalize.PromotionNormalizer;
+import org.fabric3.fabric.instantiator.component.AtomicComponentInstantiator;
+import org.fabric3.fabric.instantiator.component.CompositeComponentInstantiator;
 import org.fabric3.scdl.AbstractComponentType;
 import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.ComponentType;

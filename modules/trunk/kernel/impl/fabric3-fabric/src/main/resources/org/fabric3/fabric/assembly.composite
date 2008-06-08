@@ -33,11 +33,11 @@
     </component>
 
     <component name="atomicComponentInstantiator">
-        <system:implementation.system class="org.fabric3.fabric.instantiator.AtomicComponentInstantiator"/>
+        <system:implementation.system class="org.fabric3.fabric.instantiator.component.AtomicComponentInstantiator"/>
     </component>
 
     <component name="compositeComponentInstantiator">
-        <system:implementation.system class="org.fabric3.fabric.instantiator.CompositeComponentInstantiator"/>
+        <system:implementation.system class="org.fabric3.fabric.instantiator.component.CompositeComponentInstantiator"/>
         <reference name="atomicComponentInstantiator" target="atomicComponentInstantiator"/>
     </component>
 

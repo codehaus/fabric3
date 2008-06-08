@@ -14,7 +14,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.fabric.instantiator;
+package org.fabric3.fabric.instantiator.component;
 
 import java.net.URI;
 import java.util.Map;
@@ -22,6 +22,7 @@ import java.util.Map;
 import org.osoa.sca.annotations.Reference;
 import org.w3c.dom.Document;
 
+import org.fabric3.fabric.instantiator.LogicalInstantiationException;
 import org.fabric3.fabric.services.documentloader.DocumentLoader;
 import org.fabric3.scdl.AbstractComponentType;
 import org.fabric3.scdl.BindingDefinition;
