@@ -25,18 +25,18 @@ import org.fabric3.spi.assembly.ActivateException;
  *
  * @version $Rev$ $Date$
  */
-public class InstantiationException extends ActivateException {
+public class LogicalInstantiationException extends ActivateException {
     private static final long serialVersionUID = 4771407392907205266L;
 
-    public InstantiationException(String message, String identifier) {
+    public LogicalInstantiationException(String message, String identifier) {
         super(message, identifier);
     }
 
-    public InstantiationException(String message, String identifier, Throwable cause) {
+    public LogicalInstantiationException(String message, String identifier, Throwable cause) {
         super(message, identifier, cause);
     }
 
-    public InstantiationException(Throwable cause) {
+    public LogicalInstantiationException(Throwable cause) {
         super(cause);
     }
 }

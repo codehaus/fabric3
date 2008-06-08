@@ -21,7 +21,7 @@ import java.net.URI;
 /**
  * @version $Rev$ $Date$
  */
-public class InvalidPropertyFileException extends org.fabric3.fabric.instantiator.InstantiationException {
+public class InvalidPropertyFileException extends LogicalInstantiationException {
     private final URI file;
     private static final long serialVersionUID = 872041329228366387L;
 

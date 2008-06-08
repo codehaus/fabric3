@@ -59,7 +59,7 @@ public class CompositeComponentInstantiator extends AbstractComponentInstantiato
     public <I extends Implementation<?>> LogicalComponent<I> instantiate(LogicalCompositeComponent parent,
                                                                          Map<String, Document> properties,
                                                                          ComponentDefinition<I> definition)
-            throws InstantiationException {
+            throws LogicalInstantiationException {
         ComponentDefinition<CompositeImplementation> def = (ComponentDefinition<CompositeImplementation>) definition;
         return LogicalComponent.class.cast(instantiateComposite(parent, properties, def));
     }
@@ -67,7 +67,7 @@ public class CompositeComponentInstantiator extends AbstractComponentInstantiato
     public LogicalCompositeComponent instantiateComposite(LogicalCompositeComponent parent,
                                                           Map<String, Document> properties,
                                                           ComponentDefinition<CompositeImplementation> definition)
-            throws InstantiationException {
+            throws LogicalInstantiationException {
 
         URI runtimeId = definition.getRuntimeId();
         URI uri = URI.create(parent.getUri() + "/" + definition.getName());
@@ -86,7 +86,7 @@ public class CompositeComponentInstantiator extends AbstractComponentInstantiato
 
     private void instantiateChildComponents(LogicalCompositeComponent parent,
                                             Map<String, Document> properties,
-                                            Composite composite) throws InstantiationException {
+                                            Composite composite) throws LogicalInstantiationException {
 
         // create the child components
         for (ComponentDefinition<? extends Implementation<?>> child : composite.getComponents().values()) {

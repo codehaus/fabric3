@@ -37,10 +37,10 @@ public interface ComponentInstantiator {
      * @param properties the collection of properties associated with the component
      * @param definition the component definition to instantiate from @return the instantiated logical component
      * @return an instantiated logical component
-     * @throws InstantiationException if an error occurs during instantiation
+     * @throws LogicalInstantiationException if an error occurs during instantiation
      */
     <I extends Implementation<?>> LogicalComponent<I> instantiate(LogicalCompositeComponent parent,
                                                                   Map<String, Document> properties,
-                                                                  ComponentDefinition<I> definition) throws InstantiationException;
+                                                                  ComponentDefinition<I> definition) throws LogicalInstantiationException;
 
 }

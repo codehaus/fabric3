@@ -28,7 +28,7 @@ import javax.xml.namespace.QName;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
-import org.fabric3.fabric.instantiator.InstantiationException;
+import org.fabric3.fabric.instantiator.LogicalInstantiationException;
 import org.fabric3.fabric.component.scope.ScopeRegistryImpl;
 import org.fabric3.fabric.implementation.singleton.SingletonComponent;
 import org.fabric3.fabric.implementation.singleton.SingletonImplementation;
@@ -277,7 +277,7 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
             LogicalComponent<?> logical = createLogicalComponent(name, type, instance);
             AtomicComponent<I> physical = createPhysicalComponent(name, instance);
             runtime.registerComponent(logical, physical);
-        } catch (InstantiationException e) {
+        } catch (LogicalInstantiationException e) {
             throw new InitializationException(e);
         } catch (RegistrationException e) {
             throw new InitializationException(e);
@@ -292,7 +292,7 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
     protected <S, I extends S> LogicalComponent<Implementation<?>> createLogicalComponent(String name,
                                                                                           Class<S> type,
                                                                                           I instance)
-            throws InvalidSystemServiceContractException, org.fabric3.fabric.instantiator.InstantiationException {
+            throws InvalidSystemServiceContractException, LogicalInstantiationException {
 
         ComponentDefinition<Implementation<?>> definition = createDefinition(name, type, instance);
         return instantiator.instantiate(domain, domain.getPropertyValues(), definition);

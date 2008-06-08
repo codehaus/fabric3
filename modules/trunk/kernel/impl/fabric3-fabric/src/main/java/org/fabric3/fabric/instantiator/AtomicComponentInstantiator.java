@@ -51,7 +51,7 @@ public class AtomicComponentInstantiator extends AbstractComponentInstantiator {
     public <I extends Implementation<?>> LogicalComponent<I> instantiate(LogicalCompositeComponent parent,
                                                                          Map<String, Document> properties,
                                                                          ComponentDefinition<I> definition)
-            throws InstantiationException {
+            throws LogicalInstantiationException {
 
         I impl = definition.getImplementation();
         AbstractComponentType<?, ?, ?, ?> componentType = impl.getComponentType();

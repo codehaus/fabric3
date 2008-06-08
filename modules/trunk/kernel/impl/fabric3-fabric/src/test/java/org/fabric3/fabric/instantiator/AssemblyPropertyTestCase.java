@@ -96,7 +96,7 @@ public class AssemblyPropertyTestCase extends TestCase {
             public <I extends Implementation<?>> LogicalComponent<I> instantiate(LogicalCompositeComponent parent,
                                                                                  Map<String, Document> properties,
                                                                                  ComponentDefinition<I> definition)
-                    throws org.fabric3.fabric.instantiator.InstantiationException {
+                    throws LogicalInstantiationException {
                 return null;
             }
         };

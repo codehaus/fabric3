@@ -94,11 +94,11 @@ public abstract class AbstractComponentInstantiator implements ComponentInstanti
      *
      * @param component  the component to initialize
      * @param definition the definition of the component
-     * @throws InstantiationException if there was a problem initializing a property value
+     * @throws LogicalInstantiationException if there was a problem initializing a property value
      */
     protected <I extends Implementation<?>> void initializeProperties(LogicalComponent<I> component,
                                                                       ComponentDefinition<I> definition)
-            throws InstantiationException {
+            throws LogicalInstantiationException {
 
         Map<String, PropertyValue> propertyValues = definition.getPropertyValues();
         AbstractComponentType<?, ?, ?, ?> componentType = definition.getComponentType();
@@ -122,7 +122,7 @@ public abstract class AbstractComponentInstantiator implements ComponentInstanti
                     try {
                         value = deriveValueFromXPath(propertyValue.getSource(), component.getParent());
                     } catch (XPathExpressionException e) {
-                        throw new InstantiationException(e.getMessage(), name, e);
+                        throw new LogicalInstantiationException(e.getMessage(), name, e);
                     }
                 } else {
                     // use inline XML file

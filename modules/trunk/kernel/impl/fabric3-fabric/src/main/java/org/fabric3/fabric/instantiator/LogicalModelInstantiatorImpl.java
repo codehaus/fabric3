@@ -114,7 +114,7 @@ public class LogicalModelInstantiatorImpl implements LogicalModelInstantiator {
     }
 
     private List<LogicalComponent<?>> instantiateComponents(LogicalCompositeComponent parent, Map<String, Document> properties, Composite composite)
-            throws InstantiationException {
+            throws LogicalInstantiationException {
 
         Collection<ComponentDefinition<? extends Implementation<?>>> definitions = composite.getComponents().values();
         List<LogicalComponent<?>> newComponents = new ArrayList<LogicalComponent<?>>(definitions.size());
@@ -138,7 +138,7 @@ public class LogicalModelInstantiatorImpl implements LogicalModelInstantiator {
 
     @SuppressWarnings("unchecked")
     private LogicalComponent<?> instantiate(LogicalCompositeComponent parent, Map<String, Document> properties, ComponentDefinition<?> definition)
-            throws InstantiationException {
+            throws LogicalInstantiationException {
 
         if (definition.getImplementation().isComposite()) {
             return compositeComponentInstantiator.instantiate(parent, properties, (ComponentDefinition<CompositeImplementation>) definition);
