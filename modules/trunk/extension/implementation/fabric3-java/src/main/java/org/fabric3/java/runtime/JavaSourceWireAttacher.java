@@ -32,7 +32,7 @@ import org.fabric3.spi.builder.component.SourceWireAttacher;
 import org.fabric3.spi.builder.component.WireAttachException;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
-import org.fabric3.spi.runtime.component.ComponentManager;
+import org.fabric3.spi.services.componentmanager.ComponentManager;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.services.proxy.ProxyService;
 import org.fabric3.transform.PullTransformer;

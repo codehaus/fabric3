@@ -25,8 +25,8 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.fabric3.spi.component.Component;
-import org.fabric3.spi.runtime.component.ComponentManager;
-import org.fabric3.spi.runtime.component.RegistrationException;
+import org.fabric3.spi.services.componentmanager.ComponentManager;
+import org.fabric3.spi.services.componentmanager.RegistrationException;
 
 /**
  * Default implementation of the component manager

@@ -10,8 +10,8 @@ import org.fabric3.fabric.command.StopComponentCommand;
 import org.fabric3.spi.executor.CommandExecutor;
 import org.fabric3.spi.executor.CommandExecutorRegistry;
 import org.fabric3.spi.executor.ExecutionException;
-import org.fabric3.spi.runtime.component.ComponentManager;
-import org.fabric3.spi.runtime.component.RegistrationException;
+import org.fabric3.spi.services.componentmanager.ComponentManager;
+import org.fabric3.spi.services.componentmanager.RegistrationException;
 import org.fabric3.spi.component.Component;
 
 /*

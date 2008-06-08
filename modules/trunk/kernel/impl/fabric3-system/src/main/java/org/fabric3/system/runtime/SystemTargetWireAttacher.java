@@ -25,13 +25,13 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
+import org.fabric3.spi.services.componentmanager.ComponentManager;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.TargetWireAttacher;
 import org.fabric3.spi.builder.component.WireAttachException;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
-import org.fabric3.spi.runtime.component.ComponentManager;
 import org.fabric3.spi.util.UriHelper;
 import org.fabric3.spi.wire.Wire;
 import org.fabric3.spi.wire.InvocationChain;

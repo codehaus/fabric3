@@ -49,8 +49,8 @@ import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 import org.fabric3.spi.runtime.RuntimeServices;
 import org.fabric3.spi.runtime.assembly.LogicalComponentManager;
 import org.fabric3.spi.runtime.assembly.LogicalComponentStore;
-import org.fabric3.spi.runtime.component.ComponentManager;
-import org.fabric3.spi.runtime.component.RegistrationException;
+import org.fabric3.spi.services.componentmanager.ComponentManager;
+import org.fabric3.spi.services.componentmanager.RegistrationException;
 import org.fabric3.spi.services.event.EventService;
 import org.fabric3.spi.services.event.RuntimeStart;
 

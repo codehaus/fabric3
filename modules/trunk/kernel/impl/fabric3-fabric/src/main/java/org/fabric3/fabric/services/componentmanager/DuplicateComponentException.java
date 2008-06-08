@@ -18,7 +18,7 @@
  */
 package org.fabric3.fabric.services.componentmanager;
 
-import org.fabric3.spi.runtime.component.RegistrationException;
+import org.fabric3.spi.services.componentmanager.RegistrationException;
 
 /**
  * Denotes an attempt to register a component when one is already regsitered with that id.

@@ -20,8 +20,8 @@ import org.fabric3.spi.component.AtomicComponent;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.runtime.assembly.LogicalComponentManager;
-import org.fabric3.spi.runtime.component.ComponentManager;
-import org.fabric3.spi.runtime.component.RegistrationException;
+import org.fabric3.spi.services.componentmanager.ComponentManager;
+import org.fabric3.spi.services.componentmanager.RegistrationException;
 
 /**
  * Interface for accessing primordial services provided by a runtime.
