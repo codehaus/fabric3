@@ -1,16 +1,34 @@
-package org.fabric3.fabric.assembly.normalizer;
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+package org.fabric3.fabric.instantiator.normalize;
 
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
 import org.fabric3.scdl.CompositeImplementation;
+import org.fabric3.spi.model.instance.Bindable;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalService;
 import org.fabric3.spi.model.instance.LogicalWire;
-import org.fabric3.spi.model.instance.Bindable;
 import org.fabric3.spi.util.UriHelper;
 
 /**
@@ -46,8 +64,7 @@ public class PromotionNormalizerImpl implements PromotionNormalizer {
         return newList;
     }
 
-    private List<LogicalBinding<?>> recurseServicePromotionPath(LogicalComponent<CompositeImplementation> parent,
-                                                                URI serviceUri) {
+    private List<LogicalBinding<?>> recurseServicePromotionPath(LogicalComponent<CompositeImplementation> parent, URI serviceUri) {
         List<LogicalBinding<?>> bindings = new ArrayList<LogicalBinding<?>>();
         for (LogicalService service : parent.getServices()) {
             URI targetUri = service.getPromotedUri();
@@ -114,8 +131,7 @@ public class PromotionNormalizerImpl implements PromotionNormalizer {
         }
     }
 
-    private List<LogicalReference> recurseReferencePromotionPath(LogicalComponent<CompositeImplementation> parent,
-                                                                 URI referenceUri) {
+    private List<LogicalReference> recurseReferencePromotionPath(LogicalComponent<CompositeImplementation> parent, URI referenceUri) {
         List<LogicalReference> references = new ArrayList<LogicalReference>();
         for (LogicalReference reference : parent.getReferences()) {
             for (URI targetUri : reference.getPromotedUris()) {

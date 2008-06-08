@@ -8,7 +8,7 @@ import javax.xml.namespace.QName;
 import junit.framework.TestCase;
 import org.easymock.classextension.EasyMock;
 
-import org.fabric3.fabric.assembly.normalizer.PromotionNormalizer;
+import org.fabric3.fabric.instantiator.normalize.PromotionNormalizer;
 import org.fabric3.fabric.instantiator.AtomicComponentInstantiator;
 import org.fabric3.fabric.instantiator.CompositeComponentInstantiator;
 import org.fabric3.fabric.instantiator.LogicalModelInstantiator;

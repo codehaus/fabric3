@@ -50,7 +50,7 @@
     </component>
 
     <component name="promotionNormalizer">
-        <system:implementation.system class="org.fabric3.fabric.assembly.normalizer.PromotionNormalizerImpl"/>
+        <system:implementation.system class="org.fabric3.fabric.instantiator.normalize.PromotionNormalizerImpl"/>
     </component>
 
     <component name="documentLoader">

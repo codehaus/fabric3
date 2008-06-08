@@ -1,8 +1,7 @@
-package org.fabric3.fabric.assembly.normalizer;
+package org.fabric3.fabric.instantiator.normalize;
 
 import java.net.URI;
 import java.util.List;
-
 import javax.xml.namespace.QName;
 
 import junit.framework.TestCase;
