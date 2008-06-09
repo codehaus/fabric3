@@ -18,11 +18,10 @@
  */
 package org.fabric3.ftp.server.security;
 
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.security.cert.X509Certificate;
-import java.util.Properties;
+import java.util.HashMap;
+import java.util.Map;
 
 import org.osoa.sca.annotations.Property;
 
@@ -34,7 +33,7 @@ import org.osoa.sca.annotations.Property;
  */
 public class FileSystemUserManager implements UserManager {
     
-    private Properties users = new Properties();
+    private Map<String, String> users = new HashMap<String, String>();
     
     /**
      * Logins a user using user name and password.
@@ -44,7 +43,7 @@ public class FileSystemUserManager implements UserManager {
      * @return True if the user name and password are valid.
      */
     public boolean login(String user, String password) {
-        return users.containsKey(user) && password.equals(users.getProperty(user));
+        return users.containsKey(user) && password.equals(users.get(user));
     }
     
     /**
@@ -58,34 +57,13 @@ public class FileSystemUserManager implements UserManager {
     }
     
     /**
-     * Sets the name of the file that contains the users and passwords.
+     * Sets the users and passwords as a map.
      * 
-     * @param file Name of the file that contains the users and passwords.
-     * @throws IOException If unable to load the file.
+     * @param users Map of users to passwords.
      */
     @Property
-    public void setUserFile(String file) throws IOException {
-        
-        InputStream in = new FileInputStream(file);
-        setUsers(in);
-        
-    }
-    
-    /**
-     * Load the users from an input stream.
-     * 
-     * @param in Input stream that contains the users and passwords.
-     */
-    public void setUsers(InputStream in) throws IOException {
-        
-        try {
-            users.load(in);
-        } finally {
-            if (in != null) {
-                in.close();
-            }
-        }
-        
+    public void setUsers(Map<String, String> users) throws IOException {
+        this.users = users;
     }
 
 }

@@ -66,7 +66,8 @@ public class FtpBindingLoader implements TypeLoader<FtpBindingDefinition> {
                 introspectionContext.addError(failure);
                 return null;
             }
-            bd = new FtpBindingDefinition(new URI(uri), TransferMode.valueOf(transferMode));
+            TransferMode tMode = transferMode != null ? TransferMode.valueOf(transferMode) : TransferMode.PASSIVE;
+            bd = new FtpBindingDefinition(new URI(uri), tMode);
 
             loaderHelper.loadPolicySetsAndIntents(bd, reader, introspectionContext);
 

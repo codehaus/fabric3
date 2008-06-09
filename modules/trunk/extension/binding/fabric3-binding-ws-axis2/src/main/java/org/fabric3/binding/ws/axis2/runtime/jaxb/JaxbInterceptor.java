@@ -71,8 +71,6 @@ public class JaxbInterceptor implements Interceptor {
     }
 
     private Message interceptService(Message message) {
-        
-        System.err.println("Intercepting service");
 
         Object[] payload = (Object[]) message.getBody();
 

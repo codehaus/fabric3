@@ -32,6 +32,7 @@ import org.apache.mina.transport.socket.SocketAcceptor;
 import org.apache.mina.transport.socket.nio.NioSocketAcceptor;
 import org.fabric3.ftp.api.FtpLet;
 import org.osoa.sca.annotations.Destroy;
+import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Reference;
@@ -41,6 +42,7 @@ import org.osoa.sca.annotations.Reference;
  *
  * @version $Revision$ $Date$
  */
+@EagerInit
 public class F3FtpHost implements FtpHost {
 
     private int commandPort = 21;
@@ -90,6 +92,7 @@ public class F3FtpHost implements FtpHost {
         acceptor.getFilterChain().addLast("codec", new ProtocolCodecFilter(codecFactory));
         acceptor.setHandler(ftpHandler);
         acceptor.bind(socketAddress);
+
     }
     
     /**

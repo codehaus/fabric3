@@ -20,7 +20,6 @@ package org.fabric3.ftp.server.host;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.InetAddress;
 import java.util.HashMap;
 import java.util.Map;
@@ -51,7 +50,8 @@ public class F3FtpHostTest extends TestCase {
         
         Map<String, RequestHandler> requestHandlers = new HashMap<String, RequestHandler>();
         
-        InputStream users = getClass().getClassLoader().getResourceAsStream("user.properties");
+        Map<String, String> users = new HashMap<String, String>();
+        users.put("meeraj", "password");
         FileSystemUserManager userManager = new FileSystemUserManager();
         userManager.setUsers(users);
         requestHandlers.put("USER", new UserRequestHandler());

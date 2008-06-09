@@ -32,7 +32,8 @@ import org.fabric3.ftp.server.protocol.Response;
 import org.osoa.sca.annotations.Reference;
 
 /**
- *
+ * TODO Use monitor instead of System.err.
+ * 
  * @version $Revision$ $Date$
  */
 public class FtpHandler implements IoHandler {

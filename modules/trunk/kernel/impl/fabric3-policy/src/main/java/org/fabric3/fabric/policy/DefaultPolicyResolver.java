@@ -87,8 +87,6 @@ public class DefaultPolicyResolver implements PolicyResolver {
                                         LogicalComponent<?> target) throws PolicyResolutionException {
         
         PolicyResultImpl policyResult = new PolicyResultImpl();
-        boolean boundService = source == null;
-        boolean boundReference = target == null;
             
         for (Operation<?> operation : serviceContract.getOperations()) {
             
@@ -112,19 +110,15 @@ public class DefaultPolicyResolver implements PolicyResolver {
                 policyResult.addInterceptedPolicySets(operation, CollectionUtils.filter(policies, INTERCEPTION));
             }
 
-            if (!boundService) {
-                policyInfoset = policyInfosetBuilder.buildInfoSet(sourceBinding);
-                policies = interactionPolicyHelper.resolveIntents(sourceBinding, operation, policyInfoset);
-                policyResult.addSourcePolicySets(operation, CollectionUtils.filter(policies, PROVIDED));
-                policyResult.addInterceptedPolicySets(operation, CollectionUtils.filter(policies, INTERCEPTION));
-            }
+            policyInfoset = policyInfosetBuilder.buildInfoSet(sourceBinding);
+            policies = interactionPolicyHelper.resolveIntents(sourceBinding, operation, policyInfoset);
+            policyResult.addSourcePolicySets(operation, CollectionUtils.filter(policies, PROVIDED));
+            policyResult.addInterceptedPolicySets(operation, CollectionUtils.filter(policies, INTERCEPTION));
 
-            if (!boundReference) {
-                policyInfoset = policyInfosetBuilder.buildInfoSet(targetBinding);
-                policies = interactionPolicyHelper.resolveIntents(targetBinding, operation, policyInfoset);
-                policyResult.addTargetPolicySets(operation, CollectionUtils.filter(policies, PROVIDED));
-                policyResult.addInterceptedPolicySets(operation, CollectionUtils.filter(policies, INTERCEPTION));
-            }
+            policyInfoset = policyInfosetBuilder.buildInfoSet(targetBinding);
+            policies = interactionPolicyHelper.resolveIntents(targetBinding, operation, policyInfoset);
+            policyResult.addTargetPolicySets(operation, CollectionUtils.filter(policies, PROVIDED));
+            policyResult.addInterceptedPolicySets(operation, CollectionUtils.filter(policies, INTERCEPTION));
                 
             if (target != null) {
                 policyInfoset = policyInfosetBuilder.buildInfoSet(target);

@@ -34,6 +34,6 @@ public interface Constants {
     /**
      * Qualified name for the policy element.
      */
-    public static final QName POLICY_QNAME = new QName("urn:org.fabric3:binding:ftp", "securrity");
+    public static final QName POLICY_QNAME = new QName("urn:org.fabric3:binding:ftp", "security");
 
 }

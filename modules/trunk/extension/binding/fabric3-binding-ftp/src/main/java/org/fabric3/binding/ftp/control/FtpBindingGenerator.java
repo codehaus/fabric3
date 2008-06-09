@@ -19,9 +19,7 @@
 package org.fabric3.binding.ftp.control;
 
 import java.net.URI;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import javax.xml.namespace.QName;
 
@@ -59,7 +57,6 @@ public class FtpBindingGenerator implements BindingGenerator<FtpWireSourceDefini
             throw new GenerationException("Expects only one operation");
         }
 
-
         URI id = binding.getParent().getParent().getParent().getUri();
         FtpWireSourceDefinition hwsd = new FtpWireSourceDefinition(id);
         hwsd.setUri(binding.getBinding().getTargetUri());
@@ -92,7 +89,7 @@ public class FtpBindingGenerator implements BindingGenerator<FtpWireSourceDefini
     private FtpSecurity processPolicies(Policy policy, Operation<?> operation) throws GenerationException {
         
         List<PolicySet> policySets = policy.getProvidedPolicySets(operation);
-        if (policySets.size() == 0) {
+        if (policySets == null || policySets.size() == 0) {
             return null;
         }
         if (policySets.size() != 1) {

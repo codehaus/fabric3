@@ -26,6 +26,7 @@ import java.net.URI;
 import org.apache.commons.net.ftp.FTPClient;
 import org.fabric3.binding.ftp.provision.FtpSecurity;
 import org.fabric3.spi.invocation.Message;
+import org.fabric3.spi.invocation.MessageImpl;
 import org.fabric3.spi.wire.Interceptor;
 import org.osoa.sca.ServiceUnavailableException;
 
@@ -36,12 +37,12 @@ import org.osoa.sca.ServiceUnavailableException;
 public class FtpTargetInterceptor implements Interceptor {
     
     private Interceptor next;
-    private final URI uri;
+    private final String uri;
     private final FtpSecurity security;
     private final boolean active;
 
     public FtpTargetInterceptor(URI uri, FtpSecurity security, boolean active) {
-        this.uri = uri;
+        this.uri = uri.toString();
         this.security = security;
         this.active = active;
     }
@@ -56,11 +57,26 @@ public class FtpTargetInterceptor implements Interceptor {
         
         try {
             
-            ftpClient.connect(InetAddress.getByName(uri.toString()));
+            int index = uri.indexOf(":");
+            String host = null;
+            int port = 0;
             
-            if (ftpClient.login(security.getUser(), security.getPassword())) {
-                throw new ServiceUnavailableException("Invalid credentials");
+            if (index > 0) {
+                host = uri.substring(0, index);
+                port = Integer.parseInt(uri.substring(index + 1));
+            } else {
+                host = uri;
+                port = 23;
             }
+            
+            InetAddress hostAddress = "localhost".equals(host) ? InetAddress.getLocalHost() : InetAddress.getByName(host);
+            ftpClient.connect(hostAddress, port);
+            
+            /*if (!ftpClient.login(security.getUser(), security.getPassword())) {
+                throw new ServiceUnavailableException("Invalid credentials");
+            }*/
+            // TODO Fix above
+            ftpClient.login(security.getUser(), security.getPassword());
             
             Object[] args = (Object[]) msg.getBody();
             String fileName = (String) args[0];
@@ -72,7 +88,7 @@ public class FtpTargetInterceptor implements Interceptor {
                 ftpClient.enterLocalPassiveMode();
             }
             
-            if (ftpClient.storeFile(fileName, data)) {
+            if (!ftpClient.storeFile(fileName, data)) {
                 throw new ServiceUnavailableException("Unable to upload data");
             }
             
@@ -80,7 +96,7 @@ public class FtpTargetInterceptor implements Interceptor {
            throw new ServiceUnavailableException(e);
         }
 
-        return null;
+        return new MessageImpl();
     }
 
     public void setNext(Interceptor next) {
