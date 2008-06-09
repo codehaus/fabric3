@@ -147,7 +147,7 @@ public abstract class AbstractDomain implements Domain {
 
     }
 
-    public void excludeFromDomain(QName deployable) throws DeploymentException {
+    public void remove(QName deployable) throws DeploymentException {
 
         ResourceElement<QNameSymbol, ?> element;
         try {
@@ -167,17 +167,17 @@ public abstract class AbstractDomain implements Domain {
         }
 
         Composite composite = (Composite) object;
-        excludeFromDomain(composite);
+        remove(composite);
 
     }
 
-    public void excludeFromDomain(Composite composite) throws DeploymentException {
+    public void remove(Composite composite) throws DeploymentException {
 
         LogicalCompositeComponent domain = logicalComponentManager.getRootComponent();
 
         LogicalChange change;
         try {
-            change = logicalModelInstantiator.exclude(domain, composite);
+            change = logicalModelInstantiator.remove(domain, composite);
         } catch (LogicalInstantiationException e) {
             throw new DeploymentException("Erorr deploying: " + composite.getName(), e);
         }

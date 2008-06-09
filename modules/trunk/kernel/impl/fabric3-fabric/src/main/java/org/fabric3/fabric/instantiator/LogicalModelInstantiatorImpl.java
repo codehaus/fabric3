@@ -70,19 +70,19 @@ public class LogicalModelInstantiatorImpl implements LogicalModelInstantiator {
     }
 
     @SuppressWarnings("unchecked")
-    public LogicalChange include(LogicalCompositeComponent parent, Composite composite) throws LogicalInstantiationException {
+    public LogicalChange include(LogicalCompositeComponent targetComposite, Composite composite) throws LogicalInstantiationException {
 
-        LogicalChange change = new LogicalChange(parent);
+        LogicalChange change = new LogicalChange(targetComposite);
 
         // merge the property values into the parent
-        Map<String, Document> properties = includeProperties(parent, composite);
+        Map<String, Document> properties = includeProperties(targetComposite, composite);
 
         // instantiate all the components in the composite and add them to the parent
-        List<LogicalComponent<?>> newComponents = instantiateComponents(parent, properties, composite);
-        List<LogicalService> services = instantiateServices(parent, composite);
-        List<LogicalReference> references = instantiateReferences(parent, composite);
+        List<LogicalComponent<?>> newComponents = instantiateComponents(targetComposite, properties, composite);
+        List<LogicalService> services = instantiateServices(targetComposite, composite);
+        List<LogicalReference> references = instantiateReferences(targetComposite, composite);
 
-        resolve(parent.getComponents(), services, references);
+        resolve(targetComposite.getComponents(), services, references);
 
         // normalize bindings for each new component
         for (LogicalComponent<?> component : newComponents) {
@@ -91,14 +91,14 @@ public class LogicalModelInstantiatorImpl implements LogicalModelInstantiator {
         return change;
     }
 
-    public LogicalChange exclude(LogicalCompositeComponent parent, Composite composite) throws LogicalInstantiationException {
-        LogicalChange change = new LogicalChange(parent);
+    public LogicalChange remove(LogicalCompositeComponent targetComposite, Composite composite) throws LogicalInstantiationException {
+        LogicalChange change = new LogicalChange(targetComposite);
         // merge the property values into the parent
-        excludeProperties(parent, composite, change);
+        excludeProperties(targetComposite, composite, change);
         //merge the component values into the parent
-        excludeComponents(parent, composite, change);
+        excludeComponents(targetComposite, composite, change);
         //merge the service values into the parent
-        excludeServices(parent, composite, change);
+        excludeServices(targetComposite, composite, change);
         return change;
     }
 

@@ -27,23 +27,23 @@ import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 public interface LogicalModelInstantiator {
 
     /**
-     * Include the composite into the domain.
+     * Creates a LogicalChange for including a composite in another composite.
      *
-     * @param domain    Domain in which the composite is to be included.
-     * @param composite Composite to be included in the domain.
+     * @param targetComposite the target composite in which the composite is to be included.
+     * @param composite       the composite to be included.
      * @return the change that would result from this include operation
      * @throws LogicalInstantiationException If unable to include the composite.
      */
-    LogicalChange include(LogicalCompositeComponent domain, Composite composite) throws LogicalInstantiationException;
+    LogicalChange include(LogicalCompositeComponent targetComposite, Composite composite) throws LogicalInstantiationException;
 
 
     /**
-     * Exclude the composite from the domain.
+     * Creates a LogicalChange for removing the composite from the target composite.
      *
-     * @param domain    Domain in which the composite is to be included.
-     * @param composite Composite to be included in the domain.
-     * @return the change that would result from this include operation
-     * @throws LogicalInstantiationException If unable to include the composite.
+     * @param targetComposite the target composite from which the composite is to be removed.
+     * @param composite       Composite to be removed.
+     * @return the change that would result from this remove operation
+     * @throws LogicalInstantiationException If unable to remove the composite.
      */
-    LogicalChange exclude(LogicalCompositeComponent domain, Composite composite) throws LogicalInstantiationException;
+    LogicalChange remove(LogicalCompositeComponent targetComposite, Composite composite) throws LogicalInstantiationException;
 }

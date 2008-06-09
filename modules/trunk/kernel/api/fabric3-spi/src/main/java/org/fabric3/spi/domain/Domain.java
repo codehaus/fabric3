@@ -54,19 +54,19 @@ public interface Domain {
 
 
     /**
-     * Exclude a deployable Composite from the domain.
+     * Remove a deployable Composite from the domain.
      *
      * @param deployable the name of the deployable composite to remove
      * @throws DeploymentException if an error is encountered during removal
      */
-    void excludeFromDomain(QName deployable) throws DeploymentException;
+    void remove(QName deployable) throws DeploymentException;
 
     /**
-     * Exclude a Composite from the domain.
+     * Remove a Composite from the domain.
      *
      * @param composite the composite to remove
      * @throws DeploymentException if an error is encountered during removal
      */
-    void excludeFromDomain(Composite composite) throws DeploymentException;
+    void remove(Composite composite) throws DeploymentException;
 
 }
