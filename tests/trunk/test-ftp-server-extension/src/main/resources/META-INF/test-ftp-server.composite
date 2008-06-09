@@ -25,7 +25,12 @@
     <!-- Ftp Server -->
     <component name="testFtpServer">
         <implementation.composite name="FtpServer" scdlResource="META-INF/ftpserver.composite"/>
-        <!-- property name="dataSourceConfig" source="$systemConfig//testDsConfig"/-->
+        <property name="commandPort">2000</property>
+        <property name="minPassivePort">6000</property>
+        <property name="maxPassivePort">7000</property>
+        <property name="users">
+            <meeraj>password</meeraj>
+        </property>
     </component>
     
 </composite>

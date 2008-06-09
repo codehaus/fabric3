@@ -18,24 +18,27 @@
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:sca="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
-           xmlns:ftp="urn:org.gabric3:binding:ftp"
+           xmlns:ftp="urn:org.fabric3:binding:ftp"
            name="DataTransferTestComposite">
 
     <component name="DataTransferTest">
         <f3:junit class="org.fabric3.tests.binding.ftp.DataTransferServiceITest"/>
         <reference name="ftpDataTransferService">
-            <ftp:binding.ftp uri="ftp://localhost:2000" requires="sca:authentication.message"/>
+            <ftp:binding.ftp uri="localhost:2000" requires="sca:authentication.message" mode="PASSIVE"/>
         </reference>
     </component>
 
-    <component name="FtpDataTransferService">
+    <component name="FtpService">
         <implementation.java class="org.fabric3.tests.binding.ftp.FtpDataTransferServiceImpl"/>
+        <service name="FtpDataTransferService">
+            <ftp:binding.ftp uri="/resources"/>
+        </service>
         <reference name="wsDataTransferService">
             <binding.ws uri="http://localhost:8900/axis2/upload" f3:impl="axis2"/>
-        </service>
+        </reference>
     </component>
 
-    <component name="WsDataTransferService">
+    <component name="WsService">
         <implementation.java class="org.fabric3.tests.binding.ftp.WsDataTransferServiceImpl"/>
         <service name="WsDataTransferService">
             <binding.ws uri="upload" f3:impl="axis2"/>
