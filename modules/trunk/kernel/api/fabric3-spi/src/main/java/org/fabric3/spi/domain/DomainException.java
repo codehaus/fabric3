@@ -16,38 +16,38 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.spi.assembly;
+package org.fabric3.spi.domain;
 
 import org.fabric3.host.Fabric3Exception;
 
 /**
- * Base exception for the assembly package
+ * Base exception for the domain package
  *
  * @version $Rev$ $Date$
  */
-public class AssemblyException extends Fabric3Exception {
+public class DomainException extends Fabric3Exception {
     private static final long serialVersionUID = -2529045209367837417L;
 
-    public AssemblyException(String message) {
+    public DomainException(String message) {
         super(message);
     }
 
-    public AssemblyException(String message, String identifier) {
+    public DomainException(String message, String identifier) {
         super(message, identifier);
     }
 
-    public AssemblyException(String message, Throwable cause) {
+    public DomainException(String message, Throwable cause) {
         super(message, cause);
     }
 
-    public AssemblyException(String message, String identifier, Throwable cause) {
+    public DomainException(String message, String identifier, Throwable cause) {
         super(message, identifier, cause);
     }
 
-    public AssemblyException() {
+    public DomainException() {
     }
 
-    public AssemblyException(Throwable cause) {
+    public DomainException(Throwable cause) {
         super(cause);
     }
 }

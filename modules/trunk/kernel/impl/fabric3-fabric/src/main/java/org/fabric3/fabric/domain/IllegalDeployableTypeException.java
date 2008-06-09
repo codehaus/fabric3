@@ -14,9 +14,9 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.fabric.assembly;
+package org.fabric3.fabric.domain;
 
-import org.fabric3.spi.assembly.ActivateException;
+import org.fabric3.spi.domain.ActivateException;
 
 /**
  * @version $Rev$ $Date$

@@ -38,8 +38,8 @@ import org.fabric3.host.contribution.ContributionService;
 import org.fabric3.host.runtime.InitializationException;
 import org.fabric3.pojo.PojoWorkContextTunnel;
 import org.fabric3.runtime.webapp.contribution.WarContributionSource;
-import org.fabric3.spi.assembly.ActivateException;
-import org.fabric3.spi.assembly.Assembly;
+import org.fabric3.spi.domain.ActivateException;
+import org.fabric3.spi.domain.Domain;
 import org.fabric3.spi.invocation.WorkContext;
 
 /**
@@ -65,13 +65,13 @@ public class WebappRuntimeImpl extends AbstractRuntime<WebappHostInfo> implement
     public void activate(QName qName, URI componentId) throws ContributionException, InitializationException {
         try {
             // contribute the war to the application domain
-            Assembly assembly = getSystemComponent(Assembly.class, DISTRIBUTED_ASSEMBLY_URI);
+            Domain domain = getSystemComponent(Domain.class, DISTRIBUTED_ASSEMBLY_URI);
             ContributionService contributionService = getSystemComponent(ContributionService.class, CONTRIBUTION_SERVICE_URI);
             URI contributionUri = new URI("file", qName.getLocalPart(), null);
             WarContributionSource source = new WarContributionSource(contributionUri);
             contributionService.contribute(source);
             // activate the deployable composite in the domain
-            assembly.includeInDomain(qName);
+            domain.include(qName);
         } catch (MalformedURLException e) {
             throw new InitializationException("Invalid web archive", e);
         } catch (ActivateException e) {

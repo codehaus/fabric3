@@ -16,30 +16,30 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.fabric.assembly;
-
-import org.fabric3.fabric.allocator.Allocator;
-import org.fabric3.fabric.instantiator.LogicalModelInstantiator;
-import org.fabric3.fabric.generator.PhysicalModelGenerator;
-import org.fabric3.fabric.services.routing.RoutingService;
-import org.fabric3.spi.services.lcm.LogicalComponentManager;
-import org.fabric3.spi.services.contribution.MetaDataStore;
+package org.fabric3.fabric.domain;
 
 import org.osoa.sca.annotations.Reference;
+
+import org.fabric3.fabric.allocator.Allocator;
+import org.fabric3.fabric.generator.PhysicalModelGenerator;
+import org.fabric3.fabric.instantiator.LogicalModelInstantiator;
+import org.fabric3.fabric.services.routing.RoutingService;
+import org.fabric3.spi.services.contribution.MetaDataStore;
+import org.fabric3.spi.services.lcm.LogicalComponentManager;
 
 /**
  * The default RuntimeAssembly implementation
  *
  * @version $Rev$ $Date$
  */
-public class RuntimeAssemblyImpl extends AbstractAssembly {
+public class RuntimeDomain extends AbstractDomain {
 
-    public RuntimeAssemblyImpl(@Reference Allocator allocator,
-                               @Reference MetaDataStore metadataStore,
-                               @Reference PhysicalModelGenerator physicalModelGenerator,
-                               @Reference LogicalModelInstantiator logicalModelInstantiator,
-                               @Reference LogicalComponentManager logicalComponentManager,
-                               @Reference RoutingService routingService) {
+    public RuntimeDomain(@Reference Allocator allocator,
+                         @Reference MetaDataStore metadataStore,
+                         @Reference PhysicalModelGenerator physicalModelGenerator,
+                         @Reference LogicalModelInstantiator logicalModelInstantiator,
+                         @Reference LogicalComponentManager logicalComponentManager,
+                         @Reference RoutingService routingService) {
         super(allocator, metadataStore, physicalModelGenerator, logicalModelInstantiator, logicalComponentManager, routingService);
     }
 

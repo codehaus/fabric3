@@ -71,8 +71,8 @@ import org.fabric3.scdl.ServiceDefinition;
 import org.fabric3.scdl.ValidationContext;
 import org.fabric3.services.xmlfactory.XMLFactory;
 import org.fabric3.services.xmlfactory.impl.XMLFactoryImpl;
-import org.fabric3.spi.assembly.ActivateException;
-import org.fabric3.spi.assembly.Assembly;
+import org.fabric3.spi.domain.ActivateException;
+import org.fabric3.spi.domain.Domain;
 import org.fabric3.spi.classloader.MultiParentClassLoader;
 import org.fabric3.spi.component.AtomicComponent;
 import org.fabric3.spi.component.ScopeContainer;
@@ -172,7 +172,7 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
         ClassLoaderRegistry classLoaderRegistry =
                 runtime.getSystemComponent(ClassLoaderRegistry.class, ComponentNames.CLASSLOADER_REGISTRY_URI);
         Loader loader = BootstrapLoaderFactory.createLoader(runtime.getMonitorFactory(), xmlFactory);
-        Assembly runtimeAssembly = runtime.getSystemComponent(Assembly.class, ComponentNames.RUNTIME_ASSEMBLY_URI);
+        Domain runtimeDomain = runtime.getSystemComponent(Domain.class, ComponentNames.RUNTIME_ASSEMBLY_URI);
         try {
 
             // load the system composite
@@ -198,7 +198,7 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
             }
 
             // include in the runtime domain assembly
-            runtimeAssembly.includeInDomain(composite);
+            runtimeDomain.include(composite);
 
         } catch (ContributionException e) {
             throw new InitializationException(e);
@@ -249,8 +249,8 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
         ClasspathProcessorRegistryImpl instance = new ClasspathProcessorRegistryImpl();
         registerSystemComponent(runtimeServices, "ClasspathProcessorRegistry", ClasspathProcessorRegistry.class, instance);
 
-        Assembly runtimeAssembly = BootstrapAssemblyFactory.createAssembly(runtime);
-        registerSystemComponent(runtimeServices, "RuntimeAssembly", Assembly.class, runtimeAssembly);
+        Domain runtimeDomain = BootstrapAssemblyFactory.createAssembly(runtime);
+        registerSystemComponent(runtimeServices, "RuntimeAssembly", Domain.class, runtimeDomain);
     }
 
     private void registerClassLoaders(Fabric3Runtime<?> runtime,

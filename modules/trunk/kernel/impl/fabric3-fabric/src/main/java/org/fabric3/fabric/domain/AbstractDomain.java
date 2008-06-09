@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.fabric.assembly;
+package org.fabric3.fabric.domain;
 
 import java.util.Collection;
 import javax.xml.namespace.QName;
@@ -32,9 +32,9 @@ import org.fabric3.fabric.instantiator.LogicalInstantiationException;
 import org.fabric3.fabric.services.routing.RoutingException;
 import org.fabric3.fabric.services.routing.RoutingService;
 import org.fabric3.scdl.Composite;
-import org.fabric3.spi.assembly.ActivateException;
-import org.fabric3.spi.assembly.Assembly;
-import org.fabric3.spi.assembly.AssemblyException;
+import org.fabric3.spi.domain.ActivateException;
+import org.fabric3.spi.domain.Domain;
+import org.fabric3.spi.domain.DomainException;
 import org.fabric3.spi.generator.CommandMap;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.LogicalComponent;
@@ -51,7 +51,7 @@ import org.fabric3.spi.services.contribution.ResourceElement;
  *
  * @version $Rev$ $Date$
  */
-public abstract class AbstractAssembly implements Assembly {
+public abstract class AbstractDomain implements Domain {
     public static final QName COMPOSITE = new QName(SCA_NS, "composite");
 
     private final PhysicalModelGenerator physicalModelGenerator;
@@ -61,7 +61,7 @@ public abstract class AbstractAssembly implements Assembly {
     private final LogicalComponentManager logicalComponentManager;
     private RoutingService routingService;
 
-    public AbstractAssembly(Allocator allocator,
+    public AbstractDomain(Allocator allocator,
                             MetaDataStore metadataStore,
                             PhysicalModelGenerator physicalModelGenerator,
                             LogicalModelInstantiator logicalModelInstantiator,
@@ -75,10 +75,10 @@ public abstract class AbstractAssembly implements Assembly {
         this.routingService = routingService;
     }
 
-    public void initialize() throws AssemblyException {
+    public void initialize() throws DomainException {
     }
 
-    public void includeInDomain(QName deployable) throws ActivateException {
+    public void include(QName deployable) throws ActivateException {
 
         ResourceElement<QNameSymbol, ?> element = null;
         try {
@@ -98,11 +98,11 @@ public abstract class AbstractAssembly implements Assembly {
         }
 
         Composite composite = (Composite) object;
-        includeInDomain(composite);
+        include(composite);
 
     }
 
-    public void includeInDomain(Composite composite) throws ActivateException {
+    public void include(Composite composite) throws ActivateException {
 
         LogicalCompositeComponent domain = logicalComponentManager.getDomain();
 

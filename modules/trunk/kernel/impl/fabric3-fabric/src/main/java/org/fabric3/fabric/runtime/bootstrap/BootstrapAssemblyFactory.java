@@ -23,7 +23,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import javax.management.MBeanServer;
 
-import org.fabric3.fabric.assembly.RuntimeAssemblyImpl;
+import org.fabric3.fabric.domain.RuntimeDomain;
 import org.fabric3.fabric.allocator.Allocator;
 import org.fabric3.fabric.allocator.LocalAllocator;
 import org.fabric3.fabric.instantiator.normalize.PromotionNormalizer;
@@ -100,8 +100,8 @@ import org.fabric3.jmx.scdl.JMXBinding;
 import org.fabric3.monitor.MonitorFactory;
 import org.fabric3.pojo.instancefactory.InstanceFactoryBuildHelper;
 import org.fabric3.pojo.instancefactory.InstanceFactoryBuilderRegistry;
-import org.fabric3.spi.assembly.Assembly;
-import org.fabric3.spi.assembly.AssemblyException;
+import org.fabric3.spi.domain.Domain;
+import org.fabric3.spi.domain.DomainException;
 import org.fabric3.spi.builder.component.ComponentBuilderRegistry;
 import org.fabric3.spi.builder.component.SourceWireAttacher;
 import org.fabric3.spi.builder.component.TargetWireAttacher;
@@ -139,7 +139,7 @@ import org.fabric3.transform.dom2java.generics.map.String2MapOfString2String;
  * @version $Rev$ $Date$
  */
 public class BootstrapAssemblyFactory {
-    public static Assembly createAssembly(Fabric3Runtime<?> runtime) throws InitializationException {
+    public static Domain createAssembly(Fabric3Runtime<?> runtime) throws InitializationException {
         MonitorFactory monitorFactory = runtime.getMonitorFactory();
         MBeanServer mbeanServer = runtime.getMBeanServer();
         String jmxDomain = runtime.getJMXDomain();
@@ -167,7 +167,7 @@ public class BootstrapAssemblyFactory {
                               jmxDomain);
     }
 
-    public static Assembly createAssembly(MonitorFactory monitorFactory,
+    public static Domain createAssembly(MonitorFactory monitorFactory,
                                           ClassLoaderRegistry classLoaderRegistry,
                                           ScopeRegistry scopeRegistry,
                                           ComponentManager componentManager,
@@ -196,18 +196,18 @@ public class BootstrapAssemblyFactory {
 
         LogicalModelInstantiator logicalModelInstantiator = createLogicalModelGenerator(logicalComponentManager);
 
-        Assembly runtimeAssembly = new RuntimeAssemblyImpl(allocator,
+        Domain runtimeDomain = new RuntimeDomain(allocator,
                                                            metaDataStore,
                                                            physicalModelGenerator,
                                                            logicalModelInstantiator,
                                                            logicalComponentManager,
                                                            routingService);
         try {
-            runtimeAssembly.initialize();
-        } catch (AssemblyException e) {
+            runtimeDomain.initialize();
+        } catch (DomainException e) {
             throw new InitializationException(e);
         }
-        return runtimeAssembly;
+        return runtimeDomain;
     }
 
     private static LogicalModelInstantiator createLogicalModelGenerator(LogicalComponentManager logicalComponentManager) {

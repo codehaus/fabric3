@@ -16,31 +16,17 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.spi.assembly;
+package org.fabric3.fabric.domain;
+
+import org.fabric3.spi.domain.ActivateException;
 
 /**
- * Denotes an error during an activate operation
- *
  * @version $Rev$ $Date$
  */
-public class ActivateException extends AssemblyException {
-    private static final long serialVersionUID = -8846536703004740119L;
+public class DeployableNotFoundException extends ActivateException {
+    private static final long serialVersionUID = -8572491242992185157L;
 
-    public ActivateException(String message) {
-        super(message);
-    }
-
-    public ActivateException(String message, String identifier) {
+    public DeployableNotFoundException(String message, String identifier) {
         super(message, identifier);
     }
-
-    public ActivateException(String message, String identifier, Throwable cause) {
-        super(message, identifier, cause);
-    }
-
-    public ActivateException(Throwable cause) {
-        super(cause);
-    }
-
-
 }

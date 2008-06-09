@@ -60,9 +60,9 @@ import org.fabric3.scdl.DefaultValidationContext;
 import org.fabric3.scdl.Include;
 import org.fabric3.scdl.Scope;
 import org.fabric3.scdl.ValidationContext;
-import org.fabric3.spi.assembly.ActivateException;
-import org.fabric3.spi.assembly.Assembly;
-import org.fabric3.spi.assembly.AssemblyException;
+import org.fabric3.spi.domain.ActivateException;
+import org.fabric3.spi.domain.Domain;
+import org.fabric3.spi.domain.DomainException;
 import org.fabric3.spi.component.GroupInitializationException;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.ScopeRegistry;
@@ -217,20 +217,20 @@ public class StandaloneCoordinator implements RuntimeLifecycleCoordinator<Standa
             throw new IllegalStateException("Not in DOMAIN_JOINED state");
         }
         Callable<Void> callable = new Callable<Void>() {
-            public Void call() throws AssemblyException, InitializationException {
+            public Void call() throws DomainException, InitializationException {
                 try {
-                    Assembly assembly = runtime.getSystemComponent(Assembly.class, DISTRIBUTED_ASSEMBLY_URI);
-                    if (assembly == null) {
+                    Domain domain = runtime.getSystemComponent(Domain.class, DISTRIBUTED_ASSEMBLY_URI);
+                    if (domain == null) {
                         String name = DISTRIBUTED_ASSEMBLY_URI.toString();
                         throw new InitializationException("Assembly not found: " + name, name);
                     }
-                    assembly.initialize();
+                    domain.initialize();
                     state = State.RECOVERED;
                 } catch (InitializationException e) {
                     state = State.ERROR;
                     monitor.error(e);
                     throw e;
-                } catch (AssemblyException e) {
+                } catch (DomainException e) {
                     state = State.ERROR;
                     monitor.error(e);
                     throw e;
@@ -376,10 +376,10 @@ public class StandaloneCoordinator implements RuntimeLifecycleCoordinator<Standa
     FIXME it is now duplicated in all coordinators and should be refactored into one place
     */
     public void includeExtensionContributions(List<URI> contributionUris) throws InitializationException {
-        Assembly assembly = runtime.getSystemComponent(Assembly.class, RUNTIME_ASSEMBLY_URI);
+        Domain domain = runtime.getSystemComponent(Domain.class, RUNTIME_ASSEMBLY_URI);
         Composite composite = createExtensionComposite(contributionUris);
         try {
-            assembly.includeInDomain(composite);
+            domain.include(composite);
         } catch (ActivateException e) {
             throw new ExtensionInitializationException("Error activating extensions", e);
         }

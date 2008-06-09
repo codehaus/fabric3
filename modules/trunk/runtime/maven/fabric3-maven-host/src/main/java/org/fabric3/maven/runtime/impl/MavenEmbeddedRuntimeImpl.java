@@ -53,8 +53,8 @@ import org.fabric3.scdl.Operation;
 import org.fabric3.scdl.Scope;
 import org.fabric3.services.xmlfactory.XMLFactory;
 import org.fabric3.spi.ObjectCreationException;
-import org.fabric3.spi.assembly.ActivateException;
-import org.fabric3.spi.assembly.Assembly;
+import org.fabric3.spi.domain.ActivateException;
+import org.fabric3.spi.domain.Domain;
 import org.fabric3.spi.component.GroupInitializationException;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.ScopeRegistry;
@@ -93,12 +93,12 @@ public class MavenEmbeddedRuntimeImpl extends AbstractRuntime<MavenHostInfo> imp
     public Composite activate(ContributionSource source, QName qName) throws CompositeActivationException, ContributionException {
         try {
             // contribute the Maven project to the application domain
-            Assembly assembly = getSystemComponent(Assembly.class, DISTRIBUTED_ASSEMBLY_URI);
+            Domain domain = getSystemComponent(Domain.class, DISTRIBUTED_ASSEMBLY_URI);
             ContributionService contributionService =
                     getSystemComponent(ContributionService.class, CONTRIBUTION_SERVICE_URI);
             contributionService.contribute(source);
             // activate the deployable composite in the domain
-            assembly.includeInDomain(qName);
+            domain.include(qName);
             MetaDataStore store = getSystemComponent(MetaDataStore.class, ComponentNames.METADATA_STORE_URI);
             ResourceElement<?, ?> element = store.resolve(new QNameSymbol(qName));
             assert element != null;

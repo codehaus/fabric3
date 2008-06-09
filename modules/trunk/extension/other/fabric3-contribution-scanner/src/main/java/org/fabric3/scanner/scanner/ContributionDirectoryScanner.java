@@ -48,8 +48,8 @@ import org.fabric3.host.contribution.ValidationException;
 import org.fabric3.scdl.Composite;
 import org.fabric3.scdl.Include;
 import static org.fabric3.spi.Constants.FABRIC3_SYSTEM_NS;
-import org.fabric3.spi.assembly.ActivateException;
-import org.fabric3.spi.assembly.Assembly;
+import org.fabric3.spi.domain.ActivateException;
+import org.fabric3.spi.domain.Domain;
 import org.fabric3.spi.scanner.FileSystemResource;
 import org.fabric3.spi.scanner.FileSystemResourceFactoryRegistry;
 import org.fabric3.spi.services.VoidService;
@@ -86,7 +86,7 @@ public class ContributionDirectoryScanner implements Runnable, Fabric3EventListe
     private final EventService eventService;
     private MetaDataStore metaDataStore;
     private final ScannerMonitor monitor;
-    private final Assembly assembly;
+    private final Domain domain;
     private Map<String, URI> processed = new HashMap<String, URI>();
     private FileSystemResourceFactoryRegistry registry;
     private String path = "../deploy";
@@ -96,13 +96,13 @@ public class ContributionDirectoryScanner implements Runnable, Fabric3EventListe
 
     public ContributionDirectoryScanner(@Reference FileSystemResourceFactoryRegistry registry,
                                         @Reference ContributionService contributionService,
-                                        @Reference(name = "assembly")Assembly assembly,
+                                        @Reference(name = "assembly")Domain domain,
                                         @Reference EventService eventService,
                                         @Reference MetaDataStore metaDataStore,
                                         @Monitor ScannerMonitor monitor) {
         this.registry = registry;
         this.contributionService = contributionService;
-        this.assembly = assembly;
+        this.domain = domain;
         this.eventService = eventService;
         this.metaDataStore = metaDataStore;
         this.monitor = monitor;
@@ -274,7 +274,7 @@ public class ContributionDirectoryScanner implements Runnable, Fabric3EventListe
                 // activate the contributions by including deployables in a synthesized composite. This will ensure components are started according
                 // to dependencies even if a dependent component is defined in a different contribution.
                 Composite synthesized = synthesizeComposite(addedUris);
-                assembly.includeInDomain(synthesized);
+                domain.include(synthesized);
                 for (URI uri : addedUris) {
                     String name = uri.toString();
                     // URI is the file name

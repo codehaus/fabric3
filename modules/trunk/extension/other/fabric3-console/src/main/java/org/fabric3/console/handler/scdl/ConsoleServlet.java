@@ -19,22 +19,15 @@ package org.fabric3.console.handler.scdl;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.io.PrintWriter;
-import java.util.Collection;
-import java.util.Set;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.xml.namespace.QName;
 
 import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.scdl.CompositeImplementation;
-import org.fabric3.spi.assembly.Assembly;
+import org.fabric3.spi.domain.Domain;
 import org.fabric3.spi.host.ServletHost;
-import org.fabric3.spi.model.instance.LogicalComponent;
-import org.fabric3.spi.model.topology.RuntimeInfo;
 import org.fabric3.spi.services.discovery.DiscoveryService;
 
 /**
@@ -43,7 +36,7 @@ import org.fabric3.spi.services.discovery.DiscoveryService;
  * @version $Rev$ $Date$
  */
 public class ConsoleServlet extends Fabric3Servlet {
-    private Assembly assembly;
+    private Domain domain;
     private DiscoveryService discoveryService;
 
     /**
@@ -51,15 +44,15 @@ public class ConsoleServlet extends Fabric3Servlet {
      *
      * @param servletHost      Servlet host to use.
      * @param path             Path mapping for the servlet.
-     * @param assembly         the distrbituted assembly
+     * @param domain         the distrbituted assembly
      * @param discoveryService the discovery service
      */
     public ConsoleServlet(@Reference(name = "servletHost")ServletHost servletHost,
-                          @Reference(name = "assembly")Assembly assembly,
+                          @Reference(name = "assembly")Domain domain,
                           @Reference(name = "discoveryService")DiscoveryService discoveryService,
                           @Property(name = "path")String path) {
         super(servletHost, path);
-        this.assembly = assembly;
+        this.domain = domain;
         this.discoveryService = discoveryService;
     }
 

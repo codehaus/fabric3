@@ -45,7 +45,7 @@
     </component>
 
     <component name="distributedAssembly">
-        <system:implementation.system class="org.fabric3.fabric.assembly.DistributedAssemblyImpl"/>
+        <system:implementation.system class="org.fabric3.fabric.domain.DistributedDomain"/>
         <reference name="logicalComponentManager" target="logicalComponentManager"/>
     </component>
 

@@ -16,33 +16,33 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.spi.assembly;
+package org.fabric3.spi.domain;
 
 import javax.xml.namespace.QName;
 
 import org.fabric3.scdl.Composite;
 
 /**
- * Manages a service network
+ * Represents a domain.
  *
  * @version $Rev$ $Date$
  */
-public interface Assembly {
+public interface Domain {
 
     /**
-     * Initializes the assembly.
+     * Initializes the domain.
      *
-     * @throws AssemblyException if an error occurs initializing the assembly
+     * @throws DomainException if an error occurs initializing the assembly
      */
-    void initialize() throws AssemblyException;
+    void initialize() throws DomainException;
 
     /**
-     * Include a deployable Composite in the domain.
+     * Include a deployable composite in the domain.
      *
      * @param deployable the name of the deployable composite to include
      * @throws ActivateException if an error is encountered during activation
      */
-    void includeInDomain(QName deployable) throws ActivateException;
+    void include(QName deployable) throws ActivateException;
 
     /**
      * Include a Composite in the domain.
@@ -50,7 +50,7 @@ public interface Assembly {
      * @param composite the composite to include
      * @throws ActivateException if an error is encountered during activation
      */
-    void includeInDomain(Composite composite) throws ActivateException;
+    void include(Composite composite) throws ActivateException;
 
 
     /**
