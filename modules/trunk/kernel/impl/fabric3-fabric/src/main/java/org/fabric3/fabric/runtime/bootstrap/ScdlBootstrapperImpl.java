@@ -249,7 +249,7 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
         ClasspathProcessorRegistryImpl instance = new ClasspathProcessorRegistryImpl();
         registerSystemComponent(runtimeServices, "ClasspathProcessorRegistry", ClasspathProcessorRegistry.class, instance);
 
-        Domain runtimeDomain = BootstrapAssemblyFactory.createAssembly(runtime);
+        Domain runtimeDomain = BootstrapAssemblyFactory.createDomain(runtime);
         registerSystemComponent(runtimeServices, "RuntimeAssembly", Domain.class, runtimeDomain);
     }
 

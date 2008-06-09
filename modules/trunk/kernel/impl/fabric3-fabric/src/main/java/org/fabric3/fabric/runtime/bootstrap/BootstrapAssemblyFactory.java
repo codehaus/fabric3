@@ -139,7 +139,7 @@ import org.fabric3.transform.dom2java.generics.map.String2MapOfString2String;
  * @version $Rev$ $Date$
  */
 public class BootstrapAssemblyFactory {
-    public static Domain createAssembly(Fabric3Runtime<?> runtime) throws InitializationException {
+    public static Domain createDomain(Fabric3Runtime<?> runtime) throws InitializationException {
         MonitorFactory monitorFactory = runtime.getMonitorFactory();
         MBeanServer mbeanServer = runtime.getMBeanServer();
         String jmxDomain = runtime.getJMXDomain();
