@@ -34,8 +34,6 @@ import org.fabric3.spi.wire.Wire;
 public class WireImpl implements Wire {
     private final Map<PhysicalOperationDefinition, InvocationChain> chains =
             new HashMap<PhysicalOperationDefinition, InvocationChain>();
-    private final Map<PhysicalOperationDefinition, InvocationChain> callbackChains =
-            new HashMap<PhysicalOperationDefinition, InvocationChain>();
 
     public void addInvocationChain(PhysicalOperationDefinition operation, InvocationChain chain) {
         chains.put(operation, chain);
