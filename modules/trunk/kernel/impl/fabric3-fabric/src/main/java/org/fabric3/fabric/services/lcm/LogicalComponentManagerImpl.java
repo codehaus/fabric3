@@ -74,7 +74,7 @@ public class LogicalComponentManagerImpl implements LogicalComponentManager, Log
         return domain.getComponents();
     }
 
-    public LogicalCompositeComponent getDomain() {
+    public LogicalCompositeComponent getRootComponent() {
         return domain;
     }
 

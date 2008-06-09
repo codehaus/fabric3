@@ -104,7 +104,7 @@ public abstract class AbstractDomain implements Domain {
 
     public void include(Composite composite) throws ActivateException {
 
-        LogicalCompositeComponent domain = logicalComponentManager.getDomain();
+        LogicalCompositeComponent domain = logicalComponentManager.getRootComponent();
 
         LogicalChange change = null;
         try {
@@ -173,7 +173,7 @@ public abstract class AbstractDomain implements Domain {
 
     public void excludeFromDomain(Composite composite) throws ActivateException {
 
-        LogicalCompositeComponent domain = logicalComponentManager.getDomain();
+        LogicalCompositeComponent domain = logicalComponentManager.getRootComponent();
 
         LogicalChange change;
         try {

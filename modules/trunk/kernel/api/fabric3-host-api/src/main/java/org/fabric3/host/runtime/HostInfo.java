@@ -32,7 +32,7 @@ public interface HostInfo {
 
     /**
      * Returns the SCA domain associated with this runtime. A null domain indicates that this is a standalone runtime
-     * with a self-contained assembly.
+     * with a self-contained domain.
      *
      * @return the SCA domain associated with this runtime; may be null
      */

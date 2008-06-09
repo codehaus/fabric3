@@ -32,7 +32,7 @@ public interface LogicalComponentManager {
      *
      * @return the root component in the domain.
      */
-    LogicalCompositeComponent getDomain();
+    LogicalCompositeComponent getRootComponent();
 
     /**
      * Returns the component uniquely identified by an id.
@@ -50,13 +50,13 @@ public interface LogicalComponentManager {
     Collection<LogicalComponent<?>> getComponents();
 
     /**
-     * Initializes the domain service.
+     * Initializes the manager.
      * @throws RecoveryException if there was a problem initializing the components
      */
     void initialize() throws RecoveryException;
 
     /**
-     * Stores the domain using assembly store.
+     * Stores the logical components.
      *
      * @throws StoreException If unable to store the domain.
      */

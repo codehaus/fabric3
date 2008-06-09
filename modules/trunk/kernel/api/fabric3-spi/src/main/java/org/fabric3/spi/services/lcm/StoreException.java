@@ -20,7 +20,7 @@ import org.fabric3.host.Fabric3Exception;
 
 
 /**
- * Denotes an exception recording an assembly operation
+ * Denotes an exception recording an logical component operation
  *
  * @version $Rev$ $Date$
  */

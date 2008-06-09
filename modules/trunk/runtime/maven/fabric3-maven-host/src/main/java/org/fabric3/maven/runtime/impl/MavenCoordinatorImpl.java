@@ -31,9 +31,9 @@ import javax.xml.namespace.QName;
 import org.fabric3.fabric.runtime.ComponentNames;
 import static org.fabric3.fabric.runtime.ComponentNames.CONTRIBUTION_SERVICE_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.DEFINITIONS_REGISTRY;
-import static org.fabric3.fabric.runtime.ComponentNames.DISTRIBUTED_ASSEMBLY_URI;
+import static org.fabric3.fabric.runtime.ComponentNames.DISTRIBUTED_DOMAIN_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.METADATA_STORE_URI;
-import static org.fabric3.fabric.runtime.ComponentNames.RUNTIME_ASSEMBLY_URI;
+import static org.fabric3.fabric.runtime.ComponentNames.RUNTIME_DOMAIN_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.SCOPE_REGISTRY_URI;
 import org.fabric3.fabric.runtime.ExtensionInitializationException;
 import org.fabric3.fabric.services.contribution.manifest.XmlManifestProcessor;
@@ -189,9 +189,9 @@ public class MavenCoordinatorImpl implements MavenCoordinator {
         if (state != State.DOMAIN_JOINED) {
             throw new IllegalStateException("Not in DOMAIN_JOINED state");
         }
-        Domain domain = runtime.getSystemComponent(Domain.class, DISTRIBUTED_ASSEMBLY_URI);
+        Domain domain = runtime.getSystemComponent(Domain.class, DISTRIBUTED_DOMAIN_URI);
         if (domain == null) {
-            String name = DISTRIBUTED_ASSEMBLY_URI.toString();
+            String name = DISTRIBUTED_DOMAIN_URI.toString();
             InitializationException e = new InitializationException("Assembly not found: " + name, name);
             return new SyncFuture(new ExecutionException(e));
 
@@ -318,7 +318,7 @@ public class MavenCoordinatorImpl implements MavenCoordinator {
      */
 
     public void includeExtensionContributions(List<URI> contributionUris) throws InitializationException {
-        Domain domain = runtime.getSystemComponent(Domain.class, RUNTIME_ASSEMBLY_URI);
+        Domain domain = runtime.getSystemComponent(Domain.class, RUNTIME_DOMAIN_URI);
         Composite composite = createExtensionComposite(contributionUris);
         try {
             domain.include(composite);

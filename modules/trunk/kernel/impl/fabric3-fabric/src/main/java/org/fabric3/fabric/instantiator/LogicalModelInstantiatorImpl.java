@@ -204,7 +204,7 @@ public class LogicalModelInstantiatorImpl implements LogicalModelInstantiator {
 
         // resove composite references merged into the domain
         for (LogicalReference reference : references) {
-            resolutionService.resolve(reference, logicalComponentManager.getDomain());
+            resolutionService.resolve(reference, logicalComponentManager.getRootComponent());
         }
 
         // resolve wires for each new component

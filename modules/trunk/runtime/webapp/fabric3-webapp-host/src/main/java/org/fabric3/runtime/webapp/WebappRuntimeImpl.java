@@ -32,7 +32,7 @@ import org.fabric3.container.web.spi.WebRequestTunnel;
 import org.fabric3.fabric.runtime.AbstractRuntime;
 import org.fabric3.fabric.runtime.ComponentNames;
 import static org.fabric3.fabric.runtime.ComponentNames.CONTRIBUTION_SERVICE_URI;
-import static org.fabric3.fabric.runtime.ComponentNames.DISTRIBUTED_ASSEMBLY_URI;
+import static org.fabric3.fabric.runtime.ComponentNames.DISTRIBUTED_DOMAIN_URI;
 import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.host.contribution.ContributionService;
 import org.fabric3.host.runtime.InitializationException;
@@ -65,7 +65,7 @@ public class WebappRuntimeImpl extends AbstractRuntime<WebappHostInfo> implement
     public void activate(QName qName, URI componentId) throws ContributionException, InitializationException {
         try {
             // contribute the war to the application domain
-            Domain domain = getSystemComponent(Domain.class, DISTRIBUTED_ASSEMBLY_URI);
+            Domain domain = getSystemComponent(Domain.class, DISTRIBUTED_DOMAIN_URI);
             ContributionService contributionService = getSystemComponent(ContributionService.class, CONTRIBUTION_SERVICE_URI);
             URI contributionUri = new URI("file", qName.getLocalPart(), null);
             WarContributionSource source = new WarContributionSource(contributionUri);

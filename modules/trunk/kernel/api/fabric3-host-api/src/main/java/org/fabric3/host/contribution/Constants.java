@@ -27,7 +27,7 @@ import javax.xml.namespace.QName;
  */
 public final class Constants {
     /**
-     * An Assembly changeSet represented as XML.
+     * A changeSet represented as XML.
      */
     public static final String CHANGESET_XML = "application/x-fabric3.fabric3.changeSet+xml";
     public static final String ZIP_CONTENT_TYPE = "application/zip";

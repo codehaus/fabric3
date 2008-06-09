@@ -28,7 +28,7 @@ import org.fabric3.spi.services.contribution.MetaDataStore;
 import org.fabric3.spi.services.lcm.LogicalComponentManager;
 
 /**
- * The default RuntimeAssembly implementation
+ * Implements a domain for system services in a runtime. As Fabric3 runtimes are constituted using SCA, the runtime domain manages system services.
  *
  * @version $Rev$ $Date$
  */

@@ -31,7 +31,7 @@ import org.fabric3.spi.services.lcm.LogicalComponentManager;
 import org.fabric3.spi.services.lcm.RecoveryException;
 
 /**
- * Default implementation of a DistributedAssembly
+ * Implements a distributed domain containing user-defined services.
  *
  * @version $Rev$ $Date$
  */

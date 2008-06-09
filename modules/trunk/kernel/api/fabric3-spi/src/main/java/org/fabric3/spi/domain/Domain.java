@@ -32,7 +32,7 @@ public interface Domain {
     /**
      * Initializes the domain.
      *
-     * @throws DomainException if an error occurs initializing the assembly
+     * @throws DomainException if an error occurs initializing the domain
      */
     void initialize() throws DomainException;
 

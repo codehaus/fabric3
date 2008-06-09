@@ -34,9 +34,9 @@ import org.fabric3.fabric.runtime.ComponentNames;
 import static org.fabric3.fabric.runtime.ComponentNames.CONTRIBUTION_SERVICE_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.DEFINITIONS_REGISTRY;
 import static org.fabric3.fabric.runtime.ComponentNames.DISCOVERY_SERVICE_URI;
-import static org.fabric3.fabric.runtime.ComponentNames.DISTRIBUTED_ASSEMBLY_URI;
+import static org.fabric3.fabric.runtime.ComponentNames.DISTRIBUTED_DOMAIN_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.METADATA_STORE_URI;
-import static org.fabric3.fabric.runtime.ComponentNames.RUNTIME_ASSEMBLY_URI;
+import static org.fabric3.fabric.runtime.ComponentNames.RUNTIME_DOMAIN_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.SCOPE_REGISTRY_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.WORK_SCHEDULER_URI;
 import org.fabric3.fabric.runtime.ExtensionInitializationException;
@@ -219,9 +219,9 @@ public class StandaloneCoordinator implements RuntimeLifecycleCoordinator<Standa
         Callable<Void> callable = new Callable<Void>() {
             public Void call() throws DomainException, InitializationException {
                 try {
-                    Domain domain = runtime.getSystemComponent(Domain.class, DISTRIBUTED_ASSEMBLY_URI);
+                    Domain domain = runtime.getSystemComponent(Domain.class, DISTRIBUTED_DOMAIN_URI);
                     if (domain == null) {
-                        String name = DISTRIBUTED_ASSEMBLY_URI.toString();
+                        String name = DISTRIBUTED_DOMAIN_URI.toString();
                         throw new InitializationException("Assembly not found: " + name, name);
                     }
                     domain.initialize();
@@ -376,7 +376,7 @@ public class StandaloneCoordinator implements RuntimeLifecycleCoordinator<Standa
     FIXME it is now duplicated in all coordinators and should be refactored into one place
     */
     public void includeExtensionContributions(List<URI> contributionUris) throws InitializationException {
-        Domain domain = runtime.getSystemComponent(Domain.class, RUNTIME_ASSEMBLY_URI);
+        Domain domain = runtime.getSystemComponent(Domain.class, RUNTIME_DOMAIN_URI);
         Composite composite = createExtensionComposite(contributionUris);
         try {
             domain.include(composite);

@@ -182,7 +182,7 @@ public abstract class AbstractRuntime<HI extends HostInfo> implements Fabric3Run
     }
 
     public void registerComponent(LogicalComponent<?> logical, AtomicComponent<?> physical) throws RegistrationException {
-        LogicalCompositeComponent domain = logicalComponentManager.getDomain();
+        LogicalCompositeComponent domain = logicalComponentManager.getRootComponent();
         domain.addComponent(logical);
         componentManager.register(physical);
         scopeContainer.register(physical);

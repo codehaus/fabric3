@@ -165,14 +165,14 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
     private LogicalCompositeComponent getDomain(Fabric3Runtime<?> runtime) {
         RuntimeServices runtimeServices = (RuntimeServices) runtime;
         LogicalComponentManager logicalComponentManager = runtimeServices.getLogicalComponentManager();
-        return logicalComponentManager.getDomain();
+        return logicalComponentManager.getRootComponent();
     }
 
     public void bootSystem(Fabric3Runtime<?> runtime) throws InitializationException {
         ClassLoaderRegistry classLoaderRegistry =
                 runtime.getSystemComponent(ClassLoaderRegistry.class, ComponentNames.CLASSLOADER_REGISTRY_URI);
         Loader loader = BootstrapLoaderFactory.createLoader(runtime.getMonitorFactory(), xmlFactory);
-        Domain runtimeDomain = runtime.getSystemComponent(Domain.class, ComponentNames.RUNTIME_ASSEMBLY_URI);
+        Domain runtimeDomain = runtime.getSystemComponent(Domain.class, ComponentNames.RUNTIME_DOMAIN_URI);
         try {
 
             // load the system composite

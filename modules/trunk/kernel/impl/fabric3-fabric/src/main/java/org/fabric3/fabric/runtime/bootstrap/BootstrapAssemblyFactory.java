@@ -156,7 +156,7 @@ public class BootstrapAssemblyFactory {
 
         ClasspathProcessorRegistry cpRegistry = runtime.getSystemComponent(ClasspathProcessorRegistry.class,
                                                                            URI.create(ComponentNames.RUNTIME_NAME + "/ClasspathProcessorRegistry"));
-        return createAssembly(monitorFactory,
+        return createDomain(monitorFactory,
                               classLoaderRegistry,
                               scopeRegistry,
                               componentManager,
@@ -167,7 +167,7 @@ public class BootstrapAssemblyFactory {
                               jmxDomain);
     }
 
-    public static Domain createAssembly(MonitorFactory monitorFactory,
+    public static Domain createDomain(MonitorFactory monitorFactory,
                                           ClassLoaderRegistry classLoaderRegistry,
                                           ScopeRegistry scopeRegistry,
                                           ComponentManager componentManager,
