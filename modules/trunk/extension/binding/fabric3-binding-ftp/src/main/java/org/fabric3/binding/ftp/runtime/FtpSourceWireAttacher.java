@@ -52,14 +52,13 @@ public class FtpSourceWireAttacher implements SourceWireAttacher<FtpWireSourceDe
         this.ftpLetContainer = ftpLetContainer;
     }
 
-    public void attachToSource(FtpWireSourceDefinition source, PhysicalWireTargetDefinition target, Wire wire) throws WiringException {
-        
-        final Interceptor head = wire.getInvocationChains().values().iterator().next().getHeadInterceptor();
+    public void attachToSource(FtpWireSourceDefinition source, PhysicalWireTargetDefinition target, final Wire wire) throws WiringException {
         
         URI uri = source.getUri();
         String servicePath = uri.getPath();
         ftpLetContainer.registerFtpLet(servicePath, new FtpLet() {
             public void onUpload(String fileName, InputStream uploadData) throws Exception {
+                Interceptor head = wire.getInvocationChains().values().iterator().next().getHeadInterceptor();
                 Object[] args = new Object[] {fileName, uploadData};
                 WorkContext workContext = new WorkContext();
                 Message input = new MessageImpl(args, false, workContext);
