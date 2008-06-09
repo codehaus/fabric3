@@ -23,28 +23,26 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import javax.management.MBeanServer;
 
-import org.fabric3.fabric.domain.RuntimeDomain;
 import org.fabric3.fabric.allocator.Allocator;
 import org.fabric3.fabric.allocator.LocalAllocator;
-import org.fabric3.fabric.instantiator.normalize.PromotionNormalizer;
-import org.fabric3.fabric.instantiator.normalize.PromotionNormalizerImpl;
 import org.fabric3.fabric.builder.ConnectorImpl;
 import org.fabric3.fabric.builder.classloader.ClassLoaderBuilder;
 import org.fabric3.fabric.builder.classloader.ClassLoaderBuilderImpl;
 import org.fabric3.fabric.builder.component.DefaultComponentBuilderRegistry;
-import org.fabric3.fabric.command.ProvisionClassloaderCommand;
+import org.fabric3.fabric.command.AttachWireCommand;
 import org.fabric3.fabric.command.BuildComponentCommand;
 import org.fabric3.fabric.command.InitializeComponentCommand;
+import org.fabric3.fabric.command.ProvisionClassloaderCommand;
 import org.fabric3.fabric.command.StartComponentCommand;
 import org.fabric3.fabric.command.StartCompositeContextCommand;
-import org.fabric3.fabric.command.AttachWireCommand;
-import org.fabric3.fabric.executor.ProvisionClassloaderCommandExecutor;
-import org.fabric3.fabric.executor.CommandExecutorRegistryImpl;
+import org.fabric3.fabric.domain.RuntimeDomain;
+import org.fabric3.fabric.executor.AttachWireCommandExecutor;
 import org.fabric3.fabric.executor.BuildComponentCommandExecutor;
+import org.fabric3.fabric.executor.CommandExecutorRegistryImpl;
 import org.fabric3.fabric.executor.InitializeComponentCommandExecutor;
+import org.fabric3.fabric.executor.ProvisionClassloaderCommandExecutor;
 import org.fabric3.fabric.executor.StartComponentCommandExecutor;
 import org.fabric3.fabric.executor.StartCompositeContextCommandExecutor;
-import org.fabric3.fabric.executor.AttachWireCommandExecutor;
 import org.fabric3.fabric.generator.GeneratorRegistryImpl;
 import org.fabric3.fabric.generator.PhysicalModelGenerator;
 import org.fabric3.fabric.generator.PhysicalModelGeneratorImpl;
@@ -67,13 +65,19 @@ import org.fabric3.fabric.generator.wire.ServiceWireCommandGenerator;
 import org.fabric3.fabric.implementation.singleton.SingletonGenerator;
 import org.fabric3.fabric.implementation.singleton.SingletonWireAttacher;
 import org.fabric3.fabric.implementation.singleton.SingletonWireTargetDefinition;
-import org.fabric3.fabric.instantiator.component.AtomicComponentInstantiator;
-import org.fabric3.fabric.instantiator.component.CompositeComponentInstantiator;
 import org.fabric3.fabric.instantiator.LogicalModelInstantiator;
 import org.fabric3.fabric.instantiator.LogicalModelInstantiatorImpl;
 import org.fabric3.fabric.instantiator.ResolutionService;
 import org.fabric3.fabric.instantiator.ResolutionServiceImpl;
+import org.fabric3.fabric.instantiator.component.AtomicComponentInstantiator;
+import org.fabric3.fabric.instantiator.component.CompositeComponentInstantiator;
+import org.fabric3.fabric.instantiator.normalize.PromotionNormalizer;
+import org.fabric3.fabric.instantiator.normalize.PromotionNormalizerImpl;
+import org.fabric3.fabric.instantiator.promotion.DefaultPromotionResolutionService;
+import org.fabric3.fabric.instantiator.promotion.PromotionResolutionService;
+import org.fabric3.fabric.instantiator.target.ExplicitTargetResolutionService;
 import org.fabric3.fabric.instantiator.target.TargetResolutionService;
+import org.fabric3.fabric.instantiator.target.TypeBasedAutoWireService;
 import org.fabric3.fabric.monitor.MonitorWireAttacher;
 import org.fabric3.fabric.monitor.MonitorWireGenerator;
 import org.fabric3.fabric.monitor.MonitorWireTargetDefinition;
@@ -88,9 +92,6 @@ import org.fabric3.fabric.services.instancefactory.DefaultInstanceFactoryBuilder
 import org.fabric3.fabric.services.instancefactory.GenerationHelperImpl;
 import org.fabric3.fabric.services.instancefactory.ReflectiveInstanceFactoryBuilder;
 import org.fabric3.fabric.services.routing.RuntimeRoutingService;
-import org.fabric3.fabric.instantiator.promotion.DefaultPromotionResolutionService;
-import org.fabric3.fabric.instantiator.target.ExplicitTargetResolutionService;
-import org.fabric3.fabric.instantiator.target.TypeBasedAutoWireService;
 import org.fabric3.host.runtime.Fabric3Runtime;
 import org.fabric3.host.runtime.InitializationException;
 import org.fabric3.jmx.control.JMXBindingGenerator;
@@ -100,24 +101,23 @@ import org.fabric3.jmx.scdl.JMXBinding;
 import org.fabric3.monitor.MonitorFactory;
 import org.fabric3.pojo.instancefactory.InstanceFactoryBuildHelper;
 import org.fabric3.pojo.instancefactory.InstanceFactoryBuilderRegistry;
-import org.fabric3.spi.domain.Domain;
-import org.fabric3.spi.domain.DomainException;
 import org.fabric3.spi.builder.component.ComponentBuilderRegistry;
 import org.fabric3.spi.builder.component.SourceWireAttacher;
 import org.fabric3.spi.builder.component.TargetWireAttacher;
 import org.fabric3.spi.component.ScopeRegistry;
+import org.fabric3.spi.domain.Domain;
+import org.fabric3.spi.domain.DomainException;
 import org.fabric3.spi.executor.CommandExecutorRegistry;
 import org.fabric3.spi.generator.AddCommandGenerator;
 import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.generator.RemoveCommandGenerator;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
-import org.fabric3.spi.services.lcm.LogicalComponentManager;
-import org.fabric3.spi.services.componentmanager.ComponentManager;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
+import org.fabric3.spi.services.componentmanager.ComponentManager;
 import org.fabric3.spi.services.contribution.ClasspathProcessorRegistry;
 import org.fabric3.spi.services.contribution.MetaDataStore;
-import org.fabric3.fabric.instantiator.promotion.PromotionResolutionService;
+import org.fabric3.spi.services.lcm.LogicalComponentManager;
 import org.fabric3.system.control.SystemComponentGenerator;
 import org.fabric3.system.provision.SystemWireSourceDefinition;
 import org.fabric3.system.provision.SystemWireTargetDefinition;
@@ -157,25 +157,25 @@ public class BootstrapAssemblyFactory {
         ClasspathProcessorRegistry cpRegistry = runtime.getSystemComponent(ClasspathProcessorRegistry.class,
                                                                            URI.create(ComponentNames.RUNTIME_NAME + "/ClasspathProcessorRegistry"));
         return createDomain(monitorFactory,
-                              classLoaderRegistry,
-                              scopeRegistry,
-                              componentManager,
-                              lcm,
-                              metaDataStore,
-                              cpRegistry,
-                              mbeanServer,
-                              jmxDomain);
+                            classLoaderRegistry,
+                            scopeRegistry,
+                            componentManager,
+                            lcm,
+                            metaDataStore,
+                            cpRegistry,
+                            mbeanServer,
+                            jmxDomain);
     }
 
     public static Domain createDomain(MonitorFactory monitorFactory,
-                                          ClassLoaderRegistry classLoaderRegistry,
-                                          ScopeRegistry scopeRegistry,
-                                          ComponentManager componentManager,
-                                          LogicalComponentManager logicalComponentManager,
-                                          MetaDataStore metaDataStore,
-                                          ClasspathProcessorRegistry cpRegistry,
-                                          MBeanServer mbServer,
-                                          String jmxDomain) throws InitializationException {
+                                      ClassLoaderRegistry classLoaderRegistry,
+                                      ScopeRegistry scopeRegistry,
+                                      ComponentManager componentManager,
+                                      LogicalComponentManager logicalComponentManager,
+                                      MetaDataStore metaDataStore,
+                                      ClasspathProcessorRegistry cpRegistry,
+                                      MBeanServer mbServer,
+                                      String jmxDomain) throws InitializationException {
 
         Allocator allocator = new LocalAllocator();
 
@@ -197,11 +197,11 @@ public class BootstrapAssemblyFactory {
         LogicalModelInstantiator logicalModelInstantiator = createLogicalModelGenerator(logicalComponentManager);
 
         Domain runtimeDomain = new RuntimeDomain(allocator,
-                                                           metaDataStore,
-                                                           physicalModelGenerator,
-                                                           logicalModelInstantiator,
-                                                           logicalComponentManager,
-                                                           routingService);
+                                                 metaDataStore,
+                                                 physicalModelGenerator,
+                                                 logicalModelInstantiator,
+                                                 logicalComponentManager,
+                                                 routingService);
         try {
             runtimeDomain.initialize();
         } catch (DomainException e) {
@@ -224,10 +224,10 @@ public class BootstrapAssemblyFactory {
         CompositeComponentInstantiator compositeComponentInstantiator =
                 new CompositeComponentInstantiator(atomicComponentInstantiator, documentLoader);
         return new LogicalModelInstantiatorImpl(resolutionService,
-                                             normalizer,
-                                             logicalComponentManager,
-                                             atomicComponentInstantiator,
-                                             compositeComponentInstantiator);
+                                                normalizer,
+                                                logicalComponentManager,
+                                                atomicComponentInstantiator,
+                                                compositeComponentInstantiator);
     }
 
     private static CommandExecutorRegistry createCommandExecutorRegistry(MonitorFactory monitorFactory,
