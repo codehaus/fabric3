@@ -40,33 +40,33 @@ public interface Domain {
      * Include a deployable composite in the domain.
      *
      * @param deployable the name of the deployable composite to include
-     * @throws ActivateException if an error is encountered during activation
+     * @throws DeploymentException if an error is encountered during inclusion
      */
-    void include(QName deployable) throws ActivateException;
+    void include(QName deployable) throws DeploymentException;
 
     /**
      * Include a Composite in the domain.
      *
      * @param composite the composite to include
-     * @throws ActivateException if an error is encountered during activation
+     * @throws DeploymentException if an error is encountered during inclusion
      */
-    void include(Composite composite) throws ActivateException;
+    void include(Composite composite) throws DeploymentException;
 
 
     /**
      * Exclude a deployable Composite from the domain.
      *
-     * @param deployable the name of the deployable composite to include
-     * @throws ActivateException if an error is encountered during activation
+     * @param deployable the name of the deployable composite to remove
+     * @throws DeploymentException if an error is encountered during removal
      */
-    void excludeFromDomain(QName deployable) throws ActivateException;
+    void excludeFromDomain(QName deployable) throws DeploymentException;
 
     /**
      * Exclude a Composite from the domain.
      *
-     * @param composite the composite to include
-     * @throws ActivateException if an error is encountered during activation
+     * @param composite the composite to remove
+     * @throws DeploymentException if an error is encountered during removal
      */
-    void excludeFromDomain(Composite composite) throws ActivateException;
+    void excludeFromDomain(Composite composite) throws DeploymentException;
 
 }

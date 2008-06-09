@@ -53,7 +53,7 @@ import org.fabric3.scdl.Operation;
 import org.fabric3.scdl.Scope;
 import org.fabric3.services.xmlfactory.XMLFactory;
 import org.fabric3.spi.ObjectCreationException;
-import org.fabric3.spi.domain.ActivateException;
+import org.fabric3.spi.domain.DeploymentException;
 import org.fabric3.spi.domain.Domain;
 import org.fabric3.spi.component.GroupInitializationException;
 import org.fabric3.spi.component.ScopeContainer;
@@ -103,7 +103,7 @@ public class MavenEmbeddedRuntimeImpl extends AbstractRuntime<MavenHostInfo> imp
             ResourceElement<?, ?> element = store.resolve(new QNameSymbol(qName));
             assert element != null;
             return (Composite) element.getValue();
-        } catch (ActivateException e) {
+        } catch (DeploymentException e) {
             String identifier = qName.toString();
             throw new CompositeActivationException("Error activating composite:" + identifier, identifier, e);
         }

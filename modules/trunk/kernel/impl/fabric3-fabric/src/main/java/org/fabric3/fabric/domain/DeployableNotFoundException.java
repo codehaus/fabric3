@@ -18,12 +18,12 @@
  */
 package org.fabric3.fabric.domain;
 
-import org.fabric3.spi.domain.ActivateException;
+import org.fabric3.spi.domain.DeploymentException;
 
 /**
  * @version $Rev$ $Date$
  */
-public class DeployableNotFoundException extends ActivateException {
+public class DeployableNotFoundException extends DeploymentException {
     private static final long serialVersionUID = -8572491242992185157L;
 
     public DeployableNotFoundException(String message, String identifier) {

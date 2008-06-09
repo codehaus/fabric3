@@ -27,24 +27,24 @@ import org.fabric3.fabric.allocator.AllocationException;
 import org.fabric3.fabric.allocator.Allocator;
 import org.fabric3.fabric.generator.PhysicalModelGenerator;
 import org.fabric3.fabric.instantiator.LogicalChange;
-import org.fabric3.fabric.instantiator.LogicalModelInstantiator;
 import org.fabric3.fabric.instantiator.LogicalInstantiationException;
+import org.fabric3.fabric.instantiator.LogicalModelInstantiator;
 import org.fabric3.fabric.services.routing.RoutingException;
 import org.fabric3.fabric.services.routing.RoutingService;
 import org.fabric3.scdl.Composite;
-import org.fabric3.spi.domain.ActivateException;
+import org.fabric3.spi.domain.DeploymentException;
 import org.fabric3.spi.domain.Domain;
 import org.fabric3.spi.domain.DomainException;
 import org.fabric3.spi.generator.CommandMap;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
-import org.fabric3.spi.services.lcm.LogicalComponentManager;
-import org.fabric3.spi.services.lcm.StoreException;
 import org.fabric3.spi.services.contribution.MetaDataStore;
 import org.fabric3.spi.services.contribution.MetaDataStoreException;
 import org.fabric3.spi.services.contribution.QNameSymbol;
 import org.fabric3.spi.services.contribution.ResourceElement;
+import org.fabric3.spi.services.lcm.LogicalComponentManager;
+import org.fabric3.spi.services.lcm.StoreException;
 
 /**
  * Base class for abstract assemblies
@@ -62,11 +62,11 @@ public abstract class AbstractDomain implements Domain {
     private RoutingService routingService;
 
     public AbstractDomain(Allocator allocator,
-                            MetaDataStore metadataStore,
-                            PhysicalModelGenerator physicalModelGenerator,
-                            LogicalModelInstantiator logicalModelInstantiator,
-                            LogicalComponentManager logicalComponentManager,
-                            RoutingService routingService) {
+                          MetaDataStore metadataStore,
+                          PhysicalModelGenerator physicalModelGenerator,
+                          LogicalModelInstantiator logicalModelInstantiator,
+                          LogicalComponentManager logicalComponentManager,
+                          RoutingService routingService) {
         this.allocator = allocator;
         this.metadataStore = metadataStore;
         this.physicalModelGenerator = physicalModelGenerator;
@@ -78,13 +78,13 @@ public abstract class AbstractDomain implements Domain {
     public void initialize() throws DomainException {
     }
 
-    public void include(QName deployable) throws ActivateException {
+    public void include(QName deployable) throws DeploymentException {
 
-        ResourceElement<QNameSymbol, ?> element = null;
+        ResourceElement<QNameSymbol, ?> element;
         try {
             element = metadataStore.resolve(new QNameSymbol(deployable));
         } catch (MetaDataStoreException e) {
-            throw new ActivateException(e);
+            throw new DeploymentException("Erorr deploying: " + deployable, e);
         }
         if (element == null) {
             String id = deployable.toString();
@@ -102,15 +102,15 @@ public abstract class AbstractDomain implements Domain {
 
     }
 
-    public void include(Composite composite) throws ActivateException {
+    public void include(Composite composite) throws DeploymentException {
 
         LogicalCompositeComponent domain = logicalComponentManager.getRootComponent();
 
-        LogicalChange change = null;
+        LogicalChange change;
         try {
             change = logicalModelInstantiator.include(domain, composite);
         } catch (LogicalInstantiationException e) {
-            throw new ActivateException(e);
+            throw new DeploymentException("Erorr deploying: " + composite.getName(), e);
         }
         change.apply();
 
@@ -124,7 +124,7 @@ public abstract class AbstractDomain implements Domain {
                 }
             }
         } catch (AllocationException e) {
-            throw new ActivateException(e);
+            throw new DeploymentException("Erorr deploying: " + composite.getName(), e);
         }
 
         try {
@@ -132,9 +132,9 @@ public abstract class AbstractDomain implements Domain {
             CommandMap commandMap = physicalModelGenerator.generate(components);
             routingService.route(commandMap);
         } catch (GenerationException e) {
-            throw new ActivateException(e);
+            throw new DeploymentException("Erorr deploying: " + composite.getName(), e);
         } catch (RoutingException e) {
-            throw new ActivateException(e);
+            throw new DeploymentException("Erorr deploying: " + composite.getName(), e);
         }
 
         try {
@@ -142,18 +142,18 @@ public abstract class AbstractDomain implements Domain {
             logicalComponentManager.store();
         } catch (StoreException e) {
             String id = composite.getName().toString();
-            throw new ActivateException("Error activating deployable: " + id, id, e);
+            throw new DeploymentException("Error activating deployable: " + id, id, e);
         }
 
     }
 
-    public void excludeFromDomain(QName deployable) throws ActivateException {
+    public void excludeFromDomain(QName deployable) throws DeploymentException {
 
-        ResourceElement<QNameSymbol, ?> element = null;
+        ResourceElement<QNameSymbol, ?> element;
         try {
             element = metadataStore.resolve(new QNameSymbol(deployable));
         } catch (MetaDataStoreException e) {
-            throw new ActivateException(e);
+            throw new DeploymentException(e);
         }
         if (element == null) {
             String id = deployable.toString();
@@ -171,7 +171,7 @@ public abstract class AbstractDomain implements Domain {
 
     }
 
-    public void excludeFromDomain(Composite composite) throws ActivateException {
+    public void excludeFromDomain(Composite composite) throws DeploymentException {
 
         LogicalCompositeComponent domain = logicalComponentManager.getRootComponent();
 
@@ -179,7 +179,7 @@ public abstract class AbstractDomain implements Domain {
         try {
             change = logicalModelInstantiator.exclude(domain, composite);
         } catch (LogicalInstantiationException e) {
-            throw new ActivateException(e);
+            throw new DeploymentException("Erorr deploying: " + composite.getName(), e);
         }
         change.apply();
 
@@ -193,7 +193,7 @@ public abstract class AbstractDomain implements Domain {
                 }
             }
         } catch (AllocationException e) {
-            throw new ActivateException(e);
+            throw new DeploymentException("Erorr deploying: " + composite.getName(), e);
         }
 
         try {
@@ -201,9 +201,9 @@ public abstract class AbstractDomain implements Domain {
             CommandMap commandMap = physicalModelGenerator.generate(change);
             routingService.route(commandMap);
         } catch (GenerationException e) {
-            throw new ActivateException(e);
+            throw new DeploymentException("Erorr deploying: " + composite.getName(), e);
         } catch (RoutingException e) {
-            throw new ActivateException(e);
+            throw new DeploymentException("Erorr deploying: " + composite.getName(), e);
         }
 
         try {
@@ -211,7 +211,7 @@ public abstract class AbstractDomain implements Domain {
             logicalComponentManager.store();
         } catch (StoreException e) {
             String id = composite.getName().toString();
-            throw new ActivateException("Error activating deployable: " + id, id, e);
+            throw new DeploymentException("Error activating deployable: " + id, id, e);
         }
 
     }

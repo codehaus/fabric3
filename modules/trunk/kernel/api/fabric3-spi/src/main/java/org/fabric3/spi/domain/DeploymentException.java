@@ -19,26 +19,30 @@
 package org.fabric3.spi.domain;
 
 /**
- * Denotes an error during an activate operation
+ * Denotes an error during a deployment operation.
  *
  * @version $Rev$ $Date$
  */
-public class ActivateException extends DomainException {
+public class DeploymentException extends DomainException {
     private static final long serialVersionUID = -8846536703004740119L;
 
-    public ActivateException(String message) {
+    public DeploymentException(String message) {
         super(message);
     }
 
-    public ActivateException(String message, String identifier) {
+    public DeploymentException(String message, String identifier) {
         super(message, identifier);
     }
 
-    public ActivateException(String message, String identifier, Throwable cause) {
+    public DeploymentException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public DeploymentException(String message, String identifier, Throwable cause) {
         super(message, identifier, cause);
     }
 
-    public ActivateException(Throwable cause) {
+    public DeploymentException(Throwable cause) {
         super(cause);
     }
 

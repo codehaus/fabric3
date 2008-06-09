@@ -38,7 +38,7 @@ import org.fabric3.host.contribution.ContributionService;
 import org.fabric3.host.runtime.InitializationException;
 import org.fabric3.pojo.PojoWorkContextTunnel;
 import org.fabric3.runtime.webapp.contribution.WarContributionSource;
-import org.fabric3.spi.domain.ActivateException;
+import org.fabric3.spi.domain.DeploymentException;
 import org.fabric3.spi.domain.Domain;
 import org.fabric3.spi.invocation.WorkContext;
 
@@ -74,7 +74,7 @@ public class WebappRuntimeImpl extends AbstractRuntime<WebappHostInfo> implement
             domain.include(qName);
         } catch (MalformedURLException e) {
             throw new InitializationException("Invalid web archive", e);
-        } catch (ActivateException e) {
+        } catch (DeploymentException e) {
             String identifier = qName.toString();
             throw new InitializationException("Error activating composite: " + identifier, identifier, e);
         } catch (URISyntaxException e) {

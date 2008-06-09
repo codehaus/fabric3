@@ -71,7 +71,7 @@ import org.fabric3.scdl.ServiceDefinition;
 import org.fabric3.scdl.ValidationContext;
 import org.fabric3.services.xmlfactory.XMLFactory;
 import org.fabric3.services.xmlfactory.impl.XMLFactoryImpl;
-import org.fabric3.spi.domain.ActivateException;
+import org.fabric3.spi.domain.DeploymentException;
 import org.fabric3.spi.domain.Domain;
 import org.fabric3.spi.classloader.MultiParentClassLoader;
 import org.fabric3.spi.component.AtomicComponent;
@@ -202,7 +202,7 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
 
         } catch (ContributionException e) {
             throw new InitializationException(e);
-        } catch (ActivateException e) {
+        } catch (DeploymentException e) {
             throw new InitializationException(e);
         } catch (LoaderException e) {
             throw new InitializationException(e);

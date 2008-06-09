@@ -58,7 +58,7 @@ import org.fabric3.scdl.Include;
 import org.fabric3.scdl.Scope;
 import org.fabric3.scdl.ValidationContext;
 import org.fabric3.scdl.DefaultValidationContext;
-import org.fabric3.spi.domain.ActivateException;
+import org.fabric3.spi.domain.DeploymentException;
 import org.fabric3.spi.domain.Domain;
 import org.fabric3.spi.domain.DomainException;
 import org.fabric3.spi.component.GroupInitializationException;
@@ -361,7 +361,7 @@ public class WebappCoordinator implements RuntimeLifecycleCoordinator<WebappRunt
         Composite composite = createExtensionComposite(contributionUris);
         try {
             domain.include(composite);
-        } catch (ActivateException e) {
+        } catch (DeploymentException e) {
             throw new ExtensionInitializationException("Error activating extensions", e);
         }
     }

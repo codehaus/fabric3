@@ -48,7 +48,7 @@ import org.fabric3.host.contribution.ValidationException;
 import org.fabric3.scdl.Composite;
 import org.fabric3.scdl.Include;
 import static org.fabric3.spi.Constants.FABRIC3_SYSTEM_NS;
-import org.fabric3.spi.domain.ActivateException;
+import org.fabric3.spi.domain.DeploymentException;
 import org.fabric3.spi.domain.Domain;
 import org.fabric3.spi.scanner.FileSystemResource;
 import org.fabric3.spi.scanner.FileSystemResourceFactoryRegistry;
@@ -294,7 +294,7 @@ public class ContributionDirectoryScanner implements Runnable, Fabric3EventListe
                     errorCache.put(cached.getName(), cached);
                 }
                 monitor.error(e);
-            } catch (ActivateException e) {
+            } catch (DeploymentException e) {
                 // FIXME for now, just error all additions
                 for (FileSystemResource cached : addedResources) {
                     errorCache.put(cached.getName(), cached);
