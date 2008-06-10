@@ -33,11 +33,6 @@ public class AdministeredObjectDefinition extends ModelObject {
     private static final long serialVersionUID = -4185839724999915674L;
 
     /**
-     * Destination type.
-     */
-    private DestinationType type;
-
-    /**
      * Destination name (can be JNDI name or simple name)
      */
     private String name;
@@ -78,20 +73,6 @@ public class AdministeredObjectDefinition extends ModelObject {
      */
     public void setName(String name) {
         this.name = name;
-    }
-
-    /**
-     * @return the type
-     */
-    public DestinationType getType() {
-        return type;
-    }
-
-    /**
-     * @param type the type to set
-     */
-    public void setType(DestinationType type) {
-        this.type = type;
     }
 
     /**
