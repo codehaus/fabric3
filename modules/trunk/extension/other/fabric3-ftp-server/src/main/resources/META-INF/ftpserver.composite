@@ -22,18 +22,20 @@
            name="FtpServer"
            autowire="true">
            
-    <property name="commandPort"/>
+    <!-- property name="commandPort"/>
     <property name="minPassivePort"/>
     <property name="maxPassivePort"/>
     <property name="passiveAddress"/>
-    <property name="users"/>
+    <property name="users"/-->
+    
+    <property name="config"/>
     
     <service name="ftpContainer" promote="org.fabric3.ftp.server.ftplet.DefaultFtpLetContainer/FtpLetContainer"/>
 
     <!-- FTP Server -->
     <component name="org.fabric3.ftp.server.host.F3FtpHost">
         <system:implementation.system class="org.fabric3.ftp.server.host.F3FtpHost"/>
-        <property name="commandPort" source="$commandPort"/>
+        <property name="commandPort" source="$config//commandPort"/>
     </component>
     
     <!-- Protocol codec factory -->
@@ -70,15 +72,14 @@
     <!-- TODO May be this should be promoted out -->
     <component name="org.fabric3.ftp.server.security.FileSystemUserManager">
         <system:implementation.system class="org.fabric3.ftp.server.security.FileSystemUserManager"/>
-        <property name="users" source="$users"/>
+        <property name="users" source="$config//users/*"/>
     </component>
     
     <!-- Passive Connection Service -->
     <component name="org.fabric3.ftp.server.passive.PassiveConnectionService">
         <system:implementation.system class="org.fabric3.ftp.server.passive.PassiveConnectionServiceImpl"/>
-        <property name="minPort" source="$minPassivePort"/>
-        <property name="maxPort" source="$maxPassivePort"/>
-        <property name="passiveAddress" source="$passiveAddress"/>
+        <property name="minPort" source="$config//minPassivePort"/>
+        <property name="maxPort" source="$config//maxPassivePort"/>
     </component>
     
     <!-- FtpLet container -->

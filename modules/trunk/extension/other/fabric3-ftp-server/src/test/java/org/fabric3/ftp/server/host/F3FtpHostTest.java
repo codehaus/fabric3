@@ -63,7 +63,6 @@ public class F3FtpHostTest extends TestCase {
         PassiveConnectionServiceImpl passiveConnectionService = new PassiveConnectionServiceImpl();
         passiveConnectionService.setMinPort(50000);
         passiveConnectionService.setMaxPort(60000);
-        passiveConnectionService.setPassiveAddress("127.0.0.1");
         passiveConnectionService.init();
         PasvRequestHandler pasvRequestHandler = new PasvRequestHandler();
         pasvRequestHandler.setPassivePortService(passiveConnectionService);

@@ -38,12 +38,5 @@ public interface PassiveConnectionService {
      * @param port Port to be released.
      */
     void release(int port);
-    
-    /**
-     * Gets the passive address.
-     * 
-     * @return Passive address.
-     */
-    String getPassiveAddress();
 
 }

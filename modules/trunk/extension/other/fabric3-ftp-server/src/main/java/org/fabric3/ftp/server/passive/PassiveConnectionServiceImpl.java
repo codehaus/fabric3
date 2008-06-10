@@ -33,7 +33,6 @@ public class PassiveConnectionServiceImpl implements PassiveConnectionService {
     
     private int minPort;
     private int maxPort;
-    private String passiveAddress;
     private Stack<Integer> ports = new Stack<Integer>();
     
     /**
@@ -52,15 +51,6 @@ public class PassiveConnectionServiceImpl implements PassiveConnectionService {
     @Property
     public void setMaxPort(int maxPort) {
         this.maxPort = maxPort;
-    }
-
-    /**
-     * Sets the passive address.
-     * @param passiveAddress Passive address.
-     */
-    @Property
-    public void setPassiveAddress(String passiveAddress) {
-        this.passiveAddress = passiveAddress;
     }
     
     /**
@@ -93,15 +83,6 @@ public class PassiveConnectionServiceImpl implements PassiveConnectionService {
     public synchronized void release(int port) {
         ports.push(port);
         notifyAll();
-    }
-    
-    /**
-     * Gets the passive address.
-     * 
-     * @return Passive address.
-     */
-    public String getPassiveAddress() {
-        return passiveAddress;
     }
 
 }
