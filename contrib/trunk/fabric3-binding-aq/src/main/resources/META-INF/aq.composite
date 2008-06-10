@@ -25,54 +25,54 @@
 
     <!-- JTA Transaction Handler -->
     <component name="JTATransactionHandler" f3:key="GLOBAL">
-        <system:implementation.system class="org.fabric3.binding.aq.tx.JtaTransactionHandler"/>
+        <system:implementation.system class="org.fabric3.binding.aq.runtime.tx.JtaTransactionHandler"/>
     </component>
 
     <!-- JMS Host -->
     <component name="AQHost">
-        <system:implementation.system class="org.fabric3.binding.aq.host.standalone.DefaultAQHost"/>
+        <system:implementation.system class="org.fabric3.binding.aq.runtime.host.standalone.DefaultAQHost"/>
     </component>
 
     <!-- JMS Binding Loader -->
     <component f3:key="sca:binding.aq" name="AQBindingLoader">
-        <system:implementation.system class="org.fabric3.binding.aq.model.logical.AQBindingLoader"/>
+        <system:implementation.system class="org.fabric3.binding.aq.introspection.AQBindingLoader"/>
     </component>
 
     <!-- JMS Binding Generator -->
-    <component name="AQBindingGenerator"  f3:key="org.fabric3.binding.aq.model.logical.AQBindingDefinition">
-        <system:implementation.system class="org.fabric3.binding.aq.model.physical.AQBindingGenerator"/>
+    <component name="AQBindingGenerator"  f3:key="org.fabric3.binding.aq.scdl.AQBindingDefinition">
+        <system:implementation.system class="org.fabric3.binding.aq.control.AQBindingGenerator"/>
     </component>
 
    <!-- JMS Wire Attachers -->
-    <component f3:key="org.fabric3.binding.aq.model.physical.AQWireSourceDefinition" name="org.fabric3.binding.aq.wire.AQSourceWireAttacher">
-        <system:implementation.system class="org.fabric3.binding.aq.wire.AQSourceWireAttacher"/>
+    <component f3:key="org.fabric3.binding.aq.provision.AQWireSourceDefinition" name="org.fabric3.binding.aq.runtime.wire.AQSourceWireAttacher">
+        <system:implementation.system class="org.fabric3.binding.aq.runtime.wire.AQSourceWireAttacher"/>
         <reference name="connectionFactoryAccessor" target="XAConnectionFactory"/>
         <reference name="destinationFactory" target="XAFactory"/>
     </component>
     
-    <component f3:key="org.fabric3.binding.aq.model.physical.AQWireTargetDefinition" name="org.fabric3.binding.aq.wire.AQTargetWireAttacher">
-        <system:implementation.system class="org.fabric3.binding.aq.wire.AQTargetWireAttacher"/>
+    <component f3:key="org.fabric3.binding.aq.provision.AQWireTargetDefinition" name="org.fabric3.binding.aq.runtime.wire.AQTargetWireAttacher">
+        <system:implementation.system class="org.fabric3.binding.aq.runtime.wire.AQTargetWireAttacher"/>
         <reference name="connectionFactoryAccessor" target="XAConnectionFactory"/>
         <reference name="destinationFactory" target="XAFactory"/>
     </component>
     
      <!-- Always create connection factory strategy -->
     <component name="ConnectionFactory">
-        <system:implementation.system class="org.fabric3.binding.aq.connectionfactory.DefaultConnectionFactoryAccessor"/>
+        <system:implementation.system class="org.fabric3.binding.aq.runtime.connectionfactory.DefaultConnectionFactoryAccessor"/>
     </component>
     
     <!-- Always create connection factory strategy -->
     <component name="XAConnectionFactory">
-        <system:implementation.system class="org.fabric3.binding.aq.connectionfactory.XAConnectionFactoryAccessor"/>
+        <system:implementation.system class="org.fabric3.binding.aq.runtime.connectionfactory.XAConnectionFactoryAccessor"/>
     </component> 
 
     <!-- Destination Factory to be used for creating destinations -->
     <component name="DestinationFactory">
-        <system:implementation.system class="org.fabric3.binding.aq.destination.DefaultDestinationFactory"/>
+        <system:implementation.system class="org.fabric3.binding.aq.runtime.destination.DefaultDestinationFactory"/>
     </component>
     
     <component name="XAFactory">
-        <system:implementation.system class="org.fabric3.binding.aq.destination.XADestinationFactory"/>
+        <system:implementation.system class="org.fabric3.binding.aq.runtime.destination.XADestinationFactory"/>
     </component>   
 
     <!-- Feature -->
