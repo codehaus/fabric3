@@ -62,7 +62,10 @@ public class FtpSourceWireAttacher implements SourceWireAttacher<FtpWireSourceDe
                 Object[] args = new Object[] {fileName, uploadData};
                 WorkContext workContext = new WorkContext();
                 Message input = new MessageImpl(args, false, workContext);
-                head.invoke(input);
+                Message output = head.invoke(input);
+                if (output.isFault()) {
+                    throw (Exception) output.getBody();
+                }
             }            
         });
 
