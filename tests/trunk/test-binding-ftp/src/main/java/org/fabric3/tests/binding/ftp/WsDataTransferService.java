@@ -26,6 +26,6 @@ import org.apache.axiom.om.OMElement;
  */
 public interface WsDataTransferService {
     
-    void transferData(OMElement message) throws Exception;
+    OMElement transferData(OMElement message) throws Exception;
 
 }

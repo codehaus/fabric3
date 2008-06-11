@@ -33,7 +33,7 @@ import org.apache.axiom.om.OMText;
  */
 public class WsDataTransferServiceImpl implements WsDataTransferService {
 
-    public void transferData(OMElement message) throws Exception {
+    public OMElement transferData(OMElement message) throws Exception {
         
         OMElement fileNameElement = (OMElement) message.getFirstOMChild();
         String fileName = fileNameElement.getText();
@@ -51,6 +51,7 @@ public class WsDataTransferServiceImpl implements WsDataTransferService {
             writer.write(buffer, 0, count);
         }
         System.err.println("File data from web service:" + writer.toString());
+        return fileNameElement;
     }
 
 }

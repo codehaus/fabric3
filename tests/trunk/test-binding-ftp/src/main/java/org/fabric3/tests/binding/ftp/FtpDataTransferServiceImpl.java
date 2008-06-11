@@ -41,8 +41,12 @@ public class FtpDataTransferServiceImpl implements FtpDataTransferService {
     @Reference protected WsDataTransferService wsDataTransferService;
 
     public void transferData(String fileName, InputStream data) throws Exception {
-        OMElement wrapper = createWrapper(fileName, data);
-        wsDataTransferService.transferData(wrapper);
+        try {
+            OMElement wrapper = createWrapper(fileName, data);
+            wsDataTransferService.transferData(wrapper);
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
     }
     
     private OMElement createWrapper(final String fileName, final InputStream data) {
