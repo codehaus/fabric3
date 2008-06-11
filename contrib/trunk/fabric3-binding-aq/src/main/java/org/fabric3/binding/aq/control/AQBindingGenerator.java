@@ -20,22 +20,15 @@ package org.fabric3.binding.aq.control;
 
 import java.net.URI;
 
-import javax.xml.namespace.QName;
-
-import org.fabric3.binding.aq.common.TransactionType;
 import org.fabric3.binding.aq.provision.AQWireSourceDefinition;
 import org.fabric3.binding.aq.provision.AQWireTargetDefinition;
 import org.fabric3.binding.aq.scdl.AQBindingDefinition;
-import org.fabric3.scdl.Operation;
 import org.fabric3.scdl.ReferenceDefinition;
-import org.fabric3.scdl.ServiceContract;
 import org.fabric3.scdl.ServiceDefinition;
-import org.fabric3.scdl.definitions.Intent;
 import org.fabric3.spi.generator.BindingGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.policy.Policy;
-import org.osoa.sca.Constants;
 import org.osoa.sca.annotations.EagerInit;
 
 /**
@@ -48,62 +41,27 @@ import org.osoa.sca.annotations.EagerInit;
 @EagerInit
 public class AQBindingGenerator implements BindingGenerator<AQWireSourceDefinition, AQWireTargetDefinition, AQBindingDefinition> {
 
-    /*Transacted one way intent*/    
-    private static final QName TRANSACTED_ONEWAY_GLOBAL = new QName(Constants.SCA_NS, "transactedOneWay.global");   
-
-
     /**
-     * @see org.fabric3.spi.generator.BindingGenerator#generateWireSource(org.fabric3.spi.model.instance.LogicalBinding, org.fabric3.spi.policy.Policy, org.fabric3.scdl.ServiceDefinition)
+     * Builds the Source Definition
      */
-    public AQWireSourceDefinition generateWireSource(final LogicalBinding<AQBindingDefinition> logicalBinding,
-                                                      final Policy policy,                                                      
-                                                      final ServiceDefinition serviceDefinition) throws GenerationException {
-        /** Assign service contract and URI Classloader */
-        final ServiceContract<?> serviceContract = serviceDefinition.getServiceContract();
-        final TransactionType transactionType = getTransactionType(policy, serviceContract);        
-        final URI classloader = getClassloaderURI(logicalBinding);
-        
-        return new AQWireSourceDefinition(logicalBinding.getBinding().getMetadata(), transactionType, classloader);
-
+    public AQWireSourceDefinition generateWireSource(LogicalBinding<AQBindingDefinition> logicalBinding, 
+                                                     Policy policy, 
+                                                     ServiceDefinition serviceDefinition) {
+        URI classLoaderId = logicalBinding.getParent().getParent().getParent().getUri();
+        AQBindingDefinition bd = logicalBinding.getBinding();        
+        return new AQWireSourceDefinition(bd.getDestinationName(), bd.getInitialState(), bd.getDataSourceKey(), bd.getConsumerCount(), classLoaderId);
     }
 
     /**
-     * @see org.fabric3.spi.generator.BindingGenerator#generateWireTarget(org.fabric3.spi.model.instance.LogicalBinding, org.fabric3.spi.policy.Policy, org.fabric3.scdl.ReferenceDefinition)
+     * Builds the Target Definition
      */
-    public AQWireTargetDefinition generateWireTarget(final LogicalBinding<AQBindingDefinition> logicalBinding,
-                                                      final Policy policy,                                                      
-                                                      final ReferenceDefinition referenceDefinition)throws GenerationException {
-        /** Assign service contract and URI Classloader */
-        final ServiceContract<?> serviceContract = referenceDefinition.getServiceContract();
-        final TransactionType transactionType = getTransactionType(policy, serviceContract);        
-        final URI classloader = getClassloaderURI(logicalBinding);
-        
-        return new AQWireTargetDefinition(logicalBinding.getBinding().getMetadata(), transactionType, classloader);
+    public AQWireTargetDefinition generateWireTarget(LogicalBinding<AQBindingDefinition> logicalBinding, 
+                                                     Policy policy, 
+                                                     ReferenceDefinition referenceDefinition)throws GenerationException {
+        URI classLoaderId = logicalBinding.getParent().getParent().getParent().getUri();
+        AQBindingDefinition bd = logicalBinding.getBinding();                
+        return new AQWireTargetDefinition(bd.getDestinationName(), bd.getDataSourceKey(), classLoaderId);
 
     }
 
-    /**
-     * Gets the transaction type.
-     */
-    private TransactionType getTransactionType(Policy policy, ServiceContract<?> serviceContract) {
-        
-        TransactionType transactionType = null;
-        
-        for (Operation<?> operation : serviceContract.getOperations()) {
-            for (Intent intent : policy.getProvidedIntents(operation)) {
-                if (TRANSACTED_ONEWAY_GLOBAL.equals(intent.getName())) {
-                    transactionType =TransactionType.GLOBAL;
-                }
-            }
-        }
-        return transactionType;
-    }
-    
-    /**
-     * The URI of the Classloader
-     * @return URI
-     */
-    private URI getClassloaderURI(final LogicalBinding<AQBindingDefinition> logicalBinding) {
-        return logicalBinding.getParent().getParent().getParent().getUri();
-    }
 }

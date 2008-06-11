@@ -70,8 +70,8 @@ public class DefaultAQHost implements AQHost, DefaultAQHostMBean {
     /**
      * Registers the listeners to start on consuming messages
      */
-    public void registerListener(final XAQueueConnectionFactory connectionFactory, final Destination destination, final MessageListener listener, final TransactionHandler transactionHandler, 
-                                                                                   final ClassLoader classLoader, final URI namespace) {
+    public void registerListener(XAQueueConnectionFactory connectionFactory, Destination destination, MessageListener listener, TransactionHandler transactionHandler, 
+                                                                                   ClassLoader classLoader, URI namespace, int receiverCount) {
         
         final WorkData data = new WorkData();
         /* Set the target URI */
@@ -81,6 +81,7 @@ public class DefaultAQHost implements AQHost, DefaultAQHostMBean {
         data.setClassLoader(classLoader);
         data.setTxHandler(transactionHandler);
         workData.put(namespace, data);
+        this.receiverCount = receiverCount;
         try {
             prepareWorkSchedule(namespace);
         } catch (JMSException ex) {

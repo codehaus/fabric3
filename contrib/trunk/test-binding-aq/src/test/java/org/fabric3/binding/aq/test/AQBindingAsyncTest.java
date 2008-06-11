@@ -31,18 +31,9 @@ import org.osoa.sca.annotations.Reference;
  */
 public class AQBindingAsyncTest extends TestCase {
 
-    /** Asyn Service */
-    private EchoService echoService;
-
-    /**
-     * Sets the Echo Service
-     * 
-     * @param helloService
-     */
     @Reference
-    public void setEchoService(EchoService echoService) {
-        this.echoService = echoService;
-    }
+    protected ProxyEchoService proxyEchoService;
+    
 
     /**
      * test Hello
@@ -50,17 +41,8 @@ public class AQBindingAsyncTest extends TestCase {
      * @throws IOException
      */
     public void testEchoService() throws IOException {
-        System.out.println("Calling Echo Service");
-        /* Do Not want a LOOP */
-        echoService.areYouThere("Any One There One");
-        echoService.areYouThere("Any One There Two");
-        echoService.areYouThere("Any One There Three");
-        echoService.areYouThere("Any One There Four");
-        echoService.areYouThere("Any One There Five");
-        echoService.areYouThere("Any One There Six");
-        echoService.areYouThere("Any One There Seven");
-        echoService.areYouThere("Any One There Eight");
-        echoService.areYouThere("Any One There Nine");
+        System.out.println("Calling Echo Service");      
+        proxyEchoService.forwardRequest("Any One There One");       
         System.err.println("Press Start on JMX Console");
         boolean val = true;
         while (val) {

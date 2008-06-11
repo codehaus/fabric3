@@ -23,8 +23,6 @@ import javax.jms.ConnectionFactory;
 import javax.jms.Destination;
 import javax.jms.QueueConnectionFactory;
 
-import org.fabric3.binding.aq.common.DestinationDefinition;
-
 /**
  * Factory used to create the Jms Destinations\
  * @version $Revsion$ $Date$
@@ -38,6 +36,6 @@ public interface DestinationFactory<CF extends ConnectionFactory> {
      * @param connetcionFactory - connection used to get Queue from
      * @return return the created {@link Destination}
      */
-    Destination getDestination(DestinationDefinition definition, CF connectionFactory);
+    Destination getDestination(String destinationName, CF connectionFactory);
 
 }

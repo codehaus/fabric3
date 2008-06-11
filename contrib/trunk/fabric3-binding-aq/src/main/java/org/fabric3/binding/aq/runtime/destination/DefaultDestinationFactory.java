@@ -25,7 +25,6 @@ import javax.jms.Destination;
 import javax.jms.JMSException;
 import javax.jms.Session;
 
-import org.fabric3.binding.aq.common.DestinationDefinition;
 import org.fabric3.binding.aq.common.Fabric3AQException;
 import org.fabric3.binding.aq.runtime.helper.JmsHelper;
 
@@ -37,14 +36,12 @@ public class DefaultDestinationFactory implements DestinationFactory<ConnectionF
     /**
      * Creates a destination from a {@link DestinationDefinition} and {@link ConnectionFactory}
      */
-    public Destination getDestination(final DestinationDefinition definition, final ConnectionFactory connectionFactory) {        
-        final String name = definition.getName();        
-        final Destination queue;
+    public Destination getDestination(String destinationName, ConnectionFactory connectionFactory) {    
+        
         Connection connection = null;      
         try {                      
             connection = connectionFactory.createConnection();
-            queue = connection.createSession(true, Session.AUTO_ACKNOWLEDGE).createQueue(name);            
-            return queue;
+            return connection.createSession(true, Session.AUTO_ACKNOWLEDGE).createQueue(destinationName);  
         } catch(JMSException ex) {
             throw new Fabric3AQException("Unable to create destination", ex);
         } finally {

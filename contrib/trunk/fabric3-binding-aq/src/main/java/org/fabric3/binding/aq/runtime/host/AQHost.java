@@ -45,7 +45,7 @@ public interface AQHost {
                           MessageListener listener,
                           TransactionHandler transactionHandler,
                           ClassLoader classloader,
-                          URI namespace);
+                          URI namespace, int receiverCount);
     
     
     /**

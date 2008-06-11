@@ -22,11 +22,11 @@ package org.fabric3.binding.aq.runtime.connectionfactory;
 import javax.jms.ConnectionFactory;
 import javax.jms.JMSException;
 import javax.jms.XAQueueConnectionFactory;
+import javax.sql.DataSource;
 import javax.sql.XADataSource;
 
 import oracle.jms.AQjmsFactory;
 
-import org.fabric3.binding.aq.common.AQBindingMetadata;
 import org.fabric3.binding.aq.common.Fabric3AQException;
 
 /**
@@ -43,16 +43,17 @@ public class XAConnectionFactoryAccessor implements ConnectionFactoryAccessor<XA
      * @param metadata - meta information used to the QueueConnectionFactory
      * @return QueueConnectionFactory
      */
-    public XAQueueConnectionFactory getConnectionFactory(final AQBindingMetadata metadata) {
-        final XADataSource xaDataSource = (XADataSource)metadata.getDataSource();
-        final XAQueueConnectionFactory connectionFactory;
+    public XAQueueConnectionFactory getConnectionFactory(DataSource dataSource) {
+        
 
         try {
-            connectionFactory = AQjmsFactory.getXAQueueConnectionFactory(xaDataSource);
+            XADataSource xaDataSource = (XADataSource) dataSource;
+            return AQjmsFactory.getXAQueueConnectionFactory(xaDataSource);
         } catch (JMSException je) {
             throw new Fabric3AQException("Unable to create AQ connection factory ", je);
         }
-        return connectionFactory;
+        
     }
+    
 }
 

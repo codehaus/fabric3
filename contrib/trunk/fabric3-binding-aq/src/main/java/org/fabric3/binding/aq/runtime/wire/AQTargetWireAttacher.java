@@ -22,10 +22,9 @@ import java.util.Map;
 
 import javax.jms.Destination;
 import javax.jms.XAQueueConnectionFactory;
+import javax.sql.DataSource;
 
 import org.fabric3.api.annotation.Monitor;
-import org.fabric3.binding.aq.common.AQBindingMetadata;
-import org.fabric3.binding.aq.common.DestinationDefinition;
 import org.fabric3.binding.aq.provision.AQWireTargetDefinition;
 import org.fabric3.binding.aq.runtime.connectionfactory.ConnectionFactoryAccessor;
 import org.fabric3.binding.aq.runtime.destination.DestinationFactory;
@@ -49,52 +48,36 @@ import org.osoa.sca.annotations.Reference;
  * @version $Revision$ $Date$
  */
 public class AQTargetWireAttacher implements  TargetWireAttacher<AQWireTargetDefinition> {   
-   
-    /*Connection factory strategies. */
+
     private ConnectionFactoryAccessor<XAQueueConnectionFactory> connectionFactoryAccessor;
-    
-    /* Factory used for creating destinations */
     private DestinationFactory<XAQueueConnectionFactory> destinationFactory;
-    
-    /* Registry that holds class loaders */
     private ClassLoaderRegistry classLoaderRegistry;
-    
-    /* Registry that holds data sources */
     private DataSourceRegistry dataSourceRegistry;
-
     private TransactionHandler transactionHandler;
-
     private AQMonitor monitor;    
     
 
-    /**
-     * @see org.fabric3.spi.builder.component.TargetWireAttacher#attachToTarget(org.fabric3.spi.model.physical.PhysicalWireSourceDefinition,
-     *      org.fabric3.spi.model.physical.PhysicalWireTargetDefinition,
-     *      org.fabric3.spi.wire.Wire)
-     */
-    public void attachToTarget(final PhysicalWireSourceDefinition sourceDefinition, final AQWireTargetDefinition targetDefinition, final Wire wire)  throws WiringException {
+    public void attachToTarget(PhysicalWireSourceDefinition source, AQWireTargetDefinition target, Wire wire)  throws WiringException {
+        
         monitor.onTargetWire(" Still Refactoring ");
         
-        final ClassLoader classLoader = classLoaderRegistry.getClassLoader(targetDefinition.getClassloaderURI());               
-     
-        AQBindingMetadata metadata = targetDefinition.getMetadata();
-        String datasourceName = (String)metadata.getDestination().getProperties().get("datasource");
-        metadata.setDataSource(dataSourceRegistry.getDataSource(datasourceName));
-        
+        ClassLoader classLoader = classLoaderRegistry.getClassLoader(target.getClassLoaderId());  
 
-        XAQueueConnectionFactory reqCf = connectionFactoryAccessor.getConnectionFactory(metadata);
+        String dataSourceKey = target.getDataSourceKey();
+        DataSource dataSource = dataSourceRegistry.getDataSource(dataSourceKey);
 
-        DestinationDefinition destinationDefinition = metadata.getDestination();
-        Destination reqDestination = destinationFactory.getDestination(destinationDefinition, reqCf);      
-                
+        XAQueueConnectionFactory reqCf = connectionFactoryAccessor.getConnectionFactory(dataSource);
+
+        String destinationName = target.getDestinationName();
+        Destination reqDestination = destinationFactory.getDestination(destinationName, reqCf);     
          
         for (Map.Entry<PhysicalOperationDefinition, InvocationChain> entry : wire.getInvocationChains().entrySet()) {
-
             PhysicalOperationDefinition op = entry.getKey();
             InvocationChain chain = entry.getValue();            
             Interceptor interceptor = new OneWayAQTargetInterceptor(op.getName(), reqCf, reqDestination, transactionHandler, classLoader);             
             chain.addInterceptor(interceptor);
         }
+        
     }
 
     public ObjectFactory<?> createObjectFactory(AQWireTargetDefinition target) throws WiringException {
@@ -106,7 +89,7 @@ public class AQTargetWireAttacher implements  TargetWireAttacher<AQWireTargetDef
      * @param connectionFactoryAccessor
      */
     @Reference
-    protected void setConnectionFactoryAccessor(final ConnectionFactoryAccessor<XAQueueConnectionFactory> connectionFactoryAccessor){
+    public void setConnectionFactoryAccessor(ConnectionFactoryAccessor<XAQueueConnectionFactory> connectionFactoryAccessor){
         this.connectionFactoryAccessor = connectionFactoryAccessor;
     }
             
@@ -115,7 +98,7 @@ public class AQTargetWireAttacher implements  TargetWireAttacher<AQWireTargetDef
      * @param  destinationFactory
      */
     @Reference
-    protected void setDestinationFactory(final DestinationFactory<XAQueueConnectionFactory> destinationFactory) {
+    public void setDestinationFactory(DestinationFactory<XAQueueConnectionFactory> destinationFactory) {
         this.destinationFactory = destinationFactory;
     }
     
@@ -123,7 +106,7 @@ public class AQTargetWireAttacher implements  TargetWireAttacher<AQWireTargetDef
      * @param dataSource - the dataSource to set.
      */
     @Reference
-    protected void setDataSourceRegistry(DataSourceRegistry dataSourceRegistry) {
+    public void setDataSourceRegistry(DataSourceRegistry dataSourceRegistry) {
         this.dataSourceRegistry = dataSourceRegistry;
     }
     
@@ -132,7 +115,7 @@ public class AQTargetWireAttacher implements  TargetWireAttacher<AQWireTargetDef
      * @param transactionHandler Transaction handler.
      */
     @Reference(required = true)
-    protected void setTransactionHandler(TransactionHandler transactionHandler) {
+    public void setTransactionHandler(TransactionHandler transactionHandler) {
         this.transactionHandler = transactionHandler;
     }
 
@@ -141,7 +124,7 @@ public class AQTargetWireAttacher implements  TargetWireAttacher<AQWireTargetDef
      * @param classLoaderRegistry
      */
     @Reference
-    protected void setClassloaderRegistry(ClassLoaderRegistry classLoaderRegistry) {
+    public void setClassloaderRegistry(ClassLoaderRegistry classLoaderRegistry) {
         this.classLoaderRegistry = classLoaderRegistry;
     }
     
@@ -150,7 +133,7 @@ public class AQTargetWireAttacher implements  TargetWireAttacher<AQWireTargetDef
      * @param monitor
      */
     @Monitor
-    protected void setMonitor(final AQMonitor monitor){
+    public void setMonitor(AQMonitor monitor){
         this.monitor = monitor;
     }
 }

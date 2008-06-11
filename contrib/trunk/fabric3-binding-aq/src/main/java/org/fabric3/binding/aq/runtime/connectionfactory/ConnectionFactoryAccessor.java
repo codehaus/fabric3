@@ -20,8 +20,7 @@
 package org.fabric3.binding.aq.runtime.connectionfactory;
 
 import javax.jms.ConnectionFactory;
-
-import org.fabric3.binding.aq.common.AQBindingMetadata;
+import javax.sql.DataSource;
 
 /**
  * The Connection Factory Accessor is used to retrieve a {@link ConnectionFactory}
@@ -35,7 +34,7 @@ public interface ConnectionFactoryAccessor<CF extends ConnectionFactory> {
      * @param metadata is used to get a {@link ConnectionFactory}
      * @return ConnectionFactory 
      */
-    CF getConnectionFactory(AQBindingMetadata metadata);
+    CF getConnectionFactory(DataSource dataSource);
     
 
 }

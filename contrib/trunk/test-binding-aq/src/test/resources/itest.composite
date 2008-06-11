@@ -16,33 +16,27 @@
 	under the License.
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
-	xmlns:sca="http://www.osoa.org/xmlns/sca/1.0"
-	xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha" name="AQTest">
-
-	<component name="EchoTest">
-		<f3:junit
-			class="org.fabric3.binding.aq.test.AQBindingAsyncTest" />
-		<reference name="echoService">
-			<binding.aq correlationScheme="RequestMsgIDToCorrelID">
-				<destination name="FIRE_FORGET_Q" type="queue">
-					<property name="datasource">AQDataSource</property>
-				</destination>
-			</binding.aq>
-		</reference>
-	</component>
-
-	<component name="EchoService">
-		<implementation.java
-			class="org.fabric3.binding.aq.test.EchoServiceImpl" />
-		<service name="EchoService">
-			<binding.aq correlationScheme="RequestMsgIDToCorrelID"
-				requires="sca:transactedOneWay.global">
-				<destination name="FIRE_FORGET_Q" type="queue">
-					<property name="datasource">AQDataSource</property>
-                    <property name="initialState">stopped</property>
-				</destination>
-			</binding.aq>
-		</service>
-	</component>
-
+           xmlns:sca="http://www.osoa.org/xmlns/sca/1.0"
+           xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
+           name="AQTestComposite">
+           
+     <component name="TestAsynsTest">
+         <f3:junit class="org.fabric3.binding.aq.test.AQBindingAsyncTest"/>
+         <reference name="proxyEchoService" target="proxyEchoService"/>                                       
+    </component>            
+           
+    <component name="proxyEchoService" requires="sca:managedTransaction">
+         <implementation.java class="org.fabric3.binding.aq.test.ProxyEchoServiceImpl"/>
+         <reference name="echoService">
+              <binding.aq destinationName="FIRE_FORGET_Q" dataSourceKey="AQDataSource"/>           
+         </reference>        
+    </component>        
+    
+    <component name="echoService">
+          <implementation.java class="org.fabric3.binding.aq.test.EchoServiceImpl" />
+          <service name="EchoService">
+               <binding.aq destinationName="FIRE_FORGET_Q" dataSourceKey="AQDataSource" initialState="STOPPED" consumerCount="0"/>             
+          </service>          
+     </component>
+     
 </composite>

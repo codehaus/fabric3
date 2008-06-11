@@ -20,30 +20,29 @@
            xmlns:system="http://fabric3.org/xmlns/sca/system/2.0-alpha"
            xmlns:sca="http://www.osoa.org/xmlns/sca/1.0"
            targetNamespace="org.codehaus.fabric3"
-           name="AQBindingExtension"
-           autowire="true">
+           name="AQBindingExtension">
 
     <!-- JTA Transaction Handler -->
-    <component name="JTATransactionHandler" f3:key="GLOBAL">
+    <component name="JTATransactionHandler">
         <system:implementation.system class="org.fabric3.binding.aq.runtime.tx.JtaTransactionHandler"/>
     </component>
 
-    <!-- JMS Host -->
+    <!-- AQ Host -->
     <component name="AQHost">
         <system:implementation.system class="org.fabric3.binding.aq.runtime.host.standalone.DefaultAQHost"/>
     </component>
 
-    <!-- JMS Binding Loader -->
-    <component f3:key="sca:binding.aq" name="AQBindingLoader">
+    <!-- AQ Binding Loader -->
+    <component name="AQBindingLoader" f3:key="sca:binding.aq" >
         <system:implementation.system class="org.fabric3.binding.aq.introspection.AQBindingLoader"/>
     </component>
 
-    <!-- JMS Binding Generator -->
+    <!-- AQ Binding Generator -->
     <component name="AQBindingGenerator"  f3:key="org.fabric3.binding.aq.scdl.AQBindingDefinition">
         <system:implementation.system class="org.fabric3.binding.aq.control.AQBindingGenerator"/>
     </component>
 
-   <!-- JMS Wire Attachers -->
+   <!-- AQ Wire Attachers -->
     <component f3:key="org.fabric3.binding.aq.provision.AQWireSourceDefinition" name="org.fabric3.binding.aq.runtime.wire.AQSourceWireAttacher">
         <system:implementation.system class="org.fabric3.binding.aq.runtime.wire.AQSourceWireAttacher"/>
         <reference name="connectionFactoryAccessor" target="XAConnectionFactory"/>

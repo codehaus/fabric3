@@ -18,7 +18,7 @@
  */
 package org.fabric3.binding.aq.scdl;
 
-import org.fabric3.binding.aq.common.AQBindingMetadata;
+import org.fabric3.binding.aq.common.InitialState;
 import org.fabric3.binding.aq.introspection.AQBindingLoader;
 import org.fabric3.scdl.BindingDefinition;
 
@@ -31,30 +31,61 @@ import org.fabric3.scdl.BindingDefinition;
  */
 public class AQBindingDefinition extends BindingDefinition {
 
+    /**
+     * Serial version UID.
+     */
+    private static final long serialVersionUID = -1068490200857726262L;
     
-    private static final long serialVersionUID = 2226007278215138678L;  
-    private AQBindingMetadata metadata;
-
+    private final String destinationName;
+    private final InitialState initialState;
+    private final int consumerCount;
+    private final String dataSourceKey;
+    
     /**
-     * @param metadata Metadata to be initialized.
+     * TODO DOCUMENT
+     * @param destinationName
+     * @param initialState
+     * @param dataSourceKey
+     * @param consumerCount
      */
-    public AQBindingDefinition(final AQBindingMetadata metadata) {
+    public AQBindingDefinition(String destinationName, InitialState initialState, String dataSourceKey, int consumerCount) {
         super(AQBindingLoader.BINDING_QNAME);
-        this.metadata = metadata;
+        this.destinationName = destinationName;
+        this.initialState = initialState;
+        this.dataSourceKey = dataSourceKey;
+        this.consumerCount = consumerCount;
     }
 
     /**
-     * @return the metadata
+     * TODO DOCUMENT
+     * @return
      */
-    public AQBindingMetadata getMetadata() {
-        return metadata;
+    public String getDestinationName() {
+        return destinationName;
     }
-
+    
     /**
-     * @param metadata the metadata to set
+     * TODO DOCUMENT
+     * @return
      */
-    public void setMetadata(final AQBindingMetadata metadata) {
-        this.metadata = metadata;
+    public InitialState getInitialState() {
+        return initialState;
+    }
+    
+    /**
+     * TODO DOCUMENT
+     * @return
+     */
+    public int getConsumerCount() {
+        return consumerCount;
+    }
+    
+    /**
+     * TODO DOCUMENT
+     * @return
+     */
+    public String getDataSourceKey() {
+        return dataSourceKey;
     }
 
 }

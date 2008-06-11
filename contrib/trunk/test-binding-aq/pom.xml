@@ -57,12 +57,7 @@
                                    <groupId>org.codehaus.fabric3</groupId>
                                    <artifactId>fabric3-resource</artifactId>
                                    <version>0.5BETA2-SNAPSHOT</version>
-                              </dependency>
-                              <dependency>
-                                   <groupId>org.codehaus.fabric3</groupId>
-                                   <artifactId>fabric3-binding-aq</artifactId>
-                                   <version>0.5-SNAPSHOT</version>
-                              </dependency>
+                              </dependency>                              
                               <dependency>
                                    <groupId>org.codehaus.fabric3</groupId>
                                    <artifactId>fabric3-tx-jotm</artifactId>
@@ -77,6 +72,11 @@
                                    <groupId>org.codehaus.fabric3</groupId>
                                    <artifactId>aq-ds-extension</artifactId>
                                    <version>0.1-SNAPSHOT</version>
+                              </dependency>
+                              <dependency>
+                                   <groupId>org.codehaus.fabric3</groupId>
+                                   <artifactId>fabric3-binding-aq</artifactId>
+                                   <version>0.5-SNAPSHOT</version>
                               </dependency>
                          </extensions>
                          <shared>

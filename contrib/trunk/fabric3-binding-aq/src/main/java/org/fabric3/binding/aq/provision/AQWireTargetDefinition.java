@@ -20,8 +20,6 @@ package org.fabric3.binding.aq.provision;
 
 import java.net.URI;
 
-import org.fabric3.binding.aq.common.AQBindingMetadata;
-import org.fabric3.binding.aq.common.TransactionType;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 
 /**
@@ -29,77 +27,44 @@ import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
  */
 public class AQWireTargetDefinition extends PhysicalWireTargetDefinition {
     
-    /**
-     * Metadata.
-     */
-    private AQBindingMetadata metadata;
+    private final String destinationName;
+    private final String dataSourceKey;
+    private final URI classLoaderId;
     
     /**
-     * Transaction mode.
+     * Constructs the Wire Definition
+     * @param destinationName
+     * @param dataSourceKey
+     * @param classLoaderId
      */
-    private TransactionType transactionType;
+    public AQWireTargetDefinition(String destinationName, String dataSourceKey, URI classLoaderId) {
+        this.destinationName = destinationName;
+        this.dataSourceKey = dataSourceKey;
+        this.classLoaderId = classLoaderId;
+    }
 
     /**
-     * The classloader for the service
+     * Get Destination Name
+     * @return
      */
-    private URI classloaderURI;
-    
-    /**
-     * Default constructor.
-     */
-    public AQWireTargetDefinition() {
+    public String getDestinationName() {
+        return destinationName;
     }
     
     /**
-     * @param metadata Metadata to be initialized.
-     * @param transactionType Transaction type.
+     * Gets the Data Source Key
+     * @return
      */
-    public AQWireTargetDefinition(AQBindingMetadata metadata, TransactionType transactionType, URI classloaderUri) {
-        this.metadata = metadata;
-        this.transactionType = transactionType;
-        this.classloaderURI = classloaderUri;
+    public String getDataSourceKey() {
+        return dataSourceKey;
     }
 
     /**
-     * @return Classloader UTI.
+     * Gets the Classloader URI
+     * @return
      */
-    public URI getClassloaderURI() {
-        return classloaderURI;
-    }
-
-    /**
-     * @param classloaderURI Classloader URI.
-     */
-    public void setClassloaderURI(URI classloaderURI) {
-        this.classloaderURI = classloaderURI;
-    }
-
-    /**
-     * @return JMS metadata.
-     */
-    public AQBindingMetadata getMetadata() {
-        return metadata;
-    }
-
-    /**
-     * @param metadata JMS metadata.
-     */
-    public void setMetadata(AQBindingMetadata metadata) {
-        this.metadata = metadata;
-    }
-
-    /**
-     * @return Transaction type.
-     */
-    public TransactionType getTransactionType() {
-        return transactionType;
-    }
-
-    /**
-     * @param transactionType Transaction type.
-     */
-    public void setTransactionType(TransactionType transactionType) {
-        this.transactionType = transactionType;
+    public URI getClassLoaderId() {
+        return classLoaderId;
     }
 
 }

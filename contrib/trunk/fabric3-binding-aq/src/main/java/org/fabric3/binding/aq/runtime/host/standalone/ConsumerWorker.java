@@ -48,6 +48,7 @@ public class ConsumerWorker implements PollingConsumer {
     private final AQMonitor monitor;
 
     /**
+     * Constructs the Worker to read the data from the queues
      * @param session Session used to receive messages.
      * @param transactionHandler Transaction handler.
      * @param consumer Message consumer.

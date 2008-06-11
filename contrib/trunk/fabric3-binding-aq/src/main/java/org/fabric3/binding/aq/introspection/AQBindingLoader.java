@@ -18,23 +18,15 @@
  */
 package org.fabric3.binding.aq.introspection;
 
-import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
-import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
-
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
-import org.fabric3.binding.aq.common.AQBindingMetadata;
-import org.fabric3.binding.aq.common.AdministeredObjectDefinition;
-import org.fabric3.binding.aq.common.CorrelationScheme;
-import org.fabric3.binding.aq.common.CreateOption;
-import org.fabric3.binding.aq.common.DestinationDefinition;
-import org.fabric3.binding.aq.common.DestinationType;
-import org.fabric3.binding.aq.common.ResponseDefinition;
+import org.fabric3.binding.aq.common.InitialState;
 import org.fabric3.binding.aq.scdl.AQBindingDefinition;
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.xml.LoaderHelper;
+import org.fabric3.introspection.xml.LoaderUtil;
 import org.fabric3.introspection.xml.TypeLoader;
 import org.osoa.sca.Constants;
 import org.osoa.sca.annotations.EagerInit;
@@ -47,9 +39,8 @@ import org.osoa.sca.annotations.Reference;
 public class AQBindingLoader implements TypeLoader<AQBindingDefinition> {
 
     /** Qualified name for the binding element. */
-    public static final QName BINDING_QNAME = new QName(Constants.SCA_NS, "binding.aq");    
-    
-    /** Assists in Loading XML with Policies */
+    public static final QName BINDING_QNAME  =  new QName(Constants.SCA_NS, "binding.aq");  
+
     private final LoaderHelper loaderHelper;  
               
 
@@ -62,125 +53,28 @@ public class AQBindingLoader implements TypeLoader<AQBindingDefinition> {
     }
     
     /**
+     * @throws XMLStreamException 
      * 
      */
-    public AQBindingDefinition load(final XMLStreamReader reader, final IntrospectionContext loaderContext)
-        throws XMLStreamException {             
+    public AQBindingDefinition load(final XMLStreamReader reader, final IntrospectionContext loaderContext) throws XMLStreamException {                
+        System.err.println("Inside The Loader");
+        final String destinationName = reader.getAttributeValue(null, "destinationName");
+        final String sInitialState = reader.getAttributeValue(null, "initialState");
+        final String sConsumerCount = reader.getAttributeValue(null, "consumerCount");
+        final String dataSourceKey = reader.getAttributeValue(null, "dataSourceKey");
         
-        final AQBindingMetadata metadata = new AQBindingMetadata();
-        final AQBindingDefinition bd = new AQBindingDefinition(metadata);               
-
-        final String correlationScheme = reader.getAttributeValue(null, "correlationScheme");
-        if (correlationScheme != null) {
-            metadata.setCorrelationScheme(CorrelationScheme.valueOf(correlationScheme));
-        }        
-
-        loaderHelper.loadPolicySetsAndIntents(bd, reader, loaderContext);
-
-        String name = null;
-        while (true) {
-
-            switch(reader.next()) {
-                case START_ELEMENT:
-                    name = reader.getName().getLocalPart();
-                    if ("destination".equals(name)) {
-                        DestinationDefinition destination = loadDestination(reader);
-                        metadata.setDestination(destination);
-                    } else if ("response".equals(name)) {
-                        ResponseDefinition response = loadResponse(reader);
-                        metadata.setResponse(response);
-                    }
-                    break;
-                case END_ELEMENT:
-                    name = reader.getName().getLocalPart();
-                    if("binding.aq".equals(name)) {
-                        return bd;
-                    }
-                    break;
-            }
-
-        }
+        final int consumerCount = sConsumerCount != null ? Integer.parseInt(sConsumerCount) : 0;
+        final InitialState initialState = sConsumerCount != null ? InitialState.valueOf(sInitialState) : InitialState.STARTED;
+        
+        final AQBindingDefinition bindingDefinition = 
+            new AQBindingDefinition(destinationName, initialState, dataSourceKey, consumerCount);
+        
+        loaderHelper.loadPolicySetsAndIntents(bindingDefinition, reader, loaderContext);
+        
+        LoaderUtil.skipToEndElement(reader);
+        
+        return bindingDefinition;
 
     }
-
-    /*
-     * Loads response definition.
-     */
-    private ResponseDefinition loadResponse(XMLStreamReader reader) throws XMLStreamException {
-
-        ResponseDefinition response = new ResponseDefinition();
-
-        String name = null;
-        while (true) {
-
-            switch(reader.next()) {
-                case START_ELEMENT:
-                    name = reader.getName().getLocalPart();
-                    if ("destination".equals(name)) {
-                        DestinationDefinition destination = loadDestination(reader);
-                        response.setDestination(destination);
-                    } 
-                    break;
-                case END_ELEMENT:
-                    name = reader.getName().getLocalPart();
-                    if("response".equals(name)) {
-                        return response;
-                    }
-                    break;
-            }
-
-        }
-
-    }   
-
-    /*
-     * Loads destination definition.
-     */
-    private DestinationDefinition loadDestination(XMLStreamReader reader) throws XMLStreamException {
-
-        DestinationDefinition destination = new DestinationDefinition();
-
-        destination.setName(reader.getAttributeValue(null, "name"));
-
-        String create = reader.getAttributeValue(null, "create");
-        if (create != null) {
-            destination.setCreate(CreateOption.valueOf(create));
-        }
-
-        String type = reader.getAttributeValue(null, "type");
-        if(type != null) {
-            destination.setDestinationType(DestinationType.valueOf(type));
-        }
-
-        loadProperties(reader, destination, "destination");
-
-        return destination;
-
-    }
-
-    /*
-     * 
-     */
-    private void loadProperties(XMLStreamReader reader, AdministeredObjectDefinition parent, String parentName) throws XMLStreamException {
-
-        String name = null;
-        while (true) {
-            switch(reader.next()) {
-                case START_ELEMENT:
-                    name = reader.getName().getLocalPart();
-                    if ("property".equals(name)) {
-                        final String key = reader.getAttributeValue(null, "name");
-                        final String value = reader.getElementText();
-                        parent.addProperty(key, value);
-                    }
-                    break;
-                case END_ELEMENT:
-                    name = reader.getName().getLocalPart();
-                    if(parentName.equals(name)) {
-                        return;
-                    }
-                    break;
-            }
-        }
-    }    
+    
 }

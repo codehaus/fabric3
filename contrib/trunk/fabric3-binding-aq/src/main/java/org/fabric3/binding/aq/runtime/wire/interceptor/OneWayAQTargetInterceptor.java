@@ -46,16 +46,11 @@ public class OneWayAQTargetInterceptor implements Interceptor {
     private ClassLoader cl;
 
     /**
-     * @param methodName
-     *            Method name.
-     * @param destination
-     *            Request destination.
-     * @param connectionFactory
-     *            Request connection factory.
-     * @param correlationScheme
-     *            Correlation scheme.
-     * @param messageReceiver
-     *            Message receiver for response.
+     * @param methodName Method name.
+     * @param destination Request destination.
+     * @param connectionFactory Request connection factory.
+     * @param correlationScheme Correlation scheme.
+     * @param messageReceiver Message receiver for response.
      */
     public OneWayAQTargetInterceptor(String methodName, XAQueueConnectionFactory connectionFactory, Destination destination, TransactionHandler transactionHandler, ClassLoader classLoader) {
         this.methodName = methodName;
@@ -93,10 +88,9 @@ public class OneWayAQTargetInterceptor implements Interceptor {
             javax.jms.Message jmsMessage = session.createObjectMessage(payload);
             jmsMessage.setStringProperty("scaOperationName", methodName);
             
-            transactionHandler.enlist(session);            
-            producer.send(jmsMessage); 
-            transactionHandler.commit();
-                        
+            transactionHandler.enlist(session);          
+            producer.send(jmsMessage);                    
+            
             return empty;
         } catch (JMSException ex) {
             throw new Fabric3AQException("Unable to receive response", ex);
