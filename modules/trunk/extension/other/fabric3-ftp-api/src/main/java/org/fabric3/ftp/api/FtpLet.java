@@ -37,6 +37,6 @@ public interface FtpLet {
      * @param uploadData Stream of data that is being uploaded.
      * @throws Exception If unable to handle the data.
      */
-    void onUpload(String fileName, InputStream uploadData) throws Exception;
+    boolean onUpload(String fileName, InputStream uploadData) throws Exception;
 
 }

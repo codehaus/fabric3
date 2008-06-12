@@ -57,15 +57,12 @@ public class FtpSourceWireAttacher implements SourceWireAttacher<FtpWireSourceDe
         URI uri = source.getUri();
         String servicePath = uri.getPath();
         ftpLetContainer.registerFtpLet(servicePath, new FtpLet() {
-            public void onUpload(String fileName, InputStream uploadData) throws Exception {
+            public boolean onUpload(String fileName, InputStream uploadData) throws Exception {
                 Interceptor head = wire.getInvocationChains().values().iterator().next().getHeadInterceptor();
                 Object[] args = new Object[] {fileName, uploadData};
                 WorkContext workContext = new WorkContext();
                 Message input = new MessageImpl(args, false, workContext);
-                Message output = head.invoke(input);
-                if (output.isFault()) {
-                    throw (Exception) output.getBody();
-                }
+                return !head.invoke(input).isFault();
             }            
         });
 

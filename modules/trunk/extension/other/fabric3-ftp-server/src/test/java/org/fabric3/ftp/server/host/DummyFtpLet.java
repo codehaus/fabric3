@@ -28,13 +28,14 @@ import org.fabric3.ftp.api.FtpLet;
  */
 public class DummyFtpLet implements FtpLet {
 
-    public void onUpload(String fileName, InputStream uploadData) throws Exception {
+    public boolean onUpload(String fileName, InputStream uploadData) throws Exception {
         
         int data = uploadData.read();
         while (data != -1) {
             System.err.print((char) data);
             data = uploadData.read();
         }
+        return true;
     }
 
 }

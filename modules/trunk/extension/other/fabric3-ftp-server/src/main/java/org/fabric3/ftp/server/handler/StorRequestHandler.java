@@ -102,12 +102,14 @@ public class StorRequestHandler implements RequestHandler {
             InputStream uploadData = dataConnection.getInputStream();
             
             FtpLet ftpLet = ftpLetContainer.getFtpLet(fileName);
-            if (ftpLet != null) {
-                ftpLet.onUpload(fileName, uploadData);
-            } else {
-                throw new IOException("No registered ");
+            if (ftpLet == null) {
+                throw new IOException("No FTPlet registered");
+            }
+            if (!ftpLet.onUpload(fileName, uploadData)) {
+                throw new IOException("FTPlet aborted uplaod");
             }
             session.write(new DefaultResponse(226, "Transfer complete"));
+            
         } catch (Exception ex) {
             session.write(new DefaultResponse(426, "Data connection error"));
             return;
