@@ -62,6 +62,7 @@ public class PassRequestHandler implements RequestHandler {
         }
         
         if (userManager.login(userName, password)) {
+            session.setAuthenticated();
             session.write(new DefaultResponse(230, "User logged in, proceed"));
         } else {
             session.write(new DefaultResponse(530, "Authentication failed"));

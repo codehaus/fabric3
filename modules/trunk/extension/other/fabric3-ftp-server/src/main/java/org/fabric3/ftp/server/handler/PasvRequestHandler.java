@@ -51,6 +51,12 @@ public class PasvRequestHandler implements RequestHandler {
     public void service(Request request) {
 
         FtpSession session = request.getSession();
+        
+        if (!session.isAuthenticated()) {
+            session.write(new DefaultResponse(530, "Access denied"));
+            return;
+        }
+        
         int passivePort = 0;
 
         try {

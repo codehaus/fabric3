@@ -76,7 +76,8 @@ public class FtpSession {
      * @return True if the user is authenticated.
      */
     public boolean isAuthenticated() {
-        return getUser().isAuthenticated();
+        User user = getUser();
+        return user != null && user.isAuthenticated();
     }
     
     /**
