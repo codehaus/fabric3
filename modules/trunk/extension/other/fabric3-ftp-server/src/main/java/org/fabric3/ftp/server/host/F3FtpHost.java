@@ -49,38 +49,11 @@ public class F3FtpHost implements FtpHost {
     private SocketAcceptor acceptor;
     private IoHandler ftpHandler;
     private ProtocolCodecFactory codecFactory;
-
-
-    /**
-     * Sets the handler for the FTP commands.
-     * @param ftpHandler FTP Handler.
-     */
-    @Reference
-    public void setFtpHandler(IoHandler ftpHandler) {
-        this.ftpHandler = ftpHandler;
-    }
-
-    /**
-     * Sets the protocol codec factory.
-     * @param ftpHandler FTP Handler.
-     */
-    @Reference
-    public void setCodecFactory(ProtocolCodecFactory codecFactory) {
-        this.codecFactory = codecFactory;
-    }
-
-    /**
-     * Sets the FTP command port.
-     * @param commandPort Command port.
-     */
-    @Property
-    public void setCommandPort(int commandPort) {
-        this.commandPort = commandPort;
-    }
     
     /**
      * Starts the FTP server.
-     * @throws IOException 
+     * 
+     * @throws IOException If unable to start the FTP server.
      */
     @Init
     public void start() throws IOException {
@@ -103,15 +76,35 @@ public class F3FtpHost implements FtpHost {
         acceptor.unbind();
         acceptor.dispose();
     }
-    
+
     /**
-     * Registers an FTP let for the specified path.
+     * Sets the handler for the FTP commands.
      * 
-     * @param path Path on which the FtpLet is listening.
-     * @param ftpLet FtpLet listening for the upload request.
+     * @param ftpHandler FTP Handler.
      */
-    public void registerFtpLet(String path, FtpLet ftpLet) {
-        throw new UnsupportedOperationException();
+    @Reference
+    public void setFtpHandler(IoHandler ftpHandler) {
+        this.ftpHandler = ftpHandler;
+    }
+
+    /**
+     * Sets the protocol codec factory.
+     * 
+     * @param ftpHandler FTP Handler.
+     */
+    @Reference
+    public void setCodecFactory(ProtocolCodecFactory codecFactory) {
+        this.codecFactory = codecFactory;
+    }
+
+    /**
+     * Sets the FTP command port.
+     * 
+     * @param commandPort Command port.
+     */
+    @Property
+    public void setCommandPort(int commandPort) {
+        this.commandPort = commandPort;
     }
 
 }

@@ -33,6 +33,7 @@ import org.fabric3.ftp.server.handler.PassRequestHandler;
 import org.fabric3.ftp.server.handler.PasvRequestHandler;
 import org.fabric3.ftp.server.handler.StorRequestHandler;
 import org.fabric3.ftp.server.handler.UserRequestHandler;
+import org.fabric3.ftp.server.monitor.FtpMonitor;
 import org.fabric3.ftp.server.passive.PassiveConnectionServiceImpl;
 import org.fabric3.ftp.server.protocol.RequestHandler;
 import org.fabric3.ftp.server.security.FileSystemUserManager;
@@ -47,6 +48,8 @@ public class F3FtpHostTest extends TestCase {
     private F3FtpHost ftpHost;
     
     public void setUp() throws Exception {
+        
+        FtpMonitor ftpMonitor = new TestFtpMonitor();
         
         Map<String, RequestHandler> requestHandlers = new HashMap<String, RequestHandler>();
         
@@ -70,6 +73,7 @@ public class F3FtpHostTest extends TestCase {
         
         StorRequestHandler storRequestHandler = new StorRequestHandler();
         storRequestHandler.setPassivePortService(passiveConnectionService);
+        storRequestHandler.setFtpMonitor(ftpMonitor);
         FtpLetContainer ftpLetContainer = new DefaultFtpLetContainer();
         ftpLetContainer.registerFtpLet("/", new DummyFtpLet());
         storRequestHandler.setFtpLetContainer(ftpLetContainer);
@@ -78,7 +82,8 @@ public class F3FtpHostTest extends TestCase {
         ftpHost = new F3FtpHost();
         
         FtpHandler ftpHandler = new FtpHandler();
-        ftpHandler.setFtpCommands(requestHandlers);
+        ftpHandler.setRequestHandlers(requestHandlers);
+        ftpHandler.setFtpMonitor(ftpMonitor);
         
         ftpHost.setFtpHandler(ftpHandler);
         ftpHost.setCommandPort(1234);

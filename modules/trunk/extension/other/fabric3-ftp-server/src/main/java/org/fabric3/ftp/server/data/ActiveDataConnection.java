@@ -31,6 +31,7 @@ public class ActiveDataConnection implements DataConnection {
     
     /**
      * Initializes a data connection.
+     * 
      * @throws IOException If unable to open connection.
      */
     public void initialize() throws IOException {
@@ -66,6 +67,7 @@ public class ActiveDataConnection implements DataConnection {
 
     /**
      * Opens the data connection.
+     * 
      * @throws IOException If unable to open connection.
      */
     public void open() throws IOException {

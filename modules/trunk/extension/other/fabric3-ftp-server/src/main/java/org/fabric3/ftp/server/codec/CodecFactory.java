@@ -31,7 +31,8 @@ import org.apache.mina.filter.codec.ProtocolEncoderOutput;
 import org.apache.mina.filter.codec.textline.TextLineDecoder;
 
 /**
- *
+ * Protocol encoder and decoder factory for inbound and outbound messages.
+ * 
  * @version $Revision$ $Date$
  */
 public class CodecFactory implements ProtocolCodecFactory {
@@ -42,14 +43,29 @@ public class CodecFactory implements ProtocolCodecFactory {
     private ProtocolDecoder decoder = new TextLineDecoder(CHARSET);
     private ProtocolEncoder encoder = new ResponseEncoder();
 
+    /**
+     * Gets the protocol decoder.
+     * 
+     * @param session Session for which the decoder is created.
+     * @return Protocol decoder.
+     */
     public ProtocolDecoder getDecoder(IoSession session) throws Exception {
         return decoder;
     }
 
+    /**
+     * Gets the protocol encoder.
+     * 
+     * @param session Session for which the encoder is created.
+     * @return Protocol encoder.
+     */
     public ProtocolEncoder getEncoder(IoSession session) throws Exception {
         return encoder;
     }
     
+    /*
+     * Response encoder.
+     */
     private class ResponseEncoder extends ProtocolEncoderAdapter {
 
         public void encode(IoSession session, Object message, ProtocolEncoderOutput protocolEncoderOutput) throws Exception {

@@ -23,6 +23,8 @@ import java.util.Map;
 import org.apache.mina.common.IdleStatus;
 import org.apache.mina.common.IoHandler;
 import org.apache.mina.common.IoSession;
+import org.fabric3.api.annotation.Monitor;
+import org.fabric3.ftp.server.monitor.FtpMonitor;
 import org.fabric3.ftp.server.protocol.DefaultRequest;
 import org.fabric3.ftp.server.protocol.DefaultResponse;
 import org.fabric3.ftp.server.protocol.FtpSession;
@@ -39,25 +41,36 @@ import org.osoa.sca.annotations.Reference;
 public class FtpHandler implements IoHandler {
     
     private Map<String, RequestHandler> requestHandlers;
+    private FtpMonitor ftpMonitor;
+
+    /**
+     * Sets the monitor for logging significant events.
+     * @param ftpMonitor Monitor for logging significant events.
+     */
+    @Monitor
+    public void setFtpMonitor(FtpMonitor ftpMonitor) {
+        this.ftpMonitor = ftpMonitor;
+    }
 
     /**
      * Injects the FTP commands.
      * @param ftpCommands FTP commands.
      */
     @Reference
-    public void setFtpCommands(Map<String, RequestHandler> ftpCommands) {
+    public void setRequestHandlers(Map<String, RequestHandler> ftpCommands) {
         this.requestHandlers = ftpCommands;
     }
 
     public void exceptionCaught(IoSession session, Throwable throwable) throws Exception {
-        throwable.printStackTrace();
+        FtpSession ftpSession = new FtpSession(session);
+        ftpMonitor.onException(throwable, ftpSession.getUserName());
     }
 
     public void messageReceived(IoSession session, Object message) throws Exception {
-
-        System.err.println("Message received:" + message);
         
         FtpSession ftpSession = new FtpSession(session);
+        ftpMonitor.onCommand(message, ftpSession.getUserName());
+        
         Request request = new DefaultRequest(message.toString(), ftpSession);
 
         RequestHandler requestHandler = requestHandlers.get(request.getCommand());
@@ -70,7 +83,8 @@ public class FtpHandler implements IoHandler {
     }
 
     public void messageSent(IoSession session, Object message) throws Exception {
-        System.err.println("Message sent:" + message);
+        FtpSession ftpSession = new FtpSession(session);
+        ftpMonitor.onResponse(message, ftpSession.getUserName());
     }
 
     public void sessionClosed(IoSession session) throws Exception {

@@ -16,34 +16,27 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.ftp.server.protocol;
+package org.fabric3.ftp.server.host;
+
+import org.fabric3.ftp.server.monitor.FtpMonitor;
 
 /**
- * Encapsulates an incoming FTP request.
- * 
+ *
  * @version $Revision$ $Date$
  */
-public interface Request {
+public class TestFtpMonitor implements FtpMonitor {
 
-    /**
-     * Command that is associated with a current request.
-     * 
-     * @return FTP command.
-     */
-    String getCommand();
+    public void onCommand(Object command, String user) {
+        System.err.println("Command received from user " + user + ": " + command);
+    }
 
-    /**
-     * Argument to the current FTP request.
-     * 
-     * @return FTP command argument.
-     */
-    String getArgument();
+    public void onException(Throwable throwable, String user) {
+        System.err.println("Exception " + throwable.getMessage() + " by user " + user);
+        throwable.printStackTrace();
+    }
 
-    /**
-     * Session associated with the current request.
-     * 
-     * @return FTP session.
-     */
-    FtpSession getSession();
+    public void onResponse(Object response, String user) {
+        System.err.println("Response sent to user " + user + ": " + response);
+    }
 
 }

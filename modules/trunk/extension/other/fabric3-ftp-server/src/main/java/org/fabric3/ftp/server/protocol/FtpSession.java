@@ -55,6 +55,16 @@ public class FtpSession {
     }
     
     /**
+     * Gets the name of the user associated with the session.
+     * 
+     * @return Name of the user associated with the session.
+     */
+    public String getUserName() {
+        User user = getUser();
+        return user != null ? user.getName() : "";
+    }
+    
+    /**
      * Gets the current user.
      * 
      * @return Current user.

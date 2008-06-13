@@ -16,34 +16,44 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.ftp.server.protocol;
+package org.fabric3.ftp.server.monitor;
+
+import org.fabric3.api.annotation.logging.Info;
+import org.fabric3.api.annotation.logging.Severe;
 
 /**
- * Encapsulates an incoming FTP request.
  * 
+ * Monitor interface for logging significant events.
+ *
  * @version $Revision$ $Date$
  */
-public interface Request {
-
+public interface FtpMonitor {
+    
     /**
-     * Command that is associated with a current request.
+     * Logged when a command is received by the FTP server.
      * 
-     * @return FTP command.
+     * @param command Command that was received.
+     * @param user User that sent the command.
      */
-    String getCommand();
-
+    @Info
+    void onCommand(Object command, String user);
+    
     /**
-     * Argument to the current FTP request.
+     * Logged when a response is sent by the FTP server.
      * 
-     * @return FTP command argument.
+     * @param response Response that was sent.
+     * @param user User that sent the command.
      */
-    String getArgument();
-
+    @Info
+    void onResponse(Object response, String user);
+    
     /**
-     * Session associated with the current request.
+     * Logged when an exception occurs.
      * 
-     * @return FTP session.
+     * @param throwable Exception that occured.
+     * @param user User whose command caused the exception.
      */
-    FtpSession getSession();
+    @Severe
+    void onException(Throwable throwable, String user);
 
 }

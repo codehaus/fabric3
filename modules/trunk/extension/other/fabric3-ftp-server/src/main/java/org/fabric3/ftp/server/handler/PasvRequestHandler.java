@@ -40,14 +40,11 @@ public class PasvRequestHandler implements RequestHandler {
     private PassiveConnectionService passiveConnectionService;
 
     /**
-     * Injects the passive connection service.
-     * @param passiveConnectionService Passive connection service.
+     * Initializes the passive data connection on request of <code>PASV</code>
+     * command from an authenticated user.
+     * 
+     * @param request Object the encapsuates the current FTP command.
      */
-    @Reference
-    public void setPassivePortService(PassiveConnectionService passiveConnectionService) {
-        this.passiveConnectionService = passiveConnectionService;
-    }
-
     public void service(Request request) {
 
         FtpSession session = request.getSession();
@@ -80,6 +77,16 @@ public class PasvRequestHandler implements RequestHandler {
             session.write(new DefaultResponse(427, "Can't open passive connection"));
         }
 
+    }
+
+    /**
+     * Injects the passive connection service.
+     * 
+     * @param passiveConnectionService Passive connection service.
+     */
+    @Reference
+    public void setPassivePortService(PassiveConnectionService passiveConnectionService) {
+        this.passiveConnectionService = passiveConnectionService;
     }
 
 }

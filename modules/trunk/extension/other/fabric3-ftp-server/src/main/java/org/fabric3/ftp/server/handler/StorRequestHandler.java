@@ -21,8 +21,10 @@ package org.fabric3.ftp.server.handler;
 import java.io.IOException;
 import java.io.InputStream;
 
+import org.fabric3.api.annotation.Monitor;
 import org.fabric3.ftp.api.FtpLet;
 import org.fabric3.ftp.server.data.DataConnection;
+import org.fabric3.ftp.server.monitor.FtpMonitor;
 import org.fabric3.ftp.server.passive.PassiveConnectionService;
 import org.fabric3.ftp.server.protocol.DefaultResponse;
 import org.fabric3.ftp.server.protocol.FtpSession;
@@ -42,25 +44,14 @@ public class StorRequestHandler implements RequestHandler {
 
     private PassiveConnectionService passiveConnectionService;
     private FtpLetContainer ftpLetContainer;
-    
-    /**
-     * Injects the FtpLet container.
-     * @param ftpLetContainer Ftplet container.
-     */
-    @Reference
-    public void setFtpLetContainer(FtpLetContainer ftpLetContainer) {
-        this.ftpLetContainer = ftpLetContainer;
-    }
+    private FtpMonitor ftpMonitor;
 
     /**
-     * Injects the passive connection service.
-     * @param passiveConnectionService Passive connection service.
+     * Services the <code>STOR</code> request. Currently only supports passive connections. 
+     * This means <code>STOR</STOR> command should be preceded by a <code>PASV</code> command.
+     * 
+     * @param request Object the encapsuates the current FTP command.
      */
-    @Reference
-    public void setPassivePortService(PassiveConnectionService passiveConnectionService) {
-        this.passiveConnectionService = passiveConnectionService;
-    }
-
     public void service(Request request) {
         
         FtpSession session = request.getSession();
@@ -95,6 +86,36 @@ public class StorRequestHandler implements RequestHandler {
 
     }
 
+    /**
+     * Sets the monitor for logging significant events.
+     * @param ftpMonitor Monitor for logging significant events.
+     */
+    @Monitor
+    public void setFtpMonitor(FtpMonitor ftpMonitor) {
+        this.ftpMonitor = ftpMonitor;
+    }
+    
+    /**
+     * Injects the FtpLet container.
+     * @param ftpLetContainer Ftplet container.
+     */
+    @Reference
+    public void setFtpLetContainer(FtpLetContainer ftpLetContainer) {
+        this.ftpLetContainer = ftpLetContainer;
+    }
+
+    /**
+     * Injects the passive connection service.
+     * @param passiveConnectionService Passive connection service.
+     */
+    @Reference
+    public void setPassivePortService(PassiveConnectionService passiveConnectionService) {
+        this.passiveConnectionService = passiveConnectionService;
+    }
+
+    /*
+     * Transfers the file by calling the mapped FtpLet.
+     */
     private void transfer(FtpSession session, int passivePort, DataConnection dataConnection, String fileName) {
         
         try {
@@ -111,6 +132,7 @@ public class StorRequestHandler implements RequestHandler {
             session.write(new DefaultResponse(226, "Transfer complete"));
             
         } catch (Exception ex) {
+            ftpMonitor.onException(ex, session.getUserName());
             session.write(new DefaultResponse(426, "Data connection error"));
             return;
         } finally {
@@ -119,6 +141,9 @@ public class StorRequestHandler implements RequestHandler {
         
     }
 
+    /*
+     * Closes the data connection.
+     */
     private void closeDataConnection(FtpSession session, int passivePort) {
         session.closeDataConnection();
         passiveConnectionService.release(passivePort);

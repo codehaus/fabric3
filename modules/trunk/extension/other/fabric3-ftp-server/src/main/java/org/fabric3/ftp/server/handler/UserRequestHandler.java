@@ -31,6 +31,11 @@ import org.fabric3.ftp.server.security.User;
  */
 public class UserRequestHandler implements RequestHandler {
 
+    /**
+     * Handles a <code>USER</code> command from the remote client.
+     * 
+     * @param request Object the encapsuates the current FTP command.
+     */
     public void service(Request request) {
         
         FtpSession session = request.getSession();

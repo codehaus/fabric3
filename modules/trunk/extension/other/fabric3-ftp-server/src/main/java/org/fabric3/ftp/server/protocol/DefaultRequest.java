@@ -19,7 +19,8 @@
 package org.fabric3.ftp.server.protocol;
 
 /**
- *
+ * Default implementation of the FTP request.
+ * 
  * @version $Revision$ $Date$
  */
 public class DefaultRequest implements Request {
@@ -28,6 +29,12 @@ public class DefaultRequest implements Request {
     private String argument;
     private FtpSession session;
     
+    /**
+     * Initializes the message, argument and the session.
+     * 
+     * @param message FTP command and argument.
+     * @param session FTP session.
+     */
     public DefaultRequest(String message, FtpSession session) {
         
         message = message.trim();
@@ -43,22 +50,28 @@ public class DefaultRequest implements Request {
         
     }
     
-    /* (non-Javadoc)
-     * @see org.fabric3.ftp.server.protocol.Request#getCommand()
+    /**
+     * Gets the command for the FTP request.
+     * 
+     * @return FTP command.
      */
     public String getCommand() {
         return command;
     }
-    
-    /* (non-Javadoc)
-     * @see org.fabric3.ftp.server.protocol.Request#getArgument()
+
+    /**
+     * Gets the argument for the FTP request.
+     * 
+     * @return FTP command argument.
      */
     public String getArgument() {
         return argument;
     }
     
-    /* (non-Javadoc)
-     * @see org.fabric3.ftp.server.protocol.Request#getSession()
+    /**
+     * Gets the session associated with the FTP request.
+     * 
+     * @return FTP session.
      */
     public FtpSession getSession() {
         return session;

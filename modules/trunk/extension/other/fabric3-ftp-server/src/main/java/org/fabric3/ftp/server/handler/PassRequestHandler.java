@@ -34,17 +34,12 @@ import org.osoa.sca.annotations.Reference;
 public class PassRequestHandler implements RequestHandler {
     
     private UserManager userManager;
-    
-    /**
-     * Injects the user manager.
-     * 
-     * @param userManager Injects the user manager.
-     */
-    @Reference
-    public void setUserManager(UserManager userManager) {
-        this.userManager = userManager;
-    }
 
+    /**
+     * Uses the registered user manager to authenticate the <code>PASS</code> command.
+     * 
+     * @param request Object the encapsuates the current FTP command.
+     */
     public void service(Request request) {
         
         FtpSession session = request.getSession();
@@ -68,6 +63,16 @@ public class PassRequestHandler implements RequestHandler {
             session.write(new DefaultResponse(530, "Authentication failed"));
         }
 
+    }
+    
+    /**
+     * Injects the user manager.
+     * 
+     * @param userManager Injects the user manager.
+     */
+    @Reference
+    public void setUserManager(UserManager userManager) {
+        this.userManager = userManager;
     }
 
 }

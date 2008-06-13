@@ -19,7 +19,8 @@
 package org.fabric3.ftp.server.protocol;
 
 /**
- *
+ * Default implementation of the FTP response.
+ * 
  * @version $Revision$ $Date$
  */
 public class DefaultResponse implements Response {
@@ -27,11 +28,22 @@ public class DefaultResponse implements Response {
     private int code;
     private String message;
     
+    /**
+     * Initializes the code and the message.
+     * 
+     * @param code FTP response code.
+     * @param message FTP response message.
+     */
     public DefaultResponse(int code, String message) {
         this.code = code;
         this.message = message;
     }
 
+    /**
+     * String representation of the code and the message.
+     * 
+     * @return Concatenated code and message with a newline at the end.
+     */
     @Override
     public String toString() {
         
