@@ -18,15 +18,15 @@
  */
 package org.fabric3.jpa.hibernate;
 
-import java.util.Set;
-import java.util.HashSet;
 import java.net.URI;
+import java.util.HashSet;
+import java.util.Set;
 
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.jpa.spi.classloading.EmfClassLoaderService;
-import org.fabric3.spi.classloader.MultiParentClassLoader;
 import org.fabric3.spi.classloader.FilteringMultiparentClassLoader;
+import org.fabric3.spi.classloader.MultiParentClassLoader;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 
 /**
@@ -53,9 +53,23 @@ public class HibernateEmfClassLoaderService implements EmfClassLoaderService {
         assert classloader instanceof MultiParentClassLoader;
         MultiParentClassLoader appCl = (MultiParentClassLoader) classloader;
         Set<String> filters = new HashSet<String>();
-        filters.add("org.hibernate.*");   // allow visibility to only hibernate classes.
+        filters.add("org.hibernate.*");   // allow visibility to hibernate classes.
+        filters.add("org.apache.commons.logging.*");   // allow visibility to clogging classes.
         FilteringMultiparentClassLoader cl = new FilteringMultiparentClassLoader(CLASSLOADER_URI, systemCl, filters);
-        if (!appCl.getParents().contains(systemCl)) {
+        boolean found = false;
+        for (ClassLoader parent : appCl.getParents()) {
+            // filter already in place
+            if (parent instanceof FilteringMultiparentClassLoader) {
+                FilteringMultiparentClassLoader filteringCl = (FilteringMultiparentClassLoader) parent;
+                if (filteringCl.getParent().equals(systemCl)
+                        && filteringCl.getParents().equals(cl.getParents()) 
+                        && filters.equals(filteringCl.getPatterns())){
+                    found = true;
+                    break;
+                }
+            }
+        }
+        if (!appCl.getParents().contains(systemCl) && !found) {
             appCl.addParent(cl);
         }
         return appCl;
