@@ -16,17 +16,20 @@
  */
 package org.fabric3.jpa.service;
 
+import java.util.List;
+
 import org.fabric3.jpa.model.Employee;
 
 /**
  * @version $Revision$ $Date$
  */
 public interface EmployeeService {
-    
+
     Employee createEmployee(Long id, String name);
-    
+
     Employee findEmployee(Long id);
 
     void removeEmployee(Long id);
 
+    public List<Employee> searchWithCriteria(String name);
 }

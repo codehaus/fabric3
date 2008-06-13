@@ -18,6 +18,8 @@
  */
 package org.fabric3.jpa.service;
 
+import java.util.List;
+
 import javax.persistence.PersistenceContext;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContextType;
@@ -63,4 +65,9 @@ public class ConversationEmployeeServiceImpl implements ConversationEmployeeServ
     public void end() {
         // no-op
     }
+
+	public List<Employee> searchWithCriteria(String name) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

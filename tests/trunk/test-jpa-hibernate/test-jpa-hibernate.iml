@@ -65,6 +65,17 @@
         </SOURCES>
       </library>
     </orderEntry>
+    <orderEntry type="module-library">
+      <library name="org.hibernate:hibernate:3.2.4ga">
+        <CLASSES>
+          <root url="jar://$M2_REPO$/org/hibernate/hibernate/3.2.4.ga/hibernate-3.2.4.ga.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES>
+          <root url="jar://$M2_REPO$/org/hibernate/hibernate/3.2.4.ga/hibernate-3.2.4.ga-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
     <orderEntryProperties />
   </component>
 </module>

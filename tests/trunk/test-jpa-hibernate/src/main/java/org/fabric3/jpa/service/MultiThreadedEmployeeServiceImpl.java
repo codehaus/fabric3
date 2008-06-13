@@ -16,6 +16,8 @@
  */
 package org.fabric3.jpa.service;
 
+import java.util.List;
+
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 
@@ -52,5 +54,10 @@ public class MultiThreadedEmployeeServiceImpl implements EmployeeService {
         Employee employee = em.find(Employee.class, id);
         em.remove(employee);
     }
+
+	public List<Employee> searchWithCriteria(String name) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 }

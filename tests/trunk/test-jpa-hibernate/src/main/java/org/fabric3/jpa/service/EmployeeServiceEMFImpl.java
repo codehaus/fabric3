@@ -16,6 +16,8 @@
  */
 package org.fabric3.jpa.service;
 
+import java.util.List;
+
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceUnit;
@@ -54,5 +56,10 @@ public class EmployeeServiceEMFImpl implements EmployeeService {
         em.remove(employee);
         em.flush();
     }
+
+	public List<Employee> searchWithCriteria(String name) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 
 }

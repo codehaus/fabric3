@@ -16,6 +16,8 @@
  */
 package org.fabric3.jpa.service;
 
+import java.util.List;
+
 import org.fabric3.jpa.model.Employee;
 
 import org.osoa.sca.annotations.Reference;
@@ -64,6 +66,15 @@ public class EmployeeServiceImplTest extends TestCase {
 
         assertNotNull(employee);
         assertEquals("Barney Rubble", employee.getName());
+
+    }
+
+    public void testSearchWithName(){
+    	employeeMultiThreadedService.createEmployee(123l, "Barney");
+        List<Employee> employees = employeeService.searchWithCriteria("Barney");
+
+        assertNotNull(employees);
+        assertEquals(1, employees.size());
 
     }
 

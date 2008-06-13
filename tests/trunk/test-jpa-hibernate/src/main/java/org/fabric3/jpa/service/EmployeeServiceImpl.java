@@ -16,8 +16,14 @@
  */
 package org.fabric3.jpa.service;
 
+import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
+
+import org.hibernate.Criteria;
+import org.hibernate.Session;
+import org.hibernate.criterion.Restrictions;
+import org.hibernate.criterion.SimpleExpression;
 
 import org.fabric3.jpa.model.Employee;
 
@@ -46,6 +52,15 @@ public class EmployeeServiceImpl implements EmployeeService {
     public void removeEmployee(Long id) {
         Employee employee = em.find(Employee.class, id);
         em.remove(employee);
+    }
+
+    public List<Employee> searchWithCriteria(String name){
+    	Session session = (Session) em.getDelegate();
+    	Criteria criteria = session.createCriteria(Employee.class);
+
+    	criteria.add(Restrictions.eq("name", name));
+
+    	return (List<Employee>) criteria.list();
     }
 
 }
