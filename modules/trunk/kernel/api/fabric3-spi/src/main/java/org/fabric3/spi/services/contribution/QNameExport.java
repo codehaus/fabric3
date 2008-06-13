@@ -27,7 +27,7 @@ import org.fabric3.spi.Constants;
  *
  * @version $Rev$ $Date$
  */
-public class QNameExport extends Export {
+public class QNameExport implements Export {
     private static final long serialVersionUID = -6813997109078522174L;
     private static final QName TYPE = new QName(Constants.FABRIC3_NS, "qname");
     private QName namespace;

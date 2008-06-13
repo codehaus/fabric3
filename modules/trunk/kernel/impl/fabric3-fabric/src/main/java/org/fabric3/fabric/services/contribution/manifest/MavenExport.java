@@ -27,7 +27,7 @@ import org.fabric3.spi.services.contribution.Import;
  *
  * @version $Rev$ $Date$
  */
-public class MavenExport extends Export {
+public class MavenExport implements Export {
     private static final long serialVersionUID = 2622386855322390297L;
     private static final QName TYPE = new QName(Constants.FABRIC3_MAVEN_NS, "maven");
     private String groupId;
@@ -160,7 +160,7 @@ public class MavenExport extends Export {
             revision = tokens[2];
             snapshot = true;
         } else {
-            throw new IllegalArgumentException("Illegal Maven version number :" + version);
+            throw new IllegalArgumentException("Illegal Maven version number: " + version);
         }
     }
 

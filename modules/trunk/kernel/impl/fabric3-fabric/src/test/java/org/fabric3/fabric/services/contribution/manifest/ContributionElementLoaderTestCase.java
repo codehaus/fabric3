@@ -18,6 +18,7 @@
  */
 package org.fabric3.fabric.services.contribution.manifest;
 
+import java.net.URI;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamReader;
@@ -58,6 +59,7 @@ public class ContributionElementLoaderTestCase extends TestCase {
         assertEquals(1, manifest.getImports().size());
     }
 
+    @SuppressWarnings({"serial"})
     protected void setUp() throws Exception {
         super.setUp();
         control = EasyMock.createStrictControl();
@@ -79,6 +81,14 @@ public class ContributionElementLoaderTestCase extends TestCase {
         EasyMock.expect(reader.next()).andReturn(XMLStreamConstants.START_ELEMENT);
         EasyMock.expect(reader.getName()).andReturn(IMPORT_ELEMENT);
         Import contribImport = new Import() {
+            public URI getLocation() {
+                 return null;
+            }
+
+            public void setLocation(URI location) {
+
+            }
+
             public QName getType() {
                 return null;
             }

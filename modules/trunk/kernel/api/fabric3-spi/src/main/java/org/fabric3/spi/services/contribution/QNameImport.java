@@ -18,6 +18,7 @@
  */
 package org.fabric3.spi.services.contribution;
 
+import java.net.URI;
 import javax.xml.namespace.QName;
 
 import org.fabric3.spi.Constants;
@@ -28,10 +29,19 @@ import org.fabric3.spi.Constants;
  * @version $Rev$ $Date$
  */
 @SuppressWarnings({"SerializableHasSerializationMethods"})
-public class QNameImport extends Import {
+public class QNameImport implements Import {
     private static final long serialVersionUID = 7714960525252585065L;
     private static final QName TYPE = new QName(Constants.FABRIC3_NS, "qname");
     private QName namespace;
+    private URI location;
+
+    public URI getLocation() {
+        return location;
+    }
+
+    public void setLocation(URI location) {
+        this.location = location;
+    }
 
     public QNameImport(QName namespace) {
         this.namespace = namespace;

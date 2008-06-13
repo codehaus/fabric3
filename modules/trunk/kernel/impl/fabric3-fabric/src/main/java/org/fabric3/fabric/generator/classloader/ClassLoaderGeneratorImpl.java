@@ -87,6 +87,11 @@ public class ClassLoaderGeneratorImpl implements ClassLoaderGenerator {
                 definition.addParentClassLoader(uri);
             }
         }
+        for (URI uri : contribution.getResolvedExtensionImportUris()) {
+            if (!definition.getExtensionUris().contains(uri)) {
+                definition.addExtensionUri(uri);
+            }
+        }
         return definition;
     }
 

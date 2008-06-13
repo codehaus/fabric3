@@ -16,22 +16,14 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.spi.services.contribution;
+package org.fabric3.fabric.services.contribution.manifest;
 
-import java.io.Serializable;
-import javax.xml.namespace.QName;
+import org.fabric3.spi.services.contribution.Import;
 
 /**
- * Represents an exported artifact in a contribution
+ * Marker interface for runtime extensions used by a contribution.
  *
- * @version $Rev$ $Date$
+ * @version $Revision$ $Date$
  */
-public interface Export extends Serializable {
-    int NO_MATCH = -1;
-    int EXACT_MATCH = 1;
-
-    int match(Import contributionImport);
-
-    QName getType();
-
+public interface ExtensionImport extends Import {
 }

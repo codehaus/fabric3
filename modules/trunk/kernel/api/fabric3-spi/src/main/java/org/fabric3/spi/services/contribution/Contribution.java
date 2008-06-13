@@ -42,6 +42,7 @@ public class Contribution implements Serializable {
     private ContributionManifest manifest;
     private List<Resource> resources = new ArrayList<Resource>();
     private List<URI> resolvedImports = new ArrayList<URI>();
+    private List<URI> resolvedExtensionImports = new ArrayList<URI>();
 
     public Contribution(URI uri) {
         this.uri = uri;
@@ -179,6 +180,24 @@ public class Contribution implements Serializable {
      */
     public List<URI> getResolvedImportUris() {
         return Collections.unmodifiableList(resolvedImports);
+    }
+
+    /**
+     * Adds the URI for a resolved extension import.
+     *
+     * @param uri the contribution URI
+     */
+    public void addResolvedExtensionImportUri(URI uri) {
+        resolvedExtensionImports.add(uri);
+    }
+
+    /**
+     * Returns the list of resolved extension URIs.
+     *
+     * @return the list of resolved extension URIs
+     */
+    public List<URI> getResolvedExtensionImportUris() {
+        return Collections.unmodifiableList(resolvedExtensionImports);
     }
 
 }

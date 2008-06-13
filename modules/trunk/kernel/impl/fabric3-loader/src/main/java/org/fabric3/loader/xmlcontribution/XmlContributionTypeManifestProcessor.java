@@ -97,6 +97,9 @@ public class XmlContributionTypeManifestProcessor implements XmlElementManifestP
                         for (Import imprt : embeddedManifest.getImports()) {
                             manifest.addImport(imprt);
                         }
+                        for (Import imprt : embeddedManifest.getExtensionImports()) {
+                            manifest.addExtensionImport(imprt);
+                        }
                     }
                     break;
                 case END_ELEMENT:

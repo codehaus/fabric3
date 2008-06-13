@@ -17,6 +17,7 @@ public class ContributionManifest implements Serializable {
     private static final long serialVersionUID = -4968254313720890686L;
     private List<Export> exports = new ArrayList<Export>();
     private List<Import> imports = new ArrayList<Import>();
+    private List<Import> extensionImports = new ArrayList<Import>();
     private List<Deployable> deployables = new ArrayList<Deployable>();
 
     public List<Export> getExports() {
@@ -33,6 +34,14 @@ public class ContributionManifest implements Serializable {
 
     public void addImport(Import artifactImport) {
         imports.add(artifactImport);
+    }
+
+    public List<Import> getExtensionImports() {
+        return Collections.unmodifiableList(extensionImports);
+    }
+
+    public void addExtensionImport(Import extensionImport) {
+        extensionImports.add(extensionImport);
     }
 
     public List<Deployable> getDeployables() {

@@ -19,26 +19,36 @@
 
 package org.fabric3.spi.services.contribution;
 
-import java.net.URI;
 import java.io.Serializable;
+import java.net.URI;
 import javax.xml.namespace.QName;
 
 /**
- * The representation of an import in the contribution
+ * A contribution import
  *
  * @version $Rev$ $Date$
  */
-@SuppressWarnings({"serial", "SerializableHasSerializationMethods"})
-public abstract class Import implements Serializable {
-    private URI location;
+public interface Import extends Serializable {
 
-    public URI getLocation() {
-        return location;
-    }
+    /**
+     * The QName uniquely identiying the import type.
+     *
+     * @return the QName uniquely identiying the import type
+     */
+    QName getType();
 
-    public void setLocation(URI location) {
-        this.location = location;
-    }
+    /**
+     * A URI representing the import artifact location.
+     *
+     * @return a URI representing the import artifact location
+     */
+    URI getLocation();
 
-    public abstract QName getType();
+    /**
+     * Sets the URI representing the import artifact location.
+     *
+     * @param location the URI representing the import artifact location
+     */
+    void setLocation(URI location);
+
 }

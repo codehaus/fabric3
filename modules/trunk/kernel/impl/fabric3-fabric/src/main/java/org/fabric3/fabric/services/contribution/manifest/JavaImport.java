@@ -16,6 +16,7 @@
  */
 package org.fabric3.fabric.services.contribution.manifest;
 
+import java.net.URI;
 import javax.xml.namespace.QName;
 
 import org.fabric3.spi.Constants;
@@ -26,10 +27,19 @@ import org.fabric3.spi.services.contribution.Import;
  *
  * @version $Rev$ $Date$
  */
-public class JavaImport extends Import {
+public class JavaImport implements Import {
     private static final long serialVersionUID = -7863768515125756048L;
     private static final QName TYPE = new QName(Constants.FABRIC3_NS, "java");
     private String packageName;
+    private URI location;
+
+    public URI getLocation() {
+        return location;
+    }
+
+    public void setLocation(URI location) {
+        this.location = location;
+    }
 
     public JavaImport(String namespace) {
         this.packageName = namespace;

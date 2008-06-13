@@ -1,8 +1,6 @@
 /*
- * Licensed to the Apache Software Foundation (ASF) under one
- * or more contributor license agreements.  See the NOTICE file
- * distributed with this work for additional information
- * regarding copyright ownership.  The ASF licenses this file
+ * See the NOTICE file distributed with this work for information
+ * regarding copyright ownership.  This file is licensed
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
@@ -16,22 +14,13 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.spi.services.contribution;
-
-import java.io.Serializable;
-import javax.xml.namespace.QName;
+package org.fabric3.fabric.services.contribution.manifest;
 
 /**
- * Represents an exported artifact in a contribution
- *
  * @version $Rev$ $Date$
  */
-public interface Export extends Serializable {
-    int NO_MATCH = -1;
-    int EXACT_MATCH = 1;
+public class MavenExtensionImport extends MavenImport implements ExtensionImport {
+    private static final long serialVersionUID = 2133566461593270848L;
 
-    int match(Import contributionImport);
-
-    QName getType();
 
 }

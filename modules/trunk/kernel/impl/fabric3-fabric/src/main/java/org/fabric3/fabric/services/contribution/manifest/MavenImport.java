@@ -16,6 +16,7 @@
  */
 package org.fabric3.fabric.services.contribution.manifest;
 
+import java.net.URI;
 import javax.xml.namespace.QName;
 
 import org.fabric3.spi.Constants;
@@ -26,7 +27,7 @@ import org.fabric3.spi.services.contribution.Import;
  *
  * @version $Rev$ $Date$
  */
-public class MavenImport extends Import {
+public class MavenImport implements Import {
     private static final long serialVersionUID = -252985481705630453L;
     private static final QName TYPE = new QName(Constants.FABRIC3_MAVEN_NS, "maven");
 
@@ -38,6 +39,15 @@ public class MavenImport extends Import {
     private String minorVersion = "";
     private String revision = "";
     private boolean snapshot;
+    private URI location;
+
+    public URI getLocation() {
+        return location;
+    }
+
+    public void setLocation(URI location) {
+        this.location = location;
+    }
 
     public String getGroupId() {
         return groupId;
@@ -117,7 +127,7 @@ public class MavenImport extends Import {
             revision = tokens[2];
             snapshot = true;
         } else {
-            throw new IllegalArgumentException("Illegal Maven version number :" + version);
+            throw new IllegalArgumentException("Illegal Maven version number: " + version);
         }
     }
 

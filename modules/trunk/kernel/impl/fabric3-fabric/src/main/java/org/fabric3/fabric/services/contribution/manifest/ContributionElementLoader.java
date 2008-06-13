@@ -110,6 +110,8 @@ public class ContributionElementLoader implements TypeLoader<ContributionManifes
                     }
                     if (o instanceof Export) {
                         contribution.addExport((Export) o);
+                    } else if (o instanceof ExtensionImport) {
+                        contribution.addExtensionImport((ExtensionImport) o);
                     } else if (o instanceof Import) {
                         contribution.addImport((Import) o);
                     } else if (o != null) {

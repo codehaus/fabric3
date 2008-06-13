@@ -70,9 +70,8 @@ public class DependencyServiceImpl implements DependencyService {
             ContributionManifest manifest = contribution.getManifest();
             assert manifest != null;
             for (Import imprt : manifest.getImports()) {
-                // xcv FIXME move import resolution to here
                 // first, see if the import is already installed
-
+                // note that extension imports do not need to be checked since we assume extensons are installed prior
                 if (store.resolve(imprt) != null) {
                     continue;
                 }

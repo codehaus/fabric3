@@ -27,7 +27,7 @@ import org.fabric3.spi.services.contribution.Import;
  *
  * @version $Rev$ $Date$
  */
-public class JavaExport extends Export {
+public class JavaExport implements Export {
     private static final long serialVersionUID = -1362112844218693711L;
     private static final QName TYPE = new QName(Constants.FABRIC3_NS, "java");
     private String packageName;
