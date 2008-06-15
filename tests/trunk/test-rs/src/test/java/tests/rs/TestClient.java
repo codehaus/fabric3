@@ -41,7 +41,7 @@ public class TestClient extends TestCase {
         assertEquals("Hello World", resource.post(String.class,"World"));
     }
     
-     public void testEntity() {
+     public void _testEntity() {
         UriBuilder uri =UriBuilder.fromUri(hostURI).path("echo");
         Entity entity= new Entity();
         entity.setValue("World");
