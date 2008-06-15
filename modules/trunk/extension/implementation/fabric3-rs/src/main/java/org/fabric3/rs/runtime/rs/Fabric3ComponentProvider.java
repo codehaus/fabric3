@@ -83,6 +83,6 @@ public class Fabric3ComponentProvider implements ComponentProvider {
     }
 
     public void inject(Object instance) {
-        throw new UnsupportedOperationException("Not supported yet.");
+        //throw new UnsupportedOperationException("Not supported yet.");
     }
 }
