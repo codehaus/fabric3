@@ -69,7 +69,7 @@ public class JUnitComponentGenerator implements ComponentGenerator<LogicalCompon
         physical.setGroupId(component.getParent().getUri());
         physical.setComponentId(componentId);
 
-        URI classLoaderId = component.getParent().getUri();
+        URI classLoaderId = component.getClassLoaderId();
         physical.setClassLoaderId(classLoaderId);
 
         physical.setScope(type.getScope());
@@ -85,7 +85,7 @@ public class JUnitComponentGenerator implements ComponentGenerator<LogicalCompon
         URI uri = reference.getUri();
         ServiceContract<?> serviceContract = reference.getDefinition().getServiceContract();
         String interfaceName = getInterfaceName(serviceContract);
-        URI classLoaderId = source.getParent().getUri();
+        URI classLoaderId = source.getClassLoaderId();
 
         JavaWireSourceDefinition wireDefinition = new JavaWireSourceDefinition();
         wireDefinition.setUri(uri);
@@ -115,7 +115,7 @@ public class JUnitComponentGenerator implements ComponentGenerator<LogicalCompon
         URI uri = resource.getUri();
         ServiceContract<?> serviceContract = resource.getResourceDefinition().getServiceContract();
         String interfaceName = getInterfaceName(serviceContract);
-        URI classLoaderId = source.getParent().getUri();
+        URI classLoaderId = source.getClassLoaderId();
 
         JavaWireSourceDefinition wireDefinition = new JavaWireSourceDefinition();
         wireDefinition.setUri(uri);
@@ -134,6 +134,8 @@ public class JUnitComponentGenerator implements ComponentGenerator<LogicalCompon
                                                            Policy policy) throws GenerationException {
         JavaWireTargetDefinition wireDefinition = new JavaWireTargetDefinition();
         wireDefinition.setUri(service.getUri());
+        URI classLoaderId = target.getClassLoaderId();
+        wireDefinition.setClassLoaderId(classLoaderId);
         return wireDefinition;
     }
 }
