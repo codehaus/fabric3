@@ -23,13 +23,13 @@ import java.net.URI;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.ObjectCreationException;
-import org.fabric3.spi.services.componentmanager.ComponentManager;
+import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.SourceWireAttacher;
-import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 import org.fabric3.spi.model.physical.InteractionType;
+import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
+import org.fabric3.spi.services.componentmanager.ComponentManager;
 import org.fabric3.spi.util.UriHelper;
 import org.fabric3.spi.wire.Wire;
 import org.fabric3.web.provision.WebComponentWireSourceDefinition;
@@ -63,7 +63,8 @@ public class WebComponentSourceWireAttacher implements SourceWireAttacher<WebCom
         throw new AssertionError();
     }
 
-    public void attachObjectFactory(WebComponentWireSourceDefinition source, ObjectFactory<?> objectFactory) throws WiringException {
+    public void attachObjectFactory(WebComponentWireSourceDefinition source, ObjectFactory<?> objectFactory, PhysicalWireTargetDefinition target)
+            throws WiringException {
         URI sourceUri = UriHelper.getDefragmentedName(source.getUri());
         String referenceName = source.getUri().getFragment();
         WebComponent component = (WebComponent) manager.getComponent(sourceUri);
