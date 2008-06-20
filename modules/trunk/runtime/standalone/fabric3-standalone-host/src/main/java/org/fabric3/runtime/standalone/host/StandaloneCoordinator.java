@@ -60,12 +60,12 @@ import org.fabric3.scdl.DefaultValidationContext;
 import org.fabric3.scdl.Include;
 import org.fabric3.scdl.Scope;
 import org.fabric3.scdl.ValidationContext;
-import org.fabric3.spi.domain.DeploymentException;
-import org.fabric3.spi.domain.Domain;
-import org.fabric3.spi.domain.DomainException;
 import org.fabric3.spi.component.GroupInitializationException;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.ScopeRegistry;
+import org.fabric3.spi.domain.DeploymentException;
+import org.fabric3.spi.domain.Domain;
+import org.fabric3.spi.domain.DomainException;
 import org.fabric3.spi.invocation.CallFrame;
 import org.fabric3.spi.invocation.WorkContext;
 import org.fabric3.spi.services.contribution.Contribution;
@@ -345,8 +345,9 @@ public class StandaloneCoordinator implements RuntimeLifecycleCoordinator<Standa
         });
         for (File file : files) {
             try {
-                URI uri = file.toURI();
-                ContributionSource source = new FileContributionSource(uri, uri.toURL(), -1, new byte[0]);
+                URI uri = URI.create(file.getName());
+                URL location = file.toURI().toURL();
+                ContributionSource source = new FileContributionSource(uri, location, -1, new byte[0]);
                 sources.add(source);
             } catch (MalformedURLException e) {
                 throw new ExtensionInitializationException("Error loading extension", file.getName(), e);

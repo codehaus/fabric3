@@ -81,15 +81,13 @@ public class LaunchedComponentGenerator implements ComponentGenerator<LogicalCom
         physical.setInstanceFactoryProviderDefinition(providerDefinition);
         helper.processPropertyValues(component, physical);
         // generate the classloader resource definition
-        URI classLoaderId = component.getParent().getUri();
+        URI classLoaderId = component.getClassLoaderId();
         physical.setClassLoaderId(classLoaderId);
 
         return physical;
     }
 
-    public PhysicalWireSourceDefinition generateWireSource(LogicalComponent<Launched> source,
-                                                           LogicalReference reference,
-                                                           Policy policy) {
+    public PhysicalWireSourceDefinition generateWireSource(LogicalComponent<Launched> source, LogicalReference reference, Policy policy) {
         URI uri = reference.getUri();
         JavaWireSourceDefinition wireDefinition = new JavaWireSourceDefinition();
         wireDefinition.setUri(uri);
@@ -103,14 +101,11 @@ public class LaunchedComponentGenerator implements ComponentGenerator<LogicalCom
         throw new UnsupportedOperationException();
     }
 
-    public PhysicalWireSourceDefinition generateResourceWireSource(LogicalComponent<Launched> source,
-                                                                   LogicalResource<?> resource) {
+    public PhysicalWireSourceDefinition generateResourceWireSource(LogicalComponent<Launched> source, LogicalResource<?> resource) {
         throw new UnsupportedOperationException();
     }
 
-    public PhysicalWireTargetDefinition generateWireTarget(LogicalService service,
-                                                           LogicalComponent<Launched> target,
-                                                           Policy policy) {
+    public PhysicalWireTargetDefinition generateWireTarget(LogicalService service, LogicalComponent<Launched> target, Policy policy) {
         JavaWireTargetDefinition wireDefinition = new JavaWireTargetDefinition();
         wireDefinition.setUri(service.getUri());
         return wireDefinition;
