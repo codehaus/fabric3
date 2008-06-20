@@ -38,6 +38,7 @@ import org.fabric3.scdl.InjectableAttributeType;
 import org.fabric3.scdl.Operation;
 import org.fabric3.scdl.ServiceContract;
 import org.fabric3.scdl.definitions.Intent;
+import org.fabric3.spi.Constants;
 import org.fabric3.spi.generator.ComponentGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.generator.GeneratorRegistry;
@@ -45,12 +46,11 @@ import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalResource;
 import org.fabric3.spi.model.instance.LogicalService;
+import org.fabric3.spi.model.physical.InteractionType;
 import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
-import org.fabric3.spi.model.physical.InteractionType;
 import org.fabric3.spi.policy.Policy;
-import org.fabric3.spi.Constants;
 
 /**
  * Generates a JavaComponentDefinition from a ComponentDefinition corresponding to a Java component implementation
@@ -62,14 +62,12 @@ public class JavaComponentGenerator implements ComponentGenerator<LogicalCompone
     private static final QName PROPAGATES_CONVERSATION = new QName(Constants.FABRIC3_NS, "propagatesConversation");
     private final InstanceFactoryGenerationHelper helper;
 
-    public JavaComponentGenerator(@Reference GeneratorRegistry registry,
-                                  @Reference InstanceFactoryGenerationHelper helper) {
+    public JavaComponentGenerator(@Reference GeneratorRegistry registry, @Reference InstanceFactoryGenerationHelper helper) {
         registry.register(JavaImplementation.class, this);
         this.helper = helper;
     }
 
-    public PhysicalComponentDefinition generate(LogicalComponent<JavaImplementation> component)
-            throws GenerationException {
+    public PhysicalComponentDefinition generate(LogicalComponent<JavaImplementation> component) throws GenerationException {
         ComponentDefinition<JavaImplementation> definition = component.getDefinition();
         JavaImplementation implementation = definition.getImplementation();
         PojoComponentType type = implementation.getComponentType();
@@ -94,20 +92,19 @@ public class JavaComponentGenerator implements ComponentGenerator<LogicalCompone
         physical.setInstanceFactoryProviderDefinition(providerDefinition);
         helper.processPropertyValues(component, physical);
         // generate the classloader resource definition
-        URI classLoaderId = component.getParent().getUri();
+        URI classLoaderId = component.getClassLoaderId();
         physical.setClassLoaderId(classLoaderId);
 
         return physical;
 
     }
 
-    public PhysicalWireSourceDefinition generateWireSource(LogicalComponent<JavaImplementation> source,
-                                                           LogicalReference reference,
-                                                           Policy policy) throws GenerationException {
+    public PhysicalWireSourceDefinition generateWireSource(LogicalComponent<JavaImplementation> source, LogicalReference reference, Policy policy)
+            throws GenerationException {
         URI uri = reference.getUri();
         ServiceContract<?> serviceContract = reference.getDefinition().getServiceContract();
         String interfaceName = serviceContract.getQualifiedInterfaceName();
-        URI classLoaderId = source.getParent().getUri();
+        URI classLoaderId = source.getClassLoaderId();
 
         JavaWireSourceDefinition wireDefinition = new JavaWireSourceDefinition();
         wireDefinition.setUri(uri);
@@ -125,7 +122,7 @@ public class JavaComponentGenerator implements ComponentGenerator<LogicalCompone
                                                                    ServiceContract<?> serviceContract,
                                                                    Policy policy) throws GenerationException {
         String interfaceName = serviceContract.getQualifiedInterfaceName();
-        URI classLoaderId = source.getParent().getUri();
+        URI classLoaderId = source.getClassLoaderId();
         PojoComponentType type = source.getDefinition().getImplementation().getComponentType();
         String name = null;
         for (CallbackDefinition entry : type.getCallbacks().values()) {
@@ -150,12 +147,12 @@ public class JavaComponentGenerator implements ComponentGenerator<LogicalCompone
         return wireDefinition;
     }
 
-    public PhysicalWireSourceDefinition generateResourceWireSource(LogicalComponent<JavaImplementation> source,
-                                                                   LogicalResource<?> resource) throws GenerationException {
+    public PhysicalWireSourceDefinition generateResourceWireSource(LogicalComponent<JavaImplementation> source, LogicalResource<?> resource)
+            throws GenerationException {
         URI uri = resource.getUri();
         ServiceContract<?> serviceContract = resource.getResourceDefinition().getServiceContract();
         String interfaceName = serviceContract.getQualifiedInterfaceName();
-        URI classLoaderId = source.getParent().getUri();
+        URI classLoaderId = source.getClassLoaderId();
 
         JavaWireSourceDefinition wireDefinition = new JavaWireSourceDefinition();
         wireDefinition.setUri(uri);
@@ -165,9 +162,8 @@ public class JavaComponentGenerator implements ComponentGenerator<LogicalCompone
         return wireDefinition;
     }
 
-    public PhysicalWireTargetDefinition generateWireTarget(LogicalService service,
-                                                           LogicalComponent<JavaImplementation> target,
-                                                           Policy policy) throws GenerationException {
+    public PhysicalWireTargetDefinition generateWireTarget(LogicalService service, LogicalComponent<JavaImplementation> target, Policy policy)
+            throws GenerationException {
         JavaWireTargetDefinition wireDefinition = new JavaWireTargetDefinition();
         URI uri;
         if (service != null) {
@@ -177,6 +173,8 @@ public class JavaComponentGenerator implements ComponentGenerator<LogicalCompone
             uri = target.getUri();
         }
         wireDefinition.setUri(uri);
+        URI classLoaderId = target.getClassLoaderId();
+        wireDefinition.setClassLoaderId(classLoaderId);
 
         // assume for now that only wires to composite scope components can be optimized
         String scope = target.getDefinition().getImplementation().getComponentType().getScope();

@@ -32,13 +32,13 @@ import org.fabric3.spi.builder.component.SourceWireAttacher;
 import org.fabric3.spi.builder.component.WireAttachException;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
-import org.fabric3.spi.services.componentmanager.ComponentManager;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
+import org.fabric3.spi.services.componentmanager.ComponentManager;
 import org.fabric3.spi.services.proxy.ProxyService;
-import org.fabric3.transform.PullTransformer;
-import org.fabric3.transform.TransformerRegistry;
 import org.fabric3.spi.util.UriHelper;
 import org.fabric3.spi.wire.Wire;
+import org.fabric3.transform.PullTransformer;
+import org.fabric3.transform.TransformerRegistry;
 
 /**
  * Attaches wires to and from components implemented using the Java programming model.
@@ -75,7 +75,7 @@ public class JavaSourceWireAttacher extends PojoSourceWireAttacher implements So
             type = classLoaderRegistry.loadClass(sourceDefinition.getClassLoaderId(), sourceDefinition.getInterfaceName());
         } catch (ClassNotFoundException e) {
             String name = sourceDefinition.getInterfaceName();
-            throw new WireAttachException("Unable to load interface class [" + name + "]", sourceUri, null, e);
+            throw new WireAttachException("Unable to load interface class: " + name, sourceUri, null, e);
         }
         if (InjectableAttributeType.CALLBACK.equals(injectableAttribute.getValueType())) {
             URI targetUri = targetDefinition.getUri();
@@ -91,7 +91,7 @@ public class JavaSourceWireAttacher extends PojoSourceWireAttacher implements So
             }
 
             ObjectFactory<?> factory = proxyService.createObjectFactory(type, sourceDefinition.getInteractionType(), wire, callbackUri);
-            Object key = getKey(sourceDefinition, source, injectableAttribute);
+            Object key = getKey(sourceDefinition, source, targetDefinition, injectableAttribute);
             source.attachReferenceToTarget(injectableAttribute, factory, key);
         }
     }
@@ -101,12 +101,13 @@ public class JavaSourceWireAttacher extends PojoSourceWireAttacher implements So
     }
 
 
-    public void attachObjectFactory(JavaWireSourceDefinition source, ObjectFactory<?> objectFactory) throws WiringException {
+    public void attachObjectFactory(JavaWireSourceDefinition source, ObjectFactory<?> objectFactory, PhysicalWireTargetDefinition target)
+            throws WiringException {
         URI sourceId = UriHelper.getDefragmentedName(source.getUri());
         JavaComponent<?> sourceComponent = (JavaComponent<?>) manager.getComponent(sourceId);
         InjectableAttribute injectableAttribute = source.getValueSource();
 
-        Object key = getKey(source, sourceComponent, injectableAttribute);
+        Object key = getKey(source, sourceComponent, target, injectableAttribute);
         sourceComponent.attachReferenceToTarget(injectableAttribute, objectFactory, key);
     }
 
