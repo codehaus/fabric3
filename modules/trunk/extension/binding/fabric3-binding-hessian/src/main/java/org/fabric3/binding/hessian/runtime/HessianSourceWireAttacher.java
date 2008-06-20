@@ -51,9 +51,9 @@ public class HessianSourceWireAttacher implements SourceWireAttacher<HessianWire
     /**
      * Injects the wire attacher registry and servlet host.
      *
-     * @param servletHost                Servlet host.
-     * @param classLoaderRegistry        the classloader registry
-     * @param monitor                    the Hessian monitor
+     * @param servletHost         Servlet host.
+     * @param classLoaderRegistry the classloader registry
+     * @param monitor             the Hessian monitor
      */
     public HessianSourceWireAttacher(@Reference ServletHost servletHost,
                                      @Reference ClassLoaderRegistry classLoaderRegistry,
@@ -95,7 +95,8 @@ public class HessianSourceWireAttacher implements SourceWireAttacher<HessianWire
         throw new AssertionError();
     }
 
-    public void attachObjectFactory(HessianWireSourceDefinition source, ObjectFactory<?> objectFactory) throws WiringException {
+    public void attachObjectFactory(HessianWireSourceDefinition source, ObjectFactory<?> objectFactory, PhysicalWireTargetDefinition definition)
+            throws WiringException {
         throw new AssertionError();
     }
 }
