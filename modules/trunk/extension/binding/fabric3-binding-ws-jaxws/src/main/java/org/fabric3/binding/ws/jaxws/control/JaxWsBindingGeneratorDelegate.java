@@ -85,7 +85,7 @@ public class JaxWsBindingGeneratorDelegate implements BindingGeneratorDelegate<W
             hwtd.setWsdlElement(logicalBinding.getBinding().getWsdlElement());
         }
 
-        //URI classloaderId = logicalBinding.getParent().getParent().getParent().getUri();
+        //URI classloaderId = logicalBinding.getParent().getParent().getClassLoaderId();
         //hwtd.setClassloaderURI(classloaderId);
         return hwtd;
     }

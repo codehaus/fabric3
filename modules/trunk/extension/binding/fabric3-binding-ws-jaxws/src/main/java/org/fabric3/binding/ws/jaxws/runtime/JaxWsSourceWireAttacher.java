@@ -83,7 +83,7 @@ public class JaxWsSourceWireAttacher implements SourceWireAttacher<JaxWsWireSour
     }
 
 
-    public void attachObjectFactory(JaxWsWireSourceDefinition source, ObjectFactory<?> objectFactory)
+    public void attachObjectFactory(JaxWsWireSourceDefinition source, ObjectFactory<?> objectFactory, PhysicalWireTargetDefinition definition)
             throws WiringException {
         throw new AssertionError();
     }
