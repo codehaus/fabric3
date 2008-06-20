@@ -25,13 +25,9 @@
             <attribute name="method" value="5" />
             <attribute name="URI" value="/WEB-INF/lib/fabric3-webapp-api-0.5ALPHA3-SNAPSHOT.jar" />
           </containerElement>
-          <containerElement type="module" name="fabric3-api">
+          <containerElement type="module" name="fabric3-jmx-agent">
             <attribute name="method" value="5" />
-            <attribute name="URI" value="/WEB-INF/lib/fabric3-api-0.5ALPHA3-SNAPSHOT.jar" />
-          </containerElement>
-          <containerElement type="library" name="org.codehaus.fabric3.spec:sca-api-r1.0:0.2.1" level="module">
-            <attribute name="method" value="1" />
-            <attribute name="URI" value="/WEB-INF/lib/sca-api-r1.0-0.2.1.jar" />
+            <attribute name="URI" value="/WEB-INF/lib/fabric3-jmx-agent-0.5ALPHA3-SNAPSHOT.jar" />
           </containerElement>
           <containerElement type="module" name="fabric3-host-api">
             <attribute name="method" value="5" />
@@ -40,6 +36,14 @@
           <containerElement type="module" name="fabric3-monitor-api">
             <attribute name="method" value="5" />
             <attribute name="URI" value="/WEB-INF/lib/fabric3-monitor-api-0.5ALPHA3-SNAPSHOT.jar" />
+          </containerElement>
+          <containerElement type="library" name="org.codehaus.fabric3.spec:sca-api-r1.0:0.2.1" level="module">
+            <attribute name="method" value="1" />
+            <attribute name="URI" value="/WEB-INF/lib/sca-api-r1.0-0.2.1.jar" />
+          </containerElement>
+          <containerElement type="module" name="fabric3-api">
+            <attribute name="method" value="5" />
+            <attribute name="URI" value="/WEB-INF/lib/fabric3-api-0.5ALPHA3-SNAPSHOT.jar" />
           </containerElement>
           <containerElement type="module" name="fabric3-monitor">
             <attribute name="method" value="5" />
@@ -81,7 +85,9 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="fabric3-webapp-api" exported="" />
-    <orderEntry type="module" module-name="fabric3-api" exported="" />
+    <orderEntry type="module" module-name="fabric3-jmx-agent" exported="" />
+    <orderEntry type="module" module-name="fabric3-host-api" exported="" />
+    <orderEntry type="module" module-name="fabric3-monitor-api" exported="" />
     <orderEntry type="module-library" exported="">
       <library name="org.codehaus.fabric3.spec:sca-api-r1.0:0.2.1">
         <CLASSES>
@@ -95,8 +101,7 @@
         </SOURCES>
       </library>
     </orderEntry>
-    <orderEntry type="module" module-name="fabric3-host-api" exported="" />
-    <orderEntry type="module" module-name="fabric3-monitor-api" exported="" />
+    <orderEntry type="module" module-name="fabric3-api" exported="" />
     <orderEntry type="module" module-name="fabric3-monitor" exported="" />
     <orderEntry type="module-library">
       <library name="javax.servlet:servlet-api:2.4">
