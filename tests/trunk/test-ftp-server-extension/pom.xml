@@ -34,6 +34,7 @@
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-ftp-server</artifactId>
             <version>0.5BETA2-SNAPSHOT</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 
@@ -49,6 +50,10 @@
                         <mavenImport>
                            <groupId>org.codehaus.fabric3</groupId>
                            <artifactId>fabric3-spi</artifactId>
+                       </mavenImport>
+                        <mavenImport>
+                           <groupId>org.codehaus.fabric3</groupId>
+                           <artifactId>fabric3-ftp-server</artifactId>
                        </mavenImport>
                     </mavenImports>
                     <deployables>
