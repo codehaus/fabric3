@@ -30,6 +30,7 @@
 	<packaging>pom</packaging>
 
 	<modules>
+		<module>fabric3-async-provision</module>
 		<module>fabric3-async-loader</module>
 		<module>fabric3-async-runtime</module>
 		<module>fabric3-binding-codegen</module>
