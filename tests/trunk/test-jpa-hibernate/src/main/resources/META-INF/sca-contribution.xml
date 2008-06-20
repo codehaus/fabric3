@@ -1,4 +1,0 @@
-<?xml version="1.0" encoding="ASCII"?>
-<contribution xmlns="http://www.osoa.org/xmlns/sca/1.0">
-    <import.extension groupId="org.codehaus.fabric3" artifactId="fabric3-jpa-hibernate" version="0.5-SNAPSHOT"/>
-</contribution>
