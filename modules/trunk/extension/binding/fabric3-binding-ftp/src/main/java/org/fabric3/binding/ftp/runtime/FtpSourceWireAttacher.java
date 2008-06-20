@@ -72,7 +72,7 @@ public class FtpSourceWireAttacher implements SourceWireAttacher<FtpWireSourceDe
         throw new AssertionError();
     }
 
-    public void attachObjectFactory(FtpWireSourceDefinition source, ObjectFactory<?> objectFactory) throws WiringException {
+    public void attachObjectFactory(FtpWireSourceDefinition source, ObjectFactory<?> objectFactory, PhysicalWireTargetDefinition definition) throws WiringException {
         throw new AssertionError();
     }
 

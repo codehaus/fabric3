@@ -51,7 +51,7 @@
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-ftp-spi</artifactId>
             <version>${project.version}</version>
-            <scope>compile</scope>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>stax</groupId>
@@ -78,6 +78,10 @@
                         <mavenImport>
                            <groupId>org.codehaus.fabric3</groupId>
                            <artifactId>fabric3-spi</artifactId>
+                       </mavenImport>
+                        <mavenImport>
+                           <groupId>org.codehaus.fabric3</groupId>
+                           <artifactId>fabric3-ftp-spi</artifactId>
                        </mavenImport>
                     </mavenImports>
                     <deployables>
