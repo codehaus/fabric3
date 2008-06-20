@@ -46,7 +46,7 @@ public class TestBindingSourceWireAttacher implements SourceWireAttacher<TestBin
         throw new AssertionError();
     }
 
-    public void attachObjectFactory(TestBindingSourceDefinition source, ObjectFactory<?> objectFactory) throws WiringException {
+    public void attachObjectFactory(TestBindingSourceDefinition source, ObjectFactory<?> objectFactory, PhysicalWireTargetDefinition definition) throws WiringException {
         throw new AssertionError();
     }
 }
