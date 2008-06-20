@@ -18,8 +18,6 @@
  */
 package org.fabric3.jpa.provision;
 
-import java.net.URI;
-
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 
 /**
@@ -30,7 +28,6 @@ import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 public class PersistenceContextWireTargetDefinition extends PhysicalWireTargetDefinition {
     private String unitName;
     private boolean extended;
-    private URI classLoaderUri;
     private boolean multiThreaded = true;
 
     /**
@@ -45,20 +42,6 @@ public class PersistenceContextWireTargetDefinition extends PhysicalWireTargetDe
      */
     public void setUnitName(String unitName) {
         this.unitName = unitName;
-    }
-
-    /**
-     * @return The classloader URI.
-     */
-    public URI getClassLoaderUri() {
-        return classLoaderUri;
-    }
-
-    /**
-     * @param classLoaderUri The classloader URI.
-     */
-    public void setClassLoaderUri(URI classLoaderUri) {
-        this.classLoaderUri = classLoaderUri;
     }
 
     public boolean isMultiThreaded() {

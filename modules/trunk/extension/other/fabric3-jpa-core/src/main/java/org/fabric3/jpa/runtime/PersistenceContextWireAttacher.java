@@ -64,7 +64,7 @@ public class PersistenceContextWireAttacher implements TargetWireAttacher<Persis
     public ObjectFactory<?> createObjectFactory(PersistenceContextWireTargetDefinition definition) throws WiringException {
         String unitName = definition.getUnitName();
         boolean extended = definition.isExtended();
-        URI classLoaderUri = definition.getClassLoaderUri();
+        URI classLoaderUri = definition.getClassLoaderId();
         ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
         try {
             // get the classloader for the entity manager factory

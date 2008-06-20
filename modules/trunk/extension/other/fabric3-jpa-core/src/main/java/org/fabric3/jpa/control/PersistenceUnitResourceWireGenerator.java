@@ -59,12 +59,12 @@ public class PersistenceUnitResourceWireGenerator implements ResourceWireGenerat
     public PersistenceUnitWireTargetDefinition generateWireTargetDefinition(LogicalResource<PersistenceUnitResource> logicalResource)
         throws GenerationException {
         
-        URI classLoaderUri = logicalResource.getParent().getParent().getUri();
+        URI classLoaderId = logicalResource.getParent().getClassLoaderId();
             
         PersistenceUnitWireTargetDefinition pwtd = new PersistenceUnitWireTargetDefinition();
         pwtd.setOptimizable(true);
         pwtd.setUnitName(logicalResource.getResourceDefinition().getUnitName());
-        pwtd.setClassLoaderUri(classLoaderUri);
+        pwtd.setClassLoaderUri(classLoaderId);
             
         return pwtd;
         

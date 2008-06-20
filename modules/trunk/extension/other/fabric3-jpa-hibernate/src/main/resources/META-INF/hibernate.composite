@@ -43,5 +43,9 @@
         <system:implementation.system class="org.fabric3.jpa.hibernate.F3HibernateTransactionManagerLookup"/>
     </component>
 
+    <component name="org.fabric3.jpa.hibernate.HibernatePersistenceManifestProcessor">
+        <system:implementation.system class="org.fabric3.jpa.hibernate.HibernatePersistenceManifestProcessor"/>
+    </component>
+
     <include name="JPACore" scdlResource="META-INF/jpa.composite"/>
 </composite>

@@ -50,7 +50,7 @@ public class PersistenceContextResourceWireGenerator implements ResourceWireGene
 
     public PersistenceContextWireTargetDefinition generateWireTargetDefinition(LogicalResource<PersistenceContextResource> logicalResource)
             throws GenerationException {
-        URI classLoaderUri = logicalResource.getParent().getParent().getUri();
+        URI classLoaderUri = logicalResource.getParent().getClassLoaderId();
         PersistenceContextResource resource = logicalResource.getResourceDefinition();
         String unitName = resource.getUnitName();
         boolean multiThreaded = resource.isMultiThreaded();
@@ -59,7 +59,7 @@ public class PersistenceContextResourceWireGenerator implements ResourceWireGene
         definition.setUnitName(unitName);
         definition.setOptimizable(true);
         definition.setExtended(extended);
-        definition.setClassLoaderUri(classLoaderUri);
+        definition.setClassLoaderId(classLoaderUri);
         definition.setMultiThreaded(multiThreaded);
         return definition;
     }

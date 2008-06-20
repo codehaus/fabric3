@@ -19,28 +19,19 @@
 package org.fabric3.jpa.hibernate;
 
 import java.net.URI;
-import java.util.HashSet;
-import java.util.Set;
 
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.jpa.spi.classloading.EmfClassLoaderService;
-import org.fabric3.spi.classloader.FilteringMultiparentClassLoader;
-import org.fabric3.spi.classloader.MultiParentClassLoader;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 
 /**
- * Implements the strategy for creating a classloader network to load Hibernate EntityManagerFactories. Hibernate uses CGLIB to proxy classes for lazy
- * loading. When it generates these proxies, Hibernate adds an interface, HibernateProxy, and uses the classloader of the user class the proxy
- * implements. This which results in the user classloader requiring visibility to the HibernateProxy classloader. To accomodate this, this
- * implementation adds the classloader for the Hibernate extension as a parent to the user classloader. In order to avoid exposing other system
- * classes to the user classloader, a FilteringMultiparentClassLoader is interposed between the application and extension classloaders.
+ * Returns the previously constructed classloader. The Hibernate extension implicitly imports the Hibernate extension contribution into any
+ * application using it, so nothing is required to be done here.
  *
  * @version $Revision$ $Date$
  */
 public class HibernateEmfClassLoaderService implements EmfClassLoaderService {
-    public static final URI CLASSLOADER_URI = URI.create("HibernateFilteringClassloader");
-
     private ClassLoaderRegistry classLoaderRegistry;
 
     public HibernateEmfClassLoaderService(@Reference ClassLoaderRegistry classLoaderRegistry) {
@@ -48,30 +39,6 @@ public class HibernateEmfClassLoaderService implements EmfClassLoaderService {
     }
 
     public ClassLoader getEmfClassLoader(URI classLoaderUri) {
-        ClassLoader systemCl = getClass().getClassLoader();
-        ClassLoader classloader = classLoaderRegistry.getClassLoader(classLoaderUri);
-        assert classloader instanceof MultiParentClassLoader;
-        MultiParentClassLoader appCl = (MultiParentClassLoader) classloader;
-        Set<String> filters = new HashSet<String>();
-        filters.add("org.hibernate.*");   // allow visibility to hibernate classes.
-        filters.add("org.apache.commons.logging.*");   // allow visibility to clogging classes.
-        FilteringMultiparentClassLoader cl = new FilteringMultiparentClassLoader(CLASSLOADER_URI, systemCl, filters);
-        boolean found = false;
-        for (ClassLoader parent : appCl.getParents()) {
-            // filter already in place
-            if (parent instanceof FilteringMultiparentClassLoader) {
-                FilteringMultiparentClassLoader filteringCl = (FilteringMultiparentClassLoader) parent;
-                if (filteringCl.getParent().equals(systemCl)
-                        && filteringCl.getParents().equals(cl.getParents()) 
-                        && filters.equals(filteringCl.getPatterns())){
-                    found = true;
-                    break;
-                }
-            }
-        }
-        if (!appCl.getParents().contains(systemCl) && !found) {
-            appCl.addParent(cl);
-        }
-        return appCl;
+        return classLoaderRegistry.getClassLoader(classLoaderUri);
     }
 }
