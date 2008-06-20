@@ -21,9 +21,13 @@
            targetNamespace="org.codehaus.fabric3"
            name="TestSecurityPolicy"
            autowire="true">
-           
+
+    <component name="RegisterComponent">
+        <system:implementation.system class="org.fabric3.tests.security.RegisterComponent"/>
+    </component>
+
     <component name="TestAUthorizationService">
         <system:implementation.system class="org.fabric3.tests.security.TestAuthorizationService"/>
     </component>
-    
+
 </composite>

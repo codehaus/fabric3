@@ -39,6 +39,25 @@
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-security</artifactId>
             <version>0.5BETA2-SNAPSHOT</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.fabric3</groupId>
+            <artifactId>fabric3-spi</artifactId>
+            <version>0.5BETA2-SNAPSHOT</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+             <groupId>org.codehaus.fabric3.spec</groupId>
+             <artifactId>sca-api-r1.0</artifactId>
+             <version>0.2.1</version>
+         </dependency>
+         <!-- temporary dependency-->
+        <dependency>
+            <groupId>org.codehaus.fabric3</groupId>
+            <artifactId>fabric3-binding-ws-axis2</artifactId>
+            <version>0.5BETA2-SNAPSHOT</version>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
     
@@ -54,6 +73,14 @@
                         <mavenImport>
                            <groupId>org.codehaus.fabric3</groupId>
                            <artifactId>fabric3-spi</artifactId>
+                       </mavenImport>
+                        <mavenImport>
+                           <groupId>org.codehaus.fabric3</groupId>
+                           <artifactId>fabric3-security</artifactId>
+                       </mavenImport>
+                        <mavenImport>
+                           <groupId>org.codehaus.fabric3</groupId>
+                           <artifactId>fabric3-binding-ws-axis2</artifactId>
                        </mavenImport>
                     </mavenImports>
                     <deployables>
