@@ -63,6 +63,16 @@
                             <version>0.1-SNAPSHOT</version>
                         </dependency>
                         <dependency>
+                            <groupId>org.codehaus.fabric3</groupId>
+                            <artifactId>fabric3-ftp-spi</artifactId>
+                            <version>0.5BETA2-SNAPSHOT</version>
+                        </dependency>
+                        <dependency>
+                            <groupId>org.codehaus.fabric3</groupId>
+                            <artifactId>fabric3-ftp-server</artifactId>
+                            <version>0.5BETA2-SNAPSHOT</version>
+                        </dependency>
+                        <dependency>
                             <groupId>org.codehaus.fabric3.tests</groupId>
                             <artifactId>test-ftp-server-extension</artifactId>
                             <version>0.1-SNAPSHOT</version>
@@ -89,6 +99,11 @@
                         </dependency>
                     </extensions>
                     <shared>
+                        <dependency>
+                            <groupId>org.codehaus.fabric3</groupId>
+                            <artifactId>fabric3-ftp-api</artifactId>
+                            <version>0.5BETA2-SNAPSHOT</version>
+                        </dependency>
                         <dependency>
                             <groupId>commons-codec</groupId>
                             <artifactId>commons-codec</artifactId>
