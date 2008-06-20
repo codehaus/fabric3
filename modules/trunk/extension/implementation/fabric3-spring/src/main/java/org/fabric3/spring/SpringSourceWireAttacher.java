@@ -27,10 +27,10 @@ import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.SourceWireAttacher;
 import org.fabric3.spi.component.AtomicComponent;
 import org.fabric3.spi.component.Component;
-import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 import org.fabric3.spi.model.physical.InteractionType;
-import org.fabric3.spi.services.componentmanager.ComponentManager;
+import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
+import org.fabric3.spi.services.componentmanager.ComponentManager;
 import org.fabric3.spi.services.proxy.ProxyService;
 import org.fabric3.spi.util.UriHelper;
 import org.fabric3.spi.wire.Wire;
@@ -111,7 +111,8 @@ public class SpringSourceWireAttacher extends PojoSourceWireAttacher implements 
         return proxyService.createObjectFactory(type, interactionType, wire, null);
     }
 
-    public void attachObjectFactory(SpringWireSourceDefinition source, ObjectFactory<?> objectFactory) throws WiringException {
+    public void attachObjectFactory(SpringWireSourceDefinition source, ObjectFactory<?> objectFactory, PhysicalWireTargetDefinition target)
+            throws WiringException {
         throw new AssertionError();
     }
 }
