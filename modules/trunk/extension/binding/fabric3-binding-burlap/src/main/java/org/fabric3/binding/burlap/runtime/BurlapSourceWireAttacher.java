@@ -49,21 +49,20 @@ public class BurlapSourceWireAttacher implements SourceWireAttacher<BurlapWireSo
     /**
      * Injects the wire attacher registry and servlet host.
      *
-     * @param servletHost                Servlet host.
-     * @param classLoaderRegistry        the classloader registry to resolve the target classloader from
-     * @param monitor                    the Burlap monitor
+     * @param servletHost         Servlet host.
+     * @param classLoaderRegistry the classloader registry to resolve the target classloader from
+     * @param monitor             the Burlap monitor
      */
     public BurlapSourceWireAttacher(@Reference ServletHost servletHost,
-                              @Reference ClassLoaderRegistry classLoaderRegistry,
-                              @Monitor BurlapWireAttacherMonitor monitor) {
+                                    @Reference ClassLoaderRegistry classLoaderRegistry,
+                                    @Monitor BurlapWireAttacherMonitor monitor) {
         this.servletHost = servletHost;
         this.classLoaderRegistry = classLoaderRegistry;
         this.monitor = monitor;
     }
 
-    public void attachToSource(BurlapWireSourceDefinition sourceDefinition,
-                               PhysicalWireTargetDefinition targetDefinition,
-                               Wire wire) throws WiringException {
+    public void attachToSource(BurlapWireSourceDefinition sourceDefinition, PhysicalWireTargetDefinition targetDefinition, Wire wire)
+            throws WiringException {
 
         Map<String, Map.Entry<PhysicalOperationDefinition, InvocationChain>> ops =
                 new HashMap<String, Map.Entry<PhysicalOperationDefinition, InvocationChain>>();
@@ -83,13 +82,13 @@ public class BurlapSourceWireAttacher implements SourceWireAttacher<BurlapWireSo
         monitor.provisionedEndpoint(uri);
     }
 
-    public void detachFromSource(BurlapWireSourceDefinition sourceDefinition,
-                               PhysicalWireTargetDefinition targetDefinition,
-                               Wire wire) throws WiringException {
+    public void detachFromSource(BurlapWireSourceDefinition sourceDefinition, PhysicalWireTargetDefinition targetDefinition, Wire wire)
+            throws WiringException {
         throw new AssertionError();
     }
 
-    public void attachObjectFactory(BurlapWireSourceDefinition source, ObjectFactory<?> objectFactory) throws WiringException {
+    public void attachObjectFactory(BurlapWireSourceDefinition source, ObjectFactory<?> objectFactory, PhysicalWireTargetDefinition definition)
+            throws WiringException {
         throw new AssertionError();
     }
 }
