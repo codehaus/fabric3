@@ -116,7 +116,7 @@ public class RsSourceWireAttacher implements SourceWireAttacher<RsWireSourceDefi
         throw new AssertionError();
     }
 
-    public void attachObjectFactory(RsWireSourceDefinition source, ObjectFactory<?> objectFactory) throws WiringException {
+    public void attachObjectFactory(RsWireSourceDefinition source, ObjectFactory<?> objectFactory, PhysicalWireTargetDefinition target) throws WiringException {
         throw new AssertionError();
     }
 }

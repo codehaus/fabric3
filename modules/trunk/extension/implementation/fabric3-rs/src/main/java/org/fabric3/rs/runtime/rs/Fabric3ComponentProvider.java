@@ -85,4 +85,8 @@ public class Fabric3ComponentProvider implements ComponentProvider {
     public void inject(Object instance) {
         //throw new UnsupportedOperationException("Not supported yet.");
     }
+
+    public <T> T getInstance(com.sun.jersey.spi.service.ComponentContext context , ComponentProvider.Scope scope, Class<T> clazz) {
+        throw new UnsupportedOperationException("Not supported yet.");
+    }
 }
