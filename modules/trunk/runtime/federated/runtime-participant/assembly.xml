@@ -91,7 +91,6 @@
                 <include>org.codehaus.fabric3:fabric3-xmlfactory</include>
                 <include>org.codehaus.fabric3:fabric3-util</include>
                 <include>org.codehaus.fabric3:fabric3-jmx</include>
-                <include>org.codehaus.fabric3:fabric3-policy-spi</include>
                 <include>org.codehaus.fabric3:fabric3-pojo</include>
                 <include>org.codehaus.fabric3:fabric3-transform-api</include>
                 <include>org.codehaus.fabric3:fabric3-transform</include>
@@ -115,7 +114,7 @@
                 <!--<include>org.codehaus.fabric3:fabric3-console</include>-->
                 <include>org.codehaus.fabric3:fabric3-jdk-proxy</include>
                 <include>org.codehaus.fabric3:fabric3-java</include>
-                <include>org.codehaus.fabric3:fabric3-async-runtime</include>
+                <include>org.codehaus.fabric3:fabric3-async-provision</include>
                 <include>org.codehaus.fabric3:fabric3-async-runtime</include>
                 <include>org.codehaus.fabric3:fabric3-conversation-propagation</include>
                 <include>org.codehaus.fabric3:fabric3-jetty</include>

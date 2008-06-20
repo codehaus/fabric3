@@ -165,12 +165,11 @@
             <version>${project.version}</version>
         </dependency>
 
-        <!--<dependency>-->
-        <!--<groupId>org.codehaus.fabric3</groupId>-->
-        <!--<artifactId>fabric3-async-runtime</artifactId>-->
-        <!--<version>${project.version}</version>-->
-        <!--</dependency>-->
-
+        <dependency>
+            <groupId>org.codehaus.fabric3</groupId>
+            <artifactId>fabric3-async-provision</artifactId>
+            <version>${project.version}</version>
+        </dependency>
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-contribution-scanner</artifactId>
