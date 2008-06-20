@@ -23,9 +23,9 @@
         <version>0.5BETA2-SNAPSHOT</version>
     </parent>
     <groupId>org.codehaus.fabric3</groupId>
-    <artifactId>fabric3-async-runtime</artifactId>
-    <name>Fabric3 Asynchronous Implementation</name>
-    <description>Fabric3 Asynchronous Implementation.</description>
+    <artifactId>fabric3-async-provision</artifactId>
+    <name>Fabric3 Asynchronous Provisioning Classes</name>
+    <description>Fabric3 Asynchronous Provisioning Classes.</description>
     <packaging>sca-contribution-jar</packaging>
 
     <dependencies>
@@ -34,30 +34,6 @@
             <artifactId>fabric3-spi</artifactId>
             <version>${project.version}</version>
             <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.codehaus.fabric3</groupId>
-            <artifactId>fabric3-async-provision</artifactId>
-            <version>${project.version}</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>stax</groupId>
-            <artifactId>stax-api</artifactId>
-            <!-- use version 1.0 as it is the version bundled in JDK 6 -->
-            <version>1.0</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.easymock</groupId>
-            <artifactId>easymock</artifactId>
         </dependency>
 
     </dependencies>
@@ -75,23 +51,16 @@
                            <groupId>org.codehaus.fabric3</groupId>
                            <artifactId>fabric3-spi</artifactId>
                        </mavenImport>
-                        <mavenImport>
-                           <groupId>org.codehaus.fabric3</groupId>
-                           <artifactId>fabric3-async-provision</artifactId>
-                       </mavenImport>
                     </mavenImports>
-                    <deployables>
-                        <deployable>META-INF/async-runtime.composite</deployable>
-                    </deployables>
                 </configuration>
             </plugin>
         </plugins>
     </build>
 
     <scm>
-        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/extension/other/fabric3-async-runtime</connection>
-        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/trunk/extension/other/fabric3-async-runtime</developerConnection>
-        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/trunk/extension/other/fabric3-async-runtime</url>
+        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/extension/other/fabric3-async-provision</connection>
+        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/trunk/extension/other/fabric3-async-provision</developerConnection>
+        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/trunk/extension/other/fabric3-async-provision</url>
     </scm>
 
 </project>

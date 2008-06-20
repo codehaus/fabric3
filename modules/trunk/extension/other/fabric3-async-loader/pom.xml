@@ -35,6 +35,12 @@
             <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>org.codehaus.fabric3</groupId>
+            <artifactId>fabric3-async-provision</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
 
         <dependency>
             <groupId>stax</groupId>
@@ -63,6 +69,10 @@
                         <mavenImport>
                            <groupId>org.codehaus.fabric3</groupId>
                            <artifactId>fabric3-spi</artifactId>
+                       </mavenImport>
+                        <mavenImport>
+                           <groupId>org.codehaus.fabric3</groupId>
+                           <artifactId>fabric3-async-provision</artifactId>
                        </mavenImport>
                     </mavenImports>
                     <deployables>
