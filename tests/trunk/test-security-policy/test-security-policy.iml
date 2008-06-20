@@ -27,6 +27,7 @@
       </library>
     </orderEntry>
     <orderEntry type="module" module-name="fabric3-security" exported="" />
+    <orderEntry type="module" module-name="fabric3-binding-ws-axis2" />
     <orderEntryProperties />
   </component>
 </module>
