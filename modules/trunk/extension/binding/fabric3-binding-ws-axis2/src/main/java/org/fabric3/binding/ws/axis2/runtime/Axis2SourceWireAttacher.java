@@ -52,7 +52,7 @@ public class Axis2SourceWireAttacher implements SourceWireAttacher<Axis2WireSour
         throw new AssertionError();        
     }
 
-    public void attachObjectFactory(Axis2WireSourceDefinition source, ObjectFactory<?> objectFactory) throws WiringException {
+    public void attachObjectFactory(Axis2WireSourceDefinition source, ObjectFactory<?> objectFactory, PhysicalWireTargetDefinition definition) throws WiringException {
         throw new AssertionError();
     }
 }

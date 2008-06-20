@@ -16,6 +16,8 @@
  */
 package org.fabric3.binding.ws.axis2.runtime.config;
 
+import java.util.Set;
+
 import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.description.AxisModule;
 
@@ -24,8 +26,17 @@ import org.apache.axis2.description.AxisModule;
  */
 public interface F3Configurator {
     
-    public ConfigurationContext getConfigurationContext();
+    ConfigurationContext getConfigurationContext();
 
-    public AxisModule getModule(String name);
+    AxisModule getModule(String name);
 
+    /**
+     * This is a temporary method until we figure out how to enable extension "fragments"
+     */
+    void registerExtensionClassLoader(ClassLoader loader);
+
+    /**
+     * This is a temporary method until we figure out how to enable extension "fragments"
+     */
+    ClassLoader getExtensionClassLoader();
 }

@@ -22,10 +22,10 @@ import java.util.Set;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.binding.ws.axis2.runtime.config.F3Configurator;
-import org.fabric3.binding.ws.axis2.runtime.policy.PolicyApplier;
 import org.fabric3.binding.ws.axis2.provision.Axis2WireTargetDefinition;
 import org.fabric3.binding.ws.axis2.provision.AxisPolicy;
+import org.fabric3.binding.ws.axis2.runtime.config.F3Configurator;
+import org.fabric3.binding.ws.axis2.runtime.policy.PolicyApplier;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.TargetWireAttacher;
@@ -46,8 +46,7 @@ public class Axis2TargetWireAttacher implements TargetWireAttacher<Axis2WireTarg
     private final PolicyApplier policyApplier;
     private final F3Configurator f3Configurator;
 
-    public Axis2TargetWireAttacher(@Reference PolicyApplier policyApplier,
-                                   @Reference F3Configurator f3Configurator) {
+    public Axis2TargetWireAttacher(@Reference PolicyApplier policyApplier, @Reference F3Configurator f3Configurator) {
         this.policyApplier = policyApplier;
         this.f3Configurator = f3Configurator;
     }
@@ -60,11 +59,7 @@ public class Axis2TargetWireAttacher implements TargetWireAttacher<Axis2WireTarg
             String operation = entry.getKey().getName();
 
             Set<AxisPolicy> policies = target.getPolicies(operation);
-            Interceptor interceptor = new Axis2TargetInterceptor(target,
-                                                                 entry.getKey().getName(),
-                                                                 policies,
-                                                                 f3Configurator,
-                                                                 policyApplier);
+            Interceptor interceptor = new Axis2TargetInterceptor(target, operation, policies, f3Configurator, policyApplier);
             entry.getValue().addInterceptor(interceptor);
         }
 

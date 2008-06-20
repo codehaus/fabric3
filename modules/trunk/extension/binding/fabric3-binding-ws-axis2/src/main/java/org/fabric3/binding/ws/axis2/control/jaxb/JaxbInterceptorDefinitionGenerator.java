@@ -67,7 +67,7 @@ public class JaxbInterceptorDefinitionGenerator implements InterceptorDefinition
         
         boolean service = logicalBinding.getParent() instanceof LogicalService;
         
-        URI classLoaderId = logicalBinding.getParent().getParent().getParent().getUri();
+        URI classLoaderId = logicalBinding.getParent().getParent().getClassLoaderId();
         
         // This assumes a Java interface contract
 

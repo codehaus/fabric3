@@ -58,7 +58,7 @@ public class Axis2BindingGeneratorDelegate implements BindingGeneratorDelegate<W
         ServiceContract<?> contract = serviceDefinition.getServiceContract();
         hwsd.setServiceInterface(contract.getQualifiedInterfaceName());
         
-        URI classloaderId = binding.getParent().getParent().getParent().getUri();
+        URI classloaderId = binding.getParent().getParent().getClassLoaderId();
         hwsd.setClassloaderURI(classloaderId);
         
         setPolicyConfigs(hwsd, policy, contract);
@@ -77,7 +77,7 @@ public class Axis2BindingGeneratorDelegate implements BindingGeneratorDelegate<W
         ServiceContract<?> contract = referenceDefinition.getServiceContract();
         hwtd.setReferenceInterface(contract.getQualifiedInterfaceName());
         
-        URI classloaderId = binding.getParent().getParent().getParent().getUri();
+        URI classloaderId = binding.getParent().getParent().getClassLoaderId();
         hwtd.setClassloaderURI(classloaderId);
         
         setPolicyConfigs(hwtd, policy, contract);
