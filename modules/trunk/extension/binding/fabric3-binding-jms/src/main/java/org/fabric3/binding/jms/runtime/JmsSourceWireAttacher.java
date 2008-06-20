@@ -146,7 +146,7 @@ public class JmsSourceWireAttacher implements SourceWireAttacher<JmsWireSourceDe
         jmsHost.unregisterListener(target.getUri());
     }
 
-    public void attachObjectFactory(JmsWireSourceDefinition source, ObjectFactory<?> objectFactory) throws WiringException {
+    public void attachObjectFactory(JmsWireSourceDefinition source, ObjectFactory<?> objectFactory, PhysicalWireTargetDefinition definition) throws WiringException {
         throw new AssertionError();
     }
 

@@ -67,7 +67,7 @@ public class JmsBindingGenerator implements BindingGenerator<JmsWireSourceDefini
         TransactionType transactionType = getTransactionType(policy, serviceContract);
         Set<String> oneWayOperations = getOneWayOperations(policy, serviceContract);
 
-        URI classloaderId = logicalBinding.getParent().getParent().getParent().getUri();
+        URI classloaderId = logicalBinding.getParent().getParent().getClassLoaderId();
 
         JmsWireSourceDefinition result = new JmsWireSourceDefinition(logicalBinding.getBinding().getMetadata(), transactionType, classloaderId);
         result.setUri(logicalBinding.getBinding().getTargetUri());
@@ -87,7 +87,7 @@ public class JmsBindingGenerator implements BindingGenerator<JmsWireSourceDefini
         TransactionType transactionType = getTransactionType(policy, serviceContract);
         Set<String> oneWayOperations = getOneWayOperations(policy, serviceContract);
 
-        URI classloaderId = logicalBinding.getParent().getParent().getParent().getUri();
+        URI classloaderId = logicalBinding.getParent().getParent().getClassLoaderId();
 
         JmsWireTargetDefinition result = new JmsWireTargetDefinition(logicalBinding.getBinding().getMetadata(), transactionType, classloaderId);
         result.setOneWayOperations(oneWayOperations);
