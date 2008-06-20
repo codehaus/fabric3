@@ -194,7 +194,7 @@ public class EjbSourceWireAttacher implements SourceWireAttacher<EjbWireSourceDe
 
     }
 
-    public void attachObjectFactory(EjbWireSourceDefinition source, ObjectFactory<?> objectFactory) throws WiringException {
+    public void attachObjectFactory(EjbWireSourceDefinition source, ObjectFactory<?> objectFactory, PhysicalWireTargetDefinition definition) throws WiringException {
         throw new AssertionError();
     }
 }
