@@ -48,7 +48,7 @@ public class CxfBindingGeneratorDelegate implements BindingGeneratorDelegate<WsB
         ServiceContract<?> contract = serviceDefinition.getServiceContract();
         hwsd.setServiceInterface(contract.getQualifiedInterfaceName());
         
-        URI classloaderId = logicalBinding.getParent().getParent().getParent().getUri();
+        URI classloaderId = logicalBinding.getParent().getParent().getClassLoaderId();
         hwsd.setClassloaderURI(classloaderId);
         return hwsd;
 
@@ -64,7 +64,7 @@ public class CxfBindingGeneratorDelegate implements BindingGeneratorDelegate<WsB
         ServiceContract<?> contract = referenceDefinition.getServiceContract();
         hwtd.setReferenceInterface(contract.getQualifiedInterfaceName());
         
-        URI classloaderId = logicalBinding.getParent().getParent().getParent().getUri();
+        URI classloaderId = logicalBinding.getParent().getParent().getClassLoaderId();
         hwtd.setClassloaderURI(classloaderId);
         return hwtd;
 

@@ -88,7 +88,7 @@ public class CxfSourceWireAttacher implements SourceWireAttacher<CxfWireSourceDe
         throw new AssertionError();
     }
 
-    public void attachObjectFactory(CxfWireSourceDefinition source, ObjectFactory<?> objectFactory) throws WiringException {
+    public void attachObjectFactory(CxfWireSourceDefinition source, ObjectFactory<?> objectFactory, PhysicalWireTargetDefinition definition) throws WiringException {
         throw new AssertionError();
     }
 }
