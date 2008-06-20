@@ -18,12 +18,20 @@ package org.fabric3.groovy.control;
 
 import java.net.URI;
 
+import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Reference;
+
+import org.fabric3.groovy.provision.GroovyComponentDefinition;
+import org.fabric3.groovy.provision.GroovyInstanceFactoryDefinition;
+import org.fabric3.groovy.provision.GroovyWireSourceDefinition;
+import org.fabric3.groovy.provision.GroovyWireTargetDefinition;
+import org.fabric3.groovy.scdl.GroovyImplementation;
 import org.fabric3.pojo.instancefactory.InstanceFactoryGenerationHelper;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.ComponentDefinition;
-import org.fabric3.scdl.ServiceContract;
 import org.fabric3.scdl.InjectableAttribute;
 import org.fabric3.scdl.InjectableAttributeType;
+import org.fabric3.scdl.ServiceContract;
 import org.fabric3.spi.generator.ComponentGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.generator.GeneratorRegistry;
@@ -35,14 +43,6 @@ import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 import org.fabric3.spi.policy.Policy;
-import org.fabric3.groovy.scdl.GroovyImplementation;
-import org.fabric3.groovy.provision.GroovyComponentDefinition;
-import org.fabric3.groovy.provision.GroovyInstanceFactoryDefinition;
-import org.fabric3.groovy.provision.GroovyWireSourceDefinition;
-import org.fabric3.groovy.provision.GroovyWireTargetDefinition;
-
-import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Reference;
 
 /**
  * @version $Rev$ $Date$
@@ -81,9 +81,9 @@ public class GroovyComponentGenerator implements ComponentGenerator<LogicalCompo
         physical.setInstanceFactoryProviderDefinition(providerDefinition);
         helper.processPropertyValues(component, physical);
         // generate the classloader resource definition
-        URI classLoaderId = component.getParent().getUri();
+        URI classLoaderId = component.getClassLoaderId();
         physical.setClassLoaderId(classLoaderId);
-        
+
         return physical;
     }
 
@@ -94,7 +94,7 @@ public class GroovyComponentGenerator implements ComponentGenerator<LogicalCompo
         URI uri = reference.getUri();
         ServiceContract<?> serviceContract = reference.getDefinition().getServiceContract();
         String interfaceName = serviceContract.getQualifiedInterfaceName();
-        URI classLoaderId = source.getParent().getUri();
+        URI classLoaderId = source.getClassLoaderId();
 
         GroovyWireSourceDefinition wireDefinition = new GroovyWireSourceDefinition();
         wireDefinition.setUri(uri);
@@ -114,9 +114,8 @@ public class GroovyComponentGenerator implements ComponentGenerator<LogicalCompo
     }
 
     public PhysicalWireTargetDefinition generateWireTarget(LogicalService service,
-                                                           LogicalComponent<GroovyImplementation> target, 
-                                                           Policy policy)
-            throws GenerationException {
+                                                           LogicalComponent<GroovyImplementation> target,
+                                                           Policy policy) throws GenerationException {
         GroovyWireTargetDefinition wireDefinition = new GroovyWireTargetDefinition();
         URI uri;
         if (service != null) {
@@ -129,8 +128,8 @@ public class GroovyComponentGenerator implements ComponentGenerator<LogicalCompo
         return wireDefinition;
     }
 
-    public PhysicalWireSourceDefinition generateResourceWireSource(LogicalComponent<GroovyImplementation> source, 
-                                                                   LogicalResource<?> resource) throws GenerationException {
+    public PhysicalWireSourceDefinition generateResourceWireSource(LogicalComponent<GroovyImplementation> source, LogicalResource<?> resource)
+            throws GenerationException {
         GroovyWireSourceDefinition wireDefinition = new GroovyWireSourceDefinition();
         wireDefinition.setUri(resource.getUri());
         return wireDefinition;
