@@ -75,7 +75,7 @@ public class CompositeComponentInstantiator extends AbstractComponentInstantiato
         Composite composite = definition.getImplementation().getComponentType();
 
         LogicalCompositeComponent component = new LogicalCompositeComponent(uri, runtimeId, definition, parent);
-
+        component.setClassLoaderId(uri);
         initializeProperties(component, definition);
         instantiateChildComponents(component, properties, composite);
         instantiateCompositeServices(component, composite);
@@ -90,13 +90,14 @@ public class CompositeComponentInstantiator extends AbstractComponentInstantiato
                                             Composite composite) throws LogicalInstantiationException {
 
         // create the child components
-        for (ComponentDefinition<? extends Implementation<?>> child : composite.getComponents().values()) {
+        for (ComponentDefinition<? extends Implementation<?>> child : composite.getDeclaredComponents().values()) {
 
             LogicalComponent<?> childComponent;
-            if (child.getImplementation().isComposite()) {
+            if (child.getImplementation().isComposite()) {      
                 childComponent = instantiate(parent, properties, child);
             } else {
                 childComponent = atomicComponentInstantiator.instantiate(parent, properties, child);
+                childComponent.setClassLoaderId(parent.getClassLoaderId());
             }
             parent.addComponent(childComponent);
 

@@ -23,6 +23,7 @@ import org.osoa.sca.annotations.EagerInit;
 
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.xml.TypeLoader;
+import org.fabric3.spi.services.contribution.MavenImport;
 
 /**
  * Loads Maven import entries in a contribution manifest.

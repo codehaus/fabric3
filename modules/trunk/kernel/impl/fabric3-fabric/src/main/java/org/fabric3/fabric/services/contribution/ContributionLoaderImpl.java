@@ -52,9 +52,7 @@ public class ContributionLoaderImpl implements ContributionLoader {
             loader.addURL(library);
         }
         resolveImports(contribution, loader);
-        resolveExtensionImports(contribution, loader);
-
-        // register the classloader 
+        // register the classloader
         classLoaderRegistry.register(contributionUri, loader);
         return loader;
     }
@@ -81,28 +79,6 @@ public class ContributionLoaderImpl implements ContributionLoader {
             loader.addParent(importedLoader);
         }
         return manifest;
-    }
-
-    private void resolveExtensionImports(Contribution contribution, MultiParentClassLoader loader)
-            throws MatchingExportNotFoundException, ContributionLoadException {
-        ContributionManifest manifest = contribution.getManifest();
-        for (Import imprt : manifest.getExtensionImports()) {
-            Contribution imported = store.resolve(imprt);
-            if (imported == null) {
-                String id = imprt.toString();
-                throw new MatchingExportNotFoundException("No matching extension found for: " + id, id);
-            }
-            // add the resolved extension URI to the contribution
-            URI importedUri = imported.getUri();
-            contribution.addResolvedExtensionImportUri(importedUri);
-            // add the imported classloader
-            ClassLoader importedLoader = classLoaderRegistry.getClassLoader(importedUri);
-            if (importedLoader == null) {
-                String uri = importedUri.toString();
-                throw new ContributionLoadException("Imported extension classloader could not be found: " + uri, uri);
-            }
-            loader.addParent(importedLoader);
-        }
     }
 
 }

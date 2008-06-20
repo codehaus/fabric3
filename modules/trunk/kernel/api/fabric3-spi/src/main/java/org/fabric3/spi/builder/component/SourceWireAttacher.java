@@ -54,7 +54,8 @@ public interface SourceWireAttacher<PWSD extends PhysicalWireSourceDefinition> {
      *
      * @param source        the definition of the component reference to attach to
      * @param objectFactory an ObjectFactory that can produce values compatible with the reference
+     * @param target    the target definition for the wire
      * @throws WiringException if an exception occurs during the attach operation
      */
-    void attachObjectFactory(PWSD source, ObjectFactory<?> objectFactory) throws WiringException;
+    void attachObjectFactory(PWSD source, ObjectFactory<?> objectFactory, PhysicalWireTargetDefinition target) throws WiringException;
 }

@@ -24,9 +24,9 @@ import org.fabric3.scdl.ReferenceDefinition;
 import org.fabric3.scdl.ServiceDefinition;
 import org.fabric3.spi.generator.BindingGenerator;
 import org.fabric3.spi.generator.GenerationException;
+import org.fabric3.spi.model.instance.Bindable;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.instance.LogicalComponent;
-import org.fabric3.spi.model.instance.Bindable;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 import org.fabric3.spi.policy.Policy;
 
@@ -35,9 +35,8 @@ import org.fabric3.spi.policy.Policy;
  */
 public class JMXBindingGenerator implements BindingGenerator<JMXWireSourceDefinition, PhysicalWireTargetDefinition, JMXBinding> {
 
-    public JMXWireSourceDefinition generateWireSource(LogicalBinding<JMXBinding> binding,
-                                                      Policy policy,
-                                                      ServiceDefinition serviceDefinition) throws GenerationException {
+    public JMXWireSourceDefinition generateWireSource(LogicalBinding<JMXBinding> binding, Policy policy, ServiceDefinition serviceDefinition)
+            throws GenerationException {
         Bindable logicalService = binding.getParent();
         LogicalComponent<?> logicalComponent = logicalService.getParent();
 
@@ -47,15 +46,14 @@ public class JMXBindingGenerator implements BindingGenerator<JMXWireSourceDefini
             uri = logicalService.getUri();
         }
         definition.setUri(uri);
-        definition.setClassLoaderId(logicalComponent.getParent().getUri());
+        definition.setClassLoaderId(logicalComponent.getClassLoaderId());
         definition.setInterfaceName(serviceDefinition.getServiceContract().getQualifiedInterfaceName());
         definition.setOptimizable(true);
         return definition;
     }
 
-    public PhysicalWireTargetDefinition generateWireTarget(LogicalBinding<JMXBinding> binding,
-                                                           Policy policy,
-                                                           ReferenceDefinition referenceDefinition) throws GenerationException {
+    public PhysicalWireTargetDefinition generateWireTarget(LogicalBinding<JMXBinding> binding, Policy policy, ReferenceDefinition referenceDefinition)
+            throws GenerationException {
         // TODO we might need this for notifications but leave it out for now
         throw new UnsupportedOperationException();
     }

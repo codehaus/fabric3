@@ -30,6 +30,7 @@ import org.w3c.dom.Node;
 import org.fabric3.pojo.implementation.PojoComponent;
 import org.fabric3.scdl.DataType;
 import org.fabric3.scdl.InjectableAttribute;
+import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 import org.fabric3.spi.model.type.JavaClass;
 import org.fabric3.spi.model.type.JavaParameterizedType;
 import org.fabric3.spi.model.type.XSDSimpleType;
@@ -54,7 +55,10 @@ public abstract class PojoSourceWireAttacher {
     }
 
     @SuppressWarnings("unchecked")
-    protected Object getKey(PojoWireSourceDefinition sourceDefinition, PojoComponent<?> source, InjectableAttribute referenceSource) {
+    protected Object getKey(PojoWireSourceDefinition sourceDefinition,
+                            PojoComponent<?> source,
+                            PhysicalWireTargetDefinition targetDefinition,
+                            InjectableAttribute referenceSource) {
 
         if (!Map.class.isAssignableFrom(source.getMemberType(referenceSource))) {
             return null;
@@ -67,7 +71,7 @@ public abstract class PojoSourceWireAttacher {
 
             Element element = keyDocument.getDocumentElement();
 
-            Type formalType = null;
+            Type formalType;
             Type type = source.getGerenricMemberType(referenceSource);
 
             if (type instanceof ParameterizedType) {
@@ -83,10 +87,12 @@ public abstract class PojoSourceWireAttacher {
                 formalType = String.class;
             }
 
-            URI classLoaderId = sourceDefinition.getClassLoaderId();
-            ClassLoader cl = classLoaderRegistry.getClassLoader(classLoaderId);
+            URI sourceId = sourceDefinition.getClassLoaderId();
+            URI targetId = targetDefinition.getClassLoaderId();
+            ClassLoader sourceClassLoader = classLoaderRegistry.getClassLoader(sourceId);
+            ClassLoader targetClassLoader = classLoaderRegistry.getClassLoader(targetId);
 
-            TransformContext context = new TransformContext(cl, cl, null, null);
+            TransformContext context = new TransformContext(sourceClassLoader, targetClassLoader, null, null);
             try {
                 return createKey(formalType, element, context);
                 // return keyDocument.getDocumentElement().getTextContent();

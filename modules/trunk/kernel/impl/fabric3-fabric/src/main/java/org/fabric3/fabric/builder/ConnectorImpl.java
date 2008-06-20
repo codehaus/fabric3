@@ -75,7 +75,7 @@ public class ConnectorImpl implements Connector {
 
         if (definition.isOptimizable()) {
             ObjectFactory<?> objectFactory = targetAttacher.createObjectFactory(targetDefinition);
-            sourceAttacher.attachObjectFactory(sourceDefinition, objectFactory);
+            sourceAttacher.attachObjectFactory(sourceDefinition, objectFactory, targetDefinition);
         } else {
             Wire wire = createWire(definition);
             sourceAttacher.attachToSource(sourceDefinition, targetDefinition, wire);
@@ -86,12 +86,12 @@ public class ConnectorImpl implements Connector {
     public void disconnect(PhysicalWireDefinition definition) throws BuilderException {
         PhysicalWireSourceDefinition sourceDefinition = definition.getSource();
         SourceWireAttacher<PhysicalWireSourceDefinition> sourceAttacher =
-          getAttacher(sourceDefinition);
+                getAttacher(sourceDefinition);
 
         PhysicalWireTargetDefinition targetDefinition = definition.getTarget();
 
         if (definition.isOptimizable()) {
-            sourceAttacher.attachObjectFactory(sourceDefinition, null);
+            sourceAttacher.attachObjectFactory(sourceDefinition, null, targetDefinition);
         } else {
             Wire wire = createWire(definition);
             sourceAttacher.detachFromSource(sourceDefinition, targetDefinition, wire);
@@ -111,8 +111,6 @@ public class ConnectorImpl implements Connector {
         }
         return wire;
     }
-
-
 
 
     @SuppressWarnings("unchecked")

@@ -32,6 +32,7 @@ import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.services.contribution.ClasspathProcessorRegistry;
 import org.fabric3.spi.services.contribution.ContributionUriResolver;
 import org.fabric3.spi.services.contribution.ResolutionException;
+import org.fabric3.fabric.runtime.ComponentNames;
 
 /**
  * Default implementation of ClassLoaderBuilder.
@@ -80,6 +81,9 @@ public class ClassLoaderBuilderImpl implements ClassLoaderBuilder {
 
         // build the classloader using the locally cached resources
         MultiParentClassLoader loader = new MultiParentClassLoader(name, classpath, null);
+        // add the host classloader
+        ClassLoader cl = classLoaderRegistry.getClassLoader(ComponentNames.APPLICATION_CLASSLOADER_ID);
+        loader.addParent(cl);
         for (URI uri : definition.getParentClassLoaders()) {
             ClassLoader parent = classLoaderRegistry.getClassLoader(uri);
             if (parent == null) {

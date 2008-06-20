@@ -16,17 +16,17 @@
  */
 package org.fabric3.fabric.monitor;
 
+import org.osoa.sca.annotations.Destroy;
+import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Init;
+import org.osoa.sca.annotations.Reference;
+
+import org.fabric3.scdl.MonitorResource;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.generator.ResourceWireGenerator;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalResource;
-import org.fabric3.scdl.MonitorResource;
-
-import org.osoa.sca.annotations.Destroy;
-import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Init;
-import org.osoa.sca.annotations.Reference;
 
 /**
  * @version $Rev$ $Date$
@@ -50,8 +50,7 @@ public class MonitorWireGenerator implements ResourceWireGenerator<MonitorWireTa
         registry.unregister(MonitorResource.class, this);
     }
 
-    public MonitorWireTargetDefinition generateWireTargetDefinition(LogicalResource<MonitorResource> resource)
-            throws GenerationException {
+    public MonitorWireTargetDefinition generateWireTargetDefinition(LogicalResource<MonitorResource> resource) throws GenerationException {
 
         LogicalComponent<?> component = resource.getParent();
 
@@ -59,8 +58,7 @@ public class MonitorWireGenerator implements ResourceWireGenerator<MonitorWireTa
         definition.setMonitorType(resource.getResourceDefinition().getServiceContract().getQualifiedInterfaceName());
         definition.setUri(component.getUri());
         definition.setOptimizable(true);
-        // TODO is this a good way to get the classloader id?
-        definition.setClassLoaderId(component.getParent().getUri());
+        definition.setClassLoaderId(component.getClassLoaderId());
 
         return definition;
     }

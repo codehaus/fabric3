@@ -83,8 +83,8 @@
         <system:implementation.system class="org.fabric3.fabric.services.event.EventServiceImpl"/>
     </component>
 
-    <component name="classLoaderGenerator">
-        <system:implementation.system class="org.fabric3.fabric.generator.classloader.ClassLoaderGeneratorImpl"/>
+    <component name="ClassLoaderGenerator2">
+        <system:implementation.system class="org.fabric3.fabric.generator.classloader.ClassLoaderCommandGeneratorImpl"/>
     </component>
 
     <component name="classLaoderBuilder">

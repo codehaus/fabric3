@@ -67,11 +67,12 @@ public class JMXWireAttacher implements SourceWireAttacher<JMXWireSourceDefiniti
         throw new AssertionError();
     }
 
-    public void attachObjectFactory(JMXWireSourceDefinition source, ObjectFactory<?> objectFactory) throws WiringException {
+    public void attachObjectFactory(JMXWireSourceDefinition source, ObjectFactory<?> objectFactory, PhysicalWireTargetDefinition target)
+            throws WiringException {
         if (mBeanServer == null) {
             return;
         }
-        
+
         URI uri = source.getUri();
         String component = UriHelper.getDefragmentedNameAsString(uri);
         String service = uri.getFragment();
@@ -94,7 +95,7 @@ public class JMXWireAttacher implements SourceWireAttacher<JMXWireSourceDefiniti
         Map<String, Method> setters = new HashMap<String, Method>();
         Map<OperationKey, Method> operations = new HashMap<OperationKey, Method>();
         for (Method method : service.getMethods()) {
-            switch (getType(method)){
+            switch (getType(method)) {
             case GETTER:
                 String getterName = getAttributeName(method);
                 attributeNames.add(getterName);

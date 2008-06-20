@@ -48,6 +48,7 @@ public class LogicalComponent<I extends Implementation<?>> extends LogicalScaArt
     private final Map<String, LogicalService> services = new HashMap<String, LogicalService>();
     private final Map<String, LogicalReference> references = new HashMap<String, LogicalReference>();
     private final Map<String, LogicalResource<?>> resources = new HashMap<String, LogicalResource<?>>();
+    private URI classLoaderId;
     private URI runtimeId;
     private boolean active;
     private Autowire autowire;
@@ -59,9 +60,7 @@ public class LogicalComponent<I extends Implementation<?>> extends LogicalScaArt
      * @param definition Definition of the component.
      * @param parent     Parent of the component.
      */
-    public LogicalComponent(URI uri, URI runtimeId,
-                            ComponentDefinition<I> definition,
-                            LogicalCompositeComponent parent) {
+    public LogicalComponent(URI uri, URI runtimeId, ComponentDefinition<I> definition, LogicalCompositeComponent parent) {
         super(uri, parent, TYPE);
         this.runtimeId = runtimeId;
         this.definition = definition;
@@ -216,7 +215,7 @@ public class LogicalComponent<I extends Implementation<?>> extends LogicalScaArt
 
     /**
      * Gets the value of a property.
-     * 
+     *
      * @param name Name of the property.
      * @return Property value for the specified property.
      */
@@ -242,22 +241,23 @@ public class LogicalComponent<I extends Implementation<?>> extends LogicalScaArt
     public ComponentDefinition<I> getDefinition() {
         return definition;
     }
-    
+
     /**
      * Gets the component type.
+     *
      * @return Component type.
      */
     public AbstractComponentType<?, ?, ?, ?> getComponentType() {
         return getDefinition().getComponentType();
     }
-    
+
     /**
      * Checks whether this component needs to be eager inited.
-     * 
+     *
      * @return True if the component needs to be eager inited.
      */
     public boolean isEagerInit() {
-        
+
         ComponentDefinition<? extends Implementation<?>> definition = getDefinition();
         AbstractComponentType<?, ?, ?, ?> componentType = definition.getImplementation().getComponentType();
 
@@ -266,7 +266,7 @@ public class LogicalComponent<I extends Implementation<?>> extends LogicalScaArt
             level = componentType.getInitLevel();
         }
         return "COMPOSITE".equals(componentType.getScope()) && level > 0;
-        
+
     }
 
     /**
@@ -275,7 +275,7 @@ public class LogicalComponent<I extends Implementation<?>> extends LogicalScaArt
     public Set<QName> getIntents() {
         return definition.getIntents();
     }
-    
+
     /**
      * @param intents Intents declared on the SCA artifact.
      */
@@ -299,7 +299,7 @@ public class LogicalComponent<I extends Implementation<?>> extends LogicalScaArt
 
     /**
      * Checks whether the wire has been provisioned.
-     * 
+     *
      * @return True if the wire has been provisioned.
      */
     public boolean isProvisioned() {
@@ -308,11 +308,28 @@ public class LogicalComponent<I extends Implementation<?>> extends LogicalScaArt
 
     /**
      * Marks thw wire as provisioned/unprovisioned.
-     * 
+     *
      * @param provisioned True if the wire has been provisioned.
      */
     public void setProvisioned(boolean provisioned) {
         this.provisioned = provisioned;
     }
 
+    /**
+     * Returns the classloader id the component is associated with.
+     *
+     * @return the classloader id the component is associated with
+     */
+    public URI getClassLoaderId() {
+        return classLoaderId;
+    }
+
+    /**
+     * Sets the classloader id the component is associated with.
+     *
+     * @param id the classloader id the component is associated with
+     */
+    public void setClassLoaderId(URI id) {
+        this.classLoaderId = id;
+    }
 }

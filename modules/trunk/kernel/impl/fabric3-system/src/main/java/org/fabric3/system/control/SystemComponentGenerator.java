@@ -20,6 +20,9 @@ package org.fabric3.system.control;
 
 import java.net.URI;
 
+import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Reference;
+
 import org.fabric3.pojo.instancefactory.InstanceFactoryDefinition;
 import org.fabric3.pojo.instancefactory.InstanceFactoryGenerationHelper;
 import org.fabric3.pojo.scdl.PojoComponentType;
@@ -38,31 +41,26 @@ import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 import org.fabric3.spi.policy.Policy;
-import org.fabric3.system.scdl.SystemImplementation;
 import org.fabric3.system.provision.SystemComponentDefinition;
 import org.fabric3.system.provision.SystemWireSourceDefinition;
 import org.fabric3.system.provision.SystemWireTargetDefinition;
-
-import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Reference;
+import org.fabric3.system.scdl.SystemImplementation;
 
 /**
  * @version $Rev$ $Date$
  */
 @EagerInit
 public class SystemComponentGenerator implements ComponentGenerator<LogicalComponent<SystemImplementation>> {
-    
+
     private final InstanceFactoryGenerationHelper helper;
-    
-    public SystemComponentGenerator(@Reference GeneratorRegistry registry,
-                                    @Reference InstanceFactoryGenerationHelper helper) {
+
+    public SystemComponentGenerator(@Reference GeneratorRegistry registry, @Reference InstanceFactoryGenerationHelper helper) {
 
         registry.register(SystemImplementation.class, this);
         this.helper = helper;
     }
 
-    public PhysicalComponentDefinition generate(LogicalComponent<SystemImplementation> component)
-            throws GenerationException {
+    public PhysicalComponentDefinition generate(LogicalComponent<SystemImplementation> component) throws GenerationException {
         ComponentDefinition<SystemImplementation> definition = component.getDefinition();
         SystemImplementation implementation = definition.getImplementation();
         PojoComponentType type = implementation.getComponentType();
@@ -85,15 +83,14 @@ public class SystemComponentGenerator implements ComponentGenerator<LogicalCompo
         helper.processPropertyValues(component, physical);
 
         // generate the classloader resource definition
-        URI classLoaderId = component.getParent().getUri();
+        URI classLoaderId = component.getClassLoaderId();
         physical.setClassLoaderId(classLoaderId);
 
         return physical;
     }
 
-    public PhysicalWireSourceDefinition generateWireSource(LogicalComponent<SystemImplementation> source,
-                                                           LogicalReference reference,
-                                                           Policy policy) throws GenerationException {
+    public PhysicalWireSourceDefinition generateWireSource(LogicalComponent<SystemImplementation> source, LogicalReference reference, Policy policy)
+            throws GenerationException {
 
         URI uri = reference.getUri();
         SystemWireSourceDefinition wireDefinition = new SystemWireSourceDefinition();
@@ -101,7 +98,7 @@ public class SystemComponentGenerator implements ComponentGenerator<LogicalCompo
         wireDefinition.setUri(uri);
         wireDefinition.setValueSource(new InjectableAttribute(InjectableAttributeType.REFERENCE, uri.getFragment()));
 
-        URI classLoaderId = source.getParent().getUri();
+        URI classLoaderId = source.getClassLoaderId();
         wireDefinition.setClassLoaderId(classLoaderId);
 
         return wireDefinition;
@@ -113,24 +110,25 @@ public class SystemComponentGenerator implements ComponentGenerator<LogicalCompo
         throw new UnsupportedOperationException();
     }
 
-    public PhysicalWireTargetDefinition generateWireTarget(LogicalService service,
-                                                           LogicalComponent<SystemImplementation> logical,
-                                                           Policy policy) throws GenerationException {
+    public PhysicalWireTargetDefinition generateWireTarget(LogicalService service, LogicalComponent<SystemImplementation> logical, Policy policy)
+            throws GenerationException {
         SystemWireTargetDefinition wireDefinition = new SystemWireTargetDefinition();
         wireDefinition.setOptimizable(true);
         wireDefinition.setUri(service.getUri());
+        URI classLoaderId = logical.getClassLoaderId();
+        wireDefinition.setClassLoaderId(classLoaderId);
         return wireDefinition;
     }
 
-    public PhysicalWireSourceDefinition generateResourceWireSource(LogicalComponent<SystemImplementation> source,
-                                                                   LogicalResource<?> resource) throws GenerationException {
+    public PhysicalWireSourceDefinition generateResourceWireSource(LogicalComponent<SystemImplementation> source, LogicalResource<?> resource)
+            throws GenerationException {
         URI uri = resource.getUri();
         SystemWireSourceDefinition wireDefinition = new SystemWireSourceDefinition();
         wireDefinition.setOptimizable(true);
         wireDefinition.setUri(uri);
         wireDefinition.setValueSource(new InjectableAttribute(InjectableAttributeType.RESOURCE, uri.getFragment()));
 
-        URI classLoaderId =source.getParent().getUri();
+        URI classLoaderId = source.getClassLoaderId();
         wireDefinition.setClassLoaderId(classLoaderId);
 
         return wireDefinition;

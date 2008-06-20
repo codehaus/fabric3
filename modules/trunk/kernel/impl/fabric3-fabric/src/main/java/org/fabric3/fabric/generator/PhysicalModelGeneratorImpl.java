@@ -16,30 +16,34 @@
  */
 package org.fabric3.fabric.generator;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
+import org.fabric3.fabric.generator.classloader.ClassLoaderCommandGenerator;
+import org.fabric3.fabric.instantiator.LogicalChange;
 import org.fabric3.spi.command.Command;
 import org.fabric3.spi.generator.AddCommandGenerator;
+import org.fabric3.spi.generator.CommandGenerator;
 import org.fabric3.spi.generator.CommandMap;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.generator.RemoveCommandGenerator;
-import org.fabric3.spi.generator.CommandGenerator;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
-import org.fabric3.fabric.instantiator.LogicalChange;
 
 /**
  * Default implementation of the physical model generator. This implementation topologically sorts components according to their position in the
- * domain hierarchy. That is, by URI. This guarantees commands (e.g. classloader provisioning) will be generated in in the proper order. As part of
- * the topological sort, an ordered set of all logical components is created. The set is then iterated and command generators called based on their
- * command order are dispatched to for each logical component.
+ * domain hierarchy. That is, by URI. This guarantees commands will be generated in in the proper order. As part of the topological sort, an ordered
+ * set of all logical components is created. The set is then iterated and command generators called based on their command order are dispatched to for
+ * each logical component.
  *
  * @version $Revision$ $Date$
  */
@@ -51,21 +55,29 @@ public class PhysicalModelGeneratorImpl implements PhysicalModelGenerator {
         }
     };
 
-    private static final List<LogicalComponent<?>> EMPTY_LIST = new ArrayList<LogicalComponent<?>>();
     private final List<CommandGenerator> addCommandGenerators;
     private final List<CommandGenerator> removeCommandGenerators;
+    private ClassLoaderCommandGenerator classLoaderCommandGenerator;
 
     public PhysicalModelGeneratorImpl(@Reference(name = "addCommandGenerators")List<AddCommandGenerator> addGenerators,
-                                      @Reference(name = "removeCommandGenerators")List<RemoveCommandGenerator> removeGenerators) {
+                                      @Reference(name = "removeCommandGenerators")List<RemoveCommandGenerator> removeGenerators,
+                                      @Reference ClassLoaderCommandGenerator classLoaderCommandGenerator) {
+        this.classLoaderCommandGenerator = classLoaderCommandGenerator;
         // sort the command generators
         this.addCommandGenerators = sort(addGenerators);
         this.removeCommandGenerators = sort(removeGenerators);
     }
 
     public CommandMap generate(Collection<LogicalComponent<?>> components) throws GenerationException {
-        Collection<LogicalComponent<?>> sorted = topologicalSort(components);
+        List<LogicalComponent<?>> sorted = topologicalSort(components);
 
         CommandMap commandMap = new CommandMap();
+        Map<URI, Set<Command>> commandsPerRuntime = classLoaderCommandGenerator.generate(sorted);
+        for (Map.Entry<URI, Set<Command>> entry : commandsPerRuntime.entrySet()) {
+            for (Command command : entry.getValue()) {
+                commandMap.addCommand(entry.getKey(), command);
+            }
+        }
         for (CommandGenerator generator : addCommandGenerators) {
             for (LogicalComponent<?> component : sorted) {
                 Command command = generator.generate(component);
@@ -113,7 +125,7 @@ public class PhysicalModelGeneratorImpl implements PhysicalModelGenerator {
      * @param components the collection to sort
      * @return a sorted collection
      */
-    private Collection<LogicalComponent<?>> topologicalSort(Collection<LogicalComponent<?>> components) {
+    private List<LogicalComponent<?>> topologicalSort(Collection<LogicalComponent<?>> components) {
         List<LogicalComponent<?>> sorted = new ArrayList<LogicalComponent<?>>();
         for (LogicalComponent<?> component : components) {
             sorted.add(component);

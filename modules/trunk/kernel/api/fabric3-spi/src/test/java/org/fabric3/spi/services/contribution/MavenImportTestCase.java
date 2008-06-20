@@ -14,7 +14,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.fabric.services.contribution.manifest;
+package org.fabric3.spi.services.contribution;
 
 import junit.framework.TestCase;
 

@@ -120,10 +120,6 @@
         <system:implementation.system class="org.fabric3.fabric.services.contribution.manifest.MavenExportLoader"/>
     </component>
 
-    <component name="MavenExtensionImportLoader" f3:key="sca:import.extension">
-        <system:implementation.system class="org.fabric3.fabric.services.contribution.manifest.MavenExtensionImportLoader"/>
-    </component>
-
     <component name="MavenPOMLoader">
         <system:implementation.system class="org.fabric3.fabric.services.contribution.manifest.MavenPOMProcessor"/>
     </component>

@@ -25,6 +25,7 @@ import junit.framework.TestCase;
 import org.fabric3.scdl.DefaultValidationContext;
 import org.fabric3.scdl.ValidationContext;
 import org.fabric3.spi.services.contribution.ContributionManifest;
+import org.fabric3.spi.services.contribution.MavenExport;
 
 /**
  * @version $Rev$ $Date$

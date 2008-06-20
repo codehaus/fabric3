@@ -28,11 +28,6 @@
 
 
     <!-- default commands -->
-
-    <component name="classloaderProvisionCommandGenerator">
-        <system:implementation.system class="org.fabric3.fabric.generator.classloader.ProvisionClassloaderCommandGenerator"/>
-        <property name="order">0</property>
-    </component>
     
     <component name="componentBuildCommandGenerator">
         <system:implementation.system class="org.fabric3.fabric.generator.component.BuildComponentCommandGenerator"/>

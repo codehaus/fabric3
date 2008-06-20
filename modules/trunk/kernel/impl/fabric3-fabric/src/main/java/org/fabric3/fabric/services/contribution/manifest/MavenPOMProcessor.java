@@ -31,6 +31,7 @@ import org.fabric3.scdl.ValidationContext;
 import org.fabric3.spi.services.contribution.ContributionManifest;
 import org.fabric3.spi.services.contribution.XmlElementManifestProcessor;
 import org.fabric3.spi.services.contribution.XmlManifestProcessorRegistry;
+import org.fabric3.spi.services.contribution.MavenExport;
 import org.fabric3.transform.TransformationException;
 import org.fabric3.transform.xml.Stream2Document;
 import org.osoa.sca.annotations.EagerInit;

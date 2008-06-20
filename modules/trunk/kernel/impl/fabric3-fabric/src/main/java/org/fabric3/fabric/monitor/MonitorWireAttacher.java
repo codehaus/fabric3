@@ -39,8 +39,7 @@ public class MonitorWireAttacher implements TargetWireAttacher<MonitorWireTarget
     private final MonitorFactory monitorFactory;
     private final ClassLoaderRegistry classLoaderRegistry;
 
-    public MonitorWireAttacher(@Reference MonitorFactory monitorFactory,
-                               @Reference ClassLoaderRegistry classLoaderRegistry) {
+    public MonitorWireAttacher(@Reference MonitorFactory monitorFactory, @Reference ClassLoaderRegistry classLoaderRegistry) {
         this.monitorFactory = monitorFactory;
         this.classLoaderRegistry = classLoaderRegistry;
     }

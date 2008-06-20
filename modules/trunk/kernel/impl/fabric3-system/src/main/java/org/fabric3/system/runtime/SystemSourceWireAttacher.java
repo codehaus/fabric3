@@ -26,13 +26,13 @@ import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.SourceWireAttacher;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
-import org.fabric3.spi.services.componentmanager.ComponentManager;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
-import org.fabric3.transform.PullTransformer;
-import org.fabric3.transform.TransformerRegistry;
+import org.fabric3.spi.services.componentmanager.ComponentManager;
 import org.fabric3.spi.util.UriHelper;
 import org.fabric3.spi.wire.Wire;
 import org.fabric3.system.provision.SystemWireSourceDefinition;
+import org.fabric3.transform.PullTransformer;
+import org.fabric3.transform.TransformerRegistry;
 
 /**
  * @version $Rev$ $Date$
@@ -58,12 +58,12 @@ public class SystemSourceWireAttacher extends PojoSourceWireAttacher implements 
         throw new AssertionError();
     }
 
-    public void attachObjectFactory(SystemWireSourceDefinition source, ObjectFactory<?> objectFactory) throws WiringException {
+    public void attachObjectFactory(SystemWireSourceDefinition source, ObjectFactory<?> objectFactory, PhysicalWireTargetDefinition target)
+            throws WiringException {
         URI sourceId = UriHelper.getDefragmentedName(source.getUri());
         SystemComponent<?> sourceComponent = (SystemComponent<?>) manager.getComponent(sourceId);
         InjectableAttribute referenceSource = source.getValueSource();
-
-        Object key = getKey(source, sourceComponent, referenceSource);
+        Object key = getKey(source, sourceComponent, target, referenceSource);
         sourceComponent.attachReferenceToTarget(referenceSource, objectFactory, key);
     }
 }

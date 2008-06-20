@@ -14,23 +14,20 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.fabric.services.contribution.manifest;
+package org.fabric3.spi.services.contribution;
 
-import java.net.URI;
 import javax.xml.namespace.QName;
 
 import org.fabric3.spi.Constants;
-import org.fabric3.spi.services.contribution.Import;
 
 /**
  * Represents an Maven export entry in a contribution manifest.
  *
  * @version $Rev$ $Date$
  */
-public class MavenImport implements Import {
-    private static final long serialVersionUID = -252985481705630453L;
+public class MavenExport implements Export {
+    private static final long serialVersionUID = 2622386855322390297L;
     private static final QName TYPE = new QName(Constants.FABRIC3_MAVEN_NS, "maven");
-
     private String groupId;
     private String artifactId;
     private String version = "unspecified";
@@ -39,15 +36,6 @@ public class MavenImport implements Import {
     private String minorVersion = "";
     private String revision = "";
     private boolean snapshot;
-    private URI location;
-
-    public URI getLocation() {
-        return location;
-    }
-
-    public void setLocation(URI location) {
-        this.location = location;
-    }
 
     public String getGroupId() {
         return groupId;
@@ -98,8 +86,51 @@ public class MavenImport implements Import {
         this.classifier = classifier;
     }
 
+    public int match(Import contributionImport) {
+        assert artifactId != null;
+        assert groupId != null;
+        if (contributionImport instanceof MavenImport) {
+            MavenImport imprt = (MavenImport) contributionImport;
+            assert imprt.getArtifactId() != null;
+            assert imprt.getGroupId() != null;
+            if (imprt.getArtifactId().equals(artifactId)
+                    && imprt.getGroupId().equals(groupId)) {
+                if (matchVersion(imprt)) {
+                    return EXACT_MATCH;
+                }
+            }
+        }
+        return NO_MATCH;
+    }
+
     public QName getType() {
         return TYPE;
+    }
+
+    private boolean matchVersion(MavenImport imprt) {
+        if ("unspecified".equals(imprt.getVersion())) {
+            return true;
+        } else {
+            if (imprt.getMajorVersion().compareTo(majorVersion) > 0) {
+                return false;
+            } else if (imprt.getMajorVersion().compareTo(majorVersion) == 0) {
+                if (!"".equals(imprt.getMinorVersion()) && imprt.getMinorVersion().compareTo(minorVersion) > 0) {
+                    return false;
+                } else if (imprt.getMinorVersion().equals(minorVersion)) {
+                    if (!"".equals(imprt.getRevision()) && imprt.getRevision().compareTo(revision) > 0) {
+                        return false;
+                    } else if (imprt.getRevision().equals(revision) && !imprt.isSnapshotVersion() && snapshot) {
+                        return false;
+                    } else {
+                        return true;
+                    }
+                } else {
+                    return true;
+                }
+            } else {
+                return true;
+            }
+        }
     }
 
     private void parseVersion() {
@@ -132,8 +163,7 @@ public class MavenImport implements Import {
     }
 
     public String toString() {
-        return new StringBuilder().append("Maven [").append(groupId).append(":").append(artifactId).
+        return new StringBuilder().append("Maven export [").append(groupId).append(":").append(artifactId).
                 append(":").append(version).append(":").append(classifier).append("]").toString();
     }
-
 }

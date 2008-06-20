@@ -20,6 +20,8 @@ package org.fabric3.fabric.implementation.singleton;
 
 import java.net.URI;
 
+import org.osoa.sca.annotations.Reference;
+
 import org.fabric3.scdl.ServiceContract;
 import org.fabric3.spi.generator.ComponentGenerator;
 import org.fabric3.spi.generator.GenerationException;
@@ -32,7 +34,6 @@ import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 import org.fabric3.spi.policy.Policy;
-import org.osoa.sca.annotations.Reference;
 
 /**
  * @version $Rev$ $Date$
@@ -59,18 +60,19 @@ public class SingletonGenerator implements ComponentGenerator<LogicalComponent<S
         throw new UnsupportedOperationException();
     }
 
-    public PhysicalWireTargetDefinition generateWireTarget(LogicalService service,
-                                                           LogicalComponent<SingletonImplementation> logical,
-                                                           Policy policy) throws GenerationException {
+    public PhysicalWireTargetDefinition generateWireTarget(LogicalService service, LogicalComponent<SingletonImplementation> logical, Policy policy)
+            throws GenerationException {
         SingletonWireTargetDefinition wireDefinition = new SingletonWireTargetDefinition();
         URI uri = logical.getUri().resolve(service.getUri());
         wireDefinition.setUri(uri);
         wireDefinition.setOptimizable(true);
+        URI classLoaderId = logical.getClassLoaderId();
+        wireDefinition.setClassLoaderId(classLoaderId);
         return wireDefinition;
     }
 
-    public PhysicalWireSourceDefinition generateResourceWireSource(LogicalComponent<SingletonImplementation> source,
-                                                                   LogicalResource<?> resource) throws GenerationException {
+    public PhysicalWireSourceDefinition generateResourceWireSource(LogicalComponent<SingletonImplementation> source, LogicalResource<?> resource)
+            throws GenerationException {
         throw new UnsupportedOperationException();
     }
 

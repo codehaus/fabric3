@@ -36,6 +36,7 @@ import org.fabric3.scdl.CompositeImplementation;
 import org.fabric3.scdl.CompositeReference;
 import org.fabric3.scdl.CompositeService;
 import org.fabric3.scdl.Implementation;
+import org.fabric3.scdl.Include;
 import org.fabric3.scdl.Property;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.instance.LogicalComponent;
@@ -116,34 +117,61 @@ public class LogicalModelInstantiatorImpl implements LogicalModelInstantiator {
     private List<LogicalComponent<?>> instantiateComponents(LogicalCompositeComponent parent, Map<String, Document> properties, Composite composite)
             throws LogicalInstantiationException {
 
-        Collection<ComponentDefinition<? extends Implementation<?>>> definitions = composite.getComponents().values();
+        Collection<ComponentDefinition<? extends Implementation<?>>> definitions = composite.getDeclaredComponents().values();
         List<LogicalComponent<?>> newComponents = new ArrayList<LogicalComponent<?>>(definitions.size());
         for (ComponentDefinition<? extends Implementation<?>> definition : definitions) {
-            LogicalComponent<?> logicalComponent = instantiate(parent, properties, definition);
-            // use autowire settings on the original composite as an override if they are not specified on the component
-            Autowire autowire;
-            if (definition.getAutowire() == Autowire.INHERITED) {
-                autowire = composite.getAutowire();
-            } else {
-                autowire = definition.getAutowire();
-            }
-            if (autowire == Autowire.ON || autowire == Autowire.OFF) {
-                logicalComponent.setAutowireOverride(autowire);
-            }
+            LogicalComponent<?> logicalComponent = instantiate(parent, properties, null, definition);
+            setAutowire(composite, definition, logicalComponent);
             newComponents.add(logicalComponent);
             parent.addComponent(logicalComponent);
+        }
+        for (Include include : composite.getIncludes().values()) {
+            // xcv FIXME need to recurse down included hierarchy
+            for (ComponentDefinition<? extends Implementation<?>> definition : include.getIncluded().getComponents().values()) {
+                URI classLaoderId = URI.create(parent.getUri().toString() + "/" + include.getName().getLocalPart());
+                LogicalComponent<?> logicalComponent = instantiate(parent, properties, classLaoderId, definition);
+                setAutowire(composite, definition, logicalComponent);
+                newComponents.add(logicalComponent);
+                parent.addComponent(logicalComponent);
+            }
         }
         return newComponents;
     }
 
+    private void setAutowire(Composite composite, ComponentDefinition<? extends Implementation<?>> definition, LogicalComponent<?> logicalComponent) {
+        // use autowire settings on the original composite as an override if they are not specified on the component
+        Autowire autowire;
+        if (definition.getAutowire() == Autowire.INHERITED) {
+            autowire = composite.getAutowire();
+        } else {
+            autowire = definition.getAutowire();
+        }
+        if (autowire == Autowire.ON || autowire == Autowire.OFF) {
+            logicalComponent.setAutowireOverride(autowire);
+        }
+    }
+
     @SuppressWarnings("unchecked")
-    private LogicalComponent<?> instantiate(LogicalCompositeComponent parent, Map<String, Document> properties, ComponentDefinition<?> definition)
+    private LogicalComponent<?> instantiate(LogicalCompositeComponent parent,
+                                            Map<String, Document> properties,
+                                            URI classLoaderId,
+                                            ComponentDefinition<?> definition)
             throws LogicalInstantiationException {
 
         if (definition.getImplementation().isComposite()) {
-            return compositeComponentInstantiator.instantiate(parent, properties, (ComponentDefinition<CompositeImplementation>) definition);
+            LogicalComponent<?> component =
+                    compositeComponentInstantiator.instantiate(parent, properties, (ComponentDefinition<CompositeImplementation>) definition);
+            component.setClassLoaderId(component.getUri());
+            return component;
         } else {
-            return atomicComponentInstantiator.instantiate(parent, properties, (ComponentDefinition<Implementation<?>>) definition);
+            LogicalComponent<?> component =
+                    atomicComponentInstantiator.instantiate(parent, properties, (ComponentDefinition<Implementation<?>>) definition);
+            if (classLoaderId != null) {
+                component.setClassLoaderId(classLoaderId);
+            } else {
+                component.setClassLoaderId(parent.getUri());
+            }
+            return component;
         }
 
     }

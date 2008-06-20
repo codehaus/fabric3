@@ -46,9 +46,8 @@ import org.fabric3.fabric.executor.StartCompositeContextCommandExecutor;
 import org.fabric3.fabric.generator.GeneratorRegistryImpl;
 import org.fabric3.fabric.generator.PhysicalModelGenerator;
 import org.fabric3.fabric.generator.PhysicalModelGeneratorImpl;
-import org.fabric3.fabric.generator.classloader.ClassLoaderGenerator;
-import org.fabric3.fabric.generator.classloader.ClassLoaderGeneratorImpl;
-import org.fabric3.fabric.generator.classloader.ProvisionClassloaderCommandGenerator;
+import org.fabric3.fabric.generator.classloader.ClassLoaderCommandGenerator;
+import org.fabric3.fabric.generator.classloader.ClassLoaderCommandGeneratorImpl;
 import org.fabric3.fabric.generator.component.BuildComponentCommandGenerator;
 import org.fabric3.fabric.generator.component.InitializeComponentCommandGenerator;
 import org.fabric3.fabric.generator.component.StartComponentCommandGenerator;
@@ -312,10 +311,9 @@ public class BootstrapAssemblyFactory {
         PhysicalOperationHelper physicalOperationHelper = new PhysicalOperationHelperImpl();
         PhysicalWireGenerator wireGenerator = new PhysicalWireGeneratorImpl(generatorRegistry, new NullPolicyResolver(), physicalOperationHelper);
 
-        ClassLoaderGenerator classLoaderGenerator = new ClassLoaderGeneratorImpl(metaDataStore);
+        ClassLoaderCommandGenerator classLoaderCommandGenerator = new ClassLoaderCommandGeneratorImpl(metaDataStore);
 
         List<AddCommandGenerator> commandGenerators = new ArrayList<AddCommandGenerator>();
-        commandGenerators.add(new ProvisionClassloaderCommandGenerator(classLoaderGenerator, 0));
         commandGenerators.add(new BuildComponentCommandGenerator(generatorRegistry, 1));
         commandGenerators.add(new LocalWireCommandGenerator(wireGenerator, logicalComponentManager, 2));
         commandGenerators.add(new ServiceWireCommandGenerator(wireGenerator, 2));
@@ -326,7 +324,7 @@ public class BootstrapAssemblyFactory {
         List<RemoveCommandGenerator> removeCmdGenerator = new ArrayList<RemoveCommandGenerator>(2);
         removeCmdGenerator.add(new StopCompositeContextCommandGenerator(0));
         removeCmdGenerator.add(new StopComponentCommandGenerator(1));
-        return new PhysicalModelGeneratorImpl(commandGenerators, removeCmdGenerator);
+        return new PhysicalModelGeneratorImpl(commandGenerators, removeCmdGenerator, classLoaderCommandGenerator);
     }
 
     private static GeneratorRegistry createGeneratorRegistry() {

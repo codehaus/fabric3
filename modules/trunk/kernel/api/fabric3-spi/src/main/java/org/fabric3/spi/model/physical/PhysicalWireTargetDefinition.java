@@ -31,6 +31,7 @@ public class PhysicalWireTargetDefinition {
     private boolean optimizable;
     private boolean callback;
     private URI callbackUri;
+    private URI classLoaderId;
 
     /**
      * Returns the URI of the physical component targeted by this wire.
@@ -103,4 +104,23 @@ public class PhysicalWireTargetDefinition {
     public void setOptimizable(boolean optimizable) {
         this.optimizable = optimizable;
     }
+    
+    /**
+      * Returns the id of the classloader that should be used to load the interface class.
+      *
+      * @return the id of the classloader that should be used to load the interface class
+      */
+     public URI getClassLoaderId() {
+         return classLoaderId;
+     }
+
+     /**
+      * Sets the id of the classloader that should be used to load the interface class.
+      *
+      * @param classLoaderId the id of the classloader that should be used to load the interface class
+      */
+     public void setClassLoaderId(URI classLoaderId) {
+         this.classLoaderId = classLoaderId;
+     }
+    
 }

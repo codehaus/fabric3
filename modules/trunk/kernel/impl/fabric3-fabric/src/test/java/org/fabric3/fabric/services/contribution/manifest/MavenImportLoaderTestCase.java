@@ -21,6 +21,8 @@ import javax.xml.stream.XMLStreamReader;
 import junit.framework.TestCase;
 import org.easymock.EasyMock;
 
+import org.fabric3.spi.services.contribution.MavenImport;
+
 /**
  * @version $Rev$ $Date$
  */
