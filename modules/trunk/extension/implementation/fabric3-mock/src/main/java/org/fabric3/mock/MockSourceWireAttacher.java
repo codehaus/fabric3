@@ -27,7 +27,7 @@ import org.fabric3.spi.wire.Wire;
  */
 public class MockSourceWireAttacher implements SourceWireAttacher<MockWireSourceDefinition> {
 
-    public void attachObjectFactory(MockWireSourceDefinition arg0, ObjectFactory<?> arg1) throws WiringException {
+    public void attachObjectFactory(MockWireSourceDefinition arg0, ObjectFactory<?> arg1, PhysicalWireTargetDefinition definition) throws WiringException {
         // Empty implementation; we don't want to attach anything to the mock
     }
 
