@@ -25,7 +25,7 @@ import junit.framework.TestCase;
 public class XStreamTestCase extends TestCase {
 
     public void testCreate() {
-        XStreamFactory factory = new XStreamFactoryImpl();
+        XStreamFactory factory = new XStreamFactoryImpl(null);
         XStream xstream = factory.createInstance();
         String output = xstream.toXML("hello");
         assertTrue(output.endsWith("<string>hello</string>"));
