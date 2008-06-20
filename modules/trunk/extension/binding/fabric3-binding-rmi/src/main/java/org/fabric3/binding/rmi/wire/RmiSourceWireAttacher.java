@@ -189,7 +189,7 @@ public class RmiSourceWireAttacher implements SourceWireAttacher<RmiWireSourceDe
     }
 
 
-    public void attachObjectFactory(RmiWireSourceDefinition source, ObjectFactory<?> objectFactory) throws WiringException {
+    public void attachObjectFactory(RmiWireSourceDefinition source, ObjectFactory<?> objectFactory, PhysicalWireTargetDefinition definition) throws WiringException {
         throw new AssertionError();
     }
 }

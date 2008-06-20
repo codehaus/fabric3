@@ -48,7 +48,7 @@ public class RmiBindingGenerator implements BindingGenerator<RmiWireSourceDefini
         ServiceContract<?> contract = serviceDefinition.getServiceContract();
         ewsd.setInterfaceName(contract.getQualifiedInterfaceName());
 
-        URI classloaderId = logicalBinding.getParent().getParent().getParent().getUri();
+        URI classloaderId = logicalBinding.getParent().getParent().getClassLoaderId();
         ewsd.setClassLoaderURI(classloaderId);
         return ewsd;
 
@@ -68,7 +68,7 @@ public class RmiBindingGenerator implements BindingGenerator<RmiWireSourceDefini
         ServiceContract<?> contract = referenceDefinition.getServiceContract();
         ewtd.setInterfaceName(contract.getQualifiedInterfaceName());
 
-        URI classloaderId = logicalBinding.getParent().getParent().getParent().getUri();
+        URI classloaderId = logicalBinding.getParent().getParent().getClassLoaderId();
         ewtd.setClassLoaderURI(classloaderId);
         return ewtd;
 
