@@ -32,6 +32,7 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.fabric.util.FileHelper;
 import org.fabric3.host.contribution.ContributionException;
+import org.fabric3.host.contribution.ValidationFailure;
 import org.fabric3.introspection.DefaultIntrospectionContext;
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.xml.Loader;
@@ -117,7 +118,7 @@ public class ModuleContributionProcessor implements ContributionProcessor {
         }
         contribution.setManifest(manifest);
 
-        iterateArtifacts(contribution, new Action() {
+        iterateArtifacts(contribution, context, new Action() {
             public void process(Contribution contribution, String contentType, URL url)
                     throws ContributionException {
                 InputStream stream = null;
@@ -140,7 +141,7 @@ public class ModuleContributionProcessor implements ContributionProcessor {
     }
 
     public void index(Contribution contribution, final ValidationContext context) throws ContributionException {
-        iterateArtifacts(contribution, new Action() {
+        iterateArtifacts(contribution, context, new Action() {
             public void process(Contribution contribution, String contentType, URL url)
                     throws ContributionException {
                 registry.indexResource(contribution, contentType, url, context);
@@ -148,28 +149,28 @@ public class ModuleContributionProcessor implements ContributionProcessor {
         });
     }
 
-    private void iterateArtifacts(Contribution contribution, Action action) throws ContributionException {
+    private void iterateArtifacts(Contribution contribution, final ValidationContext context, Action action) throws ContributionException {
         File root = FileHelper.toFile(contribution.getLocation());
         assert root.isDirectory();
-        iterateArtifactsResursive(contribution, action, root);
+        iterateArtifactsResursive(contribution, context, action, root);
     }
 
-    private void iterateArtifactsResursive(Contribution contribution, Action action, File dir) throws ContributionException {
+    private void iterateArtifactsResursive(Contribution contribution, final ValidationContext context, Action action, File dir) throws ContributionException {
         File[] files = dir.listFiles();
         for (File file : files) {
             if (file.isDirectory()) {
-                iterateArtifactsResursive(contribution, action, file);
+                iterateArtifactsResursive(contribution, context, action, file);
             } else {
                 try {
                     URL entryUrl = file.toURI().toURL();
                     String contentType = contentTypeResolver.getContentType(entryUrl);
                     action.process(contribution, contentType, entryUrl);
                 } catch (MalformedURLException e) {
-                    throw new ContributionException(e);
+                    context.addWarning(new ContributionIndexingFailure(file, e));
                 } catch (IOException e) {
-                    throw new ContributionException(e);
+                    context.addWarning(new ContributionIndexingFailure(file, e));
                 } catch (ContentTypeResolutionException e) {
-                    throw new ContributionException(e);
+                    context.addWarning(new ContributionIndexingFailure(file, e));
                 }
             }
         }
