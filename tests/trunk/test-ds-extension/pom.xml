@@ -30,6 +30,16 @@
     <packaging>sca-contribution-jar</packaging>
 
     <dependencies>
+        <!--<dependency>-->
+            <!--<groupId>com.experlog</groupId>-->
+            <!--<artifactId>xapool</artifactId>-->
+            <!--<version>1.5.0</version>-->
+        <!--</dependency>-->
+        <dependency>
+            <groupId>commons-logging</groupId>
+            <artifactId>commons-logging</artifactId>
+            <version>1.1.1</version>
+        </dependency>
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-xapool</artifactId>

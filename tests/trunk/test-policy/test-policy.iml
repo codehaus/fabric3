@@ -17,19 +17,6 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module-library" exported="">
-      <library name="org.codehaus.fabric3.spec:sca-api-r1.0:0.2.1">
-        <CLASSES>
-          <root url="jar://$M2_REPO$/org/codehaus/fabric3/spec/sca-api-r1.0/0.2.1/sca-api-r1.0-0.2.1.jar!/" />
-        </CLASSES>
-        <JAVADOC>
-          <root url="jar://$M2_REPO$/org/codehaus/fabric3/spec/sca-api-r1.0/0.2.1/sca-api-r1.0-0.2.1-javadoc.jar!/" />
-        </JAVADOC>
-        <SOURCES>
-          <root url="jar://$M2_REPO$/org/codehaus/fabric3/spec/sca-api-r1.0/0.2.1/sca-api-r1.0-0.2.1-sources.jar!/" />
-        </SOURCES>
-      </library>
-    </orderEntry>
-    <orderEntry type="module-library" exported="">
       <library name="org.apache.geronimo.specs:geronimo-annotation_1.0_spec:1.1">
         <CLASSES>
           <root url="jar://$M2_REPO$/org/apache/geronimo/specs/geronimo-annotation_1.0_spec/1.1/geronimo-annotation_1.0_spec-1.1.jar!/" />
@@ -68,6 +55,7 @@
         </SOURCES>
       </library>
     </orderEntry>
+    <orderEntry type="module" module-name="sca-spec" />
     <orderEntryProperties />
   </component>
 </module>
