@@ -27,7 +27,7 @@
     <packaging>jar</packaging>
     <version>0.1-SNAPSHOT</version>
     <name>Fabric3 Timer Component Tests</name>
-    <description>Fabric3 Quartz Timer Tests.</description>
+    <description>Fabric3 Timer Component Tests.</description>
 
     <dependencies>
         <dependency>
