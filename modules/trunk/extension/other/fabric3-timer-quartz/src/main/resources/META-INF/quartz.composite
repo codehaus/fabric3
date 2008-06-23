@@ -25,14 +25,15 @@
            targetNamespace="org.codehaus.fabric3"
            autowire="true">
 
-
     <component name="TransactionalTimerService">
         <system:implementation.system class="org.fabric3.timer.quartz.QuartzTimerService"/>
-        <property name="transactional">true</property>
+        <property name="schedulerName">TransactionalScheduler</property>
     </component>
 
     <component name="NonTransactionalTimerService">
         <system:implementation.system class="org.fabric3.timer.quartz.QuartzTimerService"/>
+        <property name="transactional">false</property>
+        <property name="schedulerName">NonTransactionalScheduler</property>
     </component>
 
 </composite>

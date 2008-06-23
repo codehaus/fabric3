@@ -71,6 +71,7 @@ public class QuartzTimerService implements TimerService {
     private Scheduler scheduler;
     private long waitTime = -1;  // default Quartz value
     private boolean transactional = true;
+    private String schedulerName = "Fabric3Scheduler";
     private long counter;
 
     public QuartzTimerService(@Reference WorkScheduler workScheduler, @Reference TransactionManager tm) {
@@ -89,7 +90,7 @@ public class QuartzTimerService implements TimerService {
         } else {
             shellFactory = new F3JobRunShellFactory();
         }
-        scheduler = createScheduler("Fabric3Scheduler", "default", store, pool, shellFactory, jobFactory);
+        scheduler = createScheduler(schedulerName, "default", store, pool, shellFactory, jobFactory);
         RunnableCleanupListener listener = new RunnableCleanupListener(jobFactory);
         scheduler.addSchedulerListener(listener);
         scheduler.start();
@@ -110,6 +111,11 @@ public class QuartzTimerService implements TimerService {
     @Property
     public void setTransactional(boolean transactional) {
         this.transactional = transactional;
+    }
+
+    @Property
+    public void setSchedulerName(String schedulerName) {
+        this.schedulerName = schedulerName;
     }
 
     public ScheduledFuture<?> schedule(Runnable command, String expression) throws ParseException {
