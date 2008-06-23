@@ -24,12 +24,8 @@ import org.quartz.core.JobRunShell;
 import org.quartz.core.JobRunShellFactory;
 import org.quartz.core.SchedulingContext;
 
-import org.fabric3.pojo.PojoWorkContextTunnel;
-import org.fabric3.spi.invocation.CallFrame;
-import org.fabric3.spi.invocation.WorkContext;
-
 /**
- * Sets the WorkContext prior to a timer being invoked.
+ * Placeholder shell for monitoring events.
  *
  * @version $Revision$ $Date$
  */
@@ -39,16 +35,9 @@ public class F3JobRunShell extends JobRunShell {
     }
 
     protected void begin() throws SchedulerException {
-        // set a new work context
-        WorkContext workContext = new WorkContext();
-        CallFrame frame = new CallFrame();
-        workContext.addCallFrame(frame);
-        PojoWorkContextTunnel.setThreadWorkContext(workContext);
     }
 
     protected void complete(boolean successfull) throws SchedulerException {
-        // clear the work context
-        PojoWorkContextTunnel.setThreadWorkContext(null);
     }
 
 }
