@@ -47,14 +47,16 @@ public class RunnableHolderImpl<T> extends FutureTask<T> implements RunnableHold
     }
 
     public void execute(JobExecutionContext context) throws JobExecutionException {
-        try {
-            run();
-            get();
-        } catch (ExecutionException e) {
-            // unwrap the exception
-            throw new JobExecutionException(e.getCause());
-        } catch (Throwable e) {
-            throw new JobExecutionException(e);
+        boolean result = runAndReset();
+        if (!result) {
+            try {
+                get();
+            } catch (ExecutionException e) {
+                // unwrap the exception
+                throw new JobExecutionException(e.getCause());
+            } catch (Throwable e) {
+                throw new JobExecutionException(e);
+            }
         }
     }
 

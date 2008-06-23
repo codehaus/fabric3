@@ -139,6 +139,7 @@ public class QuartzTimerService implements TimerService {
         SimpleTrigger trigger = new SimpleTrigger();
         trigger.setName(id);
         trigger.setRepeatInterval(time);
+        trigger.setRepeatCount(SimpleTrigger.REPEAT_INDEFINITELY);
         trigger.setStartTime(new Date(System.currentTimeMillis() + initialDelay));
         return schedule(id, command, trigger);
     }

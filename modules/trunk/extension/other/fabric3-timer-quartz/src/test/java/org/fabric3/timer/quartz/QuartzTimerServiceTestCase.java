@@ -18,7 +18,7 @@
  */
 package org.fabric3.timer.quartz;
 
-import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 import javax.transaction.TransactionManager;
 
@@ -36,9 +36,8 @@ public class QuartzTimerServiceTestCase extends TestCase {
 
     public void testNonTransactionalScheduler() throws Exception {
         TestRunnable runnable = new TestRunnable();
-        ScheduledFuture<?> future = timerService.schedule(runnable, 0, TimeUnit.MILLISECONDS);
-        future.get();
-        assertTrue(runnable.isInvoked());
+        timerService.scheduleWithFixedDelay(runnable, 0, 10, TimeUnit.MILLISECONDS);
+        runnable.await();
     }
 
     protected void setUp() throws Exception {
@@ -61,14 +60,15 @@ public class QuartzTimerServiceTestCase extends TestCase {
 
 
     private class TestRunnable implements Runnable {
-        private boolean invoked;
+        private CountDownLatch latch = new CountDownLatch(2);
 
         public void run() {
-            invoked = true;
+            latch.countDown();
         }
 
-        public boolean isInvoked() {
-            return invoked;
+        public void await() throws InterruptedException {
+            latch.await();
         }
+
     }
 }
