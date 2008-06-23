@@ -133,67 +133,27 @@ public class QuartzTimerService implements TimerService {
         return schedule(id, command, trigger);
     }
 
+    public ScheduledFuture<?> scheduleWithFixedDelay(Runnable command, long initialDelay, long delay, TimeUnit unit) {
+        long time = unit.convert(delay, TimeUnit.MILLISECONDS);
+        String id = createId();
+        SimpleTrigger trigger = new SimpleTrigger();
+        trigger.setName(id);
+        trigger.setRepeatInterval(time);
+        trigger.setStartTime(new Date(System.currentTimeMillis() + initialDelay));
+        return schedule(id, command, trigger);
+    }
+
+    public ScheduledFuture<?> scheduleAtFixedRate(Runnable command, long initialDelay, long period, TimeUnit unit) {
+        throw new UnsupportedOperationException("Not implemented");
+    }
+
     public void cancel(String id) throws SchedulerException {
         jobFactory.remove(id);
         scheduler.unscheduleJob(id, GROUP);
     }
 
-    private ScheduledFuture<?> schedule(String id, Runnable command, Trigger trigger) throws RejectedExecutionException {
-        JobDetail detail = new JobDetail();
-        detail.setName(id);
-        detail.setGroup(GROUP);
-        detail.setJobClass(Job.class);  // required by Quartz
-        RunnableHolder holder = new RunnableHolderImpl(id, command, this);
-        jobFactory.register(holder);
-        try {
-            scheduler.scheduleJob(detail, trigger);
-        } catch (SchedulerException e) {
-            throw new RejectedExecutionException(e);
-        }
-        return holder;
-    }
-
-    private Scheduler createScheduler(String name, String id, JobStore store, ThreadPool pool, JobRunShellFactory shellFactory, JobFactory jobFactory)
-            throws SchedulerException {
-        SchedulingContext context = new SchedulingContext();
-        context.setInstanceId(id);
-
-        QuartzSchedulerResources resources = new QuartzSchedulerResources();
-        resources.setName(name);
-        resources.setInstanceId(id);
-        resources.setJobRunShellFactory(shellFactory);
-        resources.setThreadPool(pool);
-        resources.setJobStore(store);
-
-        QuartzScheduler quartzScheduler = new QuartzScheduler(resources, context, waitTime, -1);
-        quartzScheduler.setJobFactory(jobFactory);
-        store.initialize(null, quartzScheduler.getSchedulerSignaler());
-        Scheduler scheduler = new StdScheduler(quartzScheduler, context);
-        shellFactory.initialize(scheduler, context);
-        SchedulerRepository repository = SchedulerRepository.getInstance();
-        quartzScheduler.addNoGCObject(repository); // prevents the repository from being garbage collected
-        repository.bind(scheduler);    // no need to remove since it is handled in the scheduler shutdown method
-        return scheduler;
-    }
-
-    String createId() {
-        long id = ++counter;
-        return (String.valueOf(id));
-    }
-
     public <V> ScheduledFuture<V> schedule(Callable<V> callable, long delay, TimeUnit unit) {
         throw new UnsupportedOperationException("Not implemented");
-
-    }
-
-    public ScheduledFuture<?> scheduleAtFixedRate(Runnable command, long initialDelay, long period, TimeUnit unit) {
-        throw new UnsupportedOperationException("Not implemented");
-
-    }
-
-    public ScheduledFuture<?> scheduleWithFixedDelay(Runnable command, long initialDelay, long delay, TimeUnit unit) {
-        throw new UnsupportedOperationException("Not implemented");
-
     }
 
     public void shutdown() {
@@ -255,6 +215,49 @@ public class QuartzTimerService implements TimerService {
 
     public void execute(Runnable command) {
         workScheduler.scheduleWork(command);
+    }
+
+    private Scheduler createScheduler(String name, String id, JobStore store, ThreadPool pool, JobRunShellFactory shellFactory, JobFactory jobFactory)
+            throws SchedulerException {
+        SchedulingContext context = new SchedulingContext();
+        context.setInstanceId(id);
+
+        QuartzSchedulerResources resources = new QuartzSchedulerResources();
+        resources.setName(name);
+        resources.setInstanceId(id);
+        resources.setJobRunShellFactory(shellFactory);
+        resources.setThreadPool(pool);
+        resources.setJobStore(store);
+
+        QuartzScheduler quartzScheduler = new QuartzScheduler(resources, context, waitTime, -1);
+        quartzScheduler.setJobFactory(jobFactory);
+        store.initialize(null, quartzScheduler.getSchedulerSignaler());
+        Scheduler scheduler = new StdScheduler(quartzScheduler, context);
+        shellFactory.initialize(scheduler, context);
+        SchedulerRepository repository = SchedulerRepository.getInstance();
+        quartzScheduler.addNoGCObject(repository); // prevents the repository from being garbage collected
+        repository.bind(scheduler);    // no need to remove since it is handled in the scheduler shutdown method
+        return scheduler;
+    }
+
+    private String createId() {
+        long id = ++counter;
+        return (String.valueOf(id));
+    }
+
+    private ScheduledFuture<?> schedule(String id, Runnable command, Trigger trigger) throws RejectedExecutionException {
+        JobDetail detail = new JobDetail();
+        detail.setName(id);
+        detail.setGroup(GROUP);
+        detail.setJobClass(Job.class);  // required by Quartz
+        RunnableHolder holder = new RunnableHolderImpl(id, command, this);
+        jobFactory.register(holder);
+        try {
+            scheduler.scheduleJob(detail, trigger);
+        } catch (SchedulerException e) {
+            throw new RejectedExecutionException(e);
+        }
+        return holder;
     }
 
     /**
