@@ -273,10 +273,22 @@ public class MavenCoordinatorImpl implements MavenCoordinator {
             }
             context = new DefaultValidationContext();
             processor.process(manifest, stream, context);
+            // FIXME export Java until it can be moved to a true extension
+            stream = bootClassLoader.getResourceAsStream("META-INF/maven/org.codehaus.fabric3/fabric3-java/pom.xml");
+                        if (stream == null) {
+                            throw new InitializationException("fabric3-java jar is missing pom.xml file");
+                        }
+                        if (context.hasErrors()) {
+                            context.addErrors(context.getErrors());
+                            throw new InvalidContributionException(context.getErrors(), context.getWarnings());
+                        }
+                        context = new DefaultValidationContext();
+                        processor.process(manifest, stream, context);
             if (context.hasErrors()) {
                 context.addErrors(context.getErrors());
                 throw new InvalidContributionException(context.getErrors(), context.getWarnings());
             }
+
             contribution.setManifest(manifest);
             MetaDataStore store = runtime.getSystemComponent(MetaDataStore.class, ComponentNames.METADATA_STORE_URI);
             store.store(contribution);
