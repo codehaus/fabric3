@@ -30,6 +30,7 @@ import org.fabric3.spi.component.InstanceFactoryProvider;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.services.proxy.ProxyService;
 import org.fabric3.timer.spi.TimerService;
+import org.fabric3.timer.component.provision.TriggerData;
 
 /**
  * A timer component implementation.
@@ -39,7 +40,6 @@ import org.fabric3.timer.spi.TimerService;
 public class TimerComponent<T> extends JavaComponent<T> {
     private TriggerData data;
     private TimerService timerService;
-    private TimerService trxTimerService;
     private ScheduledFuture<?> future;
 
     /**
@@ -56,8 +56,7 @@ public class TimerComponent<T> extends JavaComponent<T> {
      * @param propertyFactories       map of factories for property values
      * @param referenceFactories      object factories for multiplicity references
      * @param data                    timer fire data
-     * @param nonTrxTimerService      the non transactional timer service
-     * @param trxTimerService         the transactional timer service
+     * @param timerService            the timer service
      */
     public TimerComponent(URI componentId,
                           InstanceFactoryProvider<T> instanceFactoryProvider,
@@ -70,8 +69,7 @@ public class TimerComponent<T> extends JavaComponent<T> {
                           Map<String, ObjectFactory<?>> propertyFactories,
                           Map<String, MultiplicityObjectFactory<?>> referenceFactories,
                           TriggerData data,
-                          TimerService nonTrxTimerService,
-                          TimerService trxTimerService) {
+                          TimerService timerService) {
         super(componentId,
               instanceFactoryProvider,
               scopeContainer,
@@ -83,8 +81,7 @@ public class TimerComponent<T> extends JavaComponent<T> {
               propertyFactories,
               referenceFactories);
         this.data = data;
-        this.timerService = nonTrxTimerService;
-        this.trxTimerService = trxTimerService;
+        this.timerService = timerService;
     }
 
     public void start() {

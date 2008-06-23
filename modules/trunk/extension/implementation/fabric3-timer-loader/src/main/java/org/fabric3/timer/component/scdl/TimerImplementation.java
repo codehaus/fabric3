@@ -18,12 +18,11 @@
  */
 package org.fabric3.timer.component.scdl;
 
-import java.util.concurrent.TimeUnit;
 import javax.xml.namespace.QName;
 
 import org.fabric3.java.scdl.JavaImplementation;
 import org.fabric3.spi.Constants;
-import org.fabric3.timer.component.provision.TriggerType;
+import org.fabric3.timer.component.provision.TriggerData;
 
 /**
  * Represents a timer component implementation type.
@@ -32,82 +31,18 @@ import org.fabric3.timer.component.provision.TriggerType;
  */
 public class TimerImplementation extends JavaImplementation {
     public static final QName IMPLEMENTATION_TIMER = new QName(Constants.FABRIC3_NS, "implementation.timer");
-    public static final long UNSPECIFIED = -1;
     private static final long serialVersionUID = -911919528396189874L;
-    private TriggerType triggerType;
-    private TimeUnit timeUnit = TimeUnit.MILLISECONDS;
-    private String cronExpression;
-    private long repeatInterval = UNSPECIFIED;
-    private long fixedRate = UNSPECIFIED;
-    private long startTime = UNSPECIFIED;
-    private long endTime = UNSPECIFIED;
-    private long fireOnce = UNSPECIFIED;
+    private TriggerData triggerData;
 
     public QName getType() {
         return IMPLEMENTATION_TIMER;
     }
 
-    public TriggerType getTriggerType() {
-        return triggerType;
+    public TriggerData getTriggerData() {
+        return triggerData;
     }
 
-    public void setTriggerType(TriggerType triggerType) {
-        this.triggerType = triggerType;
-    }
-
-    public TimeUnit getTimeUnit() {
-        return timeUnit;
-    }
-
-    public void setTimeUnit(TimeUnit timeUnit) {
-        this.timeUnit = timeUnit;
-    }
-
-    public String getCronExpression() {
-        return cronExpression;
-    }
-
-    public void setCronExpression(String cronExpression) {
-        this.cronExpression = cronExpression;
-    }
-
-    public long getRepeatInterval() {
-        return repeatInterval;
-    }
-
-    public void setRepeatInterval(long repeatInterval) {
-        this.repeatInterval = repeatInterval;
-    }
-
-    public long getFixedRate() {
-        return fixedRate;
-    }
-
-    public void setFixedRate(long fixedRate) {
-        this.fixedRate = fixedRate;
-    }
-
-    public long getStartTime() {
-        return startTime;
-    }
-
-    public void setStartTime(long startTime) {
-        this.startTime = startTime;
-    }
-
-    public long getEndTime() {
-        return endTime;
-    }
-
-    public void setEndTime(long endTime) {
-        this.endTime = endTime;
-    }
-
-    public long getFireOnce() {
-        return fireOnce;
-    }
-
-    public void setFireOnce(long fireOnce) {
-        this.fireOnce = fireOnce;
+    public void setTriggerData(TriggerData triggerData) {
+        this.triggerData = triggerData;
     }
 }

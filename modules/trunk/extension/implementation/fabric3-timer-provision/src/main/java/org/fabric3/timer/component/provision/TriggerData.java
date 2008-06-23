@@ -16,11 +16,9 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.timer.component.runtime;
+package org.fabric3.timer.component.provision;
 
 import java.util.concurrent.TimeUnit;
-
-import org.fabric3.timer.component.provision.TriggerType;
 
 /**
  * Encapsulates data for a timer trigger.
@@ -28,14 +26,16 @@ import org.fabric3.timer.component.provision.TriggerType;
  * @version $Revision$ $Date$
  */
 public class TriggerData {
+    public static final long UNSPECIFIED = -1;
+
     private TriggerType type = TriggerType.INTERVAL;
     private TimeUnit timeUnit = TimeUnit.MILLISECONDS;
     private String cronExpression;
-    private long fixedRate;
-    private long repeatInterval;
-    private long startTime;
-    private long endTime;
-    private long fireOnce;
+    private long fixedRate = UNSPECIFIED;
+    private long repeatInterval = UNSPECIFIED;
+    private long startTime = UNSPECIFIED;
+    private long endTime = UNSPECIFIED;
+    private long fireOnce = UNSPECIFIED;
 
     public TriggerType getType() {
         return type;

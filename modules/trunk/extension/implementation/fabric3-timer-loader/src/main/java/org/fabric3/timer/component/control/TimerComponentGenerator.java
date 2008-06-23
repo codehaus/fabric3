@@ -18,13 +18,15 @@
  */
 package org.fabric3.timer.component.control;
 
+import javax.xml.namespace.QName;
+
+import org.osoa.sca.Constants;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.java.control.JavaGenerationHelper;
 import org.fabric3.java.provision.JavaWireSourceDefinition;
-import org.fabric3.pojo.instancefactory.InstanceFactoryGenerationHelper;
 import org.fabric3.scdl.ServiceContract;
 import org.fabric3.spi.generator.ComponentGenerator;
 import org.fabric3.spi.generator.GenerationException;
@@ -38,6 +40,7 @@ import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 import org.fabric3.spi.policy.Policy;
 import org.fabric3.timer.component.provision.TimerComponentDefinition;
+import org.fabric3.timer.component.provision.TriggerData;
 import org.fabric3.timer.component.scdl.TimerImplementation;
 
 /**
@@ -47,16 +50,13 @@ import org.fabric3.timer.component.scdl.TimerImplementation;
  */
 @EagerInit
 public class TimerComponentGenerator implements ComponentGenerator<LogicalComponent<TimerImplementation>> {
-    protected final GeneratorRegistry registry;
+    private static final QName MANAGED_TRANSACTION = new QName(Constants.SCA_NS, "managedTransaction");
+    private final GeneratorRegistry registry;
     private JavaGenerationHelper generationHelper;
-    protected final InstanceFactoryGenerationHelper ifHelper;
 
-    public TimerComponentGenerator(@Reference GeneratorRegistry registry,
-                                   @Reference JavaGenerationHelper generationHelper,
-                                   @Reference InstanceFactoryGenerationHelper ifHelper) {
+    public TimerComponentGenerator(@Reference GeneratorRegistry registry, @Reference JavaGenerationHelper generationHelper) {
         this.registry = registry;
         this.generationHelper = generationHelper;
-        this.ifHelper = ifHelper;
     }
 
     @Init
@@ -68,13 +68,9 @@ public class TimerComponentGenerator implements ComponentGenerator<LogicalCompon
         TimerComponentDefinition physical = new TimerComponentDefinition();
         generationHelper.generate(component, physical);
         TimerImplementation implementation = component.getDefinition().getImplementation();
-        physical.setTriggerType(implementation.getTriggerType());
-        physical.setTimeUnit(implementation.getTimeUnit());
-        physical.setCronExpression(implementation.getCronExpression());
-        physical.setEndTime(implementation.getEndTime());
-        physical.setRepeatInterval(implementation.getRepeatInterval());
-        physical.setFixedRate(implementation.getFixedRate());
-        physical.setFireOnce(implementation.getFireOnce());
+        physical.setTransactional(implementation.getIntents().contains(MANAGED_TRANSACTION));
+        TriggerData data = implementation.getTriggerData();
+        physical.setTriggerData(data);
         return physical;
     }
 

@@ -44,6 +44,7 @@ import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.services.proxy.ProxyService;
 import org.fabric3.timer.component.provision.TimerComponentDefinition;
+import org.fabric3.timer.component.provision.TriggerData;
 import org.fabric3.timer.spi.TimerService;
 import org.fabric3.transform.PullTransformer;
 import org.fabric3.transform.TransformerRegistry;
@@ -95,7 +96,13 @@ public class TimerComponentBuilder<T> extends PojoComponentBuilder<T, TimerCompo
 
         Map<String, ObjectFactory<?>> propertyFactories = createPropertyFactories(definition, provider);
         Map<String, MultiplicityObjectFactory<?>> referenceFactories = createMultiplicityReferenceFactories(providerDefinition);
-        TriggerData data = populateTriggerData(definition);
+        TriggerData data = definition.getTriggerData();
+        TimerService timerService;
+        if (definition.isTransactional()) {
+            timerService = trxTimerService;
+        } else {
+            timerService = nonTrxTimerService;
+        }
         TimerComponent<T> component = new TimerComponent<T>(componentId,
                                                             provider,
                                                             scopeContainer,
@@ -107,8 +114,7 @@ public class TimerComponentBuilder<T> extends PojoComponentBuilder<T, TimerCompo
                                                             propertyFactories,
                                                             referenceFactories,
                                                             data,
-                                                            nonTrxTimerService,
-                                                            trxTimerService);
+                                                            timerService);
 
         PojoRequestContext requestContext = new PojoRequestContext();
         provider.setObjectFactory(InjectableAttribute.REQUEST_CONTEXT, new SingletonObjectFactory<PojoRequestContext>(requestContext));
@@ -121,32 +127,4 @@ public class TimerComponentBuilder<T> extends PojoComponentBuilder<T, TimerCompo
 
     }
 
-    private TriggerData populateTriggerData(TimerComponentDefinition definition) {
-        TriggerData data = new TriggerData();
-        data.setType(definition.getTriggerType());
-        data.setTimeUnit(definition.getTimeUnit());
-        switch (data.getType()) {
-        case CRON:
-            data.setCronExpression(definition.getCronExpression());
-            data.setTimeUnit(definition.getTimeUnit());
-            break;
-        case FIXED_RATE:
-            data.setFixedRate(definition.getFixedRate());
-            data.setStartTime(definition.getStartTime());
-            data.setEndTime(definition.getEndTime());
-            data.setTimeUnit(definition.getTimeUnit());
-            break;
-        case INTERVAL:
-            data.setRepeatInterval(definition.getRepeatInterval());
-            data.setStartTime(definition.getStartTime());
-            data.setEndTime(definition.getEndTime());
-            data.setTimeUnit(definition.getTimeUnit());
-            break;
-        case ONCE:
-            data.setFireOnce(definition.getFireOnce());
-            data.setTimeUnit(definition.getTimeUnit());
-            break;
-        }
-        return data;
-    }
 }
