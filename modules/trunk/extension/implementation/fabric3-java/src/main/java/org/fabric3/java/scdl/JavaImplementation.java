@@ -31,8 +31,9 @@ import org.fabric3.scdl.Implementation;
  * @version $$Rev$$ $$Date$$
  */
 public class JavaImplementation extends Implementation<PojoComponentType> {
-    private String implementationClass;
     public static final QName IMPLEMENTATION_JAVA = new QName(Constants.SCA_NS, "implementation.java");
+    private static final long serialVersionUID = 8922589166061811190L;
+    private String implementationClass;
 
     public JavaImplementation() {
     }

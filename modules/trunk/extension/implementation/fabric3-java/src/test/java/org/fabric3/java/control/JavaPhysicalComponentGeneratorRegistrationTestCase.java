@@ -22,7 +22,6 @@ import junit.framework.TestCase;
 import org.easymock.EasyMock;
 
 import org.fabric3.spi.generator.GeneratorRegistry;
-import org.fabric3.java.control.JavaComponentGenerator;
 
 /**
  * @version $Rev$ $Date$
@@ -35,7 +34,8 @@ public class JavaPhysicalComponentGeneratorRegistrationTestCase extends TestCase
         registry.register(EasyMock.isA(Class.class),
                           EasyMock.isA(JavaComponentGenerator.class));
         EasyMock.replay(registry);
-        new JavaComponentGenerator(registry, null);
+        JavaComponentGenerator generator = new JavaComponentGenerator(registry, null, null);
+        generator.init();
         EasyMock.verify(registry);
     }
 
