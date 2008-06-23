@@ -19,6 +19,7 @@
 package org.fabric3.timer.quartz;
 
 import java.util.concurrent.Delayed;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
 import java.util.concurrent.TimeUnit;
 
@@ -46,7 +47,15 @@ public class RunnableHolderImpl<T> extends FutureTask<T> implements RunnableHold
     }
 
     public void execute(JobExecutionContext context) throws JobExecutionException {
-        run();
+        try {
+            run();
+            get();
+        } catch (ExecutionException e) {
+            // unwrap the exception
+            throw new JobExecutionException(e.getCause());
+        } catch (Throwable e) {
+            throw new JobExecutionException(e);
+        }
     }
 
     public boolean cancel(boolean mayInterruptIfRunning) {
