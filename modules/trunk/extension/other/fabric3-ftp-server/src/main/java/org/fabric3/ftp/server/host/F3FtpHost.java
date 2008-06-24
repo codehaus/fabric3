@@ -30,7 +30,6 @@ import org.apache.mina.filter.codec.ProtocolCodecFilter;
 import org.apache.mina.filter.executor.ExecutorFilter;
 import org.apache.mina.transport.socket.SocketAcceptor;
 import org.apache.mina.transport.socket.nio.NioSocketAcceptor;
-import org.fabric3.ftp.api.FtpLet;
 import org.osoa.sca.annotations.Destroy;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
@@ -49,10 +48,10 @@ public class F3FtpHost implements FtpHost {
     private SocketAcceptor acceptor;
     private IoHandler ftpHandler;
     private ProtocolCodecFactory codecFactory;
-    
+
     /**
      * Starts the FTP server.
-     * 
+     *
      * @throws IOException If unable to start the FTP server.
      */
     @Init
@@ -67,7 +66,7 @@ public class F3FtpHost implements FtpHost {
         acceptor.bind(socketAddress);
 
     }
-    
+
     /**
      * Stops the FTP server.
      */
@@ -79,7 +78,7 @@ public class F3FtpHost implements FtpHost {
 
     /**
      * Sets the handler for the FTP commands.
-     * 
+     *
      * @param ftpHandler FTP Handler.
      */
     @Reference
@@ -89,8 +88,8 @@ public class F3FtpHost implements FtpHost {
 
     /**
      * Sets the protocol codec factory.
-     * 
-     * @param ftpHandler FTP Handler.
+     *
+     * @param codecFactory Protocol codec.
      */
     @Reference
     public void setCodecFactory(ProtocolCodecFactory codecFactory) {
@@ -99,7 +98,7 @@ public class F3FtpHost implements FtpHost {
 
     /**
      * Sets the FTP command port.
-     * 
+     *
      * @param commandPort Command port.
      */
     @Property

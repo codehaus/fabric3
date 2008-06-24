@@ -26,18 +26,17 @@ import org.fabric3.ftp.spi.FtpLetContainer;
 
 /**
  * Default implementation of the FtpLet container.
- * 
+ *
  * @version $Revision$ $Date$
  */
 public class DefaultFtpLetContainer implements FtpLetContainer {
-    
+
     private Map<String, FtpLet> ftpLets = new ConcurrentHashMap<String, FtpLet>();
-    
+
     /**
      * Registers an FTP let for the specified path.
-     * 
-     * @param path Path on which the FtpLet is listening.
-     * @param ftpLet FtpLet listening for the upload request.
+     *
+     * @param fileName Path on which the FtpLet is listening.
      */
     public FtpLet getFtpLet(String fileName) {
         for (Map.Entry<String, FtpLet> entry : ftpLets.entrySet()) {
@@ -47,12 +46,11 @@ public class DefaultFtpLetContainer implements FtpLetContainer {
         }
         return null;
     }
-    
+
     /**
      * Gets a registered FTP let for the file name.
-     * 
-     * @param fileName Fully qualified name for the file name.
-     * @return FTP let that is registered, null if none registered.
+     *
+     * @param path Fully qualified name for the file name.
      */
     public void registerFtpLet(String path, FtpLet ftpLet) {
         ftpLets.put(path, ftpLet);

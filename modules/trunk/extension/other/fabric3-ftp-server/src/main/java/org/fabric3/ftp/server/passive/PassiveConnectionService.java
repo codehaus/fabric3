@@ -20,21 +20,21 @@ package org.fabric3.ftp.server.passive;
 
 
 /**
- *
  * @version $Revision$ $Date$
  */
 public interface PassiveConnectionService {
-    
+
     /**
      * Acquires the next available pasive port.
-     * 
+     *
      * @return Next available passive port.
-     * @throws InterruptedException 
+     * @throws InterruptedException if the operation is interrupted.
      */
     int acquire() throws InterruptedException;
-    
+
     /**
      * Release a passive port.
+     *
      * @param port Port to be released.
      */
     void release(int port);

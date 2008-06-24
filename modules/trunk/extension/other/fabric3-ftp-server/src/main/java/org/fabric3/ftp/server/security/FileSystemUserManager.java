@@ -18,7 +18,6 @@
  */
 package org.fabric3.ftp.server.security;
 
-import java.io.IOException;
 import java.security.cert.X509Certificate;
 import java.util.HashMap;
 import java.util.Map;
@@ -62,7 +61,7 @@ public class FileSystemUserManager implements UserManager {
      * @param users Map of users to passwords.
      */
     @Property
-    public void setUsers(Map<String, String> users) throws IOException {
+    public void setUsers(Map<String, String> users) {
         this.users = users;
     }
 
