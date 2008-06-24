@@ -53,9 +53,13 @@ public class RunnableHolderImpl<T> extends FutureTask<T> implements RunnableHold
                 get();
             } catch (ExecutionException e) {
                 // unwrap the exception
-                throw new JobExecutionException(e.getCause());
+                JobExecutionException jex = new JobExecutionException(e.getCause());
+                jex.setUnscheduleAllTriggers(true);  // unschedule the job
+                throw jex;
             } catch (Throwable e) {
-                throw new JobExecutionException(e);
+                JobExecutionException jex = new JobExecutionException(e);
+                jex.setUnscheduleAllTriggers(true);  // unschedule the job
+                throw jex;
             }
         }
     }
