@@ -36,6 +36,8 @@ import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Reference;
 
+import org.fabric3.api.annotation.Monitor;
+
 /**
  * F3 implementation of the in-process FTP host.
  *
@@ -43,7 +45,7 @@ import org.osoa.sca.annotations.Reference;
  */
 @EagerInit
 public class F3FtpHost implements FtpHost {
-
+    private FtpHostMonitor monitor;
     private int commandPort = 21;
     private SocketAcceptor acceptor;
     private IoHandler ftpHandler;
@@ -63,8 +65,9 @@ public class F3FtpHost implements FtpHost {
         acceptor.getFilterChain().addLast("threadPool", new ExecutorFilter(filterExecutor));
         acceptor.getFilterChain().addLast("codec", new ProtocolCodecFilter(codecFactory));
         acceptor.setHandler(ftpHandler);
+        monitor.extensionStarted();
         acceptor.bind(socketAddress);
-
+        monitor.startFtpListener(commandPort);
     }
 
     /**
@@ -74,6 +77,17 @@ public class F3FtpHost implements FtpHost {
     public void stop() {
         acceptor.unbind();
         acceptor.dispose();
+        monitor.extensionStopped();
+    }
+
+    /**
+     * Sets the monitor.
+     *
+     * @param monitor the monitor.
+     */
+    @Monitor
+    public void setMonitor(FtpHostMonitor monitor) {
+        this.monitor = monitor;
     }
 
     /**
