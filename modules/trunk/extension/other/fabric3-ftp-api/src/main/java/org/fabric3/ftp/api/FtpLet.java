@@ -21,20 +21,20 @@ package org.fabric3.ftp.api;
 import java.io.InputStream;
 
 /**
- * 
  * Interface for receiving FTP callbacks.
- * 
+ * <p/>
  * Note: The concept is borrowed from Apache MINA FTP Server.
  *
  * @version $Revision$ $Date$
  */
 public interface FtpLet {
-    
+
     /**
      * Callback when data is uploaded by the remote FTP client.
-     * 
-     * @param path Name of the file being uploaded.
+     *
+     * @param fileName   Name of the file being uploaded.
      * @param uploadData Stream of data that is being uploaded.
+     * @return true if the operation completed
      * @throws Exception If unable to handle the data.
      */
     boolean onUpload(String fileName, InputStream uploadData) throws Exception;
