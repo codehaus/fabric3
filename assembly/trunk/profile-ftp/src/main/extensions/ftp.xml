@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<f3:xmlContribution xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha" xmlns="http://www.osoa.org/xmlns/sca/1.0" xmlns:maven="http://fabric3.org/xmlns/sca/2.0-alpha/maven">
+<contribution>
+<maven:import artifactId="fabric3-ftp-server" groupId="org.codehaus.fabric3"/>
+</contribution>
+<composite xmlns:sample="org.codehaus.fabric3" name="FTPComposite" targetNamespace="org.codehaus.fabric3">
+    <component name="FtpServerComponent">
+        <implementation.composite name="sample:FtpServer"/> 
+        <property name="config">
+            <config xmlns="">
+	            <commandPort>2000</commandPort>
+	            <minPassivePort>6000</minPassivePort>
+	            <maxPassivePort>7000</maxPassivePort>
+	            <users><meeraj>password</meeraj></users>
+	        </config>
+        </property>
+    </component>
+</composite>    
+</f3:xmlContribution>
