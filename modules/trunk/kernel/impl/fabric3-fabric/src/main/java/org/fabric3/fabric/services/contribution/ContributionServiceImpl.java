@@ -57,6 +57,7 @@ import org.fabric3.spi.services.contribution.Contribution;
 import org.fabric3.spi.services.contribution.MetaDataStore;
 import org.fabric3.spi.services.contribution.MetaDataStoreException;
 import org.fabric3.spi.services.contribution.ProcessorRegistry;
+import org.fabric3.spi.services.contribution.QNameSymbol;
 import org.fabric3.spi.services.contribution.Resource;
 import org.fabric3.spi.services.contribution.ResourceElement;
 
@@ -76,6 +77,7 @@ public class ContributionServiceImpl implements ContributionService {
     private DependencyService dependencyService;
     private String uriPrefix = "contribution://";
     private ContributionServiceMonitor monitor;
+
 
     public ContributionServiceImpl(@Reference ProcessorRegistry processorRegistry,
                                    @Reference ArchiveStore archiveStore,
@@ -287,7 +289,7 @@ public class ContributionServiceImpl implements ContributionService {
     }
 
     /**
-     * Processes contribution contents. This assumes all dependencies are installed and can be resolved
+     * Processes contribution contents. This assumes all dependencies are installed and can be resolved.
      *
      * @param contribution the contribution to process
      * @param loader       the classloader to load resources in
@@ -303,6 +305,7 @@ public class ContributionServiceImpl implements ContributionService {
             metaDataStore.store(contribution);
             context = new DefaultValidationContext();
             processorRegistry.processContribution(contribution, context, loader);
+            validateContrbitution(contribution, context);
             if (context.hasErrors()) {
                 throw new InvalidContributionException(context.getErrors(), context.getWarnings());
             } else if (context.hasWarnings()) {
@@ -312,6 +315,33 @@ public class ContributionServiceImpl implements ContributionService {
             addContributionUri(contribution);
         } catch (MetaDataStoreException e) {
             throw new ContributionException(e);
+        }
+    }
+
+    /**
+     * Performs final validation on a contribution.
+     *
+     * @param contribution the contribution to validate
+     * @param context      the validation context
+     */
+    private void validateContrbitution(Contribution contribution, ValidationContext context) {
+        for (Deployable deployable : contribution.getManifest().getDeployables()) {
+            QName name = deployable.getName();
+            QNameSymbol symbol = new QNameSymbol(name);
+            boolean found = false;
+            for (Resource resource : contribution.getResources()) {
+                for (ResourceElement<?, ?> element : resource.getResourceElements()) {
+                    if (element.getSymbol().equals(symbol)) {
+                        found = true;
+                    }
+                }
+            }
+            if (!found) {
+                URI uri = contribution.getUri();
+                InvalidDeployable failure = new InvalidDeployable("Deployable composite " + name + " not found in " + uri, uri, name);
+                context.addError(failure);
+            }
+
         }
     }
 
