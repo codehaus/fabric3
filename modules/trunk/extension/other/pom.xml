@@ -59,5 +59,7 @@
 		<module>fabric3-tx</module>
 		<module>fabric3-tx-jotm</module>
 		<module>fabric3-xapool</module>
+		<module>fabric3-timer-spi</module>
+		<module>fabric3-timer-quartz</module>
 	</modules>
 </project>

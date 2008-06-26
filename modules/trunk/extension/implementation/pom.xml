@@ -36,9 +36,9 @@
 		<module>fabric3-mock</module>
 		<module>fabric3-spring</module>
 		<module>fabric3-web</module>
-                <module>fabric3-rs</module>
-                <module>fabric3-timer-provision</module>
-                <module>fabric3-timer-loader</module>
-                <module>fabric3-timer-runtime</module>
+        <module>fabric3-rs</module>
+        <module>fabric3-timer-provision</module>
+        <module>fabric3-timer-loader</module>
+        <module>fabric3-timer-runtime</module>
 	</modules>
 </project>
