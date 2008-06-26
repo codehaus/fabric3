@@ -21,7 +21,6 @@ package org.fabric3.ftp.server.host;
 import org.fabric3.ftp.server.monitor.FtpMonitor;
 
 /**
- *
  * @version $Revision$ $Date$
  */
 public class TestFtpMonitor implements FtpMonitor {
@@ -33,6 +32,14 @@ public class TestFtpMonitor implements FtpMonitor {
     public void onException(Throwable throwable, String user) {
         System.err.println("Exception " + throwable.getMessage() + " by user " + user);
         throwable.printStackTrace();
+    }
+
+    public void uploadError(String user) {
+        System.err.println("Upload error: " + user);
+    }
+
+    public void noFtpLetRegistered(String resource) {
+        System.err.println("No registered FTPLet:" + resource);
     }
 
     public void onResponse(Object response, String user) {

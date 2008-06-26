@@ -56,4 +56,20 @@ public interface FtpMonitor {
     @Severe
     void onException(Throwable throwable, String user);
 
+    /**
+     * Logged when an upload error occurs.
+     *
+     * @param user User whose command caused the exception.
+     */
+    @Severe
+    void uploadError(String user);
+
+    /**
+     * Logged when an FtpLet not found for a resource.
+     *
+     * @param resource the resource address.
+     */
+    @Severe
+    void noFtpLetRegistered(String resource);
+
 }
