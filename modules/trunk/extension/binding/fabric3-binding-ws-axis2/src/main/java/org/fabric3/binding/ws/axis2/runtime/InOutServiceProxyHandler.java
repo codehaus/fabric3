@@ -26,9 +26,9 @@ import java.util.Vector;
 import javax.security.auth.Subject;
 
 import org.apache.axiom.om.OMElement;
+import org.apache.axiom.soap.SOAPBody;
 import org.apache.axiom.soap.SOAPEnvelope;
 import org.apache.axiom.soap.SOAPFactory;
-import org.apache.axiom.soap.SOAPBody;
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.context.MessageContext;
 import org.apache.axis2.receivers.AbstractInOutMessageReceiver;
@@ -38,9 +38,9 @@ import org.apache.ws.security.handler.WSHandlerConstants;
 import org.apache.ws.security.handler.WSHandlerResult;
 import org.apache.ws.security.util.WSSecurityUtil;
 
-import org.fabric3.spi.invocation.WorkContext;
-import org.fabric3.spi.invocation.MessageImpl;
 import org.fabric3.spi.invocation.Message;
+import org.fabric3.spi.invocation.MessageImpl;
+import org.fabric3.spi.invocation.WorkContext;
 import org.fabric3.spi.wire.Interceptor;
 import org.fabric3.spi.wire.InvocationChain;
 
@@ -79,9 +79,17 @@ public class InOutServiceProxyHandler extends AbstractInOutMessageReceiver {
         SOAPEnvelope envelope = fac.getDefaultEnvelope();
         SOAPBody body = envelope.getBody();
 
-        // we add the response to the body even if it's an application fault
-        OMElement resObject = (OMElement) ret.getBody();
-        body.addChild(resObject);
+        if (ret.isFault()) {
+            Object element = ret.getBody();
+            if (element instanceof AxisFault) {
+                throw (AxisFault) element;
+            } else if (element instanceof Throwable) {
+                throw AxisFault.makeFault((Throwable) element);
+            }
+        } else {
+            OMElement resObject = (OMElement) ret.getBody();
+            body.addChild(resObject);
+        }
 
         outMessage.setEnvelope(envelope);
 
@@ -117,7 +125,6 @@ public class InOutServiceProxyHandler extends AbstractInOutMessageReceiver {
                 //Create Subject with principal found
                 if (foundPrincipal != null) {
                     principals.add(foundPrincipal);
-                    ;
                 }
             }
 
@@ -142,8 +149,10 @@ public class InOutServiceProxyHandler extends AbstractInOutMessageReceiver {
                 break;
             }
         }
-        OMElement bodyContent = child.getFirstElement();
-        return bodyContent;
+        if (child != null) {
+            return child.getFirstElement();
+        }
+        return null;
 
     }
 

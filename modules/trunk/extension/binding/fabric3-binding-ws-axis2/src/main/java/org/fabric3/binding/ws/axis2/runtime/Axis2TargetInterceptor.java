@@ -28,6 +28,7 @@ import org.apache.axis2.description.AxisDescription;
 import org.apache.axis2.description.AxisModule;
 import org.apache.axis2.description.AxisOperation;
 import org.apache.axis2.description.AxisService;
+import org.osoa.sca.ServiceUnavailableException;
 
 import org.fabric3.binding.ws.axis2.provision.Axis2WireTargetDefinition;
 import org.fabric3.binding.ws.axis2.provision.AxisPolicy;
@@ -36,7 +37,6 @@ import org.fabric3.binding.ws.axis2.runtime.policy.PolicyApplier;
 import org.fabric3.spi.invocation.Message;
 import org.fabric3.spi.invocation.MessageImpl;
 import org.fabric3.spi.wire.Interceptor;
-import org.fabric3.spi.wire.InvocationRuntimeException;
 
 /**
  * @version $Revision$ $Date$
@@ -53,8 +53,11 @@ public class Axis2TargetInterceptor implements Interceptor {
     /**
      * Initializes the end point reference.
      *
-     * @param target    Target wire source definition.
-     * @param operation Operation name.
+     * @param target         Target wire source definition.
+     * @param operation      Operation name.
+     * @param policies       the set of policies applied to the service or reference configuration
+     * @param f3Configurator a configuration helper for classloading
+     * @param policyApplier  the helper for applying configured policies
      */
     public Axis2TargetInterceptor(Axis2WireTargetDefinition target,
                                   String operation,
@@ -69,16 +72,10 @@ public class Axis2TargetInterceptor implements Interceptor {
         this.policyApplier = policyApplier;
     }
 
-    /**
-     * @see org.fabric3.spi.wire.Interceptor#getNext()
-     */
     public Interceptor getNext() {
         return next;
     }
 
-    /**
-     * @see org.fabric3.spi.wire.Interceptor#invoke(org.fabric3.spi.invocation.Message)
-     */
     public Message invoke(Message msg) {
 
         Object[] payload = (Object[]) msg.getBody();
@@ -94,7 +91,7 @@ public class Axis2TargetInterceptor implements Interceptor {
         ClassLoader oldCl = currentThread.getContextClassLoader();
 
         try {
-            // Yhe extension classloader is a temporary workaround for Axis2 security. The security provider is installed in a separate extension
+            // The extension classloader is a temporary workaround for Axis2 security. The security provider is installed in a separate extension
             // contribution which is loaded in a child classloader of the Axis2 extensin (i.e. it imports the Axis2 extension). Axis2 expects the
             // security callback class to be visible from the TCCL. The extension classloader is the classloader that loaded the security
             // contribution and hence has both the security and Axis2 classes visible to it.
@@ -106,16 +103,18 @@ public class Axis2TargetInterceptor implements Interceptor {
             sender.getOptions().setTimeOutInMilliSeconds(0l);
             applyPolicies(sender, operation);
 
-            OMElement result = sender.sendReceive(message);
+            Object result = sender.sendReceive(message);
 
             Message ret = new MessageImpl();
-            // set the result as a normal response even if its an application fault
-            ret.setBody(result);
-
+            if (result instanceof Throwable) {
+                ret.setBodyWithFault(result);
+            } else {
+                ret.setBody(result);
+            }
             return ret;
 
         } catch (AxisFault e) {
-            throw new InvocationRuntimeException(e);
+            throw new ServiceUnavailableException("Service fault was: \n" + e.getFaultDetailElement().getFirstOMChild().toString() + "\n\n", e);
         } finally {
             currentThread.setContextClassLoader(oldCl);
         }
