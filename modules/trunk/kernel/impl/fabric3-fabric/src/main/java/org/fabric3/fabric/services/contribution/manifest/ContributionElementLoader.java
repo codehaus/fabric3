@@ -33,7 +33,6 @@ import org.osoa.sca.annotations.Reference;
 import org.fabric3.host.contribution.Constants;
 import org.fabric3.host.contribution.Deployable;
 import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.introspection.xml.InvalidPrefixException;
 import org.fabric3.introspection.xml.LoaderHelper;
 import org.fabric3.introspection.xml.LoaderRegistry;
 import org.fabric3.introspection.xml.TypeLoader;
@@ -86,16 +85,25 @@ public class ContributionElementLoader implements TypeLoader<ContributionManifes
                 } else if (DEPLOYABLE.equals(element)) {
                     String name = reader.getAttributeValue(null, "composite");
                     if (name == null) {
-                        MissingMainifestAttribute failure = new MissingMainifestAttribute("Composite attribute must be specified", "composite", reader);
+                        MissingMainifestAttribute failure =
+                                new MissingMainifestAttribute("Composite attribute must be specified", "composite", reader);
                         context.addError(failure);
                         return null;
                     }
                     QName qName;
-                    try {
-                        qName = helper.createQName(name, reader);
-                    } catch (InvalidPrefixException e) {
-                        context.addError(new InvalidQNamePrefix(e.getPrefix(), reader));
-                        return null;
+                    // read qname but only set namespace if it is explicitly declared
+                    int index = name.indexOf(':');
+                    if (index != -1) {
+                        String prefix = name.substring(0, index);
+                        String localPart = name.substring(index + 1);
+                        String ns = reader.getNamespaceContext().getNamespaceURI(prefix);
+                        if (ns == null) {
+                            context.addError(new InvalidQNamePrefix(prefix, reader));
+                            return null;
+                        }
+                        qName = new QName(ns, localPart, prefix);
+                    } else {
+                        qName = new QName(null, name);
                     }
                     Deployable deployable = new Deployable(qName, Constants.COMPOSITE_TYPE);
                     contribution.addDeployable(deployable);
