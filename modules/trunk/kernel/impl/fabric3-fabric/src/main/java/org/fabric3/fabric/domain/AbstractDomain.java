@@ -84,7 +84,7 @@ public abstract class AbstractDomain implements Domain {
         try {
             element = metadataStore.resolve(new QNameSymbol(deployable));
         } catch (MetaDataStoreException e) {
-            throw new DeploymentException("Erorr deploying: " + deployable, e);
+            throw new DeploymentException("Error deploying: " + deployable, e);
         }
         if (element == null) {
             String id = deployable.toString();
@@ -110,7 +110,7 @@ public abstract class AbstractDomain implements Domain {
         try {
             change = logicalModelInstantiator.include(domain, composite);
         } catch (LogicalInstantiationException e) {
-            throw new DeploymentException("Erorr deploying: " + composite.getName(), e);
+            throw new DeploymentException("Error deploying: " + composite.getName(), e);
         }
         change.apply();
 
@@ -124,7 +124,7 @@ public abstract class AbstractDomain implements Domain {
                 }
             }
         } catch (AllocationException e) {
-            throw new DeploymentException("Erorr deploying: " + composite.getName(), e);
+            throw new DeploymentException("Error deploying: " + composite.getName(), e);
         }
 
         try {
@@ -132,9 +132,9 @@ public abstract class AbstractDomain implements Domain {
             CommandMap commandMap = physicalModelGenerator.generate(components);
             routingService.route(commandMap);
         } catch (GenerationException e) {
-            throw new DeploymentException("Erorr deploying: " + composite.getName(), e);
+            throw new DeploymentException("Error deploying: " + composite.getName(), e);
         } catch (RoutingException e) {
-            throw new DeploymentException("Erorr deploying: " + composite.getName(), e);
+            throw new DeploymentException("Error deploying: " + composite.getName(), e);
         }
 
         try {
@@ -179,7 +179,7 @@ public abstract class AbstractDomain implements Domain {
         try {
             change = logicalModelInstantiator.remove(domain, composite);
         } catch (LogicalInstantiationException e) {
-            throw new DeploymentException("Erorr deploying: " + composite.getName(), e);
+            throw new DeploymentException("Error deploying: " + composite.getName(), e);
         }
         change.apply();
 
@@ -193,7 +193,7 @@ public abstract class AbstractDomain implements Domain {
                 }
             }
         } catch (AllocationException e) {
-            throw new DeploymentException("Erorr deploying: " + composite.getName(), e);
+            throw new DeploymentException("Error deploying: " + composite.getName(), e);
         }
 
         try {
@@ -201,9 +201,9 @@ public abstract class AbstractDomain implements Domain {
             CommandMap commandMap = physicalModelGenerator.generate(change);
             routingService.route(commandMap);
         } catch (GenerationException e) {
-            throw new DeploymentException("Erorr deploying: " + composite.getName(), e);
+            throw new DeploymentException("Error deploying: " + composite.getName(), e);
         } catch (RoutingException e) {
-            throw new DeploymentException("Erorr deploying: " + composite.getName(), e);
+            throw new DeploymentException("Error deploying: " + composite.getName(), e);
         }
 
         try {
