@@ -19,6 +19,7 @@
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
            name="WebappSmoketestComposite"
+           targetNamespace="http://fabric3.org/xmlns/sca/2.0-alpha"
            autowire="false">
 
     <component name="smoketest">

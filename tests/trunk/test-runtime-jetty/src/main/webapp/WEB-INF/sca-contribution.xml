@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="ASCII"?>
 <contribution xmlns="http://www.osoa.org/xmlns/sca/1.0"
-              xmlns:maven="http://fabric3.org/xmlns/sca/2.0-alpha/maven">
-    <maven:import groupId="org.codehaus.fabric3" artifactId="fabric3-groovy" version="0.3-SNAPSHOT"/>
-    <deployable composite="WebappSmoketestComposite"/>
+              xmlns:maven="http://fabric3.org/xmlns/sca/2.0-alpha/maven"
+              xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha">
+    <maven:import groupId="org.codehaus.fabric3" artifactId="fabric3-groovy" version="0.5BETA2-SNAPSHOT"/>
+    <deployable composite="f3:WebappSmoketestComposite"/>
 </contribution>
