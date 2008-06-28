@@ -29,12 +29,12 @@ import org.fabric3.introspection.xml.LoaderHelper;
 import org.fabric3.introspection.xml.LoaderUtil;
 import org.fabric3.introspection.xml.MissingAttribute;
 import org.fabric3.introspection.xml.TypeLoader;
-import org.fabric3.java.introspection.ImplementationNotFound;
+import org.fabric3.java.introspection.ImplementationArtifactNotFound;
 import org.fabric3.java.introspection.JavaImplementationProcessor;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.timer.component.provision.TriggerData;
-import org.fabric3.timer.component.provision.TriggerType;
 import static org.fabric3.timer.component.provision.TriggerData.UNSPECIFIED;
+import org.fabric3.timer.component.provision.TriggerType;
 import org.fabric3.timer.component.scdl.TimerImplementation;
 
 /**
@@ -111,7 +111,7 @@ public class TimerImplementationLoader implements TypeLoader<TimerImplementation
 
             }
         } catch (ClassNotFoundException e) {
-            ImplementationNotFound failure = new ImplementationNotFound(implementation);
+            ImplementationArtifactNotFound failure = new ImplementationArtifactNotFound(implementation, e.getMessage());
             context.addError(failure);
             LoaderUtil.skipToEndElement(reader);
             return false;
