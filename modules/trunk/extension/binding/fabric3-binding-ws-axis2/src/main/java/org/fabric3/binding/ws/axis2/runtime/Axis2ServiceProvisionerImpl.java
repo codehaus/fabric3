@@ -44,6 +44,8 @@ import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.Wire;
+import org.fabric3.api.annotation.Monitor;
+
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Property;
@@ -60,18 +62,21 @@ public class Axis2ServiceProvisionerImpl implements Axis2ServiceProvisioner {
     private final ClassLoaderRegistry classLoaderRegistry;
     private final PolicyApplier policyApplier;
     private final F3Configurator f3Configurator;
-    
+    private ServiceProvisionerMonitor monitor;
+
     private ConfigurationContext configurationContext;
     private String servicePath = "axis2";
     
     public Axis2ServiceProvisionerImpl(@Reference ServletHost servletHost,
                                        @Reference ClassLoaderRegistry classLoaderRegistry,
                                        @Reference PolicyApplier policyApplier,
-                                       @Reference F3Configurator f3Configurator) {
+                                       @Reference F3Configurator f3Configurator,
+                                       @Monitor ServiceProvisionerMonitor monitor) {
         this.servletHost = servletHost;
         this.classLoaderRegistry = classLoaderRegistry;
         this.policyApplier = policyApplier;
         this.f3Configurator = f3Configurator;
+        this.monitor = monitor;
     }
     
     /**
@@ -96,10 +101,6 @@ public class Axis2ServiceProvisionerImpl implements Axis2ServiceProvisioner {
         
     }
 
-    /**
-     * @see Axis2ServiceProvisioner#provision(org.fabric3.binding.ws.axis2.provision.Axis2WireSourceDefinition ,
-     *                                                                     org.fabric3.spi.wire.Wire)
-     */
     public void provision(Axis2WireSourceDefinition pwsd, Wire wire) throws WiringException {
         
         try {
@@ -126,7 +127,7 @@ public class Axis2ServiceProvisionerImpl implements Axis2ServiceProvisioner {
             configurationContext.getAxisConfiguration().addService(axisService);
             
             applyPolicies(pwsd, axisService);
-            
+            monitor.endpointProvisioned(uri);
         } catch (Exception e) {
             throw new WiringException(e);
         }
