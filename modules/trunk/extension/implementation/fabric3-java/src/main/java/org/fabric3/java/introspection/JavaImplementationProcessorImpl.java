@@ -61,7 +61,14 @@ public class JavaImplementationProcessorImpl implements JavaImplementationProces
         try {
             implClass = helper.loadClass(implClassName, cl);
         } catch (ImplementationNotFoundException e) {
-            context.addError(new ImplementationNotFound(implementation));
+            Throwable cause = e.getCause();
+            if (cause instanceof ClassNotFoundException || cause instanceof NoClassDefFoundError) {
+                // CNFE and NCDFE may be thrown as a result of a referenced class not being on the classpath
+                // Ff this is the case, ensure the correct class name is reported, not just the implementation 
+                context.addError(new ImplementationArtifactNotFound(implementation, e.getCause().getMessage()));
+            } else {
+                context.addError(new ImplementationArtifactNotFound(implementation));
+            }
             return;
         }
         TypeMapping typeMapping = helper.mapTypeParameters(implClass);
