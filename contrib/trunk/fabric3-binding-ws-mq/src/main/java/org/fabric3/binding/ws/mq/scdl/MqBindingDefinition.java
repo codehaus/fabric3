@@ -16,7 +16,7 @@ public class MqBindingDefinition extends BindingDefinition {
 	private final URI host;
 	
 	/**
-	 * Initialise by the given destination and hosts
+	 * Initialize by MQ destination and host
 	 * @param destination
 	 * @param host
 	 */
