@@ -30,15 +30,20 @@ import org.apache.axiom.om.OMAbstractFactory;
 import org.apache.axiom.om.OMElement;
 import org.apache.axiom.om.OMFactory;
 import org.apache.axiom.om.OMText;
+import org.osoa.sca.ServiceUnavailableException;
 import org.osoa.sca.annotations.Reference;
 
 /**
  * @version $Rev$ $Date$
  */
 public class Axis2EchoTest extends TestCase {
-    
+
     @Reference
     protected Axis2EchoService service;
+
+    @Reference
+    protected Axis2FaultService faultService;
+
     private OMFactory factory;
 
     public void testEchoTextNoSecurity() {
@@ -64,34 +69,47 @@ public class Axis2EchoTest extends TestCase {
         OMElement response = service.echoNoSecurity(message);
         verifyOutputMtom(response);
     }
-    
+
+    public void testRuntimeFault() {
+        try {
+            faultService.runtimeFaultOperation(getInputText());
+            fail();
+        } catch (ServiceUnavailableException e) {
+            assertTrue(e.getMessage().contains("Runtime exception thrown from service"));
+        }
+
+    }
+
     private OMElement getInputText() {
 
         OMElement message = factory.createOMElement("data", null);
         OMText text = factory.createOMText(message, "Hello World");
         message.addChild(text);
-        
+
         return message;
-        
+
     }
-    
+
     private void verifyOutputText(OMElement response) {
         String responseText = response.getText();
         assertEquals("Hello World", responseText);
     }
-    
+
     private OMElement getInputMtom() {
-        
+
         DataHandler dataHandler = new DataHandler(new DataSource() {
             public String getContentType() {
                 return "text/dat";
             }
+
             public InputStream getInputStream() throws IOException {
                 return new ByteArrayInputStream("Hello World".getBytes());
             }
+
             public String getName() {
                 return null;
             }
+
             public OutputStream getOutputStream() throws IOException {
                 return null;
             }
@@ -101,13 +119,13 @@ public class Axis2EchoTest extends TestCase {
         OMText text = factory.createOMText(dataHandler, true);
         text.setOptimize(true);
         message.addChild(text);
-        
+
         return message;
-        
+
     }
-    
+
     private void verifyOutputMtom(OMElement response) throws IOException {
-        
+
         OMText responseText = (OMText) response.getFirstOMChild();
         responseText.setOptimize(true);
         DataHandler responseData = (DataHandler) responseText.getDataHandler();
@@ -120,12 +138,12 @@ public class Axis2EchoTest extends TestCase {
 
         }
         assertEquals("Hello World", writer.toString());
-        
+
     }
 
     protected void setUp() throws Exception {
         super.setUp();
         factory = OMAbstractFactory.getOMFactory();
     }
-    
+
 }

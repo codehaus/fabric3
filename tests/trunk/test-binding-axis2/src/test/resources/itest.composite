@@ -26,6 +26,9 @@
             <binding.ws uri="http://localhost:8900/axis2/echoService" f3:impl="axis2"/>
             <operation name="echoWs"  requires="sca:authentication.message"/>
         </reference>
+        <reference name="faultService">
+            <binding.ws uri="http://localhost:8900/axis2/faultService" f3:impl="axis2"/>
+        </reference>
     </component>
 
     <component name="EchoService">
@@ -35,5 +38,12 @@
             <operation name="echoWs"  requires="sca:authentication.message f3:authorization.message"/>
         </service>
     </component>
-    
+
+    <component name="FaultService">
+        <implementation.java class="org.fabric3.tests.binding.axis2.Axis2FaultServiceImpl"/>
+        <service name="Axis2FaultService">
+            <binding.ws uri="faultService" f3:impl="axis2"/>
+        </service>
+    </component>
+
 </composite>
