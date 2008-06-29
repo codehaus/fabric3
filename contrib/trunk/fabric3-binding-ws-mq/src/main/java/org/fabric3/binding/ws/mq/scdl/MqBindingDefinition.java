@@ -27,7 +27,7 @@ public class MqBindingDefinition extends BindingDefinition {
 	}
 
 	/**
-	 * Return the destination of where the message will go
+	 * Return the queue destination
 	 * @return the destination
 	 */
 	public String getDestination() {
@@ -35,7 +35,7 @@ public class MqBindingDefinition extends BindingDefinition {
 	}
 
 	/**
-	 * Return the host where of the MQ server
+	 * Return the host of the MQ server
 	 * @return the host
 	 */
 	public URI getHost() {
