@@ -33,17 +33,24 @@ import org.apache.axis2.engine.AxisConfiguration;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Property;
+import org.osoa.sca.annotations.Reference;
+
+import org.fabric3.spi.services.work.WorkScheduler;
 
 /**
  * @version $Revision$ $Date$
  */
 @EagerInit
 public class F3ConfiguratorImpl implements F3Configurator {
-
+    private WorkScheduler scheduler;
     private ConfigurationContext configurationContext;
     private String servicePath = "axis2";
     private Map<String, AxisModule> modules = new HashMap<String, AxisModule>();
     private ClassLoader extensionClassLoader;
+
+    public F3ConfiguratorImpl(@Reference WorkScheduler scheduler) {
+        this.scheduler = scheduler;
+    }
 
     /**
      * @param servicePath Service path for Axis requests.
@@ -59,7 +66,8 @@ public class F3ConfiguratorImpl implements F3Configurator {
 
         configurationContext = ConfigurationContextFactory.createDefaultConfigurationContext();
         configurationContext.setServicePath(servicePath);
-
+        F3ThreadFactory factory = new F3ThreadFactory(scheduler);
+        configurationContext.setThreadPool(factory);
         AxisConfiguration axisConfiguration = configurationContext.getAxisConfiguration();
 
         ClassLoader classLoader = getClass().getClassLoader();
