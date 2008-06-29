@@ -33,7 +33,10 @@ import org.fabric3.scdl.BindingDefinition;
  */
 public class JmsBindingDefinition extends BindingDefinition {
 	
-    /***
+   
+	private static final long serialVersionUID = -1888120511695824132L;
+
+	/***
      * A generated URI overriding TargetUri in base class.
      */
 	private URI generatedTargetUri;
