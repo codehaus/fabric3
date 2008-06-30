@@ -22,7 +22,6 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 import org.apache.mina.common.IoHandler;
 import org.apache.mina.filter.codec.ProtocolCodecFactory;
@@ -37,6 +36,7 @@ import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.api.annotation.Monitor;
+import org.fabric3.spi.services.work.WorkScheduler;
 
 /**
  * F3 implementation of the in-process FTP host.
@@ -46,6 +46,7 @@ import org.fabric3.api.annotation.Monitor;
 @EagerInit
 public class F3FtpHost implements FtpHost {
     private FtpHostMonitor monitor;
+    private WorkScheduler workScheduler;
     private int commandPort = 21;
     private SocketAcceptor acceptor;
     private IoHandler ftpHandler;
@@ -59,7 +60,8 @@ public class F3FtpHost implements FtpHost {
     @Init
     public void start() throws IOException {
 
-        ExecutorService filterExecutor = Executors.newCachedThreadPool();
+//        ExecutorService filterExecutor = Executors.newCachedThreadPool();
+        ExecutorService filterExecutor = new F3ExecutorService(workScheduler);
         InetSocketAddress socketAddress = new InetSocketAddress(InetAddress.getLocalHost(), commandPort);
         acceptor = new NioSocketAcceptor();
         acceptor.getFilterChain().addLast("threadPool", new ExecutorFilter(filterExecutor));
@@ -111,6 +113,16 @@ public class F3FtpHost implements FtpHost {
     }
 
     /**
+     * Sets the work scheduler for task execution.
+     *
+     * @param workScheduler the scheduler
+     */
+    @Reference
+    public void setWorkScheduler(WorkScheduler workScheduler) {
+        this.workScheduler = workScheduler;
+    }
+
+    /**
      * Sets the FTP command port.
      *
      * @param commandPort Command port.
@@ -119,5 +131,6 @@ public class F3FtpHost implements FtpHost {
     public void setCommandPort(int commandPort) {
         this.commandPort = commandPort;
     }
+
 
 }

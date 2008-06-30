@@ -21,15 +21,15 @@
            targetNamespace="org.codehaus.fabric3"
            name="FtpServer"
            autowire="true">
-           
+
     <!-- property name="commandPort"/>
-    <property name="minPassivePort"/>
-    <property name="maxPassivePort"/>
-    <property name="passiveAddress"/>
-    <property name="users"/-->
-    
+   <property name="minPassivePort"/>
+   <property name="maxPassivePort"/>
+   <property name="passiveAddress"/>
+   <property name="users"/-->
+
     <property name="config"/>
-    
+
     <service name="ftpContainer" promote="org.fabric3.ftp.server.ftplet.DefaultFtpLetContainer/FtpLetContainer"/>
 
     <!-- FTP Server -->
@@ -37,54 +37,57 @@
         <system:implementation.system class="org.fabric3.ftp.server.host.F3FtpHost"/>
         <property name="commandPort" source="$config//commandPort"/>
     </component>
-    
+
+    <!-- promote the reference so it can be autowired -->
+    <reference name="WorkScheduler" promote="org.fabric3.ftp.server.host.F3FtpHost/workScheduler"/>
+
     <!-- Protocol codec factory -->
     <component name="org.fabric3.ftp.server.codec.CodecFactory">
         <system:implementation.system class="org.fabric3.ftp.server.codec.CodecFactory"/>
     </component>
-    
+
     <!-- FTP Handler -->
     <component name="org.fabric3.ftp.server.host.FtpHandler">
         <system:implementation.system class="org.fabric3.ftp.server.host.FtpHandler"/>
     </component>
-    
+
     <!-- USER Request Handler -->
     <component name="org.fabric3.ftp.server.handler.UserRequestHandler" f3:key="USER">
         <system:implementation.system class="org.fabric3.ftp.server.handler.UserRequestHandler"/>
     </component>
-    
+
     <!-- PASS Request Handler -->
     <component name="org.fabric3.ftp.server.handler.PassRequestHandler" f3:key="PASS">
         <system:implementation.system class="org.fabric3.ftp.server.handler.PassRequestHandler"/>
     </component>
-    
+
     <!-- PASV Request Handler -->
     <component name="org.fabric3.ftp.server.handler.PasvRequestHandler" f3:key="PASV">
         <system:implementation.system class="org.fabric3.ftp.server.handler.PasvRequestHandler"/>
     </component>
-    
+
     <!-- STOR Request Handler -->
     <component name="org.fabric3.ftp.server.handler.StorRequestHandler" f3:key="STOR">
         <system:implementation.system class="org.fabric3.ftp.server.handler.StorRequestHandler"/>
     </component>
-    
+
     <!-- User Manager -->
     <!-- TODO May be this should be promoted out -->
     <component name="org.fabric3.ftp.server.security.FileSystemUserManager">
         <system:implementation.system class="org.fabric3.ftp.server.security.FileSystemUserManager"/>
         <property name="users" source="$config//users/*"/>
     </component>
-    
+
     <!-- Passive Connection Service -->
     <component name="org.fabric3.ftp.server.passive.PassiveConnectionService">
         <system:implementation.system class="org.fabric3.ftp.server.passive.PassiveConnectionServiceImpl"/>
         <property name="minPort" source="$config//minPassivePort"/>
         <property name="maxPort" source="$config//maxPassivePort"/>
     </component>
-    
+
     <!-- FtpLet container -->
     <component name="org.fabric3.ftp.server.ftplet.DefaultFtpLetContainer">
         <system:implementation.system class="org.fabric3.ftp.server.ftplet.DefaultFtpLetContainer"/>
     </component>
-    
+
 </composite>
