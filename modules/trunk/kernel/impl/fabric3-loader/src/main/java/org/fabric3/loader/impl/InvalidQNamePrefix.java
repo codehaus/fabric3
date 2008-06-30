@@ -9,6 +9,6 @@ import org.fabric3.introspection.xml.XmlValidationFailure;
  */
 public class InvalidQNamePrefix extends XmlValidationFailure<String> {
     public InvalidQNamePrefix(String modelObject, XMLStreamReader reader) {
-        super("Invalid prefix", modelObject, reader);
+        super("Invalid prefix: " + modelObject, modelObject, reader);
     }
 }
