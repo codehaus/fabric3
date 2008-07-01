@@ -107,6 +107,10 @@ public class JxtaDiscoveryServiceTest extends TestCase {
             return null;
         }
 
+        public boolean supportsClassLoaderIsolation() {
+            return true;
+        }
+
     }
 
     private class MyRuntimeInfoService implements RuntimeInfoService {

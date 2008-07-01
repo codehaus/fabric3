@@ -16,6 +16,7 @@
  */
 package org.fabric3.runtime.webapp;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URI;
@@ -23,7 +24,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
+import java.util.Properties;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 import java.util.concurrent.FutureTask;
@@ -86,8 +87,6 @@ import org.fabric3.spi.services.work.WorkScheduler;
  * @version $Rev$ $Date$
  */
 public class WebappCoordinator implements RuntimeLifecycleCoordinator<WebappRuntime, Bootstrapper> {
-    private static final String EXTENSIONS_DIR = "/WEB-INF/fabric3/extensions";
-    private static final String USER_EXTENSIONS_DIR = "/WEB-INF/fabric3/user";
     private ClassLoader bootClassLoader;
 
     private enum State {
@@ -161,9 +160,9 @@ public class WebappCoordinator implements RuntimeLifecycleCoordinator<WebappRunt
             synthesizeSPIContribution();
             activateIntents();
             // activate runtime extensions
-            includeExtensions(EXTENSIONS_DIR);
+            includeExtensions("/WEB-INF/lib/f3Extensions.properties");
             // activate user extensions
-            includeExtensions(USER_EXTENSIONS_DIR);
+            includeExtensions("/WEB-INF/lib/f3UserExtensions.properties");
         } catch (DefinitionActivationException e) {
             throw new InitializationException(e);
         }
@@ -304,33 +303,37 @@ public class WebappCoordinator implements RuntimeLifecycleCoordinator<WebappRunt
     /**
      * Processes extensions and includes them in the runtime domain
      *
-     * @param extensionPath the path to the extensions
+     * @param extensionDefinitions the path to the file listing extensions
      * @throws InitializationException       if an error occurs included the extensions
      * @throws DefinitionActivationException if an error occurs activating an intent or policy set definition
      */
-    private void includeExtensions(String extensionPath) throws InitializationException, DefinitionActivationException {
+    private void includeExtensions(String extensionDefinitions) throws InitializationException, DefinitionActivationException {
         ServletContext context = runtime.getHostInfo().getServletContext();
-        Set paths = context.getResourcePaths(extensionPath);
-        if (paths == null) {
+        InputStream stream = context.getResourceAsStream(extensionDefinitions);
+        if (stream == null) {
+            // none defined
             return;
         }
+        Properties props = new Properties();
+        try {
+            props.load(stream);
+        } catch (IOException e) {
+            throw new InitializationException(e);
+        }
         List<URL> files = new ArrayList<URL>();
-        for (Object path : paths) {
-            String str = (String) path;
-            if (str.endsWith(".jar") || str.endsWith(".zip")) {
-                try {
-                    files.add(context.getResource(str).toURI().toURL());
-                } catch (MalformedURLException e) {
-                    throw new AssertionError(e);
-                } catch (URISyntaxException e) {
-                    throw new AssertionError(e);
-                }
+        for (Object key : props.keySet()) {
+            try {
+                URL url = context.getResource("/WEB-INF/lib/" + key).toURI().toURL();
+                files.add(url);
+            } catch (MalformedURLException e) {
+                throw new AssertionError(e);
+            } catch (URISyntaxException e) {
+                throw new AssertionError(e);
             }
         }
         if (!files.isEmpty()) {
             // contribute and activate extensions if they exist in the runtime domain
-            ContributionService contributionService = runtime.getSystemComponent(ContributionService.class,
-                                                                                 CONTRIBUTION_SERVICE_URI);
+            ContributionService contributionService = runtime.getSystemComponent(ContributionService.class, CONTRIBUTION_SERVICE_URI);
             List<ContributionSource> sources = new ArrayList<ContributionSource>();
             for (URL location : files) {
                 URI uri = URI.create(location.getPath());

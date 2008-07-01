@@ -77,4 +77,7 @@ public abstract class AbstractHostInfo implements HostInfo {
         return properties.getProperty(name, defaultValue);
     }
 
+    public boolean supportsClassLoaderIsolation() {
+        return true;
+    }
 }

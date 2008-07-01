@@ -22,17 +22,16 @@ import java.io.File;
 import java.net.URI;
 
 /**
- * Interface that provides information on the host environment. This allows the runtime to access information about the
- * environment in which it is running. The implementation of this interface is provided to the runtime by the host
- * during initialization. Hosts will generally extend this interface to provide additional information.
+ * Interface that provides information on the host environment. This allows the runtime to access information about the environment in which it is
+ * running. The implementation of this interface is provided to the runtime by the host during initialization. Hosts will generally extend this
+ * interface to provide additional information.
  *
  * @version $Rev$ $Date$
  */
 public interface HostInfo {
 
     /**
-     * Returns the SCA domain associated with this runtime. A null domain indicates that this is a standalone runtime
-     * with a self-contained domain.
+     * Returns the SCA domain associated with this runtime. A null domain indicates that this is a standalone runtime with a self-contained domain.
      *
      * @return the SCA domain associated with this runtime; may be null
      */
@@ -46,8 +45,8 @@ public interface HostInfo {
     File getBaseDir();
 
     /**
-     * Returns whether the host considers itself "online" or connected to the internet. This can be used by services to
-     * enable access to remote resources.
+     * Returns whether the host considers itself "online" or connected to the internet. This can be used by services to enable access to remote
+     * resources.
      *
      * @return true if the host is online.
      */
@@ -62,4 +61,10 @@ public interface HostInfo {
      */
     String getProperty(String name, String defaultValue);
 
+    /**
+     * True if the host environment supports classloader isolation.
+     *
+     * @return true if the host environment supports classloader isolation
+     */
+    boolean supportsClassLoaderIsolation();
 }

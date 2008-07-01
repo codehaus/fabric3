@@ -52,6 +52,10 @@ public class MavenHostInfoImpl implements MavenHostInfo {
         return hostProperties.getProperty(name, defaultValue);
     }
 
+    public boolean supportsClassLoaderIsolation() {
+        return true;
+    }
+
     public URI getDomain() {
         return domain;
     }

@@ -95,7 +95,7 @@ public class Fabric3ContextListener implements ServletContextListener {
             String baseDirParam = utils.getInitParameter(BASE_DIR, null);
             File baseDir;
             if (baseDirParam == null) {
-                baseDir = new File(URLDecoder.decode(servletContext.getResource("/WEB-INF/fabric3/").getFile(), "UTF-8"));
+                baseDir = new File(URLDecoder.decode(servletContext.getResource("/WEB-INF/lib/").getFile(), "UTF-8"));
             } else {
                 baseDir = new File(baseDirParam);
             }

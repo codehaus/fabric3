@@ -70,4 +70,9 @@ public class WebappHostInfoImpl implements WebappHostInfo {
         return domain;
     }
 
+    public boolean supportsClassLoaderIsolation() {
+        // web applications do not support classloader isolation between extensions and application classes as the latter are visible to the former
+        // since they are loaded in WEB-INF/lib and WEB-INF/classes
+        return false;
+    }
 }

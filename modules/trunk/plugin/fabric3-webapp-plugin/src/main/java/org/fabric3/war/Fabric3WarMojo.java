@@ -19,9 +19,11 @@
 package org.fabric3.war;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Properties;
 import java.util.Set;
 
 import org.apache.maven.artifact.Artifact;
@@ -56,24 +58,19 @@ import org.codehaus.plexus.util.FileUtils;
 public class Fabric3WarMojo extends AbstractMojo {
 
     /**
-     * Fabric3 path.
-     */
-    private static final String FABRIC3_PATH = "WEB-INF/fabric3";
-
-    /**
      * Fabric3 boot path.
      */
-    private static final String BOOT_PATH = FABRIC3_PATH + "/boot";
+    private static final String BOOT_PATH = "WEB-INF/lib";
 
     /**
      * Fabric3 extensions path.
      */
-    private static final String EXTENSIONS_PATH = FABRIC3_PATH + "/extensions";
+    private static final String EXTENSIONS_PATH = "WEB-INF/lib";
 
     /**
      * Fabric3 user extensions path.
      */
-    private static final String USER_EXTENSIONS_PATH = FABRIC3_PATH + "/user";
+    private static final String USER_EXTENSIONS_PATH = "WEB-INF/lib";
 
     /**
      * The directory where the webapp is built.
@@ -202,6 +199,7 @@ public class Fabric3WarMojo extends AbstractMojo {
     private void installExtensions() throws ArtifactNotFoundException, ArtifactResolutionException, IOException,
             ArtifactMetadataRetrievalException {
         if (extensions != null) {
+            Properties props = new Properties();
             // copy extensions
             File extensionsDir = new File(webappDirectory, EXTENSIONS_PATH);
             for (Dependency dependency : extensions) {
@@ -210,10 +208,13 @@ public class Fabric3WarMojo extends AbstractMojo {
                 }
                 for (Artifact artifact : resolveArtifact(dependency.getArtifact(artifactFactory), false)) {
                     FileUtils.copyFileToDirectoryIfModified(artifact.getFile(), extensionsDir);
+                    props.put(artifact.getFile().getName(), artifact.getFile().getName());
                 }
             }
+            props.store(new FileOutputStream(new File(extensionsDir, "f3Extensions.properties")), null);
         }
         if (userExtensions != null) {
+            Properties props = new Properties();
             // copy user extensions
             File userExtensionsDir = new File(webappDirectory, USER_EXTENSIONS_PATH);
             for (Dependency dependency : userExtensions) {
@@ -222,8 +223,10 @@ public class Fabric3WarMojo extends AbstractMojo {
                 }
                 for (Artifact artifact : resolveArtifact(dependency.getArtifact(artifactFactory), false)) {
                     FileUtils.copyFileToDirectoryIfModified(artifact.getFile(), userExtensionsDir);
+                    props.put(artifact.getFile().getName(), artifact.getFile().getName());
                 }
             }
+            props.store(new FileOutputStream(new File(userExtensionsDir, "f3UserExtensions.properties")), null);
         }
 
     }

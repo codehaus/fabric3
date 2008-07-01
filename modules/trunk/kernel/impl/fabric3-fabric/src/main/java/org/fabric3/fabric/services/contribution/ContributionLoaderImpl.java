@@ -1,3 +1,21 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
 package org.fabric3.fabric.services.contribution;
 
 import java.io.IOException;
@@ -7,6 +25,7 @@ import java.util.List;
 
 import org.osoa.sca.annotations.Reference;
 
+import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.spi.classloader.MultiParentClassLoader;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.services.contribution.ClasspathProcessorRegistry;
@@ -27,18 +46,26 @@ public class ContributionLoaderImpl implements ContributionLoader {
     private final ClassLoaderRegistry classLoaderRegistry;
     private final MetaDataStore store;
     private final ClasspathProcessorRegistry classpathProcessorRegistry;
+    private boolean classloaderIsolation;
 
     public ContributionLoaderImpl(@Reference ClassLoaderRegistry classLoaderRegistry,
                                   @Reference MetaDataStore store,
-                                  @Reference ClasspathProcessorRegistry classpathProcessorRegistry) {
+                                  @Reference ClasspathProcessorRegistry classpathProcessorRegistry,
+                                  @Reference HostInfo info) {
         this.classLoaderRegistry = classLoaderRegistry;
         this.store = store;
         this.classpathProcessorRegistry = classpathProcessorRegistry;
+        classloaderIsolation = info.supportsClassLoaderIsolation();
     }
 
     public ClassLoader loadContribution(Contribution contribution) throws ContributionLoadException, MatchingExportNotFoundException {
-        ClassLoader cl = classLoaderRegistry.getClassLoader(APP_CLASSLOADER);
         URI contributionUri = contribution.getUri();
+        ClassLoader cl = classLoaderRegistry.getClassLoader(APP_CLASSLOADER);
+        if (!classloaderIsolation) {
+            // the host environment does not support classloader isolation so only verify extensions are present
+            verifyImports(contribution);
+            return cl;
+        }
         MultiParentClassLoader loader = new MultiParentClassLoader(contributionUri, cl);
         List<URL> classpath;
         try {
@@ -57,7 +84,7 @@ public class ContributionLoaderImpl implements ContributionLoader {
         return loader;
     }
 
-    private ContributionManifest resolveImports(Contribution contribution, MultiParentClassLoader loader)
+    private void resolveImports(Contribution contribution, MultiParentClassLoader loader)
             throws MatchingExportNotFoundException, ContributionLoadException {
         ContributionManifest manifest = contribution.getManifest();
         for (Import imprt : manifest.getImports()) {
@@ -78,7 +105,21 @@ public class ContributionLoaderImpl implements ContributionLoader {
             }
             loader.addParent(importedLoader);
         }
-        return manifest;
+    }
+
+    private void verifyImports(Contribution contribution)
+            throws MatchingExportNotFoundException, ContributionLoadException {
+        ContributionManifest manifest = contribution.getManifest();
+        for (Import imprt : manifest.getImports()) {
+            Contribution imported = store.resolve(imprt);
+            if (imported == null) {
+                String id = imprt.toString();
+                throw new MatchingExportNotFoundException("No matching export found for: " + id, id);
+            }
+            // add the resolved URI to the contribution
+            URI importedUri = imported.getUri();
+            contribution.addResolvedImportUri(importedUri);
+        }
     }
 
 }
