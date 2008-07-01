@@ -458,7 +458,7 @@ public class Fabric3ITestMojo extends AbstractMojo {
         if (userExtensionsArchives != null) {
             for (File entry : userExtensionsArchives) {
                 if (!entry.exists()) {
-                    throw new MojoExecutionException("User extension does not exist: " + entry.getName());
+                    throw new MojoExecutionException("User extension does not exist: " + entry);
                 }
                 userExtensionUrls.add(entry.toURI().toURL());
             }

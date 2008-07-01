@@ -76,19 +76,19 @@
         </description>
     </intent>
     
-    <intent name="authentication.tarnsport" constrains="binding">
+    <intent name="authentication.transport" constrains="binding">
         <description>
             Inidicates the client needs to transport level authenticate before interaction.
         </description>
     </intent>
     
-    <intent name="confidentiality.tarnsport" constrains="binding">
+    <intent name="confidentiality.transport" constrains="binding">
         <description>
             Inidicates the interaction needs transport level confidentiality.
         </description>
     </intent>
     
-    <intent name="integrity.tarnsport" constrains="binding">
+    <intent name="integrity.transport" constrains="binding">
         <description>
             Inidicates the interaction needs transport level integrity.
         </description>
