@@ -17,7 +17,6 @@
 package org.fabric3.binding.ws.axis2.runtime.servlet;
 
 import java.io.IOException;
-
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -27,8 +26,6 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.transport.http.AxisServlet;
 
-import org.fabric3.spi.classloader.MultiParentClassLoader;
-
 /**
  * @version $Revision$ $Date$
  */
@@ -37,48 +34,46 @@ public class F3AxisServlet extends AxisServlet {
 
     /**
      * Initializes the Axis configuration context.
-     * 
+     *
      * @param configurationContext Axis configuration context.
      */
     public F3AxisServlet(final ConfigurationContext configurationContext) {
         this.configContext = configurationContext;
     }
-    
+
     /**
      * Adds the Axis configuration context to the servlet context.
-     * 
+     *
      * @see org.apache.axis2.transport.http.AxisServlet#init(javax.servlet.ServletConfig)
      */
     @Override
     public void init(ServletConfig config) throws ServletException {
-        
+
         ServletContext servletContext = config.getServletContext();
         servletContext.setAttribute(AxisServlet.CONFIGURATION_CONTEXT, configContext);
 
         super.init(config);
-        
+
     }
-    
+
     @Override
     protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        
+
         Thread currentThread = Thread.currentThread();
         ClassLoader oldCl = currentThread.getContextClassLoader();
-        
+
         try {
-            
+
             // TODO May be we want to do an MPCL with app cl as well
-            MultiParentClassLoader systemCl = (MultiParentClassLoader) getClass().getClassLoader();
+            ClassLoader systemCl = getClass().getClassLoader();
             currentThread.setContextClassLoader(systemCl);
             super.service(request, response);
-            
+
         } finally {
             currentThread.setContextClassLoader(oldCl);
         }
-        
-    }
-    
 
+    }
 
     /**
      * Implementaion of POST interface
