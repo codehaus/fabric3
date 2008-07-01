@@ -53,17 +53,18 @@ import org.fabric3.host.runtime.InitializationException;
 import org.fabric3.host.runtime.RuntimeLifecycleCoordinator;
 import org.fabric3.host.runtime.ShutdownException;
 import org.fabric3.host.runtime.StartException;
+import org.fabric3.introspection.validation.InvalidContributionException;
 import org.fabric3.scdl.Composite;
+import org.fabric3.scdl.DefaultValidationContext;
 import org.fabric3.scdl.Include;
 import org.fabric3.scdl.Scope;
 import org.fabric3.scdl.ValidationContext;
-import org.fabric3.scdl.DefaultValidationContext;
-import org.fabric3.spi.domain.DeploymentException;
-import org.fabric3.spi.domain.Domain;
-import org.fabric3.spi.domain.DomainException;
 import org.fabric3.spi.component.GroupInitializationException;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.ScopeRegistry;
+import org.fabric3.spi.domain.DeploymentException;
+import org.fabric3.spi.domain.Domain;
+import org.fabric3.spi.domain.DomainException;
 import org.fabric3.spi.invocation.CallFrame;
 import org.fabric3.spi.invocation.WorkContext;
 import org.fabric3.spi.services.contribution.Contribution;
@@ -78,7 +79,6 @@ import org.fabric3.spi.services.definitions.DefinitionsRegistry;
 import org.fabric3.spi.services.discovery.DiscoveryException;
 import org.fabric3.spi.services.discovery.DiscoveryService;
 import org.fabric3.spi.services.work.WorkScheduler;
-import org.fabric3.introspection.validation.InvalidContributionException;
 
 /**
  * Implementation of a coordinator for the webapp runtime.
@@ -331,19 +331,22 @@ public class WebappCoordinator implements RuntimeLifecycleCoordinator<WebappRunt
             // contribute and activate extensions if they exist in the runtime domain
             ContributionService contributionService = runtime.getSystemComponent(ContributionService.class,
                                                                                  CONTRIBUTION_SERVICE_URI);
-            List<URI> contributionUris = new ArrayList<URI>();
-            for (URL file : files) {
-                try {
-                    ContributionSource source = new FileContributionSource(file, -1, new byte[0]);
-                    contributionUris.add(contributionService.contribute(source));
-                } catch (ValidationException e) {
-                    // print out the validation errors
-                    monitor.extensionErrors(e.getMessage());
-                    throw new ExtensionInitializationException("Errors were detected in one or more extensions");
-                } catch (ContributionException e) {
-                    throw new ExtensionInitializationException("Error loading extension", file.toString(), e);
-                }
+            List<ContributionSource> sources = new ArrayList<ContributionSource>();
+            for (URL location : files) {
+                URI uri = URI.create(location.getPath());
+                ContributionSource source = new FileContributionSource(uri, location, -1, new byte[0]);
+                sources.add(source);
 
+            }
+            List<URI> contributionUris;
+            try {
+                contributionUris = contributionService.contribute(sources);
+            } catch (ValidationException e) {
+                // print out the validation errors
+                monitor.extensionErrors(e.getMessage());
+                throw new ExtensionInitializationException("Errors were detected in one or more extensions");
+            } catch (ContributionException e) {
+                throw new ExtensionInitializationException("Error loading extension", e);
             }
             includeExtensionContributions(contributionUris);
             DefinitionsRegistry definitionsRegistry =
