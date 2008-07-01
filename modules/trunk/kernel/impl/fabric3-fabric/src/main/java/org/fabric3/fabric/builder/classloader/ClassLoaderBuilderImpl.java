@@ -26,13 +26,14 @@ import java.util.Set;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
+import org.fabric3.fabric.runtime.ComponentNames;
+import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.spi.classloader.MultiParentClassLoader;
 import org.fabric3.spi.model.physical.PhysicalClassLoaderDefinition;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.services.contribution.ClasspathProcessorRegistry;
 import org.fabric3.spi.services.contribution.ContributionUriResolver;
 import org.fabric3.spi.services.contribution.ResolutionException;
-import org.fabric3.fabric.runtime.ComponentNames;
 
 /**
  * Default implementation of ClassLoaderBuilder.
@@ -45,13 +46,16 @@ public class ClassLoaderBuilderImpl implements ClassLoaderBuilder {
     private ClassLoaderRegistry classLoaderRegistry;
     private ContributionUriResolver contributionUriResolver;
     private ClasspathProcessorRegistry classpathProcessorRegistry;
+    private boolean classLoaderIsolation;
 
     public ClassLoaderBuilderImpl(@Reference ClassLoaderRegistry classLoaderRegistry,
                                   @Reference ContributionUriResolver contributionUriResolver,
-                                  @Reference ClasspathProcessorRegistry classpathProcessorRegistry) {
+                                  @Reference ClasspathProcessorRegistry classpathProcessorRegistry,
+                                  @Reference HostInfo info) {
         this.classLoaderRegistry = classLoaderRegistry;
         this.contributionUriResolver = contributionUriResolver;
         this.classpathProcessorRegistry = classpathProcessorRegistry;
+        classLoaderIsolation = info.supportsClassLoaderIsolation();
     }
 
     public void build(PhysicalClassLoaderDefinition definition) throws ClassLoaderBuilderException {
@@ -84,13 +88,16 @@ public class ClassLoaderBuilderImpl implements ClassLoaderBuilder {
         // add the host classloader
         ClassLoader cl = classLoaderRegistry.getClassLoader(ComponentNames.APPLICATION_CLASSLOADER_ID);
         loader.addParent(cl);
-        for (URI uri : definition.getParentClassLoaders()) {
-            ClassLoader parent = classLoaderRegistry.getClassLoader(uri);
-            if (parent == null) {
-                String identifier = uri.toString();
-                throw new ClassLoaderNotFoundException("Parent classloader not found: " + identifier);
+        if (classLoaderIsolation) {
+            // if the host supports isolated classloaders, add any parents
+            for (URI uri : definition.getParentClassLoaders()) {
+                ClassLoader parent = classLoaderRegistry.getClassLoader(uri);
+                if (parent == null) {
+                    String identifier = uri.toString();
+                    throw new ClassLoaderNotFoundException("Parent classloader not found: " + identifier);
+                }
+                loader.addParent(parent);
             }
-            loader.addParent(parent);
         }
         classLoaderRegistry.register(name, loader);
     }

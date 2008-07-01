@@ -92,6 +92,7 @@ import org.fabric3.fabric.services.instancefactory.GenerationHelperImpl;
 import org.fabric3.fabric.services.instancefactory.ReflectiveInstanceFactoryBuilder;
 import org.fabric3.fabric.services.routing.RuntimeRoutingService;
 import org.fabric3.host.runtime.Fabric3Runtime;
+import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.host.runtime.InitializationException;
 import org.fabric3.jmx.control.JMXBindingGenerator;
 import org.fabric3.jmx.provision.JMXWireSourceDefinition;
@@ -163,7 +164,8 @@ public class BootstrapAssemblyFactory {
                             metaDataStore,
                             cpRegistry,
                             mbeanServer,
-                            jmxDomain);
+                            jmxDomain,
+                            runtime.getHostInfo());
     }
 
     public static Domain createDomain(MonitorFactory monitorFactory,
@@ -174,7 +176,8 @@ public class BootstrapAssemblyFactory {
                                       MetaDataStore metaDataStore,
                                       ClasspathProcessorRegistry cpRegistry,
                                       MBeanServer mbServer,
-                                      String jmxDomain) throws InitializationException {
+                                      String jmxDomain,
+                                      HostInfo info) throws InitializationException {
 
         Allocator allocator = new LocalAllocator();
 
@@ -186,7 +189,7 @@ public class BootstrapAssemblyFactory {
                                               cpRegistry,
                                               mbServer,
                                               metaDataStore,
-                                              jmxDomain);
+                                              jmxDomain, info);
 
         RuntimeRoutingService routingService = new RuntimeRoutingService(commandRegistry, scopeRegistry);
 
@@ -236,7 +239,8 @@ public class BootstrapAssemblyFactory {
                                                                          ClasspathProcessorRegistry cpRegistry,
                                                                          MBeanServer mbeanServer,
                                                                          MetaDataStore metaDataStore,
-                                                                         String jmxDomain) {
+                                                                         String jmxDomain,
+                                                                         HostInfo info) {
 
         InstanceFactoryBuilderRegistry providerRegistry = new DefaultInstanceFactoryBuilderRegistry();
         InstanceFactoryBuildHelper buildHelper = new BuildHelperImpl(classLoaderRegistry);
@@ -278,7 +282,7 @@ public class BootstrapAssemblyFactory {
         connector.setSourceAttachers(sourceAttachers);
         connector.setTargetAttachers(targetAttachers);
 
-        ClassLoaderBuilder classLoaderBuilder = createClassLoaderBuilder(classLoaderRegistry, cpRegistry, metaDataStore);
+        ClassLoaderBuilder classLoaderBuilder = createClassLoaderBuilder(classLoaderRegistry, cpRegistry, metaDataStore, info);
 
         CommandExecutorRegistryImpl commandRegistry = new CommandExecutorRegistryImpl();
 
@@ -295,13 +299,14 @@ public class BootstrapAssemblyFactory {
 
     private static ClassLoaderBuilder createClassLoaderBuilder(ClassLoaderRegistry classLoaderRegistry,
                                                                ClasspathProcessorRegistry cpRegistry,
-                                                               MetaDataStore metaDataStore) {
+                                                               MetaDataStore metaDataStore,
+                                                               HostInfo info) {
 
         LocalContributionUriResolver resolver = new LocalContributionUriResolver(metaDataStore);
 
         JarClasspathProcessor classpathProcessor = new JarClasspathProcessor(cpRegistry);
         classpathProcessor.init();
-        return new ClassLoaderBuilderImpl(classLoaderRegistry, resolver, cpRegistry);
+        return new ClassLoaderBuilderImpl(classLoaderRegistry, resolver, cpRegistry, info);
     }
 
     private static PhysicalModelGenerator createPhysicalModelGenerator(LogicalComponentManager logicalComponentManager,
