@@ -24,18 +24,18 @@ import java.net.InetAddress;
 import java.net.URI;
 
 import org.apache.commons.net.ftp.FTPClient;
+import org.osoa.sca.ServiceUnavailableException;
+
 import org.fabric3.binding.ftp.provision.FtpSecurity;
 import org.fabric3.spi.invocation.Message;
 import org.fabric3.spi.invocation.MessageImpl;
 import org.fabric3.spi.wire.Interceptor;
-import org.osoa.sca.ServiceUnavailableException;
 
 /**
- *
  * @version $Revision$ $Date$
  */
 public class FtpTargetInterceptor implements Interceptor {
-    
+
     private Interceptor next;
     private final String uri;
     private final FtpSecurity security;
@@ -52,15 +52,15 @@ public class FtpTargetInterceptor implements Interceptor {
     }
 
     public Message invoke(Message msg) {
-        
+
         FTPClient ftpClient = new FTPClient();
-        
+
         try {
-            
+
             int index = uri.indexOf(":");
-            String host = null;
-            int port = 0;
-            
+            String host;
+            int port;
+
             if (index > 0) {
                 host = uri.substring(0, index);
                 port = Integer.parseInt(uri.substring(index + 1));
@@ -68,32 +68,32 @@ public class FtpTargetInterceptor implements Interceptor {
                 host = uri;
                 port = 23;
             }
-            
+
             InetAddress hostAddress = "localhost".equals(host) ? InetAddress.getLocalHost() : InetAddress.getByName(host);
             ftpClient.connect(hostAddress, port);
-            
+
             /*if (!ftpClient.login(security.getUser(), security.getPassword())) {
                 throw new ServiceUnavailableException("Invalid credentials");
             }*/
             // TODO Fix above
             ftpClient.login(security.getUser(), security.getPassword());
-            
+
             Object[] args = (Object[]) msg.getBody();
             String fileName = (String) args[0];
             InputStream data = (InputStream) args[1];
-            
+
             if (active) {
                 ftpClient.enterLocalActiveMode();
             } else {
                 ftpClient.enterLocalPassiveMode();
             }
-            
+
             if (!ftpClient.storeFile(fileName, data)) {
-                throw new ServiceUnavailableException("Unable to upload data");
+                throw new ServiceUnavailableException("Unable to upload data. Response sent from server: " + ftpClient.getReplyString());
             }
-            
+
         } catch (IOException e) {
-           throw new ServiceUnavailableException(e);
+            throw new ServiceUnavailableException(e);
         }
 
         return new MessageImpl();
