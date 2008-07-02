@@ -66,6 +66,7 @@
                <groupId>com.oracle</groupId>
                <artifactId>ojdbc14</artifactId>
                <version>10g2</version>
+               <scope>provided</scope>                 
           </dependency>
           <dependency>
                <groupId>junit</groupId>

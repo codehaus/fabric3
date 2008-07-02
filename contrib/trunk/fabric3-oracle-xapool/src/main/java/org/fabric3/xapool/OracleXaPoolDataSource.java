@@ -133,7 +133,7 @@ public class OracleXaPoolDataSource extends OracleXADataSource  {
         assignOnOracleDS();
 
         for (String dataSourceKey : dataSourceKeys) {
-            dataSourceRegistry.registerDataSource(dataSourceKey, this);
+            dataSourceRegistry.registerDataSource(dataSourceKey, assignOnOracleDS());
         }
 
     }
@@ -141,10 +141,11 @@ public class OracleXaPoolDataSource extends OracleXADataSource  {
     /*
      * For oracle
      */
-    private void assignOnOracleDS() {
+    private OracleXADataSource assignOnOracleDS() {
         super.setURL(url);
         super.setUser(user);
         super.setPassword(password);
+        return this;
     }
 
 	public boolean isWrapperFor(Class<?> iface) throws SQLException {
