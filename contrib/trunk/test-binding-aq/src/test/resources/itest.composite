@@ -35,7 +35,7 @@
     <component name="echoService">
           <implementation.java class="org.fabric3.binding.aq.test.EchoServiceImpl" />
           <service name="EchoService">
-               <binding.aq destinationName="FIRE_FORGET_Q" dataSourceKey="AQDataSource" initialState="STOPPED" consumerCount="0"/>             
+               <binding.aq destinationName="FIRE_FORGET_Q" dataSourceKey="AQDataSource" initialState="STARTED" consumerCount="1"/>             
           </service>          
      </component>
      

@@ -63,7 +63,7 @@ public class AQSourceWireAttacher implements SourceWireAttacher<AQWireSourceDefi
     private final Map<URI, AtomicBoolean> processState;    
     private ConnectionFactoryAccessor<XAQueueConnectionFactory> connectionFactoryAccessor;
     private DestinationFactory<XAQueueConnectionFactory> destinationFactory;
-    private DataSourceRegistry dataSourceRegistry;
+    private DataSourceRegistry  dataSourceRegistry;
     private TransactionHandler transactionHandler;
     private AQHost aqHost;
     private ClassLoaderRegistry classLoaderRegistry;
@@ -100,13 +100,13 @@ public class AQSourceWireAttacher implements SourceWireAttacher<AQWireSourceDefi
         URI service = wireTargetDefinition.getUri();       
         aqHost.unRegisterListener(service);
     }
-
+    
     /**
-     * Not Supported
+     * Not Used
      */
-    public void attachObjectFactory(AQWireSourceDefinition source, ObjectFactory<?> objectFactory) throws WiringException {
+    public void attachObjectFactory(AQWireSourceDefinition sourceDefinition, ObjectFactory<?> factory, PhysicalWireTargetDefinition targetDefinition) throws WiringException {
         throw new AssertionError();
-    }
+    }  
     
     /**
      * Destroy
@@ -285,5 +285,5 @@ public class AQSourceWireAttacher implements SourceWireAttacher<AQWireSourceDefi
 
         aqHost.registerListener(requestConnectionFactory, reqDestination, listener, transactionHandler, classloader, serviceUri, sourceData.getSourceDefinition().getConsumerCount());
         
-    }  
+    }   
 }

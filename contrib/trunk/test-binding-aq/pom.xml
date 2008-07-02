@@ -57,7 +57,7 @@
                                    <groupId>org.codehaus.fabric3</groupId>
                                    <artifactId>fabric3-resource</artifactId>
                                    <version>0.5BETA2-SNAPSHOT</version>
-                              </dependency>                              
+                              </dependency>
                               <dependency>
                                    <groupId>org.codehaus.fabric3</groupId>
                                    <artifactId>fabric3-tx-jotm</artifactId>
@@ -70,13 +70,13 @@
                               </dependency>
                               <dependency>
                                    <groupId>org.codehaus.fabric3</groupId>
-                                   <artifactId>aq-ds-extension</artifactId>
-                                   <version>0.1-SNAPSHOT</version>
+                                   <artifactId>fabric3-binding-aq</artifactId>
+                                   <version>0.5-SNAPSHOT</version>
                               </dependency>
                               <dependency>
                                    <groupId>org.codehaus.fabric3</groupId>
-                                   <artifactId>fabric3-binding-aq</artifactId>
-                                   <version>0.5-SNAPSHOT</version>
+                                   <artifactId>aq-ds-extension</artifactId>
+                                   <version>0.1-SNAPSHOT</version>
                               </dependency>
                          </extensions>
                          <shared>
@@ -94,6 +94,11 @@
                                    <groupId>geronimo-spec</groupId>
                                    <artifactId>geronimo-spec-j2ee-connector</artifactId>
                                    <version>1.5-rc4</version>
+                              </dependency>
+                              <dependency>
+                                   <groupId>com.oracle</groupId>
+                                   <artifactId>ojdbc14</artifactId>
+                                   <version>10g2</version>
                               </dependency>
                          </shared>
                     </configuration>

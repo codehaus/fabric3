@@ -44,7 +44,7 @@ public class AQBindingAsyncTest extends TestCase {
         System.out.println("Calling Echo Service");      
         proxyEchoService.forwardRequest("Any One There One");       
         System.err.println("Press Start on JMX Console");
-        boolean val = true;
+       /* boolean val = true;
         while (val) {
             System.err.println("Type 'finish' to exit");
             BufferedReader read = new BufferedReader(new InputStreamReader(System.in));
@@ -52,6 +52,6 @@ public class AQBindingAsyncTest extends TestCase {
             if (msg.equals("finish")) {
                 val = false;
             }
-        }
+        }*/
     }
 }
