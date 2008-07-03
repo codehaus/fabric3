@@ -71,6 +71,11 @@
         <system:implementation.system class="org.fabric3.ftp.server.handler.StorRequestHandler"/>
     </component>
 
+    <!-- QUIT Request Handler -->
+    <component name="org.fabric3.ftp.server.handler.QuitRequestHandler" f3:key="QUIT">
+        <system:implementation.system class="org.fabric3.ftp.server.handler.QuitRequestHandler"/>
+    </component>
+
     <!-- User Manager -->
     <!-- TODO May be this should be promoted out -->
     <component name="org.fabric3.ftp.server.security.FileSystemUserManager">
