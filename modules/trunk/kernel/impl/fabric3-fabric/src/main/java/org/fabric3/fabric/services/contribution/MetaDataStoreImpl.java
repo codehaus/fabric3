@@ -54,8 +54,7 @@ public class MetaDataStoreImpl implements MetaDataStore {
     private ProcessorRegistry processorRegistry;
     private ClassLoaderRegistry classLoaderRegistry;
 
-    public MetaDataStoreImpl(@Reference ClassLoaderRegistry classLoaderRegistry,
-                             @Reference ProcessorRegistry processorRegistry) {
+    public MetaDataStoreImpl(@Reference ClassLoaderRegistry classLoaderRegistry, @Reference ProcessorRegistry processorRegistry) {
         this.classLoaderRegistry = classLoaderRegistry;
         this.processorRegistry = processorRegistry;
     }
@@ -89,10 +88,6 @@ public class MetaDataStoreImpl implements MetaDataStore {
     @SuppressWarnings({"unchecked"})
     public <S extends Symbol> ResourceElement<S, ?> resolve(S symbol) throws MetaDataStoreException {
         for (Contribution contribution : cache.values()) {
-            URI contributionUri = contribution.getUri();
-            ClassLoader loader = classLoaderRegistry.getClassLoader(contributionUri);
-            assert loader != null;
-            //ValidationContext context = new DefaultValidationContext();
             for (Resource resource : contribution.getResources()) {
                 for (ResourceElement<?, ?> element : resource.getResourceElements()) {
                     if (element.getSymbol().equals(symbol)) {
