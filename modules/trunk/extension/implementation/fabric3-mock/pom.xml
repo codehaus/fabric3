@@ -82,8 +82,8 @@
         <plugins>
             <plugin>
                 <groupId>org.codehaus.fabric3</groupId>
-                <artifactId>0.5</artifactId>
-                <version>${project.version}</version>
+                <artifactId>fabric3-contribution-plugin</artifactId>
+                <version>0.5</version>
                 <extensions>true</extensions>
                 <configuration>
                     <mavenImports>
