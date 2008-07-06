@@ -94,14 +94,6 @@ public class Fabric3WarMojo extends AbstractMojo {
     public File webappDirectory;
 
     /**
-     * The build target directory.
-     *
-     * @parameter expression="${project.build.directory}/target/temp/extension"
-     * @required
-     */
-    public File tempExtensionDirectory;
-
-    /**
      * Artifact metadata source.
      *
      * @component
@@ -231,9 +223,6 @@ public class Fabric3WarMojo extends AbstractMojo {
     private void processExtensions(String extenstionsPath, String extensionProperties) 
         throws IOException, ArtifactResolutionException, ArtifactNotFoundException, ArtifactMetadataRetrievalException, FileNotFoundException {
         
-        tempExtensionDirectory.delete();
-        tempExtensionDirectory.mkdirs();
-        
         Properties props = new Properties();
         File extensionsDir = new File(webappDirectory, extenstionsPath);
         
@@ -248,7 +237,7 @@ public class Fabric3WarMojo extends AbstractMojo {
                 
                 if (artifact.equals(extensionArtifact)) {
                     
-                    File deflatedExtensionFile = new File(tempExtensionDirectory, extensionArtifact.getFile().getName());
+                    File deflatedExtensionFile = new File(extensionsDir, extensionArtifact.getFile().getName());
                     JarOutputStream deflatedExtensionOutputStream = new JarOutputStream(new FileOutputStream(deflatedExtensionFile));
                     
                     JarFile extensionFile = new JarFile(extensionArtifact.getFile());
@@ -258,13 +247,14 @@ public class Fabric3WarMojo extends AbstractMojo {
                         String entryName = jarEntry.getName();
                         if (entryName.startsWith("META-INF/lib") && entryName.endsWith(".jar")) {
                             String extractedLibraryName = entryName.substring(entryName.lastIndexOf('/') + 1);
-                            File extractedLibraryFile = new File(tempExtensionDirectory, extractedLibraryName);
-                            FileOutputStream outputStream = new FileOutputStream(extractedLibraryFile);
-                            InputStream inputStream = extensionFile.getInputStream(jarEntry);
-                            IOUtil.copy(inputStream, outputStream);
-                            IOUtil.close(inputStream);
-                            IOUtil.close(outputStream);
-                            FileUtils.copyFileToDirectory(extractedLibraryFile, extensionsDir);
+                            File extractedLibraryFile = new File(extensionsDir, extractedLibraryName);
+                            if (!extractedLibraryFile.exists()) {
+                                FileOutputStream outputStream = new FileOutputStream(extractedLibraryFile);
+                                InputStream inputStream = extensionFile.getInputStream(jarEntry);
+                                IOUtil.copy(inputStream, outputStream);
+                                IOUtil.close(inputStream);
+                                IOUtil.close(outputStream);
+                            }
                         } else {
                             deflatedExtensionOutputStream.putNextEntry(jarEntry);
                             InputStream inputStream = extensionFile.getInputStream(jarEntry);
@@ -274,7 +264,6 @@ public class Fabric3WarMojo extends AbstractMojo {
                     }
                     
                     IOUtil.close(deflatedExtensionOutputStream);
-                    FileUtils.copyFileToDirectory(deflatedExtensionFile, extensionsDir);
                     
                 } else {
                     FileUtils.copyFileToDirectoryIfModified(artifact.getFile(), extensionsDir);
