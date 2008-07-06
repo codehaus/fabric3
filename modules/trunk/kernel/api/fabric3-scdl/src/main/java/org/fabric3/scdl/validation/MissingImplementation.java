@@ -16,9 +16,9 @@
  */
 package org.fabric3.scdl.validation;
 
+import org.fabric3.host.contribution.ValidationFailure;
 import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.Implementation;
-import org.fabric3.host.contribution.ValidationFailure;
 
 /**
  * Validation failure indicating that a component definition does not have an associated implementation.
@@ -29,4 +29,13 @@ public class MissingImplementation extends ValidationFailure<ComponentDefinition
     public MissingImplementation(ComponentDefinition<? extends Implementation<?>> component) {
         super(component);
     }
+
+    public String getMessage() {
+        if (getValidatable() == null) {
+            return "Missing implementation for component";
+        }
+        return "Missing implementation for component " + getValidatable().getName();
+
+    }
+
 }
