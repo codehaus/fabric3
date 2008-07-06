@@ -1,0 +1,9 @@
+<config>
+
+    <testDsConfig>
+        <driver>org.apache.derby.jdbc.EmbeddedDriver</driver>
+        <url>jdbc:derby:testDB;create=true</url>
+        <keys>EmployeeDS</keys>
+    </testDsConfig>
+
+</config>

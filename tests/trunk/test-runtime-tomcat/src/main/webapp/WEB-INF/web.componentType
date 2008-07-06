@@ -19,4 +19,8 @@
     <reference name="hello">
         <interface.java interface="org.fabric3.runtime.webapp.smoketest.HelloService"/>
     </reference>
+    <reference name="employeeService">
+        <interface.java interface="org.fabric3.runtime.webapp.smoketest.EmployeeService"/>
+    </reference>
+
 </componentType>

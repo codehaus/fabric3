@@ -28,6 +28,8 @@ import javax.servlet.http.HttpSession;
 
 import org.osoa.sca.ComponentContext;
 
+import org.fabric3.runtime.webapp.smoketest.model.Employee;
+
 /**
  * @version $Rev$ $Date$
  */
@@ -50,6 +52,15 @@ public class TestServlet extends HttpServlet {
                 response.sendError(500, "Failed to create HelloService");
                 return;
             }
+
+            EmployeeService employeeService = context.getService(EmployeeService.class, "employeeService");
+            employeeService.createEmployee(123l, "Barney Rubble");
+            Employee employee = employeeService.findEmployee(123L);
+            if (employee == null) {
+                response.sendError(500, "Failed to persist Employee");
+                return;
+            }
+
             out.print("component URI is " + context.getURI());
         } else {
             response.sendError(500, "No test specified");

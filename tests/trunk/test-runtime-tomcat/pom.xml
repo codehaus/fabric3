@@ -63,28 +63,38 @@
             <artifactId>junit</artifactId>
         </dependency>
 
-    <!-- Meeraj remove this when archive expansion is in place -->
-            <dependency>
-                <groupId>groovy</groupId>
-                <artifactId>groovy</artifactId>
-                <version>1.1-BETA-1</version>
-            </dependency>
-            <dependency>
-                <groupId>asm</groupId>
-                <artifactId>asm</artifactId>
-                <version>2.2.3</version>
-                <scope>runtime</scope>
-            </dependency>
-            <dependency>
-                <groupId>antlr</groupId>
-                <artifactId>antlr</artifactId>
-                <version>2.7.7</version>
-                <scope>runtime</scope>
-            </dependency>
-
-    <!--   end remove this   -->
+        <dependency>
+            <groupId>javax.persistence</groupId>
+            <artifactId>persistence-api</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>geronimo-spec</groupId>
+            <artifactId>geronimo-spec-jta</artifactId>
+            <version>1.0.1B-rc4</version>
+        </dependency>
+        <dependency>
+            <groupId>geronimo-spec</groupId>
+            <artifactId>geronimo-spec-j2ee-connector</artifactId>
+            <version>1.5-rc4</version>
+        </dependency>
+        <dependency>
+            <groupId>org.hibernate</groupId>
+            <artifactId>hibernate</artifactId>
+            <version>3.2.4.ga</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>javax.transaction</groupId>
+                    <artifactId>jta</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>javax.security</groupId>
+                    <artifactId>jacc</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
     </dependencies>
-    
+
     <build>
         <finalName>${artifactId}</finalName>
         <plugins>
@@ -103,12 +113,49 @@
                 <configuration>
                     <!-- use the latest version of the runtime -->
                     <runTimeVersion>0.5BETA2-SNAPSHOT</runTimeVersion>
-                    <!-- include the Groovy extension to verify extensions are handled correctly -->
+
                     <extensions>
+                        <!-- include the Groovy extension to verify extensions are handled correctly -->
                         <dependency>
                             <groupId>org.codehaus.fabric3</groupId>
                             <artifactId>fabric3-groovy</artifactId>
                             <version>0.5BETA2-SNAPSHOT</version>
+                        </dependency>
+                        <!-- JPA Hibernate Extensions -->
+                        <dependency>
+                            <groupId>org.codehaus.fabric3</groupId>
+                            <artifactId>fabric3-jpa-hibernate</artifactId>
+                            <version>0.5BETA2-SNAPSHOT</version>
+                        </dependency>
+                        <!-- JPA Core Components -->
+                        <dependency>
+                            <groupId>org.codehaus.fabric3</groupId>
+                            <artifactId>fabric3-jpa-spi</artifactId>
+                            <version>0.5BETA2-SNAPSHOT</version>
+                        </dependency>
+                        <!-- Transaction Manager Using JOTM -->
+                        <dependency>
+                            <groupId>org.codehaus.fabric3</groupId>
+                            <artifactId>fabric3-tx-jotm</artifactId>
+                            <version>0.5BETA2-SNAPSHOT</version>
+                        </dependency>
+                        <!-- Declarative Transaction Policies -->
+                        <dependency>
+                            <groupId>org.codehaus.fabric3</groupId>
+                            <artifactId>fabric3-tx</artifactId>
+                            <version>0.5BETA2-SNAPSHOT</version>
+                        </dependency>
+                        <!-- JSR 250 Resource Support and Datasource Management -->
+                        <dependency>
+                            <groupId>org.codehaus.fabric3</groupId>
+                            <artifactId>fabric3-resource</artifactId>
+                            <version>0.5BETA2-SNAPSHOT</version>
+                        </dependency>
+                        <!-- Test Extension to Install the Datasource -->
+                        <dependency>
+                            <groupId>org.codehaus.fabric3.tests</groupId>
+                            <artifactId>test-ds-extension</artifactId>
+                            <version>0.1-SNAPSHOT</version>
                         </dependency>
                     </extensions>
                 </configuration>

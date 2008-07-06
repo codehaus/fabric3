@@ -18,15 +18,23 @@
  * under the License.
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
+           xmlns:sca="http://www.osoa.org/xmlns/sca/1.0"
            name="WebappSmoketestComposite">
 
     <component name="smoketest">
         <implementation.web/>
         <reference name="hello" target="HelloComponent"/>
+        <reference name="employeeService" target="EmployeeService"/>
     </component>
 
     <component name="HelloComponent">
         <implementation.java class="org.fabric3.runtime.webapp.smoketest.HelloServiceImpl"/>
         <property name="greeting">Hello World</property>
     </component>
+
+    <component name="EmployeeService" requires="sca:managedTransaction">
+        <implementation.java class="org.fabric3.runtime.webapp.smoketest.EmployeeServiceImpl"/>
+    </component>
+
+
 </composite>
