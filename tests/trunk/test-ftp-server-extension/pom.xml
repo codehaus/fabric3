@@ -33,7 +33,7 @@
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-ftp-server</artifactId>
-            <version>0.5BETA2-SNAPSHOT</version>
+            <version>0.5-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>
@@ -43,7 +43,7 @@
             <plugin>
                 <groupId>org.codehaus.fabric3</groupId>
                 <artifactId>fabric3-contribution-plugin</artifactId>
-                <version>0.5BETA2-SNAPSHOT</version>
+                <version>0.5-SNAPSHOT</version>
                 <extensions>true</extensions>
                 <configuration>
                     <mavenImports>
