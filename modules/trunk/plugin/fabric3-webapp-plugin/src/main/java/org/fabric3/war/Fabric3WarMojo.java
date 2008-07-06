@@ -19,12 +19,18 @@
 package org.fabric3.war;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Properties;
 import java.util.Set;
+import java.util.jar.JarEntry;
+import java.util.jar.JarFile;
+import java.util.jar.JarOutputStream;
 
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.factory.ArtifactFactory;
@@ -40,16 +46,23 @@ import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.util.FileUtils;
+import org.codehaus.plexus.util.IOUtil;
 
 /**
- * Add fabric3 runtime dependencies to a webapp.
+ * Add fabric3 runtime dependencies to a webapp. The wenapp runtime in Fabric3 currently doesn't support classloader isolation. All JAR
+ * files are added to the WEB-INF/lib directory. All system and user extensions are added to the same directory as well. The list of system 
+ * extensions are specified in the properties file f3Extensions.properties and the list of user extensions are specified in the 
+ * f3UserExtenion.properties.
+ * 
+ * Both system and user extensions are exploded and the contents of the META-INF/lib directory are copied to the WEB-INF/lib directory.
+ * 
  * <p/>
  * Performs the following tasks.
  * <p/>
- * <ul> <li>Adds the boot dependencies transitively to WEB-INF/fabric3/boot</li> <li>By default boot libraries are transitively resolved from
+ * <ul> <li>Adds the boot dependencies transitively to WEB-INF/lib</li> <li>By default boot libraries are transitively resolved from
  * webapp-host</li> <li>The version of boot libraries can be specified using configuration/runTimeVersion element</li> <li>Boot libraries can be
  * overridden using the configuration/bootLibs element in the plugin</li> <li>Adds the extension artifacts specified using configuration/extensions to
- * WEB-INF/fabric3/boot</li> </ul>
+ * WEB-INF/lib</li> </ul>
  *
  * @version $Rev$ $Date$
  * @goal fabric3-war
@@ -79,6 +92,14 @@ public class Fabric3WarMojo extends AbstractMojo {
      * @required
      */
     public File webappDirectory;
+
+    /**
+     * The build target directory.
+     *
+     * @parameter expression="${project.build.directory}/target/temp/extension"
+     * @required
+     */
+    public File tempExtensionDirectory;
 
     /**
      * Artifact metadata source.
@@ -196,39 +217,76 @@ public class Fabric3WarMojo extends AbstractMojo {
         }
     }
 
-    private void installExtensions() throws ArtifactNotFoundException, ArtifactResolutionException, IOException,
-            ArtifactMetadataRetrievalException {
+    private void installExtensions() throws ArtifactNotFoundException, ArtifactResolutionException, IOException, ArtifactMetadataRetrievalException {
+        
         if (extensions != null) {
-            Properties props = new Properties();
-            // copy extensions
-            File extensionsDir = new File(webappDirectory, EXTENSIONS_PATH);
-            for (Dependency dependency : extensions) {
-                if (dependency.getVersion() == null) {
-                    resolveDependencyVersion(dependency);
-                }
-                for (Artifact artifact : resolveArtifact(dependency.getArtifact(artifactFactory), false)) {
-                    FileUtils.copyFileToDirectoryIfModified(artifact.getFile(), extensionsDir);
-                    props.put(artifact.getFile().getName(), artifact.getFile().getName());
-                }
-            }
-            props.store(new FileOutputStream(new File(extensionsDir, "f3Extensions.properties")), null);
+            processExtensions(EXTENSIONS_PATH, "f3Extensions.properties");
         }
         if (userExtensions != null) {
-            Properties props = new Properties();
-            // copy user extensions
-            File userExtensionsDir = new File(webappDirectory, USER_EXTENSIONS_PATH);
-            for (Dependency dependency : userExtensions) {
-                if (dependency.getVersion() == null) {
-                    resolveDependencyVersion(dependency);
-                }
-                for (Artifact artifact : resolveArtifact(dependency.getArtifact(artifactFactory), false)) {
-                    FileUtils.copyFileToDirectoryIfModified(artifact.getFile(), userExtensionsDir);
-                    props.put(artifact.getFile().getName(), artifact.getFile().getName());
-                }
-            }
-            props.store(new FileOutputStream(new File(userExtensionsDir, "f3UserExtensions.properties")), null);
+            processExtensions(USER_EXTENSIONS_PATH, "f3UserExtensions.properties");
         }
 
+    }
+
+    private void processExtensions(String extenstionsPath, String extensionProperties) 
+        throws IOException, ArtifactResolutionException, ArtifactNotFoundException, ArtifactMetadataRetrievalException, FileNotFoundException {
+        
+        tempExtensionDirectory.delete();
+        tempExtensionDirectory.mkdirs();
+        
+        Properties props = new Properties();
+        File extensionsDir = new File(webappDirectory, extenstionsPath);
+        
+        for (Dependency dependency : extensions) {
+            
+            if (dependency.getVersion() == null) {
+                resolveDependencyVersion(dependency);
+            }
+            
+            Artifact extensionArtifact = dependency.getArtifact(artifactFactory);
+            for (Artifact artifact : resolveArtifact(extensionArtifact, false)) {
+                
+                if (artifact.equals(extensionArtifact)) {
+                    
+                    File deflatedExtensionFile = new File(tempExtensionDirectory, extensionArtifact.getFile().getName());
+                    JarOutputStream deflatedExtensionOutputStream = new JarOutputStream(new FileOutputStream(deflatedExtensionFile));
+                    
+                    JarFile extensionFile = new JarFile(extensionArtifact.getFile());
+                    Enumeration<JarEntry> entries = extensionFile.entries();
+                    while (entries.hasMoreElements()) {
+                        JarEntry jarEntry = entries.nextElement();
+                        String entryName = jarEntry.getName();
+                        if (entryName.startsWith("META-INF/lib") && entryName.endsWith(".jar")) {
+                            String extractedLibraryName = entryName.substring(entryName.lastIndexOf('/') + 1);
+                            File extractedLibraryFile = new File(tempExtensionDirectory, extractedLibraryName);
+                            FileOutputStream outputStream = new FileOutputStream(extractedLibraryFile);
+                            InputStream inputStream = extensionFile.getInputStream(jarEntry);
+                            IOUtil.copy(inputStream, outputStream);
+                            IOUtil.close(inputStream);
+                            IOUtil.close(outputStream);
+                            FileUtils.copyFileToDirectory(extractedLibraryFile, extensionsDir);
+                        } else {
+                            deflatedExtensionOutputStream.putNextEntry(jarEntry);
+                            InputStream inputStream = extensionFile.getInputStream(jarEntry);
+                            IOUtil.copy(inputStream, deflatedExtensionOutputStream);
+                            IOUtil.close(inputStream);
+                        }
+                    }
+                    
+                    IOUtil.close(deflatedExtensionOutputStream);
+                    FileUtils.copyFileToDirectory(deflatedExtensionFile, extensionsDir);
+                    
+                } else {
+                    FileUtils.copyFileToDirectoryIfModified(artifact.getFile(), extensionsDir);
+                }
+                
+                props.put(artifact.getFile().getName(), artifact.getFile().getName());
+                
+            }
+        }
+        
+        props.store(new FileOutputStream(new File(extensionsDir, extensionProperties)), null);
+        
     }
 
     /**
