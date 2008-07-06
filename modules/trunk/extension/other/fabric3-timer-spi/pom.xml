@@ -42,7 +42,7 @@
         <plugins>
             <plugin>
                 <groupId>org.codehaus.fabric3</groupId>
-                <artifactId>fabric3-contribution-plugin</artifactId>
+                <artifactId>0.5</artifactId>
                 <version>${project.version}</version>
                 <extensions>true</extensions>
                 <configuration>
