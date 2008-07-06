@@ -19,7 +19,11 @@
 package org.fabric3.jmx.agent;
 
 import java.io.IOException;
+import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.MalformedURLException;
+import java.net.ServerSocket;
+import java.net.SocketAddress;
 import java.util.concurrent.atomic.AtomicBoolean;
 import javax.management.MBeanServer;
 import javax.management.MBeanServerFactory;
@@ -35,39 +39,23 @@ import javax.management.remote.JMXServiceURL;
  */
 public abstract class AbstractAgent implements Agent {
 
-    /**
-     * Root domain
-     */
     private static final String DOMAIN = "fabric3";
-
-    /**
-     * MBean server to use.
-     */
     private MBeanServer mBeanServer;
-
-    /**
-     * Start flag.
-     */
     private AtomicBoolean started = new AtomicBoolean();
-
-    /**
-     * Connector adaptor.
-     */
     private JMXConnectorServer connectorServer;
-    
-    /**
-     * Listen port for the agent.
-     */
-    private int port;
+    private int minPort;
+    private int maxPort;
+    private int port = -1;
 
     /**
      * Initialies the server.
      *
      * @throws ManagementException If unable to start the agent.
      */
-    protected AbstractAgent(int port) throws ManagementException {
+    protected AbstractAgent(int minPort, int maxPort) throws ManagementException {
         mBeanServer = MBeanServerFactory.createMBeanServer(DOMAIN);
-        this.port = port;
+        this.minPort = minPort;
+        this.maxPort = maxPort;
     }
 
     /**
@@ -159,6 +147,13 @@ public abstract class AbstractAgent implements Agent {
      * @return The listen port for the agent.
      */
     protected int getPort() {
+        
+        if (port == -1) {
+            port = getAvvailablePort();
+        }
+        if (port == -1) {
+            throw new IllegalStateException("Unable to bind to management ports between " + minPort + " and " + maxPort);
+        }
         return port;
     }
 
@@ -178,5 +173,29 @@ public abstract class AbstractAgent implements Agent {
      * Any initialiation required for protocol specific agent.
      */
     protected abstract void postStop();
+    
+    /*
+     * Gets the next available port.
+     */
+    private int getAvvailablePort() {
+        
+        for (int i = minPort;i < maxPort;i++) {
+            
+            try {
+                ServerSocket serverSocket = new ServerSocket();
+                InetAddress inetAddress = InetAddress.getLocalHost();
+                SocketAddress socketAddress = new InetSocketAddress(inetAddress, i);
+                serverSocket.bind(socketAddress);
+                serverSocket.close();
+                return i;
+            } catch (IOException ex) {
+                continue;
+            }
+            
+        }
+        
+        return -1;
+        
+    }
 
 }

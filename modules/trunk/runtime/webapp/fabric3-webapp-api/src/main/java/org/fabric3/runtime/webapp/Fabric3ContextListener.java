@@ -108,7 +108,9 @@ public class Fabric3ContextListener implements ServletContextListener {
             monitor = runtime.getMonitorFactory().getMonitor(WebAppMonitor.class);
             String managementDomain = utils.getInitParameter(MANAGEMENT_DOMAIN_PARAM, DEFAULT_MANAGEMENT_DOMAIN);
             runtime.setJMXDomain(managementDomain);
-            agent = RmiAgent.newInstance();
+            
+            // TODO Add better host JMX support from the next release
+            agent = new RmiAgent(2000, 3000);
             agent.start();
             runtime.setMBeanServer(agent.getMBeanServer());
 

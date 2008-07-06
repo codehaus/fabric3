@@ -28,7 +28,6 @@ import java.rmi.server.UnicastRemoteObject;
 import javax.management.remote.JMXServiceURL;
 
 import org.fabric3.jmx.agent.AbstractAgent;
-import org.fabric3.jmx.agent.Agent;
 import org.fabric3.jmx.agent.ManagementException;
 
 /**
@@ -38,20 +37,17 @@ import org.fabric3.jmx.agent.ManagementException;
  *
  */
 public class RmiAgent extends AbstractAgent {
-
-    private static final String ADMIN_PORT_PROPERTY = "fabric3.adminPort";
-    private static final int DEFAULT_ADMIN_PORT = 1099;
     
-    /** RMI registry. */
     private Registry registry;
 
     /**
      * Initializes the listen port.
-     * @param port Listen port.
+     * @param minPort Listen port minimum value.
+     * @param maxPort Listen port maximum value.
      * @throws ManagementException
      */
-    protected RmiAgent(int port) throws ManagementException {
-        super(port);
+    public RmiAgent(int minPort, int maxPort) throws ManagementException {
+        super(minPort, maxPort);
     }
 
     /**
@@ -68,17 +64,6 @@ public class RmiAgent extends AbstractAgent {
             throw new ManagementException(ex);
         }
         
-    }
-
-    /**
-     * Returns the new agent instance.
-     * @return Agent instance.
-     * @throws ManagementException If unable to start the agent.
-     */
-    public static Agent newInstance() throws ManagementException {
-        String portValue = System.getProperty(ADMIN_PORT_PROPERTY);
-        int port = portValue != null ?  Integer.parseInt(portValue) : DEFAULT_ADMIN_PORT;
-        return new RmiAgent(port);
     }
 
     /**

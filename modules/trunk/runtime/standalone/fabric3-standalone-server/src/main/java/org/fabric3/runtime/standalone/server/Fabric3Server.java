@@ -93,7 +93,9 @@ public class Fabric3Server implements Fabric3ServerMBean {
      */
     private Fabric3Server() throws MalformedURLException {
         installDirectory = BootstrapHelper.getInstallDirectory(Fabric3Server.class);
-        agent = RmiAgent.newInstance();
+        
+        // TODO Add better host JMX support from the next release
+        agent = new RmiAgent(2000, 3000);
     }
 
     /**
