@@ -32,19 +32,19 @@
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-jmx-agent</artifactId>
-            <version>${project.version}</version>
+            <version>0.5-SNAPSHOT</version>
         </dependency>
 
         <dependency>
             <groupId>org.codehaus.fabric3.standalone</groupId>
             <artifactId>fabric3-standalone-api</artifactId>
-            <version>${project.version}</version>
+            <version>0.5-SNAPSHOT</version>
         </dependency>
 
         <dependency>
              <groupId>org.codehaus.fabric3</groupId>
              <artifactId>fabric3-api</artifactId>
-             <version>${project.version}</version>
+             <version>0.5-SNAPSHOT</version>
          </dependency>
 
         <dependency>

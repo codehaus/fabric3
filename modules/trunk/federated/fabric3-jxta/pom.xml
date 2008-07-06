@@ -43,7 +43,7 @@
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-spi</artifactId>
-            <version>${project.version}</version>
+            <version>0.5-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
 
@@ -57,7 +57,7 @@
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-install-jxta</artifactId>
-            <version>${project.version}</version>
+            <version>0.5-SNAPSHOT</version>
             <type>pom</type>
             <scope>provided</scope>
         </dependency>

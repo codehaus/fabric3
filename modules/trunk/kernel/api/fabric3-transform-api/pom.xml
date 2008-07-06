@@ -31,7 +31,7 @@
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-scdl</artifactId>
-            <version>${project.version}</version>
+            <version>0.5-SNAPSHOT</version>
         </dependency>
 
         <dependency>
