@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.codehaus.fabric3</groupId>
         <artifactId>fabric3-federated-parent-pom</artifactId>
-        <version>0.5BETA2-SNAPSHOT</version>
+        <version>0.5-SNAPSHOT</version>
     </parent>
     <groupId>org.codehaus.fabric3</groupId>
     <artifactId>fabric3-http-provisioning</artifactId>

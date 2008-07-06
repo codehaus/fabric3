@@ -21,7 +21,7 @@
     <parent>
         <groupId>org.codehaus.fabric3</groupId>
         <artifactId>fabric3-extension-parent-pom</artifactId>
-		<version>0.5BETA2-SNAPSHOT</version>
+		<version>0.5-SNAPSHOT</version>
     </parent>
     <groupId>org.codehaus.fabric3</groupId>
     <artifactId>fabric3-extension-implementation-parent-pom</artifactId>
@@ -30,15 +30,15 @@
 	<packaging>pom</packaging>
 
 	<modules>
-		<module>fabric3-groovy</module>
-		<module>fabric3-java</module>
-		<module>fabric3-junit</module>
-		<module>fabric3-mock</module>
-		<module>fabric3-spring</module>
-		<module>fabric3-web</module>
-       <!-- <module>fabric3-rs</module> -->
-        <module>fabric3-timer-provision</module>
-        <module>fabric3-timer-loader</module>
-        <module>fabric3-timer-runtime</module>
+            <module>fabric3-groovy</module>
+            <module>fabric3-java</module>
+            <module>fabric3-junit</module>
+            <module>fabric3-mock</module>
+            <module>fabric3-spring</module>
+            <module>fabric3-web</module>
+            <module>fabric3-rs</module>
+            <module>fabric3-timer-provision</module>
+            <module>fabric3-timer-loader</module>
+            <module>fabric3-timer-runtime</module>
 	</modules>
 </project>
