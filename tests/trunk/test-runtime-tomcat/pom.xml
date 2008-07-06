@@ -62,7 +62,6 @@
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
         </dependency>
-    </dependencies>
 
     <!-- Meeraj remove this when archive expansion is in place -->
             <dependency>
@@ -84,6 +83,7 @@
             </dependency>
 
     <!--   end remove this   -->
+    </dependencies>
     
     <build>
         <finalName>${artifactId}</finalName>
