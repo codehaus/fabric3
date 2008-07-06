@@ -35,7 +35,7 @@
 		<!--module>fabric3-binding-ejb</module-->
 		<module>fabric3-binding-hessian</module>
 		<module>fabric3-binding-jms</module>
-		<module>fabric3-binding-rmi</module>
+		<!--module>fabric3-binding-rmi</modulei-->
 		<module>fabric3-binding-test</module>
 		<module>fabric3-binding-ws</module>
 		<module>fabric3-binding-ws-axis2</module>
