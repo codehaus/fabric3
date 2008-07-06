@@ -16,7 +16,7 @@
 	under the License.
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-	<modelVersion>4.0.0</modelVersion>â
+	<modelVersion>4.0.0</modelVersion>ï¿½
     <parent>
         <groupId>org.codehaus.fabric3</groupId>
         <artifactId>fabric</artifactId>
@@ -24,7 +24,7 @@
     </parent>
 	<groupId>org.codehaus.fabric3</groupId>
 	<artifactId>fabric3-contribution-plugin</artifactId>
-	<version>0.5-SNAPSHOT</version>
+	<version>0.5</version>
 	<packaging>maven-plugin</packaging>
 	<name>Fabric3 Contribution Plugin</name>
 	<description>Fabric3 Contribution Plugin.</description>
@@ -73,8 +73,8 @@
 	</build>
 
     <scm>
-        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/plugin/fabric3-contribution-plugin</connection>
-        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/trunk/plugin/fabric3-contribution-plugin</developerConnection>
-        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/trunk/plugin/fabric3-contribution-plugin</url>
+        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/tags/fabric3-contribution-plugin-0.5</connection>
+        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/tags/fabric3-contribution-plugin-0.5</developerConnection>
+        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/tags/fabric3-contribution-plugin-0.5</url>
     </scm>
 </project>
