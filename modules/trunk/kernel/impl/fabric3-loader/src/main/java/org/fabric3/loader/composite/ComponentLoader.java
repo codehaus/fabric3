@@ -119,6 +119,10 @@ public class ComponentLoader implements TypeLoader<ComponentDefinition<?>> {
         try {
             reader.nextTag();
             impl = loader.load(reader, Implementation.class, context);
+            if (impl == null || impl.getComponentType() == null) {
+                // error loading impl
+                return componentDefinition;
+            }
             // TODO when the loader registry is replaced this try..catch must be replaced with a check for a loader and an
             // UnrecognizedElement added to the context if none is found
         } catch (UnrecognizedElementException e) {
