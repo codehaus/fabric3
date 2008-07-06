@@ -30,7 +30,7 @@
 	<packaging>pom</packaging>
 
 	<modules>
-		<!--module>fabric3-contribution-plugin</modulei-->
+		<module>fabric3-contribution-plugin</modulei>
 		<module>fabric3-itest-plugin</module>
 		<module>fabric3-webapp-plugin</module>
 	</modules>
