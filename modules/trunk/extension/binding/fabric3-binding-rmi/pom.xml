@@ -52,6 +52,7 @@
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-binding-codegen</artifactId>
             <version>0.5-SNAPSHOT</version>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
@@ -69,6 +70,10 @@
                 <extensions>true</extensions>
                 <configuration>
                     <mavenImports>
+                        <mavenImport>
+                            <groupId>org.codehaus.fabric3</groupId>
+                            <artifactId>fabric3-binding-codegen</artifactId>
+                        </mavenImport>
                         <mavenImport>
                             <groupId>org.codehaus.fabric3</groupId>
                             <artifactId>fabric3-spi</artifactId>

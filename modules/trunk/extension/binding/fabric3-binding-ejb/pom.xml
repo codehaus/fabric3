@@ -41,6 +41,7 @@
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-binding-codegen</artifactId>
             <version>0.5-SNAPSHOT</version>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
@@ -72,6 +73,12 @@
                 <version>0.5</version>
                 <extensions>true</extensions>
                 <configuration>
+                    <mavenImports>
+                        <mavenImport>
+                           <groupId>org.codehaus.fabric3</groupId>
+                           <artifactId>fabric3-binding-codegen</artifactId>
+                       </mavenImport>
+                    </mavenImports>
                     <deployables>
                         <deployable>META-INF/ejb.composite</deployable>
                     </deployables>

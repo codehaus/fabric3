@@ -46,6 +46,7 @@
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-binding-codegen</artifactId>
             <version>0.5-SNAPSHOT</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
@@ -65,6 +66,7 @@
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-binding-ws</artifactId>
             <version>0.5-SNAPSHOT</version>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>
@@ -109,6 +111,16 @@
                 <version>0.5</version>
                 <extensions>true</extensions>
                 <configuration>
+                    <mavenImports>
+                        <mavenImport>
+                           <groupId>org.codehaus.fabric3</groupId>
+                           <artifactId>fabric3-binding-codegen</artifactId>
+                       </mavenImport>
+                        <mavenImport>
+                           <groupId>org.codehaus.fabric3</groupId>
+                           <artifactId>fabric3-binding-ws</artifactId>
+                       </mavenImport>
+                    </mavenImports>
                     <deployables>
                         <deployable>META-INF/control.composite</deployable>
                         <deployable>META-INF/runtime.composite</deployable>
