@@ -22,7 +22,7 @@
     <parent>
         <groupId>org.codehaus.fabric3</groupId>
         <artifactId>fabric3-extension-binding-parent-pom</artifactId>
-        <version>0.5</version>
+        <version>0.6-SNAPSHOT</version>
     </parent>
 
     <groupId>org.codehaus.fabric3</groupId>
@@ -44,13 +44,13 @@
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-spi</artifactId>
-            <version>0.5</version>
+            <version>0.6-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-ftp-spi</artifactId>
-            <version>0.5</version>
+            <version>0.6-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -93,9 +93,9 @@
     </build>
 
     <scm>
-        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/tags/fabric3-modules-parent-pom-0.5/extension/binding/fabric3-binding-ftp</connection>
-        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/tags/fabric3-modules-parent-pom-0.5/extension/binding/fabric3-binding-ftp</developerConnection>
-        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/tags/fabric3-modules-parent-pom-0.5/extension/binding/fabric3-binding-ftp</url>
+        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/extension/binding/fabric3-binding-ftp</connection>
+        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/trunk/extension/binding/fabric3-binding-ftp</developerConnection>
+        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/trunk/extension/binding/fabric3-binding-ftp</url>
     </scm>
 
 </project>

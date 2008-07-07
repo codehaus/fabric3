@@ -24,7 +24,7 @@
     </parent>
     <groupId>org.codehaus.fabric3</groupId>
     <artifactId>fabric3-rs</artifactId>
-    <version>0.5</version>
+    <version>0.6-SNAPSHOT</version>
     <packaging>sca-contribution-jar</packaging>
     <name>Fabric3 REST</name>
     <description>Fabric3 JSR-311 REST Implementation Type Extension.</description>
@@ -40,19 +40,19 @@
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-spi</artifactId>
-            <version>0.5</version>
+            <version>0.6-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-java</artifactId>
-            <version>0.5</version>
+            <version>0.6-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-pojo</artifactId>
-            <version>0.5</version>
+            <version>0.6-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -102,8 +102,8 @@
         </plugins>
     </build>
     <scm>
-        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/tags/fabric3-modules-parent-pom-0.5/extension/implementation/fabric3-rs</connection>
-        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/tags/fabric3-modules-parent-pom-0.5/extension/implementation/fabric3-rs</developerConnection>
-        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/tags/fabric3-modules-parent-pom-0.5/extension/implementation/fabric3-rs</url>
+        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/extension/implementation/fabric3-rs</connection>
+        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/trunk/extension/implementation/fabric3-rs</developerConnection>
+        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/trunk/extension/implementation/fabric3-rs</url>
     </scm>
 </project>

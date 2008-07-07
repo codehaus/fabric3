@@ -20,7 +20,7 @@
     <parent>
         <groupId>org.codehaus.fabric3</groupId>
         <artifactId>fabric3-extension-binding-parent-pom</artifactId>
-        <version>0.5</version>
+        <version>0.6-SNAPSHOT</version>
     </parent>
     <groupId>org.codehaus.fabric3</groupId>
     <artifactId>fabric3-binding-ejb</artifactId>
@@ -33,14 +33,14 @@
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-pojo</artifactId>
-            <version>0.5</version>
+            <version>0.6-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-binding-codegen</artifactId>
-            <version>0.5</version>
+            <version>0.6-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
 
@@ -87,9 +87,9 @@
         </plugins>
     </build>
     <scm>
-        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/tags/fabric3-modules-parent-pom-0.5/extension/binding/fabric3-binding-ejb</connection>
-        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/tags/fabric3-modules-parent-pom-0.5/extension/binding/fabric3-binding-ejb</developerConnection>
-        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/tags/fabric3-modules-parent-pom-0.5/extension/binding/fabric3-binding-ejb</url>
+        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/extension/binding/fabric3-binding-ejb</connection>
+        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/trunk/extension/binding/fabric3-binding-ejb</developerConnection>
+        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/trunk/extension/binding/fabric3-binding-ejb</url>
     </scm>
 
 </project>

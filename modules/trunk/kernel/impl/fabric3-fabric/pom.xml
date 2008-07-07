@@ -20,7 +20,7 @@
     <parent>
         <groupId>org.codehaus.fabric3</groupId>
         <artifactId>fabric3-kernel-impl-parent-pom</artifactId>
-        <version>0.5</version>
+        <version>0.6-SNAPSHOT</version>
     </parent>
     <groupId>org.codehaus.fabric3</groupId>
     <artifactId>fabric3-fabric</artifactId>
@@ -47,43 +47,43 @@
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-spi</artifactId>
-            <version>0.5</version>
+            <version>0.6-SNAPSHOT</version>
         </dependency>
         
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-monitor</artifactId>
-            <version>0.5</version>
+            <version>0.6-SNAPSHOT</version>
         </dependency>
         
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-pojo</artifactId>
-            <version>0.5</version>
+            <version>0.6-SNAPSHOT</version>
         </dependency>
         
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-transform</artifactId>
-            <version>0.5</version>
+            <version>0.6-SNAPSHOT</version>
         </dependency>
         
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-loader</artifactId>
-            <version>0.5</version>
+            <version>0.6-SNAPSHOT</version>
         </dependency>
         
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-introspection</artifactId>
-            <version>0.5</version>
+            <version>0.6-SNAPSHOT</version>
         </dependency>
 
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-system</artifactId>
-            <version>0.5</version>
+            <version>0.6-SNAPSHOT</version>
         </dependency>
 
         <dependency>
@@ -133,9 +133,9 @@
     </dependencies>
 
     <scm>
-        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/tags/fabric3-modules-parent-pom-0.5/kernel/impl/fabric3-fabric</connection>
-        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/tags/fabric3-modules-parent-pom-0.5/kernel/impl/fabric3-fabric</developerConnection>
-        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/tags/fabric3-modules-parent-pom-0.5/kernel/impl/fabric3-fabric</url>
+        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/kernel/impl/fabric3-fabric</connection>
+        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/trunk/kernel/impl/fabric3-fabric</developerConnection>
+        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/trunk/kernel/impl/fabric3-fabric</url>
     </scm>
 
 </project>
