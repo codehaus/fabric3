@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ See the NOTICE file distributed with this work for information
+ regarding copyright ownership.  This file is licensed
+ to you under the Apache License, Version 2.0 (the
+ "License"); you may not use this file except in compliance
+ with the License.  You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing,
+ software distributed under the License is distributed on an
+ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ KIND, either express or implied.  See the License for the
+ specific language governing permissions and limitations
+ under the License.
+-->
+<!--
+    Default system configuration for common components.
+
+    $Rev: 4164 $ $Date: 2008-05-10 00:31:24 -0700 (Sat, 10 May 2008) $
+-->
+<composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
+           xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
+           xmlns:system="http://fabric3.org/xmlns/sca/system/2.0-alpha"
+           name="org.fabric3.fabric.CommandGenerators"
+           autowire="true">
+
+
+    <!-- default commands -->
+    
+    <component name="componentBuildCommandGenerator">
+        <system:implementation.system class="org.fabric3.fabric.generator.component.BuildComponentCommandGenerator"/>
+        <property name="order">1</property>
+    </component>
+    
+    <component name="org.fabric3.fabric.generator.wire.LocalWireCommandGenerator">
+        <system:implementation.system class="org.fabric3.fabric.generator.wire.LocalWireCommandGenerator"/>
+        <property name="order">2</property>
+        <reference name="logicalComponentManager" target="logicalComponentManager"/>
+    </component>
+    
+    <component name="org.fabric3.fabric.generator.wire.ReferenceWireCommandGenerator">
+        <system:implementation.system class="org.fabric3.fabric.generator.wire.ReferenceWireCommandGenerator"/>
+        <property name="order">2</property>
+    </component>
+
+    <component name="org.fabric3.fabric.generator.wire.ServiceWireCommandGenerator">
+        <system:implementation.system class="org.fabric3.fabric.generator.wire.ServiceWireCommandGenerator"/>
+        <property name="order">2</property>
+    </component>
+
+    <component name="org.fabric3.fabric.generator.wire.ResourceWireCommandGenerator">
+        <system:implementation.system class="org.fabric3.fabric.generator.wire.ResourceWireCommandGenerator"/>
+        <property name="order">2</property>
+    </component>
+
+    <component name="startComponentCommandGenerator">
+        <system:implementation.system class="org.fabric3.fabric.generator.component.StartComponentCommandGenerator"/>
+        <property name="order">3</property>
+    </component>
+
+    <component name="startCompositeContextCommandGenerator">
+        <system:implementation.system class="org.fabric3.fabric.generator.component.StartCompositeContextCommandGenerator"/>
+        <property name="order">4</property>
+    </component>
+
+    <component name="initializeComponentCommandGenerator">
+        <system:implementation.system class="org.fabric3.fabric.generator.component.InitializeComponentCommandGenerator"/>
+        <property name="order">5</property>
+    </component>
+
+
+    <component name="stopCompositeContextCommandGenerator">
+        <system:implementation.system class="org.fabric3.fabric.generator.component.StopCompositeContextCommandGenerator"/>
+        <property name="order">0</property>
+    </component>
+
+    <component name="stopComponentCommandGenerator">
+        <system:implementation.system class="org.fabric3.fabric.generator.component.StopComponentCommandGenerator"/>
+        <property name="order">1</property>
+    </component>
+
+    <component name="detachWireCommandGenerator">
+        <system:implementation.system class="org.fabric3.fabric.generator.wire.DetachWireCommandGenerator"/>
+        <property name="order">2</property>
+    </component>
+
+    <component name="unprovisionClassloaderCommandGenerator">
+        <system:implementation.system class="org.fabric3.fabric.generator.classloader.UnprovisionClassloaderCommandGenerator"/>
+        <property name="order">3</property>
+    </component>
+
+</composite>
