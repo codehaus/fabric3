@@ -11,7 +11,7 @@
 	            <commandPort>2000</commandPort>
 	            <minPassivePort>6000</minPassivePort>
 	            <maxPassivePort>7000</maxPassivePort>
-	            <users><meeraj>password</meeraj></users>
+	            <users><user>password</user></users>
 	        </config>
         </property>
     </component>
