@@ -38,7 +38,6 @@
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-xapool</artifactId>
             <version>0.6-SNAPSHOT</version>
-            <scope>provided</scope>
         </dependency>
     </dependencies>
 
@@ -54,10 +53,6 @@
                         <mavenImport>
                             <groupId>org.codehaus.fabric3</groupId>
                             <artifactId>fabric3-spi</artifactId>
-                        </mavenImport>
-                        <mavenImport>
-                            <groupId>org.codehaus.fabric3</groupId>
-                            <artifactId>fabric3-xapool</artifactId>
                         </mavenImport>
                     </mavenImports>
                 </configuration>
