@@ -20,7 +20,7 @@
     <parent>
         <groupId>org.codehaus.fabric3</groupId>
         <artifactId>fabric3-kernel-impl-parent-pom</artifactId>
-        <version>0.5-SNAPSHOT</version>
+        <version>0.5</version>
     </parent>
     <groupId>org.codehaus.fabric3</groupId>
     <artifactId>fabric3-system</artifactId>
@@ -31,22 +31,22 @@
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-loader</artifactId>
-            <version>0.5-SNAPSHOT</version>
+            <version>0.5</version>
         </dependency>
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-introspection</artifactId>
-            <version>0.5-SNAPSHOT</version>
+            <version>0.5</version>
         </dependency>
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-pojo</artifactId>
-            <version>0.5-SNAPSHOT</version>
+            <version>0.5</version>
         </dependency>
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-jmx</artifactId>
-            <version>0.5-SNAPSHOT</version>
+            <version>0.5</version>
         </dependency>
 
         <!-- mark the API as provided as it is included in Java6 -->
@@ -69,9 +69,9 @@
     </dependencies>
 
     <scm>
-        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/kernel/impl/fabric3-system</connection>
-        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/trunk/kernel/impl/fabric3-system</developerConnection>
-        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/trunk/kernel/impl/fabric3-system</url>
+        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/tags/fabric3-modules-parent-pom-0.5/kernel/impl/fabric3-system</connection>
+        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/tags/fabric3-modules-parent-pom-0.5/kernel/impl/fabric3-system</developerConnection>
+        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/tags/fabric3-modules-parent-pom-0.5/kernel/impl/fabric3-system</url>
     </scm>
 
 </project>

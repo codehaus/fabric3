@@ -20,7 +20,7 @@
     <parent>
         <groupId>org.codehaus.fabric3</groupId>
         <artifactId>fabric3-runtime-maven-parent-pom</artifactId>
-        <version>0.5-SNAPSHOT</version>
+        <version>0.5</version>
     </parent>
     <groupId>org.codehaus.fabric3</groupId>
     <artifactId>fabric3-maven-host</artifactId>
@@ -31,17 +31,17 @@
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-maven-api</artifactId>
-            <version>0.5-SNAPSHOT</version>
+            <version>0.5</version>
         </dependency>
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-fabric</artifactId>
-            <version>0.5-SNAPSHOT</version>
+            <version>0.5</version>
         </dependency>
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-policy</artifactId>
-            <version>0.5-SNAPSHOT</version>
+            <version>0.5</version>
         </dependency>
         <dependency>
             <groupId>stax</groupId>
@@ -73,9 +73,9 @@
     </dependencies>
 
     <scm>
-        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/runtime/maven/fabric3-maven-host</connection>
-        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/trunk/runtime/maven/fabric3-maven-host</developerConnection>
-        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/trunk/runtime/maven/fabric3-maven-host</url>
+        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/tags/fabric3-modules-parent-pom-0.5/runtime/maven/fabric3-maven-host</connection>
+        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/tags/fabric3-modules-parent-pom-0.5/runtime/maven/fabric3-maven-host</developerConnection>
+        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/tags/fabric3-modules-parent-pom-0.5/runtime/maven/fabric3-maven-host</url>
     </scm>
 
 </project>

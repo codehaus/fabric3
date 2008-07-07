@@ -20,7 +20,7 @@
     <parent>
         <groupId>org.codehaus.fabric3</groupId>
         <artifactId>fabric3-runtime-webapp-parent-pom</artifactId>
-        <version>0.5-SNAPSHOT</version>
+        <version>0.5</version>
     </parent>
     <groupId>org.codehaus.fabric3.webapp</groupId>
     <artifactId>fabric3-webapp-api</artifactId>
@@ -32,7 +32,7 @@
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-jmx-agent</artifactId>
-            <version>0.5-SNAPSHOT</version>
+            <version>0.5</version>
         </dependency>
     
         <dependency>
@@ -45,19 +45,19 @@
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-api</artifactId>
-            <version>0.5-SNAPSHOT</version>
+            <version>0.5</version>
         </dependency>
         
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-host-api</artifactId>
-            <version>0.5-SNAPSHOT</version>
+            <version>0.5</version>
         </dependency>
         
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-monitor</artifactId>
-            <version>0.5-SNAPSHOT</version>
+            <version>0.5</version>
         </dependency>
 
         <dependency>
@@ -73,9 +73,9 @@
     </dependencies>
 
     <scm>
-        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/runtime/webapp/fabric3-webapp-api</connection>
-        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/trunk/runtime/webapp/fabric3-webapp-api</developerConnection>
-        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/trunk/runtime/webapp/fabric3-webapp-api</url>
+        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/tags/fabric3-modules-parent-pom-0.5/runtime/webapp/fabric3-webapp-api</connection>
+        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/tags/fabric3-modules-parent-pom-0.5/runtime/webapp/fabric3-webapp-api</developerConnection>
+        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/tags/fabric3-modules-parent-pom-0.5/runtime/webapp/fabric3-webapp-api</url>
     </scm>
 
 </project>

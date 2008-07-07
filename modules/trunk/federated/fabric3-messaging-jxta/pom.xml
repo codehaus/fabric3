@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.codehaus.fabric3</groupId>
         <artifactId>fabric3-federated-parent-pom</artifactId>
-        <version>0.5-SNAPSHOT</version>
+        <version>0.5</version>
     </parent>
     <groupId>org.codehaus.fabric3</groupId>
     <artifactId>fabric3-messaging-jxta</artifactId>
@@ -36,14 +36,14 @@
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-jxta</artifactId>
-            <version>0.5-SNAPSHOT</version>
+            <version>0.5</version>
             <scope>provided</scope>
         </dependency>
 
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-spi</artifactId>
-            <version>0.5-SNAPSHOT</version>
+            <version>0.5</version>
             <scope>provided</scope>
         </dependency>
 
@@ -109,9 +109,9 @@
     </build>
 
     <scm>
-        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/federated/fabric3-messaging-jxta</connection>
-        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/trunk/federated/fabric3-messaging-jxta</developerConnection>
-        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/trunk/federated/fabric3-messaging-jxta</url>
+        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/tags/fabric3-modules-parent-pom-0.5/federated/fabric3-messaging-jxta</connection>
+        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/tags/fabric3-modules-parent-pom-0.5/federated/fabric3-messaging-jxta</developerConnection>
+        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/tags/fabric3-modules-parent-pom-0.5/federated/fabric3-messaging-jxta</url>
     </scm>
 
 </project>

@@ -20,7 +20,7 @@
     <parent>
         <groupId>org.codehaus.fabric3</groupId>
         <artifactId>fabric3-kernel-api-parent-pom</artifactId>
-        <version>0.5-SNAPSHOT</version>
+        <version>0.5</version>
     </parent>
     <groupId>org.codehaus.fabric3</groupId>
     <artifactId>fabric3-jpa-api</artifactId>
@@ -46,9 +46,9 @@
     </dependencies>
 
     <scm>
-        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/kernel/api/fabric3-jpa-api</connection>
-        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/trunk/kernel/api/fabric3-jpa-api</developerConnection>
-        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/trunk/kernel/api/fabric3-jpa-api</url>
+        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/tags/fabric3-modules-parent-pom-0.5/kernel/api/fabric3-jpa-api</connection>
+        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/tags/fabric3-modules-parent-pom-0.5/kernel/api/fabric3-jpa-api</developerConnection>
+        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/tags/fabric3-modules-parent-pom-0.5/kernel/api/fabric3-jpa-api</url>
     </scm>
 
 </project>
