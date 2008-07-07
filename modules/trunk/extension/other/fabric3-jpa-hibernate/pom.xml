@@ -129,7 +129,15 @@
                        </mavenImport>
                         <mavenImport>
                            <groupId>org.codehaus.fabric3</groupId>
+                           <artifactId>fabric3-java</artifactId>
+                       </mavenImport>
+                        <mavenImport>
+                           <groupId>org.codehaus.fabric3</groupId>
                            <artifactId>fabric3-jpa-spi</artifactId>
+                       </mavenImport>
+                        <mavenImport>
+                           <groupId>org.codehaus.fabric3</groupId>
+                           <artifactId>fabric3-jpa-core</artifactId>
                        </mavenImport>
                     </mavenImports>
                     <deployables>
