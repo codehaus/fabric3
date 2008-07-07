@@ -432,29 +432,26 @@ public class StandaloneCoordinator implements RuntimeLifecycleCoordinator<Standa
 
     private void synthesizeSPIContribution() throws InitializationException {
         try {
+            XmlManifestProcessor processor =
+                    runtime.getSystemComponent(XmlManifestProcessor.class, ComponentNames.XML_MANIFEST_PROCESSOR);
             Contribution contribution = new Contribution(ComponentNames.BOOT_CLASSLOADER_ID);
             ContributionManifest manifest = new ContributionManifest();
+
             InputStream stream =
                     bootClassLoader.getResourceAsStream("META-INF/maven/org.codehaus.fabric3/fabric3-spi/pom.xml");
             if (stream == null) {
                 throw new InitializationException("fabric3-spi jar is missing pom.xml file");
             }
             ValidationContext context = new DefaultValidationContext();
-            XmlManifestProcessor processor =
-                    runtime.getSystemComponent(XmlManifestProcessor.class, ComponentNames.XML_MANIFEST_PROCESSOR);
             processor.process(manifest, stream, context);
-            if (context.hasErrors()) {
-                context.addErrors(context.getErrors());
-                throw new InvalidContributionException(context.getErrors(), context.getWarnings());
-            }
+
             stream = bootClassLoader.getResourceAsStream("META-INF/maven/org.codehaus.fabric3/fabric3-pojo/pom.xml");
             if (stream == null) {
                 throw new InitializationException("fabric3-pojo jar is missing pom.xml file");
             }
-            context = new DefaultValidationContext();
             processor.process(manifest, stream, context);
+
             if (context.hasErrors()) {
-                context.addErrors(context.getErrors());
                 throw new InvalidContributionException(context.getErrors(), context.getWarnings());
             }
             contribution.setManifest(manifest);
