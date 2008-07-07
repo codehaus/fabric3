@@ -48,14 +48,14 @@
             <plugin>
                 <groupId>org.codehaus.fabric3</groupId>
                 <artifactId>fabric3-itest-plugin</artifactId>
-                <version>0.5-SNAPSHOT</version>
+                <version>0.6-SNAPSHOT</version>
                 <configuration>
-                    <runtimeVersion>0.5-SNAPSHOT</runtimeVersion>
+                    <runtimeVersion>0.6-SNAPSHOT</runtimeVersion>
                     <extensions>
                         <dependency>
                             <groupId>org.codehaus.fabric3</groupId>
                             <artifactId>fabric3-groovy</artifactId>
-                            <version>0.5-SNAPSHOT</version>
+                            <version>0.6-SNAPSHOT</version>
                         </dependency>
                     </extensions>
                 </configuration>

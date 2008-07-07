@@ -24,7 +24,7 @@
     </parent>
     <groupId>org.codehaus.fabric3.tests</groupId>
     <artifactId>test-security-policy</artifactId>
-    <version>0.5-SNAPSHOT</version>
+    <version>0.6-SNAPSHOT</version>
     <name>Fabric3 Test Security Policy Extension</name>
     <description>Fabric3 Security Policy Extension.</description>
     <packaging>sca-contribution-jar</packaging>
@@ -38,13 +38,13 @@
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-security</artifactId>
-            <version>0.5-SNAPSHOT</version>
+            <version>0.6-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-spi</artifactId>
-            <version>0.5-SNAPSHOT</version>
+            <version>0.6-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -56,7 +56,7 @@
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-binding-ws-axis2</artifactId>
-            <version>0.5-SNAPSHOT</version>
+            <version>0.6-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>
@@ -66,7 +66,7 @@
             <plugin>
                 <groupId>org.codehaus.fabric3</groupId>
                 <artifactId>fabric3-contribution-plugin</artifactId>
-                <version>0.5-SNAPSHOT</version>
+                <version>0.6-SNAPSHOT</version>
                 <extensions>true</extensions>
                 <configuration>
                     <mavenImports>
