@@ -78,11 +78,11 @@
         <packaging>
           <containerElement type="module" name="fabric3-bigbank-common">
             <attribute name="method" value="5" />
-            <attribute name="URI" value="/WEB-INF/lib/fabric3-tutorial-bigbank-common-0.5BETA1.jar" />
+            <attribute name="URI" value="/WEB-INF/lib/fabric3-tutorial-bigbank-common-0.5.jar" />
           </containerElement>
           <containerElement type="module" name="fabric3-bigbank-validation">
             <attribute name="method" value="5" />
-            <attribute name="URI" value="/WEB-INF/lib/fabric3-tutorial-bigbank-validation-0.5BETA1.jar" />
+            <attribute name="URI" value="/WEB-INF/lib/fabric3-tutorial-bigbank-validation-0.5.jar" />
           </containerElement>
           <containerElement type="library" name="org.codehaus.fabric3.spec:sca-api-r1.0:0.2" level="module">
             <attribute name="method" value="1" />

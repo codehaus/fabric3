@@ -90,15 +90,15 @@
       </library>
     </orderEntry>
     <orderEntry type="module-library">
-      <library name="org.codehaus.fabric3:fabric3-api:0.5BETA1">
+      <library name="org.codehaus.fabric3:fabric3-api:0.5">
         <CLASSES>
-          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-api/0.5BETA1/fabric3-api-0.5BETA1.jar!/" />
+          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-api/0.5/fabric3-api-0.5.jar!/" />
         </CLASSES>
         <JAVADOC>
-          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-api/0.5BETA1/fabric3-api-0.5BETA1-javadoc.jar!/" />
+          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-api/0.5/fabric3-api-0.5-javadoc.jar!/" />
         </JAVADOC>
         <SOURCES>
-          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-api/0.5BETA1/fabric3-api-0.5BETA1-sources.jar!/" />
+          <root url="jar://$M2_REPO$/org/codehaus/fabric3/fabric3-api/0.5/fabric3-api-0.5-sources.jar!/" />
         </SOURCES>
       </library>
     </orderEntry>
