@@ -32,6 +32,7 @@ import org.fabric3.introspection.java.ImplementationNotFoundException;
 import org.fabric3.introspection.xml.LoaderException;
 import org.fabric3.java.scdl.JavaImplementation;
 import org.fabric3.pojo.scdl.PojoComponentType;
+import org.fabric3.scdl.validation.InvalidImplementation;
 
 /**
  * @version $Rev$ $Date$
@@ -69,6 +70,11 @@ public class JavaImplementationProcessorImpl implements JavaImplementationProces
             } else {
                 context.addError(new ImplementationArtifactNotFound(implementation));
             }
+            return;
+        }
+        if (implClass.isInterface()) {
+            InvalidImplementation failure = new InvalidImplementation("Implementation class is an interface", implClassName);
+            context.addError(failure);
             return;
         }
         TypeMapping typeMapping = helper.mapTypeParameters(implClass);
