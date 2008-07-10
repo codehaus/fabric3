@@ -17,7 +17,7 @@ public class Fabric3JettyCleanMojo extends AbstractMojo {
 	/**
 	 * Fabric3 path.
 	 */
-	private static final String FABRIC3_PATH = "WEB-INF/fabric3";
+	private static final String FABRIC3_PATH = "WEB-INF/lib";
 
     /**
      * Root directory for all html/jsp etc files
