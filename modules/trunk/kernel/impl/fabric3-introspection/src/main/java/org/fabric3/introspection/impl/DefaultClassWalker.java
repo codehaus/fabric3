@@ -39,28 +39,32 @@ public class DefaultClassWalker<I extends Implementation<? extends InjectingComp
 
     /**
      * Constructor used from the bootstrapper.
-     * 
+     *
      * @param processors
      */
     public DefaultClassWalker(Map<Class<? extends Annotation>, AnnotationProcessor<? extends Annotation, I>> processors) {
         this.processors = processors;
     }
-    
+
     /**
-     * Constructor used from the system SCDL. 
-     * 
+     * Constructor used from the system SCDL.
+     * <p/>
      * TODO This needs to be working once the re-injection is working properly.
      */
     @org.osoa.sca.annotations.Constructor
     public DefaultClassWalker() {
     }
-    
+
     @Reference
     public void setProcessors(Map<Class<? extends Annotation>, AnnotationProcessor<? extends Annotation, I>> processors) {
         this.processors = processors;
     }
 
     public void walk(I implementation, Class<?> clazz, IntrospectionContext context) {
+        walk(implementation, clazz, false, context);
+    }
+
+    public void walk(I implementation, Class<?> clazz, boolean isSuperClass, IntrospectionContext context) {
         if (!clazz.isInterface()) {
             walkSuperClasses(implementation, clazz, context);
         }
@@ -73,13 +77,17 @@ public class DefaultClassWalker<I extends Implementation<? extends InjectingComp
 
         walkMethods(implementation, clazz, context);
 
-        walkConstructors(implementation, clazz, context);
+        if (!isSuperClass) {
+            // If a superclass is being evaluated, ignore its constructors.
+            // Otherwise references, properties, or resources may be incorrectly introspected.
+            walkConstructors(implementation, clazz, context);
+        }
     }
 
     private void walkSuperClasses(I implementation, Class<?> clazz, IntrospectionContext context) {
         Class<?> superClass = clazz.getSuperclass();
         if (superClass != null) {
-            walk(implementation, superClass, context);
+            walk(implementation, superClass, true, context);
         }
     }
 
@@ -170,7 +178,11 @@ public class DefaultClassWalker<I extends Implementation<? extends InjectingComp
         }
     }
 
-    private <A extends Annotation> void visitConstructorParameter(A annotation, Constructor<?> constructor, int index, I implementation, IntrospectionContext context) {
+    private <A extends Annotation> void visitConstructorParameter(A annotation,
+                                                                  Constructor<?> constructor,
+                                                                  int index,
+                                                                  I implementation,
+                                                                  IntrospectionContext context) {
         AnnotationProcessor<A, I> processor = getProcessor(annotation);
         if (processor != null) {
             processor.visitConstructorParameter(annotation, constructor, index, implementation, context);
