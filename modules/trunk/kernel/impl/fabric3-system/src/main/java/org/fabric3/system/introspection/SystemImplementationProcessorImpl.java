@@ -28,6 +28,7 @@ import org.fabric3.introspection.java.ClassWalker;
 import org.fabric3.introspection.java.HeuristicProcessor;
 import org.fabric3.introspection.java.ImplementationNotFoundException;
 import org.fabric3.pojo.scdl.PojoComponentType;
+import org.fabric3.scdl.validation.InvalidImplementation;
 import org.fabric3.scdl.validation.MissingResource;
 import org.fabric3.system.scdl.SystemImplementation;
 
@@ -64,10 +65,16 @@ public class SystemImplementationProcessorImpl implements SystemImplementationPr
             if (cause instanceof ClassNotFoundException || cause instanceof NoClassDefFoundError) {
                 // CNFE and NCDFE may be thrown as a result of a referenced class not being on the classpath
                 // If this is the case, ensure the correct class name is reported, not just the implementation
-                context.addError(new MissingResource("Class referenced from system implementation not found on classpath", e.getCause().getMessage()));
+                context.addError(new MissingResource("Class referenced from system implementation not found on classpath",
+                                                     e.getCause().getMessage()));
             } else {
                 context.addError(new MissingResource("System implementation class not found on classpath", implClassName));
             }
+            return;
+        }
+        if (implClass.isInterface()) {
+            InvalidImplementation failure = new InvalidImplementation("Implementation class is an interface", implClassName);
+            context.addError(failure);
             return;
         }
         TypeMapping typeMapping = helper.mapTypeParameters(implClass);
