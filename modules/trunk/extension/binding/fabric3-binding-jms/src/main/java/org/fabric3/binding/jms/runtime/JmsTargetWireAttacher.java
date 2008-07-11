@@ -32,6 +32,7 @@ import org.fabric3.binding.jms.common.CreateOption;
 import org.fabric3.binding.jms.common.DestinationDefinition;
 import org.fabric3.binding.jms.common.JmsBindingMetadata;
 import org.fabric3.binding.jms.provision.JmsWireTargetDefinition;
+import org.fabric3.binding.jms.provision.MessageType;
 import org.fabric3.binding.jms.runtime.lookup.connectionfactory.ConnectionFactoryStrategy;
 import org.fabric3.binding.jms.runtime.lookup.destination.DestinationStrategy;
 import org.fabric3.spi.ObjectFactory;
@@ -45,7 +46,7 @@ import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.Wire;
 
 /**
- * Wire attacher for JMS binding.
+ * Attaches the reference end of a wire to a JMS queue.
  *
  * @version $Revision$ $Date$
  */
@@ -103,11 +104,10 @@ public class JmsTargetWireAttacher implements TargetWireAttacher<JmsWireTargetDe
         this.classLoaderRegistry = classLoaderRegistry;
     }
 
-    public void attachToTarget(PhysicalWireSourceDefinition sourceDefinition,
-                               JmsWireTargetDefinition targetDefinition,
-                               Wire wire) throws WiringException {
+    public void attachToTarget(PhysicalWireSourceDefinition sourceDefinition, JmsWireTargetDefinition targetDefinition, Wire wire)
+            throws WiringException {
 
-        ClassLoader cl = classLoaderRegistry.getClassLoader(targetDefinition.getClassloaderURI());
+        ClassLoader cl = classLoaderRegistry.getClassLoader(targetDefinition.getClassloaderUri());
 
         JmsBindingMetadata metadata = targetDefinition.getMetadata();
 
@@ -134,14 +134,17 @@ public class JmsTargetWireAttacher implements TargetWireAttacher<JmsWireTargetDe
         create = destinationDefinition.getCreate();
         Destination resDestination =
                 destinationStrategies.get(create).getDestination(destinationDefinition, resCf, env);
-
+        Map<String, MessageType> messageTypes = targetDefinition.getMessageTypes();
         for (Map.Entry<PhysicalOperationDefinition, InvocationChain> entry : wire.getInvocationChains().entrySet()) {
 
             PhysicalOperationDefinition op = entry.getKey();
             InvocationChain chain = entry.getValue();
 
             Fabric3MessageReceiver messageReceiver = new Fabric3MessageReceiver(resDestination, resCf);
-            Interceptor interceptor = new JmsTargetInterceptor(op.getName(),
+            String operationName = op.getName();
+            MessageType messageType = messageTypes.get(operationName);
+            Interceptor interceptor = new JmsTargetInterceptor(operationName,
+                                                               messageType,
                                                                reqDestination,
                                                                reqCf,
                                                                correlationScheme,
@@ -155,6 +158,6 @@ public class JmsTargetWireAttacher implements TargetWireAttacher<JmsWireTargetDe
     }
 
     public ObjectFactory<?> createObjectFactory(JmsWireTargetDefinition target) throws WiringException {
-        throw new AssertionError();
+        throw new UnsupportedOperationException();
     }
 }

@@ -22,9 +22,10 @@ import java.net.URI;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
-
 import javax.jms.ConnectionFactory;
 import javax.jms.Destination;
+
+import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.binding.jms.common.ConnectionFactoryDefinition;
 import org.fabric3.binding.jms.common.CorrelationScheme;
@@ -33,6 +34,7 @@ import org.fabric3.binding.jms.common.DestinationDefinition;
 import org.fabric3.binding.jms.common.JmsBindingMetadata;
 import org.fabric3.binding.jms.common.TransactionType;
 import org.fabric3.binding.jms.provision.JmsWireSourceDefinition;
+import org.fabric3.binding.jms.provision.MessageType;
 import org.fabric3.binding.jms.runtime.host.JmsHost;
 import org.fabric3.binding.jms.runtime.lookup.connectionfactory.ConnectionFactoryStrategy;
 import org.fabric3.binding.jms.runtime.lookup.destination.DestinationStrategy;
@@ -45,10 +47,9 @@ import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.Wire;
-import org.osoa.sca.annotations.Reference;
 
 /**
- * Wire attacher for JMS binding.
+ * Attaches the target end of a wire (a service) to a JMS queue.
  *
  * @version $Revision$ $Date$
  */
@@ -62,6 +63,7 @@ public class JmsSourceWireAttacher implements SourceWireAttacher<JmsWireSourceDe
 
     /**
      * Injects the transaction handler.
+     *
      * @param transactionHandler Transaction handler.
      */
     @Reference
@@ -110,52 +112,54 @@ public class JmsSourceWireAttacher implements SourceWireAttacher<JmsWireSourceDe
     }
 
     public void attachToSource(JmsWireSourceDefinition source, PhysicalWireTargetDefinition target, Wire wire) throws WiringException {
-        
+
         URI serviceUri = target.getUri();
 
-        ClassLoader cl = classLoaderRegistry.getClassLoader(source.getClassloaderURI());
-
-        Map<String, Map.Entry<PhysicalOperationDefinition, InvocationChain>> ops =
-                new HashMap<String, Map.Entry<PhysicalOperationDefinition, InvocationChain>>();
-
-        for (Map.Entry<PhysicalOperationDefinition, InvocationChain> entry : wire.getInvocationChains().entrySet()) {
-            ops.put(entry.getKey().getName(), entry);
-        }
+        ClassLoader cl = classLoaderRegistry.getClassLoader(source.getClassloaderUri());
 
         JmsBindingMetadata metadata = source.getMetadata();
         Hashtable<String, String> env = metadata.getEnv();
         CorrelationScheme correlationScheme = metadata.getCorrelationScheme();
         TransactionType transactionType = source.getTransactionType();
 
-        JMSObjectFactory requestJMSObjectFactory = buildObjectFactory(metadata.getConnectionFactory(), metadata.getDestination(), env);
-        JMSObjectFactory responseJMSObjectFactory =
-                buildObjectFactory(metadata.getResponseConnectionFactory(), metadata.getResponseDestination(), env);
-        
+        ConnectionFactoryDefinition connectionFactory = metadata.getConnectionFactory();
+        DestinationDefinition destination = metadata.getDestination();
+        JMSObjectFactory requestJMSObjectFactory = buildObjectFactory(connectionFactory, destination, env);
+        ConnectionFactoryDefinition responseConnectionFactory = metadata.getResponseConnectionFactory();
+        DestinationDefinition responseDestination = metadata.getResponseDestination();
+        JMSObjectFactory responseJMSObjectFactory = buildObjectFactory(responseConnectionFactory, responseDestination, env);
+
         String callbackUri = null;
         if (target.getCallbackUri() != null) {
             callbackUri = target.getCallbackUri().toString();
         }
-        
+
+        Map<String, MessageType> messageTypes = source.getMessageTypes();
+        Map<PhysicalOperationDefinition, InvocationChain> operations = wire.getInvocationChains();
+
         ResponseMessageListener messageListener =
-                new ResponseMessageListenerImpl(ops, correlationScheme, transactionHandler, transactionType, callbackUri);
-        jmsHost.registerResponseListener(
-                requestJMSObjectFactory, responseJMSObjectFactory, messageListener, transactionType, transactionHandler, cl, serviceUri);
+                new ResponseMessageListenerImpl(operations, correlationScheme, messageTypes, transactionType, callbackUri);
+        jmsHost.registerResponseListener(requestJMSObjectFactory,
+                                         responseJMSObjectFactory,
+                                         messageListener,
+                                         transactionType,
+                                         transactionHandler,
+                                         cl,
+                                         serviceUri);
     }
 
     public void detachFromSource(JmsWireSourceDefinition source, PhysicalWireTargetDefinition target, Wire wire) throws WiringException {
         jmsHost.unregisterListener(target.getUri());
     }
 
-    public void attachObjectFactory(JmsWireSourceDefinition source, ObjectFactory<?> objectFactory, PhysicalWireTargetDefinition definition) throws WiringException {
-        throw new AssertionError();
+    public void attachObjectFactory(JmsWireSourceDefinition source, ObjectFactory<?> objectFactory, PhysicalWireTargetDefinition definition)
+            throws WiringException {
+        throw new UnsupportedOperationException();
     }
 
-    /**
-     * Build a JMS ObjectFactory from definition.
-     */
     private JMSObjectFactory buildObjectFactory(ConnectionFactoryDefinition connectionFactoryDefinition,
-                                                   DestinationDefinition destinationDefinition,
-                                                   Hashtable<String, String> env) {
+                                                DestinationDefinition destinationDefinition,
+                                                Hashtable<String, String> env) {
         CreateOption create = connectionFactoryDefinition.getCreate();
 
         ConnectionFactory connectionFactory =
@@ -165,5 +169,6 @@ public class JmsSourceWireAttacher implements SourceWireAttacher<JmsWireSourceDe
                 destinationStrategies.get(create).getDestination(destinationDefinition, connectionFactory, env);
         return new JMSObjectFactory(connectionFactory, reqDestination, 1);
     }
+
 
 }

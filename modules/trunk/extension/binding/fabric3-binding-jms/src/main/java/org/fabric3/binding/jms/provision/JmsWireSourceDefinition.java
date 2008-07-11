@@ -19,6 +19,8 @@
 package org.fabric3.binding.jms.provision;
 
 import java.net.URI;
+import java.util.Collections;
+import java.util.Map;
 import java.util.Set;
 
 import org.fabric3.binding.jms.common.JmsBindingMetadata;
@@ -29,59 +31,43 @@ import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
  * @version $Revision$ $Date$
  */
 public class JmsWireSourceDefinition extends PhysicalWireSourceDefinition {
-
-    /**
-     * Metadata.
-     */
     private JmsBindingMetadata metadata;
-
-    /**
-     * Transaction mode.
-     */
     private TransactionType transactionType;
+    private URI classloaderUri;
+    private Set<String> oneWayOperations;
+    private Map<String, MessageType> messageTypes;
 
     /**
-     * The classloader for the service
+     * Constructor
+     *
+     * @param uri              The service URI
+     * @param metadata         Metadata to be initialized.
+     * @param messageTypes     The JMS message types to send invocations with keyed by operation name
+     * @param transactionType  Transaction type
+     * @param oneWayOperations The set of oneway operation names
+     * @param classloaderUri   The classloader URI to deserialize types in
      */
-    private URI classloaderURI;
-
-    Set<String> oneWayOperations;
-
-    public Set<String> getOneWayOperations() {
-        return oneWayOperations;
-    }
-
-    public void setOneWayOperations(Set<String> oneWayOperations) {
-        this.oneWayOperations = oneWayOperations;
-    }
-    /**
-     * Default constructor.
-     */
-    public JmsWireSourceDefinition() {
-    }
-
-    /**
-     * @param metadata Metadata to be initialized.
-     * @param transactionType Transaction type.
-     */
-    public JmsWireSourceDefinition(JmsBindingMetadata metadata, TransactionType transactionType, URI classloaderUri) {
+    public JmsWireSourceDefinition(URI uri,
+                                   JmsBindingMetadata metadata,
+                                   Map<String, MessageType> messageTypes,
+                                   TransactionType transactionType,
+                                   Set<String> oneWayOperations,
+                                   URI classloaderUri) {
         this.metadata = metadata;
         this.transactionType = transactionType;
-        this.classloaderURI = classloaderUri;
+        this.classloaderUri = classloaderUri;
+        this.oneWayOperations = oneWayOperations;
+        this.messageTypes = messageTypes;
+        setUri(uri);
     }
 
     /**
-     * @return Classloader UTI.
+     * Returns the URI of the classloader  to load classes and deserialize parameter types.
+     *
+     * @return URI of the classloader  to load classes and deserialize parameter types
      */
-    public URI getClassloaderURI() {
-        return classloaderURI;
-    }
-
-    /**
-     * @param classloaderURI Classloader URI.
-     */
-    public void setClassloaderURI(URI classloaderURI) {
-        this.classloaderURI = classloaderURI;
+    public URI getClassloaderUri() {
+        return classloaderUri;
     }
 
     /**
@@ -92,10 +78,12 @@ public class JmsWireSourceDefinition extends PhysicalWireSourceDefinition {
     }
 
     /**
-     * @param metadata JMS metadata.
+     * Returns the JMS message type to send invocations over.
+     *
+     * @return the JMS message type
      */
-    public void setMetadata(JmsBindingMetadata metadata) {
-        this.metadata = metadata;
+    public Map<String, MessageType> getMessageTypes() {
+        return Collections.unmodifiableMap(messageTypes);
     }
 
     /**
@@ -112,6 +100,13 @@ public class JmsWireSourceDefinition extends PhysicalWireSourceDefinition {
         this.transactionType = transactionType;
     }
 
-
+    /**
+     * Returns the operation names for the wire.
+     *
+     * @return the operation names for the wire
+     */
+    public Set<String> getOneWayOperations() {
+        return oneWayOperations;
+    }
 
 }

@@ -42,6 +42,10 @@
         <system:implementation.system class="org.fabric3.binding.jms.control.JmsBindingGenerator"/>
     </component>
 
+    <component name="MessageTypeIntrospector">
+        <system:implementation.system class="org.fabric3.binding.jms.control.MessageTypeIntrospectorImpl"/>
+    </component>
+
     <!-- JMS Source Wire Attacher -->
     <component f3:key="org.fabric3.binding.jms.provision.JmsWireSourceDefinition" name="org.fabric3.binding.jms.runtime.JmsSourceWireAttacher">
         <system:implementation.system class="org.fabric3.binding.jms.runtime.JmsSourceWireAttacher"/>

@@ -20,20 +20,21 @@
 package org.fabric3.binding.jms.runtime;
 
 import java.io.Serializable;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
-
 import javax.jms.Destination;
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageProducer;
 import javax.jms.ObjectMessage;
 import javax.jms.Session;
+import javax.jms.TextMessage;
 
 import org.fabric3.binding.jms.common.CorrelationScheme;
 import org.fabric3.binding.jms.common.Fabric3JmsException;
 import org.fabric3.binding.jms.common.TransactionType;
-import org.fabric3.binding.jms.runtime.tx.TransactionHandler;
+import org.fabric3.binding.jms.provision.MessageType;
 import org.fabric3.spi.invocation.MessageImpl;
 import org.fabric3.spi.invocation.WorkContext;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
@@ -41,17 +42,13 @@ import org.fabric3.spi.wire.Interceptor;
 import org.fabric3.spi.wire.InvocationChain;
 
 /**
- * Message listeher for service requests.
+ * Message listener for service requests.
  *
  * @version $Revison$ $Date: 2008-03-18 05:24:49 +0800 (Tue, 18 Mar 2008) $
  */
 public class ResponseMessageListenerImpl implements ResponseMessageListener {
 
-
-    /**
-     * Operations available on the contract.
-     */
-    private final Map<String, Map.Entry<PhysicalOperationDefinition, InvocationChain>> ops;
+    private Map<String, ChainHolder> operations;
 
     /**
      * Correlation scheme.
@@ -63,39 +60,46 @@ public class ResponseMessageListenerImpl implements ResponseMessageListener {
      */
     private final TransactionType transactionType;
 
-    /***
+    /**
      * Callback URI.
      */
     private final String callBackURI;
 
     /**
-     * @param ops                Map of operation definitions.
-     * @param correlationScheme  Correlation scheme.
-     * @param transactionType    the type of transaction
+     * @param chains            map of operations to interceptor chains.
+     * @param correlationScheme correlation scheme.
+     * @param messageTypes      the JMS message type used to enqueue service invocations keyed by operation name
+     * @param transactionType   the type of transaction
+     * @param callbackUri       the callback service uri
      */
-    public ResponseMessageListenerImpl(Map<String, Entry<PhysicalOperationDefinition, InvocationChain>> ops,
-                                  CorrelationScheme correlationScheme,
-                                  TransactionHandler transactionHandler,
-                                  TransactionType transactionType,
-                                  String callBackURI) {
-        this.ops = ops;
+    public ResponseMessageListenerImpl(Map<PhysicalOperationDefinition, InvocationChain> chains,
+                                       CorrelationScheme correlationScheme,
+                                       Map<String, MessageType> messageTypes,
+                                       TransactionType transactionType,
+                                       String callbackUri) {
+        this.operations = new HashMap<String, ChainHolder>();
+        for (Entry<PhysicalOperationDefinition, InvocationChain> entry : chains.entrySet()) {
+            String name = entry.getKey().getName();
+            MessageType type = messageTypes.get(name);
+            if (type == null) {
+                throw new IllegalArgumentException("No message type for operation: " + name);
+            }
+            this.operations.put(name, new ChainHolder(type, entry.getValue()));
+        }
         this.correlationScheme = correlationScheme;
         this.transactionType = transactionType;
-        this.callBackURI = callBackURI;
+        this.callBackURI = callbackUri;
     }
 
-    /* (non-Javadoc)
-     * @see org.fabric3.binding.jms.runtime.ResponseMessageListener#onMessage(javax.jms.Message, javax.jms.Session, javax.jms.Destination)
-     */
     public void onMessage(Message request, Session responseSession, Destination responseDestination) {
 
         try {
 
             String opName = request.getStringProperty("scaOperationName");
-            Interceptor interceptor = getInterceptor(opName);
-
-            ObjectMessage objectMessage = (ObjectMessage) request;
-            Object[] payload = (Object[])objectMessage.getObject();
+            ChainHolder holder = getInterceptorHolder(opName);
+            Interceptor interceptor = holder.getHeadInterceptor();
+            MessageType messageType = holder.getType();
+            Object payload = getPayload(request, messageType);
 
             WorkContext workContext = new WorkContext();
 //            List<CallFrame> callFrames = (List<CallFrame>) payload[payload.length-1];
@@ -115,17 +119,18 @@ public class ResponseMessageListenerImpl implements ResponseMessageListener {
             org.fabric3.spi.invocation.Message inMessage = new MessageImpl(payload, false, workContext);
             org.fabric3.spi.invocation.Message outMessage = interceptor.invoke(inMessage);
 
-            Message response = responseSession.createObjectMessage((Serializable) outMessage.getBody());
+            Object responsePayload = outMessage.getBody();
+            Message response = createMessage(responsePayload, responseSession, messageType);
 
             switch (correlationScheme) {
-                case RequestCorrelIDToCorrelID: {
-                    response.setJMSCorrelationID(request.getJMSCorrelationID() );
-                    break;
-                }
-                case RequestMsgIDToCorrelID: {
-                    response.setJMSCorrelationID(request.getJMSMessageID());
-                    break;
-                }
+            case RequestCorrelIDToCorrelID: {
+                response.setJMSCorrelationID(request.getJMSCorrelationID());
+                break;
+            }
+            case RequestMsgIDToCorrelID: {
+                response.setJMSCorrelationID(request.getJMSMessageID());
+                break;
+            }
             }
             MessageProducer producer = responseSession.createProducer(responseDestination);
             producer.send(response);
@@ -137,20 +142,83 @@ public class ResponseMessageListenerImpl implements ResponseMessageListener {
     }
 
     /*
-     * Finds the matching interceptor.
+     * Finds the matching interceptor holder.
      */
-    private Interceptor getInterceptor(String opName) {
+    private ChainHolder getInterceptorHolder(String opName) {
 
-        if (ops.size() == 1) {
-            return ops.values().iterator().next().getValue().getHeadInterceptor();
-        } else if (opName != null && ops.containsKey(opName)) {
-            return ops.get(opName).getValue().getHeadInterceptor();
-        } else if (ops.containsKey("onMessage")) {
-            return ops.get("onMessage").getValue().getHeadInterceptor();
+        if (operations.size() == 1) {
+            return operations.values().iterator().next();
+        } else if (opName != null && operations.containsKey(opName)) {
+            return operations.get(opName);
+        } else if (operations.containsKey("onMessage")) {
+            return operations.get("onMessage");
         } else {
             throw new Fabric3JmsException("Unable to match operation on the service contract");
         }
 
     }
+
+    private Object getPayload(Message message, MessageType messageType) throws JMSException {
+        Object payload;
+        switch (messageType) {
+        case BYTES:
+            throw new UnsupportedOperationException("Bytes message not yet supported");
+        case OBJECT:
+            ObjectMessage objectMessage = (ObjectMessage) message;
+            payload = objectMessage.getObject();
+            break;
+        case STREAM:
+            throw new UnsupportedOperationException("Stream message not yet supported");
+        case TEXT:
+            TextMessage textMessage = (TextMessage) message;
+            payload = textMessage.getText();
+            break;
+        default:
+            throw new UnsupportedOperationException("Unsupported message type");
+        }
+        return payload;
+    }
+
+    private Message createMessage(Object payload, Session session, MessageType messageType) throws JMSException {
+        switch (messageType) {
+        case BYTES:
+            throw new UnsupportedOperationException("Bytes message not yet supported");
+        case STREAM:
+            throw new UnsupportedOperationException("Stream message not yet supported");
+        case TEXT:
+            if (!(payload instanceof String)) {
+                // this should not happen
+                throw new IllegalArgumentException("Response payload is not a string: " + payload);
+            }
+            return session.createTextMessage((String) payload);
+        case OBJECT:
+            if (!(payload instanceof Serializable)) {
+                // this should not happen
+                throw new IllegalArgumentException("Response payload is not serializable: " + payload);
+            }
+            return session.createObjectMessage((Serializable) payload);
+        default:
+            throw new UnsupportedOperationException("Unsupported message type");
+        }
+    }
+
+    private class ChainHolder {
+        private MessageType type;
+        private InvocationChain chain;
+
+        private ChainHolder(MessageType type, InvocationChain chain) {
+            this.type = type;
+            this.chain = chain;
+        }
+
+        public MessageType getType() {
+            return type;
+        }
+
+        public Interceptor getHeadInterceptor() {
+            return chain.getHeadInterceptor();
+        }
+    }
+
 
 }

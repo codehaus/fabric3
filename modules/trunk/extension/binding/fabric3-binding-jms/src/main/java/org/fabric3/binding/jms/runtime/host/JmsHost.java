@@ -39,7 +39,7 @@ public interface JmsHost {
      * @param transactionType Transaction type.
      * @param transactionHandler Transaction handler.
      * @param cl Classloader to use.
-     * @param componentUri URI of the service to which the binding is attached.
+     * @param serviceUri URI of the service to which the binding is attached.
      */
     public void registerResponseListener(JMSObjectFactory requestJMSObjectFactory,
                                          JMSObjectFactory responseJMSObjectFactory,

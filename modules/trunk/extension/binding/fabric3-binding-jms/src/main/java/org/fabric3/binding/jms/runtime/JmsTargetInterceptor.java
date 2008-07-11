@@ -25,15 +25,19 @@ import javax.jms.JMSException;
 import javax.jms.MessageProducer;
 import javax.jms.ObjectMessage;
 import javax.jms.Session;
+import javax.jms.TextMessage;
 
 import org.fabric3.binding.jms.common.CorrelationScheme;
 import org.fabric3.binding.jms.common.Fabric3JmsException;
+import org.fabric3.binding.jms.provision.MessageType;
 import org.fabric3.binding.jms.runtime.helper.JmsHelper;
 import org.fabric3.spi.invocation.Message;
 import org.fabric3.spi.invocation.MessageImpl;
 import org.fabric3.spi.wire.Interceptor;
 
 /**
+ * Dispatches a service invocation to a JMS queue.
+ *
  * @version $Revision$ $Date$
  */
 public class JmsTargetInterceptor implements Interceptor {
@@ -48,6 +52,7 @@ public class JmsTargetInterceptor implements Interceptor {
      */
     private String methodName;
 
+    private MessageType messageType;
     /**
      * Request destination.
      */
@@ -74,19 +79,23 @@ public class JmsTargetInterceptor implements Interceptor {
     private ClassLoader cl;
 
     /**
-     * @param methodName Method name.
-     * @param destination Request destination.
+     * @param methodName        Method name.
+     * @param messageType       the type of JMS message to send
+     * @param destination       Request destination.
      * @param connectionFactory Request connection factory.
      * @param correlationScheme Correlation scheme.
-     * @param messageReceiver Message receiver for response.
+     * @param messageReceiver   Message receiver for response.
+     * @param cl                the classloader for loading parameter types.
      */
     public JmsTargetInterceptor(String methodName,
+                                MessageType messageType,
                                 Destination destination,
                                 ConnectionFactory connectionFactory,
                                 CorrelationScheme correlationScheme,
                                 Fabric3MessageReceiver messageReceiver,
                                 ClassLoader cl) {
         this.methodName = methodName;
+        this.messageType = messageType;
         this.destination = destination;
         this.connectionFactory = connectionFactory;
         this.correlationScheme = correlationScheme;
@@ -94,16 +103,6 @@ public class JmsTargetInterceptor implements Interceptor {
         this.cl = cl;
     }
 
-    /**
-     * @see org.fabric3.spi.wire.Interceptor#getNext()
-     */
-    public Interceptor getNext() {
-        return next;
-    }
-
-    /**
-     * @see org.fabric3.spi.wire.Interceptor#invoke(org.fabric3.spi.invocation.Message)
-     */
     public Message invoke(Message message) {
 
         Connection connection = null;
@@ -117,7 +116,7 @@ public class JmsTargetInterceptor implements Interceptor {
             Object[] payload = (Object[]) message.getBody();
 //            payload = attachFramesToTail(payload, message.getWorkContext().getCallFrameStack());
 
-            javax.jms.ObjectMessage jmsMessage = session.createObjectMessage(payload);
+            javax.jms.Message jmsMessage = createMessage(session, payload);
             jmsMessage.setObjectProperty("scaOperationName", methodName);
 
 //            CallFrame previous = message.getWorkContext().peekCallFrame();
@@ -134,33 +133,66 @@ public class JmsTargetInterceptor implements Interceptor {
             producer.send(jmsMessage);
 
             String correlationId = null;
-            switch(correlationScheme) {
-                case None:
-                case RequestCorrelIDToCorrelID:
-                    throw new UnsupportedOperationException("COrrelation scheme not supported");
-                case RequestMsgIDToCorrelID:
-                    correlationId = jmsMessage.getJMSMessageID();
+            switch (correlationScheme) {
+            case None:
+            case RequestCorrelIDToCorrelID:
+                throw new UnsupportedOperationException("COrrelation scheme not supported");
+            case RequestMsgIDToCorrelID:
+                correlationId = jmsMessage.getJMSMessageID();
             }
             session.commit();
-            ObjectMessage responseMessage = (ObjectMessage) messageReceiver.receive(correlationId);
+            Object responseMessage = processResponse(correlationId);
             Message response = new MessageImpl();
-            response.setBody(responseMessage.getObject());
+            response.setBody(responseMessage);
             return response;
 
-        } catch(JMSException ex) {
+        } catch (JMSException ex) {
             throw new Fabric3JmsException("Unable to receive response", ex);
         } finally {
             JmsHelper.closeQuietly(connection);
             Thread.currentThread().setContextClassLoader(oldCl);
         }
-
     }
 
-	/**
-     * @see org.fabric3.spi.wire.Interceptor#setNext(org.fabric3.spi.wire.Interceptor)
-     */
+    public Interceptor getNext() {
+        return next;
+    }
+
     public void setNext(Interceptor next) {
         this.next = next;
+    }
+
+    private javax.jms.Message createMessage(Session session, Object[] payload) throws JMSException {
+        switch (messageType) {
+        case BYTES:
+            throw new UnsupportedOperationException("Not yet implemented");
+        case OBJECT:
+            return session.createObjectMessage(payload);
+        case STREAM:
+            throw new UnsupportedOperationException("Not yet implemented");
+        case TEXT:
+            if (payload.length != 1) {
+                throw new UnsupportedOperationException("Only single parameter operations are supported");
+            }
+            return session.createTextMessage((String) payload[0]);
+        }
+        throw new AssertionError();
+    }
+
+    private Object processResponse(String correlationId) throws JMSException {
+        switch (messageType) {
+        case BYTES:
+            throw new UnsupportedOperationException("Not yet implemented");
+        case OBJECT:
+            ObjectMessage objectMessage = (ObjectMessage) messageReceiver.receive(correlationId);
+            return objectMessage.getObject();
+        case STREAM:
+            throw new UnsupportedOperationException("Not yet implemented");
+        case TEXT:
+            TextMessage textMessage = (TextMessage) messageReceiver.receive(correlationId);
+            return textMessage.getText();
+        }
+        throw new AssertionError();
     }
 
 }

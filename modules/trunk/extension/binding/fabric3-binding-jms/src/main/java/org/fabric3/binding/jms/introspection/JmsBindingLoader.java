@@ -45,6 +45,7 @@ import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.xml.InvalidValue;
 import org.fabric3.introspection.xml.LoaderHelper;
 import org.fabric3.introspection.xml.TypeLoader;
+import org.fabric3.jaxb.control.api.JAXBTransformationService;
 
 
 /**
@@ -63,15 +64,17 @@ public class JmsBindingLoader implements TypeLoader<JmsBindingDefinition> {
     /**
      * Constructor.
      *
-     * @param loaderHelper the loaderHelper
+     * @param loaderHelper          the loaderHelper
+     * @param transformationService the JAXB transformation service
      */
-    public JmsBindingLoader(@Reference LoaderHelper loaderHelper) {
+    public JmsBindingLoader(@Reference LoaderHelper loaderHelper, @Reference JAXBTransformationService transformationService) {
         this.loaderHelper = loaderHelper;
+        transformationService.registerBinding(BINDING_QNAME, JAXBTransformationService.DATATYPE_XML);
     }
 
     public JmsBindingDefinition load(XMLStreamReader reader, IntrospectionContext introspectionContext) throws XMLStreamException {
 
-        JmsBindingMetadata metadata = null;
+        JmsBindingMetadata metadata;
         String uri = reader.getAttributeValue(null, "uri");
         JmsBindingDefinition bd;
         if (uri != null) {
@@ -82,6 +85,7 @@ public class JmsBindingLoader implements TypeLoader<JmsBindingDefinition> {
             } catch (URISyntaxException e) {
                 InvalidValue failure = new InvalidValue("Invalid JMS binding URI: " + uri, uri, reader, e);
                 introspectionContext.addError(failure);
+                return null;
             }
             bd = new JmsBindingDefinition(loaderHelper.getURI(uri), metadata);
         } else {

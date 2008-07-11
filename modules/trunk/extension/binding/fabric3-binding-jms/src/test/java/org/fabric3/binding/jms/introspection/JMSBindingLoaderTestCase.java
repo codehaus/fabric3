@@ -18,26 +18,32 @@
  */
 package org.fabric3.binding.jms.introspection;
 
-import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
-
 import java.io.InputStream;
 import java.io.InputStreamReader;
-
+import javax.xml.namespace.QName;
 import javax.xml.stream.XMLInputFactory;
+import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
 import javax.xml.stream.XMLStreamReader;
 
 import junit.framework.TestCase;
-
 import org.easymock.EasyMock;
+
 import org.fabric3.binding.jms.common.HeadersDefinition;
 import org.fabric3.binding.jms.common.JmsBindingMetadata;
 import org.fabric3.binding.jms.scdl.JmsBindingDefinition;
 import org.fabric3.introspection.xml.LoaderHelper;
+import org.fabric3.jaxb.control.api.JAXBTransformationService;
 
 public class JMSBindingLoaderTestCase extends TestCase {
     public void testLoaderJMSBindingElement() throws Exception {
         LoaderHelper loaderHelper = EasyMock.createMock(LoaderHelper.class);
-        JmsBindingLoader loader = new JmsBindingLoader(loaderHelper);
+        JAXBTransformationService mock = new JAXBTransformationService() {
+
+            public void registerBinding(QName name, QName dataType) {
+
+            }
+        };
+        JmsBindingLoader loader = new JmsBindingLoader(loaderHelper, mock);
         InputStream inputStream = JmsBindingLoader.class
                 .getResourceAsStream("JMSBindingLoaderTest.xml");
         XMLInputFactory factory = XMLInputFactory.newInstance();
@@ -47,7 +53,7 @@ public class JMSBindingLoaderTestCase extends TestCase {
         while (streamReader.hasNext()) {
             if (START_ELEMENT == streamReader.next()
                     && "binding.jms".equals(streamReader.getName()
-                            .getLocalPart())) {
+                    .getLocalPart())) {
                 jmsBinding = loader.load(streamReader, null);
                 streamReader.close();
                 break;
