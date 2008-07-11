@@ -23,6 +23,6 @@ package org.fabric3.binding.jms.common;
  */
 public enum TransactionType {
     
-    GLOBAL, LOCAL;
+    GLOBAL, LOCAL
 
 }
