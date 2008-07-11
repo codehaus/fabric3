@@ -20,6 +20,7 @@ package org.fabric3.jaxb.provision;
 
 import java.net.URI;
 import java.util.Set;
+import javax.xml.namespace.QName;
 
 /**
  * Definition for an interceptor that transforms an XML string representation to a JAXB object.
@@ -28,7 +29,7 @@ import java.util.Set;
  */
 public class ServiceTransformingInterceptorDefinition extends AbstractTransformingInterceptorDefinition {
 
-    public ServiceTransformingInterceptorDefinition(URI classLoaderId, Set<String> classNames) {
-        super(classLoaderId, classNames);
+    public ServiceTransformingInterceptorDefinition(URI classLoaderId, QName dataType, Set<String> classNames) {
+        super(classLoaderId, dataType, classNames);
     }
 }
