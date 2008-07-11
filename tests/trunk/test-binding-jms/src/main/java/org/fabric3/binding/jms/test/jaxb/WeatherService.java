@@ -16,13 +16,14 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.binding.jms.test;
+package org.fabric3.binding.jms.test.jaxb;
+
 
 /**
  * @version $Revision$ $Date$
  */
-public enum WeatherCondition {
-    
-    SUNNY, CLOUDY, RAINY, WINDY;
+public interface WeatherService {
+
+    WeatherResponse getWeather(WeatherRequest weatherRequest);
 
 }

@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.binding.jms.test;
+package org.fabric3.binding.jms.test.object;
 
 import java.io.Serializable;
 
@@ -24,28 +24,33 @@ import java.io.Serializable;
  * @version $Revision$ $Date$
  */
 public class WeatherResponse implements Serializable {
-    
+
     private static final long serialVersionUID = 8646926662793415231L;
-    
+
     private WeatherCondition condition;
     private double temperatureMinimum;
     private double temperatureMaximum;
-    
+
     public WeatherCondition getCondition() {
         return condition;
     }
+
     public void setCondition(WeatherCondition condition) {
         this.condition = condition;
     }
+
     public double getTemperatureMinimum() {
         return temperatureMinimum;
     }
+
     public void setTemperatureMinimum(double temperatureMinimum) {
         this.temperatureMinimum = temperatureMinimum;
     }
+
     public double getTemperatureMaximum() {
         return temperatureMaximum;
     }
+
     public void setTemperatureMaximum(double temperatureMaximum) {
         this.temperatureMaximum = temperatureMaximum;
     }

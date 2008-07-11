@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.binding.jms.test;
+package org.fabric3.binding.jms.test.object;
 
 import java.util.Date;
 
@@ -24,10 +24,15 @@ import org.osoa.sca.annotations.Reference;
 
 import junit.framework.TestCase;
 
+import org.fabric3.binding.jms.test.object.WeatherCondition;
+import org.fabric3.binding.jms.test.object.WeatherRequest;
+import org.fabric3.binding.jms.test.object.WeatherResponse;
+import org.fabric3.binding.jms.test.object.WeatherService;
+
 /**
  * @version $Revision$ $Date$
  */
-public class WeatherTest extends TestCase {
+public class ObjectWeatherTest extends TestCase {
     
     private WeatherService weatherService;
     

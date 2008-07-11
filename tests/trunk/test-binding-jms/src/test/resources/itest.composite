@@ -18,13 +18,13 @@
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:sca="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
-           name="BurlapTestComposite">
+           name="JMSTestComposite">
 
-    <component name="WeatherTest">
-        <f3:junit class="org.fabric3.binding.jms.test.WeatherTest"/>
+    <component name="ObjectWeatherTest">
+        <f3:junit class="org.fabric3.binding.jms.test.object.ObjectWeatherTest"/>
         <reference name="weatherService">
-            <binding.jms correlationScheme="RequestMsgIDToCorrelID" >
-                <destination name="serviceQueue" type="queue" create="always"/>
+            <binding.jms correlationScheme="RequestMsgIDToCorrelID">
+                <destination name="objectServiceQueue" type="queue" create="always"/>
                 <connectionFactory name="org.apache.activemq.ActiveMQConnectionFactory" create="always">
                     <property name="brokerURL">vm://broker</property>
                 </connectionFactory>
@@ -38,11 +38,11 @@
         </reference>
     </component>
 
-    <component name="WeatherService">
-        <implementation.java class="org.fabric3.binding.jms.test.WeatherServiceImpl"/>
+    <component name="ObjectWeatherService">
+        <implementation.java class="org.fabric3.binding.jms.test.object.WeatherServiceImpl"/>
         <service name="WeatherService">
             <binding.jms correlationScheme="RequestMsgIDToCorrelID" requires="sca:transactedOneWay.global">
-                <destination name="serviceQueue" type="queue" create="always"/>
+                <destination name="objectServiceQueue" type="queue" create="always"/>
                 <connectionFactory name="org.apache.activemq.ActiveMQXAConnectionFactory" create="always">
                     <property name="brokerURL">vm://broker</property>
                 </connectionFactory>
@@ -55,5 +55,48 @@
             </binding.jms>
         </service>
     </component>
-    
+
+
+    <component name="JAXBWeatherTest">
+        <f3:junit class="org.fabric3.binding.jms.test.jaxb.JAXBWeatherTest"/>
+        <reference name="weatherService">
+            <binding.jms correlationScheme="RequestMsgIDToCorrelID">
+                <destination name="jaxbServiceQueue" type="queue" create="always"/>
+                <connectionFactory name="org.apache.activemq.ActiveMQConnectionFactory" create="always">
+                    <property name="brokerURL">vm://broker</property>
+                </connectionFactory>
+                <response>
+                    <destination name="clientQueue" type="queue" create="always"/>
+                    <connectionFactory name="org.apache.activemq.ActiveMQConnectionFactory" create="always">
+                        <property name="brokerURL">vm://broker</property>
+                    </connectionFactory>
+                </response>
+            </binding.jms>
+        </reference>
+        <!-- verifies the JAXB transformer interceptor is not applied for wires where the source and target are collocated-->
+        <reference name="collocatedWeatherService" target="VMJAXBWeatherService"/>
+    </component>
+
+    <component name="JAXBWeatherService">
+        <implementation.java class="org.fabric3.binding.jms.test.jaxb.WeatherServiceImpl"/>
+        <service name="WeatherService">
+            <binding.jms correlationScheme="RequestMsgIDToCorrelID" requires="sca:transactedOneWay.global">
+                <destination name="jaxbServiceQueue" type="queue" create="always"/>
+                <connectionFactory name="org.apache.activemq.ActiveMQXAConnectionFactory" create="always">
+                    <property name="brokerURL">vm://broker</property>
+                </connectionFactory>
+                <response>
+                    <destination name="clientQueue" type="queue" create="always"/>
+                    <connectionFactory name="org.apache.activemq.ActiveMQXAConnectionFactory" create="always">
+                        <property name="brokerURL">vm://broker</property>
+                    </connectionFactory>
+                </response>
+            </binding.jms>
+        </service>
+    </component>
+
+    <component name="VMJAXBWeatherService">
+        <implementation.java class="org.fabric3.binding.jms.test.jaxb.WeatherServiceImpl"/>
+    </component>
+
 </composite>

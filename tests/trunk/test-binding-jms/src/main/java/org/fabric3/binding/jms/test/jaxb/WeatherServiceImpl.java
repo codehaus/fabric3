@@ -16,13 +16,22 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.binding.jms.test;
+package org.fabric3.binding.jms.test.jaxb;
 
 /**
  * @version $Revision$ $Date$
  */
-public interface WeatherService {
-    
-    WeatherResponse getWeather(WeatherRequest weatherRequest);
+public class WeatherServiceImpl implements WeatherService {
+
+    public WeatherResponse getWeather(WeatherRequest weatherRequest) {
+
+        WeatherResponse weatherResponse = new WeatherResponse();
+        weatherResponse.setCondition(WeatherCondition.SUNNY);
+        weatherResponse.setTemperatureMinimum(25);
+        weatherResponse.setTemperatureMaximum(40);
+
+        return weatherResponse;
+
+    }
 
 }

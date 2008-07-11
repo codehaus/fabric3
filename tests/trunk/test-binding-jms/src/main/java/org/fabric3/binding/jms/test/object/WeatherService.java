@@ -16,33 +16,13 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.binding.jms.test;
-
-import java.io.Serializable;
-import java.util.Date;
+package org.fabric3.binding.jms.test.object;
 
 /**
  * @version $Revision$ $Date$
  */
+public interface WeatherService {
 
-public class WeatherRequest implements Serializable {
-    
-    private static final long serialVersionUID = -3896071380449163733L;
-    
-    private String city;
-    private Date date;
-    
-    public String getCity() {
-        return city;
-    }
-    public void setCity(String city) {
-        this.city = city;
-    }
-    public Date getDate() {
-        return date;
-    }
-    public void setDate(Date date) {
-        this.date = date;
-    }
+    WeatherResponse getWeather(WeatherRequest weatherRequest);
 
 }
