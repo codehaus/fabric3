@@ -35,6 +35,8 @@ import org.osoa.sca.annotations.Remotable;
 import org.fabric3.introspection.IntrospectionHelper;
 import org.fabric3.introspection.TypeMapping;
 import org.fabric3.introspection.contract.ContractProcessor;
+import org.fabric3.introspection.contract.InterfaceIntrospector;
+import org.fabric3.introspection.contract.OperationIntrospector;
 import org.fabric3.scdl.DataType;
 import org.fabric3.scdl.Operation;
 import static org.fabric3.scdl.Operation.CONVERSATION_END;
@@ -52,9 +54,24 @@ public class DefaultContractProcessor implements ContractProcessor {
     public static final QName ONEWAY_INTENT = new QName(Constants.SCA_NS, "oneWay");
 
     private final IntrospectionHelper helper;
+    private List<InterfaceIntrospector> interfaceIntrospectors;
+    private List<OperationIntrospector> operationIntrospectors;
+
 
     public DefaultContractProcessor(@Reference IntrospectionHelper helper) {
         this.helper = helper;
+        interfaceIntrospectors = new ArrayList<InterfaceIntrospector>();
+        operationIntrospectors = new ArrayList<OperationIntrospector>();
+    }
+
+    @Reference(required = false)
+    public void setInterfaceIntrospectors(List<InterfaceIntrospector> interfaceIntrospectors) {
+        this.interfaceIntrospectors = interfaceIntrospectors;
+    }
+
+    @Reference(required = false)
+    public void setOperationIntrospectors(List<OperationIntrospector> operationIntrospectors) {
+        this.operationIntrospectors = operationIntrospectors;
     }
 
     public ServiceContract<Type> introspect(TypeMapping typeMapping, Type type, ValidationContext context) {
@@ -102,7 +119,9 @@ public class DefaultContractProcessor implements ContractProcessor {
 
         List<Operation<Type>> operations = getOperations(typeMapping, interfaze, remotable, conversational, context);
         contract.setOperations(operations);
-
+        for (InterfaceIntrospector introspector : interfaceIntrospectors) {
+            introspector.introspect(contract, interfaze, context);
+        }
         return contract;
     }
 
@@ -162,6 +181,9 @@ public class DefaultContractProcessor implements ContractProcessor {
             // TODO this should be refactored to its own processor
             if (method.isAnnotationPresent(OneWay.class)) {
                 operation.addIntent(ONEWAY_INTENT);
+            }
+            for (OperationIntrospector introspector : operationIntrospectors) {
+                introspector.introspect(operation, method, context);
             }
             operations.add(operation);
         }
