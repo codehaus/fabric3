@@ -18,28 +18,29 @@
  */
 package org.fabric3.spi.generator;
 
+import org.w3c.dom.Element;
+
 import org.fabric3.scdl.Operation;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.physical.PhysicalInterceptorDefinition;
-import org.w3c.dom.Element;
 
 /**
  * Interface for the interceptor definition generator.
- * 
+ *
  * @version $Revision$ $Date$
  */
 public interface InterceptorDefinitionGenerator {
-    
+
     /**
      * Generates an interceptor definition from the policy set extension.
-     * 
+     *
      * @param policyDefinition Policy set definition.
-     * @param generatorContext Generator context.
-     * @param operation Operation against which the interceptor is generated.
-     * @param logicalBinding Logical binding on the service or reference.
+     * @param operation        Operation against which the interceptor is generated.
+     * @param logicalBinding   Logical binding on the service or reference.
      * @return Physical interceptor definition.
+     * @throws GenerationException i an exception occurs during generation
      */
-    PhysicalInterceptorDefinition generate(Element policyDefinition, 
+    PhysicalInterceptorDefinition generate(Element policyDefinition,
                                            Operation<?> operation,
                                            LogicalBinding<?> logicalBinding) throws GenerationException;
 
