@@ -32,12 +32,13 @@ import org.fabric3.spi.model.physical.PhysicalInterceptorDefinition;
 public interface InterceptorDefinitionGenerator {
 
     /**
-     * Generates an interceptor definition from the policy set extension.
+     * Generates an interceptor definition from the policy set extension. Implementations may return null if an interceptor should not be added to a
+     * wire.
      *
      * @param policyDefinition Policy set definition.
      * @param operation        Operation against which the interceptor is generated.
      * @param logicalBinding   Logical binding on the service or reference.
-     * @return Physical interceptor definition.
+     * @return Physical interceptor definition or null if an interceptor should not be added.
      * @throws GenerationException i an exception occurs during generation
      */
     PhysicalInterceptorDefinition generate(Element policyDefinition,

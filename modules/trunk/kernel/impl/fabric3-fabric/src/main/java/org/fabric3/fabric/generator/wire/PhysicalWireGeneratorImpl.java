@@ -365,7 +365,9 @@ public class PhysicalWireGeneratorImpl implements PhysicalWireGenerator {
             QName qName = policy.getExtensionName();
             InterceptorDefinitionGenerator idg = generatorRegistry.getInterceptorDefinitionGenerator(qName);
             PhysicalInterceptorDefinition pid = idg.generate(policy.getExtension(), operation, logicalBinding);
-            interceptors.add(pid);
+            if (pid != null) {
+                interceptors.add(pid);
+            }
         }
         return interceptors;
 
