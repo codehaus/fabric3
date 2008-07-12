@@ -99,4 +99,78 @@
         <implementation.java class="org.fabric3.binding.jms.test.jaxb.WeatherServiceImpl"/>
     </component>
 
+    <component name="PrimitiveTest">
+        <f3:junit class="org.fabric3.binding.jms.test.primitives.PrimitiveTest"/>
+        <reference name="service">
+            <binding.jms correlationScheme="RequestMsgIDToCorrelID">
+                <destination name="primitiveServiceQueue" type="queue" create="always"/>
+                <connectionFactory name="org.apache.activemq.ActiveMQConnectionFactory" create="always">
+                    <property name="brokerURL">vm://broker</property>
+                </connectionFactory>
+                <response>
+                    <destination name="primitiveResponseQueue" type="queue" create="always"/>
+                    <connectionFactory name="org.apache.activemq.ActiveMQConnectionFactory" create="always">
+                        <property name="brokerURL">vm://broker</property>
+                    </connectionFactory>
+                </response>
+            </binding.jms>
+        </reference>
+    </component>
+
+    <component name="PrimitveService">
+        <implementation.java class="org.fabric3.binding.jms.test.primitives.PrimitiveServiceImpl"/>
+        <service name="PrimitiveService">
+            <binding.jms correlationScheme="RequestMsgIDToCorrelID" requires="sca:transactedOneWay.global">
+                <destination name="primitiveServiceQueue" type="queue" create="always"/>
+                <connectionFactory name="org.apache.activemq.ActiveMQXAConnectionFactory" create="always">
+                    <property name="brokerURL">vm://broker</property>
+                </connectionFactory>
+                <response>
+                    <destination name="primitiveResponseQueue" type="queue" create="always"/>
+                    <connectionFactory name="org.apache.activemq.ActiveMQXAConnectionFactory" create="always">
+                        <property name="brokerURL">vm://broker</property>
+                    </connectionFactory>
+                </response>
+            </binding.jms>
+        </service>
+    </component>
+
+    <!--FABRICTHREE-271-->
+    <!--<component name="AsyncTest">-->
+    <!--<f3:junit class="org.fabric3.binding.jms.test.async.AsyncServiceTest"/>-->
+    <!--<reference name="service">-->
+    <!--<binding.jms correlationScheme="RequestMsgIDToCorrelID">-->
+    <!--<destination name="asyncServiceQueue" type="queue" create="always"/>-->
+    <!--<connectionFactory name="org.apache.activemq.ActiveMQConnectionFactory" create="always">-->
+    <!--<property name="brokerURL">vm://broker</property>-->
+    <!--</connectionFactory>-->
+    <!--<response>-->
+    <!--<destination name="primitiveResponseQueue" type="queue" create="always"/>-->
+    <!--<connectionFactory name="org.apache.activemq.ActiveMQConnectionFactory" create="always">-->
+    <!--<property name="brokerURL">vm://broker</property>-->
+    <!--</connectionFactory>-->
+    <!--</response>-->
+    <!--</binding.jms>-->
+    <!--</reference>-->
+    <!--</component>-->
+
+    <!--<component name="AsyncService">-->
+    <!--<implementation.java class="org.fabric3.binding.jms.test.async.AsyncServiceImpl"/>-->
+    <!--<service name="AsyncService">-->
+    <!--<binding.jms correlationScheme="RequestMsgIDToCorrelID" requires="sca:transactedOneWay.global">-->
+    <!--<destination name="asyncServiceQueue" type="queue" create="always"/>-->
+    <!--<connectionFactory name="org.apache.activemq.ActiveMQXAConnectionFactory" create="always">-->
+    <!--<property name="brokerURL">vm://broker</property>-->
+    <!--</connectionFactory>-->
+    <!--<response>-->
+    <!--<destination name="primitiveResponseQueue" type="queue" create="always"/>-->
+    <!--<connectionFactory name="org.apache.activemq.ActiveMQXAConnectionFactory" create="always">-->
+    <!--<property name="brokerURL">vm://broker</property>-->
+    <!--</connectionFactory>-->
+    <!--</response>-->
+    <!--</binding.jms>-->
+    <!--</service>-->
+    <!--<reference name="asyncResponse" target="AsyncTest"/>-->
+    <!--</component>-->
+    <!--end FABRICTHREE-271-->
 </composite>
