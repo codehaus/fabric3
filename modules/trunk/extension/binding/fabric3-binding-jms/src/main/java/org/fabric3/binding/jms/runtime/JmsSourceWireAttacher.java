@@ -34,7 +34,7 @@ import org.fabric3.binding.jms.common.DestinationDefinition;
 import org.fabric3.binding.jms.common.JmsBindingMetadata;
 import org.fabric3.binding.jms.common.TransactionType;
 import org.fabric3.binding.jms.provision.JmsWireSourceDefinition;
-import org.fabric3.binding.jms.provision.MessageType;
+import org.fabric3.binding.jms.provision.PayloadType;
 import org.fabric3.binding.jms.runtime.host.JmsHost;
 import org.fabric3.binding.jms.runtime.lookup.connectionfactory.ConnectionFactoryStrategy;
 import org.fabric3.binding.jms.runtime.lookup.destination.DestinationStrategy;
@@ -134,7 +134,7 @@ public class JmsSourceWireAttacher implements SourceWireAttacher<JmsWireSourceDe
             callbackUri = target.getCallbackUri().toString();
         }
 
-        Map<String, MessageType> messageTypes = source.getMessageTypes();
+        Map<String, PayloadType> messageTypes = source.getPayloadTypes();
         Map<PhysicalOperationDefinition, InvocationChain> operations = wire.getInvocationChains();
 
         ResponseMessageListener messageListener =

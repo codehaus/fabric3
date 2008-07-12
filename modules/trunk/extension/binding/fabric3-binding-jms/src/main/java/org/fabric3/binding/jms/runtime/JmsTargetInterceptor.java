@@ -23,13 +23,11 @@ import javax.jms.ConnectionFactory;
 import javax.jms.Destination;
 import javax.jms.JMSException;
 import javax.jms.MessageProducer;
-import javax.jms.ObjectMessage;
 import javax.jms.Session;
-import javax.jms.TextMessage;
 
 import org.fabric3.binding.jms.common.CorrelationScheme;
 import org.fabric3.binding.jms.common.Fabric3JmsException;
-import org.fabric3.binding.jms.provision.MessageType;
+import org.fabric3.binding.jms.provision.PayloadType;
 import org.fabric3.binding.jms.runtime.helper.JmsHelper;
 import org.fabric3.spi.invocation.Message;
 import org.fabric3.spi.invocation.MessageImpl;
@@ -52,7 +50,7 @@ public class JmsTargetInterceptor implements Interceptor {
      */
     private String methodName;
 
-    private MessageType messageType;
+    private PayloadType payloadType;
     /**
      * Request destination.
      */
@@ -80,7 +78,7 @@ public class JmsTargetInterceptor implements Interceptor {
 
     /**
      * @param methodName        Method name.
-     * @param messageType       the type of JMS message to send
+     * @param payloadType       the type of JMS message to send
      * @param destination       Request destination.
      * @param connectionFactory Request connection factory.
      * @param correlationScheme Correlation scheme.
@@ -88,14 +86,14 @@ public class JmsTargetInterceptor implements Interceptor {
      * @param cl                the classloader for loading parameter types.
      */
     public JmsTargetInterceptor(String methodName,
-                                MessageType messageType,
+                                PayloadType payloadType,
                                 Destination destination,
                                 ConnectionFactory connectionFactory,
                                 CorrelationScheme correlationScheme,
                                 Fabric3MessageReceiver messageReceiver,
                                 ClassLoader cl) {
         this.methodName = methodName;
-        this.messageType = messageType;
+        this.payloadType = payloadType;
         this.destination = destination;
         this.connectionFactory = connectionFactory;
         this.correlationScheme = correlationScheme;
@@ -136,12 +134,13 @@ public class JmsTargetInterceptor implements Interceptor {
             switch (correlationScheme) {
             case None:
             case RequestCorrelIDToCorrelID:
-                throw new UnsupportedOperationException("COrrelation scheme not supported");
+                throw new UnsupportedOperationException("Correlation scheme not supported");
             case RequestMsgIDToCorrelID:
                 correlationId = jmsMessage.getJMSMessageID();
             }
             session.commit();
-            Object responseMessage = processResponse(correlationId);
+            javax.jms.Message resultMessage = messageReceiver.receive(correlationId);
+            Object responseMessage = MessageHelper.getPayload(resultMessage, payloadType);
             Message response = new MessageImpl();
             response.setBody(responseMessage);
             return response;
@@ -163,9 +162,7 @@ public class JmsTargetInterceptor implements Interceptor {
     }
 
     private javax.jms.Message createMessage(Session session, Object[] payload) throws JMSException {
-        switch (messageType) {
-        case BYTES:
-            throw new UnsupportedOperationException("Not yet implemented");
+        switch (payloadType) {
         case OBJECT:
             return session.createObjectMessage(payload);
         case STREAM:
@@ -175,24 +172,12 @@ public class JmsTargetInterceptor implements Interceptor {
                 throw new UnsupportedOperationException("Only single parameter operations are supported");
             }
             return session.createTextMessage((String) payload[0]);
+        default:
+            if (payload.length != 1) {
+                throw new AssertionError("Bytes messages must have a single parameter");
+            }
+            return MessageHelper.createBytesMessage(session, payload[0], payloadType);
         }
-        throw new AssertionError();
-    }
-
-    private Object processResponse(String correlationId) throws JMSException {
-        switch (messageType) {
-        case BYTES:
-            throw new UnsupportedOperationException("Not yet implemented");
-        case OBJECT:
-            ObjectMessage objectMessage = (ObjectMessage) messageReceiver.receive(correlationId);
-            return objectMessage.getObject();
-        case STREAM:
-            throw new UnsupportedOperationException("Not yet implemented");
-        case TEXT:
-            TextMessage textMessage = (TextMessage) messageReceiver.receive(correlationId);
-            return textMessage.getText();
-        }
-        throw new AssertionError();
     }
 
 }

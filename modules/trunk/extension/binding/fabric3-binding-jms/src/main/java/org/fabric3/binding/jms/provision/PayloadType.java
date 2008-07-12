@@ -19,10 +19,11 @@
 package org.fabric3.binding.jms.provision;
 
 /**
- * The JMS message type for bound service or reference.
+ * The payload type for bound service or reference.
  *
  * @version $Revision$ $Date$
  */
-public enum MessageType {
-    TEXT, OBJECT, STREAM, BYTES
+public enum PayloadType {
+    TEXT, OBJECT, STREAM, SHORT, INTEGER, DOUBLE, FLOAT, LONG, CHARACTER, BOOLEAN, BYTE
+
 }

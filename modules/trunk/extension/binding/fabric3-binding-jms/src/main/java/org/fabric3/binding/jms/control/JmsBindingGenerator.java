@@ -34,7 +34,7 @@ import org.fabric3.binding.jms.common.JmsBindingMetadata;
 import org.fabric3.binding.jms.common.TransactionType;
 import org.fabric3.binding.jms.provision.JmsWireSourceDefinition;
 import org.fabric3.binding.jms.provision.JmsWireTargetDefinition;
-import org.fabric3.binding.jms.provision.MessageType;
+import org.fabric3.binding.jms.provision.PayloadType;
 import org.fabric3.binding.jms.scdl.JmsBindingDefinition;
 import org.fabric3.scdl.Operation;
 import org.fabric3.scdl.ReferenceDefinition;
@@ -61,9 +61,9 @@ public class JmsBindingGenerator implements BindingGenerator<JmsWireSourceDefini
     private static final QName TRANSACTED_ONEWAY_GLOBAL = new QName(SCA_NS, "transactedOneWay.global");
     private static final QName ONEWAY = new QName(SCA_NS, "oneWay");
 
-    private MessageTypeIntrospector introspector;
+    private PayloadTypeIntrospector introspector;
 
-    public JmsBindingGenerator(@Reference MessageTypeIntrospector introspector) {
+    public JmsBindingGenerator(@Reference PayloadTypeIntrospector introspector) {
         this.introspector = introspector;
     }
 
@@ -78,9 +78,9 @@ public class JmsBindingGenerator implements BindingGenerator<JmsWireSourceDefini
         URI classloaderId = logicalBinding.getParent().getParent().getClassLoaderId();
 
         JmsBindingMetadata metadata = logicalBinding.getBinding().getMetadata();
-        Map<String, MessageType> messageTypes = processMessageTypes(serviceContract);
+        Map<String, PayloadType> payloadTypes = processPayloadTypes(serviceContract);
         URI uri = logicalBinding.getBinding().getTargetUri();
-        return new JmsWireSourceDefinition(uri, metadata, messageTypes, transactionType, oneWayOperations, classloaderId);
+        return new JmsWireSourceDefinition(uri, metadata, payloadTypes, transactionType, oneWayOperations, classloaderId);
     }
 
     public JmsWireTargetDefinition generateWireTarget(LogicalBinding<JmsBindingDefinition> logicalBinding,
@@ -96,8 +96,8 @@ public class JmsBindingGenerator implements BindingGenerator<JmsWireSourceDefini
 
         URI uri = logicalBinding.getBinding().getTargetUri();
         JmsBindingMetadata metadata = logicalBinding.getBinding().getMetadata();
-        Map<String, MessageType> messageTypes = processMessageTypes(serviceContract);
-        return new JmsWireTargetDefinition(uri, metadata, messageTypes, transactionType, oneWayOperations, classloaderId);
+        Map<String, PayloadType> payloadTypes = processPayloadTypes(serviceContract);
+        return new JmsWireTargetDefinition(uri, metadata, payloadTypes, transactionType, oneWayOperations, classloaderId);
     }
 
     /*
@@ -147,17 +147,17 @@ public class JmsBindingGenerator implements BindingGenerator<JmsWireSourceDefini
     }
 
     /**
-     * Determines the the message type to use based on the service contract.
+     * Determines the the payload type to use based on the service contract.
      *
      * @param serviceContract the service contract
-     * @return the collection of message types keyed by operation name
+     * @return the collection of payload types keyed by operation name
      * @throws JmsGenerationException if an error occurs
      */
-    private Map<String, MessageType> processMessageTypes(ServiceContract<?> serviceContract) throws JmsGenerationException {
-        Map<String, MessageType> types = new HashMap<String, MessageType>();
+    private Map<String, PayloadType> processPayloadTypes(ServiceContract<?> serviceContract) throws JmsGenerationException {
+        Map<String, PayloadType> types = new HashMap<String, PayloadType>();
         for (Operation<?> operation : serviceContract.getOperations()) {
-            MessageType messageType = introspector.introspect(operation);
-            types.put(operation.getName(), messageType);
+            PayloadType payloadType = introspector.introspect(operation);
+            types.put(operation.getName(), payloadType);
         }
         return types;
     }

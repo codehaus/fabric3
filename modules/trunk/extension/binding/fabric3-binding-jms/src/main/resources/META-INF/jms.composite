@@ -43,7 +43,7 @@
     </component>
 
     <component name="MessageTypeIntrospector">
-        <system:implementation.system class="org.fabric3.binding.jms.control.MessageTypeIntrospectorImpl"/>
+        <system:implementation.system class="org.fabric3.binding.jms.control.PayloadTypeIntrospectorImpl"/>
     </component>
 
     <!-- JMS Source Wire Attacher -->

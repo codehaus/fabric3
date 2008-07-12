@@ -35,21 +35,21 @@ public class JmsWireSourceDefinition extends PhysicalWireSourceDefinition {
     private TransactionType transactionType;
     private URI classloaderUri;
     private Set<String> oneWayOperations;
-    private Map<String, MessageType> messageTypes;
+    private Map<String, PayloadType> payloadTypes;
 
     /**
      * Constructor
      *
      * @param uri              The service URI
      * @param metadata         Metadata to be initialized.
-     * @param messageTypes     The JMS message types to send invocations with keyed by operation name
+     * @param payloadTypes     The JMS payload types keyed by operation name
      * @param transactionType  Transaction type
      * @param oneWayOperations The set of oneway operation names
      * @param classloaderUri   The classloader URI to deserialize types in
      */
     public JmsWireSourceDefinition(URI uri,
                                    JmsBindingMetadata metadata,
-                                   Map<String, MessageType> messageTypes,
+                                   Map<String, PayloadType> payloadTypes,
                                    TransactionType transactionType,
                                    Set<String> oneWayOperations,
                                    URI classloaderUri) {
@@ -57,7 +57,7 @@ public class JmsWireSourceDefinition extends PhysicalWireSourceDefinition {
         this.transactionType = transactionType;
         this.classloaderUri = classloaderUri;
         this.oneWayOperations = oneWayOperations;
-        this.messageTypes = messageTypes;
+        this.payloadTypes = payloadTypes;
         setUri(uri);
     }
 
@@ -78,12 +78,12 @@ public class JmsWireSourceDefinition extends PhysicalWireSourceDefinition {
     }
 
     /**
-     * Returns the JMS message type to send invocations over.
+     * Returns the payload type keyed by operation name
      *
-     * @return the JMS message type
+     * @return the payload type
      */
-    public Map<String, MessageType> getMessageTypes() {
-        return Collections.unmodifiableMap(messageTypes);
+    public Map<String, PayloadType> getPayloadTypes() {
+        return Collections.unmodifiableMap(payloadTypes);
     }
 
     /**

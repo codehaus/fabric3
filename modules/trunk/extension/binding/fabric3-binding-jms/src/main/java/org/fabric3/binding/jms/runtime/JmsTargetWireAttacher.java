@@ -32,7 +32,7 @@ import org.fabric3.binding.jms.common.CreateOption;
 import org.fabric3.binding.jms.common.DestinationDefinition;
 import org.fabric3.binding.jms.common.JmsBindingMetadata;
 import org.fabric3.binding.jms.provision.JmsWireTargetDefinition;
-import org.fabric3.binding.jms.provision.MessageType;
+import org.fabric3.binding.jms.provision.PayloadType;
 import org.fabric3.binding.jms.runtime.lookup.connectionfactory.ConnectionFactoryStrategy;
 import org.fabric3.binding.jms.runtime.lookup.destination.DestinationStrategy;
 import org.fabric3.spi.ObjectFactory;
@@ -134,7 +134,7 @@ public class JmsTargetWireAttacher implements TargetWireAttacher<JmsWireTargetDe
         create = destinationDefinition.getCreate();
         Destination resDestination =
                 destinationStrategies.get(create).getDestination(destinationDefinition, resCf, env);
-        Map<String, MessageType> messageTypes = targetDefinition.getMessageTypes();
+        Map<String, PayloadType> payloadTypes = targetDefinition.getPayloadTypes();
         for (Map.Entry<PhysicalOperationDefinition, InvocationChain> entry : wire.getInvocationChains().entrySet()) {
 
             PhysicalOperationDefinition op = entry.getKey();
@@ -142,9 +142,9 @@ public class JmsTargetWireAttacher implements TargetWireAttacher<JmsWireTargetDe
 
             Fabric3MessageReceiver messageReceiver = new Fabric3MessageReceiver(resDestination, resCf);
             String operationName = op.getName();
-            MessageType messageType = messageTypes.get(operationName);
+            PayloadType payloadType = payloadTypes.get(operationName);
             Interceptor interceptor = new JmsTargetInterceptor(operationName,
-                                                               messageType,
+                                                               payloadType,
                                                                reqDestination,
                                                                reqCf,
                                                                correlationScheme,

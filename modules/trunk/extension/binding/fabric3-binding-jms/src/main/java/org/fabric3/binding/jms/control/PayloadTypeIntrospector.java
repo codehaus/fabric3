@@ -18,15 +18,15 @@
  */
 package org.fabric3.binding.jms.control;
 
-import org.fabric3.binding.jms.provision.MessageType;
+import org.fabric3.binding.jms.provision.PayloadType;
 import org.fabric3.scdl.Operation;
 
 /**
- * Introspects an operation's in parameters to determine the JMS message type to use, e.g. text, object, bytes, or stream.
+ * Introspects an operation's in parameters to determine the payload type.
  *
  * @version $Revision$ $Date$
  */
-public interface MessageTypeIntrospector {
+public interface PayloadTypeIntrospector {
 
     /**
      * Performs the introspection.
@@ -35,6 +35,6 @@ public interface MessageTypeIntrospector {
      * @return the JMS message type
      * @throws JmsGenerationException if an error occurs introspecting the operation
      */
-    <T> MessageType introspect(Operation<T> operation) throws JmsGenerationException;
+    <T> PayloadType introspect(Operation<T> operation) throws JmsGenerationException;
 
 }
