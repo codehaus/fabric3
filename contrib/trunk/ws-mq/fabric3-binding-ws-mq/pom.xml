@@ -83,13 +83,13 @@
 
 	<scm>
 		<connection>
-			scm:svn:http://svn.codehaus.org/fabric3/contrib/trunk/fabric3-binding-ws-mq
+			scm:svn:http://svn.codehaus.org/fabric3/contrib/trunk/ws-mq/fabric3-binding-ws-mq
 		</connection>
 		<developerConnection>
-			scm:svn:https://svn.codehaus.org/fabric3/contrib/trunk/fabric3-binding-ws-mq
+			scm:svn:https://svn.codehaus.org/fabric3/contrib/trunk/ws-mq/fabric3-binding-ws-mq
 		</developerConnection>
 		<url>
-			http://svn.fabric3.codehaus.org/browse/fabric3/contrib/trunk/fabric3-binding-ws-mq
+			http://svn.fabric3.codehaus.org/browse/fabric3/contrib/trunk/ws-mq/fabric3-binding-ws-mq
 		</url>
 	</scm>
 

@@ -157,13 +157,13 @@
 
 	<scm>
 		<connection>
-			scm:svn:http://svn.codehaus.org/fabric3/contrib/trunk/fabric3-binding-aq
+			scm:svn:http://svn.codehaus.org/fabric3/contrib/trunk/aq/fabric3-binding-aq
 		</connection>
 		<developerConnection>
-			scm:svn:https://svn.codehaus.org/fabric3/contrib/trunk/fabric3-binding-aq
+			scm:svn:https://svn.codehaus.org/fabric3/contrib/trunk/aq/fabric3-binding-aq
 		</developerConnection>
 		<url>
-			http://svn.fabric3.codehaus.org/browse/fabric3/contrib/trunk/fabric3-binding-aq
+			http://svn.fabric3.codehaus.org/browse/fabric3/contrib/trunk/aq/fabric3-binding-aq
 		</url>
 	</scm>
 
