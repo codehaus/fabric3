@@ -19,6 +19,8 @@ package org.fabric3.binding.ws.axis2.runtime;
 import java.util.Set;
 
 import org.apache.axiom.om.OMElement;
+import org.apache.axiom.om.OMNode;
+import org.apache.axiom.soap.SOAPFaultDetail;
 import org.apache.axis2.AxisFault;
 import org.apache.axis2.Constants;
 import org.apache.axis2.addressing.EndpointReference;
@@ -114,7 +116,15 @@ public class Axis2TargetInterceptor implements Interceptor {
             return ret;
 
         } catch (AxisFault e) {
-            throw new ServiceUnavailableException("Service fault was: \n" + e.getFaultDetailElement().getFirstOMChild().toString() + "\n\n", e);
+            SOAPFaultDetail element = e.getFaultDetailElement();
+            if (element == null) {
+                throw new ServiceUnavailableException("Service fault was: \n" + e + "\n\n", e);
+            }
+            OMNode child = element.getFirstOMChild();
+            if (child == null) {
+                throw new ServiceUnavailableException("Service fault was: \n" + e + "\n\n", e);
+            }
+            throw new ServiceUnavailableException("Service fault was: \n" + child + "\n\n", e);
         } finally {
             currentThread.setContextClassLoader(oldCl);
         }
