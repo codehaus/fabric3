@@ -48,25 +48,25 @@
                <plugin>
                     <groupId>org.codehaus.fabric3</groupId>
                     <artifactId>fabric3-itest-plugin</artifactId>
-                    <version>0.5BETA2-SNAPSHOT</version>
+                    <version>0.6-SNAPSHOT</version>
                     <configuration>
-                         <runtimeVersion>0.5BETA2-SNAPSHOT</runtimeVersion>
+                         <runtimeVersion>0.6-SNAPSHOT</runtimeVersion>
                          <systemConfigDir>classes/META-INF</systemConfigDir>
                          <extensions>
                               <dependency>
                                    <groupId>org.codehaus.fabric3</groupId>
                                    <artifactId>fabric3-resource</artifactId>
-                                   <version>0.5BETA2-SNAPSHOT</version>
+                                   <version>0.6-SNAPSHOT</version>
                               </dependency>
                               <dependency>
                                    <groupId>org.codehaus.fabric3</groupId>
                                    <artifactId>fabric3-tx-jotm</artifactId>
-                                   <version>0.5BETA2-SNAPSHOT</version>
+                                   <version>0.6-SNAPSHOT</version>
                               </dependency>
                               <dependency>
                                    <groupId>org.codehaus.fabric3</groupId>
                                    <artifactId>fabric3-tx</artifactId>
-                                   <version>0.5BETA2-SNAPSHOT</version>
+                                   <version>0.6-SNAPSHOT</version>
                               </dependency>
                               <dependency>
                                    <groupId>org.codehaus.fabric3</groupId>
