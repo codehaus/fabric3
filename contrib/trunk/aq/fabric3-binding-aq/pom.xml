@@ -52,7 +52,7 @@
 		<dependency>
 			<groupId>org.codehaus.fabric3</groupId>
 			<artifactId>fabric3-spi</artifactId>
-			<version>0.5BETA2-SNAPSHOT</version>
+			<version>0.6-SNAPSHOT</version>
 		</dependency>	
 
 		<dependency>
@@ -136,7 +136,7 @@
 			<plugin>
 				<groupId>org.codehaus.fabric3</groupId>
 				<artifactId>fabric3-contribution-plugin</artifactId>
-				<version>0.5BETA2-SNAPSHOT</version>
+				<version>0.6-SNAPSHOT</version>
 				<extensions>true</extensions>
 				<configuration>
 					<mavenImports>
