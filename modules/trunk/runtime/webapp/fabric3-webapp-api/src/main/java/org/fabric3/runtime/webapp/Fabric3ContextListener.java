@@ -18,12 +18,25 @@
  */
 package org.fabric3.runtime.webapp;
 
+import static org.fabric3.runtime.webapp.Constants.APPLICATION_SCDL_PATH_DEFAULT;
+import static org.fabric3.runtime.webapp.Constants.APPLICATION_SCDL_PATH_PARAM;
+import static org.fabric3.runtime.webapp.Constants.BASE_DIR;
+import static org.fabric3.runtime.webapp.Constants.COMPONENT_PARAM;
+import static org.fabric3.runtime.webapp.Constants.COMPOSITE_NAMESPACE_PARAM;
+import static org.fabric3.runtime.webapp.Constants.COMPOSITE_PARAM;
+import static org.fabric3.runtime.webapp.Constants.DEFAULT_MANAGEMENT_DOMAIN;
+import static org.fabric3.runtime.webapp.Constants.DOMAIN_PARAM;
+import static org.fabric3.runtime.webapp.Constants.MANAGEMENT_DOMAIN_PARAM;
+import static org.fabric3.runtime.webapp.Constants.ONLINE_PARAM;
+import static org.fabric3.runtime.webapp.Constants.RUNTIME_ATTRIBUTE;
+
 import java.io.File;
 import java.net.URI;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
+
 import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
@@ -37,18 +50,7 @@ import org.fabric3.host.runtime.RuntimeLifecycleCoordinator;
 import org.fabric3.host.runtime.ScdlBootstrapper;
 import org.fabric3.host.runtime.ShutdownException;
 import org.fabric3.jmx.agent.Agent;
-import org.fabric3.jmx.agent.rmi.RmiAgent;
-import static org.fabric3.runtime.webapp.Constants.APPLICATION_SCDL_PATH_DEFAULT;
-import static org.fabric3.runtime.webapp.Constants.APPLICATION_SCDL_PATH_PARAM;
-import static org.fabric3.runtime.webapp.Constants.BASE_DIR;
-import static org.fabric3.runtime.webapp.Constants.COMPONENT_PARAM;
-import static org.fabric3.runtime.webapp.Constants.COMPOSITE_NAMESPACE_PARAM;
-import static org.fabric3.runtime.webapp.Constants.COMPOSITE_PARAM;
-import static org.fabric3.runtime.webapp.Constants.DEFAULT_MANAGEMENT_DOMAIN;
-import static org.fabric3.runtime.webapp.Constants.DOMAIN_PARAM;
-import static org.fabric3.runtime.webapp.Constants.MANAGEMENT_DOMAIN_PARAM;
-import static org.fabric3.runtime.webapp.Constants.ONLINE_PARAM;
-import static org.fabric3.runtime.webapp.Constants.RUNTIME_ATTRIBUTE;
+import org.fabric3.jmx.agent.DefaultAgent;
 
 /**
  * Launches a Fabric3 runtime in a web application, loading information from servlet context parameters. This listener manages one runtime per servlet
@@ -110,8 +112,7 @@ public class Fabric3ContextListener implements ServletContextListener {
             runtime.setJMXDomain(managementDomain);
             
             // TODO Add better host JMX support from the next release
-            agent = new RmiAgent(2000, 3000);
-            agent.start();
+            agent = new DefaultAgent();
             runtime.setMBeanServer(agent.getMBeanServer());
 
             // initiate the runtime bootstrap sequence
@@ -162,10 +163,6 @@ public class Fabric3ContextListener implements ServletContextListener {
         }
 
         try {
-
-            if (agent != null) {
-                agent.shutdown();
-            }
 
             Future<Void> future = coordinator.shutdown();
             future.get();

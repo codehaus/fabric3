@@ -31,7 +31,7 @@ import org.fabric3.host.runtime.Bootstrapper;
 import org.fabric3.host.runtime.RuntimeLifecycleCoordinator;
 import org.fabric3.host.runtime.ShutdownException;
 import org.fabric3.jmx.agent.Agent;
-import org.fabric3.jmx.agent.rmi.RmiAgent;
+import org.fabric3.jmx.agent.DefaultAgent;
 import org.fabric3.monitor.MonitorFactory;
 import org.fabric3.runtime.standalone.BootstrapHelper;
 import org.fabric3.runtime.standalone.StandaloneHostInfo;
@@ -95,7 +95,7 @@ public class Fabric3Server implements Fabric3ServerMBean {
         installDirectory = BootstrapHelper.getInstallDirectory(Fabric3Server.class);
         
         // TODO Add better host JMX support from the next release
-        agent = new RmiAgent(2000, 3000);
+        agent = new DefaultAgent();
     }
 
     /**
@@ -181,22 +181,18 @@ public class Fabric3Server implements Fabric3ServerMBean {
     }
 
     public final void run() {
-        agent.run();
     }
 
     /**
      * Shuts the server down.
      */
     public final void shutdown() {
-        agent.shutdown();
     }
 
     /**
      * Starts the server and starts the JMX agent.
      */
     private void start() {
-        agent.start();
-        agent.register(this, "fabric3:type=server,name=fabric3Server");
     }
 
     public interface ServerMonitor {

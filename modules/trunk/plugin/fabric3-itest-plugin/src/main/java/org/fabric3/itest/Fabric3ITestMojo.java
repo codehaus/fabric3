@@ -71,7 +71,7 @@ import org.fabric3.host.runtime.RuntimeLifecycleCoordinator;
 import org.fabric3.host.runtime.ScdlBootstrapper;
 import org.fabric3.host.runtime.ShutdownException;
 import org.fabric3.jmx.agent.Agent;
-import org.fabric3.jmx.agent.rmi.RmiAgent;
+import org.fabric3.jmx.agent.DefaultAgent;
 import org.fabric3.maven.runtime.CompositeActivationException;
 import org.fabric3.maven.runtime.ContextStartException;
 import org.fabric3.maven.runtime.MavenCoordinator;
@@ -392,12 +392,6 @@ public class Fabric3ITestMojo extends AbstractMojo {
             executeTests(log, testScdlURL, runtime);
         } finally {
             log.info("Stopping Fabric3 Runtime ...");
-            try {
-                agent.shutdown();
-                shutdownRuntime(coordinator);
-            } catch (Exception e) {
-                // ignore
-            }
         }
     }
 
@@ -674,8 +668,7 @@ public class Fabric3ITestMojo extends AbstractMojo {
         runtime.setJMXDomain(managementDomain);
         
         // TODO Add better host JMX support from the next release
-        agent = new RmiAgent(2000, 3000);
-        agent.start();
+        agent = new DefaultAgent();
         runtime.setMBeanServer(agent.getMBeanServer());
 
         return runtime;

@@ -34,20 +34,6 @@ public interface Agent {
      * @throws ManagementException If unable to register the object.
      */
     void register(Object instance, String name) throws ManagementException;
-
-    /**
-     * Starts the JMX server.
-     * @throws ManagementException If unable to start the server.
-     */
-    void start() throws ManagementException;
-
-    void run();
-
-    /**
-     * Shuts down the JMX server.
-     * @throws ManagementException If unable to shutdown the server.
-     */
-    void shutdown() throws ManagementException;
     
     /**
      * Gets the MBean server used by the agent.
