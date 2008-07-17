@@ -23,6 +23,7 @@ import java.net.MalformedURLException;
 import java.util.Map;
 import java.util.Properties;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Future;
 
 import org.fabric3.api.annotation.logging.Info;
@@ -53,6 +54,8 @@ import org.fabric3.runtime.standalone.StandaloneRuntime;
  */
 public class Fabric3Server implements Fabric3ServerMBean {
     private static final String JMX_DOMAIN = "fabric3.jmx";
+    private static final String MONITOR_PORT_PARAM = "fabric3.monitor.port";
+    private static final String MONITOR_KEY_PARAM = "fabric3.monitor.key";
 
     private final Agent agent;
 
@@ -76,10 +79,8 @@ public class Fabric3Server implements Fabric3ServerMBean {
      */
     public static void main(String[] args) throws Exception {
         Fabric3Server server = new Fabric3Server();
-        server.start();
         String jmxDomain = System.getProperty(JMX_DOMAIN, "standalone");
         server.startRuntime(jmxDomain);
-        server.run();
         for (String bootPath : server.bootedRuntimes.keySet()) {
             server.shutdownRuntime(bootPath);
         }
@@ -93,7 +94,7 @@ public class Fabric3Server implements Fabric3ServerMBean {
      */
     private Fabric3Server() throws MalformedURLException {
         installDirectory = BootstrapHelper.getInstallDirectory(Fabric3Server.class);
-        
+
         // TODO Add better host JMX support from the next release
         agent = new DefaultAgent();
     }
@@ -113,6 +114,19 @@ public class Fabric3Server implements Fabric3ServerMBean {
             // load properties for this runtime
             File propFile = new File(configDir, "runtime.properties");
             Properties props = BootstrapHelper.loadProperties(propFile, System.getProperties());
+
+            // load the monitor ports and keys
+            String monitorKey = props.getProperty(MONITOR_KEY_PARAM, "f3");
+            String portVal = props.getProperty(MONITOR_PORT_PARAM, "8083");
+            int monitorPort;
+            try {
+                monitorPort = Integer.parseInt(portVal);
+                if (monitorPort < 0) {
+                    throw new IllegalArgumentException("Invalid monitor port number:" + monitorPort);
+                }
+            } catch (NumberFormatException e) {
+                throw new IllegalArgumentException("Invalid monitor port", e);
+            }
 
             // create the classloaders for booting the runtime
             String bootPath = props.getProperty("fabric3.bootDir", null);
@@ -155,11 +169,19 @@ public class Fabric3Server implements Fabric3ServerMBean {
             future.get();
             bootedRuntimes.put(jmxDomain, coordinator);
             monitor.started(jmxDomain);
+            CountDownLatch latch = new CountDownLatch(1);
+            new ShutdownDaemon(monitorPort, monitorKey, latch);
+            try {
+                latch.await();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
         } catch (Exception ex) {
             if (monitor != null) {
                 // there could have been an error initializing the monitor
                 monitor.runError(ex);
-            }  
+            }
             throw new Fabric3ServerException(ex);
         }
     }
@@ -180,19 +202,10 @@ public class Fabric3Server implements Fabric3ServerMBean {
 
     }
 
-    public final void run() {
-    }
-
     /**
      * Shuts the server down.
      */
     public final void shutdown() {
-    }
-
-    /**
-     * Starts the server and starts the JMX agent.
-     */
-    private void start() {
     }
 
     public interface ServerMonitor {

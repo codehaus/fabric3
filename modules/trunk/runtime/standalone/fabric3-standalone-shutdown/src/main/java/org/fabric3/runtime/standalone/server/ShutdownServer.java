@@ -19,17 +19,17 @@
 package org.fabric3.runtime.standalone.server;
 
 import java.io.IOException;
+import java.io.OutputStream;
+import java.net.InetAddress;
+import java.net.Socket;
 import javax.management.JMException;
-import javax.management.MBeanServerConnection;
-import javax.management.ObjectName;
-import javax.management.remote.JMXServiceURL;
-import javax.management.remote.rmi.RMIConnector;
 
 /**
  * @version $Rev$ $Date$
  */
 public class ShutdownServer {
-
+    private static final String MONITOR_PORT_PARAM = "fabric3.monitor.port";
+    private static final String MONITOR_KEY_PARAM = "fabric3.monitor.key";
     /**
      * Fabric3 admin host.
      */
@@ -64,9 +64,20 @@ public class ShutdownServer {
      * @param args Commandline arguments.
      */
     public static void main(String[] args) throws Exception {
+        String monitorKey = System.getProperty(MONITOR_KEY_PARAM, "f3");
+        String portVal = System.getProperty(MONITOR_PORT_PARAM, "8083");
+        int monitorPort;
+        try {
+            monitorPort = Integer.parseInt(portVal);
+            if (monitorPort < 0) {
+                throw new IllegalArgumentException("Invalid port number:" + monitorPort);
+            }
+        } catch (NumberFormatException e) {
+            throw new IllegalArgumentException("Invalid port", e);
+        }
 
         ShutdownServer shutdownServer = new ShutdownServer();
-        shutdownServer.shutdown();
+        shutdownServer.shutdown(monitorKey, monitorPort);
 
     }
 
@@ -78,18 +89,23 @@ public class ShutdownServer {
         port = Integer.getInteger(ADMIN_PORT_PROPERTY, DEFAULT_ADMIN_PORT);
     }
 
-    /**
-     * Shuts down the server.
-     *
-     * @throws IOException
-     * @throws JMException
-     */
-    private void shutdown() throws IOException, JMException {
-        JMXServiceURL url = new JMXServiceURL("service:jmx:rmi:///jndi/rmi://" + host + ":" + port + "/server");
-        RMIConnector rmiConnector = new RMIConnector(url, null);
-        rmiConnector.connect();
-
-        MBeanServerConnection con = rmiConnector.getMBeanServerConnection();
-        con.invoke(new ObjectName("fabric3:type=server,name=fabric3Server"), "shutdown", null, null);
+    private void shutdown(String monitorKey, int monitorPort) throws IOException, JMException {
+        try {
+            Socket s = new Socket(InetAddress.getByName("127.0.0.1"), monitorPort);
+            OutputStream out = s.getOutputStream();
+            out.write((monitorKey + "\r\nstop\r\n").getBytes());
+            out.flush();
+            s.shutdownOutput();
+            s.close();
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+        }
+//        JMXServiceURL url = new JMXServiceURL("service:jmx:rmi:///jndi/rmi://" + host + ":" + port + "/server");
+//        RMIConnector rmiConnector = new RMIConnector(url, null);
+//        rmiConnector.connect();
+//
+//        MBeanServerConnection con = rmiConnector.getMBeanServerConnection();
+//        con.invoke(new ObjectName("fabric3:type=server,name=fabric3Server"), "shutdown", null, null);
     }
 }
