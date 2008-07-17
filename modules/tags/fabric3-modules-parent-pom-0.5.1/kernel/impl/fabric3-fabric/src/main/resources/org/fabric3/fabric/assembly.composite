@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ See the NOTICE file distributed with this work for information
+ regarding copyright ownership.  This file is licensed
+ to you under the Apache License, Version 2.0 (the
+ "License"); you may not use this file except in compliance
+ with the License.  You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing,
+ software distributed under the License is distributed on an
+ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ KIND, either express or implied.  See the License for the
+ specific language governing permissions and limitations
+ under the License.
+-->
+<!--
+    Default system configuration for common components.
+
+    $Rev$ $Date$
+-->
+<composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
+           xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
+           xmlns:system="http://fabric3.org/xmlns/sca/system/2.0-alpha"
+           name="assembly" targetNamespace="urn:maven:org.codehaus.fabric3:fabric3-fabric"
+           autowire="true">
+
+    <component name="logicalModelGenerator">
+        <system:implementation.system class="org.fabric3.fabric.instantiator.LogicalModelInstantiatorImpl"/>
+        <reference name="atomicComponentInstantiator" target="atomicComponentInstantiator"/>
+        <reference name="compositeComponentInstantiator" target="compositeComponentInstantiator"/>
+    </component>
+
+    <component name="atomicComponentInstantiator">
+        <system:implementation.system class="org.fabric3.fabric.instantiator.component.AtomicComponentInstantiator"/>
+    </component>
+
+    <component name="compositeComponentInstantiator">
+        <system:implementation.system class="org.fabric3.fabric.instantiator.component.CompositeComponentInstantiator"/>
+        <reference name="atomicComponentInstantiator" target="atomicComponentInstantiator"/>
+    </component>
+
+    <component name="logicalComponentManager">
+        <system:implementation.system class="org.fabric3.fabric.services.lcm.LogicalComponentManagerImpl"/>
+    </component>
+
+    <component name="wiringService">
+        <system:implementation.system class="org.fabric3.fabric.instantiator.ResolutionServiceImpl"/>
+    </component>
+
+    <component name="promotionNormalizer">
+        <system:implementation.system class="org.fabric3.fabric.instantiator.normalize.PromotionNormalizerImpl"/>
+    </component>
+
+    <component name="documentLoader">
+        <system:implementation.system class="org.fabric3.fabric.services.documentloader.DocumentLoaderImpl"/>
+    </component>
+
+    <component name="targetPromotionService">
+        <system:implementation.system class="org.fabric3.fabric.instantiator.promotion.DefaultPromotionResolutionService"/>
+    </component>
+
+    <component name="explicitTargetResolutionService">
+        <system:implementation.system class="org.fabric3.fabric.instantiator.target.ExplicitTargetResolutionService"/>
+    </component>
+
+    <component name="typeBasedAutoWireService">
+        <system:implementation.system class="org.fabric3.fabric.instantiator.target.TypeBasedAutoWireService"/>
+    </component>
+
+</composite>
