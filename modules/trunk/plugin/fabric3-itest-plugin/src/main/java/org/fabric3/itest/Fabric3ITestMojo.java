@@ -391,6 +391,11 @@ public class Fabric3ITestMojo extends AbstractMojo {
         try {
             executeTests(log, testScdlURL, runtime);
         } finally {
+            try {
+                shutdownRuntime(coordinator);
+            } catch (Exception e) {
+                // ignore
+            }
             log.info("Stopping Fabric3 Runtime ...");
         }
     }
