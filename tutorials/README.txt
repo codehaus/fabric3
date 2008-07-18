@@ -8,7 +8,13 @@ The tutorials are intended to demonstrate the capabilities of the Fabric3 runtim
 
 * BigBank Loan Application - This tutorial showcases advanced features of the Fabric3 runtime. It is intended to provide a complete, real-world application that demonstrates SCA and Fabric3 best-practices.
 
-II. Getting Started
+II. Prerequisites 
+
+* The Fabric3 standalone runtime, downloadable from http://fabric3.codehaus.org/Downloads.
+* The Fabric3 Tutorials distribution (this package)
+* The H2 database extension, downloadable from http://repository.codehaus.org/org/codehaus/fabric3/fabric3-db-h2/0.5.1/fabric3-db-h2-0.5.1.jar.
+
+III. Getting Started
 
 To get started, download the Fabric3 Standalone Runtime from http://fabric3.codehaus.org/Downloads and follow the installation directions. Maven 2.0.8 or later is also required to build the tutorials and can be downloaded from http://maven.apache.org/download.html. Once the Fabric3 runtime and Maven have been installed, build and deploy the desired application:
 
@@ -22,7 +28,10 @@ After the projects have been built, the can be deployed to the Fabric3 runtime a
 
 * If WebCalc is being deployed, copy the WebCalc war from the /target output directory to the Fabric3 /deploy directory. The runtime will write a message to the console after the jar has been deployed. The calculator UI can be accessed at http://localhost:8181/calculator/entry.html.
 
-* If BigBank is being deployed, copy the fabric3-tutorial-bigbank-0.5ALPHA2-SNAPSHOT.jar (located in /bigbank/bigbank/target) and the fabric3-tutorial-bigbank-webclient-0.5ALPHA2-SNAPSHOT.war (located in /bigbank/bigbank-webclient/target) archived to the Fabric3 /deploy directory. They can either be copied and installed together or individually. If they are copied and installed separately, the bigbank jar must be installed first, followed by the web archive since the latter depends on services provided by the former. The BigBank UI can be accessed from http://localhost:8181/lending/applicationForm.jsp.   
+* If BigBank is being deployed, do the following
+    * Install the H2 Database extension by copying it to the /user directory where the standalone runtime is installed (this was downloaded in a previous step).
+    * Install the BigBank datasource configuration by copying datasource.xml (located in /bigbank/config) to the /user directory where the standalone runtime is installed. 
+    * Copy the fabric3-tutorial-bigbank-0.5.1.jar (located in /bigbank/bigbank/target) and the fabric3-tutorial-bigbank-webclient-0.5.1.war (located in /bigbank/bigbank-webclient/target) archived to the Fabric3 /deploy directory. They can either be copied and installed together or individually. If they are copied and installed separately, the bigbank jar must be installed first, followed by the web archive since the latter depends on services provided by the former. The BigBank UI can be accessed from http://localhost:8181/lending/applicationForm.jsp.   
 
 II. Reporting Issues
 
