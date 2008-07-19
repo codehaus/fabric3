@@ -24,7 +24,7 @@
     </parent>
     <groupId>org.codehaus.fabric3</groupId>
     <artifactId>fabric3-rs</artifactId>
-    <version>0.5.2-SNAPSHOT</version>
+    <version>0.6-SNAPSHOT</version>
     <packaging>sca-contribution-jar</packaging>
     <name>Fabric3 REST</name>
     <description>Fabric3 JSR-311 REST Implementation Type Extension.</description>
@@ -40,19 +40,19 @@
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-spi</artifactId>
-            <version>0.5.2-SNAPSHOT</version>
+            <version>0.6-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-java</artifactId>
-            <version>0.5.2-SNAPSHOT</version>
+            <version>0.6-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-pojo</artifactId>
-            <version>0.5.2-SNAPSHOT</version>
+            <version>0.6-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
@@ -85,7 +85,7 @@
             <plugin>
                 <groupId>org.codehaus.fabric3</groupId>
                 <artifactId>fabric3-contribution-plugin</artifactId>
-                <version>0.5</version>
+                <version>0.6-SNAPSHOT</version>
                 <extensions>true</extensions>
                 <configuration>
                     <mavenImports>
