@@ -36,6 +36,7 @@
 		<module>kernel</module>
 		<module>plugin</module>
 		<module>runtime</module>
+                <module>features</module>
 	</modules>
 	
     <repositories>
