@@ -24,4 +24,42 @@ package org.fabric3.featureset;
  * @version $Rev: 2744 $ $Date: 2008-02-11 16:15:33 +0000 (Mon, 11 Feb 2008) $
  */
 public class Dependency extends org.apache.maven.model.Dependency {
+
+    /**
+     * Serial version UID.
+     */
+    private static final long serialVersionUID = 2603000897594439278L;
+
+    /**
+     * Implements equals based onartifactId, groupId and version.
+     */
+    @Override
+    public boolean equals(Object obj) {
+        
+        if (!(obj instanceof Dependency)) {
+            return false;
+        }
+        
+        Dependency other = (Dependency) obj;
+        return getArtifactId().equals(other.getArtifactId()) && 
+               getGroupId().equalsIgnoreCase(other.getGroupId()) && 
+               getVersion().equals(other.getVersion());
+        
+    }
+
+    /**
+     * Implements hashCode based onartifactId, groupId and version.
+     */
+    @Override
+    public int hashCode() {
+        
+        int hash = 7;
+        hash += 31 * getArtifactId().hashCode();
+        hash += 31 * getGroupId().hashCode();
+        hash += 31 * getVersion().hashCode();
+        
+        return hash;
+        
+    }
+    
 }

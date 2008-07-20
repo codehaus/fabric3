@@ -18,10 +18,28 @@
  */
 package org.fabric3.featureset;
 
+import java.io.File;
+import java.io.IOException;
+import java.util.List;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.apache.maven.artifact.Artifact;
+import org.apache.maven.artifact.factory.ArtifactFactory;
+import org.apache.maven.artifact.repository.ArtifactRepository;
+import org.apache.maven.artifact.resolver.ArtifactNotFoundException;
+import org.apache.maven.artifact.resolver.ArtifactResolutionException;
+import org.apache.maven.artifact.resolver.ArtifactResolver;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.project.MavenProject;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 /**
  * 
@@ -66,23 +84,180 @@ public class Fabric3FeatureSetMojo extends AbstractMojo {
      * @required
      */
     protected MavenProject project;
-    
+
     /**
      * @parameter
      */
     protected Dependency[] extensions;
-    
+
     /**
      * @parameter
      */
     protected Dependency[] includes;
-    
+
+    /**
+     * Used to look up Artifacts in the remote repository.
+     *
+     * @parameter expression="${component.org.apache.maven.artifact.resolver.ArtifactResolver}"
+     * @required
+     * @readonly
+     */
+    public ArtifactResolver resolver;
+
+    /**
+     * Location of the local repository.
+     *
+     * @parameter expression="${localRepository}"
+     * @readonly
+     * @required
+     */
+    public ArtifactRepository localRepository;
+
+    /**
+     * List of Remote Repositories used by the resolver
+     *
+     * @parameter expression="${project.remoteArtifactRepositories}"
+     * @readonly
+     * @required
+     */
+    public List<String> remoteRepositories;
+
+    /**
+     * Used to look up Artifacts in the remote repository.
+     *
+     * @parameter expression="${component.org.apache.maven.artifact.factory.ArtifactFactory}"
+     * @required
+     * @readonly
+     */
+    public ArtifactFactory artifactFactory;
+
+    // Feature set containing the requested extensions
+    private FeatureSet featureSet = new FeatureSet();
+
     /**
      * Generates the feature set files.
      */
     public void execute() throws MojoExecutionException, MojoFailureException {
-        // TODO Auto-generated method stub
+
+        processExtensions();
         
+        processIncludes();
+        
+        /*
+         * <featureSet>
+         *     <exension>
+         *         <artifactId></artifactId>
+         *         <groupId></groupId>
+         *         <version></version>
+         *     </extension>
+         * </featureSet>
+         * 
+         */
+        
+        featureSet.serialize(project.getFile());
+
+    }
+
+    /*
+     * Processes the included feature sets.
+     */
+    private void processIncludes() throws MojoExecutionException {
+        
+        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+        DocumentBuilder db;
+        try {
+            db = dbf.newDocumentBuilder();
+        } catch (ParserConfigurationException e) {
+            throw new MojoExecutionException(e.getMessage(), e);
+        }
+
+        for (Dependency include : includes) {
+            
+            File featureSetFile = resolve(include);
+            Document featureSetDoc;
+            
+            try {
+                featureSetDoc = db.parse(featureSetFile);
+            } catch (SAXException e) {
+                throw new MojoExecutionException(e.getMessage(), e);
+            } catch (IOException e) {
+                throw new MojoExecutionException(e.getMessage(), e);
+            }
+            
+            NodeList extensionList = featureSetDoc.getElementsByTagName("extension");
+            
+            for (int i = 0;i < extensionList.getLength();i++) {
+                
+                Element extensionElement = (Element) extensionList.item(i);
+                
+                String artifactId = extensionElement.getElementsByTagName("artifactId").item(0).getNodeValue();
+                String groupId = extensionElement.getElementsByTagName("groupId").item(0).getNodeValue();
+                String version = extensionElement.getElementsByTagName("version").item(0).getNodeValue();
+                
+                Dependency extension = new Dependency();
+                extension.setArtifactId(artifactId);
+                extension.setGroupId(groupId);
+                extension.setVersion(version);
+                
+                resolve(extension);
+                featureSet.addExtension(extension);
+                
+            }
+        }
+        
+    }
+
+    /*
+     * Processes the requested extensions. 
+     */
+    private void processExtensions() throws MojoExecutionException {
+        for (Dependency extension : extensions) {
+            resolve(extension);
+            featureSet.addExtension(extension);
+        }
+    }
+
+    /*
+     * Resolves the depnednecy to anartifact file in the repository.
+     */
+    private File resolve(Dependency dep) throws MojoExecutionException {
+
+        if (dep.getVersion() == null) {
+            resolveDependencyVersion(dep);
+        }
+
+        Artifact artifact = createArtifact(dep);
+        try {
+            resolver.resolve(artifact, remoteRepositories, localRepository);
+            return artifact.getFile();
+        } catch (ArtifactResolutionException e) {
+            throw new MojoExecutionException(e.getMessage(), e);
+        } catch (ArtifactNotFoundException e) {
+            throw new MojoExecutionException(e.getMessage(), e);
+        }
+    }
+
+    /*
+     * Creates the artifact from the dependency.
+     */
+    private Artifact createArtifact(Dependency dep) {
+        return artifactFactory.createArtifact(dep.getGroupId(), dep.getArtifactId(), dep.getVersion(), Artifact.SCOPE_RUNTIME, dep.getType());
+    }
+
+    /*
+     * Resolves the dependency version, if the version is not specified.
+     */
+    @SuppressWarnings("unchecked")
+    private void resolveDependencyVersion(Dependency dep) {
+
+        List<org.apache.maven.model.Dependency> dependencies = project.getDependencyManagement().getDependencies();
+        for (org.apache.maven.model.Dependency dependecy : dependencies) {
+            if (dependecy.getGroupId().equals(dep.getGroupId()) && dependecy.getArtifactId().equals(dep.getArtifactId())) {
+                dep.setVersion(dependecy.getVersion());
+
+            }
+        }
+
     }
 
 }
