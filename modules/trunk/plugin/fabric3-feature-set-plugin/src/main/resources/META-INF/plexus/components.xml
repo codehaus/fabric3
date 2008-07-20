@@ -19,10 +19,10 @@
     <components>
         <component>
             <role>org.apache.maven.artifact.handler.ArtifactHandler</role>
-            <role-hint>feature-set</role-hint>
+            <role-hint>f3-feature-set</role-hint>
             <implementation>org.apache.maven.artifact.handler.DefaultArtifactHandler</implementation>
             <configuration>
-                <type>feature-set</type>
+                <type>f3-feature-set</type>
                 <extension>xml</extension>
                 <includesDependencies>true</includesDependencies>
                 <language>java</language>
@@ -30,10 +30,11 @@
         </component>
         <component>
             <role>org.apache.maven.lifecycle.mapping.LifecycleMapping</role>
-            <role-hint>feature-set</role-hint>
+            <role-hint>f3-feature-set</role-hint>
             <implementation>org.apache.maven.lifecycle.mapping.DefaultLifecycleMapping</implementation>
             <configuration>
                 <phases>
+                    <package>org.codehaus.fabric3:fabric3-feature-set-plugin:package</package>
                     <install>org.apache.maven.plugins:maven-install-plugin:install</install>
                     <deploy>org.apache.maven.plugins:maven-deploy-plugin:deploy</deploy>
                 </phases>

@@ -19,6 +19,7 @@
 package org.fabric3.featureset;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 
@@ -74,6 +75,8 @@ import org.xml.sax.SAXException;
  * </pre>
  *
  * @version $Revision$ $Date$
+ * @goal package
+ * @phase package
  */
 public class Fabric3FeatureSetMojo extends AbstractMojo {
 
@@ -89,6 +92,14 @@ public class Fabric3FeatureSetMojo extends AbstractMojo {
      * @parameter
      */
     protected Dependency[] extensions;
+
+    /**
+     * Build output directory.
+     *
+     * @parameter expression="${project.build.directory}"
+     * @required
+     */
+    protected File outputDirectory;
 
     /**
      * @parameter
@@ -138,23 +149,31 @@ public class Fabric3FeatureSetMojo extends AbstractMojo {
      * Generates the feature set files.
      */
     public void execute() throws MojoExecutionException, MojoFailureException {
+        
+        String fileName = project.getArtifactId() + "-" + project.getVersion() + ".xml";
+        File file = new File(outputDirectory, fileName);
+        try {
+            outputDirectory.mkdirs();
+            file.createNewFile();
+        } catch (IOException e) {
+            throw new MojoExecutionException(e.getMessage(), e);
+        }
+        
+        if (extensions == null && includes == null) {
+            throw new MojoExecutionException("Extensions or includes should be specified");
+        }
 
         processExtensions();
         
         processIncludes();
         
-        /*
-         * <featureSet>
-         *     <exension>
-         *         <artifactId></artifactId>
-         *         <groupId></groupId>
-         *         <version></version>
-         *     </extension>
-         * </featureSet>
-         * 
-         */
+        try {
+            featureSet.serialize(file);
+        } catch (FileNotFoundException e) {
+            throw new MojoExecutionException(e.getMessage(), e);
+        }
         
-        featureSet.serialize(project.getFile());
+        project.getArtifact().setFile(file);
 
     }
 
@@ -162,6 +181,10 @@ public class Fabric3FeatureSetMojo extends AbstractMojo {
      * Processes the included feature sets.
      */
     private void processIncludes() throws MojoExecutionException {
+        
+        if (includes == null) {
+            return;
+        }
         
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         DocumentBuilder db;
@@ -211,10 +234,16 @@ public class Fabric3FeatureSetMojo extends AbstractMojo {
      * Processes the requested extensions. 
      */
     private void processExtensions() throws MojoExecutionException {
+        
+        if (extensions == null) {
+            return;
+        }
+        
         for (Dependency extension : extensions) {
             resolve(extension);
             featureSet.addExtension(extension);
         }
+        
     }
 
     /*
