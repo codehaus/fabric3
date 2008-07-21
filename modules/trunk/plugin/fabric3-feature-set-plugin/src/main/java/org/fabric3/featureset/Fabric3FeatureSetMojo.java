@@ -213,14 +213,16 @@ public class Fabric3FeatureSetMojo extends AbstractMojo {
                 
                 Element extensionElement = (Element) extensionList.item(i);
                 
-                String artifactId = extensionElement.getElementsByTagName("artifactId").item(0).getNodeValue();
-                String groupId = extensionElement.getElementsByTagName("groupId").item(0).getNodeValue();
-                String version = extensionElement.getElementsByTagName("version").item(0).getNodeValue();
+                Element artifactIdElement = (Element) extensionElement.getElementsByTagName("artifactId").item(0);
+                Element groupIdElement = (Element) extensionElement.getElementsByTagName("groupId").item(0);
+                Element versionElement = (Element) extensionElement.getElementsByTagName("version").item(0);
                 
                 Dependency extension = new Dependency();
-                extension.setArtifactId(artifactId);
-                extension.setGroupId(groupId);
-                extension.setVersion(version);
+                extension.setArtifactId(artifactIdElement.getTextContent());
+                extension.setGroupId(groupIdElement.getTextContent());
+                extension.setVersion(versionElement.getTextContent());
+                
+                getLog().info("Included extension " + extension);
                 
                 resolve(extension);
                 featureSet.addExtension(extension);
