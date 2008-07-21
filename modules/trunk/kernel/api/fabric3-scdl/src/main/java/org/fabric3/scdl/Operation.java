@@ -33,6 +33,7 @@ public class Operation<T> extends AbstractPolicyAware {
     public static final int CONVERSATION_CONTINUE = 1;
     public static final int CONVERSATION_END = 2;
 
+    private static final long serialVersionUID = 5279880534105654066L;
     private final String name;
     private DataType<T> outputType;
     private DataType<List<DataType<T>>> inputType;

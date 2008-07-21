@@ -30,6 +30,7 @@ import org.fabric3.spi.Constants;
  * @version $Revision$ $Date$
  */
 public class WebArtifactImplementation extends Implementation<PojoComponentType> {
+    private static final long serialVersionUID = -5415465119697665067L;
     public static final QName QNAME = new QName(Constants.FABRIC3_NS, "webArtifact");
 
     public QName getType() {

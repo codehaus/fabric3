@@ -30,6 +30,7 @@ import java.util.Map;
  * @version $Rev$ $Date$
  */
 public class Signature extends ModelObject {
+    private static final long serialVersionUID = 4851321624672183132L;
     private static final Map<String, Class<?>> PRIMITIVES_TYPES;
 
     static {

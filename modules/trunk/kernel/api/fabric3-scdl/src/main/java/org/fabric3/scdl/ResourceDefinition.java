@@ -24,11 +24,12 @@ package org.fabric3.scdl;
  * @version $Rev$ $Date$
  */
 public class ResourceDefinition extends ModelObject {
+    private static final long serialVersionUID = 4241666632750146304L;
 
     private String name;
     private boolean optional;
     private ServiceContract<?> serviceContract;
-    
+
     public ResourceDefinition(String name, ServiceContract<?> serviceContract, boolean optional) {
         this.name = name;
         this.serviceContract = serviceContract;

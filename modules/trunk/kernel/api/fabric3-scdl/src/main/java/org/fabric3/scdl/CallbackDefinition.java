@@ -24,6 +24,7 @@ package org.fabric3.scdl;
  * @version $Rev: 1450 $ $Date: 2007-10-04 12:03:56 -0700 (Thu, 04 Oct 2007) $
  */
 public class CallbackDefinition extends ModelObject {
+    private static final long serialVersionUID = -1845071329121684755L;
 
     private String name;
     private ServiceContract<?> serviceContract;

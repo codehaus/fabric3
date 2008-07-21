@@ -26,6 +26,7 @@ import org.fabric3.scdl.validation.MissingPromotion;
  * @version $Rev$ $Date$
  */
 public class CompositeService extends ServiceDefinition {
+    private static final long serialVersionUID = 7831894579780963064L;
     private URI promote;
 
     /**

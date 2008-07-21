@@ -22,9 +22,6 @@ package org.fabric3.binding.jms.common;
  * ModelObject represents binding.jms\operationProperties.
  */
 public class OperationPropertiesDefinition extends PropertyAwareObject {
-    /**
-     *
-     */
     private static final long serialVersionUID = -1325680761205311178L;
     private String name;
     private String nativeOperation;

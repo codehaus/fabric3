@@ -27,6 +27,7 @@ import org.fabric3.scdl.Implementation;
  * @version $Rev$ $Date$
  */
 public class GroovyImplementation extends Implementation<PojoComponentType> {
+    private static final long serialVersionUID = -8092204063300139457L;
     public static final QName IMPLEMENTATION_GROOVY = new QName("http://www.fabric3.org/xmlns/groovy/1.0", "groovy");
 
     private String scriptName;

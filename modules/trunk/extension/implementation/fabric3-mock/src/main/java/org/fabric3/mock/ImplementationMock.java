@@ -29,11 +29,12 @@ import org.fabric3.spi.Constants;
  * @version $Revision$ $Date$
  */
 public class ImplementationMock extends Implementation<MockComponentType> {
-    
+    private static final long serialVersionUID = -3519206465795353416L;
+
     static final QName IMPLEMENTATION_MOCK = new QName(Constants.FABRIC3_NS, "implementation.mock");
     
     private final List<String> mockedInterfaces;
-    
+
     /**
      * Initializes the mocked interfaces.
      * 

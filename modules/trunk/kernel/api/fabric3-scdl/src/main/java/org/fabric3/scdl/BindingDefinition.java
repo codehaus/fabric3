@@ -28,7 +28,8 @@ import javax.xml.namespace.QName;
  * @version $Rev$ $Date$
  */
 public abstract class BindingDefinition extends AbstractPolicyAware {
-    
+    private static final long serialVersionUID = 8780407747984243865L;
+
     private URI targetUri;
     private QName type;
 

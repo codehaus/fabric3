@@ -29,6 +29,7 @@ import org.osoa.sca.Conversation;
  * @param <T> the type of identifier used to identify instances of this scope
  */
 public class Scope<T> extends ModelObject {
+    private static final long serialVersionUID = -5300929173662672089L;
     public static final Scope<Object> STATELESS = new Scope<Object>("STATELESS", Object.class);
     public static final Scope<Thread> REQUEST = new Scope<Thread>("REQUEST", Thread.class);
     public static final Scope<Conversation> CONVERSATION = new Scope<Conversation>("CONVERSATION", Conversation.class);

@@ -28,6 +28,7 @@ import org.w3c.dom.Document;
  * @version $Rev$ $Date$
  */
 public class Property extends ModelObject {
+    private static final long serialVersionUID = -1930360315004829917L;
     private String name;
     private boolean many;
     private boolean required;

@@ -30,6 +30,7 @@ import org.fabric3.spi.Constants;
  * @version $Rev$ $Date$
  */
 public class SystemImplementation extends Implementation<PojoComponentType> {
+    private static final long serialVersionUID = -3698947089871597184L;
     public static final QName IMPLEMENTATION_SYSTEM = new QName(Constants.FABRIC3_SYSTEM_NS, "implementation.system");
     private String implementationClass;
 

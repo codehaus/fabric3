@@ -43,6 +43,7 @@ public abstract class AbstractComponentType<S extends ServiceDefinition,
         P extends Property,
         RD extends ResourceDefinition>
         extends ModelObject {
+    private static final long serialVersionUID = 5302580019263119837L;
     private String scope;
     private int initLevel;
     private long maxAge;

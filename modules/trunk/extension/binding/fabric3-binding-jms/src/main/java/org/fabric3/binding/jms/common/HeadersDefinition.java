@@ -23,10 +23,6 @@ package org.fabric3.binding.jms.common;
  * binding.jms\operationProperties\headers.
  */
 public class HeadersDefinition extends PropertyAwareObject {
-
-    /**
-     *
-     */
     private static final long serialVersionUID = 831415808031924363L;
     private String jMSType;
     private String jMSCorrelationId;

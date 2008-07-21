@@ -29,7 +29,8 @@ import org.fabric3.scdl.ServiceContract;
  * @version $Revsion$ $Date$
  */
 public class WsdlContract extends ServiceContract {
-    
+    private static final long serialVersionUID = 8084985972954894699L;
+
     /**
      * QName for the port type/interface.
      */

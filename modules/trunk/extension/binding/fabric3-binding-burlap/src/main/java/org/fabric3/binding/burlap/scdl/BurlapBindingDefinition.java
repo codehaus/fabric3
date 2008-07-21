@@ -27,7 +27,8 @@ import org.fabric3.scdl.BindingDefinition;
  * @version $Revision$ $Date$
  */
 public class BurlapBindingDefinition extends BindingDefinition {
-    
+    private static final long serialVersionUID = 9051452184163076358L;
+
     public BurlapBindingDefinition(URI targetUri) {
         super(targetUri, BurlapBindingLoader.BINDING_QNAME);
     }

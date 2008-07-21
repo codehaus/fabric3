@@ -28,7 +28,8 @@ import javax.xml.namespace.QName;
  * @version $Revision$ $Date$
  */
 public class BindingType extends AbstractType {
-    
+    private static final long serialVersionUID = 6187269257530837534L;
+
     /**
      * @param name Name of the binding type.
      * @param alwaysProvide Intents this binding always provide.

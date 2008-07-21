@@ -28,6 +28,7 @@ import org.fabric3.scdl.InjectionSite;
  * @version $Revision$ $Date$
  */
 public class WebContextInjectionSite extends InjectionSite {
+    private static final long serialVersionUID = 8530588154179239645L;
     private ContextType contextType;
 
     public static enum ContextType {

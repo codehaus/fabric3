@@ -31,6 +31,7 @@ import org.w3c.dom.Document;
  * @version $Rev$ $Date$
  */
 public class PropertyValue extends ModelObject {
+    private static final long serialVersionUID = -1638553201072873854L;
     private String name;
     private String source;
     private URI file;

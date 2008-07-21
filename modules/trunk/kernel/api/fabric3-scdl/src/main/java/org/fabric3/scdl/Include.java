@@ -27,6 +27,7 @@ import javax.xml.namespace.QName;
  * @version $Rev$ $Date$
  */
 public class Include extends ModelObject {
+    private static final long serialVersionUID = 3982129607792011105L;
     private QName name;
     private URL scdlLocation;
     private Composite included;

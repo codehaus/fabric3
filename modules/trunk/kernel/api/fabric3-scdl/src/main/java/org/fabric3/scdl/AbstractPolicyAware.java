@@ -29,6 +29,7 @@ import javax.xml.namespace.QName;
  * @version $Revision$ $Date$
  */
 public abstract class AbstractPolicyAware extends ModelObject implements PolicyAware {
+    private static final long serialVersionUID = -3494285576822641528L;
 
     private Set<QName> intents = new LinkedHashSet<QName>();
     private Set<QName> policySets = new LinkedHashSet<QName>();

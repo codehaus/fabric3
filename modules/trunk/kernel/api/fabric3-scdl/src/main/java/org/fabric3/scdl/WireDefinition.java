@@ -26,6 +26,7 @@ import java.net.URI;
  * @version $Rev$ $Date$
  */
 public class WireDefinition extends ModelObject {
+    private static final long serialVersionUID = -2310313135279527903L;
     private final URI source;
     private final URI target;
 

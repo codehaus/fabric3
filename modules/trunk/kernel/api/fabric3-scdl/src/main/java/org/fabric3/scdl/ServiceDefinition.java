@@ -28,6 +28,7 @@ import java.util.List;
  * @version $Rev$ $Date$
  */
 public class ServiceDefinition extends AbstractPolicyAware {
+    private static final long serialVersionUID = -3331868180749278028L;
     private String name;
     private ServiceContract<?> serviceContract;
     private boolean management;

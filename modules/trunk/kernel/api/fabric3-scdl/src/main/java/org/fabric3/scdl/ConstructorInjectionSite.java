@@ -23,6 +23,7 @@ import java.lang.reflect.Constructor;
  * @version $Rev$ $Date$
  */
 public class ConstructorInjectionSite extends InjectionSite {
+    private static final long serialVersionUID = -6543986170145816234L;
     private Signature signature;
     private int param;
 

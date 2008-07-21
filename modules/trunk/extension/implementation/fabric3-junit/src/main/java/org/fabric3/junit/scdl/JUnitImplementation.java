@@ -25,10 +25,11 @@ import org.fabric3.scdl.Implementation;
 import org.fabric3.spi.Constants;
 
 /**
- * @version $Rev: 1837 $ $Date: 2007-11-06 12:42:26 +0000 (Tue, 06 Nov 2007) $
+ * @version $Rev$ $Date$
  */
 public class JUnitImplementation extends Implementation<PojoComponentType> {
     public static final QName IMPLEMENTATION_JUNIT = new QName(Constants.FABRIC3_NS, "junit");
+    private static final long serialVersionUID = -5048471724313487914L;
     private String implementationClass;
 
     /**

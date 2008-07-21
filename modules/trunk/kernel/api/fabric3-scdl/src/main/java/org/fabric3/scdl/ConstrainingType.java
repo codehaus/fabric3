@@ -23,6 +23,7 @@ import javax.xml.namespace.QName;
  * @version $Rev$ $Date$
  */
 public class ConstrainingType extends AbstractComponentType<ServiceDefinition, ReferenceDefinition, Property, ResourceDefinition> {
+    private static final long serialVersionUID = 4415016987970558995L;
     private final QName name;
     private final List<QName> requires;
 

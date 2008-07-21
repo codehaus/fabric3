@@ -24,6 +24,8 @@ import org.fabric3.scdl.BindingDefinition;
  * @version $Rev$ $Date$
  */
 public class TestBindingDefinition extends BindingDefinition {
+    private static final long serialVersionUID = 2529090404017606258L;
+
     public TestBindingDefinition(URI targetUri) {
         super(targetUri, TestBindingLoader.BINDING_QNAME);
     }

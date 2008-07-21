@@ -32,6 +32,7 @@ import org.fabric3.scdl.InjectableAttribute;
  * @version $Revision$ $Date$
  */
 public class WebComponentType extends ComponentType {
+    private static final long serialVersionUID = 9213093177241637932L;
     private final Map<String, Map<InjectionSite, InjectableAttribute>> sites = new HashMap<String, Map<InjectionSite, InjectableAttribute>>();
 
     /**

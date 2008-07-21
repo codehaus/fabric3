@@ -24,10 +24,6 @@ import org.fabric3.scdl.ModelObject;
  * @version $Revision$ $Date$
  */
 public class ResponseDefinition extends ModelObject {
-
-    /**
-     *
-     */
     private static final long serialVersionUID = -3413442748842988653L;
 
     /**
@@ -40,30 +36,18 @@ public class ResponseDefinition extends ModelObject {
      */
     private ConnectionFactoryDefinition connectionFactory;
 
-    /**
-     * @see org.fabric3.binding.jms.model.ConnectionFactoryAware#getConnectionFactory()
-     */
     public ConnectionFactoryDefinition getConnectionFactory() {
         return connectionFactory;
     }
 
-    /**
-     * @see org.fabric3.binding.jms.model.ConnectionFactoryAware#setConnectionFactory(org.fabric3.binding.jms.common.ConnectionFactoryDefinition)
-     */
     public void setConnectionFactory(ConnectionFactoryDefinition connectionFactory) {
         this.connectionFactory = connectionFactory;
     }
 
-    /**
-     * @see org.fabric3.binding.jms.model.DestinationAware#getDestination()
-     */
     public DestinationDefinition getDestination() {
         return destination;
     }
 
-    /**
-     * @see org.fabric3.binding.jms.model.DestinationAware#setDestination(org.fabric3.binding.jms.common.DestinationDefinition)
-     */
     public void setDestination(DestinationDefinition destination) {
         this.destination = destination;
     }

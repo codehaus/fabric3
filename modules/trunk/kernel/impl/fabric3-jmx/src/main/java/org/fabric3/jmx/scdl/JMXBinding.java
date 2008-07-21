@@ -24,6 +24,7 @@ import org.fabric3.scdl.BindingDefinition;
  * @version $Rev$ $Date$
  */
 public class JMXBinding extends BindingDefinition {
+    private static final long serialVersionUID = -8354441354679603299L;
     private static final QName TYPE = new QName("urn:maven:org.codehaus.fabric3:fabric3-system", "management");
 
     public JMXBinding() {

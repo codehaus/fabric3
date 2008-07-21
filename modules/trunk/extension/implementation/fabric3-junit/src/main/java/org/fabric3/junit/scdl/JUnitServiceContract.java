@@ -28,6 +28,7 @@ import org.fabric3.scdl.ServiceContract;
  * @version $Rev$ $Date$
  */
 public class JUnitServiceContract extends ServiceContract<Type> {
+    private static final long serialVersionUID = -2402977196426881023L;
 
     public JUnitServiceContract(List<Operation<Type>> operations) {
         setOperations(operations);

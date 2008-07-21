@@ -25,6 +25,7 @@ import org.fabric3.scdl.validation.MissingPromotion;
  * @version $Rev$ $Date$
  */
 public class CompositeReference extends ReferenceDefinition {
+    private static final long serialVersionUID = 5387987439912912994L;
 
     private final List<URI> promotedUris;
 

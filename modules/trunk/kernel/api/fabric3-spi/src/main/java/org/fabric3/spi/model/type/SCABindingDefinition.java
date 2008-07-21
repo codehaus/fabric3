@@ -27,9 +27,10 @@ import org.osoa.sca.Constants;
  * @version $Rev$ $Date$
  */
 public final class SCABindingDefinition extends BindingDefinition {
-    
+    private static final long serialVersionUID = 8531584350454081265L;
+
     public static final SCABindingDefinition INSTANCE = new SCABindingDefinition();
-    
+
     private SCABindingDefinition() {
         super(new QName(Constants.SCA_NS, "binding.sca"));
     }

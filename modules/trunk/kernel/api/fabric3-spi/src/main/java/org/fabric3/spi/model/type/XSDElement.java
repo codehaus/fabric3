@@ -25,6 +25,8 @@ import javax.xml.namespace.QName;
  * @version $Rev$ $Date$
  */
 public class XSDElement extends XSDType {
+    private static final long serialVersionUID = -2602951884349165087L;
+
     public XSDElement(Type physical, QName logical) {
         super(physical, logical);
     }

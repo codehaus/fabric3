@@ -24,22 +24,24 @@ import java.util.Map;
 
 import org.fabric3.scdl.ModelObject;
 
-public abstract class PropertyAwareObject extends ModelObject{
+public abstract class PropertyAwareObject extends ModelObject {
+    private static final long serialVersionUID = 7862305926561642783L;
+    private Map<String, String> properties = null;
+
     /**
-     * Properties.
+     * Sets the properties used to create the administered object.
+     *
+     * @param properties used to create the administered object.
      */
-    private Map<String,String> properties = null;
-    /**
-     * @param Properties used to create the administered object.
-     */
-    public void setProperties( Map<String,String> properties) {
+    public void setProperties(Map<String, String> properties) {
         ensurePropertiesNotNull();
         this.properties.putAll(properties);
     }
 
     /**
-     * Add a Property
-     * @param name Name of the property.
+     * Add a Property.
+     *
+     * @param name  Name of the property.
      * @param value Value of the property.
      */
     public void addProperty(String name, String value) {
@@ -54,12 +56,14 @@ public abstract class PropertyAwareObject extends ModelObject{
     }
 
     /**
+     * Returns properties used to create the administered object.
+     *
      * @return Properties used to create the administered object.
      */
-    public  Map<String,String> getProperties() {
-        if(this.properties!=null){
+    public Map<String, String> getProperties() {
+        if (this.properties != null) {
             return Collections.unmodifiableMap(properties);
-        }else{
+        } else {
             return Collections.emptyMap();
         }
     }

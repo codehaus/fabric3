@@ -25,6 +25,7 @@ import javax.xml.namespace.QName;
  * @version $Rev$ $Date$
  */
 public class XSDSimpleType extends XSDType {
+    private static final long serialVersionUID = 1482637673051984949L;
     public static final QName STRING = new QName(XSD_NS, "string");
 
     public XSDSimpleType(Type physical, QName logical) {

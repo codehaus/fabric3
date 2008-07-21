@@ -25,6 +25,7 @@ import java.util.Map;
  * @version $Rev$ $Date$
  */
 public class InjectingComponentType extends AbstractComponentType<ServiceDefinition, ReferenceDefinition, Property, ResourceDefinition> {
+    private static final long serialVersionUID = -2602867276842414240L;
 
     private final Map<InjectionSite, InjectableAttribute> injectionSites = new HashMap<InjectionSite, InjectableAttribute>();
     private Signature constructor;

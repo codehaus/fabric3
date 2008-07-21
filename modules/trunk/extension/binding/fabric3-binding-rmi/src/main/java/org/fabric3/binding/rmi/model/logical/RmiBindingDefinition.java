@@ -23,6 +23,7 @@ import java.net.URI;
 import org.fabric3.scdl.BindingDefinition;
 
 public class RmiBindingDefinition extends BindingDefinition {
+    private static final long serialVersionUID = 5023496186591172203L;
 
     private static final boolean DEBUG = false;
     private String name;

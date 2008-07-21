@@ -24,6 +24,8 @@ import org.fabric3.scdl.ResourceDefinition;
  * @version $Rev$ $Date$
  */
 public class MonitorResource extends ResourceDefinition {
+    private static final long serialVersionUID = -6723752212878850748L;
+
     public MonitorResource(String name, boolean optional, ServiceContract<?> serviceContract) {
         super(name, serviceContract, optional);
     }

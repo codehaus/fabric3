@@ -29,10 +29,11 @@ import javax.xml.namespace.QName;
  * @version $Revision$ $Date$
  */
 public class AbstractType extends AbstractDefinition {
+    private static final long serialVersionUID = -2910491671004468756L;
 
     private final Set<QName> alwaysProvide;
     private final Set<QName> mayProvide;
-    
+
     /**
      * @param name Name of the binding type.
      * @param alwaysProvide Intents this binding always provide.

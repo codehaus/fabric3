@@ -65,9 +65,8 @@ public class DefaultPolicyInfosetBuilderTest extends TestCase {
         TestComponentType componentType = new TestComponentType();
         TestImplementation implementation = new TestImplementation(componentType);
         ComponentDefinition<TestImplementation> componentDefinition = new ComponentDefinition<TestImplementation>("testComponent", implementation);
-        LogicalComponent<TestImplementation> logicalComponent = new LogicalComponent<TestImplementation>(null, null, componentDefinition, null);
-        
-        return logicalComponent;
+
+        return new LogicalComponent<TestImplementation>(null, null, componentDefinition, null);
     }
     
     static LogicalBinding<?> getTestBinding() {
@@ -88,16 +87,19 @@ public class DefaultPolicyInfosetBuilderTest extends TestCase {
         
     }
     
+    @SuppressWarnings({"serial"})
     private static class TestBinidingDefinition extends BindingDefinition {
         private TestBinidingDefinition() {
             super(new QName("binding.test"));
         }
     }
     
+    @SuppressWarnings({"serial"})
     private static class TestComponentType extends AbstractComponentType<ServiceDefinition, ReferenceDefinition, Property, ResourceDefinition> {
         
     }
     
+    @SuppressWarnings({"serial"})
     private static class TestImplementation extends Implementation<TestComponentType> {
         
         private TestImplementation(TestComponentType componentType) {

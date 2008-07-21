@@ -29,9 +29,10 @@ import org.springframework.core.io.Resource;
 import org.fabric3.scdl.Implementation;
 
 /**
- * @version
+ *
  */
 public class SpringImplementation extends Implementation<SpringComponentType> {
+    private static final long serialVersionUID = 4308461674679003314L;
     public static final QName IMPLEMENTATION_SPRING = new QName(Constants.SCA_NS, "implementation.spring");
 
     // The location attribute which points to the Spring application-context XML file

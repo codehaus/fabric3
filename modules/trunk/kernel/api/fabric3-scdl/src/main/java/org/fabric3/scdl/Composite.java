@@ -34,6 +34,7 @@ import javax.xml.namespace.QName;
  * @version $Rev$ $Date$
  */
 public class Composite extends AbstractComponentType<CompositeService, CompositeReference, Property, ResourceDefinition> implements PolicyAware {
+    private static final long serialVersionUID = -3126069884608566611L;
 
     private final QName name;
     private URI contributionUri;

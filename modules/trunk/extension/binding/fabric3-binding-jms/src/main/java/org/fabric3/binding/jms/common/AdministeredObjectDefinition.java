@@ -25,10 +25,6 @@ package org.fabric3.binding.jms.common;
  * @version $Revision$ $Date$
  */
 public class AdministeredObjectDefinition extends PropertyAwareObject {
-
-    /**
-     *
-     */
     private static final long serialVersionUID = 3952595885616542808L;
 
     /**

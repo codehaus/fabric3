@@ -31,6 +31,7 @@ import org.fabric3.scdl.ServiceContract;
  * @version $Rev$ $Date$
  */
 public class JavaServiceContract extends ServiceContract<Type> {
+    private static final long serialVersionUID = -7360275776965712638L;
     // NOTE: this class cannot reference the actual Java class it represents as #isAssignableFrom may be performed
     // accross classloaders. This class may also be deserialized as part of a domain assembly in a context where the
     // Java class may not be present on the classpath.

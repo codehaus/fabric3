@@ -26,7 +26,8 @@ package org.fabric3.scdl;
  * @version $Revision$ $Date$
  */
 public class OperationDefinition extends AbstractPolicyAware {
-    
+    private static final long serialVersionUID = 3429988354453068399L;
+
     private String name;
 
     /**

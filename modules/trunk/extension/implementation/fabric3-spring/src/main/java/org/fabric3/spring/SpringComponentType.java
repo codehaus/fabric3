@@ -33,6 +33,7 @@ import org.fabric3.scdl.ServiceDefinition;
  * @version $$Rev$$ $$Date$$
  */
 public class SpringComponentType extends AbstractComponentType<ServiceDefinition, ReferenceDefinition, Property, ResourceDefinition> {
+    private static final long serialVersionUID = -2086494614136103280L;
 
     // override super class's object since we need to change introspected
     // serviceName to declared serviceName, which is equal to beanId

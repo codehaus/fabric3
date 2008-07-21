@@ -32,8 +32,8 @@ import java.lang.reflect.Type;
  * Class)
  */
 public class DataType<L> extends ModelObject {
+    private static final long serialVersionUID = 1848442023940979720L;
     private final Type physical;
-
     private final L logical;
 
     /**

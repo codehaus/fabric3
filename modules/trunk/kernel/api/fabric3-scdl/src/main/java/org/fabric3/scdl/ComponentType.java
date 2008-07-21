@@ -22,6 +22,7 @@ import javax.xml.namespace.QName;
  * @version $Rev$ $Date$
  */
 public class ComponentType extends AbstractComponentType<ServiceDefinition, ReferenceDefinition, Property, ResourceDefinition> {
+    private static final long serialVersionUID = 1431781466875898050L;
     private QName constrainingType;
 
     /**

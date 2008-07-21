@@ -27,6 +27,7 @@ import java.util.List;
  * @version $Rev$ $Date$
  */
 public abstract class ServiceContract<T> extends ModelObject {
+    private static final long serialVersionUID = 7930416351019873131L;
     protected boolean conversational;
     protected boolean remotable;
     protected String interfaceName;

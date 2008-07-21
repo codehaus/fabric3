@@ -28,6 +28,7 @@ import java.util.List;
  * @version $Rev$ $Date$
  */
 public class ComponentReference extends ReferenceDefinition {
+    private static final long serialVersionUID = 2072898078368317712L;
     private boolean autowire;
     private List<URI> targets = new ArrayList<URI>();
 

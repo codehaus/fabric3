@@ -27,6 +27,7 @@ import org.fabric3.scdl.BindingDefinition;
  * @version $Revision: 1 $ $Date: 2007-05-14 10:40:37 -0700 (Mon, 14 May 2007) $
  */
 public class EjbBindingDefinition extends BindingDefinition {
+    private static final long serialVersionUID = -6107882088582151893L;
     private String homeInterface;
     private String ejbLink;
     private boolean isStateless = true;

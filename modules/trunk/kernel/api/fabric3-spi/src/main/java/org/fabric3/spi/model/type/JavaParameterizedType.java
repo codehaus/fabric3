@@ -27,6 +27,7 @@ import org.fabric3.scdl.DataType;
  * @version $Revision$ $Date$
  */
 public class JavaParameterizedType extends DataType<ParameterizedType> {
+    private static final long serialVersionUID = -8832071773275935399L;
 
     public JavaParameterizedType(ParameterizedType parameterizedType) {
         super(parameterizedType, parameterizedType);

@@ -28,6 +28,7 @@ import org.fabric3.spi.Constants;
  * @version $Rev$ $Date$
  */
 public class Launched extends Implementation<PojoComponentType> {
+    private static final long serialVersionUID = 5261676427346961800L;
     public static final QName IMPLEMENTATION_LAUNCHED = new QName(Constants.FABRIC3_NS, "launched");
     private String implementationClass;
     private String factoryName;

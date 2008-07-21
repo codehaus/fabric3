@@ -8,6 +8,7 @@ import java.lang.annotation.ElementType;
  * @version $Revision$ $Date$
  */
 public class InjectionSite extends ModelObject {
+    private static final long serialVersionUID = 7792895640425046691L;
 
     // Element type
     private ElementType elementType;

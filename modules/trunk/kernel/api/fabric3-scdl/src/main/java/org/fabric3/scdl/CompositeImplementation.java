@@ -28,6 +28,7 @@ import org.osoa.sca.Constants;
  * @version $Rev$ $Date$
  */
 public class CompositeImplementation extends Implementation<Composite> {
+    private static final long serialVersionUID = 2140686609936627287L;
     public static final QName IMPLEMENTATION_COMPOSITE = new QName(Constants.SCA_NS, "implementation.composite");
     private QName name;
 

@@ -28,6 +28,7 @@ import org.fabric3.spi.Constants;
  * @version $Rev$ $Date$
  */
 public class SingletonImplementation extends Implementation<PojoComponentType> {
+    private static final long serialVersionUID = -3874858273451538661L;
     public static final QName IMPLEMENTATION_SINGLETON = new QName(Constants.FABRIC3_SYSTEM_NS, "singleton");
     
     private String implementationClass;

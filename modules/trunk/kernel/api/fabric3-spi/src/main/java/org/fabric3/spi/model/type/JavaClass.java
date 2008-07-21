@@ -24,6 +24,8 @@ import org.fabric3.scdl.DataType;
  * @version $Rev$ $Date$
  */
 public class JavaClass<P> extends DataType<Class<P>> {
+    private static final long serialVersionUID = -901379909664326192L;
+
     public JavaClass(Class<P> clazz) {
         super(clazz, clazz);
     }

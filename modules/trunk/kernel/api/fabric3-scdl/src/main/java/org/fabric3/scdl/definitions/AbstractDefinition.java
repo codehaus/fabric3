@@ -26,9 +26,10 @@ import org.fabric3.scdl.ModelObject;
  * @version $Revision$ $Date$
  */
 public abstract class AbstractDefinition extends ModelObject {
-    
+    private static final long serialVersionUID = -4450566760116409021L;
+
     private final QName name;
-    
+
     /**
      * @param name Name of the definition object.
      */

@@ -22,6 +22,7 @@ import java.lang.reflect.Type;
  * @version $Rev$ $Date$
  */
 public class TestServiceContract extends ServiceContract<Type> {
+    private static final long serialVersionUID = 7713843032375918467L;
     private final Class<?> type;
 
     public TestServiceContract(Class<?> type) {
