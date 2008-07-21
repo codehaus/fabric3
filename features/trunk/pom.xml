@@ -32,6 +32,7 @@
 
     <modules>
         <module>fabric3-hibernate-feature</module>
+        <module>fabric3-hibernate-jotm-feature</module>
     </modules>
 
 </project>
