@@ -37,6 +37,9 @@ public class LogicalChange {
     private final List<Command> phase2 = new ArrayList<Command>();
     private final List<Command> phase3 = new ArrayList<Command>();
 
+    private final List<LogicalChangeFailure<?>> errors = new ArrayList<LogicalChangeFailure<?>>();
+    private final List<LogicalChangeFailure<?>> warnings = new ArrayList<LogicalChangeFailure<?>>();
+
     private final List<String> deletedProperties = new ArrayList<String>();
     private final List<LogicalComponent<?>> deletedComponents = new ArrayList<LogicalComponent<?>>();
     private final List<LogicalComponent<?>> addedComponents = new ArrayList<LogicalComponent<?>>();
@@ -50,6 +53,79 @@ public class LogicalChange {
     public LogicalChange(LogicalCompositeComponent parent) {
         this.parent = parent;
     }
+
+    /**
+     * Returns true if the change generation has detected any fatal errors.
+     *
+     * @return true if the change generation has detected any fatal errors
+     */
+    public boolean hasErrors() {
+        return !errors.isEmpty();
+    }
+
+    /**
+     * Returns the list of fatal errors detected during change generation.
+     *
+     * @return the list of fatal errors detected during change generation
+     */
+    public List<LogicalChangeFailure<?>> getErrors() {
+        return errors;
+    }
+
+    /**
+     * Add a fatal error to the chnage.
+     *
+     * @param error the fatal error that has been found
+     */
+    public void addError(LogicalChangeFailure<?> error) {
+        errors.add(error);
+    }
+
+    /**
+     * Add a collection of fatal errors to the change.
+     *
+     * @param errors the fatal errors that have been found
+     */
+    public void addErrors(List<LogicalChangeFailure<?>> errors) {
+        this.errors.addAll(errors);
+    }
+
+    /**
+     * Returns true if the change generation has detected any non-fatal warnings.
+     *
+     * @return true if the change generation has detected any non-fatal warnings
+     */
+    public boolean hasWarnings() {
+        return !warnings.isEmpty();
+    }
+
+    /**
+     * Returns the list of non-fatal warnings detected during change generation.
+     *
+     * @return the list of non-fatal warnings detected during change generation
+     */
+    public List<LogicalChangeFailure<?>> getWarnings() {
+        return warnings;
+    }
+
+    /**
+     * Add a non-fatal warning to the change.
+     *
+     * @param warning the non-fatal warning that has been found
+     */
+    public void addWarning(LogicalChangeFailure<?> warning) {
+        warnings.add(warning);
+    }
+
+    /**
+     * Add a collection of non-fatal warnings to the change.
+     *
+     * @param warnings the non-fatal warnings that have been found
+     */
+    public void addWarnings(List<LogicalChangeFailure<?>> warnings) {
+        this.warnings.addAll(warnings);
+    }
+
 
     /**
      * Apply this change to its context.

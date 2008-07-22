@@ -72,7 +72,7 @@ public class LogicalModelInstantiatorImpl implements LogicalModelInstantiator {
     }
 
     @SuppressWarnings("unchecked")
-    public LogicalChange include(LogicalCompositeComponent targetComposite, Composite composite, ValidationContext context) throws LogicalInstantiationException {
+    public LogicalChange include(LogicalCompositeComponent targetComposite, Composite composite) throws LogicalInstantiationException {
 
         LogicalChange change = new LogicalChange(targetComposite);
 

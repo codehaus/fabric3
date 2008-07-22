@@ -17,7 +17,6 @@
 package org.fabric3.fabric.instantiator;
 
 import org.fabric3.scdl.Composite;
-import org.fabric3.scdl.ValidationContext;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 
 /**
@@ -32,12 +31,10 @@ public interface LogicalModelInstantiator {
      *
      * @param targetComposite the target composite in which the composite is to be included.
      * @param composite       the composite to be included.
-     * @param context         the validation context to report errors and warnings.
      * @return the change that would result from this include operation
      * @throws LogicalInstantiationException If unable to include the composite.
      */
-    LogicalChange include(LogicalCompositeComponent targetComposite, Composite composite, ValidationContext context)
-            throws LogicalInstantiationException;
+    LogicalChange include(LogicalCompositeComponent targetComposite, Composite composite) throws LogicalInstantiationException;
 
 
     /**
