@@ -16,8 +16,6 @@
  */
 package org.fabric3.binding.ws.axis2.runtime.config;
 
-import java.util.Set;
-
 import org.apache.axis2.context.ConfigurationContext;
 import org.apache.axis2.description.AxisModule;
 
@@ -25,7 +23,7 @@ import org.apache.axis2.description.AxisModule;
  * @version $Revision$ $Date$
  */
 public interface F3Configurator {
-    
+
     ConfigurationContext getConfigurationContext();
 
     AxisModule getModule(String name);
