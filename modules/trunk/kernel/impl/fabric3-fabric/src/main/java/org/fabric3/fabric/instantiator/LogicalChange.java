@@ -131,6 +131,9 @@ public class LogicalChange {
      * Apply this change to its context.
      */
     public void apply() {
+        if (hasErrors()) {
+            throw new IllegalStateException("Logical change has errors");
+        }
         for (Command command : phase1) {
             command.apply();
         }
