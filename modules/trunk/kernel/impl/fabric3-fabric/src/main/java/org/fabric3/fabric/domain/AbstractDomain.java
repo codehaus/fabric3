@@ -32,6 +32,8 @@ import org.fabric3.fabric.instantiator.LogicalModelInstantiator;
 import org.fabric3.fabric.services.routing.RoutingException;
 import org.fabric3.fabric.services.routing.RoutingService;
 import org.fabric3.scdl.Composite;
+import org.fabric3.scdl.DefaultValidationContext;
+import org.fabric3.scdl.ValidationContext;
 import org.fabric3.spi.domain.DeploymentException;
 import org.fabric3.spi.domain.Domain;
 import org.fabric3.spi.domain.DomainException;
@@ -107,10 +109,16 @@ public abstract class AbstractDomain implements Domain {
         LogicalCompositeComponent domain = logicalComponentManager.getRootComponent();
 
         LogicalChange change;
+        ValidationContext context = new DefaultValidationContext();
         try {
-            change = logicalModelInstantiator.include(domain, composite);
+            change = logicalModelInstantiator.include(domain, composite, context);
         } catch (LogicalInstantiationException e) {
             throw new DeploymentException("Error deploying: " + composite.getName(), e);
+        }
+        if (context.hasErrors()) {
+            // TODO throw exception
+        } else if (context.hasWarnings()) {
+            // TOOD log warnings 
         }
         change.apply();
 

@@ -38,6 +38,7 @@ import org.fabric3.scdl.CompositeService;
 import org.fabric3.scdl.Implementation;
 import org.fabric3.scdl.Include;
 import org.fabric3.scdl.Property;
+import org.fabric3.scdl.ValidationContext;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
@@ -71,7 +72,7 @@ public class LogicalModelInstantiatorImpl implements LogicalModelInstantiator {
     }
 
     @SuppressWarnings("unchecked")
-    public LogicalChange include(LogicalCompositeComponent targetComposite, Composite composite) throws LogicalInstantiationException {
+    public LogicalChange include(LogicalCompositeComponent targetComposite, Composite composite, ValidationContext context) throws LogicalInstantiationException {
 
         LogicalChange change = new LogicalChange(targetComposite);
 
