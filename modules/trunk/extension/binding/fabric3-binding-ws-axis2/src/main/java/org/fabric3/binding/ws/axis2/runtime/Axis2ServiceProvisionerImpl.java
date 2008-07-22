@@ -80,6 +80,8 @@ public class Axis2ServiceProvisionerImpl implements Axis2ServiceProvisioner {
     }
 
     /**
+     * TODO Make configurable: FABRICTHREE-276
+     *
      * @param servicePath Service path for Axis requests.
      */
     @Property
