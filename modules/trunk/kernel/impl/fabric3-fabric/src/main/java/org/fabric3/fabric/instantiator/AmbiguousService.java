@@ -18,11 +18,31 @@
  */
 package org.fabric3.fabric.instantiator;
 
-public class AmbiguousServiceException extends LogicalInstantiationException {
-    private static final long serialVersionUID = -6600598658356829665L;
+import org.fabric3.host.domain.AssemblyFailure;
+import org.fabric3.spi.model.instance.Bindable;
 
-    public AmbiguousServiceException(String message) {
-        super(message);
+public class AmbiguousService extends AssemblyFailure {
+    private Bindable bindable;
+    private String message;
 
+    /**
+     * Constructor.
+     *
+     * @param bindable the logical service or reference that is invalid
+     * @param message  the error message
+     */
+    public AmbiguousService(Bindable bindable, String message) {
+        super(bindable.getParent().getUri());
+        this.bindable = bindable;
+        this.message = message;
     }
+
+    public Bindable getBindable() {
+        return bindable;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
 }

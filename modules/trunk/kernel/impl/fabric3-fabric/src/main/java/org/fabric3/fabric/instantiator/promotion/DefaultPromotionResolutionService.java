@@ -22,8 +22,8 @@ import java.net.URI;
 import java.util.Collection;
 import java.util.List;
 
-import org.fabric3.fabric.instantiator.AmbiguousReferenceException;
-import org.fabric3.fabric.instantiator.AmbiguousServiceException;
+import org.fabric3.fabric.instantiator.AmbiguousReference;
+import org.fabric3.fabric.instantiator.AmbiguousService;
 import org.fabric3.fabric.instantiator.LogicalChange;
 import org.fabric3.fabric.instantiator.LogicalInstantiationException;
 import org.fabric3.fabric.instantiator.NoServiceOnComponentException;
@@ -43,7 +43,7 @@ import org.fabric3.spi.util.UriHelper;
  */
 public class DefaultPromotionResolutionService implements PromotionResolutionService {
 
-    public void resolve(LogicalService logicalService) throws LogicalInstantiationException {
+    public void resolve(LogicalService logicalService, LogicalChange change) throws LogicalInstantiationException {
 
         URI promotedUri = logicalService.getPromotedUri();
 
@@ -66,7 +66,11 @@ public class DefaultPromotionResolutionService implements PromotionResolutionSer
             if (componentServices.size() == 0) {
                 throw new NoServiceOnComponentException("No services available on component: " + promotedComponentUri);
             } else if (componentServices.size() != 1) {
-                throw new AmbiguousServiceException("More than one service available on component: " + promotedComponentUri);
+                String msg = "The promoted service " + logicalService.getUri() + " must explicitly specify the service it is promoting on component "
+                        + promotedComponentUri + " as the component has more than one service";
+                AmbiguousService error = new AmbiguousService(logicalService, msg);
+                change.addError(error);
+                return;
             }
             logicalService.setPromotedUri(componentServices.iterator().next().getUri());
         } else {
@@ -103,7 +107,9 @@ public class DefaultPromotionResolutionService implements PromotionResolutionSer
                     change.addError(error);
                     return;
                 } else if (componentReferences.size() > 1) {
-                    throw new AmbiguousReferenceException(promotedComponentUri);
+                    AmbiguousReference error = new AmbiguousReference(logicalReference, promotedComponentUri);
+                    change.addError(error);
+                    return;
                 }
                 logicalReference.setPromotedUri(i, componentReferences.iterator().next().getUri());
             } else if (promotedComponent.getReference(promotedReferenceName) == null) {

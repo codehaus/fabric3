@@ -4,8 +4,8 @@ import java.net.URI;
 
 import junit.framework.TestCase;
 
-import org.fabric3.fabric.instantiator.AmbiguousReferenceException;
-import org.fabric3.fabric.instantiator.AmbiguousServiceException;
+import org.fabric3.fabric.instantiator.AmbiguousReference;
+import org.fabric3.fabric.instantiator.AmbiguousService;
 import org.fabric3.fabric.instantiator.LogicalChange;
 import org.fabric3.fabric.instantiator.LogicalInstantiationException;
 import org.fabric3.fabric.instantiator.NoServiceOnComponentException;
@@ -29,7 +29,8 @@ public class DefaultTargetPromotionServiceTestCase extends TestCase {
         logicalService.setPromotedUri(URI.create("component#service"));
 
         try {
-            promotionResolutionService.resolve(logicalService);
+            LogicalChange change = new LogicalChange(domain);
+            promotionResolutionService.resolve(logicalService, change);
         } catch (PromotedComponentNotFoundException ex) {
             return;
         } catch (LogicalInstantiationException e) {
@@ -40,7 +41,7 @@ public class DefaultTargetPromotionServiceTestCase extends TestCase {
 
     }
 
-    public void testMultipleServicesWithNoServiceFragment() {
+    public void testMultipleServicesWithNoServiceFragment() throws Exception{
 
         LogicalService logicalService = new LogicalService(URI.create("service"), null, domain);
         logicalService.setPromotedUri(URI.create("component"));
@@ -53,17 +54,9 @@ public class DefaultTargetPromotionServiceTestCase extends TestCase {
         logicalComponent.addService(new LogicalService(URI.create("component#service2"), null, domain));
 
         domain.addComponent(logicalComponent);
-
-        try {
-            promotionResolutionService.resolve(logicalService);
-        } catch (AmbiguousServiceException ex) {
-            return;
-        } catch (LogicalInstantiationException e) {
-            fail("Unexpected exception");
-        }
-
-        fail("Expected exception");
-
+        LogicalChange change = new LogicalChange(domain);
+        promotionResolutionService.resolve(logicalService, change);
+        assertTrue(change.getErrors().get(0) instanceof AmbiguousService);
     }
 
     public void testNoServiceWithNoServiceFragment() {
@@ -79,7 +72,8 @@ public class DefaultTargetPromotionServiceTestCase extends TestCase {
         domain.addComponent(logicalComponent);
 
         try {
-            promotionResolutionService.resolve(logicalService);
+            LogicalChange change = new LogicalChange(domain);
+            promotionResolutionService.resolve(logicalService, change);
         } catch (NoServiceOnComponentException ex) {
             return;
         } catch (LogicalInstantiationException e) {
@@ -103,7 +97,8 @@ public class DefaultTargetPromotionServiceTestCase extends TestCase {
         domain.addComponent(logicalComponent);
 
         try {
-            promotionResolutionService.resolve(logicalService);
+            LogicalChange change = new LogicalChange(domain);
+            promotionResolutionService.resolve(logicalService, change);
         } catch (ServiceNotFoundException ex) {
             return;
         } catch (LogicalInstantiationException e) {
@@ -127,7 +122,8 @@ public class DefaultTargetPromotionServiceTestCase extends TestCase {
         domain.addComponent(logicalComponent);
 
         try {
-            promotionResolutionService.resolve(logicalService);
+            LogicalChange change = new LogicalChange(domain);
+            promotionResolutionService.resolve(logicalService, change);
         } catch (LogicalInstantiationException e) {
             fail("Unexpected exception");
         }
@@ -148,7 +144,8 @@ public class DefaultTargetPromotionServiceTestCase extends TestCase {
         domain.addComponent(logicalComponent);
 
         try {
-            promotionResolutionService.resolve(logicalService);
+            LogicalChange change = new LogicalChange(domain);
+            promotionResolutionService.resolve(logicalService, change);
         } catch (LogicalInstantiationException e) {
             fail("Unexpected exception");
         }
@@ -173,7 +170,7 @@ public class DefaultTargetPromotionServiceTestCase extends TestCase {
 
     }
 
-    public void testMultipleReferencesWithNoReferenceFragment() {
+    public void testMultipleReferencesWithNoReferenceFragment() throws Exception {
 
         LogicalReference logicalReference = new LogicalReference(URI.create("reference"), null, domain);
         logicalReference.addPromotedUri(URI.create("component"));
@@ -187,16 +184,9 @@ public class DefaultTargetPromotionServiceTestCase extends TestCase {
 
         domain.addComponent(logicalComponent);
 
-        try {
-            LogicalChange change = new LogicalChange(domain);
-            promotionResolutionService.resolve(logicalReference, change);
-        } catch (AmbiguousReferenceException ex) {
-            return;
-        } catch (LogicalInstantiationException e) {
-            fail("Unexpected exception");
-        }
-
-        fail("Expected exception");
+        LogicalChange change = new LogicalChange(domain);
+        promotionResolutionService.resolve(logicalReference, change);
+        assertTrue(change.getErrors().get(0) instanceof AmbiguousReference);
 
     }
 

@@ -40,9 +40,11 @@ public interface PromotionResolutionService {
      * the promoted service.
      *
      * @param logicalService Logical service whose promotion is handled.
+     * @param change         the logical change associated with the deployment operation resolution is being performed for. Recoverable errors and
+     *                       warnings should be reported here.
      * @throws LogicalInstantiationException if an error occurs processing the promoted exception
      */
-    void resolve(LogicalService logicalService) throws LogicalInstantiationException;
+    void resolve(LogicalService logicalService, LogicalChange change) throws LogicalInstantiationException;
 
     /**
      * Handles all promotions on the specified logical reference.

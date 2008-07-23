@@ -4,7 +4,7 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.fabric3.fabric.instantiator.AmbiguousServiceException;
+import org.fabric3.fabric.instantiator.AmbiguousService;
 import org.fabric3.fabric.instantiator.LogicalChange;
 import org.fabric3.fabric.instantiator.LogicalInstantiationException;
 import org.fabric3.fabric.instantiator.NoServiceOnComponentException;
@@ -42,14 +42,17 @@ public class ExplicitTargetResolutionService implements TargetResolutionService 
         List<URI> resolvedUris = new ArrayList<URI>();
         for (URI requestedTarget : requestedTargets) {
             URI resolved = parentUri.resolve(componentUri).resolve(requestedTarget);
-            URI targetURI = resolveByUri(logicalReference, resolved, component);
-            resolvedUris.add(targetURI);
+            URI targetURI = resolveByUri(logicalReference, resolved, component, change);
+            if (targetURI != null) {
+                resolvedUris.add(targetURI);
+            }
         }
         logicalReference.overrideTargets(resolvedUris);
 
     }
 
-    private URI resolveByUri(LogicalReference reference, URI targetUri, LogicalCompositeComponent composite) throws LogicalInstantiationException {
+    private URI resolveByUri(LogicalReference reference, URI targetUri, LogicalCompositeComponent composite, LogicalChange change)
+            throws LogicalInstantiationException {
 
         URI targetComponentUri = UriHelper.getDefragmentedName(targetUri);
         LogicalComponent<?> targetComponent = composite.getComponent(targetComponentUri);
@@ -73,8 +76,11 @@ public class ExplicitTargetResolutionService implements TargetResolutionService 
                     continue;
                 }
                 if (target != null) {
-                    throw new AmbiguousServiceException("More than one service available on component: " + targetUri
-                            + ". Reference must explicitly specify a target service: " + reference.getUri());
+                    String msg = "More than one service available on component: " + targetUri
+                            + ". Reference must explicitly specify a target service: " + reference.getUri();
+                    AmbiguousService error = new AmbiguousService(reference, msg);
+                    change.addError(error);
+                    return null;
                 }
                 target = service;
             }

@@ -68,11 +68,11 @@ public class ResolutionServiceImpl implements ResolutionService {
         }
 
         resolveReferences(logicalComponent, change);
-        resolveServices(logicalComponent);
+        resolveServices(logicalComponent, change);
     }
 
-    public void resolve(LogicalService logicalService) throws LogicalInstantiationException {
-        promotionResolutionService.resolve(logicalService);
+    public void resolve(LogicalService logicalService, LogicalChange change) throws LogicalInstantiationException {
+        promotionResolutionService.resolve(logicalService, change);
     }
 
     public void resolve(LogicalReference reference, LogicalCompositeComponent component, LogicalChange change) throws LogicalInstantiationException {
@@ -97,9 +97,9 @@ public class ResolutionServiceImpl implements ResolutionService {
     /*
      * Handles promotions on services.
      */
-    private void resolveServices(LogicalComponent<?> logicalComponent) throws LogicalInstantiationException {
+    private void resolveServices(LogicalComponent<?> logicalComponent, LogicalChange change) throws LogicalInstantiationException {
         for (LogicalService logicalService : logicalComponent.getServices()) {
-            promotionResolutionService.resolve(logicalService);
+            promotionResolutionService.resolve(logicalService, change);
         }
     }
 

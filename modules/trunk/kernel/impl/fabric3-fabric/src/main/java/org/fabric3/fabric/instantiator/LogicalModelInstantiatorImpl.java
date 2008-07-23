@@ -236,7 +236,7 @@ public class LogicalModelInstantiatorImpl implements LogicalModelInstantiator {
 
         // resolve wires for composite services merged into the domain
         for (LogicalService service : services) {
-            resolutionService.resolve(service);
+            resolutionService.resolve(service, change);
         }
 
         // resove composite references merged into the domain

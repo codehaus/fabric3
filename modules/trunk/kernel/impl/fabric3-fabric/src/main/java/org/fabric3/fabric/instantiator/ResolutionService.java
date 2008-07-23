@@ -48,9 +48,11 @@ public interface ResolutionService {
      * Resolves the promotion on the specified logical service.
      *
      * @param logicalService Logical service whose promotion is to be resolved.
+     * @param change         the logical change associated with the deployment operation resolution is being performed for. Recoverable errors and
+     *                       warnings should be reported here.
      * @throws LogicalInstantiationException if a resolution error occurs.
      */
-    void resolve(LogicalService logicalService) throws LogicalInstantiationException;
+    void resolve(LogicalService logicalService, LogicalChange change) throws LogicalInstantiationException;
 
     /**
      * Resolves the logical reference against the given composite.
