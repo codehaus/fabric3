@@ -4,13 +4,13 @@ import java.net.URI;
 
 import junit.framework.TestCase;
 
-import org.fabric3.fabric.instantiator.LogicalInstantiationException;
 import org.fabric3.fabric.instantiator.AmbiguousReferenceException;
 import org.fabric3.fabric.instantiator.AmbiguousServiceException;
-import org.fabric3.fabric.instantiator.NoReferenceOnComponentException;
+import org.fabric3.fabric.instantiator.LogicalChange;
+import org.fabric3.fabric.instantiator.LogicalInstantiationException;
 import org.fabric3.fabric.instantiator.NoServiceOnComponentException;
 import org.fabric3.fabric.instantiator.PromotedComponentNotFoundException;
-import org.fabric3.fabric.instantiator.ReferenceNotFoundException;
+import org.fabric3.fabric.instantiator.ReferenceNotFound;
 import org.fabric3.fabric.instantiator.ServiceNotFoundException;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
@@ -161,7 +161,8 @@ public class DefaultTargetPromotionServiceTestCase extends TestCase {
         logicalReference.addPromotedUri(URI.create("component#service"));
 
         try {
-            promotionResolutionService.resolve(logicalReference);
+            LogicalChange change = new LogicalChange(domain);
+            promotionResolutionService.resolve(logicalReference, change);
         } catch (PromotedComponentNotFoundException ex) {
             return;
         } catch (LogicalInstantiationException e) {
@@ -187,7 +188,8 @@ public class DefaultTargetPromotionServiceTestCase extends TestCase {
         domain.addComponent(logicalComponent);
 
         try {
-            promotionResolutionService.resolve(logicalReference);
+            LogicalChange change = new LogicalChange(domain);
+            promotionResolutionService.resolve(logicalReference, change);
         } catch (AmbiguousReferenceException ex) {
             return;
         } catch (LogicalInstantiationException e) {
@@ -212,18 +214,15 @@ public class DefaultTargetPromotionServiceTestCase extends TestCase {
         domain.addComponent(logicalComponent);
 
         try {
-            promotionResolutionService.resolve(logicalReference);
-        } catch (NoReferenceOnComponentException ex) {
-            return;
+            LogicalChange change = new LogicalChange(domain);
+            promotionResolutionService.resolve(logicalReference, change);
+            assert (change.getErrors().get(0) instanceof ReferenceNotFound);
         } catch (LogicalInstantiationException e) {
             fail("Unexpected exception");
         }
-
-        fail("Expected exception");
-
     }
 
-    public void testNoReferenceWithReferenceFragment() {
+    public void testNoReferenceWithReferenceFragment() throws LogicalInstantiationException {
 
         LogicalReference logicalReference = new LogicalReference(URI.create("reference"), null, domain);
         logicalReference.addPromotedUri(URI.create("component#reference"));
@@ -236,16 +235,9 @@ public class DefaultTargetPromotionServiceTestCase extends TestCase {
 
         domain.addComponent(logicalComponent);
 
-        try {
-            promotionResolutionService.resolve(logicalReference);
-        } catch (ReferenceNotFoundException ex) {
-            return;
-        } catch (LogicalInstantiationException e) {
-            fail("Unexpected exception");
-        }
-
-        fail("Expected exception");
-
+        LogicalChange change = new LogicalChange(domain);
+        promotionResolutionService.resolve(logicalReference, change);
+        assertTrue(change.getErrors().get(0) instanceof ReferenceNotFound);
     }
 
     public void testNoReferenceFragment() {
@@ -261,7 +253,8 @@ public class DefaultTargetPromotionServiceTestCase extends TestCase {
         domain.addComponent(logicalComponent);
 
         try {
-            promotionResolutionService.resolve(logicalReference);
+            LogicalChange change = new LogicalChange(domain);
+            promotionResolutionService.resolve(logicalReference, change);
         } catch (LogicalInstantiationException e) {
             fail("Unexpected exception");
         }
@@ -282,7 +275,8 @@ public class DefaultTargetPromotionServiceTestCase extends TestCase {
         domain.addComponent(logicalComponent);
 
         try {
-            promotionResolutionService.resolve(logicalReference);
+            LogicalChange change = new LogicalChange(domain);
+            promotionResolutionService.resolve(logicalReference, change);
         } catch (LogicalInstantiationException e) {
             fail("Unexpected exception");
         }

@@ -16,15 +16,38 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.fabric.instantiator.target;
+package org.fabric3.host.domain;
 
-import org.fabric3.fabric.instantiator.LogicalInstantiationException;
+import org.fabric3.host.Fabric3Exception;
 
-public class ServiceContractNotFoundException extends LogicalInstantiationException {
-    private static final long serialVersionUID = -6846855704775404977L;
+/**
+ * Base exception for the domain package.
+ *
+ * @version $Rev$ $Date$
+ */
+public class DomainException extends Fabric3Exception {
+    private static final long serialVersionUID = -2529045209367837417L;
 
-    public ServiceContractNotFoundException(String message) {
+    public DomainException(String message) {
         super(message);
     }
 
+    public DomainException(String message, String identifier) {
+        super(message, identifier);
+    }
+
+    public DomainException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public DomainException(String message, String identifier, Throwable cause) {
+        super(message, identifier, cause);
+    }
+
+    public DomainException() {
+    }
+
+    public DomainException(Throwable cause) {
+        super(cause);
+    }
 }

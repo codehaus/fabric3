@@ -24,11 +24,11 @@ import java.util.List;
 
 import org.fabric3.fabric.instantiator.AmbiguousReferenceException;
 import org.fabric3.fabric.instantiator.AmbiguousServiceException;
+import org.fabric3.fabric.instantiator.LogicalChange;
 import org.fabric3.fabric.instantiator.LogicalInstantiationException;
-import org.fabric3.fabric.instantiator.NoReferenceOnComponentException;
 import org.fabric3.fabric.instantiator.NoServiceOnComponentException;
 import org.fabric3.fabric.instantiator.PromotedComponentNotFoundException;
-import org.fabric3.fabric.instantiator.ReferenceNotFoundException;
+import org.fabric3.fabric.instantiator.ReferenceNotFound;
 import org.fabric3.fabric.instantiator.ServiceNotFoundException;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
@@ -77,7 +77,7 @@ public class DefaultPromotionResolutionService implements PromotionResolutionSer
 
     }
 
-    public void resolve(LogicalReference logicalReference) throws LogicalInstantiationException {
+    public void resolve(LogicalReference logicalReference, LogicalChange change) throws LogicalInstantiationException {
 
         List<URI> promotedUris = logicalReference.getPromotedUris();
 
@@ -98,13 +98,19 @@ public class DefaultPromotionResolutionService implements PromotionResolutionSer
             if (promotedReferenceName == null) {
                 Collection<LogicalReference> componentReferences = promotedComponent.getReferences();
                 if (componentReferences.size() == 0) {
-                    throw new NoReferenceOnComponentException(promotedComponentUri);
+                    String msg = "Reference " + promotedReferenceName + " not found on component " + promotedComponentUri;
+                    ReferenceNotFound error = new ReferenceNotFound(msg, promotedComponent, promotedReferenceName);
+                    change.addError(error);
+                    return;
                 } else if (componentReferences.size() > 1) {
                     throw new AmbiguousReferenceException(promotedComponentUri);
                 }
                 logicalReference.setPromotedUri(i, componentReferences.iterator().next().getUri());
             } else if (promotedComponent.getReference(promotedReferenceName) == null) {
-                throw new ReferenceNotFoundException("Reference " + promotedReferenceName + " not found on component " + promotedComponentUri);
+                String msg = "Reference " + promotedReferenceName + " not found on component " + promotedComponentUri;
+                ReferenceNotFound error = new ReferenceNotFound(msg, promotedComponent, promotedReferenceName);
+                change.addError(error);
+                return;
             }
 
         }

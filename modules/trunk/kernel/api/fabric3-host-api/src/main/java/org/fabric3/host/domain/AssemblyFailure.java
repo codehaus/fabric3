@@ -16,38 +16,42 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.spi.domain;
+package org.fabric3.host.domain;
 
-import org.fabric3.host.Fabric3Exception;
+import java.net.URI;
 
 /**
- * Base exception for the domain package
+ * Base class for recoverable errors updating the domain assembly encountered during a deployment.
  *
- * @version $Rev$ $Date$
+ * @version $Revision$ $Date$
  */
-public class DomainException extends Fabric3Exception {
-    private static final long serialVersionUID = -2529045209367837417L;
+public abstract class AssemblyFailure {
+    private URI componentUri;
 
-    public DomainException(String message) {
-        super(message);
+    /**
+     * Constructor.
+     *
+     * @param componentUri the URI of the component associated with the failure.
+     */
+    public AssemblyFailure(URI componentUri) {
+        this.componentUri = componentUri;
     }
 
-    public DomainException(String message, String identifier) {
-        super(message, identifier);
+    /**
+     * Returns the URI of the component associated with the failure.
+     *
+     * @return the URI of the component associated with the failure.
+     */
+    public URI getComponentUri() {
+        return componentUri;
     }
 
-    public DomainException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
-    public DomainException(String message, String identifier, Throwable cause) {
-        super(message, identifier, cause);
-    }
-
-    public DomainException() {
-    }
-
-    public DomainException(Throwable cause) {
-        super(cause);
+    /**
+     * Returns the error message.
+     *
+     * @return the error message.
+     */
+    public String getMessage() {
+        return "";
     }
 }

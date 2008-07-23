@@ -26,6 +26,7 @@ import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalWire;
+import org.fabric3.host.domain.AssemblyFailure;
 
 /**
  * @version $Rev$ $Date$
@@ -37,8 +38,8 @@ public class LogicalChange {
     private final List<Command> phase2 = new ArrayList<Command>();
     private final List<Command> phase3 = new ArrayList<Command>();
 
-    private final List<LogicalChangeFailure<?>> errors = new ArrayList<LogicalChangeFailure<?>>();
-    private final List<LogicalChangeFailure<?>> warnings = new ArrayList<LogicalChangeFailure<?>>();
+    private final List<AssemblyFailure> errors = new ArrayList<AssemblyFailure>();
+    private final List<AssemblyFailure> warnings = new ArrayList<AssemblyFailure>();
 
     private final List<String> deletedProperties = new ArrayList<String>();
     private final List<LogicalComponent<?>> deletedComponents = new ArrayList<LogicalComponent<?>>();
@@ -55,6 +56,15 @@ public class LogicalChange {
     }
 
     /**
+     * Returns the component the change is targeted at.
+     *
+     * @return the component the change is targeted at.
+     */
+    public LogicalCompositeComponent getParent() {
+        return parent;
+    }
+
+    /**
      * Returns true if the change generation has detected any fatal errors.
      *
      * @return true if the change generation has detected any fatal errors
@@ -68,7 +78,7 @@ public class LogicalChange {
      *
      * @return the list of fatal errors detected during change generation
      */
-    public List<LogicalChangeFailure<?>> getErrors() {
+    public List<AssemblyFailure> getErrors() {
         return errors;
     }
 
@@ -77,7 +87,7 @@ public class LogicalChange {
      *
      * @param error the fatal error that has been found
      */
-    public void addError(LogicalChangeFailure<?> error) {
+    public void addError(AssemblyFailure error) {
         errors.add(error);
     }
 
@@ -86,7 +96,7 @@ public class LogicalChange {
      *
      * @param errors the fatal errors that have been found
      */
-    public void addErrors(List<LogicalChangeFailure<?>> errors) {
+    public void addErrors(List<AssemblyFailure> errors) {
         this.errors.addAll(errors);
     }
 
@@ -104,7 +114,7 @@ public class LogicalChange {
      *
      * @return the list of non-fatal warnings detected during change generation
      */
-    public List<LogicalChangeFailure<?>> getWarnings() {
+    public List<AssemblyFailure> getWarnings() {
         return warnings;
     }
 
@@ -113,7 +123,7 @@ public class LogicalChange {
      *
      * @param warning the non-fatal warning that has been found
      */
-    public void addWarning(LogicalChangeFailure<?> warning) {
+    public void addWarning(AssemblyFailure warning) {
         warnings.add(warning);
     }
 
@@ -122,7 +132,7 @@ public class LogicalChange {
      *
      * @param warnings the non-fatal warnings that have been found
      */
-    public void addWarnings(List<LogicalChangeFailure<?>> warnings) {
+    public void addWarnings(List<AssemblyFailure> warnings) {
         this.warnings.addAll(warnings);
     }
 

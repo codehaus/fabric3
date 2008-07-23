@@ -30,4 +30,8 @@ public interface WebAppMonitor {
 
     @Severe
     void contributionErrors(String s);
+
+    @Severe
+    void deploymentErrors(String s);
+
 }

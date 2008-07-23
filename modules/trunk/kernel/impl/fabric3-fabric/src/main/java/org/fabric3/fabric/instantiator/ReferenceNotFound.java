@@ -18,10 +18,30 @@
  */
 package org.fabric3.fabric.instantiator;
 
-public class ReferenceNotFoundException extends LogicalInstantiationException {
-    private static final long serialVersionUID = -6600598658356829665L;
+import org.fabric3.host.domain.AssemblyFailure;
+import org.fabric3.spi.model.instance.LogicalComponent;
 
-    public ReferenceNotFoundException(String message) {
-        super(message);
+public class ReferenceNotFound extends AssemblyFailure {
+    private String message;
+    private LogicalComponent<?> component;
+    private String referenceName;
+
+    public ReferenceNotFound(String message, LogicalComponent<?> component, String referenceName) {
+        super(component.getUri());
+        this.message = message;
+        this.component = component;
+        this.referenceName = referenceName;
+    }
+
+    public LogicalComponent<?> getComponent() {
+        return component;
+    }
+
+    public String getReferenceName() {
+        return referenceName;
+    }
+
+    public String getMessage() {
+        return message;
     }
 }

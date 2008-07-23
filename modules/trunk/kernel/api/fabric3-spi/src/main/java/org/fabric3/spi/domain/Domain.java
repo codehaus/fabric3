@@ -21,6 +21,8 @@ package org.fabric3.spi.domain;
 import javax.xml.namespace.QName;
 
 import org.fabric3.scdl.Composite;
+import org.fabric3.host.domain.DomainException;
+import org.fabric3.host.domain.DeploymentException;
 
 /**
  * Represents a domain.
@@ -57,7 +59,7 @@ public interface Domain {
      * Remove a deployable Composite from the domain.
      *
      * @param deployable the name of the deployable composite to remove
-     * @throws DeploymentException if an error is encountered during removal
+     * @throws org.fabric3.host.domain.DeploymentException if an error is encountered during removal
      */
     void remove(QName deployable) throws DeploymentException;
 

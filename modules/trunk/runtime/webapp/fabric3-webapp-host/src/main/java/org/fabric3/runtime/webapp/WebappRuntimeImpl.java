@@ -35,10 +35,9 @@ import static org.fabric3.fabric.runtime.ComponentNames.CONTRIBUTION_SERVICE_URI
 import static org.fabric3.fabric.runtime.ComponentNames.DISTRIBUTED_DOMAIN_URI;
 import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.host.contribution.ContributionService;
-import org.fabric3.host.runtime.InitializationException;
+import org.fabric3.host.domain.DeploymentException;
 import org.fabric3.pojo.PojoWorkContextTunnel;
 import org.fabric3.runtime.webapp.contribution.WarContributionSource;
-import org.fabric3.spi.domain.DeploymentException;
 import org.fabric3.spi.domain.Domain;
 import org.fabric3.spi.invocation.WorkContext;
 
@@ -62,7 +61,7 @@ public class WebappRuntimeImpl extends AbstractRuntime<WebappHostInfo> implement
         super(WebappHostInfo.class);
     }
 
-    public void activate(QName qName, URI componentId) throws ContributionException, InitializationException {
+    public void activate(QName qName, URI componentId) throws ContributionException, DeploymentException {
         try {
             // contribute the war to the application domain
             Domain domain = getSystemComponent(Domain.class, DISTRIBUTED_DOMAIN_URI);
@@ -73,12 +72,9 @@ public class WebappRuntimeImpl extends AbstractRuntime<WebappHostInfo> implement
             // activate the deployable composite in the domain
             domain.include(qName);
         } catch (MalformedURLException e) {
-            throw new InitializationException("Invalid web archive", e);
-        } catch (DeploymentException e) {
-            String identifier = qName.toString();
-            throw new InitializationException("Error activating composite: " + identifier, identifier, e);
+            throw new DeploymentException("Invalid web archive", e);
         } catch (URISyntaxException e) {
-            throw new InitializationException("Error processing project", e);
+            throw new DeploymentException("Error processing project", e);
         }
     }
 

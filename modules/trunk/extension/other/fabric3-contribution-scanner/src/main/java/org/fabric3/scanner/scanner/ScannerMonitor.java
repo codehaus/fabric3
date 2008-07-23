@@ -85,4 +85,13 @@ public interface ScannerMonitor {
      */
     @Severe
     void contributionErrors(String description);
+
+    /**
+     * Called when errors are encountered during deployments
+     *
+     * @param description a description of the errors
+     */
+    @Severe
+    void deploymentErrors(String description);
+
 }

@@ -71,7 +71,7 @@ import org.fabric3.scdl.ServiceDefinition;
 import org.fabric3.scdl.ValidationContext;
 import org.fabric3.services.xmlfactory.XMLFactory;
 import org.fabric3.services.xmlfactory.impl.XMLFactoryImpl;
-import org.fabric3.spi.domain.DeploymentException;
+import org.fabric3.host.domain.DeploymentException;
 import org.fabric3.spi.domain.Domain;
 import org.fabric3.spi.classloader.MultiParentClassLoader;
 import org.fabric3.spi.component.AtomicComponent;

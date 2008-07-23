@@ -24,7 +24,9 @@ import org.fabric3.host.Fabric3Exception;
  * Denotes an exception instanitating a LogicalComponent
  *
  * @version $Rev$ $Date$
+ *
  */
+@Deprecated
 public class LogicalInstantiationException extends Fabric3Exception {
     private static final long serialVersionUID = 4771407392907205266L;
 

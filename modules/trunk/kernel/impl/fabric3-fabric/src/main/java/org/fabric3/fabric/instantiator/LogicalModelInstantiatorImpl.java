@@ -38,7 +38,6 @@ import org.fabric3.scdl.CompositeService;
 import org.fabric3.scdl.Implementation;
 import org.fabric3.scdl.Include;
 import org.fabric3.scdl.Property;
-import org.fabric3.scdl.ValidationContext;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
@@ -77,18 +76,18 @@ public class LogicalModelInstantiatorImpl implements LogicalModelInstantiator {
         LogicalChange change = new LogicalChange(targetComposite);
 
         // merge the property values into the parent
-        Map<String, Document> properties = includeProperties(targetComposite, composite);
+        Map<String, Document> properties = includeProperties(composite, change);
 
         // instantiate all the components in the composite and add them to the parent
-        List<LogicalComponent<?>> newComponents = instantiateComponents(targetComposite, properties, composite);
-        List<LogicalService> services = instantiateServices(targetComposite, composite);
-        List<LogicalReference> references = instantiateReferences(targetComposite, composite);
+        List<LogicalComponent<?>> newComponents = instantiateComponents(properties, composite, change);
+        List<LogicalService> services = instantiateServices(composite, change);
+        List<LogicalReference> references = instantiateReferences(composite, change);
 
-        resolve(targetComposite.getComponents(), services, references);
+        resolve(targetComposite.getComponents(), services, references, change);
 
         // normalize bindings for each new component
         for (LogicalComponent<?> component : newComponents) {
-            normalize(component);
+            normalize(component, change);
         }
         return change;
     }
@@ -104,7 +103,8 @@ public class LogicalModelInstantiatorImpl implements LogicalModelInstantiator {
         return change;
     }
 
-    private Map<String, Document> includeProperties(LogicalCompositeComponent parent, Composite composite) throws LogicalInstantiationException {
+    private Map<String, Document> includeProperties(Composite composite, LogicalChange change) throws LogicalInstantiationException {
+        LogicalCompositeComponent parent = change.getParent();
         for (Property property : composite.getProperties().values()) {
             String name = property.getName();
             if (parent.getPropertyValues().containsKey(name)) {
@@ -115,9 +115,12 @@ public class LogicalModelInstantiatorImpl implements LogicalModelInstantiator {
         return parent.getPropertyValues();
     }
 
-    private List<LogicalComponent<?>> instantiateComponents(LogicalCompositeComponent parent, Map<String, Document> properties, Composite composite)
+    private List<LogicalComponent<?>> instantiateComponents(
+            Map<String, Document> properties,
+            Composite composite,
+            LogicalChange change)
             throws LogicalInstantiationException {
-
+        LogicalCompositeComponent parent = change.getParent();
         Collection<ComponentDefinition<? extends Implementation<?>>> definitions = composite.getDeclaredComponents().values();
         List<LogicalComponent<?>> newComponents = new ArrayList<LogicalComponent<?>>(definitions.size());
         for (ComponentDefinition<? extends Implementation<?>> definition : definitions) {
@@ -177,7 +180,8 @@ public class LogicalModelInstantiatorImpl implements LogicalModelInstantiator {
 
     }
 
-    private List<LogicalService> instantiateServices(LogicalComponent<CompositeImplementation> parent, Composite composite) {
+    private List<LogicalService> instantiateServices(Composite composite, LogicalChange change) {
+        LogicalCompositeComponent parent = change.getParent();
         String base = parent.getUri().toString();
         List<LogicalService> services = new ArrayList<LogicalService>();
         // merge the composite service declarations into the parent
@@ -199,7 +203,8 @@ public class LogicalModelInstantiatorImpl implements LogicalModelInstantiator {
 
     }
 
-    private List<LogicalReference> instantiateReferences(LogicalComponent<CompositeImplementation> parent, Composite composite) {
+    private List<LogicalReference> instantiateReferences(Composite composite, LogicalChange change) {
+        LogicalCompositeComponent parent = change.getParent();
         String base = parent.getUri().toString();
         // merge the composite reference definitions into the parent
         List<LogicalReference> references = new ArrayList<LogicalReference>(composite.getReferences().size());
@@ -223,7 +228,10 @@ public class LogicalModelInstantiatorImpl implements LogicalModelInstantiator {
 
     }
 
-    private void resolve(Collection<LogicalComponent<?>> components, List<LogicalService> services, List<LogicalReference> references)
+    private void resolve(Collection<LogicalComponent<?>> components,
+                         List<LogicalService> services,
+                         List<LogicalReference> references,
+                         LogicalChange change)
             throws LogicalInstantiationException {
 
         // resolve wires for composite services merged into the domain
@@ -233,12 +241,12 @@ public class LogicalModelInstantiatorImpl implements LogicalModelInstantiator {
 
         // resove composite references merged into the domain
         for (LogicalReference reference : references) {
-            resolutionService.resolve(reference, logicalComponentManager.getRootComponent());
+            resolutionService.resolve(reference, logicalComponentManager.getRootComponent(), change);
         }
 
         // resolve wires for each new component
         for (LogicalComponent<?> component : components) {
-            resolutionService.resolve(component);
+            resolutionService.resolve(component, change);
         }
 
     }
@@ -247,12 +255,13 @@ public class LogicalModelInstantiatorImpl implements LogicalModelInstantiator {
      * Normalizes the component and any children
      *
      * @param component the component to normalize
+     * @param change    the logical change associated with the normalize operation
      */
-    private void normalize(LogicalComponent<?> component) {
+    private void normalize(LogicalComponent<?> component, LogicalChange change) {
         if (component instanceof LogicalCompositeComponent) {
             LogicalCompositeComponent composite = (LogicalCompositeComponent) component;
             for (LogicalComponent<?> child : composite.getComponents()) {
-                normalize(child);
+                normalize(child, change);
             }
         } else {
             promotionNormalizer.normalize(component);

@@ -18,6 +18,7 @@
  */
 package org.fabric3.fabric.instantiator.promotion;
 
+import org.fabric3.fabric.instantiator.LogicalChange;
 import org.fabric3.fabric.instantiator.LogicalInstantiationException;
 import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalService;
@@ -52,8 +53,10 @@ public interface PromotionResolutionService {
      * set to the URI of the promoted reference.
      *
      * @param logicalReference Logical reference whose promotion is handled.
+     * @param change           the logical change associated with the deployment operation resolution is being performed for. Recoverable errors and
+     *                         warnings should be reported here.
      * @throws LogicalInstantiationException if an error occurs processing the promoted exception
      */
-    void resolve(LogicalReference logicalReference) throws LogicalInstantiationException;
+    void resolve(LogicalReference logicalReference, LogicalChange change) throws LogicalInstantiationException;
 
 }

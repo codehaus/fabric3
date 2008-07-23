@@ -48,6 +48,9 @@ import org.fabric3.host.contribution.ContributionSource;
 import org.fabric3.host.contribution.Deployable;
 import org.fabric3.host.contribution.FileContributionSource;
 import org.fabric3.host.contribution.ValidationException;
+import org.fabric3.host.domain.AssemblyException;
+import org.fabric3.host.domain.DeploymentException;
+import org.fabric3.host.domain.DomainException;
 import org.fabric3.host.runtime.Bootstrapper;
 import org.fabric3.host.runtime.CoordinatorMonitor;
 import org.fabric3.host.runtime.InitializationException;
@@ -63,9 +66,7 @@ import org.fabric3.scdl.ValidationContext;
 import org.fabric3.spi.component.GroupInitializationException;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.ScopeRegistry;
-import org.fabric3.spi.domain.DeploymentException;
 import org.fabric3.spi.domain.Domain;
-import org.fabric3.spi.domain.DomainException;
 import org.fabric3.spi.invocation.CallFrame;
 import org.fabric3.spi.invocation.WorkContext;
 import org.fabric3.spi.services.contribution.Contribution;
@@ -344,14 +345,20 @@ public class WebappCoordinator implements RuntimeLifecycleCoordinator<WebappRunt
             List<URI> contributionUris;
             try {
                 contributionUris = contributionService.contribute(sources);
+                includeExtensionContributions(contributionUris);
             } catch (ValidationException e) {
                 // print out the validation errors
                 monitor.extensionErrors(e.getMessage());
-                throw new ExtensionInitializationException("Errors were detected in one or more extensions");
+                throw new ExtensionInitializationException("Contribution errors were detected in one or more extensions");
+            } catch (AssemblyException e) {
+                // print out the assembly errors
+                monitor.extensionErrors(e.getMessage());
+                throw new ExtensionInitializationException("Deployment errors were detected in one or more extensions");
             } catch (ContributionException e) {
                 throw new ExtensionInitializationException("Error loading extension", e);
+            } catch (DeploymentException e) {
+                throw new ExtensionInitializationException("Error loading extension", e);
             }
-            includeExtensionContributions(contributionUris);
             DefinitionsRegistry definitionsRegistry =
                     runtime.getSystemComponent(DefinitionsRegistry.class, DEFINITIONS_REGISTRY);
             definitionsRegistry.activateDefinitions(contributionUris);
@@ -362,14 +369,10 @@ public class WebappCoordinator implements RuntimeLifecycleCoordinator<WebappRunt
      FIXME this code was in AbstractRuntime but isn't really runtime functionality
      FIXME it is now duplicated in all coordinators and should be refactored into one place
      */
-    public void includeExtensionContributions(List<URI> contributionUris) throws InitializationException {
+    public void includeExtensionContributions(List<URI> contributionUris) throws DeploymentException {
         Domain domain = runtime.getSystemComponent(Domain.class, RUNTIME_DOMAIN_URI);
         Composite composite = createExtensionComposite(contributionUris);
-        try {
-            domain.include(composite);
-        } catch (DeploymentException e) {
-            throw new ExtensionInitializationException("Error activating extensions", e);
-        }
+        domain.include(composite);
     }
 
     /**
@@ -377,13 +380,13 @@ public class WebappCoordinator implements RuntimeLifecycleCoordinator<WebappRunt
      *
      * @param contributionUris the contributions containing the deployables to include
      * @return the extension composite
-     * @throws InitializationException if an error occurs creating the composite
+     * @throws DeploymentException if an error occurs creating the composite
      */
-    private Composite createExtensionComposite(List<URI> contributionUris) throws InitializationException {
+    private Composite createExtensionComposite(List<URI> contributionUris) throws DeploymentException {
         MetaDataStore metaDataStore = runtime.getSystemComponent(MetaDataStore.class, METADATA_STORE_URI);
         if (metaDataStore == null) {
             String id = METADATA_STORE_URI.toString();
-            throw new InitializationException("Extensions metadata store not configured", id);
+            throw new DeploymentException("Extensions metadata store not configured", id);
         }
         QName qName = new QName(org.fabric3.spi.Constants.FABRIC3_SYSTEM_NS, "extension");
         Composite composite = new Composite(qName);

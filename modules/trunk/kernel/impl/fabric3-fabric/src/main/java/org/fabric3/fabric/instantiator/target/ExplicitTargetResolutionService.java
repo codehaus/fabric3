@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import org.fabric3.fabric.instantiator.AmbiguousServiceException;
+import org.fabric3.fabric.instantiator.LogicalChange;
 import org.fabric3.fabric.instantiator.LogicalInstantiationException;
 import org.fabric3.fabric.instantiator.NoServiceOnComponentException;
 import org.fabric3.fabric.instantiator.ServiceNotFoundException;
@@ -22,7 +23,8 @@ import org.fabric3.spi.util.UriHelper;
  */
 public class ExplicitTargetResolutionService implements TargetResolutionService {
 
-    public void resolve(LogicalReference logicalReference, LogicalCompositeComponent context) throws LogicalInstantiationException {
+    public void resolve(LogicalReference logicalReference, LogicalCompositeComponent component, LogicalChange change)
+            throws LogicalInstantiationException {
 
         ComponentReference componentReference = logicalReference.getComponentReference();
         if (componentReference == null) {
@@ -34,13 +36,13 @@ public class ExplicitTargetResolutionService implements TargetResolutionService 
             return;
         }
 
-        URI parentUri = context.getUri();
+        URI parentUri = component.getUri();
         URI componentUri = logicalReference.getParent().getUri();
 
         List<URI> resolvedUris = new ArrayList<URI>();
         for (URI requestedTarget : requestedTargets) {
             URI resolved = parentUri.resolve(componentUri).resolve(requestedTarget);
-            URI targetURI = resolveByUri(logicalReference, resolved, context);
+            URI targetURI = resolveByUri(logicalReference, resolved, component);
             resolvedUris.add(targetURI);
         }
         logicalReference.overrideTargets(resolvedUris);

@@ -23,8 +23,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
+import org.fabric3.fabric.instantiator.LogicalChange;
 import org.fabric3.fabric.instantiator.LogicalInstantiationException;
-import org.fabric3.fabric.instantiator.ReferenceNotFoundException;
+import org.fabric3.fabric.instantiator.ReferenceNotFound;
 import org.fabric3.scdl.AbstractComponentType;
 import org.fabric3.scdl.Autowire;
 import org.fabric3.scdl.ComponentDefinition;
@@ -46,7 +47,8 @@ import org.fabric3.spi.util.UriHelper;
  */
 public class TypeBasedAutoWireService implements TargetResolutionService {
 
-    public void resolve(LogicalReference logicalReference, LogicalCompositeComponent compositeComponent) throws LogicalInstantiationException {
+    public void resolve(LogicalReference logicalReference, LogicalCompositeComponent compositeComponent, LogicalChange change)
+            throws LogicalInstantiationException {
 
         ComponentReference componentReference = logicalReference.getComponentReference();
         LogicalComponent<?> component = logicalReference.getParent();
@@ -81,7 +83,8 @@ public class TypeBasedAutoWireService implements TargetResolutionService {
         }
 
         if (logicalReference.getWires().isEmpty() && logicalReference.getDefinition().isRequired() && logicalReference.getBindings().isEmpty()) {
-            throw new ReferenceNotFoundException("Unable to resolve reference " + logicalReference.getUri());
+            String uri = logicalReference.getUri().toString();
+            change.addError(new ReferenceNotFound("Unable to resolve reference " + uri, component, uri));
         }
 
     }
@@ -159,7 +162,7 @@ public class TypeBasedAutoWireService implements TargetResolutionService {
                 ServiceContract<?> targetContract = determineContract(service);
                 if (targetContract == null) {
                     // This is a programming error since a non-composite service must have a service contract
-                    throw new ServiceContractNotFoundException("No service contract specified on service: " + service.getUri());
+                    throw new AssertionError("No service contract specified on service: " + service.getUri());
                 }
                 if (contract.isAssignableFrom(targetContract)) {
                     candidates.add(service.getUri());

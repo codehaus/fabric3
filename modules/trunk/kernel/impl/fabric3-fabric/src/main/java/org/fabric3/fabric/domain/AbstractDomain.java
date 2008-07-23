@@ -32,9 +32,10 @@ import org.fabric3.fabric.instantiator.LogicalModelInstantiator;
 import org.fabric3.fabric.services.routing.RoutingException;
 import org.fabric3.fabric.services.routing.RoutingService;
 import org.fabric3.scdl.Composite;
-import org.fabric3.spi.domain.DeploymentException;
+import org.fabric3.host.domain.DeploymentException;
 import org.fabric3.spi.domain.Domain;
-import org.fabric3.spi.domain.DomainException;
+import org.fabric3.host.domain.DomainException;
+import org.fabric3.host.domain.AssemblyException;
 import org.fabric3.spi.generator.CommandMap;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.LogicalComponent;
@@ -113,7 +114,7 @@ public abstract class AbstractDomain implements Domain {
             throw new DeploymentException("Error deploying: " + composite.getName(), e);
         }
         if (change.hasErrors()) {
-            // TODO throw exception
+            throw new AssemblyException(change.getErrors(), change.getWarnings());
         } else if (change.hasWarnings()) {
             // TOOD log warnings 
         }

@@ -16,27 +16,37 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.fabric.instantiator;
-
-import org.fabric3.spi.model.instance.LogicalScaArtifact;
+package org.fabric3.host.domain;
 
 /**
- * Base class for errors encountered generating a logical change during deployment.
+ * Denotes an error during deployment.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
-public abstract class LogicalChangeFailure<T extends LogicalScaArtifact<?>> {
-    private T artifact;
+public class DeploymentException extends DomainException {
+    private static final long serialVersionUID = -8846536703004740119L;
 
-    protected LogicalChangeFailure(T artifact) {
-        this.artifact = artifact;
+    public DeploymentException() {
     }
 
-    public T getArtifact() {
-        return artifact;
+    public DeploymentException(String message) {
+        super(message);
     }
 
-    public String getMessage() {
-        return "";
+    public DeploymentException(String message, String identifier) {
+        super(message, identifier);
     }
+
+    public DeploymentException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public DeploymentException(String message, String identifier, Throwable cause) {
+        super(message, identifier, cause);
+    }
+
+    public DeploymentException(Throwable cause) {
+        super(cause);
+    }
+
 }

@@ -60,37 +60,33 @@ public class ResolutionServiceImplTestCase extends TestCase {
 
     public void testAutowireAtomicToAtomic() throws Exception {
         LogicalCompositeComponent composite = createWiredComposite(domain, Foo.class, Foo.class);
-        resolutionService.resolve(composite);
+        LogicalChange change = new LogicalChange(domain);
+        resolutionService.resolve(composite, change);
         LogicalComponent<?> source = composite.getComponent(SOURCE_URI);
         assertEquals(TARGET_URI, source.getReference("ref").getWires().iterator().next().getTargetUri());
     }
 
     public void testAutowireAtomicToAtomicRequiresSuperInterface() throws Exception {
         LogicalCompositeComponent composite = createWiredComposite(domain, SuperFoo.class, Foo.class);
-        resolutionService.resolve(composite);
+        LogicalChange change = new LogicalChange(domain);
+        resolutionService.resolve(composite, change);
         LogicalComponent<?> source = composite.getComponent(SOURCE_URI);
-        resolutionService.resolve(composite);
+        resolutionService.resolve(composite, change);
         assertEquals(TARGET_URI, source.getReference("ref").getWires().iterator().next().getTargetUri());
     }
 
     public void testAutowireAtomicToAtomicRequiresSubInterface() throws Exception {
         LogicalComponent<CompositeImplementation> composite = createWiredComposite(domain, Foo.class, SuperFoo.class);
-        try {
-            resolutionService.resolve(composite);
-            fail();
-        } catch (LogicalInstantiationException e) {
-            // expected
-        }
+        LogicalChange change = new LogicalChange(domain);
+        resolutionService.resolve(composite, change);
+        assertTrue(change.getErrors().get(0) instanceof ReferenceNotFound);
     }
 
     public void testAutowireAtomicToAtomicIncompatibleInterfaces() throws Exception {
         LogicalComponent<CompositeImplementation> composite = createWiredComposite(domain, Foo.class, String.class);
-        try {
-            resolutionService.resolve(composite);
-            fail();
-        } catch (LogicalInstantiationException e) {
-            // expected
-        }
+        LogicalChange change = new LogicalChange(domain);
+        resolutionService.resolve(composite, change);
+        assertTrue(change.getErrors().get(0) instanceof ReferenceNotFound);
     }
 
     public void testNestedAutowireAtomicToAtomic() throws Exception {
@@ -98,7 +94,8 @@ public class ResolutionServiceImplTestCase extends TestCase {
         LogicalCompositeComponent parent = createComposite("parent", composite);
         parent.addComponent(composite);
         parent.getDefinition().getImplementation().getComponentType().add(composite.getDefinition());
-        resolutionService.resolve(parent);
+        LogicalChange change = new LogicalChange(domain);
+        resolutionService.resolve(parent, change);
         LogicalComponent<?> source = composite.getComponent(SOURCE_URI);
         assertEquals(TARGET_URI, source.getReference("ref").getWires().iterator().next().getTargetUri());
     }
@@ -109,7 +106,8 @@ public class ResolutionServiceImplTestCase extends TestCase {
         composite.addComponent(source);
         LogicalComponent<?> target = createTargetAtomic(Foo.class, composite);
         composite.addComponent(target);
-        resolutionService.resolve(source);
+        LogicalChange change = new LogicalChange(domain);
+        resolutionService.resolve(source, change);
     }
 
     public void testAutowireToSiblingIncludeInComposite() throws Exception {
@@ -120,7 +118,8 @@ public class ResolutionServiceImplTestCase extends TestCase {
         LogicalComponent<?> target = createTargetAtomic(Foo.class, composite);
         parent.addComponent(composite);
         composite.addComponent(target);
-        resolutionService.resolve(composite);
+        LogicalChange change = new LogicalChange(domain);
+        resolutionService.resolve(composite, change);
     }
 
 

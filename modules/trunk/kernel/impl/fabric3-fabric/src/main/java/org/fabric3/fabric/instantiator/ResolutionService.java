@@ -38,9 +38,11 @@ public interface ResolutionService {
      * will be resolved.
      *
      * @param logicalComponent logical component to be resolved.
+     * @param change           the logical change associated with the deployment operation resolution is being performed for. Recoverable errors and
+     *                         warnings should be reported here.
      * @throws LogicalInstantiationException if a resolution error occurs.
      */
-    void resolve(LogicalComponent<?> logicalComponent) throws LogicalInstantiationException;
+    void resolve(LogicalComponent<?> logicalComponent, LogicalChange change) throws LogicalInstantiationException;
 
     /**
      * Resolves the promotion on the specified logical service.
@@ -55,7 +57,9 @@ public interface ResolutionService {
      *
      * @param logicalReference Logical reference to be resolved.
      * @param composite        Composite component against which the targets are resolved.
+     * @param change           the logical change associated with the deployment operation resolution is being performed for. Recoverable errors and
+     *                         warnings should be reported here.
      * @throws LogicalInstantiationException if a resolution error occurs.
      */
-    void resolve(LogicalReference logicalReference, LogicalCompositeComponent composite) throws LogicalInstantiationException;
+    void resolve(LogicalReference logicalReference, LogicalCompositeComponent composite, LogicalChange change) throws LogicalInstantiationException;
 }

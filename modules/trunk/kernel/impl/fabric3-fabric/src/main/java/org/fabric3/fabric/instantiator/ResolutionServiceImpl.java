@@ -59,15 +59,15 @@ public class ResolutionServiceImpl implements ResolutionService {
      * @param logicalComponent Logical component that needs to be wired.
      * @throws LogicalInstantiationException Ifthe target for a required reference is unable to be wired.
      */
-    public void resolve(LogicalComponent<?> logicalComponent) throws LogicalInstantiationException {
+    public void resolve(LogicalComponent<?> logicalComponent, LogicalChange change) throws LogicalInstantiationException {
         if (logicalComponent instanceof LogicalCompositeComponent) {
             LogicalCompositeComponent compositeComponent = (LogicalCompositeComponent) logicalComponent;
             for (LogicalComponent<?> child : compositeComponent.getComponents()) {
-                resolve(child);
+                resolve(child, change);
             }
         }
 
-        resolveReferences(logicalComponent);
+        resolveReferences(logicalComponent, change);
         resolveServices(logicalComponent);
     }
 
@@ -75,22 +75,21 @@ public class ResolutionServiceImpl implements ResolutionService {
         promotionResolutionService.resolve(logicalService);
     }
 
-    public void resolve(LogicalReference logicalReference, LogicalCompositeComponent context) throws LogicalInstantiationException {
-
-        promotionResolutionService.resolve(logicalReference);
+    public void resolve(LogicalReference reference, LogicalCompositeComponent component, LogicalChange change) throws LogicalInstantiationException {
+        promotionResolutionService.resolve(reference, change);
         for (TargetResolutionService targetResolutionService : targetResolutionServices) {
-            targetResolutionService.resolve(logicalReference, context);
+            targetResolutionService.resolve(reference, component, change);
         }
     }
 
     /*
      * Handles promotions and target resolution on references.
      */
-    private void resolveReferences(LogicalComponent<?> logicalComponent) throws LogicalInstantiationException {
+    private void resolveReferences(LogicalComponent<?> logicalComponent, LogicalChange change) throws LogicalInstantiationException {
         for (LogicalReference logicalReference : logicalComponent.getReferences()) {
-            promotionResolutionService.resolve(logicalReference);
+            promotionResolutionService.resolve(logicalReference, change);
             for (TargetResolutionService targetResolutionService : targetResolutionServices) {
-                targetResolutionService.resolve(logicalReference, logicalComponent.getParent());
+                targetResolutionService.resolve(logicalReference, logicalComponent.getParent(), change);
             }
         }
     }

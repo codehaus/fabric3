@@ -33,7 +33,6 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
-
 import javax.xml.namespace.QName;
 
 import org.apache.maven.artifact.Artifact;
@@ -62,9 +61,12 @@ import org.apache.maven.surefire.report.ReporterManager;
 import org.apache.maven.surefire.report.XMLReporter;
 import org.apache.maven.surefire.suite.SurefireTestSuite;
 import org.apache.maven.surefire.testset.TestSetFailedException;
+
 import org.fabric3.api.annotation.logging.Severe;
 import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.host.contribution.ValidationException;
+import org.fabric3.host.domain.AssemblyException;
+import org.fabric3.host.domain.DeploymentException;
 import org.fabric3.host.runtime.Bootstrapper;
 import org.fabric3.host.runtime.InitializationException;
 import org.fabric3.host.runtime.RuntimeLifecycleCoordinator;
@@ -72,7 +74,6 @@ import org.fabric3.host.runtime.ScdlBootstrapper;
 import org.fabric3.host.runtime.ShutdownException;
 import org.fabric3.jmx.agent.Agent;
 import org.fabric3.jmx.agent.DefaultAgent;
-import org.fabric3.maven.runtime.CompositeActivationException;
 import org.fabric3.maven.runtime.ContextStartException;
 import org.fabric3.maven.runtime.MavenCoordinator;
 import org.fabric3.maven.runtime.MavenEmbeddedRuntime;
@@ -671,7 +672,7 @@ public class Fabric3ITestMojo extends AbstractMojo {
         runtime.setHostClassLoader(hostClassLoader);
 
         runtime.setJMXDomain(managementDomain);
-        
+
         // TODO Add better host JMX support from the next release
         agent = new DefaultAgent();
         runtime.setMBeanServer(agent.getMBeanServer());
@@ -687,7 +688,7 @@ public class Fabric3ITestMojo extends AbstractMojo {
     }
 
     protected SurefireTestSuite createTestSuite(MavenEmbeddedRuntime runtime, URL testScdlURL)
-            throws CompositeActivationException, ContributionException, ContextStartException, MojoExecutionException {
+            throws DeploymentException, ContributionException, ContextStartException, MojoExecutionException {
         URI domain = URI.create(testDomain);
         Composite composite;
         try {
@@ -697,13 +698,17 @@ public class Fabric3ITestMojo extends AbstractMojo {
             reportContributionErrors(e);
             String msg = "Contribution errors were found";
             throw new MojoExecutionException(msg);
+        } catch (AssemblyException e) {
+            reportDeploymentErrors(e);
+            String msg = "Deployment errors were found";
+            throw new MojoExecutionException(msg);
         }
         runtime.startContext(domain);
         return createTestSuite(runtime, composite, domain);
     }
 
     protected SurefireTestSuite createTestSuite(MavenEmbeddedRuntime runtime)
-            throws ContributionException, CompositeActivationException, ContextStartException, MojoExecutionException {
+            throws ContributionException, DeploymentException, ContextStartException, MojoExecutionException {
         URI domain = URI.create(testDomain);
         QName qName = new QName(compositeNamespace, compositeName);
         try {
@@ -715,6 +720,10 @@ public class Fabric3ITestMojo extends AbstractMojo {
             // print out the validation errors
             reportContributionErrors(e);
             String msg = "Contribution errors were found";
+            throw new MojoExecutionException(msg);
+        } catch (AssemblyException e) {
+            reportDeploymentErrors(e);
+            String msg = "Deployment errors were found";
             throw new MojoExecutionException(msg);
         }
     }
@@ -746,6 +755,14 @@ public class Fabric3ITestMojo extends AbstractMojo {
         getLog().error(b);
     }
 
+    protected void reportDeploymentErrors(AssemblyException cause) {
+        StringBuilder b = new StringBuilder("\n\n");
+        b.append("-------------------------------------------------------\n");
+        b.append("DEPLOYMENT ERRORS\n");
+        b.append("-------------------------------------------------------\n\n");
+        b.append(cause.getMessage());
+        getLog().error(b);
+    }
 
     protected SCATestSet createTestSet(MavenEmbeddedRuntime runtime,
                                        String name,

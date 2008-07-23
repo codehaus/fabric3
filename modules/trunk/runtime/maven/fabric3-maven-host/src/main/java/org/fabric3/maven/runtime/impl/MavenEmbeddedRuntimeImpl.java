@@ -23,8 +23,8 @@ import java.io.InputStream;
 import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URI;
-import java.net.URL;
 import java.net.URISyntaxException;
+import java.net.URL;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
@@ -40,11 +40,11 @@ import org.fabric3.fabric.util.FileHelper;
 import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.host.contribution.ContributionService;
 import org.fabric3.host.contribution.ContributionSource;
+import org.fabric3.host.domain.DeploymentException;
 import org.fabric3.maven.contribution.ModuleContributionSource;
+import org.fabric3.maven.runtime.ContextStartException;
 import org.fabric3.maven.runtime.MavenEmbeddedRuntime;
 import org.fabric3.maven.runtime.MavenHostInfo;
-import org.fabric3.maven.runtime.CompositeActivationException;
-import org.fabric3.maven.runtime.ContextStartException;
 import org.fabric3.pojo.PojoWorkContextTunnel;
 import org.fabric3.pojo.implementation.PojoComponent;
 import org.fabric3.pojo.reflection.InvokerInterceptor;
@@ -53,11 +53,10 @@ import org.fabric3.scdl.Operation;
 import org.fabric3.scdl.Scope;
 import org.fabric3.services.xmlfactory.XMLFactory;
 import org.fabric3.spi.ObjectCreationException;
-import org.fabric3.spi.domain.DeploymentException;
-import org.fabric3.spi.domain.Domain;
 import org.fabric3.spi.component.GroupInitializationException;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.ScopeRegistry;
+import org.fabric3.spi.domain.Domain;
 import org.fabric3.spi.invocation.CallFrame;
 import org.fabric3.spi.invocation.Message;
 import org.fabric3.spi.invocation.MessageImpl;
@@ -76,7 +75,7 @@ public class MavenEmbeddedRuntimeImpl extends AbstractRuntime<MavenHostInfo> imp
         super(MavenHostInfo.class, null);
     }
 
-    public Composite activate(URL url, QName qName) throws ContributionException, CompositeActivationException {
+    public Composite activate(URL url, QName qName) throws ContributionException, DeploymentException {
         try {
             URI contributionUri = url.toURI();
             ModuleContributionSource source =
@@ -84,32 +83,27 @@ public class MavenEmbeddedRuntimeImpl extends AbstractRuntime<MavenHostInfo> imp
             return activate(source, qName);
         } catch (MalformedURLException e) {
             String identifier = url.toString();
-            throw new CompositeActivationException("Invalid project directory: " + identifier, identifier, e);
+            throw new DeploymentException("Invalid project directory: " + identifier, identifier, e);
         } catch (URISyntaxException e) {
-            throw new CompositeActivationException("Error activating test contribution", e);
+            throw new DeploymentException("Error activating test contribution", e);
         }
     }
 
-    public Composite activate(ContributionSource source, QName qName) throws CompositeActivationException, ContributionException {
-        try {
-            // contribute the Maven project to the application domain
-            Domain domain = getSystemComponent(Domain.class, DISTRIBUTED_DOMAIN_URI);
-            ContributionService contributionService =
-                    getSystemComponent(ContributionService.class, CONTRIBUTION_SERVICE_URI);
-            contributionService.contribute(source);
-            // activate the deployable composite in the domain
-            domain.include(qName);
-            MetaDataStore store = getSystemComponent(MetaDataStore.class, ComponentNames.METADATA_STORE_URI);
-            ResourceElement<?, ?> element = store.resolve(new QNameSymbol(qName));
-            assert element != null;
-            return (Composite) element.getValue();
-        } catch (DeploymentException e) {
-            String identifier = qName.toString();
-            throw new CompositeActivationException("Error activating composite:" + identifier, identifier, e);
-        }
+    public Composite activate(ContributionSource source, QName qName) throws ContributionException, DeploymentException {
+        // contribute the Maven project to the application domain
+        Domain domain = getSystemComponent(Domain.class, DISTRIBUTED_DOMAIN_URI);
+        ContributionService contributionService =
+                getSystemComponent(ContributionService.class, CONTRIBUTION_SERVICE_URI);
+        contributionService.contribute(source);
+        // activate the deployable composite in the domain
+        domain.include(qName);
+        MetaDataStore store = getSystemComponent(MetaDataStore.class, ComponentNames.METADATA_STORE_URI);
+        ResourceElement<?, ?> element = store.resolve(new QNameSymbol(qName));
+        assert element != null;
+        return (Composite) element.getValue();
     }
 
-    public Composite activate(URL url, URL scdlLocation) throws ContributionException, CompositeActivationException {
+    public Composite activate(URL url, URL scdlLocation) throws ContributionException, DeploymentException {
         QName name;
         try {
             name = parseCompositeQName(scdlLocation);

@@ -16,7 +16,7 @@
  */
 package org.fabric3.fabric.domain;
 
-import org.fabric3.spi.domain.DeploymentException;
+import org.fabric3.host.domain.DeploymentException;
 
 /**
  * @version $Rev$ $Date$

@@ -23,10 +23,9 @@ import javax.servlet.ServletRequestListener;
 import javax.servlet.http.HttpSessionListener;
 import javax.xml.namespace.QName;
 
-import org.fabric3.host.runtime.Fabric3Runtime;
-import org.fabric3.host.runtime.InitializationException;
-import org.fabric3.host.contribution.ValidationException;
 import org.fabric3.host.contribution.ContributionException;
+import org.fabric3.host.domain.DeploymentException;
+import org.fabric3.host.runtime.Fabric3Runtime;
 
 /**
  * The contract for artifacts loaded in the web application classloader to comminicate with the Fabric3 runtime loaded in a child classloader. For
@@ -41,11 +40,11 @@ public interface WebappRuntime extends ServletRequestListener, HttpSessionListen
      *
      * @param qName       the composite qualified name
      * @param componentId the id of the component that should be bound to the webapp
-     * @throws InitializationException if there was a problem initializing the composite
-     * @throws ContributionException   if an error is found in the contribution. If validation errors are encountered, a ValidationException will be
-     *                                 thrown.
+     * @throws DeploymentException   if there was a problem initializing the composite
+     * @throws ContributionException if an error is found in the contribution. If validation errors are encountered, a ValidationException will be
+     *                               thrown.
      */
-    void activate(QName qName, URI componentId) throws ContributionException, InitializationException;
+    void activate(QName qName, URI componentId) throws ContributionException, DeploymentException;
 
     /**
      * Returns the ServletRequestInjector for the runtime.

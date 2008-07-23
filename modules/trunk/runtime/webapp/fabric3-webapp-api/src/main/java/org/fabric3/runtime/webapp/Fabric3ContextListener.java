@@ -43,6 +43,7 @@ import javax.servlet.ServletContextListener;
 import javax.xml.namespace.QName;
 
 import org.fabric3.host.Fabric3RuntimeException;
+import org.fabric3.host.domain.AssemblyException;
 import org.fabric3.host.contribution.ValidationException;
 import org.fabric3.host.runtime.Bootstrapper;
 import org.fabric3.host.runtime.InitializationException;
@@ -136,6 +137,10 @@ public class Fabric3ContextListener implements ServletContextListener {
             // print out the validation errors
             monitor.contributionErrors(e.getMessage());
             throw new Fabric3InitException("Errors were detected in the web application contribution");
+        } catch (AssemblyException e) {
+            // print out the deployment errors
+            monitor.deploymentErrors(e.getMessage());
+            throw new Fabric3InitException("Deployment errors were detected");
         } catch (Fabric3RuntimeException e) {
             if (monitor != null) {
                 monitor.runError(e);

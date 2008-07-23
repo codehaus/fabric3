@@ -22,8 +22,9 @@ import javax.xml.namespace.QName;
 
 import org.apache.maven.surefire.testset.TestSetFailedException;
 
-import org.fabric3.host.contribution.ContributionSource;
 import org.fabric3.host.contribution.ContributionException;
+import org.fabric3.host.contribution.ContributionSource;
+import org.fabric3.host.domain.DeploymentException;
 import org.fabric3.host.runtime.Fabric3Runtime;
 import org.fabric3.scdl.Composite;
 import org.fabric3.scdl.Operation;
@@ -41,11 +42,11 @@ public interface MavenEmbeddedRuntime extends Fabric3Runtime<MavenHostInfo> {
      * @param base      the module output directory location
      * @param composite the composite qname to activate
      * @return the activated composite's component type
-     * @throws ContributionException        if a contribution is thrown. The cause may a ValidationException resulting from  errors in the
-     *                                      contribution. In this case the errors should be reported back to the user.
-     * @throws CompositeActivationException if there is an error activating the test composite
+     * @throws ContributionException if a contribution is thrown. The cause may a ValidationException resulting from  errors in the contribution. In
+     *                               this case the errors should be reported back to the user.
+     * @throws DeploymentException   if there is an error activating the test composite
      */
-    Composite activate(URL base, QName composite) throws ContributionException, CompositeActivationException;
+    Composite activate(URL base, QName composite) throws ContributionException, DeploymentException;
 
     /**
      * Activates a composite by qualified name contained in the contribution source.
@@ -53,11 +54,11 @@ public interface MavenEmbeddedRuntime extends Fabric3Runtime<MavenHostInfo> {
      * @param source    the source of the contribution
      * @param composite the composite qname to activate
      * @return the activated composite's component type
-     * @throws ContributionException        if a contribution is thrown. The cause may a ValidationException resulting from  errors in the
-     *                                      contribution. In this case the errors should be reported back to the user.
-     * @throws CompositeActivationException if there is an error activating the test composite
+     * @throws ContributionException if a contribution is thrown. The cause may a ValidationException resulting from  errors in the contribution. In
+     *                               this case the errors should be reported back to the user.
+     * @throws DeploymentException   if there is an error activating the test composite
      */
-    Composite activate(ContributionSource source, QName composite) throws ContributionException, CompositeActivationException;
+    Composite activate(ContributionSource source, QName composite) throws ContributionException, DeploymentException;
 
     /**
      * Activates a composite pointed to by the SCDL location.
@@ -68,11 +69,11 @@ public interface MavenEmbeddedRuntime extends Fabric3Runtime<MavenHostInfo> {
      * @param base         the module output directory location
      * @param scdlLocation the composite file location
      * @return the activated composite's component type
-     * @throws CompositeActivationException if there is an error activating the test composite
-     * @throws ContributionException        if a contribution is thrown. The cause may a ValidationException resulting from  errors in the
-     *                                      contribution. In this case the errors should be reported back to the user.
+     * @throws DeploymentException   if there is an error activating the test composite
+     * @throws ContributionException if a contribution is thrown. The cause may a ValidationException resulting from  errors in the contribution. In
+     *                               this case the errors should be reported back to the user.
      */
-    Composite activate(URL base, URL scdlLocation) throws ContributionException, CompositeActivationException;
+    Composite activate(URL base, URL scdlLocation) throws ContributionException, DeploymentException;
 
     /**
      * Starts the component context

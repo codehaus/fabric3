@@ -106,7 +106,7 @@ import org.fabric3.spi.builder.component.SourceWireAttacher;
 import org.fabric3.spi.builder.component.TargetWireAttacher;
 import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.spi.domain.Domain;
-import org.fabric3.spi.domain.DomainException;
+import org.fabric3.host.domain.DomainException;
 import org.fabric3.spi.executor.CommandExecutorRegistry;
 import org.fabric3.spi.generator.AddCommandGenerator;
 import org.fabric3.spi.generator.GeneratorRegistry;
