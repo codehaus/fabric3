@@ -18,10 +18,32 @@
  */
 package org.fabric3.fabric.instantiator;
 
-public class ServiceNotFoundException extends LogicalInstantiationException {
-    private static final long serialVersionUID = -6600598658356829665L;
+import java.net.URI;
 
-    public ServiceNotFoundException(String message) {
-        super(message);
+import org.fabric3.host.domain.AssemblyFailure;
+import org.fabric3.spi.model.instance.Bindable;
+
+public class ServiceNotFound extends AssemblyFailure {
+    private String message;
+    private Bindable bindable;
+    private URI targetUri;
+
+    public ServiceNotFound(String message, Bindable bindable, URI targetUri) {
+        super(bindable.getParent().getUri());
+        this.message = message;
+        this.bindable = bindable;
+        this.targetUri = targetUri;
+    }
+
+    public Bindable getBindable() {
+        return bindable;
+    }
+
+    public URI getTargetUri() {
+        return targetUri;
+    }
+
+    public String getMessage() {
+        return message;
     }
 }

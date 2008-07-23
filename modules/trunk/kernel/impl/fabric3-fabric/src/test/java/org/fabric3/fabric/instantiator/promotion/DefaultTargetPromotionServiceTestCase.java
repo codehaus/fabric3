@@ -8,10 +8,10 @@ import org.fabric3.fabric.instantiator.AmbiguousReference;
 import org.fabric3.fabric.instantiator.AmbiguousService;
 import org.fabric3.fabric.instantiator.LogicalChange;
 import org.fabric3.fabric.instantiator.LogicalInstantiationException;
-import org.fabric3.fabric.instantiator.NoServiceOnComponentException;
+import org.fabric3.fabric.instantiator.NoServiceOnComponent;
 import org.fabric3.fabric.instantiator.PromotedComponentNotFoundException;
 import org.fabric3.fabric.instantiator.ReferenceNotFound;
-import org.fabric3.fabric.instantiator.ServiceNotFoundException;
+import org.fabric3.fabric.instantiator.ServiceNotFound;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
@@ -41,7 +41,7 @@ public class DefaultTargetPromotionServiceTestCase extends TestCase {
 
     }
 
-    public void testMultipleServicesWithNoServiceFragment() throws Exception{
+    public void testMultipleServicesWithNoServiceFragment() throws Exception {
 
         LogicalService logicalService = new LogicalService(URI.create("service"), null, domain);
         logicalService.setPromotedUri(URI.create("component"));
@@ -59,7 +59,7 @@ public class DefaultTargetPromotionServiceTestCase extends TestCase {
         assertTrue(change.getErrors().get(0) instanceof AmbiguousService);
     }
 
-    public void testNoServiceWithNoServiceFragment() {
+    public void testNoServiceWithNoServiceFragment() throws Exception {
 
         LogicalService logicalService = new LogicalService(URI.create("service"), null, domain);
         logicalService.setPromotedUri(URI.create("component"));
@@ -70,21 +70,12 @@ public class DefaultTargetPromotionServiceTestCase extends TestCase {
                                                                                                              domain);
 
         domain.addComponent(logicalComponent);
-
-        try {
-            LogicalChange change = new LogicalChange(domain);
-            promotionResolutionService.resolve(logicalService, change);
-        } catch (NoServiceOnComponentException ex) {
-            return;
-        } catch (LogicalInstantiationException e) {
-            fail("Unexpected exception");
-        }
-
-        fail("Expected exception");
-
+        LogicalChange change = new LogicalChange(domain);
+        promotionResolutionService.resolve(logicalService, change);
+        assertTrue(change.getErrors().get(0) instanceof NoServiceOnComponent);
     }
 
-    public void testNoServiceWithServiceFragment() {
+    public void testNoServiceWithServiceFragment() throws Exception {
 
         LogicalService logicalService = new LogicalService(URI.create("service"), null, domain);
         logicalService.setPromotedUri(URI.create("component#service"));
@@ -96,17 +87,9 @@ public class DefaultTargetPromotionServiceTestCase extends TestCase {
 
         domain.addComponent(logicalComponent);
 
-        try {
-            LogicalChange change = new LogicalChange(domain);
-            promotionResolutionService.resolve(logicalService, change);
-        } catch (ServiceNotFoundException ex) {
-            return;
-        } catch (LogicalInstantiationException e) {
-            fail("Unexpected exception");
-        }
-
-        fail("Expected exception");
-
+        LogicalChange change = new LogicalChange(domain);
+        promotionResolutionService.resolve(logicalService, change);
+        assertTrue(change.getErrors().get(0) instanceof ServiceNotFound);
     }
 
     public void testNoServiceFragment() {

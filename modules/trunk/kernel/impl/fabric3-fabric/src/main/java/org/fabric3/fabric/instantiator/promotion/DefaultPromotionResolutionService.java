@@ -26,10 +26,10 @@ import org.fabric3.fabric.instantiator.AmbiguousReference;
 import org.fabric3.fabric.instantiator.AmbiguousService;
 import org.fabric3.fabric.instantiator.LogicalChange;
 import org.fabric3.fabric.instantiator.LogicalInstantiationException;
-import org.fabric3.fabric.instantiator.NoServiceOnComponentException;
+import org.fabric3.fabric.instantiator.NoServiceOnComponent;
 import org.fabric3.fabric.instantiator.PromotedComponentNotFoundException;
 import org.fabric3.fabric.instantiator.ReferenceNotFound;
-import org.fabric3.fabric.instantiator.ServiceNotFoundException;
+import org.fabric3.fabric.instantiator.ServiceNotFound;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
@@ -64,7 +64,10 @@ public class DefaultPromotionResolutionService implements PromotionResolutionSer
         if (promotedServiceName == null) {
             Collection<LogicalService> componentServices = promotedComponent.getServices();
             if (componentServices.size() == 0) {
-                throw new NoServiceOnComponentException("No services available on component: " + promotedComponentUri);
+                String msg = "No services available on component: " + promotedComponentUri;
+                NoServiceOnComponent error = new NoServiceOnComponent(msg, logicalService);
+                change.addError(error);
+                return;
             } else if (componentServices.size() != 1) {
                 String msg = "The promoted service " + logicalService.getUri() + " must explicitly specify the service it is promoting on component "
                         + promotedComponentUri + " as the component has more than one service";
@@ -75,7 +78,10 @@ public class DefaultPromotionResolutionService implements PromotionResolutionSer
             logicalService.setPromotedUri(componentServices.iterator().next().getUri());
         } else {
             if (promotedComponent.getService(promotedServiceName) == null) {
-                throw new ServiceNotFoundException("Service " + promotedServiceName + " not found on component " + promotedComponentUri);
+                String message =
+                        "Service " + promotedServiceName + " promoted from " + logicalService.getUri() + "not found on component " + promotedComponentUri;
+                ServiceNotFound error = new ServiceNotFound(message, logicalService, promotedComponentUri);
+                change.addError(error);
             }
         }
 

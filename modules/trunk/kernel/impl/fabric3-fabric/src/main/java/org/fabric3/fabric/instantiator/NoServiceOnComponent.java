@@ -18,10 +18,24 @@
  */
 package org.fabric3.fabric.instantiator;
 
-public class NoServiceOnComponentException extends LogicalInstantiationException {
-    private static final long serialVersionUID = -6600598658356829665L;
+import org.fabric3.host.domain.AssemblyFailure;
+import org.fabric3.spi.model.instance.Bindable;
 
-    public NoServiceOnComponentException(String message) {
-        super(message);
+public class NoServiceOnComponent extends AssemblyFailure {
+    private String message;
+    private Bindable bindable;
+
+    public NoServiceOnComponent(String message, Bindable bindable) {
+        super(bindable.getUri());
+        this.message = message;
+        this.bindable = bindable;
+    }
+
+    public Bindable getBindable() {
+        return bindable;
+    }
+
+    public String getMessage() {
+        return message;
     }
 }

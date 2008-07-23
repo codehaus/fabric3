@@ -7,8 +7,8 @@ import java.util.List;
 import org.fabric3.fabric.instantiator.AmbiguousService;
 import org.fabric3.fabric.instantiator.LogicalChange;
 import org.fabric3.fabric.instantiator.LogicalInstantiationException;
-import org.fabric3.fabric.instantiator.NoServiceOnComponentException;
-import org.fabric3.fabric.instantiator.ServiceNotFoundException;
+import org.fabric3.fabric.instantiator.NoServiceOnComponent;
+import org.fabric3.fabric.instantiator.ServiceNotFound;
 import org.fabric3.scdl.ComponentReference;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
@@ -65,8 +65,10 @@ public class ExplicitTargetResolutionService implements TargetResolutionService 
         String serviceName = targetUri.getFragment();
         if (serviceName != null) {
             if (targetComponent.getService(serviceName) == null) {
-                throw new ServiceNotFoundException("Service " + serviceName + " not found on component: "
-                        + UriHelper.getDefragmentedName(targetUri) + ". Originating reference is: " + reference.getUri());
+                String msg = "The service " + serviceName + " targeted from the reference " +reference.getUri() + " is not found on component " + UriHelper.getDefragmentedName(targetUri);
+                ServiceNotFound error = new ServiceNotFound(msg, reference, targetComponentUri);
+                change.addError(error);
+                return null;
             }
             return targetUri;
         } else {
@@ -85,8 +87,10 @@ public class ExplicitTargetResolutionService implements TargetResolutionService 
                 target = service;
             }
             if (target == null) {
-                throw new NoServiceOnComponentException("No services available on component: "
-                        + targetUri + ". Originating reference is: " + reference.getUri());
+                String msg = "The reference " + reference.getUri() + " is wired to component "  + targetUri + " but the component has no services";
+                NoServiceOnComponent error = new NoServiceOnComponent(msg, reference);
+                change.addError(error);
+                return null;
             }
             return target.getUri();
         }
