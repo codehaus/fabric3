@@ -27,15 +27,14 @@ import org.fabric3.fabric.allocator.AllocationException;
 import org.fabric3.fabric.allocator.Allocator;
 import org.fabric3.fabric.generator.PhysicalModelGenerator;
 import org.fabric3.fabric.instantiator.LogicalChange;
-import org.fabric3.fabric.instantiator.LogicalInstantiationException;
 import org.fabric3.fabric.instantiator.LogicalModelInstantiator;
 import org.fabric3.fabric.services.routing.RoutingException;
 import org.fabric3.fabric.services.routing.RoutingService;
-import org.fabric3.scdl.Composite;
-import org.fabric3.host.domain.DeploymentException;
-import org.fabric3.spi.domain.Domain;
-import org.fabric3.host.domain.DomainException;
 import org.fabric3.host.domain.AssemblyException;
+import org.fabric3.host.domain.DeploymentException;
+import org.fabric3.host.domain.DomainException;
+import org.fabric3.scdl.Composite;
+import org.fabric3.spi.domain.Domain;
 import org.fabric3.spi.generator.CommandMap;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.LogicalComponent;
@@ -108,11 +107,7 @@ public abstract class AbstractDomain implements Domain {
         LogicalCompositeComponent domain = logicalComponentManager.getRootComponent();
 
         LogicalChange change;
-        try {
-            change = logicalModelInstantiator.include(domain, composite);
-        } catch (LogicalInstantiationException e) {
-            throw new DeploymentException("Error deploying: " + composite.getName(), e);
-        }
+        change = logicalModelInstantiator.include(domain, composite);
         if (change.hasErrors()) {
             throw new AssemblyException(change.getErrors(), change.getWarnings());
         } else if (change.hasWarnings()) {
@@ -182,10 +177,11 @@ public abstract class AbstractDomain implements Domain {
         LogicalCompositeComponent domain = logicalComponentManager.getRootComponent();
 
         LogicalChange change;
-        try {
-            change = logicalModelInstantiator.remove(domain, composite);
-        } catch (LogicalInstantiationException e) {
-            throw new DeploymentException("Error deploying: " + composite.getName(), e);
+        change = logicalModelInstantiator.remove(domain, composite);
+        if (change.hasErrors()) {
+            throw new AssemblyException(change.getErrors(), change.getWarnings());
+        } else if (change.hasWarnings()) {
+            // TOOD log warnings
         }
         change.apply();
 

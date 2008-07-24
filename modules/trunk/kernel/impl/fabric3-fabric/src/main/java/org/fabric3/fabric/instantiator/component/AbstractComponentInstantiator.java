@@ -36,7 +36,7 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import org.fabric3.fabric.instantiator.LogicalInstantiationException;
+import org.fabric3.fabric.instantiator.LogicalChange;
 import org.fabric3.fabric.services.documentloader.DocumentLoader;
 import org.fabric3.scdl.AbstractComponentType;
 import org.fabric3.scdl.ComponentDefinition;
@@ -95,12 +95,11 @@ public abstract class AbstractComponentInstantiator implements ComponentInstanti
      *
      * @param component  the component to initialize
      * @param definition the definition of the component
-     * @throws org.fabric3.fabric.instantiator.LogicalInstantiationException
-     *          if there was a problem initializing a property value
+     * @param change     the logical change
      */
     protected <I extends Implementation<?>> void initializeProperties(LogicalComponent<I> component,
-                                                                      ComponentDefinition<I> definition)
-            throws LogicalInstantiationException {
+                                                                      ComponentDefinition<I> definition,
+                                                                      LogicalChange change) {
 
         Map<String, PropertyValue> propertyValues = definition.getPropertyValues();
         AbstractComponentType<?, ?, ?, ?> componentType = definition.getComponentType();
@@ -118,13 +117,15 @@ public abstract class AbstractComponentInstantiator implements ComponentInstanti
                 // the spec defines the following sequence
                 if (propertyValue.getFile() != null) {
                     // load the value from an external resource
-                    value = loadValueFromFile(property.getName(), propertyValue.getFile());
+                    value = loadValueFromFile(component, property.getName(), propertyValue.getFile(), change);
                 } else if (propertyValue.getSource() != null) {
                     // get the value by evaluating an XPath against the composite properties
                     try {
                         value = deriveValueFromXPath(propertyValue.getSource(), component.getParent());
                     } catch (XPathExpressionException e) {
-                        throw new LogicalInstantiationException(e.getMessage(), name, e);
+                        InvalidProperty error = new InvalidProperty(component.getUri(), name, e);
+                        change.addError(error);
+                        return;
                     }
                 } else {
                     // use inline XML file
@@ -132,15 +133,13 @@ public abstract class AbstractComponentInstantiator implements ComponentInstanti
                 }
 
             }
-
             component.setPropertyValue(name, value);
 
         }
 
     }
 
-    public Document deriveValueFromXPath(String source, final LogicalComponent<?> parent)
-            throws XPathExpressionException {
+    Document deriveValueFromXPath(String source, final LogicalComponent<?> parent) throws XPathExpressionException {
 
         XPathVariableResolver variableResolver = new XPathVariableResolver() {
             public Object resolveVariable(QName qName) {
@@ -186,13 +185,17 @@ public abstract class AbstractComponentInstantiator implements ComponentInstanti
 
     }
 
-    protected Document loadValueFromFile(String name, URI file) throws InvalidPropertyFileException {
+    private Document loadValueFromFile(LogicalComponent<?> parent, String name, URI file, LogicalChange change) {
         try {
             return documentLoader.load(file);
         } catch (IOException e) {
-            throw new InvalidPropertyFileException(e.getMessage(), name, e, file);
+            InvalidPropertyFile error = new InvalidPropertyFile(parent.getUri(), name, e, file);
+            change.addError(error);
+            return null;
         } catch (SAXException e) {
-            throw new InvalidPropertyFileException(e.getMessage(), name, e, file);
+            InvalidPropertyFile error = new InvalidPropertyFile(parent.getUri(), name, e, file);
+            change.addError(error);
+            return null;
         }
     }
 

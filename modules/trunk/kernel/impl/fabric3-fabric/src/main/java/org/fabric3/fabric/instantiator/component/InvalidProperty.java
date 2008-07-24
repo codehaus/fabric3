@@ -18,21 +18,30 @@ package org.fabric3.fabric.instantiator.component;
 
 import java.net.URI;
 
-import org.fabric3.fabric.instantiator.LogicalInstantiationException;
+import org.fabric3.host.domain.AssemblyFailure;
 
 /**
- * @version $Rev$ $Date$
+ * @version $Rev: 4789 $ $Date: 2008-06-08 07:54:46 -0700 (Sun, 08 Jun 2008) $
  */
-public class InvalidPropertyFileException extends LogicalInstantiationException {
-    private final URI file;
-    private static final long serialVersionUID = 872041329228366387L;
+public class InvalidProperty extends AssemblyFailure {
+    private String name;
+    private Throwable cause;
 
-    public InvalidPropertyFileException(String message, String name, Throwable cause, URI file) {
-        super(message, name, cause);
-        this.file = file;
+    public InvalidProperty(URI componentURI, String name, Throwable cause) {
+        super(componentURI);
+        this.name = name;
+        this.cause = cause;
     }
 
-    public URI getFile() {
-        return file;
+    public String getName() {
+        return name;
+    }
+
+    public Throwable getCause() {
+        return cause;
+    }
+
+    public String getMessage() {
+        return "The property " + name + " in component " + getComponentUri() + "is invalid " + ". The error thrown was: \n" + cause;
     }
 }

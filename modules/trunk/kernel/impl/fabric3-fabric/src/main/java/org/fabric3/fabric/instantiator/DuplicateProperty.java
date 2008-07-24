@@ -18,13 +18,26 @@
  */
 package org.fabric3.fabric.instantiator;
 
+import java.net.URI;
+
+import org.fabric3.host.domain.AssemblyFailure;
+
 /**
  * @version $Revision$ $Date$
  */
-public class DuplicatePropertyException extends LogicalInstantiationException {
-    private static final long serialVersionUID = -5227440153839859219L;
+public class DuplicateProperty extends AssemblyFailure {
+    private String propertyName;
 
-    public DuplicatePropertyException(String message) {
-        super(message);
+    public DuplicateProperty(URI componentUri, String propertyName) {
+        super(componentUri);
+        this.propertyName = propertyName;
+    }
+
+    public String getPropertyName() {
+        return propertyName;
+    }
+
+    public String getMessage() {
+        return "Duplicate property named " + propertyName + " configured on component " + getComponentUri();
     }
 }

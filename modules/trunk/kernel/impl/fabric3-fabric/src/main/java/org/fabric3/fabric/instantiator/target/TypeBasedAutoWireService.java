@@ -24,7 +24,6 @@ import java.util.Collection;
 import java.util.List;
 
 import org.fabric3.fabric.instantiator.LogicalChange;
-import org.fabric3.fabric.instantiator.LogicalInstantiationException;
 import org.fabric3.fabric.instantiator.ReferenceNotFound;
 import org.fabric3.scdl.AbstractComponentType;
 import org.fabric3.scdl.Autowire;
@@ -47,8 +46,7 @@ import org.fabric3.spi.util.UriHelper;
  */
 public class TypeBasedAutoWireService implements TargetResolutionService {
 
-    public void resolve(LogicalReference logicalReference, LogicalCompositeComponent compositeComponent, LogicalChange change)
-            throws LogicalInstantiationException {
+    public void resolve(LogicalReference logicalReference, LogicalCompositeComponent compositeComponent, LogicalChange change) {
 
         ComponentReference componentReference = logicalReference.getComponentReference();
         LogicalComponent<?> component = logicalReference.getParent();
@@ -148,12 +146,11 @@ public class TypeBasedAutoWireService implements TargetResolutionService {
      * @param logicalReference the logical reference
      * @param contract         the contract to match against
      * @return true if the reference has been resolved.
-     * @throws LogicalInstantiationException if an error occurs during resolution
      */
     private boolean resolveByType(LogicalCompositeComponent composite,
                                   LogicalComponent<?> component,
                                   LogicalReference logicalReference,
-                                  ServiceContract<?> contract) throws LogicalInstantiationException {
+                                  ServiceContract<?> contract) {
 
         List<URI> candidates = new ArrayList<URI>();
 

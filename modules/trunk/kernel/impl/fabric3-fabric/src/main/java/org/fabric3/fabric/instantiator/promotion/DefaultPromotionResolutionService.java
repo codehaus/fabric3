@@ -25,9 +25,8 @@ import java.util.List;
 import org.fabric3.fabric.instantiator.AmbiguousReference;
 import org.fabric3.fabric.instantiator.AmbiguousService;
 import org.fabric3.fabric.instantiator.LogicalChange;
-import org.fabric3.fabric.instantiator.LogicalInstantiationException;
 import org.fabric3.fabric.instantiator.NoServiceOnComponent;
-import org.fabric3.fabric.instantiator.PromotedComponentNotFoundException;
+import org.fabric3.fabric.instantiator.PromotedComponentNotFound;
 import org.fabric3.fabric.instantiator.ReferenceNotFound;
 import org.fabric3.fabric.instantiator.ServiceNotFound;
 import org.fabric3.spi.model.instance.LogicalComponent;
@@ -43,7 +42,7 @@ import org.fabric3.spi.util.UriHelper;
  */
 public class DefaultPromotionResolutionService implements PromotionResolutionService {
 
-    public void resolve(LogicalService logicalService, LogicalChange change) throws LogicalInstantiationException {
+    public void resolve(LogicalService logicalService, LogicalChange change) {
 
         URI promotedUri = logicalService.getPromotedUri();
 
@@ -58,7 +57,9 @@ public class DefaultPromotionResolutionService implements PromotionResolutionSer
         LogicalComponent<?> promotedComponent = composite.getComponent(promotedComponentUri);
 
         if (promotedComponent == null) {
-            throw new PromotedComponentNotFoundException(promotedComponentUri);
+            PromotedComponentNotFound error = new PromotedComponentNotFound(logicalService, promotedComponentUri);
+            change.addError(error);
+            return;
         }
 
         if (promotedServiceName == null) {
@@ -87,7 +88,7 @@ public class DefaultPromotionResolutionService implements PromotionResolutionSer
 
     }
 
-    public void resolve(LogicalReference logicalReference, LogicalChange change) throws LogicalInstantiationException {
+    public void resolve(LogicalReference logicalReference, LogicalChange change) {
 
         List<URI> promotedUris = logicalReference.getPromotedUris();
 
@@ -102,7 +103,9 @@ public class DefaultPromotionResolutionService implements PromotionResolutionSer
             LogicalComponent<?> promotedComponent = parent.getComponent(promotedComponentUri);
 
             if (promotedComponent == null) {
-                throw new PromotedComponentNotFoundException(promotedComponentUri);
+                PromotedComponentNotFound error = new PromotedComponentNotFound(logicalReference, promotedComponentUri);
+                change.addError(error);
+                return;
             }
 
             if (promotedReferenceName == null) {

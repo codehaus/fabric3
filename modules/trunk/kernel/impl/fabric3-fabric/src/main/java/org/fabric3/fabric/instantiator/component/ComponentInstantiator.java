@@ -20,7 +20,7 @@ import java.util.Map;
 
 import org.w3c.dom.Document;
 
-import org.fabric3.fabric.instantiator.LogicalInstantiationException;
+import org.fabric3.fabric.instantiator.LogicalChange;
 import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.Implementation;
 import org.fabric3.spi.model.instance.LogicalComponent;
@@ -37,12 +37,12 @@ public interface ComponentInstantiator {
      * @param parent     the parent logical component
      * @param properties the collection of properties associated with the component
      * @param definition the component definition to instantiate from @return the instantiated logical component
+     * @param change     the logical change the instantiation should mutate
      * @return an instantiated logical component
-     * @throws org.fabric3.fabric.instantiator.LogicalInstantiationException
-     *          if an error occurs during instantiation
      */
     <I extends Implementation<?>> LogicalComponent<I> instantiate(LogicalCompositeComponent parent,
                                                                   Map<String, Document> properties,
-                                                                  ComponentDefinition<I> definition) throws LogicalInstantiationException;
+                                                                  ComponentDefinition<I> definition,
+                                                                  LogicalChange change);
 
 }

@@ -6,7 +6,6 @@ import java.util.List;
 
 import org.fabric3.fabric.instantiator.AmbiguousService;
 import org.fabric3.fabric.instantiator.LogicalChange;
-import org.fabric3.fabric.instantiator.LogicalInstantiationException;
 import org.fabric3.fabric.instantiator.NoServiceOnComponent;
 import org.fabric3.fabric.instantiator.ServiceNotFound;
 import org.fabric3.scdl.ComponentReference;
@@ -23,8 +22,7 @@ import org.fabric3.spi.util.UriHelper;
  */
 public class ExplicitTargetResolutionService implements TargetResolutionService {
 
-    public void resolve(LogicalReference logicalReference, LogicalCompositeComponent component, LogicalChange change)
-            throws LogicalInstantiationException {
+    public void resolve(LogicalReference logicalReference, LogicalCompositeComponent component, LogicalChange change) {
 
         ComponentReference componentReference = logicalReference.getComponentReference();
         if (componentReference == null) {
@@ -51,21 +49,23 @@ public class ExplicitTargetResolutionService implements TargetResolutionService 
 
     }
 
-    private URI resolveByUri(LogicalReference reference, URI targetUri, LogicalCompositeComponent composite, LogicalChange change)
-            throws LogicalInstantiationException {
+    private URI resolveByUri(LogicalReference reference, URI targetUri, LogicalCompositeComponent composite, LogicalChange change) {
 
         URI targetComponentUri = UriHelper.getDefragmentedName(targetUri);
         LogicalComponent<?> targetComponent = composite.getComponent(targetComponentUri);
 
         if (targetComponent == null) {
-            throw new TargetComponentNotFoundException("Target component not found: " + targetComponentUri.toString()
-                    + ". Originating reference is: " + reference.getUri());
+            TargetComponentNotFound error = new TargetComponentNotFound(reference, targetComponentUri);
+            change.addError(error);
+            return null;
         }
 
         String serviceName = targetUri.getFragment();
         if (serviceName != null) {
             if (targetComponent.getService(serviceName) == null) {
-                String msg = "The service " + serviceName + " targeted from the reference " +reference.getUri() + " is not found on component " + UriHelper.getDefragmentedName(targetUri);
+                URI name = UriHelper.getDefragmentedName(targetUri);
+                URI uri = reference.getUri();
+                String msg = "The service " + serviceName + " targeted from the reference " + uri + " is not found on component " + name;
                 ServiceNotFound error = new ServiceNotFound(msg, reference, targetComponentUri);
                 change.addError(error);
                 return null;
@@ -87,7 +87,7 @@ public class ExplicitTargetResolutionService implements TargetResolutionService 
                 target = service;
             }
             if (target == null) {
-                String msg = "The reference " + reference.getUri() + " is wired to component "  + targetUri + " but the component has no services";
+                String msg = "The reference " + reference.getUri() + " is wired to component " + targetUri + " but the component has no services";
                 NoServiceOnComponent error = new NoServiceOnComponent(msg, reference);
                 change.addError(error);
                 return null;

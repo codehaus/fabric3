@@ -18,13 +18,31 @@
  */
 package org.fabric3.fabric.instantiator.target;
 
-import org.fabric3.fabric.instantiator.LogicalInstantiationException;
+import java.net.URI;
 
-public class TargetComponentNotFoundException extends LogicalInstantiationException {
-    private static final long serialVersionUID = -6600598658356829665L;
+import org.fabric3.host.domain.AssemblyFailure;
+import org.fabric3.spi.model.instance.LogicalReference;
 
-    public TargetComponentNotFoundException(String message) {
-        super(message);
+public class TargetComponentNotFound extends AssemblyFailure {
+    private LogicalReference reference;
+    private URI targetUri;
+
+    public TargetComponentNotFound(LogicalReference reference, URI targetUri) {
+        super(reference.getUri());
+        this.reference = reference;
+        this.targetUri = targetUri;
+    }
+
+    public LogicalReference getReference() {
+        return reference;
+    }
+
+    public URI getTargetUri() {
+        return targetUri;
+    }
+
+    public String getMessage() {
+        return "Target component component for reference " + reference.getUri() + " not found: " + targetUri;
     }
 
 }

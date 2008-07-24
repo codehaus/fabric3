@@ -18,31 +18,30 @@
  */
 package org.fabric3.fabric.instantiator;
 
-import org.fabric3.host.Fabric3Exception;
+import java.net.URI;
 
-/**
- * Denotes an exception instanitating a LogicalComponent
- *
- * @version $Rev$ $Date$
- *
- */
-@Deprecated
-public class LogicalInstantiationException extends Fabric3Exception {
-    private static final long serialVersionUID = 4771407392907205266L;
+import org.fabric3.host.domain.AssemblyFailure;
+import org.fabric3.spi.model.instance.Bindable;
 
-    public LogicalInstantiationException(String message, String identifier) {
-        super(message, identifier);
+public class PromotedComponentNotFound extends AssemblyFailure {
+    private Bindable bindable;
+    private URI promotedComponentUri;
+
+    public PromotedComponentNotFound(Bindable bindable, URI promotedComponentUri) {
+        super(bindable.getParent().getUri());
+        this.bindable = bindable;
+        this.promotedComponentUri = promotedComponentUri;
     }
 
-    public LogicalInstantiationException(String message, String identifier, Throwable cause) {
-        super(message, identifier, cause);
+    public Bindable getBindable() {
+        return bindable;
     }
 
-    public LogicalInstantiationException(Throwable cause) {
-        super(cause);
+    public URI getPromotedComponentUri() {
+        return promotedComponentUri;
     }
 
-    public LogicalInstantiationException(String message) {
-        super(message);
+    public String getMessage() {
+        return "The component " + promotedComponentUri + " promoted by  " + bindable.getUri() + " was not found";
     }
 }

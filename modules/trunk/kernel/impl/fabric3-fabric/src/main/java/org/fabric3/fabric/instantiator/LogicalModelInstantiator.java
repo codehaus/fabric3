@@ -32,9 +32,8 @@ public interface LogicalModelInstantiator {
      * @param targetComposite the target composite in which the composite is to be included.
      * @param composite       the composite to be included.
      * @return the change that would result from this include operation
-     * @throws LogicalInstantiationException If unable to include the composite.
      */
-    LogicalChange include(LogicalCompositeComponent targetComposite, Composite composite) throws LogicalInstantiationException;
+    LogicalChange include(LogicalCompositeComponent targetComposite, Composite composite);
 
 
     /**
@@ -43,7 +42,6 @@ public interface LogicalModelInstantiator {
      * @param targetComposite the target composite from which the composite is to be removed.
      * @param composite       Composite to be removed.
      * @return the change that would result from this remove operation
-     * @throws LogicalInstantiationException If unable to remove the composite.
      */
-    LogicalChange remove(LogicalCompositeComponent targetComposite, Composite composite) throws LogicalInstantiationException;
+    LogicalChange remove(LogicalCompositeComponent targetComposite, Composite composite);
 }

@@ -27,7 +27,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import org.fabric3.fabric.instantiator.LogicalInstantiationException;
+import org.fabric3.fabric.instantiator.LogicalChange;
 import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.CompositeImplementation;
 import org.fabric3.scdl.Implementation;
@@ -94,10 +94,11 @@ public class AssemblyPropertyTestCase extends TestCase {
     protected void setUp() throws Exception {
         super.setUp();
         componentInstantiator = new AbstractComponentInstantiator(null) {
+
             public <I extends Implementation<?>> LogicalComponent<I> instantiate(LogicalCompositeComponent parent,
                                                                                  Map<String, Document> properties,
-                                                                                 ComponentDefinition<I> definition)
-                    throws LogicalInstantiationException {
+                                                                                 ComponentDefinition<I> definition,
+                                                                                 LogicalChange change) {
                 return null;
             }
         };

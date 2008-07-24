@@ -24,7 +24,7 @@ import java.util.Map;
 import org.osoa.sca.annotations.Reference;
 import org.w3c.dom.Document;
 
-import org.fabric3.fabric.instantiator.LogicalInstantiationException;
+import org.fabric3.fabric.instantiator.LogicalChange;
 import org.fabric3.fabric.services.documentloader.DocumentLoader;
 import org.fabric3.scdl.BindingDefinition;
 import org.fabric3.scdl.ComponentDefinition;
@@ -59,16 +59,16 @@ public class CompositeComponentInstantiator extends AbstractComponentInstantiato
     @SuppressWarnings("unchecked")
     public <I extends Implementation<?>> LogicalComponent<I> instantiate(LogicalCompositeComponent parent,
                                                                          Map<String, Document> properties,
-                                                                         ComponentDefinition<I> definition)
-            throws LogicalInstantiationException {
+                                                                         ComponentDefinition<I> definition,
+                                                                         LogicalChange change) {
         ComponentDefinition<CompositeImplementation> def = (ComponentDefinition<CompositeImplementation>) definition;
-        return LogicalComponent.class.cast(instantiateComposite(parent, properties, def));
+        return LogicalComponent.class.cast(instantiateComposite(parent, properties, def, change));
     }
 
     public LogicalCompositeComponent instantiateComposite(LogicalCompositeComponent parent,
                                                           Map<String, Document> properties,
-                                                          ComponentDefinition<CompositeImplementation> definition)
-            throws LogicalInstantiationException {
+                                                          ComponentDefinition<CompositeImplementation> definition,
+                                                          LogicalChange change) {
 
         URI runtimeId = definition.getRuntimeId();
         URI uri = URI.create(parent.getUri() + "/" + definition.getName());
@@ -76,8 +76,8 @@ public class CompositeComponentInstantiator extends AbstractComponentInstantiato
 
         LogicalCompositeComponent component = new LogicalCompositeComponent(uri, runtimeId, definition, parent);
         component.setClassLoaderId(uri);
-        initializeProperties(component, definition);
-        instantiateChildComponents(component, properties, composite);
+        initializeProperties(component, definition, change);
+        instantiateChildComponents(component, properties, composite, change);
         instantiateCompositeServices(component, composite);
         instantiateCompositeReferences(parent, component, composite);
 
@@ -87,16 +87,17 @@ public class CompositeComponentInstantiator extends AbstractComponentInstantiato
 
     private void instantiateChildComponents(LogicalCompositeComponent parent,
                                             Map<String, Document> properties,
-                                            Composite composite) throws LogicalInstantiationException {
+                                            Composite composite,
+                                            LogicalChange change) {
 
         // create the child components
         for (ComponentDefinition<? extends Implementation<?>> child : composite.getDeclaredComponents().values()) {
 
             LogicalComponent<?> childComponent;
-            if (child.getImplementation().isComposite()) {      
-                childComponent = instantiate(parent, properties, child);
+            if (child.getImplementation().isComposite()) {
+                childComponent = instantiate(parent, properties, child, change);
             } else {
-                childComponent = atomicComponentInstantiator.instantiate(parent, properties, child);
+                childComponent = atomicComponentInstantiator.instantiate(parent, properties, child, change);
                 childComponent.setClassLoaderId(parent.getClassLoaderId());
             }
             parent.addComponent(childComponent);

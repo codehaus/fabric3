@@ -28,10 +28,10 @@ import javax.xml.namespace.QName;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
-import org.fabric3.fabric.instantiator.LogicalInstantiationException;
 import org.fabric3.fabric.component.scope.ScopeRegistryImpl;
 import org.fabric3.fabric.implementation.singleton.SingletonComponent;
 import org.fabric3.fabric.implementation.singleton.SingletonImplementation;
+import org.fabric3.fabric.instantiator.LogicalChange;
 import org.fabric3.fabric.instantiator.component.AtomicComponentInstantiator;
 import org.fabric3.fabric.instantiator.component.ComponentInstantiator;
 import org.fabric3.fabric.runtime.ComponentNames;
@@ -46,6 +46,8 @@ import org.fabric3.fabric.services.documentloader.DocumentLoader;
 import org.fabric3.fabric.services.documentloader.DocumentLoaderImpl;
 import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.host.contribution.ValidationFailure;
+import org.fabric3.host.domain.AssemblyException;
+import org.fabric3.host.domain.DeploymentException;
 import org.fabric3.host.runtime.Fabric3Runtime;
 import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.host.runtime.InitializationException;
@@ -71,22 +73,21 @@ import org.fabric3.scdl.ServiceDefinition;
 import org.fabric3.scdl.ValidationContext;
 import org.fabric3.services.xmlfactory.XMLFactory;
 import org.fabric3.services.xmlfactory.impl.XMLFactoryImpl;
-import org.fabric3.host.domain.DeploymentException;
-import org.fabric3.spi.domain.Domain;
 import org.fabric3.spi.classloader.MultiParentClassLoader;
 import org.fabric3.spi.component.AtomicComponent;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.ScopeRegistry;
+import org.fabric3.spi.domain.Domain;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 import org.fabric3.spi.runtime.RuntimeServices;
-import org.fabric3.spi.services.lcm.LogicalComponentManager;
+import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.services.componentmanager.ComponentManager;
 import org.fabric3.spi.services.componentmanager.RegistrationException;
-import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.services.contribution.ClasspathProcessorRegistry;
 import org.fabric3.spi.services.contribution.MetaDataStore;
 import org.fabric3.spi.services.contribution.ProcessorRegistry;
+import org.fabric3.spi.services.lcm.LogicalComponentManager;
 import org.fabric3.system.introspection.BootstrapLoaderFactory;
 
 /**
@@ -278,9 +279,9 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
             LogicalComponent<?> logical = createLogicalComponent(name, type, instance);
             AtomicComponent<I> physical = createPhysicalComponent(name, instance);
             runtime.registerComponent(logical, physical);
-        } catch (LogicalInstantiationException e) {
-            throw new InitializationException(e);
         } catch (RegistrationException e) {
+            throw new InitializationException(e);
+        } catch (AssemblyException e) {
             throw new InitializationException(e);
         }
     }
@@ -293,10 +294,15 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
     protected <S, I extends S> LogicalComponent<Implementation<?>> createLogicalComponent(String name,
                                                                                           Class<S> type,
                                                                                           I instance)
-            throws InvalidSystemServiceContractException, LogicalInstantiationException {
+            throws InvalidSystemServiceContractException, AssemblyException {
 
         ComponentDefinition<Implementation<?>> definition = createDefinition(name, type, instance);
-        return instantiator.instantiate(domain, domain.getPropertyValues(), definition);
+        LogicalChange change = new LogicalChange(domain);
+        LogicalComponent<Implementation<?>> logical = instantiator.instantiate(domain, domain.getPropertyValues(), definition, change);
+        if (change.hasErrors()) {
+            throw new AssemblyException(change.getErrors(), change.getWarnings());
+        }
+        return logical;
     }
 
     protected <S, I extends S> ComponentDefinition<Implementation<?>> createDefinition(String name, Class<S> type, I instance)

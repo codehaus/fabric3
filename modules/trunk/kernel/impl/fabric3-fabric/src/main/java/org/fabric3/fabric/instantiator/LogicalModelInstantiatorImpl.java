@@ -71,7 +71,7 @@ public class LogicalModelInstantiatorImpl implements LogicalModelInstantiator {
     }
 
     @SuppressWarnings("unchecked")
-    public LogicalChange include(LogicalCompositeComponent targetComposite, Composite composite) throws LogicalInstantiationException {
+    public LogicalChange include(LogicalCompositeComponent targetComposite, Composite composite) {
 
         LogicalChange change = new LogicalChange(targetComposite);
 
@@ -92,7 +92,7 @@ public class LogicalModelInstantiatorImpl implements LogicalModelInstantiator {
         return change;
     }
 
-    public LogicalChange remove(LogicalCompositeComponent targetComposite, Composite composite) throws LogicalInstantiationException {
+    public LogicalChange remove(LogicalCompositeComponent targetComposite, Composite composite) {
         LogicalChange change = new LogicalChange(targetComposite);
         // merge the property values into the parent
         excludeProperties(targetComposite, composite, change);
@@ -103,14 +103,16 @@ public class LogicalModelInstantiatorImpl implements LogicalModelInstantiator {
         return change;
     }
 
-    private Map<String, Document> includeProperties(Composite composite, LogicalChange change) throws LogicalInstantiationException {
+    private Map<String, Document> includeProperties(Composite composite, LogicalChange change) {
         LogicalCompositeComponent parent = change.getParent();
         for (Property property : composite.getProperties().values()) {
             String name = property.getName();
             if (parent.getPropertyValues().containsKey(name)) {
-                throw new DuplicatePropertyException("Duplicate property: " + name);
+                DuplicateProperty error = new DuplicateProperty(parent.getUri(), name);
+                change.addError(error);
+            } else {
+                parent.setPropertyValue(name, property.getDefaultValue());
             }
-            parent.setPropertyValue(name, property.getDefaultValue());
         }
         return parent.getPropertyValues();
     }
@@ -118,13 +120,12 @@ public class LogicalModelInstantiatorImpl implements LogicalModelInstantiator {
     private List<LogicalComponent<?>> instantiateComponents(
             Map<String, Document> properties,
             Composite composite,
-            LogicalChange change)
-            throws LogicalInstantiationException {
+            LogicalChange change) {
         LogicalCompositeComponent parent = change.getParent();
         Collection<ComponentDefinition<? extends Implementation<?>>> definitions = composite.getDeclaredComponents().values();
         List<LogicalComponent<?>> newComponents = new ArrayList<LogicalComponent<?>>(definitions.size());
         for (ComponentDefinition<? extends Implementation<?>> definition : definitions) {
-            LogicalComponent<?> logicalComponent = instantiate(parent, properties, null, definition);
+            LogicalComponent<?> logicalComponent = instantiate(parent, properties, null, definition, change);
             setAutowire(composite, definition, logicalComponent);
             newComponents.add(logicalComponent);
             parent.addComponent(logicalComponent);
@@ -133,7 +134,7 @@ public class LogicalModelInstantiatorImpl implements LogicalModelInstantiator {
             // xcv FIXME need to recurse down included hierarchy
             for (ComponentDefinition<? extends Implementation<?>> definition : include.getIncluded().getComponents().values()) {
                 URI classLaoderId = URI.create(parent.getUri().toString() + "/" + include.getName().getLocalPart());
-                LogicalComponent<?> logicalComponent = instantiate(parent, properties, classLaoderId, definition);
+                LogicalComponent<?> logicalComponent = instantiate(parent, properties, classLaoderId, definition, change);
                 setAutowire(composite, definition, logicalComponent);
                 newComponents.add(logicalComponent);
                 parent.addComponent(logicalComponent);
@@ -159,17 +160,17 @@ public class LogicalModelInstantiatorImpl implements LogicalModelInstantiator {
     private LogicalComponent<?> instantiate(LogicalCompositeComponent parent,
                                             Map<String, Document> properties,
                                             URI classLoaderId,
-                                            ComponentDefinition<?> definition)
-            throws LogicalInstantiationException {
+                                            ComponentDefinition<?> definition,
+                                            LogicalChange change) {
 
         if (definition.getImplementation().isComposite()) {
-            LogicalComponent<?> component =
-                    compositeComponentInstantiator.instantiate(parent, properties, (ComponentDefinition<CompositeImplementation>) definition);
+            ComponentDefinition<CompositeImplementation> componentDefinition = (ComponentDefinition<CompositeImplementation>) definition;
+            LogicalComponent<?> component = compositeComponentInstantiator.instantiate(parent, properties, componentDefinition, change);
             component.setClassLoaderId(component.getUri());
             return component;
         } else {
-            LogicalComponent<?> component =
-                    atomicComponentInstantiator.instantiate(parent, properties, (ComponentDefinition<Implementation<?>>) definition);
+            ComponentDefinition<Implementation<?>> componentDefinition = (ComponentDefinition<Implementation<?>>) definition;
+            LogicalComponent<?> component = atomicComponentInstantiator.instantiate(parent, properties, componentDefinition, change);
             if (classLoaderId != null) {
                 component.setClassLoaderId(classLoaderId);
             } else {
@@ -231,8 +232,7 @@ public class LogicalModelInstantiatorImpl implements LogicalModelInstantiator {
     private void resolve(Collection<LogicalComponent<?>> components,
                          List<LogicalService> services,
                          List<LogicalReference> references,
-                         LogicalChange change)
-            throws LogicalInstantiationException {
+                         LogicalChange change) {
 
         // resolve wires for composite services merged into the domain
         for (LogicalService service : services) {
