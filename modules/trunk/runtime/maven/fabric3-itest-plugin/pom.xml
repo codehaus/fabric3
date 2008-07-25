@@ -19,7 +19,7 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.codehaus.fabric3</groupId>
-        <artifactId>fabric3-plugin-parent-pom</artifactId>
+        <artifactId>fabric3-runtime-maven-parent-pom</artifactId>
         <version>0.6-SNAPSHOT</version>
     </parent>
     <groupId>org.codehaus.fabric3</groupId>
@@ -103,9 +103,9 @@
         </dependency>
 
         <dependency>
-			<groupId>org.codehaus.fabric3</groupId>
-			<artifactId>fabric3-pojo</artifactId>
-			<version>0.6-SNAPSHOT</version>
+            <groupId>org.codehaus.fabric3</groupId>
+            <artifactId>fabric3-pojo</artifactId>
+            <version>0.6-SNAPSHOT</version>
         </dependency>
 
         <dependency>
@@ -189,8 +189,8 @@
     </reporting>
 
     <scm>
-        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/plugin/fabric3-itest-plugin</connection>
-        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/trunk/plugin/fabric3-itest-plugin</developerConnection>
-        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/trunk/plugin/fabric3-itest-plugin</url>
+        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/runtime/maven/fabric3-itest-plugin</connection>
+        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/trunk/runtime/maven/fabric3-itest-plugin</developerConnection>
+        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/trunk/runtime/maven/fabric3-itest-plugin</url>
     </scm>
 </project>

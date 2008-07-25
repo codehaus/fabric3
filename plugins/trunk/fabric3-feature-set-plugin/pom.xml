@@ -21,8 +21,8 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.codehaus.fabric3</groupId>
-        <artifactId>fabric</artifactId>
-        <version>4</version>
+        <artifactId>fabric3-plugins-parent-pom</artifactId>
+        <version>0.6-SNAPSHOT</version>
     </parent>
 
     <groupId>org.codehaus.fabric3</groupId>
@@ -76,9 +76,9 @@
      </build>
 
     <scm>
-        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/plugin/fabric3-feature-set-plugin</connection>
-        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/trunk/plugin/fabric3-feature-set-plugin</developerConnection>
-        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/trunk/plugin/fabric3-feature-set-plugin</url>
+        <connection>scm:svn:http://svn.codehaus.org/fabric3/plugins/trunk/fabric3-feature-set-plugin</connection>
+        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/plugins/trunk/fabric3-feature-set-plugin</developerConnection>
+        <url>http://svn.fabric3.codehaus.org/browse/fabric3/plugins/trunk/fabric3-feature-set-plugin</url>
     </scm>
 
 </project>

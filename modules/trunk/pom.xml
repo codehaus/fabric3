@@ -28,15 +28,14 @@
     <version>0.5.2-SNAPSHOT</version>
     <name>Fabric3 Modules Parent POM</name>
     <description>Fabric3 Modules Parent POM.</description>
-	<packaging>pom</packaging>
+    <packaging>pom</packaging>
 
-	<modules>
-		<module>extension</module>
-		<module>federated</module>
-		<module>kernel</module>
-		<module>plugin</module>
-		<module>runtime</module>
-	</modules>
+    <modules>
+        <module>extension</module>
+        <module>federated</module>
+        <module>kernel</module>
+        <module>runtime</module>
+    </modules>
 	
     <repositories>
         <repository>
