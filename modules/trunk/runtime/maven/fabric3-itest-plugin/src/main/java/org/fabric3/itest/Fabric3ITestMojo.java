@@ -234,6 +234,13 @@ public class Fabric3ITestMojo extends AbstractMojo {
     public Dependency[] extensions;
 
     /**
+     * Set of runtime extension artifacts that should be deployed to the runtime expressed as feature sets.
+     *
+     * @parameter
+     */
+    public Dependency[] features;
+
+    /**
      * Set of user extension artifacts that should be deployed to the runtime.
      *
      * @parameter
@@ -376,7 +383,7 @@ public class Fabric3ITestMojo extends AbstractMojo {
         }
         try {
             coordinator.setIntentsLocation(intentsLocation);
-            extensionHelper.processExtensions(coordinator, extensions, userExtensions, userExtensionsArchives);
+            extensionHelper.processExtensions(coordinator, extensions, features, userExtensions, userExtensionsArchives);
             bootRuntime(coordinator, runtime, bootClassLoader, hostClassLoader);
         } catch (InitializationException e) {
             throw new MojoExecutionException("Error initializing Fabric3 Runtime", e);

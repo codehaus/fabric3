@@ -19,32 +19,48 @@
 package org.fabric3.itest;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.model.Dependency;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.fabric3.maven.runtime.MavenCoordinator;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
 
 /**
  *
  * @version $Revision$ $Date$
  */
 public class ExtensionHelper {
-    
+
     public ArtifactHelper artifactHelper;
 
+    DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+    DocumentBuilder db = dbf.newDocumentBuilder();
+
+    public ExtensionHelper() throws ParserConfigurationException {
+    }
+
     private List<URL> resolveDependencies(Dependency[] dependencies) throws MojoExecutionException {
-        
+
         List<URL> urls = new ArrayList<URL>();
-        
+
         if (dependencies == null) {
             return urls;
         }
-        
+
         for (Dependency dependency : dependencies) {
             Artifact artifact = artifactHelper.resolve(dependency);
             try {
@@ -53,14 +69,25 @@ public class ExtensionHelper {
                 throw new AssertionError();
             }
         }
-        
+
         return urls;
-        
+
     }
 
-    public void processExtensions(MavenCoordinator coordinator, Dependency[] extensions, Dependency[] userExtensions, 
-            File[] userExtensionsArchives) throws MojoExecutionException, MalformedURLException {
+    public void processExtensions(MavenCoordinator coordinator, 
+                                  Dependency[] extensions, 
+                                  Dependency[] features, 
+                                  Dependency[] userExtensions,
+                                  File[] userExtensionsArchives) throws MojoExecutionException, MalformedURLException {
         List<URL> extensionUrls = resolveDependencies(extensions);
+
+        if (features != null) {
+            for (Dependency feature : features) {
+                Artifact featureArtifact = artifactHelper.resolve(feature);
+                extensionUrls.addAll(processFeatures(featureArtifact.getFile()));
+            }
+        }
+
         coordinator.setExtensions(extensionUrls);
         List<URL> userExtensionUrls = resolveDependencies(userExtensions);
         // add extensions that are not Maven artifacts
@@ -73,6 +100,43 @@ public class ExtensionHelper {
             }
         }
         coordinator.setUserExtensions(userExtensionUrls);
+    }
+
+    private List<URL> processFeatures(File featureSetFile) throws MojoExecutionException {
+        
+        List<Dependency> dependencies = new LinkedList<Dependency>();
+
+        Document featureSetDoc;
+
+        try {
+            featureSetDoc = db.parse(featureSetFile);
+        } catch (SAXException e) {
+            throw new MojoExecutionException(e.getMessage(), e);
+        } catch (IOException e) {
+            throw new MojoExecutionException(e.getMessage(), e);
+        }
+
+        NodeList extensionList = featureSetDoc.getElementsByTagName("extension");
+
+        for (int i = 0; i < extensionList.getLength(); i++) {
+
+            Element extensionElement = (Element) extensionList.item(i);
+
+            Element artifactIdElement = (Element) extensionElement.getElementsByTagName("artifactId").item(0);
+            Element groupIdElement = (Element) extensionElement.getElementsByTagName("groupId").item(0);
+            Element versionElement = (Element) extensionElement.getElementsByTagName("version").item(0);
+
+            Dependency extension = new Dependency();
+            extension.setArtifactId(artifactIdElement.getTextContent());
+            extension.setGroupId(groupIdElement.getTextContent());
+            extension.setVersion(versionElement.getTextContent());
+
+            dependencies.add(extension);
+
+        }
+        
+        return resolveDependencies(dependencies.toArray(new Dependency[dependencies.size()]));
+
     }
 
 }
