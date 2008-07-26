@@ -84,37 +84,16 @@
                 <configuration>
                     <runtimeVersion>0.6-SNAPSHOT</runtimeVersion>
                     <systemConfigDir>classes/META-INF</systemConfigDir>
-                    <extensions>
+                    <features>
                         <!-- JPA Hibernate Extensions -->
                         <dependency>
                             <groupId>org.codehaus.fabric3</groupId>
-                            <artifactId>fabric3-jpa-hibernate</artifactId>
+                            <artifactId>fabric3-hibernate-jotm-feature</artifactId>
                             <version>0.6-SNAPSHOT</version>
+                            <type>xml</type>
                         </dependency>
-                        <!-- JPA Core Components -->
-                        <dependency>
-                            <groupId>org.codehaus.fabric3</groupId>
-                            <artifactId>fabric3-jpa-spi</artifactId>
-                            <version>0.6-SNAPSHOT</version>
-                        </dependency>
-                        <!-- Transaction Manager Using JOTM -->
-                        <dependency>
-                            <groupId>org.codehaus.fabric3</groupId>
-                            <artifactId>fabric3-tx-jotm</artifactId>
-                            <version>0.6-SNAPSHOT</version>
-                        </dependency>
-                        <!-- Declarative Transaction Policies -->
-                        <dependency>
-                            <groupId>org.codehaus.fabric3</groupId>
-                            <artifactId>fabric3-tx</artifactId>
-                            <version>0.6-SNAPSHOT</version>
-                        </dependency>
-                        <!-- JSR 250 Resource Support and Datasource Management -->
-                        <dependency>
-                            <groupId>org.codehaus.fabric3</groupId>
-                            <artifactId>fabric3-resource</artifactId>
-                            <version>0.6-SNAPSHOT</version>
-                        </dependency>
+                    </features>
+                    <extensions>
                         <!-- Test Extension to Install the Datasource -->
                         <dependency>
                             <groupId>org.codehaus.fabric3.tests</groupId>
