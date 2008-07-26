@@ -32,5 +32,14 @@
                 </requirement>
             </requirements>
         </component>  
+        <component>
+            <role>org.fabric3.itest.ExtensionHelper</role>
+            <implementation>org.fabric3.itest.ExtensionHelper</implementation>
+            <requirements>
+                <requirement>
+                    <role>org.fabric3.itest.ArtifactHelper</role>
+                </requirement>
+            </requirements>
+        </component>
     </components>
 </component-set>

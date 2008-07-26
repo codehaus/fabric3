@@ -295,6 +295,14 @@ public class Fabric3ITestMojo extends AbstractMojo {
     public ArtifactHelper artifactHelper;
 
     /**
+     *
+     * @parameter expression="${component.org.fabric3.itest.ExtensionHelper}"
+     * @required
+     * @readonly
+     */
+    public ExtensionHelper extensionHelper;
+
+    /**
      * The sub-directory of the project's output directory which contains the systemConfig.xml file. Users are limited to specifying the (relative)
      * directory name in this param - the file name is fixed. The fixed name is not required by the itest environment but using it retains the
      * relationship between the test config file and WEB-INF/systemConfig.xml which contains the same information for the deployed composite
@@ -367,7 +375,8 @@ public class Fabric3ITestMojo extends AbstractMojo {
             throw new MojoExecutionException("Error creating fabric3 runtime", e);
         }
         try {
-            processExtensions(coordinator);
+            coordinator.setIntentsLocation(intentsLocation);
+            extensionHelper.processExtensions(coordinator, extensions, userExtensions, userExtensionsArchives);
             bootRuntime(coordinator, runtime, bootClassLoader, hostClassLoader);
         } catch (InitializationException e) {
             throw new MojoExecutionException("Error initializing Fabric3 Runtime", e);
@@ -385,44 +394,6 @@ public class Fabric3ITestMojo extends AbstractMojo {
             }
             log.info("Stopping Fabric3 Runtime ...");
         }
-    }
-
-    private List<URL> resolveDependencies(Dependency[] dependencies) throws MojoExecutionException {
-        
-        List<URL> urls = new ArrayList<URL>();
-        
-        if (dependencies == null) {
-            return urls;
-        }
-        
-        for (Dependency dependency : dependencies) {
-            Artifact artifact = artifactHelper.resolve(dependency);
-            try {
-                urls.add(artifact.getFile().toURI().toURL());
-            } catch (MalformedURLException e) {
-                throw new AssertionError();
-            }
-        }
-        
-        return urls;
-        
-    }
-
-    private void processExtensions(MavenCoordinator coordinator) throws MojoExecutionException, MalformedURLException {
-        List<URL> extensionUrls = resolveDependencies(extensions);
-        coordinator.setExtensions(extensionUrls);
-        coordinator.setIntentsLocation(intentsLocation);
-        List<URL> userExtensionUrls = resolveDependencies(userExtensions);
-        // add extensions that are not Maven artifacts
-        if (userExtensionsArchives != null) {
-            for (File entry : userExtensionsArchives) {
-                if (!entry.exists()) {
-                    throw new MojoExecutionException("User extension does not exist: " + entry);
-                }
-                userExtensionUrls.add(entry.toURI().toURL());
-            }
-        }
-        coordinator.setUserExtensions(userExtensionUrls);
     }
 
     private void bootRuntime(RuntimeLifecycleCoordinator<MavenEmbeddedRuntime, Bootstrapper> coordinator,

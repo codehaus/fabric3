@@ -182,17 +182,6 @@ public class ArtifactHelper {
     }
     
     /**
-     * Resolves all the dependencies transitively to local artifacts.
-     * 
-     * @param dependency Root dependency.
-     * @return Resolved set of artifacts.
-     * @throws MojoExecutionException if unable to resolve any dependencies.
-     */
-    public Set<Artifact> resolveAll(Dependency dependency) throws MojoExecutionException {
-        return resolveArtifacts(dependency, true);
-    }
-    
-    /**
      * Resolves the root dependency to the local artifact.
      * 
      * @param dependency Root dependency.
@@ -201,6 +190,17 @@ public class ArtifactHelper {
      */
     public Artifact resolve(Dependency dependency) throws MojoExecutionException {
         return  resolveArtifacts(dependency, false).iterator().next();
+    }
+    
+    /**
+     * Resolves all the dependencies transitively to local artifacts.
+     * 
+     * @param dependency Root dependency.
+     * @return Resolved set of artifacts.
+     * @throws MojoExecutionException if unable to resolve any dependencies.
+     */
+    private Set<Artifact> resolveAll(Dependency dependency) throws MojoExecutionException {
+        return resolveArtifacts(dependency, true);
     }
     
     private Set<Artifact> resolveArtifacts(Dependency dependency, boolean transitive) throws MojoExecutionException {
