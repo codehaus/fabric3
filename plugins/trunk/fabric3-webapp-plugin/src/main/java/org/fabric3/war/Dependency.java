@@ -28,25 +28,18 @@ import org.apache.maven.artifact.factory.ArtifactFactory;
  */
 public class Dependency {
 
-    /**
-     * JAR type artifact.
-     */
-    private static final String TYPE_JAR = "jar";
-
-    /**
-     * Group Id that is injected in from configuration.
-     */
     private String groupId;
-
-    /**
-     * Artifact Id that is injected in from configuration.
-     */
     private String artifactId;
-
-    /**
-     * Version that is injected in from configuration.
-     */
     private String version;
+    private String type = "jar";
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
 
     /**
      * Default constructor.
@@ -75,7 +68,7 @@ public class Dependency {
      * @return Artifact identified by the dependency.
      */
     public Artifact getArtifact(ArtifactFactory artifactFactory) {
-        return artifactFactory.createArtifact(groupId, artifactId, version, Artifact.SCOPE_RUNTIME, TYPE_JAR);
+        return artifactFactory.createArtifact(groupId, artifactId, version, Artifact.SCOPE_RUNTIME, type);
     }
 
     /**
@@ -122,5 +115,37 @@ public class Dependency {
      */
     public String getGroupId() {
         return groupId;
+    }
+
+    /**
+     * Implements equals based onartifactId, groupId and version.
+     */
+    @Override
+    public boolean equals(Object obj) {
+        
+        if (!(obj instanceof Dependency)) {
+            return false;
+        }
+        
+        Dependency other = (Dependency) obj;
+        return getArtifactId().equals(other.getArtifactId()) && 
+               getGroupId().equalsIgnoreCase(other.getGroupId()) && 
+               getVersion().equals(other.getVersion());
+        
+    }
+
+    /**
+     * Implements hashCode based onartifactId, groupId and version.
+     */
+    @Override
+    public int hashCode() {
+        
+        int hash = 7;
+        hash += 31 * getArtifactId().hashCode();
+        hash += 31 * getGroupId().hashCode();
+        hash += 31 * getVersion().hashCode();
+        
+        return hash;
+        
     }
 }

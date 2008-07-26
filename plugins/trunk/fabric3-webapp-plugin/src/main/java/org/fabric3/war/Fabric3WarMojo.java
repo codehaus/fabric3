@@ -19,7 +19,6 @@
 package org.fabric3.war;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -31,6 +30,10 @@ import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.JarOutputStream;
+
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.factory.ArtifactFactory;
@@ -47,6 +50,11 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.MavenProject;
 import org.codehaus.plexus.util.FileUtils;
 import org.codehaus.plexus.util.IOUtil;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
+import org.xml.sax.SAXException;
+import org.xml.sax.SAXParseException;
 
 /**
  * Add fabric3 runtime dependencies to a webapp. The wenapp runtime in Fabric3 currently doesn't support classloader isolation. All JAR
@@ -151,6 +159,13 @@ public class Fabric3WarMojo extends AbstractMojo {
     public Dependency[] extensions;
 
     /**
+     * Set of extension artifacts that should be deployed to the runtime expressed as feature sets.
+     *
+     * @parameter
+     */
+    public Dependency[] features;
+
+    /**
      * Set of user extension artifacts that should be deployed to the runtime.
      *
      * @parameter
@@ -172,6 +187,11 @@ public class Fabric3WarMojo extends AbstractMojo {
      * @required
      */
     public MavenProject project;
+    
+    private DocumentBuilder db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+    
+    public Fabric3WarMojo() throws ParserConfigurationException {
+    }
 
     /**
      * Executes the MOJO.
@@ -180,15 +200,12 @@ public class Fabric3WarMojo extends AbstractMojo {
         try {
             installRuntime();
             installExtensions();
-
-            // TODO add user dependencies to the war in the way the contribution service expects
         } catch (Exception e) {
             throw new MojoExecutionException(e.getMessage(), e);
         }
     }
 
-    private void installRuntime() throws IOException, ArtifactResolutionException, ArtifactNotFoundException,
-            ArtifactMetadataRetrievalException {
+    private void installRuntime() throws MojoExecutionException, IOException {
 
         getLog().info("Using fabric3 runtime version " + runTimeVersion);
 
@@ -209,72 +226,114 @@ public class Fabric3WarMojo extends AbstractMojo {
         }
     }
 
-    private void installExtensions() throws ArtifactNotFoundException, ArtifactResolutionException, IOException, ArtifactMetadataRetrievalException {
+    private void installExtensions() throws MojoExecutionException {
         
-        if (extensions != null) {
-            processExtensions(EXTENSIONS_PATH, "f3Extensions.properties");
-        }
-        if (userExtensions != null) {
-            processExtensions(USER_EXTENSIONS_PATH, "f3UserExtensions.properties");
+        try {
+        
+            if (extensions != null) {
+                Set<Dependency> uniqueExtensions = new HashSet<Dependency>();
+                for (Dependency extension : extensions) {
+                    uniqueExtensions.add(extension);
+                }
+                for (Dependency feature : features) {
+                    if (feature.getVersion() == null) {
+                        resolveDependencyVersion(feature);
+                    }
+                    Artifact featureArtifact = feature.getArtifact(artifactFactory);
+                    featureArtifact = resolveArtifact(featureArtifact, false).iterator().next();
+    
+                    Document featureSetDoc = db.parse(featureArtifact.getFile());
+    
+                    NodeList extensionList = featureSetDoc.getElementsByTagName("extension");
+    
+                    for (int i = 0; i < extensionList.getLength(); i++) {
+    
+                        Element extensionElement = (Element) extensionList.item(i);
+    
+                        Element artifactIdElement = (Element) extensionElement.getElementsByTagName("artifactId").item(0);
+                        Element groupIdElement = (Element) extensionElement.getElementsByTagName("groupId").item(0);
+                        Element versionElement = (Element) extensionElement.getElementsByTagName("version").item(0);
+    
+                        Dependency extension = 
+                            new Dependency(groupIdElement.getTextContent(), artifactIdElement.getTextContent(), versionElement.getTextContent());
+    
+                        uniqueExtensions.add(extension);
+    
+                    }
+                }
+                processExtensions(EXTENSIONS_PATH, "f3Extensions.properties", uniqueExtensions);
+            }
+            if (userExtensions != null) {
+                Set<Dependency> uniqueExtensions = new HashSet<Dependency>();
+                for (Dependency extension : userExtensions) {
+                    uniqueExtensions.add(extension);
+                }
+                processExtensions(USER_EXTENSIONS_PATH, "f3UserExtensions.properties", uniqueExtensions);
+            }
+            
+        } catch(SAXParseException e) {
+            throw new MojoExecutionException(e.getMessage(), e);
+        } catch (IOException e) {
+            throw new MojoExecutionException(e.getMessage(), e);
+        } catch (SAXException e) {
+            throw new MojoExecutionException(e.getMessage(), e);
         }
 
     }
 
-    private void processExtensions(String extenstionsPath, String extensionProperties) 
-        throws IOException, ArtifactResolutionException, ArtifactNotFoundException, ArtifactMetadataRetrievalException, FileNotFoundException {
+    private void processExtensions(String extenstionsPath, String extensionProperties, Set<Dependency> extensions) throws MojoExecutionException {
         
-        Properties props = new Properties();
-        File extensionsDir = new File(webappDirectory, extenstionsPath);
-        
-        for (Dependency dependency : extensions) {
+        try {
             
-            if (dependency.getVersion() == null) {
-                resolveDependencyVersion(dependency);
-            }
+            Properties props = new Properties();
+            File extensionsDir = new File(webappDirectory, extenstionsPath);
             
-            Artifact extensionArtifact = dependency.getArtifact(artifactFactory);
-            for (Artifact artifact : resolveArtifact(extensionArtifact, false)) {
+            for (Dependency dependency : extensions) {
                 
-                if (artifact.equals(extensionArtifact)) {
-                    
-                    File deflatedExtensionFile = new File(extensionsDir, extensionArtifact.getFile().getName());
-                    JarOutputStream deflatedExtensionOutputStream = new JarOutputStream(new FileOutputStream(deflatedExtensionFile));
-                    
-                    JarFile extensionFile = new JarFile(extensionArtifact.getFile());
-                    Enumeration<JarEntry> entries = extensionFile.entries();
-                    while (entries.hasMoreElements()) {
-                        JarEntry jarEntry = entries.nextElement();
-                        String entryName = jarEntry.getName();
-                        if (entryName.startsWith("META-INF/lib") && entryName.endsWith(".jar")) {
-                            String extractedLibraryName = entryName.substring(entryName.lastIndexOf('/') + 1);
-                            File extractedLibraryFile = new File(extensionsDir, extractedLibraryName);
-                            if (!extractedLibraryFile.exists()) {
-                                FileOutputStream outputStream = new FileOutputStream(extractedLibraryFile);
-                                InputStream inputStream = extensionFile.getInputStream(jarEntry);
-                                IOUtil.copy(inputStream, outputStream);
-                                IOUtil.close(inputStream);
-                                IOUtil.close(outputStream);
-                            }
-                        } else {
-                            deflatedExtensionOutputStream.putNextEntry(jarEntry);
-                            InputStream inputStream = extensionFile.getInputStream(jarEntry);
-                            IOUtil.copy(inputStream, deflatedExtensionOutputStream);
-                            IOUtil.close(inputStream);
-                        }
-                    }
-                    
-                    IOUtil.close(deflatedExtensionOutputStream);
-                    
-                } else {
-                    FileUtils.copyFileToDirectoryIfModified(artifact.getFile(), extensionsDir);
+                if (dependency.getVersion() == null) {
+                    resolveDependencyVersion(dependency);
                 }
                 
-                props.put(artifact.getFile().getName(), artifact.getFile().getName());
+                Artifact extensionArtifact = dependency.getArtifact(artifactFactory);
+                extensionArtifact = resolveArtifact(extensionArtifact, false).iterator().next();
                 
+                File deflatedExtensionFile = new File(extensionsDir, extensionArtifact.getFile().getName());
+                JarOutputStream deflatedExtensionOutputStream = new JarOutputStream(new FileOutputStream(deflatedExtensionFile));
+                
+                JarFile extensionFile = new JarFile(extensionArtifact.getFile());
+                Enumeration<JarEntry> entries = extensionFile.entries();
+                while (entries.hasMoreElements()) {
+                    JarEntry jarEntry = entries.nextElement();
+                    String entryName = jarEntry.getName();
+                    if (entryName.startsWith("META-INF/lib") && entryName.endsWith(".jar")) {
+                        String extractedLibraryName = entryName.substring(entryName.lastIndexOf('/') + 1);
+                        File extractedLibraryFile = new File(extensionsDir, extractedLibraryName);
+                        if (!extractedLibraryFile.exists()) {
+                            FileOutputStream outputStream = new FileOutputStream(extractedLibraryFile);
+                            InputStream inputStream = extensionFile.getInputStream(jarEntry);
+                            IOUtil.copy(inputStream, outputStream);
+                            IOUtil.close(inputStream);
+                            IOUtil.close(outputStream);
+                        }
+                    } else {
+                        deflatedExtensionOutputStream.putNextEntry(jarEntry);
+                        InputStream inputStream = extensionFile.getInputStream(jarEntry);
+                        IOUtil.copy(inputStream, deflatedExtensionOutputStream);
+                        IOUtil.close(inputStream);
+                    }
+                }
+                
+                IOUtil.close(deflatedExtensionOutputStream);
+                    
+                props.put(extensionArtifact.getFile().getName(), extensionArtifact.getFile().getName());
+
             }
+            
+            props.store(new FileOutputStream(new File(extensionsDir, extensionProperties)), null);
+            
+        } catch (IOException e) {
+            throw new MojoExecutionException(e.getMessage(), e);
         }
-        
-        props.store(new FileOutputStream(new File(extensionsDir, extensionProperties)), null);
         
     }
 
@@ -306,33 +365,41 @@ public class Fabric3WarMojo extends AbstractMojo {
      * @throws ArtifactMetadataRetrievalException
      *                                     In case of error in retrieving metadata.
      */
-    private Set<Artifact> resolveArtifact(Artifact artifact, boolean transitive)
-            throws IOException, ArtifactResolutionException,
-            ArtifactNotFoundException, ArtifactMetadataRetrievalException {
-
-        Set<Artifact> resolvedArtifacts = new HashSet<Artifact>();
-
-        // Resolve the artifact
-        resolver.resolve(artifact, remoteRepositories, localRepository);
-        resolvedArtifacts.add(artifact);
-
-        if (!transitive) {
+    private Set<Artifact> resolveArtifact(Artifact artifact, boolean transitive) throws MojoExecutionException {
+        
+        try {
+            
+            Set<Artifact> resolvedArtifacts = new HashSet<Artifact>();
+    
+            // Resolve the artifact
+            resolver.resolve(artifact, remoteRepositories, localRepository);
+            resolvedArtifacts.add(artifact);
+    
+            if (!transitive) {
+                return resolvedArtifacts;
+            }
+    
+            // Transitively resolve all the dependencies
+            ResolutionGroup resolutionGroup = metadataSource.retrieve(artifact, localRepository, remoteRepositories);
+            ArtifactResolutionResult result = resolver.resolveTransitively(resolutionGroup.getArtifacts(),
+                                                                           artifact,
+                                                                           remoteRepositories,
+                                                                           localRepository,
+                                                                           metadataSource);
+    
+            // Add the artifacts to the deployment unit
+            for (Object depArtifact : result.getArtifacts()) {
+                resolvedArtifacts.add((Artifact) depArtifact);
+            }
             return resolvedArtifacts;
+            
+        } catch (ArtifactResolutionException e) {
+            throw new MojoExecutionException(e.getMessage(), e);
+        } catch (ArtifactNotFoundException e) {
+            throw new MojoExecutionException(e.getMessage(), e);
+        } catch (ArtifactMetadataRetrievalException e) {
+            throw new MojoExecutionException(e.getMessage(), e);
         }
-
-        // Transitively resolve all the dependencies
-        ResolutionGroup resolutionGroup = metadataSource.retrieve(artifact, localRepository, remoteRepositories);
-        ArtifactResolutionResult result = resolver.resolveTransitively(resolutionGroup.getArtifacts(),
-                                                                       artifact,
-                                                                       remoteRepositories,
-                                                                       localRepository,
-                                                                       metadataSource);
-
-        // Add the artifacts to the deployment unit
-        for (Object depArtifact : result.getArtifacts()) {
-            resolvedArtifacts.add((Artifact) depArtifact);
-        }
-        return resolvedArtifacts;
 
     }
 }
