@@ -269,24 +269,6 @@ public class Fabric3ITestMojo extends AbstractMojo {
     public List<String> testClassPath;
 
     /**
-     * Used to look up Artifacts in the remote repository.
-     *
-     * @parameter expression="${component.org.apache.maven.artifact.resolver.ArtifactResolver}"
-     * @required
-     * @readonly
-     */
-    public ArtifactResolver resolver;
-
-    /**
-     * Used to look up Artifacts in the remote repository.
-     *
-     * @parameter expression="${component.org.apache.maven.artifact.metadata.ArtifactMetadataSource}"
-     * @required
-     * @readonly
-     */
-    public ArtifactMetadataSource metadataSource;
-
-    /**
      * Location of the local repository.
      *
      * @parameter expression="${localRepository}"
@@ -296,15 +278,6 @@ public class Fabric3ITestMojo extends AbstractMojo {
     public ArtifactRepository localRepository;
 
     /**
-     * List of Remote Repositories used by the resolver
-     *
-     * @parameter expression="${project.remoteArtifactRepositories}"
-     * @readonly
-     * @required
-     */
-    public List<String> remoteRepositories;
-
-    /**
      * Used to look up Artifacts in the remote repository.
      *
      * @parameter expression="${component.org.apache.maven.artifact.factory.ArtifactFactory}"
@@ -312,6 +285,14 @@ public class Fabric3ITestMojo extends AbstractMojo {
      * @readonly
      */
     public ArtifactFactory artifactFactory;
+
+    /**
+     *
+     * @parameter expression="${component.org.fabric3.itest.ArtifactHelper}"
+     * @required
+     * @readonly
+     */
+    public ArtifactHelper artifactHelper;
 
     /**
      * The sub-directory of the project's output directory which contains the systemConfig.xml file. Users are limited to specifying the (relative)
@@ -336,6 +317,10 @@ public class Fabric3ITestMojo extends AbstractMojo {
 
     @SuppressWarnings("unchecked")
     public void execute() throws MojoExecutionException, MojoFailureException {
+        
+        artifactHelper.setLocalRepository(localRepository);
+        artifactHelper.setProject(project);
+        
         Log log = getLog();
         if (!testScdl.exists()) {
             log.info("No itest SCDL found, skipping integration tests");
@@ -354,10 +339,11 @@ public class Fabric3ITestMojo extends AbstractMojo {
             throw new AssertionError(e);
         }
 
-        Set<Artifact> runtimeArtifacts = calculateRuntimeArtifacts(runtimeVersion);
-        Set<Artifact> hostArtifacts = calculateHostArtifacts(runtimeArtifacts);
-        Set<Artifact> dependencies = calculateDependencies(project.getDependencies(), project.getDependencyArtifacts());
-        Set<URL> moduleDependencies = calculateModuleDependencies(dependencies, hostArtifacts);
+        Set<Artifact> runtimeArtifacts = artifactHelper.calculateRuntimeArtifacts(runtimeVersion);
+        Set<Artifact> hostArtifacts = artifactHelper.calculateHostArtifacts(runtimeArtifacts, shared);
+        Set<Artifact> dependencies = artifactHelper.calculateDependencies();
+        Set<URL> moduleDependencies = artifactHelper.calculateModuleDependencies(dependencies, hostArtifacts);
+        
         ClassLoader parentClassLoader = getClass().getClassLoader();
         ClassLoader hostClassLoader = createHostClassLoader(parentClassLoader, hostArtifacts);
         ClassLoader bootClassLoader = createBootClassLoader(hostClassLoader, runtimeArtifacts);
@@ -402,51 +388,24 @@ public class Fabric3ITestMojo extends AbstractMojo {
     }
 
     private List<URL> resolveDependencies(Dependency[] dependencies) throws MojoExecutionException {
+        
         List<URL> urls = new ArrayList<URL>();
+        
         if (dependencies == null) {
             return urls;
         }
+        
         for (Dependency dependency : dependencies) {
-            if (dependency.getVersion() == null) {
-                resolveDependencyVersion(dependency);
-            }
-            Artifact artifact = createArtifact(dependency);
-            try {
-                resolver.resolve(artifact, remoteRepositories, localRepository);
-            } catch (ArtifactResolutionException e) {
-                throw new MojoExecutionException(e.getMessage(), e);
-            } catch (ArtifactNotFoundException e) {
-                throw new MojoExecutionException(e.getMessage(), e);
-            }
+            Artifact artifact = artifactHelper.resolve(dependency);
             try {
                 urls.add(artifact.getFile().toURI().toURL());
             } catch (MalformedURLException e) {
-                // should not happen as toURI should escape the filename
                 throw new AssertionError();
             }
         }
+        
         return urls;
-    }
-
-    private Artifact createArtifact(Dependency dependency) {
-        return artifactFactory.createArtifact(dependency.getGroupId(),
-                                              dependency.getArtifactId(),
-                                              dependency.getVersion(),
-                                              Artifact.SCOPE_RUNTIME,
-                                              dependency.getType());
-    }
-
-    @SuppressWarnings("unchecked")
-    private void resolveDependencyVersion(Dependency extension) {
-
-        List<org.apache.maven.model.Dependency> dependencies = project.getDependencyManagement().getDependencies();
-        for (org.apache.maven.model.Dependency dependecy : dependencies) {
-            if (dependecy.getGroupId().equals(extension.getGroupId())
-                    && dependecy.getArtifactId().equals(extension.getArtifactId())) {
-                extension.setVersion(dependecy.getVersion());
-
-            }
-        }
+        
     }
 
     private void processExtensions(MavenCoordinator coordinator) throws MojoExecutionException, MalformedURLException {
@@ -560,69 +519,8 @@ public class Fabric3ITestMojo extends AbstractMojo {
         return new MultiParentClassLoader(URI.create("itestBoot"), urls, parent);
     }
 
-    private Set<Artifact> calculateRuntimeArtifacts(String runtimeVersion) throws MojoExecutionException {
-        Set<Artifact> artifacts = new HashSet<Artifact>();
-        // add in the runtime
-        List<Exclusion> exclusions = Collections.emptyList();
-        Dependency dependency = new Dependency();
-        dependency.setGroupId("org.codehaus.fabric3");
-        dependency.setArtifactId("fabric3-maven-host");
-        dependency.setVersion(runtimeVersion);
-        dependency.setExclusions(exclusions);
-        addArtifacts(artifacts, dependency);
-        return artifacts;
-    }
-
-    @SuppressWarnings("unchecked")
-    private void addArtifacts(Set<Artifact> artifacts, Dependency extension) throws MojoExecutionException {
-
-        if (extension.getVersion() == null) {
-            resolveDependencyVersion(extension);
-        }
-        final List<Exclusion> exclusions = extension.getExclusions();
-
-        Artifact artifact = createArtifact(extension);
-        try {
-            resolver.resolve(artifact, remoteRepositories, localRepository);
-            ResolutionGroup resolutionGroup = metadataSource.retrieve(artifact,
-                                                                      localRepository,
-                                                                      remoteRepositories);
-            ArtifactFilter filter = new ArtifactFilter() {
-
-                public boolean include(Artifact artifact) {
-                    String groupId = artifact.getGroupId();
-                    String artifactId = artifact.getArtifactId();
-
-                    for (Exclusion exclusion : exclusions) {
-                        if (artifactId.equals(exclusion.getArtifactId()) && groupId.equals(exclusion.getGroupId())) {
-                            return false;
-                        }
-                    }
-                    return true;
-                }
-
-            };
-            ArtifactResolutionResult result = resolver.resolveTransitively(resolutionGroup.getArtifacts(),
-                                                                           artifact,
-                                                                           Collections.emptyMap(),
-                                                                           localRepository,
-                                                                           remoteRepositories,
-                                                                           metadataSource,
-                                                                           filter);
-            @SuppressWarnings("unchecked")
-            Set<Artifact> resolvedArtifacts = result.getArtifacts();
-            artifacts.add(artifact);
-            artifacts.addAll(resolvedArtifacts);
-        } catch (ArtifactResolutionException e) {
-            throw new MojoExecutionException(e.getMessage(), e);
-        } catch (ArtifactNotFoundException e) {
-            throw new MojoExecutionException(e.getMessage(), e);
-        } catch (ArtifactMetadataRetrievalException e) {
-            throw new MojoExecutionException(e.getMessage(), e);
-        }
-    }
-
     public boolean runSurefire(SurefireTestSuite testSuite) throws MojoExecutionException {
+        
         try {
             Properties status = new Properties();
             boolean success = run(testSuite, status);
@@ -633,6 +531,7 @@ public class Fabric3ITestMojo extends AbstractMojo {
         } catch (TestSetFailedException e) {
             throw new MojoExecutionException(e.getMessage(), e);
         }
+        
     }
 
     public boolean run(SurefireTestSuite suite, Properties status) throws ReporterException, TestSetFailedException {
@@ -780,66 +679,6 @@ public class Fabric3ITestMojo extends AbstractMojo {
     }
 
     /**
-     * Transitively calculates the set of artifacts to be included in the host classloader based on the artifacts associated with the Maven module.
-     *
-     * @param runtimeArtifacts the artifacts associated with the Maven module
-     * @return set of artifacts to be included in the host classloader
-     * @throws MojoExecutionException if an error occurs calculating the transitive dependencies
-     */
-    private Set<Artifact> calculateHostArtifacts(Set<Artifact> runtimeArtifacts)
-            throws MojoExecutionException {
-        Set<Artifact> hostArtifacts = new HashSet<Artifact>();
-        List<Exclusion> exclusions = Collections.emptyList();
-        // find the version of fabric3-api being used by the runtime
-        String version = null;
-        for (Artifact artifact : runtimeArtifacts) {
-            if ("org.codehaus.fabric3".equals(artifact.getGroupId())
-                    && "fabric3-api".equals(artifact.getArtifactId())) {
-                version = artifact.getVersion();
-                break;
-            }
-        }
-        if (version == null) {
-            throw new MojoExecutionException("org.codehaus.fabric3:fabric3-api version not found");
-        }
-        // add transitive dependencies of fabric3-api to the list of artifacts in the host classloader
-        Dependency dependency = new Dependency();
-        dependency.setGroupId("org.codehaus.fabric3");
-        dependency.setArtifactId("fabric3-api");
-        dependency.setVersion(version);
-        dependency.setExclusions(exclusions);
-        addArtifacts(hostArtifacts, dependency);
-
-        // add commons annotations dependency
-        Dependency jsr250API = new Dependency();
-        jsr250API.setGroupId("org.apache.geronimo.specs");
-        jsr250API.setArtifactId("geronimo-annotation_1.0_spec");
-        jsr250API.setVersion("1.1");
-        jsr250API.setExclusions(exclusions);
-        addArtifacts(hostArtifacts, jsr250API);
-
-        // add shared artifacts to the host classpath
-        if (shared != null) {
-            for (Dependency extension : shared) {
-                addArtifacts(hostArtifacts, extension);
-            }
-        }
-        return hostArtifacts;
-    }
-
-    private Set<Artifact> calculateDependencies(List<Dependency> dependencies, Set<Artifact> dependencyArtifacts) throws MojoExecutionException {
-        // add all declared project dependencies
-        Set<Artifact> artifacts = new HashSet<Artifact>();
-        for (Dependency dependency : dependencies) {
-            addArtifacts(artifacts, dependency);
-        }
-
-        // include any artifacts that have been added by other plugins (e.g. Clover see FABRICTHREE-220)
-        artifacts.addAll(dependencyArtifacts);
-        return artifacts;
-    }
-
-    /**
      * Creates the host classloader based on the given set of artifacts.
      *
      * @param parent        the parent classloader
@@ -861,35 +700,6 @@ public class Fabric3ITestMojo extends AbstractMojo {
 
         }
         return new URLClassLoader(urls.toArray(new URL[urls.size()]), parent);
-    }
-
-    /**
-     * Calculates module dependencies based on the set of project artifacts. Module dependencies must be visible to implementation code in a composite
-     * and encompass project artifacts minus artifacts provided by the host classloader and those that are "provided scope".
-     *
-     * @param projectArtifacts the artifact set to determine module dependencies from
-     * @param hostArtifacts    the set of host artifacts
-     * @return the set of URLs pointing to module depedencies.
-     */
-    private Set<URL> calculateModuleDependencies(Set<Artifact> projectArtifacts, Set<Artifact> hostArtifacts) {
-        Set<URL> urls = new LinkedHashSet<URL>();
-        for (Artifact artifact : projectArtifacts) {
-            try {
-                if (hostArtifacts.contains(artifact) || Artifact.SCOPE_PROVIDED.equals(artifact.getScope())) {
-                    continue;
-                }
-                File pathElement = artifact.getFile();
-                URL url = pathElement.toURI().toURL();
-                getLog().debug("Adding module dependency URL: " + url);
-                urls.add(url);
-
-            } catch (MalformedURLException e) {
-                // toURI should have encoded the URL
-                throw new AssertionError(e);
-            }
-
-        }
-        return urls;
     }
 
     private URL getBuildDirectoryUrl() {
