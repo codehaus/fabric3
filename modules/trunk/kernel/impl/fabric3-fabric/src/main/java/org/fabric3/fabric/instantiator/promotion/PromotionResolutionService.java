@@ -23,7 +23,7 @@ import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalService;
 
 /**
- * Resolves promoted services and references by setting the resolved promotio URI of the logical component service or reference that is being
+ * Resolves promoted services and references by setting the resolved promotion URI of the logical component service or reference that is being
  * promoted.
  *
  * @version $Revision$ $Date$

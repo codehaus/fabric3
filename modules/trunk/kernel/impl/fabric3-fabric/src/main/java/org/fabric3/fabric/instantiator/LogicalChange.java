@@ -18,15 +18,18 @@ package org.fabric3.fabric.instantiator;
 
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.w3c.dom.Document;
 
+import org.fabric3.host.domain.AssemblyFailure;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
+import org.fabric3.spi.model.instance.LogicalService;
 import org.fabric3.spi.model.instance.LogicalWire;
-import org.fabric3.host.domain.AssemblyFailure;
 
 /**
  * @version $Rev$ $Date$
@@ -34,20 +37,24 @@ import org.fabric3.host.domain.AssemblyFailure;
 public class LogicalChange {
 
     private final LogicalCompositeComponent parent;
-    private final List<Command> phase1 = new ArrayList<Command>();
-    private final List<Command> phase2 = new ArrayList<Command>();
-    private final List<Command> phase3 = new ArrayList<Command>();
 
     private final List<AssemblyFailure> errors = new ArrayList<AssemblyFailure>();
     private final List<AssemblyFailure> warnings = new ArrayList<AssemblyFailure>();
 
+    private final Map<String, Document> addedProperties = new HashMap<String, Document>();
     private final List<String> deletedProperties = new ArrayList<String>();
-    private final List<LogicalComponent<?>> deletedComponents = new ArrayList<LogicalComponent<?>>();
+
     private final List<LogicalComponent<?>> addedComponents = new ArrayList<LogicalComponent<?>>();
+    private final List<LogicalComponent<?>> deletedComponents = new ArrayList<LogicalComponent<?>>();
+
+    private final List<LogicalService> addedServices = new ArrayList<LogicalService>();
     private final List<URI> deletedServices = new ArrayList<URI>();
 
+    private final List<LogicalReference> addedReferences = new ArrayList<LogicalReference>();
+    private final Map<URI, List<LogicalWire>> addedWires = new HashMap<URI, List<LogicalWire>>();
+
     /**
-     * Construct change specifiying the context to which it applies.
+     * Construct a logical change specifiying the context to which it applies.
      *
      * @param parent the context to which this change applies
      */
@@ -138,61 +145,39 @@ public class LogicalChange {
 
 
     /**
-     * Apply this change to its context.
-     */
-    public void apply() {
-        if (hasErrors()) {
-            throw new IllegalStateException("Logical change has errors");
-        }
-        for (Command command : phase1) {
-            command.apply();
-        }
-        for (Command command : phase2) {
-            command.apply();
-        }
-        for (Command command : phase3) {
-            command.apply();
-        }
-    }
-
-    /**
-     * Change that adds a property to the parent context.
+     * Record a property being added.
      *
      * @param name  the name of the property to add
      * @param value the actual value of the property
      */
-    public void addProperty(final String name, final Document value) {
-        phase1.add(new Command() {
-            public void apply() {
-                parent.setPropertyValue(name, value);
-            }
-        });
+    public void addProperty(String name, Document value) {
+        addedProperties.put(name, value);
     }
 
-    public void removeProperty(final String name) {
+    /**
+     * Record a property being removed.
+     *
+     * @param name the name of the property
+     */
+    public void removeProperty(String name) {
         deletedProperties.add(name);
     }
 
     /**
-     * Change that adds a component to the parent context.
+     * Record a component being added.
      *
      * @param component the component to add
      */
-    public void addComponent(final LogicalComponent<?> component) {
-        phase2.add(new Command() {
-            public void apply() {
-                parent.addComponent(component);
-            }
-        });
+    public void addComponent(LogicalComponent<?> component) {
         addedComponents.add(component);
     }
 
     /**
-     * Change that removes a component from the parent context
+     * Record a component being removed.
      *
-     * @param component
+     * @param component the component
      */
-    public void removeComponent(final LogicalComponent<?> component) {
+    public void removeComponent(LogicalComponent<?> component) {
         deletedComponents.add(component);
     }
 
@@ -202,18 +187,18 @@ public class LogicalChange {
     }
 
     /**
-     * Return the list of new components added to the parent context
+     * Return the list of new components.
      *
-     * @return
+     * @return the list of added components
      */
     public List<LogicalComponent<?>> getAddedComponents() {
         return addedComponents;
     }
 
     /**
-     * Return the list of deleted components from the parent context
+     * Return the list of deleted components
      *
-     * @return
+     * @return the list of deleted components
      */
 
     public List<LogicalComponent<?>> getDeletedComponents() {
@@ -221,20 +206,106 @@ public class LogicalChange {
     }
 
     /**
-     * Change that adds a wire to the parent context.
+     * Record a wire being added.
      *
-     * @param reference the reference that sources the wire
-     * @param wire      the wire
+     * @param wire the wire
      */
-    public void addWire(final LogicalReference reference, final LogicalWire wire) {
-        phase3.add(new Command() {
-            public void apply() {
-                parent.addWire(reference, wire);
-            }
-        });
+    public void addWire(LogicalWire wire) {
+        URI uri = wire.getSource().getUri();
+        List<LogicalWire> wires = addedWires.get(uri);
+        if (wires == null) {
+            wires = new ArrayList<LogicalWire>();
+            addedWires.put(uri, wires);
+        }
+        wires.add(wire);
     }
 
-    private static abstract class Command {
-        public abstract void apply();
+    /**
+     * Returns added wires for a source (reference) URI.
+     *
+     * @param uri the source URI
+     * @return the added wires
+     */
+    public List<LogicalWire> getAddedWires(URI uri) {
+        return addedWires.get(uri);
     }
+
+    /**
+     * Returns the wires that were added to the change.
+     *
+     * @return the wires
+     */
+    public List<LogicalWire> getAddedWires() {
+        List<LogicalWire> wires = new ArrayList<LogicalWire>();
+        for (List<LogicalWire> list : addedWires.values()) {
+            wires.addAll(list);
+        }
+        return wires;
+    }
+
+
+    /**
+     * Records a service being added.
+     *
+     * @param service the service
+     */
+    public void addService(LogicalService service) {
+        addedServices.add(service);
+    }
+
+    /**
+     * Returns the collection of added services.
+     *
+     * @return the added services
+     */
+    public List<LogicalService> getAddedServices() {
+        return addedServices;
+    }
+
+    /**
+     * Records a reference being added.
+     *
+     * @param reference the service
+     */
+    public void addReference(LogicalReference reference) {
+        addedReferences.add(reference);
+    }
+
+    /**
+     * Returns the collection of added references.
+     *
+     * @return the added references
+     */
+    public List<LogicalReference> getAddedReferences() {
+        return addedReferences;
+    }
+
+    /**
+     * Returns the collection of deleted service URIs.
+     *
+     * @return the added references
+     */
+    public List<URI> getDeletedReferences() {
+        return deletedServices;
+    }
+
+
+    /**
+     * Returns the map of added properties keyed by name.
+     *
+     * @return the added properties
+     */
+    public Map<String, Document> getAddedProperties() {
+        return addedProperties;
+    }
+
+    /**
+     * Returns the names of deleted properties.
+     *
+     * @return the names of the deleted properties
+     */
+    public List<String> getDeletedProperties() {
+        return deletedProperties;
+    }
+
 }

@@ -18,8 +18,10 @@ package org.fabric3.fabric.instantiator.component;
 
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import org.osoa.sca.annotations.Reference;
 import org.w3c.dom.Document;
@@ -40,8 +42,11 @@ import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalService;
+import org.fabric3.spi.model.instance.LogicalWire;
 
 /**
+ * Instatiates a composite component in the logical representation of a domain. Child components will be recursively instantiated if they exist.
+ *
  * @version $Revision$ $Date$
  */
 public class CompositeComponentInstantiator extends AbstractComponentInstantiator {
@@ -79,7 +84,7 @@ public class CompositeComponentInstantiator extends AbstractComponentInstantiato
         initializeProperties(component, definition, change);
         instantiateChildComponents(component, properties, composite, change);
         instantiateCompositeServices(component, composite);
-        instantiateCompositeReferences(parent, component, composite);
+        instantiateCompositeReferences(parent, component, composite, change);
 
         return component;
 
@@ -147,7 +152,10 @@ public class CompositeComponentInstantiator extends AbstractComponentInstantiato
 
     }
 
-    private void instantiateCompositeReferences(LogicalCompositeComponent parent, LogicalCompositeComponent component, Composite composite) {
+    private void instantiateCompositeReferences(LogicalCompositeComponent parent,
+                                                LogicalCompositeComponent component,
+                                                Composite composite,
+                                                LogicalChange change) {
 
         ComponentDefinition<CompositeImplementation> definition = component.getDefinition();
         String uriBase = component.getUri().toString() + "/";
@@ -194,7 +202,25 @@ public class CompositeComponentInstantiator extends AbstractComponentInstantiato
                         // the target is relative to the component's parent, not the component
                         targets.add(URI.create(parent.getUri().toString() + "/" + targetUri));
                     }
-                    logicalReference.overrideTargets(targets);
+                    // xcv potentially remove if LogicalWires added to LogicalReference
+                    LogicalCompositeComponent grandParent = parent.getParent();
+                    Set<LogicalWire> wires = new LinkedHashSet<LogicalWire>();
+                    if (null != grandParent) {
+                        for (URI targetUri : targets) {
+                            LogicalWire wire = new LogicalWire(grandParent, logicalReference, targetUri);
+                            change.addWire(wire);
+                            wires.add(wire);
+                        }
+                        grandParent.overrideWires(logicalReference, wires);
+                    } else {
+                        for (URI targetUri : targets) {
+                            LogicalWire wire = new LogicalWire(parent, logicalReference, targetUri);
+                            change.addWire(wire);
+                            wires.add(wire);
+                        }
+                        parent.overrideWires(logicalReference, wires);
+                    }
+                    // end remove
                 }
 
             }

@@ -20,27 +20,31 @@ package org.fabric3.fabric.instantiator.normalize;
 
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
+import org.fabric3.fabric.instantiator.LogicalChange;
 import org.fabric3.scdl.CompositeImplementation;
 import org.fabric3.spi.model.instance.Bindable;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.instance.LogicalComponent;
+import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalService;
 import org.fabric3.spi.model.instance.LogicalWire;
 import org.fabric3.spi.util.UriHelper;
 
 /**
- * Default implementation of the BindingNormalizer
+ * Default implementation of the PromotionNormalizer.
  *
  * @version $Rev$ $Date$
  */
 public class PromotionNormalizerImpl implements PromotionNormalizer {
 
-    public void normalize(LogicalComponent<?> component) {
+    public void normalize(LogicalComponent<?> component, LogicalChange change) {
         normalizeServiceBindings(component);
-        normalizeReferenceBindings(component);
+        normalizeReferenceBindings(component, change);
     }
 
     private void normalizeServiceBindings(LogicalComponent<?> component) {
@@ -106,7 +110,7 @@ public class PromotionNormalizerImpl implements PromotionNormalizer {
         return bindings;
     }
 
-    private void normalizeReferenceBindings(LogicalComponent<?> component) {
+    private void normalizeReferenceBindings(LogicalComponent<?> component, LogicalChange change) {
         LogicalComponent<CompositeImplementation> parent = component.getParent();
         for (LogicalReference reference : component.getReferences()) {
             URI referenceUri = reference.getUri();
@@ -116,17 +120,25 @@ public class PromotionNormalizerImpl implements PromotionNormalizer {
             }
             List<LogicalBinding<?>> bindings = new ArrayList<LogicalBinding<?>>();
             List<URI> targets = new ArrayList<URI>();
+            Set<LogicalWire> wires = new LinkedHashSet<LogicalWire>();
             for (LogicalReference promoted : references) {
                 bindings.addAll(promoted.getBindings());
                 for (LogicalWire logicalWire : promoted.getWires()) {
-                    targets.add(logicalWire.getTargetUri());
+                    URI targetUri = logicalWire.getTargetUri();
+                    targets.add(targetUri);
+
                 }
             }
             if (!bindings.isEmpty()) {
                 reference.overrideBindings(bindings);
             }
             if (!targets.isEmpty()) {
-                reference.overrideTargets(targets);
+                for (URI targetUri : targets) {
+                    LogicalWire wire = new LogicalWire(parent, reference, targetUri);
+                    change.addWire(wire);
+                    wires.add(wire);
+                }
+                ((LogicalCompositeComponent) parent).overrideWires(reference, wires);
             }
         }
     }

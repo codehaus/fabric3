@@ -82,7 +82,6 @@ public class LogicalModelInstantiatorImpl implements LogicalModelInstantiator {
         List<LogicalComponent<?>> newComponents = instantiateComponents(properties, composite, change);
         List<LogicalService> services = instantiateServices(composite, change);
         List<LogicalReference> references = instantiateReferences(composite, change);
-
         resolve(targetComposite.getComponents(), services, references, change);
 
         // normalize bindings for each new component
@@ -96,9 +95,9 @@ public class LogicalModelInstantiatorImpl implements LogicalModelInstantiator {
         LogicalChange change = new LogicalChange(targetComposite);
         // merge the property values into the parent
         excludeProperties(targetComposite, composite, change);
-        //merge the component values into the parent
+        // merge the component values into the parent
         excludeComponents(targetComposite, composite, change);
-        //merge the service values into the parent
+        // merge the service values into the parent
         excludeServices(targetComposite, composite, change);
         return change;
     }
@@ -111,16 +110,14 @@ public class LogicalModelInstantiatorImpl implements LogicalModelInstantiator {
                 DuplicateProperty error = new DuplicateProperty(parent.getUri(), name);
                 change.addError(error);
             } else {
+                change.addProperty(name, property.getDefaultValue());
                 parent.setPropertyValue(name, property.getDefaultValue());
             }
         }
         return parent.getPropertyValues();
     }
 
-    private List<LogicalComponent<?>> instantiateComponents(
-            Map<String, Document> properties,
-            Composite composite,
-            LogicalChange change) {
+    private List<LogicalComponent<?>> instantiateComponents(Map<String, Document> properties, Composite composite, LogicalChange change) {
         LogicalCompositeComponent parent = change.getParent();
         Collection<ComponentDefinition<? extends Implementation<?>>> definitions = composite.getDeclaredComponents().values();
         List<LogicalComponent<?>> newComponents = new ArrayList<LogicalComponent<?>>(definitions.size());
@@ -129,6 +126,7 @@ public class LogicalModelInstantiatorImpl implements LogicalModelInstantiator {
             setAutowire(composite, definition, logicalComponent);
             newComponents.add(logicalComponent);
             parent.addComponent(logicalComponent);
+            change.addComponent(logicalComponent);
         }
         for (Include include : composite.getIncludes().values()) {
             // xcv FIXME need to recurse down included hierarchy
@@ -138,6 +136,7 @@ public class LogicalModelInstantiatorImpl implements LogicalModelInstantiator {
                 setAutowire(composite, definition, logicalComponent);
                 newComponents.add(logicalComponent);
                 parent.addComponent(logicalComponent);
+                change.addComponent(logicalComponent);
             }
         }
         return newComponents;
@@ -192,13 +191,16 @@ public class LogicalModelInstantiatorImpl implements LogicalModelInstantiator {
             LogicalService logicalService = new LogicalService(serviceURI, compositeService, parent);
             logicalService.setPromotedUri(URI.create(base + "/" + promotedURI));
             for (BindingDefinition binding : compositeService.getBindings()) {
-                logicalService.addBinding(new LogicalBinding<BindingDefinition>(binding, logicalService));
+                LogicalBinding<BindingDefinition> logicalBinding = new LogicalBinding<BindingDefinition>(binding, logicalService);
+                logicalService.addBinding(logicalBinding);
             }
             for (BindingDefinition binding : compositeService.getCallbackBindings()) {
-                logicalService.addCallbackBinding(new LogicalBinding<BindingDefinition>(binding, logicalService));
+                LogicalBinding<BindingDefinition> logicalBinding = new LogicalBinding<BindingDefinition>(binding, logicalService);
+                logicalService.addCallbackBinding(logicalBinding);
             }
             services.add(logicalService);
             parent.addService(logicalService);
+            change.addService(logicalService);
         }
         return services;
 
@@ -224,6 +226,7 @@ public class LogicalModelInstantiatorImpl implements LogicalModelInstantiator {
             }
             references.add(logicalReference);
             parent.addReference(logicalReference);
+            change.addReference(logicalReference);
         }
         return references;
 
@@ -264,7 +267,7 @@ public class LogicalModelInstantiatorImpl implements LogicalModelInstantiator {
                 normalize(child, change);
             }
         } else {
-            promotionNormalizer.normalize(component);
+            promotionNormalizer.normalize(component, change);
         }
 
     }

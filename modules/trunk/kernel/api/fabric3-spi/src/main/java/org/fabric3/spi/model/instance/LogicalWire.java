@@ -20,19 +20,13 @@ package org.fabric3.spi.model.instance;
 
 import java.net.URI;
 import java.util.Set;
-
 import javax.xml.namespace.QName;
 
 import org.osoa.sca.Constants;
 
 /**
- * Representation of a wire between two components. This can correspond to one
- * of the following,
- * 
- * 1. An explicitly defined wire in the composite. 2. A wire resulting from an
- * explictly requested target on a reference. 3. A wire resulting from the
- * resolution of an autowire.
- * 
+ * Representation of a wire from a reference to a service.
+ *
  * @version $Rev: 59 $ $Date: 2007-05-19 08:21:09 +0100 (Sat, 19 May 2007) $
  */
 public final class LogicalWire extends LogicalScaArtifact<LogicalComponent<?>> {
@@ -45,33 +39,22 @@ public final class LogicalWire extends LogicalScaArtifact<LogicalComponent<?>> {
 
     /**
      * Instantiates a logical wire.
-     * 
-     * @param uri URI of the wire.
-     * @param parent Component within which the wire is defined.
-     * @param sourceUri Source URI of the wire.
-     * @param targetUri Target URI of the wire.
-     * @param wireType Type of the wire.
+     *
+     * @param parent    component within which the wire is defined.
+     * @param source    the source reference of the wire
+     * @param targetUri the uri of the target service
      */
-    public LogicalWire(final LogicalComponent<?> parent, final LogicalReference source, final URI targetUri) {
-        
+    public LogicalWire(LogicalComponent<?> parent, LogicalReference source, URI targetUri) {
         super(null, parent, TYPE);
-        
-        if (source == null) {
-            throw new IllegalArgumentException("Source cannot be null");
-        };
-        
-        if (targetUri == null) {
-            throw new IllegalArgumentException("Target URI cannot be null");
-        };
-        
+        assert source != null;
+        assert targetUri != null;
         this.source = source;
         this.targetUri = targetUri;
-        
     }
 
     /**
      * Gets the source of the wire.
-     * 
+     *
      * @return Source of the wire.
      */
     public final LogicalReference getSource() {
@@ -80,7 +63,7 @@ public final class LogicalWire extends LogicalScaArtifact<LogicalComponent<?>> {
 
     /**
      * Gets the target URI of the wire.
-     * 
+     *
      * @return Target URI of the wire.
      */
     public final URI getTargetUri() {
@@ -89,7 +72,7 @@ public final class LogicalWire extends LogicalScaArtifact<LogicalComponent<?>> {
 
     /**
      * Intents are not supported on wires.
-     * 
+     *
      * @return Intents declared on the SCA artifact.
      */
     @Override
@@ -99,8 +82,6 @@ public final class LogicalWire extends LogicalScaArtifact<LogicalComponent<?>> {
 
     /**
      * Policy sets are not supported on wires.
-     * 
-     * @param intents Intents declared on the SCA artifact.
      */
     @Override
     public final Set<QName> getPolicySets() {
@@ -109,8 +90,6 @@ public final class LogicalWire extends LogicalScaArtifact<LogicalComponent<?>> {
 
     /**
      * Intents are not supported on wires.
-     * 
-     * @return Policy sets declared on the SCA artifact.
      */
     @Override
     public final void setIntents(Set<QName> intents) {
@@ -119,7 +98,7 @@ public final class LogicalWire extends LogicalScaArtifact<LogicalComponent<?>> {
 
     /**
      * Policy sets are not supported on wires.
-     * 
+     *
      * @param policySets Policy sets declared on the SCA artifact.
      */
     @Override
@@ -129,42 +108,42 @@ public final class LogicalWire extends LogicalScaArtifact<LogicalComponent<?>> {
 
     /**
      * Tests for quality whether the source and target URIs are the same.
-     * 
+     *
      * @param obj Object to be tested against.
      */
     @Override
     public boolean equals(Object obj) {
-        
+
         if (this == obj) {
             return true;
         }
-        
+
         if ((obj == null) || (obj.getClass() != this.getClass())) {
             return false;
         }
-        
+
         LogicalWire test = (LogicalWire) obj;
         return targetUri.equals(test.targetUri) && source.equals(test.source);
-        
+
     }
 
     /**
      * Hashcode based on the source and target URIs.
-     * 
+     *
      * @return Hashcode based on the source and target URIs.
      */
     public int hashCode() {
-        
+
         int hash = 7;
         hash = 31 * hash + source.hashCode();
         hash = 31 * hash + targetUri.hashCode();
         return hash;
-        
+
     }
 
     /**
      * Checks whether the wire has been provisioned.
-     * 
+     *
      * @return True if the wire has been provisioned.
      */
     public boolean isProvisioned() {
@@ -173,7 +152,7 @@ public final class LogicalWire extends LogicalScaArtifact<LogicalComponent<?>> {
 
     /**
      * Marks thw wire as provisioned/unprovisioned.
-     * 
+     *
      * @param provisioned True if the wire has been provisioned.
      */
     public void setProvisioned(boolean provisioned) {

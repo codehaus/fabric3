@@ -42,6 +42,6 @@ public class PromotedComponentNotFound extends AssemblyFailure {
     }
 
     public String getMessage() {
-        return "The component " + promotedComponentUri + " promoted by  " + bindable.getUri() + " was not found";
+        return "The component " + promotedComponentUri + " promoted by " + bindable.getUri() + " was not found";
     }
 }

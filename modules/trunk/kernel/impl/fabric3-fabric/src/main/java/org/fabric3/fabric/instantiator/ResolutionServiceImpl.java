@@ -30,7 +30,8 @@ import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalService;
 
 /**
- * Default implementation of the wiring service.
+ * Default implementation of the resolution service. Resolves promotions first and subsequently invokes a series of resolvers to determine reference
+ * targets.
  *
  * @version $Revision$ $Date$
  */
@@ -40,7 +41,7 @@ public class ResolutionServiceImpl implements ResolutionService {
     private final List<TargetResolutionService> targetResolutionServices;
 
     /**
-     * Injects the references required for wiring components.
+     * Constructor.
      *
      * @param promotionResolutionService Service for handling promotions.
      * @param targetResolutionServices   An ordered list of target resolution services.
@@ -51,13 +52,6 @@ public class ResolutionServiceImpl implements ResolutionService {
         this.targetResolutionServices = targetResolutionServices;
     }
 
-    /**
-     * Resolve reference targets and promotions for a component. If this is a composite component, all the child components will be resolved. For
-     * promoted references, targets are resolved in the context of the containing composite using an ordered list of target resolution services. A
-     * percieved order for resolution is explicit target, intent based autowire, and type based autowire.
-     *
-     * @param logicalComponent Logical component that needs to be wired.
-     */
     public void resolve(LogicalComponent<?> logicalComponent, LogicalChange change) {
         if (logicalComponent instanceof LogicalCompositeComponent) {
             LogicalCompositeComponent compositeComponent = (LogicalCompositeComponent) logicalComponent;

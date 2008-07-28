@@ -21,15 +21,14 @@ package org.fabric3.spi.model.instance;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
-
 import javax.xml.namespace.QName;
+
+import org.osoa.sca.Constants;
 
 import org.fabric3.scdl.ComponentReference;
 import org.fabric3.scdl.ReferenceDefinition;
-import org.osoa.sca.Constants;
 
 /**
  * Represents a resolved reference
@@ -39,14 +38,16 @@ import org.osoa.sca.Constants;
 public class LogicalReference extends Bindable {
 
     private static final QName TYPE = new QName(Constants.SCA_NS, "reference");
-    
+
     private final ReferenceDefinition definition;
     private List<URI> promotedUris;
 
     /**
-     * @param uri
-     * @param definition
-     * @param parent
+     * Constructor.
+     *
+     * @param uri        the reference URI
+     * @param definition the reference type definition
+     * @param parent     the parent component
      */
     public LogicalReference(URI uri, ReferenceDefinition definition, LogicalComponent<?> parent) {
         super(uri, parent, TYPE);
@@ -55,138 +56,143 @@ public class LogicalReference extends Bindable {
     }
 
     /**
-     * @return
+     * Returns the reference type definition.
+     *
+     * @return the reference type definition
      */
     public ReferenceDefinition getDefinition() {
         return definition;
     }
 
     /**
-     * @return
+     * Returns the wires for the reference.
+     *
+     * @return the wires for the reference
      */
     public Set<LogicalWire> getWires() {
         return getComposite().getWires(this);
     }
 
     /**
-     * @param uri
-     */
-    public void addTargetUri(URI uri) {
-        getComposite().addWire(this, new LogicalWire(getComposite(), this, uri));
-    }
-
-    /**
-     * @param targetUris
-     */
-    public void overrideTargets(List<URI> targetUris) {
-        
-        Set<LogicalWire> logicalWires = new LinkedHashSet<LogicalWire>();
-        for (URI targetUri : targetUris) {
-            logicalWires.add(new LogicalWire(getComposite(), this, targetUri));
-        }
-        getComposite().overrideWires(this, logicalWires);
-    }
-
-    /**
-     * @return
+     * Returns the URIs of component references promoted by this reference.
+     *
+     * @return the URIs
      */
     public List<URI> getPromotedUris() {
         return Collections.unmodifiableList(promotedUris);
     }
 
     /**
-     * @param uri
+     * Adds the URI of a component reference promoted by this reference.
+     *
+     * @param uri the promoted URI
      */
     public void addPromotedUri(URI uri) {
         promotedUris.add(uri);
     }
-    
+
     /**
-     * @param index
-     * @param uri
+     * Sets the  URI of the reference promoted by this reference at the given index
+     *
+     * @param index the index
+     * @param uri   the  URI
      */
     public void setPromotedUri(int index, URI uri) {
         promotedUris.set(index, uri);
     }
 
     /**
-     * @return Intents declared on the SCA artifact.
+     * Returns the intents declared on the SCA artifact.
+     *
+     * @return the intents declared on the SCA artifact
      */
     public Set<QName> getIntents() {
         return definition.getIntents();
     }
-    
+
     /**
-     * @param intents Intents declared on the SCA artifact.
+     * Sets the intents declared on the SCA artifact.
+     *
+     * @param intents Intents declared on the SCA artifact
      */
     public void setIntents(Set<QName> intents) {
         definition.setIntents(intents);
     }
-    
+
     /**
-     * @param intents Adds intents to the definition.
+     * Adds intents to the definition.
+     *
+     * @param intents the intents
      */
     public void addIntents(Set<QName> intents) {
         definition.addIntents(intents);
     }
 
     /**
-     * @return Policy sets declared on the SCA artifact.
+     * Returns policy sets declared on the SCA artifact.
+     *
+     * @return policy sets declared on the SCA artifact
      */
     public Set<QName> getPolicySets() {
         return definition.getPolicySets();
     }
 
     /**
-     * @param policySets Policy sets declared on the SCA artifact.
+     * Sets policy sets declared on the SCA artifact.
+     *
+     * @param policySets the policy sets
      */
     public void setPolicySets(Set<QName> policySets) {
         definition.setPolicySets(policySets);
     }
-    
+
     /**
-     * @param policySets Adds policy sets to the definition.
+     * Sets policy sets declared on the SCA artifact.
+     *
+     * @param policySets the policy sets.
      */
     public void addPolicySets(Set<QName> policySets) {
         definition.addPolicySets(policySets);
     }
-    
+
+    /**
+     * Gets the explicit referenceassociated with this logical reference.
+     *
+     * @return Component reference if defined, otherwise null.
+     */
+    public ComponentReference getComponentReference() {
+        return getParent().getDefinition().getReferences().get(getDefinition().getName());
+    }
+
     @Override
     public boolean equals(Object obj) {
-        
+
         if (this == obj) {
             return true;
         }
-        
+
         if ((obj == null) || (obj.getClass() != this.getClass())) {
             return false;
         }
-        
+
         LogicalReference test = (LogicalReference) obj;
         return getUri().equals(test.getUri());
-        
+
     }
 
     @Override
     public int hashCode() {
         return getUri().hashCode();
     }
-    
-    /**
-     * Gets the explicit referenceassociated with this logical reference.
-     * @return Component reference if defined, otherwise null.
-     */
-    public ComponentReference getComponentReference() {
-        return getParent().getDefinition().getReferences().get(getDefinition().getName());
-    }
-    
+
+
     private LogicalCompositeComponent getComposite() {
-        
+
         LogicalComponent<?> parent = getParent();
         LogicalCompositeComponent composite = parent.getParent();
-        
+
         return composite != null ? composite : (LogicalCompositeComponent) parent;
-        
+
     }
-    
+
 }

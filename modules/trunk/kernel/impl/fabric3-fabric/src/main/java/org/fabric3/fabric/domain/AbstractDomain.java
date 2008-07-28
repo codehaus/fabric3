@@ -113,8 +113,6 @@ public abstract class AbstractDomain implements Domain {
         } else if (change.hasWarnings()) {
             // TOOD log warnings 
         }
-        change.apply();
-
         Collection<LogicalComponent<?>> components = domain.getComponents();
 
         // Allocate the components to runtime nodes
@@ -183,7 +181,6 @@ public abstract class AbstractDomain implements Domain {
         } else if (change.hasWarnings()) {
             // TOOD log warnings
         }
-        change.apply();
 
         Collection<LogicalComponent<?>> components = change.getAddedComponents();
 

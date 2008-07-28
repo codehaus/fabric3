@@ -37,10 +37,11 @@ import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalService;
+import org.fabric3.spi.model.instance.LogicalWire;
 import org.fabric3.spi.util.UriHelper;
 
 /**
- * Resolution based on an explicitly requested target.
+ * Resolves an uspecified reference target using the SCA autowire algorithm. If a target is found, a corresponding LogicalWire will be created.
  *
  * @version $Revsion$ $Date$
  */
@@ -53,29 +54,29 @@ public class TypeBasedAutoWireService implements TargetResolutionService {
 
         if (componentReference == null) {
             // this is a reference on an atomic component, not a composite reference
-            if (!logicalReference.getBindings().isEmpty() || isPromoted(compositeComponent, logicalReference)) {
+            if (!logicalReference.getBindings().isEmpty() || isPromoted(compositeComponent, logicalReference, change)) {
                 return;
             }
             ServiceContract<?> requiredContract = determineContract(logicalReference);
 
             Autowire autowire = calculateAutowire(compositeComponent, component);
             if (autowire == Autowire.ON) {
-                resolveByType(compositeComponent, component, logicalReference, requiredContract);
+                resolveByType(compositeComponent, component, logicalReference, requiredContract, change);
             }
 
         } else {
             // the reference is a composite
             List<URI> uris = componentReference.getTargets();
-            if (!uris.isEmpty() || isPromoted(compositeComponent, logicalReference)) {
+            if (!uris.isEmpty() || isPromoted(compositeComponent, logicalReference, change)) {
                 return;
             }
 
             if (componentReference.isAutowire()) {
                 ReferenceDefinition referenceDefinition = logicalReference.getDefinition();
                 ServiceContract<?> requiredContract = referenceDefinition.getServiceContract();
-                boolean resolved = resolveByType(component.getParent(), component, logicalReference, requiredContract);
+                boolean resolved = resolveByType(component.getParent(), component, logicalReference, requiredContract, change);
                 if (!resolved) {
-                    resolveByType(compositeComponent, component, logicalReference, requiredContract);
+                    resolveByType(compositeComponent, component, logicalReference, requiredContract, change);
                 }
             }
         }
@@ -138,19 +139,21 @@ public class TypeBasedAutoWireService implements TargetResolutionService {
     }
 
     /**
-     * Attempts to resolve a reference against a composite using the autowire matching algorithm. If the reference is resolved, the target URI (or
-     * URIs) is added to the reference.
+     * Attempts to resolve a reference against a composite using the autowire matching algorithm. If the reference is resolved, a LogicalWire or set
+     * of LogicalWires is created.
      *
      * @param composite        the composite to resolve against
      * @param component        the component containing the reference
      * @param logicalReference the logical reference
      * @param contract         the contract to match against
+     * @param change           the chnage set
      * @return true if the reference has been resolved.
      */
     private boolean resolveByType(LogicalCompositeComponent composite,
                                   LogicalComponent<?> component,
                                   LogicalReference logicalReference,
-                                  ServiceContract<?> contract) {
+                                  ServiceContract<?> contract,
+                                  LogicalChange change) {
 
         List<URI> candidates = new ArrayList<URI>();
 
@@ -167,20 +170,32 @@ public class TypeBasedAutoWireService implements TargetResolutionService {
                 }
             }
         }
-
         if (candidates.isEmpty()) {
             return false;
         }
-
+        // create the wires
         for (URI target : candidates) {
-            logicalReference.addTargetUri(component.getUri().resolve(target));
+            URI uri = component.getUri().resolve(target);
+            LogicalWire wire = new LogicalWire(composite, logicalReference, uri);
+
+            // xcv potentially remove if LogicalWires added to LogicalReference
+            LogicalComponent parent = logicalReference.getParent();
+            LogicalCompositeComponent grandParent = (LogicalCompositeComponent) parent.getParent();
+            if (grandParent != null) {
+                grandParent.addWire(logicalReference, wire);
+            } else {
+                ((LogicalCompositeComponent) parent).addWire(logicalReference, wire);
+            }
+            // end remove
+            change.addWire(wire);
+
         }
 
         return true;
 
     }
 
-    private boolean isPromoted(LogicalComponent<?> composite, LogicalReference logicalReference) {
+    private boolean isPromoted(LogicalComponent<?> composite, LogicalReference logicalReference, LogicalChange change) {
         LogicalComponent<?> component = logicalReference.getParent();
         for (LogicalReference compositeReference : composite.getReferences()) {
             List<URI> uris = compositeReference.getPromotedUris();
@@ -204,7 +219,6 @@ public class TypeBasedAutoWireService implements TargetResolutionService {
 
             }
         }
-
         return false;
 
     }

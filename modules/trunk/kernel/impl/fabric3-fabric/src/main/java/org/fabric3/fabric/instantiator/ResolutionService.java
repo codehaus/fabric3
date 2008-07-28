@@ -24,10 +24,8 @@ import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalService;
 
 /**
- * Abstraction for resolving reference targets and promotions. Service promotions are resolved by determining the absolute logical URI of the actual
- * service being promoted.  Reference are resolved by determining the absolute logical URIs of the actual references being promoted and the absolute
- * URIs of refeence targets. If references are not explicitly wired, targets may be selected via an autowire algorithm (assuming autowire is enabled).
- * Otherwise, a resolution error results.
+ * Abstraction for resolving reference targets, reference promotions, and serivce promotions. Resolution involves determining the fully-qualified URI
+ * of a promoted service, promoted reference, or a reference target.
  *
  * @version $Revision$ $Date$
  */

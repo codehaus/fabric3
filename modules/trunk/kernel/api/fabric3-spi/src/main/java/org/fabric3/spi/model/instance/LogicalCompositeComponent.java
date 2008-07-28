@@ -2,8 +2,6 @@ package org.fabric3.spi.model.instance;
 
 import java.net.URI;
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -15,7 +13,6 @@ import org.fabric3.scdl.CompositeImplementation;
 
 /**
  * Represents a composite component.
- *
  */
 public class LogicalCompositeComponent extends LogicalComponent<CompositeImplementation> {
 
@@ -23,60 +20,60 @@ public class LogicalCompositeComponent extends LogicalComponent<CompositeImpleme
     private final Map<URI, LogicalComponent<?>> components = new HashMap<URI, LogicalComponent<?>>();
 
     /**
-     * Instantiates a composite composite component.
-     * 
-     * @param uri URI of the component.
-     * @param runtimeId Runtime id to which the component is provisioned.
+     * Instantiates a composite component.
+     *
+     * @param uri        URI of the component.
+     * @param runtimeId  Runtime id to which the component is provisioned.
      * @param definition Definition of the component.
-     * @param parent Parent of the component.
+     * @param parent     Parent of the component.
      */
-    public LogicalCompositeComponent(URI uri, 
-                                     URI runtimeId, 
-                                     ComponentDefinition<CompositeImplementation> definition, 
+    public LogicalCompositeComponent(URI uri,
+                                     URI runtimeId,
+                                     ComponentDefinition<CompositeImplementation> definition,
                                      LogicalCompositeComponent parent) {
         super(uri, runtimeId, definition, parent);
     }
-    
+
     /**
      * Adds a wire to this composite component.
-     * 
-     * @param wire Wire to be added to this composite component.
+     *
+     * @param logicalReference the wire source
+     * @param logicalWire      Wire to be added to this composite component.
      */
     public final void addWire(LogicalReference logicalReference, LogicalWire logicalWire) {
-        
         Set<LogicalWire> logicalWires = wires.get(logicalReference);
         if (logicalWires == null) {
             logicalWires = new LinkedHashSet<LogicalWire>();
             wires.put(logicalReference, logicalWires);
         }
         logicalWires.add(logicalWire);
-        
     }
-    
+
     /**
-     * Adds a wire to this composite component.
-     * 
-     * @param wire Wire to be added to this composite component.
+     * Adds a set of wires to this composite component.
+     *
+     * @param logicalReference the source for the wires
+     * @param logicalWires     the set of wires
      */
     public final void overrideWires(LogicalReference logicalReference, Set<LogicalWire> logicalWires) {
         wires.put(logicalReference, logicalWires);
     }
-    
+
     /**
      * Gets the resolved targets sourced by the specified logical reference.
-     * 
+     *
      * @param logicalReference Logical reference that sources the wire.
      * @return Resolved targets for the reference.
      */
     public final Set<LogicalWire> getWires(LogicalReference logicalReference) {
-        
+
         Set<LogicalWire> logicalWires = wires.get(logicalReference);
         if (logicalWires == null) {
             logicalWires = new LinkedHashSet<LogicalWire>();
             wires.put(logicalReference, logicalWires);
         }
         return logicalWires;
-        
+
     }
 
     /**
@@ -85,14 +82,14 @@ public class LogicalCompositeComponent extends LogicalComponent<CompositeImpleme
      * @return the child components of the current component
      */
     public List<LogicalComponent<?>> getComponents() {
-        List<LogicalComponent<?>> copyOfComponents = new ArrayList<LogicalComponent<?>>(components.values());
-        return copyOfComponents;
+        return new ArrayList<LogicalComponent<?>>(components.values());
     }
 
-  /**
-   * Remove the child component based on the uri
-   * @param uri
-   */
+    /**
+     * Remove the child component based on the URI
+     *
+     * @param uri the component URI
+     */
     public void removeComponent(URI uri) {
         components.remove(uri);
     }
@@ -115,7 +112,7 @@ public class LogicalCompositeComponent extends LogicalComponent<CompositeImpleme
     public void addComponent(LogicalComponent<?> component) {
         components.put(component.getUri(), component);
     }
-    
+
     @Override
     public void setProvisioned(boolean provisioned) {
         super.setProvisioned(provisioned);

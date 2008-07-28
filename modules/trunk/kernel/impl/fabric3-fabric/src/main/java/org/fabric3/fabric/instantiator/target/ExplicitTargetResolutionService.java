@@ -1,8 +1,28 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
 package org.fabric3.fabric.instantiator.target;
 
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.fabric3.fabric.instantiator.AmbiguousService;
 import org.fabric3.fabric.instantiator.LogicalChange;
@@ -13,10 +33,11 @@ import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalService;
+import org.fabric3.spi.model.instance.LogicalWire;
 import org.fabric3.spi.util.UriHelper;
 
 /**
- * Resolution based on an explicit target uri.
+ * Resolves an explicit target uri specified on a reference to a service and creates a corresponding wire.
  *
  * @version $Revsion$ $Date$
  */
@@ -37,23 +58,44 @@ public class ExplicitTargetResolutionService implements TargetResolutionService 
         URI parentUri = component.getUri();
         URI componentUri = logicalReference.getParent().getUri();
 
-        List<URI> resolvedUris = new ArrayList<URI>();
+        // resolve the target URIs to services
+        List<URI> targets = new ArrayList<URI>();
         for (URI requestedTarget : requestedTargets) {
             URI resolved = parentUri.resolve(componentUri).resolve(requestedTarget);
             URI targetURI = resolveByUri(logicalReference, resolved, component, change);
-            if (targetURI != null) {
-                resolvedUris.add(targetURI);
+            if (targetURI == null) {
+                return;
             }
-        }
-        logicalReference.overrideTargets(resolvedUris);
+            targets.add(targetURI);
 
+        }
+        // create the logical wires
+        // xcv potentially remove if LogicalWires added to LogicalReference
+        LogicalComponent parent = logicalReference.getParent();
+        LogicalCompositeComponent grandParent = (LogicalCompositeComponent) parent.getParent();
+        Set<LogicalWire> wires = new LinkedHashSet<LogicalWire>();
+        if (null != grandParent) {
+            for (URI targetUri : targets) {
+                LogicalWire wire = new LogicalWire(grandParent, logicalReference, targetUri);
+                change.addWire(wire);
+                wires.add(wire);
+            }
+            grandParent.overrideWires(logicalReference, wires);
+        } else {
+            for (URI targetUri : targets) {
+                LogicalWire wire = new LogicalWire(parent, logicalReference, targetUri);
+                change.addWire(wire);
+                wires.add(wire);
+            }
+            ((LogicalCompositeComponent) parent).overrideWires(logicalReference, wires);
+        }
+        // end remove
     }
 
     private URI resolveByUri(LogicalReference reference, URI targetUri, LogicalCompositeComponent composite, LogicalChange change) {
 
         URI targetComponentUri = UriHelper.getDefragmentedName(targetUri);
         LogicalComponent<?> targetComponent = composite.getComponent(targetComponentUri);
-
         if (targetComponent == null) {
             TargetComponentNotFound error = new TargetComponentNotFound(reference, targetComponentUri);
             change.addError(error);

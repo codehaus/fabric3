@@ -6,6 +6,7 @@ import javax.xml.namespace.QName;
 
 import junit.framework.TestCase;
 
+import org.fabric3.fabric.instantiator.LogicalChange;
 import org.fabric3.scdl.AbstractComponentType;
 import org.fabric3.scdl.BindingDefinition;
 import org.fabric3.scdl.ComponentDefinition;
@@ -29,7 +30,8 @@ public class PromotionNormalizerImplTestCase extends TestCase {
 
     public void testServiceNormalize() throws Exception {
         LogicalComponent<?> component = createServiceAssembly();
-        normalizer.normalize(component);
+        LogicalChange change = new LogicalChange(component.getParent());
+        normalizer.normalize(component, change);
         List<LogicalBinding<?>> bindings = component.getServices().iterator().next().getBindings();
         assertEquals(3, bindings.size());
         for (LogicalBinding<?> binding : bindings) {
@@ -42,7 +44,8 @@ public class PromotionNormalizerImplTestCase extends TestCase {
 
     public void testReferenceNormalize() throws Exception {
         LogicalComponent<?> component = createReferenceAssembly();
-        normalizer.normalize(component);
+        LogicalChange change = new LogicalChange(component.getParent());
+        normalizer.normalize(component, change);
         List<LogicalBinding<?>> bindings = component.getReferences().iterator().next().getBindings();
         assertEquals(3, bindings.size());
         for (LogicalBinding<?> binding : bindings) {

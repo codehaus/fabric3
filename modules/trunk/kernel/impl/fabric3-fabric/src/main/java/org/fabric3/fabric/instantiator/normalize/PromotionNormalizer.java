@@ -18,10 +18,11 @@
  */
 package org.fabric3.fabric.instantiator.normalize;
 
+import org.fabric3.fabric.instantiator.LogicalChange;
 import org.fabric3.spi.model.instance.LogicalComponent;
 
 /**
- * Merges binding and other metadata on promoted services and references down the to leaf component they are initially defined on.
+ * Merges binding and other metadata on promoted services and references down the to the leaf component they are initially defined on.
  *
  * @version $Rev$ $Date$
  */
@@ -32,7 +33,8 @@ public interface PromotionNormalizer {
      * will be walked to determine the set of promoted services and references.
      *
      * @param component the leaf component
+     * @param change    the logical change to update
      */
-    void normalize(LogicalComponent<?> component);
+    void normalize(LogicalComponent<?> component, LogicalChange change);
 
 }
