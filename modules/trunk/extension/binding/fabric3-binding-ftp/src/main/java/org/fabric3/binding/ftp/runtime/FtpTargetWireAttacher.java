@@ -18,6 +18,9 @@
  */
 package org.fabric3.binding.ftp.runtime;
 
+import java.net.URI;
+import java.net.UnknownHostException;
+
 import org.fabric3.binding.ftp.provision.FtpWireTargetDefinition;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.WiringException;
@@ -27,16 +30,20 @@ import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.Wire;
 
 /**
- *
  * @version $Revision$ $Date$
  */
 public class FtpTargetWireAttacher implements TargetWireAttacher<FtpWireTargetDefinition> {
 
     public void attachToTarget(PhysicalWireSourceDefinition source, FtpWireTargetDefinition target, Wire wire) throws WiringException {
-        
+
         InvocationChain invocationChain = wire.getInvocationChains().values().iterator().next();
-        invocationChain.addInterceptor(new FtpTargetInterceptor(target.getUri(), target.getSecurity(), target.isActive()));
-        
+        URI uri = target.getUri();
+        try {
+            invocationChain.addInterceptor(new FtpTargetInterceptor(uri, target.getSecurity(), target.isActive()));
+        } catch (UnknownHostException e) {
+            throw new WiringException(e);
+        }
+
     }
 
     public ObjectFactory<?> createObjectFactory(FtpWireTargetDefinition target) throws WiringException {

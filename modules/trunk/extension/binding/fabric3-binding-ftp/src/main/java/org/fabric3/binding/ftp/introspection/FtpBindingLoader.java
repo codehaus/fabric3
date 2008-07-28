@@ -20,10 +20,10 @@ package org.fabric3.binding.ftp.introspection;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-
-import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
+
+import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.binding.ftp.scdl.FtpBindingDefinition;
 import org.fabric3.binding.ftp.scdl.TransferMode;
@@ -33,10 +33,8 @@ import org.fabric3.introspection.xml.LoaderHelper;
 import org.fabric3.introspection.xml.LoaderUtil;
 import org.fabric3.introspection.xml.MissingAttribute;
 import org.fabric3.introspection.xml.TypeLoader;
-import org.osoa.sca.annotations.Reference;
 
 /**
- *
  * @version $Revision$ $Date$
  */
 public class FtpBindingLoader implements TypeLoader<FtpBindingDefinition> {
@@ -56,7 +54,7 @@ public class FtpBindingLoader implements TypeLoader<FtpBindingDefinition> {
 
         FtpBindingDefinition bd = null;
         String uri = null;
-        
+
         try {
 
             uri = reader.getAttributeValue(null, "uri");
@@ -65,6 +63,9 @@ public class FtpBindingLoader implements TypeLoader<FtpBindingDefinition> {
                 MissingAttribute failure = new MissingAttribute("A binding URI must be specified ", "uri", reader);
                 introspectionContext.addError(failure);
                 return null;
+            }
+            if (!uri.startsWith("ftp://") && !uri.startsWith("FTP://")) {
+                uri = "ftp://" + uri;
             }
             TransferMode tMode = transferMode != null ? TransferMode.valueOf(transferMode) : TransferMode.PASSIVE;
             bd = new FtpBindingDefinition(new URI(uri), tMode);
@@ -80,5 +81,5 @@ public class FtpBindingLoader implements TypeLoader<FtpBindingDefinition> {
         return bd;
 
     }
-    
+
 }

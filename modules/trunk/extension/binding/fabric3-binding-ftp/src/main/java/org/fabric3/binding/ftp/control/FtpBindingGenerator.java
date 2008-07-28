@@ -20,8 +20,9 @@ package org.fabric3.binding.ftp.control;
 
 import java.net.URI;
 import java.util.List;
-
 import javax.xml.namespace.QName;
+
+import org.w3c.dom.Element;
 
 import org.fabric3.binding.ftp.common.Constants;
 import org.fabric3.binding.ftp.provision.FtpSecurity;
@@ -38,20 +39,16 @@ import org.fabric3.spi.generator.BindingGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.policy.Policy;
-import org.w3c.dom.Element;
 
 /**
- *
  * @version $Revision$ $Date$
- * @param <HessianBindingDefinition>
- * @param <HessianWireSourceDefinition>
  */
 public class FtpBindingGenerator implements BindingGenerator<FtpWireSourceDefinition, FtpWireTargetDefinition, FtpBindingDefinition> {
 
-    public FtpWireSourceDefinition generateWireSource(LogicalBinding<FtpBindingDefinition> binding, 
-                                                      Policy policy, 
+    public FtpWireSourceDefinition generateWireSource(LogicalBinding<FtpBindingDefinition> binding,
+                                                      Policy policy,
                                                       ServiceDefinition serviceDefinition) throws GenerationException {
-        
+
         ServiceContract<?> serviceContract = serviceDefinition.getServiceContract();
         if (serviceContract.getOperations().size() != 1) {
             throw new GenerationException("Expects only one operation");
@@ -60,15 +57,15 @@ public class FtpBindingGenerator implements BindingGenerator<FtpWireSourceDefini
         URI id = binding.getParent().getParent().getParent().getUri();
         FtpWireSourceDefinition hwsd = new FtpWireSourceDefinition(id);
         hwsd.setUri(binding.getBinding().getTargetUri());
-        
+
         return hwsd;
-        
+
     }
 
-    public FtpWireTargetDefinition generateWireTarget(LogicalBinding<FtpBindingDefinition> binding, 
+    public FtpWireTargetDefinition generateWireTarget(LogicalBinding<FtpBindingDefinition> binding,
                                                       Policy policy,
                                                       ReferenceDefinition referenceDefinition) throws GenerationException {
-        
+
         ServiceContract<?> serviceContract = referenceDefinition.getServiceContract();
         if (serviceContract.getOperations().size() != 1) {
             throw new GenerationException("Expects only one operation");
@@ -76,18 +73,18 @@ public class FtpBindingGenerator implements BindingGenerator<FtpWireSourceDefini
 
         URI id = binding.getParent().getParent().getParent().getUri();
         boolean active = binding.getBinding().getTransferMode() == TransferMode.ACTIVE;
-        
+
         FtpSecurity security = processPolicies(policy, serviceContract.getOperations().iterator().next());
 
         FtpWireTargetDefinition hwtd = new FtpWireTargetDefinition(id, active, security);
         hwtd.setUri(binding.getBinding().getTargetUri());
-        
+
         return hwtd;
-        
+
     }
 
     private FtpSecurity processPolicies(Policy policy, Operation<?> operation) throws GenerationException {
-        
+
         List<PolicySet> policySets = policy.getProvidedPolicySets(operation);
         if (policySets == null || policySets.size() == 0) {
             return null;
@@ -95,14 +92,14 @@ public class FtpBindingGenerator implements BindingGenerator<FtpWireSourceDefini
         if (policySets.size() != 1) {
             throw new GenerationException("Invalid policy configuration, only supports security policy");
         }
-        
+
         PolicySet policySet = policySets.iterator().next();
-        
+
         QName policyQName = policySet.getExtensionName();
         if (!policyQName.equals(Constants.POLICY_QNAME)) {
             throw new GenerationException("Unexpected policy element " + policyQName);
         }
-        
+
         Element policyElement = policySet.getExtension();
         String user = policyElement.getAttribute("user");
         if (user == null) {
@@ -112,9 +109,9 @@ public class FtpBindingGenerator implements BindingGenerator<FtpWireSourceDefini
         if (password == null) {
             throw new GenerationException("Password not specified in security policy");
         }
-            
+
         return new FtpSecurity(user, password);
-        
+
     }
-    
+
 }

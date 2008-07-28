@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetAddress;
 import java.net.URI;
+import java.net.UnknownHostException;
 
 import org.apache.commons.net.ftp.FTPClient;
 import org.osoa.sca.ServiceUnavailableException;
@@ -37,14 +38,18 @@ import org.fabric3.spi.wire.Interceptor;
 public class FtpTargetInterceptor implements Interceptor {
 
     private Interceptor next;
-    private final String uri;
+    private final int port;
+    private final InetAddress hostAddress;
+
     private final FtpSecurity security;
     private final boolean active;
 
-    public FtpTargetInterceptor(URI uri, FtpSecurity security, boolean active) {
-        this.uri = uri.toString();
+    public FtpTargetInterceptor(URI uri, FtpSecurity security, boolean active) throws UnknownHostException {
         this.security = security;
         this.active = active;
+        String host = uri.getHost();
+        port = uri.getPort() == -1 ? 23 : uri.getPort();
+        hostAddress = "localhost".equals(host) ? InetAddress.getLocalHost() : InetAddress.getByName(host);
     }
 
     public Interceptor getNext() {
@@ -57,19 +62,6 @@ public class FtpTargetInterceptor implements Interceptor {
 
         try {
 
-            int index = uri.indexOf(":");
-            String host;
-            int port;
-
-            if (index > 0) {
-                host = uri.substring(0, index);
-                port = Integer.parseInt(uri.substring(index + 1));
-            } else {
-                host = uri;
-                port = 23;
-            }
-
-            InetAddress hostAddress = "localhost".equals(host) ? InetAddress.getLocalHost() : InetAddress.getByName(host);
             ftpClient.connect(hostAddress, port);
 
             /*if (!ftpClient.login(security.getUser(), security.getPassword())) {

@@ -51,9 +51,11 @@ public class FtpSourceWireAttacher implements SourceWireAttacher<FtpWireSourceDe
     }
 
     public void attachToSource(FtpWireSourceDefinition source, PhysicalWireTargetDefinition target, final Wire wire) throws WiringException {
-
         URI uri = source.getUri();
-        String servicePath = uri.getPath();
+        String servicePath = uri.getSchemeSpecificPart();
+        if (servicePath.startsWith("//")) {
+            servicePath = servicePath.substring(2);
+        }
         BindingFtpLet bindingFtpLet = new BindingFtpLet(servicePath, wire, monitor);
         ftpLetContainer.registerFtpLet(servicePath, bindingFtpLet);
 
