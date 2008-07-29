@@ -56,7 +56,10 @@ public class StorRequestHandler implements RequestHandler {
     public void service(Request request) {
 
         FtpSession session = request.getSession();
-
+        if (!session.isAuthenticated()) {
+            session.write(new DefaultResponse(530, "Access Denied"));
+            return;
+        }
         int passivePort = session.getPassivePort();
 
         if (0 == passivePort) {
