@@ -20,9 +20,9 @@ package org.fabric3.spi.domain;
 
 import javax.xml.namespace.QName;
 
-import org.fabric3.scdl.Composite;
-import org.fabric3.host.domain.DomainException;
 import org.fabric3.host.domain.DeploymentException;
+import org.fabric3.host.domain.DomainException;
+import org.fabric3.scdl.Composite;
 
 /**
  * Represents a domain.
@@ -47,6 +47,16 @@ public interface Domain {
     void include(QName deployable) throws DeploymentException;
 
     /**
+     * Include a deployable composite in the domain.
+     *
+     * @param deployable    the name of the deployable composite to include
+     * @param transactional if true, the deployment operation will be done transactionally. That is, changes to the logical model will only be applied
+     *                      after componnets have been deployed to a runtime or runtimes.
+     * @throws DeploymentException if an error is encountered during inclusion
+     */
+    void include(QName deployable, boolean transactional) throws DeploymentException;
+
+    /**
      * Include a Composite in the domain.
      *
      * @param composite the composite to include
@@ -54,14 +64,35 @@ public interface Domain {
      */
     void include(Composite composite) throws DeploymentException;
 
+    /**
+     * Include a Composite in the domain.
+     *
+     * @param composite     the composite to include
+     * @param transactional if true, the deployment operation will be done transactionally. That is, changes to the logical model will only be applied
+     *                      after componnets have been deployed to a runtime or runtimes.
+     * @throws DeploymentException if an error is encountered during inclusion
+     */
+    void include(Composite composite, boolean transactional) throws DeploymentException;
 
     /**
      * Remove a deployable Composite from the domain.
      *
      * @param deployable the name of the deployable composite to remove
-     * @throws org.fabric3.host.domain.DeploymentException if an error is encountered during removal
+     * @throws org.fabric3.host.domain.DeploymentException
+     *          if an error is encountered during removal
      */
     void remove(QName deployable) throws DeploymentException;
+
+    /**
+     * Remove a deployable Composite from the domain.
+     *
+     * @param deployable    the name of the deployable composite to remove
+     * @param transactional if true, the deployment operation will be done transactionally. That is, changes to the logical model will only be applied
+     *                      after componnets have been deployed to a runtime or runtimes.
+     * @throws org.fabric3.host.domain.DeploymentException
+     *          if an error is encountered during removal
+     */
+    void remove(QName deployable, boolean transactional) throws DeploymentException;
 
     /**
      * Remove a Composite from the domain.
@@ -70,5 +101,15 @@ public interface Domain {
      * @throws DeploymentException if an error is encountered during removal
      */
     void remove(Composite composite) throws DeploymentException;
+
+    /**
+     * Remove a Composite from the domain.
+     *
+     * @param composite     the composite to remove
+     * @param transactional if true, the deployment operation will be done transactionally. That is, changes to the logical model will only be applied
+     *                      after componnets have been undeployed to a runtime or runtimes.
+     * @throws DeploymentException if an error is encountered during removal
+     */
+    void remove(Composite composite, boolean transactional) throws DeploymentException;
 
 }

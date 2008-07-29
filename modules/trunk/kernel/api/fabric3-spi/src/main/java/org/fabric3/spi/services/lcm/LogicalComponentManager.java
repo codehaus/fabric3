@@ -35,6 +35,15 @@ public interface LogicalComponentManager {
     LogicalCompositeComponent getRootComponent();
 
     /**
+     * Replaces the root component in the domain. This is generally used during deployment to update the domain with a modified copy of the logical
+     * model.
+     *
+     * @param component the replacement
+     * @throws StoreException if an error occurs replacing the root component
+     */
+    void replaceRootComponent(LogicalCompositeComponent component) throws StoreException;
+
+    /**
      * Returns the component uniquely identified by an id.
      *
      * @param uri the unique id of the component
@@ -51,15 +60,10 @@ public interface LogicalComponentManager {
 
     /**
      * Initializes the manager.
+     *
      * @throws RecoveryException if there was a problem initializing the components
      */
     void initialize() throws RecoveryException;
 
-    /**
-     * Stores the logical components.
-     *
-     * @throws StoreException If unable to store the domain.
-     */
-    void store() throws StoreException;
 
 }

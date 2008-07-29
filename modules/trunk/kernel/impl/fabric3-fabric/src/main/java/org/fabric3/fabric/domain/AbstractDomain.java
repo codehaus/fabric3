@@ -37,6 +37,7 @@ import org.fabric3.scdl.Composite;
 import org.fabric3.spi.domain.Domain;
 import org.fabric3.spi.generator.CommandMap;
 import org.fabric3.spi.generator.GenerationException;
+import org.fabric3.spi.model.instance.CopyUtil;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 import org.fabric3.spi.services.contribution.MetaDataStore;
@@ -79,6 +80,10 @@ public abstract class AbstractDomain implements Domain {
     }
 
     public void include(QName deployable) throws DeploymentException {
+        include(deployable, false);
+    }
+
+    public void include(QName deployable, boolean transactional) throws DeploymentException {
 
         ResourceElement<QNameSymbol, ?> element;
         try {
@@ -98,16 +103,22 @@ public abstract class AbstractDomain implements Domain {
         }
 
         Composite composite = (Composite) object;
-        include(composite);
+        include(composite, transactional);
 
     }
 
     public void include(Composite composite) throws DeploymentException {
+        include(composite, false);
+    }
+
+    public void include(Composite composite, boolean transactional) throws DeploymentException {
 
         LogicalCompositeComponent domain = logicalComponentManager.getRootComponent();
 
-        LogicalChange change;
-        change = logicalModelInstantiator.include(domain, composite);
+        if (transactional) {
+            domain = CopyUtil.copy(domain);
+        }
+        LogicalChange change = logicalModelInstantiator.include(domain, composite);
         if (change.hasErrors()) {
             throw new AssemblyException(change.getErrors(), change.getWarnings());
         } else if (change.hasWarnings()) {
@@ -137,8 +148,8 @@ public abstract class AbstractDomain implements Domain {
         }
 
         try {
-            // record the operation
-            logicalComponentManager.store();
+            // TODO this should happen after nodes have deployed the components and wires
+            logicalComponentManager.replaceRootComponent(domain);
         } catch (StoreException e) {
             String id = composite.getName().toString();
             throw new DeploymentException("Error activating deployable: " + id, id, e);
@@ -147,6 +158,10 @@ public abstract class AbstractDomain implements Domain {
     }
 
     public void remove(QName deployable) throws DeploymentException {
+        remove(deployable, false);
+    }
+
+    public void remove(QName deployable, boolean transactional) throws DeploymentException {
 
         ResourceElement<QNameSymbol, ?> element;
         try {
@@ -166,14 +181,20 @@ public abstract class AbstractDomain implements Domain {
         }
 
         Composite composite = (Composite) object;
-        remove(composite);
+        remove(composite, transactional);
 
     }
 
     public void remove(Composite composite) throws DeploymentException {
+        remove(composite, false);
+    }
+
+    public void remove(Composite composite, boolean transactional) throws DeploymentException {
 
         LogicalCompositeComponent domain = logicalComponentManager.getRootComponent();
-
+        if (transactional) {
+            domain = CopyUtil.copy(domain);
+        }
         LogicalChange change;
         change = logicalModelInstantiator.remove(domain, composite);
         if (change.hasErrors()) {
@@ -206,8 +227,8 @@ public abstract class AbstractDomain implements Domain {
         }
 
         try {
-            // record the operation
-            logicalComponentManager.store();
+            // TODO this should happen after nodes have undeployed the components and wires
+            logicalComponentManager.replaceRootComponent(domain);
         } catch (StoreException e) {
             String id = composite.getName().toString();
             throw new DeploymentException("Error activating deployable: " + id, id, e);

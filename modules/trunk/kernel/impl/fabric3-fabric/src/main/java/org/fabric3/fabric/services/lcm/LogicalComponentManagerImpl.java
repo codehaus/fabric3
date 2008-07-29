@@ -18,39 +18,38 @@ package org.fabric3.fabric.services.lcm;
 
 import java.net.URI;
 import java.util.Collection;
-
 import javax.xml.namespace.QName;
 
-import org.fabric3.spi.model.instance.LogicalComponent;
-import org.fabric3.spi.model.instance.LogicalCompositeComponent;
-import org.fabric3.spi.model.instance.LogicalService;
-import org.fabric3.spi.model.instance.LogicalReference;
-import org.fabric3.spi.services.lcm.LogicalComponentManager;
-import org.fabric3.spi.services.lcm.LogicalComponentStore;
-import org.fabric3.spi.services.lcm.StoreException;
-import org.fabric3.spi.services.lcm.LogicalComponentManagerMBean;
-import org.fabric3.spi.services.lcm.RecoveryException;
-import org.fabric3.spi.util.UriHelper;
+import org.osoa.sca.annotations.Reference;
+
 import org.fabric3.scdl.Composite;
 import org.fabric3.scdl.CompositeReference;
 import org.fabric3.scdl.CompositeService;
-
-import org.osoa.sca.annotations.Reference;
+import org.fabric3.spi.model.instance.LogicalComponent;
+import org.fabric3.spi.model.instance.LogicalCompositeComponent;
+import org.fabric3.spi.model.instance.LogicalReference;
+import org.fabric3.spi.model.instance.LogicalService;
+import org.fabric3.spi.services.lcm.LogicalComponentManager;
+import org.fabric3.spi.services.lcm.LogicalComponentManagerMBean;
+import org.fabric3.spi.services.lcm.LogicalComponentStore;
+import org.fabric3.spi.services.lcm.RecoveryException;
+import org.fabric3.spi.services.lcm.StoreException;
+import org.fabric3.spi.util.UriHelper;
 
 /**
  * @version $Revision$ $Date$
  */
 public class LogicalComponentManagerImpl implements LogicalComponentManager, LogicalComponentManagerMBean {
-    
+
     private LogicalCompositeComponent domain;
     private final LogicalComponentStore logicalComponentStore;
-    
+
     public LogicalComponentManagerImpl(@Reference LogicalComponentStore logicalComponentStore) {
         this.logicalComponentStore = logicalComponentStore;
     }
 
     public LogicalComponent<?> getComponent(URI uri) {
-        
+
         String defragmentedUri = UriHelper.getDefragmentedNameAsString(uri);
         String domainString = domain.getUri().toString();
         String[] hierarchy = defragmentedUri.substring(domainString.length() + 1).split("/");
@@ -67,9 +66,9 @@ public class LogicalComponentManagerImpl implements LogicalComponentManager, Log
             }
         }
         return currentComponent;
-        
+
     }
-    
+
     public Collection<LogicalComponent<?>> getComponents() {
         return domain.getComponents();
     }
@@ -78,12 +77,13 @@ public class LogicalComponentManagerImpl implements LogicalComponentManager, Log
         return domain;
     }
 
+    public void replaceRootComponent(LogicalCompositeComponent component) throws StoreException {
+        domain = component;
+        logicalComponentStore.store(domain);
+    }
+
     public void initialize() throws RecoveryException {
         domain = logicalComponentStore.read();
-    }
-    
-    public void store() throws StoreException {
-        logicalComponentStore.store(domain);
     }
 
     public String getDomainURI() {
