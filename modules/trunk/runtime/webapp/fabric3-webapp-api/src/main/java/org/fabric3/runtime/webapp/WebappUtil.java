@@ -21,8 +21,8 @@ package org.fabric3.runtime.webapp;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import org.fabric3.host.runtime.RuntimeLifecycleCoordinator;
 import org.fabric3.host.runtime.Bootstrapper;
+import org.fabric3.host.runtime.RuntimeLifecycleCoordinator;
 import org.fabric3.host.runtime.ScdlBootstrapper;
 
 /**
@@ -34,19 +34,9 @@ public interface WebappUtil {
 
     WebappRuntime getRuntime(ClassLoader bootClassLoader) throws Fabric3InitException;
 
-    /**
-     * Return the classloader that should be used to boot the Fabric3 runtime. This will be a child of the web
-     * application's ClassLoader.
-     *
-     * @param webappClassLoader the web application's classloader
-     * @return a classloader that can be used to load the Fabric3 runtime classes
-     */
-    ClassLoader getBootClassLoader(ClassLoader webappClassLoader) throws InvalidResourcePath;
-
     ScdlBootstrapper getBootstrapper(ClassLoader bootClassLoader) throws Fabric3InitException;
 
-    RuntimeLifecycleCoordinator<WebappRuntime, Bootstrapper> getCoordinator(ClassLoader bootClassLoader)
-            throws Fabric3InitException;
+    RuntimeLifecycleCoordinator<WebappRuntime, Bootstrapper> getCoordinator(ClassLoader bootClassLoader) throws Fabric3InitException;
 
     URL getSystemScdl(ClassLoader bootClassLoader) throws InvalidResourcePath;
 

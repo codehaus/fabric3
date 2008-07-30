@@ -18,7 +18,6 @@
  */
 package org.fabric3.runtime.webapp;
 
-import java.net.URL;
 import javax.servlet.ServletContext;
 
 import org.fabric3.host.runtime.HostInfo;
@@ -34,10 +33,5 @@ public interface WebappHostInfo extends HostInfo {
      */
     ServletContext getServletContext();
 
-    /**
-     * Returns the default intents file location or null if not configured.
-     *
-     * @return the default intents file location or null if not configured
-     */
-    URL getIntentsLocation();
 }
+

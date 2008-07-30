@@ -81,21 +81,6 @@ public final class Constants {
     public static final String CONTEXT_ATTRIBUTE = "org.osoa.sca.ComponentContext";
 
     /**
-     * Name of the parameter that defines the name of webapp resource containing bootstrap jars.
-     */
-    static final String BOOTDIR_PARAM = "fabric3.bootDir";
-
-    /**
-     * Default value for BOOTDIR_PARAM.
-     */
-    static final String BOOTDIR_DEFAULT = "/WEB-INF/fabric3/boot";
-
-    /**
-     * Name of the parameter that defines the name of webapp resource containing bootstrap jars.
-     */
-    static final String EXTENSIONDIR_PARAM = "fabric3.extensionDir";
-
-    /**
      * Name of the parameter that defines the class to load to launch the runtime.
      */
     static final String RUNTIME_PARAM = "fabric3.runtimeImpl";
@@ -155,16 +140,6 @@ public final class Constants {
      * Servlet context-param name for the path to the composite to set as the webb app composite
      */
     static final String CURRENT_COMPOSITE_PATH_PARAM = "fabric3.currentCompositePath";
-
-    /**
-     * Servlet context-param name for user-specified system SCDL path.
-     */
-    static final String EXTENSION_SCDL_PATH_PARAM = "fabric3.extensionScdlPath";
-
-    /**
-     * Default path for extensions if no "extensionScdlPath param is specified
-     */
-    static final String DEFAULT_EXTENSION_PATH_PARAM = "/WEB-INF/fabric3/extensions";
 
     /**
      * Servlet context-param name for system monitoring level. Supported values are the names of statics defined in

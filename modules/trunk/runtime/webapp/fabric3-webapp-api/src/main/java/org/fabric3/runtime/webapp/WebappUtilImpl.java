@@ -18,10 +18,18 @@
  */
 package org.fabric3.runtime.webapp;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.logging.Level;
+import javax.servlet.ServletContext;
+
+import org.fabric3.host.runtime.Bootstrapper;
+import org.fabric3.host.runtime.RuntimeLifecycleCoordinator;
+import org.fabric3.host.runtime.ScdlBootstrapper;
+import org.fabric3.monitor.MonitorFactory;
+import org.fabric3.monitor.impl.JavaLoggingMonitorFactory;
 import static org.fabric3.runtime.webapp.Constants.APPLICATION_SCDL_PATH_DEFAULT;
 import static org.fabric3.runtime.webapp.Constants.APPLICATION_SCDL_PATH_PARAM;
-import static org.fabric3.runtime.webapp.Constants.BOOTDIR_DEFAULT;
-import static org.fabric3.runtime.webapp.Constants.BOOTDIR_PARAM;
 import static org.fabric3.runtime.webapp.Constants.BOOTSTRAP_DEFAULT;
 import static org.fabric3.runtime.webapp.Constants.BOOTSTRAP_PARAM;
 import static org.fabric3.runtime.webapp.Constants.COORDINATOR_DEFAULT;
@@ -34,20 +42,6 @@ import static org.fabric3.runtime.webapp.Constants.SYSTEM_MONITORING_DEFAULT;
 import static org.fabric3.runtime.webapp.Constants.SYSTEM_MONITORING_PARAM;
 import static org.fabric3.runtime.webapp.Constants.SYSTEM_SCDL_PATH_DEFAULT;
 import static org.fabric3.runtime.webapp.Constants.SYSTEM_SCDL_PATH_PARAM;
-
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLClassLoader;
-import java.util.Set;
-import java.util.logging.Level;
-
-import javax.servlet.ServletContext;
-
-import org.fabric3.monitor.MonitorFactory;
-import org.fabric3.host.runtime.Bootstrapper;
-import org.fabric3.host.runtime.RuntimeLifecycleCoordinator;
-import org.fabric3.host.runtime.ScdlBootstrapper;
-import org.fabric3.monitor.impl.JavaLoggingMonitorFactory;
 
 /**
  * @version $Rev$ $Date$
@@ -111,25 +105,6 @@ public class WebappUtilImpl implements WebappUtil {
         } catch (ClassNotFoundException e) {
             throw new Fabric3InitException("Bootstrapper Implementation not found", e);
         }
-    }
-
-    public ClassLoader getBootClassLoader(ClassLoader webappClassLoader) throws InvalidResourcePath {
-        String bootDirName = getInitParameter(BOOTDIR_PARAM, BOOTDIR_DEFAULT);
-        Set<?> bootPaths = servletContext.getResourcePaths(bootDirName);
-        if (bootPaths == null) {
-            // nothing in boot directory, assume everything is in the webapp classloader
-            return webappClassLoader;
-        }
-        URL[] urls = new URL[bootPaths.size()];
-        int i = 0;
-        for (Object path : bootPaths) {
-            try {
-                urls[i++] = servletContext.getResource((String) path);
-            } catch (MalformedURLException e) {
-                throw new InvalidResourcePath(APPLICATION_SCDL_PATH_PARAM, path.toString(), e);
-            }
-        }
-        return new URLClassLoader(urls, webappClassLoader);
     }
 
     public URL getSystemScdl(ClassLoader bootClassLoader) throws InvalidResourcePath {
