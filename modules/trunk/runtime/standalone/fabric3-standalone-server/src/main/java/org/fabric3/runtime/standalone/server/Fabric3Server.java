@@ -19,33 +19,37 @@
 package org.fabric3.runtime.standalone.server;
 
 import java.io.File;
+import java.io.FileFilter;
+import java.io.IOException;
 import java.net.MalformedURLException;
-import java.util.Map;
+import java.net.URI;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Properties;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.Future;
 
 import org.fabric3.api.annotation.logging.Info;
 import org.fabric3.api.annotation.logging.Severe;
+import org.fabric3.host.contribution.ContributionSource;
+import org.fabric3.host.contribution.FileContributionSource;
+import org.fabric3.host.runtime.BootConfiguration;
 import org.fabric3.host.runtime.Bootstrapper;
+import org.fabric3.host.runtime.InitializationException;
 import org.fabric3.host.runtime.RuntimeLifecycleCoordinator;
 import org.fabric3.host.runtime.ShutdownException;
 import org.fabric3.jmx.agent.Agent;
 import org.fabric3.jmx.agent.DefaultAgent;
 import org.fabric3.monitor.MonitorFactory;
+import org.fabric3.runtime.standalone.BootstrapException;
 import org.fabric3.runtime.standalone.BootstrapHelper;
 import org.fabric3.runtime.standalone.StandaloneHostInfo;
 import org.fabric3.runtime.standalone.StandaloneRuntime;
 
 /**
- * This class provides the commandline interface for starting the Fabric3 standalone server. <p/> <p/> The class boots the Fabric3 server and also
- * starts a JMX server and listens for shutdown command. The server itself is available by the object name
- * <code>fabric3:type=server,name=fabric3Server </code>. It also allows a runtime to be booted given a bootpath. The JMX domain in which the runtime
- * is registered si definied in the file <code>$bootPath/etc/runtime.properties</code>. The properties defined are <code>jmx.domain</code> and
- * <code>offline</code>. </p> <p/> <p/> The install directory can be specified using the system property <code>fabric3.installDir</code>. If not
- * specified it is asumed to be the directory from where the JAR file containing the main class is loaded. </p>
- * <p/>
+ * This class provides the commandline interface for starting the Fabric3 standalone server. The class boots a Fabric3 runtime and launches a daemon
+ * that listens for a shutdown command.
  * <p/>
  * The administration port can be specified using the system property <code>fabric3.adminPort</code>.If not specified the default port that is used is
  * <code>1099</code>
@@ -56,19 +60,11 @@ public class Fabric3Server implements Fabric3ServerMBean {
     private static final String JMX_DOMAIN = "fabric3.jmx";
     private static final String MONITOR_PORT_PARAM = "fabric3.monitor.port";
     private static final String MONITOR_KEY_PARAM = "fabric3.monitor.key";
+    private static final String INTENTS_FILE = "intents.xml";
 
     private final Agent agent;
-
-    /**
-     * Install directory
-     */
     private final File installDirectory;
-
-    /**
-     * Started runtimes.
-     */
-    private final Map<String, RuntimeLifecycleCoordinator<StandaloneRuntime, Bootstrapper>> bootedRuntimes =
-            new ConcurrentHashMap<String, RuntimeLifecycleCoordinator<StandaloneRuntime, Bootstrapper>>();
+    private RuntimeLifecycleCoordinator<StandaloneRuntime, Bootstrapper> coordinator;
     private ServerMonitor monitor;
 
     /**
@@ -81,9 +77,7 @@ public class Fabric3Server implements Fabric3ServerMBean {
         Fabric3Server server = new Fabric3Server();
         String jmxDomain = System.getProperty(JMX_DOMAIN, "standalone");
         server.startRuntime(jmxDomain);
-        for (String bootPath : server.bootedRuntimes.keySet()) {
-            server.shutdownRuntime(bootPath);
-        }
+        server.shutdownRuntime(jmxDomain);
         System.exit(0);
     }
 
@@ -139,25 +133,21 @@ public class Fabric3Server implements Fabric3ServerMBean {
             ClassLoader hostLoader = BootstrapHelper.createClassLoader(systemClassLoader, hostDir);
             ClassLoader bootLoader = BootstrapHelper.createClassLoader(hostLoader, bootDir);
 
-            // create the HostInfo and runtime
+            // create the HostInfo, MonitorFactory, and runtime
             hostInfo = BootstrapHelper.createHostInfo(installDirectory, configDir, props);
             MonitorFactory monitorFactory = BootstrapHelper.createMonitorFactory(bootLoader, props);
             runtime = BootstrapHelper.createRuntime(hostInfo, bootLoader, monitorFactory);
-
             runtime.setMBeanServer(agent.getMBeanServer());
             runtime.setJMXDomain(jmxDomain);
             monitor = runtime.getMonitorFactory().getMonitor(ServerMonitor.class);
 
             // boot the runtime
-            Bootstrapper bootstrapper = BootstrapHelper.createBootstrapper(hostInfo, bootLoader);
-            RuntimeLifecycleCoordinator<StandaloneRuntime, Bootstrapper> coordinator = BootstrapHelper.createCoordinator(hostInfo, bootLoader);
-
-            // load the primordial system components
-            coordinator.bootPrimordial(runtime, bootstrapper, bootLoader, hostLoader);
-
+            coordinator = BootstrapHelper.createCoordinator(hostInfo, bootLoader);
+            BootConfiguration<StandaloneRuntime, Bootstrapper> configuration = createBootConfiguration(runtime, bootLoader, hostLoader);
+            coordinator.setConfiguration(configuration);
+            coordinator.bootPrimordial();
             // load and initialize runtime extension components and the local runtime domain
             coordinator.initialize();
-
             // join a distributed domain
             Future<Void> future = coordinator.joinDomain(10000);
             future.get();
@@ -167,8 +157,10 @@ public class Fabric3Server implements Fabric3ServerMBean {
             // start the runtime receiving requests
             future = coordinator.start();
             future.get();
-            bootedRuntimes.put(jmxDomain, coordinator);
+
             monitor.started(jmxDomain);
+
+            // create the shutdown daemon
             CountDownLatch latch = new CountDownLatch(1);
             new ShutdownDaemon(monitorPort, monitorKey, latch);
             try {
@@ -189,10 +181,8 @@ public class Fabric3Server implements Fabric3ServerMBean {
     public final void shutdownRuntime(String bootPath) {
 
         try {
-            RuntimeLifecycleCoordinator<StandaloneRuntime, Bootstrapper> coordinator = bootedRuntimes.get(bootPath);
             if (coordinator != null) {
                 coordinator.shutdown();
-                bootedRuntimes.remove(bootPath);
             }
             monitor.stopped(bootPath);
         } catch (ShutdownException ex) {
@@ -207,6 +197,81 @@ public class Fabric3Server implements Fabric3ServerMBean {
      */
     public final void shutdown() {
     }
+
+
+    private BootConfiguration<StandaloneRuntime, Bootstrapper> createBootConfiguration(StandaloneRuntime runtime,
+                                                                                       ClassLoader bootClassLoader,
+                                                                                       ClassLoader appClassLoader)
+            throws BootstrapException, InitializationException {
+        StandaloneHostInfo hostInfo = runtime.getHostInfo();
+        BootConfiguration<StandaloneRuntime, Bootstrapper> configuration = new BootConfiguration<StandaloneRuntime, Bootstrapper>();
+        configuration.setAppClassLoader(appClassLoader);
+        configuration.setBootClassLoader(bootClassLoader);
+
+        Bootstrapper bootstrapper = BootstrapHelper.createBootstrapper(hostInfo, bootClassLoader);
+        // create the runtime bootrapper
+        configuration.setBootstrapper(bootstrapper);
+
+        // add the boot libraries to export as contributions. This is necessary so extension contributions can import them
+        List<String> bootExports = new ArrayList<String>();
+        bootExports.add("META-INF/maven/org.codehaus.fabric3/fabric3-spi/pom.xml");
+        bootExports.add("META-INF/maven/org.codehaus.fabric3/fabric3-pojo/pom.xml");
+        configuration.setBootLibraryExports(bootExports);
+
+        // process extensions
+        File extensionsDir = runtime.getHostInfo().getExtensionsDirectory();
+        File userExtensionsDir = runtime.getHostInfo().getUserExtensionsDirectory();
+        List<ContributionSource> extensions = getExtensionContributions(extensionsDir);
+        configuration.setExtensions(extensions);
+        List<ContributionSource> userExtensions = getExtensionContributions(userExtensionsDir);
+        configuration.setUserExtensions(userExtensions);
+
+        // process the baseline intents
+        ContributionSource source = getIntentsContribution(hostInfo.getConfigDirectory());
+        configuration.setIntents(source);
+        configuration.setRuntime(runtime);
+        return configuration;
+    }
+
+    private ContributionSource getIntentsContribution(File dir) throws InitializationException {
+        //File dir = runtime.getHostInfo().getConfigDirectory();
+        try {
+            File file = new File(dir, INTENTS_FILE);
+            if (!file.exists()) {
+                return null;
+            }
+            URI contribuUri = file.toURI();
+            URL location = contribuUri.toURL();
+            return new FileContributionSource(contribuUri, location, -1, new byte[0]);
+        } catch (MalformedURLException e) {
+            throw new InitializationException(e);
+        }
+    }
+
+    private List<ContributionSource> getExtensionContributions(File dir) throws InitializationException {
+        List<ContributionSource> sources = new ArrayList<ContributionSource>();
+        File[] files = dir.listFiles(new FileFilter() {
+            public boolean accept(File pathname) {
+                String name = pathname.getName();
+                return name.endsWith(".jar") || name.endsWith(".zip") || name.endsWith(".xml");
+            }
+        });
+        for (File file : files) {
+            try {
+                URI uri = URI.create(file.getName());
+                URL location = file.toURI().toURL();
+                ContributionSource source = new FileContributionSource(uri, location, -1, new byte[0]);
+                sources.add(source);
+            } catch (MalformedURLException e) {
+                throw new InitializationException("Error loading extension", file.getName(), e);
+            } catch (IOException e) {
+                throw new InitializationException("Error loading extension", file.getName(), e);
+            }
+
+        }
+        return sources;
+    }
+
 
     public interface ServerMonitor {
         @Severe
