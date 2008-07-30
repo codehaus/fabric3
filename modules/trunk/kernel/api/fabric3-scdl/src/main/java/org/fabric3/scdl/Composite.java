@@ -44,6 +44,15 @@ public class Composite extends AbstractComponentType<CompositeService, Composite
             new HashMap<String, ComponentDefinition<? extends Implementation<?>>>();
     private final Map<QName, Include> includes = new HashMap<QName, Include>();
     private final List<WireDefinition> wires = new ArrayList<WireDefinition>();
+
+    // views are caches of all properties, references, wires, or components contained in the composite and its included composites
+    private final Map<String, Property> propertiesView = new HashMap<String, Property>();
+    private final Map<String, CompositeReference> referencesView = new HashMap<String, CompositeReference>();
+    private final Map<String, CompositeService> servicesView = new HashMap<String, CompositeService>();
+    private final Map<String, ComponentDefinition<? extends Implementation<?>>> componentsView =
+            new HashMap<String, ComponentDefinition<? extends Implementation<?>>>();
+    private final List<WireDefinition> wiresView = new ArrayList<WireDefinition>();
+
     private QName constrainingType;
     private Set<QName> intents;
     private Set<QName> policySets;
@@ -147,11 +156,12 @@ public class Composite extends AbstractComponentType<CompositeService, Composite
      * @return
      */
     public Map<String, Property> getProperties() {
-        Map<String, Property> view = new HashMap<String, Property>(super.getProperties());
-        for (Include i : includes.values()) {
-            view.putAll(i.getIncluded().getProperties());
-        }
-        return Collections.unmodifiableMap(view);
+        return Collections.unmodifiableMap(propertiesView);
+    }
+
+    public void add(Property property) {
+        super.add(property);
+        propertiesView.put(property.getName(), property);
     }
 
     @Override
@@ -161,11 +171,12 @@ public class Composite extends AbstractComponentType<CompositeService, Composite
      * @return
      */
     public Map<String, CompositeReference> getReferences() {
-        Map<String, CompositeReference> view = new HashMap<String, CompositeReference>(super.getReferences());
-        for (Include i : includes.values()) {
-            view.putAll(i.getIncluded().getReferences());
-        }
-        return Collections.unmodifiableMap(view);
+        return Collections.unmodifiableMap(referencesView);
+    }
+
+    public void add(CompositeReference reference) {
+        super.add(reference);
+        referencesView.put(reference.getName(), reference);
     }
 
     @SuppressWarnings("unchecked")
@@ -175,11 +186,12 @@ public class Composite extends AbstractComponentType<CompositeService, Composite
      * @return
      */
     public Map<String, CompositeService> getServices() {
-        Map<String, CompositeService> view = new HashMap<String, CompositeService>(super.getServices());
-        for (Include i : includes.values()) {
-            view.putAll(i.getIncluded().getServices());
-        }
-        return Collections.unmodifiableMap(view);
+        return Collections.unmodifiableMap(servicesView);
+    }
+
+    public void add(CompositeService service) {
+        super.add(service);
+        servicesView.put(service.getName(), service);
     }
 
     /**
@@ -187,13 +199,14 @@ public class Composite extends AbstractComponentType<CompositeService, Composite
      */
     @SuppressWarnings("unchecked")
     public Map<String, ComponentDefinition<? extends Implementation<?>>> getComponents() {
-        Map<String, ComponentDefinition<? extends Implementation<?>>> view =
-                new HashMap<String, ComponentDefinition<? extends Implementation<?>>>(components);
-        for (Include i : includes.values()) {
-            view.putAll(i.getIncluded().getComponents());
-        }
-        return Collections.unmodifiableMap(view);
+        return Collections.unmodifiableMap(componentsView);
     }
+
+    public void add(ComponentDefinition<? extends Implementation<?>> componentDefinition) {
+        componentsView.put(componentDefinition.getName(), componentDefinition);
+        components.put(componentDefinition.getName(), componentDefinition);
+    }
+
 
 
     /**
@@ -208,9 +221,9 @@ public class Composite extends AbstractComponentType<CompositeService, Composite
         Collection<URI> targets = new ArrayList<URI>();
         for (ComponentDefinition<? extends Implementation<?>> component : getComponents().values()) {
             AbstractComponentType<?, ?, ?, ?> componentType = component.getComponentType();
-            for (ServiceDefinition service : (Collection<? extends ServiceDefinition>) componentType.getServices().values()) {
+            for (ServiceDefinition service : componentType.getServices().values()) {
                 if (contract.isAssignableFrom(service.getServiceContract())) {
-                    URI uri = URI.create(component.getName() + '#' + service.getName()); 
+                    URI uri = URI.create(component.getName() + '#' + service.getName());
                     targets.add(uri);
                 }
             }
@@ -224,12 +237,7 @@ public class Composite extends AbstractComponentType<CompositeService, Composite
      */
     @SuppressWarnings("unchecked")
     public List<WireDefinition> getWires() {
-        List<WireDefinition> view =
-                new ArrayList<WireDefinition>(wires);
-        for (Include i : includes.values()) {
-            view.addAll(i.getIncluded().getWires());
-        }
-        return Collections.unmodifiableList(view);
+        return Collections.unmodifiableList(wiresView);
     }
 
     /**
@@ -269,12 +277,9 @@ public class Composite extends AbstractComponentType<CompositeService, Composite
 
     public void add(WireDefinition wireDefn) {
         wires.add(wireDefn);
+        wiresView.add(wireDefn);
     }
 
-
-    public void add(ComponentDefinition<? extends Implementation<?>> componentDefinition) {
-        components.put(componentDefinition.getName(), componentDefinition);
-    }
 
     public Map<QName, Include> getIncludes() {
         return includes;
@@ -282,6 +287,11 @@ public class Composite extends AbstractComponentType<CompositeService, Composite
 
     public void add(Include include) {
         includes.put(include.getName(), include);
+        componentsView.putAll(include.getIncluded().getComponents());
+        referencesView.putAll(include.getIncluded().getReferences());
+        propertiesView.putAll(include.getIncluded().getProperties());
+        servicesView.putAll(include.getIncluded().getServices());
+        wiresView.addAll(include.getIncluded().getWires());
     }
 
 
