@@ -21,11 +21,12 @@ package org.fabric3.itest;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
-
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -33,14 +34,16 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.model.Dependency;
 import org.apache.maven.plugin.MojoExecutionException;
-import org.fabric3.maven.runtime.MavenCoordinator;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import org.fabric3.host.contribution.ContributionSource;
+import org.fabric3.host.contribution.FileContributionSource;
+import org.fabric3.host.runtime.BootConfiguration;
+
 /**
- *
  * @version $Revision$ $Date$
  */
 public class ExtensionHelper {
@@ -74,11 +77,11 @@ public class ExtensionHelper {
 
     }
 
-    public void processExtensions(MavenCoordinator coordinator, 
-                                  Dependency[] extensions, 
-                                  Dependency[] features, 
+    public void processExtensions(BootConfiguration configuration,
+                                  Dependency[] extensions,
+                                  Dependency[] features,
                                   Dependency[] userExtensions,
-                                  File[] userExtensionsArchives) throws MojoExecutionException, MalformedURLException {
+                                  File[] userExtensionsArchives) throws MojoExecutionException {
         List<URL> extensionUrls = resolveDependencies(extensions);
 
         if (features != null) {
@@ -87,8 +90,9 @@ public class ExtensionHelper {
                 extensionUrls.addAll(processFeatures(featureArtifact.getFile()));
             }
         }
+        List<ContributionSource> sources = createContributionSources(extensionUrls);
+        configuration.setExtensions(sources);
 
-        coordinator.setExtensions(extensionUrls);
         List<URL> userExtensionUrls = resolveDependencies(userExtensions);
         // add extensions that are not Maven artifacts
         if (userExtensionsArchives != null) {
@@ -96,14 +100,34 @@ public class ExtensionHelper {
                 if (!entry.exists()) {
                     throw new MojoExecutionException("User extension does not exist: " + entry);
                 }
-                userExtensionUrls.add(entry.toURI().toURL());
+                try {
+                    userExtensionUrls.add(entry.toURI().toURL());
+                } catch (MalformedURLException e) {
+                    throw new MojoExecutionException("Invalid user extension URL: " + entry, e);
+                }
             }
         }
-        coordinator.setUserExtensions(userExtensionUrls);
+        sources = createContributionSources(userExtensionUrls);
+        configuration.setUserExtensions(sources);
+    }
+
+    private List<ContributionSource> createContributionSources(List<URL> urls) {
+        List<ContributionSource> sources = new ArrayList<ContributionSource>();
+        for (URL extensionUrl : urls) {
+            try {
+                URI uri = extensionUrl.toURI();
+                ContributionSource source = new FileContributionSource(uri, extensionUrl, -1, new byte[0]);
+                sources.add(source);
+            } catch (URISyntaxException e) {
+                // should not happen
+                throw new IllegalArgumentException(e);
+            }
+        }
+        return sources;
     }
 
     private List<URL> processFeatures(File featureSetFile) throws MojoExecutionException {
-        
+
         List<Dependency> dependencies = new LinkedList<Dependency>();
 
         Document featureSetDoc;
@@ -134,7 +158,7 @@ public class ExtensionHelper {
             dependencies.add(extension);
 
         }
-        
+
         return resolveDependencies(dependencies.toArray(new Dependency[dependencies.size()]));
 
     }
