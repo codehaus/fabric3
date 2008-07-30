@@ -30,25 +30,26 @@ import java.util.concurrent.Future;
  *      <li>SHUTDOWN - the runtime has stopped prcessing synnchronous requests and detached from the domain.
  * </ul>
  * </pre>
- * The initialize operation is synchronous while all other operations are performed in non-blocking fashion. For
- * non-blocking transitions, host environments may choose to block on the returned Future or perform additional work
- * prior to querying for completion.
+ * The initialize operation is synchronous while all other operations are performed in non-blocking fashion. For non-blocking transitions, host
+ * environments may choose to block on the returned Future or perform additional work prior to querying for completion.
  *
  * @version $Rev$ $Date$
  */
-public interface RuntimeLifecycleCoordinator<R extends Fabric3Runtime, B extends Bootstrapper> {
+public interface RuntimeLifecycleCoordinator<R extends Fabric3Runtime<?>, B extends Bootstrapper> {
+
+    /**
+     * Sets the bootstrap configuration. Thismust be done prior to booting the runtime.
+     *
+     * @param configuration the bootstrap configuration
+     */
+    void setConfiguration(BootConfiguration<R, B> configuration);
 
     /**
      * Boots the runtime with its primordial components.
      *
-     * @param runtime         the runtime to boot
-     * @param bootstrapper    the bootstrapper to bootstrap primordial components and system components
-     * @param bootClassLoader the bootstrap classloader
-     * @param appClassLoader  the top-level application classloader
      * @throws InitializationException if an error occurs booting the runtime
      */
-    void bootPrimordial(R runtime, B bootstrapper, ClassLoader bootClassLoader, ClassLoader appClassLoader)
-            throws InitializationException;
+    void bootPrimordial() throws InitializationException;
 
     /**
      * Initializes the local runtime, including all system components
@@ -56,7 +57,6 @@ public interface RuntimeLifecycleCoordinator<R extends Fabric3Runtime, B extends
      * @throws InitializationException if an error occurs initializing the runtime
      */
     void initialize() throws InitializationException;
-
 
     /**
      * Join the domain in a non-blocking fashion.
@@ -82,8 +82,8 @@ public interface RuntimeLifecycleCoordinator<R extends Fabric3Runtime, B extends
     Future<Void> start() throws StartException;
 
     /**
-     * Shuts the runtime down, stopping it from receiving requests and detaching it from the domain. In-flight
-     * synchronous operations will be allowed to proceed to completion.
+     * Shuts the runtime down, stopping it from receiving requests and detaching it from the domain. In-flight synchronous operations will be allowed
+     * to proceed to completion.
      *
      * @return a future that can be polled for completion of the operation
      * @throws ShutdownException if an error ocurrs shutting down the runtime
