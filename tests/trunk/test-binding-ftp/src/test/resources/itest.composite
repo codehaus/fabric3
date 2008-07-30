@@ -31,7 +31,7 @@
     <component name="FtpService">
         <implementation.java class="org.fabric3.tests.binding.ftp.FtpDataTransferServiceImpl"/>
         <service name="FtpDataTransferService">
-            <ftp:binding.ftp uri="/resources"/>
+            <ftp:binding.ftp uri="/"/>
         </service>
         <reference name="wsDataTransferService">
             <binding.ws uri="http://localhost:8900/axis2/upload" f3:impl="axis2"/>
