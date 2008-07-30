@@ -23,16 +23,16 @@ import java.io.FileFilter;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.lang.reflect.Constructor;
+import java.lang.reflect.InvocationTargetException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Properties;
-import java.util.logging.Level;
 import java.util.jar.JarFile;
-import java.lang.reflect.Constructor;
-import java.lang.reflect.InvocationTargetException;
+import java.util.logging.Level;
 
 import org.fabric3.host.runtime.Bootstrapper;
 import org.fabric3.host.runtime.RuntimeLifecycleCoordinator;
@@ -328,7 +328,7 @@ public final class BootstrapHelper {
                                                                                                  ClassLoader bootClassLoader)
             throws BootstrapException {
         String className = hostInfo.getProperty("fabric3.coordinatorClass",
-                                                "org.fabric3.runtime.standalone.host.StandaloneCoordinator");
+                                                "org.fabric3.fabric.runtime.DefaultCoordinator");
         try {
             Class<?> implClass = Class.forName(className, true, bootClassLoader);
             return (RuntimeLifecycleCoordinator<StandaloneRuntime, Bootstrapper>) implClass.newInstance();
