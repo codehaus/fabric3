@@ -174,7 +174,7 @@ public class Fabric3ITestMojo extends AbstractMojo {
     /**
      * Class name for the implementation of the coordinator to use.
      *
-     * @parameter expression="org.fabric3.maven.runtime.impl.MavenCoordinatorImpl"
+     * @parameter expression="org.fabric3.fabric.runtime.DefaultCoordinator"
      */
     public String coordinatorImpl;
 
