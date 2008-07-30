@@ -108,7 +108,7 @@ public final class Constants {
     /**
      * Name of the default webapp coordinator implementation.
      */
-    static final String COORDINATOR_DEFAULT = "org.fabric3.runtime.webapp.WebappCoordinator";
+    static final String COORDINATOR_DEFAULT = "org.fabric3.fabric.runtime.DefaultCoordinator";
 
 
     /**
