@@ -129,7 +129,7 @@ public class StorRequestHandler implements RequestHandler {
 
             InputStream uploadData = dataConnection.getInputStream();
 
-            FtpLet ftpLet = ftpLetContainer.getFtpLet(fileName);
+            FtpLet ftpLet = ftpLetContainer.getFtpLet(session.getCurrentDirectory());
             if (ftpLet == null) {
                 ftpMonitor.noFtpLetRegistered(fileName);
                 session.write(new DefaultResponse(426, "Data connection error"));

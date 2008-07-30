@@ -34,6 +34,7 @@ public class FtpSession {
     private static final String USER = "org.fabric3.ftp.server.user";
     private static final String PASSIVE_PORT = "org.fabric3.ftp.server.passive.port";
     private static final String DATA_CONNECTION = "org.fabric3.ftp.server.data.connection";
+    private static final String CURRENT_DIRECTORY = "org.fabric3.ftp.server.directory";
 
     private IoSession ioSession;
 
@@ -107,6 +108,28 @@ public class FtpSession {
      */
     public void setPassivePort(int passivePort) {
         ioSession.setAttribute(PASSIVE_PORT, passivePort);
+    }
+
+    /**
+     * Returs the current working directory.
+     *
+     * @return the working directory.
+     */
+    public String getCurrentDirectory() {
+        String dir = (String) ioSession.getAttribute(CURRENT_DIRECTORY);
+        if (dir == null) {
+            return "/";
+        }
+        return dir;
+    }
+
+    /**
+     * Sets the current working directory.
+     *
+     * @param dir the working directory.
+     */
+    public void setCurrentDirectory(String dir) {
+        ioSession.setAttribute(CURRENT_DIRECTORY, dir);
     }
 
     /**

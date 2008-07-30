@@ -59,8 +59,6 @@ public class F3FtpHost implements FtpHost {
      */
     @Init
     public void start() throws IOException {
-
-//        ExecutorService filterExecutor = Executors.newCachedThreadPool();
         ExecutorService filterExecutor = new F3ExecutorService(workScheduler);
         InetSocketAddress socketAddress = new InetSocketAddress(InetAddress.getLocalHost(), commandPort);
         acceptor = new NioSocketAcceptor();
