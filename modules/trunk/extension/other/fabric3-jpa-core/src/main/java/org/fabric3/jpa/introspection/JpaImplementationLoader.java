@@ -36,6 +36,7 @@ import org.fabric3.introspection.TypeMapping;
 import org.fabric3.introspection.contract.ContractProcessor;
 import org.fabric3.introspection.xml.MissingAttribute;
 import org.fabric3.introspection.xml.TypeLoader;
+import org.fabric3.introspection.xml.LoaderUtil;
 import org.fabric3.java.introspection.JavaImplementationProcessor;
 import org.fabric3.java.scdl.JavaImplementation;
 import org.fabric3.jpa.scdl.PersistenceContextResource;
@@ -76,7 +77,6 @@ public class JpaImplementationLoader implements TypeLoader<JavaImplementation> {
     public JavaImplementation load(XMLStreamReader reader, IntrospectionContext context) throws XMLStreamException {
 
         try {
-
             JavaImplementation implementation = new JavaImplementation();
             String persistenceUnit = reader.getAttributeValue(null, "persistenceUnit");
             if (persistenceUnit == null) {
@@ -106,7 +106,8 @@ public class JpaImplementationLoader implements TypeLoader<JavaImplementation> {
                     "unit", persistenceUnit, PersistenceContextType.TRANSACTION, factoryServiceContract, false);
             FieldInjectionSite site = new FieldInjectionSite(ConversationalDaoImpl.class.getDeclaredField("entityManager"));
             pojoComponentType.add(resource, site);
-
+            LoaderUtil.skipToEndElement(reader);
+         
             return implementation;
 
         } catch (NoSuchFieldException e) {
