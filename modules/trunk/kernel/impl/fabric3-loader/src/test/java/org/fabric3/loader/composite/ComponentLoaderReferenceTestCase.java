@@ -103,6 +103,8 @@ public class ComponentLoaderReferenceTestCase extends TestCase {
         Location location = EasyMock.createNiceMock(Location.class);
         EasyMock.replay(location);
         EasyMock.expect(reader.getAttributeValue(null, "name")).andReturn("component");
+        EasyMock.expect(reader.getName()).andReturn(new QName("implementation.test")).times(2);
+        EasyMock.expect(reader.getEventType()).andReturn(2);
         EasyMock.expect(reader.getAttributeValue(null, "autowire")).andReturn(null);
         EasyMock.expect(reader.getAttributeValue(null, "runtimeId")).andReturn(null);
         EasyMock.expect(reader.getAttributeValue(null, "initLevel")).andReturn(null);

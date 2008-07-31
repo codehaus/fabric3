@@ -118,6 +118,7 @@ public class ComponentLoader implements TypeLoader<ComponentDefinition<?>> {
         Implementation<?> impl;
         try {
             reader.nextTag();
+            QName elementName = reader.getName();
             impl = loader.load(reader, Implementation.class, context);
             if (impl == null || impl.getComponentType() == null) {
                 // error loading impl
@@ -125,6 +126,10 @@ public class ComponentLoader implements TypeLoader<ComponentDefinition<?>> {
             }
             // TODO when the loader registry is replaced this try..catch must be replaced with a check for a loader and an
             // UnrecognizedElement added to the context if none is found
+            if (!reader.getName().equals(elementName) || reader.getEventType() != END_ELEMENT) {
+                // ensure that the implementation loader has positioned the cursor to the end element 
+                throw new AssertionError("Impementation loader must position the cursor to the end element");
+            }
         } catch (UnrecognizedElementException e) {
             UnrecognizedElement failure = new UnrecognizedElement(reader);
             context.addError(failure);
