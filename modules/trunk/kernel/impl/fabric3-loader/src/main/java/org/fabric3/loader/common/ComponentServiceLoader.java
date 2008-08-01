@@ -18,9 +18,9 @@ package org.fabric3.loader.common;
 
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamConstants;
+import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
-import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
 
 import static org.osoa.sca.Constants.SCA_NS;
 import org.osoa.sca.annotations.Reference;
@@ -30,6 +30,7 @@ import org.fabric3.introspection.xml.Loader;
 import org.fabric3.introspection.xml.LoaderHelper;
 import org.fabric3.introspection.xml.MissingAttribute;
 import org.fabric3.introspection.xml.TypeLoader;
+import org.fabric3.introspection.xml.UnrecognizedAttribute;
 import org.fabric3.introspection.xml.UnrecognizedElement;
 import org.fabric3.introspection.xml.UnrecognizedElementException;
 import org.fabric3.scdl.BindingDefinition;
@@ -45,6 +46,7 @@ import org.fabric3.scdl.ServiceContract;
  */
 public class ComponentServiceLoader implements TypeLoader<ComponentService> {
     private static final QName CALLBACK = new QName(SCA_NS, "callback");
+
     private final Loader loader;
     private final LoaderHelper loaderHelper;
 
@@ -55,7 +57,7 @@ public class ComponentServiceLoader implements TypeLoader<ComponentService> {
     }
 
     public ComponentService load(XMLStreamReader reader, IntrospectionContext context) throws XMLStreamException {
-
+        validateAttributes(reader, context);
         String name = reader.getAttributeValue(null, "name");
         if (name == null) {
             MissingAttribute failure = new MissingAttribute("Missing name attribute", "name", reader);
@@ -116,4 +118,14 @@ public class ComponentServiceLoader implements TypeLoader<ComponentService> {
             }
         }
     }
+
+    private void validateAttributes(XMLStreamReader reader, IntrospectionContext context) {
+        for (int i = 0; i < reader.getAttributeCount(); i++) {
+            String name = reader.getAttributeLocalName(i);
+            if (!"name".equals(name)) {
+                context.addError(new UnrecognizedAttribute(name, reader));
+            }
+        }
+    }
+
 }
