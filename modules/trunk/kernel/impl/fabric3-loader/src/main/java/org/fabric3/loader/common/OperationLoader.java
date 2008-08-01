@@ -27,6 +27,7 @@ import org.fabric3.introspection.xml.LoaderHelper;
 import org.fabric3.introspection.xml.LoaderUtil;
 import org.fabric3.introspection.xml.MissingAttribute;
 import org.fabric3.introspection.xml.TypeLoader;
+import org.fabric3.introspection.xml.UnrecognizedAttribute;
 import org.fabric3.scdl.OperationDefinition;
 
 /**
@@ -44,7 +45,7 @@ public class OperationLoader implements TypeLoader<OperationDefinition> {
     }
 
     public OperationDefinition load(XMLStreamReader reader, IntrospectionContext context) throws XMLStreamException {
-
+        validateAttributes(reader, context);
         OperationDefinition operationDefinition = new OperationDefinition();
         String name = reader.getAttributeValue(null, "name");
         if (name == null) {
@@ -60,5 +61,15 @@ public class OperationLoader implements TypeLoader<OperationDefinition> {
         return operationDefinition;
 
     }
+
+    private void validateAttributes(XMLStreamReader reader, IntrospectionContext context) {
+        for (int i = 0; i < reader.getAttributeCount(); i++) {
+            String name = reader.getAttributeLocalName(i);
+            if (!"name".equals(name)) {
+                context.addError(new UnrecognizedAttribute(name, reader));
+            }
+        }
+    }
+
 
 }
