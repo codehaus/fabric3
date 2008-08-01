@@ -29,6 +29,7 @@ import org.w3c.dom.Document;
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.xml.LoaderHelper;
 import org.fabric3.introspection.xml.TypeLoader;
+import org.fabric3.introspection.xml.UnrecognizedAttribute;
 import org.fabric3.scdl.Property;
 
 /**
@@ -49,6 +50,7 @@ public class PropertyLoader implements TypeLoader<Property> {
     }
 
     public Property load(XMLStreamReader reader, IntrospectionContext ctx) throws XMLStreamException {
+        validateAttributes(reader, ctx);
         String name = reader.getAttributeValue(null, NAME);
         boolean many = Boolean.parseBoolean(reader.getAttributeValue(null, MANY));
         boolean mustSupply = Boolean.parseBoolean(reader.getAttributeValue(null, MUST_SUPPLY));
@@ -62,4 +64,14 @@ public class PropertyLoader implements TypeLoader<Property> {
         property.setDefaultValue(value);
         return property;
     }
+
+    private void validateAttributes(XMLStreamReader reader, IntrospectionContext context) {
+        for (int i = 0; i < reader.getAttributeCount(); i++) {
+            String name = reader.getAttributeLocalName(i);
+            if (!NAME.equals(name) && !MANY.equals(name) && !MUST_SUPPLY.equals(name)) {
+                context.addError(new UnrecognizedAttribute(name, reader));
+            }
+        }
+    }
+
 }
