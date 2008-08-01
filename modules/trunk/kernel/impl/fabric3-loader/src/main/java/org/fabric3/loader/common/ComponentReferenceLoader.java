@@ -21,7 +21,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 import javax.xml.namespace.QName;
-import javax.xml.stream.XMLStreamConstants;
+import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
+import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
@@ -95,11 +96,12 @@ public class ComponentReferenceLoader implements TypeLoader<ComponentReference> 
         boolean callback = false;
         while (true) {
             switch (reader.next()) {
-            case XMLStreamConstants.START_ELEMENT:
+            case START_ELEMENT:
                 callback = CALLBACK.equals(reader.getName());
                 if (callback) {
                     reader.nextTag();
                 }
+                QName elementName = reader.getName();
                 ModelObject type;
                 try {
                     type = loader.load(reader, ModelObject.class, context);
@@ -120,15 +122,18 @@ public class ComponentReferenceLoader implements TypeLoader<ComponentReference> 
                     }
                 } else if (type instanceof OperationDefinition) {
                     reference.addOperation((OperationDefinition) type);
-                }else if (type == null) {
+                } else if (type == null) {
                     // error loading, the element, ignore as an error will have been reported
                     break;
                 } else {
                     context.addError(new UnrecognizedElement(reader));
                     continue;
                 }
+                if (!reader.getName().equals(elementName) || reader.getEventType() != END_ELEMENT) {
+                    throw new AssertionError("Loader must position the cursor to the end element");
+                }
                 break;
-            case XMLStreamConstants.END_ELEMENT:
+            case END_ELEMENT:
                 if (callback) {
                     callback = false;
                     break;

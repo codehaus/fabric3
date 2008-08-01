@@ -75,6 +75,7 @@ public class CompositeServiceLoader implements TypeLoader<CompositeService> {
                 if (callback) {
                     reader.nextTag();
                 }
+                QName elementName = reader.getName();
                 ModelObject type;
                 try {
                     type = loader.load(reader, ModelObject.class, context);
@@ -100,6 +101,9 @@ public class CompositeServiceLoader implements TypeLoader<CompositeService> {
                 } else {
                     context.addError(new UnrecognizedElement(reader));
                     continue;
+                }
+                if (!reader.getName().equals(elementName) || reader.getEventType() != END_ELEMENT) {
+                    throw new AssertionError("Loader must position the cursor to the end element");
                 }
                 break;
             case END_ELEMENT:

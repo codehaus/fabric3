@@ -20,6 +20,7 @@ import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
+import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
 
 import static org.osoa.sca.Constants.SCA_NS;
 import org.osoa.sca.annotations.Reference;
@@ -74,6 +75,7 @@ public class ComponentServiceLoader implements TypeLoader<ComponentService> {
                 if (callback) {
                     reader.nextTag();
                 }
+                QName elementName = reader.getName();
                 ModelObject type;
                 try {
                     type = loader.load(reader, ModelObject.class, context);
@@ -100,6 +102,9 @@ public class ComponentServiceLoader implements TypeLoader<ComponentService> {
                 } else {
                     context.addError(new UnrecognizedElement(reader));
                     continue;
+                }
+                if (!reader.getName().equals(elementName) || reader.getEventType() != END_ELEMENT) {
+                    throw new AssertionError("Loader must position the cursor to the end element");
                 }
                 break;
             case XMLStreamConstants.END_ELEMENT:

@@ -102,8 +102,15 @@ public class CompositeServiceLoaderTestCase extends TestCase {
 
         expect(mockReader.next()).andReturn(START_ELEMENT);
         expect(mockReader.getName()).andReturn(NAME);
+        expect(mockReader.getName()).andReturn(NAME);
+        expect(mockReader.getName()).andReturn(NAME);
+        expect(mockReader.getEventType()).andReturn(END_ELEMENT);
+        expect(mockReader.getName()).andReturn(NAME);
+        expect(mockReader.getName()).andReturn(NAME);
         expect(mockReader.next()).andReturn(START_ELEMENT);
         expect(mockReader.getName()).andReturn(NAME);
+        expect(mockReader.getEventType()).andReturn(END_ELEMENT);
+
         expect(mockReader.next()).andReturn(END_ELEMENT);
 
         BindingDefinition binding = new BindingDefinition(null) {
@@ -137,7 +144,10 @@ public class CompositeServiceLoaderTestCase extends TestCase {
 
         expect(mockReader.next()).andReturn(START_ELEMENT);
         expect(mockReader.getName()).andReturn(NAME);
+        expect(mockReader.getName()).andReturn(NAME);
         expect(mockRegistry.load(mockReader, ModelObject.class, introspectionContext)).andReturn(sc);
+        expect(mockReader.getName()).andReturn(NAME);
+        expect(mockReader.getEventType()).andReturn(END_ELEMENT);
         expect(mockReader.next()).andReturn(END_ELEMENT);
 
         replay(mockReader, mockLoaderHelper, mockRegistry);
@@ -149,7 +159,7 @@ public class CompositeServiceLoaderTestCase extends TestCase {
 
     protected void setUp() throws Exception {
         super.setUp();
-        mockReader = EasyMock.createStrictMock(XMLStreamReader.class);
+        mockReader = EasyMock.createMock(XMLStreamReader.class);
         mockRegistry = EasyMock.createMock(LoaderRegistry.class);
         mockLoaderHelper = EasyMock.createMock(LoaderHelper.class);
         loader = new CompositeServiceLoader(mockRegistry, mockLoaderHelper);
