@@ -32,6 +32,7 @@ import org.fabric3.introspection.xml.LoaderUtil;
 import org.fabric3.introspection.xml.MissingAttribute;
 import org.fabric3.introspection.xml.ResourceNotFound;
 import org.fabric3.introspection.xml.TypeLoader;
+import org.fabric3.introspection.xml.UnrecognizedAttribute;
 import org.fabric3.scdl.ServiceContract;
 
 /**
@@ -51,7 +52,7 @@ public class JavaInterfaceLoader implements TypeLoader<ServiceContract> {
     }
 
     public ServiceContract load(XMLStreamReader reader, IntrospectionContext context) throws XMLStreamException {
-
+        validateAttributes(reader, context);
         String name = reader.getAttributeValue(null, "interface");
         if (name == null) {
             // allow "class" as well as seems to be a common mistake
@@ -91,4 +92,14 @@ public class JavaInterfaceLoader implements TypeLoader<ServiceContract> {
         }
         return serviceContract;
     }
+
+    private void validateAttributes(XMLStreamReader reader, IntrospectionContext context) {
+        for (int i = 0; i < reader.getAttributeCount(); i++) {
+            String name = reader.getAttributeLocalName(i);
+            if (!"class".equals(name) && !"interface".equals(name) && !"callbackInterface".equals(name)) {
+                context.addError(new UnrecognizedAttribute(name, reader));
+            }
+        }
+    }
+
 }
