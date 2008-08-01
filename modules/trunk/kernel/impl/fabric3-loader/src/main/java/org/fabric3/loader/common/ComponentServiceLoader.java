@@ -50,8 +50,7 @@ public class ComponentServiceLoader implements TypeLoader<ComponentService> {
     private final Loader loader;
     private final LoaderHelper loaderHelper;
 
-    public ComponentServiceLoader(@Reference Loader loader,
-                                  @Reference LoaderHelper loaderHelper) {
+    public ComponentServiceLoader(@Reference Loader loader, @Reference LoaderHelper loaderHelper) {
         this.loader = loader;
         this.loaderHelper = loaderHelper;
     }
@@ -122,7 +121,7 @@ public class ComponentServiceLoader implements TypeLoader<ComponentService> {
     private void validateAttributes(XMLStreamReader reader, IntrospectionContext context) {
         for (int i = 0; i < reader.getAttributeCount(); i++) {
             String name = reader.getAttributeLocalName(i);
-            if (!"name".equals(name)) {
+            if (!"name".equals(name) && !"requires".equals(name)) {
                 context.addError(new UnrecognizedAttribute(name, reader));
             }
         }

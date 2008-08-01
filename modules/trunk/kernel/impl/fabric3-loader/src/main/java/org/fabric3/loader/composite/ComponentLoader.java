@@ -20,6 +20,7 @@ package org.fabric3.loader.composite;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.HashMap;
 import java.util.Map;
 import javax.xml.XMLConstants;
 import javax.xml.namespace.QName;
@@ -43,6 +44,7 @@ import org.fabric3.introspection.xml.LoaderHelper;
 import org.fabric3.introspection.xml.LoaderUtil;
 import org.fabric3.introspection.xml.MissingAttribute;
 import org.fabric3.introspection.xml.TypeLoader;
+import org.fabric3.introspection.xml.UnrecognizedAttribute;
 import org.fabric3.introspection.xml.UnrecognizedElement;
 import org.fabric3.introspection.xml.UnrecognizedElementException;
 import org.fabric3.scdl.AbstractComponentType;
@@ -66,7 +68,7 @@ public class ComponentLoader implements TypeLoader<ComponentDefinition<?>> {
     private static final QName PROPERTY = new QName(SCA_NS, "property");
     private static final QName SERVICE = new QName(SCA_NS, "service");
     private static final QName REFERENCE = new QName(SCA_NS, "reference");
-
+    private static final Map<String, String> ATTRIBUTES = new HashMap<String, String>();
     private static final DocumentBuilder documentBuilder;
 
     static {
@@ -77,6 +79,12 @@ public class ComponentLoader implements TypeLoader<ComponentDefinition<?>> {
         } catch (ParserConfigurationException e) {
             throw new ExceptionInInitializerError(e);
         }
+        ATTRIBUTES.put("name", "name");
+        ATTRIBUTES.put("autowire", "autowire");
+        ATTRIBUTES.put("requires", "requires");
+        ATTRIBUTES.put("key", "key");
+        ATTRIBUTES.put("initLevel", "initLevel");
+        ATTRIBUTES.put("runtimeId", "runtimeId");
     }
 
     private final Loader loader;
@@ -98,7 +106,7 @@ public class ComponentLoader implements TypeLoader<ComponentDefinition<?>> {
     }
 
     public ComponentDefinition<?> load(XMLStreamReader reader, IntrospectionContext context) throws XMLStreamException {
-
+        validateAttributes(reader, context);
         String name = reader.getAttributeValue(null, "name");
         if (name == null) {
             MissingAttribute failure = new MissingAttribute("Component name not specified", "name", reader);
@@ -311,6 +319,15 @@ public class ComponentLoader implements TypeLoader<ComponentDefinition<?>> {
             } catch (URISyntaxException e) {
                 InvalidValue failure = new InvalidValue("Component runtime ID must be a valid URI: " + runtimeAttr, runtimeAttr, reader);
                 context.addError(failure);
+            }
+        }
+    }
+
+    private void validateAttributes(XMLStreamReader reader, IntrospectionContext context) {
+        for (int i = 0; i < reader.getAttributeCount(); i++) {
+            String name = reader.getAttributeLocalName(i);
+            if (!ATTRIBUTES.containsKey(name)) {
+                context.addError(new UnrecognizedAttribute(name, reader));
             }
         }
     }

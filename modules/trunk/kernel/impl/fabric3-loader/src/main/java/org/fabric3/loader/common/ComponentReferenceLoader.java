@@ -60,6 +60,7 @@ public class ComponentReferenceLoader implements TypeLoader<ComponentReference> 
         ATTRIBUTES.put("autowire", "autowire");
         ATTRIBUTES.put("target", "target");
         ATTRIBUTES.put("multiplicity", "multiplicity");
+        ATTRIBUTES.put("requires", "requires");
     }
 
     private final Loader loader;

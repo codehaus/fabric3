@@ -65,7 +65,7 @@ public class OperationLoader implements TypeLoader<OperationDefinition> {
     private void validateAttributes(XMLStreamReader reader, IntrospectionContext context) {
         for (int i = 0; i < reader.getAttributeCount(); i++) {
             String name = reader.getAttributeLocalName(i);
-            if (!"name".equals(name)) {
+            if (!"name".equals(name) && !"requires".equals(name)) {
                 context.addError(new UnrecognizedAttribute(name, reader));
             }
         }

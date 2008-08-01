@@ -24,6 +24,7 @@ import javax.xml.stream.Location;
 
 import junit.framework.TestCase;
 import org.easymock.EasyMock;
+import static org.easymock.EasyMock.expect;
 import static org.osoa.sca.Constants.SCA_NS;
 
 import org.fabric3.scdl.ComponentReference;
@@ -102,6 +103,7 @@ public class ComponentLoaderReferenceTestCase extends TestCase {
         XMLStreamReader reader = EasyMock.createMock(XMLStreamReader.class);
         Location location = EasyMock.createNiceMock(Location.class);
         EasyMock.replay(location);
+        EasyMock.expect(reader.getAttributeCount()).andReturn(0);
         EasyMock.expect(reader.getAttributeValue(null, "name")).andReturn("component");
         EasyMock.expect(reader.getName()).andReturn(new QName("implementation.test")).times(2);
         EasyMock.expect(reader.getEventType()).andReturn(2);

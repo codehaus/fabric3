@@ -108,6 +108,7 @@ public class ComponentLoaderDuplicatePropertyTestCase extends TestCase {
         EasyMock.replay(location);
 
         XMLStreamReader reader = EasyMock.createMock(XMLStreamReader.class);
+        EasyMock.expect(reader.getAttributeCount()).andReturn(0);
         EasyMock.expect(reader.getAttributeValue(null, "name")).andReturn("component");
         EasyMock.expect(reader.getName()).andReturn(new QName("implementation.test")).times(2);
         EasyMock.expect(reader.getEventType()).andReturn(2);
