@@ -18,7 +18,9 @@ package org.fabric3.loader.common;
 
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.StringTokenizer;
 import javax.xml.namespace.QName;
 import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
@@ -34,6 +36,7 @@ import org.fabric3.introspection.xml.InvalidValue;
 import org.fabric3.introspection.xml.Loader;
 import org.fabric3.introspection.xml.LoaderHelper;
 import org.fabric3.introspection.xml.TypeLoader;
+import org.fabric3.introspection.xml.UnrecognizedAttribute;
 import org.fabric3.introspection.xml.UnrecognizedElement;
 import org.fabric3.introspection.xml.UnrecognizedElementException;
 import org.fabric3.scdl.BindingDefinition;
@@ -50,6 +53,14 @@ import org.fabric3.scdl.ServiceContract;
  */
 public class ComponentReferenceLoader implements TypeLoader<ComponentReference> {
     private static final QName CALLBACK = new QName(SCA_NS, "callback");
+    private static final Map<String, String> ATTRIBUTES = new HashMap<String, String>();
+
+    static {
+        ATTRIBUTES.put("name", "name");
+        ATTRIBUTES.put("autowire", "autowire");
+        ATTRIBUTES.put("target", "target");
+        ATTRIBUTES.put("multiplicity", "multiplicity");
+    }
 
     private final Loader loader;
     private final LoaderHelper loaderHelper;
@@ -60,6 +71,7 @@ public class ComponentReferenceLoader implements TypeLoader<ComponentReference> 
     }
 
     public ComponentReference load(XMLStreamReader reader, IntrospectionContext context) throws XMLStreamException {
+        validateAttributes(reader, context);
         String name = reader.getAttributeValue(null, "name");
         if (name == null) {
             MissingReferenceName failure = new MissingReferenceName(reader);
@@ -139,6 +151,15 @@ public class ComponentReferenceLoader implements TypeLoader<ComponentReference> 
                     break;
                 }
                 return reference;
+            }
+        }
+    }
+
+    private void validateAttributes(XMLStreamReader reader, IntrospectionContext context) {
+        for (int i = 0; i < reader.getAttributeCount(); i++) {
+            String name = reader.getAttributeLocalName(i);
+            if (!ATTRIBUTES.containsKey(name)) {
+                context.addError(new UnrecognizedAttribute(name, reader));
             }
         }
     }
