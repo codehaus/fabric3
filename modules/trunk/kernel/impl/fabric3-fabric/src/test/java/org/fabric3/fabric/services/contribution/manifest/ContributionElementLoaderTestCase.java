@@ -68,6 +68,7 @@ public class ContributionElementLoaderTestCase extends TestCase {
         loader = new ContributionElementLoader(loaderRegistry, helper);
 
         reader = EasyMock.createMock(XMLStreamReader.class);
+        EasyMock.expect(reader.getAttributeCount()).andReturn(0);
         EasyMock.expect(reader.next()).andReturn(XMLStreamConstants.START_ELEMENT);
         EasyMock.expect(reader.getName()).andReturn(CONTRIBUTION);
         EasyMock.expect(reader.next()).andReturn(XMLStreamConstants.START_ELEMENT);

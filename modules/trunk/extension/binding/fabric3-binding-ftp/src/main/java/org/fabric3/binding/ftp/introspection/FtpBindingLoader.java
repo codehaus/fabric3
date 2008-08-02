@@ -33,6 +33,7 @@ import org.fabric3.introspection.xml.LoaderHelper;
 import org.fabric3.introspection.xml.LoaderUtil;
 import org.fabric3.introspection.xml.MissingAttribute;
 import org.fabric3.introspection.xml.TypeLoader;
+import org.fabric3.introspection.xml.UnrecognizedAttribute;
 
 /**
  * @version $Revision$ $Date$
@@ -51,6 +52,7 @@ public class FtpBindingLoader implements TypeLoader<FtpBindingDefinition> {
     }
 
     public FtpBindingDefinition load(XMLStreamReader reader, IntrospectionContext introspectionContext) throws XMLStreamException {
+        validateAttributes(reader, introspectionContext);
 
         FtpBindingDefinition bd = null;
         String uri = null;
@@ -80,6 +82,15 @@ public class FtpBindingLoader implements TypeLoader<FtpBindingDefinition> {
         LoaderUtil.skipToEndElement(reader);
         return bd;
 
+    }
+
+    private void validateAttributes(XMLStreamReader reader, IntrospectionContext context) {
+        for (int i = 0; i < reader.getAttributeCount(); i++) {
+            String name = reader.getAttributeLocalName(i);
+            if (!"uri".equals(name) && !"requires".equals(name) && !"policySets".equals(name) && !"mode".equals(name)) {
+                context.addError(new UnrecognizedAttribute(name, reader));
+            }
+        }
     }
 
 }

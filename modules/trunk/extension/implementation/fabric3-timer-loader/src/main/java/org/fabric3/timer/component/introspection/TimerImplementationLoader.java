@@ -19,6 +19,8 @@
 package org.fabric3.timer.component.introspection;
 
 import java.text.ParseException;
+import java.util.HashMap;
+import java.util.Map;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
@@ -29,6 +31,7 @@ import org.fabric3.introspection.xml.LoaderHelper;
 import org.fabric3.introspection.xml.LoaderUtil;
 import org.fabric3.introspection.xml.MissingAttribute;
 import org.fabric3.introspection.xml.TypeLoader;
+import org.fabric3.introspection.xml.UnrecognizedAttribute;
 import org.fabric3.java.introspection.ImplementationArtifactNotFound;
 import org.fabric3.java.introspection.JavaImplementationProcessor;
 import org.fabric3.pojo.scdl.PojoComponentType;
@@ -41,6 +44,17 @@ import org.fabric3.timer.component.scdl.TimerImplementation;
  * Loads <implementation.timer> entries in a composite.
  */
 public class TimerImplementationLoader implements TypeLoader<TimerImplementation> {
+    private static final Map<String, String> ATTRIBUTES = new HashMap<String, String>();
+
+    static {
+        ATTRIBUTES.put("class", "class");
+        ATTRIBUTES.put("cronExpression", "cronExpression");
+        ATTRIBUTES.put("fixedRate", "fixedRate");
+        ATTRIBUTES.put("repeatInterval", "repeatInterval");
+        ATTRIBUTES.put("fireOnce", "fireOnce");
+        ATTRIBUTES.put("requires", "requires");
+        ATTRIBUTES.put("policySets", "policySets");
+    }
 
     private final JavaImplementationProcessor implementationProcessor;
     private final LoaderHelper loaderHelper;
@@ -55,6 +69,7 @@ public class TimerImplementationLoader implements TypeLoader<TimerImplementation
     public TimerImplementation load(XMLStreamReader reader, IntrospectionContext context) throws XMLStreamException {
         assert TimerImplementation.IMPLEMENTATION_TIMER.equals(reader.getName());
 
+        validateAttributes(reader, context);
         TimerImplementation implementation = new TimerImplementation();
         if (!processImplementationClass(implementation, reader, context)) {
             // an error with the implementation class, return a dummy implementation
@@ -199,6 +214,15 @@ public class TimerImplementationLoader implements TypeLoader<TimerImplementation
                 InvalidTimerExpression failure =
                         new InvalidTimerExpression("Fire once time is invalid: " + time, time, reader, e);
                 introspectionContext.addError(failure);
+            }
+        }
+    }
+
+    private void validateAttributes(XMLStreamReader reader, IntrospectionContext context) {
+        for (int i = 0; i < reader.getAttributeCount(); i++) {
+            String name = reader.getAttributeLocalName(i);
+            if (!ATTRIBUTES.containsKey(name)) {
+                context.addError(new UnrecognizedAttribute(name, reader));
             }
         }
     }

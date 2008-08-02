@@ -28,6 +28,7 @@ import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.xml.LoaderUtil;
 import org.fabric3.introspection.xml.MissingAttribute;
 import org.fabric3.introspection.xml.TypeLoader;
+import org.fabric3.introspection.xml.UnrecognizedAttribute;
 import org.fabric3.system.scdl.SystemImplementation;
 
 /**
@@ -51,6 +52,7 @@ public class SystemImplementationLoader implements TypeLoader<SystemImplementati
 
     public SystemImplementation load(XMLStreamReader reader, IntrospectionContext introspectionContext) throws XMLStreamException {
         assert SystemImplementation.IMPLEMENTATION_SYSTEM.equals(reader.getName());
+        validateAttributes(reader, introspectionContext);
         String implClass = reader.getAttributeValue(null, "class");
         if (implClass == null) {
             MissingAttribute failure = new MissingAttribute("Implementation class must be specified using the class attribute", "class", reader);
@@ -63,6 +65,15 @@ public class SystemImplementationLoader implements TypeLoader<SystemImplementati
         implementation.setImplementationClass(implClass);
         implementationProcessor.introspect(implementation, introspectionContext);
         return implementation;
+    }
+
+    private void validateAttributes(XMLStreamReader reader, IntrospectionContext context) {
+        for (int i = 0; i < reader.getAttributeCount(); i++) {
+            String name = reader.getAttributeLocalName(i);
+            if (!"class".equals(name)) {
+                context.addError(new UnrecognizedAttribute(name, reader));
+            }
+        }
     }
 
 

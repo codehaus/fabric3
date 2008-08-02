@@ -19,6 +19,8 @@
 package org.fabric3.binding.jms.introspection;
 
 import java.net.URISyntaxException;
+import java.util.HashMap;
+import java.util.Map;
 import javax.xml.namespace.QName;
 import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
 import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
@@ -45,6 +47,7 @@ import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.xml.InvalidValue;
 import org.fabric3.introspection.xml.LoaderHelper;
 import org.fabric3.introspection.xml.TypeLoader;
+import org.fabric3.introspection.xml.UnrecognizedAttribute;
 import org.fabric3.jaxb.control.api.JAXBTransformationService;
 
 
@@ -58,6 +61,27 @@ public class JmsBindingLoader implements TypeLoader<JmsBindingDefinition> {
      * Qualified name for the binding element.
      */
     public static final QName BINDING_QNAME = new QName(Constants.SCA_NS, "binding.jms");
+    private static final Map<String, String> ATTRIBUTES = new HashMap<String, String>();
+
+    static {
+        ATTRIBUTES.put("uri", "uri");
+        ATTRIBUTES.put("correlationScheme", "correlationScheme");
+        ATTRIBUTES.put("jndiURL", "jndiURL");
+        ATTRIBUTES.put("initialContextFactory", "initialContextFactory");
+        ATTRIBUTES.put("requires", "requires");
+        ATTRIBUTES.put("policySets", "policySets");
+        ATTRIBUTES.put("name", "name");
+        ATTRIBUTES.put("create", "create");
+        ATTRIBUTES.put("type", "type");
+        ATTRIBUTES.put("destination", "destination");
+        ATTRIBUTES.put("connectionFactory", "connectionFactory");
+        ATTRIBUTES.put("JMSType", "JMSType");
+        ATTRIBUTES.put("JMSTimeToLive", "JMSTimeToLive");
+        ATTRIBUTES.put("JMSPriority", "JMSPriority");
+        ATTRIBUTES.put("JMSDeliveryMode", "JMSDeliveryMode");
+        ATTRIBUTES.put("JMSCorrelationId", "JMSCorrelationId");
+        ATTRIBUTES.put("name", "name");
+    }
 
     private final LoaderHelper loaderHelper;
 
@@ -73,6 +97,7 @@ public class JmsBindingLoader implements TypeLoader<JmsBindingDefinition> {
     }
 
     public JmsBindingDefinition load(XMLStreamReader reader, IntrospectionContext introspectionContext) throws XMLStreamException {
+        validateAttributes(reader, introspectionContext);
 
         JmsBindingMetadata metadata;
         String uri = reader.getAttributeValue(null, "uri");
@@ -323,5 +348,13 @@ public class JmsBindingLoader implements TypeLoader<JmsBindingDefinition> {
         parent.addProperty(key, value);
     }
 
+    private void validateAttributes(XMLStreamReader reader, IntrospectionContext context) {
+        for (int i = 0; i < reader.getAttributeCount(); i++) {
+            String name = reader.getAttributeLocalName(i);
+            if (!ATTRIBUTES.containsKey(name)) {
+                context.addError(new UnrecognizedAttribute(name, reader));
+            }
+        }
+    }
 
 }

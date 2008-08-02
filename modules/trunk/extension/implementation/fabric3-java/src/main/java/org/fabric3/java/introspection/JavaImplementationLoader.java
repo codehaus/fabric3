@@ -28,6 +28,7 @@ import org.fabric3.introspection.xml.LoaderHelper;
 import org.fabric3.introspection.xml.LoaderUtil;
 import org.fabric3.introspection.xml.MissingAttribute;
 import org.fabric3.introspection.xml.TypeLoader;
+import org.fabric3.introspection.xml.UnrecognizedAttribute;
 import org.fabric3.java.scdl.JavaImplementation;
 
 /**
@@ -49,6 +50,7 @@ public class JavaImplementationLoader implements TypeLoader<JavaImplementation> 
 
         assert JavaImplementation.IMPLEMENTATION_JAVA.equals(reader.getName());
 
+        validateAttributes(reader, introspectionContext);
         JavaImplementation implementation = new JavaImplementation();
         String implClass = reader.getAttributeValue(null, "class");
         if (implClass == null) {
@@ -65,5 +67,15 @@ public class JavaImplementationLoader implements TypeLoader<JavaImplementation> 
         implementationProcessor.introspect(implementation, introspectionContext);
         return implementation;
     }
+
+    private void validateAttributes(XMLStreamReader reader, IntrospectionContext context) {
+        for (int i = 0; i < reader.getAttributeCount(); i++) {
+            String name = reader.getAttributeLocalName(i);
+            if (!"class".equals(name) && !"requires".equals(name) && !"policySets".equals(name)) {
+                context.addError(new UnrecognizedAttribute(name, reader));
+            }
+        }
+    }
+
 
 }

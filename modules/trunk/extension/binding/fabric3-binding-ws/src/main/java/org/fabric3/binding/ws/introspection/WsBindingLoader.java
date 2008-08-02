@@ -20,6 +20,8 @@ package org.fabric3.binding.ws.introspection;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Map;
+import java.util.HashMap;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
@@ -35,6 +37,7 @@ import org.fabric3.introspection.xml.LoaderHelper;
 import org.fabric3.introspection.xml.LoaderUtil;
 import org.fabric3.introspection.xml.MissingAttribute;
 import org.fabric3.introspection.xml.TypeLoader;
+import org.fabric3.introspection.xml.UnrecognizedAttribute;
 
 /**
  * @version $Revision$ $Date$
@@ -46,6 +49,16 @@ public class WsBindingLoader implements TypeLoader<WsBindingDefinition> {
      * Qualified name for the binding element.
      */
     public static final QName BINDING_QNAME = new QName(Constants.SCA_NS, "binding.ws");
+    private static final Map<String, String> ATTRIBUTES = new HashMap<String, String>();
+
+    static {
+        ATTRIBUTES.put("uri", "uri");
+        ATTRIBUTES.put("impl", "impl");
+        ATTRIBUTES.put("wsdlElement", "wsdlElement");
+        ATTRIBUTES.put("wsdlLocation", "wsdlLocation");
+        ATTRIBUTES.put("requires", "requires");
+        ATTRIBUTES.put("policySets", "policySets");
+    }
 
     private final LoaderHelper loaderHelper;
 
@@ -59,6 +72,7 @@ public class WsBindingLoader implements TypeLoader<WsBindingDefinition> {
     }
 
     public WsBindingDefinition load(XMLStreamReader reader, IntrospectionContext introspectionContext) throws XMLStreamException {
+        validateAttributes(reader, introspectionContext);
 
         WsBindingDefinition bd = null;
         String uri = null;
@@ -88,6 +102,15 @@ public class WsBindingLoader implements TypeLoader<WsBindingDefinition> {
         LoaderUtil.skipToEndElement(reader);
         return bd;
 
+    }
+
+    private void validateAttributes(XMLStreamReader reader, IntrospectionContext context) {
+        for (int i = 0; i < reader.getAttributeCount(); i++) {
+            String name = reader.getAttributeLocalName(i);
+            if (!ATTRIBUTES.containsKey(name)) {
+                context.addError(new UnrecognizedAttribute(name, reader));
+            }
+        }
     }
 
 }

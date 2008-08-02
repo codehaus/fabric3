@@ -42,6 +42,7 @@ public class MavenExportLoaderTestCase extends TestCase {
     protected void setUp() throws Exception {
         super.setUp();
         reader = EasyMock.createMock(XMLStreamReader.class);
+        EasyMock.expect(reader.getAttributeCount()).andReturn(0);
         EasyMock.expect(reader.getAttributeValue(null, "groupId")).andReturn("foo");
         EasyMock.expect(reader.getAttributeValue(null, "artifactId")).andReturn("bar");
         EasyMock.expect(reader.getAttributeValue(null, "version")).andReturn("1.0-SNAPSHOT");

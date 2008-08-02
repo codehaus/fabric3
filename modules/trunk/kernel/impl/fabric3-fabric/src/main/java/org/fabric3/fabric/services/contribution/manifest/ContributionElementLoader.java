@@ -36,6 +36,7 @@ import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.xml.LoaderHelper;
 import org.fabric3.introspection.xml.LoaderRegistry;
 import org.fabric3.introspection.xml.TypeLoader;
+import org.fabric3.introspection.xml.UnrecognizedAttribute;
 import org.fabric3.introspection.xml.UnrecognizedElement;
 import org.fabric3.introspection.xml.UnrecognizedElementException;
 import org.fabric3.loader.impl.InvalidQNamePrefix;
@@ -74,6 +75,7 @@ public class ContributionElementLoader implements TypeLoader<ContributionManifes
 
 
     public ContributionManifest load(XMLStreamReader reader, IntrospectionContext context) throws XMLStreamException {
+        validateAttributes(reader, context);
         ContributionManifest contribution = new ContributionManifest();
         while (true) {
             int event = reader.next();
@@ -135,5 +137,15 @@ public class ContributionElementLoader implements TypeLoader<ContributionManifes
             }
         }
     }
+
+    private void validateAttributes(XMLStreamReader reader, IntrospectionContext context) {
+        for (int i = 0; i < reader.getAttributeCount(); i++) {
+            String name = reader.getAttributeLocalName(i);
+            if (!"composite".equals(name)) {
+                context.addError(new UnrecognizedAttribute(name, reader));
+            }
+        }
+    }
+
 
 }

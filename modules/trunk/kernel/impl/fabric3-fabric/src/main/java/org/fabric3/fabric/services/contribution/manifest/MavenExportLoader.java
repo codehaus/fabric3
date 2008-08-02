@@ -23,6 +23,7 @@ import org.osoa.sca.annotations.EagerInit;
 
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.xml.TypeLoader;
+import org.fabric3.introspection.xml.UnrecognizedAttribute;
 import org.fabric3.spi.services.contribution.MavenExport;
 
 /**
@@ -34,6 +35,7 @@ import org.fabric3.spi.services.contribution.MavenExport;
 public class MavenExportLoader implements TypeLoader<MavenExport> {
 
     public MavenExport load(XMLStreamReader reader, IntrospectionContext context) throws XMLStreamException {
+        validateAttributes(reader, context);
         String groupId = reader.getAttributeValue(null, "groupId");
         if (groupId == null) {
             MissingMainifestAttribute failure = new MissingMainifestAttribute("The groupId attribute must be specified", "groupId", reader);
@@ -60,4 +62,14 @@ public class MavenExportLoader implements TypeLoader<MavenExport> {
         }
         return export;
     }
+
+    private void validateAttributes(XMLStreamReader reader, IntrospectionContext context) {
+        for (int i = 0; i < reader.getAttributeCount(); i++) {
+            String name = reader.getAttributeLocalName(i);
+            if (!"groupId".equals(name) && !"artifactId".equals(name) && !"version".equals(name) && !"classifier".equals(name)) {
+                context.addError(new UnrecognizedAttribute(name, reader));
+            }
+        }
+    }
+
 }

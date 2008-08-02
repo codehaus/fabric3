@@ -27,6 +27,7 @@ import org.osoa.sca.annotations.Reference;
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.xml.LoaderUtil;
 import org.fabric3.introspection.xml.TypeLoader;
+import org.fabric3.introspection.xml.UnrecognizedAttribute;
 import org.fabric3.junit.scdl.JUnitImplementation;
 
 /**
@@ -42,6 +43,7 @@ public class JUnitImplementationLoader implements TypeLoader<JUnitImplementation
     }
 
     public JUnitImplementation load(XMLStreamReader reader, IntrospectionContext introspectionContext) throws XMLStreamException {
+        validateAttributes(reader, introspectionContext);
         String className = reader.getAttributeValue(null, "class");
         LoaderUtil.skipToEndElement(reader);
 
@@ -49,5 +51,15 @@ public class JUnitImplementationLoader implements TypeLoader<JUnitImplementation
         implementationProcessor.introspect(impl, introspectionContext);
         return impl;
     }
+
+    private void validateAttributes(XMLStreamReader reader, IntrospectionContext context) {
+        for (int i = 0; i < reader.getAttributeCount(); i++) {
+            String name = reader.getAttributeLocalName(i);
+            if (!"class".equals(name) && !"requires".equals(name) && !"policySets".equals(name)) {
+                context.addError(new UnrecognizedAttribute(name, reader));
+            }
+        }
+    }
+
 
 }

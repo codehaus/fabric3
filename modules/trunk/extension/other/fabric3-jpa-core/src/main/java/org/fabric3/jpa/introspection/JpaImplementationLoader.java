@@ -34,9 +34,10 @@ import org.fabric3.introspection.DefaultIntrospectionContext;
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.TypeMapping;
 import org.fabric3.introspection.contract.ContractProcessor;
+import org.fabric3.introspection.xml.LoaderUtil;
 import org.fabric3.introspection.xml.MissingAttribute;
 import org.fabric3.introspection.xml.TypeLoader;
-import org.fabric3.introspection.xml.LoaderUtil;
+import org.fabric3.introspection.xml.UnrecognizedAttribute;
 import org.fabric3.java.introspection.JavaImplementationProcessor;
 import org.fabric3.java.scdl.JavaImplementation;
 import org.fabric3.jpa.scdl.PersistenceContextResource;
@@ -75,6 +76,7 @@ public class JpaImplementationLoader implements TypeLoader<JavaImplementation> {
      * @return An instance of the JPA implemenation.
      */
     public JavaImplementation load(XMLStreamReader reader, IntrospectionContext context) throws XMLStreamException {
+        validateAttributes(reader, context);
 
         try {
             JavaImplementation implementation = new JavaImplementation();
@@ -107,7 +109,7 @@ public class JpaImplementationLoader implements TypeLoader<JavaImplementation> {
             FieldInjectionSite site = new FieldInjectionSite(ConversationalDaoImpl.class.getDeclaredField("entityManager"));
             pojoComponentType.add(resource, site);
             LoaderUtil.skipToEndElement(reader);
-         
+
             return implementation;
 
         } catch (NoSuchFieldException e) {
@@ -116,5 +118,15 @@ public class JpaImplementationLoader implements TypeLoader<JavaImplementation> {
         }
 
     }
+
+    private void validateAttributes(XMLStreamReader reader, IntrospectionContext context) {
+        for (int i = 0; i < reader.getAttributeCount(); i++) {
+            String name = reader.getAttributeLocalName(i);
+            if (!"persistenceUnit".equals(name)) {
+                context.addError(new UnrecognizedAttribute(name, reader));
+            }
+        }
+    }
+
 
 }

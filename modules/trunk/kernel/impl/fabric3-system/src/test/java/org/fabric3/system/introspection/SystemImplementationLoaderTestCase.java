@@ -46,6 +46,7 @@ public class SystemImplementationLoaderTestCase extends TestCase {
         implementationProcessor.introspect(EasyMock.isA(SystemImplementation.class), EasyMock.eq(context));
         EasyMock.replay(implementationProcessor);
 
+        EasyMock.expect(reader.getAttributeCount()).andReturn(0);
         EasyMock.expect(reader.getName()).andReturn(SYSTEM_IMPLEMENTATION);
         EasyMock.expect(reader.getAttributeValue(null, "class")).andReturn(getClass().getName());
         EasyMock.expect(reader.next()).andReturn(XMLStreamConstants.END_ELEMENT);
