@@ -31,6 +31,7 @@ import org.fabric3.introspection.xml.InvalidPrefixException;
 import org.fabric3.introspection.xml.LoaderHelper;
 import org.fabric3.introspection.xml.LoaderUtil;
 import org.fabric3.introspection.xml.TypeLoader;
+import org.fabric3.introspection.xml.UnrecognizedAttribute;
 import org.fabric3.loader.impl.InvalidQNamePrefix;
 import org.fabric3.scdl.definitions.BindingType;
 
@@ -49,7 +50,7 @@ public class BindingTypeLoader implements TypeLoader<BindingType> {
     }
 
     public BindingType load(XMLStreamReader reader, IntrospectionContext context) throws XMLStreamException {
-
+        validateAttributes(reader, context);
 
         String name = reader.getAttributeValue(null, "name");
         QName qName = new QName(context.getTargetNamespace(), name);
@@ -67,5 +68,15 @@ public class BindingTypeLoader implements TypeLoader<BindingType> {
 
 
     }
+
+    private void validateAttributes(XMLStreamReader reader, IntrospectionContext context) {
+        for (int i = 0; i < reader.getAttributeCount(); i++) {
+            String name = reader.getAttributeLocalName(i);
+            if (!"name".equals(name) && !"alwaysProvides".equals(name) && !"mayProvide".equals(name)) {
+                context.addError(new UnrecognizedAttribute(name, reader));
+            }
+        }
+    }
+
 
 }

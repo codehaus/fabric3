@@ -60,6 +60,7 @@ public class CompositeReferenceLoader implements TypeLoader<CompositeReference> 
         ATTRIBUTES.put("promote", "promote");
         ATTRIBUTES.put("multiplicity", "multiplicity");
         ATTRIBUTES.put("requires", "requires");
+        ATTRIBUTES.put("policySets", "policySets");
     }
 
     private final Loader loader;

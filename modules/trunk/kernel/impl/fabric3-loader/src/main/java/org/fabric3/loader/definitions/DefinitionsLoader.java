@@ -36,13 +36,14 @@ import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.introspection.DefaultIntrospectionContext;
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.xml.Loader;
+import org.fabric3.introspection.xml.UnrecognizedAttribute;
 import org.fabric3.introspection.xml.UnrecognizedElementException;
+import org.fabric3.scdl.ValidationContext;
 import org.fabric3.scdl.definitions.AbstractDefinition;
 import org.fabric3.scdl.definitions.BindingType;
 import org.fabric3.scdl.definitions.ImplementationType;
 import org.fabric3.scdl.definitions.Intent;
 import org.fabric3.scdl.definitions.PolicySet;
-import org.fabric3.scdl.ValidationContext;
 import org.fabric3.spi.services.contribution.QNameSymbol;
 import org.fabric3.spi.services.contribution.Resource;
 import org.fabric3.spi.services.contribution.ResourceElement;
@@ -87,6 +88,7 @@ public class DefinitionsLoader implements XmlResourceElementLoader {
 
     public void load(XMLStreamReader reader, URI contributionUri, Resource resource, ValidationContext context, ClassLoader loader)
             throws ContributionException, XMLStreamException {
+        validateAttributes(reader, context);
 
         List<AbstractDefinition> definitions = new ArrayList<AbstractDefinition>();
 
@@ -157,5 +159,15 @@ public class DefinitionsLoader implements XmlResourceElementLoader {
         }
 
     }
+
+    private void validateAttributes(XMLStreamReader reader, ValidationContext context) {
+        for (int i = 0; i < reader.getAttributeCount(); i++) {
+            String name = reader.getAttributeLocalName(i);
+            if (!"targetNamespace".equals(name)) {
+                context.addError(new UnrecognizedAttribute(name, reader));
+            }
+        }
+    }
+
 
 }

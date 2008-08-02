@@ -82,6 +82,7 @@ public class ComponentLoader implements TypeLoader<ComponentDefinition<?>> {
         ATTRIBUTES.put("name", "name");
         ATTRIBUTES.put("autowire", "autowire");
         ATTRIBUTES.put("requires", "requires");
+        ATTRIBUTES.put("policySets", "policySets");
         ATTRIBUTES.put("key", "key");
         ATTRIBUTES.put("initLevel", "initLevel");
         ATTRIBUTES.put("runtimeId", "runtimeId");

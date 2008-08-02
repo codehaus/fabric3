@@ -61,6 +61,7 @@ public class ComponentReferenceLoader implements TypeLoader<ComponentReference> 
         ATTRIBUTES.put("target", "target");
         ATTRIBUTES.put("multiplicity", "multiplicity");
         ATTRIBUTES.put("requires", "requires");
+        ATTRIBUTES.put("policySets", "policySets");
     }
 
     private final Loader loader;

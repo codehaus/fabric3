@@ -38,6 +38,7 @@ import org.fabric3.host.contribution.Deployable;
 import org.fabric3.introspection.DefaultIntrospectionContext;
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.xml.Loader;
+import org.fabric3.introspection.xml.UnrecognizedAttribute;
 import org.fabric3.introspection.xml.UnrecognizedElementException;
 import org.fabric3.scdl.Composite;
 import org.fabric3.scdl.ValidationContext;
@@ -81,6 +82,7 @@ public class XmlContributionTypeLoader implements XmlProcessor {
 
     public void processContent(Contribution contribution, ValidationContext context, XMLStreamReader reader, ClassLoader classLoader)
             throws ContributionException {
+        validateAttributes(reader, context);
         List<Composite> composites = new ArrayList<Composite>();
         String targetNamespace = reader.getAttributeValue(null, "targetNamespace");
         URI contributionUri = contribution.getUri();
@@ -151,5 +153,15 @@ public class XmlContributionTypeLoader implements XmlProcessor {
         }
 
     }
+
+    private void validateAttributes(XMLStreamReader reader, ValidationContext context) {
+        for (int i = 0; i < reader.getAttributeCount(); i++) {
+            String name = reader.getAttributeLocalName(i);
+            if (!"targetNamespace".equals(name)) {
+                context.addError(new UnrecognizedAttribute(name, reader));
+            }
+        }
+    }
+
 
 }

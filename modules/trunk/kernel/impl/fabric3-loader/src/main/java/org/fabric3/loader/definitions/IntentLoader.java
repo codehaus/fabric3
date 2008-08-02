@@ -33,12 +33,13 @@ import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.xml.InvalidPrefixException;
 import org.fabric3.introspection.xml.LoaderHelper;
 import org.fabric3.introspection.xml.TypeLoader;
+import org.fabric3.introspection.xml.UnrecognizedAttribute;
 import org.fabric3.loader.impl.InvalidQNamePrefix;
 import org.fabric3.scdl.definitions.Intent;
 
 /**
  * Loader for definitions.
- * 
+ *
  * @version $Revision$ $Date$
  */
 public class IntentLoader implements TypeLoader<Intent> {
@@ -50,13 +51,13 @@ public class IntentLoader implements TypeLoader<Intent> {
     }
 
     public Intent load(XMLStreamReader reader, IntrospectionContext context) throws XMLStreamException {
-        
+        validateAttributes(reader, context);
         String name = reader.getAttributeValue(null, "name");
         QName qName = new QName(context.getTargetNamespace(), name);
-        
+
         String constrainsVal = reader.getAttributeValue(null, "constrains");
         QName constrains = null;
-        if(constrainsVal != null) {
+        if (constrainsVal != null) {
             try {
                 constrains = helper.createQName(constrainsVal, reader);
             } catch (InvalidPrefixException e) {
@@ -64,14 +65,14 @@ public class IntentLoader implements TypeLoader<Intent> {
                 return null;
             }
         }
-        
+
         String description = null;
-        
+
         String requiresVal = reader.getAttributeValue(null, "requires");
         Set<QName> requires = new HashSet<QName>();
-        if(requiresVal != null) {
+        if (requiresVal != null) {
             StringTokenizer tok = new StringTokenizer(requiresVal);
-            while(tok.hasMoreElements()) {
+            while (tok.hasMoreElements()) {
                 try {
                     QName id = helper.createQName(tok.nextToken(), reader);
                     requires.add(id);
@@ -81,7 +82,7 @@ public class IntentLoader implements TypeLoader<Intent> {
                 }
             }
         }
-        
+
         while (true) {
             switch (reader.next()) {
             case START_ELEMENT:
@@ -95,7 +96,16 @@ public class IntentLoader implements TypeLoader<Intent> {
                 }
             }
         }
-        
+
+    }
+
+    private void validateAttributes(XMLStreamReader reader, IntrospectionContext context) {
+        for (int i = 0; i < reader.getAttributeCount(); i++) {
+            String name = reader.getAttributeLocalName(i);
+            if (!"name".equals(name) && !"constrains".equals(name) && !"requires".equals(name)) {
+                context.addError(new UnrecognizedAttribute(name, reader));
+            }
+        }
     }
 
 }

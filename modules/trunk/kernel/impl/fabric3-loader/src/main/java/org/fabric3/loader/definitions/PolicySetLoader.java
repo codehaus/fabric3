@@ -34,6 +34,7 @@ import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.xml.InvalidPrefixException;
 import org.fabric3.introspection.xml.LoaderHelper;
 import org.fabric3.introspection.xml.TypeLoader;
+import org.fabric3.introspection.xml.UnrecognizedAttribute;
 import org.fabric3.loader.impl.InvalidQNamePrefix;
 import org.fabric3.scdl.definitions.PolicyPhase;
 import org.fabric3.scdl.definitions.PolicySet;
@@ -57,7 +58,7 @@ public class PolicySetLoader implements TypeLoader<PolicySet> {
     }
 
     public PolicySet load(XMLStreamReader reader, IntrospectionContext context) throws XMLStreamException {
-
+        validateAttributes(reader, context);
         Element policyElement;
         try {
             policyElement = transformer.transform(reader, null).getDocumentElement();
@@ -102,6 +103,15 @@ public class PolicySetLoader implements TypeLoader<PolicySet> {
 
         return new PolicySet(qName, provides, appliesTo, extension, phase);
 
+    }
+
+    private void validateAttributes(XMLStreamReader reader, IntrospectionContext context) {
+        for (int i = 0; i < reader.getAttributeCount(); i++) {
+            String name = reader.getAttributeLocalName(i);
+            if (!"name".equals(name) && !"provides".equals(name) && !"appliesTo".equals(name) && !"phase".equals(name)) {
+                context.addError(new UnrecognizedAttribute(name, reader));
+            }
+        }
     }
 
 }

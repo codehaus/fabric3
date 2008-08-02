@@ -121,7 +121,7 @@ public class CompositeServiceLoader implements TypeLoader<CompositeService> {
     private void validateAttributes(XMLStreamReader reader, IntrospectionContext context) {
         for (int i = 0; i < reader.getAttributeCount(); i++) {
             String name = reader.getAttributeLocalName(i);
-            if (!"name".equals(name) && !"requires".equals(name) && !"promote".equals(name)) {
+            if (!"name".equals(name) && !"requires".equals(name) && !"promote".equals(name) && !"policySets".equals(name)) {
                 context.addError(new UnrecognizedAttribute(name, reader));
             }
         }

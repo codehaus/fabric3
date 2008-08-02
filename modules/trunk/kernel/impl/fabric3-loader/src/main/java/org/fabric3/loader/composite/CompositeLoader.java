@@ -78,6 +78,7 @@ public class CompositeLoader implements TypeLoader<Composite> {
         ATTRIBUTES.put("targetNamespace", "targetNamespace");
         ATTRIBUTES.put("local", "local");
         ATTRIBUTES.put("requires", "requires");
+        ATTRIBUTES.put("policySets", "policySets");
         ATTRIBUTES.put("constrainingType", "constrainingType");
     }
 
