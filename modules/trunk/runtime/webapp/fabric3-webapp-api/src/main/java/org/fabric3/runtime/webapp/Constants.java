@@ -63,7 +63,7 @@ public final class Constants {
     /**
      * Servlet context-param name for user-specified application SCDL path.
      */
-    static final String APPLICATION_SCDL_PATH_PARAM = "fabric3.applicationScdlPath";
+    public static final String APPLICATION_SCDL_PATH_PARAM = "fabric3.applicationScdlPath";
 
     /**
      * Default application SCDL path.
@@ -83,94 +83,94 @@ public final class Constants {
     /**
      * Name of the parameter that defines the class to load to launch the runtime.
      */
-    static final String RUNTIME_PARAM = "fabric3.runtimeImpl";
+    public static final String RUNTIME_PARAM = "fabric3.runtimeImpl";
 
     /**
      * Name of the default webapp runtime implementation.
      */
-    static final String RUNTIME_DEFAULT = "org.fabric3.runtime.webapp.WebappRuntimeImpl";
+    public static final String RUNTIME_DEFAULT = "org.fabric3.runtime.webapp.WebappRuntimeImpl";
 
     /**
      * Name of the parameter that defines the class to load to bootstrap the runtime.
      */
-    static final String BOOTSTRAP_PARAM = "fabric3.bootstrapImpl";
+    public static final String BOOTSTRAP_PARAM = "fabric3.bootstrapImpl";
 
     /**
      * Name of the default webapp bootstrap implementation.
      */
-    static final String BOOTSTRAP_DEFAULT = "org.fabric3.fabric.runtime.bootstrap.ScdlBootstrapperImpl";
+    public static final String BOOTSTRAP_DEFAULT = "org.fabric3.fabric.runtime.bootstrap.ScdlBootstrapperImpl";
 
     /**
      * Name of the parameter that defines the class to load to coordinate booting the runtime.
      */
-    static final String COORDINATOR_PARAM = "fabric3.coordinatorImpl";
+    public static final String COORDINATOR_PARAM = "fabric3.coordinatorImpl";
 
     /**
      * Name of the default webapp coordinator implementation.
      */
-    static final String COORDINATOR_DEFAULT = "org.fabric3.fabric.runtime.DefaultCoordinator";
+    public static final String COORDINATOR_DEFAULT = "org.fabric3.fabric.runtime.DefaultCoordinator";
 
 
     /**
      * Servlet context-param name for user-specified system SCDL path.
      */
-    static final String SYSTEM_SCDL_PATH_PARAM = "fabric3.systemScdlPath";
+    public static final String SYSTEM_SCDL_PATH_PARAM = "fabric3.systemScdlPath";
 
     /**
      * Default webapp system SCDL path.
      */
-    static final String SYSTEM_SCDL_PATH_DEFAULT = "META-INF/fabric3/webapp.composite";
+    public static final String SYSTEM_SCDL_PATH_DEFAULT = "META-INF/fabric3/webapp.composite";
 
     /**
      * Servlet context-param name for user-specified intents file path.
      */
-    static final String INTENTS_PATH_PARAM = "fabric3.intentsPath";
+    public static final String INTENTS_PATH_PARAM = "fabric3.intentsPath";
 
     /**
      * Default webapp system intents file path.
      */
-    static final String INTENTS_PATH_DEFAULT = "META-INF/fabric3/intents.xml";
+    public static final String INTENTS_PATH_DEFAULT = "META-INF/fabric3/intents.xml";
 
     /**
      * Context attribute to which the Fabric3 runtime for this servlet context is stored.
      */
-    static final String RUNTIME_ATTRIBUTE = "fabric3.runtime";
+    public static final String RUNTIME_ATTRIBUTE = "fabric3.runtime";
 
     /**
      * Servlet context-param name for the path to the composite to set as the webb app composite
      */
-    static final String CURRENT_COMPOSITE_PATH_PARAM = "fabric3.currentCompositePath";
+    public static final String CURRENT_COMPOSITE_PATH_PARAM = "fabric3.currentCompositePath";
 
     /**
      * Servlet context-param name for system monitoring level. Supported values are the names of statics defined in
      * java.util.logging.Level.
      */
-    static final String SYSTEM_MONITORING_PARAM = "fabric3.monitoringLevel";
+    public static final String SYSTEM_MONITORING_PARAM = "fabric3.monitoringLevel";
 
     /**
      * Default log level
      */
-    static final String SYSTEM_MONITORING_DEFAULT = "FINEST";
+    public static final String SYSTEM_MONITORING_DEFAULT = "FINEST";
 
     /**
      * Name of the parameter that defines the class to load to launch the runtime.
      */
-    static final String MONITOR_FACTORY_PARAM = "fabric3.monitorFactory";
+    public static final String MONITOR_FACTORY_PARAM = "fabric3.monitorFactory";
 
     /**
      * Name of the default webapp runtime implementation.
      */
-    static final String MONITOR_FACTORY_DEFAULT = "org.fabric3.fabric.monitor.JavaLoggingMonitorFactory";
+    public static final String MONITOR_FACTORY_DEFAULT = "org.fabric3.fabric.monitor.JavaLoggingMonitorFactory";
 
     /**
      * Name of bundle files used for monitoring messages
      */
-    static final String MONITORING_BUNDLE_PARAM = "fabric3.monitoringBundle";
+    public static final String MONITORING_BUNDLE_PARAM = "fabric3.monitoringBundle";
 
     /**
      * Default name of bundle files for monitoring messages
      */
-    static final String MONITORING_BUNDLE_DEFAULT = "f3";
+    public static final String MONITORING_BUNDLE_DEFAULT = "f3";
 
     private Constants() {
     }
