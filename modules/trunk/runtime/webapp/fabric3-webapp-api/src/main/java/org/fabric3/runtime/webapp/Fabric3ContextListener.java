@@ -136,8 +136,9 @@ public class Fabric3ContextListener implements ServletContextListener {
     }
 
     private WebappRuntime createRuntime(ClassLoader webappClassLoader, ServletContext context, WebappUtil utils) {
+        
         try {
-            boolean online = Boolean.valueOf(utils.getInitParameter(ONLINE_PARAM, "true"));
+            
             String baseDirParam = utils.getInitParameter(BASE_DIR, null);
             File baseDir;
             if (baseDirParam == null) {
@@ -145,31 +146,33 @@ public class Fabric3ContextListener implements ServletContextListener {
             } else {
                 baseDir = new File(baseDirParam);
             }
+            
             URI domain = new URI(utils.getInitParameter(DOMAIN_PARAM, "fabric3://./domain"));
-            WebappHostInfo info = new WebappHostInfoImpl(context, domain, baseDir, online);
+            WebappHostInfo info = new WebappHostInfoImpl(context, domain, baseDir);
 
             WebappRuntime runtime = utils.getRuntime(webappClassLoader);
             runtime.setHostInfo(info);
             runtime.setHostClassLoader(webappClassLoader);
             String managementDomain = utils.getInitParameter(MANAGEMENT_DOMAIN_PARAM, DEFAULT_MANAGEMENT_DOMAIN);
             runtime.setJMXDomain(managementDomain);
-
-            // TODO Add better host JMX support from the next release
-            agent = new DefaultAgent();
-            runtime.setMBeanServer(agent.getMBeanServer());
+            
             return runtime;
+            
+        } catch (URISyntaxException e) {
+            throw new Fabric3InitException(e);
         } catch (UnsupportedEncodingException e) {
             throw new Fabric3InitException(e);
         } catch (MalformedURLException e) {
-            throw new Fabric3InitException(e);
-        } catch (URISyntaxException e) {
             throw new Fabric3InitException(e);
         }
 
     }
 
-    private BootConfiguration<WebappRuntime, Bootstrapper> createBootConfiguration(WebappRuntime runtime,
-                                                                                   ClassLoader webappClassLoader,
+    /*
+     * Creates the boot configuration.
+     */
+    private BootConfiguration<WebappRuntime, Bootstrapper> createBootConfiguration(WebappRuntime runtime, 
+                                                                                   ClassLoader webappClassLoader, 
                                                                                    WebappUtil utils) throws InitializationException {
 
         BootConfiguration<WebappRuntime, Bootstrapper> configuration = new BootConfiguration<WebappRuntime, Bootstrapper>();
@@ -196,6 +199,7 @@ public class Fabric3ContextListener implements ServletContextListener {
         configuration.setExtensions(extensions);
         List<ContributionSource> userExtensions = getExtensionContributions("/WEB-INF/lib/f3UserExtensions.properties", context);
         configuration.setUserExtensions(userExtensions);
+        
         // process the baseline intents
         URL intentsLocation = utils.getIntentsLocation(webappClassLoader);
         try {
@@ -209,30 +213,30 @@ public class Fabric3ContextListener implements ServletContextListener {
             // should not happen
             throw new IllegalArgumentException(e);
         }
+        
         configuration.setRuntime(runtime);
+        
         return configuration;
+        
     }
 
-    /**
-     * Processes extensions for deployment to the runtime domain
-     *
-     * @param extensionDefinitions the path to the file listing extensions
-     * @param context              the servlet context
-     * @return a colleciton of ContributionSources representing the extension archives
-     * @throws InitializationException if an error occurs included the extensions
+    /*
+     * Gets the extension contributions.
      */
     private List<ContributionSource> getExtensionContributions(String extensionDefinitions, ServletContext context) throws InitializationException {
+        
         InputStream stream = context.getResourceAsStream(extensionDefinitions);
         if (stream == null) {
-            // none defined
             return Collections.emptyList();
         }
+        
         Properties props = new Properties();
         try {
             props.load(stream);
         } catch (IOException e) {
             throw new InitializationException(e);
         }
+        
         List<URL> files = new ArrayList<URL>();
         for (Object key : props.keySet()) {
             try {
@@ -244,6 +248,7 @@ public class Fabric3ContextListener implements ServletContextListener {
                 throw new AssertionError(e);
             }
         }
+        
         if (!files.isEmpty()) {
             // contribute and activate extensions if they exist in the runtime domain
             List<ContributionSource> sources = new ArrayList<ContributionSource>();
@@ -255,14 +260,24 @@ public class Fabric3ContextListener implements ServletContextListener {
             }
             return sources;
         }
+        
         return Collections.emptyList();
+        
     }
 
-
-    private WebappUtil getUtils(ServletContext servletContext) {
+    /**
+     * Can be overridden for tighter host integration.
+     * 
+     * @param servletContext Servlet context for the runtime.
+     * @return Webapp util to be used.
+     */
+    protected WebappUtil getUtils(ServletContext servletContext) {
         return new WebappUtilImpl(servletContext);
     }
 
+    /**
+     * Invoked when the servlet context is destroyed. This is used to shutdown the runtime.
+     */
     public void contextDestroyed(ServletContextEvent event) {
 
         ServletContext servletContext = event.getServletContext();

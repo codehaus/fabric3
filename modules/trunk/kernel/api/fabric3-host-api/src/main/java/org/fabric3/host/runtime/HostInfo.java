@@ -45,14 +45,6 @@ public interface HostInfo {
     File getBaseDir();
 
     /**
-     * Returns whether the host considers itself "online" or connected to the internet. This can be used by services to enable access to remote
-     * resources.
-     *
-     * @return true if the host is online.
-     */
-    boolean isOnline();
-
-    /**
      * Return the value of the named property.
      *
      * @param name         the name of the property

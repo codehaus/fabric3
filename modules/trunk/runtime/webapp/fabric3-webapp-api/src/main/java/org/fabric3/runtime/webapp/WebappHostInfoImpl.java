@@ -26,16 +26,15 @@ import javax.servlet.ServletContext;
  * @version $Rev$ $Date$
  */
 public class WebappHostInfoImpl implements WebappHostInfo {
+    
     private final ServletContext servletContext;
     private final URI domain;
     private final File baseDir;
-    private final boolean online;
 
-    public WebappHostInfoImpl(ServletContext servletContext, URI domain, File baseDir, boolean online) {
+    public WebappHostInfoImpl(ServletContext servletContext, URI domain, File baseDir) {
         this.servletContext = servletContext;
         this.domain = domain;
         this.baseDir = baseDir;
-        this.online = online;
     }
 
     public ServletContext getServletContext() {
@@ -47,11 +46,7 @@ public class WebappHostInfoImpl implements WebappHostInfo {
     }
 
     public File getInstallDirectory() {
-        return new File("");
-    }
-
-    public boolean isOnline() {
-        return online;
+        throw new UnsupportedOperationException();
     }
 
     public String getProperty(String name, String defaultValue) {
@@ -64,8 +59,6 @@ public class WebappHostInfoImpl implements WebappHostInfo {
     }
 
     public boolean supportsClassLoaderIsolation() {
-        // web applications do not support classloader isolation between extensions and application classes as the latter are visible to the former
-        // since they are loaded in WEB-INF/lib and WEB-INF/classes
         return false;
     }
 }
