@@ -39,7 +39,7 @@ public class ModuleContributionSource implements ContributionSource {
 
     public ModuleContributionSource(URI uri, String base) throws MalformedURLException {
         this.uri = uri;
-        url = new URL("file", "", -1, base, new ModuleDirectoryStreamHandler());
+        url = new URL("file", "", -1, base);
         checksum = new byte[0];
         timestamp = System.currentTimeMillis();
     }

@@ -160,7 +160,7 @@ public class Fabric3ITestMojo extends AbstractMojo {
     /**
      * Class name for the implementation of the runtime to use.
      *
-     * @parameter expression="org.fabric3.maven.runtime.impl.MavenEmbeddedRuntimeImpl"
+     * @parameter expression="org.fabric3.maven.runtime.MavenEmbeddedRuntimeImpl"
      */
     public String runtimeImpl;
 
