@@ -18,9 +18,10 @@ package org.fabric3.runtime.webapp.contribution;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.File;
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
-import java.net.MalformedURLException;
 
 import org.fabric3.host.contribution.ContributionSource;
 
@@ -38,7 +39,7 @@ public class WarContributionSource implements ContributionSource {
 
     public WarContributionSource(URI contributionUri) throws MalformedURLException {
         this.contributionUri = contributionUri;
-        this.url = new URL("file", "", -1, "/", new WarStreamHandler());
+        this.url = new File("/").toURI().toURL();
         checksum = new byte[0];
         timestamp = System.currentTimeMillis();
     }

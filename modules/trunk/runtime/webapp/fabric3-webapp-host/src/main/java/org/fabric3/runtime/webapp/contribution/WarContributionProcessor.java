@@ -16,6 +16,7 @@
  */
 package org.fabric3.runtime.webapp.contribution;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.MalformedURLException;
@@ -36,6 +37,7 @@ import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.xml.Loader;
 import org.fabric3.introspection.xml.LoaderException;
 import org.fabric3.runtime.webapp.WebappHostInfo;
+import org.fabric3.scdl.ValidationContext;
 import org.fabric3.spi.services.contenttype.ContentTypeResolutionException;
 import org.fabric3.spi.services.contenttype.ContentTypeResolver;
 import org.fabric3.spi.services.contribution.Action;
@@ -44,7 +46,6 @@ import org.fabric3.spi.services.contribution.ContributionManifest;
 import org.fabric3.spi.services.contribution.ContributionProcessor;
 import org.fabric3.spi.services.contribution.ProcessorRegistry;
 import org.fabric3.spi.services.contribution.Resource;
-import org.fabric3.scdl.ValidationContext;
 
 /**
  * Processes a WAR contribution in an embedded runtime.
@@ -126,6 +127,10 @@ public class WarContributionProcessor implements ContributionProcessor {
                 try {
                     stream = url.openStream();
                     registry.processManifestArtifact(contribution.getManifest(), contentType, stream, context);
+                } catch (FileNotFoundException e) {
+                    // Tomcat hack: swallow the exception as directories under META-INF are reported as resources from the servlet context but
+                    // Tomcat's underlying URLConnection returns a file not found exception when URL.openStream() is called. This is safe as
+                    // interateArtifacts only iterates entries found in a contribution archive and FileNotFoundException should generally not happen.
                 } catch (IOException e) {
                     throw new ContributionException(e);
                 } finally {
