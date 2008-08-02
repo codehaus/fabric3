@@ -64,6 +64,7 @@ public class IncludeLoaderTestCase extends TestCase {
     private Composite composite;
 
     public void testResolveQName() throws Exception {
+        expect(reader.getAttributeCount()).andReturn(0);
         expect(reader.getAttributeValue(null, "name")).andReturn(name.getLocalPart());
         expect(reader.getNamespaceContext()).andReturn(namespaceContext);
         expect(reader.getAttributeValue(null, "scdlLocation")).andReturn(null);
@@ -86,6 +87,7 @@ public class IncludeLoaderTestCase extends TestCase {
     }
 
     public void testWithAbsoluteScdlLocation() throws LoaderException, XMLStreamException {
+        expect(reader.getAttributeCount()).andReturn(0);
         expect(reader.getAttributeValue(null, "name")).andReturn(name.getLocalPart());
         expect(reader.getNamespaceContext()).andReturn(namespaceContext);
         expect(reader.getAttributeValue(null, "scdlLocation")).andReturn("file:/include.scdl");
@@ -111,6 +113,7 @@ public class IncludeLoaderTestCase extends TestCase {
     }
 
     public void testWithRelativeScdlLocation() throws LoaderException, XMLStreamException {
+        expect(reader.getAttributeCount()).andReturn(0);
         expect(reader.getAttributeValue(null, "name")).andReturn(name.getLocalPart());
         expect(reader.getNamespaceContext()).andReturn(namespaceContext);
         expect(reader.getAttributeValue(null, "scdlLocation")).andReturn("include.scdl");
@@ -140,6 +143,7 @@ public class IncludeLoaderTestCase extends TestCase {
         includeURL = cl.getResource(resource);
         assertNotNull(includeURL);
 
+        expect(reader.getAttributeCount()).andReturn(0);
         expect(reader.getAttributeValue(null, "name")).andReturn(name.getLocalPart());
         expect(reader.getNamespaceContext()).andReturn(namespaceContext);
         expect(reader.getAttributeValue(null, "scdlLocation")).andReturn(null);

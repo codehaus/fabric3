@@ -113,6 +113,7 @@ public class DuplicatePromotedReferenceNameTestCase extends TestCase {
         EasyMock.replay(location);
         XMLStreamReader reader = EasyMock.createMock(XMLStreamReader.class);
         EasyMock.expect(reader.getNamespaceContext()).andStubReturn(null);
+        EasyMock.expect(reader.getAttributeCount()).andReturn(0);
         EasyMock.expect(reader.getAttributeValue(null, "name")).andReturn("composite");
         EasyMock.expect(reader.getAttributeValue(null, "targetNamespace")).andReturn("http:///somenamepace");
         EasyMock.expect(reader.getAttributeValue(null, "local")).andReturn(null);

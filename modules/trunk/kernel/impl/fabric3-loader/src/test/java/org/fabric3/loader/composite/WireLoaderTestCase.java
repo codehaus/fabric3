@@ -38,6 +38,7 @@ public class WireLoaderTestCase extends TestCase {
     private XMLStreamReader reader;
 
     public void testWithNoServiceName() throws LoaderException, XMLStreamException {
+        EasyMock.expect(reader.getAttributeCount()).andReturn(0);
         EasyMock.expect(reader.getAttributeValue(null, "source")).andReturn("source");
         EasyMock.expect(reader.getAttributeValue(null, "target")).andReturn("target");
         EasyMock.expect(reader.next()).andReturn(XMLStreamConstants.END_ELEMENT);
@@ -49,6 +50,7 @@ public class WireLoaderTestCase extends TestCase {
     }
 
     public void testWithServiceName() throws LoaderException, XMLStreamException {
+        EasyMock.expect(reader.getAttributeCount()).andReturn(0);
         EasyMock.expect(reader.getAttributeValue(null, "source")).andReturn("source/s");
         EasyMock.expect(reader.getAttributeValue(null, "target")).andReturn("target/t");
         EasyMock.expect(reader.next()).andReturn(XMLStreamConstants.END_ELEMENT);

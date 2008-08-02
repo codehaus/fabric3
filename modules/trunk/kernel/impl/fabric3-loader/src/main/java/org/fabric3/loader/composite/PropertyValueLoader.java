@@ -18,6 +18,8 @@ package org.fabric3.loader.composite;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.Map;
+import java.util.HashMap;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
@@ -32,6 +34,7 @@ import org.fabric3.introspection.xml.LoaderHelper;
 import org.fabric3.introspection.xml.LoaderUtil;
 import org.fabric3.introspection.xml.MissingAttribute;
 import org.fabric3.introspection.xml.TypeLoader;
+import org.fabric3.introspection.xml.UnrecognizedAttribute;
 import org.fabric3.scdl.DataType;
 import org.fabric3.scdl.PropertyValue;
 import org.fabric3.spi.model.type.XSDSimpleType;
@@ -40,6 +43,15 @@ import org.fabric3.spi.model.type.XSDSimpleType;
  * @version $Rev$ $Date$
  */
 public class PropertyValueLoader implements TypeLoader<PropertyValue> {
+    private static final Map<String, String> ATTRIBUTES = new HashMap<String, String>();
+
+    static {
+        ATTRIBUTES.put("name", "name");
+        ATTRIBUTES.put("source", "source");
+        ATTRIBUTES.put("file", "file");
+        ATTRIBUTES.put("type", "type");
+        ATTRIBUTES.put("element", "element");
+    }
     private final LoaderHelper helper;
 
     public PropertyValueLoader(@Reference LoaderHelper helper) {
@@ -47,6 +59,7 @@ public class PropertyValueLoader implements TypeLoader<PropertyValue> {
     }
 
     public PropertyValue load(XMLStreamReader reader, IntrospectionContext context) throws XMLStreamException {
+        validateAttributes(reader, context);
         String name = reader.getAttributeValue(null, "name");
         if (name == null || name.length() == 0) {
             MissingAttribute failure = new MissingAttribute("Missing name attribute", "name", reader);
@@ -99,4 +112,14 @@ public class PropertyValueLoader implements TypeLoader<PropertyValue> {
         Document value = helper.loadValue(reader);
         return new PropertyValue(name, dataType, value);
     }
+
+    private void validateAttributes(XMLStreamReader reader, IntrospectionContext context) {
+        for (int i = 0; i < reader.getAttributeCount(); i++) {
+            String name = reader.getAttributeLocalName(i);
+            if (!ATTRIBUTES.containsKey(name)) {
+                context.addError(new UnrecognizedAttribute(name, reader));
+            }
+        }
+    }
+
 }

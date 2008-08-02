@@ -61,6 +61,7 @@ public class CompositeServiceLoaderTestCase extends TestCase {
     private LoaderHelper mockLoaderHelper;
 
     public void testPromotedComponent() throws XMLStreamException {
+        expect(mockReader.getAttributeCount()).andReturn(0);
         expect(mockReader.getAttributeValue(null, "name")).andReturn(serviceName);
         expect(mockReader.getAttributeValue(null, "promote")).andReturn(componentName);
         expect(mockLoaderHelper.getURI(componentName)).andReturn(componentURI);
@@ -77,6 +78,7 @@ public class CompositeServiceLoaderTestCase extends TestCase {
     }
 
     public void testPromotedService() throws XMLStreamException {
+        expect(mockReader.getAttributeCount()).andReturn(0);
         expect(mockReader.getAttributeValue(null, "name")).andReturn(serviceName);
         expect(mockReader.getAttributeValue(null, "promote")).andReturn(componentServiceName);
         expect(mockLoaderHelper.getURI(componentServiceName)).andReturn(componentServiceURI);
@@ -93,6 +95,7 @@ public class CompositeServiceLoaderTestCase extends TestCase {
     }
 
     public void testMultipleBindings() throws LoaderException, XMLStreamException {
+        expect(mockReader.getAttributeCount()).andReturn(0);
         expect(mockReader.getAttributeValue(null, "name")).andReturn(serviceName);
         expect(mockReader.getAttributeValue(null, "promote")).andReturn(componentName);
         expect(mockLoaderHelper.getURI(componentName)).andReturn(componentURI);
@@ -135,6 +138,7 @@ public class CompositeServiceLoaderTestCase extends TestCase {
             }
 
         };
+        expect(mockReader.getAttributeCount()).andReturn(0);
         expect(mockReader.getAttributeValue(null, "name")).andReturn(serviceName);
         expect(mockReader.getAttributeValue(null, "promote")).andReturn(componentName);
         expect(mockLoaderHelper.getURI(componentName)).andReturn(componentURI);

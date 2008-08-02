@@ -18,6 +18,8 @@
  */
 package org.fabric3.loader.composite;
 
+import java.util.HashMap;
+import java.util.Map;
 import javax.xml.namespace.NamespaceContext;
 import javax.xml.namespace.QName;
 import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
@@ -39,6 +41,7 @@ import org.fabric3.introspection.xml.LoaderHelper;
 import org.fabric3.introspection.xml.LoaderRegistry;
 import org.fabric3.introspection.xml.LoaderUtil;
 import org.fabric3.introspection.xml.TypeLoader;
+import org.fabric3.introspection.xml.UnrecognizedAttribute;
 import org.fabric3.introspection.xml.UnrecognizedElement;
 import org.fabric3.introspection.xml.UnrecognizedElementException;
 import org.fabric3.scdl.ArtifactValidationFailure;
@@ -66,6 +69,17 @@ public class CompositeLoader implements TypeLoader<Composite> {
     public static final QName REFERENCE = new QName(SCA_NS, "reference");
     public static final QName COMPONENT = new QName(SCA_NS, "component");
     public static final QName WIRE = new QName(SCA_NS, "wire");
+
+    private static final Map<String, String> ATTRIBUTES = new HashMap<String, String>();
+
+    static {
+        ATTRIBUTES.put("name", "name");
+        ATTRIBUTES.put("autowire", "autowire");
+        ATTRIBUTES.put("targetNamespace", "targetNamespace");
+        ATTRIBUTES.put("local", "local");
+        ATTRIBUTES.put("requires", "requires");
+        ATTRIBUTES.put("constrainingType", "constrainingType");
+    }
 
     private final LoaderRegistry registry;
     private final Loader loader;
@@ -150,6 +164,7 @@ public class CompositeLoader implements TypeLoader<Composite> {
     }
 
     public Composite load(XMLStreamReader reader, IntrospectionContext introspectionContext) throws XMLStreamException {
+        validateAttributes(reader, introspectionContext);
         String name = reader.getAttributeValue(null, "name");
         String targetNamespace = reader.getAttributeValue(null, "targetNamespace");
         boolean local = Boolean.valueOf(reader.getAttributeValue(null, "local"));
@@ -298,4 +313,14 @@ public class CompositeLoader implements TypeLoader<Composite> {
             }
         }
     }
+
+    private void validateAttributes(XMLStreamReader reader, IntrospectionContext context) {
+        for (int i = 0; i < reader.getAttributeCount(); i++) {
+            String name = reader.getAttributeLocalName(i);
+            if (!ATTRIBUTES.containsKey(name)) {
+                context.addError(new UnrecognizedAttribute(name, reader));
+            }
+        }
+    }
+
 }

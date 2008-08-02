@@ -26,6 +26,7 @@ import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.xml.LoaderHelper;
 import org.fabric3.introspection.xml.LoaderUtil;
 import org.fabric3.introspection.xml.TypeLoader;
+import org.fabric3.introspection.xml.UnrecognizedAttribute;
 import org.fabric3.scdl.WireDefinition;
 
 /**
@@ -39,6 +40,7 @@ public class WireLoader implements TypeLoader<WireDefinition> {
     }
 
     public WireDefinition load(XMLStreamReader reader, IntrospectionContext context) throws XMLStreamException {
+        validateAttributes(reader, context);
 
         String source = reader.getAttributeValue(null, "source");
         String target = reader.getAttributeValue(null, "target");
@@ -48,4 +50,14 @@ public class WireLoader implements TypeLoader<WireDefinition> {
         URI targetURI = helper.getURI(target);
         return new WireDefinition(sourceURI, targetURI);
     }
+
+    private void validateAttributes(XMLStreamReader reader, IntrospectionContext context) {
+        for (int i = 0; i < reader.getAttributeCount(); i++) {
+            String name = reader.getAttributeLocalName(i);
+            if (!"source".equals(name) && !"target".equals(name) && !"requires".equals(name)) {
+                context.addError(new UnrecognizedAttribute(name, reader));
+            }
+        }
+    }
+
 }

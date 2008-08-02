@@ -111,6 +111,7 @@ public class DuplicatePropertyTestCase extends TestCase {
         XMLStreamReader reader = EasyMock.createMock(XMLStreamReader.class);
         Location location = EasyMock.createNiceMock(Location.class);
         EasyMock.replay(location);
+        EasyMock.expect(reader.getAttributeCount()).andReturn(0);
         EasyMock.expect(reader.getNamespaceContext()).andStubReturn(null);
         EasyMock.expect(reader.getAttributeValue(null, "name")).andReturn("composite");
         EasyMock.expect(reader.getAttributeValue(null, "targetNamespace")).andReturn("http:///somenamepace");

@@ -21,6 +21,8 @@ package org.fabric3.loader.composite;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
@@ -39,6 +41,7 @@ import org.fabric3.introspection.xml.LoaderRegistry;
 import org.fabric3.introspection.xml.LoaderUtil;
 import org.fabric3.introspection.xml.MissingAttribute;
 import org.fabric3.introspection.xml.TypeLoader;
+import org.fabric3.introspection.xml.UnrecognizedAttribute;
 import org.fabric3.scdl.Composite;
 import org.fabric3.scdl.CompositeImplementation;
 import org.fabric3.spi.services.contribution.MetaDataStore;
@@ -53,6 +56,15 @@ import org.fabric3.spi.services.contribution.ResourceElement;
  */
 @EagerInit
 public class ImplementationCompositeLoader implements TypeLoader<CompositeImplementation> {
+    private static final Map<String, String> ATTRIBUTES = new HashMap<String, String>();
+
+    static {
+        ATTRIBUTES.put("name", "name");
+        ATTRIBUTES.put("scdlLocation", "scdlLocation");
+        ATTRIBUTES.put("scdlResource", "scdlResource");
+        ATTRIBUTES.put("requires", "requires");
+    }
+
     private final Loader loader;
     private final LoaderRegistry registry;
     private final MetaDataStore store;
@@ -74,8 +86,8 @@ public class ImplementationCompositeLoader implements TypeLoader<CompositeImplem
     }
 
     public CompositeImplementation load(XMLStreamReader reader, IntrospectionContext introspectionContext) throws XMLStreamException {
-
         assert CompositeImplementation.IMPLEMENTATION_COMPOSITE.equals(reader.getName());
+        validateAttributes(reader, introspectionContext);
         String nameAttr = reader.getAttributeValue(null, "name");
         if (nameAttr == null || nameAttr.length() == 0) {
             MissingAttribute failure = new MissingAttribute("Missing name attribute", "name", reader);
@@ -177,6 +189,15 @@ public class ImplementationCompositeLoader implements TypeLoader<CompositeImplem
             }
         }
 
+    }
+
+    private void validateAttributes(XMLStreamReader reader, IntrospectionContext context) {
+        for (int i = 0; i < reader.getAttributeCount(); i++) {
+            String name = reader.getAttributeLocalName(i);
+            if (!ATTRIBUTES.containsKey(name)) {
+                context.addError(new UnrecognizedAttribute(name, reader));
+            }
+        }
     }
 
 }

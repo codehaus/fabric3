@@ -21,6 +21,8 @@ package org.fabric3.loader.composite;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
@@ -29,13 +31,14 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.introspection.DefaultIntrospectionContext;
 import org.fabric3.introspection.IntrospectionContext;
+import org.fabric3.introspection.xml.ElementLoadFailure;
+import org.fabric3.introspection.xml.InvalidValue;
 import org.fabric3.introspection.xml.Loader;
 import org.fabric3.introspection.xml.LoaderException;
 import org.fabric3.introspection.xml.LoaderUtil;
 import org.fabric3.introspection.xml.MissingAttribute;
 import org.fabric3.introspection.xml.TypeLoader;
-import org.fabric3.introspection.xml.InvalidValue;
-import org.fabric3.introspection.xml.ElementLoadFailure;
+import org.fabric3.introspection.xml.UnrecognizedAttribute;
 import org.fabric3.scdl.Composite;
 import org.fabric3.scdl.Include;
 import org.fabric3.spi.services.contribution.MetaDataStore;
@@ -49,6 +52,15 @@ import org.fabric3.spi.services.contribution.ResourceElement;
  * @version $Rev$ $Date$
  */
 public class IncludeLoader implements TypeLoader<Include> {
+    private static final Map<String, String> ATTRIBUTES = new HashMap<String, String>();
+
+    static {
+        ATTRIBUTES.put("name", "name");
+        ATTRIBUTES.put("scdlLocation", "scdlLocation");
+        ATTRIBUTES.put("scdlResource", "scdlResource");
+        ATTRIBUTES.put("requires", "requires");
+    }
+
     private final Loader loader;
     private MetaDataStore store;
 
@@ -58,6 +70,7 @@ public class IncludeLoader implements TypeLoader<Include> {
     }
 
     public Include load(XMLStreamReader reader, IntrospectionContext context) throws XMLStreamException {
+        validateAttributes(reader, context);
 
         String nameAttr = reader.getAttributeValue(null, "name");
         if (nameAttr == null || nameAttr.length() == 0) {
@@ -139,6 +152,15 @@ public class IncludeLoader implements TypeLoader<Include> {
         include.setScdlLocation(url);
         include.setIncluded(composite);
         return include;
+    }
+
+    private void validateAttributes(XMLStreamReader reader, IntrospectionContext context) {
+        for (int i = 0; i < reader.getAttributeCount(); i++) {
+            String name = reader.getAttributeLocalName(i);
+            if (!ATTRIBUTES.containsKey(name)) {
+                context.addError(new UnrecognizedAttribute(name, reader));
+            }
+        }
     }
 
 }

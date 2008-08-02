@@ -17,7 +17,9 @@
 package org.fabric3.loader.composite;
 
 import java.net.URI;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamConstants;
 import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
@@ -33,6 +35,7 @@ import org.fabric3.introspection.xml.Loader;
 import org.fabric3.introspection.xml.LoaderHelper;
 import org.fabric3.introspection.xml.MissingAttribute;
 import org.fabric3.introspection.xml.TypeLoader;
+import org.fabric3.introspection.xml.UnrecognizedAttribute;
 import org.fabric3.introspection.xml.UnrecognizedElement;
 import org.fabric3.introspection.xml.UnrecognizedElementException;
 import org.fabric3.scdl.BindingDefinition;
@@ -49,6 +52,16 @@ import org.fabric3.scdl.ServiceContract;
  */
 public class CompositeReferenceLoader implements TypeLoader<CompositeReference> {
     private static final QName CALLBACK = new QName(SCA_NS, "callback");
+    private static final Map<String, String> ATTRIBUTES = new HashMap<String, String>();
+
+    static {
+        ATTRIBUTES.put("name", "name");
+        ATTRIBUTES.put("autowire", "autowire");
+        ATTRIBUTES.put("promote", "promote");
+        ATTRIBUTES.put("multiplicity", "multiplicity");
+        ATTRIBUTES.put("requires", "requires");
+    }
+
     private final Loader loader;
     private final LoaderHelper loaderHelper;
 
@@ -58,7 +71,7 @@ public class CompositeReferenceLoader implements TypeLoader<CompositeReference> 
     }
 
     public CompositeReference load(XMLStreamReader reader, IntrospectionContext context) throws XMLStreamException {
-
+        validateAttributes(reader, context);
         String name = reader.getAttributeValue(null, "name");
         if (name == null) {
             MissingAttribute failure = new MissingAttribute("Reference name not specified", "name", reader);
@@ -129,4 +142,14 @@ public class CompositeReferenceLoader implements TypeLoader<CompositeReference> 
         }
 
     }
+
+    private void validateAttributes(XMLStreamReader reader, IntrospectionContext context) {
+        for (int i = 0; i < reader.getAttributeCount(); i++) {
+            String name = reader.getAttributeLocalName(i);
+            if (!ATTRIBUTES.containsKey(name)) {
+                context.addError(new UnrecognizedAttribute(name, reader));
+            }
+        }
+    }
+
 }

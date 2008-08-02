@@ -26,6 +26,7 @@ import junit.framework.TestCase;
 import org.easymock.EasyMock;
 import static org.osoa.sca.Constants.SCA_NS;
 
+import org.fabric3.host.contribution.ValidationFailure;
 import org.fabric3.introspection.DefaultIntrospectionContext;
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.xml.LoaderException;
@@ -36,7 +37,6 @@ import org.fabric3.scdl.ArtifactValidationFailure;
 import org.fabric3.scdl.ComponentType;
 import org.fabric3.scdl.CompositeService;
 import org.fabric3.scdl.Implementation;
-import org.fabric3.host.contribution.ValidationFailure;
 
 /**
  * @version $Rev$ $Date$
@@ -111,6 +111,7 @@ public class DuplicateServiceTestCase extends TestCase {
         Location location = EasyMock.createNiceMock(Location.class);
         EasyMock.replay(location);
         XMLStreamReader reader = EasyMock.createMock(XMLStreamReader.class);
+        EasyMock.expect(reader.getAttributeCount()).andReturn(0);
         EasyMock.expect(reader.getNamespaceContext()).andStubReturn(null);
         EasyMock.expect(reader.getAttributeValue(null, "name")).andReturn("composite");
         EasyMock.expect(reader.getAttributeValue(null, "targetNamespace")).andReturn("http:///somenamepace");
