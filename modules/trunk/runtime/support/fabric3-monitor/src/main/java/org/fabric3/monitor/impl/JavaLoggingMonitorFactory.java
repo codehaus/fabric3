@@ -18,11 +18,11 @@
  */
 package org.fabric3.monitor.impl;
 
-import java.lang.annotation.Annotation;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
+import java.net.URI;
 import java.util.Locale;
 import java.util.Map;
 import java.util.MissingResourceException;
@@ -30,14 +30,12 @@ import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.WeakHashMap;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.logging.Formatter;
+import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
-import java.util.logging.Formatter;
-import java.util.logging.Handler;
-import java.net.URI;
 
-import org.fabric3.api.annotation.logging.LogLevel;
 import org.fabric3.api.annotation.logging.LogLevels;
 import org.fabric3.monitor.MonitorFactory;
 
