@@ -26,6 +26,7 @@
     <artifactId>fabric3-weblogic92-webapp-host</artifactId>
     <name>Fabric3 Weblogic92 Webapp Runtime Host</name>
     <description>Fabric3 Weblogic92 Webapp Runtime Host.</description>
+    <version>0.6-SNAPSHOT</version>
 
     <repositories>
         <!-- repo needed for the Apache Tuscany version of the commonj API -->
