@@ -25,6 +25,25 @@
 
     <display-name>Fabric3 Web Calculator</display-name>
 
+    <listener>
+        <listener-class>org.fabric3.runtime.weblogic92.WeblogicContextListener</listener-class>
+    </listener>
+
+    <context-param>
+        <param-name>fabric3.composite</param-name>
+        <param-value>WebCalculator</param-value>
+    </context-param>
+
+    <context-param>
+        <param-name>fabric3.compositeNamespace</param-name>
+        <param-value>http://fabric3.org/xmlns/sca/tutorials/0.5</param-value>
+    </context-param>
+
+    <context-param>
+        <param-name>fabric3.component</param-name>
+        <param-value>calculator</param-value>
+    </context-param>
+
     <servlet>
         <servlet-name>CalculatorServlet</servlet-name>
         <servlet-class>org.fabric3.tutorials.webcalc.ui.CalculatorServlet</servlet-class>

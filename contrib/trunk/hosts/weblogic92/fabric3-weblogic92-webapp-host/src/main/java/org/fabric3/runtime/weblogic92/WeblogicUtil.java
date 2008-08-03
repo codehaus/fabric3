@@ -29,6 +29,7 @@ import javax.management.MBeanServer;
 import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
+import javax.rmi.PortableRemoteObject;
 import javax.servlet.ServletContext;
 
 import org.fabric3.monitor.MonitorFactory;
@@ -91,7 +92,8 @@ public class WeblogicUtil extends WebappUtilImpl {
         Context ctx = null;        
         try {
             ctx = new InitialContext();
-            return (MBeanServer) ctx.lookup("weblogic/management/mbeanservers/runtime");
+            Object mbeanServer = ctx.lookup("java:comp/env/jmx/runtime");
+            return (MBeanServer) PortableRemoteObject.narrow(mbeanServer, MBeanServer.class);
         } finally {
             ctx.close();
         }
