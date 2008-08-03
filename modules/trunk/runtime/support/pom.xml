@@ -32,5 +32,6 @@
 	<modules>
 		<module>fabric3-jmx-agent</module>
 		<module>fabric3-monitor</module>
+                <module>fabric3-jsr237</module>
 	</modules>
 </project>
