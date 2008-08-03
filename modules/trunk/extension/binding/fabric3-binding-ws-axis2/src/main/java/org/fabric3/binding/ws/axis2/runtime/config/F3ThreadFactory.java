@@ -20,7 +20,7 @@ package org.fabric3.binding.ws.axis2.runtime.config;
 
 import org.apache.axis2.util.threadpool.ThreadFactory;
 
-import org.fabric3.spi.services.work.WorkScheduler;
+import org.fabric3.host.work.WorkScheduler;
 
 /**
  * Wrapper to use the Fabric3 work scheduler to handle work from the Axis2 extension.

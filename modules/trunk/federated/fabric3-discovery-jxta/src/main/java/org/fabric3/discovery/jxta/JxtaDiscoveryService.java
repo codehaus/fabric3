@@ -36,12 +36,12 @@ import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Reference;
 
+import org.fabric3.host.work.WorkScheduler;
 import org.fabric3.jxta.JxtaService;
 import org.fabric3.spi.model.topology.RuntimeInfo;
 import org.fabric3.spi.services.discovery.DiscoveryService;
 import org.fabric3.spi.services.discovery.DiscoveryServiceRegistry;
 import org.fabric3.spi.services.runtime.RuntimeInfoService;
-import org.fabric3.spi.services.work.WorkScheduler;
 import org.fabric3.api.annotation.Monitor;
 
 /**

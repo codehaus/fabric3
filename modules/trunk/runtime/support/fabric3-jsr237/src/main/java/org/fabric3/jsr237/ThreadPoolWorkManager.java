@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.fabric.services.work.jsr237.workmanager;
+package org.fabric3.jsr237;
 
 import java.rmi.server.UID;
 import java.util.Collection;

@@ -40,7 +40,7 @@ import static org.easymock.EasyMock.replay;
 import org.easymock.IAnswer;
 
 import org.fabric3.host.runtime.HostInfo;
-import org.fabric3.spi.services.work.WorkScheduler;
+import org.fabric3.host.work.WorkScheduler;
 
 /**
  * @version $Rev$ $Date$

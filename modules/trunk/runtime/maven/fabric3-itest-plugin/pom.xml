@@ -91,6 +91,12 @@
 
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
+            <artifactId>fabric3-jsr237</artifactId>
+            <version>0.6-SNAPSHOT</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-jmx-agent</artifactId>
             <version>0.6-SNAPSHOT</version>
         </dependency>
@@ -149,7 +155,6 @@
             <groupId>org.apache.tuscany</groupId>
             <artifactId>commonj-api_r1.1</artifactId>
             <version>1.0-incubator-M2</version>
-            <scope>runtime</scope>
         </dependency>
         
         <dependency>

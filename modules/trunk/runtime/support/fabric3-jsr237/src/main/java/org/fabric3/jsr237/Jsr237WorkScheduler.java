@@ -16,14 +16,14 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.fabric.services.work.jsr237;
+package org.fabric3.jsr237;
 
 import org.osoa.sca.annotations.Reference;
 import org.osoa.sca.annotations.Scope;
 
-import org.fabric3.spi.services.work.NotificationListener;
-import org.fabric3.spi.services.work.WorkScheduler;
-import org.fabric3.spi.services.work.WorkSchedulerException;
+import org.fabric3.host.work.NotificationListener;
+import org.fabric3.host.work.WorkScheduler;
+import org.fabric3.host.work.WorkSchedulerException;
 
 import commonj.work.Work;
 import commonj.work.WorkEvent;

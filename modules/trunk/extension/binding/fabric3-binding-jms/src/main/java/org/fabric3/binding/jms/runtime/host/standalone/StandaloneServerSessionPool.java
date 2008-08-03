@@ -31,7 +31,7 @@ import org.fabric3.binding.jms.common.TransactionType;
 import org.fabric3.binding.jms.runtime.JMSObjectFactory;
 import org.fabric3.binding.jms.runtime.helper.JmsHelper;
 import org.fabric3.binding.jms.runtime.tx.TransactionHandler;
-import org.fabric3.spi.services.work.WorkScheduler;
+import org.fabric3.host.work.WorkScheduler;
 
 /**
  * Server session pool used by the standalone JMS server.

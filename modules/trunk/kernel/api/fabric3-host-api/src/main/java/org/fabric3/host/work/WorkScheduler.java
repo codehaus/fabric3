@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.spi.services.work;
+package org.fabric3.host.work;
 
 /**
  * Defines the contract for scheduling asychronous units of work.

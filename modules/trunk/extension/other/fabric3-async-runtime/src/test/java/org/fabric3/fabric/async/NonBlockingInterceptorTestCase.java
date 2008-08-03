@@ -26,11 +26,11 @@ import static org.easymock.EasyMock.isA;
 import static org.easymock.EasyMock.replay;
 import org.easymock.IAnswer;
 
+import org.fabric3.host.work.WorkScheduler;
 import org.fabric3.spi.invocation.CallFrame;
 import org.fabric3.spi.invocation.WorkContext;
 import org.fabric3.spi.invocation.MessageImpl;
 import org.fabric3.spi.invocation.Message;
-import org.fabric3.spi.services.work.WorkScheduler;
 import org.fabric3.spi.wire.Interceptor;
 
 /**

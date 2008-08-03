@@ -28,7 +28,7 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
-import org.fabric3.spi.services.work.WorkScheduler;
+import org.fabric3.host.work.WorkScheduler;
 
 /**
  * Wraps the runtime WorkScheduler for use by libraries that require an ExecutorService.

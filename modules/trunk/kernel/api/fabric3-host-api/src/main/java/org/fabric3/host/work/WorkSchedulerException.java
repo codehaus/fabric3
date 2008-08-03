@@ -16,29 +16,26 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.jmx.agent;
+package org.fabric3.host.work;
 
-import javax.management.MBeanServer;
+import org.fabric3.host.Fabric3RuntimeException;
 
 /**
- * Interface to a JMX agent.
- * @version $Revision$ $Date$
+ * Exception thrown by the work scheduler in case of unexpected exceptions.
+ * 
+ * @version $Rev$ $Date$
  *
  */
-public interface Agent {
+@SuppressWarnings("serial")
+public class WorkSchedulerException extends Fabric3RuntimeException {
 
     /**
-     * Registers a managed bean.
-     * @param instance Instance to be registered.
-     * @param name Object name of the instance.
-     * @throws ManagementException If unable to register the object.
+     * Wraps the root cause.
+     * 
+     * @param cause Root cause for the exception.
      */
-    void register(Object instance, String name) throws ManagementException;
-    
-    /**
-     * Gets the MBean server used by the agent.
-     * @return MBean server used by the agent.
-     */
-    MBeanServer getMBeanServer();
+    public WorkSchedulerException(Throwable cause) {
+        super(cause);
+    }
 
 }

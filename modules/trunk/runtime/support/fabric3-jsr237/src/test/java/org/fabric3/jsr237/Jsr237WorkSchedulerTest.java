@@ -16,14 +16,15 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.fabric.services.work.jsr237;
+package org.fabric3.jsr237;
 
-import org.fabric3.spi.services.work.NotificationListener;
-import org.fabric3.spi.services.work.WorkScheduler;
 
 import commonj.work.WorkManager;
 import junit.framework.TestCase;
-import org.fabric3.fabric.services.work.jsr237.workmanager.ThreadPoolWorkManager;
+import org.fabric3.host.work.NotificationListener;
+import org.fabric3.host.work.WorkScheduler;
+import org.fabric3.jsr237.Jsr237WorkScheduler;
+import org.fabric3.jsr237.ThreadPoolWorkManager;
 
 public class Jsr237WorkSchedulerTest extends TestCase {
 

@@ -91,6 +91,16 @@ public final class Constants {
     public static final String RUNTIME_DEFAULT = "org.fabric3.runtime.webapp.WebappRuntimeImpl";
 
     /**
+     * Name of the parameter that defines the number of worker threads.
+     */
+    public static final String NUM_WORKERS_PARAM = "fabric3.numWorkers";
+
+    /**
+     * The number of default worker threads.
+     */
+    public static final String NUM_WORKERS_DEFAULT = "10";
+
+    /**
      * Name of the parameter that defines the class to load to bootstrap the runtime.
      */
     public static final String BOOTSTRAP_PARAM = "fabric3.bootstrapImpl";

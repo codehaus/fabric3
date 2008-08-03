@@ -33,14 +33,14 @@
     </component>
 
     <!-- WorkScheduler service -->
-    <component name="workManager">
+    <!--component name="workManager">
         <system:implementation.system class="org.fabric3.fabric.services.work.jsr237.workmanager.ThreadPoolWorkManager"/>
         <property name="poolSize">10</property>
     </component>
 
     <component name="workScheduler">
         <system:implementation.system class="org.fabric3.fabric.services.work.jsr237.Jsr237WorkScheduler"/>
-    </component>
+    </component-->
 
     <component name="allocator">
         <system:implementation.system class="org.fabric3.fabric.allocator.DefaultAllocator"/>

@@ -33,6 +33,7 @@ import org.fabric3.host.runtime.Fabric3Runtime;
 import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.host.runtime.InitializationException;
 import org.fabric3.host.runtime.StartException;
+import org.fabric3.host.work.WorkScheduler;
 import org.fabric3.monitor.MonitorFactory;
 import org.fabric3.pojo.PojoWorkContextTunnel;
 import org.fabric3.scdl.Autowire;
@@ -56,11 +57,14 @@ import org.fabric3.spi.services.lcm.RecoveryException;
  * @version $Rev$ $Date$
  */
 public abstract class AbstractRuntime<HI extends HostInfo> implements Fabric3Runtime<HI>, RuntimeServices {
+	
     private String applicationName;
     private URL applicationScdl;
     private Class<HI> hostInfoType;
     private MBeanServer mbServer;
-    private String jmxDomain;
+    private String jmxSubDomain;
+    private WorkScheduler workScheduler;
+    
 
     /**
      * Information provided by the host about its runtime environment.
@@ -150,12 +154,12 @@ public abstract class AbstractRuntime<HI extends HostInfo> implements Fabric3Run
         this.mbServer = mbServer;
     }
 
-    public String getJMXDomain() {
-        return jmxDomain;
+    public String getJMXSubDomain() {
+        return jmxSubDomain;
     }
 
-    public void setJMXDomain(String jmxDomain) {
-        this.jmxDomain = jmxDomain;
+    public void setJmxSubDomain(String jmxDomain) {
+        this.jmxSubDomain = jmxDomain;
     }
 
     public void initialize() throws InitializationException {
@@ -218,5 +222,23 @@ public abstract class AbstractRuntime<HI extends HostInfo> implements Fabric3Run
 
     public ScopeContainer<?> getScopeContainer() {
         return scopeContainer;
+    }
+    
+    /**
+     * Gets the work scheduler provided by the host.
+     * 
+     * @return Work scheduler provided y the host.
+     */
+    public WorkScheduler getWorkScheduler() {
+    	return workScheduler;
+    }
+    
+    /**
+     * Sets the work scheduler provided by the host.
+     * 
+     * @param workScheduler Work scheduler provided by the host.
+     */
+    public void setWorkScheduler(WorkScheduler workScheduler) {
+    	this.workScheduler = workScheduler;
     }
 }

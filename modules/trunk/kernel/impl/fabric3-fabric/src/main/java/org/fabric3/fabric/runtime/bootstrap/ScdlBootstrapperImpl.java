@@ -52,6 +52,7 @@ import org.fabric3.host.runtime.Fabric3Runtime;
 import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.host.runtime.InitializationException;
 import org.fabric3.host.runtime.ScdlBootstrapper;
+import org.fabric3.host.work.WorkScheduler;
 import org.fabric3.introspection.DefaultIntrospectionContext;
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.IntrospectionHelper;
@@ -221,6 +222,7 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
         if (mbServer != null) {
             registerSystemComponent(runtimeServices, "MBeanServer", MBeanServer.class, mbServer);
         }
+        registerSystemComponent(runtimeServices, "WorkScheduler", WorkScheduler.class, runtime.getWorkScheduler());
 
         // services available through the inward facing RuntimeServices SPI
         ComponentManager componentManager = runtimeServices.getComponentManager();

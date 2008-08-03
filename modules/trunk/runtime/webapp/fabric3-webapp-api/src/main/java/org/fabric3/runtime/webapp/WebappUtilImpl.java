@@ -26,10 +26,16 @@ import javax.servlet.ServletContext;
 import org.fabric3.host.runtime.Bootstrapper;
 import org.fabric3.host.runtime.RuntimeLifecycleCoordinator;
 import org.fabric3.host.runtime.ScdlBootstrapper;
+import org.fabric3.host.work.WorkScheduler;
 import org.fabric3.jmx.agent.Agent;
 import org.fabric3.jmx.agent.DefaultAgent;
+import org.fabric3.jsr237.Jsr237WorkScheduler;
+import org.fabric3.jsr237.ThreadPoolWorkManager;
 import org.fabric3.monitor.MonitorFactory;
 import org.fabric3.monitor.impl.JavaLoggingMonitorFactory;
+
+import commonj.work.WorkManager;
+
 import static org.fabric3.runtime.webapp.Constants.APPLICATION_SCDL_PATH_DEFAULT;
 import static org.fabric3.runtime.webapp.Constants.APPLICATION_SCDL_PATH_PARAM;
 import static org.fabric3.runtime.webapp.Constants.BOOTSTRAP_DEFAULT;
@@ -40,6 +46,8 @@ import static org.fabric3.runtime.webapp.Constants.INTENTS_PATH_DEFAULT;
 import static org.fabric3.runtime.webapp.Constants.INTENTS_PATH_PARAM;
 import static org.fabric3.runtime.webapp.Constants.RUNTIME_DEFAULT;
 import static org.fabric3.runtime.webapp.Constants.RUNTIME_PARAM;
+import static org.fabric3.runtime.webapp.Constants.NUM_WORKERS_DEFAULT;
+import static org.fabric3.runtime.webapp.Constants.NUM_WORKERS_PARAM;
 import static org.fabric3.runtime.webapp.Constants.SYSTEM_MONITORING_DEFAULT;
 import static org.fabric3.runtime.webapp.Constants.SYSTEM_MONITORING_PARAM;
 import static org.fabric3.runtime.webapp.Constants.SYSTEM_SCDL_PATH_DEFAULT;
@@ -75,6 +83,11 @@ public class WebappUtilImpl implements WebappUtil {
             WebappRuntime runtime = (WebappRuntime) bootClassLoader.loadClass(className).newInstance();
             runtime.setMonitorFactory(factory);
             runtime.setMBeanServer(agent.getMBeanServer());
+            
+            String numWorkers = getInitParameter(NUM_WORKERS_PARAM, NUM_WORKERS_DEFAULT);
+            WorkManager workManager = new ThreadPoolWorkManager(Integer.parseInt(numWorkers));
+            WorkScheduler workScheduler = new Jsr237WorkScheduler(workManager);
+            runtime.setWorkScheduler(workScheduler);
             
             return runtime;
             

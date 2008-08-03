@@ -21,10 +21,10 @@ package org.fabric3.fabric.async;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.fabric3.host.work.WorkScheduler;
 import org.fabric3.spi.invocation.CallFrame;
 import org.fabric3.spi.invocation.WorkContext;
 import org.fabric3.spi.invocation.Message;
-import org.fabric3.spi.services.work.WorkScheduler;
 import org.fabric3.spi.wire.Interceptor;
 
 /**

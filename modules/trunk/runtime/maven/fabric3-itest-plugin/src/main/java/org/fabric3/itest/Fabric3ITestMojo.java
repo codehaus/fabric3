@@ -50,11 +50,16 @@ import org.fabric3.host.runtime.RuntimeLifecycleCoordinator;
 import org.fabric3.host.runtime.ScdlBootstrapper;
 import org.fabric3.host.runtime.ShutdownException;
 import org.fabric3.host.runtime.StartException;
+import org.fabric3.host.work.WorkScheduler;
 import org.fabric3.jmx.agent.Agent;
 import org.fabric3.jmx.agent.DefaultAgent;
+import org.fabric3.jsr237.Jsr237WorkScheduler;
+import org.fabric3.jsr237.ThreadPoolWorkManager;
 import org.fabric3.maven.runtime.MavenEmbeddedRuntime;
 import org.fabric3.monitor.MonitorFactory;
 import org.fabric3.spi.classloader.MultiParentClassLoader;
+
+import commonj.work.WorkManager;
 
 /**
  * Run integration tests on a SCA composite using an embedded Fabric3 runtime.
@@ -82,6 +87,13 @@ public class Fabric3ITestMojo extends AbstractMojo {
      * @parameter
      */
     public String managementDomain = "itest-host";
+
+    /**
+     * Optional parameter for thread pool size.
+     *
+     * @parameter
+     */
+    public int numWorkers = 10;
 
     /**
      * The optional target namespace of the composite to activate.
@@ -435,11 +447,15 @@ public class Fabric3ITestMojo extends AbstractMojo {
         MavenHostInfoImpl hostInfo = new MavenHostInfoImpl(URI.create(testDomain), hostProperties, moduleDependencies);
         runtime.setHostInfo(hostInfo);
 
-        runtime.setJMXDomain(managementDomain);
+        runtime.setJmxSubDomain(managementDomain);
 
         // TODO Add better host JMX support from the next release
         agent = new DefaultAgent();
         runtime.setMBeanServer(agent.getMBeanServer());
+        
+        WorkManager workManager = new ThreadPoolWorkManager(numWorkers);
+        WorkScheduler workScheduler = new Jsr237WorkScheduler(workManager);
+        runtime.setWorkScheduler(workScheduler);
 
         return runtime;
     }

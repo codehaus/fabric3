@@ -46,7 +46,7 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.api.annotation.Monitor;
 import org.fabric3.host.runtime.HostInfo;
-import org.fabric3.spi.services.work.WorkScheduler;
+import org.fabric3.host.work.WorkScheduler;
 
 /**
  * Implements an HTTP transport service using Jetty.

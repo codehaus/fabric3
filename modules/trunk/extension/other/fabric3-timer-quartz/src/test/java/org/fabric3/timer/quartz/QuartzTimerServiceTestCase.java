@@ -25,8 +25,8 @@ import javax.transaction.TransactionManager;
 
 import junit.framework.TestCase;
 
-import org.fabric3.spi.services.work.NotificationListener;
-import org.fabric3.spi.services.work.WorkScheduler;
+import org.fabric3.host.work.NotificationListener;
+import org.fabric3.host.work.WorkScheduler;
 
 /**
  * @version $Revision$ $Date$

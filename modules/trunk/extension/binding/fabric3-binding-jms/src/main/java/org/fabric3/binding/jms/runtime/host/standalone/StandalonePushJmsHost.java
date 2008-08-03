@@ -35,7 +35,7 @@ import org.fabric3.binding.jms.runtime.ResponseMessageListener;
 import org.fabric3.binding.jms.runtime.helper.JmsHelper;
 import org.fabric3.binding.jms.runtime.host.JmsHost;
 import org.fabric3.binding.jms.runtime.tx.TransactionHandler;
-import org.fabric3.spi.services.work.WorkScheduler;
+import org.fabric3.host.work.WorkScheduler;
 import org.osoa.sca.annotations.Destroy;
 import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Reference;

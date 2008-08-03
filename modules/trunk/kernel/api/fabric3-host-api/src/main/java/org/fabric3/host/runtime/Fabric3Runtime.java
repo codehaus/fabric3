@@ -22,6 +22,7 @@ import java.net.URI;
 
 import javax.management.MBeanServer;
 
+import org.fabric3.host.work.WorkScheduler;
 import org.fabric3.monitor.MonitorFactory;
 
 /**
@@ -97,20 +98,20 @@ public interface Fabric3Runtime<HI extends HostInfo> {
     void setMBeanServer(MBeanServer mbServer);
 
     /**
-     * Returns the JMX domain this runtime should use.
+     * Returns the JMX sub domain this runtime should use.
      *
-     * @return the JMX domain this runtime should use
+     * @return the JMX sub domain this runtime should use
      */
-    String getJMXDomain();
+    String getJMXSubDomain();
 
     /**
-     * Sets the JMX domain this runtime should use.
+     * Sets the JMX sub domain this runtime should use.
      * <p/>
-     * This will be used as the domain portion of the ObjectName for all MBeans registered with the MBeanServer
+     * This will be used as the sub domain portion of the ObjectName for all MBeans registered with the MBeanServer
      *
-     * @param jmxDomain the JMX domain this runtime should use
+     * @param jmxSubDomain the JMX domain this runtime should use
      */
-    void setJMXDomain(String jmxDomain);
+    void setJmxSubDomain(String jmxSubDomain);
 
     /**
      * Initialize a runtime. An initialized runtime has has completed core service initialization, recovery operations, and is ready to be started.
@@ -142,4 +143,19 @@ public interface Fabric3Runtime<HI extends HostInfo> {
      * @return an implementation of the requested service
      */
     <I> I getSystemComponent(Class<I> service, URI uri);
+    
+    /**
+     * Gets the work scheduler provided by the host.
+     * 
+     * @return Work scheduler provided y the host.
+     */
+    WorkScheduler getWorkScheduler();
+    
+    /**
+     * Sets the work scheduler provided by the host.
+     * 
+     * @param workScheduler Work scheduler provided by the host.
+     */
+    void setWorkScheduler(WorkScheduler workScheduler);
+    
 }

@@ -54,7 +54,7 @@ import org.quartz.spi.JobFactory;
 import org.quartz.spi.JobStore;
 import org.quartz.spi.ThreadPool;
 
-import org.fabric3.spi.services.work.WorkScheduler;
+import org.fabric3.host.work.WorkScheduler;
 import org.fabric3.timer.spi.TimerService;
 
 /**

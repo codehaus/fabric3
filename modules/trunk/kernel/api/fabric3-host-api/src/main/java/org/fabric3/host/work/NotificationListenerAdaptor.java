@@ -16,42 +16,47 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.spi.services.work;
+package org.fabric3.host.work;
 
 /**
- * A callback inyterface that can be optionally used for registering 
- * interest in status of asynchronously scheduled unit of work.
+ * Adaptor class for the notification listsner.
+ * 
+ * @version $Revision$ $Date$
  *
  */
-public interface NotificationListener<T extends Runnable> {
-    
+public class NotificationListenerAdaptor<T extends Runnable> implements NotificationListener<T> {
+
     /**
      * Callback method when the unit of work is accepted.
      * 
      * @param work Work that was accepted.
      */
-    void workAccepted(T work);
+    public void workAccepted(T work) {
+    }
     
     /**
      * Callback method when the unit of work is successfully completed.
      * 
      * @param work Work that was succesfully completed.
      */
-    void workCompleted(T work);
+    public void workCompleted(T work) {
+    }
     
     /**
      * Callback when the unit of work is started.
      * 
      * @param work Unit of work that was started.
      */
-    void workStarted(T work);
+    public void workStarted(T work) {
+    }
     
     /**
      * Callback when the unit of work is rejected.
      * 
      * @param work Unit of work that was rejected.
      */
-    void workRejected(T work);
+    public void workRejected(T work) {
+    }
     
     /**
      * Callnack when the unit of work fails to complete.
@@ -59,8 +64,8 @@ public interface NotificationListener<T extends Runnable> {
      * @param work Unit of work that failed to complete.
      * @param error Error that caused the unit of work to fail.
      */
-    void workFailed(T work, Throwable error);
-    
-    
+    public void workFailed(T work, Throwable error) {
+        error.printStackTrace();
+    }
 
 }

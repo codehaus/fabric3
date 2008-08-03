@@ -142,7 +142,7 @@ public class BootstrapAssemblyFactory {
     public static Domain createDomain(Fabric3Runtime<?> runtime) throws InitializationException {
         MonitorFactory monitorFactory = runtime.getMonitorFactory();
         MBeanServer mbeanServer = runtime.getMBeanServer();
-        String jmxDomain = runtime.getJMXDomain();
+        String jmxDomain = runtime.getJMXSubDomain();
         ClassLoaderRegistry classLoaderRegistry =
                 runtime.getSystemComponent(ClassLoaderRegistry.class, ComponentNames.CLASSLOADER_REGISTRY_URI);
         ComponentManager componentManager = runtime.getSystemComponent(ComponentManager.class,

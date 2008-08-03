@@ -154,7 +154,7 @@ public class Fabric3ContextListener implements ServletContextListener {
             runtime.setHostInfo(info);
             runtime.setHostClassLoader(webappClassLoader);
             String managementDomain = utils.getInitParameter(MANAGEMENT_DOMAIN_PARAM, DEFAULT_MANAGEMENT_DOMAIN);
-            runtime.setJMXDomain(managementDomain);
+            runtime.setJmxSubDomain(managementDomain);
             
             return runtime;
             

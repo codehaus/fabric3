@@ -20,9 +20,9 @@ package org.fabric3.fabric.async;
 
 import org.osoa.sca.annotations.Reference;
 
+import org.fabric3.host.work.WorkScheduler;
 import org.fabric3.spi.builder.BuilderException;
 import org.fabric3.spi.builder.interceptor.InterceptorBuilder;
-import org.fabric3.spi.services.work.WorkScheduler;
 
 /**
  * Creates a non-blocking interceptor

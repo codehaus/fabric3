@@ -28,6 +28,12 @@
     <description>Fabric3 Standalone Runtime Server Start Command.</description>
 
     <dependencies>
+
+        <dependency>
+            <groupId>org.codehaus.fabric3</groupId>
+            <artifactId>fabric3-jsr237</artifactId>
+            <version>0.6-SNAPSHOT</version>
+        </dependency>
     
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
@@ -66,6 +72,13 @@
             <!-- use version 1.0 as it is the version bundled in JDK 6 -->
             <version>1.0</version>
             <scope>runtime</scope>
+        </dependency> 
+              
+        <dependency>
+            <groupId>org.apache.tuscany</groupId>
+            <artifactId>commonj-api_r1.1</artifactId>
+            <version>1.0-incubator-M2</version>
+            <scope>provided</scope>
         </dependency>
 
     </dependencies>

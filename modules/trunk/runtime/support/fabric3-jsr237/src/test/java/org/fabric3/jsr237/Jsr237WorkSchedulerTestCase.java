@@ -16,10 +16,11 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.fabric.services.work.jsr237;
+package org.fabric3.jsr237;
 
-import org.fabric3.spi.services.work.NotificationListener;
-import org.fabric3.spi.services.work.WorkSchedulerException;
+import org.fabric3.host.work.NotificationListener;
+import org.fabric3.host.work.WorkSchedulerException;
+import org.fabric3.jsr237.Jsr237WorkScheduler;
 
 import commonj.work.Work;
 import commonj.work.WorkItem;

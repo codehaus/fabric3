@@ -25,9 +25,9 @@ import javax.resource.spi.work.WorkListener;
 import javax.resource.spi.work.WorkManager;
 import javax.resource.spi.work.WorkRejectedException;
 
-import org.fabric3.spi.services.work.NotificationListener;
-import org.fabric3.spi.services.work.WorkScheduler;
-import org.fabric3.spi.services.work.WorkSchedulerException;
+import org.fabric3.host.work.NotificationListener;
+import org.fabric3.host.work.WorkScheduler;
+import org.fabric3.host.work.WorkSchedulerException;
 
 /**
  * A work scheduler implementation based on the JCA SPI work manager.
