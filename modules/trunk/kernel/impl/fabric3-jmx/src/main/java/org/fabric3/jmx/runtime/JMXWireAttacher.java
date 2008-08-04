@@ -47,16 +47,18 @@ import org.fabric3.spi.wire.Wire;
  * @version $Rev$ $Date$
  */
 public class JMXWireAttacher implements SourceWireAttacher<JMXWireSourceDefinition> {
+	
+	private static final String DOMAIN = "f3-management";
     private final MBeanServer mBeanServer;
     private final ClassLoaderRegistry classLoaderRegistry;
-    private final String domain;
+    private final String subDomain;
 
     public JMXWireAttacher(@Reference MBeanServer mBeanServer,
                            @Reference ClassLoaderRegistry classLoaderRegistry,
-                           @Property(name = "domain")String domain) {
+                           @Property(name = "subDomain") String subDomain) {
         this.mBeanServer = mBeanServer;
         this.classLoaderRegistry = classLoaderRegistry;
-        this.domain = domain;
+        this.subDomain = subDomain;
     }
 
     public void attachToSource(JMXWireSourceDefinition source, PhysicalWireTargetDefinition target, Wire wire) throws WiringException {
@@ -78,7 +80,7 @@ public class JMXWireAttacher implements SourceWireAttacher<JMXWireSourceDefiniti
         String service = uri.getFragment();
         try {
             Class<?> managementInterface = classLoaderRegistry.loadClass(source.getClassLoaderId(), source.getInterfaceName());
-            ObjectName name = new ObjectName(domain + ":type=service,component=\"" + component + "\",service=" + service);
+            ObjectName name = new ObjectName(DOMAIN + ":SubDomain=" + subDomain + ":type=service,component=\"" + component + "\",service=" + service);
             OptimizedMBean<?> mbean = createOptimizedMBean(objectFactory, managementInterface);
             if (!mBeanServer.isRegistered(name)) {
             	mBeanServer.registerMBean(mbean, name);

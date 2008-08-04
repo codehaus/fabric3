@@ -142,7 +142,7 @@ public class BootstrapAssemblyFactory {
     public static Domain createDomain(Fabric3Runtime<?> runtime) throws InitializationException {
         MonitorFactory monitorFactory = runtime.getMonitorFactory();
         MBeanServer mbeanServer = runtime.getMBeanServer();
-        String jmxDomain = runtime.getJMXSubDomain();
+        String jmxSubDomain = runtime.getJMXSubDomain();
         ClassLoaderRegistry classLoaderRegistry =
                 runtime.getSystemComponent(ClassLoaderRegistry.class, ComponentNames.CLASSLOADER_REGISTRY_URI);
         ComponentManager componentManager = runtime.getSystemComponent(ComponentManager.class,
@@ -164,7 +164,7 @@ public class BootstrapAssemblyFactory {
                             metaDataStore,
                             cpRegistry,
                             mbeanServer,
-                            jmxDomain,
+                            jmxSubDomain,
                             runtime.getHostInfo());
     }
 
@@ -176,7 +176,7 @@ public class BootstrapAssemblyFactory {
                                       MetaDataStore metaDataStore,
                                       ClasspathProcessorRegistry cpRegistry,
                                       MBeanServer mbServer,
-                                      String jmxDomain,
+                                      String jmxSubDomain,
                                       HostInfo info) throws InitializationException {
 
         Allocator allocator = new LocalAllocator();
@@ -189,7 +189,8 @@ public class BootstrapAssemblyFactory {
                                               cpRegistry,
                                               mbServer,
                                               metaDataStore,
-                                              jmxDomain, info);
+                                              jmxSubDomain, 
+                                              info);
 
         RuntimeRoutingService routingService = new RuntimeRoutingService(commandRegistry, scopeRegistry);
 
@@ -239,7 +240,7 @@ public class BootstrapAssemblyFactory {
                                                                          ClasspathProcessorRegistry cpRegistry,
                                                                          MBeanServer mbeanServer,
                                                                          MetaDataStore metaDataStore,
-                                                                         String jmxDomain,
+                                                                         String jmxSubDomain,
                                                                          HostInfo info) {
 
         InstanceFactoryBuilderRegistry providerRegistry = new DefaultInstanceFactoryBuilderRegistry();
@@ -270,7 +271,7 @@ public class BootstrapAssemblyFactory {
                 new ConcurrentHashMap<Class<? extends PhysicalWireSourceDefinition>, SourceWireAttacher<? extends PhysicalWireSourceDefinition>>();
         sourceAttachers.put(SystemWireSourceDefinition.class,
                             new SystemSourceWireAttacher(componentManager, transformerRegistry, classLoaderRegistry));
-        sourceAttachers.put(JMXWireSourceDefinition.class, new JMXWireAttacher(mbeanServer, classLoaderRegistry, jmxDomain));
+        sourceAttachers.put(JMXWireSourceDefinition.class, new JMXWireAttacher(mbeanServer, classLoaderRegistry, jmxSubDomain));
 
         Map<Class<? extends PhysicalWireTargetDefinition>, TargetWireAttacher<? extends PhysicalWireTargetDefinition>> targetAttachers =
                 new ConcurrentHashMap<Class<? extends PhysicalWireTargetDefinition>, TargetWireAttacher<? extends PhysicalWireTargetDefinition>>();
