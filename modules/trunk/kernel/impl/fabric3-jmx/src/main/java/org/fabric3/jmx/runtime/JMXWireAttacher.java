@@ -80,7 +80,7 @@ public class JMXWireAttacher implements SourceWireAttacher<JMXWireSourceDefiniti
         String service = uri.getFragment();
         try {
             Class<?> managementInterface = classLoaderRegistry.loadClass(source.getClassLoaderId(), source.getInterfaceName());
-            ObjectName name = new ObjectName(DOMAIN + ":SubDomain=" + subDomain + ":type=service,component=\"" + component + "\",service=" + service);
+            ObjectName name = new ObjectName(DOMAIN + ":SubDomain=" + subDomain + ",type=service,component=\"" + component + "\",service=" + service);
             OptimizedMBean<?> mbean = createOptimizedMBean(objectFactory, managementInterface);
             if (!mBeanServer.isRegistered(name)) {
             	mBeanServer.registerMBean(mbean, name);
