@@ -28,6 +28,7 @@ import javax.xml.namespace.QName;
 
 import static org.fabric3.fabric.runtime.ComponentNames.CONTRIBUTION_SERVICE_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.DEFINITIONS_REGISTRY;
+import static org.fabric3.fabric.runtime.ComponentNames.DISCOVERY_SERVICE_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.DISTRIBUTED_DOMAIN_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.METADATA_STORE_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.RUNTIME_DOMAIN_URI;
@@ -67,6 +68,8 @@ import org.fabric3.spi.services.contribution.Resource;
 import org.fabric3.spi.services.contribution.ResourceElement;
 import org.fabric3.spi.services.definitions.DefinitionActivationException;
 import org.fabric3.spi.services.definitions.DefinitionsRegistry;
+import org.fabric3.spi.services.discovery.DiscoveryException;
+import org.fabric3.spi.services.discovery.DiscoveryService;
 
 /**
  * Default implementation of a RuntimeLifecycleCoordinator.
@@ -162,6 +165,12 @@ public class DefaultCoordinator<RUNTIME extends Fabric3Runtime<?>, BOOTSTRAPPER 
     public Future<Void> joinDomain(final long timeout) {
         if (state != State.INITIALIZED) {
             throw new IllegalStateException("Not in INITIALIZED state");
+        }
+        DiscoveryService discoveryService = runtime.getSystemComponent(DiscoveryService.class, DISCOVERY_SERVICE_URI);
+        try {
+            discoveryService.joinDomain(timeout);
+        } catch (DiscoveryException e) {
+            return new SyncFuture(new ExecutionException(e));
         }
         state = State.DOMAIN_JOINED;
         // no domain to join
