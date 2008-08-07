@@ -76,6 +76,8 @@ public class JaxbInterceptorBuilder implements InterceptorBuilder<JaxbIntercepto
         }
         ClassLoader old = Thread.currentThread().getContextClassLoader();
         try {
+            // The JAXBContext searches the TCCL for the JAXB-RI. Set the TCCL to the Axis classloader (which loaded this class), as it has 
+            // visibility to the JAXB RI.
             Thread.currentThread().setContextClassLoader(getClass().getClassLoader());
             return JAXBContext.newInstance(classes);
         } finally {
