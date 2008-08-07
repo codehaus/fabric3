@@ -78,7 +78,6 @@
             <groupId>org.apache.tuscany</groupId>
             <artifactId>commonj-api_r1.1</artifactId>
             <version>1.0-incubator-M2</version>
-            <scope>provided</scope>
         </dependency>
 
     </dependencies>
