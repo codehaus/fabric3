@@ -28,10 +28,10 @@ import javax.xml.ws.WebFault;
 
 import org.osoa.sca.annotations.Reference;
 
+import org.fabric3.binding.ws.axis2.provision.jaxb.JaxbInterceptorDefinition;
 import org.fabric3.spi.builder.BuilderException;
 import org.fabric3.spi.builder.interceptor.InterceptorBuilder;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
-import org.fabric3.binding.ws.axis2.provision.jaxb.JaxbInterceptorDefinition;
 
 /**
  * @version $Revision$ $Date$
@@ -74,7 +74,13 @@ public class JaxbInterceptorBuilder implements InterceptorBuilder<JaxbIntercepto
         for (String className : classNames) {
             classes[i++] = classLoaderRegistry.loadClass(classLoader, className);
         }
-        return JAXBContext.newInstance(classes);
+        ClassLoader old = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader(getClass().getClassLoader());
+            return JAXBContext.newInstance(classes);
+        } finally {
+            Thread.currentThread().setContextClassLoader(old);
+        }
     }
 
     private Map<Class<?>, Constructor<?>> getFaultMapping(ClassLoader classLoader, Set<String> faultNames)
