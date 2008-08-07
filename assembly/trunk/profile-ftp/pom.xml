@@ -49,22 +49,22 @@
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-ftp-api</artifactId>
-            <version>0.5.1</version>
+            <version>0.6-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-ftp-spi</artifactId>
-            <version>0.5.1</version>
+            <version>0.6-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-binding-ftp</artifactId>
-            <version>0.5.1</version>
+            <version>0.6-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-ftp-server</artifactId>
-            <version>0.5.1</version>
+            <version>0.6-SNAPSHOT</version>
         </dependency>
     </dependencies>
 
