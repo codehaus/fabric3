@@ -26,8 +26,8 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.spi.model.topology.RuntimeInfo;
-import org.fabric3.spi.services.componentmanager.ComponentManager;
 import org.fabric3.spi.services.advertisement.AdvertisementService;
+import org.fabric3.spi.services.componentmanager.ComponentManager;
 import org.fabric3.spi.services.runtime.RuntimeInfoService;
 
 /**
@@ -68,6 +68,7 @@ public class DefaultRuntimeInfoService implements RuntimeInfoService {
         RuntimeInfo runtimeInfo = new RuntimeInfo(runtimeId);
         // add features
         runtimeInfo.setFeatures(advertService.getFeatures());
+        runtimeInfo.setTransportInfo(advertService.getTransportInfo());
         // add component URIs
         for (URI componentUri : componentManager.getComponentsInHierarchy(hostInfo.getDomain())) {
             runtimeInfo.addComponent(componentUri);
