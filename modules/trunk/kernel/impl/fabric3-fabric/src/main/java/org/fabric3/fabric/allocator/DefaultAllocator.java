@@ -105,6 +105,12 @@ public class DefaultAllocator implements Allocator {
      * @throws AllocationException if an error occurs assigning the component
      */
     private void assign(Set<RuntimeInfo> runtimes, LogicalComponent<?> component) throws AllocationException {
+        URI explicitId = component.getDefinition().getRuntimeId();
+        if (explicitId != null) {
+            // runtime explicitly set in composite
+            component.setRuntimeId(explicitId);
+            return;
+        }
         RuntimeInfo info = null;
         if (!runtimes.contains(info)) {
             // Assign runtime using a simple algorithm: if two or more exist, pick one other than the controller,
