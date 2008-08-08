@@ -19,6 +19,8 @@
 package org.fabric3.fabric.services.advertisement;
 
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
 import javax.xml.namespace.QName;
@@ -38,6 +40,8 @@ public class DefaultAdvertismentService implements AdvertisementService {
 
     // Features
     private Set<QName> features = new CopyOnWriteArraySet<QName>();
+
+    private Map<QName, String> transportInfo = new HashMap<QName, String>();
 
     public Set<QName> getFeatures() {
         return Collections.unmodifiableSet(features);
@@ -63,6 +67,18 @@ public class DefaultAdvertismentService implements AdvertisementService {
 
     public void removeListener(AdvertisementListener listener) {
         listeners.remove(listener);
+    }
+
+    public void addTransportMetadata(QName transport, String metaData) {
+        transportInfo.put(transport, metaData);
+    }
+
+    public void removeTransportMetadata(QName transport) {
+        transportInfo.remove(transport);
+    }
+
+    public Map<QName, String> getTransportInfo() {
+        return transportInfo;
     }
 
 }
