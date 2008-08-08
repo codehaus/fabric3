@@ -22,25 +22,34 @@ import org.fabric3.ftp.api.FtpLet;
 
 /**
  * SPI for the FTP let container.
- * 
+ *
  * @version $Revision$ $Date$
  */
 public interface FtpLetContainer {
-    
+
     /**
      * Registers an FTP let for the specified path.
-     * 
-     * @param path Path on which the FtpLet is listening.
+     *
+     * @param path   Path on which the FtpLet is listening.
      * @param ftpLet FtpLet listening for the upload request.
      */
     void registerFtpLet(String path, FtpLet ftpLet);
-    
+
     /**
      * Gets a registered FTP let for the file name.
-     * 
+     *
      * @param fileName Fully qualified name for the file name.
      * @return FTP let that is registered, null if none registered.
      */
     FtpLet getFtpLet(String fileName);
+
+    /**
+     * Returns true if an FtpLet is registered for the given path.
+     *
+     * @param path the path.
+     * @return true if an FtpLet is registered for the given path
+     */
+    public boolean isRegistered(String path);
+
 
 }

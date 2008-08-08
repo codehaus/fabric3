@@ -33,11 +33,6 @@ public class DefaultFtpLetContainer implements FtpLetContainer {
 
     private Map<String, FtpLet> ftpLets = new ConcurrentHashMap<String, FtpLet>();
 
-    /**
-     * Registers an FTP let for the specified path.
-     *
-     * @param fileName Path on which the FtpLet is listening.
-     */
     public FtpLet getFtpLet(String fileName) {
         for (Map.Entry<String, FtpLet> entry : ftpLets.entrySet()) {
             if (fileName.startsWith(entry.getKey())) {
@@ -47,13 +42,12 @@ public class DefaultFtpLetContainer implements FtpLetContainer {
         return null;
     }
 
-    /**
-     * Gets a registered FTP let for the file name.
-     *
-     * @param path Fully qualified name for the file name.
-     */
     public void registerFtpLet(String path, FtpLet ftpLet) {
         ftpLets.put(path, ftpLet);
+    }
+
+    public boolean isRegistered(String path) {
+        return ftpLets.containsKey(path);
     }
 
 }

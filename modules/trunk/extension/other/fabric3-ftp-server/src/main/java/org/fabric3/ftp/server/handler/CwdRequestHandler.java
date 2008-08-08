@@ -18,10 +18,13 @@
  */
 package org.fabric3.ftp.server.handler;
 
+import org.osoa.sca.annotations.Reference;
+
 import org.fabric3.ftp.server.protocol.DefaultResponse;
 import org.fabric3.ftp.server.protocol.FtpSession;
 import org.fabric3.ftp.server.protocol.Request;
 import org.fabric3.ftp.server.protocol.RequestHandler;
+import org.fabric3.ftp.spi.FtpLetContainer;
 
 /**
  * Handles the <code>CWD</code> command.
@@ -30,6 +33,13 @@ import org.fabric3.ftp.server.protocol.RequestHandler;
  * @version $Revision$ $Date$
  */
 public class CwdRequestHandler implements RequestHandler {
+    private FtpLetContainer container;
+
+    @Reference
+    public void setContainer(FtpLetContainer container) {
+        this.container = container;
+    }
+
     /**
      * Services the <code>CWD</code> request.
      *
@@ -42,6 +52,10 @@ public class CwdRequestHandler implements RequestHandler {
             return;
         }
         String directory = request.getArgument();
+        if (!container.isRegistered(directory)) {
+            session.write(new DefaultResponse(550, directory + ": No such file or directory"));
+            return;
+        }
         session.setCurrentDirectory(directory);
         session.write(new DefaultResponse(250, "CWD command successful"));
 
