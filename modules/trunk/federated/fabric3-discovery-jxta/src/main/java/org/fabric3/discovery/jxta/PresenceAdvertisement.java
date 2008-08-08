@@ -19,7 +19,9 @@
 package org.fabric3.discovery.jxta;
 
 import java.net.URI;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import javax.xml.namespace.QName;
 
@@ -36,6 +38,8 @@ import net.jxta.id.IDFactory;
 import org.fabric3.spi.model.topology.RuntimeInfo;
 
 /**
+ * Encapsulates metadata for a runtime sent to the controller.
+ *
  * @version $Revsion$ $Date$
  */
 public class PresenceAdvertisement extends Advertisement {
@@ -53,6 +57,7 @@ public class PresenceAdvertisement extends Advertisement {
     private String messageDestination;
     private Set<QName> features = new HashSet<QName>();
     private Set<URI> components = new HashSet<URI>();
+    private Map<QName, String> transportInfo = new HashMap<QName, String>();
 
     @SuppressWarnings("deprecation")
     public ID getID() {
@@ -68,6 +73,8 @@ public class PresenceAdvertisement extends Advertisement {
     }
 
     /**
+     * Returs the peer id that generated the advertisement.
+     *
      * @return Peer id that generated the advertisement.
      */
     public String getPeerId() {
@@ -75,6 +82,8 @@ public class PresenceAdvertisement extends Advertisement {
     }
 
     /**
+     * Returns the RuntimeInfo for the runtime.
+     *
      * @return Runtime info.
      */
     public RuntimeInfo getRuntimeInfo() {
@@ -84,10 +93,33 @@ public class PresenceAdvertisement extends Advertisement {
         for (URI component : components) {
             runtimeInfo.addComponent(component);
         }
+        runtimeInfo.setTransportInfo(transportInfo);
         return runtimeInfo;
     }
 
     /**
+     * Sets the RuntimeInfo for the runtime.
+     *
+     * @param runtimeInfo Runtime info.
+     */
+    void setRuntimeInfo(RuntimeInfo runtimeInfo) {
+        runtimeId = runtimeInfo.getId();
+        if (runtimeInfo.getFeatures() != null) {
+            features = runtimeInfo.getFeatures();
+        }
+        messageDestination = runtimeInfo.getMessageDestination();
+        if (runtimeInfo.getComponents() != null) {
+            components = runtimeInfo.getComponents();
+        }
+        if (runtimeInfo.getTransportInfo() != null) {
+            transportInfo = runtimeInfo.getTransportInfo();
+        }
+    }
+
+
+    /**
+     * Returns the advertisement type.
+     *
      * @return Advertisement type.
      */
     public static String getAdvertisementType() {
@@ -95,10 +127,66 @@ public class PresenceAdvertisement extends Advertisement {
     }
 
     /**
+     * Returns the base advertisement type.
+     *
      * @return Base advertisement type.
      */
     public final String getBaseAdvType() {
         return getAdvertisementType();
+    }
+
+    /**
+     * Sets the peer id that generated the advertisement.
+     *
+     * @param peerId Peer id that generated the advertisement
+     */
+    void setPeerId(String peerId) {
+        this.peerId = peerId;
+    }
+
+    /**
+     * Sets the runtime id for the runtime generating the advertisement.
+     *
+     * @param runtimeId the runtime id
+     */
+    void setRuntimeId(URI runtimeId) {
+        this.runtimeId = runtimeId;
+    }
+
+    /**
+     * Sets the opaque message destination metadata for how the runtime may be contacted.
+     *
+     * @param messageDestination the opaque message destination information
+     */
+    void setMessageDestination(String messageDestination) {
+        this.messageDestination = messageDestination;
+    }
+
+    /**
+     * Sets the features available on the runtime.
+     *
+     * @param features the features available on the runtime
+     */
+    void setFeatures(Set<QName> features) {
+        this.features = features;
+    }
+
+    /**
+     * Sets the active components hosted by the runtime.
+     *
+     * @param components the components hosted by the runtime
+     */
+    void setComponents(Set<URI> components) {
+        this.components = components;
+    }
+
+    /**
+     * Sets the opaque metadata for binding transports supported by the runtime keyed by transport type
+     *
+     * @param info the transport metadata
+     */
+    void setTransportInfo(Map<QName, String> info) {
+        transportInfo = info;
     }
 
     public Document getDocument(MimeMediaType mimeMediaType) {
@@ -127,6 +215,16 @@ public class PresenceAdvertisement extends Advertisement {
         for (URI component : components) {
             elem.appendChild(doc.createElement("component", component.toString()));
         }
+
+        // serialize runtime transport information keyed by transport QName
+        elem = doc.createElement("transportInfo");
+        doc.appendChild(elem);
+        for (Map.Entry<QName, String> entry : transportInfo.entrySet()) {
+            Element infoElement = doc.createElement("metaData");
+            elem.appendChild(infoElement);
+            infoElement.appendChild(doc.createElement("key", entry.getKey().toString()));
+            infoElement.appendChild(doc.createElement("value", entry.getValue()));
+        }
         return doc;
     }
 
@@ -147,43 +245,5 @@ public class PresenceAdvertisement extends Advertisement {
         }
     }
 
-    /**
-     * @param runtimeInfo Runtime info.
-     */
-    void setRuntimeInfo(RuntimeInfo runtimeInfo) {
-        runtimeId = runtimeInfo.getId();
-        if (runtimeInfo.getFeatures() != null) {
-            features = runtimeInfo.getFeatures();
-        }
-        messageDestination = runtimeInfo.getMessageDestination();
-        if (runtimeInfo.getComponents() != null) {
-            components = runtimeInfo.getComponents();
-        }
-    }
-
-    /**
-     * Sets the peer id that generated the advertisement.
-     *
-     * @param peerId Peer id that generated the advertisement
-     */
-    void setPeerId(String peerId) {
-        this.peerId = peerId;
-    }
-
-    void setRuntimeId(URI runtimeId) {
-        this.runtimeId = runtimeId;
-    }
-
-    void setMessageDestination(String messageDestination) {
-        this.messageDestination = messageDestination;
-    }
-
-    void setFeatures(Set<QName> features) {
-        this.features = features;
-    }
-
-    void setComponents(Set<URI> components) {
-        this.components = components;
-    }
 
 }

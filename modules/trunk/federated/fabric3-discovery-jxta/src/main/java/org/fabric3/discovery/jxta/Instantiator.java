@@ -19,7 +19,9 @@ package org.fabric3.discovery.jxta;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import javax.xml.namespace.QName;
 
@@ -68,6 +70,10 @@ public class Instantiator implements AdvertisementFactory.Instantiator {
         Set<QName> features = deserializeFeatures(elem);
         adv.setFeatures(features);
 
+        elem = (Element) element.getChildren("transportInfo").nextElement();
+        Map<QName, String> info = deserializeTransportInfo(elem);
+        adv.setTransportInfo(info);
+
         elem = (Element) element.getChildren("components").nextElement();
         Set<URI> compenents = deserializeComponents(elem);
         adv.setComponents(compenents);
@@ -102,6 +108,20 @@ public class Instantiator implements AdvertisementFactory.Instantiator {
             }
         }
         return features;
+    }
+
+    private Map<QName, String> deserializeTransportInfo(Element elem) {
+        Map<QName, String> info = new HashMap<QName, String>();
+        Enumeration children = elem.getChildren("transportInfo");
+        while (children.hasMoreElements()) {
+            // read the metadata for each transport keyed by a QName representing the transport
+            elem = (Element) children.nextElement();
+            Enumeration infoChildren = elem.getChildren();
+            QName key = QName.valueOf((String) ((Element) infoChildren.nextElement()).getValue());
+            String value = (String) ((Element) infoChildren.nextElement()).getValue();
+            info.put(key, value);
+        }
+        return info;
     }
 
 }
