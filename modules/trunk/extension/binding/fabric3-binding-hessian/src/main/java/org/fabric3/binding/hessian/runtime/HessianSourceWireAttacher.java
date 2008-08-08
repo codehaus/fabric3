@@ -77,7 +77,7 @@ public class HessianSourceWireAttacher implements SourceWireAttacher<HessianWire
         URI id = sourceDefinition.getClassLoaderId();
         ClassLoader loader = classLoaderRegistry.getClassLoader(id);
         if (loader == null) {
-            throw new WiringException("Classloader not found", id.toString());
+            throw new WiringException("Classloader not found: " + id, id.toString());
         }
         String callbackUri = null;
         if (targetDefinition.getCallbackUri() != null) {

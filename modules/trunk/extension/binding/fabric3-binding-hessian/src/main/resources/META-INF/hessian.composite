@@ -32,6 +32,10 @@
         <system:implementation.system class="org.fabric3.binding.hessian.control.HessianBindingGenerator"/>
     </component>
 
+    <component name="HessianSCABindingProvider" f3:key="hessian:binding.hessian">
+        <system:implementation.system class="org.fabric3.binding.hessian.control.HessianBindingProvider"/>
+    </component>
+
     <!-- Hessian Wire Attachers -->
     <component name="HessianSourceWireAttacher" f3:key="org.fabric3.binding.hessian.provision.HessianWireSourceDefinition">
         <system:implementation.system class="org.fabric3.binding.hessian.runtime.HessianSourceWireAttacher"/>
