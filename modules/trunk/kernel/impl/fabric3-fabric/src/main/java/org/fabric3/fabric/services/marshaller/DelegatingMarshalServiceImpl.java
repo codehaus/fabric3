@@ -39,10 +39,16 @@ public class DelegatingMarshalServiceImpl implements DelegatingMarshalService {
     }
 
     public void marshall(Object object, XMLStreamWriter writer) throws MarshalException {
+        if (proxied == null) {
+            throw new NoRegisteredMarshallingService("Marshal service delgate not registred");
+        }
         proxied.marshall(object, writer);
     }
 
     public <T> T unmarshall(Class<T> type, XMLStreamReader reader) throws MarshalException {
+        if (proxied == null) {
+            throw new NoRegisteredMarshallingService("Marshal service delgate not registred");
+        }
         return proxied.unmarshall(type, reader);
     }
 }
