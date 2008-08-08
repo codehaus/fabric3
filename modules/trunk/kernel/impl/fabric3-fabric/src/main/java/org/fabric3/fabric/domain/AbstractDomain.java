@@ -18,6 +18,7 @@
  */
 package org.fabric3.fabric.domain;
 
+import java.net.URI;
 import java.util.Collection;
 import javax.xml.namespace.QName;
 
@@ -25,6 +26,7 @@ import static org.osoa.sca.Constants.SCA_NS;
 
 import org.fabric3.fabric.allocator.AllocationException;
 import org.fabric3.fabric.allocator.Allocator;
+import org.fabric3.fabric.binding.BindingSelector;
 import org.fabric3.fabric.generator.PhysicalModelGenerator;
 import org.fabric3.fabric.instantiator.LogicalChange;
 import org.fabric3.fabric.instantiator.LogicalModelInstantiator;
@@ -34,18 +36,23 @@ import org.fabric3.host.domain.AssemblyException;
 import org.fabric3.host.domain.DeploymentException;
 import org.fabric3.host.domain.DomainException;
 import org.fabric3.scdl.Composite;
+import org.fabric3.spi.binding.BindingSelectionException;
 import org.fabric3.spi.domain.Domain;
 import org.fabric3.spi.generator.CommandMap;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.CopyUtil;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
+import org.fabric3.spi.model.instance.LogicalReference;
+import org.fabric3.spi.model.instance.LogicalService;
+import org.fabric3.spi.model.instance.LogicalWire;
 import org.fabric3.spi.services.contribution.MetaDataStore;
 import org.fabric3.spi.services.contribution.MetaDataStoreException;
 import org.fabric3.spi.services.contribution.QNameSymbol;
 import org.fabric3.spi.services.contribution.ResourceElement;
 import org.fabric3.spi.services.lcm.LogicalComponentManager;
 import org.fabric3.spi.services.lcm.StoreException;
+import org.fabric3.spi.util.UriHelper;
 
 /**
  * Base class for abstract assemblies
@@ -60,6 +67,7 @@ public abstract class AbstractDomain implements Domain {
     private final Allocator allocator;
     private final MetaDataStore metadataStore;
     private final LogicalComponentManager logicalComponentManager;
+    private BindingSelector bindingSelector;
     private RoutingService routingService;
 
     public AbstractDomain(Allocator allocator,
@@ -67,12 +75,14 @@ public abstract class AbstractDomain implements Domain {
                           PhysicalModelGenerator physicalModelGenerator,
                           LogicalModelInstantiator logicalModelInstantiator,
                           LogicalComponentManager logicalComponentManager,
+                          BindingSelector bindingSelector,
                           RoutingService routingService) {
         this.allocator = allocator;
         this.metadataStore = metadataStore;
         this.physicalModelGenerator = physicalModelGenerator;
         this.logicalModelInstantiator = logicalModelInstantiator;
         this.logicalComponentManager = logicalComponentManager;
+        this.bindingSelector = bindingSelector;
         this.routingService = routingService;
     }
 
@@ -128,15 +138,13 @@ public abstract class AbstractDomain implements Domain {
 
         // Allocate the components to runtime nodes
         try {
-            for (LogicalComponent<?> component : components) {
-                if (!component.isProvisioned()) {
-                    allocator.allocate(component, false);
-                }
-            }
+            allocate(components);
         } catch (AllocationException e) {
-            throw new DeploymentException("Error deploying: " + composite.getName(), e);
+            throw new DeploymentException("Error deploying composite: " + composite.getName());
         }
 
+        // Select bindings
+        selectBinding(components);
         try {
             // generate and provision any new components and new wires
             CommandMap commandMap = physicalModelGenerator.generate(components);
@@ -207,13 +215,9 @@ public abstract class AbstractDomain implements Domain {
 
         // Allocate the components to runtime nodes
         try {
-            for (LogicalComponent<?> component : components) {
-                if (!component.isProvisioned()) {
-                    allocator.allocate(component, false);
-                }
-            }
+            allocate(components);
         } catch (AllocationException e) {
-            throw new DeploymentException("Error deploying: " + composite.getName(), e);
+            throw new DeploymentException("Error deploying composite: " + composite.getName());
         }
 
         try {
@@ -235,4 +239,61 @@ public abstract class AbstractDomain implements Domain {
         }
 
     }
+
+    /**
+     * Selects bindings for references targetd to remote services for a set of components being deployed by delegatng to a BindingSelector. If the
+     * remote service is has an explicit binding, its configuration will be used to construct the reference binding. If the service does not have an
+     * explicit binding, the wire is said to using binding.sca, in which case the BindingSelector will select an appropriate remoe transport and
+     * create binding configuraton for both sides of the wire.
+     *
+     * @param components the set of components being deployed
+     * @throws DeploymentException if an error occurs during binding selection
+     */
+    private void selectBinding(Collection<LogicalComponent<?>> components) throws DeploymentException {
+        for (LogicalComponent<?> component : components) {
+            if (!component.isProvisioned()) {
+                for (LogicalReference reference : component.getReferences()) {
+                    for (LogicalWire wire : reference.getWires()) {
+                        if (wire.getTargetUri() != null) {
+                            URI targetUri = UriHelper.getDefragmentedName(wire.getTargetUri());
+                            LogicalComponent target = logicalComponentManager.getComponent(targetUri);
+                            assert target != null;
+                            if ((component.getRuntimeId() == null && target.getRuntimeId() == null)) {
+                                // components are local, no need for a binding
+                                continue;
+                            } else if (component.getRuntimeId() != null && component.getRuntimeId().equals(target.getRuntimeId())) {
+                                // components are local, no need for a binding
+                                continue;
+                            }
+                            LogicalService targetServce = target.getService(wire.getTargetUri().getFragment());
+                            assert targetServce != null;
+                            try {
+                                bindingSelector.selectBinding(reference, targetServce);
+                            } catch (BindingSelectionException e) {
+                                URI from = reference.getUri();
+                                URI to = targetServce.getUri();
+                                throw new DeploymentException("Error selecting a binding from " + from + " to " + to, e);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * Delegates to the Allocator to determine which runtimes to deploy the given collection of components to.
+     *
+     * @param components the components to allocate
+     * @throws AllocationException if an allocation error occurs
+     */
+    private void allocate(Collection<LogicalComponent<?>> components) throws AllocationException {
+        for (LogicalComponent<?> component : components) {
+            if (!component.isProvisioned()) {
+                allocator.allocate(component, false);
+            }
+        }
+    }
+
+
 }

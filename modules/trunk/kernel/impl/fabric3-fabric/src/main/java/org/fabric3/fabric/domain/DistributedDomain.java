@@ -21,11 +21,12 @@ package org.fabric3.fabric.domain;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.fabric.allocator.Allocator;
+import org.fabric3.fabric.binding.BindingSelector;
 import org.fabric3.fabric.generator.PhysicalModelGenerator;
 import org.fabric3.fabric.instantiator.LogicalModelInstantiator;
 import org.fabric3.fabric.services.routing.RoutingService;
-import org.fabric3.spi.domain.Domain;
 import org.fabric3.host.domain.DomainException;
+import org.fabric3.spi.domain.Domain;
 import org.fabric3.spi.services.contribution.MetaDataStore;
 import org.fabric3.spi.services.lcm.LogicalComponentManager;
 import org.fabric3.spi.services.lcm.RecoveryException;
@@ -42,9 +43,10 @@ public class DistributedDomain extends AbstractDomain implements Domain {
                              @Reference(name = "store")MetaDataStore metaDataStore,
                              @Reference PhysicalModelGenerator physicalModelGenerator,
                              @Reference LogicalModelInstantiator logicalModelInstantiator,
+                             @Reference BindingSelector bindingSelector,
                              @Reference(name = "logicalComponentManager")LogicalComponentManager logicalComponentManager,
                              @Reference RoutingService routingService) {
-        super(allocator, metaDataStore, physicalModelGenerator, logicalModelInstantiator, logicalComponentManager, routingService);
+        super(allocator, metaDataStore, physicalModelGenerator, logicalModelInstantiator, logicalComponentManager, bindingSelector, routingService);
         this.logicalComponentManager = logicalComponentManager;
     }
 

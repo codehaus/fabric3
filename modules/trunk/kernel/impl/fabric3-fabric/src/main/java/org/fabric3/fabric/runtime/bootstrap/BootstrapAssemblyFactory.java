@@ -91,6 +91,8 @@ import org.fabric3.fabric.services.instancefactory.DefaultInstanceFactoryBuilder
 import org.fabric3.fabric.services.instancefactory.GenerationHelperImpl;
 import org.fabric3.fabric.services.instancefactory.ReflectiveInstanceFactoryBuilder;
 import org.fabric3.fabric.services.routing.RuntimeRoutingService;
+import org.fabric3.fabric.binding.BindingSelector;
+import org.fabric3.fabric.binding.BindingSelectorImpl;
 import org.fabric3.host.runtime.Fabric3Runtime;
 import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.host.runtime.InitializationException;
@@ -180,7 +182,7 @@ public class BootstrapAssemblyFactory {
                                       HostInfo info) throws InitializationException {
 
         Allocator allocator = new LocalAllocator();
-
+        BindingSelector bindingSelector = new BindingSelectorImpl();
         CommandExecutorRegistry commandRegistry =
                 createCommandExecutorRegistry(monitorFactory,
                                               classLoaderRegistry,
@@ -204,6 +206,7 @@ public class BootstrapAssemblyFactory {
                                                  physicalModelGenerator,
                                                  logicalModelInstantiator,
                                                  logicalComponentManager,
+                                                 bindingSelector,
                                                  routingService);
         try {
             runtimeDomain.initialize();
