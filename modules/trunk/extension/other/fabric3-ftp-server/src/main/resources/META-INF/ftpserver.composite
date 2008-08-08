@@ -76,6 +76,10 @@
         <system:implementation.system class="org.fabric3.ftp.server.handler.QuitRequestHandler"/>
     </component>
 
+    <component name="org.fabric3.ftp.server.handler.ListRequestHandler" f3:key="LIST">
+        <system:implementation.system class="org.fabric3.ftp.server.handler.ListRequestHandler"/>
+    </component>
+
     <!-- SYST Request Handler -->
     <component name="org.fabric3.ftp.server.handler.CwdRequestHandler" f3:key="CWD">
         <system:implementation.system class="org.fabric3.ftp.server.handler.CwdRequestHandler"/>
