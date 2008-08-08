@@ -18,14 +18,12 @@
  */
 package org.fabric3.spi.services.advertisement;
 
+import java.util.Map;
 import java.util.Set;
-
 import javax.xml.namespace.QName;
 
 /**
- * Provides the abstraction for locally advertising capaibilities
- * within a runtime. The capabilities are expressed as qualified
- * names.
+ * Provides the abstraction for locally advertising capaibilities within a runtime. The capabilities are expressed as qualified names.
  *
  * @version $Revsion$ $Date$
  */
@@ -33,32 +31,59 @@ public interface AdvertisementService {
 
     /**
      * Returns the list of features available on the current node.
+     *
      * @return List of features.
      */
     Set<QName> getFeatures();
 
     /**
      * Adds a feature to the current node.
+     *
      * @param feature Feature to be added.
      */
     void addFeature(QName feature);
 
     /**
      * Removes a feature from the current node.
+     *
      * @param feature Feature to be removed.
      */
     void removeFeature(QName feature);
 
     /**
      * Adds an advertismenet listener.
+     *
      * @param listener Listener to be added.
      */
     void addListener(AdvertisementListener listener);
 
     /**
      * Removes an advertismenet listener.
+     *
      * @param listener Listener to be removed.
      */
     void removeListener(AdvertisementListener listener);
+
+    /**
+     * Adds metadata for a binding transport supported by the runtime.
+     *
+     * @param transport the QName representing the transport
+     * @param metaData  the transport metadata
+     */
+    void addTransportMetadata(QName transport, String metaData);
+
+    /**
+     * Removes the transport and its metadata from the list of supported binding transports.
+     *
+     * @param transport the QName representing the transport
+     */
+    void removeTransportMetadata(QName transport);
+
+    /**
+     * Returns the collection of transport metadata keyed by transport QName.
+     *
+     * @return the transport metadata
+     */
+    public Map<QName, String> getTransportInfo();
 
 }
