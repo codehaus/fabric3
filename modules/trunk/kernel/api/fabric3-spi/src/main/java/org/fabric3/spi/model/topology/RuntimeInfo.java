@@ -20,7 +20,9 @@ package org.fabric3.spi.model.topology;
 
 import java.net.URI;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 import javax.xml.namespace.QName;
 
@@ -45,6 +47,7 @@ public class RuntimeInfo {
     private long uptime;
     private Status status;
     private String messageDestination;
+    private Map<QName, String> transportInfo = new HashMap<QName, String>();
 
     public RuntimeInfo() {
         components = new HashSet<URI>();
@@ -56,6 +59,8 @@ public class RuntimeInfo {
     }
 
     /**
+     * Returns the runtime status.
+     *
      * @return Runtime status.
      */
     public Status getStatus() {
@@ -63,6 +68,8 @@ public class RuntimeInfo {
     }
 
     /**
+     * Sets the runtime status.
+     *
      * @param status Runtime status.
      */
     public void setStatus(Status status) {
@@ -70,6 +77,8 @@ public class RuntimeInfo {
     }
 
     /**
+     * Returns the features available on the runtime.
+     *
      * @return Features available on the runtime.
      */
     public Set<QName> getFeatures() {
@@ -77,6 +86,8 @@ public class RuntimeInfo {
     }
 
     /**
+     * Sets the features available on the runtime.
+     *
      * @param features Features available on the runtime.
      */
     public void setFeatures(Set<QName> features) {
@@ -84,6 +95,8 @@ public class RuntimeInfo {
     }
 
     /**
+     * Returns the uptime for the runtime.
+     *
      * @return Uptime for the runtime.
      */
     public long getUptime() {
@@ -91,6 +104,8 @@ public class RuntimeInfo {
     }
 
     /**
+     * Sets the uptime for the runtime.
+     *
      * @param uptime Uptime for the runtime.
      */
     public void setUptime(long uptime) {
@@ -124,6 +139,54 @@ public class RuntimeInfo {
         components.add(uri);
     }
 
+    /**
+     * Returns the message destination used by this runtime.
+     *
+     * @return Message destination used by this runtime.
+     */
+    public String getMessageDestination() {
+        return messageDestination;
+    }
+
+    /**
+     * Sets the message destination used by this runtime.
+     *
+     * @param messageDestination Message destination used by this runtime.
+     */
+    public void setMessageDestination(String messageDestination) {
+        this.messageDestination = messageDestination;
+    }
+
+    /**
+     * Sets the opaque metadata for binding transports supported by the runtime. Transport information is keyed by a QName representing the transport
+     * type (e.g. HTTP or HTTPs) and contains opaque metadata pertaining to the transport such as port number or queue name.
+     *
+     * @param info the transport information
+     */
+    public void setTransportInfo(Map<QName, String> info) {
+        transportInfo.putAll(info);
+    }
+
+    /**
+     * Returns the opaque metadata for a transport supported by the runtime.
+     *
+     * @param transport the metadata or null if the transport is not supported
+     * @return the QName representing the transport
+     */
+    public String getTransportMetaData(QName transport) {
+        return transportInfo.get(transport);
+    }
+
+    /**
+     * Returns the opaque metadata for binding transports supported by the runtime. Transport information is keyed by a QName representing the
+     * transport type (e.g. HTTP or HTTPs) and contains opaque metadata pertaining to the transport such as port number or queue name.
+     *
+     * @return the metadata for transports supported by the runtime
+     */
+    public Map<QName, String> getTransportInfo() {
+        return transportInfo;
+    }
+
     @Override
     public boolean equals(Object obj) {
         return obj != null && obj.getClass() == RuntimeInfo.class && obj.equals(id);
@@ -134,17 +197,5 @@ public class RuntimeInfo {
         return id.hashCode();
     }
 
-    /**
-     * @return Message destination used by this runtime.
-     */
-    public String getMessageDestination() {
-        return messageDestination;
-    }
 
-    /**
-     * @param messageDestination Message destination used by this runtime.
-     */
-    public void setMessageDestination(String messageDestination) {
-        this.messageDestination = messageDestination;
-    }
 }
