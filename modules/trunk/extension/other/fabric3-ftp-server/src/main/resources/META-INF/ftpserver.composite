@@ -81,6 +81,10 @@
         <system:implementation.system class="org.fabric3.ftp.server.handler.CwdRequestHandler"/>
     </component>
 
+    <component name="org.fabric3.ftp.server.handler.TypeRequestHandler" f3:key="TYPE">
+        <system:implementation.system class="org.fabric3.ftp.server.handler.TypeRequestHandler"/>
+    </component>
+
     <!-- CWD Request Handler -->
     <component name="org.fabric3.ftp.server.handler.SystRequestHandler" f3:key="SYST">
         <system:implementation.system class="org.fabric3.ftp.server.handler.SystRequestHandler"/>
