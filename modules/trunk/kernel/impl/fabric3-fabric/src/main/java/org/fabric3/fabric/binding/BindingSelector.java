@@ -19,23 +19,22 @@
 package org.fabric3.fabric.binding;
 
 import org.fabric3.spi.binding.BindingSelectionException;
-import org.fabric3.spi.model.instance.LogicalReference;
-import org.fabric3.spi.model.instance.LogicalService;
+import org.fabric3.spi.model.instance.LogicalComponent;
 
 /**
- * Implementations are responsible for selecting and configuring a binding for a wire from a source reference to a target service.
+ * Implementations are responsible for selecting and configuring binding information for wires originating from component.
  *
  * @version $Revision$ $Date$
  */
 public interface BindingSelector {
 
+
     /**
-     * Selects and configures a binding to connect the source to the target.
+     * Selects and configures bindings for component wires.
      *
-     * @param source the source reference
-     * @param target the target reference
+     * @param component the component
      * @throws BindingSelectionException if an error occurs selecting a binding
      */
-    void selectBinding(LogicalReference source, LogicalService target) throws BindingSelectionException;
+    void selectBindings(LogicalComponent<?> component) throws BindingSelectionException;
 
 }

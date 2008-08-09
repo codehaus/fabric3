@@ -25,6 +25,8 @@ import javax.management.MBeanServer;
 
 import org.fabric3.fabric.allocator.Allocator;
 import org.fabric3.fabric.allocator.LocalAllocator;
+import org.fabric3.fabric.binding.BindingSelector;
+import org.fabric3.fabric.binding.BindingSelectorImpl;
 import org.fabric3.fabric.builder.ConnectorImpl;
 import org.fabric3.fabric.builder.classloader.ClassLoaderBuilder;
 import org.fabric3.fabric.builder.classloader.ClassLoaderBuilderImpl;
@@ -91,8 +93,7 @@ import org.fabric3.fabric.services.instancefactory.DefaultInstanceFactoryBuilder
 import org.fabric3.fabric.services.instancefactory.GenerationHelperImpl;
 import org.fabric3.fabric.services.instancefactory.ReflectiveInstanceFactoryBuilder;
 import org.fabric3.fabric.services.routing.RuntimeRoutingService;
-import org.fabric3.fabric.binding.BindingSelector;
-import org.fabric3.fabric.binding.BindingSelectorImpl;
+import org.fabric3.host.domain.DomainException;
 import org.fabric3.host.runtime.Fabric3Runtime;
 import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.host.runtime.InitializationException;
@@ -108,7 +109,6 @@ import org.fabric3.spi.builder.component.SourceWireAttacher;
 import org.fabric3.spi.builder.component.TargetWireAttacher;
 import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.spi.domain.Domain;
-import org.fabric3.host.domain.DomainException;
 import org.fabric3.spi.executor.CommandExecutorRegistry;
 import org.fabric3.spi.generator.AddCommandGenerator;
 import org.fabric3.spi.generator.GeneratorRegistry;
@@ -182,7 +182,7 @@ public class BootstrapAssemblyFactory {
                                       HostInfo info) throws InitializationException {
 
         Allocator allocator = new LocalAllocator();
-        BindingSelector bindingSelector = new BindingSelectorImpl();
+        BindingSelector bindingSelector = new BindingSelectorImpl(logicalComponentManager);
         CommandExecutorRegistry commandRegistry =
                 createCommandExecutorRegistry(monitorFactory,
                                               classLoaderRegistry,
@@ -191,7 +191,7 @@ public class BootstrapAssemblyFactory {
                                               cpRegistry,
                                               mbServer,
                                               metaDataStore,
-                                              jmxSubDomain, 
+                                              jmxSubDomain,
                                               info);
 
         RuntimeRoutingService routingService = new RuntimeRoutingService(commandRegistry, scopeRegistry);

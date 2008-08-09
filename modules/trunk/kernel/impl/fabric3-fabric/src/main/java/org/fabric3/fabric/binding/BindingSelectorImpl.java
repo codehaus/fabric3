@@ -29,11 +29,18 @@ import org.osoa.sca.annotations.Reference;
 import org.fabric3.spi.binding.BindingProvider;
 import org.fabric3.spi.binding.BindingSelectionException;
 import org.fabric3.spi.binding.BindingSelectionStrategy;
+import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalService;
+import org.fabric3.spi.model.instance.LogicalWire;
+import org.fabric3.spi.services.lcm.LogicalComponentManager;
+import org.fabric3.spi.util.UriHelper;
 
 /**
- * Selects a binding provider by delegating to a BindingSelectionStrategy configured for the domain.
+ * Selects a binding provider by delegating to a BindingSelectionStrategy configured for the domain. For each wire, if a remote service has an
+ * explicit binding, its configuration will be used to construct the reference binding. If a service does not have an explicit binding, the wire is
+ * said to using binding.sca, in which case the BindingSelector will select an appropriate remote transport and create binding configuraton for both
+ * sides of the wire.
  *
  * @version $Revision$ $Date$
  */
@@ -42,6 +49,11 @@ public class BindingSelectorImpl implements BindingSelector {
     private Map<QName, BindingProvider> providers = new HashMap<QName, BindingProvider>();
     // the default binding strategy if none explicitly configured
     private BindingSelectionStrategy strategy = new DefaultBindingSelectionStrategy();
+    private LogicalComponentManager logicalComponentManager;
+
+    public BindingSelectorImpl(@Reference(name = "logicalComponentManager")LogicalComponentManager logicalComponentManager) {
+        this.logicalComponentManager = logicalComponentManager;
+    }
 
     /**
      * Lazily injects SCAServiceProviders as they become available from runtime extensions.
@@ -62,7 +74,37 @@ public class BindingSelectorImpl implements BindingSelector {
         this.strategy = strategy;
     }
 
-    public void selectBinding(LogicalReference source, LogicalService target) throws BindingSelectionException {
+    public void selectBindings(LogicalComponent<?> component) throws BindingSelectionException {
+        for (LogicalReference reference : component.getReferences()) {
+            for (LogicalWire wire : reference.getWires()) {
+                if (wire.getTargetUri() != null) {
+                    URI targetUri = UriHelper.getDefragmentedName(wire.getTargetUri());
+                    LogicalComponent target = logicalComponentManager.getComponent(targetUri);
+                    assert target != null;
+                    if ((component.getRuntimeId() == null && target.getRuntimeId() == null)) {
+                        // components are local, no need for a binding
+                        continue;
+                    } else if (component.getRuntimeId() != null && component.getRuntimeId().equals(target.getRuntimeId())) {
+                        // components are local, no need for a binding
+                        continue;
+                    }
+                    LogicalService targetServce = target.getService(wire.getTargetUri().getFragment());
+                    assert targetServce != null;
+                    selectBinding(reference, targetServce);
+                }
+            }
+        }
+
+    }
+
+    /**
+     * Selects and configures a binding to connect the source to the target.
+     *
+     * @param source the source reference
+     * @param target the target reference
+     * @throws BindingSelectionException if an error occurs selecting a binding
+     */
+    private void selectBinding(LogicalReference source, LogicalService target) throws BindingSelectionException {
         Map<QName, BindingProvider> requiredMatches = new HashMap<QName, BindingProvider>();
         Map<QName, BindingProvider> allMatches = new HashMap<QName, BindingProvider>();
 

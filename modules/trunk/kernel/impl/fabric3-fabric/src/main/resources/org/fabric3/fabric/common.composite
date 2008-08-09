@@ -51,6 +51,7 @@
 
     <component name="BindingSelector">
         <system:implementation.system class="org.fabric3.fabric.binding.BindingSelectorImpl"/>
+        <reference name="logicalComponentManager" target="logicalComponentManager"/>
     </component>
 
     <component name="generatorRegistry">

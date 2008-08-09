@@ -18,7 +18,6 @@
  */
 package org.fabric3.fabric.domain;
 
-import java.net.URI;
 import java.util.Collection;
 import javax.xml.namespace.QName;
 
@@ -43,16 +42,12 @@ import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.CopyUtil;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
-import org.fabric3.spi.model.instance.LogicalReference;
-import org.fabric3.spi.model.instance.LogicalService;
-import org.fabric3.spi.model.instance.LogicalWire;
 import org.fabric3.spi.services.contribution.MetaDataStore;
 import org.fabric3.spi.services.contribution.MetaDataStoreException;
 import org.fabric3.spi.services.contribution.QNameSymbol;
 import org.fabric3.spi.services.contribution.ResourceElement;
 import org.fabric3.spi.services.lcm.LogicalComponentManager;
 import org.fabric3.spi.services.lcm.StoreException;
-import org.fabric3.spi.util.UriHelper;
 
 /**
  * Base class for abstract assemblies
@@ -241,10 +236,7 @@ public abstract class AbstractDomain implements Domain {
     }
 
     /**
-     * Selects bindings for references targetd to remote services for a set of components being deployed by delegatng to a BindingSelector. If the
-     * remote service is has an explicit binding, its configuration will be used to construct the reference binding. If the service does not have an
-     * explicit binding, the wire is said to using binding.sca, in which case the BindingSelector will select an appropriate remoe transport and
-     * create binding configuraton for both sides of the wire.
+     * Selects bindings for references targeted to remote services for a set of components being deployed by delegating to a BindingSelector.
      *
      * @param components the set of components being deployed
      * @throws DeploymentException if an error occurs during binding selection
@@ -252,30 +244,10 @@ public abstract class AbstractDomain implements Domain {
     private void selectBinding(Collection<LogicalComponent<?>> components) throws DeploymentException {
         for (LogicalComponent<?> component : components) {
             if (!component.isProvisioned()) {
-                for (LogicalReference reference : component.getReferences()) {
-                    for (LogicalWire wire : reference.getWires()) {
-                        if (wire.getTargetUri() != null) {
-                            URI targetUri = UriHelper.getDefragmentedName(wire.getTargetUri());
-                            LogicalComponent target = logicalComponentManager.getComponent(targetUri);
-                            assert target != null;
-                            if ((component.getRuntimeId() == null && target.getRuntimeId() == null)) {
-                                // components are local, no need for a binding
-                                continue;
-                            } else if (component.getRuntimeId() != null && component.getRuntimeId().equals(target.getRuntimeId())) {
-                                // components are local, no need for a binding
-                                continue;
-                            }
-                            LogicalService targetServce = target.getService(wire.getTargetUri().getFragment());
-                            assert targetServce != null;
-                            try {
-                                bindingSelector.selectBinding(reference, targetServce);
-                            } catch (BindingSelectionException e) {
-                                URI from = reference.getUri();
-                                URI to = targetServce.getUri();
-                                throw new DeploymentException("Error selecting a binding from " + from + " to " + to, e);
-                            }
-                        }
-                    }
+                try {
+                    bindingSelector.selectBindings(component);
+                } catch (BindingSelectionException e) {
+                    throw new DeploymentException(e);
                 }
             }
         }
