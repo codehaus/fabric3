@@ -54,7 +54,7 @@ public class TypeBasedAutoWireService implements TargetResolutionService {
 
         if (componentReference == null) {
             // this is a reference on an atomic component, not a composite reference
-            if (!logicalReference.getBindings().isEmpty() || isPromoted(compositeComponent, logicalReference, change)) {
+            if (!logicalReference.getBindings().isEmpty() || isPromoted(compositeComponent, logicalReference)) {
                 return;
             }
             ServiceContract<?> requiredContract = determineContract(logicalReference);
@@ -67,7 +67,7 @@ public class TypeBasedAutoWireService implements TargetResolutionService {
         } else {
             // the reference is a composite
             List<URI> uris = componentReference.getTargets();
-            if (!uris.isEmpty() || isPromoted(compositeComponent, logicalReference, change)) {
+            if (!uris.isEmpty() || isPromoted(compositeComponent, logicalReference)) {
                 return;
             }
 
@@ -195,7 +195,7 @@ public class TypeBasedAutoWireService implements TargetResolutionService {
 
     }
 
-    private boolean isPromoted(LogicalComponent<?> composite, LogicalReference logicalReference, LogicalChange change) {
+    private boolean isPromoted(LogicalComponent<?> composite, LogicalReference logicalReference) {
         LogicalComponent<?> component = logicalReference.getParent();
         for (LogicalReference compositeReference : composite.getReferences()) {
             List<URI> uris = compositeReference.getPromotedUris();
