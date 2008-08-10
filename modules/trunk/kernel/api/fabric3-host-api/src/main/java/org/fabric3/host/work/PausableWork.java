@@ -34,7 +34,7 @@ public interface PausableWork extends Runnable {
 	/**
 	 * Restart any paused work.
 	 */
-	void restart();
+	void start();
 	
 	/**
 	 * Stop the work.

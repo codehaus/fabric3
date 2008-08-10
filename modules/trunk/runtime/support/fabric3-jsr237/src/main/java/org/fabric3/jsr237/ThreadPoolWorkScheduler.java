@@ -6,20 +6,26 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import org.fabric3.host.work.DefaultPausableWork;
+import org.fabric3.host.work.PausableWork;
 import org.fabric3.host.work.WorkScheduler;
+import org.fabric3.management.WorkSchedulerMBean;
 import org.osoa.sca.annotations.Property;
 
 /**
  * Thread pool based implementation of the work scheduler.
  *
  */
-public class ThreadPoolWorkScheduler implements WorkScheduler {
+public class ThreadPoolWorkScheduler implements WorkScheduler, WorkSchedulerMBean {
 
     private final ThreadPoolExecutor executor;
     private final Set<DefaultPausableWork> workInProgress = new CopyOnWriteArraySet<DefaultPausableWork>();
     private final AtomicBoolean paused = new AtomicBoolean();
+    private final ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
 
     /**
      * Initializes the thread-pool. Supports unbounded work with a fixed pool size. If all the workers 
@@ -34,13 +40,15 @@ public class ThreadPoolWorkScheduler implements WorkScheduler {
     }
 
 	public <T extends DefaultPausableWork> void scheduleWork(T work) {
-
-		if (paused.get()) {
-			work.pause();
-		}
 		
-        Runnable runnable = new DecoratingWork(work);
-        executor.submit(runnable);
+		Lock lock = readWriteLock.readLock();
+		lock.lock();
+		try {
+	        Runnable runnable = new DecoratingWork(work);
+	        executor.submit(runnable);
+		} finally {
+			lock.unlock();
+		}
         
 	}
 	
@@ -53,12 +61,84 @@ public class ThreadPoolWorkScheduler implements WorkScheduler {
 		}
 		
 		public void run() {
+
+			if (paused.get()) {
+				work.pause();
+			}
 			workInProgress.add(work);
+			
 			try {
 				work.run();
 			} finally {
 				workInProgress.remove(work);
 			}
+			
+		}
+		
+	}
+	
+	// ------------------ Management operations
+	public int getActiveCount() {
+		return executor.getActiveCount();
+	}
+
+	public int getPoolSize() {
+		return executor.getCorePoolSize();
+	}
+
+	public void pause() {
+		
+		if (paused.get()) {
+			return;
+		}
+		
+		Lock lock = readWriteLock.writeLock();
+		lock.lock();
+		try {
+			paused.set(true);
+			for (PausableWork pausableWork : workInProgress) {
+				pausableWork.pause();
+			}
+		} finally {
+			lock.unlock();
+		}
+		
+	}
+
+	public void setPoolSize(int poolSize) {
+		executor.setCorePoolSize(poolSize);
+	}
+
+	public void start() {
+		
+		if (!paused.get()) {
+			return;
+		}
+		
+		Lock lock = readWriteLock.writeLock();
+		lock.lock();
+		try {
+			paused.set(false);
+			for (PausableWork pausableWork : workInProgress) {
+				pausableWork.start();
+			}
+		} finally {
+			lock.unlock();
+		}
+		
+	}
+
+	public void stop() {
+		
+		Lock lock = readWriteLock.writeLock();
+		lock.lock();
+		try {
+			for (PausableWork pausableWork : workInProgress) {
+				pausableWork.stop();
+			}
+			executor.shutdown();
+		} finally {
+			lock.unlock();
 		}
 		
 	}

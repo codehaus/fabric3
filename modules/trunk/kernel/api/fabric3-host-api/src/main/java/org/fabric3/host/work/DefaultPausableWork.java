@@ -57,7 +57,7 @@ public abstract class DefaultPausableWork implements PausableWork {
 	/**
 	 * Restarts the job.
 	 */
-	public final void restart() {
+	public final void start() {
 		paused.set(false);
 	}
 	

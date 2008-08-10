@@ -39,6 +39,11 @@
             <version>0.6-SNAPSHOT</version>
         </dependency>
         <dependency>
+            <groupId>org.codehaus.fabric3</groupId>
+            <artifactId>fabric3-management-api</artifactId>
+            <version>0.6-SNAPSHOT</version>
+        </dependency>
+        <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
         </dependency>
