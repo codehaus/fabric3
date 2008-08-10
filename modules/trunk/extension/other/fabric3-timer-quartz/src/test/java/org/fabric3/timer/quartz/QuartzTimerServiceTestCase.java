@@ -19,8 +19,8 @@
 package org.fabric3.timer.quartz;
 
 import java.util.concurrent.CountDownLatch;
-import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
+
 import javax.transaction.TransactionManager;
 
 import junit.framework.TestCase;

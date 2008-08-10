@@ -18,9 +18,8 @@
  */
 package org.fabric3.discovery.jxta;
 
-import java.net.URI;
-import java.net.URL;
 import java.io.File;
+import java.net.URI;
 
 import junit.framework.TestCase;
 import net.jxta.platform.NetworkConfigurator;
