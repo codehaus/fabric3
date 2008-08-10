@@ -26,6 +26,7 @@ import junit.framework.TestCase;
 import net.jxta.platform.NetworkConfigurator;
 
 import org.fabric3.host.runtime.HostInfo;
+import org.fabric3.host.work.DefaultPausableWork;
 import org.fabric3.host.work.NotificationListener;
 import org.fabric3.host.work.WorkScheduler;
 import org.fabric3.jxta.impl.JxtaServiceImpl;
@@ -72,14 +73,15 @@ public class JxtaDiscoveryServiceTest extends TestCase {
 
     private class MyWorkScheduler implements WorkScheduler {
 
-        public <T extends Runnable> void scheduleWork(T runnable) {
-            new Thread(runnable).start();
-        }
+		public <T extends DefaultPausableWork> void scheduleWork(T work, NotificationListener<T> listener) {
+            new Thread(work).start();
+			
+		}
 
-        public <T extends Runnable> void scheduleWork(T runnable, NotificationListener<T> arg1) {
-            // TODO Auto-generated method stub
-
-        }
+		public <T extends DefaultPausableWork> void scheduleWork(T work) {
+			// TODO Auto-generated method stub
+			
+		}
 
     }
 

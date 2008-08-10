@@ -26,10 +26,26 @@ import java.util.concurrent.atomic.AtomicBoolean;
  * @Revision $Date$
  *
  */
-public abstract class DefaultDaemonWork implements DaemonWork {
+public abstract class DefaultPausableWork implements PausableWork {
 	
 	private AtomicBoolean active = new AtomicBoolean(true);
 	private AtomicBoolean paused = new AtomicBoolean(false);
+	private boolean daemon;
+	
+	/**
+	 * Non-daemon constructor.
+	 */
+	public DefaultPausableWork() {
+	}
+	
+	/**
+	 * Allows to set whether the work is daemon or not.
+	 * 
+	 * @param daemon Whether this worker is a daemon or not.
+	 */
+	public DefaultPausableWork(boolean daemon) {
+		this.daemon = daemon;
+	}
 	
 	/**
 	 * Pauses the job.
@@ -57,9 +73,15 @@ public abstract class DefaultDaemonWork implements DaemonWork {
 	 */
 	public final void run() {		
 		
-		while (active.get()) {
-			if (paused.get()) {
-				continue;
+		if (daemon) {
+			while (active.get()) {
+				if (paused.get()) {
+					continue;
+				}
+				execute();
+			}
+		} else {
+			while (paused.get()) {
 			}
 			execute();
 		}

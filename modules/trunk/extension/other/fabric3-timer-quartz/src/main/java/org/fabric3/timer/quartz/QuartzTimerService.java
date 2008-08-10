@@ -54,6 +54,7 @@ import org.quartz.spi.JobFactory;
 import org.quartz.spi.JobStore;
 import org.quartz.spi.ThreadPool;
 
+import org.fabric3.host.work.DefaultPausableWork;
 import org.fabric3.host.work.WorkScheduler;
 import org.fabric3.timer.spi.TimerService;
 
@@ -214,8 +215,12 @@ public class QuartzTimerService implements TimerService {
 
     }
 
-    public void execute(Runnable command) {
-        workScheduler.scheduleWork(command);
+    public void execute(final Runnable runnable) {
+        workScheduler.scheduleWork(new DefaultPausableWork() {
+        	public void execute() {
+        		runnable.run();
+        	}
+        });
     }
 
     private Scheduler createScheduler(String name, String id, JobStore store, ThreadPool pool, JobRunShellFactory shellFactory, JobFactory jobFactory)
@@ -266,8 +271,12 @@ public class QuartzTimerService implements TimerService {
      */
     private class F3ThreadPool implements ThreadPool {
 
-        public boolean runInThread(Runnable runnable) {
-            workScheduler.scheduleWork(runnable);
+        public boolean runInThread(final Runnable runnable) {
+            workScheduler.scheduleWork(new DefaultPausableWork() {
+            	public void execute() {
+            		runnable.run();
+            	}
+            });
             return true;
         }
 

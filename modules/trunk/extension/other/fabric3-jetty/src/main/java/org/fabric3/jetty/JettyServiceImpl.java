@@ -49,6 +49,7 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.api.annotation.Monitor;
 import org.fabric3.host.runtime.HostInfo;
+import org.fabric3.host.work.DefaultPausableWork;
 import org.fabric3.host.work.WorkScheduler;
 import org.fabric3.spi.Constants;
 import org.fabric3.spi.services.advertisement.AdvertisementService;
@@ -358,7 +359,7 @@ public class JettyServiceImpl implements JettyService {
     /**
      * A unit of work dispatched to the runtime work scheduler
      */
-    private class Fabric3Work implements Work {
+    private class Fabric3Work extends DefaultPausableWork {
 
         Runnable job;
 
@@ -369,7 +370,7 @@ public class JettyServiceImpl implements JettyService {
         public void release() {
         }
 
-        public void run() {
+        public void execute() {
             job.run();
         }
     }

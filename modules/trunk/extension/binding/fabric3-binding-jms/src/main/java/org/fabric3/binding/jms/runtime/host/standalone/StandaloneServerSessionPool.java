@@ -31,6 +31,7 @@ import org.fabric3.binding.jms.common.TransactionType;
 import org.fabric3.binding.jms.runtime.JMSObjectFactory;
 import org.fabric3.binding.jms.runtime.helper.JmsHelper;
 import org.fabric3.binding.jms.runtime.tx.TransactionHandler;
+import org.fabric3.host.work.DefaultPausableWork;
 import org.fabric3.host.work.WorkScheduler;
 
 /**
@@ -121,8 +122,8 @@ public class StandaloneServerSessionPool implements ServerSessionPool {
      * @param serverSessions
      */
     public void StartServerSession(final ServerSession serverSession){
-        workScheduler.scheduleWork(new Runnable() {
-            public void run() {
+        workScheduler.scheduleWork(new DefaultPausableWork() {
+            public void execute() {
                 try {
                     Session session = serverSession.getSession();
                     if (transactionType == TransactionType.GLOBAL) {

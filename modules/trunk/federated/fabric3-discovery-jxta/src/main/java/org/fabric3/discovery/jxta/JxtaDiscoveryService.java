@@ -18,6 +18,8 @@
  */
 package org.fabric3.discovery.jxta;
 
+import static net.jxta.discovery.DiscoveryService.ADV;
+
 import java.io.IOException;
 import java.net.URI;
 import java.util.Enumeration;
@@ -25,25 +27,23 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicBoolean;
 
-import static net.jxta.discovery.DiscoveryService.ADV;
 import net.jxta.document.AdvertisementFactory;
 import net.jxta.peergroup.PeerGroup;
-import org.osoa.sca.annotations.Destroy;
-import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Init;
-import org.osoa.sca.annotations.Property;
-import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.host.work.DefaultDaemonWork;
+import org.fabric3.api.annotation.Monitor;
+import org.fabric3.host.work.DefaultPausableWork;
 import org.fabric3.host.work.WorkScheduler;
 import org.fabric3.jxta.JxtaService;
 import org.fabric3.spi.model.topology.RuntimeInfo;
 import org.fabric3.spi.services.discovery.DiscoveryService;
 import org.fabric3.spi.services.discovery.DiscoveryServiceRegistry;
 import org.fabric3.spi.services.runtime.RuntimeInfoService;
-import org.fabric3.api.annotation.Monitor;
+import org.osoa.sca.annotations.Destroy;
+import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Init;
+import org.osoa.sca.annotations.Property;
+import org.osoa.sca.annotations.Reference;
 
 /**
  * JXTA implementation of the discovery service. <p/> <p/> The implementation uses the JXTA PDP to broadcast advertisements on the current node and
@@ -190,7 +190,11 @@ public class JxtaDiscoveryService implements DiscoveryService {
     * Notifier sending information about the current node.
     *
     */
-    private class Publisher extends DefaultDaemonWork {
+    private class Publisher extends DefaultPausableWork {
+    	
+    	private Publisher() {
+    		super(true);
+    	}
 
         /*
          * Waits for the defined interval and sends advertisements for the

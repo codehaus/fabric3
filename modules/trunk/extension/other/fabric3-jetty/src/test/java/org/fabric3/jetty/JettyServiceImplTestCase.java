@@ -40,6 +40,7 @@ import static org.easymock.EasyMock.replay;
 import org.easymock.IAnswer;
 
 import org.fabric3.host.runtime.HostInfo;
+import org.fabric3.host.work.DefaultPausableWork;
 import org.fabric3.host.work.WorkScheduler;
 
 /**
@@ -144,7 +145,7 @@ public class JettyServiceImplTestCase extends TestCase {
         super.setUp();
         monitor = createMock(TransportMonitor.class);
         scheduler = createMock(WorkScheduler.class);
-        scheduler.scheduleWork(isA(Runnable.class));
+        scheduler.scheduleWork(isA(DefaultPausableWork.class));
 
         expectLastCall().andStubAnswer(new IAnswer() {
             public Object answer() throws Throwable {

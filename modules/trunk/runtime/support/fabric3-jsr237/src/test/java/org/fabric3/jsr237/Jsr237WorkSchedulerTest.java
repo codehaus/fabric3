@@ -21,6 +21,8 @@ package org.fabric3.jsr237;
 
 import commonj.work.WorkManager;
 import junit.framework.TestCase;
+
+import org.fabric3.host.work.DefaultPausableWork;
 import org.fabric3.host.work.NotificationListener;
 import org.fabric3.host.work.WorkScheduler;
 import org.fabric3.jsr237.Jsr237WorkScheduler;
@@ -49,8 +51,8 @@ public class Jsr237WorkSchedulerTest extends TestCase {
 
     }
 
-    private class MyRunnable implements Runnable {
-        public void run() {
+    private class MyRunnable extends DefaultPausableWork {
+        public void execute() {
             System.err.println("Test executed");
         }
     }

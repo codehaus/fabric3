@@ -39,7 +39,7 @@ public interface WorkScheduler {
      * @param work The unit of work that needs to be asynchronously executed.
      * @param listener Notification listener for callbacks.
      */
-    <T extends Runnable>void scheduleWork(T work, NotificationListener<T> listener);
+    <T extends DefaultPausableWork>void scheduleWork(T work, NotificationListener<T> listener);
     
     /**
      * Schedules a unit of work for future execution. The notification listener 
@@ -47,6 +47,6 @@ public interface WorkScheduler {
      * 
      * @param work The unit of work that needs to be asynchronously executed.
      */
-    <T extends Runnable>void scheduleWork(T work);
+    <T extends DefaultPausableWork>void scheduleWork(T work);
 
 }

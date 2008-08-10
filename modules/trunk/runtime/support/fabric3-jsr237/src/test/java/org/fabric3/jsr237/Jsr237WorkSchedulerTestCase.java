@@ -18,6 +18,7 @@
  */
 package org.fabric3.jsr237;
 
+import org.fabric3.host.work.DefaultPausableWork;
 import org.fabric3.host.work.NotificationListener;
 import org.fabric3.host.work.WorkSchedulerException;
 import org.fabric3.jsr237.Jsr237WorkScheduler;
@@ -28,11 +29,7 @@ import commonj.work.WorkListener;
 import commonj.work.WorkManager;
 import commonj.work.WorkRejectedException;
 import junit.framework.TestCase;
-import static org.easymock.EasyMock.createMock;
-import static org.easymock.EasyMock.expectLastCall;
-import static org.easymock.EasyMock.isA;
-import static org.easymock.EasyMock.replay;
-import static org.easymock.EasyMock.verify;
+import static org.easymock.EasyMock.*;
 
 /**
  * @version $Rev$ $Date$
@@ -46,7 +43,11 @@ public class Jsr237WorkSchedulerTestCase extends TestCase {
         expectLastCall().andReturn(item);
         replay(mgr);
         Jsr237WorkScheduler scheduler = new Jsr237WorkScheduler(mgr);
-        Work work = createMock(Work.class);
+        DefaultPausableWork work = new DefaultPausableWork() {
+			@Override
+			protected void execute() {
+			}
+        };
         scheduler.scheduleWork(work);
         verify(mgr);
     }
@@ -59,8 +60,12 @@ public class Jsr237WorkSchedulerTestCase extends TestCase {
         expectLastCall().andReturn(item);
         replay(mgr);
         Jsr237WorkScheduler scheduler = new Jsr237WorkScheduler(mgr);
-        Work work = createMock(Work.class);
-        NotificationListener<Runnable> listener = createMock(NotificationListener.class);
+        DefaultPausableWork work = new DefaultPausableWork() {
+			@Override
+			protected void execute() {
+			}
+        };
+        NotificationListener<DefaultPausableWork> listener = createMock(NotificationListener.class);
         scheduler.scheduleWork(work, listener);
         verify(mgr);
     }
@@ -72,9 +77,13 @@ public class Jsr237WorkSchedulerTestCase extends TestCase {
         expectLastCall().andThrow(new WorkRejectedException());
         replay(mgr);
         Jsr237WorkScheduler scheduler = new Jsr237WorkScheduler(mgr);
-        Work work = createMock(Work.class);
-        NotificationListener<Runnable> listener = createMock(NotificationListener.class);
-        listener.workRejected(isA(Runnable.class));
+        DefaultPausableWork work = new DefaultPausableWork() {
+			@Override
+			protected void execute() {
+			}
+        };
+        NotificationListener<DefaultPausableWork> listener = createMock(NotificationListener.class);
+        listener.workRejected(isA(DefaultPausableWork.class));
         expectLastCall();
         replay(listener);
         scheduler.scheduleWork(work, listener);
@@ -88,7 +97,11 @@ public class Jsr237WorkSchedulerTestCase extends TestCase {
         expectLastCall().andThrow(new WorkRejectedException());
         replay(mgr);
         Jsr237WorkScheduler scheduler = new Jsr237WorkScheduler(mgr);
-        Work work = createMock(Work.class);
+        DefaultPausableWork work = new DefaultPausableWork() {
+			@Override
+			protected void execute() {
+			}
+        };
         try {
             scheduler.scheduleWork(work);
             fail();

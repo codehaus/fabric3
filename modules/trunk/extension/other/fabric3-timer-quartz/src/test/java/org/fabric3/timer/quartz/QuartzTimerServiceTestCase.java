@@ -25,6 +25,7 @@ import javax.transaction.TransactionManager;
 
 import junit.framework.TestCase;
 
+import org.fabric3.host.work.DefaultPausableWork;
 import org.fabric3.host.work.NotificationListener;
 import org.fabric3.host.work.WorkScheduler;
 
@@ -46,11 +47,11 @@ public class QuartzTimerServiceTestCase extends TestCase {
         // TODO mock transaction manager
         WorkScheduler workScheduler = new WorkScheduler() {
 
-            public <T extends Runnable> void scheduleWork(T work, NotificationListener<T> listener) {
+            public <T extends DefaultPausableWork> void scheduleWork(T work, NotificationListener<T> listener) {
                 work.run();
             }
 
-            public <T extends Runnable> void scheduleWork(T work) {
+            public <T extends DefaultPausableWork> void scheduleWork(T work) {
                 work.run();
             }
         };

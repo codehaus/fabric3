@@ -28,6 +28,7 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
+import org.fabric3.host.work.DefaultPausableWork;
 import org.fabric3.host.work.WorkScheduler;
 
 /**
@@ -42,8 +43,12 @@ public class F3ExecutorService implements ExecutorService {
         this.scheduler = scheduler;
     }
 
-    public void execute(Runnable command) {
-        scheduler.scheduleWork(command);
+    public void execute(final Runnable runnable) {
+        scheduler.scheduleWork(new DefaultPausableWork() {
+        	public void execute() {
+        		runnable.run();
+        	}
+        });
     }
 
     public void shutdown() {

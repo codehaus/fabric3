@@ -21,6 +21,7 @@ package org.fabric3.jsr237;
 import org.osoa.sca.annotations.Reference;
 import org.osoa.sca.annotations.Scope;
 
+import org.fabric3.host.work.DefaultPausableWork;
 import org.fabric3.host.work.NotificationListener;
 import org.fabric3.host.work.WorkScheduler;
 import org.fabric3.host.work.WorkSchedulerException;
@@ -67,7 +68,7 @@ public class Jsr237WorkScheduler implements WorkScheduler {
      *
      * @param work The unit of work that needs to be asynchronously executed.
      */
-    public <T extends Runnable> void scheduleWork(T work) {
+    public <T extends DefaultPausableWork> void scheduleWork(T work) {
         scheduleWork(work, null);
     }
 
@@ -78,7 +79,7 @@ public class Jsr237WorkScheduler implements WorkScheduler {
      * @param work     The unit of work that needs to be asynchronously executed.
      * @param listener Notification listener for callbacks.
      */
-    public <T extends Runnable> void scheduleWork(T work, NotificationListener<T> listener) {
+    public <T extends DefaultPausableWork> void scheduleWork(T work, NotificationListener<T> listener) {
 
         if (work == null) {
             throw new IllegalArgumentException("Work cannot be null");

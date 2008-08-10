@@ -18,8 +18,6 @@
  */
 package org.fabric3.binding.jms.runtime.host.standalone;
 
-import java.util.concurrent.atomic.AtomicBoolean;
-
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageConsumer;
@@ -32,14 +30,14 @@ import org.fabric3.binding.jms.runtime.JMSRuntimeMonitor;
 import org.fabric3.binding.jms.runtime.ResponseMessageListener;
 import org.fabric3.binding.jms.runtime.tx.JmsTxException;
 import org.fabric3.binding.jms.runtime.tx.TransactionHandler;
-import org.fabric3.host.work.DefaultDaemonWork;
+import org.fabric3.host.work.DefaultPausableWork;
 
 /**
  * A thread pull message from destination and invoke Message listener.
  *
  * @version $Revision$ $Date$
  */
-public class ConsumerWorker extends DefaultDaemonWork {
+public class ConsumerWorker extends DefaultPausableWork {
 
     private final Session session;
     private final TransactionHandler transactionHandler;
@@ -60,6 +58,8 @@ public class ConsumerWorker extends DefaultDaemonWork {
      * @param readTimeout        Read timeout.
      */
     public ConsumerWorker(ConsumerWorkerTemplate template) {
+    	
+    	super(true);
         
         try {
             

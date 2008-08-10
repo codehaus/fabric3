@@ -24,7 +24,7 @@ package org.fabric3.host.work;
  * @Revision $Date$
  *
  */
-public interface DaemonWork extends Runnable {
+public interface PausableWork extends Runnable {
 	
 	/**
 	 * Pause the work if possible.

@@ -20,6 +20,7 @@ package org.fabric3.binding.ws.axis2.runtime.config;
 
 import org.apache.axis2.util.threadpool.ThreadFactory;
 
+import org.fabric3.host.work.DefaultPausableWork;
 import org.fabric3.host.work.WorkScheduler;
 
 /**
@@ -34,7 +35,11 @@ public class F3ThreadFactory implements ThreadFactory {
         this.scheduler = scheduler;
     }
 
-    public void execute(Runnable runnable) {
-        scheduler.scheduleWork(runnable);
+    public void execute(final Runnable runnable) {
+        scheduler.scheduleWork(new DefaultPausableWork() {
+        	public void execute() {
+        		runnable.run();
+        	}
+        });
     }
 }

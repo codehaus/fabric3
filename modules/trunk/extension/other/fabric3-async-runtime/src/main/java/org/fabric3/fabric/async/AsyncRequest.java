@@ -20,6 +20,7 @@ package org.fabric3.fabric.async;
 
 import java.util.List;
 
+import org.fabric3.host.work.DefaultPausableWork;
 import org.fabric3.spi.wire.Interceptor;
 import org.fabric3.spi.invocation.Message;
 import org.fabric3.spi.invocation.CallFrame;
@@ -30,7 +31,7 @@ import org.fabric3.spi.invocation.WorkContext;
  *
  * @version $Revision$ $Date$
  */
-public class AsyncRequest implements Runnable {
+public class AsyncRequest extends DefaultPausableWork {
     private final Interceptor next;
     private final Message message;
     private List<CallFrame> stack;
@@ -41,7 +42,7 @@ public class AsyncRequest implements Runnable {
         this.stack = stack;
     }
 
-    public void run() {
+    public void execute() {
         WorkContext newWorkContext = new WorkContext();
         if (stack != null) {
             newWorkContext.addCallFrames(stack);
