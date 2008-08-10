@@ -32,13 +32,14 @@ import org.fabric3.binding.jms.runtime.JMSRuntimeMonitor;
 import org.fabric3.binding.jms.runtime.ResponseMessageListener;
 import org.fabric3.binding.jms.runtime.tx.JmsTxException;
 import org.fabric3.binding.jms.runtime.tx.TransactionHandler;
+import org.fabric3.host.work.DefaultDaemonWork;
 
 /**
  * A thread pull message from destination and invoke Message listener.
  *
  * @version $Revision$ $Date$
  */
-public class ConsumerWorker implements Runnable {
+public class ConsumerWorker extends DefaultDaemonWork {
 
     private final Session session;
     private final TransactionHandler transactionHandler;
@@ -47,7 +48,6 @@ public class ConsumerWorker implements Runnable {
     private final long readTimeout;
     private final TransactionType transactionType;
     private final ClassLoader cl;
-    private final AtomicBoolean active = new AtomicBoolean(true);
     private final JMSObjectFactory responseJMSObjectFactory;
     private final JMSObjectFactory requestJMSObjectFactory;
     private JMSRuntimeMonitor monitor;
@@ -83,7 +83,7 @@ public class ConsumerWorker implements Runnable {
     /**
      * @see java.lang.Runnable#run()
      */
-    public void run() {
+    public void execute() {
 
         ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
         try {
@@ -92,42 +92,37 @@ public class ConsumerWorker implements Runnable {
             if (transactionType == TransactionType.GLOBAL) {
                 transactionHandler.enlist(session);
             }
-            while (active.get()) {
-                Message message = consumer.receive(readTimeout);
-                try {
-                    if (message != null) {
-                        Session responseSession = responseJMSObjectFactory.createSession();
-                        if (transactionType == TransactionType.GLOBAL) {
-                            transactionHandler.enlist(responseSession);
-                        }
-                        listener.onMessage(message, responseSession, responseJMSObjectFactory.getDestination());
-                        if (transactionType == TransactionType.GLOBAL) {
-                            transactionHandler.commit();
-                            transactionHandler.enlist(session);
-                        } else {
-                            session.commit();
-                        }
-                    }
-                } catch (JmsTxException e) {
+            Message message = consumer.receive(readTimeout);
+            try {
+                if (message != null) {
+                    Session responseSession = responseJMSObjectFactory.createSession();
                     if (transactionType == TransactionType.GLOBAL) {
-                        transactionHandler.rollback();
-                    } else {
-                        try {
-                            session.rollback();
-                        } catch (JMSException ne) {
-                            reportException(ne);
-                        }
-                        reportException(e);
+                        transactionHandler.enlist(responseSession);
                     }
+                    listener.onMessage(message, responseSession, responseJMSObjectFactory.getDestination());
+                    if (transactionType == TransactionType.GLOBAL) {
+                        transactionHandler.commit();
+                        transactionHandler.enlist(session);
+                    } else {
+                        session.commit();
+                    }
+                }
+            } catch (JmsTxException e) {
+                if (transactionType == TransactionType.GLOBAL) {
+                    transactionHandler.rollback();
+                } else {
+                    try {
+                        session.rollback();
+                    } catch (JMSException ne) {
+                        reportException(ne);
+                    }
+                    reportException(e);
                 }
             }
         } catch (JMSException ex) {
-            if (active.get()) {
-                if (transactionType == TransactionType.GLOBAL) {
-                    transactionHandler.rollback();
-                }
+            if (transactionType == TransactionType.GLOBAL) {
+                transactionHandler.rollback();
             }
-
         } finally {
             Thread.currentThread().setContextClassLoader(oldCl);
         }
@@ -141,13 +136,6 @@ public class ConsumerWorker implements Runnable {
         if (monitor != null) {
             monitor.jmsListenerError(e);
         }
-    }
-
-    /**
-     * Notify worker to stop.
-     */
-    public void inactivate() {
-        active.set(false);
     }
 
 }

@@ -36,6 +36,7 @@ import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Reference;
 
+import org.fabric3.host.work.DefaultDaemonWork;
 import org.fabric3.host.work.WorkScheduler;
 import org.fabric3.jxta.JxtaService;
 import org.fabric3.spi.model.topology.RuntimeInfo;
@@ -177,7 +178,7 @@ public class JxtaDiscoveryService implements DiscoveryService {
      */
     @Destroy
     public void stop() {
-        publisher.live.set(false);
+        publisher.stop();
     }
 
     @Init
@@ -189,37 +190,32 @@ public class JxtaDiscoveryService implements DiscoveryService {
     * Notifier sending information about the current node.
     *
     */
-    private class Publisher implements Runnable {
-
-        private AtomicBoolean live = new AtomicBoolean(true);
+    private class Publisher extends DefaultDaemonWork {
 
         /*
          * Waits for the defined interval and sends advertisements for the
          * current node and discovery requests for the other nodes in the
          * domain.
          */
-        public void run() {
+        public void execute() {
 
-            while (live.get()) {
+            try {
 
-                try {
+                Thread.sleep(interval);
 
-                    Thread.sleep(interval);
+                requestRemoteAdvertisements();
 
-                    requestRemoteAdvertisements();
+                publishAdvertisement();
 
-                    publishAdvertisement();
+                checkAdvertisementResponses();
 
-                    checkAdvertisementResponses();
+                expireInacticeRuntimes();
 
-                    expireInacticeRuntimes();
-
-                } catch (InterruptedException ex) {
-                    return;
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    // TODO Notify the monitor
-                }
+            } catch (InterruptedException ex) {
+                return;
+            } catch (IOException e) {
+                e.printStackTrace();
+                // TODO Notify the monitor
             }
 
         }

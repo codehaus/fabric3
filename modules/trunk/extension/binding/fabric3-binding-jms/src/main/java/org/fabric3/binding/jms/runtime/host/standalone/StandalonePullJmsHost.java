@@ -101,7 +101,7 @@ public class StandalonePullJmsHost implements JmsHost, StandalonePullJmsHostMBea
         
         for (List<ConsumerWorker> consumerWorkers : consumerWorkerMap.values()) {
             for (ConsumerWorker worker : consumerWorkers) {
-                worker.inactivate();
+                worker.stop();
             }
         }
         for (Connection connection : connectionMap.values()) {
@@ -114,7 +114,7 @@ public class StandalonePullJmsHost implements JmsHost, StandalonePullJmsHostMBea
     public void unregisterListener(URI serviceUri){
     	List<ConsumerWorker> workers = consumerWorkerMap.remove(serviceUri);
     	for (ConsumerWorker consumerWorker : workers) {
-    		consumerWorker.inactivate();
+    		consumerWorker.stop();
 		}
     	JmsHelper.closeQuietly(connectionMap.remove(serviceUri));
     	templateMap.remove(serviceUri);
@@ -188,7 +188,7 @@ public class StandalonePullJmsHost implements JmsHost, StandalonePullJmsHostMBea
         
         ConsumerWorkerTemplate template = templateMap.get(serviceUri);
         for (ConsumerWorker consumerWorker : consumerWorkers) {
-            consumerWorker.inactivate();
+            consumerWorker.stop();
         }
         consumerWorkers.clear();
         
