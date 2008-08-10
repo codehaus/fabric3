@@ -19,14 +19,11 @@
 package org.fabric3.fabric.services.work.jca;
 
 import javax.resource.spi.work.Work;
-import javax.resource.spi.work.WorkEvent;
 import javax.resource.spi.work.WorkException;
-import javax.resource.spi.work.WorkListener;
 import javax.resource.spi.work.WorkManager;
 import javax.resource.spi.work.WorkRejectedException;
 
 import org.fabric3.host.work.DefaultPausableWork;
-import org.fabric3.host.work.NotificationListener;
 import org.fabric3.host.work.WorkScheduler;
 import org.fabric3.host.work.WorkSchedulerException;
 
@@ -63,20 +60,9 @@ public class JcaWorkScheduler implements WorkScheduler {
      * Schedules a unit of work for future execution. The notification listener is used to register interest in
      * callbacks regarding the status of the work.
      *
-     * @param work The unit of work that needs to be asynchronously executed.
+     * @param work     The unit of work that needs to be asynchronously executed.
      */
     public <T extends DefaultPausableWork> void scheduleWork(T work) {
-        scheduleWork(work, null);
-    }
-
-    /**
-     * Schedules a unit of work for future execution. The notification listener is used to register interest in
-     * callbacks regarding the status of the work.
-     *
-     * @param work     The unit of work that needs to be asynchronously executed.
-     * @param listener Notification listener for callbacks.
-     */
-    public <T extends DefaultPausableWork> void scheduleWork(T work, NotificationListener<T> listener) {
 
         if (work == null) {
             throw new IllegalArgumentException("Work cannot be null");
@@ -84,85 +70,11 @@ public class JcaWorkScheduler implements WorkScheduler {
 
         JcaWork<T> jcaWork = new JcaWork<T>(work);
         try {
-            if (listener == null) {
-                jcaWorkManager.scheduleWork(jcaWork);
-            } else {
-                JcaWorkListener<T> jcaWorkListener = new JcaWorkListener<T>(listener);
-                // TODO Clarify the usage of timeout and execution context
-                jcaWorkManager.scheduleWork(jcaWork, -1, null, jcaWorkListener);
-            }
+            jcaWorkManager.scheduleWork(jcaWork);
         } catch (WorkRejectedException ex) {
-            if (listener != null) {
-                listener.workRejected(work);
-            } else {
-                throw new WorkSchedulerException(ex);
-            }
+            throw new WorkSchedulerException(ex);
         } catch (WorkException ex) {
             throw new WorkSchedulerException(ex);
-        }
-
-    }
-
-    /*
-     * Worklistener for keeping track of work status callbacks.
-     *
-     */
-    private class JcaWorkListener<T extends Runnable> implements WorkListener {
-
-        // Notification listener
-        private NotificationListener<T> listener;
-
-        /*
-         * Initializes the notification listener.
-         */
-        public JcaWorkListener(NotificationListener<T> listener) {
-            this.listener = listener;
-        }
-
-        /*
-         * Callback when the work is accepted.
-         */
-        public void workAccepted(WorkEvent workEvent) {
-            T work = getWork(workEvent);
-            listener.workAccepted(work);
-        }
-
-        /*
-         * Callback when the work is rejected.
-         */
-        public void workRejected(WorkEvent workEvent) {
-            T work = getWork(workEvent);
-            listener.workRejected(work);
-        }
-
-        /*
-         * Callback when the work is started.
-         */
-        public void workStarted(WorkEvent workEvent) {
-            T work = getWork(workEvent);
-            listener.workStarted(work);
-        }
-
-        /*
-         * Callback when the work is completed.
-         */
-        public void workCompleted(WorkEvent workEvent) {
-            T work = getWork(workEvent);
-            Exception exception = workEvent.getException();
-            if (exception != null) {
-                listener.workFailed(work, exception);
-            } else {
-                listener.workCompleted(work);
-            }
-        }
-
-        /*
-        * Gets the underlying work from the work event.
-        */
-        @SuppressWarnings("unchecked")
-        private T getWork(WorkEvent workEvent) {
-            JcaWork<T> jcaWork = (JcaWork<T>) workEvent.getWork();
-            return jcaWork.getWork();
         }
 
     }

@@ -42,15 +42,12 @@ import org.fabric3.host.runtime.ShutdownException;
 import org.fabric3.host.work.WorkScheduler;
 import org.fabric3.jmx.agent.Agent;
 import org.fabric3.jmx.agent.DefaultAgent;
-import org.fabric3.jsr237.Jsr237WorkScheduler;
-import org.fabric3.jsr237.ThreadPoolWorkManager;
+import org.fabric3.jsr237.ThreadPoolWorkScheduler;
 import org.fabric3.monitor.MonitorFactory;
 import org.fabric3.runtime.standalone.BootstrapException;
 import org.fabric3.runtime.standalone.BootstrapHelper;
 import org.fabric3.runtime.standalone.StandaloneHostInfo;
 import org.fabric3.runtime.standalone.StandaloneRuntime;
-
-import commonj.work.WorkManager;
 
 /**
  * This class provides the commandline interface for starting the Fabric3 standalone server. The class boots a Fabric3 runtime and launches a daemon
@@ -148,8 +145,7 @@ public class Fabric3Server implements Fabric3ServerMBean {
             
             // Get number of workers from somewhere
             int numWorkers = 10;
-            WorkManager workManager = new ThreadPoolWorkManager(numWorkers);
-            WorkScheduler workScheduler = new Jsr237WorkScheduler(workManager);
+            WorkScheduler workScheduler = new ThreadPoolWorkScheduler(numWorkers, false);
             runtime.setWorkScheduler(workScheduler);
 
             // boot the runtime

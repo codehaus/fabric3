@@ -37,15 +37,6 @@ public interface WorkScheduler {
      * is used to register interest in callbacks regarding the status of the work.
      * 
      * @param work The unit of work that needs to be asynchronously executed.
-     * @param listener Notification listener for callbacks.
-     */
-    <T extends DefaultPausableWork>void scheduleWork(T work, NotificationListener<T> listener);
-    
-    /**
-     * Schedules a unit of work for future execution. The notification listener 
-     * is used to register interest in callbacks regarding the status of the work.
-     * 
-     * @param work The unit of work that needs to be asynchronously executed.
      */
     <T extends DefaultPausableWork>void scheduleWork(T work);
 

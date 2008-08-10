@@ -16,24 +16,36 @@
  */
 package org.fabric3.management;
 
+import org.fabric3.api.annotation.Management;
+import org.fabric3.api.annotation.ManagementName;
+
 /**
  * Management interface for the work scheduler.
  *
  */
+@Management
+@ManagementName("Fabric3 Work Scheduler")
 public interface WorkSchedulerMBean {
 	
-	void setMaximumSize(int maximumSize);
-	
+	@ManagementName("Set Maximum Threads")
+	void setMaximumSize(@ManagementName("Maximum Threads") int maximumSize);
+
+	@ManagementName("Get Maximum Threads")
 	int getMaximumSize();
-	
+
+	@ManagementName("Get Active Threads")
 	int getActiveCount();
-	
+
+	@ManagementName("Pause All The Threads")
 	void pause();
-	
+
+	@ManagementName("Stop All The Threads")
 	void stop();
-	
+
+	@ManagementName("Restart Paused Threads")
 	void restart();
-	
+
+	@ManagementName("Start All The Threads")
 	void start();
 
 }
