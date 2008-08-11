@@ -18,7 +18,6 @@
  */
 package org.fabric3.runtime.standalone.host;
 
-import org.fabric3.api.annotation.logging.Severe;
 import org.fabric3.fabric.runtime.AbstractRuntime;
 import org.fabric3.monitor.MonitorFactory;
 import org.fabric3.runtime.standalone.StandaloneHostInfo;
@@ -28,16 +27,9 @@ import org.fabric3.runtime.standalone.StandaloneRuntime;
  * @version $Rev$ $Date$
  */
 public class StandaloneRuntimeImpl extends AbstractRuntime<StandaloneHostInfo> implements StandaloneRuntime {
-    StandaloneMonitor monitor;
 
     public StandaloneRuntimeImpl(MonitorFactory factory) {
         super(StandaloneHostInfo.class, factory);
-        monitor = factory.getMonitor(StandaloneMonitor.class);
     }
 
-
-    public interface StandaloneMonitor {
-        @Severe
-        void runError(Exception e);
-    }
 }
