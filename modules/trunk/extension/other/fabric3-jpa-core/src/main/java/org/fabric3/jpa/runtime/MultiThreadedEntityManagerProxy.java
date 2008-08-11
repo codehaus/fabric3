@@ -19,13 +19,13 @@
 package org.fabric3.jpa.runtime;
 
 import javax.persistence.EntityManager;
+import javax.persistence.EntityTransaction;
 import javax.persistence.FlushModeType;
 import javax.persistence.LockModeType;
 import javax.persistence.Query;
-import javax.persistence.EntityTransaction;
-import javax.transaction.TransactionManager;
-import javax.transaction.Transaction;
 import javax.transaction.SystemException;
+import javax.transaction.Transaction;
+import javax.transaction.TransactionManager;
 
 import org.osoa.sca.Conversation;
 import org.osoa.sca.ServiceRuntimeException;
@@ -161,7 +161,7 @@ public class MultiThreadedEntityManagerProxy implements EntityManagerProxy {
             WorkContext context = PojoWorkContextTunnel.getThreadWorkContext();
             Conversation conversation = context.peekCallFrame().getConversation();
             if (conversation == null) {
-                throw new IllegalStateException("No conversational context associated with the current thread");
+                throw new IllegalStateException("No conversational context associated with the current component");
             }
             try {
                 return emService.getEntityManager(unitName, this, conversation);
@@ -172,6 +172,9 @@ public class MultiThreadedEntityManagerProxy implements EntityManagerProxy {
             // a transaction-scoped persitence context
             try {
                 Transaction trx = tm.getTransaction();
+                if (trx == null) {
+                    throw new IllegalStateException("A transaction is not active - ensure the component is executing in a managed transaction");
+                }
                 return emService.getEntityManager(unitName, this, trx);
             } catch (SystemException e) {
                 throw new ServiceRuntimeException(e);
