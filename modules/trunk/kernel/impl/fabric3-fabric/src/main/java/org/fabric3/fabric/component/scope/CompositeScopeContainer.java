@@ -19,30 +19,30 @@
 package org.fabric3.fabric.component.scope;
 
 import java.net.URI;
-import java.util.Map;
-import java.util.List;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-
-import org.fabric3.api.annotation.Monitor;
-import org.fabric3.scdl.Scope;
-import org.fabric3.spi.ObjectFactory;
-import org.fabric3.spi.ObjectCreationException;
-import org.fabric3.spi.component.AtomicComponent;
-import org.fabric3.spi.component.ExpirationPolicy;
-import org.fabric3.spi.component.GroupInitializationException;
-import org.fabric3.spi.component.InstanceWrapper;
-import org.fabric3.spi.component.ScopeContainer;
-import org.fabric3.spi.component.InstanceDestructionException;
-import org.fabric3.spi.component.InstanceInitializationException;
-import org.fabric3.spi.component.InstanceLifecycleException;
-import org.fabric3.spi.invocation.WorkContext;
 
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Service;
+
+import org.fabric3.api.annotation.Monitor;
+import org.fabric3.scdl.Scope;
+import org.fabric3.spi.ObjectCreationException;
+import org.fabric3.spi.ObjectFactory;
+import org.fabric3.spi.component.AtomicComponent;
+import org.fabric3.spi.component.ExpirationPolicy;
+import org.fabric3.spi.component.GroupInitializationException;
+import org.fabric3.spi.component.InstanceDestructionException;
+import org.fabric3.spi.component.InstanceInitializationException;
+import org.fabric3.spi.component.InstanceLifecycleException;
+import org.fabric3.spi.component.InstanceWrapper;
+import org.fabric3.spi.component.ScopeContainer;
+import org.fabric3.spi.invocation.WorkContext;
 
 /**
  * A scope context which manages atomic component instances keyed by composite
@@ -173,6 +173,39 @@ public class CompositeScopeContainer extends AbstractScopeContainer<URI> {
         for (InstanceWrapper<?> instanceWrapper : instanceWrappers.values()) {
             instanceWrapper.reinject();
         }
+    }
+
+    protected void stopContext(WorkContext workContext, URI contextId) {
+        List<InstanceWrapper<?>> list = removeDestroyComponents(contextId);
+        if (list == null) {
+            throw new IllegalStateException("Context does not exist: " + contextId);
+        }
+        destroyInstances(list);
+    }
+
+
+    /**
+     * Removes and returns components from the destroy queue under the given composite hierarchy. This method will recurse down the composite
+     * hierarchy, including children in the list of components to shutdown.
+     *
+     * @param contextId the URI composite
+     * @return the list of components to shutdown.
+     */
+    protected List<InstanceWrapper<?>> removeDestroyComponents(URI contextId) {
+        // for composite contexts being closed, also destroy child composites and their contained components
+        String path = contextId.getPath();
+        List<InstanceWrapper<?>> toDestroy = new ArrayList<InstanceWrapper<?>>();
+        for (Map.Entry<URI, List<InstanceWrapper<?>>> entry : destroyQueues.entrySet()) {
+            URI key = entry.getKey();
+            if (key.getPath().startsWith(path)) {
+                // matches URIs that are in the hieratchy being destroyed
+                List<InstanceWrapper<?>> wrappers = entry.getValue();
+                toDestroy.addAll(wrappers);
+                // safe to be removed during iteration
+                destroyQueues.remove(key);
+            }
+        }
+        return toDestroy;
     }
 
     private void eagerInitialize(WorkContext workContext, URI contextId) throws GroupInitializationException {
