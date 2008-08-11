@@ -34,10 +34,10 @@ import org.fabric3.spi.AbstractLifecycle;
 import org.fabric3.spi.component.AtomicComponent;
 import org.fabric3.spi.component.ConversationExpirationCallback;
 import org.fabric3.spi.component.GroupInitializationException;
+import org.fabric3.spi.component.InstanceDestructionException;
 import org.fabric3.spi.component.InstanceWrapper;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.ScopeRegistry;
-import org.fabric3.spi.component.InstanceDestructionException;
 import org.fabric3.spi.invocation.WorkContext;
 
 /**
@@ -162,12 +162,11 @@ public abstract class AbstractScopeContainer<KEY> extends AbstractLifecycle impl
      * @param contextId   the scope context id
      */
     protected void stopContext(WorkContext workContext, KEY contextId) {
-        List<InstanceWrapper<?>> list = destroyQueues.get(contextId);
+        List<InstanceWrapper<?>> list = destroyQueues.remove(contextId);
         if (list == null) {
             throw new IllegalStateException("Context does not exist: " + contextId);
         }
         destroyInstances(list);
-        destroyQueues.remove(contextId);
     }
 
     /**
@@ -176,7 +175,7 @@ public abstract class AbstractScopeContainer<KEY> extends AbstractLifecycle impl
      *
      * @param instances the list of instances to shutdown
      */
-    private void destroyInstances(List<InstanceWrapper<?>> instances) {
+    protected void destroyInstances(List<InstanceWrapper<?>> instances) {
         while (true) {
             InstanceWrapper<?> toDestroy;
             synchronized (instances) {
