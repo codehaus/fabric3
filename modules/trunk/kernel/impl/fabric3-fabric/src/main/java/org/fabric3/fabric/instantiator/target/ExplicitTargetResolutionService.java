@@ -47,11 +47,13 @@ public class ExplicitTargetResolutionService implements TargetResolutionService 
 
         ComponentReference componentReference = logicalReference.getComponentReference();
         if (componentReference == null) {
+            // the reference is not configured on the component definition in the composite
             return;
         }
 
         List<URI> requestedTargets = componentReference.getTargets();
         if (requestedTargets.isEmpty()) {
+            // no target urls are specified
             return;
         }
 
