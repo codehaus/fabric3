@@ -88,13 +88,8 @@ public class ImplementationCompositeLoader implements TypeLoader<CompositeImplem
     public CompositeImplementation load(XMLStreamReader reader, IntrospectionContext introspectionContext) throws XMLStreamException {
         assert CompositeImplementation.IMPLEMENTATION_COMPOSITE.equals(reader.getName());
         validateAttributes(reader, introspectionContext);
+        // read name now b/c the reader skips ahead
         String nameAttr = reader.getAttributeValue(null, "name");
-        if (nameAttr == null || nameAttr.length() == 0) {
-            MissingAttribute failure = new MissingAttribute("Missing name attribute", "name", reader);
-            introspectionContext.addError(failure);
-            return null;
-        }
-        QName name = LoaderUtil.getQName(nameAttr, introspectionContext.getTargetNamespace(), reader.getNamespaceContext());
         String scdlLocation = reader.getAttributeValue(null, "scdlLocation");
         String scdlResource = reader.getAttributeValue(null, "scdlResource");
         LoaderUtil.skipToEndElement(reader);
@@ -169,6 +164,12 @@ public class ImplementationCompositeLoader implements TypeLoader<CompositeImplem
                 // throw error as this is invalid in a bootstrap environment
                 throw new UnsupportedOperationException("scdlLocation or scdlResource must be supplied as no MetaDataStore is available");
             }
+            if (nameAttr == null || nameAttr.length() == 0) {
+                MissingAttribute failure = new MissingAttribute("Missing name attribute", "name", reader);
+                introspectionContext.addError(failure);
+                return null;
+            }
+            QName name = LoaderUtil.getQName(nameAttr, introspectionContext.getTargetNamespace(), reader.getNamespaceContext());
 
             try {
                 QNameSymbol symbol = new QNameSymbol(name);
