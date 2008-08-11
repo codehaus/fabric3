@@ -31,6 +31,7 @@ import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.ComponentReference;
 import org.fabric3.scdl.Composite;
 import org.fabric3.scdl.Implementation;
+import org.fabric3.scdl.Multiplicity;
 import org.fabric3.scdl.ReferenceDefinition;
 import org.fabric3.scdl.ServiceContract;
 import org.fabric3.spi.model.instance.LogicalComponent;
@@ -53,10 +54,11 @@ public class TypeBasedAutoWireService implements TargetResolutionService {
         LogicalComponent<?> component = logicalReference.getParent();
 
         if (componentReference == null) {
-            // this is a reference on an atomic component, not a composite reference
+            // The reference is not configured on the component definition in the composite. i.e. it is only present in the componentType
             if (!logicalReference.getBindings().isEmpty() || isPromoted(compositeComponent, logicalReference)) {
                 return;
             }
+
             ServiceContract<?> requiredContract = determineContract(logicalReference);
 
             Autowire autowire = calculateAutowire(compositeComponent, component);
@@ -65,7 +67,7 @@ public class TypeBasedAutoWireService implements TargetResolutionService {
             }
 
         } else {
-            // the reference is a composite
+            // The reference is explicity configured on the component definition in the composite
             List<URI> uris = componentReference.getTargets();
             if (!uris.isEmpty() || isPromoted(compositeComponent, logicalReference)) {
                 return;
@@ -156,7 +158,8 @@ public class TypeBasedAutoWireService implements TargetResolutionService {
                                   LogicalChange change) {
 
         List<URI> candidates = new ArrayList<URI>();
-
+        Multiplicity refMultiplicity = logicalReference.getDefinition().getMultiplicity();
+        boolean multiplicity = Multiplicity.ZERO_N.equals(refMultiplicity) || Multiplicity.ONE_N.equals(refMultiplicity);
         for (LogicalComponent<?> child : composite.getComponents()) {
             for (LogicalService service : child.getServices()) {
                 ServiceContract<?> targetContract = determineContract(service);
@@ -168,6 +171,10 @@ public class TypeBasedAutoWireService implements TargetResolutionService {
                     candidates.add(service.getUri());
                     break;
                 }
+            }
+            if (!candidates.isEmpty() && !multiplicity) {
+                // since the reference is to a single target and a candidate has been found, avoid iterating the remaining components
+                break;
             }
         }
         if (candidates.isEmpty()) {
