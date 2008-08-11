@@ -295,8 +295,7 @@ public class LogicalModelInstantiatorImpl implements LogicalModelInstantiator {
     private void excludeComponents(LogicalCompositeComponent parent, Composite composite, LogicalChange change) {
         Set<String> keys = composite.getComponents().keySet();
         for (String key : keys) {
-            List<LogicalComponent<?>> list = parent.getComponents();
-            for (LogicalComponent<?> component : list) {
+            for (LogicalComponent<?> component : parent.getComponents()) {
                 URI uri = component.getUri();
                 if (UriHelper.getBaseName(uri).equals(key)) {
                     change.removeComponent(component);

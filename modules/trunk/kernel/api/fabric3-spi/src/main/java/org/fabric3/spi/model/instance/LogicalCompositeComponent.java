@@ -7,6 +7,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.Collection;
 
 import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.CompositeImplementation;
@@ -81,8 +82,8 @@ public class LogicalCompositeComponent extends LogicalComponent<CompositeImpleme
      *
      * @return the child components of the current component
      */
-    public List<LogicalComponent<?>> getComponents() {
-        return new ArrayList<LogicalComponent<?>>(components.values());
+    public Collection<LogicalComponent<?>> getComponents() {
+        return components.values();
     }
 
     /**
