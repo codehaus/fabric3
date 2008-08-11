@@ -24,6 +24,10 @@ import org.fabric3.api.annotation.Management;
  */
 @Management
 public interface WorkSchedulerMBean {
+	
+	enum Status {
+		STARTED, PAUSED;
+	}
 
 	void setPoolSize(int poolSize);
 
@@ -36,5 +40,7 @@ public interface WorkSchedulerMBean {
 	void stop();
 
 	void start();
+	
+	Status getStatus();
 
 }

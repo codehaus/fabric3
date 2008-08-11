@@ -143,4 +143,8 @@ public class ThreadPoolWorkScheduler implements WorkScheduler, WorkSchedulerMBea
 		
 	}
 
+	public Status getStatus() {
+		return paused.get() ? Status.PAUSED : Status.STARTED;
+	}
+
 }
