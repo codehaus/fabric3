@@ -37,11 +37,14 @@ import org.fabric3.host.work.WorkScheduler;
 import org.fabric3.monitor.MonitorFactory;
 import org.fabric3.pojo.PojoWorkContextTunnel;
 import org.fabric3.scdl.Autowire;
+import org.fabric3.scdl.Scope;
 import org.fabric3.spi.component.AtomicComponent;
 import org.fabric3.spi.component.InstanceLifecycleException;
 import org.fabric3.spi.component.InstanceWrapper;
 import org.fabric3.spi.component.ScopeContainer;
+import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.spi.invocation.WorkContext;
+import org.fabric3.spi.invocation.CallFrame;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 import org.fabric3.spi.runtime.RuntimeServices;
@@ -183,6 +186,13 @@ public abstract class AbstractRuntime<HI extends HostInfo> implements Fabric3Run
     }
 
     public void destroy() {
+        // destroy system components
+        ScopeRegistry scopeRegistry = getSystemComponent(ScopeRegistry.class, ComponentNames.SCOPE_REGISTRY_URI);
+        ScopeContainer<?> scopeContainer = scopeRegistry.getScopeContainer(Scope.COMPOSITE);
+        WorkContext workContext = new WorkContext();
+        CallFrame frame = new CallFrame(ComponentNames.RUNTIME_URI);
+        workContext.addCallFrame(frame);
+        scopeContainer.stopContext(workContext);
     }
 
     public void registerComponent(LogicalComponent<?> logical, AtomicComponent<?> physical) throws RegistrationException {

@@ -124,16 +124,6 @@ public class MavenEmbeddedRuntimeImpl extends AbstractRuntime<MavenHostInfo> imp
         }
     }
 
-    public void destroy() {
-        // destroy system components
-        ScopeRegistry scopeRegistry = getSystemComponent(ScopeRegistry.class, ComponentNames.SCOPE_REGISTRY_URI);
-        ScopeContainer<?> scopeContainer = scopeRegistry.getScopeContainer(Scope.COMPOSITE);
-        WorkContext workContext = new WorkContext();
-        CallFrame frame = new CallFrame(ComponentNames.RUNTIME_URI);
-        workContext.addCallFrame(frame);
-        scopeContainer.stopContext(workContext);
-    }
-
     @SuppressWarnings({"unchecked"})
     public void executeTest(URI contextId, String componentName, Operation<?> operation) throws TestSetFailedException {
         WorkContext oldContext = PojoWorkContextTunnel.getThreadWorkContext();
