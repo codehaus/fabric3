@@ -80,7 +80,7 @@ public class DefaultPromotionResolutionService implements PromotionResolutionSer
         } else {
             if (promotedComponent.getService(promotedServiceName) == null) {
                 String message =
-                        "Service " + promotedServiceName + " promoted from " + logicalService.getUri() + "not found on component " + promotedComponentUri;
+                        "Service " + promotedServiceName + " promoted from " + logicalService.getUri() + " not found on component " + promotedComponentUri;
                 ServiceNotFound error = new ServiceNotFound(message, logicalService, promotedComponentUri);
                 change.addError(error);
             }
