@@ -23,8 +23,8 @@ import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
 
 /**
- * Abstraction for resolving targets for references. Possible implementations include explicit targets, intent based auto-wiring, type based
- * auto-wiring etc.
+ * Abstraction for resolving targets for references. Possible implementations include explicit targets, intent based auto-wiring, and type based
+ * auto-wiring. Resolution strategies are exclusive. That is, only one strategy is used per reference.
  *
  * @version $Revision$ $Date$
  */
