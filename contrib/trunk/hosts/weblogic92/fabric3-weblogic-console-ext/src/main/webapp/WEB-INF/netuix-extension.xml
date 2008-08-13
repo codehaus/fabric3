@@ -15,14 +15,12 @@
 
     <portal-file>/console.portal</portal-file>
 
-    <!--
-
-       This extension changes the look and feel
-       of the console portal
-
-    -->
-
-    <desktop-extension>
-    </desktop-extension>
+       <book-extension>
+        <book-location>
+             <parent-label-location label="CoreDomainConfigGeneralBook" />
+             <book-insertion-point action="append" />
+        </book-location>
+        <book-content content-uri="/controls/fabric3core.pinc" />
+   </book-extension>
 
 </weblogic-portal-extension>
