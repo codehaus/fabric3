@@ -66,7 +66,7 @@ public class HessianBindingProvider implements BindingProvider {
         if (target.getBindings().isEmpty()) {
             // configure both sides
             configureService(target);
-            configureReference(source, targetInfo);
+            configureReference(source, target, targetInfo);
         } else {
             configureReference(source, target, targetInfo);
         }
@@ -88,11 +88,6 @@ public class HessianBindingProvider implements BindingProvider {
         constructLogicalReference(source, targetUri);
     }
 
-    private void configureReference(LogicalReference source, RuntimeInfo targetInfo) {
-        URI targetUri = URI.create("http://" + targetInfo.getTransportMetaData(HTTP));
-        constructLogicalReference(source, targetUri);
-    }
-
     private void constructLogicalReference(LogicalReference source, URI targetUri) {
         HessianBindingDefinition referenceDefinition = new HessianBindingDefinition(targetUri);
         LogicalBinding<HessianBindingDefinition> referenceBinding = new LogicalBinding<HessianBindingDefinition>(referenceDefinition, source);
@@ -100,8 +95,9 @@ public class HessianBindingProvider implements BindingProvider {
     }
 
     private void configureService(LogicalService target) {
-        String fragment = target.getUri().getFragment();
-        String endpointName = fragment.substring(0, 1).toLowerCase() + fragment.substring(1);
+        // String fragment = target.getUri().getFragment();
+        String endpointName =
+                target.getUri().getPath() + "/" + target.getUri().getFragment(); // fragment.substring(0, 1).toLowerCase() + fragment.substring(1);
         URI endpointUri = URI.create(endpointName);
         HessianBindingDefinition serviceDefinition = new HessianBindingDefinition(endpointUri);
         LogicalBinding<HessianBindingDefinition> serviceBinding = new LogicalBinding<HessianBindingDefinition>(serviceDefinition, target);
