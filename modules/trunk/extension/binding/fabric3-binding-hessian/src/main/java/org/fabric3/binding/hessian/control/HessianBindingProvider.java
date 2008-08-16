@@ -95,9 +95,7 @@ public class HessianBindingProvider implements BindingProvider {
     }
 
     private void configureService(LogicalService target) {
-        // String fragment = target.getUri().getFragment();
-        String endpointName =
-                target.getUri().getPath() + "/" + target.getUri().getFragment(); // fragment.substring(0, 1).toLowerCase() + fragment.substring(1);
+        String endpointName = target.getUri().getPath() + "/" + target.getUri().getFragment();
         URI endpointUri = URI.create(endpointName);
         HessianBindingDefinition serviceDefinition = new HessianBindingDefinition(endpointUri);
         LogicalBinding<HessianBindingDefinition> serviceBinding = new LogicalBinding<HessianBindingDefinition>(serviceDefinition, target);
