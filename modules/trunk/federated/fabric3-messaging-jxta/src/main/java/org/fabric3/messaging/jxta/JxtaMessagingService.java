@@ -32,6 +32,7 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
+import org.fabric3.api.annotation.Monitor;
 import org.fabric3.jxta.JxtaService;
 import org.fabric3.messaging.jxta.prp.Fabric3QueryHandler;
 import org.fabric3.spi.model.topology.RuntimeInfo;
@@ -40,7 +41,6 @@ import org.fabric3.spi.services.messaging.MessagingEventService;
 import org.fabric3.spi.services.messaging.MessagingException;
 import org.fabric3.spi.services.messaging.MessagingService;
 import org.fabric3.spi.services.messaging.MessagingServiceRegistry;
-import org.fabric3.api.annotation.Monitor;
 
 /**
  * Messaging service implemented using JXTA.
@@ -123,6 +123,9 @@ public class JxtaMessagingService implements MessagingService {
     public void sendMessage(final URI runtimeId, final XMLStreamReader content) throws MessagingException {
 
         RuntimeInfo runtimeInfo = discoveryService.getRuntimeInfo(runtimeId);
+        if (runtimeInfo == null) {
+            throw new MessagingException("Runtime not found:" + runtimeId);
+        }
         String messageDestination = runtimeInfo.getMessageDestination();
 
         PeerID peerID;
