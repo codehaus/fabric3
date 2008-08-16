@@ -78,7 +78,7 @@ public class DefaultAllocator implements Allocator {
         allocate(runtimes, component);
     }
 
-    public void allocate(Set<RuntimeInfo> runtimes, LogicalComponent<?> component) throws AllocationException {
+    private void allocate(Set<RuntimeInfo> runtimes, LogicalComponent<?> component) throws AllocationException {
 
         if (CompositeImplementation.class.isInstance(component.getDefinition().getImplementation())) {
             LogicalCompositeComponent composite = (LogicalCompositeComponent) component;
