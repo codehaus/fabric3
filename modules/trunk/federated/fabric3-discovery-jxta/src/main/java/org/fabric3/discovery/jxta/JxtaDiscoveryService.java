@@ -98,7 +98,11 @@ public class JxtaDiscoveryService implements DiscoveryService {
     }
 
     public RuntimeInfo getRuntimeInfo(URI runtimeId) {
-        return participatingRuntimes.get(runtimeId).getFirst();
+        TwosTuple<RuntimeInfo, Long> pair = participatingRuntimes.get(runtimeId);
+        if (pair == null) {
+            return null;
+        }
+        return pair.getFirst();
     }
 
     @Monitor

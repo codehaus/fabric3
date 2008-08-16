@@ -112,7 +112,7 @@ public class Instantiator implements AdvertisementFactory.Instantiator {
 
     private Map<QName, String> deserializeTransportInfo(Element elem) {
         Map<QName, String> info = new HashMap<QName, String>();
-        Enumeration children = elem.getChildren("transportInfo");
+        Enumeration children = elem.getChildren("metaData");
         while (children.hasMoreElements()) {
             // read the metadata for each transport keyed by a QName representing the transport
             elem = (Element) children.nextElement();
