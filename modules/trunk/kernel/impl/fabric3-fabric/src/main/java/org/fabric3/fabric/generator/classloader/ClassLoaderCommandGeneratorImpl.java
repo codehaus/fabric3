@@ -77,7 +77,7 @@ public class ClassLoaderCommandGeneratorImpl implements ClassLoaderCommandGenera
 
     public Map<URI, Set<Command>> generate(List<LogicalComponent<?>> components) throws GenerationException {
         // contributions mapped to the node they are provisioned to
-        Map<URI, Set<URI>> contributionsPerRuntime = collateContributions(components);
+        Map<URI, Set<URI>> contributionsPerRuntime = calculateCollatedContributions(components);
         Map<URI, Set<PhysicalClassLoaderDefinition>> definitionsPerRuntime = createContributionClassLoaderDefinitions(contributionsPerRuntime);
         createComponentClassLoaderDefinitions(components, definitionsPerRuntime);
         Map<URI, Set<Command>> commandsPerRuntime = new HashMap<URI, Set<Command>>(definitionsPerRuntime.size());
@@ -94,24 +94,34 @@ public class ClassLoaderCommandGeneratorImpl implements ClassLoaderCommandGenera
     }
 
     /**
-     * Processes the component set and collates all required contributions by runtime id
+     * Processes the list of components being deployed and returns the set of required contributions collated by runtime id.
      *
      * @param components the set of components
      * @return the set of required contribution URIs grouped by runtime id
      */
-    private Map<URI, Set<URI>> collateContributions(List<LogicalComponent<?>> components) {
+    private Map<URI, Set<URI>> calculateCollatedContributions(List<LogicalComponent<?>> components) {
         // collate all contributions that must be provisioned as part of the change set
         Map<URI, Set<URI>> contributionsPerRuntime = new HashMap<URI, Set<URI>>();
         for (LogicalComponent<?> component : components) {
             URI contributionUri = component.getDefinition().getContributionUri();
             if (contributionUri != null) {
-                // xcv FIXME need to deal with the case where a contribution has been imported by another and has not yet been provisioned.
                 // xcv FIXME contribution URIs can be null if component is primordial. this should be fixed in the synthesize
                 URI runtimeId = component.getRuntimeId();
                 Set<URI> contributions = contributionsPerRuntime.get(runtimeId);
                 if (contributions == null) {
                     contributions = new LinkedHashSet<URI>();
                     contributionsPerRuntime.put(runtimeId, contributions);
+                }
+                Contribution contribution = store.find(contributionUri);
+                // imported contributions must also be provisioned 
+                for (URI uri : contribution.getResolvedImportUris()) {
+                    // ignore the boot and application classloaders
+                    if (ComponentNames.BOOT_CLASSLOADER_ID.equals(uri) || ComponentNames.APPLICATION_CLASSLOADER_ID.equals(uri)) {
+                        continue;
+                    }
+                    if (!contributions.contains(uri)) {
+                        contributions.add(uri);
+                    }
                 }
                 contributions.add(contributionUri);
             }
