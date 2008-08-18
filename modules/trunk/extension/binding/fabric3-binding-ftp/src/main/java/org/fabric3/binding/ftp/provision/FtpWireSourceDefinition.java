@@ -28,25 +28,4 @@ import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
  */
 public class FtpWireSourceDefinition extends PhysicalWireSourceDefinition {
     
-    private final URI classLoaderId;
-
-    /**
-     * Initializes the classloader id.
-     *
-     * @param classLoaderId the classloader id to deserialize parameters in
-     */
-
-    public FtpWireSourceDefinition(URI classLoaderId) {
-        this.classLoaderId = classLoaderId;
-    }
-
-    /**
-     * Returns the classloader id to deserialize parameters in.
-     *
-     * @return the classloader id to deserialize parameters in
-     */
-    public URI getClassLoaderId() {
-        return classLoaderId;
-    }
-
 }

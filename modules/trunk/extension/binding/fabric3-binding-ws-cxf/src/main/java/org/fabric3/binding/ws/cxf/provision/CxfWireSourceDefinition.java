@@ -35,11 +35,6 @@ public class CxfWireSourceDefinition extends PhysicalWireSourceDefinition {
     private String serviceInterface;
 
     /**
-     * The classloader for the service
-     */
-    private URI classloaderURI;
-
-    /**
      * @return Service interface.
      */
     public String getServiceInterface() {
@@ -53,11 +48,4 @@ public class CxfWireSourceDefinition extends PhysicalWireSourceDefinition {
         this.serviceInterface = serviceInterface;
     }
 
-    public URI getClassloaderURI() {
-        return classloaderURI;
-    }
-
-    public void setClassloaderURI(URI classloaderURI) {
-        this.classloaderURI = classloaderURI;
-    }
 }

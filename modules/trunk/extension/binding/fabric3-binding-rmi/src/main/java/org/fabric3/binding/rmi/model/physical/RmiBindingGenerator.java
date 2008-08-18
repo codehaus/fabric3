@@ -49,7 +49,7 @@ public class RmiBindingGenerator implements BindingGenerator<RmiWireSourceDefini
         ewsd.setInterfaceName(contract.getQualifiedInterfaceName());
 
         URI classloaderId = logicalBinding.getParent().getParent().getClassLoaderId();
-        ewsd.setClassLoaderURI(classloaderId);
+        ewsd.setClassLoaderId(classloaderId);
         return ewsd;
 
     }

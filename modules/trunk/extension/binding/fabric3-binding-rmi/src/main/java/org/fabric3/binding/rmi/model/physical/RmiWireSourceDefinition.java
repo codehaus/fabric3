@@ -1,9 +1,7 @@
 package org.fabric3.binding.rmi.model.physical;
 
-import java.net.URI;
-
-import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.binding.rmi.model.logical.RmiBindingDefinition;
+import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 
 /*
  * Licensed to the Apache Software Foundation (ASF) under one
@@ -25,10 +23,8 @@ import org.fabric3.binding.rmi.model.logical.RmiBindingDefinition;
  */
 
 public class RmiWireSourceDefinition extends PhysicalWireSourceDefinition {
-
     private RmiBindingDefinition bindingDefinition;
     private String interfaceName;
-    private URI classLoaderURI;
 
     public RmiBindingDefinition getBindingDefinition() {
         return bindingDefinition;
@@ -46,13 +42,6 @@ public class RmiWireSourceDefinition extends PhysicalWireSourceDefinition {
         this.interfaceName = interfaceName;
     }
 
-    public void setClassLoaderURI(URI classLoaderURI) {
-        this.classLoaderURI = classLoaderURI;
-    }
-
-    public URI getClassLoaderURI() {
-        return classLoaderURI;
-    }
 }
 
 

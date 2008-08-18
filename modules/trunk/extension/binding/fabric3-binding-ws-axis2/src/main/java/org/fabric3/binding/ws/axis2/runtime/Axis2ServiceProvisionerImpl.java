@@ -109,7 +109,7 @@ public class Axis2ServiceProvisionerImpl implements Axis2ServiceProvisioner {
         try {
 
             String uri = pwsd.getUri().getPath();
-            URI classLoaderUri = pwsd.getClassloaderURI();
+            URI classLoaderUri = pwsd.getClassLoaderId();
             String serviceClass = pwsd.getServiceInterface();
 
             ClassLoader classLoader = classLoaderRegistry.getClassLoader(classLoaderUri);

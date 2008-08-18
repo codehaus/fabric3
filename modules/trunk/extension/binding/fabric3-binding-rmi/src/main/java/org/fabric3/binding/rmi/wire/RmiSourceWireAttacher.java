@@ -84,7 +84,7 @@ public class RmiSourceWireAttacher implements SourceWireAttacher<RmiWireSourceDe
         Class interfaceClass;
         try {
             String interfaceName = sourceDefinition.getInterfaceName();
-            interfaceClass = generateRemoteInterface(interfaceName, sourceDefinition.getClassLoaderURI());
+            interfaceClass = generateRemoteInterface(interfaceName, sourceDefinition.getClassLoaderId());
             for (Map.Entry<PhysicalOperationDefinition, InvocationChain> entry : wire.getInvocationChains().entrySet()) {
 
                 Signature signature = new Signature(entry.getKey().getName(), entry.getKey().getParameters());

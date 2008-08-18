@@ -1,7 +1,5 @@
 package org.fabric3.binding.ws.jaxws.provision;
 
-import java.net.URI;
-
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 
 /*
@@ -21,10 +19,8 @@ import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
  * under the License.
  */
 
-public class JaxWsWireSourceDefinition  extends PhysicalWireSourceDefinition {
-
+public class JaxWsWireSourceDefinition extends PhysicalWireSourceDefinition {
     private String serviceInterface;
-    private URI classloaderURI;
     private String wsdlElement;
     private String wsdlLocation;
     private String serviceName;
@@ -46,22 +42,6 @@ public class JaxWsWireSourceDefinition  extends PhysicalWireSourceDefinition {
     }
 
     /**
-     * @return Classloader URI.
-     */
-    public URI getClassloaderURI() {
-        return classloaderURI;
-    }
-
-    /**
-     * @param classloaderURI Classloader URI.
-     */
-    public void setClassloaderURI(URI classloaderURI) {
-        this.classloaderURI = classloaderURI;
-    }
-
-
-      /**
-     *
      * @return WSDL Element
      */
     public String getWsdlElement() {
@@ -98,30 +78,33 @@ public class JaxWsWireSourceDefinition  extends PhysicalWireSourceDefinition {
         this.namespaceURI = uri;
     }
 
-   /**
-   * Get WSDL namespace uri
-   * @return wsdl namespace uri
-   */
+    /**
+     * Get WSDL namespace uri
+     *
+     * @return wsdl namespace uri
+     */
     public String getNamespaceURI() {
         return namespaceURI;
     }
 
-  /**
-   * Get WSDL Service Name
-   * @return service name
-   */
+    /**
+     * Get WSDL Service Name
+     *
+     * @return service name
+     */
     public String getServiceName() {
-       return serviceName;
+        return serviceName;
     }
 
     public void setServiceName(String serviceName) {
         this.serviceName = serviceName;
     }
 
-  /**
-   * Get WSDL port name
-   * @return portname for the wsdl
-   */
+    /**
+     * Get WSDL port name
+     *
+     * @return portname for the wsdl
+     */
     public String getPortName() {
         return portName;
     }

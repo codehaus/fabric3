@@ -29,10 +29,8 @@ import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
  * @version $Revision: 1 $ $Date: 2007-05-14 10:40:37 -0700 (Mon, 14 May 2007) $
  */
 public class EjbWireSourceDefinition extends PhysicalWireSourceDefinition {
-
     private EjbBindingDefinition bindingDefinition;
     private String interfaceName;
-    private URI classLoaderURI;
 
     public EjbBindingDefinition getBindingDefinition() {
         return bindingDefinition;
@@ -50,11 +48,4 @@ public class EjbWireSourceDefinition extends PhysicalWireSourceDefinition {
         this.interfaceName = interfaceName;
     }
 
-    public URI getClassLoaderURI() {
-        return classLoaderURI;
-    }
-
-    public void setClassLoaderURI(URI classLoaderURI) {
-        this.classLoaderURI = classLoaderURI;
-    }
 }

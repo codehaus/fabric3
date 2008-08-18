@@ -55,8 +55,10 @@ public class FtpBindingGenerator implements BindingGenerator<FtpWireSourceDefini
         }
 
         URI id = binding.getParent().getParent().getParent().getUri();
-        FtpWireSourceDefinition hwsd = new FtpWireSourceDefinition(id);
-        hwsd.setUri(binding.getBinding().getTargetUri());
+        FtpWireSourceDefinition hwsd = new FtpWireSourceDefinition();
+        hwsd.setClassLoaderId(id);
+        URI targetUri = binding.getBinding().getTargetUri();
+        hwsd.setUri(targetUri);
 
         return hwsd;
 

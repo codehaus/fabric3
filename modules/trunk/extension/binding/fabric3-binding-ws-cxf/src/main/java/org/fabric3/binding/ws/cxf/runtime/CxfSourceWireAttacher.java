@@ -65,7 +65,7 @@ public class CxfSourceWireAttacher implements SourceWireAttacher<CxfWireSourceDe
         ClassLoader oldCl = currentThread.getContextClassLoader();
         currentThread.setContextClassLoader(getClass().getClassLoader());
         try {
-            URI classLoaderUri = sourceDefinition.getClassloaderURI();
+            URI classLoaderUri = sourceDefinition.getClassLoaderId();
             ClassLoader loader = classLoaderRegistry.getClassLoader(classLoaderUri);
             if (loader == null) {
                 throw new ClassLoaderNotFoundException("Classloader not defined", classLoaderUri.toString());

@@ -20,6 +20,8 @@ package org.fabric3.binding.hessian.control;
 
 import java.net.URI;
 
+import org.osoa.sca.annotations.EagerInit;
+
 import org.fabric3.binding.hessian.provision.HessianWireSourceDefinition;
 import org.fabric3.binding.hessian.provision.HessianWireTargetDefinition;
 import org.fabric3.binding.hessian.scdl.HessianBindingDefinition;
@@ -29,7 +31,6 @@ import org.fabric3.spi.generator.BindingGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.policy.Policy;
-import org.osoa.sca.annotations.EagerInit;
 
 /**
  * Implementation of the hessian binding generator.
@@ -45,8 +46,10 @@ public class HessianBindingGenerator implements BindingGenerator<HessianWireSour
             throws GenerationException {
 
         URI id = logicalBinding.getParent().getParent().getClassLoaderId();
-        HessianWireSourceDefinition hwsd = new HessianWireSourceDefinition(id);
-        hwsd.setUri(logicalBinding.getBinding().getTargetUri());
+        HessianWireSourceDefinition hwsd = new HessianWireSourceDefinition();
+        hwsd.setClassLoaderId(id);
+        URI targetUri = logicalBinding.getBinding().getTargetUri();
+        hwsd.setUri(targetUri);
 
         return hwsd;
 

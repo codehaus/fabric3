@@ -115,7 +115,7 @@ public class JmsSourceWireAttacher implements SourceWireAttacher<JmsWireSourceDe
 
         URI serviceUri = target.getUri();
 
-        ClassLoader cl = classLoaderRegistry.getClassLoader(source.getClassloaderUri());
+        ClassLoader cl = classLoaderRegistry.getClassLoader(source.getClassLoaderId());
 
         JmsBindingMetadata metadata = source.getMetadata();
         Hashtable<String, String> env = metadata.getEnv();

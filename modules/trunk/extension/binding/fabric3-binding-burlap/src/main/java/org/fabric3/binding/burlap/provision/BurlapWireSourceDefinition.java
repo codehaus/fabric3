@@ -18,8 +18,6 @@
  */
 package org.fabric3.binding.burlap.provision;
 
-import java.net.URI;
-
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 
 /**
@@ -28,24 +26,5 @@ import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
  * @version $Revision$ $Date$
  */
 public class BurlapWireSourceDefinition extends PhysicalWireSourceDefinition {
-    private URI classLoaderId;
 
-    /**
-     * Constructor.
-     *
-     * @param classLoaderId the classloader id to deserialize parameters in
-     */
-
-    public BurlapWireSourceDefinition(URI classLoaderId) {
-        this.classLoaderId = classLoaderId;
-    }
-
-    /**
-     * Returns the classloader id to deserialize parameters in.
-     *
-     * @return the classloader id to deserialize parameters in
-     */
-    public URI getClassLoaderId() {
-        return classLoaderId;
-    }
 }

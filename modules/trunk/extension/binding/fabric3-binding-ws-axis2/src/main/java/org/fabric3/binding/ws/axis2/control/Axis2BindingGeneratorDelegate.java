@@ -59,7 +59,7 @@ public class Axis2BindingGeneratorDelegate implements BindingGeneratorDelegate<W
         hwsd.setServiceInterface(contract.getQualifiedInterfaceName());
         
         URI classloaderId = binding.getParent().getParent().getClassLoaderId();
-        hwsd.setClassloaderURI(classloaderId);
+        hwsd.setClassLoaderId(classloaderId);
         
         setPolicyConfigs(hwsd, policy, contract);
         

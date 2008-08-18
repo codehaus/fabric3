@@ -20,6 +20,8 @@ package org.fabric3.binding.burlap.control;
 
 import java.net.URI;
 
+import org.osoa.sca.annotations.EagerInit;
+
 import org.fabric3.binding.burlap.provision.BurlapWireSourceDefinition;
 import org.fabric3.binding.burlap.provision.BurlapWireTargetDefinition;
 import org.fabric3.binding.burlap.scdl.BurlapBindingDefinition;
@@ -29,7 +31,6 @@ import org.fabric3.spi.generator.BindingGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.policy.Policy;
-import org.osoa.sca.annotations.EagerInit;
 
 /**
  * Implementation of the hessian binding generator.
@@ -45,15 +46,16 @@ public class BurlapBindingGenerator implements BindingGenerator<BurlapWireSource
             throws GenerationException {
         // TODO Pass the contract information to physical
         URI id = logicalBinding.getParent().getParent().getClassLoaderId();
-        BurlapWireSourceDefinition hwsd = new BurlapWireSourceDefinition(id);
-        hwsd.setUri(logicalBinding.getBinding().getTargetUri());
+        BurlapWireSourceDefinition hwsd = new BurlapWireSourceDefinition();
+        hwsd.setClassLoaderId(id);
+        URI targetUri = logicalBinding.getBinding().getTargetUri();
+        hwsd.setUri(targetUri);
         return hwsd;
     }
 
     public BurlapWireTargetDefinition generateWireTarget(LogicalBinding<BurlapBindingDefinition> logicalBinding,
                                                          Policy policy,
-                                                         ReferenceDefinition referenceDefinition)
-            throws GenerationException {
+                                                         ReferenceDefinition referenceDefinition) throws GenerationException {
 
         // TODO Pass the contract information to the physical
         URI id = logicalBinding.getParent().getParent().getClassLoaderId();

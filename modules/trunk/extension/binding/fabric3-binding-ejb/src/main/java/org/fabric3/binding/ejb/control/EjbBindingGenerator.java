@@ -32,7 +32,7 @@ import org.osoa.sca.annotations.EagerInit;
 
 /**
  * Implementation of the EJB binding generator.
- * 
+ *
  * @version $Revision: 1 $ $Date: 2007-05-14 10:40:37 -0700 (Mon, 14 May 2007) $
  */
 @EagerInit
@@ -42,7 +42,7 @@ public class EjbBindingGenerator implements BindingGenerator<EjbWireSourceDefini
                                                       Policy policy,
                                                       ServiceDefinition serviceDefinition)
         throws GenerationException {
-        
+
         // TODO Pass the contract information to physical
 
         EjbWireSourceDefinition ewsd = new EjbWireSourceDefinition();
@@ -50,7 +50,7 @@ public class EjbBindingGenerator implements BindingGenerator<EjbWireSourceDefini
         ewsd.setBindingDefinition(logicalBinding.getBinding());
         ServiceContract<?> contract = serviceDefinition.getServiceContract();
         ewsd.setInterfaceName(contract.getQualifiedInterfaceName());
-        ewsd.setClassLoaderURI(logicalBinding.getParent().getParent().getClassLoaderId());
+        ewsd.setClassLoaderId(logicalBinding.getParent().getParent().getClassLoaderId());
 
         return ewsd;
     }
@@ -59,7 +59,7 @@ public class EjbBindingGenerator implements BindingGenerator<EjbWireSourceDefini
                                                       Policy policy,
                                                       ReferenceDefinition referenceDefinition)
         throws GenerationException {
-        
+
         // TODO Pass the contract information to the physical
 
         EjbWireTargetDefinition ewtd = new EjbWireTargetDefinition();

@@ -16,7 +16,6 @@
  */
 package org.fabric3.binding.ws.axis2.provision;
 
-import java.net.URI;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -30,7 +29,6 @@ import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 public class Axis2WireSourceDefinition extends PhysicalWireSourceDefinition implements Axis2PolicyAware {
     private String serviceInterface;
     private Map<String, Set<AxisPolicy>> policies = new HashMap<String, Set<AxisPolicy>>();
-    private URI classloaderURI;
 
     /**
      * @return Service interface for the wire source.
@@ -44,20 +42,6 @@ public class Axis2WireSourceDefinition extends PhysicalWireSourceDefinition impl
      */
     public void setServiceInterface(String serviceInterface) {
         this.serviceInterface = serviceInterface;
-    }
-
-    /**
-     * @return Classloader URI.
-     */
-    public URI getClassloaderURI() {
-        return classloaderURI;
-    }
-
-    /**
-     * @param classloaderURI Classloader URI.
-     */
-    public void setClassloaderURI(URI classloaderURI) {
-        this.classloaderURI = classloaderURI;
     }
 
     /**

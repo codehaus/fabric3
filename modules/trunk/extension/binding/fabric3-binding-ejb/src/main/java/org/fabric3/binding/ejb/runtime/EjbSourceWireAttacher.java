@@ -110,7 +110,7 @@ public class EjbSourceWireAttacher implements SourceWireAttacher<EjbWireSourceDe
                                       Map<Signature, Map.Entry<PhysicalOperationDefinition, InvocationChain>> ops)
             throws WiringException {
 
-        Class<?> interfaceClass = loadClass(sourceDefinition.getInterfaceName(), sourceDefinition.getClassLoaderURI());
+        Class<?> interfaceClass = loadClass(sourceDefinition.getInterfaceName(), sourceDefinition.getClassLoaderId());
 
         EjbServiceHandler handler = new EjbServiceHandler(ops);
 
@@ -131,7 +131,7 @@ public class EjbSourceWireAttacher implements SourceWireAttacher<EjbWireSourceDe
             throw new WiringException("Ejb 2.x bindings on services must specify a home interface name");
         }
 
-        Class<?> homeInterfaceClass = loadClass(homeInterface, sourceDefinition.getClassLoaderURI());
+        Class<?> homeInterfaceClass = loadClass(homeInterface, sourceDefinition.getClassLoaderId());
 
         // For 2.x beans, the EJBObject interface is not necessarily an interface implemented by the POJO
         // Rather than using the service interface from the implementation, use the EJBObject interface
