@@ -104,23 +104,23 @@ public class PhysicalWireTargetDefinition {
     public void setOptimizable(boolean optimizable) {
         this.optimizable = optimizable;
     }
-    
-    /**
-      * Returns the id of the classloader that should be used to load the interface class.
-      *
-      * @return the id of the classloader that should be used to load the interface class
-      */
-     public URI getClassLoaderId() {
-         return classLoaderId;
-     }
 
-     /**
-      * Sets the id of the classloader that should be used to load the interface class.
-      *
-      * @param classLoaderId the id of the classloader that should be used to load the interface class
-      */
-     public void setClassLoaderId(URI classLoaderId) {
-         this.classLoaderId = classLoaderId;
-     }
-    
+    /**
+     * Returns the id of the classloader associated with the target componnet.
+     *
+     * @return the id of the classloader associated with the target componnet
+     */
+    public URI getClassLoaderId() {
+        return classLoaderId;
+    }
+
+    /**
+     * Sets the id of the classloader associated with the target componnet.
+     *
+     * @param classLoaderId the id of the classloader associated with the target componnet
+     */
+    public void setClassLoaderId(URI classLoaderId) {
+        this.classLoaderId = classLoaderId;
+    }
+
 }

@@ -32,6 +32,7 @@ import org.fabric3.scdl.InjectableAttribute;
  */
 public class PhysicalWireSourceDefinition {
     private URI uri;
+    private URI classLoaderId;
     private InjectableAttribute injectableAttribute;
     private boolean optimizable;
     private Document key;
@@ -54,6 +55,25 @@ public class PhysicalWireSourceDefinition {
     public void setUri(URI uri) {
         this.uri = uri;
     }
+
+    /**
+     * Returns the id of the classloader associated with the source.
+     *
+     * @return the id of the classloader associated with the source
+     */
+    public URI getClassLoaderId() {
+        return classLoaderId;
+    }
+
+    /**
+     * Sets the id of the classloader associated with the source..
+     *
+     * @param classLoaderId the id of the classloader associated with the source
+     */
+    public void setClassLoaderId(URI classLoaderId) {
+        this.classLoaderId = classLoaderId;
+    }
+
 
     /**
      * Returns the value source for this wire. This identifies which reference or resource on the component this wire applies to.
