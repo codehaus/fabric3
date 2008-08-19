@@ -87,7 +87,9 @@ public class CompositeReferenceLoader implements TypeLoader<CompositeReference> 
         String value = reader.getAttributeValue(null, "multiplicity");
         try {
             Multiplicity multiplicity = Multiplicity.fromString(value);
-            referenceDefinition.setMultiplicity(multiplicity);
+            if (multiplicity != null) {
+                referenceDefinition.setMultiplicity(multiplicity);
+            }
         } catch (IllegalArgumentException e) {
             InvalidValue failure = new InvalidValue("Invalid multiplicity value: " + value, value, reader);
             context.addError(failure);

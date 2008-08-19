@@ -88,7 +88,9 @@ public class ComponentReferenceLoader implements TypeLoader<ComponentReference> 
         String value = reader.getAttributeValue(null, "multiplicity");
         try {
             Multiplicity multiplicity = Multiplicity.fromString(value);
-            reference.setMultiplicity(multiplicity);
+            if (multiplicity != null) {
+                reference.setMultiplicity(multiplicity);
+            }
         } catch (IllegalArgumentException e) {
             InvalidValue failure = new InvalidValue("Invalid multiplicity value: " + value, value, reader);
             context.addError(failure);
