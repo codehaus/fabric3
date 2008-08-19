@@ -25,19 +25,24 @@
 		<version>4</version>
 	</parent>
 	<groupId>org.codehaus.fabric3</groupId>
-	<artifactId>fabric3-weblogic-console-ext</artifactId>
+	<artifactId>fabric3-weblogic-console-ext-action</artifactId>
 	<version>0.6-SNAPSHOT</version>
-	<packaging>war</packaging>
+	<packaging>jar</packaging>
 	<name>Fabric3 Weblogic Console Extension</name>
 	<description>
 		Fabric3 Console Extension of weblogic for Management API
 	</description>
 
 	<dependencies>
-     <dependency>
-	    <groupId>org.codehaus.fabric3</groupId>
-	    <artifactId>fabric3-weblogic-console-ext-action</artifactId>
-	    <version>0.6-SNAPSHOT</version>
+	  <dependency>
+	    <groupId>struts</groupId>
+	    <artifactId>struts</artifactId>
+	    <version>1.2.9</version>
+	  </dependency>
+	  <dependency>
+	    <groupId>javax.servlet</groupId>
+	    <artifactId>servlet-api</artifactId>
+	    <version>2.3</version>
 	  </dependency>
 	</dependencies>
 	<scm>

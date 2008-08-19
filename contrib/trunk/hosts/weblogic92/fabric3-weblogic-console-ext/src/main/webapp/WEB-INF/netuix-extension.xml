@@ -7,10 +7,8 @@
     <provider-info>
         <title>Fabric3 Extension</title>
         <version>1.0</version>
-        <description>A simple test of changing the look and feel.</description>
-        <author>Mike Jasnowski</author>
-        <last-modified>03/18/2005</last-modified>
-        <support-url>http://www.dev2dev.com/products/wlportal81/index.jsp</support-url>
+        <description>Extension to add a tab for controlling the JMX Component</description>
+        <author>Fabric3 Team</author>
     </provider-info>
 
     <portal-file>/console.portal</portal-file>
