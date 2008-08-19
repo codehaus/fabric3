@@ -25,6 +25,7 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.java.provision.JavaWireTargetDefinition;
 import org.fabric3.pojo.reflection.InvokerInterceptor;
+import org.fabric3.pojo.wire.PojoWireSourceDefinition;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.TargetWireAttacher;
@@ -34,8 +35,8 @@ import org.fabric3.spi.component.Component;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
-import org.fabric3.spi.services.componentmanager.ComponentManager;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
+import org.fabric3.spi.services.componentmanager.ComponentManager;
 import org.fabric3.spi.util.UriHelper;
 import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.Wire;
@@ -50,8 +51,7 @@ public class JavaTargetWireAttacher implements TargetWireAttacher<JavaWireTarget
     private final ComponentManager manager;
     private final ClassLoaderRegistry classLoaderRegistry;
 
-    public JavaTargetWireAttacher(@Reference ComponentManager manager,
-                                  @Reference ClassLoaderRegistry classLoaderRegistry) {
+    public JavaTargetWireAttacher(@Reference ComponentManager manager, @Reference ClassLoaderRegistry classLoaderRegistry) {
         this.manager = manager;
         this.classLoaderRegistry = classLoaderRegistry;
     }
@@ -99,17 +99,19 @@ public class JavaTargetWireAttacher implements TargetWireAttacher<JavaWireTarget
                 // callbacks do not expire the client (i.e. the callback target); they expire the forward implementation instance
                 endsConversation = false;
             }
-            InvokerInterceptor<?, ?> interceptor = createInterceptor(method, callback, endsConversation, target, scopeContainer);
+            InvokerInterceptor<?, ?> interceptor;
+            if (sourceDefinition instanceof PojoWireSourceDefinition &&
+                    targetDefinition.getClassLoaderId().equals(sourceDefinition.getClassLoaderId())) {
+                // if the source is Java and target classloaders are equal, do not set the TCCL
+                interceptor = createInterceptor(method, callback, endsConversation, target, scopeContainer);
+            } else {
+                // If the source and target classloaders are not equal, configure the interceptor to set the TCCL to the target classloader
+                // when dispatching to a target instance. This guarantees when application code executes, it does so with the TCCL set to the
+                // target component's classloader.
+                interceptor = createInterceptor(method, callback, endsConversation, target, scopeContainer, loader);
+            }
             chain.addInterceptor(interceptor);
         }
-    }
-
-    <T, CONTEXT> InvokerInterceptor<T, CONTEXT> createInterceptor(Method method,
-                                                                  boolean callback,
-                                                                  boolean endsConvesation,
-                                                                  AtomicComponent<T> component,
-                                                                  ScopeContainer<CONTEXT> scopeContainer) {
-        return new InvokerInterceptor<T, CONTEXT>(method, callback, endsConvesation, component, scopeContainer);
     }
 
     public ObjectFactory<?> createObjectFactory(JavaWireTargetDefinition target) throws WiringException {
@@ -117,4 +119,22 @@ public class JavaTargetWireAttacher implements TargetWireAttacher<JavaWireTarget
         JavaComponent<?> targetComponent = (JavaComponent<?>) manager.getComponent(targetId);
         return targetComponent.createObjectFactory();
     }
+
+    private <T, CONTEXT> InvokerInterceptor<T, CONTEXT> createInterceptor(Method method,
+                                                                          boolean callback,
+                                                                          boolean endsConvesation,
+                                                                          AtomicComponent<T> component,
+                                                                          ScopeContainer<CONTEXT> scopeContainer,
+                                                                          ClassLoader loader) {
+        return new InvokerInterceptor<T, CONTEXT>(method, callback, endsConvesation, component, scopeContainer, loader);
+    }
+
+    private <T, CONTEXT> InvokerInterceptor<T, CONTEXT> createInterceptor(Method method,
+                                                                          boolean callback,
+                                                                          boolean endsConvesation,
+                                                                          AtomicComponent<T> component,
+                                                                          ScopeContainer<CONTEXT> scopeContainer) {
+        return new InvokerInterceptor<T, CONTEXT>(method, callback, endsConvesation, component, scopeContainer);
+    }
+
 }

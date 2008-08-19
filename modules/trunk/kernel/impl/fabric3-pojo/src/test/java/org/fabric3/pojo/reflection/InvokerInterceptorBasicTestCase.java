@@ -125,9 +125,8 @@ public class InvokerInterceptorBasicTestCase extends TestCase {
 
     public void testFailureGettingWrapperThrowsException() {
         EasyMock.expect(scopeContainer.getScope()).andReturn(Scope.COMPOSITE);
-        InstanceLifecycleException ex = new InstanceLifecycleException(null);
-        EasyMock.expect(message.getBody()).andReturn(null);
         EasyMock.expect(message.getWorkContext()).andReturn(workContext);
+        InstanceLifecycleException ex = new InstanceLifecycleException(null);
         try {
             EasyMock.expect(scopeContainer.getWrapper(component, workContext)).andThrow(ex);
         } catch (InstanceLifecycleException e) {
@@ -147,20 +146,20 @@ public class InvokerInterceptorBasicTestCase extends TestCase {
 
     private void mockCall(Object value, Object body) throws Exception {
         EasyMock.expect(scopeContainer.getScope()).andReturn(Scope.COMPOSITE);
-        EasyMock.expect(message.getBody()).andReturn(value);
         EasyMock.expect(message.getWorkContext()).andReturn(workContext);
         EasyMock.expect(scopeContainer.getWrapper(component, workContext)).andReturn(wrapper);
         EasyMock.expect(wrapper.getInstance()).andReturn(bean);
+        EasyMock.expect(message.getBody()).andReturn(value);
         message.setBody(body);
         scopeContainer.returnWrapper(component, workContext, wrapper);
     }
 
     private void mockFaultCall(Object value, Class<? extends Exception> fault) throws Exception {
         EasyMock.expect(scopeContainer.getScope()).andReturn(Scope.COMPOSITE);
-        EasyMock.expect(message.getBody()).andReturn(value);
         EasyMock.expect(message.getWorkContext()).andReturn(workContext);
         EasyMock.expect(scopeContainer.getWrapper(component, workContext)).andReturn(wrapper);
         EasyMock.expect(wrapper.getInstance()).andReturn(bean);
+        EasyMock.expect(message.getBody()).andReturn(value);
         message.setBodyWithFault(EasyMock.isA(fault));
         scopeContainer.returnWrapper(component, workContext, wrapper);
     }

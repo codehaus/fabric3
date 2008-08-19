@@ -28,10 +28,10 @@ import org.fabric3.scdl.Scope;
 import org.fabric3.spi.component.AtomicComponent;
 import org.fabric3.spi.component.ExpirationPolicy;
 import org.fabric3.spi.component.GroupInitializationException;
-import org.fabric3.spi.component.InstanceWrapper;
-import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.InstanceDestructionException;
 import org.fabric3.spi.component.InstanceLifecycleException;
+import org.fabric3.spi.component.InstanceWrapper;
+import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.invocation.CallFrame;
 import org.fabric3.spi.invocation.ConversationContext;
 import org.fabric3.spi.invocation.Message;
@@ -50,6 +50,7 @@ public class InvokerInterceptor<T, CONTEXT> implements Interceptor {
     private Method operation;
     private AtomicComponent<T> component;
     private ScopeContainer<CONTEXT> scopeContainer;
+    private ClassLoader targetTCCLClassLoader;
     private boolean callback;
     private boolean endConversation;
     private boolean conversationScope;
@@ -76,6 +77,31 @@ public class InvokerInterceptor<T, CONTEXT> implements Interceptor {
         conversationScope = Scope.CONVERSATION.equals(scopeContainer.getScope());
     }
 
+    /**
+     * Creates a new interceptor instance that sets the TCCL to the given classloader before dispatching an invocation.
+     *
+     * @param operation             the method to invoke on the target instance
+     * @param callback              true if the operation is a callback
+     * @param endConversation       if true, ends the conversation after the invocation
+     * @param component             the target component
+     * @param scopeContainer        the ScopeContainer that manages implementation instances for the target component
+     * @param targetTCCLClassLoader the classloader to set the TCCL to before dispatching.
+     */
+    public InvokerInterceptor(Method operation,
+                              boolean callback,
+                              boolean endConversation,
+                              AtomicComponent<T> component,
+                              ScopeContainer<CONTEXT> scopeContainer,
+                              ClassLoader targetTCCLClassLoader) {
+        this.operation = operation;
+        this.callback = callback;
+        this.endConversation = endConversation;
+        this.component = component;
+        this.scopeContainer = scopeContainer;
+        this.targetTCCLClassLoader = targetTCCLClassLoader;
+        conversationScope = Scope.CONVERSATION.equals(scopeContainer.getScope());
+    }
+
     public void setNext(Interceptor next) {
         throw new IllegalStateException("This interceptor must be the last one in an target interceptor chain");
     }
@@ -89,7 +115,6 @@ public class InvokerInterceptor<T, CONTEXT> implements Interceptor {
     }
 
     public Message invoke(Message msg) {
-        Object body = msg.getBody();
         WorkContext workContext = msg.getWorkContext();
         InstanceWrapper<T> wrapper;
         try {
@@ -104,17 +129,7 @@ public class InvokerInterceptor<T, CONTEXT> implements Interceptor {
 
         try {
             Object instance = wrapper.getInstance();
-            WorkContext oldWorkContext = PojoWorkContextTunnel.setThreadWorkContext(workContext);
-            try {
-                msg.setBody(operation.invoke(instance, (Object[]) body));
-            } catch (InvocationTargetException e) {
-                msg.setBodyWithFault(e.getCause());
-            } catch (IllegalAccessException e) {
-                throw new InvocationRuntimeException(e);
-            } finally {
-                PojoWorkContextTunnel.setThreadWorkContext(oldWorkContext);
-            }
-            return msg;
+            return invoke(msg, workContext, instance);
         } finally {
             try {
                 scopeContainer.returnWrapper(component, workContext, wrapper);
@@ -125,6 +140,40 @@ public class InvokerInterceptor<T, CONTEXT> implements Interceptor {
                 throw new InvocationRuntimeException(e);
             }
         }
+    }
+
+    /**
+     * Performs the invocation on the target component instance. If a target classloader is configured for the interceptor, it will be set as the
+     * TCCL.
+     *
+     * @param msg         the messaging containing the invocation data
+     * @param workContext the current work context
+     * @param instance    the target component instance
+     * @return the response message
+     */
+    private Message invoke(Message msg, WorkContext workContext, Object instance) {
+        WorkContext oldWorkContext = PojoWorkContextTunnel.setThreadWorkContext(workContext);
+        try {
+            Object body = msg.getBody();
+            if (targetTCCLClassLoader == null) {
+                msg.setBody(operation.invoke(instance, (Object[]) body));
+            } else {
+                ClassLoader old = Thread.currentThread().getContextClassLoader();
+                try {
+                    Thread.currentThread().setContextClassLoader(targetTCCLClassLoader);
+                    msg.setBody(operation.invoke(instance, (Object[]) body));
+                } finally {
+                    Thread.currentThread().setContextClassLoader(old);
+                }
+            }
+        } catch (InvocationTargetException e) {
+            msg.setBodyWithFault(e.getCause());
+        } catch (IllegalAccessException e) {
+            throw new InvocationRuntimeException(e);
+        } finally {
+            PojoWorkContextTunnel.setThreadWorkContext(oldWorkContext);
+        }
+        return msg;
     }
 
     /**
