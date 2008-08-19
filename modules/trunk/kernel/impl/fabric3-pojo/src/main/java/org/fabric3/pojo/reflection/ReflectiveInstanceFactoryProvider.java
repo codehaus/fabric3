@@ -26,18 +26,16 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.ArrayList;
 
 import org.fabric3.pojo.injection.ListMultiplicityObjectFactory;
 import org.fabric3.pojo.injection.MapMultiplicityObjectFactory;
-import org.fabric3.pojo.injection.MultiplicityObjectFactory;
 import org.fabric3.pojo.injection.SetMultiplicityObjectFactory;
 import org.fabric3.scdl.ConstructorInjectionSite;
 import org.fabric3.scdl.FieldInjectionSite;
+import org.fabric3.scdl.InjectableAttribute;
 import org.fabric3.scdl.InjectableAttributeType;
 import org.fabric3.scdl.InjectionSite;
 import org.fabric3.scdl.MethodInjectionSite;
-import org.fabric3.scdl.InjectableAttribute;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.component.InstanceFactory;
 import org.fabric3.spi.component.InstanceFactoryProvider;
@@ -86,8 +84,7 @@ public class ReflectiveInstanceFactoryProvider<T> implements InstanceFactoryProv
         if (site == null) {
             throw new AssertionError("No injection site for " + injectableAttribute + " in " + implementationClass);
         }
-        switch (site.getElementType()) {
-        case FIELD:
+        if (site instanceof FieldInjectionSite) {
             try {
                 FieldInjectionSite fieldSite = (FieldInjectionSite) site;
                 Field field = getField(fieldSite.getName());
@@ -95,7 +92,8 @@ public class ReflectiveInstanceFactoryProvider<T> implements InstanceFactoryProv
             } catch (NoSuchFieldException e) {
                 throw new AssertionError(e);
             }
-        case METHOD:
+        } else if (site instanceof MethodInjectionSite) {
+
             try {
                 MethodInjectionSite methodSite = (MethodInjectionSite) site;
                 Method method = methodSite.getSignature().getMethod(implementationClass);
@@ -105,7 +103,7 @@ public class ReflectiveInstanceFactoryProvider<T> implements InstanceFactoryProv
             } catch (NoSuchMethodException e) {
                 throw new AssertionError(e);
             }
-        case CONSTRUCTOR:
+        } else if (site instanceof ConstructorInjectionSite) {
             try {
                 ConstructorInjectionSite methodSite = (ConstructorInjectionSite) site;
                 Constructor<T> method = methodSite.getSignature().getConstructor(implementationClass);
@@ -115,8 +113,8 @@ public class ReflectiveInstanceFactoryProvider<T> implements InstanceFactoryProv
             } catch (NoSuchMethodException e) {
                 throw new AssertionError(e);
             }
-        default:
-            throw new AssertionError();
+        } else {
+            throw new AssertionError("Invalid injection site type: " + site.getClass());
         }
     }
 
@@ -125,8 +123,7 @@ public class ReflectiveInstanceFactoryProvider<T> implements InstanceFactoryProv
         if (site == null) {
             throw new AssertionError("No injection site for " + injectableAttribute);
         }
-        switch (site.getElementType()) {
-        case FIELD:
+        if (site instanceof FieldInjectionSite) {
             try {
                 FieldInjectionSite fieldSite = (FieldInjectionSite) site;
                 Field field = getField(fieldSite.getName());
@@ -134,7 +131,7 @@ public class ReflectiveInstanceFactoryProvider<T> implements InstanceFactoryProv
             } catch (NoSuchFieldException e) {
                 throw new AssertionError(e);
             }
-        case METHOD:
+        } else if (site instanceof MethodInjectionSite) {
             try {
                 MethodInjectionSite methodSite = (MethodInjectionSite) site;
                 Method method = methodSite.getSignature().getMethod(implementationClass);
@@ -144,7 +141,7 @@ public class ReflectiveInstanceFactoryProvider<T> implements InstanceFactoryProv
             } catch (NoSuchMethodException e) {
                 throw new AssertionError(e);
             }
-        case CONSTRUCTOR:
+        } else if (site instanceof ConstructorInjectionSite) {
             try {
                 ConstructorInjectionSite methodSite = (ConstructorInjectionSite) site;
                 Constructor<T> method = methodSite.getSignature().getConstructor(implementationClass);
@@ -154,8 +151,8 @@ public class ReflectiveInstanceFactoryProvider<T> implements InstanceFactoryProv
             } catch (NoSuchMethodException e) {
                 throw new AssertionError(e);
             }
-        default:
-            throw new AssertionError();
+        } else {
+            throw new AssertionError("Invalid injection site type " + site.getClass());
         }
     }
 
@@ -224,8 +221,8 @@ public class ReflectiveInstanceFactoryProvider<T> implements InstanceFactoryProv
                 factories.put(attribute, factory);
             }
             if (factory != null) {
-                switch (site.getElementType()) {
-                case FIELD:
+                if (site instanceof FieldInjectionSite) {
+
                     try {
                         FieldInjectionSite fieldSite = (FieldInjectionSite) site;
                         Field field = getField(fieldSite.getName());
@@ -233,8 +230,7 @@ public class ReflectiveInstanceFactoryProvider<T> implements InstanceFactoryProv
                     } catch (NoSuchFieldException e) {
                         throw new AssertionError(e);
                     }
-                    break;
-                case METHOD:
+                } else if (site instanceof MethodInjectionSite) {
                     try {
                         MethodInjectionSite methodSite = (MethodInjectionSite) site;
                         Method method = methodSite.getSignature().getMethod(implementationClass);
@@ -244,7 +240,6 @@ public class ReflectiveInstanceFactoryProvider<T> implements InstanceFactoryProv
                     } catch (NoSuchMethodException e) {
                         throw new AssertionError(e);
                     }
-                    break;
                 }
             }
         }
@@ -267,6 +262,6 @@ public class ReflectiveInstanceFactoryProvider<T> implements InstanceFactoryProv
         } else {
             return NULL_FACTORY;
         }
-        
+
     }
 }

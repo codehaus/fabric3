@@ -18,8 +18,6 @@
  */
 package org.fabric3.web.provision;
 
-import java.lang.annotation.ElementType;
-
 import org.fabric3.scdl.InjectionSite;
 
 /**
@@ -37,7 +35,7 @@ public class WebContextInjectionSite extends InjectionSite {
     }
 
     public WebContextInjectionSite(String type, ContextType contextType) {
-        super(ElementType.PARAMETER, type);
+        super(type);
         this.contextType = contextType;
     }
 

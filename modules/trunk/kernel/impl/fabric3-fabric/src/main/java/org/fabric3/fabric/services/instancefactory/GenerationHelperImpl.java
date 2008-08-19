@@ -17,10 +17,9 @@
 package org.fabric3.fabric.services.instancefactory;
 
 import java.lang.reflect.Method;
-import java.lang.annotation.ElementType;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.HashSet;
 
 import org.w3c.dom.Document;
 
@@ -76,7 +75,7 @@ public class GenerationHelperImpl implements InstanceFactoryGenerationHelper {
         Map<InjectionSite, InjectableAttribute> reinjection = providerDefinition.getReinjection();
         for (Map.Entry<InjectionSite, InjectableAttribute> entry : mappings.entrySet()) {
             InjectionSite site = entry.getKey();
-            if (site.getElementType() == ElementType.CONSTRUCTOR) {
+            if (site instanceof ConstructorInjectionSite) {
                 continue;
             }
             

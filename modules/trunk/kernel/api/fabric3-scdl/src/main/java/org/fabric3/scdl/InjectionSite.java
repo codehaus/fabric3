@@ -1,7 +1,5 @@
 package org.fabric3.scdl;
 
-import java.lang.annotation.ElementType;
-
 /**
  * Represents an injection site on a Java-based component implementation.
  *
@@ -10,24 +8,11 @@ import java.lang.annotation.ElementType;
 public class InjectionSite extends ModelObject {
     private static final long serialVersionUID = 7792895640425046691L;
 
-    // Element type
-    private ElementType elementType;
-
     // Name of type being injected
     private String type;
 
-    protected InjectionSite(ElementType elementType, String type) {
-        this.elementType = elementType;
+    protected InjectionSite(String type) {
         this.type = type;
-    }
-
-    /**
-     * Gets the element type.
-     *
-     * @return Element type.
-     */
-    public ElementType getElementType() {
-        return elementType;
     }
 
     /**

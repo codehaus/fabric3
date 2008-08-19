@@ -17,7 +17,6 @@
 package org.fabric3.scdl;
 
 import java.lang.reflect.Method;
-import java.lang.annotation.ElementType;
 
 /**
  * @version $Rev$ $Date$
@@ -29,7 +28,7 @@ public class MethodInjectionSite extends InjectionSite {
     private int modifiers;
 
     public MethodInjectionSite(Method method, int param) {
-        super(ElementType.METHOD, method.getParameterTypes()[param].getName());
+        super(method.getParameterTypes()[param].getName());
         this.signature = new Signature(method);
         this.param = param;
         this.modifiers = method.getModifiers();

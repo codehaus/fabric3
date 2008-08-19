@@ -16,7 +16,6 @@
  */
 package org.fabric3.scdl;
 
-import java.lang.annotation.ElementType;
 import java.lang.reflect.Field;
 
 /**
@@ -28,7 +27,7 @@ public class FieldInjectionSite extends InjectionSite {
     int modifiers;
 
     public FieldInjectionSite(Field field) {
-        super(ElementType.FIELD, field.getType().getName());
+        super(field.getType().getName());
         this.modifiers = field.getModifiers();
         name = field.getName();
     }

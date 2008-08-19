@@ -16,7 +16,6 @@
  */
 package org.fabric3.scdl;
 
-import java.lang.annotation.ElementType;
 import java.lang.reflect.Constructor;
 
 /**
@@ -28,13 +27,13 @@ public class ConstructorInjectionSite extends InjectionSite {
     private int param;
 
     public ConstructorInjectionSite(Constructor<?> constructor, int param) {
-        super(ElementType.CONSTRUCTOR, constructor.getParameterTypes()[param].getName());
+        super(constructor.getParameterTypes()[param].getName());
         this.signature = new Signature(constructor);
         this.param = param;
     }
 
     public ConstructorInjectionSite(Signature signature, int param) {
-        super(ElementType.CONSTRUCTOR, signature.getParameterTypes().get(param));
+        super(signature.getParameterTypes().get(param));
         this.signature = signature;
         this.param = param;
     }
