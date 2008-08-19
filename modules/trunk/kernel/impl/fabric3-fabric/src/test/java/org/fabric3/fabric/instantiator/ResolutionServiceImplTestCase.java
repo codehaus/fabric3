@@ -29,7 +29,7 @@ import org.fabric3.fabric.instantiator.promotion.DefaultPromotionResolutionServi
 import org.fabric3.fabric.instantiator.promotion.PromotionResolutionService;
 import org.fabric3.fabric.instantiator.target.ExplicitTargetResolutionService;
 import org.fabric3.fabric.instantiator.target.TargetResolutionService;
-import org.fabric3.fabric.instantiator.target.TypeBasedAutoWireService;
+import org.fabric3.fabric.instantiator.target.TypeBasedAutowireResolutionService;
 import org.fabric3.introspection.impl.contract.JavaServiceContract;
 import org.fabric3.scdl.AbstractComponentType;
 import org.fabric3.scdl.ComponentDefinition;
@@ -128,7 +128,7 @@ public class ResolutionServiceImplTestCase extends TestCase {
         PromotionResolutionService promotionResolutionService = new DefaultPromotionResolutionService();
         List<TargetResolutionService> targetResolutionServices = new ArrayList<TargetResolutionService>();
         targetResolutionServices.add(new ExplicitTargetResolutionService());
-        targetResolutionServices.add(new TypeBasedAutoWireService());
+        targetResolutionServices.add(new TypeBasedAutowireResolutionService());
         resolutionService = new ResolutionServiceImpl(promotionResolutionService, targetResolutionServices);
         URI domainUri = URI.create("fabric3://./runtime");
         URI runtimeUri = URI.create("runtime");

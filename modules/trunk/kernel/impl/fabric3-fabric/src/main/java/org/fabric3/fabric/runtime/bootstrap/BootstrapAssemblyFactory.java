@@ -78,7 +78,7 @@ import org.fabric3.fabric.instantiator.promotion.DefaultPromotionResolutionServi
 import org.fabric3.fabric.instantiator.promotion.PromotionResolutionService;
 import org.fabric3.fabric.instantiator.target.ExplicitTargetResolutionService;
 import org.fabric3.fabric.instantiator.target.TargetResolutionService;
-import org.fabric3.fabric.instantiator.target.TypeBasedAutoWireService;
+import org.fabric3.fabric.instantiator.target.TypeBasedAutowireResolutionService;
 import org.fabric3.fabric.monitor.MonitorWireAttacher;
 import org.fabric3.fabric.monitor.MonitorWireGenerator;
 import org.fabric3.fabric.monitor.MonitorWireTargetDefinition;
@@ -220,7 +220,7 @@ public class BootstrapAssemblyFactory {
         PromotionResolutionService promotionResolutionService = new DefaultPromotionResolutionService();
         List<TargetResolutionService> targetResolutionServices = new ArrayList<TargetResolutionService>();
         targetResolutionServices.add(new ExplicitTargetResolutionService());
-        targetResolutionServices.add(new TypeBasedAutoWireService());
+        targetResolutionServices.add(new TypeBasedAutowireResolutionService());
         ResolutionService resolutionService = new ResolutionServiceImpl(promotionResolutionService, targetResolutionServices);
 
         PromotionNormalizer normalizer = new PromotionNormalizerImpl();
