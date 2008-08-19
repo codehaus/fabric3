@@ -50,7 +50,6 @@ import org.fabric3.host.runtime.RuntimeLifecycleCoordinator;
 import org.fabric3.host.runtime.ScdlBootstrapper;
 import org.fabric3.host.runtime.ShutdownException;
 import org.fabric3.jmx.agent.Agent;
-import org.fabric3.jmx.agent.DefaultAgent;
 import static org.fabric3.runtime.webapp.Constants.APPLICATION_SCDL_PATH_DEFAULT;
 import static org.fabric3.runtime.webapp.Constants.APPLICATION_SCDL_PATH_PARAM;
 import static org.fabric3.runtime.webapp.Constants.BASE_DIR;
@@ -60,7 +59,6 @@ import static org.fabric3.runtime.webapp.Constants.COMPOSITE_PARAM;
 import static org.fabric3.runtime.webapp.Constants.DEFAULT_MANAGEMENT_DOMAIN;
 import static org.fabric3.runtime.webapp.Constants.DOMAIN_PARAM;
 import static org.fabric3.runtime.webapp.Constants.MANAGEMENT_DOMAIN_PARAM;
-import static org.fabric3.runtime.webapp.Constants.ONLINE_PARAM;
 import static org.fabric3.runtime.webapp.Constants.RUNTIME_ATTRIBUTE;
 
 /**
