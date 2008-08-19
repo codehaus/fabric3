@@ -21,7 +21,6 @@ package org.fabric3.scdl;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -156,7 +155,7 @@ public class Composite extends AbstractComponentType<CompositeService, Composite
      * @return
      */
     public Map<String, Property> getProperties() {
-        return Collections.unmodifiableMap(propertiesView);
+        return propertiesView;
     }
 
     public void add(Property property) {
@@ -171,7 +170,7 @@ public class Composite extends AbstractComponentType<CompositeService, Composite
      * @return
      */
     public Map<String, CompositeReference> getReferences() {
-        return Collections.unmodifiableMap(referencesView);
+        return referencesView;
     }
 
     public void add(CompositeReference reference) {
@@ -186,7 +185,7 @@ public class Composite extends AbstractComponentType<CompositeService, Composite
      * @return
      */
     public Map<String, CompositeService> getServices() {
-        return Collections.unmodifiableMap(servicesView);
+        return servicesView;
     }
 
     public void add(CompositeService service) {
@@ -199,7 +198,7 @@ public class Composite extends AbstractComponentType<CompositeService, Composite
      */
     @SuppressWarnings("unchecked")
     public Map<String, ComponentDefinition<? extends Implementation<?>>> getComponents() {
-        return Collections.unmodifiableMap(componentsView);
+        return componentsView;
     }
 
     public void add(ComponentDefinition<? extends Implementation<?>> componentDefinition) {
@@ -237,7 +236,7 @@ public class Composite extends AbstractComponentType<CompositeService, Composite
      */
     @SuppressWarnings("unchecked")
     public List<WireDefinition> getWires() {
-        return Collections.unmodifiableList(wiresView);
+        return wiresView;
     }
 
     /**

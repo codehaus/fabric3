@@ -19,7 +19,6 @@
 package org.fabric3.spi.model.topology;
 
 import java.net.URI;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -127,7 +126,7 @@ public class RuntimeInfo {
      * @return the list of active components hosted by the runtime
      */
     public Set<URI> getComponents() {
-        return Collections.unmodifiableSet(components);
+        return components;
     }
 
     /**

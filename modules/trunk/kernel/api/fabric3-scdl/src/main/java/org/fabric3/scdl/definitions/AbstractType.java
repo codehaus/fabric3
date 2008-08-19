@@ -18,9 +18,7 @@
  */
 package org.fabric3.scdl.definitions;
 
-import java.util.Collections;
 import java.util.Set;
-
 import javax.xml.namespace.QName;
 
 /**
@@ -49,14 +47,14 @@ public class AbstractType extends AbstractDefinition {
      * @return Intents this binding always provide.
      */
     public Set<QName> getAlwaysProvide() {
-        return Collections.unmodifiableSet(alwaysProvide);
+        return alwaysProvide;
     }
 
     /**
      * @return Intents this binding may provide.
      */
     public Set<QName> getMayProvide() {
-        return Collections.unmodifiableSet(mayProvide);
+        return mayProvide;
     }
 
 

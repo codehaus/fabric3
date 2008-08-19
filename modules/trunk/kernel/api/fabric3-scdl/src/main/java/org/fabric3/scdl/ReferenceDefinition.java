@@ -19,7 +19,6 @@
 package org.fabric3.scdl;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -117,7 +116,7 @@ public class ReferenceDefinition extends AbstractPolicyAware {
      * @return List of bindings defined against the reference.
      */
     public List<BindingDefinition> getBindings() {
-        return Collections.unmodifiableList(bindings);
+        return bindings;
     }
 
     /**
@@ -131,7 +130,7 @@ public class ReferenceDefinition extends AbstractPolicyAware {
      * @return List of callback bindings defined against the reference.
      */
     public List<BindingDefinition> getCallbackBindings() {
-        return Collections.unmodifiableList(callbackBindings);
+        return callbackBindings;
     }
 
     /**
@@ -145,7 +144,7 @@ public class ReferenceDefinition extends AbstractPolicyAware {
      * @return Get the list of operations defined against the reference.
      */
     public List<OperationDefinition> getOperations() {
-        return Collections.unmodifiableList(operations);
+        return operations;
     }
 
     /**

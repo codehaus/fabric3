@@ -18,7 +18,6 @@ package org.fabric3.spi.model.physical;
 
 import java.net.URI;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -62,7 +61,7 @@ public class PhysicalClassLoaderDefinition {
      * @return the URIs as an ordered Set
      */
     public Set<URI> getContributionUris() {
-        return Collections.unmodifiableSet(contributionUris);
+        return contributionUris;
     }
 
     /**
@@ -80,7 +79,7 @@ public class PhysicalClassLoaderDefinition {
      * @return the URIs as an ordered Set
      */
     public Set<URI> getExtensionUris() {
-        return Collections.unmodifiableSet(extensionUris);
+        return extensionUris;
     }
 
     /**
@@ -89,7 +88,7 @@ public class PhysicalClassLoaderDefinition {
      * @return the list of parent classloader URIs
      */
     public List<URI> getParentClassLoaders() {
-        return Collections.unmodifiableList(parentClassLoaders);
+        return parentClassLoaders;
     }
 
     /**

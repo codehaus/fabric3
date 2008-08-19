@@ -20,7 +20,6 @@ package org.fabric3.spi.classloader;
 
 import java.net.URI;
 import java.net.URL;
-import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.regex.Pattern;
@@ -45,7 +44,7 @@ public class FilteringMultiparentClassLoader extends MultiParentClassLoader {
     }
 
     public Set<Pattern> getPatterns() {
-        return Collections.unmodifiableSet(patterns);
+        return patterns;
     }
 
     protected synchronized Class<?> loadClass(String name, boolean resolve) throws ClassNotFoundException {

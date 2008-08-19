@@ -16,7 +16,6 @@
  */
 package org.fabric3.host.contribution;
 
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -48,7 +47,7 @@ public abstract class ValidationException extends ContributionException {
      * @return the collection of underlying errors
      */
     public List<ValidationFailure> getErrors() {
-        return Collections.unmodifiableList(errors);
+        return errors;
     }
 
     /**
@@ -57,7 +56,7 @@ public abstract class ValidationException extends ContributionException {
      * @return the collection of underlying errors
      */
     public List<ValidationFailure> getWarnings() {
-        return Collections.unmodifiableList(warnings);
+        return warnings;
     }
 
 }

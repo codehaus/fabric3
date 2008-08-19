@@ -20,9 +20,7 @@ package org.fabric3.spi.model.instance;
 
 import java.net.URI;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-
 import javax.xml.namespace.QName;
 
 /**
@@ -73,7 +71,7 @@ public abstract class Bindable extends LogicalScaArtifact<LogicalComponent<?>> {
      * @return The bindings available on the service or the reference.
      */
     public final List<LogicalBinding<?>> getBindings() {
-        return Collections.unmodifiableList(bindings);
+        return bindings;
     }
 
     /**
@@ -82,7 +80,7 @@ public abstract class Bindable extends LogicalScaArtifact<LogicalComponent<?>> {
      * @return The bindings available on the service or the reference.
      */
     public final List<LogicalBinding<?>> getCallbackBindings() {
-        return Collections.unmodifiableList(callbackBindings);
+        return callbackBindings;
     }
 
     /**

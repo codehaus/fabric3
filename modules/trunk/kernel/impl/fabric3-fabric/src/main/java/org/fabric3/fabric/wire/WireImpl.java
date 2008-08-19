@@ -18,7 +18,6 @@
  */
 package org.fabric3.fabric.wire;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -40,7 +39,7 @@ public class WireImpl implements Wire {
     }
 
     public Map<PhysicalOperationDefinition, InvocationChain> getInvocationChains() {
-        return Collections.unmodifiableMap(chains);
+        return chains;
     }
 
 }

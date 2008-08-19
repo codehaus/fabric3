@@ -19,7 +19,6 @@ package org.fabric3.spi.services.contribution;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -75,7 +74,7 @@ public class Resource {
      * @return the map of resource elements
      */
     public List<ResourceElement<?, ?>> getResourceElements() {
-        return Collections.unmodifiableList(elements);
+        return elements;
     }
 
     /**

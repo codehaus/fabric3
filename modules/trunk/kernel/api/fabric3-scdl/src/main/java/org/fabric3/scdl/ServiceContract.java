@@ -100,7 +100,7 @@ public abstract class ServiceContract<T> extends ModelObject {
         if (operations == null) {
             return Collections.emptyList();
         }
-        return Collections.unmodifiableList(operations);
+        return operations;
     }
 
     /**
@@ -113,8 +113,7 @@ public abstract class ServiceContract<T> extends ModelObject {
     }
 
     /**
-     * Returns the callback contract associated with the service contract or null if the service does not have a
-     * callback.
+     * Returns the callback contract associated with the service contract or null if the service does not have a callback.
      *
      * @return the callback contract or null
      */
@@ -132,8 +131,8 @@ public abstract class ServiceContract<T> extends ModelObject {
     }
 
     /**
-     * Determines if this contract is compatible with the given contract. Compatibility is determined according to the
-     * specifics of the IDL's compatibility semantics.
+     * Determines if this contract is compatible with the given contract. Compatibility is determined according to the specifics of the IDL's
+     * compatibility semantics.
      *
      * @param contract the contract to test compatibility with
      * @return true if the contracts are compatible

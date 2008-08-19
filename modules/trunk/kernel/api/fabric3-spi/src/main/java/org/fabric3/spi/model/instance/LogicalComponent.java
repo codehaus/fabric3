@@ -20,7 +20,6 @@ package org.fabric3.spi.model.instance;
 
 import java.net.URI;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -126,7 +125,7 @@ public class LogicalComponent<I extends Implementation<?>> extends LogicalScaArt
      * @return the services offered by the current component
      */
     public Collection<LogicalService> getServices() {
-        return Collections.unmodifiableCollection(services.values());
+        return services.values();
     }
 
     /**
@@ -154,7 +153,7 @@ public class LogicalComponent<I extends Implementation<?>> extends LogicalScaArt
      * @return the resources required by the current component
      */
     public Collection<LogicalResource<?>> getResources() {
-        return Collections.unmodifiableCollection(resources.values());
+        return resources.values();
     }
 
     /**
@@ -182,7 +181,7 @@ public class LogicalComponent<I extends Implementation<?>> extends LogicalScaArt
      * @return the component references
      */
     public Collection<LogicalReference> getReferences() {
-        return Collections.unmodifiableCollection(references.values());
+        return references.values();
     }
 
     /**
@@ -210,7 +209,7 @@ public class LogicalComponent<I extends Implementation<?>> extends LogicalScaArt
      * @return the resolved property values for the component
      */
     public Map<String, Document> getPropertyValues() {
-        return Collections.unmodifiableMap(propertyValues);
+        return propertyValues;
     }
 
     /**

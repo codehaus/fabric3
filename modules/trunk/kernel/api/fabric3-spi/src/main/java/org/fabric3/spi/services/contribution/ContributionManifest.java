@@ -2,7 +2,6 @@ package org.fabric3.spi.services.contribution;
 
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import org.fabric3.host.contribution.Deployable;
@@ -20,7 +19,7 @@ public class ContributionManifest implements Serializable {
     private List<Deployable> deployables = new ArrayList<Deployable>();
 
     public List<Export> getExports() {
-        return Collections.unmodifiableList(exports);
+        return exports;
     }
 
     public void addExport(Export export) {
@@ -28,7 +27,7 @@ public class ContributionManifest implements Serializable {
     }
 
     public List<Import> getImports() {
-        return Collections.unmodifiableList(imports);
+        return imports;
     }
 
     public void addImport(Import artifactImport) {
@@ -36,7 +35,7 @@ public class ContributionManifest implements Serializable {
     }
 
     public List<Deployable> getDeployables() {
-        return Collections.unmodifiableList(deployables);
+        return deployables;
     }
 
     public void addDeployable(Deployable deployale) {

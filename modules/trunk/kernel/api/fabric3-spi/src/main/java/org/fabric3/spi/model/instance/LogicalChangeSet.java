@@ -19,7 +19,6 @@
 package org.fabric3.spi.model.instance;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -50,7 +49,7 @@ public class LogicalChangeSet {
      * @return Newly added components at domain level as a result of the new contribution.
      */
     public List<LogicalComponent<?>> getNewComponents() {
-        return Collections.unmodifiableList(newComponents);
+        return newComponents;
     }
 
     /**
@@ -59,7 +58,7 @@ public class LogicalChangeSet {
      * @return Newly added wires at the domain level as a result of the new contribution.
      */
     public List<LogicalWire> getNewWires() {
-        return Collections.unmodifiableList(newWires);
+        return newWires;
     }
 
 }

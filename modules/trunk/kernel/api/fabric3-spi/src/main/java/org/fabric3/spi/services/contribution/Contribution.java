@@ -23,7 +23,6 @@ import java.io.Serializable;
 import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -142,7 +141,7 @@ public class Contribution implements Serializable {
      * @return the list of resources
      */
     public List<Resource> getResources() {
-        return Collections.unmodifiableList(resources);
+        return resources;
     }
 
     /**
@@ -178,7 +177,7 @@ public class Contribution implements Serializable {
      * @return the list of contribution URIs matching resolved imports
      */
     public List<URI> getResolvedImportUris() {
-        return Collections.unmodifiableList(resolvedImports);
+        return resolvedImports;
     }
 
 }

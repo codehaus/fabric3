@@ -20,7 +20,6 @@ package org.fabric3.fabric.services.classloading;
 
 import java.net.URI;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -68,7 +67,7 @@ public class ClassLoaderRegistryImpl implements ClassLoaderRegistry {
     }
 
     public Map<URI, ClassLoader> getClassLoaders() {
-        return Collections.unmodifiableMap(registry);
+        return registry;
     }
 
 

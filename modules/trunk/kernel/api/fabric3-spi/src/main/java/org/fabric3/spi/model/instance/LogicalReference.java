@@ -20,7 +20,6 @@ package org.fabric3.spi.model.instance;
 
 import java.net.URI;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import javax.xml.namespace.QName;
@@ -80,7 +79,7 @@ public class LogicalReference extends Bindable {
      * @return the URIs
      */
     public List<URI> getPromotedUris() {
-        return Collections.unmodifiableList(promotedUris);
+        return promotedUris;
     }
 
     /**

@@ -17,7 +17,6 @@
 package org.fabric3.fabric.util.graph;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -39,7 +38,7 @@ public class DirectedGraphImpl<T> implements DirectedGraph<T> {
     }
 
     public Set<Vertex<T>> getVertices() {
-        return Collections.unmodifiableSet(graphVertices.keySet());
+        return graphVertices.keySet();
     }
 
     public void add(Vertex<T> vertex) {
@@ -95,7 +94,7 @@ public class DirectedGraphImpl<T> implements DirectedGraph<T> {
     }
 
     public Set<Edge<T>> getEdges() {
-        return Collections.unmodifiableSet(graphEdges);
+        return graphEdges;
     }
 
     public void add(Edge<T> edge) {

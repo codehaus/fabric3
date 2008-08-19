@@ -18,7 +18,6 @@
  */
 package org.fabric3.fabric.services.advertisement;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -44,7 +43,7 @@ public class DefaultAdvertismentService implements AdvertisementService {
     private Map<QName, String> transportInfo = new HashMap<QName, String>();
 
     public Set<QName> getFeatures() {
-        return Collections.unmodifiableSet(features);
+        return features;
     }
 
     public void addFeature(QName feature) {

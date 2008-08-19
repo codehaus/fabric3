@@ -19,7 +19,6 @@
 package org.fabric3.spi.generator;
 
 import java.net.URI;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
@@ -45,7 +44,7 @@ public class CommandMap {
     }
     
     public Set<URI> getRuntimeIds() {
-        return Collections.unmodifiableSet(commands.keySet());
+        return commands.keySet();
     }
     
     public Set<Command> getCommandsForRuntime(URI runtimeId) {

@@ -17,7 +17,6 @@
 package org.fabric3.fabric.services.discovery;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import org.fabric3.spi.services.discovery.DiscoveryService;
@@ -40,6 +39,6 @@ public class DiscoveryServiceRegistryImpl implements DiscoveryServiceRegistry {
     }
 
     public List<DiscoveryService> getServices() {
-        return Collections.unmodifiableList(services);
+        return services;
     }
 }
