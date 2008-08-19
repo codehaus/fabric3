@@ -18,13 +18,12 @@
  */
 package org.fabric3.web.introspection;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.fabric3.scdl.ComponentType;
-import org.fabric3.scdl.InjectionSite;
 import org.fabric3.scdl.InjectableAttribute;
+import org.fabric3.scdl.InjectionSite;
 
 /**
  * A component type representing a web component.
@@ -42,7 +41,7 @@ public class WebComponentType extends ComponentType {
      * @return the mapping
      */
     public Map<String, Map<InjectionSite, InjectableAttribute>> getInjectionSites() {
-        return Collections.unmodifiableMap(sites);
+        return sites;
     }
 
     /**
