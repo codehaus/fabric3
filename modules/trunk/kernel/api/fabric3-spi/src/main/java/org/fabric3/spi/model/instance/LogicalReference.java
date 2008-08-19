@@ -41,6 +41,7 @@ public class LogicalReference extends Bindable {
 
     private final ReferenceDefinition definition;
     private List<URI> promotedUris;
+    private boolean resolved;
 
     /**
      * Constructor.
@@ -99,6 +100,24 @@ public class LogicalReference extends Bindable {
      */
     public void setPromotedUri(int index, URI uri) {
         promotedUris.set(index, uri);
+    }
+
+    /**
+     * Returns true if this reference's target (or targets) has been resolved.
+     *
+     * @return true if this reference's target (or targets) has been resolved
+     */
+    public boolean isResolved() {
+        return resolved;
+    }
+
+    /**
+     * Sets if this reference's target (or targets) has been resolved.
+     *
+     * @param resolved true if resolved.
+     */
+    public void setResolved(boolean resolved) {
+        this.resolved = resolved;
     }
 
     /**
