@@ -92,6 +92,7 @@ public class ExplicitTargetResolutionService implements TargetResolutionService 
             ((LogicalCompositeComponent) parent).overrideWires(logicalReference, wires);
         }
         // end remove
+        logicalReference.setResolved(true);
     }
 
     private URI resolveByUri(LogicalReference reference, URI targetUri, LogicalCompositeComponent composite, LogicalChange change) {

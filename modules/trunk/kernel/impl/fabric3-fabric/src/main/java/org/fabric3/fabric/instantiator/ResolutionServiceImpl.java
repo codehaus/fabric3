@@ -24,6 +24,7 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.fabric.instantiator.promotion.PromotionResolutionService;
 import org.fabric3.fabric.instantiator.target.TargetResolutionService;
+import org.fabric3.scdl.Multiplicity;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
@@ -79,10 +80,16 @@ public class ResolutionServiceImpl implements ResolutionService {
      * Handles promotions and target resolution on references.
      */
     private void resolveReferences(LogicalComponent<?> logicalComponent, LogicalChange change) {
+        LogicalCompositeComponent parent = logicalComponent.getParent();
         for (LogicalReference logicalReference : logicalComponent.getReferences()) {
-            promotionResolutionService.resolve(logicalReference, change);
-            for (TargetResolutionService targetResolutionService : targetResolutionServices) {
-                targetResolutionService.resolve(logicalReference, logicalComponent.getParent(), change);
+            Multiplicity multiplicityValue = logicalReference.getDefinition().getMultiplicity();
+            boolean refMultiplicity = multiplicityValue.equals(Multiplicity.ZERO_N) || multiplicityValue.equals(Multiplicity.ONE_N);
+            if (refMultiplicity || !logicalReference.isResolved()) {
+                // only resolve references that have not been resolved or ones that are multiplicities since the latter may be reinjected
+                promotionResolutionService.resolve(logicalReference, change);
+                for (TargetResolutionService targetResolutionService : targetResolutionServices) {
+                    targetResolutionService.resolve(logicalReference, parent, change);
+                }
             }
         }
     }
