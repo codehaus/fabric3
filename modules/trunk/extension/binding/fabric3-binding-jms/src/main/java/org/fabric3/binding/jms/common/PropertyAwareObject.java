@@ -62,7 +62,7 @@ public abstract class PropertyAwareObject extends ModelObject {
      */
     public Map<String, String> getProperties() {
         if (this.properties != null) {
-            return Collections.unmodifiableMap(properties);
+            return properties;
         } else {
             return Collections.emptyMap();
         }

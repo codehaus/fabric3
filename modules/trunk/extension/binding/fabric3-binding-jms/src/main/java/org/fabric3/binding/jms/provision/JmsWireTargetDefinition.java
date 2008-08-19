@@ -19,7 +19,6 @@
 package org.fabric3.binding.jms.provision;
 
 import java.net.URI;
-import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 
@@ -83,7 +82,7 @@ public class JmsWireTargetDefinition extends PhysicalWireTargetDefinition {
      * @return the payload type
      */
     public Map<String, PayloadType> getPayloadTypes() {
-        return Collections.unmodifiableMap(payloadTypes);
+        return payloadTypes;
     }
 
     /**

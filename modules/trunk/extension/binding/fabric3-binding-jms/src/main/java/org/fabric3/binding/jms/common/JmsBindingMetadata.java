@@ -22,7 +22,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Map;
-
 import javax.naming.Context;
 
 import org.fabric3.scdl.ModelObject;
@@ -156,7 +155,7 @@ public class JmsBindingMetadata extends ModelObject {
     }
 
     /**
-     * @param responseDefinition Definition fro sending responses.
+     * @param response Definition fro sending responses.
      */
     public void setResponse(ResponseDefinition response) {
         this.response = response;
@@ -206,7 +205,7 @@ public class JmsBindingMetadata extends ModelObject {
         if(operationProperties==null){
             return Collections.emptyMap();
         }else{
-            return Collections.unmodifiableMap(operationProperties);
+            return operationProperties;
         }
     }
 
