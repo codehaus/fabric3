@@ -85,10 +85,16 @@ public class ResolutionServiceImpl implements ResolutionService {
             Multiplicity multiplicityValue = logicalReference.getDefinition().getMultiplicity();
             boolean refMultiplicity = multiplicityValue.equals(Multiplicity.ZERO_N) || multiplicityValue.equals(Multiplicity.ONE_N);
             if (refMultiplicity || !logicalReference.isResolved()) {
-                // only resolve references that have not been resolved or ones that are multiplicities since the latter may be reinjected
+                // Only resolve references that have not been resolved or ones that are multiplicities since the latter may be reinjected.
+                // Explicitly set the reference to unresolved, since if it was a multiplicity it may have been previously resolved.
+                logicalReference.setResolved(false);
                 promotionResolutionService.resolve(logicalReference, change);
                 for (TargetResolutionService targetResolutionService : targetResolutionServices) {
                     targetResolutionService.resolve(logicalReference, parent, change);
+                    if (logicalReference.isResolved()) {
+                        // the reference has been resolved
+                        break;
+                    }
                 }
             }
         }
