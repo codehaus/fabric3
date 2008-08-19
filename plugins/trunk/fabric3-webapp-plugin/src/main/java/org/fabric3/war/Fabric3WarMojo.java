@@ -23,14 +23,15 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 import java.util.jar.JarEntry;
 import java.util.jar.JarFile;
 import java.util.jar.JarOutputStream;
-
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -57,20 +58,19 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
 /**
- * Add fabric3 runtime dependencies to a webapp. The wenapp runtime in Fabric3 currently doesn't support classloader isolation. All JAR
- * files are added to the WEB-INF/lib directory. All system and user extensions are added to the same directory as well. The list of system 
- * extensions are specified in the properties file f3Extensions.properties and the list of user extensions are specified in the 
- * f3UserExtenion.properties.
- * 
+ * Add fabric3 runtime dependencies to a webapp. The wenapp runtime in Fabric3 currently doesn't support classloader isolation. All JAR files are
+ * added to the WEB-INF/lib directory. All system and user extensions are added to the same directory as well. The list of system extensions are
+ * specified in the properties file f3Extensions.properties and the list of user extensions are specified in the f3UserExtenion.properties.
+ * <p/>
  * Both system and user extensions are exploded and the contents of the META-INF/lib directory are copied to the WEB-INF/lib directory.
- * 
+ * <p/>
  * <p/>
  * Performs the following tasks.
  * <p/>
- * <ul> <li>Adds the boot dependencies transitively to WEB-INF/lib</li> <li>By default boot libraries are transitively resolved from
- * webapp-host</li> <li>The version of boot libraries can be specified using configuration/runTimeVersion element</li> <li>Boot libraries can be
- * overridden using the configuration/bootLibs element in the plugin</li> <li>Adds the extension artifacts specified using configuration/extensions to
- * WEB-INF/lib</li> </ul>
+ * <ul> <li>Adds the boot dependencies transitively to WEB-INF/lib</li> <li>By default boot libraries are transitively resolved from webapp-host</li>
+ * <li>The version of boot libraries can be specified using configuration/runTimeVersion element</li> <li>Boot libraries can be overridden using the
+ * configuration/bootLibs element in the plugin</li> <li>Adds the extension artifacts specified using configuration/extensions to WEB-INF/lib</li>
+ * </ul>
  *
  * @version $Rev$ $Date$
  * @goal fabric3-war
@@ -173,6 +173,13 @@ public class Fabric3WarMojo extends AbstractMojo {
     public Dependency[] userExtensions;
 
     /**
+     * Set of user extension artifacts that are not Maven artifacts.
+     *
+     * @parameter
+     */
+    public File[] userExtensionsArchives;
+
+    /**
      * The default version of the runtime to use.
      *
      * @parameter expression="RELEASE"
@@ -187,9 +194,9 @@ public class Fabric3WarMojo extends AbstractMojo {
      * @required
      */
     public MavenProject project;
-    
+
     private DocumentBuilder db = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-    
+
     public Fabric3WarMojo() throws ParserConfigurationException {
     }
 
@@ -227,7 +234,7 @@ public class Fabric3WarMojo extends AbstractMojo {
     }
 
     private void installExtensions() throws MojoExecutionException {
-        
+
         try {
 
             Set<Dependency> uniqueExtensions = new HashSet<Dependency>();
@@ -243,24 +250,24 @@ public class Fabric3WarMojo extends AbstractMojo {
                     }
                     Artifact featureArtifact = feature.getArtifact(artifactFactory);
                     featureArtifact = resolveArtifact(featureArtifact, false).iterator().next();
-    
+
                     Document featureSetDoc = db.parse(featureArtifact.getFile());
-    
+
                     NodeList extensionList = featureSetDoc.getElementsByTagName("extension");
-    
+
                     for (int i = 0; i < extensionList.getLength(); i++) {
-    
+
                         Element extensionElement = (Element) extensionList.item(i);
-    
+
                         Element artifactIdElement = (Element) extensionElement.getElementsByTagName("artifactId").item(0);
                         Element groupIdElement = (Element) extensionElement.getElementsByTagName("groupId").item(0);
                         Element versionElement = (Element) extensionElement.getElementsByTagName("version").item(0);
-    
-                        Dependency extension = 
+
+                        Dependency extension =
                             new Dependency(groupIdElement.getTextContent(), artifactIdElement.getTextContent(), versionElement.getTextContent());
-    
+
                         uniqueExtensions.add(extension);
-    
+
                     }
                 }
             }
@@ -272,7 +279,7 @@ public class Fabric3WarMojo extends AbstractMojo {
                 }
                 processExtensions(USER_EXTENSIONS_PATH, "f3UserExtensions.properties", uniqueExtensions);
             }
-            
+
         } catch(SAXParseException e) {
             throw new MojoExecutionException(e.getMessage(), e);
         } catch (IOException e) {
@@ -284,24 +291,24 @@ public class Fabric3WarMojo extends AbstractMojo {
     }
 
     private void processExtensions(String extenstionsPath, String extensionProperties, Set<Dependency> extensions) throws MojoExecutionException {
-        
+
         try {
-            
             Properties props = new Properties();
             File extensionsDir = new File(webappDirectory, extenstionsPath);
-            
+
+            // process Maven dependencies
             for (Dependency dependency : extensions) {
-                
+
                 if (dependency.getVersion() == null) {
                     resolveDependencyVersion(dependency);
                 }
-                
+
                 Artifact extensionArtifact = dependency.getArtifact(artifactFactory);
                 extensionArtifact = resolveArtifact(extensionArtifact, false).iterator().next();
-                
+
                 File deflatedExtensionFile = new File(extensionsDir, extensionArtifact.getFile().getName());
                 JarOutputStream deflatedExtensionOutputStream = new JarOutputStream(new FileOutputStream(deflatedExtensionFile));
-                
+
                 JarFile extensionFile = new JarFile(extensionArtifact.getFile());
                 Enumeration<JarEntry> entries = extensionFile.entries();
                 while (entries.hasMoreElements()) {
@@ -324,19 +331,43 @@ public class Fabric3WarMojo extends AbstractMojo {
                         IOUtil.close(inputStream);
                     }
                 }
-                
+
                 IOUtil.close(deflatedExtensionOutputStream);
-                    
+
                 props.put(extensionArtifact.getFile().getName(), extensionArtifact.getFile().getName());
 
             }
-            
+
+            // process extensions that are not Maven archives, e.g. XML contributions
+            if (userExtensionsArchives != null) {
+                Map<String, String> names = new HashMap<String, String>();
+                for (File entry : userExtensionsArchives) {
+                    if (!entry.exists()) {
+                        throw new MojoExecutionException("User extension does not exist: " + entry);
+                    }
+                    String name = entry.getName();
+                    if (names.containsKey(name)) {
+                        throw new MojoExecutionException("User extensions must have unique names: " + name);
+                    }
+                    names.put(name, name);
+                    // copy to directory
+                    File destinationFile = new File(extensionsDir, name);
+                    FileOutputStream outputStream = new FileOutputStream(destinationFile);
+                    InputStream inputStream = entry.toURL().openStream();
+                    IOUtil.copy(inputStream, outputStream);
+                    IOUtil.close(inputStream);
+                    IOUtil.close(outputStream);
+                    props.put(name, name);
+                }
+            }
+
+
             props.store(new FileOutputStream(new File(extensionsDir, extensionProperties)), null);
-            
+
         } catch (IOException e) {
             throw new MojoExecutionException(e.getMessage(), e);
         }
-        
+
     }
 
     /**
@@ -368,19 +399,19 @@ public class Fabric3WarMojo extends AbstractMojo {
      *                                     In case of error in retrieving metadata.
      */
     private Set<Artifact> resolveArtifact(Artifact artifact, boolean transitive) throws MojoExecutionException {
-        
+
         try {
-            
+
             Set<Artifact> resolvedArtifacts = new HashSet<Artifact>();
-    
+
             // Resolve the artifact
             resolver.resolve(artifact, remoteRepositories, localRepository);
             resolvedArtifacts.add(artifact);
-    
+
             if (!transitive) {
                 return resolvedArtifacts;
             }
-    
+
             // Transitively resolve all the dependencies
             ResolutionGroup resolutionGroup = metadataSource.retrieve(artifact, localRepository, remoteRepositories);
             ArtifactResolutionResult result = resolver.resolveTransitively(resolutionGroup.getArtifacts(),
@@ -388,13 +419,13 @@ public class Fabric3WarMojo extends AbstractMojo {
                                                                            remoteRepositories,
                                                                            localRepository,
                                                                            metadataSource);
-    
+
             // Add the artifacts to the deployment unit
             for (Object depArtifact : result.getArtifacts()) {
                 resolvedArtifacts.add((Artifact) depArtifact);
             }
             return resolvedArtifacts;
-            
+
         } catch (ArtifactResolutionException e) {
             throw new MojoExecutionException(e.getMessage(), e);
         } catch (ArtifactNotFoundException e) {
