@@ -25,9 +25,9 @@ import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.java.provision.JavaComponentDefinition;
-import org.fabric3.pojo.implementation.PojoComponentBuilder;
-import org.fabric3.pojo.implementation.PojoComponentContext;
-import org.fabric3.pojo.implementation.PojoRequestContext;
+import org.fabric3.pojo.builder.PojoComponentBuilder;
+import org.fabric3.pojo.component.PojoComponentContext;
+import org.fabric3.pojo.component.PojoRequestContext;
 import org.fabric3.pojo.injection.ConversationIDObjectFactory;
 import org.fabric3.pojo.instancefactory.InstanceFactoryBuilderRegistry;
 import org.fabric3.pojo.instancefactory.InstanceFactoryDefinition;

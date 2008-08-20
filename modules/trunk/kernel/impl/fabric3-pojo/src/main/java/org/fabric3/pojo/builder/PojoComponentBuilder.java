@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.pojo.implementation;
+package org.fabric3.pojo.builder;
 
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
@@ -27,6 +27,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
+import org.fabric3.pojo.provision.PojoComponentDefinition;
 import org.fabric3.pojo.instancefactory.InstanceFactoryBuilderRegistry;
 import org.fabric3.scdl.DataType;
 import org.fabric3.scdl.InjectableAttribute;
@@ -52,8 +53,7 @@ import org.fabric3.transform.TransformerRegistry;
  *
  * @version $Rev$ $Date$
  */
-public abstract class PojoComponentBuilder<T, PCD extends PojoComponentDefinition, C extends Component>
-        implements ComponentBuilder<PCD, C> {
+public abstract class PojoComponentBuilder<T, PCD extends PojoComponentDefinition, C extends Component> implements ComponentBuilder<PCD, C> {
 
     protected final ComponentBuilderRegistry builderRegistry;
     protected final ScopeRegistry scopeRegistry;

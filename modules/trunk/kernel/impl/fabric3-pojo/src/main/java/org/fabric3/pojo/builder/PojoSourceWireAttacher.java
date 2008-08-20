@@ -27,7 +27,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
-import org.fabric3.pojo.implementation.PojoComponent;
+import org.fabric3.pojo.component.PojoComponent;
 import org.fabric3.scdl.DataType;
 import org.fabric3.scdl.InjectableAttribute;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;

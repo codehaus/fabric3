@@ -18,7 +18,7 @@ package org.fabric3.groovy.runtime;
 
 import java.net.URI;
 
-import org.fabric3.pojo.implementation.PojoComponent;
+import org.fabric3.pojo.component.PojoComponent;
 import org.fabric3.spi.component.InstanceFactoryProvider;
 import org.fabric3.spi.component.ScopeContainer;
 

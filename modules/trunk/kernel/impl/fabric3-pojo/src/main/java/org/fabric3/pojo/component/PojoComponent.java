@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.pojo.implementation;
+package org.fabric3.pojo.component;
 
 import java.lang.reflect.Type;
 import java.net.URI;

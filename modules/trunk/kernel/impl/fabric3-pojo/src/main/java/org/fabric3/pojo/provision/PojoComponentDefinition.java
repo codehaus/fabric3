@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.pojo.implementation;
+package org.fabric3.pojo.provision;
 
 import java.net.URI;
 import java.util.HashMap;

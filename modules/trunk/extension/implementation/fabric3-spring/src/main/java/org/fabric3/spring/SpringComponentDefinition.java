@@ -20,9 +20,9 @@ package org.fabric3.spring;
 
 import java.util.Map;
 
-import org.fabric3.pojo.implementation.PojoComponentDefinition;
+import org.fabric3.pojo.provision.PojoComponentDefinition;
 import org.fabric3.scdl.ReferenceDefinition;
-import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
+
 import org.springframework.core.io.Resource;
 
 /**

@@ -18,7 +18,7 @@
  */
 package org.fabric3.spring;
 
-import org.fabric3.pojo.implementation.PojoComponentBuilder;
+import org.fabric3.pojo.builder.PojoComponentBuilder;
 import org.fabric3.pojo.instancefactory.InstanceFactoryBuilderRegistry;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.BuilderException;

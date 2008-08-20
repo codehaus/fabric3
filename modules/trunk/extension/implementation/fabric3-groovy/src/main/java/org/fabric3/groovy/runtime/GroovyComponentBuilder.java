@@ -17,10 +17,8 @@
 package org.fabric3.groovy.runtime;
 
 import java.net.URI;
-import java.util.Map;
 
-import org.fabric3.pojo.implementation.PojoComponentBuilder;
-import org.fabric3.pojo.injection.MultiplicityObjectFactory;
+import org.fabric3.pojo.builder.PojoComponentBuilder;
 import org.fabric3.pojo.instancefactory.InstanceFactoryBuilderRegistry;
 import org.fabric3.pojo.instancefactory.InstanceFactoryDefinition;
 import org.fabric3.scdl.Scope;

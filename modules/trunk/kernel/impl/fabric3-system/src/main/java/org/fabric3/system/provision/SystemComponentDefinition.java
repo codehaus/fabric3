@@ -18,7 +18,7 @@
  */
 package org.fabric3.system.provision;
 
-import org.fabric3.pojo.implementation.PojoComponentDefinition;
+import org.fabric3.pojo.provision.PojoComponentDefinition;
 
 /**
  * @version $Rev$ $Date$
