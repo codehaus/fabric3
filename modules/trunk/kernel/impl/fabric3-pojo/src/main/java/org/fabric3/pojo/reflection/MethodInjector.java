@@ -43,15 +43,17 @@ public class MethodInjector<T> implements Injector<T> {
     }
 
     public void inject(T instance) throws ObjectCreationException {
-        
         Object target = objectFactory.getInstance();
-        
+        if (target == null) {
+            // The object factory is "empty", e.g. a reference has not been wired yet. Avoid injecting onto the instance.
+            // Note this is a correct assumption as there is no mechanism for configuring null values in SCA
+            return;
+        }
         try {
             method.invoke(instance, target);
         } catch (IllegalAccessException e) {
             throw new AssertionError("Method is not accessible:" + method);
         } catch (IllegalArgumentException e) {
-            System.err.println(target.getClass());
             String id = method.toString();
             throw new ObjectCreationException("Exception thrown by setter: " + id, id, e);
         } catch (InvocationTargetException e) {
@@ -61,12 +63,12 @@ public class MethodInjector<T> implements Injector<T> {
     }
 
     public void setObjectFactory(ObjectFactory<?> objectFactory, Object key) {
-        
+
         if (this.objectFactory instanceof MultiplicityObjectFactory<?>) {
             ((MultiplicityObjectFactory<?>) this.objectFactory).addObjectFactory(objectFactory, key);
         } else {
             this.objectFactory = objectFactory;
         }
-        
+
     }
 }

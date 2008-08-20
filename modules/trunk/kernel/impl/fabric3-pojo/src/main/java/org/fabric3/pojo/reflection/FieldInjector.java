@@ -53,7 +53,13 @@ public class FieldInjector<T> implements Injector<T> {
      */
     public void inject(T instance) throws ObjectCreationException {
         try {
-            field.set(instance, objectFactory.getInstance());
+            Object o = objectFactory.getInstance();
+            if (o == null) {
+                // The object factory is "empty", e.g. a reference has not been wired yet. Avoid injecting onto the instance.
+                // Note this is a correct assumption as there is no mechanism for configuring null values in SCA
+                return;
+            }
+            field.set(instance, o);
         } catch (IllegalAccessException e) {
             String id = field.getName();
             throw new AssertionError("Field is not accessible:" + id);
