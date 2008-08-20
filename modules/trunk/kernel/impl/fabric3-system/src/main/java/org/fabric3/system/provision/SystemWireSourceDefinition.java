@@ -18,7 +18,7 @@
  */
 package org.fabric3.system.provision;
 
-import org.fabric3.pojo.wire.PojoWireSourceDefinition;
+import org.fabric3.pojo.builder.PojoWireSourceDefinition;
 
 /**
  * Models a System physical wire source definition.

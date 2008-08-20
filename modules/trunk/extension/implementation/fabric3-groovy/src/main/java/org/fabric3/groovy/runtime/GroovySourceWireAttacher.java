@@ -22,7 +22,7 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.groovy.provision.GroovyWireSourceDefinition;
-import org.fabric3.pojo.wire.PojoSourceWireAttacher;
+import org.fabric3.pojo.builder.PojoSourceWireAttacher;
 import org.fabric3.scdl.InjectableAttribute;
 import org.fabric3.scdl.InjectableAttributeType;
 import org.fabric3.spi.ObjectFactory;

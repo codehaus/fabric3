@@ -16,7 +16,7 @@
  */
 package org.fabric3.groovy.provision;
 
-import org.fabric3.pojo.wire.PojoWireSourceDefinition;
+import org.fabric3.pojo.builder.PojoWireSourceDefinition;
 
 /**
  * @version $Rev$ $Date$
