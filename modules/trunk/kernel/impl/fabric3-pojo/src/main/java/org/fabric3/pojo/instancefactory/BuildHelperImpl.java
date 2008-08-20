@@ -14,14 +14,13 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.fabric.services.instancefactory;
+package org.fabric3.pojo.instancefactory;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.pojo.instancefactory.InstanceFactoryBuildHelper;
 import org.fabric3.scdl.Signature;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 

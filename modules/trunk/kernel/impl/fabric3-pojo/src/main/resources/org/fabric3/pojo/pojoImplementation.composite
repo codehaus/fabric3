@@ -25,19 +25,19 @@
            name="org.fabric3.fabric.PojoImplementation"
            autowire="true">
 
-    <component name="org.fabric3.fabric.services.instancefactory.DefaultInstanceFactoryBuilderRegistry">
-        <system:implementation.system class="org.fabric3.fabric.services.instancefactory.DefaultInstanceFactoryBuilderRegistry"/>
+    <component name="org.fabric3.pojo.instancefactory.DefaultInstanceFactoryBuilderRegistry">
+        <system:implementation.system class="org.fabric3.pojo.instancefactory.DefaultInstanceFactoryBuilderRegistry"/>
     </component>
 
-    <component name="org.fabric3.fabric.services.instancefactory.ReflectiveInstanceFactoryBuilder">
-        <system:implementation.system class="org.fabric3.fabric.services.instancefactory.ReflectiveInstanceFactoryBuilder"/>
+    <component name="org.fabric3.pojo.instancefactory.ReflectiveInstanceFactoryBuilder">
+        <system:implementation.system class="org.fabric3.pojo.instancefactory.ReflectiveInstanceFactoryBuilder"/>
     </component>
 
-    <component name="org.fabric3.fabric.services.instancefactory.GenerationHelperImpl">
-        <system:implementation.system class="org.fabric3.fabric.services.instancefactory.GenerationHelperImpl"/>
+    <component name="org.fabric3.pojo.instancefactory.GenerationHelperImpl">
+        <system:implementation.system class="org.fabric3.pojo.instancefactory.GenerationHelperImpl"/>
     </component>
 
-    <component name="org.fabric3.fabric.services.instancefactory.BuildHelperImpl">
-        <system:implementation.system class="org.fabric3.fabric.services.instancefactory.BuildHelperImpl"/>
+    <component name="org.fabric3.pojo.instancefactory.BuildHelperImpl">
+        <system:implementation.system class="org.fabric3.pojo.instancefactory.BuildHelperImpl"/>
     </component>
 </composite>

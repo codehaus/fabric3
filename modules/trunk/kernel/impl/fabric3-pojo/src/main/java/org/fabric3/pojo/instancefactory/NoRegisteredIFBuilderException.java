@@ -16,9 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.fabric.services.instancefactory;
-
-import org.fabric3.pojo.instancefactory.InstanceFactoryBuilderException;
+package org.fabric3.pojo.instancefactory;
 
 /**
  * @version $Rev$ $Date$

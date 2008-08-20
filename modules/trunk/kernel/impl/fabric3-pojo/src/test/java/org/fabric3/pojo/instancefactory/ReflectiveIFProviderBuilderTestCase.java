@@ -16,33 +16,33 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.fabric.services.instancefactory;
+package org.fabric3.pojo.instancefactory;
 
-import java.lang.reflect.Method;
-import java.lang.reflect.Field;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+import java.net.URI;
+import java.util.List;
 import java.util.Map;
 
 import junit.framework.TestCase;
 
-import org.fabric3.pojo.instancefactory.InstanceFactoryDefinition;
-import org.fabric3.scdl.InjectionSite;
-import org.fabric3.scdl.Signature;
-import org.fabric3.pojo.instancefactory.InstanceFactoryBuildHelper;
-import org.fabric3.spi.component.InstanceFactoryProvider;
-import org.fabric3.scdl.InjectableAttribute;
-import org.fabric3.scdl.FieldInjectionSite;
-import org.fabric3.scdl.MethodInjectionSite;
 import org.fabric3.scdl.ConstructorInjectionSite;
+import org.fabric3.scdl.FieldInjectionSite;
+import org.fabric3.scdl.InjectableAttribute;
 import org.fabric3.scdl.InjectableAttributeType;
-import org.fabric3.fabric.services.instancefactory.ReflectiveInstanceFactoryBuilder;
-import org.fabric3.fabric.services.classloading.ClassLoaderRegistryImpl;
+import org.fabric3.scdl.InjectionSite;
+import org.fabric3.scdl.MethodInjectionSite;
+import org.fabric3.scdl.Signature;
+import org.fabric3.spi.component.InstanceFactoryProvider;
+import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
+import org.fabric3.spi.services.classloading.DuplicateClassLoaderException;
 
 /**
  * @version $Date$ $Revision$
  */
 public class ReflectiveIFProviderBuilderTestCase extends TestCase {
-    private InstanceFactoryBuildHelper helper = new BuildHelperImpl(new ClassLoaderRegistryImpl());
+    private InstanceFactoryBuildHelper helper = new BuildHelperImpl(new MockClassLoaderRegistry());
     private ReflectiveInstanceFactoryBuilder builder = new ReflectiveInstanceFactoryBuilder(null, helper);
     private InstanceFactoryDefinition definition;
     private Constructor<Foo> constructor;
@@ -101,7 +101,7 @@ public class ReflectiveIFProviderBuilderTestCase extends TestCase {
         definition.setConstructor(new Signature(constructor));
         definition.setInitMethod(new Signature("init"));
         definition.setDestroyMethod(new Signature("destroy"));
-        Map<InjectionSite,InjectableAttribute> construction = definition.getConstruction();
+        Map<InjectionSite, InjectableAttribute> construction = definition.getConstruction();
         construction.put(new ConstructorInjectionSite(constructor, 0), new InjectableAttribute(InjectableAttributeType.PROPERTY, "a"));
         construction.put(new ConstructorInjectionSite(constructor, 1), new InjectableAttribute(InjectableAttributeType.REFERENCE, "b"));
     }
@@ -123,8 +123,39 @@ public class ReflectiveIFProviderBuilderTestCase extends TestCase {
         }
 
     }
-    
+
     public static class Bar {
 
+    }
+
+    private class MockClassLoaderRegistry implements ClassLoaderRegistry {
+
+        public void register(URI id, ClassLoader classLoader) throws DuplicateClassLoaderException {
+
+        }
+
+        public ClassLoader unregister(URI id) {
+            return null;
+        }
+
+        public ClassLoader getClassLoader(URI id) {
+            return null;
+        }
+
+        public Map<URI, ClassLoader> getClassLoaders() {
+            return null;
+        }
+
+        public Class<?> loadClass(URI classLoaderId, String className) throws ClassNotFoundException {
+            return null;
+        }
+
+        public Class<?> loadClass(ClassLoader cl, String className) throws ClassNotFoundException {
+            return Class.forName(className, true, cl);
+        }
+
+        public List<URI> resolveParentUris(ClassLoader cl) {
+            return null;
+        }
     }
 }

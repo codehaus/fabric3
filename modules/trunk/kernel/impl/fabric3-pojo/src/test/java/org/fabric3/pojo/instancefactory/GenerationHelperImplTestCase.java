@@ -14,23 +14,21 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.fabric.services.instancefactory;
+package org.fabric3.pojo.instancefactory;
 
 import java.util.Map;
 import javax.xml.namespace.QName;
 
 import junit.framework.TestCase;
 
-import org.fabric3.pojo.instancefactory.InstanceFactoryGenerationHelper;
-import org.fabric3.pojo.instancefactory.InstanceFactoryDefinition;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.ComponentDefinition;
+import org.fabric3.scdl.ConstructorInjectionSite;
 import org.fabric3.scdl.Implementation;
-import org.fabric3.scdl.Signature;
 import org.fabric3.scdl.InjectableAttribute;
 import org.fabric3.scdl.InjectableAttributeType;
-import org.fabric3.scdl.ConstructorInjectionSite;
 import org.fabric3.scdl.InjectionSite;
+import org.fabric3.scdl.Signature;
 import org.fabric3.spi.model.instance.LogicalComponent;
 
 /**

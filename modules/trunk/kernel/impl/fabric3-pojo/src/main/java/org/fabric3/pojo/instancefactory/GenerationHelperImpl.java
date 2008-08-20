@@ -14,7 +14,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.fabric.services.instancefactory;
+package org.fabric3.pojo.instancefactory;
 
 import java.lang.reflect.Method;
 import java.util.HashSet;
@@ -24,8 +24,6 @@ import java.util.Set;
 import org.w3c.dom.Document;
 
 import org.fabric3.pojo.implementation.PojoComponentDefinition;
-import org.fabric3.pojo.instancefactory.InstanceFactoryDefinition;
-import org.fabric3.pojo.instancefactory.InstanceFactoryGenerationHelper;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.ConstructorInjectionSite;

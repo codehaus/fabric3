@@ -61,7 +61,7 @@
     <include name="org.fabric3.JDKProxy" scdlResource="META-INF/jdkproxy.composite"/>
 
     <!-- Pojo implementation type -->
-    <include name="org.fabric3.fabric.PojoImplementation" scdlResource="org/fabric3/fabric/pojoImplementation.composite"/>
+    <include name="org.fabric3.fabric.PojoImplementation" scdlResource="org/fabric3/pojo/pojoImplementation.composite"/>
 
     <!-- System implementation type -->
     <include name="org.fabric3.fabric.SystemImplementation" scdlResource="org/fabric3/fabric/systemImplementation.composite"/>

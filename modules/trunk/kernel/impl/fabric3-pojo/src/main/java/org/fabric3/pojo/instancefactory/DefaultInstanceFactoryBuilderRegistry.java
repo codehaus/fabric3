@@ -16,16 +16,12 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.fabric.services.instancefactory;
+package org.fabric3.pojo.instancefactory;
 
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.fabric3.spi.component.InstanceFactoryProvider;
-import org.fabric3.pojo.instancefactory.InstanceFactoryBuilder;
-import org.fabric3.pojo.instancefactory.InstanceFactoryBuilderException;
-import org.fabric3.pojo.instancefactory.InstanceFactoryBuilderRegistry;
-import org.fabric3.pojo.instancefactory.InstanceFactoryDefinition;
 
 /**
  * Default implementation of the registry.

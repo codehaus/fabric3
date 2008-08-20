@@ -22,9 +22,9 @@ package org.fabric3.pojo.instancefactory;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.fabric3.scdl.InjectableAttribute;
 import org.fabric3.scdl.InjectionSite;
 import org.fabric3.scdl.Signature;
-import org.fabric3.scdl.InjectableAttribute;
 
 /**
  * Base class for instance factory definitions.
