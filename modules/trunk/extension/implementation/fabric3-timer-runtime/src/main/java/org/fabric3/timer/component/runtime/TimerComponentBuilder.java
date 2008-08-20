@@ -19,7 +19,6 @@
 package org.fabric3.timer.component.runtime;
 
 import java.net.URI;
-import java.util.Map;
 
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
@@ -29,12 +28,10 @@ import org.fabric3.pojo.implementation.PojoComponentBuilder;
 import org.fabric3.pojo.implementation.PojoComponentContext;
 import org.fabric3.pojo.implementation.PojoRequestContext;
 import org.fabric3.pojo.injection.ConversationIDObjectFactory;
-import org.fabric3.pojo.injection.MultiplicityObjectFactory;
 import org.fabric3.pojo.instancefactory.InstanceFactoryBuilderRegistry;
 import org.fabric3.pojo.instancefactory.InstanceFactoryDefinition;
 import org.fabric3.scdl.InjectableAttribute;
 import org.fabric3.scdl.Scope;
-import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.SingletonObjectFactory;
 import org.fabric3.spi.builder.BuilderException;
 import org.fabric3.spi.builder.component.ComponentBuilderRegistry;
@@ -94,8 +91,7 @@ public class TimerComponentBuilder<T> extends PojoComponentBuilder<T, TimerCompo
 
         InstanceFactoryProvider<T> provider = providerBuilders.build(providerDefinition, classLoader);
 
-        Map<String, ObjectFactory<?>> propertyFactories = createPropertyFactories(definition, provider);
-        Map<String, MultiplicityObjectFactory<?>> referenceFactories = createMultiplicityReferenceFactories(providerDefinition);
+        createPropertyFactories(definition, provider);
         TriggerData data = definition.getTriggerData();
         TimerService timerService;
         if (definition.isTransactional()) {
@@ -111,8 +107,6 @@ public class TimerComponentBuilder<T> extends PojoComponentBuilder<T, TimerCompo
                                                             definition.getMaxIdleTime(),
                                                             definition.getMaxAge(),
                                                             proxyService,
-                                                            propertyFactories,
-                                                            referenceFactories,
                                                             data,
                                                             timerService);
 

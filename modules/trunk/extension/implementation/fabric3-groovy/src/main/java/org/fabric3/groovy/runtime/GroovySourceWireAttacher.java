@@ -89,7 +89,7 @@ public class GroovySourceWireAttacher extends PojoSourceWireAttacher implements 
             }
             ObjectFactory<?> factory = proxyService.createObjectFactory(type, sourceDefinition.getInteractionType(), wire, callbackUri);
             Object key = getKey(sourceDefinition, source, targetDefinition, injectableAttribute);
-            source.attachReferenceToTarget(injectableAttribute, factory, key);
+            source.setObjectFactory(injectableAttribute, factory, key);
         }
     }
 
@@ -103,6 +103,6 @@ public class GroovySourceWireAttacher extends PojoSourceWireAttacher implements 
         InjectableAttribute attribute = source.getValueSource();
 
         Object key = getKey(source, sourceComponent, definition, attribute);
-        sourceComponent.attachReferenceToTarget(attribute, objectFactory, key);
+        sourceComponent.setObjectFactory(attribute, objectFactory, key);
     }
 }

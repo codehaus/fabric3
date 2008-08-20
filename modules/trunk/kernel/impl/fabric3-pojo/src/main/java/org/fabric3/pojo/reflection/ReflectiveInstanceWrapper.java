@@ -18,17 +18,16 @@
  */
 package org.fabric3.pojo.reflection;
 
-import java.util.Map;
-import java.util.Set;
 import java.util.HashSet;
+import java.util.Set;
 
 import org.fabric3.scdl.InjectableAttribute;
 import org.fabric3.spi.ObjectCreationException;
 import org.fabric3.spi.ObjectFactory;
-import org.fabric3.spi.component.InstanceWrapper;
 import org.fabric3.spi.component.InstanceDestructionException;
 import org.fabric3.spi.component.InstanceInitializationException;
 import org.fabric3.spi.component.InstanceLifecycleException;
+import org.fabric3.spi.component.InstanceWrapper;
 
 /**
  * @version $Rev$ $Date$
@@ -39,18 +38,21 @@ public class ReflectiveInstanceWrapper<T> implements InstanceWrapper<T> {
     private final EventInvoker<T> initInvoker;
     private final EventInvoker<T> destroyInvoker;
     private boolean started;
-    private final Map<InjectableAttribute, Injector<T>> injectors;
+    private final InjectableAttribute[] attributes;
+    private final Injector<T>[] injectors;
     private final Set<Injector<T>> updatedInjectors;
 
     public ReflectiveInstanceWrapper(T instance,
                                      ClassLoader cl,
                                      EventInvoker<T> initInvoker,
                                      EventInvoker<T> destroyInvoker,
-                                     Map<InjectableAttribute, Injector<T>> injectors) {
+                                     InjectableAttribute[] attributes,
+                                     Injector<T>[] injectors) {
         this.instance = instance;
         this.cl = cl;
         this.initInvoker = initInvoker;
         this.destroyInvoker = destroyInvoker;
+        this.attributes = attributes;
         this.started = false;
         this.injectors = injectors;
         this.updatedInjectors = new HashSet<Injector<T>>();
@@ -113,9 +115,10 @@ public class ReflectiveInstanceWrapper<T> implements InstanceWrapper<T> {
     }
 
     public void addObjectFactory(String referenceName, ObjectFactory<?> factory, Object key) {
-        for (InjectableAttribute attribute : injectors.keySet()) {
+        for (int i = 0; i < attributes.length; i++) {
+            InjectableAttribute attribute = attributes[i];
             if (attribute.getName().equals(referenceName)) {
-                Injector<T> injector = injectors.get(attribute);
+                Injector<T> injector = injectors[i];
                 injector.setObjectFactory(factory, key);
                 if (instance != null) {
                     updatedInjectors.add(injector);

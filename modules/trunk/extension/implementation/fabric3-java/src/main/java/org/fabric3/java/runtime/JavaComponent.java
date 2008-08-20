@@ -19,18 +19,14 @@
 package org.fabric3.java.runtime;
 
 import java.net.URI;
-import java.util.Map;
 
 import org.osoa.sca.CallableReference;
 import org.osoa.sca.ServiceReference;
 
 import org.fabric3.pojo.implementation.PojoComponent;
-import org.fabric3.pojo.injection.MultiplicityObjectFactory;
-import org.fabric3.spi.ObjectCreationException;
-import org.fabric3.spi.ObjectFactory;
-import org.fabric3.spi.services.proxy.ProxyService;
 import org.fabric3.spi.component.InstanceFactoryProvider;
 import org.fabric3.spi.component.ScopeContainer;
+import org.fabric3.spi.services.proxy.ProxyService;
 
 /**
  * The runtime instantiation of a Java component implementation.
@@ -40,7 +36,6 @@ import org.fabric3.spi.component.ScopeContainer;
  */
 public class JavaComponent<T> extends PojoComponent<T> {
     private final ProxyService proxyService;
-    private final Map<String, ObjectFactory<?>> propertyFactories;
 
     /**
      * Constructor for a Java Component.
@@ -53,8 +48,6 @@ public class JavaComponent<T> extends PojoComponent<T> {
      * @param maxIdleTime             the time after which idle instances of this component can be expired
      * @param maxAge                  the time after which instances of this component can be expired
      * @param proxyService            the service used to create reference proxies
-     * @param propertyFactories       map of factories for property values
-     * @param referenceFactories      object factories for multiplicity references
      */
     public JavaComponent(URI componentId,
                          InstanceFactoryProvider<T> instanceFactoryProvider,
@@ -63,12 +56,9 @@ public class JavaComponent<T> extends PojoComponent<T> {
                          int initLevel,
                          long maxIdleTime,
                          long maxAge,
-                         ProxyService proxyService,
-                         Map<String, ObjectFactory<?>> propertyFactories,
-                         Map<String, MultiplicityObjectFactory<?>> referenceFactories) {
-        super(componentId, instanceFactoryProvider, scopeContainer, groupId, initLevel, maxIdleTime, maxAge, referenceFactories);
+                         ProxyService proxyService) {
+        super(componentId, instanceFactoryProvider, scopeContainer, groupId, initLevel, maxIdleTime, maxAge);
         this.proxyService = proxyService;
-        this.propertyFactories = propertyFactories;
     }
 
     public <B> B getService(Class<B> businessInterface, String referenceName) {
@@ -77,16 +67,6 @@ public class JavaComponent<T> extends PojoComponent<T> {
 
     public <B> ServiceReference<B> getServiceReference(Class<B> businessInterface, String referenceName) {
         throw new UnsupportedOperationException();
-    }
-
-    public <B> B getProperty(Class<B> type, String propertyName) throws ObjectCreationException {
-        // TODO for now assume property values will be assignable to the user class - we can add mediation later
-        ObjectFactory<?> factory = propertyFactories.get(propertyName);
-        if (factory == null) {
-            return null;
-        } else {
-            return type.cast(factory.getInstance());
-        }
     }
 
     @SuppressWarnings("unchecked")

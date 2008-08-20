@@ -19,7 +19,7 @@
 package org.fabric3.scdl;
 
 /**
- * Identifies an attribute of the component that can be injected in to an application instance.
+ * Identifies an attribute of the component that can be injected into an instance.
  *
  * @version $Revision$ $Date$
  */

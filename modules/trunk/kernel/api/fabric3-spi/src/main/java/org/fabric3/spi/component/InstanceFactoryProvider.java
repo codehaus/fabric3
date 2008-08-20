@@ -20,8 +20,8 @@ package org.fabric3.spi.component;
 
 import java.lang.reflect.Type;
 
-import org.fabric3.spi.ObjectFactory;
 import org.fabric3.scdl.InjectableAttribute;
+import org.fabric3.spi.ObjectFactory;
 
 /**
  * @version $Rev$ $Date$
@@ -35,12 +35,21 @@ public interface InstanceFactoryProvider<T> {
     Class<T> getImplementationClass();
 
     /**
-     * Sets an object factory for an injection site
+     * Sets an object factory for an injection site.
      *
      * @param name          the injection site name
      * @param objectFactory the object factory
      */
     void setObjectFactory(InjectableAttribute name, ObjectFactory<?> objectFactory);
+
+    /**
+     * Sets an object factory for an injection site.
+     *
+     * @param name          the injection site name
+     * @param objectFactory the object factory
+     * @param key           the key for Map-based injection sites
+     */
+    void setObjectFactory(InjectableAttribute name, ObjectFactory<?> objectFactory, Object key);
 
     /**
      * Returns the type for the injection site
@@ -56,7 +65,7 @@ public interface InstanceFactoryProvider<T> {
      * @param injectionSite the injection site name
      * @return the required type
      */
-    Type getGenericType(InjectableAttribute innectionSite);
+    Type getGenericType(InjectableAttribute injectionSite);
 
     /**
      * Create an instance factory that can be used to create component instances.

@@ -19,13 +19,10 @@
 package org.fabric3.system.runtime;
 
 import java.net.URI;
-import java.util.Map;
 
-import org.fabric3.spi.component.InstanceFactoryProvider;
 import org.fabric3.pojo.implementation.PojoComponent;
-import org.fabric3.pojo.injection.MultiplicityObjectFactory;
+import org.fabric3.spi.component.InstanceFactoryProvider;
 import org.fabric3.spi.component.ScopeContainer;
-import org.fabric3.spi.services.event.EventService;
 
 /**
  * @version $Rev$ $Date$
@@ -38,9 +35,8 @@ public class SystemComponent<T> extends PojoComponent<T> {
                            URI groupId,
                            int initLevel,
                            int maxIdleTime,
-                           int maxAge,
-                           Map<String, MultiplicityObjectFactory<?>> referenceFactories) {
-        super(componentId, provider, scopeContainer, groupId, initLevel, maxIdleTime, maxAge, referenceFactories);
+                           int maxAge) {
+        super(componentId, provider, scopeContainer, groupId, initLevel, maxIdleTime, maxAge);
     }
 
 }

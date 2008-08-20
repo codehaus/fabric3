@@ -23,7 +23,6 @@ import java.net.URI;
 import java.util.Map;
 
 import org.fabric3.pojo.ComponentObjectFactory;
-import org.fabric3.pojo.injection.MultiplicityObjectFactory;
 import org.fabric3.scdl.InjectableAttribute;
 import org.fabric3.scdl.PropertyValue;
 import org.fabric3.spi.AbstractLifecycle;
@@ -51,7 +50,6 @@ public abstract class PojoComponent<T> extends AbstractLifecycle implements Atom
     private final long maxIdleTime;
     private final long maxAge;
     private InstanceFactory<T> instanceFactory;
-    private final Map<String, MultiplicityObjectFactory<?>> multiplicityReferenceFactories;
 
     public PojoComponent(URI componentId,
                          InstanceFactoryProvider<T> provider,
@@ -59,8 +57,7 @@ public abstract class PojoComponent<T> extends AbstractLifecycle implements Atom
                          URI groupId,
                          int initLevel,
                          long maxIdleTime,
-                         long maxAge,
-                         Map<String, MultiplicityObjectFactory<?>> referenceFactories) {
+                         long maxAge) {
         this.uri = componentId;
         this.provider = provider;
         this.scopeContainer = scopeContainer;
@@ -68,7 +65,6 @@ public abstract class PojoComponent<T> extends AbstractLifecycle implements Atom
         this.initLevel = initLevel;
         this.maxIdleTime = maxIdleTime;
         this.maxAge = maxAge;
-        this.multiplicityReferenceFactories = referenceFactories;
     }
 
     public URI getUri() {
@@ -96,12 +92,9 @@ public abstract class PojoComponent<T> extends AbstractLifecycle implements Atom
     }
 
     public void start() {
-        
         super.start();
-        
         instanceFactory = provider.createFactory();
         scopeContainer.register(this);
-        
     }
 
     public void stop() {
@@ -138,40 +131,40 @@ public abstract class PojoComponent<T> extends AbstractLifecycle implements Atom
         return provider.getImplementationClass();
     }
 
-    public void setObjectFactory(InjectableAttribute name, ObjectFactory<?> objectFactory) {
-        provider.setObjectFactory(name, objectFactory);
+    /**
+     * Sets an object factory.
+     *
+     * @param attribute     the InjectableAttribute identifying the component reference, property or context artifact the object factory creates
+     *                      instances for
+     * @param objectFactory the object factory
+     */
+    public void setObjectFactory(InjectableAttribute attribute, ObjectFactory<?> objectFactory) {
+        setObjectFactory(attribute, objectFactory, null);
+    }
+
+    /**
+     * Sets an object factory.
+     *
+     * @param attribute     the InjectableAttribute identifying the component reference, property or context artifact the object factory creates
+     *                      instances for
+     * @param objectFactory the object factory
+     * @param key           key value for a Map reference
+     */
+    public void setObjectFactory(InjectableAttribute attribute, ObjectFactory<?> objectFactory, Object key) {
+        scopeContainer.addObjectFactory(this, objectFactory, attribute.getName(), key);
+        provider.setObjectFactory(attribute, objectFactory, key);
     }
 
     public Class<?> getMemberType(InjectableAttribute injectionSite) {
         return provider.getMemberType(injectionSite);
     }
-    
+
     public Type getGerenricMemberType(InjectableAttribute injectionSite) {
         return provider.getGenericType(injectionSite);
     }
 
     public String toString() {
         return "[" + uri.toString() + "] in state [" + super.toString() + ']';
-    }
-    
-    /**
-     * Attaches a reference source to the target.
-     * 
-     * @param referenceSource Reference source.
-     * @param objectFactory Object factory.
-     * @param key key value for a Map reference
-     */
-    public void attachReferenceToTarget(InjectableAttribute referenceSource, ObjectFactory<?> objectFactory, Object key) {
-        
-        MultiplicityObjectFactory<?> factory = multiplicityReferenceFactories.get(referenceSource.getName());
-
-        if(factory != null) {
-            factory.addObjectFactory(objectFactory, key);
-            setObjectFactory(referenceSource, factory);
-            scopeContainer.addObjectFactory(this, objectFactory, referenceSource.getName(), key);
-        } else {
-            setObjectFactory(referenceSource, objectFactory);
-        }
     }
 
 }

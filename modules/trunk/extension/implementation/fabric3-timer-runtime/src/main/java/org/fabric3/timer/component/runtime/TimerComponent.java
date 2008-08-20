@@ -20,17 +20,14 @@ package org.fabric3.timer.component.runtime;
 
 import java.net.URI;
 import java.text.ParseException;
-import java.util.Map;
 import java.util.concurrent.ScheduledFuture;
 
 import org.fabric3.java.runtime.JavaComponent;
-import org.fabric3.pojo.injection.MultiplicityObjectFactory;
-import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.component.InstanceFactoryProvider;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.services.proxy.ProxyService;
-import org.fabric3.timer.spi.TimerService;
 import org.fabric3.timer.component.provision.TriggerData;
+import org.fabric3.timer.spi.TimerService;
 
 /**
  * A timer component implementation.
@@ -53,8 +50,6 @@ public class TimerComponent<T> extends JavaComponent<T> {
      * @param maxIdleTime             the time after which idle instances of this component can be expired
      * @param maxAge                  the time after which instances of this component can be expired
      * @param proxyService            the service used to create reference proxies
-     * @param propertyFactories       map of factories for property values
-     * @param referenceFactories      object factories for multiplicity references
      * @param data                    timer fire data
      * @param timerService            the timer service
      */
@@ -66,8 +61,6 @@ public class TimerComponent<T> extends JavaComponent<T> {
                           long maxIdleTime,
                           long maxAge,
                           ProxyService proxyService,
-                          Map<String, ObjectFactory<?>> propertyFactories,
-                          Map<String, MultiplicityObjectFactory<?>> referenceFactories,
                           TriggerData data,
                           TimerService timerService) {
         super(componentId,
@@ -77,9 +70,7 @@ public class TimerComponent<T> extends JavaComponent<T> {
               initLevel,
               maxIdleTime,
               maxAge,
-              proxyService,
-              propertyFactories,
-              referenceFactories);
+              proxyService);
         this.data = data;
         this.timerService = timerService;
     }

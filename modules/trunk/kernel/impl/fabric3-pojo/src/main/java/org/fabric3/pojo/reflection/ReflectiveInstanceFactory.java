@@ -18,33 +18,33 @@
  */
 package org.fabric3.pojo.reflection;
 
-import java.util.List;
-import java.util.Map;
-
 import org.fabric3.pojo.PojoWorkContextTunnel;
 import org.fabric3.scdl.InjectableAttribute;
 import org.fabric3.spi.ObjectCreationException;
 import org.fabric3.spi.ObjectFactory;
-import org.fabric3.spi.invocation.WorkContext;
 import org.fabric3.spi.component.InstanceFactory;
 import org.fabric3.spi.component.InstanceWrapper;
+import org.fabric3.spi.invocation.WorkContext;
 
 /**
  * @version $Rev$ $Date$
  */
 public class ReflectiveInstanceFactory<T> implements InstanceFactory<T> {
     private final ObjectFactory<T> constructor;
-    private final Map<InjectableAttribute, Injector<T>> injectors;
+    private InjectableAttribute[] attributes;
+    private final Injector<T>[] injectors;
     private final EventInvoker<T> initInvoker;
     private final EventInvoker<T> destroyInvoker;
     private final ClassLoader cl;
 
     public ReflectiveInstanceFactory(ObjectFactory<T> constructor,
-                                     Map<InjectableAttribute, Injector<T>> injectors,
+                                     InjectableAttribute[] attributes,
+                                     Injector<T>[] injectors,
                                      EventInvoker<T> initInvoker,
                                      EventInvoker<T> destroyInvoker,
                                      ClassLoader cl) {
         this.constructor = constructor;
+        this.attributes = attributes;
         this.injectors = injectors;
         this.initInvoker = initInvoker;
         this.destroyInvoker = destroyInvoker;
@@ -59,11 +59,11 @@ public class ReflectiveInstanceFactory<T> implements InstanceFactory<T> {
         try {
             T instance = constructor.getInstance();
             if (injectors != null) {
-                for (Injector<T> injector : injectors.values()) {
+                for (Injector<T> injector : injectors) {
                     injector.inject(instance);
                 }
             }
-            return new ReflectiveInstanceWrapper<T>(instance, cl, initInvoker, destroyInvoker, injectors);
+            return new ReflectiveInstanceWrapper<T>(instance, cl, initInvoker, destroyInvoker, attributes, injectors);
         } finally {
             PojoWorkContextTunnel.setThreadWorkContext(oldContext);
             Thread.currentThread().setContextClassLoader(oldCl);

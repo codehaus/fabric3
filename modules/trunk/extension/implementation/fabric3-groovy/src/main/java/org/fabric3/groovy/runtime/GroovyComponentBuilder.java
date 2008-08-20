@@ -72,9 +72,7 @@ public class GroovyComponentBuilder<T> extends PojoComponentBuilder<T, GroovyCom
         InstanceFactoryProvider<T> provider = providerBuilders.build(providerDefinition, classLoader);
 
         createPropertyFactories(definition, provider);
-        Map<String, MultiplicityObjectFactory<?>> referenceFactories =
-                createMultiplicityReferenceFactories(providerDefinition);
 
-        return new GroovyComponent<T>(componentId, provider, scopeContainer, groupId, initLevel, -1, -1, referenceFactories);
+        return new GroovyComponent<T>(componentId, provider, scopeContainer, groupId, initLevel, -1, -1);
     }
 }

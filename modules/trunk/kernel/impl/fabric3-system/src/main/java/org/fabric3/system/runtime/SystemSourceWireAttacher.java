@@ -64,6 +64,6 @@ public class SystemSourceWireAttacher extends PojoSourceWireAttacher implements 
         SystemComponent<?> sourceComponent = (SystemComponent<?>) manager.getComponent(sourceId);
         InjectableAttribute referenceSource = source.getValueSource();
         Object key = getKey(source, sourceComponent, target, referenceSource);
-        sourceComponent.attachReferenceToTarget(referenceSource, objectFactory, key);
+        sourceComponent.setObjectFactory(referenceSource, objectFactory, key);
     }
 }

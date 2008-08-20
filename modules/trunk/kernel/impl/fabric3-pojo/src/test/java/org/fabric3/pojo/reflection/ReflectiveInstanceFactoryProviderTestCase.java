@@ -62,7 +62,7 @@ public class ReflectiveInstanceFactoryProviderTestCase extends TestCase {
 
     public void testNoConstructorArgs() {
         List<InjectableAttribute> sources = Collections.emptyList();
-        ObjectFactory<?>[] args = provider.getArgumentFactories(sources);
+        ObjectFactory<?>[] args = provider.getConstructorParameterFactories(sources);
         assertEquals(0, args.length);
     }
 
@@ -77,7 +77,7 @@ public class ReflectiveInstanceFactoryProviderTestCase extends TestCase {
                                                               Foo.class.getClassLoader());
         provider.setObjectFactory(intProperty, intFactory);
         provider.setObjectFactory(stringProperty, stringFactory);
-        ObjectFactory<?>[] args = provider.getArgumentFactories(ctrNames);
+        ObjectFactory<?>[] args = provider.getConstructorParameterFactories(ctrNames);
         assertEquals(2, args.length);
         assertSame(intFactory, args[0]);
         assertSame(stringFactory, args[1]);
@@ -86,7 +86,7 @@ public class ReflectiveInstanceFactoryProviderTestCase extends TestCase {
     public void testFieldInjectors() throws ObjectCreationException {
         sites.put(new FieldInjectionSite(intField), intProperty);
         sites.put(new FieldInjectionSite(stringField), stringProperty);
-        Collection<Injector<Foo>> injectors = provider.getInjectors().values();
+        Collection<Injector<Foo>> injectors = provider.createInjectorMappings().values();
         assertEquals(2, injectors.size());
 
         Foo foo = new Foo();
@@ -102,7 +102,7 @@ public class ReflectiveInstanceFactoryProviderTestCase extends TestCase {
     public void testMethodInjectors() throws ObjectCreationException {
         sites.put(new MethodInjectionSite(intSetter, 0), intProperty);
         sites.put(new MethodInjectionSite(stringSetter, 0), stringProperty);
-        Collection<Injector<Foo>> injectors = provider.getInjectors().values();
+        Collection<Injector<Foo>> injectors = provider.createInjectorMappings().values();
         assertEquals(2, injectors.size());
 
         Foo foo = new Foo();

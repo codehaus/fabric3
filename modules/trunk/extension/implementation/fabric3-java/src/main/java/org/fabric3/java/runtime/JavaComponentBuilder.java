@@ -19,7 +19,6 @@
 package org.fabric3.java.runtime;
 
 import java.net.URI;
-import java.util.Map;
 
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
@@ -30,12 +29,10 @@ import org.fabric3.pojo.implementation.PojoComponentBuilder;
 import org.fabric3.pojo.implementation.PojoComponentContext;
 import org.fabric3.pojo.implementation.PojoRequestContext;
 import org.fabric3.pojo.injection.ConversationIDObjectFactory;
-import org.fabric3.pojo.injection.MultiplicityObjectFactory;
 import org.fabric3.pojo.instancefactory.InstanceFactoryBuilderRegistry;
 import org.fabric3.pojo.instancefactory.InstanceFactoryDefinition;
 import org.fabric3.scdl.InjectableAttribute;
 import org.fabric3.scdl.Scope;
-import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.SingletonObjectFactory;
 import org.fabric3.spi.builder.BuilderException;
 import org.fabric3.spi.builder.component.ComponentBuilderRegistry;
@@ -43,9 +40,9 @@ import org.fabric3.spi.component.InstanceFactoryProvider;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
+import org.fabric3.spi.services.proxy.ProxyService;
 import org.fabric3.transform.PullTransformer;
 import org.fabric3.transform.TransformerRegistry;
-import org.fabric3.spi.services.proxy.ProxyService;
 
 /**
  * Builds a JavaComponent from a physical definition.
@@ -89,8 +86,7 @@ public class JavaComponentBuilder<T> extends PojoComponentBuilder<T, JavaCompone
 
         InstanceFactoryProvider<T> provider = providerBuilders.build(providerDefinition, classLoader);
 
-        Map<String, ObjectFactory<?>> propertyFactories = createPropertyFactories(definition, provider);
-        Map<String, MultiplicityObjectFactory<?>> referenceFactories = createMultiplicityReferenceFactories(providerDefinition);
+        createPropertyFactories(definition, provider);
 
         JavaComponent<T> component = new JavaComponent<T>(componentId,
                                                           provider,
@@ -99,9 +95,7 @@ public class JavaComponentBuilder<T> extends PojoComponentBuilder<T, JavaCompone
                                                           initLevel,
                                                           definition.getMaxIdleTime(),
                                                           definition.getMaxAge(),
-                                                          proxyService,
-                                                          propertyFactories,
-                                                          referenceFactories);
+                                                          proxyService);
 
         PojoRequestContext requestContext = new PojoRequestContext();
         provider.setObjectFactory(InjectableAttribute.REQUEST_CONTEXT, new SingletonObjectFactory<PojoRequestContext>(requestContext));

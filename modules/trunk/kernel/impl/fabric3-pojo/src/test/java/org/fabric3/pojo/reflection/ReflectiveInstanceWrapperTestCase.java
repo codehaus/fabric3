@@ -36,7 +36,7 @@ public class ReflectiveInstanceWrapperTestCase extends TestCase {
     private ClassLoader cl;
 
     public void testWithNoCallbacks() {
-        wrapper = new ReflectiveInstanceWrapper<Object>(instance, cl, null, null, null);
+        wrapper = new ReflectiveInstanceWrapper<Object>(instance, cl, null, null, null, null);
         try {
             wrapper.start();
         } catch (InstanceInitializationException e) {
@@ -52,7 +52,7 @@ public class ReflectiveInstanceWrapperTestCase extends TestCase {
     public void testWithStartCallback() throws ObjectCallbackException {
         initInvoker.invokeEvent(instance);
         EasyMock.replay(initInvoker);
-        wrapper = new ReflectiveInstanceWrapper<Object>(instance, cl, initInvoker, null, null);
+        wrapper = new ReflectiveInstanceWrapper<Object>(instance, cl, initInvoker, null, null, null);
         try {
             wrapper.start();
         } catch (InstanceInitializationException e) {
@@ -64,7 +64,7 @@ public class ReflectiveInstanceWrapperTestCase extends TestCase {
     public void testWithStopCallback() throws ObjectCallbackException {
         destroyInvoker.invokeEvent(instance);
         EasyMock.replay(destroyInvoker);
-        wrapper = new ReflectiveInstanceWrapper<Object>(instance, cl, null, destroyInvoker, null);
+        wrapper = new ReflectiveInstanceWrapper<Object>(instance, cl, null, destroyInvoker, null, null);
         try {
             wrapper.start();
             wrapper.stop();

@@ -17,17 +17,14 @@
 package org.fabric3.groovy.runtime;
 
 import java.net.URI;
-import java.util.Map;
 
 import org.fabric3.pojo.implementation.PojoComponent;
-import org.fabric3.pojo.injection.MultiplicityObjectFactory;
 import org.fabric3.spi.component.InstanceFactoryProvider;
 import org.fabric3.spi.component.ScopeContainer;
-import org.fabric3.spi.services.event.EventService;
 
 /**
  * Runtime container for a component implemented in Groovy.
- * 
+ *
  * @version $Rev$ $Date$
  */
 public class GroovyComponent<T> extends PojoComponent<T> {
@@ -37,8 +34,7 @@ public class GroovyComponent<T> extends PojoComponent<T> {
                            URI groupId,
                            int initLevel,
                            long maxIdleTime,
-                           long maxAge,
-                           Map<String, MultiplicityObjectFactory<?>> referenceFactories) {
-        super(componentId, instanceFactoryProvider, scopeContainer, groupId, initLevel, maxIdleTime, maxAge, referenceFactories);
+                           long maxAge) {
+        super(componentId, instanceFactoryProvider, scopeContainer, groupId, initLevel, maxIdleTime, maxAge);
     }
 }

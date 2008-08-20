@@ -22,7 +22,6 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.java.provision.JavaWireSourceDefinition;
-import org.fabric3.java.provision.JavaWireTargetDefinition;
 import org.fabric3.pojo.wire.PojoSourceWireAttacher;
 import org.fabric3.scdl.InjectableAttribute;
 import org.fabric3.scdl.InjectableAttributeType;
@@ -92,14 +91,13 @@ public class JavaSourceWireAttacher extends PojoSourceWireAttacher implements So
 
             ObjectFactory<?> factory = proxyService.createObjectFactory(type, sourceDefinition.getInteractionType(), wire, callbackUri);
             Object key = getKey(sourceDefinition, source, targetDefinition, injectableAttribute);
-            source.attachReferenceToTarget(injectableAttribute, factory, key);
+            source.setObjectFactory(injectableAttribute, factory, key);
         }
     }
 
     public void detachFromSource(JavaWireSourceDefinition source, PhysicalWireTargetDefinition target, Wire wire) throws WiringException {
         throw new AssertionError();
     }
-
 
     public void attachObjectFactory(JavaWireSourceDefinition source, ObjectFactory<?> objectFactory, PhysicalWireTargetDefinition target)
             throws WiringException {
@@ -108,12 +106,6 @@ public class JavaSourceWireAttacher extends PojoSourceWireAttacher implements So
         InjectableAttribute injectableAttribute = source.getValueSource();
 
         Object key = getKey(source, sourceComponent, target, injectableAttribute);
-        sourceComponent.attachReferenceToTarget(injectableAttribute, objectFactory, key);
-    }
-
-    public ObjectFactory<?> createObjectFactory(JavaWireTargetDefinition target) throws WiringException {
-        URI targetId = UriHelper.getDefragmentedName(target.getUri());
-        JavaComponent<?> targetComponent = (JavaComponent<?>) manager.getComponent(targetId);
-        return targetComponent.createObjectFactory();
+        sourceComponent.setObjectFactory(injectableAttribute, objectFactory, key);
     }
 }
