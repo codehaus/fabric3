@@ -44,7 +44,7 @@ import org.fabric3.host.domain.DeploymentException;
 import org.fabric3.maven.contribution.ModuleContributionSource;
 import org.fabric3.pojo.PojoWorkContextTunnel;
 import org.fabric3.pojo.component.PojoComponent;
-import org.fabric3.pojo.reflection.InvokerInterceptor;
+import org.fabric3.pojo.component.InvokerInterceptor;
 import org.fabric3.scdl.Composite;
 import org.fabric3.scdl.Operation;
 import org.fabric3.scdl.Scope;

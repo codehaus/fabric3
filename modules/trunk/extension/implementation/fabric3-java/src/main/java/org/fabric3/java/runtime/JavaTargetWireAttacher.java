@@ -24,7 +24,7 @@ import java.util.Map;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.java.provision.JavaWireTargetDefinition;
-import org.fabric3.pojo.reflection.InvokerInterceptor;
+import org.fabric3.pojo.component.InvokerInterceptor;
 import org.fabric3.pojo.builder.PojoWireSourceDefinition;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.WiringException;

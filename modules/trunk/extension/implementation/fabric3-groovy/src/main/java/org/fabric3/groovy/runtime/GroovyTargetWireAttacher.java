@@ -25,7 +25,7 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.groovy.provision.GroovyWireTargetDefinition;
 import org.fabric3.pojo.component.PojoComponent;
-import org.fabric3.pojo.reflection.InvokerInterceptor;
+import org.fabric3.pojo.component.InvokerInterceptor;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.TargetWireAttacher;

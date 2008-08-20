@@ -16,26 +16,29 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.pojo.reflection;
+package org.fabric3.pojo.component;
 
-import junit.framework.TestCase;
+import org.fabric3.spi.component.ExpirationPolicy;
 
 /**
+ * An ExpirationPolicy that cannot be renewed, i.e. expiration is set for a fixed time.
+ *
  * @version $Revision$ $Date$
  */
-public class RenewableExpirationPolicyTestCase extends TestCase {
+public class NonRenewableExpirationPolicy implements ExpirationPolicy {
+    private long expiration;
 
-    public void testExpiration() throws Exception {
-        RenewableExpirationPolicy policy = new RenewableExpirationPolicy(System.currentTimeMillis(), 10000);
-        Thread.sleep(1);
-        assertTrue(policy.isExpired());
+    public NonRenewableExpirationPolicy(long expiration) {
+        this.expiration = expiration;
     }
 
-    public void testNonExpiration() throws Exception {
-        RenewableExpirationPolicy policy = new RenewableExpirationPolicy(System.currentTimeMillis(), 10000);
-        policy.renew();
-        Thread.sleep(1);
-        assertFalse(policy.isExpired());
+    public boolean isExpired() {
+        return expiration <= System.currentTimeMillis();
+
     }
+
+    public void renew() {
+    }
+
 
 }

@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.pojo.reflection;
+package org.fabric3.pojo.component;
 
 import java.lang.reflect.Method;
 import java.net.URI;
@@ -25,14 +25,14 @@ import junit.framework.TestCase;
 import org.easymock.IMocksControl;
 import org.easymock.classextension.EasyMock;
 
+import org.fabric3.scdl.Scope;
 import org.fabric3.spi.component.AtomicComponent;
+import org.fabric3.spi.component.InstanceLifecycleException;
 import org.fabric3.spi.component.InstanceWrapper;
 import org.fabric3.spi.component.ScopeContainer;
-import org.fabric3.spi.component.InstanceLifecycleException;
-import org.fabric3.spi.invocation.WorkContext;
 import org.fabric3.spi.invocation.Message;
+import org.fabric3.spi.invocation.WorkContext;
 import org.fabric3.spi.wire.InvocationRuntimeException;
-import org.fabric3.scdl.Scope;
 
 public class InvokerInterceptorBasicTestCase extends TestCase {
     private TestBean bean;
