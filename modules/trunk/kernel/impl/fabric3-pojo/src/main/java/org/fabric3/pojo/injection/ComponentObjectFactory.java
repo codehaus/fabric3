@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.pojo;
+package org.fabric3.pojo.injection;
 
 import org.fabric3.spi.ObjectCreationException;
 import org.fabric3.spi.ObjectFactory;
@@ -24,6 +24,7 @@ import org.fabric3.spi.invocation.WorkContext;
 import org.fabric3.spi.component.AtomicComponent;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.InstanceLifecycleException;
+import org.fabric3.pojo.PojoWorkContextTunnel;
 
 /**
  * @version $Rev$ $Date$

@@ -22,7 +22,7 @@ import java.lang.reflect.Type;
 import java.net.URI;
 import java.util.Map;
 
-import org.fabric3.pojo.ComponentObjectFactory;
+import org.fabric3.pojo.injection.ComponentObjectFactory;
 import org.fabric3.scdl.InjectableAttribute;
 import org.fabric3.scdl.PropertyValue;
 import org.fabric3.spi.AbstractLifecycle;
