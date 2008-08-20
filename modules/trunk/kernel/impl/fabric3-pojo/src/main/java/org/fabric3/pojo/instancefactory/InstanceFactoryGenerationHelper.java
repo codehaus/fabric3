@@ -19,6 +19,7 @@ package org.fabric3.pojo.instancefactory;
 import java.lang.reflect.Method;
 
 import org.fabric3.pojo.provision.PojoComponentDefinition;
+import org.fabric3.pojo.provision.InstanceFactoryDefinition;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.Implementation;

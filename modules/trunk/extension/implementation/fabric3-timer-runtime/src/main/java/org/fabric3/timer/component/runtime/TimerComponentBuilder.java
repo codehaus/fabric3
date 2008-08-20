@@ -29,7 +29,7 @@ import org.fabric3.pojo.component.PojoComponentContext;
 import org.fabric3.pojo.component.PojoRequestContext;
 import org.fabric3.pojo.injection.ConversationIDObjectFactory;
 import org.fabric3.pojo.instancefactory.InstanceFactoryBuilderRegistry;
-import org.fabric3.pojo.instancefactory.InstanceFactoryDefinition;
+import org.fabric3.pojo.provision.InstanceFactoryDefinition;
 import org.fabric3.scdl.InjectableAttribute;
 import org.fabric3.scdl.Scope;
 import org.fabric3.spi.SingletonObjectFactory;

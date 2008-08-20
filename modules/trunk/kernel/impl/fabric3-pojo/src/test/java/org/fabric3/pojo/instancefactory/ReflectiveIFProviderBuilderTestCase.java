@@ -37,6 +37,7 @@ import org.fabric3.scdl.Signature;
 import org.fabric3.spi.component.InstanceFactoryProvider;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.services.classloading.DuplicateClassLoaderException;
+import org.fabric3.pojo.provision.InstanceFactoryDefinition;
 
 /**
  * @version $Date$ $Revision$

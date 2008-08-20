@@ -22,6 +22,7 @@ import javax.xml.namespace.QName;
 import junit.framework.TestCase;
 
 import org.fabric3.pojo.scdl.PojoComponentType;
+import org.fabric3.pojo.provision.InstanceFactoryDefinition;
 import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.ConstructorInjectionSite;
 import org.fabric3.scdl.Implementation;

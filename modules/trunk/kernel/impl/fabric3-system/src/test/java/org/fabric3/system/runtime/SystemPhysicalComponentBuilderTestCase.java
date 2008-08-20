@@ -24,8 +24,7 @@ import junit.framework.TestCase;
 
 import org.easymock.EasyMock;
 import org.fabric3.pojo.instancefactory.InstanceFactoryBuilderRegistry;
-import org.fabric3.pojo.instancefactory.InstanceFactoryDefinition;
-import org.fabric3.scdl.Scope;
+import org.fabric3.pojo.provision.InstanceFactoryDefinition;
 import org.fabric3.scdl.Signature;
 import org.fabric3.spi.builder.component.ComponentBuilderRegistry;
 import org.fabric3.spi.component.InstanceFactoryProvider;

@@ -27,7 +27,7 @@ import org.fabric3.java.provision.JavaComponentDefinition;
 import org.fabric3.java.provision.JavaWireSourceDefinition;
 import org.fabric3.java.provision.JavaWireTargetDefinition;
 import org.fabric3.java.scdl.JavaImplementation;
-import org.fabric3.pojo.instancefactory.InstanceFactoryDefinition;
+import org.fabric3.pojo.provision.InstanceFactoryDefinition;
 import org.fabric3.pojo.instancefactory.InstanceFactoryGenerationHelper;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.CallbackDefinition;

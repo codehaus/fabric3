@@ -24,7 +24,7 @@ import java.util.Map;
 
 import org.w3c.dom.Document;
 
-import org.fabric3.pojo.instancefactory.InstanceFactoryDefinition;
+import org.fabric3.pojo.provision.InstanceFactoryDefinition;
 import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
 
 /**

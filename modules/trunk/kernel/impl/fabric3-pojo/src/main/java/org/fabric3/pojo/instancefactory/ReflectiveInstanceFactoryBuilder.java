@@ -28,6 +28,7 @@ import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.pojo.reflection.ReflectiveInstanceFactoryProvider;
+import org.fabric3.pojo.provision.InstanceFactoryDefinition;
 import org.fabric3.scdl.ConstructorInjectionSite;
 import org.fabric3.scdl.InjectableAttribute;
 import org.fabric3.scdl.InjectionSite;

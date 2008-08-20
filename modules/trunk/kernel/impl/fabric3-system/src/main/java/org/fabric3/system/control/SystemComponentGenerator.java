@@ -23,7 +23,7 @@ import java.net.URI;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.pojo.instancefactory.InstanceFactoryDefinition;
+import org.fabric3.pojo.provision.InstanceFactoryDefinition;
 import org.fabric3.pojo.instancefactory.InstanceFactoryGenerationHelper;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.ComponentDefinition;

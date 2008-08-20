@@ -17,7 +17,7 @@
  * under the License.    
  */
 
-package org.fabric3.pojo.instancefactory;
+package org.fabric3.pojo.provision;
 
 import java.util.HashMap;
 import java.util.Map;

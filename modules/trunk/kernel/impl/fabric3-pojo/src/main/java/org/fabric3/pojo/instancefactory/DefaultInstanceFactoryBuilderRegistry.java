@@ -22,6 +22,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.fabric3.spi.component.InstanceFactoryProvider;
+import org.fabric3.pojo.provision.InstanceFactoryDefinition;
 
 /**
  * Default implementation of the registry.

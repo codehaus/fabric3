@@ -16,7 +16,7 @@
  */
 package org.fabric3.groovy.provision;
 
-import org.fabric3.pojo.instancefactory.InstanceFactoryDefinition;
+import org.fabric3.pojo.provision.InstanceFactoryDefinition;
 
 /**
  * @version $Rev$ $Date$

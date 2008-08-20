@@ -20,7 +20,7 @@ import java.net.URI;
 
 import org.fabric3.pojo.builder.PojoComponentBuilder;
 import org.fabric3.pojo.instancefactory.InstanceFactoryBuilderRegistry;
-import org.fabric3.pojo.instancefactory.InstanceFactoryDefinition;
+import org.fabric3.pojo.provision.InstanceFactoryDefinition;
 import org.fabric3.scdl.Scope;
 import org.fabric3.spi.builder.BuilderException;
 import org.fabric3.spi.builder.component.ComponentBuilderRegistry;
