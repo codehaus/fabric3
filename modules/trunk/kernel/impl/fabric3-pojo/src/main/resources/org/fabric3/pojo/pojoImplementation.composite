@@ -33,8 +33,8 @@
         <system:implementation.system class="org.fabric3.pojo.instancefactory.ReflectiveInstanceFactoryBuilder"/>
     </component>
 
-    <component name="org.fabric3.pojo.instancefactory.GenerationHelperImpl">
-        <system:implementation.system class="org.fabric3.pojo.instancefactory.GenerationHelperImpl"/>
+    <component name="org.fabric3.pojo.control.GenerationHelperImpl">
+        <system:implementation.system class="org.fabric3.pojo.control.GenerationHelperImpl"/>
     </component>
 
     <component name="org.fabric3.pojo.instancefactory.BuildHelperImpl">

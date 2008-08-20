@@ -26,7 +26,7 @@ import org.fabric3.groovy.provision.GroovyInstanceFactoryDefinition;
 import org.fabric3.groovy.provision.GroovyWireSourceDefinition;
 import org.fabric3.groovy.provision.GroovyWireTargetDefinition;
 import org.fabric3.groovy.scdl.GroovyImplementation;
-import org.fabric3.pojo.instancefactory.InstanceFactoryGenerationHelper;
+import org.fabric3.pojo.control.InstanceFactoryGenerationHelper;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.InjectableAttribute;

@@ -90,7 +90,7 @@ import org.fabric3.fabric.services.documentloader.DocumentLoader;
 import org.fabric3.fabric.services.documentloader.DocumentLoaderImpl;
 import org.fabric3.pojo.instancefactory.BuildHelperImpl;
 import org.fabric3.pojo.instancefactory.DefaultInstanceFactoryBuilderRegistry;
-import org.fabric3.pojo.instancefactory.GenerationHelperImpl;
+import org.fabric3.pojo.control.GenerationHelperImpl;
 import org.fabric3.pojo.instancefactory.ReflectiveInstanceFactoryBuilder;
 import org.fabric3.fabric.services.routing.RuntimeRoutingService;
 import org.fabric3.host.domain.DomainException;

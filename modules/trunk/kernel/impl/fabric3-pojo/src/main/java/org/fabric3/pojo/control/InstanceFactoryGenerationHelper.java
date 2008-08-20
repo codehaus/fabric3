@@ -14,7 +14,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.pojo.instancefactory;
+package org.fabric3.pojo.control;
 
 import java.lang.reflect.Method;
 
