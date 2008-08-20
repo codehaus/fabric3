@@ -23,7 +23,7 @@ import java.net.URLConnection;
 import java.io.IOException;
 
 import javax.activation.FileTypeMap;
-
+import org.osoa.sca.annotations.Property;
 import org.fabric3.spi.services.contenttype.ContentTypeResolver;
 import org.fabric3.spi.services.contenttype.ContentTypeResolutionException;
 
@@ -45,6 +45,7 @@ public class ExtensionMapContentTypeResolver implements ContentTypeResolver {
     /**
      * @param extensionMap Injected extension map.
      */
+    @Property
     public void setExtensionMap(Map<String, String> extensionMap) {
         this.extensionMap = extensionMap;
     }
