@@ -26,9 +26,10 @@ package org.fabric3.pojo.reflection;
 public interface EventInvoker<T> {
 
     /**
-     * Performs the invocation on a given instance
+     * Performs the invocation on a given instance.
      *
-     * @throws ObjectCallbackException
+     * @param instance the instance to invoke
+     * @throws ObjectCallbackException if the invocation causes an error
      */
     void invokeEvent(T instance) throws ObjectCallbackException;
 }

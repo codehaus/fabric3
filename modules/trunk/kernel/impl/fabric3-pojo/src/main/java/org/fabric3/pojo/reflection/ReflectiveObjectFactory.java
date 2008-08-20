@@ -19,16 +19,24 @@ package org.fabric3.pojo.reflection;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
-import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.ObjectCreationException;
+import org.fabric3.spi.ObjectFactory;
 
 /**
+ * Reflectively instantiates a Java-based component instance.
+ *
  * @version $Rev$ $Date$
  */
 public class ReflectiveObjectFactory<T> implements ObjectFactory<T> {
     private final Constructor<T> constructor;
     private final ObjectFactory<?>[] paramFactories;
 
+    /**
+     * Constructor.
+     *
+     * @param constructor    the constructor to use for instance instantiation
+     * @param paramFactories factories for creating constructor parameters
+     */
     public ReflectiveObjectFactory(Constructor<T> constructor, ObjectFactory<?>[] paramFactories) {
         this.constructor = constructor;
         this.paramFactories = paramFactories;

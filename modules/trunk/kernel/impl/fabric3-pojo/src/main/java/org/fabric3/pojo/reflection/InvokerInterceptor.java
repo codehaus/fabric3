@@ -40,7 +40,7 @@ import org.fabric3.spi.wire.Interceptor;
 import org.fabric3.spi.wire.InvocationRuntimeException;
 
 /**
- * Responsible for dispatching an invocation to a Java component implementation instance.
+ * Responsible for dispatching an invocation to a Java-based component implementation instance.
  *
  * @version $Rev$ $Date$
  * @param <T> the implementation class for the component being invoked
