@@ -31,13 +31,13 @@ import org.fabric3.spi.builder.component.SourceWireAttacher;
 import org.fabric3.spi.builder.component.WireAttachException;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
-import org.fabric3.spi.services.componentmanager.ComponentManager;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
+import org.fabric3.spi.services.componentmanager.ComponentManager;
 import org.fabric3.spi.services.proxy.ProxyService;
-import org.fabric3.transform.PullTransformer;
-import org.fabric3.transform.TransformerRegistry;
 import org.fabric3.spi.util.UriHelper;
 import org.fabric3.spi.wire.Wire;
+import org.fabric3.transform.PullTransformer;
+import org.fabric3.transform.TransformerRegistry;
 
 /**
  * The component builder for Java implementation types. Responsible for creating the Component runtime artifact from a physical component definition
@@ -62,7 +62,7 @@ public class GroovySourceWireAttacher extends PojoSourceWireAttacher implements 
 
     public void attachToSource(GroovyWireSourceDefinition sourceDefinition,
                                PhysicalWireTargetDefinition targetDefinition,
-                               Wire wire) throws WireAttachException {
+                               Wire wire) throws WiringException {
         URI sourceUri = sourceDefinition.getUri();
         URI sourceName = UriHelper.getDefragmentedName(sourceDefinition.getUri());
         GroovyComponent<?> source = (GroovyComponent) manager.getComponent(sourceName);
@@ -97,7 +97,8 @@ public class GroovySourceWireAttacher extends PojoSourceWireAttacher implements 
         throw new AssertionError();
     }
 
-    public void attachObjectFactory(GroovyWireSourceDefinition source, ObjectFactory<?> objectFactory, PhysicalWireTargetDefinition definition) throws WiringException {
+    public void attachObjectFactory(GroovyWireSourceDefinition source, ObjectFactory<?> objectFactory, PhysicalWireTargetDefinition definition)
+            throws WiringException {
         URI sourceId = UriHelper.getDefragmentedName(source.getUri());
         GroovyComponent<?> sourceComponent = (GroovyComponent<?>) manager.getComponent(sourceId);
         InjectableAttribute attribute = source.getValueSource();

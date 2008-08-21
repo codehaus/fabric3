@@ -16,15 +16,23 @@
  */
 package org.fabric3.pojo.builder;
 
-import org.fabric3.spi.builder.BuilderException;
+import org.fabric3.spi.builder.WiringException;
 
 /**
  * @version $Rev$ $Date$
  */
-public class PropertyTransformException extends BuilderException {
+public class PropertyTransformException extends WiringException {
     private static final long serialVersionUID = -8543494515576133797L;
+
+    public PropertyTransformException(String message) {
+        super(message);
+    }
 
     public PropertyTransformException(String message, String identifier, Throwable cause) {
         super(message, identifier, cause);
+    }
+
+    public PropertyTransformException(String message, Throwable cause) {
+        super(message, cause);
     }
 }

@@ -38,6 +38,7 @@ import org.fabric3.spi.model.type.XSDSimpleType;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.transform.PullTransformer;
 import org.fabric3.transform.TransformContext;
+import org.fabric3.transform.TransformationException;
 import org.fabric3.transform.TransformerRegistry;
 
 /**
@@ -59,7 +60,7 @@ public abstract class PojoSourceWireAttacher {
     protected Object getKey(PojoWireSourceDefinition sourceDefinition,
                             PojoComponent<?> source,
                             PhysicalWireTargetDefinition targetDefinition,
-                            InjectableAttribute referenceSource) {
+                            InjectableAttribute referenceSource) throws PropertyTransformException {
 
         if (!Map.class.isAssignableFrom(source.getMemberType(referenceSource))) {
             return null;
@@ -82,7 +83,7 @@ public abstract class PojoSourceWireAttacher {
                     formalType = ((ParameterizedType) formalType).getRawType();
                 } else if (formalType instanceof Class<?> && Enum.class.isAssignableFrom((Class<?>) formalType)) {
                     Class<Enum> enumClass = (Class<Enum>) formalType;
-                    return Enum.valueOf(enumClass, element.getTextContent());           
+                    return Enum.valueOf(enumClass, element.getTextContent());
                 }
             } else {
                 formalType = String.class;
@@ -94,12 +95,7 @@ public abstract class PojoSourceWireAttacher {
             ClassLoader targetClassLoader = classLoaderRegistry.getClassLoader(targetId);
 
             TransformContext context = new TransformContext(sourceClassLoader, targetClassLoader, null, null);
-            try {
-                return createKey(formalType, element, context);
-                // return keyDocument.getDocumentElement().getTextContent();
-            } catch (Exception e) {
-                throw new AssertionError(e);
-            }
+            return createKey(formalType, element, context);
         }
 
         return null;
@@ -107,23 +103,23 @@ public abstract class PojoSourceWireAttacher {
     }
 
     @SuppressWarnings("unchecked")
-    private Object createKey(Type type, Element value, TransformContext context) {
-        
-        DataType<?> targetType = null;
+    private Object createKey(Type type, Element value, TransformContext context) throws PropertyTransformException {
+
+        DataType<?> targetType;
         if (type instanceof Class<?>) {
             targetType = new JavaClass((Class<?>) type);
         } else {
             targetType = new JavaParameterizedType((ParameterizedType) type);
         }
         PullTransformer<Node, ?> transformer = (PullTransformer<Node, ?>) transformerRegistry.getTransformer(SOURCE_TYPE, targetType);
+        if (transformer == null) {
+            throw new PropertyTransformException("No transformer for : " + type);
+        }
         try {
-            if (transformer == null) {
-                System.err.println("No transformer for : " + type);
-            }
             return transformer.transform(value, context);
-        } catch (Exception e) {
-            throw new AssertionError(e);
+        } catch (TransformationException e) {
+            throw new PropertyTransformException("Error transformatng property", e);
         }
     }
-    
+
 }

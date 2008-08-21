@@ -27,11 +27,16 @@ import java.net.URI;
  * @version $Rev$ $Date$
  */
 public class WiringException extends BuilderException {
+    private static final long serialVersionUID = 3668451213570682938L;
     private URI sourceUri;
     private URI targetUri;
 
     public WiringException(Throwable cause) {
         super(cause);
+    }
+
+    public WiringException(String message, Throwable cause) {
+        super(message, cause);
     }
 
     public WiringException(String message) {

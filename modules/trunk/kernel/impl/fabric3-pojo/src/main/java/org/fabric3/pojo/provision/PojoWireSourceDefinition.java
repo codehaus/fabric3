@@ -18,8 +18,6 @@
  */
 package org.fabric3.pojo.provision;
 
-import java.net.URI;
-
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 
 /**

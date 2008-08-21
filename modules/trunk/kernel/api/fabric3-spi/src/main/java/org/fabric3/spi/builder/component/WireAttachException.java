@@ -28,6 +28,8 @@ import org.fabric3.spi.builder.WiringException;
  * @version $Rev$ $Date$
  */
 public class WireAttachException extends WiringException {
+    private static final long serialVersionUID = 4976504310808006829L;
+
     public WireAttachException(String message, URI sourceUri, URI targetUri, Throwable cause) {
         super(message, sourceUri, targetUri, cause);
     }
