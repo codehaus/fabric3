@@ -58,6 +58,9 @@ public class ResourceWireCommandGenerator implements AddCommandGenerator {
     }
 
     private void generatePhysicalWires(LogicalComponent<?> component, AttachWireCommand command) throws GenerationException {
+        if (component.isProvisioned()) {
+            return;
+        }
         for (LogicalResource<?> resource : component.getResources()) {
             PhysicalWireDefinition pwd = physicalWireGenerator.generateResourceWire(component, resource);
             command.addPhysicalWireDefinition(pwd);
