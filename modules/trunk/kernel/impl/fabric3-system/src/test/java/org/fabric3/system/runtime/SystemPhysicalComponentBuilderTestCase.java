@@ -89,6 +89,6 @@ public class SystemPhysicalComponentBuilderTestCase<T> extends TestCase {
         definition.setClassLoaderId(groupId);
         definition.setScope("COMPOSITE");
         definition.setInitLevel(-1);
-        definition.setInstanceFactoryProviderDefinition(providerDefinition);
+        definition.setProviderDefinition(providerDefinition);
     }
 }

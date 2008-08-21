@@ -81,7 +81,7 @@ public class JavaGenerationHelperImpl implements JavaGenerationHelper {
         physical.setInitLevel(helper.getInitLevel(logical, type));
         physical.setMaxAge(type.getMaxAge());
         physical.setMaxIdleTime(type.getMaxIdleTime());
-        physical.setInstanceFactoryProviderDefinition(providerDefinition);
+        physical.setProviderDefinition(providerDefinition);
         helper.processPropertyValues(component, physical);
         // generate the classloader resource definition
         URI classLoaderId = component.getClassLoaderId();

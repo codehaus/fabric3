@@ -33,7 +33,7 @@ import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
  */
 public abstract class PojoComponentDefinition extends PhysicalComponentDefinition {
 
-    private InstanceFactoryDefinition instanceFactoryProviderDefinition;
+    private InstanceFactoryDefinition providerDefinition;
     private URI classLoaderId;
     private final Map<String, Document> propertyValues = new HashMap<String, Document>();
 
@@ -42,19 +42,18 @@ public abstract class PojoComponentDefinition extends PhysicalComponentDefinitio
      *
      * @return Instance factory provider definition.
      */
-    public InstanceFactoryDefinition getInstanceFactoryProviderDefinition() {
-        return instanceFactoryProviderDefinition;
+    public InstanceFactoryDefinition getProviderDefinition() {
+        return providerDefinition;
     }
 
     /**
      * Sets the instance factory provider definition.
      *
-     * @param instanceFactoryProviderDefinition
+     * @param providerDefinition
      *         Instance factory provider definition.
      */
-    public void setInstanceFactoryProviderDefinition(
-            InstanceFactoryDefinition instanceFactoryProviderDefinition) {
-        this.instanceFactoryProviderDefinition = instanceFactoryProviderDefinition;
+    public void setProviderDefinition(InstanceFactoryDefinition providerDefinition) {
+        this.providerDefinition = providerDefinition;
     }
 
     /**

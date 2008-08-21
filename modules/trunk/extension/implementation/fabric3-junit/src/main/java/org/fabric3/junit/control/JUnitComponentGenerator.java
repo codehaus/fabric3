@@ -74,7 +74,7 @@ public class JUnitComponentGenerator implements ComponentGenerator<LogicalCompon
 
         physical.setScope(type.getScope());
         physical.setInitLevel(level);
-        physical.setInstanceFactoryProviderDefinition(providerDefinition);
+        physical.setProviderDefinition(providerDefinition);
         helper.processPropertyValues(component, physical);
         return physical;
     }

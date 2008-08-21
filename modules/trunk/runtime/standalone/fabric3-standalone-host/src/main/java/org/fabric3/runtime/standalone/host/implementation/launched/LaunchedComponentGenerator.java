@@ -78,7 +78,7 @@ public class LaunchedComponentGenerator implements ComponentGenerator<LogicalCom
         physical.setGroupId(component.getParent().getUri());
         physical.setScope(type.getScope());
         physical.setInitLevel(helper.getInitLevel(definition, type));
-        physical.setInstanceFactoryProviderDefinition(providerDefinition);
+        physical.setProviderDefinition(providerDefinition);
         helper.processPropertyValues(component, physical);
         // generate the classloader resource definition
         URI classLoaderId = component.getClassLoaderId();
