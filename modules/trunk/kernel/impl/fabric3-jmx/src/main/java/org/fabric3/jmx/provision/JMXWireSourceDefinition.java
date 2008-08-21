@@ -16,7 +16,7 @@
  */
 package org.fabric3.jmx.provision;
 
-import org.fabric3.pojo.builder.PojoWireSourceDefinition;
+import org.fabric3.pojo.provision.PojoWireSourceDefinition;
 
 /**
  * @version $Rev$ $Date$
