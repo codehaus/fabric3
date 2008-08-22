@@ -41,6 +41,10 @@
         <reference name="atomicComponentInstantiator" target="atomicComponentInstantiator"/>
     </component>
 
+    <component name="WireInstantiator">
+        <system:implementation.system class="org.fabric3.fabric.instantiator.component.WireInstantiatorImpl"/>
+    </component>
+
     <component name="logicalComponentManager">
         <system:implementation.system class="org.fabric3.fabric.services.lcm.LogicalComponentManagerImpl"/>
     </component>

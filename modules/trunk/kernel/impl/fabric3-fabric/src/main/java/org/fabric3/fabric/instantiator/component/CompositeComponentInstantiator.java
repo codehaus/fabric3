@@ -52,13 +52,15 @@ import org.fabric3.spi.model.instance.LogicalWire;
 public class CompositeComponentInstantiator extends AbstractComponentInstantiator {
 
     private ComponentInstantiator atomicComponentInstantiator;
-
+    private WireInstantiator wireInstantiator;
 
     public CompositeComponentInstantiator(
             @Reference(name = "atomicComponentInstantiator")ComponentInstantiator atomicComponentInstantiator,
+            @Reference WireInstantiator wireInstantiator,
             @Reference(name = "documentLoader")DocumentLoader documentLoader) {
         super(documentLoader);
         this.atomicComponentInstantiator = atomicComponentInstantiator;
+        this.wireInstantiator = wireInstantiator;
     }
 
     @SuppressWarnings("unchecked")
@@ -70,10 +72,10 @@ public class CompositeComponentInstantiator extends AbstractComponentInstantiato
         return LogicalComponent.class.cast(instantiateComposite(parent, properties, def, change));
     }
 
-    public LogicalCompositeComponent instantiateComposite(LogicalCompositeComponent parent,
-                                                          Map<String, Document> properties,
-                                                          ComponentDefinition<CompositeImplementation> definition,
-                                                          LogicalChange change) {
+    private LogicalCompositeComponent instantiateComposite(LogicalCompositeComponent parent,
+                                                           Map<String, Document> properties,
+                                                           ComponentDefinition<CompositeImplementation> definition,
+                                                           LogicalChange change) {
 
         URI runtimeId = definition.getRuntimeId();
         URI uri = URI.create(parent.getUri() + "/" + definition.getName());
@@ -85,7 +87,7 @@ public class CompositeComponentInstantiator extends AbstractComponentInstantiato
         instantiateChildComponents(component, properties, composite, change);
         instantiateCompositeServices(component, composite);
         instantiateCompositeReferences(parent, component, composite, change);
-
+        wireInstantiator.instantiateWires(composite, component, change);
         return component;
 
     }
@@ -106,7 +108,6 @@ public class CompositeComponentInstantiator extends AbstractComponentInstantiato
                 childComponent.setClassLoaderId(parent.getClassLoaderId());
             }
             parent.addComponent(childComponent);
-
         }
 
     }
@@ -229,5 +230,6 @@ public class CompositeComponentInstantiator extends AbstractComponentInstantiato
 
         }
     }
+
 
 }

@@ -27,6 +27,7 @@ import org.osoa.sca.annotations.Reference;
 import org.w3c.dom.Document;
 
 import org.fabric3.fabric.instantiator.component.ComponentInstantiator;
+import org.fabric3.fabric.instantiator.component.WireInstantiator;
 import org.fabric3.fabric.instantiator.normalize.PromotionNormalizer;
 import org.fabric3.scdl.Autowire;
 import org.fabric3.scdl.BindingDefinition;
@@ -56,18 +57,21 @@ public class LogicalModelInstantiatorImpl implements LogicalModelInstantiator {
     private final LogicalComponentManager logicalComponentManager;
     private final ComponentInstantiator atomicComponentInstantiator;
     private final ComponentInstantiator compositeComponentInstantiator;
+    private WireInstantiator wireInstantiator;
 
 
     public LogicalModelInstantiatorImpl(@Reference ResolutionService resolutionService,
                                         @Reference PromotionNormalizer promotionNormalizer,
                                         @Reference LogicalComponentManager logicalComponentManager,
                                         @Reference(name = "atomicComponentInstantiator")ComponentInstantiator atomicComponentInstantiator,
-                                        @Reference(name = "compositeComponentInstantiator")ComponentInstantiator compositeComponentInstantiator) {
+                                        @Reference(name = "compositeComponentInstantiator")ComponentInstantiator compositeComponentInstantiator,
+                                        @Reference WireInstantiator wireInstantiator) {
         this.resolutionService = resolutionService;
         this.promotionNormalizer = promotionNormalizer;
         this.logicalComponentManager = logicalComponentManager;
         this.atomicComponentInstantiator = atomicComponentInstantiator;
         this.compositeComponentInstantiator = compositeComponentInstantiator;
+        this.wireInstantiator = wireInstantiator;
     }
 
     @SuppressWarnings("unchecked")
@@ -82,6 +86,11 @@ public class LogicalModelInstantiatorImpl implements LogicalModelInstantiator {
         List<LogicalComponent<?>> newComponents = instantiateComponents(properties, composite, change);
         List<LogicalService> services = instantiateServices(composite, change);
         List<LogicalReference> references = instantiateReferences(composite, change);
+
+        // explicit wires must be instantiated after the services have been merged
+        wireInstantiator.instantiateWires(composite, change.getParent(), change);
+
+        // resolve services and references
         resolve(targetComposite.getComponents(), services, references, change);
 
         // normalize bindings for each new component
@@ -232,12 +241,13 @@ public class LogicalModelInstantiatorImpl implements LogicalModelInstantiator {
 
     }
 
+
     private void resolve(Collection<LogicalComponent<?>> components,
                          List<LogicalService> services,
                          List<LogicalReference> references,
                          LogicalChange change) {
 
-        // resolve wires for composite services merged into the domain
+        // resolve composite services merged into the domain
         for (LogicalService service : services) {
             resolutionService.resolve(service, change);
         }

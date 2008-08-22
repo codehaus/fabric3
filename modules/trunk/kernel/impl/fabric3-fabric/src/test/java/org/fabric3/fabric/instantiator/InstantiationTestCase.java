@@ -28,6 +28,8 @@ import org.easymock.classextension.EasyMock;
 
 import org.fabric3.fabric.instantiator.component.AtomicComponentInstantiator;
 import org.fabric3.fabric.instantiator.component.CompositeComponentInstantiator;
+import org.fabric3.fabric.instantiator.component.WireInstantiator;
+import org.fabric3.fabric.instantiator.component.WireInstantiatorImpl;
 import org.fabric3.fabric.instantiator.normalize.PromotionNormalizer;
 import org.fabric3.scdl.AbstractComponentType;
 import org.fabric3.scdl.ComponentDefinition;
@@ -84,12 +86,19 @@ public class InstantiationTestCase extends TestCase {
         super.setUp();
 
         AtomicComponentInstantiator atomicComponentInstantiator = new AtomicComponentInstantiator(null);
-        CompositeComponentInstantiator compositeComponentInstantiator = new CompositeComponentInstantiator(atomicComponentInstantiator, null);
+        WireInstantiator wireInstantiator = new WireInstantiatorImpl();
+        CompositeComponentInstantiator compositeComponentInstantiator =
+                new CompositeComponentInstantiator(atomicComponentInstantiator, wireInstantiator, null);
         ResolutionService resolutionService = EasyMock.createMock(ResolutionService.class);
         PromotionNormalizer normalizer = EasyMock.createMock(PromotionNormalizer.class);
 
         logicalModelInstantiator =
-                new LogicalModelInstantiatorImpl(resolutionService, normalizer, null, atomicComponentInstantiator, compositeComponentInstantiator);
+                new LogicalModelInstantiatorImpl(resolutionService,
+                                                 normalizer,
+                                                 null,
+                                                 atomicComponentInstantiator,
+                                                 compositeComponentInstantiator,
+                                                 wireInstantiator);
         parent = new LogicalCompositeComponent(PARENT_URI, null, null, null);
     }
 

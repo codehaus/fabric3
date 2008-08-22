@@ -72,6 +72,8 @@ import org.fabric3.fabric.instantiator.ResolutionService;
 import org.fabric3.fabric.instantiator.ResolutionServiceImpl;
 import org.fabric3.fabric.instantiator.component.AtomicComponentInstantiator;
 import org.fabric3.fabric.instantiator.component.CompositeComponentInstantiator;
+import org.fabric3.fabric.instantiator.component.WireInstantiator;
+import org.fabric3.fabric.instantiator.component.WireInstantiatorImpl;
 import org.fabric3.fabric.instantiator.normalize.PromotionNormalizer;
 import org.fabric3.fabric.instantiator.normalize.PromotionNormalizerImpl;
 import org.fabric3.fabric.instantiator.promotion.DefaultPromotionResolutionService;
@@ -88,10 +90,6 @@ import org.fabric3.fabric.services.contribution.LocalContributionUriResolver;
 import org.fabric3.fabric.services.contribution.processor.JarClasspathProcessor;
 import org.fabric3.fabric.services.documentloader.DocumentLoader;
 import org.fabric3.fabric.services.documentloader.DocumentLoaderImpl;
-import org.fabric3.pojo.instancefactory.BuildHelperImpl;
-import org.fabric3.pojo.instancefactory.DefaultInstanceFactoryBuilderRegistry;
-import org.fabric3.pojo.control.GenerationHelperImpl;
-import org.fabric3.pojo.instancefactory.ReflectiveInstanceFactoryBuilder;
 import org.fabric3.fabric.services.routing.RuntimeRoutingService;
 import org.fabric3.host.domain.DomainException;
 import org.fabric3.host.runtime.Fabric3Runtime;
@@ -102,8 +100,12 @@ import org.fabric3.jmx.provision.JMXWireSourceDefinition;
 import org.fabric3.jmx.runtime.JMXWireAttacher;
 import org.fabric3.jmx.scdl.JMXBinding;
 import org.fabric3.monitor.MonitorFactory;
+import org.fabric3.pojo.control.GenerationHelperImpl;
+import org.fabric3.pojo.instancefactory.BuildHelperImpl;
+import org.fabric3.pojo.instancefactory.DefaultInstanceFactoryBuilderRegistry;
 import org.fabric3.pojo.instancefactory.InstanceFactoryBuildHelper;
 import org.fabric3.pojo.instancefactory.InstanceFactoryBuilderRegistry;
+import org.fabric3.pojo.instancefactory.ReflectiveInstanceFactoryBuilder;
 import org.fabric3.spi.builder.component.ComponentBuilderRegistry;
 import org.fabric3.spi.builder.component.SourceWireAttacher;
 import org.fabric3.spi.builder.component.TargetWireAttacher;
@@ -227,13 +229,15 @@ public class BootstrapAssemblyFactory {
         DocumentLoader documentLoader = new DocumentLoaderImpl();
         AtomicComponentInstantiator atomicComponentInstantiator = new AtomicComponentInstantiator(documentLoader);
 
+        WireInstantiator wireInstantiator = new WireInstantiatorImpl();
         CompositeComponentInstantiator compositeComponentInstantiator =
-                new CompositeComponentInstantiator(atomicComponentInstantiator, documentLoader);
+                new CompositeComponentInstantiator(atomicComponentInstantiator, wireInstantiator, documentLoader);
         return new LogicalModelInstantiatorImpl(resolutionService,
                                                 normalizer,
                                                 logicalComponentManager,
                                                 atomicComponentInstantiator,
-                                                compositeComponentInstantiator);
+                                                compositeComponentInstantiator,
+                                                wireInstantiator);
     }
 
     private static CommandExecutorRegistry createCommandExecutorRegistry(MonitorFactory monitorFactory,
