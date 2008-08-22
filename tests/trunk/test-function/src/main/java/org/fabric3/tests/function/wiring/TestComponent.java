@@ -29,6 +29,7 @@ public class TestComponent implements TestService {
     private HelloService promotedReference;
     private HelloService nonConfiguredPromotedReference;
     private HelloService optionalNonSetReference;
+    private HelloService wireElementReference;
 
     public TestComponent(@Reference(name = "targetConstructor")HelloService constructorHelloService) {
         this.constructorService = constructorHelloService;
@@ -54,6 +55,11 @@ public class TestComponent implements TestService {
         this.optionalNonSetReference = optionalNonSetReference;
     }
 
+    @Reference
+     public void setWireElementReference(HelloService wireElementReference) {
+        this.wireElementReference = wireElementReference;
+    }
+
     public HelloService getService() {
         return service;
     }
@@ -72,5 +78,9 @@ public class TestComponent implements TestService {
 
     public HelloService getOptionalNonSetReference() {
         return optionalNonSetReference;
+    }
+
+    public HelloService getWireElementReference() {
+        return wireElementReference;
     }
 }

@@ -31,7 +31,7 @@
     <reference name="promotedDefaultReference" promote="SingeReferenceTest">
         <f3:binding.test uri="WiringCompositeHelloService"/>
     </reference>
-    
+
     <component name="TestComponent">
         <implementation.java class="org.fabric3.tests.function.wiring.TestComponent"/>
         <reference name="targetConstructor" target="HelloService"/>
@@ -47,5 +47,12 @@
         <f3:binding.test uri="WiringCompositeHelloService"/>
     </reference>
 
+    <wire source="TestComponent/wireElementReference" target="HelloService"/>
 
+    <!-- verifies a wire contained in another composite-->
+    <component name="WireBagTest">
+        <f3:junit class="org.fabric3.tests.function.wiring.WireBagTest"/>
+    </component>
+    <include name="WiringBagComposite"/>
+    
 </composite>
