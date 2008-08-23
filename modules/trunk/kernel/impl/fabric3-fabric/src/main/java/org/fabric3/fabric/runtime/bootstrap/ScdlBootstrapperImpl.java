@@ -37,6 +37,7 @@ import org.fabric3.fabric.instantiator.component.ComponentInstantiator;
 import org.fabric3.fabric.runtime.ComponentNames;
 import static org.fabric3.fabric.runtime.ComponentNames.APPLICATION_CLASSLOADER_ID;
 import static org.fabric3.fabric.runtime.ComponentNames.BOOT_CLASSLOADER_ID;
+import static org.fabric3.fabric.runtime.ComponentNames.CLASSLOADER_REGISTRY_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.RUNTIME_URI;
 import org.fabric3.fabric.services.classloading.ClassLoaderRegistryImpl;
 import org.fabric3.fabric.services.contribution.ClasspathProcessorRegistryImpl;
@@ -67,11 +68,9 @@ import org.fabric3.monitor.MonitorFactory;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.Composite;
-import org.fabric3.scdl.DefaultValidationContext;
 import org.fabric3.scdl.Implementation;
 import org.fabric3.scdl.ServiceContract;
 import org.fabric3.scdl.ServiceDefinition;
-import org.fabric3.scdl.ValidationContext;
 import org.fabric3.services.xmlfactory.XMLFactory;
 import org.fabric3.services.xmlfactory.impl.XMLFactoryImpl;
 import org.fabric3.spi.classloader.MultiParentClassLoader;
@@ -81,6 +80,8 @@ import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.spi.domain.Domain;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
+import org.fabric3.spi.model.instance.LogicalReference;
+import org.fabric3.spi.model.instance.LogicalWire;
 import org.fabric3.spi.runtime.RuntimeServices;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.services.componentmanager.ComponentManager;
@@ -90,6 +91,8 @@ import org.fabric3.spi.services.contribution.MetaDataStore;
 import org.fabric3.spi.services.contribution.ProcessorRegistry;
 import org.fabric3.spi.services.lcm.LogicalComponentManager;
 import org.fabric3.system.introspection.BootstrapLoaderFactory;
+import org.fabric3.system.introspection.SystemImplementationProcessor;
+import org.fabric3.system.scdl.SystemImplementation;
 
 /**
  * Bootstrapper that initializes a runtime by reading a system SCDL file.
@@ -105,6 +108,7 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
     private final ContractProcessor interfaceProcessorRegistry;
     private final DocumentLoader documentLoader;
     private final ComponentInstantiator instantiator;
+    private final SystemImplementationProcessor systemImplementationProcessor;
 
     private URL scdlLocation;
     private URL systemConfig;
@@ -133,6 +137,7 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
         interfaceProcessorRegistry = new DefaultContractProcessor(helper);
         documentLoader = new DocumentLoaderImpl();
         instantiator = new AtomicComponentInstantiator(documentLoader);
+        systemImplementationProcessor = BootstrapLoaderFactory.createSystemImplementationProcessor();
     }
 
     public URL getScdlLocation() {
@@ -171,9 +176,8 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
     }
 
     public void bootSystem(Fabric3Runtime<?> runtime) throws InitializationException {
-        ClassLoaderRegistry classLoaderRegistry =
-                runtime.getSystemComponent(ClassLoaderRegistry.class, ComponentNames.CLASSLOADER_REGISTRY_URI);
-        Loader loader = BootstrapLoaderFactory.createLoader(runtime.getMonitorFactory(), xmlFactory);
+        ClassLoaderRegistry classLoaderRegistry = runtime.getSystemComponent(ClassLoaderRegistry.class, CLASSLOADER_REGISTRY_URI);
+        Loader loader = BootstrapLoaderFactory.createLoader(systemImplementationProcessor, runtime.getMonitorFactory(), xmlFactory);
         Domain runtimeDomain = runtime.getSystemComponent(Domain.class, ComponentNames.RUNTIME_DOMAIN_URI);
         try {
 
@@ -216,52 +220,48 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
         RuntimeServices runtimeServices = (RuntimeServices) runtime;
 
         // services available through the outward facing Fabric3Runtime API
-        registerSystemComponent(runtimeServices, "MonitorFactory", MonitorFactory.class, runtime.getMonitorFactory());
-        registerSystemComponent(runtimeServices, "HostInfo", runtime.getHostInfoType(), runtime.getHostInfo());
+        registerSystemComponent(runtimeServices, "MonitorFactory", MonitorFactory.class, runtime.getMonitorFactory(), true);
+        registerSystemComponent(runtimeServices, "HostInfo", runtime.getHostInfoType(), runtime.getHostInfo(), true);
         MBeanServer mbServer = runtime.getMBeanServer();
         if (mbServer != null) {
-            registerSystemComponent(runtimeServices, "MBeanServer", MBeanServer.class, mbServer);
+            registerSystemComponent(runtimeServices, "MBeanServer", MBeanServer.class, mbServer, false);
         }
-        registerSystemComponent(runtimeServices, "WorkScheduler", WorkScheduler.class, runtime.getWorkScheduler());
+        registerSystemComponent(runtimeServices, "WorkScheduler", WorkScheduler.class, runtime.getWorkScheduler(), false);
 
         // services available through the inward facing RuntimeServices SPI
         ComponentManager componentManager = runtimeServices.getComponentManager();
         LogicalComponentManager logicalCM = runtimeServices.getLogicalComponentManager();
         ScopeContainer<?> scopeContainer = runtimeServices.getScopeContainer();
-        registerSystemComponent(runtimeServices, "ComponentManager", ComponentManager.class, componentManager);
-        registerSystemComponent(runtimeServices, "LogicalComponentManager", LogicalComponentManager.class, logicalCM);
-        registerSystemComponent(runtimeServices, "CompositeScopeContainer", ScopeContainer.class, scopeContainer);
+        registerSystemComponent(runtimeServices, "ComponentManager", ComponentManager.class, componentManager, true);
+        registerSystemComponent(runtimeServices, "RuntimeLogicalComponentManager", LogicalComponentManager.class, logicalCM, true);
+        registerSystemComponent(runtimeServices, "CompositeScopeContainer", ScopeContainer.class, scopeContainer, true);
     }
 
     private void registerBootstrapComponents(Fabric3Runtime<?> runtime) throws InitializationException {
 
-
         RuntimeServices runtimeServices = (RuntimeServices) runtime;
 
-        registerSystemComponent(runtimeServices, "ClassLoaderRegistry", ClassLoaderRegistry.class, classLoaderRegistry);
+        registerSystemComponent(runtimeServices, "ClassLoaderRegistry", ClassLoaderRegistry.class, classLoaderRegistry, true);
 
         scopeRegistry.register(runtimeServices.getScopeContainer());
-        registerSystemComponent(runtimeServices, "ScopeRegistry", ScopeRegistry.class, scopeRegistry);
+        registerSystemComponent(runtimeServices, "ScopeRegistry", ScopeRegistry.class, scopeRegistry, true);
 
-        registerSystemComponent(runtimeServices, "ContributionProcessorRegistry", ProcessorRegistry.class, processorRegistry);
+        registerSystemComponent(runtimeServices, "ContributionProcessorRegistry", ProcessorRegistry.class, processorRegistry, true);
 
         if (metaDataStore != null) {
-            registerSystemComponent(runtimeServices, "MetaDataStore", MetaDataStore.class, metaDataStore);
+            registerSystemComponent(runtimeServices, "MetaDataStore", MetaDataStore.class, metaDataStore, true);
         }
 
         ClasspathProcessorRegistryImpl instance = new ClasspathProcessorRegistryImpl();
-        registerSystemComponent(runtimeServices, "ClasspathProcessorRegistry", ClasspathProcessorRegistry.class, instance);
+        registerSystemComponent(runtimeServices, "ClasspathProcessorRegistry", ClasspathProcessorRegistry.class, instance, true);
 
         Domain runtimeDomain = BootstrapAssemblyFactory.createDomain(runtime);
-        registerSystemComponent(runtimeServices, "RuntimeAssembly", Domain.class, runtimeDomain);
+        registerSystemComponent(runtimeServices, "RuntimeAssembly", Domain.class, runtimeDomain, true);
     }
 
-    private void registerClassLoaders(Fabric3Runtime<?> runtime,
-                                      ClassLoader bootClassLoader,
-                                      ClassLoader appClassLoader) {
+    private void registerClassLoaders(Fabric3Runtime<?> runtime, ClassLoader bootClassLoader, ClassLoader appClassLoader) {
 
-        ClassLoaderRegistry classLoaderRegistry =
-                runtime.getSystemComponent(ClassLoaderRegistry.class, ComponentNames.CLASSLOADER_REGISTRY_URI);
+        ClassLoaderRegistry classLoaderRegistry = runtime.getSystemComponent(ClassLoaderRegistry.class, CLASSLOADER_REGISTRY_URI);
         classLoaderRegistry.register(HOST_CLASSLOADER_ID, runtime.getHostClassLoader());
         classLoaderRegistry.register(BOOT_CLASSLOADER_ID, bootClassLoader);
         classLoaderRegistry.register(RUNTIME_URI, new MultiParentClassLoader(RUNTIME_URI, bootClassLoader));
@@ -271,15 +271,12 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
         classLoaderRegistry.register(domainId, new MultiParentClassLoader(domainId, appClassLoader));
     }
 
-    private <S, I extends S> void registerSystemComponent(RuntimeServices runtime,
-                                                          String name,
-                                                          Class<S> type,
-                                                          I instance)
+    private <S, I extends S> void registerSystemComponent(RuntimeServices runtime, String name, Class<S> type, I instance, boolean introspect)
             throws InitializationException {
 
         try {
-            LogicalComponent<?> logical = createLogicalComponent(name, type, instance);
-            AtomicComponent<I> physical = createPhysicalComponent(name, instance);
+            LogicalComponent<?> logical = createLogicalComponent(name, type, instance, introspect);
+            AtomicComponent<I> physical = createPhysicalComponent(name, logical, instance);
             runtime.registerComponent(logical, physical);
         } catch (RegistrationException e) {
             throw new InitializationException(e);
@@ -288,46 +285,69 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
         }
     }
 
-    protected <I> AtomicComponent<I> createPhysicalComponent(String name, I instance) {
+    protected <I> AtomicComponent<I> createPhysicalComponent(String name, LogicalComponent<?> logicalComponent, I instance) {
         URI uri = URI.create(domain.getUri() + "/" + name);
-        return new SingletonComponent<I>(uri, instance, null);
+        PojoComponentType type = (PojoComponentType) logicalComponent.getComponentType();
+        type.getInjectionSites();
+        return new SingletonComponent<I>(uri, instance, type.getInjectionSites());
     }
 
-    protected <S, I extends S> LogicalComponent<Implementation<?>> createLogicalComponent(String name,
-                                                                                          Class<S> type,
-                                                                                          I instance)
+    protected <S, I extends S> LogicalComponent<Implementation<?>> createLogicalComponent(String name, Class<S> type, I instance, boolean introspect)
             throws InvalidSystemServiceContractException, AssemblyException {
 
-        ComponentDefinition<Implementation<?>> definition = createDefinition(name, type, instance);
+        ComponentDefinition<Implementation<?>> definition = createDefinition(name, type, instance, introspect);
         LogicalChange change = new LogicalChange(domain);
         LogicalComponent<Implementation<?>> logical = instantiator.instantiate(domain, domain.getPropertyValues(), definition, change);
         if (change.hasErrors()) {
             throw new AssemblyException(change.getErrors(), change.getWarnings());
         }
+        // mark singleton components as provisioned since instances are not created
+        logical.setProvisioned(true);
+        logical.setClassLoaderId(BOOT_CLASSLOADER_ID);
+        // all references are initially resolved since they are manually injected
+        for (LogicalReference reference : logical.getReferences()) {
+            reference.setResolved(true);
+            for (LogicalWire wire : reference.getWires()) {
+                wire.setProvisioned(true);
+            }
+        }
         return logical;
     }
 
-    protected <S, I extends S> ComponentDefinition<Implementation<?>> createDefinition(String name, Class<S> type, I instance)
+    protected <S, I extends S> ComponentDefinition<Implementation<?>> createDefinition(String name, Class<S> type, I instance, boolean introspect)
             throws InvalidSystemServiceContractException {
 
         String implClassName = instance.getClass().getName();
 
-        ValidationContext context = new DefaultValidationContext();
-        ServiceContract<?> contract = interfaceProcessorRegistry.introspect(new TypeMapping(), type, context);
-        if (context.hasErrors()) {
-            throw new InvalidSystemServiceContractException(context.getErrors());
+        TypeMapping mapping = new TypeMapping();
+        IntrospectionContext context = new DefaultIntrospectionContext(getClass().getClassLoader(), null, null, null, mapping);
+        if (introspect) {
+            // introspect the instance so it may be injected by the runtime with additional services
+            SystemImplementation implementation = new SystemImplementation();
+            implementation.setImplementationClass(implClassName);
+            systemImplementationProcessor.introspect(implementation, context);
+            ComponentDefinition<Implementation<?>> def = new ComponentDefinition<Implementation<?>>(name);
+            SingletonImplementation singletonImplementation = new SingletonImplementation(implementation.getComponentType(), implClassName);
+            def.setImplementation(singletonImplementation);
+            return def;
+        } else {
+            // instance does not have any services injected
+            ServiceContract<?> contract = interfaceProcessorRegistry.introspect(mapping, type, context);
+            if (context.hasErrors()) {
+                throw new InvalidSystemServiceContractException(context.getErrors());
+            }
+            String serviceName = contract.getInterfaceName();
+            ServiceDefinition service = new ServiceDefinition(serviceName, contract);
+
+            PojoComponentType componentType = new PojoComponentType(implClassName);
+            componentType.add(service);
+
+            SingletonImplementation implementation = new SingletonImplementation(componentType, implClassName);
+            implementation.setComponentType(componentType);
+            ComponentDefinition<Implementation<?>> def = new ComponentDefinition<Implementation<?>>(name);
+            def.setImplementation(implementation);
+            return def;
         }
-        String serviceName = contract.getInterfaceName();
-        ServiceDefinition service = new ServiceDefinition(serviceName, contract);
-
-        PojoComponentType componentType = new PojoComponentType(implClassName);
-        componentType.add(service);
-
-        SingletonImplementation impl = new SingletonImplementation(componentType, implClassName);
-
-        ComponentDefinition<Implementation<?>> def = new ComponentDefinition<Implementation<?>>(name);
-        def.setImplementation(impl);
-        return def;
     }
 
 

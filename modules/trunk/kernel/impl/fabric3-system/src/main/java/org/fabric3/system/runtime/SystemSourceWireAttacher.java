@@ -18,6 +18,7 @@ package org.fabric3.system.runtime;
 
 import java.net.URI;
 
+import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.pojo.builder.PojoSourceWireAttacher;
@@ -37,14 +38,14 @@ import org.fabric3.transform.TransformerRegistry;
 /**
  * @version $Rev$ $Date$
  */
+@EagerInit
 public class SystemSourceWireAttacher extends PojoSourceWireAttacher implements SourceWireAttacher<SystemWireSourceDefinition> {
 
     private final ComponentManager manager;
 
     public SystemSourceWireAttacher(@Reference ComponentManager manager,
                                     @Reference TransformerRegistry<PullTransformer<?, ?>> transformerRegistry,
-                                    @Reference ClassLoaderRegistry classLoaderRegistry
-    ) {
+                                    @Reference ClassLoaderRegistry classLoaderRegistry) {
         super(transformerRegistry, classLoaderRegistry);
         this.manager = manager;
     }

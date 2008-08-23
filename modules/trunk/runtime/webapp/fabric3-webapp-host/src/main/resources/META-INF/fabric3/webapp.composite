@@ -64,6 +64,12 @@
     <!-- System implementation type -->
     <include name="org.fabric3.launcher.SystemImplementation" scdlResource="org/fabric3/fabric/systemImplementation.composite"/>
 
+    <!-- Singleton implementation type -->
+    <include name="org.fabric3.fabric.SingletonImplementation" scdlResource="org/fabric3/fabric/singletonImplementation.composite"/>
+
+    <!-- JMX components -->
+    <include name="org.fabric3.jmx.JMXExtension" scdlResource="org/fabric3/jmx/jmx.composite"/>
+    
     <!-- include Java implementation type -->
     <include name="org.fabric3.JavaControl" scdlResource="META-INF/javaControl.composite"/>
     <include name="org.fabric3.JavaIntrospection" scdlResource="META-INF/javaIntrospection.composite"/>

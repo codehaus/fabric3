@@ -50,26 +50,26 @@ import org.fabric3.spi.services.lcm.LogicalComponentManager;
 import org.fabric3.spi.services.lcm.StoreException;
 
 /**
- * Base class for abstract assemblies
+ * Base class for a domain.
  *
  * @version $Rev$ $Date$
  */
 public abstract class AbstractDomain implements Domain {
     public static final QName COMPOSITE = new QName(SCA_NS, "composite");
 
-    private final PhysicalModelGenerator physicalModelGenerator;
-    private final LogicalModelInstantiator logicalModelInstantiator;
-    private final Allocator allocator;
     private final MetaDataStore metadataStore;
     private final LogicalComponentManager logicalComponentManager;
-    private BindingSelector bindingSelector;
-    private RoutingService routingService;
+    protected LogicalModelInstantiator logicalModelInstantiator;
+    protected Allocator allocator;
+    protected BindingSelector bindingSelector;
+    protected RoutingService routingService;
+    protected PhysicalModelGenerator physicalModelGenerator;
 
-    public AbstractDomain(Allocator allocator,
-                          MetaDataStore metadataStore,
+    public AbstractDomain(MetaDataStore metadataStore,
+                          LogicalComponentManager logicalComponentManager,
+                          Allocator allocator,
                           PhysicalModelGenerator physicalModelGenerator,
                           LogicalModelInstantiator logicalModelInstantiator,
-                          LogicalComponentManager logicalComponentManager,
                           BindingSelector bindingSelector,
                           RoutingService routingService) {
         this.allocator = allocator;

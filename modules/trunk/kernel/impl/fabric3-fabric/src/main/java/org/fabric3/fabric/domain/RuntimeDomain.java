@@ -29,7 +29,9 @@ import org.fabric3.spi.services.contribution.MetaDataStore;
 import org.fabric3.spi.services.lcm.LogicalComponentManager;
 
 /**
- * Implements a domain for system services in a runtime. As Fabric3 runtimes are constituted using SCA, the runtime domain manages system services.
+ * Implements a domain for system components in a runtime. Fabric3 runtimes are constituted using SCA components and the runtime domain manages
+ * deployment of those system components. When a runtime is booted, the runtime domain is provided with a set of primoridal services for deploying
+ * system components. After bootstrap, the runtime domain is reinjected with a new set of fully-configured deployment services.
  *
  * @version $Rev$ $Date$
  */
@@ -42,7 +44,28 @@ public class RuntimeDomain extends AbstractDomain {
                          @Reference LogicalComponentManager logicalComponentManager,
                          @Reference BindingSelector bindingSelector,
                          @Reference RoutingService routingService) {
-        super(allocator, metadataStore, physicalModelGenerator, logicalModelInstantiator, logicalComponentManager, bindingSelector, routingService);
+        super(metadataStore, logicalComponentManager, allocator, physicalModelGenerator, logicalModelInstantiator, bindingSelector, routingService);
     }
+
+    /**
+     * Used for reinjection.
+     *
+     * @param physicalModelGenerator the generator to inject
+     */
+    @Reference
+    public void setPhysicalModelGenerator(PhysicalModelGenerator physicalModelGenerator) {
+        this.physicalModelGenerator = physicalModelGenerator;
+    }
+
+    /**
+     * Used for reinjection.
+     *
+     * @param routingService the routing service to reinject
+     */
+    @Reference
+    public void setRoutingService(RoutingService routingService) {
+        this.routingService = routingService;
+    }
+
 
 }

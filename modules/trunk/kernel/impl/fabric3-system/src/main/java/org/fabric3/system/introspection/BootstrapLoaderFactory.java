@@ -28,6 +28,8 @@ import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.api.annotation.Monitor;
+import org.fabric3.introspection.IntrospectionHelper;
+import org.fabric3.introspection.contract.ContractProcessor;
 import org.fabric3.introspection.impl.DefaultClassWalker;
 import org.fabric3.introspection.impl.DefaultIntrospectionHelper;
 import org.fabric3.introspection.impl.annotation.DestroyProcessor;
@@ -39,8 +41,6 @@ import org.fabric3.introspection.impl.annotation.ReferenceProcessor;
 import org.fabric3.introspection.impl.contract.DefaultContractProcessor;
 import org.fabric3.introspection.java.AnnotationProcessor;
 import org.fabric3.introspection.java.ClassWalker;
-import org.fabric3.introspection.contract.ContractProcessor;
-import org.fabric3.introspection.IntrospectionHelper;
 import org.fabric3.introspection.xml.Loader;
 import org.fabric3.introspection.xml.LoaderHelper;
 import org.fabric3.introspection.xml.TypeLoader;
@@ -51,6 +51,7 @@ import org.fabric3.loader.composite.ComponentLoader;
 import org.fabric3.loader.composite.CompositeLoader;
 import org.fabric3.loader.composite.IncludeLoader;
 import org.fabric3.loader.composite.PropertyValueLoader;
+import org.fabric3.loader.composite.WireLoader;
 import org.fabric3.loader.impl.DefaultLoaderHelper;
 import org.fabric3.loader.impl.LoaderRegistryImpl;
 import org.fabric3.monitor.MonitorFactory;
@@ -59,53 +60,16 @@ import org.fabric3.system.scdl.SystemImplementation;
 
 /**
  * Factory class for an implementation of Loader that can handle system SCDL.
- *
- * This loader can handle a constrained version of SCDL for bootstrapping a runtime. The constraints are:
- * <ul>
- * <li>The only implementation type allowed is system</li>
- * <li>The only service contract type is a Java interface found through introspection</li>
- * <li>Resolution of SCDL artifacts by QName is not supported; scdlLocation or scdlResource must be used</li>
- * </ul>
+ * <p/>
+ * This loader can handle a constrained version of SCDL for bootstrapping a runtime. The constraints are: <ul> <li>The only implementation type
+ * allowed is system</li> <li>The only service contract type is a Java interface found through introspection</li> <li>Resolution of SCDL artifacts by
+ * QName is not supported; scdlLocation or scdlResource must be used</li> </ul>
  *
  * @version $Rev$ $Date$
  */
 public class BootstrapLoaderFactory {
 
-    public static Loader createLoader(MonitorFactory monitorFactory, XMLFactory xmlFactory) {
-
-        LoaderHelper loaderHelper = new DefaultLoaderHelper();
-
-        LoaderRegistryImpl loader = new LoaderRegistryImpl(monitorFactory.getMonitor(LoaderRegistryImpl.Monitor.class), xmlFactory);
-        Map<QName, TypeLoader<?>> loaders = new HashMap<QName, TypeLoader<?>>();
-
-        // loader for <composite> document
-        loaders.put(CompositeLoader.COMPOSITE, compositeLoader(loader, loaderHelper));
-
-        // loader for <implementation.system> element
-        loaders.put(SystemImplementation.IMPLEMENTATION_SYSTEM, systemImplementation());
-
-        loader.setLoaders(loaders);
-        return loader;
-    }
-
-    private static CompositeLoader compositeLoader(Loader loader, LoaderHelper loaderHelper) {
-        PropertyLoader propertyLoader = new PropertyLoader(loaderHelper);
-        PropertyValueLoader propertyValueLoader = new PropertyValueLoader(loaderHelper);
-
-
-        ComponentReferenceLoader componentReferenceLoader = new ComponentReferenceLoader(loader, loaderHelper);
-        ComponentServiceLoader componentServiceLoader = new ComponentServiceLoader(loader, loaderHelper);
-        ComponentLoader componentLoader = new ComponentLoader(loader,
-                                                              propertyValueLoader,
-                                                              componentReferenceLoader,
-                                                              componentServiceLoader,
-                                                              loaderHelper);
-
-        IncludeLoader includeLoader = new IncludeLoader(loader, null);
-        return new CompositeLoader(loader, includeLoader, propertyLoader, componentLoader, loaderHelper);
-    }
-
-    private static SystemImplementationLoader systemImplementation() {
+    public static SystemImplementationProcessor createSystemImplementationProcessor() {
         IntrospectionHelper helper = new DefaultIntrospectionHelper();
         ContractProcessor contractProcessor = new DefaultContractProcessor(helper);
 
@@ -128,7 +92,50 @@ public class BootstrapLoaderFactory {
         SystemUnannotatedHeuristic unannotatedHeuristic = new SystemUnannotatedHeuristic(helper, contractProcessor);
         SystemHeuristic systemHeuristic = new SystemHeuristic(serviceHeuristic, constructorHeuristic, unannotatedHeuristic);
 
-        SystemImplementationProcessor processor = new SystemImplementationProcessorImpl(classWalker, systemHeuristic, helper);
+        return new SystemImplementationProcessorImpl(classWalker, systemHeuristic, helper);
+    }
+
+    public static Loader createLoader(SystemImplementationProcessor processor, MonitorFactory monitorFactory, XMLFactory xmlFactory) {
+
+        LoaderHelper loaderHelper = new DefaultLoaderHelper();
+
+        LoaderRegistryImpl loader = new LoaderRegistryImpl(monitorFactory.getMonitor(LoaderRegistryImpl.Monitor.class), xmlFactory);
+        Map<QName, TypeLoader<?>> loaders = new HashMap<QName, TypeLoader<?>>();
+
+        WireLoader wireLoader = new WireLoader(loaderHelper);
+
+        // loader for <composite> document
+        loaders.put(CompositeLoader.COMPOSITE, compositeLoader(loader, wireLoader, loaderHelper));
+
+        // loader for <implementation.system> element
+        loaders.put(SystemImplementation.IMPLEMENTATION_SYSTEM, systemImplementation(processor));
+
+        loaders.put(CompositeLoader.WIRE, wireLoader);
+
+        loader.setLoaders(loaders);
+        return loader;
+    }
+
+    private static CompositeLoader compositeLoader(Loader loader, WireLoader wireLoader, LoaderHelper loaderHelper) {
+        PropertyLoader propertyLoader = new PropertyLoader(loaderHelper);
+        PropertyValueLoader propertyValueLoader = new PropertyValueLoader(loaderHelper);
+
+
+        ComponentReferenceLoader componentReferenceLoader = new ComponentReferenceLoader(loader, loaderHelper);
+        ComponentServiceLoader componentServiceLoader = new ComponentServiceLoader(loader, loaderHelper);
+        ComponentLoader componentLoader = new ComponentLoader(loader,
+                                                              propertyValueLoader,
+                                                              componentReferenceLoader,
+                                                              componentServiceLoader,
+                                                              loaderHelper);
+
+        IncludeLoader includeLoader = new IncludeLoader(loader, null);
+        return new CompositeLoader(loader, includeLoader, propertyLoader, componentLoader, wireLoader, loaderHelper);
+    }
+
+    private static SystemImplementationLoader systemImplementation(SystemImplementationProcessor processor) {
         return new SystemImplementationLoader(processor);
     }
+
+
 }

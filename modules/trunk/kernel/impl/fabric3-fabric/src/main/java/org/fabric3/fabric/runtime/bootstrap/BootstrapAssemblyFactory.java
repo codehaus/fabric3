@@ -63,8 +63,10 @@ import org.fabric3.fabric.generator.wire.PhysicalWireGenerator;
 import org.fabric3.fabric.generator.wire.PhysicalWireGeneratorImpl;
 import org.fabric3.fabric.generator.wire.ResourceWireCommandGenerator;
 import org.fabric3.fabric.generator.wire.ServiceWireCommandGenerator;
-import org.fabric3.fabric.implementation.singleton.SingletonGenerator;
-import org.fabric3.fabric.implementation.singleton.SingletonWireAttacher;
+import org.fabric3.fabric.implementation.singleton.SingletonComponentGenerator;
+import org.fabric3.fabric.implementation.singleton.SingletonSourceWireAttacher;
+import org.fabric3.fabric.implementation.singleton.SingletonTargetWireAttacher;
+import org.fabric3.fabric.implementation.singleton.SingletonWireSourceDefinition;
 import org.fabric3.fabric.implementation.singleton.SingletonWireTargetDefinition;
 import org.fabric3.fabric.instantiator.LogicalModelInstantiator;
 import org.fabric3.fabric.instantiator.LogicalModelInstantiatorImpl;
@@ -143,6 +145,7 @@ import org.fabric3.transform.dom2java.generics.map.String2MapOfString2String;
  * @version $Rev$ $Date$
  */
 public class BootstrapAssemblyFactory {
+
     public static Domain createDomain(Fabric3Runtime<?> runtime) throws InitializationException {
         MonitorFactory monitorFactory = runtime.getMonitorFactory();
         MBeanServer mbeanServer = runtime.getMBeanServer();
@@ -152,7 +155,7 @@ public class BootstrapAssemblyFactory {
         ComponentManager componentManager = runtime.getSystemComponent(ComponentManager.class,
                                                                        URI.create(ComponentNames.RUNTIME_NAME + "/ComponentManager"));
         LogicalComponentManager lcm = runtime.getSystemComponent(LogicalComponentManager.class,
-                                                                 URI.create(ComponentNames.RUNTIME_NAME + "/LogicalComponentManager"));
+                                                                 URI.create(ComponentNames.RUNTIME_NAME + "/RuntimeLogicalComponentManager"));
         MetaDataStore metaDataStore =
                 runtime.getSystemComponent(MetaDataStore.class, ComponentNames.METADATA_STORE_URI);
         ScopeRegistry scopeRegistry =
@@ -278,11 +281,13 @@ public class BootstrapAssemblyFactory {
                 new ConcurrentHashMap<Class<? extends PhysicalWireSourceDefinition>, SourceWireAttacher<? extends PhysicalWireSourceDefinition>>();
         sourceAttachers.put(SystemWireSourceDefinition.class,
                             new SystemSourceWireAttacher(componentManager, transformerRegistry, classLoaderRegistry));
+        sourceAttachers.put(SingletonWireSourceDefinition.class, new SingletonSourceWireAttacher(componentManager));
+
         sourceAttachers.put(JMXWireSourceDefinition.class, new JMXWireAttacher(mbeanServer, classLoaderRegistry, jmxSubDomain));
 
         Map<Class<? extends PhysicalWireTargetDefinition>, TargetWireAttacher<? extends PhysicalWireTargetDefinition>> targetAttachers =
                 new ConcurrentHashMap<Class<? extends PhysicalWireTargetDefinition>, TargetWireAttacher<? extends PhysicalWireTargetDefinition>>();
-        targetAttachers.put(SingletonWireTargetDefinition.class, new SingletonWireAttacher(componentManager));
+        targetAttachers.put(SingletonWireTargetDefinition.class, new SingletonTargetWireAttacher(componentManager));
         targetAttachers.put(SystemWireTargetDefinition.class, new SystemTargetWireAttacher(componentManager, classLoaderRegistry));
         targetAttachers.put(MonitorWireTargetDefinition.class, new MonitorWireAttacher(monitorFactory, classLoaderRegistry));
 
@@ -344,7 +349,7 @@ public class BootstrapAssemblyFactory {
         GeneratorRegistryImpl registry = new GeneratorRegistryImpl();
         GenerationHelperImpl helper = new GenerationHelperImpl();
         new SystemComponentGenerator(registry, helper);
-        new SingletonGenerator(registry);
+        new SingletonComponentGenerator(registry);
         registry.register(JMXBinding.class, new JMXBindingGenerator());
         new MonitorWireGenerator(registry).init();
         return registry;

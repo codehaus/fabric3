@@ -65,7 +65,13 @@
 
     <!-- System implementation type -->
     <include name="org.fabric3.fabric.SystemImplementation" scdlResource="org/fabric3/fabric/systemImplementation.composite"/>
-   
+
+    <!-- Singleton implementation type -->
+    <include name="org.fabric3.fabric.SingletonImplementation" scdlResource="org/fabric3/fabric/singletonImplementation.composite"/>
+
+    <!-- JMX components -->
+    <include name="org.fabric3.jmx.JMXExtension" scdlResource="org/fabric3/jmx/jmx.composite"/>
+
     <!-- include JUnit implementation type -->
     <include xmlns:junit="urn:org.codehaus.fabric3:fabric3-junit" name="junit:JUnitImplementation" scdlResource="org/fabric3/junit/junitImplementation.composite"/>
 

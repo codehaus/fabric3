@@ -38,11 +38,11 @@
         <reference name="transformerRegistry" target="pullTransformerRegistry"/>
     </component>
 
-    <component name="org.fabric3.system.runtime.SystemSourceWireAttacher">
+    <component f3:key="org.fabric3.system.provision.SystemWireSourceDefinition" name="org.fabric3.system.runtime.SystemSourceWireAttacher">
         <system:implementation.system class="org.fabric3.system.runtime.SystemSourceWireAttacher"/>
     </component>
 
-    <component name="org.fabric3.system.runtime.SystemTargetWireAttacher">
+    <component f3:key="org.fabric3.system.provision.SystemWireTargetDefinition" name="org.fabric3.system.runtime.SystemTargetWireAttacher">
         <system:implementation.system class="org.fabric3.system.runtime.SystemTargetWireAttacher"/>
     </component>
 
@@ -79,4 +79,5 @@
     <component name="org.fabric3.system.control.SystemComponentGenerator">
         <system:implementation.system class="org.fabric3.system.control.SystemComponentGenerator"/>
     </component>
+
 </composite>

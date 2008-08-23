@@ -20,26 +20,26 @@ package org.fabric3.fabric.services.routing;
 
 import java.util.Set;
 
-import org.fabric3.scdl.Scope;
-import org.fabric3.spi.command.Command;
-import org.fabric3.spi.executor.CommandExecutorRegistry;
-import org.fabric3.spi.executor.ExecutionException;
-import org.fabric3.spi.component.ScopeRegistry;
-import org.fabric3.spi.component.InstanceLifecycleException;
-import org.fabric3.spi.generator.CommandMap;
-
 import org.osoa.sca.annotations.Reference;
 
+import org.fabric3.scdl.Scope;
+import org.fabric3.spi.command.Command;
+import org.fabric3.spi.component.InstanceLifecycleException;
+import org.fabric3.spi.component.ScopeRegistry;
+import org.fabric3.spi.executor.CommandExecutorRegistry;
+import org.fabric3.spi.executor.ExecutionException;
+import org.fabric3.spi.generator.CommandMap;
+
 /**
- * A routing service implementation that routes to the local runtime instance. For example, this service is used to
- * route changesets for runtime extensions.
+ * A routing service implementation that routes to the local runtime instance. For example, this service is used to route changesets for runtime
+ * extensions.
  *
  * @version $Rev$ $Date$
  */
 public class RuntimeRoutingService implements RoutingService {
 
-    private final CommandExecutorRegistry registry;
-    private final ScopeRegistry scopeRegistry;
+    private CommandExecutorRegistry registry;
+    private ScopeRegistry scopeRegistry;
 
     public RuntimeRoutingService(@Reference CommandExecutorRegistry registry, @Reference ScopeRegistry scopeRegistry) {
         this.registry = registry;
@@ -56,7 +56,7 @@ public class RuntimeRoutingService implements RoutingService {
                 throw new RoutingException(e);
             }
         }
-        
+
         try {
             if (scopeRegistry != null) {
                 scopeRegistry.getScopeContainer(Scope.COMPOSITE).reinject();

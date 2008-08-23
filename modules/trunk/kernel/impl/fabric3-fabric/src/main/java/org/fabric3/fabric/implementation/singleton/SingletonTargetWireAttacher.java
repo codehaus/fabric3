@@ -3,6 +3,7 @@ package org.fabric3.fabric.implementation.singleton;
 import java.net.URI;
 
 import org.osoa.sca.annotations.Reference;
+import org.osoa.sca.annotations.EagerInit;
 
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.services.componentmanager.ComponentManager;
@@ -17,10 +18,11 @@ import org.fabric3.spi.wire.Wire;
  *
  * @version $Rev$ $Date$
  */
-public class SingletonWireAttacher implements TargetWireAttacher<SingletonWireTargetDefinition> {
+@EagerInit
+public class SingletonTargetWireAttacher implements TargetWireAttacher<SingletonWireTargetDefinition> {
     private final ComponentManager manager;
 
-    public SingletonWireAttacher(@Reference ComponentManager manager) {
+    public SingletonTargetWireAttacher(@Reference ComponentManager manager) {
         this.manager = manager;
     }
 

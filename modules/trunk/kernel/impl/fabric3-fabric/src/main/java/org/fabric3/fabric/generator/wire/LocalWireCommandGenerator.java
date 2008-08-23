@@ -20,10 +20,12 @@ package org.fabric3.fabric.generator.wire;
 
 import java.net.URI;
 
+import org.osoa.sca.annotations.Constructor;
 import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.fabric.command.AttachWireCommand;
+import org.fabric3.fabric.runtime.ComponentNames;
 import org.fabric3.scdl.CompositeImplementation;
 import org.fabric3.spi.generator.AddCommandGenerator;
 import org.fabric3.spi.generator.GenerationException;
@@ -43,15 +45,42 @@ import org.fabric3.spi.util.UriHelper;
  */
 public class LocalWireCommandGenerator implements AddCommandGenerator {
 
-    private final PhysicalWireGenerator physicalWireGenerator;
-    private final LogicalComponentManager logicalComponentManager;
-    private final int order;
+    private PhysicalWireGenerator physicalWireGenerator;
+    private LogicalComponentManager applicationLCM;
+    private LogicalComponentManager runtimeLCM;
+    private int order;
 
+    /**
+     * Constructor used during bootstrap.
+     *
+     * @param physicalWireGenerator the bootstrap physical wire generator
+     * @param runtimeLCM            the bootstrap LogicalComponentManager
+     * @param order                 the order value for commands generated
+     */
+    public LocalWireCommandGenerator(PhysicalWireGenerator physicalWireGenerator, LogicalComponentManager runtimeLCM, int order) {
+        this.physicalWireGenerator = physicalWireGenerator;
+        this.runtimeLCM = runtimeLCM;
+        this.order = order;
+    }
+
+    /**
+     * Constructor used for instantiation after bootstrap. After bootstrap on a controller instance, two domains will be active: the runtime domain
+     * containing system components and the application domain containing end-user components. On runtime nodes, the application domain may not be
+     * active, in which case a null value may be injected.
+     *
+     * @param physicalWireGenerator the bootstrap physical wire generator
+     * @param runtimeLCM            the LogicalComponentManager associated with the runtime domain
+     * @param applicationLCM        the LogicalComponentManager associated with the application domain
+     * @param order                 the order value for commands generated
+     */
+    @Constructor
     public LocalWireCommandGenerator(@Reference PhysicalWireGenerator physicalWireGenerator,
-                                     @Reference(name = "logicalComponentManager")LogicalComponentManager logicalComponentManager,
+                                     @Reference(name = "runtimeLCM")LogicalComponentManager runtimeLCM,
+                                     @Reference(name = "applicationLCM")LogicalComponentManager applicationLCM,
                                      @Property(name = "order")int order) {
         this.physicalWireGenerator = physicalWireGenerator;
-        this.logicalComponentManager = logicalComponentManager;
+        this.runtimeLCM = runtimeLCM;
+        this.applicationLCM = applicationLCM;
         this.order = order;
     }
 
@@ -85,9 +114,13 @@ public class LocalWireCommandGenerator implements AddCommandGenerator {
 
             URI uri = logicalWire.getTargetUri();
             String serviceName = uri.getFragment();
-
-            LogicalComponent<?> target = logicalComponentManager.getComponent(uri);
-
+            LogicalComponent<?> target;
+            if (uri.toString().startsWith(ComponentNames.RUNTIME_NAME)) {
+                target = runtimeLCM.getComponent(uri);
+            } else {
+                target = applicationLCM.getComponent(uri);
+            }
+            assert target != null;
             LogicalService targetService = target.getService(serviceName);
 
             assert targetService != null;

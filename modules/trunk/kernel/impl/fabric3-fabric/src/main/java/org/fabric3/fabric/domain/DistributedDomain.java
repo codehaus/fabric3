@@ -39,14 +39,14 @@ import org.fabric3.spi.services.lcm.RecoveryException;
 public class DistributedDomain extends AbstractDomain implements Domain {
     private LogicalComponentManager logicalComponentManager;
 
-    public DistributedDomain(@Reference Allocator allocator,
-                             @Reference(name = "store")MetaDataStore metaDataStore,
+    public DistributedDomain(@Reference(name = "store")MetaDataStore metaDataStore,
+                             @Reference(name = "logicalComponentManager")LogicalComponentManager logicalComponentManager,
+                             @Reference Allocator allocator,
                              @Reference PhysicalModelGenerator physicalModelGenerator,
                              @Reference LogicalModelInstantiator logicalModelInstantiator,
                              @Reference BindingSelector bindingSelector,
-                             @Reference(name = "logicalComponentManager")LogicalComponentManager logicalComponentManager,
                              @Reference RoutingService routingService) {
-        super(allocator, metaDataStore, physicalModelGenerator, logicalModelInstantiator, logicalComponentManager, bindingSelector, routingService);
+        super(metaDataStore, logicalComponentManager, allocator, physicalModelGenerator, logicalModelInstantiator, bindingSelector, routingService);
         this.logicalComponentManager = logicalComponentManager;
     }
 

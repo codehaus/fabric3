@@ -99,23 +99,25 @@ public class CompositeLoader implements TypeLoader<Composite> {
      * @param includeLoader   loader for include elements
      * @param propertyLoader  loader for composite property elements
      * @param componentLoader loader for component elements
+     * @param wireLoader      loader for wire elements
      * @param loaderHelper    helper
      */
     public CompositeLoader(Loader loader,
                            TypeLoader<Include> includeLoader,
                            TypeLoader<Property> propertyLoader,
                            TypeLoader<ComponentDefinition<?>> componentLoader,
+                           TypeLoader<WireDefinition> wireLoader,
                            LoaderHelper loaderHelper) {
         this.loader = loader;
         this.includeLoader = includeLoader;
         this.propertyLoader = propertyLoader;
         this.componentLoader = componentLoader;
+        this.wireLoader = wireLoader;
         this.loaderHelper = loaderHelper;
 
         this.registry = null;
         this.serviceLoader = null;
         this.referenceLoader = null;
-        this.wireLoader = null;
     }
 
     /**

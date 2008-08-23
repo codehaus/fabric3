@@ -22,13 +22,12 @@ import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.fabric.command.BuildComponentCommand;
-import org.fabric3.fabric.implementation.singleton.SingletonImplementation;
 import org.fabric3.scdl.Implementation;
 import org.fabric3.spi.generator.AddCommandGenerator;
 import org.fabric3.spi.generator.ComponentGenerator;
 import org.fabric3.spi.generator.GenerationException;
-import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.generator.GeneratorNotFoundException;
+import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
@@ -55,9 +54,7 @@ public class BuildComponentCommandGenerator implements AddCommandGenerator {
     @SuppressWarnings("unchecked")
     public BuildComponentCommand generate(LogicalComponent<?> component) throws GenerationException {
         Implementation<?> implementation = component.getDefinition().getImplementation();
-        if (!(component instanceof LogicalCompositeComponent)
-                && !component.isProvisioned()
-                && !implementation.isType(SingletonImplementation.IMPLEMENTATION_SINGLETON)) {
+        if (!(component instanceof LogicalCompositeComponent) && !component.isProvisioned()) {
             Class<? extends Implementation> type = implementation.getClass();
             ComponentGenerator generator = generatorRegistry.getComponentGenerator(type);
             if (generator == null) {

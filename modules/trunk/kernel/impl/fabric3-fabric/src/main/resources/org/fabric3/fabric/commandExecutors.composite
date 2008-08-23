@@ -31,8 +31,6 @@
         <system:implementation.system class="org.fabric3.fabric.executor.CommandExecutorRegistryImpl"/>
     </component>
 
-
-    
     <component name="classloaderProvisionCommandExecutor">
         <system:implementation.system class="org.fabric3.fabric.executor.ProvisionClassloaderCommandExecutor"/>
     </component>
@@ -48,7 +46,7 @@
     <component name="componentStartCommandExecutor">
         <system:implementation.system class="org.fabric3.fabric.executor.StartComponentCommandExecutor"/>
     </component>
-    
+
     <component name="startCompositeContextCommandExecutor">
         <system:implementation.system class="org.fabric3.fabric.executor.StartCompositeContextCommandExecutor"/>
     </component>
@@ -73,5 +71,5 @@
         <system:implementation.system class="org.fabric3.fabric.executor.UnprovisionClassloaderCommandExecutor"/>
     </component>
 
-    
+
 </composite>

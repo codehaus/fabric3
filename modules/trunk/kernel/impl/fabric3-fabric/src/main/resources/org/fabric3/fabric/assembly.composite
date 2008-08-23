@@ -26,6 +26,12 @@
            name="assembly" targetNamespace="urn:maven:org.codehaus.fabric3:fabric3-fabric"
            autowire="true">
 
+    <component name="RuntimeRoutingService">
+        <system:implementation.system class="org.fabric3.fabric.services.routing.RuntimeRoutingService"/>
+    </component>
+    <!-- this wire reinjects the routing service into the RuntimeDomain -->
+    <wire source="RuntimeAssembly/routingService" target="RuntimeRoutingService"/>
+
     <component name="logicalModelGenerator">
         <system:implementation.system class="org.fabric3.fabric.instantiator.LogicalModelInstantiatorImpl"/>
         <reference name="atomicComponentInstantiator" target="atomicComponentInstantiator"/>

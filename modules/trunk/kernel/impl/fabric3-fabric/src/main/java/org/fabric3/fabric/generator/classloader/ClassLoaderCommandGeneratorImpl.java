@@ -172,9 +172,9 @@ public class ClassLoaderCommandGeneratorImpl implements ClassLoaderCommandGenera
             throws GenerationException {
         for (LogicalComponent<?> component : components) {
             URI classLoaderUri = component.getClassLoaderId();
-            // XCV FIXME classloaderID is null for system components passed by the runtime. need to set in bootstrapper
-            if (classLoaderUri == null) {
-                classLoaderUri = URI.create(ComponentNames.RUNTIME_NAME);
+            if (ComponentNames.BOOT_CLASSLOADER_ID.equals(classLoaderUri)) {
+                // skip provisioning for the boot classloader
+                continue;
             }
             PhysicalClassLoaderDefinition definition = new PhysicalClassLoaderDefinition(classLoaderUri);
             LogicalComponent<CompositeImplementation> grandParent = component.getParent().getParent();
