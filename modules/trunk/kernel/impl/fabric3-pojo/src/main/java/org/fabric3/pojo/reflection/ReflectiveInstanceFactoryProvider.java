@@ -87,7 +87,6 @@ public class ReflectiveInstanceFactoryProvider<T> implements InstanceFactoryProv
             setUpdateableFactory(name, objectFactory, key);
         } else {
             // the factory corresponds to a property or context, which will override previous values if reinjected
-            // XCV resources are injected twice
             factories.put(name, objectFactory);
         }
     }
