@@ -140,10 +140,6 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
         systemImplementationProcessor = BootstrapLoaderFactory.createSystemImplementationProcessor();
     }
 
-    public URL getScdlLocation() {
-        return scdlLocation;
-    }
-
     public void setScdlLocation(URL scdlLocation) {
         this.scdlLocation = scdlLocation;
     }
@@ -167,12 +163,6 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
         // register the classloaders
         registerClassLoaders(runtime, bootClassLoader, appClassLoader);
 
-    }
-
-    private LogicalCompositeComponent getDomain(Fabric3Runtime<?> runtime) {
-        RuntimeServices runtimeServices = (RuntimeServices) runtime;
-        LogicalComponentManager logicalComponentManager = runtimeServices.getLogicalComponentManager();
-        return logicalComponentManager.getRootComponent();
     }
 
     public void bootSystem(Fabric3Runtime<?> runtime) throws InitializationException {
@@ -214,6 +204,12 @@ public class ScdlBootstrapperImpl implements ScdlBootstrapper {
             throw new InitializationException(e);
         }
 
+    }
+
+    private LogicalCompositeComponent getDomain(Fabric3Runtime<?> runtime) {
+        RuntimeServices runtimeServices = (RuntimeServices) runtime;
+        LogicalComponentManager logicalComponentManager = runtimeServices.getLogicalComponentManager();
+        return logicalComponentManager.getRootComponent();
     }
 
     private <T extends HostInfo> void registerRuntimeComponents(Fabric3Runtime<T> runtime) throws InitializationException {
