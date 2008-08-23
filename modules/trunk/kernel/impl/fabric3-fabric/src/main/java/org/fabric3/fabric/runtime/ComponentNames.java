@@ -44,8 +44,6 @@ public final class ComponentNames {
 
     public static final URI EVENT_SERVICE_URI = URI.create(RUNTIME_NAME + "/eventService");
 
-    public static final URI WORK_SCHEDULER_URI = URI.create(RUNTIME_NAME + "/workScheduler");
-
     public static final URI DISCOVERY_SERVICE_URI = URI.create(RUNTIME_NAME + "/DiscoveryService");
 
     public static final URI CONTRIBUTION_SERVICE_URI = URI.create(RUNTIME_NAME + "/ContributionService");
@@ -56,11 +54,7 @@ public final class ComponentNames {
 
     public static final URI DEFINITIONS_REGISTRY = URI.create(RUNTIME_NAME + "/definitionsRegistry");
 
-    public static final URI CONTRIBUTION_STORE_URI = URI.create(RUNTIME_NAME + "/ContributionStore");
-
     public static final URI METADATA_STORE_URI = URI.create(RUNTIME_NAME + "/MetaDataStore");
-
-    public static final URI PROCESSOR_REGISTY_URI = URI.create(RUNTIME_NAME + "/ContributionProcessorRegistry");
 
     public static final URI XML_MANIFEST_PROCESSOR = URI.create(RUNTIME_NAME + "/XmlManifestProcessor");
 
