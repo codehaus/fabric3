@@ -66,7 +66,7 @@ public class DefaultComponentBuilderRegistry implements ComponentBuilderRegistry
 
         ComponentBuilder builder = registry.get(componentDefinition.getClass());
         if (builder == null) {
-            throw new BuilderNotFoundException("Builder not found for ", componentDefinition.getClass().getName());
+            throw new BuilderNotFoundException("Builder not found for " + componentDefinition.getClass().getName());
         }
         return builder.build(componentDefinition);
 
