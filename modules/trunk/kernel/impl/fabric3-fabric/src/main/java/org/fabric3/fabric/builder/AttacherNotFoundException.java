@@ -21,31 +21,17 @@ package org.fabric3.fabric.builder;
 import org.fabric3.spi.builder.BuilderException;
 
 /**
- * Represents an error processing an assembly model
- *
  * @version $Rev$ $Date$
  */
-public class BuilderNoutFoundException extends BuilderException {
+public class AttacherNotFoundException extends BuilderException {
     private static final long serialVersionUID = 2604579115547966762L;
 
-    public BuilderNoutFoundException() {
+    public AttacherNotFoundException() {
         super();
     }
 
-    public BuilderNoutFoundException(String message) {
+    public AttacherNotFoundException(String message) {
         super(message);
-    }
-
-    public BuilderNoutFoundException(String message, String identifier) {
-        super(message, identifier);
-    }
-
-    public BuilderNoutFoundException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
-    public BuilderNoutFoundException(Throwable cause) {
-        super(cause);
     }
 
 }

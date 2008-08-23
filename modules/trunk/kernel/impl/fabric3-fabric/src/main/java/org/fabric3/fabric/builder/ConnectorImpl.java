@@ -69,9 +69,14 @@ public class ConnectorImpl implements Connector {
     public void connect(PhysicalWireDefinition definition) throws BuilderException {
         PhysicalWireSourceDefinition sourceDefinition = definition.getSource();
         SourceWireAttacher<PhysicalWireSourceDefinition> sourceAttacher = getAttacher(sourceDefinition);
-
+        if (sourceAttacher == null) {
+            throw new AttacherNotFoundException("Source attacher not found for type: " + sourceDefinition.getClass());
+        }
         PhysicalWireTargetDefinition targetDefinition = definition.getTarget();
         TargetWireAttacher<PhysicalWireTargetDefinition> targetAttacher = getAttacher(targetDefinition);
+        if (targetAttacher == null) {
+            throw new AttacherNotFoundException("Target attacher not found for type: " + targetDefinition.getClass());
+        }
 
         if (definition.isOptimizable()) {
             ObjectFactory<?> objectFactory = targetAttacher.createObjectFactory(targetDefinition);
