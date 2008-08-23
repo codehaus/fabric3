@@ -31,6 +31,7 @@ import javax.management.MBeanOperationInfo;
 import javax.management.MBeanServer;
 import javax.management.ObjectName;
 
+import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Reference;
 
@@ -46,16 +47,17 @@ import org.fabric3.spi.wire.Wire;
 /**
  * @version $Rev$ $Date$
  */
+@EagerInit
 public class JMXWireAttacher implements SourceWireAttacher<JMXWireSourceDefinition> {
-	
-	private static final String DOMAIN = "f3-management";
+
+    private static final String DOMAIN = "f3-management";
     private final MBeanServer mBeanServer;
     private final ClassLoaderRegistry classLoaderRegistry;
     private final String subDomain;
 
     public JMXWireAttacher(@Reference MBeanServer mBeanServer,
                            @Reference ClassLoaderRegistry classLoaderRegistry,
-                           @Property(name = "subDomain") String subDomain) {
+                           @Property(name = "subDomain")String subDomain) {
         this.mBeanServer = mBeanServer;
         this.classLoaderRegistry = classLoaderRegistry;
         this.subDomain = subDomain;
@@ -83,7 +85,7 @@ public class JMXWireAttacher implements SourceWireAttacher<JMXWireSourceDefiniti
             ObjectName name = new ObjectName(DOMAIN + ":SubDomain=" + subDomain + ",type=service,component=\"" + component + "\",service=" + service);
             OptimizedMBean<?> mbean = createOptimizedMBean(objectFactory, managementInterface);
             if (!mBeanServer.isRegistered(name)) {
-            	mBeanServer.registerMBean(mbean, name);
+                mBeanServer.registerMBean(mbean, name);
             }
         } catch (JMException e) {
             throw new WiringException(e);

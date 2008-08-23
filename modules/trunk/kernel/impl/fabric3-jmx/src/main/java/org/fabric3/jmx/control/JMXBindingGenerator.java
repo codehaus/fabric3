@@ -18,6 +18,8 @@ package org.fabric3.jmx.control;
 
 import java.net.URI;
 
+import org.osoa.sca.annotations.EagerInit;
+
 import org.fabric3.jmx.provision.JMXWireSourceDefinition;
 import org.fabric3.jmx.scdl.JMXBinding;
 import org.fabric3.scdl.ReferenceDefinition;
@@ -33,6 +35,7 @@ import org.fabric3.spi.policy.Policy;
 /**
  * @version $Rev$ $Date$
  */
+@EagerInit
 public class JMXBindingGenerator implements BindingGenerator<JMXWireSourceDefinition, PhysicalWireTargetDefinition, JMXBinding> {
 
     public JMXWireSourceDefinition generateWireSource(LogicalBinding<JMXBinding> binding, Policy policy, ServiceDefinition serviceDefinition)
