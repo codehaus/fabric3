@@ -111,7 +111,7 @@ public abstract class AbstractBootstrapper implements Bootstrapper {
         systemImplementationProcessor = BootstrapIntrospectionFactory.createSystemImplementationProcessor();
     }
 
-    public void bootPrimordial(Fabric3Runtime<?> runtime, ClassLoader bootClassLoader, ClassLoader appClassLoader) throws InitializationException {
+    public void bootRuntimeDomain(Fabric3Runtime<?> runtime, ClassLoader bootClassLoader, ClassLoader appClassLoader) throws InitializationException {
 
         this.bootClassLoader = bootClassLoader;
         // classloader shared by extension and application classes

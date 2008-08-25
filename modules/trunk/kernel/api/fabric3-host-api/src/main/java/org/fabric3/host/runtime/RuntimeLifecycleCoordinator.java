@@ -22,7 +22,7 @@ import java.util.concurrent.Future;
  * Implementations manage the lifecycle for a runtime type. This involves transitioning through a series of states:
  * <pre>
  * <ul>
- *      <li>BOOT PRIMORDIAL - the runtime is booted with primordial system components.
+ *      <li>BOOT PRIMORDIAL - the runtime is booted with and its domain containing system components is initialized.
  *      <li>INITIALIZE - extensions are registered and activated in the local runtime domain.
  *      <li>JOIN DOMIAN - the runtime instance discoveres and joins an application domain.
  *      <li>RECOVER - the runtime recovers and synchronizes its state with the application domain.

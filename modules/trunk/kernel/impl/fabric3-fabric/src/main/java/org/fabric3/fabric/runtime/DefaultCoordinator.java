@@ -117,7 +117,7 @@ public class DefaultCoordinator<RUNTIME extends Fabric3Runtime<?>, BOOTSTRAPPER 
         }
         try {
             runtime.initialize();
-            bootstrapper.bootPrimordial(runtime, bootClassLoader, appClassLoader);
+            bootstrapper.bootRuntimeDomain(runtime, bootClassLoader, appClassLoader);
             ScopeRegistry scopeRegistry = runtime.getSystemComponent(ScopeRegistry.class, SCOPE_REGISTRY_URI);
             ScopeContainer<URI> container = scopeRegistry.getScopeContainer(Scope.COMPOSITE);
 
