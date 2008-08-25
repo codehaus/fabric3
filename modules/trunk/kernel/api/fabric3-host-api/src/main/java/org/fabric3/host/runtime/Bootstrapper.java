@@ -17,13 +17,14 @@
 package org.fabric3.host.runtime;
 
 /**
- * Interface for mechanisms that are able to bootstrap a runtime.
+ * Implementations bootstrap a runtime in two phases. The primordial phase initializes the essential services required to load the core runtime
+ * services. The second phase initializes the core runtime services.
  *
  * @version $Rev$ $Date$
  */
 public interface Bootstrapper {
     /**
-     * Bootstrap the supplied runtime and register the primordial system components.
+     * Iniitialize the supplied runtime and and its primordial system components.
      *
      * @param runtime         the runtime to boot
      * @param bootClassLoader the bootstrap classloader
@@ -34,11 +35,10 @@ public interface Bootstrapper {
             throws InitializationException;
 
     /**
-     * Boot and register the system components for the supplied runtime.
+     * Initialize the core system components for the supplied runtime.
      *
-     * @param runtime the runtime to boot
      * @throws InitializationException if there was a problem bootstrapping the runtime
      */
-    public void bootSystem(Fabric3Runtime<?> runtime) throws InitializationException;
+    public void bootSystem() throws InitializationException;
 
 }

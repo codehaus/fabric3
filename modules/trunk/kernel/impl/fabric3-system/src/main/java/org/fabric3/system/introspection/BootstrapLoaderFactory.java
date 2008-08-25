@@ -16,31 +16,10 @@
  */
 package org.fabric3.system.introspection;
 
-import java.lang.annotation.Annotation;
 import java.util.HashMap;
 import java.util.Map;
 import javax.xml.namespace.QName;
 
-import org.osoa.sca.annotations.Destroy;
-import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Init;
-import org.osoa.sca.annotations.Property;
-import org.osoa.sca.annotations.Reference;
-
-import org.fabric3.api.annotation.Monitor;
-import org.fabric3.introspection.IntrospectionHelper;
-import org.fabric3.introspection.contract.ContractProcessor;
-import org.fabric3.introspection.impl.DefaultClassWalker;
-import org.fabric3.introspection.impl.DefaultIntrospectionHelper;
-import org.fabric3.introspection.impl.annotation.DestroyProcessor;
-import org.fabric3.introspection.impl.annotation.EagerInitProcessor;
-import org.fabric3.introspection.impl.annotation.InitProcessor;
-import org.fabric3.introspection.impl.annotation.MonitorProcessor;
-import org.fabric3.introspection.impl.annotation.PropertyProcessor;
-import org.fabric3.introspection.impl.annotation.ReferenceProcessor;
-import org.fabric3.introspection.impl.contract.DefaultContractProcessor;
-import org.fabric3.introspection.java.AnnotationProcessor;
-import org.fabric3.introspection.java.ClassWalker;
 import org.fabric3.introspection.xml.Loader;
 import org.fabric3.introspection.xml.LoaderHelper;
 import org.fabric3.introspection.xml.TypeLoader;
@@ -61,39 +40,18 @@ import org.fabric3.system.scdl.SystemImplementation;
 /**
  * Factory class for an implementation of Loader that can handle system SCDL.
  * <p/>
- * This loader can handle a constrained version of SCDL for bootstrapping a runtime. The constraints are: <ul> <li>The only implementation type
- * allowed is system</li> <li>The only service contract type is a Java interface found through introspection</li> <li>Resolution of SCDL artifacts by
- * QName is not supported; scdlLocation or scdlResource must be used</li> </ul>
+ * This loader can handle a constrained version of SCDL for bootstrapping a runtime. The constraints are:
+ * <pre>
+ * <ul>
+ * <li>The only implementation type allowed is system</li>
+ * <li>The only service contract type is a Java interface found through introspection</li>
+ * <li>Resolution of SCDL artifacts by QName is not supported; scdlLocation or scdlResource must be used</li>
+ * </ul>
+ * </pre>
  *
  * @version $Rev$ $Date$
  */
 public class BootstrapLoaderFactory {
-
-    public static SystemImplementationProcessor createSystemImplementationProcessor() {
-        IntrospectionHelper helper = new DefaultIntrospectionHelper();
-        ContractProcessor contractProcessor = new DefaultContractProcessor(helper);
-
-        Map<Class<? extends Annotation>, AnnotationProcessor<? extends Annotation, SystemImplementation>> processors =
-                new HashMap<Class<? extends Annotation>, AnnotationProcessor<? extends Annotation, SystemImplementation>>();
-
-        // no constructor processor is needed as that is handled by heuristics
-        processors.put(Property.class, new PropertyProcessor<SystemImplementation>(helper));
-        processors.put(Reference.class, new ReferenceProcessor<SystemImplementation>(contractProcessor, helper));
-        processors.put(EagerInit.class, new EagerInitProcessor<SystemImplementation>());
-        processors.put(Init.class, new InitProcessor<SystemImplementation>());
-        processors.put(Destroy.class, new DestroyProcessor<SystemImplementation>());
-        processors.put(Monitor.class, new MonitorProcessor<SystemImplementation>(helper, contractProcessor));
-
-        ClassWalker<SystemImplementation> classWalker = new DefaultClassWalker<SystemImplementation>(processors);
-
-        // heuristics for system components
-        SystemServiceHeuristic serviceHeuristic = new SystemServiceHeuristic(contractProcessor, helper);
-        SystemConstructorHeuristic constructorHeuristic = new SystemConstructorHeuristic();
-        SystemUnannotatedHeuristic unannotatedHeuristic = new SystemUnannotatedHeuristic(helper, contractProcessor);
-        SystemHeuristic systemHeuristic = new SystemHeuristic(serviceHeuristic, constructorHeuristic, unannotatedHeuristic);
-
-        return new SystemImplementationProcessorImpl(classWalker, systemHeuristic, helper);
-    }
 
     public static Loader createLoader(SystemImplementationProcessor processor, MonitorFactory monitorFactory, XMLFactory xmlFactory) {
 
@@ -108,7 +66,8 @@ public class BootstrapLoaderFactory {
         loaders.put(CompositeLoader.COMPOSITE, compositeLoader(loader, wireLoader, loaderHelper));
 
         // loader for <implementation.system> element
-        loaders.put(SystemImplementation.IMPLEMENTATION_SYSTEM, systemImplementation(processor));
+        SystemImplementationLoader systemLoader = new SystemImplementationLoader(processor);
+        loaders.put(SystemImplementation.IMPLEMENTATION_SYSTEM, systemLoader);
 
         loaders.put(CompositeLoader.WIRE, wireLoader);
 
@@ -120,7 +79,6 @@ public class BootstrapLoaderFactory {
         PropertyLoader propertyLoader = new PropertyLoader(loaderHelper);
         PropertyValueLoader propertyValueLoader = new PropertyValueLoader(loaderHelper);
 
-
         ComponentReferenceLoader componentReferenceLoader = new ComponentReferenceLoader(loader, loaderHelper);
         ComponentServiceLoader componentServiceLoader = new ComponentServiceLoader(loader, loaderHelper);
         ComponentLoader componentLoader = new ComponentLoader(loader,
@@ -131,10 +89,6 @@ public class BootstrapLoaderFactory {
 
         IncludeLoader includeLoader = new IncludeLoader(loader, null);
         return new CompositeLoader(loader, includeLoader, propertyLoader, componentLoader, wireLoader, loaderHelper);
-    }
-
-    private static SystemImplementationLoader systemImplementation(SystemImplementationProcessor processor) {
-        return new SystemImplementationLoader(processor);
     }
 
 

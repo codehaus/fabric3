@@ -146,7 +146,7 @@ public class DefaultCoordinator<RUNTIME extends Fabric3Runtime<?>, BOOTSTRAPPER 
             throw new IllegalStateException("Not in PRIMORDIAL state");
         }
         // initialize core system components
-        bootstrapper.bootSystem(runtime);
+        bootstrapper.bootSystem();
 
         synthesizeBootContribution();
 

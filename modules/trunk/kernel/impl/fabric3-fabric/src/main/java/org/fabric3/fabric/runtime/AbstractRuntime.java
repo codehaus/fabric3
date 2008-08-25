@@ -43,13 +43,10 @@ import org.fabric3.spi.component.InstanceLifecycleException;
 import org.fabric3.spi.component.InstanceWrapper;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.ScopeRegistry;
-import org.fabric3.spi.invocation.WorkContext;
 import org.fabric3.spi.invocation.CallFrame;
-import org.fabric3.spi.model.instance.LogicalComponent;
-import org.fabric3.spi.model.instance.LogicalCompositeComponent;
+import org.fabric3.spi.invocation.WorkContext;
 import org.fabric3.spi.runtime.RuntimeServices;
 import org.fabric3.spi.services.componentmanager.ComponentManager;
-import org.fabric3.spi.services.componentmanager.RegistrationException;
 import org.fabric3.spi.services.event.EventService;
 import org.fabric3.spi.services.event.RuntimeStart;
 import org.fabric3.spi.services.lcm.LogicalComponentManager;
@@ -62,7 +59,6 @@ import org.fabric3.spi.services.lcm.RecoveryException;
 public abstract class AbstractRuntime<HI extends HostInfo> implements Fabric3Runtime<HI>, RuntimeServices {
 	
     private String applicationName;
-    private URL applicationScdl;
     private Class<HI> hostInfoType;
     private MBeanServer mbServer;
     private String jmxSubDomain;
@@ -111,14 +107,6 @@ public abstract class AbstractRuntime<HI extends HostInfo> implements Fabric3Run
 
     public void setApplicationName(String applicationName) {
         this.applicationName = applicationName;
-    }
-
-    public URL getApplicationScdl() {
-        return applicationScdl;
-    }
-
-    public void setApplicationScdl(URL applicationScdl) {
-        this.applicationScdl = applicationScdl;
     }
 
     public ClassLoader getHostClassLoader() {
@@ -193,13 +181,6 @@ public abstract class AbstractRuntime<HI extends HostInfo> implements Fabric3Run
         CallFrame frame = new CallFrame(ComponentNames.RUNTIME_URI);
         workContext.addCallFrame(frame);
         scopeContainer.stopContext(workContext);
-    }
-
-    public void registerComponent(LogicalComponent<?> logical, AtomicComponent<?> physical) throws RegistrationException {
-        LogicalCompositeComponent domain = logicalComponentManager.getRootComponent();
-        domain.addComponent(logical);
-        componentManager.register(physical);
-        scopeContainer.register(physical);
     }
 
     public <I> I getSystemComponent(Class<I> service, URI uri) {

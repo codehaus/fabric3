@@ -16,18 +16,14 @@
  */
 package org.fabric3.spi.runtime;
 
-import org.fabric3.spi.component.AtomicComponent;
 import org.fabric3.spi.component.ScopeContainer;
-import org.fabric3.spi.model.instance.LogicalComponent;
-import org.fabric3.spi.services.lcm.LogicalComponentManager;
 import org.fabric3.spi.services.componentmanager.ComponentManager;
-import org.fabric3.spi.services.componentmanager.RegistrationException;
+import org.fabric3.spi.services.lcm.LogicalComponentManager;
 
 /**
  * Interface for accessing primordial services provided by a runtime.
  * <p/>
- * These are the primoridal services that should be provided by all runtime implementations for use by other runtime
- * components.
+ * These are the primoridal services that should be provided by all runtime implementations for use by other runtime components.
  *
  * @version $Rev$ $Date$
  */
@@ -54,12 +50,4 @@ public interface RuntimeServices {
      */
     ScopeContainer<?> getScopeContainer();
 
-    /**
-     * Register a primordial component with the runtime.
-     *
-     * @param logical  the logical model of the component
-     * @param physical the physical container for the component
-     * @throws RegistrationException if there was a problem registering the component
-     */
-    void registerComponent(LogicalComponent<?> logical, AtomicComponent<?> physical) throws RegistrationException;
 }

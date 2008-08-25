@@ -175,7 +175,7 @@ public class BootstrapAssemblyFactory {
                             runtime.getHostInfo());
     }
 
-    public static Domain createDomain(MonitorFactory monitorFactory,
+    private static Domain createDomain(MonitorFactory monitorFactory,
                                       ClassLoaderRegistry classLoaderRegistry,
                                       ScopeRegistry scopeRegistry,
                                       ComponentManager componentManager,
