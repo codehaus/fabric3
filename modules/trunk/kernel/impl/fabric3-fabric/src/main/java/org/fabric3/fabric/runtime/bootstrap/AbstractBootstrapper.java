@@ -21,7 +21,6 @@ import javax.management.MBeanServer;
 
 import org.w3c.dom.Document;
 
-import org.fabric3.fabric.component.scope.ScopeRegistryImpl;
 import org.fabric3.fabric.implementation.singleton.SingletonComponent;
 import org.fabric3.fabric.implementation.singleton.SingletonImplementation;
 import org.fabric3.fabric.instantiator.LogicalChange;
@@ -31,10 +30,6 @@ import org.fabric3.fabric.runtime.ComponentNames;
 import static org.fabric3.fabric.runtime.ComponentNames.APPLICATION_CLASSLOADER_ID;
 import static org.fabric3.fabric.runtime.ComponentNames.BOOT_CLASSLOADER_ID;
 import static org.fabric3.fabric.runtime.ComponentNames.RUNTIME_URI;
-import org.fabric3.fabric.services.classloading.ClassLoaderRegistryImpl;
-import org.fabric3.fabric.services.contribution.ClasspathProcessorRegistryImpl;
-import org.fabric3.fabric.services.contribution.MetaDataStoreImpl;
-import org.fabric3.fabric.services.contribution.ProcessorRegistryImpl;
 import org.fabric3.fabric.services.documentloader.DocumentLoader;
 import org.fabric3.fabric.services.documentloader.DocumentLoaderImpl;
 import org.fabric3.host.domain.AssemblyException;
@@ -71,9 +66,7 @@ import org.fabric3.spi.runtime.RuntimeServices;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.services.componentmanager.ComponentManager;
 import org.fabric3.spi.services.componentmanager.RegistrationException;
-import org.fabric3.spi.services.contribution.ClasspathProcessorRegistry;
 import org.fabric3.spi.services.contribution.MetaDataStore;
-import org.fabric3.spi.services.contribution.ProcessorRegistry;
 import org.fabric3.spi.services.lcm.LogicalComponentManager;
 import org.fabric3.system.introspection.BootstrapIntrospectionFactory;
 import org.fabric3.system.introspection.SystemImplementationProcessor;
@@ -88,59 +81,72 @@ public abstract class AbstractBootstrapper implements Bootstrapper {
 
     private static final URI HOST_CLASSLOADER_ID = URI.create("sca://./hostClassLoader");
 
-    // runtime components
-    private final ClassLoaderRegistry classLoaderRegistry;
-    private final ProcessorRegistry processorRegistry;
-    private final ContractProcessor interfaceProcessorRegistry;
-    private final MetaDataStore metaDataStore;
-    private final ScopeRegistry scopeRegistry;
-    private LogicalCompositeComponent domain;
-    private ComponentManager componentManager;
-    private ScopeContainer<?> scopeContainer;
-
-    private MonitorFactory monitorFactory;
-    private Domain runtimeDomain;
-
     // bootstrap components
+    private final ContractProcessor interfaceProcessorRegistry;
     private final ComponentInstantiator instantiator;
     private final SystemImplementationProcessor systemImplementationProcessor;
 
+    // runtime components
+    private MonitorFactory monitorFactory;
+    private HostInfo hostInfo;
+    private ClassLoaderRegistry classLoaderRegistry;
+    private MetaDataStore metaDataStore;
+    private ScopeRegistry scopeRegistry;
+    private LogicalCompositeComponent domain;
+    private LogicalComponentManager logicalComponetManager;
+    private ComponentManager componentManager;
+    private ScopeContainer<?> scopeContainer;
+
+    private Domain runtimeDomain;
+
     private ClassLoader bootClassLoader;
+    private ClassLoader hostClassLoader;
 
     protected AbstractBootstrapper() {
-        classLoaderRegistry = new ClassLoaderRegistryImpl();
-        processorRegistry = new ProcessorRegistryImpl();
+        // create components needed for to bootstrap the runtime
         IntrospectionHelper helper = new DefaultIntrospectionHelper();
         interfaceProcessorRegistry = new DefaultContractProcessor(helper);
-        metaDataStore = new MetaDataStoreImpl(classLoaderRegistry, processorRegistry);
-        scopeRegistry = new ScopeRegistryImpl();
-
         DocumentLoader documentLoader = new DocumentLoaderImpl();
         instantiator = new AtomicComponentInstantiator(documentLoader);
         systemImplementationProcessor = BootstrapIntrospectionFactory.createSystemImplementationProcessor();
     }
 
-    public void bootPrimordial(Fabric3Runtime<?> runtime, ClassLoader bootClassLoader, ClassLoader appClassLoader)
-            throws InitializationException {
+    public void bootPrimordial(Fabric3Runtime<?> runtime, ClassLoader bootClassLoader, ClassLoader appClassLoader) throws InitializationException {
 
         this.bootClassLoader = bootClassLoader;
+        // classloader shared by extension and application classes
+        this.hostClassLoader = runtime.getHostClassLoader();
 
         monitorFactory = runtime.getMonitorFactory();
+        hostInfo = runtime.getHostInfo();
 
-        //TODO REMOVE this cast
         RuntimeServices runtimeServices = (RuntimeServices) runtime;
-        LogicalComponentManager lcm = runtimeServices.getLogicalComponentManager();
-        domain = lcm.getRootComponent();
+        logicalComponetManager = runtimeServices.getLogicalComponentManager();
         componentManager = runtimeServices.getComponentManager();
+        domain = logicalComponetManager.getRootComponent();
+        classLoaderRegistry = runtimeServices.getClassLoaderRegistry();
+        metaDataStore = runtimeServices.getMetaDataStore();
+        scopeRegistry = runtimeServices.getScopeRegistry();
         scopeContainer = runtimeServices.getScopeContainer();
+
         // register primordial components provided by the runtime itself
         registerRuntimeComponents(runtime);
 
+        runtimeDomain = BootstrapAssemblyFactory.createDomain(monitorFactory,
+                                                              classLoaderRegistry,
+                                                              scopeRegistry,
+                                                              componentManager,
+                                                              logicalComponetManager,
+                                                              metaDataStore,
+                                                              runtime.getMBeanServer(),
+                                                              runtime.getJMXSubDomain(),
+                                                              hostInfo);
+
         // create and register bootstrap components provided by this bootstrapper
-        registerBootstrapComponents(runtime);
+        registerDomain(runtime);
 
         // register the classloaders
-        registerClassLoaders(runtime, bootClassLoader, appClassLoader);
+        registerClassLoaders(bootClassLoader, appClassLoader);
 
     }
 
@@ -202,10 +208,9 @@ public abstract class AbstractBootstrapper implements Bootstrapper {
     protected abstract Document loadSystemConfig();
 
     private <T extends HostInfo> void registerRuntimeComponents(Fabric3Runtime<T> runtime) throws InitializationException {
-        RuntimeServices runtimeServices = (RuntimeServices) runtime;
 
         // services available through the outward facing Fabric3Runtime API
-        registerComponent("MonitorFactory", MonitorFactory.class, runtime.getMonitorFactory(), true);
+        registerComponent("MonitorFactory", MonitorFactory.class, monitorFactory, true);
         registerComponent("HostInfo", runtime.getHostInfoType(), runtime.getHostInfo(), true);
         MBeanServer mbServer = runtime.getMBeanServer();
         if (mbServer != null) {
@@ -214,46 +219,34 @@ public abstract class AbstractBootstrapper implements Bootstrapper {
         registerComponent("WorkScheduler", WorkScheduler.class, runtime.getWorkScheduler(), false);
 
         // services available through the inward facing RuntimeServices SPI
-        ComponentManager componentManager = runtimeServices.getComponentManager();
-        LogicalComponentManager logicalCM = runtimeServices.getLogicalComponentManager();
-        ScopeContainer<?> scopeContainer = runtimeServices.getScopeContainer();
         registerComponent("ComponentManager", ComponentManager.class, componentManager, true);
-        registerComponent("RuntimeLogicalComponentManager", LogicalComponentManager.class, logicalCM, true);
+        registerComponent("RuntimeLogicalComponentManager", LogicalComponentManager.class, logicalComponetManager, true);
         registerComponent("CompositeScopeContainer", ScopeContainer.class, scopeContainer, true);
-    }
-
-    private void registerBootstrapComponents(Fabric3Runtime<?> runtime) throws InitializationException {
-
-        RuntimeServices runtimeServices = (RuntimeServices) runtime;
-
         registerComponent("ClassLoaderRegistry", ClassLoaderRegistry.class, classLoaderRegistry, true);
 
-        scopeRegistry.register(runtimeServices.getScopeContainer());
         registerComponent("ScopeRegistry", ScopeRegistry.class, scopeRegistry, true);
-
-        registerComponent("ContributionProcessorRegistry", ProcessorRegistry.class, processorRegistry, true);
 
         if (metaDataStore != null) {
             registerComponent("MetaDataStore", MetaDataStore.class, metaDataStore, true);
         }
+    }
 
-        ClasspathProcessorRegistryImpl instance = new ClasspathProcessorRegistryImpl();
-        registerComponent("ClasspathProcessorRegistry", ClasspathProcessorRegistry.class, instance, true);
-
-        runtimeDomain = BootstrapAssemblyFactory.createDomain(runtime);
+    private void registerDomain(Fabric3Runtime<?> runtime) throws InitializationException {
         registerComponent("RuntimeAssembly", Domain.class, runtimeDomain, true);
+        // the following is a hack to initialize the domain
         runtime.getSystemComponent(Domain.class, ComponentNames.RUNTIME_DOMAIN_URI);
     }
 
-    private void registerClassLoaders(Fabric3Runtime<?> runtime, ClassLoader bootClassLoader, ClassLoader appClassLoader) {
+    private void registerClassLoaders(ClassLoader bootClassLoader, ClassLoader appClassLoader) {
 
-        classLoaderRegistry.register(HOST_CLASSLOADER_ID, runtime.getHostClassLoader());
+        classLoaderRegistry.register(HOST_CLASSLOADER_ID, hostClassLoader);
         classLoaderRegistry.register(BOOT_CLASSLOADER_ID, bootClassLoader);
         classLoaderRegistry.register(RUNTIME_URI, new MultiParentClassLoader(RUNTIME_URI, bootClassLoader));
 
-        URI domainId = runtime.getHostInfo().getDomain();
+        URI domainId = hostInfo.getDomain();
         classLoaderRegistry.register(APPLICATION_CLASSLOADER_ID, appClassLoader);
-        classLoaderRegistry.register(domainId, new MultiParentClassLoader(domainId, appClassLoader));
+        MultiParentClassLoader applicationClassLoader = new MultiParentClassLoader(domainId, appClassLoader);
+        classLoaderRegistry.register(domainId, applicationClassLoader);
     }
 
     private <S, I extends S> void registerComponent(String name, Class<S> type, I instance, boolean introspect)

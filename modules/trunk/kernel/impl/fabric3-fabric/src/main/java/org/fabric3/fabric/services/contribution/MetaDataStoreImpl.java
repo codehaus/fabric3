@@ -54,7 +54,7 @@ public class MetaDataStoreImpl implements MetaDataStore {
     private ProcessorRegistry processorRegistry;
     private ClassLoaderRegistry classLoaderRegistry;
 
-    public MetaDataStoreImpl(@Reference ClassLoaderRegistry classLoaderRegistry, @Reference ProcessorRegistry processorRegistry) {
+    public MetaDataStoreImpl(ClassLoaderRegistry classLoaderRegistry, ProcessorRegistry processorRegistry) {
         this.classLoaderRegistry = classLoaderRegistry;
         this.processorRegistry = processorRegistry;
     }
@@ -64,6 +64,15 @@ public class MetaDataStoreImpl implements MetaDataStore {
         addToExports(contribution);
     }
 
+    /**
+     * Used to reinject the processor registry after runtime bootstrap
+     *
+     * @param processorRegistry the configured processor registry
+     */
+    @Reference
+    public void setProcessorRegistry(ProcessorRegistry processorRegistry) {
+        this.processorRegistry = processorRegistry;
+    }
 
     public Contribution find(URI contributionUri) {
         return cache.get(contributionUri);

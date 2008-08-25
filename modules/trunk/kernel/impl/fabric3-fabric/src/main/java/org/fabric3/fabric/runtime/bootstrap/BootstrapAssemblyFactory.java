@@ -16,7 +16,6 @@
  */
 package org.fabric3.fabric.runtime.bootstrap;
 
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -87,14 +86,13 @@ import org.fabric3.fabric.monitor.MonitorWireAttacher;
 import org.fabric3.fabric.monitor.MonitorWireGenerator;
 import org.fabric3.fabric.monitor.MonitorWireTargetDefinition;
 import org.fabric3.fabric.policy.NullPolicyResolver;
-import org.fabric3.fabric.runtime.ComponentNames;
+import org.fabric3.fabric.services.contribution.ClasspathProcessorRegistryImpl;
 import org.fabric3.fabric.services.contribution.LocalContributionUriResolver;
 import org.fabric3.fabric.services.contribution.processor.JarClasspathProcessor;
 import org.fabric3.fabric.services.documentloader.DocumentLoader;
 import org.fabric3.fabric.services.documentloader.DocumentLoaderImpl;
 import org.fabric3.fabric.services.routing.RuntimeRoutingService;
 import org.fabric3.host.domain.DomainException;
-import org.fabric3.host.runtime.Fabric3Runtime;
 import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.host.runtime.InitializationException;
 import org.fabric3.jmx.control.JMXBindingGenerator;
@@ -146,45 +144,15 @@ import org.fabric3.transform.dom2java.generics.map.String2MapOfString2String;
  */
 public class BootstrapAssemblyFactory {
 
-    public static Domain createDomain(Fabric3Runtime<?> runtime) throws InitializationException {
-        MonitorFactory monitorFactory = runtime.getMonitorFactory();
-        MBeanServer mbeanServer = runtime.getMBeanServer();
-        String jmxSubDomain = runtime.getJMXSubDomain();
-        ClassLoaderRegistry classLoaderRegistry =
-                runtime.getSystemComponent(ClassLoaderRegistry.class, ComponentNames.CLASSLOADER_REGISTRY_URI);
-        ComponentManager componentManager = runtime.getSystemComponent(ComponentManager.class,
-                                                                       URI.create(ComponentNames.RUNTIME_NAME + "/ComponentManager"));
-        LogicalComponentManager lcm = runtime.getSystemComponent(LogicalComponentManager.class,
-                                                                 URI.create(ComponentNames.RUNTIME_NAME + "/RuntimeLogicalComponentManager"));
-        MetaDataStore metaDataStore =
-                runtime.getSystemComponent(MetaDataStore.class, ComponentNames.METADATA_STORE_URI);
-        ScopeRegistry scopeRegistry =
-                runtime.getSystemComponent(ScopeRegistry.class, ComponentNames.SCOPE_REGISTRY_URI);
-
-        ClasspathProcessorRegistry cpRegistry = runtime.getSystemComponent(ClasspathProcessorRegistry.class,
-                                                                           URI.create(ComponentNames.RUNTIME_NAME + "/ClasspathProcessorRegistry"));
-        return createDomain(monitorFactory,
-                            classLoaderRegistry,
-                            scopeRegistry,
-                            componentManager,
-                            lcm,
-                            metaDataStore,
-                            cpRegistry,
-                            mbeanServer,
-                            jmxSubDomain,
-                            runtime.getHostInfo());
-    }
-
-    private static Domain createDomain(MonitorFactory monitorFactory,
-                                      ClassLoaderRegistry classLoaderRegistry,
-                                      ScopeRegistry scopeRegistry,
-                                      ComponentManager componentManager,
-                                      LogicalComponentManager logicalComponentManager,
-                                      MetaDataStore metaDataStore,
-                                      ClasspathProcessorRegistry cpRegistry,
-                                      MBeanServer mbServer,
-                                      String jmxSubDomain,
-                                      HostInfo info) throws InitializationException {
+    public static Domain createDomain(MonitorFactory monitorFactory,
+                                       ClassLoaderRegistry classLoaderRegistry,
+                                       ScopeRegistry scopeRegistry,
+                                       ComponentManager componentManager,
+                                       LogicalComponentManager logicalComponentManager,
+                                       MetaDataStore metaDataStore,
+                                       MBeanServer mbServer,
+                                       String jmxSubDomain,
+                                       HostInfo info) throws InitializationException {
 
         Allocator allocator = new LocalAllocator();
         BindingSelector bindingSelector = new BindingSelectorImpl(logicalComponentManager);
@@ -193,7 +161,6 @@ public class BootstrapAssemblyFactory {
                                               classLoaderRegistry,
                                               scopeRegistry,
                                               componentManager,
-                                              cpRegistry,
                                               mbServer,
                                               metaDataStore,
                                               jmxSubDomain,
@@ -247,7 +214,6 @@ public class BootstrapAssemblyFactory {
                                                                          ClassLoaderRegistry classLoaderRegistry,
                                                                          ScopeRegistry scopeRegistry,
                                                                          ComponentManager componentManager,
-                                                                         ClasspathProcessorRegistry cpRegistry,
                                                                          MBeanServer mbeanServer,
                                                                          MetaDataStore metaDataStore,
                                                                          String jmxSubDomain,
@@ -295,6 +261,8 @@ public class BootstrapAssemblyFactory {
         connector.setSourceAttachers(sourceAttachers);
         connector.setTargetAttachers(targetAttachers);
 
+        ClasspathProcessorRegistry cpRegistry = new ClasspathProcessorRegistryImpl();
+
         ClassLoaderBuilder classLoaderBuilder = createClassLoaderBuilder(classLoaderRegistry, cpRegistry, metaDataStore, info);
 
         CommandExecutorRegistryImpl commandRegistry = new CommandExecutorRegistryImpl();
@@ -316,7 +284,6 @@ public class BootstrapAssemblyFactory {
                                                                HostInfo info) {
 
         LocalContributionUriResolver resolver = new LocalContributionUriResolver(metaDataStore);
-
         JarClasspathProcessor classpathProcessor = new JarClasspathProcessor(cpRegistry);
         classpathProcessor.init();
         return new ClassLoaderBuilderImpl(classLoaderRegistry, resolver, cpRegistry, info);

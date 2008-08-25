@@ -32,7 +32,6 @@ import javax.xml.stream.XMLStreamReader;
 import org.apache.maven.surefire.testset.TestSetFailedException;
 
 import org.fabric3.fabric.runtime.AbstractRuntime;
-import org.fabric3.fabric.runtime.ComponentNames;
 import static org.fabric3.fabric.runtime.ComponentNames.CONTRIBUTION_SERVICE_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.DISTRIBUTED_DOMAIN_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.XML_FACTORY_URI;
@@ -43,22 +42,19 @@ import org.fabric3.host.contribution.ContributionSource;
 import org.fabric3.host.domain.DeploymentException;
 import org.fabric3.maven.contribution.ModuleContributionSource;
 import org.fabric3.pojo.PojoWorkContextTunnel;
-import org.fabric3.pojo.component.PojoComponent;
 import org.fabric3.pojo.component.InvokerInterceptor;
+import org.fabric3.pojo.component.PojoComponent;
 import org.fabric3.scdl.Composite;
 import org.fabric3.scdl.Operation;
-import org.fabric3.scdl.Scope;
 import org.fabric3.services.xmlfactory.XMLFactory;
 import org.fabric3.spi.ObjectCreationException;
 import org.fabric3.spi.component.GroupInitializationException;
 import org.fabric3.spi.component.ScopeContainer;
-import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.spi.domain.Domain;
 import org.fabric3.spi.invocation.CallFrame;
 import org.fabric3.spi.invocation.Message;
 import org.fabric3.spi.invocation.MessageImpl;
 import org.fabric3.spi.invocation.WorkContext;
-import org.fabric3.spi.services.contribution.MetaDataStore;
 import org.fabric3.spi.services.contribution.QNameSymbol;
 import org.fabric3.spi.services.contribution.ResourceElement;
 
@@ -94,8 +90,7 @@ public class MavenEmbeddedRuntimeImpl extends AbstractRuntime<MavenHostInfo> imp
         contributionService.contribute(source);
         // activate the deployable composite in the domain
         domain.include(qName);
-        MetaDataStore store = getSystemComponent(MetaDataStore.class, ComponentNames.METADATA_STORE_URI);
-        ResourceElement<?, ?> element = store.resolve(new QNameSymbol(qName));
+        ResourceElement<?, ?> element = getMetaDataStore().resolve(new QNameSymbol(qName));
         assert element != null;
         return (Composite) element.getValue();
     }
@@ -116,9 +111,8 @@ public class MavenEmbeddedRuntimeImpl extends AbstractRuntime<MavenHostInfo> imp
         WorkContext workContext = new WorkContext();
         CallFrame frame = new CallFrame(groupId);
         workContext.addCallFrame(frame);
-        ScopeRegistry scopeRegistry = getSystemComponent(ScopeRegistry.class, ComponentNames.SCOPE_REGISTRY_URI);
         try {
-            scopeRegistry.getScopeContainer(Scope.COMPOSITE).startContext(workContext);
+            scopeContainer.startContext(workContext);
         } catch (GroupInitializationException e) {
             throw new ContextStartException(e);
         }

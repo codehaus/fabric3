@@ -17,7 +17,10 @@
 package org.fabric3.spi.runtime;
 
 import org.fabric3.spi.component.ScopeContainer;
+import org.fabric3.spi.component.ScopeRegistry;
+import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.services.componentmanager.ComponentManager;
+import org.fabric3.spi.services.contribution.MetaDataStore;
 import org.fabric3.spi.services.lcm.LogicalComponentManager;
 
 /**
@@ -44,10 +47,31 @@ public interface RuntimeServices {
     ComponentManager getComponentManager();
 
     /**
+     * Returns the ScopeRegistry used to manage runtime ScopeContainers.
+     *
+     * @return the ScopeRegistry used to manage runtime ScopeContainers
+     */
+    ScopeRegistry getScopeRegistry();
+
+    /**
      * Returns the ScopeContainer used to manage runtime component instances.
      *
      * @return the ScopeContainer used to manage runtime component instances
      */
     ScopeContainer<?> getScopeContainer();
+
+    /**
+     * Returns the ClassLoaderRegistry used to manage runtime classloaders.
+     *
+     * @return the ClassLoaderRegistry used to manage runtime classloaders
+     */
+    ClassLoaderRegistry getClassLoaderRegistry();
+
+    /**
+     * Returns the MetaDataStore used to index contribution resources.
+     *
+     * @return the MetaDataStore used to index contribution resources
+     */
+    MetaDataStore getMetaDataStore();
 
 }

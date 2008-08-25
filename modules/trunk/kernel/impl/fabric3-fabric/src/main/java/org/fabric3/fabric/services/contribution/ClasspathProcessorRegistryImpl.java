@@ -23,12 +23,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.osoa.sca.annotations.EagerInit;
+
 import org.fabric3.spi.services.contribution.ClasspathProcessor;
 import org.fabric3.spi.services.contribution.ClasspathProcessorRegistry;
 
 /**
  * @version $Rev$ $Date$
  */
+@EagerInit
 public class ClasspathProcessorRegistryImpl implements ClasspathProcessorRegistry {
     private List<ClasspathProcessor> processors = new ArrayList<ClasspathProcessor>();
     // cache of previously processed artifact URLs

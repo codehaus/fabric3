@@ -19,14 +19,17 @@
 package org.fabric3.fabric.runtime;
 
 import java.net.URI;
-import java.net.URL;
 import javax.management.MBeanServer;
 
 import org.fabric3.fabric.component.scope.CompositeScopeContainer;
 import org.fabric3.fabric.component.scope.ScopeContainerMonitor;
+import org.fabric3.fabric.component.scope.ScopeRegistryImpl;
 import static org.fabric3.fabric.runtime.ComponentNames.EVENT_SERVICE_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.RUNTIME_URI;
+import org.fabric3.fabric.services.classloading.ClassLoaderRegistryImpl;
 import org.fabric3.fabric.services.componentmanager.ComponentManagerImpl;
+import org.fabric3.fabric.services.contribution.MetaDataStoreImpl;
+import org.fabric3.fabric.services.contribution.ProcessorRegistryImpl;
 import org.fabric3.fabric.services.lcm.LogicalComponentManagerImpl;
 import org.fabric3.fabric.services.lcm.NonPersistentLogicalComponentStore;
 import org.fabric3.host.runtime.Fabric3Runtime;
@@ -37,7 +40,6 @@ import org.fabric3.host.work.WorkScheduler;
 import org.fabric3.monitor.MonitorFactory;
 import org.fabric3.pojo.PojoWorkContextTunnel;
 import org.fabric3.scdl.Autowire;
-import org.fabric3.scdl.Scope;
 import org.fabric3.spi.component.AtomicComponent;
 import org.fabric3.spi.component.InstanceLifecycleException;
 import org.fabric3.spi.component.InstanceWrapper;
@@ -46,7 +48,10 @@ import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.spi.invocation.CallFrame;
 import org.fabric3.spi.invocation.WorkContext;
 import org.fabric3.spi.runtime.RuntimeServices;
+import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.services.componentmanager.ComponentManager;
+import org.fabric3.spi.services.contribution.MetaDataStore;
+import org.fabric3.spi.services.contribution.ProcessorRegistry;
 import org.fabric3.spi.services.event.EventService;
 import org.fabric3.spi.services.event.RuntimeStart;
 import org.fabric3.spi.services.lcm.LogicalComponentManager;
@@ -57,40 +62,54 @@ import org.fabric3.spi.services.lcm.RecoveryException;
  * @version $Rev$ $Date$
  */
 public abstract class AbstractRuntime<HI extends HostInfo> implements Fabric3Runtime<HI>, RuntimeServices {
-	
-    private String applicationName;
     private Class<HI> hostInfoType;
     private MBeanServer mbServer;
     private String jmxSubDomain;
     private WorkScheduler workScheduler;
-    
+
 
     /**
      * Information provided by the host about its runtime environment.
      */
-    private HI hostInfo;
+    protected HI hostInfo;
 
     /**
      * MonitorFactory provided by the host for directing events to its management framework.
      */
-    private MonitorFactory monitorFactory;
+    protected MonitorFactory monitorFactory;
 
     /**
      * The LogicalComponentManager that manages all logical components in this runtime.
      */
-    private LogicalComponentManager logicalComponentManager;
+    protected LogicalComponentManager logicalComponentManager;
 
     /**
      * The ComponentManager that manages all physical components in this runtime.
      */
-    private ComponentManager componentManager;
+    protected ComponentManager componentManager;
 
     /**
      * The ScopeContainer used to managed system component instances.
      */
-    private CompositeScopeContainer scopeContainer;
+    protected CompositeScopeContainer scopeContainer;
 
-    private ClassLoader hostClassLoader;
+    /**
+     * The ClassLoaderRegristy that manages all runtime classloaders.
+     */
+    protected ClassLoaderRegistry classLoaderRegistry;
+
+    /**
+     * The MetaDataStore that indexes contribution metadata and artifacts.
+     */
+    protected MetaDataStore metaDataStore;
+
+    /**
+     * The ScopeRegistry that manages runtime ScopeContainers
+     */
+    protected ScopeRegistry scopeRegistry;
+
+    protected ClassLoader hostClassLoader;
+
 
     protected AbstractRuntime(Class<HI> runtimeInfoType, MonitorFactory monitorFactory) {
         this.hostInfoType = runtimeInfoType;
@@ -99,14 +118,6 @@ public abstract class AbstractRuntime<HI extends HostInfo> implements Fabric3Run
 
     protected AbstractRuntime(Class<HI> runtimeInfoType) {
         this.hostInfoType = runtimeInfoType;
-    }
-
-    public String getApplicationName() {
-        return applicationName;
-    }
-
-    public void setApplicationName(String applicationName) {
-        this.applicationName = applicationName;
     }
 
     public ClassLoader getHostClassLoader() {
@@ -162,8 +173,13 @@ public abstract class AbstractRuntime<HI extends HostInfo> implements Fabric3Run
             throw new InitializationException(e);
         }
         componentManager = new ComponentManagerImpl();
+        classLoaderRegistry = new ClassLoaderRegistryImpl();
+        ProcessorRegistry processorRegistry = new ProcessorRegistryImpl();
+        metaDataStore = new MetaDataStoreImpl(classLoaderRegistry, processorRegistry);
         scopeContainer = new CompositeScopeContainer(getMonitorFactory().getMonitor(ScopeContainerMonitor.class));
         scopeContainer.start();
+        scopeRegistry = new ScopeRegistryImpl();
+        scopeRegistry.register(scopeContainer);
     }
 
 
@@ -175,8 +191,6 @@ public abstract class AbstractRuntime<HI extends HostInfo> implements Fabric3Run
 
     public void destroy() {
         // destroy system components
-        ScopeRegistry scopeRegistry = getSystemComponent(ScopeRegistry.class, ComponentNames.SCOPE_REGISTRY_URI);
-        ScopeContainer<?> scopeContainer = scopeRegistry.getScopeContainer(Scope.COMPOSITE);
         WorkContext workContext = new WorkContext();
         CallFrame frame = new CallFrame(ComponentNames.RUNTIME_URI);
         workContext.addCallFrame(frame);
@@ -214,22 +228,24 @@ public abstract class AbstractRuntime<HI extends HostInfo> implements Fabric3Run
     public ScopeContainer<?> getScopeContainer() {
         return scopeContainer;
     }
-    
-    /**
-     * Gets the work scheduler provided by the host.
-     * 
-     * @return Work scheduler provided y the host.
-     */
-    public WorkScheduler getWorkScheduler() {
-    	return workScheduler;
+
+    public ClassLoaderRegistry getClassLoaderRegistry() {
+        return classLoaderRegistry;
     }
-    
-    /**
-     * Sets the work scheduler provided by the host.
-     * 
-     * @param workScheduler Work scheduler provided by the host.
-     */
+
+    public MetaDataStore getMetaDataStore() {
+        return metaDataStore;
+    }
+
+    public ScopeRegistry getScopeRegistry() {
+        return scopeRegistry;
+    }
+
+    public WorkScheduler getWorkScheduler() {
+        return workScheduler;
+    }
+
     public void setWorkScheduler(WorkScheduler workScheduler) {
-    	this.workScheduler = workScheduler;
+        this.workScheduler = workScheduler;
     }
 }
