@@ -97,7 +97,10 @@ public class SystemComponentGenerator implements ComponentGenerator<LogicalCompo
         wireDefinition.setOptimizable(true);
         wireDefinition.setUri(uri);
         wireDefinition.setValueSource(new InjectableAttribute(InjectableAttributeType.REFERENCE, uri.getFragment()));
-
+        ServiceContract<?> serviceContract = reference.getDefinition().getServiceContract();
+        String interfaceName = serviceContract.getQualifiedInterfaceName();
+        wireDefinition.setInterfaceName(interfaceName);
+         
         URI classLoaderId = source.getClassLoaderId();
         wireDefinition.setClassLoaderId(classLoaderId);
 
