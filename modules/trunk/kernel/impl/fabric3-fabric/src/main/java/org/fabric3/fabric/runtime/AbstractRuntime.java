@@ -222,7 +222,9 @@ public abstract class AbstractRuntime<HI extends HostInfo> implements Fabric3Run
     }
 
     public <I> I getSystemComponent(Class<I> service, URI uri) {
-
+        if (RuntimeServices.class.equals(service)) {
+            return service.cast(this);
+        }
         AtomicComponent<?> component = (AtomicComponent<?>) componentManager.getComponent(uri);
         if (component == null) {
             return null;
