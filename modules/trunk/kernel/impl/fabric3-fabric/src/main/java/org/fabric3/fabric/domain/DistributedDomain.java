@@ -50,6 +50,16 @@ public class DistributedDomain extends AbstractDomain implements Domain {
         this.logicalComponentManager = logicalComponentManager;
     }
 
+    /**
+     * Used to reinject the Allocator. This allows an alternative allocation mechanism to be used by adding an optional extension to the runtime.
+     *
+     * @param allocator the allocator to override the default one
+     */
+    @Reference
+    public void setAllocator(Allocator allocator) {
+        this.allocator = allocator;
+    }
+
     public void initialize() throws DomainException {
         try {
             logicalComponentManager.initialize();
