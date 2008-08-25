@@ -49,7 +49,7 @@
     <include name="org.fabric3.fabric.PojoImplementation" scdlResource="org/fabric3/pojo/pojoImplementation.composite"/>
 
     <!-- System implementation type -->
-    <include name="org.fabric3.fabric.SystemImplementation" scdlResource="org/fabric3/fabric/systemImplementation.composite"/>
+    <include name="org.fabric3.fabric.SystemImplementation" scdlResource="org/fabric3/system/systemImplementation.composite"/>
 
     <!-- Singleton implementation type -->
     <include name="org.fabric3.fabric.SingletonImplementation" scdlResource="org/fabric3/fabric/singletonImplementation.composite"/>
