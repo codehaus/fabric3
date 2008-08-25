@@ -24,7 +24,7 @@ import org.fabric3.spi.services.contribution.MetaDataStore;
 import org.fabric3.spi.services.lcm.LogicalComponentManager;
 
 /**
- * Interface for accessing primordial services provided by a runtime.
+ * Interface for accessing services provided by a runtime.
  * <p/>
  * These are the primoridal services that should be provided by all runtime implementations for use by other runtime components.
  *
