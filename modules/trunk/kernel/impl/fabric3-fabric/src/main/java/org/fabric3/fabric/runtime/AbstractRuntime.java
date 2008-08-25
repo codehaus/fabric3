@@ -41,6 +41,7 @@ import org.fabric3.monitor.MonitorFactory;
 import org.fabric3.pojo.PojoWorkContextTunnel;
 import org.fabric3.scdl.Autowire;
 import org.fabric3.spi.component.AtomicComponent;
+import org.fabric3.spi.component.GroupInitializationException;
 import org.fabric3.spi.component.InstanceLifecycleException;
 import org.fabric3.spi.component.InstanceWrapper;
 import org.fabric3.spi.component.ScopeContainer;
@@ -66,7 +67,6 @@ public abstract class AbstractRuntime<HI extends HostInfo> implements Fabric3Run
     private MBeanServer mbServer;
     private String jmxSubDomain;
     private WorkScheduler workScheduler;
-
 
     /**
      * Information provided by the host about its runtime environment.
@@ -182,6 +182,30 @@ public abstract class AbstractRuntime<HI extends HostInfo> implements Fabric3Run
         scopeRegistry.register(scopeContainer);
     }
 
+    public void startRuntimeDomainContext() throws InitializationException {
+        try {
+            WorkContext workContext = new WorkContext();
+            CallFrame frame = new CallFrame(ComponentNames.RUNTIME_URI);
+            workContext.addCallFrame(frame);
+            scopeContainer.startContext(workContext);
+            workContext.popCallFrame();
+        } catch (GroupInitializationException e) {
+            throw new InitializationException(e);
+        }
+    }
+
+    public void startApplicationDomainContext() throws InitializationException {
+        try {
+            URI groupId = getHostInfo().getDomain();
+            WorkContext workContext = new WorkContext();
+            CallFrame frame = new CallFrame(groupId);
+            workContext.addCallFrame(frame);
+            scopeContainer.startContext(workContext);
+            workContext.popCallFrame();
+        } catch (GroupInitializationException e) {
+            throw new InitializationException(e);
+        }
+    }
 
     public void start() throws StartException {
         // starts the runtime by publishing a start event

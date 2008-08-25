@@ -63,8 +63,9 @@ public interface RuntimeLifecycleCoordinator<R extends Fabric3Runtime<?>, B exte
      *
      * @param timeout the timeout in milliseconds or -1 if the operation should wait indefinitely
      * @return a future that can be polled for completion of the operation
+     * @throws InitializationException if an error occurs joining the domain
      */
-    Future<Void> joinDomain(long timeout);
+    Future<Void> joinDomain(long timeout) throws InitializationException;
 
     /**
      * Perform the recovery operation. On controller nodes, this may result in reprovisioning components and resources.

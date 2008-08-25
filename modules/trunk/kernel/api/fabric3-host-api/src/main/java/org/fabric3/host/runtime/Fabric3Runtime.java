@@ -19,7 +19,6 @@
 package org.fabric3.host.runtime;
 
 import java.net.URI;
-
 import javax.management.MBeanServer;
 
 import org.fabric3.host.work.WorkScheduler;
@@ -121,7 +120,21 @@ public interface Fabric3Runtime<HI extends HostInfo> {
     void initialize() throws InitializationException;
 
     /**
-     * Starts the runtime.A runtime is ready to process requests when it has been started.
+     * Starts the runtime domain context and initializes system components marked to eagerly initialize.
+     *
+     * @throws InitializationException if there is an error starting the context
+     */
+    void startRuntimeDomainContext() throws InitializationException;
+
+    /**
+     * Starts the appliaiton domain context.
+     *
+     * @throws InitializationException if there is an error starting the context
+     */
+    void startApplicationDomainContext() throws InitializationException;
+
+    /**
+     * Starts the runtime. A runtime is ready to process requests when it has been started.
      *
      * @throws StartException if there is an error starting the runtime
      */
@@ -143,19 +156,19 @@ public interface Fabric3Runtime<HI extends HostInfo> {
      * @return an implementation of the requested service
      */
     <I> I getSystemComponent(Class<I> service, URI uri);
-    
+
     /**
      * Gets the work scheduler provided by the host.
-     * 
+     *
      * @return Work scheduler provided y the host.
      */
     WorkScheduler getWorkScheduler();
-    
+
     /**
      * Sets the work scheduler provided by the host.
-     * 
+     *
      * @param workScheduler Work scheduler provided by the host.
      */
     void setWorkScheduler(WorkScheduler workScheduler);
-    
+
 }

@@ -226,9 +226,7 @@ public abstract class AbstractBootstrapper implements Bootstrapper {
 
         registerComponent("ScopeRegistry", ScopeRegistry.class, scopeRegistry, true);
 
-        if (metaDataStore != null) {
-            registerComponent("MetaDataStore", MetaDataStore.class, metaDataStore, true);
-        }
+        registerComponent("MetaDataStore", MetaDataStore.class, metaDataStore, true);
     }
 
     private void registerDomain(Fabric3Runtime<?> runtime) throws InitializationException {

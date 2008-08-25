@@ -32,7 +32,6 @@ import static org.fabric3.fabric.runtime.ComponentNames.DISCOVERY_SERVICE_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.DISTRIBUTED_DOMAIN_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.METADATA_STORE_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.RUNTIME_DOMAIN_URI;
-import static org.fabric3.fabric.runtime.ComponentNames.SCOPE_REGISTRY_URI;
 import org.fabric3.fabric.services.contribution.manifest.XmlManifestProcessor;
 import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.host.contribution.ContributionService;
@@ -51,14 +50,8 @@ import org.fabric3.introspection.validation.InvalidContributionException;
 import org.fabric3.scdl.Composite;
 import org.fabric3.scdl.DefaultValidationContext;
 import org.fabric3.scdl.Include;
-import org.fabric3.scdl.Scope;
 import org.fabric3.scdl.ValidationContext;
-import org.fabric3.spi.component.GroupInitializationException;
-import org.fabric3.spi.component.ScopeContainer;
-import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.spi.domain.Domain;
-import org.fabric3.spi.invocation.CallFrame;
-import org.fabric3.spi.invocation.WorkContext;
 import org.fabric3.spi.services.contribution.Contribution;
 import org.fabric3.spi.services.contribution.ContributionManifest;
 import org.fabric3.spi.services.contribution.MetaDataStore;
@@ -115,27 +108,9 @@ public class DefaultCoordinator<RUNTIME extends Fabric3Runtime<?>, BOOTSTRAPPER 
         if (state != State.UNINITIALIZED) {
             throw new IllegalStateException("Not in UNINITIALIZED state");
         }
-        try {
-            runtime.initialize();
-            bootstrapper.bootRuntimeDomain(runtime, bootClassLoader, appClassLoader);
-            ScopeRegistry scopeRegistry = runtime.getSystemComponent(ScopeRegistry.class, SCOPE_REGISTRY_URI);
-            ScopeContainer<URI> container = scopeRegistry.getScopeContainer(Scope.COMPOSITE);
-
-            // start the system context
-            WorkContext workContext = new WorkContext();
-            CallFrame frame = new CallFrame(ComponentNames.RUNTIME_URI);
-            workContext.addCallFrame(frame);
-            container.startContext(workContext);
-            workContext.popCallFrame();
-            // start the domain context
-            URI groupId = runtime.getHostInfo().getDomain();
-            workContext = new WorkContext();
-            frame = new CallFrame(groupId);
-            workContext.addCallFrame(frame);
-            container.startContext(workContext);
-        } catch (GroupInitializationException e) {
-            throw new InitializationException(e);
-        }
+        runtime.initialize();
+        bootstrapper.bootRuntimeDomain(runtime, bootClassLoader, appClassLoader);
+        runtime.startRuntimeDomainContext();
         state = State.PRIMORDIAL;
     }
 
@@ -162,7 +137,8 @@ public class DefaultCoordinator<RUNTIME extends Fabric3Runtime<?>, BOOTSTRAPPER 
 
     }
 
-    public Future<Void> joinDomain(final long timeout) {
+    public Future<Void> joinDomain(final long timeout) throws InitializationException {
+        runtime.startApplicationDomainContext();
         if (state != State.INITIALIZED) {
             throw new IllegalStateException("Not in INITIALIZED state");
         }
