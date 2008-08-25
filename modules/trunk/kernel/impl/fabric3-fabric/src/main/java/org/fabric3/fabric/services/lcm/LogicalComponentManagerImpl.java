@@ -20,6 +20,7 @@ import java.net.URI;
 import java.util.Collection;
 import javax.xml.namespace.QName;
 
+import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.scdl.Composite;
@@ -82,6 +83,7 @@ public class LogicalComponentManagerImpl implements LogicalComponentManager, Log
         logicalComponentStore.store(domain);
     }
 
+    @Init
     public void initialize() throws RecoveryException {
         domain = logicalComponentStore.read();
     }

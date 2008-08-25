@@ -25,11 +25,9 @@ import org.fabric3.fabric.binding.BindingSelector;
 import org.fabric3.fabric.generator.PhysicalModelGenerator;
 import org.fabric3.fabric.instantiator.LogicalModelInstantiator;
 import org.fabric3.fabric.services.routing.RoutingService;
-import org.fabric3.host.domain.DomainException;
 import org.fabric3.spi.domain.Domain;
 import org.fabric3.spi.services.contribution.MetaDataStore;
 import org.fabric3.spi.services.lcm.LogicalComponentManager;
-import org.fabric3.spi.services.lcm.RecoveryException;
 
 /**
  * Implements a distributed domain containing user-defined services.
@@ -37,7 +35,6 @@ import org.fabric3.spi.services.lcm.RecoveryException;
  * @version $Rev$ $Date$
  */
 public class DistributedDomain extends AbstractDomain implements Domain {
-    private LogicalComponentManager logicalComponentManager;
 
     public DistributedDomain(@Reference(name = "store")MetaDataStore metaDataStore,
                              @Reference(name = "logicalComponentManager")LogicalComponentManager logicalComponentManager,
@@ -47,7 +44,6 @@ public class DistributedDomain extends AbstractDomain implements Domain {
                              @Reference BindingSelector bindingSelector,
                              @Reference RoutingService routingService) {
         super(metaDataStore, logicalComponentManager, allocator, physicalModelGenerator, logicalModelInstantiator, bindingSelector, routingService);
-        this.logicalComponentManager = logicalComponentManager;
     }
 
     /**
@@ -60,11 +56,4 @@ public class DistributedDomain extends AbstractDomain implements Domain {
         this.allocator = allocator;
     }
 
-    public void initialize() throws DomainException {
-        try {
-            logicalComponentManager.initialize();
-        } catch (RecoveryException e) {
-            throw new DomainException(e);
-        }
-    }
 }

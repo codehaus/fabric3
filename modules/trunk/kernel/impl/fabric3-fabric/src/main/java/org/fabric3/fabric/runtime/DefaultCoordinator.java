@@ -38,7 +38,6 @@ import org.fabric3.host.contribution.ContributionService;
 import org.fabric3.host.contribution.ContributionSource;
 import org.fabric3.host.contribution.Deployable;
 import org.fabric3.host.domain.DeploymentException;
-import org.fabric3.host.domain.DomainException;
 import org.fabric3.host.runtime.BootConfiguration;
 import org.fabric3.host.runtime.Bootstrapper;
 import org.fabric3.host.runtime.Fabric3Runtime;
@@ -163,11 +162,6 @@ public class DefaultCoordinator<RUNTIME extends Fabric3Runtime<?>, BOOTSTRAPPER 
             InitializationException e = new InitializationException("Assembly not found: " + name, name);
             return new SyncFuture(new ExecutionException(e));
 
-        }
-        try {
-            domain.initialize();
-        } catch (DomainException e) {
-            return new SyncFuture(new ExecutionException(e));
         }
         state = State.RECOVERED;
         return new SyncFuture();

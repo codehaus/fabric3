@@ -92,7 +92,6 @@ import org.fabric3.fabric.services.contribution.processor.JarClasspathProcessor;
 import org.fabric3.fabric.services.documentloader.DocumentLoader;
 import org.fabric3.fabric.services.documentloader.DocumentLoaderImpl;
 import org.fabric3.fabric.services.routing.RuntimeRoutingService;
-import org.fabric3.host.domain.DomainException;
 import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.host.runtime.InitializationException;
 import org.fabric3.jmx.control.JMXBindingGenerator;
@@ -145,14 +144,14 @@ import org.fabric3.transform.dom2java.generics.map.String2MapOfString2String;
 public class BootstrapAssemblyFactory {
 
     public static Domain createDomain(MonitorFactory monitorFactory,
-                                       ClassLoaderRegistry classLoaderRegistry,
-                                       ScopeRegistry scopeRegistry,
-                                       ComponentManager componentManager,
-                                       LogicalComponentManager logicalComponentManager,
-                                       MetaDataStore metaDataStore,
-                                       MBeanServer mbServer,
-                                       String jmxSubDomain,
-                                       HostInfo info) throws InitializationException {
+                                      ClassLoaderRegistry classLoaderRegistry,
+                                      ScopeRegistry scopeRegistry,
+                                      ComponentManager componentManager,
+                                      LogicalComponentManager logicalComponentManager,
+                                      MetaDataStore metaDataStore,
+                                      MBeanServer mbServer,
+                                      String jmxSubDomain,
+                                      HostInfo info) throws InitializationException {
 
         Allocator allocator = new LocalAllocator();
         BindingSelector bindingSelector = new BindingSelectorImpl(logicalComponentManager);
@@ -173,19 +172,13 @@ public class BootstrapAssemblyFactory {
 
         LogicalModelInstantiator logicalModelInstantiator = createLogicalModelGenerator(logicalComponentManager);
 
-        Domain runtimeDomain = new RuntimeDomain(allocator,
-                                                 metaDataStore,
-                                                 physicalModelGenerator,
-                                                 logicalModelInstantiator,
-                                                 logicalComponentManager,
-                                                 bindingSelector,
-                                                 routingService);
-        try {
-            runtimeDomain.initialize();
-        } catch (DomainException e) {
-            throw new InitializationException(e);
-        }
-        return runtimeDomain;
+        return new RuntimeDomain(allocator,
+                                 metaDataStore,
+                                 physicalModelGenerator,
+                                 logicalModelInstantiator,
+                                 logicalComponentManager,
+                                 bindingSelector,
+                                 routingService);
     }
 
     private static LogicalModelInstantiator createLogicalModelGenerator(LogicalComponentManager logicalComponentManager) {

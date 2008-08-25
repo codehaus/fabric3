@@ -21,7 +21,6 @@ package org.fabric3.spi.domain;
 import javax.xml.namespace.QName;
 
 import org.fabric3.host.domain.DeploymentException;
-import org.fabric3.host.domain.DomainException;
 import org.fabric3.scdl.Composite;
 
 /**
@@ -30,13 +29,6 @@ import org.fabric3.scdl.Composite;
  * @version $Rev$ $Date$
  */
 public interface Domain {
-
-    /**
-     * Initializes the domain.
-     *
-     * @throws DomainException if an error occurs initializing the domain
-     */
-    void initialize() throws DomainException;
 
     /**
      * Include a deployable composite in the domain.
