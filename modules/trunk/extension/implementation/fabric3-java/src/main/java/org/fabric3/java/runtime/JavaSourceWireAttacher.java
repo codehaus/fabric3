@@ -49,7 +49,6 @@ public class JavaSourceWireAttacher extends PojoSourceWireAttacher implements So
 
     private final ComponentManager manager;
     private final ProxyService proxyService;
-    private final ClassLoaderRegistry classLoaderRegistry;
 
     public JavaSourceWireAttacher(@Reference ComponentManager manager,
                                   @Reference ProxyService proxyService,
@@ -58,7 +57,6 @@ public class JavaSourceWireAttacher extends PojoSourceWireAttacher implements So
         super(transformerRegistry, classLoaderRegistry);
         this.manager = manager;
         this.proxyService = proxyService;
-        this.classLoaderRegistry = classLoaderRegistry;
     }
 
     public void attachToSource(JavaWireSourceDefinition sourceDefinition, PhysicalWireTargetDefinition targetDefinition, Wire wire)

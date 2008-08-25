@@ -23,12 +23,15 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.pojo.builder.PojoSourceWireAttacher;
 import org.fabric3.scdl.InjectableAttribute;
+import org.fabric3.scdl.InjectableAttributeType;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.SourceWireAttacher;
+import org.fabric3.spi.builder.component.WireAttachException;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.services.componentmanager.ComponentManager;
+import org.fabric3.spi.services.proxy.ProxyService;
 import org.fabric3.spi.util.UriHelper;
 import org.fabric3.spi.wire.Wire;
 import org.fabric3.system.provision.SystemWireSourceDefinition;
@@ -42,6 +45,7 @@ import org.fabric3.transform.TransformerRegistry;
 public class SystemSourceWireAttacher extends PojoSourceWireAttacher implements SourceWireAttacher<SystemWireSourceDefinition> {
 
     private final ComponentManager manager;
+    private ProxyService proxyService;
 
     public SystemSourceWireAttacher(@Reference ComponentManager manager,
                                     @Reference TransformerRegistry<PullTransformer<?, ?>> transformerRegistry,
@@ -50,9 +54,49 @@ public class SystemSourceWireAttacher extends PojoSourceWireAttacher implements 
         this.manager = manager;
     }
 
-    public void attachToSource(SystemWireSourceDefinition source, PhysicalWireTargetDefinition target, Wire wire) throws WiringException {
-        // should never be called as the wire must be optimized
-        throw new AssertionError();
+    /**
+     * Used for lazy injection of the proxy service. Since the ProxyService is only available after extensions are loaded and this class is loaded
+     * during runtime boostrap, injection of the former service must be delayed. This is achieved by setting the reference to no required. when the
+     * ProxyService becomes available, it will be wired to this reference.
+     *
+     * @param proxyService the service used to create reference proxies
+     */
+    @Reference(required = false)
+    public void setProxyService(ProxyService proxyService) {
+        this.proxyService = proxyService;
+    }
+
+    public void attachToSource(SystemWireSourceDefinition sourceDefinition, PhysicalWireTargetDefinition targetDefinition, Wire wire)
+            throws WiringException {
+        if (proxyService == null) {
+            throw new WiringException(
+                    "Attempt to inject a non-optimized wire during runtime boostrap. Non-optimizied wires are only supported in user extensions");
+        }
+        URI sourceUri = sourceDefinition.getUri();
+        URI sourceName = UriHelper.getDefragmentedName(sourceDefinition.getUri());
+        SystemComponent<?> source = (SystemComponent) manager.getComponent(sourceName);
+        InjectableAttribute injectableAttribute = sourceDefinition.getValueSource();
+
+        Class<?> type;
+        try {
+            type = classLoaderRegistry.loadClass(sourceDefinition.getClassLoaderId(), sourceDefinition.getInterfaceName());
+        } catch (ClassNotFoundException e) {
+            String name = sourceDefinition.getInterfaceName();
+            throw new WireAttachException("Unable to load interface class: " + name, sourceUri, null, e);
+        }
+        if (InjectableAttributeType.CALLBACK.equals(injectableAttribute.getValueType())) {
+            throw new UnsupportedOperationException("Callbacks not supported on system components");
+        } else {
+            String callbackUri = null;
+            URI uri = targetDefinition.getCallbackUri();
+            if (uri != null) {
+                callbackUri = uri.toString();
+            }
+
+            ObjectFactory<?> factory = proxyService.createObjectFactory(type, sourceDefinition.getInteractionType(), wire, callbackUri);
+            Object key = getKey(sourceDefinition, source, targetDefinition, injectableAttribute);
+            source.setObjectFactory(injectableAttribute, factory, key);
+        }
     }
 
     public void detachFromSource(SystemWireSourceDefinition source, PhysicalWireTargetDefinition target, Wire wire) throws WiringException {

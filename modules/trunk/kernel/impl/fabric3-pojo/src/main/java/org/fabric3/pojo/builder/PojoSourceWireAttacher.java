@@ -48,8 +48,8 @@ public abstract class PojoSourceWireAttacher {
 
     private static final XSDSimpleType SOURCE_TYPE = new XSDSimpleType(Node.class, XSDSimpleType.STRING);
 
-    private TransformerRegistry<PullTransformer<?, ?>> transformerRegistry;
-    private ClassLoaderRegistry classLoaderRegistry;
+    protected TransformerRegistry<PullTransformer<?, ?>> transformerRegistry;
+    protected ClassLoaderRegistry classLoaderRegistry;
 
     protected PojoSourceWireAttacher(TransformerRegistry<PullTransformer<?, ?>> transformerRegistry, ClassLoaderRegistry classLoaderRegistry) {
         this.transformerRegistry = transformerRegistry;
