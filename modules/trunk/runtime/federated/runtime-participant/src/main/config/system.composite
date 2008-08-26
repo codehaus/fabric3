@@ -78,14 +78,6 @@
         <system:implementation.system class="org.fabric3.fabric.services.messaging.MessagingEventServiceImpl"/>
     </component>
 
-    <component name="launchedLoader">
-        <system:implementation.system class="org.fabric3.runtime.standalone.host.implementation.launched.LaunchedLoader"/>
-    </component>
-
-    <component name="launchedComponentLoader">
-        <system:implementation.system class="org.fabric3.runtime.standalone.host.implementation.launched.LaunchedComponentTypeLoaderImpl"/>
-    </component>
-
     <component name="assemblyRecoveryService">
         <system:implementation.system class="org.fabric3.fabric.services.lcm.NonPersistentLogicalComponentStore"/>
     </component>
