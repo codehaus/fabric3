@@ -23,12 +23,10 @@ import javax.xml.stream.XMLStreamWriter;
 import com.thoughtworks.xstream.XStream;
 import com.thoughtworks.xstream.io.xml.StaxDriver;
 import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.spi.services.marshaller.MarshalException;
 import org.fabric3.spi.services.marshaller.MarshalService;
-import org.fabric3.spi.services.marshaller.DelegatingMarshalService;
 import org.fabric3.xstream.factory.ClassLoaderStaxDriver;
 import org.fabric3.xstream.factory.XStreamFactory;
 
@@ -41,12 +39,10 @@ import org.fabric3.xstream.factory.XStreamFactory;
 public class XStreamMarshalService implements MarshalService {
     private XStream xStream;
     private StaxDriver staxDriver;
-    private DelegatingMarshalService marshalService;
 
-    public XStreamMarshalService(@Reference XStreamFactory factory, @Reference DelegatingMarshalService service) {
+    public XStreamMarshalService(@Reference XStreamFactory factory) {
         xStream = factory.createInstance();
         staxDriver = new ClassLoaderStaxDriver(getClass().getClassLoader());
-        this.marshalService = service;
     }
 
     public void marshall(Object modelObject, XMLStreamWriter writer) throws MarshalException {
@@ -61,8 +57,4 @@ public class XStreamMarshalService implements MarshalService {
         return type.cast(xStream.unmarshal(staxDriver.createStaxReader(reader)));
     }
 
-    @Init
-    public void init() {
-        marshalService.registerMarshalService(this);
-    }
 }

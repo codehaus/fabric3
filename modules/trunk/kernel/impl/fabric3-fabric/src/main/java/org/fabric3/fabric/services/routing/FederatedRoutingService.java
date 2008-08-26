@@ -34,10 +34,10 @@ import org.fabric3.scdl.Scope;
 import org.fabric3.services.xmlfactory.XMLFactory;
 import org.fabric3.services.xmlfactory.XMLFactoryInstantiationException;
 import org.fabric3.spi.command.Command;
+import org.fabric3.spi.component.InstanceLifecycleException;
+import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.spi.executor.CommandExecutorRegistry;
 import org.fabric3.spi.executor.ExecutionException;
-import org.fabric3.spi.component.ScopeRegistry;
-import org.fabric3.spi.component.InstanceLifecycleException;
 import org.fabric3.spi.generator.CommandMap;
 import org.fabric3.spi.services.marshaller.MarshalException;
 import org.fabric3.spi.services.marshaller.MarshalService;
@@ -51,26 +51,34 @@ import org.fabric3.spi.services.messaging.MessagingService;
  */
 public class FederatedRoutingService implements RoutingService {
 
-    private final MarshalService marshalService;
+    private MarshalService marshalService;
     private final MessagingService messagingService;
     private final CommandExecutorRegistry executorRegistry;
     private final XMLFactory xmlFactory;
     private final RoutingMonitor monitor;
     private final ScopeRegistry scopeRegistry;
 
-    public FederatedRoutingService(@Reference MarshalService marshalService,
-                                   @Reference MessagingService messagingService,
+    public FederatedRoutingService(@Reference MessagingService messagingService,
                                    @Reference CommandExecutorRegistry executorRegistry,
                                    @Reference XMLFactory xmlFactory,
                                    @Monitor RoutingMonitor monitor,
                                    @Reference ScopeRegistry scopeRegistry) {
 
-        this.marshalService = marshalService;
         this.messagingService = messagingService;
         this.executorRegistry = executorRegistry;
         this.xmlFactory = xmlFactory;
         this.monitor = monitor;
         this.scopeRegistry = scopeRegistry;
+    }
+
+    /**
+     * Used to lazily inject the MarhsalService since it may be provided by a runtime extension loaded after this component.
+     *
+     * @param marshalService the MarshalService to inject
+     */
+    @Reference(required = false)
+    public void setMarshalService(MarshalService marshalService) {
+        this.marshalService = marshalService;
     }
 
     public void route(CommandMap commandMap) throws RoutingException {
@@ -113,7 +121,7 @@ public class FederatedRoutingService implements RoutingService {
             ByteArrayOutputStream out = new ByteArrayOutputStream();
             XMLOutputFactory factory = xmlFactory.newOutputFactoryInstance();
             XMLStreamWriter writer = factory.createXMLStreamWriter(out);
-            marshalService.marshall(commandSet, writer);
+            getMarshalService().marshall(commandSet, writer);
             ByteArrayInputStream in = new ByteArrayInputStream(out.toByteArray());
             XMLStreamReader pcsReader = xmlFactory.newInputFactoryInstance().createXMLStreamReader(in);
             messagingService.sendMessage(runtimeId, pcsReader);
@@ -127,6 +135,13 @@ public class FederatedRoutingService implements RoutingService {
             throw new RoutingException("Routing error", e);
         }
 
+    }
+
+    private MarshalService getMarshalService() {
+        if (marshalService == null) {
+            throw new IllegalStateException("MarshalService not configured");
+        }
+        return marshalService;
     }
 
 }

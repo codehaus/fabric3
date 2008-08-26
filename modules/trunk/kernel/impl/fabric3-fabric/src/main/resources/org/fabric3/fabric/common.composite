@@ -82,10 +82,6 @@
         <system:implementation.system class="org.fabric3.fabric.component.scope.NonExpiringMemoryStore"/>
     </component>
 
-    <component name="DelegatingMarshalService">
-        <system:implementation.system class="org.fabric3.fabric.services.marshaller.DelegatingMarshalServiceImpl"/>
-    </component>
-
     <component name="eventService">
         <system:implementation.system class="org.fabric3.fabric.services.event.EventServiceImpl"/>
     </component>
