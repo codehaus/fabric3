@@ -33,7 +33,7 @@ import org.apache.maven.surefire.testset.TestSetFailedException;
 
 import org.fabric3.fabric.runtime.AbstractRuntime;
 import static org.fabric3.fabric.runtime.ComponentNames.CONTRIBUTION_SERVICE_URI;
-import static org.fabric3.fabric.runtime.ComponentNames.DISTRIBUTED_DOMAIN_URI;
+import static org.fabric3.fabric.runtime.ComponentNames.APPLICATION_DOMAIN_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.XML_FACTORY_URI;
 import org.fabric3.fabric.util.FileHelper;
 import org.fabric3.host.contribution.ContributionException;
@@ -84,7 +84,7 @@ public class MavenEmbeddedRuntimeImpl extends AbstractRuntime<MavenHostInfo> imp
 
     public Composite activate(ContributionSource source, QName qName) throws ContributionException, DeploymentException {
         // contribute the Maven project to the application domain
-        Domain domain = getSystemComponent(Domain.class, DISTRIBUTED_DOMAIN_URI);
+        Domain domain = getSystemComponent(Domain.class, APPLICATION_DOMAIN_URI);
         ContributionService contributionService =
                 getSystemComponent(ContributionService.class, CONTRIBUTION_SERVICE_URI);
         contributionService.contribute(source);

@@ -30,7 +30,7 @@
         <system:implementation.system class="org.fabric3.fabric.services.routing.RuntimeRoutingService"/>
     </component>
     <!-- this wire reinjects the routing service into the RuntimeDomain -->
-    <wire source="RuntimeAssembly/routingService" target="RuntimeRoutingService"/>
+    <wire source="RuntimeDomain/routingService" target="RuntimeRoutingService"/>
 
     <component name="logicalModelGenerator">
         <system:implementation.system class="org.fabric3.fabric.instantiator.LogicalModelInstantiatorImpl"/>

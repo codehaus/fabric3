@@ -30,7 +30,7 @@
 
     <component name="ContributionDirectoryScanner">
         <system:implementation.system class="org.fabric3.scanner.scanner.ContributionDirectoryScanner"/>
-        <reference name="assembly" target="distributedAssembly"/>
+        <reference name="assembly" target="ApplicationDomain"/>
     </component>
 
     <component name="FileSystemResourceFactoryRegistry">

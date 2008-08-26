@@ -29,7 +29,7 @@ import javax.xml.namespace.QName;
 import static org.fabric3.fabric.runtime.ComponentNames.CONTRIBUTION_SERVICE_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.DEFINITIONS_REGISTRY;
 import static org.fabric3.fabric.runtime.ComponentNames.DISCOVERY_SERVICE_URI;
-import static org.fabric3.fabric.runtime.ComponentNames.DISTRIBUTED_DOMAIN_URI;
+import static org.fabric3.fabric.runtime.ComponentNames.APPLICATION_DOMAIN_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.METADATA_STORE_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.RUNTIME_DOMAIN_URI;
 import org.fabric3.fabric.services.contribution.manifest.XmlManifestProcessor;
@@ -156,10 +156,10 @@ public class DefaultCoordinator<RUNTIME extends Fabric3Runtime<?>, BOOTSTRAPPER 
         if (state != State.DOMAIN_JOINED) {
             throw new IllegalStateException("Not in DOMAIN_JOINED state");
         }
-        Domain domain = runtime.getSystemComponent(Domain.class, DISTRIBUTED_DOMAIN_URI);
+        Domain domain = runtime.getSystemComponent(Domain.class, APPLICATION_DOMAIN_URI);
         if (domain == null) {
-            String name = DISTRIBUTED_DOMAIN_URI.toString();
-            InitializationException e = new InitializationException("Assembly not found: " + name, name);
+            String name = APPLICATION_DOMAIN_URI.toString();
+            InitializationException e = new InitializationException("Domain not found: " + name, name);
             return new SyncFuture(new ExecutionException(e));
 
         }

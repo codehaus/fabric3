@@ -231,7 +231,7 @@ public abstract class AbstractBootstrapper implements Bootstrapper {
     }
 
     private void registerDomain(Fabric3Runtime<?> runtime) throws InitializationException {
-        registerComponent("RuntimeAssembly", Domain.class, runtimeDomain, true);
+        registerComponent("RuntimeDomain", Domain.class, runtimeDomain, true);
         // the following is a hack to initialize the domain
         runtime.getSystemComponent(Domain.class, ComponentNames.RUNTIME_DOMAIN_URI);
     }
