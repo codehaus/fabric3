@@ -48,7 +48,7 @@ public class SystemSourceWireAttacher extends PojoSourceWireAttacher implements 
     private ProxyService proxyService;
 
     public SystemSourceWireAttacher(@Reference ComponentManager manager,
-                                    @Reference TransformerRegistry<PullTransformer<?, ?>> transformerRegistry,
+                                    @Reference(name = "transformerRegistry")TransformerRegistry<PullTransformer<?, ?>> transformerRegistry,
                                     @Reference ClassLoaderRegistry classLoaderRegistry) {
         super(transformerRegistry, classLoaderRegistry);
         this.manager = manager;
