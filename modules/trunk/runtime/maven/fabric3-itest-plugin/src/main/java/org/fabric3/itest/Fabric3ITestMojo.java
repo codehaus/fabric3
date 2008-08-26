@@ -152,7 +152,7 @@ public class Fabric3ITestMojo extends AbstractMojo {
     /**
      * The SCA domain in which to deploy the test components.
      *
-     * @parameter expression="fabric3://./domain"
+     * @parameter expression="fabric3://domain"
      * @required
      */
     public String testDomain;

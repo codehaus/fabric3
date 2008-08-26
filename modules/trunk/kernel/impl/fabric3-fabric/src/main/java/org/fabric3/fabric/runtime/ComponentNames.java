@@ -30,7 +30,7 @@ public final class ComponentNames {
     /**
      * The name of the component that is the root of the system composite tree.
      */
-    public static final String RUNTIME_NAME = "fabric3://./runtime";
+    public static final String RUNTIME_NAME = "fabric3://runtime";
 
     public static final URI RUNTIME_URI = URI.create(RUNTIME_NAME);
 

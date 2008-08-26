@@ -145,7 +145,7 @@ public class Fabric3ContextListener implements ServletContextListener {
                 baseDir = new File(baseDirParam);
             }
             
-            URI domain = new URI(utils.getInitParameter(DOMAIN_PARAM, "fabric3://./domain"));
+            URI domain = new URI(utils.getInitParameter(DOMAIN_PARAM, "fabric3://domain"));
             WebappHostInfo info = new WebappHostInfoImpl(context, domain, baseDir);
 
             WebappRuntime runtime = utils.getRuntime(webappClassLoader);

@@ -20,7 +20,7 @@ import org.fabric3.system.scdl.SystemImplementation;
 public class DefaultTargetPromotionServiceTestCase extends TestCase {
 
     private PromotionResolutionService promotionResolutionService = new DefaultPromotionResolutionService();
-    private LogicalCompositeComponent domain = new LogicalCompositeComponent(URI.create("fabric3://./runtime"), URI.create("runtime"), null, null);
+    private LogicalCompositeComponent domain = new LogicalCompositeComponent(URI.create("fabric3://runtime"), URI.create("runtime"), null, null);
 
     public void testNoComponentForPromotedService() {
 

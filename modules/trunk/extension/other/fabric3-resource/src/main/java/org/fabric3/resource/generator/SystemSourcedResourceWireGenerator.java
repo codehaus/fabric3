@@ -37,7 +37,7 @@ import org.osoa.sca.annotations.Reference;
 @EagerInit
 public class SystemSourcedResourceWireGenerator implements ResourceWireGenerator<SystemSourcedWireTargetDefinition, SystemSourcedResource> {
 
-    private static final String SYSTEM_URI = "fabric3://./runtime/";
+    private static final String SYSTEM_URI = "fabric3://runtime/";
 
     private GeneratorRegistry registry;
 

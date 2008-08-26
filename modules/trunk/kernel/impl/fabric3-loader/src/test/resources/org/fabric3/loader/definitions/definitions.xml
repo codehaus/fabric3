@@ -15,7 +15,7 @@
         <f3:interceptor class="FooInterceptor"/>
     </policySet>
     
-    <policySet name="testServerPolicy" provides="sca:authentication.message" appliesTo="fabric3://./domain/EchoService#Axis2EchoService">
+    <policySet name="testServerPolicy" provides="sca:authentication.message" appliesTo="fabric3://domain/EchoService#Axis2EchoService">
         <wsp:Policy>
             <sp:UsernameToken>
                 <wsp:Policy>
@@ -25,7 +25,7 @@
         </wsp:Policy>
     </policySet>
     
-    <policySet name="testClientPolicy" provides="sca:authentication.message" appliesTo="fabric3://./domain/EchoTest#service">
+    <policySet name="testClientPolicy" provides="sca:authentication.message" appliesTo="fabric3://domain/EchoTest#service">
         <wsp:Policy>
             <sp:UsernameToken>
                 <wsp:Policy>

@@ -130,7 +130,7 @@ public class ResolutionServiceImplTestCase extends TestCase {
         targetResolutionServices.add(new ExplicitTargetResolutionService());
         targetResolutionServices.add(new TypeBasedAutowireResolutionService());
         resolutionService = new ResolutionServiceImpl(promotionResolutionService, targetResolutionServices);
-        URI domainUri = URI.create("fabric3://./runtime");
+        URI domainUri = URI.create("fabric3://runtime");
         URI runtimeUri = URI.create("runtime");
         domain = new LogicalCompositeComponent(domainUri, runtimeUri, null, null);
     }

@@ -149,7 +149,7 @@ public class ClassLoaderBuilderImpl implements ClassLoaderBuilder {
         // extension classloader added as a parent
         if (!definition.getExtensionUris().isEmpty()) {
             // since all extensions are merged into the system classloader, just add it
-            ClassLoader systemCL = classLoaderRegistry.getClassLoader(URI.create("fabric3://./runtime"));
+            ClassLoader systemCL = classLoaderRegistry.getClassLoader(URI.create("fabric3://runtime"));
             if (!loader.getParents().contains(systemCL)) {
                 loader.addParent(systemCL);
             }
