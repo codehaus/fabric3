@@ -22,6 +22,7 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
+import java.io.Serializable;
 
 import org.fabric3.scdl.ServiceContract;
 
@@ -125,7 +126,8 @@ public class JavaServiceContract extends ServiceContract<Type> {
         }
     }
 
-    private class MethodSignature {
+    private class MethodSignature implements Serializable {
+        private static final long serialVersionUID = 8945587852354777957L;
         String name;
         List<String> parameters;
         String returnType;
