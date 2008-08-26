@@ -21,7 +21,7 @@ package org.fabric3.fabric.runtime;
 import java.net.URI;
 
 /**
- * Class that defines the URIs of well-known component
+ * Class that defines the URIs of well-known components.
  *
  * @version $Rev$ $Date$
  */
