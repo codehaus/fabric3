@@ -31,7 +31,8 @@ import org.osoa.sca.Constants;
  * @version $Rev$ $Date$
  */
 public class LogicalBinding<BD extends BindingDefinition> extends LogicalScaArtifact<Bindable> {
-    
+    private static final long serialVersionUID = 8153501808553226042L;
+
     private static final QName TYPE = new QName(Constants.SCA_NS, "binding");
     
     private final BD binding;

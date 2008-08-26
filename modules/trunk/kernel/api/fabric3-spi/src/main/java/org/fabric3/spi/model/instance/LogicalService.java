@@ -33,6 +33,7 @@ import org.fabric3.scdl.ServiceDefinition;
  * @version $Rev$ $Date$
  */
 public class LogicalService extends Bindable {
+    private static final long serialVersionUID = -2417797075030173948L;
 
     private static final QName TYPE = new QName(Constants.SCA_NS, "service");
 

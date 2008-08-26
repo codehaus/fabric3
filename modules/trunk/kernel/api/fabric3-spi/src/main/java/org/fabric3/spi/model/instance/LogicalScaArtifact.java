@@ -20,6 +20,7 @@ package org.fabric3.spi.model.instance;
 
 import java.net.URI;
 import java.util.Set;
+import java.io.Serializable;
 
 import javax.xml.namespace.QName;
 
@@ -28,7 +29,8 @@ import javax.xml.namespace.QName;
  *
  * @version $Revision$ $Date$
  */
-public abstract class LogicalScaArtifact<P extends LogicalScaArtifact<?>> {
+public abstract class LogicalScaArtifact<P extends LogicalScaArtifact<?>> implements Serializable {
+    private static final long serialVersionUID = 3937960041374196627L;
     private final URI uri;
     private final P parent;
     private final QName type;
@@ -90,5 +92,5 @@ public abstract class LogicalScaArtifact<P extends LogicalScaArtifact<?>> {
      * @param policySets Policy sets declared on the SCA artifact.
      */
     public abstract void setPolicySets(Set<QName> policySets) ;
-    
+
 }

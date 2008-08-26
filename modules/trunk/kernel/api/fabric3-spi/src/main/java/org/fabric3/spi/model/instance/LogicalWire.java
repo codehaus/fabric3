@@ -30,6 +30,7 @@ import org.osoa.sca.Constants;
  * @version $Rev: 59 $ $Date: 2007-05-19 08:21:09 +0100 (Sat, 19 May 2007) $
  */
 public final class LogicalWire extends LogicalScaArtifact<LogicalComponent<?>> {
+    private static final long serialVersionUID = -643283191171197255L;
 
     private static final QName TYPE = new QName(Constants.SCA_NS, "wire");
 

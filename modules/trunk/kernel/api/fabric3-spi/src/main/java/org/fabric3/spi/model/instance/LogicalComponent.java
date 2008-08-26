@@ -39,6 +39,7 @@ import org.fabric3.scdl.Implementation;
  * @version $Rev$ $Date$
  */
 public class LogicalComponent<I extends Implementation<?>> extends LogicalScaArtifact<LogicalCompositeComponent> {
+    private static final long serialVersionUID = -3520150701040845117L;
 
     private static final QName TYPE = new QName(Constants.SCA_NS, "component");
 

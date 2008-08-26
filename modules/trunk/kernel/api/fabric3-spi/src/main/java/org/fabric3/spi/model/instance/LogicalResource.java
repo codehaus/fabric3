@@ -32,7 +32,8 @@ import org.fabric3.spi.Constants;
  * @version $Revision$ $Date$
  */
 public class LogicalResource<RD extends ResourceDefinition> extends LogicalScaArtifact<LogicalComponent<?>> {
-    
+    private static final long serialVersionUID = -6298167441706672513L;
+
     private static final QName TYPE = new QName(Constants.FABRIC3_NS, "resource");
     
     private final RD resourceDefinition;

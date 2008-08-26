@@ -35,6 +35,7 @@ import org.fabric3.scdl.ReferenceDefinition;
  * @version $Rev$ $Date$
  */
 public class LogicalReference extends Bindable {
+    private static final long serialVersionUID = 2308698868251298609L;
 
     private static final QName TYPE = new QName(Constants.SCA_NS, "reference");
 

@@ -16,6 +16,7 @@ import org.fabric3.scdl.CompositeImplementation;
  * Represents a composite component.
  */
 public class LogicalCompositeComponent extends LogicalComponent<CompositeImplementation> {
+    private static final long serialVersionUID = 6661201121307925462L;
 
     private final Map<LogicalReference, Set<LogicalWire>> wires = new HashMap<LogicalReference, Set<LogicalWire>>();
     private final Map<URI, LogicalComponent<?>> components = new HashMap<URI, LogicalComponent<?>>();

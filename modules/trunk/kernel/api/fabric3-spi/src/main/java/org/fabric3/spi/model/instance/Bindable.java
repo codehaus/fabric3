@@ -29,6 +29,7 @@ import javax.xml.namespace.QName;
  * @version $Rev: 59 $ $Date: 2007-05-19 08:21:09 +0100 (Sat, 19 May 2007) $
  */
 public abstract class Bindable extends LogicalScaArtifact<LogicalComponent<?>> {
+    private static final long serialVersionUID = 570403036597601956L;
     private final List<LogicalBinding<?>> bindings;
     private final List<LogicalBinding<?>> callbackBindings;
 
