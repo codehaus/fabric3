@@ -27,28 +27,23 @@ import java.net.URI;
  */
 public final class ComponentNames {
 
-    /**
-     * The name of the component that is the root of the system composite tree.
-     */
     public static final String RUNTIME_NAME = "fabric3://runtime";
 
     public static final URI RUNTIME_URI = URI.create(RUNTIME_NAME);
 
+    public static final URI BOOT_CLASSLOADER_ID = URI.create("fabric3://runtime/BootClassLoader");
+
+    public static final URI APPLICATION_CLASSLOADER_ID = URI.create("fabric3://runtime/ApplicationClassLoader");
+
     public static final URI APPLICATION_DOMAIN_URI = URI.create(RUNTIME_NAME + "/ApplicationDomain");
 
     public static final URI RUNTIME_DOMAIN_URI = URI.create(RUNTIME_NAME + "/RuntimeDomain");
-
-    public static final URI CLASSLOADER_REGISTRY_URI = URI.create(RUNTIME_NAME + "/ClassLoaderRegistry");
 
     public static final URI EVENT_SERVICE_URI = URI.create(RUNTIME_NAME + "/eventService");
 
     public static final URI DISCOVERY_SERVICE_URI = URI.create(RUNTIME_NAME + "/DiscoveryService");
 
     public static final URI CONTRIBUTION_SERVICE_URI = URI.create(RUNTIME_NAME + "/ContributionService");
-
-    public static final URI BOOT_CLASSLOADER_ID = URI.create("fabric3://runtime/BootClassLoader");
-
-    public static final URI APPLICATION_CLASSLOADER_ID = URI.create("fabric3://runtime/ApplicationClassLoader");
 
     public static final URI DEFINITIONS_REGISTRY = URI.create(RUNTIME_NAME + "/definitionsRegistry");
 
