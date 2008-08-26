@@ -93,7 +93,6 @@ public abstract class PojoComponent<T> extends AbstractLifecycle implements Atom
 
     public void start() {
         super.start();
-        instanceFactory = provider.createFactory();
         scopeContainer.register(this);
     }
 
@@ -104,7 +103,7 @@ public abstract class PojoComponent<T> extends AbstractLifecycle implements Atom
     }
 
     public InstanceWrapper<T> createInstanceWrapper(WorkContext workContext) throws ObjectCreationException {
-        return instanceFactory.newInstance(workContext);
+        return getInstanceFactory().newInstance(workContext);
     }
 
     @SuppressWarnings({"unchecked"})
@@ -153,6 +152,9 @@ public abstract class PojoComponent<T> extends AbstractLifecycle implements Atom
     public void setObjectFactory(InjectableAttribute attribute, ObjectFactory<?> objectFactory, Object key) {
         scopeContainer.addObjectFactory(this, objectFactory, attribute.getName(), key);
         provider.setObjectFactory(attribute, objectFactory, key);
+        // Clear the instance factory as it has changed and will need to be re-created. This can happen if reinjection occurs after the first 
+        // instance has been created.
+        instanceFactory = null;
     }
 
     public Class<?> getMemberType(InjectableAttribute injectionSite) {
@@ -165,6 +167,13 @@ public abstract class PojoComponent<T> extends AbstractLifecycle implements Atom
 
     public String toString() {
         return "[" + uri.toString() + "] in state [" + super.toString() + ']';
+    }
+
+    private InstanceFactory getInstanceFactory() {
+        if (instanceFactory == null) {
+            instanceFactory = provider.createFactory();
+        }
+        return instanceFactory;
     }
 
 }
