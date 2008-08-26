@@ -79,7 +79,7 @@ import org.fabric3.system.scdl.SystemImplementation;
  */
 public abstract class AbstractBootstrapper implements Bootstrapper {
 
-    private static final URI HOST_CLASSLOADER_ID = URI.create("sca://./hostClassLoader");
+    private static final URI HOST_CLASSLOADER_ID = URI.create("fabric3://runtime/HostClassLoader");
     private static final URI RUNTIME_SERVICES = URI.create("fabric3://./RuntimeServices");
 
     // bootstrap components

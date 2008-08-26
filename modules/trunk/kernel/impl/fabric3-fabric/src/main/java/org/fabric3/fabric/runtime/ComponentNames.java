@@ -48,9 +48,9 @@ public final class ComponentNames {
 
     public static final URI CONTRIBUTION_SERVICE_URI = URI.create(RUNTIME_NAME + "/ContributionService");
 
-    public static final URI BOOT_CLASSLOADER_ID = URI.create("sca://./bootClassLoader");
+    public static final URI BOOT_CLASSLOADER_ID = URI.create("fabric3://runtime/BootClassLoader");
 
-    public static final URI APPLICATION_CLASSLOADER_ID = URI.create("sca://./applicationClassLoader");
+    public static final URI APPLICATION_CLASSLOADER_ID = URI.create("fabric3://runtime/ApplicationClassLoader");
 
     public static final URI DEFINITIONS_REGISTRY = URI.create(RUNTIME_NAME + "/definitionsRegistry");
 

@@ -42,7 +42,7 @@ import org.fabric3.spi.services.contribution.MetaDataStore;
  * @version $Rev$ $Date$
  */
 public class ContributionLoaderImpl implements ContributionLoader {
-    private static final URI APP_CLASSLOADER = URI.create("sca://./applicationClassLoader");
+    private static final URI APP_CLASSLOADER = URI.create("fabric3://runtime/ApplicationClassLoader");
     private final ClassLoaderRegistry classLoaderRegistry;
     private final MetaDataStore store;
     private final ClasspathProcessorRegistry classpathProcessorRegistry;
