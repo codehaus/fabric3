@@ -53,8 +53,8 @@ public class URIHelperTestCase extends TestCase {
     }
 
     public void testParentName() throws Exception {
-        URI uri = new URI("sca://./grandparent/parent/child");
-        assertEquals("sca://./grandparent/parent", UriHelper.getParentName(uri));
+        URI uri = new URI("fabric3://grandparent/parent/child");
+        assertEquals("fabric3://grandparent/parent", UriHelper.getParentName(uri));
     }
 
     public void testDefragmentedNameScheme() throws Exception {

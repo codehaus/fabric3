@@ -48,8 +48,8 @@ import org.fabric3.spi.model.instance.LogicalService;
  * @version $Rev$ $Date$
  */
 public class InstantiationTestCase extends TestCase {
-    public static final URI PARENT_URI = URI.create("sca://./domain/parent");
-    public static final URI COMPONENT_BASE = URI.create("sca://./domain/parent/component");
+    public static final URI PARENT_URI = URI.create("fabric3://domain/parent");
+    public static final URI COMPONENT_BASE = URI.create("fabric3://domain/parent/component");
     public static final String COMPONENT_URI = PARENT_URI.toString() + "/component";
     public static final String CHILD_URI = COMPONENT_URI + "/child";
     public static final String SERVICE_URI = COMPONENT_URI + "#service";

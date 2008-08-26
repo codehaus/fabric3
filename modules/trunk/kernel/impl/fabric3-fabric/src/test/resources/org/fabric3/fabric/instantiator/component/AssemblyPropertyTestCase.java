@@ -102,8 +102,8 @@ public class AssemblyPropertyTestCase extends TestCase {
                 return null;
             }
         };
-        domain = new LogicalComponent<CompositeImplementation>(URI.create("sca://./domain"),
-                                                               URI.create("sca://./domain"),
+        domain = new LogicalComponent<CompositeImplementation>(URI.create("fabric3://domain"),
+                                                               URI.create("fabric3://domain"),
                                                                null,
                                                                null);
 

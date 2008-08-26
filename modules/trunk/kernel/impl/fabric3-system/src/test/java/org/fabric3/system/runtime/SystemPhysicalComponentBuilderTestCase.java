@@ -59,8 +59,8 @@ public class SystemPhysicalComponentBuilderTestCase<T> extends TestCase {
     @SuppressWarnings("unchecked")
     protected void setUp() throws Exception {
         super.setUp();
-        groupId = URI.create("sca://./composite");
-        componentId = URI.create("sca://./component");
+        groupId = URI.create("fabric3://composite");
+        componentId = URI.create("fabric3://component");
 
         builderRegistry = EasyMock.createMock(ComponentBuilderRegistry.class);
         scopeRegistry = EasyMock.createMock(ScopeRegistry.class);
