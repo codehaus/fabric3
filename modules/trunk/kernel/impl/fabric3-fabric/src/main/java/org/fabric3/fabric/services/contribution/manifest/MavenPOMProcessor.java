@@ -16,28 +16,22 @@
  */
 package org.fabric3.fabric.services.contribution.manifest;
 
-import java.util.Collections;
-import java.util.Iterator;
-
-import javax.xml.namespace.NamespaceContext;
 import javax.xml.namespace.QName;
+import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
+import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
+import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathExpressionException;
-import javax.xml.xpath.XPathFactory;
+
+import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Init;
+import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.scdl.ValidationContext;
 import org.fabric3.spi.services.contribution.ContributionManifest;
+import org.fabric3.spi.services.contribution.MavenExport;
 import org.fabric3.spi.services.contribution.XmlElementManifestProcessor;
 import org.fabric3.spi.services.contribution.XmlManifestProcessorRegistry;
-import org.fabric3.spi.services.contribution.MavenExport;
-import org.fabric3.transform.TransformationException;
-import org.fabric3.transform.xml.Stream2Document;
-import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Init;
-import org.osoa.sca.annotations.Reference;
-import org.w3c.dom.Element;
 
 /**
  * Loads Maven export entries in a contribution manifest by parsing a pom.xml file contained in a contribution.
@@ -47,9 +41,6 @@ import org.w3c.dom.Element;
 @EagerInit
 public class MavenPOMProcessor implements XmlElementManifestProcessor {
 
-    private Stream2Document transformer = new Stream2Document();
-    private static final XPathFactory XPATH_Factory = XPathFactory.newInstance();
-    
     public static final String NS = "http://maven.apache.org/POM/4.0.0";
     private static final QName PROJECT = new QName(NS, "project");
 
@@ -69,60 +60,90 @@ public class MavenPOMProcessor implements XmlElementManifestProcessor {
     }
 
     public void process(ContributionManifest manifest, XMLStreamReader reader, ValidationContext context) throws ContributionException {
-        
+        String parentVersion = null;
+        String groupId = null;
+        String artifactId = null;
+        String version = null;
+        String packaging = null;
+        boolean loop = true;
+        QName firstChildElement = null;
         try {
-            
-            XPath xpath = XPATH_Factory.newXPath();            
-            xpath.setNamespaceContext(new NamespaceContext() {
-                public String getNamespaceURI(String prefix) {
-                    return NS;
+            while (loop) {
+                switch (reader.next()) {
+                case START_ELEMENT:
+                    if (reader.getName().getLocalPart().equals("parent")) {
+                        parentVersion = parseParent(reader);
+                    } else if (firstChildElement == null && reader.getName().getLocalPart().equals("groupId")) {
+                        groupId = reader.getElementText();
+                    } else if (firstChildElement == null && reader.getName().getLocalPart().equals("artifactId")) {
+                        artifactId = reader.getElementText();
+                    } else if (firstChildElement == null && reader.getName().getLocalPart().equals("packaging")) {
+                        packaging = reader.getElementText();
+                    } else if (firstChildElement == null && reader.getName().getLocalPart().equals("version")) {
+                        version = reader.getElementText();
+                    } else if (firstChildElement == null) {
+                        // keep track of child element below <project>. This is used to ignore values in subelements for version, groupid, and
+                        // artifact id wich pertain to different contexts, e.g. <dependency>
+                        firstChildElement = reader.getName();
+                    }
+                    break;
+                case END_ELEMENT:
+                    if (reader.getName().getLocalPart().equals("project")) {
+                        loop = false;
+                        continue;
+                    } else {
+                        if (reader.getName().equals(firstChildElement)) {
+                            firstChildElement = null;
+                        }
+                    }
                 }
-                public String getPrefix(String namespaceURI) {
-                    return "mvn";
-                }
-                public Iterator getPrefixes(String namespaceURI) {
-                    return Collections.singletonList("").iterator();
-                }
-                
-            });
-            
-            Element project = transformer.transform(reader, null).getDocumentElement();
-            
-            String parentVersion = xpath.evaluate("mvn:parent/mvn:version", project);
-            String groupId = xpath.evaluate("mvn:groupId", project);
-            String artifactId = xpath.evaluate("mvn:artifactId", project);
-            String version = xpath.evaluate("mvn:version", project);
-            if (version == null || "".equals(version)) {
-                version = parentVersion;
             }
-            String packaging = xpath.evaluate("mvn:package", project);
-            
-            if (groupId == null || "".equals(groupId)) {
-                context.addError(new InvalidPOM("Group id not specified", "groupId", reader));
-            }
-            if (artifactId == null || "".equals(artifactId)) {
-                context.addError(new InvalidPOM("Artifact id not specified", "artifactId", reader));
-            }
-            if (version == null || "".equals(version)) {
-                context.addError(new InvalidPOM("Version not specified", "version", reader));
-            }
-
-            MavenExport export = new MavenExport();
-            export.setGroupId(groupId);
-            export.setArtifactId(artifactId);
-            export.setVersion(version);
-
-            if (packaging != null && "".equals(packaging)) {
-                export.setClassifier(packaging);
-            }
-            
-            manifest.addExport(export);
-            
-        } catch (TransformationException ex) {
-            throw new ContributionException(ex);
-        } catch (XPathExpressionException ex) {
-            throw new ContributionException(ex);
+        } catch (XMLStreamException e) {
+            throw new ContributionException(e);
         }
-        
+
+        if (version == null || "".equals(version)) {
+            version = parentVersion;
+        }
+
+        if (groupId == null || "".equals(groupId)) {
+            context.addError(new InvalidPOM("Group id not specified", "groupId", reader));
+        }
+        if (artifactId == null || "".equals(artifactId)) {
+            context.addError(new InvalidPOM("Artifact id not specified", "artifactId", reader));
+        }
+        if (version == null || "".equals(version)) {
+            context.addError(new InvalidPOM("Version not specified", "version", reader));
+        }
+
+        MavenExport export = new MavenExport();
+        export.setGroupId(groupId);
+        export.setArtifactId(artifactId);
+        export.setVersion(version);
+
+        if (packaging != null && "".equals(packaging)) {
+            export.setClassifier(packaging);
+        }
+
+        manifest.addExport(export);
+
+
+    }
+
+    private String parseParent(XMLStreamReader reader) throws XMLStreamException {
+        String version = null;
+        while (true) {
+            switch (reader.next()) {
+            case START_ELEMENT:
+                if (reader.getName().getLocalPart().equals("version")) {
+                    version = reader.getElementText();
+                }
+                break;
+            case END_ELEMENT:
+                if (reader.getName().getLocalPart().equals("parent")) {
+                    return version;
+                }
+            }
+        }
     }
 }
