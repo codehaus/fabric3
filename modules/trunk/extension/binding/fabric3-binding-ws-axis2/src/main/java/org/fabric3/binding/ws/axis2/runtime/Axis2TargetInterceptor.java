@@ -32,7 +32,6 @@ import org.apache.axis2.description.AxisOperation;
 import org.apache.axis2.description.AxisService;
 import org.osoa.sca.ServiceUnavailableException;
 
-import org.fabric3.binding.ws.axis2.provision.Axis2WireTargetDefinition;
 import org.fabric3.binding.ws.axis2.provision.AxisPolicy;
 import org.fabric3.binding.ws.axis2.runtime.config.F3Configurator;
 import org.fabric3.binding.ws.axis2.runtime.policy.PolicyApplier;
@@ -55,20 +54,20 @@ public class Axis2TargetInterceptor implements Interceptor {
     /**
      * Initializes the end point reference.
      *
-     * @param target         Target wire source definition.
+     * @param endpointUri    the endpoint uri.
      * @param operation      Operation name.
      * @param policies       the set of policies applied to the service or reference configuration
      * @param f3Configurator a configuration helper for classloading
      * @param policyApplier  the helper for applying configured policies
      */
-    public Axis2TargetInterceptor(Axis2WireTargetDefinition target,
+    public Axis2TargetInterceptor(String endpointUri,
                                   String operation,
                                   Set<AxisPolicy> policies,
                                   F3Configurator f3Configurator,
                                   PolicyApplier policyApplier) {
 
         this.operation = operation;
-        this.epr = new EndpointReference(target.getUri().toASCIIString());
+        this.epr = new EndpointReference(endpointUri);
         this.policies = policies;
         this.f3Configurator = f3Configurator;
         this.policyApplier = policyApplier;

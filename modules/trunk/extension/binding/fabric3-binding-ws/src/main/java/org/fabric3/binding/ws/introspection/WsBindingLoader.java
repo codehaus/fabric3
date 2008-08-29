@@ -18,10 +18,12 @@
  */
 package org.fabric3.binding.ws.introspection;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Map;
+import java.net.URLEncoder;
 import java.util.HashMap;
+import java.util.Map;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
@@ -88,7 +90,9 @@ public class WsBindingLoader implements TypeLoader<WsBindingDefinition> {
                 introspectionContext.addError(failure);
                 bd = new WsBindingDefinition(null, implementation, wsdlLocation, wsdlElement);
             } else {
-                bd = new WsBindingDefinition(new URI(uri), implementation, wsdlLocation, wsdlElement);
+                // encode the URI since there may be expressions (e.g. "${..}") contained in it
+                URI endpointUri = new URI(URLEncoder.encode(uri, "UTF-8"));
+                bd = new WsBindingDefinition(endpointUri, implementation, wsdlLocation, wsdlElement);
             }
             loaderHelper.loadPolicySetsAndIntents(bd, reader, introspectionContext);
 
@@ -96,6 +100,9 @@ public class WsBindingLoader implements TypeLoader<WsBindingDefinition> {
 
         } catch (URISyntaxException ex) {
             InvalidValue failure = new InvalidValue("The web services binding URI is not a valid: " + uri, "uri", reader);
+            introspectionContext.addError(failure);
+        } catch (UnsupportedEncodingException e) {
+            InvalidValue failure = new InvalidValue("Invalid encoding for URI: " + uri + "\n" + e, "uri", reader);
             introspectionContext.addError(failure);
         }
 

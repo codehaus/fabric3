@@ -16,7 +16,9 @@
  */
 package org.fabric3.binding.ws.axis2.runtime;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
+import java.net.URLDecoder;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -49,6 +51,8 @@ import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.host.ServletHost;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
+import org.fabric3.spi.services.expression.ExpressionExpander;
+import org.fabric3.spi.services.expression.ExpressionExpansionException;
 import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.Wire;
 
@@ -62,6 +66,7 @@ public class Axis2ServiceProvisionerImpl implements Axis2ServiceProvisioner {
     private final ClassLoaderRegistry classLoaderRegistry;
     private final PolicyApplier policyApplier;
     private final F3Configurator f3Configurator;
+    private ExpressionExpander expander;
     private ServiceProvisionerMonitor monitor;
 
     private ConfigurationContext configurationContext;
@@ -71,11 +76,13 @@ public class Axis2ServiceProvisionerImpl implements Axis2ServiceProvisioner {
                                        @Reference ClassLoaderRegistry classLoaderRegistry,
                                        @Reference PolicyApplier policyApplier,
                                        @Reference F3Configurator f3Configurator,
+                                       @Reference ExpressionExpander expander,
                                        @Monitor ServiceProvisionerMonitor monitor) {
         this.servletHost = servletHost;
         this.classLoaderRegistry = classLoaderRegistry;
         this.policyApplier = policyApplier;
         this.f3Configurator = f3Configurator;
+        this.expander = expander;
         this.monitor = monitor;
     }
 
@@ -108,7 +115,7 @@ public class Axis2ServiceProvisionerImpl implements Axis2ServiceProvisioner {
 
         try {
 
-            String uri = pwsd.getUri().getPath();
+            String uri = expandUri(pwsd.getUri());
             URI classLoaderUri = pwsd.getClassLoaderId();
             String serviceClass = pwsd.getServiceInterface();
 
@@ -192,5 +199,26 @@ public class Axis2ServiceProvisionerImpl implements Axis2ServiceProvisioner {
         }
 
     }
+
+
+    /**
+     * Expands the target URI if it contains an expression of the form ${..}.
+     *
+     * @param uri the target uri to expand
+     * @return the expanded URI with sourced values for any expressions
+     * @throws WiringException if there is an error expanding an expression
+     */
+    private String expandUri(URI uri) throws WiringException {
+        try {
+            String decoded = URLDecoder.decode(uri.getPath(), "UTF-8");
+            // classloaders not needed since the type is String
+            return expander.expand(decoded);
+        } catch (UnsupportedEncodingException e) {
+            throw new AssertionError(e);
+        } catch (ExpressionExpansionException e) {
+            throw new WiringException(e);
+        }
+    }
+
 
 }
