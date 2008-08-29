@@ -76,7 +76,6 @@ public class FtpTargetWireAttacher implements TargetWireAttacher<FtpWireTargetDe
     private URI expandUri(URI uri) throws WiringException {
         try {
             String decoded = URLDecoder.decode(uri.toString(), "UTF-8");
-            // classloaders not needed since the type is String
             return URI.create(expander.expand(decoded));
         } catch (UnsupportedEncodingException e) {
             throw new AssertionError(e);
