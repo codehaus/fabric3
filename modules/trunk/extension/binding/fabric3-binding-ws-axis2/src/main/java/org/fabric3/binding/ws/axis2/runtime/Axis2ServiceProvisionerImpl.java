@@ -211,7 +211,6 @@ public class Axis2ServiceProvisionerImpl implements Axis2ServiceProvisioner {
     private String expandUri(URI uri) throws WiringException {
         try {
             String decoded = URLDecoder.decode(uri.getPath(), "UTF-8");
-            // classloaders not needed since the type is String
             return expander.expand(decoded);
         } catch (UnsupportedEncodingException e) {
             throw new AssertionError(e);
