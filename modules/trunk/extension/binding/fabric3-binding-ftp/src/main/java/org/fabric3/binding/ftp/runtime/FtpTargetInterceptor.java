@@ -21,7 +21,6 @@ package org.fabric3.binding.ftp.runtime;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetAddress;
-import java.net.URI;
 import java.net.UnknownHostException;
 
 import org.apache.commons.net.ftp.FTPClient;
@@ -44,12 +43,11 @@ public class FtpTargetInterceptor implements Interceptor {
     private final FtpSecurity security;
     private final boolean active;
 
-    public FtpTargetInterceptor(URI uri, FtpSecurity security, boolean active) throws UnknownHostException {
+    public FtpTargetInterceptor(InetAddress hostAddress, int port, FtpSecurity security, boolean active) throws UnknownHostException {
+        this.hostAddress = hostAddress;
+        this.port = port;
         this.security = security;
         this.active = active;
-        String host = uri.getHost();
-        port = uri.getPort() == -1 ? 23 : uri.getPort();
-        hostAddress = "localhost".equals(host) ? InetAddress.getLocalHost() : InetAddress.getByName(host);
     }
 
     public Interceptor getNext() {

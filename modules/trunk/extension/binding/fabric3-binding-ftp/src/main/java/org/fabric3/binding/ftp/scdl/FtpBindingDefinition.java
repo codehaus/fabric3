@@ -21,7 +21,6 @@ package org.fabric3.binding.ftp.scdl;
 import java.net.URI;
 
 import org.fabric3.binding.ftp.common.Constants;
-import org.fabric3.binding.ftp.introspection.FtpBindingLoader;
 import org.fabric3.scdl.BindingDefinition;
 
 /**
@@ -37,7 +36,8 @@ public class FtpBindingDefinition extends BindingDefinition {
     /**
      * Initializes the binding type.
      * 
-     * @param URI Target URI.
+     * @param uri Target URI.
+     * @param transferMode the FTP transfer mode
      */
     public FtpBindingDefinition(URI uri, TransferMode transferMode) {
         super(uri, Constants.BINDING_QNAME);
