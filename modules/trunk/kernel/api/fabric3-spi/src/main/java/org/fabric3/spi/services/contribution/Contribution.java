@@ -151,11 +151,11 @@ public class Contribution implements Serializable {
      * @return a ResourceElement matching the symbol or null if not found
      */
     @SuppressWarnings({"unchecked"})
-    public <T extends Symbol> ResourceElement<T, Object> findResourceElement(Symbol<T> symbol) {
+    public <T extends Symbol> ResourceElement<T, Serializable> findResourceElement(Symbol<T> symbol) {
         for (Resource resource : resources) {
             for (ResourceElement<?, ?> element : resource.getResourceElements()) {
                 if (element.getSymbol().equals(symbol)) {
-                    return (ResourceElement<T, Object>) element;
+                    return (ResourceElement<T, Serializable>) element;
                 }
             }
         }

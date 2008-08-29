@@ -19,6 +19,7 @@
 package org.fabric3.spi.services.contribution;
 
 import java.net.URI;
+import java.io.Serializable;
 
 import org.fabric3.scdl.ValidationContext;
 
@@ -82,7 +83,7 @@ public interface MetaDataStore {
      * @return the resource element or null if not found
      * @throws MetaDataStoreException if an error occurs during resolution
      */
-    <S extends Symbol, V> ResourceElement<S, V> resolve(URI contributionUri, Class<V> type, S symbol, ValidationContext context)
+    <S extends Symbol, V extends Serializable> ResourceElement<S, V> resolve(URI contributionUri, Class<V> type, S symbol, ValidationContext context)
             throws MetaDataStoreException;
 
     /**

@@ -16,12 +16,15 @@
  */
 package org.fabric3.spi.services.contribution;
 
+import java.io.Serializable;
+
 /**
  * Encapsulates an addressable key for a symbol space.
  *
  * @version $Rev$ $Date$
  */
-public abstract class Symbol<KEY> {
+public abstract class Symbol<KEY> implements Serializable {
+    private static final long serialVersionUID = -1064949020858816670L;
     protected KEY key;
 
     public Symbol(KEY key) {

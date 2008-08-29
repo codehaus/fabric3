@@ -18,6 +18,7 @@
  */
 package org.fabric3.runtime.webapp.contribution;
 
+import java.io.Serializable;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamReader;
 
@@ -72,7 +73,7 @@ public class WebXmlIndexer implements XmlIndexer {
         } else {
             symbol = new QNameSymbol(WEB_APP_NO_NAMESPACE);
         }
-        ResourceElement<QNameSymbol, Void> element = new ResourceElement<QNameSymbol, Void>(symbol);
+        ResourceElement<QNameSymbol, Serializable> element = new ResourceElement<QNameSymbol, Serializable>(symbol);
         resource.addResourceElement(element);
     }
 }

@@ -1,6 +1,7 @@
 package org.fabric3.fabric.services.contribution;
 
 import java.io.File;
+import java.io.Serializable;
 import java.net.URI;
 import java.net.URL;
 import java.util.List;
@@ -52,7 +53,7 @@ public class MetaDataStoreImplTestCase extends TestCase {
         contribution.setManifest(manifest);
         QName qname = new QName("foo", "bar");
         QNameSymbol symbol = new QNameSymbol(qname);
-        ResourceElement<QNameSymbol, Void> element = new ResourceElement<QNameSymbol, Void>(symbol);
+        ResourceElement<QNameSymbol, Serializable> element = new ResourceElement<QNameSymbol, Serializable>(symbol);
         Resource resource = new Resource(new URL("file://foo"), "resource");
         resource.addResourceElement(element);
         contribution.addResource(resource);

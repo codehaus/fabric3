@@ -18,6 +18,7 @@
  */
 package org.fabric3.fabric.services.contribution;
 
+import java.io.Serializable;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
@@ -126,7 +127,10 @@ public class MetaDataStoreImpl implements MetaDataStore {
         return null;
     }
 
-    public <S extends Symbol, V> ResourceElement<S, V> resolve(URI contributionUri, Class<V> type, S symbol, ValidationContext context)
+    public <S extends Symbol, V extends Serializable> ResourceElement<S, V> resolve(URI contributionUri,
+                                                                                    Class<V> type,
+                                                                                    S symbol,
+                                                                                    ValidationContext context)
             throws MetaDataStoreException {
         Contribution contribution = find(contributionUri);
         if (contribution == null) {
@@ -193,10 +197,11 @@ public class MetaDataStoreImpl implements MetaDataStore {
     }
 
     @SuppressWarnings({"unchecked"})
-    private <S extends Symbol, V> ResourceElement<S, V> resolveInternal(Contribution contribution,
-                                                                        Class<V> type,
-                                                                        S symbol,
-                                                                        ValidationContext context) throws MetaDataStoreException {
+    private <S extends Symbol, V extends Serializable> ResourceElement<S, V> resolveInternal(Contribution contribution,
+                                                                                             Class<V> type,
+                                                                                             S symbol,
+                                                                                             ValidationContext context)
+            throws MetaDataStoreException {
         URI contributionUri = contribution.getUri();
         ClassLoader loader = classLoaderRegistry.getClassLoader(contributionUri);
         assert loader != null;
