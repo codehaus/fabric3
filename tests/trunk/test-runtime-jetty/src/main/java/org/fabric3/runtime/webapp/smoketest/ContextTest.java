@@ -35,7 +35,7 @@ public class ContextTest implements TestService {
         ComponentContext componentContext = (ComponentContext) request.getSession().getAttribute(Constants.CONTEXT_ATTRIBUTE);
         if (componentContext == null) {
             response.sendError(500, "Context was not bound");
-        } else if (!"fabric3://./domain/smoketest".equals(componentContext.getURI())) {
+        } else if (!"fabric3://domain/smoketest".equals(componentContext.getURI())) {
             response.sendError(500, "Context was not bound");
         } else {
             PrintWriter out = response.getWriter();
