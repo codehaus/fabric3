@@ -109,11 +109,9 @@ public class DefaultContractProcessor implements ContractProcessor {
         JavaServiceContract contract = new JavaServiceContract(interfaze);
         contract.setInterfaceName(interfaze.getSimpleName());
 
-        // TODO this should be refactored to its own processor
         boolean remotable = interfaze.isAnnotationPresent(Remotable.class);
         contract.setRemotable(remotable);
 
-        // TODO this should be refactored to its own processor
         boolean conversational = helper.isAnnotationPresent(interfaze, Conversational.class);
         contract.setConversational(conversational);
 
@@ -178,7 +176,6 @@ public class DefaultContractProcessor implements ContractProcessor {
             DataType<List<DataType<Type>>> inputType = new DataType<List<DataType<Type>>>(Object[].class, paramDataTypes);
             Operation<Type> operation = new Operation<Type>(name, inputType, returnDataType, faultDataTypes, conversationSequence);
 
-            // TODO this should be refactored to its own processor
             if (method.isAnnotationPresent(OneWay.class)) {
                 operation.addIntent(ONEWAY_INTENT);
             }
