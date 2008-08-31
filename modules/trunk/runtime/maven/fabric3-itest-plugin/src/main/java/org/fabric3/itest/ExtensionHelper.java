@@ -22,7 +22,6 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -114,14 +113,10 @@ public class ExtensionHelper {
     private List<ContributionSource> createContributionSources(List<URL> urls) {
         List<ContributionSource> sources = new ArrayList<ContributionSource>();
         for (URL extensionUrl : urls) {
-            try {
-                URI uri = extensionUrl.toURI();
-                ContributionSource source = new FileContributionSource(uri, extensionUrl, -1, new byte[0]);
-                sources.add(source);
-            } catch (URISyntaxException e) {
-                // should not happen
-                throw new IllegalArgumentException(e);
-            }
+            // it's ok to assume archives are uniquely named since most server environments have a single deploy directory
+            URI uri = URI.create(new File(extensionUrl.getFile()).getName());
+            ContributionSource source = new FileContributionSource(uri, extensionUrl, -1, new byte[0]);
+            sources.add(source);
         }
         return sources;
     }
