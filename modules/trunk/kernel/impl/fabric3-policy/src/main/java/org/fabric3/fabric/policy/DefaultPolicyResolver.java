@@ -18,7 +18,10 @@
  */
 package org.fabric3.fabric.policy;
 
+import java.util.Collections;
+import java.util.List;
 import java.util.Set;
+import javax.xml.namespace.QName;
 
 import org.osoa.sca.annotations.Reference;
 import org.w3c.dom.Element;
@@ -28,10 +31,13 @@ import org.fabric3.fabric.policy.helper.InteractionPolicyHelper;
 import org.fabric3.fabric.policy.infoset.PolicyInfosetBuilder;
 import org.fabric3.scdl.Operation;
 import org.fabric3.scdl.ServiceContract;
+import org.fabric3.scdl.definitions.Intent;
 import org.fabric3.scdl.definitions.PolicyPhase;
 import org.fabric3.scdl.definitions.PolicySet;
+import org.fabric3.spi.Constants;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.instance.LogicalComponent;
+import org.fabric3.spi.policy.Policy;
 import org.fabric3.spi.policy.PolicyResolutionException;
 import org.fabric3.spi.policy.PolicyResolver;
 import org.fabric3.spi.policy.PolicyResult;
@@ -42,6 +48,8 @@ import org.fabric3.util.closure.CollectionUtils;
  * @version $Revision$ $Date$
  */
 public class DefaultPolicyResolver implements PolicyResolver {
+    private static final QName IMPLEMENTATION_SYSTEM = new QName(Constants.FABRIC3_SYSTEM_NS, "implementation.system");
+    private static final QName IMPLEMENTATION_SINGLETON = new QName(Constants.FABRIC3_SYSTEM_NS, "singleton");
 
     /**
      * Closure for filtering intercepted policies.
@@ -50,6 +58,38 @@ public class DefaultPolicyResolver implements PolicyResolver {
         public Boolean execute(PolicySet policySet) {
             return policySet.getPhase() == PolicyPhase.INTERCEPTION;
         }
+    };
+
+    private static final PolicyResult RESULT = new PolicyResult() {
+
+        public List<PolicySet> getInterceptedPolicySets(Operation<?> operation) {
+            return Collections.emptyList();
+        }
+
+        public Policy getSourcePolicy() {
+            return new Policy() {
+                public List<Intent> getProvidedIntents(Operation<?> operation) {
+                    return Collections.emptyList();
+                }
+
+                public List<PolicySet> getProvidedPolicySets(Operation<?> operation) {
+                    return Collections.emptyList();
+                }
+            };
+        }
+
+        public Policy getTargetPolicy() {
+            return new Policy() {
+                public List<Intent> getProvidedIntents(Operation<?> operation) {
+                    return Collections.emptyList();
+                }
+
+                public List<PolicySet> getProvidedPolicySets(Operation<?> operation) {
+                    return Collections.emptyList();
+                }
+            };
+        }
+
     };
 
     /**
@@ -89,7 +129,9 @@ public class DefaultPolicyResolver implements PolicyResolver {
                                         LogicalBinding<?> targetBinding,
                                         LogicalComponent<?> source,
                                         LogicalComponent<?> target) throws PolicyResolutionException {
-
+        if (noPolicy(source) && noPolicy(target)) {
+            return RESULT;
+        }
         PolicyResultImpl policyResult = new PolicyResultImpl();
 
         for (Operation<?> operation : serviceContract.getOperations()) {
@@ -131,10 +173,15 @@ public class DefaultPolicyResolver implements PolicyResolver {
                 policyResult.addInterceptedPolicySets(operation, CollectionUtils.filter(policies, INTERCEPTION));
             }
 
-        }
+        }                       
 
         return policyResult;
 
+    }
+
+    private boolean noPolicy(LogicalComponent<?> component) {
+        return component != null && (component.getDefinition().getImplementation().isType(IMPLEMENTATION_SYSTEM)
+                || component.getDefinition().getImplementation().isType(IMPLEMENTATION_SINGLETON));
     }
 
 }
