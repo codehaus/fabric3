@@ -53,7 +53,7 @@ public class InvalidCompositeException extends ValidationException {
         PrintWriter writer = new PrintWriter(bas);
         ValidationUtils.writeErrors(writer, getErrors());
         writer.write("\n");
-        ValidationUtils.writeWarnings(writer, getErrors());
+        ValidationUtils.writeWarnings(writer, getWarnings());
         return bas.toString();
     }
 

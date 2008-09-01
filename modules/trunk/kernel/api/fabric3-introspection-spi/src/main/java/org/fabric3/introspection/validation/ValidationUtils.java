@@ -18,11 +18,11 @@
  */
 package org.fabric3.introspection.validation;
 
-import java.util.List;
+import java.io.ByteArrayOutputStream;
+import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.io.PrintWriter;
-import java.io.ByteArrayOutputStream;
+import java.util.List;
 
 import org.fabric3.host.contribution.ValidationFailure;
 import org.fabric3.scdl.ArtifactValidationFailure;
@@ -107,7 +107,9 @@ public final class ValidationUtils {
             if (type == TYPE.ERROR) {
                 writer.write(count + " errors were found \n\n");
             } else {
-                writer.write(count + " warnings were found \n\n");
+                if (count != 0) {
+                    writer.write(count + " warnings were found \n\n");
+                }
             }
         }
         writer.flush();
