@@ -93,7 +93,7 @@
 
     <component name="DefinitionsProcessor">
         <system:implementation.system class="org.fabric3.fabric.services.contribution.processor.DefinitionsProcessor"/>
-        <reference name="loader" target="loader.definitions"/>
+        <reference name="loader" target="DefinitionsLoader"/>
     </component>
 
     <component name="ContributionElementLoader">

@@ -26,16 +26,16 @@
            xmlns:loader="urn:maven:org.codehaus.fabric3:fabric3-loader"
            xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
            xmlns:system="http://fabric3.org/xmlns/sca/system/2.0-alpha"
-           name="loaderCommon" targetNamespace="urn:maven:org.codehaus.fabric3:fabric3-loader"
+           name="LoaderCommonBootComposite" targetNamespace="urn:maven:org.codehaus.fabric3:fabric3-loader"
         >
 
     <!-- Loader and LoaderRegistry -->
-    <component name="loader">
+    <component name="LoaderRegistry">
         <system:implementation.system class="org.fabric3.loader.impl.LoaderRegistryImpl"/>
     </component>
 
     <!-- Loader helper -->
-    <component name="loaderHelper">
+    <component name="LoaderHelper">
         <system:implementation.system class="org.fabric3.loader.impl.DefaultLoaderHelper"/>
     </component>
 </composite>

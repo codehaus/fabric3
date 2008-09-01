@@ -26,7 +26,7 @@
            xmlns:sca="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
            xmlns:system="http://fabric3.org/xmlns/sca/system/2.0-alpha"
-           name="xmlContributionLoader" targetNamespace="urn:maven:org.codehaus.fabric3:fabric3-loader"
+           name="XmlContributionLoaderBootComposite" targetNamespace="urn:maven:org.codehaus.fabric3:fabric3-loader"
         >
 
     <!-- Definitions SCDL loader implementation -->
