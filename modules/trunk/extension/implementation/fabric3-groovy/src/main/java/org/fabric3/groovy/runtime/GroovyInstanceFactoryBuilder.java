@@ -29,15 +29,15 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
+import org.fabric3.groovy.provision.GroovyInstanceFactoryDefinition;
 import org.fabric3.pojo.instancefactory.InstanceFactoryBuildHelper;
 import org.fabric3.pojo.instancefactory.InstanceFactoryBuilder;
 import org.fabric3.pojo.instancefactory.InstanceFactoryBuilderException;
 import org.fabric3.pojo.instancefactory.InstanceFactoryBuilderRegistry;
 import org.fabric3.pojo.reflection.ReflectiveInstanceFactoryProvider;
 import org.fabric3.scdl.ConstructorInjectionSite;
-import org.fabric3.scdl.InjectionSite;
 import org.fabric3.scdl.InjectableAttribute;
-import org.fabric3.groovy.provision.GroovyInstanceFactoryDefinition;
+import org.fabric3.scdl.InjectionSite;
 
 /**
  * @version $Rev$ $Date$
@@ -84,13 +84,14 @@ public class GroovyInstanceFactoryBuilder<T>
 
             Method initMethod = helper.getMethod(implClass, ifpd.getInitMethod());
             Method destroyMethod = helper.getMethod(implClass, ifpd.getDestroyMethod());
-
+            boolean reinjectable = ifpd.isReinjectable();
             return new ReflectiveInstanceFactoryProvider<T>(ctr,
                                                             Arrays.asList(cdiSources),
                                                             ifpd.getPostConstruction(),
                                                             initMethod,
                                                             destroyMethod,
-                                                            gcl);
+                                                            reinjectable,
+                                                            cl);
         } catch (ClassNotFoundException e) {
             throw new InstanceFactoryBuilderException(e);
         } catch (NoSuchMethodException ex) {

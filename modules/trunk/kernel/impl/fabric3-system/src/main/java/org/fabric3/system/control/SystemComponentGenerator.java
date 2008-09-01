@@ -66,6 +66,7 @@ public class SystemComponentGenerator implements ComponentGenerator<LogicalCompo
         PojoComponentType type = implementation.getComponentType();
 
         InstanceFactoryDefinition providerDefinition = new InstanceFactoryDefinition();
+        providerDefinition.setReinjectable(true);
         providerDefinition.setConstructor(type.getConstructor());
         providerDefinition.setInitMethod(type.getInitMethod());
         providerDefinition.setDestroyMethod(type.getDestroyMethod());

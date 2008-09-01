@@ -21,14 +21,15 @@ package org.fabric3.pojo.instancefactory;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.pojo.reflection.ReflectiveInstanceFactoryProvider;
 import org.fabric3.pojo.provision.InstanceFactoryDefinition;
+import org.fabric3.pojo.reflection.ReflectiveInstanceFactoryProvider;
 import org.fabric3.scdl.ConstructorInjectionSite;
 import org.fabric3.scdl.InjectableAttribute;
 import org.fabric3.scdl.InjectionSite;
@@ -79,7 +80,11 @@ public class ReflectiveInstanceFactoryBuilder<T> implements InstanceFactoryBuild
             Method initMethod = helper.getMethod(implClass, ifpd.getInitMethod());
             Method destroyMethod = helper.getMethod(implClass, ifpd.getDestroyMethod());
 
-            return new ReflectiveInstanceFactoryProvider<T>(ctr, Arrays.asList(cdiSources), ifpd.getPostConstruction(), initMethod, destroyMethod, cl);
+            Map<InjectionSite, InjectableAttribute> postConstruction = ifpd.getPostConstruction();
+            List<InjectableAttribute> list = Arrays.asList(cdiSources);
+            boolean reinjectable = ifpd.isReinjectable();
+
+            return new ReflectiveInstanceFactoryProvider<T>(ctr, list, postConstruction, initMethod, destroyMethod, reinjectable, cl);
         } catch (ClassNotFoundException ex) {
             throw new InstanceFactoryBuilderException(ex);
         } catch (NoSuchMethodException ex) {

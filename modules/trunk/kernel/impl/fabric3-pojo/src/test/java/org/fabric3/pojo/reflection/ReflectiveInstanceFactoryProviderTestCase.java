@@ -74,6 +74,7 @@ public class ReflectiveInstanceFactoryProviderTestCase extends TestCase {
                                                               sites,
                                                               null,
                                                               null,
+                                                              false,
                                                               Foo.class.getClassLoader());
         provider.setObjectFactory(intProperty, intFactory);
         provider.setObjectFactory(stringProperty, stringFactory);
@@ -147,6 +148,7 @@ public class ReflectiveInstanceFactoryProviderTestCase extends TestCase {
                                                               sites,
                                                               null,
                                                               null,
+                                                              false,
                                                               Foo.class.getClassLoader());
         intFactory = EasyMock.createMock(ObjectFactory.class);
         stringFactory = EasyMock.createMock(ObjectFactory.class);

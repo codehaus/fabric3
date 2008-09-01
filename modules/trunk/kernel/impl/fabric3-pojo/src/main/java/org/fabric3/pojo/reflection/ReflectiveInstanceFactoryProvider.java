@@ -61,12 +61,13 @@ public class ReflectiveInstanceFactoryProvider<T> implements InstanceFactoryProv
     private final EventInvoker<T> destroyInvoker;
     private final Map<InjectableAttribute, ObjectFactory<?>> factories = new HashMap<InjectableAttribute, ObjectFactory<?>>();
     private final ClassLoader cl;
-
+    private final boolean reinjectable;
     public ReflectiveInstanceFactoryProvider(Constructor<T> constructor,
                                              List<InjectableAttribute> cdiSources,
                                              Map<InjectionSite, InjectableAttribute> postConstruction,
                                              Method initMethod,
                                              Method destroyMethod,
+                                             boolean reinjectable,
                                              ClassLoader cl) {
         this.implementationClass = constructor.getDeclaringClass();
         this.constructor = constructor;
@@ -74,6 +75,7 @@ public class ReflectiveInstanceFactoryProvider<T> implements InstanceFactoryProv
         this.postConstruction = postConstruction;
         this.initInvoker = initMethod == null ? null : new MethodEventInvoker<T>(initMethod);
         this.destroyInvoker = destroyMethod == null ? null : new MethodEventInvoker<T>(destroyMethod);
+        this.reinjectable = reinjectable;
         this.cl = cl;
 
     }
@@ -180,7 +182,7 @@ public class ReflectiveInstanceFactoryProvider<T> implements InstanceFactoryProv
         InjectableAttribute[] attributes = mappings.keySet().toArray(new InjectableAttribute[mappings.size()]);
         Injector<T>[] injectors = mappings.values().toArray(new Injector[mappings.size()]);
 
-        return new ReflectiveInstanceFactory<T>(factory, attributes, injectors, initInvoker, destroyInvoker, cl);
+        return new ReflectiveInstanceFactory<T>(factory, attributes, injectors, initInvoker, destroyInvoker, reinjectable, cl);
     }
 
     /**

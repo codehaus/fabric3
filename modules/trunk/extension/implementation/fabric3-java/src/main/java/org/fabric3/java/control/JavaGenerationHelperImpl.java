@@ -27,14 +27,15 @@ import org.fabric3.java.provision.JavaComponentDefinition;
 import org.fabric3.java.provision.JavaWireSourceDefinition;
 import org.fabric3.java.provision.JavaWireTargetDefinition;
 import org.fabric3.java.scdl.JavaImplementation;
-import org.fabric3.pojo.provision.InstanceFactoryDefinition;
 import org.fabric3.pojo.control.InstanceFactoryGenerationHelper;
+import org.fabric3.pojo.provision.InstanceFactoryDefinition;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.CallbackDefinition;
 import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.InjectableAttribute;
 import org.fabric3.scdl.InjectableAttributeType;
 import org.fabric3.scdl.Operation;
+import org.fabric3.scdl.Scope;
 import org.fabric3.scdl.ServiceContract;
 import org.fabric3.scdl.definitions.Intent;
 import org.fabric3.spi.Constants;
@@ -64,9 +65,11 @@ public class JavaGenerationHelperImpl implements JavaGenerationHelper {
         ComponentDefinition<? extends JavaImplementation> logical = component.getDefinition();
         JavaImplementation implementation = logical.getImplementation();
         PojoComponentType type = implementation.getComponentType();
+        String scope = type.getScope();
 
         // create the instance factory definition
         InstanceFactoryDefinition providerDefinition = new InstanceFactoryDefinition();
+        providerDefinition.setReinjectable(Scope.COMPOSITE.getScope().equals(scope));
         providerDefinition.setConstructor(type.getConstructor());
         providerDefinition.setInitMethod(type.getInitMethod());
         providerDefinition.setDestroyMethod(type.getDestroyMethod());
@@ -77,7 +80,7 @@ public class JavaGenerationHelperImpl implements JavaGenerationHelper {
         URI componentId = component.getUri();
         physical.setComponentId(componentId);
         physical.setGroupId(component.getParent().getUri());
-        physical.setScope(type.getScope());
+        physical.setScope(scope);
         physical.setInitLevel(helper.getInitLevel(logical, type));
         physical.setMaxAge(type.getMaxAge());
         physical.setMaxIdleTime(type.getMaxIdleTime());

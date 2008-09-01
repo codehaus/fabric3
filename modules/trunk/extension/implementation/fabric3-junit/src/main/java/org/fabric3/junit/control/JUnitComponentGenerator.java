@@ -10,12 +10,13 @@ import org.fabric3.java.provision.JavaComponentDefinition;
 import org.fabric3.java.provision.JavaWireSourceDefinition;
 import org.fabric3.java.provision.JavaWireTargetDefinition;
 import org.fabric3.junit.scdl.JUnitImplementation;
-import org.fabric3.pojo.provision.InstanceFactoryDefinition;
 import org.fabric3.pojo.control.InstanceFactoryGenerationHelper;
+import org.fabric3.pojo.provision.InstanceFactoryDefinition;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.InjectableAttribute;
 import org.fabric3.scdl.InjectableAttributeType;
+import org.fabric3.scdl.Scope;
 import org.fabric3.scdl.ServiceContract;
 import org.fabric3.spi.generator.ComponentGenerator;
 import org.fabric3.spi.generator.GenerationException;
@@ -57,8 +58,10 @@ public class JUnitComponentGenerator implements ComponentGenerator<LogicalCompon
         PojoComponentType type = implementation.getComponentType();
         Integer level = helper.getInitLevel(definition, type);
         URI componentId = component.getUri();
+        String scope = type.getScope();
 
         InstanceFactoryDefinition providerDefinition = new InstanceFactoryDefinition();
+        providerDefinition.setReinjectable(Scope.COMPOSITE.getScope().equals(scope));
         providerDefinition.setConstructor(type.getConstructor());
         providerDefinition.setInitMethod(type.getInitMethod());
         providerDefinition.setDestroyMethod(type.getDestroyMethod());
@@ -72,7 +75,7 @@ public class JUnitComponentGenerator implements ComponentGenerator<LogicalCompon
         URI classLoaderId = component.getClassLoaderId();
         physical.setClassLoaderId(classLoaderId);
 
-        physical.setScope(type.getScope());
+        physical.setScope(scope);
         physical.setInitLevel(level);
         physical.setProviderDefinition(providerDefinition);
         helper.processPropertyValues(component, physical);

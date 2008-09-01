@@ -36,6 +36,7 @@ public class InstanceFactoryDefinition {
     private Signature constructor;
     private Signature initMethod;
     private Signature destroyMethod;
+    private boolean reinjectable;
     private Map<InjectionSite, InjectableAttribute> construction = new HashMap<InjectionSite, InjectableAttribute>();
     private Map<InjectionSite, InjectableAttribute> postConstruction = new HashMap<InjectionSite, InjectableAttribute>();
     private Map<InjectionSite, InjectableAttribute> reinjection = new HashMap<InjectionSite, InjectableAttribute>();
@@ -114,6 +115,7 @@ public class InstanceFactoryDefinition {
 
     /**
      * Returns the map of injections to be performed during construction.
+     *
      * @return the map of injections to be performed during construction
      */
     public Map<InjectionSite, InjectableAttribute> getConstruction() {
@@ -122,6 +124,7 @@ public class InstanceFactoryDefinition {
 
     /**
      * Returns the map of injections to be performed after construction.
+     *
      * @return the map of injections to be performed after construction
      */
     public Map<InjectionSite, InjectableAttribute> getPostConstruction() {
@@ -130,9 +133,28 @@ public class InstanceFactoryDefinition {
 
     /**
      * Returns the map of injections to be performed during reinjection.
+     *
      * @return the map of injections to be performed during reinjection
      */
     public Map<InjectionSite, InjectableAttribute> getReinjection() {
         return reinjection;
+    }
+
+    /**
+     * Returns true if the implementation is reinjectable, e.g. it is composite-scoped.
+     *
+     * @return true if the implementation is reinjectable, e.g. it is composite-scoped
+     */
+    public boolean isReinjectable() {
+        return reinjectable;
+    }
+
+    /**
+     * sets if the implementation is reinjectable.
+     *
+     * @param reinjectable true if the implementation is reinjectable
+     */
+    public void setReinjectable(boolean reinjectable) {
+        this.reinjectable = reinjectable;
     }
 }

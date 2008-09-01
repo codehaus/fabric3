@@ -34,6 +34,7 @@ import org.fabric3.spi.component.InstanceWrapper;
  */
 public class ReflectiveInstanceWrapper<T> implements InstanceWrapper<T> {
     private final T instance;
+    private boolean reinjectable;
     private final ClassLoader cl;
     private final EventInvoker<T> initInvoker;
     private final EventInvoker<T> destroyInvoker;
@@ -43,19 +44,25 @@ public class ReflectiveInstanceWrapper<T> implements InstanceWrapper<T> {
     private final Set<Injector<T>> updatedInjectors;
 
     public ReflectiveInstanceWrapper(T instance,
+                                     boolean reinjectable,
                                      ClassLoader cl,
                                      EventInvoker<T> initInvoker,
                                      EventInvoker<T> destroyInvoker,
                                      InjectableAttribute[] attributes,
                                      Injector<T>[] injectors) {
         this.instance = instance;
+        this.reinjectable = reinjectable;
         this.cl = cl;
         this.initInvoker = initInvoker;
         this.destroyInvoker = destroyInvoker;
         this.attributes = attributes;
         this.started = false;
         this.injectors = injectors;
-        this.updatedInjectors = new HashSet<Injector<T>>();
+        if (reinjectable) {
+            this.updatedInjectors = new HashSet<Injector<T>>();
+        } else {
+            this.updatedInjectors = null;
+        }
     }
 
     public T getInstance() {
@@ -104,6 +111,9 @@ public class ReflectiveInstanceWrapper<T> implements InstanceWrapper<T> {
     }
 
     public void reinject() throws InstanceLifecycleException {
+        if (!reinjectable) {
+            throw new IllegalStateException("Implementation is not reinjectable");
+        }
         try {
             for (Injector<T> injector : updatedInjectors) {
                 injector.inject(instance);
@@ -120,7 +130,10 @@ public class ReflectiveInstanceWrapper<T> implements InstanceWrapper<T> {
             if (attribute.getName().equals(referenceName)) {
                 Injector<T> injector = injectors[i];
                 injector.setObjectFactory(factory, key);
-                if (instance != null) {
+                if (instance != null && !reinjectable) {
+                    throw new IllegalStateException("Implementation is not reinjectable");
+
+                } else if (instance != null) {
                     updatedInjectors.add(injector);
                 }
             }

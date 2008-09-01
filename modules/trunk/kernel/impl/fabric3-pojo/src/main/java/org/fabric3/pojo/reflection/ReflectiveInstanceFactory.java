@@ -36,18 +36,21 @@ public class ReflectiveInstanceFactory<T> implements InstanceFactory<T> {
     private final EventInvoker<T> initInvoker;
     private final EventInvoker<T> destroyInvoker;
     private final ClassLoader cl;
+    private final boolean reinjectable;
 
     public ReflectiveInstanceFactory(ObjectFactory<T> constructor,
                                      InjectableAttribute[] attributes,
                                      Injector<T>[] injectors,
                                      EventInvoker<T> initInvoker,
                                      EventInvoker<T> destroyInvoker,
+                                     boolean reinjectable,
                                      ClassLoader cl) {
         this.constructor = constructor;
         this.attributes = attributes;
         this.injectors = injectors;
         this.initInvoker = initInvoker;
         this.destroyInvoker = destroyInvoker;
+        this.reinjectable = reinjectable;
         this.cl = cl;
     }
 
@@ -63,7 +66,7 @@ public class ReflectiveInstanceFactory<T> implements InstanceFactory<T> {
                     injector.inject(instance);
                 }
             }
-            return new ReflectiveInstanceWrapper<T>(instance, cl, initInvoker, destroyInvoker, attributes, injectors);
+            return new ReflectiveInstanceWrapper<T>(instance, reinjectable, cl, initInvoker, destroyInvoker, attributes, injectors);
         } finally {
             PojoWorkContextTunnel.setThreadWorkContext(oldContext);
             Thread.currentThread().setContextClassLoader(oldCl);
