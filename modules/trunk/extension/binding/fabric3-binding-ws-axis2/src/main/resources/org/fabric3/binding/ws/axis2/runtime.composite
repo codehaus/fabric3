@@ -19,16 +19,16 @@
            xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
            xmlns:system="http://fabric3.org/xmlns/sca/system/2.0-alpha"
            targetNamespace="urn:maven:org.codehaus.fabric3:fabric3-binding-ws-axis2"
-           name="runtime"
+           name="Axis2RuntimeExtension"
            autowire="true">
 
     <!-- Feature -->
     <system:feature name="WsAxis2BindingFeature">{http://fabric3.org/xmlns/binding}ws-axis2</system:feature>
 
-    <component f3:key="org.fabric3.binding.ws.axis2.provision.Axis2WireSourceDefinition" name="org.fabric3.binding.ws.axis2.runtime.Axis2SourceWireAttacher">
+    <component f3:key="org.fabric3.binding.ws.axis2.provision.Axis2WireSourceDefinition" name="Axis2SourceWireAttacher">
         <system:implementation.system class="org.fabric3.binding.ws.axis2.runtime.Axis2SourceWireAttacher"/>
     </component>
-    <component f3:key="org.fabric3.binding.ws.axis2.provision.Axis2WireTargetDefinition" name="org.fabric3.binding.ws.axis2.runtime.Axis2TargetWireAttacher">
+    <component f3:key="org.fabric3.binding.ws.axis2.provision.Axis2WireTargetDefinition" name="Axis2TargetWireAttacher">
         <system:implementation.system class="org.fabric3.binding.ws.axis2.runtime.Axis2TargetWireAttacher"/>
     </component>
 

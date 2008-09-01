@@ -16,16 +16,13 @@
     * KIND, either express or implied.  See the License for the
     * specific language governing permissions and limitations
     * under the License.    
--->
-<!--
-    Deployment-related system components
-    
+
     $Rev: 667 $ $Date: 2007-08-06 09:46:10 -0700 (Mon, 06 Aug 2007) $
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:system="http://fabric3.org/xmlns/sca/system/2.0-alpha"
            targetNamespace="org.codehaus.fabric3"
-           name="WarContributionScannerComposite"
+           name="WarContributionScannerExtension"
            autowire="true">
 
     <component name="WarResourceFactory">

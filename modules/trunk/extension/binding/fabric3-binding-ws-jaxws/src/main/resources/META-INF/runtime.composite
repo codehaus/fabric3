@@ -19,16 +19,17 @@
            xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
            xmlns:system="http://fabric3.org/xmlns/sca/system/2.0-alpha"
            targetNamespace="urn:maven:org.codehaus.fabric3:fabric3-binding-ws-jax-ws"
-           name="runtime"
+           name="JAXWSRuntimeExtension"
            autowire="true">
+
+    <component name="JaxWsSourceWireAttacher" f3:key="org.fabric3.binding.ws.jaxws.provision.JaxWsWireSourceDefinition">
+        <system:implementation.system class="org.fabric3.binding.ws.jaxws.runtime.JaxWsSourceWireAttacher"/>
+    </component>
+    <component name="JaxWsTargetWireAttacher" f3:key="org.fabric3.binding.ws.jaxws.provision.JaxWsWireTargetDefinition">
+        <system:implementation.system class="org.fabric3.binding.ws.jaxws.runtime.JaxWsTargetWireAttacher"/>
+    </component>
 
     <!-- Feature -->
     <system:feature name="JaxWsBindingFeature">{http://fabric3.org/xmlns/binding}ws-jax-ws</system:feature>
 
-    <component f3:key="org.fabric3.binding.ws.jaxws.provision.JaxWsWireSourceDefinition" name="org.fabric3.binding.ws.jaxws.runtime.JaxWsSourceWireAttacher">
-        <system:implementation.system class="org.fabric3.binding.ws.jaxws.runtime.JaxWsSourceWireAttacher"/>
-    </component>
-    <component f3:key="org.fabric3.binding.ws.jaxws.provision.JaxWsWireTargetDefinition" name="org.fabric3.binding.ws.jaxws.runtime.JaxWsTargetWireAttacher">
-        <system:implementation.system class="org.fabric3.binding.ws.jaxws.runtime.JaxWsTargetWireAttacher"/>
-    </component>
 </composite>

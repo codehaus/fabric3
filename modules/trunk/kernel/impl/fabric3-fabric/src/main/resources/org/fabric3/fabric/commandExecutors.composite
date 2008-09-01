@@ -23,51 +23,51 @@
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
            xmlns:system="http://fabric3.org/xmlns/sca/system/2.0-alpha"
-           name="org.fabric3.fabric.CommonExecutors"
+           name="CommonExecutorsBootComposite"
            autowire="true">
 
 
-    <component name="commandExecutorRegistry">
+    <component name="CommandExecutorRegistry">
         <system:implementation.system class="org.fabric3.fabric.executor.CommandExecutorRegistryImpl"/>
     </component>
 
-    <component name="classloaderProvisionCommandExecutor">
+    <component name="ClassloaderProvisionCommandExecutor">
         <system:implementation.system class="org.fabric3.fabric.executor.ProvisionClassloaderCommandExecutor"/>
     </component>
 
-    <component name="componentBuildCommandExecutor">
+    <component name="ComponentBuildCommandExecutor">
         <system:implementation.system class="org.fabric3.fabric.executor.BuildComponentCommandExecutor"/>
     </component>
 
-    <component name="wireAttachCommandExecutor">
+    <component name="WireAttachCommandExecutor">
         <system:implementation.system class="org.fabric3.fabric.executor.AttachWireCommandExecutor"/>
     </component>
 
-    <component name="componentStartCommandExecutor">
+    <component name="ComponentStartCommandExecutor">
         <system:implementation.system class="org.fabric3.fabric.executor.StartComponentCommandExecutor"/>
     </component>
 
-    <component name="startCompositeContextCommandExecutor">
+    <component name="StartCompositeContextCommandExecutor">
         <system:implementation.system class="org.fabric3.fabric.executor.StartCompositeContextCommandExecutor"/>
     </component>
 
-    <component name="initializeComponentCommandExecutor">
+    <component name="InitializeComponentCommandExecutor">
         <system:implementation.system class="org.fabric3.fabric.executor.InitializeComponentCommandExecutor"/>
     </component>
 
-    <component name="componentStopCommandExecutor">
+    <component name="ComponentStopCommandExecutor">
         <system:implementation.system class="org.fabric3.fabric.executor.StopComponentCommandExecutor"/>
     </component>
 
-    <component name="stopCompositeContextCommandExecutor">
+    <component name="StopCompositeContextCommandExecutor">
         <system:implementation.system class="org.fabric3.fabric.executor.StopCompositeContextCommandExecutor"/>
     </component>
 
-    <component name="wireDetachCommandExecutor">
+    <component name="WireDetachCommandExecutor">
         <system:implementation.system class="org.fabric3.fabric.executor.DetachWireCommandExecutor"/>
     </component>
 
-    <component name="unprovisionClassloaderCommandExecutor">
+    <component name="UnprovisionClassloaderCommandExecutor">
         <system:implementation.system class="org.fabric3.fabric.executor.UnprovisionClassloaderCommandExecutor"/>
     </component>
 

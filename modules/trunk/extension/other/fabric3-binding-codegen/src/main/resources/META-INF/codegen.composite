@@ -23,7 +23,7 @@
            autowire="true">
 
     <!-- Default Proxy Generator -->
-    <component name="ProxyGen">
+    <component name="ProxyGenerator">
         <system:implementation.system class="org.fabric3.binding.codegen.impl.ProxyGeneratorImpl"/>
     </component>
 

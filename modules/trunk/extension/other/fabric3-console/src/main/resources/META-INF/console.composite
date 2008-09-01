@@ -28,7 +28,7 @@
            name="ConsoleExtension"
            autowire="true">
 
-    <component name="console.consoleServlet">
+    <component name="ConsoleServlet">
         <system:implementation.system class="org.fabric3.console.handler.scdl.ConsoleServlet"/>
         <reference name="assembly" target="ApplicationDomain"/>
         <property name="path">/console/*</property>

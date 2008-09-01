@@ -23,7 +23,7 @@
            name="introspection">
 
     <!-- Ws Binding Loader -->
-    <component name="org.fabric3.binding.ws.introspection.WsBindingLoader" f3:key="sca:binding.ws">
+    <component name="WsBindingLoader" f3:key="sca:binding.ws">
         <system:implementation.system class="org.fabric3.binding.ws.introspection.WsBindingLoader"/>
     </component>
 

@@ -39,13 +39,13 @@ public final class ComponentNames {
 
     public static final URI RUNTIME_DOMAIN_URI = URI.create(RUNTIME_NAME + "/RuntimeDomain");
 
-    public static final URI EVENT_SERVICE_URI = URI.create(RUNTIME_NAME + "/eventService");
+    public static final URI EVENT_SERVICE_URI = URI.create(RUNTIME_NAME + "/EventService");
 
     public static final URI DISCOVERY_SERVICE_URI = URI.create(RUNTIME_NAME + "/DiscoveryService");
 
     public static final URI CONTRIBUTION_SERVICE_URI = URI.create(RUNTIME_NAME + "/ContributionService");
 
-    public static final URI DEFINITIONS_REGISTRY = URI.create(RUNTIME_NAME + "/definitionsRegistry");
+    public static final URI DEFINITIONS_REGISTRY = URI.create(RUNTIME_NAME + "/DefinitionsRegistry");
 
     public static final URI METADATA_STORE_URI = URI.create(RUNTIME_NAME + "/MetaDataStore");
 

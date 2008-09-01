@@ -19,18 +19,18 @@
            xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
            xmlns:system="http://fabric3.org/xmlns/sca/system/2.0-alpha"
            targetNamespace="org.codehaus.fabric3"
-           name="H2DataSource"
+           name="H2DataSourceExtension"
            autowire="true">
 
     <property name="url"/>
     <property name="dataSourceKeys"/>
     <property name="user"/>
     <property name="password"/>
-    <reference name="transactionManager" promote="xaPoolDataSource/transactionManager"/>
-    <reference name="dataSourceRegistry" promote="xaPoolDataSource/dataSourceRegistry"/>
+    <reference name="transactionManager" promote="XaPoolDataSource/transactionManager"/>
+    <reference name="dataSourceRegistry" promote="XaPoolDataSource/dataSourceRegistry"/>
 
     <!-- XAPool Datasource -->
-    <component name="xaPoolDataSource">
+    <component name="XaPoolDataSource">
         <system:implementation.system class="org.fabric3.xapool.XaPoolDataSource"/>
         <property name="driver">org.h2.Driver</property>
         <property name="url" source="$url"/>

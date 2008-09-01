@@ -22,15 +22,15 @@
            targetNamespace="org.codehaus.fabric3"
            name="DataBindingJAXBRuntimeExtension">
 
-    <component f3:key="org.fabric3.jaxb.provision.ReferenceTransformingInterceptorDefinition" name="ReferenceTransformingInterceptorBuilder">
+    <component name="ReferenceTransformingInterceptorBuilder" f3:key="org.fabric3.jaxb.provision.ReferenceTransformingInterceptorDefinition">
         <system:implementation.system class="org.fabric3.jaxb.runtime.impl.ReferenceTransformingInterceptorBuilder"/>
     </component>
 
-    <component f3:key="org.fabric3.jaxb.provision.ServiceTransformingInterceptorDefinition" name="ServiceTransformingInterceptorBuilder">
+    <component name="ServiceTransformingInterceptorBuilder" f3:key="org.fabric3.jaxb.provision.ServiceTransformingInterceptorDefinition">
         <system:implementation.system class="org.fabric3.jaxb.runtime.impl.ServiceTransformingInterceptorBuilder"/>
     </component>
 
-    <component f3:key="f3:dataType.xml" name="XmlDataBindingTransformerFactory">
+    <component name="XmlDataBindingTransformerFactory" f3:key="f3:dataType.xml">
         <system:implementation.system class="org.fabric3.jaxb.runtime.impl.XmlDataBindingTransformerFactory"/>
     </component>
 

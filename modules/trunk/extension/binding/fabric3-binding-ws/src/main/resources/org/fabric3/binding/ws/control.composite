@@ -22,7 +22,7 @@
            name="control">
 
     <!-- Ws Binding Generator -->
-    <component name="org.fabric3.binding.ws.control.WsBindingGenerator" f3:key="org.fabric3.binding.ws.scdl.WsBindingDefinition">
+    <component name="WsBindingGenerator" f3:key="org.fabric3.binding.ws.scdl.WsBindingDefinition">
         <system:implementation.system class="org.fabric3.binding.ws.control.WsBindingGenerator"/>
     </component>
 

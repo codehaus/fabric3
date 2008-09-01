@@ -23,66 +23,66 @@
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
            xmlns:system="http://fabric3.org/xmlns/sca/system/2.0-alpha"
-           name="org.fabric3.fabric.Common"
+           name="CommonBootComposite"
            autowire="true">
 
-    <include name="assembly" scdlLocation="assembly.composite"/>
+    <include name="AsssemblyBootComposite" scdlLocation="assembly.composite"/>
 
-    <include name="org.fabric3.fabric.CommandGenerators" scdlLocation="commandGenerators.composite"/>
+    <include name="CommandGeneratorsBootComposite" scdlLocation="commandGenerators.composite"/>
 
-    <include name="org.fabric3.fabric.CommonExecutors" scdlLocation="commandExecutors.composite"/>
+    <include name="CommonExecutorsBootComposite" scdlLocation="commandExecutors.composite"/>
 
-    <component name="physicalOperationHelper">
+    <component name="PhysicalOperationHelper">
         <system:implementation.system class="org.fabric3.fabric.generator.wire.PhysicalOperationHelperImpl"/>
     </component>
 
-    <component name="physicalModelGenerator">
+    <component name="PhysicalModelGenerator">
         <system:implementation.system class="org.fabric3.fabric.generator.PhysicalModelGeneratorImpl"/>
     </component>
     <!-- the wire forces a reinjection of the generator into the RuntimeDomain -->
-    <wire source="RuntimeDomain/physicalModelGenerator" target="physicalModelGenerator"/>
+    <wire source="RuntimeDomain/physicalModelGenerator" target="PhysicalModelGenerator"/>
 
-    <component name="physicalWireGenerator">
+    <component name="PhysicalWireGenerator">
         <system:implementation.system class="org.fabric3.fabric.generator.wire.PhysicalWireGeneratorImpl"/>
     </component>
 
     <component name="ApplicationDomain">
         <system:implementation.system class="org.fabric3.fabric.domain.DistributedDomain"/>
-        <reference name="logicalComponentManager" target="logicalComponentManager"/>
+        <reference name="logicalComponentManager" target="LogicalComponentManager"/>
     </component>
 
     <component name="BindingSelector">
         <system:implementation.system class="org.fabric3.fabric.binding.BindingSelectorImpl"/>
-        <reference name="logicalComponentManager" target="logicalComponentManager"/>
+        <reference name="logicalComponentManager" target="LogicalComponentManager"/>
     </component>
 
-    <component name="generatorRegistry">
+    <component name="GeneratorRegistry">
         <system:implementation.system class="org.fabric3.fabric.generator.GeneratorRegistryImpl"/>
     </component>
 
-    <component name="advertismentService">
+    <component name="AdvertismentService">
         <system:implementation.system class="org.fabric3.fabric.services.advertisement.DefaultAdvertismentService"/>
     </component>
 
-    <component name="featureLoader" f3:key="system:feature">
+    <component name="FeatureLoader" f3:key="system:feature">
         <system:implementation.system class="org.fabric3.fabric.services.advertisement.FeatureLoader"/>
     </component>
 
     <!-- Default scopes -->
-    <component name="scope.stateless">
+    <component name="StatelessScopeContainer">
         <system:implementation.system class="org.fabric3.fabric.component.scope.StatelessScopeContainer"/>
     </component>
 
-    <component name="scope.conversation">
+    <component name="ConversationalScopeContainer">
         <system:implementation.system class="org.fabric3.fabric.component.scope.ConversationalScopeContainer"/>
-        <reference name="store" target="memoryStore"/>
+        <reference name="store" target="MemoryStore"/>
     </component>
 
-    <component name="memoryStore">
+    <component name="MemoryStore">
         <system:implementation.system class="org.fabric3.fabric.component.scope.NonExpiringMemoryStore"/>
     </component>
 
-    <component name="eventService">
+    <component name="EventService">
         <system:implementation.system class="org.fabric3.fabric.services.event.EventServiceImpl"/>
     </component>
 
@@ -90,12 +90,12 @@
         <system:implementation.system class="org.fabric3.fabric.generator.classloader.ClassLoaderCommandGeneratorImpl"/>
     </component>
 
-    <component name="classLaoderBuilder">
+    <component name="ClassLoaderBuilder">
         <system:implementation.system class="org.fabric3.fabric.builder.classloader.ClassLoaderBuilderImpl"/>
     </component>
 
     <!-- Definitions registry -->
-    <component name="definitionsRegistry">
+    <component name="DefinitionsRegistry">
         <system:implementation.system class="org.fabric3.fabric.services.definitions.DefaultDefinitionsRegistry"/>
     </component>
 

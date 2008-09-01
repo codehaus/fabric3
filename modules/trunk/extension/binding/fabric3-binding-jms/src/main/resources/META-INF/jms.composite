@@ -47,12 +47,12 @@
     </component>
 
     <!-- JMS Source Wire Attacher -->
-    <component f3:key="org.fabric3.binding.jms.provision.JmsWireSourceDefinition" name="org.fabric3.binding.jms.runtime.JmsSourceWireAttacher">
+    <component f3:key="org.fabric3.binding.jms.provision.JmsWireSourceDefinition" name="JmsSourceWireAttacher">
         <system:implementation.system class="org.fabric3.binding.jms.runtime.JmsSourceWireAttacher"/>
     </component>
 
     <!-- JMS Target Wire Attacher -->
-    <component f3:key="org.fabric3.binding.jms.provision.JmsWireTargetDefinition" name="org.fabric3.binding.jms.runtime.JmsTargetWireAttacher">
+    <component f3:key="org.fabric3.binding.jms.provision.JmsWireTargetDefinition" name="JmsTargetWireAttacher">
         <system:implementation.system class="org.fabric3.binding.jms.runtime.JmsTargetWireAttacher"/>
     </component>
 
