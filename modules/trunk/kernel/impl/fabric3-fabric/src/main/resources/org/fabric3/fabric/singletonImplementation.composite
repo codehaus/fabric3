@@ -16,16 +16,13 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.    
--->
-<!--
-    Default system configuration for the launcher environment.
-    
+
     $Rev$ $Date$
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
            xmlns:system="http://fabric3.org/xmlns/sca/system/2.0-alpha"
-           name="SingletonImplementationComposite"
+           name="SingletonImplementationBootComposite"
            autowire="true">
 
     <!-- Singleton implementation type -->
@@ -34,11 +31,11 @@
         <system:implementation.system class="org.fabric3.fabric.implementation.singleton.SingletonComponentGenerator"/>
     </component>
 
-    <component f3:key="org.fabric3.fabric.implementation.singleton.SingletonWireSourceDefinition" name="SingletonWireSourceAttacher">
+    <component name="SingletonWireSourceAttacher" f3:key="org.fabric3.fabric.implementation.singleton.SingletonWireSourceDefinition">
         <system:implementation.system class="org.fabric3.fabric.implementation.singleton.SingletonSourceWireAttacher"/>
     </component>
 
-    <component f3:key="org.fabric3.fabric.implementation.singleton.SingletonWireTargetDefinition" name="SingletonWireTargetAttacher">
+    <component name="SingletonWireTargetAttacher" f3:key="org.fabric3.fabric.implementation.singleton.SingletonWireTargetDefinition">
         <system:implementation.system class="org.fabric3.fabric.implementation.singleton.SingletonTargetWireAttacher"/>
     </component>
 

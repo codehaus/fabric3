@@ -16,16 +16,11 @@
     * KIND, either express or implied.  See the License for the
     * specific language governing permissions and limitations
     * under the License.    
--->
-<!--
-    Stores configured for persistent storage
-    
-    TODO JFM: this should be combined with persistentStore and have persistent values set in a property on the domain
-    
+
     $Rev: 881 $ $Date: 2007-08-27 13:12:34 -0700 (Mon, 27 Aug 2007) $
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0" xmlns:system="http://fabric3.org/xmlns/sca/system/2.0-alpha"
-           name="org.fabric3.fabric.PersistentStore"
+           name="ContributionStoreBootComposite"
            autowire="true">
     <component name="ContributionStore">
         <system:implementation.system class="org.fabric3.fabric.services.archive.ArchiveStoreImpl"/>
