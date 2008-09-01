@@ -26,66 +26,66 @@
            xmlns:system="http://fabric3.org/xmlns/sca/system/2.0-alpha"
            xmlns:introspection="urn:maven:org.codehaus.fabric3:fabric3-introspection"
            xmlns:loader="urn:maven:org.codehaus.fabric3:fabric3-loader"
-           name="org.fabric3.itest.EmbeddedMaven"
+           name="MavenRuntimeComposite"
            autowire="true">
 
     <!-- include host services configuration -->
-    <include name="org.fabric3.fabric.host.services" scdlResource="org/fabric3/fabric/hostServices.composite"/>
+    <include name="HostServices" scdlResource="org/fabric3/fabric/hostServices.composite"/>
 
     <!-- include monitor configuration -->
-    <include name="org.fabric3.fabric.Monitor" scdlResource="org/fabric3/fabric/monitor.composite"/>
+    <include name="Monitor" scdlResource="org/fabric3/fabric/monitor.composite"/>
 
     <!-- include policy configuration -->
-    <include name="org.fabric3.fabric.Policy" scdlResource="org/fabric3/policy/policy.composite"/>
+    <include name="Policy" scdlResource="org/fabric3/policy/policy.composite"/>
 
     <!-- include physical deployment configuration -->
-    <include name="org.fabric3.fabric.Common" scdlResource="org/fabric3/fabric/common.composite"/>
+    <include name="Common" scdlResource="org/fabric3/fabric/common.composite"/>
 
     <!-- include physical deployment configuration -->
-    <include name="org.fabric3.fabric.Physical" scdlResource="org/fabric3/fabric/physical.composite"/>
+    <include name="Physical" scdlResource="org/fabric3/fabric/physical.composite"/>
 
     <!-- Introspection Components -->
-    <include name="introspection:Helper" scdlResource="org/fabric3/introspection/impl/helper.composite"/>
-    <include name="introspection:AnnotationProcessors" scdlResource="org/fabric3/introspection/impl/annotation/processors.composite"/>
-    <include name="loader:loader" scdlResource="org/fabric3/loader/loader.composite"/>
+    <include name="Helper" scdlResource="org/fabric3/introspection/impl/helper.composite"/>
+    <include name="AnnotationProcessors" scdlResource="org/fabric3/introspection/impl/annotation/processors.composite"/>
+    <include name="Loader" scdlResource="org/fabric3/loader/loader.composite"/>
 
     <!-- include deployment configuration -->
-    <include name="org.fabric3.fabric.Deployment" scdlResource="org/fabric3/fabric/deployment.composite"/>
+    <include name="Deployment" scdlResource="org/fabric3/fabric/deployment.composite"/>
 
-    <include name="org.fabric3.fabric.FileSystemResolver" scdlResource="org/fabric3/fabric/localProvisioning.composite"/>
+    <include name="LocalProvisioning" scdlResource="org/fabric3/fabric/localProvisioning.composite"/>
 
     <!-- include transform configuration -->
-    <include name="org.fabric3.transform.Transform" scdlResource="org/fabric3/transform/transform.composite"/>
+    <include name="Transform" scdlResource="org/fabric3/transform/transform.composite"/>
 
     <!-- proxy service implementation -->
-    <include name="org.fabric3.JDKProxy" scdlResource="META-INF/jdkproxy.composite"/>
+    <include name="JDKProxy" scdlResource="META-INF/jdkproxy.composite"/>
 
     <!-- Pojo implementation type -->
-    <include name="org.fabric3.fabric.PojoImplementation" scdlResource="org/fabric3/pojo/pojoImplementation.composite"/>
+    <include name="PojoImplementation" scdlResource="org/fabric3/pojo/pojoImplementation.composite"/>
 
     <!-- System implementation type -->
-    <include name="org.fabric3.fabric.SystemImplementation" scdlResource="org/fabric3/system/systemImplementation.composite"/>
+    <include name="SystemImplementation" scdlResource="org/fabric3/system/systemImplementation.composite"/>
 
     <!-- Singleton implementation type -->
     <include name="org.fabric3.fabric.SingletonImplementation" scdlResource="org/fabric3/fabric/singletonImplementation.composite"/>
 
     <!-- JMX components -->
-    <include name="org.fabric3.jmx.JMXExtension" scdlResource="org/fabric3/jmx/jmx.composite"/>
+    <include name="JMXExtension" scdlResource="org/fabric3/jmx/jmx.composite"/>
 
     <!-- include JUnit implementation type -->
-    <include xmlns:junit="urn:org.codehaus.fabric3:fabric3-junit" name="junit:JUnitImplementation" scdlResource="org/fabric3/junit/junitImplementation.composite"/>
+    <include name="junit:JUnitImplementation" scdlResource="org/fabric3/junit/junitImplementation.composite"/>
 
     <!-- include Java implementation type -->
-    <include name="org.fabric3.JavaControl" scdlResource="META-INF/javaControl.composite"/>
-    <include name="org.fabric3.JavaIntrospection" scdlResource="META-INF/javaIntrospection.composite"/>
-    <include name="org.fabric3.JavaRuntime" scdlResource="META-INF/javaRuntime.composite"/>
+    <include name="JavaControl" scdlResource="META-INF/javaControl.composite"/>
+    <include name="JavaIntrospection" scdlResource="META-INF/javaIntrospection.composite"/>
+    <include name="JavaRuntime" scdlResource="META-INF/javaRuntime.composite"/>
 
     <component name="runtimeInfoService">
         <system:implementation.system class="org.fabric3.fabric.services.runtime.DefaultRuntimeInfoService"/>
     </component>
 
     <!-- no recovery for the iTest runtime   -->
-    <component name="assemblyRecoveryService">
+    <component name="AssemblyRecoveryService">
         <system:implementation.system class="org.fabric3.fabric.services.lcm.NonPersistentLogicalComponentStore"/>
     </component>
 

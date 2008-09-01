@@ -19,10 +19,10 @@
            xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
            xmlns:system="http://fabric3.org/xmlns/sca/system/2.0-alpha"
            targetNamespace="org.codehaus.fabric3"
-           name="ProxyServiceComposite"
+           name="ProxyServiceExtension"
            autowire="true">
 
-    <component name="proxyService">
+    <component name="ProxyService">
         <system:implementation.system class="org.fabric3.proxy.jdk.JDKProxyService"/>
     </component>
 

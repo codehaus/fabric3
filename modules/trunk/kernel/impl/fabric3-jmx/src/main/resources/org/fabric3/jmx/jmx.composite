@@ -16,23 +16,20 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.    
--->
-<!--
-    Default system configuration for the launcher environment.
-    
+
     $Rev: 4223 $ $Date: 2008-05-15 01:28:07 -0700 (Thu, 15 May 2008) $
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
            xmlns:system="http://fabric3.org/xmlns/sca/system/2.0-alpha"
-           name="JMXComposite"
+           name="JMXExtension"
            autowire="true">
 
-    <component f3:key="org.fabric3.jmx.scdl.JMXBinding" name="JMXBindingGenerator">
+    <component name="JMXBindingGenerator" f3:key="org.fabric3.jmx.scdl.JMXBinding">
         <system:implementation.system class="org.fabric3.jmx.control.JMXBindingGenerator"/>
     </component>
 
-    <component f3:key="org.fabric3.jmx.provision.JMXWireSourceDefinition" name="JMXWireAttacher">
+    <component name="JMXWireAttacher" f3:key="org.fabric3.jmx.provision.JMXWireSourceDefinition">
         <system:implementation.system class="org.fabric3.jmx.runtime.JMXWireAttacher"/>
     </component>
 

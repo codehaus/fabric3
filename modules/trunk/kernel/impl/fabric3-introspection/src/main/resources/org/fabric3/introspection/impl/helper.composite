@@ -16,22 +16,19 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.    
--->
-<!--
-    Default system configuration for the launcher environment.
-    
+
     $Rev$ $Date$
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:system="http://fabric3.org/xmlns/sca/system/2.0-alpha"
-           name="Helper" targetNamespace="urn:org.codehaus.fabric3:fabric3-introspection"
+           name="HelperComposite" targetNamespace="urn:org.codehaus.fabric3:fabric3-introspection"
            autowire="true">
 
-    <component name="org.fabric3.introspection.impl.DefaultIntrospectionHelper">
+    <component name="DefaultIntrospectionHelper">
         <system:implementation.system class="org.fabric3.introspection.impl.DefaultIntrospectionHelper"/>
     </component>
 
-    <component name="org.fabric3.introspection.impl.contract.DefaultContractProcessor">
+    <component name="DefaultContractProcessor">
         <system:implementation.system class="org.fabric3.introspection.impl.contract.DefaultContractProcessor"/>
     </component>
 </composite>
