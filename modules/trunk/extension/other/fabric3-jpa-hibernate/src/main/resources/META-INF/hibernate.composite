@@ -30,20 +30,20 @@
            autowire="true">
 
     <!-- EMF Builder Delegate -->
-    <component name="org.fabric3.jpa.hibernate.HibernateDelegate" f3:key="org.hibernate.ejb.HibernatePersistence">
+    <component name="HibernateDelegate" f3:key="org.hibernate.ejb.HibernatePersistence">
         <system:implementation.system class="org.fabric3.jpa.hibernate.HibernateDelegate"/>
     </component>
 
-    <component name="org.fabric3.jpa.hibernate.HibernateEmfClassLoaderService">
+    <component name="HibernateEmfClassLoaderService">
         <system:implementation.system class="org.fabric3.jpa.hibernate.HibernateEmfClassLoaderService"/>
     </component>
 
     <!-- Transaction manager lookup -->
-    <component name="org.fabric3.jpa.hibernate.F3HibernateTransactionManagerLookup">
+    <component name="F3HibernateTransactionManagerLookup">
         <system:implementation.system class="org.fabric3.jpa.hibernate.F3HibernateTransactionManagerLookup"/>
     </component>
 
-    <component name="org.fabric3.jpa.hibernate.HibernatePersistenceManifestProcessor">
+    <component name="HibernatePersistenceManifestProcessor">
         <system:implementation.system class="org.fabric3.jpa.hibernate.HibernatePersistenceManifestProcessor"/>
     </component>
 

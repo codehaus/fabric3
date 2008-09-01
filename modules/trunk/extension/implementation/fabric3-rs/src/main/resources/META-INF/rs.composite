@@ -23,22 +23,22 @@
            name="RsExtension"
            autowire="true">
 
-    <component name="org.fabric3.rs.introspection.RsHeuristic">
+    <component name="RsHeuristic">
         <system:implementation.system class="org.fabric3.rs.introspection.RsHeuristicImpl"/>
     </component>
  
-    <component name="org.fabric3.rs.introspection.RsImplementationLoader" f3:key="rs:implementation.rs">
+    <component name="RsImplementationLoader" f3:key="rs:implementation.rs">
         <system:implementation.system class="org.fabric3.rs.introspection.RsImplementationLoader"/>
-        <reference name="implementationProcessor" target="org.fabric3.java.introspection.JavaImplementationProcessorImpl"/>
+        <reference name="implementationProcessor" target="JavaImplementationProcessorImpl"/>
     </component>
  
     <!-- Rs Binding Generator -->
-    <component f3:key="org.fabric3.rs.scdl.RsBindingDefinition" name="RsBindingGenerator" >
+    <component name="RsBindingGenerator" f3:key="org.fabric3.rs.scdl.RsBindingDefinition">
         <system:implementation.system class="org.fabric3.rs.control.RsBindingGenerator"/>
     </component>
 
     <!-- Rs Binding Wire Attachers  -->
-    <component f3:key="org.fabric3.rs.provision.RsWireSourceDefinition" name="RsSourceWireAttacher" >
+    <component name="RsSourceWireAttacher" f3:key="org.fabric3.rs.provision.RsWireSourceDefinition">
         <system:implementation.system class="org.fabric3.rs.runtime.RsSourceWireAttacher"/>
     </component> 
     
