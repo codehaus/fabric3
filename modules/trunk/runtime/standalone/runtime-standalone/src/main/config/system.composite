@@ -16,16 +16,13 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.    
--->
-<!--
-    Default system configuration for the launcher environment.
 
     $Rev: 329 $ $Date: 2007-06-30 14:33:48 +0100 (Sat, 30 Jun 2007) $
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:system="http://fabric3.org/xmlns/sca/system/2.0-alpha"
            xmlns:introspection="urn:maven:org.codehaus.fabric3:fabric3-introspection"
-           name="org.fabric3.launcher.System"
+           name="StandaloneSystemComposite"
            autowire="true">
 
     <!-- include physical deployment configuration -->
@@ -85,7 +82,7 @@
         <system:implementation.system class="org.fabric3.fabric.services.discovery.SingleVMDiscoveryService"/>
     </component>
 
-	 <component name="assemblyRecoveryService">
+    <component name="AssemblyRecoveryService">
         <system:implementation.system class="org.fabric3.fabric.services.lcm.NonPersistentLogicalComponentStore"/>
     </component>
 

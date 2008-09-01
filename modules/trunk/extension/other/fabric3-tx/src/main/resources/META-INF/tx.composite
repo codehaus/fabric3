@@ -23,12 +23,12 @@
            autowire="true">
 
     <!-- Tx Interceptor Builder -->
-    <component f3:key="org.fabric3.tx.interceptor.TxInterceptorDefinition" name="txInterceptorBuilder">
+    <component name="TxInterceptorBuilder" f3:key="org.fabric3.tx.interceptor.TxInterceptorDefinition" >
         <system:implementation.system class="org.fabric3.tx.interceptor.TxInterceptorBuilder"/>
     </component>
 
     <!-- Tx Interceptor Generator -->
-    <component name="txInterceptorGenerator">
+    <component name="TxInterceptorGenerator">
         <system:implementation.system class="org.fabric3.tx.interceptor.TxInterceptorDefinitionGenerator"/>
     </component>
 

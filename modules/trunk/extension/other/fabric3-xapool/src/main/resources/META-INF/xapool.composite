@@ -23,11 +23,11 @@
            autowire="true">
            
     <property name="dataSourceConfig" type="f3:dataSourceConfig"/>
-    <reference name="transactionManager" promote="xaPoolDataSource/transactionManager"/>
-    <reference name="dataSourceRegistry" promote="xaPoolDataSource/dataSourceRegistry"/>
+    <reference name="transactionManager" promote="XaPoolDataSource/transactionManager"/>
+    <reference name="dataSourceRegistry" promote="XaPoolDataSource/dataSourceRegistry"/>
 
     <!-- XAPool Datasource -->
-    <component name="xaPoolDataSource">
+    <component name="XaPoolDataSource">
         <system:implementation.system class="org.fabric3.xapool.XaPoolDataSource"/>
         <property name="driver" source="$dataSourceConfig//driver"/>
         <property name="url" source="$dataSourceConfig//url"/>

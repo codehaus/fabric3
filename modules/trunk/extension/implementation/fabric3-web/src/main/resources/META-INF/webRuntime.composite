@@ -16,9 +16,6 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.
--->
-<!--
-    Configuration of components used at runtime.
 
     $Rev: 3127 $ $Date: 2008-03-17 03:35:09 -0700 (Mon, 17 Mar 2008) $
 -->
@@ -26,7 +23,7 @@
            xmlns:sca="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
            xmlns:system="http://fabric3.org/xmlns/sca/system/2.0-alpha"
-           name="WebRuntime" targetNamespace="urn:maven:org.codehaus.fabric3:fabric3-java"
+           name="WebImplementationRuntimeExtension" targetNamespace="urn:maven:org.codehaus.fabric3:fabric3-java"
            autowire="true">
 
     <component name="WebComponentBuilder">
@@ -36,7 +33,7 @@
         <system:implementation.system class="org.fabric3.web.runtime.InjectorFactoryImpl"/>
     </component>
 
-    <component f3:key="org.fabric3.web.provision.WebComponentWireSourceDefinition" name="WebSourceWireAttacher">
+    <component name="WebSourceWireAttacher" f3:key="org.fabric3.web.provision.WebComponentWireSourceDefinition">
         <system:implementation.system class="org.fabric3.web.runtime.WebComponentSourceWireAttacher"/>
     </component>
 

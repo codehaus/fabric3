@@ -32,12 +32,12 @@
 
     <component name="SystemComponentBuilder">
         <system:implementation.system class="org.fabric3.system.runtime.SystemComponentBuilder"/>
-        <reference name="transformerRegistry" target="pullTransformerRegistry"/>
+        <reference name="transformerRegistry" target="PullTransformerRegistry"/>
     </component>
 
     <component name="SystemSourceWireAttacher" f3:key="org.fabric3.system.provision.SystemWireSourceDefinition">
         <system:implementation.system class="org.fabric3.system.runtime.SystemSourceWireAttacher"/>
-        <reference name="transformerRegistry" target="pullTransformerRegistry"/>
+        <reference name="transformerRegistry" target="PullTransformerRegistry"/>
     </component>
 
     <component name="SystemTargetWireAttacher" f3:key="org.fabric3.system.provision.SystemWireTargetDefinition">

@@ -21,12 +21,12 @@
            xmlns:sca="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
            xmlns:system="http://fabric3.org/xmlns/sca/system/2.0-alpha"
-           name="TimerComponentLoader"
+           name="TimerLoaderExtension"
            targetNamespace="org.codehaus.fabric3"
            autowire="true">
 
 
-    <component f3:key="f3:implementation.timer" name="TimerImplementationLoader">
+    <component name="TimerImplementationLoader" f3:key="f3:implementation.timer">
         <system:implementation.system class="org.fabric3.timer.component.introspection.TimerImplementationLoader"/>
     </component>
 

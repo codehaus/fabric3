@@ -17,111 +17,111 @@
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:system="http://fabric3.org/xmlns/sca/system/2.0-alpha"
-           name="org.fabric3.transform.Transformers"
+           name="TransformersBootComposite"
            autowire="true">
 
-    <component name="pushTransformerRegistry">
+    <component name="PushTransformerRegistry">
         <system:implementation.system class="org.fabric3.transform.DefaultTransformerRegistry"/>
     </component>
 
-    <component name="pullTransformerRegistry">
+    <component name="PullTransformerRegistry">
         <system:implementation.system class="org.fabric3.transform.DefaultTransformerRegistry"/>
     </component>
 
     <component name="String2Boolean">
         <system:implementation.system class="org.fabric3.transform.dom2java.String2Boolean"/>
-        <reference name="registry" target="pullTransformerRegistry"/>
+        <reference name="registry" target="PullTransformerRegistry"/>
     </component>
 
     <component name="String2Byte">
         <system:implementation.system class="org.fabric3.transform.dom2java.String2Byte"/>
-        <reference name="registry" target="pullTransformerRegistry"/>
+        <reference name="registry" target="PullTransformerRegistry"/>
     </component>
 
     <component name="String2Short">
         <system:implementation.system class="org.fabric3.transform.dom2java.String2Short"/>
-        <reference name="registry" target="pullTransformerRegistry"/>
+        <reference name="registry" target="PullTransformerRegistry"/>
     </component>
 
     <component name="String2Integer">
         <system:implementation.system class="org.fabric3.transform.dom2java.String2Integer"/>
-        <reference name="registry" target="pullTransformerRegistry"/>
+        <reference name="registry" target="PullTransformerRegistry"/>
     </component>
 
     <component name="String2Long">
         <system:implementation.system class="org.fabric3.transform.dom2java.String2Long"/>
-        <reference name="registry" target="pullTransformerRegistry"/>
+        <reference name="registry" target="PullTransformerRegistry"/>
     </component>
 
     <component name="String2Float">
         <system:implementation.system class="org.fabric3.transform.dom2java.String2Float"/>
-        <reference name="registry" target="pullTransformerRegistry"/>
+        <reference name="registry" target="PullTransformerRegistry"/>
     </component>
 
     <component name="String2Double">
         <system:implementation.system class="org.fabric3.transform.dom2java.String2Double"/>
-        <reference name="registry" target="pullTransformerRegistry"/>
+        <reference name="registry" target="PullTransformerRegistry"/>
     </component>
 
     <component name="String2QName">
         <system:implementation.system class="org.fabric3.transform.dom2java.String2QName"/>
-        <reference name="registry" target="pullTransformerRegistry"/>
+        <reference name="registry" target="PullTransformerRegistry"/>
     </component>
 
     <component name="String2Class">
         <system:implementation.system class="org.fabric3.transform.dom2java.String2Class"/>
-        <reference name="registry" target="pullTransformerRegistry"/>
+        <reference name="registry" target="PullTransformerRegistry"/>
     </component>
     
     <component name="String2Date">
         <system:implementation.system class="org.fabric3.transform.dom2java.String2Date"/>
-        <reference name="registry" target="pullTransformerRegistry"/>
+        <reference name="registry" target="PullTransformerRegistry"/>
     </component>
 
     <component name="String2Calendar">
         <system:implementation.system class="org.fabric3.transform.dom2java.String2Calendar"/>
-        <reference name="registry" target="pullTransformerRegistry"/>
+        <reference name="registry" target="PullTransformerRegistry"/>
     </component>
 
     <component name="String2String">
         <system:implementation.system class="org.fabric3.transform.dom2java.String2String"/>
-        <reference name="registry" target="pullTransformerRegistry"/>
+        <reference name="registry" target="PullTransformerRegistry"/>
     </component>
     
     <component name="String2URI">
         <system:implementation.system class="org.fabric3.transform.dom2java.String2URI"/>
-        <reference name="registry" target="pullTransformerRegistry"/>
+        <reference name="registry" target="PullTransformerRegistry"/>
     </component>
     
     <component name="String2URL">
         <system:implementation.system class="org.fabric3.transform.dom2java.String2URL"/>
-        <reference name="registry" target="pullTransformerRegistry"/>
+        <reference name="registry" target="PullTransformerRegistry"/>
     </component>
 
     <component name="String2MapOfString2String">
         <system:implementation.system class="org.fabric3.transform.dom2java.generics.map.String2MapOfString2String"/>
-        <reference name="registry" target="pullTransformerRegistry"/>
+        <reference name="registry" target="PullTransformerRegistry"/>
     </component>
 
     <component name="String2MapOfQname2Class">
         <system:implementation.system class="org.fabric3.transform.dom2java.generics.map.String2MapOfQName2Class"/>
-        <reference name="registry" target="pullTransformerRegistry"/>
+        <reference name="registry" target="PullTransformerRegistry"/>
     </component>
 
     <component name="String2ListOfString">
         <system:implementation.system class="org.fabric3.transform.dom2java.generics.list.String2ListOfString"/>
-        <reference name="registry" target="pullTransformerRegistry"/>
+        <reference name="registry" target="PullTransformerRegistry"/>
     </component>
 
     <component name="String2Properties">
         <system:implementation.system class="org.fabric3.transform.dom2java.String2Properties"/>
-        <reference name="registry" target="pullTransformerRegistry"/>
+        <reference name="registry" target="PullTransformerRegistry"/>
     </component>
 
 <!--
     <component name="Element2Stream">
         <system:implementation.system class="org.fabric3.transform.xml.Element2Stream"/>
-        <reference name="registry" target="pullTransformerRegistry"/>
+        <reference name="registry" target="PullTransformerRegistry"/>
     </component>
 
     <component name="Stream2Stream">
