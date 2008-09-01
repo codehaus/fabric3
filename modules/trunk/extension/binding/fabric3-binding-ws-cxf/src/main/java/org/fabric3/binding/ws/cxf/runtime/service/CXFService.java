@@ -30,21 +30,21 @@ public interface CXFService {
     /**
      * Provisions a a wire's target service as a Web Service endpoint at the given URI
      *
-     * @param uri       the endpoint uri
+     * @param address       the endpoint uri
      * @param interfaze the service interface
      * @param wire      the wire to the target service being provisioned
      * @throws EndpointProvisionException if an error is encountered provisioning the endpoint
      */
-    void provisionEndpoint(URI uri, Class<?> interfaze, Wire wire) throws EndpointProvisionException;
+    void provisionEndpoint(String address, Class<?> interfaze, Wire wire) throws EndpointProvisionException;
 
     /**
      * Binds a wire from a reference to a target web services endpoint
      *
-     * @param uri       the endpoint uri
+     * @param address       the endpoint uri
      * @param interfaze the service interface for the reference
      * @param wire      the wire to the target service being provisioned
      * @throws TargetBindException if an error is encountered binding the wire
      */
-    void bindToTarget(URI uri, Class<?> interfaze, Wire wire) throws TargetBindException;
+    void bindToTarget(String address, Class<?> interfaze, Wire wire) throws TargetBindException;
 
 }

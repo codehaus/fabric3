@@ -19,18 +19,22 @@
 
 package org.fabric3.binding.ws.cxf.runtime;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
+import java.net.URLDecoder;
 
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.binding.ws.cxf.runtime.service.CXFService;
 import org.fabric3.binding.ws.cxf.provision.CxfWireSourceDefinition;
+import org.fabric3.binding.ws.cxf.runtime.service.CXFService;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.SourceWireAttacher;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
+import org.fabric3.spi.services.expression.ExpressionExpander;
+import org.fabric3.spi.services.expression.ExpressionExpansionException;
 import org.fabric3.spi.wire.Wire;
 
 /**
@@ -43,17 +47,21 @@ public class CxfSourceWireAttacher implements SourceWireAttacher<CxfWireSourceDe
 
     private final ClassLoaderRegistry classLoaderRegistry;
     private final CXFService cxfService;
+    private ExpressionExpander expander;
 
     /**
      * Injects the wire attacher registry and servlet host.
      *
      * @param classLoaderRegistry the classloader registry
      * @param cxfService          the CXF service
+     * @param expander            the ExpressionExpander to use to expand parameters
      */
     public CxfSourceWireAttacher(@Reference ClassLoaderRegistry classLoaderRegistry,
-                                 @Reference CXFService cxfService) {
+                                 @Reference CXFService cxfService,
+                                 @Reference ExpressionExpander expander) {
         this.classLoaderRegistry = classLoaderRegistry;
         this.cxfService = cxfService;
+        this.expander = expander;
     }
 
 
@@ -71,9 +79,9 @@ public class CxfSourceWireAttacher implements SourceWireAttacher<CxfWireSourceDe
                 throw new ClassLoaderNotFoundException("Classloader not defined", classLoaderUri.toString());
             }
             Class<?> service = loader.loadClass(sourceDefinition.getServiceInterface());
-            URI uri = sourceDefinition.getUri();
+            String address = expandUri(sourceDefinition.getUri());
             // provision the bound service as a Web Service endpoint
-            cxfService.provisionEndpoint(uri, service, wire);
+            cxfService.provisionEndpoint(address, service, wire);
         } catch (ClassNotFoundException e) {
             throw new WiringException(e);
         } finally {
@@ -83,12 +91,32 @@ public class CxfSourceWireAttacher implements SourceWireAttacher<CxfWireSourceDe
     }
 
     public void detachFromSource(CxfWireSourceDefinition sourceDefinition,
-                               PhysicalWireTargetDefinition targetDefinition,
-                               Wire wire) throws WiringException {
+                                 PhysicalWireTargetDefinition targetDefinition,
+                                 Wire wire) throws WiringException {
         throw new AssertionError();
     }
 
-    public void attachObjectFactory(CxfWireSourceDefinition source, ObjectFactory<?> objectFactory, PhysicalWireTargetDefinition definition) throws WiringException {
+    public void attachObjectFactory(CxfWireSourceDefinition source, ObjectFactory<?> objectFactory, PhysicalWireTargetDefinition definition)
+            throws WiringException {
         throw new AssertionError();
     }
+
+    /**
+     * Expands the target URI if it contains an expression of the form ${..}.
+     *
+     * @param uri the target uri to expand
+     * @return the expanded URI with sourced values for any expressions
+     * @throws WiringException if there is an error expanding an expression
+     */
+    private String expandUri(URI uri) throws WiringException {
+        try {
+            String decoded = URLDecoder.decode(uri.getPath(), "UTF-8");
+            return expander.expand(decoded);
+        } catch (UnsupportedEncodingException e) {
+            throw new AssertionError(e);
+        } catch (ExpressionExpansionException e) {
+            throw new WiringException(e);
+        }
+    }
+
 }

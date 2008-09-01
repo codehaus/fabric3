@@ -120,7 +120,7 @@ public class CXFServiceImpl implements CXFService {
         monitor.extensionStopped();
     }
 
-    public void provisionEndpoint(URI uri, Class<?> interfaze, Wire wire) {
+    public void provisionEndpoint(String address, Class<?> interfaze, Wire wire) {
         Map<String, InvocationChain> interceptors = new HashMap<String, InvocationChain>();
         for (Map.Entry<PhysicalOperationDefinition, InvocationChain> entry : wire.getInvocationChains().entrySet()) {
             interceptors.put(entry.getKey().getName(), entry.getValue());
@@ -129,7 +129,6 @@ public class CXFServiceImpl implements CXFService {
         Object implementor = ServiceProxyHandler.newInstance(interfaze, interceptors, wire);
         ServerFactoryBean serverFactoryBean = new ServerFactoryBean();
         serverFactoryBean.setBus(bus);
-        String address = uri.toASCIIString();
         serverFactoryBean.setAddress(address);
         serverFactoryBean.setServiceClass(interfaze);
         serverFactoryBean.setServiceBean(implementor);
@@ -139,11 +138,11 @@ public class CXFServiceImpl implements CXFService {
         endpointProvisioned(address);
     }
 
-    public void bindToTarget(URI uri, Class<?> interfaze, Wire wire) {
+    public void bindToTarget(String address, Class<?> interfaze, Wire wire) {
         ClientProxyFactoryBean factory = new ClientProxyFactoryBean();
         factory.setBus(bus);
         factory.setServiceClass(interfaze);
-        factory.setAddress(uri.toString());
+        factory.setAddress(address);
         Object proxy = interfaze.cast(factory.create());
         for (Method method : interfaze.getDeclaredMethods()) {
             for (Map.Entry<PhysicalOperationDefinition, InvocationChain> entry : wire.getInvocationChains().entrySet()) {
