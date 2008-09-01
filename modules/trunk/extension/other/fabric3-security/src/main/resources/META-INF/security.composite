@@ -30,13 +30,13 @@
            autowire="true">
 
     <!-- Authorization Interceptor Builder -->
-    <component f3:key="org.fabric3.security.authorization.AuthorizationInterceptorDefinition" name="authorizationInterceptorBuilder">
+    <component name="AuthorizationInterceptorBuilder" f3:key="org.fabric3.security.authorization.AuthorizationInterceptorDefinition">
         <system:implementation.system class="org.fabric3.security.authorization.AuthorizationInterceptorBuilder"/>
     </component>
 
     <!-- Authorization Interceptor Generator -->
-    <component name="authorizationInterceptorGenerator">
+    <component name="AuthorizationInterceptorDefinitionGenerator">
         <system:implementation.system class="org.fabric3.security.authorization.AuthorizationInterceptorDefinitionGenerator"/>
     </component>
-    
+
 </composite>

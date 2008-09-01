@@ -28,40 +28,40 @@
            targetNamespace="org.codehaus.fabric3"
            name="MockImplementationExtension"
            autowire="true">
-    
+
     <!-- Implementation loader -->
-    <component name="org.fabric3.mock.ImplementationMockLoader" f3:key="f3:implementation.mock">
+    <component name="ImplementationMockLoader" f3:key="f3:implementation.mock">
         <system:implementation.system class="org.fabric3.mock.ImplementationMockLoader"/>
     </component>
-    
+
     <!-- Component type loader -->
-    <component name="org.fabric3.mock.MockComponentTypeLoader">
+    <component name="MockComponentTypeLoader">
         <system:implementation.system class="org.fabric3.mock.MockComponentTypeLoaderImpl"/>
     </component>
-    
+
     <!-- Generator -->
-    <component name="org.fabric3.mock.MockComponentGenerator">
+    <component name="MockComponentGenerator">
         <system:implementation.system class="org.fabric3.mock.MockComponentGenerator"/>
     </component>
-    
+
     <!-- Builder -->
-    <component name="org.fabric3.mock.MockComponentBuilder">
+    <component name="MockComponentBuilder">
         <system:implementation.system class="org.fabric3.mock.MockComponentBuilder"/>
     </component>
-    
+
     <!-- Target Wire attacher -->
-    <component f3:key="org.fabric3.mock.MockWireTargetDefinition" name="org.fabric3.mock.MockTargetWireAttacher">
+    <component name="MockTargetWireAttacher" f3:key="org.fabric3.mock.MockWireTargetDefinition">
         <system:implementation.system class="org.fabric3.mock.MockTargetWireAttacher"/>
     </component>
-    
+
     <!-- Source Wire attacher -->
-    <component f3:key="org.fabric3.mock.MockWireSourceDefinition" name="org.fabric3.mock.MockSourceWireAttacher">
+    <component name="MockSourceWireAttacher" f3:key="org.fabric3.mock.MockWireSourceDefinition">
         <system:implementation.system class="org.fabric3.mock.MockSourceWireAttacher"/>
     </component>
-    
+
     <!-- IMock control -->
-    <component name="org.fabric3.mock.IMocksControlProxy">
+    <component name="IMocksControlProxy">
         <system:implementation.system class="org.fabric3.mock.IMocksControlProxy"/>
     </component>
-    
+
 </composite>

@@ -16,10 +16,7 @@
  * KIND, either express or implied.  See the License for the
  * specific language governing permissions and limitations
  * under the License.    
--->
-<!--
-    Default system configuration for the launcher environment.
-    
+
     $Rev$ $Date$
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
@@ -29,55 +26,55 @@
            autowire="true">
 
     <!-- System implementation type -->
-    <component name="org.fabric3.system.introspection.SystemImplementationLoader" f3:key="system:implementation.system">
+    <component name="SystemImplementationLoader" f3:key="system:implementation.system">
         <system:implementation.system class="org.fabric3.system.introspection.SystemImplementationLoader"/>
     </component>
 
-    <component name="org.fabric3.system.runtime.SystemComponentBuilder">
+    <component name="SystemComponentBuilder">
         <system:implementation.system class="org.fabric3.system.runtime.SystemComponentBuilder"/>
         <reference name="transformerRegistry" target="pullTransformerRegistry"/>
     </component>
 
-    <component f3:key="org.fabric3.system.provision.SystemWireSourceDefinition" name="org.fabric3.system.runtime.SystemSourceWireAttacher">
+    <component name="SystemSourceWireAttacher" f3:key="org.fabric3.system.provision.SystemWireSourceDefinition">
         <system:implementation.system class="org.fabric3.system.runtime.SystemSourceWireAttacher"/>
         <reference name="transformerRegistry" target="pullTransformerRegistry"/>
     </component>
 
-    <component f3:key="org.fabric3.system.provision.SystemWireTargetDefinition" name="org.fabric3.system.runtime.SystemTargetWireAttacher">
+    <component name="SystemTargetWireAttacher" f3:key="org.fabric3.system.provision.SystemWireTargetDefinition">
         <system:implementation.system class="org.fabric3.system.runtime.SystemTargetWireAttacher"/>
     </component>
 
 
-    <component name="org.fabric3.system.introspection.SystemImplementationProcessorImpl">
+    <component name="SystemImplementationProcessorImpl">
         <system:implementation.system class="org.fabric3.system.introspection.SystemImplementationProcessorImpl"/>
-        <reference name="classWalker" target="org.fabric3.system.ClassWalker"/>
-        <reference name="heuristic" target="org.fabric3.system.introspection.SystemHeuristic"/>
+        <reference name="classWalker" target="SystemClassWalker"/>
+        <reference name="heuristic" target="SystemHeuristic"/>
     </component>
 
-    <component name="org.fabric3.system.ClassWalker">
+    <component name="SystemClassWalker">
         <system:implementation.system class="org.fabric3.introspection.impl.DefaultClassWalker"/>
     </component>
 
-    <component name="org.fabric3.system.introspection.SystemHeuristic">
+    <component name="SystemHeuristic">
         <system:implementation.system class="org.fabric3.system.introspection.SystemHeuristic"/>
-        <reference name="service" target="org.fabric3.system.introspection.SystemServiceHeuristic"/>
-        <reference name="constructor" target="org.fabric3.system.introspection.SystemConstructorHeuristic"/>
-        <reference name="injection" target="org.fabric3.system.introspection.SystemUnannotatedHeuristic"/>
+        <reference name="service" target="SystemServiceHeuristic"/>
+        <reference name="constructor" target="SystemConstructorHeuristic"/>
+        <reference name="injection" target="SystemUnannotatedHeuristic"/>
     </component>
 
-    <component name="org.fabric3.system.introspection.SystemServiceHeuristic">
+    <component name="SystemServiceHeuristic">
         <system:implementation.system class="org.fabric3.system.introspection.SystemServiceHeuristic"/>
     </component>
 
-    <component name="org.fabric3.system.introspection.SystemConstructorHeuristic">
+    <component name="SystemConstructorHeuristic">
         <system:implementation.system class="org.fabric3.system.introspection.SystemConstructorHeuristic"/>
     </component>
 
-    <component name="org.fabric3.system.introspection.SystemUnannotatedHeuristic">
+    <component name="SystemUnannotatedHeuristic">
         <system:implementation.system class="org.fabric3.system.introspection.SystemUnannotatedHeuristic"/>
     </component>
 
-    <component name="org.fabric3.system.control.SystemComponentGenerator">
+    <component name="SystemComponentGenerator">
         <system:implementation.system class="org.fabric3.system.control.SystemComponentGenerator"/>
     </component>
 

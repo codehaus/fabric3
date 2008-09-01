@@ -14,27 +14,24 @@
  KIND, either express or implied.  See the License for the
  specific language governing permissions and limitations
  under the License.
--->
-<!--
-    Default system configuration for the pojo implementation.
 
     $Rev$ $Date$
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
            xmlns:system="http://fabric3.org/xmlns/sca/system/2.0-alpha"
-           name="org.fabric3.fabric.standlone.host.LaunchedImplementation"
+           name="LaunchedImplementationExtension"
            autowire="true">
 
-    <component name="org.fabric3.runtime.standalone.host.implementation.launched.LaunchedLoader" f3:key="f3:launched">
+    <component name="LaunchedLoader" f3:key="f3:launched">
         <system:implementation.system class="org.fabric3.runtime.standalone.host.implementation.launched.LaunchedLoader"/>
     </component>
 
-    <component name="org.fabric3.runtime.standalone.host.implementation.launched.LaunchedComponentTypeLoaderImpl">
+    <component name="LaunchedComponentTypeLoader">
         <system:implementation.system class="org.fabric3.runtime.standalone.host.implementation.launched.LaunchedComponentTypeLoaderImpl"/>
     </component>
 
-    <component name="launchedGenerator">
+    <component name="LaunchedComponentGenerator">
         <system:implementation.system class="org.fabric3.runtime.standalone.host.implementation.launched.LaunchedComponentGenerator"/>
     </component>
 

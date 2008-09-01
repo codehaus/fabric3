@@ -24,7 +24,7 @@
     <property name="jndiProperties"/>
 
     <!-- JNDI Delegate -->
-    <component name="org.fabric3.naming.JNDIContextDelegate">
+    <component name="JNDIContextDelegate">
         <system:implementation.system class="org.fabric3.naming.JNDIContextDelegate"/>
         <property name="properties" source="$jndiProperties"/>
     </component>

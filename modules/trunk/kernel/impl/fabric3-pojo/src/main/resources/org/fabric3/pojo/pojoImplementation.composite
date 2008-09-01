@@ -22,22 +22,22 @@
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:system="http://fabric3.org/xmlns/sca/system/2.0-alpha"
-           name="org.fabric3.fabric.PojoImplementation"
+           name="PojoImplementationBootComposite"
            autowire="true">
 
-    <component name="org.fabric3.pojo.instancefactory.DefaultInstanceFactoryBuilderRegistry">
+    <component name="DefaultInstanceFactoryBuilderRegistry">
         <system:implementation.system class="org.fabric3.pojo.instancefactory.DefaultInstanceFactoryBuilderRegistry"/>
     </component>
 
-    <component name="org.fabric3.pojo.instancefactory.ReflectiveInstanceFactoryBuilder">
+    <component name="ReflectiveInstanceFactoryBuilder">
         <system:implementation.system class="org.fabric3.pojo.instancefactory.ReflectiveInstanceFactoryBuilder"/>
     </component>
 
-    <component name="org.fabric3.pojo.control.GenerationHelperImpl">
+    <component name="GenerationHelperImpl">
         <system:implementation.system class="org.fabric3.pojo.control.GenerationHelperImpl"/>
     </component>
 
-    <component name="org.fabric3.pojo.instancefactory.BuildHelperImpl">
+    <component name="BuildHelperImpl">
         <system:implementation.system class="org.fabric3.pojo.instancefactory.BuildHelperImpl"/>
     </component>
 </composite>

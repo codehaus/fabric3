@@ -28,30 +28,30 @@
            targetNamespace="org.codehaus.fabric3"
            name="ResourceExtension"
            autowire="true">
-    
+
     <!-- Processor for F3 resources -->
-    <component f3:key="org.fabric3.api.annotation.Resource" name="org.fabric3.resource.introspection.Fabric3ResourceProcessor">
+    <component name="Fabric3ResourceProcessor" f3:key="org.fabric3.api.annotation.Resource">
         <system:implementation.system class="org.fabric3.resource.introspection.Fabric3ResourceProcessor"/>
     </component>
-    
+
     <!-- Processor for JSR250 resources -->
-    <component f3:key="javax.annotation.Resource" name="org.fabric3.resource.introspection.JSR250ResourceProcessor">
+    <component name="JSR250ResourceProcessor" f3:key="javax.annotation.Resource">
         <system:implementation.system class="org.fabric3.resource.introspection.JSR250ResourceProcessor"/>
     </component>
-    
+
     <!-- Wire Target Definition Generator -->
-    <component name="org.fabric3.resource.generator.SystemSourcedResourceWireGenerator">
+    <component name="SystemSourcedResourceWireGenerator">
         <system:implementation.system class="org.fabric3.resource.generator.SystemSourcedResourceWireGenerator"/>
     </component>
-    
+
     <!-- Wire Attacher for System Sourced Resources -->
-    <component f3:key="org.fabric3.resource.model.SystemSourcedWireTargetDefinition" name="org.fabric3.resource.wire.SystemSourcedResourceWireAttacher">
+    <component name="SystemSourcedResourceWireAttacher" f3:key="org.fabric3.resource.model.SystemSourcedWireTargetDefinition">
         <system:implementation.system class="org.fabric3.resource.wire.SystemSourcedResourceWireAttacher"/>
     </component>
-    
+
     <!-- Datasource registry -->
-    <component name="org.fabric3.resource.ds.DataSourceRegistryImpl">
+    <component name="DataSourceRegistry">
         <system:implementation.system class="org.fabric3.resource.ds.DataSourceRegistryImpl"/>
     </component>
-    
+
 </composite>

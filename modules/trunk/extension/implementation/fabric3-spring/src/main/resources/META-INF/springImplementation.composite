@@ -27,33 +27,33 @@
            xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
            xmlns:system="http://fabric3.org/xmlns/sca/system/2.0-alpha"
            targetNamespace="org.codehaus.fabric3"
-           name="SpringExtensionComposite"
+           name="SpringExtension"
            autowire="true">
 
 
-    <component f3:key="sca:implementation.spring" name="org.fabric3.spring.SpringImplementationLoader">
+    <component name="SpringImplementationLoader" f3:key="sca:implementation.spring">
         <system:implementation.system class="org.fabric3.spring.xml.SpringImplementationLoader"/>
     </component>
 
-    <component name="org.fabric3.spring.SpringComponentTypeLoaderImpl">
+    <component name="SpringComponentTypeLoaderImpl">
         <system:implementation.system class="org.fabric3.spring.xml.SpringComponentTypeLoaderImpl"/>
     </component>
 
-    <component name="org.fabric3.spring.SpringComponentGenerator">
+    <component name="SpringComponentGenerator">
         <system:implementation.system class="org.fabric3.spring.SpringComponentGenerator"/>
     </component>
 
-    <component name="org.fabric3.spring.SpringComponentBuilder">
+    <component name="SpringComponentBuilder">
         <system:implementation.system class="org.fabric3.spring.SpringComponentBuilder"/>
         <reference name="transformerRegistry" target="pullTransformerRegistry"/>
     </component>
 
-    <component f3:key="org.fabric3.spring.SpringWireSourceDefinition" name="org.fabric3.spring.SpringSourceWireAttacher">
+    <component name="SpringSourceWireAttacher" f3:key="org.fabric3.spring.SpringWireSourceDefinition">
         <system:implementation.system class="org.fabric3.spring.SpringSourceWireAttacher"/>
         <reference name="transformerRegistry" target="pullTransformerRegistry"/>
     </component>
 
-    <component f3:key="org.fabric3.spring.SpringWireTargetDefinition" name="org.fabric3.spring.SpringTargetWireAttacher">
+    <component name="SpringTargetWireAttacher" f3:key="org.fabric3.spring.SpringWireTargetDefinition">
         <system:implementation.system class="org.fabric3.spring.SpringTargetWireAttacher"/>
     </component>
 </composite>
