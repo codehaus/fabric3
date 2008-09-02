@@ -145,8 +145,6 @@ public class ClassLoaderBuilderImpl implements ClassLoaderBuilder {
             }
         }
 
-        // FIXME when extensions are isolated, the extensions URIs will need to be iterated, the extension classloader resolved, and the
-        // extension classloader added as a parent
         if (!definition.getExtensionUris().isEmpty()) {
             // since all extensions are merged into the system classloader, just add it
             ClassLoader systemCL = classLoaderRegistry.getClassLoader(URI.create("fabric3://runtime"));
