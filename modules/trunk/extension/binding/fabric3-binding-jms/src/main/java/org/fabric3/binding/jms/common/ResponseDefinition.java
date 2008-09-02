@@ -24,16 +24,11 @@ import org.fabric3.scdl.ModelObject;
  * @version $Revision$ $Date$
  */
 public class ResponseDefinition extends ModelObject {
+    
     private static final long serialVersionUID = -3413442748842988653L;
 
-    /**
-     * Destination.
-     */
-    private DestinationDefinition destination;
-
-    /**
-     * Connection factory.
-     */
+       
+    private DestinationDefinition destination;    
     private ConnectionFactoryDefinition connectionFactory;
 
     public ConnectionFactoryDefinition getConnectionFactory() {
@@ -51,5 +46,4 @@ public class ResponseDefinition extends ModelObject {
     public void setDestination(DestinationDefinition destination) {
         this.destination = destination;
     }
-
 }

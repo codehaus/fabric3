@@ -18,6 +18,7 @@
  */
 package org.fabric3.binding.jms.runtime.host.standalone;
 
+import javax.jms.Destination;
 import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.MessageConsumer;
@@ -34,7 +35,7 @@ import org.fabric3.host.work.DefaultPausableWork;
 
 /**
  * A thread pull message from destination and invoke Message listener.
- *
+ * 
  * @version $Revision$ $Date$
  */
 public class ConsumerWorker extends DefaultPausableWork {
@@ -51,18 +52,18 @@ public class ConsumerWorker extends DefaultPausableWork {
     private JMSRuntimeMonitor monitor;
 
     /**
-     * @param session            Session used to receive messages.
+     * @param session Session used to receive messages.
      * @param transactionHandler Transaction handler.
-     * @param consumer           Message consumer.
-     * @param listener           Delegate message listener.
-     * @param readTimeout        Read timeout.
+     * @param consumer Message consumer.
+     * @param listener Delegate message listener.
+     * @param readTimeout Read timeout.
      */
     public ConsumerWorker(ConsumerWorkerTemplate template) {
-    	
-    	super(true);
-        
+
+        super(true);
+
         try {
-            
+
             transactionHandler = template.getTransactionHandler();
             transactionType = template.getTransactionType();
             listener = template.getListener();
@@ -73,17 +74,19 @@ public class ConsumerWorker extends DefaultPausableWork {
             readTimeout = template.getReadTimeout();
             cl = template.getCl();
             monitor = template.getMonitor();
-            
+
         } catch (JMSException e) {
             throw new Fabric3JmsException("Unale to create consumer", e);
         }
-        
+
     }
 
     /**
      * @see java.lang.Runnable#run()
      */
     public void execute() {
+        Session responseSession = null;
+        Destination responseDestination = null;
 
         ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
         try {
@@ -95,11 +98,14 @@ public class ConsumerWorker extends DefaultPausableWork {
             Message message = consumer.receive(readTimeout);
             try {
                 if (message != null) {
-                    Session responseSession = responseJMSObjectFactory.createSession();
-                    if (transactionType == TransactionType.GLOBAL) {
-                        transactionHandler.enlist(responseSession);
+                    if (responseJMSObjectFactory != null) {
+                        responseSession = responseJMSObjectFactory.createSession();
+                        if (transactionType == TransactionType.GLOBAL) {
+                            transactionHandler.enlist(responseSession);
+                        }
+                        responseDestination = responseJMSObjectFactory.getDestination();
                     }
-                    listener.onMessage(message, responseSession, responseJMSObjectFactory.getDestination());
+                    listener.onMessage(message, responseSession, responseDestination);
                     if (transactionType == TransactionType.GLOBAL) {
                         transactionHandler.commit();
                         transactionHandler.enlist(session);

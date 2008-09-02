@@ -47,21 +47,19 @@ import org.fabric3.spi.wire.Wire;
 
 /**
  * Attaches the reference end of a wire to a JMS queue.
- *
+ * 
  * @version $Revision$ $Date$
  */
 public class JmsTargetWireAttacher implements TargetWireAttacher<JmsWireTargetDefinition> {
     /**
      * Destination strategies.
      */
-    private Map<CreateOption, DestinationStrategy> destinationStrategies =
-            new HashMap<CreateOption, DestinationStrategy>();
+    private Map<CreateOption, DestinationStrategy> destinationStrategies = new HashMap<CreateOption, DestinationStrategy>();
 
     /**
      * Connection factory strategies.
      */
-    private Map<CreateOption, ConnectionFactoryStrategy> connectionFactoryStrategies =
-            new HashMap<CreateOption, ConnectionFactoryStrategy>();
+    private Map<CreateOption, ConnectionFactoryStrategy> connectionFactoryStrategies = new HashMap<CreateOption, ConnectionFactoryStrategy>();
 
     /**
      * Classloader registry.
@@ -76,7 +74,7 @@ public class JmsTargetWireAttacher implements TargetWireAttacher<JmsWireTargetDe
 
     /**
      * Injects the destination strategies.
-     *
+     * 
      * @param strategies Destination strategies.
      */
     @Reference
@@ -86,7 +84,7 @@ public class JmsTargetWireAttacher implements TargetWireAttacher<JmsWireTargetDe
 
     /**
      * Injects the connection factory strategies.
-     *
+     * 
      * @param strategies Connection factory strategies.
      */
     @Reference
@@ -96,7 +94,7 @@ public class JmsTargetWireAttacher implements TargetWireAttacher<JmsWireTargetDe
 
     /**
      * Injects the classloader registry.
-     *
+     * 
      * @param classLoaderRegistry Classloader registry.
      */
     @Reference
@@ -106,7 +104,11 @@ public class JmsTargetWireAttacher implements TargetWireAttacher<JmsWireTargetDe
 
     public void attachToTarget(PhysicalWireSourceDefinition sourceDefinition, JmsWireTargetDefinition targetDefinition, Wire wire)
             throws WiringException {
-
+  
+        Fabric3MessageReceiver messageReceiver = null;
+        Destination resDestination = null;
+        ConnectionFactory resCf = null;
+        
         ClassLoader cl = classLoaderRegistry.getClassLoader(targetDefinition.getClassloaderUri());
 
         JmsBindingMetadata metadata = targetDefinition.getMetadata();
@@ -117,39 +119,35 @@ public class JmsTargetWireAttacher implements TargetWireAttacher<JmsWireTargetDe
         ConnectionFactoryDefinition connectionFactoryDefinition = metadata.getConnectionFactory();
         CreateOption create = connectionFactoryDefinition.getCreate();
 
-        ConnectionFactory reqCf =
-                connectionFactoryStrategies.get(create).getConnectionFactory(connectionFactoryDefinition, env);
-
-        connectionFactoryDefinition = metadata.getResponseConnectionFactory();
-        create = connectionFactoryDefinition.getCreate();
-        ConnectionFactory resCf =
-                connectionFactoryStrategies.get(create).getConnectionFactory(connectionFactoryDefinition, env);
+        ConnectionFactory reqCf = connectionFactoryStrategies.get(create).getConnectionFactory(connectionFactoryDefinition, env);
 
         DestinationDefinition destinationDefinition = metadata.getDestination();
         create = destinationDefinition.getCreate();
-        Destination reqDestination =
-                destinationStrategies.get(create).getDestination(destinationDefinition, reqCf, env);
+        Destination reqDestination = destinationStrategies.get(create).getDestination(destinationDefinition, reqCf, env);
 
-        destinationDefinition = metadata.getResponseDestination();
-        create = destinationDefinition.getCreate();
-        Destination resDestination =
-                destinationStrategies.get(create).getDestination(destinationDefinition, resCf, env);
+        if (!metadata.noResponse()) {
+            connectionFactoryDefinition = metadata.getResponseConnectionFactory();
+            create = connectionFactoryDefinition.getCreate();
+            resCf = connectionFactoryStrategies.get(create).getConnectionFactory(connectionFactoryDefinition, env);
+
+            destinationDefinition = metadata.getResponseDestination();
+            create = destinationDefinition.getCreate();
+            resDestination = destinationStrategies.get(create).getDestination(destinationDefinition, resCf, env);
+        }
+
         Map<String, PayloadType> payloadTypes = targetDefinition.getPayloadTypes();
         for (Map.Entry<PhysicalOperationDefinition, InvocationChain> entry : wire.getInvocationChains().entrySet()) {
 
             PhysicalOperationDefinition op = entry.getKey();
             InvocationChain chain = entry.getValue();
-
-            Fabric3MessageReceiver messageReceiver = new Fabric3MessageReceiver(resDestination, resCf);
+            
+            if(resDestination != null && resCf != null){
+                messageReceiver = new Fabric3MessageReceiver(resDestination, resCf);
+            }
             String operationName = op.getName();
             PayloadType payloadType = payloadTypes.get(operationName);
-            Interceptor interceptor = new JmsTargetInterceptor(operationName,
-                                                               payloadType,
-                                                               reqDestination,
-                                                               reqCf,
-                                                               correlationScheme,
-                                                               messageReceiver,
-                                                               cl);
+            Interceptor interceptor = new JmsTargetInterceptor(operationName, payloadType, reqDestination, reqCf, correlationScheme, messageReceiver,
+                    cl);
 
             chain.addInterceptor(interceptor);
 

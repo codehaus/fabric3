@@ -102,7 +102,9 @@ public class JmsTargetInterceptor implements Interceptor {
     }
 
     public Message invoke(Message message) {
-
+        
+        Message response = new MessageImpl();
+        
         Connection connection = null;
         ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
         try {
@@ -139,10 +141,12 @@ public class JmsTargetInterceptor implements Interceptor {
                 correlationId = jmsMessage.getJMSMessageID();
             }
             session.commit();
-            javax.jms.Message resultMessage = messageReceiver.receive(correlationId);
-            Object responseMessage = MessageHelper.getPayload(resultMessage, payloadType);
-            Message response = new MessageImpl();
-            response.setBody(responseMessage);
+            if(messageReceiver != null) {
+               javax.jms.Message resultMessage = messageReceiver.receive(correlationId);
+               Object responseMessage = MessageHelper.getPayload(resultMessage, payloadType);        
+               response.setBody(responseMessage);
+            }   
+            
             return response;
 
         } catch (JMSException ex) {

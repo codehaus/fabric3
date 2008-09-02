@@ -215,5 +215,12 @@ public class JmsBindingMetadata extends ModelObject {
         }
         this.operationProperties.put(name, operationProperties);
     }
+    
+    /**
+     * @return there is No response in the Meta data
+     */
+    public boolean noResponse(){
+        return response == null;
+    }
 
 }

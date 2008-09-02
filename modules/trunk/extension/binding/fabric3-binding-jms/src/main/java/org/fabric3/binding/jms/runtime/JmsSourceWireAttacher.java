@@ -113,6 +113,7 @@ public class JmsSourceWireAttacher implements SourceWireAttacher<JmsWireSourceDe
 
     public void attachToSource(JmsWireSourceDefinition source, PhysicalWireTargetDefinition target, Wire wire) throws WiringException {
 
+        JMSObjectFactory responseJMSObjectFactory = null; 
         URI serviceUri = target.getUri();
 
         ClassLoader cl = classLoaderRegistry.getClassLoader(source.getClassLoaderId());
@@ -125,9 +126,12 @@ public class JmsSourceWireAttacher implements SourceWireAttacher<JmsWireSourceDe
         ConnectionFactoryDefinition connectionFactory = metadata.getConnectionFactory();
         DestinationDefinition destination = metadata.getDestination();
         JMSObjectFactory requestJMSObjectFactory = buildObjectFactory(connectionFactory, destination, env);
-        ConnectionFactoryDefinition responseConnectionFactory = metadata.getResponseConnectionFactory();
-        DestinationDefinition responseDestination = metadata.getResponseDestination();
-        JMSObjectFactory responseJMSObjectFactory = buildObjectFactory(responseConnectionFactory, responseDestination, env);
+        
+        if(!metadata.noResponse()){
+          ConnectionFactoryDefinition responseConnectionFactory = metadata.getResponseConnectionFactory();
+          DestinationDefinition responseDestination = metadata.getResponseDestination();
+          responseJMSObjectFactory = buildObjectFactory(responseConnectionFactory, responseDestination, env);
+        }
 
         String callbackUri = null;
         if (target.getCallbackUri() != null) {
@@ -137,8 +141,12 @@ public class JmsSourceWireAttacher implements SourceWireAttacher<JmsWireSourceDe
         Map<String, PayloadType> messageTypes = source.getPayloadTypes();
         Map<PhysicalOperationDefinition, InvocationChain> operations = wire.getInvocationChains();
 
-        ResponseMessageListener messageListener =
-                new ResponseMessageListenerImpl(operations, correlationScheme, messageTypes, transactionType, callbackUri);
+        ResponseMessageListener messageListener;
+         if(metadata.noResponse()){
+             messageListener = new OneWayMessageListenerImpl(operations, correlationScheme, messageTypes, transactionType, callbackUri);
+         }else {
+              messageListener =  new ResponseMessageListenerImpl(operations, correlationScheme, messageTypes, transactionType, callbackUri);
+         }
         jmsHost.registerResponseListener(requestJMSObjectFactory,
                                          responseJMSObjectFactory,
                                          messageListener,

@@ -23,10 +23,10 @@ import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
+
 import javax.jms.Destination;
 import javax.jms.JMSException;
 import javax.jms.Message;
-import javax.jms.MessageProducer;
 import javax.jms.Session;
 
 import org.fabric3.binding.jms.common.CorrelationScheme;
@@ -44,7 +44,7 @@ import org.fabric3.spi.wire.InvocationChain;
  *
  * @version $Revison$ $Date: 2008-03-18 05:24:49 +0800 (Tue, 18 Mar 2008) $
  */
-public class ResponseMessageListenerImpl implements ResponseMessageListener {
+public class OneWayMessageListenerImpl implements ResponseMessageListener {
 
     private Map<String, ChainHolder> operations;
 
@@ -70,7 +70,7 @@ public class ResponseMessageListenerImpl implements ResponseMessageListener {
      * @param transactionType   the type of transaction
      * @param callbackUri       the callback service uri
      */
-    public ResponseMessageListenerImpl(Map<PhysicalOperationDefinition, InvocationChain> chains,
+    public OneWayMessageListenerImpl(Map<PhysicalOperationDefinition, InvocationChain> chains,
                                        CorrelationScheme correlationScheme,
                                        Map<String, PayloadType> messageTypes,
                                        TransactionType transactionType,
@@ -103,41 +103,10 @@ public class ResponseMessageListenerImpl implements ResponseMessageListener {
                 payload = new Object[]{payload};
             }
             WorkContext workContext = new WorkContext();
-//            List<CallFrame> callFrames = (List<CallFrame>) payload[payload.length-1];
-//
-//            CallFrame previous = workContext.peekCallFrame();
-            // Copy correlation and conversation information from incoming frame to new frame
-            // Note that the callback URI is set to the callback address of this service so its callback wire can be mapped in the case of a
-            // bidirectional service
-//            Object id = previous.getCorrelationId(Object.class);
-//            ConversationContext context = previous.getConversationContext();
-//            Conversation conversation = previous.getConversation();
-//            CallFrame frame = new CallFrame(callBackURI, id, conversation, context);
-//            callFrames.add(frame);
-//            workContext.addCallFrames(callFrames);
-//            Object[] netPayload = new Object[payload.length-1];
-//            System.arraycopy(payload, 0, netPayload, 0, payload.length-1);
             org.fabric3.spi.invocation.Message inMessage = new MessageImpl(payload, false, workContext);
             org.fabric3.spi.invocation.Message outMessage = interceptor.invoke(inMessage);
-
-            Object responsePayload = outMessage.getBody();
-            Message response = createMessage(responsePayload, responseSession, payloadType);
-
-            switch (correlationScheme) {
-            case RequestCorrelIDToCorrelID: {
-                response.setJMSCorrelationID(request.getJMSCorrelationID());
-                break;
-            }
-            case RequestMsgIDToCorrelID: {
-                response.setJMSCorrelationID(request.getJMSMessageID());
-                break;
-            }
-            }
-            MessageProducer producer = responseSession.createProducer(responseDestination);
-            producer.send(response);
-            
-            if (transactionType == TransactionType.LOCAL){
-                responseSession.commit();
+            if(outMessage.isFault()){
+                throw new Fabric3JmsException("Error with in the UnderlyingService " + outMessage);
             }
 
         } catch (JMSException ex) {
