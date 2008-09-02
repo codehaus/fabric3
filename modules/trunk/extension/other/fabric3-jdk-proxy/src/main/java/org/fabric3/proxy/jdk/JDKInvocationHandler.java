@@ -28,20 +28,20 @@ import org.osoa.sca.Conversation;
 import org.osoa.sca.ServiceReference;
 import org.osoa.sca.ServiceUnavailableException;
 
-import org.fabric3.pojo.PojoWorkContextTunnel;
 import org.fabric3.pojo.ConversationImpl;
-import org.fabric3.spi.invocation.CallFrame;
+import org.fabric3.pojo.PojoWorkContextTunnel;
+import org.fabric3.spi.component.ConversationExpirationCallback;
 import org.fabric3.spi.component.InstanceInvocationException;
 import org.fabric3.spi.component.ScopeContainer;
-import org.fabric3.spi.component.ConversationExpirationCallback;
-import org.fabric3.spi.invocation.WorkContext;
-import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
-import org.fabric3.spi.model.physical.InteractionType;
-import org.fabric3.spi.wire.Interceptor;
-import org.fabric3.spi.wire.InvocationChain;
+import org.fabric3.spi.invocation.CallFrame;
+import org.fabric3.spi.invocation.ConversationContext;
 import org.fabric3.spi.invocation.Message;
 import org.fabric3.spi.invocation.MessageImpl;
-import org.fabric3.spi.invocation.ConversationContext;
+import org.fabric3.spi.invocation.WorkContext;
+import org.fabric3.spi.model.physical.InteractionType;
+import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
+import org.fabric3.spi.wire.Interceptor;
+import org.fabric3.spi.wire.InvocationChain;
 
 /**
  * Dispatches from a proxy to a wire.
@@ -159,20 +159,7 @@ public final class JDKInvocationHandler<B> implements ConversationExpirationCall
         assert headInterceptor != null;
 
         WorkContext workContext = PojoWorkContextTunnel.getThreadWorkContext();
-        CallFrame frame;
-        if (InteractionType.CONVERSATIONAL == type && conversation == null) {
-            conversation = new ConversationImpl(createConversationID(), scopeContainer);
-            // register this proxy to receive notifications when the conversation ends
-            scopeContainer.registerCallback(conversation, this);
-            // mark the CallFrame as starting a conversation
-            frame = new CallFrame(callbackUri, null, conversation, ConversationContext.NEW);
-        } else if (InteractionType.PROPAGATES_CONVERSATION == type && conversation == null) {
-            Conversation propagated = workContext.peekCallFrame().getConversation();
-            frame = new CallFrame(callbackUri, null, propagated, ConversationContext.PROPAGATE);
-        } else {
-            frame = new CallFrame(callbackUri, null, conversation, null);
-        }
-        workContext.addCallFrame(frame);
+        CallFrame frame = initalizeCallFrame(workContext);
         Message msg = new MessageImpl();
         msg.setBody(args);
         msg.setWorkContext(workContext);
@@ -203,9 +190,44 @@ public final class JDKInvocationHandler<B> implements ConversationExpirationCall
                     conversation = null;
                 }
             }
-            workContext.popCallFrame();
+            if (frame != null) {
+                // no callframe was created as the wire is unidrectional and non-conversational 
+                workContext.popCallFrame();
+            }
         }
 
+    }
+
+    /**
+     * Initializes and returns CallFrame for the invocation if it is required. A CallFrame is required if the wire is targeted to a conversational
+     * service or is bidrectional (i.e. there is a callback). It is not required if the wire is targeted to a unidirectional, non-conversational
+     * service. If not required, null is returned, thereby avoiding the overhead of creating and pushing a CallFrame onto the current WorkContext.
+     *
+     * @param workContext the current work context
+     * @return a CallFrame for the invocation or null if none is required.
+     */
+    private CallFrame initalizeCallFrame(WorkContext workContext) {
+        CallFrame frame = null;
+        if (InteractionType.CONVERSATIONAL == type && conversation == null) {
+            conversation = new ConversationImpl(createConversationID(), scopeContainer);
+            // register this proxy to receive notifications when the conversation ends
+            scopeContainer.registerCallback(conversation, this);
+            // mark the CallFrame as starting a conversation
+            frame = new CallFrame(callbackUri, null, conversation, ConversationContext.NEW);
+            workContext.addCallFrame(frame);
+        } else if (InteractionType.PROPAGATES_CONVERSATION == type && conversation == null) {
+            Conversation propagated = workContext.peekCallFrame().getConversation();
+            frame = new CallFrame(callbackUri, null, propagated, ConversationContext.PROPAGATE);
+            workContext.addCallFrame(frame);
+        } else if (InteractionType.CONVERSATIONAL == type) {
+            frame = new CallFrame(callbackUri, null, conversation, null);
+            workContext.addCallFrame(frame);
+        } else if (callbackUri != null) {
+            // the wire is bidrectional so a callframe is required
+            frame = new CallFrame(callbackUri, null, null, null);
+            workContext.addCallFrame(frame);
+        }
+        return frame;
     }
 
     /**
