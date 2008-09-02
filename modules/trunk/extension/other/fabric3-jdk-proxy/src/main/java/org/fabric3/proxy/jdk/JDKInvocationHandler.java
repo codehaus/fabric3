@@ -199,7 +199,7 @@ public final class JDKInvocationHandler<B> implements ConversationExpirationCall
     }
 
     /**
-     * Initializes and returns CallFrame for the invocation if it is required. A CallFrame is required if the wire is targeted to a conversational
+     * Initializes and returns a CallFrame for the invocation if it is required. A CallFrame is required if the wire is targeted to a conversational
      * service or is bidrectional (i.e. there is a callback). It is not required if the wire is targeted to a unidirectional, non-conversational
      * service. If not required, null is returned, thereby avoiding the overhead of creating and pushing a CallFrame onto the current WorkContext.
      *
