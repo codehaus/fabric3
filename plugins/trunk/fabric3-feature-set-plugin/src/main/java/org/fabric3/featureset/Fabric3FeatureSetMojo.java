@@ -23,8 +23,6 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.maven.artifact.Artifact;
@@ -37,9 +35,6 @@ import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.project.MavenProject;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 /**
@@ -48,7 +43,7 @@ import org.xml.sax.SAXException;
  * and or including a set of explicitly requested extensions. A feature set is published as maven artifact with the extension .xml. This can be later 
  * referenced by the itest and webapp plugins, instead of explictly referencing all the extensions included in the feature set. User applications are 
  * expected to have a separate maven module to build the feature set, and then the installed artifact will be reused from the other modules that use 
- * the itest and webapp plugins.
+ * the itest and webapp plugins. Feature sets can also contain shared dependencies used in itest environments.
  * 
  * An example usage of the feature set plugin is shown below,
  * 
@@ -70,6 +65,12 @@ import org.xml.sax.SAXException;
  *                &lt;artifactId&gt;fabric3-hibernate-feature-set&lt;/artifactId&gt;
  *             &lt;/dependency&gt;
  *          &lt;/includes&gt;
+ *          &lt;shared&gt;
+ *             &lt;dependency&gt;
+ *                &lt;groupId&gt;javax.persistence&lt;/groupId&gt;
+ *                &lt;artifactId&gt;persistence-api&lt;/artifactId&gt;
+ *             &lt;/dependency&gt;
+ *          &lt;/shared&gt;
  *       &lt;/configuration&gt;
  *     &lt;/plugin&gt;
  * </pre>
@@ -105,6 +106,11 @@ public class Fabric3FeatureSetMojo extends AbstractMojo {
      * @parameter
      */
     protected Dependency[] includes;
+
+    /**
+     * @parameter
+     */
+    protected Dependency[] shared;
 
     /**
      * Used to look up Artifacts in the remote repository.
@@ -164,7 +170,7 @@ public class Fabric3FeatureSetMojo extends AbstractMojo {
         }
 
         processExtensions();
-        
+        processShared();
         processIncludes();
         
         try {
@@ -185,49 +191,31 @@ public class Fabric3FeatureSetMojo extends AbstractMojo {
         if (includes == null) {
             return;
         }
-        
-        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-        DocumentBuilder db;
-        try {
-            db = dbf.newDocumentBuilder();
-        } catch (ParserConfigurationException e) {
-            throw new MojoExecutionException(e.getMessage(), e);
-        }
 
         for (Dependency include : includes) {
             
             File featureSetFile = resolve(include);
-            Document featureSetDoc;
+            FeatureSet includedFeatureSet = null;
+			try {
+				includedFeatureSet = FeatureSet.deserialize(featureSetFile);
+			} catch (ParserConfigurationException e) {
+				throw new MojoExecutionException("Unable to process includes", e);
+			} catch (SAXException e) {
+				throw new MojoExecutionException("Unable to process includes", e);
+			} catch (IOException e) {
+				throw new MojoExecutionException("Unable to process includes", e);
+			}
             
-            try {
-                featureSetDoc = db.parse(featureSetFile);
-            } catch (SAXException e) {
-                throw new MojoExecutionException(e.getMessage(), e);
-            } catch (IOException e) {
-                throw new MojoExecutionException(e.getMessage(), e);
-            }
-            
-            NodeList extensionList = featureSetDoc.getElementsByTagName("extension");
-            
-            for (int i = 0;i < extensionList.getLength();i++) {
-                
-                Element extensionElement = (Element) extensionList.item(i);
-                
-                Element artifactIdElement = (Element) extensionElement.getElementsByTagName("artifactId").item(0);
-                Element groupIdElement = (Element) extensionElement.getElementsByTagName("groupId").item(0);
-                Element versionElement = (Element) extensionElement.getElementsByTagName("version").item(0);
-                
-                Dependency extension = new Dependency();
-                extension.setArtifactId(artifactIdElement.getTextContent());
-                extension.setGroupId(groupIdElement.getTextContent());
-                extension.setVersion(versionElement.getTextContent());
-                
-                getLog().info("Included extension " + extension);
-                
-                resolve(extension);
+            for (org.apache.maven.model.Dependency extension : includedFeatureSet.getExtensions()) {
+            	resolve(extension);
                 featureSet.addExtension(extension);
-                
             }
+            
+            for (org.apache.maven.model.Dependency sharedLibrary : includedFeatureSet.getSharedLibraries()) {
+            	resolve(sharedLibrary);
+                featureSet.addSharedLibrary(sharedLibrary);
+            }
+            
         }
         
     }
@@ -249,9 +237,25 @@ public class Fabric3FeatureSetMojo extends AbstractMojo {
     }
 
     /*
+     * Processes the requested shared libraries. 
+     */
+    private void processShared() throws MojoExecutionException {
+        
+        if (shared == null) {
+            return;
+        }
+        
+        for (Dependency sharedLibrary : shared) {
+            resolve(sharedLibrary);
+            featureSet.addSharedLibrary(sharedLibrary);
+        }
+        
+    }
+
+    /*
      * Resolves the depnednecy to anartifact file in the repository.
      */
-    private File resolve(Dependency dep) throws MojoExecutionException {
+    private File resolve(org.apache.maven.model.Dependency dep) throws MojoExecutionException {
 
         if (dep.getVersion() == null) {
             resolveDependencyVersion(dep);
@@ -271,7 +275,7 @@ public class Fabric3FeatureSetMojo extends AbstractMojo {
     /*
      * Creates the artifact from the dependency.
      */
-    private Artifact createArtifact(Dependency dep) {
+    private Artifact createArtifact(org.apache.maven.model.Dependency dep) {
         return artifactFactory.createArtifact(dep.getGroupId(), dep.getArtifactId(), dep.getVersion(), Artifact.SCOPE_RUNTIME, dep.getType());
     }
 
@@ -279,7 +283,7 @@ public class Fabric3FeatureSetMojo extends AbstractMojo {
      * Resolves the dependency version, if the version is not specified.
      */
     @SuppressWarnings("unchecked")
-    private void resolveDependencyVersion(Dependency dep) {
+    private void resolveDependencyVersion(org.apache.maven.model.Dependency dep) {
 
         List<org.apache.maven.model.Dependency> dependencies = project.getDependencyManagement().getDependencies();
         for (org.apache.maven.model.Dependency dependecy : dependencies) {
