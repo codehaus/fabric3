@@ -23,12 +23,13 @@ import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.osoa.sca.annotations.Reference;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
-import org.fabric3.pojo.provision.PojoComponentDefinition;
 import org.fabric3.pojo.instancefactory.InstanceFactoryBuilderRegistry;
+import org.fabric3.pojo.provision.PojoComponentDefinition;
 import org.fabric3.scdl.DataType;
 import org.fabric3.scdl.InjectableAttribute;
 import org.fabric3.scdl.InjectableAttributeType;
@@ -44,6 +45,7 @@ import org.fabric3.spi.model.type.JavaClass;
 import org.fabric3.spi.model.type.JavaParameterizedType;
 import org.fabric3.spi.model.type.XSDSimpleType;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
+import org.fabric3.spi.services.expression.ExpressionExpander;
 import org.fabric3.transform.PullTransformer;
 import org.fabric3.transform.TransformContext;
 import org.fabric3.transform.TransformerRegistry;
@@ -60,6 +62,7 @@ public abstract class PojoComponentBuilder<T, PCD extends PojoComponentDefinitio
     protected final InstanceFactoryBuilderRegistry providerBuilders;
     protected final ClassLoaderRegistry classLoaderRegistry;
     protected final TransformerRegistry<PullTransformer<?, ?>> transformerRegistry;
+    protected ExpressionExpander expander;
 
     private static final XSDSimpleType SOURCE_TYPE = new XSDSimpleType(Node.class, XSDSimpleType.STRING);
     private static final Map<Type, Class<?>> OBJECT_TYPES;
@@ -85,6 +88,17 @@ public abstract class PojoComponentBuilder<T, PCD extends PojoComponentDefinitio
         this.providerBuilders = providerBuilders;
         this.classLoaderRegistry = classLoaderRegistry;
         this.transformerRegistry = transformerRegistry;
+    }
+
+    /**
+     * Optional ExpressionExpander for substituting values for properties containing expressions of the form '${..}'. Values may be sourced from a
+     * variety of places, including a file or system property.
+     *
+     * @param expander the injected expander
+     */
+    @Reference(required = false)
+    public void setExpander(ExpressionExpander expander) {
+        this.expander = expander;
     }
 
     protected void createPropertyFactories(PCD definition, InstanceFactoryProvider<T> provider) throws BuilderException {
@@ -130,6 +144,10 @@ public abstract class PojoComponentBuilder<T, PCD extends PojoComponentDefinitio
 
         try {
             Object instance = transformer.transform(value, context);
+            if (instance instanceof String && expander != null) {
+                // if the property value is a string, expand it if it contains expressions
+                instance = expander.expand((String) instance);
+            }
             return new SingletonObjectFactory(instance);
         } catch (Exception e) {
             throw new PropertyTransformException("Unable to transform property value: " + name, name, e);
