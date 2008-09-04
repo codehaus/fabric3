@@ -73,7 +73,7 @@ public class SCATestSet implements SurefireTestSet {
         return name;
     }
 
-    public Class getTestClass() {
+    public Class<?> getTestClass() {
         throw new UnsupportedOperationException();
     }
 }

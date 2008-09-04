@@ -43,6 +43,7 @@ import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Exclusion;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.MavenProject;
+import org.fabric3.featureset.FeatureSet;
 
 
 /**
@@ -129,7 +130,10 @@ public class ArtifactHelper {
         }
 
         // include any artifacts that have been added by other plugins (e.g. Clover see FABRICTHREE-220)
-        artifacts.addAll(project.getDependencyArtifacts());
+        Iterator<?> it = project.getDependencyArtifacts().iterator();
+        while (it.hasNext()) {
+        	artifacts.add((Artifact) it.next());
+        }
         return artifacts;
     }
 
@@ -140,7 +144,7 @@ public class ArtifactHelper {
      * @return set of artifacts to be included in the host classloader
      * @throws MojoExecutionException if an error occurs calculating the transitive dependencies
      */
-    public Set<Artifact> calculateHostArtifacts(Set<Artifact> runtimeArtifacts, Dependency[] shared) throws MojoExecutionException {
+    public Set<Artifact> calculateHostArtifacts(Set<Artifact> runtimeArtifacts, Dependency[] shared, List<FeatureSet> featureSets) throws MojoExecutionException {
         
         Set<Artifact> hostArtifacts = new HashSet<Artifact>();
         List<Exclusion> exclusions = Collections.emptyList();
@@ -177,6 +181,13 @@ public class ArtifactHelper {
             for (Dependency sharedDependency : shared) {
                 hostArtifacts.addAll(resolveAll(sharedDependency));
             }
+        }
+        
+        for (FeatureSet featureSet : featureSets) {
+        	for (Dependency sharedLibrary : featureSet.getSharedLibraries()) {
+                hostArtifacts.addAll(resolveAll(sharedLibrary));
+        		
+        	}
         }
         return hostArtifacts;
     }

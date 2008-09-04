@@ -20,4 +20,9 @@ package org.fabric3.itest;
  * @version $Revision$ $Date$
  */
 public class Exclusion extends org.apache.maven.model.Exclusion {
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -8603965798437869917L;
 }

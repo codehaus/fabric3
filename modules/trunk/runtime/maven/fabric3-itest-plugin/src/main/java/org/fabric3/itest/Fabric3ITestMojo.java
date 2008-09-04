@@ -19,17 +19,21 @@
 package org.fabric3.itest;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
+
+import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.factory.ArtifactFactory;
@@ -41,6 +45,7 @@ import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.project.MavenProject;
 import org.fabric3.api.annotation.logging.Severe;
+import org.fabric3.featureset.FeatureSet;
 import org.fabric3.host.contribution.ContributionSource;
 import org.fabric3.host.contribution.FileContributionSource;
 import org.fabric3.host.runtime.BootConfiguration;
@@ -56,6 +61,7 @@ import org.fabric3.jsr237.ThreadPoolWorkScheduler;
 import org.fabric3.maven.runtime.MavenEmbeddedRuntime;
 import org.fabric3.monitor.MonitorFactory;
 import org.fabric3.spi.classloader.MultiParentClassLoader;
+import org.xml.sax.SAXException;
 
 /**
  * Run integration tests on a SCA composite using an embedded Fabric3 runtime.
@@ -300,6 +306,9 @@ public class Fabric3ITestMojo extends AbstractMojo {
 
     // JMX management agent
     private Agent agent;
+    
+    // Resolved feature sets
+    private List<FeatureSet> featureSets = new LinkedList<FeatureSet>();
 
 
     @SuppressWarnings("unchecked")
@@ -316,9 +325,23 @@ public class Fabric3ITestMojo extends AbstractMojo {
 
         artifactHelper.setLocalRepository(localRepository);
         artifactHelper.setProject(project);
+        
+        for (Dependency feature : features) {
+        	Artifact artifact = artifactHelper.resolve(feature);
+        	try {
+				FeatureSet featureSet = FeatureSet.deserialize(artifact.getFile());
+				featureSets.add(featureSet);
+			} catch (ParserConfigurationException e) {
+	            throw new MojoExecutionException("Error booting Fabric3 runtime", e);
+			} catch (SAXException e) {
+	            throw new MojoExecutionException("Error booting Fabric3 runtime", e);
+			} catch (IOException e) {
+	            throw new MojoExecutionException("Error booting Fabric3 runtime", e);
+			}
+        }
 
         Set<Artifact> runtimeArtifacts = artifactHelper.calculateRuntimeArtifacts(runtimeVersion);
-        Set<Artifact> hostArtifacts = artifactHelper.calculateHostArtifacts(runtimeArtifacts, shared);
+        Set<Artifact> hostArtifacts = artifactHelper.calculateHostArtifacts(runtimeArtifacts, shared, featureSets);
         Set<Artifact> dependencies = artifactHelper.calculateDependencies();
         Set<URL> moduleDependencies = artifactHelper.calculateModuleDependencies(dependencies, hostArtifacts);
 
@@ -404,7 +427,7 @@ public class Fabric3ITestMojo extends AbstractMojo {
         configuration.setBootLibraryExports(bootExports);
 
         // process extensions
-        extensionHelper.processExtensions(configuration, extensions, features, userExtensions, userExtensionsArchives);
+        extensionHelper.processExtensions(configuration, extensions, featureSets, userExtensions, userExtensionsArchives);
 
         // process the baseline intents
         try {

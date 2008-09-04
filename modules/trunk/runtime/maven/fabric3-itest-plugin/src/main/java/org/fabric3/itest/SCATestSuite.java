@@ -73,7 +73,7 @@ public class SCATestSuite implements SurefireTestSuite {
         reporterManager.reset();
     }
 
-    public Map locateTestSets(ClassLoader classLoader) throws TestSetFailedException {
+    public Map<?, ?> locateTestSets(ClassLoader classLoader) throws TestSetFailedException {
         throw new UnsupportedOperationException();
     }
 }
