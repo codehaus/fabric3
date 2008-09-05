@@ -16,35 +16,35 @@
  under the License.
 -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-    
+
     <modelVersion>4.0.0</modelVersion>
-    
+
     <parent>
         <groupId>org.codehaus.fabric3</groupId>
         <artifactId>fabric3-extension-other-parent-pom</artifactId>
         <version>0.6-SNAPSHOT</version>
     </parent>
-    
+
     <groupId>org.codehaus.fabric3</groupId>
     <artifactId>fabric3-jpa-hibernate</artifactId>
     <name>Fabric3 JPA Integration (Hibernate)</name>
     <description>Fabric3 JPA Integration (Hibernate).</description>
-    
+
     <packaging>sca-contribution-jar</packaging>
 
     <repositories>
         <repository>
-	        <id>java.net</id>
-	        <url>https://maven-repository.dev.java.net/nonav/repository</url>
-	        <layout>legacy</layout>
-	        <snapshots>
-	            <enabled>false</enabled>
-	        </snapshots>
+            <id>java.net</id>
+            <url>https://maven-repository.dev.java.net/nonav/repository</url>
+            <layout>legacy</layout>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
         </repository>
     </repositories>
 
     <dependencies>
-    
+
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-jpa-spi</artifactId>
@@ -68,6 +68,13 @@
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-pojo</artifactId>
+            <version>0.6-SNAPSHOT</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>org.codehaus.fabric3</groupId>
+            <artifactId>fabric3-resource</artifactId>
             <version>0.6-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
@@ -113,7 +120,7 @@
         </dependency>
 
     </dependencies>
-    
+
     <build>
         <plugins>
             <plugin>
@@ -124,17 +131,21 @@
                 <configuration>
                     <mavenImports>
                         <mavenImport>
-                           <groupId>org.codehaus.fabric3</groupId>
-                           <artifactId>fabric3-spi</artifactId>
-                       </mavenImport>
+                            <groupId>org.codehaus.fabric3</groupId>
+                            <artifactId>fabric3-jpa-spi</artifactId>
+                        </mavenImport>
                         <mavenImport>
-                           <groupId>org.codehaus.fabric3</groupId>
-                           <artifactId>fabric3-java</artifactId>
-                       </mavenImport>
+                            <groupId>org.codehaus.fabric3</groupId>
+                            <artifactId>fabric3-resource</artifactId>
+                        </mavenImport>
                         <mavenImport>
-                           <groupId>org.codehaus.fabric3</groupId>
-                           <artifactId>fabric3-jpa-spi</artifactId>
-                       </mavenImport>
+                            <groupId>org.codehaus.fabric3</groupId>
+                            <artifactId>fabric3-spi</artifactId>
+                        </mavenImport>
+                        <mavenImport>
+                            <groupId>org.codehaus.fabric3</groupId>
+                            <artifactId>fabric3-java</artifactId>
+                        </mavenImport>
                     </mavenImports>
                     <deployables>
                         <deployable>META-INF/hibernate.composite</deployable>
@@ -149,5 +160,5 @@
         <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/trunk/extension/other/fabric3-jpa-hibernate</developerConnection>
         <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/trunk/extension/other/fabric3-jpa-hibernate</url>
     </scm>
-    
+
 </project>
