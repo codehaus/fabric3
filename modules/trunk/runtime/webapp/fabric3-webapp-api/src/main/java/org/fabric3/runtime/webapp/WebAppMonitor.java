@@ -18,6 +18,9 @@
  */
 package org.fabric3.runtime.webapp;
 
+import javax.xml.namespace.QName;
+
+import org.fabric3.api.annotation.logging.Info;
 import org.fabric3.api.annotation.logging.Severe;
 
 
@@ -25,6 +28,16 @@ import org.fabric3.api.annotation.logging.Severe;
  * @version $Revision$ $Date$
  */
 public interface WebAppMonitor {
+
+    @Info
+    void started(String domain);
+
+    @Info
+    void stopped();
+
+    @Info
+    void compositeDeployed(QName qName);
+
     @Severe
     void runError(Throwable e);
 
