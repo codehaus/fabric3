@@ -14,7 +14,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.fabric.runtime.bootstrap;
+package org.fabric3.spi.services.synthesize;
 
 import java.util.List;
 
@@ -23,13 +23,13 @@ import org.fabric3.host.contribution.ValidationFailure;
 import org.fabric3.introspection.xml.XmlValidationFailure;
 
 /**
- * @version $Rev$ $Date$
+ * @version $Rev: 4336 $ $Date: 2008-05-25 02:06:15 -0700 (Sun, 25 May 2008) $
  */
-public class InvalidSystemServiceContractException extends InitializationException {
+public class InvalidServiceContractException extends InitializationException {
     private static final long serialVersionUID = 4367622270403828483L;
     private List<ValidationFailure> errors;
 
-    public InvalidSystemServiceContractException(List<ValidationFailure> errors) {
+    public InvalidServiceContractException(List<ValidationFailure> errors) {
         super("System service contract has errors");
         this.errors = errors;
     }

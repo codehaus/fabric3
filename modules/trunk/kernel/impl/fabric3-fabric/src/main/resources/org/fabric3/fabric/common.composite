@@ -94,6 +94,10 @@
         <system:implementation.system class="org.fabric3.fabric.builder.classloader.ClassLoaderBuilderImpl"/>
     </component>
 
+    <component name="SingletonComponentSynthesizer">
+        <system:implementation.system class="org.fabric3.fabric.services.synthesizer.SingletonComponentSynthesizer"/>
+    </component>
+
     <!-- Definitions registry -->
     <component name="DefinitionsRegistry">
         <system:implementation.system class="org.fabric3.fabric.services.definitions.DefaultDefinitionsRegistry"/>

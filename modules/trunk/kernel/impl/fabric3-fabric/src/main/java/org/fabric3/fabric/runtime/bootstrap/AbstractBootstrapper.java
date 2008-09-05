@@ -21,9 +21,6 @@ import javax.management.MBeanServer;
 
 import org.w3c.dom.Document;
 
-import org.fabric3.fabric.implementation.singleton.SingletonComponent;
-import org.fabric3.fabric.implementation.singleton.SingletonImplementation;
-import org.fabric3.fabric.instantiator.LogicalChange;
 import org.fabric3.fabric.instantiator.component.AtomicComponentInstantiator;
 import org.fabric3.fabric.instantiator.component.ComponentInstantiator;
 import org.fabric3.fabric.runtime.ComponentNames;
@@ -32,45 +29,33 @@ import static org.fabric3.fabric.runtime.ComponentNames.BOOT_CLASSLOADER_ID;
 import static org.fabric3.fabric.runtime.ComponentNames.RUNTIME_URI;
 import org.fabric3.fabric.services.documentloader.DocumentLoader;
 import org.fabric3.fabric.services.documentloader.DocumentLoaderImpl;
-import org.fabric3.host.domain.AssemblyException;
+import org.fabric3.fabric.services.synthesizer.SingletonComponentSynthesizer;
 import org.fabric3.host.domain.DeploymentException;
 import org.fabric3.host.runtime.Bootstrapper;
 import org.fabric3.host.runtime.Fabric3Runtime;
 import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.host.runtime.InitializationException;
 import org.fabric3.host.work.WorkScheduler;
-import org.fabric3.introspection.DefaultIntrospectionContext;
-import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.IntrospectionHelper;
-import org.fabric3.introspection.TypeMapping;
 import org.fabric3.introspection.contract.ContractProcessor;
 import org.fabric3.introspection.impl.DefaultIntrospectionHelper;
 import org.fabric3.introspection.impl.contract.DefaultContractProcessor;
 import org.fabric3.monitor.MonitorFactory;
-import org.fabric3.pojo.scdl.PojoComponentType;
-import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.Composite;
-import org.fabric3.scdl.Implementation;
-import org.fabric3.scdl.ServiceContract;
-import org.fabric3.scdl.ServiceDefinition;
 import org.fabric3.spi.classloader.MultiParentClassLoader;
-import org.fabric3.spi.component.AtomicComponent;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.spi.domain.Domain;
-import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
-import org.fabric3.spi.model.instance.LogicalReference;
-import org.fabric3.spi.model.instance.LogicalWire;
 import org.fabric3.spi.runtime.RuntimeServices;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.services.componentmanager.ComponentManager;
-import org.fabric3.spi.services.componentmanager.RegistrationException;
 import org.fabric3.spi.services.contribution.MetaDataStore;
 import org.fabric3.spi.services.lcm.LogicalComponentManager;
+import org.fabric3.spi.services.synthesize.ComponentRegistrationException;
+import org.fabric3.spi.services.synthesize.ComponentSynthesizer;
 import org.fabric3.system.introspection.BootstrapIntrospectionFactory;
 import org.fabric3.system.introspection.SystemImplementationProcessor;
-import org.fabric3.system.scdl.SystemImplementation;
 
 /**
  * The base Bootstrapper implementation.
@@ -82,12 +67,13 @@ public abstract class AbstractBootstrapper implements Bootstrapper {
     private static final URI HOST_CLASSLOADER_ID = URI.create("fabric3://runtime/HostClassLoader");
     private static final URI RUNTIME_SERVICES = URI.create("fabric3://RuntimeServices");
 
-    // bootstrap components
-    private final ContractProcessor interfaceProcessorRegistry;
+    // bootstrap components - these are disposed of after the core runtime system components are booted
+    private final ContractProcessor contractProcessor;
     private final ComponentInstantiator instantiator;
     private final SystemImplementationProcessor systemImplementationProcessor;
+    private ComponentSynthesizer synthesizer;
 
-    // runtime components
+    // runtime components - these are persistent and supplied by the runtime implementation
     private MonitorFactory monitorFactory;
     private HostInfo hostInfo;
     private ClassLoaderRegistry classLoaderRegistry;
@@ -106,7 +92,7 @@ public abstract class AbstractBootstrapper implements Bootstrapper {
     protected AbstractBootstrapper() {
         // create components needed for to bootstrap the runtime
         IntrospectionHelper helper = new DefaultIntrospectionHelper();
-        interfaceProcessorRegistry = new DefaultContractProcessor(helper);
+        contractProcessor = new DefaultContractProcessor(helper);
         DocumentLoader documentLoader = new DocumentLoaderImpl();
         instantiator = new AtomicComponentInstantiator(documentLoader);
         systemImplementationProcessor = BootstrapIntrospectionFactory.createSystemImplementationProcessor();
@@ -129,6 +115,13 @@ public abstract class AbstractBootstrapper implements Bootstrapper {
         metaDataStore = runtimeServices.getMetaDataStore();
         scopeRegistry = runtimeServices.getScopeRegistry();
         scopeContainer = runtimeServices.getScopeContainer();
+
+        synthesizer = new SingletonComponentSynthesizer(systemImplementationProcessor,
+                                                        instantiator,
+                                                        logicalComponetManager,
+                                                        componentManager,
+                                                        contractProcessor,
+                                                        scopeContainer);
 
         // register primordial components provided by the runtime itself
         registerRuntimeComponents(runtime);
@@ -248,86 +241,12 @@ public abstract class AbstractBootstrapper implements Bootstrapper {
         classLoaderRegistry.register(domainId, applicationClassLoader);
     }
 
-    private <S, I extends S> void registerComponent(String name, Class<S> type, I instance, boolean introspect)
-            throws InitializationException {
-
+    private <S, I extends S> void registerComponent(String name, Class<S> type, I instance, boolean introspect) throws InitializationException {
         try {
-            LogicalComponent<?> logical = createLogicalComponent(name, type, instance, introspect);
-            AtomicComponent<I> physical = createPhysicalComponent(name, logical, instance);
-            domain.addComponent(logical);
-            componentManager.register(physical);
-            scopeContainer.register(physical);
-        } catch (RegistrationException e) {
-            throw new InitializationException(e);
-        } catch (AssemblyException e) {
+            synthesizer.registerComponent(name, type, instance, introspect);
+        } catch (ComponentRegistrationException e) {
             throw new InitializationException(e);
         }
     }
-
-    private <I> AtomicComponent<I> createPhysicalComponent(String name, LogicalComponent<?> logicalComponent, I instance) {
-        URI uri = URI.create(domain.getUri() + "/" + name);
-        PojoComponentType type = (PojoComponentType) logicalComponent.getComponentType();
-        type.getInjectionSites();
-        return new SingletonComponent<I>(uri, instance, type.getInjectionSites());
-    }
-
-    private <S, I extends S> LogicalComponent<Implementation<?>> createLogicalComponent(String name, Class<S> type, I instance, boolean introspect)
-            throws InvalidSystemServiceContractException, AssemblyException {
-
-        ComponentDefinition<Implementation<?>> definition = createDefinition(name, type, instance, introspect);
-        LogicalChange change = new LogicalChange(domain);
-        LogicalComponent<Implementation<?>> logical = instantiator.instantiate(domain, domain.getPropertyValues(), definition, change);
-        if (change.hasErrors()) {
-            throw new AssemblyException(change.getErrors(), change.getWarnings());
-        }
-        // mark singleton components as provisioned since instances are not created
-        logical.setProvisioned(true);
-        logical.setClassLoaderId(BOOT_CLASSLOADER_ID);
-        // all references are initially resolved since they are manually injected
-        for (LogicalReference reference : logical.getReferences()) {
-            reference.setResolved(true);
-            for (LogicalWire wire : reference.getWires()) {
-                wire.setProvisioned(true);
-            }
-        }
-        return logical;
-    }
-
-    private <S, I extends S> ComponentDefinition<Implementation<?>> createDefinition(String name, Class<S> type, I instance, boolean introspect)
-            throws InvalidSystemServiceContractException {
-
-        String implClassName = instance.getClass().getName();
-
-        TypeMapping mapping = new TypeMapping();
-        IntrospectionContext context = new DefaultIntrospectionContext(getClass().getClassLoader(), null, null, null, mapping);
-        if (introspect) {
-            // introspect the instance so it may be injected by the runtime with additional services
-            SystemImplementation implementation = new SystemImplementation();
-            implementation.setImplementationClass(implClassName);
-            systemImplementationProcessor.introspect(implementation, context);
-            ComponentDefinition<Implementation<?>> def = new ComponentDefinition<Implementation<?>>(name);
-            SingletonImplementation singletonImplementation = new SingletonImplementation(implementation.getComponentType(), implClassName);
-            def.setImplementation(singletonImplementation);
-            return def;
-        } else {
-            // instance does not have any services injected
-            ServiceContract<?> contract = interfaceProcessorRegistry.introspect(mapping, type, context);
-            if (context.hasErrors()) {
-                throw new InvalidSystemServiceContractException(context.getErrors());
-            }
-            String serviceName = contract.getInterfaceName();
-            ServiceDefinition service = new ServiceDefinition(serviceName, contract);
-
-            PojoComponentType componentType = new PojoComponentType(implClassName);
-            componentType.add(service);
-
-            SingletonImplementation implementation = new SingletonImplementation(componentType, implClassName);
-            implementation.setComponentType(componentType);
-            ComponentDefinition<Implementation<?>> def = new ComponentDefinition<Implementation<?>>(name);
-            def.setImplementation(implementation);
-            return def;
-        }
-    }
-
 
 }
