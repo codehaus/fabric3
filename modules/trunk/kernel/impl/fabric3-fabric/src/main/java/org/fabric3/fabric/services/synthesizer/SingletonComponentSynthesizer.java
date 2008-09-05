@@ -92,10 +92,7 @@ public class SingletonComponentSynthesizer implements ComponentSynthesizer {
     }
 
 
-    private <S, I extends S> LogicalComponent<Implementation<?>> createLogicalComponent
-            (String
-                    name, Class<S> type, I
-                    instance, boolean introspect)
+    private <S, I extends S> LogicalComponent<Implementation<?>> createLogicalComponent(String name, Class<S> type, I instance, boolean introspect)
             throws InvalidServiceContractException, AssemblyException {
         LogicalCompositeComponent domain = lcm.getRootComponent();
         ComponentDefinition<Implementation<?>> definition = createDefinition(name, type, instance, introspect);
@@ -117,10 +114,7 @@ public class SingletonComponentSynthesizer implements ComponentSynthesizer {
         return logical;
     }
 
-    private <S, I extends S> ComponentDefinition<Implementation<?>> createDefinition
-            (String
-                    name, Class<S> type, I
-                    instance, boolean introspect)
+    private <S, I extends S> ComponentDefinition<Implementation<?>> createDefinition(String name, Class<S> type, I instance, boolean introspect)
             throws InvalidServiceContractException {
 
         String implClassName = instance.getClass().getName();
@@ -156,9 +150,7 @@ public class SingletonComponentSynthesizer implements ComponentSynthesizer {
         }
     }
 
-    private <I> AtomicComponent<I> createPhysicalComponent
-            (LogicalComponent<?> logicalComponent, I
-                    instance) {
+    private <I> AtomicComponent<I> createPhysicalComponent(LogicalComponent<?> logicalComponent, I instance) {
         URI uri = logicalComponent.getUri();
         PojoComponentType type = (PojoComponentType) logicalComponent.getComponentType();
         type.getInjectionSites();
