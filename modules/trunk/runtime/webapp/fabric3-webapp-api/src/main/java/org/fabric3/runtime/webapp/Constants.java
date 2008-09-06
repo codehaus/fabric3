@@ -24,7 +24,7 @@ package org.fabric3.runtime.webapp;
  * @version $Rev$ $Date$
  */
 public final class Constants {
-    
+
     /**
      * Default management domain.
      */
@@ -152,8 +152,7 @@ public final class Constants {
     public static final String CURRENT_COMPOSITE_PATH_PARAM = "fabric3.currentCompositePath";
 
     /**
-     * Servlet context-param name for system monitoring level. Supported values are the names of statics defined in
-     * java.util.logging.Level.
+     * Servlet context-param name for system monitoring level. Supported values are the names of statics defined in java.util.logging.Level.
      */
     public static final String SYSTEM_MONITORING_PARAM = "fabric3.monitoringLevel";
 
@@ -170,8 +169,17 @@ public final class Constants {
     /**
      * Name of the default webapp runtime implementation.
      */
-    public static final String MONITOR_FACTORY_DEFAULT = "org.fabric3.fabric.monitor.JavaLoggingMonitorFactory";
+    public static final String MONITOR_FACTORY_DEFAULT = "org.fabric3.monitor.impl.JavaLoggingMonitorFactory";
 
+    /**
+     * Parameter that defines the log formatter
+     */
+    public static final String LOG_FORMATTER_PARAM = "fabric3.jdkLogFormatter";
+
+    /**
+     * Name of the default log formatter
+     */
+    public static final String LOG_FORMATTER_DEFAULT = "org.fabric3.monitor.impl.Fabric3LogFormatter";
     /**
      * Name of bundle files used for monitoring messages
      */
