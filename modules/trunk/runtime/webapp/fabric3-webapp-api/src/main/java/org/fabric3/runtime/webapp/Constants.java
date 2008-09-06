@@ -91,9 +91,19 @@ public final class Constants {
     public static final String RUNTIME_DEFAULT = "org.fabric3.runtime.webapp.WebappRuntimeImpl";
 
     /**
+     * Name of the parameter that defines whether the work scheduler should pause on start.
+     */
+    public static final String PAUSE_ON_START_PARAM = "fabric3.work.scheduler.pauseOnStart";
+
+    /**
+     * The default pause on start value.
+     */
+    public static final String PAUSE_ON_START_DEFAULT = "false";
+
+    /**
      * Name of the parameter that defines the number of worker threads.
      */
-    public static final String NUM_WORKERS_PARAM = "fabric3.numWorkers";
+    public static final String NUM_WORKERS_PARAM = "fabric3.work.scheduler.numWorkers";
 
     /**
      * The number of default worker threads.
