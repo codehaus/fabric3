@@ -16,6 +16,8 @@
  */
 package org.fabric3.fabric.instantiator.component;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.net.URI;
 
 import org.fabric3.host.domain.AssemblyFailure;
@@ -48,7 +50,10 @@ public class InvalidPropertyFile extends AssemblyFailure {
     }
 
     public String getMessage() {
+        StringWriter writer = new StringWriter();
+        PrintWriter pw = new PrintWriter(writer);
+        cause.printStackTrace(pw);
         return "The property file for property " + name + " in component " + getComponentUri()
-                + "is invalid due to an error processing the file  " + file + ". The error thrown was: \n" + cause;
+                + " is invalid due to an error processing the file  " + file + ". The error thrown was: \n" + writer;
     }
 }
