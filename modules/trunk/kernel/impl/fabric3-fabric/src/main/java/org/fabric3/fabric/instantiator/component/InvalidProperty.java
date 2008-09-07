@@ -16,6 +16,8 @@
  */
 package org.fabric3.fabric.instantiator.component;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.net.URI;
 
 import org.fabric3.host.domain.AssemblyFailure;
@@ -42,6 +44,9 @@ public class InvalidProperty extends AssemblyFailure {
     }
 
     public String getMessage() {
-        return "The property " + name + " in component " + getComponentUri() + "is invalid " + ". The error thrown was: \n" + cause;
+        StringWriter writer = new StringWriter();
+        PrintWriter pw = new PrintWriter(writer);
+        cause.printStackTrace(pw);
+        return "The property " + name + " in component " + getComponentUri() + " is invalid " + ". The error thrown was: \n" + writer;
     }
 }
