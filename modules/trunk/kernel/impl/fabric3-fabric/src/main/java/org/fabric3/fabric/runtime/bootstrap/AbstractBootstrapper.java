@@ -210,7 +210,7 @@ public abstract class AbstractBootstrapper implements Bootstrapper {
         if (mbServer != null) {
             registerComponent("MBeanServer", MBeanServer.class, mbServer, false);
         }
-        registerComponent("WorkScheduler", WorkScheduler.class, runtime.getWorkScheduler(), false);
+        registerComponent("WorkScheduler", WorkScheduler.class, runtime.getWorkScheduler(), true);
 
         // services available through the inward facing RuntimeServices SPI
         registerComponent("ComponentManager", ComponentManager.class, componentManager, true);
