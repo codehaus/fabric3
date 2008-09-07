@@ -159,7 +159,7 @@ public abstract class AbstractComponentInstantiator implements ComponentInstanti
         try {
             builder = DOCUMENT_FACTORY.newDocumentBuilder();
         } catch (ParserConfigurationException e) {
-            throw new AssertionError();
+            throw new AssertionError(e);
         }
 
         Document value = builder.newDocument();
@@ -171,7 +171,17 @@ public abstract class AbstractComponentInstantiator implements ComponentInstanti
             for (int i = 0; i < result.getLength(); i++) {
                 Node node = result.item(i);
                 value.adoptNode(node);
-                root.appendChild(node);
+                short type = node.getNodeType();
+                if (Node.ELEMENT_NODE == type || Node.TEXT_NODE == type) {
+                    root.appendChild(node);
+                } else if (Node.ATTRIBUTE_NODE == type) {
+                    // convert the attribute to an element in the property DOM
+                    Element element = value.createElement(node.getNodeName());
+                    element.setTextContent(node.getNodeValue());
+                    root.appendChild(element);
+                } else {
+                    throw new XPathExpressionException("Unsupported node type: " + type);
+                }
             }
         } catch (XPathExpressionException e) {
             // FIXME rethrow this for now, fix if people find it confusing

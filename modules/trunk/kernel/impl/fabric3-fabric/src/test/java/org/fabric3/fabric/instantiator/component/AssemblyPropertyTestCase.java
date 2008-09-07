@@ -65,6 +65,17 @@ public class AssemblyPropertyTestCase extends TestCase {
         assertEquals("8080", child.getTextContent());
     }
 
+    public void testAttributeProperty() throws Exception {
+        Element http = property.createElement("http");
+        http.setAttribute("port", "8080");
+        root.appendChild(http);
+        Document value = componentInstantiator.deriveValueFromXPath("$domain/http/@port", domain);
+        Node child = value.getDocumentElement().getFirstChild();
+        assertEquals(Node.ELEMENT_NODE, child.getNodeType());
+        assertEquals("port", child.getNodeName());
+        assertEquals("8080", child.getTextContent());
+    }
+
     public void testComplexPropertyWithMultipleValues() throws Exception {
         Element http1 = property.createElement("http");
         root.appendChild(http1);
