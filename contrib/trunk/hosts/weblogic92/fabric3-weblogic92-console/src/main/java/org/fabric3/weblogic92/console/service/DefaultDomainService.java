@@ -54,7 +54,7 @@ public class DefaultDomainService implements DomainService {
 				String listenAddress = (String) connection.getAttribute(serverName, "ListenAddress");
 				String state = (String) connection.getAttribute(serverName, "State");
 				
-				servers[i] = new Server(name, listenPort, listenAddress, state);
+				servers[i] = new Server(name, listenPort, listenAddress.substring(1), state);
 				
 			}
 			

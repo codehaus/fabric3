@@ -3,12 +3,13 @@ package org.fabric3.weblogic92.console;
 import javax.management.ObjectName;
 
 import org.fabric3.weblogic92.console.service.DefaultDomainService;
+import org.fabric3.weblogic92.console.service.DefaultF3RuntimeService;
 import org.fabric3.weblogic92.console.service.DefaultJmxConnectionService;
+import org.fabric3.weblogic92.console.service.F3Runtime;
 import org.fabric3.weblogic92.console.service.JmxConnectionService;
 import org.fabric3.weblogic92.console.service.Server;
 
 public class Test {
-		;
 
 	/*
 	 * Initialize connection to the Domain Runtime MBean Server.
@@ -29,8 +30,15 @@ public class Test {
 		domainService.setDomainRuntimeServiceMBeanName(domainRuntimeServiceMBeanName);
 		domainService.setJmxConnectionService(jmxConnectionService);
 		
+		DefaultF3RuntimeService f3RuntimeService = new DefaultF3RuntimeService();
+		f3RuntimeService.setMbeanServer("/jndi/weblogic.management.mbeanservers.runtime");
+		f3RuntimeService.setJmxConnectionService(jmxConnectionService);
+		
 		for (Server server : domainService.getServers("localhost", 7001, "weblogic", "password")) {
-			System.err.println(server.getName() + ":" + server.getListenAddress() + ":" + server.getListenPort() + ":" + server.getState());
+			System.err.println("Server: " + server.getName());
+			for (F3Runtime f3Runtime : f3RuntimeService.getF3Runtimes(server, "weblogic", "password")) {
+				System.err.println("F3 Runtime:" + f3Runtime.getSubDomain());
+			}
 		}
 		
 	}
