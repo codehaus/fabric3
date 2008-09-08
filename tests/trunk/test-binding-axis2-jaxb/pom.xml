@@ -30,13 +30,13 @@
     <description>Fabric3 Axis2 Binding Jaxb Test.</description>
 
     <dependencies>
-    
+
         <dependency>
             <groupId>org.codehaus.fabric3.spec</groupId>
             <artifactId>sca-api-r1.0</artifactId>
             <version>0.2.1</version>
         </dependency>
-        
+
         <dependency>
             <groupId>org.apache.ws.commons.axiom</groupId>
             <artifactId>axiom-api</artifactId>
@@ -49,7 +49,7 @@
             <artifactId>jaxb-api</artifactId>
             <version>2.1</version>
         </dependency>
-        
+
         <dependency>
             <groupId>javax.xml.ws</groupId>
             <artifactId>jaxws-api</artifactId>
@@ -60,7 +60,7 @@
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
         </dependency>
-        
+
     </dependencies>
 
     <build>
@@ -122,12 +122,15 @@
                             <version>2.1.6</version>
                         </dependency>
                     </shared>
-                    <properties>
-                        <property>
-                            <name>http.port</name>
-                            <value>8900</value>
-                        </property>
-                    </properties>
+                    <systemConfig>
+                        <![CDATA[
+                        <config>
+                            <web.server>
+                                <http port="8900"/>
+                            </web.server>
+                        </config>
+                        ]]>
+                    </systemConfig>
                 </configuration>
                 <executions>
                     <execution>

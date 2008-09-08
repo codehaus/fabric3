@@ -22,8 +22,8 @@
 
     <component name="EchoTest">
         <f3:junit class="org.fabric3.tests.binding.harness.EchoTest"/>
-        <reference name="service">
-            <hessian:binding.hessian uri="http://localhost:8900/echoService"/>
+        <reference name="service" target="EchoService">
+            <!--<hessian:binding.hessian uri="http://localhost:8900/echoService"/>-->
         </reference>
     </component>
 

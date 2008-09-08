@@ -68,12 +68,15 @@
                             <version>0.6-SNAPSHOT</version>
                         </dependency>
                     </extensions>
-                    <properties>
-                        <property>
-                            <name>http.port</name>
-                            <value>8900</value>
-                        </property>
-                    </properties>
+                    <systemConfig>
+                        <![CDATA[
+                        <config>
+                            <web.server>
+                                <http port="8900"/>
+                            </web.server>
+                        </config>
+                        ]]>
+                    </systemConfig>
                 </configuration>
                 <executions>
                     <execution>

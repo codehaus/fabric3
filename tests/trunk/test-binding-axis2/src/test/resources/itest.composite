@@ -27,6 +27,7 @@
             <operation name="echoWs"  requires="sca:authentication.message"/>
         </reference>
         <reference name="faultService">
+            <!--<binding.ws uri="http://localhost:${axis.port}/axis2/faultService" f3:impl="axis2"/>-->
             <binding.ws uri="http://localhost:8900/axis2/faultService" f3:impl="axis2"/>
         </reference>
     </component>

@@ -30,10 +30,15 @@
     <packaging>sca-contribution-jar</packaging>
 
     <dependencies>
+        <dependency>
+            <groupId>org.codehaus.fabric3.spec</groupId>
+            <artifactId>sca-api-r1.0</artifactId>
+            <version>0.2.1</version>
+        </dependency>
         <!--<dependency>-->
-            <!--<groupId>com.experlog</groupId>-->
-            <!--<artifactId>xapool</artifactId>-->
-            <!--<version>1.5.0</version>-->
+        <!--<groupId>com.experlog</groupId>-->
+        <!--<artifactId>xapool</artifactId>-->
+        <!--<version>1.5.0</version>-->
         <!--</dependency>-->
         <dependency>
             <groupId>commons-logging</groupId>
@@ -67,9 +72,9 @@
                 <configuration>
                     <mavenImports>
                         <mavenImport>
-                           <groupId>org.codehaus.fabric3</groupId>
-                           <artifactId>fabric3-spi</artifactId>
-                       </mavenImport>
+                            <groupId>org.codehaus.fabric3</groupId>
+                            <artifactId>fabric3-spi</artifactId>
+                        </mavenImport>
                     </mavenImports>
                     <deployables>
                         <deployable>META-INF/ds.composite</deployable>
