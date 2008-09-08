@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<!-- dpcontrols/TreeSimple.mxml -->
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml">
+
+    <mx:Array id="arr">
+        <mx:Object label="Red" />
+        <mx:Object label="Orange" />
+    </mx:Array>
+    <mx:Panel>
+        <mx:HBox>
+            <mx:Tree id="tree1" labelField="@label" showRoot="true" width="200" height="300">
+                <mx:XMLListCollection id="MailBox1">
+                    <mx:XMLList>
+                        <folder label="Fabric 3 Runtimes">
+                            <folder label="Admin Server" />
+                            <folder label="Managed Server 1">
+                                <Pfolder label="Technical Faciltation UI" />
+                                <Pfolder label="Mandate Management UI" />
+                            </folder>
+                            <folder label="Managed Server 2">
+                                <Pfolder label="Technical Faciltation Engine" />
+                                <Pfolder label="Mandate Management Engine" />
+                            </folder>
+                        </folder>
+                    </mx:XMLList>
+                </mx:XMLListCollection>
+            </mx:Tree>
+            <mx:VBox>
+                <!-- Create an HBox container to hold the three buttons. -->
+                <mx:TabBar dataProvider="{myViewStack}" borderStyle="solid"/>
+                <mx:ViewStack id="myViewStack" borderStyle="solid" width="100%">
+                    <mx:Canvas id="workScheduler" label="Work Scheduler">
+                        <mx:Label text="Work Scheduler" />
+                    </mx:Canvas>
+                    <mx:Canvas id="logicalDomain" label="Logical Domain">
+                        <mx:Label text="Logical Domain" />
+                    </mx:Canvas>
+                </mx:ViewStack>
+            </mx:VBox>
+        </mx:HBox>
+    </mx:Panel>
+</mx:Application>
