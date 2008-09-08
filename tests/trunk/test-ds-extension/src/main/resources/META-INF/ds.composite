@@ -28,11 +28,4 @@
         <property name="dataSourceConfig" source="$systemConfig//testDsConfig"/>
     </component>
 
-    <component name="testSource">
-        <system:implementation.system class="org.fabric3.test.TestSourceImpl"/>
-    </component>
-
-    <component name="testCompo">
-        <implementation.java class="org.fabric3.test.TestComponent"/>
-    </component>
 </composite>
