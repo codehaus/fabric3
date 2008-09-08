@@ -155,9 +155,7 @@ public class JettyServiceImplTestCase extends TestCase {
             }
         });
         replay(scheduler);
-        HostInfo info = EasyMock.createNiceMock(HostInfo.class);
-        EasyMock.replay(info);
-        service = new JettyServiceImpl(monitor, info);
+        service = new JettyServiceImpl(monitor);
 
     }
 

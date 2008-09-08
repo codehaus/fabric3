@@ -24,6 +24,7 @@
     <!-- Jetty service -->
     <component name="JettyService">
         <system:implementation.system class="org.fabric3.jetty.JettyServiceImpl"/>
+        <property name="httpPort" source="$systemConfig//web.server/http/@port"/>
     </component>
 
     <!-- Feature -->

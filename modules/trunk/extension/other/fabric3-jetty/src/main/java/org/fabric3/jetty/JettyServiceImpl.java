@@ -20,7 +20,6 @@ package org.fabric3.jetty;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import javax.resource.spi.work.Work;
 import javax.servlet.Servlet;
 import javax.servlet.ServletContext;
 import javax.xml.namespace.QName;
@@ -48,7 +47,6 @@ import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.api.annotation.Monitor;
-import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.host.work.DefaultPausableWork;
 import org.fabric3.host.work.WorkScheduler;
 import org.fabric3.spi.Constants;
@@ -89,7 +87,6 @@ public class JettyServiceImpl implements JettyService {
     private ServletHandler servletHandler;
     private ContextHandlerCollection rootHandler;
 
-    private HostInfo info;
 
     static {
         // hack to replace the static Jetty logger
@@ -99,10 +96,8 @@ public class JettyServiceImpl implements JettyService {
 
     @Constructor
     public JettyServiceImpl(@Reference WorkScheduler scheduler,
-                            @Reference HostInfo info,
                             @Reference AdvertisementService advertisementService,
                             @Monitor TransportMonitor monitor) {
-        this.info = info;
         this.advertisementService = advertisementService;
         this.monitor = monitor;
         this.scheduler = scheduler;
@@ -117,9 +112,8 @@ public class JettyServiceImpl implements JettyService {
         }
     }
 
-    public JettyServiceImpl(TransportMonitor monitor, HostInfo info) {
+    public JettyServiceImpl(TransportMonitor monitor) {
         this.monitor = monitor;
-        this.info = info;
     }
 
     @Property
@@ -164,28 +158,16 @@ public class JettyServiceImpl implements JettyService {
 
     @Init
     public void init() throws JettyInitializationException {
-        String http = info.getProperty("http.port", null);
-        if (http != null) {
-            try {
-                httpPort = Integer.parseInt(http.trim());
-                if (advertisementService != null) {
-                    // advertise the http port the runtime is listening on to the controller
-                    InetAddress address = InetAddress.getByName("localhost");
-                    advertisementService.addTransportMetadata(HTTP, address.getHostAddress() + ":" + http.trim());
-                }
-            } catch (NumberFormatException e) {
-                throw new JettyInitializationException("Invalid HTTP port: " + http, http);
-            } catch (UnknownHostException e) {
-                throw new JettyInitializationException("Error determining IP address", e);
+        try {
+            if (advertisementService != null) {
+                // advertise the http port the runtime is listening on to the controller
+                InetAddress address = InetAddress.getByName("localhost");
+                advertisementService.addTransportMetadata(HTTP, address.getHostAddress() + ":" + httpPort);
             }
-        }
-        String https = info.getProperty("https.port", null);
-        if (https != null) {
-            try {
-                httpsPort = Integer.parseInt(http);
-            } catch (NumberFormatException e) {
-                throw new JettyInitializationException("Invalid HTTPS port", https);
-            }
+        } catch (NumberFormatException e) {
+            throw new JettyInitializationException("Invalid HTTP port: " + httpPort);
+        } catch (UnknownHostException e) {
+            throw new JettyInitializationException("Error determining IP address", e);
         }
         try {
             state = STARTING;
