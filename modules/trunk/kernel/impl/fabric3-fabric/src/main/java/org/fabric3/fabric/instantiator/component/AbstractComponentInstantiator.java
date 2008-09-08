@@ -183,6 +183,7 @@ public abstract class AbstractComponentInstantiator implements ComponentInstanti
             }
             for (int i = 0; i < result.getLength(); i++) {
                 Node node = result.item(i);
+                // clone the node as the original may be accessed multiple times
                 Node cloned = node.cloneNode(true);
                 value.adoptNode(cloned);
                 short type = cloned.getNodeType();
