@@ -18,6 +18,8 @@ package org.fabric3.host.runtime;
 
 import java.net.URL;
 
+import org.xml.sax.InputSource;
+
 /**
  * A bootstrapper subtype that instantiates a runtime from a system composite definition.
  *
@@ -38,4 +40,12 @@ public interface ScdlBootstrapper extends Bootstrapper {
      * @param systemConfig System configuration.
      */
     void setSystemConfig(URL systemConfig);
+
+    /**
+     * Sets the system configuration for the host.
+     *
+     * @param document System configuration as an InputSource.
+     */
+    void setSystemConfig(InputSource document);
+
 }

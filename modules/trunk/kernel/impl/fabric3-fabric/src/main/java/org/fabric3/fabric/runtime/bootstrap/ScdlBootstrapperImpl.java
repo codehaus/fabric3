@@ -17,14 +17,17 @@
 package org.fabric3.fabric.runtime.bootstrap;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
 import java.util.List;
 import javax.xml.namespace.QName;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
 
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import org.fabric3.fabric.services.documentloader.DocumentLoader;
@@ -59,6 +62,7 @@ public class ScdlBootstrapperImpl extends AbstractBootstrapper implements ScdlBo
 
     private URL scdlLocation;
     private URL systemConfig;
+    private InputSource systemConfigDocument;
 
     public ScdlBootstrapperImpl() {
         this(new XMLFactoryImpl());
@@ -76,6 +80,10 @@ public class ScdlBootstrapperImpl extends AbstractBootstrapper implements ScdlBo
 
     public void setSystemConfig(URL systemConfig) {
         this.systemConfig = systemConfig;
+    }
+
+    public void setSystemConfig(InputSource source) {
+        this.systemConfigDocument = source;
     }
 
     protected Composite loadSystemComposite(URI contributionUri,
@@ -103,34 +111,63 @@ public class ScdlBootstrapperImpl extends AbstractBootstrapper implements ScdlBo
         }
     }
 
-    protected Document loadUserConfig() {
+    protected Document loadUserConfig() throws InitializationException {
         // Get the user config location
         File configFile = new File(USER_CONFIG);
+        if (!configFile.exists()) {
+            // none found, create a default one
+            return createDefaultConfigProperty();
+        }
         try {
             return documentLoader.load(configFile);
-        } catch (FileNotFoundException e) {
-            return null;
         } catch (IOException e) {
-            return null;
+            throw new InitializationException(e);
         } catch (SAXException e) {
-            return null;
+            throw new InitializationException(e);
         }
     }
 
 
-    protected Document loadSystemConfig() {
-        // Get the system config location
+    protected Document loadSystemConfig() throws InitializationException {
+        if (systemConfigDocument != null) {
+            try {
+                // load from an external URL
+                return documentLoader.load(systemConfigDocument);
+            } catch (IOException e) {
+                throw new InitializationException(e);
+            } catch (SAXException e) {
+                throw new InitializationException(e);
+            }
+        }
         if (systemConfig == null) {
-            return null;
+            // none specified, create a default one
+            return createDefaultConfigProperty();
         }
         try {
+            // load from an external URL
             return documentLoader.load(systemConfig);
-        } catch (FileNotFoundException e) {
-            return null;
         } catch (IOException e) {
-            return null;
+            throw new InitializationException(e);
         } catch (SAXException e) {
-            return null;
+            throw new InitializationException(e);
+        }
+    }
+
+    /**
+     * Creates a default configuration domain property.
+     *
+     * @return a document representing the configuration domain property
+     */
+    protected Document createDefaultConfigProperty() {
+        try {
+            DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
+            factory.setNamespaceAware(true);
+            Document document = factory.newDocumentBuilder().newDocument();
+            Element root = document.createElement("config");
+            document.appendChild(root);
+            return document;
+        } catch (ParserConfigurationException e) {
+            throw new AssertionError(e);
         }
     }
 }

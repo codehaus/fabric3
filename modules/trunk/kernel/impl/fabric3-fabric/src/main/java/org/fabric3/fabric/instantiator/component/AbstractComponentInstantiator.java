@@ -133,7 +133,17 @@ public abstract class AbstractComponentInstantiator implements ComponentInstanti
                 }
 
             }
-            component.setPropertyValue(name, value);
+            if (property.isRequired() && value == null) {
+                // The XPath expression returned an empty value. Since the property is required, throw an exception
+                PropertySourceNotFound error = new PropertySourceNotFound(component.getUri(), name);
+                change.addError(error);
+            } else if (!property.isRequired() && value == null) {
+                // The XPath expression returned an empty value. Since the property is optional, ignore it
+                continue;
+            } else {
+                // set the property value
+                component.setPropertyValue(name, value);
+            }
 
         }
 
@@ -168,6 +178,9 @@ public abstract class AbstractComponentInstantiator implements ComponentInstanti
         value.appendChild(root);
         try {
             NodeList result = (NodeList) xpath.evaluate(source, root, XPathConstants.NODESET);
+            if (result.getLength() == 0) {
+                return null;
+            }
             for (int i = 0; i < result.getLength(); i++) {
                 Node node = result.item(i);
                 value.adoptNode(node);

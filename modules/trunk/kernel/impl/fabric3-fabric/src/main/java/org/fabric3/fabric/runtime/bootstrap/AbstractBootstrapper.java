@@ -190,16 +190,18 @@ public abstract class AbstractBootstrapper implements Bootstrapper {
      * referenced entirely or in part via XPath by end-user components in the application domain to supply configuration values.
      *
      * @return a Document representing the domain-level user configuration property or null if none is defined
+     * @throws InitializationException if an error occurs loading the configuration file
      */
-    protected abstract Document loadUserConfig();
+    protected abstract Document loadUserConfig() throws InitializationException;
 
     /**
      * Subclasses return a Document representing the domain-level runtime configuration property or null if none is defined. This property may be
      * referenced entirely or in part via XPath by components in the runtime domain to supply configuration values.
      *
      * @return a Document representing the domain-level user configuration property or null if none is defined
+     * @throws InitializationException if an error occurs loading the configuration file
      */
-    protected abstract Document loadSystemConfig();
+    protected abstract Document loadSystemConfig() throws InitializationException;
 
     private <T extends HostInfo> void registerRuntimeComponents(Fabric3Runtime<T> runtime) throws InitializationException {
 

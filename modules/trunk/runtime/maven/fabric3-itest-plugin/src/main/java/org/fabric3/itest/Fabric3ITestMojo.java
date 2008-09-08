@@ -20,6 +20,8 @@ package org.fabric3.itest;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.Reader;
+import java.io.StringReader;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
@@ -32,7 +34,6 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
-
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.maven.artifact.Artifact;
@@ -44,6 +45,9 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.project.MavenProject;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+
 import org.fabric3.api.annotation.logging.Severe;
 import org.fabric3.featureset.FeatureSet;
 import org.fabric3.host.contribution.ContributionSource;
@@ -61,7 +65,6 @@ import org.fabric3.jsr237.ThreadPoolWorkScheduler;
 import org.fabric3.maven.runtime.MavenEmbeddedRuntime;
 import org.fabric3.monitor.MonitorFactory;
 import org.fabric3.spi.classloader.MultiParentClassLoader;
-import org.xml.sax.SAXException;
 
 /**
  * Run integration tests on a SCA composite using an embedded Fabric3 runtime.
@@ -297,6 +300,13 @@ public class Fabric3ITestMojo extends AbstractMojo {
     public String systemConfigDir;
 
     /**
+     * Allows the optional in-line specification of system configuration in the plugin configuration.
+     *
+     * @parameter
+     */
+    public String systemConfig;
+
+    /**
      * Build output directory.
      *
      * @parameter expression="${project.build.directory}"
@@ -306,7 +316,7 @@ public class Fabric3ITestMojo extends AbstractMojo {
 
     // JMX management agent
     private Agent agent;
-    
+
     // Resolved feature sets
     private List<FeatureSet> featureSets = new LinkedList<FeatureSet>();
 
@@ -325,19 +335,21 @@ public class Fabric3ITestMojo extends AbstractMojo {
 
         artifactHelper.setLocalRepository(localRepository);
         artifactHelper.setProject(project);
-        
-        for (Dependency feature : features) {
-        	Artifact artifact = artifactHelper.resolve(feature);
-        	try {
-				FeatureSet featureSet = FeatureSet.deserialize(artifact.getFile());
-				featureSets.add(featureSet);
-			} catch (ParserConfigurationException e) {
-	            throw new MojoExecutionException("Error booting Fabric3 runtime", e);
-			} catch (SAXException e) {
-	            throw new MojoExecutionException("Error booting Fabric3 runtime", e);
-			} catch (IOException e) {
-	            throw new MojoExecutionException("Error booting Fabric3 runtime", e);
-			}
+
+        if (features != null) {
+            for (Dependency feature : features) {
+                Artifact artifact = artifactHelper.resolve(feature);
+                try {
+                    FeatureSet featureSet = FeatureSet.deserialize(artifact.getFile());
+                    featureSets.add(featureSet);
+                } catch (ParserConfigurationException e) {
+                    throw new MojoExecutionException("Error booting Fabric3 runtime", e);
+                } catch (SAXException e) {
+                    throw new MojoExecutionException("Error booting Fabric3 runtime", e);
+                } catch (IOException e) {
+                    throw new MojoExecutionException("Error booting Fabric3 runtime", e);
+                }
+            }
         }
 
         Set<Artifact> runtimeArtifacts = artifactHelper.calculateRuntimeArtifacts(runtimeVersion);
@@ -451,8 +463,14 @@ public class Fabric3ITestMojo extends AbstractMojo {
             systemScdl = bootClassLoader.getResource("META-INF/fabric3/embeddedMaven.composite");
         }
         bootstrapper.setScdlLocation(systemScdl);
-        URL systemConfig = getSystemConfig();
-        bootstrapper.setSystemConfig(systemConfig);
+        if (systemConfig != null) {
+            Reader reader = new StringReader(systemConfig);
+            InputSource source = new InputSource(reader);
+            bootstrapper.setSystemConfig(source);
+        } else {
+            URL systemConfig = getSystemConfig();
+            bootstrapper.setSystemConfig(systemConfig);
+        }
         return bootstrapper;
     }
 
@@ -471,7 +489,7 @@ public class Fabric3ITestMojo extends AbstractMojo {
         // TODO Add better host JMX support from the next release
         agent = new DefaultAgent();
         runtime.setMBeanServer(agent.getMBeanServer());
-        
+
         WorkScheduler workScheduler = new ThreadPoolWorkScheduler(numWorkers, false);
         runtime.setWorkScheduler(workScheduler);
 
