@@ -183,14 +183,15 @@ public abstract class AbstractComponentInstantiator implements ComponentInstanti
             }
             for (int i = 0; i < result.getLength(); i++) {
                 Node node = result.item(i);
-                value.adoptNode(node);
-                short type = node.getNodeType();
+                Node cloned = node.cloneNode(true);
+                value.adoptNode(cloned);
+                short type = cloned.getNodeType();
                 if (Node.ELEMENT_NODE == type || Node.TEXT_NODE == type) {
-                    root.appendChild(node);
+                    root.appendChild(cloned);
                 } else if (Node.ATTRIBUTE_NODE == type) {
                     // convert the attribute to an element in the property DOM
-                    Element element = value.createElement(node.getNodeName());
-                    element.setTextContent(node.getNodeValue());
+                    Element element = value.createElement(cloned.getNodeName());
+                    element.setTextContent(cloned.getNodeValue());
                     root.appendChild(element);
                 } else {
                     throw new XPathExpressionException("Unsupported node type: " + type);
