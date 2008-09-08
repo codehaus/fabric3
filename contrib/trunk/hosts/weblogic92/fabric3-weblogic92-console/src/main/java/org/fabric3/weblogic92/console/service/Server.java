@@ -9,22 +9,22 @@ package org.fabric3.weblogic92.console.service;
 public class Server {
 
 	private final String name;
-	private final Integer listenPort;
-	private final String listenAddress;
+	private final Integer port;
+	private final String address;
 	private final String state;
 
 	/**
 	 * Initializes the name, listen port, listen address and state of the server.
 	 * 
 	 * @param name Name of the server.
-	 * @param listenPort Listen port of the server.
-	 * @param listenAddress Listen address of the server.
+	 * @param port Listen port of the server.
+	 * @param address Listen address of the server.
 	 * @param state State of the server.
 	 */
-	public Server(String name, Integer listenPort, String listenAddress, String state) {
+	public Server(String name, Integer port, String address, String state) {
 		this.name = name;
-		this.listenPort = listenPort;
-		this.listenAddress = listenAddress;
+		this.port = port;
+		this.address = address;
 		this.state = state;
 	}
 
@@ -51,8 +51,8 @@ public class Server {
 	 * 
 	 * @return Listen port for the server.
 	 */
-	public Integer getListenPort() {
-		return listenPort;
+	public Integer getPort() {
+		return port;
 	}
 
 	/**
@@ -60,8 +60,8 @@ public class Server {
 	 * 
 	 * @return Listen address for the server.
 	 */
-	public String getListenAddress() {
-		return listenAddress;
+	public String getAddress() {
+		return address;
 	}
 
 }

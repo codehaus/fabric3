@@ -29,14 +29,16 @@ public class DefaultJmxConnectionService implements JmxConnectionService {
 	 * @throws IOException If unable to establish a connection.
 	 */
 	public JMXConnector getConnector(String url, int port, String mbeanServer, String user, String password) throws IOException {
+		
+		String jndiroot= "/jndi/iiop://" + url + ":" + port + "/";
 
-		JMXServiceURL serviceURL = new JMXServiceURL("t3", url, port, mbeanServer);
+		JMXServiceURL serviceURL = new JMXServiceURL("rmi", url, port, jndiroot + mbeanServer);
+
 
 		Hashtable<String, Object> h = new Hashtable<String, Object>();
 		h.put(Context.SECURITY_PRINCIPAL, user);
 		h.put(Context.SECURITY_CREDENTIALS, password);
-		h.put(JMXConnectorFactory.PROTOCOL_PROVIDER_PACKAGES, "weblogic.management.remote");
-		
+
 		return JMXConnectorFactory.connect(serviceURL, h);
 		
 	}

@@ -36,7 +36,7 @@ public class DefaultF3RuntimeService implements F3RuntimeService {
 	 */
 	public Set<F3Runtime> getF3Runtimes(Server server, String user, String password) throws IOException, JMException {
 		
-		JMXConnector connector = jmxConnectionService.getConnector(server.getListenAddress(), server.getListenPort(), mbeanServer, user, password);
+		JMXConnector connector = jmxConnectionService.getConnector(server.getAddress(), server.getPort(), mbeanServer, user, password);
 	
 		try {
 			
