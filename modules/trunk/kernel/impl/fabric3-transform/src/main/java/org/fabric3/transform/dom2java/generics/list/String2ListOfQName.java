@@ -19,7 +19,7 @@ import org.fabric3.transform.TransformationException;
  * <p/>
  * <code> value1, value2, value3 </code>
  * <p/>
- * where values are correspond to the format specified by {@link QName#valueOf(String)}.
+ * where values correspond to the format specified by {@link QName#valueOf(String)}.
  *
  * @version $Rev: 1570 $ $Date: 2007-10-20 14:24:19 +0100 (Sat, 20 Oct 2007) $
  */
