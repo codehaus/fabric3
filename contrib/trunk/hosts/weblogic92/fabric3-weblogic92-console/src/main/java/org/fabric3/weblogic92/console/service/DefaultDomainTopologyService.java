@@ -1,5 +1,6 @@
 package org.fabric3.weblogic92.console.service;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
@@ -10,6 +11,13 @@ import javax.management.MalformedObjectNameException;
 import javax.management.ObjectInstance;
 import javax.management.ObjectName;
 import javax.management.remote.JMXConnector;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.Path;
+import javax.ws.rs.ProduceMime;
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
 
 import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Reference;
@@ -20,6 +28,7 @@ import org.osoa.sca.annotations.Reference;
  * @author meerajk
  *
  */
+@Path("/Hello")
 public class DefaultDomainTopologyService implements DomainTopologyService {
 	
 	private JmxConnectionService jmxConnectionService;
@@ -34,7 +43,7 @@ public class DefaultDomainTopologyService implements DomainTopologyService {
 	 * @param port Listen port of the admin server.
 	 * @param user Admin user for the server.
 	 * @param password Admin password for the server.
-	 * @return List of servers in the domain, with hosted F3 runtimes.
+	 * @return List of servers in the domain.
 	 * 
 	 * @throws IOException If unable to connect to the admin server.
 	 * @throws JMException In case of any unexpected JMX exception.
@@ -60,9 +69,14 @@ public class DefaultDomainTopologyService implements DomainTopologyService {
 				listenAddress = listenAddress.substring(1);
 				String state = (String) connection.getAttribute(serverName, "State");
 				
-				Set<F3Runtime> f3Runtimes = getF3Runtimes(listenAddress, listenPort, user, password);
+				Set<String> f3Runtimes = getF3Runtimes(listenAddress, listenPort, user, password);
 				
-				servers[i] = new Server(name, listenPort, listenAddress.substring(1), state, f3Runtimes);
+				servers[i] = new Server();
+				servers[i].setName(name);
+				servers[i].setAddress(listenAddress);
+				servers[i].setPort(listenPort);
+				servers[i].setState(state);
+				servers[i].setF3Runtimes(f3Runtimes);
 				
 			}
 			
@@ -71,6 +85,39 @@ public class DefaultDomainTopologyService implements DomainTopologyService {
 		} finally {
 			connector.close();
 		}
+		
+	}
+	
+	/**
+	 * Gets the F3 runtime topology for the weblogic domain.
+	 * 
+	 * @param url Listen address of the admin server.
+	 * @param port Listen port of the admin server.
+	 * @param user Admin user for the server.
+	 * @param password Admin password for the server.
+	 * @return An XML representation of the domain topology.
+	 * 
+	 * @throws IOException If unable to connect to the admin server.
+	 * @throws JMException In case of any unexpected JMX exception.
+	 * @throws JAXBException In case of any XML marshalling error.
+	 */
+    @GET
+    @ProduceMime("text/xml")
+	public String getDomainTopologyAsXml(String url, int port, String user, String password) throws IOException, JMException, JAXBException {
+		
+		Server[] servers = getDomainTopology(url, port, user, password);
+		
+		StringBuffer xml = new StringBuffer("<topology>");
+		for (Server server : servers) {			
+			ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+			Marshaller marshaller = JAXBContext.newInstance(Server.class).createMarshaller();
+			marshaller.setProperty("com.sun.xml.bind.xmlDeclaration", Boolean.FALSE);
+			marshaller.marshal(server, outputStream);
+			xml.append(new String(outputStream.toByteArray()));
+		}
+		xml.append("</topology>");
+		
+		return xml.toString();
 		
 	}
 
@@ -118,7 +165,7 @@ public class DefaultDomainTopologyService implements DomainTopologyService {
 	/*
 	 * Gets the configured runtime on a managed server.
 	 */
-	private Set<F3Runtime> getF3Runtimes(String url, int port, String user, String password) throws IOException, JMException {
+	private Set<String> getF3Runtimes(String url, int port, String user, String password) throws IOException, JMException {
 		
 		JMXConnector connector = jmxConnectionService.getConnector(url, port, runtimeServer, user, password);
 	
@@ -127,13 +174,13 @@ public class DefaultDomainTopologyService implements DomainTopologyService {
 			MBeanServerConnection con = connector.getMBeanServerConnection();
 			Set<?> objectInstances = con.queryMBeans(new ObjectName("f3-management:*"), null);
 			
-			Set<F3Runtime> f3Runtimes = new HashSet<F3Runtime>();
+			Set<String> f3Runtimes = new HashSet<String>();
 			
 			for (Object obj : objectInstances) {
 				ObjectInstance objectInstance = (ObjectInstance) obj;
 				ObjectName objectName = objectInstance.getObjectName();
 				String subDomain = objectName.getKeyProperty("SubDomain");
-				f3Runtimes.add(new F3Runtime(subDomain));
+				f3Runtimes.add(subDomain);
 			}
 			
 			return f3Runtimes;
