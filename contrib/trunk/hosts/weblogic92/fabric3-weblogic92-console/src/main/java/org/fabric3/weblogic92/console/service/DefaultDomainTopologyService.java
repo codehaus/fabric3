@@ -107,6 +107,8 @@ public class DefaultDomainTopologyService implements DomainTopologyService {
 										 @QueryParam("port") int port, 
 										 @QueryParam("user") String user, 
 										 @QueryParam("password") String password) throws IOException, JMException, JAXBException {
+    	
+    	System.err.println("Received request");
 		
 		Server[] servers = getDomainTopology(url, port, user, password);
 		
@@ -119,6 +121,8 @@ public class DefaultDomainTopologyService implements DomainTopologyService {
 			xml.append(new String(outputStream.toByteArray()));
 		}
 		xml.append("</topology>");
+    	
+    	System.err.println(xml);
 		
 		return xml.toString();
 		

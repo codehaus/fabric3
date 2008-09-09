@@ -2,41 +2,53 @@
 <!-- dpcontrols/TreeSimple.mxml -->
 <mx:Application xmlns:mx="http://www.adobe.com/2006/mxml">
 
-    <mx:Array id="arr">
-        <mx:Object label="Red" />
-        <mx:Object label="Orange" />
-    </mx:Array>
+    <mx:Script>
+        <![CDATA[
+            private function send_data():void {
+                topologyRequest.send();
+            }
+        ]]>
+    </mx:Script>
+    
+    <mx:HTTPService id="topologyRequest" url="service/console" useProxy="false" method="GET">
+        <mx:request xmlns="">
+            <url>{serverAddress.text}</url>
+            <port>{serverPort.text}</port>
+            <user>{userName.text}</user>
+            <password>{password.text}</password>
+        </mx:request>
+    </mx:HTTPService>
+    
     <mx:Panel>
-        <mx:HBox>
-            <mx:Tree id="tree1" labelField="@label" showRoot="true" width="200" height="300">
-                <mx:XMLListCollection id="MailBox1">
-                    <mx:XMLList>
-                        <folder label="Fabric 3 Runtimes">
-                            <folder label="Admin Server" />
-                            <folder label="Managed Server 1">
-                                <Pfolder label="Technical Faciltation UI" />
-                                <Pfolder label="Mandate Management UI" />
-                            </folder>
-                            <folder label="Managed Server 2">
-                                <Pfolder label="Technical Faciltation Engine" />
-                                <Pfolder label="Mandate Management Engine" />
-                            </folder>
-                        </folder>
-                    </mx:XMLList>
-                </mx:XMLListCollection>
-            </mx:Tree>
-            <mx:VBox>
-                <!-- Create an HBox container to hold the three buttons. -->
-                <mx:TabBar dataProvider="{myViewStack}" borderStyle="solid"/>
-                <mx:ViewStack id="myViewStack" borderStyle="solid" width="100%">
-                    <mx:Canvas id="workScheduler" label="Work Scheduler">
-                        <mx:Label text="Work Scheduler" />
-                    </mx:Canvas>
-                    <mx:Canvas id="logicalDomain" label="Logical Domain">
-                        <mx:Label text="Logical Domain" />
-                    </mx:Canvas>
-                </mx:ViewStack>
-            </mx:VBox>
-        </mx:HBox>
+        <mx:VBox>
+            <mx:Form id="securityForm" x="22" y="10" width="493">
+                <mx:HBox>
+                    <mx:VBox>
+                        <mx:Label text="Server Address"/>
+                        <mx:Label text="Server Port"/>
+                        <mx:Label text="User Name"/>
+                        <mx:Label text="Password"/>
+                    </mx:VBox>
+                    <mx:VBox>
+                        <mx:TextInput id="serverAddress" text="localHost"/>
+                        <mx:TextInput id="serverPort" text="7001"/>
+                        <mx:TextInput id="userName" text="weblogic"/>
+                        <mx:TextInput id="password" text="password" displayAsPassword="true"/>
+                        <mx:Button label="Submit" click="send_data()"/>
+                    </mx:VBox>
+                    </mx:HBox>
+            </mx:Form>
+            <mx:HBox>
+                <mx:Tree id="tree1" labelField="@label" showRoot="true" width="300" height="300"/>
+                <mx:VBox>
+                    <!-- Create an HBox container to hold the three buttons. -->
+                    <mx:TabBar dataProvider="{myViewStack}" borderStyle="solid"/>
+                    <mx:ViewStack id="myViewStack" borderStyle="solid" width="100%">
+                        <mx:Canvas id="workScheduler" label="Work Scheduler" width="500"/>
+                    </mx:ViewStack>
+                </mx:VBox>
+            </mx:HBox>
+        </mx:VBox>
     </mx:Panel>
+    
 </mx:Application>

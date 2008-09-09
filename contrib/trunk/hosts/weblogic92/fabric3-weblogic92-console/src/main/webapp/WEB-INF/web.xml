@@ -33,7 +33,7 @@
  
     <servlet-mapping>
         <servlet-name>Fabric3Servlet</servlet-name>
-        <url-pattern>/*</url-pattern>
+        <url-pattern>/service/*</url-pattern>
     </servlet-mapping>
 
 </web-app>
