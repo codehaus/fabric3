@@ -47,8 +47,7 @@ import org.fabric3.spi.util.UriHelper;
 @EagerInit
 public class BindingSelectorImpl implements BindingSelector {
     private Map<QName, BindingProvider> providers = new HashMap<QName, BindingProvider>();
-    // the default binding strategy if none explicitly configured
-    private BindingSelectionStrategy strategy = new DefaultBindingSelectionStrategy();
+    private BindingSelectionStrategy strategy;
     private LogicalComponentManager logicalComponentManager;
 
     public BindingSelectorImpl(@Reference(name = "logicalComponentManager")LogicalComponentManager logicalComponentManager) {
@@ -67,10 +66,6 @@ public class BindingSelectorImpl implements BindingSelector {
 
     @Reference(required = false)
     public void setStrategy(BindingSelectionStrategy strategy) {
-        if (strategy == null) {
-            // FABRICTHREE-288 workaround
-            return;
-        }
         this.strategy = strategy;
     }
 

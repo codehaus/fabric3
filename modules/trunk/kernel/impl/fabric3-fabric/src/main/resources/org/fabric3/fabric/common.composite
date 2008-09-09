@@ -56,6 +56,12 @@
         <reference name="logicalComponentManager" target="LogicalComponentManager"/>
     </component>
 
+    <component name="ConfigurableBindingSelectionStrategy">
+        <system:implementation.system class="org.fabric3.fabric.binding.ConfigurableBindingSelectionStrategy"/>
+        <!-- allows users to configure the SCA binding preference through a systemConfig entry -->
+        <property name="scaBindingOrder" source="$systemConfig//bindings/binding.sca/provider.order"/>
+    </component>
+
     <component name="GeneratorRegistry">
         <system:implementation.system class="org.fabric3.fabric.generator.GeneratorRegistryImpl"/>
     </component>
