@@ -19,7 +19,6 @@
 
 package org.fabric3.binding.jms.runtime;
 
-import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Map.Entry;
@@ -47,34 +46,21 @@ import org.fabric3.spi.wire.InvocationChain;
 public class OneWayMessageListenerImpl implements ResponseMessageListener {
 
     private Map<String, ChainHolder> operations;
-
-    /**
-     * Correlation scheme.
-     */
     private final CorrelationScheme correlationScheme;
-
-    /**
-     * Transaction type.
-     */
     private final TransactionType transactionType;
 
-    /**
-     * Callback URI.
-     */
-    private final String callBackURI;
 
     /**
      * @param chains            map of operations to interceptor chains.
      * @param correlationScheme correlation scheme.
      * @param messageTypes      the JMS message type used to enqueue service invocations keyed by operation name
      * @param transactionType   the type of transaction
-     * @param callbackUri       the callback service uri
      */
     public OneWayMessageListenerImpl(Map<PhysicalOperationDefinition, InvocationChain> chains,
                                        CorrelationScheme correlationScheme,
                                        Map<String, PayloadType> messageTypes,
-                                       TransactionType transactionType,
-                                       String callbackUri) {
+                                       TransactionType transactionType) {
+    	
         this.operations = new HashMap<String, ChainHolder>();
         for (Entry<PhysicalOperationDefinition, InvocationChain> entry : chains.entrySet()) {
             String name = entry.getKey().getName();
@@ -86,9 +72,11 @@ public class OneWayMessageListenerImpl implements ResponseMessageListener {
         }
         this.correlationScheme = correlationScheme;
         this.transactionType = transactionType;
-        this.callBackURI = callbackUri;
     }
-
+    
+    /*
+     * Handle the message
+     */
     public void onMessage(Message request, Session responseSession, Destination responseDestination) {
 
         try {
@@ -132,27 +120,6 @@ public class OneWayMessageListenerImpl implements ResponseMessageListener {
 
     }
 
-
-    private Message createMessage(Object payload, Session session, PayloadType payloadType) throws JMSException {
-        switch (payloadType) {
-        case STREAM:
-            throw new UnsupportedOperationException("Stream message not yet supported");
-        case TEXT:
-            if (!(payload instanceof String)) {
-                // this should not happen
-                throw new IllegalArgumentException("Response payload is not a string: " + payload);
-            }
-            return session.createTextMessage((String) payload);
-        case OBJECT:
-            if (!(payload instanceof Serializable)) {
-                // this should not happen
-                throw new IllegalArgumentException("Response payload is not serializable: " + payload);
-            }
-            return session.createObjectMessage((Serializable) payload);
-        default:
-            return MessageHelper.createBytesMessage(session, payload, payloadType);
-        }
-    }
 
     private class ChainHolder {
         private PayloadType type;

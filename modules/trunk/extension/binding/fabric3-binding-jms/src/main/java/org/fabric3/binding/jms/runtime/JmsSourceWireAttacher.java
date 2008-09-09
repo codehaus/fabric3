@@ -143,7 +143,7 @@ public class JmsSourceWireAttacher implements SourceWireAttacher<JmsWireSourceDe
 
         ResponseMessageListener messageListener;
          if(metadata.noResponse()){
-             messageListener = new OneWayMessageListenerImpl(operations, correlationScheme, messageTypes, transactionType, callbackUri);
+             messageListener = new OneWayMessageListenerImpl(operations, correlationScheme, messageTypes, transactionType);
          }else {
               messageListener =  new ResponseMessageListenerImpl(operations, correlationScheme, messageTypes, transactionType, callbackUri);
          }
