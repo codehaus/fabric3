@@ -62,6 +62,7 @@ public class Fabric3Server implements Fabric3ServerMBean {
     private static final String JMX_DOMAIN = "fabric3.jmx";
     private static final String MONITOR_PORT_PARAM = "fabric3.monitor.port";
     private static final String MONITOR_KEY_PARAM = "fabric3.monitor.key";
+    private static final String JOIN_DOMAIN_TIMEOUT = "fabric3.join.domain.timeout";
     private static final String INTENTS_FILE = "intents.xml";
 
     private final Agent agent;
@@ -124,6 +125,14 @@ public class Fabric3Server implements Fabric3ServerMBean {
                 throw new IllegalArgumentException("Invalid monitor port", e);
             }
 
+            // load the join timeout
+            int joinTimeout;
+            try {
+                joinTimeout = Integer.parseInt(props.getProperty(JOIN_DOMAIN_TIMEOUT, "10000"));
+            } catch (NumberFormatException e) {
+                throw new IllegalArgumentException("Invalid join domain timeout value", e);
+            }
+
             // create the classloaders for booting the runtime
             String bootPath = props.getProperty("fabric3.bootDir", null);
             File bootDir = BootstrapHelper.getDirectory(installDirectory, bootPath, "boot");
@@ -142,7 +151,7 @@ public class Fabric3Server implements Fabric3ServerMBean {
             runtime.setMBeanServer(agent.getMBeanServer());
             runtime.setJmxSubDomain(jmxDomain);
             monitor = runtime.getMonitorFactory().getMonitor(ServerMonitor.class);
-            
+
             // Get number of workers from somewhere
             int numWorkers = 10;
             WorkScheduler workScheduler = new ThreadPoolWorkScheduler(numWorkers, false);
@@ -156,7 +165,7 @@ public class Fabric3Server implements Fabric3ServerMBean {
             // load and initialize runtime extension components and the local runtime domain
             coordinator.initialize();
             // join a distributed domain
-            Future<Void> future = coordinator.joinDomain(10000);
+            Future<Void> future = coordinator.joinDomain(joinTimeout);
             future.get();
             // perform recovery. If the runtime is a controller node, this may result in reprovisioning components
             future = coordinator.recover();
