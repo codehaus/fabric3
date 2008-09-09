@@ -6,6 +6,7 @@ import java.util.Set;
 
 import javax.management.JMException;
 import javax.management.MBeanServerConnection;
+import javax.management.MalformedObjectNameException;
 import javax.management.ObjectInstance;
 import javax.management.ObjectName;
 import javax.management.remote.JMXConnector;
@@ -24,7 +25,7 @@ public class DefaultDomainTopologyService implements DomainTopologyService {
 	private JmxConnectionService jmxConnectionService;
 	private String domainServer;
 	private String runtimeServer;
-	private ObjectName domainRuntimeServiceMBeanName;
+	private ObjectName domainRuntimeService;
 	
 	/**
 	 * Gets the F3 runtime topology for the weblogic domain.
@@ -46,7 +47,7 @@ public class DefaultDomainTopologyService implements DomainTopologyService {
 			
 			MBeanServerConnection connection = connector.getMBeanServerConnection();
 			
-			ObjectName[] serverNames = (ObjectName[]) connection.getAttribute(domainRuntimeServiceMBeanName, "ServerRuntimes");
+			ObjectName[] serverNames = (ObjectName[]) connection.getAttribute(domainRuntimeService, "ServerRuntimes");
 			Server[] servers = new Server[serverNames.length];
 			
 			for (int i = 0;i < serverNames.length;i++) {
@@ -106,11 +107,12 @@ public class DefaultDomainTopologyService implements DomainTopologyService {
 	/**
 	 * Sets the domain runtime service MBean name.
 	 * 
-	 * @param domainRuntimeServiceMBeanName Domain runtime service MBean name.
+	 * @param domainRuntimeService Domain runtime service MBean name.
+	 * @throws MalformedObjectNameException If the object name is not valid.
 	 */
 	@Property
-	public void setDomainRuntimeServiceMBeanName(ObjectName domainRuntimeServiceMBeanName) {
-		this.domainRuntimeServiceMBeanName = domainRuntimeServiceMBeanName;
+	public void setDomainRuntimeService(String domainRuntimeService) throws MalformedObjectNameException {
+		this.domainRuntimeService = new ObjectName(domainRuntimeService);
 	}
 	
 	/*
