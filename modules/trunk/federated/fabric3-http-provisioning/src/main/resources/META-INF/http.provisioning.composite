@@ -23,6 +23,8 @@
 
     <component name="HTTPArtifactLocationEncoder">
         <system:implementation.system class="org.fabric3.provisioning.http.HTTPContributionUriEncoder"/>
+        <property name="httpPort" source="$systemConfig//web.server/http/@port"/>
+        <property name="address" source="$systemConfig//provisioner/@address"/>
     </component>
 
 </composite>

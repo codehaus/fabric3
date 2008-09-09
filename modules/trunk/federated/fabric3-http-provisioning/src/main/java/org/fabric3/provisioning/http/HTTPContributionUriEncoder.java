@@ -18,16 +18,15 @@
  */
 package org.fabric3.provisioning.http;
 
+import java.net.InetAddress;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.spi.host.ServletHost;
 import org.fabric3.spi.services.contribution.ContributionUriEncoder;
 import org.fabric3.spi.services.contribution.MetaDataStore;
@@ -38,15 +37,13 @@ import org.fabric3.spi.services.contribution.MetaDataStore;
  * @version $Revision$ $Date$
  */
 public class HTTPContributionUriEncoder implements ContributionUriEncoder {
-    private HostInfo info;
     private ServletHost host;
     private MetaDataStore store;
     private String address;
     private int port;
     private String mappingPath = "/contribution";
 
-    public HTTPContributionUriEncoder(@Reference HostInfo info, @Reference ServletHost host, @Reference MetaDataStore store) {
-        this.info = info;
+    public HTTPContributionUriEncoder(@Reference ServletHost host, @Reference MetaDataStore store) {
         this.host = host;
         this.store = store;
     }
@@ -56,10 +53,21 @@ public class HTTPContributionUriEncoder implements ContributionUriEncoder {
         mappingPath = path;
     }
 
+    @Property
+    public void setHttpPort(String port) {
+        this.port = Integer.parseInt(port);
+    }
+
+    @Property
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
     @Init
     public void init() throws UnknownHostException {
-        address = info.getProperty("address", InetAddress.getLocalHost().getHostAddress());
-        port = Integer.parseInt(info.getProperty("http.port", "80"));
+        if (address == null) {
+            address = InetAddress.getLocalHost().getHostAddress();
+        }
         host.registerMapping(mappingPath + "/*", new ArchiveResolverServlet(store));
     }
 
