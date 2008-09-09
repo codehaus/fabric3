@@ -119,6 +119,13 @@
                 <configuration>
                     <!-- use the latest version of the runtime -->
                     <runTimeVersion>0.6-SNAPSHOT</runTimeVersion>
+                    <extensions>
+                        <dependency>
+                            <groupId>org.codehaus.fabric3</groupId>
+                            <artifactId>fabric3-rs</artifactId>
+                            <version>0.6-SNAPSHOT</version>
+                        </dependency>
+                    </extensions>
                 </configuration>
             </plugin>
         </plugins>

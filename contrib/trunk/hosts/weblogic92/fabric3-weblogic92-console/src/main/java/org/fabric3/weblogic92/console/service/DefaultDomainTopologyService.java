@@ -12,9 +12,9 @@ import javax.management.ObjectInstance;
 import javax.management.ObjectName;
 import javax.management.remote.JMXConnector;
 import javax.ws.rs.GET;
-import javax.ws.rs.POST;
 import javax.ws.rs.Path;
 import javax.ws.rs.ProduceMime;
+import javax.ws.rs.QueryParam;
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
@@ -28,7 +28,7 @@ import org.osoa.sca.annotations.Reference;
  * @author meerajk
  *
  */
-@Path("/Hello")
+@Path("/console")
 public class DefaultDomainTopologyService implements DomainTopologyService {
 	
 	private JmxConnectionService jmxConnectionService;
@@ -103,7 +103,10 @@ public class DefaultDomainTopologyService implements DomainTopologyService {
 	 */
     @GET
     @ProduceMime("text/xml")
-	public String getDomainTopologyAsXml(String url, int port, String user, String password) throws IOException, JMException, JAXBException {
+	public String getDomainTopologyAsXml(@QueryParam("url") String url, 
+										 @QueryParam("port") int port, 
+										 @QueryParam("user") String user, 
+										 @QueryParam("password") String password) throws IOException, JMException, JAXBException {
 		
 		Server[] servers = getDomainTopology(url, port, user, password);
 		

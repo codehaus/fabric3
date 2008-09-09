@@ -24,6 +24,16 @@
     <context-param>
         <param-name>fabric3.component</param-name>
         <param-value>weblogicConsole</param-value>
-    </context-param>
+    </context-param> 
+    
+    <servlet>
+        <servlet-name>Fabric3Servlet</servlet-name>
+        <servlet-class>org.fabric3.runtime.webapp.Fabric3Servlet</servlet-class>
+    </servlet>
+ 
+    <servlet-mapping>
+        <servlet-name>Fabric3Servlet</servlet-name>
+        <url-pattern>/*</url-pattern>
+    </servlet-mapping>
 
 </web-app>
