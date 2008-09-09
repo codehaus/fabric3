@@ -9,17 +9,14 @@ package org.fabric3.weblogic92.console.service;
 public class F3Runtime {
 	
 	private final String subDomain;
-	private final Server server;
 	
 	/**
 	 * Sets the runtime subdomain and server.
 	 * 
 	 * @param subDomain Runtime subdomain.
-	 * @param server Server that hosts the runtime.
 	 */
-	public F3Runtime(String subDomain, Server server) {
+	public F3Runtime(String subDomain) {
 		this.subDomain = subDomain;
-		this.server = server;
 	}
 
 	/**
@@ -29,15 +26,6 @@ public class F3Runtime {
 	 */
 	public String getSubDomain() {
 		return subDomain;
-	}
-
-	/**
-	 * Gets the server that hosts the runtime.
-	 * 
-	 * @return Server that hosts the runtime.
-	 */
-	public Server getServer() {
-		return server;
 	}
 
 	/**

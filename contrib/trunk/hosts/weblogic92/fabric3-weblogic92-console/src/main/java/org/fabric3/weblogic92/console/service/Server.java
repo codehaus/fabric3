@@ -1,5 +1,7 @@
 package org.fabric3.weblogic92.console.service;
 
+import java.util.Set;
+
 /**
  * Represents a server within the WLS domain.
  * 
@@ -12,6 +14,7 @@ public class Server {
 	private final Integer port;
 	private final String address;
 	private final String state;
+	private final Set<F3Runtime> f3Runtimes;
 
 	/**
 	 * Initializes the name, listen port, listen address and state of the server.
@@ -20,12 +23,14 @@ public class Server {
 	 * @param port Listen port of the server.
 	 * @param address Listen address of the server.
 	 * @param state State of the server.
+	 * @param f3Runtimes F3 runtimes configured on this server.
 	 */
-	public Server(String name, Integer port, String address, String state) {
+	public Server(String name, Integer port, String address, String state, Set<F3Runtime> f3Runtimes) {
 		this.name = name;
 		this.port = port;
 		this.address = address;
 		this.state = state;
+		this.f3Runtimes = f3Runtimes;
 	}
 
 	/**
@@ -62,6 +67,15 @@ public class Server {
 	 */
 	public String getAddress() {
 		return address;
+	}
+
+	/**
+	 * Get the set of configured F3 runtimes on the server.
+	 * 
+	 * @return Configured F3 runtimes on the server.
+	 */
+	public Set<F3Runtime> getF3Runtimes() {
+		return f3Runtimes;
 	}
 
 }
