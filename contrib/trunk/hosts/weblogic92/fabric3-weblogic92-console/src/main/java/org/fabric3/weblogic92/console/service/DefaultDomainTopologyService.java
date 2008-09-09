@@ -69,14 +69,9 @@ public class DefaultDomainTopologyService implements DomainTopologyService {
 				listenAddress = listenAddress.substring(1);
 				String state = (String) connection.getAttribute(serverName, "State");
 				
-				Set<String> f3Runtimes = getF3Runtimes(listenAddress, listenPort, user, password);
+				Set<F3Runtime> f3Runtimes = getF3Runtimes(listenAddress, listenPort, user, password);
 				
-				servers[i] = new Server();
-				servers[i].setName(name);
-				servers[i].setAddress(listenAddress);
-				servers[i].setPort(listenPort);
-				servers[i].setState(state);
-				servers[i].setF3Runtimes(f3Runtimes);
+				servers[i] = new Server(name, listenPort, listenAddress, state, f3Runtimes);
 				
 			}
 			
@@ -172,7 +167,7 @@ public class DefaultDomainTopologyService implements DomainTopologyService {
 	/*
 	 * Gets the configured runtime on a managed server.
 	 */
-	private Set<String> getF3Runtimes(String url, int port, String user, String password) throws IOException, JMException {
+	private Set<F3Runtime> getF3Runtimes(String url, int port, String user, String password) throws IOException, JMException {
 		
 		JMXConnector connector = jmxConnectionService.getConnector(url, port, runtimeServer, user, password);
 	
@@ -181,13 +176,13 @@ public class DefaultDomainTopologyService implements DomainTopologyService {
 			MBeanServerConnection con = connector.getMBeanServerConnection();
 			Set<?> objectInstances = con.queryMBeans(new ObjectName("f3-management:*"), null);
 			
-			Set<String> f3Runtimes = new HashSet<String>();
+			Set<F3Runtime> f3Runtimes = new HashSet<F3Runtime>();
 			
 			for (Object obj : objectInstances) {
 				ObjectInstance objectInstance = (ObjectInstance) obj;
 				ObjectName objectName = objectInstance.getObjectName();
 				String subDomain = objectName.getKeyProperty("SubDomain");
-				f3Runtimes.add(subDomain);
+				f3Runtimes.add(new F3Runtime(subDomain));
 			}
 			
 			return f3Runtimes;
