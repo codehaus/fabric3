@@ -28,9 +28,7 @@ import javax.jms.JMSException;
 import javax.jms.Message;
 import javax.jms.Session;
 
-import org.fabric3.binding.jms.common.CorrelationScheme;
 import org.fabric3.binding.jms.common.Fabric3JmsException;
-import org.fabric3.binding.jms.common.TransactionType;
 import org.fabric3.binding.jms.provision.PayloadType;
 import org.fabric3.spi.invocation.MessageImpl;
 import org.fabric3.spi.invocation.WorkContext;
@@ -46,20 +44,13 @@ import org.fabric3.spi.wire.InvocationChain;
 public class OneWayMessageListenerImpl implements ResponseMessageListener {
 
     private Map<String, ChainHolder> operations;
-    private final CorrelationScheme correlationScheme;
-    private final TransactionType transactionType;
 
 
     /**
      * @param chains            map of operations to interceptor chains.
-     * @param correlationScheme correlation scheme.
      * @param messageTypes      the JMS message type used to enqueue service invocations keyed by operation name
-     * @param transactionType   the type of transaction
      */
-    public OneWayMessageListenerImpl(Map<PhysicalOperationDefinition, InvocationChain> chains,
-                                       CorrelationScheme correlationScheme,
-                                       Map<String, PayloadType> messageTypes,
-                                       TransactionType transactionType) {
+    public OneWayMessageListenerImpl(Map<PhysicalOperationDefinition, InvocationChain> chains,Map<String, PayloadType> messageTypes) {
     	
         this.operations = new HashMap<String, ChainHolder>();
         for (Entry<PhysicalOperationDefinition, InvocationChain> entry : chains.entrySet()) {
@@ -70,8 +61,6 @@ public class OneWayMessageListenerImpl implements ResponseMessageListener {
             }
             this.operations.put(name, new ChainHolder(type, entry.getValue()));
         }
-        this.correlationScheme = correlationScheme;
-        this.transactionType = transactionType;
     }
     
     /*
