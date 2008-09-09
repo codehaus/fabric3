@@ -84,7 +84,7 @@ public class Fabric3Server implements Fabric3ServerMBean {
     }
 
     /**
-     * Constructor initializes all the required classloaders.
+     * Constructor.
      *
      * @throws MalformedURLException if the install directory is invalid
      */
