@@ -103,11 +103,9 @@ public class DefaultDomainTopologyService implements DomainTopologyService {
 										 @QueryParam("user") String user, 
 										 @QueryParam("password") String password) throws IOException, JMException, JAXBException {
     	
-    	System.err.println("Received request");
+    	Server[] servers = getDomainTopology(url, port, user, password);
 		
-		Server[] servers = getDomainTopology(url, port, user, password);
-		
-		StringBuffer xml = new StringBuffer("<topology>");
+		StringBuffer xml = new StringBuffer("<topology name='Toplogy'>");
 		for (Server server : servers) {			
 			ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
 			Marshaller marshaller = JAXBContext.newInstance(Server.class).createMarshaller();
@@ -116,8 +114,6 @@ public class DefaultDomainTopologyService implements DomainTopologyService {
 			xml.append(new String(outputStream.toByteArray()));
 		}
 		xml.append("</topology>");
-    	
-    	System.err.println(xml);
 		
 		return xml.toString();
 		
