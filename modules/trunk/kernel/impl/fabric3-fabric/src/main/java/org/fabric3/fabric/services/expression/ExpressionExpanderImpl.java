@@ -58,7 +58,7 @@ public class ExpressionExpanderImpl implements ExpressionExpander {
         String expression = value.substring(start + 2, end);
         String evaluated = evaluate(expression);
         if (evaluated == null) {
-            throw new ValueNotFoundException("Value not defined for '" + expression + "' in :" + value);
+            throw new ValueNotFoundException("Value not defined for '" + expression + "' in: " + value);
         }
         builder.append(evaluated);
 
