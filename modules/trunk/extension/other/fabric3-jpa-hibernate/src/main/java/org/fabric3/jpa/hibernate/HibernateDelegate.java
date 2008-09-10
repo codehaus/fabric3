@@ -97,7 +97,7 @@ public class HibernateDelegate implements EmfBuilderDelegate {
                     + " was not found. The datasource must either be explicitly declared as part of the Fabric3 system configuration or provided"
                     + " via JNDI using the name of the data source.", e);
         } catch (ComponentRegistrationException e) {
-            throw new DataSourceInitException("Error registering datasource" + datasource + " specified in persistent unit " + persistenceUnit, e);
+            throw new DataSourceInitException("Error registering datasource " + datasource + " specified in persistent unit " + persistenceUnit, e);
         }
     }
 
