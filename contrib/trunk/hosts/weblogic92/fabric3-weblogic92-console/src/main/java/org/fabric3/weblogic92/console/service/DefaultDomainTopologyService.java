@@ -48,7 +48,7 @@ public class DefaultDomainTopologyService implements DomainTopologyService {
 	 * @throws IOException If unable to connect to the admin server.
 	 * @throws JMException In case of any unexpected JMX exception.
 	 */
-	public Server[] getDomainTopology(String url, int port, String user, String password) throws IOException, JMException {
+	public Topology getDomainTopology(String url, int port, String user, String password) throws IOException, JMException {
 		
 		JMXConnector connector = jmxConnectionService.getConnector(url, port, domainServer, user, password);
 		
@@ -57,7 +57,7 @@ public class DefaultDomainTopologyService implements DomainTopologyService {
 			MBeanServerConnection connection = connector.getMBeanServerConnection();
 			
 			ObjectName[] serverNames = (ObjectName[]) connection.getAttribute(domainRuntimeService, "ServerRuntimes");
-			Server[] servers = new Server[serverNames.length];
+			Set<Server> servers = new HashSet<Server>();
 			
 			for (int i = 0;i < serverNames.length;i++) {
 				
@@ -71,11 +71,11 @@ public class DefaultDomainTopologyService implements DomainTopologyService {
 				
 				Set<F3Runtime> f3Runtimes = getF3Runtimes(listenAddress, listenPort, user, password);
 				
-				servers[i] = new Server(name, listenPort, listenAddress, state, f3Runtimes);
+				servers.add(new Server(name, listenPort, listenAddress, state, f3Runtimes));
 				
 			}
 			
-			return servers;
+			return new Topology(servers);
 			
 		} finally {
 			connector.close();
@@ -103,19 +103,14 @@ public class DefaultDomainTopologyService implements DomainTopologyService {
 										 @QueryParam("user") String user, 
 										 @QueryParam("password") String password) throws IOException, JMException, JAXBException {
     	
-    	Server[] servers = getDomainTopology(url, port, user, password);
+    	Topology topology = getDomainTopology(url, port, user, password);
 		
-		StringBuffer xml = new StringBuffer("<topology name='Toplogy'>");
-		for (Server server : servers) {			
-			ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-			Marshaller marshaller = JAXBContext.newInstance(Server.class).createMarshaller();
-			marshaller.setProperty("com.sun.xml.bind.xmlDeclaration", Boolean.FALSE);
-			marshaller.marshal(server, outputStream);
-			xml.append(new String(outputStream.toByteArray()));
-		}
-		xml.append("</topology>");
+		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+		Marshaller marshaller = JAXBContext.newInstance(Topology.class).createMarshaller();
+		marshaller.setProperty("com.sun.xml.bind.xmlDeclaration", Boolean.FALSE);
+		marshaller.marshal(topology, outputStream);
 		
-		return xml.toString();
+		return new String(outputStream.toByteArray());
 		
 	}
 

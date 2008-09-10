@@ -25,7 +25,7 @@ public interface DomainTopologyService {
 	 * @throws IOException If unable to connect to the admin server.
 	 * @throws JMException In case of any unexpected JMX exception.
 	 */
-	Server[] getDomainTopology(String url, int port, String user, String password) throws IOException, JMException;
+	Topology getDomainTopology(String url, int port, String user, String password) throws IOException, JMException;
 	
 	/**
 	 * Gets the F3 runtime topology for the weblogic domain.

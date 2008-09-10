@@ -24,8 +24,7 @@ public class Server {
 	@XmlAttribute private int port;
 	@XmlAttribute private String address;
 	@XmlAttribute private String state;
-	@XmlElement(name = "f3Runtime")
-	private Set<F3Runtime> f3Runtimes;
+	@XmlElement(name = "f3Runtime") private Set<F3Runtime> f3Runtimes;
 	
 	public Server() {
 	}
