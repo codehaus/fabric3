@@ -90,7 +90,7 @@ public class HibernateDelegate implements EmfBuilderDelegate {
             keys.add(datasource);
             proxy.setDataSourceKeys(keys);
             proxy.init();
-            synthesizer.registerComponent(datasource + "Component", DataSource.class, proxy, true);
+            synthesizer.registerComponent(datasource + "Component", DataSource.class, proxy, false);
             return proxy;
         } catch (NamingException e) {
             throw new DataSourceInitException("Datasource " + datasource + " specified in persistent unit " + persistenceUnit
