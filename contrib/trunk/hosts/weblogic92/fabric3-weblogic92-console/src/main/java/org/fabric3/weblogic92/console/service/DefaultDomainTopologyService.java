@@ -1,6 +1,5 @@
 package org.fabric3.weblogic92.console.service;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
@@ -15,9 +14,6 @@ import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.ProduceMime;
 import javax.ws.rs.QueryParam;
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
 
 import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Reference;
@@ -48,7 +44,12 @@ public class DefaultDomainTopologyService implements DomainTopologyService {
 	 * @throws IOException If unable to connect to the admin server.
 	 * @throws JMException In case of any unexpected JMX exception.
 	 */
-	public Topology getDomainTopology(String url, int port, String user, String password) throws IOException, JMException {
+    @GET
+    @ProduceMime("application/xml")
+	public Topology getDomainTopology(@QueryParam("url") String url, 
+									  @QueryParam("port") int port, 
+									  @QueryParam("user") String user, 
+									  @QueryParam("password") String password) throws IOException, JMException {
 		
 		JMXConnector connector = jmxConnectionService.getConnector(url, port, domainServer, user, password);
 		
@@ -80,37 +81,6 @@ public class DefaultDomainTopologyService implements DomainTopologyService {
 		} finally {
 			connector.close();
 		}
-		
-	}
-	
-	/**
-	 * Gets the F3 runtime topology for the weblogic domain.
-	 * 
-	 * @param url Listen address of the admin server.
-	 * @param port Listen port of the admin server.
-	 * @param user Admin user for the server.
-	 * @param password Admin password for the server.
-	 * @return An XML representation of the domain topology.
-	 * 
-	 * @throws IOException If unable to connect to the admin server.
-	 * @throws JMException In case of any unexpected JMX exception.
-	 * @throws JAXBException In case of any XML marshalling error.
-	 */
-    @GET
-    @ProduceMime("text/xml")
-	public String getDomainTopologyAsXml(@QueryParam("url") String url, 
-										 @QueryParam("port") int port, 
-										 @QueryParam("user") String user, 
-										 @QueryParam("password") String password) throws IOException, JMException, JAXBException {
-    	
-    	Topology topology = getDomainTopology(url, port, user, password);
-		
-		ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-		Marshaller marshaller = JAXBContext.newInstance(Topology.class).createMarshaller();
-		marshaller.setProperty("com.sun.xml.bind.xmlDeclaration", Boolean.FALSE);
-		marshaller.marshal(topology, outputStream);
-		
-		return new String(outputStream.toByteArray());
 		
 	}
 

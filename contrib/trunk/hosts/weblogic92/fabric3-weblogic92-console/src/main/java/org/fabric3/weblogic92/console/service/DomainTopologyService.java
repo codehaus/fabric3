@@ -3,7 +3,6 @@ package org.fabric3.weblogic92.console.service;
 import java.io.IOException;
 
 import javax.management.JMException;
-import javax.xml.bind.JAXBException;
 
 /**
  * Service for getting the domain topology.
@@ -26,20 +25,5 @@ public interface DomainTopologyService {
 	 * @throws JMException In case of any unexpected JMX exception.
 	 */
 	Topology getDomainTopology(String url, int port, String user, String password) throws IOException, JMException;
-	
-	/**
-	 * Gets the F3 runtime topology for the weblogic domain.
-	 * 
-	 * @param url Listen address of the admin server.
-	 * @param port Listen port of the admin server.
-	 * @param user Admin user for the server.
-	 * @param password Admin password for the server.
-	 * @return An XML representation of the domain topology.
-	 * 
-	 * @throws IOException If unable to connect to the admin server.
-	 * @throws JMException In case of any unexpected JMX exception.
-	 * @throws JAXBException In case of any XML marshalling error.
-	 */
-	String getDomainTopologyAsXml(String url, int port, String user, String password) throws IOException, JMException, JAXBException;
 
 }
