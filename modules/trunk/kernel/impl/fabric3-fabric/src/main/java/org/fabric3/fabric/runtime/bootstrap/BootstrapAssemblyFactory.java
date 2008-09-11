@@ -80,6 +80,8 @@ import org.fabric3.fabric.instantiator.normalize.PromotionNormalizerImpl;
 import org.fabric3.fabric.instantiator.promotion.DefaultPromotionResolutionService;
 import org.fabric3.fabric.instantiator.promotion.PromotionResolutionService;
 import org.fabric3.fabric.instantiator.target.ExplicitTargetResolutionService;
+import org.fabric3.fabric.instantiator.target.ServiceContractResolver;
+import org.fabric3.fabric.instantiator.target.ServiceContractResolverImpl;
 import org.fabric3.fabric.instantiator.target.TargetResolutionService;
 import org.fabric3.fabric.instantiator.target.TypeBasedAutowireResolutionService;
 import org.fabric3.fabric.monitor.MonitorWireAttacher;
@@ -185,8 +187,11 @@ public class BootstrapAssemblyFactory {
     private static LogicalModelInstantiator createLogicalModelGenerator(LogicalComponentManager logicalComponentManager) {
         PromotionResolutionService promotionResolutionService = new DefaultPromotionResolutionService();
         List<TargetResolutionService> targetResolutionServices = new ArrayList<TargetResolutionService>();
-        targetResolutionServices.add(new ExplicitTargetResolutionService());
-        targetResolutionServices.add(new TypeBasedAutowireResolutionService());
+        ServiceContractResolver serviceContractResolver = new ServiceContractResolverImpl();
+        ExplicitTargetResolutionService explicitTargetResolutionService = new ExplicitTargetResolutionService(serviceContractResolver);
+        targetResolutionServices.add(explicitTargetResolutionService);
+        TypeBasedAutowireResolutionService autowireResolutionService = new TypeBasedAutowireResolutionService(serviceContractResolver);
+        targetResolutionServices.add(autowireResolutionService);
         ResolutionService resolutionService = new ResolutionServiceImpl(promotionResolutionService, targetResolutionServices);
 
         PromotionNormalizer normalizer = new PromotionNormalizerImpl();

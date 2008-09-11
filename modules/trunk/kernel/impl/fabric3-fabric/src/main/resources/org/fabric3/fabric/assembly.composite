@@ -79,4 +79,8 @@
         <system:implementation.system class="org.fabric3.fabric.instantiator.target.TypeBasedAutowireResolutionService"/>
     </component>
 
+    <component name="ServiceContractResolver">
+        <system:implementation.system class="org.fabric3.fabric.instantiator.target.ServiceContractResolverImpl"/>
+    </component>
+
 </composite>

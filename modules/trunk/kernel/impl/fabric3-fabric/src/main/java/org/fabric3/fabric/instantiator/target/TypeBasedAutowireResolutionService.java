@@ -20,8 +20,9 @@ package org.fabric3.fabric.instantiator.target;
 
 import java.net.URI;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
+
+import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.fabric.instantiator.LogicalChange;
 import org.fabric3.fabric.instantiator.ReferenceNotFound;
@@ -39,7 +40,6 @@ import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalService;
 import org.fabric3.spi.model.instance.LogicalWire;
-import org.fabric3.spi.util.UriHelper;
 
 /**
  * Resolves an uspecified reference target using the SCA autowire algorithm. If a target is found, a corresponding LogicalWire will be created.
@@ -47,6 +47,11 @@ import org.fabric3.spi.util.UriHelper;
  * @version $Revsion$ $Date$
  */
 public class TypeBasedAutowireResolutionService implements TargetResolutionService {
+    private ServiceContractResolver contractResolver;
+
+    public TypeBasedAutowireResolutionService(@Reference ServiceContractResolver contractResolver) {
+        this.contractResolver = contractResolver;
+    }
 
     public void resolve(LogicalReference logicalReference, LogicalCompositeComponent compositeComponent, LogicalChange change) {
 
@@ -59,7 +64,7 @@ public class TypeBasedAutowireResolutionService implements TargetResolutionServi
                 return;
             }
 
-            ServiceContract<?> requiredContract = determineContract(logicalReference);
+            ServiceContract<?> requiredContract = contractResolver.determineContract(logicalReference);
 
             Autowire autowire = calculateAutowire(compositeComponent, component);
             if (autowire == Autowire.ON) {
@@ -164,7 +169,7 @@ public class TypeBasedAutowireResolutionService implements TargetResolutionServi
         boolean multiplicity = Multiplicity.ZERO_N.equals(refMultiplicity) || Multiplicity.ONE_N.equals(refMultiplicity);
         for (LogicalComponent<?> child : composite.getComponents()) {
             for (LogicalService service : child.getServices()) {
-                ServiceContract<?> targetContract = determineContract(service);
+                ServiceContract<?> targetContract = contractResolver.determineContract(service);
                 if (targetContract == null) {
                     // This is a programming error since a non-composite service must have a service contract
                     throw new AssertionError("No service contract specified on service: " + service.getUri());
@@ -232,80 +237,4 @@ public class TypeBasedAutowireResolutionService implements TargetResolutionServi
 
     }
 
-    /**
-     * Determines the service contract for a promoted reference
-     *
-     * @param reference the reference to determine the contract for
-     * @return the service contract
-     */
-    private ServiceContract<?> determineContract(LogicalReference reference) {
-
-        ServiceContract<?> contract = reference.getDefinition().getServiceContract();
-        if (contract != null) {
-            return contract;
-        }
-
-        assert !reference.getPromotedUris().isEmpty();
-
-        URI promotes = reference.getPromotedUris().get(0);
-        URI defragmented = UriHelper.getDefragmentedName(promotes);
-        String promotedReferenceName = promotes.getFragment();
-        LogicalCompositeComponent parent = (LogicalCompositeComponent) reference.getParent();
-        LogicalComponent<?> promotedComponent = parent.getComponent(defragmented);
-        LogicalReference promotedReference;
-
-        if (promotedReferenceName == null) {
-            // if the component has only one reference, the SCA specification allows it to be used as a default
-            assert promotedComponent.getReferences().size() == 1;
-            promotedReference = promotedComponent.getReferences().iterator().next();
-        } else {
-            promotedReference = promotedComponent.getReference(promotedReferenceName);
-        }
-
-        return determineContract(promotedReference);
-
-    }
-
-    /**
-     * Returns the service contract for a service. Promoted services often do not specify a service contract explicitly, instead using a service
-     * contract defined further down in the promotion hieratchy. In these cases, the service contract is often inferred from the implementation (e.g.
-     * a Java class) or explicitly declared within the component definition in a composite file.
-     *
-     * @param service the composite service to determine the service contract for.
-     * @return the service contract or null if none is found
-     */
-    private ServiceContract<?> determineContract(LogicalService service) {
-        ServiceContract<?> contract = service.getDefinition().getServiceContract();
-        if (contract != null) {
-            return contract;
-        }
-        if (!(service.getParent() instanceof LogicalCompositeComponent)) {
-            return null;
-        }
-        LogicalCompositeComponent parent = (LogicalCompositeComponent) service.getParent();
-        URI promotedUri = service.getPromotedUri();
-        LogicalComponent<?> promoted = parent.getComponent(UriHelper.getDefragmentedName(promotedUri));
-        assert promoted != null;
-        String serviceName = promotedUri.getFragment();
-        LogicalService promotedService;
-        if (serviceName == null && promoted.getServices().size() == 1) {
-            // select the default service as a service name was not specified
-            Collection<LogicalService> services = promoted.getServices();
-            promotedService = services.iterator().next();
-        } else if (serviceName == null) {
-            // programing error
-            throw new AssertionError("Service must be specified");
-        } else {
-            promotedService = promoted.getService(serviceName);
-        }
-        assert promotedService != null;
-        contract = promotedService.getDefinition().getServiceContract();
-        if (contract != null) {
-            return contract;
-        } else {
-            // this is another promoted service, so recurse further into the promotion hierarchy
-            contract = determineContract(promotedService);
-        }
-        return contract;
-    }
 }
