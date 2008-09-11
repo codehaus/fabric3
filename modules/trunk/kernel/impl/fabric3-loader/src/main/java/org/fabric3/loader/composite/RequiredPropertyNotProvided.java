@@ -18,7 +18,6 @@ package org.fabric3.loader.composite;
 
 import javax.xml.stream.XMLStreamReader;
 
-import org.fabric3.introspection.xml.LoaderException;
 import org.fabric3.introspection.xml.XmlValidationFailure;
 import org.fabric3.scdl.Property;
 
@@ -29,7 +28,7 @@ public class RequiredPropertyNotProvided extends XmlValidationFailure<Property> 
     private String componentName;
 
     public RequiredPropertyNotProvided(Property property, String componentName, XMLStreamReader reader) {
-        super("Component " + componentName + " has a property " + property.getName() + " which requires that a value is supplied", property, reader);
+        super("Component " + componentName + " has a required property " + property.getName() + " that is not set", property, reader);
         this.componentName = componentName;
     }
 
