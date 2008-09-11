@@ -24,6 +24,7 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.groovy.scdl.GroovyImplementation;
 import org.fabric3.introspection.IntrospectionContext;
+import org.fabric3.introspection.java.ImplementationProcessor;
 import org.fabric3.introspection.xml.LoaderHelper;
 import org.fabric3.introspection.xml.LoaderUtil;
 import org.fabric3.introspection.xml.MissingAttribute;
@@ -35,10 +36,10 @@ import org.fabric3.introspection.xml.TypeLoader;
 @EagerInit
 public class GroovyImplementationLoader implements TypeLoader<GroovyImplementation> {
 
-    private final GroovyImplementationProcessor processor;
+    private final ImplementationProcessor<GroovyImplementation> processor;
     private final LoaderHelper loaderHelper;
 
-    public GroovyImplementationLoader(@Reference(name = "implementationProcessor")GroovyImplementationProcessor processor,
+    public GroovyImplementationLoader(@Reference(name = "implementationProcessor")ImplementationProcessor<GroovyImplementation> processor,
                                       @Reference LoaderHelper loaderHelper) {
         this.processor = processor;
         this.loaderHelper = loaderHelper;
