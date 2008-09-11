@@ -22,7 +22,7 @@
 
     <component name="CallbackTestComponent">
         <f3:junit class="org.fabric3.tests.function.callback.stateless.StatelessCallbackTest"/>
-        <reference name="client1" target="CallbackClient1/ForwardService"/>
+        <reference name="client1" target="CallbackClient1/ClientService"/>
         <!--<reference name="client2" target="CallbackClient2/ForwardService"/>-->
     </component>
 

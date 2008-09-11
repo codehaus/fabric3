@@ -27,7 +27,7 @@ public class ConversationTest extends TestCase {
     public ConversationalService service;
 
     @Reference
-    public ConversationalSubservice subService;
+    public ConversationalService subService;
 
     @Reference
     public ConversationalService compositeService;
@@ -36,7 +36,7 @@ public class ConversationTest extends TestCase {
 //    public ConversationalService maxAgeService;
 
     @Reference
-    public ConversationalSubservice compositeSubService;
+    public ConversationalService compositeSubService;
 
     public void testConversationIdIsInjected() {
         assertNotNull(service.getConversationId());
