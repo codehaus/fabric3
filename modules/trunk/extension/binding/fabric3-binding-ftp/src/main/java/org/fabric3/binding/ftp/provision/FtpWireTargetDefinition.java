@@ -19,33 +19,43 @@
 package org.fabric3.binding.ftp.provision;
 
 import java.net.URI;
-import java.util.Map;
 
-import org.fabric3.scdl.Operation;
+import org.fabric3.binding.ftp.common.Constants;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 
 /**
- *
  * @version $Revision$ $Date$
  */
 public class FtpWireTargetDefinition extends PhysicalWireTargetDefinition {
-    
     private final URI classLoaderId;
     private final boolean active;
     private final FtpSecurity security;
+    private int timeout;
 
     /**
      * Initializes the classloader id and transfer mode.
      *
      * @param classLoaderId the classloader id to deserialize parameters in
-     * @param active FTP transfer mode
-     * @param security Security parameters
+     * @param active        FTP transfer mode
+     * @param security      Security parameters
      */
-
     public FtpWireTargetDefinition(URI classLoaderId, boolean active, FtpSecurity security) {
+        this(classLoaderId, active, security, Constants.NO_TIMEOUT);
+    }
+
+    /**
+     * Initializes the classloader id, transfer mode, and timeout.
+     *
+     * @param classLoaderId the classloader id to deserialize parameters in
+     * @param active        FTP transfer mode
+     * @param security      Security parameters
+     * @param timeout       the timeout to use for blocking connection operations
+     */
+    public FtpWireTargetDefinition(URI classLoaderId, boolean active, FtpSecurity security, int timeout) {
         this.classLoaderId = classLoaderId;
         this.active = active;
         this.security = security;
+        this.timeout = timeout;
     }
 
     /**
@@ -56,10 +66,10 @@ public class FtpWireTargetDefinition extends PhysicalWireTargetDefinition {
     public URI getClassLoaderId() {
         return classLoaderId;
     }
-    
+
     /**
      * Gets the FTP transfer mode.
-     * 
+     *
      * @return True if user wants active transfer mode.
      */
     public boolean isActive() {
@@ -68,7 +78,7 @@ public class FtpWireTargetDefinition extends PhysicalWireTargetDefinition {
 
     /**
      * Get the security parameters.
-     * 
+     *
      * @return Get the security parameters.
      */
     public FtpSecurity getSecurity() {
@@ -76,4 +86,21 @@ public class FtpWireTargetDefinition extends PhysicalWireTargetDefinition {
     }
 
 
+    /**
+     * Returns the timeout value to use for blocking operations or {@link Constants#NO_TIMEOUT} if none is set.
+     *
+     * @return the timeout value to use for blocking operations or {@link Constants#NO_TIMEOUT} if none is set
+     */
+    public int getTimeout() {
+        return timeout;
+    }
+
+    /**
+     * Sets the timeout value to use for blocking operations.
+     *
+     * @param timeout the timeout value
+     */
+    public void setTimeout(int timeout) {
+        this.timeout = timeout;
+    }
 }

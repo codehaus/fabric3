@@ -22,6 +22,7 @@ import java.net.URI;
 import java.util.List;
 import javax.xml.namespace.QName;
 
+import org.osoa.sca.annotations.Property;
 import org.w3c.dom.Element;
 
 import org.fabric3.binding.ftp.common.Constants;
@@ -44,6 +45,17 @@ import org.fabric3.spi.policy.Policy;
  * @version $Revision$ $Date$
  */
 public class FtpBindingGenerator implements BindingGenerator<FtpWireSourceDefinition, FtpWireTargetDefinition, FtpBindingDefinition> {
+    private int timeout = 1800000;  // default timeout of 30 minutes
+
+    /**
+     * Optionally configures a timeout setting for socket connections from the client to a server. The default is 30 minutes.
+     *
+     * @param timeout the timeout in milliseconds
+     */
+    @Property
+    public void setTimeout(int timeout) {
+        this.timeout = timeout;
+    }
 
     public FtpWireSourceDefinition generateWireSource(LogicalBinding<FtpBindingDefinition> binding,
                                                       Policy policy,
@@ -78,7 +90,7 @@ public class FtpBindingGenerator implements BindingGenerator<FtpWireSourceDefini
 
         FtpSecurity security = processPolicies(policy, serviceContract.getOperations().iterator().next());
 
-        FtpWireTargetDefinition hwtd = new FtpWireTargetDefinition(id, active, security);
+        FtpWireTargetDefinition hwtd = new FtpWireTargetDefinition(id, active, security, timeout);
         hwtd.setUri(binding.getBinding().getTargetUri());
 
         return hwtd;

@@ -21,7 +21,6 @@ package org.fabric3.binding.ftp.common;
 import javax.xml.namespace.QName;
 
 /**
- *
  * @version $Revision$ $Date$
  */
 public interface Constants {
@@ -29,11 +28,15 @@ public interface Constants {
     /**
      * Qualified name for the binding element.
      */
-    public static final QName BINDING_QNAME = new QName("urn:org.fabric3:binding:ftp", "binding.ftp");
+    QName BINDING_QNAME = new QName("urn:org.fabric3:binding:ftp", "binding.ftp");
 
     /**
      * Qualified name for the policy element.
      */
-    public static final QName POLICY_QNAME = new QName("urn:org.fabric3:binding:ftp", "security");
+    QName POLICY_QNAME = new QName("urn:org.fabric3:binding:ftp", "security");
 
+    /**
+     * The value for specifying no timeout for blocking operations on an FTP socket.
+     */
+    int NO_TIMEOUT = 0;
 }

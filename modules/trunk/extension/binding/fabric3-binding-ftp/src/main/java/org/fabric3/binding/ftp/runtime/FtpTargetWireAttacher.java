@@ -27,6 +27,7 @@ import java.net.UnknownHostException;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.binding.ftp.provision.FtpWireTargetDefinition;
+import org.fabric3.binding.ftp.provision.FtpSecurity;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.TargetWireAttacher;
@@ -55,7 +56,11 @@ public class FtpTargetWireAttacher implements TargetWireAttacher<FtpWireTargetDe
             int port = uri.getPort() == -1 ? 23 : uri.getPort();
             InetAddress hostAddress = "localhost".equals(host) ? InetAddress.getLocalHost() : InetAddress.getByName(host);
 
-            invocationChain.addInterceptor(new FtpTargetInterceptor(hostAddress, port, target.getSecurity(), target.isActive()));
+            FtpSecurity security = target.getSecurity();
+            boolean active = target.isActive();
+            int timeout = target.getTimeout();
+            FtpTargetInterceptor targetInterceptor = new FtpTargetInterceptor(hostAddress, port, security, active, timeout);
+            invocationChain.addInterceptor(targetInterceptor);
         } catch (UnknownHostException e) {
             throw new WiringException(e);
         }
