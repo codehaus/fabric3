@@ -240,6 +240,9 @@ public class Fabric3WarMojo extends AbstractMojo {
             Set<Dependency> uniqueExtensions = new HashSet<Dependency>();
             if (extensions != null) {
                 for (Dependency extension : extensions) {
+					if (extension.getVersion() == null) {
+					  resolveDependencyVersion(extension);
+                    }
                     uniqueExtensions.add(extension);
                 }
             }
@@ -275,6 +278,9 @@ public class Fabric3WarMojo extends AbstractMojo {
             uniqueExtensions.clear();
             if (userExtensions != null) {
                 for (Dependency extension : userExtensions) {
+					if (extension.getVersion() == null) {
+						resolveDependencyVersion(extension);
+                    }
                     uniqueExtensions.add(extension);
                 }
                 processExtensions(USER_EXTENSIONS_PATH, "f3UserExtensions.properties", uniqueExtensions);
