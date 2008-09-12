@@ -45,16 +45,27 @@ import org.fabric3.spi.policy.Policy;
  * @version $Revision$ $Date$
  */
 public class FtpBindingGenerator implements BindingGenerator<FtpWireSourceDefinition, FtpWireTargetDefinition, FtpBindingDefinition> {
-    private int timeout = 1800000;  // default timeout of 30 minutes
+    private int connectTimeout = 120000; // two minutes
+    private int socketTimeout = 1800000;  // default timeout of 30 minutes
+
+    /**
+     * Optionally configures a timeout setting for openning a socket connection. The default wait is 2 minutes.
+     *
+     * @param connectTimeout the timeout in milliseconds
+     */
+    @Property
+    public void setConnectTimeout(int connectTimeout) {
+        this.connectTimeout = connectTimeout;
+    }
 
     /**
      * Optionally configures a timeout setting for socket connections from the client to a server. The default is 30 minutes.
      *
-     * @param timeout the timeout in milliseconds
+     * @param socketTimeout the timeout in milliseconds
      */
     @Property
-    public void setTimeout(int timeout) {
-        this.timeout = timeout;
+    public void setSocketTimeout(int socketTimeout) {
+        this.socketTimeout = socketTimeout;
     }
 
     public FtpWireSourceDefinition generateWireSource(LogicalBinding<FtpBindingDefinition> binding,
@@ -90,7 +101,7 @@ public class FtpBindingGenerator implements BindingGenerator<FtpWireSourceDefini
 
         FtpSecurity security = processPolicies(policy, serviceContract.getOperations().iterator().next());
 
-        FtpWireTargetDefinition hwtd = new FtpWireTargetDefinition(id, active, security, timeout);
+        FtpWireTargetDefinition hwtd = new FtpWireTargetDefinition(id, active, security, connectTimeout, socketTimeout);
         hwtd.setUri(binding.getBinding().getTargetUri());
 
         return hwtd;

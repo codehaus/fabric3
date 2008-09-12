@@ -31,7 +31,10 @@
     <!-- Ftp Binding Generator -->
     <component name="FtpBindingGenerator" f3:key="org.fabric3.binding.ftp.scdl.FtpBindingDefinition">
         <system:implementation.system class="org.fabric3.binding.ftp.control.FtpBindingGenerator"/>
-        <property name="timeout" source="$systemConfig//ftp.binding/@clientTimeout"/>
+        <!-- sets the optional socket connect timeout property from the system configuration domain property -->
+        <property name="connectTimeout" source="$systemConfig//ftp.binding/@connectTimeout"/>
+        <!-- sets the optional client timeout property from the system configuration domain property -->
+        <property name="socketTimeout" source="$systemConfig//ftp.binding/@clientTimeout"/>
     </component>
 
     <!-- Ftp Wire Attachers -->

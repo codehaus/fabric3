@@ -30,7 +30,8 @@ public class FtpWireTargetDefinition extends PhysicalWireTargetDefinition {
     private final URI classLoaderId;
     private final boolean active;
     private final FtpSecurity security;
-    private int timeout;
+    private int connectTimeout;
+    private int socketTimeout;
 
     /**
      * Initializes the classloader id and transfer mode.
@@ -40,22 +41,24 @@ public class FtpWireTargetDefinition extends PhysicalWireTargetDefinition {
      * @param security      Security parameters
      */
     public FtpWireTargetDefinition(URI classLoaderId, boolean active, FtpSecurity security) {
-        this(classLoaderId, active, security, Constants.NO_TIMEOUT);
+        this(classLoaderId, active, security, Constants.NO_TIMEOUT, Constants.NO_TIMEOUT);
     }
 
     /**
      * Initializes the classloader id, transfer mode, and timeout.
      *
-     * @param classLoaderId the classloader id to deserialize parameters in
-     * @param active        FTP transfer mode
-     * @param security      Security parameters
-     * @param timeout       the timeout to use for blocking connection operations
+     * @param classLoaderId  the classloader id to deserialize parameters in
+     * @param active         FTP transfer mode
+     * @param security       Security parameters
+     * @param connectTimeout the timeout to use for opening socket connections
+     * @param socketTimeout  the timeout to use for blocking connection operations
      */
-    public FtpWireTargetDefinition(URI classLoaderId, boolean active, FtpSecurity security, int timeout) {
+    public FtpWireTargetDefinition(URI classLoaderId, boolean active, FtpSecurity security, int connectTimeout, int socketTimeout) {
         this.classLoaderId = classLoaderId;
         this.active = active;
         this.security = security;
-        this.timeout = timeout;
+        this.connectTimeout = connectTimeout;
+        this.socketTimeout = socketTimeout;
     }
 
     /**
@@ -85,22 +88,40 @@ public class FtpWireTargetDefinition extends PhysicalWireTargetDefinition {
         return security;
     }
 
+    /**
+     * Returns the timeout value to use for opening connections or {@link Constants#NO_TIMEOUT} if none is set.
+     *
+     * @return the timeout value to use for opening connections or {@link Constants#NO_TIMEOUT} if none is set
+     */
+    public int getConectTimeout() {
+        return connectTimeout;
+    }
+
+    /**
+     * Sets the timeout value to use for opening connections.
+     *
+     * @param socketTimeout the timeout value
+     */
+    public void setConnectTimeout(int socketTimeout) {
+        this.socketTimeout = socketTimeout;
+    }
 
     /**
      * Returns the timeout value to use for blocking operations or {@link Constants#NO_TIMEOUT} if none is set.
      *
      * @return the timeout value to use for blocking operations or {@link Constants#NO_TIMEOUT} if none is set
      */
-    public int getTimeout() {
-        return timeout;
+    public int getSocketTimeout() {
+        return socketTimeout;
     }
 
     /**
      * Sets the timeout value to use for blocking operations.
      *
-     * @param timeout the timeout value
+     * @param socketTimeout the timeout value
      */
-    public void setTimeout(int timeout) {
-        this.timeout = timeout;
+    public void setSocketTimeout(int socketTimeout) {
+        this.socketTimeout = socketTimeout;
     }
+
 }

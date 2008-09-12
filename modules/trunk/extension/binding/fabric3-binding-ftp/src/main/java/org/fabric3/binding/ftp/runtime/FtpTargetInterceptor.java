@@ -22,9 +22,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
-import java.net.ServerSocket;
-import java.net.Socket;
 
+import org.apache.commons.net.SocketFactory;
 import org.apache.commons.net.ftp.FTPClient;
 import org.osoa.sca.ServiceUnavailableException;
 
@@ -42,16 +41,19 @@ public class FtpTargetInterceptor implements Interceptor {
     private final int port;
     private final InetAddress hostAddress;
     private final int timeout;
+    private SocketFactory factory;
 
     private final FtpSecurity security;
     private final boolean active;
 
-    public FtpTargetInterceptor(InetAddress hostAddress, int port, FtpSecurity security, boolean active, int timeout) throws UnknownHostException {
+    public FtpTargetInterceptor(InetAddress hostAddress, int port, FtpSecurity security, boolean active, int timeout, SocketFactory factory)
+            throws UnknownHostException {
         this.hostAddress = hostAddress;
         this.port = port;
         this.security = security;
         this.active = active;
         this.timeout = timeout;
+        this.factory = factory;
     }
 
     public Interceptor getNext() {
@@ -61,7 +63,7 @@ public class FtpTargetInterceptor implements Interceptor {
     public Message invoke(Message msg) {
 
         FTPClient ftpClient = new FTPClient();
-
+        ftpClient.setSocketFactory(factory);
         try {
             if (timeout > 0) {
                 ftpClient.setDefaultTimeout(timeout);
