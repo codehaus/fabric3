@@ -22,6 +22,9 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -166,6 +169,13 @@ public class Fabric3WarMojo extends AbstractMojo {
     public Dependency[] features;
 
     /**
+     * Whether to exclude default features.
+     *
+     * @parameter
+     */
+    public boolean excludeDefaultFeatures;
+
+    /**
      * Set of user extension artifacts that should be deployed to the runtime.
      *
      * @parameter
@@ -246,8 +256,11 @@ public class Fabric3WarMojo extends AbstractMojo {
                     uniqueExtensions.add(extension);
                 }
             }
-            if (features != null) {
-                for (Dependency feature : features) {
+            
+            List<Dependency> featuresToInstall = getFeaturesToInstall();
+            
+            if (!featuresToInstall.isEmpty()) {
+                for (Dependency feature : featuresToInstall) {
                     if (feature.getVersion() == null) {
                         resolveDependencyVersion(feature);
                     }
@@ -295,6 +308,20 @@ public class Fabric3WarMojo extends AbstractMojo {
         }
 
     }
+
+	private List<Dependency> getFeaturesToInstall() {
+		List<Dependency> featuresToInstall = new ArrayList<Dependency>();
+		
+		if (features != null) {
+			featuresToInstall.addAll(Arrays.asList(features));
+		}
+		if (!excludeDefaultFeatures) {
+			Dependency dependency = new Dependency("org.codehaus.fabric3", "fabric3-default-feature", runTimeVersion);
+			dependency.setType("xml");
+			featuresToInstall.add(dependency);
+		}
+		return featuresToInstall;
+	}
 
     private void processExtensions(String extenstionsPath, String extensionProperties, Set<Dependency> extensions) throws MojoExecutionException {
 
