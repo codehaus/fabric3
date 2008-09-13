@@ -62,26 +62,6 @@
                             <artifactId>fabric3-binding-test</artifactId>
                             <version>0.6-SNAPSHOT</version>
                         </dependency>
-                        <dependency>
-                            <groupId>org.codehaus.fabric3</groupId>
-                            <artifactId>fabric3-async-provision</artifactId>
-                            <version>0.6-SNAPSHOT</version>
-                        </dependency>
-                        <dependency>
-                            <groupId>org.codehaus.fabric3</groupId>
-                            <artifactId>fabric3-async-loader</artifactId>
-                            <version>0.6-SNAPSHOT</version>
-                        </dependency>
-                        <dependency>
-                            <groupId>org.codehaus.fabric3</groupId>
-                            <artifactId>fabric3-async-runtime</artifactId>
-                            <version>0.6-SNAPSHOT</version>
-                        </dependency>
-                        <dependency>
-                            <groupId>org.codehaus.fabric3</groupId>
-                            <artifactId>fabric3-conversation-propagation</artifactId>
-                            <version>0.6-SNAPSHOT</version>
-                        </dependency>
                     </extensions>
                     <compositeName>FunctionTestHarnessComposite</compositeName>
                     <systemConfig>

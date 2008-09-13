@@ -73,6 +73,7 @@
                         </config>
                         ]]>
                     </systemConfig>
+                    <excludeDefaultFeatures>true</excludeDefaultFeatures>
                 </configuration>
                 <executions>
                     <execution>
