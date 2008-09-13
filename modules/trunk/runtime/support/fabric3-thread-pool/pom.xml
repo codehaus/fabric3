@@ -23,32 +23,11 @@
         <version>0.6-SNAPSHOT</version>
     </parent>
     <groupId>org.codehaus.fabric3</groupId>
-    <artifactId>fabric3-jsr237</artifactId>
-    <name>Fabric3 JSR 237 Implementations</name>
-    <description>Fabric3 JSR 237 Implementation.</description>
-
-    <repositories>
-        <!-- repo needed for the Apache Tuscany version of the commonj API -->
-        <repository>
-            <id>apache.incubator</id>
-            <name>Apache Incubator Repository</name>
-            <url>http://people.apache.org/repo/m2-incubating-repository</url>
-            <releases>
-                <enabled>true</enabled>
-            </releases>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </repository>
-    </repositories>
+    <artifactId>fabric3-thread-pool</artifactId>
+    <name>Fabric3 Thread Pool Implementations</name>
+    <description>Fabric3 Thread Pool Implementation.</description>
 
     <dependencies>        
-        <dependency>
-            <groupId>org.apache.tuscany</groupId>
-            <artifactId>commonj-api_r1.1</artifactId>
-            <version>1.0-incubator-M2</version>
-            <scope>provided</scope>
-        </dependency>
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-host-api</artifactId>
@@ -65,9 +44,9 @@
     </dependencies>
 
     <scm>
-        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/runtime/support/fabric3-jsr237</connection>
-        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/trunk/runtime/support/fabric3-jsr237</developerConnection>
-        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/trunk/runtime/support/fabric3-jsr237</url>
+        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/runtime/support/fabric3-thread-pool</connection>
+        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/trunk/runtime/support/fabric3-thread-pool</developerConnection>
+        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/trunk/runtime/support/fabric3-thread-pool</url>
     </scm>
 
 </project>

@@ -31,7 +31,7 @@
 
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
-            <artifactId>fabric3-jsr237</artifactId>
+            <artifactId>fabric3-thread-pool</artifactId>
             <version>0.6-SNAPSHOT</version>
         </dependency>
 
