@@ -23,11 +23,13 @@ import java.net.InetAddress;
 import java.net.InetSocketAddress;
 import java.util.concurrent.ExecutorService;
 
+import org.apache.mina.common.IdleStatus;
 import org.apache.mina.common.IoHandler;
 import org.apache.mina.filter.codec.ProtocolCodecFactory;
 import org.apache.mina.filter.codec.ProtocolCodecFilter;
 import org.apache.mina.filter.executor.ExecutorFilter;
 import org.apache.mina.transport.socket.SocketAcceptor;
+import org.apache.mina.transport.socket.SocketSessionConfig;
 import org.apache.mina.transport.socket.nio.NioSocketAcceptor;
 import org.osoa.sca.annotations.Destroy;
 import org.osoa.sca.annotations.EagerInit;
@@ -51,6 +53,7 @@ public class F3FtpHost implements FtpHost {
     private SocketAcceptor acceptor;
     private IoHandler ftpHandler;
     private ProtocolCodecFactory codecFactory;
+    private int idleTimeout = 60; // 60 seconds default
 
     /**
      * Starts the FTP server.
@@ -62,6 +65,8 @@ public class F3FtpHost implements FtpHost {
         ExecutorService filterExecutor = new F3ExecutorService(workScheduler);
         InetSocketAddress socketAddress = new InetSocketAddress(InetAddress.getLocalHost(), commandPort);
         acceptor = new NioSocketAcceptor();
+        SocketSessionConfig config = acceptor.getSessionConfig();
+        config.setIdleTime(IdleStatus.BOTH_IDLE, idleTimeout);
         acceptor.getFilterChain().addLast("threadPool", new ExecutorFilter(filterExecutor));
         acceptor.getFilterChain().addLast("codec", new ProtocolCodecFilter(codecFactory));
         acceptor.setHandler(ftpHandler);
@@ -130,5 +135,13 @@ public class F3FtpHost implements FtpHost {
         this.commandPort = commandPort;
     }
 
-
+    /**
+     * Sets the optional timeout in milliseconds for sockets that are idle.
+     *
+     * @param timeout timeout in milliseconds.
+     */
+    @Property
+    public void setIdleTimeout(int timeout) {
+        this.idleTimeout = timeout / 1000;   // conver to seconds used by Mina
+    }
 }

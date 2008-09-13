@@ -23,6 +23,8 @@ import java.util.Map;
 import org.apache.mina.common.IdleStatus;
 import org.apache.mina.common.IoHandler;
 import org.apache.mina.common.IoSession;
+import org.osoa.sca.annotations.Reference;
+
 import org.fabric3.api.annotation.Monitor;
 import org.fabric3.ftp.server.monitor.FtpMonitor;
 import org.fabric3.ftp.server.protocol.DefaultRequest;
@@ -31,20 +33,21 @@ import org.fabric3.ftp.server.protocol.FtpSession;
 import org.fabric3.ftp.server.protocol.Request;
 import org.fabric3.ftp.server.protocol.RequestHandler;
 import org.fabric3.ftp.server.protocol.Response;
-import org.osoa.sca.annotations.Reference;
+import org.fabric3.ftp.server.security.User;
 
 /**
  * TODO Use monitor instead of System.err.
- * 
+ *
  * @version $Revision$ $Date$
  */
 public class FtpHandler implements IoHandler {
-    
+
     private Map<String, RequestHandler> requestHandlers;
     private FtpMonitor ftpMonitor;
 
     /**
      * Sets the monitor for logging significant events.
+     *
      * @param ftpMonitor Monitor for logging significant events.
      */
     @Monitor
@@ -54,6 +57,7 @@ public class FtpHandler implements IoHandler {
 
     /**
      * Injects the FTP commands.
+     *
      * @param ftpCommands FTP commands.
      */
     @Reference
@@ -67,10 +71,9 @@ public class FtpHandler implements IoHandler {
     }
 
     public void messageReceived(IoSession session, Object message) throws Exception {
-        
         FtpSession ftpSession = new FtpSession(session);
         ftpMonitor.onCommand(message, ftpSession.getUserName());
-        
+
         Request request = new DefaultRequest(message.toString(), ftpSession);
 
         RequestHandler requestHandler = requestHandlers.get(request.getCommand());
@@ -79,15 +82,11 @@ public class FtpHandler implements IoHandler {
         } else {
             requestHandler.service(request);
         }
-        
     }
 
     public void messageSent(IoSession session, Object message) throws Exception {
         FtpSession ftpSession = new FtpSession(session);
         ftpMonitor.onResponse(message, ftpSession.getUserName());
-    }
-
-    public void sessionClosed(IoSession session) throws Exception {
     }
 
     public void sessionCreated(IoSession session) throws Exception {
@@ -96,9 +95,21 @@ public class FtpHandler implements IoHandler {
     }
 
     public void sessionIdle(IoSession session, IdleStatus idleStatus) throws Exception {
+        // The session was idle more than the timeout period which is probably a hung client
+        // Report an error and wait to close the session
+        User user = (User) session.getAttribute(FtpSession.USER);
+        if (user != null) {
+            ftpMonitor.connectionTimedOut(user.getName());
+        } else {
+            ftpMonitor.connectionTimedOut("anonymous");
+        }
+        session.closeOnFlush().awaitUninterruptibly(10000);
     }
 
     public void sessionOpened(IoSession session) throws Exception {
+    }
+
+    public void sessionClosed(IoSession session) throws Exception {
     }
 
 }

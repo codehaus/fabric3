@@ -36,6 +36,8 @@
     <component name="F3FtpHost">
         <system:implementation.system class="org.fabric3.ftp.server.host.F3FtpHost"/>
         <property name="commandPort" source="$config//commandPort"/>
+        <!-- sets the optional socket idle timeout -->
+        <property name="idleTimeout" source="$config//idleTimeout"/>
     </component>
 
     <!-- promote the reference so it can be autowired -->

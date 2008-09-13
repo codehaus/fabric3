@@ -31,10 +31,10 @@ import org.fabric3.ftp.server.security.User;
  */
 public class FtpSession {
 
-    private static final String USER = "org.fabric3.ftp.server.user";
-    private static final String PASSIVE_PORT = "org.fabric3.ftp.server.passive.port";
-    private static final String DATA_CONNECTION = "org.fabric3.ftp.server.data.connection";
-    private static final String CURRENT_DIRECTORY = "org.fabric3.ftp.server.directory";
+    public static final String USER = "org.fabric3.ftp.server.user";
+    public static final String PASSIVE_PORT = "org.fabric3.ftp.server.passive.port";
+    public static final String DATA_CONNECTION = "org.fabric3.ftp.server.data.connection";
+    public static final String CURRENT_DIRECTORY = "org.fabric3.ftp.server.directory";
 
     private IoSession ioSession;
 
