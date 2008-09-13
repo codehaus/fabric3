@@ -5,7 +5,7 @@
 </contribution>
 <composite xmlns:sample="org.codehaus.fabric3" name="FTPComposite" targetNamespace="org.codehaus.fabric3">
     <component name="FtpServerComponent">
-        <implementation.composite name="sample:FtpServer"/> 
+        <implementation.composite name="sample:FtpServerExtension"/> 
         <property name="config">
             <config xmlns="">
 	            <commandPort>2000</commandPort>
