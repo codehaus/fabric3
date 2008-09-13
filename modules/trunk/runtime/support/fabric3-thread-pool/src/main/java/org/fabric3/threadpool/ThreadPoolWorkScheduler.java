@@ -1,4 +1,4 @@
-package org.fabric3.jsr237;
+package org.fabric3.threadpool;
 
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArraySet;
@@ -14,28 +14,52 @@ import org.fabric3.host.work.DefaultPausableWork;
 import org.fabric3.host.work.PausableWork;
 import org.fabric3.host.work.WorkScheduler;
 import org.fabric3.management.WorkSchedulerMBean;
+import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Property;
 
 /**
  * Thread pool based implementation of the work scheduler.
  *
  */
+@EagerInit
 public class ThreadPoolWorkScheduler implements WorkScheduler, WorkSchedulerMBean {
 
-    private final ThreadPoolExecutor executor;
+    private ThreadPoolExecutor executor;
     private final Set<DefaultPausableWork> workInProgress = new CopyOnWriteArraySet<DefaultPausableWork>();
     private final AtomicBoolean paused = new AtomicBoolean();
     private final ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
+    
+    private int size = 20;
+    private boolean pauseOnStart = true;
+    
+    /**
+     * Sets the pool size.
+     * 
+     * @param size Pool size.
+     */
+    @Property
+    public void setSize(int size) {
+    	this.size = size;
+    }
+    
+    /**
+     * Indicates whether to start this in a paused state.
+     * 
+     * @param pauseOnStart True if we want to start this in a pased state.
+     */
+    @Property
+    public void setPauseOnStart(boolean pauseOnStart) {
+    	this.pauseOnStart = pauseOnStart;
+    }
 
     /**
      * Initializes the thread-pool. Supports unbounded work with a fixed pool size. If all the workers 
      * are busy, work gets queued.
-     *
-     * @param threadPoolSize Thread-pool size.
      */
-    public ThreadPoolWorkScheduler(@Property(name = "poolSize") int poolSize,
-    							   @Property(name = "pauseOnStart") boolean pauseOnStart) {
-        executor = new ThreadPoolExecutor(poolSize, poolSize, Long.MAX_VALUE, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>());
+    @Init
+    public void init() {
+        executor = new ThreadPoolExecutor(size, size, Long.MAX_VALUE, TimeUnit.SECONDS, new LinkedBlockingQueue<Runnable>());
         paused.set(pauseOnStart);
     }
 

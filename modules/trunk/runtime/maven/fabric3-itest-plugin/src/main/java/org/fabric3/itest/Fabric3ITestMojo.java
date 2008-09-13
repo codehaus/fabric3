@@ -61,10 +61,10 @@ import org.fabric3.host.runtime.StartException;
 import org.fabric3.host.work.WorkScheduler;
 import org.fabric3.jmx.agent.Agent;
 import org.fabric3.jmx.agent.DefaultAgent;
-import org.fabric3.jsr237.ThreadPoolWorkScheduler;
 import org.fabric3.maven.runtime.MavenEmbeddedRuntime;
 import org.fabric3.monitor.MonitorFactory;
 import org.fabric3.spi.classloader.MultiParentClassLoader;
+import org.fabric3.threadpool.ThreadPoolWorkScheduler;
 
 /**
  * Run integration tests on a SCA composite using an embedded Fabric3 runtime.
@@ -490,7 +490,10 @@ public class Fabric3ITestMojo extends AbstractMojo {
         agent = new DefaultAgent();
         runtime.setMBeanServer(agent.getMBeanServer());
 
-        WorkScheduler workScheduler = new ThreadPoolWorkScheduler(numWorkers, false);
+        ThreadPoolWorkScheduler workScheduler = new ThreadPoolWorkScheduler();
+        workScheduler.setSize(numWorkers);
+        workScheduler.setPauseOnStart(false);
+        workScheduler.init();
         runtime.setWorkScheduler(workScheduler);
 
         return runtime;
