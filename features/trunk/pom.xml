@@ -31,6 +31,7 @@
     <version>0.6-SNAPSHOT</version>
 
     <modules>
+        <module>fabric3-default-feature</module>
         <module>fabric3-hibernate-feature</module>
         <module>fabric3-hibernate-jotm-feature</module>
     </modules>
