@@ -39,7 +39,6 @@ import org.fabric3.host.runtime.Bootstrapper;
 import org.fabric3.host.runtime.InitializationException;
 import org.fabric3.host.runtime.RuntimeLifecycleCoordinator;
 import org.fabric3.host.runtime.ShutdownException;
-import org.fabric3.host.work.WorkScheduler;
 import org.fabric3.jmx.agent.Agent;
 import org.fabric3.jmx.agent.DefaultAgent;
 import org.fabric3.monitor.MonitorFactory;
@@ -47,7 +46,6 @@ import org.fabric3.runtime.standalone.BootstrapException;
 import org.fabric3.runtime.standalone.BootstrapHelper;
 import org.fabric3.runtime.standalone.StandaloneHostInfo;
 import org.fabric3.runtime.standalone.StandaloneRuntime;
-import org.fabric3.threadpool.ThreadPoolWorkScheduler;
 
 /**
  * This class provides the commandline interface for starting the Fabric3 standalone server. The class boots a Fabric3 runtime and launches a daemon
@@ -151,14 +149,6 @@ public class Fabric3Server implements Fabric3ServerMBean {
             runtime.setMBeanServer(agent.getMBeanServer());
             runtime.setJmxSubDomain(jmxDomain);
             monitor = runtime.getMonitorFactory().getMonitor(ServerMonitor.class);
-
-            // Get number of workers from somewhere
-            int numWorkers = 10;
-            ThreadPoolWorkScheduler workScheduler = new ThreadPoolWorkScheduler();
-            workScheduler.setSize(numWorkers);
-            workScheduler.setPauseOnStart(false);
-            workScheduler.init();
-            runtime.setWorkScheduler(workScheduler);
 
             // boot the runtime
             coordinator = BootstrapHelper.createCoordinator(hostInfo, bootLoader);
@@ -282,8 +272,6 @@ public class Fabric3Server implements Fabric3ServerMBean {
                 ContributionSource source = new FileContributionSource(uri, location, -1, new byte[0]);
                 sources.add(source);
             } catch (MalformedURLException e) {
-                throw new InitializationException("Error loading extension", file.getName(), e);
-            } catch (IOException e) {
                 throw new InitializationException("Error loading extension", file.getName(), e);
             }
 

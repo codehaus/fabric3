@@ -29,6 +29,9 @@
            name="MavenRuntimeComposite"
            autowire="true">
 
+    <!-- include the thread pool -->
+    <include name="ThreadPool" scdlResource="META-INF/threadPool.composite"/>
+
     <!-- include host services configuration -->
     <include name="HostServices" scdlResource="org/fabric3/fabric/hostServices.composite"/>
 

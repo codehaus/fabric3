@@ -55,7 +55,6 @@ import org.fabric3.host.runtime.ScdlBootstrapper;
 import org.fabric3.host.work.WorkScheduler;
 import org.fabric3.jmx.agent.DefaultAgent;
 import org.fabric3.monitor.MonitorFactory;
-import org.fabric3.threadpool.ThreadPoolWorkScheduler;
 
 /**
  * @version $Rev$ $Date$
@@ -75,13 +74,11 @@ public class WebappUtilImpl implements WebappUtil {
         WebappRuntime runtime = createRuntime(bootClassLoader);
 
         MonitorFactory factory = createMonitorFactory(bootClassLoader);
-        WorkScheduler workScheduler = createWorkScheduler();
         MBeanServer mBeanServer = createMBeanServer();
 
 
         runtime.setMonitorFactory(factory);
         runtime.setMBeanServer(mBeanServer);
-        runtime.setWorkScheduler(workScheduler);
 
         return runtime;
 
@@ -225,26 +222,6 @@ public class WebappUtilImpl implements WebappUtil {
             throw new Fabric3InitException("Runtime Implementation not found", e);
         }
         
-	}
-
-	/**
-	 * Extension point for creating the work scheduler.
-	 * 
-	 * @return Work scheduler.
-	 */
-	protected WorkScheduler createWorkScheduler() {
-		
-		String numWorkers = getInitParameter(NUM_WORKERS_PARAM, NUM_WORKERS_DEFAULT);
-		String pauseOnStart = getInitParameter(PAUSE_ON_START_PARAM, PAUSE_ON_START_DEFAULT);
-		
-
-        ThreadPoolWorkScheduler workScheduler = new ThreadPoolWorkScheduler();
-        workScheduler.setSize(Integer.parseInt(numWorkers));
-        workScheduler.setPauseOnStart(Boolean.valueOf(pauseOnStart));
-        workScheduler.init();
-		
-		return workScheduler;
-
 	}
 
 	/**

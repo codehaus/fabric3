@@ -157,18 +157,4 @@ public interface Fabric3Runtime<HI extends HostInfo> {
      */
     <I> I getSystemComponent(Class<I> service, URI uri);
 
-    /**
-     * Gets the work scheduler provided by the host.
-     *
-     * @return Work scheduler provided y the host.
-     */
-    WorkScheduler getWorkScheduler();
-
-    /**
-     * Sets the work scheduler provided by the host.
-     *
-     * @param workScheduler Work scheduler provided by the host.
-     */
-    void setWorkScheduler(WorkScheduler workScheduler);
-
 }

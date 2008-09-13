@@ -25,6 +25,9 @@
            name="StandaloneSystemComposite"
            autowire="true">
 
+    <!-- include the thread pool -->
+    <include name="ThreadPool" scdlResource="META-INF/threadPool.composite"/>
+
     <!-- include physical deployment configuration -->
     <include name="org.fabric3.fabric.Common" scdlResource="org/fabric3/fabric/common.composite"/>
 

@@ -31,7 +31,7 @@ public class ThreadPoolWorkScheduler implements WorkScheduler, WorkSchedulerMBea
     private final ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
     
     private int size = 20;
-    private boolean pauseOnStart = true;
+    private boolean pauseOnStart = false;
     
     /**
      * Sets the pool size.
