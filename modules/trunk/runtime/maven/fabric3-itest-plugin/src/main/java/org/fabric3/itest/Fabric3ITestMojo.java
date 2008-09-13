@@ -28,12 +28,14 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
+
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.maven.artifact.Artifact;
@@ -45,9 +47,6 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.project.MavenProject;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-
 import org.fabric3.api.annotation.logging.Severe;
 import org.fabric3.featureset.FeatureSet;
 import org.fabric3.host.contribution.ContributionSource;
@@ -58,12 +57,13 @@ import org.fabric3.host.runtime.RuntimeLifecycleCoordinator;
 import org.fabric3.host.runtime.ScdlBootstrapper;
 import org.fabric3.host.runtime.ShutdownException;
 import org.fabric3.host.runtime.StartException;
-import org.fabric3.host.work.WorkScheduler;
 import org.fabric3.jmx.agent.Agent;
 import org.fabric3.jmx.agent.DefaultAgent;
 import org.fabric3.maven.runtime.MavenEmbeddedRuntime;
 import org.fabric3.monitor.MonitorFactory;
 import org.fabric3.spi.classloader.MultiParentClassLoader;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 /**
  * Run integration tests on a SCA composite using an embedded Fabric3 runtime.
@@ -223,6 +223,13 @@ public class Fabric3ITestMojo extends AbstractMojo {
     public Dependency[] features;
 
     /**
+     * Whether to exclude default features.
+     *
+     * @parameter
+     */
+    public boolean excludeDefaultFeatures;
+
+    /**
      * Set of user extension artifacts that should be deployed to the runtime.
      *
      * @parameter
@@ -335,8 +342,9 @@ public class Fabric3ITestMojo extends AbstractMojo {
         artifactHelper.setLocalRepository(localRepository);
         artifactHelper.setProject(project);
 
-        if (features != null) {
-            for (Dependency feature : features) {
+        List<Dependency> featurestoInstall = getFeaturesToInstall();
+        if (!featurestoInstall.isEmpty()) {
+            for (Dependency feature : featurestoInstall) {
                 Artifact artifact = artifactHelper.resolve(feature);
                 try {
                     FeatureSet featureSet = FeatureSet.deserialize(artifact.getFile());
@@ -578,6 +586,23 @@ public class Fabric3ITestMojo extends AbstractMojo {
             throw new MojoExecutionException("Invalid system configuration: " + systemConfig, e);
         }
     }
+
+	private List<Dependency> getFeaturesToInstall() {
+		List<Dependency> featuresToInstall = new ArrayList<Dependency>();
+		
+		if (features != null) {
+			featuresToInstall.addAll(Arrays.asList(features));
+		}
+		if (!excludeDefaultFeatures) {
+			Dependency dependency = new Dependency();
+			dependency.setArtifactId("fabric3-default-feature");
+			dependency.setGroupId("org.codehaus.fabric3");
+			dependency.setVersion(runtimeVersion);
+			dependency.setType("xml");
+			featuresToInstall.add(dependency);
+		}
+		return featuresToInstall;
+	}
 
     public interface MojoMonitor {
         @Severe
