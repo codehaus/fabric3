@@ -15,19 +15,18 @@
 	specific language governing permissions and limitations
 	under the License.
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
 	
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.codehaus.fabric3</groupId>
         <artifactId>fabric3-plugins-parent-pom</artifactId>
-        <version>0.6-SNAPSHOT</version>
+        <version>0.6</version>
     </parent>
 
     <groupId>org.codehaus.fabric3</groupId>
     <artifactId>fabric3-feature-set-plugin</artifactId>
-    <version>0.6-SNAPSHOT</version>
+    <version>0.6</version>
     <packaging>maven-plugin</packaging>
     <name>Fabric3 Feature Set Plugin</name>
     <description>Fabric3 Feature Set Plugin.</description>
@@ -76,9 +75,9 @@
      </build>
 
     <scm>
-        <connection>scm:svn:http://svn.codehaus.org/fabric3/plugins/trunk/fabric3-feature-set-plugin</connection>
-        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/plugins/trunk/fabric3-feature-set-plugin</developerConnection>
-        <url>http://svn.fabric3.codehaus.org/browse/fabric3/plugins/trunk/fabric3-feature-set-plugin</url>
+        <connection>scm:svn:http://svn.codehaus.org/fabric3/plugins/tags/fabric3-plugins-parent-pom-0.6</connection>
+        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/plugins/tags/fabric3-plugins-parent-pom-0.6</developerConnection>
+        <url>http://svn.fabric3.codehaus.org/browse/fabric3/plugins/tags/fabric3-plugins-parent-pom-0.6</url>
     </scm>
 
 </project>
