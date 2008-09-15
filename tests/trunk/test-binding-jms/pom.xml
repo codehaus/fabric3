@@ -58,59 +58,59 @@ under the License.
             <plugin>
                 <groupId>org.codehaus.fabric3</groupId>
                 <artifactId>fabric3-itest-plugin</artifactId>
-                <version>0.6-SNAPSHOT</version>
+                <version>0.7-SNAPSHOT</version>
                 <configuration>
-                    <runtimeVersion>0.6-SNAPSHOT</runtimeVersion>
+                    <runtimeVersion>0.7-SNAPSHOT</runtimeVersion>
                     <extensions>
                         <dependency>
                             <groupId>org.codehaus.fabric3</groupId>
                             <artifactId>fabric3-binding-jms</artifactId>
-                            <version>0.6-SNAPSHOT</version>
+                            <version>0.7-SNAPSHOT</version>
                         </dependency>
                         <dependency>
                             <groupId>org.codehaus.fabric3</groupId>
                             <artifactId>fabric3-jaxb</artifactId>
-                            <version>0.6-SNAPSHOT</version>
+                            <version>0.7-SNAPSHOT</version>
                         </dependency>
                         <dependency>
                             <groupId>org.codehaus.fabric3</groupId>
                             <artifactId>fabric3-databinding-jaxb-provision</artifactId>
-                            <version>0.6-SNAPSHOT</version>
+                            <version>0.7-SNAPSHOT</version>
                         </dependency>
                         <dependency>
                             <groupId>org.codehaus.fabric3</groupId>
                             <artifactId>fabric3-databinding-jaxb-loader</artifactId>
-                            <version>0.6-SNAPSHOT</version>
+                            <version>0.7-SNAPSHOT</version>
                         </dependency>
                         <dependency>
                             <groupId>org.codehaus.fabric3</groupId>
                             <artifactId>fabric3-databinding-jaxb-runtime</artifactId>
-                            <version>0.6-SNAPSHOT</version>
+                            <version>0.7-SNAPSHOT</version>
                         </dependency>
                         <dependency>
                             <groupId>org.codehaus.fabric3</groupId>
                             <artifactId>fabric3-tx-jotm</artifactId>
-                            <version>0.6-SNAPSHOT</version>
+                            <version>0.7-SNAPSHOT</version>
                         </dependency>
                         <dependency>
                             <groupId>org.codehaus.fabric3</groupId>
                             <artifactId>fabric3-tx</artifactId>
-                            <version>0.6-SNAPSHOT</version>
+                            <version>0.7-SNAPSHOT</version>
                         </dependency>
                         <dependency>
                             <groupId>org.codehaus.fabric3</groupId>
                             <artifactId>fabric3-async-provision</artifactId>
-                            <version>0.6-SNAPSHOT</version>
+                            <version>0.7-SNAPSHOT</version>
                         </dependency>
                         <dependency>
                             <groupId>org.codehaus.fabric3</groupId>
                             <artifactId>fabric3-async-loader</artifactId>
-                            <version>0.6-SNAPSHOT</version>
+                            <version>0.7-SNAPSHOT</version>
                         </dependency>
                         <dependency>
                             <groupId>org.codehaus.fabric3</groupId>
                             <artifactId>fabric3-async-runtime</artifactId>
-                            <version>0.6-SNAPSHOT</version>
+                            <version>0.7-SNAPSHOT</version>
                         </dependency>
                     </extensions>
                     <shared>
