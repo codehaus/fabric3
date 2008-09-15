@@ -1,0 +1,104 @@
+/*
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
+ * to you under the Apache License, Version 2.0 (the
+ * "License"); you may not use this file except in compliance
+ * with the License.  You may obtain a copy of the License at
+ *
+ *   http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing,
+ * software distributed under the License is distributed on an
+ * "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ * KIND, either express or implied.  See the License for the
+ * specific language governing permissions and limitations
+ * under the License.
+ */
+package org.fabric3.host.runtime;
+
+import java.util.List;
+
+import org.fabric3.host.contribution.ContributionSource;
+
+/**
+ * Encapsulates configuration needed to boostrap a runtime.
+ *
+ * @version $Revision$ $Date$
+ */
+public class BootConfiguration<RUNTIME extends Fabric3Runtime<?>, BOOTSTRAPPER extends Bootstrapper> {
+    private RUNTIME runtime;
+    private BOOTSTRAPPER bootstrapper;
+    private ClassLoader bootClassLoader;
+    private ClassLoader appClassLoader;
+    private List<String> bootExports;
+    private ContributionSource intents;
+    private List<ContributionSource> extensions;
+    private List<ContributionSource> userExtensions;
+
+    public RUNTIME getRuntime() {
+        return runtime;
+    }
+
+    public void setRuntime(RUNTIME runtime) {
+        this.runtime = runtime;
+    }
+
+    public BOOTSTRAPPER getBootstrapper() {
+        return bootstrapper;
+    }
+
+    public void setBootstrapper(BOOTSTRAPPER bootstrapper) {
+        this.bootstrapper = bootstrapper;
+    }
+
+    public ClassLoader getBootClassLoader() {
+        return bootClassLoader;
+    }
+
+    public void setBootClassLoader(ClassLoader bootClassLoader) {
+        this.bootClassLoader = bootClassLoader;
+    }
+
+    public ClassLoader getAppClassLoader() {
+        return appClassLoader;
+    }
+
+    public void setAppClassLoader(ClassLoader appClassLoader) {
+        this.appClassLoader = appClassLoader;
+    }
+
+    public List<String> getBootLibraryExports() {
+        return bootExports;
+    }
+
+    public void setBootLibraryExports(List<String> bootExports) {
+        this.bootExports = bootExports;
+    }
+
+    public ContributionSource getIntents() {
+        return intents;
+    }
+
+    public void setIntents(ContributionSource intents) {
+        this.intents = intents;
+    }
+
+    public List<ContributionSource> getExtensions() {
+        return extensions;
+    }
+
+    public void setExtensions(List<ContributionSource> extensions) {
+        this.extensions = extensions;
+    }
+
+    public List<ContributionSource> getUserExtensions() {
+        return userExtensions;
+    }
+
+    public void setUserExtensions(List<ContributionSource> userExtensions) {
+        this.userExtensions = userExtensions;
+    }
+
+}

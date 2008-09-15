@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="ASCII"?>
+<definitions
+        xmlns="http://www.osoa.org/xmlns/sca/1.0"
+        xmlns:sca="http://www.osoa.org/xmlns/sca/1.0"
+        xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
+        targetNamespace="http://fabric3.org/xmlns/sca/2.0-alpha">
+
+    <intent name="propagatesConversation" constrains="implementation">
+        <description>
+            Used to indicate a conversation is propagated through a reference.
+        </description>
+    </intent>
+    <!-- this is a temporary measure as java and junit tests are not treated as extensions in maven -->
+    <implementationType name="sca:implementation.java" mayProvide="f3:propagatesConversation"/>
+    <implementationType name="sca:implementation.junit" mayProvide="f3:propagatesConversation"/>
+</definitions>

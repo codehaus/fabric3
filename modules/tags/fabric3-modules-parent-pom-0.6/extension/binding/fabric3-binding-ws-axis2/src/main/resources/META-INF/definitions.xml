@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="ASCII"?>
+<definitions  xmlns="http://www.osoa.org/xmlns/sca/1.0" 
+              xmlns:f3-axis="http://fabric3.org/xmlns/sca/2.0-alpha/axis"
+              xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
+              targetNamespace="http://fabric3.org/xmlns/sca/2.0-alpha/axis">
+
+    <intent name="dataBinding" constrains="binding">
+        <description>
+            Unqualified intent for daat binding.
+        </description>
+    </intent>
+
+    <intent name="dataBinding.jaxb" constrains="binding">
+        <description>
+            Data binding using Jaxb.
+        </description>
+    </intent>
+    
+    <!-- Databinding policy for services -->
+    <policySet name="jaxbPolicyService" provides="f3-axis:dataBinding.jaxb" f3:phase="INTERCEPTION">
+        <f3-axis:dataBinding.jaxb/>
+    </policySet>
+    
+</definitions>
