@@ -22,7 +22,7 @@
     <parent>
         <groupId>org.codehaus.fabric3</groupId>
         <artifactId>fabric3-features-parent-pom</artifactId>
-        <version>0.6-SNAPSHOT</version>
+        <version>0.6</version>
     </parent>
     
     <groupId>org.codehaus.fabric3</groupId>
@@ -70,9 +70,9 @@
     </build>
 
     <scm>
-        <connection>scm:svn:http://svn.codehaus.org/fabric3/features/trunk/fabric3-default-feature</connection>
-        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/features/trunk/fabric3-default-feature</developerConnection>
-        <url>http://svn.fabric3.codehaus.org/browse/fabric3/features/trunk/fabric3-default-feature</url>
+        <connection>scm:svn:http://svn.codehaus.org/fabric3/features/tags/fabric3-features-parent-pom-0.6</connection>
+        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/features/tags/fabric3-features-parent-pom-0.6</developerConnection>
+        <url>http://svn.fabric3.codehaus.org/browse/fabric3/features/tags/fabric3-features-parent-pom-0.6</url>
     </scm>
 
 </project>
