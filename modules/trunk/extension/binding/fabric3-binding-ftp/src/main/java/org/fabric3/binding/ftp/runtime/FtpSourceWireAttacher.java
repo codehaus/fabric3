@@ -40,18 +40,18 @@ import org.fabric3.spi.wire.Wire;
  */
 public class FtpSourceWireAttacher implements SourceWireAttacher<FtpWireSourceDefinition> {
 
-    private final FtpLetContainer ftpLetContainer;
+    private FtpLetContainer ftpLetContainer;
     private ExpressionExpander expander;
     private BindingMonitor monitor;
 
     /**
      * Injects the references.
      *
-     * @param ftpLetContainer FtpLet container.
+     * @param ftpLetContainer FtpLet container.  The FtpLet container is optional. If it is not available, only reference bindings will be supported.
      * @param expander        the expander for '${..}' expressions.
      * @param monitor         the binding monitor for reporting events.
      */
-    public FtpSourceWireAttacher(@Reference FtpLetContainer ftpLetContainer,
+    public FtpSourceWireAttacher(@Reference(required = false)FtpLetContainer ftpLetContainer,
                                  @Reference ExpressionExpander expander,
                                  @Monitor BindingMonitor monitor) {
         this.ftpLetContainer = ftpLetContainer;
@@ -66,6 +66,10 @@ public class FtpSourceWireAttacher implements SourceWireAttacher<FtpWireSourceDe
             servicePath = servicePath.substring(2);
         }
         BindingFtpLet bindingFtpLet = new BindingFtpLet(servicePath, wire, monitor);
+        if (ftpLetContainer == null) {
+            throw new WiringException(
+                    "An FTP server was not configured for this runtime. Ensure the FTP server extension is installed and configured properly.");
+        }
         ftpLetContainer.registerFtpLet(servicePath, bindingFtpLet);
 
     }
