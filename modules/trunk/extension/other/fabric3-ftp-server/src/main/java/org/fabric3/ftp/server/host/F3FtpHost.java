@@ -53,6 +53,7 @@ public class F3FtpHost implements FtpHost {
     private SocketAcceptor acceptor;
     private IoHandler ftpHandler;
     private ProtocolCodecFactory codecFactory;
+    private String listenAddress;
     private int idleTimeout = 60; // 60 seconds default
 
     /**
@@ -63,7 +64,12 @@ public class F3FtpHost implements FtpHost {
     @Init
     public void start() throws IOException {
         ExecutorService filterExecutor = new F3ExecutorService(workScheduler);
-        InetSocketAddress socketAddress = new InetSocketAddress(InetAddress.getLocalHost(), commandPort);
+        InetSocketAddress socketAddress;
+        if (listenAddress == null) {
+            socketAddress = new InetSocketAddress(InetAddress.getLocalHost(), commandPort);
+        } else {
+            socketAddress = new InetSocketAddress(listenAddress, commandPort);
+        }
         acceptor = new NioSocketAcceptor();
         SocketSessionConfig config = acceptor.getSessionConfig();
         config.setIdleTime(IdleStatus.BOTH_IDLE, idleTimeout);
@@ -142,6 +148,11 @@ public class F3FtpHost implements FtpHost {
      */
     @Property
     public void setIdleTimeout(int timeout) {
-        this.idleTimeout = timeout / 1000;   // conver to seconds used by Mina
+        this.idleTimeout = timeout / 1000;   // convert to seconds used by Mina
+    }
+
+    @Property
+    public void setListenAddress(String listenAddress) {
+        this.listenAddress = listenAddress;
     }
 }
