@@ -22,13 +22,21 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
+
+import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.introspection.IntrospectionContext;
+import org.fabric3.introspection.IntrospectionHelper;
+import org.fabric3.introspection.TypeMapping;
+import org.fabric3.introspection.contract.ContractProcessor;
 import org.fabric3.introspection.java.HeuristicProcessor;
 import org.fabric3.junit.scdl.JUnitImplementation;
 import org.fabric3.junit.scdl.JUnitServiceContract;
+import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.DataType;
 import org.fabric3.scdl.Operation;
+import org.fabric3.scdl.ServiceContract;
 import org.fabric3.scdl.ServiceDefinition;
 
 /**
@@ -37,11 +45,37 @@ import org.fabric3.scdl.ServiceDefinition;
 public class JUnitServiceHeuristic implements HeuristicProcessor<JUnitImplementation> {
     private static final String TEST_SERVICE_NAME = "testService";
 
+    private final IntrospectionHelper helper;
+    private final ContractProcessor contractProcessor;
+
+    public JUnitServiceHeuristic(@Reference IntrospectionHelper helper, @Reference ContractProcessor contractProcessor) {
+        this.helper = helper;
+        this.contractProcessor = contractProcessor;
+    }
+
     public void applyHeuristics(JUnitImplementation implementation, Class<?> implClass, IntrospectionContext context) {
 
         JUnitServiceContract testContract = generateTestContract(implClass);
         ServiceDefinition testService = new ServiceDefinition(TEST_SERVICE_NAME, testContract);
-        implementation.getComponentType().add(testService);
+        PojoComponentType componentType = implementation.getComponentType();
+        TypeMapping typeMapping = context.getTypeMapping();
+        componentType.add(testService);
+        // if the class implements a single interface, use it, otherwise the contract is the class itself
+        Set<Class<?>> interfaces = helper.getImplementedInterfaces(implClass);
+        if (interfaces.size() > 1) {
+            for (Class interfaze : interfaces) {
+                if (interfaze.getCanonicalName().endsWith("Test")) {
+                    continue;
+                }
+                ServiceDefinition serviceDefinition = createServiceDefinition(interfaze, typeMapping, context);
+                componentType.add(serviceDefinition);
+            }
+        }
+    }
+
+    ServiceDefinition createServiceDefinition(Class<?> serviceInterface, TypeMapping typeMapping, IntrospectionContext context) {
+        ServiceContract<Type> contract = contractProcessor.introspect(typeMapping, serviceInterface, context);
+        return new ServiceDefinition(contract.getInterfaceName(), contract);
     }
 
     private static final DataType<List<DataType<Type>>> INPUT_TYPE;
