@@ -24,6 +24,10 @@ import java.util.ArrayList;
 import java.util.List;
 import java.io.Serializable;
 
+import java.util.HashMap;
+import java.util.Map;
+import org.fabric3.scdl.DataType;
+import org.fabric3.scdl.Operation;
 import org.fabric3.scdl.ServiceContract;
 
 /**
@@ -32,6 +36,7 @@ import org.fabric3.scdl.ServiceContract;
  * @version $Rev$ $Date$
  */
 public class JavaServiceContract extends ServiceContract<Type> {
+
     private static final long serialVersionUID = -7360275776965712638L;
     // NOTE: this class cannot reference the actual Java class it represents as #isAssignableFrom may be performed
     // accross classloaders. This class may also be deserialized as part of a domain assembly in a context where the
@@ -76,19 +81,20 @@ public class JavaServiceContract extends ServiceContract<Type> {
      * <code>Class</code> object is either the same as, or is a superclass or
      * superinterface of, the class or interface represented by the specified
      * <code>Class</code> parameter. It returns <code>true</code> if so;
-
+    
      */
     public boolean isAssignableFrom(ServiceContract<?> contract) {
         if (JavaServiceContract.class.isInstance(contract)) {
             return isJavaAssignableFrom(JavaServiceContract.class.cast(contract));
+        } else {
+            return isNonJavaAssignableFrom(contract);
         }
-        // TODO handle the case where the contract is defined using a different IDL
-        return false;
+    // TODO handle the case where the contract is defined using a different IDL
+    //return false;
     }
 
     private boolean isJavaAssignableFrom(JavaServiceContract contract) {
-        if ((superType == null && contract.superType != null)
-                || (superType != null && !superType.equals(contract.superType))) {
+        if ((superType == null && contract.superType != null) || (superType != null && !superType.equals(contract.superType))) {
             return false;
         }
         if (interfaceClass.equals(contract.interfaceClass)) {
@@ -111,6 +117,75 @@ public class JavaServiceContract extends ServiceContract<Type> {
 
     }
 
+    private boolean isNonJavaAssignableFrom(ServiceContract contract) {
+        //compare contract operations
+        List<Operation<?>> theirOperations = contract.getOperations();
+        Map<String, Operation<?>> theirOperationNames = new HashMap<String, Operation<?>>();
+        for (Operation o : theirOperations) {
+            theirOperationNames.put(o.getName(), o);
+        }
+        List<Operation<Type>> myOperations = this.getOperations();
+        for (Operation o : myOperations) {
+            Operation theirs = theirOperationNames.remove(o.getName());
+            if (theirs == null) {
+                return false;
+            }
+            if (!compareTypes(o.getInputType(), theirs.getInputType())) {
+                return false;
+            }
+            List<DataType<?>> myParams = (List<DataType<?>>) o.getInputType().getLogical();
+            List<DataType<?>> theirParams = (List<DataType<?>>) theirs.getInputType().getLogical();
+
+            if (myParams.size() == theirParams.size()) {
+                for (int i = 0; i < myParams.size(); i++) {
+                    if (!compareTypes(myParams.get(i), theirParams.get(i))) {
+                        return false;
+                    }
+                }
+            }else{
+                return false;
+            }
+
+            if (!compareTypes(o.getOutputType(), theirs.getOutputType())) {
+                return false;
+            }
+
+            List<DataType<?>> theirFaults = theirs.getFaultTypes();
+            List<DataType<?>> faults = o.getFaultTypes();
+            for (DataType theirFault : theirFaults) {
+                boolean matches = false;
+                for (DataType myFault : faults) {
+                    if (compareTypes(theirFault, myFault)) {
+                        matches = true;
+                        break;
+                    }
+                }
+                if (!matches) {
+                    return false;
+                }
+            }
+        }
+        return true;
+
+
+    }
+
+    private boolean compareTypes(DataType mine, DataType theirs) {
+        Type myType = mine.getPhysical();
+        Type theirType = theirs.getPhysical();
+        if (myType instanceof Class && theirType instanceof Class) {
+            Class myClass = (Class) myType;
+            Class theirClass = (Class) theirType;
+            if (!theirClass.isAssignableFrom(myClass)) {
+                return false;
+            }
+        } else {
+            return false;
+        }
+        return true;
+
+    }
+
     /**
      * Adds all interfaces implemented/extended by the class, including those of its ancestors.
      *
@@ -127,6 +202,7 @@ public class JavaServiceContract extends ServiceContract<Type> {
     }
 
     private class MethodSignature implements Serializable {
+
         private static final long serialVersionUID = 8945587852354777957L;
         String name;
         List<String> parameters;
@@ -163,6 +239,5 @@ public class JavaServiceContract extends ServiceContract<Type> {
             }
             return true;
         }
-
     }
 }
