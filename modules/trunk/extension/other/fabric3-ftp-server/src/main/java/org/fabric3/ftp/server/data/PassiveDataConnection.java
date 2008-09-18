@@ -22,26 +22,31 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketAddress;
 
 /**
  * Represents a passive data connection.
- * 
+ *
  * @version $Revision$ $Date$
  */
 public class PassiveDataConnection implements DataConnection {
-    
+
     private ServerSocket serverSocket;
+    private InetAddress bindAddress;
     private int passivePort;
     private Socket socket;
-    
+
     /**
-     * Initializes the passie port.
-     * 
+     * Initializes the passive data connection.
+     *
+     * @param bindAddress the address to bind the socket to.
      * @param passivePort Passive port.
      */
-    public PassiveDataConnection(int passivePort) {
+    public PassiveDataConnection(InetAddress bindAddress, int passivePort) {
+        this.bindAddress = bindAddress;
         this.passivePort = passivePort;
     }
 
@@ -63,20 +68,20 @@ public class PassiveDataConnection implements DataConnection {
             }
         }
     }
-    
+
     /**
      * Get an input stream to the data connection.
-     * 
+     *
      * @return Input stream to the data cnnection.
      * @throws IOException If unable to get input stream.
      */
     public InputStream getInputStream() throws IOException {
         return socket.getInputStream();
     }
-    
+
     /**
      * Get an output stream to the data connection.
-     * 
+     *
      * @return Output stream to the data connection.
      * @throws IOException If unable to get output stream.
      */
@@ -86,18 +91,22 @@ public class PassiveDataConnection implements DataConnection {
 
     /**
      * Opens the data connection.
+     *
      * @throws IOException If unable to open connection.
      */
     public void open() throws IOException {
         socket = serverSocket.accept();
     }
-    
+
     /**
      * Initializes a data connection.
+     *
      * @throws IOException If unable to open connection.
      */
     public void initialize() throws IOException {
-        serverSocket = new ServerSocket(passivePort, 1, InetAddress.getLocalHost());
+        serverSocket = new ServerSocket();
+        SocketAddress address = new InetSocketAddress(bindAddress, passivePort);
+        serverSocket.bind(address);
     }
 
 }

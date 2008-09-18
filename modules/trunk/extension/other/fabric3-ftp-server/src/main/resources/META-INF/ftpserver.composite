@@ -67,6 +67,7 @@
     <!-- PASV Request Handler -->
     <component name="PasvRequestHandler" f3:key="PASV">
         <system:implementation.system class="org.fabric3.ftp.server.handler.PasvRequestHandler"/>
+        <property name="listenAddress" source="$config//listenAddress"/>
     </component>
 
     <!-- STOR Request Handler -->
