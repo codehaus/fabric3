@@ -16,13 +16,14 @@
  */
 package org.fabric3.rs.introspection;
 
+import java.net.URI;
 import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.rs.scdl.RsBindingDefinition;
+import org.fabric3.java.scdl.JavaImplementation;
 
 /**
  * @version $Rev$ $Date$
  */
 public interface RsHeuristic {
 
-    public void applyHeuristics(RsBindingDefinition definition, String implClassName, IntrospectionContext context);
+    public void applyHeuristics(JavaImplementation impl, URI webAppUri, IntrospectionContext context);
 }

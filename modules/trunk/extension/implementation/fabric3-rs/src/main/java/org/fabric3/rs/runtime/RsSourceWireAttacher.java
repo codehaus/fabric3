@@ -97,19 +97,8 @@ public class RsSourceWireAttacher implements SourceWireAttacher<RsWireSourceDefi
             }
             servletHost.registerMapping(servletMapping, application);
         }
-
-        if (sourceDefinition.isResource()) {
-            application.addResourceFactory(type, factory);
-        }
-
-        if (sourceDefinition.isProvider()) {
-            application.addProviderFactory(type, factory);
-        }
-
+        application.addFactory(type, factory);
         monitor.provisionedEndpoint(sourceDefinition.getInterfaceName(), (sourceDefinition.isResource() ? "resource" : " ") + (sourceDefinition.isProvider() ? "provider" : " "), sourceUri);
-
-
-
     }
 
     public void detachFromSource(RsWireSourceDefinition source, PhysicalWireTargetDefinition target, Wire wire) throws WiringException {

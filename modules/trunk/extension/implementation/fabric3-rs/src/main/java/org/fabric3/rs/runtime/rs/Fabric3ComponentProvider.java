@@ -30,20 +30,15 @@ import org.fabric3.spi.ObjectFactory;
  */
 public class Fabric3ComponentProvider implements ComponentProvider {
 
-    ConcurrentHashMap<Class<?>, ObjectFactory<?>> resources;
-    ConcurrentHashMap<Class<?>, ObjectFactory<?>> providers;
-
+    ConcurrentHashMap<Class<?>, ObjectFactory<?>> classes;
+    
     public Fabric3ComponentProvider() {
-        resources = new ConcurrentHashMap<Class<?>, ObjectFactory<?>>();
-        providers = new ConcurrentHashMap<Class<?>, ObjectFactory<?>>();
+        classes = new ConcurrentHashMap<Class<?>, ObjectFactory<?>>();
 
     }
 
     public Object getInstance(Scope scope, Class c) throws InstantiationException, IllegalAccessException {
-        ObjectFactory factory = resources.get(c);
-        if (factory == null) {
-            factory = providers.get(c);
-        }
+        ObjectFactory factory = classes.get(c);
         if (factory != null) {
             try {
                 return factory.getInstance();
@@ -59,23 +54,15 @@ public class Fabric3ComponentProvider implements ComponentProvider {
 
     public Object getInstance(Scope scope, Constructor constructor, Object[] parameters) throws InstantiationException,
             IllegalArgumentException, IllegalAccessException, InvocationTargetException {
-        throw new UnsupportedOperationException("Not supported yet.");
+        return null;
     }
 
-    public void addResource(Class<?> resource, ObjectFactory<?> factory) {
-        resources.put(resource, factory);
+    public void addClass(Class<?> resource, ObjectFactory<?> factory) {
+        classes.put(resource, factory);
     }
 
-    public void addProvider(Class<?> resource, ObjectFactory<?> factory) {
-        providers.put(resource, factory);
-    }
-
-    public Set<Class<?>> getResourceClasses() {
-        return resources.keySet();
-    }
-
-    public Set<Class<?>> getProviderClasses() {
-        return providers.keySet();
+    public Set<Class<?>> getClasses() {
+        return classes.keySet();
     }
 
     public <T> T getInjectableInstance(T instance) {

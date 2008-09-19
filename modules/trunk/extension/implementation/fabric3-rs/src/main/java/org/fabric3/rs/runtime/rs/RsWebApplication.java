@@ -31,15 +31,10 @@ public final class RsWebApplication extends HttpServlet {
         reload = true;
     }
 
-    public void addResourceFactory(Class<?> resource, ObjectFactory<?> factory) {
-        this.provider.addResource(resource, factory);
+    public void addFactory(Class<?> resource, ObjectFactory<?> factory) {
+        this.provider.addClass(resource, factory);
         reload = true;
 
-    }
-
-    public void addProviderFactory(Class<?> resource, ObjectFactory<?> factory) {
-        this.provider.addProvider(resource, factory);
-        reload = true;
     }
 
     @Override

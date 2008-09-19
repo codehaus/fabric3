@@ -37,12 +37,8 @@ public class Fabric3ResourceConfig extends DefaultResourceConfig {
     }
 
     @Override
-    public Set<Class<?>> getResourceClasses() {
-        return provider.getResourceClasses();
+    public Set<Class<?>> getClasses() {
+        return provider.getClasses();
     }
 
-    @Override
-    public Set<Class<?>> getProviderClasses() {
-        return provider.getProviderClasses();
-    }
 }

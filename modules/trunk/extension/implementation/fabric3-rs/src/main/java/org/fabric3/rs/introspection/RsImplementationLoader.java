@@ -85,29 +85,7 @@ public class RsImplementationLoader implements TypeLoader<JavaImplementation> {
         loaderHelper.loadPolicySetsAndIntents(impl, reader, context);
         processor.introspect(impl, context);
         LoaderUtil.skipToEndElement(reader);
-
-        RsBindingDefinition bindingDefinition = new RsBindingDefinition(webAppURI);
-        rsHeuristic.applyHeuristics(bindingDefinition, className, context);
-
-        ServiceDefinition definition = new ServiceDefinition("REST");
-        final String intName = className;
-        ServiceContract serviceContract = new ServiceContract() {
-
-            @Override
-            public boolean isAssignableFrom(ServiceContract contract) {
-                return false;
-            }
-
-            @Override
-            public String getQualifiedInterfaceName() {
-                return intName;
-            }
-        };
-        serviceContract.setInterfaceName(intName);
-        definition.setServiceContract(serviceContract);
-        definition.addBinding(bindingDefinition);
-        InjectingComponentType componentType = impl.getComponentType();
-        componentType.add(definition);
+        rsHeuristic.applyHeuristics(impl, webAppURI, context);
         return impl;
     }
 }
