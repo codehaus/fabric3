@@ -100,7 +100,7 @@ public class ClasspathPersistenceUnitScanner implements PersistenceUnitScanner {
 			return jarURLConnection.getJarFileURL();
 		} else if ("file".equals(protocol)) {
 			String path = persistenceUnitUrl.getPath();
-			return new File(path).getParentFile().getParentFile().toURL();
+			return new File(path).getParentFile().getParentFile().toURI().toURL();
 		} else if ("zip".equals(protocol)) {
 			String path = persistenceUnitUrl.getPath();
 			String rootJarUrl = path.substring(0,path.lastIndexOf("META-INF") - 2);
