@@ -42,6 +42,8 @@ public class XaPoolDataSource implements DataSource {
     private String url;
     private String driver;
     private List<String> dataSourceKeys;
+    private int minSize = 10;
+    private int maxSize = 10;
 
     private StandardXADataSource delegate;
     private TransactionManager transactionManager;
@@ -97,6 +99,16 @@ public class XaPoolDataSource implements DataSource {
         this.driver = driver;
     }
 
+    @Property
+    public void setMinSize(int minSize) {
+        this.minSize = minSize;
+    }
+
+    @Property
+    public void setMaxSize(int maxSize) {
+        this.maxSize = maxSize;
+    }
+
     @Reference
     public void setTransactionManager(TransactionManager transactionManager) {
         this.transactionManager = transactionManager;
@@ -116,6 +128,8 @@ public class XaPoolDataSource implements DataSource {
         delegate.setDriverName(driver);
         delegate.setPassword(password);
         delegate.setUser(user);
+        delegate.setMinCon(minSize);
+        delegate.setMaxCon(maxSize);
 
         for (String dataSourceKey : dataSourceKeys) {
             dataSourceRegistry.registerDataSource(dataSourceKey, this);

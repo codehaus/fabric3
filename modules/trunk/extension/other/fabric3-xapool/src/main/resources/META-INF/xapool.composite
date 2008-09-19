@@ -34,6 +34,8 @@
         <property name="dataSourceKeys" source="$dataSourceConfig//keys"/>
         <property name="user" source="$dataSourceConfig//user"/>
         <property name="password" source="$dataSourceConfig//password"/>
+        <property name="minSize" source="$dataSourceConfig//minSize"/>
+        <property name="maxSize" source="$dataSourceConfig//maxSize"/>
     </component>
     
 </composite>
