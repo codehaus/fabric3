@@ -45,6 +45,21 @@ public class JavaServiceContract extends ServiceContract<Type> {
     private List<String> interfaces;
     private String superType;
     private List<MethodSignature> methodSignatures;
+    
+    //http://bugs.sun.com/bugdatabase/view_bug.do?bug_id=6176992
+    private static final Map<Class, Class> PRIMITIVE_TYPES = new HashMap<Class, Class>();
+
+    static {
+        PRIMITIVE_TYPES.put(byte.class, Byte.class);
+        PRIMITIVE_TYPES.put(short.class, Short.class);
+        PRIMITIVE_TYPES.put(char.class, Character.class);
+        PRIMITIVE_TYPES.put(int.class, Integer.class);
+        PRIMITIVE_TYPES.put(long.class, Long.class);
+        PRIMITIVE_TYPES.put(float.class, Float.class);
+        PRIMITIVE_TYPES.put(double.class, Double.class);
+        PRIMITIVE_TYPES.put(boolean.class, Boolean.class);
+        PRIMITIVE_TYPES.put(void.class, Void.class);
+    }
 
     public JavaServiceContract(Class<?> interfaceClazz) {
         methodSignatures = new ArrayList<MethodSignature>();
@@ -176,6 +191,12 @@ public class JavaServiceContract extends ServiceContract<Type> {
         if (myType instanceof Class && theirType instanceof Class) {
             Class myClass = (Class) myType;
             Class theirClass = (Class) theirType;
+            if (myClass.isPrimitive()){
+                myClass = PRIMITIVE_TYPES.get(myClass);
+            }
+            if (theirClass.isPrimitive()){
+                theirClass = PRIMITIVE_TYPES.get(theirClass);
+            }
             if (!theirClass.isAssignableFrom(myClass)) {
                 return false;
             }
