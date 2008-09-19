@@ -45,12 +45,17 @@
         <dependency>
             <groupId>javax.ws.rs</groupId>
             <artifactId>jsr311-api</artifactId>
-            <version>0.8-SNAPSHOT</version>
+            <version>0.11</version>
         </dependency>
         <dependency>
             <groupId>com.sun.jersey</groupId>
-            <artifactId>jersey</artifactId>
-            <version>0.8-ea-SNAPSHOT</version>
+            <artifactId>jersey-server</artifactId>
+            <version>0.11-ea-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.jersey</groupId>
+            <artifactId>jersey-client</artifactId>
+            <version>0.11-ea-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
@@ -83,12 +88,12 @@
                         <dependency>
                             <groupId>javax.ws.rs</groupId>
                             <artifactId>jsr311-api</artifactId>
-                            <version>0.8-SNAPSHOT</version>
+                            <version>0.11</version>
                         </dependency>
                         <dependency>
                             <groupId>com.sun.jersey</groupId>
-                            <artifactId>jersey</artifactId>
-                            <version>0.8-ea-SNAPSHOT</version>
+                            <artifactId>jersey-server</artifactId>
+                            <version>0.11-ea-SNAPSHOT</version>
                         </dependency>
                     </shared>
                 </configuration>

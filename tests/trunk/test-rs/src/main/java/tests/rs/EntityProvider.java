@@ -23,8 +23,8 @@ import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Type;
-import javax.ws.rs.ConsumeMime;
-import javax.ws.rs.ProduceMime;
+import javax.ws.rs.Consumes;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.MultivaluedMap;
 import javax.ws.rs.ext.MessageBodyReader;
@@ -35,16 +35,16 @@ import javax.ws.rs.ext.Provider;
  * @version $Rev$ $Date$
  */
 @Provider
-@ProduceMime("application/entity")
-@ConsumeMime("application/entity")
+@Produces("application/entity")
+@Consumes("application/entity")
 public class EntityProvider implements MessageBodyReader<Entity>, MessageBodyWriter<Entity> {
 
-    public boolean isReadable(Class<?> type, Type genericType, Annotation[] annotations) {
+    public boolean isReadable(Class<?> type, Type genericType, Annotation[] annotations, MediaType mediaType) {
         return type.equals(Entity.class);
     }
 
     public Entity readFrom(Class<Entity> type, Type genericType,
-            Annotation[] annotations, MediaType mediaType, MultivaluedMap<String, String> headers,
+            Annotation[] annotations, MediaType mediaType, MultivaluedMap<String, String> headers, 
             InputStream entityStream) throws IOException {
         ObjectInputStream oin = new ObjectInputStream(entityStream);
         try {
@@ -57,11 +57,11 @@ public class EntityProvider implements MessageBodyReader<Entity>, MessageBodyWri
 
     }
 
-    public boolean isWriteable(Class<?> type, Type genericType, Annotation[] annotations) {
+    public boolean isWriteable(Class<?> type, Type genericType, Annotation[] annotations,  MediaType mediaType) {
         return Entity.class.isAssignableFrom(type);
     }
-
-    public long getSize(Entity entity) {
+    
+    public long getSize(Entity entity, Class<?> type, Type genericType, Annotation annotations[], MediaType mediaType) {
         return -1;
     }
 
@@ -74,4 +74,5 @@ public class EntityProvider implements MessageBodyReader<Entity>, MessageBodyWri
         out.flush();
 
     }
+
 }

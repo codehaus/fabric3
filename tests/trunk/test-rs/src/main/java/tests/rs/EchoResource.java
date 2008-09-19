@@ -20,7 +20,7 @@ import javax.ws.rs.POST;
 import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Reference;
 import org.osoa.sca.annotations.Service;
-import javax.ws.rs.ProduceMime;
+import javax.ws.rs.Produces;
 import javax.ws.rs.Path;
 
 /**
@@ -42,13 +42,13 @@ public class EchoResource implements EchoService {
     }
 
     @POST
-    @ProduceMime("text/plain")
+    @Produces("text/plain")
     public String hello(String name) {
         return message + " " + service.hello(name);
     }
 
     @POST
-    @ProduceMime("application/entity")
+    @Produces("application/entity")
     public Entity hello(Entity entity) {
         entity.setValue(message + " " + service.hello(entity).getValue());
         return entity;

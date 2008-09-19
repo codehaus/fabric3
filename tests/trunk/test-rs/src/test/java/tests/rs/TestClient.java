@@ -46,7 +46,7 @@ public class TestClient extends TestCase {
         Entity entity= new Entity();
         entity.setValue("World");
         ClientConfig cc = new DefaultClientConfig();
-        cc.getProviderClasses().add(EntityProvider.class);
+        cc.getClasses().add(EntityProvider.class);
         Client c = Client.create(cc);
         WebResource resource =c.resource(uri.path("Hello").build());
         ClientResponse response =resource.accept("application/entity").type("application/entity").post(ClientResponse.class,entity);
