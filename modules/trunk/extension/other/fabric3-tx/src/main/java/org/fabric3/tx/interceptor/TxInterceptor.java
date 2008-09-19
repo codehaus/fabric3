@@ -90,8 +90,10 @@ public class TxInterceptor implements Interceptor {
             throw e;
         }
             
-        if(txAction == TxAction.BEGIN && transaction == null) {
+        if(txAction == TxAction.BEGIN && transaction == null && !ret.isFault()) {
             commit();
+        } else if(txAction == TxAction.BEGIN && transaction == null && ret.isFault()) {
+            rollback();
         } else if(txAction == TxAction.SUSPEND && transaction != null) {
             resume(transaction);
         }
