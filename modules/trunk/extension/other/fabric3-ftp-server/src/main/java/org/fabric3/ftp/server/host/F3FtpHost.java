@@ -151,6 +151,11 @@ public class F3FtpHost implements FtpHost {
         this.idleTimeout = timeout / 1000;   // convert to seconds used by Mina
     }
 
+    /**
+     * Sets the address the server should bind to. This is used for multi-homed machines.
+     *
+     * @param listenAddress the address to bind to
+     */
     @Property
     public void setListenAddress(String listenAddress) {
         this.listenAddress = listenAddress;

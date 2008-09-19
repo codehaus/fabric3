@@ -41,6 +41,7 @@ public class PasvRequestHandler implements RequestHandler {
 
     private PassiveConnectionService passiveConnectionService;
     private String listenAddress;
+    private int idleTimeout = 60000;  // 60 seconds default
 
     /**
      * Initializes the passive data connection on request of <code>PASV</code> command from an authenticated user.
@@ -72,7 +73,7 @@ public class PasvRequestHandler implements RequestHandler {
             String socketAddress = localAddress.getHostAddress().replace('.', ',') + ',' + (passivePort >> 8) + ',' + (passivePort & 0xFF);
             session.setPassivePort(passivePort);
 
-            DataConnection dataConnection = new PassiveDataConnection(localAddress, passivePort);
+            DataConnection dataConnection = new PassiveDataConnection(localAddress, passivePort, idleTimeout);
             dataConnection.initialize();
             session.setDataConnection(dataConnection);
 
@@ -91,6 +92,17 @@ public class PasvRequestHandler implements RequestHandler {
     public void setListenAddress(String listenAddress) {
         this.listenAddress = listenAddress;
     }
+
+    /**
+     * Sets the optional timeout in milliseconds for sockets that are idle.
+     *
+     * @param timeout timeout in milliseconds.
+     */
+    @Property
+    public void setIdleTimeout(int timeout) {
+        this.idleTimeout = timeout / 1000;   // convert to seconds used by Mina
+    }
+
 
     /**
      * Injects the passive connection service.

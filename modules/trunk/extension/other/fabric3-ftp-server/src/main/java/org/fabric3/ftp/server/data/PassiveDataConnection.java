@@ -38,16 +38,19 @@ public class PassiveDataConnection implements DataConnection {
     private InetAddress bindAddress;
     private int passivePort;
     private Socket socket;
+    private int idleTimeout;
 
     /**
      * Initializes the passive data connection.
      *
      * @param bindAddress the address to bind the socket to.
      * @param passivePort Passive port.
+     * @param idleTimeout the time to wait in milliseconds for an accept() operation on the passive socket.
      */
-    public PassiveDataConnection(InetAddress bindAddress, int passivePort) {
+    public PassiveDataConnection(InetAddress bindAddress, int passivePort, int idleTimeout) {
         this.bindAddress = bindAddress;
         this.passivePort = passivePort;
+        this.idleTimeout = idleTimeout;
     }
 
     /**
@@ -105,6 +108,8 @@ public class PassiveDataConnection implements DataConnection {
      */
     public void initialize() throws IOException {
         serverSocket = new ServerSocket();
+        // set the timeout to wait for the client to respond
+        serverSocket.setSoTimeout(idleTimeout);
         SocketAddress address = new InetSocketAddress(bindAddress, passivePort);
         serverSocket.bind(address);
     }
