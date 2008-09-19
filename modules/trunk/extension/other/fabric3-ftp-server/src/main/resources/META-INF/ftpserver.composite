@@ -21,12 +21,15 @@
            targetNamespace="org.codehaus.fabric3"
            name="FtpServerExtension"
            autowire="true">
+    <!--
+    The FTP composite has the following configurable parameters, which are sourced from the runtime domain configuration property:
 
-    <!-- property name="commandPort"/>
-   <property name="minPassivePort"/>
-   <property name="maxPassivePort"/>
-   <property name="passiveAddress"/>
-   <property name="users"/-->
+    1. commandPort - the port to accept FTP commands on
+    2. minPassivePort - the lowest port number for passive connections
+    3. maxPassivePort - the highest port number for passive connections
+    4. listenAddress - the machine address the server should bind to. Used for multi-homed machines
+    5. idelTimeout - the timeout in milliseconds to use for socket connections
+    -->
 
     <property name="config"/>
 
