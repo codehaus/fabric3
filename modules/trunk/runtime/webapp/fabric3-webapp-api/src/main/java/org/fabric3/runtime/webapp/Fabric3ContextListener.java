@@ -201,18 +201,12 @@ public class Fabric3ContextListener implements ServletContextListener {
 
         // process the baseline intents
         URL intentsLocation = utils.getIntentsLocation(webappClassLoader);
-        try {
-            if (intentsLocation == null) {
-                intentsLocation = webappClassLoader.getResource("META-INF/fabric3/intents.xml");
-            }
-            URI uri = intentsLocation.toURI();
-            ContributionSource source = new FileContributionSource(uri, intentsLocation, -1, new byte[0]);
-            configuration.setIntents(source);
-        } catch (URISyntaxException e) {
-            // should not happen
-            throw new IllegalArgumentException(e);
+        if (intentsLocation == null) {
+            intentsLocation = webappClassLoader.getResource("META-INF/fabric3/intents.xml");
         }
-
+        URI uri = URI.create("StandardIntents");
+        ContributionSource source = new FileContributionSource(uri, intentsLocation, -1, new byte[0]);
+        configuration.setIntents(source);
         configuration.setRuntime(runtime);
 
         return configuration;

@@ -24,7 +24,6 @@ import java.io.Reader;
 import java.io.StringReader;
 import java.net.MalformedURLException;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
@@ -35,7 +34,6 @@ import java.util.Properties;
 import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
-
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.maven.artifact.Artifact;
@@ -47,6 +45,9 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.project.MavenProject;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+
 import org.fabric3.api.annotation.logging.Severe;
 import org.fabric3.featureset.FeatureSet;
 import org.fabric3.host.contribution.ContributionSource;
@@ -62,8 +63,6 @@ import org.fabric3.jmx.agent.DefaultAgent;
 import org.fabric3.maven.runtime.MavenEmbeddedRuntime;
 import org.fabric3.monitor.MonitorFactory;
 import org.fabric3.spi.classloader.MultiParentClassLoader;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
 
 /**
  * Run integration tests on a SCA composite using an embedded Fabric3 runtime.
@@ -449,17 +448,12 @@ public class Fabric3ITestMojo extends AbstractMojo {
         extensionHelper.processExtensions(configuration, extensions, featureSets, userExtensions, userExtensionsArchives);
 
         // process the baseline intents
-        try {
-            if (intentsLocation == null) {
-                intentsLocation = bootClassLoader.getResource("META-INF/fabric3/intents.xml");
-            }
-            URI uri = intentsLocation.toURI();
-            ContributionSource source = new FileContributionSource(uri, intentsLocation, -1, new byte[0]);
-            configuration.setIntents(source);
-        } catch (URISyntaxException e) {
-            // should not happen
-            throw new IllegalArgumentException(e);
+        if (intentsLocation == null) {
+            intentsLocation = bootClassLoader.getResource("META-INF/fabric3/intents.xml");
         }
+        URI uri = URI.create("StandardIntents");
+        ContributionSource source = new FileContributionSource(uri, intentsLocation, -1, new byte[0]);
+        configuration.setIntents(source);
         configuration.setRuntime(runtime);
         return configuration;
     }
@@ -587,22 +581,22 @@ public class Fabric3ITestMojo extends AbstractMojo {
         }
     }
 
-	private List<Dependency> getFeaturesToInstall() {
-		List<Dependency> featuresToInstall = new ArrayList<Dependency>();
-		
-		if (features != null) {
-			featuresToInstall.addAll(Arrays.asList(features));
-		}
-		if (!excludeDefaultFeatures) {
-			Dependency dependency = new Dependency();
-			dependency.setArtifactId("fabric3-default-feature");
-			dependency.setGroupId("org.codehaus.fabric3");
-			dependency.setVersion(runtimeVersion);
-			dependency.setType("xml");
-			featuresToInstall.add(dependency);
-		}
-		return featuresToInstall;
-	}
+    private List<Dependency> getFeaturesToInstall() {
+        List<Dependency> featuresToInstall = new ArrayList<Dependency>();
+
+        if (features != null) {
+            featuresToInstall.addAll(Arrays.asList(features));
+        }
+        if (!excludeDefaultFeatures) {
+            Dependency dependency = new Dependency();
+            dependency.setArtifactId("fabric3-default-feature");
+            dependency.setGroupId("org.codehaus.fabric3");
+            dependency.setVersion(runtimeVersion);
+            dependency.setType("xml");
+            featuresToInstall.add(dependency);
+        }
+        return featuresToInstall;
+    }
 
     public interface MojoMonitor {
         @Severe
