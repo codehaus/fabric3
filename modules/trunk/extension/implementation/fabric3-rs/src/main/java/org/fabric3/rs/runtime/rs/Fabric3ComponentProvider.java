@@ -19,37 +19,19 @@ package org.fabric3.rs.runtime.rs;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 
 import com.sun.jersey.spi.service.ComponentProvider;
-import java.util.concurrent.ConcurrentHashMap;
-import org.fabric3.spi.ObjectCreationException;
-import org.fabric3.spi.ObjectFactory;
 
 /**
  * @version $Rev$ $Date$
  */
 public class Fabric3ComponentProvider implements ComponentProvider {
 
-    ConcurrentHashMap<Class<?>, ObjectFactory<?>> classes;
-    
-    public Fabric3ComponentProvider() {
-        classes = new ConcurrentHashMap<Class<?>, ObjectFactory<?>>();
-
-    }
+    ConcurrentHashMap<Class<?>, Object> instances = new ConcurrentHashMap<Class<?>, Object>();
 
     public Object getInstance(Scope scope, Class c) throws InstantiationException, IllegalAccessException {
-        ObjectFactory factory = classes.get(c);
-        if (factory != null) {
-            try {
-                return factory.getInstance();
-            } catch (ObjectCreationException ex) {
-                ex.printStackTrace();
-                InstantiationException ie = new InstantiationException("unable to create instance");
-                ie.initCause(ex);
-                throw ie;
-            }
-        }
-        return null;
+        return instances.get(c);
     }
 
     public Object getInstance(Scope scope, Constructor constructor, Object[] parameters) throws InstantiationException,
@@ -57,12 +39,12 @@ public class Fabric3ComponentProvider implements ComponentProvider {
         return null;
     }
 
-    public void addClass(Class<?> resource, ObjectFactory<?> factory) {
-        classes.put(resource, factory);
+    public void addServiceHandler(Class<?> resource, Object instance) {
+        instances.put(resource, instance);
     }
 
     public Set<Class<?>> getClasses() {
-        return classes.keySet();
+        return instances.keySet();
     }
 
     public <T> T getInjectableInstance(T instance) {
@@ -70,7 +52,6 @@ public class Fabric3ComponentProvider implements ComponentProvider {
     }
 
     public void inject(Object instance) {
-        //throw new UnsupportedOperationException("Not supported yet.");
     }
 
     public <T> T getInstance(com.sun.jersey.spi.service.ComponentContext context , ComponentProvider.Scope scope, Class<T> clazz) {

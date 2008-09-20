@@ -1,7 +1,10 @@
 package org.fabric3.rs.runtime.rs;
 
 import java.io.IOException;
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
 import java.util.Enumeration;
+import java.util.Map;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
@@ -12,7 +15,11 @@ import javax.servlet.http.HttpServletResponse;
 import org.fabric3.pojo.PojoWorkContextTunnel;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.invocation.CallFrame;
+import org.fabric3.spi.invocation.Message;
+import org.fabric3.spi.invocation.MessageImpl;
 import org.fabric3.spi.invocation.WorkContext;
+import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
+import org.fabric3.spi.wire.InvocationChain;
 
 /**
  * @version $Rev$ $Date$
@@ -31,10 +38,9 @@ public final class RsWebApplication extends HttpServlet {
         reload = true;
     }
 
-    public void addFactory(Class<?> resource, ObjectFactory<?> factory) {
-        this.provider.addClass(resource, factory);
+    public void addServiceHandler(Class<?> resource, Object instance) {
+        provider.addServiceHandler(resource, instance);
         reload = true;
-
     }
 
     @Override
@@ -144,4 +150,5 @@ public final class RsWebApplication extends HttpServlet {
             return config.getServletName();
         }
     }
+    
 }

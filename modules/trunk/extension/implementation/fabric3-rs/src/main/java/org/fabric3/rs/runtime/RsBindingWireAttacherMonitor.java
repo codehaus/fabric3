@@ -31,7 +31,7 @@ public interface RsBindingWireAttacherMonitor {
      * @param address the endpoint address
      */
     @Info
-    void provisionedEndpoint( String className, String type, URI address);
+    void provisionedEndpoint(String className, String type, URI address);
 
     /**
      * Callback when a service endpoint has been de-provisioned
@@ -39,7 +39,7 @@ public interface RsBindingWireAttacherMonitor {
      * @param address the endpoint address
      */
     @Info
-    void removedEndpoint( String className, String type, URI address);
+    void removedEndpoint(String className, String type, URI address);
 
     /**
      * Callback indicating the extension has been initialized.
