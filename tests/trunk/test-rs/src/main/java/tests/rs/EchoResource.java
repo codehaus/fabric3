@@ -20,6 +20,8 @@ import javax.ws.rs.POST;
 import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Reference;
 import org.osoa.sca.annotations.Service;
+
+import javax.ws.rs.Consumes;
 import javax.ws.rs.Produces;
 import javax.ws.rs.Path;
 
@@ -43,6 +45,7 @@ public class EchoResource implements EchoService {
 
     @POST
     @Produces("text/plain")
+    @Consumes("application/x-www-form-urlencoded")
     public String hello(String name) {
         return message + " " + service.hello(name);
     }

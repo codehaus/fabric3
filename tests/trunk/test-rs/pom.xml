@@ -51,6 +51,12 @@
             <groupId>com.sun.jersey</groupId>
             <artifactId>jersey-server</artifactId>
             <version>0.11-ea-SNAPSHOT</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>asm</groupId>
+                    <artifactId>asm</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>com.sun.jersey</groupId>
@@ -94,8 +100,24 @@
                             <groupId>com.sun.jersey</groupId>
                             <artifactId>jersey-server</artifactId>
                             <version>0.11-ea-SNAPSHOT</version>
+                            <exclusions>
+                                <exclusion>
+                                    <groupId>asm</groupId>
+                                    <artifactId>asm</artifactId>
+                                </exclusion>
+                            </exclusions>
                         </dependency>
                     </shared>
+                    <!-- Set the Jetty Listen Port for Integration Tests -->
+                    <systemConfig>
+                        <![CDATA[
+                            <config>
+                                <web.server>
+                                    <http port="8900"/>
+                                </web.server>
+                            </config>
+                        ]]>
+                    </systemConfig>
                 </configuration>
                 <executions>
                     <execution>
