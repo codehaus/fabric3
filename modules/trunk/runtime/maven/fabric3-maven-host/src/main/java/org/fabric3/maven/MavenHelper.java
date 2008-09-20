@@ -257,7 +257,7 @@ public class MavenHelper {
             String localRepo = settings.getLocalRepository();
 
             localRepository = artifactRepositoryFactory.createArtifactRepository("local",
-                                                                                 new File(localRepo).toURL().toString(),
+                                                                                 new File(localRepo).toURI().toURL().toString(),
                                                                                  layout,
                                                                                  snapshotsPolicy,
                                                                                  releasesPolicy);
