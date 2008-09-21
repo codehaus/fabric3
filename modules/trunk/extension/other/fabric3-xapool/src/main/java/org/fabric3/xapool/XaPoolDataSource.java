@@ -50,11 +50,14 @@ public class XaPoolDataSource implements DataSource {
     private DataSourceRegistry dataSourceRegistry;
 
     public Connection getConnection() throws SQLException {
+		System.err.println("****************************** Getting XA connection ****************************");
         return delegate.getXAConnection().getConnection();
+        //return delegate.getConnection();
     }
 
     public Connection getConnection(String username, String password) throws SQLException {
         return delegate.getXAConnection(username, password).getConnection();
+        //return delegate.getConnection(username, password);
     }
 
     public PrintWriter getLogWriter() throws SQLException {
