@@ -20,6 +20,7 @@ package org.fabric3.binding.ftp.runtime;
 
 import java.io.InputStream;
 
+import org.fabric3.ftp.api.FtpConstants;
 import org.fabric3.ftp.api.FtpLet;
 import org.fabric3.spi.invocation.Message;
 import org.fabric3.spi.invocation.MessageImpl;
@@ -44,9 +45,11 @@ public class BindingFtpLet implements FtpLet {
         this.monitor = monitor;
     }
 
-    public boolean onUpload(String fileName, InputStream uploadData) throws Exception {
+    public boolean onUpload(String fileName, String contentType, InputStream uploadData) throws Exception {
         Object[] args = new Object[]{fileName, uploadData};
         WorkContext workContext = new WorkContext();
+        // set the header value for the request context
+        workContext.setHeader(FtpConstants.HEADER_CONTENT_TYPE, contentType);
         Message input = new MessageImpl(args, false, workContext);
         Message msg = getInterceptor().invoke(input);
         if (msg.isFault()) {

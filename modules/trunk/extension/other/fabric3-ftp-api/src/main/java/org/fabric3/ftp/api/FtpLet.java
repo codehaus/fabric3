@@ -32,11 +32,12 @@ public interface FtpLet {
     /**
      * Callback when data is uploaded by the remote FTP client.
      *
-     * @param fileName   Name of the file being uploaded.
-     * @param uploadData Stream of data that is being uploaded.
+     * @param fileName    Name of the file being uploaded.
+     * @param contentType the type of data (e.g. binary or text) being uploaded
+     * @param uploadData  Stream of data that is being uploaded.
      * @return true if the operation completed
      * @throws Exception If unable to handle the data.
      */
-    boolean onUpload(String fileName, InputStream uploadData) throws Exception;
+    boolean onUpload(String fileName, String contentType, InputStream uploadData) throws Exception;
 
 }

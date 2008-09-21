@@ -135,7 +135,8 @@ public class StorRequestHandler implements RequestHandler {
                 session.write(new DefaultResponse(426, "Data connection error"));
                 return;
             }
-            if (!ftpLet.onUpload(fileName, uploadData)) {
+            String type = session.getContentType();
+            if (!ftpLet.onUpload(fileName, type, uploadData)) {
                 ftpMonitor.uploadError(session.getUserName());
                 session.write(new DefaultResponse(426, "Data connection error"));
                 return;

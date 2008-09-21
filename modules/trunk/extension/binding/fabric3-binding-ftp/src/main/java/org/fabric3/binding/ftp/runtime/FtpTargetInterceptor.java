@@ -24,6 +24,7 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 import org.apache.commons.net.SocketFactory;
+import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
 import org.osoa.sca.ServiceUnavailableException;
 
@@ -31,6 +32,7 @@ import org.fabric3.binding.ftp.provision.FtpSecurity;
 import org.fabric3.spi.invocation.Message;
 import org.fabric3.spi.invocation.MessageImpl;
 import org.fabric3.spi.wire.Interceptor;
+import org.fabric3.ftp.api.FtpConstants;
 
 /**
  * @version $Revision$ $Date$
@@ -70,6 +72,12 @@ public class FtpTargetInterceptor implements Interceptor {
                 ftpClient.setDataTimeout(timeout);
             }
             ftpClient.connect(hostAddress, port);
+            String type = msg.getWorkContext().getHeader(String.class, FtpConstants.HEADER_CONTENT_TYPE);
+            if (type != null && type.equalsIgnoreCase(FtpConstants.BINARY_TYPE)) {
+                ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
+            } else if (type != null && type.equalsIgnoreCase(FtpConstants.TEXT_TYPE)) {
+                ftpClient.setFileType(FTP.ASCII_FILE_TYPE);
+            }
 
             /*if (!ftpClient.login(security.getUser(), security.getPassword())) {
                 throw new ServiceUnavailableException("Invalid credentials");

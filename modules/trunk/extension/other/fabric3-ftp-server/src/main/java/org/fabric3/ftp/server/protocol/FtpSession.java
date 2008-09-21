@@ -21,8 +21,10 @@ package org.fabric3.ftp.server.protocol;
 import org.apache.mina.common.IoSession;
 import org.apache.mina.common.WriteFuture;
 
+import org.fabric3.ftp.api.FtpConstants;
 import org.fabric3.ftp.server.data.DataConnection;
 import org.fabric3.ftp.server.security.User;
+
 
 /**
  * Represents an FTP session between a client and a server.
@@ -35,6 +37,7 @@ public class FtpSession {
     public static final String PASSIVE_PORT = "org.fabric3.ftp.server.passive.port";
     public static final String DATA_CONNECTION = "org.fabric3.ftp.server.data.connection";
     public static final String CURRENT_DIRECTORY = "org.fabric3.ftp.server.directory";
+    public static final String CONTENT_TYPE = "org.fabric3.ftp.server.content.type";
 
     private IoSession ioSession;
 
@@ -173,6 +176,33 @@ public class FtpSession {
         setDataConnection(null);
         setPassivePort(0);
 
+    }
+
+    /**
+     * Sets the data content type
+     *
+     * @param type the file transfer type
+     */
+    public void setContentType(String type) {
+        if ("I".equals(type)) {
+            ioSession.setAttribute(CONTENT_TYPE, FtpConstants.BINARY_TYPE);
+        } else {
+            ioSession.setAttribute(CONTENT_TYPE, FtpConstants.TEXT_TYPE);
+        }
+    }
+
+    /**
+     * Returns the data content type
+     *
+     * @return the file transfer type
+     */
+    public String getContentType() {
+        String type = (String) ioSession.getAttribute(CONTENT_TYPE);
+        if (type == null) {
+            // default to ASCII/text
+            return FtpConstants.TEXT_TYPE;
+        }
+        return type;
     }
 
     /**

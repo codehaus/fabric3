@@ -23,13 +23,12 @@ import java.io.InputStream;
 import org.fabric3.ftp.api.FtpLet;
 
 /**
- *
  * @version $Revision$ $Date$
  */
 public class DummyFtpLet implements FtpLet {
 
-    public boolean onUpload(String fileName, InputStream uploadData) throws Exception {
-        
+    public boolean onUpload(String fileName, String contentType, InputStream uploadData) throws Exception {
+
         int data = uploadData.read();
         while (data != -1) {
             System.err.print((char) data);

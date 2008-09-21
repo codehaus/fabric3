@@ -38,7 +38,9 @@ public class TypeRequestHandler implements RequestHandler {
      */
     public void service(Request request) {
         FtpSession session = request.getSession();
-        session.write(new DefaultResponse(200, "Type set to " + request.getArgument()));
+        String type = request.getArgument();
+        session.setContentType(type);
+        session.write(new DefaultResponse(200, "Type set to " + type));
 
     }
 
