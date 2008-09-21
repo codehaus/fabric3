@@ -22,7 +22,7 @@
     
     <component name="TestClient">
         <f3:junit class="tests.rs.TestClient"/>
-        <property name="hostURI">http://localhost:8700</property>
+        <property name="hostURI">http://localhost:8900</property>
     </component>
     
     <component name="EntityProvider" >
