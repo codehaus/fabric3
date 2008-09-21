@@ -20,8 +20,15 @@ import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.sql.DataSource;
+import javax.sql.XAConnection;
+import javax.transaction.RollbackException;
+import javax.transaction.Synchronization;
+import javax.transaction.SystemException;
+import javax.transaction.Transaction;
 import javax.transaction.TransactionManager;
 
 import org.enhydra.jdbc.standard.StandardXADataSource;
@@ -48,16 +55,46 @@ public class XaPoolDataSource implements DataSource {
     private StandardXADataSource delegate;
     private TransactionManager transactionManager;
     private DataSourceRegistry dataSourceRegistry;
+    private Map<Transaction, TransactedConnection> connectionCache = new ConcurrentHashMap<Transaction, TransactedConnection>();
 
     public Connection getConnection() throws SQLException {
-		System.err.println("****************************** Getting XA connection ****************************");
-        return delegate.getXAConnection().getConnection();
-        //return delegate.getConnection();
+		
+        try {
+            
+            final Transaction transaction = transactionManager.getTransaction();
+            
+            if (transaction == null) {
+                return delegate.getConnection();
+            }
+            
+            TransactedConnection connection = connectionCache.get(transaction);
+            if (connection == null) {
+                final XAConnection xaConnection = delegate.getXAConnection();
+                connection = new TransactedConnection(xaConnection);
+                connectionCache.put(transaction, connection);
+                transaction.registerSynchronization(new Synchronization() {
+                    public void afterCompletion(int status) {
+                        TransactedConnection connection = connectionCache.get(transaction);
+                        connection.closeForReal();
+                        connectionCache.remove(transaction);
+                    }
+                    public void beforeCompletion() {
+                    }
+                });
+            }
+            
+            return connection;
+            
+        } catch (SystemException e) {
+            throw new SQLException(e.getMessage());
+        } catch (RollbackException e) {
+            throw new SQLException(e.getMessage());
+        }
+        
     }
 
     public Connection getConnection(String username, String password) throws SQLException {
-        return delegate.getXAConnection(username, password).getConnection();
-        //return delegate.getConnection(username, password);
+        throw new UnsupportedOperationException();
     }
 
     public PrintWriter getLogWriter() throws SQLException {
