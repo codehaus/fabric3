@@ -67,7 +67,9 @@ public class Axis2TargetWireAttacher implements TargetWireAttacher<Axis2WireTarg
             String operation = entry.getKey().getName();
 
             Set<AxisPolicy> policies = target.getPolicies(operation);
-            Interceptor interceptor = new Axis2TargetInterceptor(endpointUri, operation, policies, f3Configurator, policyApplier);
+            Map<String, String> opInfo = target.getOperationInfo() != null ? target.getOperationInfo().get(operation) : null;
+            
+            Interceptor interceptor = new Axis2TargetInterceptor(endpointUri, operation, policies, opInfo, target.getConfig(), f3Configurator, policyApplier);
             entry.getValue().addInterceptor(interceptor);
         }
 

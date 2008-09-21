@@ -31,5 +31,10 @@
     <component name="JaxbInterceptorGenerator">
         <system:implementation.system class="org.fabric3.binding.ws.axis2.control.jaxb.JaxbInterceptorDefinitionGenerator"/>
     </component>
+    
+    <!--Jaxws Introspector -->
+    <component name="JAXWSTypeIntrospector">
+        <system:implementation.system class="org.fabric3.binding.ws.axis2.introspection.JAXWSTypeIntrospector"/>
+    </component>
 
 </composite>

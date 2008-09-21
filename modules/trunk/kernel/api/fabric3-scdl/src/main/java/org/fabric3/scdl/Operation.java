@@ -19,7 +19,11 @@
 package org.fabric3.scdl;
 
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
+import javax.xml.namespace.QName;
 
 
 /**
@@ -39,6 +43,7 @@ public class Operation<T> extends AbstractPolicyAware {
     private DataType<List<DataType<T>>> inputType;
     private List<DataType<T>> faultTypes;
     private int conversationSequence = NO_CONVERSATION;
+    private Map<QName, Map<String, String>> info;
 
     /**
      * Construct a minimally-specified operation
@@ -136,6 +141,22 @@ public class Operation<T> extends AbstractPolicyAware {
      */
     public void setConversationSequence(int conversationSequence) {
         this.conversationSequence = conversationSequence;
+    }
+    
+    public void addInfo(QName qName, String key, String value) {
+	if(info == null) {//Lazy loading
+	    info = new HashMap<QName, Map<String,String>>();
+	    info.put(qName, new HashMap<String, String>());
+	}
+	
+	info.get(qName).put(key, value);
+    }
+    
+    public Map<String, String> getInfo(QName qName) {
+	if(info != null) {
+	    return info.get(qName);
+	}
+	return null;
     }
 
     public String toString() {

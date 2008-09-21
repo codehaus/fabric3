@@ -32,6 +32,8 @@ public class Axis2WireTargetDefinition extends PhysicalWireTargetDefinition impl
 
     private String referenceInterface;
     private Map<String, Set<AxisPolicy>> policies = new HashMap<String, Set<AxisPolicy>>();
+    private Map<String, Map<String, String>> operationInfo;
+    private Map<String, String> config;
     private URI classloaderURI;
 
     /**
@@ -67,6 +69,25 @@ public class Axis2WireTargetDefinition extends PhysicalWireTargetDefinition impl
      */
     public Set<AxisPolicy> getPolicies(String operation) {
         return policies.get(operation);
+    }
+    
+    public Map<String, Map<String, String>> getOperationInfo() {
+        return operationInfo;
+    }
+
+    public void addOperationInfo(String operation, Map<String, String> operationInfo) {
+	if(this.operationInfo == null) {
+	    this.operationInfo = new HashMap<String, Map<String,String>>();	    
+	}
+	this.operationInfo.put(operation, operationInfo);
+    }    
+
+    public Map<String, String> getConfig() {
+        return config;
+    }
+
+    public void setConfig(Map<String, String> config) {
+        this.config = config;
     }
 
     /**

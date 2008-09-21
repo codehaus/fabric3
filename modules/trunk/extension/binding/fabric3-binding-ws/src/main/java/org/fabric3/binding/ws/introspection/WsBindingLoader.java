@@ -18,19 +18,19 @@
  */
 package org.fabric3.binding.ws.introspection;
 
+import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
+import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
+
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
+
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
-
-import org.osoa.sca.Constants;
-import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.binding.ws.scdl.WsBindingDefinition;
 import org.fabric3.introspection.IntrospectionContext;
@@ -40,6 +40,9 @@ import org.fabric3.introspection.xml.LoaderUtil;
 import org.fabric3.introspection.xml.MissingAttribute;
 import org.fabric3.introspection.xml.TypeLoader;
 import org.fabric3.introspection.xml.UnrecognizedAttribute;
+import org.osoa.sca.Constants;
+import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Reference;
 
 /**
  * @version $Revision$ $Date$
@@ -95,6 +98,9 @@ public class WsBindingLoader implements TypeLoader<WsBindingDefinition> {
                 bd = new WsBindingDefinition(endpointUri, implementation, wsdlLocation, wsdlElement);
             }
             loaderHelper.loadPolicySetsAndIntents(bd, reader, introspectionContext);
+            
+            //Load optional config parameters
+            loadConfig(bd, reader);
 
             // TODO Add rest of the WSDL support
 
@@ -106,9 +112,36 @@ public class WsBindingLoader implements TypeLoader<WsBindingDefinition> {
             introspectionContext.addError(failure);
         }
 
-        LoaderUtil.skipToEndElement(reader);
+        //LoaderUtil.skipToEndElement(reader);
         return bd;
 
+    }
+
+    private void loadConfig(WsBindingDefinition bd, XMLStreamReader reader) throws XMLStreamException {
+	Map<String, String> config = null;
+	String name = null;
+        while (true) {
+            switch(reader.next()) {
+                case START_ELEMENT:
+                    name = reader.getName().getLocalPart();
+                    if("config".equals(name)) {
+                	config = new HashMap<String, String>();
+                    } else if ("parameter".equals(name)) {
+                        final String key = reader.getAttributeValue(null, "name");
+                        final String value = reader.getElementText();
+                        config.put(key, value);
+                    }
+                    break;
+                case END_ELEMENT:
+                    name = reader.getName().getLocalPart();
+                    if("config".equals(name)) {
+                	bd.setConfig(config);
+                    } else if("binding.ws".equals(name)) {
+                        return ;
+                    }
+                    break;
+            }
+        }        
     }
 
     private void validateAttributes(XMLStreamReader reader, IntrospectionContext context) {

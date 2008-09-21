@@ -20,6 +20,7 @@
 package org.fabric3.binding.ws.scdl;
 
 import java.net.URI;
+import java.util.Map;
 
 import org.fabric3.scdl.BindingDefinition;
 import org.fabric3.binding.ws.introspection.WsBindingLoader;
@@ -35,12 +36,13 @@ public class WsBindingDefinition extends BindingDefinition {
     private final String implementation;
     private final String wsdlLocation;
     private final String wsdlElement;
+    private Map<String, String> config;
 
     public WsBindingDefinition(URI targetUri, String implementation, String wsdlLocation, String wsdlElement) {
         super(targetUri, WsBindingLoader.BINDING_QNAME);
         this.implementation = implementation;
         this.wsdlElement = wsdlElement;
-        this.wsdlLocation = wsdlLocation;
+        this.wsdlLocation = wsdlLocation;        
     }
 
     public String getImplementation() {
@@ -54,6 +56,14 @@ public class WsBindingDefinition extends BindingDefinition {
 
     public String getWsdlLocation() {
         return wsdlLocation;
+    }
+
+    public Map<String, String> getConfig() {
+        return config;
+    }
+
+    public void setConfig(Map<String, String> config) {
+        this.config = config;
     }
 
 }

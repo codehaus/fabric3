@@ -16,6 +16,7 @@
  */
 package org.fabric3.binding.ws.axis2.runtime;
 
+import java.util.Map;
 import java.util.Set;
 
 import org.apache.axiom.om.OMElement;
@@ -30,14 +31,14 @@ import org.apache.axis2.description.AxisDescription;
 import org.apache.axis2.description.AxisModule;
 import org.apache.axis2.description.AxisOperation;
 import org.apache.axis2.description.AxisService;
-import org.osoa.sca.ServiceUnavailableException;
-
+import org.fabric3.binding.ws.axis2.common.Constant;
 import org.fabric3.binding.ws.axis2.provision.AxisPolicy;
 import org.fabric3.binding.ws.axis2.runtime.config.F3Configurator;
 import org.fabric3.binding.ws.axis2.runtime.policy.PolicyApplier;
 import org.fabric3.spi.invocation.Message;
 import org.fabric3.spi.invocation.MessageImpl;
 import org.fabric3.spi.wire.Interceptor;
+import org.osoa.sca.ServiceUnavailableException;
 
 /**
  * @version $Revision$ $Date$
@@ -48,6 +49,8 @@ public class Axis2TargetInterceptor implements Interceptor {
     private final EndpointReference epr;
     private final String operation;
     private final Set<AxisPolicy> policies;
+    private Map<String, String> operationInfo;
+    private Map<String, String> config;
     private final F3Configurator f3Configurator;
     private final PolicyApplier policyApplier;
 
@@ -63,6 +66,8 @@ public class Axis2TargetInterceptor implements Interceptor {
     public Axis2TargetInterceptor(String endpointUri,
                                   String operation,
                                   Set<AxisPolicy> policies,
+                                  Map<String, String> operationInfo,
+                                  Map<String, String> config,
                                   F3Configurator f3Configurator,
                                   PolicyApplier policyApplier) {
 
@@ -71,6 +76,8 @@ public class Axis2TargetInterceptor implements Interceptor {
         this.policies = policies;
         this.f3Configurator = f3Configurator;
         this.policyApplier = policyApplier;
+        this.operationInfo = operationInfo;
+        this.config = config;
     }
 
     public Interceptor getNext() {
@@ -86,7 +93,10 @@ public class Axis2TargetInterceptor implements Interceptor {
         options.setTo(epr);
         options.setTransportInProtocol(Constants.TRANSPORT_HTTP);
         options.setProperty(Constants.Configuration.ENABLE_MTOM, Constants.VALUE_TRUE);
-        options.setAction("urn:" + operation);
+                
+        applyOperationInfo(options);
+        applyConfig(options);
+        
 
         Thread currentThread = Thread.currentThread();
         ClassLoader oldCl = currentThread.getContextClassLoader();
@@ -128,6 +138,30 @@ public class Axis2TargetInterceptor implements Interceptor {
             currentThread.setContextClassLoader(oldCl);
         }
 
+    }    
+
+    private void applyOperationInfo(Options options) {
+	String soapAction = "urn:" + operation;//Default
+	
+	if(this.operationInfo != null) {
+	    String soapActionInfo = this.operationInfo.get(Constant.SOAP_ACTION);
+	    if(soapActionInfo != null) {
+		soapAction = soapActionInfo;
+	    }
+	}
+	options.setAction(soapAction);	
+    }
+    
+    private void applyConfig(Options options) {
+	if(config != null) {
+	    boolean mtomEnabled = config.get(Constant.CONFIG_ENABLE_MTOM).equalsIgnoreCase(Constant.VALUE_TRUE);
+	    if(!mtomEnabled) {
+		options.setProperty(Constants.Configuration.ENABLE_MTOM, Constants.VALUE_FALSE);
+		return;
+	    }
+	}
+	//By default MTOM is enabled for backward compatibility.
+	options.setProperty(Constants.Configuration.ENABLE_MTOM, Constants.VALUE_TRUE);	
     }
 
     private void applyPolicies(ServiceClient sender, String operation) throws AxisFault {

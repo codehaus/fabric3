@@ -18,6 +18,7 @@ package org.fabric3.binding.ws.axis2.control;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Map;
 
 import javax.xml.namespace.QName;
 
@@ -80,12 +81,27 @@ public class Axis2BindingGeneratorDelegate implements BindingGeneratorDelegate<W
         URI classloaderId = binding.getParent().getParent().getClassLoaderId();
         hwtd.setClassloaderURI(classloaderId);
         
+        //Set Axis2 operation parameters
+        addOperationInfo(hwtd, contract);
+        
+        //Set config
+        hwtd.setConfig(binding.getBinding().getConfig());
+        
         setPolicyConfigs(hwtd, policy, contract);
         
         return hwtd;
 
     }
     
+    private void addOperationInfo(Axis2WireTargetDefinition hwtd, ServiceContract<?> serviceContract) {
+	for (Operation<?> operation : serviceContract.getOperations()) {
+	    Map<String, String> info = operation.getInfo(org.fabric3.binding.ws.axis2.common.Constant.AXIS2_JAXWS_QNAME);
+	    if(info != null) {
+		hwtd.addOperationInfo(operation.getName(), info);
+	    }	    
+	}	
+    }
+
     private void setPolicyConfigs(Axis2PolicyAware policyAware, Policy policy, ServiceContract<?> serviceContract) throws Axis2GenerationException {
         
         for (Operation<?> operation : serviceContract.getOperations()) {
