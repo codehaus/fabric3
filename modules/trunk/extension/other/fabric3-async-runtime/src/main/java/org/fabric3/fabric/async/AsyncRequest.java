@@ -19,6 +19,7 @@
 package org.fabric3.fabric.async;
 
 import java.util.List;
+import java.util.Map;
 
 import org.fabric3.host.work.DefaultPausableWork;
 import org.fabric3.spi.wire.Interceptor;
@@ -35,17 +36,22 @@ public class AsyncRequest extends DefaultPausableWork {
     private final Interceptor next;
     private final Message message;
     private List<CallFrame> stack;
+    private Map<String, Object> headers;
 
-    public AsyncRequest(Interceptor next, Message message, List<CallFrame> stack) {
+    public AsyncRequest(Interceptor next, Message message, List<CallFrame> stack, Map<String, Object> headers) {
         this.next = next;
         this.message = message;
         this.stack = stack;
+        this.headers = headers;
     }
 
     public void execute() {
         WorkContext newWorkContext = new WorkContext();
         if (stack != null) {
             newWorkContext.addCallFrames(stack);
+        }
+        if (headers != null) {
+            newWorkContext.addHeaders(headers);
         }
         message.setWorkContext(newWorkContext);
         next.invoke(message);

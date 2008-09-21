@@ -50,7 +50,11 @@ public class ContextProcessor<I extends Implementation<? extends InjectingCompon
 
         Type type = field.getGenericType();
         FieldInjectionSite site = new FieldInjectionSite(field);
-        InjectableAttribute attribute = getContext(type);
+        InjectableAttribute attribute = null;
+        if (type instanceof Class) {
+            attribute = getContext((Class) type);
+
+        }
         if (attribute != null) {
             implementation.getComponentType().addInjectionSite(attribute, site);
         }
@@ -60,16 +64,20 @@ public class ContextProcessor<I extends Implementation<? extends InjectingCompon
 
         Type type = helper.getGenericType(method);
         MethodInjectionSite site = new MethodInjectionSite(method, 0);
-        InjectableAttribute attribute = getContext(type);
+        InjectableAttribute attribute = null;
+        if (type instanceof Class) {
+            attribute = getContext((Class) type);
+
+        }
         if (attribute != null) {
             implementation.getComponentType().addInjectionSite(attribute, site);
         }
     }
 
-    InjectableAttribute getContext(Type type) {
-        if (RequestContext.class.equals(type)) {
+    InjectableAttribute getContext(Class<?> type) {
+        if (RequestContext.class.isAssignableFrom(type)) {
             return InjectableAttribute.REQUEST_CONTEXT;
-        } else if (ComponentContext.class.equals(type)) {
+        } else if (ComponentContext.class.isAssignableFrom(type)) {
             return InjectableAttribute.COMPONENT_CONTEXT;
         } else {
             return null;

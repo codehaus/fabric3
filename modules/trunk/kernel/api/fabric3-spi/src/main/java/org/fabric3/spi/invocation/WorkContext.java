@@ -19,7 +19,9 @@
 package org.fabric3.spi.invocation;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import javax.security.auth.Subject;
 
 /**
@@ -35,6 +37,7 @@ import javax.security.auth.Subject;
 public class WorkContext {
     private Subject subject;
     private List<CallFrame> callStack;
+    private Map<String, Object> headers;
 
     public void setSubject(Subject subject) {
         this.subject = subject;
@@ -108,4 +111,59 @@ public class WorkContext {
         return callStack;
     }
 
+    /**
+     * Returns the header value for the given name associated with the current request context.
+     *
+     * @param type the expected header value type
+     * @param name the header name
+     * @return the header value or null if no header exists
+     */
+    public <T> T getHeader(Class<T> type, String name) {
+        if (headers == null) {
+            return null;
+        }
+        return type.cast(headers.get(name));
+    }
+
+    /**
+     * Sets a header value for the current request context.
+     *
+     * @param name  the header name
+     * @param value the header vale
+     */
+    public void setHeader(String name, Object value) {
+        if (headers == null) {
+            headers = new HashMap<String, Object>();
+        }
+        headers.put(name, value);
+    }
+
+    /**
+     * Clears a header for the current request context.
+     *
+     * @param name the hader name
+     */
+    public void removeHeader(String name) {
+        if (headers == null) {
+            return;
+        }
+        headers.remove(name);
+    }
+
+    /**
+     * Returns all headers for the current request context.
+     *
+     * @return the map of header names and values
+     */
+    public Map<String, Object> getHeaders() {
+        return headers;
+    }
+
+    public void addHeaders(Map<String, Object> newheaders) {
+        if (headers == null) {
+            headers = newheaders;
+            return;
+        }
+        headers.putAll(newheaders);
+    }
 }

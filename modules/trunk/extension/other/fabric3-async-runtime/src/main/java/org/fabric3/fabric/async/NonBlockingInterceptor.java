@@ -20,6 +20,8 @@ package org.fabric3.fabric.async;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.HashMap;
 
 import org.fabric3.host.work.WorkScheduler;
 import org.fabric3.spi.invocation.CallFrame;
@@ -52,7 +54,13 @@ public class NonBlockingInterceptor implements Interceptor {
             newStack = new ArrayList<CallFrame>(stack);
         }
         msg.setWorkContext(null);
-        AsyncRequest request = new AsyncRequest(next, msg, newStack);
+        Map<String, Object> newHeaders = null;
+        Map<String, Object> headers = workContext.getHeaders();
+        if (headers != null && !headers.isEmpty()) {
+            // clone the headers to avoid multiple threads seeing changes
+            newHeaders = new HashMap<String, Object>(headers);
+        }
+        AsyncRequest request = new AsyncRequest(next, msg, newStack, newHeaders);
         workScheduler.scheduleWork(request);
         return RESPONSE;
     }
