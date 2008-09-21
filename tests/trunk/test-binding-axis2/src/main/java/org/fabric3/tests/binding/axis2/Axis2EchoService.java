@@ -16,12 +16,16 @@
  */
 package org.fabric3.tests.binding.axis2;
 
+import javax.jws.WebMethod;
+
 import org.apache.axiom.om.OMElement;
 
 /**
  * @version $Rev$ $Date$
  */
 public interface Axis2EchoService {
+    @WebMethod(action="echoWs")
     OMElement echoWs(OMElement message);
+    
     OMElement echoNoSecurity(OMElement message);
 }
