@@ -21,25 +21,36 @@ package org.fabric3.tests.binding.ftp;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 
+import junit.framework.TestCase;
+import org.osoa.sca.annotations.Context;
 import org.osoa.sca.annotations.Reference;
 
-import junit.framework.TestCase;
+import org.fabric3.api.F3RequestContext;
 
 /**
- *
  * @version $Revision$ $Date$
  */
 public class DataTransferServiceITest extends TestCase {
-    
-    @Reference protected FtpDataTransferService ftpDataTransferService;
-    
+
+    @Context
+    protected F3RequestContext context;
+
+    @Reference
+    protected FtpDataTransferService ftpDataTransferService;
+
     public void testTransfer() throws Exception {
-        
+
         String fileName = "/resources/test.dat";
         InputStream data = new ByteArrayInputStream("TEST".getBytes());
-        
+
         ftpDataTransferService.transferData(fileName, data);
-        
+
+    }
+
+    public void testBinaryTransfer() throws Exception {
+        context.setHeader("f3.contentType", "BINARY");
+        ByteArrayInputStream data = new ByteArrayInputStream(new byte[]{0x9});
+        ftpDataTransferService.transferData("test", data);
     }
 
 }
