@@ -42,14 +42,14 @@
                 <module>test-groovy</module>
                 <module>test-policy</module>
                 <module>test-mock</module>
-                <!--module>test-security-policy</module-->
+                <module>test-security-policy</module>
                 <module>test-runtime-jetty</module>
-                <!--module>test-binding-cxf</module>
+                <module>test-binding-cxf</module>
                 <module>test-binding-axis2</module>
-                <module>test-binding-axis2-jaxb</module-->
+                <module>test-binding-axis2-jaxb</module>
                 <module>test-binding-burlap</module>
-                <!--module>test-binding-hessian</module-->
-                <!--module>test-binding-jms</module-->
+                <module>test-binding-hessian</module>
+                <module>test-binding-jms</module>
                 <module>test-ds-extension</module>
                 <module>test-jpa-hibernate</module>
                 <module>test-jpa-implementation</module>
