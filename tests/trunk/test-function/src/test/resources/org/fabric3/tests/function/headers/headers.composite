@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
+           xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
+           name="HeaderComposite">
+
+    <component name="HeaderTest">
+        <f3:junit class="org.fabric3.tests.function.headers.HeaderTest"/>
+        <reference name="headerService" target="HeaderService"/>
+        <reference name="asyncHeaderService" target="AsyncHeaderService"/>
+    </component>
+
+    <component name="HeaderService">
+        <implementation.java class="org.fabric3.tests.function.headers.HeaderServiceImpl"/>
+    </component>
+
+    <component name="AsyncHeaderService">
+        <implementation.java class="org.fabric3.tests.function.headers.AsyncHeaderServiceImpl"/>
+    </component>
+
+</composite>

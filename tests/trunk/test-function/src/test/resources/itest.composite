@@ -35,5 +35,6 @@
     <include name="OrderingComposite"/>
     <include name="GenericTestComposite"/>
     <include name="ScopeComposite"/>
+    <include name="HeaderComposite"/>
 
 </composite>
