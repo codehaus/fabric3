@@ -37,7 +37,7 @@ import org.fabric3.scdl.InjectableAttributeType;
 import org.fabric3.scdl.Operation;
 import org.fabric3.scdl.Scope;
 import org.fabric3.scdl.ServiceContract;
-import org.fabric3.scdl.definitions.Intent;
+import org.fabric3.scdl.definitions.PolicySet;
 import org.fabric3.spi.Constants;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.LogicalComponent;
@@ -53,7 +53,7 @@ import org.fabric3.spi.policy.Policy;
  * @version $Revision$ $Date$
  */
 public class JavaGenerationHelperImpl implements JavaGenerationHelper {
-    private static final QName PROPAGATES_CONVERSATION = new QName(Constants.FABRIC3_NS, "propagatesConversation");
+    private static final QName PROPAGATES_CONVERSATION_POLICY = new QName(Constants.FABRIC3_NS, "propagatesConversationPolicy");
     private final InstanceFactoryGenerationHelper helper;
 
     public JavaGenerationHelperImpl(@Reference InstanceFactoryGenerationHelper helper) {
@@ -179,10 +179,17 @@ public class JavaGenerationHelperImpl implements JavaGenerationHelper {
     }
 
 
+    /**
+     * Determines if the wire propagates conversations. Conversational propagation is handled by the source component.
+     *
+     * @param wireDefinition  the source wire defintion
+     * @param serviceContract the wire service cotnract
+     * @param policy          the set of policies for the wire
+     */
     private void calculateConversationalPolicy(JavaWireSourceDefinition wireDefinition, ServiceContract<?> serviceContract, Policy policy) {
         for (Operation<?> operation : serviceContract.getOperations()) {
-            for (Intent intent : policy.getProvidedIntents(operation)) {
-                if (PROPAGATES_CONVERSATION.equals(intent.getName())) {
+            for (PolicySet policySet : policy.getProvidedPolicySets(operation)) {
+                if (PROPAGATES_CONVERSATION_POLICY.equals(policySet.getName())) {
                     wireDefinition.setInteractionType(InteractionType.PROPAGATES_CONVERSATION);
                     // conversational propagation is for the entire reference so set it an return
                     return;
