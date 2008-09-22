@@ -106,12 +106,12 @@ public class RsSourceWireAttacher implements SourceWireAttacher<RsWireSourceDefi
             Message message = new MessageImpl(args, false, new WorkContext());
             InvocationChain invocationChain = invocationChains.get(method.getName());
             if (invocationChain != null) {
-                try {
-                    Interceptor headInterceptor = invocationChain.getHeadInterceptor();
-                    return headInterceptor.invoke(message).getBody();
-                } catch (Throwable th) {
-                    th.printStackTrace();
-                    return null;
+                Interceptor headInterceptor = invocationChain.getHeadInterceptor();
+                Message ret = headInterceptor.invoke(message);
+                if (ret.isFault()) {
+                    throw (Throwable) ret.getBody();
+                } else {
+                    return ret.getBody();
                 }
             } else {
                 return null;
