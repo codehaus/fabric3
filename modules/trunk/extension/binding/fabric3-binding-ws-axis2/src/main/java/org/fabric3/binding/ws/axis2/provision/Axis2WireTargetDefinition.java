@@ -44,7 +44,8 @@ public class Axis2WireTargetDefinition extends PhysicalWireTargetDefinition impl
     }
 
     /**
-     * @param referenceInterface Reference interface for the wire target.
+     * @param referenceInterface
+     *            Reference interface for the wire target.
      */
     public void setReferenceInterface(String referenceInterface) {
         this.referenceInterface = referenceInterface;
@@ -58,7 +59,8 @@ public class Axis2WireTargetDefinition extends PhysicalWireTargetDefinition impl
     }
 
     /**
-     * @param classloaderURI Classloader URI.
+     * @param classloaderURI
+     *            Classloader URI.
      */
     public void setClassloaderURI(URI classloaderURI) {
         this.classloaderURI = classloaderURI;
@@ -70,17 +72,17 @@ public class Axis2WireTargetDefinition extends PhysicalWireTargetDefinition impl
     public Set<AxisPolicy> getPolicies(String operation) {
         return policies.get(operation);
     }
-    
+
     public Map<String, Map<String, String>> getOperationInfo() {
         return operationInfo;
     }
 
     public void addOperationInfo(String operation, Map<String, String> operationInfo) {
-	if(this.operationInfo == null) {
-	    this.operationInfo = new HashMap<String, Map<String,String>>();	    
-	}
-	this.operationInfo.put(operation, operationInfo);
-    }    
+        if (this.operationInfo == null) {
+            this.operationInfo = new HashMap<String, Map<String, String>>();
+        }
+        this.operationInfo.put(operation, operationInfo);
+    }
 
     public Map<String, String> getConfig() {
         return config;
@@ -91,10 +93,11 @@ public class Axis2WireTargetDefinition extends PhysicalWireTargetDefinition impl
     }
 
     /**
-     * @param policy Policy definitions.
+     * @param policy
+     *            Policy definitions.
      */
     public void addPolicy(String operation, AxisPolicy policy) {
-        
+
         if (!this.policies.containsKey(operation)) {
             this.policies.put(operation, new HashSet<AxisPolicy>());
         }

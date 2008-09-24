@@ -141,27 +141,27 @@ public class Axis2TargetInterceptor implements Interceptor {
     }    
 
     private void applyOperationInfo(Options options) {
-	String soapAction = "urn:" + operation;//Default
-	
-	if(this.operationInfo != null) {
-	    String soapActionInfo = this.operationInfo.get(Constant.SOAP_ACTION);
-	    if(soapActionInfo != null) {
-		soapAction = soapActionInfo;
-	    }
-	}
-	options.setAction(soapAction);	
+    	String soapAction = "urn:" + operation;//Default
+    	
+    	if(this.operationInfo != null) {
+    	    String soapActionInfo = this.operationInfo.get(Constant.SOAP_ACTION);
+    	    if(soapActionInfo != null) {
+    	        soapAction = soapActionInfo;
+    	    }
+    	}
+    	options.setAction(soapAction);	
     }
     
     private void applyConfig(Options options) {
-	if(config != null) {
-	    boolean mtomEnabled = config.get(Constant.CONFIG_ENABLE_MTOM).equalsIgnoreCase(Constant.VALUE_TRUE);
-	    if(!mtomEnabled) {
-		options.setProperty(Constants.Configuration.ENABLE_MTOM, Constants.VALUE_FALSE);
-		return;
-	    }
-	}
-	//By default MTOM is enabled for backward compatibility.
-	options.setProperty(Constants.Configuration.ENABLE_MTOM, Constants.VALUE_TRUE);	
+    	if(config != null) {
+    	    boolean mtomEnabled = config.get(Constant.CONFIG_ENABLE_MTOM).equalsIgnoreCase(Constant.VALUE_TRUE);
+    	    if(!mtomEnabled) {
+    	        options.setProperty(Constants.Configuration.ENABLE_MTOM, Constants.VALUE_FALSE);
+    	        return;
+    	    }
+    	}
+    	//By default MTOM is enabled for backward compatibility.
+    	options.setProperty(Constants.Configuration.ENABLE_MTOM, Constants.VALUE_TRUE);	
     }
 
     private void applyPolicies(ServiceClient sender, String operation) throws AxisFault {

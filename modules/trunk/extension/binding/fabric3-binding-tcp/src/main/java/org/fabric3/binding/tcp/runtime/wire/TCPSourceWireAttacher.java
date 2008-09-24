@@ -58,60 +58,58 @@ public class TCPSourceWireAttacher implements SourceWireAttacher<TCPWireSourceDe
     /**
      * Inject dependencies
      * 
-     * @param workScheduler F3 Work Scheduler
+     * @param workScheduler
+     *            F3 Work Scheduler
      */
-    public TCPSourceWireAttacher(@Reference WorkScheduler workScheduler, @Monitor TCPBindingMonitor monitor) {
-	this.workScheduler = workScheduler;
-	this.monitor = monitor;
+    public TCPSourceWireAttacher(@Reference WorkScheduler workScheduler, 
+                                 @Monitor TCPBindingMonitor monitor) {
+        this.workScheduler = workScheduler;
+        this.monitor = monitor;
     }
 
     /**
      * {@inheritDoc}
      */
-    public void attachToSource(TCPWireSourceDefinition source, PhysicalWireTargetDefinition target, final Wire wire)
-	    throws WiringException {
-	URI uri = source.getUri();
-	String hostname = uri.getHost();
-	int port = uri.getPort();
+    public void attachToSource(TCPWireSourceDefinition source, PhysicalWireTargetDefinition target, final Wire wire) throws WiringException {
+        URI uri = source.getUri();
+        String hostname = uri.getHost();
+        int port = uri.getPort();
 
-	ExecutorService filterExecutor = new F3ExecutorService(workScheduler);
-	InetSocketAddress socketAddress;
-	try {
-	    // TODO: Move below to separate component configurable with Codec
-	    // and IoHandler based on protocol like TCP/HTTP etc.
-	    socketAddress = new InetSocketAddress(hostname, port);
-	    acceptor = new NioSocketAcceptor();
-	    acceptor.getFilterChain().addLast("threadPool", new ExecutorFilter(filterExecutor));
-	    acceptor.getFilterChain().addLast("codec",
-		    new ProtocolCodecFilter(new TextLineCodecFactory(Charset.forName("UTF-8"))));
+        ExecutorService filterExecutor = new F3ExecutorService(workScheduler);
+        InetSocketAddress socketAddress;
+        try {
+            // TODO: Move below to separate component configurable with Codec
+            // and IoHandler based on protocol like TCP/HTTP etc.
+            socketAddress = new InetSocketAddress(hostname, port);
+            acceptor = new NioSocketAcceptor();
+            acceptor.getFilterChain().addLast("threadPool", new ExecutorFilter(filterExecutor));
+            acceptor.getFilterChain().addLast("codec", new ProtocolCodecFilter(new TextLineCodecFactory(Charset.forName("UTF-8"))));
 
-	    acceptor.setHandler(new TCPHandler(wire, monitor));
-	    acceptor.bind(socketAddress);
+            acceptor.setHandler(new TCPHandler(wire, monitor));
+            acceptor.bind(socketAddress);
 
-	    monitor.onTcpExtensionStarted(uri.toString());
+            monitor.onTcpExtensionStarted(uri.toString());
 
-	} catch (UnknownHostException exception) {
-	    throw new WiringException("Unable to bind to:" + uri.toString(), "binding.tcp", exception);
-	} catch (IOException exception) {
-	    throw new WiringException("Unable to bind to:" + uri.toString(), "binding.tcp", exception);
-	}
+        } catch (UnknownHostException exception) {
+            throw new WiringException("Unable to bind to:" + uri.toString(), "binding.tcp", exception);
+        } catch (IOException exception) {
+            throw new WiringException("Unable to bind to:" + uri.toString(), "binding.tcp", exception);
+        }
 
     }
 
     /**
      * {@inheritDoc}
      */
-    public void detachFromSource(TCPWireSourceDefinition source, PhysicalWireTargetDefinition target, Wire wire)
-	    throws WiringException {
-	throw new UnsupportedOperationException();
+    public void detachFromSource(TCPWireSourceDefinition source, PhysicalWireTargetDefinition target, Wire wire) throws WiringException {
+        throw new UnsupportedOperationException();
     }
 
     /**
      * {@inheritDoc}
      */
-    public void attachObjectFactory(TCPWireSourceDefinition source, ObjectFactory<?> objectFactory,
-	    PhysicalWireTargetDefinition definition) throws WiringException {
-	throw new UnsupportedOperationException();
+    public void attachObjectFactory(TCPWireSourceDefinition source, ObjectFactory<?> objectFactory, PhysicalWireTargetDefinition definition) throws WiringException {
+        throw new UnsupportedOperationException();
     }
 
     /**
@@ -119,7 +117,7 @@ public class TCPSourceWireAttacher implements SourceWireAttacher<TCPWireSourceDe
      */
     @Destroy
     public void destroy() {
-	acceptor.unbind();
-	acceptor.dispose();
+        acceptor.unbind();
+        acceptor.dispose();
     }
 }

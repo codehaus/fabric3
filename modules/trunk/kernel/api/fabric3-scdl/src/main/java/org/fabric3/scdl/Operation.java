@@ -143,20 +143,33 @@ public class Operation<T> extends AbstractPolicyAware {
         this.conversationSequence = conversationSequence;
     }
     
+    /**
+     * Add additional info related to Operation
+     * 
+     * @param qName QName info need to be keyed on.
+     * @param key   Name of the parameter
+     * @param value Value of the parameter
+     */
     public void addInfo(QName qName, String key, String value) {
-	if(info == null) {//Lazy loading
-	    info = new HashMap<QName, Map<String,String>>();
-	    info.put(qName, new HashMap<String, String>());
-	}
-	
-	info.get(qName).put(key, value);
+    	if(info == null) {//Lazy loading
+    	    info = new HashMap<QName, Map<String,String>>();
+    	    info.put(qName, new HashMap<String, String>());
+    	}
+    	
+    	info.get(qName).put(key, value);
     }
     
+    /**
+     * Retrieve info set on the Operation
+     * 
+     * @param qName QName as key to retrieve the info
+     * @return Map containing key-value info
+     */
     public Map<String, String> getInfo(QName qName) {
-	if(info != null) {
-	    return info.get(qName);
-	}
-	return null;
+    	if(info != null) {
+    	    return info.get(qName);
+    	}
+    	return null;
     }
 
     public String toString() {

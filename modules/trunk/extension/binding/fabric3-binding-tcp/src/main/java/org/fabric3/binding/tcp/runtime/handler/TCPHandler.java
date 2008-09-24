@@ -43,29 +43,29 @@ public class TCPHandler extends IoHandlerAdapter {
      * @param monitor
      */
     public TCPHandler(Wire wire, TCPBindingMonitor monitor) {
-	this.wire = wire;
-	this.monitor = monitor;
+        this.wire = wire;
+        this.monitor = monitor;
     }
 
     /**
      * {@inheritDoc}
      */
     public void messageReceived(IoSession session, Object message) throws Exception {
-	Interceptor interceptor = wire.getInvocationChains().values().iterator().next().getHeadInterceptor();
-	WorkContext workContext = new WorkContext();
-	Message input = new MessageImpl(new Object[] { message }, false, workContext);
-	Message msg = interceptor.invoke(input);
+        Interceptor interceptor = wire.getInvocationChains().values().iterator().next().getHeadInterceptor();
+        WorkContext workContext = new WorkContext();
+        Message input = new MessageImpl(new Object[] { message }, false, workContext);
+        Message msg = interceptor.invoke(input);
 
-	// TODO: Work out if service is of request/response type, and then write
-	// the response back.
-	if (!msg.isFault() && msg.getBody() != null) {
-	    session.write(msg.getBody());
-	}
+        // TODO: Work out if service is of request/response type, and then write
+        // the response back.
+        if (!msg.isFault() && msg.getBody() != null) {
+            session.write(msg.getBody());
+        }
     }
 
     @Override
     public void exceptionCaught(IoSession session, Throwable cause) throws Exception {
-	monitor.onException("Exception caught in TCP binding:TCP handler", cause);
+        monitor.onException("Exception caught in TCP binding:TCP handler", cause);
     }
 
 }

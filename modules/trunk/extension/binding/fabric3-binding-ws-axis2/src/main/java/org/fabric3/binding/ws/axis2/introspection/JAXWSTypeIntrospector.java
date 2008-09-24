@@ -28,19 +28,18 @@ import org.fabric3.scdl.Operation;
 import org.fabric3.scdl.ValidationContext;
 
 /**
- * Introspects operations for the presence of JAX-WS annotations. 
- * JAX-WS annotations are used to configure the Axis2 engine.
+ * Introspects operations for the presence of JAX-WS annotations. JAX-WS annotations are used to configure the Axis2 engine.
  * 
  * @version $Revision$ $Date$
  */
 public class JAXWSTypeIntrospector implements OperationIntrospector {
-    
+
     public <T> void introspect(Operation<T> operation, Method method, ValidationContext context) {
         WebMethod webMethod = method.getAnnotation(WebMethod.class);
         if (webMethod != null) {
             String soapAction = webMethod.action();
-            if(soapAction !=null) {
-        	operation.addInfo(Constant.AXIS2_JAXWS_QNAME, Constant.SOAP_ACTION, soapAction);
+            if (soapAction != null) {
+                operation.addInfo(Constant.AXIS2_JAXWS_QNAME, Constant.SOAP_ACTION, soapAction);
             }
         }
 
