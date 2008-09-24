@@ -97,21 +97,6 @@ under the License.
                             <artifactId>fabric3-tx</artifactId>
                             <version>0.7-SNAPSHOT</version>
                         </dependency>
-                        <dependency>
-                            <groupId>org.codehaus.fabric3</groupId>
-                            <artifactId>fabric3-async-provision</artifactId>
-                            <version>0.7-SNAPSHOT</version>
-                        </dependency>
-                        <dependency>
-                            <groupId>org.codehaus.fabric3</groupId>
-                            <artifactId>fabric3-async-loader</artifactId>
-                            <version>0.7-SNAPSHOT</version>
-                        </dependency>
-                        <dependency>
-                            <groupId>org.codehaus.fabric3</groupId>
-                            <artifactId>fabric3-async-runtime</artifactId>
-                            <version>0.7-SNAPSHOT</version>
-                        </dependency>
                     </extensions>
                     <shared>
                         <dependency>
