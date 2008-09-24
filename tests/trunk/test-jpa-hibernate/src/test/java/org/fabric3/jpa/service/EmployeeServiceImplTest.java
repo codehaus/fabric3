@@ -18,11 +18,11 @@ package org.fabric3.jpa.service;
 
 import java.util.List;
 
-import org.fabric3.jpa.model.Employee;
-
+import junit.framework.TestCase;
 import org.osoa.sca.annotations.Reference;
 
-import junit.framework.TestCase;
+import org.fabric3.jpa.model.Employee;
+import org.fabric3.jpa.model.ExEmployee;
 
 /**
  * @version $Revision$ $Date$
@@ -41,10 +41,8 @@ public class EmployeeServiceImplTest extends TestCase {
     protected ConversationEmployeeService conversationEmployeeService;
 
     public void testCreateEmployee() {
-        Employee employee;
-
-        employeeService.createEmployee(123l, "Barney Rubble");
-        employee = employeeService.findEmployee(123L);
+        employeeService.createEmployee(123L, "Barney Rubble");
+        Employee employee = employeeService.findEmployee(123L);
 
         assertNotNull(employee);
         assertEquals("Barney Rubble", employee.getName());
@@ -52,7 +50,7 @@ public class EmployeeServiceImplTest extends TestCase {
     }
 
     public void testCreateEMFEmployee() throws Exception {
-        employeeEMFService.createEmployee(123l, "Barney Rubble");
+        employeeEMFService.createEmployee(123L, "Barney Rubble");
         Employee employee = employeeEMFService.findEmployee(123L);
 
         assertNotNull(employee);
@@ -61,7 +59,7 @@ public class EmployeeServiceImplTest extends TestCase {
     }
 
     public void testCreateMultiThreadedEmployee() {
-        employeeMultiThreadedService.createEmployee(123l, "Barney Rubble");
+        employeeMultiThreadedService.createEmployee(123L, "Barney Rubble");
         Employee employee = employeeMultiThreadedService.findEmployee(123L);
 
         assertNotNull(employee);
@@ -69,8 +67,8 @@ public class EmployeeServiceImplTest extends TestCase {
 
     }
 
-    public void testSearchWithName(){
-    	employeeMultiThreadedService.createEmployee(123l, "Barney");
+    public void testSearchWithName() {
+        employeeMultiThreadedService.createEmployee(123L, "Barney");
         List<Employee> employees = employeeService.searchWithCriteria("Barney");
 
         assertNotNull(employees);
@@ -78,31 +76,47 @@ public class EmployeeServiceImplTest extends TestCase {
 
     }
 
-    public void testExtendedPersistenceContext() {
-        conversationEmployeeService.createEmployee(123l, "Barney Rubble");
-        Employee employee = conversationEmployeeService.findEmployee(123L);
+//    public void testTwoPersistenceContexts() {
+//        employeeService.createEmployee(123L, "Barney Rubble");
+//        employeeService.fire(123L);
+//    }
 
-        assertNotNull(employee);
-        assertEquals("Barney Rubble", employee.getName());
-        // verify the object has not be detached
-        employee.setName("Fred Flintstone");
-        Employee employee2 = conversationEmployeeService.updateEmployee(employee);
-        // the merge operation should use the same persistent entity since it is never detached for extended persistence contexts
-        assertSame(employee, employee2);
-        employee = conversationEmployeeService.findEmployee(123L);
-        assertEquals("Fred Flintstone", employee.getName());
-        // end the conversation, which should also close the EntityManager/persistence context
+//    public void testExtendedPersistenceContext() {
+//        conversationEmployeeService.createEmployee(123L, "Barney Rubble");
+//        Employee employee = conversationEmployeeService.findEmployee(123L);
+//
+//        assertNotNull(employee);
+//        assertEquals("Barney Rubble", employee.getName());
+//        // verify the object has not be detached
+//        employee.setName("Fred Flintstone");
+//        Employee employee2 = conversationEmployeeService.updateEmployee(employee);
+//        // the merge operation should use the same persistent entity since it is never detached for extended persistence contexts
+//        assertSame(employee, employee2);
+//        employee = conversationEmployeeService.findEmployee(123L);
+//        assertEquals("Fred Flintstone", employee.getName());
+//        // end the conversation, which should also close the EntityManager/persistence context
+//        conversationEmployeeService.end();
+//        employee2 = conversationEmployeeService.findEmployee(123L);
+//        // employee2 should be loaded in a different persistence context and not the same as the original
+//        assertNotSame(employee, employee2);
+//    }
+//
+    public void testTwoExtendedPersistenceContexts() {
+        conversationEmployeeService.createEmployee(123L, "Barney Rubble");
+        conversationEmployeeService.fire(123L);
         conversationEmployeeService.end();
-        employee2 = conversationEmployeeService.findEmployee(123L);
-        // employee2 should be loaded in a different persistence context and not the same as the original
-        assertNotSame(employee, employee2);
     }
+
 
     protected void setUp() throws Exception {
         super.setUp();
         Employee employee = employeeService.findEmployee(123L);
         if (employee != null) {
             employeeService.removeEmployee(123L);
+        }
+        ExEmployee exEmployee = employeeService.findExEmployee(123L);
+        if (exEmployee != null) {
+            employeeService.removeExEmployee(123L);
         }
     }
 

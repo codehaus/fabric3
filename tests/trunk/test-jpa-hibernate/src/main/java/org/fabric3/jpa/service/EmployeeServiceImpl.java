@@ -23,44 +23,66 @@ import javax.persistence.PersistenceContext;
 import org.hibernate.Criteria;
 import org.hibernate.Session;
 import org.hibernate.criterion.Restrictions;
-import org.hibernate.criterion.SimpleExpression;
 
 import org.fabric3.jpa.model.Employee;
+import org.fabric3.jpa.model.ExEmployee;
 
 /**
  * @version $Revision$ $Date$
  */
 public class EmployeeServiceImpl implements EmployeeService {
-    private EntityManager em;
+    private EntityManager employeeEM;
+    private EntityManager exEmployeeEM;
 
     @PersistenceContext(name = "employeeEmf", unitName = "employee")
-    public void setEntityManager(EntityManager em) {
-        this.em = em;
+    public void setEmployeeEM(EntityManager em) {
+        this.employeeEM = em;
+    }
+
+    @PersistenceContext(name = "exEmployeeEmf", unitName = "ex-employee")
+    public void setExEmployeeEM(EntityManager em) {
+        this.exEmployeeEM = em;
     }
 
     public Employee createEmployee(Long id, String name) {
         Employee employee = new Employee(id, name);
-        em.persist(employee);
+        employeeEM.persist(employee);
         return employee;
     }
 
     public Employee findEmployee(Long id) {
-        Employee e = em.find(Employee.class, id);
-        return e;
+        return employeeEM.find(Employee.class, id);
     }
 
     public void removeEmployee(Long id) {
-        Employee employee = em.find(Employee.class, id);
-        em.remove(employee);
+        Employee employee = employeeEM.find(Employee.class, id);
+        employeeEM.remove(employee);
     }
 
-    public List<Employee> searchWithCriteria(String name){
-    	Session session = (Session) em.getDelegate();
-    	Criteria criteria = session.createCriteria(Employee.class);
-
-    	criteria.add(Restrictions.eq("name", name));
-
-    	return (List<Employee>) criteria.list();
+    public ExEmployee findExEmployee(Long id) {
+        return exEmployeeEM.find(ExEmployee.class, id);
     }
+
+    public void removeExEmployee(Long id) {
+        ExEmployee exEmployee = exEmployeeEM.find(ExEmployee.class, id);
+        exEmployeeEM.remove(exEmployee);
+    }
+
+    public List<Employee> searchWithCriteria(String name) {
+        Session session = (Session) employeeEM.getDelegate();
+        Criteria criteria = session.createCriteria(Employee.class);
+
+        criteria.add(Restrictions.eq("name", name));
+
+        return (List<Employee>) criteria.list();
+    }
+
+    public void fire(Long id) {
+        Employee employee = employeeEM.find(Employee.class, id);
+        employeeEM.remove(employee);
+        ExEmployee exEmployee = new ExEmployee(employee.getId(),employee.getName());
+        exEmployeeEM.persist(exEmployee);
+    }
+
 
 }

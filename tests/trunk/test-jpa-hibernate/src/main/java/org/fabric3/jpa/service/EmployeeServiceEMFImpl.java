@@ -23,6 +23,7 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceUnit;
 
 import org.fabric3.jpa.model.Employee;
+import org.fabric3.jpa.model.ExEmployee;
 
 /**
  * Exercises injecting an EntityManagerFactory.
@@ -58,8 +59,20 @@ public class EmployeeServiceEMFImpl implements EmployeeService {
     }
 
 	public List<Employee> searchWithCriteria(String name) {
-		// TODO Auto-generated method stub
 		return null;
 	}
+
+    public void fire(Long id) {
+        throw new UnsupportedOperationException();
+    }
+
+    public ExEmployee findExEmployee(Long id) {
+        return null;
+    }
+
+    public void removeExEmployee(Long id) {
+
+    }
+
 
 }

@@ -19,46 +19,61 @@
 package org.fabric3.jpa.service;
 
 import java.util.List;
-
-import javax.persistence.PersistenceContext;
 import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceContextType;
 
-import org.osoa.sca.annotations.Scope;
 import org.osoa.sca.annotations.EndsConversation;
+import org.osoa.sca.annotations.Scope;
 
 import org.fabric3.jpa.model.Employee;
+import org.fabric3.jpa.model.ExEmployee;
 
 /**
  * @version $Revision$ $Date$
  */
 @Scope("CONVERSATION")
 public class ConversationEmployeeServiceImpl implements ConversationEmployeeService {
-    private EntityManager em;
+    private EntityManager employeeEM;
+    private EntityManager exEmployeeEM;
 
     @PersistenceContext(name = "employeeEmf", unitName = "employee", type = PersistenceContextType.EXTENDED)
-    public void setEntityManager(EntityManager em) {
-        this.em = em;
+    public void setEmployeeEM(EntityManager em) {
+        this.employeeEM = em;
+    }
+
+    @PersistenceContext(name = "exEmployeeEmf", unitName = "ex-employee", type = PersistenceContextType.EXTENDED)
+    public void setExEmployeeEM(EntityManager em) {
+        this.exEmployeeEM = em;
     }
 
     public Employee createEmployee(Long id, String name) {
         Employee employee = new Employee(id, name);
-        em.persist(employee);
+        employeeEM.persist(employee);
         return employee;
     }
 
     public Employee findEmployee(Long id) {
-        return em.find(Employee.class, id);
+        return employeeEM.find(Employee.class, id);
+    }
+
+    public ExEmployee findExEmployee(Long id) {
+        return exEmployeeEM.find(ExEmployee.class, id);
+    }
+
+    public void removeExEmployee(Long id) {
+        ExEmployee exEmployee = exEmployeeEM.find(ExEmployee.class, id);
+        exEmployeeEM.remove(exEmployee);
     }
 
     public void removeEmployee(Long id) {
-        Employee employee = em.find(Employee.class, id);
-        em.remove(employee);
+        Employee employee = employeeEM.find(Employee.class, id);
+        employeeEM.remove(employee);
     }
 
 
     public Employee updateEmployee(Employee employee) {
-        return em.merge(employee);
+        return employeeEM.merge(employee);
     }
 
     @EndsConversation
@@ -66,8 +81,15 @@ public class ConversationEmployeeServiceImpl implements ConversationEmployeeServ
         // no-op
     }
 
-	public List<Employee> searchWithCriteria(String name) {
-		// TODO Auto-generated method stub
-		return null;
-	}
+    public List<Employee> searchWithCriteria(String name) {
+        // TODO Auto-generated method stub
+        return null;
+    }
+
+    public void fire(Long id) {
+        Employee employee = employeeEM.find(Employee.class, id);
+        employeeEM.remove(employee);
+        ExEmployee exEmployee = new ExEmployee(employee.getId(),employee.getName());
+        exEmployeeEM.persist(exEmployee);
+    }
 }
