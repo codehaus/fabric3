@@ -20,7 +20,7 @@
     <parent>
         <groupId>org.codehaus.fabric3</groupId>
         <artifactId>fabric3-extension-implementation-parent-pom</artifactId>
-        <version>0.7-SNAPSHOT</version>
+        <version>0.6.5-SNAPSHOT</version>
     </parent>
     <groupId>org.codehaus.fabric3</groupId>
     <artifactId>fabric3-groovy</artifactId>
@@ -32,13 +32,13 @@
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-pojo</artifactId>
-            <version>0.7-SNAPSHOT</version>
+            <version>0.6.5-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-fabric</artifactId>
-            <version>0.7-SNAPSHOT</version>
+            <version>0.6.5-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
         
@@ -82,7 +82,7 @@
             <plugin>
                 <groupId>org.codehaus.fabric3</groupId>
                 <artifactId>fabric3-contribution-plugin</artifactId>
-                <version>0.6</version>
+                <version>0.6.5-SNAPSHOT</version>
                 <extensions>true</extensions>
                 <configuration>
                     <mavenImports>

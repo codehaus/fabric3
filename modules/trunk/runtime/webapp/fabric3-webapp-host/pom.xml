@@ -20,7 +20,7 @@
     <parent>
         <groupId>org.codehaus.fabric3</groupId>
         <artifactId>fabric3-runtime-webapp-parent-pom</artifactId>
-        <version>0.7-SNAPSHOT</version>
+        <version>0.6.5-SNAPSHOT</version>
     </parent>
     <groupId>org.codehaus.fabric3.webapp</groupId>
     <artifactId>fabric3-webapp-host</artifactId>
@@ -48,57 +48,57 @@
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-thread-pool</artifactId>
-            <version>0.7-SNAPSHOT</version>
+            <version>0.6.5-SNAPSHOT</version>
         </dependency>
     
         <dependency>
             <groupId>org.codehaus.fabric3.webapp</groupId>
             <artifactId>fabric3-webapp-api</artifactId>
-            <version>0.7-SNAPSHOT</version>
+            <version>0.6.5-SNAPSHOT</version>
         </dependency>
         
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-fabric</artifactId>
-            <version>0.7-SNAPSHOT</version>
+            <version>0.6.5-SNAPSHOT</version>
         </dependency>
         
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-monitor</artifactId>
-            <version>0.7-SNAPSHOT</version>
+            <version>0.6.5-SNAPSHOT</version>
         </dependency>
 
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-jdk-proxy</artifactId>
-            <version>0.7-SNAPSHOT</version>
+            <version>0.6.5-SNAPSHOT</version>
             <scope>runtime</scope>
         </dependency>
 
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-java</artifactId>
-            <version>0.7-SNAPSHOT</version>
+            <version>0.6.5-SNAPSHOT</version>
         </dependency>
 
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-web</artifactId>
-            <version>0.7-SNAPSHOT</version>
+            <version>0.6.5-SNAPSHOT</version>
             <scope>runtime</scope>
         </dependency>
 
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-container-web-spi</artifactId>
-            <version>0.7-SNAPSHOT</version>
+            <version>0.6.5-SNAPSHOT</version>
         </dependency>
 
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-policy</artifactId>
-            <version>0.7-SNAPSHOT</version>
+            <version>0.6.5-SNAPSHOT</version>
         </dependency>
 
         <dependency>

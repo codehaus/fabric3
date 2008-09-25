@@ -23,7 +23,7 @@
     <parent>
         <groupId>org.codehaus.fabric3</groupId>
         <artifactId>fabric3-federated-parent-pom</artifactId>
-        <version>0.7-SNAPSHOT</version>
+        <version>0.6.5-SNAPSHOT</version>
     </parent>
     <groupId>org.codehaus.fabric3</groupId>
     <artifactId>fabric3-discovery-jxta</artifactId>
@@ -42,14 +42,14 @@
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-spi</artifactId>
-            <version>0.7-SNAPSHOT</version>
+            <version>0.6.5-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
 
        <dependency>
            <groupId>org.codehaus.fabric3</groupId>
            <artifactId>fabric3-jxta</artifactId>
-           <version>0.7-SNAPSHOT</version>
+           <version>0.6.5-SNAPSHOT</version>
            <scope>provided</scope>
        </dependency>
 
@@ -93,7 +93,7 @@
             <plugin>
                 <groupId>org.codehaus.fabric3</groupId>
                 <artifactId>fabric3-contribution-plugin</artifactId>
-                <version>0.6</version>
+                <version>0.6.5-SNAPSHOT</version>
                 <extensions>true</extensions>
                 <configuration>
                     <mavenImports>
