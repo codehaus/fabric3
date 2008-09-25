@@ -21,7 +21,7 @@ public class ClientToIntermediaryImpl implements ClientToIntermediary {
             throw new AssertionError("Conversation state not maintained");
         }
         // service2 should point to the same ConversationalService instance as service1
-        if (!"test".equals(service1.getValue())) {
+        if (!"test".equals(service2.getValue())) {
             throw new AssertionError("Conversation state not propagated through intermediary");
         }
     }
