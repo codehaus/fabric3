@@ -70,7 +70,7 @@
             <plugin>
                 <groupId>org.codehaus.fabric3</groupId>
                 <artifactId>fabric3-webapp-plugin</artifactId>
-                <version>0.6.5-SNAPSHOT</version>
+                <version>0.6.5</version>
                 <executions>
                     <execution>
                         <id>fabric3-war</id>
