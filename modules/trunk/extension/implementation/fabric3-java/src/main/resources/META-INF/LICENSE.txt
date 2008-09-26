@@ -6,6 +6,12 @@
  a UK corporation (“Metaform”), copyright 2008 as denoted by the
  © symbol on all legal notices.
 
+ Fabric3 is a trademark of Metaform.  No commercial use of this
+ trademark may be made without prior written permission of Metaform.
+
+ Fabric3 is a trademark of Metaform.  No commercial use of this
+ trademark may be made without prior written permission of Metaform.
+
  By downloading the software, you represent that you agree to the
  terms of this license.
 
