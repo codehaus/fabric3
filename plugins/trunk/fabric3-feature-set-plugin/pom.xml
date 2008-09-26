@@ -21,12 +21,12 @@
     <parent>
         <groupId>org.codehaus.fabric3</groupId>
         <artifactId>fabric3-plugins-parent-pom</artifactId>
-        <version>0.6.5-SNAPSHOT</version>
+        <version>0.6.5</version>
     </parent>
 
     <groupId>org.codehaus.fabric3</groupId>
     <artifactId>fabric3-feature-set-plugin</artifactId>
-    <version>0.6.5-SNAPSHOT</version>
+    <version>0.6.5</version>
     <packaging>maven-plugin</packaging>
     <name>Fabric3 Feature Set Plugin</name>
     <description>Fabric3 Feature Set Plugin.</description>
@@ -75,9 +75,9 @@
     </build>
 
     <scm>
-        <connection>scm:svn:http://svn.codehaus.org/fabric3/plugins/trunk/fabric3-feature-set-plugin</connection>
-        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/plugins/trunk/fabric3-feature-set-plugin</developerConnection>
-        <url>http://svn.fabric3.codehaus.org/browse/fabric3/plugins/trunk/fabric3-feature-set-plugin</url>
+        <connection>scm:svn:http://svn.codehaus.org/fabric3/plugins/tags/fabric3-plugins-parent-pom-0.6.5</connection>
+        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/plugins/tags/fabric3-plugins-parent-pom-0.6.5</developerConnection>
+        <url>http://svn.fabric3.codehaus.org/browse/fabric3/plugins/tags/fabric3-plugins-parent-pom-0.6.5</url>
     </scm>
 
 </project>
