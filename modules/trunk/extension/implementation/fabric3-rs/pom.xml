@@ -58,7 +58,7 @@
         <dependency>
             <groupId>com.sun.jersey</groupId>
             <artifactId>jersey-server</artifactId>
-            <version>0.11-ea-SNAPSHOT</version>
+            <version>0.9-ea</version>
             <exclusions>
                 <exclusion>
                     <groupId>asm</groupId>

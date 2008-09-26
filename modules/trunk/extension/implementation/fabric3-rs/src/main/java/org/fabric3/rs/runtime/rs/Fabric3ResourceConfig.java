@@ -16,9 +16,10 @@
  */
 package org.fabric3.rs.runtime.rs;
 
-import com.sun.jersey.api.core.DefaultResourceConfig;
 import java.util.Map;
 import java.util.Set;
+
+import com.sun.jersey.api.core.DefaultResourceConfig;
 
 /**
  * @version $Rev$ $Date$
@@ -36,7 +37,8 @@ public class Fabric3ResourceConfig extends DefaultResourceConfig {
         this.provider = provider;
     }
 
-    @Override
+    // JFM - commented out as part of revision back to Jersey 0.9-ea 
+    // @Override
     public Set<Class<?>> getClasses() {
         return provider.getClasses();
     }
