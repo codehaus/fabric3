@@ -1,3 +1,19 @@
+/*
+ * Fabric3
+ * Copyright © 2008 Metaform Systems Limited
+ *
+ * This proprietary software may be used only connection with the Fabric3 license
+ * (the “License”), a copy of which is included in the software or may be
+ * obtained at: http://www.metaformsystems.com/licenses/license.html.
+
+ * Software distributed under the License is distributed on an “as is” basis,
+ * without warranties or conditions of any kind.  See the License for the
+ * specific language governing permissions and limitations of use of the software.
+ * This software is distributed in conjunction with other software licensed under
+ * different terms.  See the separate licenses for those programs included in the
+ * distribution for the permitted and restricted uses of such software.
+ *
+ */
 package org.fabric3.binding.ejb.runtime;
 
 import java.lang.reflect.InvocationTargetException;
@@ -12,8 +28,7 @@ import org.fabric3.binding.ejb.scdl.EjbBindingDefinition;
 import org.fabric3.spi.builder.WiringException;
 
 /**
- * Created by IntelliJ IDEA. User: mshinn Date: Jul 5, 2007 Time: 3:11:40 PM To change this template use File | Settings
- * | File Templates.
+ *
  */
 public class EjbResolver {
 

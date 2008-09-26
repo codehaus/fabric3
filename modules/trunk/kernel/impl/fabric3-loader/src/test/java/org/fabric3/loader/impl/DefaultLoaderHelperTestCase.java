@@ -1,6 +1,24 @@
 /*
- * See the NOTICE file distributed with this work for information
- * regarding copyright ownership.  This file is licensed
+ * Fabric3
+ * Copyright © 2008 Metaform Systems Limited
+ *
+ * This proprietary software may be used only connection with the Fabric3 license
+ * (the “License”), a copy of which is included in the software or may be
+ * obtained at: http://www.metaformsystems.com/licenses/license.html.
+
+ * Software distributed under the License is distributed on an “as is” basis,
+ * without warranties or conditions of any kind.  See the License for the
+ * specific language governing permissions and limitations of use of the software.
+ * This software is distributed in conjunction with other software licensed under
+ * different terms.  See the separate licenses for those programs included in the
+ * distribution for the permitted and restricted uses of such software.
+ *
+ * --- Original Apache License ---
+ *
+ * Licensed to the Apache Software Foundation (ASF) under one
+ * or more contributor license agreements.  See the NOTICE file
+ * distributed with this work for additional information
+ * regarding copyright ownership.  The ASF licenses this file
  * to you under the Apache License, Version 2.0 (the
  * "License"); you may not use this file except in compliance
  * with the License.  You may obtain a copy of the License at
@@ -19,16 +37,15 @@ package org.fabric3.loader.impl;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
 import javax.xml.namespace.QName;
+import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
-import javax.xml.stream.XMLInputFactory;
 
 import junit.framework.TestCase;
 import org.w3c.dom.Document;
-import org.w3c.dom.NodeList;
 import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
-import org.fabric3.loader.impl.DefaultLoaderHelper;
 import org.fabric3.introspection.xml.InvalidPrefixException;
 
 /**
@@ -66,9 +83,9 @@ public class DefaultLoaderHelperTestCase extends TestCase {
 
     public void testComplexProperty() throws XMLStreamException {
         String xml = "<property xmlns:foo='http://foo.com'>"
-            + "<foo:a>aValue</foo:a>"
-            + "<foo:b>InterestingURI</foo:b>"
-            + "</property>";
+                + "<foo:a>aValue</foo:a>"
+                + "<foo:b>InterestingURI</foo:b>"
+                + "</property>";
 
         XMLStreamReader reader = createReader(xml);
         Document value = helper.loadValue(reader);

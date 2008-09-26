@@ -1,5 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
+ Fabric3
+ Copyright © 2008 Metaform Systems Limited
+
+ This proprietary software may be used only connection with the Fabric3 license
+ (the “License”), a copy of which is included in the software or may be
+ obtained at: http://www.metaformsystems.com/licenses/license.html.
+
+ Software distributed under the License is distributed on an “as is” basis,
+ without warranties or conditions of any kind.  See the License for the
+ specific language governing permissions and limitations of use of the software.
+ This software is distributed in conjunction with other software licensed under
+ different terms.  See the separate licenses for those programs included in the
+ distribution for the permitted and restricted uses of such software.
+
+ ___ Original Apache License ___
+
  See the NOTICE file distributed with this work for information
  regarding copyright ownership.  This file is licensed
  to you under the Apache License, Version 2.0 (the
@@ -49,31 +65,31 @@
             <artifactId>fabric3-spi</artifactId>
             <version>0.6.5-SNAPSHOT</version>
         </dependency>
-        
+
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-monitor</artifactId>
             <version>0.6.5-SNAPSHOT</version>
         </dependency>
-        
+
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-pojo</artifactId>
             <version>0.6.5-SNAPSHOT</version>
         </dependency>
-        
+
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-transform</artifactId>
             <version>0.6.5-SNAPSHOT</version>
         </dependency>
-        
+
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-loader</artifactId>
             <version>0.6.5-SNAPSHOT</version>
         </dependency>
-        
+
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-introspection</artifactId>
@@ -91,28 +107,28 @@
             <artifactId>geronimo-annotation_1.0_spec</artifactId>
             <version>1.1</version>
         </dependency>
-        
+
         <dependency>
             <groupId>javax.activation</groupId>
             <artifactId>activation</artifactId>
             <version>1.1</version>
             <scope>provided</scope>
         </dependency>
-        
+
         <dependency>
             <groupId>org.apache.geronimo.specs</groupId>
             <artifactId>geronimo-j2ee-connector_1.5_spec</artifactId>
             <version>1.0.1</version>
             <scope>provided</scope>
         </dependency>
-        
+
         <dependency>
             <groupId>org.apache.tuscany</groupId>
             <artifactId>commonj-api_r1.1</artifactId>
             <version>1.0-incubator-M2</version>
             <scope>provided</scope>
         </dependency>
-        
+
         <dependency>
             <groupId>org.codehaus.woodstox</groupId>
             <artifactId>wstx-asl</artifactId>
@@ -124,12 +140,12 @@
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
         </dependency>
-        
+
         <dependency>
             <groupId>org.easymock</groupId>
             <artifactId>easymockclassextension</artifactId>
         </dependency>
-		
+
     </dependencies>
 
     <scm>
