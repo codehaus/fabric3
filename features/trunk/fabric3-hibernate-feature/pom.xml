@@ -39,7 +39,7 @@
             <plugin>
                 <groupId>org.codehaus.fabric3</groupId>
                 <artifactId>fabric3-feature-set-plugin</artifactId>
-                <version>0.6.5-SNAPSHOT</version>
+                <version>0.6.5</version>
                 <extensions>true</extensions>
                 <configuration>
                     <extensions>
