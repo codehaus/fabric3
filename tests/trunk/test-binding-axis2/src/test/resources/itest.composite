@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
- See the NOTICE file distributed with this work for information
- regarding copyright ownership.  This file is licensed
- to you under the Apache License, Version 2.0 (the
- "License"); you may not use this file except in compliance
- with the License.  You may obtain a copy of the License at
+ Fabric3
+ Copyright © 2008 Metaform Systems Limited
 
-   http://www.apache.org/licenses/LICENSE-2.0
+ This proprietary software may be used only connection with the Fabric3 license
+ (the “License”), a copy of which is included in the software or may be
+ obtained at: http://www.metaformsystems.com/licenses/license.html.
 
- Unless required by applicable law or agreed to in writing,
- software distributed under the License is distributed on an
- "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
- KIND, either express or implied.  See the License for the
- specific language governing permissions and limitations
- under the License.
+ Software distributed under the License is distributed on an “as is” basis,
+ without warranties or conditions of any kind.  See the License for the
+ specific language governing permissions and limitations of use of the software.
+ This software is distributed in conjunction with other software licensed under
+ different terms.  See the separate licenses for those programs included in the
+ distribution for the permitted and restricted uses of such software.
+
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:sca="http://www.osoa.org/xmlns/sca/1.0"
@@ -24,14 +24,14 @@
         <f3:junit class="org.fabric3.tests.binding.axis2.Axis2EchoTest"/>
         <reference name="service">
             <binding.ws uri="http://localhost:8900/axis2/echoService" f3:impl="axis2"/>
-            <operation name="echoWs"  requires="sca:authentication.message"/>
+            <operation name="echoWs" requires="sca:authentication.message"/>
         </reference>
         <reference name="faultService">
             <!--<binding.ws uri="http://localhost:${axis.port}/axis2/faultService" f3:impl="axis2"/>-->
             <binding.ws uri="http://localhost:8900/axis2/faultService" f3:impl="axis2">
-            	<config>
-            		<parameter name="enableMTOM">false</parameter>
-            	</config>
+                <config>
+                    <parameter name="enableMTOM">false</parameter>
+                </config>
             </binding.ws>
         </reference>
     </component>
@@ -40,14 +40,14 @@
         <implementation.java class="org.fabric3.tests.binding.axis2.Axis2EchoServiceImpl"/>
         <service name="Axis2EchoService">
             <binding.ws uri="echoService" f3:impl="axis2"/>
-            <operation name="echoWs"  requires="sca:authentication.message f3:authorization.message"/>
+            <operation name="echoWs" requires="sca:authentication.message f3:authorization.message"/>
         </service>
     </component>
 
     <component name="FaultService">
         <implementation.java class="org.fabric3.tests.binding.axis2.Axis2FaultServiceImpl"/>
         <service name="Axis2FaultService">
-            <binding.ws uri="faultService" f3:impl="axis2"/>            
+            <binding.ws uri="faultService" f3:impl="axis2"/>
         </service>
     </component>
 
