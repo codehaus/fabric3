@@ -16,7 +16,6 @@
  */
 package org.fabric3.rs.runtime.rs;
 
-import java.util.Map;
 import java.util.Set;
 
 import com.sun.jersey.api.core.DefaultResourceConfig;
@@ -27,19 +26,14 @@ import com.sun.jersey.api.core.DefaultResourceConfig;
 public class Fabric3ResourceConfig extends DefaultResourceConfig {
 
     Fabric3ComponentProvider provider;
-    Map initProperties;
-
-    public Fabric3ResourceConfig(Map props) {
-        initProperties = props;
-    }
 
     public void setProvider(Fabric3ComponentProvider provider) {
         this.provider = provider;
     }
 
     // JFM - commented out as part of revision back to Jersey 0.9-ea 
-    // @Override
-    public Set<Class<?>> getClasses() {
+    @Override
+    public Set<Class<?>> getResourceClasses() {
         return provider.getClasses();
     }
 
