@@ -75,4 +75,19 @@ public class EntityProvider implements MessageBodyReader<Entity>, MessageBodyWri
 
     }
 
+	public boolean isReadable(Class<?> arg0, Type arg1, Annotation[] arg2) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	public long getSize(Entity arg0) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	public boolean isWriteable(Class<?> arg0, Type arg1, Annotation[] arg2) {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 }

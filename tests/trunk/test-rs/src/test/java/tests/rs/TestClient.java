@@ -16,14 +16,14 @@
  */
 package tests.rs;
 
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.api.client.WebResource;
-import com.sun.jersey.api.client.config.ClientConfig;
-import com.sun.jersey.api.client.config.DefaultClientConfig;
 import javax.ws.rs.core.UriBuilder;
+
 import junit.framework.TestCase;
+
 import org.osoa.sca.annotations.Property;
+
+import com.sun.jersey.api.client.Client;
+import com.sun.jersey.api.client.WebResource;
 
 /**
  * @version $Rev$ $Date$
@@ -42,7 +42,7 @@ public class TestClient extends TestCase {
     }
     
      public void _testEntity() {
-        UriBuilder uri =UriBuilder.fromUri(hostURI).path("echo");
+        /*UriBuilder uri =UriBuilder.fromUri(hostURI).path("echo");
         Entity entity= new Entity();
         entity.setValue("World");
         ClientConfig cc = new DefaultClientConfig();
@@ -53,7 +53,7 @@ public class TestClient extends TestCase {
         assertNotNull(response);
         entity=response.getEntity(Entity.class);
         assertNotNull(entity);
-        assertEquals("Hello World",entity.getValue() );
+        assertEquals("Hello World",entity.getValue() );*/
     }
    
 }
