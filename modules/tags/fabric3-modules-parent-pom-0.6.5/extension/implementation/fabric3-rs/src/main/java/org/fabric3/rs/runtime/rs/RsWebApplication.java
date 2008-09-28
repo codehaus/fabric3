@@ -1,0 +1,170 @@
+/*
+ * Fabric3
+ * Copyright © 2008 Metaform Systems Limited
+ *
+ * This proprietary software may be used only connection with the Fabric3 license
+ * (the “License”), a copy of which is included in the software or may be
+ * obtained at: http://www.metaformsystems.com/licenses/license.html.
+
+ * Software distributed under the License is distributed on an “as is” basis,
+ * without warranties or conditions of any kind.  See the License for the
+ * specific language governing permissions and limitations of use of the software.
+ * This software is distributed in conjunction with other software licensed under
+ * different terms.  See the separate licenses for those programs included in the
+ * distribution for the permitted and restricted uses of such software.
+ *
+ */
+package org.fabric3.rs.runtime.rs;
+
+import java.io.IOException;
+import java.lang.reflect.InvocationHandler;
+import java.lang.reflect.Method;
+import java.util.Enumeration;
+import java.util.Map;
+
+import javax.servlet.ServletConfig;
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import org.fabric3.pojo.PojoWorkContextTunnel;
+import org.fabric3.spi.ObjectFactory;
+import org.fabric3.spi.invocation.CallFrame;
+import org.fabric3.spi.invocation.Message;
+import org.fabric3.spi.invocation.MessageImpl;
+import org.fabric3.spi.invocation.WorkContext;
+import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
+import org.fabric3.spi.wire.InvocationChain;
+
+/**
+ * @version $Rev$ $Date$
+ */
+public final class RsWebApplication extends HttpServlet {
+
+    RsServlet servlet;
+    ClassLoader cl;
+    ServletConfig cfg;
+    Fabric3ComponentProvider provider;
+    boolean reload = false;
+
+    public RsWebApplication(ClassLoader cl) {
+        this.cl = cl;
+        this.provider = new Fabric3ComponentProvider();
+        reload = true;
+    }
+
+    public void addServiceHandler(Class<?> resource, Object instance) {
+        provider.addServiceHandler(resource, instance);
+        reload = true;
+    }
+
+    @Override
+    public void init(final ServletConfig config) throws ServletException {
+        cfg = new ServletConfigWrapper(config);
+    }
+
+    public void reload() throws ServletException {
+        // Set the class loader to the runtime one so Jersey loads the
+        // ResourceConfig properly
+        ClassLoader oldcl = Thread.currentThread().getContextClassLoader();
+        try {
+            Thread.currentThread().setContextClassLoader(cl);
+            this.servlet = new RsServlet(this.provider);
+            servlet.init(cfg);
+        } catch (ServletException se) {
+            throw se;
+        } catch (Throwable t) {
+            ServletException se = new ServletException(t);
+            throw se;
+        } finally {
+            Thread.currentThread().setContextClassLoader(oldcl);
+        }
+        reload = false;
+    }
+
+    @Override
+    protected void service(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+        if (reload) {
+            reload();
+        }
+
+        ClassLoader oldcl = Thread.currentThread().getContextClassLoader();
+        WorkContext oldContext = null;
+        try {
+            Thread.currentThread().setContextClassLoader(cl);
+            WorkContext workContext = new WorkContext();
+            CallFrame frame = new CallFrame();
+            workContext.addCallFrame(frame);
+            oldContext = PojoWorkContextTunnel.setThreadWorkContext(workContext);
+            servlet.service(req, res);
+        } catch (ServletException se) {
+            throw se;
+        } catch (IOException ie) {
+            throw ie;
+        } catch (Throwable t) {
+            ServletException se = new ServletException(t);
+            throw se;
+        } finally {
+            Thread.currentThread().setContextClassLoader(oldcl);
+            PojoWorkContextTunnel.setThreadWorkContext(oldContext);
+        }
+    }
+
+    /**
+     * 
+     * Wrapper class to add the Jersey resource class as a web app init
+     * parameter
+     * 
+     */
+    public class ServletConfigWrapper implements ServletConfig {
+
+        ServletConfig config;
+
+        public ServletConfigWrapper(ServletConfig config) {
+            this.config = config;
+        }
+
+        public String getInitParameter(String name) {
+            if ("javax.ws.rs.ApplicationConfig".equals(name)) {
+                return Fabric3ResourceConfig.class.getName();
+            }
+            return config.getInitParameter(name);
+        }
+
+        public Enumeration getInitParameterNames() {
+            final Enumeration e = config.getInitParameterNames();
+            return new Enumeration() {
+
+                boolean finished = false;
+
+                public boolean hasMoreElements() {
+                    if (e.hasMoreElements() || !finished) {
+                        return true;
+                    }
+                    return false;
+                }
+
+                public Object nextElement() {
+                    if (e.hasMoreElements()) {
+                        return e.nextElement();
+                    }
+                    if (!finished) {
+                        finished = true;
+                        return "javax.ws.rs.ApplicationConfig";
+                    }
+                    return null;
+                }
+            };
+        }
+
+        public ServletContext getServletContext() {
+            return config.getServletContext();
+        }
+
+        public String getServletName() {
+            return config.getServletName();
+        }
+    }
+    
+}

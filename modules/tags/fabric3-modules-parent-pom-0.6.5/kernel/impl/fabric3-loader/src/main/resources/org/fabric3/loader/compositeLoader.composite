@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Fabric3
+ Copyright © 2008 Metaform Systems Limited
+
+ This proprietary software may be used only connection with the Fabric3 license
+ (the “License”), a copy of which is included in the software or may be
+ obtained at: http://www.metaformsystems.com/licenses/license.html.
+
+ Software distributed under the License is distributed on an “as is” basis,
+ without warranties or conditions of any kind.  See the License for the
+ specific language governing permissions and limitations of use of the software.
+ This software is distributed in conjunction with other software licensed under
+ different terms.  See the separate licenses for those programs included in the
+ distribution for the permitted and restricted uses of such software.
+
+ ___ Original Apache License ___
+
+ See the NOTICE file distributed with this work for information
+ regarding copyright ownership.  This file is licensed
+ to you under the Apache License, Version 2.0 (the
+ "License"); you may not use this file except in compliance
+ with the License.  You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing,
+ software distributed under the License is distributed on an
+ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ KIND, either express or implied.  See the License for the
+ specific language governing permissions and limitations
+ under the License.
+
+    $Rev$ $Date$
+-->
+<composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
+           xmlns:sca="http://www.osoa.org/xmlns/sca/1.0"
+           xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
+           xmlns:system="http://fabric3.org/xmlns/sca/system/2.0-alpha"
+           name="CompositeLoaderBootComposite" targetNamespace="urn:maven:org.codehaus.fabric3:fabric3-loader"
+        >
+
+    <!-- Common SCDL loader implementations -->
+    <component name="OperationLoader" f3:key="sca:operation">
+        <system:implementation.system class="org.fabric3.loader.common.OperationLoader"/>
+    </component>
+    <component name="ComponentReferenceLoader">
+        <system:implementation.system class="org.fabric3.loader.common.ComponentReferenceLoader"/>
+    </component>
+    <component name="ComponentServiceLoader">
+        <system:implementation.system class="org.fabric3.loader.common.ComponentServiceLoader"/>
+    </component>
+    <component name="PropertyLoader">
+        <system:implementation.system class="org.fabric3.loader.common.PropertyLoader"/>
+    </component>
+    <component name="JavaInterfaceLoader" f3:key="sca:interface.java">
+        <system:implementation.system class="org.fabric3.loader.common.JavaInterfaceLoader"/>
+    </component>
+
+    <!-- Composite SCDL loader implementations -->
+    <component name="PropertyValueLoader">
+        <system:implementation.system class="org.fabric3.loader.composite.PropertyValueLoader"/>
+    </component>
+    <component name="ComponentLoader">
+        <system:implementation.system class="org.fabric3.loader.composite.ComponentLoader"/>
+        <reference name="propertyValue" target="PropertyValueLoader"/>
+        <reference name="reference" target="ComponentReferenceLoader"/>
+        <reference name="service" target="ComponentServiceLoader"/>
+        <reference name="loaderHelper" target="LoaderHelper"/>
+    </component>
+    <component name="IncludeLoader">
+        <system:implementation.system class="org.fabric3.loader.composite.IncludeLoader"/>
+    </component>
+    <component name="CompositeReferenceLoader">
+        <system:implementation.system class="org.fabric3.loader.composite.CompositeReferenceLoader"/>
+    </component>
+    <component name="CompositeServiceLoader">
+        <system:implementation.system class="org.fabric3.loader.composite.CompositeServiceLoader"/>
+    </component>
+    <component name="WireLoader">
+        <system:implementation.system class="org.fabric3.loader.composite.WireLoader"/>
+    </component>
+
+    <component name="CompositeLoader">
+        <system:implementation.system class="org.fabric3.loader.composite.CompositeLoader"/>
+        <reference name="include" target="IncludeLoader"/>
+        <reference name="property" target="PropertyLoader"/>
+        <reference name="service" target="CompositeServiceLoader"/>
+        <reference name="reference" target="CompositeReferenceLoader"/>
+        <reference name="component" target="ComponentLoader"/>
+        <reference name="wire" target="WireLoader"/>
+    </component>
+
+    <!-- Composite implementation type -->
+    <component name="ImplementationCompositeLoader">
+        <system:implementation.system class="org.fabric3.loader.composite.ImplementationCompositeLoader"/>
+    </component>
+
+    <component name="ComponentTypeLoader">
+        <system:implementation.system class="org.fabric3.loader.componentType.ComponentTypeLoader"/>
+        <reference name="property" target="PropertyLoader"/>
+        <reference name="service" target="ComponentServiceLoader"/>
+        <reference name="reference" target="ComponentReferenceLoader"/>
+    </component>
+</composite>

@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Fabric3
+ Copyright © 2008 Metaform Systems Limited
+
+ This proprietary software may be used only connection with the Fabric3 license
+ (the “License”), a copy of which is included in the software or may be
+ obtained at: http://www.metaformsystems.com/licenses/license.html.
+
+ Software distributed under the License is distributed on an “as is” basis,
+ without warranties or conditions of any kind.  See the License for the
+ specific language governing permissions and limitations of use of the software.
+ This software is distributed in conjunction with other software licensed under
+ different terms.  See the separate licenses for those programs included in the
+ distribution for the permitted and restricted uses of such software.
+
+ ___ Original Apache License ___
+
+ See the NOTICE file distributed with this work for information
+ regarding copyright ownership.  This file is licensed
+ to you under the Apache License, Version 2.0 (the
+ "License"); you may not use this file except in compliance
+ with the License.  You may obtain a copy of the License at
+
+   http://www.apache.org/licenses/LICENSE-2.0
+
+ Unless required by applicable law or agreed to in writing,
+ software distributed under the License is distributed on an
+ "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY
+ KIND, either express or implied.  See the License for the
+ specific language governing permissions and limitations
+ under the License.
+
+    $Rev$ $Date$
+-->
+<composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
+           xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
+           xmlns:system="http://fabric3.org/xmlns/sca/system/2.0-alpha"
+           name="CommonBootComposite"
+           autowire="true">
+
+    <include name="AsssemblyBootComposite" scdlLocation="assembly.composite"/>
+
+    <include name="CommandGeneratorsBootComposite" scdlLocation="commandGenerators.composite"/>
+
+    <include name="CommonExecutorsBootComposite" scdlLocation="commandExecutors.composite"/>
+
+    <component name="PhysicalOperationHelper">
+        <system:implementation.system class="org.fabric3.fabric.generator.wire.PhysicalOperationHelperImpl"/>
+    </component>
+
+    <component name="PhysicalModelGenerator">
+        <system:implementation.system class="org.fabric3.fabric.generator.PhysicalModelGeneratorImpl"/>
+    </component>
+    <!-- the wire forces a reinjection of the generator into the RuntimeDomain -->
+    <wire source="RuntimeDomain/physicalModelGenerator" target="PhysicalModelGenerator"/>
+
+    <component name="PhysicalWireGenerator">
+        <system:implementation.system class="org.fabric3.fabric.generator.wire.PhysicalWireGeneratorImpl"/>
+    </component>
+
+    <component name="ApplicationDomain">
+        <system:implementation.system class="org.fabric3.fabric.domain.DistributedDomain"/>
+        <reference name="logicalComponentManager" target="LogicalComponentManager"/>
+    </component>
+
+    <component name="BindingSelector">
+        <system:implementation.system class="org.fabric3.fabric.binding.BindingSelectorImpl"/>
+        <reference name="logicalComponentManager" target="LogicalComponentManager"/>
+    </component>
+
+    <component name="ConfigurableBindingSelectionStrategy">
+        <system:implementation.system class="org.fabric3.fabric.binding.ConfigurableBindingSelectionStrategy"/>
+        <!-- allows users to configure the SCA binding preference through a systemConfig entry -->
+        <property name="scaBindingOrder" source="$systemConfig//bindings/binding.sca/provider.order"/>
+    </component>
+
+    <component name="GeneratorRegistry">
+        <system:implementation.system class="org.fabric3.fabric.generator.GeneratorRegistryImpl"/>
+    </component>
+
+    <component name="AdvertismentService">
+        <system:implementation.system class="org.fabric3.fabric.services.advertisement.DefaultAdvertismentService"/>
+    </component>
+
+    <component name="FeatureLoader" f3:key="system:feature">
+        <system:implementation.system class="org.fabric3.fabric.services.advertisement.FeatureLoader"/>
+    </component>
+
+    <!-- Default scopes -->
+    <component name="StatelessScopeContainer">
+        <system:implementation.system class="org.fabric3.fabric.component.scope.StatelessScopeContainer"/>
+    </component>
+
+    <component name="ConversationalScopeContainer">
+        <system:implementation.system class="org.fabric3.fabric.component.scope.ConversationalScopeContainer"/>
+        <reference name="store" target="MemoryStore"/>
+    </component>
+
+    <component name="MemoryStore">
+        <system:implementation.system class="org.fabric3.fabric.component.scope.NonExpiringMemoryStore"/>
+    </component>
+
+    <component name="EventService">
+        <system:implementation.system class="org.fabric3.fabric.services.event.EventServiceImpl"/>
+    </component>
+
+    <component name="ClassLoaderGenerator">
+        <system:implementation.system class="org.fabric3.fabric.generator.classloader.ClassLoaderCommandGeneratorImpl"/>
+    </component>
+
+    <component name="ClassLoaderBuilder">
+        <system:implementation.system class="org.fabric3.fabric.builder.classloader.ClassLoaderBuilderImpl"/>
+    </component>
+
+    <component name="SingletonComponentSynthesizer">
+        <system:implementation.system class="org.fabric3.fabric.services.synthesizer.SingletonComponentSynthesizer"/>
+    </component>
+
+    <!-- Definitions registry -->
+    <component name="DefinitionsRegistry">
+        <system:implementation.system class="org.fabric3.fabric.services.definitions.DefaultDefinitionsRegistry"/>
+    </component>
+
+    <component name="ClasspathProcessorRegistry">
+        <system:implementation.system class="org.fabric3.fabric.services.contribution.ClasspathProcessorRegistryImpl"/>
+    </component>
+
+    <component name="JarClasspathProcessor">
+        <system:implementation.system class="org.fabric3.fabric.services.contribution.processor.JarClasspathProcessor"/>
+    </component>
+
+    <component name="ProcessorRegistry">
+        <system:implementation.system class="org.fabric3.fabric.services.contribution.ProcessorRegistryImpl"/>
+    </component>
+    <!-- reinjects the metadata store after runtime bootstrap -->
+    <wire source="MetaDataStore/processorRegistry" target="ProcessorRegistry"/>
+
+</composite>

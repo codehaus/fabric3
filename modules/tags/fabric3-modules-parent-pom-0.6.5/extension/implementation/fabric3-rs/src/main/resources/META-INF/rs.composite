@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Fabric3
+ Copyright © 2008 Metaform Systems Limited
+
+ This proprietary software may be used only connection with the Fabric3 license
+ (the “License”), a copy of which is included in the software or may be
+ obtained at: http://www.metaformsystems.com/licenses/license.html.
+
+ Software distributed under the License is distributed on an “as is” basis,
+ without warranties or conditions of any kind.  See the License for the
+ specific language governing permissions and limitations of use of the software.
+ This software is distributed in conjunction with other software licensed under
+ different terms.  See the separate licenses for those programs included in the
+ distribution for the permitted and restricted uses of such software.
+-->
+<composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
+           xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
+           xmlns:rs="http://www.fabric3.org/xmlns/rs/1.0"
+           xmlns:system="http://fabric3.org/xmlns/sca/system/2.0-alpha"
+           targetNamespace="org.codehaus.fabric3"
+           name="RsExtension"
+           autowire="true">
+
+    <component name="RsHeuristic">
+        <system:implementation.system class="org.fabric3.rs.introspection.RsHeuristicImpl"/>
+    </component>
+ 
+    <component name="RsImplementationLoader" f3:key="rs:implementation.rs">
+        <system:implementation.system class="org.fabric3.rs.introspection.RsImplementationLoader"/>
+        <reference name="implementationProcessor" target="JavaImplementationProcessorImpl"/>
+    </component>
+ 
+    <!-- Rs Binding Generator -->
+    <component name="RsBindingGenerator" f3:key="org.fabric3.rs.scdl.RsBindingDefinition">
+        <system:implementation.system class="org.fabric3.rs.control.RsBindingGenerator"/>
+    </component>
+
+    <!-- Rs Binding Wire Attachers  -->
+    <component name="RsSourceWireAttacher" f3:key="org.fabric3.rs.provision.RsWireSourceDefinition">
+        <system:implementation.system class="org.fabric3.rs.runtime.RsSourceWireAttacher"/>
+    </component> 
+    
+   
+   
+
+</composite>

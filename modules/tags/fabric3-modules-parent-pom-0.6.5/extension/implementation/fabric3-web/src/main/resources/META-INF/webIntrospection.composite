@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Fabric3
+ Copyright © 2008 Metaform Systems Limited
+
+ This proprietary software may be used only connection with the Fabric3 license
+ (the “License”), a copy of which is included in the software or may be
+ obtained at: http://www.metaformsystems.com/licenses/license.html.
+
+ Software distributed under the License is distributed on an “as is” basis,
+ without warranties or conditions of any kind.  See the License for the
+ specific language governing permissions and limitations of use of the software.
+ This software is distributed in conjunction with other software licensed under
+ different terms.  See the separate licenses for those programs included in the
+ distribution for the permitted and restricted uses of such software.
+
+    $Rev: 3127 $ $Date: 2008-03-17 03:35:09 -0700 (Mon, 17 Mar 2008) $
+-->
+<composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
+           xmlns:sca="http://www.osoa.org/xmlns/sca/1.0"
+           xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
+           xmlns:system="http://fabric3.org/xmlns/sca/system/2.0-alpha"
+           name="WebImplementationIntrospectionExtension" targetNamespace="urn:maven:org.codehaus.fabric3:fabric3-java"
+           autowire="true">
+
+
+    <component name="WebComponentLoader">
+        <system:implementation.system class="org.fabric3.web.introspection.WebComponentLoader"/>
+    </component>
+
+    <component name="WebImplementationProcessor">
+        <system:implementation.system class="org.fabric3.web.introspection.WebImplementationIntrospectorImpl"/>
+    </component>
+
+    <component name="WebXmlIntrospector">
+        <system:implementation.system class="org.fabric3.web.introspection.WebXmlIntrospectorImpl"/>
+    </component>
+
+</composite>

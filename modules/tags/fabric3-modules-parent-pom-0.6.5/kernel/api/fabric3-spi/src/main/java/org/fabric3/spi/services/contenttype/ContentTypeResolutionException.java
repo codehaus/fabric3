@@ -1,0 +1,50 @@
+/*
+ * Fabric3
+ * Copyright © 2008 Metaform Systems Limited
+ *
+ * This proprietary software may be used only connection with the Fabric3 license
+ * (the “License”), a copy of which is included in the software or may be
+ * obtained at: http://www.metaformsystems.com/licenses/license.html.
+
+ * Software distributed under the License is distributed on an “as is” basis,
+ * without warranties or conditions of any kind.  See the License for the
+ * specific language governing permissions and limitations of use of the software.
+ * This software is distributed in conjunction with other software licensed under
+ * different terms.  See the separate licenses for those programs included in the
+ * distribution for the permitted and restricted uses of such software.
+ *
+ */
+package org.fabric3.spi.services.contenttype;
+
+import org.fabric3.host.Fabric3Exception;
+
+/**
+ * Denotes an error resolving the content type for a resource.
+ *
+ * @version $Revision$ $Date$
+ */
+public class ContentTypeResolutionException extends Fabric3Exception {
+    private static final long serialVersionUID = 7983355008884153907L;
+
+    /**
+     * Constructor.
+     *
+     * @param message    the error message
+     * @param identifier an error identifier
+     */
+    public ContentTypeResolutionException(String message, String identifier) {
+        super(message, identifier);
+    }
+
+    /**
+     * Constructor.
+     *
+     * @param message    the error message
+     * @param identifier an error identifier
+     * @param cause      an exception thrown during resolution
+     */
+    public ContentTypeResolutionException(String message, String identifier, Throwable cause) {
+        super(message, identifier, cause);
+    }
+
+}

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Fabric3
+ Copyright © 2008 Metaform Systems Limited
+
+ This proprietary software may be used only connection with the Fabric3 license
+ (the “License”), a copy of which is included in the software or may be
+ obtained at: http://www.metaformsystems.com/licenses/license.html.
+
+ Software distributed under the License is distributed on an “as is” basis,
+ without warranties or conditions of any kind.  See the License for the
+ specific language governing permissions and limitations of use of the software.
+ This software is distributed in conjunction with other software licensed under
+ different terms.  See the separate licenses for those programs included in the
+ distribution for the permitted and restricted uses of such software.
+-->
+<!--
+Implements a limited functionality binding for test purposes. The binding only supports invocations between clients and
+providers in the same VM. Other limitations include no support for operator overloading and support for complex types
+only if the client and provider share a common parent classloader.
+
+To bind a service or reference, use the binding.test element with either uri to make the service available at or the
+destination uri the reference should flow invocations to as in:
+
+&gtbinding.test uri="MyService"&lt
+
+-->
+<composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
+           xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
+           xmlns:system="http://fabric3.org/xmlns/sca/system/2.0-alpha"
+           targetNamespace="org.codehaus.fabric3"
+           name="TestBindingExtension">
+
+    <component name="BindingChannel">
+        <system:implementation.system class="org.fabric3.binding.test.BindingChannelImpl"/>
+    </component>
+
+    <component name="TestBindingLoader" f3:key="f3:binding.test">
+        <system:implementation.system class="org.fabric3.binding.test.TestBindingLoader"/>
+    </component>
+
+    <component name="TestBindingGenerator" f3:key="org.fabric3.binding.test.TestBindingDefinition">
+        <system:implementation.system class="org.fabric3.binding.test.TestBindingGenerator"/>
+    </component>
+
+    <component f3:key="org.fabric3.binding.test.TestBindingSourceDefinition" name="TestBindingSourceWireAttacher">
+        <system:implementation.system class="org.fabric3.binding.test.TestBindingSourceWireAttacher"/>
+    </component>
+    <component f3:key="org.fabric3.binding.test.TestBindingTargetDefinition" name="TestBindingTargetWireAttacher">
+        <system:implementation.system class="org.fabric3.binding.test.TestBindingTargetWireAttacher"/>
+    </component>
+
+    <system:feature name="TestBindingFeature">{http://fabric3.org/xmlns/binding}test</system:feature>
+
+</composite>

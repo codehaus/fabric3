@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Fabric3
+ Copyright © 2008 Metaform Systems Limited
+
+ This proprietary software may be used only connection with the Fabric3 license
+ (the “License”), a copy of which is included in the software or may be
+ obtained at: http://www.metaformsystems.com/licenses/license.html.
+
+ Software distributed under the License is distributed on an “as is” basis,
+ without warranties or conditions of any kind.  See the License for the
+ specific language governing permissions and limitations of use of the software.
+ This software is distributed in conjunction with other software licensed under
+ different terms.  See the separate licenses for those programs included in the
+ distribution for the permitted and restricted uses of such software.
+
+-->
+<composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
+           xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
+           xmlns:system="http://fabric3.org/xmlns/sca/system/2.0-alpha"
+           targetNamespace="org.codehaus.fabric3"
+           name="H2DataSourceExtension"
+           autowire="true">
+
+    <property name="url"/>
+    <property name="dataSourceKeys"/>
+    <property name="user"/>
+    <property name="password"/>
+    <reference name="transactionManager" promote="XaPoolDataSource/transactionManager"/>
+    <reference name="dataSourceRegistry" promote="XaPoolDataSource/dataSourceRegistry"/>
+
+    <!-- XAPool Datasource -->
+    <component name="XaPoolDataSource">
+        <system:implementation.system class="org.fabric3.xapool.XaPoolDataSource"/>
+        <property name="driver">org.h2.Driver</property>
+        <property name="url" source="$url"/>
+        <property name="dataSourceKeys" source="$dataSourceKeys"/>
+        <property name="user" source="$user"/>
+        <property name="password" source="$password"/>
+    </component>
+
+</composite>

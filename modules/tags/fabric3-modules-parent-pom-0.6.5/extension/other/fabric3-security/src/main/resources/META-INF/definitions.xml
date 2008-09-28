@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="ASCII"?>
+<!--
+ Fabric3
+ Copyright ? 2008 Metaform Systems Limited
+
+ This proprietary software may be used only connection with the Fabric3 license
+ (the ?License?), a copy of which is included in the software or may be
+ obtained at: http://www.metaformsystems.com/licenses/license.html.
+
+ Software distributed under the License is distributed on an ?as is? basis,
+ without warranties or conditions of any kind.  See the License for the
+ specific language governing permissions and limitations of use of the software.
+ This software is distributed in conjunction with other software licensed under
+ different terms.  See the separate licenses for those programs included in the
+ distribution for the permitted and restricted uses of such software.
+-->
+<definitions xmlns="http://www.osoa.org/xmlns/sca/1.0" targetNamespace="http://fabric3.org/xmlns/sca/2.0-alpha">
+
+    <intent name="authorization" constrains="binding">
+        <description>
+            Unqualified intent for authorization.
+        </description>
+    </intent>
+
+    <intent name="authorization.message" constrains="binding">
+        <description>
+            Message level authorization.
+        </description>
+    </intent>
+
+</definitions>
