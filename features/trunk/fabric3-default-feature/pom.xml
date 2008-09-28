@@ -46,22 +46,22 @@
                        <dependency>
                            <groupId>org.codehaus.fabric3</groupId>
                            <artifactId>fabric3-async-provision</artifactId>
-                           <version>0.6.5-SNAPSHOT</version>
+                           <version>0.6.5</version>
                        </dependency>
                        <dependency>
                            <groupId>org.codehaus.fabric3</groupId>
                            <artifactId>fabric3-async-loader</artifactId>
-                           <version>0.6.5-SNAPSHOT</version>
+                           <version>0.6.5</version>
                        </dependency>
                        <dependency>
                            <groupId>org.codehaus.fabric3</groupId>
                            <artifactId>fabric3-async-runtime</artifactId>
-                           <version>0.6.5-SNAPSHOT</version>
+                           <version>0.6.5</version>
                        </dependency>
                        <dependency>
                            <groupId>org.codehaus.fabric3</groupId>
                            <artifactId>fabric3-conversation-propagation</artifactId>
-                           <version>0.6.5-SNAPSHOT</version>
+                           <version>0.6.5</version>
                        </dependency>
                     </extensions>
                 </configuration>

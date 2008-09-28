@@ -47,25 +47,25 @@
                         <dependency>
                             <groupId>org.codehaus.fabric3</groupId>
                             <artifactId>fabric3-jpa-hibernate</artifactId>
-                            <version>0.6.5-SNAPSHOT</version>
+                            <version>0.6.5</version>
                         </dependency>
                         <!-- JPA Core Components -->
                         <dependency>
                             <groupId>org.codehaus.fabric3</groupId>
                             <artifactId>fabric3-jpa-spi</artifactId>
-                            <version>0.6.5-SNAPSHOT</version>
+                            <version>0.6.5</version>
                         </dependency>
                         <!-- Declarative Transaction Policies -->
                         <dependency>
                             <groupId>org.codehaus.fabric3</groupId>
                             <artifactId>fabric3-tx</artifactId>
-                            <version>0.6.5-SNAPSHOT</version>
+                            <version>0.6.5</version>
                         </dependency>
                         <!-- JSR 250 Resource Support and Datasource Management -->
                         <dependency>
                             <groupId>org.codehaus.fabric3</groupId>
                             <artifactId>fabric3-resource</artifactId>
-                            <version>0.6.5-SNAPSHOT</version>
+                            <version>0.6.5</version>
                         </dependency>
                     </extensions>
                     <!-- API classes need to be shared between the application and extension classloaders -->
