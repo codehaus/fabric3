@@ -40,5 +40,6 @@
             <module>fabric3-timer-provision</module>
             <module>fabric3-timer-loader</module>
             <module>fabric3-timer-runtime</module>
+            <module>fabric3-xquery</module>
 	</modules>
 </project>

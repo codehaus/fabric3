@@ -43,6 +43,7 @@
 		<module>fabric3-contribution-war</module>
 		<module>fabric3-conversation-propagation</module>
 		<module>fabric3-db-h2</module>
+		<module>fabric3-db-exist</module>
 		<module>fabric3-ftp-api</module>
 		<module>fabric3-ftp-server</module>
 		<module>fabric3-ftp-spi</module>

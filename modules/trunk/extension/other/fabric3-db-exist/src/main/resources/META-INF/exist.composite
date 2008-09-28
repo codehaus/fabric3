@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Fabric3
+ Copyright © 2008 Metaform Systems Limited
+
+ This proprietary software may be used only connection with the Fabric3 license
+ (the “License”), a copy of which is included in the software or may be
+ obtained at: http://www.metaformsystems.com/licenses/license.html.
+
+ Software distributed under the License is distributed on an “as is” basis,
+ without warranties or conditions of any kind.  See the License for the
+ specific language governing permissions and limitations of use of the software.
+ This software is distributed in conjunction with other software licensed under
+ different terms.  See the separate licenses for those programs included in the
+ distribution for the permitted and restricted uses of such software.
+
+-->
+<!--
+    $Rev$ $Date$
+-->
+<composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
+           xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
+           xmlns:system="http://fabric3.org/xmlns/sca/system/2.0-alpha"
+           targetNamespace="org.codehaus.fabric3"
+           name="eXistXQuery"
+           autowire="true">
+
+
+    <component name="ExistDatabaseInstanceRegistry">
+        <system:implementation.system class="org.fabric3.exist.ExistDBInstanceRegistryImpl"/>
+    </component>
+
+    <component name="ExistXQueryImplementationProcessor" f3:key="org.fabric3.xquery.introspection.XQueryImplementationProcessor">
+        <system:implementation.system class="org.fabric3.exist.introspection.XQueryImplementationProcessorImpl"/>
+    </component>
+
+    <component name="org.fabric3.xquery.runtime.XQueryComponentBuilder">
+        <system:implementation.system class="org.fabric3.exist.runtime.ExistXQueryComponentBuilder"/>
+    </component>
+
+    <!-- Exist Transform Registry -->
+    <component name="ExistTransformerRegistry">
+        <system:implementation.system class="org.fabric3.exist.transform.TransformerRegistryImpl"/>
+    </component>
+
+    <!-- Exist Transformers  -->
+    <component name="ExistArrayTransformer">
+        <system:implementation.system class="org.fabric3.exist.transform.ArrayTransformer"/>
+        <reference name="registry" target="ExistTransformerRegistry"/>
+    </component>
+
+    <component name="ExistBooleanTransformer">
+        <system:implementation.system class="org.fabric3.exist.transform.BooleanTransformer"/>
+        <reference name="registry" target="ExistTransformerRegistry"/>
+    </component>
+
+   <component name="ExistCharacterTransformer">
+        <system:implementation.system class="org.fabric3.exist.transform.CharacterTransformer"/>
+        <reference name="registry" target="ExistTransformerRegistry"/>
+    </component>
+
+    <component name="ExistDoubleTransformer">
+        <system:implementation.system class="org.fabric3.exist.transform.DoubleTransformer"/>
+        <reference name="registry" target="ExistTransformerRegistry"/>
+    </component>
+
+    <component name="ExistFloatTransformer">
+        <system:implementation.system class="org.fabric3.exist.transform.FloatTransformer"/>
+        <reference name="registry" target="ExistTransformerRegistry"/>
+    </component>
+
+    <component name="ExistIntegerTransformer">
+        <system:implementation.system class="org.fabric3.exist.transform.IntegerTransformer"/>
+        <reference name="registry" target="ExistTransformerRegistry"/>
+    </component>
+
+    <component name="ExistJavaTransformer">
+        <system:implementation.system class="org.fabric3.exist.transform.JavaTransformer"/>
+        <reference name="registry" target="ExistTransformerRegistry"/>
+    </component>
+
+    <component name="ExistListTransformer">
+        <system:implementation.system class="org.fabric3.exist.transform.ListTransformer"/>
+        <reference name="registry" target="ExistTransformerRegistry"/>
+    </component>
+
+    <component name="ExistLongTransformer">
+        <system:implementation.system class="org.fabric3.exist.transform.LongTransformer"/>
+        <reference name="registry" target="ExistTransformerRegistry"/>
+    </component>
+
+    <component name="ExistNodeListTransformer">
+        <system:implementation.system class="org.fabric3.exist.transform.NodeListTransformer"/>
+        <reference name="registry" target="ExistTransformerRegistry"/>
+    </component>
+
+    <component name="ExistNodeTransformer">
+        <system:implementation.system class="org.fabric3.exist.transform.NodeTransformer"/>
+        <reference name="registry" target="ExistTransformerRegistry"/>
+    </component>
+
+    <component name="ExistShortTransformer">
+        <system:implementation.system class="org.fabric3.exist.transform.ShortTransformer"/>
+        <reference name="registry" target="ExistTransformerRegistry"/>
+    </component>
+
+    <component name="ExistStringTransformer">
+        <system:implementation.system class="org.fabric3.exist.transform.StringTransformer"/>
+        <reference name="registry" target="ExistTransformerRegistry"/>
+    </component>
+  
+    <component name="ExistVoidTransformer">
+        <system:implementation.system class="org.fabric3.exist.transform.VoidTransformer"/>
+        <reference name="registry" target="ExistTransformerRegistry"/>
+    </component>
+
+    <component name="ExistXMLStreamReaderTransformer">
+        <system:implementation.system class="org.fabric3.exist.transform.XMLStreamReaderTransformer"/>
+        <reference name="registry" target="ExistTransformerRegistry"/>
+    </component>
+
+</composite>
