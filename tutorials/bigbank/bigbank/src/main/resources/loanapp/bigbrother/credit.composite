@@ -18,7 +18,7 @@
 <!-- Demonstrates composition. This credit service implementation uses the fictitious BigBrother Credit Bureau
 to perform credit scoring -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
-           targetNamespace="http://fabric3.org/xmlns/sca/tutorials/0.5.1"
+           targetNamespace="http://fabric3.org/xmlns/sca/tutorials/0.6.5"
            name="CreditComposite">
     <service name="CreditService" promote="BigBrotherCreditComponent/CreditService"/>
 

@@ -17,8 +17,8 @@
 -->
 
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
-           xmlns:tutorials="http://fabric3.org/xmlns/sca/tutorials/0.5.1"
-           targetNamespace="http://fabric3.org/xmlns/sca/tutorials/0.5.1"
+           xmlns:tutorials="http://fabric3.org/xmlns/sca/tutorials/0.6.5"
+           targetNamespace="http://fabric3.org/xmlns/sca/tutorials/0.6.5"
            name="PricingComposite">
     <service name="PricingService" promote="PricingComponent"/>
 
