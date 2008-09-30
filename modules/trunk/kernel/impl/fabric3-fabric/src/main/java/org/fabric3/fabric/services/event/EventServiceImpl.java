@@ -34,33 +34,36 @@ import org.fabric3.spi.services.event.Fabric3EventListener;
  */
 @EagerInit
 public class EventServiceImpl implements EventService {
-    private Map<Class<? extends Fabric3Event>, List<Fabric3EventListener>> cache;
+    private Map<Class<Fabric3Event>, List<Fabric3EventListener<Fabric3Event>>> cache;
 
     public EventServiceImpl() {
-        cache = new ConcurrentHashMap<Class<? extends Fabric3Event>, List<Fabric3EventListener>>();
+        cache = new ConcurrentHashMap<Class<Fabric3Event>, List<Fabric3EventListener<Fabric3Event>>>();
     }
 
-    public <T extends Fabric3Event> void publish(T event) {
-        List<Fabric3EventListener> listeners = cache.get(event.getClass());
+    @SuppressWarnings({"SuspiciousMethodCalls"})
+    public void publish(Fabric3Event event) {
+        List<Fabric3EventListener<Fabric3Event>> listeners = cache.get(event.getClass());
         if (listeners == null) {
             return;
         }
-        for (Fabric3EventListener listener : listeners) {
+        for (Fabric3EventListener<Fabric3Event> listener : listeners) {
             listener.onEvent(event);
         }
     }
 
-    public <T extends Fabric3Event> void subscribe(Class<T> type, Fabric3EventListener listener) {
-        List<Fabric3EventListener> listeners = cache.get(type);
+    @SuppressWarnings({"SuspiciousMethodCalls", "unchecked"})
+    public <T extends Fabric3Event> void subscribe(Class<T> type, Fabric3EventListener<T> listener) {
+        List<Fabric3EventListener<Fabric3Event>> listeners = cache.get(type);
         if (listeners == null) {
-            listeners = new ArrayList<Fabric3EventListener>();
-            cache.put(type, listeners);
+            listeners = new ArrayList<Fabric3EventListener<Fabric3Event>>();
+            cache.put((Class<Fabric3Event>) type, listeners);
         }
-        listeners.add(listener);
+        listeners.add((Fabric3EventListener<Fabric3Event>) listener);
     }
 
-    public <T extends Fabric3Event> void unsubscribe(Class<T> type, Fabric3EventListener listener) {
-        List<Fabric3EventListener> listeners = cache.get(type);
+    @SuppressWarnings({"SuspiciousMethodCalls"})
+    public <T extends Fabric3Event> void unsubscribe(Class<T> type, Fabric3EventListener<T> listener) {
+        List<Fabric3EventListener<Fabric3Event>> listeners = cache.get(type);
         if (listeners == null) {
             return;
         }

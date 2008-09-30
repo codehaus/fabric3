@@ -17,8 +17,7 @@
 package org.fabric3.spi.services.event;
 
 /**
- * The runtime event service. {@link Fabric3EventListener}s subscribe with this service to receive notification of
- * various runtime events.
+ * The runtime event service. {@link Fabric3EventListener}s subscribe with this service to receive notification of various runtime events.
  *
  * @version $Rev$ $Date$
  */
@@ -29,7 +28,7 @@ public interface EventService {
      *
      * @param event the event
      */
-    <T extends Fabric3Event> void publish(T event);
+    void publish(Fabric3Event event);
 
     /**
      * Subscribes the listener to receive notification when events of the specified type are published.
@@ -37,7 +36,7 @@ public interface EventService {
      * @param type     the event type to receive notifications for
      * @param listener the listener to subscribe
      */
-    <T extends Fabric3Event> void subscribe(Class<T> type, Fabric3EventListener listener);
+    <T extends Fabric3Event> void subscribe(Class<T> type, Fabric3EventListener<T> listener);
 
     /**
      * Unsubscribes the listener from receiving notifications when events of the specified type are published.
@@ -45,7 +44,7 @@ public interface EventService {
      * @param type     the event type to unsibscribe from
      * @param listener the listener to unsubscribe
      */
-    <T extends Fabric3Event> void unsubscribe(Class<T> type, Fabric3EventListener listener);
+    <T extends Fabric3Event> void unsubscribe(Class<T> type, Fabric3EventListener<T> listener);
 
 
 }

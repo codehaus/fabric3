@@ -28,7 +28,7 @@ import org.fabric3.spi.services.event.Fabric3EventListener;
  */
 public class EventServiceImplTestCase extends TestCase {
     private EventService service;
-    private Fabric3EventListener listener;
+    private Fabric3EventListener<MockEvent> listener;
 
     public void testSubscribeUnsubscribe() throws Exception {
         service.subscribe(MockEvent.class, listener);

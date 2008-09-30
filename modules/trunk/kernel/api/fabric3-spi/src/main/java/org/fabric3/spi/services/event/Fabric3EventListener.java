@@ -22,7 +22,7 @@ package org.fabric3.spi.services.event;
  *
  * @version $Rev$ $Date$
  */
-public interface Fabric3EventListener {
+public interface Fabric3EventListener<T extends Fabric3Event> {
 
     /**
      * Notifies the listener of an event. The listener must not throw an exception as all listeners are notified on the
@@ -30,6 +30,6 @@ public interface Fabric3EventListener {
      *
      * @param event the event
      */
-    void onEvent(Fabric3Event event);
+    void onEvent(T event);
 
 }

@@ -60,7 +60,6 @@ import org.fabric3.spi.services.contribution.QNameSymbol;
 import org.fabric3.spi.services.contribution.Resource;
 import org.fabric3.spi.services.contribution.ResourceElement;
 import org.fabric3.spi.services.event.EventService;
-import org.fabric3.spi.services.event.Fabric3Event;
 import org.fabric3.spi.services.event.Fabric3EventListener;
 import org.fabric3.spi.services.event.RuntimeStart;
 
@@ -80,7 +79,7 @@ import org.fabric3.spi.services.event.RuntimeStart;
  */
 @Service(VoidService.class)
 @EagerInit
-public class ContributionDirectoryScanner implements Runnable, Fabric3EventListener {
+public class ContributionDirectoryScanner implements Runnable, Fabric3EventListener<RuntimeStart> {
     private final Map<String, FileSystemResource> cache = new HashMap<String, FileSystemResource>();
     private final Map<String, FileSystemResource> errorCache = new HashMap<String, FileSystemResource>();
     private final ContributionService contributionService;
@@ -130,7 +129,7 @@ public class ContributionDirectoryScanner implements Runnable, Fabric3EventListe
         executor.shutdownNow();
     }
 
-    public void onEvent(Fabric3Event event) {
+    public void onEvent(RuntimeStart event) {
         executor = Executors.newSingleThreadScheduledExecutor();
         executor.scheduleWithFixedDelay(this, 10, delay, TimeUnit.MILLISECONDS);
     }
