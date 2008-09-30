@@ -80,16 +80,16 @@
             <plugin>
                 <groupId>org.codehaus.fabric3</groupId>
                 <artifactId>fabric3-itest-plugin</artifactId>
-                <version>0.6.5-SNAPSHOT</version>
+                <version>0.7-SNAPSHOT</version>
                 <configuration>
-                    <runtimeVersion>0.6.5-SNAPSHOT</runtimeVersion>
+                    <runtimeVersion>0.7-SNAPSHOT</runtimeVersion>
                     <systemConfigDir>classes/META-INF</systemConfigDir>
                     <features>
                         <!-- JPA Hibernate Extensions -->
                         <dependency>
                             <groupId>org.codehaus.fabric3</groupId>
                             <artifactId>fabric3-hibernate-jotm-feature</artifactId>
-                            <version>0.6.5-SNAPSHOT</version>
+                            <version>0.7-SNAPSHOT</version>
                             <type>xml</type>
                         </dependency>
                     </features>
