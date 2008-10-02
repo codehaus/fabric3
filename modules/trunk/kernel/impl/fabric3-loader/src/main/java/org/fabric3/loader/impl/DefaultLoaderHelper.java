@@ -153,7 +153,7 @@ public class DefaultLoaderHelper implements LoaderHelper {
         }
     }
 
-    public List<URI> parseListOfUris(XMLStreamReader reader, String attribute) {
+    /*public List<URI> parseListOfUris(XMLStreamReader reader, String attribute) {
         String value = reader.getAttributeValue(null, attribute);
         if (value == null || value.length() == 0) {
             return null;
@@ -162,6 +162,20 @@ public class DefaultLoaderHelper implements LoaderHelper {
             List<URI> result = new ArrayList<URI>(uris.length);
             for (String uri : uris) {
                 result.add(getURI(uri));
+            }
+            return result;
+        }
+    }*/
+
+    public List<URI> parseListOfUris(XMLStreamReader reader, String attribute) {
+        String value = reader.getAttributeValue(null, attribute);
+        if (value == null || value.length() == 0) {
+            return null;
+        } else {
+            StringTokenizer tok = new StringTokenizer(value);
+            List<URI> result = new ArrayList<URI>(tok.countTokens());
+            while (tok.hasMoreTokens()) {
+            	result.add(getURI(tok.nextToken().trim()));
             }
             return result;
         }
