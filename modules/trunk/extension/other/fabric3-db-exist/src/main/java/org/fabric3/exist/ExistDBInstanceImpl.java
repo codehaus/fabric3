@@ -1,12 +1,12 @@
 /*
  * Fabric3
- * Copyright © 2008 Metaform Systems Limited
+ * Copyright ï¿½ 2008 Metaform Systems Limited
  *
  * This proprietary software may be used only connection with the Fabric3 license
- * (the ÒLicenseÓ), a copy of which is included in the software or may be
+ * (the ï¿½Licenseï¿½), a copy of which is included in the software or may be
  * obtained at: http://www.metaformsystems.com/licenses/license.html.
 
- * Software distributed under the License is distributed on an Òas isÓ basis,
+ * Software distributed under the License is distributed on an ï¿½as isï¿½ basis,
  * without warranties or conditions of any kind.  See the License for the
  * specific language governing permissions and limitations of use of the software.
  * This software is distributed in conjunction with other software licensed under
@@ -18,6 +18,7 @@ package org.fabric3.exist;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.nio.channels.Channels;
 import java.nio.channels.FileChannel;
 import java.nio.channels.ReadableByteChannel;
@@ -26,6 +27,7 @@ import org.exist.security.User;
 import org.exist.storage.BrokerPool;
 import org.exist.storage.DBBroker;
 import org.exist.util.Configuration;
+import org.exist.util.DatabaseConfigurationException;
 import org.osoa.sca.annotations.Destroy;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
@@ -63,7 +65,7 @@ public class ExistDBInstanceImpl implements ExistDBInstance {
     }
 
     @Init
-    public void init() {
+    public void init()throws EXistException  {
         initializeDB();
         eXistDBRegistry.registerInstance(instanceName,this);
         
@@ -112,8 +114,9 @@ public class ExistDBInstanceImpl implements ExistDBInstance {
 
     }
 
-    protected void initializeDB() {
+    protected void initializeDB() throws EXistException{
         try {
+            File defaultHome = new File(System.getProperty("user.dir"));
             File existHomeDir;
             File config;
             if (existHome != null) {
@@ -121,12 +124,18 @@ public class ExistDBInstanceImpl implements ExistDBInstance {
             } else if (configFile != null) {
                 existHomeDir = new File(configFile).getParentFile();
             } else {
-                existHomeDir = new File(System.getProperty("user.dir"), "eXist");
+                existHomeDir = new File(defaultHome, "eXist");
+            }
+            if (!existHomeDir.isAbsolute()){
+                    existHomeDir = new File(defaultHome,existHomeDir.getPath());
             }
             existHomeDir.mkdirs();
 
             if (configFile != null) {
                 config = new File(configFile);
+                if (!config.isAbsolute()){
+                    throw new EXistException(String.format("Unable to locate config file %s use absolute path", configFile));
+                }
             } else {
                 config = new File(existHomeDir, "conf.xml");
                 FileChannel out = new FileOutputStream(config).getChannel();
@@ -148,8 +157,10 @@ public class ExistDBInstanceImpl implements ExistDBInstance {
             if (userID == null) {
                 userID = "admin";
             }
-        } catch (Exception ie) {
-            ie.printStackTrace();
+        } catch (DatabaseConfigurationException ex) {
+            throw new EXistException(ex);
+        } catch (IOException ie) {
+            throw new EXistException(ie);
         }
     }
 
