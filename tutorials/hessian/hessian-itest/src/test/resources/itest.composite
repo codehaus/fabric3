@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
  Fabric3
- Copyright © 2008 Metaform Systems Limited
+ Copyright 2008 Metaform Systems Limited
 
  This proprietary software may be used only connection with the Fabric3 license
- (the “License”), a copy of which is included in the software or may be
+ (the ?~@~\License?~@~]), a copy of which is included in the software or may be
  obtained at: http://www.metaformsystems.com/licenses/license.html.
 
- Software distributed under the License is distributed on an “as is” basis,
+ Software distributed under the License is distributed on an ?~@~\as is?~@~] basis,
  without warranties or conditions of any kind.  See the License for the
  specific language governing permissions and limitations of use of the software.
  This software is distributed in conjunction with other software licensed under
@@ -31,34 +31,24 @@
  specific language governing permissions and limitations
  under the License.
 -->
-<project 
-    xmlns="http://maven.apache.org/POM/4.0.0" 
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
-    
-    <modelVersion>4.0.0</modelVersion>
-    <parent>
-        <groupId>org.codehaus.fabric3</groupId>
-        <artifactId>fabric</artifactId>
-        <version>4</version>
-    </parent>
-    <groupId>org.codehaus.fabric3.tutorials</groupId>
-    <artifactId>hessian-webapp</artifactId>
-    <version>0.1-SNAPSHOT</version>
-    <name>Hessian Webapp</name>
-    <packaging>jar</packaging>
-    <description>Hessian Webapp.</description>
+<composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
+           xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
+           xmlns:hessian="http://www.fabric3.org/binding/hessian/0.2"
+           name="SyncComposite" 
+           autowire="false">
 
-    <dependencies>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.codehaus.fabric3.spec</groupId>
-            <artifactId>sca-api-r1.0</artifactId>
-            <version>0.2.1</version>
-        </dependency>
-    </dependencies>
+    <component name="WeatherTest">
+        <f3:junit class="org.fabric3.tutorials.hessian.WeatherServiceITest"/>
+        <reference name="weatherService">
+            <hessian:binding.hessian uri="http://localhost:8900/weatherService"/>
+        </reference>
+    </component>
 
-</project>
+    <component name="WeatherService">
+        <implementation.java class="org.fabric3.tutorials.hessian.DefaultWeatherService"/>
+        <service name="WeatherService">
+            <hessian:binding.hessian uri="/weatherService"/>
+        </service>
+    </component>
+
+</composite>
