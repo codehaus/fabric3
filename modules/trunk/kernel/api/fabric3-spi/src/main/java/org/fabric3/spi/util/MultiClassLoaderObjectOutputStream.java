@@ -14,7 +14,7 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.fabric.util;
+package org.fabric3.spi.util;
 
 import java.io.IOException;
 import java.io.ObjectOutputStream;
