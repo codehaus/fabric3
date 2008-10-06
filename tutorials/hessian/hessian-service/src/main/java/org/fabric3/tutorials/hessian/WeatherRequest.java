@@ -36,26 +36,13 @@ import java.io.Serializable;
 import java.util.Date;
 
 public class WeatherRequest implements Serializable {
-
-    private static final long serialVersionUID = 5587324085038488460L;
     
     private String city;
+    public void setCity(String city) { this.city = city; }
+    public String getCity() { return city; }
+    
     private Date date;
-
-    public void setCity(String city) {
-        this.city = city;
-    }
-
-    public void setDate(Date date) {
-        this.date = date;
-    }
-
-    public String getCity() {
-        return city;
-    }
-
-    public Date getDate() {
-        return date;
-    }
+    public void setDate(Date date) { this.date = date; }
+    public Date getDate() { return date; }
 
 }

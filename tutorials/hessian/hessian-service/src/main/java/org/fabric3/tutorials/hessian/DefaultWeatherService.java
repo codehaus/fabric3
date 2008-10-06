@@ -34,14 +34,13 @@ package org.fabric3.tutorials.hessian;
 
 public class DefaultWeatherService implements WeatherService {
 
-    public WeatherResponse getWeather(WeatherRequest weatherRequest) {
+    public WeatherResponse getWeather(WeatherRequest request) {
         
-        WeatherResponse weatherResponse = new WeatherResponse();
-        weatherResponse.setCondition("SUNNY");
-        weatherResponse.setLowTemp(12.0);
-        weatherResponse.setHighTemp(23.0);
+        WeatherResponse response = new WeatherResponse();
+        response.setForecast("SUNNY");
+        response.setTemp(23.0);
         
-        return weatherResponse;
+        return response;
         
     }
 

@@ -35,35 +35,13 @@ package org.fabric3.tutorials.hessian;
 import java.io.Serializable;
 
 public class WeatherResponse implements Serializable {
-
-    private static final long serialVersionUID = -8240552034958867012L;
     
-    private String condition;
-    private double lowTemp;
-    private double highTemp;
+    private String forecast;
+    public void setForecast(String forecast) { this.forecast = forecast; }
+    public String getForecast() { return forecast; }
 
-    public String getCondition() {
-        return condition;
-    }
-
-    public void setCondition(String condition) {
-        this.condition = condition;
-    }
-
-    public double getLowTemp() {
-        return lowTemp;
-    }
-
-    public void setLowTemp(double lowTemp) {
-        this.lowTemp = lowTemp;
-    }
-
-    public double getHighTemp() {
-        return highTemp;
-    }
-
-    public void setHighTemp(double highTemp) {
-        this.highTemp = highTemp;
-    }
+    private double temp;
+    public void setTemp(double temp) { this.temp = temp; }
+    public double getTemp() { return temp; }
 
 }

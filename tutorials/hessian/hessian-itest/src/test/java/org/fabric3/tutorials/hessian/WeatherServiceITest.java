@@ -50,9 +50,8 @@ public class WeatherServiceITest extends TestCase {
         
         WeatherResponse weatherResponse = weatherService.getWeather(weatherRequest);
         assertNotNull(weatherResponse);
-        assertEquals("SUNNY", weatherResponse.getCondition()); // I wish
-        assertEquals(12.0, weatherResponse.getLowTemp());
-        assertEquals(23.0, weatherResponse.getHighTemp());
+        assertEquals("SUNNY", weatherResponse.getForecast()); // I wish
+        assertEquals(23.0, weatherResponse.getTemp());
         
     }
 
