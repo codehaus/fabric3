@@ -25,6 +25,7 @@ import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
  * @version $Revision$ $Date$
  */
 public class MockComponentDefinition extends PhysicalComponentDefinition {
+    private static final long serialVersionUID = 9028368024803049278L;
     private URI classLoaderId;
     private List<String> interfaces;
 
