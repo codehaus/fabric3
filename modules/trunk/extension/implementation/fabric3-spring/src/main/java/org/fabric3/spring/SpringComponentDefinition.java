@@ -32,7 +32,7 @@ public class SpringComponentDefinition extends PojoComponentDefinition {
     private Resource resource;
     private String springBeanId;
     private Map<String, ReferenceDefinition> references;
-    
+
     public void setResource(Resource resource) {
         this.resource = resource;
     }
