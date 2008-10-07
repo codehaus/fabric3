@@ -40,6 +40,7 @@ package org.fabric3.spi.command;
  * @version $Revision$ $Date$
  */
 public abstract class AbstractCommand implements Command {
+    private static final long serialVersionUID = -5064962104132575958L;
 
     private final int order;
 
