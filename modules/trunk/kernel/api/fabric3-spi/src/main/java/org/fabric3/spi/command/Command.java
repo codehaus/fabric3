@@ -34,12 +34,14 @@
  */
 package org.fabric3.spi.command;
 
+import java.io.Serializable;
+
 /**
  * Represents a command to be executed on a runtime.
  *
  * @version $Rev$ $Date$
  */
-public interface Command extends Comparable<Command> {
+public interface Command extends Comparable<Command>, Serializable {
 
     /**
      * Returns the relative order the command must be exected in, 0 being the highest.
