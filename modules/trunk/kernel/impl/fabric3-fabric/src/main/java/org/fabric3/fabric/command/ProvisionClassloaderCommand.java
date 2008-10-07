@@ -25,6 +25,8 @@ import org.fabric3.spi.model.physical.PhysicalClassLoaderDefinition;
  * @version $Revision$ $Date$
  */
 public class ProvisionClassloaderCommand extends AbstractCommand {
+    private static final long serialVersionUID = -5993951083285578380L;
+
     private PhysicalClassLoaderDefinition physicalClassLoaderDefinition;
 
     public ProvisionClassloaderCommand(int order, PhysicalClassLoaderDefinition definition) {

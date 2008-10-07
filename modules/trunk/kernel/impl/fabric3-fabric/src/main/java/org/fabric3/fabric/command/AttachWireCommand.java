@@ -47,6 +47,7 @@ import org.fabric3.spi.model.physical.PhysicalWireDefinition;
  * @version $Revision$ $Date$
  */
 public class AttachWireCommand extends AbstractCommand {
+    private static final long serialVersionUID = -5157427289507028318L;
 
     private final Set<PhysicalWireDefinition> physicalWireDefinitions = new LinkedHashSet<PhysicalWireDefinition>();
 

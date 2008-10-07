@@ -43,6 +43,7 @@ import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
  * @version $Revision$ $Date$
  */
 public class BuildComponentCommand extends AbstractCommand {
+    private static final long serialVersionUID = -6102447991230736883L;
     private final PhysicalComponentDefinition definition;
 
     public BuildComponentCommand(int order, PhysicalComponentDefinition definition) {

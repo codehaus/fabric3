@@ -21,8 +21,10 @@ import java.net.URI;
 import org.fabric3.spi.command.AbstractCommand;
 
 public class UnprovisionClassloaderCommand extends AbstractCommand {
+    private static final long serialVersionUID = -155817487398296922L;
 
     private final URI uri;
+
     public UnprovisionClassloaderCommand(int order, URI uri) {
         super(order);
         this.uri = uri;

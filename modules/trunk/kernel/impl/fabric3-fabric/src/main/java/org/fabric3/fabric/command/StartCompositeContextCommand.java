@@ -44,6 +44,8 @@ import org.fabric3.spi.command.AbstractCommand;
  * @version $Rev$ $Date$
  */
 public class StartCompositeContextCommand extends AbstractCommand {
+    private static final long serialVersionUID = -2132991925467598257L;
+
     private final URI groupId;
 
     public StartCompositeContextCommand(int order, URI groupId) {

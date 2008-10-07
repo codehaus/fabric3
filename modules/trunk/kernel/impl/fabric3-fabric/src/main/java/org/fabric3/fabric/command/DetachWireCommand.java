@@ -23,6 +23,7 @@ import org.fabric3.spi.command.AbstractCommand;
 import org.fabric3.spi.model.physical.PhysicalWireDefinition;
 
 public class DetachWireCommand extends AbstractCommand {
+    private static final long serialVersionUID = 804710699486702279L;
 
     private final Set<PhysicalWireDefinition> physicalWireDefinitions =
             new LinkedHashSet<PhysicalWireDefinition>();

@@ -42,6 +42,7 @@ import org.fabric3.spi.command.AbstractCommand;
  * @version $Rev$ $Date$
  */
 public class InitializeComponentCommand extends AbstractCommand {
+    private static final long serialVersionUID = 5183185472114176764L;
     private final ComponentInitializationUri uri;
 
 

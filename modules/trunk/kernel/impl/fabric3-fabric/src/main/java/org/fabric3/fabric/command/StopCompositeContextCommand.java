@@ -21,6 +21,7 @@ import java.net.URI;
 import org.fabric3.spi.command.AbstractCommand;
 
 public class StopCompositeContextCommand extends AbstractCommand {
+    private static final long serialVersionUID = 6161772793715132968L;
 
     private final URI groupId;
 
