@@ -48,6 +48,7 @@ import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
  * @version $Rev$ $Date$
  */
 public abstract class PojoComponentDefinition extends PhysicalComponentDefinition {
+    private static final long serialVersionUID = 297672484973345029L;
 
     private InstanceFactoryDefinition providerDefinition;
     private URI classLoaderId;
