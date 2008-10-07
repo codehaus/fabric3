@@ -17,13 +17,15 @@
 package org.fabric3.timer.component.provision;
 
 import java.util.concurrent.TimeUnit;
+import java.io.Serializable;
 
 /**
  * Encapsulates data for a timer trigger.
  *
  * @version $Revision$ $Date$
  */
-public class TriggerData {
+public class TriggerData implements Serializable {
+    private static final long serialVersionUID = 5814910790533612455L;
     public static final long UNSPECIFIED = -1;
 
     private TriggerType type = TriggerType.INTERVAL;
