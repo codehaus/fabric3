@@ -24,4 +24,5 @@ import org.fabric3.pojo.provision.PojoComponentDefinition;
  * @version $Rev$ $Date$
  */
 public class JavaComponentDefinition extends PojoComponentDefinition {
+    private static final long serialVersionUID = -4767928352571015483L;
 }
