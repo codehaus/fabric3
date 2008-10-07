@@ -44,6 +44,7 @@ import org.fabric3.spi.command.AbstractCommand;
  * @version $Rev$ $Date$
  */
 public class RunCommand extends AbstractCommand {
+    private static final long serialVersionUID = -2188363631278801249L;
     private final URI uri;
 
     public RunCommand(int order, URI uri) {
