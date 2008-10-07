@@ -22,4 +22,5 @@ import org.fabric3.pojo.provision.PojoComponentDefinition;
  * @version $Rev$ $Date$
  */
 public class GroovyComponentDefinition extends PojoComponentDefinition {
+    private static final long serialVersionUID = 3236670449751159020L;
 }
