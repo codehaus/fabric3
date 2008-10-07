@@ -21,13 +21,16 @@ import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+import java.io.Serializable;
 
 /**
  * A definition used to provision classloaders on a runtime.
  *
  * @version $Rev$ $Date$
  */
-public class PhysicalClassLoaderDefinition {
+public class PhysicalClassLoaderDefinition implements Serializable {
+    private static final long serialVersionUID = 1869864181383360066L;
+
     private URI uri;
     private List<URI> parentClassLoaders = new ArrayList<URI>();
     private Set<URI> contributionUris = new LinkedHashSet<URI>();

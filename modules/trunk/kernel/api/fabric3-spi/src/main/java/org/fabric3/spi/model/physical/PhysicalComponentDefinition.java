@@ -35,13 +35,15 @@
 package org.fabric3.spi.model.physical;
 
 import java.net.URI;
+import java.io.Serializable;
 
 /**
  * Represents a physical component model.
  *
  * @version $Rev$ $Date$
  */
-public abstract class PhysicalComponentDefinition {
+public abstract class PhysicalComponentDefinition implements Serializable {
+    private static final long serialVersionUID = -4354673356182365263L;
 
     private URI componentId;
     private String scope;
