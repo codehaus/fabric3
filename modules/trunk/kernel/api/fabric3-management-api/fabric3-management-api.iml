@@ -27,7 +27,6 @@
     </orderEntry>
     <orderEntry type="module" module-name="sca-spec" exported="" />
     <orderEntry type="module" module-name="fabric3-api" />
-    <orderEntryProperties />
   </component>
 </module>
 

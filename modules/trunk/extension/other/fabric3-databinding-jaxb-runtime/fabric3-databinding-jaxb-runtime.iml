@@ -42,7 +42,6 @@
     <orderEntry type="module" module-name="fabric3-transform" />
     <orderEntry type="module" module-name="fabric3-jaxb" />
     <orderEntry type="module" module-name="fabric3-databinding-jaxb-provision" />
-    <orderEntryProperties />
   </component>
 </module>
 

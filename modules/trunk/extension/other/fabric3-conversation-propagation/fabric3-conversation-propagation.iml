@@ -20,7 +20,6 @@
     <orderEntry type="module" module-name="fabric3-scdl" exported="" />
     <orderEntry type="module" module-name="fabric3-transform-api" exported="" />
     <orderEntry type="module" module-name="fabric3-xmlfactory" exported="" />
-    <orderEntryProperties />
   </component>
 </module>
 
