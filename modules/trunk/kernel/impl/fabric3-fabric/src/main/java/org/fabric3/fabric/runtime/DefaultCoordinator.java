@@ -62,6 +62,8 @@ import org.fabric3.spi.services.definitions.DefinitionActivationException;
 import org.fabric3.spi.services.definitions.DefinitionsRegistry;
 import org.fabric3.spi.services.discovery.DiscoveryException;
 import org.fabric3.spi.services.discovery.DiscoveryService;
+import org.fabric3.spi.services.event.EventService;
+import org.fabric3.spi.services.event.JoinDomain;
 
 /**
  * Default implementation of a RuntimeLifecycleCoordinator.
@@ -144,6 +146,8 @@ public class DefaultCoordinator<RUNTIME extends Fabric3Runtime<?>, BOOTSTRAPPER 
         DiscoveryService discoveryService = runtime.getSystemComponent(DiscoveryService.class, DISCOVERY_SERVICE_URI);
         try {
             discoveryService.joinDomain(timeout);
+            EventService eventService = runtime.getSystemComponent(EventService.class, ComponentNames.EVENT_SERVICE_URI);
+            eventService.publish(new JoinDomain());
         } catch (DiscoveryException e) {
             return new SyncFuture(new ExecutionException(e));
         }
