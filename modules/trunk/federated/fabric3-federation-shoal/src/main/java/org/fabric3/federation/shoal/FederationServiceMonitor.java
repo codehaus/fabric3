@@ -64,7 +64,7 @@ public interface FederationServiceMonitor {
      * @param throwable   Exception that occured.
      */
     @Severe
-    void onException(String description, Throwable throwable);
+    void onSignalException(String description, Throwable throwable);
 
     /**
      * Logged when an error occurs.

@@ -22,10 +22,10 @@ import java.net.URI;
 import org.easymock.EasyMock;
 
 import org.fabric3.host.runtime.HostInfo;
-import org.fabric3.spi.command.DeploymentCommand;
 import org.fabric3.spi.services.event.EventService;
 import org.fabric3.spi.topology.Zone;
 import org.fabric3.spi.util.MultiClassLoaderObjectOutputStream;
+import org.fabric3.spi.command.Command;
 
 /**
  * @version $Revision$ $Date$
@@ -50,7 +50,7 @@ public class ShoalDomainManagerSendMessage {
         for (Zone zone : domainManager.getZones()) {
             String zoneName = zone.getName();
             System.out.println("Sending message to zone: " + zoneName);
-            DeploymentCommand command = new DeploymentCommand(null);
+            Command command = new MockCommand();
             ByteArrayOutputStream bas = new ByteArrayOutputStream();
             MultiClassLoaderObjectOutputStream stream = new MultiClassLoaderObjectOutputStream(bas);
             stream.writeObject(command);
@@ -76,4 +76,15 @@ public class ShoalDomainManagerSendMessage {
         Thread.sleep(4000);
     }
 
+    private static class MockCommand implements Command {
+        private static final long serialVersionUID = -6379269046748362803L;
+
+        public int getOrder() {
+            return 0;
+        }
+
+        public int compareTo(Command o) {
+            return 0;
+        }
+    }
 }

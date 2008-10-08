@@ -36,7 +36,10 @@ import com.sun.enterprise.ee.cms.impl.common.GMSConfigConstants;
 import com.sun.enterprise.ee.cms.logging.GMSLogDomain;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Property;
+import org.osoa.sca.annotations.Reference;
+import org.osoa.sca.annotations.EagerInit;
 
+import org.fabric3.api.annotation.Monitor;
 import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.spi.services.event.EventService;
 import org.fabric3.spi.services.event.Fabric3EventListener;
@@ -48,7 +51,7 @@ import org.fabric3.spi.services.event.RuntimeStop;
  *
  * @version $Revision$ $Date$
  */
-
+@EagerInit
 public class FederationServiceImpl implements FederationService {
     // configuration properties
     private String zoneName = "zone";
@@ -135,7 +138,7 @@ public class FederationServiceImpl implements FederationService {
      * @param info         the host runtime information
      * @param monitor      the monitor for controller events
      */
-    public FederationServiceImpl(EventService eventService, HostInfo info, FederationServiceMonitor monitor) {
+    public FederationServiceImpl(@Reference EventService eventService, @Reference HostInfo info, @Monitor FederationServiceMonitor monitor) {
         this.eventService = eventService;
         this.monitor = monitor;
         domainName = info.getDomain().getAuthority();

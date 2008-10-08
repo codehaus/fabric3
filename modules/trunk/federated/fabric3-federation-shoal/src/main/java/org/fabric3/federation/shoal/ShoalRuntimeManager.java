@@ -29,6 +29,7 @@ import com.sun.enterprise.ee.cms.core.GMSException;
 import com.sun.enterprise.ee.cms.core.GroupManagementService;
 import com.sun.enterprise.ee.cms.core.MessageSignal;
 import com.sun.enterprise.ee.cms.core.Signal;
+import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
@@ -47,6 +48,7 @@ import org.fabric3.spi.util.MultiClassLoaderObjectInputStream;
  *
  * @version $Revision$ $Date$
  */
+@EagerInit
 public class ShoalRuntimeManager implements RuntimeManager, FederationCallback {
     private Map<QName, Serializable> runtimeMetdata = new HashMap<QName, Serializable>();
     private FederationService federationService;
@@ -96,12 +98,13 @@ public class ShoalRuntimeManager implements RuntimeManager, FederationCallback {
 
     @SuppressWarnings({"unchecked"})
     private void executeCommand(MessageSignal signal) throws FederationCallbackException {
+        MultiClassLoaderObjectInputStream ois = null;
         try {
             byte[] payload = signal.getMessage();
             InputStream stream = new ByteArrayInputStream(payload);
             // Deserialize the command set. As command set classes may be loaded in an extension classloader, use a MultiClassLoaderObjectInputStream
             // to deserialize classes in the appropriate classloader.
-            MultiClassLoaderObjectInputStream ois = new MultiClassLoaderObjectInputStream(stream, classLoaderRegistry);
+            ois = new MultiClassLoaderObjectInputStream(stream, classLoaderRegistry);
             LinkedHashSet<Command> commands = (LinkedHashSet<Command>) ois.readObject();
             for (Command command : commands) {
                 executorRegistry.execute(command);
@@ -112,6 +115,14 @@ public class ShoalRuntimeManager implements RuntimeManager, FederationCallback {
             throw new FederationCallbackException(e);
         } catch (ClassNotFoundException e) {
             throw new FederationCallbackException(e);
+        } finally {
+            try {
+                if (ois != null) {
+                    ois.close();
+                }
+            } catch (IOException e) {
+                // ignore;
+            }
         }
     }
 

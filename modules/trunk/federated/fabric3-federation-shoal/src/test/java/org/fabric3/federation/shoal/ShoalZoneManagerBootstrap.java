@@ -94,6 +94,7 @@ public class ShoalZoneManagerBootstrap {
         EasyMock.replay(classLoaderRegistry);
 
         ShoalZoneManager zoneManager = new ShoalZoneManager(federationService, executorRegistry, classLoaderRegistry);
+        zoneManager.setZoneManager(true);
         zoneManager.init();
 
         ShoalRuntimeManager runtimeManager = new ShoalRuntimeManager(federationService, null, null);

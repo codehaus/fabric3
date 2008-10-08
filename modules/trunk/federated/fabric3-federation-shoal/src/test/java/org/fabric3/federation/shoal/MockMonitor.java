@@ -25,7 +25,7 @@ public class MockMonitor implements FederationServiceMonitor {
         throwable.printStackTrace();
     }
 
-    public void onException(String description, Throwable throwable) {
+    public void onSignalException(String description, Throwable throwable) {
         throwable.printStackTrace();
     }
 

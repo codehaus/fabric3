@@ -26,6 +26,7 @@ import com.sun.enterprise.ee.cms.core.GMSException;
 import com.sun.enterprise.ee.cms.core.Signal;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
+import org.osoa.sca.annotations.EagerInit;
 
 import static org.fabric3.federation.shoal.FederationConstants.DOMAIN_MANAGER;
 import static org.fabric3.federation.shoal.FederationConstants.ZONE_MANAGER;
@@ -36,6 +37,7 @@ import org.fabric3.spi.topology.Zone;
 /**
  * @version $Revision$ $Date$
  */
+@EagerInit
 public class ShoalDomainManager implements DomainManager, FederationCallback {
     private FederationService federationService;
 

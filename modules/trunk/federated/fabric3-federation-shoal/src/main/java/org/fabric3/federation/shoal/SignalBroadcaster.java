@@ -41,7 +41,7 @@ public class SignalBroadcaster implements CallBack {
                 callback.onSignal(signal);
             }
         } catch (FederationCallbackException e) {
-            monitor.onException("Error processing signal", e);
+            monitor.onSignalException("Error processing signal", e);
         }
 
 
