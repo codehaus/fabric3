@@ -33,13 +33,15 @@ import com.sun.enterprise.ee.cms.core.JoinedAndReadyNotificationSignal;
 import com.sun.enterprise.ee.cms.core.MessageSignal;
 import com.sun.enterprise.ee.cms.core.PlannedShutdownSignal;
 import com.sun.enterprise.ee.cms.core.Signal;
+import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
+import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Reference;
 
 import static org.fabric3.federation.shoal.FederationConstants.RUNTIME_MANAGER;
 import static org.fabric3.federation.shoal.FederationConstants.RUNTIME_TRANSPORT_INFO;
 import static org.fabric3.federation.shoal.FederationConstants.ZONE_TRANSPORT_INFO;
-import org.fabric3.spi.command.DeploymentCommand;
+import org.fabric3.spi.command.Command;
 import org.fabric3.spi.executor.CommandExecutorRegistry;
 import org.fabric3.spi.executor.ExecutionException;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
@@ -58,10 +60,12 @@ import org.fabric3.spi.util.MultiClassLoaderObjectInputStream;
  *
  * @version $Revision$ $Date$
  */
+@EagerInit
 public class ShoalZoneManager implements ZoneManager, FederationCallback {
     private FederationService federationService;
     private CommandExecutorRegistry executorRegistry;
     private ClassLoaderRegistry classLoaderRegistry;
+    private boolean zoneManager;
 
     /**
      * Constructor.
@@ -79,8 +83,22 @@ public class ShoalZoneManager implements ZoneManager, FederationCallback {
         this.classLoaderRegistry = classLoaderRegistry;
     }
 
+    /**
+     * Property indicating if the current runtime is a zone manager. The default is false.
+     *
+     * @param zoneManager if the current runtime is a zone manager
+     */
+    @Property
+    public void setZoneManager(boolean zoneManager) {
+        this.zoneManager = zoneManager;
+    }
+
     @Init
     public void init() {
+        if (!zoneManager) {
+            // the runtime is not a zone manager, don't initialize zone manager
+            return;
+        }
         federationService.registerZoneCallback(FederationConstants.ZONE_MANAGER, this);
         federationService.registerDomainCallback(FederationConstants.ZONE_MANAGER, this);
     }
@@ -152,15 +170,16 @@ public class ShoalZoneManager implements ZoneManager, FederationCallback {
     }
 
     private void handleMessage(MessageSignal signal) throws FederationCallbackException {
+        MultiClassLoaderObjectInputStream ois = null;
         try {
             byte[] payload = signal.getMessage();
             InputStream stream = new ByteArrayInputStream(payload);
             // Deserialize the command set. As command set classes may be loaded in an extension classloader, use a MultiClassLoaderObjectInputStream
             // to deserialize classes in the appropriate classloader.
-            MultiClassLoaderObjectInputStream ois = new MultiClassLoaderObjectInputStream(stream, classLoaderRegistry);
+            ois = new MultiClassLoaderObjectInputStream(stream, classLoaderRegistry);
             Object deserialized = ois.readObject();
-            if (deserialized instanceof DeploymentCommand) {
-                executorRegistry.execute((DeploymentCommand) deserialized);
+            if (deserialized instanceof Command) {
+                executorRegistry.execute((Command) deserialized);
             }
         } catch (ExecutionException e) {
             throw new FederationCallbackException(e);
@@ -168,6 +187,14 @@ public class ShoalZoneManager implements ZoneManager, FederationCallback {
             throw new FederationCallbackException(e);
         } catch (ClassNotFoundException e) {
             throw new FederationCallbackException(e);
+        } finally {
+            try {
+                if (ois != null) {
+                    ois.close();
+                }
+            } catch (IOException e) {
+                // ignore;
+            }
         }
     }
 
