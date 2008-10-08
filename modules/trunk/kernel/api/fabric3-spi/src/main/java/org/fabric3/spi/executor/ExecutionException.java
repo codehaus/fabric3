@@ -44,6 +44,10 @@ import org.fabric3.host.Fabric3Exception;
 public class ExecutionException extends Fabric3Exception {
     private static final long serialVersionUID = 7518538722801035000L;
 
+    public ExecutionException(Throwable cause) {
+        super(cause);
+    }
+
     public ExecutionException(String message, String identifier) {
         super(message, identifier);
     }

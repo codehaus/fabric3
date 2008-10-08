@@ -14,19 +14,22 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.spi.command;
+package org.fabric3.fabric.command;
 
 import java.util.Set;
+
+import org.fabric3.spi.command.AbstractCommand;
+import org.fabric3.spi.command.Command;
 
 /**
  * @version $Revision$ $Date$
  */
-public class DeploymentCommand extends AbstractCommand {
+public class ZoneDeploymentCommand extends AbstractCommand {
     private static final long serialVersionUID = 8673100303949676875L;
 
     private Set<Command> commands;
 
-    public DeploymentCommand(Set<Command> commands) {
+    public ZoneDeploymentCommand(Set<Command> commands) {
         super(0);
         this.commands = commands;
     }
