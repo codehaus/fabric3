@@ -18,7 +18,7 @@ import com.caucho.burlap.io.BurlapOutput;
  * Test the provisioned hessian service from a non-SCA client.
  *
  */
-public class HessianTest extends TestCase {
+public class BurlapTest extends TestCase {
     
     public void test() throws Throwable {
         
@@ -26,7 +26,7 @@ public class HessianTest extends TestCase {
         request.setCity("LONDON");
         request.setDate(new Date());
         
-        URL url = new URL("http://localhost:8900/hessian-webapp/weatherService");
+        URL url = new URL("http://localhost:8900/burlap-webapp/weatherService");
         HttpURLConnection conn = (HttpURLConnection) url.openConnection();
         conn.setDoOutput(true);
         conn.setRequestProperty("Content-Type", "x-application/hessian");
@@ -50,8 +50,6 @@ public class HessianTest extends TestCase {
         os.close();
         is.close();
         conn.disconnect();
-        
-        System.err.println("*********************");
         
     }
 
