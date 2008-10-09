@@ -38,6 +38,7 @@ import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Reference;
 
+import org.fabric3.api.annotation.Monitor;
 import static org.fabric3.federation.shoal.FederationConstants.RUNTIME_MANAGER;
 import static org.fabric3.federation.shoal.FederationConstants.RUNTIME_TRANSPORT_INFO;
 import static org.fabric3.federation.shoal.FederationConstants.ZONE_TRANSPORT_INFO;
@@ -49,7 +50,6 @@ import org.fabric3.spi.topology.MessageException;
 import org.fabric3.spi.topology.RuntimeInstance;
 import org.fabric3.spi.topology.ZoneManager;
 import org.fabric3.spi.util.MultiClassLoaderObjectInputStream;
-import org.fabric3.api.annotation.Monitor;
 
 /**
  * Manages communications between a zone and the DomainManager. As communications are segmented between domain-wide messages and zone-specific

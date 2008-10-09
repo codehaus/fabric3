@@ -21,7 +21,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.util.HashMap;
-import java.util.LinkedHashSet;
 import java.util.Map;
 import javax.xml.namespace.QName;
 
@@ -102,13 +101,11 @@ public class ShoalRuntimeManager implements RuntimeManager, FederationCallback {
         try {
             byte[] payload = signal.getMessage();
             InputStream stream = new ByteArrayInputStream(payload);
-            // Deserialize the command set. As command set classes may be loaded in an extension classloader, use a MultiClassLoaderObjectInputStream
+            // Deserialize the command. As command classes may be loaded in an extension classloader, use a MultiClassLoaderObjectInputStream
             // to deserialize classes in the appropriate classloader.
             ois = new MultiClassLoaderObjectInputStream(stream, classLoaderRegistry);
-            LinkedHashSet<Command> commands = (LinkedHashSet<Command>) ois.readObject();
-            for (Command command : commands) {
-                executorRegistry.execute(command);
-            }
+            Command command = (Command) ois.readObject();
+            executorRegistry.execute(command);
         } catch (ExecutionException e) {
             throw new FederationCallbackException(e);
         } catch (IOException e) {

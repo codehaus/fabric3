@@ -73,6 +73,7 @@ public class FederationServiceImpl implements RuntimeService, FederationService 
     private FederationServiceMonitor monitor;
     private boolean enableDomain;
     private boolean enableZone;
+    private boolean componentHost = true;
 
     private GroupManagementService domainGMS;
     private GroupManagementService zoneGMS;
@@ -139,6 +140,19 @@ public class FederationServiceImpl implements RuntimeService, FederationService 
         this.enableZone = enableZone;
     }
 
+    /**
+     * Property indicating if the current runtime hosts components. The default is true.
+     *
+     * @param componentHost true f the runtime hosts components
+     */
+    @Property
+    public void setComponentHost(boolean componentHost) {
+        this.componentHost = componentHost;
+    }
+
+    public boolean isComponentHost() {
+        return componentHost;
+    }
 
     /**
      * Constructor
