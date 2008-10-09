@@ -1,3 +1,0 @@
-<contribution xmlns="http://www.osoa.org/xmlns/sca/1.0">
-    <deployable composite="WebappComposite"/>
-</contribution>
