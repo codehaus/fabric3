@@ -1,12 +1,13 @@
-/*
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
  Fabric3
- Copyright © 2008 Metaform Systems Limited
+ Copyright 2008 Metaform Systems Limited
 
  This proprietary software may be used only connection with the Fabric3 license
- (the ÒLicenseÓ), a copy of which is included in the software or may be
+ (the ?~@~\License?~@~]), a copy of which is included in the software or may be
  obtained at: http://www.metaformsystems.com/licenses/license.html.
 
- Software distributed under the License is distributed on an Òas isÓ basis,
+ Software distributed under the License is distributed on an ?~@~\as is?~@~] basis,
  without warranties or conditions of any kind.  See the License for the
  specific language governing permissions and limitations of use of the software.
  This software is distributed in conjunction with other software licensed under
@@ -29,30 +30,22 @@
  KIND, either express or implied.  See the License for the
  specific language governing permissions and limitations
  under the License.
- */
-package org.fabric3.tutorials.hessian;
+-->
+<composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
+           xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
+           xmlns:burlap="http://www.fabric3.org/binding/burlap/0.2"
+           name="HessianTestComposite" 
+           autowire="false">
 
-import java.util.Date;
+    <component name="WeatherTest">
+        <f3:junit class="org.fabric3.tutorials.hessian.WeatherServiceITest"/>
+        <reference name="weatherService">
+            <burlap:binding.burlap uri="http://localhost:8900/weatherService"/>
+        </reference>
+    </component>
 
-import org.osoa.sca.annotations.Reference;
+    <component name="WeatherService">
+        <implementation.composite scdlResource="service.composite"/>
+    </component>
 
-import junit.framework.TestCase;
-
-public class WeatherServiceITest extends TestCase {
-    
-    @Reference protected WeatherService weatherService;
-    
-    public void testWeather() {
-        
-        WeatherRequest weatherRequest = new WeatherRequest();
-        weatherRequest.setCity("London");
-        weatherRequest.setDate(new Date());
-        
-        WeatherResponse weatherResponse = weatherService.getWeather(weatherRequest);
-        assertNotNull(weatherResponse);
-        assertEquals("SUNNY", weatherResponse.getForecast()); // I wish
-        assertEquals(23.0, weatherResponse.getTemp());
-        
-    }
-
-}
+</composite>

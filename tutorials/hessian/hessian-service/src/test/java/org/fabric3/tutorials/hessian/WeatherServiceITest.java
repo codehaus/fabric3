@@ -1,13 +1,12 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!--
+/*
  Fabric3
- Copyright Â© 2008 Metaform Systems Limited
+ Copyright © 2008 Metaform Systems Limited
 
  This proprietary software may be used only connection with the Fabric3 license
- (the â€œLicenseâ€), a copy of which is included in the software or may be
+ (the ÒLicenseÓ), a copy of which is included in the software or may be
  obtained at: http://www.metaformsystems.com/licenses/license.html.
 
- Software distributed under the License is distributed on an â€œas isâ€ basis,
+ Software distributed under the License is distributed on an Òas isÓ basis,
  without warranties or conditions of any kind.  See the License for the
  specific language governing permissions and limitations of use of the software.
  This software is distributed in conjunction with other software licensed under
@@ -30,30 +29,28 @@
  KIND, either express or implied.  See the License for the
  specific language governing permissions and limitations
  under the License.
--->
-<project 
-    xmlns="http://maven.apache.org/POM/4.0.0" 
-    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
-    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+ */
+package org.fabric3.tutorials.hessian;
+
+import java.util.Date;
+import org.osoa.sca.annotations.Reference;
+import junit.framework.TestCase;
+
+public class WeatherServiceITest extends TestCase {
     
-    <modelVersion>4.0.0</modelVersion>
-    <parent>
-        <groupId>org.codehaus.fabric3</groupId>
-        <artifactId>fabric</artifactId>
-        <version>4</version>
-    </parent>
-    <groupId>org.codehaus.fabric3.tutorials</groupId>
-    <artifactId>hessian-client</artifactId>
-    <version>0.1-SNAPSHOT</version>
-    <name>Hessian Client</name>
-    <packaging>jar</packaging>
-    <description>Hessian Client.</description>
+    @Reference protected WeatherService weatherService;
+    
+    public void testWeather() {
+        
+        WeatherRequest request = new WeatherRequest();
+        request.setCity("London");
+        request.setDate(new Date());
+        
+        WeatherResponse response = weatherService.getWeather(request);
+        assertNotNull(response);
+        assertEquals("SUNNY", response.getForecast()); // I wish
+        assertEquals(23.0, response.getTemp());
+        
+    }
 
-    <dependencies>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-        </dependency>
-    </dependencies>
-
-</project>
+}

@@ -32,22 +32,14 @@
  under the License.
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
-           xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
-           xmlns:hessian="http://www.fabric3.org/binding/hessian/0.2"
-           name="SyncComposite" 
+           xmlns:burlap="http://www.fabric3.org/binding/burlap/0.2"
+           name="HessianServiceComposite" 
            autowire="false">
-
-    <component name="WeatherTest">
-        <f3:junit class="org.fabric3.tutorials.hessian.WeatherServiceITest"/>
-        <reference name="weatherService">
-            <hessian:binding.hessian uri="http://localhost:8900/weatherService"/>
-        </reference>
-    </component>
 
     <component name="WeatherService">
         <implementation.java class="org.fabric3.tutorials.hessian.DefaultWeatherService"/>
         <service name="WeatherService">
-            <hessian:binding.hessian uri="/weatherService"/>
+            <burlap:binding.burlap uri="/weatherService"/>
         </service>
     </component>
 
