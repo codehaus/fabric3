@@ -31,10 +31,7 @@
  specific language governing permissions and limitations
  under the License.
 -->
-<composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
-           name="BurlapWebappComposite" 
-           targetNamespace="http://fabric3.org/xmlns/sca/2.0-alpha"
-           autowire="false">
+<composite xmlns="http://www.osoa.org/xmlns/sca/1.0" name="WebappComposite" autowire="false">
 
     <component name="WeatherService">
         <implementation.composite scdlResource="service.composite"/>

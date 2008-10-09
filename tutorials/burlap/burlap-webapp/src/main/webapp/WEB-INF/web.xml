@@ -27,21 +27,6 @@
         <listener-class>org.fabric3.runtime.webapp.Fabric3ContextListener</listener-class>
     </listener>
 
-    <context-param>
-        <param-name>fabric3.composite</param-name>
-        <param-value>BurlapWebappComposite</param-value>
-    </context-param>
-
-    <context-param>
-        <param-name>fabric3.compositeNamespace</param-name>
-        <param-value>http://fabric3.org/xmlns/sca/2.0-alpha</param-value>
-    </context-param>
-
-    <context-param>
-        <param-name>fabric3.component</param-name>
-        <param-value>smoketest</param-value>
-    </context-param>
-
     <servlet>
         <servlet-name>Fabric3Servlet</servlet-name>
         <servlet-class>org.fabric3.runtime.webapp.Fabric3Servlet</servlet-class>
