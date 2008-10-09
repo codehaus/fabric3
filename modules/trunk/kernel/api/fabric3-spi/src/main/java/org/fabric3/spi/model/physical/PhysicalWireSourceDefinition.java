@@ -35,6 +35,7 @@
 package org.fabric3.spi.model.physical;
 
 import java.net.URI;
+import java.io.Serializable;
 
 import org.w3c.dom.Document;
 
@@ -45,7 +46,9 @@ import org.fabric3.scdl.InjectableAttribute;
  *
  * @version $Revision$ $Date$
  */
-public class PhysicalWireSourceDefinition {
+public class PhysicalWireSourceDefinition implements Serializable {
+    private static final long serialVersionUID = 2560576437284123839L;
+
     private URI uri;
     private URI classLoaderId;
     private InjectableAttribute injectableAttribute;

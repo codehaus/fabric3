@@ -34,6 +34,7 @@
  */
 package org.fabric3.spi.model.physical;
 
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -46,7 +47,8 @@ import java.util.Set;
  *          <p/>
  *          TODO Discuss with Jeremy/Jim on how to model MEPs, INOUT parameters, faults etc
  */
-public class PhysicalOperationDefinition  {
+public class PhysicalOperationDefinition implements Serializable {
+    private static final long serialVersionUID = -4270990709748460450L;
 
     // Parameters
     private List<String> parameterTypes = new LinkedList<String>();

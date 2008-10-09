@@ -35,13 +35,16 @@
 package org.fabric3.spi.model.physical;
 
 import java.net.URI;
+import java.io.Serializable;
 
 /**
  * Represents the target set of a physical wire.
  *
  * @version $Revision$ $Date$
  */
-public class PhysicalWireTargetDefinition {
+public class PhysicalWireTargetDefinition implements Serializable {
+    private static final long serialVersionUID = -8430498259706831133L;
+
     private URI uri;
     private boolean optimizable;
     private boolean callback;

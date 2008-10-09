@@ -34,11 +34,14 @@
  */
 package org.fabric3.spi.model.physical;
 
+import java.io.Serializable;
+
 /**
- * Model class representing the portable definition of an interceptor. This class is used to describe the interceptors
- * around inbound and outbound wires on a physical component definition.
+ * Model class representing the portable definition of an interceptor. This class is used to describe the interceptors around inbound and outbound
+ * wires on a physical component definition.
  *
  * @version $Rev$ $Date$
  */
-public class PhysicalInterceptorDefinition  {
+public class PhysicalInterceptorDefinition implements Serializable {
+    private static final long serialVersionUID = -1850310857357736392L;
 }

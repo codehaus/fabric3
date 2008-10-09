@@ -36,6 +36,7 @@ package org.fabric3.spi.model.physical;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.io.Serializable;
 
 /**
  * Model class representing the portable definition of a wire.
@@ -45,7 +46,8 @@ import java.util.Set;
  *
  * @version $Rev$ $Date$
  */
-public class PhysicalWireDefinition {
+public class PhysicalWireDefinition implements Serializable {
+    private static final long serialVersionUID = 995196092611674935L;
 
     // Source definition
     private PhysicalWireSourceDefinition source;
