@@ -30,6 +30,7 @@ import org.fabric3.spi.executor.CommandExecutorRegistry;
 import org.fabric3.spi.executor.ExecutionException;
 import org.fabric3.spi.topology.MessageException;
 import org.fabric3.spi.topology.RuntimeInstance;
+import org.fabric3.spi.topology.RuntimeService;
 import org.fabric3.spi.topology.ZoneManager;
 import org.fabric3.spi.util.MultiClassLoaderObjectOutputStream;
 
@@ -42,10 +43,14 @@ import org.fabric3.spi.util.MultiClassLoaderObjectOutputStream;
 public class ZoneDeploymentCommandExecutor implements CommandExecutor<ZoneDeploymentCommand> {
     private ZoneManager zoneManager;
     private CommandExecutorRegistry executorRegistry;
+    private RuntimeService runtimeService;
 
-    public ZoneDeploymentCommandExecutor(@Reference ZoneManager zoneManager, @Reference CommandExecutorRegistry executorRegistry) {
+    public ZoneDeploymentCommandExecutor(@Reference ZoneManager zoneManager,
+                                         @Reference CommandExecutorRegistry executorRegistry,
+                                         @Reference RuntimeService runtimeService) {
         this.zoneManager = zoneManager;
         this.executorRegistry = executorRegistry;
+        this.runtimeService = runtimeService;
     }
 
     @Init
@@ -61,8 +66,16 @@ public class ZoneDeploymentCommandExecutor implements CommandExecutor<ZoneDeploy
             stream.writeObject(runtimeCommand);
             stream.close();
             byte[] serialized = bas.toByteArray();
+            String runtimeName = runtimeService.getRuntimeName();
             for (RuntimeInstance runtime : zoneManager.getRuntimes()) {
-                zoneManager.sendMessage(runtime.getName(), serialized);
+                if (runtimeName.equals(runtimeName)) {
+                    // deploy locally
+                    // FIXME this should be configurable if the zone manager hosts components
+                    executorRegistry.execute(runtimeCommand);
+                } else {
+                    // deploy to the runtime
+                    zoneManager.sendMessage(runtime.getName(), serialized);
+                }
             }
         } catch (IOException e) {
             throw new ExecutionException(e);
