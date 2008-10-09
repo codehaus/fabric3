@@ -36,6 +36,7 @@ package org.fabric3.pojo.provision;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.io.Serializable;
 
 import org.fabric3.scdl.InjectableAttribute;
 import org.fabric3.scdl.InjectionSite;
@@ -46,7 +47,8 @@ import org.fabric3.scdl.Signature;
  *
  * @version $Revsion$ $Date$
  */
-public class InstanceFactoryDefinition {
+public class InstanceFactoryDefinition implements Serializable {
+    private static final long serialVersionUID = 3516497485593609161L;
     private String implementationClass;
     private Signature constructor;
     private Signature initMethod;
