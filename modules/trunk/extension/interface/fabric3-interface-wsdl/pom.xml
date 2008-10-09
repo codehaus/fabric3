@@ -24,6 +24,7 @@
     </parent>
     <groupId>org.codehaus.fabric3</groupId>
     <artifactId>fabric3-interface-wsdl</artifactId>
+    <packaging>sca-contribution-jar</packaging>
     <name>Fabric3 WSDL Interface</name>
     <description>Fabric3 WSDL Interface.</description>
 
@@ -102,6 +103,29 @@
         </dependency>
 
     </dependencies>
+    
+       <build>
+        <defaultGoal>verify</defaultGoal>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.fabric3</groupId>
+                <artifactId>fabric3-contribution-plugin</artifactId>
+                <version>0.7-SNAPSHOT</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <mavenImports>
+                        <mavenImport>
+                            <groupId>org.codehaus.fabric3</groupId>
+                            <artifactId>fabric3-spi</artifactId>
+                        </mavenImport>
+                    </mavenImports>
+                    <deployables>
+                        <deployable>META-INF/wsdl.composite</deployable>
+                    </deployables>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
     <scm>
         <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/extension/interface/fabric3-interface-wsdl</connection>

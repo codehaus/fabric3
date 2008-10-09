@@ -1,12 +1,12 @@
 /*
  * Fabric3
- * Copyright © 2008 Metaform Systems Limited
+ * Copyright ï¿½ 2008 Metaform Systems Limited
  *
  * This proprietary software may be used only connection with the Fabric3 license
- * (the ÒLicenseÓ), a copy of which is included in the software or may be
+ * (the ï¿½Licenseï¿½), a copy of which is included in the software or may be
  * obtained at: http://www.metaformsystems.com/licenses/license.html.
 
- * Software distributed under the License is distributed on an Òas isÓ basis,
+ * Software distributed under the License is distributed on an ï¿½as isï¿½ basis,
  * without warranties or conditions of any kind.  See the License for the
  * specific language governing permissions and limitations of use of the software.
  * This software is distributed in conjunction with other software licensed under
@@ -42,6 +42,8 @@ import org.fabric3.idl.wsdl.version.WsdlVersionChecker.WsdlVersion;
 import org.fabric3.scdl.DataType;
 import org.fabric3.scdl.Operation;
 
+import org.osoa.sca.annotations.Reference;
+import org.osoa.sca.annotations.Service;
 import org.w3c.dom.Element;
 
 /**
@@ -49,12 +51,13 @@ import org.w3c.dom.Element;
  * 
  * @version $Revsion$ $Date$
  */
+@Service(interfaces={Wsdl11Processor.class,WsdlProcessor.class})
 public class Wsdl11Processor extends AbstractWsdlProcessor implements WsdlProcessor {
     
     /**
      * @param wsdlProcessorRegistry Injected default processor.
      */
-    public Wsdl11Processor(WsdlProcessorRegistry wsdlProcessorRegistry) {
+    public Wsdl11Processor(@Reference(name="registry") WsdlProcessorRegistry wsdlProcessorRegistry) {
         wsdlProcessorRegistry.registerProcessor(WsdlVersion.VERSION_1_1, this);
     }
 
@@ -90,6 +93,22 @@ public class Wsdl11Processor extends AbstractWsdlProcessor implements WsdlProces
         
     }
 
+     public List<Operation<XmlSchemaType>> getOperations(PortType portType,XmlSchemaCollection xmlSchema) {
+        
+            List<Operation<XmlSchemaType>> operations = new LinkedList<Operation<XmlSchemaType>>();
+            
+            
+            if(portType == null || xmlSchema==null) {
+                throw new WsdlProcessorException("Port type is null ");
+            }
+            
+            for(Object obj : portType.getOperations()) {                
+                Operation<XmlSchemaType> op = getOperation(xmlSchema, obj);                
+                operations.add(op);                
+            }
+            
+            return operations;
+    }
     /*
      * Creates an F3 operation from a WSDL operation.
      */

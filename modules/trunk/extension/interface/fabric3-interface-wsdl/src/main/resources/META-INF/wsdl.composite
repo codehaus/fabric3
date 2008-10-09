@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Fabric3
+ Copyright © 2008 Metaform Systems Limited
+
+ This proprietary software may be used only connection with the Fabric3 license
+ (the “License”), a copy of which is included in the software or may be
+ obtained at: http://www.metaformsystems.com/licenses/license.html.
+
+ Software distributed under the License is distributed on an “as is” basis,
+ without warranties or conditions of any kind.  See the License for the
+ specific language governing permissions and limitations of use of the software.
+ This software is distributed in conjunction with other software licensed under
+ different terms.  See the separate licenses for those programs included in the
+ distribution for the permitted and restricted uses of such software.
+
+    $Rev: 5481 $ $Date: 2008-09-26 04:36:30 -0500 (Fri, 26 Sep 2008) $
+-->
+<composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
+           xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
+           xmlns:system="http://fabric3.org/xmlns/sca/system/2.0-alpha"
+           targetNamespace="org.codehaus.fabric3"
+           name="WsdlInterfaceExtension"
+           autowire="true">
+
+
+    <component name="WsdlInterfaceLoader" f3:key="sca:interface.wsdl">
+        <system:implementation.system class="org.fabric3.idl.wsdl.loader.InterfaceWsdlLoader"/>
+    </component>
+
+    <component name="DefaultWsdlVersionChecker">
+        <system:implementation.system class="org.fabric3.idl.wsdl.version.DefaultWsdlVersionChecker"/>
+    </component>
+
+    <component name="WSDLProcessorRegistryComponent">
+        <system:implementation.system class="org.fabric3.idl.wsdl.processor.WsdlProcessorRegistry"/>
+        <reference name="versionChecker" target="DefaultWsdlVersionChecker"/>
+    </component>
+
+    <component name="Wsdl11ProcessorComponent">
+        <system:implementation.system class="org.fabric3.idl.wsdl.processor.Wsdl11Processor"/>
+        <reference name="registry" target="WSDLProcessorRegistryComponent/WsdlProcessorRegistry"/>
+    </component>
+
+    <component name="Wsdl20ProcessorComponent">
+        <system:implementation.system class="org.fabric3.idl.wsdl.processor.Wsdl20Processor"/>
+        <reference name="registry" target="WSDLProcessorRegistryComponent/WsdlProcessorRegistry"/>
+    </component>
+ 
+</composite>

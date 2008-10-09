@@ -1,12 +1,12 @@
 /*
  * Fabric3
- * Copyright © 2008 Metaform Systems Limited
+ * Copyright ï¿½ 2008 Metaform Systems Limited
  *
  * This proprietary software may be used only connection with the Fabric3 license
- * (the ÒLicenseÓ), a copy of which is included in the software or may be
+ * (the ï¿½Licenseï¿½), a copy of which is included in the software or may be
  * obtained at: http://www.metaformsystems.com/licenses/license.html.
 
- * Software distributed under the License is distributed on an Òas isÓ basis,
+ * Software distributed under the License is distributed on an ï¿½as isï¿½ basis,
  * without warranties or conditions of any kind.  See the License for the
  * specific language governing permissions and limitations of use of the software.
  * This software is distributed in conjunction with other software licensed under
@@ -22,17 +22,15 @@ import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
-import org.osoa.sca.Constants;
-import org.osoa.sca.annotations.Destroy;
 import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Init;
 
-import org.fabric3.idl.wsdl.WsdlContract;
+import org.fabric3.idl.wsdl.scdl.WsdlContract;
 import org.fabric3.idl.wsdl.processor.WsdlProcessor;
 import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.introspection.xml.LoaderRegistry;
+import org.fabric3.introspection.xml.LoaderUtil;
 import org.fabric3.introspection.xml.MissingAttribute;
 import org.fabric3.introspection.xml.TypeLoader;
+import org.osoa.sca.annotations.Reference;
 
 /**
  * Loader for interface.wsdl.
@@ -40,36 +38,19 @@ import org.fabric3.introspection.xml.TypeLoader;
  * @version $Revision$ $Date$
  */
 @EagerInit
-public class InterfaceWsdlLoader implements TypeLoader<WsdlContract>, Constants {
+public class InterfaceWsdlLoader implements TypeLoader<WsdlContract> {
 
-    /**
-     * Interface element QName.
-     */
-    private static final QName QNAME = new QName(SCA_NS, "interface.wsdl");
-
-    private LoaderRegistry registry;
     /**
      * WSDL processor.
      */
-    private WsdlProcessor processor;
+    private final WsdlProcessor processor;
 
     /**
      * @param loaderRegistry Loader registry.
      * @param processor      WSDL processor.
      */
-    protected InterfaceWsdlLoader(LoaderRegistry loaderRegistry, WsdlProcessor processor) {
-        registry = loaderRegistry;
+    public InterfaceWsdlLoader(@Reference(name="processor")WsdlProcessor processor) {
         this.processor = processor;
-    }
-
-    @Init
-    public void start() {
-        registry.registerLoader(QNAME, this);
-    }
-
-    @Destroy
-    public void stop() {
-        registry.unregisterLoader(QNAME);
     }
 
     public WsdlContract load(XMLStreamReader reader, IntrospectionContext context) throws XMLStreamException {
@@ -84,7 +65,9 @@ public class InterfaceWsdlLoader implements TypeLoader<WsdlContract>, Constants 
         processInterface(reader, wsdlContract, wsdlUrl, context);
 
         processCallbackInterface(reader, wsdlContract, wsdlUrl);
-
+        
+        LoaderUtil.skipToEndElement(reader);
+        
         return wsdlContract;
 
     }
