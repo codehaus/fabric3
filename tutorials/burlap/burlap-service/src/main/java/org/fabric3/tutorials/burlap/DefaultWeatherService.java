@@ -30,26 +30,17 @@
  specific language governing permissions and limitations
  under the License.
  */
-package org.fabric3.tutorials.hessian;
+package org.fabric3.tutorials.burlap;
 
-import java.util.Date;
-import org.osoa.sca.annotations.Reference;
-import junit.framework.TestCase;
+public class DefaultWeatherService implements WeatherService {
 
-public class WeatherServiceITest extends TestCase {
-    
-    @Reference protected WeatherService weatherService;
-    
-    public void testWeather() {
+    public WeatherResponse getWeather(WeatherRequest request) {
         
-        WeatherRequest request = new WeatherRequest();
-        request.setCity("London");
-        request.setDate(new Date());
+        WeatherResponse response = new WeatherResponse();
+        response.setForecast("SUNNY");
+        response.setTemp(23.0);
         
-        WeatherResponse response = weatherService.getWeather(request);
-        assertNotNull(response);
-        assertEquals("SUNNY", response.getForecast()); // I wish
-        assertEquals(23.0, response.getTemp());
+        return response;
         
     }
 

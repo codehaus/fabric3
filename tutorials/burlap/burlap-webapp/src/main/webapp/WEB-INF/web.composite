@@ -32,8 +32,7 @@
  under the License.
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
-           xmlns:hessian="http://www.fabric3.org/binding/hessian/0.2"
-           name="HessianWebappComposite" 
+           name="BurlapWebappComposite" 
            targetNamespace="http://fabric3.org/xmlns/sca/2.0-alpha"
            autowire="false">
 

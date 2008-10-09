@@ -30,18 +30,10 @@
  specific language governing permissions and limitations
  under the License.
  */
-package org.fabric3.tutorials.hessian;
+package org.fabric3.tutorials.burlap;
 
-public class DefaultWeatherService implements WeatherService {
-
-    public WeatherResponse getWeather(WeatherRequest request) {
-        
-        WeatherResponse response = new WeatherResponse();
-        response.setForecast("SUNNY");
-        response.setTemp(23.0);
-        
-        return response;
-        
-    }
+public interface WeatherService {
+    
+    WeatherResponse getWeather(WeatherRequest weatherRequest);
 
 }

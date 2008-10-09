@@ -33,11 +33,11 @@
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:burlap="http://www.fabric3.org/binding/burlap/0.2"
-           name="HessianServiceComposite" 
+           name="BurlapServiceComposite" 
            autowire="false">
 
     <component name="WeatherService">
-        <implementation.java class="org.fabric3.tutorials.hessian.DefaultWeatherService"/>
+        <implementation.java class="org.fabric3.tutorials.burlap.DefaultWeatherService"/>
         <service name="WeatherService">
             <burlap:binding.burlap uri="/weatherService"/>
         </service>

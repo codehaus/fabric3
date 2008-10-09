@@ -30,10 +30,31 @@
  specific language governing permissions and limitations
  under the License.
  */
-package org.fabric3.tutorials.hessian;
+package org.fabric3.tutorials.burlap;
 
-public interface WeatherService {
+import java.util.Date;
+
+import org.fabric3.tutorials.burlap.WeatherRequest;
+import org.fabric3.tutorials.burlap.WeatherResponse;
+import org.fabric3.tutorials.burlap.WeatherService;
+import org.osoa.sca.annotations.Reference;
+import junit.framework.TestCase;
+
+public class WeatherServiceITest extends TestCase {
     
-    WeatherResponse getWeather(WeatherRequest weatherRequest);
+    @Reference protected WeatherService weatherService;
+    
+    public void testWeather() {
+        
+        WeatherRequest request = new WeatherRequest();
+        request.setCity("London");
+        request.setDate(new Date());
+        
+        WeatherResponse response = weatherService.getWeather(request);
+        assertNotNull(response);
+        assertEquals("SUNNY", response.getForecast()); // I wish
+        assertEquals(23.0, response.getTemp());
+        
+    }
 
 }

@@ -30,19 +30,18 @@
  specific language governing permissions and limitations
  under the License.
  */
-package org.fabric3.tutorials.hessian;
+package org.fabric3.tutorials.burlap;
 
 import java.io.Serializable;
-import java.util.Date;
 
-public class WeatherRequest implements Serializable {
+public class WeatherResponse implements Serializable {
     
-    private String city;
-    public void setCity(String city) { this.city = city; }
-    public String getCity() { return city; }
-    
-    private Date date;
-    public void setDate(Date date) { this.date = date; }
-    public Date getDate() { return date; }
+    private String forecast;
+    public void setForecast(String forecast) { this.forecast = forecast; }
+    public String getForecast() { return forecast; }
+
+    private double temp;
+    public void setTemp(double temp) { this.temp = temp; }
+    public double getTemp() { return temp; }
 
 }

@@ -46,11 +46,11 @@
     </parent>
 
     <groupId>org.codehaus.fabric3.tutorials</groupId>
-    <artifactId>hessian-service</artifactId>
+    <artifactId>burlap-service</artifactId>
     <version>0.1-SNAPSHOT</version>
-    <name>Hessian Service</name>
+    <name>Burlap Service</name>
     <packaging>jar</packaging>
-    <description>Hessian Service.</description>
+    <description>Burlap Service.</description>
 
     <dependencies>
         <dependency>

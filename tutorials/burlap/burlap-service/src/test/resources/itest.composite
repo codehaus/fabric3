@@ -34,11 +34,11 @@
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
            xmlns:burlap="http://www.fabric3.org/binding/burlap/0.2"
-           name="HessianTestComposite" 
+           name="BurlapTestComposite" 
            autowire="false">
 
     <component name="WeatherTest">
-        <f3:junit class="org.fabric3.tutorials.hessian.WeatherServiceITest"/>
+        <f3:junit class="org.fabric3.tutorials.burlap.WeatherServiceITest"/>
         <reference name="weatherService">
             <burlap:binding.burlap uri="http://localhost:8900/weatherService"/>
         </reference>

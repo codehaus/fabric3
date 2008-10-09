@@ -1,18 +1,18 @@
-package org.fabric3.tutorials.hessian;
+package org.fabric3.tutorials.burlap;
 
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
-
-import com.caucho.hessian.io.Hessian2Input;
-import com.caucho.hessian.io.Hessian2Output;
-import com.caucho.hessian.io.SerializerFactory;
 
 import junit.framework.TestCase;
+
+import org.fabric3.tutorials.burlap.WeatherRequest;
+import org.fabric3.tutorials.burlap.WeatherResponse;
+
+import com.caucho.burlap.io.BurlapInput;
+import com.caucho.burlap.io.BurlapOutput;
 
 /**
  * Test the provisioned hessian service from a non-SCA client.
@@ -32,18 +32,15 @@ public class HessianTest extends TestCase {
         conn.setRequestProperty("Content-Type", "x-application/hessian");
 
         OutputStream os = conn.getOutputStream();
-        Hessian2Output output = new Hessian2Output(os);
-        output.setSerializerFactory(new SerializerFactory());
+        BurlapOutput output = new BurlapOutput(os);
+        // output.setSerializerFactory(new SerializerFactory());
         output.startCall();
-        output.writeHeader("callFrames");
-        output.writeObject(new LinkedList());
         output.writeMethod("getWeather");
         output.writeObject(request);
         output.completeCall();
-        output.flush();
         
         InputStream is = conn.getInputStream();
-        Hessian2Input input = new Hessian2Input(is);
+        BurlapInput input = new BurlapInput(is);
         WeatherResponse response = (WeatherResponse) input.readReply(WeatherResponse.class);
         
         assertNotNull(response);
