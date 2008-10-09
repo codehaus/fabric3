@@ -49,6 +49,7 @@ import org.fabric3.spi.topology.MessageException;
 import org.fabric3.spi.topology.RuntimeInstance;
 import org.fabric3.spi.topology.ZoneManager;
 import org.fabric3.spi.util.MultiClassLoaderObjectInputStream;
+import org.fabric3.api.annotation.Monitor;
 
 /**
  * Manages communications between a zone and the DomainManager. As communications are segmented between domain-wide messages and zone-specific
@@ -65,6 +66,7 @@ public class ShoalZoneManager implements ZoneManager, FederationCallback {
     private FederationService federationService;
     private CommandExecutorRegistry executorRegistry;
     private ClassLoaderRegistry classLoaderRegistry;
+    private ZoneManagerMonitor monitor;
     private boolean zoneManager;
 
     /**
@@ -74,13 +76,16 @@ public class ShoalZoneManager implements ZoneManager, FederationCallback {
      * @param executorRegistry    the command executor registry for handling commands contained in messages
      * @param classLoaderRegistry the classloader registry used during deserialization of message payloads. Payloads may contain types defined in
      *                            runtime extension classloaders.
+     * @param monitor             the monitor to report runtime events to
      */
     public ShoalZoneManager(@Reference FederationService federationService,
                             @Reference CommandExecutorRegistry executorRegistry,
-                            @Reference ClassLoaderRegistry classLoaderRegistry) {
+                            @Reference ClassLoaderRegistry classLoaderRegistry,
+                            @Monitor ZoneManagerMonitor monitor) {
         this.federationService = federationService;
         this.executorRegistry = executorRegistry;
         this.classLoaderRegistry = classLoaderRegistry;
+        this.monitor = monitor;
     }
 
     /**
@@ -101,6 +106,7 @@ public class ShoalZoneManager implements ZoneManager, FederationCallback {
         }
         federationService.registerZoneCallback(FederationConstants.ZONE_MANAGER, this);
         federationService.registerDomainCallback(FederationConstants.ZONE_MANAGER, this);
+        monitor.enabled(federationService.getZoneName());
     }
 
     public List<RuntimeInstance> getRuntimes() {

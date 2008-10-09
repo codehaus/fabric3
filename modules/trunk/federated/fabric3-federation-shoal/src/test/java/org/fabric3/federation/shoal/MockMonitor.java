@@ -11,7 +11,7 @@ import org.fabric3.api.annotation.logging.Warning;
 public class MockMonitor implements FederationServiceMonitor {
 
     @Info
-    public void joined(String name) {
+    public void joined(String name, String runtimeName) {
         System.out.println("Joined domain " + name);
     }
 

@@ -34,10 +34,11 @@ import com.sun.enterprise.ee.cms.impl.client.JoinedAndReadyNotificationActionFac
 import com.sun.enterprise.ee.cms.impl.client.PlannedShutdownActionFactoryImpl;
 import com.sun.enterprise.ee.cms.impl.common.GMSConfigConstants;
 import com.sun.enterprise.ee.cms.logging.GMSLogDomain;
+import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Reference;
-import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Service;
 
 import org.fabric3.api.annotation.Monitor;
 import org.fabric3.host.runtime.HostInfo;
@@ -45,6 +46,7 @@ import org.fabric3.spi.services.event.EventService;
 import org.fabric3.spi.services.event.Fabric3EventListener;
 import org.fabric3.spi.services.event.JoinDomain;
 import org.fabric3.spi.services.event.RuntimeStop;
+import org.fabric3.spi.topology.RuntimeService;
 
 /**
  * Manages federated communications using Shoal.
@@ -52,7 +54,8 @@ import org.fabric3.spi.services.event.RuntimeStop;
  * @version $Revision$ $Date$
  */
 @EagerInit
-public class FederationServiceImpl implements FederationService {
+@Service(interfaces = {RuntimeService.class, FederationService.class})
+public class FederationServiceImpl implements RuntimeService, FederationService {
     // configuration properties
     private String zoneName = "zone";
     private String domainName = "domain";
@@ -69,6 +72,7 @@ public class FederationServiceImpl implements FederationService {
     private EventService eventService;
     private FederationServiceMonitor monitor;
     private boolean enableDomain;
+    private boolean enableZone;
 
     private GroupManagementService domainGMS;
     private GroupManagementService zoneGMS;
@@ -128,6 +132,11 @@ public class FederationServiceImpl implements FederationService {
     @Property
     public void setEnableDomain(boolean enableDomain) {
         this.enableDomain = enableDomain;
+    }
+
+    @Property
+    public void setEnableZone(boolean enableZone) {
+        this.enableZone = enableZone;
     }
 
 
@@ -196,14 +205,16 @@ public class FederationServiceImpl implements FederationService {
                     callback.afterJoin();
                 }
                 domainGMS.reportJoinedAndReadyState(domainName);
-                monitor.joined(domainName);
+                monitor.joined(domainName, runtimeName);
             }
-            zoneGMS.join();
-            for (FederationCallback callback : zoneCallbacks.values()) {
-                callback.afterJoin();
+            if (enableZone) {
+                zoneGMS.join();
+                for (FederationCallback callback : zoneCallbacks.values()) {
+                    callback.afterJoin();
+                }
+                zoneGMS.reportJoinedAndReadyState(zoneName);
+                monitor.joined(zoneName, runtimeName);
             }
-            zoneGMS.reportJoinedAndReadyState(zoneName);
-            monitor.joined(zoneName);
         } catch (GMSException e) {
             monitor.onException("An error was raised joining the group", domainName, e);
         } catch (FederationCallbackException e) {
@@ -247,10 +258,11 @@ public class FederationServiceImpl implements FederationService {
 
     private void initializeGMS() {
         Properties properties = initializeProperties();
-
-        // join the zone group first
-        zoneGMS = (GroupManagementService) GMSFactory.startGMSModule(runtimeName, zoneName, CORE, properties);
-        initializeZoneCallbacks(zoneGMS);
+        if (enableZone) {
+            // join the zone group first
+            zoneGMS = (GroupManagementService) GMSFactory.startGMSModule(runtimeName, zoneName, CORE, properties);
+            initializeZoneCallbacks(zoneGMS);
+        }
         if (enableDomain) {
             // join the domain group after the zone group has joined
             domainGMS = (GroupManagementService) GMSFactory.startGMSModule(runtimeName, domainName, CORE, properties);

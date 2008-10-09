@@ -32,20 +32,21 @@ import org.fabric3.api.annotation.logging.Warning;
 public interface FederationServiceMonitor {
 
     /**
-     * Callback invoked when the runtime joins the domain.
+     * Callback invoked when the runtime joins a group.
      *
-     * @param name the domain.
+     * @param groupName   the group name.
+     * @param runtimeName the runtime name
      */
     @Info
-    void joined(String name);
+    void joined(String groupName, String runtimeName);
 
     /**
-     * Callback invoked when the runtime exits the domain.
+     * Callback invoked when the runtime exits a group.
      *
-     * @param name the domain.
+     * @param groupName   the domain.
      */
     @Info
-    void exited(String name);
+    void exited(String groupName);
 
     /**
      * Logged when an exception occurs.

@@ -24,10 +24,11 @@ import javax.xml.namespace.QName;
 
 import com.sun.enterprise.ee.cms.core.GMSException;
 import com.sun.enterprise.ee.cms.core.Signal;
+import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
-import org.osoa.sca.annotations.EagerInit;
 
+import org.fabric3.api.annotation.Monitor;
 import static org.fabric3.federation.shoal.FederationConstants.DOMAIN_MANAGER;
 import static org.fabric3.federation.shoal.FederationConstants.ZONE_MANAGER;
 import org.fabric3.spi.topology.DomainManager;
@@ -40,19 +41,23 @@ import org.fabric3.spi.topology.Zone;
 @EagerInit
 public class ShoalDomainManager implements DomainManager, FederationCallback {
     private FederationService federationService;
+    private DomainManagerMonitor monitor;
 
     /**
      * Constructor
      *
      * @param federationService the service responsible for managing domain runtime communications
+     * @param monitor           the monitor for reporting events
      */
-    public ShoalDomainManager(@Reference FederationService federationService) {
+    public ShoalDomainManager(@Reference FederationService federationService, @Monitor DomainManagerMonitor monitor) {
         this.federationService = federationService;
+        this.monitor = monitor;
     }
 
     @Init
     public void init() {
         federationService.registerZoneCallback(DOMAIN_MANAGER, this);
+        monitor.enabled(federationService.getDomainName());
     }
 
     public List<Zone> getZones() {
