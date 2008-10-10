@@ -14,7 +14,7 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.fabric.allocator;
+package org.fabric3.federation.allocator;
 
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.allocator.AllocationException;
