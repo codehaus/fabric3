@@ -46,7 +46,6 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.spi.domain.Domain;
 import org.fabric3.spi.host.ServletHost;
-import org.fabric3.spi.services.discovery.DiscoveryService;
 
 /**
  * A temporary console servlet for showing the status of the distributed domain.
@@ -55,7 +54,6 @@ import org.fabric3.spi.services.discovery.DiscoveryService;
  */
 public class ConsoleServlet extends Fabric3Servlet {
     private Domain domain;
-    private DiscoveryService discoveryService;
 
     /**
      * Injects the servlet host and path mapping.
@@ -63,15 +61,12 @@ public class ConsoleServlet extends Fabric3Servlet {
      * @param servletHost      Servlet host to use.
      * @param path             Path mapping for the servlet.
      * @param domain         the distrbituted assembly
-     * @param discoveryService the discovery service
      */
     public ConsoleServlet(@Reference(name = "servletHost")ServletHost servletHost,
                           @Reference(name = "assembly")Domain domain,
-                          @Reference(name = "discoveryService")DiscoveryService discoveryService,
                           @Property(name = "path")String path) {
         super(servletHost, path);
         this.domain = domain;
-        this.discoveryService = discoveryService;
     }
 
     protected void process(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
