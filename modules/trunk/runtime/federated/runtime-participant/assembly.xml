@@ -134,12 +134,6 @@
                 <include>org.codehaus.fabric3:fabric3-conversation-propagation</include>
                 <include>org.codehaus.fabric3:fabric3-jetty</include>
                 <include>org.codehaus.fabric3:fabric3-resource</include>
-                <include>org.codehaus.fabric3:fabric3-marshal-xstream</include>
-                <include>org.codehaus.fabric3:fabric3-jxta</include>
-                <include>org.codehaus.fabric3:fabric3-discovery-jxta</include>
-                <include>org.codehaus.fabric3:fabric3-messaging</include>
-                <include>org.codehaus.fabric3:fabric3-messaging-jxta</include>
-
                 <include>org.codehaus.fabric3:fabric3-federation-participant-shoal</include>
                 <include>org.codehaus.fabric3:fabric3-federation-shoal</include>
             </includes>
