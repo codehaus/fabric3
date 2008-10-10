@@ -68,10 +68,11 @@ public class ZoneDeploymentCommandExecutor implements CommandExecutor<ZoneDeploy
             byte[] serialized = bas.toByteArray();
             String runtimeName = runtimeService.getRuntimeName();
             for (RuntimeInstance runtime : zoneManager.getRuntimes()) {
-                if (runtimeName.equals(runtimeName)) {
-                    // deploy locally
-                    // FIXME this should be configurable if the zone manager hosts components
-                    executorRegistry.execute(runtimeCommand);
+                if (runtimeName.equals(runtime.getName())) {
+                    // deploy locally if this runtime host components
+                    if (runtimeService.isComponentHost()) {
+                        executorRegistry.execute(runtimeCommand);
+                    }
                 } else {
                     // deploy to the runtime
                     zoneManager.sendMessage(runtime.getName(), serialized);
