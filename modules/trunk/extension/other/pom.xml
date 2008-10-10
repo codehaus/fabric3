@@ -34,7 +34,6 @@
 		<module>fabric3-async-loader</module>
 		<module>fabric3-async-runtime</module>
 		<module>fabric3-binding-codegen</module>
-		<module>fabric3-console</module>
 		<module>fabric3-container-web-jetty</module>
 		<module>fabric3-container-web-spi</module>
 		<module>fabric3-contribution-scanner</module>
