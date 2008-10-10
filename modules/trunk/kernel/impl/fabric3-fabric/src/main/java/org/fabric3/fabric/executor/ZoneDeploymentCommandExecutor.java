@@ -18,13 +18,16 @@ package org.fabric3.fabric.executor;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Set;
 
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
+import org.fabric3.api.annotation.Monitor;
 import org.fabric3.fabric.command.RuntimeDeploymentCommand;
 import org.fabric3.fabric.command.ZoneDeploymentCommand;
+import org.fabric3.spi.command.Command;
 import org.fabric3.spi.executor.CommandExecutor;
 import org.fabric3.spi.executor.CommandExecutorRegistry;
 import org.fabric3.spi.executor.ExecutionException;
@@ -44,13 +47,16 @@ public class ZoneDeploymentCommandExecutor implements CommandExecutor<ZoneDeploy
     private ZoneManager zoneManager;
     private CommandExecutorRegistry executorRegistry;
     private RuntimeService runtimeService;
+    private ZoneDeploymentCommandExecutorMonitor monitor;
 
     public ZoneDeploymentCommandExecutor(@Reference ZoneManager zoneManager,
                                          @Reference CommandExecutorRegistry executorRegistry,
-                                         @Reference RuntimeService runtimeService) {
+                                         @Reference RuntimeService runtimeService,
+                                         @Monitor ZoneDeploymentCommandExecutorMonitor monitor) {
         this.zoneManager = zoneManager;
         this.executorRegistry = executorRegistry;
         this.runtimeService = runtimeService;
+        this.monitor = monitor;
     }
 
     @Init
@@ -60,9 +66,12 @@ public class ZoneDeploymentCommandExecutor implements CommandExecutor<ZoneDeploy
 
     public void execute(ZoneDeploymentCommand command) throws ExecutionException {
         try {
+            String id = command.getId();
+            monitor.receivedDeploymentCommand(id);
             ByteArrayOutputStream bas = new ByteArrayOutputStream();
             MultiClassLoaderObjectOutputStream stream = new MultiClassLoaderObjectOutputStream(bas);
-            RuntimeDeploymentCommand runtimeCommand = new RuntimeDeploymentCommand(command.getCommands());
+            Set<Command> commands = command.getCommands();
+            RuntimeDeploymentCommand runtimeCommand = new RuntimeDeploymentCommand(id, commands);
             stream.writeObject(runtimeCommand);
             stream.close();
             byte[] serialized = bas.toByteArray();
@@ -71,14 +80,17 @@ public class ZoneDeploymentCommandExecutor implements CommandExecutor<ZoneDeploy
                 throw new NoTargetRuntimeException("No deployment runtime found. Note the zone manager is configured not to host components.");
             }
             for (RuntimeInstance runtime : zoneManager.getRuntimes()) {
-                if (runtimeName.equals(runtime.getName())) {
+                String target = runtime.getName();
+                if (runtimeName.equals(target)) {
                     // deploy locally if this runtime host components
                     if (runtimeService.isComponentHost()) {
                         executorRegistry.execute(runtimeCommand);
+                        monitor.routed(target, id);
                     }
                 } else {
                     // deploy to the runtime
-                    zoneManager.sendMessage(runtime.getName(), serialized);
+                    zoneManager.sendMessage(target, serialized);
+                    monitor.routed(target, id);
                 }
             }
         } catch (IOException e) {

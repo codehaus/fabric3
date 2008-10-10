@@ -25,16 +25,22 @@ import org.fabric3.spi.command.Command;
  * @version $Revision$ $Date$
  */
 public class RuntimeDeploymentCommand extends AbstractCommand {
-
-    private Set<Command> commands;
     private static final long serialVersionUID = -3864446712541806877L;
 
-    public RuntimeDeploymentCommand(Set<Command> commands) {
+    private String id;
+    private Set<Command> commands;
+
+    public RuntimeDeploymentCommand(String id, Set<Command> commands) {
         super(0);
+        this.id = id;
         this.commands = commands;
     }
 
     public Set<Command> getCommands() {
         return commands;
+    }
+
+    public String getId() {
+        return id;
     }
 }

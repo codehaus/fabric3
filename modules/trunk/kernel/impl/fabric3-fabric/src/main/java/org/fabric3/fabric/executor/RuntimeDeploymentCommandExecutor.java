@@ -20,6 +20,7 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
+import org.fabric3.api.annotation.Monitor;
 import org.fabric3.fabric.command.RuntimeDeploymentCommand;
 import org.fabric3.spi.command.Command;
 import org.fabric3.spi.executor.CommandExecutor;
@@ -34,9 +35,12 @@ import org.fabric3.spi.executor.ExecutionException;
 @EagerInit
 public class RuntimeDeploymentCommandExecutor implements CommandExecutor<RuntimeDeploymentCommand> {
     private CommandExecutorRegistry executorRegistry;
+    private RuntimeDeploymentCommandExecutorMonitor monitor;
 
-    public RuntimeDeploymentCommandExecutor(@Reference CommandExecutorRegistry executorRegistry) {
+    public RuntimeDeploymentCommandExecutor(@Reference CommandExecutorRegistry executorRegistry,
+                                            @Monitor RuntimeDeploymentCommandExecutorMonitor monitor) {
         this.executorRegistry = executorRegistry;
+        this.monitor = monitor;
     }
 
     @Init
@@ -45,8 +49,11 @@ public class RuntimeDeploymentCommandExecutor implements CommandExecutor<Runtime
     }
 
     public void execute(RuntimeDeploymentCommand command) throws ExecutionException {
+        String id = command.getId();
+        monitor.receivedDeploymentCommand(id);
         for (Command cmd : command.getCommands()) {
             executorRegistry.execute(cmd);
         }
+        monitor.receivedDeploymentCommand(id);
     }
 }

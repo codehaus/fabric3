@@ -62,7 +62,7 @@ public class RuntimeRoutingService implements RoutingService {
         this.scopeRegistry = scopeRegistry;
     }
 
-    public void route(CommandMap commandMap) throws RoutingException {
+    public void route(String id, CommandMap commandMap) throws RoutingException {
 
         Set<Command> commands = commandMap.getCommandsForRuntime(null);
         for (Command command : commands) {

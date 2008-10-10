@@ -17,6 +17,7 @@
 package org.fabric3.fabric.domain;
 
 import java.util.Collection;
+import java.util.UUID;
 import javax.xml.namespace.QName;
 
 import static org.osoa.sca.Constants.SCA_NS;
@@ -141,7 +142,8 @@ public abstract class AbstractDomain implements Domain {
         try {
             // generate and provision any new components and new wires
             CommandMap commandMap = physicalModelGenerator.generate(components);
-            routingService.route(commandMap);
+            String id = UUID.randomUUID().toString();
+            routingService.route(id, commandMap);
         } catch (GenerationException e) {
             throw new DeploymentException("Error deploying: " + composite.getName(), e);
         } catch (RoutingException e) {
@@ -216,7 +218,8 @@ public abstract class AbstractDomain implements Domain {
         try {
             // generate and provision any new components and new wires
             CommandMap commandMap = physicalModelGenerator.generate(change);
-            routingService.route(commandMap);
+            String id = UUID.randomUUID().toString();
+            routingService.route(id, commandMap);
         } catch (GenerationException e) {
             throw new DeploymentException("Error deploying: " + composite.getName(), e);
         } catch (RoutingException e) {

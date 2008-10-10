@@ -46,9 +46,11 @@ public interface RoutingService {
     /**
      * Routes a command set to a runtime node
      *
-     * @param commandMap the command map to route
-     * @throws RoutingException if an exception occurs during routing
+     * @param id         the command set id used for correlation
+     * @param commandMap the command map to route @throws RoutingException if an exception occurs during routing @throws RoutingException if an error
+     *                   occurs routing the command set
+     * @throws RoutingException if an exception occurs routing the command set
      */
-    void route(CommandMap commandMap) throws RoutingException;
+    void route(String id, CommandMap commandMap) throws RoutingException;
 
 }

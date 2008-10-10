@@ -14,34 +14,30 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.fabric.command;
+package org.fabric3.fabric.executor;
 
-import java.util.Set;
-
-import org.fabric3.spi.command.AbstractCommand;
-import org.fabric3.spi.command.Command;
+import org.fabric3.api.annotation.logging.Info;
 
 /**
  * @version $Revision$ $Date$
  */
-public class ZoneDeploymentCommand extends AbstractCommand {
-    private static final long serialVersionUID = 8673100303949676875L;
+public interface ZoneDeploymentCommandExecutorMonitor {
 
-    private String id;
-    private Set<Command> commands;
+    /**
+     * Callback when a deployment command is received.
+     *
+     * @param description the deployment description, usually the deployment composite name.
+     */
+    @Info
+    void receivedDeploymentCommand(String description);
 
-    public ZoneDeploymentCommand(String id, Set<Command> commands) {
-        super(0);
-        this.id = id;
-        this.commands = commands;
-    }
-
-    public Set<Command> getCommands() {
-        return commands;
-    }
-
-    public String getId() {
-        return id;
-    }
+    /**
+     * Callback received when a deployment command is routed to a runtime in the zone
+     *
+     * @param runtimeName the runtime the deployment is routed to
+     * @param description the deployment description, usually the deployment composite name.
+     */
+    @Info
+    void routed(String runtimeName, String description);
 
 }

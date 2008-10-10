@@ -97,7 +97,7 @@ public class FederatedRoutingService implements RoutingService {
         this.marshalService = marshalService;
     }
 
-    public void route(CommandMap commandMap) throws RoutingException {
+    public void route(String id, CommandMap commandMap) throws RoutingException {
 
         for (URI runtimeId : commandMap.getRuntimeIds()) {
 
