@@ -36,7 +36,7 @@ import org.fabric3.api.annotation.Monitor;
 import org.fabric3.host.work.DefaultPausableWork;
 import org.fabric3.host.work.WorkScheduler;
 import org.fabric3.jxta.JxtaService;
-import org.fabric3.spi.model.topology.RuntimeInfo;
+import org.fabric3.spi.services.runtime.RuntimeInfo;
 import org.fabric3.spi.services.discovery.DiscoveryService;
 import org.fabric3.spi.services.runtime.RuntimeInfoService;
 

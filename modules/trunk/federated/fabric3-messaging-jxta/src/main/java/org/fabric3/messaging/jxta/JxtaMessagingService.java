@@ -33,7 +33,7 @@ import org.osoa.sca.annotations.Reference;
 import org.fabric3.api.annotation.Monitor;
 import org.fabric3.jxta.JxtaService;
 import org.fabric3.messaging.jxta.prp.Fabric3QueryHandler;
-import org.fabric3.spi.model.topology.RuntimeInfo;
+import org.fabric3.spi.services.runtime.RuntimeInfo;
 import org.fabric3.spi.services.discovery.DiscoveryService;
 import org.fabric3.messaging.MessagingEventService;
 import org.fabric3.messaging.MessagingException;

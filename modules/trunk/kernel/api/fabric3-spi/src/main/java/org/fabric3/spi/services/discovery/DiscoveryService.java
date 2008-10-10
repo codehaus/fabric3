@@ -19,7 +19,7 @@ package org.fabric3.spi.services.discovery;
 import java.util.Set;
 import java.net.URI;
 
-import org.fabric3.spi.model.topology.RuntimeInfo;
+import org.fabric3.spi.services.runtime.RuntimeInfo;
 
 /**
  * Defines the abstraction for getting domain wide information of nodes
@@ -27,6 +27,7 @@ import org.fabric3.spi.model.topology.RuntimeInfo;
  *
  * @version $Revsion$ $Date$
  */
+@Deprecated
 public interface DiscoveryService {
 
     /**

@@ -32,7 +32,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.spi.model.topology;
+package org.fabric3.spi.services.runtime;
 
 import java.net.URI;
 import java.util.HashMap;
@@ -48,6 +48,7 @@ import org.fabric3.spi.Constants;
  *
  * @version $Rev$ $Date$
  */
+@Deprecated
 public class RuntimeInfo {
 
     public static final QName QNAME = new QName(Constants.FABRIC3_NS, "runtimeInfo");

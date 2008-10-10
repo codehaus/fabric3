@@ -111,10 +111,6 @@
         <system:implementation.system class="org.fabric3.fabric.services.lcm.NonPersistentLogicalComponentStore"/>
     </component>
 
-    <component name="RuntimeInfoService">
-        <system:implementation.system class="org.fabric3.fabric.services.runtime.DefaultRuntimeInfoService"/>
-    </component>
-
     <component name="WarContributionProcessor">
         <system:implementation.system class="org.fabric3.runtime.webapp.contribution.WarContributionProcessor"/>
     </component>

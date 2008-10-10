@@ -36,8 +36,6 @@ package org.fabric3.spi.services.runtime;
 
 import java.net.URI;
 
-import org.fabric3.spi.model.topology.RuntimeInfo;
-
 /**
  * Provides the abstraction to the component that provides information about the local runtime.
  * <p/>
@@ -47,6 +45,7 @@ import org.fabric3.spi.model.topology.RuntimeInfo;
  *
  * @version $Revsion$ $Date$
  */
+@Deprecated
 public interface RuntimeInfoService {
 
     /**

@@ -94,10 +94,6 @@
     <include name="JavaIntrospection" scdlResource="META-INF/javaIntrospection.composite"/>
     <include name="JavaRuntime" scdlResource="META-INF/javaRuntime.composite"/>
 
-    <component name="runtimeInfoService">
-        <system:implementation.system class="org.fabric3.fabric.services.runtime.DefaultRuntimeInfoService"/>
-    </component>
-
     <!-- no recovery for the iTest runtime   -->
     <component name="AssemblyRecoveryService">
         <system:implementation.system class="org.fabric3.fabric.services.lcm.NonPersistentLogicalComponentStore"/>

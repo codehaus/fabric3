@@ -46,7 +46,6 @@ import org.fabric3.spi.binding.BindingSelectionException;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalService;
-import org.fabric3.spi.model.topology.RuntimeInfo;
 
 /**
  * Allows Hessian to be used for sca.binding in a domain.
@@ -84,21 +83,21 @@ public class HessianBindingProvider implements BindingProvider {
 //        }
     }
 
-    private void configureReference(LogicalReference source, LogicalService target, RuntimeInfo targetInfo) throws BindingSelectionException {
-        LogicalBinding<HessianBindingDefinition> binding = null;
-        for (LogicalBinding<?> entry : target.getBindings()) {
-            if (entry.getBinding().getType().equals(BINDING_QNAME)) {
-                //noinspection unchecked
-                binding = (LogicalBinding<HessianBindingDefinition>) entry;
-                break;
-            }
-        }
-        if (binding == null) {
-            throw new BindingSelectionException("Hessian binding on service not found: " + target.getUri());
-        }
-        URI targetUri = URI.create("http://" + targetInfo.getTransportMetaData(HTTP) + binding.getBinding().getTargetUri().toString());
-        constructLogicalReference(source, targetUri);
-    }
+//    private void configureReference(LogicalReference source, LogicalService target, RuntimeInfo targetInfo) throws BindingSelectionException {
+//        LogicalBinding<HessianBindingDefinition> binding = null;
+//        for (LogicalBinding<?> entry : target.getBindings()) {
+//            if (entry.getBinding().getType().equals(BINDING_QNAME)) {
+//                //noinspection unchecked
+//                binding = (LogicalBinding<HessianBindingDefinition>) entry;
+//                break;
+//            }
+//        }
+//        if (binding == null) {
+//            throw new BindingSelectionException("Hessian binding on service not found: " + target.getUri());
+//        }
+//        URI targetUri = URI.create("http://" + targetInfo.getTransportMetaData(HTTP) + binding.getBinding().getTargetUri().toString());
+//        constructLogicalReference(source, targetUri);
+//    }
 
     private void constructLogicalReference(LogicalReference source, URI targetUri) {
         HessianBindingDefinition referenceDefinition = new HessianBindingDefinition(targetUri);

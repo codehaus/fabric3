@@ -33,7 +33,7 @@ import net.jxta.document.StructuredDocumentFactory;
 import net.jxta.id.ID;
 import net.jxta.id.IDFactory;
 
-import org.fabric3.spi.model.topology.RuntimeInfo;
+import org.fabric3.spi.services.runtime.RuntimeInfo;
 
 /**
  * Encapsulates metadata for a runtime sent to the controller.

@@ -80,12 +80,6 @@
     <!-- include policy configuration -->
     <include name="org.fabric3.policy.Policy" scdlResource="org/fabric3/policy/policy.composite"/>
 
-    <component name="RuntimeInfoService">
-        <system:implementation.system class="org.fabric3.fabric.services.runtime.DefaultRuntimeInfoService"/>
-        <property name="scheme">jxta</property>
-        <property name="runtimeId">controller</property>
-    </component>
-
     <component name="assemblyRecoveryService">
         <system:implementation.system class="org.fabric3.fabric.services.lcm.NonPersistentLogicalComponentStore"/>
     </component>
