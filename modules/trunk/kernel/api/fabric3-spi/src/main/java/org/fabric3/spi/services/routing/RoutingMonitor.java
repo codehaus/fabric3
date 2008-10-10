@@ -32,25 +32,17 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.fabric.services.routing;
+package org.fabric3.spi.services.routing;
 
-import org.fabric3.spi.generator.CommandMap;
+import org.fabric3.api.annotation.logging.Fine;
 
 /**
- * Implementations route physical commands to a runtime node.
+ * Event monitor for the routing service
  *
  * @version $Rev$ $Date$
  */
-public interface RoutingService {
+public interface RoutingMonitor {
 
-    /**
-     * Routes a command set to a runtime node
-     *
-     * @param id         the command set id used for correlation
-     * @param commandMap the command map to route @throws RoutingException if an exception occurs during routing @throws RoutingException if an error
-     *                   occurs routing the command set
-     * @throws RoutingException if an exception occurs routing the command set
-     */
-    void route(String id, CommandMap commandMap) throws RoutingException;
-
+    @Fine
+    void routeCommands(String runtimeId);
 }

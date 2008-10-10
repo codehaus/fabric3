@@ -24,4 +24,10 @@
            autowire="true">
 
 
+    <component name="FederatedRoutingService">
+        <system:implementation.system class="org.fabric3.fabric.services.routing.FederatedRoutingService"/>
+    </component>
+
+    
+
 </composite>

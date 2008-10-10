@@ -43,9 +43,4 @@
         <property name="input">com.ctc.wstx.stax.WstxInputFactory</property>
         <property name="output">com.ctc.wstx.stax.WstxOutputFactory</property>
     </component>
-
-    <component name="FederatedRoutingService">
-        <system:implementation.system class="org.fabric3.fabric.services.routing.FederatedRoutingService"/>
-    </component>
-
 </composite>

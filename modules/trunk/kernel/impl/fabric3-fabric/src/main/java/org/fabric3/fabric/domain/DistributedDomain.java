@@ -22,7 +22,7 @@ import org.fabric3.spi.allocator.Allocator;
 import org.fabric3.fabric.binding.BindingSelector;
 import org.fabric3.fabric.generator.PhysicalModelGenerator;
 import org.fabric3.fabric.instantiator.LogicalModelInstantiator;
-import org.fabric3.fabric.services.routing.RoutingService;
+import org.fabric3.spi.services.routing.RoutingService;
 import org.fabric3.spi.domain.Domain;
 import org.fabric3.spi.services.contribution.MetaDataStore;
 import org.fabric3.spi.services.lcm.LogicalComponentManager;

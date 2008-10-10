@@ -32,7 +32,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.fabric.services.routing;
+package org.fabric3.federation.routing;
 
 import java.util.Set;
 
@@ -46,6 +46,9 @@ import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.spi.executor.CommandExecutorRegistry;
 import org.fabric3.spi.executor.ExecutionException;
 import org.fabric3.spi.generator.CommandMap;
+import org.fabric3.spi.services.routing.RoutingService;
+import org.fabric3.spi.services.routing.RoutingException;
+import org.fabric3.spi.services.routing.RoutingMonitor;
 
 /**
  * A routing service implementation that routes physical changesets across a domain

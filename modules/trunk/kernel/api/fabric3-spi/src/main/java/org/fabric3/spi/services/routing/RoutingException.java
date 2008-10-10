@@ -32,7 +32,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.fabric.services.routing;
+package org.fabric3.spi.services.routing;
 
 import org.fabric3.host.Fabric3Exception;
 
@@ -44,26 +44,26 @@ import org.fabric3.host.Fabric3Exception;
 public class RoutingException extends Fabric3Exception {
     private static final long serialVersionUID = -7865833725458046880L;
 
-    protected RoutingException() {
+    public RoutingException() {
     }
 
-    protected RoutingException(String message, String identifier) {
+    public RoutingException(String message, String identifier) {
         super(message, identifier);
     }
 
-    protected RoutingException(Throwable cause) {
+    public RoutingException(Throwable cause) {
         super(cause);
     }
 
-    protected RoutingException(String message, Throwable cause) {
+    public RoutingException(String message, Throwable cause) {
         super(message, cause);
     }
 
-    protected RoutingException(String message, String identifier, Throwable cause) {
+    public RoutingException(String message, String identifier, Throwable cause) {
         super(message, identifier, cause);
     }
 
-    protected RoutingException(String message) {
+    public RoutingException(String message) {
         super(message);
     }
 }
