@@ -67,6 +67,9 @@ public class ZoneDeploymentCommandExecutor implements CommandExecutor<ZoneDeploy
             stream.close();
             byte[] serialized = bas.toByteArray();
             String runtimeName = runtimeService.getRuntimeName();
+            if (zoneManager.getRuntimes().size() == 1 && !runtimeService.isComponentHost()) {
+                throw new NoTargetRuntimeException("No deployment runtime found. Note the zone manager is configured not to host components.");
+            }
             for (RuntimeInstance runtime : zoneManager.getRuntimes()) {
                 if (runtimeName.equals(runtime.getName())) {
                     // deploy locally if this runtime host components
