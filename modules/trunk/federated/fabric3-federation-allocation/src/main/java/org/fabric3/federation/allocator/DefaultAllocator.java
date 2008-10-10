@@ -16,9 +16,12 @@
  */
 package org.fabric3.federation.allocator;
 
+import org.osoa.sca.annotations.Reference;
+
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.allocator.AllocationException;
 import org.fabric3.spi.allocator.Allocator;
+import org.fabric3.spi.topology.DomainManager;
 
 /**
  * Default Allocator implementation.
@@ -26,12 +29,17 @@ import org.fabric3.spi.allocator.Allocator;
  * @version $Rev$ $Date$
  */
 public class DefaultAllocator implements Allocator {
+    private DomainManager domainManager;
 
 
-    public DefaultAllocator() {
+    public DefaultAllocator(@Reference DomainManager domainManager) {
+        this.domainManager = domainManager;
     }
 
     public void allocate(LogicalComponent<?> component, boolean recover) throws AllocationException {
+        if (component.getZone() == null) {
+            
+        }
         // Comment out for now until zones are integrated
 
 //        if (synchronizeTopology) {
