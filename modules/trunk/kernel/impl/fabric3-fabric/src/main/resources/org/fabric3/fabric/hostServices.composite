@@ -44,10 +44,6 @@
         <property name="output">com.ctc.wstx.stax.WstxOutputFactory</property>
     </component>
 
-    <component name="Allocator">
-        <system:implementation.system class="org.fabric3.fabric.allocator.DefaultAllocator"/>
-    </component>
-
     <component name="FederatedRoutingService">
         <system:implementation.system class="org.fabric3.fabric.services.routing.FederatedRoutingService"/>
     </component>

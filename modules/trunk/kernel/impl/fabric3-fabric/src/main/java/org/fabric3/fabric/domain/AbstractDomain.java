@@ -59,19 +59,29 @@ public abstract class AbstractDomain implements Domain {
     private final MetaDataStore metadataStore;
     private final LogicalComponentManager logicalComponentManager;
     protected LogicalModelInstantiator logicalModelInstantiator;
-    protected Allocator allocator;
     protected BindingSelector bindingSelector;
     protected RoutingService routingService;
     protected PhysicalModelGenerator physicalModelGenerator;
 
+    // The service for allocating to remote zones. Domain subtypes may optionally inject this service if they support distributed domains.
+    protected Allocator allocator;
+
+    /**
+     * Constructor.
+     *
+     * @param metadataStore            the store for resolving contribution artifacts
+     * @param logicalComponentManager  the manager for logical components
+     * @param physicalModelGenerator   the physical model generator
+     * @param logicalModelInstantiator the logical model instantiator
+     * @param bindingSelector          the selector for binding.sca
+     * @param routingService           the service for routing deployment commands
+     */
     public AbstractDomain(MetaDataStore metadataStore,
                           LogicalComponentManager logicalComponentManager,
-                          Allocator allocator,
                           PhysicalModelGenerator physicalModelGenerator,
                           LogicalModelInstantiator logicalModelInstantiator,
                           BindingSelector bindingSelector,
                           RoutingService routingService) {
-        this.allocator = allocator;
         this.metadataStore = metadataStore;
         this.physicalModelGenerator = physicalModelGenerator;
         this.logicalModelInstantiator = logicalModelInstantiator;
@@ -261,6 +271,10 @@ public abstract class AbstractDomain implements Domain {
      * @throws AllocationException if an allocation error occurs
      */
     private void allocate(Collection<LogicalComponent<?>> components) throws AllocationException {
+        if (allocator == null) {
+            // allocator is an optional extension
+            return;
+        }
         for (LogicalComponent<?> component : components) {
             if (!component.isProvisioned()) {
                 allocator.allocate(component, false);

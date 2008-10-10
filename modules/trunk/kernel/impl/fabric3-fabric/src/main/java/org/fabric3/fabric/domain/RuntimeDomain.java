@@ -18,7 +18,6 @@ package org.fabric3.fabric.domain;
 
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.fabric.allocator.Allocator;
 import org.fabric3.fabric.binding.BindingSelector;
 import org.fabric3.fabric.generator.PhysicalModelGenerator;
 import org.fabric3.fabric.instantiator.LogicalModelInstantiator;
@@ -35,14 +34,13 @@ import org.fabric3.spi.services.lcm.LogicalComponentManager;
  */
 public class RuntimeDomain extends AbstractDomain {
 
-    public RuntimeDomain(@Reference Allocator allocator,
-                         @Reference MetaDataStore metadataStore,
+    public RuntimeDomain(@Reference MetaDataStore metadataStore,
                          @Reference PhysicalModelGenerator physicalModelGenerator,
                          @Reference LogicalModelInstantiator logicalModelInstantiator,
                          @Reference LogicalComponentManager logicalComponentManager,
                          @Reference BindingSelector bindingSelector,
                          @Reference RoutingService routingService) {
-        super(metadataStore, logicalComponentManager, allocator, physicalModelGenerator, logicalModelInstantiator, bindingSelector, routingService);
+        super(metadataStore, logicalComponentManager, physicalModelGenerator, logicalModelInstantiator, bindingSelector, routingService);
     }
 
     /**

@@ -34,22 +34,21 @@ import org.fabric3.spi.services.lcm.LogicalComponentManager;
  */
 public class DistributedDomain extends AbstractDomain implements Domain {
 
-    public DistributedDomain(@Reference(name = "store")MetaDataStore metaDataStore,
-                             @Reference(name = "logicalComponentManager")LogicalComponentManager logicalComponentManager,
-                             @Reference Allocator allocator,
+    public DistributedDomain(@Reference(name = "store") MetaDataStore metaDataStore,
+                             @Reference(name = "logicalComponentManager") LogicalComponentManager logicalComponentManager,
                              @Reference PhysicalModelGenerator physicalModelGenerator,
                              @Reference LogicalModelInstantiator logicalModelInstantiator,
                              @Reference BindingSelector bindingSelector,
                              @Reference RoutingService routingService) {
-        super(metaDataStore, logicalComponentManager, allocator, physicalModelGenerator, logicalModelInstantiator, bindingSelector, routingService);
+        super(metaDataStore, logicalComponentManager, physicalModelGenerator, logicalModelInstantiator, bindingSelector, routingService);
     }
 
     /**
-     * Used to reinject the Allocator. This allows an alternative allocation mechanism to be used by adding an optional extension to the runtime.
+     * Used to optionally inject an Allocator.
      *
-     * @param allocator the allocator to override the default one
+     * @param allocator the allocator
      */
-    @Reference
+    @Reference(required = false)
     public void setAllocator(Allocator allocator) {
         this.allocator = allocator;
     }

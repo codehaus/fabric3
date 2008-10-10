@@ -22,8 +22,6 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import javax.management.MBeanServer;
 
-import org.fabric3.fabric.allocator.Allocator;
-import org.fabric3.fabric.allocator.LocalAllocator;
 import org.fabric3.fabric.binding.BindingSelector;
 import org.fabric3.fabric.binding.BindingSelectorImpl;
 import org.fabric3.fabric.builder.ConnectorImpl;
@@ -156,7 +154,6 @@ public class BootstrapAssemblyFactory {
                                       String jmxSubDomain,
                                       HostInfo info) throws InitializationException {
 
-        Allocator allocator = new LocalAllocator();
         BindingSelector bindingSelector = new BindingSelectorImpl(logicalComponentManager);
         CommandExecutorRegistry commandRegistry =
                 createCommandExecutorRegistry(monitorFactory,
@@ -175,8 +172,7 @@ public class BootstrapAssemblyFactory {
 
         LogicalModelInstantiator logicalModelInstantiator = createLogicalModelGenerator(logicalComponentManager);
 
-        return new RuntimeDomain(allocator,
-                                 metaDataStore,
+        return new RuntimeDomain(metaDataStore,
                                  physicalModelGenerator,
                                  logicalModelInstantiator,
                                  logicalComponentManager,
