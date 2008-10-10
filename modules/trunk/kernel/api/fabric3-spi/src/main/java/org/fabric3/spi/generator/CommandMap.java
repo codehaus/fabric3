@@ -34,7 +34,6 @@
  */
 package org.fabric3.spi.generator;
 
-import java.net.URI;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
@@ -43,36 +42,37 @@ import java.util.Set;
 import org.fabric3.spi.command.Command;
 
 /**
+ * Contains a set of comamnds mapped by the zone to which they are to be applied.
  *
  * @version $Revision$ $Date$
  */
 public class CommandMap {
-    private Map<URI, Set<Command>> commands = new HashMap<URI, Set<Command>>();
-    
-    public void addCommand(URI runtimeId, Command command) {
-        Set<Command> cmds = getCommandsForRuntimeInternal(runtimeId);
+    private Map<String, Set<Command>> commands = new HashMap<String, Set<Command>>();
+
+    public void addCommand(String zone, Command command) {
+        Set<Command> cmds = getCommandsForRuntimeInternal(zone);
         cmds.add(command);
     }
-    
-    public void addCommands(URI runtimeId, Set<Command> commandList) {
-        Set<Command> cmds = getCommandsForRuntimeInternal(runtimeId);
+
+    public void addCommands(String zone, Set<Command> commandList) {
+        Set<Command> cmds = getCommandsForRuntimeInternal(zone);
         cmds.addAll(commandList);
     }
-    
-    public Set<URI> getRuntimeIds() {
+
+    public Set<String> getZones() {
         return commands.keySet();
     }
-    
-    public Set<Command> getCommandsForRuntime(URI runtimeId) {
-        Set<Command> cmds = getCommandsForRuntimeInternal(runtimeId);
+
+    public Set<Command> getCommandsForZone(String zone) {
+        Set<Command> cmds = getCommandsForRuntimeInternal(zone);
         return new LinkedHashSet<Command>(cmds);
     }
 
-    private  Set<Command> getCommandsForRuntimeInternal(URI runtimeId) {
-        Set<Command> cmds = commands.get(runtimeId);
+    private Set<Command> getCommandsForRuntimeInternal(String zone) {
+        Set<Command> cmds = commands.get(zone);
         if (cmds == null) {
             cmds = new LinkedHashSet<Command>();
-            commands.put(runtimeId, cmds);
+            commands.put(zone, cmds);
         }
         return cmds;
     }

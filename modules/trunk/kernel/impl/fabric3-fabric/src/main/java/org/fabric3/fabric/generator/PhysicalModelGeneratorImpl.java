@@ -34,7 +34,6 @@
  */
 package org.fabric3.fabric.generator;
 
-import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -90,8 +89,8 @@ public class PhysicalModelGeneratorImpl implements PhysicalModelGenerator {
         List<LogicalComponent<?>> sorted = topologicalSort(components);
 
         CommandMap commandMap = new CommandMap();
-        Map<URI, Set<Command>> commandsPerRuntime = classLoaderCommandGenerator.generate(sorted);
-        for (Map.Entry<URI, Set<Command>> entry : commandsPerRuntime.entrySet()) {
+        Map<String, Set<Command>> commandsPerZone = classLoaderCommandGenerator.generate(sorted);
+        for (Map.Entry<String, Set<Command>> entry : commandsPerZone.entrySet()) {
             for (Command command : entry.getValue()) {
                 commandMap.addCommand(entry.getKey(), command);
             }

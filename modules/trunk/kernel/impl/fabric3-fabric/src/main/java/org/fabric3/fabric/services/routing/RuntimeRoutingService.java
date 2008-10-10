@@ -64,7 +64,7 @@ public class RuntimeRoutingService implements RoutingService {
 
     public void route(String id, CommandMap commandMap) throws RoutingException {
 
-        Set<Command> commands = commandMap.getCommandsForRuntime(null);
+        Set<Command> commands = commandMap.getCommandsForZone(null);
         for (Command command : commands) {
             try {
                 registry.execute(command);

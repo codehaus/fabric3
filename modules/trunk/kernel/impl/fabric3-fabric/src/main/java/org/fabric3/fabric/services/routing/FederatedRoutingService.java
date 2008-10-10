@@ -34,31 +34,18 @@
  */
 package org.fabric3.fabric.services.routing;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.net.URI;
 import java.util.Set;
-import javax.xml.stream.XMLOutputFactory;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamReader;
-import javax.xml.stream.XMLStreamWriter;
 
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.api.annotation.Monitor;
 import org.fabric3.scdl.Scope;
-import org.fabric3.services.xmlfactory.XMLFactory;
-import org.fabric3.services.xmlfactory.XMLFactoryInstantiationException;
 import org.fabric3.spi.command.Command;
 import org.fabric3.spi.component.InstanceLifecycleException;
 import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.spi.executor.CommandExecutorRegistry;
 import org.fabric3.spi.executor.ExecutionException;
 import org.fabric3.spi.generator.CommandMap;
-import org.fabric3.spi.services.marshaller.MarshalException;
-import org.fabric3.spi.services.marshaller.MarshalService;
-import org.fabric3.spi.services.messaging.MessagingException;
-import org.fabric3.spi.services.messaging.MessagingService;
 
 /**
  * A routing service implementation that routes physical changesets across a domain
@@ -67,44 +54,27 @@ import org.fabric3.spi.services.messaging.MessagingService;
  */
 public class FederatedRoutingService implements RoutingService {
 
-    private MarshalService marshalService;
-    private final MessagingService messagingService;
     private final CommandExecutorRegistry executorRegistry;
-    private final XMLFactory xmlFactory;
     private final RoutingMonitor monitor;
     private final ScopeRegistry scopeRegistry;
 
-    public FederatedRoutingService(@Reference MessagingService messagingService,
-                                   @Reference CommandExecutorRegistry executorRegistry,
-                                   @Reference XMLFactory xmlFactory,
+    public FederatedRoutingService(@Reference CommandExecutorRegistry executorRegistry,
                                    @Monitor RoutingMonitor monitor,
                                    @Reference ScopeRegistry scopeRegistry) {
 
-        this.messagingService = messagingService;
         this.executorRegistry = executorRegistry;
-        this.xmlFactory = xmlFactory;
         this.monitor = monitor;
         this.scopeRegistry = scopeRegistry;
     }
 
-    /**
-     * Used to lazily inject the MarhsalService since it may be provided by a runtime extension loaded after this component.
-     *
-     * @param marshalService the MarshalService to inject
-     */
-    @Reference(required = false)
-    public void setMarshalService(MarshalService marshalService) {
-        this.marshalService = marshalService;
-    }
-
     public void route(String id, CommandMap commandMap) throws RoutingException {
 
-        for (URI runtimeId : commandMap.getRuntimeIds()) {
+        for (String zone : commandMap.getZones()) {
 
-            Set<Command> commands = commandMap.getCommandsForRuntime(runtimeId);
-            if (runtimeId != null) {
-                monitor.routeCommands(runtimeId.toString());
-                routeToDestination(runtimeId, commands);
+            Set<Command> commands = commandMap.getCommandsForZone(zone);
+            if (zone != null) {
+                monitor.routeCommands(zone);
+                routeToDestination(zone, commands);
             } else {
                 routeLocally(commands);
             }
@@ -131,33 +101,10 @@ public class FederatedRoutingService implements RoutingService {
 
     }
 
-    private void routeToDestination(URI runtimeId, Object commandSet) throws RoutingException {
+    private void routeToDestination(String zone, Object commandSet) throws RoutingException {
+        // temporarily comment out
+        throw new UnsupportedOperationException();
 
-        try {
-            ByteArrayOutputStream out = new ByteArrayOutputStream();
-            XMLOutputFactory factory = xmlFactory.newOutputFactoryInstance();
-            XMLStreamWriter writer = factory.createXMLStreamWriter(out);
-            getMarshalService().marshall(commandSet, writer);
-            ByteArrayInputStream in = new ByteArrayInputStream(out.toByteArray());
-            XMLStreamReader pcsReader = xmlFactory.newInputFactoryInstance().createXMLStreamReader(in);
-            messagingService.sendMessage(runtimeId, pcsReader);
-        } catch (XMLFactoryInstantiationException e) {
-            e.printStackTrace();
-        } catch (XMLStreamException e) {
-            throw new RoutingException("Routing error", e);
-        } catch (MarshalException e) {
-            throw new RoutingException("Routing error", e);
-        } catch (MessagingException e) {
-            throw new RoutingException("Routing error", e);
-        }
-
-    }
-
-    private MarshalService getMarshalService() {
-        if (marshalService == null) {
-            throw new IllegalStateException("MarshalService not configured");
-        }
-        return marshalService;
     }
 
 }

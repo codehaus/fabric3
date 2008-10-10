@@ -43,6 +43,6 @@ public interface ClassLoaderCommandGenerator {
      * @return the classloader provisioning commands grouped by runtime id where they are to be provisioned
      * @throws GenerationException if an error occurs during generation
      */
-    Map<URI, Set<Command>> generate(List<LogicalComponent<?>> components) throws GenerationException;
+    Map<String, Set<Command>> generate(List<LogicalComponent<?>> components) throws GenerationException;
 
 }

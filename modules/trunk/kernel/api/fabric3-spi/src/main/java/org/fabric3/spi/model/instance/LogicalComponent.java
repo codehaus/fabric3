@@ -65,7 +65,7 @@ public class LogicalComponent<I extends Implementation<?>> extends LogicalScaArt
     private final Map<String, LogicalReference> references = new HashMap<String, LogicalReference>();
     private final Map<String, LogicalResource<?>> resources = new HashMap<String, LogicalResource<?>>();
     private URI classLoaderId;
-    private URI zone;
+    private String zone;
     private boolean active;
     private Autowire autowire;
     private boolean provisioned;
@@ -85,7 +85,7 @@ public class LogicalComponent<I extends Implementation<?>> extends LogicalScaArt
      *
      * @return the zone name where the component is provisioned
      */
-    public URI getZone() {
+    public String getZone() {
         return zone;
     }
 
@@ -94,7 +94,7 @@ public class LogicalComponent<I extends Implementation<?>> extends LogicalScaArt
      *
      * @param zone the zone name where the component is provisioned
      */
-    public void setZone(URI zone) {
+    public void setZone(String zone) {
         this.zone = zone;
     }
 

@@ -38,7 +38,6 @@ import java.net.URI;
 import javax.xml.namespace.QName;
 
 import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.binding.hessian.scdl.HessianBindingDefinition;
 import org.fabric3.spi.Constants;
@@ -48,7 +47,6 @@ import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalService;
 import org.fabric3.spi.model.topology.RuntimeInfo;
-import org.fabric3.spi.services.discovery.DiscoveryService;
 
 /**
  * Allows Hessian to be used for sca.binding in a domain.
@@ -60,10 +58,7 @@ public class HessianBindingProvider implements BindingProvider {
     private static final QName HTTP = new QName(Constants.FABRIC3_NS, "transport.http.base");
     private static final QName BINDING_QNAME = new QName("http://www.fabric3.org/binding/hessian/0.2", "binding.hessian");
 
-    private DiscoveryService discoveryService;
-
-    public HessianBindingProvider(@Reference DiscoveryService discoveryService) {
-        this.discoveryService = discoveryService;
+    public HessianBindingProvider() {
     }
 
     public MatchType canBind(LogicalReference source, LogicalService target) {
@@ -72,20 +67,21 @@ public class HessianBindingProvider implements BindingProvider {
     }
 
     public void bind(LogicalReference source, LogicalService target) throws BindingSelectionException {
-        URI runtimeId = target.getParent().getZone();
-        RuntimeInfo targetInfo = discoveryService.getRuntimeInfo(runtimeId);
-        if (targetInfo == null) {
-            // This could potentially occur if a runtime is removed from the domain during deployment
-            throw new BindingSelectionException("Runtime not found: " + runtimeId);
-        }
-        // determing whether to configure both sides of the wire or just the reference
-        if (target.getBindings().isEmpty()) {
-            // configure both sides
-            configureService(target);
-            configureReference(source, target, targetInfo);
-        } else {
-            configureReference(source, target, targetInfo);
-        }
+        // XCV TODO temporarily comment out until this is refactored to use the ZoneManager
+//        String zone = target.getParent().getZone();
+//        RuntimeInfo targetInfo = discoveryService.getRuntimeInfo(runtimeId);
+//        if (targetInfo == null) {
+//            // This could potentially occur if a runtime is removed from the domain during deployment
+//            throw new BindingSelectionException("Zone not found: " + zone);
+//        }
+//        // determing whether to configure both sides of the wire or just the reference
+//        if (target.getBindings().isEmpty()) {
+//            // configure both sides
+//            configureService(target);
+//            configureReference(source, target, targetInfo);
+//        } else {
+//            configureReference(source, target, targetInfo);
+//        }
     }
 
     private void configureReference(LogicalReference source, LogicalService target, RuntimeInfo targetInfo) throws BindingSelectionException {

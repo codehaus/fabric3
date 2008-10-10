@@ -75,13 +75,13 @@ public class ClassLoaderCommandGeneratorImpl implements ClassLoaderCommandGenera
         this.encoder = encoders.get(0);
     }
 
-    public Map<URI, Set<Command>> generate(List<LogicalComponent<?>> components) throws GenerationException {
+    public Map<String, Set<Command>> generate(List<LogicalComponent<?>> components) throws GenerationException {
         // contributions mapped to the node they are provisioned to
-        Map<URI, Set<URI>> contributionsPerRuntime = calculateCollatedContributions(components);
-        Map<URI, Set<PhysicalClassLoaderDefinition>> definitionsPerRuntime = createContributionClassLoaderDefinitions(contributionsPerRuntime);
-        createComponentClassLoaderDefinitions(components, definitionsPerRuntime);
-        Map<URI, Set<Command>> commandsPerRuntime = new HashMap<URI, Set<Command>>(definitionsPerRuntime.size());
-        for (Map.Entry<URI, Set<PhysicalClassLoaderDefinition>> entry : definitionsPerRuntime.entrySet()) {
+        Map<String, Set<URI>> contributionsPerZone = calculateCollatedContributions(components);
+        Map<String, Set<PhysicalClassLoaderDefinition>> definitionsPerZone = createContributionClassLoaderDefinitions(contributionsPerZone);
+        createComponentClassLoaderDefinitions(components, definitionsPerZone);
+        Map<String, Set<Command>> commandsPerRuntime = new HashMap<String, Set<Command>>(definitionsPerZone.size());
+        for (Map.Entry<String, Set<PhysicalClassLoaderDefinition>> entry : definitionsPerZone.entrySet()) {
             Set<PhysicalClassLoaderDefinition> definitions = entry.getValue();
             Set<Command> commands = new LinkedHashSet<Command>();
             commandsPerRuntime.put(entry.getKey(), commands);
@@ -94,23 +94,23 @@ public class ClassLoaderCommandGeneratorImpl implements ClassLoaderCommandGenera
     }
 
     /**
-     * Processes the list of components being deployed and returns the set of required contributions collated by runtime id.
+     * Processes the list of components being deployed and returns the set of required contributions collated by zone.
      *
      * @param components the set of components
      * @return the set of required contribution URIs grouped by runtime id
      */
-    private Map<URI, Set<URI>> calculateCollatedContributions(List<LogicalComponent<?>> components) {
+    private Map<String, Set<URI>> calculateCollatedContributions(List<LogicalComponent<?>> components) {
         // collate all contributions that must be provisioned as part of the change set
-        Map<URI, Set<URI>> contributionsPerRuntime = new HashMap<URI, Set<URI>>();
+        Map<String, Set<URI>> contributionsPerZone = new HashMap<String, Set<URI>>();
         for (LogicalComponent<?> component : components) {
             URI contributionUri = component.getDefinition().getContributionUri();
             if (contributionUri != null) {
                 // xcv FIXME contribution URIs can be null if component is primordial. this should be fixed in the synthesize
-                URI runtimeId = component.getZone();
-                Set<URI> contributions = contributionsPerRuntime.get(runtimeId);
+                String zone = component.getZone();
+                Set<URI> contributions = contributionsPerZone.get(zone);
                 if (contributions == null) {
                     contributions = new LinkedHashSet<URI>();
-                    contributionsPerRuntime.put(runtimeId, contributions);
+                    contributionsPerZone.put(zone, contributions);
                 }
                 Contribution contribution = store.find(contributionUri);
                 // imported contributions must also be provisioned 
@@ -126,20 +126,20 @@ public class ClassLoaderCommandGeneratorImpl implements ClassLoaderCommandGenera
                 contributions.add(contributionUri);
             }
         }
-        return contributionsPerRuntime;
+        return contributionsPerZone;
     }
 
     /**
      * Creates PhysicalClassLoaderDefinitions for the set of contributions grouped by runtime id
      *
-     * @param contributionsPerRuntime the contribution URIs grouped by runtime id
-     * @return the PhysicalClassLoaderDefinitions grouped by runtime id
+     * @param contributionsPerZone the contribution URIs grouped by runtime id
+     * @return the PhysicalClassLoaderDefinitions grouped by zone
      * @throws GenerationException if a generation error occurs
      */
-    private Map<URI, Set<PhysicalClassLoaderDefinition>> createContributionClassLoaderDefinitions(Map<URI, Set<URI>> contributionsPerRuntime)
+    private Map<String, Set<PhysicalClassLoaderDefinition>> createContributionClassLoaderDefinitions(Map<String, Set<URI>> contributionsPerZone)
             throws GenerationException {
-        Map<URI, Set<PhysicalClassLoaderDefinition>> definitionsPerRuntime = new HashMap<URI, Set<PhysicalClassLoaderDefinition>>();
-        for (Map.Entry<URI, Set<URI>> entry : contributionsPerRuntime.entrySet()) {
+        Map<String, Set<PhysicalClassLoaderDefinition>> definitionsPerZone = new HashMap<String, Set<PhysicalClassLoaderDefinition>>();
+        for (Map.Entry<String, Set<URI>> entry : contributionsPerZone.entrySet()) {
             for (URI uri : entry.getValue()) {
                 Contribution contribution = store.find(uri);
                 PhysicalClassLoaderDefinition definition = new PhysicalClassLoaderDefinition(uri);
@@ -147,28 +147,28 @@ public class ClassLoaderCommandGeneratorImpl implements ClassLoaderCommandGenera
                 for (URI resolved : contribution.getResolvedImportUris()) {
                     definition.addParentClassLoader(resolved);
                 }
-                URI runtimeId = entry.getKey();
-                Set<PhysicalClassLoaderDefinition> definitions = definitionsPerRuntime.get(runtimeId);
+                String zone = entry.getKey();
+                Set<PhysicalClassLoaderDefinition> definitions = definitionsPerZone.get(zone);
                 if (definitions == null) {
                     definitions = new LinkedHashSet<PhysicalClassLoaderDefinition>();
-                    definitionsPerRuntime.put(runtimeId, definitions);
+                    definitionsPerZone.put(zone, definitions);
                 }
                 definitions.add(definition);
             }
 
         }
-        return definitionsPerRuntime;
+        return definitionsPerZone;
     }
 
     /**
-     * Processes a component set, updating the suppied collection of PhysicalClassLoaderDefinitions.
+     * Processes a component set, updating the supplied collection of PhysicalClassLoaderDefinitions.
      *
-     * @param components            the component set
-     * @param definitionsPerRuntime the collection of PhysicalClassLoaderDefinitions to add to grouped by runtime id
+     * @param components         the component set
+     * @param definitionsPerZone the collection of PhysicalClassLoaderDefinitions to add to grouped by zone
      * @throws GenerationException if a generation error occurs
      */
     private void createComponentClassLoaderDefinitions(List<LogicalComponent<?>> components,
-                                                       Map<URI, Set<PhysicalClassLoaderDefinition>> definitionsPerRuntime)
+                                                       Map<String, Set<PhysicalClassLoaderDefinition>> definitionsPerZone)
             throws GenerationException {
         for (LogicalComponent<?> component : components) {
             URI classLoaderUri = component.getClassLoaderId();
@@ -184,14 +184,14 @@ public class ClassLoaderCommandGeneratorImpl implements ClassLoaderCommandGenera
                 definition.addParentClassLoader(uri);
             }
             URI contributionUri = component.getDefinition().getContributionUri();
-            Set<PhysicalClassLoaderDefinition> definitions = definitionsPerRuntime.get(component.getZone());
+            Set<PhysicalClassLoaderDefinition> definitions = definitionsPerZone.get(component.getZone());
             if (contributionUri == null) {
                 // xcv FIXME bootstrap services should be associated with a contribution
                 // the logical component is not provisioned as part of a contribution, e.g. a boostrap system service
                 definition.addParentClassLoader(ComponentNames.BOOT_CLASSLOADER_ID);
                 if (definitions == null) {
                     definitions = new LinkedHashSet<PhysicalClassLoaderDefinition>();
-                    definitionsPerRuntime.put(component.getZone(), definitions);
+                    definitionsPerZone.put(component.getZone(), definitions);
                 }
                 definitions.add(definition);
                 continue;
