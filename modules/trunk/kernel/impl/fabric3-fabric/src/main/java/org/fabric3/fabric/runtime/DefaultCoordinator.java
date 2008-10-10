@@ -26,10 +26,9 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import javax.xml.namespace.QName;
 
+import static org.fabric3.fabric.runtime.ComponentNames.APPLICATION_DOMAIN_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.CONTRIBUTION_SERVICE_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.DEFINITIONS_REGISTRY;
-import static org.fabric3.fabric.runtime.ComponentNames.DISCOVERY_SERVICE_URI;
-import static org.fabric3.fabric.runtime.ComponentNames.APPLICATION_DOMAIN_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.METADATA_STORE_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.RUNTIME_DOMAIN_URI;
 import org.fabric3.fabric.services.contribution.manifest.XmlManifestProcessor;
@@ -60,8 +59,6 @@ import org.fabric3.spi.services.contribution.Resource;
 import org.fabric3.spi.services.contribution.ResourceElement;
 import org.fabric3.spi.services.definitions.DefinitionActivationException;
 import org.fabric3.spi.services.definitions.DefinitionsRegistry;
-import org.fabric3.spi.services.discovery.DiscoveryException;
-import org.fabric3.spi.services.discovery.DiscoveryService;
 import org.fabric3.spi.services.event.EventService;
 import org.fabric3.spi.services.event.JoinDomain;
 
@@ -143,14 +140,8 @@ public class DefaultCoordinator<RUNTIME extends Fabric3Runtime<?>, BOOTSTRAPPER 
         if (state != State.INITIALIZED) {
             throw new IllegalStateException("Not in INITIALIZED state");
         }
-        DiscoveryService discoveryService = runtime.getSystemComponent(DiscoveryService.class, DISCOVERY_SERVICE_URI);
-        try {
-            discoveryService.joinDomain(timeout);
-            EventService eventService = runtime.getSystemComponent(EventService.class, ComponentNames.EVENT_SERVICE_URI);
-            eventService.publish(new JoinDomain());
-        } catch (DiscoveryException e) {
-            return new SyncFuture(new ExecutionException(e));
-        }
+        EventService eventService = runtime.getSystemComponent(EventService.class, ComponentNames.EVENT_SERVICE_URI);
+        eventService.publish(new JoinDomain());
         state = State.DOMAIN_JOINED;
         // no domain to join
         return new SyncFuture();

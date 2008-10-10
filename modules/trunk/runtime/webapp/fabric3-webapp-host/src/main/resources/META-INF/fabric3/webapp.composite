@@ -123,10 +123,6 @@
         <system:implementation.system class="org.fabric3.fabric.services.messaging.MessagingEventServiceImpl"/>
     </component>
 
-    <component name="DiscoveryService">
-        <system:implementation.system class="org.fabric3.fabric.services.discovery.SingleVMDiscoveryService"/>
-    </component>
-
     <component name="WarContributionProcessor">
         <system:implementation.system class="org.fabric3.runtime.webapp.contribution.WarContributionProcessor"/>
     </component>
