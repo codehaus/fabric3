@@ -64,7 +64,6 @@ public class ComponentDefinition<I extends Implementation<?>> extends AbstractPo
     private static final long serialVersionUID = 4909969579651563484L;
 
     private final String name;
-    private URI runtimeId;
     private Autowire autowire = Autowire.INHERITED;
     private Integer initLevel;
     private I implementation;
@@ -119,24 +118,6 @@ public class ComponentDefinition<I extends Implementation<?>> extends AbstractPo
      */
     public String getName() {
         return name;
-    }
-
-    /**
-     * Returns the id of the node the component is to be provisioned to.
-     *
-     * @return the id of the node the component is to be provisioned to
-     */
-    public URI getRuntimeId() {
-        return runtimeId;
-    }
-
-    /**
-     * Sets the id of the node the component is to be provisioned to.
-     *
-     * @param id the id of the node the component is to be provisioned to
-     */
-    public void setRuntimeId(URI id) {
-        this.runtimeId = id;
     }
 
     /**

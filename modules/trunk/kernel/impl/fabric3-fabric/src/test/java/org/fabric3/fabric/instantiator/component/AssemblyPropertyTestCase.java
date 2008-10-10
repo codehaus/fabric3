@@ -131,10 +131,7 @@ public class AssemblyPropertyTestCase extends TestCase {
                 return null;
             }
         };
-        domain = new LogicalComponent<CompositeImplementation>(URI.create("fabric3://domain"),
-                                                               URI.create("fabric3://domain"),
-                                                               null,
-                                                               null);
+        domain = new LogicalComponent<CompositeImplementation>(URI.create("fabric3://domain"), null, null);
 
         property = FACTORY.newDocumentBuilder().newDocument();
         root = property.createElement("value");

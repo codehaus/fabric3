@@ -86,7 +86,7 @@ public class GenerationHelperImplTestCase extends TestCase {
         componentType = new PojoComponentType(null);
         implementation = new MockImplementation(componentType);
         componentDefinition = new ComponentDefinition<MockImplementation>("mock", implementation);
-        logicalComponent = new LogicalComponent<MockImplementation>(null, null, componentDefinition, null);
+        logicalComponent = new LogicalComponent<MockImplementation>(null, componentDefinition, null);
         providerDefinition = new InstanceFactoryDefinition();
 
         intProp = new InjectableAttribute(InjectableAttributeType.PROPERTY, "intProp");

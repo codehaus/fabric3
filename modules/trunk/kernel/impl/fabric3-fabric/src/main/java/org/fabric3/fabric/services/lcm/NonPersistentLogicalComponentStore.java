@@ -57,7 +57,7 @@ public class NonPersistentLogicalComponentStore implements LogicalComponentStore
                 new ComponentDefinition<CompositeImplementation>(domainUri.toString());
         definition.setImplementation(impl);
         type.setAutowire(autowire);
-        return new LogicalCompositeComponent(domainUri, domainUri, definition, null);
+        return new LogicalCompositeComponent(domainUri, definition, null);
     }
 
     public void store(LogicalCompositeComponent domain) {

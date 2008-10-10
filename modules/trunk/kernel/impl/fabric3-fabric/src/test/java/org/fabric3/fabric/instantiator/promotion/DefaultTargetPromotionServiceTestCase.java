@@ -36,7 +36,7 @@ import org.fabric3.system.scdl.SystemImplementation;
 public class DefaultTargetPromotionServiceTestCase extends TestCase {
 
     private PromotionResolutionService promotionResolutionService = new DefaultPromotionResolutionService();
-    private LogicalCompositeComponent domain = new LogicalCompositeComponent(URI.create("fabric3://runtime"), URI.create("runtime"), null, null);
+    private LogicalCompositeComponent domain = new LogicalCompositeComponent(URI.create("fabric3://runtime"), null, null);
 
     public void testNoComponentForPromotedService() {
 
@@ -54,7 +54,6 @@ public class DefaultTargetPromotionServiceTestCase extends TestCase {
         logicalService.setPromotedUri(URI.create("component"));
 
         LogicalComponent<SystemImplementation> logicalComponent = new LogicalComponent<SystemImplementation>(URI.create("component"),
-                                                                                                             URI.create("runtime"),
                                                                                                              null,
                                                                                                              domain);
         logicalComponent.addService(new LogicalService(URI.create("component#service1"), null, domain));
@@ -72,7 +71,6 @@ public class DefaultTargetPromotionServiceTestCase extends TestCase {
         logicalService.setPromotedUri(URI.create("component"));
 
         LogicalComponent<SystemImplementation> logicalComponent = new LogicalComponent<SystemImplementation>(URI.create("component"),
-                                                                                                             URI.create("runtime"),
                                                                                                              null,
                                                                                                              domain);
 
@@ -88,7 +86,6 @@ public class DefaultTargetPromotionServiceTestCase extends TestCase {
         logicalService.setPromotedUri(URI.create("component#service"));
 
         LogicalComponent<SystemImplementation> logicalComponent = new LogicalComponent<SystemImplementation>(URI.create("component"),
-                                                                                                             URI.create("runtime"),
                                                                                                              null,
                                                                                                              domain);
 
@@ -105,7 +102,6 @@ public class DefaultTargetPromotionServiceTestCase extends TestCase {
         logicalService.setPromotedUri(URI.create("component"));
 
         LogicalComponent<SystemImplementation> logicalComponent = new LogicalComponent<SystemImplementation>(URI.create("component"),
-                                                                                                             URI.create("runtime"),
                                                                                                              null,
                                                                                                              domain);
         logicalComponent.addService(new LogicalService(URI.create("component#service1"), null, domain));
@@ -123,7 +119,6 @@ public class DefaultTargetPromotionServiceTestCase extends TestCase {
         logicalService.setPromotedUri(URI.create("component#service1"));
 
         LogicalComponent<SystemImplementation> logicalComponent = new LogicalComponent<SystemImplementation>(URI.create("component"),
-                                                                                                             URI.create("runtime"),
                                                                                                              null,
                                                                                                              domain);
         logicalComponent.addService(new LogicalService(URI.create("component#service1"), null, domain));
@@ -149,7 +144,6 @@ public class DefaultTargetPromotionServiceTestCase extends TestCase {
         logicalReference.addPromotedUri(URI.create("component"));
 
         LogicalComponent<SystemImplementation> logicalComponent = new LogicalComponent<SystemImplementation>(URI.create("component"),
-                                                                                                             URI.create("runtime"),
                                                                                                              null,
                                                                                                              domain);
         logicalComponent.addReference(new LogicalReference(URI.create("component#reference1"), null, domain));
@@ -169,7 +163,6 @@ public class DefaultTargetPromotionServiceTestCase extends TestCase {
         logicalReference.addPromotedUri(URI.create("component"));
 
         LogicalComponent<SystemImplementation> logicalComponent = new LogicalComponent<SystemImplementation>(URI.create("component"),
-                                                                                                             URI.create("runtime"),
                                                                                                              null,
                                                                                                              domain);
 
@@ -187,7 +180,6 @@ public class DefaultTargetPromotionServiceTestCase extends TestCase {
         logicalReference.addPromotedUri(URI.create("component#reference"));
 
         LogicalComponent<SystemImplementation> logicalComponent = new LogicalComponent<SystemImplementation>(URI.create("component"),
-                                                                                                             URI.create("runtime"),
                                                                                                              null,
                                                                                                              domain);
 
@@ -205,7 +197,6 @@ public class DefaultTargetPromotionServiceTestCase extends TestCase {
         logicalReference.addPromotedUri(URI.create("component"));
 
         LogicalComponent<SystemImplementation> logicalComponent = new LogicalComponent<SystemImplementation>(URI.create("component"),
-                                                                                                             URI.create("runtime"),
                                                                                                              null,
                                                                                                              domain);
         logicalComponent.addReference(new LogicalReference(URI.create("component#reference1"), null, domain));
@@ -223,7 +214,6 @@ public class DefaultTargetPromotionServiceTestCase extends TestCase {
         logicalReference.addPromotedUri(URI.create("component#reference1"));
 
         LogicalComponent<SystemImplementation> logicalComponent = new LogicalComponent<SystemImplementation>(URI.create("component"),
-                                                                                                             URI.create("runtime"),
                                                                                                              null,
                                                                                                              domain);
         logicalComponent.addReference(new LogicalReference(URI.create("component#reference1"), null, domain));

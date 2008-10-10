@@ -72,13 +72,11 @@ public class LogicalComponent<I extends Implementation<?>> extends LogicalScaArt
 
     /**
      * @param uri        URI of the component.
-     * @param runtimeId  URI of the runtime to which the component has to be provisioned.
      * @param definition Definition of the component.
      * @param parent     Parent of the component.
      */
-    public LogicalComponent(URI uri, URI runtimeId, ComponentDefinition<I> definition, LogicalCompositeComponent parent) {
+    public LogicalComponent(URI uri, ComponentDefinition<I> definition, LogicalCompositeComponent parent) {
         super(uri, parent, TYPE);
-        this.runtimeId = runtimeId;
         this.definition = definition;
     }
 

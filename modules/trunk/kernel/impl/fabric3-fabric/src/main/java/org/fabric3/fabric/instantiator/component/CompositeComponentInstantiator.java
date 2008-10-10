@@ -77,11 +77,10 @@ public class CompositeComponentInstantiator extends AbstractComponentInstantiato
                                                            ComponentDefinition<CompositeImplementation> definition,
                                                            LogicalChange change) {
 
-        URI runtimeId = definition.getRuntimeId();
         URI uri = URI.create(parent.getUri() + "/" + definition.getName());
         Composite composite = definition.getImplementation().getComponentType();
 
-        LogicalCompositeComponent component = new LogicalCompositeComponent(uri, runtimeId, definition, parent);
+        LogicalCompositeComponent component = new LogicalCompositeComponent(uri, definition, parent);
         component.setClassLoaderId(uri);
         initializeProperties(component, definition, change);
         instantiateChildComponents(component, properties, composite, change);

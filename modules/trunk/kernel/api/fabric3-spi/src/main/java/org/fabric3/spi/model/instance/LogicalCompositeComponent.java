@@ -17,13 +17,11 @@
 package org.fabric3.spi.model.instance;
 
 import java.net.URI;
-import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.Collection;
 
 import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.CompositeImplementation;
@@ -41,15 +39,11 @@ public class LogicalCompositeComponent extends LogicalComponent<CompositeImpleme
      * Instantiates a composite component.
      *
      * @param uri        URI of the component.
-     * @param runtimeId  Runtime id to which the component is provisioned.
      * @param definition Definition of the component.
      * @param parent     Parent of the component.
      */
-    public LogicalCompositeComponent(URI uri,
-                                     URI runtimeId,
-                                     ComponentDefinition<CompositeImplementation> definition,
-                                     LogicalCompositeComponent parent) {
-        super(uri, runtimeId, definition, parent);
+    public LogicalCompositeComponent(URI uri, ComponentDefinition<CompositeImplementation> definition, LogicalCompositeComponent parent) {
+        super(uri, definition, parent);
     }
 
     /**

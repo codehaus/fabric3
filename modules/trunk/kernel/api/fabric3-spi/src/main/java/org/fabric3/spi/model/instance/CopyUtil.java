@@ -50,7 +50,7 @@ public class CopyUtil {
      */
     private static LogicalCompositeComponent copy(LogicalCompositeComponent composite, LogicalCompositeComponent parent) {
         LogicalCompositeComponent copy =
-                new LogicalCompositeComponent(composite.getUri(), composite.getRuntimeId(), composite.getDefinition(), parent);
+                new LogicalCompositeComponent(composite.getUri(), composite.getDefinition(), parent);
         copy.setActive(composite.isActive());
         copy.setAutowireOverride(composite.getAutowireOverride());
         copy.setClassLoaderId(composite.getClassLoaderId());
@@ -83,7 +83,8 @@ public class CopyUtil {
         if (component instanceof LogicalCompositeComponent) {
             copy = copy((LogicalCompositeComponent) component, parent);
         } else {
-            copy = new LogicalComponent(component.getUri(), component.getRuntimeId(), component.getDefinition(), parent);
+            copy = new LogicalComponent(component.getUri(), component.getDefinition(), parent);
+            copy.setRuntimeId(component.getRuntimeId());
         }
         parent.addComponent(copy);
     }

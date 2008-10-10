@@ -57,9 +57,8 @@ public class AtomicComponentInstantiator extends AbstractComponentInstantiator {
         I impl = definition.getImplementation();
         AbstractComponentType<?, ?, ?, ?> componentType = impl.getComponentType();
 
-        URI runtimeId = definition.getRuntimeId();
         URI uri = URI.create(parent.getUri() + "/" + definition.getName());
-        LogicalComponent<I> component = new LogicalComponent<I>(uri, runtimeId, definition, parent);
+        LogicalComponent<I> component = new LogicalComponent<I>(uri, definition, parent);
         initializeProperties(component, definition, change);
         createServices(definition, component, componentType);
         createReferences(definition, component, componentType);

@@ -97,7 +97,7 @@ public class InstantiationTestCase extends TestCase {
                                                  atomicComponentInstantiator,
                                                  compositeComponentInstantiator,
                                                  wireInstantiator);
-        parent = new LogicalCompositeComponent(PARENT_URI, null, null, null);
+        parent = new LogicalCompositeComponent(PARENT_URI, null, null);
     }
 
     private ComponentDefinition<?> createParentWithChild() {

@@ -34,8 +34,6 @@
  */
 package org.fabric3.loader.composite;
 
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
 import javax.xml.XMLConstants;
@@ -101,7 +99,6 @@ public class ComponentLoader implements TypeLoader<ComponentDefinition<?>> {
         ATTRIBUTES.put("policySets", "policySets");
         ATTRIBUTES.put("key", "key");
         ATTRIBUTES.put("initLevel", "initLevel");
-        ATTRIBUTES.put("runtimeId", "runtimeId");
     }
 
     private final Loader loader;
@@ -134,7 +131,6 @@ public class ComponentLoader implements TypeLoader<ComponentDefinition<?>> {
         ComponentDefinition<Implementation<?>> componentDefinition = new ComponentDefinition<Implementation<?>>(name);
         Autowire autowire = Autowire.fromString(reader.getAttributeValue(null, "autowire"));
         componentDefinition.setAutowire(autowire);
-        loadRuntimeId(componentDefinition, reader, context);
         loadInitLevel(componentDefinition, reader, context);
         loadKey(componentDefinition, reader);
 
@@ -320,21 +316,6 @@ public class ComponentLoader implements TypeLoader<ComponentDefinition<?>> {
                 componentDefinition.setInitLevel(level);
             } catch (NumberFormatException e) {
                 InvalidValue failure = new InvalidValue("Component initialization level must be an integer: " + initLevel, initLevel, reader);
-                context.addError(failure);
-            }
-        }
-    }
-
-    /*
-     * Loads the runtime id.
-     */
-    private void loadRuntimeId(ComponentDefinition<Implementation<?>> componentDefinition, XMLStreamReader reader, IntrospectionContext context) {
-        String runtimeAttr = reader.getAttributeValue(null, "runtimeId");
-        if (runtimeAttr != null) {
-            try {
-                componentDefinition.setRuntimeId(new URI(runtimeAttr));
-            } catch (URISyntaxException e) {
-                InvalidValue failure = new InvalidValue("Component runtime ID must be a valid URI: " + runtimeAttr, runtimeAttr, reader);
                 context.addError(failure);
             }
         }

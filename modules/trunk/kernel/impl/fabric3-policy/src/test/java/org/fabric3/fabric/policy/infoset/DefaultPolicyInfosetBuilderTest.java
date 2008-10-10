@@ -66,7 +66,7 @@ public class DefaultPolicyInfosetBuilderTest extends TestCase {
         TestImplementation implementation = new TestImplementation(componentType);
         ComponentDefinition<TestImplementation> componentDefinition = new ComponentDefinition<TestImplementation>("testComponent", implementation);
 
-        return new LogicalComponent<TestImplementation>(null, null, componentDefinition, null);
+        return new LogicalComponent<TestImplementation>(null, componentDefinition, null);
     }
     
     static LogicalBinding<?> getTestBinding() {
@@ -74,7 +74,7 @@ public class DefaultPolicyInfosetBuilderTest extends TestCase {
         TestComponentType componentType = new TestComponentType();
         TestImplementation implementation = new TestImplementation(componentType);
         ComponentDefinition<TestImplementation> componentDefinition = new ComponentDefinition<TestImplementation>("testComponent", implementation);
-        LogicalComponent<TestImplementation> logicalComponent = new LogicalComponent<TestImplementation>(null, null, componentDefinition, null);
+        LogicalComponent<TestImplementation> logicalComponent = new LogicalComponent<TestImplementation>(null, componentDefinition, null);
         
         ReferenceDefinition referenceDefinition = new ReferenceDefinition("testService", null);
         LogicalReference logicalReference = new LogicalReference(null, referenceDefinition, logicalComponent);

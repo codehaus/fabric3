@@ -134,8 +134,7 @@ public class ResolutionServiceImplTestCase extends TestCase {
         targetResolutionServices.add(autowireResolutionService);
         this.resolutionService = new ResolutionServiceImpl(promotionResolutionService, targetResolutionServices);
         URI domainUri = URI.create("fabric3://runtime");
-        URI runtimeUri = URI.create("runtime");
-        domain = new LogicalCompositeComponent(domainUri, runtimeUri, null, null);
+        domain = new LogicalCompositeComponent(domainUri, null, null);
     }
 
     private LogicalCompositeComponent createWiredComposite(LogicalCompositeComponent parent,
@@ -160,8 +159,7 @@ public class ResolutionServiceImplTestCase extends TestCase {
         ComponentDefinition<CompositeImplementation> definition =
                 new ComponentDefinition<CompositeImplementation>(parentUri.toString());
         definition.setImplementation(impl);
-        URI id = URI.create("runtime");
-        return new LogicalCompositeComponent(parentUri, id, definition, parent);
+        return new LogicalCompositeComponent(parentUri, definition, parent);
     }
 
     private LogicalComponent<?> createSourceAtomic(Class<?> requiredInterface, LogicalCompositeComponent parent) {
@@ -178,9 +176,8 @@ public class ResolutionServiceImplTestCase extends TestCase {
         ComponentReference target = new ComponentReference(REFERENCE_URI.getFragment());
         target.setAutowire(true);
         definition.add(target);
-        URI id = URI.create("runtime");
         LogicalComponent<?> component =
-                new LogicalComponent<MockAtomicImpl>(SOURCE_URI, id, definition, parent);
+                new LogicalComponent<MockAtomicImpl>(SOURCE_URI, definition, parent);
         LogicalReference logicalReference = new LogicalReference(REFERENCE_URI, referenceDefinition, component);
         component.addReference(logicalReference);
         return component;
@@ -196,8 +193,7 @@ public class ResolutionServiceImplTestCase extends TestCase {
         impl.setComponentType(type);
         ComponentDefinition<MockAtomicImpl> definition = new ComponentDefinition<MockAtomicImpl>(uri.toString());
         definition.setImplementation(impl);
-        URI id = URI.create("runtime");
-        LogicalComponent component = new LogicalComponent<MockAtomicImpl>(uri, id, definition, parent);
+        LogicalComponent component = new LogicalComponent<MockAtomicImpl>(uri, definition, parent);
         LogicalService logicalService = new LogicalService(TARGET_URI, service, parent);
         component.addService(logicalService);
         return component;

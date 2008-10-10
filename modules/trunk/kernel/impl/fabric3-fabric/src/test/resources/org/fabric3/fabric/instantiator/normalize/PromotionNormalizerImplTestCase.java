@@ -192,18 +192,17 @@ public class PromotionNormalizerImplTestCase extends TestCase {
         impl.setComponentType(type);
         ComponentDefinition<CompositeImplementation> definition = new ComponentDefinition<CompositeImplementation>(uri.toString());
         definition.setImplementation(impl);
-        return new LogicalCompositeComponent(uri, runtimeID, definition, parent);
+        return new LogicalCompositeComponent(uri, definition, parent);
 
     }
 
     private LogicalComponent<?> createComponent(URI uri, LogicalCompositeComponent parent) {
-        URI runtimeID = URI.create("id");
         ComponentType type = new ComponentType();
         MockImplementation impl = new MockImplementation();
         impl.setComponentType(type);
         ComponentDefinition<MockImplementation> definition = new ComponentDefinition<MockImplementation>(uri.toString());
         definition.setImplementation(impl);
-        LogicalComponent<MockImplementation> component = new LogicalComponent<MockImplementation>(uri, runtimeID, definition, parent);
+        LogicalComponent<MockImplementation> component = new LogicalComponent<MockImplementation>(uri, definition, parent);
 
         ServiceDefinition serviceDefinition = new ServiceDefinition(null);
         LogicalService service = new LogicalService(URI.create("grandParent/parent/component#service"), serviceDefinition, component);

@@ -113,7 +113,7 @@ public class LogicalComponentStoreImpl implements LogicalComponentStore {
             ComponentDefinition<CompositeImplementation> definition =
                     new ComponentDefinition<CompositeImplementation>(domainUri.toString());
             definition.setImplementation(impl);
-            return new LogicalCompositeComponent(domainUri, domainUri, definition, null);
+            return new LogicalCompositeComponent(domainUri, definition, null);
         }
         FileInputStream fin = null;
         try {
