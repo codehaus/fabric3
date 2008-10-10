@@ -22,8 +22,8 @@ import javax.xml.namespace.QName;
 
 import static org.osoa.sca.Constants.SCA_NS;
 
-import org.fabric3.fabric.allocator.AllocationException;
-import org.fabric3.fabric.allocator.Allocator;
+import org.fabric3.spi.allocator.AllocationException;
+import org.fabric3.spi.allocator.Allocator;
 import org.fabric3.fabric.binding.BindingSelector;
 import org.fabric3.fabric.generator.PhysicalModelGenerator;
 import org.fabric3.fabric.instantiator.LogicalChange;

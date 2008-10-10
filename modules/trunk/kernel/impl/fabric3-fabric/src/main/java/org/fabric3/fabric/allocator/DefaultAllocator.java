@@ -17,6 +17,8 @@
 package org.fabric3.fabric.allocator;
 
 import org.fabric3.spi.model.instance.LogicalComponent;
+import org.fabric3.spi.allocator.AllocationException;
+import org.fabric3.spi.allocator.Allocator;
 
 /**
  * Default Allocator implementation.

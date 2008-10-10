@@ -14,23 +14,27 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.fabric.allocator;
+package org.fabric3.spi.allocator;
 
-import org.fabric3.spi.model.instance.LogicalComponent;
+import org.fabric3.host.Fabric3Exception;
 
 /**
- * Allocates a component to a service node.
+ * Denotes an error allocating a component to a service node.
  *
  * @version $Rev$ $Date$
  */
-public interface Allocator {
+public class AllocationException extends Fabric3Exception {
+    private static final long serialVersionUID = 3960592897460184482L;
 
-    /**
-     * Performs the allocation. Composites are recursed and their children are allocated.
-     *
-     * @param component the component to allocate
-     * @param recover   true if the allocator is called while the controller is recovering.
-     * @throws AllocationException if an error during allocation occurs
-     */
-    void allocate(LogicalComponent<?> component, boolean recover) throws AllocationException;
+    public AllocationException(String message, String identifier) {
+        super(message, identifier);
+    }
+
+    public AllocationException(String message, String identifier, Throwable cause) {
+        super(message, identifier, cause);
+    }
+
+    public AllocationException(Throwable cause) {
+        super(cause);
+    }
 }
