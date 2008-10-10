@@ -24,7 +24,7 @@ import org.fabric3.spi.model.instance.LogicalComponent;
  * @version $Rev$ $Date$
  */
 public class LocalAllocator implements Allocator {
-    public void allocate(LogicalComponent<?> component, boolean synchronizeTopology) throws AllocationException {
+    public void allocate(LogicalComponent<?> component, boolean recover) throws AllocationException {
 
     }
 }

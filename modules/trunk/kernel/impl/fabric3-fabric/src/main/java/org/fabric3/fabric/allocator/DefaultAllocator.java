@@ -29,7 +29,7 @@ public class DefaultAllocator implements Allocator {
     public DefaultAllocator() {
     }
 
-    public void allocate(LogicalComponent<?> component, boolean synchronizeTopology) throws AllocationException {
+    public void allocate(LogicalComponent<?> component, boolean recover) throws AllocationException {
         // Comment out for now until zones are integrated
 
 //        if (synchronizeTopology) {

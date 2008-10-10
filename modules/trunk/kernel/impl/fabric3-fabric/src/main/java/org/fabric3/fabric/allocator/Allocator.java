@@ -28,12 +28,9 @@ public interface Allocator {
     /**
      * Performs the allocation. Composites are recursed and their children are allocated.
      *
-     * @param component           the component to allocate
-     * @param synchronizeTopology true if the allocator should attempt to synchronize its view of the domain topology with service nodes components
-     *                            have been pre-allocated to. Synchronization will attempt to poll a set number of times for runtimes components are
-     *                            pre-allocated to. If a runtime is not found, corresponding pre-allocated components will be marked for
-     *                            re-allocation.
+     * @param component the component to allocate
+     * @param recover   true if the allocator is called while the controller is recovering.
      * @throws AllocationException if an error during allocation occurs
      */
-    void allocate(LogicalComponent<?> component, boolean synchronizeTopology) throws AllocationException;
+    void allocate(LogicalComponent<?> component, boolean recover) throws AllocationException;
 }
