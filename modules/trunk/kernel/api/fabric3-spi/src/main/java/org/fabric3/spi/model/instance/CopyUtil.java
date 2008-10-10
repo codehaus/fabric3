@@ -51,7 +51,6 @@ public class CopyUtil {
     private static LogicalCompositeComponent copy(LogicalCompositeComponent composite, LogicalCompositeComponent parent) {
         LogicalCompositeComponent copy =
                 new LogicalCompositeComponent(composite.getUri(), composite.getDefinition(), parent);
-        copy.setActive(composite.isActive());
         copy.setAutowireOverride(composite.getAutowireOverride());
         copy.setClassLoaderId(composite.getClassLoaderId());
         copy.setProvisioned(composite.isProvisioned());

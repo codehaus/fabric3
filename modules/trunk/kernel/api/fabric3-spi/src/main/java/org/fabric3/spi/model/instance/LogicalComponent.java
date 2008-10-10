@@ -66,7 +66,6 @@ public class LogicalComponent<I extends Implementation<?>> extends LogicalScaArt
     private final Map<String, LogicalResource<?>> resources = new HashMap<String, LogicalResource<?>>();
     private URI classLoaderId;
     private String zone;
-    private boolean active;
     private Autowire autowire;
     private boolean provisioned;
 
@@ -96,24 +95,6 @@ public class LogicalComponent<I extends Implementation<?>> extends LogicalScaArt
      */
     public void setZone(String zone) {
         this.zone = zone;
-    }
-
-    /**
-     * True if the component is curently active on a node.
-     *
-     * @return true if the component is curently active on a node
-     */
-    public boolean isActive() {
-        return active;
-    }
-
-    /**
-     * Sets if the component is currently active on a node.
-     *
-     * @param active true if the component is active
-     */
-    public void setActive(boolean active) {
-        this.active = active;
     }
 
     /**
