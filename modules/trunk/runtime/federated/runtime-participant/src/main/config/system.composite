@@ -80,14 +80,6 @@
         <system:implementation.system class="org.fabric3.fabric.services.lcm.NonPersistentLogicalComponentStore"/>
     </component>
 
-    <component name="DiscoveryServiceRegistry">
-        <system:implementation.system class="org.fabric3.fabric.services.discovery.DiscoveryServiceRegistryImpl"/>
-    </component>
-
-    <component name="DelegatingDiscoveryService">
-        <system:implementation.system class="org.fabric3.fabric.services.discovery.DelegatingDiscoveryService"/>
-    </component>
-
     <component name="MessagingServiceRegistry">
         <system:implementation.system class="org.fabric3.fabric.services.messaging.MessagingServiceRegistryImpl"/>
     </component>
