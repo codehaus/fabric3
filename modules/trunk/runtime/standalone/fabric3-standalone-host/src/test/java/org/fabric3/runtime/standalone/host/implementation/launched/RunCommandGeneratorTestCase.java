@@ -65,18 +65,18 @@ public class RunCommandGeneratorTestCase extends TestCase {
         generator = new RunCommandGenerator(null, 1);
 
         ComponentDefinition<CompositeImplementation> parentDefinition = createComposite("parent");
-        composite = new LogicalCompositeComponent(PARENT, PARENT, parentDefinition, null);
-        LogicalCompositeComponent childComposite = new LogicalCompositeComponent(CHILD, CHILD, parentDefinition, composite);
+        composite = new LogicalCompositeComponent(PARENT, parentDefinition, null);
+        LogicalCompositeComponent childComposite = new LogicalCompositeComponent(CHILD, parentDefinition, composite);
 
         ComponentDefinition<Launched> launched2Def = createLaunched("launched2");
         LogicalComponent<Launched> launched2 =
-                new LogicalComponent<Launched>(LAUNCHED2, LAUNCHED1, launched2Def, childComposite);
+                new LogicalComponent<Launched>(LAUNCHED2, launched2Def, childComposite);
         childComposite.addComponent(launched2);
 
 
         ComponentDefinition<Launched> launched1Def = createLaunched("launched1");
         LogicalComponent<Launched> launched1 =
-                new LogicalComponent<Launched>(LAUNCHED1, LAUNCHED1, launched1Def, childComposite);
+                new LogicalComponent<Launched>(LAUNCHED1, launched1Def, childComposite);
         composite.addComponent(launched1);
         composite.addComponent(childComposite);
     }

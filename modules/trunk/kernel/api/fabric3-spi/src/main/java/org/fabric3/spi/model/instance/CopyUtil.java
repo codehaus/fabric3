@@ -55,7 +55,7 @@ public class CopyUtil {
         copy.setAutowireOverride(composite.getAutowireOverride());
         copy.setClassLoaderId(composite.getClassLoaderId());
         copy.setProvisioned(composite.isProvisioned());
-        copy.setRuntimeId(composite.getRuntimeId());
+        copy.setZone(composite.getZone());
         for (Map.Entry<String, Document> entry : composite.getPropertyValues().entrySet()) {
             copy.setPropertyValue(entry.getKey(), entry.getValue());
         }
@@ -84,7 +84,7 @@ public class CopyUtil {
             copy = copy((LogicalCompositeComponent) component, parent);
         } else {
             copy = new LogicalComponent(component.getUri(), component.getDefinition(), parent);
-            copy.setRuntimeId(component.getRuntimeId());
+            copy.setZone(component.getZone());
         }
         parent.addComponent(copy);
     }

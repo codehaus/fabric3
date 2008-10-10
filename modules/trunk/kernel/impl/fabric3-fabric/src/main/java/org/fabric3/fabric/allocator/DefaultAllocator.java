@@ -111,7 +111,7 @@ public class DefaultAllocator implements Allocator {
             // otherwise deploy locally
             if (runtimes.size() < 1) {
                 // single node setup, allocate locally
-                component.setRuntimeId(null);
+                component.setZone(null);
                 return;
             }
 
@@ -122,9 +122,9 @@ public class DefaultAllocator implements Allocator {
                 }
             }
             if (info != null) {
-                component.setRuntimeId(info.getId());
+                component.setZone(info.getId());
             } else {
-                component.setRuntimeId(null);
+                component.setZone(null);
             }
         }
     }
@@ -190,7 +190,7 @@ public class DefaultAllocator implements Allocator {
                 calculatePreallocatedRuntimes(child, runtimes);
             }
         } else {
-            URI uri = component.getRuntimeId();
+            URI uri = component.getZone();
             if (uri != null) {
                 if (!runtimes.contains(uri)) {
                     runtimes.add(uri);
@@ -207,9 +207,9 @@ public class DefaultAllocator implements Allocator {
      */
     private void markForReallocation(LogicalComponent<?> component, Set<URI> nonRespondingRuntimes) {
         if (!CompositeImplementation.class.isInstance(component.getDefinition().getImplementation())) {
-            URI id = component.getRuntimeId();
+            URI id = component.getZone();
             if (id != null && nonRespondingRuntimes.contains(id)) {
-                component.setRuntimeId(null);
+                component.setZone(null);
                 component.setActive(false);
             } else if (id != null) {
                 // check to see if the component is already running on the service node, and if so record that it is running

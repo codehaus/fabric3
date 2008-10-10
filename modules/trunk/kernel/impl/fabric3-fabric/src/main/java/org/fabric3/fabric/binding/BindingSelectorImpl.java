@@ -74,10 +74,10 @@ public class BindingSelectorImpl implements BindingSelector {
                     URI targetUri = UriHelper.getDefragmentedName(wire.getTargetUri());
                     LogicalComponent target = logicalComponentManager.getComponent(targetUri);
                     assert target != null;
-                    if ((component.getRuntimeId() == null && target.getRuntimeId() == null)) {
+                    if ((component.getZone() == null && target.getZone() == null)) {
                         // components are local, no need for a binding
                         continue;
-                    } else if (component.getRuntimeId() != null && component.getRuntimeId().equals(target.getRuntimeId())) {
+                    } else if (component.getZone() != null && component.getZone().equals(target.getZone())) {
                         // components are local, no need for a binding
                         continue;
                     }

@@ -100,7 +100,7 @@ public class PhysicalModelGeneratorImpl implements PhysicalModelGenerator {
             for (LogicalComponent<?> component : sorted) {
                 Command command = generator.generate(component);
                 if (command != null) {
-                    commandMap.addCommand(component.getRuntimeId(), command);
+                    commandMap.addCommand(component.getZone(), command);
                 }
             }
         }
@@ -119,7 +119,7 @@ public class PhysicalModelGeneratorImpl implements PhysicalModelGenerator {
             for (LogicalComponent<?> component : deletedComponents) {
                 Command command = generator.generate(component);
                 if (command != null) {
-                    commandMap.addCommand(component.getRuntimeId(), command);
+                    commandMap.addCommand(component.getZone(), command);
                 }
             }
         }
@@ -127,7 +127,7 @@ public class PhysicalModelGeneratorImpl implements PhysicalModelGenerator {
             for (LogicalComponent<?> component : addedComponents) {
                 Command command = generator.generate(component);
                 if (command != null) {
-                    commandMap.addCommand(component.getRuntimeId(), command);
+                    commandMap.addCommand(component.getZone(), command);
                 }
             }
         }

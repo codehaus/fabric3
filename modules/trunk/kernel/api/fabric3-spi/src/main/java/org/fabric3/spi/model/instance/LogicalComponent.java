@@ -65,7 +65,7 @@ public class LogicalComponent<I extends Implementation<?>> extends LogicalScaArt
     private final Map<String, LogicalReference> references = new HashMap<String, LogicalReference>();
     private final Map<String, LogicalResource<?>> resources = new HashMap<String, LogicalResource<?>>();
     private URI classLoaderId;
-    private URI runtimeId;
+    private URI zone;
     private boolean active;
     private Autowire autowire;
     private boolean provisioned;
@@ -81,21 +81,21 @@ public class LogicalComponent<I extends Implementation<?>> extends LogicalScaArt
     }
 
     /**
-     * Returns the runtime id the component is provisioned to.
+     * Returns the zone name where the component is provisioned.
      *
-     * @return the runtime id the component is provisioned to
+     * @return the zone name where the component is provisioned
      */
-    public URI getRuntimeId() {
-        return runtimeId;
+    public URI getZone() {
+        return zone;
     }
 
     /**
-     * Sets the runtime id the component is provisioned to.
+     * Sets the zone name where the component is provisioned.
      *
-     * @param runtimeId the runtime id the component is provisioned to
+     * @param zone the zone name where the component is provisioned
      */
-    public void setRuntimeId(URI runtimeId) {
-        this.runtimeId = runtimeId;
+    public void setZone(URI zone) {
+        this.zone = zone;
     }
 
     /**

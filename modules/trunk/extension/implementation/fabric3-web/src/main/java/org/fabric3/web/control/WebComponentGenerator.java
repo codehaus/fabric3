@@ -88,7 +88,7 @@ public class WebComponentGenerator implements ComponentGenerator<LogicalComponen
         processPropertyValues(component, physical);
         URI classLoaderId = component.getClassLoaderId();
         physical.setClassLoaderId(classLoaderId);
-        if (component.getRuntimeId() == null) {
+        if (component.getZone() == null) {
             physical.setContributionUri(definition.getContributionUri());
         } else {
             URI encoded;

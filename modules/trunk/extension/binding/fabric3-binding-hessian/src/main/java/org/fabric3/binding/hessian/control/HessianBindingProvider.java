@@ -72,7 +72,7 @@ public class HessianBindingProvider implements BindingProvider {
     }
 
     public void bind(LogicalReference source, LogicalService target) throws BindingSelectionException {
-        URI runtimeId = target.getParent().getRuntimeId();
+        URI runtimeId = target.getParent().getZone();
         RuntimeInfo targetInfo = discoveryService.getRuntimeInfo(runtimeId);
         if (targetInfo == null) {
             // This could potentially occur if a runtime is removed from the domain during deployment

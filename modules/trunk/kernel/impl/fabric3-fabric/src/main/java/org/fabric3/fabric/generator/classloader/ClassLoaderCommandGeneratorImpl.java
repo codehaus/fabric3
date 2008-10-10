@@ -106,7 +106,7 @@ public class ClassLoaderCommandGeneratorImpl implements ClassLoaderCommandGenera
             URI contributionUri = component.getDefinition().getContributionUri();
             if (contributionUri != null) {
                 // xcv FIXME contribution URIs can be null if component is primordial. this should be fixed in the synthesize
-                URI runtimeId = component.getRuntimeId();
+                URI runtimeId = component.getZone();
                 Set<URI> contributions = contributionsPerRuntime.get(runtimeId);
                 if (contributions == null) {
                     contributions = new LinkedHashSet<URI>();
@@ -184,14 +184,14 @@ public class ClassLoaderCommandGeneratorImpl implements ClassLoaderCommandGenera
                 definition.addParentClassLoader(uri);
             }
             URI contributionUri = component.getDefinition().getContributionUri();
-            Set<PhysicalClassLoaderDefinition> definitions = definitionsPerRuntime.get(component.getRuntimeId());
+            Set<PhysicalClassLoaderDefinition> definitions = definitionsPerRuntime.get(component.getZone());
             if (contributionUri == null) {
                 // xcv FIXME bootstrap services should be associated with a contribution
                 // the logical component is not provisioned as part of a contribution, e.g. a boostrap system service
                 definition.addParentClassLoader(ComponentNames.BOOT_CLASSLOADER_ID);
                 if (definitions == null) {
                     definitions = new LinkedHashSet<PhysicalClassLoaderDefinition>();
-                    definitionsPerRuntime.put(component.getRuntimeId(), definitions);
+                    definitionsPerRuntime.put(component.getZone(), definitions);
                 }
                 definitions.add(definition);
                 continue;
