@@ -46,9 +46,9 @@ import net.jxta.protocol.ResolverResponseMsg;
 import net.jxta.resolver.QueryHandler;
 import net.jxta.resolver.ResolverService;
 
+import org.fabric3.messaging.MessagingEventService;
 import org.fabric3.messaging.jxta.JxtaException;
 import org.fabric3.messaging.jxta.MessagingMonitor;
-import org.fabric3.spi.services.messaging.MessagingEventService;
 
 /**
  * Generic quety handler for Fabric3 PRP (Peer Resolver Protocol) messages. The <code>processQuery</code> method is invoked on the receiver and the

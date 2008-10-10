@@ -103,14 +103,6 @@
         <system:implementation.system class="org.fabric3.fabric.services.lcm.NonPersistentLogicalComponentStore"/>
     </component>
 
-    <component name="MessagingService">
-        <system:implementation.system class="org.fabric3.fabric.services.messaging.NullMessagingService"/>
-    </component>
-
-    <component name="MessagingEventService">
-        <system:implementation.system class="org.fabric3.fabric.services.messaging.MessagingEventServiceImpl"/>
-    </component>
-
     <component name="ContributionStore">
         <system:implementation.system class="org.fabric3.maven.MavenArchiveStore"/>
     </component>

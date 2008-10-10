@@ -32,19 +32,37 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.spi.services.messaging;
+package org.fabric3.messaging;
+
+import javax.xml.namespace.QName;
+import javax.xml.stream.XMLStreamReader;
 
 /**
- * A registry of MessageServices. Used in runtimes that support more than one MessageService.
- *
  * @version $Rev$ $Date$
  */
-public interface MessagingServiceRegistry {
+public interface MessagingEventService {
 
-    void register(MessagingService service);
+    /**
+     * Registers a request listener for async messages. Request listeners handle unslolicited async messages sent by recipients.
+     *
+     * @param messageType Message type that can be handled by the listener.
+     * @param listener    Recipient of the async message.
+     */
+    void registerRequestListener(QName messageType, RequestListener listener);
 
-    void unRegister(MessagingService service);
+    /**
+     * Un registers a request listener for async messages.
+     *
+     * @param messageType Message type that can be handled by the listener.
+     */
+    void unRegisterRequestListener(QName messageType);
 
-    MessagingService getServiceForScheme(String scheme);
+    /**
+     * Dispatches an event to a registered listener for the message type. If no listener is found, the message is ignored.
+     *
+     * @param messageType the message type
+     * @param content     the message body
+     */
+    void publish(QName messageType, XMLStreamReader content);
 
 }

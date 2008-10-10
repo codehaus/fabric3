@@ -86,20 +86,8 @@
         <property name="runtimeId">controller</property>
     </component>
 
-    <component name="MessagingEventService">
-        <system:implementation.system class="org.fabric3.fabric.services.messaging.MessagingEventServiceImpl"/>
-    </component>
-
     <component name="assemblyRecoveryService">
         <system:implementation.system class="org.fabric3.fabric.services.lcm.NonPersistentLogicalComponentStore"/>
-    </component>
-
-    <component name="MessagingServiceRegistry">
-        <system:implementation.system class="org.fabric3.fabric.services.messaging.MessagingServiceRegistryImpl"/>
-    </component>
-
-    <component name="DelegatingMessagingService">
-        <system:implementation.system class="org.fabric3.fabric.services.messaging.DelegatingMessagingService"/>
     </component>
 
     <component name="HttpContributionUriResolver">

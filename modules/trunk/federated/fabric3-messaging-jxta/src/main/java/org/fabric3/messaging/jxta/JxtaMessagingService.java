@@ -35,10 +35,9 @@ import org.fabric3.jxta.JxtaService;
 import org.fabric3.messaging.jxta.prp.Fabric3QueryHandler;
 import org.fabric3.spi.model.topology.RuntimeInfo;
 import org.fabric3.spi.services.discovery.DiscoveryService;
-import org.fabric3.spi.services.messaging.MessagingEventService;
-import org.fabric3.spi.services.messaging.MessagingException;
-import org.fabric3.spi.services.messaging.MessagingService;
-import org.fabric3.spi.services.messaging.MessagingServiceRegistry;
+import org.fabric3.messaging.MessagingEventService;
+import org.fabric3.messaging.MessagingException;
+import org.fabric3.messaging.MessagingService;
 
 /**
  * Messaging service implemented using JXTA.
@@ -67,7 +66,6 @@ public class JxtaMessagingService implements MessagingService {
      * Discovery service.
      */
     private DiscoveryService discoveryService;
-    private MessagingServiceRegistry messagingServiceRegistry;
     private MessagingEventService eventService;
     private MessagingMonitor monitor;
 
@@ -90,11 +88,6 @@ public class JxtaMessagingService implements MessagingService {
     @Reference
     public void setDiscoveryService(DiscoveryService discoveryService) {
         this.discoveryService = discoveryService;
-    }
-
-    @Reference
-    public void setMessagingserviceRegistry(MessagingServiceRegistry messagingServiceRegistry) {
-        this.messagingServiceRegistry = messagingServiceRegistry;
     }
 
     @Reference
@@ -158,7 +151,6 @@ public class JxtaMessagingService implements MessagingService {
      */
     @Init
     public void start() {
-        messagingServiceRegistry.register(this);
         domainGroup = jxtaService.getDomainGroup();
         setupResolver();
 

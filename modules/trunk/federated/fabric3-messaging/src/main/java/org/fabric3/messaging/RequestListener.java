@@ -32,54 +32,23 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.spi.services.messaging;
+package org.fabric3.messaging;
 
-import org.fabric3.host.Fabric3Exception;
+import javax.xml.stream.XMLStreamReader;
 
 /**
- * Checked exception thrown during messaging operations.
+ * Message listener for propogating callbacks. Request listeners handle unslolicited async messages sent by recipients.
  *
  * @version $Revision$ $Date$
  */
-@SuppressWarnings("serial")
-public class MessagingException extends Fabric3Exception {
+public interface RequestListener {
 
     /**
-     * Initialises the exception message.
+     * Callback for propogating async messages.
      *
-     * @param message Message for the exception.
+     * @param content Message content.
+     * @return Response to the request message.
      */
-    public MessagingException(String message) {
-        super(message);
-    }
+    XMLStreamReader onRequest(XMLStreamReader content);
 
-
-    /**
-     * Initialises the exception message.
-     *
-     * @param message Message for the exception.
-     * @param cause   Root cause for the exception.
-     */
-    public MessagingException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
-    /**
-     * Initialises the exception root cause.
-     *
-     * @param cause Root cause for the exception.
-     */
-    public MessagingException(Throwable cause) {
-        super(cause);
-    }
-
-    /**
-     * Initialises the exception message.
-     *
-     * @param message    Message for the exception.
-     * @param identifier Indentifier for the exception.
-     */
-    public MessagingException(String message, String identifier) {
-        super(message, identifier);
-    }
 }

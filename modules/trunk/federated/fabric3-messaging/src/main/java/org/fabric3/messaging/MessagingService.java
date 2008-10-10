@@ -32,24 +32,33 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.spi.services.messaging;
+package org.fabric3.messaging;
 
+import java.net.URI;
 import javax.xml.stream.XMLStreamReader;
 
 /**
- * Message listener for propogating callbacks. Request listeners handle 
- * unslolicited async messages sent by recipients.
- * 
- * @version $Revision$ $Date$
+ * Defines the abstraction allowing runtimes to exchange arbitrary messages with each other.
  *
+ * @version $Revision$ $Date$
  */
-public interface RequestListener {
-    
+public interface MessagingService {
+
     /**
-     * Callback for propogating async messages.
-     * @param content Message content.
-     * @return Response to the request message.
+     * Returns the messaging scheme handled by this service.
+     *
+     * @return the messaging scheme handled by this service
      */
-    XMLStreamReader onRequest(XMLStreamReader content);
+    String getScheme();
+
+    /**
+     * Sends a message to the specified runtime. The method returns a unique message id for the sent message. The consumers can use the message id for
+     * correlating responses to sent messages.
+     *
+     * @param runtimeId Runtime id of recipient.
+     * @param content   Message content.
+     * @throws MessagingException In case of discovery errors.
+     */
+    void sendMessage(URI runtimeId, XMLStreamReader content) throws MessagingException;
 
 }

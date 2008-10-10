@@ -32,33 +32,54 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.spi.services.messaging;
+package org.fabric3.messaging;
 
-import java.net.URI;
-import javax.xml.stream.XMLStreamReader;
+import org.fabric3.host.Fabric3Exception;
 
 /**
- * Defines the abstraction allowing runtimes to exchange arbitrary messages with each other.
+ * Checked exception thrown during messaging operations.
  *
  * @version $Revision$ $Date$
  */
-public interface MessagingService {
+@SuppressWarnings("serial")
+public class MessagingException extends Fabric3Exception {
 
     /**
-     * Returns the messaging scheme handled by this service.
+     * Initialises the exception message.
      *
-     * @return the messaging scheme handled by this service
+     * @param message Message for the exception.
      */
-    String getScheme();
+    public MessagingException(String message) {
+        super(message);
+    }
+
 
     /**
-     * Sends a message to the specified runtime. The method returns a unique message id for the sent message. The
-     * consumers can use the message id for correlating responses to sent messages.
+     * Initialises the exception message.
      *
-     * @param runtimeId Runtime id of recipient.
-     * @param content   Message content.
-     * @throws MessagingException In case of discovery errors.
+     * @param message Message for the exception.
+     * @param cause   Root cause for the exception.
      */
-    void sendMessage(URI runtimeId, XMLStreamReader content) throws MessagingException;
+    public MessagingException(String message, Throwable cause) {
+        super(message, cause);
+    }
 
+    /**
+     * Initialises the exception root cause.
+     *
+     * @param cause Root cause for the exception.
+     */
+    public MessagingException(Throwable cause) {
+        super(cause);
+    }
+
+    /**
+     * Initialises the exception message.
+     *
+     * @param message    Message for the exception.
+     * @param identifier Indentifier for the exception.
+     */
+    public MessagingException(String message, String identifier) {
+        super(message, identifier);
+    }
 }

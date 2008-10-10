@@ -14,26 +14,35 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.fabric.services.messaging;
+package org.fabric3.messaging;
 
-import java.net.URI;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamReader;
 
-import org.fabric3.spi.services.messaging.MessagingException;
-import org.fabric3.spi.services.messaging.MessagingService;
-
 /**
- * A messaging service implementation fr a single node runtime
+ * MessagingEventService implementation.
  *
  * @version $Rev$ $Date$
  */
-public class NullMessagingService implements MessagingService {
+public class MessagingEventServiceImpl implements MessagingEventService {
+    private Map<QName, RequestListener> cache = new ConcurrentHashMap<QName, RequestListener>();
 
-    public String getScheme() {
-        return null;
+    public void registerRequestListener(QName messageType, RequestListener listener) {
+        cache.put(messageType, listener);
     }
 
-    public void sendMessage(URI runtimeId, XMLStreamReader content) throws MessagingException {
+    public void unRegisterRequestListener(QName messageType) {
+        cache.remove(messageType);
     }
 
+    public void publish(QName messageType, XMLStreamReader content) {
+        RequestListener listener = cache.get(messageType);
+        if (listener == null) {
+            // ignore th message
+            return;
+        }
+        listener.onRequest(content);
+    }
 }
