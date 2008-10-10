@@ -356,6 +356,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/binding/fabric3-binding-test-harness/binding-test-harness.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/binding/fabric3-binding-test-harness/binding-test-harness.iml" group="tests" />
       <module fileurl="file://$PROJECT_DIR$/fabric-pom/trunk/fabric-pom.iml" filepath="$PROJECT_DIR$/fabric-pom/trunk/fabric-pom.iml" group="poms" />
+      <module fileurl="file://$PROJECT_DIR$/modules/trunk/federated/fabric3-federation-allocation/fabric3-allocation.iml" filepath="$PROJECT_DIR$/modules/trunk/federated/fabric3-federation-allocation/fabric3-allocation.iml" group="federated" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/kernel/api/fabric3-api/fabric3-api.iml" filepath="$PROJECT_DIR$/modules/trunk/kernel/api/fabric3-api/fabric3-api.iml" group="kernel/api" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/other/fabric3-async-loader/fabric3-async-loader.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/other/fabric3-async-loader/fabric3-async-loader.iml" group="other/async" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/other/fabric3-async-provision/fabric3-async-provision.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/other/fabric3-async-provision/fabric3-async-provision.iml" group="other/async" />
