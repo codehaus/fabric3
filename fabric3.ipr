@@ -38,7 +38,34 @@
         <option name="XML_TEXT_WRAP" value="0" />
         <option name="PARAMETER_ANNOTATION_WRAP" value="1" />
         <option name="VARIABLE_ANNOTATION_WRAP" value="2" />
+        <ADDITIONAL_INDENT_OPTIONS fileType="java">
+          <option name="INDENT_SIZE" value="4" />
+          <option name="CONTINUATION_INDENT_SIZE" value="8" />
+          <option name="TAB_SIZE" value="4" />
+          <option name="USE_TAB_CHARACTER" value="false" />
+          <option name="SMART_TABS" value="false" />
+          <option name="LABEL_INDENT_SIZE" value="0" />
+          <option name="LABEL_INDENT_ABSOLUTE" value="false" />
+        </ADDITIONAL_INDENT_OPTIONS>
         <ADDITIONAL_INDENT_OPTIONS fileType="js">
+          <option name="INDENT_SIZE" value="4" />
+          <option name="CONTINUATION_INDENT_SIZE" value="8" />
+          <option name="TAB_SIZE" value="4" />
+          <option name="USE_TAB_CHARACTER" value="false" />
+          <option name="SMART_TABS" value="false" />
+          <option name="LABEL_INDENT_SIZE" value="0" />
+          <option name="LABEL_INDENT_ABSOLUTE" value="false" />
+        </ADDITIONAL_INDENT_OPTIONS>
+        <ADDITIONAL_INDENT_OPTIONS fileType="jsp">
+          <option name="INDENT_SIZE" value="4" />
+          <option name="CONTINUATION_INDENT_SIZE" value="8" />
+          <option name="TAB_SIZE" value="4" />
+          <option name="USE_TAB_CHARACTER" value="false" />
+          <option name="SMART_TABS" value="false" />
+          <option name="LABEL_INDENT_SIZE" value="0" />
+          <option name="LABEL_INDENT_ABSOLUTE" value="false" />
+        </ADDITIONAL_INDENT_OPTIONS>
+        <ADDITIONAL_INDENT_OPTIONS fileType="xml">
           <option name="INDENT_SIZE" value="4" />
           <option name="CONTINUATION_INDENT_SIZE" value="8" />
           <option name="TAB_SIZE" value="4" />
@@ -56,6 +83,8 @@
     <option name="DEPLOY_AFTER_MAKE" value="0" />
     <excludeFromCompile>
       <file url="file://$PROJECT_DIR$/modules/trunk/extension/other/fabric3-jpa-core/src/test/resources/META-INF/persistence.xml" />
+      <file url="file://$PROJECT_DIR$/tests/trunk/test-jpa-core/src/main/resources/META-INF/persistence.xml" />
+      <file url="file://$PROJECT_DIR$/tests/trunk/test-runtime-tomcat/src/main/resources/META-INF/persistence.xml" />
     </excludeFromCompile>
     <resourceExtensions>
       <entry name=".+\.(properties|xml|html|dtd|tld)" />
@@ -93,13 +122,14 @@
     <option name="ADDITIONAL_OPTIONS_STRING" value="" />
     <option name="MAXIMUM_HEAP_SIZE" value="128" />
   </component>
+  <component name="Encoding" useUTFGuessing="true" native2AsciiForPropertiesFiles="false" />
   <component name="EntryPointsManager">
     <entry_points version="2.0" />
   </component>
   <component name="ExportToHTMLSettings">
-    <option name="PRINT_LINE_NUMBERS" value="false" />
-    <option name="OPEN_IN_BROWSER" value="false" />
-    <option name="OUTPUT_DIRECTORY" />
+    <option name="printScope" value="1" />
+    <option name="OPEN_IN_BROWSER" value="true" />
+    <option name="OUTPUT_DIRECTORY" value="$PROJECT_DIR$/exportToHTML" />
   </component>
   <component name="FacetAutodetectingManager">
     <autodetection-disabled>
@@ -318,6 +348,9 @@
       </item>
     </group>
   </component>
+  <component name="ProjectDetails">
+    <option name="projectName" value="fabric3" />
+  </component>
   <component name="ProjectFileVersion" converted="true" />
   <component name="ProjectModuleManager">
     <modules>
@@ -340,7 +373,6 @@
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/binding/fabric3-binding-ws-axis2/fabric3-binding-ws-axis2.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/binding/fabric3-binding-ws-axis2/fabric3-binding-ws-axis2.iml" group="bindings" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/binding/fabric3-binding-ws-cxf/fabric3-binding-ws-cxf.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/binding/fabric3-binding-ws-cxf/fabric3-binding-ws-cxf.iml" group="bindings" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/binding/fabric3-binding-ws-jaxws/fabric3-binding-ws-jaxws.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/binding/fabric3-binding-ws-jaxws/fabric3-binding-ws-jaxws.iml" group="bindings" />
-      <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/other/fabric3-console/fabric3-console.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/other/fabric3-console/fabric3-console.iml" group="other" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/other/fabric3-container-web-jetty/fabric3-container-web-jetty.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/other/fabric3-container-web-jetty/fabric3-container-web-jetty.iml" group="other/web" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/other/fabric3-container-web-spi/fabric3-container-web-spi.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/other/fabric3-container-web-spi/fabric3-container-web-spi.iml" group="other/web" />
       <module fileurl="file://$PROJECT_DIR$/plugins/trunk/fabric3-contribution-plugin/fabric3-contribution-plugin.iml" filepath="$PROJECT_DIR$/plugins/trunk/fabric3-contribution-plugin/fabric3-contribution-plugin.iml" group="plugins" />
@@ -357,6 +389,9 @@
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/federated/fabric3-discovery-jxta/fabric3-discovery-jxta.iml" filepath="$PROJECT_DIR$/modules/trunk/federated/fabric3-discovery-jxta/fabric3-discovery-jxta.iml" group="federated" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/kernel/impl/fabric3-fabric/fabric3-fabric.iml" filepath="$PROJECT_DIR$/modules/trunk/kernel/impl/fabric3-fabric/fabric3-fabric.iml" group="kernel/impl" />
       <module fileurl="file://$PROJECT_DIR$/plugins/trunk/fabric3-feature-set-plugin/fabric3-feature-set-plugin.iml" filepath="$PROJECT_DIR$/plugins/trunk/fabric3-feature-set-plugin/fabric3-feature-set-plugin.iml" group="plugins" />
+      <module fileurl="file://$PROJECT_DIR$/modules/trunk/federated/fabric3-federation-controller-shoal/fabric3-federation-controller-shoal.iml" filepath="$PROJECT_DIR$/modules/trunk/federated/fabric3-federation-controller-shoal/fabric3-federation-controller-shoal.iml" group="federated" />
+      <module fileurl="file://$PROJECT_DIR$/modules/trunk/federated/fabric3-federation-participant-shoal/fabric3-federation-participant-shoal.iml" filepath="$PROJECT_DIR$/modules/trunk/federated/fabric3-federation-participant-shoal/fabric3-federation-participant-shoal.iml" group="federated" />
+      <module fileurl="file://$PROJECT_DIR$/modules/trunk/federated/fabric3-federation-shoal/fabric3-federation-shoal.iml" filepath="$PROJECT_DIR$/modules/trunk/federated/fabric3-federation-shoal/fabric3-federation-shoal.iml" group="federated" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/other/fabric3-ftp-api/fabric3-ftp-api.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/other/fabric3-ftp-api/fabric3-ftp-api.iml" group="other/ftp" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/other/fabric3-ftp-server/fabric3-ftp-server.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/other/fabric3-ftp-server/fabric3-ftp-server.iml" group="other/ftp" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/other/fabric3-ftp-spi/fabric3-ftp-spi.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/other/fabric3-ftp-spi/fabric3-ftp-spi.iml" group="other/ftp" />
@@ -448,6 +483,7 @@
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-performance-app/test-performance-app.iml" filepath="$PROJECT_DIR$/tests/trunk/test-performance-app/test-performance-app.iml" group="tests" />
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-policy/test-policy.iml" filepath="$PROJECT_DIR$/tests/trunk/test-policy/test-policy.iml" group="tests" />
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-resource/test-resource.iml" filepath="$PROJECT_DIR$/tests/trunk/test-resource/test-resource.iml" group="tests" />
+      <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-rs/test-rs.iml" filepath="$PROJECT_DIR$/tests/trunk/test-rs/test-rs.iml" group="tests" />
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-runtime-jetty/test-runtime-jetty.iml" filepath="$PROJECT_DIR$/tests/trunk/test-runtime-jetty/test-runtime-jetty.iml" group="tests" />
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-runtime-tomcat/test-runtime-tomcat.iml" filepath="$PROJECT_DIR$/tests/trunk/test-runtime-tomcat/test-runtime-tomcat.iml" group="tests" />
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-security-policy/test-security-policy.iml" filepath="$PROJECT_DIR$/tests/trunk/test-security-policy/test-security-policy.iml" group="tests" />
@@ -483,6 +519,7 @@
         </entry>
       </map>
     </option>
+    <option name="myVersion" value="123" />
   </component>
   <component name="VcsDirectoryMappings">
     <mapping directory="" vcs="svn" />
@@ -496,7 +533,6 @@
     </option>
   </component>
   <UsedPathMacros>
-    <macro name="IDEA_HOME" />
     <macro name="M2_REPO" />
   </UsedPathMacros>
 </project>
