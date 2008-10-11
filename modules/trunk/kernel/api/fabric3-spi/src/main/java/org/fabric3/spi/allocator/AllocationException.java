@@ -26,6 +26,10 @@ import org.fabric3.host.Fabric3Exception;
 public class AllocationException extends Fabric3Exception {
     private static final long serialVersionUID = 3960592897460184482L;
 
+    public AllocationException(String message) {
+        super(message);
+    }
+
     public AllocationException(String message, String identifier) {
         super(message, identifier);
     }
