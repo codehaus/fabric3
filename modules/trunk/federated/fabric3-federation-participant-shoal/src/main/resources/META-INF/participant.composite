@@ -44,11 +44,11 @@
     </component>
 
     <component name="ZoneDeploymentCommandExecutor">
-        <system:implementation.system class="org.fabric3.federation.command.ZoneDeploymentCommandExecutor"/>
+        <system:implementation.system class="org.fabric3.federation.executor.ZoneDeploymentCommandExecutor"/>
     </component>
 
     <component name="RuntimeDeploymentCommandExecutor">
-        <system:implementation.system class="org.fabric3.federation.command.RuntimeDeploymentCommandExecutor"/>
+        <system:implementation.system class="org.fabric3.federation.executor.RuntimeDeploymentCommandExecutor"/>
     </component>
 
 

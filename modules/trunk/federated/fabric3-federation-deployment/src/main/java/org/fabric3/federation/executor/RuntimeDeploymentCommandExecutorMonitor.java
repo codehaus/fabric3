@@ -14,7 +14,7 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.federation.command;
+package org.fabric3.federation.executor;
 
 import org.fabric3.api.annotation.logging.Info;
 

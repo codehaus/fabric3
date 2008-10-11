@@ -14,19 +14,30 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.federation.command;
+package org.fabric3.federation.executor;
 
-import org.fabric3.spi.executor.ExecutionException;
+import org.fabric3.api.annotation.logging.Info;
 
 /**
- * Thrown when a target runtime cannot be found to deploy to.
- *
  * @version $Revision$ $Date$
  */
-public class NoTargetRuntimeException extends ExecutionException {
-    private static final long serialVersionUID = 5115365218091847896L;
+public interface ZoneDeploymentCommandExecutorMonitor {
 
-    public NoTargetRuntimeException(String message) {
-        super(message);
-    }
+    /**
+     * Callback when a deployment command is received.
+     *
+     * @param description the deployment description, usually the deployment composite name.
+     */
+    @Info
+    void receivedDeploymentCommand(String description);
+
+    /**
+     * Callback received when a deployment command is routed to a runtime in the zone
+     *
+     * @param runtimeName the runtime the deployment is routed to
+     * @param description the deployment description, usually the deployment composite name.
+     */
+    @Info
+    void routed(String runtimeName, String description);
+
 }
