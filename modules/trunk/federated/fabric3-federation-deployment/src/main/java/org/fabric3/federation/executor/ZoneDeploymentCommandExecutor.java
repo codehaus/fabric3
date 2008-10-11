@@ -84,8 +84,10 @@ public class ZoneDeploymentCommandExecutor implements CommandExecutor<ZoneDeploy
                 if (runtimeName.equals(target)) {
                     // deploy locally if this runtime host components
                     if (runtimeService.isComponentHost()) {
-                        executorRegistry.execute(runtimeCommand);
                         monitor.routed(target, id);
+                        for (Command cmd : commands) {
+                            executorRegistry.execute(cmd);
+                        }
                     }
                 } else {
                     // deploy to the runtime
