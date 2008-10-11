@@ -91,7 +91,7 @@ import org.fabric3.fabric.services.contribution.LocalContributionUriResolver;
 import org.fabric3.fabric.services.contribution.processor.JarClasspathProcessor;
 import org.fabric3.fabric.services.documentloader.DocumentLoader;
 import org.fabric3.fabric.services.documentloader.DocumentLoaderImpl;
-import org.fabric3.fabric.services.routing.RuntimeRoutingService;
+import org.fabric3.fabric.services.routing.LocalRoutingService;
 import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.host.runtime.InitializationException;
 import org.fabric3.jmx.control.JMXBindingGenerator;
@@ -165,7 +165,7 @@ public class BootstrapAssemblyFactory {
                                               jmxSubDomain,
                                               info);
 
-        RuntimeRoutingService routingService = new RuntimeRoutingService(commandRegistry, scopeRegistry);
+        LocalRoutingService routingService = new LocalRoutingService(commandRegistry, scopeRegistry);
 
         PhysicalModelGenerator physicalModelGenerator =
                 createPhysicalModelGenerator(logicalComponentManager, metaDataStore);

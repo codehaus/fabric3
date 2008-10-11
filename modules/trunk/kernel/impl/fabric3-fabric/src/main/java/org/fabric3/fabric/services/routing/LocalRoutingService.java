@@ -49,17 +49,16 @@ import org.fabric3.spi.services.routing.RoutingException;
 import org.fabric3.spi.services.routing.RoutingService;
 
 /**
- * A routing service implementation that routes to the local runtime instance. For example, this service is used to route changesets for runtime
- * extensions.
+ * A routing service implementation that routes commands to the local runtime instance.
  *
  * @version $Rev$ $Date$
  */
-public class RuntimeRoutingService implements RoutingService {
+public class LocalRoutingService implements RoutingService {
 
     private CommandExecutorRegistry registry;
     private ScopeRegistry scopeRegistry;
 
-    public RuntimeRoutingService(@Reference CommandExecutorRegistry registry, @Reference ScopeRegistry scopeRegistry) {
+    public LocalRoutingService(@Reference CommandExecutorRegistry registry, @Reference ScopeRegistry scopeRegistry) {
         this.registry = registry;
         this.scopeRegistry = scopeRegistry;
     }
