@@ -204,6 +204,12 @@
 
         <dependency>
              <groupId>org.codehaus.fabric3</groupId>
+             <artifactId>fabric3-federation-deployment</artifactId>
+             <version>0.7-SNAPSHOT</version>
+         </dependency>
+        
+        <dependency>
+             <groupId>org.codehaus.fabric3</groupId>
              <artifactId>fabric3-federation-shoal</artifactId>
              <version>0.7-SNAPSHOT</version>
          </dependency>

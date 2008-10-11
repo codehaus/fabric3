@@ -134,6 +134,7 @@
                 <include>org.codehaus.fabric3:fabric3-conversation-propagation</include>
                 <include>org.codehaus.fabric3:fabric3-jetty</include>
                 <include>org.codehaus.fabric3:fabric3-resource</include>
+                <include>org.codehaus.fabric3:fabric3-federation-deployment</include>
                 <include>org.codehaus.fabric3:fabric3-federation-participant-shoal</include>
                 <include>org.codehaus.fabric3:fabric3-federation-shoal</include>
             </includes>
