@@ -14,29 +14,30 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.fabric.executor;
+package org.fabric3.federation.command;
 
 import org.fabric3.api.annotation.logging.Info;
 
 /**
  * @version $Revision$ $Date$
  */
-public interface RuntimeDeploymentCommandExecutorMonitor {
+public interface ZoneDeploymentCommandExecutorMonitor {
 
     /**
      * Callback when a deployment command is received.
      *
-     * @param id the deployment command id.
+     * @param description the deployment description, usually the deployment composite name.
      */
     @Info
-    void receivedDeploymentCommand(String id);
+    void receivedDeploymentCommand(String description);
 
     /**
-     * Callback received when a deployment command has been applied
+     * Callback received when a deployment command is routed to a runtime in the zone
      *
-     * @param id the deployment command id.
+     * @param runtimeName the runtime the deployment is routed to
+     * @param description the deployment description, usually the deployment composite name.
      */
     @Info
-    void appliedDeploymentCommand(String id);
+    void routed(String runtimeName, String description);
 
 }

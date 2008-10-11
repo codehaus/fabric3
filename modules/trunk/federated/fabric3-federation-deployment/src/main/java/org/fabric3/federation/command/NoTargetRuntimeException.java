@@ -14,7 +14,7 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.fabric.executor;
+package org.fabric3.federation.command;
 
 import org.fabric3.spi.executor.ExecutionException;
 

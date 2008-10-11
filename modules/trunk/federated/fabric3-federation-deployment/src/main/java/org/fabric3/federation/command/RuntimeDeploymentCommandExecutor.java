@@ -14,14 +14,14 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.fabric.executor;
+package org.fabric3.federation.command;
 
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.api.annotation.Monitor;
-import org.fabric3.fabric.command.RuntimeDeploymentCommand;
+import org.fabric3.federation.command.RuntimeDeploymentCommand;
 import org.fabric3.spi.command.Command;
 import org.fabric3.spi.executor.CommandExecutor;
 import org.fabric3.spi.executor.CommandExecutorRegistry;

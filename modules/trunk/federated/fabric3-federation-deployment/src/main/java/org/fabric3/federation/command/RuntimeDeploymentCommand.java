@@ -14,7 +14,7 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.fabric.command;
+package org.fabric3.federation.command;
 
 import java.util.Set;
 
@@ -24,13 +24,13 @@ import org.fabric3.spi.command.Command;
 /**
  * @version $Revision$ $Date$
  */
-public class ZoneDeploymentCommand extends AbstractCommand {
-    private static final long serialVersionUID = 8673100303949676875L;
+public class RuntimeDeploymentCommand extends AbstractCommand {
+    private static final long serialVersionUID = -3864446712541806877L;
 
     private String id;
     private Set<Command> commands;
 
-    public ZoneDeploymentCommand(String id, Set<Command> commands) {
+    public RuntimeDeploymentCommand(String id, Set<Command> commands) {
         super(0);
         this.id = id;
         this.commands = commands;
@@ -43,5 +43,4 @@ public class ZoneDeploymentCommand extends AbstractCommand {
     public String getId() {
         return id;
     }
-
 }

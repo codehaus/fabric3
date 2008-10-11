@@ -53,9 +53,6 @@
                             <artifactId>fabric3-spi</artifactId>
                         </mavenImport>
                     </mavenImports>
-                    <deployables>
-                        <deployable>META-INF/federatedDeployment.composite</deployable>
-                    </deployables>
                 </configuration>
             </plugin>
         </plugins>

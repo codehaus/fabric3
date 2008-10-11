@@ -46,12 +46,12 @@ import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.spi.executor.CommandExecutorRegistry;
 import org.fabric3.spi.executor.ExecutionException;
 import org.fabric3.spi.generator.CommandMap;
-import org.fabric3.spi.services.routing.RoutingService;
 import org.fabric3.spi.services.routing.RoutingException;
 import org.fabric3.spi.services.routing.RoutingMonitor;
+import org.fabric3.spi.services.routing.RoutingService;
 
 /**
- * A routing service implementation that routes physical changesets across a domain
+ * A routing service implementation that routes commands to a zone.
  *
  * @version $Rev$ $Date$
  */
