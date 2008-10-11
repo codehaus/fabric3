@@ -34,21 +34,22 @@
  */
 package org.fabric3.federation.routing;
 
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.util.Set;
 
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.api.annotation.Monitor;
-import org.fabric3.scdl.Scope;
+import org.fabric3.federation.command.ZoneDeploymentCommand;
 import org.fabric3.spi.command.Command;
-import org.fabric3.spi.component.InstanceLifecycleException;
-import org.fabric3.spi.component.ScopeRegistry;
-import org.fabric3.spi.executor.CommandExecutorRegistry;
-import org.fabric3.spi.executor.ExecutionException;
 import org.fabric3.spi.generator.CommandMap;
 import org.fabric3.spi.services.routing.RoutingException;
 import org.fabric3.spi.services.routing.RoutingMonitor;
 import org.fabric3.spi.services.routing.RoutingService;
+import org.fabric3.spi.topology.DomainManager;
+import org.fabric3.spi.topology.MessageException;
+import org.fabric3.spi.util.MultiClassLoaderObjectOutputStream;
 
 /**
  * A routing service implementation that routes commands to a zone.
@@ -57,56 +58,32 @@ import org.fabric3.spi.services.routing.RoutingService;
  */
 public class FederatedRoutingService implements RoutingService {
 
-    private final CommandExecutorRegistry executorRegistry;
     private final RoutingMonitor monitor;
-    private final ScopeRegistry scopeRegistry;
+    private final DomainManager domainManager;
 
-    public FederatedRoutingService(@Reference CommandExecutorRegistry executorRegistry,
-                                   @Monitor RoutingMonitor monitor,
-                                   @Reference ScopeRegistry scopeRegistry) {
+    public FederatedRoutingService(@Reference DomainManager domainManager, @Monitor RoutingMonitor monitor) {
 
-        this.executorRegistry = executorRegistry;
+        this.domainManager = domainManager;
         this.monitor = monitor;
-        this.scopeRegistry = scopeRegistry;
     }
 
     public void route(String id, CommandMap commandMap) throws RoutingException {
 
         for (String zone : commandMap.getZones()) {
-
-            Set<Command> commands = commandMap.getCommandsForZone(zone);
-            if (zone != null) {
-                monitor.routeCommands(zone);
-                routeToDestination(zone, commands);
-            } else {
-                routeLocally(commands);
-            }
-
-        }
-
-    }
-
-    private void routeLocally(Set<Command> commands) throws RoutingException {
-
-        for (Command command : commands) {
             try {
-                executorRegistry.execute(command);
-            } catch (ExecutionException e) {
+                Set<Command> commands = commandMap.getCommandsForZone(zone);
+                monitor.routeCommands(zone);
+                Command command = new ZoneDeploymentCommand(id, commands);
+                ByteArrayOutputStream bas = new ByteArrayOutputStream();
+                MultiClassLoaderObjectOutputStream stream = new MultiClassLoaderObjectOutputStream(bas);
+                stream.writeObject(command);
+                domainManager.sendMessage(zone, bas.toByteArray());
+            } catch (IOException e) {
+                throw new RoutingException(e);
+            } catch (MessageException e) {
                 throw new RoutingException(e);
             }
         }
-
-        try {
-            scopeRegistry.getScopeContainer(Scope.COMPOSITE).reinject();
-        } catch (InstanceLifecycleException e) {
-            throw new RoutingException(e);
-        }
-
-    }
-
-    private void routeToDestination(String zone, Object commandSet) throws RoutingException {
-        // temporarily comment out
-        throw new UnsupportedOperationException();
 
     }
 
