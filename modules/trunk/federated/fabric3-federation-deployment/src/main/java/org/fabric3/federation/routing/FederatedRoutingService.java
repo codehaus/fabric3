@@ -57,12 +57,10 @@ import org.fabric3.spi.util.MultiClassLoaderObjectOutputStream;
  * @version $Rev$ $Date$
  */
 public class FederatedRoutingService implements RoutingService {
-
-    private final RoutingMonitor monitor;
     private final DomainManager domainManager;
+    private final RoutingMonitor monitor;
 
     public FederatedRoutingService(@Reference DomainManager domainManager, @Monitor RoutingMonitor monitor) {
-
         this.domainManager = domainManager;
         this.monitor = monitor;
     }
