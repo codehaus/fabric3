@@ -39,6 +39,7 @@ import java.io.IOException;
 import java.util.Set;
 
 import org.osoa.sca.annotations.Reference;
+import org.osoa.sca.annotations.EagerInit;
 
 import org.fabric3.api.annotation.Monitor;
 import org.fabric3.federation.command.ZoneDeploymentCommand;
@@ -56,6 +57,7 @@ import org.fabric3.spi.util.MultiClassLoaderObjectOutputStream;
  *
  * @version $Rev$ $Date$
  */
+@EagerInit
 public class FederatedRoutingService implements RoutingService {
     private final DomainManager domainManager;
     private final RoutingMonitor monitor;
