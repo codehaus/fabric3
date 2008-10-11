@@ -34,5 +34,11 @@
         <property name="runtimeName" source="$systemConfig//federation/runtimeName"/>
     </component>
 
+    <!-- this wire reinjects the routing service into the application Domain -->
+    <wire source="ApplicationDomain/routingService" target="FederatedRoutingZervice"/>
+
+    <component name="FederatedRoutingZervice">
+        <system:implementation.system class="org.fabric3.federation.routing.FederatedRoutingService"/>
+    </component>
 
 </composite>
