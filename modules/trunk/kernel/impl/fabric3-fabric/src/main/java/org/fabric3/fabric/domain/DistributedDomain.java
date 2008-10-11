@@ -18,14 +18,14 @@ package org.fabric3.fabric.domain;
 
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.spi.allocator.Allocator;
 import org.fabric3.fabric.binding.BindingSelector;
 import org.fabric3.fabric.generator.PhysicalModelGenerator;
 import org.fabric3.fabric.instantiator.LogicalModelInstantiator;
-import org.fabric3.spi.services.routing.RoutingService;
+import org.fabric3.spi.allocator.Allocator;
 import org.fabric3.spi.domain.Domain;
 import org.fabric3.spi.services.contribution.MetaDataStore;
 import org.fabric3.spi.services.lcm.LogicalComponentManager;
+import org.fabric3.spi.services.routing.RoutingService;
 
 /**
  * Implements a distributed domain containing user-defined services.
@@ -51,6 +51,16 @@ public class DistributedDomain extends AbstractDomain implements Domain {
     @Reference(required = false)
     public void setAllocator(Allocator allocator) {
         this.allocator = allocator;
+    }
+
+    /**
+     * Used to optionally reinject a RoutingService
+     *
+     * @param routingService the routing service
+     */
+    @Reference
+    public void setRoutingService(RoutingService routingService) {
+        this.routingService = routingService;
     }
 
 }
