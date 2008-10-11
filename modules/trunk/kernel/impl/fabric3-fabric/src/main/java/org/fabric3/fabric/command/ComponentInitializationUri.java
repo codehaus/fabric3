@@ -35,16 +35,18 @@
 package org.fabric3.fabric.command;
 
 import java.net.URI;
+import java.io.Serializable;
 
 /**
  *
  * @version $Revision$ $Date$
  */
-public class ComponentInitializationUri {
-    
+public class ComponentInitializationUri implements Serializable {
+    private static final long serialVersionUID = 2878715324071157981L;
+
     private URI groupId;
     private URI uri;
-    
+
     public URI getGroupId() {
         return groupId;
     }
