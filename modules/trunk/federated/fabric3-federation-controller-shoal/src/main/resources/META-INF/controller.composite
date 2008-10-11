@@ -35,9 +35,9 @@
     </component>
 
     <!-- this wire reinjects the routing service into the application Domain -->
-    <wire source="ApplicationDomain/routingService" target="FederatedRoutingZervice"/>
+    <wire source="ApplicationDomain/routingService" target="FederatedRoutingService"/>
 
-    <component name="FederatedRoutingZervice">
+    <component name="FederatedRoutingService">
         <system:implementation.system class="org.fabric3.federation.routing.FederatedRoutingService"/>
     </component>
 
