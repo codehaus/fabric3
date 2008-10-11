@@ -1,12 +1,12 @@
 /*
  * Fabric3
- * Copyright © 2008 Metaform Systems Limited
+ * Copyright ï¿½ 2008 Metaform Systems Limited
  *
  * This proprietary software may be used only connection with the Fabric3 license
- * (the ÒLicenseÓ), a copy of which is included in the software or may be
+ * (the ï¿½Licenseï¿½), a copy of which is included in the software or may be
  * obtained at: http://www.metaformsystems.com/licenses/license.html.
 
- * Software distributed under the License is distributed on an Òas isÓ basis,
+ * Software distributed under the License is distributed on an ï¿½as isï¿½ basis,
  * without warranties or conditions of any kind.  See the License for the
  * specific language governing permissions and limitations of use of the software.
  * This software is distributed in conjunction with other software licensed under
@@ -17,10 +17,7 @@
 package org.fabric3.rs.runtime.rs;
 
 import java.io.IOException;
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Method;
 import java.util.Enumeration;
-import java.util.Map;
 
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
@@ -29,13 +26,8 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import org.fabric3.pojo.PojoWorkContextTunnel;
-import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.invocation.CallFrame;
-import org.fabric3.spi.invocation.Message;
-import org.fabric3.spi.invocation.MessageImpl;
 import org.fabric3.spi.invocation.WorkContext;
-import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
-import org.fabric3.spi.wire.InvocationChain;
 
 /**
  * @version $Rev$ $Date$
@@ -73,7 +65,7 @@ public final class RsWebApplication extends HttpServlet {
             this.servlet = new RsServlet(this.provider);
             servlet.init(cfg);
         } catch (ServletException se) {
-            throw se;
+            throw se;//TODO this is not getting logged in the F3 Runtime
         } catch (Throwable t) {
             ServletException se = new ServletException(t);
             throw se;
@@ -126,7 +118,7 @@ public final class RsWebApplication extends HttpServlet {
         }
 
         public String getInitParameter(String name) {
-            if ("javax.ws.rs.ApplicationConfig".equals(name)) {
+            if ("javax.ws.rs.Application".equals(name)) {
                 return Fabric3ResourceConfig.class.getName();
             }
             return config.getInitParameter(name);
@@ -151,7 +143,7 @@ public final class RsWebApplication extends HttpServlet {
                     }
                     if (!finished) {
                         finished = true;
-                        return "javax.ws.rs.ApplicationConfig";
+                        return "javax.ws.rs.Application";
                     }
                     return null;
                 }

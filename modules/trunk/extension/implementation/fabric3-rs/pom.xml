@@ -40,25 +40,25 @@
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-spi</artifactId>
-            <version>0.7-SNAPSHOT</version>
+            <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-java</artifactId>
-            <version>0.7-SNAPSHOT</version>
+            <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-pojo</artifactId>
-            <version>0.7-SNAPSHOT</version>
+            <version>${project.version}</version>
             <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.sun.jersey</groupId>
             <artifactId>jersey-server</artifactId>
-            <version>0.9-ea</version>
+            <version>1.0-ea-SNAPSHOT</version>
             <exclusions>
                 <exclusion>
                     <groupId>asm</groupId>
@@ -92,7 +92,7 @@
             <plugin>
                 <groupId>org.codehaus.fabric3</groupId>
                 <artifactId>fabric3-contribution-plugin</artifactId>
-                <version>0.7-SNAPSHOT</version>
+                <version>${project.version}</version>
                 <extensions>true</extensions>
                 <configuration>
                     <mavenImports>
