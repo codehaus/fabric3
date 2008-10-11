@@ -16,88 +16,56 @@
  */
 package org.fabric3.federation.allocator;
 
-import org.osoa.sca.annotations.Reference;
+import java.util.List;
 
-import org.fabric3.spi.model.instance.LogicalComponent;
+import org.osoa.sca.annotations.Reference;
+import org.osoa.sca.annotations.EagerInit;
+
+import org.fabric3.api.annotation.Monitor;
 import org.fabric3.spi.allocator.AllocationException;
 import org.fabric3.spi.allocator.Allocator;
+import org.fabric3.spi.model.instance.LogicalComponent;
+import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 import org.fabric3.spi.topology.DomainManager;
+import org.fabric3.spi.topology.Zone;
 
 /**
- * Default Allocator implementation.
+ * Allocator that selectes the default (first available) zone.
  *
  * @version $Rev$ $Date$
  */
+@EagerInit
 public class DefaultAllocator implements Allocator {
     private DomainManager domainManager;
+    private AllocatorMonitor monitor;
 
 
-    public DefaultAllocator(@Reference DomainManager domainManager) {
+    public DefaultAllocator(@Reference DomainManager domainManager, @Monitor AllocatorMonitor monitor) {
         this.domainManager = domainManager;
+        this.monitor = monitor;
     }
 
     public void allocate(LogicalComponent<?> component, boolean recover) throws AllocationException {
         if (component.getZone() == null) {
-            
+            if (component instanceof LogicalCompositeComponent) {
+                LogicalCompositeComponent composite = (LogicalCompositeComponent) component;
+                for (LogicalComponent<?> child : composite.getComponents()) {
+                    allocate(child, recover);
+                }
+            }
+            selectZone(component);
         }
-        // Comment out for now until zones are integrated
-
-//        if (synchronizeTopology) {
-//            // TODO This should include logic to recover, i.e. when a controller comes up if it needs to synchronize its view with any zones
-//        }
-//        Set<RuntimeInfo> runtimes = discoveryService.getParticipatingRuntimes();
-//        allocate(runtimes, component);
     }
 
-//    private void allocate(Set<RuntimeInfo> runtimes, LogicalComponent<?> component) throws AllocationException {
-//
-//        if (CompositeImplementation.class.isInstance(component.getDefinition().getImplementation())) {
-//            LogicalCompositeComponent composite = (LogicalCompositeComponent) component;
-//            for (LogicalComponent<?> child : composite.getComponents()) {
-//                if (CompositeImplementation.class.isInstance(child.getDefinition().getImplementation())) {
-//                    // the component is a composite, recurse and asign its children
-//                    allocate(runtimes, child);
-//                } else {
-//                    assign(runtimes, child);
-//                }
-//            }
-//        } else {
-//            assign(runtimes, component);
-//        }
-//
-//    }
-//
-//
-//    /**
-//     * Assigns a component to a runtime
-//     *
-//     * @param runtimes  the list of available runtimes
-//     * @param component the component to assign
-//     * @throws AllocationException if an error occurs assigning the component
-//     */
-//    private void assign(Set<RuntimeInfo> runtimes, LogicalComponent<?> component) throws AllocationException {
-//        RuntimeInfo info = null;
-//        if (!runtimes.contains(info)) {
-//            // Assign runtime using a simple algorithm: if two or more exist, pick one other than the controller,
-//            // otherwise deploy locally
-//            if (runtimes.size() < 1) {
-//                // single node setup, allocate locally
-//                component.setZone(null);
-//                return;
-//            }
-//
-//            for (RuntimeInfo runtime : runtimes) {
-//                if (!runtimeId.equals(runtime.getId())) {
-//                    info = runtime;
-//                    break;
-//                }
-//            }
-//            if (info != null) {
-//                component.setZone(info.getId().toString());
-//            } else {
-//                component.setZone(null);
-//            }
-//        }
-//    }
-
+    private void selectZone(LogicalComponent<?> component) throws AllocationException {
+        List<Zone> zones = domainManager.getZones();
+        if (zones.isEmpty()) {
+            throw new NoZonesAvailableException("No zones are available for deployment in domain");
+        }
+        // for now, pick the first one
+        Zone zone = zones.get(0);
+        String zoneName = zone.getName();
+        component.setZone(zoneName);
+        monitor.selected(zoneName);
+    }
 }

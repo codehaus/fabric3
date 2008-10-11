@@ -23,5 +23,10 @@
            name="FederatedAllocatorExtension"
            autowire="true">
 
+    <!-- The allocator will be reinjected into the DistributedDomain -->
+    <component name="DefaultAllocator">
+        <system:implementation.system class="org.fabric3.federation.allocator.DefaultAllocator"/>
+    </component>
+
 
 </composite>
