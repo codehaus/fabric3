@@ -28,10 +28,10 @@
             <f3:binding.test uri="HelloService"/>
             <f3:binding.test uri="HelloService"/>
         </reference>
-        <!-- reference name="mapOfReferences">
+        <reference name="mapOfReferences">
             <f3:binding.test uri="HelloService" f3:key="ONE"/>
             <f3:binding.test uri="HelloService" f3:key="TWO"/>
-        </reference-->
+        </reference>
     </component>
 
     <component name="HelloExplicitComponent">

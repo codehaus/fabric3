@@ -34,7 +34,7 @@ public class BoundServiceReferenceTest extends TestCase {
 	
     @Reference protected HelloService helloService;
     @Reference protected List<HelloService> listOfReferences;
-    //@Reference protected Map<String, HelloService> mapOfReferences;
+    @Reference protected Map<String, HelloService> mapOfReferences;
 
     public void testReferenceIsBound() {
         assertEquals("hello", helloService.send("hello"));
@@ -51,9 +51,9 @@ public class BoundServiceReferenceTest extends TestCase {
         }
     }
 
-    /*public void testMapOfReferenceIsBound() {
+    public void testMapOfReferenceIsBound() {
         assertEquals(2, mapOfReferences.size());
         assertEquals("hello", mapOfReferences.get("ONE").send("hello"));
         assertEquals("hello", mapOfReferences.get("TWO").send("hello"));
-    }*/
+    }
 }
