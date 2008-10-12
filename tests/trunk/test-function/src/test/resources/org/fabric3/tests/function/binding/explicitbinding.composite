@@ -24,6 +24,10 @@
         <reference name="helloService">
             <f3:binding.test uri="HelloService"/>
         </reference>
+        <reference name="listOfReferences">
+            <f3:binding.test uri="HelloService"/>
+            <f3:binding.test uri="HelloService"/>
+        </reference>
     </component>
 
     <component name="HelloExplicitComponent">

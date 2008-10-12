@@ -16,6 +16,8 @@
  */
 package org.fabric3.tests.function.binding;
 
+import java.util.List;
+
 import junit.framework.TestCase;
 import org.osoa.sca.annotations.Reference;
 
@@ -28,14 +30,22 @@ import org.fabric3.tests.function.common.HelloService;
  * @version $Rev$ $Date$
  */
 public class BoundServiceReferenceTest extends TestCase {
-    private HelloService helloService;
-
-    @Reference
-    public void setHelloService(HelloService helloService) {
-        this.helloService = helloService;
-    }
+	
+    @Reference protected HelloService helloService;
+    @Reference protected List<HelloService> listOfReferences;
 
     public void testReferenceIsBound() {
         assertEquals("hello", helloService.send("hello"));
+        assertEquals(2, listOfReferences.size());
+        for (HelloService helloService : listOfReferences) {
+            assertEquals("hello", helloService.send("hello"));
+        }
+    }
+
+    public void testListOfReferenceIsBound() {
+        assertEquals(2, listOfReferences.size());
+        for (HelloService helloService : listOfReferences) {
+            assertEquals("hello", helloService.send("hello"));
+        }
     }
 }
