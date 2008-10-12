@@ -16,9 +16,7 @@
  */
 package org.fabric3.spi.topology;
 
-import java.io.Serializable;
 import java.util.List;
-import javax.xml.namespace.QName;
 
 /**
  * Coordinates federated communications accross a domain. DomainManagers are associated with controller instances for a domain. A domain topology
@@ -47,7 +45,7 @@ public interface DomainManager {
      * @param transport the transport type
      * @return the opaque metadata
      */
-    <T extends Serializable> T getTransportMetaData(String zone, Class<T> type, QName transport);
+    <T> T getTransportMetaData(String zone, Class<T> type, String transport);
 
     /**
      * Sends a message to the given zone manager.

@@ -64,18 +64,22 @@ public class ShoalDomainManager implements DomainManager, FederationCallback {
         List<String> members = federationService.getDomainGMS().getGroupHandle().getCurrentCoreMembers();
         List<Zone> zones = new ArrayList<Zone>(members.size());
         for (String member : members) {
-            zones.add(new Zone(member));
+            // FIXME we need a way to distinguish member types, possibly by using member attributes
+            // Don't include controller.
+            if (!member.equals(federationService.getRuntimeName())) {
+                zones.add(new Zone(member));
+            }
         }
         return zones;
     }
 
     @SuppressWarnings({"unchecked"})
-    public <T extends Serializable> T getTransportMetaData(String zone, Class<T> type, QName transport) {
+    public <T> T getTransportMetaData(String zone, Class<T> type, String transport) {
         Map<Serializable, Serializable> details = federationService.getDomainGMS().getMemberDetails(zone);
         if (details == null) {
             return null;
         }
-        Map<QName, T> transportMetadata = (Map<QName, T>) details.get(FederationConstants.ZONE_TRANSPORT_INFO);
+        Map<String, T> transportMetadata = (Map<String, T>) details.get(FederationConstants.ZONE_TRANSPORT_INFO);
         if (transportMetadata == null) {
             throw new AssertionError("Transport metadata not found");
         }
