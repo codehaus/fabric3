@@ -28,6 +28,7 @@
         <system:implementation.system class="org.fabric3.federation.shoal.ShoalZoneManager"/>
         <!-- System configuration. If set to true, the runtime will operate as a zone manager  -->
         <property name="zoneManager" source="$systemConfig//federation/@zoneManager"/>
+        <property name="transportMetadata" source="$systemConfig//federation/transport//*"/>
     </component>
 
     <component name="RuntimeManager">

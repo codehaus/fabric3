@@ -21,17 +21,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import javax.xml.namespace.QName;
 
-import com.sun.enterprise.ee.cms.core.FailureNotificationSignal;
 import com.sun.enterprise.ee.cms.core.GMSException;
-import com.sun.enterprise.ee.cms.core.GroupManagementService;
-import com.sun.enterprise.ee.cms.core.JoinedAndReadyNotificationSignal;
 import com.sun.enterprise.ee.cms.core.MessageSignal;
-import com.sun.enterprise.ee.cms.core.PlannedShutdownSignal;
 import com.sun.enterprise.ee.cms.core.Signal;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
@@ -40,7 +34,6 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.api.annotation.Monitor;
 import static org.fabric3.federation.shoal.FederationConstants.RUNTIME_MANAGER;
-import static org.fabric3.federation.shoal.FederationConstants.RUNTIME_TRANSPORT_INFO;
 import static org.fabric3.federation.shoal.FederationConstants.ZONE_TRANSPORT_INFO;
 import org.fabric3.spi.command.Command;
 import org.fabric3.spi.executor.CommandExecutorRegistry;
@@ -68,6 +61,7 @@ public class ShoalZoneManager implements ZoneManager, FederationCallback {
     private ClassLoaderRegistry classLoaderRegistry;
     private ZoneManagerMonitor monitor;
     private boolean zoneManager;
+    private Map<String, String> transportMetadata;
 
     /**
      * Constructor.
@@ -98,6 +92,17 @@ public class ShoalZoneManager implements ZoneManager, FederationCallback {
         this.zoneManager = zoneManager;
     }
 
+
+    /**
+     * Property to set the transport metadata. This may contain information such as the cluster HTTP address.
+     *
+     * @param transportMetadata the transport metadata keyed by type.
+     */
+    @Property
+    public void setTransportMetadata(Map<String, String> transportMetadata) {
+        this.transportMetadata = transportMetadata;
+    }
+
     @Init
     public void init() {
         if (!zoneManager) {
@@ -119,26 +124,10 @@ public class ShoalZoneManager implements ZoneManager, FederationCallback {
     }
 
     public void afterJoin() throws FederationCallbackException {
-        // synchronize zone metadata with the domain distributed cache as runtimes may have started before the zone manager
-        List<String> members = federationService.getZoneGMS().getGroupHandle().getCurrentCoreMembers();
-        try {
-            for (String member : members) {
-                addRuntimeMetaData(member);
-            }
-        } catch (GMSException e) {
-            throw new FederationCallbackException(e);
-        }
+        updateZoneMetaData();
     }
 
     public void onLeave() throws FederationCallbackException {
-        List<String> members = federationService.getZoneGMS().getGroupHandle().getCurrentCoreMembers();
-        try {
-            for (String member : members) {
-                removeRuntimeMetaData(member);
-            }
-        } catch (GMSException e) {
-            throw new FederationCallbackException(e);
-        }
     }
 
     public void sendMessage(String runtimeName, byte[] message) throws MessageException {
@@ -158,15 +147,7 @@ public class ShoalZoneManager implements ZoneManager, FederationCallback {
     }
 
     private void handleZoneSignal(Signal signal) throws FederationCallbackException {
-        try {
-            if (signal instanceof JoinedAndReadyNotificationSignal) {
-                addRuntimeMetaData(signal.getMemberToken());
-            } else if (signal instanceof FailureNotificationSignal || signal instanceof PlannedShutdownSignal) {
-                removeRuntimeMetaData(signal.getMemberToken());
-            }
-        } catch (GMSException e) {
-            throw new FederationCallbackException(e);
-        }
+
     }
 
     private void handleDomainSignal(Signal signal) throws FederationCallbackException {
@@ -204,48 +185,13 @@ public class ShoalZoneManager implements ZoneManager, FederationCallback {
         }
     }
 
-
-    /**
-     * Updates the domain distributed cache with changed metadata from the runtime in the zone associated with this ZoneManager.
-     *
-     * @param runtimeName the runtime whose metadata changed
-     * @throws GMSException if an error occurs updating the domain distributed cache.
-     */
-    @SuppressWarnings({"unchecked"})
-    private void addRuntimeMetaData(String runtimeName) throws GMSException {
-        GroupManagementService zoneGMS = federationService.getZoneGMS();
-        Map<QName, String> runtimeTransportInfo = (Map<QName, String>) zoneGMS.getMemberDetails(runtimeName).get(RUNTIME_TRANSPORT_INFO);
-        if (runtimeTransportInfo == null) {
-            return;
-        }
+    private void updateZoneMetaData() throws FederationCallbackException {
         String zoneName = federationService.getRuntimeName();
-        GroupManagementService domainGMS = federationService.getDomainGMS();
-        Map<Serializable, Serializable> zoneDetails = domainGMS.getMemberDetails(zoneName);
-        Map<String, Map<QName, String>> zoneTransportInfo = (Map<String, Map<QName, String>>) zoneDetails.get(ZONE_TRANSPORT_INFO);
-        if (zoneTransportInfo == null) {
-            zoneTransportInfo = new HashMap<String, Map<QName, String>>();
+        try {
+            federationService.getDomainGMS().updateMemberDetails(zoneName, ZONE_TRANSPORT_INFO, (Serializable) transportMetadata);
+        } catch (GMSException e) {
+            throw new FederationCallbackException(e);
         }
-        zoneTransportInfo.put(runtimeName, runtimeTransportInfo);
-        domainGMS.updateMemberDetails(zoneName, ZONE_TRANSPORT_INFO, (Serializable) zoneTransportInfo);
-    }
-
-    /**
-     * Removes runtime metadata from the domain distributed cache.
-     *
-     * @param runtimeName the runtime whose metadata changed
-     * @throws GMSException if an error occurs updating the domain distributed cache.
-     */
-    @SuppressWarnings({"unchecked"})
-    private void removeRuntimeMetaData(String runtimeName) throws GMSException {
-        GroupManagementService domainGMS = federationService.getDomainGMS();
-        String zoneName = federationService.getRuntimeName();
-        Map<Serializable, Serializable> zoneDetails = domainGMS.getMemberDetails(zoneName);
-        Map<String, Map<QName, String>> zoneTransportInfo = (Map<String, Map<QName, String>>) zoneDetails.get(ZONE_TRANSPORT_INFO);
-        if (zoneTransportInfo == null) {
-            return;
-        }
-        zoneTransportInfo.remove(runtimeName);
-        domainGMS.updateMemberDetails(zoneName, ZONE_TRANSPORT_INFO, (Serializable) zoneTransportInfo);
     }
 
 }

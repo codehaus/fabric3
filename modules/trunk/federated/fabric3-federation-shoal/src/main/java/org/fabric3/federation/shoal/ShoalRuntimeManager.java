@@ -19,13 +19,7 @@ package org.fabric3.federation.shoal;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
-import javax.xml.namespace.QName;
 
-import com.sun.enterprise.ee.cms.core.GMSException;
-import com.sun.enterprise.ee.cms.core.GroupManagementService;
 import com.sun.enterprise.ee.cms.core.MessageSignal;
 import com.sun.enterprise.ee.cms.core.Signal;
 import org.osoa.sca.annotations.EagerInit;
@@ -33,7 +27,6 @@ import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
 import static org.fabric3.federation.shoal.FederationConstants.RUNTIME_MANAGER;
-import static org.fabric3.federation.shoal.FederationConstants.RUNTIME_TRANSPORT_INFO;
 import org.fabric3.spi.command.Command;
 import org.fabric3.spi.executor.CommandExecutorRegistry;
 import org.fabric3.spi.executor.ExecutionException;
@@ -49,7 +42,7 @@ import org.fabric3.spi.util.MultiClassLoaderObjectInputStream;
  */
 @EagerInit
 public class ShoalRuntimeManager implements RuntimeManager, FederationCallback {
-    private Map<QName, Serializable> runtimeMetdata = new HashMap<QName, Serializable>();
+//    private Map<QName, Serializable> runtimeMetdata = new HashMap<QName, Serializable>();
     private FederationService federationService;
     private CommandExecutorRegistry executorRegistry;
     private ClassLoaderRegistry classLoaderRegistry;
@@ -75,14 +68,7 @@ public class ShoalRuntimeManager implements RuntimeManager, FederationCallback {
     }
 
     public void afterJoin() throws FederationCallbackException {
-        // update the transport info for the runtime prior to notifying the zone manager
-        Serializable cache = (Serializable) getTransportInfoCache();
-        GroupManagementService gms = federationService.getZoneGMS();
-        try {
-            gms.updateMemberDetails(federationService.getRuntimeName(), RUNTIME_TRANSPORT_INFO, cache);
-        } catch (GMSException e) {
-            throw new FederationCallbackException(e);
-        }
+
     }
 
     public void onLeave() {
@@ -121,28 +107,6 @@ public class ShoalRuntimeManager implements RuntimeManager, FederationCallback {
                 // ignore;
             }
         }
-    }
-
-    public void addTransportMetadata(QName transport, String metaData) {
-        Map<QName, String> cache = getTransportInfoCache();
-        cache.put(transport, metaData);
-    }
-
-    public void removeTransportMetadata(QName transport) {
-        Map<QName, String> cache = getTransportInfoCache();
-        cache.remove(transport);
-    }
-
-
-    @SuppressWarnings({"unchecked"})
-    private Map<QName, String> getTransportInfoCache() {
-        Map<QName, String> cache = (Map<QName, String>) runtimeMetdata.get(RUNTIME_TRANSPORT_INFO);
-        if (cache == null) {
-            cache = new HashMap<QName, String>();
-            runtimeMetdata.put(RUNTIME_TRANSPORT_INFO, (Serializable) cache);
-        }
-
-        return cache;
     }
 
 }

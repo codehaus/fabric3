@@ -74,7 +74,7 @@ public class ShoalRuntimeBootstrap {
         EasyMock.replay(classLoaderRegistry);
 
         runtimeManager = new ShoalRuntimeManager(federationService, executorRegistry, classLoaderRegistry);
-        runtimeManager.addTransportMetadata(new QName(Constants.FABRIC3_NS, "http"), "Http information");
+//        runtimeManager.addTransportMetadata(new QName(Constants.FABRIC3_NS, "http"), "Http information");
         runtimeManager.init();
 
         federationService.onJoinDomain();

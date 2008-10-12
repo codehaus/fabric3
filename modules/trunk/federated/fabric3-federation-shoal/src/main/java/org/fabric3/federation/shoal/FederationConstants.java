@@ -47,8 +47,4 @@ public interface FederationConstants {
      */
     QName ZONE_TRANSPORT_INFO = new QName(Constants.FABRIC3_NS, "ZoneTransportInfo");
 
-    /**
-     * The key for runtime transport metadata.
-     */
-    QName RUNTIME_TRANSPORT_INFO = new QName(Constants.FABRIC3_NS, "RuntimeTransportInfo");
 }
