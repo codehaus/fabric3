@@ -68,21 +68,22 @@ public class ReferenceWireCommandGenerator implements AddCommandGenerator {
             }
 
             // TODO this should be extensible and moved out
-            LogicalBinding<?> logicalBinding = logicalReference.getBindings().get(0);
-            PhysicalWireDefinition pwd = physicalWireGenerator.generateBoundReferenceWire(component, logicalReference, logicalBinding);
-            command.addPhysicalWireDefinition(pwd);
-            if (logicalReference.getDefinition().getServiceContract().getCallbackContract() != null) {
-                List<LogicalBinding<?>> callbackBindings = logicalReference.getCallbackBindings();
-                if (callbackBindings.size() != 1) {
-                    String uri = logicalReference.getUri().toString();
-                    throw new UnsupportedOperationException("The runtime requires exactly one callback binding to be specified on reference: " + uri);
-                }
-                LogicalBinding<?> callbackBinding = callbackBindings.get(0);
-                // generate the callback wire
-                PhysicalWireDefinition callbackPwd = physicalWireGenerator.generateBoundCallbackRerenceWire(logicalReference,
-                                                                                                            callbackBinding,
-                                                                                                            component);
-                command.addPhysicalWireDefinition(callbackPwd);
+            for (LogicalBinding<?> logicalBinding : logicalReference.getBindings()) {
+	            PhysicalWireDefinition pwd = physicalWireGenerator.generateBoundReferenceWire(component, logicalReference, logicalBinding);
+	            command.addPhysicalWireDefinition(pwd);
+	            if (logicalReference.getDefinition().getServiceContract().getCallbackContract() != null) {
+	                List<LogicalBinding<?>> callbackBindings = logicalReference.getCallbackBindings();
+	                if (callbackBindings.size() != 1) {
+	                    String uri = logicalReference.getUri().toString();
+	                    throw new UnsupportedOperationException("The runtime requires exactly one callback binding to be specified on reference: " + uri);
+	                }
+	                LogicalBinding<?> callbackBinding = callbackBindings.get(0);
+	                // generate the callback wire
+	                PhysicalWireDefinition callbackPwd = physicalWireGenerator.generateBoundCallbackRerenceWire(logicalReference,
+	                                                                                                            callbackBinding,
+	                                                                                                            component);
+	                command.addPhysicalWireDefinition(callbackPwd);
+	            }
             }
         }
     }
