@@ -32,7 +32,7 @@ public final class SCABindingDefinition extends BindingDefinition {
     public static final SCABindingDefinition INSTANCE = new SCABindingDefinition();
 
     private SCABindingDefinition() {
-        super(new QName(Constants.SCA_NS, "binding.sca"));
+        super(null, new QName(Constants.SCA_NS, "binding.sca"), null);
     }
     
     

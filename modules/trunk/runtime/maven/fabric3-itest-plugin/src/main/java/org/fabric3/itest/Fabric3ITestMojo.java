@@ -295,7 +295,7 @@ public class Fabric3ITestMojo extends AbstractMojo {
      * @required
      * @readonly
      */
-    public ArtifactFactory artifactFactory;
+    public ArtifactFactory _artifactFactory;
 
     /**
      * @parameter expression="${component.org.fabric3.itest.ArtifactHelper}"

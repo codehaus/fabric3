@@ -100,7 +100,7 @@ public class HessianBindingProvider implements BindingProvider {
 //    }
 
     private void constructLogicalReference(LogicalReference source, URI targetUri) {
-        HessianBindingDefinition referenceDefinition = new HessianBindingDefinition(targetUri);
+        HessianBindingDefinition referenceDefinition = new HessianBindingDefinition(targetUri, null);
         LogicalBinding<HessianBindingDefinition> referenceBinding = new LogicalBinding<HessianBindingDefinition>(referenceDefinition, source);
         source.addBinding(referenceBinding);
     }
@@ -108,7 +108,7 @@ public class HessianBindingProvider implements BindingProvider {
     private void configureService(LogicalService target) {
         String endpointName = target.getUri().getPath() + "/" + target.getUri().getFragment();
         URI endpointUri = URI.create(endpointName);
-        HessianBindingDefinition serviceDefinition = new HessianBindingDefinition(endpointUri);
+        HessianBindingDefinition serviceDefinition = new HessianBindingDefinition(endpointUri, null);
         LogicalBinding<HessianBindingDefinition> serviceBinding = new LogicalBinding<HessianBindingDefinition>(serviceDefinition, target);
         target.addBinding(serviceBinding);
     }

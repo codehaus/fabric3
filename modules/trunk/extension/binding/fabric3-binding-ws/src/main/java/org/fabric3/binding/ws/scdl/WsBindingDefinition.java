@@ -53,8 +53,8 @@ public class WsBindingDefinition extends BindingDefinition {
     private final String wsdlElement;
     private Map<String, String> config;
 
-    public WsBindingDefinition(URI targetUri, String implementation, String wsdlLocation, String wsdlElement) {
-        super(targetUri, WsBindingLoader.BINDING_QNAME);
+    public WsBindingDefinition(URI targetUri, String implementation, String wsdlLocation, String wsdlElement, String key) {
+        super(targetUri, WsBindingLoader.BINDING_QNAME, key);
         this.implementation = implementation;
         this.wsdlElement = wsdlElement;
         this.wsdlLocation = wsdlLocation;        

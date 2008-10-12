@@ -32,8 +32,8 @@ public class EjbBindingDefinition extends BindingDefinition {
     private boolean isEjb3;
     private String name;
 
-    public EjbBindingDefinition(URI targetUri) {
-        super(targetUri, EjbBindingLoader.BINDING_QNAME);
+    public EjbBindingDefinition(URI targetUri, String key) {
+        super(targetUri, EjbBindingLoader.BINDING_QNAME, key);
     }
 
     //TODO PolicySets & Requires

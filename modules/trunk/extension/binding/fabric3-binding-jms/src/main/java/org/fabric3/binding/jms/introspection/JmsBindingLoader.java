@@ -118,6 +118,7 @@ public class JmsBindingLoader implements TypeLoader<JmsBindingDefinition> {
         JmsBindingMetadata metadata;
         String uri = reader.getAttributeValue(null, "uri");
         JmsBindingDefinition bd;
+        String key = reader.getAttributeValue(null, "key");
         if (uri != null) {
             JmsURIMetadata uriMeta;
             try {
@@ -128,10 +129,10 @@ public class JmsBindingLoader implements TypeLoader<JmsBindingDefinition> {
                 introspectionContext.addError(failure);
                 return null;
             }
-            bd = new JmsBindingDefinition(loaderHelper.getURI(uri), metadata);
+            bd = new JmsBindingDefinition(loaderHelper.getURI(uri), metadata, key);
         } else {
             metadata = new JmsBindingMetadata();
-            bd = new JmsBindingDefinition(metadata);
+            bd = new JmsBindingDefinition(metadata, key);
         }
         final String correlationScheme = reader.getAttributeValue(null, "correlationScheme");
         if (correlationScheme != null) {

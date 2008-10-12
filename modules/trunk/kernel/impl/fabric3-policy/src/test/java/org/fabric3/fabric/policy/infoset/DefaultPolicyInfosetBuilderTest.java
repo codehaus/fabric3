@@ -90,7 +90,7 @@ public class DefaultPolicyInfosetBuilderTest extends TestCase {
     @SuppressWarnings({"serial"})
     private static class TestBinidingDefinition extends BindingDefinition {
         private TestBinidingDefinition() {
-            super(new QName("binding.test"));
+            super(null, new QName("binding.test"), null);
         }
     }
     

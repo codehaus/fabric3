@@ -16,6 +16,8 @@
  */
 package org.fabric3.tests.binding.harness;
 
+import java.util.Collections;
+
 /**
  * @version $Rev$ $Date$
  */
@@ -26,6 +28,6 @@ public class EchoTestCase extends EchoTest {
         // use the basic service impl
         EchoService impl = new EchoServiceImpl();
         EchoService delegate = new EchoDelegator(impl);
-        setService(delegate);
+        this.service = Collections.singletonList(delegate);
     }
 }

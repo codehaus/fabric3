@@ -37,8 +37,8 @@ public class FtpBindingDefinition extends BindingDefinition {
      * @param uri Target URI.
      * @param transferMode the FTP transfer mode
      */
-    public FtpBindingDefinition(URI uri, TransferMode transferMode) {
-        super(uri, Constants.BINDING_QNAME);
+    public FtpBindingDefinition(URI uri, TransferMode transferMode, String key) {
+        super(uri, Constants.BINDING_QNAME, key);
         this.transferMode = transferMode;
     }
 

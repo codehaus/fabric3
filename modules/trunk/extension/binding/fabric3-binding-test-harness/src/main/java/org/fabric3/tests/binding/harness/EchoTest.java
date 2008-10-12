@@ -16,6 +16,8 @@
  */
 package org.fabric3.tests.binding.harness;
 
+import java.util.List;
+
 import junit.framework.TestCase;
 import org.osoa.sca.annotations.Reference;
 
@@ -24,24 +26,23 @@ import org.osoa.sca.annotations.Reference;
  */
 public class EchoTest extends TestCase {
 
-    private EchoService service;
-
-    @Reference
-    public void setService(EchoService service) {
-        this.service = service;
-    }
+    @Reference protected List<EchoService> service;
 
     public void testString() {
-        assertEquals("Hello", service.echoString("Hello"));
+    	int i = 0;
+    	for (EchoService echoService : service) {
+    		System.err.println("**************** executing " + (++i));
+    		assertEquals("Hello", echoService.echoString("Hello"));
+    	}
     }
 
     public void testInt() {
-        assertEquals(123, service.echoInt(123));
+        assertEquals(123, service.get(0).echoInt(123));
     }
 
     public void testFault() {
         try {
-            service.echoFault();
+        	service.get(0).echoFault();
             fail();
         } catch (EchoFault echoFault) {
             // OK

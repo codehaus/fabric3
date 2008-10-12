@@ -87,7 +87,8 @@ public class HessianBindingLoader implements TypeLoader<HessianBindingDefinition
                 introspectionContext.addError(failure);
                 return null;
             }
-            bd = new HessianBindingDefinition(new URI(uri));
+            String key = reader.getAttributeValue(null, "key");
+            bd = new HessianBindingDefinition(new URI(uri), key);
 
             loaderHelper.loadPolicySetsAndIntents(bd, reader, introspectionContext);
 

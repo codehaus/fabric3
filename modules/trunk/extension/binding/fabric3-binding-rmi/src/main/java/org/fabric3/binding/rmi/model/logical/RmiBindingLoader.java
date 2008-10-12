@@ -49,7 +49,8 @@ public class RmiBindingLoader implements TypeLoader<RmiBindingDefinition> {
             targetURI = URI.create(target);
         }
 
-        RmiBindingDefinition definition = new RmiBindingDefinition(targetURI);
+        String key = reader.getAttributeValue(null, "key");
+        RmiBindingDefinition definition = new RmiBindingDefinition(targetURI, key);
         definition.setName(name);
         if (serviceName != null) {
             definition.setServiceName(serviceName);

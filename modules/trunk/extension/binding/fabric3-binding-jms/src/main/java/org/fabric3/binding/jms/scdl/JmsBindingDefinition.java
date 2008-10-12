@@ -64,8 +64,8 @@ public class JmsBindingDefinition extends BindingDefinition {
     /**
      * @param metadata Metadata to be initialized.
      */
-    public JmsBindingDefinition(JmsBindingMetadata metadata) {
-        super(JmsBindingLoader.BINDING_QNAME);
+    public JmsBindingDefinition(JmsBindingMetadata metadata, String key) {
+        super(null, JmsBindingLoader.BINDING_QNAME, key);
         this.metadata = metadata;
     }
     
@@ -73,8 +73,8 @@ public class JmsBindingDefinition extends BindingDefinition {
 	 * @param targetURI URI of binding target
 	 * @param metadata Metadata to be initialized.
 	 */
-    public JmsBindingDefinition(URI targetURI,JmsBindingMetadata metadata) {
-        super(targetURI,JmsBindingLoader.BINDING_QNAME);
+    public JmsBindingDefinition(URI targetURI,JmsBindingMetadata metadata, String key) {
+        super(targetURI, JmsBindingLoader.BINDING_QNAME, key);
         this.metadata = metadata;
     }
     /**

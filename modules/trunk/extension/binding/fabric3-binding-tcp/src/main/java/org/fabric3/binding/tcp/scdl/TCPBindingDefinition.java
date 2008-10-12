@@ -39,7 +39,7 @@ public class TCPBindingDefinition extends BindingDefinition {
      * 
      * @param targetUri Target URI.
      */
-    public TCPBindingDefinition(URI targetUri) {
-        super(targetUri, BINDING_QNAME);
+    public TCPBindingDefinition(URI targetUri, String key) {
+        super(targetUri, BINDING_QNAME, key);
     }
 }

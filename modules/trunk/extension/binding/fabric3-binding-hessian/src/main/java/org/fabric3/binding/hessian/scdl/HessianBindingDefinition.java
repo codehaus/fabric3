@@ -45,7 +45,7 @@ import org.fabric3.scdl.BindingDefinition;
 public class HessianBindingDefinition extends BindingDefinition {
     private static final long serialVersionUID = 1740501132107914441L;
 
-    public HessianBindingDefinition(URI targetUri) {
-        super(targetUri, HessianBindingLoader.BINDING_QNAME);
+    public HessianBindingDefinition(URI targetUri, String key) {
+        super(targetUri, HessianBindingLoader.BINDING_QNAME, key);
     }
 }

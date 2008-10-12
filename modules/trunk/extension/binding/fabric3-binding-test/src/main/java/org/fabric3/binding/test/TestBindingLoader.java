@@ -52,7 +52,8 @@ public class TestBindingLoader implements TypeLoader<TestBindingDefinition> {
                 context.addError(failure);
                 return null;
             } else {
-                definition = new TestBindingDefinition(new URI(uri));
+                String key = reader.getAttributeValue(null, "key");
+                definition = new TestBindingDefinition(new URI(uri), key);
             }
         } catch (URISyntaxException ex) {
             InvalidValue failure = new InvalidValue("The Burlap binding URI is not valid: " + uri, "uri", reader);

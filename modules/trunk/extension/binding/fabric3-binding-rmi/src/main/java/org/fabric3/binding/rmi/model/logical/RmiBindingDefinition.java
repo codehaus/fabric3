@@ -29,8 +29,8 @@ public class RmiBindingDefinition extends BindingDefinition {
     private String host = "localhost";
     private String serviceName;
 
-    public RmiBindingDefinition(URI targetUri) {
-        super(targetUri, RmiBindingLoader.BINDING_QNAME);
+    public RmiBindingDefinition(URI targetUri, String key) {
+        super(targetUri, RmiBindingLoader.BINDING_QNAME, key);
     }
 
     public String getName() {

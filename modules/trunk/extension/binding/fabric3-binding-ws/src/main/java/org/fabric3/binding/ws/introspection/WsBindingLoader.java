@@ -104,14 +104,15 @@ public class WsBindingLoader implements TypeLoader<WsBindingDefinition> {
             String wsdlElement = reader.getAttributeValue(null, "wsdlElement");
             String wsdlLocation = reader.getAttributeValue("http://www.w3.org/2004/08/wsdl-instance", "wsdlLocation");
 
+            String key = reader.getAttributeValue(null, "key");
             if (uri == null) {
                 MissingAttribute failure = new MissingAttribute("The uri attribute is not specified", "uri", reader);
                 introspectionContext.addError(failure);
-                bd = new WsBindingDefinition(null, implementation, wsdlLocation, wsdlElement);
+                bd = new WsBindingDefinition(null, implementation, wsdlLocation, wsdlElement, key);
             } else {
                 // encode the URI since there may be expressions (e.g. "${..}") contained in it
                 URI endpointUri = new URI(URLEncoder.encode(uri, "UTF-8"));
-                bd = new WsBindingDefinition(endpointUri, implementation, wsdlLocation, wsdlElement);
+                bd = new WsBindingDefinition(endpointUri, implementation, wsdlLocation, wsdlElement, key);
             }
             loaderHelper.loadPolicySetsAndIntents(bd, reader, introspectionContext);
             

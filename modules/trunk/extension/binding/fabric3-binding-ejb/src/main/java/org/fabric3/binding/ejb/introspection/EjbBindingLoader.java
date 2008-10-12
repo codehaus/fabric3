@@ -56,7 +56,8 @@ public class EjbBindingLoader implements TypeLoader<EjbBindingDefinition> {
             introspectionContext.addError(failure);
             return null;
         }
-        EjbBindingDefinition bd = new EjbBindingDefinition(targetUri);
+        String key = reader.getAttributeValue(null, "key");
+        EjbBindingDefinition bd = new EjbBindingDefinition(targetUri, key);
 
         String homeInterface = reader.getAttributeValue(null, "homeInterface");
         bd.setHomeInterface(homeInterface);

@@ -54,8 +54,9 @@ public class TCPBindingLoader implements TypeLoader<TCPBindingDefinition> {
             if (!uri.contains("://")) { // Default to TCP.
                 uri = "tcp://" + uri;
             }
+            String key = reader.getAttributeValue(null, "key");
 
-            bd = new TCPBindingDefinition(new URI(uri));
+            bd = new TCPBindingDefinition(new URI(uri), key);
 
         } catch (URISyntaxException ex) {
             InvalidValue failure = new InvalidValue("The TCP binding URI is not valid: " + uri, "uri", reader);

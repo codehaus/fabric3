@@ -48,14 +48,12 @@ public abstract class BindingDefinition extends AbstractPolicyAware {
 
     private URI targetUri;
     private QName type;
+    private String key;
 
-    protected BindingDefinition(QName type) {
-        this(null, type);
-    }
-
-    public BindingDefinition(URI targetUri, QName type) {
+    public BindingDefinition(URI targetUri, QName type, String key) {
         this.targetUri = targetUri;
         this.type = type;
+        this.key = key;
     }
 
     public URI getTargetUri() {
@@ -64,6 +62,10 @@ public abstract class BindingDefinition extends AbstractPolicyAware {
     
     public QName getType() {
         return type;
+    }
+    
+    public String getKey() {
+    	return key;
     }
     
 }
