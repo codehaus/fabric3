@@ -52,7 +52,6 @@ import org.fabric3.binding.ws.scdl.WsBindingDefinition;
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.xml.InvalidValue;
 import org.fabric3.introspection.xml.LoaderHelper;
-import org.fabric3.introspection.xml.LoaderUtil;
 import org.fabric3.introspection.xml.MissingAttribute;
 import org.fabric3.introspection.xml.TypeLoader;
 import org.fabric3.introspection.xml.UnrecognizedAttribute;
@@ -104,15 +103,14 @@ public class WsBindingLoader implements TypeLoader<WsBindingDefinition> {
             String wsdlElement = reader.getAttributeValue(null, "wsdlElement");
             String wsdlLocation = reader.getAttributeValue("http://www.w3.org/2004/08/wsdl-instance", "wsdlLocation");
 
-            String key = reader.getAttributeValue(null, "key");
             if (uri == null) {
                 MissingAttribute failure = new MissingAttribute("The uri attribute is not specified", "uri", reader);
                 introspectionContext.addError(failure);
-                bd = new WsBindingDefinition(null, implementation, wsdlLocation, wsdlElement, key);
+                bd = new WsBindingDefinition(null, implementation, wsdlLocation, wsdlElement, loaderHelper.loadKey(reader));
             } else {
                 // encode the URI since there may be expressions (e.g. "${..}") contained in it
                 URI endpointUri = new URI(URLEncoder.encode(uri, "UTF-8"));
-                bd = new WsBindingDefinition(endpointUri, implementation, wsdlLocation, wsdlElement, key);
+                bd = new WsBindingDefinition(endpointUri, implementation, wsdlLocation, wsdlElement, loaderHelper.loadKey(reader));
             }
             loaderHelper.loadPolicySetsAndIntents(bd, reader, introspectionContext);
             

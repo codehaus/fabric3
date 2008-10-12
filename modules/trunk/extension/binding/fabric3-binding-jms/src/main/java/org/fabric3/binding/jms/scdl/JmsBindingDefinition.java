@@ -39,6 +39,7 @@ import java.net.URI;
 import org.fabric3.binding.jms.common.JmsBindingMetadata;
 import org.fabric3.binding.jms.introspection.JmsBindingLoader;
 import org.fabric3.scdl.BindingDefinition;
+import org.w3c.dom.Document;
 
 /**
  * Logical model object for JMS binding definition. TODO Support for overriding
@@ -64,7 +65,7 @@ public class JmsBindingDefinition extends BindingDefinition {
     /**
      * @param metadata Metadata to be initialized.
      */
-    public JmsBindingDefinition(JmsBindingMetadata metadata, String key) {
+    public JmsBindingDefinition(JmsBindingMetadata metadata, Document key) {
         super(null, JmsBindingLoader.BINDING_QNAME, key);
         this.metadata = metadata;
     }
@@ -73,7 +74,7 @@ public class JmsBindingDefinition extends BindingDefinition {
 	 * @param targetURI URI of binding target
 	 * @param metadata Metadata to be initialized.
 	 */
-    public JmsBindingDefinition(URI targetURI,JmsBindingMetadata metadata, String key) {
+    public JmsBindingDefinition(URI targetURI,JmsBindingMetadata metadata, Document key) {
         super(targetURI, JmsBindingLoader.BINDING_QNAME, key);
         this.metadata = metadata;
     }

@@ -21,6 +21,7 @@ import java.net.URI;
 import javax.xml.namespace.QName;
 
 import org.fabric3.scdl.BindingDefinition;
+import org.w3c.dom.Document;
 
 /**
  * Binding definition loaded from the SCDL.
@@ -39,7 +40,7 @@ public class TCPBindingDefinition extends BindingDefinition {
      * 
      * @param targetUri Target URI.
      */
-    public TCPBindingDefinition(URI targetUri, String key) {
+    public TCPBindingDefinition(URI targetUri, Document key) {
         super(targetUri, BINDING_QNAME, key);
     }
 }

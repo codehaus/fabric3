@@ -19,6 +19,7 @@ package org.fabric3.binding.rmi.model.logical;
 import java.net.URI;
 
 import org.fabric3.scdl.BindingDefinition;
+import org.w3c.dom.Document;
 
 public class RmiBindingDefinition extends BindingDefinition {
     private static final long serialVersionUID = 5023496186591172203L;
@@ -29,7 +30,7 @@ public class RmiBindingDefinition extends BindingDefinition {
     private String host = "localhost";
     private String serviceName;
 
-    public RmiBindingDefinition(URI targetUri, String key) {
+    public RmiBindingDefinition(URI targetUri, Document key) {
         super(targetUri, RmiBindingLoader.BINDING_QNAME, key);
     }
 

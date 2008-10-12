@@ -38,6 +38,7 @@ import java.net.URI;
 
 import org.fabric3.binding.burlap.introspection.BurlapBindingLoader;
 import org.fabric3.scdl.BindingDefinition;
+import org.w3c.dom.Document;
 
 /**
  * @version $Revision$ $Date$
@@ -45,7 +46,7 @@ import org.fabric3.scdl.BindingDefinition;
 public class BurlapBindingDefinition extends BindingDefinition {
     private static final long serialVersionUID = 9051452184163076358L;
 
-    public BurlapBindingDefinition(URI targetUri, String key) {
+    public BurlapBindingDefinition(URI targetUri, Document key) {
         super(targetUri, BurlapBindingLoader.BINDING_QNAME, key);
     }
 }

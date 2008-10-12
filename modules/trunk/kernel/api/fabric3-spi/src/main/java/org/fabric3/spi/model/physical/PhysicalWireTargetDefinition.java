@@ -37,6 +37,8 @@ package org.fabric3.spi.model.physical;
 import java.net.URI;
 import java.io.Serializable;
 
+import org.w3c.dom.Document;
+
 /**
  * Represents the target set of a physical wire.
  *
@@ -50,6 +52,25 @@ public class PhysicalWireTargetDefinition implements Serializable {
     private boolean callback;
     private URI callbackUri;
     private URI classLoaderId;
+    private Document key;
+
+    /**
+     * Returns the key to be used when this wire is part of a Map reference.
+     *
+     * @return the key to be used when this wire is part of a Map reference
+     */
+    public Document getKey() {
+        return key;
+    }
+
+    /**
+     * Sets the key to be used when this wire is part of a Map reference.
+     *
+     * @param key the key to be used when this wire is part of a Map reference
+     */
+    public void setKey(Document key) {
+        this.key = key;
+    }
 
     /**
      * Returns the URI of the physical component targeted by this wire.

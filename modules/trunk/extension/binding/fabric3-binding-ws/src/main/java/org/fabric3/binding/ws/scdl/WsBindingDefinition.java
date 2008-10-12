@@ -39,6 +39,7 @@ import java.util.Map;
 
 import org.fabric3.scdl.BindingDefinition;
 import org.fabric3.binding.ws.introspection.WsBindingLoader;
+import org.w3c.dom.Document;
 
 /**
  * Logical binding definition for web services.
@@ -53,7 +54,7 @@ public class WsBindingDefinition extends BindingDefinition {
     private final String wsdlElement;
     private Map<String, String> config;
 
-    public WsBindingDefinition(URI targetUri, String implementation, String wsdlLocation, String wsdlElement, String key) {
+    public WsBindingDefinition(URI targetUri, String implementation, String wsdlLocation, String wsdlElement, Document key) {
         super(targetUri, WsBindingLoader.BINDING_QNAME, key);
         this.implementation = implementation;
         this.wsdlElement = wsdlElement;

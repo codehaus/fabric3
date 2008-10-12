@@ -20,6 +20,7 @@ import java.net.URI;
 
 import org.fabric3.binding.ftp.common.Constants;
 import org.fabric3.scdl.BindingDefinition;
+import org.w3c.dom.Document;
 
 /**
  * Binding definition loaded from the SCDL.
@@ -37,7 +38,7 @@ public class FtpBindingDefinition extends BindingDefinition {
      * @param uri Target URI.
      * @param transferMode the FTP transfer mode
      */
-    public FtpBindingDefinition(URI uri, TransferMode transferMode, String key) {
+    public FtpBindingDefinition(URI uri, TransferMode transferMode, Document key) {
         super(uri, Constants.BINDING_QNAME, key);
         this.transferMode = transferMode;
     }

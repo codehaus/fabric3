@@ -53,6 +53,16 @@ import org.fabric3.introspection.IntrospectionContext;
  */
 public interface LoaderHelper {
     /**
+     * Load the value of the attribute key from the current element.
+     *
+     * @param reader a stream containing a property value
+     * @return a standalone document containing the value
+     * @throws javax.xml.stream.XMLStreamException
+     *          if there was a problem reading the stream
+     */
+    Document loadKey(XMLStreamReader reader);
+    
+    /**
      * Load an XML value from a Stax stream.
      * <p/>
      * The reader must be positioned at an element whose body contains an XML value. This will typically be an SCA &lt;property&gt; element (either in

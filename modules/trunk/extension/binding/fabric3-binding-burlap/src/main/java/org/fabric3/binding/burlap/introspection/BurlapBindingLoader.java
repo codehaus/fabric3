@@ -88,8 +88,7 @@ public class BurlapBindingLoader implements TypeLoader<BurlapBindingDefinition> 
                 introspectionContext.addError(failure);
                 return null;
             }
-            String key = reader.getAttributeValue(null, "key");
-            bd = new BurlapBindingDefinition(new URI(uri), key);
+            bd = new BurlapBindingDefinition(new URI(uri), loaderHelper.loadKey(reader));
 
             loaderHelper.loadPolicySetsAndIntents(bd, reader, introspectionContext);
 

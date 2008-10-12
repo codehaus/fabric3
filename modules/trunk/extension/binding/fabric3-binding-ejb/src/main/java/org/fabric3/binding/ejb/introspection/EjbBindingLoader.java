@@ -24,10 +24,12 @@ import javax.xml.stream.XMLStreamReader;
 
 import static org.osoa.sca.Constants.SCA_NS;
 import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.binding.ejb.scdl.EjbBindingDefinition;
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.xml.InvalidValue;
+import org.fabric3.introspection.xml.LoaderHelper;
 import org.fabric3.introspection.xml.LoaderUtil;
 import org.fabric3.introspection.xml.MissingAttribute;
 import org.fabric3.introspection.xml.TypeLoader;
@@ -38,6 +40,17 @@ import org.fabric3.introspection.xml.TypeLoader;
  */
 @EagerInit
 public class EjbBindingLoader implements TypeLoader<EjbBindingDefinition> {
+
+    private final LoaderHelper loaderHelper;
+
+    /**
+     * Constructor.
+     *
+     * @param loaderHelper the policy helper
+     */
+    public EjbBindingLoader(@Reference LoaderHelper loaderHelper) {
+        this.loaderHelper = loaderHelper;
+    }
 
     /**
      * Qualified name for the binding element.
@@ -56,8 +69,7 @@ public class EjbBindingLoader implements TypeLoader<EjbBindingDefinition> {
             introspectionContext.addError(failure);
             return null;
         }
-        String key = reader.getAttributeValue(null, "key");
-        EjbBindingDefinition bd = new EjbBindingDefinition(targetUri, key);
+        EjbBindingDefinition bd = new EjbBindingDefinition(targetUri, loaderHelper.loadKey(reader));
 
         String homeInterface = reader.getAttributeValue(null, "homeInterface");
         bd.setHomeInterface(homeInterface);

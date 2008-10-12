@@ -20,6 +20,7 @@ import java.net.URI;
 
 import org.fabric3.binding.ejb.introspection.EjbBindingLoader;
 import org.fabric3.scdl.BindingDefinition;
+import org.w3c.dom.Document;
 
 /**
  * @version $Revision: 1 $ $Date: 2007-05-14 10:40:37 -0700 (Mon, 14 May 2007) $
@@ -32,7 +33,7 @@ public class EjbBindingDefinition extends BindingDefinition {
     private boolean isEjb3;
     private String name;
 
-    public EjbBindingDefinition(URI targetUri, String key) {
+    public EjbBindingDefinition(URI targetUri, Document key) {
         super(targetUri, EjbBindingLoader.BINDING_QNAME, key);
     }
 

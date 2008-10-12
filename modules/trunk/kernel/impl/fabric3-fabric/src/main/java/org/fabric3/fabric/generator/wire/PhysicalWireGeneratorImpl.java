@@ -255,6 +255,7 @@ public class PhysicalWireGeneratorImpl implements PhysicalWireGenerator {
             URI callbackUri = generateCallbackUri(component, callbackContract, referenceDefinition.getName());
             targetDefinition.setCallbackUri(callbackUri);
         }
+        targetDefinition.setKey(binding.getBinding().getKey());
 
 
         ComponentGenerator<C> sourceGenerator = getGenerator(component);

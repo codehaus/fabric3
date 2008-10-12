@@ -34,25 +34,76 @@
  */
 package org.fabric3.binding.jms.introspection;
 
+import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
+
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.URI;
+import java.util.List;
+import java.util.Set;
+
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLInputFactory;
-import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
+import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
 import junit.framework.TestCase;
-import org.easymock.EasyMock;
 
 import org.fabric3.binding.jms.common.HeadersDefinition;
 import org.fabric3.binding.jms.common.JmsBindingMetadata;
 import org.fabric3.binding.jms.scdl.JmsBindingDefinition;
+import org.fabric3.introspection.IntrospectionContext;
+import org.fabric3.introspection.xml.InvalidPrefixException;
 import org.fabric3.introspection.xml.LoaderHelper;
 import org.fabric3.jaxb.control.api.JAXBTransformationService;
+import org.fabric3.scdl.PolicyAware;
+import org.w3c.dom.Document;
 
 public class JMSBindingLoaderTestCase extends TestCase {
     public void testLoaderJMSBindingElement() throws Exception {
-        LoaderHelper loaderHelper = EasyMock.createMock(LoaderHelper.class);
+        LoaderHelper loaderHelper = new LoaderHelper() {
+
+			public QName createQName(String name, XMLStreamReader reader)
+					throws InvalidPrefixException {
+				// TODO Auto-generated method stub
+				return null;
+			}
+
+			public URI getURI(String target) {
+				// TODO Auto-generated method stub
+				return null;
+			}
+
+			public Document loadKey(XMLStreamReader reader) {
+				// TODO Auto-generated method stub
+				return null;
+			}
+
+			public void loadPolicySetsAndIntents(PolicyAware policyAware,
+					XMLStreamReader reader, IntrospectionContext context) {
+				// TODO Auto-generated method stub
+				
+			}
+
+			public Document loadValue(XMLStreamReader reader)
+					throws XMLStreamException {
+				// TODO Auto-generated method stub
+				return null;
+			}
+
+			public Set<QName> parseListOfQNames(XMLStreamReader reader,
+					String attribute) throws InvalidPrefixException {
+				// TODO Auto-generated method stub
+				return null;
+			}
+
+			public List<URI> parseListOfUris(XMLStreamReader reader,
+					String attribute) {
+				// TODO Auto-generated method stub
+				return null;
+			}
+        	
+        };
         JAXBTransformationService mock = new JAXBTransformationService() {
 
             public void registerBinding(QName name, QName dataType) {
@@ -65,6 +116,7 @@ public class JMSBindingLoaderTestCase extends TestCase {
         XMLInputFactory factory = XMLInputFactory.newInstance();
         XMLStreamReader streamReader = factory
                 .createXMLStreamReader(new InputStreamReader(inputStream));
+        loaderHelper.loadKey(streamReader);
         JmsBindingDefinition jmsBinding = null;
         while (streamReader.hasNext()) {
             if (START_ELEMENT == streamReader.next()

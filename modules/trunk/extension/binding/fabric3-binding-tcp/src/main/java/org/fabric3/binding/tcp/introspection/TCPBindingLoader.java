@@ -25,14 +25,27 @@ import javax.xml.stream.XMLStreamReader;
 import org.fabric3.binding.tcp.scdl.TCPBindingDefinition;
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.xml.InvalidValue;
+import org.fabric3.introspection.xml.LoaderHelper;
 import org.fabric3.introspection.xml.LoaderUtil;
 import org.fabric3.introspection.xml.MissingAttribute;
 import org.fabric3.introspection.xml.TypeLoader;
+import org.osoa.sca.annotations.Reference;
 
 /**
  * @version $Revision$ $Date$
  */
 public class TCPBindingLoader implements TypeLoader<TCPBindingDefinition> {
+
+    private final LoaderHelper loaderHelper;
+
+    /**
+     * Constructor.
+     *
+     * @param loaderHelper the policy helper
+     */
+    public TCPBindingLoader(@Reference LoaderHelper loaderHelper) {
+        this.loaderHelper = loaderHelper;
+    }
 
     /**
      * {@inheritDoc}
@@ -54,9 +67,8 @@ public class TCPBindingLoader implements TypeLoader<TCPBindingDefinition> {
             if (!uri.contains("://")) { // Default to TCP.
                 uri = "tcp://" + uri;
             }
-            String key = reader.getAttributeValue(null, "key");
 
-            bd = new TCPBindingDefinition(new URI(uri), key);
+            bd = new TCPBindingDefinition(new URI(uri), loaderHelper.loadKey(reader));
 
         } catch (URISyntaxException ex) {
             InvalidValue failure = new InvalidValue("The TCP binding URI is not valid: " + uri, "uri", reader);

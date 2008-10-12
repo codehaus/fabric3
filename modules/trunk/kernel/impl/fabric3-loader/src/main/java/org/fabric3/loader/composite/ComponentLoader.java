@@ -279,30 +279,7 @@ public class ComponentLoader implements TypeLoader<ComponentDefinition<?>> {
      * @param reader              a reader positioned on the element containing the key definition @return a Document containing the key value.
      */
     private void loadKey(ComponentDefinition<Implementation<?>> componentDefinition, XMLStreamReader reader) {
-
-        String key = reader.getAttributeValue(Constants.FABRIC3_NS, "key");
-        if (key == null) {
-            return;
-        }
-
-        // create a document with a root element to hold the key value
-        Document document = documentBuilder.newDocument();
-        Element element = document.createElement("key");
-        document.appendChild(element);
-
-        // TODO: we should copy all in-context namespaces to the declaration if we can find what they are
-        // in the mean time, see if the value looks like it might contain a prefix
-        int index = key.indexOf(':');
-        if (index != -1) {
-            String prefix = key.substring(0, index);
-            String uri = reader.getNamespaceURI(prefix);
-            if (uri != null) {
-                element.setAttributeNS(XMLConstants.XMLNS_ATTRIBUTE_NS_URI, "xmlns:" + prefix, uri);
-            }
-        }
-        // set the text value
-        element.appendChild(document.createTextNode(key));
-        componentDefinition.setKey(document);
+        componentDefinition.setKey(loaderHelper.loadKey(reader));
     }
 
     /*

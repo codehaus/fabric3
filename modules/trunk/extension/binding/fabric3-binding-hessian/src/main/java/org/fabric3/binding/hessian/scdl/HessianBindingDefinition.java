@@ -38,6 +38,7 @@ import java.net.URI;
 
 import org.fabric3.binding.hessian.introspection.HessianBindingLoader;
 import org.fabric3.scdl.BindingDefinition;
+import org.w3c.dom.Document;
 
 /**
  * @version $Revision$ $Date$
@@ -45,7 +46,7 @@ import org.fabric3.scdl.BindingDefinition;
 public class HessianBindingDefinition extends BindingDefinition {
     private static final long serialVersionUID = 1740501132107914441L;
 
-    public HessianBindingDefinition(URI targetUri, String key) {
+    public HessianBindingDefinition(URI targetUri, Document key) {
         super(targetUri, HessianBindingLoader.BINDING_QNAME, key);
     }
 }

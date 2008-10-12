@@ -83,6 +83,9 @@ public abstract class PojoSourceWireAttacher {
         }
 
         Document keyDocument = sourceDefinition.getKey();
+        if (keyDocument == null) {
+        	keyDocument = targetDefinition.getKey();
+        }
 
 
         if (keyDocument != null) {
@@ -108,7 +111,10 @@ public abstract class PojoSourceWireAttacher {
             URI sourceId = sourceDefinition.getClassLoaderId();
             URI targetId = targetDefinition.getClassLoaderId();
             ClassLoader sourceClassLoader = classLoaderRegistry.getClassLoader(sourceId);
-            ClassLoader targetClassLoader = classLoaderRegistry.getClassLoader(targetId);
+            ClassLoader targetClassLoader = null;
+            if (targetId != null) {
+            	targetClassLoader = classLoaderRegistry.getClassLoader(targetId);
+            }
 
             TransformContext context = new TransformContext(sourceClassLoader, targetClassLoader, null, null);
             return createKey(formalType, element, context);

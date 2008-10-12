@@ -38,6 +38,8 @@ import java.net.URI;
 
 import javax.xml.namespace.QName;
 
+import org.w3c.dom.Document;
+
 /**
  * The base representation of a binding specified in an assembly
  *
@@ -48,9 +50,9 @@ public abstract class BindingDefinition extends AbstractPolicyAware {
 
     private URI targetUri;
     private QName type;
-    private String key;
+    private Document key;
 
-    public BindingDefinition(URI targetUri, QName type, String key) {
+    public BindingDefinition(URI targetUri, QName type, Document key) {
         this.targetUri = targetUri;
         this.type = type;
         this.key = key;
@@ -64,7 +66,7 @@ public abstract class BindingDefinition extends AbstractPolicyAware {
         return type;
     }
     
-    public String getKey() {
+    public Document getKey() {
     	return key;
     }
     

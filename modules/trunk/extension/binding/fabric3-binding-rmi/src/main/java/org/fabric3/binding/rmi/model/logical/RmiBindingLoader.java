@@ -23,13 +23,26 @@ import javax.xml.stream.XMLStreamReader;
 
 import static org.osoa.sca.Constants.SCA_NS;
 import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.introspection.IntrospectionContext;
+import org.fabric3.introspection.xml.LoaderHelper;
 import org.fabric3.introspection.xml.LoaderUtil;
 import org.fabric3.introspection.xml.TypeLoader;
 
 @EagerInit
 public class RmiBindingLoader implements TypeLoader<RmiBindingDefinition> {
+
+    private final LoaderHelper loaderHelper;
+
+    /**
+     * Constructor.
+     *
+     * @param loaderHelper the policy helper
+     */
+    public RmiBindingLoader(@Reference LoaderHelper loaderHelper) {
+        this.loaderHelper = loaderHelper;
+    }
 
     /**
      * Qualified name for the binding element.
@@ -49,8 +62,7 @@ public class RmiBindingLoader implements TypeLoader<RmiBindingDefinition> {
             targetURI = URI.create(target);
         }
 
-        String key = reader.getAttributeValue(null, "key");
-        RmiBindingDefinition definition = new RmiBindingDefinition(targetURI, key);
+        RmiBindingDefinition definition = new RmiBindingDefinition(targetURI, loaderHelper.loadKey(reader));
         definition.setName(name);
         if (serviceName != null) {
             definition.setServiceName(serviceName);

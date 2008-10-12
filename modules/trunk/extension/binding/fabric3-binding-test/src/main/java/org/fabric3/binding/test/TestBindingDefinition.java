@@ -19,6 +19,7 @@ package org.fabric3.binding.test;
 import java.net.URI;
 
 import org.fabric3.scdl.BindingDefinition;
+import org.w3c.dom.Document;
 
 /**
  * @version $Rev$ $Date$
@@ -26,7 +27,7 @@ import org.fabric3.scdl.BindingDefinition;
 public class TestBindingDefinition extends BindingDefinition {
     private static final long serialVersionUID = 2529090404017606258L;
 
-    public TestBindingDefinition(URI targetUri, String key) {
+    public TestBindingDefinition(URI targetUri, Document key) {
         super(targetUri, TestBindingLoader.BINDING_QNAME, key);
     }
 }

@@ -40,6 +40,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.StringTokenizer;
+
+import javax.xml.XMLConstants;
 import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -54,6 +56,7 @@ import org.fabric3.introspection.xml.InvalidPrefixException;
 import org.fabric3.introspection.xml.LoaderHelper;
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.scdl.PolicyAware;
+import org.fabric3.spi.Constants;
 import org.fabric3.transform.TransformationException;
 import org.fabric3.transform.xml.Stream2Element2;
 
@@ -70,6 +73,47 @@ public class DefaultLoaderHelper implements LoaderHelper {
         stream2Element = new Stream2Element2();
         documentBuilderFactory = DocumentBuilderFactory.newInstance();
         documentBuilderFactory.setNamespaceAware(true);
+    }
+    /**
+     * Load the value of the attribute key from the current element.
+     *
+     * @param reader a stream containing a property value
+     * @return a standalone document containing the value
+     * @throws javax.xml.stream.XMLStreamException
+     *          if there was a problem reading the stream
+     */
+    public Document loadKey(XMLStreamReader reader) {
+        DocumentBuilder builder;
+        try {
+            builder = documentBuilderFactory.newDocumentBuilder();
+        } catch (ParserConfigurationException e) {
+            throw new AssertionError(e);
+        }
+
+        String key = reader.getAttributeValue(Constants.FABRIC3_NS, "key");
+        if (key == null) {
+            return null;
+        }
+
+        // create a document with a root element to hold the key value
+        Document document = builder.newDocument();
+        Element element = document.createElement("key");
+        document.appendChild(element);
+
+        // TODO: we should copy all in-context namespaces to the declaration if we can find what they are
+        // in the mean time, see if the value looks like it might contain a prefix
+        int index = key.indexOf(':');
+        if (index != -1) {
+            String prefix = key.substring(0, index);
+            String uri = reader.getNamespaceURI(prefix);
+            if (uri != null) {
+                element.setAttributeNS(XMLConstants.XMLNS_ATTRIBUTE_NS_URI, "xmlns:" + prefix, uri);
+            }
+        }
+        // set the text value
+        element.appendChild(document.createTextNode(key));
+        return document;
+    	
     }
 
 
@@ -152,20 +196,6 @@ public class DefaultLoaderHelper implements LoaderHelper {
             return URI.create(uri + '#' + fragment);
         }
     }
-
-    /*public List<URI> parseListOfUris(XMLStreamReader reader, String attribute) {
-        String value = reader.getAttributeValue(null, attribute);
-        if (value == null || value.length() == 0) {
-            return null;
-        } else {
-            String[] uris = value.split(" ");
-            List<URI> result = new ArrayList<URI>(uris.length);
-            for (String uri : uris) {
-                result.add(getURI(uri));
-            }
-            return result;
-        }
-    }*/
 
     public List<URI> parseListOfUris(XMLStreamReader reader, String attribute) {
         String value = reader.getAttributeValue(null, attribute);
