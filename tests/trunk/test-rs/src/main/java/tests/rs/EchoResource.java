@@ -52,8 +52,8 @@ public class EchoResource implements EchoService {
 
     @POST
     @Produces("application/entity")
-    public Entity hello(Entity entity) {
-        entity.setValue(message + " " + service.hello(entity).getValue());
+    public Entity helloEntity(Entity entity) {
+        entity.setValue(message + " " + service.helloEntity(entity).getValue());
         return entity;
     }
 }

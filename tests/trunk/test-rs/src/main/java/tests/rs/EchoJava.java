@@ -25,7 +25,7 @@ public class EchoJava implements EchoService {
         return name;
     }
 
-    public Entity hello(Entity entity) {
+    public Entity helloEntity(Entity entity) {
         return entity;
     }
 }

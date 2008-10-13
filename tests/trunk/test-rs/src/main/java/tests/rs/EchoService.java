@@ -23,5 +23,5 @@ public interface EchoService {
 
     String hello(String name);
 
-    Entity hello(Entity entity);
+    Entity helloEntity(Entity entity);
 }
