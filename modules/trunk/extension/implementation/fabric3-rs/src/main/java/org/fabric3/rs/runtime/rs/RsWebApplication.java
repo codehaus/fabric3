@@ -19,6 +19,8 @@ package org.fabric3.rs.runtime.rs;
 import java.io.IOException;
 import java.util.Enumeration;
 
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
@@ -39,6 +41,9 @@ public final class RsWebApplication extends HttpServlet {
     ServletConfig cfg;
     Fabric3ComponentProvider provider;
     boolean reload = false;
+    ReentrantReadWriteLock reloadRWLock = new ReentrantReadWriteLock();
+    Lock reloadLock = reloadRWLock.readLock();
+    Lock serviceLock = reloadRWLock.writeLock();
 
     public RsWebApplication(ClassLoader cl) {
         this.cl = cl;
@@ -57,49 +62,64 @@ public final class RsWebApplication extends HttpServlet {
     }
 
     public void reload() throws ServletException {
-        // Set the class loader to the runtime one so Jersey loads the
-        // ResourceConfig properly
-        ClassLoader oldcl = Thread.currentThread().getContextClassLoader();
         try {
-            Thread.currentThread().setContextClassLoader(cl);
-            this.servlet = new RsServlet(this.provider);
-            servlet.init(cfg);
-        } catch (ServletException se) {
-            throw se;//TODO this is not getting logged in the F3 Runtime
-        } catch (Throwable t) {
-            ServletException se = new ServletException(t);
-            throw se;
+            reloadLock.lock();
+            // Set the class loader to the runtime one so Jersey loads the
+            // ResourceConfig properly
+            ClassLoader oldcl = Thread.currentThread().getContextClassLoader();
+            try {
+                Thread.currentThread().setContextClassLoader(cl);
+                this.servlet = new RsServlet(this.provider);
+                servlet.init(cfg);
+            } catch (ServletException se) {
+                se.printStackTrace();//Jetty only seems to log exceptions when debug is enabled
+                throw se;//TODO this is not getting logged in the F3 Runtime
+            } catch (Throwable t) {
+                ServletException se = new ServletException(t);
+                se.printStackTrace();//Jetty only seems to log exceptions when debug is enabled
+                throw se;
+            } finally {
+                Thread.currentThread().setContextClassLoader(oldcl);
+            }
+            reload = false;
         } finally {
-            Thread.currentThread().setContextClassLoader(oldcl);
+            reloadLock.unlock();
         }
-        reload = false;
     }
 
     @Override
     protected void service(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
-        if (reload) {
-            reload();
-        }
-
-        ClassLoader oldcl = Thread.currentThread().getContextClassLoader();
-        WorkContext oldContext = null;
         try {
-            Thread.currentThread().setContextClassLoader(cl);
-            WorkContext workContext = new WorkContext();
-            CallFrame frame = new CallFrame();
-            workContext.addCallFrame(frame);
-            oldContext = PojoWorkContextTunnel.setThreadWorkContext(workContext);
-            servlet.service(req, res);
-        } catch (ServletException se) {
-            throw se;
-        } catch (IOException ie) {
-            throw ie;
-        } catch (Throwable t) {
-            ServletException se = new ServletException(t);
-            throw se;
+            serviceLock.lock();
+            if (reload) {
+                reload();
+            }
+
+            ClassLoader oldcl = Thread.currentThread().getContextClassLoader();
+            WorkContext oldContext = null;
+            try {
+                Thread.currentThread().setContextClassLoader(cl);
+                WorkContext workContext = new WorkContext();
+                CallFrame frame = new CallFrame();
+                workContext.addCallFrame(frame);
+                oldContext = PojoWorkContextTunnel.setThreadWorkContext(workContext);
+                servlet.service(req, res);
+            } catch (ServletException se) {
+                se.printStackTrace();//Jetty only seems to log exceptions when debug is enabled
+                throw se;
+            } catch (IOException ie) {
+                ie.printStackTrace();//Jetty only seems to log exceptions when debug is enabled
+                throw ie;
+            } catch (Throwable t) {
+                t.printStackTrace();//Jetty only seems to log exceptions when debug is enabled
+                ServletException se = new ServletException(t);
+                throw se;
+            } finally {
+                Thread.currentThread().setContextClassLoader(oldcl);
+                PojoWorkContextTunnel.setThreadWorkContext(oldContext);
+            }
         } finally {
-            Thread.currentThread().setContextClassLoader(oldcl);
-            PojoWorkContextTunnel.setThreadWorkContext(oldContext);
+            serviceLock.unlock();
         }
     }
 
@@ -158,5 +178,4 @@ public final class RsWebApplication extends HttpServlet {
             return config.getServletName();
         }
     }
-    
 }

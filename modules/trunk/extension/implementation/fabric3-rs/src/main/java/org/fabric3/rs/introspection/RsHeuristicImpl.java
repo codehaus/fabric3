@@ -1,12 +1,12 @@
 /*
  * Fabric3
- * Copyright © 2008 Metaform Systems Limited
+ * Copyright ï¿½ 2008 Metaform Systems Limited
  *
  * This proprietary software may be used only connection with the Fabric3 license
- * (the ÒLicenseÓ), a copy of which is included in the software or may be
+ * (the ï¿½Licenseï¿½), a copy of which is included in the software or may be
  * obtained at: http://www.metaformsystems.com/licenses/license.html.
 
- * Software distributed under the License is distributed on an Òas isÓ basis,
+ * Software distributed under the License is distributed on an ï¿½as isï¿½ basis,
  * without warranties or conditions of any kind.  See the License for the
  * specific language governing permissions and limitations of use of the software.
  * This software is distributed in conjunction with other software licensed under
@@ -22,10 +22,12 @@ import java.lang.reflect.Type;
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import javax.ws.rs.Path;
 import javax.ws.rs.ext.MessageBodyReader;
 import javax.ws.rs.ext.MessageBodyWriter;
 import javax.ws.rs.ext.Provider;
+import org.fabric3.host.contribution.ValidationFailure;
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.IntrospectionHelper;
 import org.fabric3.introspection.java.ImplementationNotFoundException;
@@ -74,6 +76,7 @@ public class RsHeuristicImpl implements RsHeuristic {
                 for (Annotation a : m.getAnnotations()) {
                     if (a.annotationType().getName().startsWith("javax.ws.rs")) {
                         operations.add(getOperations(m));
+                        break;
                     }
                 }
             }
@@ -123,9 +126,6 @@ public class RsHeuristicImpl implements RsHeuristic {
 
     private <T> Operation<Type> getOperations(Method method) {
 
-        String name = method.getName();
-
-
         Class<?> returnType = method.getReturnType();
         Class<?>[] paramTypes = method.getParameterTypes();
         Class<?>[] faultTypes = method.getExceptionTypes();
@@ -142,7 +142,7 @@ public class RsHeuristicImpl implements RsHeuristic {
         }
 
         DataType<List<DataType<Type>>> inputType = new DataType<List<DataType<Type>>>(Object[].class, paramDataTypes);
-        Operation<Type> operation = new Operation<Type>(name, inputType, returnDataType, faultDataTypes, NO_CONVERSATION);
+        Operation<Type> operation = new Operation<Type>(method.getName(), inputType, returnDataType, faultDataTypes, NO_CONVERSATION);
         return operation;
     }
 }
