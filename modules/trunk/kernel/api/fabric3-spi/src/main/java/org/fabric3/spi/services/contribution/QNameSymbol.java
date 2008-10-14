@@ -24,6 +24,8 @@ import javax.xml.namespace.QName;
  * @version $Rev$ $Date$
  */
 public class QNameSymbol extends Symbol<QName> {
+    private static final long serialVersionUID = -515369746328003976L;
+
     public QNameSymbol(QName qName) {
         super(qName);
     }
