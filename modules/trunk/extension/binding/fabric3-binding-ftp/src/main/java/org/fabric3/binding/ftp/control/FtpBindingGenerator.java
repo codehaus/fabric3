@@ -95,13 +95,16 @@ public class FtpBindingGenerator implements BindingGenerator<FtpWireSourceDefini
         }
 
         URI id = binding.getParent().getParent().getParent().getUri();
-        boolean active = binding.getBinding().getTransferMode() == TransferMode.ACTIVE;
+        FtpBindingDefinition definition = binding.getBinding();
+        boolean active = definition.getTransferMode() == TransferMode.ACTIVE;
 
         FtpSecurity security = processPolicies(policy, serviceContract.getOperations().iterator().next());
 
         FtpWireTargetDefinition hwtd = new FtpWireTargetDefinition(id, active, security, connectTimeout, socketTimeout);
-        hwtd.setUri(binding.getBinding().getTargetUri());
-
+        hwtd.setUri(definition.getTargetUri());
+        if (!definition.getSTORCommands().isEmpty()) {
+            hwtd.setSTORCommands(definition.getSTORCommands());
+        }
         return hwtd;
 
     }

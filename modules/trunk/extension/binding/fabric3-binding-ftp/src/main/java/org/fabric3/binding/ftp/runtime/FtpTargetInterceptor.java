@@ -20,6 +20,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.List;
 
 import org.apache.commons.net.SocketFactory;
 import org.apache.commons.net.ftp.FTP;
@@ -27,10 +28,10 @@ import org.apache.commons.net.ftp.FTPClient;
 import org.osoa.sca.ServiceUnavailableException;
 
 import org.fabric3.binding.ftp.provision.FtpSecurity;
+import org.fabric3.ftp.api.FtpConstants;
 import org.fabric3.spi.invocation.Message;
 import org.fabric3.spi.invocation.MessageImpl;
 import org.fabric3.spi.wire.Interceptor;
-import org.fabric3.ftp.api.FtpConstants;
 
 /**
  * @version $Revision$ $Date$
@@ -42,11 +43,18 @@ public class FtpTargetInterceptor implements Interceptor {
     private final InetAddress hostAddress;
     private final int timeout;
     private SocketFactory factory;
+    private List<String> commands;
 
     private final FtpSecurity security;
     private final boolean active;
 
-    public FtpTargetInterceptor(InetAddress hostAddress, int port, FtpSecurity security, boolean active, int timeout, SocketFactory factory)
+    public FtpTargetInterceptor(InetAddress hostAddress,
+                                int port,
+                                FtpSecurity security,
+                                boolean active,
+                                int timeout,
+                                SocketFactory factory,
+                                List<String> commands)
             throws UnknownHostException {
         this.hostAddress = hostAddress;
         this.port = port;
@@ -54,6 +62,7 @@ public class FtpTargetInterceptor implements Interceptor {
         this.active = active;
         this.timeout = timeout;
         this.factory = factory;
+        this.commands = commands;
     }
 
     public Interceptor getNext() {
@@ -92,7 +101,11 @@ public class FtpTargetInterceptor implements Interceptor {
             } else {
                 ftpClient.enterLocalPassiveMode();
             }
-
+            if (commands != null) {
+                for (String command : commands) {
+                    ftpClient.sendCommand(command);
+                }
+            }
             if (!ftpClient.storeFile(fileName, data)) {
                 throw new ServiceUnavailableException("Unable to upload data. Response sent from server: " + ftpClient.getReplyString());
             }

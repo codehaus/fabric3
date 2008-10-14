@@ -16,10 +16,11 @@
  */
 package org.fabric3.binding.ftp.introspection;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLEncoder;
-import java.io.UnsupportedEncodingException;
+import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
@@ -34,6 +35,7 @@ import org.fabric3.introspection.xml.LoaderUtil;
 import org.fabric3.introspection.xml.MissingAttribute;
 import org.fabric3.introspection.xml.TypeLoader;
 import org.fabric3.introspection.xml.UnrecognizedAttribute;
+import org.fabric3.introspection.xml.UnrecognizedElement;
 
 /**
  * @version $Revision$ $Date$
@@ -75,6 +77,28 @@ public class FtpBindingLoader implements TypeLoader<FtpBindingDefinition> {
             bd = new FtpBindingDefinition(endpointUri, tMode, loaderHelper.loadKey(reader));
 
             loaderHelper.loadPolicySetsAndIntents(bd, reader, introspectionContext);
+            while (true) {
+                switch (reader.next()) {
+                case XMLStreamConstants.END_ELEMENT:
+                    if ("binding.ftp".equals(reader.getName().getLocalPart())) {
+                        return bd;
+                    }
+                case XMLStreamConstants.START_ELEMENT:
+                    if ("commands".equals(reader.getName().getLocalPart())) {
+                        boolean success = parseCommands(bd, reader, introspectionContext);
+                        if (!success) {
+                            while (true) {
+                                // position the curser at the end of the binding.ftp entry
+                                LoaderUtil.skipToEndElement(reader);
+                                if ("binding.ftp".equals(reader.getName().getLocalPart())) {
+                                    return bd;
+                                }
+                            }
+                        }
+                    }
+                }
+
+            }
 
         } catch (URISyntaxException ex) {
             InvalidValue failure = new InvalidValue("The FTP binding URI is not valid: " + uri, "uri", reader);
@@ -87,6 +111,27 @@ public class FtpBindingLoader implements TypeLoader<FtpBindingDefinition> {
         LoaderUtil.skipToEndElement(reader);
         return bd;
 
+    }
+
+    private boolean parseCommands(FtpBindingDefinition bd, XMLStreamReader reader, IntrospectionContext context) throws XMLStreamException {
+        while (true) {
+            switch (reader.nextTag()) {
+            case XMLStreamConstants.END_ELEMENT:
+                if ("commands".equals(reader.getName().getLocalPart())) {
+                    return true;
+                }
+                break;
+            case XMLStreamConstants.START_ELEMENT:
+                if ("command".equals(reader.getName().getLocalPart())) {
+                    reader.next();
+                    bd.addSTORCommand(reader.getText());
+                } else {
+                    UnrecognizedElement error = new UnrecognizedElement(reader);
+                    context.addError(error);
+                    return false;
+                }
+            }
+        }
     }
 
     private void validateAttributes(XMLStreamReader reader, IntrospectionContext context) {

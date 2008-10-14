@@ -17,26 +17,31 @@
 package org.fabric3.binding.ftp.scdl;
 
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
+
+import org.w3c.dom.Document;
 
 import org.fabric3.binding.ftp.common.Constants;
 import org.fabric3.scdl.BindingDefinition;
-import org.w3c.dom.Document;
 
 /**
  * Binding definition loaded from the SCDL.
- * 
+ *
  * @version $Revision$ $Date$
  */
 public class FtpBindingDefinition extends BindingDefinition {
     private static final long serialVersionUID = -889044951554792780L;
-    
+
     private final TransferMode transferMode;
+    private List<String> commands = new ArrayList<String>();
 
     /**
      * Initializes the binding type.
-     * 
-     * @param uri Target URI.
+     *
+     * @param uri          Target URI.
      * @param transferMode the FTP transfer mode
+     * @param key          the key for mapped bindings
      */
     public FtpBindingDefinition(URI uri, TransferMode transferMode, Document key) {
         super(uri, Constants.BINDING_QNAME, key);
@@ -45,11 +50,29 @@ public class FtpBindingDefinition extends BindingDefinition {
 
     /**
      * Gets the transfer mode.
-     * 
+     *
      * @return File transfer mode.
      */
     public TransferMode getTransferMode() {
         return transferMode;
     }
 
+    /**
+     * Gets the list of commands to execute before a STOR operation, i.e. a service invocation.
+     *
+     * @return the list of commands to execture before a STOR
+     */
+    public List<String> getSTORCommands() {
+        return commands;
+    }
+
+
+    /**
+     * Adds a command to execute before a put.
+     *
+     * @param command the command
+     */
+    public void addSTORCommand(String command) {
+        commands.add(command);
+    }
 }

@@ -17,6 +17,7 @@
 package org.fabric3.binding.ftp.provision;
 
 import java.net.URI;
+import java.util.List;
 
 import org.fabric3.binding.ftp.common.Constants;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
@@ -25,22 +26,13 @@ import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
  * @version $Revision$ $Date$
  */
 public class FtpWireTargetDefinition extends PhysicalWireTargetDefinition {
+    private static final long serialVersionUID = -494501322715192283L;
     private final URI classLoaderId;
     private final boolean active;
     private final FtpSecurity security;
     private int connectTimeout;
     private int socketTimeout;
-
-    /**
-     * Initializes the classloader id and transfer mode.
-     *
-     * @param classLoaderId the classloader id to deserialize parameters in
-     * @param active        FTP transfer mode
-     * @param security      Security parameters
-     */
-    public FtpWireTargetDefinition(URI classLoaderId, boolean active, FtpSecurity security) {
-        this(classLoaderId, active, security, Constants.NO_TIMEOUT, Constants.NO_TIMEOUT);
-    }
+    private List<String> commands;
 
     /**
      * Initializes the classloader id, transfer mode, and timeout.
@@ -122,4 +114,21 @@ public class FtpWireTargetDefinition extends PhysicalWireTargetDefinition {
         this.socketTimeout = socketTimeout;
     }
 
+    /**
+     * The commands to execute before a STOR operation (i.e. a service invocation)
+     *
+     * @return the commands
+     */
+    public List<String> getSTORCommands() {
+        return commands;
+    }
+
+    /**
+     * Sets the list of commands to execute before a STOR operation.
+     *
+     * @param commands the commands
+     */
+    public void setSTORCommands(List<String> commands) {
+        this.commands = commands;
+    }
 }

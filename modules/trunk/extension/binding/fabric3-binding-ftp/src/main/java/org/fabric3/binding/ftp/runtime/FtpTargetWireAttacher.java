@@ -21,6 +21,7 @@ import java.net.InetAddress;
 import java.net.URI;
 import java.net.URLDecoder;
 import java.net.UnknownHostException;
+import java.util.List;
 
 import org.apache.commons.net.SocketFactory;
 import org.osoa.sca.annotations.Reference;
@@ -60,7 +61,8 @@ public class FtpTargetWireAttacher implements TargetWireAttacher<FtpWireTargetDe
             int connectTimeout = target.getConectTimeout();
             SocketFactory factory = new ExpiringSocketFactory(connectTimeout);
             int socketTimeout = target.getSocketTimeout();
-            FtpTargetInterceptor targetInterceptor = new FtpTargetInterceptor(hostAddress, port, security, active, socketTimeout, factory);
+            List<String> cmds = target.getSTORCommands();
+            FtpTargetInterceptor targetInterceptor = new FtpTargetInterceptor(hostAddress, port, security, active, socketTimeout, factory, cmds);
             invocationChain.addInterceptor(targetInterceptor);
         } catch (UnknownHostException e) {
             throw new WiringException(e);
