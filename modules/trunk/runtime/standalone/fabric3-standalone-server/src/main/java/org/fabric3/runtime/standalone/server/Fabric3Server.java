@@ -264,8 +264,8 @@ public class Fabric3Server implements Fabric3ServerMBean {
             if (!file.exists()) {
                 return null;
             }
-            URI contribuUri = file.toURI();
-            URL location = contribuUri.toURL();
+            URI contribuUri = URI.create("StandardIntents");
+            URL location = file.toURI().toURL();
             return new FileContributionSource(contribuUri, location, -1, new byte[0]);
         } catch (MalformedURLException e) {
             throw new InitializationException(e);
