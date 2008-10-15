@@ -225,14 +225,6 @@ public class ContributionServiceImpl implements ContributionService {
         metaDataStore.remove(contributionUri);
     }
 
-    public <T> T resolve(URI contributionUri, Class<T> definitionType, QName name) {
-        throw new UnsupportedOperationException();
-    }
-
-    public URL resolve(URI contribution, String namespace, URI uri, URI baseURI) {
-        throw new UnsupportedOperationException();
-    }
-
     private Contribution find(URI contributionUri) throws ContributionNotFoundException {
         Contribution contribution = metaDataStore.find(contributionUri);
         if (contribution == null) {

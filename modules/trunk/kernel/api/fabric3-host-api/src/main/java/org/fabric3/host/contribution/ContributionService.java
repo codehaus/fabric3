@@ -35,9 +35,7 @@
 package org.fabric3.host.contribution;
 
 import java.net.URI;
-import java.net.URL;
 import java.util.List;
-import javax.xml.namespace.QName;
 
 
 /**
@@ -106,29 +104,4 @@ public interface ContributionService {
      * @throws ContributionException if there was a problem with the contribution
      */
     void remove(URI uri) throws ContributionException;
-
-    /**
-     * Resolve an artifact by QName within the contribution
-     *
-     * @param <T>            The java type of the artifact such as javax.wsdl.Definition
-     * @param uri            The URI of the contribution
-     * @param definitionType The java type of the artifact
-     * @param name           The name of the artifact
-     * @return The resolved artifact
-     */
-    <T> T resolve(URI uri, Class<T> definitionType, QName name);
-
-    /**
-     * Resolve the reference to an artifact by the location URI within the given contribution. Some typical use cases
-     * are: <ul> <li>Reference a XML schema using {http://www.w3.org/2001/XMLSchema-instance}schemaLocation or
-     * <li>Reference a list of WSDLs using {http://www.w3.org/2004/08/wsdl-instance}wsdlLocation </ul>
-     *
-     * @param uri         The URI of the contribution
-     * @param namespace   The namespace of the artifact. This is for validation purpose. If the namespace is null, then
-     *                    no check will be performed.
-     * @param locationUri The location URI
-     * @param baseURI     The URI of the base artifact where the reference is declared
-     * @return The URL of the resolved artifact
-     */
-    URL resolve(URI uri, String namespace, URI locationUri, URI baseURI);
 }
