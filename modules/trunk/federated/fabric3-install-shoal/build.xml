@@ -50,10 +50,10 @@
 		<unzip src="${basedir}/target/shoal-download/shoal.zip"
                dest="${basedir}/target/shoal-download/shoal"
                overwrite="false"/>
-        <exec executable="mvn${maven.suffix}" dir="${basedir}" failonerror="false">
+        <exec executable="${maven.home}/bin/mvn${maven.suffix}" dir="${basedir}" failonerror="false">
             <arg line="install:install-file -DgroupId=com.sun.shoal  -DartifactId=shoal-gms -Dversion=${shoal.version} -Dpackaging=jar -DgeneratePom=true -Dfile=&quot;${basedir}/target/shoal-download/shoal/shoal-gms.jar&quot;"/>
         </exec>
-        <exec executable="mvn${maven.suffix}" dir="${basedir}" failonerror="false">
+        <exec executable="${maven.home}/bin/mvn${maven.suffix}" dir="${basedir}" failonerror="false">
             <arg line="install:install-file -DgroupId=com.sun.shoal  -DartifactId=shoal-jxta -Dversion=${shoal.version} -Dpackaging=jar -DgeneratePom=true -Dfile=&quot;${basedir}/target/shoal-download/shoal/jxta.jar&quot;"/>
         </exec>
     </target>

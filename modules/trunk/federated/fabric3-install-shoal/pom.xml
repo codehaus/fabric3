@@ -45,6 +45,7 @@
                             <tasks>
                                 <ant target="install-shoal">
                                     <property name="localRepository" value="${settings.localRepository}" />
+                                    <property name="maven.home" value="${maven.home}" />
                                 </ant>
                             </tasks>
                         </configuration>
