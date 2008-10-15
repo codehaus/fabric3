@@ -14,16 +14,21 @@
  different terms.  See the separate licenses for those programs included in the
  distribution for the permitted and restricted uses of such software.
 
-
     $Rev$ $Date$
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
-           xmlns:loader="urn:maven:org.codehaus.fabric3:fabric3-loader"
-           name="LoaderBootCompsite" targetNamespace="urn:maven:org.codehaus.fabric3:fabric3-loader">
+           xmlns:sca="http://www.osoa.org/xmlns/sca/1.0"
+           xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
+           xmlns:system="http://fabric3.org/xmlns/sca/system/2.0-alpha"
+           name="PlanLoaderBootComposite" targetNamespace="urn:maven:org.codehaus.fabric3:fabric3-loader"
+        >
 
-    <include name="commonLoaderComposite" scdlLocation="loaderCommon.composite"/>
-    <include name="compositeLoaderComposite" scdlLocation="compositeLoader.composite"/>
-    <include name="definitionsLoaderComposite" scdlLocation="definitionsLoader.composite"/>
-    <include name="xmlContributionLoaderComposite" scdlLocation="xmlContributionLoader.composite"/>
-    <include name="planLoaderComposite" scdlLocation="planLoader.composite"/>
+    <component name="DeploymentPlanIndexer">
+        <system:implementation.system class="org.fabric3.loader.plan.DeploymentPlanIndexer"/>
+    </component>
+
+    <component name="DeploymentPlanProcessor">
+        <system:implementation.system class="org.fabric3.loader.plan.DeploymentPlanProcessor"/>
+    </component>
+
 </composite>
