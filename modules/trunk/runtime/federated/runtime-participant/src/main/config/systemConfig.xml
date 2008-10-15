@@ -5,7 +5,7 @@
     <federation zoneManager="true" componentHost="true">
         <runtimeName>ZoneManager</runtimeName>
         <transport>
-            <http>localhost://8181</http>
+            <http>localhost:8181</http>
         </transport>
     </federation>
 </config>
