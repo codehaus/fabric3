@@ -16,24 +16,23 @@
  */
 package org.fabric3.fabric.domain;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.UUID;
 import javax.xml.namespace.QName;
 
 import static org.osoa.sca.Constants.SCA_NS;
 
-import org.fabric3.spi.allocator.AllocationException;
-import org.fabric3.spi.allocator.Allocator;
 import org.fabric3.fabric.binding.BindingSelector;
 import org.fabric3.fabric.generator.PhysicalModelGenerator;
 import org.fabric3.fabric.instantiator.LogicalChange;
 import org.fabric3.fabric.instantiator.LogicalModelInstantiator;
-import org.fabric3.spi.services.routing.RoutingException;
-import org.fabric3.spi.services.routing.RoutingService;
 import org.fabric3.host.domain.AssemblyException;
 import org.fabric3.host.domain.DeploymentException;
-import org.fabric3.host.domain.DomainException;
 import org.fabric3.scdl.Composite;
+import org.fabric3.spi.allocator.AllocationException;
+import org.fabric3.spi.allocator.Allocator;
 import org.fabric3.spi.binding.BindingSelectionException;
 import org.fabric3.spi.domain.Domain;
 import org.fabric3.spi.generator.CommandMap;
@@ -41,12 +40,15 @@ import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.CopyUtil;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
+import org.fabric3.spi.plan.DeploymentPlan;
 import org.fabric3.spi.services.contribution.MetaDataStore;
 import org.fabric3.spi.services.contribution.MetaDataStoreException;
 import org.fabric3.spi.services.contribution.QNameSymbol;
 import org.fabric3.spi.services.contribution.ResourceElement;
 import org.fabric3.spi.services.lcm.LogicalComponentManager;
 import org.fabric3.spi.services.lcm.StoreException;
+import org.fabric3.spi.services.routing.RoutingException;
+import org.fabric3.spi.services.routing.RoutingService;
 
 /**
  * Base class for a domain.
@@ -90,9 +92,6 @@ public abstract class AbstractDomain implements Domain {
         this.routingService = routingService;
     }
 
-    public void initialize() throws DomainException {
-    }
-
     public void include(QName deployable) throws DeploymentException {
         include(deployable, false);
     }
@@ -117,16 +116,17 @@ public abstract class AbstractDomain implements Domain {
         }
 
         Composite composite = (Composite) object;
-        include(composite, transactional);
+        include(composite, null, transactional);
 
     }
 
     public void include(Composite composite) throws DeploymentException {
-        include(composite, false);
+        include(composite, null, false);
     }
 
-    public void include(Composite composite, boolean transactional) throws DeploymentException {
-
+    public void include(Composite composite, DeploymentPlan plan, boolean transactional) throws DeploymentException {
+        List<DeploymentPlan> plans = new ArrayList<DeploymentPlan>();
+        plans.add(plan);
         LogicalCompositeComponent domain = logicalComponentManager.getRootComponent();
 
         if (transactional) {
@@ -136,38 +136,26 @@ public abstract class AbstractDomain implements Domain {
         if (change.hasErrors()) {
             throw new AssemblyException(change.getErrors(), change.getWarnings());
         } else if (change.hasWarnings()) {
-            // TOOD log warnings 
+            // TOOD log warnings
         }
-        Collection<LogicalComponent<?>> components = domain.getComponents();
+        allocateAndDeploy(domain, plans);
 
-        // Allocate the components to runtime nodes
-        try {
-            allocate(components);
-        } catch (AllocationException e) {
-            throw new DeploymentException("Error deploying composite: " + composite.getName());
+    }
+
+    public void include(List<Composite> composites, List<DeploymentPlan> plans, boolean transactional) throws DeploymentException {
+        LogicalCompositeComponent domain = logicalComponentManager.getRootComponent();
+
+        if (transactional) {
+            domain = CopyUtil.copy(domain);
         }
-
-        // Select bindings
-        selectBinding(components);
-        try {
-            // generate and provision any new components and new wires
-            CommandMap commandMap = physicalModelGenerator.generate(components);
-            String id = UUID.randomUUID().toString();
-            routingService.route(id, commandMap);
-        } catch (GenerationException e) {
-            throw new DeploymentException("Error deploying: " + composite.getName(), e);
-        } catch (RoutingException e) {
-            throw new DeploymentException("Error deploying: " + composite.getName(), e);
+        LogicalChange change = logicalModelInstantiator.include(domain, composites);
+        if (change.hasErrors()) {
+            throw new AssemblyException(change.getErrors(), change.getWarnings());
+        } else if (change.hasWarnings()) {
+            // TOOD log warnings
         }
 
-        try {
-            // TODO this should happen after nodes have deployed the components and wires
-            logicalComponentManager.replaceRootComponent(domain);
-        } catch (StoreException e) {
-            String id = composite.getName().toString();
-            throw new DeploymentException("Error activating deployable: " + id, id, e);
-        }
-
+        allocateAndDeploy(domain, plans);
     }
 
     public void remove(QName deployable) throws DeploymentException {
@@ -203,47 +191,63 @@ public abstract class AbstractDomain implements Domain {
     }
 
     public void remove(Composite composite, boolean transactional) throws DeploymentException {
+        throw new UnsupportedOperationException();
+    }
 
-        LogicalCompositeComponent domain = logicalComponentManager.getRootComponent();
-        if (transactional) {
-            domain = CopyUtil.copy(domain);
-        }
-        LogicalChange change;
-        change = logicalModelInstantiator.remove(domain, composite);
-        if (change.hasErrors()) {
-            throw new AssemblyException(change.getErrors(), change.getWarnings());
-        } else if (change.hasWarnings()) {
-            // TOOD log warnings
-        }
-
-        Collection<LogicalComponent<?>> components = change.getAddedComponents();
-
+    /**
+     * Allocates and deploys new components in the domain.
+     *
+     * @param domain the domain component
+     * @param plans  the deployment plans to use for deployment
+     * @throws DeploymentException if an error is encountered during deployment
+     */
+    private void allocateAndDeploy(LogicalCompositeComponent domain, List<DeploymentPlan> plans) throws DeploymentException {
+        Collection<LogicalComponent<?>> components = domain.getComponents();
         // Allocate the components to runtime nodes
         try {
-            allocate(components);
+            allocate(components, plans);
         } catch (AllocationException e) {
-            throw new DeploymentException("Error deploying composite: " + composite.getName());
+            throw new DeploymentException("Error deploying composite", e);
         }
 
+        // Select bindings
+        selectBinding(components);
         try {
             // generate and provision any new components and new wires
-            CommandMap commandMap = physicalModelGenerator.generate(change);
+            CommandMap commandMap = physicalModelGenerator.generate(components);
             String id = UUID.randomUUID().toString();
             routingService.route(id, commandMap);
         } catch (GenerationException e) {
-            throw new DeploymentException("Error deploying: " + composite.getName(), e);
+            throw new DeploymentException("Error deploying components", e);
         } catch (RoutingException e) {
-            throw new DeploymentException("Error deploying: " + composite.getName(), e);
+            throw new DeploymentException("Error deploying components", e);
         }
 
         try {
-            // TODO this should happen after nodes have undeployed the components and wires
+            // TODO this should happen after nodes have deployed the components and wires
             logicalComponentManager.replaceRootComponent(domain);
         } catch (StoreException e) {
-            String id = composite.getName().toString();
-            throw new DeploymentException("Error activating deployable: " + id, id, e);
+            throw new DeploymentException("Error applying deployment", e);
         }
+    }
 
+    /**
+     * Delegates to the Allocator to determine which runtimes to deploy the given collection of components to.
+     *
+     * @param components the components to allocate
+     * @param plans      the deployment plans to use for allocation
+     * @throws AllocationException if an allocation error occurs
+     */
+    private void allocate(Collection<LogicalComponent<?>> components, List<DeploymentPlan> plans) throws AllocationException {
+        if (allocator == null) {
+            // allocator is an optional extension
+            return;
+        }
+        for (LogicalComponent<?> component : components) {
+            if (!component.isProvisioned()) {
+                allocator.allocate(component, plans, false);
+            }
+        }
     }
 
     /**
@@ -263,24 +267,5 @@ public abstract class AbstractDomain implements Domain {
             }
         }
     }
-
-    /**
-     * Delegates to the Allocator to determine which runtimes to deploy the given collection of components to.
-     *
-     * @param components the components to allocate
-     * @throws AllocationException if an allocation error occurs
-     */
-    private void allocate(Collection<LogicalComponent<?>> components) throws AllocationException {
-        if (allocator == null) {
-            // allocator is an optional extension
-            return;
-        }
-        for (LogicalComponent<?> component : components) {
-            if (!component.isProvisioned()) {
-                allocator.allocate(component, false);
-            }
-        }
-    }
-
 
 }

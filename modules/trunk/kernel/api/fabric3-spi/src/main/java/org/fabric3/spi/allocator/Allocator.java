@@ -16,7 +16,10 @@
  */
 package org.fabric3.spi.allocator;
 
+import java.util.List;
+
 import org.fabric3.spi.model.instance.LogicalComponent;
+import org.fabric3.spi.plan.DeploymentPlan;
 
 /**
  * Allocates a component to a service node.
@@ -29,8 +32,9 @@ public interface Allocator {
      * Performs the allocation. Composites are recursed and their children are allocated.
      *
      * @param component the component to allocate
+     * @param plans     the deployment plans to use for mapping components to domain zones
      * @param recover   true if the allocator is called while the controller is recovering.
      * @throws AllocationException if an error during allocation occurs
      */
-    void allocate(LogicalComponent<?> component, boolean recover) throws AllocationException;
+    void allocate(LogicalComponent<?> component, List<DeploymentPlan> plans, boolean recover) throws AllocationException;
 }
