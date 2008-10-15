@@ -88,6 +88,7 @@ public class HessianBindingProvider implements BindingProvider {
         if (baseUrl == null) {
             throw new BindingSelectionException("HTTP information not found");
         }
+        baseUrl = "http://" + baseUrl;
         // determing whether to configure both sides of the wire or just the reference
         if (target.getBindings().isEmpty()) {
             // configure both sides
