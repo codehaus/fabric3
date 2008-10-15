@@ -16,6 +16,8 @@
  */
 package org.fabric3.fabric.instantiator;
 
+import java.util.List;
+
 import org.fabric3.scdl.Composite;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 
@@ -27,13 +29,22 @@ import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 public interface LogicalModelInstantiator {
 
     /**
-     * Creates a LogicalChange for including a composite in another composite.
+     * Includes a composite in another composite.
      *
      * @param targetComposite the target composite in which the composite is to be included.
      * @param composite       the composite to be included.
-     * @return the change that would result from this include operation
+     * @return the change that results from this include operation
      */
     LogicalChange include(LogicalCompositeComponent targetComposite, Composite composite);
+
+    /**
+     * Includes a set of composites in another composite.
+     *
+     * @param targetComposite the target composite in which the composite is to be included.
+     * @param composites      the composites to be included.
+     * @return the change that results from this include operation
+     */
+    LogicalChange include(LogicalCompositeComponent targetComposite, List<Composite> composites);
 
 
     /**
@@ -41,7 +52,7 @@ public interface LogicalModelInstantiator {
      *
      * @param targetComposite the target composite from which the composite is to be removed.
      * @param composite       Composite to be removed.
-     * @return the change that would result from this remove operation
+     * @return the change that results from this remove operation
      */
     LogicalChange remove(LogicalCompositeComponent targetComposite, Composite composite);
 }

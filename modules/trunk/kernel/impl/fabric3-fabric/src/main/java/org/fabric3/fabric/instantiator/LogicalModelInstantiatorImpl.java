@@ -22,6 +22,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import javax.xml.namespace.QName;
 
 import org.osoa.sca.annotations.Reference;
 import org.w3c.dom.Document;
@@ -39,6 +40,7 @@ import org.fabric3.scdl.CompositeService;
 import org.fabric3.scdl.Implementation;
 import org.fabric3.scdl.Include;
 import org.fabric3.scdl.Property;
+import org.fabric3.spi.Constants;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
@@ -51,6 +53,10 @@ import org.fabric3.spi.util.UriHelper;
  * @version $Revision$ $Date$
  */
 public class LogicalModelInstantiatorImpl implements LogicalModelInstantiator {
+    /**
+     * Represents a synthetic composite. Synthetic composites are created to instantiate multiple deployable composites in a single operation.
+     */
+    private QName SYNTHENTIC_COMPOSITE = new QName(Constants.FABRIC3_NS, "SyntheticComposite");
 
     private final ResolutionService resolutionService;
     private final PromotionNormalizer promotionNormalizer;
@@ -63,8 +69,8 @@ public class LogicalModelInstantiatorImpl implements LogicalModelInstantiator {
     public LogicalModelInstantiatorImpl(@Reference ResolutionService resolutionService,
                                         @Reference PromotionNormalizer promotionNormalizer,
                                         @Reference LogicalComponentManager logicalComponentManager,
-                                        @Reference(name = "atomicComponentInstantiator")ComponentInstantiator atomicComponentInstantiator,
-                                        @Reference(name = "compositeComponentInstantiator")ComponentInstantiator compositeComponentInstantiator,
+                                        @Reference(name = "atomicComponentInstantiator") ComponentInstantiator atomicComponentInstantiator,
+                                        @Reference(name = "compositeComponentInstantiator") ComponentInstantiator compositeComponentInstantiator,
                                         @Reference WireInstantiator wireInstantiator) {
         this.resolutionService = resolutionService;
         this.promotionNormalizer = promotionNormalizer;
@@ -76,6 +82,15 @@ public class LogicalModelInstantiatorImpl implements LogicalModelInstantiator {
 
     @SuppressWarnings("unchecked")
     public LogicalChange include(LogicalCompositeComponent targetComposite, Composite composite) {
+        return include(targetComposite, composite, false);
+    }
+
+    public LogicalChange include(LogicalCompositeComponent targetComposite, List<Composite> composites) {
+        Composite composite = synthesizeComposite(composites);
+        return include(targetComposite, composite, true);
+    }
+
+    private LogicalChange include(LogicalCompositeComponent targetComposite, Composite composite, boolean synthetic) {
 
         LogicalChange change = new LogicalChange(targetComposite);
 
@@ -83,7 +98,7 @@ public class LogicalModelInstantiatorImpl implements LogicalModelInstantiator {
         Map<String, Document> properties = includeProperties(composite, change);
 
         // instantiate all the components in the composite and add them to the parent
-        List<LogicalComponent<?>> newComponents = instantiateComponents(properties, composite, change);
+        List<LogicalComponent<?>> newComponents = instantiateComponents(properties, composite, change, synthetic);
         List<LogicalService> services = instantiateServices(composite, change);
         List<LogicalReference> references = instantiateReferences(composite, change);
 
@@ -99,6 +114,7 @@ public class LogicalModelInstantiatorImpl implements LogicalModelInstantiator {
         }
         return change;
     }
+
 
     public LogicalChange remove(LogicalCompositeComponent targetComposite, Composite composite) {
         LogicalChange change = new LogicalChange(targetComposite);
@@ -126,13 +142,17 @@ public class LogicalModelInstantiatorImpl implements LogicalModelInstantiator {
         return parent.getPropertyValues();
     }
 
-    private List<LogicalComponent<?>> instantiateComponents(Map<String, Document> properties, Composite composite, LogicalChange change) {
+    private List<LogicalComponent<?>> instantiateComponents(Map<String, Document> properties,
+                                                            Composite composite,
+                                                            LogicalChange change,
+                                                            boolean synthetic) {
         LogicalCompositeComponent parent = change.getParent();
         Collection<ComponentDefinition<? extends Implementation<?>>> definitions = composite.getDeclaredComponents().values();
         List<LogicalComponent<?>> newComponents = new ArrayList<LogicalComponent<?>>(definitions.size());
         for (ComponentDefinition<? extends Implementation<?>> definition : definitions) {
             LogicalComponent<?> logicalComponent = instantiate(parent, properties, null, definition, change);
             setAutowire(composite, definition, logicalComponent);
+            setDeployable(logicalComponent, composite.getName());
             newComponents.add(logicalComponent);
             parent.addComponent(logicalComponent);
             change.addComponent(logicalComponent);
@@ -143,25 +163,18 @@ public class LogicalModelInstantiatorImpl implements LogicalModelInstantiator {
                 URI classLaoderId = URI.create(parent.getUri().toString() + "/" + include.getName().getLocalPart());
                 LogicalComponent<?> logicalComponent = instantiate(parent, properties, classLaoderId, definition, change);
                 setAutowire(composite, definition, logicalComponent);
+                if (synthetic) {
+                    // If it is a synthetic composite, included composites are the deployables.
+                    // Synthetic composites are used to deploy multiple composites as a group. They include the composites (deployables).
+                    // Adding the deployable name to domain-level components allows them to be managed as a group after they are deployed.
+                    setDeployable(logicalComponent, include.getIncluded().getName());
+                }
                 newComponents.add(logicalComponent);
                 parent.addComponent(logicalComponent);
                 change.addComponent(logicalComponent);
             }
         }
         return newComponents;
-    }
-
-    private void setAutowire(Composite composite, ComponentDefinition<? extends Implementation<?>> definition, LogicalComponent<?> logicalComponent) {
-        // use autowire settings on the original composite as an override if they are not specified on the component
-        Autowire autowire;
-        if (definition.getAutowire() == Autowire.INHERITED) {
-            autowire = composite.getAutowire();
-        } else {
-            autowire = definition.getAutowire();
-        }
-        if (autowire == Autowire.ON || autowire == Autowire.OFF) {
-            logicalComponent.setAutowireOverride(autowire);
-        }
     }
 
     @SuppressWarnings("unchecked")
@@ -186,7 +199,6 @@ public class LogicalModelInstantiatorImpl implements LogicalModelInstantiator {
             }
             return component;
         }
-
     }
 
     private List<LogicalService> instantiateServices(Composite composite, LogicalChange change) {
@@ -314,5 +326,53 @@ public class LogicalModelInstantiatorImpl implements LogicalModelInstantiator {
             }
         }
     }
+
+    /**
+     * Synthesizes a composite from a collection of composites using inclusion.
+     *
+     * @param composites the composites to synthesize
+     * @return the synthesized composite
+     */
+    private Composite synthesizeComposite(List<Composite> composites) {
+        Composite synthesized = new Composite(SYNTHENTIC_COMPOSITE);
+        for (Composite composite : composites) {
+            Include include = new Include();
+            include.setName(composite.getName());
+            include.setIncluded(composite);
+            synthesized.add(include);
+
+        }
+        return synthesized;
+    }
+
+    /**
+     * Recursively sets the deployable composite the logical component was instantiated from.
+     *
+     * @param component  the logical component
+     * @param deployable the deployable
+     */
+    private void setDeployable(LogicalComponent<?> component, QName deployable) {
+        if (component instanceof LogicalCompositeComponent) {
+            LogicalCompositeComponent composite = (LogicalCompositeComponent) component;
+            for (LogicalComponent<?> child : composite.getComponents()) {
+                setDeployable(child, deployable);
+            }
+        }
+        component.setDeployable(deployable);
+    }
+
+    private void setAutowire(Composite composite, ComponentDefinition<? extends Implementation<?>> definition, LogicalComponent<?> logicalComponent) {
+        // use autowire settings on the original composite as an override if they are not specified on the component
+        Autowire autowire;
+        if (definition.getAutowire() == Autowire.INHERITED) {
+            autowire = composite.getAutowire();
+        } else {
+            autowire = definition.getAutowire();
+        }
+        if (autowire == Autowire.ON || autowire == Autowire.OFF) {
+            logicalComponent.setAutowireOverride(autowire);
+        }
+    }
+
 
 }
