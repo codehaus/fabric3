@@ -33,11 +33,6 @@ public class FileContributionSource implements ContributionSource {
     private byte[] checksum;
     private String contentType;
 
-
-    public FileContributionSource(URL location, long timestamp, byte[] checksum) {
-        this(null, location, timestamp, checksum);
-    }
-
     public FileContributionSource(URI uri, URL location, long timestamp, byte[] checksum) {
         this(uri, location, timestamp, checksum, null);
     }
