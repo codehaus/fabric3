@@ -41,6 +41,7 @@
         <!-- if the runtime is a zone manager, activate domain communications -->
         <property name="enableDomain" source="$systemConfig//federation/@zoneManager"/>
         <property name="componentHost" source="$systemConfig//federation/@componentHost"/>
+        <property name="zoneName" source="$systemConfig//federation/zoneName"/>
         <property name="enableZone">true</property>
     </component>
 
