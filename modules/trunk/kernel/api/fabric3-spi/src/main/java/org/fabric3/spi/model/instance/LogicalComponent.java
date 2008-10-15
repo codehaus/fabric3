@@ -66,6 +66,7 @@ public class LogicalComponent<I extends Implementation<?>> extends LogicalScaArt
     private final Map<String, LogicalResource<?>> resources = new HashMap<String, LogicalResource<?>>();
     private URI classLoaderId;
     private String zone;
+    private QName deployable;
     private Autowire autowire;
     private boolean provisioned;
 
@@ -95,6 +96,24 @@ public class LogicalComponent<I extends Implementation<?>> extends LogicalScaArt
      */
     public void setZone(String zone) {
         this.zone = zone;
+    }
+
+    /**
+     * Returns the deployable composite name this logical component was instantiated from.
+     *
+     * @return the deployable name
+     */
+    public QName getDeployable() {
+        return deployable;
+    }
+
+    /**
+     * Sets the name of the deployable composite this component was instantiated from.
+     *
+     * @param deployable the deployable name
+     */
+    public void setDeployable(QName deployable) {
+        this.deployable = deployable;
     }
 
     /**
