@@ -19,11 +19,10 @@ package org.fabric3.host.runtime;
 import java.net.URI;
 import javax.management.MBeanServer;
 
-import org.fabric3.host.work.WorkScheduler;
 import org.fabric3.monitor.MonitorFactory;
 
 /**
- * Represents a node in the service network. Runtimes may host components and/or function as a Domain controller.
+ * Represents a runtime in a domain.
  *
  * @version $Rev$ $Date$
  */
