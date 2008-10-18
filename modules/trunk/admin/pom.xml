@@ -30,5 +30,10 @@
 	<packaging>pom</packaging>
 
 	<modules>
+		<module>fabric3-admin-api</module>
+		<module>fabric3-admin-grammar</module>
+		<module>fabric3-admin-interpreter</module>
+		<module>fabric3-admin-impl</module>
+		<module>fabric3-admin-cli</module>
 	</modules>
 </project>
