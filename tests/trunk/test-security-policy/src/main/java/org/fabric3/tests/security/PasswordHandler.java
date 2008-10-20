@@ -32,7 +32,7 @@ public class PasswordHandler implements CallbackHandler {
     public void handle(Callback[] callbacks) throws IOException, UnsupportedCallbackException {
         for (Callback callback : callbacks) {
             if (callback instanceof WSPasswordCallback) {
-                ((WSPasswordCallback) callback).setPassword("foobar");
+                ((WSPasswordCallback) callback).setPassword("changeit");
             }
         }
     }

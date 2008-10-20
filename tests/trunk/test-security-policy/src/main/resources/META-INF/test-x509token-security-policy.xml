@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="ASCII"?>
+<!--
+ Fabric3
+ Copyright ? 2008 Metaform Systems Limited
+
+ This proprietary software may be used only connection with the Fabric3 license
+ (the ?License?), a copy of which is included in the software or may be
+ obtained at: http://www.metaformsystems.com/licenses/license.html.
+
+ Software distributed under the License is distributed on an ?as is? basis,
+ without warranties or conditions of any kind.  See the License for the
+ specific language governing permissions and limitations of use of the software.
+ This software is distributed in conjunction with other software licensed under
+ different terms.  See the separate licenses for those programs included in the
+ distribution for the permitted and restricted uses of such software.
+-->
+<definitions xmlns="http://www.osoa.org/xmlns/sca/1.0"
+    xmlns:sca="http://www.osoa.org/xmlns/sca/1.0"
+    targetNamespace="http://fabric3.org/xmlns/sca/2.0-alpha"
+    xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha">
+    
+    <!-- Authorization policy -->
+    <policySet name="testServerX509TokenAuthrizationPolicy" 
+               provides="f3:authorization.message"
+               appliesTo="@name='Axis2EchoService' and ../@name='EchoService' and $Operation='echoWsX509Token'"
+               f3:phase="INTERCEPTION">
+        <f3:authorization roles="ADMIN"/>            
+    </policySet>
+    
+    <!-- Server policy using ws-policy -->
+    <policySet name="testServerX509TokenPolicy" 
+               provides="sca:authentication.message" 
+               appliesTo="@name='Axis2EchoService' and ../@name='EchoService' and $Operation='echoWsX509Token'">
+        <f3:axisConfig module="rampart" message="In">
+            <wsp:Policy wsu:Id="X509TokenPolicy" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" 
+                xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy" 
+                xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" >
+                    <sp:AsymmetricBinding>
+                        <wsp:Policy>
+                            <sp:InitiatorToken>
+                                <wsp:Policy>
+                                    <sp:X509Token sp:IncludeToken="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/AlwaysToRecipient">
+                                        <wsp:Policy>
+                                            <sp:WssX509PkiPathV1Token10/>
+                                        </wsp:Policy>
+                                    </sp:X509Token>
+                                </wsp:Policy>
+                            </sp:InitiatorToken>
+                            <sp:RecipientToken>
+                                <wsp:Policy>
+                                    <sp:X509Token sp:IncludeToken="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/Never">
+                                        <wsp:Policy>
+                                            <sp:WssX509PkiPathV1Token10/>
+                                        </wsp:Policy>
+                                    </sp:X509Token>
+                                </wsp:Policy>
+                            </sp:RecipientToken>
+                            <sp:AlgorithmSuite>
+                                <wsp:Policy>
+                                    <sp:TripleDesRsa15/>
+                                </wsp:Policy>
+                            </sp:AlgorithmSuite>
+                            <sp:Layout>
+                                <wsp:Policy>
+                                    <sp:Strict/>
+                                </wsp:Policy>
+                            </sp:Layout>
+                            <sp:IncludeTimestamp/>
+                        </wsp:Policy>
+                    </sp:AsymmetricBinding>
+                    <sp:SignedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+                        <sp:Body/>
+                    </sp:SignedParts>
+                    <ramp:RampartConfig xmlns:ramp="http://ws.apache.org/rampart/policy"> 
+                        <ramp:user>axis2test</ramp:user>
+                        <ramp:timestampTTL/>		                        	
+                        <ramp:passwordCallbackClass>org.fabric3.tests.security.PasswordHandler</ramp:passwordCallbackClass>
+                        <ramp:signatureCrypto>
+                        <ramp:crypto provider="org.apache.ws.security.components.crypto.Merlin">
+                            <ramp:property name="org.apache.ws.security.crypto.merlin.keystore.type">JKS</ramp:property>
+                            <ramp:property name="org.apache.ws.security.crypto.merlin.file">axis2test.jks</ramp:property>
+                            <ramp:property name="org.apache.ws.security.crypto.merlin.keystore.password">changeit</ramp:property>
+                        </ramp:crypto>
+                    </ramp:signatureCrypto>
+                </ramp:RampartConfig>
+            </wsp:Policy>
+        </f3:axisConfig>
+    </policySet>
+    
+    <!-- Client policy using ws-policy -->
+    <policySet 	name="testClientX509TokenPolicy" 
+                provides="sca:authentication.message" 
+                appliesTo="@name='service' and ../@name='EchoTest' and $Operation='echoWsX509Token'">
+        <f3:axisConfig module="rampart" message="Out">
+        <wsp:Policy wsu:Id="X509TokenPolicy" xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy" 
+            xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy" 
+            xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" >
+            <sp:AsymmetricBinding>
+                <wsp:Policy>
+                    <sp:InitiatorToken>
+                        <wsp:Policy>
+                            <sp:X509Token sp:IncludeToken="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/AlwaysToRecipient">
+                                <wsp:Policy>
+                                    <sp:WssX509PkiPathV1Token10/>
+                                </wsp:Policy>
+                            </sp:X509Token>
+                        </wsp:Policy>
+                    </sp:InitiatorToken>
+                    <sp:RecipientToken>
+                        <wsp:Policy>
+                            <sp:X509Token sp:IncludeToken="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy/IncludeToken/Never">
+                                <wsp:Policy>
+                                    <sp:WssX509PkiPathV1Token10/>
+                                </wsp:Policy>
+                            </sp:X509Token>
+                        </wsp:Policy>
+                    </sp:RecipientToken>
+                    <sp:AlgorithmSuite>
+                        <wsp:Policy>
+                            <sp:TripleDesRsa15/>
+                        </wsp:Policy>
+                    </sp:AlgorithmSuite>
+                    <sp:Layout>
+                        <wsp:Policy>
+                            <sp:Strict/>
+                        </wsp:Policy>
+                    </sp:Layout>
+                    <sp:IncludeTimestamp/>
+                </wsp:Policy>
+            </sp:AsymmetricBinding>
+            <sp:SignedParts xmlns:sp="http://schemas.xmlsoap.org/ws/2005/07/securitypolicy">
+                <sp:Body/>
+            </sp:SignedParts>
+            <ramp:RampartConfig xmlns:ramp="http://ws.apache.org/rampart/policy"> 
+                <ramp:user>axis2test</ramp:user>
+                <ramp:timestampTTL/>		                        	
+                <ramp:passwordCallbackClass>org.fabric3.tests.security.PasswordHandler</ramp:passwordCallbackClass>
+                <ramp:signatureCrypto>
+                    <ramp:crypto provider="org.apache.ws.security.components.crypto.Merlin">
+                        <ramp:property name="org.apache.ws.security.crypto.merlin.keystore.type">JKS</ramp:property>
+                        <ramp:property name="org.apache.ws.security.crypto.merlin.file">axis2test.jks</ramp:property>
+                        <ramp:property name="org.apache.ws.security.crypto.merlin.keystore.password">changeit</ramp:property>
+                    </ramp:crypto>
+                </ramp:signatureCrypto>
+            </ramp:RampartConfig>
+        </wsp:Policy>
+    </f3:axisConfig>
+    </policySet>
+</definitions>

@@ -25,11 +25,15 @@ import org.osoa.sca.annotations.Scope;
 @Scope("COMPOSITE")
 public class Axis2EchoServiceImpl implements Axis2EchoService {
 
-    public OMElement echoWs(OMElement message) {
+    public OMElement echoWsUsernameToken(OMElement message) {
         return message;
     }
 
     public OMElement echoNoSecurity(OMElement message) {
+        return message;
+    }
+
+    public OMElement echoWsX509Token(OMElement message) {
         return message;
     }
 

@@ -18,12 +18,23 @@ package org.fabric3.tests.security;
 
 import javax.security.auth.Subject;
 
+import org.fabric3.api.annotation.Monitor;
+import org.fabric3.api.annotation.logging.Info;
 import org.fabric3.security.authorization.AuthorizationResult;
 import org.fabric3.security.authorization.AuthorizationService;
 
+/**
+ * Test implementation of {@link AuthorizationService}
+ */
 public class TestAuthorizationService implements AuthorizationService {
+    @Monitor
+    protected TestAuthorizationServiceMonitor monitor;
 
+    /** 
+     * {@inheritDoc}
+     */
     public AuthorizationResult hasRoles(Subject subject, String[] roles) {
+        monitor.onAuthorization(subject);
         return new AuthorizationResult() {
             public Object getFault() {
                 return null;
@@ -33,5 +44,13 @@ public class TestAuthorizationService implements AuthorizationService {
             }
         };
     }
-
+    
+    /**
+     * Monitor interface for {@link TestAuthorizationService}
+     */
+    public static interface TestAuthorizationServiceMonitor {
+        
+        @Info
+        void onAuthorization(Subject subject);
+    }
 }

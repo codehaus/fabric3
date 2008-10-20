@@ -46,30 +46,73 @@ public class Axis2EchoTest extends TestCase {
 
     private OMFactory factory;
 
+    /**
+     * Test for simple WS call without Security
+     * 
+     */
     public void testEchoTextNoSecurity() {
         OMElement message = getInputText();
         OMElement response = service.echoNoSecurity(message);
         verifyOutputText(response);
     }
 
+    /**
+     * Test for simple WS call with UsernameToken Security
+     * 
+     */
     public void testEchoTextWs() {
         OMElement message = getInputText();
-        OMElement response = service.echoWs(message);
+        OMElement response = service.echoWsUsernameToken(message);
+        verifyOutputText(response);
+    }
+    
+    /**
+     * Test for simple WS call with X509Token Security
+     * 
+     */
+    public void testEchoTextWsWithX509() {
+        OMElement message = getInputText();
+        OMElement response = service.echoWsX509Token(message);
         verifyOutputText(response);
     }
 
+    /**
+     * Test for MTOM WS call with UsernameToken Security
+     * 
+     * @throws IOException thrown if error occurred in unmarshalling MTOM
+     */
     public void testEchoDataWsWithMTOM() throws IOException {
         OMElement message = getInputMtom();
-        OMElement response = service.echoWs(message);
+        OMElement response = service.echoWsUsernameToken(message);
+        verifyOutputMtom(response);
+    }
+    
+    /**
+     * Test for MTOM WS call with X509Token Security
+     * 
+     * @throws IOException thrown if error occurred in unmarshalling MTOM
+     */
+    public void testEchoDataWsWithX509MTOM() throws IOException {
+        OMElement message = getInputMtom();
+        OMElement response = service.echoWsX509Token(message);
         verifyOutputMtom(response);
     }
 
+    /**
+     * Test for MTOM WS call without Security.
+     * 
+     * @throws IOException thrown if error occurred in unmarshalling MTOM
+     */
     public void testEchoDataWithMTOMNoSecurity() throws IOException {
         OMElement message = getInputMtom();
         OMElement response = service.echoNoSecurity(message);
         verifyOutputMtom(response);
     }
 
+    /**
+     * Test for WS call generating runtime fault
+     * 
+     */
     public void testRuntimeFault() {
         try {
             faultService.runtimeFaultOperation(getInputText());

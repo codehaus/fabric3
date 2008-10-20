@@ -24,8 +24,32 @@ import org.apache.axiom.om.OMElement;
  * @version $Rev$ $Date$
  */
 public interface Axis2EchoService {
+    /**
+     * Web service operation used to -
+     * <ol> 
+     *  <li>demonstrate UsernameToken WS Security
+     *  <li> demonstrate custom configuration of soap-action
+     * </ol>
+     * 
+     * @param message request payload
+     * @return response payload
+     */
     @WebMethod(action="echoWs")
-    OMElement echoWs(OMElement message);
+    OMElement echoWsUsernameToken(OMElement message);
     
+    /**
+     * Web service operation used to demonstrate X509Token WS Security
+     * 
+     * @param message request axiom payload
+     * @return response axiom payload
+     */
+    OMElement echoWsX509Token(OMElement message);
+    
+    /**
+     * Web service operation without any WSS security
+     * 
+     * @param message request axiom payload
+     * @return response axiom payload
+     */
     OMElement echoNoSecurity(OMElement message);
 }
