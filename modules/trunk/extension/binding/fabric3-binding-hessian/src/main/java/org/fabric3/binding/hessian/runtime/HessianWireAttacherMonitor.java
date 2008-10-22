@@ -19,8 +19,6 @@ package org.fabric3.binding.hessian.runtime;
 import java.net.URI;
 
 import org.fabric3.api.annotation.logging.Info;
-import org.fabric3.api.annotation.logging.LogLevel;
-import org.fabric3.api.annotation.logging.LogLevels;
 
 /**
  * @version $Rev$ $Date$

@@ -99,11 +99,11 @@ public class HessianBindingProvider implements BindingProvider {
         }
     }
 
-    private void configureReference(LogicalReference source, LogicalService target, String baseUrl) throws BindingSelectionException {
+    @SuppressWarnings("unchecked")
+	private void configureReference(LogicalReference source, LogicalService target, String baseUrl) throws BindingSelectionException {
         LogicalBinding<HessianBindingDefinition> binding = null;
         for (LogicalBinding<?> entry : target.getBindings()) {
             if (entry.getBinding().getType().equals(BINDING_QNAME)) {
-                //noinspection unchecked
                 binding = (LogicalBinding<HessianBindingDefinition>) entry;
                 break;
             }

@@ -51,6 +51,7 @@ import org.fabric3.introspection.xml.LoaderUtil;
 import org.fabric3.introspection.xml.MissingAttribute;
 import org.fabric3.introspection.xml.TypeLoader;
 import org.fabric3.introspection.xml.UnrecognizedAttribute;
+import org.fabric3.spi.Namespaces;
 
 /**
  * @version $Revision$ $Date$
@@ -61,7 +62,7 @@ public class HessianBindingLoader implements TypeLoader<HessianBindingDefinition
     /**
      * Qualified name for the binding element.
      */
-    public static final QName BINDING_QNAME = new QName("http://www.fabric3.org/binding/hessian/0.2", "binding.hessian");
+    public static final QName BINDING_QNAME = new QName(Namespaces.BINDING, "binding.hessian");
 
     private final LoaderHelper loaderHelper;
 

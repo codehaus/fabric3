@@ -34,12 +34,12 @@
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
            xmlns:system="http://fabric3.org/xmlns/sca/system/2.0-alpha"
-		   xmlns:hessian="http://www.fabric3.org/binding/hessian/0.2"
+		   xmlns:f3-binding="urn:fabric3.org:binding"
            targetNamespace="org.codehaus.fabric3"
            name="HessianBindingExtension">
 
     <!-- Hessian Binding Loader -->
-    <component name="HessianBindingLoader" f3:key="hessian:binding.hessian">
+    <component name="HessianBindingLoader" f3:key="f3-binding:binding.hessian">
         <system:implementation.system class="org.fabric3.binding.hessian.introspection.HessianBindingLoader"/>
     </component>
 
@@ -48,7 +48,7 @@
         <system:implementation.system class="org.fabric3.binding.hessian.control.HessianBindingGenerator"/>
     </component>
 
-    <component name="HessianSCABindingProvider" f3:key="hessian:binding.hessian">
+    <component name="HessianSCABindingProvider" f3:key="f3-binding:binding.hessian">
         <system:implementation.system class="org.fabric3.binding.hessian.control.HessianBindingProvider"/>
     </component>
 
