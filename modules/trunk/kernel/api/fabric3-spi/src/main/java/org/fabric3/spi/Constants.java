@@ -19,6 +19,7 @@ package org.fabric3.spi;
 /**
  * @version $Rev$ $Date$
  */
+@Deprecated
 public interface Constants {
     /**
      * Fabric3 base namespace.
