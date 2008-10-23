@@ -141,13 +141,19 @@ public class ClassLoaderCommandGeneratorImpl implements ClassLoaderCommandGenera
         Map<String, Set<PhysicalClassLoaderDefinition>> definitionsPerZone = new HashMap<String, Set<PhysicalClassLoaderDefinition>>();
         for (Map.Entry<String, Set<URI>> entry : contributionsPerZone.entrySet()) {
             for (URI uri : entry.getValue()) {
+                String zone = entry.getKey();
                 Contribution contribution = store.find(uri);
                 PhysicalClassLoaderDefinition definition = new PhysicalClassLoaderDefinition(uri);
-                definition.addContributionUri(encode(uri));
+                if (zone == null) {
+                    // If the contribution is providioned to this runtime, its URI should not be encoded
+                    definition.addContributionUri(uri);
+                } else {
+                    URI encoded = encode(uri);
+                    definition.addContributionUri(encoded);
+                }
                 for (URI resolved : contribution.getResolvedImportUris()) {
                     definition.addParentClassLoader(resolved);
                 }
-                String zone = entry.getKey();
                 Set<PhysicalClassLoaderDefinition> definitions = definitionsPerZone.get(zone);
                 if (definitions == null) {
                     definitions = new LinkedHashSet<PhysicalClassLoaderDefinition>();
