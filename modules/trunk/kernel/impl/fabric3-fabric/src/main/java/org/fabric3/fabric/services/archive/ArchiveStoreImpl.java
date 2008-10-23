@@ -76,6 +76,9 @@ public class ArchiveStoreImpl implements ArchiveStore {
         }
     }
 
+    public boolean exists(URI uri) {
+        return archiveUriToUrl.containsKey(uri);
+    }
 
     public URL find(URI uri) {
         return archiveUriToUrl.get(uri);

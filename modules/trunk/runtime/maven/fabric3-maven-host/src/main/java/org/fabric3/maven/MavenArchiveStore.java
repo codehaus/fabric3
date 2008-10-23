@@ -60,6 +60,10 @@ public class MavenArchiveStore implements ArchiveStore {
         return find(uri);
     }
 
+    public boolean exists(URI uri) {
+        throw new UnsupportedOperationException();
+    }
+
     public URL find(URI uri) throws ArchiveStoreException {
         // assume uri is in the form 'group id:artifact id: version'
         String[] parsed = uri.toString().split(":");

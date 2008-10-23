@@ -37,6 +37,14 @@ public interface ArchiveStore {
     URL store(URI uri, InputStream stream) throws ArchiveStoreException;
 
     /**
+     * Returns true if the archive exists
+     *
+     * @param uri the archive URI
+     * @return true if the archive exists
+     */
+    boolean exists(URI uri);
+
+    /**
      * Look up the artifact URL by URI
      *
      * @param uri The URI of the artifact
