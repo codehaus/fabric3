@@ -34,38 +34,46 @@
  */
 package org.fabric3.spi;
 
-
 /**
  * 
  * Namespace URIs used in Fabric3.
  *
  */
 public class Namespaces {
-	
-	/**
-	 * Namespae URI used for core Fabric3.
-	 */
-	public static final String CORE = "urn:fabric3.org:core";
-	
-	/**
-	 * Namespae URI used for fabric3 binding extensions.
-	 */
-	public static final String BINDING = "urn:fabric3.org:binding";
-	
-	/**
-	 * Namespae URI used for fabric3 implementation extensions.
-	 */
-	public static final String IMPLEMENTATION = "urn:fabric3.org:implementation";
-	
-	/**
-	 * Namespae URI used for fabric3 policy extensions.
-	 */
-	public static final String POLICY = "urn:fabric3.org:policy";
-	
-	/**
-	 * Private constructor.
-	 */
-	private Namespaces() {
-	}
+	   
+    /**
+     * Namespace URI used for core Fabric3.
+     * Intended usage for map keys in SCDLs etc. Recommended prefix f3-core.
+     */
+    public static final String CORE = "urn:fabric3.org:core";
+   
+    /**
+     * Namespace URI used for fabric3 binding extensions.
+     * Intended usage for non-standard bindings like hessian, burlap, ftp etc, Recommended prefix f3-binding.
+     */
+    public static final String BINDING = "urn:fabric3.org:binding";
+   
+    /**
+     * Namespace URI used for fabric3 implementation extensions.
+     * Intended usage for non-standard implementations like system, groovy, junit etc, Recommended prefix f3-implementation.
+     */
+    public static final String IMPLEMENTATION = "urn:fabric3.org:implementation";
+   
+    /**
+     * Namespace URI used for fabric3 policy extensions.
+     * Intended usage for non-standard SCA intents and policies like dataBinding.jaxb, authorization.message, Recommended prefix f3-policy.
+     */
+    public static final String POLICY = "urn:fabric3.org:policy";
+   
+    /**
+     * Namespace URI used for other extensions like implementation.cache and implementation.jpa. Recommended prefix f3-other.
+     */
+    public static final String OTHER = "urn:fabric3.org:other";
+   
+    /**
+     * Private constructor.
+     */
+    private Namespaces() {
+    }
 
 }
