@@ -33,20 +33,20 @@
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
-           xmlns:burlap="http://www.fabric3.org/binding/burlap/0.2"
+           xmlns:f3-binding="urn:fabric3.org:binding"
            name="BurlapTestComposite">
 
     <component name="EchoTest">
         <f3:junit class="org.fabric3.tests.binding.harness.EchoTest"/>
         <reference name="service">
-            <burlap:binding.burlap uri="http://localhost:8900/echoService"/>
+            <f3-binding:binding.burlap uri="http://localhost:8900/echoService"/>
         </reference>
     </component>
 
     <component name="EchoService">
         <implementation.java class="org.fabric3.tests.binding.harness.EchoServiceImpl"/>
         <service name="EchoService">
-            <burlap:binding.burlap uri="/echoService"/>
+            <f3-binding:binding.burlap uri="/echoService"/>
         </service>
     </component>
 </composite>

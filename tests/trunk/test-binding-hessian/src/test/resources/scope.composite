@@ -33,7 +33,7 @@
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
-           xmlns:hessian="http://www.fabric3.org/binding/hessian/0.2"
+           xmlns:f3-binding="urn:fabric3.org:binding"
            name="ScopeComposite" autowire="false">
 
     <component name="BindingScopeTestComponent">
@@ -44,7 +44,7 @@
     <component name="CompositeService">
         <implementation.java class="org.fabric3.tests.binding.harness.scope.CompositeServiceImpl"/>
         <service name="CompositeService">
-            <hessian:binding.hessian uri="/CompositeService"/>
+            <f3-binding:binding.hessian uri="/CompositeService"/>
         </service>
     </component>
 
