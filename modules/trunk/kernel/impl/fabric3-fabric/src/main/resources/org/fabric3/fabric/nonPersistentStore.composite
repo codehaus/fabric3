@@ -38,7 +38,6 @@
            autowire="true">
     <component name="ContributionStore">
         <system:implementation.system class="org.fabric3.fabric.services.archive.ArchiveStoreImpl"/>
-        <property name="persistent">false</property>
     </component>
 
 

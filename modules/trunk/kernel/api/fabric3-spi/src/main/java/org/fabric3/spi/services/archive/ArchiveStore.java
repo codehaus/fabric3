@@ -37,16 +37,6 @@ public interface ArchiveStore {
     URL store(URI uri, InputStream stream) throws ArchiveStoreException;
 
     /**
-     * Copy an artifact from the source URL to the store
-     *
-     * @param contributionUri the URI of the artifact
-     * @param sourceURL       the source URL of the artifact
-     * @return a URL pointing to the stored artifact
-     * @throws ArchiveStoreException if an error occurs storing the artifact
-     */
-    URL store(URI contributionUri, URL sourceURL) throws ArchiveStoreException;
-
-    /**
      * Look up the artifact URL by URI
      *
      * @param uri The URI of the artifact

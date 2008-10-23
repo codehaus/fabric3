@@ -58,14 +58,13 @@ public class ArchiveStoreImplTestCase extends TestCase {
         HostInfo info = EasyMock.createMock(HostInfo.class);
         EasyMock.expect(info.getBaseDir()).andReturn(null).atLeastOnce();
         EasyMock.replay(info);
+        FileHelper.forceMkdir(new File("repository"));
         this.repository = new ArchiveStoreImpl(info);
-        repository.setRepository("target/repository/");
-        repository.init();
     }
 
     @Override
     protected void tearDown() throws Exception {
         super.tearDown();
-        FileHelper.deleteDirectory(new File("target/repository"));
+        FileHelper.deleteDirectory(new File("repository"));
     }
 }
