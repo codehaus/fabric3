@@ -101,7 +101,6 @@ public class ArchiveStoreImpl implements ArchiveStore {
         if (!root.exists() || !root.isDirectory() || !root.canRead()) {
             throw new IOException("The repository location is not a directory: " + root);
         }
-        // FIXME: Map the contribution URI to a file?
         return new File(root, uri.getPath());
     }
 
