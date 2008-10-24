@@ -61,7 +61,8 @@ public class MavenArchiveStore implements ArchiveStore {
     }
 
     public boolean exists(URI uri) {
-        throw new UnsupportedOperationException();
+        // always return false
+        return false;
     }
 
     public URL find(URI uri) throws ArchiveStoreException {

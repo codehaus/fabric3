@@ -55,6 +55,7 @@ import org.fabric3.host.contribution.ContributionNotFoundException;
 import org.fabric3.host.contribution.ContributionService;
 import org.fabric3.host.contribution.ContributionSource;
 import org.fabric3.host.contribution.Deployable;
+import org.fabric3.host.contribution.DuplicateContributionException;
 import org.fabric3.host.contribution.ValidationFailure;
 import org.fabric3.introspection.validation.InvalidContributionException;
 import org.fabric3.introspection.validation.ValidationUtils;
@@ -259,6 +260,9 @@ public class ContributionServiceImpl implements ContributionService {
         URI contributionUri = source.getUri();
         if (contributionUri == null) {
             contributionUri = URI.create(uriPrefix + "/" + UUID.randomUUID());
+        }
+        if (archiveStore.exists(contributionUri)) {
+            throw new DuplicateContributionException("Contribution is already installed: " + contributionUri);
         }
         URL locationUrl;
         if (!source.persist()) {
