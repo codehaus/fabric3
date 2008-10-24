@@ -48,9 +48,6 @@ public class InstallCommandParser implements CommandParser {
             case DomainAdminLexer.FILE:
                 parseFile(command, iterator);
                 break;
-            case DomainAdminLexer.CONTRIBUTION_NAME:
-                parseContributionName(command, iterator);
-                break;
             case DomainAdminLexer.PARAMETER:
                 parseParameter(command, iterator);
                 break;
@@ -61,8 +58,6 @@ public class InstallCommandParser implements CommandParser {
         }
         if (command.getContribution() == null) {
             throw new AssertionError("FILE token not found");
-        } else if (command.getContributionName() == null) {
-            throw new AssertionError("CONTRIBUTION_NAME token not found");
         }
         return command;
     }
@@ -77,6 +72,9 @@ public class InstallCommandParser implements CommandParser {
             break;
         case DomainAdminLexer.PARAM_PASSWORD:
             command.setPassword(iterator.next().getText());
+            break;
+        case DomainAdminLexer.PARAM_CONTRIBUTION_NAME:
+            command.setContributionName(iterator.next().getText());
             break;
         default:
             throw new AssertionError("Invalid parameter token type: " + token.getText());
@@ -103,15 +101,6 @@ public class InstallCommandParser implements CommandParser {
         } catch (MalformedURLException e) {
             throw new ParseException("Invalid contribution URL", e);
         }
-    }
-
-    private void parseContributionName(InstallCommand command, Iterator<Token> iterator) throws ParseException {
-        // proceed past DOWN;
-        iterator.next();
-        String name = iterator.next().getText();
-        // proceed past UP
-        iterator.next();
-        command.setContributionName(name);
     }
 
 }
