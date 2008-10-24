@@ -96,7 +96,7 @@ public class InstallCommand implements Command {
                 out.println("   " + desc);
             }
         } catch (ContributionAlreadyInstalledException e) {
-            out.println("ERROR: A contribution with that name is alread installed");
+            out.println("ERROR: A contribution with that name is already installed");
         } catch (AdministrationException e) {
             throw new CommandException(e);
         } catch (IOException e) {

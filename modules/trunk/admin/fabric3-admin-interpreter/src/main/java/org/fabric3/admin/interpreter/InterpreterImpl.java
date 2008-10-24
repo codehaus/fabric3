@@ -44,7 +44,7 @@ import org.fabric3.admin.interpreter.parser.InstallCommandParser;
  * @version $Revision$ $Date$
  */
 public class InterpreterImpl implements Interpreter {
-    private static final String PROMPT = "f3>";
+    private static final String PROMPT = "\nf3>";
     private DomainController controller;
     private Map<Integer, CommandParser> parsers;
 
