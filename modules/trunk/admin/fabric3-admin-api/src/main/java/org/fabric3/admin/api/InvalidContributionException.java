@@ -14,27 +14,23 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.admin.interpreter.command;
+package org.fabric3.admin.api;
 
-import java.io.PrintStream;
-
-import org.fabric3.admin.api.DomainController;
-import org.fabric3.admin.interpreter.Command;
-import org.fabric3.admin.interpreter.CommandException;
+import java.util.List;
 
 /**
  * @version $Revision$ $Date$
  */
-public class SetPasswordCommand implements Command {
-    private DomainController controller;
-    private String password;
+public class InvalidContributionException extends AdministrationException {
+    private static final long serialVersionUID = 426753127572166846L;
+    private List<String> descriptions;
 
-    public SetPasswordCommand(DomainController controller, String password) {
-        this.controller = controller;
-        this.password = password;
+    public InvalidContributionException(List<String> descriptions) {
+        super();
+        this.descriptions = descriptions;
     }
 
-    public void execute(PrintStream out) throws CommandException {
-        controller.setUsername(password);
+    public List<String> getDescriptions() {
+        return descriptions;
     }
 }

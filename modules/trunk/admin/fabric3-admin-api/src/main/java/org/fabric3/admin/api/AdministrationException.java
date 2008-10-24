@@ -24,8 +24,8 @@ package org.fabric3.admin.api;
 public class AdministrationException extends Exception {
     private static final long serialVersionUID = -351731887104971407L;
 
-    public AdministrationException(String message) {
-        super(message);
+    public AdministrationException() {
+        super();
     }
 
     public AdministrationException(String message, Throwable cause) {

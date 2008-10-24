@@ -16,6 +16,8 @@
  */
 package org.fabric3.admin.interpreter.command;
 
+import java.io.PrintStream;
+
 import org.fabric3.admin.api.AdministrationException;
 import org.fabric3.admin.api.DomainController;
 import org.fabric3.admin.interpreter.Command;
@@ -58,7 +60,7 @@ public class DeployCommand implements Command {
         this.password = password;
     }
 
-    public void execute() throws CommandException {
+    public void execute(PrintStream out) throws CommandException {
         try {
             if (username != null) {
                 controller.setUsername(username);

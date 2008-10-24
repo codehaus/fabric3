@@ -42,6 +42,24 @@
       </library>
     </orderEntry>
     <orderEntry type="module" module-name="fabric3-admin-api" />
+    <orderEntry type="module-library">
+      <library name="org.apache.httpcomponents:httpclient:4.0-beta1">
+        <CLASSES>
+          <root url="jar://$M2_REPO$/org/apache/httpcomponents/httpclient/4.0-beta1/httpclient-4.0-beta1.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
+    <orderEntry type="module-library">
+      <library name="org.apach.httpcomponents:httpcore:4.0-beta2">
+        <CLASSES>
+          <root url="jar://$M2_REPO$/org/apache/httpcomponents/httpcore/4.0-beta2/httpcore-4.0-beta2.jar!/" />
+        </CLASSES>
+        <JAVADOC />
+        <SOURCES />
+      </library>
+    </orderEntry>
   </component>
 </module>
 

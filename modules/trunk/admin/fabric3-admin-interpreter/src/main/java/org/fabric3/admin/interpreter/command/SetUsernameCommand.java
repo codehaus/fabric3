@@ -16,6 +16,8 @@
  */
 package org.fabric3.admin.interpreter.command;
 
+import java.io.PrintStream;
+
 import org.fabric3.admin.api.DomainController;
 import org.fabric3.admin.interpreter.Command;
 import org.fabric3.admin.interpreter.CommandException;
@@ -32,7 +34,7 @@ public class SetUsernameCommand implements Command {
         this.username = username;
     }
 
-    public void execute() throws CommandException {
+    public void execute(PrintStream out) throws CommandException {
         controller.setUsername(username);
     }
 }

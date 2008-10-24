@@ -28,9 +28,10 @@ public interface Interpreter {
      * Processes an instruction.
      *
      * @param command the instruction
+     * @param out     the PrintStream where command output is sent
      * @throws InterpreterException if an error occurs processing the instruction
      */
-    public void process(String command) throws InterpreterException;
+    public void process(String command, PrintStream out) throws InterpreterException;
 
     /**
      * Provides an interactive command prompt for issuing commands to the DomainController.

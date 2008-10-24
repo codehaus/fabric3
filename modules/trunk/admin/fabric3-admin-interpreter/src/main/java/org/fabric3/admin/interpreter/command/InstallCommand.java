@@ -16,10 +16,14 @@
  */
 package org.fabric3.admin.interpreter.command;
 
+import java.io.IOException;
+import java.io.PrintStream;
 import java.net.URL;
 
 import org.fabric3.admin.api.AdministrationException;
+import org.fabric3.admin.api.ContributionAlreadyInstalledException;
 import org.fabric3.admin.api.DomainController;
+import org.fabric3.admin.api.InvalidContributionException;
 import org.fabric3.admin.interpreter.Command;
 import org.fabric3.admin.interpreter.CommandException;
 
@@ -69,7 +73,7 @@ public class InstallCommand implements Command {
         this.password = password;
     }
 
-    public void execute() throws CommandException {
+    public void execute(PrintStream out) throws CommandException {
         try {
             if (username != null) {
                 controller.setUsername(username);
@@ -77,9 +81,24 @@ public class InstallCommand implements Command {
             if (password != null) {
                 controller.setPassword(password);
             }
+            if (!controller.isConnected()) {
+                controller.connect();
+            }
             controller.install(contribution, contributionName);
+            out.println("Installed " + contributionName);
+
+        } catch (InvalidContributionException e) {
+            out.println("ERROR: The contribution contained errors:");
+            for (String desc : e.getDescriptions()) {
+                out.println("   " + desc);
+            }
+        } catch (ContributionAlreadyInstalledException e) {
+            out.println("ERROR: A contribution with that name is alread installed");
         } catch (AdministrationException e) {
             throw new CommandException(e);
+        } catch (IOException e) {
+            out.println("ERROR: Unable to connect to the doman controller");
+            e.printStackTrace(out);
         }
     }
 }

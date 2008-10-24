@@ -23,6 +23,29 @@ tokens {  INSTALL_CMD;
 @header { package org.fabric3.admin.cli; }
 @lexer::header { package org.fabric3.admin.cli; }
 
+@members {
+    
+   protected void mismatch(IntStream input, int ttype, BitSet follow) throws RecognitionException {
+      System.out.println("-------------->");
+      super.mismatch(input, ttype, follow);
+      // throw new MismatchedTokenException(ttype, input);
+   }
+
+   public void recoverFromMismatchedSet(IntStream input, RecognitionException e, BitSet follow) throws RecognitionException {
+      System.out.println("--------------x>");
+      super.recoverFromMismatchedSet(input, e, follow);
+      // throw e;
+   }
+
+}
+
+// Alter code generation so catch-clauses get replace with this action.
+@rulecatch {
+   catch (RecognitionException e) {
+      throw e;
+   }
+}
+
 command		: (subcommand)+ EOF;
 
 subcommand	: (install | deploy) NEWLINE?;

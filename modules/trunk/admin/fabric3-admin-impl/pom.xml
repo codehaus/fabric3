@@ -28,7 +28,7 @@
     <description>Fabric3 Implementation for Domain Administration.</description>
 
     <dependencies>
-            <dependency>
+        <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-admin-api</artifactId>
             <version>0.7-SNAPSHOT</version>
@@ -44,6 +44,12 @@
             <artifactId>fabric3-admin-interpreter</artifactId>
             <version>0.7-SNAPSHOT</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.apache.httpcomponents</groupId>
+            <artifactId>httpclient</artifactId>
+            <version>4.0-beta1</version>
+         </dependency>
 
         <dependency>
             <groupId>junit</groupId>

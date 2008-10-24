@@ -40,13 +40,14 @@ public class Main {
         Interpreter interpreter = new InterpreterImpl(controller) {
         };
         if (args.length == 0) {
+            System.out.println("\nFabric3 Admininstration Interface");
             interpreter.processInteractive(System.in, System.out);
         } else {
             StringBuilder builder = new StringBuilder();
             for (String arg : args) {
                 builder.append(" ").append(arg);
             }
-            interpreter.process(builder.toString());
+            interpreter.process(builder.toString(), System.out);
         }
     }
 

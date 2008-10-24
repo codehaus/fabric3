@@ -16,6 +16,8 @@
  */
 package org.fabric3.admin.interpreter;
 
+import java.io.PrintStream;
+
 /**
  * Commands are constructed by a CommandParser that walks the AST generated from a instructions submitted to the Interpreter. Typically, Commands
  * operate against the DomainController.
@@ -27,8 +29,9 @@ public interface Command {
     /**
      * Executes the command.
      *
+     * @param out the PrintStream where command output is sent
      * @throws CommandException if  there is an exception executing the command
      */
-    void execute() throws CommandException;
+    void execute(PrintStream out) throws CommandException;
 
 }

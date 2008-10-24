@@ -14,27 +14,15 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.admin.interpreter.command;
-
-import java.io.PrintStream;
-
-import org.fabric3.admin.api.DomainController;
-import org.fabric3.admin.interpreter.Command;
-import org.fabric3.admin.interpreter.CommandException;
+package org.fabric3.admin.api;
 
 /**
  * @version $Revision$ $Date$
  */
-public class SetPasswordCommand implements Command {
-    private DomainController controller;
-    private String password;
+public class ContributionAlreadyInstalledException extends AdministrationException {
+    private static final long serialVersionUID = 2950465877291283258L;
 
-    public SetPasswordCommand(DomainController controller, String password) {
-        this.controller = controller;
-        this.password = password;
-    }
-
-    public void execute(PrintStream out) throws CommandException {
-        controller.setUsername(password);
+    public ContributionAlreadyInstalledException(String message) {
+        super();
     }
 }

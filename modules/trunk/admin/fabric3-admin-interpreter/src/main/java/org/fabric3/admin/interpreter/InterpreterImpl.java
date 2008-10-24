@@ -44,7 +44,7 @@ import org.fabric3.admin.interpreter.parser.InstallCommandParser;
  * @version $Revision$ $Date$
  */
 public class InterpreterImpl implements Interpreter {
-    private static final String PROMPT = ">";
+    private static final String PROMPT = "f3>";
     private DomainController controller;
     private Map<Integer, CommandParser> parsers;
 
@@ -59,12 +59,12 @@ public class InterpreterImpl implements Interpreter {
             out.print(PROMPT);
             String line = scanner.nextLine().trim();
             if ("quit".equals(line) || "exit".equals(line)) break;
-            process(line);
+            process(line, out);
         }
     }
 
 
-    public void process(String line) throws InterpreterException {
+    public void process(String line, PrintStream out) throws InterpreterException {
         // Run the lexer and token parser on the line.
         DomainAdminLexer lexer = new DomainAdminLexer(new ANTLRStringStream(line));
         DomainAdminParser parser = new DomainAdminParser(new CommonTokenStream(lexer));
@@ -84,7 +84,7 @@ public class InterpreterImpl implements Interpreter {
 
         Command command = parseCommand(iterator);
 
-        command.execute();
+        command.execute(out);
     }
 
     /**

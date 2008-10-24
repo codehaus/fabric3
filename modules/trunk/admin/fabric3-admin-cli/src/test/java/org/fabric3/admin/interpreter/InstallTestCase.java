@@ -39,6 +39,7 @@ public class InstallTestCase extends TestCase {
 //        controller.setDomain("domain");
         controller.setUsername("username");
         controller.setPassword("password");
+        EasyMock.expect(controller.isConnected()).andReturn(true);
         controller.install(contributionUrl, "contribution");
         EasyMock.replay(controller);
 

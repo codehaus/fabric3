@@ -16,6 +16,8 @@
  */
 package org.fabric3.admin.api;
 
+import java.io.IOException;
+import java.io.PrintStream;
 import java.net.URL;
 
 /**
@@ -28,9 +30,9 @@ public interface DomainController {
     /**
      * Sets the base domain controller address.
      *
-     * @param domain the domain controller address
+     * @param address the domain controller address
      */
-    void setControllerAddress(String domain);
+    void setControllerAddress(String address);
 
     /**
      * Sets the username to authenticate with.
@@ -45,6 +47,12 @@ public interface DomainController {
      * @param password a valid domain admin password
      */
     void setPassword(String password);
+
+    boolean isConnected();
+
+    void connect() throws IOException;
+
+    void disconnect() throws IOException;
 
     /**
      * Installs a contribution in the domain.
