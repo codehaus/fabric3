@@ -84,6 +84,9 @@ public class InstallCommand implements Command {
             if (!controller.isConnected()) {
                 controller.connect();
             }
+            if (contributionName == null) {
+                parseContributionName();
+            }
             controller.install(contribution, contributionName);
             out.println("Installed " + contributionName);
 
@@ -99,6 +102,24 @@ public class InstallCommand implements Command {
         } catch (IOException e) {
             out.println("ERROR: Unable to connect to the doman controller");
             e.printStackTrace(out);
+        }
+    }
+
+    private void parseContributionName() {
+        String path = contribution.getPath();
+        int pos = path.lastIndexOf('/');
+        if (pos < 0) {
+            contributionName = path;
+        } else if (pos == path.length() - 1) {
+            String substr = path.substring(0, pos);
+            pos = substr.lastIndexOf('/');
+            if (pos < 0) {
+                contributionName = substr;
+            } else {
+                contributionName = path.substring(pos + 1, path.length() - 1);
+            }
+        } else {
+            contributionName = path.substring(pos + 1);
         }
     }
 }

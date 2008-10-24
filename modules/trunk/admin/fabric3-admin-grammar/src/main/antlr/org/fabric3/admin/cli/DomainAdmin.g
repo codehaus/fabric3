@@ -68,6 +68,6 @@ USERNAME	: ('-u' | '-username' | '-USERNAME') ;
 PASSWORD	: ('-p' | '-P'|'-PASSWORD' | '-password');
 CONTRIBUTION : ('-n' | '-N'|'-NAME'| '-name');
 
-STRING	: ('a'..'z'|'A'..'Z'|'0'..'9'|'.' |'-'|'_')+;
+STRING	: ('a'..'z'|'A'..'Z'|'0'..'9'|'.' |'-'|'_' | '/' | ':' | '/')+;
 NEWLINE    	: '\r'? '\n';
 WS		: (' '|'\t'|'\n'|'\r')+ {skip();};
