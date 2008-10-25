@@ -39,12 +39,10 @@ import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamReader;
 
 import junit.framework.TestCase;
-import org.easymock.EasyMock;
 
-import org.fabric3.spi.Constants;
+import org.easymock.EasyMock;
 import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.system.introspection.SystemImplementationProcessor;
-import org.fabric3.system.introspection.SystemImplementationLoader;
+import org.fabric3.spi.Namespaces;
 import org.fabric3.system.scdl.SystemImplementation;
 
 /**
@@ -52,7 +50,7 @@ import org.fabric3.system.scdl.SystemImplementation;
  */
 public class SystemImplementationLoaderTestCase extends TestCase {
 
-    public static final QName SYSTEM_IMPLEMENTATION = new QName(Constants.FABRIC3_SYSTEM_NS, "implementation.system");
+    public static final QName SYSTEM_IMPLEMENTATION = new QName(Namespaces.IMPLEMENTATION, "implementation.system");
     private IntrospectionContext context;
     private XMLStreamReader reader;
     private SystemImplementationProcessor implementationProcessor;

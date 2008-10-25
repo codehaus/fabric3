@@ -17,7 +17,7 @@
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
-           xmlns:system="http://fabric3.org/xmlns/sca/system/2.0-alpha"
+           xmlns:f3-impl="urn:fabric3.org:implementation"
            targetNamespace="org.codehaus.fabric3"
            name="H2DataSourceExtension"
            autowire="true">
@@ -31,7 +31,7 @@
 
     <!-- XAPool Datasource -->
     <component name="XaPoolDataSource">
-        <system:implementation.system class="org.fabric3.xapool.XaPoolDataSource"/>
+        <f3-impl:implementation.system class="org.fabric3.xapool.XaPoolDataSource"/>
         <property name="driver">org.h2.Driver</property>
         <property name="url" source="$url"/>
         <property name="dataSourceKeys" source="$dataSourceKeys"/>

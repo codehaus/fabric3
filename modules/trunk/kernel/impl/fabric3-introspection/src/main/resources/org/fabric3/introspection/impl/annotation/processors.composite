@@ -38,76 +38,76 @@
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:sca="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
-           xmlns:system="http://fabric3.org/xmlns/sca/system/2.0-alpha"
+           xmlns:f3-impl="urn:fabric3.org:implementation"
            name="AnnotationProcessorsComposite" targetNamespace="urn:org.codehaus.fabric3:fabric3-introspection"
            autowire="true">
 
     <!-- OSOA Specification Annotations -->
 
     <component name="CallbackProcessor" f3:key="org.osoa.sca.annotations.Callback">
-        <system:implementation.system class="org.fabric3.introspection.impl.annotation.CallbackProcessor"/>
+        <f3-impl:implementation.system class="org.fabric3.introspection.impl.annotation.CallbackProcessor"/>
     </component>
 
     <component name="ContextProcessor" f3:key="org.osoa.sca.annotations.Context">
-        <system:implementation.system class="org.fabric3.introspection.impl.annotation.ContextProcessor"/>
+        <f3-impl:implementation.system class="org.fabric3.introspection.impl.annotation.ContextProcessor"/>
     </component>
 
     <component name="ConversationIDProcessor" f3:key="org.osoa.sca.annotations.ConversationID">
-        <system:implementation.system class="org.fabric3.introspection.impl.annotation.ConversationIDProcessor"/>
+        <f3-impl:implementation.system class="org.fabric3.introspection.impl.annotation.ConversationIDProcessor"/>
     </component>
 
     <component name="DestroyProcessor" f3:key="org.osoa.sca.annotations.Destroy">
-        <system:implementation.system class="org.fabric3.introspection.impl.annotation.DestroyProcessor"/>
+        <f3-impl:implementation.system class="org.fabric3.introspection.impl.annotation.DestroyProcessor"/>
     </component>
 
     <component name="EagerInitProcessor" f3:key="org.osoa.sca.annotations.EagerInit">
-        <system:implementation.system class="org.fabric3.introspection.impl.annotation.EagerInitProcessor"/>
+        <f3-impl:implementation.system class="org.fabric3.introspection.impl.annotation.EagerInitProcessor"/>
     </component>
 
     <component name="InitProcessor" f3:key="org.osoa.sca.annotations.Init">
-        <system:implementation.system class="org.fabric3.introspection.impl.annotation.InitProcessor"/>
+        <f3-impl:implementation.system class="org.fabric3.introspection.impl.annotation.InitProcessor"/>
     </component>
 
     <component name="PropertyProcessor" f3:key="org.osoa.sca.annotations.Property">
-        <system:implementation.system class="org.fabric3.introspection.impl.annotation.PropertyProcessor"/>
+        <f3-impl:implementation.system class="org.fabric3.introspection.impl.annotation.PropertyProcessor"/>
     </component>
 
     <component name="ReferenceProcessor" f3:key="org.osoa.sca.annotations.Reference">
-        <system:implementation.system class="org.fabric3.introspection.impl.annotation.ReferenceProcessor"/>
+        <f3-impl:implementation.system class="org.fabric3.introspection.impl.annotation.ReferenceProcessor"/>
     </component>
 
     <component name="RemotableProcessor" f3:key="org.osoa.sca.annotations.Remotable">
-        <system:implementation.system class="org.fabric3.introspection.impl.annotation.RemotableProcessor"/>
+        <f3-impl:implementation.system class="org.fabric3.introspection.impl.annotation.RemotableProcessor"/>
     </component>
 
     <component name="ScopeProcessor" f3:key="org.osoa.sca.annotations.Scope">
-        <system:implementation.system class="org.fabric3.introspection.impl.annotation.ScopeProcessor"/>
+        <f3-impl:implementation.system class="org.fabric3.introspection.impl.annotation.ScopeProcessor"/>
     </component>
 
     <component name="ServiceProcessor" f3:key="org.osoa.sca.annotations.Service">
-        <system:implementation.system class="org.fabric3.introspection.impl.annotation.ServiceProcessor"/>
+        <f3-impl:implementation.system class="org.fabric3.introspection.impl.annotation.ServiceProcessor"/>
     </component>
 
     <!-- Fabric3 Annotations -->
 
     <component name="MonitorProcessor" f3:key="org.fabric3.api.annotation.Monitor">
-        <system:implementation.system class="org.fabric3.introspection.impl.annotation.MonitorProcessor"/>
+        <f3-impl:implementation.system class="org.fabric3.introspection.impl.annotation.MonitorProcessor"/>
     </component>
 
     <component name="ConversationProcessor" f3:key="org.fabric3.api.annotation.scope.Conversation">
-        <system:implementation.system class="org.fabric3.introspection.impl.annotation.ConversationProcessor"/>
+        <f3-impl:implementation.system class="org.fabric3.introspection.impl.annotation.ConversationProcessor"/>
     </component>
 
     <component name="CompositeProcessor" f3:key="org.fabric3.api.annotation.scope.Composite">
-        <system:implementation.system class="org.fabric3.introspection.impl.annotation.CompositeProcessor"/>
+        <f3-impl:implementation.system class="org.fabric3.introspection.impl.annotation.CompositeProcessor"/>
     </component>
 
     <component name="RequestProcessor" f3:key="org.fabric3.api.annotation.scope.Request">
-        <system:implementation.system class="org.fabric3.introspection.impl.annotation.RequestProcessor"/>
+        <f3-impl:implementation.system class="org.fabric3.introspection.impl.annotation.RequestProcessor"/>
     </component>
 
     <component name="StatelessProcessor" f3:key="org.fabric3.api.annotation.scope.Stateless">
-        <system:implementation.system class="org.fabric3.introspection.impl.annotation.StatelessProcessor"/>
+        <f3-impl:implementation.system class="org.fabric3.introspection.impl.annotation.StatelessProcessor"/>
     </component>
 
 </composite>

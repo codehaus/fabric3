@@ -32,7 +32,7 @@
  under the License.
     $Rev$ $Date$
 -->
-<composite xmlns="http://www.osoa.org/xmlns/sca/1.0" xmlns:system="http://fabric3.org/xmlns/sca/system/2.0-alpha"
+<composite xmlns="http://www.osoa.org/xmlns/sca/1.0" xmlns:f3-impl="urn:fabric3.org:implementation"
            xmlns:sca="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
            xmlns:f3maven="http://fabric3.org/xmlns/sca/2.0-alpha/maven"
@@ -41,7 +41,7 @@
 
     <!-- Content type resolver -->
     <component name="ContentTypeResolver">
-        <system:implementation.system class="org.fabric3.fabric.services.contenttype.ExtensionMapContentTypeResolver"/>
+        <f3-impl:implementation.system class="org.fabric3.fabric.services.contenttype.ExtensionMapContentTypeResolver"/>
         <property name="extensionMap">
             <xml>application/xml</xml>
             <composite>text/vnd.fabric3.composite+xml</composite>
@@ -53,92 +53,92 @@
 
     <!-- Contribution Service -->
     <component name="ContributionService">
-        <system:implementation.system class="org.fabric3.fabric.services.contribution.ContributionServiceImpl"/>
+        <f3-impl:implementation.system class="org.fabric3.fabric.services.contribution.ContributionServiceImpl"/>
     </component>
 
     <component name="ContributionLoader">
-        <system:implementation.system class="org.fabric3.fabric.services.contribution.ContributionLoaderImpl"/>
+        <f3-impl:implementation.system class="org.fabric3.fabric.services.contribution.ContributionLoaderImpl"/>
     </component>
 
     <component name="DependencyService">
-        <system:implementation.system class="org.fabric3.fabric.services.contribution.DependencyServiceImpl"/>
+        <f3-impl:implementation.system class="org.fabric3.fabric.services.contribution.DependencyServiceImpl"/>
     </component>
 
     <component name="ArchiveContributionProcessor">
-        <system:implementation.system class="org.fabric3.fabric.services.contribution.processor.ArchiveContributionProcessor"/>
+        <f3-impl:implementation.system class="org.fabric3.fabric.services.contribution.processor.ArchiveContributionProcessor"/>
     </component>
 
     <component name="ZipContributionHandler">
-        <system:implementation.system class="org.fabric3.fabric.services.contribution.processor.ZipContributionHandler"/>
+        <f3-impl:implementation.system class="org.fabric3.fabric.services.contribution.processor.ZipContributionHandler"/>
     </component>
 
     <component name="XmlResourceProcessor">
-        <system:implementation.system class="org.fabric3.fabric.services.contribution.processor.XmlResourceProcessor"/>
+        <f3-impl:implementation.system class="org.fabric3.fabric.services.contribution.processor.XmlResourceProcessor"/>
     </component>
 
     <component name="CompositeResourceProcessor">
-        <system:implementation.system class="org.fabric3.fabric.services.contribution.processor.CompositeResourceProcessor"/>
+        <f3-impl:implementation.system class="org.fabric3.fabric.services.contribution.processor.CompositeResourceProcessor"/>
     </component>
 
     <component name="XmlContributionProcessor">
-        <system:implementation.system class="org.fabric3.fabric.services.contribution.processor.XmlContributionProcessor"/>
+        <f3-impl:implementation.system class="org.fabric3.fabric.services.contribution.processor.XmlContributionProcessor"/>
     </component>
 
     <component name="XmlManifestProcessorRegistry">
-        <system:implementation.system class="org.fabric3.fabric.services.contribution.manifest.XmlManifestProcessorRegistryImpl"/>
+        <f3-impl:implementation.system class="org.fabric3.fabric.services.contribution.manifest.XmlManifestProcessorRegistryImpl"/>
     </component>
 
     <component name="XmlIndexerRegistry">
-        <system:implementation.system class="org.fabric3.fabric.services.contribution.processor.XmlIndexerRegistryImpl"/>
+        <f3-impl:implementation.system class="org.fabric3.fabric.services.contribution.processor.XmlIndexerRegistryImpl"/>
     </component>
 
     <component name="XmlPRocessorRegistry">
-        <system:implementation.system class="org.fabric3.fabric.services.contribution.processor.XmlProcessorRegistryImpl"/>
+        <f3-impl:implementation.system class="org.fabric3.fabric.services.contribution.processor.XmlProcessorRegistryImpl"/>
     </component>
 
     <component name="XmlResourceElementLoaderRegistry">
-        <system:implementation.system class="org.fabric3.fabric.services.contribution.processor.XmlResourceElementLoaderRegistryImpl"/>
+        <f3-impl:implementation.system class="org.fabric3.fabric.services.contribution.processor.XmlResourceElementLoaderRegistryImpl"/>
     </component>
 
     <component name="XmlManifestProcessor">
-        <system:implementation.system class="org.fabric3.fabric.services.contribution.manifest.XmlManifestProcessor"/>
+        <f3-impl:implementation.system class="org.fabric3.fabric.services.contribution.manifest.XmlManifestProcessor"/>
     </component>
 
     <component name="DefinitionsProcessor">
-        <system:implementation.system class="org.fabric3.fabric.services.contribution.processor.DefinitionsProcessor"/>
+        <f3-impl:implementation.system class="org.fabric3.fabric.services.contribution.processor.DefinitionsProcessor"/>
         <reference name="loader" target="DefinitionsLoader"/>
     </component>
 
     <component name="ContributionElementLoader">
-        <system:implementation.system class="org.fabric3.fabric.services.contribution.manifest.ContributionElementLoader"/>
+        <f3-impl:implementation.system class="org.fabric3.fabric.services.contribution.manifest.ContributionElementLoader"/>
     </component>
 
     <component name="QNameExportLoader" f3:key="sca:export">
-        <system:implementation.system class="org.fabric3.fabric.services.contribution.manifest.QNameExportLoader"/>
+        <f3-impl:implementation.system class="org.fabric3.fabric.services.contribution.manifest.QNameExportLoader"/>
     </component>
 
     <component name="QNameImportLoader" f3:key="sca:import">
-        <system:implementation.system class="org.fabric3.fabric.services.contribution.manifest.QNameImportLoader"/>
+        <f3-impl:implementation.system class="org.fabric3.fabric.services.contribution.manifest.QNameImportLoader"/>
     </component>
 
     <component name="MavenImportLoader" f3:key="f3maven:import">
-        <system:implementation.system class="org.fabric3.fabric.services.contribution.manifest.MavenImportLoader"/>
+        <f3-impl:implementation.system class="org.fabric3.fabric.services.contribution.manifest.MavenImportLoader"/>
     </component>
 
     <component name="MavenExportLoader" f3:key="f3maven:export">
-        <system:implementation.system class="org.fabric3.fabric.services.contribution.manifest.MavenExportLoader"/>
+        <f3-impl:implementation.system class="org.fabric3.fabric.services.contribution.manifest.MavenExportLoader"/>
     </component>
 
     <component name="MavenPOMLoader">
-        <system:implementation.system class="org.fabric3.fabric.services.contribution.manifest.MavenPOMProcessor"/>
+        <f3-impl:implementation.system class="org.fabric3.fabric.services.contribution.manifest.MavenPOMProcessor"/>
     </component>
 
     <component name="JavaExportLoader" f3:key="sca:export.java">
-        <system:implementation.system class="org.fabric3.fabric.services.contribution.manifest.JavaExportLoader"/>
+        <f3-impl:implementation.system class="org.fabric3.fabric.services.contribution.manifest.JavaExportLoader"/>
     </component>
 
     <component name="JavaImportLoader" f3:key="sca:import.java">
-        <system:implementation.system class="org.fabric3.fabric.services.contribution.manifest.JavaImportLoader"/>
+        <f3-impl:implementation.system class="org.fabric3.fabric.services.contribution.manifest.JavaImportLoader"/>
     </component>
 
 

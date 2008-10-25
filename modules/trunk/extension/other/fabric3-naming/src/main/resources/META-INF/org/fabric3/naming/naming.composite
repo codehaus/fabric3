@@ -16,7 +16,7 @@
 
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
-           xmlns:system="http://fabric3.org/xmlns/sca/system/2.0-alpha"
+           xmlns:f3-impl="urn:fabric3.org:implementation"
            targetNamespace="org.codehaus.fabric3"
            name="NamingExtension"
         >
@@ -25,7 +25,7 @@
 
     <!-- JNDI Delegate -->
     <component name="JNDIContextDelegate">
-        <system:implementation.system class="org.fabric3.naming.JNDIContextDelegate"/>
+        <f3-impl:implementation.system class="org.fabric3.naming.JNDIContextDelegate"/>
         <property name="properties" source="$jndiProperties"/>
     </component>
 

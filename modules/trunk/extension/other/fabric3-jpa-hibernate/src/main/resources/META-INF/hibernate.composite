@@ -19,27 +19,27 @@
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
-           xmlns:system="http://fabric3.org/xmlns/sca/system/2.0-alpha"
+           xmlns:f3-impl="urn:fabric3.org:implementation"
            targetNamespace="org.codehaus.fabric3"
            name="HibernateJpaExtension"
            autowire="true">
 
     <!-- EMF Builder Delegate -->
     <component name="HibernateDelegate" f3:key="org.hibernate.ejb.HibernatePersistence">
-        <system:implementation.system class="org.fabric3.jpa.hibernate.HibernateDelegate"/>
+        <f3-impl:implementation.system class="org.fabric3.jpa.hibernate.HibernateDelegate"/>
     </component>
 
     <component name="HibernateEmfClassLoaderService">
-        <system:implementation.system class="org.fabric3.jpa.hibernate.HibernateEmfClassLoaderService"/>
+        <f3-impl:implementation.system class="org.fabric3.jpa.hibernate.HibernateEmfClassLoaderService"/>
     </component>
 
     <!-- Transaction manager lookup -->
     <component name="F3HibernateTransactionManagerLookup">
-        <system:implementation.system class="org.fabric3.jpa.hibernate.F3HibernateTransactionManagerLookup"/>
+        <f3-impl:implementation.system class="org.fabric3.jpa.hibernate.F3HibernateTransactionManagerLookup"/>
     </component>
 
     <component name="HibernatePersistenceManifestProcessor">
-        <system:implementation.system class="org.fabric3.jpa.hibernate.HibernatePersistenceManifestProcessor"/>
+        <f3-impl:implementation.system class="org.fabric3.jpa.hibernate.HibernatePersistenceManifestProcessor"/>
     </component>
 
     <include name="JPACore" scdlResource="META-INF/jpa.composite"/>

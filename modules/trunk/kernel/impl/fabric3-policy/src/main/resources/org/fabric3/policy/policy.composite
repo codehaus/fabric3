@@ -20,43 +20,43 @@
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
-           xmlns:system="http://fabric3.org/xmlns/sca/system/2.0-alpha"
+           xmlns:f3-impl="urn:fabric3.org:implementation"
            name="PolicyBootComposite"
            autowire="true">
 
     <!-- Policy Infoset Builder -->
     <component name="PolicyInfosetBuilder">
-        <system:implementation.system class="org.fabric3.fabric.policy.infoset.DefaultPolicyInfosetBuilder"/>
+        <f3-impl:implementation.system class="org.fabric3.fabric.policy.infoset.DefaultPolicyInfosetBuilder"/>
     </component>
 
     <!-- Policy Set Evaluator -->
     <component name="PolicySetEvaluator">
-        <system:implementation.system class="org.fabric3.fabric.policy.infoset.DefaultPolicySetEvaluator"/>
+        <f3-impl:implementation.system class="org.fabric3.fabric.policy.infoset.DefaultPolicySetEvaluator"/>
     </component>
 
     <!-- Interception policy helper -->
     <component name="InteractionPolicyHelper">
-        <system:implementation.system class="org.fabric3.fabric.policy.helper.InteractionPolicyHelperImpl"/>
+        <f3-impl:implementation.system class="org.fabric3.fabric.policy.helper.InteractionPolicyHelperImpl"/>
     </component>
 
     <!-- Implementation policy helper -->
     <component name="ImplementationPolicyHelper">
-        <system:implementation.system class="org.fabric3.fabric.policy.helper.ImplementationPolicyHelperImpl"/>
+        <f3-impl:implementation.system class="org.fabric3.fabric.policy.helper.ImplementationPolicyHelperImpl"/>
     </component>
 
     <!-- Policy resolver -->
     <component name="DefaultPolicyResolver">
-        <system:implementation.system class="org.fabric3.fabric.policy.DefaultPolicyResolver"/>
+        <f3-impl:implementation.system class="org.fabric3.fabric.policy.DefaultPolicyResolver"/>
     </component>
 
     <!-- Simple interceptor builder -->
     <component name="SimpleInterceptorBuilder" f3:key="org.fabric3.fabric.policy.interceptor.simple.SimpleInterceptorDefinition">
-        <system:implementation.system class="org.fabric3.fabric.policy.interceptor.simple.SimpleInterceptorBuilder"/>
+        <f3-impl:implementation.system class="org.fabric3.fabric.policy.interceptor.simple.SimpleInterceptorBuilder"/>
     </component>
 
     <!-- Simple interceptor generator -->
     <component name="SimpleInterceptorDefinitionGenerator">
-        <system:implementation.system class="org.fabric3.fabric.policy.interceptor.simple.SimpleInterceptorDefinitionGenerator"/>
+        <f3-impl:implementation.system class="org.fabric3.fabric.policy.interceptor.simple.SimpleInterceptorDefinitionGenerator"/>
     </component>
 
 </composite>

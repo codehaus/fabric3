@@ -35,72 +35,72 @@
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
-           xmlns:system="http://fabric3.org/xmlns/sca/system/2.0-alpha"
+           xmlns:f3-impl="urn:fabric3.org:implementation"
            name="CommandGeneratorsBootComposite"
            autowire="true">
 
     <!-- default commands -->
 
     <component name="ComponentBuildCommandGenerator">
-        <system:implementation.system class="org.fabric3.fabric.generator.component.BuildComponentCommandGenerator"/>
+        <f3-impl:implementation.system class="org.fabric3.fabric.generator.component.BuildComponentCommandGenerator"/>
         <property name="order">1</property>
     </component>
 
     <component name="LocalWireCommandGenerator">
-        <system:implementation.system class="org.fabric3.fabric.generator.wire.LocalWireCommandGenerator"/>
+        <f3-impl:implementation.system class="org.fabric3.fabric.generator.wire.LocalWireCommandGenerator"/>
         <property name="order">2</property>
         <reference name="applicationLCM" target="LogicalComponentManager"/>
         <reference name="runtimeLCM" target="RuntimeLogicalComponentManager"/>
     </component>
 
     <component name="ReferenceWireCommandGenerator">
-        <system:implementation.system class="org.fabric3.fabric.generator.wire.ReferenceWireCommandGenerator"/>
+        <f3-impl:implementation.system class="org.fabric3.fabric.generator.wire.ReferenceWireCommandGenerator"/>
         <property name="order">2</property>
     </component>
 
     <component name="ServiceWireCommandGenerator">
-        <system:implementation.system class="org.fabric3.fabric.generator.wire.ServiceWireCommandGenerator"/>
+        <f3-impl:implementation.system class="org.fabric3.fabric.generator.wire.ServiceWireCommandGenerator"/>
         <property name="order">2</property>
     </component>
 
     <component name="ResourceWireCommandGenerator">
-        <system:implementation.system class="org.fabric3.fabric.generator.wire.ResourceWireCommandGenerator"/>
+        <f3-impl:implementation.system class="org.fabric3.fabric.generator.wire.ResourceWireCommandGenerator"/>
         <property name="order">2</property>
     </component>
 
     <component name="StartComponentCommandGenerator">
-        <system:implementation.system class="org.fabric3.fabric.generator.component.StartComponentCommandGenerator"/>
+        <f3-impl:implementation.system class="org.fabric3.fabric.generator.component.StartComponentCommandGenerator"/>
         <property name="order">3</property>
     </component>
 
     <component name="StartCompositeContextCommandGenerator">
-        <system:implementation.system class="org.fabric3.fabric.generator.component.StartCompositeContextCommandGenerator"/>
+        <f3-impl:implementation.system class="org.fabric3.fabric.generator.component.StartCompositeContextCommandGenerator"/>
         <property name="order">4</property>
     </component>
 
     <component name="InitializeComponentCommandGenerator">
-        <system:implementation.system class="org.fabric3.fabric.generator.component.InitializeComponentCommandGenerator"/>
+        <f3-impl:implementation.system class="org.fabric3.fabric.generator.component.InitializeComponentCommandGenerator"/>
         <property name="order">5</property>
     </component>
 
 
     <component name="StopCompositeContextCommandGenerator">
-        <system:implementation.system class="org.fabric3.fabric.generator.component.StopCompositeContextCommandGenerator"/>
+        <f3-impl:implementation.system class="org.fabric3.fabric.generator.component.StopCompositeContextCommandGenerator"/>
         <property name="order">0</property>
     </component>
 
     <component name="StopComponentCommandGenerator">
-        <system:implementation.system class="org.fabric3.fabric.generator.component.StopComponentCommandGenerator"/>
+        <f3-impl:implementation.system class="org.fabric3.fabric.generator.component.StopComponentCommandGenerator"/>
         <property name="order">1</property>
     </component>
 
     <component name="DetachWireCommandGenerator">
-        <system:implementation.system class="org.fabric3.fabric.generator.wire.DetachWireCommandGenerator"/>
+        <f3-impl:implementation.system class="org.fabric3.fabric.generator.wire.DetachWireCommandGenerator"/>
         <property name="order">2</property>
     </component>
 
     <component name="UnprovisionClassloaderCommandGenerator">
-        <system:implementation.system class="org.fabric3.fabric.generator.classloader.UnprovisionClassloaderCommandGenerator"/>
+        <f3-impl:implementation.system class="org.fabric3.fabric.generator.classloader.UnprovisionClassloaderCommandGenerator"/>
         <property name="order">3</property>
     </component>
 

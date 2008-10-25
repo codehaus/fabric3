@@ -35,61 +35,61 @@
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
-           xmlns:system="http://fabric3.org/xmlns/sca/system/2.0-alpha"
+           xmlns:f3-impl="urn:fabric3.org:implementation"
            name="org.fabric3.fabric.SystemImplementation"
            autowire="true">
 
     <!-- System implementation type -->
-    <component name="SystemImplementationLoader" f3:key="system:implementation.system">
-        <system:implementation.system class="org.fabric3.system.introspection.SystemImplementationLoader"/>
+    <component name="SystemImplementationLoader" f3:key="f3-impl:implementation.system">
+        <f3-impl:implementation.system class="org.fabric3.system.introspection.SystemImplementationLoader"/>
     </component>
 
     <component name="SystemComponentBuilder">
-        <system:implementation.system class="org.fabric3.system.runtime.SystemComponentBuilder"/>
+        <f3-impl:implementation.system class="org.fabric3.system.runtime.SystemComponentBuilder"/>
         <reference name="transformerRegistry" target="PullTransformerRegistry"/>
     </component>
 
     <component name="SystemSourceWireAttacher" f3:key="org.fabric3.system.provision.SystemWireSourceDefinition">
-        <system:implementation.system class="org.fabric3.system.runtime.SystemSourceWireAttacher"/>
+        <f3-impl:implementation.system class="org.fabric3.system.runtime.SystemSourceWireAttacher"/>
         <reference name="transformerRegistry" target="PullTransformerRegistry"/>
     </component>
 
     <component name="SystemTargetWireAttacher" f3:key="org.fabric3.system.provision.SystemWireTargetDefinition">
-        <system:implementation.system class="org.fabric3.system.runtime.SystemTargetWireAttacher"/>
+        <f3-impl:implementation.system class="org.fabric3.system.runtime.SystemTargetWireAttacher"/>
     </component>
 
 
     <component name="SystemImplementationProcessorImpl">
-        <system:implementation.system class="org.fabric3.system.introspection.SystemImplementationProcessorImpl"/>
+        <f3-impl:implementation.system class="org.fabric3.system.introspection.SystemImplementationProcessorImpl"/>
         <reference name="classWalker" target="SystemClassWalker"/>
         <reference name="heuristic" target="SystemHeuristic"/>
     </component>
 
     <component name="SystemClassWalker">
-        <system:implementation.system class="org.fabric3.introspection.impl.DefaultClassWalker"/>
+        <f3-impl:implementation.system class="org.fabric3.introspection.impl.DefaultClassWalker"/>
     </component>
 
     <component name="SystemHeuristic">
-        <system:implementation.system class="org.fabric3.system.introspection.SystemHeuristic"/>
+        <f3-impl:implementation.system class="org.fabric3.system.introspection.SystemHeuristic"/>
         <reference name="service" target="SystemServiceHeuristic"/>
         <reference name="constructor" target="SystemConstructorHeuristic"/>
         <reference name="injection" target="SystemUnannotatedHeuristic"/>
     </component>
 
     <component name="SystemServiceHeuristic">
-        <system:implementation.system class="org.fabric3.system.introspection.SystemServiceHeuristic"/>
+        <f3-impl:implementation.system class="org.fabric3.system.introspection.SystemServiceHeuristic"/>
     </component>
 
     <component name="SystemConstructorHeuristic">
-        <system:implementation.system class="org.fabric3.system.introspection.SystemConstructorHeuristic"/>
+        <f3-impl:implementation.system class="org.fabric3.system.introspection.SystemConstructorHeuristic"/>
     </component>
 
     <component name="SystemUnannotatedHeuristic">
-        <system:implementation.system class="org.fabric3.system.introspection.SystemUnannotatedHeuristic"/>
+        <f3-impl:implementation.system class="org.fabric3.system.introspection.SystemUnannotatedHeuristic"/>
     </component>
 
     <component name="SystemComponentGenerator">
-        <system:implementation.system class="org.fabric3.system.control.SystemComponentGenerator"/>
+        <f3-impl:implementation.system class="org.fabric3.system.control.SystemComponentGenerator"/>
     </component>
 
 </composite>

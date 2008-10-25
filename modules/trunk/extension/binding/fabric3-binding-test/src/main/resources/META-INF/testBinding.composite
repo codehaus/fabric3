@@ -27,29 +27,29 @@ destination uri the reference should flow invocations to as in:
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
-           xmlns:system="http://fabric3.org/xmlns/sca/system/2.0-alpha"
+           xmlns:f3-impl="urn:fabric3.org:implementation"
            targetNamespace="org.codehaus.fabric3"
            name="TestBindingExtension">
 
     <component name="BindingChannel">
-        <system:implementation.system class="org.fabric3.binding.test.BindingChannelImpl"/>
+        <f3-impl:implementation.system class="org.fabric3.binding.test.BindingChannelImpl"/>
     </component>
 
     <component name="TestBindingLoader" f3:key="f3:binding.test">
-        <system:implementation.system class="org.fabric3.binding.test.TestBindingLoader"/>
+        <f3-impl:implementation.system class="org.fabric3.binding.test.TestBindingLoader"/>
     </component>
 
     <component name="TestBindingGenerator" f3:key="org.fabric3.binding.test.TestBindingDefinition">
-        <system:implementation.system class="org.fabric3.binding.test.TestBindingGenerator"/>
+        <f3-impl:implementation.system class="org.fabric3.binding.test.TestBindingGenerator"/>
     </component>
 
     <component f3:key="org.fabric3.binding.test.TestBindingSourceDefinition" name="TestBindingSourceWireAttacher">
-        <system:implementation.system class="org.fabric3.binding.test.TestBindingSourceWireAttacher"/>
+        <f3-impl:implementation.system class="org.fabric3.binding.test.TestBindingSourceWireAttacher"/>
     </component>
     <component f3:key="org.fabric3.binding.test.TestBindingTargetDefinition" name="TestBindingTargetWireAttacher">
-        <system:implementation.system class="org.fabric3.binding.test.TestBindingTargetWireAttacher"/>
+        <f3-impl:implementation.system class="org.fabric3.binding.test.TestBindingTargetWireAttacher"/>
     </component>
 
-    <system:feature name="TestBindingFeature">{http://fabric3.org/xmlns/binding}test</system:feature>
+    <f3-impl:feature name="TestBindingFeature">{http://fabric3.org/xmlns/binding}test</f3-impl:feature>
 
 </composite>

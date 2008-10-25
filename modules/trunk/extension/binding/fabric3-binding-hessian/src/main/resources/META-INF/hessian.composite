@@ -33,35 +33,35 @@
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
-           xmlns:system="http://fabric3.org/xmlns/sca/system/2.0-alpha"
+           xmlns:f3-impl="urn:fabric3.org:implementation"
 		   xmlns:f3-binding="urn:fabric3.org:binding"
            targetNamespace="org.codehaus.fabric3"
            name="HessianBindingExtension">
 
     <!-- Hessian Binding Loader -->
     <component name="HessianBindingLoader" f3:key="f3-binding:binding.hessian">
-        <system:implementation.system class="org.fabric3.binding.hessian.introspection.HessianBindingLoader"/>
+        <f3-impl:implementation.system class="org.fabric3.binding.hessian.introspection.HessianBindingLoader"/>
     </component>
 
     <!-- Hessian Binding Generator -->
     <component name="HessianBindingGenerator" f3:key="org.fabric3.binding.hessian.scdl.HessianBindingDefinition">
-        <system:implementation.system class="org.fabric3.binding.hessian.control.HessianBindingGenerator"/>
+        <f3-impl:implementation.system class="org.fabric3.binding.hessian.control.HessianBindingGenerator"/>
     </component>
 
     <component name="HessianSCABindingProvider" f3:key="f3-binding:binding.hessian">
-        <system:implementation.system class="org.fabric3.binding.hessian.control.HessianBindingProvider"/>
+        <f3-impl:implementation.system class="org.fabric3.binding.hessian.control.HessianBindingProvider"/>
     </component>
 
     <!-- Hessian Wire Attachers -->
     <component name="HessianSourceWireAttacher" f3:key="org.fabric3.binding.hessian.provision.HessianWireSourceDefinition">
-        <system:implementation.system class="org.fabric3.binding.hessian.runtime.HessianSourceWireAttacher"/>
+        <f3-impl:implementation.system class="org.fabric3.binding.hessian.runtime.HessianSourceWireAttacher"/>
     </component>
     
     <component name="HessianTargetWireAttacher" f3:key="org.fabric3.binding.hessian.provision.HessianWireTargetDefinition">
-        <system:implementation.system class="org.fabric3.binding.hessian.runtime.HessianTargetWireAttacher"/>
+        <f3-impl:implementation.system class="org.fabric3.binding.hessian.runtime.HessianTargetWireAttacher"/>
     </component>
 
     <!-- Feature -->
-    <system:feature name="HessianBindingFeature">{http://fabric3.org/xmlns/binding}hessian</system:feature>
+    <f3-impl:feature name="HessianBindingFeature">{http://fabric3.org/xmlns/binding}hessian</f3-impl:feature>
 
 </composite>

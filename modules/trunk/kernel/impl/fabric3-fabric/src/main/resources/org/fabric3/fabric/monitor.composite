@@ -33,14 +33,14 @@
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
-           xmlns:system="http://fabric3.org/xmlns/sca/system/2.0-alpha"
+           xmlns:f3-impl="urn:fabric3.org:implementation"
            name="MonitorBootComposite"
            autowire="true">
 
     <component name="MonitorWireGenerator">
-        <system:implementation.system class="org.fabric3.fabric.monitor.MonitorWireGenerator"/>
+        <f3-impl:implementation.system class="org.fabric3.fabric.monitor.MonitorWireGenerator"/>
     </component>
     <component name="MonitorWireAttacher" f3:key="org.fabric3.fabric.monitor.MonitorWireTargetDefinition">
-        <system:implementation.system class="org.fabric3.fabric.monitor.MonitorWireAttacher"/>
+        <f3-impl:implementation.system class="org.fabric3.fabric.monitor.MonitorWireAttacher"/>
     </component>
 </composite>

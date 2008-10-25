@@ -16,7 +16,7 @@
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
-           xmlns:system="http://fabric3.org/xmlns/sca/system/2.0-alpha"
+           xmlns:f3-impl="urn:fabric3.org:implementation"
            targetNamespace="org.codehaus.fabric3"
            name="FtpBindingExtension"
            autowire="true"
@@ -24,12 +24,12 @@
 
     <!-- Ftp Binding Loader -->
     <component name="FtpBindingLoader" f3:key="ftp:binding.ftp">
-        <system:implementation.system class="org.fabric3.binding.ftp.introspection.FtpBindingLoader"/>
+        <f3-impl:implementation.system class="org.fabric3.binding.ftp.introspection.FtpBindingLoader"/>
     </component>
 
     <!-- Ftp Binding Generator -->
     <component name="FtpBindingGenerator" f3:key="org.fabric3.binding.ftp.scdl.FtpBindingDefinition">
-        <system:implementation.system class="org.fabric3.binding.ftp.control.FtpBindingGenerator"/>
+        <f3-impl:implementation.system class="org.fabric3.binding.ftp.control.FtpBindingGenerator"/>
         <!-- sets the optional socket connect timeout property from the system configuration domain property -->
         <property name="connectTimeout" source="$systemConfig//ftp.binding/@connectTimeout"/>
         <!-- sets the optional client timeout property from the system configuration domain property -->
@@ -38,14 +38,14 @@
 
     <!-- Ftp Wire Attachers -->
     <component name="FtpSourceWireAttacher" f3:key="org.fabric3.binding.ftp.provision.FtpWireSourceDefinition">
-        <system:implementation.system class="org.fabric3.binding.ftp.runtime.FtpSourceWireAttacher"/>
+        <f3-impl:implementation.system class="org.fabric3.binding.ftp.runtime.FtpSourceWireAttacher"/>
     </component>
 
     <component name="FtpTargetWireAttacher" f3:key="org.fabric3.binding.ftp.provision.FtpWireTargetDefinition">
-        <system:implementation.system class="org.fabric3.binding.ftp.runtime.FtpTargetWireAttacher"/>
+        <f3-impl:implementation.system class="org.fabric3.binding.ftp.runtime.FtpTargetWireAttacher"/>
     </component>
 
     <!-- Feature -->
-    <system:feature name="FtpBindingFeature">{http://fabric3.org/xmlns/binding}ftpBinding</system:feature>
+    <f3-impl:feature name="FtpBindingFeature">{http://fabric3.org/xmlns/binding}ftpBinding</f3-impl:feature>
 
 </composite>

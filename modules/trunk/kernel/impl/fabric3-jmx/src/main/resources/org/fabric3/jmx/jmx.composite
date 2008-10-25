@@ -19,16 +19,16 @@
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
-           xmlns:system="http://fabric3.org/xmlns/sca/system/2.0-alpha"
+           xmlns:f3-impl="urn:fabric3.org:implementation"
            name="JMXExtension"
            autowire="true">
 
     <component name="JMXBindingGenerator" f3:key="org.fabric3.jmx.scdl.JMXBinding">
-        <system:implementation.system class="org.fabric3.jmx.control.JMXBindingGenerator"/>
+        <f3-impl:implementation.system class="org.fabric3.jmx.control.JMXBindingGenerator"/>
     </component>
 
     <component name="JMXWireAttacher" f3:key="org.fabric3.jmx.provision.JMXWireSourceDefinition">
-        <system:implementation.system class="org.fabric3.jmx.runtime.JMXWireAttacher"/>
+        <f3-impl:implementation.system class="org.fabric3.jmx.runtime.JMXWireAttacher"/>
     </component>
 
 </composite>

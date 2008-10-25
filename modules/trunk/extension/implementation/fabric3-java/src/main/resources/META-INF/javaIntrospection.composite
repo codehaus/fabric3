@@ -19,36 +19,36 @@
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:sca="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
-           xmlns:system="http://fabric3.org/xmlns/sca/system/2.0-alpha"
+           xmlns:f3-impl="urn:fabric3.org:implementation"
            name="JavaIntrospectionExtension" targetNamespace="urn:maven:org.codehaus.fabric3:fabric3-java"
            autowire="true">
 
 
     <component name="JavaImplementationLoader" f3:key="sca:implementation.java">
-        <system:implementation.system class="org.fabric3.java.introspection.JavaImplementationLoader"/>
+        <f3-impl:implementation.system class="org.fabric3.java.introspection.JavaImplementationLoader"/>
     </component>
 
     <component name="JavaImplementationProcessorImpl">
-        <system:implementation.system class="org.fabric3.java.introspection.JavaImplementationProcessorImpl"/>
+        <f3-impl:implementation.system class="org.fabric3.java.introspection.JavaImplementationProcessorImpl"/>
         <reference name="classWalker" target="ClassWalker"/>
         <reference name="heuristic" target="JavaHeuristic"/>
     </component>
 
     <component name="ClassWalker">
-        <system:implementation.system class="org.fabric3.introspection.impl.DefaultClassWalker"/>
+        <f3-impl:implementation.system class="org.fabric3.introspection.impl.DefaultClassWalker"/>
     </component>
 
     <component name="JavaHeuristic">
-        <system:implementation.system class="org.fabric3.java.introspection.JavaHeuristic"/>
+        <f3-impl:implementation.system class="org.fabric3.java.introspection.JavaHeuristic"/>
         <reference name="service" target="JavaServiceHeuristic"/>
         <reference name="dataType" target="JavaDataTypeHeuristic"/>
     </component>
 
     <component name="JavaServiceHeuristic">
-        <system:implementation.system class="org.fabric3.java.introspection.JavaServiceHeuristic"/>
+        <f3-impl:implementation.system class="org.fabric3.java.introspection.JavaServiceHeuristic"/>
     </component>
 
     <component name="JavaDataTypeHeuristic">
-        <system:implementation.system class="org.fabric3.java.introspection.JavaDataTypeHeuristic"/>
+        <f3-impl:implementation.system class="org.fabric3.java.introspection.JavaDataTypeHeuristic"/>
     </component>
 </composite>

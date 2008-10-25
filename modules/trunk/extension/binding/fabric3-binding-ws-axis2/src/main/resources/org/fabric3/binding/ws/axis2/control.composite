@@ -16,24 +16,24 @@
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
-           xmlns:system="http://fabric3.org/xmlns/sca/system/2.0-alpha"
+           xmlns:f3-impl="urn:fabric3.org:implementation"
            targetNamespace="urn:maven:org.codehaus.fabric3:fabric3-binding-ws-axis2"
            name="Axis2ControllerExtension"
            autowire="true">
 
     <!-- Axis Binding Generator -->
     <component name="Axis2BindingGeneratorDelegate" f3:key="axis2">
-        <system:implementation.system class="org.fabric3.binding.ws.axis2.control.Axis2BindingGeneratorDelegate"/>
+        <f3-impl:implementation.system class="org.fabric3.binding.ws.axis2.control.Axis2BindingGeneratorDelegate"/>
     </component>
     
     <!-- Jaxb Databinding Interceptor Generator -->
     <component name="JaxbInterceptorGenerator">
-        <system:implementation.system class="org.fabric3.binding.ws.axis2.control.jaxb.JaxbInterceptorDefinitionGenerator"/>
+        <f3-impl:implementation.system class="org.fabric3.binding.ws.axis2.control.jaxb.JaxbInterceptorDefinitionGenerator"/>
     </component>
     
     <!--Jaxws Introspector -->
     <component name="JAXWSTypeIntrospector">
-        <system:implementation.system class="org.fabric3.binding.ws.axis2.introspection.JAXWSTypeIntrospector"/>
+        <f3-impl:implementation.system class="org.fabric3.binding.ws.axis2.introspection.JAXWSTypeIntrospector"/>
     </component>
 
 </composite>

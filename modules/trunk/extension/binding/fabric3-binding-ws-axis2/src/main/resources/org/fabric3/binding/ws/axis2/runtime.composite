@@ -16,38 +16,38 @@
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
-           xmlns:system="http://fabric3.org/xmlns/sca/system/2.0-alpha"
+           xmlns:f3-impl="urn:fabric3.org:implementation"
            targetNamespace="urn:maven:org.codehaus.fabric3:fabric3-binding-ws-axis2"
            name="Axis2RuntimeExtension"
            autowire="true">
 
     <!-- Feature -->
-    <system:feature name="WsAxis2BindingFeature">{http://fabric3.org/xmlns/binding}ws-axis2</system:feature>
+    <f3-impl:feature name="WsAxis2BindingFeature">{http://fabric3.org/xmlns/binding}ws-axis2</f3-impl:feature>
 
     <component f3:key="org.fabric3.binding.ws.axis2.provision.Axis2WireSourceDefinition" name="Axis2SourceWireAttacher">
-        <system:implementation.system class="org.fabric3.binding.ws.axis2.runtime.Axis2SourceWireAttacher"/>
+        <f3-impl:implementation.system class="org.fabric3.binding.ws.axis2.runtime.Axis2SourceWireAttacher"/>
     </component>
     <component f3:key="org.fabric3.binding.ws.axis2.provision.Axis2WireTargetDefinition" name="Axis2TargetWireAttacher">
-        <system:implementation.system class="org.fabric3.binding.ws.axis2.runtime.Axis2TargetWireAttacher"/>
+        <f3-impl:implementation.system class="org.fabric3.binding.ws.axis2.runtime.Axis2TargetWireAttacher"/>
     </component>
 
     <!-- Axis service provisioner -->
     <component name="Axis2ServiceProvisioner">
-        <system:implementation.system class="org.fabric3.binding.ws.axis2.runtime.Axis2ServiceProvisionerImpl"/>
+        <f3-impl:implementation.system class="org.fabric3.binding.ws.axis2.runtime.Axis2ServiceProvisionerImpl"/>
     </component>
 
     <!-- WS Policy Applier -->
     <component name="NeethiPolicyApplier">
-        <system:implementation.system class="org.fabric3.binding.ws.axis2.runtime.policy.NeethiPolicyApplier"/>
+        <f3-impl:implementation.system class="org.fabric3.binding.ws.axis2.runtime.policy.NeethiPolicyApplier"/>
     </component>
     
     <!-- Configurator -->
     <component name="Axis2F3Configurator">
-        <system:implementation.system class="org.fabric3.binding.ws.axis2.runtime.config.F3ConfiguratorImpl"/>
+        <f3-impl:implementation.system class="org.fabric3.binding.ws.axis2.runtime.config.F3ConfiguratorImpl"/>
     </component>
 
     <!-- Jaxb Databinding Interceptor Builder -->
     <component f3:key="org.fabric3.binding.ws.axis2.provision.jaxb.JaxbInterceptorDefinition" name="jaxbInterceptorBuilder">
-        <system:implementation.system class="org.fabric3.binding.ws.axis2.runtime.jaxb.JaxbInterceptorBuilder"/>
+        <f3-impl:implementation.system class="org.fabric3.binding.ws.axis2.runtime.jaxb.JaxbInterceptorBuilder"/>
     </component>
 </composite>

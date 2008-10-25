@@ -19,10 +19,8 @@ package org.fabric3.fabric.policy;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
-import javax.xml.namespace.QName;
 
-import org.osoa.sca.annotations.Reference;
-import org.w3c.dom.Element;
+import javax.xml.namespace.QName;
 
 import org.fabric3.fabric.policy.helper.ImplementationPolicyHelper;
 import org.fabric3.fabric.policy.helper.InteractionPolicyHelper;
@@ -32,7 +30,7 @@ import org.fabric3.scdl.ServiceContract;
 import org.fabric3.scdl.definitions.Intent;
 import org.fabric3.scdl.definitions.PolicyPhase;
 import org.fabric3.scdl.definitions.PolicySet;
-import org.fabric3.spi.Constants;
+import org.fabric3.spi.Namespaces;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.policy.Policy;
@@ -41,13 +39,15 @@ import org.fabric3.spi.policy.PolicyResolver;
 import org.fabric3.spi.policy.PolicyResult;
 import org.fabric3.util.closure.Closure;
 import org.fabric3.util.closure.CollectionUtils;
+import org.osoa.sca.annotations.Reference;
+import org.w3c.dom.Element;
 
 /**
  * @version $Revision$ $Date$
  */
 public class DefaultPolicyResolver implements PolicyResolver {
-    private static final QName IMPLEMENTATION_SYSTEM = new QName(Constants.FABRIC3_SYSTEM_NS, "implementation.system");
-    private static final QName IMPLEMENTATION_SINGLETON = new QName(Constants.FABRIC3_SYSTEM_NS, "singleton");
+    private static final QName IMPLEMENTATION_SYSTEM = new QName(Namespaces.IMPLEMENTATION, "implementation.system");
+    private static final QName IMPLEMENTATION_SINGLETON = new QName(Namespaces.IMPLEMENTATION, "singleton");
 
     /**
      * Closure for filtering intercepted policies.

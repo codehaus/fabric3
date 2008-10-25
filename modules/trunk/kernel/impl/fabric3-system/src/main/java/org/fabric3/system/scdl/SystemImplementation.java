@@ -38,7 +38,7 @@ import javax.xml.namespace.QName;
 
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.Implementation;
-import org.fabric3.spi.Constants;
+import org.fabric3.spi.Namespaces;
 
 /**
  * Represents the system composite implementation
@@ -47,7 +47,7 @@ import org.fabric3.spi.Constants;
  */
 public class SystemImplementation extends Implementation<PojoComponentType> {
     private static final long serialVersionUID = -3698947089871597184L;
-    public static final QName IMPLEMENTATION_SYSTEM = new QName(Constants.FABRIC3_SYSTEM_NS, "implementation.system");
+    public static final QName IMPLEMENTATION_SYSTEM = new QName(Namespaces.IMPLEMENTATION, "implementation.system");
     private String implementationClass;
 
     public SystemImplementation() {

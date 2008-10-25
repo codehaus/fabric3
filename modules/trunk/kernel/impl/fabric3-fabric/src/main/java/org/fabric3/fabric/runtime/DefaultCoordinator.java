@@ -16,6 +16,12 @@
  */
 package org.fabric3.fabric.runtime;
 
+import static org.fabric3.fabric.runtime.ComponentNames.APPLICATION_DOMAIN_URI;
+import static org.fabric3.fabric.runtime.ComponentNames.CONTRIBUTION_SERVICE_URI;
+import static org.fabric3.fabric.runtime.ComponentNames.DEFINITIONS_REGISTRY;
+import static org.fabric3.fabric.runtime.ComponentNames.METADATA_STORE_URI;
+import static org.fabric3.fabric.runtime.ComponentNames.RUNTIME_DOMAIN_URI;
+
 import java.io.InputStream;
 import java.net.URI;
 import java.util.ArrayList;
@@ -24,13 +30,9 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
+
 import javax.xml.namespace.QName;
 
-import static org.fabric3.fabric.runtime.ComponentNames.APPLICATION_DOMAIN_URI;
-import static org.fabric3.fabric.runtime.ComponentNames.CONTRIBUTION_SERVICE_URI;
-import static org.fabric3.fabric.runtime.ComponentNames.DEFINITIONS_REGISTRY;
-import static org.fabric3.fabric.runtime.ComponentNames.METADATA_STORE_URI;
-import static org.fabric3.fabric.runtime.ComponentNames.RUNTIME_DOMAIN_URI;
 import org.fabric3.fabric.services.contribution.manifest.XmlManifestProcessor;
 import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.host.contribution.ContributionService;
@@ -49,6 +51,7 @@ import org.fabric3.scdl.Composite;
 import org.fabric3.scdl.DefaultValidationContext;
 import org.fabric3.scdl.Include;
 import org.fabric3.scdl.ValidationContext;
+import org.fabric3.spi.Namespaces;
 import org.fabric3.spi.domain.Domain;
 import org.fabric3.spi.services.contribution.Contribution;
 import org.fabric3.spi.services.contribution.ContributionManifest;
@@ -267,7 +270,7 @@ public class DefaultCoordinator<RUNTIME extends Fabric3Runtime<?>, BOOTSTRAPPER 
             String id = METADATA_STORE_URI.toString();
             throw new InitializationException("Extensions metadata store not configured: " + id, id);
         }
-        QName qName = new QName(org.fabric3.spi.Constants.FABRIC3_SYSTEM_NS, "extension");
+        QName qName = new QName(Namespaces.IMPLEMENTATION, "extension");
         Composite composite = new Composite(qName);
         for (URI uri : contributionUris) {
             Contribution contribution = metaDataStore.find(uri);

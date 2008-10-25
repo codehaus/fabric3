@@ -17,49 +17,49 @@
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
            xmlns:groovy="http://www.fabric3.org/xmlns/groovy/1.0"
-           xmlns:system="http://fabric3.org/xmlns/sca/system/2.0-alpha"
+           xmlns:f3-impl="urn:fabric3.org:implementation"
            targetNamespace="org.codehaus.fabric3"
            name="GroovyExtension"
            autowire="true">
 
     <component name="GroovyImplementationLoader" f3:key="groovy:groovy">
-        <system:implementation.system class="org.fabric3.groovy.introspection.GroovyImplementationLoader"/>
+        <f3-impl:implementation.system class="org.fabric3.groovy.introspection.GroovyImplementationLoader"/>
         <reference name="implementationProcessor" target="GroovyImplementationProcessor"/>
     </component>
 
     <component name="GroovyImplementationProcessor">
-        <system:implementation.system class="org.fabric3.groovy.introspection.GroovyImplementationProcessor"/>
+        <f3-impl:implementation.system class="org.fabric3.groovy.introspection.GroovyImplementationProcessor"/>
         <reference name="classWalker" target="GroovyClassWalker"/>
         <reference name="heuristic" target="GroovyHeuristic"/>
     </component>
 
     <component name="GroovyClassWalker">
-        <system:implementation.system class="org.fabric3.introspection.impl.DefaultClassWalker"/>
+        <f3-impl:implementation.system class="org.fabric3.introspection.impl.DefaultClassWalker"/>
     </component>
 
     <component name="GroovyHeuristic">
-        <system:implementation.system class="org.fabric3.groovy.introspection.GroovyHeuristic"/>
+        <f3-impl:implementation.system class="org.fabric3.groovy.introspection.GroovyHeuristic"/>
     </component>
 
     <component name="GroovyComponentGenerator">
-        <system:implementation.system class="org.fabric3.groovy.control.GroovyComponentGenerator"/>
+        <f3-impl:implementation.system class="org.fabric3.groovy.control.GroovyComponentGenerator"/>
     </component>
 
     <component name="GroovyComponentBuilder">
-        <system:implementation.system class="org.fabric3.groovy.runtime.GroovyComponentBuilder"/>
+        <f3-impl:implementation.system class="org.fabric3.groovy.runtime.GroovyComponentBuilder"/>
         <reference name="transformerRegistry" target="PullTransformerRegistry"/>
     </component>
 
     <component name="GroovyInstanceFactoryBuilder">
-        <system:implementation.system class="org.fabric3.groovy.runtime.GroovyInstanceFactoryBuilder"/>
+        <f3-impl:implementation.system class="org.fabric3.groovy.runtime.GroovyInstanceFactoryBuilder"/>
     </component>
 
     <component name="GroovySourceWireAttacher" f3:key="org.fabric3.groovy.provision.GroovyWireSourceDefinition">
-        <system:implementation.system class="org.fabric3.groovy.runtime.GroovySourceWireAttacher"/>
+        <f3-impl:implementation.system class="org.fabric3.groovy.runtime.GroovySourceWireAttacher"/>
         <reference name="transformerRegistry" target="PullTransformerRegistry"/>
     </component>
 
     <component name="GroovyTargetWireAttacher" f3:key="org.fabric3.groovy.provision.GroovyWireTargetDefinition">
-        <system:implementation.system class="org.fabric3.groovy.runtime.GroovyTargetWireAttacher"/>
+        <f3-impl:implementation.system class="org.fabric3.groovy.runtime.GroovyTargetWireAttacher"/>
     </component>
 </composite>

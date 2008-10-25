@@ -35,7 +35,7 @@
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
-           xmlns:system="http://fabric3.org/xmlns/sca/system/2.0-alpha"
+           xmlns:f3-impl="urn:fabric3.org:implementation"
            name="CommonBootComposite"
            autowire="true">
 
@@ -46,92 +46,92 @@
     <include name="CommonExecutorsBootComposite" scdlLocation="commandExecutors.composite"/>
 
     <component name="PhysicalOperationHelper">
-        <system:implementation.system class="org.fabric3.fabric.generator.wire.PhysicalOperationHelperImpl"/>
+        <f3-impl:implementation.system class="org.fabric3.fabric.generator.wire.PhysicalOperationHelperImpl"/>
     </component>
 
     <component name="PhysicalModelGenerator">
-        <system:implementation.system class="org.fabric3.fabric.generator.PhysicalModelGeneratorImpl"/>
+        <f3-impl:implementation.system class="org.fabric3.fabric.generator.PhysicalModelGeneratorImpl"/>
     </component>
     <!-- the wire forces a reinjection of the generator into the RuntimeDomain -->
     <wire source="RuntimeDomain/physicalModelGenerator" target="PhysicalModelGenerator"/>
 
     <component name="PhysicalWireGenerator">
-        <system:implementation.system class="org.fabric3.fabric.generator.wire.PhysicalWireGeneratorImpl"/>
+        <f3-impl:implementation.system class="org.fabric3.fabric.generator.wire.PhysicalWireGeneratorImpl"/>
     </component>
 
     <component name="ApplicationDomain">
-        <system:implementation.system class="org.fabric3.fabric.domain.DistributedDomain"/>
+        <f3-impl:implementation.system class="org.fabric3.fabric.domain.DistributedDomain"/>
         <reference name="logicalComponentManager" target="LogicalComponentManager"/>
     </component>
 
     <component name="BindingSelector">
-        <system:implementation.system class="org.fabric3.fabric.binding.BindingSelectorImpl"/>
+        <f3-impl:implementation.system class="org.fabric3.fabric.binding.BindingSelectorImpl"/>
         <reference name="logicalComponentManager" target="LogicalComponentManager"/>
     </component>
 
     <component name="ConfigurableBindingSelectionStrategy">
-        <system:implementation.system class="org.fabric3.fabric.binding.ConfigurableBindingSelectionStrategy"/>
+        <f3-impl:implementation.system class="org.fabric3.fabric.binding.ConfigurableBindingSelectionStrategy"/>
         <!-- allows users to configure the SCA binding preference through a systemConfig entry -->
         <property name="scaBindingOrder" source="$systemConfig//bindings/binding.sca/provider.order"/>
     </component>
 
     <component name="GeneratorRegistry">
-        <system:implementation.system class="org.fabric3.fabric.generator.GeneratorRegistryImpl"/>
+        <f3-impl:implementation.system class="org.fabric3.fabric.generator.GeneratorRegistryImpl"/>
     </component>
 
     <component name="AdvertismentService">
-        <system:implementation.system class="org.fabric3.fabric.services.advertisement.DefaultAdvertismentService"/>
+        <f3-impl:implementation.system class="org.fabric3.fabric.services.advertisement.DefaultAdvertismentService"/>
     </component>
 
-    <component name="FeatureLoader" f3:key="system:feature">
-        <system:implementation.system class="org.fabric3.fabric.services.advertisement.FeatureLoader"/>
+    <component name="FeatureLoader" f3:key="f3-impl:feature">
+        <f3-impl:implementation.system class="org.fabric3.fabric.services.advertisement.FeatureLoader"/>
     </component>
 
     <!-- Default scopes -->
     <component name="StatelessScopeContainer">
-        <system:implementation.system class="org.fabric3.fabric.component.scope.StatelessScopeContainer"/>
+        <f3-impl:implementation.system class="org.fabric3.fabric.component.scope.StatelessScopeContainer"/>
     </component>
 
     <component name="ConversationalScopeContainer">
-        <system:implementation.system class="org.fabric3.fabric.component.scope.ConversationalScopeContainer"/>
+        <f3-impl:implementation.system class="org.fabric3.fabric.component.scope.ConversationalScopeContainer"/>
         <reference name="store" target="MemoryStore"/>
     </component>
 
     <component name="MemoryStore">
-        <system:implementation.system class="org.fabric3.fabric.component.scope.NonExpiringMemoryStore"/>
+        <f3-impl:implementation.system class="org.fabric3.fabric.component.scope.NonExpiringMemoryStore"/>
     </component>
 
     <component name="EventService">
-        <system:implementation.system class="org.fabric3.fabric.services.event.EventServiceImpl"/>
+        <f3-impl:implementation.system class="org.fabric3.fabric.services.event.EventServiceImpl"/>
     </component>
 
     <component name="ClassLoaderGenerator">
-        <system:implementation.system class="org.fabric3.fabric.generator.classloader.ClassLoaderCommandGeneratorImpl"/>
+        <f3-impl:implementation.system class="org.fabric3.fabric.generator.classloader.ClassLoaderCommandGeneratorImpl"/>
     </component>
 
     <component name="ClassLoaderBuilder">
-        <system:implementation.system class="org.fabric3.fabric.builder.classloader.ClassLoaderBuilderImpl"/>
+        <f3-impl:implementation.system class="org.fabric3.fabric.builder.classloader.ClassLoaderBuilderImpl"/>
     </component>
 
     <component name="SingletonComponentSynthesizer">
-        <system:implementation.system class="org.fabric3.fabric.services.synthesizer.SingletonComponentSynthesizer"/>
+        <f3-impl:implementation.system class="org.fabric3.fabric.services.synthesizer.SingletonComponentSynthesizer"/>
     </component>
 
     <!-- Definitions registry -->
     <component name="DefinitionsRegistry">
-        <system:implementation.system class="org.fabric3.fabric.services.definitions.DefaultDefinitionsRegistry"/>
+        <f3-impl:implementation.system class="org.fabric3.fabric.services.definitions.DefaultDefinitionsRegistry"/>
     </component>
 
     <component name="ClasspathProcessorRegistry">
-        <system:implementation.system class="org.fabric3.fabric.services.contribution.ClasspathProcessorRegistryImpl"/>
+        <f3-impl:implementation.system class="org.fabric3.fabric.services.contribution.ClasspathProcessorRegistryImpl"/>
     </component>
 
     <component name="JarClasspathProcessor">
-        <system:implementation.system class="org.fabric3.fabric.services.contribution.processor.JarClasspathProcessor"/>
+        <f3-impl:implementation.system class="org.fabric3.fabric.services.contribution.processor.JarClasspathProcessor"/>
     </component>
 
     <component name="ProcessorRegistry">
-        <system:implementation.system class="org.fabric3.fabric.services.contribution.ProcessorRegistryImpl"/>
+        <f3-impl:implementation.system class="org.fabric3.fabric.services.contribution.ProcessorRegistryImpl"/>
     </component>
     <!-- reinjects the metadata store after runtime bootstrap -->
     <wire source="MetaDataStore/processorRegistry" target="ProcessorRegistry"/>

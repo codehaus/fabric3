@@ -33,17 +33,17 @@
 
     $Rev: 1028 $ $Date: 2007-09-03 14:06:54 -0700 (Mon, 03 Sep 2007) $
 -->
-<composite xmlns="http://www.osoa.org/xmlns/sca/1.0" xmlns:system="http://fabric3.org/xmlns/sca/system/2.0-alpha"
+<composite xmlns="http://www.osoa.org/xmlns/sca/1.0" xmlns:f3-impl="urn:fabric3.org:implementation"
            name="LocalProvisioningBootComposite"
            autowire="true">
 
     <component name="LocalContributionUriEncoder">
-        <system:implementation.system
+        <f3-impl:implementation.system
                 class="org.fabric3.fabric.services.contribution.LocalContributionUriEncoder"/>
     </component>
 
     <component name="LocalContributionUriResolver">
-        <system:implementation.system
+        <f3-impl:implementation.system
                 class="org.fabric3.fabric.services.contribution.LocalContributionUriResolver"/>
     </component>
 

@@ -19,34 +19,34 @@
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
-           xmlns:system="http://fabric3.org/xmlns/sca/system/2.0-alpha"
+           xmlns:f3-impl="urn:fabric3.org:implementation"
            targetNamespace="org.codehaus.fabric3"
            name="ResourceExtension"
            autowire="true">
 
     <!-- Processor for F3 resources -->
     <component name="Fabric3ResourceProcessor" f3:key="org.fabric3.api.annotation.Resource">
-        <system:implementation.system class="org.fabric3.resource.introspection.Fabric3ResourceProcessor"/>
+        <f3-impl:implementation.system class="org.fabric3.resource.introspection.Fabric3ResourceProcessor"/>
     </component>
 
     <!-- Processor for JSR250 resources -->
     <component name="JSR250ResourceProcessor" f3:key="javax.annotation.Resource">
-        <system:implementation.system class="org.fabric3.resource.introspection.JSR250ResourceProcessor"/>
+        <f3-impl:implementation.system class="org.fabric3.resource.introspection.JSR250ResourceProcessor"/>
     </component>
 
     <!-- Wire Target Definition Generator -->
     <component name="SystemSourcedResourceWireGenerator">
-        <system:implementation.system class="org.fabric3.resource.generator.SystemSourcedResourceWireGenerator"/>
+        <f3-impl:implementation.system class="org.fabric3.resource.generator.SystemSourcedResourceWireGenerator"/>
     </component>
 
     <!-- Wire Attacher for System Sourced Resources -->
     <component name="SystemSourcedResourceWireAttacher" f3:key="org.fabric3.resource.model.SystemSourcedWireTargetDefinition">
-        <system:implementation.system class="org.fabric3.resource.wire.SystemSourcedResourceWireAttacher"/>
+        <f3-impl:implementation.system class="org.fabric3.resource.wire.SystemSourcedResourceWireAttacher"/>
     </component>
 
     <!-- Datasource registry -->
     <component name="DataSourceRegistry">
-        <system:implementation.system class="org.fabric3.resource.ds.DataSourceRegistryImpl"/>
+        <f3-impl:implementation.system class="org.fabric3.resource.ds.DataSourceRegistryImpl"/>
     </component>
 
 </composite>

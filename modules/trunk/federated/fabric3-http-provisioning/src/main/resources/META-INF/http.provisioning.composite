@@ -15,13 +15,13 @@
  distribution for the permitted and restricted uses of such software.
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
-           xmlns:system="http://fabric3.org/xmlns/sca/system/2.0-alpha"
+           xmlns:f3-impl="urn:fabric3.org:implementation"
            targetNamespace="org.codehaus.fabric3"
            name="HttpProvisioningExtension"
            autowire="true">
 
     <component name="HTTPArtifactLocationEncoder">
-        <system:implementation.system class="org.fabric3.provisioning.http.HTTPContributionUriEncoder"/>
+        <f3-impl:implementation.system class="org.fabric3.provisioning.http.HTTPContributionUriEncoder"/>
         <property name="httpPort" source="$systemConfig//web.server/http/@port"/>
         <property name="address" source="$systemConfig//provisioner/@address"/>
     </component>

@@ -50,8 +50,7 @@ import org.fabric3.scdl.Signature;
  * @version $Rev$ $Date$
  */
 public class InitProcessor<I extends Implementation<? extends InjectingComponentType>> extends AbstractAnnotationProcessor<Init, I> {
-    private static final String FABRIC3_SYSTEM_NS = "http://fabric3.org/xmlns/sca/system/2.0-alpha";
-    public static final QName IMPLEMENTATION_SYSTEM = new QName(FABRIC3_SYSTEM_NS, "implementation.system");
+    public static final QName IMPLEMENTATION_SYSTEM = new QName("urn:fabric3.org:implementation", "implementation.system");
 
     public InitProcessor() {
         super(Init.class);

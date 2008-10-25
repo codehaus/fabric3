@@ -19,32 +19,32 @@
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:sca="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
-           xmlns:system="http://fabric3.org/xmlns/sca/system/2.0-alpha"
+           xmlns:f3-impl="urn:fabric3.org:implementation"
            targetNamespace="org.codehaus.fabric3"
            name="WsdlInterfaceExtension"
            autowire="true">
 
 
     <component name="WsdlInterfaceLoader" f3:key="sca:interface.wsdl">
-        <system:implementation.system class="org.fabric3.idl.wsdl.loader.InterfaceWsdlLoader"/>
+        <f3-impl:implementation.system class="org.fabric3.idl.wsdl.loader.InterfaceWsdlLoader"/>
     </component>
 
     <component name="DefaultWsdlVersionChecker">
-        <system:implementation.system class="org.fabric3.idl.wsdl.version.DefaultWsdlVersionChecker"/>
+        <f3-impl:implementation.system class="org.fabric3.idl.wsdl.version.DefaultWsdlVersionChecker"/>
     </component>
 
     <component name="WSDLProcessorRegistryComponent">
-        <system:implementation.system class="org.fabric3.idl.wsdl.processor.WsdlProcessorRegistry"/>
+        <f3-impl:implementation.system class="org.fabric3.idl.wsdl.processor.WsdlProcessorRegistry"/>
         <reference name="versionChecker" target="DefaultWsdlVersionChecker"/>
     </component>
 
     <component name="Wsdl11ProcessorComponent">
-        <system:implementation.system class="org.fabric3.idl.wsdl.processor.Wsdl11Processor"/>
+        <f3-impl:implementation.system class="org.fabric3.idl.wsdl.processor.Wsdl11Processor"/>
         <reference name="registry" target="WSDLProcessorRegistryComponent/WsdlProcessorRegistry"/>
     </component>
 
     <component name="Wsdl20ProcessorComponent">
-        <system:implementation.system class="org.fabric3.idl.wsdl.processor.Wsdl20Processor"/>
+        <f3-impl:implementation.system class="org.fabric3.idl.wsdl.processor.Wsdl20Processor"/>
         <reference name="registry" target="WSDLProcessorRegistryComponent/WsdlProcessorRegistry"/>
     </component>
  

@@ -19,59 +19,59 @@
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
-           xmlns:system="http://fabric3.org/xmlns/sca/system/2.0-alpha"
+           xmlns:f3-impl="urn:fabric3.org:implementation"
            targetNamespace="org.codehaus.fabric3"
            name="JpaExtension"
            autowire="true">
 
     <!-- Persistence Unit Annotation Processor -->
     <component name="PersistenceUnitProcessor" f3:key="javax.persistence.PersistenceUnit">
-        <system:implementation.system class="org.fabric3.jpa.introspection.PersistenceUnitProcessor"/>
+        <f3-impl:implementation.system class="org.fabric3.jpa.introspection.PersistenceUnitProcessor"/>
     </component>
 
     <!-- Persistence Context Annotation Processor -->
     <component name="PersistenceContextProcessor" f3:key="javax.persistence.PersistenceContext">
-        <system:implementation.system class="org.fabric3.jpa.introspection.PersistenceContextProcessor"/>
+        <f3-impl:implementation.system class="org.fabric3.jpa.introspection.PersistenceContextProcessor"/>
     </component>
 
     <!-- Persistence Unit Wire Target Definition Generator -->
     <component name="PersistenceUnitResourceWireGenerator">
-        <system:implementation.system class="org.fabric3.jpa.control.PersistenceUnitResourceWireGenerator"/>
+        <f3-impl:implementation.system class="org.fabric3.jpa.control.PersistenceUnitResourceWireGenerator"/>
     </component>
 
     <!-- Persistence Context Wire Target Definition Generator -->
     <component name="PersistenceContextResourceWireGenerator">
-        <system:implementation.system class="org.fabric3.jpa.control.PersistenceContextResourceWireGenerator"/>
+        <f3-impl:implementation.system class="org.fabric3.jpa.control.PersistenceContextResourceWireGenerator"/>
     </component>
 
     <!-- Persistence Unit Wire Target Attacher -->
     <component name="PersistenceUnitWireAttacher" f3:key="org.fabric3.jpa.provision.PersistenceUnitWireTargetDefinition">
-        <system:implementation.system class="org.fabric3.jpa.runtime.PersistenceUnitWireAttacher"/>
+        <f3-impl:implementation.system class="org.fabric3.jpa.runtime.PersistenceUnitWireAttacher"/>
     </component>
 
     <!-- Persistence Context Wire Target Attacher -->
     <component name="PersistenceContextWireAttacher" f3:key="org.fabric3.jpa.provision.PersistenceContextWireTargetDefinition">
-        <system:implementation.system class="org.fabric3.jpa.runtime.PersistenceContextWireAttacher"/>
+        <f3-impl:implementation.system class="org.fabric3.jpa.runtime.PersistenceContextWireAttacher"/>
     </component>
 
     <!-- Persistence Unit Scanner -->
     <component name="ClasspathPersistenceUnitScanner">
-        <system:implementation.system class="org.fabric3.jpa.runtime.ClasspathPersistenceUnitScanner"/>
+        <f3-impl:implementation.system class="org.fabric3.jpa.runtime.ClasspathPersistenceUnitScanner"/>
     </component>
 
     <!-- EMF Builder -->
     <component name="CachingEmfBuilder">
-        <system:implementation.system class="org.fabric3.jpa.runtime.CachingEmfBuilder"/>
+        <f3-impl:implementation.system class="org.fabric3.jpa.runtime.CachingEmfBuilder"/>
     </component>
 
     <!-- Entity Manager Service -->
     <component name="EntityManagerService">
-        <system:implementation.system class="org.fabric3.jpa.runtime.EntityManagerServiceImpl"/>
+        <f3-impl:implementation.system class="org.fabric3.jpa.runtime.EntityManagerServiceImpl"/>
     </component>
 
     <!-- JPA Implementation Loader -->
     <component name="JpaImplementationLoader" f3:key="f3:implementation.jpa">
-        <system:implementation.system class="org.fabric3.jpa.introspection.JpaImplementationLoader"/>
+        <f3-impl:implementation.system class="org.fabric3.jpa.introspection.JpaImplementationLoader"/>
     </component>
 
 </composite>

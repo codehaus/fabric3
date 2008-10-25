@@ -18,26 +18,26 @@
     $Rev: 667 $ $Date: 2007-08-06 09:46:10 -0700 (Mon, 06 Aug 2007) $
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
-           xmlns:system="http://fabric3.org/xmlns/sca/system/2.0-alpha"
+           xmlns:f3-impl="urn:fabric3.org:implementation"
            targetNamespace="org.codehaus.fabric3"
            name="WarContributionExtension"
            autowire="true">
 
     <component name="WarClasspathProcessor">
-        <system:implementation.system class="org.fabric3.contribution.war.WarClasspathProcessor"/>
+        <f3-impl:implementation.system class="org.fabric3.contribution.war.WarClasspathProcessor"/>
     </component>
 
     <component name="WarContributionProcessor">
-        <system:implementation.system class="org.fabric3.contribution.war.WarContributionHandler"/>
+        <f3-impl:implementation.system class="org.fabric3.contribution.war.WarContributionHandler"/>
     </component>
 
     <component name="WebXmlIndexer">
-        <system:implementation.system class="org.fabric3.contribution.war.WebXmlIndexer"/>
+        <f3-impl:implementation.system class="org.fabric3.contribution.war.WebXmlIndexer"/>
         <property name="namespace">false</property>
     </component>
 
     <component name="WebXmlIndexerNamepsaceAware">
-        <system:implementation.system class="org.fabric3.contribution.war.WebXmlIndexer"/>
+        <f3-impl:implementation.system class="org.fabric3.contribution.war.WebXmlIndexer"/>
         <property name="namespace">true</property>
     </component>
 

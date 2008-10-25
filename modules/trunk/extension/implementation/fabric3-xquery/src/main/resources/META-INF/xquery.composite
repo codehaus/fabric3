@@ -21,25 +21,25 @@
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
            xmlns:xq="http://www.fabric3.org/xmlns/xquery/1.0"
-           xmlns:system="http://fabric3.org/xmlns/sca/system/2.0-alpha"
+           xmlns:f3-impl="urn:fabric3.org:implementation"
            name="XQueryExtension" targetNamespace="org.codehaus.fabric3"
            autowire="true">
 
 
     <component name="org.fabric3.xquery.introspection.XQueryImplementationLoader" f3:key="xq:implementation.xquery">
-        <system:implementation.system class="org.fabric3.xquery.introspection.XQueryImplementationLoader"/>
+        <f3-impl:implementation.system class="org.fabric3.xquery.introspection.XQueryImplementationLoader"/>
     </component>
 
     <component name="org.fabric3.xquery.control.XQueryComponentGenerator">
-        <system:implementation.system class="org.fabric3.xquery.control.XQueryComponentGenerator"/>
+        <f3-impl:implementation.system class="org.fabric3.xquery.control.XQueryComponentGenerator"/>
     </component>
 
         <component f3:key="org.fabric3.xquery.provision.XQueryComponentWireSourceDefinition" name="org.fabric3.xquery.runtime.XQueryComponentSourceWireAttacher">
-        <system:implementation.system class="org.fabric3.xquery.runtime.XQueryComponentSourceWireAttacher"/>
+        <f3-impl:implementation.system class="org.fabric3.xquery.runtime.XQueryComponentSourceWireAttacher"/>
     </component>
 
     <component f3:key="org.fabric3.xquery.provision.XQueryComponentWireTargetDefinition" name="org.fabric3.xquery.runtime.XQueryComponentTargetWireAttacher">
-        <system:implementation.system class="org.fabric3.xquery.runtime.XQueryComponentTargetWireAttacher"/>
+        <f3-impl:implementation.system class="org.fabric3.xquery.runtime.XQueryComponentTargetWireAttacher"/>
     </component>
 
 </composite>

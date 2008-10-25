@@ -17,16 +17,16 @@
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:sca="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
-           xmlns:system="http://fabric3.org/xmlns/sca/system/2.0-alpha"
+           xmlns:f3-impl="urn:fabric3.org:implementation"
            name="JavaControllerExtension" targetNamespace="urn:maven:org.codehaus.fabric3:fabric3-java"
            autowire="true">
 
     <component name="JavaComponentGenerator">
-        <system:implementation.system class="org.fabric3.java.control.JavaComponentGenerator"/>
+        <f3-impl:implementation.system class="org.fabric3.java.control.JavaComponentGenerator"/>
     </component>
 
     <component name="JavaGenerationHelper">
-        <system:implementation.system class="org.fabric3.java.control.JavaGenerationHelperImpl"/>
+        <f3-impl:implementation.system class="org.fabric3.java.control.JavaGenerationHelperImpl"/>
     </component>
 
 </composite>

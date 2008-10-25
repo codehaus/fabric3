@@ -17,30 +17,30 @@
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:sca="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
-           xmlns:system="http://fabric3.org/xmlns/sca/system/2.0-alpha"
+           xmlns:f3-impl="urn:fabric3.org:implementation"
            targetNamespace="org.codehaus.fabric3"
            name="EjbBindingExtension">
 
     <!-- EJB Binding Loader -->
     <component f3:key="sca:binding.ejb" name="EjbBindingLoader">
-        <system:implementation.system class="org.fabric3.binding.ejb.introspection.EjbBindingLoader"/>
+        <f3-impl:implementation.system class="org.fabric3.binding.ejb.introspection.EjbBindingLoader"/>
     </component>
 
     <!-- EJB Binding Generator -->
     <component f3:key="org.fabric3.binding.ejb.scdl.EjbBindingDefinition" name="EjbBindingGenerator">
-        <system:implementation.system class="org.fabric3.binding.ejb.control.EjbBindingGenerator"/>
+        <f3-impl:implementation.system class="org.fabric3.binding.ejb.control.EjbBindingGenerator"/>
     </component>
 
     <!-- EJB Wire Attachers -->
     <component f3:key="org.fabric3.binding.ejb.provision.EjbWireSourceDefinition" name="EjbSourceWireAttacher">
-        <system:implementation.system class="org.fabric3.binding.ejb.runtime.EjbSourceWireAttacher"/>
+        <f3-impl:implementation.system class="org.fabric3.binding.ejb.runtime.EjbSourceWireAttacher"/>
     </component>
     <component f3:key="org.fabric3.binding.ejb.provision.EjbWireTargetDefinition" name="EjbTargetWireAttacher">
-        <system:implementation.system class="org.fabric3.binding.ejb.runtime.EjbTargetWireAttacher"/>
+        <f3-impl:implementation.system class="org.fabric3.binding.ejb.runtime.EjbTargetWireAttacher"/>
     </component>
 
     <!-- EJB Registry -->
     <component name="EjbRegistry">
-        <system:implementation.system class="org.fabric3.binding.ejb.runtime.DefaultEjbRegistry"/>
+        <f3-impl:implementation.system class="org.fabric3.binding.ejb.runtime.DefaultEjbRegistry"/>
     </component>
 </composite>

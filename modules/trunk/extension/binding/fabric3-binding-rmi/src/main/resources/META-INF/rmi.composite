@@ -17,28 +17,28 @@
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:sca="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
-           xmlns:system="http://fabric3.org/xmlns/sca/system/2.0-alpha"
+           xmlns:f3-impl="urn:fabric3.org:implementation"
            targetNamespace="org.codehaus.fabric3"
            name="RMIBindingExtension">
 
     <component name="RmiSourceWireAttacher" f3:key="org.fabric3.binding.rmi.model.physical.RmiWireSourceDefinition">
-        <system:implementation.system class="org.fabric3.binding.rmi.wire.RmiSourceWireAttacher"/>
+        <f3-impl:implementation.system class="org.fabric3.binding.rmi.wire.RmiSourceWireAttacher"/>
     </component>
     <component name="RmiTargetWireAttacher" f3:key="org.fabric3.binding.rmi.model.physical.RmiWireTargetDefinition">
-        <system:implementation.system class="org.fabric3.binding.rmi.wire.RmiTargetWireAttacher"/>
+        <f3-impl:implementation.system class="org.fabric3.binding.rmi.wire.RmiTargetWireAttacher"/>
     </component>
 
     <!-- Binding Loader -->
     <component name="RMIBindingLoader" f3:key="sca:binding.rmi">
-        <system:implementation.system class="org.fabric3.binding.rmi.model.logical.RmiBindingLoader"/>
+        <f3-impl:implementation.system class="org.fabric3.binding.rmi.model.logical.RmiBindingLoader"/>
     </component>
 
     <!-- Binding Generator -->
     <component name="RMIBindingGenerator" f3:key="org.fabric3.binding.rmi.model.logical.RmiBindingDefinition">
-        <system:implementation.system class="org.fabric3.binding.rmi.model.physical.RmiBindingGenerator"/>
+        <f3-impl:implementation.system class="org.fabric3.binding.rmi.model.physical.RmiBindingGenerator"/>
     </component>
 
     <!-- Feature -->
-    <system:feature name="RMIBindingFeature">{http://fabric3.org/xmlns/binding}rmi</system:feature>
+    <f3-impl:feature name="RMIBindingFeature">{http://fabric3.org/xmlns/binding}rmi</f3-impl:feature>
 
 </composite>

@@ -18,17 +18,17 @@
     $Rev: 667 $ $Date: 2007-08-06 09:46:10 -0700 (Mon, 06 Aug 2007) $
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
-           xmlns:system="http://fabric3.org/xmlns/sca/system/2.0-alpha"
+           xmlns:f3-impl="urn:fabric3.org:implementation"
            targetNamespace="org.codehaus.fabric3"
            name="XStreamExtension"
            autowire="true">
 
     <component name="XStreamFactory">
-        <system:implementation.system class="org.fabric3.xstream.factory.XStreamFactoryImpl"/>
+        <f3-impl:implementation.system class="org.fabric3.xstream.factory.XStreamFactoryImpl"/>
     </component>
 
     <component name="XStreamMarshalService">
-        <system:implementation.system class="org.fabric3.xstream.marshaller.XStreamMarshalService"/>
+        <f3-impl:implementation.system class="org.fabric3.xstream.marshaller.XStreamMarshalService"/>
     </component>
 
 

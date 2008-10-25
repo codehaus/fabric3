@@ -35,65 +35,65 @@
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
-           xmlns:system="http://fabric3.org/xmlns/sca/system/2.0-alpha"
+           xmlns:f3-impl="urn:fabric3.org:implementation"
            name="AssemblyBootComposite" targetNamespace="urn:maven:org.codehaus.fabric3:fabric3-fabric"
            autowire="true">
 
     <component name="LocalRoutingService">
-        <system:implementation.system class="org.fabric3.fabric.services.routing.LocalRoutingService"/>
+        <f3-impl:implementation.system class="org.fabric3.fabric.services.routing.LocalRoutingService"/>
     </component>
     <!-- this wire reinjects the routing service into the RuntimeDomain -->
     <wire source="RuntimeDomain/routingService" target="LocalRoutingService"/>
 
     <component name="LogicalModelGenerator">
-        <system:implementation.system class="org.fabric3.fabric.instantiator.LogicalModelInstantiatorImpl"/>
+        <f3-impl:implementation.system class="org.fabric3.fabric.instantiator.LogicalModelInstantiatorImpl"/>
         <reference name="atomicComponentInstantiator" target="AtomicComponentInstantiator"/>
         <reference name="compositeComponentInstantiator" target="CompositeComponentInstantiator"/>
     </component>
 
     <component name="AtomicComponentInstantiator">
-        <system:implementation.system class="org.fabric3.fabric.instantiator.component.AtomicComponentInstantiator"/>
+        <f3-impl:implementation.system class="org.fabric3.fabric.instantiator.component.AtomicComponentInstantiator"/>
     </component>
 
     <component name="CompositeComponentInstantiator">
-        <system:implementation.system class="org.fabric3.fabric.instantiator.component.CompositeComponentInstantiator"/>
+        <f3-impl:implementation.system class="org.fabric3.fabric.instantiator.component.CompositeComponentInstantiator"/>
         <reference name="atomicComponentInstantiator" target="AtomicComponentInstantiator"/>
     </component>
 
     <component name="WireInstantiator">
-        <system:implementation.system class="org.fabric3.fabric.instantiator.component.WireInstantiatorImpl"/>
+        <f3-impl:implementation.system class="org.fabric3.fabric.instantiator.component.WireInstantiatorImpl"/>
     </component>
 
     <component name="LogicalComponentManager">
-        <system:implementation.system class="org.fabric3.fabric.services.lcm.LogicalComponentManagerImpl"/>
+        <f3-impl:implementation.system class="org.fabric3.fabric.services.lcm.LogicalComponentManagerImpl"/>
     </component>
 
     <component name="WiringService">
-        <system:implementation.system class="org.fabric3.fabric.instantiator.ResolutionServiceImpl"/>
+        <f3-impl:implementation.system class="org.fabric3.fabric.instantiator.ResolutionServiceImpl"/>
     </component>
 
     <component name="PromotionNormalizer">
-        <system:implementation.system class="org.fabric3.fabric.instantiator.normalize.PromotionNormalizerImpl"/>
+        <f3-impl:implementation.system class="org.fabric3.fabric.instantiator.normalize.PromotionNormalizerImpl"/>
     </component>
 
     <component name="DocumentLoader">
-        <system:implementation.system class="org.fabric3.fabric.services.documentloader.DocumentLoaderImpl"/>
+        <f3-impl:implementation.system class="org.fabric3.fabric.services.documentloader.DocumentLoaderImpl"/>
     </component>
 
     <component name="TargetPromotionService">
-        <system:implementation.system class="org.fabric3.fabric.instantiator.promotion.DefaultPromotionResolutionService"/>
+        <f3-impl:implementation.system class="org.fabric3.fabric.instantiator.promotion.DefaultPromotionResolutionService"/>
     </component>
 
     <component name="ExplicitTargetResolutionService">
-        <system:implementation.system class="org.fabric3.fabric.instantiator.target.ExplicitTargetResolutionService"/>
+        <f3-impl:implementation.system class="org.fabric3.fabric.instantiator.target.ExplicitTargetResolutionService"/>
     </component>
 
     <component name="TypeBasedAutoWireResolutionService">
-        <system:implementation.system class="org.fabric3.fabric.instantiator.target.TypeBasedAutowireResolutionService"/>
+        <f3-impl:implementation.system class="org.fabric3.fabric.instantiator.target.TypeBasedAutowireResolutionService"/>
     </component>
 
     <component name="ServiceContractResolver">
-        <system:implementation.system class="org.fabric3.fabric.instantiator.target.ServiceContractResolverImpl"/>
+        <f3-impl:implementation.system class="org.fabric3.fabric.instantiator.target.ServiceContractResolverImpl"/>
     </component>
 
 </composite>

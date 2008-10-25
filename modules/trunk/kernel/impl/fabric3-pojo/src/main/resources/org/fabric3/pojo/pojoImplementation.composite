@@ -36,23 +36,23 @@
     $Rev$ $Date$
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
-           xmlns:system="http://fabric3.org/xmlns/sca/system/2.0-alpha"
+           xmlns:f3-impl="urn:fabric3.org:implementation"
            name="PojoImplementationBootComposite"
            autowire="true">
 
     <component name="DefaultInstanceFactoryBuilderRegistry">
-        <system:implementation.system class="org.fabric3.pojo.instancefactory.DefaultInstanceFactoryBuilderRegistry"/>
+        <f3-impl:implementation.system class="org.fabric3.pojo.instancefactory.DefaultInstanceFactoryBuilderRegistry"/>
     </component>
 
     <component name="ReflectiveInstanceFactoryBuilder">
-        <system:implementation.system class="org.fabric3.pojo.instancefactory.ReflectiveInstanceFactoryBuilder"/>
+        <f3-impl:implementation.system class="org.fabric3.pojo.instancefactory.ReflectiveInstanceFactoryBuilder"/>
     </component>
 
     <component name="GenerationHelperImpl">
-        <system:implementation.system class="org.fabric3.pojo.control.GenerationHelperImpl"/>
+        <f3-impl:implementation.system class="org.fabric3.pojo.control.GenerationHelperImpl"/>
     </component>
 
     <component name="BuildHelperImpl">
-        <system:implementation.system class="org.fabric3.pojo.instancefactory.BuildHelperImpl"/>
+        <f3-impl:implementation.system class="org.fabric3.pojo.instancefactory.BuildHelperImpl"/>
     </component>
 </composite>
