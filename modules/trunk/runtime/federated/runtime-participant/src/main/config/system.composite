@@ -18,7 +18,7 @@
     $Rev: 329 $ $Date: 2007-06-30 14:33:48 +0100 (Sat, 30 Jun 2007) $
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
-           xmlns:system="http://fabric3.org/xmlns/sca/system/2.0-alpha"
+           xmlns:f3-impl="urn:fabric3.org:implementation"
            xmlns:introspection="urn:maven:org.codehaus.fabric3:fabric3-introspection"
            name="ParticipantSystemComposite"
            autowire="true">
@@ -67,16 +67,16 @@
     <include name="org.fabric3.policy.Policy" scdlResource="org/fabric3/policy/policy.composite"/>
 
     <component name="assemblyRecoveryService">
-        <system:implementation.system class="org.fabric3.fabric.services.lcm.NonPersistentLogicalComponentStore"/>
+        <f3-impl:implementation.system class="org.fabric3.fabric.services.lcm.NonPersistentLogicalComponentStore"/>
     </component>
 
     <component name="HttpContributionUriResolver">
-        <system:implementation.system
+        <f3-impl:implementation.system
                 class="org.fabric3.fabric.services.contribution.HttpContributionUriResolver"/>
     </component>
 
     <component name="LocalContributionUriEncoder">
-        <system:implementation.system
+        <f3-impl:implementation.system
                 class="org.fabric3.fabric.services.contribution.LocalContributionUriEncoder"/>
     </component>
 
