@@ -34,13 +34,13 @@
     $Rev: 329 $ $Date: 2007-06-30 14:33:48 +0100 (Sat, 30 Jun 2007) $
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
-           xmlns:system="http://fabric3.org/xmlns/sca/system/2.0-alpha"
+           xmlns:f3-impl="urn:fabric3.org:implementation"
            xmlns:introspection="urn:maven:org.codehaus.fabric3:fabric3-introspection"
            name="ControllerSystemComposite"
            autowire="true">
     <!-- include the thread pool -->
     <include name="ThreadPool" scdlResource="META-INF/threadPool.composite"/>
-   
+
     <!-- include physical deployment configuration -->
     <include name="org.fabric3.fabric.Common" scdlResource="org/fabric3/fabric/common.composite"/>
 
@@ -69,7 +69,7 @@
 
     <!-- JMX components -->
     <include name="org.fabric3.jmx.JMXExtension" scdlResource="org/fabric3/jmx/jmx.composite"/>
-    
+
     <!-- include deployment configuration -->
     <include name="org.fabric3.fabric.Deployment" scdlResource="org/fabric3/fabric/deployment.composite"/>
     <include name="org.fabric3.fabric.Stores" scdlResource="org/fabric3/fabric/nonPersistentStore.composite"/>
@@ -81,11 +81,11 @@
     <include name="org.fabric3.policy.Policy" scdlResource="org/fabric3/policy/policy.composite"/>
 
     <component name="assemblyRecoveryService">
-        <system:implementation.system class="org.fabric3.fabric.services.lcm.NonPersistentLogicalComponentStore"/>
+        <f3-impl:implementation.system class="org.fabric3.fabric.services.lcm.NonPersistentLogicalComponentStore"/>
     </component>
 
     <component name="HttpContributionUriResolver">
-        <system:implementation.system class="org.fabric3.fabric.services.contribution.HttpContributionUriResolver"/>
+        <f3-impl:implementation.system class="org.fabric3.fabric.services.contribution.HttpContributionUriResolver"/>
     </component>
 
 
