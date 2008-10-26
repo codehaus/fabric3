@@ -75,7 +75,7 @@ public class ListCommand implements Command {
                 }
             }
         } catch (IOException e) {
-            out.println("ERROR: Unable to connect to the doman controller");
+            out.println("ERROR: Unable to connect to the domain controller");
             e.printStackTrace(out);
         } catch (AdministrationException e) {
             throw new CommandException(e);
