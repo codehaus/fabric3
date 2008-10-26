@@ -33,8 +33,9 @@ import org.antlr.runtime.tree.CommonTreeNodeStream;
 import org.fabric3.admin.api.DomainController;
 import org.fabric3.admin.cli.DomainAdminLexer;
 import org.fabric3.admin.cli.DomainAdminParser;
-import org.fabric3.admin.interpreter.parser.InstallCommandParser;
 import org.fabric3.admin.interpreter.parser.AuthCommandParser;
+import org.fabric3.admin.interpreter.parser.InstallCommandParser;
+import org.fabric3.admin.interpreter.parser.ListCommandParser;
 
 /**
  * Default interpreter implementation. This implementation constructs a parse tree from an instruction as defined by the domain adminsitration
@@ -63,7 +64,8 @@ public class InterpreterImpl implements Interpreter {
             try {
                 process(line, out);
             } catch (InterpreterException e) {
-                e.printStackTrace(out);
+                // TODO handle this better
+                e.printStackTrace();
             }
         }
     }
@@ -121,6 +123,7 @@ public class InterpreterImpl implements Interpreter {
         parsers = new HashMap<Integer, CommandParser>();
         parsers.put(DomainAdminLexer.INSTALL_CMD, new InstallCommandParser(controller));
         parsers.put(DomainAdminLexer.AUTH_CMD, new AuthCommandParser(controller));
+        parsers.put(DomainAdminLexer.LIST_CMD, new ListCommandParser(controller));
     }
 
     /**

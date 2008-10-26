@@ -19,6 +19,7 @@ package org.fabric3.admin.api;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.net.URL;
+import java.util.List;
 
 /**
  * The interface for performing domain administrative functions.
@@ -53,6 +54,9 @@ public interface DomainController {
     void connect() throws IOException;
 
     void disconnect() throws IOException;
+
+
+    public List<String> list() throws AdministrationException;
 
     /**
      * Installs a contribution in the domain.

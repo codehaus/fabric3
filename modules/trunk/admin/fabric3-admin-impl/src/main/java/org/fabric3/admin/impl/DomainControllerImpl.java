@@ -94,6 +94,22 @@ public class DomainControllerImpl implements DomainController {
         }
     }
 
+    @SuppressWarnings({"unchecked"})
+    public List<String> list() throws AdministrationException {
+        try {
+            if (!isConnected()) {
+                throw new IllegalStateException("Not connected");
+            }
+            MBeanServerConnection conn = jmxc.getMBeanServerConnection();
+            ObjectName oName = new ObjectName(CONTRIBUTION_SERVICE_MBEAN);
+            return (List<String>) conn.getAttribute(oName, "InstalledContributions");
+        } catch (JMException e) {
+            throw new AdministrationException(e);
+        } catch (IOException e) {
+            throw new AdministrationException(e);
+        }
+    }
+
     private void handleResponse(HttpResponse response, String name) throws AdministrationException {
         int code = response.getStatusLine().getStatusCode();
         if (400 == code) {

@@ -14,6 +14,7 @@ ASTLabelType=CommonTree;
 tokens {  INSTALL_CMD;
 	      DEPLOY;
 	      AUTH_CMD;
+	      LIST_CMD;
 	      PARAMETER;
 	      PARAM_USERNAME;
 	      PARAM_PASSWORD;
@@ -47,29 +48,35 @@ tokens {  INSTALL_CMD;
 
 command		: (subcommand)+ EOF;
 
-subcommand	: (install | deploy | auth) NEWLINE?;
-install 	: INSTALL file WS? param* -> ^(INSTALL_CMD file param*);
-uninstall 	: UNINSTALL contribution? WS? param*;
-deploy 		: DEPLOY contribution WS? param* -> ^(DEPLOY contribution? param*);
-undeploy 	: UNDEPLOY contribution WS? param+;
-auth            : AUTH auth_param auth_param -> ^(AUTH_CMD auth_param auth_param);
-file		: STRING -> ^(FILE STRING);
-param		: operator STRING WS? -> ^(PARAMETER operator STRING) ;
-auth_param	: auth_operator STRING WS? -> ^(PARAMETER auth_operator STRING) ;
-operator    : (username | password | contribution);
-auth_operator    : (username | password);
-username : USERNAME -> ^(PARAM_USERNAME);
-password : PASSWORD -> ^(PARAM_PASSWORD);
-contribution: CONTRIBUTION -> ^(PARAM_CONTRIBUTION_NAME);
+subcommand	: (install | deploy | auth | list) NEWLINE?;
 
-INSTALL 	: ('install' | 'ins');
-UNINSTALL 	: ('uninstall' | 'uins');
-DEPLOY		: ('deploy' | 'dep');
-UNDEPLOY	: ('undeploy' | 'udep');
-USERNAME	: ('-u' | '-username' | '-USERNAME') ;
-PASSWORD	: ('-p' | '-P'|'-PASSWORD' | '-password');
-CONTRIBUTION : ('-n' | '-N'|'-NAME'| '-name');
-AUTH 	:	('AUTH' |'auth' | 'authenticate');
-STRING	: ('a'..'z'|'A'..'Z'|'0'..'9'|'.' |'-'|'_' | '/' | ':')+;
-NEWLINE    	: '\r'? '\n';
-WS		: (' '|'\t'|'\n'|'\r')+ {skip();};
+// main commands
+install 	    : INSTALL file WS? param* -> ^(INSTALL_CMD file param*);
+auth            : AUTH auth_param auth_param -> ^(AUTH_CMD auth_param auth_param);
+list            : LIST auth_param* -> ^(LIST_CMD auth_param*);
+deploy 		    : DEPLOY contribution WS? param* -> ^(DEPLOY contribution? param*);
+uninstall 	    : UNINSTALL contribution? WS? param*;
+undeploy 	    : UNDEPLOY contribution WS? param+;
+
+file		    : STRING -> ^(FILE STRING);
+param		    : operator STRING WS? -> ^(PARAMETER operator STRING) ;
+auth_param	    : auth_operator STRING WS? -> ^(PARAMETER auth_operator STRING) ;
+operator        : (username | password | contribution);
+auth_operator   : (username | password);
+username        : USERNAME -> ^(PARAM_USERNAME);
+password        : PASSWORD -> ^(PARAM_PASSWORD);
+contribution    : CONTRIBUTION -> ^(PARAM_CONTRIBUTION_NAME);
+
+INSTALL 	    : ('install' | 'ins');
+AUTH 	        : ('authenticate' | 'auth');
+LIST     	    : ('list' | 'ls');
+DEPLOY		    : ('deploy' | 'dep');
+UNINSTALL 	    : ('uninstall' | 'uins');
+UNDEPLOY	    : ('undeploy' | 'udep');
+USERNAME	    : ('-u' | '-username' | '-USERNAME') ;
+PASSWORD	    : ('-p' | '-P'|'-PASSWORD' | '-password');
+CONTRIBUTION    : ('-n' | '-N'|'-NAME'| '-name');
+
+STRING	        : ('a'..'z'|'A'..'Z'|'0'..'9'|'.' |'-'|'_' | '/' | ':')+;
+NEWLINE    	    : '\r'? '\n';
+WS		        : (' '|'\t'|'\n'|'\r')+ {skip();};
