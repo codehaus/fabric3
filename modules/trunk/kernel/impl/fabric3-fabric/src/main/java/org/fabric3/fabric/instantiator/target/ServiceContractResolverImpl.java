@@ -76,7 +76,7 @@ public class ServiceContractResolverImpl implements ServiceContractResolver {
         if (promotedUris.size() < 1) {
             // this is an invalid configuration: a reference with no service contract that does not promote another reference and should be
             // caught during the load phase before reaching here.
-            throw new AssertionError();
+            throw new AssertionError(" This is an Invalid Configuration on " + contract.getInterfaceName());
         }
         // pick the first one since references expose the same contract
         URI promotedUri = promotedUris.get(0);
@@ -86,17 +86,17 @@ public class ServiceContractResolverImpl implements ServiceContractResolver {
         String referenceName = promotedUri.getFragment();
         LogicalReference promotedReference;
         if (referenceName == null && promoted.getReferences().size() == 1) {
-            // select the default reference as a reference name was not specified
+            // select the default reference as a reference name wast specified
             Collection<LogicalReference> references = promoted.getReferences();
             promotedReference = references.iterator().next();
         } else if (referenceName == null) {
             // programing error
-            throw new AssertionError("Reference must be specified");
+            throw new AssertionError("Reference name must be specified on " + promoted.getDefinition().getName());
         } else {
             promotedReference = promoted.getReference(referenceName);
         }
         if (promotedReference == null) {
-            throw new AssertionError("Promoted reference was null");
+            throw new AssertionError("Promoted reference " + referenceName + " not found on " + promoted.getDefinition().getName());
         }
         return determineContract(promotedReference);
     }
