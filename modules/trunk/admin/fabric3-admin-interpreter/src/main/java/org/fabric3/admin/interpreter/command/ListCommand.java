@@ -17,6 +17,9 @@
 package org.fabric3.admin.interpreter.command;
 
 import java.io.PrintStream;
+import java.io.IOException;
+import java.util.Set;
+import java.net.URI;
 
 import org.fabric3.admin.api.AdministrationException;
 import org.fabric3.admin.api.DomainController;
@@ -59,7 +62,21 @@ public class ListCommand implements Command {
             controller.setPassword(password);
         }
         try {
-            controller.list();
+            if (!controller.isConnected()) {
+                controller.connect();
+            }
+            Set<URI> uris = controller.list();
+            if (uris.isEmpty()) {
+                out.println("No installed contributions");
+            } else {
+                out.println("Installed contributions:\n");
+                for (URI uri : uris) {
+                    out.println(uri);
+                }
+            }
+        } catch (IOException e) {
+            out.println("ERROR: Unable to connect to the doman controller");
+            e.printStackTrace(out);
         } catch (AdministrationException e) {
             throw new CommandException(e);
         }

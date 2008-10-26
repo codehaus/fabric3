@@ -20,6 +20,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.PrintStream;
+import java.net.URI;
 import java.util.Collections;
 
 import junit.framework.TestCase;
@@ -36,7 +37,8 @@ public class ListTestCase extends TestCase {
         DomainController controller = EasyMock.createMock(DomainController.class);
         controller.setUsername("username");
         controller.setPassword("password");
-        EasyMock.expect(controller.list()).andReturn(Collections.<String>emptyList());
+        EasyMock.expect(controller.isConnected()).andReturn(true);
+        EasyMock.expect(controller.list()).andReturn(Collections.<URI>emptySet());
         EasyMock.replay(controller);
 
         Interpreter interpreter = new InterpreterImpl(controller);
@@ -50,7 +52,8 @@ public class ListTestCase extends TestCase {
 
     public void testListWithNoAuth() throws Exception {
         DomainController controller = EasyMock.createMock(DomainController.class);
-        EasyMock.expect(controller.list()).andReturn(Collections.<String>emptyList());
+        EasyMock.expect(controller.isConnected()).andReturn(true);
+        EasyMock.expect(controller.list()).andReturn(Collections.<URI>emptySet());
         EasyMock.replay(controller);
 
         Interpreter interpreter = new InterpreterImpl(controller);
@@ -65,7 +68,8 @@ public class ListTestCase extends TestCase {
 
     public void testFullCommand() throws Exception {
         DomainController controller = EasyMock.createMock(DomainController.class);
-        EasyMock.expect(controller.list()).andReturn(Collections.<String>emptyList());
+        EasyMock.expect(controller.isConnected()).andReturn(true);
+        EasyMock.expect(controller.list()).andReturn(Collections.<URI>emptySet());
         EasyMock.replay(controller);
 
         Interpreter interpreter = new InterpreterImpl(controller);

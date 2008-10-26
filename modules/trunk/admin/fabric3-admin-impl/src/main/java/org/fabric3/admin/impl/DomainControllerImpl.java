@@ -18,8 +18,10 @@ package org.fabric3.admin.impl;
 
 import java.io.IOException;
 import java.net.URL;
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 import javax.management.JMException;
 import javax.management.MBeanServerConnection;
 import javax.management.ObjectName;
@@ -95,14 +97,14 @@ public class DomainControllerImpl implements DomainController {
     }
 
     @SuppressWarnings({"unchecked"})
-    public List<String> list() throws AdministrationException {
+    public Set<URI> list() throws AdministrationException {
         try {
             if (!isConnected()) {
                 throw new IllegalStateException("Not connected");
             }
             MBeanServerConnection conn = jmxc.getMBeanServerConnection();
             ObjectName oName = new ObjectName(CONTRIBUTION_SERVICE_MBEAN);
-            return (List<String>) conn.getAttribute(oName, "InstalledContributions");
+            return (Set<URI>) conn.getAttribute(oName, "InstalledContributions");
         } catch (JMException e) {
             throw new AdministrationException(e);
         } catch (IOException e) {
