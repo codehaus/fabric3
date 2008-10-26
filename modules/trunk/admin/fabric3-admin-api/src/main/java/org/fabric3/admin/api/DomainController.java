@@ -17,10 +17,8 @@
 package org.fabric3.admin.api;
 
 import java.io.IOException;
-import java.io.PrintStream;
-import java.net.URL;
 import java.net.URI;
-import java.util.List;
+import java.net.URL;
 import java.util.Set;
 
 /**
@@ -51,13 +49,33 @@ public interface DomainController {
      */
     void setPassword(String password);
 
+    /**
+     * Returns true if a connection to the domain controller is open.
+     *
+     * @return true if a connection to the domain controller is open
+     */
     boolean isConnected();
 
+    /**
+     * Open a connection to the domain controller.
+     *
+     * @throws IOException if a connection cannot be established
+     */
     void connect() throws IOException;
 
+    /**
+     * Closes an open connection to the domain controller.
+     *
+     * @throws IOException if there is an error closing the connection.
+     */
     void disconnect() throws IOException;
 
-
+    /**
+     * Returns a set of installed contributions in the domain.
+     *
+     * @return the set of installed contributions.
+     * @throws AdministrationException if an exception occurs executing the operation
+     */
     public Set<URI> list() throws AdministrationException;
 
     /**
