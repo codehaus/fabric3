@@ -48,5 +48,33 @@ public class ListTestCase extends TestCase {
         EasyMock.verify(controller);
     }
 
+    public void testListWithNoAuth() throws Exception {
+        DomainController controller = EasyMock.createMock(DomainController.class);
+        EasyMock.expect(controller.list()).andReturn(Collections.<String>emptyList());
+        EasyMock.replay(controller);
+
+        Interpreter interpreter = new InterpreterImpl(controller);
+
+        InputStream in = new ByteArrayInputStream("ls \n quit".getBytes());
+        PrintStream out = new PrintStream(new ByteArrayOutputStream());
+        interpreter.processInteractive(in, out);
+
+        EasyMock.verify(controller);
+    }
+
+
+    public void testFullCommand() throws Exception {
+        DomainController controller = EasyMock.createMock(DomainController.class);
+        EasyMock.expect(controller.list()).andReturn(Collections.<String>emptyList());
+        EasyMock.replay(controller);
+
+        Interpreter interpreter = new InterpreterImpl(controller);
+
+        InputStream in = new ByteArrayInputStream("list \n quit".getBytes());
+        PrintStream out = new PrintStream(new ByteArrayOutputStream());
+        interpreter.processInteractive(in, out);
+
+        EasyMock.verify(controller);
+    }
 
 }
