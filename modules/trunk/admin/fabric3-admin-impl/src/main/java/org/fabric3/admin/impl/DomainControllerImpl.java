@@ -46,7 +46,7 @@ import org.fabric3.admin.api.InvalidContributionException;
  */
 public class DomainControllerImpl implements DomainController {
     private static final String CONTRIBUTION_SERVICE_MBEAN =
-            "f3-management:SubDomain=null,type=service,component=\"fabric3://runtime/ContibutionHandler\",service=ContributionServiceMBean";
+            "f3-management:SubDomain=null,type=service,component=\"fabric3://runtime/ContibutionServiceMBean\",service=ContributionServiceMBean";
     private String username;
     private String password;
     private String controllerAddress = "service:jmx:rmi:///jndi/rmi://localhost:1099/server";
