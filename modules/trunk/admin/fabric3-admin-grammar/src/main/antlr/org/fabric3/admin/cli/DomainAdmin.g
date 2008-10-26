@@ -12,7 +12,7 @@ ASTLabelType=CommonTree;
 }
 
 tokens {  INSTALL_CMD;
-	      DEPLOY;
+	      DEPLOY_CMD;
 	      AUTH_CMD;
 	      LIST_CMD;
 	      PARAMETER;
@@ -54,7 +54,7 @@ subcommand	: (install | deploy | auth | list) NEWLINE?;
 install 	    : INSTALL file WS? param* -> ^(INSTALL_CMD file param*);
 auth            : AUTH auth_param auth_param -> ^(AUTH_CMD auth_param auth_param);
 list            : LIST auth_param* -> ^(LIST_CMD auth_param*);
-deploy 		    : DEPLOY contribution WS? param* -> ^(DEPLOY contribution? param*);
+deploy 		    : DEPLOY contribution_name WS? param* -> ^(DEPLOY_CMD contribution_name param*);
 uninstall 	    : UNINSTALL contribution? WS? param*;
 undeploy 	    : UNDEPLOY contribution WS? param+;
 
@@ -66,6 +66,7 @@ auth_operator   : (username | password);
 username        : USERNAME -> ^(PARAM_USERNAME);
 password        : PASSWORD -> ^(PARAM_PASSWORD);
 contribution    : CONTRIBUTION -> ^(PARAM_CONTRIBUTION_NAME);
+contribution_name : STRING -> ^(PARAM_CONTRIBUTION_NAME STRING);
 
 INSTALL 	    : ('install' | 'ins');
 AUTH 	        : ('authenticate' | 'auth');

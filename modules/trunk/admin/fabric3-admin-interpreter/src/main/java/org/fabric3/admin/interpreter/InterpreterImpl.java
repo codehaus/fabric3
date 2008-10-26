@@ -34,6 +34,7 @@ import org.fabric3.admin.api.DomainController;
 import org.fabric3.admin.cli.DomainAdminLexer;
 import org.fabric3.admin.cli.DomainAdminParser;
 import org.fabric3.admin.interpreter.parser.AuthCommandParser;
+import org.fabric3.admin.interpreter.parser.DeployCommandParser;
 import org.fabric3.admin.interpreter.parser.InstallCommandParser;
 import org.fabric3.admin.interpreter.parser.ListCommandParser;
 
@@ -124,6 +125,7 @@ public class InterpreterImpl implements Interpreter {
         parsers.put(DomainAdminLexer.INSTALL_CMD, new InstallCommandParser(controller));
         parsers.put(DomainAdminLexer.AUTH_CMD, new AuthCommandParser(controller));
         parsers.put(DomainAdminLexer.LIST_CMD, new ListCommandParser(controller));
+        parsers.put(DomainAdminLexer.DEPLOY_CMD, new DeployCommandParser(controller));
     }
 
     /**

@@ -17,8 +17,8 @@
 package org.fabric3.admin.impl;
 
 import java.io.IOException;
-import java.net.URL;
 import java.net.URI;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -47,6 +47,9 @@ import org.fabric3.admin.api.InvalidContributionException;
 public class DomainControllerImpl implements DomainController {
     private static final String CONTRIBUTION_SERVICE_MBEAN =
             "f3-management:SubDomain=null,type=service,component=\"fabric3://runtime/ContibutionServiceMBean\",service=ContributionServiceMBean";
+    private static final String DOMAIN_MBEAN =
+            "f3-management:SubDomain=null,type=service,component=\"fabric3://runtime/DomainMBean\",service=DomainMBean";
+
     private String username;
     private String password;
     private String controllerAddress = "service:jmx:rmi:///jndi/rmi://localhost:1099/server";
@@ -132,6 +135,18 @@ public class DomainControllerImpl implements DomainController {
     }
 
     public void deploy(String name) throws AdministrationException {
+        try {
+            if (!isConnected()) {
+                throw new IllegalStateException("Not connected");
+            }
+            MBeanServerConnection conn = jmxc.getMBeanServerConnection();
+            ObjectName oName = new ObjectName(DOMAIN_MBEAN);
+            conn.invoke(oName, "deploy", new URI[]{URI.create(name)}, new String[]{URI.class.getName()});
+        } catch (JMException e) {
+            throw new AdministrationException(e);
+        } catch (IOException e) {
+            throw new AdministrationException(e);
+        }
 
     }
 

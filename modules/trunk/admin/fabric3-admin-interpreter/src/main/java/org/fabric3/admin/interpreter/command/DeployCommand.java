@@ -16,6 +16,7 @@
  */
 package org.fabric3.admin.interpreter.command;
 
+import java.io.IOException;
 import java.io.PrintStream;
 
 import org.fabric3.admin.api.AdministrationException;
@@ -68,9 +69,16 @@ public class DeployCommand implements Command {
             if (password != null) {
                 controller.setPassword(password);
             }
+            if (!controller.isConnected()) {
+                controller.connect();
+            }
             controller.deploy(contributionName);
+            out.println("Deployed " + contributionName);
         } catch (AdministrationException e) {
             throw new CommandException(e);
+        } catch (IOException e) {
+            out.println("ERROR: Unable to connect to the doman controller");
+            e.printStackTrace(out);
         }
     }
 }
