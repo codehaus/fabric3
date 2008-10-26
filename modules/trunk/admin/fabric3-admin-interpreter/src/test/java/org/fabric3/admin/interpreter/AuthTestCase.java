@@ -16,29 +16,35 @@
  */
 package org.fabric3.admin.interpreter;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.PrintStream;
+
+import junit.framework.TestCase;
+import org.easymock.EasyMock;
+
+import org.fabric3.admin.api.DomainController;
 
 /**
  * @version $Revision$ $Date$
  */
-public interface Interpreter {
+public class AuthTestCase extends TestCase {
 
-    /**
-     * Processes an instruction.
-     *
-     * @param command the instruction
-     * @param out     the PrintStream where command output is sent
-     * @throws InterpreterException if an error occurs processing the instruction
-     */
-    public void process(String command, PrintStream out) throws InterpreterException;
+    public void testSetUsername() throws Exception {
+        DomainController controller = EasyMock.createMock(DomainController.class);
+        controller.setUsername("username");
+        controller.setPassword("password");
+        EasyMock.replay(controller);
 
-    /**
-     * Provides an interactive command prompt for issuing commands to the DomainController.
-     *
-     * @param in  the InputStream where instructions are received
-     * @param out the PrintStream where command output is sent
-     */
-    void processInteractive(InputStream in, PrintStream out);
+        Interpreter interpreter = new InterpreterImpl(controller);
+
+        InputStream in = new ByteArrayInputStream("auth -username username -password password \n quit".getBytes());
+        PrintStream out = new PrintStream(new ByteArrayOutputStream());
+        interpreter.processInteractive(in, out);
+
+        EasyMock.verify(controller);
+    }
+
 
 }

@@ -70,15 +70,11 @@ public class DomainControllerImpl implements DomainController {
             // find HTTP port and post contents
             MBeanServerConnection conn = jmxc.getMBeanServerConnection();
             String address;
-            try {
-                ObjectName oName = new ObjectName(CONTRIBUTION_SERVICE_MBEAN);
-                address = (String) conn.getAttribute(oName, "ContributionServiceAddress");
-            } catch (JMException e) {
-                throw new AdministrationException(e);
-            }
+            ObjectName oName = new ObjectName(CONTRIBUTION_SERVICE_MBEAN);
+            address = (String) conn.getAttribute(oName, "ContributionServiceAddress");
+            DefaultHttpClient httpclient = new DefaultHttpClient();
 //            String base = null;
 //            int port = -1;
-            DefaultHttpClient httpclient = new DefaultHttpClient();
 //            AuthScope scope = new AuthScope(base, port);
 //            UsernamePasswordCredentials credentials = new UsernamePasswordCredentials(username, password);
 //            httpclient.getCredentialsProvider().setCredentials(scope, credentials);
@@ -90,10 +86,9 @@ public class DomainControllerImpl implements DomainController {
             post.setEntity(entity);
 
             HttpResponse response = httpclient.execute(post);
-//            HttpPut put = new HttpPut(address + "/" + name);
-//            put.setEntity(entity);
-//            HttpResponse response = httpclient.execute(put);
             handleResponse(response, name);
+        } catch (JMException e) {
+            throw new AdministrationException(e);
         } catch (IOException e) {
             throw new AdministrationException(e);
         }

@@ -13,6 +13,7 @@ ASTLabelType=CommonTree;
 
 tokens {  INSTALL_CMD;
 	      DEPLOY;
+	      AUTH_CMD;
 	      PARAMETER;
 	      PARAM_USERNAME;
 	      PARAM_PASSWORD;
@@ -24,7 +25,7 @@ tokens {  INSTALL_CMD;
 @lexer::header { package org.fabric3.admin.cli; }
 
 @members {
-    
+
    protected void mismatch(IntStream input, int ttype, BitSet follow) throws RecognitionException {
       super.mismatch(input, ttype, follow);
       // throw new MismatchedTokenException(ttype, input);
@@ -46,19 +47,20 @@ tokens {  INSTALL_CMD;
 
 command		: (subcommand)+ EOF;
 
-subcommand	: (install | deploy) NEWLINE?;
-install 	: INSTALL file WS? param+ -> ^(INSTALL_CMD file param+);
-uninstall 	: UNINSTALL contribution? WS? param+;
-deploy 		: DEPLOY contribution WS? param+ -> ^(DEPLOY contribution? param+);
+subcommand	: (install | deploy | auth) NEWLINE?;
+install 	: INSTALL file WS? param* -> ^(INSTALL_CMD file param*);
+uninstall 	: UNINSTALL contribution? WS? param*;
+deploy 		: DEPLOY contribution WS? param* -> ^(DEPLOY contribution? param*);
 undeploy 	: UNDEPLOY contribution WS? param+;
+auth            : AUTH auth_param auth_param -> ^(AUTH_CMD auth_param auth_param);
 file		: STRING -> ^(FILE STRING);
 param		: operator STRING WS? -> ^(PARAMETER operator STRING) ;
+auth_param	: auth_operator STRING WS? -> ^(PARAMETER auth_operator STRING) ;
 operator    : (username | password | contribution);
-
+auth_operator    : (username | password);
 username : USERNAME -> ^(PARAM_USERNAME);
 password : PASSWORD -> ^(PARAM_PASSWORD);
 contribution: CONTRIBUTION -> ^(PARAM_CONTRIBUTION_NAME);
-
 
 INSTALL 	: ('install' | 'ins');
 UNINSTALL 	: ('uninstall' | 'uins');
@@ -67,7 +69,7 @@ UNDEPLOY	: ('undeploy' | 'udep');
 USERNAME	: ('-u' | '-username' | '-USERNAME') ;
 PASSWORD	: ('-p' | '-P'|'-PASSWORD' | '-password');
 CONTRIBUTION : ('-n' | '-N'|'-NAME'| '-name');
-
-STRING	: ('a'..'z'|'A'..'Z'|'0'..'9'|'.' |'-'|'_' | '/' | ':' | '/')+;
+AUTH 	:	('AUTH' |'auth' | 'authenticate');
+STRING	: ('a'..'z'|'A'..'Z'|'0'..'9'|'.' |'-'|'_' | '/' | ':')+;
 NEWLINE    	: '\r'? '\n';
 WS		: (' '|'\t'|'\n'|'\r')+ {skip();};

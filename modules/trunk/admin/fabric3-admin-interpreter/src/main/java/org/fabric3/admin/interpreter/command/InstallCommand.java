@@ -16,6 +16,7 @@
  */
 package org.fabric3.admin.interpreter.command;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.net.URL;
@@ -98,6 +99,10 @@ public class InstallCommand implements Command {
         } catch (ContributionAlreadyInstalledException e) {
             out.println("ERROR: A contribution with that name is already installed");
         } catch (AdministrationException e) {
+            if (e.getCause() instanceof FileNotFoundException) {
+                out.println("ERROR: File not found:" + e.getMessage());
+                return;
+            }
             throw new CommandException(e);
         } catch (IOException e) {
             out.println("ERROR: Unable to connect to the doman controller");

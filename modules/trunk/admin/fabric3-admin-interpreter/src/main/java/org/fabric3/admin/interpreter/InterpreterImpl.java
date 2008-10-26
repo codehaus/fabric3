@@ -34,6 +34,7 @@ import org.fabric3.admin.api.DomainController;
 import org.fabric3.admin.cli.DomainAdminLexer;
 import org.fabric3.admin.cli.DomainAdminParser;
 import org.fabric3.admin.interpreter.parser.InstallCommandParser;
+import org.fabric3.admin.interpreter.parser.AuthCommandParser;
 
 /**
  * Default interpreter implementation. This implementation constructs a parse tree from an instruction as defined by the domain adminsitration
@@ -53,13 +54,17 @@ public class InterpreterImpl implements Interpreter {
         createParsers();
     }
 
-    public void processInteractive(InputStream in, PrintStream out) throws InterpreterException {
+    public void processInteractive(InputStream in, PrintStream out) {
         Scanner scanner = new Scanner(in);
         while (true) {
             out.print(PROMPT);
             String line = scanner.nextLine().trim();
             if ("quit".equals(line) || "exit".equals(line)) break;
-            process(line, out);
+            try {
+                process(line, out);
+            } catch (InterpreterException e) {
+                e.printStackTrace(out);
+            }
         }
     }
 
@@ -84,7 +89,12 @@ public class InterpreterImpl implements Interpreter {
 
         Command command = parseCommand(iterator);
 
-        command.execute(out);
+        try {
+            command.execute(out);
+        } catch (CommandException e) {
+            out.println("ERORR: An error was encountered");
+            e.printStackTrace(out);
+        }
     }
 
     /**
@@ -110,6 +120,7 @@ public class InterpreterImpl implements Interpreter {
     private void createParsers() {
         parsers = new HashMap<Integer, CommandParser>();
         parsers.put(DomainAdminLexer.INSTALL_CMD, new InstallCommandParser(controller));
+        parsers.put(DomainAdminLexer.AUTH_CMD, new AuthCommandParser(controller));
     }
 
     /**
