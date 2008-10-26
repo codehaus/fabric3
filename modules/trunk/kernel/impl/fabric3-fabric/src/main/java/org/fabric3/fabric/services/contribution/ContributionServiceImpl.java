@@ -40,7 +40,9 @@ import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
 import javax.xml.namespace.QName;
 
@@ -208,6 +210,15 @@ public class ContributionServiceImpl implements ContributionService {
             return -1;
         }
         return contribution.getTimestamp();
+    }
+
+    public Set<URI> getInstalledContributions() {
+        Set<Contribution> contributions = metaDataStore.getContributions();
+        Set<URI> uris = new HashSet<URI>(contributions.size());
+        for (Contribution contribution : contributions) {
+            uris.add(contribution.getUri());
+        }
+        return uris;
     }
 
     public List<Deployable> getDeployables(URI contributionUri) throws ContributionException {

@@ -36,6 +36,7 @@ package org.fabric3.host.contribution;
 
 import java.net.URI;
 import java.util.List;
+import java.util.Set;
 
 
 /**
@@ -67,8 +68,7 @@ public interface ContributionService {
      * Updates a previously contributed artifact if its timestamp and checksum have changed.
      *
      * @param source the contribution source
-     * @throws ContributionException if an error occurs during the update procecedure, for example, a previuous
-     *                               contribution is not found
+     * @throws ContributionException if an error occurs during the update procecedure, for example, a previuous contribution is not found
      */
     void update(ContributionSource source) throws ContributionException;
 
@@ -87,6 +87,13 @@ public interface ContributionService {
      * @return the timestamp or -1 if no contribution was found
      */
     long getContributionTimestamp(URI uri);
+
+    /**
+     * Returns the URIs of installed contributions in the domain.
+     *
+     * @return the URIs of installed contributions in the domain
+     */
+    public Set<URI> getInstalledContributions();
 
     /**
      * Returns a list of deployables in a contribution.

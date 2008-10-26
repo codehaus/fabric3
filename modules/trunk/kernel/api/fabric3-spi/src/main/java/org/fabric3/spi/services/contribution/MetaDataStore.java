@@ -16,13 +16,14 @@
  */
 package org.fabric3.spi.services.contribution;
 
-import java.net.URI;
 import java.io.Serializable;
+import java.net.URI;
+import java.util.Set;
 
 import org.fabric3.scdl.ValidationContext;
 
 /**
- * Implementations store contribution metadata
+ * Implementations store contribution metadata.
  *
  * @version $Rev$ $Date$
  */
@@ -37,21 +38,26 @@ public interface MetaDataStore {
     void store(Contribution contribution) throws MetaDataStoreException;
 
     /**
-     * Returns the contribution for the given URI
+     * Returns the contribution for the given URI.
      *
      * @param contributionUri the contribution URI
      * @return the contribution for the given URI or null if not found
      */
     Contribution find(URI contributionUri);
 
+    /**
+     * Returns the installed contributions in the domain.
+     *
+     * @return the installed contributions in the domain
+     */
+    Set<Contribution> getContributions();
 
     /**
-     * Removes the contribution metadata
+     * Removes the contribution metadata.
      *
      * @param contributionUri the contribution uri
      */
     void remove(URI contributionUri);
-
 
     /**
      * Resolves a resource element by its symbol against the entire domain symbol space.
@@ -85,7 +91,7 @@ public interface MetaDataStore {
             throws MetaDataStoreException;
 
     /**
-     * Resolves an import to a matching export
+     * Resolves an import to a matching export.
      *
      * @param imprt the import to resolve
      * @return a matching contribution or null

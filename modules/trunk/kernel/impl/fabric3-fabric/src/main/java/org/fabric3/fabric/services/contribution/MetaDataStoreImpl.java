@@ -19,8 +19,10 @@ package org.fabric3.fabric.services.contribution;
 import java.io.Serializable;
 import java.net.URI;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import javax.xml.namespace.QName;
 
@@ -58,11 +60,6 @@ public class MetaDataStoreImpl implements MetaDataStore {
         this.processorRegistry = processorRegistry;
     }
 
-    public void store(Contribution contribution) throws MetaDataStoreException {
-        cache.put(contribution.getUri(), contribution);
-        addToExports(contribution);
-    }
-
     /**
      * Used to reinject the processor registry after runtime bootstrap
      *
@@ -73,8 +70,17 @@ public class MetaDataStoreImpl implements MetaDataStore {
         this.processorRegistry = processorRegistry;
     }
 
+    public void store(Contribution contribution) throws MetaDataStoreException {
+        cache.put(contribution.getUri(), contribution);
+        addToExports(contribution);
+    }
+
     public Contribution find(URI contributionUri) {
         return cache.get(contributionUri);
+    }
+
+    public Set<Contribution> getContributions() {
+        return new HashSet<Contribution>(cache.values());
     }
 
     public void remove(URI contributionUri) {

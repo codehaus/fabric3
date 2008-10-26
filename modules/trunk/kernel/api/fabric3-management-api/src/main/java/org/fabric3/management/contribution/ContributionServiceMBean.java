@@ -16,6 +16,10 @@
  */
 package org.fabric3.management.contribution;
 
+import java.util.List;
+import java.util.Set;
+import java.net.URI;
+
 import org.fabric3.api.annotation.Management;
 
 /**
@@ -33,4 +37,10 @@ public interface ContributionServiceMBean {
      */
     String getContributionServiceAddress();
 
+    /**
+     * Returns the URIs of installed contributions in the domain.
+     *
+     * @return the URIs of installed contributions in the domain.
+     */
+    Set<URI> getInstalledContributions();
 }
