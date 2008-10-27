@@ -150,6 +150,22 @@ public class DomainControllerImpl implements DomainController {
 
     }
 
+    public void deploy(String name, String plan) throws AdministrationException {
+        try {
+            if (!isConnected()) {
+                throw new IllegalStateException("Not connected");
+            }
+            MBeanServerConnection conn = jmxc.getMBeanServerConnection();
+            ObjectName oName = new ObjectName(DOMAIN_MBEAN);
+            conn.invoke(oName, "deploy", new Object[]{URI.create(name), plan}, new String[]{URI.class.getName(), "java.lang.String"});
+        } catch (JMException e) {
+            throw new AdministrationException(e);
+        } catch (IOException e) {
+            throw new AdministrationException(e);
+        }
+
+    }
+
     public boolean isConnected() {
         return jmxc != null;
     }

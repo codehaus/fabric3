@@ -88,11 +88,20 @@ public interface DomainController {
     void install(URL contribution, String name) throws AdministrationException;
 
     /**
-     * Deploys a contribution.
+     * Deploys all deployables in a contribution.
      *
      * @param name the contribution name.
      * @throws AdministrationException if an exception occurs executing the operation
      */
     void deploy(String name) throws AdministrationException;
+
+    /**
+     * Deploys all deployables in a contribution.
+     *
+     * @param name the contribution name.
+     * @param plan the name of the deployment plan
+     * @throws AdministrationException if an exception occurs executing the operation
+     */
+    void deploy(String name, String plan) throws AdministrationException;
 
 }
