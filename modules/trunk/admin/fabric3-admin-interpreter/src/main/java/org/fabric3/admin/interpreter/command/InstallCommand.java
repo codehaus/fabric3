@@ -86,7 +86,7 @@ public class InstallCommand implements Command {
                 controller.connect();
             }
             if (contributionName == null) {
-                parseContributionName();
+                contributionName = CommandHelper.parseContributionName(contribution);
             }
             controller.install(contribution, contributionName);
             out.println("Installed " + contributionName);
@@ -110,21 +110,5 @@ public class InstallCommand implements Command {
         }
     }
 
-    private void parseContributionName() {
-        String path = contribution.getPath();
-        int pos = path.lastIndexOf('/');
-        if (pos < 0) {
-            contributionName = path;
-        } else if (pos == path.length() - 1) {
-            String substr = path.substring(0, pos);
-            pos = substr.lastIndexOf('/');
-            if (pos < 0) {
-                contributionName = substr;
-            } else {
-                contributionName = path.substring(pos + 1, path.length() - 1);
-            }
-        } else {
-            contributionName = path.substring(pos + 1);
-        }
-    }
+
 }

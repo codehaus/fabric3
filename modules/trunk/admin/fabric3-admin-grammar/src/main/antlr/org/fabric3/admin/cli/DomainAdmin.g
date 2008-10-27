@@ -21,6 +21,7 @@ tokens {  INSTALL_CMD;
 	      FILE;
 	      PARAM_CONTRIBUTION_NAME;
 	      PARAM_PLAN_NAME;
+	      PARAM_PLAN_FILE;
 }
 
 @header { package org.fabric3.admin.cli; }
@@ -55,7 +56,7 @@ subcommand	: (install | deploy | auth | list) NEWLINE?;
 install 	    : INSTALL file WS? param* -> ^(INSTALL_CMD file param*);
 auth            : AUTH auth_param auth_param -> ^(AUTH_CMD auth_param auth_param);
 list            : LIST auth_param* -> ^(LIST_CMD auth_param*);
-deploy 		    : DEPLOY contribution_name plan_name? WS? param* -> ^(DEPLOY_CMD contribution_name plan_name? param*);
+deploy 		    : DEPLOY contribution_name plan_name?  plan_file? WS? param* -> ^(DEPLOY_CMD contribution_name plan_name? plan_file? param*);
 uninstall 	    : UNINSTALL contribution? WS? param*;
 undeploy 	    : UNDEPLOY contribution WS? param+;
 
@@ -69,6 +70,7 @@ password        : PASSWORD -> ^(PARAM_PASSWORD);
 contribution    : CONTRIBUTION -> ^(PARAM_CONTRIBUTION_NAME);
 contribution_name : STRING -> ^(PARAM_CONTRIBUTION_NAME STRING);
 plan_name         : STRING -> ^(PARAM_PLAN_NAME STRING);
+plan_file         : PLAN STRING -> ^(PARAM_PLAN_FILE STRING);
 
 INSTALL 	    : ('install' | 'ins');
 AUTH 	        : ('authenticate' | 'auth');
@@ -79,6 +81,7 @@ UNDEPLOY	    : ('undeploy' | 'udep');
 USERNAME	    : ('-u' | '-username' | '-USERNAME') ;
 PASSWORD	    : ('-p' | '-P'|'-PASSWORD' | '-password');
 CONTRIBUTION    : ('-n' | '-N'|'-NAME'| '-name');
+PLAN            : ('-plan' | '-PLAN');
 
 STRING	        : ('a'..'z'|'A'..'Z'|'0'..'9'|'.' |'-'|'_' | '/' | ':')+;
 NEWLINE    	    : '\r'? '\n';

@@ -91,7 +91,7 @@ public class InstallCommandParser implements CommandParser {
         iterator.next();
         try {
             URL contribution;
-            if (!text.contains("://")) {
+            if (!text.contains(":/")) {
                 // assume it is a file
                 contribution = new File(text).toURI().toURL();
             } else {

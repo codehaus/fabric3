@@ -18,6 +18,13 @@ package org.fabric3.admin.interpreter.command;
 
 import java.io.IOException;
 import java.io.PrintStream;
+import java.net.URL;
+import javax.xml.parsers.DocumentBuilder;
+import javax.xml.parsers.DocumentBuilderFactory;
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.w3c.dom.Document;
+import org.xml.sax.SAXException;
 
 import org.fabric3.admin.api.AdministrationException;
 import org.fabric3.admin.api.DomainController;
@@ -32,7 +39,8 @@ public class DeployCommand implements Command {
     private String contributionName;
     private String username;
     private String password;
-    private String plan;
+    private String planName;
+    private URL planFile;
 
     public DeployCommand(DomainController controller) {
         this.controller = controller;
@@ -63,7 +71,11 @@ public class DeployCommand implements Command {
     }
 
     public void setPlanName(String plan) {
-        this.plan = plan;
+        this.planName = plan;
+    }
+
+    public void setPlanFile(URL planFile) {
+        this.planFile = planFile;
     }
 
     public void execute(PrintStream out) throws CommandException {
@@ -77,8 +89,13 @@ public class DeployCommand implements Command {
             if (!controller.isConnected()) {
                 controller.connect();
             }
-            if (plan != null) {
-                controller.deploy(contributionName, plan);
+            if (planName != null) {
+                controller.deploy(contributionName, planName);
+            } else if (planFile != null) {
+                String planContributionName = CommandHelper.parseContributionName(planFile);
+                controller.install(planFile, planContributionName); // install plan
+                String installedPlanName = parsePlanName();
+                controller.deploy(contributionName, installedPlanName);
             } else {
                 controller.deploy(contributionName);
             }
@@ -86,9 +103,22 @@ public class DeployCommand implements Command {
         } catch (AdministrationException e) {
             throw new CommandException(e);
         } catch (IOException e) {
-            out.println("ERROR: Unable to connect to the doman controller");
+            out.println("ERROR: Error deploying");
+            e.printStackTrace(out);
+        } catch (ParserConfigurationException e) {
+            out.println("ERROR: Invalid deployment plan");
+            e.printStackTrace(out);
+        } catch (SAXException e) {
+            out.println("ERROR: Invalid deployment plan");
             e.printStackTrace(out);
         }
+    }
+
+    private String parsePlanName() throws ParserConfigurationException, IOException, SAXException {
+        DocumentBuilderFactory f = DocumentBuilderFactory.newInstance();
+        DocumentBuilder b = f.newDocumentBuilder();
+        Document d = b.parse(planFile.openStream());
+        return d.getDocumentElement().getAttribute("name");
     }
 
 }

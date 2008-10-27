@@ -16,6 +16,9 @@
  */
 package org.fabric3.admin.interpreter.parser;
 
+import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Iterator;
 
 import org.antlr.runtime.Token;
@@ -44,6 +47,9 @@ public class DeployCommandParser implements CommandParser {
             switch (token.getType()) {
             case DomainAdminLexer.PARAM_CONTRIBUTION_NAME:
                 parseContributionName(command, iterator);
+                break;
+            case DomainAdminLexer.PARAM_PLAN_FILE:
+                parsePlanFile(command, iterator);
                 break;
             case DomainAdminLexer.PARAM_PLAN_NAME:
                 parsePlanName(command, iterator);
@@ -93,6 +99,26 @@ public class DeployCommandParser implements CommandParser {
         // proceed past UP
         iterator.next();
         command.setPlanName(text);
+    }
+
+    private void parsePlanFile(DeployCommand command, Iterator<Token> iterator) throws ParseException {
+        // proceed past DOWN;
+        iterator.next();
+        String text = iterator.next().getText();
+        // proceed past UP
+        iterator.next();
+        try {
+            URL plan;
+            if (!text.contains(":/")) {
+                // assume it is a file
+                plan = new File(text).toURI().toURL();
+            } else {
+                plan = new URL(text);
+            }
+            command.setPlanFile(plan);
+        } catch (MalformedURLException e) {
+            throw new ParseException("Invalid contribution URL", e);
+        }
     }
 
 }

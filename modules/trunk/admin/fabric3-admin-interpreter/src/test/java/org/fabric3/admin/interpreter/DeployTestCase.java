@@ -50,7 +50,7 @@ public class DeployTestCase extends TestCase {
         EasyMock.verify(controller);
     }
 
-    public void testDeployWithPlan() throws Exception {
+    public void testDeployWithPlanName() throws Exception {
         DomainController controller = EasyMock.createMock(DomainController.class);
         controller.setUsername("username");
         controller.setPassword("password");
@@ -61,6 +61,23 @@ public class DeployTestCase extends TestCase {
         Interpreter interpreter = new InterpreterImpl(controller);
 
         InputStream in = new ByteArrayInputStream("deploy foo.jar plan.xml -u username -p password \n quit".getBytes());
+        PrintStream out = new PrintStream(new ByteArrayOutputStream());
+        interpreter.processInteractive(in, out);
+
+        EasyMock.verify(controller);
+    }
+
+    public void testDeployWithPlanFile() throws Exception {
+        DomainController controller = EasyMock.createMock(DomainController.class);
+        controller.setUsername("username");
+        controller.setPassword("password");
+        EasyMock.expect(controller.isConnected()).andReturn(true);
+        URL planURL = getClass().getClassLoader().getResource("plan.xml");
+        controller.install(planURL, "plan.xml");
+        controller.deploy("foo.jar", "testPlan");
+        EasyMock.replay(controller);
+        Interpreter interpreter = new InterpreterImpl(controller);
+        InputStream in = new ByteArrayInputStream(("deploy foo.jar -plan "+planURL+" -u username -p password \n quit").getBytes());
         PrintStream out = new PrintStream(new ByteArrayOutputStream());
         interpreter.processInteractive(in, out);
 
