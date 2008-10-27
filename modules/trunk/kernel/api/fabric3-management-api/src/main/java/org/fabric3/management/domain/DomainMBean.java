@@ -16,6 +16,8 @@
  */
 package org.fabric3.management.domain;
 
+import java.net.URI;
+
 import org.fabric3.api.annotation.Management;
 
 /**
@@ -26,7 +28,6 @@ import org.fabric3.api.annotation.Management;
 @Management
 public interface DomainMBean {
 
-    void deploy(String contributionName);
-
+    void deploy(URI contributionUri);
 
 }

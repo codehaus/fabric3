@@ -40,4 +40,10 @@
     <component name="ContibutionServiceMBean">
         <f3-impl:implementation.system class="org.fabric3.admin.controller.ContibutionServiceMBeanImpl"/>
     </component>
+
+    <component name="DomainMBean">
+        <f3-impl:implementation.system class="org.fabric3.admin.controller.DomainMBeanImpl"/>
+        <reference name="domain" target="ApplicationDomain"/>
+    </component>
+
 </composite>
