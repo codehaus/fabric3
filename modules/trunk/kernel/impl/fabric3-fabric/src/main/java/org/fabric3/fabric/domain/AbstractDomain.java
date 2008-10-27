@@ -163,35 +163,8 @@ public abstract class AbstractDomain implements Domain {
     }
 
     public void remove(QName deployable, boolean transactional) throws DeploymentException {
-
-        ResourceElement<QNameSymbol, ?> element;
-        try {
-            element = metadataStore.resolve(new QNameSymbol(deployable));
-        } catch (MetaDataStoreException e) {
-            throw new DeploymentException(e);
-        }
-        if (element == null) {
-            String id = deployable.toString();
-            throw new DeployableNotFoundException("Deployable not found " + id, id);
-        }
-
-        Object object = element.getValue();
-        if (!(object instanceof Composite)) {
-            String id = deployable.toString();
-            throw new IllegalDeployableTypeException("Deployable must be a composite: " + id, id);
-        }
-
-        Composite composite = (Composite) object;
-        remove(composite, transactional);
-
-    }
-
-    public void remove(Composite composite) throws DeploymentException {
-        remove(composite, false);
-    }
-
-    public void remove(Composite composite, boolean transactional) throws DeploymentException {
         throw new UnsupportedOperationException();
+
     }
 
     /**

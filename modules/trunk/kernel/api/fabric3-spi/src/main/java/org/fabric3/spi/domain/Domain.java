@@ -97,22 +97,4 @@ public interface Domain {
      */
     void remove(QName deployable, boolean transactional) throws DeploymentException;
 
-    /**
-     * Remove a Composite from the domain.
-     *
-     * @param composite the composite to remove
-     * @throws DeploymentException if an error is encountered during removal
-     */
-    void remove(Composite composite) throws DeploymentException;
-
-    /**
-     * Remove a Composite from the domain.
-     *
-     * @param composite     the composite to remove
-     * @param transactional if true, the deployment operation will be done transactionally. That is, changes to the logical model will only be applied
-     *                      after componnets have been undeployed to a runtime or runtimes.
-     * @throws DeploymentException if an error is encountered during removal
-     */
-    void remove(Composite composite, boolean transactional) throws DeploymentException;
-
 }
