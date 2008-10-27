@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <!--
  Fabric3
  Copyright © 2008 Metaform Systems Limited
@@ -22,11 +22,12 @@
            xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
            xmlns:xq="http://www.fabric3.org/xmlns/xquery/1.0"
            xmlns:ap="http://www.fabric3.org/xmlns/xquery/test-advanced-property"
+           xmlns:f3-implementation="urn:fabric3.org:implementation"
            name="ExistXQueryTestHarnessComposite">
 
 
     <component name="TestClient">
-        <f3:junit class="tests.xquery.TestClient"/>
+        <f3-implementation:junit class="tests.xquery.TestClient"/>
         <reference name="service" target="Echo/EchoService"/>
     </component>
 
@@ -47,7 +48,7 @@
 
 <!-- Advanced Test -->
     <component name="AdvancedTestClient">
-        <f3:junit class="tests.xquery.AdvancedTestClient"/>
+        <f3-implementation:junit class="tests.xquery.AdvancedTestClient"/>
         <reference name="xqService" target="Advanced/XQueryService"/>
         <reference name="service" target="Advanced/AdvancedService"/>
     </component>

@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <!--
  Fabric3
  Copyright © 2008 Metaform Systems Limited
@@ -15,7 +15,10 @@
  distribution for the permitted and restricted uses of such software.
 
 -->
-<composite xmlns="http://www.osoa.org/xmlns/sca/1.0" xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha" name="OuterComposite">
+<composite xmlns="http://www.osoa.org/xmlns/sca/1.0" 
+           xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha" 
+           xmlns:f3-implementation="urn:fabric3.org:implementation"
+           name="OuterComposite">
 
     <component name="Inner">
         <implementation.composite name="InnerComposite" scdlLocation="inner.composite"/>
@@ -33,7 +36,7 @@
     </component>
 
     <component name="InnerCompositeTest">
-        <f3:junit class="org.fabric3.tests.function.composite.InnerCompositeTest"/>
+        <f3-implementation:junit class="org.fabric3.tests.function.composite.InnerCompositeTest"/>
         <reference name="inner" target="Inner"/>
         <reference name="innerSpecified" target="Inner2/two"/>
         <reference name="boundSource">

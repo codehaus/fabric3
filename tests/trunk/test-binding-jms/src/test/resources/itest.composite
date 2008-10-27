@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <!--
  Fabric3
  Copyright © 2008 Metaform Systems Limited
@@ -18,10 +18,11 @@
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:sca="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
+           xmlns:f3-implementation="urn:fabric3.org:implementation"           
            name="JMSTestComposite">
 
     <component name="ObjectWeatherTest">
-        <f3:junit class="org.fabric3.binding.jms.test.object.ObjectWeatherTest"/>
+        <f3-implementation:junit class="org.fabric3.binding.jms.test.object.ObjectWeatherTest"/>
         <reference name="weatherService">
             <binding.jms correlationScheme="RequestMsgIDToCorrelID">
                 <destination name="objectServiceQueue" type="queue" create="always"/>
@@ -58,7 +59,7 @@
 
 
     <component name="JAXBWeatherTest">
-        <f3:junit class="org.fabric3.binding.jms.test.jaxb.JAXBWeatherTest"/>
+        <f3-implementation:junit class="org.fabric3.binding.jms.test.jaxb.JAXBWeatherTest"/>
         <reference name="weatherService">
             <binding.jms correlationScheme="RequestMsgIDToCorrelID">
                 <destination name="jaxbServiceQueue" type="queue" create="always"/>
@@ -100,7 +101,7 @@
     </component>
 
     <component name="PrimitiveTest">
-        <f3:junit class="org.fabric3.binding.jms.test.primitives.PrimitiveTest"/>
+        <f3-implementation:junit class="org.fabric3.binding.jms.test.primitives.PrimitiveTest"/>
         <reference name="service">
             <binding.jms correlationScheme="RequestMsgIDToCorrelID">
                 <destination name="primitiveServiceQueue" type="queue" create="always"/>
@@ -136,7 +137,7 @@
     </component>
 
     <component name="OneWayServiceTest">
-        <f3:junit class="org.fabric3.binding.jms.test.oneway.OneWayServiceTest"/>
+        <f3-implementation:junit class="org.fabric3.binding.jms.test.oneway.OneWayServiceTest"/>
         <reference name="service">
             <binding.jms correlationScheme="RequestMsgIDToCorrelID">
                 <destination name="onewayServiceQueue" type="queue" create="always"/>

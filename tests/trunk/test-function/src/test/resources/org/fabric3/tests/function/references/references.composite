@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <!--
  Fabric3
  Copyright © 2008 Metaform Systems Limited
@@ -17,10 +17,11 @@
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
+           xmlns:f3-implementation="urn:fabric3.org:implementation"
            name="ReferencesComposite">
 
     <component name="MultiplicityTest">
-        <f3:junit class="org.fabric3.tests.function.references.MultiplicityTest"/>
+        <f3-implementation:junit class="org.fabric3.tests.function.references.MultiplicityTest"/>
         <reference name="listCdi1" target="map.one map.two map.three"/>
         <reference name="listCdi2" target="map.one map.two map.three"/>
         <reference name="listSetter" target="map.one map.two map.three"/>
@@ -28,14 +29,14 @@
     </component>
 
     <component name="MapTest">
-        <f3:junit class="org.fabric3.tests.function.references.MapTest"/>
+        <f3-implementation:junit class="org.fabric3.tests.function.references.MapTest"/>
         <reference name="constructor" target="map.one map.two map.three"/>
         <reference name="setter" target="map.one map.two map.three"/>
         <reference name="field" target="map.one map.two map.three"/>
     </component>
 
     <component name="QNameMapTest">
-        <f3:junit class="org.fabric3.tests.function.references.QNameMapTest"/>
+        <f3-implementation:junit class="org.fabric3.tests.function.references.QNameMapTest"/>
         <reference name="field" target="test.test"/>
     </component>
 

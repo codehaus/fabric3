@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+﻿<?xml version="1.0" encoding="UTF-8"?>
 <!--
  Fabric3
  Copyright © 2008 Metaform Systems Limited
@@ -17,11 +17,12 @@
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:sca="http://www.osoa.org/xmlns/sca/1.0"
+           xmlns:f3-implementation="urn:fabric3.org:implementation"           
            xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
            name="Axis2TestComposite">
 
     <component name="EchoTest">
-        <f3:junit class="org.fabric3.tests.binding.axis2.Axis2EchoTest"/>
+        <f3-implementation:junit class="org.fabric3.tests.binding.axis2.Axis2EchoTest"/>
         <reference name="service">
             <binding.ws uri="http://localhost:8900/axis2/echoService" f3:impl="axis2"/>
             <operation name="echoWsUsernameToken" requires="sca:authentication.message"/>
