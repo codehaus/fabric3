@@ -21,6 +21,7 @@ import java.net.URI;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.host.contribution.Deployable;
+import org.fabric3.host.domain.AssemblyException;
 import org.fabric3.host.domain.DeploymentException;
 import org.fabric3.management.domain.DomainMBean;
 import org.fabric3.spi.domain.Domain;
@@ -34,7 +35,7 @@ public class DomainMBeanImpl implements DomainMBean {
     private Domain domain;
     private MetaDataStore store;
 
-    public DomainMBeanImpl(@Reference (name = "domain") Domain domain, @Reference MetaDataStore store) {
+    public DomainMBeanImpl(@Reference(name = "domain") Domain domain, @Reference MetaDataStore store) {
         this.domain = domain;
         this.store = store;
     }
@@ -48,6 +49,26 @@ public class DomainMBeanImpl implements DomainMBean {
         for (Deployable deployable : contribution.getManifest().getDeployables()) {
             try {
                 domain.include(deployable.getName());
+            } catch (AssemblyException e) {
+                e.printStackTrace();
+            } catch (DeploymentException e) {
+                // FIXME
+                e.printStackTrace();
+            }
+        }
+    }
+
+    public void deploy(URI contributionUri, String plan) {
+        Contribution contribution = store.find(contributionUri);
+        if (contribution == null) {
+            // FIXME
+            throw new AssertionError("Invalid contribution");
+        }
+        for (Deployable deployable : contribution.getManifest().getDeployables()) {
+            try {
+                domain.include(deployable.getName(), plan);
+            } catch (AssemblyException e) {
+                e.printStackTrace();
             } catch (DeploymentException e) {
                 // FIXME
                 e.printStackTrace();
@@ -55,4 +76,5 @@ public class DomainMBeanImpl implements DomainMBean {
 
         }
     }
+
 }

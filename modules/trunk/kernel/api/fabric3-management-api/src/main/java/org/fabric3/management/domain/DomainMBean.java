@@ -30,4 +30,6 @@ public interface DomainMBean {
 
     void deploy(URI contributionUri);
 
+    void deploy(URI contributionUri, String plan);
+
 }
