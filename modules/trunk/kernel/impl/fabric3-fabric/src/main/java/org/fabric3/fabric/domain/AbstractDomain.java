@@ -30,6 +30,7 @@ import org.fabric3.fabric.instantiator.LogicalChange;
 import org.fabric3.fabric.instantiator.LogicalModelInstantiator;
 import org.fabric3.host.domain.AssemblyException;
 import org.fabric3.host.domain.DeploymentException;
+import org.fabric3.loader.plan.DeploymentPlanConstants;
 import org.fabric3.scdl.Composite;
 import org.fabric3.spi.allocator.AllocationException;
 import org.fabric3.spi.allocator.Allocator;
@@ -93,30 +94,25 @@ public abstract class AbstractDomain implements Domain {
     }
 
     public void include(QName deployable) throws DeploymentException {
-        include(deployable, false);
+        include(deployable, null, false);
     }
 
     public void include(QName deployable, boolean transactional) throws DeploymentException {
+        include(deployable, null, transactional);
+    }
 
-        ResourceElement<QNameSymbol, ?> element;
-        try {
-            element = metadataStore.resolve(new QNameSymbol(deployable));
-        } catch (MetaDataStoreException e) {
-            throw new DeploymentException("Error deploying: " + deployable, e);
-        }
-        if (element == null) {
-            String id = deployable.toString();
-            throw new DeployableNotFoundException("Deployable not found: " + id, id);
-        }
+    public void include(QName deployable, String plan) throws DeploymentException {
+        include(deployable, plan, false);
+    }
 
-        Object object = element.getValue();
-        if (!(object instanceof Composite)) {
-            String id = deployable.toString();
-            throw new IllegalDeployableTypeException("Deployable must be a composite:" + id, id);
+    public void include(QName deployable, String plan, boolean transactional) throws DeploymentException {
+        Composite composite = resolveComposite(deployable);
+        if (plan == null) {
+            include(composite, null, transactional);
+        } else {
+            DeploymentPlan deploymentPlan = resolvePlan(plan);
+            include(composite, deploymentPlan, transactional);
         }
-
-        Composite composite = (Composite) object;
-        include(composite, null, transactional);
 
     }
 
@@ -164,7 +160,63 @@ public abstract class AbstractDomain implements Domain {
 
     public void remove(QName deployable, boolean transactional) throws DeploymentException {
         throw new UnsupportedOperationException();
+    }
 
+    /**
+     * Resolves a deployment plan by name.
+     *
+     * @param plan the deployment plan name
+     * @return the resolved deployment plan
+     * @throws DeploymentException if the plan cannot be resolved
+     */
+    private DeploymentPlan resolvePlan(String plan) throws DeploymentException {
+        ResourceElement<QNameSymbol, ?> element;
+        DeploymentPlan deploymentPlan;
+        try {
+            QName planName = new QName(DeploymentPlanConstants.PLAN_NAMESPACE, plan);
+            element = metadataStore.resolve(new QNameSymbol(planName));
+        } catch (MetaDataStoreException e) {
+            throw new DeploymentException("Error finding plan: " + plan, e);
+        }
+        if (element == null) {
+            throw new DeployableNotFoundException("Plan not found: " + plan, plan);
+        }
+
+        Object object = element.getValue();
+        if (!(object instanceof DeploymentPlan)) {
+            throw new IllegalDeployableTypeException("Not a deployment plan:" + plan, plan);
+        }
+
+        deploymentPlan = (DeploymentPlan) object;
+        return deploymentPlan;
+    }
+
+    /**
+     * Resolves a deployable by name.
+     *
+     * @param deployable the deployable name
+     * @return the deployable
+     * @throws DeploymentException if the deployable cannot be resolved
+     */
+    private Composite resolveComposite(QName deployable) throws DeploymentException {
+        ResourceElement<QNameSymbol, ?> element;
+        try {
+            element = metadataStore.resolve(new QNameSymbol(deployable));
+        } catch (MetaDataStoreException e) {
+            throw new DeploymentException("Error deploying: " + deployable, e);
+        }
+        if (element == null) {
+            String id = deployable.toString();
+            throw new DeployableNotFoundException("Deployable not found: " + id, id);
+        }
+
+        Object object = element.getValue();
+        if (!(object instanceof Composite)) {
+            String id = deployable.toString();
+            throw new IllegalDeployableTypeException("Deployable must be a composite:" + id, id);
+        }
+
+        return (Composite) object;
     }
 
     /**
