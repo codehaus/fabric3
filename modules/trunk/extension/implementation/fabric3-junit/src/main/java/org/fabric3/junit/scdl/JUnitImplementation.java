@@ -20,13 +20,13 @@ import javax.xml.namespace.QName;
 
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.Implementation;
-import org.fabric3.spi.Constants;
+import org.fabric3.spi.Namespaces;
 
 /**
  * @version $Rev$ $Date$
  */
 public class JUnitImplementation extends Implementation<PojoComponentType> {
-    public static final QName IMPLEMENTATION_JUNIT = new QName(Constants.FABRIC3_NS, "junit");
+    public static final QName IMPLEMENTATION_JUNIT = new QName(Namespaces.IMPLEMENTATION, "junit");
     private static final long serialVersionUID = -5048471724313487914L;
     private String implementationClass;
 

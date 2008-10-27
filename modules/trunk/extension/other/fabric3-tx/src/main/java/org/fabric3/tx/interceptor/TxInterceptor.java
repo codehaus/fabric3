@@ -39,10 +39,10 @@ public class TxInterceptor implements Interceptor {
     private TransactionManager transactionManager;
     private TxAction txAction;
     private TxMonitor monitor;
-    
+
     /**
      * Initializes the transaction manager.
-     * 
+     *
      * @param transactionManager Transaction manager to be initialized.
      * @param txAction Transaction action.
      * @param monitor Transaction monitor.
@@ -63,9 +63,9 @@ public class TxInterceptor implements Interceptor {
     }
 
     public Message invoke(Message message) {
-        
+
         Transaction transaction =  getTransaction();
-            
+
         if (txAction == TxAction.BEGIN) {
             if (transaction == null) {
                 begin();
@@ -87,7 +87,7 @@ public class TxInterceptor implements Interceptor {
             }
             throw e;
         }
-            
+
         if(txAction == TxAction.BEGIN && transaction == null && !ret.isFault()) {
             commit();
         } else if(txAction == TxAction.BEGIN && transaction == null && ret.isFault()) {
@@ -95,11 +95,11 @@ public class TxInterceptor implements Interceptor {
         } else if(txAction == TxAction.SUSPEND && transaction != null) {
             resume(transaction);
         }
-            
+
         return ret;
-        
+
     }
-    
+
     private void setRollbackOnly() {
         try {
             monitor.markedForRollback(hashCode());
@@ -108,7 +108,7 @@ public class TxInterceptor implements Interceptor {
             throw new TxException(e);
         }
     }
-    
+
     private Transaction getTransaction() {
         try {
             return transactionManager.getTransaction();
@@ -116,7 +116,7 @@ public class TxInterceptor implements Interceptor {
             throw new TxException(e);
         }
     }
-    
+
     private void rollback() {
         try {
             monitor.rolledback(hashCode());
@@ -125,7 +125,7 @@ public class TxInterceptor implements Interceptor {
             throw new TxException(e);
         }
     }
-    
+
     private void begin() {
         try {
             monitor.started(hashCode());
@@ -136,7 +136,7 @@ public class TxInterceptor implements Interceptor {
             throw new TxException(e);
         }
     }
-    
+
     private void suspend() {
         try {
             monitor.suspended(hashCode());
@@ -145,7 +145,7 @@ public class TxInterceptor implements Interceptor {
             throw new TxException(e);
         }
     }
-    
+
     private void resume(Transaction transaction) {
         try {
             monitor.resumed(hashCode());
@@ -158,7 +158,7 @@ public class TxInterceptor implements Interceptor {
             throw new TxException(e);
         }
     }
-    
+
     private void commit() {
         try {
             if (transactionManager.getStatus() != Status.STATUS_MARKED_ROLLBACK) {

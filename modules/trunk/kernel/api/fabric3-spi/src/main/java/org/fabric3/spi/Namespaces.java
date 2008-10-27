@@ -69,7 +69,7 @@ public class Namespaces {
      * Namespace URI used for other extensions like implementation.cache and implementation.jpa. Recommended prefix f3-other.
      */
     public static final String OTHER = "urn:fabric3.org:other";
-   
+    
     /**
      * Private constructor.
      */
