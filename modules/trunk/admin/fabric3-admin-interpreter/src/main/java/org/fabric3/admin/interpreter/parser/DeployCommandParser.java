@@ -45,6 +45,9 @@ public class DeployCommandParser implements CommandParser {
             case DomainAdminLexer.PARAM_CONTRIBUTION_NAME:
                 parseContributionName(command, iterator);
                 break;
+            case DomainAdminLexer.PARAM_PLAN_NAME:
+                parsePlanName(command, iterator);
+                break;
             case DomainAdminLexer.PARAMETER:
                 parseParameter(command, iterator);
                 break;
@@ -81,6 +84,15 @@ public class DeployCommandParser implements CommandParser {
         // proceed past UP
         iterator.next();
         command.setContributionName(text);
+    }
+
+    private void parsePlanName(DeployCommand command, Iterator<Token> iterator) throws ParseException {
+        // proceed past DOWN;
+        iterator.next();
+        String text = iterator.next().getText();
+        // proceed past UP
+        iterator.next();
+        command.setPlanName(text);
     }
 
 }

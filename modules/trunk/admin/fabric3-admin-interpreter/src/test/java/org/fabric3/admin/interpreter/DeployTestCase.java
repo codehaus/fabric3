@@ -33,9 +33,8 @@ import org.fabric3.admin.api.DomainController;
  */
 public class DeployTestCase extends TestCase {
 
-    public void testInstallWithName() throws Exception {
+    public void testDeployWithName() throws Exception {
         DomainController controller = EasyMock.createMock(DomainController.class);
-//        controller.setDomain("domain");
         controller.setUsername("username");
         controller.setPassword("password");
         EasyMock.expect(controller.isConnected()).andReturn(true);
@@ -45,6 +44,23 @@ public class DeployTestCase extends TestCase {
         Interpreter interpreter = new InterpreterImpl(controller);
 
         InputStream in = new ByteArrayInputStream("deploy foo.jar -u username -p password \n quit".getBytes());
+        PrintStream out = new PrintStream(new ByteArrayOutputStream());
+        interpreter.processInteractive(in, out);
+
+        EasyMock.verify(controller);
+    }
+
+    public void testDeployWithPlan() throws Exception {
+        DomainController controller = EasyMock.createMock(DomainController.class);
+        controller.setUsername("username");
+        controller.setPassword("password");
+        EasyMock.expect(controller.isConnected()).andReturn(true);
+        controller.deploy("foo.jar", "plan.xml");
+        EasyMock.replay(controller);
+
+        Interpreter interpreter = new InterpreterImpl(controller);
+
+        InputStream in = new ByteArrayInputStream("deploy foo.jar plan.xml -u username -p password \n quit".getBytes());
         PrintStream out = new PrintStream(new ByteArrayOutputStream());
         interpreter.processInteractive(in, out);
 

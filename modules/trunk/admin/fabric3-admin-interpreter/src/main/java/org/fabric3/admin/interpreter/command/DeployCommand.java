@@ -32,6 +32,7 @@ public class DeployCommand implements Command {
     private String contributionName;
     private String username;
     private String password;
+    private String plan;
 
     public DeployCommand(DomainController controller) {
         this.controller = controller;
@@ -61,6 +62,10 @@ public class DeployCommand implements Command {
         this.password = password;
     }
 
+    public void setPlanName(String plan) {
+        this.plan = plan;
+    }
+
     public void execute(PrintStream out) throws CommandException {
         try {
             if (username != null) {
@@ -72,7 +77,11 @@ public class DeployCommand implements Command {
             if (!controller.isConnected()) {
                 controller.connect();
             }
-            controller.deploy(contributionName);
+            if (plan != null) {
+                controller.deploy(contributionName, plan);
+            } else {
+                controller.deploy(contributionName);
+            }
             out.println("Deployed " + contributionName);
         } catch (AdministrationException e) {
             throw new CommandException(e);
@@ -81,4 +90,5 @@ public class DeployCommand implements Command {
             e.printStackTrace(out);
         }
     }
+
 }
