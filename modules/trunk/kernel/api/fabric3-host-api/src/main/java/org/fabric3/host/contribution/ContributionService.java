@@ -40,23 +40,51 @@ import java.util.Set;
 
 
 /**
- * Service interface that manages artifacts contributed to a Fabric3 domain.
+ * Manages artifacts contributed to a domain. Contributions can be application or extension artifacts. Contributions may be in a variety of formats,
+ * for example, a JAR or XML document.
+ * <p/>
+ * The lifecycle of a contribution is defined as follows:
+ * <pre>
+ * <ul>
+ * <li>Stored - The contribution artifact is persisted.
+ * <li>Installed - The contribution is introspected, validated, and loaded.
+ * <li>Uninstalled - The contribution is unloaded.
+ * <li>Remove - the contribution is removed from persistent storage.
+ * </ul>
  *
  * @version $Rev$ $Date$
  */
 public interface ContributionService {
 
     /**
-     * Contribute an artifact to the SCA Domain.
+     * Persistently stores a contribution in the domain.
      *
      * @param source the contribution source
-     * @return a URI that uniquely identifies this contribution within the SCA Domain
-     * @throws ContributionException if there was a problem with the contribution
+     * @return a URI that uniquely identifies this contribution within the domain
+     * @throws ContributionException if there is an error persisting the contribution
+     */
+    URI store(ContributionSource source) throws ContributionException;
+
+    /**
+     * Installs a stored contribution.
+     *
+     * @param uri the contribution URI
+     * @throws ContributionException if there an error reading, introspecting or loading the contribution
+     */
+    void install(URI uri) throws ContributionException;
+
+
+    /**
+     * Stores and installs an artifact.
+     *
+     * @param source the contribution source
+     * @return a URI that uniquely identifies this contribution within the domain
+     * @throws ContributionException if there an error reading, introspecting or loading the contribution
      */
     URI contribute(ContributionSource source) throws ContributionException;
 
     /**
-     * Contribute a collection of artifacts to a domain. Artifacts will be ordered by import dependencies.
+     * Stores and installs a collection of artifacts to a domain. Artifacts will be ordered by import dependencies.
      *
      * @param sources the artifacts to contribute
      * @return a list of contributed URIs.
@@ -65,7 +93,7 @@ public interface ContributionService {
     List<URI> contribute(List<ContributionSource> sources) throws ContributionException;
 
     /**
-     * Updates a previously contributed artifact if its timestamp and checksum have changed.
+     * Updates a previously stored artifact if its timestamp and checksum have changed.
      *
      * @param source the contribution source
      * @throws ContributionException if an error occurs during the update procecedure, for example, a previuous contribution is not found
@@ -105,7 +133,7 @@ public interface ContributionService {
     public List<Deployable> getDeployables(URI uri) throws ContributionException;
 
     /**
-     * Remove a contribution from the SCA domain.
+     * Remove a contribution from the domain.
      *
      * @param uri The URI of the contribution
      * @throws ContributionException if there was a problem with the contribution
