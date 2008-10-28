@@ -184,7 +184,7 @@ public class ContributionServiceImpl implements ContributionService {
         return contribution.getTimestamp();
     }
 
-    public Set<URI> getInstalledContributions() {
+    public Set<URI> getContributions() {
         Set<Contribution> contributions = metaDataStore.getContributions();
         Set<URI> uris = new HashSet<URI>(contributions.size());
         for (Contribution contribution : contributions) {

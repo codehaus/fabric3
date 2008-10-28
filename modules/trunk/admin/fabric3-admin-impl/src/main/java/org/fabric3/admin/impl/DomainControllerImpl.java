@@ -107,7 +107,7 @@ public class DomainControllerImpl implements DomainController {
             }
             MBeanServerConnection conn = jmxc.getMBeanServerConnection();
             ObjectName oName = new ObjectName(CONTRIBUTION_SERVICE_MBEAN);
-            return (Set<URI>) conn.getAttribute(oName, "InstalledContributions");
+            return (Set<URI>) conn.getAttribute(oName, "Contributions");
         } catch (JMException e) {
             throw new AdministrationException(e);
         } catch (IOException e) {

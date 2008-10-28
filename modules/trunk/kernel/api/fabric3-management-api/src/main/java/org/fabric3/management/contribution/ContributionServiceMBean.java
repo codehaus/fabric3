@@ -38,9 +38,9 @@ public interface ContributionServiceMBean {
     String getContributionServiceAddress();
 
     /**
-     * Returns the URIs of installed contributions in the domain.
+     * Returns the URIs of contributions in the domain.
      *
-     * @return the URIs of installed contributions in the domain.
+     * @return the URIs of contributions in the domain.
      */
-    Set<URI> getInstalledContributions();
+    Set<URI> getContributions();
 }

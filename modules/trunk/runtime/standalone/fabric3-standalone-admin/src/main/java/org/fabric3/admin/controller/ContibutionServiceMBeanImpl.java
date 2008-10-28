@@ -75,8 +75,8 @@ public class ContibutionServiceMBeanImpl implements ContributionServiceMBean {
         return "http://localhost:8180/admin/repository";
     }
 
-    public Set<URI> getInstalledContributions() {
-        return contributionService.getInstalledContributions();
+    public Set<URI> getContributions() {
+        return contributionService.getContributions();
     }
 
 

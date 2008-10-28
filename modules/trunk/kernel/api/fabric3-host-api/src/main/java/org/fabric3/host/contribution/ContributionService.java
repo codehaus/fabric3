@@ -117,11 +117,11 @@ public interface ContributionService {
     long getContributionTimestamp(URI uri);
 
     /**
-     * Returns the URIs of installed contributions in the domain.
+     * Returns the URIs of contributions in the domain.
      *
-     * @return the URIs of installed contributions in the domain
+     * @return the URIs of contributions in the domain
      */
-    public Set<URI> getInstalledContributions();
+    public Set<URI> getContributions();
 
     /**
      * Returns a list of deployables in a contribution.
