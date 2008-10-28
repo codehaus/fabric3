@@ -49,7 +49,7 @@ import java.util.Set;
  * <li>Stored - The contribution artifact is persisted.
  * <li>Installed - The contribution is introspected, validated, and loaded.
  * <li>Uninstalled - The contribution is unloaded.
- * <li>Remove - the contribution is removed from persistent storage.
+ * <li>Removed - the contribution is removed from persistent storage.
  * </ul>
  *
  * @version $Rev$ $Date$
