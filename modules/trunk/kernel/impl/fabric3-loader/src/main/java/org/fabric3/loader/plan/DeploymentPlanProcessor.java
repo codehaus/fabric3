@@ -150,6 +150,7 @@ public class DeploymentPlanProcessor implements XmlResourceElementLoader {
             // this is a programming error if this happens as the indexer did not set the resource element properly
             throw new AssertionError("Deployment plan not found: " + name);
         }
+        resource.setProcessed(true);
     }
 
 

@@ -109,6 +109,11 @@
         <reference name="loader" target="DefinitionsLoader"/>
     </component>
 
+    <component name="DeploymentPlanXmlProcessor">
+        <f3-impl:implementation.system class="org.fabric3.fabric.services.contribution.processor.DeploymentPlanXmlProcessor"/>
+        <reference name="loader" target="DeploymentPlanProcessor"/>
+    </component>
+
     <component name="ContributionElementLoader">
         <f3-impl:implementation.system class="org.fabric3.fabric.services.contribution.manifest.ContributionElementLoader"/>
     </component>
