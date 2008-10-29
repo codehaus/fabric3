@@ -33,32 +33,31 @@
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:sca="http://www.osoa.org/xmlns/sca/1.0"
-           xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
            xmlns:f3-implementation="urn:fabric3.org:implementation"           
-           xmlns:ftp="urn:org.fabric3:binding:ftp"
+           xmlns:f3-binding="urn:org.fabric3:binding"   
            name="DataTransferTestComposite">
 
     <component name="DataTransferTest">
         <f3-implementation:junit class="org.fabric3.tests.binding.ftp.DataTransferServiceITest"/>
         <reference name="ftpDataTransferService">
-            <ftp:binding.ftp uri="localhost:2000" requires="sca:authentication.message" mode="PASSIVE"/>
+            <f3-binding:binding.ftp uri="localhost:2000" requires="sca:authentication.message" mode="PASSIVE"/>
         </reference>
     </component>
 
     <component name="FtpService">
         <implementation.java class="org.fabric3.tests.binding.ftp.FtpDataTransferServiceImpl"/>
         <service name="FtpDataTransferService">
-            <ftp:binding.ftp uri="/"/>
+            <f3-binding:binding.ftp uri="/"/>
         </service>
         <reference name="wsDataTransferService">
-            <binding.ws uri="http://localhost:8900/axis2/upload" f3:impl="axis2"/>
+            <binding.ws uri="http://localhost:8900/axis2/upload"/>
         </reference>
     </component>
 
     <component name="WsService">
         <implementation.java class="org.fabric3.tests.binding.ftp.WsDataTransferServiceImpl"/>
         <service name="WsDataTransferService">
-            <binding.ws uri="upload" f3:impl="axis2"/>
+            <binding.ws uri="upload"/>
         </service>
     </component>
 
