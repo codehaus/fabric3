@@ -112,12 +112,16 @@ public class ContributionServiceImpl implements ContributionService {
     }
 
     public URI store(ContributionSource source) throws ContributionException {
-        return persist(source).getUri();
+        Contribution contribution = persist(source);
+        metaDataStore.store(contribution);
+        return contribution.getUri();
     }
 
     public void install(URI uri) throws ContributionException {
         Contribution contribution = metaDataStore.find(uri);
         install(contribution);
+        // update the store with changes
+        metaDataStore.store(contribution);
     }
 
     public List<URI> contribute(List<ContributionSource> sources) throws ContributionException {
