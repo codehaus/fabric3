@@ -44,13 +44,14 @@ import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.java.AbstractAnnotationProcessor;
 import org.fabric3.scdl.Implementation;
 import org.fabric3.scdl.InjectingComponentType;
+import org.fabric3.spi.Namespaces;
 
 /**
  * @version $Rev: 3105 $ $Date: 2008-03-15 09:47:31 -0700 (Sat, 15 Mar 2008) $
  */
 public class ConversationPropagationProcessor<I extends Implementation<? extends InjectingComponentType>>
         extends AbstractAnnotationProcessor<PropagatesConversation, I> {
-    public static final QName PROPAGATES_CONVERSATION_INTENT = new QName("http://fabric3.org/xmlns/sca/2.0-alpha", "propagatesConversation");
+    public static final QName PROPAGATES_CONVERSATION_INTENT = new QName(Namespaces.POLICY, "propagatesConversation");
 
     public ConversationPropagationProcessor() {
         super(PropagatesConversation.class);

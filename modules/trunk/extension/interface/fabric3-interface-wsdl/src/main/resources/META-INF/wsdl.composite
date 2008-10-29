@@ -18,14 +18,14 @@
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:sca="http://www.osoa.org/xmlns/sca/1.0"
-           xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
+           xmlns:f3-core="urn:fabric3.org:core"
            xmlns:f3-impl="urn:fabric3.org:implementation"
            targetNamespace="org.codehaus.fabric3"
            name="WsdlInterfaceExtension"
            autowire="true">
 
 
-    <component name="WsdlInterfaceLoader" f3:key="sca:interface.wsdl">
+    <component name="WsdlInterfaceLoader" f3-core:key="sca:interface.wsdl">
         <f3-impl:implementation.system class="org.fabric3.idl.wsdl.loader.InterfaceWsdlLoader"/>
     </component>
 

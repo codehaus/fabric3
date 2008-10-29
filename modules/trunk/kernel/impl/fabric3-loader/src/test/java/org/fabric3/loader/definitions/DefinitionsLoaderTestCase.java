@@ -21,6 +21,7 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamConstants;
@@ -39,6 +40,7 @@ import org.fabric3.scdl.DefaultValidationContext;
 import org.fabric3.scdl.definitions.AbstractDefinition;
 import org.fabric3.scdl.definitions.Intent;
 import org.fabric3.scdl.definitions.PolicySet;
+import org.fabric3.spi.Namespaces;
 import org.fabric3.spi.services.contribution.QNameSymbol;
 import org.fabric3.spi.services.contribution.Resource;
 import org.fabric3.spi.services.contribution.ResourceElement;
@@ -49,14 +51,14 @@ import org.fabric3.spi.services.contribution.ResourceElement;
 public class DefinitionsLoaderTestCase extends TestCase {
 
     public static final QName TRANSACTIONAL_QNAME =
-            new QName("http://fabric3.org/xmlns/sca/2.0-alpha", "transactional");
+            new QName(Namespaces.POLICY, "transactional");
     public static final QName BINDING_QNAME = new QName("http://www.osoa.org/xmlns/sca/1.0", "binding");
     public static final QName TRX_POLICY_QNAME =
-            new QName("http://fabric3.org/xmlns/sca/2.0-alpha", "transactionalPolicy");
+            new QName(Namespaces.POLICY, "transactionalPolicy");
     public static final QName SERVER_SEC_POLICY =
-            new QName("http://fabric3.org/xmlns/sca/2.0-alpha", "testServerPolicy");
+            new QName(Namespaces.POLICY, "testServerPolicy");
     public static final QName CLIENT_SEC_POLICY =
-            new QName("http://fabric3.org/xmlns/sca/2.0-alpha", "testClientPolicy");
+            new QName(Namespaces.POLICY, "testClientPolicy");
 
     private DefinitionsLoader loader;
     private Resource resource;
@@ -101,7 +103,7 @@ public class DefinitionsLoaderTestCase extends TestCase {
 
         QName extensionName = policySet.getExtensionName();
         assertEquals("interceptor", extensionName.getLocalPart());
-        assertEquals("http://fabric3.org/xmlns/sca/2.0-alpha", extensionName.getNamespaceURI());
+        assertEquals(Namespaces.POLICY, extensionName.getNamespaceURI());
 
     }
 

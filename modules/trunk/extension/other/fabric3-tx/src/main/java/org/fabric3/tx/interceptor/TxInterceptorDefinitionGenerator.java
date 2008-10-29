@@ -19,7 +19,7 @@ package org.fabric3.tx.interceptor;
 import javax.xml.namespace.QName;
 
 import org.fabric3.scdl.Operation;
-import org.fabric3.spi.Constants;
+import org.fabric3.spi.Namespaces;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.generator.InterceptorDefinitionGenerator;
@@ -37,7 +37,7 @@ import org.w3c.dom.Element;
  */
 @EagerInit
 public class TxInterceptorDefinitionGenerator implements InterceptorDefinitionGenerator {
-    private static final QName EXTENSION_NAME = new QName(Constants.FABRIC3_NS, "transaction");
+    private static final QName EXTENSION_NAME = new QName(Namespaces.POLICY, "transaction");
     private GeneratorRegistry generatorRegistry;
 
     public TxInterceptorDefinitionGenerator(@Reference GeneratorRegistry generatorRegistry) {

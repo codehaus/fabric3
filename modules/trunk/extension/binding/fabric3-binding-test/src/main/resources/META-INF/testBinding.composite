@@ -26,8 +26,9 @@ destination uri the reference should flow invocations to as in:
 
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
-           xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
+           xmlns:f3-core="urn:fabric3.org:core"
            xmlns:f3-impl="urn:fabric3.org:implementation"
+           xmlns:f3-binding="urn:fabric3.org:binding"
            targetNamespace="org.codehaus.fabric3"
            name="TestBindingExtension">
 
@@ -35,18 +36,18 @@ destination uri the reference should flow invocations to as in:
         <f3-impl:implementation.system class="org.fabric3.binding.test.BindingChannelImpl"/>
     </component>
 
-    <component name="TestBindingLoader" f3:key="f3:binding.test">
+    <component name="TestBindingLoader" f3-core:key="f3-binding:binding.test">
         <f3-impl:implementation.system class="org.fabric3.binding.test.TestBindingLoader"/>
     </component>
 
-    <component name="TestBindingGenerator" f3:key="org.fabric3.binding.test.TestBindingDefinition">
+    <component name="TestBindingGenerator" f3-core:key="org.fabric3.binding.test.TestBindingDefinition">
         <f3-impl:implementation.system class="org.fabric3.binding.test.TestBindingGenerator"/>
     </component>
 
-    <component f3:key="org.fabric3.binding.test.TestBindingSourceDefinition" name="TestBindingSourceWireAttacher">
+    <component f3-core:key="org.fabric3.binding.test.TestBindingSourceDefinition" name="TestBindingSourceWireAttacher">
         <f3-impl:implementation.system class="org.fabric3.binding.test.TestBindingSourceWireAttacher"/>
     </component>
-    <component f3:key="org.fabric3.binding.test.TestBindingTargetDefinition" name="TestBindingTargetWireAttacher">
+    <component f3-core:key="org.fabric3.binding.test.TestBindingTargetDefinition" name="TestBindingTargetWireAttacher">
         <f3-impl:implementation.system class="org.fabric3.binding.test.TestBindingTargetWireAttacher"/>
     </component>
 

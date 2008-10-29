@@ -16,21 +16,22 @@
 
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
-           xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
            xmlns:sca="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:f3-impl="urn:fabric3.org:implementation"
+           xmlns:f3-policy="urn:fabric3.org:policy"
+           xmlns:f3-core="urn:fabric3.org:core"
            targetNamespace="org.codehaus.fabric3"
            name="DataBindingJAXBRuntimeExtension">
 
-    <component name="ReferenceTransformingInterceptorBuilder" f3:key="org.fabric3.jaxb.provision.ReferenceTransformingInterceptorDefinition">
+    <component name="ReferenceTransformingInterceptorBuilder" f3-core:key="org.fabric3.jaxb.provision.ReferenceTransformingInterceptorDefinition">
         <f3-impl:implementation.system class="org.fabric3.jaxb.runtime.impl.ReferenceTransformingInterceptorBuilder"/>
     </component>
 
-    <component name="ServiceTransformingInterceptorBuilder" f3:key="org.fabric3.jaxb.provision.ServiceTransformingInterceptorDefinition">
+    <component name="ServiceTransformingInterceptorBuilder" f3-core:key="org.fabric3.jaxb.provision.ServiceTransformingInterceptorDefinition">
         <f3-impl:implementation.system class="org.fabric3.jaxb.runtime.impl.ServiceTransformingInterceptorBuilder"/>
     </component>
 
-    <component name="XmlDataBindingTransformerFactory" f3:key="f3:dataType.xml">
+    <component name="XmlDataBindingTransformerFactory" f3-core:key="f3-policy:dataType.xml">
         <f3-impl:implementation.system class="org.fabric3.jaxb.runtime.impl.XmlDataBindingTransformerFactory"/>
     </component>
 

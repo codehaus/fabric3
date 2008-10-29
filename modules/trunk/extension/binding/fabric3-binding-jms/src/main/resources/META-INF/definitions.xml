@@ -17,8 +17,7 @@
 <definitions
     xmlns="http://www.osoa.org/xmlns/sca/1.0" 
     xmlns:sca="http://www.osoa.org/xmlns/sca/1.0"
-    targetNamespace="http://www.osoa.org/xmlns/sca/1.0" 
-    xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha">
+    targetNamespace="http://www.osoa.org/xmlns/sca/1.0">
     
     <bindingType name="binding.jms" mayProvide="sca:oneWay sca:transactedOneWay sca:transactedOneWay.global sca:transactedOneWay.local"/>
     

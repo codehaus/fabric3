@@ -19,7 +19,7 @@ package org.fabric3.security.authorization;
 import javax.xml.namespace.QName;
 
 import org.fabric3.scdl.Operation;
-import org.fabric3.spi.Constants;
+import org.fabric3.spi.Namespaces;
 import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.generator.InterceptorDefinitionGenerator;
 import org.fabric3.spi.model.instance.LogicalBinding;
@@ -42,7 +42,7 @@ import org.w3c.dom.Element;
 @EagerInit
 public class AuthorizationInterceptorDefinitionGenerator implements InterceptorDefinitionGenerator {
     
-    private static final QName EXTENSION_NAME = new QName(Constants.FABRIC3_NS, "authorization");
+    private static final QName EXTENSION_NAME = new QName(Namespaces.POLICY, "authorization");
     private GeneratorRegistry generatorRegistry;
 
     /**

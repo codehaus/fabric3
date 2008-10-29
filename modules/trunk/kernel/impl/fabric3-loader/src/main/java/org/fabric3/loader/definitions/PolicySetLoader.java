@@ -19,14 +19,10 @@ package org.fabric3.loader.definitions;
 import java.util.HashSet;
 import java.util.Set;
 import java.util.StringTokenizer;
+
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
-
-import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Reference;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
 
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.xml.InvalidPrefixException;
@@ -36,9 +32,13 @@ import org.fabric3.introspection.xml.UnrecognizedAttribute;
 import org.fabric3.loader.impl.InvalidQNamePrefix;
 import org.fabric3.scdl.definitions.PolicyPhase;
 import org.fabric3.scdl.definitions.PolicySet;
-import org.fabric3.spi.Constants;
+import org.fabric3.spi.Namespaces;
 import org.fabric3.transform.TransformationException;
 import org.fabric3.transform.xml.Stream2Document;
+import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Reference;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
 /**
  * Loader for definitions.
@@ -82,7 +82,7 @@ public class PolicySetLoader implements TypeLoader<PolicySet> {
 
         String appliesTo = policyElement.getAttribute("appliesTo");
 
-        String sPhase = policyElement.getAttributeNS(Constants.FABRIC3_NS, "phase");
+        String sPhase = policyElement.getAttributeNS(Namespaces.POLICY, "phase");
         PolicyPhase phase = null;
         if (sPhase != null && !"".equals(sPhase.trim())) {
             phase = PolicyPhase.valueOf(sPhase);

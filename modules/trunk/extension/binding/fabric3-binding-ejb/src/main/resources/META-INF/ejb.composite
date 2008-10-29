@@ -16,26 +16,26 @@
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:sca="http://www.osoa.org/xmlns/sca/1.0"
-           xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
+           xmlns:f3-core="urn:fabric3.org:core"
            xmlns:f3-impl="urn:fabric3.org:implementation"
            targetNamespace="org.codehaus.fabric3"
            name="EjbBindingExtension">
 
     <!-- EJB Binding Loader -->
-    <component f3:key="sca:binding.ejb" name="EjbBindingLoader">
+    <component f3-core:key="sca:binding.ejb" name="EjbBindingLoader">
         <f3-impl:implementation.system class="org.fabric3.binding.ejb.introspection.EjbBindingLoader"/>
     </component>
 
     <!-- EJB Binding Generator -->
-    <component f3:key="org.fabric3.binding.ejb.scdl.EjbBindingDefinition" name="EjbBindingGenerator">
+    <component f3-core:key="org.fabric3.binding.ejb.scdl.EjbBindingDefinition" name="EjbBindingGenerator">
         <f3-impl:implementation.system class="org.fabric3.binding.ejb.control.EjbBindingGenerator"/>
     </component>
 
     <!-- EJB Wire Attachers -->
-    <component f3:key="org.fabric3.binding.ejb.provision.EjbWireSourceDefinition" name="EjbSourceWireAttacher">
+    <component f3-core:key="org.fabric3.binding.ejb.provision.EjbWireSourceDefinition" name="EjbSourceWireAttacher">
         <f3-impl:implementation.system class="org.fabric3.binding.ejb.runtime.EjbSourceWireAttacher"/>
     </component>
-    <component f3:key="org.fabric3.binding.ejb.provision.EjbWireTargetDefinition" name="EjbTargetWireAttacher">
+    <component f3-core:key="org.fabric3.binding.ejb.provision.EjbWireTargetDefinition" name="EjbTargetWireAttacher">
         <f3-impl:implementation.system class="org.fabric3.binding.ejb.runtime.EjbTargetWireAttacher"/>
     </component>
 

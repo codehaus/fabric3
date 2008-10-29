@@ -18,14 +18,12 @@ package org.fabric3.jpa.introspection;
 
 import java.lang.reflect.Type;
 import java.net.URI;
+
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContextType;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
-
-import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.api.jpa.ConversationalDaoImpl;
 import org.fabric3.introspection.DefaultIntrospectionContext;
@@ -44,7 +42,9 @@ import org.fabric3.scdl.DefaultValidationContext;
 import org.fabric3.scdl.FieldInjectionSite;
 import org.fabric3.scdl.ServiceContract;
 import org.fabric3.scdl.ValidationContext;
-import org.fabric3.spi.Constants;
+import org.fabric3.spi.Namespaces;
+import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Reference;
 
 /**
  * Implementation loader for JPA component.
@@ -54,7 +54,7 @@ import org.fabric3.spi.Constants;
 @EagerInit
 public class JpaImplementationLoader implements TypeLoader<JavaImplementation> {
 
-    public static final QName IMPLEMENTATION_JPA = new QName(Constants.FABRIC3_NS, "implementation.jpa");
+    public static final QName IMPLEMENTATION_JPA = new QName(Namespaces.IMPLEMENTATION, "implementation.jpa");
 
     private final JavaImplementationProcessor implementationProcessor;
     private final ServiceContract<Type> factoryServiceContract;

@@ -35,13 +35,13 @@
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:sca="http://www.osoa.org/xmlns/sca/1.0"
-           xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
+           xmlns:f3-core="urn:fabric3.org:core"
            xmlns:f3-impl="urn:fabric3.org:implementation"
            name="CompositeLoaderBootComposite" targetNamespace="urn:maven:org.codehaus.fabric3:fabric3-loader"
         >
 
     <!-- Common SCDL loader implementations -->
-    <component name="OperationLoader" f3:key="sca:operation">
+    <component name="OperationLoader" f3-core:key="sca:operation">
         <f3-impl:implementation.system class="org.fabric3.loader.common.OperationLoader"/>
     </component>
     <component name="ComponentReferenceLoader">
@@ -53,7 +53,7 @@
     <component name="PropertyLoader">
         <f3-impl:implementation.system class="org.fabric3.loader.common.PropertyLoader"/>
     </component>
-    <component name="JavaInterfaceLoader" f3:key="sca:interface.java">
+    <component name="JavaInterfaceLoader" f3-core:key="sca:interface.java">
         <f3-impl:implementation.system class="org.fabric3.loader.common.JavaInterfaceLoader"/>
     </component>
 

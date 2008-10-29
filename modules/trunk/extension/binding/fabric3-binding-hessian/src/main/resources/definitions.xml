@@ -14,10 +14,7 @@
  different terms.  See the separate licenses for those programs included in the
  distribution for the permitted and restricted uses of such software.
 -->
-<definitions
-        xmlns="http://www.osoa.org/xmlns/sca/1.0"
-        targetNamespace="http://www.fabric3.org/binding/hessian/0.2"
-        xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha">
+<definitions xmlns="http://www.osoa.org/xmlns/sca/1.0" targetNamespace="urn:fabric3.org:binding">
 
     <bindingType name="hessian"/>
 

@@ -18,12 +18,10 @@ package org.fabric3.binding.test;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
-
-import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.xml.InvalidValue;
@@ -31,7 +29,9 @@ import org.fabric3.introspection.xml.LoaderHelper;
 import org.fabric3.introspection.xml.LoaderUtil;
 import org.fabric3.introspection.xml.MissingAttribute;
 import org.fabric3.introspection.xml.TypeLoader;
-import org.fabric3.spi.Constants;
+import org.fabric3.spi.Namespaces;
+import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Reference;
 
 /**
  * Parses <code>binding.test</code> for services and references. A uri to bind the service to or target a reference must be provided as an attribute.
@@ -41,7 +41,7 @@ import org.fabric3.spi.Constants;
 @EagerInit
 public class TestBindingLoader implements TypeLoader<TestBindingDefinition> {
 
-    public static final QName BINDING_QNAME = new QName(Constants.FABRIC3_NS, "binding.test");
+    public static final QName BINDING_QNAME = new QName(Namespaces.BINDING, "binding.test");
 
     private final LoaderHelper loaderHelper;
 

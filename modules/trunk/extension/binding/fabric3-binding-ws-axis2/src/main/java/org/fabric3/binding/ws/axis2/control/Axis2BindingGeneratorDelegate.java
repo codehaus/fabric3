@@ -32,7 +32,7 @@ import org.fabric3.scdl.ReferenceDefinition;
 import org.fabric3.scdl.ServiceContract;
 import org.fabric3.scdl.ServiceDefinition;
 import org.fabric3.scdl.definitions.PolicySet;
-import org.fabric3.spi.Constants;
+import org.fabric3.spi.Namespaces;
 import org.fabric3.spi.generator.BindingGeneratorDelegate;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.LogicalBinding;
@@ -47,7 +47,7 @@ import org.w3c.dom.NodeList;
  */
 public class Axis2BindingGeneratorDelegate implements BindingGeneratorDelegate<WsBindingDefinition> {
     
-    private static final QName POLICY_ELEMENT = new QName(Constants.FABRIC3_NS, "axisPolicy");
+    private static final QName POLICY_ELEMENT = new QName(Namespaces.POLICY, "axisPolicy");
 
     public Axis2WireSourceDefinition generateWireSource(LogicalBinding<WsBindingDefinition> binding,
                                                         Policy policy,  

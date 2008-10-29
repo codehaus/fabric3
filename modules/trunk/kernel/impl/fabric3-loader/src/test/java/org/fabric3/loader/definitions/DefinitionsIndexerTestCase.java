@@ -24,6 +24,7 @@ import javax.xml.stream.XMLStreamReader;
 
 import junit.framework.TestCase;
 
+import org.fabric3.spi.Namespaces;
 import org.fabric3.spi.services.contribution.QNameSymbol;
 import org.fabric3.spi.services.contribution.Resource;
 import org.fabric3.spi.services.contribution.ResourceElement;
@@ -48,11 +49,11 @@ public class DefinitionsIndexerTestCase extends TestCase {
 
         ResourceElement<?, ?> intentResourceElement = resourceElements.get(0);
         QNameSymbol symbol = (QNameSymbol) intentResourceElement.getSymbol();
-        assertEquals(new QName("http://fabric3.org/xmlns/sca/2.0-alpha", "transactional"), symbol.getKey());
+        assertEquals(new QName(Namespaces.POLICY, "transactional"), symbol.getKey());
 
         ResourceElement<?, ?> policySetResourceElement = resourceElements.get(1);
         symbol = (QNameSymbol) policySetResourceElement.getSymbol();
-        assertEquals(new QName("http://fabric3.org/xmlns/sca/2.0-alpha", "transactionalPolicy"), symbol.getKey());
+        assertEquals(new QName(Namespaces.POLICY, "transactionalPolicy"), symbol.getKey());
     }
 
     protected void setUp() throws Exception {

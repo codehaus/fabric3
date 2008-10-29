@@ -16,14 +16,14 @@
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:sca="http://www.osoa.org/xmlns/sca/1.0"
-           xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
+           xmlns:f3-core="urn:fabric3.org:core"
            xmlns:f3-impl="urn:fabric3.org:implementation"
            name="TimerLoaderExtension"
            targetNamespace="org.codehaus.fabric3"
            autowire="true">
 
 
-    <component name="TimerImplementationLoader" f3:key="f3:implementation.timer">
+    <component name="TimerImplementationLoader" f3-core:key="f3-impl:implementation.timer">
         <f3-impl:implementation.system class="org.fabric3.timer.component.introspection.TimerImplementationLoader"/>
     </component>
 

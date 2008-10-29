@@ -15,8 +15,8 @@
  distribution for the permitted and restricted uses of such software.
 -->
 <definitions xmlns="http://www.osoa.org/xmlns/sca/1.0"
-             xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
-             targetNamespace="http://fabric3.org/xmlns/sca/2.0-alpha">
+             xmlns:f3-policy="urn:fabric3.org:policy"
+             targetNamespace="urn:fabric3.org:policy">
 
     <intent name="dataBinding" constrains="binding">
         <description>
@@ -31,8 +31,8 @@
     </intent>
 
     <!-- Databinding policy for services -->
-    <policySet name="jaxbPolicy" provides="f3:dataBinding.jaxb" f3:phase="INTERCEPTION">
-        <f3:jaxbPolicy/>
+    <policySet name="jaxbPolicy" provides="f3-policy:dataBinding.jaxb" f3-policy:phase="INTERCEPTION">
+        <f3-policy:jaxbPolicy/>
     </policySet>
 
 </definitions>

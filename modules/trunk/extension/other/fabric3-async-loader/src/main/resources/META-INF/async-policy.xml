@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="ASCII"?>
-<definitions
-        xmlns="http://www.osoa.org/xmlns/sca/1.0"
-        xmlns:sca="http://www.osoa.org/xmlns/sca/1.0"
-        xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
-        targetNamespace="http://fabric3.org/xmlns/sca/2.0-alpha">
+<definitions xmlns="http://www.osoa.org/xmlns/sca/1.0"
+             xmlns:sca="http://www.osoa.org/xmlns/sca/1.0"
+             xmlns:f3-policy="urn:fabric3.org:policy"
+             targetNamespace="urn:fabric3.org:policy">
 
-    <policySet name="oneWayPolicy" provides="sca:oneWay" f3:phase="INTERCEPTION">
-        <f3:oneWayPolicy/>
+    <policySet name="oneWayPolicy" provides="sca:oneWay" f3-policy:phase="INTERCEPTION">
+        <f3-policy:oneWayPolicy/>
     </policySet>
 
 </definitions>

@@ -34,13 +34,13 @@
     $Rev$ $Date$
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
-           xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
+           xmlns:f3-core="urn:fabric3.org:core"
            xmlns:f3-impl="urn:fabric3.org:implementation"
            name="org.fabric3.fabric.SystemImplementation"
            autowire="true">
 
     <!-- System implementation type -->
-    <component name="SystemImplementationLoader" f3:key="f3-impl:implementation.system">
+    <component name="SystemImplementationLoader" f3-core:key="f3-impl:implementation.system">
         <f3-impl:implementation.system class="org.fabric3.system.introspection.SystemImplementationLoader"/>
     </component>
 
@@ -49,12 +49,12 @@
         <reference name="transformerRegistry" target="PullTransformerRegistry"/>
     </component>
 
-    <component name="SystemSourceWireAttacher" f3:key="org.fabric3.system.provision.SystemWireSourceDefinition">
+    <component name="SystemSourceWireAttacher" f3-core:key="org.fabric3.system.provision.SystemWireSourceDefinition">
         <f3-impl:implementation.system class="org.fabric3.system.runtime.SystemSourceWireAttacher"/>
         <reference name="transformerRegistry" target="PullTransformerRegistry"/>
     </component>
 
-    <component name="SystemTargetWireAttacher" f3:key="org.fabric3.system.provision.SystemWireTargetDefinition">
+    <component name="SystemTargetWireAttacher" f3-core:key="org.fabric3.system.provision.SystemWireTargetDefinition">
         <f3-impl:implementation.system class="org.fabric3.system.runtime.SystemTargetWireAttacher"/>
     </component>
 

@@ -37,6 +37,7 @@ import org.fabric3.scdl.Scope;
 import org.fabric3.scdl.ServiceContract;
 import org.fabric3.scdl.definitions.PolicySet;
 import org.fabric3.spi.Constants;
+import org.fabric3.spi.Namespaces;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
@@ -51,7 +52,7 @@ import org.fabric3.spi.policy.Policy;
  * @version $Revision$ $Date$
  */
 public class JavaGenerationHelperImpl implements JavaGenerationHelper {
-    private static final QName PROPAGATES_CONVERSATION_POLICY = new QName(Constants.FABRIC3_NS, "propagatesConversationPolicy");
+    private static final QName PROPAGATES_CONVERSATION_POLICY = new QName(Namespaces.POLICY, "propagatesConversationPolicy");
     private final InstanceFactoryGenerationHelper helper;
 
     public JavaGenerationHelperImpl(@Reference InstanceFactoryGenerationHelper helper) {

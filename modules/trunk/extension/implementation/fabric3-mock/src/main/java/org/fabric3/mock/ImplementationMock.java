@@ -21,7 +21,7 @@ import java.util.List;
 import javax.xml.namespace.QName;
 
 import org.fabric3.scdl.Implementation;
-import org.fabric3.spi.Constants;
+import org.fabric3.spi.Namespaces;
 
 /**
  * Implementation type for mock components.
@@ -31,7 +31,7 @@ import org.fabric3.spi.Constants;
 public class ImplementationMock extends Implementation<MockComponentType> {
     private static final long serialVersionUID = -3519206465795353416L;
 
-    static final QName IMPLEMENTATION_MOCK = new QName(Constants.FABRIC3_NS, "implementation.mock");
+    static final QName IMPLEMENTATION_MOCK = new QName(Namespaces.IMPLEMENTATION, "implementation.mock");
     
     private final List<String> mockedInterfaces;
 

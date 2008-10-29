@@ -19,7 +19,7 @@ package org.fabric3.fabric.async;
 import javax.xml.namespace.QName;
 
 import org.fabric3.scdl.Operation;
-import org.fabric3.spi.Constants;
+import org.fabric3.spi.Namespaces;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.generator.InterceptorDefinitionGenerator;
@@ -38,7 +38,7 @@ import org.w3c.dom.Element;
 @EagerInit
 public class NonBlockingGenerator implements InterceptorDefinitionGenerator {
     
-    private static final QName QNAME = new QName(Constants.FABRIC3_NS, "oneWayPolicy");
+    private static final QName QNAME = new QName(Namespaces.POLICY, "oneWayPolicy");
     
     private GeneratorRegistry registry;
 

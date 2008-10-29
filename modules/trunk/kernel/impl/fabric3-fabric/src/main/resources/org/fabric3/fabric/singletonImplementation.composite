@@ -34,7 +34,7 @@
     $Rev$ $Date$
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
-           xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
+           xmlns:f3-core="urn:fabric3.org:core"
            xmlns:f3-impl="urn:fabric3.org:implementation"
            name="SingletonImplementationBootComposite"
            autowire="true">
@@ -45,11 +45,11 @@
         <f3-impl:implementation.system class="org.fabric3.fabric.implementation.singleton.SingletonComponentGenerator"/>
     </component>
 
-    <component name="SingletonWireSourceAttacher" f3:key="org.fabric3.fabric.implementation.singleton.SingletonWireSourceDefinition">
+    <component name="SingletonWireSourceAttacher" f3-core:key="org.fabric3.fabric.implementation.singleton.SingletonWireSourceDefinition">
         <f3-impl:implementation.system class="org.fabric3.fabric.implementation.singleton.SingletonSourceWireAttacher"/>
     </component>
 
-    <component name="SingletonWireTargetAttacher" f3:key="org.fabric3.fabric.implementation.singleton.SingletonWireTargetDefinition">
+    <component name="SingletonWireTargetAttacher" f3-core:key="org.fabric3.fabric.implementation.singleton.SingletonWireTargetDefinition">
         <f3-impl:implementation.system class="org.fabric3.fabric.implementation.singleton.SingletonTargetWireAttacher"/>
     </component>
 

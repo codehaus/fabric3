@@ -69,6 +69,7 @@ import org.fabric3.scdl.Implementation;
 import org.fabric3.scdl.Operation;
 import org.fabric3.scdl.ServiceDefinition;
 import org.fabric3.spi.Constants;
+import org.fabric3.spi.Namespaces;
 
 /**
  * Executes integration tests.
@@ -76,7 +77,7 @@ import org.fabric3.spi.Constants;
  * @version $Revision$ $Date$
  */
 public class TestRunner {
-    private static final QName IMPLEMENTATION_JUNIT = new QName(Constants.FABRIC3_NS, "junit");
+    private static final QName IMPLEMENTATION_JUNIT = new QName(Namespaces.IMPLEMENTATION, "junit");
     private String testDomain;
     private String compositeName;
     private String compositeNamespace;

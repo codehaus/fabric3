@@ -28,6 +28,7 @@ import javax.xml.ws.WebFault;
 
 import org.fabric3.scdl.DataType;
 import org.fabric3.scdl.Operation;
+import org.fabric3.spi.Namespaces;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.generator.InterceptorDefinitionGenerator;
@@ -46,7 +47,7 @@ import org.w3c.dom.Element;
 @EagerInit
 public class JaxbInterceptorDefinitionGenerator implements InterceptorDefinitionGenerator {
 
-    private static final QName EXTENSION_NAME = new QName("http://fabric3.org/xmlns/sca/2.0-alpha/axis", "dataBinding.jaxb");
+    private static final QName EXTENSION_NAME = new QName(Namespaces.POLICY, "dataBinding.jaxb");
     
     private GeneratorRegistry generatorRegistry;
 

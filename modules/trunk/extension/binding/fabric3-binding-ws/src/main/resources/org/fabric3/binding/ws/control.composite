@@ -15,13 +15,13 @@
  distribution for the permitted and restricted uses of such software.
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
-           xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
+           xmlns:f3-core="urn:fabric3.org:core"
            xmlns:f3-impl="urn:fabric3.org:implementation"
            targetNamespace="urn:maven:org.codehaus.fabric3:fabric3-binding-ws"
            name="control">
 
     <!-- Ws Binding Generator -->
-    <component name="WsBindingGenerator" f3:key="org.fabric3.binding.ws.scdl.WsBindingDefinition">
+    <component name="WsBindingGenerator" f3-core:key="org.fabric3.binding.ws.scdl.WsBindingDefinition">
         <f3-impl:implementation.system class="org.fabric3.binding.ws.control.WsBindingGenerator"/>
     </component>
 

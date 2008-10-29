@@ -17,14 +17,14 @@
     $Rev: 593 $ $Date: 2007-07-26 04:55:15 +0100 (Thu, 26 Jul 2007) $
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
-           xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
+           xmlns:f3-core="urn:fabric3.org:core"
            xmlns:f3-impl="urn:fabric3.org:implementation"
            targetNamespace="org.codehaus.fabric3"
            name="MockImplementationExtension"
            autowire="true">
 
     <!-- Implementation loader -->
-    <component name="ImplementationMockLoader" f3:key="f3:implementation.mock">
+    <component name="ImplementationMockLoader" f3-core:key="f3-impl:implementation.mock">
         <f3-impl:implementation.system class="org.fabric3.mock.ImplementationMockLoader"/>
     </component>
 
@@ -44,12 +44,12 @@
     </component>
 
     <!-- Target Wire attacher -->
-    <component name="MockTargetWireAttacher" f3:key="org.fabric3.mock.MockWireTargetDefinition">
+    <component name="MockTargetWireAttacher" f3-core:key="org.fabric3.mock.MockWireTargetDefinition">
         <f3-impl:implementation.system class="org.fabric3.mock.MockTargetWireAttacher"/>
     </component>
 
     <!-- Source Wire attacher -->
-    <component name="MockSourceWireAttacher" f3:key="org.fabric3.mock.MockWireSourceDefinition">
+    <component name="MockSourceWireAttacher" f3-core:key="org.fabric3.mock.MockWireSourceDefinition">
         <f3-impl:implementation.system class="org.fabric3.mock.MockSourceWireAttacher"/>
     </component>
 

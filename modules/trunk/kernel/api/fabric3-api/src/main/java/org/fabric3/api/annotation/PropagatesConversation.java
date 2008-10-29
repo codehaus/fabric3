@@ -16,20 +16,19 @@
  */
 package org.fabric3.api.annotation;
 
-import java.lang.annotation.Target;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
+import java.lang.annotation.Target;
 
 import org.osoa.sca.annotations.Intent;
-import org.osoa.sca.Constants;
 
 /**
  * Declares that a component implementation or reference propagates conversational context.
  *
  * @version $Revision$ $Date$
  */
-@Intent(targetNamespace = "http://fabric3.org/xmlns/sca/2.0-alpha", localPart = "propagatesConversation")
+@Intent(targetNamespace = "urn:fabric3.org:policy", localPart = "propagatesConversation")
 @Target({ElementType.FIELD, ElementType.METHOD, ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
 public @interface PropagatesConversation {

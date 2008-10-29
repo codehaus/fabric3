@@ -18,7 +18,7 @@ package org.fabric3.jaxb.control.api;
 
 import javax.xml.namespace.QName;
 
-import org.fabric3.spi.Constants;
+import org.fabric3.spi.Namespaces;
 
 /**
  * Bindings register with this service to enable JAXB transformation support.
@@ -26,7 +26,7 @@ import org.fabric3.spi.Constants;
  * @version $Revision$ $Date$
  */
 public interface JAXBTransformationService {
-    QName DATATYPE_XML = new QName(Constants.FABRIC3_NS, "dataType.xml");
+    QName DATATYPE_XML = new QName(Namespaces.POLICY, "dataType.xml");
 
     /**
      * Registers a binding for JAXB support.

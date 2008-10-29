@@ -16,7 +16,7 @@
 
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
-           xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
+           xmlns:f3-core="urn:fabric3.org:core"
            xmlns:f3-impl="urn:fabric3.org:implementation"
            targetNamespace="org.codehaus.fabric3"
            name="FtpServerExtension"
@@ -58,50 +58,50 @@
     </component>
 
     <!-- USER Request Handler -->
-    <component name="UserRequestHandler" f3:key="USER">
+    <component name="UserRequestHandler" f3-core:key="USER">
         <f3-impl:implementation.system class="org.fabric3.ftp.server.handler.UserRequestHandler"/>
     </component>
 
     <!-- PASS Request Handler -->
-    <component name="PassRequestHandler" f3:key="PASS">
+    <component name="PassRequestHandler" f3-core:key="PASS">
         <f3-impl:implementation.system class="org.fabric3.ftp.server.handler.PassRequestHandler"/>
     </component>
 
     <!-- PASV Request Handler -->
-    <component name="PasvRequestHandler" f3:key="PASV">
+    <component name="PasvRequestHandler" f3-core:key="PASV">
         <f3-impl:implementation.system class="org.fabric3.ftp.server.handler.PasvRequestHandler"/>
         <property name="listenAddress" source="$config//listenAddress"/>
     </component>
 
     <!-- STOR Request Handler -->
-    <component name="StorRequestHandler" f3:key="STOR">
+    <component name="StorRequestHandler" f3-core:key="STOR">
         <f3-impl:implementation.system class="org.fabric3.ftp.server.handler.StorRequestHandler"/>
     </component>
 
     <!-- QUIT Request Handler -->
-    <component name="QuitRequestHandler" f3:key="QUIT">
+    <component name="QuitRequestHandler" f3-core:key="QUIT">
         <f3-impl:implementation.system class="org.fabric3.ftp.server.handler.QuitRequestHandler"/>
     </component>
 
-    <component name="ListRequestHandler" f3:key="LIST">
+    <component name="ListRequestHandler" f3-core:key="LIST">
         <f3-impl:implementation.system class="org.fabric3.ftp.server.handler.ListRequestHandler"/>
     </component>
 
     <!-- SYST Request Handler -->
-    <component name="CwdRequestHandler" f3:key="CWD">
+    <component name="CwdRequestHandler" f3-core:key="CWD">
         <f3-impl:implementation.system class="org.fabric3.ftp.server.handler.CwdRequestHandler"/>
     </component>
 
-    <component name="TypeRequestHandler" f3:key="TYPE">
+    <component name="TypeRequestHandler" f3-core:key="TYPE">
         <f3-impl:implementation.system class="org.fabric3.ftp.server.handler.TypeRequestHandler"/>
     </component>
 
-    <component name="PwdRequestHandler" f3:key="PWD">
+    <component name="PwdRequestHandler" f3-core:key="PWD">
         <f3-impl:implementation.system class="org.fabric3.ftp.server.handler.PwdRequestHandler"/>
     </component>
 
     <!-- CWD Request Handler -->
-    <component name="SystRequestHandler" f3:key="SYST">
+    <component name="SystRequestHandler" f3-core:key="SYST">
         <f3-impl:implementation.system class="org.fabric3.ftp.server.handler.SystRequestHandler"/>
     </component>
 

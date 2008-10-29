@@ -18,13 +18,13 @@ package org.fabric3.jaxb.provision;
 
 import javax.xml.namespace.QName;
 
-import static org.fabric3.spi.Constants.FABRIC3_NS;
+import org.fabric3.spi.Namespaces;
 
 /**
  * @version $Revision$ $Date$
  */
 public interface JAXBConstants {
 
-    QName DATABINDING_INTENT = new QName(FABRIC3_NS, "dataBinding.jaxb");
+    QName DATABINDING_INTENT = new QName(Namespaces.POLICY, "dataBinding.jaxb");
 
 }

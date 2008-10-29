@@ -49,16 +49,15 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-
+import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.xml.InvalidPrefixException;
 import org.fabric3.introspection.xml.LoaderHelper;
-import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.scdl.PolicyAware;
-import org.fabric3.spi.Constants;
+import org.fabric3.spi.Namespaces;
 import org.fabric3.transform.TransformationException;
 import org.fabric3.transform.xml.Stream2Element2;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
 
 /**
  * Default implementation of the loader helper.
@@ -90,7 +89,7 @@ public class DefaultLoaderHelper implements LoaderHelper {
             throw new AssertionError(e);
         }
 
-        String key = reader.getAttributeValue(Constants.FABRIC3_NS, "key");
+        String key = reader.getAttributeValue(Namespaces.CORE, "key");
         if (key == null) {
             return null;
         }

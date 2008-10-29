@@ -18,7 +18,7 @@
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:sca="http://www.osoa.org/xmlns/sca/1.0"
-           xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
+           xmlns:f3-core="urn:fabric3.org:core"
            xmlns:f3-impl="urn:fabric3.org:implementation"
            name="DefinitionsLoaderBootComposite" targetNamespace="urn:maven:org.codehaus.fabric3:fabric3-loader"
         >
@@ -32,19 +32,19 @@
         <f3-impl:implementation.system class="org.fabric3.loader.definitions.DefinitionsIndexer"/>
     </component>
 
-    <component name="IntentLoader" f3:key="sca:intent">
+    <component name="IntentLoader" f3-core:key="sca:intent">
         <f3-impl:implementation.system class="org.fabric3.loader.definitions.IntentLoader"/>
     </component>
 
-    <component name="PolicySetLoader" f3:key="sca:policySet">
+    <component name="PolicySetLoader" f3-core:key="sca:policySet">
         <f3-impl:implementation.system class="org.fabric3.loader.definitions.PolicySetLoader"/>
     </component>
 
-    <component name="BindingTypeLoader" f3:key="sca:bindingType">
+    <component name="BindingTypeLoader" f3-core:key="sca:bindingType">
         <f3-impl:implementation.system class="org.fabric3.loader.definitions.BindingTypeLoader"/>
     </component>
 
-    <component name="ImplementationTypeLoader" f3:key="sca:implementationType">
+    <component name="ImplementationTypeLoader" f3-core:key="sca:implementationType">
         <f3-impl:implementation.system class="org.fabric3.loader.definitions.ImplementationTypeLoader"/>
     </component>
 

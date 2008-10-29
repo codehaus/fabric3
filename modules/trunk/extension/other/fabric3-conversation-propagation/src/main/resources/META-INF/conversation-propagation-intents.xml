@@ -17,8 +17,9 @@
 <definitions
         xmlns="http://www.osoa.org/xmlns/sca/1.0"
         xmlns:sca="http://www.osoa.org/xmlns/sca/1.0"
-        xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
-        targetNamespace="http://fabric3.org/xmlns/sca/2.0-alpha">
+        xmlns:f3-policy="urn:fabric3.org:policy"
+        targetNamespace="urn:fabric3.org:policy">
+        
     <!-- Propagates conversation is defined as an interaction intent that must be handled by the component impplementation type -->
     <intent name="propagatesConversation" constrains="binding">
         <description>
@@ -26,6 +27,6 @@
         </description>
     </intent>
 
-    <policySet name="propagatesConversationPolicy" provides="f3:propagatesConversation"/>
+    <policySet name="propagatesConversationPolicy" provides="f3-policy:propagatesConversation"/>
 
 </definitions>

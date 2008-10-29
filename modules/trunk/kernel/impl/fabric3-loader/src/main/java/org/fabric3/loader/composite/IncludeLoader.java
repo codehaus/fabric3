@@ -156,6 +156,7 @@ public class IncludeLoader implements TypeLoader<Include> {
         } catch (LoaderException e) {
             InvalidValue failure = new InvalidValue("Error loading include", null, reader);
             context.addError(failure);
+            e.printStackTrace();
             return include;
         }
         if (childContext.hasErrors()) {

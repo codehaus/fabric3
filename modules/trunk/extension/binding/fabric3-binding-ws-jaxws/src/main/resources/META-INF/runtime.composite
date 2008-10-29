@@ -15,16 +15,16 @@
  distribution for the permitted and restricted uses of such software.
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
-           xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
+           xmlns:f3-core="urn:fabric3.org:core"
            xmlns:f3-impl="urn:fabric3.org:implementation"
            targetNamespace="urn:maven:org.codehaus.fabric3:fabric3-binding-ws-jax-ws"
            name="JAXWSRuntimeExtension"
            autowire="true">
 
-    <component name="JaxWsSourceWireAttacher" f3:key="org.fabric3.binding.ws.jaxws.provision.JaxWsWireSourceDefinition">
+    <component name="JaxWsSourceWireAttacher" f3-core:key="org.fabric3.binding.ws.jaxws.provision.JaxWsWireSourceDefinition">
         <f3-impl:implementation.system class="org.fabric3.binding.ws.jaxws.runtime.JaxWsSourceWireAttacher"/>
     </component>
-    <component name="JaxWsTargetWireAttacher" f3:key="org.fabric3.binding.ws.jaxws.provision.JaxWsWireTargetDefinition">
+    <component name="JaxWsTargetWireAttacher" f3-core:key="org.fabric3.binding.ws.jaxws.provision.JaxWsWireTargetDefinition">
         <f3-impl:implementation.system class="org.fabric3.binding.ws.jaxws.runtime.JaxWsTargetWireAttacher"/>
     </component>
 

@@ -19,7 +19,7 @@ package org.fabric3.timer.component.scdl;
 import javax.xml.namespace.QName;
 
 import org.fabric3.java.scdl.JavaImplementation;
-import org.fabric3.spi.Constants;
+import org.fabric3.spi.Namespaces;
 import org.fabric3.timer.component.provision.TriggerData;
 
 /**
@@ -28,7 +28,7 @@ import org.fabric3.timer.component.provision.TriggerData;
  * @version $$Rev: 3079 $$ $$Date: 2008-03-13 03:30:59 -0700 (Thu, 13 Mar 2008) $$
  */
 public class TimerImplementation extends JavaImplementation {
-    public static final QName IMPLEMENTATION_TIMER = new QName(Constants.FABRIC3_NS, "implementation.timer");
+    public static final QName IMPLEMENTATION_TIMER = new QName(Namespaces.IMPLEMENTATION, "implementation.timer");
     private static final long serialVersionUID = -911919528396189874L;
     private TriggerData triggerData;
 

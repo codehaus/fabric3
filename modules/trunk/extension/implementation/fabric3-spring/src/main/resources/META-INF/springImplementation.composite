@@ -16,14 +16,14 @@
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:sca="http://www.osoa.org/xmlns/sca/1.0"
-           xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
+           xmlns:f3-core="urn:fabric3.org:core"
            xmlns:f3-impl="urn:fabric3.org:implementation"
            targetNamespace="org.codehaus.fabric3"
            name="SpringExtension"
            autowire="true">
 
 
-    <component name="SpringImplementationLoader" f3:key="sca:implementation.spring">
+    <component name="SpringImplementationLoader" f3-core:key="sca:implementation.spring">
         <f3-impl:implementation.system class="org.fabric3.spring.xml.SpringImplementationLoader"/>
     </component>
 
@@ -40,12 +40,12 @@
         <reference name="transformerRegistry" target="PullTransformerRegistry"/>
     </component>
 
-    <component name="SpringSourceWireAttacher" f3:key="org.fabric3.spring.SpringWireSourceDefinition">
+    <component name="SpringSourceWireAttacher" f3-core:key="org.fabric3.spring.SpringWireSourceDefinition">
         <f3-impl:implementation.system class="org.fabric3.spring.SpringSourceWireAttacher"/>
         <reference name="transformerRegistry" target="PullTransformerRegistry"/>
     </component>
 
-    <component name="SpringTargetWireAttacher" f3:key="org.fabric3.spring.SpringWireTargetDefinition">
+    <component name="SpringTargetWireAttacher" f3-core:key="org.fabric3.spring.SpringWireTargetDefinition">
         <f3-impl:implementation.system class="org.fabric3.spring.SpringTargetWireAttacher"/>
     </component>
 </composite>
