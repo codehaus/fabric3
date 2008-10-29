@@ -16,8 +16,6 @@
  */
 package org.fabric3.binding.ftp.provision;
 
-import java.net.URI;
-
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 
 /**

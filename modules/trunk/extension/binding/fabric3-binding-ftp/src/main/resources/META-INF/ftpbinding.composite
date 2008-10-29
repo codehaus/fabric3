@@ -20,10 +20,10 @@
            targetNamespace="org.codehaus.fabric3"
            name="FtpBindingExtension"
            autowire="true"
-           xmlns:ftp="urn:org.fabric3:binding:ftp">
+           xmlns:f3-binding="urn:org.fabric3:binding">
 
     <!-- Ftp Binding Loader -->
-    <component name="FtpBindingLoader" f3:key="ftp:binding.ftp">
+    <component name="FtpBindingLoader" f3:key="f3-binding:binding.ftp">
         <f3-impl:implementation.system class="org.fabric3.binding.ftp.introspection.FtpBindingLoader"/>
     </component>
 
