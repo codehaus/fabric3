@@ -16,25 +16,25 @@
 
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
-           xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
+           xmlns:f3-core="urn:fabric3.org:core"
            name="MapComposite">
 
-    <component f3:key="one" name="map.one">
+    <component f3-core:key="one" name="map.one">
         <implementation.java class="org.fabric3.tests.function.common.IdentityServiceImpl"/>
         <property name="id">map.one</property>
     </component>
 
-    <component f3:key="two" name="map.two">
+    <component f3-core:key="two" name="map.two">
         <implementation.java class="org.fabric3.tests.function.common.IdentityServiceImpl"/>
         <property name="id">map.two</property>
     </component>
 
-    <component f3:key="three" name="map.three">
+    <component f3-core:key="three" name="map.three">
         <implementation.java class="org.fabric3.tests.function.common.IdentityServiceImpl"/>
         <property name="id">map.three</property>
     </component>
 
-    <component xmlns:test="file://./foo" f3:key="test:test" name="test.test">
+    <component xmlns:test="file://./foo" f3-core:key="test:test" name="test.test">
         <implementation.java class="org.fabric3.tests.function.common.IdentityServiceImpl"/>
         <property name="id">test.test</property>
     </component>

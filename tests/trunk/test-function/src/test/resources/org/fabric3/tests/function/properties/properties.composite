@@ -16,12 +16,12 @@
 
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
-           xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
-           xmlns:f3-implementation="urn:fabric3.org:implementation"
+           xmlns:f3-core="urn:fabric3.org:core"
+           xmlns:f3-impl="urn:fabric3.org:implementation"
            name="PropertiesComposite">
 
     <component name="PublicFieldPropertyTypesTest">
-        <f3-implementation:junit class="org.fabric3.tests.function.properties.PropertyTypeTest"/>
+        <f3-impl:junit class="org.fabric3.tests.function.properties.PropertyTypeTest"/>
         <reference name="service" target="PublicFieldPropertyTypesImpl"/>
     </component>
 
@@ -70,7 +70,7 @@ prop2=value2
     </component>
 
     <component name="ProtectedFieldPropertyTypesTest">
-        <f3-implementation:junit class="org.fabric3.tests.function.properties.PropertyTypeTest"/>
+        <f3-impl:junit class="org.fabric3.tests.function.properties.PropertyTypeTest"/>
         <reference name="service" target="ProtectedFieldPropertyTypesImpl"/>
     </component>
 
@@ -112,7 +112,7 @@ prop2=value2
     </component>
 
     <component name="PublicSetterPropertyTypesTest">
-        <f3-implementation:junit class="org.fabric3.tests.function.properties.PropertyTypeTest"/>
+        <f3-impl:junit class="org.fabric3.tests.function.properties.PropertyTypeTest"/>
         <reference name="service" target="PublicSetterPropertyTypesImpl"/>
     </component>
 
@@ -154,7 +154,7 @@ prop2=value2
     </component>
 
     <component name="ProtectedSetterPropertyTypesTest">
-        <f3-implementation:junit class="org.fabric3.tests.function.properties.PropertyTypeTest"/>
+        <f3-impl:junit class="org.fabric3.tests.function.properties.PropertyTypeTest"/>
         <reference name="service" target="ProtectedSetterPropertyTypesImpl"/>
     </component>
 
@@ -196,7 +196,7 @@ prop2=value2
     </component>
 
     <component name="PublicConstructorPropertyTypesTest">
-        <f3-implementation:junit class="org.fabric3.tests.function.properties.PropertyTypeTest"/>
+        <f3-impl:junit class="org.fabric3.tests.function.properties.PropertyTypeTest"/>
         <reference name="service" target="PublicConstructorPropertyTypesImpl"/>
     </component>
 
@@ -243,7 +243,7 @@ prop2=value2
     </component>
 
     <component name="PropertyFileTest">
-        <f3-implementation:junit class="org.fabric3.tests.function.properties.PropertyFileTest"/>
+        <f3-impl:junit class="org.fabric3.tests.function.properties.PropertyFileTest"/>
         <property name="string" file="string.xml"/>
         <reference name="javaComponent" target="PropertyFromFileImpl"/>
     </component>
@@ -256,7 +256,7 @@ prop2=value2
     </property>
 
     <component name="PropertyXPathTest">
-        <f3-implementation:junit class="org.fabric3.tests.function.properties.PropertyXPathTest"/>
+        <f3-impl:junit class="org.fabric3.tests.function.properties.PropertyXPathTest"/>
         <property name="simple" source="$simple"/>
         <property name="complex" source="$complex/a"/>
         <property name="complexWithNamespace" xmlns:foo="urn:foo" source="$complex/foo:a"/>

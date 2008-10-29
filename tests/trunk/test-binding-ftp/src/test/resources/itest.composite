@@ -33,12 +33,12 @@
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:sca="http://www.osoa.org/xmlns/sca/1.0"
-           xmlns:f3-implementation="urn:fabric3.org:implementation"           
+           xmlns:f3-impl="urn:fabric3.org:implementation"           
            xmlns:f3-binding="urn:org.fabric3:binding"   
            name="DataTransferTestComposite">
 
     <component name="DataTransferTest">
-        <f3-implementation:junit class="org.fabric3.tests.binding.ftp.DataTransferServiceITest"/>
+        <f3-impl:junit class="org.fabric3.tests.binding.ftp.DataTransferServiceITest"/>
         <reference name="ftpDataTransferService">
             <f3-binding:binding.ftp uri="localhost:2000" requires="sca:authentication.message" mode="PASSIVE"/>
         </reference>

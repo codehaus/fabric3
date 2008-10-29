@@ -16,13 +16,13 @@
  under the License.
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
-           xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
+           xmlns:f3-core="urn:fabric3.org:core"
            xmlns:rs="http://www.fabric3.org/xmlns/rs/1.0"
-           xmlns:f3-implementation="urn:fabric3.org:implementation"
+           xmlns:f3-impl="urn:fabric3.org:implementation"
            name="RSTestHarnessComposite">
     
     <component name="TestClient">
-        <f3-implementation:junit class="tests.rs.TestClient"/>
+        <f3-impl:junit class="tests.rs.TestClient"/>
         <property name="hostURI">http://localhost:8900</property>
     </component>
     

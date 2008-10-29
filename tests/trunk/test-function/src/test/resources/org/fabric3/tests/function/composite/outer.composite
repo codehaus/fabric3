@@ -16,8 +16,9 @@
 
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0" 
-           xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha" 
-           xmlns:f3-implementation="urn:fabric3.org:implementation"
+           xmlns:f3-core="urn:fabric3.org:core" 
+           xmlns:f3-impl="urn:fabric3.org:implementation"
+           xmlns:f3-binding="urn:fabric3.org:binding"
            name="OuterComposite">
 
     <component name="Inner">
@@ -30,17 +31,17 @@
     <component name="Inner2">
         <implementation.composite name="InnerComposite2" scdlLocation="inner2.composite"/>
         <service name="SourceService">
-            <f3:binding.test uri="SourceService"/>
+            <f3-binding:binding.test uri="SourceService"/>
         </service>
         <reference name="promoted" target="target"/>
     </component>
 
     <component name="InnerCompositeTest">
-        <f3-implementation:junit class="org.fabric3.tests.function.composite.InnerCompositeTest"/>
+        <f3-impl:junit class="org.fabric3.tests.function.composite.InnerCompositeTest"/>
         <reference name="inner" target="Inner"/>
         <reference name="innerSpecified" target="Inner2/two"/>
         <reference name="boundSource">
-            <f3:binding.test uri="SourceService"/>
+            <f3-binding:binding.test uri="SourceService"/>
         </reference>
     </component>
 

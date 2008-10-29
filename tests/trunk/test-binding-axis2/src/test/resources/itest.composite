@@ -17,20 +17,20 @@
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:sca="http://www.osoa.org/xmlns/sca/1.0"
-           xmlns:f3-implementation="urn:fabric3.org:implementation"           
-           xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
+           xmlns:f3-impl="urn:fabric3.org:implementation"           
+           xmlns:f3-core="urn:fabric3.org:core"     
+           xmlns:f3-policy="urn:fabric3.org:policy"
            name="Axis2TestComposite">
 
     <component name="EchoTest">
-        <f3-implementation:junit class="org.fabric3.tests.binding.axis2.Axis2EchoTest"/>
+        <f3-impl:junit class="org.fabric3.tests.binding.axis2.Axis2EchoTest"/>
         <reference name="service">
-            <binding.ws uri="http://localhost:8900/axis2/echoService" f3:impl="axis2"/>
+            <binding.ws uri="http://localhost:8900/axis2/echoService"/>
             <operation name="echoWsUsernameToken" requires="sca:authentication.message"/>
             <operation name="echoWsX509Token" requires="sca:authentication.message"/>
         </reference>
         <reference name="faultService">
-            <!--<binding.ws uri="http://localhost:${axis.port}/axis2/faultService" f3:impl="axis2"/>-->
-            <binding.ws uri="http://localhost:8900/axis2/faultService" f3:impl="axis2">
+            <binding.ws uri="http://localhost:8900/axis2/faultService">
                 <config>
                     <parameter name="enableMTOM">false</parameter>
                 </config>
@@ -41,16 +41,16 @@
     <component name="EchoService">
         <implementation.java class="org.fabric3.tests.binding.axis2.Axis2EchoServiceImpl"/>
         <service name="Axis2EchoService">
-            <binding.ws uri="echoService" f3:impl="axis2"/>
-            <operation name="echoWsUsernameToken" requires="sca:authentication.message f3:authorization.message"/>
-            <operation name="echoWsX509Token" requires="sca:authentication.message f3:authorization.message"/>
+            <binding.ws uri="echoService"/>
+            <operation name="echoWsUsernameToken" requires="sca:authentication.message f3-policy:authorization.message"/>
+            <operation name="echoWsX509Token" requires="sca:authentication.message f3-policy:authorization.message"/>
         </service>
     </component>
 
     <component name="FaultService">
         <implementation.java class="org.fabric3.tests.binding.axis2.Axis2FaultServiceImpl"/>
         <service name="Axis2FaultService">
-            <binding.ws uri="faultService" f3:impl="axis2"/>
+            <binding.ws uri="faultService"/>
         </service>
     </component>
 

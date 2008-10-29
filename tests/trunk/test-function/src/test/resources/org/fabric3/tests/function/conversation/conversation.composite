@@ -17,12 +17,13 @@
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:sca="http://www.osoa.org/xmlns/sca/1.0"
-           xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
-           xmlns:f3-implementation="urn:fabric3.org:implementation"
+           xmlns:f3-core="urn:fabric3.org:core"
+           xmlns:f3-impl="urn:fabric3.org:implementation"
+           xmlns:f3-policy="urn:fabric3.org:policy"
            name="ConversationComposite">
 
     <component name="ConversationTest">
-        <f3-implementation:junit class="org.fabric3.tests.function.conversation.ConversationTest"/>
+        <f3-impl:junit class="org.fabric3.tests.function.conversation.ConversationTest"/>
         <reference name="service" target="ConversationalServiceImpl"/>
         <reference name="subService" target="ConversationalServiceImpl"/>
         <reference name="compositeService" target="CompositeServiceImpl"/>
@@ -31,7 +32,7 @@
     </component>
 
     <component name="ConversationPropagationTest">
-        <f3-implementation:junit class="org.fabric3.tests.function.conversation.ConversationPropagationTest"/>
+        <f3-impl:junit class="org.fabric3.tests.function.conversation.ConversationPropagationTest"/>
         <reference name="service" target="ClientToIntermediary"/>
         <reference name="compositeService" target="ConversationPropagationComponent"/>
     </component>
@@ -48,18 +49,18 @@
         <implementation.java class="org.fabric3.tests.function.conversation.CompositeServiceImpl"/>
     </component>
 
-    <component name="ClientToIntermediary" requires="f3:propagatesConversation">
+    <component name="ClientToIntermediary" requires="f3-policy:propagatesConversation">
         <implementation.java class="org.fabric3.tests.function.conversation.ClientToIntermediaryImpl"/>
         <reference name="service1" target="IntermediaryService1"/>
         <reference name="service2" target="IntermediaryService2"/>
     </component>
     
-    <component name="IntermediaryService1" requires="f3:propagatesConversation">
+    <component name="IntermediaryService1" requires="f3-policy:propagatesConversation">
         <implementation.java class="org.fabric3.tests.function.conversation.IntermediaryServiceImpl"/>
         <reference name="conversationalService" target="ConversationalServiceImpl"/>
     </component>
 
-    <component name="IntermediaryService2" requires="f3:propagatesConversation">
+    <component name="IntermediaryService2" requires="f3-policy:propagatesConversation">
         <implementation.java class="org.fabric3.tests.function.conversation.IntermediaryServiceImpl"/>
         <reference name="conversationalService" target="ConversationalServiceImpl"/>
     </component>

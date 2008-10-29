@@ -15,7 +15,6 @@
  distribution for the permitted and restricted uses of such software.
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
-           xmlns:fabric3="http://fabric3.org/xmlns/sca/2.0-alpha"
            name="OrderingTest"
            autowire="false">
 	

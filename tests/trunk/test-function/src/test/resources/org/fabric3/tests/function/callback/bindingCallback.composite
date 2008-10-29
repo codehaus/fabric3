@@ -16,21 +16,22 @@
 
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
-           xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
-           xmlns:f3-implementation="urn:fabric3.org:implementation"
+           xmlns:f3-core="urn:fabric3.org:core"
+           xmlns:f3-impl="urn:fabric3.org:implementation"
+           xmlns:f3-binding="urn:fabric3.org:binding"
            name="BindingCallbackComposite" autowire="false">
 
     <component name="BindingCallbackTestComponent">
-        <f3-implementation:junit class="org.fabric3.tests.function.callback.binding.BindingCallbackTest"/>
+        <f3-impl:junit class="org.fabric3.tests.function.callback.binding.BindingCallbackTest"/>
         <reference name="client" target="BindingCallbackClient/ClientService"/>
     </component>
 
     <component name="BindingForwardService">
         <implementation.java class="org.fabric3.tests.function.callback.binding.ForwardServiceImpl"/>
         <service name="ForwardService">
-            <f3:binding.test uri="ForwardService"/>
+            <f3-binding:binding.test uri="ForwardService"/>
             <callback>
-                <f3:binding.test uri="CallbackService"/>
+                <f3-binding:binding.test uri="CallbackService"/>
             </callback>
         </service>
     </component>
@@ -38,9 +39,9 @@
     <component name="BindingCallbackClient">
         <implementation.java class="org.fabric3.tests.function.callback.binding.ClientServiceImpl"/>
         <reference name="forwardService">
-            <f3:binding.test uri="ForwardService"/>
+            <f3-binding:binding.test uri="ForwardService"/>
             <callback>
-                <f3:binding.test uri="CallbackService"/>
+                <f3-binding:binding.test uri="CallbackService"/>
             </callback>
         </reference>
     </component>

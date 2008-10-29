@@ -15,10 +15,7 @@
  distribution for the permitted and restricted uses of such software.
 
 -->
-<composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
-           xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
-           xmlns:hessian="http://www.fabric3.org/binding/hessian/0.2"
-           name="BindingComposite">
+<composite xmlns="http://www.osoa.org/xmlns/sca/1.0" name="BindingComposite">
 
     <include name="ExplicitBindingComposite"/>
     <include name="PromotionComposite"/>

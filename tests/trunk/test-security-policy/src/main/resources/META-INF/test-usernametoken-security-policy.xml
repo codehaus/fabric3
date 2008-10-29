@@ -16,22 +16,22 @@
 -->
 <definitions xmlns="http://www.osoa.org/xmlns/sca/1.0"
     xmlns:sca="http://www.osoa.org/xmlns/sca/1.0"
-    targetNamespace="http://fabric3.org/xmlns/sca/2.0-alpha"
-    xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha">    
+    targetNamespace="urn:fabric3.org:policy"
+    xmlns:f3-policy="urn:fabric3.org:policy">    
     
     <!-- Authorization policy -->
     <policySet name="testServerUsernameTokenAuthrizationPolicy" 
-               provides="f3:authorization.message"
+               provides="f3-policy:authorization.message"
                appliesTo="@name='Axis2EchoService' and ../@name='EchoService' and $Operation='echoWsUsernameToken'"
-               f3:phase="INTERCEPTION">
-        <f3:authorization roles="ADMIN"/>
+               f3-policy:phase="INTERCEPTION">
+        <f3-policy:authorization roles="ADMIN"/>
     </policySet>
     
     <!-- Server policy using ws-policy -->
     <policySet name="testServerUsernameTokenPolicy" 
                provides="sca:authentication.message" 
                appliesTo="@name='Axis2EchoService' and ../@name='EchoService' and $Operation='echoWsUsernameToken'">
-        <f3:axisConfig module="rampart">
+        <f3-policy:axisConfig module="rampart">
             <wsp:Policy wsu:Id="UTOverTransport" 
                         xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" 
                         xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy">
@@ -48,14 +48,14 @@
                     </wsp:All>
                 </wsp:ExactlyOne>
             </wsp:Policy>
-        </f3:axisConfig>
+        </f3-policy:axisConfig>
     </policySet>
     
     <!-- Client policy using ws-policy -->
     <policySet name="testClientUsernameTokenPolicy" 
                provides="sca:authentication.message" 
                appliesTo="@name='service' and ../@name='EchoTest' and $Operation='echoWsUsernameToken'">
-        <f3:axisConfig module="rampart">
+        <f3-policy:axisConfig module="rampart">
             <wsp:Policy wsu:Id="UTOverTransport" 
                         xmlns:wsu="http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-utility-1.0.xsd" 
                         xmlns:wsp="http://schemas.xmlsoap.org/ws/2004/09/policy">
@@ -74,7 +74,7 @@
                     </wsp:All>
                 </wsp:ExactlyOne>
             </wsp:Policy>
-        </f3:axisConfig>
+        </f3-policy:axisConfig>
     </policySet>
 
 </definitions>

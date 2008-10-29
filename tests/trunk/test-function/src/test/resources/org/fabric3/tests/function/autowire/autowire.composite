@@ -16,16 +16,16 @@
 
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
-           xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
-           xmlns:f3-implementation="urn:fabric3.org:implementation"
+           xmlns:f3-core="urn:fabric3.org:core"
+           xmlns:f3-impl="urn:fabric3.org:implementation"
            name="AutoWireComposite">
 
     <component name="AutowireTrueTest" autowire="true">
-        <f3-implementation:junit class="org.fabric3.tests.function.autowire.AutowireTest"/>
+        <f3-impl:junit class="org.fabric3.tests.function.autowire.AutowireTest"/>
     </component>
 
     <component name="AutowireFalseTest" autowire="false">
-        <f3-implementation:junit class="org.fabric3.tests.function.autowire.NoAutowireTest"/>
+        <f3-impl:junit class="org.fabric3.tests.function.autowire.NoAutowireTest"/>
     </component>
 
     <component name="AutowireTarget">
