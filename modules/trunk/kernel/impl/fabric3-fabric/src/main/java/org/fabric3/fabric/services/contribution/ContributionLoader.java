@@ -27,8 +27,8 @@ import org.fabric3.spi.services.contribution.MatchingExportNotFoundException;
 public interface ContributionLoader {
 
     /**
-     * Performs the load operation. This includes resolution of dependent contributions if necessary, and constructing a
-     * classloader with access to resources contained in and required by the contribution.
+     * Performs the load operation. This includes resolution of dependent contributions if necessary, and constructing a classloader with access to
+     * resources contained in and required by the contribution.
      *
      * @param contribution the contribution to load
      * @return the classloader with access to the contribution and dependent resources
@@ -36,6 +36,12 @@ public interface ContributionLoader {
      * @throws MatchingExportNotFoundException
      *                                   if matching export could not be found
      */
-    ClassLoader loadContribution(Contribution contribution)
-            throws ContributionLoadException, MatchingExportNotFoundException;
+    ClassLoader load(Contribution contribution) throws ContributionLoadException, MatchingExportNotFoundException;
+
+    /**
+     * Unloads a contribution from memory.
+     *
+     * @param contribution the contribution to unload
+     */
+    void unload(Contribution contribution);
 }

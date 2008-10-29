@@ -56,7 +56,7 @@ public class ContributionLoaderImpl implements ContributionLoader {
         classloaderIsolation = info.supportsClassLoaderIsolation();
     }
 
-    public ClassLoader loadContribution(Contribution contribution) throws ContributionLoadException, MatchingExportNotFoundException {
+    public ClassLoader load(Contribution contribution) throws ContributionLoadException, MatchingExportNotFoundException {
         URI contributionUri = contribution.getUri();
         ClassLoader cl = classLoaderRegistry.getClassLoader(APP_CLASSLOADER);
         if (!classloaderIsolation) {
@@ -80,6 +80,11 @@ public class ContributionLoaderImpl implements ContributionLoader {
         // register the classloader
         classLoaderRegistry.register(contributionUri, loader);
         return loader;
+    }
+
+    public void unload(Contribution contribution) {
+        // TODO verify no contributions import this contribution
+        classLoaderRegistry.unregister(contribution.getUri());
     }
 
     private void resolveImports(Contribution contribution, MultiParentClassLoader loader)
