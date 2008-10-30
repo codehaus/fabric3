@@ -34,6 +34,7 @@ import org.fabric3.jetty.JettyService;
 import org.fabric3.management.contribution.ContributionManagementException;
 import org.fabric3.management.contribution.ContributionServiceMBean;
 import org.fabric3.management.contribution.InvalidContributionException;
+import org.fabric3.management.domain.DeploymentManagementException;
 
 /**
  * @version $Revision$ $Date$
@@ -102,9 +103,9 @@ public class ContibutionServiceMBeanImpl implements ContributionServiceMBean {
             }
             throw new InvalidContributionException("Error installing " + uri, errors);
         } catch (ContributionException e) {
-            monitor.error("Error removing installing: " + uri, e);
+            monitor.error("Error installing: " + uri, e);
             // don't rethrow the original exception since the class will not be available on the client's classpath
-            throw new ContributionManagementException(e.getMessage());
+            reportError(e);
         }
     }
 
@@ -114,7 +115,18 @@ public class ContibutionServiceMBeanImpl implements ContributionServiceMBean {
         } catch (ContributionException e) {
             monitor.error("Error removing contribution: " + uri, e);
             // don't rethrow the original exception since the class will not be available on the client's classpath
-            throw new ContributionManagementException("Error removing contribution: " + uri);
+            reportError(e);
+
         }
+    }
+
+    private void reportError(ContributionException e) throws ContributionManagementException {
+        StringBuilder msg = new StringBuilder(e.getMessage());
+        Throwable cause = e.getCause();
+        while (cause != null) {
+            msg.append(":").append(e.getCause().getMessage());
+            cause = cause.getCause();
+        }
+        throw new ContributionManagementException(msg.toString());
     }
 }

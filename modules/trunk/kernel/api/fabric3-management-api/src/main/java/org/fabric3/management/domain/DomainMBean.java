@@ -28,8 +28,22 @@ import org.fabric3.api.annotation.Management;
 @Management
 public interface DomainMBean {
 
-    void deploy(URI contributionUri);
+    /**
+     * Deploys a contribution to the domain.  All contained deployables will be included in the domain composite.
+     *
+     * @param uri the contribution URI.
+     * @throws DeploymentManagementException if an exception deploying the contribution is encountered
+     */
+    void deploy(URI uri) throws DeploymentManagementException;
 
-    void deploy(URI contributionUri, String plan);
+
+    /**
+     * Deploys a contribution to the domain using the specified deployment plan.  All contained deployables will be included in the domain composite.
+     *
+     * @param uri  the contribution URI.
+     * @param plan the deployment plan name
+     * @throws DeploymentManagementException if an exception deploying the contribution is encountered
+     */
+    void deploy(URI uri, String plan) throws DeploymentManagementException;
 
 }
