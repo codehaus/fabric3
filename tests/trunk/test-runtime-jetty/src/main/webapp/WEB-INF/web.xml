@@ -40,7 +40,7 @@
 
     <context-param>
         <param-name>fabric3.compositeNamespace</param-name>
-        <param-value>http://fabric3.org/xmlns/sca/2.0-alpha</param-value>
+        <param-value>urn:fabric3.org:sample</param-value>
     </context-param>
 
     <context-param>

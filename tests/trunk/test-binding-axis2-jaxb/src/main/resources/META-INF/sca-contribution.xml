@@ -15,10 +15,10 @@
  distribution for the permitted and restricted uses of such software.
 -->
 <contribution xmlns="http://www.osoa.org/xmlns/sca/1.0"
-              xmlns:f3="org.codehaus.fabric3"
-              xmlns:maven="http://fabric3.org/xmlns/sca/2.0-alpha/maven">
-    <maven:import groupId="org.codehaus.fabric3" artifactId="fabric3-spi" version="0.7-SNAPSHOT"/>
-    <maven:import groupId="org.codehaus.fabric3" artifactId="fabric3-binding-ws-axis2" version="0.3-SNAPSHOT"/>
+              xmlns:f3-maven="urn:fabric3.org:maven"
+              xmlns:f3-core="urn:fabric3.org:core">
+    <f3-maven:import groupId="org.codehaus.fabric3" artifactId="fabric3-spi" version="0.7-SNAPSHOT"/>
+    <f3-maven:import groupId="org.codehaus.fabric3" artifactId="fabric3-binding-ws-axis2" version="0.3-SNAPSHOT"/>
     <deployable composite="Axis2TestComposite"/>
 </contribution>
 
