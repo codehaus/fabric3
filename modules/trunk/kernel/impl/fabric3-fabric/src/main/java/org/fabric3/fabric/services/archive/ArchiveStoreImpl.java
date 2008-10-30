@@ -84,8 +84,15 @@ public class ArchiveStoreImpl implements ArchiveStore {
         return archiveUriToUrl.get(uri);
     }
 
-    public void remove(URI uri) {
-        throw new UnsupportedOperationException();
+    public void remove(URI uri) throws ArchiveStoreException {
+        try {
+            File location = mapToFile(uri);
+            archiveUriToUrl.remove(uri);
+            location.delete();
+        } catch (IOException e) {
+            String id = uri.toString();
+            throw new ArchiveStoreException("Error storing archive: " + id, id, e);
+        }
     }
 
     public List<URI> list() {
