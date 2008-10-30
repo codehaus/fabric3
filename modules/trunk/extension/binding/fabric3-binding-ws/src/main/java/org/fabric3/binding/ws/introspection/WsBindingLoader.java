@@ -55,6 +55,7 @@ import org.fabric3.introspection.xml.LoaderHelper;
 import org.fabric3.introspection.xml.MissingAttribute;
 import org.fabric3.introspection.xml.TypeLoader;
 import org.fabric3.introspection.xml.UnrecognizedAttribute;
+import org.fabric3.spi.Namespaces;
 import org.osoa.sca.Constants;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
@@ -99,7 +100,7 @@ public class WsBindingLoader implements TypeLoader<WsBindingDefinition> {
         try {
 
             uri = reader.getAttributeValue(null, "uri");
-            String implementation = reader.getAttributeValue(org.fabric3.spi.Constants.FABRIC3_NS, "impl");
+            String implementation = reader.getAttributeValue(Namespaces.IMPLEMENTATION, "impl");
             String wsdlElement = reader.getAttributeValue(null, "wsdlElement");
             String wsdlLocation = reader.getAttributeValue("http://www.w3.org/2004/08/wsdl-instance", "wsdlLocation");
 

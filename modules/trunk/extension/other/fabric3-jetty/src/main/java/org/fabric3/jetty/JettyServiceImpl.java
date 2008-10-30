@@ -36,10 +36,16 @@ package org.fabric3.jetty;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+
 import javax.servlet.Servlet;
 import javax.servlet.ServletContext;
 import javax.xml.namespace.QName;
 
+import org.fabric3.api.annotation.Monitor;
+import org.fabric3.host.work.DefaultPausableWork;
+import org.fabric3.host.work.WorkScheduler;
+import org.fabric3.spi.Namespaces;
+import org.fabric3.spi.services.advertisement.AdvertisementService;
 import org.mortbay.jetty.Connector;
 import org.mortbay.jetty.Handler;
 import org.mortbay.jetty.Server;
@@ -62,12 +68,6 @@ import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.api.annotation.Monitor;
-import org.fabric3.host.work.DefaultPausableWork;
-import org.fabric3.host.work.WorkScheduler;
-import org.fabric3.spi.Constants;
-import org.fabric3.spi.services.advertisement.AdvertisementService;
-
 /**
  * Implements an HTTP transport service using Jetty.
  *
@@ -75,7 +75,7 @@ import org.fabric3.spi.services.advertisement.AdvertisementService;
  */
 @EagerInit
 public class JettyServiceImpl implements JettyService {
-    private static final QName HTTP = new QName(Constants.FABRIC3_NS, "transport.http.base");
+    private static final QName HTTP = new QName(Namespaces.CORE, "transport.http.base");
 
     private static final String ROOT = "/";
     private static final int ERROR = 0;

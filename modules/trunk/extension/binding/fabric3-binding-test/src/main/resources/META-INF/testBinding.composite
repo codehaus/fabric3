@@ -51,6 +51,6 @@ destination uri the reference should flow invocations to as in:
         <f3-impl:implementation.system class="org.fabric3.binding.test.TestBindingTargetWireAttacher"/>
     </component>
 
-    <f3-impl:feature name="TestBindingFeature">{http://fabric3.org/xmlns/binding}test</f3-impl:feature>
+    <f3-impl:feature name="TestBindingFeature">{urn:fabric3.org:binding}test</f3-impl:feature>
 
 </composite>

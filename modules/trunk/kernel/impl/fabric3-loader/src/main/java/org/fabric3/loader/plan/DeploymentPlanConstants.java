@@ -18,7 +18,7 @@ package org.fabric3.loader.plan;
 
 import javax.xml.namespace.QName;
 
-import org.fabric3.spi.Constants;
+import org.fabric3.spi.Namespaces;
 
 /**
  * @version $Revision$ $Date$
@@ -26,5 +26,5 @@ import org.fabric3.spi.Constants;
 public interface DeploymentPlanConstants {
     String PLAN_NAMESPACE = "urn:fabric3.org:extension:plan";
 
-    QName PLAN = new QName(Constants.FABRIC3_NS, "plan");
+    QName PLAN = new QName(Namespaces.CORE, "plan");
 }

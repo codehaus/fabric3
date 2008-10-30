@@ -16,27 +16,27 @@
  */
 package org.fabric3.loader.xmlcontribution;
 
+import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
+import static org.osoa.sca.Constants.SCA_NS;
+
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamConstants;
-import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
-import static org.osoa.sca.Constants.SCA_NS;
-import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Init;
-import org.osoa.sca.annotations.Reference;
-
 import org.fabric3.host.contribution.ContributionException;
+import org.fabric3.introspection.xml.MissingAttribute;
 import org.fabric3.scdl.Composite;
 import org.fabric3.scdl.ValidationContext;
-import static org.fabric3.spi.Constants.FABRIC3_NS;
+import org.fabric3.spi.Namespaces;
 import org.fabric3.spi.services.contribution.QNameSymbol;
 import org.fabric3.spi.services.contribution.Resource;
 import org.fabric3.spi.services.contribution.ResourceElement;
 import org.fabric3.spi.services.contribution.XmlIndexer;
 import org.fabric3.spi.services.contribution.XmlIndexerRegistry;
-import org.fabric3.introspection.xml.MissingAttribute;
+import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Init;
+import org.osoa.sca.annotations.Reference;
 
 /**
  * Indexer for the <xmlContribution> type.
@@ -45,7 +45,7 @@ import org.fabric3.introspection.xml.MissingAttribute;
  */
 @EagerInit
 public class XmlContributionTypeIndexer implements XmlIndexer {
-    private static final QName XML_CONTRIBUTION = new QName(FABRIC3_NS, "xmlContribution");
+    private static final QName XML_CONTRIBUTION = new QName(Namespaces.CORE, "xmlContribution");
     private static final QName COMPOSITE = new QName(SCA_NS, "composite");
     private XmlIndexerRegistry registry;
 

@@ -22,10 +22,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import javax.xml.namespace.QName;
 
-import org.osoa.sca.annotations.Reference;
-import org.w3c.dom.Document;
+import javax.xml.namespace.QName;
 
 import org.fabric3.fabric.instantiator.component.ComponentInstantiator;
 import org.fabric3.fabric.instantiator.component.WireInstantiator;
@@ -40,7 +38,7 @@ import org.fabric3.scdl.CompositeService;
 import org.fabric3.scdl.Implementation;
 import org.fabric3.scdl.Include;
 import org.fabric3.scdl.Property;
-import org.fabric3.spi.Constants;
+import org.fabric3.spi.Namespaces;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
@@ -48,6 +46,8 @@ import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalService;
 import org.fabric3.spi.services.lcm.LogicalComponentManager;
 import org.fabric3.spi.util.UriHelper;
+import org.osoa.sca.annotations.Reference;
+import org.w3c.dom.Document;
 
 /**
  * @version $Revision$ $Date$
@@ -56,7 +56,7 @@ public class LogicalModelInstantiatorImpl implements LogicalModelInstantiator {
     /**
      * Represents a synthetic composite. Synthetic composites are created to instantiate multiple deployable composites in a single operation.
      */
-    private QName SYNTHENTIC_COMPOSITE = new QName(Constants.FABRIC3_NS, "SyntheticComposite");
+    private QName SYNTHENTIC_COMPOSITE = new QName(Namespaces.IMPLEMENTATION, "SyntheticComposite");
 
     private final ResolutionService resolutionService;
     private final PromotionNormalizer promotionNormalizer;

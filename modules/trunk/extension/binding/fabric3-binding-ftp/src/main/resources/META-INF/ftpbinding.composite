@@ -46,6 +46,6 @@
     </component>
 
     <!-- Feature -->
-    <f3-impl:feature name="FtpBindingFeature">{http://fabric3.org/xmlns/binding}ftpBinding</f3-impl:feature>
+    <f3-impl:feature name="FtpBindingFeature">{urn:fabric3.org:binding}ftpBinding</f3-impl:feature>
 
 </composite>

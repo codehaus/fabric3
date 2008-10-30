@@ -103,6 +103,6 @@
     </component>
 
     <!-- Feature -->
-    <f3-impl:feature name="JmsBindingFeature">{http://fabric3.org/xmlns/binding}jms</f3-impl:feature>
+    <f3-impl:feature name="JmsBindingFeature">{urn:fabric3.org:binding}jms</f3-impl:feature>
 
 </composite>

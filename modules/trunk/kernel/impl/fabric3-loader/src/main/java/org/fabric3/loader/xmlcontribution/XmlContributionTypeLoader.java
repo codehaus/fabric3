@@ -16,19 +16,17 @@
  */
 package org.fabric3.loader.xmlcontribution;
 
+import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
+import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
+import static org.osoa.sca.Constants.SCA_NS;
+
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.xml.namespace.QName;
-import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
-import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
-
-import static org.osoa.sca.Constants.SCA_NS;
-import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Init;
-import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.host.contribution.Constants;
 import org.fabric3.host.contribution.ContributionException;
@@ -40,7 +38,7 @@ import org.fabric3.introspection.xml.UnrecognizedAttribute;
 import org.fabric3.introspection.xml.UnrecognizedElementException;
 import org.fabric3.scdl.Composite;
 import org.fabric3.scdl.ValidationContext;
-import static org.fabric3.spi.Constants.FABRIC3_NS;
+import org.fabric3.spi.Namespaces;
 import org.fabric3.spi.services.contribution.Contribution;
 import org.fabric3.spi.services.contribution.ContributionManifest;
 import org.fabric3.spi.services.contribution.QNameSymbol;
@@ -50,6 +48,9 @@ import org.fabric3.spi.services.contribution.ResourceElementNotFoundException;
 import org.fabric3.spi.services.contribution.Symbol;
 import org.fabric3.spi.services.contribution.XmlProcessor;
 import org.fabric3.spi.services.contribution.XmlProcessorRegistry;
+import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Init;
+import org.osoa.sca.annotations.Reference;
 
 /**
  * Loader for definitions.
@@ -58,7 +59,7 @@ import org.fabric3.spi.services.contribution.XmlProcessorRegistry;
  */
 @EagerInit
 public class XmlContributionTypeLoader implements XmlProcessor {
-    private static final QName XML_CONTRIBUTION = new QName(FABRIC3_NS, "xmlContribution");
+    private static final QName XML_CONTRIBUTION = new QName(Namespaces.CORE, "xmlContribution");
     static final QName COMPOSITE = new QName(SCA_NS, "composite");
 
     private XmlProcessorRegistry processorRegistry;

@@ -35,7 +35,7 @@
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0" xmlns:f3-impl="urn:fabric3.org:implementation"
            xmlns:sca="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:f3-core="urn:fabric3.org:core"
-           xmlns:f3maven="http://fabric3.org/xmlns/sca/2.0-alpha/maven"
+           xmlns:f3-maven="urn:fabric3.org:maven"
            name="DeploymentBootComposite"
            autowire="true">
 
@@ -126,11 +126,11 @@
         <f3-impl:implementation.system class="org.fabric3.fabric.services.contribution.manifest.QNameImportLoader"/>
     </component>
 
-    <component name="MavenImportLoader" f3-core:key="f3maven:import">
+    <component name="MavenImportLoader" f3-core:key="f3-maven:import">
         <f3-impl:implementation.system class="org.fabric3.fabric.services.contribution.manifest.MavenImportLoader"/>
     </component>
 
-    <component name="MavenExportLoader" f3-core:key="f3maven:export">
+    <component name="MavenExportLoader" f3-core:key="f3-maven:export">
         <f3-impl:implementation.system class="org.fabric3.fabric.services.contribution.manifest.MavenExportLoader"/>
     </component>
 

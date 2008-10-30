@@ -18,7 +18,7 @@ package org.fabric3.federation.shoal;
 
 import javax.xml.namespace.QName;
 
-import org.fabric3.spi.Constants;
+import org.fabric3.spi.Namespaces;
 
 /**
  * Constants for federation extension classes.
@@ -45,6 +45,6 @@ public interface FederationConstants {
     /**
      * The key for zone transport metadata.
      */
-    QName ZONE_TRANSPORT_INFO = new QName(Constants.FABRIC3_NS, "ZoneTransportInfo");
+    QName ZONE_TRANSPORT_INFO = new QName(Namespaces.CORE, "ZoneTransportInfo");
 
 }

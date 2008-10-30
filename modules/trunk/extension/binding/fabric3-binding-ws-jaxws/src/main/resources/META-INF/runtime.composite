@@ -29,6 +29,6 @@
     </component>
 
     <!-- Feature -->
-    <f3-impl:feature name="JaxWsBindingFeature">{http://fabric3.org/xmlns/binding}ws-jax-ws</f3-impl:feature>
+    <f3-impl:feature name="JaxWsBindingFeature">{urn:fabric3.org:binding}ws-jax-ws</f3-impl:feature>
 
 </composite>

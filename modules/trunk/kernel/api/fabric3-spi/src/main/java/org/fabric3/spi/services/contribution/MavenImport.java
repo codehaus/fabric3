@@ -17,9 +17,10 @@
 package org.fabric3.spi.services.contribution;
 
 import java.net.URI;
+
 import javax.xml.namespace.QName;
 
-import org.fabric3.spi.Constants;
+import org.fabric3.spi.Namespaces;
 
 /**
  * Represents an Maven export entry in a contribution manifest.
@@ -28,7 +29,7 @@ import org.fabric3.spi.Constants;
  */
 public class MavenImport implements Import {
     private static final long serialVersionUID = -252985481705630453L;
-    private static final QName TYPE = new QName(Constants.FABRIC3_MAVEN_NS, "maven");
+    private static final QName TYPE = new QName(Namespaces.MAVEN, "maven");
 
     private String groupId;
     private String artifactId;

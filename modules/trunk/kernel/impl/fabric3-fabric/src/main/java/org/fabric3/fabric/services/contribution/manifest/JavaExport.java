@@ -18,7 +18,7 @@ package org.fabric3.fabric.services.contribution.manifest;
 
 import javax.xml.namespace.QName;
 
-import org.fabric3.spi.Constants;
+import org.fabric3.spi.Namespaces;
 import org.fabric3.spi.services.contribution.Export;
 import org.fabric3.spi.services.contribution.Import;
 
@@ -29,7 +29,7 @@ import org.fabric3.spi.services.contribution.Import;
  */
 public class JavaExport implements Export {
     private static final long serialVersionUID = -1362112844218693711L;
-    private static final QName TYPE = new QName(Constants.FABRIC3_NS, "java");
+    private static final QName TYPE = new QName(Namespaces.CORE, "java");
     private String packageName;
 
     public JavaExport(String packageName) {

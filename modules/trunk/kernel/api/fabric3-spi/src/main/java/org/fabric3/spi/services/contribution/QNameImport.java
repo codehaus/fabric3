@@ -17,19 +17,19 @@
 package org.fabric3.spi.services.contribution;
 
 import java.net.URI;
+
 import javax.xml.namespace.QName;
 
-import org.fabric3.spi.Constants;
+import org.fabric3.spi.Namespaces;
 
 /**
  * A QName-based contribution import
  *
  * @version $Rev$ $Date$
  */
-@SuppressWarnings({"SerializableHasSerializationMethods"})
 public class QNameImport implements Import {
     private static final long serialVersionUID = 7714960525252585065L;
-    private static final QName TYPE = new QName(Constants.FABRIC3_NS, "qname");
+    private static final QName TYPE = new QName(Namespaces.CORE, "qname");
     private QName namespace;
     private URI location;
 

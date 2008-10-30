@@ -42,6 +42,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
+
 import javax.xml.namespace.QName;
 
 import org.apache.maven.plugin.MojoExecutionException;
@@ -55,7 +56,6 @@ import org.apache.maven.surefire.report.ReporterManager;
 import org.apache.maven.surefire.report.XMLReporter;
 import org.apache.maven.surefire.suite.SurefireTestSuite;
 import org.apache.maven.surefire.testset.TestSetFailedException;
-
 import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.host.contribution.ValidationException;
 import org.fabric3.host.domain.AssemblyException;
@@ -68,7 +68,6 @@ import org.fabric3.scdl.Composite;
 import org.fabric3.scdl.Implementation;
 import org.fabric3.scdl.Operation;
 import org.fabric3.scdl.ServiceDefinition;
-import org.fabric3.spi.Constants;
 import org.fabric3.spi.Namespaces;
 
 /**

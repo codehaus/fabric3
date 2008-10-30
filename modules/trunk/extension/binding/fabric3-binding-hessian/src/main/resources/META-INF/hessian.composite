@@ -62,6 +62,6 @@
     </component>
 
     <!-- Feature -->
-    <f3-impl:feature name="HessianBindingFeature">{http://fabric3.org/xmlns/binding}hessian</f3-impl:feature>
+    <f3-impl:feature name="HessianBindingFeature">{urn:fabric3.org:binding}hessian</f3-impl:feature>
 
 </composite>

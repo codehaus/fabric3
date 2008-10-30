@@ -69,6 +69,11 @@ public class Namespaces {
      * Namespace URI used for other extensions like implementation.cache and implementation.jpa. Recommended prefix f3-other.
      */
     public static final String OTHER = "urn:fabric3.org:other";
+   
+    /**
+     * Namespace URI used for fabric3 maven extensions. Recommended prefix f3-maven.
+     */
+    public static final String MAVEN = "urn:fabric3.org:maven";
     
     /**
      * Private constructor.

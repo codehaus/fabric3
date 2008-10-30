@@ -38,12 +38,13 @@ import java.io.InputStream;
 import java.io.Serializable;
 import java.lang.reflect.Type;
 import java.util.List;
+
 import javax.xml.namespace.QName;
 
 import org.fabric3.binding.jms.provision.PayloadType;
 import org.fabric3.scdl.DataType;
 import org.fabric3.scdl.Operation;
-import static org.fabric3.spi.Constants.FABRIC3_NS;
+import org.fabric3.spi.Namespaces;
 
 /**
  * Default implementation of the PayloadTypeIntrospector. Message types are determined as follows:
@@ -59,7 +60,7 @@ import static org.fabric3.spi.Constants.FABRIC3_NS;
  * @version $Revision$ $Date$
  */
 public class PayloadTypeIntrospectorImpl implements PayloadTypeIntrospector {
-    private static final QName DATABINDING_INTENT = new QName(FABRIC3_NS, "dataBinding.jaxb");
+    private static final QName DATABINDING_INTENT = new QName(Namespaces.POLICY, "dataBinding.jaxb");
 
     public <T> PayloadType introspect(Operation<T> operation) throws JmsGenerationException {
         // TODO perform error checking, e.g. mixing of databindings

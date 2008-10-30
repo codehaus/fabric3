@@ -33,6 +33,6 @@
     </component>
 
     <!-- Feature -->
-    <f3-impl:feature name="TransactionFeature">{http://fabric3.org/xmlns/policy}transaction</f3-impl:feature>
+    <f3-impl:feature name="TransactionFeature">{urn:fabric3.org:policy}transaction</f3-impl:feature>
 
 </composite>

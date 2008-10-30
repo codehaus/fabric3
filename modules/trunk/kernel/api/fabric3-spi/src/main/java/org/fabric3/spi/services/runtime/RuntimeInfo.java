@@ -39,9 +39,10 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+
 import javax.xml.namespace.QName;
 
-import org.fabric3.spi.Constants;
+import org.fabric3.spi.Namespaces;
 
 /**
  * Tracks information regarding a runtime service node, including available capabilities and resources
@@ -51,7 +52,7 @@ import org.fabric3.spi.Constants;
 @Deprecated
 public class RuntimeInfo {
 
-    public static final QName QNAME = new QName(Constants.FABRIC3_NS, "runtimeInfo");
+    public static final QName QNAME = new QName(Namespaces.CORE, "runtimeInfo");
 
     public enum Status {
         STARTED, STOPPED

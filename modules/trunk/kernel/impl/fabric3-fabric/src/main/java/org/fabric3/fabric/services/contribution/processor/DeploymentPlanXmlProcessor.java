@@ -17,21 +17,21 @@
 package org.fabric3.fabric.services.contribution.processor;
 
 import java.net.URI;
+
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
-import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Reference;
-
 import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.scdl.ValidationContext;
-import org.fabric3.spi.Constants;
+import org.fabric3.spi.Namespaces;
 import org.fabric3.spi.services.contribution.Contribution;
 import org.fabric3.spi.services.contribution.Resource;
 import org.fabric3.spi.services.contribution.XmlProcessor;
 import org.fabric3.spi.services.contribution.XmlProcessorRegistry;
 import org.fabric3.spi.services.contribution.XmlResourceElementLoader;
+import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Reference;
 
 /**
  * Processes a contributed deployment plan file.
@@ -40,7 +40,7 @@ import org.fabric3.spi.services.contribution.XmlResourceElementLoader;
  */
 @EagerInit
 public class DeploymentPlanXmlProcessor implements XmlProcessor {
-    private static final QName PLAN = new QName(Constants.FABRIC3_NS, "plan");
+    private static final QName PLAN = new QName(Namespaces.CORE, "plan");
     private XmlResourceElementLoader loader;
 
     public DeploymentPlanXmlProcessor(@Reference(name = "processorRegistry") XmlProcessorRegistry processorRegistry,

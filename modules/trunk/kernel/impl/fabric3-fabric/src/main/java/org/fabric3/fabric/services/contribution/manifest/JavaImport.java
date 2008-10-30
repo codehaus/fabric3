@@ -17,9 +17,10 @@
 package org.fabric3.fabric.services.contribution.manifest;
 
 import java.net.URI;
+
 import javax.xml.namespace.QName;
 
-import org.fabric3.spi.Constants;
+import org.fabric3.spi.Namespaces;
 import org.fabric3.spi.services.contribution.Import;
 
 /**
@@ -29,7 +30,7 @@ import org.fabric3.spi.services.contribution.Import;
  */
 public class JavaImport implements Import {
     private static final long serialVersionUID = -7863768515125756048L;
-    private static final QName TYPE = new QName(Constants.FABRIC3_NS, "java");
+    private static final QName TYPE = new QName(Namespaces.CORE, "java");
     private String packageName;
     private URI location;
 

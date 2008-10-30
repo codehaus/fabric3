@@ -16,30 +16,31 @@
  */
 package org.fabric3.loader.plan;
 
-import java.net.URI;
-import javax.xml.namespace.QName;
 import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
 import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
+import static org.fabric3.loader.plan.DeploymentPlanConstants.PLAN;
+import static org.fabric3.loader.plan.DeploymentPlanConstants.PLAN_NAMESPACE;
+
+import java.net.URI;
+
+import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
-
-import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Init;
-import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.introspection.xml.LoaderUtil;
 import org.fabric3.introspection.xml.MissingAttribute;
-import static org.fabric3.loader.plan.DeploymentPlanConstants.PLAN;
-import static org.fabric3.loader.plan.DeploymentPlanConstants.PLAN_NAMESPACE;
 import org.fabric3.scdl.ValidationContext;
-import static org.fabric3.spi.Constants.FABRIC3_NS;
+import org.fabric3.spi.Namespaces;
 import org.fabric3.spi.plan.DeploymentPlan;
 import org.fabric3.spi.services.contribution.QNameSymbol;
 import org.fabric3.spi.services.contribution.Resource;
 import org.fabric3.spi.services.contribution.ResourceElement;
 import org.fabric3.spi.services.contribution.XmlResourceElementLoader;
 import org.fabric3.spi.services.contribution.XmlResourceElementLoaderRegistry;
+import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Init;
+import org.osoa.sca.annotations.Reference;
 
 /**
  * Processes a deployment plan.
@@ -48,7 +49,7 @@ import org.fabric3.spi.services.contribution.XmlResourceElementLoaderRegistry;
  */
 @EagerInit
 public class DeploymentPlanProcessor implements XmlResourceElementLoader {
-    private static final QName DEPLOYABLE_MAPPING = new QName(FABRIC3_NS, "mapping");
+    private static final QName DEPLOYABLE_MAPPING = new QName(Namespaces.CORE, "mapping");
 
     private XmlResourceElementLoaderRegistry registry;
 

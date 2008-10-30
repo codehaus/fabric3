@@ -18,7 +18,7 @@ package org.fabric3.spi.services.contribution;
 
 import javax.xml.namespace.QName;
 
-import org.fabric3.spi.Constants;
+import org.fabric3.spi.Namespaces;
 
 /**
  * A QName-based contribution export
@@ -27,7 +27,7 @@ import org.fabric3.spi.Constants;
  */
 public class QNameExport implements Export {
     private static final long serialVersionUID = -6813997109078522174L;
-    private static final QName TYPE = new QName(Constants.FABRIC3_NS, "qname");
+    private static final QName TYPE = new QName(Namespaces.CORE, "qname");
     private QName namespace;
 
     public QNameExport(QName namespace) {

@@ -22,7 +22,7 @@ import java.util.Set;
 import javax.xml.namespace.QName;
 
 import org.fabric3.scdl.ResourceDefinition;
-import org.fabric3.spi.Constants;
+import org.fabric3.spi.Namespaces;
 
 /**
  * Represents a resource in the logical model.
@@ -32,7 +32,7 @@ import org.fabric3.spi.Constants;
 public class LogicalResource<RD extends ResourceDefinition> extends LogicalScaArtifact<LogicalComponent<?>> {
     private static final long serialVersionUID = -6298167441706672513L;
 
-    private static final QName TYPE = new QName(Constants.FABRIC3_NS, "resource");
+    private static final QName TYPE = new QName(Namespaces.BINDING, "resource");
     
     private final RD resourceDefinition;
     private URI target;

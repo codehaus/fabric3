@@ -19,7 +19,7 @@ package org.fabric3.fabric.policy.interceptor.simple;
 import javax.xml.namespace.QName;
 
 import org.fabric3.scdl.Operation;
-import org.fabric3.spi.Constants;
+import org.fabric3.spi.Namespaces;
 import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.generator.InterceptorDefinitionGenerator;
 import org.fabric3.spi.model.instance.LogicalBinding;
@@ -37,7 +37,7 @@ import org.w3c.dom.Element;
 public class SimpleInterceptorDefinitionGenerator implements InterceptorDefinitionGenerator {
     
     // Qualified name of the handled element
-    private static final QName EXTENSION_NAME = new QName(Constants.FABRIC3_NS, "interceptor");
+    private static final QName EXTENSION_NAME = new QName(Namespaces.POLICY, "interceptor");
     private GeneratorRegistry generatorRegistry;
 
     public SimpleInterceptorDefinitionGenerator(@Reference GeneratorRegistry generatorRegistry) {

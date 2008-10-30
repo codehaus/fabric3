@@ -39,6 +39,6 @@
     </component>
 
     <!-- Feature -->
-    <f3-impl:feature name="RMIBindingFeature">{http://fabric3.org/xmlns/binding}rmi</f3-impl:feature>
+    <f3-impl:feature name="RMIBindingFeature">{urn:fabric3.org:binding}rmi</f3-impl:feature>
 
 </composite>

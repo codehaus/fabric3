@@ -17,9 +17,8 @@
 package org.fabric3.java.control;
 
 import java.net.URI;
-import javax.xml.namespace.QName;
 
-import org.osoa.sca.annotations.Reference;
+import javax.xml.namespace.QName;
 
 import org.fabric3.java.provision.JavaComponentDefinition;
 import org.fabric3.java.provision.JavaWireSourceDefinition;
@@ -36,7 +35,6 @@ import org.fabric3.scdl.Operation;
 import org.fabric3.scdl.Scope;
 import org.fabric3.scdl.ServiceContract;
 import org.fabric3.scdl.definitions.PolicySet;
-import org.fabric3.spi.Constants;
 import org.fabric3.spi.Namespaces;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.LogicalComponent;
@@ -47,6 +45,7 @@ import org.fabric3.spi.model.physical.InteractionType;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 import org.fabric3.spi.policy.Policy;
+import org.osoa.sca.annotations.Reference;
 
 /**
  * @version $Revision$ $Date$

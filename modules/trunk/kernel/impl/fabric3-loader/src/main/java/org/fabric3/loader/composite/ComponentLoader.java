@@ -34,22 +34,19 @@
  */
 package org.fabric3.loader.composite;
 
+import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
+import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
+import static org.osoa.sca.Constants.SCA_NS;
+
 import java.util.HashMap;
 import java.util.Map;
-import javax.xml.XMLConstants;
+
 import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
-import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
-
-import static org.osoa.sca.Constants.SCA_NS;
-import org.osoa.sca.annotations.Reference;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
 
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.xml.InvalidValue;
@@ -69,7 +66,7 @@ import org.fabric3.scdl.ComponentService;
 import org.fabric3.scdl.Implementation;
 import org.fabric3.scdl.Property;
 import org.fabric3.scdl.PropertyValue;
-import org.fabric3.spi.Constants;
+import org.osoa.sca.annotations.Reference;
 
 /**
  * Loads a component definition from an XML-based assembly file

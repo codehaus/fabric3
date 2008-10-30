@@ -57,6 +57,6 @@
     </component>
 
     <!-- Feature -->
-    <f3-impl:feature name="BurlapBindingFeature">{http://fabric3.org/xmlns/binding}burlap</f3-impl:feature>
+    <f3-impl:feature name="BurlapBindingFeature">{urn:fabric3.org:binding}burlap</f3-impl:feature>
 
 </composite>

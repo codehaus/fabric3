@@ -19,7 +19,7 @@ package org.fabric3.web.introspection;
 import javax.xml.namespace.QName;
 
 import org.fabric3.scdl.Implementation;
-import org.fabric3.spi.Constants;
+import org.fabric3.spi.Namespaces;
 
 /**
  * Model object for a web component.
@@ -30,7 +30,7 @@ public class WebImplementation extends Implementation<WebComponentType> {
     private static final long serialVersionUID = 5589199308230767243L;
     // the deprecated, F3-specific namespace
     @Deprecated
-    public static final QName IMPLEMENTATION_WEBAPP = new QName(Constants.FABRIC3_NS, "web");
+    public static final QName IMPLEMENTATION_WEBAPP = new QName(Namespaces.IMPLEMENTATION, "web");
     public static final QName IMPLEMENTATION_WEB = new QName(org.osoa.sca.Constants.SCA_NS, "implementation.web");
 
     public QName getType() {
