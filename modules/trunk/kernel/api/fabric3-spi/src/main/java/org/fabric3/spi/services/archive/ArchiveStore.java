@@ -37,7 +37,7 @@ public interface ArchiveStore {
     URL store(URI uri, InputStream stream) throws ArchiveStoreException;
 
     /**
-     * Returns true if the archive exists
+     * Returns true if the archive exists.
      *
      * @param uri the archive URI
      * @return true if the archive exists
@@ -45,7 +45,7 @@ public interface ArchiveStore {
     boolean exists(URI uri);
 
     /**
-     * Look up the artifact URL by URI
+     * Look up the artifact URL by URI.
      *
      * @param uri The URI of the artifact
      * @return A URL pointing to the artifact or null if the artifact cannot be found
@@ -54,7 +54,7 @@ public interface ArchiveStore {
     URL find(URI uri) throws ArchiveStoreException;
 
     /**
-     * Remove an artifact from the store
+     * Removes an artifact from the store.
      *
      * @param uri The URI of the contribution to be removed
      * @throws ArchiveStoreException if an exception occurs removing the contribution
@@ -62,7 +62,7 @@ public interface ArchiveStore {
     void remove(URI uri) throws ArchiveStoreException;
 
     /**
-     * Get list of URIs for all the artifacts in the store
+     * Returns a list of URIs for all the artifacts in the store.
      *
      * @return A list of artifact URIs
      */
