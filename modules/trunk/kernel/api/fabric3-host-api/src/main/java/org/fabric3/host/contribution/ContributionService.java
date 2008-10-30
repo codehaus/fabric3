@@ -101,6 +101,14 @@ public interface ContributionService {
     void update(ContributionSource source) throws ContributionException;
 
     /**
+     * Remove a contribution from persistent storage. Contribution must be uninstalled prior to being removed.
+     *
+     * @param uri The URI of the contribution
+     * @throws ContributionException if there was a problem with the contribution
+     */
+    void remove(URI uri) throws ContributionException;
+
+    /**
      * Returns true if a contribution for the given URI exists.
      *
      * @param uri the contribution URI
@@ -132,11 +140,4 @@ public interface ContributionService {
      */
     public List<Deployable> getDeployables(URI uri) throws ContributionException;
 
-    /**
-     * Remove a contribution from the domain.
-     *
-     * @param uri The URI of the contribution
-     * @throws ContributionException if there was a problem with the contribution
-     */
-    void remove(URI uri) throws ContributionException;
 }

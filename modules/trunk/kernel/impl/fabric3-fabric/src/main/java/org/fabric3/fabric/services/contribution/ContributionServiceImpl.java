@@ -138,7 +138,7 @@ public class ContributionServiceImpl implements ContributionService {
         // order the contributions based on their dependencies
         contributions = dependencyService.order(contributions);
         for (Contribution contribution : contributions) {
-            ClassLoader loader = contributionLoader.loadContribution(contribution);
+            ClassLoader loader = contributionLoader.load(contribution);
             // continue processing the contributions. As they are ordered, dependencies will resolve correctly
             processContents(contribution, loader);
         }
@@ -209,8 +209,15 @@ public class ContributionServiceImpl implements ContributionService {
     }
 
     public void remove(URI contributionUri) throws ContributionException {
-        //Work in progress
+        // unload from memory
+        Contribution contribution = metaDataStore.find(contributionUri);
+        contributionLoader.unload(contribution);
         metaDataStore.remove(contributionUri);
+        try {
+            archiveStore.remove(contributionUri);
+        } catch (ArchiveStoreException e) {
+            throw new ContributionException(e);
+        }
     }
 
     /**
@@ -237,7 +244,7 @@ public class ContributionServiceImpl implements ContributionService {
      */
     private void install(Contribution contribution) throws ContributionException {
         introspect(contribution);
-        ClassLoader loader = contributionLoader.loadContribution(contribution);
+        ClassLoader loader = contributionLoader.load(contribution);
         processContents(contribution, loader);
     }
 
