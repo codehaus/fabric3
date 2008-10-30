@@ -74,34 +74,45 @@ public interface DomainController {
      * Returns a set of installed contributions in the domain.
      *
      * @return the set of installed contributions.
-     * @throws AdministrationException if an exception occurs executing the operation
+     * @throws CommunicationException if there is an error communicating with the domain controller
      */
-    public Set<URI> list() throws AdministrationException;
+    public Set<URI> list() throws CommunicationException;
 
     /**
      * Installs a contribution in the domain.
      *
      * @param contribution a URL pointing to the contribution artifact
      * @param name         the name to assign the contribution. Names must be unique in the domain.
-     * @throws AdministrationException if an exception occurs executing the operation
+     * @throws CommunicationException if there is an error communicating with the domain controller
+     * @throws ContributionException  if there is an error installing the contribution. See InstallException subtypes for specific errors that may be
+     *                                thrown.
      */
-    void install(URL contribution, String name) throws AdministrationException;
+    void install(URL contribution, String name) throws CommunicationException, ContributionException;
 
     /**
      * Deploys all deployables in a contribution.
      *
      * @param name the contribution name.
-     * @throws AdministrationException if an exception occurs executing the operation
+     * @throws CommunicationException if there is an error communicating with the domain controller
      */
-    void deploy(String name) throws AdministrationException;
+    void deploy(String name) throws CommunicationException;
 
     /**
      * Deploys all deployables in a contribution.
      *
      * @param name the contribution name.
      * @param plan the name of the deployment plan
-     * @throws AdministrationException if an exception occurs executing the operation
+     * @throws CommunicationException if there is an error communicating with the domain controller
      */
-    void deploy(String name, String plan) throws AdministrationException;
+    void deploy(String name, String plan) throws CommunicationException;
+
+    /**
+     * Removes a contribution from storage in a domain.
+     *
+     * @param uri the contribution URI
+     * @throws CommunicationException if there is an error communicating with the domain controller
+     * @throws ContributionException  if the is an error removing the contribution
+     */
+    void remove(URI uri) throws CommunicationException, ContributionException;
 
 }

@@ -19,10 +19,9 @@ package org.fabric3.admin.impl;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Set;
 import javax.management.JMException;
+import javax.management.MBeanException;
 import javax.management.MBeanServerConnection;
 import javax.management.ObjectName;
 import javax.management.remote.JMXConnector;
@@ -34,9 +33,10 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.entity.InputStreamEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 
-import org.fabric3.admin.api.AdministrationException;
-import org.fabric3.admin.api.ContributionAlreadyInstalledException;
+import org.fabric3.admin.api.CommunicationException;
 import org.fabric3.admin.api.DomainController;
+import org.fabric3.admin.api.DuplicateContributionException;
+import org.fabric3.admin.api.ContributionException;
 import org.fabric3.admin.api.InvalidContributionException;
 
 /**
@@ -67,16 +67,19 @@ public class DomainControllerImpl implements DomainController {
         this.password = password;
     }
 
-    public void install(URL contribution, String name) throws AdministrationException {
+    public void install(URL contribution, String name) throws CommunicationException, ContributionException {
         try {
             if (!isConnected()) {
                 throw new IllegalStateException("Not connected");
             }
             // find HTTP port and post contents
             MBeanServerConnection conn = jmxc.getMBeanServerConnection();
+
+            // store the contribution using an HTTP post to the ContributionService
             String address;
             ObjectName oName = new ObjectName(CONTRIBUTION_SERVICE_MBEAN);
             address = (String) conn.getAttribute(oName, "ContributionServiceAddress");
+
             DefaultHttpClient httpclient = new DefaultHttpClient();
 //            String base = null;
 //            int port = -1;
@@ -91,16 +94,32 @@ public class DomainControllerImpl implements DomainController {
             post.setEntity(entity);
 
             HttpResponse response = httpclient.execute(post);
-            handleResponse(response, name);
+            int code = response.getStatusLine().getStatusCode();
+            if (400 == code) {
+                throw new ContributionException("Error storing contribution");
+            } else if (420 == code) {
+                throw new DuplicateContributionException("A contribution already exists for " + name);
+            }
+
+            // install the contribution
+            conn.invoke(oName, "install", new URI[]{URI.create(name)}, new String[]{URI.class.getName()});
+        } catch (MBeanException e) {
+            if (e.getTargetException() instanceof org.fabric3.management.contribution.InvalidContributionException) {
+                org.fabric3.management.contribution.InvalidContributionException ex =
+                        (org.fabric3.management.contribution.InvalidContributionException) e.getTargetException();
+                throw new InvalidContributionException("Error installing " + name, ex.getErrors());
+            } else {
+                throw new ContributionException(e.getTargetException());
+            }
         } catch (JMException e) {
-            throw new AdministrationException(e);
+            throw new CommunicationException(e);
         } catch (IOException e) {
-            throw new AdministrationException(e);
+            throw new CommunicationException(e);
         }
     }
 
     @SuppressWarnings({"unchecked"})
-    public Set<URI> list() throws AdministrationException {
+    public Set<URI> list() throws CommunicationException {
         try {
             if (!isConnected()) {
                 throw new IllegalStateException("Not connected");
@@ -109,32 +128,13 @@ public class DomainControllerImpl implements DomainController {
             ObjectName oName = new ObjectName(CONTRIBUTION_SERVICE_MBEAN);
             return (Set<URI>) conn.getAttribute(oName, "Contributions");
         } catch (JMException e) {
-            throw new AdministrationException(e);
+            throw new CommunicationException(e);
         } catch (IOException e) {
-            throw new AdministrationException(e);
+            throw new CommunicationException(e);
         }
     }
 
-    private void handleResponse(HttpResponse response, String name) throws AdministrationException {
-        int code = response.getStatusLine().getStatusCode();
-        if (400 == code) {
-            throw new AdministrationException();
-        } else if (420 == code) {
-            throw new ContributionAlreadyInstalledException(name);
-        } else if (422 == code) {
-            List<String> errors = new ArrayList<String>();
-            // TODO fill in
-            throw new InvalidContributionException(errors);
-            // TODO iterator
-        }
-//        HttpEntity resEntity = response.getEntity();
-//
-//        if (resEntity != null) {
-//            resEntity.consumeContent();
-//        }
-    }
-
-    public void deploy(String name) throws AdministrationException {
+    public void deploy(String name) throws CommunicationException {
         try {
             if (!isConnected()) {
                 throw new IllegalStateException("Not connected");
@@ -143,14 +143,14 @@ public class DomainControllerImpl implements DomainController {
             ObjectName oName = new ObjectName(DOMAIN_MBEAN);
             conn.invoke(oName, "deploy", new URI[]{URI.create(name)}, new String[]{URI.class.getName()});
         } catch (JMException e) {
-            throw new AdministrationException(e);
+            throw new CommunicationException(e);
         } catch (IOException e) {
-            throw new AdministrationException(e);
+            throw new CommunicationException(e);
         }
 
     }
 
-    public void deploy(String name, String plan) throws AdministrationException {
+    public void deploy(String name, String plan) throws CommunicationException {
         try {
             if (!isConnected()) {
                 throw new IllegalStateException("Not connected");
@@ -159,11 +159,25 @@ public class DomainControllerImpl implements DomainController {
             ObjectName oName = new ObjectName(DOMAIN_MBEAN);
             conn.invoke(oName, "deploy", new Object[]{URI.create(name), plan}, new String[]{URI.class.getName(), "java.lang.String"});
         } catch (JMException e) {
-            throw new AdministrationException(e);
+            throw new CommunicationException(e);
         } catch (IOException e) {
-            throw new AdministrationException(e);
+            throw new CommunicationException(e);
         }
+    }
 
+    public void remove(URI name) throws CommunicationException, ContributionException {
+        try {
+            if (!isConnected()) {
+                throw new IllegalStateException("Not connected");
+            }
+            MBeanServerConnection conn = jmxc.getMBeanServerConnection();
+            ObjectName oName = new ObjectName(CONTRIBUTION_SERVICE_MBEAN);
+            conn.invoke(oName, "remove", new Object[]{name}, new String[]{URI.class.getName()});
+        } catch (JMException e) {
+            throw new CommunicationException(e);
+        } catch (IOException e) {
+            throw new CommunicationException(e);
+        }
     }
 
     public boolean isConnected() {

@@ -17,22 +17,12 @@
 package org.fabric3.admin.api;
 
 /**
- * Denotes an exception performing an adminsitrative operation.
- *
  * @version $Revision$ $Date$
  */
-public class AdministrationException extends Exception {
-    private static final long serialVersionUID = -351731887104971407L;
+public class DuplicateContributionException extends ContributionException {
+    private static final long serialVersionUID = 2950465877291283258L;
 
-    public AdministrationException(String message) {
+    public DuplicateContributionException(String message) {
         super(message);
-    }
-
-    public AdministrationException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
-    public AdministrationException(Throwable cause) {
-        super(cause);
     }
 }

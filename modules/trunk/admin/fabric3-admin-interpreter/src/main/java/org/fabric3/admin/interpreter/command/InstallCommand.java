@@ -21,9 +21,10 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.net.URL;
 
-import org.fabric3.admin.api.AdministrationException;
-import org.fabric3.admin.api.ContributionAlreadyInstalledException;
+import org.fabric3.admin.api.CommunicationException;
 import org.fabric3.admin.api.DomainController;
+import org.fabric3.admin.api.DuplicateContributionException;
+import org.fabric3.admin.api.ContributionException;
 import org.fabric3.admin.api.InvalidContributionException;
 import org.fabric3.admin.interpreter.Command;
 import org.fabric3.admin.interpreter.CommandException;
@@ -90,15 +91,14 @@ public class InstallCommand implements Command {
             }
             controller.install(contribution, contributionName);
             out.println("Installed " + contributionName);
-
         } catch (InvalidContributionException e) {
-            out.println("ERROR: The contribution contained errors:");
-            for (String desc : e.getDescriptions()) {
-                out.println("   " + desc);
+            out.println("The contribution contained errors:");
+            for (String desc : e.getErrors()) {
+                out.println("ERROR: " + desc);
             }
-        } catch (ContributionAlreadyInstalledException e) {
+        } catch (DuplicateContributionException e) {
             out.println("ERROR: A contribution with that name is already installed");
-        } catch (AdministrationException e) {
+        } catch (CommunicationException e) {
             if (e.getCause() instanceof FileNotFoundException) {
                 out.println("ERROR: File not found:" + e.getMessage());
                 return;
@@ -106,6 +106,9 @@ public class InstallCommand implements Command {
             throw new CommandException(e);
         } catch (IOException e) {
             out.println("ERROR: Unable to connect to the doman controller");
+            e.printStackTrace(out);
+        } catch (ContributionException e) {
+            out.println("ERROR: Error installing contribution");
             e.printStackTrace(out);
         }
     }

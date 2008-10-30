@@ -21,16 +21,16 @@ import java.util.List;
 /**
  * @version $Revision$ $Date$
  */
-public class InvalidContributionException extends AdministrationException {
+public class InvalidContributionException extends ContributionException {
     private static final long serialVersionUID = 426753127572166846L;
-    private List<String> descriptions;
+    private List<String> errors;
 
-    public InvalidContributionException(List<String> descriptions) {
-        super();
-        this.descriptions = descriptions;
+    public InvalidContributionException(String message, List<String> errors) {
+        super(message);
+        this.errors = errors;
     }
 
-    public List<String> getDescriptions() {
-        return descriptions;
+    public List<String> getErrors() {
+        return errors;
     }
 }

@@ -16,12 +16,12 @@
  */
 package org.fabric3.admin.interpreter.command;
 
-import java.io.PrintStream;
 import java.io.IOException;
-import java.util.Set;
+import java.io.PrintStream;
 import java.net.URI;
+import java.util.Set;
 
-import org.fabric3.admin.api.AdministrationException;
+import org.fabric3.admin.api.CommunicationException;
 import org.fabric3.admin.api.DomainController;
 import org.fabric3.admin.interpreter.Command;
 import org.fabric3.admin.interpreter.CommandException;
@@ -77,7 +77,7 @@ public class ListCommand implements Command {
         } catch (IOException e) {
             out.println("ERROR: Unable to connect to the domain controller");
             e.printStackTrace(out);
-        } catch (AdministrationException e) {
+        } catch (CommunicationException e) {
             throw new CommandException(e);
         }
     }

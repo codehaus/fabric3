@@ -18,6 +18,7 @@ package org.fabric3.admin.interpreter.command;
 
 import java.io.IOException;
 import java.io.PrintStream;
+import java.net.URI;
 import java.net.URL;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -26,8 +27,11 @@ import javax.xml.parsers.ParserConfigurationException;
 import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
-import org.fabric3.admin.api.AdministrationException;
+import org.fabric3.admin.api.CommunicationException;
+import org.fabric3.admin.api.ContributionException;
 import org.fabric3.admin.api.DomainController;
+import org.fabric3.admin.api.DuplicateContributionException;
+import org.fabric3.admin.api.InvalidContributionException;
 import org.fabric3.admin.interpreter.Command;
 import org.fabric3.admin.interpreter.CommandException;
 
@@ -79,37 +83,88 @@ public class DeployCommand implements Command {
     }
 
     public void execute(PrintStream out) throws CommandException {
-        try {
-            if (username != null) {
-                controller.setUsername(username);
-            }
-            if (password != null) {
-                controller.setPassword(password);
-            }
-            if (!controller.isConnected()) {
+        if (username != null) {
+            controller.setUsername(username);
+        }
+        if (password != null) {
+            controller.setPassword(password);
+        }
+        if (!controller.isConnected()) {
+            try {
                 controller.connect();
+            } catch (IOException e) {
+                out.println("ERROR: Error connecting to domain controller");
+                e.printStackTrace(out);
             }
-            if (planName != null) {
-                controller.deploy(contributionName, planName);
-            } else if (planFile != null) {
-                String planContributionName = CommandHelper.parseContributionName(planFile);
-                controller.install(planFile, planContributionName); // install plan
-                String installedPlanName = parsePlanName();
-                controller.deploy(contributionName, installedPlanName);
-            } else {
-                controller.deploy(contributionName);
-            }
+        }
+        if (planName != null) {
+            deployByName(out);
+        } else if (planFile != null) {
+            deployByFile(out);
+        } else {
+            deployNoPlan(out);
+        }
+    }
+
+    private void deployByName(PrintStream out) {
+        try {
+            controller.deploy(contributionName, planName);
             out.println("Deployed " + contributionName);
-        } catch (AdministrationException e) {
-            throw new CommandException(e);
+        } catch (CommunicationException e) {
+            out.println("ERROR: Error connecting to domain controller");
+            e.printStackTrace(out);
+        }
+    }
+
+    private void deployByFile(PrintStream out) {
+        String planContributionName = CommandHelper.parseContributionName(planFile);
+        try {
+            controller.install(planFile, planContributionName); // install plan
+            String installedPlanName = parsePlanName();
+            controller.deploy(contributionName, installedPlanName);
+            out.println("Deployed " + contributionName);
+        } catch (CommunicationException e) {
+            out.println("ERROR: Error connecting to domain controller");
+            e.printStackTrace(out);
+        } catch (InvalidContributionException e) {
+            out.println("The following errors were found in the deployment plan:");
+            for (String desc : e.getErrors()) {
+                out.println("ERROR: " + desc);
+            }
+            // remove the plan from the persistent store
+            try {
+                controller.remove(URI.create(planContributionName));
+            } catch (CommunicationException ex) {
+                out.println("ERROR: Error connecting to domain controller");
+                e.printStackTrace(out);
+            } catch (ContributionException ex) {
+                out.println("ERROR: Error reverting deployment plan");
+                e.printStackTrace(out);
+            }
+        } catch (DuplicateContributionException e) {
+            out.println("ERROR: Deployment plan already exists: " + planFile);
+            e.printStackTrace(out);
+        } catch (ContributionException e) {
+            out.println("ERROR: There was a problem installing the deployment plan: " + planFile);
+            e.printStackTrace(out);
         } catch (IOException e) {
-            out.println("ERROR: Error deploying");
+            out.println("ERROR: Unable to read deployment plan: " + planFile);
             e.printStackTrace(out);
         } catch (ParserConfigurationException e) {
-            out.println("ERROR: Invalid deployment plan");
+            out.println("ERROR: Unable to read deployment plan: " + planFile);
             e.printStackTrace(out);
         } catch (SAXException e) {
-            out.println("ERROR: Invalid deployment plan");
+            out.println("ERROR: Unable to read deployment plan: " + planFile);
+            e.printStackTrace(out);
+        }
+    }
+
+    private void deployNoPlan(PrintStream out) {
+        try {
+            controller.deploy(contributionName);
+            out.println("Deployed " + contributionName);
+        } catch (CommunicationException e) {
+            out.println("ERROR: Error connecting to domain controller");
             e.printStackTrace(out);
         }
     }
