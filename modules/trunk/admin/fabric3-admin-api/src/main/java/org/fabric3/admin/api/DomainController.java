@@ -94,17 +94,21 @@ public interface DomainController {
      *
      * @param uri the contribution uri.
      * @throws CommunicationException if there is an error communicating with the domain controller
+     * @throws DeploymentException    if there is an error deploying the contribution. See InstallException subtypes for specific errors that may be
+     *                                thrown.
      */
-    void deploy(URI uri) throws CommunicationException;
+    void deploy(URI uri) throws CommunicationException, DeploymentException;
 
     /**
      * Deploys all deployables in a contribution.
      *
-     * @param uri the contribution URI.
+     * @param uri  the contribution URI.
      * @param plan the name of the deployment plan
      * @throws CommunicationException if there is an error communicating with the domain controller
+     * @throws DeploymentException    if there is an error deploying the contribution. See InstallException subtypes for specific errors that may be
+     *                                thrown.
      */
-    void deploy(URI uri, String plan) throws CommunicationException;
+    void deploy(URI uri, String plan) throws CommunicationException, DeploymentException;
 
     /**
      * Removes a contribution from storage in a domain.

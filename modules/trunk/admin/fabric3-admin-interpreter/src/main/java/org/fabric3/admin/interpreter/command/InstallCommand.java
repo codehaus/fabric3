@@ -110,7 +110,7 @@ public class InstallCommand implements Command {
             e.printStackTrace(out);
         } catch (ContributionException e) {
             out.println("ERROR: Error installing contribution");
-            e.printStackTrace(out);
+            out.println("       " + e.getMessage());
         }
     }
 

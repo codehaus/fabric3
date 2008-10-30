@@ -29,9 +29,11 @@ import org.xml.sax.SAXException;
 
 import org.fabric3.admin.api.CommunicationException;
 import org.fabric3.admin.api.ContributionException;
+import org.fabric3.admin.api.DeploymentException;
 import org.fabric3.admin.api.DomainController;
 import org.fabric3.admin.api.DuplicateContributionException;
 import org.fabric3.admin.api.InvalidContributionException;
+import org.fabric3.admin.api.InvalidDeploymentException;
 import org.fabric3.admin.interpreter.Command;
 import org.fabric3.admin.interpreter.CommandException;
 
@@ -110,9 +112,17 @@ public class DeployCommand implements Command {
         try {
             controller.deploy(contributionUri, planName);
             out.println("Deployed " + contributionUri);
+        } catch (InvalidDeploymentException e) {
+            out.println("The following deployment errors were reported:");
+            for (String desc : e.getErrors()) {
+                out.println("ERROR: " + desc);
+            }
         } catch (CommunicationException e) {
             out.println("ERROR: Error connecting to domain controller");
             e.printStackTrace(out);
+        } catch (DeploymentException e) {
+            out.println("ERROR: Error deploying contribution");
+            out.println("       " + e.getMessage());
         }
     }
 
@@ -123,6 +133,15 @@ public class DeployCommand implements Command {
             String installedPlanName = parsePlanName();
             controller.deploy(contributionUri, installedPlanName);
             out.println("Deployed " + contributionUri);
+        } catch (InvalidDeploymentException e) {
+            out.println("The following deployment errors were reported:");
+            for (String desc : e.getErrors()) {
+                out.println("ERROR: " + desc);
+            }
+        } catch (DeploymentException e) {
+            out.println("ERROR: Error deploying contribution");
+            out.println("       " + e.getMessage());
+            revertPlan(planContributionUri, out);
         } catch (CommunicationException e) {
             out.println("ERROR: Error connecting to domain controller");
             e.printStackTrace(out);
@@ -131,22 +150,14 @@ public class DeployCommand implements Command {
             for (String desc : e.getErrors()) {
                 out.println("ERROR: " + desc);
             }
-            // remove the plan from the persistent store
-            try {
-                controller.remove(planContributionUri);
-            } catch (CommunicationException ex) {
-                out.println("ERROR: Error connecting to domain controller");
-                e.printStackTrace(out);
-            } catch (ContributionException ex) {
-                out.println("ERROR: Error reverting deployment plan");
-                e.printStackTrace(out);
-            }
+            revertPlan(planContributionUri, out);
+
         } catch (DuplicateContributionException e) {
-            out.println("ERROR: Deployment plan already exists: " + planFile);
-            e.printStackTrace(out);
+            out.println("ERROR: Deployment plan already exists");
         } catch (ContributionException e) {
             out.println("ERROR: There was a problem installing the deployment plan: " + planFile);
-            e.printStackTrace(out);
+            out.println("       " + e.getMessage());
+            revertPlan(planContributionUri, out);
         } catch (IOException e) {
             out.println("ERROR: Unable to read deployment plan: " + planFile);
             e.printStackTrace(out);
@@ -163,6 +174,14 @@ public class DeployCommand implements Command {
         try {
             controller.deploy(contributionUri);
             out.println("Deployed " + contributionUri);
+        } catch (InvalidDeploymentException e) {
+            out.println("The following deployment errors were reported:");
+            for (String desc : e.getErrors()) {
+                out.println("ERROR: " + desc);
+            }
+        } catch (DeploymentException e) {
+            out.println("ERROR: Error deploying contribution");
+            out.println("       " + e.getMessage());
         } catch (CommunicationException e) {
             out.println("ERROR: Error connecting to domain controller");
             e.printStackTrace(out);
@@ -175,5 +194,19 @@ public class DeployCommand implements Command {
         Document d = b.parse(planFile.openStream());
         return d.getDocumentElement().getAttribute("name");
     }
+
+    private void revertPlan(URI planContributionUri, PrintStream out) {
+        // remove the plan from the persistent store
+        try {
+            controller.remove(planContributionUri);
+        } catch (CommunicationException ex) {
+            out.println("ERROR: Error connecting to domain controller");
+            ex.printStackTrace(out);
+        } catch (ContributionException ex) {
+            out.println("ERROR: Error reverting deployment plan");
+            out.println("       " + ex.getMessage());
+        }
+    }
+
 
 }
