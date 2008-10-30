@@ -30,7 +30,9 @@ import java.util.List;
 @SuppressWarnings({"SerializableHasSerializationMethods"})
 public class Contribution implements Serializable {
     private static final long serialVersionUID = 2511879480122631196L;
+
     private final URI uri;
+    private ContributionState state = ContributionState.STORED;
     private URL location;
     private byte[] checksum;
     private long timestamp;
@@ -67,6 +69,24 @@ public class Contribution implements Serializable {
      */
     public URI getUri() {
         return uri;
+    }
+
+    /**
+     * Returns the contribution lifecycle state.
+     *
+     * @return the contribution lifecycle state
+     */
+    public ContributionState getState() {
+        return state;
+    }
+
+    /**
+     * Sets the contribution lifecycle state.
+     *
+     * @param state the contribution lifecycle state
+     */
+    public void setState(ContributionState state) {
+        this.state = state;
     }
 
     /**
