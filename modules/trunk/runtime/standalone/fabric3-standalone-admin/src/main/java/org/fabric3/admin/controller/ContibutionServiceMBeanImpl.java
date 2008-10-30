@@ -34,7 +34,6 @@ import org.fabric3.jetty.JettyService;
 import org.fabric3.management.contribution.ContributionManagementException;
 import org.fabric3.management.contribution.ContributionServiceMBean;
 import org.fabric3.management.contribution.InvalidContributionException;
-import org.fabric3.management.domain.DeploymentManagementException;
 
 /**
  * @version $Revision$ $Date$
@@ -121,12 +120,10 @@ public class ContibutionServiceMBeanImpl implements ContributionServiceMBean {
     }
 
     private void reportError(ContributionException e) throws ContributionManagementException {
-        StringBuilder msg = new StringBuilder(e.getMessage());
-        Throwable cause = e.getCause();
-        while (cause != null) {
-            msg.append(":").append(e.getCause().getMessage());
+        Throwable cause = e;
+        while (cause.getCause() != null) {
             cause = cause.getCause();
         }
-        throw new ContributionManagementException(msg.toString());
+        throw new ContributionManagementException(cause.getMessage());
     }
 }
