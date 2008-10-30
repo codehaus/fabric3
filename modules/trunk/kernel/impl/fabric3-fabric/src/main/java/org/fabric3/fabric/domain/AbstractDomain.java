@@ -154,11 +154,11 @@ public abstract class AbstractDomain implements Domain {
         allocateAndDeploy(domain, plans);
     }
 
-    public void remove(QName deployable) throws DeploymentException {
-        remove(deployable, false);
+    public void undeploy(QName deployable) throws DeploymentException {
+        undeploy(deployable, false);
     }
 
-    public void remove(QName deployable, boolean transactional) throws DeploymentException {
+    public void undeploy(QName deployable, boolean transactional) throws DeploymentException {
         throw new UnsupportedOperationException();
     }
 

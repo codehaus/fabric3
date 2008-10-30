@@ -105,7 +105,7 @@ public interface Domain {
      * @param deployable the name of the deployable composite to remove
      * @throws DeploymentException if an error is encountered during removal
      */
-    void remove(QName deployable) throws DeploymentException;
+    void undeploy(QName deployable) throws DeploymentException;
 
     /**
      * Remove a deployable Composite from the domain.
@@ -115,6 +115,6 @@ public interface Domain {
      *                      after componnets have been deployed to a runtime or runtimes.
      * @throws DeploymentException if an error is encountered during removal
      */
-    void remove(QName deployable, boolean transactional) throws DeploymentException;
+    void undeploy(QName deployable, boolean transactional) throws DeploymentException;
 
 }
