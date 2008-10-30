@@ -44,7 +44,7 @@ public class ContributionServlet extends HttpServlet {
 
 
     /**
-     * Installs a contribution via an HTTP POST operation.
+     * Stores a contribution via an HTTP POST operation.
      *
      * @param req  the servlet request
      * @param resp the servlet response
@@ -63,7 +63,7 @@ public class ContributionServlet extends HttpServlet {
         try {
             URI uri = new URI(substr);  // remove the leading "/"
             ContributionSource source = new RemoteContributionSource(uri, req.getInputStream());
-            contributionService.contribute(source);
+            contributionService.store(source);
             resp.setStatus(201);
         } catch (URISyntaxException e) {
             resp.setStatus(400);
@@ -71,12 +71,9 @@ public class ContributionServlet extends HttpServlet {
             throw new ServletException("Invalid contribution name", e);
         } catch (DuplicateContributionException e) {
             resp.setStatus(420);
-        } catch (ValidationException e) {
-            resp.setStatus(422);
-            resp.getWriter().write("<?xml version=\"1.0\" encoding=\"ASCII\"?><description>Invalid contribution</description>");
         } catch (ContributionException e) {
             resp.setStatus(422);
-            resp.getWriter().write("<?xml version=\"1.0\" encoding=\"ASCII\"?><description>Error processing contribution</description>");
+            resp.getWriter().write("<?xml version=\"1.0\" encoding=\"ASCII\"?><description>Error storing contribution</description>");
         }
     }
 }

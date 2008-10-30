@@ -17,15 +17,23 @@
 package org.fabric3.admin.controller;
 
 import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Set;
 
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
+import org.fabric3.api.annotation.Monitor;
+import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.host.contribution.ContributionService;
+import org.fabric3.host.contribution.ValidationException;
+import org.fabric3.host.contribution.ValidationFailure;
 import org.fabric3.jetty.JettyService;
+import org.fabric3.management.contribution.ContributionManagementException;
 import org.fabric3.management.contribution.ContributionServiceMBean;
+import org.fabric3.management.contribution.InvalidContributionException;
 
 /**
  * @version $Revision$ $Date$
@@ -34,10 +42,14 @@ import org.fabric3.management.contribution.ContributionServiceMBean;
 public class ContibutionServiceMBeanImpl implements ContributionServiceMBean {
     private JettyService jettyService;
     private ContributionService contributionService;
+    private ContributionServiceMBeanMonitor monitor;
 
-    public ContibutionServiceMBeanImpl(@Reference JettyService jettyService, @Reference ContributionService contributionService) {
+    public ContibutionServiceMBeanImpl(@Reference JettyService jettyService,
+                                       @Reference ContributionService contributionService,
+                                       @Monitor ContributionServiceMBeanMonitor monitor) {
         this.jettyService = jettyService;
         this.contributionService = contributionService;
+        this.monitor = monitor;
     }
 
 
@@ -79,5 +91,30 @@ public class ContibutionServiceMBeanImpl implements ContributionServiceMBean {
         return contributionService.getContributions();
     }
 
+    public void install(URI uri) throws ContributionManagementException {
+        try {
+            contributionService.install(uri);
+        } catch (ValidationException e) {
+            // propagate validaton error messages to the client
+            List<String> errors = new ArrayList<String>();
+            for (ValidationFailure failure : e.getErrors()) {
+                errors.add(failure.getMessage());
+            }
+            throw new InvalidContributionException("Error installing " + uri, errors);
+        } catch (ContributionException e) {
+            monitor.error("Error removing installing: " + uri, e);
+            // don't rethrow the original exception since the class will not be available on the client's classpath
+            throw new ContributionManagementException(e.getMessage());
+        }
+    }
 
+    public void remove(URI uri) throws ContributionManagementException {
+        try {
+            contributionService.remove(uri);
+        } catch (ContributionException e) {
+            monitor.error("Error removing contribution: " + uri, e);
+            // don't rethrow the original exception since the class will not be available on the client's classpath
+            throw new ContributionManagementException("Error removing contribution: " + uri);
+        }
+    }
 }

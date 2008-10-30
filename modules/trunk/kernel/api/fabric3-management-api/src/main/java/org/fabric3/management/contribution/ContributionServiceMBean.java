@@ -16,9 +16,8 @@
  */
 package org.fabric3.management.contribution;
 
-import java.util.List;
-import java.util.Set;
 import java.net.URI;
+import java.util.Set;
 
 import org.fabric3.api.annotation.Management;
 
@@ -43,4 +42,23 @@ public interface ContributionServiceMBean {
      * @return the URIs of contributions in the domain.
      */
     Set<URI> getContributions();
+
+    /**
+     * Installs a stored contribution in the domain.
+     *
+     * @param uri the contribution URI
+     * @throws ContributionManagementException
+     *          if an error occurs during installation. Exception types may vary, for example, a contribution may be invalid. See subtypes for
+     *          specifics.
+     */
+    void install(URI uri) throws ContributionManagementException;
+
+    /**
+     * Removes a stored contribution in the domain.
+     *
+     * @param uri the contribution URI
+     * @throws ContributionManagementException
+     *          if an error occurs during removal.
+     */
+    void remove(URI uri) throws ContributionManagementException;
 }
