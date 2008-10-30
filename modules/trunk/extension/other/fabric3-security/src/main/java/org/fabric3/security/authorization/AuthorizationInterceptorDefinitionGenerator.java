@@ -32,9 +32,9 @@ import org.w3c.dom.Element;
  * Generates the physical interceptor definition from the underlying policy infoset. An example 
  * for the policy definition is shown below,
  * 
- * <f3:authorization roles="ADMIN,USER"/>
+ * <f3-policy:authorization roles="ADMIN,USER"/>
  * 
- * where the namespace prefix f3 maps to the url http://fabric3.org/xmlns/sca/2.0-alpha.
+ * where the namespace prefix f3-policy maps to the uri urn:fabric3.org:policy.
  * 
  * @version $Revision$ $Date$
  *
