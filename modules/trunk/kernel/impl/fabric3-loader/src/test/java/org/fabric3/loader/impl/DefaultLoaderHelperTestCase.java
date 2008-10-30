@@ -54,14 +54,14 @@ import org.fabric3.introspection.xml.InvalidPrefixException;
 public class DefaultLoaderHelperTestCase extends TestCase {
 
     public static final String XML = "<composite xmlns=\"http://www.osoa.org/xmlns/sca/1.0\" " +
-            "xmlns:f3=\"http://fabric3.org/xmlns/sca/2.0-alpha\"/>";
+            "xmlns:f3-core=\"urn:fabric3.org:core\"/>";
     private XMLInputFactory xmlFactory;
     private DefaultLoaderHelper helper;
 
     public void testCreateQName() throws Exception {
         XMLStreamReader reader = createReader(XML);
-        QName qName = helper.createQName("f3:bar", reader);
-        assertEquals("http://fabric3.org/xmlns/sca/2.0-alpha", qName.getNamespaceURI());
+        QName qName = helper.createQName("f3-core:bar", reader);
+        assertEquals("urn:fabric3.org:core", qName.getNamespaceURI());
         assertEquals("bar", qName.getLocalPart());
     }
 
