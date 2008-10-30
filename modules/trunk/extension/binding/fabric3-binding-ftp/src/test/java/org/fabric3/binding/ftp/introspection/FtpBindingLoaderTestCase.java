@@ -35,15 +35,15 @@ import org.fabric3.introspection.xml.LoaderHelper;
  */
 public class FtpBindingLoaderTestCase extends TestCase {
     private static final String XML_NO_COMMANDS =
-            "<f3:binding.ftp uri=\"ftp://foo.com/service\" xmlns:f3=\"http://fabric3.org/xmlns/sca/2.0-alpha\"></f3:binding.ftp>";
+            "<f3-binding:binding.ftp uri=\"ftp://foo.com/service\" xmlns:f3-binding=\"urn:fabric3.org:binding\"></f3-binding:binding.ftp>";
 
     private static final String XML_COMMANDS =
-            "<f3:binding.ftp uri=\"ftp://foo.com/service\" xmlns:f3=\"http://fabric3.org/xmlns/sca/2.0-alpha\">\n" +
+            "<f3-binding:binding.ftp uri=\"ftp://foo.com/service\" xmlns:f3-binding=\"urn:fabric3.org:binding\">\n" +
                     "   <commands>\n" +
                     "     <command>QUOTE test1</command>\n" +
                     "     <command>QUOTE test2</command>\n" +
                     "   </commands>\n" +
-                    "</f3:binding.ftp>";
+                    "</f3-binding:binding.ftp>";
 
     private DefaultIntrospectionContext context;
     private FtpBindingLoader loader;
