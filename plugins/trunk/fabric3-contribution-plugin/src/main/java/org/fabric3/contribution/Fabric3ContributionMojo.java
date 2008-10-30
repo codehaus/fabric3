@@ -84,8 +84,8 @@ import org.xml.sax.SAXException;
  */
 public class Fabric3ContributionMojo extends AbstractMojo {
     private static final String SCA_NS = "http://www.osoa.org/xmlns/sca/1.0";
-    private static final String F3_MVN_NS = "http://fabric3.org/xmlns/sca/2.0-alpha/maven";
-    private static final String F3_NS = "http://fabric3.org/xmlns/sca/2.0-alpha";
+    private static final String F3_MVN_NS = "urn:fabric3.org:maven";
+    private static final String F3_NS = "urn:fabric3.org:core";
     private static final String XML_PACKAGING = "sca-contribution-xml";
     private static final String JAR_PACKAGING = "sca-contribution-jar";
 
