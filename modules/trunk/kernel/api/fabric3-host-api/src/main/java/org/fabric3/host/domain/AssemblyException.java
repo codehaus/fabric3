@@ -45,6 +45,14 @@ public class AssemblyException extends DeploymentException {
         this.warnings = warnings;
     }
 
+    public List<AssemblyFailure> getErrors() {
+        return errors;
+    }
+
+    public List<AssemblyFailure> getWarnings() {
+        return warnings;
+    }
+
     public String getMessage() {
         ByteArrayOutputStream bas = new ByteArrayOutputStream();
         PrintWriter writer = new PrintWriter(bas);
