@@ -19,6 +19,7 @@ package org.fabric3.admin.interpreter.parser;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URI;
 import java.util.Iterator;
 
 import org.antlr.runtime.Token;
@@ -74,7 +75,8 @@ public class InstallCommandParser implements CommandParser {
             command.setPassword(iterator.next().getText());
             break;
         case DomainAdminLexer.PARAM_CONTRIBUTION_NAME:
-            command.setContributionName(iterator.next().getText());
+            String text = iterator.next().getText();
+            command.setContributionUri(URI.create(text));
             break;
         default:
             throw new AssertionError("Invalid parameter token type: " + token.getText());

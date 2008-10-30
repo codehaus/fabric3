@@ -16,6 +16,7 @@
  */
 package org.fabric3.admin.interpreter.command;
 
+import java.net.URI;
 import java.net.URL;
 
 /**
@@ -32,7 +33,7 @@ public class CommandHelper {
      * @param contribution the contribution URL
      * @return the contribution name
      */
-    public static String parseContributionName(URL contribution) {
+    public static URI parseContributionName(URL contribution) {
         String contributionName;
         String path = contribution.getPath();
         int pos = path.lastIndexOf('/');
@@ -49,6 +50,6 @@ public class CommandHelper {
         } else {
             contributionName = path.substring(pos + 1);
         }
-        return contributionName;
+        return URI.create(contributionName);
     }
 }

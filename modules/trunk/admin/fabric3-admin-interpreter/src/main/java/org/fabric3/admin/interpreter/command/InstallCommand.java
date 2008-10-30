@@ -20,6 +20,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintStream;
 import java.net.URL;
+import java.net.URI;
 
 import org.fabric3.admin.api.CommunicationException;
 import org.fabric3.admin.api.DomainController;
@@ -35,7 +36,7 @@ import org.fabric3.admin.interpreter.CommandException;
 public class InstallCommand implements Command {
     private DomainController controller;
     private URL contribution;
-    private String contributionName;
+    private URI contributionUri;
     private String username;
     private String password;
 
@@ -51,12 +52,12 @@ public class InstallCommand implements Command {
         this.contribution = contribution;
     }
 
-    public String getContributionName() {
-        return contributionName;
+    public URI getContributionUri() {
+        return contributionUri;
     }
 
-    public void setContributionName(String contributionName) {
-        this.contributionName = contributionName;
+    public void setContributionUri(URI uri) {
+        this.contributionUri = uri;
     }
 
     public String getUsername() {
@@ -86,11 +87,11 @@ public class InstallCommand implements Command {
             if (!controller.isConnected()) {
                 controller.connect();
             }
-            if (contributionName == null) {
-                contributionName = CommandHelper.parseContributionName(contribution);
+            if (contributionUri == null) {
+                contributionUri = CommandHelper.parseContributionName(contribution);
             }
-            controller.install(contribution, contributionName);
-            out.println("Installed " + contributionName);
+            controller.install(contribution, contributionUri);
+            out.println("Installed " + contributionUri);
         } catch (InvalidContributionException e) {
             out.println("The contribution contained errors:");
             for (String desc : e.getErrors()) {

@@ -40,7 +40,7 @@ import org.fabric3.admin.interpreter.CommandException;
  */
 public class DeployCommand implements Command {
     private DomainController controller;
-    private String contributionName;
+    private URI contributionUri;
     private String username;
     private String password;
     private String planName;
@@ -50,12 +50,12 @@ public class DeployCommand implements Command {
         this.controller = controller;
     }
 
-    public String getContributionName() {
-        return contributionName;
+    public URI getContributionUri() {
+        return contributionUri;
     }
 
-    public void setContributionName(String contributionName) {
-        this.contributionName = contributionName;
+    public void setContributionUri(URI uri) {
+        this.contributionUri = uri;
     }
 
     public String getUsername() {
@@ -108,8 +108,8 @@ public class DeployCommand implements Command {
 
     private void deployByName(PrintStream out) {
         try {
-            controller.deploy(contributionName, planName);
-            out.println("Deployed " + contributionName);
+            controller.deploy(contributionUri, planName);
+            out.println("Deployed " + contributionUri);
         } catch (CommunicationException e) {
             out.println("ERROR: Error connecting to domain controller");
             e.printStackTrace(out);
@@ -117,12 +117,12 @@ public class DeployCommand implements Command {
     }
 
     private void deployByFile(PrintStream out) {
-        String planContributionName = CommandHelper.parseContributionName(planFile);
+        URI planContributionUri = CommandHelper.parseContributionName(planFile);
         try {
-            controller.install(planFile, planContributionName); // install plan
+            controller.install(planFile, planContributionUri); // install plan
             String installedPlanName = parsePlanName();
-            controller.deploy(contributionName, installedPlanName);
-            out.println("Deployed " + contributionName);
+            controller.deploy(contributionUri, installedPlanName);
+            out.println("Deployed " + contributionUri);
         } catch (CommunicationException e) {
             out.println("ERROR: Error connecting to domain controller");
             e.printStackTrace(out);
@@ -133,7 +133,7 @@ public class DeployCommand implements Command {
             }
             // remove the plan from the persistent store
             try {
-                controller.remove(URI.create(planContributionName));
+                controller.remove(planContributionUri);
             } catch (CommunicationException ex) {
                 out.println("ERROR: Error connecting to domain controller");
                 e.printStackTrace(out);
@@ -161,8 +161,8 @@ public class DeployCommand implements Command {
 
     private void deployNoPlan(PrintStream out) {
         try {
-            controller.deploy(contributionName);
-            out.println("Deployed " + contributionName);
+            controller.deploy(contributionUri);
+            out.println("Deployed " + contributionUri);
         } catch (CommunicationException e) {
             out.println("ERROR: Error connecting to domain controller");
             e.printStackTrace(out);

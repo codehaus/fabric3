@@ -22,6 +22,7 @@ import java.io.File;
 import java.io.InputStream;
 import java.io.PrintStream;
 import java.net.URL;
+import java.net.URI;
 
 import junit.framework.TestCase;
 import org.easymock.EasyMock;
@@ -40,7 +41,7 @@ public class InstallTestCase extends TestCase {
         controller.setUsername("username");
         controller.setPassword("password");
         EasyMock.expect(controller.isConnected()).andReturn(true);
-        controller.install(contributionUrl, "contribution");
+        controller.install(contributionUrl, URI.create("contribution"));
         EasyMock.replay(controller);
 
         Interpreter interpreter = new InterpreterImpl(controller);

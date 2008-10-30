@@ -34,9 +34,9 @@ import org.apache.http.entity.InputStreamEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 
 import org.fabric3.admin.api.CommunicationException;
+import org.fabric3.admin.api.ContributionException;
 import org.fabric3.admin.api.DomainController;
 import org.fabric3.admin.api.DuplicateContributionException;
-import org.fabric3.admin.api.ContributionException;
 import org.fabric3.admin.api.InvalidContributionException;
 
 /**
@@ -67,7 +67,7 @@ public class DomainControllerImpl implements DomainController {
         this.password = password;
     }
 
-    public void install(URL contribution, String name) throws CommunicationException, ContributionException {
+    public void install(URL contribution, URI uri) throws CommunicationException, ContributionException {
         try {
             if (!isConnected()) {
                 throw new IllegalStateException("Not connected");
@@ -87,7 +87,7 @@ public class DomainControllerImpl implements DomainController {
 //            UsernamePasswordCredentials credentials = new UsernamePasswordCredentials(username, password);
 //            httpclient.getCredentialsProvider().setCredentials(scope, credentials);
 
-            HttpPost post = new HttpPost(address + "/" + name);
+            HttpPost post = new HttpPost(address + "/" + uri);
             InputStreamEntity entity = new InputStreamEntity(contribution.openStream(), -1);
             entity.setContentType("binary/octet-stream");
             entity.setChunked(true);
@@ -98,16 +98,16 @@ public class DomainControllerImpl implements DomainController {
             if (400 == code) {
                 throw new ContributionException("Error storing contribution");
             } else if (420 == code) {
-                throw new DuplicateContributionException("A contribution already exists for " + name);
+                throw new DuplicateContributionException("A contribution already exists for " + uri);
             }
 
             // install the contribution
-            conn.invoke(oName, "install", new URI[]{URI.create(name)}, new String[]{URI.class.getName()});
+            conn.invoke(oName, "install", new URI[]{uri}, new String[]{URI.class.getName()});
         } catch (MBeanException e) {
             if (e.getTargetException() instanceof org.fabric3.management.contribution.InvalidContributionException) {
                 org.fabric3.management.contribution.InvalidContributionException ex =
                         (org.fabric3.management.contribution.InvalidContributionException) e.getTargetException();
-                throw new InvalidContributionException("Error installing " + name, ex.getErrors());
+                throw new InvalidContributionException("Error installing " + uri, ex.getErrors());
             } else {
                 throw new ContributionException(e.getTargetException());
             }
@@ -134,14 +134,14 @@ public class DomainControllerImpl implements DomainController {
         }
     }
 
-    public void deploy(String name) throws CommunicationException {
+    public void deploy(URI uri) throws CommunicationException {
         try {
             if (!isConnected()) {
                 throw new IllegalStateException("Not connected");
             }
             MBeanServerConnection conn = jmxc.getMBeanServerConnection();
             ObjectName oName = new ObjectName(DOMAIN_MBEAN);
-            conn.invoke(oName, "deploy", new URI[]{URI.create(name)}, new String[]{URI.class.getName()});
+            conn.invoke(oName, "deploy", new URI[]{uri}, new String[]{URI.class.getName()});
         } catch (JMException e) {
             throw new CommunicationException(e);
         } catch (IOException e) {
@@ -150,14 +150,14 @@ public class DomainControllerImpl implements DomainController {
 
     }
 
-    public void deploy(String name, String plan) throws CommunicationException {
+    public void deploy(URI uri, String plan) throws CommunicationException {
         try {
             if (!isConnected()) {
                 throw new IllegalStateException("Not connected");
             }
             MBeanServerConnection conn = jmxc.getMBeanServerConnection();
             ObjectName oName = new ObjectName(DOMAIN_MBEAN);
-            conn.invoke(oName, "deploy", new Object[]{URI.create(name), plan}, new String[]{URI.class.getName(), "java.lang.String"});
+            conn.invoke(oName, "deploy", new Object[]{uri, plan}, new String[]{URI.class.getName(), "java.lang.String"});
         } catch (JMException e) {
             throw new CommunicationException(e);
         } catch (IOException e) {

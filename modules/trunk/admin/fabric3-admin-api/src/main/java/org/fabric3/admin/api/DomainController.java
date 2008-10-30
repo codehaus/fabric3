@@ -82,29 +82,29 @@ public interface DomainController {
      * Installs a contribution in the domain.
      *
      * @param contribution a URL pointing to the contribution artifact
-     * @param name         the name to assign the contribution. Names must be unique in the domain.
+     * @param uri          the URI to assign the contribution.
      * @throws CommunicationException if there is an error communicating with the domain controller
      * @throws ContributionException  if there is an error installing the contribution. See InstallException subtypes for specific errors that may be
      *                                thrown.
      */
-    void install(URL contribution, String name) throws CommunicationException, ContributionException;
+    void install(URL contribution, URI uri) throws CommunicationException, ContributionException;
 
     /**
      * Deploys all deployables in a contribution.
      *
-     * @param name the contribution name.
+     * @param uri the contribution uri.
      * @throws CommunicationException if there is an error communicating with the domain controller
      */
-    void deploy(String name) throws CommunicationException;
+    void deploy(URI uri) throws CommunicationException;
 
     /**
      * Deploys all deployables in a contribution.
      *
-     * @param name the contribution name.
+     * @param uri the contribution URI.
      * @param plan the name of the deployment plan
      * @throws CommunicationException if there is an error communicating with the domain controller
      */
-    void deploy(String name, String plan) throws CommunicationException;
+    void deploy(URI uri, String plan) throws CommunicationException;
 
     /**
      * Removes a contribution from storage in a domain.

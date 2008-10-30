@@ -19,6 +19,7 @@ package org.fabric3.admin.interpreter.parser;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.net.URI;
 import java.util.Iterator;
 
 import org.antlr.runtime.Token;
@@ -89,7 +90,7 @@ public class DeployCommandParser implements CommandParser {
         String text = iterator.next().getText();
         // proceed past UP
         iterator.next();
-        command.setContributionName(text);
+        command.setContributionUri(URI.create(text));
     }
 
     private void parsePlanName(DeployCommand command, Iterator<Token> iterator) throws ParseException {

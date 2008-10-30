@@ -20,6 +20,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.PrintStream;
+import java.net.URI;
 import java.net.URL;
 
 import junit.framework.TestCase;
@@ -37,7 +38,7 @@ public class DeployTestCase extends TestCase {
         controller.setUsername("username");
         controller.setPassword("password");
         EasyMock.expect(controller.isConnected()).andReturn(true);
-        controller.deploy("foo.jar");
+        controller.deploy(URI.create("foo.jar"));
         EasyMock.replay(controller);
 
         Interpreter interpreter = new InterpreterImpl(controller);
@@ -54,7 +55,7 @@ public class DeployTestCase extends TestCase {
         controller.setUsername("username");
         controller.setPassword("password");
         EasyMock.expect(controller.isConnected()).andReturn(true);
-        controller.deploy("foo.jar", "plan.xml");
+        controller.deploy(URI.create("foo.jar"), "plan.xml");
         EasyMock.replay(controller);
 
         Interpreter interpreter = new InterpreterImpl(controller);
@@ -72,11 +73,11 @@ public class DeployTestCase extends TestCase {
         controller.setPassword("password");
         EasyMock.expect(controller.isConnected()).andReturn(true);
         URL planURL = getClass().getClassLoader().getResource("plan.xml");
-        controller.install(planURL, "plan.xml");
-        controller.deploy("foo.jar", "testPlan");
+        controller.install(planURL, URI.create("plan.xml"));
+        controller.deploy(URI.create("foo.jar"), "testPlan");
         EasyMock.replay(controller);
         Interpreter interpreter = new InterpreterImpl(controller);
-        InputStream in = new ByteArrayInputStream(("deploy foo.jar -plan "+planURL+" -u username -p password \n quit").getBytes());
+        InputStream in = new ByteArrayInputStream(("deploy foo.jar -plan " + planURL + " -u username -p password \n quit").getBytes());
         PrintStream out = new PrintStream(new ByteArrayOutputStream());
         interpreter.processInteractive(in, out);
 
