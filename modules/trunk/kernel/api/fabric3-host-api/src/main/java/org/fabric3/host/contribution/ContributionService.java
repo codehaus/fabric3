@@ -101,6 +101,14 @@ public interface ContributionService {
     void update(ContributionSource source) throws ContributionException;
 
     /**
+     * Uninstalls a contribution.
+     *
+     * @param uri The URI of the contribution
+     * @throws ContributionException if there was a problem with the contribution
+     */
+    void uninstall(URI uri) throws ContributionException;
+
+    /**
      * Remove a contribution from persistent storage. Contribution must be uninstalled prior to being removed.
      *
      * @param uri The URI of the contribution

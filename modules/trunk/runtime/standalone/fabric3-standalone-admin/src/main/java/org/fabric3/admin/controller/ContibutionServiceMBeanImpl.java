@@ -108,6 +108,16 @@ public class ContibutionServiceMBeanImpl implements ContributionServiceMBean {
         }
     }
 
+    public void uninstall(URI uri) throws ContributionManagementException {
+        try {
+            contributionService.uninstall(uri);
+        } catch (ContributionException e) {
+            monitor.error("Error uninstalling contribution: " + uri, e);
+            // don't rethrow the original exception since the class will not be available on the client's classpath
+            reportError(e);
+        }
+    }
+
     public void remove(URI uri) throws ContributionManagementException {
         try {
             contributionService.remove(uri);
@@ -115,7 +125,6 @@ public class ContibutionServiceMBeanImpl implements ContributionServiceMBean {
             monitor.error("Error removing contribution: " + uri, e);
             // don't rethrow the original exception since the class will not be available on the client's classpath
             reportError(e);
-
         }
     }
 

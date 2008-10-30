@@ -71,6 +71,7 @@ import org.fabric3.spi.services.archive.ArchiveStoreException;
 import org.fabric3.spi.services.contenttype.ContentTypeResolutionException;
 import org.fabric3.spi.services.contenttype.ContentTypeResolver;
 import org.fabric3.spi.services.contribution.Contribution;
+import org.fabric3.spi.services.contribution.ContributionState;
 import org.fabric3.spi.services.contribution.MetaDataStore;
 import org.fabric3.spi.services.contribution.MetaDataStoreException;
 import org.fabric3.spi.services.contribution.ProcessorRegistry;
@@ -93,7 +94,6 @@ public class ContributionServiceImpl implements ContributionService {
     private ContentTypeResolver contentTypeResolver;
     private DependencyService dependencyService;
     private ContributionServiceMonitor monitor;
-
 
     public ContributionServiceImpl(@Reference ProcessorRegistry processorRegistry,
                                    @Reference ArchiveStore archiveStore,
@@ -141,6 +141,7 @@ public class ContributionServiceImpl implements ContributionService {
             ClassLoader loader = contributionLoader.load(contribution);
             // continue processing the contributions. As they are ordered, dependencies will resolve correctly
             processContents(contribution, loader);
+            contribution.setState(ContributionState.INSTALLED);
         }
         List<URI> uris = new ArrayList<URI>(contributions.size());
         for (Contribution contribution : contributions) {
@@ -208,13 +209,29 @@ public class ContributionServiceImpl implements ContributionService {
         return list;
     }
 
-    public void remove(URI contributionUri) throws ContributionException {
+    public void uninstall(URI uri) throws ContributionException {
+        Contribution contribution = metaDataStore.find(uri);
+        if (contribution == null) {
+            throw new ContributionNotFoundException("Contribution does not exist:" + uri);
+        }
+        if (contribution.getState() != ContributionState.INSTALLED) {
+            throw new IllegalContributionStateException("Contribution not installed: " + uri);
+        }
         // unload from memory
-        Contribution contribution = metaDataStore.find(contributionUri);
         contributionLoader.unload(contribution);
-        metaDataStore.remove(contributionUri);
+        contribution.setState(ContributionState.STORED);
+    }
+
+    public void remove(URI uri) throws ContributionException {
+        Contribution contribution = metaDataStore.find(uri);
+        if (contribution != null) {
+            if (contribution.getState() != ContributionState.STORED) {
+                throw new IllegalContributionStateException("Contribution must first be uninstalled: " + uri);
+            }
+            metaDataStore.remove(uri);
+        }
         try {
-            archiveStore.remove(contributionUri);
+            archiveStore.remove(uri);
         } catch (ArchiveStoreException e) {
             throw new ContributionException(e);
         }
@@ -230,8 +247,7 @@ public class ContributionServiceImpl implements ContributionService {
     private Contribution find(URI contributionUri) throws ContributionNotFoundException {
         Contribution contribution = metaDataStore.find(contributionUri);
         if (contribution == null) {
-            String uri = contributionUri.toString();
-            throw new ContributionNotFoundException("No contribution found for: " + uri, uri);
+            throw new ContributionNotFoundException("No contribution found for: " + contributionUri);
         }
         return contribution;
     }
@@ -246,6 +262,7 @@ public class ContributionServiceImpl implements ContributionService {
         introspect(contribution);
         ClassLoader loader = contributionLoader.load(contribution);
         processContents(contribution, loader);
+        contribution.setState(ContributionState.INSTALLED);
     }
 
     /**
@@ -330,8 +347,7 @@ public class ContributionServiceImpl implements ContributionService {
     private void update(URI uri, byte[] checksum, long timestamp) throws ContributionException, IOException {
         Contribution contribution = metaDataStore.find(uri);
         if (contribution == null) {
-            String identifier = uri.toString();
-            throw new ContributionNotFoundException("Contribution not found for: " + identifier, identifier);
+            throw new ContributionNotFoundException("Contribution not found for: " + uri);
         }
         long archivedTimestamp = contribution.getTimestamp();
         if (timestamp > archivedTimestamp) {

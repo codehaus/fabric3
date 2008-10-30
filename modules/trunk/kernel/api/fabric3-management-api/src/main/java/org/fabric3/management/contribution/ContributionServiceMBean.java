@@ -54,6 +54,15 @@ public interface ContributionServiceMBean {
     void install(URI uri) throws ContributionManagementException;
 
     /**
+     * Uninstalls a contribution.
+     *
+     * @param uri the contribution URI
+     * @throws ContributionManagementException
+     *          if an error occurs during deinstallation.
+     */
+    public void uninstall(URI uri) throws ContributionManagementException;
+
+    /**
      * Removes a stored contribution in the domain.
      *
      * @param uri the contribution URI

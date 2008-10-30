@@ -198,6 +198,7 @@ public class DeployCommand implements Command {
     private void revertPlan(URI planContributionUri, PrintStream out) {
         // remove the plan from the persistent store
         try {
+            controller.uninstall(planContributionUri);
             controller.remove(planContributionUri);
         } catch (CommunicationException ex) {
             out.println("ERROR: Error connecting to domain controller");
