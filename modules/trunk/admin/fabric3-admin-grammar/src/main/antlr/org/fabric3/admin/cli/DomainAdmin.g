@@ -13,6 +13,7 @@ ASTLabelType=CommonTree;
 
 tokens {  INSTALL_CMD;
 	      DEPLOY_CMD;
+	      UNDEPLOY_CMD;
 	      AUTH_CMD;
 	      LIST_CMD;
 	      PARAMETER;
@@ -50,7 +51,7 @@ tokens {  INSTALL_CMD;
 
 command		: (subcommand)+ EOF;
 
-subcommand	: (install | deploy | auth | list) NEWLINE?;
+subcommand	: (install | deploy | auth | list | undeploy) NEWLINE?;
 
 // main commands
 install 	    : INSTALL file WS? param* -> ^(INSTALL_CMD file param*);
@@ -58,7 +59,7 @@ auth            : AUTH auth_param auth_param -> ^(AUTH_CMD auth_param auth_param
 list            : LIST auth_param* -> ^(LIST_CMD auth_param*);
 deploy 		    : DEPLOY contribution_name plan_name?  plan_file? WS? param* -> ^(DEPLOY_CMD contribution_name plan_name? plan_file? param*);
 uninstall 	    : UNINSTALL contribution? WS? param*;
-undeploy 	    : UNDEPLOY contribution WS? param+;
+undeploy 	    : UNDEPLOY contribution_name WS? param* -> ^(UNDEPLOY_CMD contribution_name param*);
 
 file		    : STRING -> ^(FILE STRING);
 param		    : operator STRING WS? -> ^(PARAMETER operator STRING) ;
