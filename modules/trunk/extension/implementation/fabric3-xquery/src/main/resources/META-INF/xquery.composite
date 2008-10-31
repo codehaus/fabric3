@@ -20,13 +20,12 @@
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:f3-core="urn:fabric3.org:core"
-           xmlns:xq="http://www.fabric3.org/xmlns/xquery/1.0"
            xmlns:f3-impl="urn:fabric3.org:implementation"
            name="XQueryExtension" targetNamespace="org.codehaus.fabric3"
            autowire="true">
 
 
-    <component name="org.fabric3.xquery.introspection.XQueryImplementationLoader" f3-core:key="xq:implementation.xquery">
+    <component name="org.fabric3.xquery.introspection.XQueryImplementationLoader" f3-core:key="f3-impl:implementation.xquery">
         <f3-impl:implementation.system class="org.fabric3.xquery.introspection.XQueryImplementationLoader"/>
     </component>
 
