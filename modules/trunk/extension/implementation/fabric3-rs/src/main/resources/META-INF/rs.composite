@@ -16,7 +16,6 @@
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:f3-core="urn:fabric3.org:core"
-           xmlns:rs="http://www.fabric3.org/xmlns/rs/1.0"
            xmlns:f3-impl="urn:fabric3.org:implementation"
            targetNamespace="org.codehaus.fabric3"
            name="RsExtension"
@@ -26,7 +25,7 @@
         <f3-impl:implementation.system class="org.fabric3.rs.introspection.RsHeuristicImpl"/>
     </component>
  
-    <component name="RsImplementationLoader" f3-core:key="rs:implementation.rs">
+    <component name="RsImplementationLoader" f3-core:key="f3-impl:implementation.rs">
         <f3-impl:implementation.system class="org.fabric3.rs.introspection.RsImplementationLoader"/>
         <reference name="implementationProcessor" target="JavaImplementationProcessorImpl"/>
     </component>

@@ -1,12 +1,12 @@
 /*
  * Fabric3
- * Copyright © 2008 Metaform Systems Limited
+ * Copyright ï¿½ 2008 Metaform Systems Limited
  *
  * This proprietary software may be used only connection with the Fabric3 license
- * (the ÒLicenseÓ), a copy of which is included in the software or may be
+ * (the ï¿½Licenseï¿½), a copy of which is included in the software or may be
  * obtained at: http://www.metaformsystems.com/licenses/license.html.
 
- * Software distributed under the License is distributed on an Òas isÓ basis,
+ * Software distributed under the License is distributed on an ï¿½as isï¿½ basis,
  * without warranties or conditions of any kind.  See the License for the
  * specific language governing permissions and limitations of use of the software.
  * This software is distributed in conjunction with other software licensed under
@@ -19,13 +19,14 @@ package org.fabric3.rs.scdl;
 import java.net.URI;
 import javax.xml.namespace.QName;
 import org.fabric3.scdl.BindingDefinition;
+import org.fabric3.spi.Namespaces;
 
 /**
  * @version $Rev$ $Date$
  */
 public class RsBindingDefinition extends BindingDefinition {
 
-    public static final QName BINDING_RS = new QName("http://www.fabric3.org/xmlns/rs/1.0", "binding.rs");
+    public static final QName BINDING_RS = new QName(Namespaces.IMPLEMENTATION, "binding.rs");
     private boolean isResource;
     private boolean isProvider;
 
