@@ -1,12 +1,12 @@
 /*
  * Fabric3
- * Copyright © 2008 Metaform Systems Limited
+ * Copyright ï¿½ 2008 Metaform Systems Limited
  *
  * This proprietary software may be used only connection with the Fabric3 license
- * (the ÒLicenseÓ), a copy of which is included in the software or may be
+ * (the ï¿½Licenseï¿½), a copy of which is included in the software or may be
  * obtained at: http://www.metaformsystems.com/licenses/license.html.
 
- * Software distributed under the License is distributed on an Òas isÓ basis,
+ * Software distributed under the License is distributed on an ï¿½as isï¿½ basis,
  * without warranties or conditions of any kind.  See the License for the
  * specific language governing permissions and limitations of use of the software.
  * This software is distributed in conjunction with other software licensed under
@@ -20,6 +20,7 @@ import java.text.ParseException;
 import java.util.Collection;
 import java.util.Date;
 import java.util.List;
+import java.util.concurrent.AbstractExecutorService;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
@@ -61,7 +62,7 @@ import org.fabric3.timer.spi.TimerService;
  *
  * @version $Revision$ $Date$
  */
-public class QuartzTimerService implements TimerService {
+public class QuartzTimerService extends AbstractExecutorService implements TimerService {
     public static final String GROUP = "default";
 
     private final WorkScheduler workScheduler;
@@ -188,27 +189,6 @@ public class QuartzTimerService implements TimerService {
     }
 
     public Future<?> submit(Runnable task) {
-        throw new UnsupportedOperationException("Not implemented");
-
-    }
-
-    public <T> List<Future<T>> invokeAll(Collection<Callable<T>> tasks) throws InterruptedException {
-        throw new UnsupportedOperationException("Not implemented");
-
-    }
-
-    public <T> List<Future<T>> invokeAll(Collection<Callable<T>> tasks, long timeout, TimeUnit unit) throws InterruptedException {
-        throw new UnsupportedOperationException("Not implemented");
-
-    }
-
-    public <T> T invokeAny(Collection<Callable<T>> tasks) throws InterruptedException, ExecutionException {
-        throw new UnsupportedOperationException("Not implemented");
-
-    }
-
-    public <T> T invokeAny(Collection<Callable<T>> tasks, long timeout, TimeUnit unit)
-            throws InterruptedException, ExecutionException, TimeoutException {
         throw new UnsupportedOperationException("Not implemented");
 
     }
