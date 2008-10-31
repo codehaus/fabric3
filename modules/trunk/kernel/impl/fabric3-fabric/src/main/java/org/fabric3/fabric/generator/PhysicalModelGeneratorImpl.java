@@ -46,7 +46,6 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.fabric.generator.classloader.ClassLoaderCommandGenerator;
-import org.fabric3.fabric.instantiator.LogicalChange;
 import org.fabric3.spi.command.Command;
 import org.fabric3.spi.generator.AddCommandGenerator;
 import org.fabric3.spi.generator.CommandGenerator;
@@ -109,32 +108,6 @@ public class PhysicalModelGeneratorImpl implements PhysicalModelGenerator {
         return commandMap;
     }
 
-
-    public CommandMap generate(LogicalChange change) throws GenerationException {
-        Collection<LogicalComponent<?>> addedComponents = topologicalSort(change.getAddedComponents());
-        Collection<LogicalComponent<?>> deletedComponents = change.getDeletedComponents();
-        CommandMap commandMap = new CommandMap();
-        for (CommandGenerator generator : removeCommandGenerators) {
-            for (LogicalComponent<?> component : deletedComponents) {
-                Command command = generator.generate(component);
-                if (command != null) {
-                    commandMap.addCommand(component.getZone(), command);
-                }
-            }
-        }
-        for (CommandGenerator generator : addCommandGenerators) {
-            for (LogicalComponent<?> component : addedComponents) {
-                Command command = generator.generate(component);
-                if (command != null) {
-                    commandMap.addCommand(component.getZone(), command);
-                }
-            }
-        }
-        for (LogicalComponent<?> component : addedComponents) {
-            component.setProvisioned(true);
-        }
-        return commandMap;
-    }
 
     /**
      * Topologically sorts components according to their URI.
