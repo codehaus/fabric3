@@ -46,4 +46,12 @@ public interface DomainMBean {
      */
     void deploy(URI uri, String plan) throws DeploymentManagementException;
 
+    /**
+     * Undeploys deployables contained in a contribution.
+     *
+     * @param uri the contribution URI.
+     * @throws DeploymentManagementException if an exception undeploying the contribution is encountered
+     */
+    void undeploy(URI uri) throws DeploymentManagementException;
+
 }

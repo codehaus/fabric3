@@ -16,23 +16,13 @@
  */
 package org.fabric3.management.domain;
 
-import java.util.List;
-
 /**
- * Used to report deployment errors.
- *
  * @version $Revision$ $Date$
  */
-public class InvalidDeploymentException extends DeploymentManagementException {
-    private static final long serialVersionUID = -4240726635386110545L;
-    private List<String> errors;
+public class ContributionNotFoundException extends DeploymentManagementException{
+    private static final long serialVersionUID = -344143140199797738L;
 
-    public InvalidDeploymentException(String message, List<String> errors) {
+    public ContributionNotFoundException(String message) {
         super(message);
-        this.errors = errors;
-    }
-
-    public List<String> getErrors() {
-        return errors;
     }
 }
