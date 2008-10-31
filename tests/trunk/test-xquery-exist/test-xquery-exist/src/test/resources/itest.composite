@@ -20,7 +20,6 @@
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:f3-core="urn:fabric3.org:core"
-           xmlns:xq="http://www.fabric3.org/xmlns/xquery/1.0"
            xmlns:ap="http://www.fabric3.org/xmlns/xquery/test-advanced-property"
            xmlns:f3-impl="urn:fabric3.org:implementation"
            name="ExistXQueryTestHarnessComposite">
@@ -32,7 +31,7 @@
     </component>
 
     <component name="Echo">
-        <xq:implementation.xquery location="tests/xquery/EchoImpl.xqm"/>
+        <f3-impl:implementation.xquery location="tests/xquery/EchoImpl.xqm"/>
         <property name="message">Hello</property>
         <service name="EchoService">
             <interface.java interface="tests.xquery.EchoService" callbackInterface="tests.xquery.EchoServiceCallback"/>
@@ -54,7 +53,7 @@
     </component>
 
     <component name="Advanced">
-        <xq:implementation.xquery location="tests/xquery/Advanced.xq"/>
+        <f3-impl:implementation.xquery location="tests/xquery/Advanced.xq"/>
 <!--   TODO Need to fix PropertyValueLoader.loadInlinePropertyValue     
         <property name="value" type="ap:AdvancedType">
             <ap:advanced xsi:type="ap:AdvancedType"><ap:value name="one">value</ap:value></ap:advanced>

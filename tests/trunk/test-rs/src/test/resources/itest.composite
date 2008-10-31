@@ -17,7 +17,6 @@
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:f3-core="urn:fabric3.org:core"
-           xmlns:rs="http://www.fabric3.org/xmlns/rs/1.0"
            xmlns:f3-impl="urn:fabric3.org:implementation"
            name="RSTestHarnessComposite">
     
@@ -27,11 +26,11 @@
     </component>
     
     <component name="EntityProvider" >
-        <rs:implementation.rs class="tests.rs.EntityProvider" uri="/echo" />
+        <f3-impl:implementation.rs class="tests.rs.EntityProvider" uri="/echo" />
    </component>
 
     <component name="RESTResource">
-        <rs:implementation.rs class="tests.rs.EchoResource" uri="/echo" />
+        <f3-impl:implementation.rs class="tests.rs.EchoResource" uri="/echo" />
         <property name="message">Hello</property>
         <reference name="service" target="Java"/>
     </component>

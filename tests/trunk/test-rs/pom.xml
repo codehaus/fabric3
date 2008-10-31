@@ -44,7 +44,7 @@
         <dependency>
             <groupId>com.sun.jersey</groupId>
             <artifactId>jersey-server</artifactId>
-            <version>1.0-ea-SNAPSHOT</version>
+            <version>1.0</version>
             <exclusions>
                 <exclusion>
                     <groupId>asm</groupId>
@@ -55,7 +55,7 @@
         <dependency>
             <groupId>com.sun.jersey</groupId>
             <artifactId>jersey-client</artifactId>
-            <version>1.0-ea-SNAPSHOT</version>
+            <version>1.0</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>
@@ -88,13 +88,18 @@
                         <dependency>
                             <groupId>com.sun.jersey</groupId>
                             <artifactId>jersey-server</artifactId>
-                            <version>1.0-ea-SNAPSHOT</version>
+                            <version>1.0</version>
                             <exclusions>
                                 <exclusion>
                                     <groupId>asm</groupId>
                                     <artifactId>asm</artifactId>
                                 </exclusion>
                             </exclusions>
+                        </dependency>
+                        <dependency>
+                            <groupId>cglib</groupId>
+                            <artifactId>cglib</artifactId>
+                            <version>2.1_3</version>
                         </dependency>
                     </shared>
                     <!-- Set the Jetty Listen Port for Integration Tests -->
