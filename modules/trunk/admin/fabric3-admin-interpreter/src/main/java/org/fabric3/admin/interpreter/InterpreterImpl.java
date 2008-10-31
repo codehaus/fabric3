@@ -37,6 +37,7 @@ import org.fabric3.admin.interpreter.parser.AuthCommandParser;
 import org.fabric3.admin.interpreter.parser.DeployCommandParser;
 import org.fabric3.admin.interpreter.parser.InstallCommandParser;
 import org.fabric3.admin.interpreter.parser.ListCommandParser;
+import org.fabric3.admin.interpreter.parser.UndeployCommandParser;
 
 /**
  * Default interpreter implementation. This implementation constructs a parse tree from an instruction as defined by the domain adminsitration
@@ -126,6 +127,7 @@ public class InterpreterImpl implements Interpreter {
         parsers.put(DomainAdminLexer.AUTH_CMD, new AuthCommandParser(controller));
         parsers.put(DomainAdminLexer.LIST_CMD, new ListCommandParser(controller));
         parsers.put(DomainAdminLexer.DEPLOY_CMD, new DeployCommandParser(controller));
+        parsers.put(DomainAdminLexer.UNDEPLOY_CMD, new UndeployCommandParser(controller));
     }
 
     /**
