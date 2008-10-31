@@ -47,7 +47,7 @@ public class ResourceWireCommandGenerator implements AddCommandGenerator {
     }
 
     public AttachWireCommand generate(LogicalComponent<?> component) throws GenerationException {
-        if (component instanceof LogicalCompositeComponent) {
+        if (component instanceof LogicalCompositeComponent || component.isProvisioned()) {
             return null;
         }
         AttachWireCommand command = new AttachWireCommand(order);

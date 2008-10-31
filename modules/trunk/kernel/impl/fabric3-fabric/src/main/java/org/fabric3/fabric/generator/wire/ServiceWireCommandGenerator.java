@@ -60,7 +60,7 @@ public class ServiceWireCommandGenerator implements AddCommandGenerator {
     private final PhysicalWireGenerator physicalWireGenerator;
     private final int order;
 
-    public ServiceWireCommandGenerator(@Reference PhysicalWireGenerator physicalWireGenerator, @Property(name = "order")int order) {
+    public ServiceWireCommandGenerator(@Reference PhysicalWireGenerator physicalWireGenerator, @Property(name = "order") int order) {
         this.physicalWireGenerator = physicalWireGenerator;
         this.order = order;
     }
@@ -70,7 +70,7 @@ public class ServiceWireCommandGenerator implements AddCommandGenerator {
     }
 
     public AttachWireCommand generate(LogicalComponent<?> component) throws GenerationException {
-        if (component instanceof LogicalCompositeComponent) {
+        if (component instanceof LogicalCompositeComponent || component.isProvisioned()) {
             return null;
         }
         AttachWireCommand command = new AttachWireCommand(order);
