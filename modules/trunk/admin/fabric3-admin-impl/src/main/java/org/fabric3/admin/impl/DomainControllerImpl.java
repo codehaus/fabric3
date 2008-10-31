@@ -183,6 +183,23 @@ public class DomainControllerImpl implements DomainController {
         }
     }
 
+    public void undeploy(URI uri) throws CommunicationException, DeploymentException {
+        try {
+            if (!isConnected()) {
+                throw new IllegalStateException("Not connected");
+            }
+            MBeanServerConnection conn = jmxc.getMBeanServerConnection();
+            ObjectName oName = new ObjectName(DOMAIN_MBEAN);
+            conn.invoke(oName, "undeploy", new Object[]{uri}, new String[]{URI.class.getName()});
+        } catch (MBeanException e) {
+            throw new DeploymentException(e.getTargetException().getMessage(), e.getTargetException());
+        } catch (JMException e) {
+            throw new CommunicationException(e);
+        } catch (IOException e) {
+            throw new CommunicationException(e);
+        }
+    }
+
     public void uninstall(URI name) throws CommunicationException, ContributionException {
         try {
             if (!isConnected()) {

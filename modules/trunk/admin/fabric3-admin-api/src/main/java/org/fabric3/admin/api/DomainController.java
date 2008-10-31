@@ -111,6 +111,15 @@ public interface DomainController {
     void deploy(URI uri, String plan) throws CommunicationException, DeploymentException;
 
     /**
+     * Undeploys all deployables in a contribution.
+     *
+     * @param uri the contribution URI.
+     * @throws CommunicationException if there is an error communicating with the domain controller
+     * @throws DeploymentException    if there is an error undeploying the contribution.
+     */
+    void undeploy(URI uri) throws CommunicationException, DeploymentException;
+
+    /**
      * Uninstalls a contribution.
      *
      * @param uri the contribution URI
