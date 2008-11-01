@@ -52,7 +52,7 @@ public final class LogicalWire extends LogicalScaArtifact<LogicalComponent<?>> {
 
     private final LogicalReference source;
     private final URI targetUri;
-    private boolean provisioned;
+    private LogicalState state;
 
     /**
      * Instantiates a logical wire.
@@ -159,21 +159,22 @@ public final class LogicalWire extends LogicalScaArtifact<LogicalComponent<?>> {
     }
 
     /**
-     * Checks whether the wire has been provisioned.
+     * Returns the wire state.
      *
-     * @return True if the wire has been provisioned.
+     * @return the wire state
      */
-    public boolean isProvisioned() {
-        return provisioned;
+    public LogicalState getState() {
+        return state;
     }
 
     /**
-     * Marks thw wire as provisioned/unprovisioned.
+     * Sets the wire state.
      *
-     * @param provisioned True if the wire has been provisioned.
+     * @param state the wire state
      */
-    public void setProvisioned(boolean provisioned) {
-        this.provisioned = provisioned;
+    public void setState(LogicalState state) {
+        this.state = state;
     }
+
 
 }

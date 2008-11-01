@@ -31,6 +31,7 @@ import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalService;
+import org.fabric3.spi.model.instance.LogicalState;
 import org.fabric3.spi.model.instance.LogicalWire;
 import org.fabric3.spi.model.physical.PhysicalWireDefinition;
 import org.fabric3.spi.services.lcm.LogicalComponentManager;
@@ -73,9 +74,9 @@ public class LocalWireCommandGenerator implements AddCommandGenerator {
      */
     @Constructor
     public LocalWireCommandGenerator(@Reference PhysicalWireGenerator physicalWireGenerator,
-                                     @Reference(name = "runtimeLCM")LogicalComponentManager runtimeLCM,
-                                     @Reference(name = "applicationLCM")LogicalComponentManager applicationLCM,
-                                     @Property(name = "order")int order) {
+                                     @Reference(name = "runtimeLCM") LogicalComponentManager runtimeLCM,
+                                     @Reference(name = "applicationLCM") LogicalComponentManager applicationLCM,
+                                     @Property(name = "order") int order) {
         this.physicalWireGenerator = physicalWireGenerator;
         this.runtimeLCM = runtimeLCM;
         this.applicationLCM = applicationLCM;
@@ -106,7 +107,7 @@ public class LocalWireCommandGenerator implements AddCommandGenerator {
 
         for (LogicalWire logicalWire : logicalReference.getWires()) {
 
-            if (logicalWire.isProvisioned()) {
+            if (logicalWire.getState() == LogicalState.PROVISIONED) {
                 continue;
             }
 
@@ -140,7 +141,7 @@ public class LocalWireCommandGenerator implements AddCommandGenerator {
                 command.addPhysicalWireDefinition(pwd);
             }
 
-            logicalWire.setProvisioned(true);
+            logicalWire.setState(LogicalState.PROVISIONED);
 
         }
 

@@ -125,7 +125,7 @@ public class SingletonComponentSynthesizer implements ComponentSynthesizer {
         for (LogicalReference reference : logical.getReferences()) {
             reference.setResolved(true);
             for (LogicalWire wire : reference.getWires()) {
-                wire.setProvisioned(true);
+                wire.setState(LogicalState.PROVISIONED);
             }
         }
         return logical;
