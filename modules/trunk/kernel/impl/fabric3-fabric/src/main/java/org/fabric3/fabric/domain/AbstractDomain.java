@@ -25,6 +25,7 @@ import javax.xml.namespace.QName;
 import static org.osoa.sca.Constants.SCA_NS;
 
 import org.fabric3.fabric.binding.BindingSelector;
+import org.fabric3.fabric.collector.Collector;
 import org.fabric3.fabric.generator.PhysicalModelGenerator;
 import org.fabric3.fabric.instantiator.LogicalChange;
 import org.fabric3.fabric.instantiator.LogicalModelInstantiator;
@@ -65,6 +66,7 @@ public abstract class AbstractDomain implements Domain {
     protected BindingSelector bindingSelector;
     protected RoutingService routingService;
     protected PhysicalModelGenerator physicalModelGenerator;
+    protected Collector collector;
 
     // The service for allocating to remote zones. Domain subtypes may optionally inject this service if they support distributed domains.
     protected Allocator allocator;
@@ -78,19 +80,22 @@ public abstract class AbstractDomain implements Domain {
      * @param logicalModelInstantiator the logical model instantiator
      * @param bindingSelector          the selector for binding.sca
      * @param routingService           the service for routing deployment commands
+     * @param collector                the collector for undeploying componentsco
      */
     public AbstractDomain(MetaDataStore metadataStore,
                           LogicalComponentManager logicalComponentManager,
                           PhysicalModelGenerator physicalModelGenerator,
                           LogicalModelInstantiator logicalModelInstantiator,
                           BindingSelector bindingSelector,
-                          RoutingService routingService) {
+                          RoutingService routingService,
+                          Collector collector) {
         this.metadataStore = metadataStore;
         this.physicalModelGenerator = physicalModelGenerator;
         this.logicalModelInstantiator = logicalModelInstantiator;
         this.logicalComponentManager = logicalComponentManager;
         this.bindingSelector = bindingSelector;
         this.routingService = routingService;
+        this.collector = collector;
     }
 
     public void include(QName deployable) throws DeploymentException {
@@ -159,7 +164,33 @@ public abstract class AbstractDomain implements Domain {
     }
 
     public void undeploy(QName deployable, boolean transactional) throws DeploymentException {
-        throw new UnsupportedOperationException();
+        LogicalCompositeComponent domain = logicalComponentManager.getRootComponent();
+
+        if (transactional) {
+            domain = CopyUtil.copy(domain);
+        }
+        LogicalChange change = collector.mark(deployable, domain);
+        if (change.hasErrors()) {
+            throw new AssemblyException(change.getErrors(), change.getWarnings());
+        } else if (change.hasWarnings()) {
+            // TOOD log warnings
+        }
+        try {
+            CommandMap commandMap = physicalModelGenerator.generate(change.getDeletedComponents());
+            String id = UUID.randomUUID().toString();
+            routingService.route(id, commandMap);
+        } catch (GenerationException e) {
+            throw new DeploymentException("Error undeploying: " + deployable, e);
+        } catch (RoutingException e) {
+            throw new DeploymentException("Error undeploying: " + deployable, e);
+
+        }
+        try {
+            // TODO this should happen after nodes have deployed the components and wires
+            logicalComponentManager.replaceRootComponent(domain);
+        } catch (StoreException e) {
+            throw new DeploymentException("Error applying undeployment: " + deployable, e);
+        }
     }
 
     /**

@@ -28,6 +28,8 @@ import org.fabric3.fabric.builder.ConnectorImpl;
 import org.fabric3.fabric.builder.classloader.ClassLoaderBuilder;
 import org.fabric3.fabric.builder.classloader.ClassLoaderBuilderImpl;
 import org.fabric3.fabric.builder.component.DefaultComponentBuilderRegistry;
+import org.fabric3.fabric.collector.Collector;
+import org.fabric3.fabric.collector.CollectorImpl;
 import org.fabric3.fabric.command.AttachWireCommand;
 import org.fabric3.fabric.command.BuildComponentCommand;
 import org.fabric3.fabric.command.InitializeComponentCommand;
@@ -171,13 +173,14 @@ public class BootstrapAssemblyFactory {
                 createPhysicalModelGenerator(logicalComponentManager, metaDataStore);
 
         LogicalModelInstantiator logicalModelInstantiator = createLogicalModelGenerator(logicalComponentManager);
-
+        Collector collector = new CollectorImpl();
         return new RuntimeDomain(metaDataStore,
                                  physicalModelGenerator,
                                  logicalModelInstantiator,
                                  logicalComponentManager,
                                  bindingSelector,
-                                 routingService);
+                                 routingService,
+                                 collector);
     }
 
     private static LogicalModelInstantiator createLogicalModelGenerator(LogicalComponentManager logicalComponentManager) {

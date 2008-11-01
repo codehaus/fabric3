@@ -96,4 +96,8 @@
         <f3-impl:implementation.system class="org.fabric3.fabric.instantiator.target.ServiceContractResolverImpl"/>
     </component>
 
+    <component name="Collector">
+        <f3-impl:implementation.system class="org.fabric3.fabric.collector.CollectorImpl"/>
+    </component>
+
 </composite>

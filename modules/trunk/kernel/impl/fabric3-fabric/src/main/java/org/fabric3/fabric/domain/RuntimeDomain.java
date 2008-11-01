@@ -21,6 +21,7 @@ import org.osoa.sca.annotations.Reference;
 import org.fabric3.fabric.binding.BindingSelector;
 import org.fabric3.fabric.generator.PhysicalModelGenerator;
 import org.fabric3.fabric.instantiator.LogicalModelInstantiator;
+import org.fabric3.fabric.collector.Collector;
 import org.fabric3.spi.services.routing.RoutingService;
 import org.fabric3.spi.services.contribution.MetaDataStore;
 import org.fabric3.spi.services.lcm.LogicalComponentManager;
@@ -39,8 +40,9 @@ public class RuntimeDomain extends AbstractDomain {
                          @Reference LogicalModelInstantiator logicalModelInstantiator,
                          @Reference LogicalComponentManager logicalComponentManager,
                          @Reference BindingSelector bindingSelector,
-                         @Reference RoutingService routingService) {
-        super(metadataStore, logicalComponentManager, physicalModelGenerator, logicalModelInstantiator, bindingSelector, routingService);
+                         @Reference RoutingService routingService,
+                         @Reference Collector collector) {
+        super(metadataStore, logicalComponentManager, physicalModelGenerator, logicalModelInstantiator, bindingSelector, routingService, collector);
     }
 
     /**
