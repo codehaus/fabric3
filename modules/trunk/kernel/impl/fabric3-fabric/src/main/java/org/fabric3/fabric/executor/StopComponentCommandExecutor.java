@@ -18,17 +18,17 @@ package org.fabric3.fabric.executor;
 
 import java.net.URI;
 
-import org.osoa.sca.annotations.Reference;
-import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Init;
+import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.fabric.command.StopComponentCommand;
+import org.fabric3.spi.component.Component;
 import org.fabric3.spi.executor.CommandExecutor;
 import org.fabric3.spi.executor.CommandExecutorRegistry;
 import org.fabric3.spi.executor.ExecutionException;
 import org.fabric3.spi.services.componentmanager.ComponentManager;
 import org.fabric3.spi.services.componentmanager.RegistrationException;
-import org.fabric3.spi.component.Component;
 
 @EagerInit
 public class StopComponentCommandExecutor implements CommandExecutor<StopComponentCommand> {
@@ -37,7 +37,7 @@ public class StopComponentCommandExecutor implements CommandExecutor<StopCompone
     private final CommandExecutorRegistry commandExecutorRegistry;
 
     public StopComponentCommandExecutor(@Reference ComponentManager componentManager,
-                                         @Reference CommandExecutorRegistry commandExecutorRegistry) {
+                                        @Reference CommandExecutorRegistry commandExecutorRegistry) {
         this.componentManager = componentManager;
         this.commandExecutorRegistry = commandExecutorRegistry;
     }
@@ -54,7 +54,7 @@ public class StopComponentCommandExecutor implements CommandExecutor<StopCompone
         try {
             componentManager.unregister(component);
         } catch (RegistrationException re) {
-            throw new ExecutionException("Unexpected exception unregistering component", re);
+            throw new ExecutionException("Unexpected exception unregistering component: " + uri, re);
         }
     }
 }
