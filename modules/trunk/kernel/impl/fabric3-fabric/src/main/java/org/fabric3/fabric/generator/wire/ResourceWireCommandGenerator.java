@@ -25,6 +25,7 @@ import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 import org.fabric3.spi.model.instance.LogicalResource;
+import org.fabric3.spi.model.instance.LogicalState;
 import org.fabric3.spi.model.physical.PhysicalWireDefinition;
 
 /**
@@ -47,7 +48,7 @@ public class ResourceWireCommandGenerator implements AddCommandGenerator {
     }
 
     public AttachWireCommand generate(LogicalComponent<?> component) throws GenerationException {
-        if (component instanceof LogicalCompositeComponent || component.isProvisioned()) {
+        if (component instanceof LogicalCompositeComponent || component.getState() != LogicalState.NEW) {
             return null;
         }
         AttachWireCommand command = new AttachWireCommand(order);
@@ -56,7 +57,7 @@ public class ResourceWireCommandGenerator implements AddCommandGenerator {
     }
 
     private void generatePhysicalWires(LogicalComponent<?> component, AttachWireCommand command) throws GenerationException {
-        if (component.isProvisioned()) {
+        if (component.getState() != LogicalState.NEW) {
             return;
         }
         for (LogicalResource<?> resource : component.getResources()) {

@@ -41,6 +41,7 @@ import org.fabric3.spi.generator.AddCommandGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
+import org.fabric3.spi.model.instance.LogicalState;
 
 /**
  * Creates a command to start an atomic component on a runtime.
@@ -61,7 +62,7 @@ public class StartComponentCommandGenerator implements AddCommandGenerator {
     @SuppressWarnings("unchecked")
     public StartComponentCommand generate(LogicalComponent<?> component) throws GenerationException {
         // start a component if it is atomic and not provisioned
-        if (!(component instanceof LogicalCompositeComponent) && !component.isProvisioned()) {
+        if (!(component instanceof LogicalCompositeComponent) && component.getState() == LogicalState.NEW) {
             return new StartComponentCommand(order, component.getUri());
         }
         return null;

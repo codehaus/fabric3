@@ -68,7 +68,7 @@ public class LogicalComponent<I extends Implementation<?>> extends LogicalScaArt
     private String zone;
     private QName deployable;
     private Autowire autowire;
-    private boolean provisioned;
+    private LogicalState state = LogicalState.NEW;
 
     /**
      * @param uri        URI of the component.
@@ -312,21 +312,21 @@ public class LogicalComponent<I extends Implementation<?>> extends LogicalScaArt
     }
 
     /**
-     * Checks whether the wire has been provisioned.
+     * Returns the instance state.
      *
-     * @return True if the wire has been provisioned.
+     * @return the instance state
      */
-    public boolean isProvisioned() {
-        return provisioned;
+    public LogicalState getState() {
+        return state;
     }
 
     /**
-     * Marks thw wire as provisioned/unprovisioned.
+     * Sets the instance state.
      *
-     * @param provisioned True if the wire has been provisioned.
+     * @param state the instance state
      */
-    public void setProvisioned(boolean provisioned) {
-        this.provisioned = provisioned;
+    public void setState(LogicalState state) {
+        this.state = state;
     }
 
     /**

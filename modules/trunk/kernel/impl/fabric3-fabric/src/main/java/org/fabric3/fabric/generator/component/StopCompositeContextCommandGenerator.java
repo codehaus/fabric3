@@ -23,6 +23,7 @@ import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.generator.RemoveCommandGenerator;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
+import org.fabric3.spi.model.instance.LogicalState;
 
 /**
  * Generates a command to stop the composite context on a runtime.
@@ -45,7 +46,7 @@ public class StopCompositeContextCommandGenerator implements RemoveCommandGenera
 
      @SuppressWarnings("unchecked")
     public StopCompositeContextCommand generate(LogicalComponent<?> component) throws GenerationException {
-        if (!component.isProvisioned() && component instanceof LogicalCompositeComponent) {
+        if (component.getState() == LogicalState.MARKED && component instanceof LogicalCompositeComponent) {
             return new StopCompositeContextCommand(order, component.getUri());
         }
         return null;

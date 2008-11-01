@@ -42,6 +42,7 @@ import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.CopyUtil;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
+import org.fabric3.spi.model.instance.LogicalState;
 import org.fabric3.spi.plan.DeploymentPlan;
 import org.fabric3.spi.services.contribution.MetaDataStore;
 import org.fabric3.spi.services.contribution.MetaDataStoreException;
@@ -300,7 +301,7 @@ public abstract class AbstractDomain implements Domain {
             return;
         }
         for (LogicalComponent<?> component : components) {
-            if (!component.isProvisioned()) {
+            if (component.getState() == LogicalState.NEW) {
                 allocator.allocate(component, plans, false);
             }
         }
@@ -314,7 +315,7 @@ public abstract class AbstractDomain implements Domain {
      */
     private void selectBinding(Collection<LogicalComponent<?>> components) throws DeploymentException {
         for (LogicalComponent<?> component : components) {
-            if (!component.isProvisioned()) {
+            if (component.getState() == LogicalState.NEW) {
                 try {
                     bindingSelector.selectBindings(component);
                 } catch (BindingSelectionException e) {

@@ -42,6 +42,7 @@ import org.fabric3.spi.generator.AddCommandGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
+import org.fabric3.spi.model.instance.LogicalState;
 
 /**
  * Generates a command to start the composite context on a runtime.
@@ -62,7 +63,7 @@ public class StartCompositeContextCommandGenerator implements AddCommandGenerato
 
     @SuppressWarnings("unchecked")
     public StartCompositeContextCommand generate(LogicalComponent<?> component) throws GenerationException {
-        if (!component.isProvisioned() && component instanceof LogicalCompositeComponent) {
+        if (component.getState() == LogicalState.NEW && component instanceof LogicalCompositeComponent) {
             return new StartCompositeContextCommand(order, component.getUri());
         }
         return null;

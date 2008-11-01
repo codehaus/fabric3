@@ -48,6 +48,7 @@ import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 import org.fabric3.spi.model.instance.LogicalService;
+import org.fabric3.spi.model.instance.LogicalState;
 import org.fabric3.spi.model.physical.PhysicalWireDefinition;
 
 /**
@@ -70,7 +71,7 @@ public class ServiceWireCommandGenerator implements AddCommandGenerator {
     }
 
     public AttachWireCommand generate(LogicalComponent<?> component) throws GenerationException {
-        if (component instanceof LogicalCompositeComponent || component.isProvisioned()) {
+        if (component instanceof LogicalCompositeComponent || component.getState() != LogicalState.NEW) {
             return null;
         }
         AttachWireCommand command = new AttachWireCommand(order);

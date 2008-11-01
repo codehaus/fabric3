@@ -126,10 +126,10 @@ public class LogicalCompositeComponent extends LogicalComponent<CompositeImpleme
     }
 
     @Override
-    public void setProvisioned(boolean provisioned) {
-        super.setProvisioned(provisioned);
+    public void setState(LogicalState state) {
+        super.setState(state);
         for (LogicalComponent<?> component : getComponents()) {
-            component.setProvisioned(true);
+            component.setState(state);
         }
     }
 

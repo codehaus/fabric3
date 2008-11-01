@@ -44,6 +44,7 @@ import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalWire;
+import org.fabric3.spi.model.instance.LogicalState;
 import org.fabric3.spi.services.componentmanager.ComponentManager;
 import org.fabric3.spi.services.componentmanager.RegistrationException;
 import org.fabric3.spi.services.lcm.LogicalComponentManager;
@@ -118,7 +119,7 @@ public class SingletonComponentSynthesizer implements ComponentSynthesizer {
             throw new AssemblyException(change.getErrors(), change.getWarnings());
         }
         // mark singleton components as provisioned since instances are not created
-        logical.setProvisioned(true);
+        logical.setState(LogicalState.PROVISIONED);
         logical.setClassLoaderId(BOOT_CLASSLOADER_ID);
         // all references are initially resolved since they are manually injected
         for (LogicalReference reference : logical.getReferences()) {

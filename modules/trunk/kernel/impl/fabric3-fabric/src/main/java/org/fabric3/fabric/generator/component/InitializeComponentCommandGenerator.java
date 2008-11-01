@@ -45,6 +45,7 @@ import org.fabric3.spi.generator.AddCommandGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
+import org.fabric3.spi.model.instance.LogicalState;
 
 /**
  * Generates a command to initialize an atomic component marked to eagerly initialize.
@@ -65,7 +66,7 @@ public class InitializeComponentCommandGenerator implements AddCommandGenerator 
 
     @SuppressWarnings("unchecked")
     public InitializeComponentCommand generate(LogicalComponent<?> component) throws GenerationException {
-        if (!(component instanceof LogicalCompositeComponent) && !component.isProvisioned() && component.isEagerInit()) {
+        if (!(component instanceof LogicalCompositeComponent) && component.getState() == LogicalState.NEW && component.isEagerInit()) {
             URI groupId = URI.create(component.getParent().getUri().toString() + "/");
             ComponentInitializationUri uri = new ComponentInitializationUri(groupId, component.getUri());
             return new InitializeComponentCommand(order, uri);

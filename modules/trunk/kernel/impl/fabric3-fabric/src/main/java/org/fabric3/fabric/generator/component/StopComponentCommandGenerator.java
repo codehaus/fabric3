@@ -23,6 +23,7 @@ import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.generator.RemoveCommandGenerator;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
+import org.fabric3.spi.model.instance.LogicalState;
 
 /**
  * Creates a command to stop an atomic component on a runtime.
@@ -44,7 +45,7 @@ public class StopComponentCommandGenerator implements RemoveCommandGenerator {
     @SuppressWarnings("unchecked")
     public StopComponentCommand generate(LogicalComponent<?> component) throws GenerationException {
         // start a component if it is atomic and not provisioned
-        if (!(component instanceof LogicalCompositeComponent) && component.isProvisioned()) {
+        if (!(component instanceof LogicalCompositeComponent) && component.getState() == LogicalState.MARKED) {
             return new StopComponentCommand(order, component.getUri());
         }
         return null;

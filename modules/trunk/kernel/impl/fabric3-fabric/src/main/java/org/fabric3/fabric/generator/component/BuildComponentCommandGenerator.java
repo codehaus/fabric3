@@ -46,6 +46,7 @@ import org.fabric3.spi.generator.GeneratorNotFoundException;
 import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
+import org.fabric3.spi.model.instance.LogicalState;
 import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
 
 /**
@@ -70,7 +71,7 @@ public class BuildComponentCommandGenerator implements AddCommandGenerator {
     @SuppressWarnings("unchecked")
     public BuildComponentCommand generate(LogicalComponent<?> component) throws GenerationException {
         Implementation<?> implementation = component.getDefinition().getImplementation();
-        if (!(component instanceof LogicalCompositeComponent) && !component.isProvisioned()) {
+        if (!(component instanceof LogicalCompositeComponent) && component.getState() == LogicalState.NEW) {
             Class<? extends Implementation> type = implementation.getClass();
             ComponentGenerator generator = generatorRegistry.getComponentGenerator(type);
             if (generator == null) {
