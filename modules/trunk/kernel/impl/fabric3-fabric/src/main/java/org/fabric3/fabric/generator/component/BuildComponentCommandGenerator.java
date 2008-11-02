@@ -39,7 +39,7 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.fabric.command.BuildComponentCommand;
 import org.fabric3.scdl.Implementation;
-import org.fabric3.spi.generator.AddCommandGenerator;
+import org.fabric3.spi.generator.CommandGenerator;
 import org.fabric3.spi.generator.ComponentGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.generator.GeneratorNotFoundException;
@@ -54,7 +54,7 @@ import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
  *
  * @version $Revision$ $Date$
  */
-public class BuildComponentCommandGenerator implements AddCommandGenerator {
+public class BuildComponentCommandGenerator implements CommandGenerator {
 
     private final GeneratorRegistry generatorRegistry;
     private final int order;

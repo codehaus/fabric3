@@ -47,11 +47,9 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.fabric.generator.classloader.ClassLoaderCommandGenerator;
 import org.fabric3.spi.command.Command;
-import org.fabric3.spi.generator.AddCommandGenerator;
 import org.fabric3.spi.generator.CommandGenerator;
 import org.fabric3.spi.generator.CommandMap;
 import org.fabric3.spi.generator.GenerationException;
-import org.fabric3.spi.generator.RemoveCommandGenerator;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 import org.fabric3.spi.model.instance.LogicalState;
@@ -72,17 +70,14 @@ public class PhysicalModelGeneratorImpl implements PhysicalModelGenerator {
         }
     };
 
-    private final List<CommandGenerator> addCommandGenerators;
-    private final List<CommandGenerator> removeCommandGenerators;
+    private final List<CommandGenerator> commandGenerators;
     private ClassLoaderCommandGenerator classLoaderCommandGenerator;
 
-    public PhysicalModelGeneratorImpl(@Reference(name = "addCommandGenerators")List<AddCommandGenerator> addGenerators,
-                                      @Reference(name = "removeCommandGenerators")List<RemoveCommandGenerator> removeGenerators,
+    public PhysicalModelGeneratorImpl(@Reference List<CommandGenerator> commandGenerators,
                                       @Reference ClassLoaderCommandGenerator classLoaderCommandGenerator) {
         this.classLoaderCommandGenerator = classLoaderCommandGenerator;
         // sort the command generators
-        this.addCommandGenerators = sort(addGenerators);
-        this.removeCommandGenerators = sort(removeGenerators);
+        this.commandGenerators = sort(commandGenerators);
     }
 
     public CommandMap generate(Collection<LogicalComponent<?>> components) throws GenerationException {
@@ -95,7 +90,7 @@ public class PhysicalModelGeneratorImpl implements PhysicalModelGenerator {
                 commandMap.addCommand(entry.getKey(), command);
             }
         }
-        for (CommandGenerator generator : addCommandGenerators) {
+        for (CommandGenerator generator : commandGenerators) {
             for (LogicalComponent<?> component : sorted) {
                 Command command = generator.generate(component);
                 if (command != null) {

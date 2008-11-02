@@ -19,11 +19,11 @@ package org.fabric3.fabric.generator.classloader;
 import org.osoa.sca.annotations.Property;
 
 import org.fabric3.fabric.command.UnprovisionClassloaderCommand;
+import org.fabric3.spi.generator.CommandGenerator;
 import org.fabric3.spi.generator.GenerationException;
-import org.fabric3.spi.generator.RemoveCommandGenerator;
 import org.fabric3.spi.model.instance.LogicalComponent;
 
-public class UnprovisionClassloaderCommandGenerator implements RemoveCommandGenerator {
+public class UnprovisionClassloaderCommandGenerator implements CommandGenerator {
 
     private final int order;
 

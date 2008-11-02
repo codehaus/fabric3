@@ -22,7 +22,7 @@ import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.fabric.command.AttachWireCommand;
-import org.fabric3.spi.generator.AddCommandGenerator;
+import org.fabric3.spi.generator.CommandGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.instance.LogicalComponent;
@@ -36,13 +36,12 @@ import org.fabric3.spi.model.physical.PhysicalWireDefinition;
  *
  * @version $Revision$ $Date$
  */
-public class ReferenceWireCommandGenerator implements AddCommandGenerator {
+public class ReferenceWireCommandGenerator implements CommandGenerator {
 
     private final PhysicalWireGenerator physicalWireGenerator;
     private final int order;
 
-    public ReferenceWireCommandGenerator(@Reference PhysicalWireGenerator physicalWireGenerator,
-                                         @Property(name = "order")int order) {
+    public ReferenceWireCommandGenerator(@Reference PhysicalWireGenerator physicalWireGenerator, @Property(name = "order") int order) {
         this.physicalWireGenerator = physicalWireGenerator;
         this.order = order;
     }
@@ -70,21 +69,21 @@ public class ReferenceWireCommandGenerator implements AddCommandGenerator {
 
             // TODO this should be extensible and moved out
             for (LogicalBinding<?> logicalBinding : logicalReference.getBindings()) {
-	            PhysicalWireDefinition pwd = physicalWireGenerator.generateBoundReferenceWire(component, logicalReference, logicalBinding);
-	            command.addPhysicalWireDefinition(pwd);
-	            if (logicalReference.getDefinition().getServiceContract().getCallbackContract() != null) {
-	                List<LogicalBinding<?>> callbackBindings = logicalReference.getCallbackBindings();
-	                if (callbackBindings.size() != 1) {
-	                    String uri = logicalReference.getUri().toString();
-	                    throw new UnsupportedOperationException("The runtime requires exactly one callback binding to be specified on reference: " + uri);
-	                }
-	                LogicalBinding<?> callbackBinding = callbackBindings.get(0);
-	                // generate the callback wire
-	                PhysicalWireDefinition callbackPwd = physicalWireGenerator.generateBoundCallbackRerenceWire(logicalReference,
-	                                                                                                            callbackBinding,
-	                                                                                                            component);
-	                command.addPhysicalWireDefinition(callbackPwd);
-	            }
+                PhysicalWireDefinition pwd = physicalWireGenerator.generateBoundReferenceWire(component, logicalReference, logicalBinding);
+                command.addPhysicalWireDefinition(pwd);
+                if (logicalReference.getDefinition().getServiceContract().getCallbackContract() != null) {
+                    List<LogicalBinding<?>> callbackBindings = logicalReference.getCallbackBindings();
+                    if (callbackBindings.size() != 1) {
+                        String uri = logicalReference.getUri().toString();
+                        throw new UnsupportedOperationException("The runtime requires exactly one callback binding to be specified on reference: " + uri);
+                    }
+                    LogicalBinding<?> callbackBinding = callbackBindings.get(0);
+                    // generate the callback wire
+                    PhysicalWireDefinition callbackPwd = physicalWireGenerator.generateBoundCallbackRerenceWire(logicalReference,
+                                                                                                                callbackBinding,
+                                                                                                                component);
+                    command.addPhysicalWireDefinition(callbackPwd);
+                }
             }
         }
     }

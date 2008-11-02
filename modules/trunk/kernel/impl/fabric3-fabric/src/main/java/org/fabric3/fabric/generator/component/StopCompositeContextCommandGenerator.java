@@ -19,8 +19,8 @@ package org.fabric3.fabric.generator.component;
 import org.osoa.sca.annotations.Property;
 
 import org.fabric3.fabric.command.StopCompositeContextCommand;
+import org.fabric3.spi.generator.CommandGenerator;
 import org.fabric3.spi.generator.GenerationException;
-import org.fabric3.spi.generator.RemoveCommandGenerator;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 import org.fabric3.spi.model.instance.LogicalState;
@@ -31,7 +31,7 @@ import org.fabric3.spi.model.instance.LogicalState;
  * @version $Rev: 4150 $ $Date: 2008-05-09 12:33:01 -0700 (Fri, 09 May 2008) $
  */
 
-public class StopCompositeContextCommandGenerator implements RemoveCommandGenerator {
+public class StopCompositeContextCommandGenerator implements CommandGenerator {
 
 
     private final int order;
