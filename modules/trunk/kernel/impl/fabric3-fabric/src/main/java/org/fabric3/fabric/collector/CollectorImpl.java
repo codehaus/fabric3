@@ -16,15 +16,19 @@
  */
 package org.fabric3.fabric.collector;
 
+import java.net.URI;
+import java.util.ArrayList;
+import java.util.List;
 import javax.xml.namespace.QName;
 
 import org.fabric3.fabric.instantiator.LogicalChange;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
+import org.fabric3.spi.model.instance.LogicalState;
 
 /**
  * Default Collector implementation.
- * 
+ *
  * @version $Revision$ $Date$
  */
 public class CollectorImpl implements Collector {
@@ -36,16 +40,32 @@ public class CollectorImpl implements Collector {
     }
 
     public void collect(LogicalCompositeComponent composite) {
-         // TODO
+        List<URI> remove = new ArrayList<URI>();
+        for (LogicalComponent<?> component : composite.getComponents()) {
+            if (component instanceof LogicalCompositeComponent) {
+                collect((LogicalCompositeComponent) component);
+            }
+            remove.add(component.getUri());
+        }
+        for (URI uri : remove) {
+            composite.removeComponent(uri);
+        }
     }
 
+    /**
+     * Iterates through the components and their children belonging to the deployable and marks them for removal.
+     *
+     * @param deployable the deployable being undeployed
+     * @param composite  the root composite, typically the domain component
+     * @param change     the change set to update
+     */
     private void mark(QName deployable, LogicalCompositeComponent composite, LogicalChange change) {
         for (LogicalComponent<?> component : composite.getComponents()) {
             if (deployable.equals(component.getDeployable())) {
                 if (component instanceof LogicalCompositeComponent) {
                     mark(deployable, (LogicalCompositeComponent) component, change);
                 }
-                // TODO mark
+                component.setState(LogicalState.MARKED);
                 change.removeComponent(component);
             }
         }
