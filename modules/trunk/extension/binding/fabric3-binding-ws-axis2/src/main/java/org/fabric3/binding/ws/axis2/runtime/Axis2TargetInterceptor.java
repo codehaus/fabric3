@@ -57,26 +57,21 @@ public class Axis2TargetInterceptor implements Interceptor {
     private Map<String, String> config;
     private final F3Configurator f3Configurator;
     private final PolicyApplier policyApplier;
-    
+
     private Random random = new Random();
     private List<String> failedUris = new LinkedList<String>();
 
     /**
      * Initializes the end point reference.
-     *
-     * @param endpointUri    the endpoint uri.
-     * @param operation      Operation name.
-     * @param policies       the set of policies applied to the service or reference configuration
+     * 
+     * @param endpointUri the endpoint uri.
+     * @param operation Operation name.
+     * @param policies the set of policies applied to the service or reference configuration
      * @param f3Configurator a configuration helper for classloading
-     * @param policyApplier  the helper for applying configured policies
+     * @param policyApplier the helper for applying configured policies
      */
-    public Axis2TargetInterceptor(List<String> endpointUris,
-                                  String operation,
-                                  Set<AxisPolicy> policies,
-                                  Map<String, String> operationInfo,
-                                  Map<String, String> config,
-                                  F3Configurator f3Configurator,
-                                  PolicyApplier policyApplier) {
+    public Axis2TargetInterceptor(List<String> endpointUris, String operation, Set<AxisPolicy> policies, Map<String, String> operationInfo,
+            Map<String, String> config, F3Configurator f3Configurator, PolicyApplier policyApplier) {
 
         this.operation = operation;
         this.endpointUris = endpointUris;
@@ -92,8 +87,8 @@ public class Axis2TargetInterceptor implements Interceptor {
     }
 
     public Message invoke(Message msg) {
-    	
-    	String endpointUri = getEndpointUri();
+
+        String endpointUri = getEndpointUri();
 
         Object[] payload = (Object[]) msg.getBody();
         OMElement message = payload == null ? null : (OMElement) payload[0];
@@ -102,7 +97,7 @@ public class Axis2TargetInterceptor implements Interceptor {
         options.setTo(new EndpointReference(endpointUri));
         options.setTransportInProtocol(Constants.TRANSPORT_HTTP);
         options.setProperty(Constants.Configuration.ENABLE_MTOM, Constants.VALUE_TRUE);
-                
+
         applyOperationInfo(options);
         applyConfig(options);
 
@@ -110,10 +105,15 @@ public class Axis2TargetInterceptor implements Interceptor {
         ClassLoader oldCl = currentThread.getContextClassLoader();
 
         try {
-            // The extension classloader is a temporary workaround for Axis2 security. The security provider is installed in a separate extension
-            // contribution which is loaded in a child classloader of the Axis2 extensin (i.e. it imports the Axis2 extension). Axis2 expects the
-            // security callback class to be visible from the TCCL. The extension classloader is the classloader that loaded the security
-            // contribution and hence has both the security and Axis2 classes visible to it.
+            // The extension classloader is a temporary workaround for Axis2
+            // security. The security provider is installed in a separate
+            // extension
+            // contribution which is loaded in a child classloader of the Axis2
+            // extensin (i.e. it imports the Axis2 extension). Axis2 expects the
+            // security callback class to be visible from the TCCL. The
+            // extension classloader is the classloader that loaded the security
+            // contribution and hence has both the security and Axis2 classes
+            // visible to it.
 
             currentThread.setContextClassLoader(f3Configurator.getExtensionClassLoader());
 
@@ -131,81 +131,81 @@ public class Axis2TargetInterceptor implements Interceptor {
                 ret.setBody(result);
             }
             failedUris.clear();
-            
+
             return ret;
 
         } catch (AxisFault e) {
-        	return handleFault(msg, endpointUri, e);
+            return handleFault(msg, endpointUri, e);
         } finally {
             currentThread.setContextClassLoader(oldCl);
         }
 
     }
 
-	private Message handleFault(Message msg, String endpointUri, AxisFault e) {
-		
-		Throwable cause = e.getCause();
-		if (cause instanceof ConnectException) {
-			failedUris.add(endpointUri);
-			if (failedUris.size() != endpointUris.size()) {
-				// Retry till all URIs are exhausted
-				return invoke(msg);
-			}
-		}
-		
-		SOAPFaultDetail element = e.getFaultDetailElement();
-		if (element == null) {
-		    throw new ServiceUnavailableException("Service fault was: \n" + e + "\n\n", e);
-		}
-		
-		OMNode child = element.getFirstOMChild();
-		if (child == null) {
-		    throw new ServiceUnavailableException("Service fault was: \n" + e + "\n\n", e);
-		}
-		
-		throw new ServiceUnavailableException("Service fault was: \n" + child + "\n\n", e);
-		
-	}
+    private Message handleFault(Message msg, String endpointUri, AxisFault e) {
 
-	private String getEndpointUri() {
-		
-		int index = random.nextInt(endpointUris.size());
-    	String endpointUri = endpointUris.get(index);
-    	
-    	if (failedUris.contains(endpointUri)) {
-    		endpointUri = getEndpointUri();
-    	}
-    	
-		return endpointUri;
-		
-	}    
+        Throwable cause = e.getCause();
+        if (cause instanceof ConnectException) {
+            failedUris.add(endpointUri);
+            if (failedUris.size() != endpointUris.size()) {
+                // Retry till all URIs are exhausted
+                return invoke(msg);
+            }
+        }
+
+        SOAPFaultDetail element = e.getFaultDetailElement();
+        if (element == null) {
+            throw new ServiceUnavailableException("Service fault was: \n" + e + "\n\n", e);
+        }
+
+        OMNode child = element.getFirstOMChild();
+        if (child == null) {
+            throw new ServiceUnavailableException("Service fault was: \n" + e + "\n\n", e);
+        }
+
+        throw new ServiceUnavailableException("Service fault was: \n" + child + "\n\n", e);
+
+    }
+
+    private String getEndpointUri() {
+
+        int index = random.nextInt(endpointUris.size());
+        String endpointUri = endpointUris.get(index);
+
+        if (failedUris.contains(endpointUri)) {
+            endpointUri = getEndpointUri();
+        }
+
+        return endpointUri;
+
+    }
 
     private void applyOperationInfo(Options options) {
-    	
-    	String soapAction = "urn:" + operation;//Default
-    	
-    	if(this.operationInfo != null) {
-    	    String soapActionInfo = this.operationInfo.get(Constant.SOAP_ACTION);
-    	    if(soapActionInfo != null) {
-    	        soapAction = soapActionInfo;
-    	    }
-    	}
-    	options.setAction(soapAction);
-    	
+
+        String soapAction = "urn:" + operation;// Default
+
+        if (this.operationInfo != null) {
+            String soapActionInfo = this.operationInfo.get(Constant.SOAP_ACTION);
+            if (soapActionInfo != null) {
+                soapAction = soapActionInfo;
+            }
+        }
+        options.setAction(soapAction);
+
     }
-    
+
     private void applyConfig(Options options) {
-    	
-    	if(config != null) {
-    	    boolean mtomEnabled = config.get(Constant.CONFIG_ENABLE_MTOM).equalsIgnoreCase(Constant.VALUE_TRUE);
-    	    if(!mtomEnabled) {
-    	        options.setProperty(Constants.Configuration.ENABLE_MTOM, Constants.VALUE_FALSE);
-    	        return;
-    	    }
-    	}
-    	//By default MTOM is enabled for backward compatibility.
-    	options.setProperty(Constants.Configuration.ENABLE_MTOM, Constants.VALUE_TRUE);	
-    	
+
+        if (config != null) {
+            boolean mtomEnabled = config.get(Constant.CONFIG_ENABLE_MTOM).equalsIgnoreCase(Constant.VALUE_TRUE);
+            if (!mtomEnabled) {
+                options.setProperty(Constants.Configuration.ENABLE_MTOM, Constants.VALUE_FALSE);
+                return;
+            }
+        }
+        // By default MTOM is enabled for backward compatibility.
+        options.setProperty(Constants.Configuration.ENABLE_MTOM, Constants.VALUE_TRUE);
+
     }
 
     private void applyPolicies(ServiceClient sender, String operation) throws AxisFault {
