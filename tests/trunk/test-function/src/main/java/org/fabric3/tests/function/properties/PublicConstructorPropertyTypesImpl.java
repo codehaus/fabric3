@@ -32,6 +32,8 @@ import org.osoa.sca.annotations.Property;
  * @version $Rev$ $Date$
  */
 public class PublicConstructorPropertyTypesImpl implements PropertyTypes {
+	
+	private final Foo foo;
     private final boolean booleanPrimitive;
     private final byte bytePrimitive;
     private final short shortPrimitive;
@@ -85,7 +87,8 @@ public class PublicConstructorPropertyTypesImpl implements PropertyTypes {
                                               @Property(name = "mapValue") Map<String, String> mapValue,
                                               @Property(name = "propertiesValue") Properties propertiesValue,
                                               @Property(name = "listValue") List<String> listValue,
-                                              @Property(name = "mapOfQNameToClassValue") Map<QName, Class<?>> mapOfQNameToClassValue) {
+                                              @Property(name = "mapOfQNameToClassValue") Map<QName, Class<?>> mapOfQNameToClassValue,
+                                              @Property(name = "foo") Foo foo) {
         this.booleanPrimitive = booleanPrimitive;
         this.bytePrimitive = bytePrimitive;
         this.shortPrimitive = shortPrimitive;
@@ -111,6 +114,11 @@ public class PublicConstructorPropertyTypesImpl implements PropertyTypes {
         this.propertiesValue = propertiesValue;
         this.listValue = listValue;
         this.mapOfQNameToClassValue = mapOfQNameToClassValue;
+        this.foo = foo;
+    }
+
+    public Foo getFoo() {
+    	return foo;
     }
 
     public boolean getBooleanPrimitive() {

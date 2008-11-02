@@ -32,6 +32,9 @@ import javax.xml.namespace.QName;
  * @version $Rev$ $Date$
  */
 public interface PropertyTypes {
+	
+	Foo getFoo();
+	
     boolean getBooleanPrimitive();
 
     byte getBytePrimitive();

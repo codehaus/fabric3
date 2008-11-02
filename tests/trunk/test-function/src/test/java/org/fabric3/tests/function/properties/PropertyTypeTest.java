@@ -38,6 +38,10 @@ import org.osoa.sca.annotations.Reference;
 public class PropertyTypeTest extends TestCase {
     @Reference
     public PropertyTypes service;
+    
+    public void testFoo() {
+    	assertEquals("Bar", service.getFoo().bar);
+    }
 
     public void testBoolean() {
         assertEquals(true, service.getBooleanPrimitive());

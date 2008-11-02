@@ -32,6 +32,9 @@ import org.osoa.sca.annotations.Property;
  * @version $Rev$ $Date$
  */
 public class ProtectedSetterPropertyTypesImpl implements PropertyTypes {
+	
+	private Foo foo;
+	
     private boolean booleanPrimitive;
     private byte bytePrimitive;
     private short shortPrimitive;
@@ -60,6 +63,15 @@ public class ProtectedSetterPropertyTypesImpl implements PropertyTypes {
     private Properties propertiesValue;
     private List<String> listValue;
     private Map<QName, Class<?>> mapOfQNameToClassValue;
+
+    public Foo getFoo() {
+    	return foo;
+    }
+    
+    @Property
+    protected void setFoo(Foo foo) {
+    	this.foo = foo;
+    }
 
     public boolean getBooleanPrimitive() {
         return booleanPrimitive;

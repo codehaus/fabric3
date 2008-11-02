@@ -32,6 +32,8 @@ import org.osoa.sca.annotations.Property;
  * @version $Rev$ $Date$
  */
 public class PublicFieldPropertyTypesImpl implements PropertyTypes {
+	
+	@Property public Foo foo;
     @Property public boolean booleanPrimitive;
     @Property public byte bytePrimitive;
     @Property public short shortPrimitive;
@@ -60,6 +62,10 @@ public class PublicFieldPropertyTypesImpl implements PropertyTypes {
     @Property public Properties propertiesValue;
     @Property public List<String> listValue;
     @Property public Map<QName, Class<?>> mapOfQNameToClassValue;
+
+    public Foo getFoo() {
+    	return foo;
+    }
 
     public boolean getBooleanPrimitive() {
         return booleanPrimitive;
