@@ -42,7 +42,19 @@ public class DefaultTransformerRegistry<T extends Transformer> implements Transf
 
     public T getTransformer(DataType<?> source, DataType<?> target) {
         TransformerPair pair = new TransformerPair(source, target);
-        return transformers.get(pair);
+        T transformer = transformers.get(pair);
+        if (transformer == null) {
+        	for (T tr : transformers.values()) {
+        		if (tr.canTransform(target)) {
+        			transformer = tr;
+        			break;
+        		}
+        	}
+        }
+        if (transformer == null) {
+        	System.err.println("No transformer for soure " + target.getLogical() + "|" + target.getPhysical());
+        }
+        return transformer;
     }
 
     private static class TransformerPair {

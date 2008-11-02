@@ -24,4 +24,5 @@ import org.fabric3.scdl.DataType;
 public interface Transformer {
     DataType<?> getSourceType();
     DataType<?> getTargetType();
+    boolean canTransform(DataType<?> targetType);
 }

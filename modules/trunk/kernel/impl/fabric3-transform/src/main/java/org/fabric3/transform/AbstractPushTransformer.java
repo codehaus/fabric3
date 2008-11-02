@@ -21,6 +21,7 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
+import org.fabric3.scdl.DataType;
 import org.fabric3.transform.PushTransformer;
 import org.fabric3.transform.TransformerRegistry;
 
@@ -44,5 +45,15 @@ public abstract class AbstractPushTransformer<SOURCE, TARGET> implements PushTra
     @Destroy
     public void destroy() {
         registry.unregister(this);
+    }
+    
+    /**
+     * Checks whether this transformer can transform the specified type.
+     * 
+     * @param target Target type.
+     * @return True if this type can be transformed.
+     */
+    public boolean canTransform(DataType<?> targetType) {
+    	return false;
     }
 }

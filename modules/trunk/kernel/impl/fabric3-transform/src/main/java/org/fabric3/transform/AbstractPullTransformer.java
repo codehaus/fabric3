@@ -16,16 +16,13 @@
  */
 package org.fabric3.transform;
 
+import org.fabric3.scdl.DataType;
+import org.fabric3.spi.model.type.XSDSimpleType;
 import org.osoa.sca.annotations.Destroy;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 import org.w3c.dom.Node;
-
-import org.fabric3.scdl.DataType;
-import org.fabric3.spi.model.type.XSDSimpleType;
-import org.fabric3.transform.PullTransformer;
-import org.fabric3.transform.TransformerRegistry;
 
 /**
  * @version $Rev$ $Date$
@@ -65,5 +62,15 @@ public abstract class AbstractPullTransformer<SOURCE, TARGET> implements PullTra
      */
     public DataType<?> getSourceType() {
     	return DEFAULT_SOURCE;
+    }
+    
+    /**
+     * Checks whether this transformer can transform the specified type.
+     * 
+     * @param target Target type.
+     * @return True if this type can be transformed.
+     */
+    public boolean canTransform(DataType<?> targetType) {
+    	return false;
     }
 }
