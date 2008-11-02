@@ -16,7 +16,11 @@
  */
 package org.fabric3.binding.ws.axis2.runtime;
 
+import java.net.ConnectException;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
+import java.util.Random;
 import java.util.Set;
 
 import org.apache.axiom.om.OMElement;
@@ -46,13 +50,16 @@ import org.osoa.sca.ServiceUnavailableException;
 public class Axis2TargetInterceptor implements Interceptor {
 
     private Interceptor next;
-    private final EndpointReference epr;
+    private List<String> endpointUris;
     private final String operation;
     private final Set<AxisPolicy> policies;
     private Map<String, String> operationInfo;
     private Map<String, String> config;
     private final F3Configurator f3Configurator;
     private final PolicyApplier policyApplier;
+    
+    private Random random = new Random();
+    private List<String> failedUris = new LinkedList<String>();
 
     /**
      * Initializes the end point reference.
@@ -63,7 +70,7 @@ public class Axis2TargetInterceptor implements Interceptor {
      * @param f3Configurator a configuration helper for classloading
      * @param policyApplier  the helper for applying configured policies
      */
-    public Axis2TargetInterceptor(String endpointUri,
+    public Axis2TargetInterceptor(List<String> endpointUris,
                                   String operation,
                                   Set<AxisPolicy> policies,
                                   Map<String, String> operationInfo,
@@ -72,7 +79,7 @@ public class Axis2TargetInterceptor implements Interceptor {
                                   PolicyApplier policyApplier) {
 
         this.operation = operation;
-        this.epr = new EndpointReference(endpointUri);
+        this.endpointUris = endpointUris;
         this.policies = policies;
         this.f3Configurator = f3Configurator;
         this.policyApplier = policyApplier;
@@ -85,18 +92,19 @@ public class Axis2TargetInterceptor implements Interceptor {
     }
 
     public Message invoke(Message msg) {
+    	
+    	String endpointUri = getEndpointUri();
 
         Object[] payload = (Object[]) msg.getBody();
         OMElement message = payload == null ? null : (OMElement) payload[0];
 
         Options options = new Options();
-        options.setTo(epr);
+        options.setTo(new EndpointReference(endpointUri));
         options.setTransportInProtocol(Constants.TRANSPORT_HTTP);
         options.setProperty(Constants.Configuration.ENABLE_MTOM, Constants.VALUE_TRUE);
                 
         applyOperationInfo(options);
         applyConfig(options);
-        
 
         Thread currentThread = Thread.currentThread();
         ClassLoader oldCl = currentThread.getContextClassLoader();
@@ -122,25 +130,58 @@ public class Axis2TargetInterceptor implements Interceptor {
             } else {
                 ret.setBody(result);
             }
+            failedUris.clear();
+            
             return ret;
 
         } catch (AxisFault e) {
-            SOAPFaultDetail element = e.getFaultDetailElement();
-            if (element == null) {
-                throw new ServiceUnavailableException("Service fault was: \n" + e + "\n\n", e);
-            }
-            OMNode child = element.getFirstOMChild();
-            if (child == null) {
-                throw new ServiceUnavailableException("Service fault was: \n" + e + "\n\n", e);
-            }
-            throw new ServiceUnavailableException("Service fault was: \n" + child + "\n\n", e);
+        	return handleFault(msg, endpointUri, e);
         } finally {
             currentThread.setContextClassLoader(oldCl);
         }
 
-    }    
+    }
+
+	private Message handleFault(Message msg, String endpointUri, AxisFault e) {
+		
+		Throwable cause = e.getCause();
+		if (cause instanceof ConnectException) {
+			failedUris.add(endpointUri);
+			if (failedUris.size() != endpointUris.size()) {
+				// Retry till all URIs are exhausted
+				return invoke(msg);
+			}
+		}
+		
+		SOAPFaultDetail element = e.getFaultDetailElement();
+		if (element == null) {
+		    throw new ServiceUnavailableException("Service fault was: \n" + e + "\n\n", e);
+		}
+		
+		OMNode child = element.getFirstOMChild();
+		if (child == null) {
+		    throw new ServiceUnavailableException("Service fault was: \n" + e + "\n\n", e);
+		}
+		
+		throw new ServiceUnavailableException("Service fault was: \n" + child + "\n\n", e);
+		
+	}
+
+	private String getEndpointUri() {
+		
+		int index = random.nextInt(endpointUris.size());
+    	String endpointUri = endpointUris.get(index);
+    	
+    	if (failedUris.contains(endpointUri)) {
+    		endpointUri = getEndpointUri();
+    	}
+    	
+		return endpointUri;
+		
+	}    
 
     private void applyOperationInfo(Options options) {
+    	
     	String soapAction = "urn:" + operation;//Default
     	
     	if(this.operationInfo != null) {
@@ -149,10 +190,12 @@ public class Axis2TargetInterceptor implements Interceptor {
     	        soapAction = soapActionInfo;
     	    }
     	}
-    	options.setAction(soapAction);	
+    	options.setAction(soapAction);
+    	
     }
     
     private void applyConfig(Options options) {
+    	
     	if(config != null) {
     	    boolean mtomEnabled = config.get(Constant.CONFIG_ENABLE_MTOM).equalsIgnoreCase(Constant.VALUE_TRUE);
     	    if(!mtomEnabled) {
@@ -162,6 +205,7 @@ public class Axis2TargetInterceptor implements Interceptor {
     	}
     	//By default MTOM is enabled for backward compatibility.
     	options.setProperty(Constants.Configuration.ENABLE_MTOM, Constants.VALUE_TRUE);	
+    	
     }
 
     private void applyPolicies(ServiceClient sender, String operation) throws AxisFault {

@@ -19,8 +19,11 @@ package org.fabric3.binding.ws.axis2.runtime;
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URLDecoder;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.StringTokenizer;
 
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
@@ -59,9 +62,15 @@ public class Axis2TargetWireAttacher implements TargetWireAttacher<Axis2WireTarg
         this.expander = expander;
     }
 
-    public void attachToTarget(PhysicalWireSourceDefinition source, Axis2WireTargetDefinition target, Wire wire)
-            throws WiringException {
+    public void attachToTarget(PhysicalWireSourceDefinition source, Axis2WireTargetDefinition target, Wire wire) throws WiringException {
+    	
+    	List<String> endpointUris = new LinkedList<String>();
         String endpointUri = expandUri(target.getUri());
+        StringTokenizer tok = new StringTokenizer(endpointUri);
+        while (tok.hasMoreElements()) {
+        	endpointUris.add(tok.nextToken().trim());
+        	
+        }
         for (Map.Entry<PhysicalOperationDefinition, InvocationChain> entry : wire.getInvocationChains().entrySet()) {
 
             String operation = entry.getKey().getName();
@@ -69,7 +78,7 @@ public class Axis2TargetWireAttacher implements TargetWireAttacher<Axis2WireTarg
             Set<AxisPolicy> policies = target.getPolicies(operation);
             Map<String, String> opInfo = target.getOperationInfo() != null ? target.getOperationInfo().get(operation) : null;
             
-            Interceptor interceptor = new Axis2TargetInterceptor(endpointUri, operation, policies, opInfo, target.getConfig(), f3Configurator, policyApplier);
+            Interceptor interceptor = new Axis2TargetInterceptor(endpointUris, operation, policies, opInfo, target.getConfig(), f3Configurator, policyApplier);
             entry.getValue().addInterceptor(interceptor);
         }
 
