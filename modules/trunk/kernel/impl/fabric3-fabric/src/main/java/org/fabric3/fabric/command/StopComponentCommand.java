@@ -35,18 +35,19 @@ public class StopComponentCommand extends AbstractCommand {
         return uri;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        StopComponentCommand that = (StopComponentCommand) o;
+
+        return !(uri != null ? !uri.equals(that.uri) : that.uri != null);
+
+    }
+
+    @Override
     public int hashCode() {
-        return uri.hashCode();
+        return uri != null ? uri.hashCode() : 0;
     }
-
-    public boolean equals(Object object) {
-        if (this == object) return true;
-        try {
-            StopComponentCommand csc = (StopComponentCommand) object;
-            return uri.equals(csc.uri);
-        } catch (ClassCastException cse) {
-            return false;
-        }
-    }
-
 }

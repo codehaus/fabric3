@@ -35,17 +35,19 @@ public class StopCompositeContextCommand extends AbstractCommand {
         return groupId;
     }
 
-    public int hashCode() {
-        return groupId.hashCode();
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        StopCompositeContextCommand that = (StopCompositeContextCommand) o;
+
+        return !(groupId != null ? !groupId.equals(that.groupId) : that.groupId != null);
+
     }
 
-    public boolean equals(Object object) {
-        if (this == object) return true;
-        try {
-            StopCompositeContextCommand other = (StopCompositeContextCommand) object;
-            return groupId.equals(other.groupId);
-        } catch (ClassCastException cce) {
-            return false;
-        }
+    @Override
+    public int hashCode() {
+        return groupId != null ? groupId.hashCode() : 0;
     }
 }

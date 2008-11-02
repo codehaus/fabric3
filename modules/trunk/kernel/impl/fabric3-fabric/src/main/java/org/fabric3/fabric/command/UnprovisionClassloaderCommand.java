@@ -35,19 +35,20 @@ public class UnprovisionClassloaderCommand extends AbstractCommand {
         return uri;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        UnprovisionClassloaderCommand that = (UnprovisionClassloaderCommand) o;
+
+        return !(uri != null ? !uri.equals(that.uri) : that.uri != null);
+
+    }
+
+    @Override
     public int hashCode() {
-        return uri.hashCode();
+        return uri != null ? uri.hashCode() : 0;
     }
-
-    public boolean equals(Object obj) {
-        if (this == obj) return true;
-        try {
-            UnprovisionClassloaderCommand other = (UnprovisionClassloaderCommand) obj;
-            return uri.equals(other.uri);
-        } catch (ClassCastException cce) {
-            return false;
-        }
-    }
-
 }
 
