@@ -33,6 +33,7 @@ import org.fabric3.host.domain.AssemblyException;
 import org.fabric3.host.domain.DeploymentException;
 import org.fabric3.loader.plan.DeploymentPlanConstants;
 import org.fabric3.scdl.Composite;
+import org.fabric3.scdl.Include;
 import org.fabric3.spi.allocator.AllocationException;
 import org.fabric3.spi.allocator.Allocator;
 import org.fabric3.spi.binding.BindingSelectionException;
@@ -113,11 +114,18 @@ public abstract class AbstractDomain implements Domain {
 
     public void include(QName deployable, String plan, boolean transactional) throws DeploymentException {
         Composite composite = resolveComposite(deployable);
+        // In order to include a composite at the domain level, it must first be wrapped in a composite that includes it.
+        // This wrapper is thrown away during the inclusion.
+        Composite wrapper = new Composite(deployable);
+        Include include = new Include();
+        include.setName(deployable);
+        include.setIncluded(composite);
+        wrapper.add(include);
         if (plan == null) {
-            include(composite, null, transactional);
+            include(wrapper, null, transactional);
         } else {
             DeploymentPlan deploymentPlan = resolvePlan(plan);
-            include(composite, deploymentPlan, transactional);
+            include(wrapper, deploymentPlan, transactional);
         }
 
     }
