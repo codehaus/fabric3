@@ -99,9 +99,4 @@
         <property name="order">2</property>
     </component>
 
-    <component name="UnprovisionClassloaderCommandGenerator">
-        <f3-impl:implementation.system class="org.fabric3.fabric.generator.classloader.UnprovisionClassloaderCommandGenerator"/>
-        <property name="order">3</property>
-    </component>
-
 </composite>
