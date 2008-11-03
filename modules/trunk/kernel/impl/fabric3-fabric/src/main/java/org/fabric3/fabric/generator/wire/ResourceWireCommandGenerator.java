@@ -38,7 +38,7 @@ public class ResourceWireCommandGenerator implements CommandGenerator {
     private final PhysicalWireGenerator physicalWireGenerator;
     private final int order;
 
-    public ResourceWireCommandGenerator(@Reference PhysicalWireGenerator physicalWireGenerator, @Property(name = "order")int order) {
+    public ResourceWireCommandGenerator(@Reference PhysicalWireGenerator physicalWireGenerator, @Property(name = "order") int order) {
         this.physicalWireGenerator = physicalWireGenerator;
         this.order = order;
     }
@@ -51,19 +51,19 @@ public class ResourceWireCommandGenerator implements CommandGenerator {
         if (component instanceof LogicalCompositeComponent || component.getState() != LogicalState.NEW) {
             return null;
         }
-        AttachWireCommand command = new AttachWireCommand(order);
-        generatePhysicalWires(component, command);
-        return command;
+        return generatePhysicalWires(component);
     }
 
-    private void generatePhysicalWires(LogicalComponent<?> component, AttachWireCommand command) throws GenerationException {
+    private AttachWireCommand generatePhysicalWires(LogicalComponent<?> component) throws GenerationException {
+        AttachWireCommand command = new AttachWireCommand(order);
         if (component.getState() != LogicalState.NEW) {
-            return;
+            return null;
         }
         for (LogicalResource<?> resource : component.getResources()) {
             PhysicalWireDefinition pwd = physicalWireGenerator.generateResourceWire(component, resource);
             command.addPhysicalWireDefinition(pwd);
         }
+        return command;
     }
 
 }
