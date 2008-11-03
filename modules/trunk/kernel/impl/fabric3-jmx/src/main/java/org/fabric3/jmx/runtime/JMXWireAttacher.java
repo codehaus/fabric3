@@ -67,7 +67,7 @@ public class JMXWireAttacher implements SourceWireAttacher<JMXWireSourceDefiniti
         throw new UnsupportedOperationException();
     }
 
-    public void detachFromSource(JMXWireSourceDefinition source, PhysicalWireTargetDefinition target, Wire wire) throws WiringException {
+    public void detachFromSource(JMXWireSourceDefinition source, PhysicalWireTargetDefinition target) throws WiringException {
         throw new AssertionError();
     }
 

@@ -76,7 +76,7 @@ public class JaxWsSourceWireAttacher implements SourceWireAttacher<JaxWsWireSour
         provisioner.provision(clazz, handler, source, target.getUri());
     }
 
-    public void detachFromSource(JaxWsWireSourceDefinition source, PhysicalWireTargetDefinition target, Wire wire) throws WiringException {
+    public void detachFromSource(JaxWsWireSourceDefinition source, PhysicalWireTargetDefinition target) throws WiringException {
         provisioner.unprovision(source, target.getUri());
     }
 

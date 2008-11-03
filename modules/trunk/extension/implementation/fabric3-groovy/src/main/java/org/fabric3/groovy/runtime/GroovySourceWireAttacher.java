@@ -93,7 +93,7 @@ public class GroovySourceWireAttacher extends PojoSourceWireAttacher implements 
         }
     }
 
-    public void detachFromSource(GroovyWireSourceDefinition source, PhysicalWireTargetDefinition target, Wire wire) throws WiringException {
+    public void detachFromSource(GroovyWireSourceDefinition source, PhysicalWireTargetDefinition target) throws WiringException {
         throw new AssertionError();
     }
 

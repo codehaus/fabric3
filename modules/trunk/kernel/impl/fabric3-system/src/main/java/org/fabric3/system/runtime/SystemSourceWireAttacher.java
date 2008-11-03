@@ -117,7 +117,7 @@ public class SystemSourceWireAttacher extends PojoSourceWireAttacher implements 
         }
     }
 
-    public void detachFromSource(SystemWireSourceDefinition source, PhysicalWireTargetDefinition target, Wire wire) throws WiringException {
+    public void detachFromSource(SystemWireSourceDefinition source, PhysicalWireTargetDefinition target) throws WiringException {
         throw new AssertionError();
     }
 

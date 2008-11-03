@@ -42,7 +42,7 @@ public class TestBindingSourceWireAttacher implements SourceWireAttacher<TestBin
         channel.registerDestinationWire(source.getUri(), wire, callbackUri);
     }
 
-    public void detachFromSource(TestBindingSourceDefinition source, PhysicalWireTargetDefinition target, Wire wire) throws WiringException {
+    public void detachFromSource(TestBindingSourceDefinition source, PhysicalWireTargetDefinition target) throws WiringException {
         throw new AssertionError();
     }
 

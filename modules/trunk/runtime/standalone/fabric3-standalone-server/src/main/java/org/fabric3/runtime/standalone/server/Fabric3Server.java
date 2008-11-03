@@ -56,6 +56,7 @@ import org.fabric3.host.runtime.RuntimeLifecycleCoordinator;
 import org.fabric3.host.runtime.ShutdownException;
 import org.fabric3.jmx.agent.Agent;
 import org.fabric3.jmx.agent.DefaultAgent;
+import org.fabric3.jmx.agent.rmi.RmiAgent;
 import org.fabric3.monitor.MonitorFactory;
 import org.fabric3.runtime.standalone.BootstrapException;
 import org.fabric3.runtime.standalone.BootstrapHelper;
@@ -78,7 +79,7 @@ public class Fabric3Server implements Fabric3ServerMBean {
     private static final String JOIN_DOMAIN_TIMEOUT = "fabric3.join.domain.timeout";
     private static final String INTENTS_FILE = "intents.xml";
 
-    private final Agent agent;
+    private final RmiAgent agent;
     private final File installDirectory;
     private RuntimeLifecycleCoordinator<StandaloneRuntime, Bootstrapper> coordinator;
     private ServerMonitor monitor;
@@ -106,7 +107,7 @@ public class Fabric3Server implements Fabric3ServerMBean {
         installDirectory = BootstrapHelper.getInstallDirectory(Fabric3Server.class);
 
         // TODO Add better host JMX support from the next release
-        agent = new DefaultAgent();
+        agent = new RmiAgent();
     }
 
     /**
@@ -183,7 +184,7 @@ public class Fabric3Server implements Fabric3ServerMBean {
             future.get();
 
             monitor.started(jmxDomain);
-
+            agent.start();
             // create the shutdown daemon
             CountDownLatch latch = new CountDownLatch(1);
             new ShutdownDaemon(monitorPort, monitorKey, latch);
@@ -192,7 +193,7 @@ public class Fabric3Server implements Fabric3ServerMBean {
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-
+            agent.shutdown();
         } catch (Exception ex) {
             if (monitor != null) {
                 // there could have been an error initializing the monitor

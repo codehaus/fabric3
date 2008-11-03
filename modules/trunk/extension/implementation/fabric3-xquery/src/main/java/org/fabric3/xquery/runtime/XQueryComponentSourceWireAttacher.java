@@ -56,7 +56,7 @@ public class XQueryComponentSourceWireAttacher implements SourceWireAttacher<XQu
         component.attachSourceWire(referenceName, interactionType,callbackUri, wire);
     }
 
-    public void detachFromSource(XQueryComponentWireSourceDefinition source, PhysicalWireTargetDefinition target, Wire wire) throws WiringException {
+    public void detachFromSource(XQueryComponentWireSourceDefinition source, PhysicalWireTargetDefinition target) throws WiringException {
         throw new AssertionError();
     }
 

@@ -57,7 +57,7 @@ public class WebComponentSourceWireAttacher implements SourceWireAttacher<WebCom
         }
     }
 
-    public void detachFromSource(WebComponentWireSourceDefinition source, PhysicalWireTargetDefinition target, Wire wire) throws WiringException {
+    public void detachFromSource(WebComponentWireSourceDefinition source, PhysicalWireTargetDefinition target) throws WiringException {
         throw new AssertionError();
     }
 

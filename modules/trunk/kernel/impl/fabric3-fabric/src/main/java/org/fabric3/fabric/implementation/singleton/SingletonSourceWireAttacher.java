@@ -65,7 +65,7 @@ public class SingletonSourceWireAttacher implements SourceWireAttacher<Singleton
         throw new UnsupportedOperationException();
     }
 
-    public void detachFromSource(SingletonWireSourceDefinition source, PhysicalWireTargetDefinition target, Wire wire) throws WiringException {
+    public void detachFromSource(SingletonWireSourceDefinition source, PhysicalWireTargetDefinition target) throws WiringException {
         throw new UnsupportedOperationException();
     }
 

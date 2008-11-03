@@ -48,7 +48,7 @@ public class Axis2SourceWireAttacher implements SourceWireAttacher<Axis2WireSour
         serviceProvisioner.provision(source, wire);
     }
 
-    public void detachFromSource(Axis2WireSourceDefinition source, PhysicalWireTargetDefinition target, Wire wire) throws WiringException {
+    public void detachFromSource(Axis2WireSourceDefinition source, PhysicalWireTargetDefinition target) throws WiringException {
         throw new AssertionError();        
     }
 

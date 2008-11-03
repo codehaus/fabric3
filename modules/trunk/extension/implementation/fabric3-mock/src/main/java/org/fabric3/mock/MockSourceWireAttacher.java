@@ -36,7 +36,7 @@ public class MockSourceWireAttacher implements SourceWireAttacher<MockWireSource
         // Empty implementation; we don't want to attach anything to the mock
     }
 
-    public void detachFromSource(MockWireSourceDefinition source, PhysicalWireTargetDefinition target, Wire wire) throws WiringException {
+    public void detachFromSource(MockWireSourceDefinition source, PhysicalWireTargetDefinition target) throws WiringException {
 
     }
 }

@@ -50,10 +50,10 @@ import org.fabric3.spi.wire.Wire;
  */
 public interface SourceWireAttacher<PWSD extends PhysicalWireSourceDefinition> {
     /**
-     * Attaches a wire to a source component or and incoming binding.
+     * Attaches a wire to a source component or an incoming binding.
      *
-     * @param source metadata for performing the attach
-     * @param target metadata for performing the attach
+     * @param source metadata for the source side of the wire
+     * @param target metadata for the target side of the wire
      * @param wire   the wire
      * @throws WiringException if an exception occurs during the attach operation
      */
@@ -61,19 +61,22 @@ public interface SourceWireAttacher<PWSD extends PhysicalWireSourceDefinition> {
 
 
     /**
-     * Detach a wire from a source component
-     * @param source
-     * @param target
-     * @param wire
-     */
-    void detachFromSource(PWSD source, PhysicalWireTargetDefinition target, Wire wire) throws WiringException;
-    /**
      * Attaches an ObjectFactory to a source component.
      *
      * @param source        the definition of the component reference to attach to
      * @param objectFactory an ObjectFactory that can produce values compatible with the reference
-     * @param target    the target definition for the wire
+     * @param target        the target definition for the wire
      * @throws WiringException if an exception occurs during the attach operation
      */
     void attachObjectFactory(PWSD source, ObjectFactory<?> objectFactory, PhysicalWireTargetDefinition target) throws WiringException;
+
+    /**
+     * Detach a wire from a source component.
+     *
+     * @param source metadata for the source side of the wire
+     * @param target metadata for the target side of the wire
+     * @throws WiringException if an exception occurs during the attach operation
+     */
+    void detachFromSource(PWSD source, PhysicalWireTargetDefinition target) throws WiringException;
+
 }

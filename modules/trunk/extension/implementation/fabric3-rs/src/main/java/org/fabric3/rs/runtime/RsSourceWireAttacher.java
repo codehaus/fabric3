@@ -86,7 +86,7 @@ public class RsSourceWireAttacher implements SourceWireAttacher<RsWireSourceDefi
         
     }
 
-    public void detachFromSource(RsWireSourceDefinition source, PhysicalWireTargetDefinition target, Wire wire) throws WiringException {
+    public void detachFromSource(RsWireSourceDefinition source, PhysicalWireTargetDefinition target) throws WiringException {
         throw new AssertionError();
     }
 

@@ -106,16 +106,14 @@ public class ConnectorImpl implements Connector {
 
     public void disconnect(PhysicalWireDefinition definition) throws BuilderException {
         PhysicalWireSourceDefinition sourceDefinition = definition.getSource();
-        SourceWireAttacher<PhysicalWireSourceDefinition> sourceAttacher =
-                getAttacher(sourceDefinition);
+        SourceWireAttacher<PhysicalWireSourceDefinition> sourceAttacher = getAttacher(sourceDefinition);
 
         PhysicalWireTargetDefinition targetDefinition = definition.getTarget();
 
         if (definition.isOptimizable()) {
             sourceAttacher.attachObjectFactory(sourceDefinition, null, targetDefinition);
         } else {
-            Wire wire = createWire(definition);
-            sourceAttacher.detachFromSource(sourceDefinition, targetDefinition, wire);
+            sourceAttacher.detachFromSource(sourceDefinition, targetDefinition);
         }
     }
 

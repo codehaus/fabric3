@@ -99,7 +99,7 @@ public class TCPSourceWireAttacher implements SourceWireAttacher<TCPWireSourceDe
     /**
      * {@inheritDoc}
      */
-    public void detachFromSource(TCPWireSourceDefinition source, PhysicalWireTargetDefinition target, Wire wire) throws WiringException {
+    public void detachFromSource(TCPWireSourceDefinition source, PhysicalWireTargetDefinition target) throws WiringException {
         throw new UnsupportedOperationException();
     }
 

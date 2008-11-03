@@ -116,7 +116,7 @@ public class RmiSourceWireAttacher implements SourceWireAttacher<RmiWireSourceDe
 
     }
 
-    public void detachFromSource(RmiWireSourceDefinition source, PhysicalWireTargetDefinition target, Wire wire) throws WireAttachException {
+    public void detachFromSource(RmiWireSourceDefinition source, PhysicalWireTargetDefinition target) throws WireAttachException {
         String serviceName = source.getBindingDefinition().getServiceName();
         int port = source.getBindingDefinition().getPort();
         if (serviceName != null) {

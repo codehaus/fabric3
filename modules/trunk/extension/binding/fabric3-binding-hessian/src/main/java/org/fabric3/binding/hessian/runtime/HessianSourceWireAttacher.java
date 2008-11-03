@@ -107,7 +107,7 @@ public class HessianSourceWireAttacher implements SourceWireAttacher<HessianWire
 
     }
 
-    public void detachFromSource(HessianWireSourceDefinition source, PhysicalWireTargetDefinition target, Wire wire) throws WiringException {
+    public void detachFromSource(HessianWireSourceDefinition source, PhysicalWireTargetDefinition target) throws WiringException {
         throw new AssertionError();
     }
 

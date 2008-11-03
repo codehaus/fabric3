@@ -99,8 +99,8 @@ public class EjbSourceWireAttacher implements SourceWireAttacher<EjbWireSourceDe
     }
 
     public void detachFromSource(EjbWireSourceDefinition sourceDefinition,
-                               PhysicalWireTargetDefinition targetDefinition,
-                               Wire wire) throws WiringException {
+                                 PhysicalWireTargetDefinition targetDefinition
+    ) throws WiringException {
         throw new AssertionError();
     }
 

@@ -172,7 +172,7 @@ public class JmsSourceWireAttacher implements SourceWireAttacher<JmsWireSourceDe
                                          serviceUri);
     }
 
-    public void detachFromSource(JmsWireSourceDefinition source, PhysicalWireTargetDefinition target, Wire wire) throws WiringException {
+    public void detachFromSource(JmsWireSourceDefinition source, PhysicalWireTargetDefinition target) throws WiringException {
         jmsHost.unregisterListener(target.getUri());
     }
 

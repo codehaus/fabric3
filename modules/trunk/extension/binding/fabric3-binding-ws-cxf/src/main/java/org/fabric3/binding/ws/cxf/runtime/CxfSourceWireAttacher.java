@@ -106,8 +106,8 @@ public class CxfSourceWireAttacher implements SourceWireAttacher<CxfWireSourceDe
     }
 
     public void detachFromSource(CxfWireSourceDefinition sourceDefinition,
-                                 PhysicalWireTargetDefinition targetDefinition,
-                                 Wire wire) throws WiringException {
+                                 PhysicalWireTargetDefinition targetDefinition
+    ) throws WiringException {
         throw new AssertionError();
     }
 
