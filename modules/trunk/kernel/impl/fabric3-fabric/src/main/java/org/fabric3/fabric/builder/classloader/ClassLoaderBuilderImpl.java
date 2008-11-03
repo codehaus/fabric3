@@ -87,7 +87,47 @@ public class ClassLoaderBuilderImpl implements ClassLoaderBuilder {
     }
 
     public void destroy(URI uri) {
-        classLoaderRegistry.unregister(uri);
+        ClassLoader loader = classLoaderRegistry.getClassLoader(uri);
+        assert loader != null;
+        boolean referenced = false;
+        for (ClassLoader cl : classLoaderRegistry.getClassLoaders().values()) {
+            if (cl == loader) {
+                continue;
+            }
+            if (cl instanceof MultiParentClassLoader) {
+                MultiParentClassLoader multi = (MultiParentClassLoader) cl;
+                for (ClassLoader parent : multi.getParents()) {
+                    referenced = checkReferenced(loader, parent);
+                }
+            } else {
+                referenced = checkReferenced(loader, cl);
+            }
+            if (referenced) {
+                break;
+            }
+        }
+        if (!referenced) {
+            classLoaderRegistry.unregister(uri);
+        }
+    }
+
+    /**
+     * Returns true if the first classloader is referenced in the second's classloader hierarchy.
+     *
+     * @param classLoaderToCheck the classloader to check
+     * @param classLoader        the classloader hierarchy
+     * @return true if the first classloader is referenced
+     */
+    private boolean checkReferenced(ClassLoader classLoaderToCheck, ClassLoader classLoader) {
+        boolean referenced = false;
+        while (classLoader.getParent() != null) {
+            classLoader = classLoader.getParent();
+            if (classLoader == classLoaderToCheck) {
+                referenced = true;
+                break;
+            }
+        }
+        return referenced;
     }
 
     /**

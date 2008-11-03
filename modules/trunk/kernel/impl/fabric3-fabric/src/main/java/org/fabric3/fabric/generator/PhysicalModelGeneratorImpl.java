@@ -82,7 +82,7 @@ public class PhysicalModelGeneratorImpl implements PhysicalModelGenerator {
 
     public CommandMap generate(Collection<LogicalComponent<?>> components) throws GenerationException {
         List<LogicalComponent<?>> sorted = topologicalSort(components);
-
+        // provision required classloaders first
         CommandMap commandMap = new CommandMap();
         Map<String, Set<Command>> commandsPerZone = classLoaderCommandGenerator.generate(sorted);
         for (Map.Entry<String, Set<Command>> entry : commandsPerZone.entrySet()) {
@@ -90,6 +90,8 @@ public class PhysicalModelGeneratorImpl implements PhysicalModelGenerator {
                 commandMap.addCommand(entry.getKey(), command);
             }
         }
+
+        // provision components
         for (CommandGenerator generator : commandGenerators) {
             for (LogicalComponent<?> component : sorted) {
                 Command command = generator.generate(component);
@@ -98,6 +100,15 @@ public class PhysicalModelGeneratorImpl implements PhysicalModelGenerator {
                 }
             }
         }
+
+        // release classloaders for components being undeployed that are no longer referenced
+        Map<String, Set<Command>> releaseCommandsPerZone = classLoaderCommandGenerator.release(sorted);
+        for (Map.Entry<String, Set<Command>> entry : releaseCommandsPerZone.entrySet()) {
+            for (Command command : entry.getValue()) {
+                commandMap.addCommand(entry.getKey(), command);
+            }
+        }
+
         for (LogicalComponent<?> component : components) {
             component.setState(LogicalState.PROVISIONED);
         }

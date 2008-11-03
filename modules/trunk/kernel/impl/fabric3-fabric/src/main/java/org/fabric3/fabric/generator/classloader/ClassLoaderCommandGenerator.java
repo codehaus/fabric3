@@ -16,7 +16,6 @@
  */
 package org.fabric3.fabric.generator.classloader;
 
-import java.net.URI;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -26,23 +25,28 @@ import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.LogicalComponent;
 
 /**
- * Generates classloader definitions for a set of logical components that are to be provisioned to a runtime.
- * <p/>
- * On the runtime, a builder is responsible for matching the PhysicalClassLoaderDefinition to an existing classloader or creating a new one. During
- * this process, the contribution archive and required extensions may need to be provisioned to the runtime.
- * <p/>
+ * Generates commands for provisioning and releasing classloaders on runtimes for a set of components being deployed or undeployed.
  *
  * @version $Revision$ $Date$
  */
 public interface ClassLoaderCommandGenerator {
 
     /**
-     * Generates the classloader definitons for a set of logical components.
+     * Generates classloader provisioning commands for a set of components being deployed.
      *
-     * @param components the logical components
-     * @return the classloader provisioning commands grouped by runtime id where they are to be provisioned
+     * @param components the components being deployed
+     * @return the classloader provisioning commands grouped by zone where they are to be provisioned
      * @throws GenerationException if an error occurs during generation
      */
     Map<String, Set<Command>> generate(List<LogicalComponent<?>> components) throws GenerationException;
+
+    /**
+     * Generates classloader release commands for a set of components being undeployed.
+     *
+     * @param components the components being undeployed
+     * @return the classloader provisioning commands grouped by zone where they are being undeployed
+     * @throws GenerationException if an error occurs during generation
+     */
+    Map<String, Set<Command>> release(List<LogicalComponent<?>> components) throws GenerationException;
 
 }

@@ -45,13 +45,19 @@ import org.fabric3.spi.model.physical.PhysicalClassLoaderDefinition;
  */
 public interface ClassLoaderBuilder {
 
+    /**
+     * Creates or updates a classloader based on the classloader definition.
+     *
+     * @param definition the classloader definition
+     * @throws ClassLoaderBuilderException if the classloader cannot be created
+     */
     void build(PhysicalClassLoaderDefinition definition) throws ClassLoaderBuilderException;
 
 
     /**
-     * Unregister & destroy the classloader
-     * @param uri classloader uri
+     * Removes a classloader if it is not referenced by any other registered classloader.
+     *
+     * @param uri the classloader uri
      */
-
     void destroy(URI uri);
 }
