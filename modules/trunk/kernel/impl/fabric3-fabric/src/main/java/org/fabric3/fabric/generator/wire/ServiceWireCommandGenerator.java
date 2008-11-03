@@ -74,13 +74,11 @@ public class ServiceWireCommandGenerator implements CommandGenerator {
         if (component instanceof LogicalCompositeComponent || component.getState() != LogicalState.NEW) {
             return null;
         }
-        AttachWireCommand command = new AttachWireCommand(order);
-        generatePhysicalWires(component, command);
-        return command;
+        return generatePhysicalWires(component);
     }
 
-    private void generatePhysicalWires(LogicalComponent<?> component, AttachWireCommand command) throws GenerationException {
-
+    private AttachWireCommand generatePhysicalWires(LogicalComponent<?> component) throws GenerationException {
+        AttachWireCommand command = new AttachWireCommand(order);
         for (LogicalService service : component.getServices()) {
             List<LogicalBinding<?>> bindings = service.getBindings();
             if (bindings.isEmpty()) {
@@ -115,7 +113,10 @@ public class ServiceWireCommandGenerator implements CommandGenerator {
                 callbackBinding.setProvisioned(true);
             }
         }
-
+        if (command.getPhysicalWireDefinitions().isEmpty()) {
+            return null;
+        }
+        return command;
     }
 
 
