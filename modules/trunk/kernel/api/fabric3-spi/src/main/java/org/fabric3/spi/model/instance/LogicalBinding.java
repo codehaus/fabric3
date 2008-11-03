@@ -35,11 +35,11 @@
 package org.fabric3.spi.model.instance;
 
 import java.util.Set;
-
 import javax.xml.namespace.QName;
 
-import org.fabric3.scdl.BindingDefinition;
 import org.osoa.sca.Constants;
+
+import org.fabric3.scdl.BindingDefinition;
 
 /**
  * Represents a resolved binding
@@ -50,9 +50,9 @@ public class LogicalBinding<BD extends BindingDefinition> extends LogicalScaArti
     private static final long serialVersionUID = 8153501808553226042L;
 
     private static final QName TYPE = new QName(Constants.SCA_NS, "binding");
-    
+
     private final BD binding;
-    private boolean provisioned;
+    private LogicalState state = LogicalState.NEW;
 
     /**
      * @param binding
@@ -78,7 +78,7 @@ public class LogicalBinding<BD extends BindingDefinition> extends LogicalScaArti
     public Set<QName> getIntents() {
         return binding.getIntents();
     }
-    
+
     /**
      * @param intents Intents declared on the SCA artifact.
      */
@@ -100,11 +100,22 @@ public class LogicalBinding<BD extends BindingDefinition> extends LogicalScaArti
         binding.setPolicySets(policySets);
     }
 
-    public boolean isProvisioned() {
-        return provisioned;
+    /**
+     * Returns the binding state.
+     *
+     * @return the binding state
+     */
+    public LogicalState getState() {
+        return state;
     }
 
-    public void setProvisioned(boolean provisioned) {
-        this.provisioned = provisioned;
+    /**
+     * Sets the binding state.
+     *
+     * @param state the binding state
+     */
+    public void setState(LogicalState state) {
+        this.state = state;
     }
+
 }

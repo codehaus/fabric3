@@ -83,14 +83,14 @@ public class DetachWireCommandGenerator implements CommandGenerator {
                 //if (!binding.isProvisioned()) {
                 PhysicalWireDefinition pwd = generator.generateBoundServiceWire(service, binding, component, callbackUri);
                 command.addPhysicalWireDefinition(pwd);
-                binding.setProvisioned(true);
+                binding.setState(LogicalState.PROVISIONED);
                 //}
             }
             // generate the callback command set
-            if (callbackBinding != null && !callbackBinding.isProvisioned()) {
+            if (callbackBinding != null && callbackBinding.getState() == LogicalState.NEW) {
                 PhysicalWireDefinition callbackPwd = generator.generateBoundCallbackServiceWire(component, service, callbackBinding);
                 command.addPhysicalWireDefinition(callbackPwd);
-                callbackBinding.setProvisioned(true);
+                callbackBinding.setState(LogicalState.PROVISIONED);
             }
         }
 

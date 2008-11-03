@@ -116,12 +116,12 @@ public class CopyUtil {
     private static void copy(Bindable from, Bindable to) {
         for (LogicalBinding<?> binding : from.getBindings()) {
             LogicalBinding<?> copy = new LogicalBinding(binding.getBinding(), to);
-            copy.setProvisioned(binding.isProvisioned());
+            copy.setState(binding.getState());
             to.addBinding(copy);
         }
         for (LogicalBinding<?> binding : from.getCallbackBindings()) {
             LogicalBinding<?> copy = new LogicalBinding(binding.getBinding(), to);
-            copy.setProvisioned(binding.isProvisioned());
+            copy.setState(binding.getState());
             to.addCallbackBinding(copy);
         }
     }
