@@ -87,18 +87,21 @@ public class LocalWireCommandGenerator implements CommandGenerator {
         if (component instanceof LogicalCompositeComponent) {
             return null;
         }
-        AttachWireCommand command = new AttachWireCommand(order);
-        generatePhysicalWires(component, command);
-        return command;
+        return generatePhysicalWires(component);
     }
 
-    private void generatePhysicalWires(LogicalComponent<?> component, AttachWireCommand command) throws GenerationException {
+    private AttachWireCommand generatePhysicalWires(LogicalComponent<?> component) throws GenerationException {
+        AttachWireCommand command = new AttachWireCommand(order);
 
         for (LogicalReference logicalReference : component.getReferences()) {
             if (logicalReference.getBindings().isEmpty()) {
                 generateUnboundReferenceWires(logicalReference, command);
             }
         }
+        if (command.getPhysicalWireDefinitions().isEmpty()) {
+            return null;
+        }
+        return command;
     }
 
     private void generateUnboundReferenceWires(LogicalReference logicalReference, AttachWireCommand command) throws GenerationException {
@@ -107,7 +110,7 @@ public class LocalWireCommandGenerator implements CommandGenerator {
 
         for (LogicalWire logicalWire : logicalReference.getWires()) {
 
-            if (logicalWire.getState() == LogicalState.PROVISIONED) {
+            if (logicalWire.getState() != LogicalState.NEW) {
                 continue;
             }
 
