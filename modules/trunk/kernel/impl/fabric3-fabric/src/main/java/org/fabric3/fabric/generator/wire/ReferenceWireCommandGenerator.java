@@ -55,15 +55,16 @@ public class ReferenceWireCommandGenerator implements CommandGenerator {
         if (component instanceof LogicalCompositeComponent || component.getState() != LogicalState.NEW) {
             return null;
         }
-        AttachWireCommand command = new AttachWireCommand(order);
-        generatePhysicalWires(component, command);
-        return command;
+        return generatePhysicalWires(component);
     }
 
-    private void generatePhysicalWires(LogicalComponent<?> component, AttachWireCommand command) throws GenerationException {
+    private AttachWireCommand generatePhysicalWires(LogicalComponent<?> component) throws GenerationException {
+        AttachWireCommand command = new AttachWireCommand(order);
 
         for (LogicalReference logicalReference : component.getReferences()) {
-            if (logicalReference.getBindings().isEmpty()) {
+            // FIXME the check for component state should be done individually for each binding, not on the component since bindings may be
+            // dynamically added
+            if (logicalReference.getBindings().isEmpty() || LogicalState.NEW != component.getState()) {
                 continue;
             }
 
@@ -86,6 +87,10 @@ public class ReferenceWireCommandGenerator implements CommandGenerator {
                 }
             }
         }
+        if (command.getPhysicalWireDefinitions().isEmpty()) {
+            return null;
+        }
+        return command;
     }
 
 }
