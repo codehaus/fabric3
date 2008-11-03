@@ -21,9 +21,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-
 import javax.xml.namespace.QName;
+
+import org.osoa.sca.annotations.Reference;
+import org.w3c.dom.Document;
 
 import org.fabric3.fabric.instantiator.component.ComponentInstantiator;
 import org.fabric3.fabric.instantiator.component.WireInstantiator;
@@ -45,9 +46,6 @@ import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
 import org.fabric3.spi.model.instance.LogicalService;
 import org.fabric3.spi.services.lcm.LogicalComponentManager;
-import org.fabric3.spi.util.UriHelper;
-import org.osoa.sca.annotations.Reference;
-import org.w3c.dom.Document;
 
 /**
  * @version $Revision$ $Date$
@@ -116,17 +114,6 @@ public class LogicalModelInstantiatorImpl implements LogicalModelInstantiator {
     }
 
 
-    public LogicalChange remove(LogicalCompositeComponent targetComposite, Composite composite) {
-        LogicalChange change = new LogicalChange(targetComposite);
-        // merge the property values into the parent
-        excludeProperties(targetComposite, composite, change);
-        // merge the component values into the parent
-        excludeComponents(targetComposite, composite, change);
-        // merge the service values into the parent
-        excludeServices(targetComposite, composite, change);
-        return change;
-    }
-
     private Map<String, Document> includeProperties(Composite composite, LogicalChange change) {
         LogicalCompositeComponent parent = change.getParent();
         for (Property property : composite.getProperties().values()) {
@@ -160,14 +147,16 @@ public class LogicalModelInstantiatorImpl implements LogicalModelInstantiator {
         for (Include include : composite.getIncludes().values()) {
             // xcv FIXME need to recurse down included hierarchy
             for (ComponentDefinition<? extends Implementation<?>> definition : include.getIncluded().getComponents().values()) {
-                URI classLaoderId = URI.create(parent.getUri().toString() + "/" + include.getName().getLocalPart());
-                LogicalComponent<?> logicalComponent = instantiate(parent, properties, classLaoderId, definition, change);
+                URI classLoaderId = URI.create(parent.getUri().toString() + "/" + include.getName().getLocalPart());
+                LogicalComponent<?> logicalComponent = instantiate(parent, properties, classLoaderId, definition, change);
                 setAutowire(composite, definition, logicalComponent);
                 if (synthetic) {
                     // If it is a synthetic composite, included composites are the deployables.
                     // Synthetic composites are used to deploy multiple composites as a group. They include the composites (deployables).
                     // Adding the deployable name to domain-level components allows them to be managed as a group after they are deployed.
                     setDeployable(logicalComponent, include.getIncluded().getName());
+                } else {
+                    setDeployable(logicalComponent, composite.getName());
                 }
                 newComponents.add(logicalComponent);
                 parent.addComponent(logicalComponent);
@@ -292,39 +281,6 @@ public class LogicalModelInstantiatorImpl implements LogicalModelInstantiator {
             promotionNormalizer.normalize(component, change);
         }
 
-    }
-
-    private void excludeServices(LogicalComponent<CompositeImplementation> parent, Composite composite, LogicalChange change) {
-        String base = parent.getUri().toString();
-        // merge the composite service declarations into the parent
-        for (CompositeService compositeService : composite.getServices().values()) {
-            URI serviceURI = URI.create(base + '#' + compositeService.getName());
-            change.removeService(serviceURI);
-
-        }
-
-    }
-
-    private Map<String, Document> excludeProperties(LogicalCompositeComponent parent, Composite composite, LogicalChange change) {
-        Map<String, Document> map = parent.getPropertyValues();
-        for (Property property : composite.getProperties().values()) {
-            String name = property.getName();
-            change.removeProperty(name);
-        }
-        return map;
-    }
-
-    private void excludeComponents(LogicalCompositeComponent parent, Composite composite, LogicalChange change) {
-        Set<String> keys = composite.getComponents().keySet();
-        for (String key : keys) {
-            for (LogicalComponent<?> component : parent.getComponents()) {
-                URI uri = component.getUri();
-                if (UriHelper.getBaseName(uri).equals(key)) {
-                    change.removeComponent(component);
-                    parent.removeComponent(uri);
-                }
-            }
-        }
     }
 
     /**

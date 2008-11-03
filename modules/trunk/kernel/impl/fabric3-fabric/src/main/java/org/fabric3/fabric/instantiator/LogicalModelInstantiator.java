@@ -46,13 +46,4 @@ public interface LogicalModelInstantiator {
      */
     LogicalChange include(LogicalCompositeComponent targetComposite, List<Composite> composites);
 
-
-    /**
-     * Creates a LogicalChange for removing the composite from the target composite.
-     *
-     * @param targetComposite the target composite from which the composite is to be removed.
-     * @param composite       Composite to be removed.
-     * @return the change that results from this remove operation
-     */
-    LogicalChange remove(LogicalCompositeComponent targetComposite, Composite composite);
 }
