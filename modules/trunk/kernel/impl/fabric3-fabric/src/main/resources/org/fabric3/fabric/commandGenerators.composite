@@ -94,9 +94,4 @@
         <property name="order">1</property>
     </component>
 
-    <component name="DetachWireCommandGenerator">
-        <f3-impl:implementation.system class="org.fabric3.fabric.generator.wire.DetachWireCommandGenerator"/>
-        <property name="order">2</property>
-    </component>
-
 </composite>

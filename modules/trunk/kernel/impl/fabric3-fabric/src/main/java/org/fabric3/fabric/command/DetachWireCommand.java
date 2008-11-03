@@ -22,44 +22,14 @@ import java.util.LinkedHashSet;
 import org.fabric3.spi.command.AbstractCommand;
 import org.fabric3.spi.model.physical.PhysicalWireDefinition;
 
-public class DetachWireCommand extends AbstractCommand {
+public class DetachWireCommand extends WireCommand {
     private static final long serialVersionUID = 804710699486702279L;
-
-    private final Set<PhysicalWireDefinition> physicalWireDefinitions =
-            new LinkedHashSet<PhysicalWireDefinition>();
 
     public DetachWireCommand(int order) {
         super(order);
     }
 
-    public Set<PhysicalWireDefinition> getPhysicalWireDefinitions() {
-        return physicalWireDefinitions;
-    }
 
-    public void addPhysicalWireDefinition(PhysicalWireDefinition physicalWireDefinition) {
-        physicalWireDefinitions.add(physicalWireDefinition);
-    }
-
-    public void addPhysicalWireDefinitions(Set<PhysicalWireDefinition> physicalWireDefinitions) {
-        this.physicalWireDefinitions.addAll(physicalWireDefinitions);
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) return true;
-        try {
-            DetachWireCommand other = (DetachWireCommand) obj;
-            return physicalWireDefinitions.equals(other.physicalWireDefinitions);   
-        } catch (ClassCastException cce) {
-            return false;
-        }
-
-    }
-
-    @Override
-    public int hashCode() {
-        return physicalWireDefinitions.hashCode();
-    }
 
 }
 

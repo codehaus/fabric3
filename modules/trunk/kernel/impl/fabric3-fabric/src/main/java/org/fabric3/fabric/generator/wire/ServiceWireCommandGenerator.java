@@ -41,7 +41,10 @@ import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.fabric.command.AttachWireCommand;
+import org.fabric3.fabric.command.DetachWireCommand;
+import org.fabric3.fabric.command.WireCommand;
 import org.fabric3.scdl.ServiceContract;
+import org.fabric3.spi.command.Command;
 import org.fabric3.spi.generator.CommandGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.LogicalBinding;
@@ -52,7 +55,8 @@ import org.fabric3.spi.model.instance.LogicalState;
 import org.fabric3.spi.model.physical.PhysicalWireDefinition;
 
 /**
- * Generate a command to create a wire from a service endpoint to a component.
+ * Generate a command to create a wire from a service endpoint to a component for components being deployed and a command to detach a wire for
+ * components being undeployed.
  *
  * @version $Revision$ $Date$
  */
@@ -70,15 +74,26 @@ public class ServiceWireCommandGenerator implements CommandGenerator {
         return order;
     }
 
-    public AttachWireCommand generate(LogicalComponent<?> component) throws GenerationException {
-        if (component instanceof LogicalCompositeComponent || component.getState() != LogicalState.NEW) {
+    public Command generate(LogicalComponent<?> component) throws GenerationException {
+        if (component instanceof LogicalCompositeComponent) {
             return null;
         }
-        return generatePhysicalWires(component);
+        WireCommand command;
+        if (LogicalState.NEW == component.getState()) {
+            command = new AttachWireCommand(order);
+        } else if (LogicalState.MARKED == component.getState()) {
+            command = new DetachWireCommand(order);
+        } else {
+            return null;
+        }
+        generatePhysicalWires(component, command);
+        if (command.getPhysicalWireDefinitions().isEmpty()) {
+            return null;
+        }
+        return command;
     }
 
-    private AttachWireCommand generatePhysicalWires(LogicalComponent<?> component) throws GenerationException {
-        AttachWireCommand command = new AttachWireCommand(order);
+    private void generatePhysicalWires(LogicalComponent<?> component, WireCommand command) throws GenerationException {
         for (LogicalService service : component.getServices()) {
             List<LogicalBinding<?>> bindings = service.getBindings();
             if (bindings.isEmpty()) {
@@ -113,10 +128,6 @@ public class ServiceWireCommandGenerator implements CommandGenerator {
                 callbackBinding.setState(LogicalState.PROVISIONED);
             }
         }
-        if (command.getPhysicalWireDefinitions().isEmpty()) {
-            return null;
-        }
-        return command;
     }
 
 

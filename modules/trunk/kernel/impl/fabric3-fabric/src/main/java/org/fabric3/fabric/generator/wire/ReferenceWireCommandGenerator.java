@@ -22,6 +22,9 @@ import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.fabric.command.AttachWireCommand;
+import org.fabric3.fabric.command.DetachWireCommand;
+import org.fabric3.fabric.command.WireCommand;
+import org.fabric3.spi.command.Command;
 import org.fabric3.spi.generator.CommandGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.LogicalBinding;
@@ -32,7 +35,8 @@ import org.fabric3.spi.model.instance.LogicalState;
 import org.fabric3.spi.model.physical.PhysicalWireDefinition;
 
 /**
- * Generate a command to attach component reference wires to their transports.
+ * Generates a command to attach component reference wires to their transports for components being deployed or a command to detach reference wires
+ * for components being undeployed.
  *
  * @version $Revision$ $Date$
  */
@@ -51,15 +55,27 @@ public class ReferenceWireCommandGenerator implements CommandGenerator {
     }
 
     @SuppressWarnings("unchecked")
-    public AttachWireCommand generate(LogicalComponent<?> component) throws GenerationException {
-        if (component instanceof LogicalCompositeComponent || component.getState() != LogicalState.NEW) {
+    public Command generate(LogicalComponent<?> component) throws GenerationException {
+        if (component instanceof LogicalCompositeComponent) {
             return null;
         }
-        return generatePhysicalWires(component);
+        WireCommand command;
+        if (LogicalState.NEW == component.getState()) {
+            command = new AttachWireCommand(order);
+        } else if (LogicalState.MARKED == component.getState()) {
+            command = new DetachWireCommand(order);
+        } else {
+            return null;
+        }
+
+        generatePhysicalWires(component, command);
+        if (command.getPhysicalWireDefinitions().isEmpty()) {
+            return null;
+        }
+        return command;
     }
 
-    private AttachWireCommand generatePhysicalWires(LogicalComponent<?> component) throws GenerationException {
-        AttachWireCommand command = new AttachWireCommand(order);
+    private void generatePhysicalWires(LogicalComponent<?> component, WireCommand command) throws GenerationException {
 
         for (LogicalReference logicalReference : component.getReferences()) {
             // FIXME the check for component state should be done individually for each binding, not on the component since bindings may be
@@ -76,7 +92,8 @@ public class ReferenceWireCommandGenerator implements CommandGenerator {
                     List<LogicalBinding<?>> callbackBindings = logicalReference.getCallbackBindings();
                     if (callbackBindings.size() != 1) {
                         String uri = logicalReference.getUri().toString();
-                        throw new UnsupportedOperationException("The runtime requires exactly one callback binding to be specified on reference: " + uri);
+                        throw new UnsupportedOperationException("The runtime requires exactly one callback binding to be " +
+                                "specified on reference: " + uri);
                     }
                     LogicalBinding<?> callbackBinding = callbackBindings.get(0);
                     // generate the callback wire
@@ -87,10 +104,6 @@ public class ReferenceWireCommandGenerator implements CommandGenerator {
                 }
             }
         }
-        if (command.getPhysicalWireDefinitions().isEmpty()) {
-            return null;
-        }
-        return command;
     }
 
 }

@@ -34,19 +34,52 @@
  */
 package org.fabric3.fabric.command;
 
+import java.util.LinkedHashSet;
+import java.util.Set;
+
+import org.fabric3.spi.command.AbstractCommand;
+import org.fabric3.spi.model.physical.PhysicalWireDefinition;
+
 /**
- * A command to attach a set of wires from a source component to a set of targets on a runtime. Valid targets can be a service offered by another
- * component, a binding transport, or a resource.
+ * Base class for wire commands.
  *
  * @version $Revision$ $Date$
  */
-public class AttachWireCommand extends WireCommand {
-    private static final long serialVersionUID = -5157427289507028318L;
+public abstract class WireCommand extends AbstractCommand {
+    private static final long serialVersionUID = -1691568679691192110L;
 
-    public AttachWireCommand(int order) {
+    protected final Set<PhysicalWireDefinition> physicalWireDefinitions = new LinkedHashSet<PhysicalWireDefinition>();
+
+    public WireCommand(int order) {
         super(order);
     }
 
+    public Set<PhysicalWireDefinition> getPhysicalWireDefinitions() {
+        return physicalWireDefinitions;
+    }
 
+    public void addPhysicalWireDefinition(PhysicalWireDefinition physicalWireDefinition) {
+        physicalWireDefinitions.add(physicalWireDefinition);
+    }
 
+    public void addPhysicalWireDefinitions(Set<PhysicalWireDefinition> physicalWireDefinitions) {
+        this.physicalWireDefinitions.addAll(physicalWireDefinitions);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        WireCommand that = (WireCommand) o;
+
+        return !(physicalWireDefinitions != null ? !physicalWireDefinitions.equals(that.physicalWireDefinitions) :
+                that.physicalWireDefinitions != null);
+
+    }
+
+    @Override
+    public int hashCode() {
+        return physicalWireDefinitions != null ? physicalWireDefinitions.hashCode() : 0;
+    }
 }
