@@ -52,7 +52,7 @@ public final class LogicalWire extends LogicalScaArtifact<LogicalComponent<?>> {
 
     private final LogicalReference source;
     private final URI targetUri;
-    private LogicalState state;
+    private LogicalState state = LogicalState.NEW;
 
     /**
      * Instantiates a logical wire.
