@@ -42,7 +42,7 @@ public class RsBindingGenerator implements BindingGenerator<RsWireSourceDefiniti
             throws GenerationException {
 
         RsWireSourceDefinition rwsd = new RsWireSourceDefinition();
-        URI id = logicalBinding.getParent().getParent().getParent().getUri();
+        URI id = logicalBinding.getParent().getParent().getClassLoaderId();
         rwsd.setClassLoaderId(id);
         rwsd.setUri(logicalBinding.getBinding().getTargetUri());
         rwsd.setInterfaceName(serviceDefinition.getServiceContract().getInterfaceName());
