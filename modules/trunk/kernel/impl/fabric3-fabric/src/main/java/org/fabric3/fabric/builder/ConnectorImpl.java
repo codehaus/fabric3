@@ -73,12 +73,14 @@ public class ConnectorImpl implements Connector {
     }
 
     @Reference(required = false)
-    public void setSourceAttachers(Map<Class<? extends PhysicalWireSourceDefinition>, SourceWireAttacher<? extends PhysicalWireSourceDefinition>> sourceAttachers) {
+    public void setSourceAttachers(Map<Class<? extends PhysicalWireSourceDefinition>,
+            SourceWireAttacher<? extends PhysicalWireSourceDefinition>> sourceAttachers) {
         this.sourceAttachers = sourceAttachers;
     }
 
     @Reference
-    public void setTargetAttachers(Map<Class<? extends PhysicalWireTargetDefinition>, TargetWireAttacher<? extends PhysicalWireTargetDefinition>> targetAttachers) {
+    public void setTargetAttachers(Map<Class<? extends PhysicalWireTargetDefinition>,
+            TargetWireAttacher<? extends PhysicalWireTargetDefinition>> targetAttachers) {
         this.targetAttachers = targetAttachers;
     }
 
