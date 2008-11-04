@@ -37,8 +37,6 @@ package org.fabric3.fabric.component.scope;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 import org.osoa.sca.Conversation;
 import org.osoa.sca.annotations.Destroy;
@@ -66,9 +64,6 @@ public abstract class AbstractScopeContainer<KEY> extends AbstractLifecycle impl
     private final Scope<KEY> scope;
     protected final ScopeContainerMonitor monitor;
     private ScopeRegistry scopeRegistry;
-
-    // the queue of instanceWrappers to destroy, in the order that their instances were created
-    protected final Map<KEY, List<InstanceWrapper<?>>> destroyQueues = new ConcurrentHashMap<KEY, List<InstanceWrapper<?>>>();
 
     public AbstractScopeContainer(Scope<KEY> scope, ScopeContainerMonitor monitor) {
         this.scope = scope;
@@ -102,7 +97,6 @@ public abstract class AbstractScopeContainer<KEY> extends AbstractLifecycle impl
         if (scopeRegistry != null) {
             scopeRegistry.unregister(this);
         }
-        destroyQueues.clear();
     }
 
     public Scope<KEY> getScope() {
@@ -141,48 +135,6 @@ public abstract class AbstractScopeContainer<KEY> extends AbstractLifecycle impl
 
     public String toString() {
         return "In state [" + super.toString() + ']';
-    }
-
-    /**
-     * Starts a scope context.
-     *
-     * @param workContext the work context associated with the start operation
-     * @param contextId   the scope context id
-     * @throws GroupInitializationException if an error occurs starting the context
-     */
-    protected void startContext(WorkContext workContext, KEY contextId) throws GroupInitializationException {
-        // Allocate a queue to callback instances when they are destroyed. Instances will be called back in the order they were created.
-        destroyQueues.put(contextId, new ArrayList<InstanceWrapper<?>>());
-    }
-
-    /**
-     * Joins an existing context.
-     *
-     * @param workContext the work context associated with the start operation
-     * @param contextId   the scope context id
-     * @return true if a local context was created
-     * @throws GroupInitializationException if an error occurs starting the context
-     */
-    protected boolean joinContext(WorkContext workContext, KEY contextId) throws GroupInitializationException {
-        if (destroyQueues.containsKey(contextId)) {
-            return false;
-        }
-        startContext(workContext, contextId);
-        return true;
-    }
-
-    /**
-     * Stops a scope context and destroys all associated instances.
-     *
-     * @param workContext the work context associated with the stop operation
-     * @param contextId   the scope context id
-     */
-    protected void stopContext(WorkContext workContext, KEY contextId) {
-        List<InstanceWrapper<?>> list = destroyQueues.remove(contextId);
-        if (list == null) {
-            throw new IllegalStateException("Context does not exist: " + contextId);
-        }
-        destroyInstances(list);
     }
 
     /**

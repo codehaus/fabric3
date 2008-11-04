@@ -61,7 +61,7 @@ import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.invocation.WorkContext;
 
 /**
- * A scope context which manages atomic component instances keyed by composite
+ * Scope container for the standard COMPOSITE scope.
  *
  * @version $Rev$ $Date$
  */
@@ -71,8 +71,11 @@ public class CompositeScopeContainer extends AbstractScopeContainer<URI> {
     // there is one instance per component so we can index directly
     private final Map<AtomicComponent<?>, InstanceWrapper<?>> instanceWrappers = new ConcurrentHashMap<AtomicComponent<?>, InstanceWrapper<?>>();
 
+    // the queue of instanceWrappers to destroy, in the order that their instances were created
+    private final Map<URI, List<InstanceWrapper<?>>> destroyQueues = new ConcurrentHashMap<URI, List<InstanceWrapper<?>>>();
+
     // the queue of components to eagerly initialize in each group
-    protected final Map<URI, List<AtomicComponent<?>>> initQueues = new HashMap<URI, List<AtomicComponent<?>>>();
+    private final Map<URI, List<AtomicComponent<?>>> initQueues = new HashMap<URI, List<AtomicComponent<?>>>();
 
     public CompositeScopeContainer(@Monitor ScopeContainerMonitor monitor) {
         super(Scope.COMPOSITE, monitor);
@@ -111,21 +114,22 @@ public class CompositeScopeContainer extends AbstractScopeContainer<URI> {
         }
     }
 
+    public void startContext(WorkContext workContext) throws GroupInitializationException {
+        URI contextId = workContext.peekCallFrame().getCorrelationId(URI.class);
+        destroyQueues.put(contextId, new ArrayList<InstanceWrapper<?>>());
+        eagerInitialize(workContext, contextId);
+    }
+
     public void startContext(WorkContext workContext, ExpirationPolicy policy) throws GroupInitializationException {
         // scope does not support expiration policies
         startContext(workContext);
     }
 
-    public void startContext(WorkContext workContext) throws GroupInitializationException {
-        URI contextId = workContext.peekCallFrame().getCorrelationId(URI.class);
-        super.startContext(workContext, contextId);
-        eagerInitialize(workContext, contextId);
-
-    }
-
     public void joinContext(WorkContext workContext) throws GroupInitializationException {
         URI contextId = workContext.peekCallFrame().getCorrelationId(URI.class);
-        super.joinContext(workContext, contextId);
+        if (!destroyQueues.containsKey(contextId)) {
+            destroyQueues.put(contextId, new ArrayList<InstanceWrapper<?>>());
+        }
     }
 
     public void joinContext(WorkContext workContext, ExpirationPolicy policy) throws GroupInitializationException {
@@ -135,11 +139,16 @@ public class CompositeScopeContainer extends AbstractScopeContainer<URI> {
 
     public void stopContext(WorkContext workContext) {
         URI contextId = workContext.peekCallFrame().getCorrelationId(URI.class);
-        super.stopContext(workContext, contextId);
+        List<InstanceWrapper<?>> list = removeDestroyComponents(contextId);
+        if (list == null) {
+            throw new IllegalStateException("Context does not exist: " + contextId);
+        }
+        destroyInstances(list);
     }
 
     public synchronized void stop() {
         super.stop();
+        destroyQueues.clear();
         synchronized (initQueues) {
             initQueues.clear();
         }
@@ -191,14 +200,6 @@ public class CompositeScopeContainer extends AbstractScopeContainer<URI> {
         }
     }
 
-    protected void stopContext(WorkContext workContext, URI contextId) {
-        List<InstanceWrapper<?>> list = removeDestroyComponents(contextId);
-        if (list == null) {
-            throw new IllegalStateException("Context does not exist: " + contextId);
-        }
-        destroyInstances(list);
-    }
-
 
     /**
      * Removes and returns components from the destroy queue under the given composite hierarchy. This method will recurse down the composite
@@ -207,7 +208,7 @@ public class CompositeScopeContainer extends AbstractScopeContainer<URI> {
      * @param contextId the URI composite
      * @return the list of components to shutdown.
      */
-    protected List<InstanceWrapper<?>> removeDestroyComponents(URI contextId) {
+    private List<InstanceWrapper<?>> removeDestroyComponents(URI contextId) {
         // for composite contexts being closed, also destroy child composites and their contained components
         String path = contextId.getPath();
         List<InstanceWrapper<?>> toDestroy = new ArrayList<InstanceWrapper<?>>();
@@ -243,6 +244,7 @@ public class CompositeScopeContainer extends AbstractScopeContainer<URI> {
             return o1.getInitLevel() - o2.getInitLevel();
         }
     };
+
 
     private static final InstanceWrapper<Object> EMPTY = new InstanceWrapper<Object>() {
         public Object getInstance() {

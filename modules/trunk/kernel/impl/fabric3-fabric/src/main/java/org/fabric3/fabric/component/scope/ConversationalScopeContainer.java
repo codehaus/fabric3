@@ -54,15 +54,17 @@ import org.osoa.sca.annotations.Service;
 
 import org.fabric3.api.annotation.Monitor;
 import org.fabric3.scdl.Scope;
+import org.fabric3.spi.ObjectCreationException;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.component.AtomicComponent;
 import org.fabric3.spi.component.ConversationExpirationCallback;
 import org.fabric3.spi.component.ExpirationPolicy;
 import org.fabric3.spi.component.GroupInitializationException;
+import org.fabric3.spi.component.InstanceDestructionException;
+import org.fabric3.spi.component.InstanceLifecycleException;
 import org.fabric3.spi.component.InstanceWrapper;
 import org.fabric3.spi.component.InstanceWrapperStore;
 import org.fabric3.spi.component.ScopeContainer;
-import org.fabric3.spi.component.InstanceLifecycleException;
 import org.fabric3.spi.invocation.CallFrame;
 import org.fabric3.spi.invocation.ConversationContext;
 import org.fabric3.spi.invocation.WorkContext;
@@ -74,16 +76,21 @@ import org.fabric3.spi.invocation.WorkContext;
  */
 @Service(ScopeContainer.class)
 @EagerInit
-public class ConversationalScopeContainer extends StatefulScopeContainer<Conversation> {
-    private final ConcurrentHashMap<Conversation, ExpirationPolicy> expirationPolicies;
-    private final ConcurrentHashMap<Conversation, List<ConversationExpirationCallback>> expirationCallbacks;
+public class ConversationalScopeContainer extends AbstractScopeContainer<Conversation> {
+    private final Map<Conversation, ExpirationPolicy> expirationPolicies;
+    private final Map<Conversation, List<ConversationExpirationCallback>> expirationCallbacks;
+    private final InstanceWrapperStore<Conversation> store;
     private ScheduledExecutorService executor;
     // TODO this should be part of the system configuration
     private long delay = 600;  // reap every 600 seconds
 
-    public ConversationalScopeContainer(@Monitor ScopeContainerMonitor monitor,
-                                        @Reference(name = "store")InstanceWrapperStore<Conversation> store) {
-        super(Scope.CONVERSATION, monitor, store);
+    // the queue of instanceWrappers to destroy, in the order that their instances were created
+    private final Map<Conversation, List<InstanceWrapper<?>>> destroyQueues = new ConcurrentHashMap<Conversation, List<InstanceWrapper<?>>>();
+
+
+    public ConversationalScopeContainer(@Monitor ScopeContainerMonitor monitor, @Reference(name = "store") InstanceWrapperStore<Conversation> store) {
+        super(Scope.CONVERSATION, monitor);
+        this.store = store;
         expirationPolicies = new ConcurrentHashMap<Conversation, ExpirationPolicy>();
         expirationCallbacks = new ConcurrentHashMap<Conversation, List<ConversationExpirationCallback>>();
     }
@@ -109,6 +116,7 @@ public class ConversationalScopeContainer extends StatefulScopeContainer<Convers
     @Destroy
     public void stop() {
         executor.shutdownNow();
+        destroyQueues.clear();
         super.stop();
     }
 
@@ -124,38 +132,50 @@ public class ConversationalScopeContainer extends StatefulScopeContainer<Convers
     }
 
     public void startContext(WorkContext workContext) throws GroupInitializationException {
-        Conversation conversation = workContext.peekCallFrame().getConversation();
-        assert conversation != null;
-        super.startContext(workContext, conversation);
+        startContext(workContext, null);
     }
 
     public void startContext(WorkContext workContext, ExpirationPolicy policy) throws GroupInitializationException {
         Conversation conversation = workContext.peekCallFrame().getConversation();
         assert conversation != null;
-        super.startContext(workContext, conversation);
-        expirationPolicies.put(conversation, policy);
+        store.startContext(conversation);
+        destroyQueues.put(conversation, new ArrayList<InstanceWrapper<?>>());
+        if (policy != null) {
+            expirationPolicies.put(conversation, policy);
+        }
     }
 
     public void joinContext(WorkContext workContext) throws GroupInitializationException {
-        Conversation conversation = workContext.peekCallFrame().getConversation();
-        assert conversation != null;
-        super.joinContext(workContext, conversation);
+        joinContext(workContext, null);
     }
 
     public void joinContext(WorkContext workContext, ExpirationPolicy policy) throws GroupInitializationException {
         Conversation conversation = workContext.peekCallFrame().getConversation();
         assert conversation != null;
-        if (super.joinContext(workContext, conversation)) {
-            expirationPolicies.put(conversation, policy);
+        if (!destroyQueues.containsKey(conversation)) {
+            destroyQueues.put(conversation, new ArrayList<InstanceWrapper<?>>());
+            if (policy != null) {
+                expirationPolicies.put(conversation, policy);
+            }
         }
     }
 
     public void stopContext(WorkContext workContext) {
         Conversation conversation = workContext.peekCallFrame().getConversation();
         assert conversation != null;
-        super.stopContext(workContext, conversation);
+        stopContext(conversation);
         expirationPolicies.remove(conversation);
         notifyExpirationCallbacks(conversation);
+    }
+
+    private void stopContext(Conversation conversation) {
+        List<InstanceWrapper<?>> list = destroyQueues.remove(conversation);
+        if (list == null) {
+            throw new IllegalStateException("Conversation does not exist: " + conversation);
+        }
+        destroyInstances(list);
+
+        store.stopContext(conversation);
     }
 
     public <T> InstanceWrapper<T> getWrapper(AtomicComponent<T> component, WorkContext workContext) throws InstanceLifecycleException {
@@ -170,7 +190,7 @@ public class ConversationalScopeContainer extends StatefulScopeContainer<Convers
         ConversationContext context = frame.getConversationContext();
         // if the context is new or propagates a conversation and the target instance has not been created, create it
         boolean create = (context == ConversationContext.NEW || context == ConversationContext.PROPAGATE);
-        InstanceWrapper<T> wrapper = super.getWrapper(component, workContext, conversation, create);
+        InstanceWrapper<T> wrapper = getWrapper(component, workContext, conversation, create);
         if (wrapper == null) {
             // conversation has either been ended or timed out, throw an exception
             throw new ConversationEndedException("Conversation ended");
@@ -185,6 +205,11 @@ public class ConversationalScopeContainer extends StatefulScopeContainer<Convers
 
     }
 
+    public <T> void returnWrapper(AtomicComponent<T> component, WorkContext workContext, InstanceWrapper<T> wrapper)
+            throws InstanceDestructionException {
+    }
+
+
     private void notifyExpirationCallbacks(Conversation conversation) {
         List<ConversationExpirationCallback> callbacks = expirationCallbacks.remove(conversation);
         if (callbacks != null) {
@@ -195,6 +220,7 @@ public class ConversationalScopeContainer extends StatefulScopeContainer<Convers
             }
         }
     }
+
 
     /**
      * Periodically scans and removes expired conversation contexts.
@@ -209,11 +235,45 @@ public class ConversationalScopeContainer extends StatefulScopeContainer<Convers
                     WorkContext workContext = new WorkContext();
                     CallFrame frame = new CallFrame(null, conversation, conversation, null);
                     workContext.addCallFrame(frame);
-                    stopContext(workContext, conversation);
+                    stopContext(conversation);
                     notifyExpirationCallbacks(conversation);
                 }
             }
         }
     }
+
+    /**
+     * Return an instance wrapper containing a component implementation instance associated with the correlation key, optionally creating one if not
+     * found.
+     *
+     * @param component    the component the implementation instance belongs to
+     * @param workContext  the current WorkContext
+     * @param conversation the conversation key for the component implementation instance
+     * @param create       true if an instance should be created
+     * @return an instance wrapper or null if not found an create is set to false
+     * @throws org.fabric3.spi.component.InstanceLifecycleException
+     *          if an error occurs returning the wrapper
+     */
+    private <T> InstanceWrapper<T> getWrapper(AtomicComponent<T> component, WorkContext workContext, Conversation conversation, boolean create)
+            throws InstanceLifecycleException {
+        assert conversation != null;
+        InstanceWrapper<T> wrapper = store.getWrapper(component, conversation);
+        if (wrapper == null && create) {
+            try {
+                wrapper = component.createInstanceWrapper(workContext);
+            } catch (ObjectCreationException e) {
+                throw new InstanceLifecycleException(e.getMessage(), component.getUri().toString(), e);
+            }
+            wrapper.start();
+            store.putWrapper(component, conversation, wrapper);
+            List<InstanceWrapper<?>> queue = destroyQueues.get(conversation);
+            if (queue == null) {
+                throw new IllegalStateException("Instance context not found");
+            }
+            queue.add(wrapper);
+        }
+        return wrapper;
+    }
+
 
 }

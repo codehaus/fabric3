@@ -37,34 +37,29 @@ package org.fabric3.fabric.component.scope;
 import junit.framework.TestCase;
 import org.easymock.IMocksControl;
 import org.easymock.classextension.EasyMock;
+import org.osoa.sca.Conversation;
 
-import org.fabric3.scdl.Scope;
-import org.fabric3.spi.ObjectFactory;
+import org.fabric3.pojo.ConversationImpl;
 import org.fabric3.spi.component.AtomicComponent;
-import org.fabric3.spi.component.ExpirationPolicy;
 import org.fabric3.spi.component.GroupInitializationException;
+import org.fabric3.spi.component.InstanceLifecycleException;
 import org.fabric3.spi.component.InstanceWrapper;
 import org.fabric3.spi.component.InstanceWrapperStore;
-import org.fabric3.spi.component.InstanceLifecycleException;
 import org.fabric3.spi.invocation.CallFrame;
 import org.fabric3.spi.invocation.WorkContext;
+import org.fabric3.spi.invocation.ConversationContext;
 
 /**
  * @version $Rev$ $Date$
  */
-public class StatefulScopeContainerTestCase extends TestCase {
-    private StatefulScopeContainer<MockId> container;
+public class ConversationalScopeContainerTestCase extends TestCase {
+    private ConversationalScopeContainer container;
     private IMocksControl control;
-    private InstanceWrapperStore<MockId> store;
-    private Scope<MockId> scope;
-    private MockId conversation;
+    private InstanceWrapperStore<Conversation> store;
+    private Conversation conversation;
     private WorkContext workContext;
     private AtomicComponent<Object> component;
     private InstanceWrapper<Object> wrapper;
-
-    public void testCorrectScope() {
-        assertSame(scope, container.getScope());
-    }
 
     public void testStoreIsNotifiedOfContextStartStop() throws GroupInitializationException {
         store.startContext(conversation);
@@ -97,59 +92,15 @@ public class StatefulScopeContainerTestCase extends TestCase {
     @SuppressWarnings("unchecked")
     protected void setUp() throws Exception {
         super.setUp();
-        conversation = new MockId("contextId");
-        scope = new Scope<MockId>("TESTING", MockId.class);
         control = EasyMock.createControl();
         store = control.createMock(InstanceWrapperStore.class);
+        container = new ConversationalScopeContainer(null, store);
+        conversation = new ConversationImpl("contextId", container);
         workContext = new WorkContext();
-        workContext.addCallFrame(new CallFrame(conversation));
+        CallFrame frame = new CallFrame(null, null, conversation, ConversationContext.NEW);
+        workContext.addCallFrame(frame);
         component = control.createMock(AtomicComponent.class);
         wrapper = control.createMock(InstanceWrapper.class);
-        container = new StatefulScopeContainer<MockId>(scope, null, store) {
-
-            public void startContext(WorkContext workContext) throws GroupInitializationException {
-                super.startContext(workContext, conversation);
-            }
-
-            public void startContext(WorkContext workContext, ExpirationPolicy policy) throws GroupInitializationException {
-
-            }
-
-            public void joinContext(WorkContext workContext) throws GroupInitializationException {
-
-            }
-
-            public void joinContext(WorkContext workContext, ExpirationPolicy policy) throws GroupInitializationException {
-
-            }
-
-            public void stopContext(WorkContext workContext) {
-                super.stopContext(workContext, conversation);
-            }
-
-            public <T> InstanceWrapper<T> getWrapper(AtomicComponent<T> component, WorkContext workContext) throws InstanceLifecycleException {
-                return super.getWrapper(component, workContext, conversation, true);
-            }
-
-            public void reinject() {
-            }
-
-            public void addObjectFactory(AtomicComponent<?> component, ObjectFactory<?> factory, String referenceName, Object key) {
-            }
-
-        };
     }
 
-    private class MockId {
-        private String id;
-
-        public MockId(String id) {
-            this.id = id;
-        }
-
-        public Object getId() {
-            return id;
-        }
-
-    }
 }
