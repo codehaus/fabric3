@@ -22,18 +22,18 @@
        xsi:noNamespaceSchemaLocation="schema/conf.xsd">
 
     <cluster dbaPassword="" dbaUser="admin" exclude="/db/system,/db/system/config"
-        journalDir="/data/journal"
+        journalDir="data/journal"
         protocol="UDP(mcast_addr=228.1.2.3;mcast_port=45566;ip_ttl=8;ip_mcast=true;mcast_send_buf_size=800000;mcast_recv_buf_size=150000;ucast_send_buf_size=800000;ucast_recv_buf_size=150000;loopback=true):PING(timeout=2000;num_initial_members=3;up_thread=true;down_thread=true):MERGE2(min_interval=10000;max_interval=20000):FD(shun=true;up_thread=true;down_thread=true;timeout=2500;max_tries=5):VERIFY_SUSPECT(timeout=3000;num_msgs=3;up_thread=true;down_thread=true):pbcast.NAKACK(gc_lag=50;retransmit_timeout=300,600,1200,2400,4800;max_xmit_size=8192;up_thread=true;down_thread=true):UNICAST(timeout=300,600,1200,2400,4800;window_size=100;min_threshold=10;down_thread=true):pbcast.STABLE(desired_avg_gossip=20000;up_thread=true;down_thread=true):FRAG(frag_size=8192;down_thread=true;up_thread=true):pbcast.GMS(join_timeout=5000;join_retry_timeout=2000;shun=true;print_local_addr=true)"/>
 
     <db-connection cacheSize="48M" collectionCache="24M" database="native"
-        files="/data" pageSize="4096">
+        files="data" pageSize="4096">
 
         <pool max="20" min="1" sync-period="120000" wait-before-shutdown="120000"/>
 
         <query-pool max-stack-size="5" size="128" timeout="120000"                
 		            timeout-check-interval="30000"/>
 
-        <recovery enabled="yes" group-commit="no" journal-dir="/data" 
+        <recovery enabled="yes" group-commit="no" journal-dir="data" 
                   size="100M" sync-on-commit="no"/>
 
         <watchdog output-size-limit="10000" query-timeout="-1"/>
