@@ -185,7 +185,7 @@ public abstract class AbstractDomain implements Domain {
             // TOOD log warnings
         }
         try {
-            CommandMap commandMap = physicalModelGenerator.generate(change.getDeletedComponents());
+            CommandMap commandMap = physicalModelGenerator.generate(domain.getComponents());
             String id = UUID.randomUUID().toString();
             routingService.route(id, commandMap);
         } catch (GenerationException e) {
