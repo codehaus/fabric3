@@ -107,4 +107,9 @@ public class BurlapSourceWireAttacher implements SourceWireAttacher<BurlapWireSo
             throws WiringException {
         throw new AssertionError();
     }
+
+    public void detachObjectFactory(BurlapWireSourceDefinition source, PhysicalWireTargetDefinition target) throws WiringException {
+        throw new AssertionError();
+    }
+
 }

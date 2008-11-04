@@ -116,6 +116,11 @@ public class CxfSourceWireAttacher implements SourceWireAttacher<CxfWireSourceDe
         throw new AssertionError();
     }
 
+    public void detachObjectFactory(CxfWireSourceDefinition source, PhysicalWireTargetDefinition target) throws WiringException {
+        throw new AssertionError();
+    }
+
+
     /**
      * Expands the target URI if it contains an expression of the form ${..}.
      *

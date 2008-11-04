@@ -26,8 +26,8 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 import org.osoa.sca.annotations.Remotable;
 
-import org.fabric3.binding.ejb.provision.EjbWireSourceDefinition;
 import org.fabric3.binding.codegen.ProxyGenerator;
+import org.fabric3.binding.ejb.provision.EjbWireSourceDefinition;
 import org.fabric3.scdl.Signature;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.WiringException;
@@ -103,6 +103,11 @@ public class EjbSourceWireAttacher implements SourceWireAttacher<EjbWireSourceDe
     ) throws WiringException {
         throw new AssertionError();
     }
+
+    public void detachObjectFactory(EjbWireSourceDefinition source, PhysicalWireTargetDefinition target) throws WiringException {
+        throw new AssertionError();
+    }
+
 
     private Object generateEjb3Facade(EjbWireSourceDefinition sourceDefinition,
                                       Map<Signature, Map.Entry<PhysicalOperationDefinition, InvocationChain>> ops)

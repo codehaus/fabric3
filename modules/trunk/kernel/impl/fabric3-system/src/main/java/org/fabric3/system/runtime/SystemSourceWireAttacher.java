@@ -121,6 +121,10 @@ public class SystemSourceWireAttacher extends PojoSourceWireAttacher implements 
         throw new AssertionError();
     }
 
+    public void detachObjectFactory(SystemWireSourceDefinition source, PhysicalWireTargetDefinition target) throws WiringException {
+        throw new AssertionError();
+    }
+
     public void attachObjectFactory(SystemWireSourceDefinition source, ObjectFactory<?> objectFactory, PhysicalWireTargetDefinition target)
             throws WiringException {
         URI sourceId = UriHelper.getDefragmentedName(source.getUri());

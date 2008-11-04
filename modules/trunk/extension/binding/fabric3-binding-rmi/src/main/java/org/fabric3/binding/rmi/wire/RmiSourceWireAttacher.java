@@ -136,6 +136,10 @@ public class RmiSourceWireAttacher implements SourceWireAttacher<RmiWireSourceDe
 
     }
 
+    public void detachObjectFactory(RmiWireSourceDefinition source, PhysicalWireTargetDefinition target) throws WiringException {
+        throw new AssertionError();
+    }
+
     private Class generateRemoteInterface(String name, URI uri)
             throws IOException, ClassNotFoundException {
         String key = uri.toString();

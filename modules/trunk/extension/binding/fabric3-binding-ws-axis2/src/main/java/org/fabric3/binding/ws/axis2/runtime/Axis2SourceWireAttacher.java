@@ -19,7 +19,6 @@ package org.fabric3.binding.ws.axis2.runtime;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.binding.ws.axis2.runtime.Axis2ServiceProvisioner;
 import org.fabric3.binding.ws.axis2.provision.Axis2WireSourceDefinition;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.WiringException;
@@ -55,4 +54,9 @@ public class Axis2SourceWireAttacher implements SourceWireAttacher<Axis2WireSour
     public void attachObjectFactory(Axis2WireSourceDefinition source, ObjectFactory<?> objectFactory, PhysicalWireTargetDefinition definition) throws WiringException {
         throw new AssertionError();
     }
+
+    public void detachObjectFactory(Axis2WireSourceDefinition source, PhysicalWireTargetDefinition target) throws WiringException {
+        throw new AssertionError();
+    }
+
 }

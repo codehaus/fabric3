@@ -111,6 +111,11 @@ public class HessianSourceWireAttacher implements SourceWireAttacher<HessianWire
         throw new AssertionError();
     }
 
+    public void detachObjectFactory(HessianWireSourceDefinition source, PhysicalWireTargetDefinition target) throws WiringException {
+        throw new AssertionError();
+    }
+
+
     public void attachObjectFactory(HessianWireSourceDefinition source, ObjectFactory<?> objectFactory, PhysicalWireTargetDefinition definition)
             throws WiringException {
         throw new AssertionError();

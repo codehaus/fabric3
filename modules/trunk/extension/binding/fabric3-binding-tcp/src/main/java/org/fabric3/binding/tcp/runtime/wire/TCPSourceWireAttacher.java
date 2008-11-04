@@ -28,6 +28,9 @@ import org.apache.mina.filter.codec.textline.TextLineCodecFactory;
 import org.apache.mina.filter.executor.ExecutorFilter;
 import org.apache.mina.transport.socket.SocketAcceptor;
 import org.apache.mina.transport.socket.nio.NioSocketAcceptor;
+import org.osoa.sca.annotations.Destroy;
+import org.osoa.sca.annotations.Reference;
+
 import org.fabric3.api.annotation.Monitor;
 import org.fabric3.binding.tcp.provision.TCPWireSourceDefinition;
 import org.fabric3.binding.tcp.runtime.concurrent.F3ExecutorService;
@@ -39,8 +42,6 @@ import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.SourceWireAttacher;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 import org.fabric3.spi.wire.Wire;
-import org.osoa.sca.annotations.Destroy;
-import org.osoa.sca.annotations.Reference;
 
 /**
  * @version $Revision$ $Date$
@@ -55,19 +56,14 @@ public class TCPSourceWireAttacher implements SourceWireAttacher<TCPWireSourceDe
 
     /**
      * Inject dependencies
-     * 
-     * @param workScheduler
-     *            F3 Work Scheduler
+     *
+     * @param workScheduler F3 Work Scheduler
      */
-    public TCPSourceWireAttacher(@Reference WorkScheduler workScheduler, 
-                                 @Monitor TCPBindingMonitor monitor) {
+    public TCPSourceWireAttacher(@Reference WorkScheduler workScheduler, @Monitor TCPBindingMonitor monitor) {
         this.workScheduler = workScheduler;
         this.monitor = monitor;
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public void attachToSource(TCPWireSourceDefinition source, PhysicalWireTargetDefinition target, final Wire wire) throws WiringException {
         URI uri = source.getUri();
         String hostname = uri.getHost();
@@ -96,20 +92,18 @@ public class TCPSourceWireAttacher implements SourceWireAttacher<TCPWireSourceDe
 
     }
 
-    /**
-     * {@inheritDoc}
-     */
     public void detachFromSource(TCPWireSourceDefinition source, PhysicalWireTargetDefinition target) throws WiringException {
         throw new UnsupportedOperationException();
     }
 
-    /**
-     * {@inheritDoc}
-     */
-    public void attachObjectFactory(TCPWireSourceDefinition source, ObjectFactory<?> objectFactory, PhysicalWireTargetDefinition definition) throws WiringException {
+    public void attachObjectFactory(TCPWireSourceDefinition source, ObjectFactory<?> objectFactory, PhysicalWireTargetDefinition definition)
+            throws WiringException {
         throw new UnsupportedOperationException();
     }
 
+    public void detachObjectFactory(TCPWireSourceDefinition source, PhysicalWireTargetDefinition target) throws WiringException {
+        throw new AssertionError();
+    }
     /**
      * Stops the processing.
      */

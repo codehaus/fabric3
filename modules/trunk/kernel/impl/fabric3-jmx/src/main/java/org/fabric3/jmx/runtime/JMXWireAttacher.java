@@ -94,6 +94,10 @@ public class JMXWireAttacher implements SourceWireAttacher<JMXWireSourceDefiniti
         }
     }
 
+    public void detachObjectFactory(JMXWireSourceDefinition source, PhysicalWireTargetDefinition target) throws WiringException {
+        throw new AssertionError();
+    }
+
     private <T> OptimizedMBean<T> createOptimizedMBean(ObjectFactory<T> objectFactory, Class<?> service) throws IntrospectionException {
         String className = service.getName();
         Set<String> attributeNames = new HashSet<String>();

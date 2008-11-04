@@ -76,6 +76,10 @@ public class FtpSourceWireAttacher implements SourceWireAttacher<FtpWireSourceDe
         throw new UnsupportedOperationException();
     }
 
+    public void detachObjectFactory(FtpWireSourceDefinition source, PhysicalWireTargetDefinition target) throws WiringException {
+        throw new UnsupportedOperationException();
+    }
+
     public void attachObjectFactory(FtpWireSourceDefinition source, ObjectFactory<?> objectFactory, PhysicalWireTargetDefinition definition)
             throws WiringException {
         throw new UnsupportedOperationException();

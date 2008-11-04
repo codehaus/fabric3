@@ -21,12 +21,12 @@ import java.net.URI;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.ObjectCreationException;
+import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.SourceWireAttacher;
-import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 import org.fabric3.spi.model.physical.InteractionType;
+import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 import org.fabric3.spi.services.componentmanager.ComponentManager;
 import org.fabric3.spi.util.UriHelper;
 import org.fabric3.spi.wire.Wire;
@@ -53,14 +53,15 @@ public class XQueryComponentSourceWireAttacher implements SourceWireAttacher<XQu
             callbackUri = target.getCallbackUri().toString();
         }
         XQueryComponent component = (XQueryComponent) manager.getComponent(sourceUri);
-        component.attachSourceWire(referenceName, interactionType,callbackUri, wire);
+        component.attachSourceWire(referenceName, interactionType, callbackUri, wire);
     }
 
     public void detachFromSource(XQueryComponentWireSourceDefinition source, PhysicalWireTargetDefinition target) throws WiringException {
         throw new AssertionError();
     }
 
-    public void attachObjectFactory(XQueryComponentWireSourceDefinition source, ObjectFactory<?> objectFactory, PhysicalWireTargetDefinition target) throws WiringException {
+    public void attachObjectFactory(XQueryComponentWireSourceDefinition source, ObjectFactory<?> objectFactory, PhysicalWireTargetDefinition target)
+            throws WiringException {
         URI sourceUri = UriHelper.getDefragmentedName(source.getUri());
         String referenceName = source.getUri().getFragment();
         XQueryComponent component = (XQueryComponent) manager.getComponent(sourceUri);
@@ -70,4 +71,9 @@ public class XQueryComponentSourceWireAttacher implements SourceWireAttacher<XQu
             throw new WiringException(e);
         }
     }
+
+    public void detachObjectFactory(XQueryComponentWireSourceDefinition source, PhysicalWireTargetDefinition target) throws WiringException {
+        throw new AssertionError();
+    }
+
 }

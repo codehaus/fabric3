@@ -93,7 +93,11 @@ public class RsSourceWireAttacher implements SourceWireAttacher<RsWireSourceDefi
     public void attachObjectFactory(RsWireSourceDefinition source, ObjectFactory<?> objectFactory, PhysicalWireTargetDefinition target) throws WiringException {
         throw new AssertionError();
     }
-    
+
+    public void detachObjectFactory(RsWireSourceDefinition source, PhysicalWireTargetDefinition target) throws WiringException {
+        throw new AssertionError();
+    }
+
     private class RsMethodInterceptor implements MethodInterceptor {
         
         private Map<String, InvocationChain> invocationChains;

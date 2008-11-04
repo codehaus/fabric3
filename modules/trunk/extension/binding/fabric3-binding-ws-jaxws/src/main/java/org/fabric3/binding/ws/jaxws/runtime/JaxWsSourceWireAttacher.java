@@ -80,6 +80,10 @@ public class JaxWsSourceWireAttacher implements SourceWireAttacher<JaxWsWireSour
         provisioner.unprovision(source, target.getUri());
     }
 
+    public void detachObjectFactory(JaxWsWireSourceDefinition source, PhysicalWireTargetDefinition target) throws WiringException {
+        throw new AssertionError();
+    }
+
 
     public void attachObjectFactory(JaxWsWireSourceDefinition source, ObjectFactory<?> objectFactory, PhysicalWireTargetDefinition definition)
             throws WiringException {

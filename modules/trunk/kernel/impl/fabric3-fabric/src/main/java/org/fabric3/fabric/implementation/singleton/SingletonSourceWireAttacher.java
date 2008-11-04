@@ -69,6 +69,10 @@ public class SingletonSourceWireAttacher implements SourceWireAttacher<Singleton
         throw new UnsupportedOperationException();
     }
 
+    public void detachObjectFactory(SingletonWireSourceDefinition source, PhysicalWireTargetDefinition target) throws WiringException {
+        throw new UnsupportedOperationException();
+    }
+
     public void attachObjectFactory(SingletonWireSourceDefinition source, ObjectFactory<?> objectFactory, PhysicalWireTargetDefinition target)
             throws WiringException {
         URI sourceId = UriHelper.getDefragmentedName(source.getUri());
