@@ -41,7 +41,7 @@ import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 import org.fabric3.spi.wire.Wire;
 
 /**
- * Component that handles attachment of a wire at the source side of the invocation chain.
+ * Component that handles attachment and detachment of a wires to a source component or binding.
  * <p/>
  * Implementations attach physical wires to component implementations so that the implementation can invoke other components. These may be for
  * references or for callbacks.
