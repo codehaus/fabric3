@@ -107,12 +107,19 @@ public class ConnectorImpl implements Connector {
     public void disconnect(PhysicalWireDefinition definition) throws BuilderException {
         PhysicalWireSourceDefinition sourceDefinition = definition.getSource();
         SourceWireAttacher<PhysicalWireSourceDefinition> sourceAttacher = getAttacher(sourceDefinition);
+        if (sourceAttacher == null) {
+            throw new AttacherNotFoundException("Source attacher not found for type: " + sourceDefinition.getClass());
+        }
 
         PhysicalWireTargetDefinition targetDefinition = definition.getTarget();
-
         if (definition.isOptimizable()) {
-            sourceAttacher.attachObjectFactory(sourceDefinition, null, targetDefinition);
+            sourceAttacher.detachObjectFactory(sourceDefinition, targetDefinition);
         } else {
+            TargetWireAttacher<PhysicalWireTargetDefinition> targetAttacher = getAttacher(targetDefinition);
+            if (targetAttacher == null) {
+                throw new AttacherNotFoundException("Target attacher not found for type: " + targetDefinition.getClass());
+            }
+            targetAttacher.detachFromTarget(sourceDefinition, targetDefinition);
             sourceAttacher.detachFromSource(sourceDefinition, targetDefinition);
         }
     }
