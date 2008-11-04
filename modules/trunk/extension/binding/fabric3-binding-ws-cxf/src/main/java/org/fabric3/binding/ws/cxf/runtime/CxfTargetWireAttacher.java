@@ -104,6 +104,10 @@ public class CxfTargetWireAttacher implements TargetWireAttacher<CxfWireTargetDe
 
     }
 
+    public void detachFromTarget(PhysicalWireSourceDefinition source, CxfWireTargetDefinition target) throws WiringException {
+        throw new AssertionError();
+    }
+
     public ObjectFactory<?> createObjectFactory(CxfWireTargetDefinition target) throws WiringException {
         throw new AssertionError();
     }

@@ -41,6 +41,8 @@ import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 import org.fabric3.spi.wire.Wire;
 
 /**
+ * Component that handles attachment and detachment of wires to a target component or binding.
+ *
  * @version $Rev$ $Date$
  */
 public interface TargetWireAttacher<PWTD extends PhysicalWireTargetDefinition> {
@@ -53,6 +55,15 @@ public interface TargetWireAttacher<PWTD extends PhysicalWireTargetDefinition> {
      * @throws WiringException if an exception occurs during the attach operation
      */
     void attachToTarget(PhysicalWireSourceDefinition source, PWTD target, Wire wire) throws WiringException;
+
+    /**
+     * Detaches a wire from a target component or outgoing binding.
+     *
+     * @param source metadata for performing the attach
+     * @param target metadata for performing the attach
+     * @throws WiringException if an exception occurs during the detach operation
+     */
+    void detachFromTarget(PhysicalWireSourceDefinition source, PWTD target) throws WiringException;
 
     /**
      * Create an ObjectFactory that can return values compatible with this wire.

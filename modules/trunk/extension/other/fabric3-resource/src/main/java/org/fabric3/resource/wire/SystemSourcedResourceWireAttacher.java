@@ -45,6 +45,10 @@ public class SystemSourcedResourceWireAttacher implements TargetWireAttacher<Sys
         throw new AssertionError();
     }
 
+    public void detachFromTarget(PhysicalWireSourceDefinition source, SystemSourcedWireTargetDefinition target) throws WiringException {
+        throw new AssertionError();
+    }
+
     public ObjectFactory<?> createObjectFactory(SystemSourcedWireTargetDefinition target) throws WiringException {
         URI targetId = UriHelper.getDefragmentedName(target.getUri());
         AtomicComponent<?> targetComponent = (AtomicComponent<?>) manager.getComponent(targetId);

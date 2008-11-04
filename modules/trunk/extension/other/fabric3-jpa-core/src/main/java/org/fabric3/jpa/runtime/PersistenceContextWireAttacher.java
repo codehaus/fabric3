@@ -86,4 +86,8 @@ public class PersistenceContextWireAttacher implements TargetWireAttacher<Persis
         throw new UnsupportedOperationException();
     }
 
+    public void detachFromTarget(PhysicalWireSourceDefinition source, PersistenceContextWireTargetDefinition target) throws WiringException {
+        throw new UnsupportedOperationException();
+    }
+
 }

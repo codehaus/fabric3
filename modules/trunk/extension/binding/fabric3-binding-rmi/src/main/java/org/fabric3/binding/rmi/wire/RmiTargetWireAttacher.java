@@ -100,6 +100,10 @@ public class RmiTargetWireAttacher implements TargetWireAttacher<RmiWireTargetDe
         }
     }
 
+    public void detachFromTarget(PhysicalWireSourceDefinition source, RmiWireTargetDefinition target) throws WiringException {
+        throw new AssertionError();
+    }
+
     private static Method locateMethod(PhysicalOperationDefinition operation,
                                        Class clazz) {
         assert clazz.isInterface();

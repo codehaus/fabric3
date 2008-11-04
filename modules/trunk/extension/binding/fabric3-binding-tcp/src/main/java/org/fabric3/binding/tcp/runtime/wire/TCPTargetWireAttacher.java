@@ -29,17 +29,15 @@ import org.fabric3.spi.wire.Wire;
  */
 public class TCPTargetWireAttacher implements TargetWireAttacher<TCPWireTargetDefinition> {
 
-    /**
-     * {@inheritDoc}
-     */
     public void attachToTarget(PhysicalWireSourceDefinition source, TCPWireTargetDefinition target, Wire wire) throws WiringException {
 
         new UnsupportedOperationException("TCP binding for Reference yet to be implemented");
     }
 
-    /**
-     * {@inheritDoc}
-     */
+    public void detachFromTarget(PhysicalWireSourceDefinition source, TCPWireTargetDefinition target) throws WiringException {
+        throw new UnsupportedOperationException();
+    }
+
     public ObjectFactory<?> createObjectFactory(TCPWireTargetDefinition target) throws WiringException {
         throw new AssertionError();
     }

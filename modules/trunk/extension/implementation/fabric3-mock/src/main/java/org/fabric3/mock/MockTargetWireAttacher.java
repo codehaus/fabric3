@@ -72,7 +72,11 @@ public class MockTargetWireAttacher implements TargetWireAttacher<MockWireTarget
         }
 
     }
-    
+
+    public void detachFromTarget(PhysicalWireSourceDefinition source, MockWireTargetDefinition target) throws WiringException {
+        throw new AssertionError();
+    }
+
     public ObjectFactory<?> createObjectFactory(MockWireTargetDefinition target) throws WiringException {
         Class<?> mockedInterface = loadInterface(target);
         Object mock = createMock(mockedInterface);

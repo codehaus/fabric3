@@ -48,6 +48,10 @@ public class MonitorWireAttacher implements TargetWireAttacher<MonitorWireTarget
         throw new UnsupportedOperationException();
     }
 
+    public void detachFromTarget(PhysicalWireSourceDefinition source, MonitorWireTargetDefinition target) throws WiringException {
+        throw new AssertionError();
+    }
+
     public ObjectFactory<?> createObjectFactory(MonitorWireTargetDefinition target) throws WiringException {
         try {
             Class<?> type = classLoaderRegistry.loadClass(target.getClassLoaderId(), target.getMonitorType());

@@ -56,6 +56,10 @@ public class PersistenceUnitWireAttacher implements TargetWireAttacher<Persisten
         throw new AssertionError();
     }
 
+    public void detachFromTarget(PhysicalWireSourceDefinition source, PersistenceUnitWireTargetDefinition target) throws WiringException {
+        throw new AssertionError();
+    }
+
     public ObjectFactory<?> createObjectFactory(PersistenceUnitWireTargetDefinition target) throws WiringException {
         
         final String unitName = target.getUnitName();

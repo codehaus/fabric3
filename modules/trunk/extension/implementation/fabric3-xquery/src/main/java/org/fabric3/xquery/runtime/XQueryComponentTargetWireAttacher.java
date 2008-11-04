@@ -18,16 +18,16 @@ package org.fabric3.xquery.runtime;
 
 import java.net.URI;
 
-import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.ObjectCreationException;
+import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.TargetWireAttacher;
-import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 import org.fabric3.spi.model.physical.InteractionType;
+import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
+import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 import org.fabric3.spi.services.componentmanager.ComponentManager;
 import org.fabric3.spi.util.UriHelper;
 import org.fabric3.spi.wire.Wire;
@@ -53,6 +53,10 @@ public class XQueryComponentTargetWireAttacher implements TargetWireAttacher<XQu
         XQueryComponent component = (XQueryComponent) manager.getComponent(targetURI);
         component.attachTargetWire(serviceName, interactionType, wire);
 
+    }
+
+    public void detachFromTarget(PhysicalWireSourceDefinition source, XQueryComponentWireTargetDefinition target) throws WiringException {
+        throw new AssertionError();
     }
 
     public void detachFromTarget(XQueryComponentWireSourceDefinition source, PhysicalWireTargetDefinition target, Wire wire) throws WiringException {

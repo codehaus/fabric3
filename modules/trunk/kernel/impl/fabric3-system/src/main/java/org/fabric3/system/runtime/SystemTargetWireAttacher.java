@@ -108,6 +108,10 @@ public class SystemTargetWireAttacher implements TargetWireAttacher<SystemWireTa
         }
     }
 
+    public void detachFromTarget(PhysicalWireSourceDefinition source, SystemWireTargetDefinition target) throws WiringException {
+        throw new AssertionError();
+    }
+
     <T> SystemInvokerInterceptor<T> createInterceptor(Method method, SystemComponent<T> component, ScopeContainer<?> scopeContainer) {
         return new SystemInvokerInterceptor<T>(method, scopeContainer, component);
     }

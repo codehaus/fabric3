@@ -171,6 +171,10 @@ public class JmsTargetWireAttacher implements TargetWireAttacher<JmsWireTargetDe
 
     }
 
+    public void detachFromTarget(PhysicalWireSourceDefinition source, JmsWireTargetDefinition target) throws WiringException {
+        throw new AssertionError();
+    }
+
     public ObjectFactory<?> createObjectFactory(JmsWireTargetDefinition target) throws WiringException {
         throw new UnsupportedOperationException();
     }

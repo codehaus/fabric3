@@ -82,6 +82,10 @@ public class EjbTargetWireAttacher implements TargetWireAttacher<EjbWireTargetDe
 
     }
 
+    public void detachFromTarget(PhysicalWireSourceDefinition source, EjbWireTargetDefinition target) throws WiringException {
+        throw new AssertionError();
+    }
+
     private URI getId(EjbBindingDefinition bd)
             throws WiringException {
         try {

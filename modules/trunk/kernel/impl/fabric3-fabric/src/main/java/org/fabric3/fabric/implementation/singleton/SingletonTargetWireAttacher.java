@@ -46,6 +46,10 @@ public class SingletonTargetWireAttacher implements TargetWireAttacher<Singleton
             throws WiringException {
     }
 
+    public void detachFromTarget(PhysicalWireSourceDefinition source, SingletonWireTargetDefinition target) throws WiringException {
+        throw new AssertionError();
+    }
+
     public ObjectFactory<?> createObjectFactory(SingletonWireTargetDefinition target) throws WiringException {
         URI targetId = UriHelper.getDefragmentedName(target.getUri());
         SingletonComponent<?> targetComponent = (SingletonComponent<?>) manager.getComponent(targetId);

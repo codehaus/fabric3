@@ -85,6 +85,10 @@ public class JaxWsTargetWireAttacher implements TargetWireAttacher<JaxWsWireTarg
 
     }
 
+    public void detachFromTarget(PhysicalWireSourceDefinition source, JaxWsWireTargetDefinition target) throws WiringException {
+        throw new AssertionError();
+    }
+
     public ObjectFactory<?> createObjectFactory(JaxWsWireTargetDefinition definition) {
         throw new AssertionError();
     }

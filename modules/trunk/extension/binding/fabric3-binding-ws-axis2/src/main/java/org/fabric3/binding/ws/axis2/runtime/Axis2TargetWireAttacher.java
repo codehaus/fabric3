@@ -63,13 +63,13 @@ public class Axis2TargetWireAttacher implements TargetWireAttacher<Axis2WireTarg
     }
 
     public void attachToTarget(PhysicalWireSourceDefinition source, Axis2WireTargetDefinition target, Wire wire) throws WiringException {
-    	
-    	List<String> endpointUris = new LinkedList<String>();
+
+        List<String> endpointUris = new LinkedList<String>();
         String endpointUri = expandUri(target.getUri());
         StringTokenizer tok = new StringTokenizer(endpointUri);
         while (tok.hasMoreElements()) {
-        	endpointUris.add(tok.nextToken().trim());
-        	
+            endpointUris.add(tok.nextToken().trim());
+
         }
         for (Map.Entry<PhysicalOperationDefinition, InvocationChain> entry : wire.getInvocationChains().entrySet()) {
 
@@ -77,11 +77,16 @@ public class Axis2TargetWireAttacher implements TargetWireAttacher<Axis2WireTarg
 
             Set<AxisPolicy> policies = target.getPolicies(operation);
             Map<String, String> opInfo = target.getOperationInfo() != null ? target.getOperationInfo().get(operation) : null;
-            
-            Interceptor interceptor = new Axis2TargetInterceptor(endpointUris, operation, policies, opInfo, target.getConfig(), f3Configurator, policyApplier);
+
+            Interceptor interceptor =
+                    new Axis2TargetInterceptor(endpointUris, operation, policies, opInfo, target.getConfig(), f3Configurator, policyApplier);
             entry.getValue().addInterceptor(interceptor);
         }
 
+    }
+
+    public void detachFromTarget(PhysicalWireSourceDefinition source, Axis2WireTargetDefinition target) throws WiringException {
+        throw new AssertionError();
     }
 
     public ObjectFactory<?> createObjectFactory(Axis2WireTargetDefinition target) throws WiringException {

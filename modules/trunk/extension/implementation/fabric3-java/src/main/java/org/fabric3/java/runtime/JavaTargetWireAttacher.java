@@ -114,6 +114,10 @@ public class JavaTargetWireAttacher implements TargetWireAttacher<JavaWireTarget
         }
     }
 
+    public void detachFromTarget(PhysicalWireSourceDefinition source, JavaWireTargetDefinition target) throws WiringException {
+        throw new AssertionError();
+    }
+
     public ObjectFactory<?> createObjectFactory(JavaWireTargetDefinition target) throws WiringException {
         URI targetId = UriHelper.getDefragmentedName(target.getUri());
         JavaComponent<?> targetComponent = (JavaComponent<?>) manager.getComponent(targetId);

@@ -79,6 +79,10 @@ public class SpringTargetWireAttacher implements TargetWireAttacher<SpringWireTa
         }
     }
 
+    public void detachFromTarget(PhysicalWireSourceDefinition source, SpringWireTargetDefinition target) throws WiringException {
+        throw new AssertionError();
+    }
+
     public ObjectFactory<?> createObjectFactory(SpringWireTargetDefinition target) throws WiringException {
         throw new AssertionError();
     }
