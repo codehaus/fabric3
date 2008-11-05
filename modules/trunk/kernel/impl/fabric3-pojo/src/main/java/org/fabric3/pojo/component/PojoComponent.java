@@ -37,6 +37,7 @@ package org.fabric3.pojo.component;
 import java.lang.reflect.Type;
 import java.net.URI;
 import java.util.Map;
+import javax.xml.namespace.QName;
 
 import org.fabric3.pojo.injection.ComponentObjectFactory;
 import org.fabric3.scdl.InjectableAttribute;
@@ -61,7 +62,7 @@ public abstract class PojoComponent<T> extends AbstractLifecycle implements Atom
     private final URI uri;
     private final InstanceFactoryProvider<T> provider;
     private final ScopeContainer<?> scopeContainer;
-    private final URI groupId;
+    private final QName groupId;
     private final int initLevel;
     private final long maxIdleTime;
     private final long maxAge;
@@ -70,7 +71,7 @@ public abstract class PojoComponent<T> extends AbstractLifecycle implements Atom
     public PojoComponent(URI componentId,
                          InstanceFactoryProvider<T> provider,
                          ScopeContainer<?> scopeContainer,
-                         URI groupId,
+                         QName groupId,
                          int initLevel,
                          long maxIdleTime,
                          long maxAge) {
@@ -87,7 +88,7 @@ public abstract class PojoComponent<T> extends AbstractLifecycle implements Atom
         return uri;
     }
 
-    public URI getGroupId() {
+    public QName getGroupId() {
         return groupId;
     }
 
@@ -185,7 +186,7 @@ public abstract class PojoComponent<T> extends AbstractLifecycle implements Atom
         return "[" + uri.toString() + "] in state [" + super.toString() + ']';
     }
 
-    private InstanceFactory getInstanceFactory() {
+    private InstanceFactory<T> getInstanceFactory() {
         if (instanceFactory == null) {
             instanceFactory = provider.createFactory();
         }

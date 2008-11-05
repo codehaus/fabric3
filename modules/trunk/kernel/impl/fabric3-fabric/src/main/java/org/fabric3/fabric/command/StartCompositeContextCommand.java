@@ -34,7 +34,7 @@
  */
 package org.fabric3.fabric.command;
 
-import java.net.URI;
+import javax.xml.namespace.QName;
 
 import org.fabric3.spi.command.AbstractCommand;
 
@@ -46,14 +46,14 @@ import org.fabric3.spi.command.AbstractCommand;
 public class StartCompositeContextCommand extends AbstractCommand {
     private static final long serialVersionUID = -2132991925467598257L;
 
-    private final URI groupId;
+    private final QName groupId;
 
-    public StartCompositeContextCommand(int order, URI groupId) {
+    public StartCompositeContextCommand(int order, QName groupId) {
         super(order);
         this.groupId = groupId;
     }
 
-    public URI getGroupId() {
+    public QName getGroupId() {
         return groupId;
     }
 
@@ -65,11 +65,8 @@ public class StartCompositeContextCommand extends AbstractCommand {
 
         StartCompositeContextCommand that = (StartCompositeContextCommand) o;
 
-        if (groupId != null ? !groupId.equals(that.groupId) : that.groupId != null) {
-            return false;
-        }
+        return !(groupId != null ? !groupId.equals(that.groupId) : that.groupId != null);
 
-        return true;
     }
 
     public int hashCode() {

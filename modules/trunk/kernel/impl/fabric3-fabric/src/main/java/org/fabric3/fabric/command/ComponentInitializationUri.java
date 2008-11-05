@@ -36,6 +36,7 @@ package org.fabric3.fabric.command;
 
 import java.net.URI;
 import java.io.Serializable;
+import javax.xml.namespace.QName;
 
 /**
  *
@@ -44,10 +45,10 @@ import java.io.Serializable;
 public class ComponentInitializationUri implements Serializable {
     private static final long serialVersionUID = 2878715324071157981L;
 
-    private URI groupId;
+    private QName groupId;
     private URI uri;
 
-    public URI getGroupId() {
+    public QName getGroupId() {
         return groupId;
     }
 
@@ -55,7 +56,7 @@ public class ComponentInitializationUri implements Serializable {
         return uri;
     }
 
-    public ComponentInitializationUri(URI groupId, URI uri) {
+    public ComponentInitializationUri(QName groupId, URI uri) {
         super();
         this.groupId = groupId;
         this.uri = uri;

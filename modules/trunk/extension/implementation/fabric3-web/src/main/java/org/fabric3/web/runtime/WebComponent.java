@@ -21,6 +21,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import javax.xml.namespace.QName;
 
 import org.osoa.sca.CallableReference;
 import org.osoa.sca.ComponentContext;
@@ -58,7 +59,7 @@ public class WebComponent<T> extends AbstractLifecycle implements AtomicComponen
     // injection site name to <artifact name, injection site>
     private final Map<String, Map<String, InjectionSite>> siteMappings;
     private final ProxyService proxyService;
-    private final URI groupId;
+    private final QName groupId;
     private final Map<String, ObjectFactory<?>> propertyFactories;
     private final Map<String, ObjectFactory<?>> referenceFactories;
     private final URI archiveUri;
@@ -68,7 +69,7 @@ public class WebComponent<T> extends AbstractLifecycle implements AtomicComponen
     public WebComponent(URI uri,
                         String contextUrl,
                         URI classLoaderId,
-                        URI groupId,
+                        QName groupId,
                         URI archiveUri,
                         ClassLoader classLoader,
                         InjectorFactory injectorFactory,
@@ -148,7 +149,7 @@ public class WebComponent<T> extends AbstractLifecycle implements AtomicComponen
         return proxyService.createObjectFactory(interfaze, interactionType, wire, null);
     }
 
-    public URI getGroupId() {
+    public QName getGroupId() {
         return groupId;
     }
 

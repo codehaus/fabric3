@@ -17,6 +17,7 @@
 package org.fabric3.java.runtime;
 
 import java.net.URI;
+import javax.xml.namespace.QName;
 
 import org.osoa.sca.CallableReference;
 import org.osoa.sca.ServiceReference;
@@ -50,7 +51,7 @@ public class JavaComponent<T> extends PojoComponent<T> {
     public JavaComponent(URI componentId,
                          InstanceFactoryProvider<T> instanceFactoryProvider,
                          ScopeContainer<?> scopeContainer,
-                         URI groupId,
+                         QName groupId,
                          int initLevel,
                          long maxIdleTime,
                          long maxAge,

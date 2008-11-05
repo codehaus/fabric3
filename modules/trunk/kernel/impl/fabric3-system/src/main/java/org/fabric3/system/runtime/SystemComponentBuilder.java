@@ -36,6 +36,8 @@ package org.fabric3.system.runtime;
 
 import java.net.URI;
 
+import javax.xml.namespace.QName;
+
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
@@ -77,7 +79,7 @@ public class SystemComponentBuilder<T> extends PojoComponentBuilder<T, SystemCom
     public SystemComponent<T> build(SystemComponentDefinition definition) throws BuilderException {
         URI componentId = definition.getComponentId();
         int initLevel = definition.getInitLevel();
-        URI groupId = definition.getGroupId();
+        QName groupId = definition.getGroupId();
         ClassLoader classLoader = classLoaderRegistry.getClassLoader(definition.getClassLoaderId());
 
         // get the scope container for this component

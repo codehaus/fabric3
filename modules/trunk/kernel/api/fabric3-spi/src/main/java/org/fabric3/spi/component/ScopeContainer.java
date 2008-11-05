@@ -130,6 +130,11 @@ public interface ScopeContainer<KEY> extends Lifecycle {
     void stopContext(WorkContext workContext);
 
     /**
+     * Stops all active contexts.
+     */
+    void stopAllContexts();
+
+    /**
      * Initialise an ordered list of components. The list is traversed in order and the getWrapper() method called for each to associate an instance
      * with the supplied context.
      *
@@ -145,7 +150,7 @@ public interface ScopeContainer<KEY> extends Lifecycle {
      * @param component   the component
      * @param workContext the work context in which the instance should be obtained
      * @return the wrapper for the target instance
-     * @throws InstanceLifecycleException  if there was a problem instantiating the target instance
+     * @throws InstanceLifecycleException if there was a problem instantiating the target instance
      * @throws ConversationEndedException if the instance is conversational and the associated has ended or expired
      */
     <T> InstanceWrapper<T> getWrapper(AtomicComponent<T> component, WorkContext workContext)

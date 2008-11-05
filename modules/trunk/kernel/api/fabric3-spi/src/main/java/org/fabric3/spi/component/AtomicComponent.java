@@ -34,7 +34,7 @@
  */
 package org.fabric3.spi.component;
 
-import java.net.URI;
+import javax.xml.namespace.QName;
 
 import org.fabric3.spi.ObjectCreationException;
 import org.fabric3.spi.ObjectFactory;
@@ -52,7 +52,7 @@ public interface AtomicComponent<T> extends Component {
      *
      * @return the group containing this component
      */
-    URI getGroupId();
+    QName getGroupId();
 
     /**
      * Returns true if component instances should be eagerly initialized.
@@ -76,16 +76,15 @@ public interface AtomicComponent<T> extends Component {
     long getMaxIdleTime();
 
     /**
-     * Returns the maximum age a conversation may remain active in milliseconds if the implementation is
-     * conversational.
+     * Returns the maximum age a conversation may remain active in milliseconds if the implementation is conversational.
      *
      * @return the maximum age a conversation may remain active in milliseconds if the implementation is conversational
      */
     long getMaxAge();
 
     /**
-     * Create a new implementation instance, fully injected with all property and reference values. The instance's
-     * lifecycle callbacks must not have been called.
+     * Create a new implementation instance, fully injected with all property and reference values. The instance's lifecycle callbacks must not have
+     * been called.
      *
      * @param workContext the work context in which to create the instance
      * @return a wrapper for a new implementation instance
@@ -104,9 +103,9 @@ public interface AtomicComponent<T> extends Component {
     /**
      * Create an ObjectFactory that returns instances that can be used as references to the specified service.
      *
-     * @param type the type of reference to return; instances must be assignable to this class
+     * @param type        the type of reference to return; instances must be assignable to this class
      * @param serviceName the name of the service being referenced
-     * @param <R> the type of the reference
+     * @param <R>         the type of the reference
      * @return an ObjectFactory for instances of a reference
      * @throws ObjectCreationException if there was problem creating the factory
      */

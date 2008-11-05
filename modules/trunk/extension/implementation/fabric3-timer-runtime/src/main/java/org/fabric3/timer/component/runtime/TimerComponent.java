@@ -20,6 +20,8 @@ import java.net.URI;
 import java.text.ParseException;
 import java.util.concurrent.ScheduledFuture;
 
+import javax.xml.namespace.QName;
+
 import org.fabric3.java.runtime.JavaComponent;
 import org.fabric3.spi.component.InstanceFactoryProvider;
 import org.fabric3.spi.component.ScopeContainer;
@@ -54,7 +56,7 @@ public class TimerComponent<T> extends JavaComponent<T> {
     public TimerComponent(URI componentId,
                           InstanceFactoryProvider<T> instanceFactoryProvider,
                           ScopeContainer scopeContainer,
-                          URI groupId,
+                          QName groupId,
                           int initLevel,
                           long maxIdleTime,
                           long maxAge,

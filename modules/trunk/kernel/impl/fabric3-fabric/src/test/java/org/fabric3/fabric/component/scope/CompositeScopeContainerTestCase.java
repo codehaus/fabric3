@@ -34,7 +34,7 @@
  */
 package org.fabric3.fabric.component.scope;
 
-import java.net.URI;
+import javax.xml.namespace.QName;
 
 import junit.framework.TestCase;
 import org.easymock.IMocksControl;
@@ -44,16 +44,16 @@ import org.fabric3.scdl.Scope;
 import org.fabric3.spi.component.AtomicComponent;
 import org.fabric3.spi.component.InstanceWrapper;
 import org.fabric3.spi.component.ScopeContainer;
-import org.fabric3.spi.invocation.WorkContext;
 import org.fabric3.spi.invocation.CallFrame;
+import org.fabric3.spi.invocation.WorkContext;
 
 /**
  * @version $$Rev$$ $$Date$$
  */
 public class CompositeScopeContainerTestCase<T> extends TestCase {
     protected IMocksControl control;
-    protected ScopeContainer<URI> scopeContainer;
-    protected URI groupId;
+    protected ScopeContainer<QName> scopeContainer;
+    protected QName groupId;
     protected AtomicComponent<T> component;
     protected InstanceWrapper<T> wrapper;
     private WorkContext workContext;
@@ -80,7 +80,7 @@ public class CompositeScopeContainerTestCase<T> extends TestCase {
     @SuppressWarnings("unchecked")
     protected void setUp() throws Exception {
         super.setUp();
-        groupId = URI.create("groupId");
+        groupId = new QName("groupId");
         control = EasyMock.createStrictControl();
         workContext = new WorkContext();
         workContext.addCallFrame(new CallFrame(groupId));

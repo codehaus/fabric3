@@ -99,7 +99,7 @@ public interface MavenEmbeddedRuntime extends Fabric3Runtime<MavenHostInfo> {
      * @param compositeId the context id
      * @throws ContextStartException if an error starting the context is encountered
      */
-    void startContext(URI compositeId) throws ContextStartException;
+    void startContext(QName compositeId) throws ContextStartException;
 
     /**
      * @param contextId     the context id assocated with the test

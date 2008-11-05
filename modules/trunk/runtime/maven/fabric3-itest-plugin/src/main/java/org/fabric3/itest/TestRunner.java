@@ -189,7 +189,7 @@ public class TestRunner {
             String msg = "Deployment errors were found";
             throw new MojoExecutionException(msg);
         }
-        runtime.startContext(domain);
+        runtime.startContext(composite.getName());
         return createTestSuite(runtime, composite, domain);
     }
 
@@ -200,7 +200,7 @@ public class TestRunner {
         try {
             Composite composite;
             composite = runtime.activate(getBuildDirectoryUrl(), qName);
-            runtime.startContext(domain);
+            runtime.startContext(composite.getName());
             return createTestSuite(runtime, composite, domain);
         } catch (ValidationException e) {
             // print out the validation errors

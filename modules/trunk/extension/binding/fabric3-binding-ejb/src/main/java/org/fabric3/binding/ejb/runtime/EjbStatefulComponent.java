@@ -18,6 +18,7 @@ package org.fabric3.binding.ejb.runtime;
 
 import java.net.URI;
 import java.util.Map;
+import javax.xml.namespace.QName;
 
 import org.osoa.sca.ComponentContext;
 
@@ -26,21 +27,20 @@ import org.fabric3.spi.AbstractLifecycle;
 import org.fabric3.spi.ObjectCreationException;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.component.AtomicComponent;
-import org.fabric3.spi.component.InstanceWrapper;
 import org.fabric3.spi.invocation.WorkContext;
 
 /**
  * @version $Revision Date: Oct 29, 2007 Time: 4:26:44 PM
  */
-public class EjbStatefulComponent extends AbstractLifecycle implements AtomicComponent {
+public class EjbStatefulComponent extends AbstractLifecycle implements AtomicComponent<EjbStatefulInstanceWrapper> {
 
-    private final URI groupId;
+    private final QName groupId;
 
-    public EjbStatefulComponent(URI groupId) {
+    public EjbStatefulComponent(QName groupId) {
         this.groupId = groupId;
     }
 
-    public URI getGroupId() {
+    public QName getGroupId() {
         return groupId;
     }
 
@@ -60,7 +60,7 @@ public class EjbStatefulComponent extends AbstractLifecycle implements AtomicCom
         return 0;
     }
 
-    public InstanceWrapper createInstanceWrapper(WorkContext workContext) throws ObjectCreationException {
+    public EjbStatefulInstanceWrapper createInstanceWrapper(WorkContext workContext) throws ObjectCreationException {
         return new EjbStatefulInstanceWrapper();
     }
 
@@ -91,5 +91,6 @@ public class EjbStatefulComponent extends AbstractLifecycle implements AtomicCom
     public void setDefaultPropertyValues(Map<String, PropertyValue> defaultPropertyValues) {
 
     }
+
 
 }

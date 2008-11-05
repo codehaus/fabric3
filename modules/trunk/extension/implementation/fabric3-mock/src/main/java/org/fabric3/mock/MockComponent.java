@@ -19,6 +19,8 @@ package org.fabric3.mock;
 import java.net.URI;
 import java.util.Map;
 
+import javax.xml.namespace.QName;
+
 import org.fabric3.scdl.PropertyValue;
 import org.fabric3.spi.AbstractLifecycle;
 import org.fabric3.spi.ObjectCreationException;
@@ -58,7 +60,7 @@ public class MockComponent<T> extends AbstractLifecycle implements AtomicCompone
         return null;
     }
 
-    public URI getGroupId() {
+    public QName getGroupId() {
         return null;
     }
 

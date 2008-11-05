@@ -20,6 +20,8 @@ import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.xml.namespace.QName;
+
 import org.fabric3.scdl.PropertyValue;
 import org.fabric3.spi.AbstractLifecycle;
 import org.fabric3.spi.ObjectCreationException;
@@ -70,7 +72,7 @@ public class SpringComponent<T> extends AbstractLifecycle implements AtomicCompo
         return null;
     }
 
-    public URI getGroupId() {
+    public QName getGroupId() {
         return null;
     }
 

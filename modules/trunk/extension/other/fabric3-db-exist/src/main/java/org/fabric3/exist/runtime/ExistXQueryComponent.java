@@ -17,7 +17,7 @@
 package org.fabric3.exist.runtime;
 
 import java.net.URI;
-
+import javax.xml.namespace.QName;
 
 import org.exist.EXistException;
 import org.exist.xquery.XPathException;
@@ -41,7 +41,7 @@ public class ExistXQueryComponent extends XQueryComponent implements Lifecycle {
 
     public ExistXQueryComponent(URI uri,
             URI classLoaderId,
-            URI groupId,
+            QName groupId,
             ExistXQueryCompiler compiler) {
         super(uri, classLoaderId, groupId);
         this.compiler=compiler;

@@ -36,6 +36,8 @@ package org.fabric3.system.runtime;
 
 import java.net.URI;
 
+import javax.xml.namespace.QName;
+
 import org.fabric3.pojo.component.PojoComponent;
 import org.fabric3.spi.component.InstanceFactoryProvider;
 import org.fabric3.spi.component.ScopeContainer;
@@ -48,7 +50,7 @@ public class SystemComponent<T> extends PojoComponent<T> {
     public SystemComponent(URI componentId,
                            InstanceFactoryProvider<T> provider,
                            ScopeContainer<?> scopeContainer,
-                           URI groupId,
+                           QName groupId,
                            int initLevel,
                            int maxIdleTime,
                            int maxAge) {

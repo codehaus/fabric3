@@ -85,7 +85,7 @@ public class JUnitComponentGenerator implements ComponentGenerator<LogicalCompon
         helper.processInjectionSites(component, providerDefinition);
 
         JavaComponentDefinition physical = new JavaComponentDefinition();
-        physical.setGroupId(component.getParent().getUri());
+        physical.setGroupId(component.getDeployable());
         physical.setComponentId(componentId);
 
         URI classLoaderId = component.getClassLoaderId();

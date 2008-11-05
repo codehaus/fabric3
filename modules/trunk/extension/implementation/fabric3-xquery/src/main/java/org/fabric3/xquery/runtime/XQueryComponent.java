@@ -19,7 +19,7 @@ package org.fabric3.xquery.runtime;
 import java.net.URI;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-
+import javax.xml.namespace.QName;
 
 import org.fabric3.scdl.PropertyValue;
 import org.fabric3.spi.AbstractLifecycle;
@@ -39,12 +39,12 @@ public abstract class XQueryComponent<T> extends AbstractLifecycle implements At
 
     protected final URI uri;
     protected final URI classLoaderId;
-    protected final URI groupId;
+    protected final QName groupId;
     protected final Map<String, ObjectFactory<?>> referenceFactories;
 
     public XQueryComponent(URI uri,
-            URI classLoaderId,
-            URI groupId) {
+                           URI classLoaderId,
+                           QName groupId) {
         this.uri = uri;
         this.classLoaderId = classLoaderId;
         this.groupId = groupId;
@@ -63,7 +63,7 @@ public abstract class XQueryComponent<T> extends AbstractLifecycle implements At
 
     }
 
-    public abstract void attachSourceWire(String name, InteractionType interactionType,String callbackUri, Wire wire) throws WiringException;
+    public abstract void attachSourceWire(String name, InteractionType interactionType, String callbackUri, Wire wire) throws WiringException;
 
     public abstract void attachTargetWire(String name, InteractionType interactionType, Wire wire) throws WiringException;
 
@@ -75,7 +75,7 @@ public abstract class XQueryComponent<T> extends AbstractLifecycle implements At
         return null;
     }
 
-    public URI getGroupId() {
+    public QName getGroupId() {
         return groupId;
     }
 

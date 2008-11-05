@@ -38,6 +38,8 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.xml.namespace.QName;
+
 import org.osoa.sca.annotations.Constructor;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
@@ -90,7 +92,7 @@ public class InitializeComponentCommandExecutor implements CommandExecutor<Initi
     public void execute(InitializeComponentCommand command) throws ExecutionException {
 
         ComponentInitializationUri componentInitializationUri = command.getUri();
-        URI groupId = componentInitializationUri.getGroupId();
+        QName groupId = componentInitializationUri.getGroupId();
         URI uri = componentInitializationUri.getUri();
         Component component = manager.getComponent(uri);
         if (!(component instanceof AtomicComponent)) {

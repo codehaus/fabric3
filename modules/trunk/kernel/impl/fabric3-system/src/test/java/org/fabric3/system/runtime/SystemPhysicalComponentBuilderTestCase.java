@@ -35,10 +35,11 @@
 package org.fabric3.system.runtime;
 
 import java.net.URI;
+import javax.xml.namespace.QName;
 
 import junit.framework.TestCase;
-
 import org.easymock.EasyMock;
+
 import org.fabric3.pojo.instancefactory.InstanceFactoryBuilderRegistry;
 import org.fabric3.pojo.provision.InstanceFactoryDefinition;
 import org.fabric3.scdl.Signature;
@@ -46,25 +47,15 @@ import org.fabric3.spi.builder.component.ComponentBuilderRegistry;
 import org.fabric3.spi.component.InstanceFactoryProvider;
 import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
-import org.fabric3.system.runtime.SystemComponent;
-import org.fabric3.system.runtime.SystemComponentBuilder;
 import org.fabric3.system.provision.SystemComponentDefinition;
 
 /**
  * @version $Rev$ $Date$
  */
 public class SystemPhysicalComponentBuilderTestCase<T> extends TestCase {
-    private ComponentBuilderRegistry builderRegistry;
-    private ScopeRegistry scopeRegistry;
-    private InstanceFactoryBuilderRegistry providerBuilders;
-    private InstanceFactoryDefinition providerDefinition;
-    private InstanceFactoryProvider<T> instanceFactoryProvider;
     private SystemComponentBuilder<T> builder;
     private SystemComponentDefinition definition;
     private URI componentId;
-    private URI groupId;
-    private ClassLoaderRegistry classLoaderRegistry;
-    private ClassLoader classLoader;
 
     public void testBuildSimplePOJO() throws Exception {
         SystemComponent<T> component = builder.build(definition);
@@ -75,21 +66,22 @@ public class SystemPhysicalComponentBuilderTestCase<T> extends TestCase {
     @SuppressWarnings("unchecked")
     protected void setUp() throws Exception {
         super.setUp();
-        groupId = URI.create("fabric3://composite");
+        URI classLoaderId = URI.create("classLoaderId");
+        QName groupId = new QName("test", "test");
         componentId = URI.create("fabric3://component");
 
-        builderRegistry = EasyMock.createMock(ComponentBuilderRegistry.class);
-        scopeRegistry = EasyMock.createMock(ScopeRegistry.class);
+        ComponentBuilderRegistry builderRegistry = EasyMock.createMock(ComponentBuilderRegistry.class);
+        ScopeRegistry scopeRegistry = EasyMock.createMock(ScopeRegistry.class);
 
-        classLoader = getClass().getClassLoader();
-        classLoaderRegistry = EasyMock.createMock(ClassLoaderRegistry.class);
-        EasyMock.expect(classLoaderRegistry.getClassLoader(groupId)).andStubReturn(classLoader);
+        ClassLoader classLoader = getClass().getClassLoader();
+        ClassLoaderRegistry classLoaderRegistry = EasyMock.createMock(ClassLoaderRegistry.class);
+        EasyMock.expect(classLoaderRegistry.getClassLoader(classLoaderId)).andStubReturn(classLoader);
         EasyMock.replay(classLoaderRegistry);
 
-        providerBuilders = EasyMock.createMock(InstanceFactoryBuilderRegistry.class);
-        providerDefinition = new InstanceFactoryDefinition();
+        InstanceFactoryBuilderRegistry providerBuilders = EasyMock.createMock(InstanceFactoryBuilderRegistry.class);
+        InstanceFactoryDefinition providerDefinition = new InstanceFactoryDefinition();
         providerDefinition.setConstructor(new Signature("Foo"));
-        instanceFactoryProvider = EasyMock.createMock(InstanceFactoryProvider.class);
+        InstanceFactoryProvider<T> instanceFactoryProvider = EasyMock.createMock(InstanceFactoryProvider.class);
         EasyMock.expect(providerBuilders.build(providerDefinition, classLoader)).andStubReturn(instanceFactoryProvider);
         EasyMock.replay(providerBuilders);
 
@@ -102,7 +94,7 @@ public class SystemPhysicalComponentBuilderTestCase<T> extends TestCase {
         definition = new SystemComponentDefinition();
         definition.setGroupId(groupId);
         definition.setComponentId(componentId);
-        definition.setClassLoaderId(groupId);
+        definition.setClassLoaderId(classLoaderId);
         definition.setScope("COMPOSITE");
         definition.setInitLevel(-1);
         definition.setProviderDefinition(providerDefinition);

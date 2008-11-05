@@ -53,7 +53,6 @@ import org.fabric3.host.runtime.Bootstrapper;
 import org.fabric3.host.runtime.Fabric3Runtime;
 import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.host.runtime.InitializationException;
-import org.fabric3.host.work.WorkScheduler;
 import org.fabric3.introspection.IntrospectionHelper;
 import org.fabric3.introspection.contract.ContractProcessor;
 import org.fabric3.introspection.impl.DefaultIntrospectionHelper;

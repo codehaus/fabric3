@@ -42,6 +42,8 @@ import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.xml.namespace.QName;
+
 import org.osoa.sca.ComponentContext;
 
 import org.fabric3.scdl.FieldInjectionSite;
@@ -88,7 +90,7 @@ public class SingletonComponent<T> extends AbstractLifecycle implements AtomicCo
         return uri;
     }
 
-    public URI getGroupId() {
+    public QName getGroupId() {
         return null;
     }
 

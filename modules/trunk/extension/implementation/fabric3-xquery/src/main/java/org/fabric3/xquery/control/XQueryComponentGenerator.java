@@ -83,7 +83,7 @@ public class XQueryComponentGenerator implements ComponentGenerator<LogicalCompo
         URI componentId = component.getUri();
         XQueryComponentDefinition physical = new XQueryComponentDefinition();
         physical.setComponentId(componentId);
-        physical.setGroupId(component.getParent().getUri());
+        physical.setGroupId(component.getDeployable());
         URI classLoaderId = component.getParent().getUri();
         physical.setClassLoaderId(classLoaderId);
         physical.setLocation(definition.getImplementation().getLocation());

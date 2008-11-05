@@ -18,6 +18,8 @@ package org.fabric3.groovy.runtime;
 
 import java.net.URI;
 
+import javax.xml.namespace.QName;
+
 import org.fabric3.pojo.builder.PojoComponentBuilder;
 import org.fabric3.pojo.instancefactory.InstanceFactoryBuilderRegistry;
 import org.fabric3.pojo.provision.InstanceFactoryDefinition;
@@ -57,7 +59,7 @@ public class GroovyComponentBuilder<T> extends PojoComponentBuilder<T, GroovyCom
     public GroovyComponent<T> build(GroovyComponentDefinition definition) throws BuilderException {
         URI componentId = definition.getComponentId();
         int initLevel = definition.getInitLevel();
-        URI groupId = definition.getGroupId();
+        QName groupId = definition.getGroupId();
         ClassLoader classLoader = classLoaderRegistry.getClassLoader(definition.getClassLoaderId());
 
         // get the scope container for this component

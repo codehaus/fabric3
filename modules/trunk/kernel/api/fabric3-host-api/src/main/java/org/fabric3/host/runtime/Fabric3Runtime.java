@@ -117,20 +117,6 @@ public interface Fabric3Runtime<HI extends HostInfo> {
     void initialize() throws InitializationException;
 
     /**
-     * Starts the runtime domain context and initializes system components marked to eagerly initialize.
-     *
-     * @throws InitializationException if there is an error starting the context
-     */
-    void startRuntimeDomainContext() throws InitializationException;
-
-    /**
-     * Starts the appliaiton domain context.
-     *
-     * @throws InitializationException if there is an error starting the context
-     */
-    void startApplicationDomainContext() throws InitializationException;
-
-    /**
      * Starts the runtime. A runtime is ready to process requests when it has been started.
      *
      * @throws StartException if there is an error starting the runtime

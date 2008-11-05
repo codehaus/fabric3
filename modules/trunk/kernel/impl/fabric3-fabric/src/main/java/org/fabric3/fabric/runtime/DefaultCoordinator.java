@@ -111,7 +111,6 @@ public class DefaultCoordinator<RUNTIME extends Fabric3Runtime<?>, BOOTSTRAPPER 
         }
         runtime.initialize();
         bootstrapper.bootRuntimeDomain(runtime, bootClassLoader, appClassLoader);
-        runtime.startRuntimeDomainContext();
         state = State.PRIMORDIAL;
     }
 
@@ -139,7 +138,6 @@ public class DefaultCoordinator<RUNTIME extends Fabric3Runtime<?>, BOOTSTRAPPER 
     }
 
     public Future<Void> joinDomain(final long timeout) throws InitializationException {
-        runtime.startApplicationDomainContext();
         if (state != State.INITIALIZED) {
             throw new IllegalStateException("Not in INITIALIZED state");
         }

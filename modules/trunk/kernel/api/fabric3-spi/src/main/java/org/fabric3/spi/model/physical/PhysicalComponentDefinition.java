@@ -36,6 +36,7 @@ package org.fabric3.spi.model.physical;
 
 import java.net.URI;
 import java.io.Serializable;
+import javax.xml.namespace.QName;
 
 /**
  * Represents a physical component model.
@@ -47,7 +48,7 @@ public abstract class PhysicalComponentDefinition implements Serializable {
 
     private URI componentId;
     private String scope;
-    private URI groupId;
+    private QName groupId;
     private int initLevel;
     private long maxIdleTime;
     private long maxAge;
@@ -75,7 +76,7 @@ public abstract class PhysicalComponentDefinition implements Serializable {
      *
      * @return the id of the component group this component belongs to
      */
-    public URI getGroupId() {
+    public QName getGroupId() {
         return groupId;
     }
 
@@ -84,7 +85,7 @@ public abstract class PhysicalComponentDefinition implements Serializable {
      *
      * @param groupId the id of the component group this component belongs to
      */
-    public void setGroupId(URI groupId) {
+    public void setGroupId(QName groupId) {
         this.groupId = groupId;
     }
 

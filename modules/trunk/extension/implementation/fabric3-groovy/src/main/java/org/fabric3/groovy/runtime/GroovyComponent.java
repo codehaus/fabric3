@@ -18,6 +18,8 @@ package org.fabric3.groovy.runtime;
 
 import java.net.URI;
 
+import javax.xml.namespace.QName;
+
 import org.fabric3.pojo.component.PojoComponent;
 import org.fabric3.spi.component.InstanceFactoryProvider;
 import org.fabric3.spi.component.ScopeContainer;
@@ -31,7 +33,7 @@ public class GroovyComponent<T> extends PojoComponent<T> {
     public GroovyComponent(URI componentId,
                            InstanceFactoryProvider<T> instanceFactoryProvider,
                            ScopeContainer<?> scopeContainer,
-                           URI groupId,
+                           QName groupId,
                            int initLevel,
                            long maxIdleTime,
                            long maxAge) {

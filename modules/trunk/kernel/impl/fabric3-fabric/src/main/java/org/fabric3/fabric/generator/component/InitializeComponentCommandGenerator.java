@@ -36,6 +36,8 @@ package org.fabric3.fabric.generator.component;
 
 import java.net.URI;
 
+import javax.xml.namespace.QName;
+
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Property;
 
@@ -67,7 +69,7 @@ public class InitializeComponentCommandGenerator implements CommandGenerator {
     @SuppressWarnings("unchecked")
     public InitializeComponentCommand generate(LogicalComponent<?> component) throws GenerationException {
         if (!(component instanceof LogicalCompositeComponent) && component.getState() == LogicalState.NEW && component.isEagerInit()) {
-            URI groupId = URI.create(component.getParent().getUri().toString() + "/");
+            QName groupId = component.getDeployable();
             ComponentInitializationUri uri = new ComponentInitializationUri(groupId, component.getUri());
             return new InitializeComponentCommand(order, uri);
         }

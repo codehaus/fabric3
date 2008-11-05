@@ -20,6 +20,8 @@ import java.net.URI;
 import java.util.Collections;
 import java.util.Map;
 
+import javax.xml.namespace.QName;
+
 import org.osoa.sca.annotations.Destroy;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
@@ -65,7 +67,7 @@ public class WebComponentBuilder implements ComponentBuilder<WebComponentDefinit
 
     public WebComponent build(WebComponentDefinition definition) throws BuilderException {
         URI componentId = definition.getComponentId();
-        URI groupId = definition.getGroupId();
+        QName groupId = definition.getGroupId();
         // TODO fix properties
         Map<String, ObjectFactory<?>> propertyFactories = Collections.emptyMap();
         URI classLoaderId = definition.getClassLoaderId();

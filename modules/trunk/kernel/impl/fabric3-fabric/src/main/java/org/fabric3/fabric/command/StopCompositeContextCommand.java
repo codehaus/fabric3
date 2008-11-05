@@ -16,22 +16,22 @@
  */
 package org.fabric3.fabric.command;
 
-import java.net.URI;
+import javax.xml.namespace.QName;
 
 import org.fabric3.spi.command.AbstractCommand;
 
 public class StopCompositeContextCommand extends AbstractCommand {
     private static final long serialVersionUID = 6161772793715132968L;
 
-    private final URI groupId;
+    private final QName groupId;
 
-    public StopCompositeContextCommand(int order, URI groupId) {
+    public StopCompositeContextCommand(int order, QName groupId) {
         super(order);
         this.groupId = groupId;
         assert groupId != null;
     }
 
-    public URI getGroupId() {
+    public QName getGroupId() {
         return groupId;
     }
 

@@ -99,6 +99,10 @@ public abstract class AbstractScopeContainer<KEY> extends AbstractLifecycle impl
         }
     }
 
+    public void stopAllContexts() {
+        throw new UnsupportedOperationException();
+    }
+
     public Scope<KEY> getScope() {
         return scope;
     }

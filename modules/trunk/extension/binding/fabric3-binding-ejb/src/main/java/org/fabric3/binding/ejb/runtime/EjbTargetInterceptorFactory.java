@@ -18,6 +18,8 @@ package org.fabric3.binding.ejb.runtime;
 
 import java.net.URI;
 
+import javax.xml.namespace.QName;
+
 import org.fabric3.binding.ejb.scdl.EjbBindingDefinition;
 import org.fabric3.scdl.Signature;
 import org.fabric3.scdl.Scope;
@@ -37,8 +39,7 @@ public class EjbTargetInterceptorFactory {
     private EjbStatefulComponent statefulComponent;
 
 
-    public EjbTargetInterceptorFactory(EjbBindingDefinition bd, EjbResolver resolver,
-                                       ScopeRegistry scopeRegistry, URI id) {
+    public EjbTargetInterceptorFactory(EjbBindingDefinition bd, EjbResolver resolver, ScopeRegistry scopeRegistry, QName id) {
         this.bd = bd;
         this.resolver = resolver;
 

@@ -19,6 +19,7 @@ package org.fabric3.exist.runtime;
 import org.fabric3.xquery.runtime.*;
 import java.net.URI;
 import java.net.URL;
+import javax.xml.namespace.QName;
 
 import org.exist.source.URLSource;
 import org.fabric3.exist.ExistDBInstance;
@@ -70,7 +71,7 @@ public class ExistXQueryComponentBuilder implements ComponentBuilder<XQueryCompo
 
     public XQueryComponent build(XQueryComponentDefinition definition) throws BuilderException {
         URI componentId = definition.getComponentId();
-        URI groupId = definition.getGroupId();
+        QName groupId = definition.getGroupId();
         URI classLoaderId = definition.getClassLoaderId();
         ExistDBInstance instance = dbRegistry.getInstance(definition.getContext());
         ClassLoader classLoader = classLoaderRegistry.getClassLoader(definition.getClassLoaderId());

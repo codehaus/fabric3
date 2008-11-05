@@ -77,7 +77,7 @@ public class JavaGenerationHelperImpl implements JavaGenerationHelper {
         // create the physical component definition
         URI componentId = component.getUri();
         physical.setComponentId(componentId);
-        physical.setGroupId(component.getParent().getUri());
+        physical.setGroupId(component.getDeployable());
         physical.setScope(scope);
         physical.setInitLevel(helper.getInitLevel(logical, type));
         physical.setMaxAge(type.getMaxAge());

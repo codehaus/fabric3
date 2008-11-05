@@ -34,7 +34,7 @@
  */
 package org.fabric3.fabric.executor;
 
-import java.net.URI;
+import javax.xml.namespace.QName;
 
 import org.osoa.sca.annotations.Constructor;
 import org.osoa.sca.annotations.EagerInit;
@@ -59,7 +59,7 @@ import org.fabric3.spi.invocation.WorkContext;
  */
 @EagerInit
 public class StartCompositeContextCommandExecutor implements CommandExecutor<StartCompositeContextCommand> {
-    private ScopeContainer<URI> container;
+    private ScopeContainer<QName> container;
     private CommandExecutorRegistry commandExecutorRegistry;
 
     @Constructor
@@ -79,7 +79,7 @@ public class StartCompositeContextCommandExecutor implements CommandExecutor<Sta
     }
 
     public void execute(StartCompositeContextCommand command) throws ExecutionException {
-        URI groupId = command.getGroupId();
+        QName groupId = command.getGroupId();
         WorkContext workContext = new WorkContext();
         CallFrame frame = new CallFrame(groupId);
         workContext.addCallFrame(frame);

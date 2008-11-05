@@ -57,12 +57,10 @@ import org.fabric3.monitor.MonitorFactory;
 import org.fabric3.pojo.PojoWorkContextTunnel;
 import org.fabric3.scdl.Autowire;
 import org.fabric3.spi.component.AtomicComponent;
-import org.fabric3.spi.component.GroupInitializationException;
 import org.fabric3.spi.component.InstanceLifecycleException;
 import org.fabric3.spi.component.InstanceWrapper;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.ScopeRegistry;
-import org.fabric3.spi.invocation.CallFrame;
 import org.fabric3.spi.invocation.WorkContext;
 import org.fabric3.spi.runtime.RuntimeServices;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
@@ -198,31 +196,6 @@ public abstract class AbstractRuntime<HI extends HostInfo> implements Fabric3Run
         scopeRegistry.register(scopeContainer);
     }
 
-    public void startRuntimeDomainContext() throws InitializationException {
-        try {
-            WorkContext workContext = new WorkContext();
-            CallFrame frame = new CallFrame(ComponentNames.RUNTIME_URI);
-            workContext.addCallFrame(frame);
-            scopeContainer.startContext(workContext);
-            workContext.popCallFrame();
-        } catch (GroupInitializationException e) {
-            throw new InitializationException(e);
-        }
-    }
-
-    public void startApplicationDomainContext() throws InitializationException {
-        try {
-            URI groupId = getHostInfo().getDomain();
-            WorkContext workContext = new WorkContext();
-            CallFrame frame = new CallFrame(groupId);
-            workContext.addCallFrame(frame);
-            scopeContainer.startContext(workContext);
-            workContext.popCallFrame();
-        } catch (GroupInitializationException e) {
-            throw new InitializationException(e);
-        }
-    }
-
     public void start() throws StartException {
         // starts the runtime by publishing a start event
         EventService eventService = getSystemComponent(EventService.class, EVENT_SERVICE_URI);
@@ -231,10 +204,7 @@ public abstract class AbstractRuntime<HI extends HostInfo> implements Fabric3Run
 
     public void destroy() {
         // destroy system components
-        WorkContext workContext = new WorkContext();
-        CallFrame frame = new CallFrame(ComponentNames.RUNTIME_URI);
-        workContext.addCallFrame(frame);
-        scopeContainer.stopContext(workContext);
+        scopeContainer.stopAllContexts();
     }
 
     public <I> I getSystemComponent(Class<I> service, URI uri) {
@@ -252,8 +222,8 @@ public abstract class AbstractRuntime<HI extends HostInfo> implements Fabric3Run
             InstanceWrapper<?> wrapper = scopeContainer.getWrapper(component, workContext);
             return service.cast(wrapper.getInstance());
         } catch (InstanceLifecycleException e) {
-            // FIXME throw something better
-            throw new AssertionError();
+            // this is an error with the runtime and not something that is recoverable
+            throw new AssertionError(e);
         } finally {
             PojoWorkContextTunnel.setThreadWorkContext(oldContext);
         }

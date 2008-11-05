@@ -47,7 +47,7 @@ public class StopCompositeContextCommandGenerator implements CommandGenerator {
      @SuppressWarnings("unchecked")
     public StopCompositeContextCommand generate(LogicalComponent<?> component) throws GenerationException {
         if (component.getState() == LogicalState.MARKED && component instanceof LogicalCompositeComponent) {
-            return new StopCompositeContextCommand(order, component.getUri());
+            return new StopCompositeContextCommand(order, component.getDeployable());
         }
         return null;
 

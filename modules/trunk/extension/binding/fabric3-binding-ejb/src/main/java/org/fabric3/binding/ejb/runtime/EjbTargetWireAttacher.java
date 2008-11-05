@@ -17,8 +17,8 @@
 package org.fabric3.binding.ejb.runtime;
 
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.util.Map;
+import javax.xml.namespace.QName;
 
 import org.osoa.sca.annotations.Reference;
 
@@ -86,13 +86,9 @@ public class EjbTargetWireAttacher implements TargetWireAttacher<EjbWireTargetDe
         throw new AssertionError();
     }
 
-    private URI getId(EjbBindingDefinition bd)
+    private QName getId(EjbBindingDefinition bd)
             throws WiringException {
-        try {
-            return bd.getTargetUri() != null ? bd.getTargetUri() : new URI(bd.getEjbLink());
-        } catch (URISyntaxException se) {
-            throw new WiringException(se);
-        }
+        return new QName(bd.getEjbLink());
     }
 
     private Class loadClass(String name, URI classLoaderURI)

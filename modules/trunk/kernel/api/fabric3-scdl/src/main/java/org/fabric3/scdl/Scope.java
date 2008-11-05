@@ -34,7 +34,7 @@
  */
 package org.fabric3.scdl;
 
-import java.net.URI;
+import javax.xml.namespace.QName;
 
 import org.osoa.sca.Conversation;
 
@@ -49,7 +49,7 @@ public class Scope<T> extends ModelObject {
     public static final Scope<Object> STATELESS = new Scope<Object>("STATELESS", Object.class);
     public static final Scope<Thread> REQUEST = new Scope<Thread>("REQUEST", Thread.class);
     public static final Scope<Conversation> CONVERSATION = new Scope<Conversation>("CONVERSATION", Conversation.class);
-    public static final Scope<URI> COMPOSITE = new Scope<URI>("COMPOSITE", URI.class);
+    public static final Scope<QName> COMPOSITE = new Scope<QName>("COMPOSITE", QName.class);
 
     private final Class<T> identifierType;
     private final String scope;

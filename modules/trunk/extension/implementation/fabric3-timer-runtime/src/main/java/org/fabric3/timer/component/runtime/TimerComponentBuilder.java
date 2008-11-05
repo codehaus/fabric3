@@ -17,6 +17,7 @@
 package org.fabric3.timer.component.runtime;
 
 import java.net.URI;
+import javax.xml.namespace.QName;
 
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
@@ -57,10 +58,10 @@ public class TimerComponentBuilder<T> extends PojoComponentBuilder<T, TimerCompo
                                  @Reference ScopeRegistry scopeRegistry,
                                  @Reference InstanceFactoryBuilderRegistry providerBuilders,
                                  @Reference ClassLoaderRegistry classLoaderRegistry,
-                                 @Reference(name = "transformerRegistry")TransformerRegistry<PullTransformer<?, ?>> transformerRegistry,
+                                 @Reference(name = "transformerRegistry") TransformerRegistry<PullTransformer<?, ?>> transformerRegistry,
                                  @Reference ProxyService proxyService,
-                                 @Reference(name = "nonTrxTimerService")TimerService nonTrxTimerService,
-                                 @Reference(name = "trxTimerService")TimerService trxTimerService) {
+                                 @Reference(name = "nonTrxTimerService") TimerService nonTrxTimerService,
+                                 @Reference(name = "trxTimerService") TimerService trxTimerService) {
         super(builderRegistry, scopeRegistry, providerBuilders, classLoaderRegistry, transformerRegistry);
         this.proxyService = proxyService;
         this.nonTrxTimerService = nonTrxTimerService;
@@ -75,7 +76,7 @@ public class TimerComponentBuilder<T> extends PojoComponentBuilder<T, TimerCompo
     public TimerComponent<T> build(TimerComponentDefinition definition) throws BuilderException {
         URI componentId = definition.getComponentId();
         int initLevel = definition.getInitLevel();
-        URI groupId = definition.getGroupId();
+        QName groupId = definition.getGroupId();
         ClassLoader classLoader = classLoaderRegistry.getClassLoader(definition.getClassLoaderId());
 
         // get the scope container for this component

@@ -82,7 +82,7 @@ public class WebComponentGenerator implements ComponentGenerator<LogicalComponen
         WebComponentDefinition physical = new WebComponentDefinition();
         physical.setComponentId(componentId);
         physical.setContextUrl(contextUrl);
-        physical.setGroupId(component.getParent().getUri());
+        physical.setGroupId(component.getDeployable());
         Map<String, Map<String, InjectionSite>> sites = generateInjectionMapping(componentType);
         physical.setInjectionMappings(sites);
         processPropertyValues(component, physical);
