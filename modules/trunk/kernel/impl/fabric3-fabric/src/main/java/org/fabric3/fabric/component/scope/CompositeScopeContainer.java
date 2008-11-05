@@ -39,6 +39,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -68,17 +69,20 @@ import org.fabric3.spi.invocation.WorkContext;
 @EagerInit
 @Service(ScopeContainer.class)
 public class CompositeScopeContainer extends AbstractScopeContainer<URI> {
-    // there is one instance per component so we can index directly
-    private final Map<AtomicComponent<?>, InstanceWrapper<?>> instanceWrappers = new ConcurrentHashMap<AtomicComponent<?>, InstanceWrapper<?>>();
+    private final Map<AtomicComponent<?>, InstanceWrapper<?>> instanceWrappers;
 
-    // the queue of instanceWrappers to destroy, in the order that their instances were created
-    private final Map<URI, List<InstanceWrapper<?>>> destroyQueues = new ConcurrentHashMap<URI, List<InstanceWrapper<?>>>();
+    // The map of InstanceWrappers to destroy keyed by the deployable composite the component was deployed with.
+    // The queues of InstanceWrappers are ordered by the sequence in which the deployables were deployed.
+    // The InstanceWrappers themselves are ordered by the sequence in which they were instantiated.
+    private final Map<URI, List<InstanceWrapper<?>>> destroyQueues;
 
     // the queue of components to eagerly initialize in each group
     private final Map<URI, List<AtomicComponent<?>>> initQueues = new HashMap<URI, List<AtomicComponent<?>>>();
 
     public CompositeScopeContainer(@Monitor ScopeContainerMonitor monitor) {
         super(Scope.COMPOSITE, monitor);
+        instanceWrappers = new ConcurrentHashMap<AtomicComponent<?>, InstanceWrapper<?>>();
+        destroyQueues = new LinkedHashMap<URI, List<InstanceWrapper<?>>>();
     }
 
     public void register(AtomicComponent<?> component) {
@@ -116,7 +120,9 @@ public class CompositeScopeContainer extends AbstractScopeContainer<URI> {
 
     public void startContext(WorkContext workContext) throws GroupInitializationException {
         URI contextId = workContext.peekCallFrame().getCorrelationId(URI.class);
-        destroyQueues.put(contextId, new ArrayList<InstanceWrapper<?>>());
+        synchronized (destroyQueues) {
+            destroyQueues.put(contextId, new ArrayList<InstanceWrapper<?>>());
+        }
         eagerInitialize(workContext, contextId);
     }
 
@@ -127,8 +133,10 @@ public class CompositeScopeContainer extends AbstractScopeContainer<URI> {
 
     public void joinContext(WorkContext workContext) throws GroupInitializationException {
         URI contextId = workContext.peekCallFrame().getCorrelationId(URI.class);
-        if (!destroyQueues.containsKey(contextId)) {
-            destroyQueues.put(contextId, new ArrayList<InstanceWrapper<?>>());
+        synchronized (destroyQueues) {
+            if (!destroyQueues.containsKey(contextId)) {
+                destroyQueues.put(contextId, new ArrayList<InstanceWrapper<?>>());
+            }
         }
     }
 
@@ -148,7 +156,9 @@ public class CompositeScopeContainer extends AbstractScopeContainer<URI> {
 
     public synchronized void stop() {
         super.stop();
-        destroyQueues.clear();
+        synchronized (destroyQueues) {
+            destroyQueues.clear();
+        }
         synchronized (initQueues) {
             initQueues.clear();
         }
@@ -173,7 +183,10 @@ public class CompositeScopeContainer extends AbstractScopeContainer<URI> {
         // some component instances such as system singletons may already be started
         if (!wrapper.isStarted()) {
             wrapper.start();
-            List<InstanceWrapper<?>> queue = destroyQueues.get(component.getGroupId());
+            List<InstanceWrapper<?>> queue;
+            synchronized (destroyQueues) {
+                queue = destroyQueues.get(component.getGroupId());
+            }
             if (queue == null) {
                 throw new IllegalStateException("Context not started");
             }
@@ -212,13 +225,19 @@ public class CompositeScopeContainer extends AbstractScopeContainer<URI> {
         // for composite contexts being closed, also destroy child composites and their contained components
         String path = contextId.getPath();
         List<InstanceWrapper<?>> toDestroy = new ArrayList<InstanceWrapper<?>>();
-        for (Map.Entry<URI, List<InstanceWrapper<?>>> entry : destroyQueues.entrySet()) {
-            URI key = entry.getKey();
-            if (key.getPath().startsWith(path)) {
-                // matches URIs that are in the hieratchy being destroyed
-                List<InstanceWrapper<?>> wrappers = entry.getValue();
-                toDestroy.addAll(wrappers);
-                // safe to be removed during iteration
+        synchronized (destroyQueues) {
+            List<URI> keys = new ArrayList<URI>();
+            for (Map.Entry<URI, List<InstanceWrapper<?>>> entry : destroyQueues.entrySet()) {
+                URI key = entry.getKey();
+                if (key.getPath().startsWith(path)) {
+                    // matches URIs that are in the hieratchy being destroyed
+                    List<InstanceWrapper<?>> wrappers = entry.getValue();
+                    toDestroy.addAll(wrappers);
+                    keys.add(key);
+                    //destroyQueues.remove(key);
+                }
+            }
+            for (URI key : keys) {
                 destroyQueues.remove(key);
             }
         }
