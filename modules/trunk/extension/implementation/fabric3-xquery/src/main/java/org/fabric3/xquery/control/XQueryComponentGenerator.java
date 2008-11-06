@@ -17,14 +17,17 @@
 package org.fabric3.xquery.control;
 
 import java.net.URI;
-
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.xml.namespace.QName;
+
 import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Init;
+import org.osoa.sca.annotations.Reference;
+import org.w3c.dom.Document;
 
 import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.ComponentReference;
@@ -56,9 +59,6 @@ import org.fabric3.xquery.scdl.XQueryComponentType;
 import org.fabric3.xquery.scdl.XQueryImplementation;
 import org.fabric3.xquery.scdl.XQueryProperty;
 import org.fabric3.xquery.scdl.XQueryServiceContract;
-import org.osoa.sca.annotations.Init;
-import org.osoa.sca.annotations.Reference;
-import org.w3c.dom.Document;
 
 /**
  * @version $Rev$ $Date$
@@ -80,10 +80,7 @@ public class XQueryComponentGenerator implements ComponentGenerator<LogicalCompo
 
     public PhysicalComponentDefinition generate(LogicalComponent<XQueryImplementation> component) throws GenerationException {
         ComponentDefinition<XQueryImplementation> definition = component.getDefinition();
-        URI componentId = component.getUri();
         XQueryComponentDefinition physical = new XQueryComponentDefinition();
-        physical.setComponentId(componentId);
-        physical.setGroupId(component.getDeployable());
         URI classLoaderId = component.getParent().getUri();
         physical.setClassLoaderId(classLoaderId);
         physical.setLocation(definition.getImplementation().getLocation());
@@ -140,8 +137,8 @@ public class XQueryComponentGenerator implements ComponentGenerator<LogicalCompo
                 XQueryServiceContract callback = (XQueryServiceContract) service.getCallbackContract();
                 addFunctions(callback.getQname().getLocalPart(), callback, callbackFunctions);
             }
-            ComponentService compService =definition.getServices().get(serviceName);
-            if (compService != null &&  compService.getServiceContract() != null) { //override the ServiceContract with a more specific type
+            ComponentService compService = definition.getServices().get(serviceName);
+            if (compService != null && compService.getServiceContract() != null) { //override the ServiceContract with a more specific type
                 entry.getValue().setServiceContract(compService.getServiceContract());
             } else {//not explicitly set, obtain the reference to the service from the composite if available
                 ServiceContract contract = services.get(serviceName);
@@ -157,7 +154,7 @@ public class XQueryComponentGenerator implements ComponentGenerator<LogicalCompo
             XQueryServiceContract reference = (XQueryServiceContract) entry.getValue().getServiceContract();
             addFunctions(entry.getKey(), reference, referenceFunctions);
             ComponentReference compReference = definition.getReferences().get(referenceName);
-            if (compReference!= null && compReference.getServiceContract()!=null) { //override the ServiceContract with a more specific type
+            if (compReference != null && compReference.getServiceContract() != null) { //override the ServiceContract with a more specific type
                 entry.getValue().setServiceContract(compReference.getServiceContract());
             } else {//not explicitly set, obtain the reference to the service from the composite if available
                 ServiceContract contract = references.get(referenceName);
@@ -203,7 +200,9 @@ public class XQueryComponentGenerator implements ComponentGenerator<LogicalCompo
         }
     }
 
-    public XQueryComponentWireSourceDefinition generateWireSource(LogicalComponent<XQueryImplementation> source, LogicalReference reference, Policy policy)
+    public XQueryComponentWireSourceDefinition generateWireSource(LogicalComponent<XQueryImplementation> source,
+                                                                  LogicalReference reference,
+                                                                  Policy policy)
             throws GenerationException {
 
         XQueryComponentWireSourceDefinition sourceDefinition = new XQueryComponentWireSourceDefinition();
@@ -215,8 +214,8 @@ public class XQueryComponentGenerator implements ComponentGenerator<LogicalCompo
     }
 
     public PhysicalWireSourceDefinition generateCallbackWireSource(LogicalComponent<XQueryImplementation> source,
-            ServiceContract<?> serviceContract,
-            Policy policy) throws GenerationException {
+                                                                   ServiceContract<?> serviceContract,
+                                                                   Policy policy) throws GenerationException {
         XQueryComponentWireSourceDefinition sourceDefinition = new XQueryComponentWireSourceDefinition();
         URI classLoaderId = source.getClassLoaderId();
         XQueryComponentType type = source.getDefinition().getImplementation().getComponentType();

@@ -72,7 +72,7 @@ public class JavaComponentBuilder<T> extends PojoComponentBuilder<T, JavaCompone
     public JavaComponent<T> build(JavaComponentDefinition definition) throws BuilderException {
         URI componentId = definition.getComponentId();
         int initLevel = definition.getInitLevel();
-        QName groupId = definition.getGroupId();
+        QName deployable = definition.getDeployable();
         ClassLoader classLoader = classLoaderRegistry.getClassLoader(definition.getClassLoaderId());
 
         // get the scope container for this component
@@ -91,7 +91,7 @@ public class JavaComponentBuilder<T> extends PojoComponentBuilder<T, JavaCompone
         JavaComponent<T> component = new JavaComponent<T>(componentId,
                                                           provider,
                                                           scopeContainer,
-                                                          groupId,
+                                                          deployable,
                                                           initLevel,
                                                           definition.getMaxIdleTime(),
                                                           definition.getMaxAge(),

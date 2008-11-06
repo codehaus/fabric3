@@ -34,6 +34,8 @@
  */
 package org.fabric3.fabric.command;
 
+import java.net.URI;
+
 import org.fabric3.spi.command.AbstractCommand;
 
 /**
@@ -43,34 +45,31 @@ import org.fabric3.spi.command.AbstractCommand;
  */
 public class InitializeComponentCommand extends AbstractCommand {
     private static final long serialVersionUID = 5183185472114176764L;
-    private final ComponentInitializationUri uri;
+    private final URI uri;
 
 
-    public InitializeComponentCommand(int order, ComponentInitializationUri uri) {
+    public InitializeComponentCommand(int order, URI uri) {
         super(order);
         this.uri = uri;
     }
 
-    public ComponentInitializationUri getUri() {
+    public URI getUri() {
         return uri;
     }
 
+    @Override
     public boolean equals(Object o) {
         if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
+        if (o == null || getClass() != o.getClass()) return false;
 
         InitializeComponentCommand that = (InitializeComponentCommand) o;
 
-        if (uri != null ? !uri.equals(that.uri) : that.uri != null) {
-            return false;
-        }
+        return !(uri != null ? !uri.equals(that.uri) : that.uri != null);
 
-        return true;
     }
 
+    @Override
     public int hashCode() {
-        return (uri != null ? uri.hashCode() : 0);
+        return uri != null ? uri.hashCode() : 0;
     }
 }

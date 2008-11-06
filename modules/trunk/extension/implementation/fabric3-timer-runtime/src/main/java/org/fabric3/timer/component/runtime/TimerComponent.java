@@ -19,7 +19,6 @@ package org.fabric3.timer.component.runtime;
 import java.net.URI;
 import java.text.ParseException;
 import java.util.concurrent.ScheduledFuture;
-
 import javax.xml.namespace.QName;
 
 import org.fabric3.java.runtime.JavaComponent;
@@ -45,7 +44,7 @@ public class TimerComponent<T> extends JavaComponent<T> {
      * @param componentId             the component's uri
      * @param instanceFactoryProvider the provider for the instance factory
      * @param scopeContainer          the container for the component's implementation scope
-     * @param groupId                 the component group this component belongs to
+     * @param deployable              the deployable composite this component is deployed with Ê
      * @param initLevel               the initialization level
      * @param maxIdleTime             the time after which idle instances of this component can be expired
      * @param maxAge                  the time after which instances of this component can be expired
@@ -56,7 +55,7 @@ public class TimerComponent<T> extends JavaComponent<T> {
     public TimerComponent(URI componentId,
                           InstanceFactoryProvider<T> instanceFactoryProvider,
                           ScopeContainer scopeContainer,
-                          QName groupId,
+                          QName deployable,
                           int initLevel,
                           long maxIdleTime,
                           long maxAge,
@@ -66,7 +65,7 @@ public class TimerComponent<T> extends JavaComponent<T> {
         super(componentId,
               instanceFactoryProvider,
               scopeContainer,
-              groupId,
+              deployable,
               initLevel,
               maxIdleTime,
               maxAge,

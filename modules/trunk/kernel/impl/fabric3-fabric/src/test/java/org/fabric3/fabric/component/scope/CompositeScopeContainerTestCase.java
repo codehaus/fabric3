@@ -53,7 +53,7 @@ import org.fabric3.spi.invocation.WorkContext;
 public class CompositeScopeContainerTestCase<T> extends TestCase {
     protected IMocksControl control;
     protected ScopeContainer<QName> scopeContainer;
-    protected QName groupId;
+    protected QName deployable;
     protected AtomicComponent<T> component;
     protected InstanceWrapper<T> wrapper;
     private WorkContext workContext;
@@ -68,7 +68,7 @@ public class CompositeScopeContainerTestCase<T> extends TestCase {
         EasyMock.expect(component.createInstanceWrapper(workContext)).andReturn(wrapper);
         EasyMock.expect(wrapper.isStarted()).andReturn(false);
         wrapper.start();
-        EasyMock.expect(component.getGroupId()).andStubReturn(groupId);
+        EasyMock.expect(component.getDeployable()).andStubReturn(deployable);
         control.replay();
         scopeContainer.register(component);
         scopeContainer.startContext(workContext);
@@ -80,10 +80,10 @@ public class CompositeScopeContainerTestCase<T> extends TestCase {
     @SuppressWarnings("unchecked")
     protected void setUp() throws Exception {
         super.setUp();
-        groupId = new QName("groupId");
+        deployable = new QName("deployable");
         control = EasyMock.createStrictControl();
         workContext = new WorkContext();
-        workContext.addCallFrame(new CallFrame(groupId));
+        workContext.addCallFrame(new CallFrame(deployable));
         component = control.createMock(AtomicComponent.class);
         wrapper = control.createMock(InstanceWrapper.class);
         scopeContainer = new CompositeScopeContainer(EasyMock.createNiceMock(ScopeContainerMonitor.class));

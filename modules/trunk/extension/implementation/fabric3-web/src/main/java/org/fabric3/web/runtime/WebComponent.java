@@ -69,7 +69,7 @@ public class WebComponent<T> extends AbstractLifecycle implements AtomicComponen
     public WebComponent(URI uri,
                         String contextUrl,
                         URI classLoaderId,
-                        QName groupId,
+                        QName deployable,
                         URI archiveUri,
                         ClassLoader classLoader,
                         InjectorFactory injectorFactory,
@@ -86,7 +86,7 @@ public class WebComponent<T> extends AbstractLifecycle implements AtomicComponen
         this.activator = activator;
         this.siteMappings = injectorMappings;
         this.proxyService = proxyService;
-        this.groupId = groupId;
+        this.groupId = deployable;
         this.propertyFactories = propertyFactories;
         referenceFactories = new ConcurrentHashMap<String, ObjectFactory<?>>();
     }
@@ -149,7 +149,7 @@ public class WebComponent<T> extends AbstractLifecycle implements AtomicComponen
         return proxyService.createObjectFactory(interfaze, interactionType, wire, null);
     }
 
-    public QName getGroupId() {
+    public QName getDeployable() {
         return groupId;
     }
 
@@ -174,10 +174,6 @@ public class WebComponent<T> extends AbstractLifecycle implements AtomicComponen
     }
 
     public ObjectFactory<T> createObjectFactory() {
-        throw new UnsupportedOperationException();
-    }
-
-    public <R> ObjectFactory<R> createObjectFactory(Class<R> type, String serviceName) throws ObjectCreationException {
         throw new UnsupportedOperationException();
     }
 

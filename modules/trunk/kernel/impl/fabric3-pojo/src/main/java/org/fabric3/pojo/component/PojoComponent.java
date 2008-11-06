@@ -62,7 +62,7 @@ public abstract class PojoComponent<T> extends AbstractLifecycle implements Atom
     private final URI uri;
     private final InstanceFactoryProvider<T> provider;
     private final ScopeContainer<?> scopeContainer;
-    private final QName groupId;
+    private final QName deployable;
     private final int initLevel;
     private final long maxIdleTime;
     private final long maxAge;
@@ -71,14 +71,14 @@ public abstract class PojoComponent<T> extends AbstractLifecycle implements Atom
     public PojoComponent(URI componentId,
                          InstanceFactoryProvider<T> provider,
                          ScopeContainer<?> scopeContainer,
-                         QName groupId,
+                         QName deployable,
                          int initLevel,
                          long maxIdleTime,
                          long maxAge) {
         this.uri = componentId;
         this.provider = provider;
         this.scopeContainer = scopeContainer;
-        this.groupId = groupId;
+        this.deployable = deployable;
         this.initLevel = initLevel;
         this.maxIdleTime = maxIdleTime;
         this.maxAge = maxAge;
@@ -88,8 +88,8 @@ public abstract class PojoComponent<T> extends AbstractLifecycle implements Atom
         return uri;
     }
 
-    public QName getGroupId() {
-        return groupId;
+    public QName getDeployable() {
+        return deployable;
     }
 
     public boolean isEagerInit() {
@@ -126,10 +126,6 @@ public abstract class PojoComponent<T> extends AbstractLifecycle implements Atom
     @SuppressWarnings({"unchecked"})
     public ObjectFactory<T> createObjectFactory() {
         return new ComponentObjectFactory(this, scopeContainer);
-    }
-
-    public <R> ObjectFactory<R> createObjectFactory(Class<R> type, String serviceName) throws ObjectCreationException {
-        throw new UnsupportedOperationException();
     }
 
     public Map<String, PropertyValue> getDefaultPropertyValues() {

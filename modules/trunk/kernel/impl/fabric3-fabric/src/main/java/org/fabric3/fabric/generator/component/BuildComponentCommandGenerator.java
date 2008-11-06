@@ -34,6 +34,9 @@
  */
 package org.fabric3.fabric.generator.component;
 
+import java.net.URI;
+import javax.xml.namespace.QName;
+
 import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Reference;
 
@@ -59,7 +62,7 @@ public class BuildComponentCommandGenerator implements CommandGenerator {
     private final GeneratorRegistry generatorRegistry;
     private final int order;
 
-    public BuildComponentCommandGenerator(@Reference GeneratorRegistry generatorRegistry, @Property(name = "order")int order) {
+    public BuildComponentCommandGenerator(@Reference GeneratorRegistry generatorRegistry, @Property(name = "order") int order) {
         this.generatorRegistry = generatorRegistry;
         this.order = order;
     }
@@ -78,6 +81,10 @@ public class BuildComponentCommandGenerator implements CommandGenerator {
                 throw new GeneratorNotFoundException(type);
             }
             PhysicalComponentDefinition definition = generator.generate(component);
+            URI uri = component.getUri();
+            definition.setComponentId(uri);
+            QName deployable = component.getDeployable();
+            definition.setDeployable(deployable);
             return new BuildComponentCommand(order, definition);
         }
         return null;

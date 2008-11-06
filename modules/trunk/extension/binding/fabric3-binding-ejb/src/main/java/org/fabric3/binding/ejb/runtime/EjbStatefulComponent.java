@@ -34,14 +34,14 @@ import org.fabric3.spi.invocation.WorkContext;
  */
 public class EjbStatefulComponent extends AbstractLifecycle implements AtomicComponent<EjbStatefulInstanceWrapper> {
 
-    private final QName groupId;
+    private final QName deployable;
 
-    public EjbStatefulComponent(QName groupId) {
-        this.groupId = groupId;
+    public EjbStatefulComponent(QName deployable) {
+        this.deployable = deployable;
     }
 
-    public QName getGroupId() {
-        return groupId;
+    public QName getDeployable() {
+        return deployable;
     }
 
     public boolean isEagerInit() {
@@ -70,10 +70,6 @@ public class EjbStatefulComponent extends AbstractLifecycle implements AtomicCom
                 return new EjbStatefulInstanceWrapper();
             }
         };
-    }
-
-    public ObjectFactory createObjectFactory(Class type, String serviceName) throws ObjectCreationException {
-        throw new UnsupportedOperationException();
     }
 
     public URI getUri() {

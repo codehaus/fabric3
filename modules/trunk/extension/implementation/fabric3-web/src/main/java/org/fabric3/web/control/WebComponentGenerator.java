@@ -80,9 +80,7 @@ public class WebComponentGenerator implements ComponentGenerator<LogicalComponen
         // the context URL for the web application is derived from the component name relative to the domain
         String contextUrl = info.getDomain().relativize(componentId).toString();
         WebComponentDefinition physical = new WebComponentDefinition();
-        physical.setComponentId(componentId);
         physical.setContextUrl(contextUrl);
-        physical.setGroupId(component.getDeployable());
         Map<String, Map<String, InjectionSite>> sites = generateInjectionMapping(componentType);
         physical.setInjectionMappings(sites);
         processPropertyValues(component, physical);

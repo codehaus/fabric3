@@ -67,7 +67,7 @@ public class SystemPhysicalComponentBuilderTestCase<T> extends TestCase {
     protected void setUp() throws Exception {
         super.setUp();
         URI classLoaderId = URI.create("classLoaderId");
-        QName groupId = new QName("test", "test");
+        QName deployable = new QName("test", "test");
         componentId = URI.create("fabric3://component");
 
         ComponentBuilderRegistry builderRegistry = EasyMock.createMock(ComponentBuilderRegistry.class);
@@ -92,7 +92,7 @@ public class SystemPhysicalComponentBuilderTestCase<T> extends TestCase {
                                                 null);
 
         definition = new SystemComponentDefinition();
-        definition.setGroupId(groupId);
+        definition.setDeployable(deployable);
         definition.setComponentId(componentId);
         definition.setClassLoaderId(classLoaderId);
         definition.setScope("COMPOSITE");

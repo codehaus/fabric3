@@ -123,9 +123,9 @@ public class MavenEmbeddedRuntimeImpl extends AbstractRuntime<MavenHostInfo> imp
         return activate(url, name);
     }
 
-    public void startContext(QName groupId) throws ContextStartException {
+    public void startContext(QName deployable) throws ContextStartException {
         WorkContext workContext = new WorkContext();
-        CallFrame frame = new CallFrame(groupId);
+        CallFrame frame = new CallFrame(deployable);
         workContext.addCallFrame(frame);
         try {
             scopeContainer.startContext(workContext);

@@ -43,18 +43,18 @@ import org.fabric3.spi.command.AbstractCommand;
  *
  * @version $Rev$ $Date$
  */
-public class StartCompositeContextCommand extends AbstractCommand {
+public class StartContextCommand extends AbstractCommand {
     private static final long serialVersionUID = -2132991925467598257L;
 
-    private final QName groupId;
+    private final QName deployable;
 
-    public StartCompositeContextCommand(int order, QName groupId) {
+    public StartContextCommand(int order, QName deployable) {
         super(order);
-        this.groupId = groupId;
+        this.deployable = deployable;
     }
 
-    public QName getGroupId() {
-        return groupId;
+    public QName getDeployable() {
+        return deployable;
     }
 
     public boolean equals(Object o) {
@@ -63,13 +63,13 @@ public class StartCompositeContextCommand extends AbstractCommand {
             return false;
         }
 
-        StartCompositeContextCommand that = (StartCompositeContextCommand) o;
+        StartContextCommand that = (StartContextCommand) o;
 
-        return !(groupId != null ? !groupId.equals(that.groupId) : that.groupId != null);
+        return !(deployable != null ? !deployable.equals(that.deployable) : that.deployable != null);
 
     }
 
     public int hashCode() {
-        return (groupId != null ? groupId.hashCode() : 0);
+        return (deployable != null ? deployable.hashCode() : 0);
     }
 }

@@ -35,7 +35,6 @@
 package org.fabric3.system.runtime;
 
 import java.net.URI;
-
 import javax.xml.namespace.QName;
 
 import org.osoa.sca.annotations.EagerInit;
@@ -67,7 +66,7 @@ public class SystemComponentBuilder<T> extends PojoComponentBuilder<T, SystemCom
             @Reference ScopeRegistry scopeRegistry,
             @Reference InstanceFactoryBuilderRegistry providerBuilders,
             @Reference ClassLoaderRegistry classLoaderRegistry,
-            @Reference(name = "transformerRegistry")TransformerRegistry<PullTransformer<?, ?>> transformerRegistry) {
+            @Reference(name = "transformerRegistry") TransformerRegistry<PullTransformer<?, ?>> transformerRegistry) {
         super(builderRegistry, scopeRegistry, providerBuilders, classLoaderRegistry, transformerRegistry);
     }
 
@@ -79,7 +78,7 @@ public class SystemComponentBuilder<T> extends PojoComponentBuilder<T, SystemCom
     public SystemComponent<T> build(SystemComponentDefinition definition) throws BuilderException {
         URI componentId = definition.getComponentId();
         int initLevel = definition.getInitLevel();
-        QName groupId = definition.getGroupId();
+        QName deployable = definition.getDeployable();
         ClassLoader classLoader = classLoaderRegistry.getClassLoader(definition.getClassLoaderId());
 
         // get the scope container for this component
@@ -91,6 +90,6 @@ public class SystemComponentBuilder<T> extends PojoComponentBuilder<T, SystemCom
 
         createPropertyFactories(definition, provider);
 
-        return new SystemComponent<T>(componentId, provider, scopeContainer, groupId, initLevel, -1, -1);
+        return new SystemComponent<T>(componentId, provider, scopeContainer, deployable, initLevel, -1, -1);
     }
 }

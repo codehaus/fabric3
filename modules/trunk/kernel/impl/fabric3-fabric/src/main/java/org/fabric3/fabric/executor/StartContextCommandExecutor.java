@@ -41,7 +41,7 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.fabric.command.StartCompositeContextCommand;
+import org.fabric3.fabric.command.StartContextCommand;
 import org.fabric3.scdl.Scope;
 import org.fabric3.spi.component.GroupInitializationException;
 import org.fabric3.spi.component.ScopeContainer;
@@ -53,35 +53,35 @@ import org.fabric3.spi.invocation.CallFrame;
 import org.fabric3.spi.invocation.WorkContext;
 
 /**
- * Executes a {@link org.fabric3.fabric.command.StartCompositeContextCommand}.
+ * Executes a {@link org.fabric3.fabric.command.StartContextCommand}.
  *
  * @version $Rev$ $Date$
  */
 @EagerInit
-public class StartCompositeContextCommandExecutor implements CommandExecutor<StartCompositeContextCommand> {
+public class StartContextCommandExecutor implements CommandExecutor<StartContextCommand> {
     private ScopeContainer<QName> container;
     private CommandExecutorRegistry commandExecutorRegistry;
 
     @Constructor
-    public StartCompositeContextCommandExecutor(@Reference CommandExecutorRegistry commandExecutorRegistry,
+    public StartContextCommandExecutor(@Reference CommandExecutorRegistry commandExecutorRegistry,
                                                 @Reference ScopeRegistry scopeRegistry) {
         this.commandExecutorRegistry = commandExecutorRegistry;
         this.container = scopeRegistry.getScopeContainer(Scope.COMPOSITE);
     }
 
-    public StartCompositeContextCommandExecutor(ScopeRegistry scopeRegistry) {
+    public StartContextCommandExecutor(ScopeRegistry scopeRegistry) {
         this.container = scopeRegistry.getScopeContainer(Scope.COMPOSITE);
     }
 
     @Init
     public void init() {
-        commandExecutorRegistry.register(StartCompositeContextCommand.class, this);
+        commandExecutorRegistry.register(StartContextCommand.class, this);
     }
 
-    public void execute(StartCompositeContextCommand command) throws ExecutionException {
-        QName groupId = command.getGroupId();
+    public void execute(StartContextCommand command) throws ExecutionException {
+        QName deployable = command.getDeployable();
         WorkContext workContext = new WorkContext();
-        CallFrame frame = new CallFrame(groupId);
+        CallFrame frame = new CallFrame(deployable);
         workContext.addCallFrame(frame);
         try {
             container.startContext(workContext);

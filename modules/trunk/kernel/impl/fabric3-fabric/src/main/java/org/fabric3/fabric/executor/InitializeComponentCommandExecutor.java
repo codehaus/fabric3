@@ -38,14 +38,11 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.xml.namespace.QName;
-
 import org.osoa.sca.annotations.Constructor;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.fabric.command.ComponentInitializationUri;
 import org.fabric3.fabric.command.InitializeComponentCommand;
 import org.fabric3.scdl.Scope;
 import org.fabric3.spi.component.AtomicComponent;
@@ -91,15 +88,13 @@ public class InitializeComponentCommandExecutor implements CommandExecutor<Initi
 
     public void execute(InitializeComponentCommand command) throws ExecutionException {
 
-        ComponentInitializationUri componentInitializationUri = command.getUri();
-        QName groupId = componentInitializationUri.getGroupId();
-        URI uri = componentInitializationUri.getUri();
+        URI uri = command.getUri();
         Component component = manager.getComponent(uri);
         if (!(component instanceof AtomicComponent)) {
             throw new ComponentNotRegisteredException("Component not registered: " + uri.toString(), uri.toString());
         }
         WorkContext workContext = new WorkContext();
-        CallFrame frame = new CallFrame(groupId);
+        CallFrame frame = new CallFrame();
         workContext.addCallFrame(frame);
         List<AtomicComponent<?>> atomicComponents = new ArrayList<AtomicComponent<?>>();
         atomicComponents.add((AtomicComponent<?>) component);

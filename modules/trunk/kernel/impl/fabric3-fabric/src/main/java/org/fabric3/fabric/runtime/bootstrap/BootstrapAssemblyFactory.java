@@ -35,7 +35,7 @@ import org.fabric3.fabric.command.BuildComponentCommand;
 import org.fabric3.fabric.command.InitializeComponentCommand;
 import org.fabric3.fabric.command.ProvisionClassloaderCommand;
 import org.fabric3.fabric.command.StartComponentCommand;
-import org.fabric3.fabric.command.StartCompositeContextCommand;
+import org.fabric3.fabric.command.StartContextCommand;
 import org.fabric3.fabric.domain.RuntimeDomain;
 import org.fabric3.fabric.executor.AttachWireCommandExecutor;
 import org.fabric3.fabric.executor.BuildComponentCommandExecutor;
@@ -43,7 +43,7 @@ import org.fabric3.fabric.executor.CommandExecutorRegistryImpl;
 import org.fabric3.fabric.executor.InitializeComponentCommandExecutor;
 import org.fabric3.fabric.executor.ProvisionClassloaderCommandExecutor;
 import org.fabric3.fabric.executor.StartComponentCommandExecutor;
-import org.fabric3.fabric.executor.StartCompositeContextCommandExecutor;
+import org.fabric3.fabric.executor.StartContextCommandExecutor;
 import org.fabric3.fabric.generator.GeneratorRegistryImpl;
 import org.fabric3.fabric.generator.PhysicalModelGenerator;
 import org.fabric3.fabric.generator.PhysicalModelGeneratorImpl;
@@ -52,7 +52,7 @@ import org.fabric3.fabric.generator.classloader.ClassLoaderCommandGeneratorImpl;
 import org.fabric3.fabric.generator.component.BuildComponentCommandGenerator;
 import org.fabric3.fabric.generator.component.InitializeComponentCommandGenerator;
 import org.fabric3.fabric.generator.component.StartComponentCommandGenerator;
-import org.fabric3.fabric.generator.component.StartCompositeContextCommandGenerator;
+import org.fabric3.fabric.generator.component.StartContextCommandGenerator;
 import org.fabric3.fabric.generator.wire.LocalWireCommandGenerator;
 import org.fabric3.fabric.generator.wire.PhysicalOperationHelper;
 import org.fabric3.fabric.generator.wire.PhysicalOperationHelperImpl;
@@ -263,7 +263,7 @@ public class BootstrapAssemblyFactory {
 
         CommandExecutorRegistryImpl commandRegistry = new CommandExecutorRegistryImpl();
 
-        commandRegistry.register(StartCompositeContextCommand.class, new StartCompositeContextCommandExecutor(scopeRegistry));
+        commandRegistry.register(StartContextCommand.class, new StartContextCommandExecutor(scopeRegistry));
         commandRegistry.register(InitializeComponentCommand.class, new InitializeComponentCommandExecutor(scopeRegistry, componentManager));
         commandRegistry.register(BuildComponentCommand.class, new BuildComponentCommandExecutor(registry, componentManager));
         commandRegistry.register(AttachWireCommand.class, new AttachWireCommandExecutor(connector));
@@ -300,7 +300,7 @@ public class BootstrapAssemblyFactory {
         commandGenerators.add(new ServiceWireCommandGenerator(wireGenerator, 2));
         commandGenerators.add(new ResourceWireCommandGenerator(wireGenerator, 2));
         commandGenerators.add(new StartComponentCommandGenerator(3));
-        commandGenerators.add(new StartCompositeContextCommandGenerator(4));
+        commandGenerators.add(new StartContextCommandGenerator(4));
         commandGenerators.add(new InitializeComponentCommandGenerator(5));
         return new PhysicalModelGeneratorImpl(commandGenerators, classLoaderCommandGenerator);
     }

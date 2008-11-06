@@ -59,7 +59,7 @@ public class GroovyComponentBuilder<T> extends PojoComponentBuilder<T, GroovyCom
     public GroovyComponent<T> build(GroovyComponentDefinition definition) throws BuilderException {
         URI componentId = definition.getComponentId();
         int initLevel = definition.getInitLevel();
-        QName groupId = definition.getGroupId();
+        QName deployable = definition.getDeployable();
         ClassLoader classLoader = classLoaderRegistry.getClassLoader(definition.getClassLoaderId());
 
         // get the scope container for this component
@@ -73,6 +73,6 @@ public class GroovyComponentBuilder<T> extends PojoComponentBuilder<T, GroovyCom
 
         createPropertyFactories(definition, provider);
 
-        return new GroovyComponent<T>(componentId, provider, scopeContainer, groupId, initLevel, -1, -1);
+        return new GroovyComponent<T>(componentId, provider, scopeContainer, deployable, initLevel, -1, -1);
     }
 }

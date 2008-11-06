@@ -39,15 +39,15 @@ public abstract class XQueryComponent<T> extends AbstractLifecycle implements At
 
     protected final URI uri;
     protected final URI classLoaderId;
-    protected final QName groupId;
+    protected final QName deployable;
     protected final Map<String, ObjectFactory<?>> referenceFactories;
 
     public XQueryComponent(URI uri,
                            URI classLoaderId,
-                           QName groupId) {
+                           QName deployable) {
         this.uri = uri;
         this.classLoaderId = classLoaderId;
-        this.groupId = groupId;
+        this.deployable = deployable;
         referenceFactories = new ConcurrentHashMap<String, ObjectFactory<?>>();
     }
 
@@ -75,8 +75,8 @@ public abstract class XQueryComponent<T> extends AbstractLifecycle implements At
         return null;
     }
 
-    public QName getGroupId() {
-        return groupId;
+    public QName getDeployable() {
+        return deployable;
     }
 
     public boolean isEagerInit() {
@@ -100,10 +100,6 @@ public abstract class XQueryComponent<T> extends AbstractLifecycle implements At
     }
 
     public ObjectFactory<T> createObjectFactory() {
-        throw new UnsupportedOperationException();
-    }
-
-    public <R> ObjectFactory<R> createObjectFactory(Class<R> type, String serviceName) throws ObjectCreationException {
         throw new UnsupportedOperationException();
     }
 

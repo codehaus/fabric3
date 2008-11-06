@@ -22,7 +22,7 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.fabric.command.StopCompositeContextCommand;
+import org.fabric3.fabric.command.StopContextCommand;
 import org.fabric3.scdl.Scope;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.ScopeRegistry;
@@ -33,31 +33,28 @@ import org.fabric3.spi.invocation.CallFrame;
 import org.fabric3.spi.invocation.WorkContext;
 
 @EagerInit
-public class StopCompositeContextCommandExecutor implements CommandExecutor<StopCompositeContextCommand> {
+public class StopContextCommandExecutor implements CommandExecutor<StopContextCommand> {
 
     private ScopeContainer<QName> container;
     private CommandExecutorRegistry commandExecutorRegistry;
 
 
-    public StopCompositeContextCommandExecutor(@Reference CommandExecutorRegistry commandExecutorRegistry,
-                                               @Reference ScopeRegistry scopeRegistry) {
+    public StopContextCommandExecutor(@Reference CommandExecutorRegistry commandExecutorRegistry, @Reference ScopeRegistry scopeRegistry) {
         this.commandExecutorRegistry = commandExecutorRegistry;
         this.container = scopeRegistry.getScopeContainer(Scope.COMPOSITE);
     }
 
-
     @Init
     public void init() {
-        commandExecutorRegistry.register(StopCompositeContextCommand.class, this);
+        commandExecutorRegistry.register(StopContextCommand.class, this);
     }
 
-    public void execute(StopCompositeContextCommand command) throws ExecutionException {
-        QName groupId = command.getGroupId();
+    public void execute(StopContextCommand command) throws ExecutionException {
+        QName deployable = command.getDeployable();
         WorkContext workContext = new WorkContext();
-        CallFrame frame = new CallFrame(groupId);
+        CallFrame frame = new CallFrame(deployable);
         workContext.addCallFrame(frame);
         container.stopContext(workContext);
-
     }
 
 }

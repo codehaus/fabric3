@@ -48,11 +48,11 @@ import org.fabric3.spi.invocation.WorkContext;
  */
 public interface AtomicComponent<T> extends Component {
     /**
-     * Returns the group containing this component.
+     * Returns the QName of the deployable composite this component was deployed with.
      *
      * @return the group containing this component
      */
-    QName getGroupId();
+    QName getDeployable();
 
     /**
      * Returns true if component instances should be eagerly initialized.
@@ -97,17 +97,6 @@ public interface AtomicComponent<T> extends Component {
      *
      * @return an ObjectFactory that returns an instance of this AtomicComponent
      */
-    @Deprecated
     ObjectFactory<T> createObjectFactory();
 
-    /**
-     * Create an ObjectFactory that returns instances that can be used as references to the specified service.
-     *
-     * @param type        the type of reference to return; instances must be assignable to this class
-     * @param serviceName the name of the service being referenced
-     * @param <R>         the type of the reference
-     * @return an ObjectFactory for instances of a reference
-     * @throws ObjectCreationException if there was problem creating the factory
-     */
-    <R> ObjectFactory<R> createObjectFactory(Class<R> type, String serviceName) throws ObjectCreationException;
 }

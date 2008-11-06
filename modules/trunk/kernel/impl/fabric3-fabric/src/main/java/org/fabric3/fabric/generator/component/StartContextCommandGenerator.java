@@ -32,51 +32,41 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.fabric.command;
+package org.fabric3.fabric.generator.component;
 
-import java.net.URI;
-import java.io.Serializable;
-import javax.xml.namespace.QName;
+import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Property;
+
+import org.fabric3.fabric.command.StartContextCommand;
+import org.fabric3.spi.generator.CommandGenerator;
+import org.fabric3.spi.generator.GenerationException;
+import org.fabric3.spi.model.instance.LogicalComponent;
+import org.fabric3.spi.model.instance.LogicalState;
 
 /**
+ * Generates a command to start the composite context on a runtime.
  *
- * @version $Revision$ $Date$
+ * @version $Rev$ $Date$
  */
-public class ComponentInitializationUri implements Serializable {
-    private static final long serialVersionUID = 2878715324071157981L;
+@EagerInit
+public class StartContextCommandGenerator implements CommandGenerator {
+    private final int order;
 
-    private QName groupId;
-    private URI uri;
-
-    public QName getGroupId() {
-        return groupId;
+    public StartContextCommandGenerator(@Property(name = "order")int order) {
+        this.order = order;
     }
 
-    public URI getUri() {
-        return uri;
+    public int getOrder() {
+        return order;
     }
 
-    public ComponentInitializationUri(QName groupId, URI uri) {
-        super();
-        this.groupId = groupId;
-        this.uri = uri;
-    }
-    
-    @Override
-    public boolean equals(Object obj) {
-        
-        if (obj == null || obj.getClass() != ComponentInitializationUri.class) {
-            return false;
+    @SuppressWarnings("unchecked")
+    public StartContextCommand generate(LogicalComponent<?> component) throws GenerationException {
+        if (component.getState() == LogicalState.NEW) {
+            return new StartContextCommand(order, component.getDeployable());
         }
-        
-        ComponentInitializationUri other = (ComponentInitializationUri) obj;
-        return super.equals(uri.equals(other.uri));
-        
-    }
+        return null;
 
-    @Override
-    public int hashCode() {
-        return uri.hashCode();
     }
 
 }

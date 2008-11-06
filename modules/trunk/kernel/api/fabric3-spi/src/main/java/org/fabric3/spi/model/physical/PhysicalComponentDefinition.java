@@ -34,8 +34,8 @@
  */
 package org.fabric3.spi.model.physical;
 
-import java.net.URI;
 import java.io.Serializable;
+import java.net.URI;
 import javax.xml.namespace.QName;
 
 /**
@@ -48,7 +48,7 @@ public abstract class PhysicalComponentDefinition implements Serializable {
 
     private URI componentId;
     private String scope;
-    private QName groupId;
+    private QName deployable;
     private int initLevel;
     private long maxIdleTime;
     private long maxAge;
@@ -72,21 +72,21 @@ public abstract class PhysicalComponentDefinition implements Serializable {
     }
 
     /**
-     * Returns the id of the component group this component belongs to.
+     * Returns the QName of the deployable composite this component is deployed as part of.
      *
-     * @return the id of the component group this component belongs to
+     * @return the QName of the deployable composite this component is deployed as part of
      */
-    public QName getGroupId() {
-        return groupId;
+    public QName getDeployable() {
+        return deployable;
     }
 
     /**
-     * Sets the id of the component group this component belongs to.
+     * Sets the QName of the deployable composite this component is deployed as part of.
      *
-     * @param groupId the id of the component group this component belongs to
+     * @param deployable the QName of the deployable composite this component is deployed as part of
      */
-    public void setGroupId(QName groupId) {
-        this.groupId = groupId;
+    public void setDeployable(QName deployable) {
+        this.deployable = deployable;
     }
 
     /**
@@ -160,24 +160,24 @@ public abstract class PhysicalComponentDefinition implements Serializable {
     public void setMaxAge(long maxAge) {
         this.maxAge = maxAge;
     }
-    
+
     @Override
     public boolean equals(Object obj) {
-        
+
         if (obj == null || obj.getClass() != getClass()) {
             return false;
         }
-        
+
         PhysicalComponentDefinition other = (PhysicalComponentDefinition) obj;
         return super.equals(componentId.equals(other.getComponentId()));
-        
+
     }
 
     @Override
     public int hashCode() {
         return componentId.hashCode();
     }
-    
+
     @Override
     public String toString() {
         return componentId.toString();

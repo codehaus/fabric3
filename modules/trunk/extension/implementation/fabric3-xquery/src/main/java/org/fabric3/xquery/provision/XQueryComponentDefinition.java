@@ -30,6 +30,7 @@ import org.w3c.dom.Document;
  * @version $Rev$ $Date$
  */
 public class XQueryComponentDefinition extends PhysicalComponentDefinition {
+    private static final long serialVersionUID = -2176668190738465467L;
 
     private URI classLoaderId;
     private String location;

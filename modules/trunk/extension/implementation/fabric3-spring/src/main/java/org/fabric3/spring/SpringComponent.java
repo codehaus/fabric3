@@ -64,15 +64,11 @@ public class SpringComponent<T> extends AbstractLifecycle implements AtomicCompo
         return objectFactory;
     }
 
-    public <R> ObjectFactory<R> createObjectFactory(Class<R> type, String serviceName) throws ObjectCreationException {
-        throw new UnsupportedOperationException();
-    }
-
     public InstanceWrapper<T> createInstanceWrapper(WorkContext workContext) throws ObjectCreationException {
         return null;
     }
 
-    public QName getGroupId() {
+    public QName getDeployable() {
         return null;
     }
 

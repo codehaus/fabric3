@@ -34,19 +34,13 @@
  */
 package org.fabric3.fabric.generator.component;
 
-import java.net.URI;
-
-import javax.xml.namespace.QName;
-
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Property;
 
-import org.fabric3.fabric.command.ComponentInitializationUri;
 import org.fabric3.fabric.command.InitializeComponentCommand;
 import org.fabric3.spi.generator.CommandGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.LogicalComponent;
-import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 import org.fabric3.spi.model.instance.LogicalState;
 
 /**
@@ -68,10 +62,8 @@ public class InitializeComponentCommandGenerator implements CommandGenerator {
 
     @SuppressWarnings("unchecked")
     public InitializeComponentCommand generate(LogicalComponent<?> component) throws GenerationException {
-        if (!(component instanceof LogicalCompositeComponent) && component.getState() == LogicalState.NEW && component.isEagerInit()) {
-            QName groupId = component.getDeployable();
-            ComponentInitializationUri uri = new ComponentInitializationUri(groupId, component.getUri());
-            return new InitializeComponentCommand(order, uri);
+        if (component.getState() == LogicalState.NEW && component.isEagerInit()) {
+            return new InitializeComponentCommand(order, component.getUri());
         }
         return null;
     }

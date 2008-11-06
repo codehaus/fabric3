@@ -33,10 +33,10 @@ public class GroovyComponent<T> extends PojoComponent<T> {
     public GroovyComponent(URI componentId,
                            InstanceFactoryProvider<T> instanceFactoryProvider,
                            ScopeContainer<?> scopeContainer,
-                           QName groupId,
+                           QName deployable,
                            int initLevel,
                            long maxIdleTime,
                            long maxAge) {
-        super(componentId, instanceFactoryProvider, scopeContainer, groupId, initLevel, maxIdleTime, maxAge);
+        super(componentId, instanceFactoryProvider, scopeContainer, deployable, initLevel, maxIdleTime, maxAge);
     }
 }

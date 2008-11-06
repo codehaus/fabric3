@@ -42,7 +42,7 @@ public class JavaComponent<T> extends PojoComponent<T> {
      * @param componentId             the component's uri
      * @param instanceFactoryProvider the provider for the instance factory
      * @param scopeContainer          the container for the component's implementation scope
-     * @param groupId                 the component group this component belongs to
+     * @param deployable              the deployable composite this component is deployed with
      * @param initLevel               the initialization level
      * @param maxIdleTime             the time after which idle instances of this component can be expired
      * @param maxAge                  the time after which instances of this component can be expired
@@ -51,12 +51,12 @@ public class JavaComponent<T> extends PojoComponent<T> {
     public JavaComponent(URI componentId,
                          InstanceFactoryProvider<T> instanceFactoryProvider,
                          ScopeContainer<?> scopeContainer,
-                         QName groupId,
+                         QName deployable,
                          int initLevel,
                          long maxIdleTime,
                          long maxAge,
                          ProxyService proxyService) {
-        super(componentId, instanceFactoryProvider, scopeContainer, groupId, initLevel, maxIdleTime, maxAge);
+        super(componentId, instanceFactoryProvider, scopeContainer, deployable, initLevel, maxIdleTime, maxAge);
         this.proxyService = proxyService;
     }
 

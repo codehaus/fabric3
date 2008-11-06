@@ -90,7 +90,7 @@ public class SingletonComponent<T> extends AbstractLifecycle implements AtomicCo
         return uri;
     }
 
-    public QName getGroupId() {
+    public QName getDeployable() {
         return null;
     }
 
@@ -116,10 +116,6 @@ public class SingletonComponent<T> extends AbstractLifecycle implements AtomicCo
 
     public ObjectFactory<T> createObjectFactory() {
         return new SingletonObjectFactory<T>(instance);
-    }
-
-    public <R> ObjectFactory<R> createObjectFactory(Class<R> type, String serviceName) throws ObjectCreationException {
-        throw new UnsupportedOperationException();
     }
 
     public ComponentContext getComponentContext() {

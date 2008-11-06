@@ -70,7 +70,6 @@ public class MockComponentGenerator implements ComponentGenerator<LogicalCompone
 
         componentDefinition.setInterfaces(implementationMock.getMockedInterfaces());
 
-        componentDefinition.setComponentId(component.getUri());
         componentDefinition.setScope(componentType.getScope());
 
         URI classLoaderId = component.getClassLoaderId();

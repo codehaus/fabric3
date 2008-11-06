@@ -59,7 +59,7 @@
     </component>
 
     <component name="StartCompositeContextCommandExecutor">
-        <f3-impl:implementation.system class="org.fabric3.fabric.executor.StartCompositeContextCommandExecutor"/>
+        <f3-impl:implementation.system class="org.fabric3.fabric.executor.StartContextCommandExecutor"/>
     </component>
 
     <component name="InitializeComponentCommandExecutor">
@@ -71,7 +71,7 @@
     </component>
 
     <component name="StopCompositeContextCommandExecutor">
-        <f3-impl:implementation.system class="org.fabric3.fabric.executor.StopCompositeContextCommandExecutor"/>
+        <f3-impl:implementation.system class="org.fabric3.fabric.executor.StopContextCommandExecutor"/>
     </component>
 
     <component name="WireDetachCommandExecutor">

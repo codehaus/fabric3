@@ -72,10 +72,7 @@ public class GroovyComponentGenerator implements ComponentGenerator<LogicalCompo
         helper.processInjectionSites(component, providerDefinition);
 
         // create the physical component definition
-        URI componentId = component.getUri();
         GroovyComponentDefinition physical = new GroovyComponentDefinition();
-        physical.setComponentId(componentId);
-        physical.setGroupId(component.getDeployable());
         physical.setScope(type.getScope());
         physical.setInitLevel(helper.getInitLevel(definition, type));
         physical.setProviderDefinition(providerDefinition);

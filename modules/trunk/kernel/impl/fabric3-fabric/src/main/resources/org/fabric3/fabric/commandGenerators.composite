@@ -74,7 +74,7 @@
     </component>
 
     <component name="StartCompositeContextCommandGenerator">
-        <f3-impl:implementation.system class="org.fabric3.fabric.generator.component.StartCompositeContextCommandGenerator"/>
+        <f3-impl:implementation.system class="org.fabric3.fabric.generator.component.StartContextCommandGenerator"/>
         <property name="order">4</property>
     </component>
 
@@ -85,7 +85,7 @@
 
 
     <component name="StopCompositeContextCommandGenerator">
-        <f3-impl:implementation.system class="org.fabric3.fabric.generator.component.StopCompositeContextCommandGenerator"/>
+        <f3-impl:implementation.system class="org.fabric3.fabric.generator.component.StopContextCommandGenerator"/>
         <property name="order">0</property>
     </component>
 

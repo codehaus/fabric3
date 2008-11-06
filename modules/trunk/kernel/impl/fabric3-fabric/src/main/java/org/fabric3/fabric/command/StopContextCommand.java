@@ -20,19 +20,19 @@ import javax.xml.namespace.QName;
 
 import org.fabric3.spi.command.AbstractCommand;
 
-public class StopCompositeContextCommand extends AbstractCommand {
+public class StopContextCommand extends AbstractCommand {
     private static final long serialVersionUID = 6161772793715132968L;
 
-    private final QName groupId;
+    private final QName deployable;
 
-    public StopCompositeContextCommand(int order, QName groupId) {
+    public StopContextCommand(int order, QName deployable) {
         super(order);
-        this.groupId = groupId;
-        assert groupId != null;
+        this.deployable = deployable;
+        assert deployable != null;
     }
 
-    public QName getGroupId() {
-        return groupId;
+    public QName getDeployable() {
+        return deployable;
     }
 
     @Override
@@ -40,14 +40,14 @@ public class StopCompositeContextCommand extends AbstractCommand {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
-        StopCompositeContextCommand that = (StopCompositeContextCommand) o;
+        StopContextCommand that = (StopContextCommand) o;
 
-        return !(groupId != null ? !groupId.equals(that.groupId) : that.groupId != null);
+        return !(deployable != null ? !deployable.equals(that.deployable) : that.deployable != null);
 
     }
 
     @Override
     public int hashCode() {
-        return groupId != null ? groupId.hashCode() : 0;
+        return deployable != null ? deployable.hashCode() : 0;
     }
 }

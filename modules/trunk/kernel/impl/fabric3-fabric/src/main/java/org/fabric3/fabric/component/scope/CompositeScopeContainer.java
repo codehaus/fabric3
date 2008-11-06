@@ -62,7 +62,9 @@ import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.invocation.WorkContext;
 
 /**
- * Scope container for the standard COMPOSITE scope.
+ * Scope container for the standard COMPOSITE scope. Composite components have one instance which is associated with a scope context. Components
+ * deployed via a deployable composite are associated with the same context. When a context starts and stops, components will recieve initalization
+ * and destruction callbacks.
  *
  * @version $Rev$ $Date$
  */
@@ -88,12 +90,12 @@ public class CompositeScopeContainer extends AbstractScopeContainer<QName> {
     public void register(AtomicComponent<?> component) {
         super.register(component);
         if (component.isEagerInit()) {
-            QName groupId = component.getGroupId();
+            QName deployable = component.getDeployable();
             synchronized (initQueues) {
-                List<AtomicComponent<?>> initQueue = initQueues.get(groupId);
+                List<AtomicComponent<?>> initQueue = initQueues.get(deployable);
                 if (initQueue == null) {
                     initQueue = new ArrayList<AtomicComponent<?>>();
-                    initQueues.put(groupId, initQueue);
+                    initQueues.put(deployable, initQueue);
                 }
                 initQueue.add(component);
                 Collections.sort(initQueue, COMPARATOR);
@@ -107,12 +109,12 @@ public class CompositeScopeContainer extends AbstractScopeContainer<QName> {
         // FIXME should this component be destroyed already or do we need to stop it?
         instanceWrappers.remove(component);
         if (component.isEagerInit()) {
-            QName groupId = component.getGroupId();
+            QName deployable = component.getDeployable();
             synchronized (initQueues) {
-                List<AtomicComponent<?>> initQueue = initQueues.get(groupId);
+                List<AtomicComponent<?>> initQueue = initQueues.get(deployable);
                 initQueue.remove(component);
                 if (initQueue.isEmpty()) {
-                    initQueues.remove(groupId);
+                    initQueues.remove(deployable);
                 }
             }
         }
@@ -175,10 +177,8 @@ public class CompositeScopeContainer extends AbstractScopeContainer<QName> {
         instanceWrappers.clear();
     }
 
+    @SuppressWarnings({"unchecked"})
     public <T> InstanceWrapper<T> getWrapper(AtomicComponent<T> component, WorkContext workContext) throws InstanceLifecycleException {
-
-        assert instanceWrappers.containsKey(component);
-        @SuppressWarnings("unchecked")
         InstanceWrapper<T> wrapper = (InstanceWrapper<T>) instanceWrappers.get(component);
         if (wrapper != EMPTY) {
             return wrapper;
@@ -188,17 +188,19 @@ public class CompositeScopeContainer extends AbstractScopeContainer<QName> {
         try {
             wrapper = component.createInstanceWrapper(workContext);
         } catch (ObjectCreationException e) {
-            throw new InstanceLifecycleException(e.getMessage(), component.getUri().toString(), e);
+            String uri = component.getUri().toString();
+            throw new InstanceLifecycleException("Error initializing: " + uri, uri, e);
         }
         // some component instances such as system singletons may already be started
         if (!wrapper.isStarted()) {
             wrapper.start();
             List<InstanceWrapper<?>> queue;
+            QName deployable = component.getDeployable();
             synchronized (destroyQueues) {
-                queue = destroyQueues.get(component.getGroupId());
+                queue = destroyQueues.get(deployable);
             }
             if (queue == null) {
-                throw new IllegalStateException("Context not started");
+                throw new IllegalStateException("Context not started: " + deployable);
             }
             queue.add(wrapper);
         }

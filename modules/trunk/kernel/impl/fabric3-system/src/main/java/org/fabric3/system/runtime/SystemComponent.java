@@ -50,11 +50,11 @@ public class SystemComponent<T> extends PojoComponent<T> {
     public SystemComponent(URI componentId,
                            InstanceFactoryProvider<T> provider,
                            ScopeContainer<?> scopeContainer,
-                           QName groupId,
+                           QName deployable,
                            int initLevel,
                            int maxIdleTime,
                            int maxAge) {
-        super(componentId, provider, scopeContainer, groupId, initLevel, maxIdleTime, maxAge);
+        super(componentId, provider, scopeContainer, deployable, initLevel, maxIdleTime, maxAge);
     }
 
 }

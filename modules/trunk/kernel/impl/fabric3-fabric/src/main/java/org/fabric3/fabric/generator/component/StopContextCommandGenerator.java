@@ -18,7 +18,7 @@ package org.fabric3.fabric.generator.component;
 
 import org.osoa.sca.annotations.Property;
 
-import org.fabric3.fabric.command.StopCompositeContextCommand;
+import org.fabric3.fabric.command.StopContextCommand;
 import org.fabric3.spi.generator.CommandGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.LogicalComponent;
@@ -26,17 +26,15 @@ import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 import org.fabric3.spi.model.instance.LogicalState;
 
 /**
- * Generates a command to stop the composite context on a runtime.
+ * Generates a command to stop the composite scope context on a runtime.
  *
  * @version $Rev: 4150 $ $Date: 2008-05-09 12:33:01 -0700 (Fri, 09 May 2008) $
  */
 
-public class StopCompositeContextCommandGenerator implements CommandGenerator {
-
-
+public class StopContextCommandGenerator implements CommandGenerator {
     private final int order;
 
-    public StopCompositeContextCommandGenerator(@Property(name = "order")int order) {
+    public StopContextCommandGenerator(@Property(name = "order") int order) {
         this.order = order;
     }
 
@@ -44,12 +42,11 @@ public class StopCompositeContextCommandGenerator implements CommandGenerator {
         return order;
     }
 
-     @SuppressWarnings("unchecked")
-    public StopCompositeContextCommand generate(LogicalComponent<?> component) throws GenerationException {
-        if (component.getState() == LogicalState.MARKED && component instanceof LogicalCompositeComponent) {
-            return new StopCompositeContextCommand(order, component.getDeployable());
+    @SuppressWarnings("unchecked")
+    public StopContextCommand generate(LogicalComponent<?> component) throws GenerationException {
+        if (component.getState() == LogicalState.MARKED) {
+            return new StopContextCommand(order, component.getDeployable());
         }
         return null;
-
     }
 }

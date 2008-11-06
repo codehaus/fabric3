@@ -73,7 +73,6 @@ public class JUnitComponentGenerator implements ComponentGenerator<LogicalCompon
         JUnitImplementation implementation = definition.getImplementation();
         PojoComponentType type = implementation.getComponentType();
         Integer level = helper.getInitLevel(definition, type);
-        URI componentId = component.getUri();
         String scope = type.getScope();
 
         InstanceFactoryDefinition providerDefinition = new InstanceFactoryDefinition();
@@ -85,8 +84,6 @@ public class JUnitComponentGenerator implements ComponentGenerator<LogicalCompon
         helper.processInjectionSites(component, providerDefinition);
 
         JavaComponentDefinition physical = new JavaComponentDefinition();
-        physical.setGroupId(component.getDeployable());
-        physical.setComponentId(componentId);
 
         URI classLoaderId = component.getClassLoaderId();
         physical.setClassLoaderId(classLoaderId);

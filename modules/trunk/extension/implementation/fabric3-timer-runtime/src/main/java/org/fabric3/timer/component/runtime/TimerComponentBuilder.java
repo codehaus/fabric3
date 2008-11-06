@@ -76,7 +76,7 @@ public class TimerComponentBuilder<T> extends PojoComponentBuilder<T, TimerCompo
     public TimerComponent<T> build(TimerComponentDefinition definition) throws BuilderException {
         URI componentId = definition.getComponentId();
         int initLevel = definition.getInitLevel();
-        QName groupId = definition.getGroupId();
+        QName deployable = definition.getDeployable();
         ClassLoader classLoader = classLoaderRegistry.getClassLoader(definition.getClassLoaderId());
 
         // get the scope container for this component
@@ -101,7 +101,7 @@ public class TimerComponentBuilder<T> extends PojoComponentBuilder<T, TimerCompo
         TimerComponent<T> component = new TimerComponent<T>(componentId,
                                                             provider,
                                                             scopeContainer,
-                                                            groupId,
+                                                            deployable,
                                                             initLevel,
                                                             definition.getMaxIdleTime(),
                                                             definition.getMaxAge(),
