@@ -38,13 +38,6 @@ public interface ContributionServiceListener {
     void onInstall(Contribution contribution);
 
     /**
-     * Called when a contribution is contributed.
-     *
-     * @param contribution the contribution
-     */
-    void onContribute(Contribution contribution);
-
-    /**
      * Called when a contribution is updated.
      *
      * @param contribution the contribution
