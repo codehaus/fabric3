@@ -42,8 +42,8 @@ import java.util.concurrent.Future;
  * <ul>
  *      <li>BOOT PRIMORDIAL - the runtime is booted with and its domain containing system components is initialized.
  *      <li>INITIALIZE - extensions are registered and activated in the local runtime domain.
- *      <li>JOIN DOMIAN - the runtime instance discoveres and joins an application domain.
  *      <li>RECOVER - the runtime recovers and synchronizes its state with the application domain.
+ *      <li>JOIN DOMIAN - the runtime instance discoveres and joins an application domain.
  *      <li>START - the runtime is prepared to receive and process requests
  *      <li>SHUTDOWN - the runtime has stopped prcessing synnchronous requests and detached from the domain.
  * </ul>
