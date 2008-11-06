@@ -90,7 +90,6 @@ public class DefaultCoordinator<RUNTIME extends Fabric3Runtime<?>, BOOTSTRAPPER 
         DOMAIN_JOINED,
         RECOVERED,
         STARTED,
-        SHUTTINGDOWN,
         SHUTDOWN,
         ERROR
     }
