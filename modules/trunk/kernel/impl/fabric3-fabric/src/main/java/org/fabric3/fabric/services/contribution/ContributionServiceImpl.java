@@ -370,7 +370,8 @@ public class ContributionServiceImpl implements ContributionService {
             throw new DuplicateContributionException("Contribution is already installed: " + contributionUri);
         }
         URL locationUrl;
-        if (!source.persist()) {
+        boolean persistent = source.persist();
+        if (!persistent) {
             locationUrl = source.getLocation();
         } else {
             InputStream stream = null;
@@ -399,7 +400,7 @@ public class ContributionServiceImpl implements ContributionService {
             }
             byte[] checksum = source.getChecksum();
             long timestamp = source.getTimestamp();
-            return new Contribution(contributionUri, locationUrl, checksum, timestamp, type);
+            return new Contribution(contributionUri, locationUrl, checksum, timestamp, type, persistent);
         } catch (ContentTypeResolutionException e) {
             throw new ContributionException(e);
         }

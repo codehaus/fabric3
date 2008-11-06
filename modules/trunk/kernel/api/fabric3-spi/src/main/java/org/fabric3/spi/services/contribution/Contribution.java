@@ -37,6 +37,7 @@ public class Contribution implements Serializable {
     private byte[] checksum;
     private long timestamp;
     private String contentType;
+    private boolean persistent;
     private ContributionManifest manifest;
     private List<Resource> resources = new ArrayList<Resource>();
     private List<URI> resolvedImports = new ArrayList<URI>();
@@ -46,20 +47,22 @@ public class Contribution implements Serializable {
     }
 
     /**
-     * Instantiates a new Contribution instance
+     * Instantiates a new Contribution instance.
      *
      * @param uri         the contribution URI
      * @param location    a dereferenceble URL for the contribution archive
      * @param checksum    the checksum for the contribution artifact
      * @param timestamp   the time stamp of the contribution artifact
      * @param contentType the MIME type of the contribution
+     * @param persistent  true if the contribution is persistent
      */
-    public Contribution(URI uri, URL location, byte[] checksum, long timestamp, String contentType) {
+    public Contribution(URI uri, URL location, byte[] checksum, long timestamp, String contentType, boolean persistent) {
         this.uri = uri;
         this.location = location;
         this.checksum = checksum;
         this.timestamp = timestamp;
         this.contentType = contentType;
+        this.persistent = persistent;
     }
 
     /**
@@ -123,6 +126,15 @@ public class Contribution implements Serializable {
      */
     public long getTimestamp() {
         return timestamp;
+    }
+
+    /**
+     * Returns true if the contribution is persistent.
+     *
+     * @return true if the contribution is persistent.
+     */
+    public boolean isPersistent() {
+        return persistent;
     }
 
     /**
