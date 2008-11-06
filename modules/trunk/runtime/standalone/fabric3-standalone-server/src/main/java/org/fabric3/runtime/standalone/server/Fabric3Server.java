@@ -173,13 +173,10 @@ public class Fabric3Server implements Fabric3ServerMBean {
             coordinator.bootPrimordial();
             // load and initialize runtime extension components and the local runtime domain
             coordinator.initialize();
-            // join a distributed domain
-            Future<Void> future = coordinator.joinDomain(joinTimeout);
+            Future<Void> future = coordinator.recover();
             future.get();
-            // perform recovery. If the runtime is a controller node, this may result in reprovisioning components
-            future = coordinator.recover();
+            future = coordinator.joinDomain(joinTimeout);
             future.get();
-            // start the runtime receiving requests
             future = coordinator.start();
             future.get();
 

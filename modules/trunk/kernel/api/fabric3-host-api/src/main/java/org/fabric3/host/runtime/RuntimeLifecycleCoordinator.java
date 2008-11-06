@@ -70,27 +70,28 @@ public interface RuntimeLifecycleCoordinator<R extends Fabric3Runtime<?>, B exte
     void bootPrimordial() throws InitializationException;
 
     /**
-     * Initializes the local runtime, including all system components
+     * Initializes the runtime, including all system components
      *
      * @throws InitializationException if an error occurs initializing the runtime
      */
     void initialize() throws InitializationException;
 
     /**
-     * Join the domain in a non-blocking fashion.
+     * Performs local recovery operations.
+     *
+     * @return a future that can be polled for completion of the operation
+     * @throws InitializationException if an error occurs performing recovery
+     */
+    Future<Void> recover() throws InitializationException;
+
+    /**
+     * Joins the domain in a non-blocking fashion.
      *
      * @param timeout the timeout in milliseconds or -1 if the operation should wait indefinitely
      * @return a future that can be polled for completion of the operation
      * @throws InitializationException if an error occurs joining the domain
      */
     Future<Void> joinDomain(long timeout) throws InitializationException;
-
-    /**
-     * Perform the recovery operation. On controller nodes, this may result in reprovisioning components and resources.
-     *
-     * @return a future that can be polled for completion of the operation
-     */
-    Future<Void> recover();
 
     /**
      * Start the runtime receiving requests.

@@ -16,12 +16,6 @@
  */
 package org.fabric3.fabric.runtime;
 
-import static org.fabric3.fabric.runtime.ComponentNames.APPLICATION_DOMAIN_URI;
-import static org.fabric3.fabric.runtime.ComponentNames.CONTRIBUTION_SERVICE_URI;
-import static org.fabric3.fabric.runtime.ComponentNames.DEFINITIONS_REGISTRY;
-import static org.fabric3.fabric.runtime.ComponentNames.METADATA_STORE_URI;
-import static org.fabric3.fabric.runtime.ComponentNames.RUNTIME_DOMAIN_URI;
-
 import java.io.InputStream;
 import java.net.URI;
 import java.util.ArrayList;
@@ -30,9 +24,14 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
-
 import javax.xml.namespace.QName;
 
+import static org.fabric3.fabric.runtime.ComponentNames.APPLICATION_DOMAIN_URI;
+import static org.fabric3.fabric.runtime.ComponentNames.CONTRIBUTION_SERVICE_URI;
+import static org.fabric3.fabric.runtime.ComponentNames.DEFINITIONS_REGISTRY;
+import static org.fabric3.fabric.runtime.ComponentNames.EVENT_SERVICE_URI;
+import static org.fabric3.fabric.runtime.ComponentNames.METADATA_STORE_URI;
+import static org.fabric3.fabric.runtime.ComponentNames.RUNTIME_DOMAIN_URI;
 import org.fabric3.fabric.services.contribution.manifest.XmlManifestProcessor;
 import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.host.contribution.ContributionService;
@@ -64,6 +63,8 @@ import org.fabric3.spi.services.definitions.DefinitionActivationException;
 import org.fabric3.spi.services.definitions.DefinitionsRegistry;
 import org.fabric3.spi.services.event.EventService;
 import org.fabric3.spi.services.event.JoinDomain;
+import org.fabric3.spi.services.event.Recover;
+import org.fabric3.spi.services.event.RuntimeStart;
 
 /**
  * Default implementation of a RuntimeLifecycleCoordinator.
@@ -137,20 +138,9 @@ public class DefaultCoordinator<RUNTIME extends Fabric3Runtime<?>, BOOTSTRAPPER 
 
     }
 
-    public Future<Void> joinDomain(final long timeout) throws InitializationException {
+    public Future<Void> recover() {
         if (state != State.INITIALIZED) {
             throw new IllegalStateException("Not in INITIALIZED state");
-        }
-        EventService eventService = runtime.getSystemComponent(EventService.class, ComponentNames.EVENT_SERVICE_URI);
-        eventService.publish(new JoinDomain());
-        state = State.DOMAIN_JOINED;
-        // no domain to join
-        return new SyncFuture();
-    }
-
-    public Future<Void> recover() {
-        if (state != State.DOMAIN_JOINED) {
-            throw new IllegalStateException("Not in DOMAIN_JOINED state");
         }
         Domain domain = runtime.getSystemComponent(Domain.class, APPLICATION_DOMAIN_URI);
         if (domain == null) {
@@ -159,16 +149,32 @@ public class DefaultCoordinator<RUNTIME extends Fabric3Runtime<?>, BOOTSTRAPPER 
             return new SyncFuture(new ExecutionException(e));
 
         }
+        EventService eventService = runtime.getSystemComponent(EventService.class, ComponentNames.EVENT_SERVICE_URI);
+        eventService.publish(new Recover());
         state = State.RECOVERED;
         return new SyncFuture();
     }
 
-    public Future<Void> start() {
+    public Future<Void> joinDomain(final long timeout) throws InitializationException {
         if (state != State.RECOVERED) {
             throw new IllegalStateException("Not in RECOVERED state");
         }
+        EventService eventService = runtime.getSystemComponent(EventService.class, ComponentNames.EVENT_SERVICE_URI);
+        eventService.publish(new JoinDomain());
+        state = State.DOMAIN_JOINED;
+        // no domain to join
+        return new SyncFuture();
+    }
+
+    public Future<Void> start() {
+        if (state != State.DOMAIN_JOINED) {
+            throw new IllegalStateException("Not in DOMAIN_JOINED state");
+        }
         try {
             runtime.start();
+            // starts the runtime by publishing a start event
+            EventService eventService = runtime.getSystemComponent(EventService.class, EVENT_SERVICE_URI);
+            eventService.publish(new RuntimeStart());
             state = State.STARTED;
         } catch (StartException e) {
             state = State.ERROR;

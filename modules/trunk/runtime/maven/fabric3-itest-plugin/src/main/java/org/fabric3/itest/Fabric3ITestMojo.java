@@ -416,9 +416,9 @@ public class Fabric3ITestMojo extends AbstractMojo {
             getLog().info("Starting Embedded Fabric3 Runtime ...");
             coordinator.bootPrimordial();
             coordinator.initialize();
-            Future<Void> future = coordinator.joinDomain(-1);
+            Future<Void> future = coordinator.recover();
             future.get();
-            future = coordinator.recover();
+            future = coordinator.joinDomain(-1);
             future.get();
             future = coordinator.start();
             future.get();

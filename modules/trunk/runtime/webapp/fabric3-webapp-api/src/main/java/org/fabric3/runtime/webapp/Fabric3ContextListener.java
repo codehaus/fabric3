@@ -117,12 +117,12 @@ public class Fabric3ContextListener implements ServletContextListener {
             // boot the runtime
             coordinator.bootPrimordial();
             coordinator.initialize();
-            Future<Void> joinFuture = coordinator.joinDomain(-1);
-            joinFuture.get();
-            Future<Void> recoverFuture = coordinator.recover();
-            recoverFuture.get();
-            Future<Void> startFuture = coordinator.start();
-            startFuture.get();
+            Future<Void> future = coordinator.recover();
+            future.get();
+            future = coordinator.joinDomain(-1);
+            future.get();
+            future = coordinator.start();
+            future.get();
             servletContext.setAttribute(RUNTIME_ATTRIBUTE, runtime);
             monitor.started(runtime.getJMXSubDomain());
             // deploy the application composite

@@ -197,9 +197,6 @@ public abstract class AbstractRuntime<HI extends HostInfo> implements Fabric3Run
     }
 
     public void start() throws StartException {
-        // starts the runtime by publishing a start event
-        EventService eventService = getSystemComponent(EventService.class, EVENT_SERVICE_URI);
-        eventService.publish(new RuntimeStart());
     }
 
     public void destroy() {
