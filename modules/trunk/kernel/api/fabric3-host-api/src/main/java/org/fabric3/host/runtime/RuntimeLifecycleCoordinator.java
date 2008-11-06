@@ -37,7 +37,7 @@ package org.fabric3.host.runtime;
 import java.util.concurrent.Future;
 
 /**
- * Implementations manage the lifecycle for a runtime type. This involves transitioning through a series of states:
+ * Implementations manage the Fabric3 runtime lifecycle. This involves transitioning through a series of states:
  * <pre>
  * <ul>
  *      <li>BOOT PRIMORDIAL - the runtime is booted with and its domain containing system components is initialized.
