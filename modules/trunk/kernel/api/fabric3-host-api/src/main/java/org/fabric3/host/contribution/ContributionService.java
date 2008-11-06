@@ -73,6 +73,14 @@ public interface ContributionService {
      */
     void install(URI uri) throws ContributionException;
 
+    /**
+     * Installs a list of stored contributions.
+     *
+     * @param uris the contribution URIs
+     * @throws ContributionException if there an error reading, introspecting or loading the contribution
+     */
+    void install(List<URI> uris) throws ContributionException;
+
 
     /**
      * Stores and installs an artifact.

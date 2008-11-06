@@ -71,6 +71,7 @@ import org.fabric3.spi.services.archive.ArchiveStoreException;
 import org.fabric3.spi.services.contenttype.ContentTypeResolutionException;
 import org.fabric3.spi.services.contenttype.ContentTypeResolver;
 import org.fabric3.spi.services.contribution.Contribution;
+import org.fabric3.spi.services.contribution.ContributionServiceListener;
 import org.fabric3.spi.services.contribution.ContributionState;
 import org.fabric3.spi.services.contribution.MetaDataStore;
 import org.fabric3.spi.services.contribution.MetaDataStoreException;
@@ -94,6 +95,7 @@ public class ContributionServiceImpl implements ContributionService {
     private ContentTypeResolver contentTypeResolver;
     private DependencyService dependencyService;
     private ContributionServiceMonitor monitor;
+    private List<ContributionServiceListener> listeners;
 
     public ContributionServiceImpl(@Reference ProcessorRegistry processorRegistry,
                                    @Reference ArchiveStore archiveStore,
@@ -109,11 +111,20 @@ public class ContributionServiceImpl implements ContributionService {
         this.contentTypeResolver = contentTypeResolver;
         this.dependencyService = dependencyService;
         this.monitor = monitor;
+        listeners = new ArrayList<ContributionServiceListener>();
+    }
+
+    @Reference(required = false)
+    public void setListeners(List<ContributionServiceListener> listeners) {
+        this.listeners = listeners;
     }
 
     public URI store(ContributionSource source) throws ContributionException {
         Contribution contribution = persist(source);
         metaDataStore.store(contribution);
+        for (ContributionServiceListener listener : listeners) {
+            listener.onStore(contribution);
+        }
         return contribution.getUri();
     }
 
@@ -122,6 +133,21 @@ public class ContributionServiceImpl implements ContributionService {
         install(contribution);
         // update the store with changes
         metaDataStore.store(contribution);
+        for (ContributionServiceListener listener : listeners) {
+            listener.onInstall(contribution);
+        }
+    }
+
+    public void install(List<URI> uris) throws ContributionException {
+        List<Contribution> contributions = new ArrayList<Contribution>(uris.size());
+        for (URI uri : uris) {
+            Contribution contribution = metaDataStore.find(uri);
+            if (contribution == null) {
+                throw new ContributionNotFoundException("Contribution not found: " + uri);
+            }
+            contributions.add(contribution);
+        }
+        installInOrder(contributions);
     }
 
     public List<URI> contribute(List<ContributionSource> sources) throws ContributionException {
@@ -129,30 +155,24 @@ public class ContributionServiceImpl implements ContributionService {
         for (ContributionSource source : sources) {
             // store the contributions
             Contribution contribution = persist(source);
+            for (ContributionServiceListener listener : listeners) {
+                listener.onStore(contribution);
+            }
             contributions.add(contribution);
         }
-        for (Contribution contribution : contributions) {
-            // process any SCA manifest information, including imports and exports
-            introspect(contribution);
-        }
-        // order the contributions based on their dependencies
-        contributions = dependencyService.order(contributions);
-        for (Contribution contribution : contributions) {
-            ClassLoader loader = contributionLoader.load(contribution);
-            // continue processing the contributions. As they are ordered, dependencies will resolve correctly
-            processContents(contribution, loader);
-            contribution.setState(ContributionState.INSTALLED);
-        }
-        List<URI> uris = new ArrayList<URI>(contributions.size());
-        for (Contribution contribution : contributions) {
-            uris.add(contribution.getUri());
-        }
-        return uris;
+        return installInOrder(contributions);
     }
+
 
     public URI contribute(ContributionSource source) throws ContributionException {
         Contribution contribution = persist(source);
+        for (ContributionServiceListener listener : listeners) {
+            listener.onStore(contribution);
+        }
         install(contribution);
+        for (ContributionServiceListener listener : listeners) {
+            listener.onInstall(contribution);
+        }
         return contribution.getUri();
     }
 
@@ -220,6 +240,10 @@ public class ContributionServiceImpl implements ContributionService {
         // unload from memory
         contributionLoader.unload(contribution);
         contribution.setState(ContributionState.STORED);
+        for (ContributionServiceListener listener : listeners) {
+            listener.onUninstall(contribution);
+        }
+
     }
 
     public void remove(URI uri) throws ContributionException {
@@ -235,6 +259,10 @@ public class ContributionServiceImpl implements ContributionService {
         } catch (ArchiveStoreException e) {
             throw new ContributionException(e);
         }
+        for (ContributionServiceListener listener : listeners) {
+            listener.onRemove(contribution);
+        }
+
     }
 
     /**
@@ -263,6 +291,36 @@ public class ContributionServiceImpl implements ContributionService {
         ClassLoader loader = contributionLoader.load(contribution);
         processContents(contribution, loader);
         contribution.setState(ContributionState.INSTALLED);
+    }
+
+    /**
+     * Installs a collection of contributions in order of their dependencies.
+     *
+     * @param contributions the contributions
+     * @return the ordered list of contribution URIs
+     * @throws ContributionException if there is an error installing the contributions
+     */
+    private List<URI> installInOrder(List<Contribution> contributions) throws ContributionException {
+        for (Contribution contribution : contributions) {
+            // process any SCA manifest information, including imports and exports
+            introspect(contribution);
+        }
+        // order the contributions based on their dependencies
+        contributions = dependencyService.order(contributions);
+        for (Contribution contribution : contributions) {
+            ClassLoader loader = contributionLoader.load(contribution);
+            // continue processing the contributions. As they are ordered, dependencies will resolve correctly
+            processContents(contribution, loader);
+            contribution.setState(ContributionState.INSTALLED);
+            for (ContributionServiceListener listener : listeners) {
+                listener.onInstall(contribution);
+            }
+        }
+        List<URI> uris = new ArrayList<URI>(contributions.size());
+        for (Contribution contribution : contributions) {
+            uris.add(contribution.getUri());
+        }
+        return uris;
     }
 
     /**
@@ -352,8 +410,14 @@ public class ContributionServiceImpl implements ContributionService {
         long archivedTimestamp = contribution.getTimestamp();
         if (timestamp > archivedTimestamp) {
             // TODO update
+            for (ContributionServiceListener listener : listeners) {
+                listener.onUpdate(contribution);
+            }
         } else if (timestamp == archivedTimestamp && Arrays.equals(checksum, contribution.getChecksum())) {
             // TODO update
+            for (ContributionServiceListener listener : listeners) {
+                listener.onUpdate(contribution);
+            }
         }
     }
 
