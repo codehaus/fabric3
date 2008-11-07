@@ -103,7 +103,7 @@ public class ContributionTrackingTestCase extends TestCase {
         // Setup the ContributionReplayer
         ContributionReplayMonitor replayMonitor = EasyMock.createMock(ContributionReplayMonitor.class);
         EasyMock.replay(replayMonitor);
-        replayer = new ContributionReplayer(contributionService, store, factory, info, replayMonitor);
+        replayer = new ContributionReplayer(contributionService, store, factory, info, null, replayMonitor);
 
     }
 

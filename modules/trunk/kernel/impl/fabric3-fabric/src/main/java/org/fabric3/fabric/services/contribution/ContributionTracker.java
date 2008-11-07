@@ -108,13 +108,7 @@ public class ContributionTracker implements ContributionServiceListener {
         if (!contribution.isPersistent()) {
             return;
         }
-        // update even though it isn't necessary with pass-by-ref as this listener should not assume the same Contribution instance is always returned
-        URI uri = contribution.getUri();
-        Contribution tracked = contributions.get(uri);
-        if (tracked == null) {
-            throw new AssertionError("Contribution not found: " + uri);
-        }
-        tracked.setState(contribution.getState());
+        contributions.put(contribution.getUri(), contribution);
         persist();
     }
 

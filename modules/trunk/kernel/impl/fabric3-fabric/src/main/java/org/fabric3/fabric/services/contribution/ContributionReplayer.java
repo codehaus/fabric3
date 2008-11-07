@@ -36,6 +36,7 @@ import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
 import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.api.annotation.Monitor;
@@ -47,6 +48,7 @@ import org.fabric3.spi.Namespaces;
 import org.fabric3.spi.services.contribution.Contribution;
 import org.fabric3.spi.services.contribution.ContributionState;
 import org.fabric3.spi.services.contribution.MetaDataStore;
+import org.fabric3.spi.services.event.EventService;
 import org.fabric3.spi.services.event.Fabric3EventListener;
 import org.fabric3.spi.services.event.Recover;
 
@@ -60,6 +62,7 @@ public class ContributionReplayer implements Fabric3EventListener<Recover> {
     private static final QName CONTRIBUTION = new QName(Namespaces.CORE, "contribution");
     private ContributionService contributionService;
     private MetaDataStore store;
+    private EventService eventService;
     private ContributionReplayMonitor monitor;
     private XMLInputFactory inputFactory;
     private File repositoryIndex;
@@ -68,13 +71,20 @@ public class ContributionReplayer implements Fabric3EventListener<Recover> {
                                 @Reference MetaDataStore store,
                                 @Reference XMLFactory xmlFactory,
                                 @Reference HostInfo hostInfo,
+                                @Reference EventService eventService,
                                 @Monitor ContributionReplayMonitor monitor) {
         this.contributionService = contributionService;
         this.store = store;
+        this.eventService = eventService;
         this.monitor = monitor;
         this.inputFactory = xmlFactory.newInputFactoryInstance();
         File repository = new File(hostInfo.getBaseDir(), "repository");
         repositoryIndex = new File(repository, "f3.xml");
+    }
+
+    @Init
+    public void init() {
+        eventService.subscribe(Recover.class, this);
     }
 
     public void onEvent(Recover event) {
