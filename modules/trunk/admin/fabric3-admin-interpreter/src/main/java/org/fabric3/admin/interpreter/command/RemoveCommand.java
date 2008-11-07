@@ -19,13 +19,12 @@ package org.fabric3.admin.interpreter.command;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.PrintStream;
-import java.net.URL;
 import java.net.URI;
 
 import org.fabric3.admin.api.CommunicationException;
+import org.fabric3.admin.api.ContributionException;
 import org.fabric3.admin.api.DomainController;
 import org.fabric3.admin.api.DuplicateContributionException;
-import org.fabric3.admin.api.ContributionException;
 import org.fabric3.admin.api.InvalidContributionException;
 import org.fabric3.admin.interpreter.Command;
 import org.fabric3.admin.interpreter.CommandException;
@@ -33,23 +32,14 @@ import org.fabric3.admin.interpreter.CommandException;
 /**
  * @version $Revision$ $Date$
  */
-public class InstallCommand implements Command {
+public class RemoveCommand implements Command {
     private DomainController controller;
-    private URL contribution;
     private URI contributionUri;
     private String username;
     private String password;
 
-    public InstallCommand(DomainController controller) {
+    public RemoveCommand(DomainController controller) {
         this.controller = controller;
-    }
-
-    public URL getContribution() {
-        return contribution;
-    }
-
-    public void setContribution(URL contribution) {
-        this.contribution = contribution;
     }
 
     public URI getContributionUri() {
@@ -87,18 +77,8 @@ public class InstallCommand implements Command {
             if (!controller.isConnected()) {
                 controller.connect();
             }
-            if (contributionUri == null) {
-                contributionUri = CommandHelper.parseContributionName(contribution);
-            }
-            controller.install(contribution, contributionUri);
-            out.println("Installed " + contributionUri);
-        } catch (InvalidContributionException e) {
-            out.println("The contribution contained errors:");
-            for (String desc : e.getErrors()) {
-                out.println("ERROR: " + desc);
-            }
-        } catch (DuplicateContributionException e) {
-            out.println("ERROR: A contribution with that name is already installed");
+            controller.remove(contributionUri);
+            out.println("Removed " + contributionUri);
         } catch (CommunicationException e) {
             if (e.getCause() instanceof FileNotFoundException) {
                 out.println("ERROR: File not found:" + e.getMessage());

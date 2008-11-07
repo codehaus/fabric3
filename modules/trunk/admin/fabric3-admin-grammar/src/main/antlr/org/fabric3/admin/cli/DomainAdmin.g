@@ -14,6 +14,8 @@ ASTLabelType=CommonTree;
 tokens {  INSTALL_CMD;
 	      DEPLOY_CMD;
 	      UNDEPLOY_CMD;
+	      UNINSTALL_CMD;
+	      REMOVE_CMD;
 	      AUTH_CMD;
 	      LIST_CMD;
 	      PARAMETER;
@@ -51,15 +53,16 @@ tokens {  INSTALL_CMD;
 
 command		: (subcommand)+ EOF;
 
-subcommand	: (install | deploy | auth | list | undeploy) NEWLINE?;
+subcommand	: (install | deploy | auth | list | undeploy | uninstall | remove) NEWLINE?;
 
 // main commands
 install 	    : INSTALL file WS? param* -> ^(INSTALL_CMD file param*);
 auth            : AUTH auth_param auth_param -> ^(AUTH_CMD auth_param auth_param);
 list            : LIST auth_param* -> ^(LIST_CMD auth_param*);
 deploy 		    : DEPLOY contribution_name plan_name?  plan_file? WS? param* -> ^(DEPLOY_CMD contribution_name plan_name? plan_file? param*);
-uninstall 	    : UNINSTALL contribution? WS? param*;
 undeploy 	    : UNDEPLOY contribution_name WS? param* -> ^(UNDEPLOY_CMD contribution_name param*);
+uninstall 	    : UNINSTALL contribution_name WS? param* -> ^(UNINSTALL_CMD contribution_name param*);
+remove          : REMOVE contribution_name WS? param* -> ^(REMOVE_CMD contribution_name param*);
 
 file		    : STRING -> ^(FILE STRING);
 param		    : operator STRING WS? -> ^(PARAMETER operator STRING) ;
@@ -77,6 +80,7 @@ INSTALL 	    : ('install' | 'ins');
 AUTH 	        : ('authenticate' | 'auth');
 LIST     	    : ('list' | 'ls');
 DEPLOY		    : ('deploy' | 'dep');
+REMOVE          : ('remove' | 'rem');
 UNINSTALL 	    : ('uninstall' | 'uins');
 UNDEPLOY	    : ('undeploy' | 'udep');
 USERNAME	    : ('-u' | '-username' | '-USERNAME') ;
