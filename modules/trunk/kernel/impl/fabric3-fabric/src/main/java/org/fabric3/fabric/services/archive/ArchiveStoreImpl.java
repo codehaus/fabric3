@@ -20,6 +20,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.RandomAccessFile;
+import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import java.nio.ByteBuffer;
@@ -31,6 +32,7 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.host.runtime.HostInfo;
@@ -45,7 +47,7 @@ import org.fabric3.spi.services.archive.ArchiveStoreException;
 @EagerInit
 public class ArchiveStoreImpl implements ArchiveStore {
     private Map<URI, URL> archiveUriToUrl;
-    private File baseDir;
+    private File repository;
 
     /**
      * Constructor.
@@ -55,15 +57,24 @@ public class ArchiveStoreImpl implements ArchiveStore {
      */
     public ArchiveStoreImpl(@Reference HostInfo hostInfo) throws IOException {
         archiveUriToUrl = new ConcurrentHashMap<URI, URL>();
-        baseDir = hostInfo.getBaseDir();
+        File baseDir = hostInfo.getBaseDir();
+        repository = new File(baseDir, "repository");
     }
 
+    @Init
+    public void init() throws MalformedURLException {
+        if (!repository.exists() || !repository.isDirectory()) {
+            return;
+        }
+        for (File file : repository.listFiles()) {
+            archiveUriToUrl.put(mapToUri(file), file.toURI().toURL());
+        }
+    }
 
     public URL store(URI uri, InputStream stream) throws ArchiveStoreException {
         try {
-            File root = new File(baseDir, "repository");
-            if (!root.exists() || !root.isDirectory() || !root.canRead()) {
-                throw new IOException("The repository location is not a directory: " + root);
+            if (!repository.exists() || !repository.isDirectory() || !repository.canRead()) {
+                throw new IOException("The repository location is not a directory: " + repository);
             }
             File location = mapToFile(uri);
             write(stream, location);
@@ -100,18 +111,27 @@ public class ArchiveStoreImpl implements ArchiveStore {
     }
 
     /**
-     * Resolve contribution location in the repository
+     * Resolve contribution location in the repository.
      *
      * @param uri the uri to resolve
      * @return the mapped file
      * @throws IOException if an exception occurs mapping the file
      */
     private File mapToFile(URI uri) throws IOException {
-        File root = new File(baseDir, "repository");
-        if (!root.exists() || !root.isDirectory() || !root.canRead()) {
-            throw new IOException("The repository location is not a directory: " + root);
+        if (!repository.exists() || !repository.isDirectory() || !repository.canRead()) {
+            throw new IOException("The repository location is not a directory: " + repository);
         }
-        return new File(root, uri.getPath());
+        return new File(repository, uri.getPath());
+    }
+
+    /**
+     * Maps a file to a URI.
+     *
+     * @param file the file
+     * @return the URI
+     */
+    private URI mapToUri(File file) {
+        return URI.create(file.getName());
     }
 
     private void write(InputStream source, File target) throws IOException {
