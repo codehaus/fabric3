@@ -41,9 +41,13 @@ import org.fabric3.spi.domain.Domain;
 import org.fabric3.spi.generator.CommandMap;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.CopyUtil;
+import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
+import org.fabric3.spi.model.instance.LogicalReference;
+import org.fabric3.spi.model.instance.LogicalService;
 import org.fabric3.spi.model.instance.LogicalState;
+import org.fabric3.spi.model.instance.LogicalWire;
 import org.fabric3.spi.plan.DeploymentPlan;
 import org.fabric3.spi.services.contribution.MetaDataStore;
 import org.fabric3.spi.services.contribution.MetaDataStoreException;
@@ -148,7 +152,7 @@ public abstract class AbstractDomain implements Domain {
         } else if (change.hasWarnings()) {
             // TOOD log warnings
         }
-        allocateAndDeploy(domain, plans);
+        allocateAndDeploy(domain, plans, change);
 
     }
 
@@ -165,7 +169,7 @@ public abstract class AbstractDomain implements Domain {
             // TOOD log warnings
         }
 
-        allocateAndDeploy(domain, plans);
+        allocateAndDeploy(domain, plans, change);
     }
 
     public void undeploy(QName deployable) throws DeploymentException {
@@ -264,9 +268,10 @@ public abstract class AbstractDomain implements Domain {
      *
      * @param domain the domain component
      * @param plans  the deployment plans to use for deployment
+     * @param change the logical change
      * @throws DeploymentException if an error is encountered during deployment
      */
-    private void allocateAndDeploy(LogicalCompositeComponent domain, List<DeploymentPlan> plans) throws DeploymentException {
+    private void allocateAndDeploy(LogicalCompositeComponent domain, List<DeploymentPlan> plans, LogicalChange change) throws DeploymentException {
         Collection<LogicalComponent<?>> components = domain.getComponents();
         // Allocate the components to runtime nodes
         try {
@@ -290,9 +295,41 @@ public abstract class AbstractDomain implements Domain {
 
         try {
             // TODO this should happen after nodes have deployed the components and wires
+            markAsProvisioned(change);
             logicalComponentManager.replaceRootComponent(domain);
         } catch (StoreException e) {
             throw new DeploymentException("Error applying deployment", e);
+        }
+    }
+
+    /**
+     * Marks all components, wires, and bindings that are part of a change as provisioned.
+     *
+     * @param change the logical change
+     */
+    private void markAsProvisioned(LogicalChange change) {
+        for (LogicalComponent<?> component : change.getAddedComponents()) {
+            component.setState(LogicalState.PROVISIONED);
+        }
+        for (LogicalReference reference : change.getAddedReferences()) {
+            for (LogicalBinding<?> binding : reference.getBindings()) {
+                binding.setState(LogicalState.PROVISIONED);
+            }
+            for (LogicalBinding<?> binding : reference.getCallbackBindings()) {
+                binding.setState(LogicalState.PROVISIONED);
+            }
+        }
+        for (LogicalWire wire : change.getAddedWires()) {
+            wire.setState(LogicalState.PROVISIONED);
+        }
+
+        for (LogicalService service : change.getAddedServices()) {
+            for (LogicalBinding<?> binding : service.getBindings()) {
+                binding.setState(LogicalState.PROVISIONED);
+            }
+            for (LogicalBinding<?> binding : service.getCallbackBindings()) {
+                binding.setState(LogicalState.PROVISIONED);
+            }
         }
     }
 

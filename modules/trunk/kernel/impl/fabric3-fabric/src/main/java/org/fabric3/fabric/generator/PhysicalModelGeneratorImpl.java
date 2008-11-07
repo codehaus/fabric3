@@ -52,7 +52,6 @@ import org.fabric3.spi.generator.CommandMap;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
-import org.fabric3.spi.model.instance.LogicalState;
 
 /**
  * Default implementation of the physical model generator. This implementation topologically sorts components according to their position in the
@@ -109,9 +108,6 @@ public class PhysicalModelGeneratorImpl implements PhysicalModelGenerator {
             }
         }
 
-        for (LogicalComponent<?> component : components) {
-            component.setState(LogicalState.PROVISIONED);
-        }
         return commandMap;
     }
 

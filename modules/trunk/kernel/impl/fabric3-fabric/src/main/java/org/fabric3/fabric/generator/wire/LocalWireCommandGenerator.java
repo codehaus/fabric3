@@ -144,8 +144,6 @@ public class LocalWireCommandGenerator implements CommandGenerator {
                 command.addPhysicalWireDefinition(pwd);
             }
 
-            logicalWire.setState(LogicalState.PROVISIONED);
-
         }
 
     }

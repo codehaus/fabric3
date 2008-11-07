@@ -118,14 +118,12 @@ public class ServiceWireCommandGenerator implements CommandGenerator {
                 if (binding.getState() == LogicalState.NEW) {
                     PhysicalWireDefinition pwd = physicalWireGenerator.generateBoundServiceWire(service, binding, component, callbackUri);
                     command.addPhysicalWireDefinition(pwd);
-                    binding.setState(LogicalState.PROVISIONED);
                 }
             }
             // generate the callback command set
             if (callbackBinding != null && callbackBinding.getState() == LogicalState.NEW) {
                 PhysicalWireDefinition callbackPwd = physicalWireGenerator.generateBoundCallbackServiceWire(component, service, callbackBinding);
                 command.addPhysicalWireDefinition(callbackPwd);
-                callbackBinding.setState(LogicalState.PROVISIONED);
             }
         }
     }
