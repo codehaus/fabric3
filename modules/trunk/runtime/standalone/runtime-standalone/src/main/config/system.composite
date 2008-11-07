@@ -87,5 +87,12 @@
         <f3-impl:implementation.system class="org.fabric3.fabric.services.lcm.NonPersistentLogicalComponentStore"/>
     </component>
 
+    <component name="ContributionReplayer">
+        <f3-impl:implementation.system class="org.fabric3.fabric.services.contribution.ContributionReplayer"/>
+    </component>
+
+    <component name="ContributionTracker">
+        <f3-impl:implementation.system class="org.fabric3.fabric.services.contribution.ContributionTracker"/>
+    </component>
 
 </composite>
