@@ -19,11 +19,13 @@ tokens {  STORE_CMD;
 	      REMOVE_CMD;
 	      AUTH_CMD;
 	      LIST_CMD;
+	      USE_CMD;
 	      PARAMETER;
 	      PARAM_USERNAME;
 	      PARAM_PASSWORD;
 	      FILE;
 	      PARAM_CONTRIBUTION_NAME;
+	      PARAM_DOMAIN_NAME;
 	      PARAM_PLAN_NAME;
 	      PARAM_PLAN_FILE;
 }
@@ -54,7 +56,7 @@ tokens {  STORE_CMD;
 
 command		: (subcommand)+ EOF;
 
-subcommand	: (store | install | deploy | auth | list | undeploy | uninstall | remove) NEWLINE?;
+subcommand	: (store | install | deploy | auth | list | undeploy | uninstall | remove | use) NEWLINE?;
 
 // main commands
 store    	    : STORE file WS? param* -> ^(STORE_CMD file param*);
@@ -65,7 +67,7 @@ deploy 		    : DEPLOY contribution_name plan_name?  plan_file? WS? param* -> ^(D
 undeploy 	    : UNDEPLOY contribution_name WS? param* -> ^(UNDEPLOY_CMD contribution_name param*);
 uninstall 	    : UNINSTALL contribution_name WS? param* -> ^(UNINSTALL_CMD contribution_name param*);
 remove          : REMOVE contribution_name WS? param* -> ^(REMOVE_CMD contribution_name param*);
-
+use             : USE domain_name -> ^(USE_CMD) domain_name;
 file		    : STRING -> ^(FILE STRING);
 param		    : operator STRING WS? -> ^(PARAMETER operator STRING) ;
 auth_param	    : auth_operator STRING WS? -> ^(PARAMETER auth_operator STRING) ;
@@ -75,8 +77,9 @@ username        : USERNAME -> ^(PARAM_USERNAME);
 password        : PASSWORD -> ^(PARAM_PASSWORD);
 contribution    : CONTRIBUTION -> ^(PARAM_CONTRIBUTION_NAME);
 contribution_name : STRING -> ^(PARAM_CONTRIBUTION_NAME STRING);
-plan_name         : STRING -> ^(PARAM_PLAN_NAME STRING);
-plan_file         : PLAN STRING -> ^(PARAM_PLAN_FILE STRING);
+domain_name     : STRING -> ^(PARAM_DOMAIN_NAME STRING);
+plan_name       : STRING -> ^(PARAM_PLAN_NAME STRING);
+plan_file       : PLAN STRING -> ^(PARAM_PLAN_FILE STRING);
 
 STORE 	        : ('store' | 'stor');
 INSTALL 	    : ('install' | 'ins');
@@ -86,6 +89,7 @@ DEPLOY		    : ('deploy' | 'dep');
 REMOVE          : ('remove' | 'rem');
 UNINSTALL 	    : ('uninstall' | 'uins');
 UNDEPLOY	    : ('undeploy' | 'udep');
+USE     	    : ('use');
 USERNAME	    : ('-u' | '-username' | '-USERNAME') ;
 PASSWORD	    : ('-p' | '-P'|'-PASSWORD' | '-password');
 CONTRIBUTION    : ('-n' | '-N'|'-NAME'| '-name');
