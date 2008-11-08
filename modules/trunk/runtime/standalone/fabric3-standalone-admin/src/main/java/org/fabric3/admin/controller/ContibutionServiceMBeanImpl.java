@@ -43,6 +43,8 @@ import org.fabric3.management.contribution.InvalidContributionException;
  */
 @EagerInit
 public class ContibutionServiceMBeanImpl implements ContributionServiceMBean {
+    private static final String REPOSITORY = "/admin/repository";
+
     private JettyService jettyService;
     private ContributionService contributionService;
     private ContributionServiceMBeanMonitor monitor;
@@ -108,7 +110,7 @@ public class ContibutionServiceMBeanImpl implements ContributionServiceMBean {
 
         // map a servlet for uploading contributions
         ContributionServlet servlet = new ContributionServlet(contributionService);
-        jettyService.registerMapping("/admin/repository/*", servlet);
+        jettyService.registerMapping(REPOSITORY + "/*", servlet);
     }
 
     public String getContributionServiceAddress() {
@@ -168,7 +170,7 @@ public class ContibutionServiceMBeanImpl implements ContributionServiceMBean {
         } else {
             baseAddress = InetAddress.getByName(hostName).getHostAddress();
         }
-        address = "http://" + baseAddress + ":" + httpPort + "/admin/repository";
+        address = "http://" + baseAddress + ":" + httpPort + REPOSITORY;
     }
 
     private void reportError(ContributionException e) throws ContributionManagementException {
