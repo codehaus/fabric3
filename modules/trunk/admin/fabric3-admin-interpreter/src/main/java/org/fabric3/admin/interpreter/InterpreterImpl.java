@@ -53,11 +53,17 @@ import org.fabric3.admin.interpreter.parser.UninstallCommandParser;
 public class InterpreterImpl implements Interpreter {
     private static final String PROMPT = "\nf3>";
     private DomainController controller;
+    private Settings settings;
     private Map<Integer, CommandParser> parsers;
 
     public InterpreterImpl(DomainController controller) {
         this.controller = controller;
         createParsers();
+    }
+
+    public InterpreterImpl(DomainController controller, Settings settings) {
+        this(controller);
+        this.settings = settings;
     }
 
     public void processInteractive(InputStream in, PrintStream out) {

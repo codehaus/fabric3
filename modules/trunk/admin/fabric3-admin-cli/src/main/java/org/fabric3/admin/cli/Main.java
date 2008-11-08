@@ -16,6 +16,10 @@
  */
 package org.fabric3.admin.cli;
 
+import java.io.File;
+import java.net.URI;
+import java.net.URL;
+
 import org.fabric3.admin.api.DomainController;
 import org.fabric3.admin.impl.DomainControllerImpl;
 import org.fabric3.admin.interpreter.Interpreter;
@@ -37,8 +41,8 @@ public class Main {
      */
     public static void main(String[] args) throws InterpreterException {
         DomainController controller = new DomainControllerImpl();
-        Interpreter interpreter = new InterpreterImpl(controller) {
-        };
+        FileSettings settings = new FileSettings(getSettingsFile());
+        Interpreter interpreter = new InterpreterImpl(controller, settings);
         if (args.length == 0) {
             System.out.println("\nFabric3 Admininstration Interface");
             interpreter.processInteractive(System.in, System.out);
@@ -50,5 +54,43 @@ public class Main {
             interpreter.process(builder.toString(), System.out);
         }
     }
+
+    /**
+     * Returns the location of the settings.properties file by introspecting the location of the current class. It is assumed the settings file is
+     * contained in a sibling directory named "config".
+     *
+     * @return the location of the settings file
+     */
+    private static File getSettingsFile() throws IllegalStateException {
+        Class<?> clazz = Main.class;
+        String name = clazz.getName();
+        int last = name.lastIndexOf('.');
+        if (last != -1) {
+            name = name.substring(last + 1);
+        }
+        name = name + ".class";
+
+        // get location of the class
+        URL url = clazz.getResource(name);
+        if (url == null) {
+            throw new IllegalStateException("Unable to get location of class " + name);
+        }
+
+        String jarLocation = url.toString();
+        if (!jarLocation.startsWith("jar:")) {
+            throw new IllegalStateException("Must be run from a jar: " + url);
+        }
+
+        // extract the location of thr jar from the resource URL
+        jarLocation = jarLocation.substring(4, jarLocation.lastIndexOf("!/"));
+        if (!jarLocation.startsWith("file:")) {
+            throw new IllegalStateException("Must be run from a local filesystem: " + jarLocation);
+        }
+
+        File jarFile = new File(URI.create(jarLocation));
+        File configDir = new File(jarFile.getParentFile().getParentFile(), "config");
+        return new File(configDir, "settings.properties");
+    }
+
 
 }
