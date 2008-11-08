@@ -16,13 +16,16 @@
  */
 package org.fabric3.admin.controller;
 
+import java.net.InetAddress;
 import java.net.URI;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
+import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.api.annotation.Monitor;
@@ -43,6 +46,9 @@ public class ContibutionServiceMBeanImpl implements ContributionServiceMBean {
     private JettyService jettyService;
     private ContributionService contributionService;
     private ContributionServiceMBeanMonitor monitor;
+    private int httpPort = 8080;
+    private String hostName;
+    private String address;
 
     public ContibutionServiceMBeanImpl(@Reference JettyService jettyService,
                                        @Reference ContributionService contributionService,
@@ -52,6 +58,25 @@ public class ContibutionServiceMBeanImpl implements ContributionServiceMBean {
         this.monitor = monitor;
     }
 
+    /**
+     * Optionally sets the port for uploading contributions.
+     *
+     * @param httpPort the port
+     */
+    @Property
+    public void setHttpPort(String httpPort) {
+        this.httpPort = Integer.parseInt(httpPort);
+    }
+
+    /**
+     * Optionally sets the host name to use for determing the IP address for clients to use when uploading contributions to a multi-homed machine.
+     *
+     * @param hostName the host name
+     */
+    @Property
+    public void setHostName(String hostName) {
+        this.hostName = hostName;
+    }
 
     @Init
     public void init() throws Exception {
@@ -78,13 +103,16 @@ public class ContibutionServiceMBeanImpl implements ContributionServiceMBean {
 //
 //        jettyService.registerHandler(handlers);
 //        handlers.start();
+
+        initAddress();
+
+        // map a servlet for uploading contributions
         ContributionServlet servlet = new ContributionServlet(contributionService);
         jettyService.registerMapping("/admin/repository/*", servlet);
     }
 
     public String getContributionServiceAddress() {
-        // TODO make configurable
-        return "http://localhost:8180/admin/repository";
+        return address;
     }
 
     public Set<URI> getContributions() {
@@ -126,6 +154,21 @@ public class ContibutionServiceMBeanImpl implements ContributionServiceMBean {
             // don't rethrow the original exception since the class will not be available on the client's classpath
             reportError(e);
         }
+    }
+
+    /**
+     * Calculates the address clients use to upload contributions.
+     *
+     * @throws UnknownHostException if the specified host is not found
+     */
+    private void initAddress() throws UnknownHostException {
+        String baseAddress;
+        if (hostName == null) {
+            baseAddress = InetAddress.getLocalHost().getHostAddress();
+        } else {
+            baseAddress = InetAddress.getByName(hostName).getHostAddress();
+        }
+        address = "http://" + baseAddress + ":" + httpPort + "/admin/repository";
     }
 
     private void reportError(ContributionException e) throws ContributionManagementException {
