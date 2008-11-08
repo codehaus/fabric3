@@ -16,7 +16,10 @@
  */
 package org.fabric3.admin.interpreter.parser;
 
+import java.io.File;
+import java.net.MalformedURLException;
 import java.net.URI;
+import java.net.URL;
 import java.util.Iterator;
 
 import org.antlr.runtime.Token;
@@ -26,25 +29,25 @@ import org.fabric3.admin.cli.DomainAdminLexer;
 import org.fabric3.admin.interpreter.Command;
 import org.fabric3.admin.interpreter.CommandParser;
 import org.fabric3.admin.interpreter.ParseException;
-import org.fabric3.admin.interpreter.command.InstallCommand;
+import org.fabric3.admin.interpreter.command.StoreCommand;
 
 /**
  * @version $Revision$ $Date$
  */
-public class InstallCommandParser implements CommandParser {
+public class StoreCommandParser implements CommandParser {
     private DomainController controller;
 
-    public InstallCommandParser(DomainController controller) {
+    public StoreCommandParser(DomainController controller) {
         this.controller = controller;
     }
 
     public Command parse(Iterator<Token> iterator) throws ParseException {
         Token token = iterator.next();
-        InstallCommand command = new InstallCommand(controller);
+        StoreCommand command = new StoreCommand(controller);
         while (Token.UP != token.getType()) {
             switch (token.getType()) {
-            case DomainAdminLexer.PARAM_CONTRIBUTION_NAME:
-                parseContributionName(command, iterator);
+            case DomainAdminLexer.FILE:
+                parseFile(command, iterator);
                 break;
             case DomainAdminLexer.PARAMETER:
                 parseParameter(command, iterator);
@@ -54,10 +57,13 @@ public class InstallCommandParser implements CommandParser {
             }
             token = iterator.next();
         }
+        if (command.getContribution() == null) {
+            throw new AssertionError("FILE token not found");
+        }
         return command;
     }
 
-    private void parseParameter(InstallCommand command, Iterator<Token> iterator) {
+    private void parseParameter(StoreCommand command, Iterator<Token> iterator) {
         // proceed past DOWN;
         iterator.next();
         Token token = iterator.next();
@@ -68,6 +74,10 @@ public class InstallCommandParser implements CommandParser {
         case DomainAdminLexer.PARAM_PASSWORD:
             command.setPassword(iterator.next().getText());
             break;
+        case DomainAdminLexer.PARAM_CONTRIBUTION_NAME:
+            String text = iterator.next().getText();
+            command.setContributionUri(URI.create(text));
+            break;
         default:
             throw new AssertionError("Invalid parameter token type: " + token.getText());
         }
@@ -75,14 +85,24 @@ public class InstallCommandParser implements CommandParser {
         iterator.next();
     }
 
-    private void parseContributionName(InstallCommand command, Iterator<Token> iterator) throws ParseException {
+    private void parseFile(StoreCommand command, Iterator<Token> iterator) throws ParseException {
         // proceed past DOWN;
         iterator.next();
         String text = iterator.next().getText();
         // proceed past UP
         iterator.next();
-        command.setContributionUri(URI.create(text));
+        try {
+            URL contribution;
+            if (!text.contains(":/")) {
+                // assume it is a file
+                contribution = new File(text).toURI().toURL();
+            } else {
+                contribution = new URL(text);
+            }
+            command.setContribution(contribution);
+        } catch (MalformedURLException e) {
+            throw new ParseException("Invalid contribution URL", e);
+        }
     }
-
 
 }

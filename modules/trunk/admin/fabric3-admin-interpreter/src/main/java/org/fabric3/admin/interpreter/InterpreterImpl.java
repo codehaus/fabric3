@@ -38,6 +38,7 @@ import org.fabric3.admin.interpreter.parser.DeployCommandParser;
 import org.fabric3.admin.interpreter.parser.InstallCommandParser;
 import org.fabric3.admin.interpreter.parser.ListCommandParser;
 import org.fabric3.admin.interpreter.parser.RemoveCommandParser;
+import org.fabric3.admin.interpreter.parser.StoreCommandParser;
 import org.fabric3.admin.interpreter.parser.UndeployCommandParser;
 import org.fabric3.admin.interpreter.parser.UninstallCommandParser;
 
@@ -125,6 +126,7 @@ public class InterpreterImpl implements Interpreter {
 
     private void createParsers() {
         parsers = new HashMap<Integer, CommandParser>();
+        parsers.put(DomainAdminLexer.STORE_CMD, new StoreCommandParser(controller));
         parsers.put(DomainAdminLexer.INSTALL_CMD, new InstallCommandParser(controller));
         parsers.put(DomainAdminLexer.AUTH_CMD, new AuthCommandParser(controller));
         parsers.put(DomainAdminLexer.LIST_CMD, new ListCommandParser(controller));

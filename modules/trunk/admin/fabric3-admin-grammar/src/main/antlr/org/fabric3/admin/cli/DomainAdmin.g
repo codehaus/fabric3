@@ -11,7 +11,8 @@ output=AST;
 ASTLabelType=CommonTree;
 }
 
-tokens {  INSTALL_CMD;
+tokens {  STORE_CMD;
+          INSTALL_CMD;
 	      DEPLOY_CMD;
 	      UNDEPLOY_CMD;
 	      UNINSTALL_CMD;
@@ -53,10 +54,11 @@ tokens {  INSTALL_CMD;
 
 command		: (subcommand)+ EOF;
 
-subcommand	: (install | deploy | auth | list | undeploy | uninstall | remove) NEWLINE?;
+subcommand	: (store | install | deploy | auth | list | undeploy | uninstall | remove) NEWLINE?;
 
 // main commands
-install 	    : INSTALL file WS? param* -> ^(INSTALL_CMD file param*);
+store    	    : STORE file WS? param* -> ^(STORE_CMD file param*);
+install 	    : INSTALL contribution_name WS? param* -> ^(INSTALL_CMD contribution_name param*);
 auth            : AUTH auth_param auth_param -> ^(AUTH_CMD auth_param auth_param);
 list            : LIST auth_param* -> ^(LIST_CMD auth_param*);
 deploy 		    : DEPLOY contribution_name plan_name?  plan_file? WS? param* -> ^(DEPLOY_CMD contribution_name plan_name? plan_file? param*);
@@ -76,6 +78,7 @@ contribution_name : STRING -> ^(PARAM_CONTRIBUTION_NAME STRING);
 plan_name         : STRING -> ^(PARAM_PLAN_NAME STRING);
 plan_file         : PLAN STRING -> ^(PARAM_PLAN_FILE STRING);
 
+STORE 	        : ('store' | 'stor');
 INSTALL 	    : ('install' | 'ins');
 AUTH 	        : ('authenticate' | 'auth');
 LIST     	    : ('list' | 'ls');

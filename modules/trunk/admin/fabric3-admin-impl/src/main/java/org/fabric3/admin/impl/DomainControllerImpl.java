@@ -69,7 +69,7 @@ public class DomainControllerImpl implements DomainController {
         this.password = password;
     }
 
-    public void install(URL contribution, URI uri) throws CommunicationException, ContributionException {
+    public void store(URL contribution, URI uri) throws CommunicationException, ContributionException {
         try {
             if (!isConnected()) {
                 throw new IllegalStateException("Not connected");
@@ -103,6 +103,24 @@ public class DomainControllerImpl implements DomainController {
                 throw new DuplicateContributionException("A contribution already exists for " + uri);
             }
 
+        } catch (MBeanException e) {
+            throw new ContributionException(e.getMessage(), e.getTargetException());
+        } catch (JMException e) {
+            throw new CommunicationException(e);
+        } catch (IOException e) {
+            throw new CommunicationException(e);
+        }
+    }
+
+    public void install(URI uri) throws CommunicationException, ContributionException {
+        try {
+            if (!isConnected()) {
+                throw new IllegalStateException("Not connected");
+            }
+            // find HTTP port and post contents
+            MBeanServerConnection conn = jmxc.getMBeanServerConnection();
+
+            ObjectName oName = new ObjectName(CONTRIBUTION_SERVICE_MBEAN);
             // install the contribution
             conn.invoke(oName, "install", new URI[]{uri}, new String[]{URI.class.getName()});
         } catch (MBeanException e) {

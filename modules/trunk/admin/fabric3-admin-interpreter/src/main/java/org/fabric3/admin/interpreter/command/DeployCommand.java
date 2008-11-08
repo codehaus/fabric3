@@ -129,7 +129,9 @@ public class DeployCommand implements Command {
     private void deployByFile(PrintStream out) {
         URI planContributionUri = CommandHelper.parseContributionName(planFile);
         try {
-            controller.install(planFile, planContributionUri); // install plan
+            // store and install plan
+            controller.store(planFile, planContributionUri);
+            controller.install(planContributionUri);
             String installedPlanName = parsePlanName();
             controller.deploy(contributionUri, installedPlanName);
             out.println("Deployed " + contributionUri);

@@ -78,16 +78,26 @@ public interface DomainController {
      */
     public Set<URI> list() throws CommunicationException;
 
+
     /**
-     * Installs a contribution in the domain.
+     * Stores a contribution in the domain.
      *
      * @param contribution a URL pointing to the contribution artifact
      * @param uri          the URI to assign the contribution.
      * @throws CommunicationException if there is an error communicating with the domain controller
+     * @throws ContributionException  if there is an error storing the contribution.
+     */
+    void store(URL contribution, URI uri) throws CommunicationException, ContributionException;
+
+    /**
+     * Installs a contribution.
+     *
+     * @param uri the URI to assign the contribution.
+     * @throws CommunicationException if there is an error communicating with the domain controller
      * @throws ContributionException  if there is an error installing the contribution. See InstallException subtypes for specific errors that may be
      *                                thrown.
      */
-    void install(URL contribution, URI uri) throws CommunicationException, ContributionException;
+    void install(URI uri) throws CommunicationException, ContributionException;
 
     /**
      * Deploys all deployables in a contribution.

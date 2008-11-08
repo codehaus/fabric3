@@ -18,10 +18,11 @@ package org.fabric3.admin.interpreter;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.File;
 import java.io.InputStream;
 import java.io.PrintStream;
-import java.net.URI;
 import java.net.URL;
+import java.net.URI;
 
 import junit.framework.TestCase;
 import org.easymock.EasyMock;
@@ -31,59 +32,81 @@ import org.fabric3.admin.api.DomainController;
 /**
  * @version $Revision$ $Date$
  */
-public class DeployTestCase extends TestCase {
+public class StoreTestCase extends TestCase {
+    private URL contributionUrl;
 
-    public void testDeployWithName() throws Exception {
+    public void testInstallWithName() throws Exception {
         DomainController controller = EasyMock.createMock(DomainController.class);
+//        controller.setDomain("domain");
         controller.setUsername("username");
         controller.setPassword("password");
         EasyMock.expect(controller.isConnected()).andReturn(true);
-        controller.deploy(URI.create("foo.jar"));
+        controller.store(contributionUrl, URI.create("contribution"));
         EasyMock.replay(controller);
 
         Interpreter interpreter = new InterpreterImpl(controller);
 
-        InputStream in = new ByteArrayInputStream("deploy foo.jar -u username -p password \n quit".getBytes());
+        InputStream in = new ByteArrayInputStream("store foo.jar -n contribution -u username -p password \n quit".getBytes());
         PrintStream out = new PrintStream(new ByteArrayOutputStream());
         interpreter.processInteractive(in, out);
 
         EasyMock.verify(controller);
     }
 
-    public void testDeployWithPlanName() throws Exception {
+    public void testInstallWithNoNameNoPath() throws Exception {
         DomainController controller = EasyMock.createMock(DomainController.class);
         controller.setUsername("username");
         controller.setPassword("password");
         EasyMock.expect(controller.isConnected()).andReturn(true);
-        controller.deploy(URI.create("foo.jar"), "plan.xml");
+        controller.store(contributionUrl, URI.create("foo.jar"));
         EasyMock.replay(controller);
 
         Interpreter interpreter = new InterpreterImpl(controller);
 
-        InputStream in = new ByteArrayInputStream("deploy foo.jar plan.xml -u username -p password \n quit".getBytes());
+        InputStream in = new ByteArrayInputStream("store foo.jar -u username -p password \n quit".getBytes());
         PrintStream out = new PrintStream(new ByteArrayOutputStream());
         interpreter.processInteractive(in, out);
 
         EasyMock.verify(controller);
     }
 
-    public void testDeployWithPlanFile() throws Exception {
+    public void testInstallWithNoNameWithPath() throws Exception {
         DomainController controller = EasyMock.createMock(DomainController.class);
         controller.setUsername("username");
         controller.setPassword("password");
         EasyMock.expect(controller.isConnected()).andReturn(true);
-        URL planURL = getClass().getClassLoader().getResource("plan.xml");
-        URI uri = URI.create("plan.xml");
-        controller.store(planURL, uri);
-        controller.install(uri);
-        controller.deploy(URI.create("foo.jar"), "testPlan");
+        controller.store(new URL("file://bar/foo.jar"), URI.create("foo.jar"));
         EasyMock.replay(controller);
+
         Interpreter interpreter = new InterpreterImpl(controller);
-        InputStream in = new ByteArrayInputStream(("deploy foo.jar -plan " + planURL + " -u username -p password \n quit").getBytes());
+
+        InputStream in = new ByteArrayInputStream("store file://bar/foo.jar -u username -p password \n quit".getBytes());
         PrintStream out = new PrintStream(new ByteArrayOutputStream());
         interpreter.processInteractive(in, out);
 
         EasyMock.verify(controller);
     }
 
+    public void testInstallWithNoNameWithSlashAtEnd() throws Exception {
+        DomainController controller = EasyMock.createMock(DomainController.class);
+        controller.setUsername("username");
+        controller.setPassword("password");
+        EasyMock.expect(controller.isConnected()).andReturn(true);
+        controller.store(new URL("file://bar/foo.jar/"), URI.create("foo.jar"));
+        EasyMock.replay(controller);
+
+        Interpreter interpreter = new InterpreterImpl(controller);
+
+        InputStream in = new ByteArrayInputStream("store file://bar/foo.jar/ -u username -p password \n quit".getBytes());
+        PrintStream out = new PrintStream(new ByteArrayOutputStream());
+        interpreter.processInteractive(in, out);
+
+        EasyMock.verify(controller);
+    }
+
+    @Override
+    protected void setUp() throws Exception {
+        super.setUp();
+        contributionUrl = new File("foo.jar").toURI().toURL();
+    }
 }
