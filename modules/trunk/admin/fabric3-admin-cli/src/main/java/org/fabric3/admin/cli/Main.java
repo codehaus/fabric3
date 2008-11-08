@@ -60,6 +60,7 @@ public class Main {
      * contained in a sibling directory named "config".
      *
      * @return the location of the settings file
+     * @throws IllegalStateException if the class cannot be introspected
      */
     private static File getSettingsFile() throws IllegalStateException {
         Class<?> clazz = Main.class;
