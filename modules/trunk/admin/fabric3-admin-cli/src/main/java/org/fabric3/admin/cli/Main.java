@@ -17,6 +17,7 @@
 package org.fabric3.admin.cli;
 
 import java.io.File;
+import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
 
@@ -42,6 +43,11 @@ public class Main {
     public static void main(String[] args) throws InterpreterException {
         DomainController controller = new DomainControllerImpl();
         FileSettings settings = new FileSettings(getSettingsFile());
+        try {
+            settings.load();
+        } catch (IOException e) {
+            throw new InterpreterException("Error loading settings", e);
+        }
         Interpreter interpreter = new InterpreterImpl(controller, settings);
         if (args.length == 0) {
             System.out.println("\nFabric3 Admininstration Interface");

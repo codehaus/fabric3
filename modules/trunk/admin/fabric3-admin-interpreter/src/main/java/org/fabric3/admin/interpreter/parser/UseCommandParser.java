@@ -51,7 +51,7 @@ public class UseCommandParser implements CommandParser {
                 String domain = iterator.next().getText();
                 String address = settings.getDomainAddress(domain);
                 if (address == null) {
-                    throw new UnknownDomainException("Unknown domain: " + domain);
+                    throw new UnknownDomainException("The domain has not been configured: " + domain);
                 }
                 command.setDomainAddress(address);
 
