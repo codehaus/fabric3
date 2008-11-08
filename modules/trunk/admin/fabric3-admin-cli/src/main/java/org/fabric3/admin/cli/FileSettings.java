@@ -60,7 +60,6 @@ public class FileSettings implements Settings {
     public void save() throws IOException {
         OutputStream stream = null;
         try {
-            domains.clear();
             stream = new FileOutputStream(file);
             domains.store(stream, "F3 domain configuration");
         } finally {
