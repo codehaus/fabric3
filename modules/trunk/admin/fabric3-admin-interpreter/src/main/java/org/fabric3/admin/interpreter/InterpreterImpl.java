@@ -65,6 +65,7 @@ public class InterpreterImpl implements Interpreter {
         this.controller = controller;
         this.settings = settings;
         createParsers();
+        setDefaultAddress();
     }
 
     public void processInteractive(InputStream in, PrintStream out) {
@@ -131,6 +132,9 @@ public class InterpreterImpl implements Interpreter {
         return cmdParser.parse(iterator);
     }
 
+    /**
+     * Initializes the command parsers
+     */
     private void createParsers() {
         parsers = new HashMap<Integer, CommandParser>();
         parsers.put(DomainAdminLexer.STORE_CMD, new StoreCommandParser(controller));
@@ -142,6 +146,16 @@ public class InterpreterImpl implements Interpreter {
         parsers.put(DomainAdminLexer.UNINSTALL_CMD, new UninstallCommandParser(controller));
         parsers.put(DomainAdminLexer.REMOVE_CMD, new RemoveCommandParser(controller));
         parsers.put(DomainAdminLexer.USE_CMD, new UseCommandParser(controller, settings));
+    }
+
+    /**
+     * Sets the default domain address if it is configured.
+     */
+    private void setDefaultAddress() {
+        String defaultAddress = settings.getDomainAddress("default");
+        if (defaultAddress != null) {
+            controller.setDomainAddress(defaultAddress);
+        }
     }
 
     /**
