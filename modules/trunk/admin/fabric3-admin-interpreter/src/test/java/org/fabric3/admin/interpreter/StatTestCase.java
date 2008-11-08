@@ -74,7 +74,7 @@ public class StatTestCase extends TestCase {
 
         Interpreter interpreter = new InterpreterImpl(controller);
 
-        InputStream in = new ByteArrayInputStream("stat \n quit".getBytes());
+        InputStream in = new ByteArrayInputStream("status \n quit".getBytes());
         PrintStream out = new PrintStream(new ByteArrayOutputStream());
         interpreter.processInteractive(in, out);
 
