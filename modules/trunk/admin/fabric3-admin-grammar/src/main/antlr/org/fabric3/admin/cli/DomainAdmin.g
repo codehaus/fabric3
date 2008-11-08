@@ -18,7 +18,7 @@ tokens {  STORE_CMD;
 	      UNINSTALL_CMD;
 	      REMOVE_CMD;
 	      AUTH_CMD;
-	      LIST_CMD;
+	      STAT_CMD;
 	      USE_CMD;
 	      PARAMETER;
 	      PARAM_USERNAME;
@@ -56,13 +56,13 @@ tokens {  STORE_CMD;
 
 command		: (subcommand)+ EOF;
 
-subcommand	: (store | install | deploy | auth | list | undeploy | uninstall | remove | use) NEWLINE?;
+subcommand	: (store | install | deploy | auth | stat | undeploy | uninstall | remove | use) NEWLINE?;
 
 // main commands
 store    	    : STORE file WS? param* -> ^(STORE_CMD file param*);
 install 	    : INSTALL contribution_name WS? param* -> ^(INSTALL_CMD contribution_name param*);
 auth            : AUTH auth_param auth_param -> ^(AUTH_CMD auth_param auth_param);
-list            : LIST auth_param* -> ^(LIST_CMD auth_param*);
+stat            : STAT auth_param* -> ^(STAT_CMD auth_param*);
 deploy 		    : DEPLOY contribution_name plan_name?  plan_file? WS? param* -> ^(DEPLOY_CMD contribution_name plan_name? plan_file? param*);
 undeploy 	    : UNDEPLOY contribution_name WS? param* -> ^(UNDEPLOY_CMD contribution_name param*);
 uninstall 	    : UNINSTALL contribution_name WS? param* -> ^(UNINSTALL_CMD contribution_name param*);
@@ -81,14 +81,14 @@ domain_name     : STRING -> ^(PARAM_DOMAIN_NAME STRING);
 plan_name       : STRING -> ^(PARAM_PLAN_NAME STRING);
 plan_file       : PLAN STRING -> ^(PARAM_PLAN_FILE STRING);
 
-STORE 	        : ('store' | 'stor');
-INSTALL 	    : ('install' | 'ins');
-AUTH 	        : ('authenticate' | 'auth');
-LIST     	    : ('list' | 'ls');
-DEPLOY		    : ('deploy' | 'dep');
-REMOVE          : ('remove' | 'rem');
-UNINSTALL 	    : ('uninstall' | 'uins');
-UNDEPLOY	    : ('undeploy' | 'udep');
+STORE 	        : ('store' | 'sto');
+INSTALL 	    : ('install' | 'in');
+AUTH 	        : ('authenticate' | 'au');
+STAT     	    : ('stat' | 'st');
+DEPLOY		    : ('deploy' | 'de');
+REMOVE          : ('remove' | 'rm');
+UNINSTALL 	    : ('uninstall' | 'uin');
+UNDEPLOY	    : ('undeploy' | 'ude');
 USE     	    : ('use');
 USERNAME	    : ('-u' | '-username' | '-USERNAME') ;
 PASSWORD	    : ('-p' | '-P'|'-PASSWORD' | '-password');

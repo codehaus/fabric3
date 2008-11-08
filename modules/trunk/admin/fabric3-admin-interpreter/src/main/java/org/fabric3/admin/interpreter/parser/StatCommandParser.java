@@ -25,21 +25,21 @@ import org.fabric3.admin.cli.DomainAdminLexer;
 import org.fabric3.admin.interpreter.Command;
 import org.fabric3.admin.interpreter.CommandParser;
 import org.fabric3.admin.interpreter.ParseException;
-import org.fabric3.admin.interpreter.command.ListCommand;
+import org.fabric3.admin.interpreter.command.StatCommand;
 
 /**
  * @version $Revision$ $Date$
  */
-public class ListCommandParser implements CommandParser {
+public class StatCommandParser implements CommandParser {
     private DomainController controller;
 
-    public ListCommandParser(DomainController controller) {
+    public StatCommandParser(DomainController controller) {
         this.controller = controller;
     }
 
     public Command parse(Iterator<Token> iterator) throws ParseException {
         Token token = iterator.next();
-        ListCommand command = new ListCommand(controller);
+        StatCommand command = new StatCommand(controller);
         while (DomainAdminLexer.PARAMETER == token.getType()) {
             // proceed past down
             iterator.next();

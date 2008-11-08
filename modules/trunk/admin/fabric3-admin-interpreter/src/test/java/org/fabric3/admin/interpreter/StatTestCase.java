@@ -31,7 +31,7 @@ import org.fabric3.admin.api.DomainController;
 /**
  * @version $Revision$ $Date$
  */
-public class ListTestCase extends TestCase {
+public class StatTestCase extends TestCase {
 
     public void testListWithAuth() throws Exception {
         DomainController controller = EasyMock.createMock(DomainController.class);
@@ -43,7 +43,7 @@ public class ListTestCase extends TestCase {
 
         Interpreter interpreter = new InterpreterImpl(controller);
 
-        InputStream in = new ByteArrayInputStream("ls -username username -password password \n quit".getBytes());
+        InputStream in = new ByteArrayInputStream("st -username username -password password \n quit".getBytes());
         PrintStream out = new PrintStream(new ByteArrayOutputStream());
         interpreter.processInteractive(in, out);
 
@@ -58,7 +58,7 @@ public class ListTestCase extends TestCase {
 
         Interpreter interpreter = new InterpreterImpl(controller);
 
-        InputStream in = new ByteArrayInputStream("ls \n quit".getBytes());
+        InputStream in = new ByteArrayInputStream("st \n quit".getBytes());
         PrintStream out = new PrintStream(new ByteArrayOutputStream());
         interpreter.processInteractive(in, out);
 
@@ -74,7 +74,7 @@ public class ListTestCase extends TestCase {
 
         Interpreter interpreter = new InterpreterImpl(controller);
 
-        InputStream in = new ByteArrayInputStream("list \n quit".getBytes());
+        InputStream in = new ByteArrayInputStream("stat \n quit".getBytes());
         PrintStream out = new PrintStream(new ByteArrayOutputStream());
         interpreter.processInteractive(in, out);
 

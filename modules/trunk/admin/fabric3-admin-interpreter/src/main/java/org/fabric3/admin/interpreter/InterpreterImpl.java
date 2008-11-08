@@ -36,8 +36,8 @@ import org.fabric3.admin.cli.DomainAdminParser;
 import org.fabric3.admin.interpreter.parser.AuthCommandParser;
 import org.fabric3.admin.interpreter.parser.DeployCommandParser;
 import org.fabric3.admin.interpreter.parser.InstallCommandParser;
-import org.fabric3.admin.interpreter.parser.ListCommandParser;
 import org.fabric3.admin.interpreter.parser.RemoveCommandParser;
+import org.fabric3.admin.interpreter.parser.StatCommandParser;
 import org.fabric3.admin.interpreter.parser.StoreCommandParser;
 import org.fabric3.admin.interpreter.parser.UndeployCommandParser;
 import org.fabric3.admin.interpreter.parser.UninstallCommandParser;
@@ -140,7 +140,7 @@ public class InterpreterImpl implements Interpreter {
         parsers.put(DomainAdminLexer.STORE_CMD, new StoreCommandParser(controller));
         parsers.put(DomainAdminLexer.INSTALL_CMD, new InstallCommandParser(controller));
         parsers.put(DomainAdminLexer.AUTH_CMD, new AuthCommandParser(controller));
-        parsers.put(DomainAdminLexer.LIST_CMD, new ListCommandParser(controller));
+        parsers.put(DomainAdminLexer.STAT_CMD, new StatCommandParser(controller));
         parsers.put(DomainAdminLexer.DEPLOY_CMD, new DeployCommandParser(controller));
         parsers.put(DomainAdminLexer.UNDEPLOY_CMD, new UndeployCommandParser(controller));
         parsers.put(DomainAdminLexer.UNINSTALL_CMD, new UninstallCommandParser(controller));

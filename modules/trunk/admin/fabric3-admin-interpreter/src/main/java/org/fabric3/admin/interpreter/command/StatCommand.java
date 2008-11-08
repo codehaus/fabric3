@@ -29,12 +29,12 @@ import org.fabric3.admin.interpreter.CommandException;
 /**
  * @version $Revision$ $Date$
  */
-public class ListCommand implements Command {
+public class StatCommand implements Command {
     private DomainController controller;
     private String username;
     private String password;
 
-    public ListCommand(DomainController controller) {
+    public StatCommand(DomainController controller) {
         this.controller = controller;
     }
 
