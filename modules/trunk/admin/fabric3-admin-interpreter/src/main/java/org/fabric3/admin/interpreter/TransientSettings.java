@@ -16,23 +16,35 @@
  */
 package org.fabric3.admin.interpreter;
 
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
 /**
- * Thrown when there is an exception parsing an AST and transforming it into a Command.
+ * Retains settings in memory.
  *
  * @version $Revision$ $Date$
  */
-public class ParseException extends InterpreterException {
-    private static final long serialVersionUID = -7449995506490423229L;
+public class TransientSettings implements Settings {
+    private Map<String, String> domains = new HashMap<String, String>();
 
-    public ParseException(String message) {
-        super(message);
+    public void addDomain(String name, String address) {
+        domains.put(name, address);
     }
 
-    public ParseException(String message, Throwable cause) {
-        super(message, cause);
+    public String getDomainAddress(String name) {
+        return domains.get(name);
     }
 
-    public ParseException(Throwable cause) {
-        super(cause);
+    public Map<String, String> getDomainAddresses() {
+        return domains;
+    }
+
+    public void load() throws IOException {
+        // no-op
+    }
+
+    public void save() throws IOException {
+        // no-op
     }
 }

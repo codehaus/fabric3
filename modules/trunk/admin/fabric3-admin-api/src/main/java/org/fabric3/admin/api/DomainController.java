@@ -29,11 +29,11 @@ import java.util.Set;
 public interface DomainController {
 
     /**
-     * Sets the base domain controller address.
+     * Sets the base domain admin address.
      *
-     * @param address the domain controller address
+     * @param address the domain admin address
      */
-    void setControllerAddress(String address);
+    void setDomainAddress(String address);
 
     /**
      * Sets the username to authenticate with.

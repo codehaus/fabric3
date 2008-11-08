@@ -54,11 +54,11 @@ public class DomainControllerImpl implements DomainController {
 
     private String username;
     private String password;
-    private String controllerAddress = "service:jmx:rmi:///jndi/rmi://localhost:1099/server";
+    private String domainAddress = "service:jmx:rmi:///jndi/rmi://localhost:1099/server";
     private JMXConnector jmxc;
 
-    public void setControllerAddress(String address) {
-        controllerAddress = address;
+    public void setDomainAddress(String address) {
+        domainAddress = address;
     }
 
     public void setUsername(String username) {
@@ -256,7 +256,7 @@ public class DomainControllerImpl implements DomainController {
         if (jmxc != null) {
             throw new IllegalStateException("Already connected");
         }
-        JMXServiceURL url = new JMXServiceURL(controllerAddress);
+        JMXServiceURL url = new JMXServiceURL(domainAddress);
         jmxc = JMXConnectorFactory.connect(url, null);
     }
 

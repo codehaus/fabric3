@@ -14,25 +14,31 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.admin.interpreter;
+package org.fabric3.admin.interpreter.command;
+
+import java.io.PrintStream;
+
+import org.fabric3.admin.api.DomainController;
+import org.fabric3.admin.interpreter.Command;
+import org.fabric3.admin.interpreter.CommandException;
 
 /**
- * Thrown when there is an exception parsing an AST and transforming it into a Command.
- *
  * @version $Revision$ $Date$
  */
-public class ParseException extends InterpreterException {
-    private static final long serialVersionUID = -7449995506490423229L;
+public class UseCommand implements Command {
+    private DomainController controller;
+    private String domainAddress;
 
-    public ParseException(String message) {
-        super(message);
+    public UseCommand(DomainController controller) {
+        this.controller = controller;
     }
 
-    public ParseException(String message, Throwable cause) {
-        super(message, cause);
+    public void setDomainAddress(String domainAddress) {
+        this.domainAddress = domainAddress;
     }
 
-    public ParseException(Throwable cause) {
-        super(cause);
+    public void execute(PrintStream out) throws CommandException {
+        controller.setDomainAddress(domainAddress);
     }
+
 }

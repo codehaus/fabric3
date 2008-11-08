@@ -14,25 +14,17 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.admin.interpreter;
+package org.fabric3.admin.interpreter.parser;
+
+import org.fabric3.admin.interpreter.ParseException;
 
 /**
- * Thrown when there is an exception parsing an AST and transforming it into a Command.
- *
  * @version $Revision$ $Date$
  */
-public class ParseException extends InterpreterException {
-    private static final long serialVersionUID = -7449995506490423229L;
+public class UnknownDomainException extends ParseException {
+    private static final long serialVersionUID = 4983355584718653467L;
 
-    public ParseException(String message) {
+    public UnknownDomainException(String message) {
         super(message);
-    }
-
-    public ParseException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
-    public ParseException(Throwable cause) {
-        super(cause);
     }
 }

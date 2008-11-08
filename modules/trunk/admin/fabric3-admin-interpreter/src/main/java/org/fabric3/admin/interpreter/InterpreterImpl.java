@@ -41,6 +41,7 @@ import org.fabric3.admin.interpreter.parser.RemoveCommandParser;
 import org.fabric3.admin.interpreter.parser.StoreCommandParser;
 import org.fabric3.admin.interpreter.parser.UndeployCommandParser;
 import org.fabric3.admin.interpreter.parser.UninstallCommandParser;
+import org.fabric3.admin.interpreter.parser.UseCommandParser;
 
 /**
  * Default interpreter implementation. This implementation constructs a parse tree from an instruction as defined by the domain adminsitration
@@ -57,13 +58,13 @@ public class InterpreterImpl implements Interpreter {
     private Map<Integer, CommandParser> parsers;
 
     public InterpreterImpl(DomainController controller) {
-        this.controller = controller;
-        createParsers();
+        this(controller, new TransientSettings());
     }
 
     public InterpreterImpl(DomainController controller, Settings settings) {
-        this(controller);
+        this.controller = controller;
         this.settings = settings;
+        createParsers();
     }
 
     public void processInteractive(InputStream in, PrintStream out) {
@@ -140,6 +141,7 @@ public class InterpreterImpl implements Interpreter {
         parsers.put(DomainAdminLexer.UNDEPLOY_CMD, new UndeployCommandParser(controller));
         parsers.put(DomainAdminLexer.UNINSTALL_CMD, new UninstallCommandParser(controller));
         parsers.put(DomainAdminLexer.REMOVE_CMD, new RemoveCommandParser(controller));
+        parsers.put(DomainAdminLexer.USE_CMD, new UseCommandParser(controller, settings));
     }
 
     /**

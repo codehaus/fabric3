@@ -67,7 +67,7 @@ deploy 		    : DEPLOY contribution_name plan_name?  plan_file? WS? param* -> ^(D
 undeploy 	    : UNDEPLOY contribution_name WS? param* -> ^(UNDEPLOY_CMD contribution_name param*);
 uninstall 	    : UNINSTALL contribution_name WS? param* -> ^(UNINSTALL_CMD contribution_name param*);
 remove          : REMOVE contribution_name WS? param* -> ^(REMOVE_CMD contribution_name param*);
-use             : USE domain_name -> ^(USE_CMD) domain_name;
+use             : USE domain_name -> ^(USE_CMD domain_name);
 file		    : STRING -> ^(FILE STRING);
 param		    : operator STRING WS? -> ^(PARAMETER operator STRING) ;
 auth_param	    : auth_operator STRING WS? -> ^(PARAMETER auth_operator STRING) ;
