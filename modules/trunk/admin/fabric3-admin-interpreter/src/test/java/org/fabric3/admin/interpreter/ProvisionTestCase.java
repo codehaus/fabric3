@@ -102,24 +102,6 @@ public class ProvisionTestCase extends TestCase {
 
         EasyMock.verify(controller);
     }
-//
-//    public void testDeployWithPlanFile() throws Exception {
-//        DomainController controller = EasyMock.createMock(DomainController.class);
-//        controller.setUsername("username");
-//        controller.setPassword("password");
-//        EasyMock.expect(controller.isConnected()).andReturn(true);
-//        URL planURL = getClass().getClassLoader().getResource("plan.xml");
-//        URI uri = URI.create("plan.xml");
-//        controller.store(planURL, uri);
-//        controller.install(uri);
-//        controller.deploy(URI.create("foo.jar"), "testPlan");
-//        EasyMock.replay(controller);
-//        Interpreter interpreter = new InterpreterImpl(controller);
-//        InputStream in = new ByteArrayInputStream(("deploy foo.jar -plan " + planURL + " -u username -p password \n quit").getBytes());
-//        PrintStream out = new PrintStream(new ByteArrayOutputStream());
-//        interpreter.processInteractive(in, out);
-//
-//        EasyMock.verify(controller);
-//    }
+
 
 }
