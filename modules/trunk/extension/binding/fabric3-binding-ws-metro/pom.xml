@@ -105,6 +105,7 @@
                     </mavenImports>
                     <deployables>
                         <deployable>META-INF/control.composite</deployable>
+                        <deployable>META-INF/runtime.composite</deployable>
                     </deployables>
                 </configuration>
             </plugin>
