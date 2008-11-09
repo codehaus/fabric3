@@ -248,12 +248,13 @@ public class ContributionServiceImpl implements ContributionService {
 
     public void remove(URI uri) throws ContributionException {
         Contribution contribution = metaDataStore.find(uri);
-        if (contribution != null) {
-            if (contribution.getState() != ContributionState.STORED) {
-                throw new IllegalContributionStateException("Contribution must first be uninstalled: " + uri);
-            }
-            metaDataStore.remove(uri);
+        if (contribution == null) {
+            throw new ContributionNotFoundException("Contribution not found:" + uri);
         }
+        if (contribution.getState() != ContributionState.STORED) {
+            throw new IllegalContributionStateException("Contribution must first be uninstalled: " + uri);
+        }
+        metaDataStore.remove(uri);
         try {
             archiveStore.remove(uri);
         } catch (ArchiveStoreException e) {
