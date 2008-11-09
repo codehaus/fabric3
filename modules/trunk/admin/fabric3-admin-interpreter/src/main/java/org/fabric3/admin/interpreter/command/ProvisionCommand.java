@@ -38,12 +38,6 @@ public class ProvisionCommand implements Command {
         deployCommand = new DeployCommand(controller);
     }
 
-    public void setContributionUri(URI uri) {
-        storeCommand.setContributionUri(uri);
-        installCommand.setContributionUri(uri);
-        deployCommand.setContributionUri(uri);
-    }
-
     public void setUsername(String username) {
         storeCommand.setUsername(username);
     }
@@ -52,12 +46,26 @@ public class ProvisionCommand implements Command {
         storeCommand.setPassword(password);
     }
 
+    public void setContribution(URL contribution) {
+        storeCommand.setContribution(contribution);
+        URI contributionUri = CommandHelper.parseContributionName(contribution);
+        storeCommand.setContributionUri(contributionUri);
+        installCommand.setContributionUri(contributionUri);
+        deployCommand.setContributionUri(contributionUri);
+    }
+
+    public void setContributionUri(URI uri) {
+        storeCommand.setContributionUri(uri);
+        installCommand.setContributionUri(uri);
+        deployCommand.setContributionUri(uri);
+    }
+
     public void setPlanFile(URL planFile) {
         deployCommand.setPlanFile(planFile);
     }
 
-    public void setContribution(URL contribution) {
-        storeCommand.setContribution(contribution);
+    public void setPlanName(String name) {
+        deployCommand.setPlanName(name);
     }
 
     public boolean execute(PrintStream out) throws CommandException {
