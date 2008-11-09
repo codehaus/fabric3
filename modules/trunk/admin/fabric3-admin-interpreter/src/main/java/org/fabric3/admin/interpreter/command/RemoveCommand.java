@@ -66,7 +66,7 @@ public class RemoveCommand implements Command {
         this.password = password;
     }
 
-    public void execute(PrintStream out) throws CommandException {
+    public boolean execute(PrintStream out) throws CommandException {
         try {
             if (username != null) {
                 controller.setUsername(username);
@@ -79,10 +79,11 @@ public class RemoveCommand implements Command {
             }
             controller.remove(contributionUri);
             out.println("Removed " + contributionUri);
+            return true;
         } catch (CommunicationException e) {
             if (e.getCause() instanceof FileNotFoundException) {
                 out.println("ERROR: File not found:" + e.getMessage());
-                return;
+                return false;
             }
             throw new CommandException(e);
         } catch (IOException e) {
@@ -92,6 +93,7 @@ public class RemoveCommand implements Command {
             out.println("ERROR: Error installing contribution");
             out.println("       " + e.getMessage());
         }
+        return false;
     }
 
 

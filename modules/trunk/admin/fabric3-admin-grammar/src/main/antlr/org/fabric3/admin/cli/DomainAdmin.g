@@ -65,7 +65,7 @@ install 	    : INSTALL contribution_name WS? param* -> ^(INSTALL_CMD contributio
 auth            : AUTH auth_param auth_param -> ^(AUTH_CMD auth_param auth_param);
 stat            : STAT auth_param* -> ^(STAT_CMD auth_param*);
 deploy 		    : DEPLOY contribution_name plan_name?  plan_file? WS? param* -> ^(DEPLOY_CMD contribution_name plan_name? plan_file? param*);
-provision       : PROVISION file WS? param* -> ^(PROVISION_CMD file param*);
+provision       : PROVISION file plan_name?  plan_file? WS? param* -> ^(PROVISION_CMD file plan_name?  plan_file?  param*);
 undeploy 	    : UNDEPLOY contribution_name WS? param* -> ^(UNDEPLOY_CMD contribution_name param*);
 uninstall 	    : UNINSTALL contribution_name WS? param* -> ^(UNINSTALL_CMD contribution_name param*);
 remove          : REMOVE contribution_name WS? param* -> ^(REMOVE_CMD contribution_name param*);

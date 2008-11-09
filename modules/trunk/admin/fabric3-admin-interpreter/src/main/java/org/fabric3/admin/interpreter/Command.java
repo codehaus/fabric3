@@ -31,7 +31,8 @@ public interface Command {
      *
      * @param out the PrintStream where command output is sent
      * @throws CommandException if  there is an exception executing the command
+     * @return true if the command completed successfully, false of there was an error
      */
-    void execute(PrintStream out) throws CommandException;
+    boolean execute(PrintStream out) throws CommandException;
 
 }

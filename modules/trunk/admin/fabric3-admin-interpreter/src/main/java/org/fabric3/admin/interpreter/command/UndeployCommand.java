@@ -63,7 +63,7 @@ public class UndeployCommand implements Command {
         this.password = password;
     }
 
-    public void execute(PrintStream out) throws CommandException {
+    public boolean execute(PrintStream out) throws CommandException {
         if (username != null) {
             controller.setUsername(username);
         }
@@ -80,6 +80,7 @@ public class UndeployCommand implements Command {
         }
         try {
             controller.undeploy(contributionUri);
+            return true;
         } catch (CommunicationException ex) {
             out.println("ERROR: Error connecting to domain controller");
             ex.printStackTrace(out);
@@ -87,6 +88,7 @@ public class UndeployCommand implements Command {
             out.println("ERROR: Error undeploying contribution");
             out.println("       " + ex.getMessage());
         }
+        return false;
     }
 
 

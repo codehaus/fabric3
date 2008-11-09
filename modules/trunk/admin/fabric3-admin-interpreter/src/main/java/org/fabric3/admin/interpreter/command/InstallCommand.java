@@ -67,7 +67,7 @@ public class InstallCommand implements Command {
         this.password = password;
     }
 
-    public void execute(PrintStream out) throws CommandException {
+    public boolean execute(PrintStream out) throws CommandException {
         try {
             if (username != null) {
                 controller.setUsername(username);
@@ -80,6 +80,7 @@ public class InstallCommand implements Command {
             }
             controller.install(contributionUri);
             out.println("Installed " + contributionUri);
+            return true;
         } catch (InvalidContributionException e) {
             out.println("The contribution contained errors:");
             for (String desc : e.getErrors()) {
@@ -90,7 +91,7 @@ public class InstallCommand implements Command {
         } catch (CommunicationException e) {
             if (e.getCause() instanceof FileNotFoundException) {
                 out.println("ERROR: File not found:" + e.getMessage());
-                return;
+                return false;
             }
             throw new CommandException(e);
         } catch (IOException e) {
@@ -100,6 +101,7 @@ public class InstallCommand implements Command {
             out.println("ERROR: Error installing contribution");
             out.println("       " + e.getMessage());
         }
+        return false;
     }
 
 

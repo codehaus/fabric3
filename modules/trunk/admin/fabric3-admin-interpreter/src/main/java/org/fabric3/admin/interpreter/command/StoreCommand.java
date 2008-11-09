@@ -75,7 +75,7 @@ public class StoreCommand implements Command {
         this.password = password;
     }
 
-    public void execute(PrintStream out) throws CommandException {
+    public boolean execute(PrintStream out) throws CommandException {
         try {
             if (username != null) {
                 controller.setUsername(username);
@@ -91,12 +91,13 @@ public class StoreCommand implements Command {
             }
             controller.store(contribution, contributionUri);
             out.println("Stored " + contributionUri);
+            return true;
         } catch (DuplicateContributionException e) {
             out.println("ERROR: A contribution with that name already exists");
         } catch (CommunicationException e) {
             if (e.getCause() instanceof FileNotFoundException) {
                 out.println("ERROR: File not found:" + e.getMessage());
-                return;
+                return false;
             }
             throw new CommandException(e);
         } catch (IOException e) {
@@ -106,6 +107,7 @@ public class StoreCommand implements Command {
             out.println("ERROR: Error installing contribution");
             out.println("       " + e.getMessage());
         }
+        return false;
     }
 
 

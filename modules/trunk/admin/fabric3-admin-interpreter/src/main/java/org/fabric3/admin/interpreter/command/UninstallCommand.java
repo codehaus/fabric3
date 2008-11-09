@@ -64,7 +64,7 @@ public class UninstallCommand implements Command {
         this.password = password;
     }
 
-    public void execute(PrintStream out) throws CommandException {
+    public boolean execute(PrintStream out) throws CommandException {
         try {
             if (username != null) {
                 controller.setUsername(username);
@@ -77,10 +77,11 @@ public class UninstallCommand implements Command {
             }
             controller.uninstall(contributionUri);
             out.println("Uninstalled " + contributionUri);
+            return true;
         } catch (CommunicationException e) {
             if (e.getCause() instanceof FileNotFoundException) {
                 out.println("ERROR: File not found:" + e.getMessage());
-                return;
+                return false;
             }
             throw new CommandException(e);
         } catch (IOException e) {
@@ -90,6 +91,7 @@ public class UninstallCommand implements Command {
             out.println("ERROR: Error installing contribution");
             out.println("       " + e.getMessage());
         }
+        return false;
     }
 
 

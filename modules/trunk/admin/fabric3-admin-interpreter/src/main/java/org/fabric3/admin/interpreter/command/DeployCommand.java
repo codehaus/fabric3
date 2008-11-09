@@ -84,7 +84,7 @@ public class DeployCommand implements Command {
         this.planFile = planFile;
     }
 
-    public void execute(PrintStream out) throws CommandException {
+    public boolean execute(PrintStream out) throws CommandException {
         if (username != null) {
             controller.setUsername(username);
         }
@@ -97,21 +97,23 @@ public class DeployCommand implements Command {
             } catch (IOException e) {
                 out.println("ERROR: Error connecting to domain controller");
                 e.printStackTrace(out);
+                return false;
             }
         }
         if (planName != null) {
-            deployByName(out);
+            return deployByName(out);
         } else if (planFile != null) {
-            deployByFile(out);
+            return deployByFile(out);
         } else {
-            deployNoPlan(out);
+            return deployNoPlan(out);
         }
     }
 
-    private void deployByName(PrintStream out) {
+    private boolean deployByName(PrintStream out) {
         try {
             controller.deploy(contributionUri, planName);
             out.println("Deployed " + contributionUri);
+            return true;
         } catch (InvalidDeploymentException e) {
             out.println("The following deployment errors were reported:");
             for (String desc : e.getErrors()) {
@@ -124,9 +126,10 @@ public class DeployCommand implements Command {
             out.println("ERROR: Error deploying contribution");
             out.println("       " + e.getMessage());
         }
+        return false;
     }
 
-    private void deployByFile(PrintStream out) {
+    private boolean deployByFile(PrintStream out) {
         URI planContributionUri = CommandHelper.parseContributionName(planFile);
         try {
             // store and install plan
@@ -135,6 +138,7 @@ public class DeployCommand implements Command {
             String installedPlanName = parsePlanName();
             controller.deploy(contributionUri, installedPlanName);
             out.println("Deployed " + contributionUri);
+            return true;
         } catch (InvalidDeploymentException e) {
             out.println("The following deployment errors were reported:");
             for (String desc : e.getErrors()) {
@@ -170,12 +174,14 @@ public class DeployCommand implements Command {
             out.println("ERROR: Unable to read deployment plan: " + planFile);
             e.printStackTrace(out);
         }
+        return false;
     }
 
-    private void deployNoPlan(PrintStream out) {
+    private boolean deployNoPlan(PrintStream out) {
         try {
             controller.deploy(contributionUri);
             out.println("Deployed " + contributionUri);
+            return true;
         } catch (InvalidDeploymentException e) {
             out.println("The following deployment errors were reported:");
             for (String desc : e.getErrors()) {
@@ -188,6 +194,7 @@ public class DeployCommand implements Command {
             out.println("ERROR: Error connecting to domain controller");
             e.printStackTrace(out);
         }
+        return false;
     }
 
     private String parsePlanName() throws ParserConfigurationException, IOException, SAXException {

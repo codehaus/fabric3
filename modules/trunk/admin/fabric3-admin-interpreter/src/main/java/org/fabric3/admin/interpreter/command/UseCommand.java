@@ -37,8 +37,9 @@ public class UseCommand implements Command {
         this.domainAddress = domainAddress;
     }
 
-    public void execute(PrintStream out) throws CommandException {
+    public boolean execute(PrintStream out) throws CommandException {
         controller.setDomainAddress(domainAddress);
+        return true;
     }
 
 }

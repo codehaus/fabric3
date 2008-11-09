@@ -54,7 +54,7 @@ public class StatCommand implements Command {
         this.password = password;
     }
 
-    public void execute(PrintStream out) throws CommandException {
+    public boolean execute(PrintStream out) throws CommandException {
         if (username != null) {
             controller.setUsername(username);
         }
@@ -74,12 +74,14 @@ public class StatCommand implements Command {
                     out.println(uri);
                 }
             }
+            return true;
         } catch (IOException e) {
             out.println("ERROR: Unable to connect to the domain controller");
             e.printStackTrace(out);
         } catch (CommunicationException e) {
             throw new CommandException(e);
         }
+        return false;
     }
 
 }

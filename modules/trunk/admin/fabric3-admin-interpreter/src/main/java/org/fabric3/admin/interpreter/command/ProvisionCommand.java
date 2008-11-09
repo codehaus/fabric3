@@ -17,6 +17,8 @@
 package org.fabric3.admin.interpreter.command;
 
 import java.io.PrintStream;
+import java.net.URI;
+import java.net.URL;
 
 import org.fabric3.admin.api.DomainController;
 import org.fabric3.admin.interpreter.Command;
@@ -25,39 +27,42 @@ import org.fabric3.admin.interpreter.CommandException;
 /**
  * @version $Revision$ $Date$
  */
-public class AuthCommand implements Command {
-    private DomainController controller;
-    private String username;
-    private String password;
+public class ProvisionCommand implements Command {
+    private DeployCommand deployCommand;
+    private StoreCommand storeCommand;
+    private InstallCommand installCommand;
 
-    public AuthCommand(DomainController controller) {
-        this.controller = controller;
+    public ProvisionCommand(DomainController controller) {
+        storeCommand = new StoreCommand(controller);
+        installCommand = new InstallCommand(controller);
+        deployCommand = new DeployCommand(controller);
     }
 
-    public String getUsername() {
-        return username;
+    public void setContributionUri(URI uri) {
+        storeCommand.setContributionUri(uri);
+        installCommand.setContributionUri(uri);
+        deployCommand.setContributionUri(uri);
     }
 
     public void setUsername(String username) {
-        this.username = username;
-    }
-
-    public String getPassword() {
-        return password;
+        storeCommand.setUsername(username);
     }
 
     public void setPassword(String password) {
-        this.password = password;
+        storeCommand.setPassword(password);
+    }
+
+    public void setPlanFile(URL planFile) {
+        deployCommand.setPlanFile(planFile);
+    }
+
+    public void setContribution(URL contribution) {
+        storeCommand.setContribution(contribution);
     }
 
     public boolean execute(PrintStream out) throws CommandException {
-        if (username != null) {
-            controller.setUsername(username);
-        }
-        if (password != null) {
-            controller.setPassword(password);
-        }
-        return true;
+        return storeCommand.execute(out) && installCommand.execute(out) && deployCommand.execute(out);
     }
+
 
 }
