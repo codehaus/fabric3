@@ -21,9 +21,9 @@
            name="Axis2ControllerExtension"
            autowire="true">
 
-    <!-- Axis Binding Generator -->
-    <component name="Axis2BindingGeneratorDelegate" f3-core:key="axis2">
-        <f3-impl:implementation.system class="org.fabric3.binding.ws.axis2.control.Axis2BindingGeneratorDelegate"/>
+    <!-- Ws Binding Generator -->
+    <component name="Axis2BindingGenerator" f3-core:key="org.fabric3.binding.ws.scdl.WsBindingDefinition">
+        <f3-impl:implementation.system class="org.fabric3.binding.ws.axis2.control.Axis2BindingGenerator"/>
     </component>
     
     <!-- Jaxb Databinding Interceptor Generator -->

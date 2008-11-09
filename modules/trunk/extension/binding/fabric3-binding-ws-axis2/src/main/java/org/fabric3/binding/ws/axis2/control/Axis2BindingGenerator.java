@@ -33,7 +33,7 @@ import org.fabric3.scdl.ServiceContract;
 import org.fabric3.scdl.ServiceDefinition;
 import org.fabric3.scdl.definitions.PolicySet;
 import org.fabric3.spi.Namespaces;
-import org.fabric3.spi.generator.BindingGeneratorDelegate;
+import org.fabric3.spi.generator.BindingGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.policy.Policy;
@@ -45,7 +45,7 @@ import org.w3c.dom.NodeList;
  * 
  * TODO Add support for WSDL Contract
  */
-public class Axis2BindingGeneratorDelegate implements BindingGeneratorDelegate<WsBindingDefinition> {
+public class Axis2BindingGenerator  implements BindingGenerator<Axis2WireSourceDefinition, Axis2WireTargetDefinition, WsBindingDefinition> {
     
     private static final QName POLICY_ELEMENT = new QName(Namespaces.POLICY, "axisPolicy");
 

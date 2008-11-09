@@ -93,7 +93,6 @@
                     </mavenImports>
                     <deployables>
                         <deployable>org/fabric3/binding/ws/introspection.composite</deployable>
-                        <deployable>org/fabric3/binding/ws/control.composite</deployable>
                     </deployables>
                 </configuration>
             </plugin>
