@@ -39,8 +39,6 @@
 		<module>fabric3-binding-test</module>
 		<module>fabric3-binding-ws</module>
 		<module>fabric3-binding-ws-axis2</module>
-		<module>fabric3-binding-ws-cxf</module>
-		<module>fabric3-binding-ws-jaxws</module>
                 <module>fabric3-binding-ftp</module>
                 <module>fabric3-binding-tcp</module>
 	</modules>
