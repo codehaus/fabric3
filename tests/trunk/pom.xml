@@ -44,7 +44,6 @@
                 <module>test-mock</module>
                 <module>test-security-policy</module>
                 <module>test-runtime-jetty</module>
-                <module>test-binding-cxf</module>
                 <module>test-binding-axis2</module>
                 <module>test-binding-axis2-jaxb</module>
                 <module>test-binding-burlap</module>
