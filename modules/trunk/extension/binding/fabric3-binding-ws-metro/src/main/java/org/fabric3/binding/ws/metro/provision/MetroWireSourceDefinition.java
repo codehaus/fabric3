@@ -37,8 +37,6 @@ package org.fabric3.binding.ws.metro.provision;
 import java.net.URI;
 import java.net.URL;
 
-import javax.xml.namespace.QName;
-
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 
 /**
@@ -47,42 +45,30 @@ import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
  */
 public class MetroWireSourceDefinition extends PhysicalWireSourceDefinition {
 
-    private QName serviceName;
-    private QName portName;
+    private WsdlElement wsdlElement;
     private URL wsdlUrl;
     private URI servicePath;
 
     /**
      * Initialises information required for provisioning the service.
      * 
-     * @param serviceName Qualified name of the WSDL 1.1 service.
-     * @param portName Qualified name of the WSDL 1.1 port.
+     * @param wsdlElement WSDL element that encasulates the qualified WSDL 1.1 service and port names.
      * @param wsdlUrl Optional URL to the WSDL location.
      * @param servicePath Relative path on which the service is provisioned.
      */
-    public MetroWireSourceDefinition(QName serviceName, QName portName, URL wsdlUrl, URI servicePath) {
-        this.serviceName = serviceName;
-        this.portName = portName;
+    public MetroWireSourceDefinition(WsdlElement wsdlElement, URL wsdlUrl, URI servicePath) {
+        this.wsdlElement = wsdlElement;
         this.wsdlUrl = wsdlUrl;
         this.servicePath = servicePath;
     }
 
     /**
-     * Gets the qualified name of the WSDL 1.1 service.
+     * Gets the WSDL element that encasulates the qualified WSDL 1.1 service and port names.
      * 
-     * @return Qualified name of the WSDL 1.1 service.
+     * @return WSDL element that encasulates the qualified WSDL 1.1 service and port names.
      */
-    public QName getServiceName() {
-        return serviceName;
-    }
-
-    /**
-     * Gets the qualified name of the WSDL 1.1 port.
-     * 
-     * @return Qualified name of the WSDL 1.1 port.
-     */
-    public QName getPortName() {
-        return portName;
+    public WsdlElement getWsdlElement() {
+        return wsdlElement;
     }
 
     /**

@@ -32,60 +32,29 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.binding.ws.metro.provision;
+package org.fabric3.binding.ws.metro.control;
 
 import java.net.URL;
 
-import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
+import org.fabric3.binding.ws.metro.provision.WsdlElement;
+import org.fabric3.scdl.ServiceContract;
+import org.fabric3.spi.generator.GenerationException;
 
 /**
- * Wire target definition for Metro binding.
+ * Interface for parsing the WSDL element.
  *
  */
-public class MetroWireTargetDefinition extends PhysicalWireTargetDefinition {
-
-    private WsdlElement wsdlElement;
-    private URL wsdlUrl;
-    private URL[] targetUrls;
-
+public interface WsdlElementParser {
+    
     /**
-     * Initialises information required for provisioning the service.
+     * Parses the WSDL element.
      * 
-     * @param wsdlElement WSDL element that encasulates the qualified WSDL 1.1 service and port names.
-     * @param wsdlUrl Optional URL to the WSDL location.
-     * @param targetUrls One or more URLs used to invoke the service.
+     * @param wsdlElement String representation of the WSDL element.
+     * @param wsdlLocation URL to the WSDL.
+     * @param serviceContract Service contract for the WSDL.
+     * @return Parsed WSDL element.
+     * @throws GenerationException If unable to parse the WSDL element.
      */
-    public MetroWireTargetDefinition(WsdlElement wsdlElement, URL wsdlUrl, URL ... targetUrls) {
-        this.wsdlElement = wsdlElement;
-        this.wsdlUrl = wsdlUrl;
-        this.targetUrls = targetUrls;
-    }
-
-    /**
-     * Gets the WSDL element that encasulates the qualified WSDL 1.1 service and port names.
-     * 
-     * @return WSDL element that encasulates the qualified WSDL 1.1 service and port names.
-     */
-    public WsdlElement getWsdlElement() {
-        return wsdlElement;
-    }
-
-    /**
-     * Gets an optional URL to the WSDL document.
-     * 
-     * @return Optional URL to the WSDL document.
-     */
-    public URL getWsdlUrl() {
-        return wsdlUrl;
-    }
-
-    /**
-     * Gets one or more URLs used to invoke the service.
-     * 
-     * @return One or more URLs used to invoke the service.
-     */
-    public URL[] getTargetUrls() {
-        return targetUrls;
-    }
+    WsdlElement parseWsdlElement(String wsdlElement, URL wsdlLocation, ServiceContract<?> serviceContract) throws GenerationException;
 
 }

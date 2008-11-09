@@ -16,8 +16,13 @@
  */
 package org.fabric3.binding.ws.metro.control;
 
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URL;
+
 import org.fabric3.binding.ws.metro.provision.MetroWireSourceDefinition;
 import org.fabric3.binding.ws.metro.provision.MetroWireTargetDefinition;
+import org.fabric3.binding.ws.metro.provision.WsdlElement;
 import org.fabric3.binding.ws.scdl.WsBindingDefinition;
 import org.fabric3.scdl.ReferenceDefinition;
 import org.fabric3.scdl.ServiceDefinition;
@@ -25,6 +30,8 @@ import org.fabric3.spi.generator.BindingGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.policy.Policy;
+import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
+import org.osoa.sca.annotations.Reference;
 
 /**
  * @version $Revision$ $Date$
@@ -32,22 +39,63 @@ import org.fabric3.spi.policy.Policy;
  * TODO Add support for WSDL Contract
  */
 public class MetroBindingGenerator  implements BindingGenerator<MetroWireSourceDefinition, MetroWireTargetDefinition, WsBindingDefinition> {
+    
+    @Reference protected ClassLoaderRegistry classLoaderRegistry;
+    @Reference protected WsdlElementParser wsdlElementParser;
+    @Reference protected AddressResolver addressResolver;
 
+    /**
+     * Creates the wire source definition.
+     */
     public MetroWireSourceDefinition generateWireSource(LogicalBinding<WsBindingDefinition> binding,
                                                         Policy policy,  
                                                         ServiceDefinition serviceDefinition) throws GenerationException {
-        MetroWireSourceDefinition mwsd = null;
-        return mwsd;
+        
+        WsBindingDefinition definition = binding.getDefinition();
+        URI classLoaderId = binding.getParent().getParent().getClassLoaderId();
+        URL wsdlLocation = getWsdlLocation(definition.getWsdlLocation(), classLoaderId);
+        
+        WsdlElement wsdlElement = wsdlElementParser.parseWsdlElement(definition.getWsdlElement(), wsdlLocation, serviceDefinition.getServiceContract());
+        URI servicePath = addressResolver.resolveServiceAddress(definition.getTargetUri(), wsdlElement.getPortName(), wsdlLocation);
+        
+        return new MetroWireSourceDefinition(wsdlElement, wsdlLocation, servicePath);
         
     }
 
+    /**
+     * Creates the wire target definition.
+     */
     public MetroWireTargetDefinition generateWireTarget(LogicalBinding<WsBindingDefinition> binding,
                                                         Policy policy,
                                                         ReferenceDefinition referenceDefinition) throws GenerationException {
+        
+        WsBindingDefinition definition = binding.getDefinition();
+        URI classLoaderId = binding.getParent().getParent().getClassLoaderId();
+        URL wsdlLocation = getWsdlLocation(definition.getWsdlLocation(), classLoaderId);
+        
+        WsdlElement wsdlElement = wsdlElementParser.parseWsdlElement(definition.getWsdlElement(), wsdlLocation, referenceDefinition.getServiceContract());
+        URL[] referenceUrls = addressResolver.resolveReferenceAddress(definition.getTargetUri(), wsdlElement.getPortName(), wsdlLocation);
+        
+        return new MetroWireTargetDefinition(wsdlElement, wsdlLocation, referenceUrls);
 
-        MetroWireTargetDefinition mwtd = null;
-        return mwtd;
+    }
 
+    /*
+     * Gets the WSDL location as a URL.
+     */
+    private URL getWsdlLocation(String wsdlLocation, URI classloaderId) {
+        
+        if (wsdlLocation == null) {
+            return null;
+        }
+        
+        try {
+            return new URL(wsdlLocation);
+        } catch (MalformedURLException e) {
+            ClassLoader classLoader = classLoaderRegistry.getClassLoader(classloaderId);
+            return classLoader.getResource(wsdlLocation);
+        }
+        
     }
 
 }

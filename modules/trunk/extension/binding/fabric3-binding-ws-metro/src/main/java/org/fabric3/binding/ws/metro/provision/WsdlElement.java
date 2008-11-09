@@ -34,58 +34,45 @@
  */
 package org.fabric3.binding.ws.metro.provision;
 
-import java.net.URL;
-
-import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
+import javax.xml.namespace.QName;
 
 /**
- * Wire target definition for Metro binding.
+ * 
+ * Encapsulates the service name and QName.
  *
  */
-public class MetroWireTargetDefinition extends PhysicalWireTargetDefinition {
-
-    private WsdlElement wsdlElement;
-    private URL wsdlUrl;
-    private URL[] targetUrls;
-
+public class WsdlElement {
+    
+    private QName serviceName;
+    private QName portName;
+    
     /**
-     * Initialises information required for provisioning the service.
+     * Initialises the service name and port name.
      * 
-     * @param wsdlElement WSDL element that encasulates the qualified WSDL 1.1 service and port names.
-     * @param wsdlUrl Optional URL to the WSDL location.
-     * @param targetUrls One or more URLs used to invoke the service.
+     * @param serviceName Service name.
+     * @param portName Port name.
      */
-    public MetroWireTargetDefinition(WsdlElement wsdlElement, URL wsdlUrl, URL ... targetUrls) {
-        this.wsdlElement = wsdlElement;
-        this.wsdlUrl = wsdlUrl;
-        this.targetUrls = targetUrls;
+    public WsdlElement(QName serviceName, QName portName) {
+        this.serviceName = serviceName;
+        this.portName = portName;
     }
 
     /**
-     * Gets the WSDL element that encasulates the qualified WSDL 1.1 service and port names.
+     * Gets the name of the service.
      * 
-     * @return WSDL element that encasulates the qualified WSDL 1.1 service and port names.
+     * @return Name of the service.
      */
-    public WsdlElement getWsdlElement() {
-        return wsdlElement;
+    public QName getServiceName() {
+        return serviceName;
     }
 
     /**
-     * Gets an optional URL to the WSDL document.
+     * Gets the name of the port.
      * 
-     * @return Optional URL to the WSDL document.
+     * @return Name of the port.
      */
-    public URL getWsdlUrl() {
-        return wsdlUrl;
-    }
-
-    /**
-     * Gets one or more URLs used to invoke the service.
-     * 
-     * @return One or more URLs used to invoke the service.
-     */
-    public URL[] getTargetUrls() {
-        return targetUrls;
+    public QName getPortName() {
+        return portName;
     }
 
 }

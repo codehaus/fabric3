@@ -32,60 +32,43 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.binding.ws.metro.provision;
+package org.fabric3.binding.ws.metro.control;
 
+import java.net.URI;
 import java.net.URL;
 
-import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
+import javax.xml.namespace.QName;
+
+import org.fabric3.spi.generator.GenerationException;
 
 /**
- * Wire target definition for Metro binding.
+ * Resolves the address on which service is provisioned or reference is invoked.
  *
  */
-public class MetroWireTargetDefinition extends PhysicalWireTargetDefinition {
-
-    private WsdlElement wsdlElement;
-    private URL wsdlUrl;
-    private URL[] targetUrls;
-
+public interface AddressResolver {
+    
     /**
-     * Initialises information required for provisioning the service.
+     * Resolves the address on which the service is provisioned.
      * 
-     * @param wsdlElement WSDL element that encasulates the qualified WSDL 1.1 service and port names.
-     * @param wsdlUrl Optional URL to the WSDL location.
-     * @param targetUrls One or more URLs used to invoke the service.
+     * @param targetUri Target URI specified on the service binding.
+     * @param portName Qualified name of the port.
+     * @param wsdlLocation URL to the WSDL document.
+     * @return URI on which the service is provisioned.
+     * 
+     * @throws GenerationException If unable to resolve the address.
      */
-    public MetroWireTargetDefinition(WsdlElement wsdlElement, URL wsdlUrl, URL ... targetUrls) {
-        this.wsdlElement = wsdlElement;
-        this.wsdlUrl = wsdlUrl;
-        this.targetUrls = targetUrls;
-    }
-
+    URI resolveServiceAddress(URI targetUri, QName portName, URL wsdlLocation) throws GenerationException;
+    
     /**
-     * Gets the WSDL element that encasulates the qualified WSDL 1.1 service and port names.
+     * Resolves the address on which the service is provisioned.
      * 
-     * @return WSDL element that encasulates the qualified WSDL 1.1 service and port names.
-     */
-    public WsdlElement getWsdlElement() {
-        return wsdlElement;
-    }
-
-    /**
-     * Gets an optional URL to the WSDL document.
+     * @param targetUri Target URI specified on the reference binding.
+     * @param portName Qualified name of the port.
+     * @param wsdlLocation URL to the WSDL document.
+     * @return List of URLs on which the service can be invoked..
      * 
-     * @return Optional URL to the WSDL document.
+     * @throws GenerationException If unable to resolve the address.
      */
-    public URL getWsdlUrl() {
-        return wsdlUrl;
-    }
-
-    /**
-     * Gets one or more URLs used to invoke the service.
-     * 
-     * @return One or more URLs used to invoke the service.
-     */
-    public URL[] getTargetUrls() {
-        return targetUrls;
-    }
+    URL[] resolveReferenceAddress(URI targetUri, QName portName, URL wsdlLocation) throws GenerationException;
 
 }
