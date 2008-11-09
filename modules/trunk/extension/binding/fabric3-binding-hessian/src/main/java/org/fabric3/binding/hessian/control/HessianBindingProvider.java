@@ -103,7 +103,7 @@ public class HessianBindingProvider implements BindingProvider {
 	private void configureReference(LogicalReference source, LogicalService target, String baseUrl) throws BindingSelectionException {
         LogicalBinding<HessianBindingDefinition> binding = null;
         for (LogicalBinding<?> entry : target.getBindings()) {
-            if (entry.getBinding().getType().equals(BINDING_QNAME)) {
+            if (entry.getDefinition().getType().equals(BINDING_QNAME)) {
                 binding = (LogicalBinding<HessianBindingDefinition>) entry;
                 break;
             }
@@ -111,7 +111,7 @@ public class HessianBindingProvider implements BindingProvider {
         if (binding == null) {
             throw new BindingSelectionException("Hessian binding on service not found: " + target.getUri());
         }
-        URI targetUri = URI.create(baseUrl + binding.getBinding().getTargetUri().toString());
+        URI targetUri = URI.create(baseUrl + binding.getDefinition().getTargetUri().toString());
         constructLogicalReference(source, targetUri);
     }
 

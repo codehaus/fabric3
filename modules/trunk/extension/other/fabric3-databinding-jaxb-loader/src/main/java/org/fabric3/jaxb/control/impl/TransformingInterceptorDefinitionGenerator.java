@@ -72,7 +72,7 @@ public class TransformingInterceptorDefinitionGenerator implements InterceptorDe
 
     public AbstractTransformingInterceptorDefinition generate(Element policySet, Operation<?> operation, LogicalBinding<?> logicalBinding)
             throws GenerationException {
-        QName dataType = engagedBindings.get(logicalBinding.getBinding().getType());
+        QName dataType = engagedBindings.get(logicalBinding.getDefinition().getType());
         if (dataType == null) {
             // The binding does not use JAXB, ignore. For example, a collocated wire may pass JAXB types but they do not need to be serialized
             // as invocations flow through the same VM.

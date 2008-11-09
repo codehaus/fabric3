@@ -44,10 +44,10 @@ public class RsBindingGenerator implements BindingGenerator<RsWireSourceDefiniti
         RsWireSourceDefinition rwsd = new RsWireSourceDefinition();
         URI id = logicalBinding.getParent().getParent().getClassLoaderId();
         rwsd.setClassLoaderId(id);
-        rwsd.setUri(logicalBinding.getBinding().getTargetUri());
+        rwsd.setUri(logicalBinding.getDefinition().getTargetUri());
         rwsd.setInterfaceName(serviceDefinition.getServiceContract().getInterfaceName());
-        rwsd.setIsResource(logicalBinding.getBinding().isResource());
-        rwsd.setIsProvider(logicalBinding.getBinding().isProvider());
+        rwsd.setIsResource(logicalBinding.getDefinition().isResource());
+        rwsd.setIsProvider(logicalBinding.getDefinition().isProvider());
 
 
         return rwsd;

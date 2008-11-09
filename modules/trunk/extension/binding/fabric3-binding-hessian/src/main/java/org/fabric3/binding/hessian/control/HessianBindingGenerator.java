@@ -64,7 +64,7 @@ public class HessianBindingGenerator implements BindingGenerator<HessianWireSour
         URI id = logicalBinding.getParent().getParent().getClassLoaderId();
         HessianWireSourceDefinition hwsd = new HessianWireSourceDefinition();
         hwsd.setClassLoaderId(id);
-        URI targetUri = logicalBinding.getBinding().getTargetUri();
+        URI targetUri = logicalBinding.getDefinition().getTargetUri();
         hwsd.setUri(targetUri);
 
         return hwsd;
@@ -77,7 +77,7 @@ public class HessianBindingGenerator implements BindingGenerator<HessianWireSour
             throws GenerationException {
         URI id = logicalBinding.getParent().getParent().getClassLoaderId();
         HessianWireTargetDefinition hwtd = new HessianWireTargetDefinition(id);
-        hwtd.setUri(logicalBinding.getBinding().getTargetUri());
+        hwtd.setUri(logicalBinding.getDefinition().getTargetUri());
 
         return hwtd;
 

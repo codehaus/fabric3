@@ -54,7 +54,7 @@ public class Axis2BindingGenerator  implements BindingGenerator<Axis2WireSourceD
                                                         ServiceDefinition serviceDefinition) throws GenerationException {
         
         Axis2WireSourceDefinition hwsd = new Axis2WireSourceDefinition();
-        hwsd.setUri(binding.getBinding().getTargetUri());
+        hwsd.setUri(binding.getDefinition().getTargetUri());
         
         ServiceContract<?> contract = serviceDefinition.getServiceContract();
         hwsd.setServiceInterface(contract.getQualifiedInterfaceName());
@@ -73,7 +73,7 @@ public class Axis2BindingGenerator  implements BindingGenerator<Axis2WireSourceD
                                                         ReferenceDefinition referenceDefinition) throws GenerationException {
 
         Axis2WireTargetDefinition hwtd = new Axis2WireTargetDefinition();
-        hwtd.setUri(binding.getBinding().getTargetUri());
+        hwtd.setUri(binding.getDefinition().getTargetUri());
         
         ServiceContract<?> contract = referenceDefinition.getServiceContract();
         hwtd.setReferenceInterface(contract.getQualifiedInterfaceName());
@@ -85,7 +85,7 @@ public class Axis2BindingGenerator  implements BindingGenerator<Axis2WireSourceD
         addOperationInfo(hwtd, contract);
         
         //Set config
-        hwtd.setConfig(binding.getBinding().getConfig());
+        hwtd.setConfig(binding.getDefinition().getConfig());
         
         setPolicyConfigs(hwtd, policy, contract);
         

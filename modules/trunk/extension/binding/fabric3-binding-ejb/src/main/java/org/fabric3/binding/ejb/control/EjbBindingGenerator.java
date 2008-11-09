@@ -44,8 +44,8 @@ public class EjbBindingGenerator implements BindingGenerator<EjbWireSourceDefini
         // TODO Pass the contract information to physical
 
         EjbWireSourceDefinition ewsd = new EjbWireSourceDefinition();
-        ewsd.setUri(logicalBinding.getBinding().getTargetUri());
-        ewsd.setBindingDefinition(logicalBinding.getBinding());
+        ewsd.setUri(logicalBinding.getDefinition().getTargetUri());
+        ewsd.setBindingDefinition(logicalBinding.getDefinition());
         ServiceContract<?> contract = serviceDefinition.getServiceContract();
         ewsd.setInterfaceName(contract.getQualifiedInterfaceName());
         ewsd.setClassLoaderId(logicalBinding.getParent().getParent().getClassLoaderId());
@@ -61,8 +61,8 @@ public class EjbBindingGenerator implements BindingGenerator<EjbWireSourceDefini
         // TODO Pass the contract information to the physical
 
         EjbWireTargetDefinition ewtd = new EjbWireTargetDefinition();
-        ewtd.setUri(logicalBinding.getBinding().getTargetUri());
-        ewtd.setBindingDefinition(logicalBinding.getBinding());
+        ewtd.setUri(logicalBinding.getDefinition().getTargetUri());
+        ewtd.setBindingDefinition(logicalBinding.getDefinition());
         ServiceContract<?> contract = referenceDefinition.getServiceContract();
         ewtd.setInterfaceName(contract.getQualifiedInterfaceName());
         ewtd.setClassLoaderURI(logicalBinding.getParent().getParent().getClassLoaderId());

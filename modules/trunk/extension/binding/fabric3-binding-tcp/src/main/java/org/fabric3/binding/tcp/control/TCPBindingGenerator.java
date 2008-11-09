@@ -49,7 +49,7 @@ public class TCPBindingGenerator implements
         URI classLoaderId = binding.getParent().getParent().getParent().getUri();
         TCPWireSourceDefinition hwsd = new TCPWireSourceDefinition();
         hwsd.setClassLoaderId(classLoaderId);
-        URI targetUri = binding.getBinding().getTargetUri();
+        URI targetUri = binding.getDefinition().getTargetUri();
         hwsd.setUri(targetUri);
 
         return hwsd;
@@ -72,7 +72,7 @@ public class TCPBindingGenerator implements
 
         TCPWireTargetDefinition hwtd = new TCPWireTargetDefinition();
         hwtd.setClassLoaderId(classLoaderId);
-        hwtd.setUri(binding.getBinding().getTargetUri());
+        hwtd.setUri(binding.getDefinition().getTargetUri());
 
         return hwtd;
 

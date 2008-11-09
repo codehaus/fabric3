@@ -51,16 +51,16 @@ public class LogicalBinding<BD extends BindingDefinition> extends LogicalScaArti
 
     private static final QName TYPE = new QName(Constants.SCA_NS, "binding");
 
-    private final BD binding;
+    private final BD definition;
     private LogicalState state = LogicalState.NEW;
 
     /**
-     * @param binding
+     * @param definition
      * @param parent
      */
-    public LogicalBinding(BD binding, Bindable parent) {
+    public LogicalBinding(BD definition, Bindable parent) {
         super(null, parent, TYPE);
-        this.binding = binding;
+        this.definition = definition;
     }
 
     /**
@@ -68,36 +68,36 @@ public class LogicalBinding<BD extends BindingDefinition> extends LogicalScaArti
      *
      * @return the binding definition
      */
-    public BD getBinding() {
-        return binding;
+    public BD getDefinition() {
+        return definition;
     }
 
     /**
      * @return Intents declared on the SCA artifact.
      */
     public Set<QName> getIntents() {
-        return binding.getIntents();
+        return definition.getIntents();
     }
 
     /**
      * @param intents Intents declared on the SCA artifact.
      */
     public void setIntents(Set<QName> intents) {
-        binding.setIntents(intents);
+        definition.setIntents(intents);
     }
 
     /**
      * @return Policy sets declared on the SCA artifact.
      */
     public Set<QName> getPolicySets() {
-        return binding.getPolicySets();
+        return definition.getPolicySets();
     }
 
     /**
      * @param policySets Policy sets declared on the SCA artifact.
      */
     public void setPolicySets(Set<QName> policySets) {
-        binding.setPolicySets(policySets);
+        definition.setPolicySets(policySets);
     }
 
     /**

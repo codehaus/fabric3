@@ -38,7 +38,7 @@ public class TestBindingGenerator implements BindingGenerator<TestBindingSourceD
                                                           ServiceDefinition serviceDefinition)
             throws GenerationException {
         TestBindingSourceDefinition definition = new TestBindingSourceDefinition();
-        definition.setUri(logicalBinding.getBinding().getTargetUri());
+        definition.setUri(logicalBinding.getDefinition().getTargetUri());
         return definition;
     }
 
@@ -48,7 +48,7 @@ public class TestBindingGenerator implements BindingGenerator<TestBindingSourceD
             throws GenerationException {
 
         TestBindingTargetDefinition definition = new TestBindingTargetDefinition();
-        definition.setUri(logicalBinding.getBinding().getTargetUri());
+        definition.setUri(logicalBinding.getDefinition().getTargetUri());
         return definition;
     }
 

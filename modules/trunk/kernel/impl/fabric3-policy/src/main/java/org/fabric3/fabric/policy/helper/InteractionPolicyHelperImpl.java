@@ -46,7 +46,7 @@ public class InteractionPolicyHelperImpl extends AbstractPolicyHelper implements
 
     public Set<Intent> getProvidedIntents(LogicalBinding<?> logicalBinding, Operation<?> operation) throws PolicyResolutionException {
         
-        QName type = logicalBinding.getBinding().getType();
+        QName type = logicalBinding.getDefinition().getType();
         BindingType bindingType = definitionsRegistry.getDefinition(type, BindingType.class);
         
         // FIXME This should not happen, all binding types should be registsred
@@ -71,7 +71,7 @@ public class InteractionPolicyHelperImpl extends AbstractPolicyHelper implements
     
     public Set<PolicySet> resolveIntents(LogicalBinding<?> logicalBinding, Operation<?> operation, Element target) throws PolicyResolutionException {
 
-        QName type = logicalBinding.getBinding().getType();
+        QName type = logicalBinding.getDefinition().getType();
         BindingType bindingType = definitionsRegistry.getDefinition(type, BindingType.class);
         
         Set<QName> alwaysProvidedIntents = new LinkedHashSet<QName>();
@@ -109,7 +109,7 @@ public class InteractionPolicyHelperImpl extends AbstractPolicyHelper implements
         // Aggregate all the intents from the ancestors
         Set<QName> intentNames = new LinkedHashSet<QName>();
         intentNames.addAll(operation.getIntents());
-        intentNames.addAll(logicalBinding.getBinding().getIntents());
+        intentNames.addAll(logicalBinding.getDefinition().getIntents());
         intentNames.addAll(aggregateIntents(logicalBinding));
         
         // Expand all the profile intents

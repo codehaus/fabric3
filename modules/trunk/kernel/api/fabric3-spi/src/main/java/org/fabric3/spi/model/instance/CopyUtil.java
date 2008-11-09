@@ -115,12 +115,12 @@ public class CopyUtil {
     @SuppressWarnings({"unchecked"})
     private static void copy(Bindable from, Bindable to) {
         for (LogicalBinding<?> binding : from.getBindings()) {
-            LogicalBinding<?> copy = new LogicalBinding(binding.getBinding(), to);
+            LogicalBinding<?> copy = new LogicalBinding(binding.getDefinition(), to);
             copy.setState(binding.getState());
             to.addBinding(copy);
         }
         for (LogicalBinding<?> binding : from.getCallbackBindings()) {
-            LogicalBinding<?> copy = new LogicalBinding(binding.getBinding(), to);
+            LogicalBinding<?> copy = new LogicalBinding(binding.getDefinition(), to);
             copy.setState(binding.getState());
             to.addCallbackBinding(copy);
         }

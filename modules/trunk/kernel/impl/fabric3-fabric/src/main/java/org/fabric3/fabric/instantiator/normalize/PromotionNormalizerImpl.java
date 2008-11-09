@@ -61,7 +61,7 @@ public class PromotionNormalizerImpl implements PromotionNormalizer {
     private List<LogicalBinding<?>> resetParent(List<LogicalBinding<?>> list, Bindable parent) {
         List<LogicalBinding<?>> newList = new ArrayList<LogicalBinding<?>>();
         for (LogicalBinding<?> binding : list) {
-            newList.add(new LogicalBinding(binding.getBinding(), parent));
+            newList.add(new LogicalBinding(binding.getDefinition(), parent));
         }
         return newList;
     }

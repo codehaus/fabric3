@@ -111,7 +111,7 @@ public class ServiceWireCommandGenerator implements CommandGenerator {
                 }
                 callbackBinding = callbackBindings.get(0);
                 // xcv FIXME should be on the logical binding
-                callbackUri = callbackBinding.getBinding().getTargetUri();
+                callbackUri = callbackBinding.getDefinition().getTargetUri();
             }
 
             for (LogicalBinding<?> binding : service.getBindings()) {

@@ -73,7 +73,7 @@ public class DefaultPolicyInfosetBuilder implements PolicyInfosetBuilder {
             LogicalComponent<?> logicalComponent = bindable.getParent();
             componentElement.setAttribute("name", logicalComponent.getDefinition().getName());
             
-            Element bindingElement = document.createElement(logicalBinding.getBinding().getType().getLocalPart());
+            Element bindingElement = document.createElement(logicalBinding.getDefinition().getType().getLocalPart());
             bindableElement.appendChild(bindingElement);
 
             return bindableElement;

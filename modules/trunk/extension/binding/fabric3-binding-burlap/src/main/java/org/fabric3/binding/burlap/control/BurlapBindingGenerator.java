@@ -64,7 +64,7 @@ public class BurlapBindingGenerator implements BindingGenerator<BurlapWireSource
         URI id = logicalBinding.getParent().getParent().getClassLoaderId();
         BurlapWireSourceDefinition hwsd = new BurlapWireSourceDefinition();
         hwsd.setClassLoaderId(id);
-        URI targetUri = logicalBinding.getBinding().getTargetUri();
+        URI targetUri = logicalBinding.getDefinition().getTargetUri();
         hwsd.setUri(targetUri);
         return hwsd;
     }
@@ -76,7 +76,7 @@ public class BurlapBindingGenerator implements BindingGenerator<BurlapWireSource
         // TODO Pass the contract information to the physical
         URI id = logicalBinding.getParent().getParent().getClassLoaderId();
         BurlapWireTargetDefinition hwtd = new BurlapWireTargetDefinition(id);
-        hwtd.setUri(logicalBinding.getBinding().getTargetUri());
+        hwtd.setUri(logicalBinding.getDefinition().getTargetUri());
         return hwtd;
 
     }

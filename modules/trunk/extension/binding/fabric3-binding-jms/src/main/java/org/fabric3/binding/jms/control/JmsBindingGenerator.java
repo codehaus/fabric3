@@ -93,9 +93,9 @@ public class JmsBindingGenerator implements BindingGenerator<JmsWireSourceDefini
 
         URI classloaderId = logicalBinding.getParent().getParent().getClassLoaderId();
 
-        JmsBindingMetadata metadata = logicalBinding.getBinding().getMetadata();
+        JmsBindingMetadata metadata = logicalBinding.getDefinition().getMetadata();
         Map<String, PayloadType> payloadTypes = processPayloadTypes(serviceContract);
-        URI uri = logicalBinding.getBinding().getTargetUri();
+        URI uri = logicalBinding.getDefinition().getTargetUri();
         return new JmsWireSourceDefinition(uri, metadata, payloadTypes, transactionType, oneWayOperations, classloaderId);
     }
 
@@ -110,8 +110,8 @@ public class JmsBindingGenerator implements BindingGenerator<JmsWireSourceDefini
 
         URI classloaderId = logicalBinding.getParent().getParent().getClassLoaderId();
 
-        URI uri = logicalBinding.getBinding().getTargetUri();
-        JmsBindingMetadata metadata = logicalBinding.getBinding().getMetadata();
+        URI uri = logicalBinding.getDefinition().getTargetUri();
+        JmsBindingMetadata metadata = logicalBinding.getDefinition().getMetadata();
         Map<String, PayloadType> payloadTypes = processPayloadTypes(serviceContract);
         return new JmsWireTargetDefinition(uri, metadata, payloadTypes, transactionType, oneWayOperations, classloaderId);
     }

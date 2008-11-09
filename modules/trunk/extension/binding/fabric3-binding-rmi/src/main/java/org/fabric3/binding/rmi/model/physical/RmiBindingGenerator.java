@@ -41,8 +41,8 @@ public class RmiBindingGenerator implements BindingGenerator<RmiWireSourceDefini
         // TODO Pass the contract information to physical
         // TODO ignoring intents for now
         RmiWireSourceDefinition ewsd = new RmiWireSourceDefinition();
-        ewsd.setUri(logicalBinding.getBinding().getTargetUri());
-        ewsd.setBindingDefinition(logicalBinding.getBinding());
+        ewsd.setUri(logicalBinding.getDefinition().getTargetUri());
+        ewsd.setBindingDefinition(logicalBinding.getDefinition());
         ServiceContract<?> contract = serviceDefinition.getServiceContract();
         ewsd.setInterfaceName(contract.getQualifiedInterfaceName());
 
@@ -61,8 +61,8 @@ public class RmiBindingGenerator implements BindingGenerator<RmiWireSourceDefini
         // TODO Pass the contract information to the physical
 
         RmiWireTargetDefinition ewtd = new RmiWireTargetDefinition();
-        ewtd.setUri(logicalBinding.getBinding().getTargetUri());
-        ewtd.setBindingDefinition(logicalBinding.getBinding());
+        ewtd.setUri(logicalBinding.getDefinition().getTargetUri());
+        ewtd.setBindingDefinition(logicalBinding.getDefinition());
         ServiceContract<?> contract = referenceDefinition.getServiceContract();
         ewtd.setInterfaceName(contract.getQualifiedInterfaceName());
 

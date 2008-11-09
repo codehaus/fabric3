@@ -255,7 +255,7 @@ public class PhysicalWireGeneratorImpl implements PhysicalWireGenerator {
             URI callbackUri = generateCallbackUri(component, callbackContract, referenceDefinition.getName());
             targetDefinition.setCallbackUri(callbackUri);
         }
-        targetDefinition.setKey(binding.getBinding().getKey());
+        targetDefinition.setKey(binding.getDefinition().getKey());
 
 
         ComponentGenerator<C> sourceGenerator = getGenerator(component);
@@ -419,7 +419,7 @@ public class PhysicalWireGeneratorImpl implements PhysicalWireGenerator {
 
     @SuppressWarnings("unchecked")
     private <T extends BindingDefinition> BindingGenerator<?, ?, T> getGenerator(LogicalBinding<T> binding) throws GeneratorNotFoundException {
-        return (BindingGenerator<?, ?, T>) generatorRegistry.getBindingGenerator(binding.getBinding().getClass());
+        return (BindingGenerator<?, ?, T>) generatorRegistry.getBindingGenerator(binding.getDefinition().getClass());
     }
 
     private boolean checkOptimization(ServiceContract<?> serviceContract, Set<PhysicalOperationDefinition> operationDefinitions) {
