@@ -18,13 +18,13 @@ package org.fabric3.admin.interpreter.command;
 
 import java.io.IOException;
 import java.io.PrintStream;
-import java.net.URI;
 import java.util.Set;
 
 import org.fabric3.admin.api.CommunicationException;
 import org.fabric3.admin.api.DomainController;
 import org.fabric3.admin.interpreter.Command;
 import org.fabric3.admin.interpreter.CommandException;
+import org.fabric3.management.contribution.ContributionInfo;
 
 /**
  * @version $Revision$ $Date$
@@ -65,13 +65,13 @@ public class StatCommand implements Command {
             if (!controller.isConnected()) {
                 controller.connect();
             }
-            Set<URI> uris = controller.list();
-            if (uris.isEmpty()) {
-                out.println("No installed contributions");
+            Set<ContributionInfo> infos = controller.stat();
+            if (infos.isEmpty()) {
+                out.println("No contributions");
             } else {
-                out.println("Installed contributions:\n");
-                for (URI uri : uris) {
-                    out.println(uri);
+                out.println("Contributions:\n");
+                for (ContributionInfo info : infos) {
+                    out.printf("%-65s %s \n", info.getUri(), info.getState());
                 }
             }
             return true;

@@ -20,13 +20,13 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.PrintStream;
-import java.net.URI;
 import java.util.Collections;
 
 import junit.framework.TestCase;
 import org.easymock.EasyMock;
 
 import org.fabric3.admin.api.DomainController;
+import org.fabric3.management.contribution.ContributionInfo;
 
 /**
  * @version $Revision$ $Date$
@@ -38,7 +38,7 @@ public class StatTestCase extends TestCase {
         controller.setUsername("username");
         controller.setPassword("password");
         EasyMock.expect(controller.isConnected()).andReturn(true);
-        EasyMock.expect(controller.list()).andReturn(Collections.<URI>emptySet());
+        EasyMock.expect(controller.stat()).andReturn(Collections.<ContributionInfo>emptySet());
         EasyMock.replay(controller);
 
         Interpreter interpreter = new InterpreterImpl(controller);
@@ -53,7 +53,7 @@ public class StatTestCase extends TestCase {
     public void testListWithNoAuth() throws Exception {
         DomainController controller = EasyMock.createMock(DomainController.class);
         EasyMock.expect(controller.isConnected()).andReturn(true);
-        EasyMock.expect(controller.list()).andReturn(Collections.<URI>emptySet());
+        EasyMock.expect(controller.stat()).andReturn(Collections.<ContributionInfo>emptySet());
         EasyMock.replay(controller);
 
         Interpreter interpreter = new InterpreterImpl(controller);
@@ -69,7 +69,7 @@ public class StatTestCase extends TestCase {
     public void testFullCommand() throws Exception {
         DomainController controller = EasyMock.createMock(DomainController.class);
         EasyMock.expect(controller.isConnected()).andReturn(true);
-        EasyMock.expect(controller.list()).andReturn(Collections.<URI>emptySet());
+        EasyMock.expect(controller.stat()).andReturn(Collections.<ContributionInfo>emptySet());
         EasyMock.replay(controller);
 
         Interpreter interpreter = new InterpreterImpl(controller);

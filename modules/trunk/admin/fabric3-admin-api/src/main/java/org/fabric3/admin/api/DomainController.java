@@ -21,6 +21,8 @@ import java.net.URI;
 import java.net.URL;
 import java.util.Set;
 
+import org.fabric3.management.contribution.ContributionInfo;
+
 /**
  * The interface for performing domain administrative functions.
  *
@@ -76,7 +78,7 @@ public interface DomainController {
      * @return the set of installed contributions.
      * @throws CommunicationException if there is an error communicating with the domain controller
      */
-    public Set<URI> list() throws CommunicationException;
+    public Set<ContributionInfo> stat() throws CommunicationException;
 
 
     /**

@@ -27,7 +27,13 @@
     <name>Fabric3 Domain Admin API</name>
     <description>Fabric3 APIs for Domain Administration.</description>
 
+
     <dependencies>
+        <dependency>
+            <groupId>org.codehaus.fabric3</groupId>
+            <artifactId>fabric3-management-api</artifactId>
+            <version>0.7-SNAPSHOT</version>
+        </dependency>
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>

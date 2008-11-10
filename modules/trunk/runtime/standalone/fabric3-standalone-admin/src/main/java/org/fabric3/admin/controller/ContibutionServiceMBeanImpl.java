@@ -22,6 +22,10 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
+import java.util.HashSet;
+import java.util.TreeSet;
+
+import javax.xml.namespace.QName;
 
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
@@ -33,10 +37,14 @@ import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.host.contribution.ContributionService;
 import org.fabric3.host.contribution.ValidationException;
 import org.fabric3.host.contribution.ValidationFailure;
+import org.fabric3.host.contribution.Deployable;
 import org.fabric3.jetty.JettyService;
 import org.fabric3.management.contribution.ContributionManagementException;
 import org.fabric3.management.contribution.ContributionServiceMBean;
 import org.fabric3.management.contribution.InvalidContributionException;
+import org.fabric3.management.contribution.ContributionInfo;
+import org.fabric3.spi.services.contribution.MetaDataStore;
+import org.fabric3.spi.services.contribution.Contribution;
 
 /**
  * @version $Revision$ $Date$
@@ -47,6 +55,7 @@ public class ContibutionServiceMBeanImpl implements ContributionServiceMBean {
 
     private JettyService jettyService;
     private ContributionService contributionService;
+    private MetaDataStore metaDataStore;
     private ContributionServiceMBeanMonitor monitor;
     private int httpPort = 8080;
     private String hostName;
@@ -54,9 +63,11 @@ public class ContibutionServiceMBeanImpl implements ContributionServiceMBean {
 
     public ContibutionServiceMBeanImpl(@Reference JettyService jettyService,
                                        @Reference ContributionService contributionService,
+                                       @Reference MetaDataStore metaDataStore,
                                        @Monitor ContributionServiceMBeanMonitor monitor) {
         this.jettyService = jettyService;
         this.contributionService = contributionService;
+        this.metaDataStore = metaDataStore;
         this.monitor = monitor;
     }
 
@@ -117,8 +128,21 @@ public class ContibutionServiceMBeanImpl implements ContributionServiceMBean {
         return address;
     }
 
-    public Set<URI> getContributions() {
-        return contributionService.getContributions();
+    public Set<ContributionInfo> getContributions() {
+        Set<Contribution> contributions =  metaDataStore.getContributions();
+        Set<ContributionInfo> infos = new TreeSet<ContributionInfo>();
+        for (Contribution contribution : contributions) {
+            URI uri = contribution.getUri();
+            String state = contribution.getState().toString();
+            long timestamp = contribution.getTimestamp();
+            List<QName> deployables = new ArrayList<QName>();
+            for (Deployable deployable : contribution.getManifest().getDeployables()) {
+                deployables.add(deployable.getName());
+            }
+            ContributionInfo info = new ContributionInfo(uri, state, deployables, timestamp);
+            infos.add(info);
+        }
+        return infos;
     }
 
     public void install(URI uri) throws ContributionManagementException {

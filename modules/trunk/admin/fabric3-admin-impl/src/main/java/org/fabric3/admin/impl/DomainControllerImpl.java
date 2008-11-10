@@ -40,6 +40,7 @@ import org.fabric3.admin.api.DomainController;
 import org.fabric3.admin.api.DuplicateContributionException;
 import org.fabric3.admin.api.InvalidContributionException;
 import org.fabric3.admin.api.InvalidDeploymentException;
+import org.fabric3.management.contribution.ContributionInfo;
 
 /**
  * Default implementation of the DomainController API.
@@ -139,14 +140,14 @@ public class DomainControllerImpl implements DomainController {
     }
 
     @SuppressWarnings({"unchecked"})
-    public Set<URI> list() throws CommunicationException {
+    public Set<ContributionInfo> stat() throws CommunicationException {
         try {
             if (!isConnected()) {
                 throw new IllegalStateException("Not connected");
             }
             MBeanServerConnection conn = jmxc.getMBeanServerConnection();
             ObjectName oName = new ObjectName(CONTRIBUTION_SERVICE_MBEAN);
-            return (Set<URI>) conn.getAttribute(oName, "Contributions");
+            return (Set<ContributionInfo>) conn.getAttribute(oName, "Contributions");
         } catch (JMException e) {
             throw new CommunicationException(e);
         } catch (IOException e) {

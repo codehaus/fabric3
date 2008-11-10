@@ -37,11 +37,11 @@ public interface ContributionServiceMBean {
     String getContributionServiceAddress();
 
     /**
-     * Returns the URIs of contributions in the domain.
+     * Returns ContributionInfos for contributions in the domain.
      *
      * @return the URIs of contributions in the domain.
      */
-    Set<URI> getContributions();
+    Set<ContributionInfo> getContributions();
 
     /**
      * Installs a stored contribution in the domain.

@@ -27,6 +27,7 @@
         </SOURCES>
       </library>
     </orderEntry>
+    <orderEntry type="module" module-name="fabric3-management-api" />
   </component>
 </module>
 
