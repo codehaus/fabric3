@@ -21,7 +21,7 @@ package org.fabric3.admin.api;
  *
  * @version $Revision$ $Date$
  */
-public class CommunicationException extends AdministrationException {
+public class CommunicationException extends Exception {
     private static final long serialVersionUID = -351731887104971407L;
 
     public CommunicationException(String message) {

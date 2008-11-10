@@ -23,11 +23,11 @@ import java.net.URI;
 import java.net.URL;
 
 import org.fabric3.admin.api.CommunicationException;
-import org.fabric3.admin.api.ContributionException;
 import org.fabric3.admin.api.DomainController;
 import org.fabric3.admin.api.DuplicateContributionException;
 import org.fabric3.admin.interpreter.Command;
 import org.fabric3.admin.interpreter.CommandException;
+import org.fabric3.management.contribution.ContributionManagementException;
 
 /**
  * @version $Revision$ $Date$
@@ -103,7 +103,7 @@ public class StoreCommand implements Command {
         } catch (IOException e) {
             out.println("ERROR: Unable to connect to the domain controller");
             e.printStackTrace(out);
-        } catch (ContributionException e) {
+        } catch (ContributionManagementException e) {
             out.println("ERROR: Error installing contribution");
             out.println("       " + e.getMessage());
         }

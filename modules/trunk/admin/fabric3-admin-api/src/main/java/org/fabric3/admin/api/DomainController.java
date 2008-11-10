@@ -22,6 +22,8 @@ import java.net.URL;
 import java.util.Set;
 
 import org.fabric3.management.contribution.ContributionInfo;
+import org.fabric3.management.contribution.ContributionManagementException;
+import org.fabric3.management.domain.DeploymentManagementException;
 
 /**
  * The interface for performing domain administrative functions.
@@ -87,66 +89,70 @@ public interface DomainController {
      * @param contribution a URL pointing to the contribution artifact
      * @param uri          the URI to assign the contribution.
      * @throws CommunicationException if there is an error communicating with the domain controller
-     * @throws ContributionException  if there is an error storing the contribution.
+     * @throws ContributionManagementException
+     *                                if there is an error storing the contribution.
      */
-    void store(URL contribution, URI uri) throws CommunicationException, ContributionException;
+    void store(URL contribution, URI uri) throws CommunicationException, ContributionManagementException;
 
     /**
      * Installs a contribution.
      *
      * @param uri the URI to assign the contribution.
      * @throws CommunicationException if there is an error communicating with the domain controller
-     * @throws ContributionException  if there is an error installing the contribution. See InstallException subtypes for specific errors that may be
+     * @throws ContributionManagementException
+     *                                if there is an error installing the contribution. See InstallException subtypes for specific errors that may be
      *                                thrown.
      */
-    void install(URI uri) throws CommunicationException, ContributionException;
+    void install(URI uri) throws CommunicationException, ContributionManagementException;
 
     /**
      * Deploys all deployables in a contribution.
      *
      * @param uri the contribution uri.
-     * @throws CommunicationException if there is an error communicating with the domain controller
-     * @throws DeploymentException    if there is an error deploying the contribution. See InstallException subtypes for specific errors that may be
-     *                                thrown.
+     * @throws CommunicationException        if there is an error communicating with the domain controller
+     * @throws DeploymentManagementException if there is an error deploying the contribution. See InstallException subtypes for specific errors that
+     *                                       may be thrown.
      */
-    void deploy(URI uri) throws CommunicationException, DeploymentException;
+    void deploy(URI uri) throws CommunicationException, DeploymentManagementException;
 
     /**
      * Deploys all deployables in a contribution.
      *
      * @param uri  the contribution URI.
      * @param plan the name of the deployment plan
-     * @throws CommunicationException if there is an error communicating with the domain controller
-     * @throws DeploymentException    if there is an error deploying the contribution. See InstallException subtypes for specific errors that may be
-     *                                thrown.
+     * @throws CommunicationException        if there is an error communicating with the domain controller
+     * @throws DeploymentManagementException if there is an error deploying the contribution. See InstallException subtypes for specific errors that
+     *                                       may be thrown.
      */
-    void deploy(URI uri, String plan) throws CommunicationException, DeploymentException;
+    void deploy(URI uri, String plan) throws CommunicationException, DeploymentManagementException;
 
     /**
      * Undeploys all deployables in a contribution.
      *
      * @param uri the contribution URI.
-     * @throws CommunicationException if there is an error communicating with the domain controller
-     * @throws DeploymentException    if there is an error undeploying the contribution.
+     * @throws CommunicationException        if there is an error communicating with the domain controller
+     * @throws DeploymentManagementException if there is an error undeploying the contribution.
      */
-    void undeploy(URI uri) throws CommunicationException, DeploymentException;
+    void undeploy(URI uri) throws CommunicationException, DeploymentManagementException;
 
     /**
      * Uninstalls a contribution.
      *
      * @param uri the contribution URI
      * @throws CommunicationException if there is an error communicating with the domain controller
-     * @throws ContributionException  if the is an error uninstalling the contribution
+     * @throws ContributionManagementException
+     *                                if the is an error uninstalling the contribution
      */
-    void uninstall(URI uri) throws CommunicationException, ContributionException;
+    void uninstall(URI uri) throws CommunicationException, ContributionManagementException;
 
     /**
      * Removes a contribution from storage in a domain.
      *
      * @param uri the contribution URI
      * @throws CommunicationException if there is an error communicating with the domain controller
-     * @throws ContributionException  if the is an error removing the contribution
+     * @throws ContributionManagementException
+     *                                if the is an error removing the contribution
      */
-    void remove(URI uri) throws CommunicationException, ContributionException;
+    void remove(URI uri) throws CommunicationException, ContributionManagementException;
 
 }

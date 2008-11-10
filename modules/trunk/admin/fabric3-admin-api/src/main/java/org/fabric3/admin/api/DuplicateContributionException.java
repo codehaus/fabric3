@@ -16,10 +16,12 @@
  */
 package org.fabric3.admin.api;
 
+import org.fabric3.management.contribution.ContributionManagementException;
+
 /**
  * @version $Revision$ $Date$
  */
-public class DuplicateContributionException extends ContributionException {
+public class DuplicateContributionException extends ContributionManagementException {
     private static final long serialVersionUID = 2950465877291283258L;
 
     public DuplicateContributionException(String message) {

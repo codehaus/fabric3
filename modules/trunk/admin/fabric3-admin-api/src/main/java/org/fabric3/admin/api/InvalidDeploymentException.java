@@ -18,10 +18,12 @@ package org.fabric3.admin.api;
 
 import java.util.List;
 
+import org.fabric3.management.domain.DeploymentManagementException;
+
 /**
  * @version $Revision$ $Date$
  */
-public class InvalidDeploymentException extends DeploymentException {
+public class InvalidDeploymentException extends DeploymentManagementException {
     private static final long serialVersionUID = 4166765627173457876L;
     private List<String> errors;
 

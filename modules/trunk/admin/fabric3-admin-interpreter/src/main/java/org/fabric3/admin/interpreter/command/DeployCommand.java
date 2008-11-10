@@ -28,14 +28,14 @@ import org.w3c.dom.Document;
 import org.xml.sax.SAXException;
 
 import org.fabric3.admin.api.CommunicationException;
-import org.fabric3.admin.api.ContributionException;
-import org.fabric3.admin.api.DeploymentException;
 import org.fabric3.admin.api.DomainController;
 import org.fabric3.admin.api.DuplicateContributionException;
-import org.fabric3.admin.api.InvalidContributionException;
-import org.fabric3.admin.api.InvalidDeploymentException;
 import org.fabric3.admin.interpreter.Command;
 import org.fabric3.admin.interpreter.CommandException;
+import org.fabric3.management.contribution.ContributionManagementException;
+import org.fabric3.management.contribution.InvalidContributionException;
+import org.fabric3.management.domain.DeploymentManagementException;
+import org.fabric3.management.domain.InvalidDeploymentException;
 
 /**
  * @version $Revision$ $Date$
@@ -122,7 +122,7 @@ public class DeployCommand implements Command {
         } catch (CommunicationException e) {
             out.println("ERROR: Error connecting to domain controller");
             e.printStackTrace(out);
-        } catch (DeploymentException e) {
+        } catch (DeploymentManagementException e) {
             out.println("ERROR: Error deploying contribution");
             out.println("       " + e.getMessage());
         }
@@ -144,7 +144,7 @@ public class DeployCommand implements Command {
             for (String desc : e.getErrors()) {
                 out.println("ERROR: " + desc);
             }
-        } catch (DeploymentException e) {
+        } catch (DeploymentManagementException e) {
             out.println("ERROR: Error deploying contribution");
             out.println("       " + e.getMessage());
             revertPlan(planContributionUri, out);
@@ -160,7 +160,7 @@ public class DeployCommand implements Command {
 
         } catch (DuplicateContributionException e) {
             out.println("ERROR: Deployment plan already exists");
-        } catch (ContributionException e) {
+        } catch (ContributionManagementException e) {
             out.println("ERROR: There was a problem installing the deployment plan: " + planFile);
             out.println("       " + e.getMessage());
             revertPlan(planContributionUri, out);
@@ -187,7 +187,7 @@ public class DeployCommand implements Command {
             for (String desc : e.getErrors()) {
                 out.println("ERROR: " + desc);
             }
-        } catch (DeploymentException e) {
+        } catch (DeploymentManagementException e) {
             out.println("ERROR: Error deploying contribution");
             out.println("       " + e.getMessage());
         } catch (CommunicationException e) {
@@ -212,7 +212,7 @@ public class DeployCommand implements Command {
         } catch (CommunicationException ex) {
             out.println("ERROR: Error connecting to domain controller");
             ex.printStackTrace(out);
-        } catch (ContributionException ex) {
+        } catch (ContributionManagementException ex) {
             out.println("ERROR: Error reverting deployment plan");
             out.println("       " + ex.getMessage());
         }

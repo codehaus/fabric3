@@ -21,10 +21,10 @@ import java.io.PrintStream;
 import java.net.URI;
 
 import org.fabric3.admin.api.CommunicationException;
-import org.fabric3.admin.api.DeploymentException;
 import org.fabric3.admin.api.DomainController;
 import org.fabric3.admin.interpreter.Command;
 import org.fabric3.admin.interpreter.CommandException;
+import org.fabric3.management.domain.DeploymentManagementException;
 
 /**
  * @version $Revision$ $Date$
@@ -84,7 +84,7 @@ public class UndeployCommand implements Command {
         } catch (CommunicationException ex) {
             out.println("ERROR: Error connecting to domain controller");
             ex.printStackTrace(out);
-        } catch (DeploymentException ex) {
+        } catch (DeploymentManagementException ex) {
             out.println("ERROR: Error undeploying contribution");
             out.println("       " + ex.getMessage());
         }

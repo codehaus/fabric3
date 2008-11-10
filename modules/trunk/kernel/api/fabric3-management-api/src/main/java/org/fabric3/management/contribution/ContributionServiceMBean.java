@@ -60,7 +60,7 @@ public interface ContributionServiceMBean {
      * @throws ContributionManagementException
      *          if an error occurs during deinstallation.
      */
-    public void uninstall(URI uri) throws ContributionManagementException;
+     void uninstall(URI uri) throws ContributionManagementException;
 
     /**
      * Removes a stored contribution in the domain.

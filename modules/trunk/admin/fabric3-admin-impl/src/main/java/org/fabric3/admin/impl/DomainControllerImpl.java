@@ -34,13 +34,13 @@ import org.apache.http.entity.InputStreamEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 
 import org.fabric3.admin.api.CommunicationException;
-import org.fabric3.admin.api.ContributionException;
-import org.fabric3.admin.api.DeploymentException;
 import org.fabric3.admin.api.DomainController;
 import org.fabric3.admin.api.DuplicateContributionException;
-import org.fabric3.admin.api.InvalidContributionException;
 import org.fabric3.admin.api.InvalidDeploymentException;
 import org.fabric3.management.contribution.ContributionInfo;
+import org.fabric3.management.contribution.ContributionManagementException;
+import org.fabric3.management.contribution.InvalidContributionException;
+import org.fabric3.management.domain.DeploymentManagementException;
 
 /**
  * Default implementation of the DomainController API.
@@ -70,7 +70,7 @@ public class DomainControllerImpl implements DomainController {
         this.password = password;
     }
 
-    public void store(URL contribution, URI uri) throws CommunicationException, ContributionException {
+    public void store(URL contribution, URI uri) throws CommunicationException, ContributionManagementException {
         try {
             if (!isConnected()) {
                 throw new IllegalStateException("Not connected");
@@ -99,13 +99,13 @@ public class DomainControllerImpl implements DomainController {
             HttpResponse response = httpclient.execute(post);
             int code = response.getStatusLine().getStatusCode();
             if (400 == code) {
-                throw new ContributionException("Error storing contribution");
+                throw new ContributionManagementException("Error storing contribution");
             } else if (420 == code) {
                 throw new DuplicateContributionException("A contribution already exists for " + uri);
             }
 
         } catch (MBeanException e) {
-            throw new ContributionException(e.getMessage(), e.getTargetException());
+            throw new ContributionManagementException(e.getMessage(), e.getTargetException());
         } catch (JMException e) {
             throw new CommunicationException(e);
         } catch (IOException e) {
@@ -113,7 +113,7 @@ public class DomainControllerImpl implements DomainController {
         }
     }
 
-    public void install(URI uri) throws CommunicationException, ContributionException {
+    public void install(URI uri) throws CommunicationException, ContributionManagementException {
         try {
             if (!isConnected()) {
                 throw new IllegalStateException("Not connected");
@@ -125,12 +125,10 @@ public class DomainControllerImpl implements DomainController {
             // install the contribution
             conn.invoke(oName, "install", new URI[]{uri}, new String[]{URI.class.getName()});
         } catch (MBeanException e) {
-            if (e.getTargetException() instanceof org.fabric3.management.contribution.InvalidContributionException) {
-                org.fabric3.management.contribution.InvalidContributionException ex =
-                        (org.fabric3.management.contribution.InvalidContributionException) e.getTargetException();
-                throw new InvalidContributionException("Error installing " + uri, ex.getErrors());
+            if (e.getTargetException() instanceof InvalidContributionException) {
+                throw (InvalidContributionException) e.getTargetException();
             } else {
-                throw new ContributionException(e.getMessage(), e.getTargetException());
+                throw new ContributionManagementException(e.getMessage(), e.getTargetException());
             }
         } catch (JMException e) {
             throw new CommunicationException(e);
@@ -155,7 +153,7 @@ public class DomainControllerImpl implements DomainController {
         }
     }
 
-    public void deploy(URI uri) throws CommunicationException, DeploymentException {
+    public void deploy(URI uri) throws CommunicationException, DeploymentManagementException {
         try {
             if (!isConnected()) {
                 throw new IllegalStateException("Not connected");
@@ -164,12 +162,11 @@ public class DomainControllerImpl implements DomainController {
             ObjectName oName = new ObjectName(DOMAIN_MBEAN);
             conn.invoke(oName, "deploy", new URI[]{uri}, new String[]{URI.class.getName()});
         } catch (MBeanException e) {
-            if (e.getTargetException() instanceof org.fabric3.management.contribution.InvalidContributionException) {
-                org.fabric3.management.contribution.InvalidContributionException ex =
-                        (org.fabric3.management.contribution.InvalidContributionException) e.getTargetException();
+            if (e.getTargetException() instanceof InvalidContributionException) {
+                InvalidContributionException ex = (InvalidContributionException) e.getTargetException();
                 throw new InvalidDeploymentException("Error deploying " + uri, ex.getErrors());
             } else {
-                throw new DeploymentException(e.getTargetException().getMessage(), e.getTargetException());
+                throw new DeploymentManagementException(e.getTargetException().getMessage(), e.getTargetException());
             }
         } catch (JMException e) {
             throw new CommunicationException(e);
@@ -179,7 +176,7 @@ public class DomainControllerImpl implements DomainController {
 
     }
 
-    public void deploy(URI uri, String plan) throws CommunicationException, DeploymentException {
+    public void deploy(URI uri, String plan) throws CommunicationException, DeploymentManagementException {
         try {
             if (!isConnected()) {
                 throw new IllegalStateException("Not connected");
@@ -188,12 +185,11 @@ public class DomainControllerImpl implements DomainController {
             ObjectName oName = new ObjectName(DOMAIN_MBEAN);
             conn.invoke(oName, "deploy", new Object[]{uri, plan}, new String[]{URI.class.getName(), "java.lang.String"});
         } catch (MBeanException e) {
-            if (e.getTargetException() instanceof org.fabric3.management.contribution.InvalidContributionException) {
-                org.fabric3.management.contribution.InvalidContributionException ex =
-                        (org.fabric3.management.contribution.InvalidContributionException) e.getTargetException();
+            if (e.getTargetException() instanceof InvalidContributionException) {
+                InvalidContributionException ex = (InvalidContributionException) e.getTargetException();
                 throw new InvalidDeploymentException("Error deploying " + uri, ex.getErrors());
             } else {
-                throw new DeploymentException(e.getTargetException().getMessage(), e.getTargetException());
+                throw new DeploymentManagementException(e.getTargetException().getMessage(), e.getTargetException());
             }
         } catch (JMException e) {
             throw new CommunicationException(e);
@@ -202,7 +198,7 @@ public class DomainControllerImpl implements DomainController {
         }
     }
 
-    public void undeploy(URI uri) throws CommunicationException, DeploymentException {
+    public void undeploy(URI uri) throws CommunicationException, DeploymentManagementException {
         try {
             if (!isConnected()) {
                 throw new IllegalStateException("Not connected");
@@ -211,7 +207,7 @@ public class DomainControllerImpl implements DomainController {
             ObjectName oName = new ObjectName(DOMAIN_MBEAN);
             conn.invoke(oName, "undeploy", new Object[]{uri}, new String[]{URI.class.getName()});
         } catch (MBeanException e) {
-            throw new DeploymentException(e.getTargetException().getMessage(), e.getTargetException());
+            throw new DeploymentManagementException(e.getTargetException().getMessage(), e.getTargetException());
         } catch (JMException e) {
             throw new CommunicationException(e);
         } catch (IOException e) {
@@ -219,7 +215,7 @@ public class DomainControllerImpl implements DomainController {
         }
     }
 
-    public void uninstall(URI name) throws CommunicationException, ContributionException {
+    public void uninstall(URI name) throws CommunicationException, ContributionManagementException {
         try {
             if (!isConnected()) {
                 throw new IllegalStateException("Not connected");
@@ -234,7 +230,7 @@ public class DomainControllerImpl implements DomainController {
         }
     }
 
-    public void remove(URI name) throws CommunicationException, ContributionException {
+    public void remove(URI name) throws CommunicationException {
         try {
             if (!isConnected()) {
                 throw new IllegalStateException("Not connected");
