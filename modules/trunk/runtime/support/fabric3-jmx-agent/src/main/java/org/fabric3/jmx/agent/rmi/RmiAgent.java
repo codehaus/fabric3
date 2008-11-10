@@ -33,17 +33,18 @@ import org.fabric3.jmx.agent.ManagementException;
  * Utility for starting the JMX server with an RMI agent.
  *
  * @version $Revsion$ $Date: 2007-09-02 01:33:01 +0100 (Sun, 02 Sep 2007) $
- *
  */
 public class RmiAgent extends AbstractAgent {
 
     private Registry registry;
 
-    public RmiAgent() throws ManagementException {
+    public RmiAgent(int port) throws ManagementException {
+        super(port);
     }
 
     /**
      * Gets the adaptor URL.
+     *
      * @return Adaptor URL used by the agent.
      * @throws ManagementException If unable to start the agent.
      */

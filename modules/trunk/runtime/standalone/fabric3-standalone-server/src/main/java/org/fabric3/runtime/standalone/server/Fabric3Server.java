@@ -54,8 +54,6 @@ import org.fabric3.host.runtime.Bootstrapper;
 import org.fabric3.host.runtime.InitializationException;
 import org.fabric3.host.runtime.RuntimeLifecycleCoordinator;
 import org.fabric3.host.runtime.ShutdownException;
-import org.fabric3.jmx.agent.Agent;
-import org.fabric3.jmx.agent.DefaultAgent;
 import org.fabric3.jmx.agent.rmi.RmiAgent;
 import org.fabric3.monitor.MonitorFactory;
 import org.fabric3.runtime.standalone.BootstrapException;
@@ -74,14 +72,15 @@ import org.fabric3.runtime.standalone.StandaloneRuntime;
  */
 public class Fabric3Server implements Fabric3ServerMBean {
     private static final String JMX_DOMAIN = "fabric3.jmx";
+    private static final String JMX_PORT = "fabric3.jmx.port";
     private static final String MONITOR_PORT_PARAM = "fabric3.monitor.port";
     private static final String MONITOR_KEY_PARAM = "fabric3.monitor.key";
     private static final String JOIN_DOMAIN_TIMEOUT = "fabric3.join.domain.timeout";
     private static final String INTENTS_FILE = "intents.xml";
 
-    private final RmiAgent agent;
     private final File installDirectory;
     private RuntimeLifecycleCoordinator<StandaloneRuntime, Bootstrapper> coordinator;
+    private RmiAgent agent;
     private ServerMonitor monitor;
 
     /**
@@ -105,9 +104,6 @@ public class Fabric3Server implements Fabric3ServerMBean {
      */
     private Fabric3Server() throws MalformedURLException {
         installDirectory = BootstrapHelper.getInstallDirectory(Fabric3Server.class);
-
-        // TODO Add better host JMX support from the next release
-        agent = new RmiAgent();
     }
 
     /**
@@ -162,9 +158,14 @@ public class Fabric3Server implements Fabric3ServerMBean {
             hostInfo = BootstrapHelper.createHostInfo(installDirectory, configDir, props);
             MonitorFactory monitorFactory = BootstrapHelper.createMonitorFactory(bootLoader, props);
             runtime = BootstrapHelper.createRuntime(hostInfo, bootLoader, monitorFactory);
+            monitor = runtime.getMonitorFactory().getMonitor(ServerMonitor.class);
+
+            // boot the JMX agent
+
+            int jmxPort = Integer.parseInt(props.getProperty(JMX_PORT, "1099"));
+            agent = new RmiAgent(jmxPort);
             runtime.setMBeanServer(agent.getMBeanServer());
             runtime.setJmxSubDomain(jmxDomain);
-            monitor = runtime.getMonitorFactory().getMonitor(ServerMonitor.class);
 
             // boot the runtime
             coordinator = BootstrapHelper.createCoordinator(hostInfo, bootLoader);

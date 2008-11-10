@@ -40,11 +40,22 @@ public abstract class AbstractAgent implements Agent {
     protected int port = 1099;
 
     /**
-     * Initialies the server.
+     * Constructor using the default RMI port (1099).
      *
      * @throws ManagementException If unable to start the agent.
      */
     public AbstractAgent() throws ManagementException {
+        this(1099);
+    }
+
+    /**
+     * Constructor using the given port.
+     *
+     * @param port the given port
+     * @throws ManagementException If unable to start the agent.
+     */
+    protected AbstractAgent(int port) {
+        this.port = port;
         mBeanServer = MBeanServerFactory.createMBeanServer(DOMAIN);
     }
 
