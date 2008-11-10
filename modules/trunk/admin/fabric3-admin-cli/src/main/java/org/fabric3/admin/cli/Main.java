@@ -45,6 +45,9 @@ public class Main {
         FileSettings settings = new FileSettings(getSettingsFile());
         try {
             settings.load();
+            if (settings.getDomainAddress("default") == null) {
+                settings.addDomain("default", "service:jmx:rmi:///jndi/rmi://localhost:1099/server");
+            }
         } catch (IOException e) {
             throw new InterpreterException("Error loading settings", e);
         }
