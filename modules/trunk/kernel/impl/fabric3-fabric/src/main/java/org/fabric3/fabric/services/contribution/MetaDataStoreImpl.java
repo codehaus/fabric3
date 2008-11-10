@@ -61,7 +61,7 @@ public class MetaDataStoreImpl implements MetaDataStore {
     }
 
     /**
-     * Used to reinject the processor registry after runtime bootstrap
+     * Used to reinject the processor registry after runtime bootstrap.
      *
      * @param processorRegistry the configured processor registry
      */
@@ -177,6 +177,19 @@ public class MetaDataStoreImpl implements MetaDataStore {
             }
         }
         return null;
+    }
+
+    public Set<Contribution> resolveDependentContributions(URI uri) {
+        Set<Contribution> dependents = new HashSet<Contribution>();
+        for (Contribution entry : cache.values()) {
+            for (URI resolvedUri : entry.getResolvedImportUris()) {
+                if (uri.equals(resolvedUri)) {
+                    dependents.add(entry);
+                    break;
+                }
+            }
+        }
+        return dependents;
     }
 
     public List<Contribution> resolveTransitiveImports(Contribution contribution) throws UnresolvableImportException {

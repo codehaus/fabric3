@@ -21,6 +21,7 @@ import java.io.Serializable;
 import java.net.URI;
 import java.net.URL;
 import java.util.List;
+import java.util.Set;
 import javax.xml.namespace.QName;
 
 import junit.framework.TestCase;
@@ -34,6 +35,7 @@ import org.fabric3.spi.services.contribution.QNameImport;
 import org.fabric3.spi.services.contribution.QNameSymbol;
 import org.fabric3.spi.services.contribution.ResourceElement;
 import org.fabric3.spi.services.contribution.Resource;
+import org.fabric3.spi.services.contribution.Export;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 
 /**
@@ -77,6 +79,11 @@ public class MetaDataStoreImplTestCase extends TestCase {
         assertEquals(resource, store.resolveContainingResource(uri, symbol));
     }
 
+    public void testResolveDependentContributions() throws Exception {
+        Set<Contribution> contributions = store.resolveDependentContributions(RESOURCE_URI);
+        assertEquals(RESOURCE_URI2, contributions.iterator().next().getUri());
+    }
+
     protected void setUp() throws Exception {
         super.setUp();
         ClassLoaderRegistry registry = new ClassLoaderRegistryImpl();
@@ -96,6 +103,7 @@ public class MetaDataStoreImplTestCase extends TestCase {
         QNameExport export2 = new QNameExport(IMPORT_EXPORT_QNAME2);
         manifest2.addExport(export2);
         contribution2.setManifest(manifest2);
+        contribution2.addResolvedImportUri(RESOURCE_URI);
         store.store(contribution2);
 
     }

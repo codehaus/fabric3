@@ -98,4 +98,12 @@ public interface MetaDataStore {
      */
     Contribution resolve(Import imprt);
 
+    /**
+     * Resolves contributions that import the contribution represented by the given URI.
+     *
+     * @param uri the contribution URI
+     * @return the set of contributions that import the contribution
+     */
+    Set<Contribution> resolveDependentContributions(URI uri);
+
 }

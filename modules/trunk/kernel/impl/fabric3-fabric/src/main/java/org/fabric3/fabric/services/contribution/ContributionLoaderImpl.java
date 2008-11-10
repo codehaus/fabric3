@@ -20,6 +20,9 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.HashSet;
 
 import org.osoa.sca.annotations.Reference;
 
@@ -82,10 +85,19 @@ public class ContributionLoaderImpl implements ContributionLoader {
         return loader;
     }
 
-    public void unload(Contribution contribution) {
-        // TODO verify no contributions import this contribution
-        classLoaderRegistry.unregister(contribution.getUri());
+    public void unload(Contribution contribution) throws ContributionInUseException {
+        URI uri = contribution.getUri();
+        Set<Contribution> contributions = store.resolveDependentContributions(uri);
+        if (!contributions.isEmpty()) {
+            Set<URI> dependents = new HashSet<URI>(contributions.size());
+            for (Contribution dependent : contributions) {
+                dependents.add(dependent.getUri());
+            }
+            throw new ContributionInUseException("Contribution is in use: " + uri, uri, dependents);
+        }
+        classLoaderRegistry.unregister(uri);
     }
+
 
     private void resolveImports(Contribution contribution, MultiParentClassLoader loader)
             throws MatchingExportNotFoundException, ContributionLoadException {

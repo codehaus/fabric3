@@ -42,6 +42,7 @@ public interface ContributionLoader {
      * Unloads a contribution from memory.
      *
      * @param contribution the contribution to unload
+     * @throws ContributionInUseException if the contribution cannot be unloaded because it is referenced by another loaded contribution
      */
-    void unload(Contribution contribution);
+    void unload(Contribution contribution) throws ContributionInUseException;
 }
