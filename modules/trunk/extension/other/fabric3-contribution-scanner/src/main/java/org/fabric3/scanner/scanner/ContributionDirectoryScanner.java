@@ -46,6 +46,7 @@ import org.fabric3.host.contribution.FileContributionSource;
 import org.fabric3.host.contribution.ValidationException;
 import org.fabric3.host.domain.AssemblyException;
 import org.fabric3.host.domain.DeploymentException;
+import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.scdl.Composite;
 import org.fabric3.spi.domain.Domain;
 import org.fabric3.spi.plan.DeploymentPlan;
@@ -87,7 +88,7 @@ public class ContributionDirectoryScanner implements Runnable, Fabric3EventListe
     private final Domain domain;
     private Map<String, URI> processed = new HashMap<String, URI>();
     private FileSystemResourceFactoryRegistry registry;
-    private String path = "../deploy";
+    private File path;
 
     private long delay = 5000;
     private ScheduledExecutorService executor;
@@ -97,18 +98,20 @@ public class ContributionDirectoryScanner implements Runnable, Fabric3EventListe
                                         @Reference(name = "assembly") Domain domain,
                                         @Reference EventService eventService,
                                         @Reference MetaDataStore metaDataStore,
+                                        @Reference HostInfo info,
                                         @Monitor ScannerMonitor monitor) {
         this.registry = registry;
         this.contributionService = contributionService;
         this.domain = domain;
         this.eventService = eventService;
         this.metaDataStore = metaDataStore;
+        path = new File(info.getBaseDir(), "deploy");
         this.monitor = monitor;
     }
 
     @Property(required = false)
-    public void setPath(String path) {
-        this.path = path;
+    public void setPath(String dir) {
+        this.path = new File(dir);
     }
 
     @Property(required = false)
@@ -133,13 +136,12 @@ public class ContributionDirectoryScanner implements Runnable, Fabric3EventListe
     }
 
     public synchronized void run() {
-        File extensionDir = new File(path);
-        if (!extensionDir.isDirectory()) {
+        if (!path.isDirectory()) {
             // there is no extension directory, return without processing
             return;
         }
         try {
-            File[] files = extensionDir.listFiles();
+            File[] files = path.listFiles();
             processRemovals(files);
             processFiles(files);
         } catch (RuntimeException e) {
