@@ -14,37 +14,17 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.management.contribution;
-
-import java.net.URI;
-import java.util.Set;
+package org.fabric3.host.domain;
 
 /**
+ * Thrown when an attempt is made to perform an operation on a contribution that is not in the required installed state.
+ *
  * @version $Revision$ $Date$
  */
-public class ContributionInUseManagementException extends ContributionUninstallException {
-    private static final long serialVersionUID = -4801764591014282993L;
-    private Set<URI> contributions;
-    private URI uri;
+public class ContributionNotInstalledException extends DeploymentException {
+    private static final long serialVersionUID = -4286636545614691532L;
 
-    /**
-     * Constructor.
-     *
-     * @param message       the error message
-     * @param uri           the contribution
-     * @param contributions the installed contributions that reference the contribution
-     */
-    public ContributionInUseManagementException(String message, URI uri, Set<URI> contributions) {
+    public ContributionNotInstalledException(String message) {
         super(message);
-        this.uri = uri;
-        this.contributions = contributions;
-    }
-
-    public Set<URI> getContributions() {
-        return contributions;
-    }
-
-    public URI getUri() {
-        return uri;
     }
 }

@@ -21,12 +21,15 @@ import java.io.IOException;
 import java.io.PrintStream;
 import java.net.URI;
 
+import javax.xml.namespace.QName;
+
 import org.fabric3.admin.api.CommunicationException;
 import org.fabric3.admin.api.DomainController;
 import org.fabric3.admin.interpreter.Command;
 import org.fabric3.admin.interpreter.CommandException;
 import org.fabric3.management.contribution.ContributionInUseManagementException;
 import org.fabric3.management.contribution.ContributionUninstallException;
+import org.fabric3.management.contribution.ContributionLockedManagementException;
 
 /**
  * @version $Revision$ $Date$
@@ -92,6 +95,11 @@ public class UninstallCommand implements Command {
             out.println("ERROR: Contribution is in use by the following contributions:");
             for (URI uri : e.getContributions()) {
                 out.println("       " + uri);
+            }
+        } catch (ContributionLockedManagementException e) {
+            out.println("ERROR: Contribution is in use by the following deployed composites:");
+            for (QName name : e.getDeployables()) {
+                out.println("       " + name);
             }
         } catch (ContributionUninstallException e) {
             out.println("ERROR: Error uninstalling contribution");

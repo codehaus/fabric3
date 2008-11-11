@@ -37,6 +37,7 @@ import org.fabric3.host.contribution.ContributionService;
 import org.fabric3.host.contribution.Deployable;
 import org.fabric3.host.contribution.ValidationException;
 import org.fabric3.host.contribution.ValidationFailure;
+import org.fabric3.host.contribution.ContributionLockedException;
 import org.fabric3.jetty.JettyService;
 import org.fabric3.management.contribution.ContributionInUseManagementException;
 import org.fabric3.management.contribution.ContributionInfo;
@@ -45,6 +46,7 @@ import org.fabric3.management.contribution.ContributionRemoveException;
 import org.fabric3.management.contribution.ContributionServiceMBean;
 import org.fabric3.management.contribution.ContributionUninstallException;
 import org.fabric3.management.contribution.InvalidContributionException;
+import org.fabric3.management.contribution.ContributionLockedManagementException;
 import org.fabric3.spi.services.contribution.Contribution;
 import org.fabric3.spi.services.contribution.MetaDataStore;
 
@@ -168,9 +170,11 @@ public class ContibutionServiceMBeanImpl implements ContributionServiceMBean {
         try {
             contributionService.uninstall(uri);
         } catch (ContributionInUseException e) {
-            monitor.error("Error uninstalling contribution: " + uri, e);
             throw new ContributionInUseManagementException(e.getMessage(), e.getUri(), e.getContributions());
+        } catch (ContributionLockedException e) {
+            throw new ContributionLockedManagementException(e.getMessage(), e.getUri(), e.getDeployables());
         } catch (ContributionException e) {
+            // log the exception as it is not recoverable
             monitor.error("Error uninstalling contribution: " + uri, e);
             // don't rethrow the original exception since the class will not be available on the client's classpath
             throw new ContributionUninstallException(getErrorMessage(e));

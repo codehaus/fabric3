@@ -32,6 +32,7 @@ import org.fabric3.fabric.instantiator.LogicalChange;
 import org.fabric3.fabric.instantiator.LogicalModelInstantiator;
 import org.fabric3.host.domain.AssemblyException;
 import org.fabric3.host.domain.DeploymentException;
+import org.fabric3.host.domain.ContributionNotInstalledException;
 import org.fabric3.host.contribution.Deployable;
 import org.fabric3.loader.plan.DeploymentPlanConstants;
 import org.fabric3.scdl.Composite;
@@ -57,6 +58,7 @@ import org.fabric3.spi.services.contribution.QNameSymbol;
 import org.fabric3.spi.services.contribution.ResourceElement;
 import org.fabric3.spi.services.contribution.Contribution;
 import org.fabric3.spi.services.contribution.Resource;
+import org.fabric3.spi.services.contribution.ContributionState;
 import org.fabric3.spi.services.lcm.LogicalComponentManager;
 import org.fabric3.spi.services.lcm.StoreException;
 import org.fabric3.spi.services.routing.RoutingException;
@@ -144,7 +146,14 @@ public abstract class AbstractDomain implements Domain {
 
     public void include(List<URI> uris, boolean transactional) throws DeploymentException {
         LogicalCompositeComponent domain = logicalComponentManager.getRootComponent();
+
         List<Contribution> contributions = resolveContributions(uris);
+        for (Contribution contribution : contributions) {
+            if (ContributionState.INSTALLED != contribution.getState()) {
+                throw new ContributionNotInstalledException("Contribution is not installed: " + contribution.getUri());
+            }
+        }
+
         List<Composite> deployables = getDeployables(contributions);
         List<DeploymentPlan> plans = getDeploymentPlans(contributions);
 
@@ -212,11 +221,16 @@ public abstract class AbstractDomain implements Domain {
 
         QName name = composite.getName();
         Contribution contribution = metadataStore.resolveContainingContribution(new QNameSymbol(name));
-        if (contribution != null) {
+        if (contribution != null && ContributionState.INSTALLED != contribution.getState()) {
             // a composite may not be associated with a contribution, e.g. a bootstrap composite
+            throw new ContributionNotInstalledException("Contribution is not installed: " + contribution.getUri());
+        }
+
+        if (contribution != null) {
             // lock the contribution
             contribution.acquireLock(name);
         }
+        
         if (transactional) {
             domain = CopyUtil.copy(domain);
         }

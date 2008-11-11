@@ -14,37 +14,34 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.management.contribution;
+package org.fabric3.host.contribution;
 
 import java.net.URI;
 import java.util.Set;
+import javax.xml.namespace.QName;
 
 /**
+ * Thrown when an attempt is made to uninstall a contribution that is referenced by deployed components.
+ *
  * @version $Revision$ $Date$
  */
-public class ContributionInUseManagementException extends ContributionUninstallException {
-    private static final long serialVersionUID = -4801764591014282993L;
-    private Set<URI> contributions;
+public class ContributionLockedException extends ContributionException {
+    private static final long serialVersionUID = -5443601943113359365L;
     private URI uri;
+    private Set<QName> deployables;
 
-    /**
-     * Constructor.
-     *
-     * @param message       the error message
-     * @param uri           the contribution
-     * @param contributions the installed contributions that reference the contribution
-     */
-    public ContributionInUseManagementException(String message, URI uri, Set<URI> contributions) {
+    public ContributionLockedException(String message, URI uri, Set<QName> deployables) {
         super(message);
         this.uri = uri;
-        this.contributions = contributions;
-    }
-
-    public Set<URI> getContributions() {
-        return contributions;
+        this.deployables = deployables;
     }
 
     public URI getUri() {
         return uri;
     }
+
+    public Set<QName> getDeployables() {
+        return deployables;
+    }
+
 }

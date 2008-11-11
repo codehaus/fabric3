@@ -18,33 +18,34 @@ package org.fabric3.management.contribution;
 
 import java.net.URI;
 import java.util.Set;
+import javax.xml.namespace.QName;
 
 /**
  * @version $Revision$ $Date$
  */
-public class ContributionInUseManagementException extends ContributionUninstallException {
-    private static final long serialVersionUID = -4801764591014282993L;
-    private Set<URI> contributions;
+public class ContributionLockedManagementException extends ContributionUninstallException {
+    private static final long serialVersionUID = 5508297045249783700L;
     private URI uri;
+    private Set<QName> deployables;
 
     /**
      * Constructor.
      *
-     * @param message       the error message
-     * @param uri           the contribution
-     * @param contributions the installed contributions that reference the contribution
+     * @param message     the error message
+     * @param uri         the contribution
+     * @param deployables the deployed composites that are using to the contribution
      */
-    public ContributionInUseManagementException(String message, URI uri, Set<URI> contributions) {
+    public ContributionLockedManagementException(String message, URI uri, Set<QName> deployables) {
         super(message);
         this.uri = uri;
-        this.contributions = contributions;
-    }
-
-    public Set<URI> getContributions() {
-        return contributions;
+        this.deployables = deployables;
     }
 
     public URI getUri() {
         return uri;
+    }
+
+    public Set<QName> getDeployables() {
+        return deployables;
     }
 }

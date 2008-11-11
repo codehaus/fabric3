@@ -41,6 +41,8 @@ import org.fabric3.management.contribution.ContributionManagementException;
 import org.fabric3.management.contribution.InvalidContributionException;
 import org.fabric3.management.contribution.ContributionInstallException;
 import org.fabric3.management.contribution.ContributionUninstallException;
+import org.fabric3.management.contribution.ContributionInUseManagementException;
+import org.fabric3.management.contribution.ContributionLockedManagementException;
 import org.fabric3.management.domain.DeploymentManagementException;
 import org.fabric3.management.domain.InvalidDeploymentException;
 
@@ -188,6 +190,7 @@ public class DomainControllerImpl implements DomainController {
             conn.invoke(oName, "deploy", new Object[]{uri, plan}, new String[]{URI.class.getName(), "java.lang.String"});
         } catch (MBeanException e) {
             if (e.getTargetException() instanceof InvalidContributionException) {
+                // can be thrown when installing the deployment plan
                 InvalidContributionException ex = (InvalidContributionException) e.getTargetException();
                 throw new InvalidDeploymentException("Error deploying " + uri, ex.getErrors());
             } else {
@@ -225,6 +228,14 @@ public class DomainControllerImpl implements DomainController {
             MBeanServerConnection conn = jmxc.getMBeanServerConnection();
             ObjectName oName = new ObjectName(CONTRIBUTION_SERVICE_MBEAN);
             conn.invoke(oName, "uninstall", new Object[]{name}, new String[]{URI.class.getName()});
+        } catch (MBeanException e) {
+            if (e.getTargetException() instanceof ContributionInUseManagementException) {
+                throw (ContributionInUseManagementException) e.getTargetException();
+            } else if (e.getTargetException() instanceof ContributionLockedManagementException) {
+                throw (ContributionLockedManagementException) e.getTargetException();
+            } else {
+                throw new ContributionUninstallException(e.getTargetException().getMessage(), e.getTargetException());
+            }
         } catch (JMException e) {
             throw new CommunicationException(e);
         } catch (IOException e) {

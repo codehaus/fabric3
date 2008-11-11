@@ -27,10 +27,12 @@ import org.fabric3.host.contribution.Deployable;
 import org.fabric3.host.domain.AssemblyException;
 import org.fabric3.host.domain.AssemblyFailure;
 import org.fabric3.host.domain.DeploymentException;
+import org.fabric3.host.domain.ContributionNotInstalledException;
 import org.fabric3.management.domain.ContributionNotFoundException;
 import org.fabric3.management.domain.DeploymentManagementException;
 import org.fabric3.management.domain.DomainMBean;
 import org.fabric3.management.domain.InvalidDeploymentException;
+import org.fabric3.management.domain.ContributionNotInstalledManagementException;
 import org.fabric3.spi.domain.Domain;
 import org.fabric3.spi.services.contribution.Contribution;
 import org.fabric3.spi.services.contribution.MetaDataStore;
@@ -50,24 +52,7 @@ public class DomainMBeanImpl implements DomainMBean {
     }
 
     public void deploy(URI uri) throws DeploymentManagementException {
-        Contribution contribution = store.find(uri);
-        if (contribution == null) {
-            throw new ContributionNotFoundException("Contribution not found: " + uri);
-        }
-        for (Deployable deployable : contribution.getManifest().getDeployables()) {
-            try {
-                domain.include(deployable.getName());
-            } catch (AssemblyException e) {
-                monitor.error("Error deploying " + uri, e);
-                List<String> errors = new ArrayList<String>();
-                for (AssemblyFailure error : e.getErrors()) {
-                    errors.add(error.getMessage());
-                }
-                throw new InvalidDeploymentException("Error deploying " + uri, errors);
-            } catch (DeploymentException e) {
-                reportError(uri, e);
-            }
-        }
+        deploy(uri, null);
     }
 
     public void deploy(URI uri, String plan) throws DeploymentManagementException {
@@ -77,7 +62,13 @@ public class DomainMBeanImpl implements DomainMBean {
         }
         for (Deployable deployable : contribution.getManifest().getDeployables()) {
             try {
-                domain.include(deployable.getName(), plan);
+                if (plan == null) {
+                    domain.include(deployable.getName());
+                } else {
+                    domain.include(deployable.getName(), plan);
+                }
+            } catch (ContributionNotInstalledException e) {
+                throw new ContributionNotInstalledManagementException(e.getMessage());
             } catch (AssemblyException e) {
                 monitor.error("Error deploying " + uri, e);
                 List<String> errors = new ArrayList<String>();
@@ -100,13 +91,6 @@ public class DomainMBeanImpl implements DomainMBean {
         for (Deployable deployable : contribution.getManifest().getDeployables()) {
             try {
                 domain.undeploy(deployable.getName());
-            } catch (AssemblyException e) {
-                monitor.error("Error deploying " + uri, e);
-                List<String> errors = new ArrayList<String>();
-                for (AssemblyFailure error : e.getErrors()) {
-                    errors.add(error.getMessage());
-                }
-                throw new InvalidDeploymentException("Error deploying " + uri, errors);
             } catch (DeploymentException e) {
                 reportError(uri, e);
             }

@@ -57,6 +57,7 @@ import org.fabric3.host.contribution.ContributionSource;
 import org.fabric3.host.contribution.Deployable;
 import org.fabric3.host.contribution.DuplicateContributionException;
 import org.fabric3.host.contribution.ValidationFailure;
+import org.fabric3.host.contribution.ContributionLockedException;
 import org.fabric3.introspection.validation.InvalidContributionException;
 import org.fabric3.introspection.validation.ValidationUtils;
 import org.fabric3.scdl.ArtifactValidationFailure;
@@ -237,6 +238,10 @@ public class ContributionServiceImpl implements ContributionService {
         if (contribution.getState() != ContributionState.INSTALLED) {
             throw new IllegalContributionStateException("Contribution not installed: " + uri);
         }
+        if (contribution.isLocked()) {
+            Set<QName> deployables = contribution.getLockOwners();
+            throw new ContributionLockedException("Contribution is currently in use by a deployment: " + uri, uri, deployables);
+        }
         // unload from memory
         contributionLoader.unload(contribution);
         contribution.setState(ContributionState.STORED);
@@ -288,6 +293,9 @@ public class ContributionServiceImpl implements ContributionService {
      * @throws ContributionException if there is an error installing the contribution
      */
     private void install(Contribution contribution) throws ContributionException {
+        if (ContributionState.STORED != contribution.getState()) {
+            throw new IllegalContributionStateException("Contribution is already installed");
+        }
         introspect(contribution);
         ClassLoader loader = contributionLoader.load(contribution);
         processContents(contribution, loader);
