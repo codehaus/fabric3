@@ -83,7 +83,6 @@ public interface ContributionService {
      */
     void install(List<URI> uris) throws InstallException, ContributionNotFoundException;
 
-
     /**
      * Stores and installs an artifact.
      *
@@ -115,9 +114,10 @@ public interface ContributionService {
      * Uninstalls a contribution.
      *
      * @param uri The URI of the contribution
-     * @throws ContributionException if there was a problem with the contribution
+     * @throws UninstallException if there was a problem with the contribution
+     * @throws ContributionNotFoundException if a contribution is not found
      */
-    void uninstall(URI uri) throws ContributionException;
+    void uninstall(URI uri) throws UninstallException, ContributionNotFoundException;
 
     /**
      * Remove a contribution from persistent storage. Contribution must be uninstalled prior to being removed.

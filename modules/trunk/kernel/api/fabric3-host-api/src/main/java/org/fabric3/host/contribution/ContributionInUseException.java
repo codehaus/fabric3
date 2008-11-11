@@ -24,7 +24,7 @@ import java.util.Set;
  *
  * @version $Revision$ $Date$
  */
-public class ContributionInUseException extends ContributionException {
+public class ContributionInUseException extends UninstallException {
     private static final long serialVersionUID = 3826037592455762508L;
     private Set<URI> contributions;
     private URI uri;

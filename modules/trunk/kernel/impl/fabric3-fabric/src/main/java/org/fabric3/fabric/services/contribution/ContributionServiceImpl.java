@@ -61,6 +61,7 @@ import org.fabric3.host.contribution.ContributionLockedException;
 import org.fabric3.host.contribution.StoreException;
 import org.fabric3.host.contribution.InstallException;
 import org.fabric3.host.contribution.UpdateException;
+import org.fabric3.host.contribution.UninstallException;
 import org.fabric3.introspection.validation.InvalidContributionException;
 import org.fabric3.introspection.validation.ValidationUtils;
 import org.fabric3.scdl.ArtifactValidationFailure;
@@ -236,13 +237,13 @@ public class ContributionServiceImpl implements ContributionService {
         return list;
     }
 
-    public void uninstall(URI uri) throws ContributionException {
+    public void uninstall(URI uri) throws UninstallException, ContributionNotFoundException {
         Contribution contribution = metaDataStore.find(uri);
         if (contribution == null) {
             throw new ContributionNotFoundException("Contribution does not exist:" + uri);
         }
         if (contribution.getState() != ContributionState.INSTALLED) {
-            throw new IllegalContributionStateException("Contribution not installed: " + uri);
+            throw new UninstallException("Contribution not installed: " + uri);
         }
         if (contribution.isLocked()) {
             Set<QName> deployables = contribution.getLockOwners();

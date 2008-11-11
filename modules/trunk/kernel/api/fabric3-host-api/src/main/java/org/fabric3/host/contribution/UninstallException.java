@@ -16,32 +16,17 @@
  */
 package org.fabric3.host.contribution;
 
-import java.net.URI;
-import java.util.Set;
-import javax.xml.namespace.QName;
-
 /**
- * Thrown when an attempt is made to uninstall a contribution that is referenced by deployed components.
- *
  * @version $Revision$ $Date$
  */
-public class ContributionLockedException extends UninstallException {
-    private static final long serialVersionUID = -5443601943113359365L;
-    private URI uri;
-    private Set<QName> deployables;
+public class UninstallException extends ContributionException {
+    private static final long serialVersionUID = -4854676797754404104L;
 
-    public ContributionLockedException(String message, URI uri, Set<QName> deployables) {
+    public UninstallException(String message) {
         super(message);
-        this.uri = uri;
-        this.deployables = deployables;
     }
 
-    public URI getUri() {
-        return uri;
+    public UninstallException(String message, Throwable cause) {
+        super(message, cause);
     }
-
-    public Set<QName> getDeployables() {
-        return deployables;
-    }
-
 }
