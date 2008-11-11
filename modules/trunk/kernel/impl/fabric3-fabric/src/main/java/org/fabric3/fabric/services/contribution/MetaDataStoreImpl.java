@@ -43,7 +43,7 @@ import org.fabric3.spi.services.contribution.ResourceElement;
 import org.fabric3.spi.services.contribution.Symbol;
 
 /**
- * Default IndexStore implementation
+ * Default MetaDataStore implementation
  *
  * @version $Rev$ $Date$
  */
@@ -107,6 +107,19 @@ public class MetaDataStoreImpl implements MetaDataStore {
                             throw new MetaDataStoreException("Attempt to resolve a resource before it is processed");
                         }
                         return (ResourceElement<S, ?>) element;
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    public Contribution resolveContainingContribution(Symbol symbol) {
+        for (Contribution contribution : cache.values()) {
+            for (Resource resource : contribution.getResources()) {
+                for (ResourceElement<?, ?> element : resource.getResourceElements()) {
+                    if (element.getSymbol().equals(symbol)) {
+                        return contribution;
                     }
                 }
             }

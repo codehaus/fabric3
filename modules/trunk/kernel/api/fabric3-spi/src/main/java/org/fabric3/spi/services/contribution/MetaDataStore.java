@@ -106,4 +106,11 @@ public interface MetaDataStore {
      */
     Set<Contribution> resolveDependentContributions(URI uri);
 
+    /**
+     * Resolves the contribution that contains the given symbol
+     *
+     * @param symbol the symbol to resolve
+     * @return the contribution or null
+     */
+    Contribution resolveContainingContribution(Symbol symbol);
 }
