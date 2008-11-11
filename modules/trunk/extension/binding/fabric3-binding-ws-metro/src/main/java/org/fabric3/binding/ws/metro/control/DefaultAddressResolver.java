@@ -89,7 +89,7 @@ public class DefaultAddressResolver implements AddressResolver {
         
         URL[] referenceAddresses = null;
         
-        StringTokenizer stringTokenizer = new StringTokenizer(uri.toASCIIString());
+        StringTokenizer stringTokenizer = new StringTokenizer(uri.toASCIIString(), ",");
         referenceAddresses = new URL[stringTokenizer.countTokens()];
         for (int i = 0; i < referenceAddresses.length;i++) {
             try {
