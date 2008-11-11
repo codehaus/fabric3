@@ -35,12 +35,14 @@ import org.apache.http.impl.client.DefaultHttpClient;
 
 import org.fabric3.admin.api.CommunicationException;
 import org.fabric3.admin.api.DomainController;
-import org.fabric3.admin.api.DuplicateContributionException;
-import org.fabric3.admin.api.InvalidDeploymentException;
+import org.fabric3.management.contribution.DuplicateContributionManagementException;
 import org.fabric3.management.contribution.ContributionInfo;
 import org.fabric3.management.contribution.ContributionManagementException;
 import org.fabric3.management.contribution.InvalidContributionException;
+import org.fabric3.management.contribution.ContributionInstallException;
+import org.fabric3.management.contribution.ContributionUninstallException;
 import org.fabric3.management.domain.DeploymentManagementException;
+import org.fabric3.management.domain.InvalidDeploymentException;
 
 /**
  * Default implementation of the DomainController API.
@@ -101,7 +103,7 @@ public class DomainControllerImpl implements DomainController {
             if (400 == code) {
                 throw new ContributionManagementException("Error storing contribution");
             } else if (420 == code) {
-                throw new DuplicateContributionException("A contribution already exists for " + uri);
+                throw new DuplicateContributionManagementException("A contribution already exists for " + uri);
             }
 
         } catch (MBeanException e) {
@@ -113,7 +115,7 @@ public class DomainControllerImpl implements DomainController {
         }
     }
 
-    public void install(URI uri) throws CommunicationException, ContributionManagementException {
+    public void install(URI uri) throws CommunicationException, ContributionInstallException {
         try {
             if (!isConnected()) {
                 throw new IllegalStateException("Not connected");
@@ -128,7 +130,7 @@ public class DomainControllerImpl implements DomainController {
             if (e.getTargetException() instanceof InvalidContributionException) {
                 throw (InvalidContributionException) e.getTargetException();
             } else {
-                throw new ContributionManagementException(e.getMessage(), e.getTargetException());
+                throw new ContributionInstallException(e.getMessage(), e.getTargetException());
             }
         } catch (JMException e) {
             throw new CommunicationException(e);
@@ -215,7 +217,7 @@ public class DomainControllerImpl implements DomainController {
         }
     }
 
-    public void uninstall(URI name) throws CommunicationException, ContributionManagementException {
+    public void uninstall(URI name) throws CommunicationException, ContributionUninstallException {
         try {
             if (!isConnected()) {
                 throw new IllegalStateException("Not connected");

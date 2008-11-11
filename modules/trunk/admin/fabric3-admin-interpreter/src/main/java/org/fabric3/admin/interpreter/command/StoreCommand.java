@@ -24,10 +24,10 @@ import java.net.URL;
 
 import org.fabric3.admin.api.CommunicationException;
 import org.fabric3.admin.api.DomainController;
-import org.fabric3.admin.api.DuplicateContributionException;
 import org.fabric3.admin.interpreter.Command;
 import org.fabric3.admin.interpreter.CommandException;
 import org.fabric3.management.contribution.ContributionManagementException;
+import org.fabric3.management.contribution.DuplicateContributionManagementException;
 
 /**
  * @version $Revision$ $Date$
@@ -92,7 +92,7 @@ public class StoreCommand implements Command {
             controller.store(contribution, contributionUri);
             out.println("Stored " + contributionUri);
             return true;
-        } catch (DuplicateContributionException e) {
+        } catch (DuplicateContributionManagementException e) {
             out.println("ERROR: A contribution with that name already exists");
         } catch (CommunicationException e) {
             if (e.getCause() instanceof FileNotFoundException) {

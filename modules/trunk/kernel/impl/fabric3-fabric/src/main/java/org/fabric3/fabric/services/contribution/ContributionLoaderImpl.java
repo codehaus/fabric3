@@ -20,13 +20,13 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 import java.util.HashSet;
 
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.host.runtime.HostInfo;
+import org.fabric3.host.contribution.ContributionInUseException;
 import org.fabric3.spi.classloader.MultiParentClassLoader;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.services.contribution.ClasspathProcessorRegistry;

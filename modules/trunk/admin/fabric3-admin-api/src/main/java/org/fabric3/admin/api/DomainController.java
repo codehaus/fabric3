@@ -23,6 +23,9 @@ import java.util.Set;
 
 import org.fabric3.management.contribution.ContributionInfo;
 import org.fabric3.management.contribution.ContributionManagementException;
+import org.fabric3.management.contribution.ContributionUninstallException;
+import org.fabric3.management.contribution.ContributionRemoveException;
+import org.fabric3.management.contribution.ContributionInstallException;
 import org.fabric3.management.domain.DeploymentManagementException;
 
 /**
@@ -98,12 +101,11 @@ public interface DomainController {
      * Installs a contribution.
      *
      * @param uri the URI to assign the contribution.
-     * @throws CommunicationException if there is an error communicating with the domain controller
-     * @throws ContributionManagementException
-     *                                if there is an error installing the contribution. See InstallException subtypes for specific errors that may be
-     *                                thrown.
+     * @throws CommunicationException       if there is an error communicating with the domain controller
+     * @throws ContributionInstallException if there is an error installing the contribution. See InstallException subtypes for specific errors that
+     *                                      may be thrown.
      */
-    void install(URI uri) throws CommunicationException, ContributionManagementException;
+    void install(URI uri) throws CommunicationException, ContributionInstallException;
 
     /**
      * Deploys all deployables in a contribution.
@@ -139,20 +141,18 @@ public interface DomainController {
      * Uninstalls a contribution.
      *
      * @param uri the contribution URI
-     * @throws CommunicationException if there is an error communicating with the domain controller
-     * @throws ContributionManagementException
-     *                                if the is an error uninstalling the contribution
+     * @throws CommunicationException         if there is an error communicating with the domain controller
+     * @throws ContributionUninstallException if the is an error uninstalling the contribution
      */
-    void uninstall(URI uri) throws CommunicationException, ContributionManagementException;
+    void uninstall(URI uri) throws CommunicationException, ContributionUninstallException;
 
     /**
      * Removes a contribution from storage in a domain.
      *
      * @param uri the contribution URI
-     * @throws CommunicationException if there is an error communicating with the domain controller
-     * @throws ContributionManagementException
-     *                                if the is an error removing the contribution
+     * @throws CommunicationException      if there is an error communicating with the domain controller
+     * @throws ContributionRemoveException if the is an error removing the contribution
      */
-    void remove(URI uri) throws CommunicationException, ContributionManagementException;
+    void remove(URI uri) throws CommunicationException, ContributionRemoveException;
 
 }

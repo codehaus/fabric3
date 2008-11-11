@@ -18,6 +18,7 @@ package org.fabric3.fabric.services.contribution;
 
 import org.fabric3.spi.services.contribution.Contribution;
 import org.fabric3.spi.services.contribution.MatchingExportNotFoundException;
+import org.fabric3.host.contribution.ContributionInUseException;
 
 /**
  * Loads an installed contribution.

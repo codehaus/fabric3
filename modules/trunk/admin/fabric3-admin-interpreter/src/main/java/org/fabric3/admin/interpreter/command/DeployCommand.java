@@ -29,10 +29,10 @@ import org.xml.sax.SAXException;
 
 import org.fabric3.admin.api.CommunicationException;
 import org.fabric3.admin.api.DomainController;
-import org.fabric3.admin.api.DuplicateContributionException;
 import org.fabric3.admin.interpreter.Command;
 import org.fabric3.admin.interpreter.CommandException;
 import org.fabric3.management.contribution.ContributionManagementException;
+import org.fabric3.management.contribution.DuplicateContributionManagementException;
 import org.fabric3.management.contribution.InvalidContributionException;
 import org.fabric3.management.domain.DeploymentManagementException;
 import org.fabric3.management.domain.InvalidDeploymentException;
@@ -158,7 +158,7 @@ public class DeployCommand implements Command {
             }
             revertPlan(planContributionUri, out);
 
-        } catch (DuplicateContributionException e) {
+        } catch (DuplicateContributionManagementException e) {
             out.println("ERROR: Deployment plan already exists");
         } catch (ContributionManagementException e) {
             out.println("ERROR: There was a problem installing the deployment plan: " + planFile);

@@ -22,9 +22,7 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
-import java.util.HashSet;
 import java.util.TreeSet;
-
 import javax.xml.namespace.QName;
 
 import org.osoa.sca.annotations.EagerInit;
@@ -34,17 +32,21 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.api.annotation.Monitor;
 import org.fabric3.host.contribution.ContributionException;
+import org.fabric3.host.contribution.ContributionInUseException;
 import org.fabric3.host.contribution.ContributionService;
+import org.fabric3.host.contribution.Deployable;
 import org.fabric3.host.contribution.ValidationException;
 import org.fabric3.host.contribution.ValidationFailure;
-import org.fabric3.host.contribution.Deployable;
 import org.fabric3.jetty.JettyService;
-import org.fabric3.management.contribution.ContributionManagementException;
-import org.fabric3.management.contribution.ContributionServiceMBean;
-import org.fabric3.management.contribution.InvalidContributionException;
+import org.fabric3.management.contribution.ContributionInUseManagementException;
 import org.fabric3.management.contribution.ContributionInfo;
-import org.fabric3.spi.services.contribution.MetaDataStore;
+import org.fabric3.management.contribution.ContributionInstallException;
+import org.fabric3.management.contribution.ContributionRemoveException;
+import org.fabric3.management.contribution.ContributionServiceMBean;
+import org.fabric3.management.contribution.ContributionUninstallException;
+import org.fabric3.management.contribution.InvalidContributionException;
 import org.fabric3.spi.services.contribution.Contribution;
+import org.fabric3.spi.services.contribution.MetaDataStore;
 
 /**
  * @version $Revision$ $Date$
@@ -129,7 +131,7 @@ public class ContibutionServiceMBeanImpl implements ContributionServiceMBean {
     }
 
     public Set<ContributionInfo> getContributions() {
-        Set<Contribution> contributions =  metaDataStore.getContributions();
+        Set<Contribution> contributions = metaDataStore.getContributions();
         Set<ContributionInfo> infos = new TreeSet<ContributionInfo>();
         for (Contribution contribution : contributions) {
             URI uri = contribution.getUri();
@@ -145,7 +147,7 @@ public class ContibutionServiceMBeanImpl implements ContributionServiceMBean {
         return infos;
     }
 
-    public void install(URI uri) throws ContributionManagementException {
+    public void install(URI uri) throws ContributionInstallException {
         try {
             contributionService.install(uri);
         } catch (ValidationException e) {
@@ -158,27 +160,30 @@ public class ContibutionServiceMBeanImpl implements ContributionServiceMBean {
         } catch (ContributionException e) {
             monitor.error("Error installing: " + uri, e);
             // don't rethrow the original exception since the class will not be available on the client's classpath
-            reportError(e);
+            throw new ContributionInstallException(getErrorMessage(e));
         }
     }
 
-    public void uninstall(URI uri) throws ContributionManagementException {
+    public void uninstall(URI uri) throws ContributionUninstallException {
         try {
             contributionService.uninstall(uri);
+        } catch (ContributionInUseException e) {
+            monitor.error("Error uninstalling contribution: " + uri, e);
+            throw new ContributionInUseManagementException(e.getMessage(), e.getUri(), e.getContributions());
         } catch (ContributionException e) {
             monitor.error("Error uninstalling contribution: " + uri, e);
             // don't rethrow the original exception since the class will not be available on the client's classpath
-            reportError(e);
+            throw new ContributionUninstallException(getErrorMessage(e));
         }
     }
 
-    public void remove(URI uri) throws ContributionManagementException {
+    public void remove(URI uri) throws ContributionRemoveException {
         try {
             contributionService.remove(uri);
         } catch (ContributionException e) {
             monitor.error("Error removing contribution: " + uri, e);
             // don't rethrow the original exception since the class will not be available on the client's classpath
-            reportError(e);
+            throw new ContributionRemoveException(getErrorMessage(e));
         }
     }
 
@@ -197,11 +202,11 @@ public class ContibutionServiceMBeanImpl implements ContributionServiceMBean {
         address = "http://" + baseAddress + ":" + httpPort + REPOSITORY;
     }
 
-    private void reportError(ContributionException e) throws ContributionManagementException {
+    private String getErrorMessage(ContributionException e) {
         Throwable cause = e;
         while (cause.getCause() != null) {
             cause = cause.getCause();
         }
-        throw new ContributionManagementException(cause.getMessage());
+        return cause.getMessage();
     }
 }

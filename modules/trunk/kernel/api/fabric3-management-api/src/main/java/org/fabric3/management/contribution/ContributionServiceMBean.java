@@ -47,27 +47,24 @@ public interface ContributionServiceMBean {
      * Installs a stored contribution in the domain.
      *
      * @param uri the contribution URI
-     * @throws ContributionManagementException
-     *          if an error occurs during installation. Exception types may vary, for example, a contribution may be invalid. See subtypes for
-     *          specifics.
+     * @throws ContributionInstallException if an error occurs during installation. Exception types may vary, for example, a contribution may be
+     *                                      invalid. See subtypes for specifics.
      */
-    void install(URI uri) throws ContributionManagementException;
+    void install(URI uri) throws ContributionInstallException;
 
     /**
      * Uninstalls a contribution.
      *
      * @param uri the contribution URI
-     * @throws ContributionManagementException
-     *          if an error occurs during deinstallation.
+     * @throws ContributionUninstallException if an error occurs during deinstallation.
      */
-     void uninstall(URI uri) throws ContributionManagementException;
+    void uninstall(URI uri) throws ContributionUninstallException;
 
     /**
      * Removes a stored contribution in the domain.
      *
      * @param uri the contribution URI
-     * @throws ContributionManagementException
-     *          if an error occurs during removal.
+     * @throws ContributionRemoveException if an error occurs during removal.
      */
-    void remove(URI uri) throws ContributionManagementException;
+    void remove(URI uri) throws ContributionRemoveException;
 }

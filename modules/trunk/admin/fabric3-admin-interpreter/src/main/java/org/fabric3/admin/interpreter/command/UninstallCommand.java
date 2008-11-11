@@ -25,7 +25,8 @@ import org.fabric3.admin.api.CommunicationException;
 import org.fabric3.admin.api.DomainController;
 import org.fabric3.admin.interpreter.Command;
 import org.fabric3.admin.interpreter.CommandException;
-import org.fabric3.management.contribution.ContributionManagementException;
+import org.fabric3.management.contribution.ContributionInUseManagementException;
+import org.fabric3.management.contribution.ContributionUninstallException;
 
 /**
  * @version $Revision$ $Date$
@@ -87,8 +88,13 @@ public class UninstallCommand implements Command {
         } catch (IOException e) {
             out.println("ERROR: Unable to connect to the domain controller");
             e.printStackTrace(out);
-        } catch (ContributionManagementException e) {
-            out.println("ERROR: Error installing contribution");
+        } catch (ContributionInUseManagementException e) {
+            out.println("ERROR: Contribution is in use by the following contributions:");
+            for (URI uri : e.getContributions()) {
+                out.println("       " + uri);
+            }
+        } catch (ContributionUninstallException e) {
+            out.println("ERROR: Error uninstalling contribution");
             out.println("       " + e.getMessage());
         }
         return false;

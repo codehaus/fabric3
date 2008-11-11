@@ -14,12 +14,10 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.fabric.services.contribution;
+package org.fabric3.host.contribution;
 
 import java.net.URI;
 import java.util.Set;
-
-import org.fabric3.host.contribution.ContributionException;
 
 /**
  * Thrown when there is an attempt to unload a contribution referenced by other installed contributions.

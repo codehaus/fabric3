@@ -16,23 +16,21 @@
  */
 package org.fabric3.management.contribution;
 
-import java.util.List;
-
 /**
- * Denotes an invalid contribution and reports introspection errors.
- *
  * @version $Revision$ $Date$
  */
-public class InvalidContributionException extends ContributionInstallException {
-    private static final long serialVersionUID = -9209475021865946685L;
-    private List<String> errors;
+public class ContributionInstallException extends ContributionManagementException{
+    private static final long serialVersionUID = 4938971859311394300L;
 
-    public InvalidContributionException(String message, List<String> errors) {
+    public ContributionInstallException(String message) {
         super(message);
-        this.errors = errors;
     }
 
-    public List<String> getErrors() {
-        return errors;
+    public ContributionInstallException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public ContributionInstallException(Throwable cause) {
+        super(cause);
     }
 }

@@ -14,25 +14,23 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.admin.api;
-
-import java.util.List;
-
-import org.fabric3.management.domain.DeploymentManagementException;
+package org.fabric3.management.contribution;
 
 /**
  * @version $Revision$ $Date$
  */
-public class InvalidDeploymentException extends DeploymentManagementException {
-    private static final long serialVersionUID = 4166765627173457876L;
-    private List<String> errors;
+public class ContributionRemoveException extends ContributionManagementException{
+    private static final long serialVersionUID = -2608610594863271459L;
 
-    public InvalidDeploymentException(String message, List<String> errors) {
+    public ContributionRemoveException(String message) {
         super(message);
-        this.errors = errors;
     }
 
-    public List<String> getErrors() {
-        return errors;
+    public ContributionRemoveException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public ContributionRemoveException(Throwable cause) {
+        super(cause);
     }
 }

@@ -23,10 +23,10 @@ import java.net.URI;
 
 import org.fabric3.admin.api.CommunicationException;
 import org.fabric3.admin.api.DomainController;
-import org.fabric3.admin.api.DuplicateContributionException;
 import org.fabric3.admin.interpreter.Command;
 import org.fabric3.admin.interpreter.CommandException;
 import org.fabric3.management.contribution.ContributionManagementException;
+import org.fabric3.management.contribution.DuplicateContributionManagementException;
 import org.fabric3.management.contribution.InvalidContributionException;
 
 /**
@@ -85,8 +85,6 @@ public class InstallCommand implements Command {
             for (String desc : e.getErrors()) {
                 out.println("ERROR: " + desc);
             }
-        } catch (DuplicateContributionException e) {
-            out.println("ERROR: A contribution with that name is already installed");
         } catch (CommunicationException e) {
             if (e.getCause() instanceof FileNotFoundException) {
                 out.println("ERROR: File not found:" + e.getMessage());

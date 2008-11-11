@@ -14,17 +14,23 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.admin.api;
-
-import org.fabric3.management.contribution.ContributionManagementException;
+package org.fabric3.management.contribution;
 
 /**
  * @version $Revision$ $Date$
  */
-public class DuplicateContributionException extends ContributionManagementException {
-    private static final long serialVersionUID = 2950465877291283258L;
+public class ContributionUninstallException extends ContributionManagementException{
+    private static final long serialVersionUID = 4938971859311394300L;
 
-    public DuplicateContributionException(String message) {
+    public ContributionUninstallException(String message) {
         super(message);
+    }
+
+    public ContributionUninstallException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public ContributionUninstallException(Throwable cause) {
+        super(cause);
     }
 }
