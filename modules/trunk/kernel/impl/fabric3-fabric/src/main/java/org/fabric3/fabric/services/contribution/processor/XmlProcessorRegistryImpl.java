@@ -21,11 +21,11 @@ import java.util.Map;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamReader;
 
-import org.fabric3.host.contribution.ContributionException;
+import org.fabric3.host.contribution.InstallException;
+import org.fabric3.scdl.ValidationContext;
 import org.fabric3.spi.services.contribution.Contribution;
 import org.fabric3.spi.services.contribution.XmlProcessor;
 import org.fabric3.spi.services.contribution.XmlProcessorRegistry;
-import org.fabric3.scdl.ValidationContext;
 
 /**
  * Default impelmentation of an XmlProcessorRegistry.
@@ -44,7 +44,7 @@ public class XmlProcessorRegistryImpl implements XmlProcessorRegistry {
     }
 
     public void process(Contribution contribution, XMLStreamReader reader, ValidationContext context, ClassLoader loader)
-            throws ContributionException {
+            throws InstallException {
         QName name = reader.getName();
         XmlProcessor processor = cache.get(name);
         if (processor == null) {

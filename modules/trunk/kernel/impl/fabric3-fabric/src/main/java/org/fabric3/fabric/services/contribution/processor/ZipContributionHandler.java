@@ -28,7 +28,7 @@ import java.util.zip.ZipInputStream;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.host.contribution.Constants;
-import org.fabric3.host.contribution.ContributionException;
+import org.fabric3.host.contribution.InstallException;
 import org.fabric3.introspection.DefaultIntrospectionContext;
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.xml.Loader;
@@ -69,7 +69,7 @@ public class ZipContributionHandler implements ArchiveContributionHandler {
         return sourceUrl.endsWith(".jar") || sourceUrl.endsWith(".zip");
     }
 
-    public void processManifest(Contribution contribution, final ValidationContext context) throws ContributionException {
+    public void processManifest(Contribution contribution, final ValidationContext context) throws InstallException {
         ContributionManifest manifest;
         try {
             URL sourceUrl = contribution.getLocation();
@@ -92,7 +92,7 @@ public class ZipContributionHandler implements ArchiveContributionHandler {
             if (e.getCause() instanceof FileNotFoundException) {
                 // ignore no manifest found
             } else {
-                throw new ContributionException(e);
+                throw new InstallException(e);
             }
         } catch (MalformedURLException e) {
             // ignore no manifest found
@@ -100,13 +100,13 @@ public class ZipContributionHandler implements ArchiveContributionHandler {
 
         iterateArtifacts(contribution, new Action() {
             public void process(Contribution contribution, String contentType, URL url)
-                    throws ContributionException {
+                    throws InstallException {
                 InputStream stream = null;
                 try {
                     stream = url.openStream();
                     registry.processManifestArtifact(contribution.getManifest(), contentType, stream, context);
                 } catch (IOException e) {
-                    throw new ContributionException(e);
+                    throw new InstallException(e);
                 } finally {
                     try {
                         if (stream != null) {
@@ -120,7 +120,7 @@ public class ZipContributionHandler implements ArchiveContributionHandler {
         });
     }
 
-    public void iterateArtifacts(Contribution contribution, Action action) throws ContributionException {
+    public void iterateArtifacts(Contribution contribution, Action action) throws InstallException {
         URL location = contribution.getLocation();
         ZipInputStream zipStream = null;
         try {
@@ -147,11 +147,11 @@ public class ZipContributionHandler implements ArchiveContributionHandler {
                 action.process(contribution, contentType, entryUrl);
             }
         } catch (ContentTypeResolutionException e) {
-            throw new ContributionException(e);
+            throw new InstallException(e);
         } catch (MalformedURLException e) {
-            throw new ContributionException(e);
+            throw new InstallException(e);
         } catch (IOException e) {
-            throw new ContributionException(e);
+            throw new InstallException(e);
         } finally {
             try {
                 if (zipStream != null) {

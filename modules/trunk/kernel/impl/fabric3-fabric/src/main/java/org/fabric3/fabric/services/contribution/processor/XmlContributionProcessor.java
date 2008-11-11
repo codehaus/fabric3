@@ -30,7 +30,8 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.host.contribution.ContributionException;
+import org.fabric3.host.contribution.InstallException;
+import org.fabric3.scdl.ValidationContext;
 import org.fabric3.services.xmlfactory.XMLFactory;
 import org.fabric3.spi.services.contribution.Contribution;
 import org.fabric3.spi.services.contribution.ContributionManifest;
@@ -40,7 +41,6 @@ import org.fabric3.spi.services.contribution.Resource;
 import org.fabric3.spi.services.contribution.XmlIndexerRegistry;
 import org.fabric3.spi.services.contribution.XmlManifestProcessorRegistry;
 import org.fabric3.spi.services.contribution.XmlProcessorRegistry;
-import org.fabric3.scdl.ValidationContext;
 
 /**
  * Processes an XML-based contribution. The implementaton dispatches to a specific XmlProcessor based on the QName of the document element.
@@ -77,7 +77,7 @@ public class XmlContributionProcessor implements ContributionProcessor {
         return CONTENT_TYPES;
     }
 
-    public void processManifest(Contribution contribution, ValidationContext context) throws ContributionException {
+    public void processManifest(Contribution contribution, ValidationContext context) throws InstallException {
         ContributionManifest manifest = contribution.getManifest();
         InputStream stream = null;
         XMLStreamReader reader = null;
@@ -90,18 +90,18 @@ public class XmlContributionProcessor implements ContributionProcessor {
             manifestProcessorRegistry.process(name, manifest, reader, context);
         } catch (IOException e) {
             String uri = contribution.getUri().toString();
-            throw new ContributionException("Error processing contribution " + uri, e);
+            throw new InstallException("Error processing contribution " + uri, e);
         } catch (XMLStreamException e) {
             String uri = contribution.getUri().toString();
             int line = e.getLocation().getLineNumber();
             int col = e.getLocation().getColumnNumber();
-            throw new ContributionException("Error processing contribution " + uri + " [" + line + "," + col + "]", e);
+            throw new InstallException("Error processing contribution " + uri + " [" + line + "," + col + "]", e);
         } finally {
             close(stream, reader);
         }
     }
 
-    public void index(Contribution contribution, ValidationContext context) throws ContributionException {
+    public void index(Contribution contribution, ValidationContext context) throws InstallException {
         InputStream stream = null;
         XMLStreamReader reader = null;
         try {
@@ -114,18 +114,18 @@ public class XmlContributionProcessor implements ContributionProcessor {
             contribution.addResource(resource);
         } catch (IOException e) {
             String uri = contribution.getUri().toString();
-            throw new ContributionException("Error processing contribution " + uri, e);
+            throw new InstallException("Error processing contribution " + uri, e);
         } catch (XMLStreamException e) {
             String uri = contribution.getUri().toString();
             int line = e.getLocation().getLineNumber();
             int col = e.getLocation().getColumnNumber();
-            throw new ContributionException("Error processing contribution " + uri + " [" + line + "," + col + "]", e);
+            throw new InstallException("Error processing contribution " + uri + " [" + line + "," + col + "]", e);
         } finally {
             close(stream, reader);
         }
     }
 
-    public void process(Contribution contribution, ValidationContext context, ClassLoader loader) throws ContributionException {
+    public void process(Contribution contribution, ValidationContext context, ClassLoader loader) throws InstallException {
         URL locationURL = contribution.getLocation();
         InputStream stream = null;
         XMLStreamReader reader = null;
@@ -136,12 +136,12 @@ public class XmlContributionProcessor implements ContributionProcessor {
             xmlProcessorRegistry.process(contribution, reader, context, loader);
         } catch (IOException e) {
             String uri = contribution.getUri().toString();
-            throw new ContributionException("Error processing contribution " + uri, e);
+            throw new InstallException("Error processing contribution " + uri, e);
         } catch (XMLStreamException e) {
             String uri = contribution.getUri().toString();
             int line = e.getLocation().getLineNumber();
             int col = e.getLocation().getColumnNumber();
-            throw new ContributionException("Error processing contribution " + uri + " [" + line + "," + col + "]", e);
+            throw new InstallException("Error processing contribution " + uri + " [" + line + "," + col + "]", e);
         } finally {
             close(stream, reader);
         }

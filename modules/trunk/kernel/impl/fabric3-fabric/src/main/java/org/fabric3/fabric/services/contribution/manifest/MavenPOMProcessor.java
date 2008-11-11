@@ -26,7 +26,7 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.host.contribution.ContributionException;
+import org.fabric3.host.contribution.InstallException;
 import org.fabric3.scdl.ValidationContext;
 import org.fabric3.spi.services.contribution.ContributionManifest;
 import org.fabric3.spi.services.contribution.MavenExport;
@@ -59,7 +59,7 @@ public class MavenPOMProcessor implements XmlElementManifestProcessor {
         return PROJECT;
     }
 
-    public void process(ContributionManifest manifest, XMLStreamReader reader, ValidationContext context) throws ContributionException {
+    public void process(ContributionManifest manifest, XMLStreamReader reader, ValidationContext context) throws InstallException {
         String parentVersion = null;
         String groupId = null;
         String artifactId = null;
@@ -99,7 +99,7 @@ public class MavenPOMProcessor implements XmlElementManifestProcessor {
                 }
             }
         } catch (XMLStreamException e) {
-            throw new ContributionException(e);
+            throw new InstallException(e);
         }
 
         if (version == null || "".equals(version)) {

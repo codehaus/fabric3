@@ -21,11 +21,11 @@ import java.util.Map;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamReader;
 
-import org.fabric3.host.contribution.ContributionException;
+import org.fabric3.host.contribution.InstallException;
+import org.fabric3.scdl.ValidationContext;
 import org.fabric3.spi.services.contribution.ContributionManifest;
 import org.fabric3.spi.services.contribution.XmlElementManifestProcessor;
 import org.fabric3.spi.services.contribution.XmlManifestProcessorRegistry;
-import org.fabric3.scdl.ValidationContext;
 
 /**
  * Default implementation of XmlManifestProcessorRegistry.
@@ -44,7 +44,7 @@ public class XmlManifestProcessorRegistryImpl implements XmlManifestProcessorReg
         cache.remove(name);
     }
 
-    public void process(QName name, ContributionManifest manifest, XMLStreamReader reader, ValidationContext context) throws ContributionException {
+    public void process(QName name, ContributionManifest manifest, XMLStreamReader reader, ValidationContext context) throws InstallException {
         XmlElementManifestProcessor processor = cache.get(name);
         if (processor == null) {
             return;

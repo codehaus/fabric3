@@ -19,7 +19,6 @@ package org.fabric3.fabric.services.contribution;
 import java.util.List;
 
 import org.fabric3.fabric.util.graph.Cycle;
-import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.spi.services.contribution.Contribution;
 
 /**
@@ -27,12 +26,12 @@ import org.fabric3.spi.services.contribution.Contribution;
  *
  * @version $Rev$ $Date$
  */
-public class CyclicDependencyException extends ContributionException {
+public class CyclicDependencyException extends DependencyException {
     private static final long serialVersionUID = 3763877232188058275L;
     private final List<Cycle<Contribution>> cycles;
 
     public CyclicDependencyException(List<Cycle<Contribution>> cycles) {
-        super("Cyclic dependency found", (String) null);
+        super("Cyclic dependency found");
         this.cycles = cycles;
     }
 

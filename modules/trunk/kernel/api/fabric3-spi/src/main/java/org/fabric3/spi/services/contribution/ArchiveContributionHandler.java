@@ -17,6 +17,7 @@
 package org.fabric3.spi.services.contribution;
 
 import org.fabric3.host.contribution.ContributionException;
+import org.fabric3.host.contribution.InstallException;
 import org.fabric3.scdl.ValidationContext;
 
 /**
@@ -47,17 +48,17 @@ public interface ArchiveContributionHandler {
      *
      * @param contribution the contribution
      * @param context      the context to which validation errors and warnings are reported
-     * @throws ContributionException if an error occurs processing the manifest
+     * @throws InstallException if an error occurs processing the manifest
      */
-    void processManifest(Contribution contribution, ValidationContext context) throws ContributionException;
+    void processManifest(Contribution contribution, ValidationContext context) throws InstallException;
 
     /**
      * Iterates through a contribution calling the supplied action when a contained artifact is encountered.
      *
      * @param contribution the contribution
      * @param action       the action to perform when an artifact is encountered
-     * @throws ContributionException if an error occurs processing the manifest
+     * @throws InstallException if an error occurs processing the manifest
      */
-    void iterateArtifacts(Contribution contribution, Action action) throws ContributionException;
+    void iterateArtifacts(Contribution contribution, Action action) throws InstallException;
 
 }

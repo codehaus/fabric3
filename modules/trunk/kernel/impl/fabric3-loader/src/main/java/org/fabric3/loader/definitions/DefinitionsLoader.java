@@ -31,6 +31,7 @@ import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.host.contribution.ContributionException;
+import org.fabric3.host.contribution.InstallException;
 import org.fabric3.introspection.DefaultIntrospectionContext;
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.xml.Loader;
@@ -85,7 +86,7 @@ public class DefinitionsLoader implements XmlResourceElementLoader {
     }
 
     public void load(XMLStreamReader reader, URI contributionUri, Resource resource, ValidationContext context, ClassLoader loader)
-            throws ContributionException, XMLStreamException {
+            throws InstallException, XMLStreamException {
         validateAttributes(reader, context);
 
         List<AbstractDefinition> definitions = new ArrayList<AbstractDefinition>();
@@ -103,25 +104,25 @@ public class DefinitionsLoader implements XmlResourceElementLoader {
                     try {
                         definition = loaderRegistry.load(reader, Intent.class, childContext);
                     } catch (UnrecognizedElementException e) {
-                        throw new ContributionException(e);
+                        throw new InstallException(e);
                     }
                 } else if (POLICY_SET.equals(qname)) {
                     try {
                         definition = loaderRegistry.load(reader, PolicySet.class, childContext);
                     } catch (UnrecognizedElementException e) {
-                        throw new ContributionException(e);
+                        throw new InstallException(e);
                     }
                 } else if (BINDING_TYPE.equals(qname)) {
                     try {
                         definition = loaderRegistry.load(reader, BindingType.class, childContext);
                     } catch (UnrecognizedElementException e) {
-                        throw new ContributionException(e);
+                        throw new InstallException(e);
                     }
                 } else if (IMPLEMENTATION_TYPE.equals(qname)) {
                     try {
                         definition = loaderRegistry.load(reader, ImplementationType.class, childContext);
                     } catch (UnrecognizedElementException e) {
-                        throw new ContributionException(e);
+                        throw new InstallException(e);
                     }
                 }
                 if (definition != null) {

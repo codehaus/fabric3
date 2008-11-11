@@ -28,7 +28,7 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.fabric.util.FileHelper;
 import org.fabric3.host.contribution.Constants;
-import org.fabric3.host.contribution.ContributionException;
+import org.fabric3.host.contribution.InstallException;
 import org.fabric3.introspection.DefaultIntrospectionContext;
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.xml.Loader;
@@ -67,7 +67,7 @@ public class ExplodedArchiveContributionHandler implements ArchiveContributionHa
         return Constants.FOLDER_CONTENT_TYPE.equals(contribution.getContentType());
     }
 
-    public void processManifest(Contribution contribution, final ValidationContext context) throws ContributionException {
+    public void processManifest(Contribution contribution, final ValidationContext context) throws InstallException {
         ContributionManifest manifest;
         try {
             URL sourceUrl = contribution.getLocation();
@@ -87,21 +87,20 @@ public class ExplodedArchiveContributionHandler implements ArchiveContributionHa
             if (e.getCause() instanceof FileNotFoundException) {
                 // ignore no manifest found
             } else {
-                throw new ContributionException(e);
+                throw new InstallException(e);
             }
         } catch (MalformedURLException e) {
             // ignore no manifest found
         }
 
         iterateArtifacts(contribution, new Action() {
-            public void process(Contribution contribution, String contentType, URL url)
-                    throws ContributionException {
+            public void process(Contribution contribution, String contentType, URL url) throws InstallException {
                 InputStream stream = null;
                 try {
                     stream = url.openStream();
                     registry.processManifestArtifact(contribution.getManifest(), contentType, stream, context);
                 } catch (IOException e) {
-                    throw new ContributionException(e);
+                    throw new InstallException(e);
                 } finally {
                     try {
                         if (stream != null) {
@@ -116,14 +115,14 @@ public class ExplodedArchiveContributionHandler implements ArchiveContributionHa
     }
 
     public void iterateArtifacts(Contribution contribution, Action action)
-            throws ContributionException {
+            throws InstallException {
         File root = FileHelper.toFile(contribution.getLocation());
         assert root.isDirectory();
         iterateArtifactsResursive(contribution, action, root);
     }
 
     protected void iterateArtifactsResursive(Contribution contribution, Action action, File dir)
-            throws ContributionException {
+            throws InstallException {
         File[] files = dir.listFiles();
         for (File file : files) {
             if (file.isDirectory()) {
@@ -134,11 +133,11 @@ public class ExplodedArchiveContributionHandler implements ArchiveContributionHa
                     String contentType = contentTypeResolver.getContentType(entryUrl);
                     action.process(contribution, contentType, entryUrl);
                 } catch (MalformedURLException e) {
-                    throw new ContributionException(e);
+                    throw new InstallException(e);
                 } catch (IOException e) {
-                    throw new ContributionException(e);
+                    throw new InstallException(e);
                 } catch (ContentTypeResolutionException e) {
-                    throw new ContributionException(e);
+                    throw new InstallException(e);
                 }
             }
         }

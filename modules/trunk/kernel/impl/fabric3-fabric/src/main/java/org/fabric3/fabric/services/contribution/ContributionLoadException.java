@@ -16,15 +16,19 @@
  */
 package org.fabric3.fabric.services.contribution;
 
-import org.fabric3.host.contribution.ContributionException;
+import org.fabric3.host.contribution.InstallException;
 
 /**
  * Denots an error loading a contribution.
  *
  * @version $Rev$ $Date$
  */
-public class ContributionLoadException extends ContributionException {
+public class ContributionLoadException extends InstallException {
     private static final long serialVersionUID = 4545049826186872284L;
+
+    public ContributionLoadException(String message) {
+        super(message);
+    }
 
     public ContributionLoadException(Throwable cause) {
         super(cause);

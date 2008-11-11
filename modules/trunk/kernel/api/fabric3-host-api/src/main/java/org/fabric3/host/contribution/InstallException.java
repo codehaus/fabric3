@@ -14,17 +14,29 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.spi.services.contribution;
-
-import org.fabric3.host.contribution.InstallException;
+package org.fabric3.host.contribution;
 
 /**
- * @version $Rev$ $Date$
+ * Denotes an error installing a conribution.
+ *
+ * @version $Revision$ $Date$
  */
-public class ResourceElementNotFoundException extends InstallException {
-    private static final long serialVersionUID = -5136038576712536339L;
+public class InstallException extends ContributionException {
+    private static final long serialVersionUID = 3609176062577063255L;
 
-    public ResourceElementNotFoundException(String message, String identifier) {
+    public InstallException(String message) {
+        super(message);
+    }
+
+    public InstallException(Throwable cause) {
+        super(cause);
+    }
+
+    public InstallException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public InstallException(String message, String identifier) {
         super(message, identifier);
     }
 }

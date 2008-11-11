@@ -202,27 +202,6 @@ public class MetaDataStoreImpl implements MetaDataStore {
         return dependents;
     }
 
-    public List<Contribution> resolveTransitiveImports(Contribution contribution) throws UnresolvableImportException {
-        ArrayList<Contribution> contributions = new ArrayList<Contribution>();
-        resolveTransitiveImports(contribution, contributions);
-        return contributions;
-    }
-
-    private void resolveTransitiveImports(Contribution contribution, List<Contribution> dependencies)
-            throws UnresolvableImportException {
-        for (Import imprt : contribution.getManifest().getImports()) {
-            Contribution imported = resolve(imprt);
-            if (imported == null) {
-                String id = contribution.getUri().toString();
-                throw new UnresolvableImportException("Import " + imprt + " in contribution " + id + " cannot be resolved", id, imprt);
-            }
-            if (!dependencies.contains(imported)) {
-                dependencies.add(imported);
-            }
-            resolveTransitiveImports(imported, dependencies);
-        }
-    }
-
     @SuppressWarnings({"unchecked"})
     private <S extends Symbol, V extends Serializable> ResourceElement<S, V> resolveInternal(Contribution contribution,
                                                                                              Class<V> type,

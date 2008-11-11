@@ -31,7 +31,7 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.host.contribution.ContributionException;
+import org.fabric3.host.contribution.InstallException;
 import org.fabric3.introspection.DefaultIntrospectionContext;
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.xml.Loader;
@@ -81,7 +81,7 @@ public class WarContributionProcessor implements ContributionProcessor {
         registry.register(this);
     }
 
-    public void process(Contribution contribution, ValidationContext context, ClassLoader loader) throws ContributionException {
+    public void process(Contribution contribution, ValidationContext context, ClassLoader loader) throws InstallException {
         URI contributionUri = contribution.getUri();
         for (Resource resource : contribution.getResources()) {
             if (!resource.isProcessed()) {
@@ -90,7 +90,7 @@ public class WarContributionProcessor implements ContributionProcessor {
         }
     }
 
-    public void processManifest(Contribution contribution, final ValidationContext context) throws ContributionException {
+    public void processManifest(Contribution contribution, final ValidationContext context) throws InstallException {
         URL manifestURL;
         try {
             manifestURL = info.getServletContext().getResource("/WEB-INF/sca-contribution.xml");
@@ -116,12 +116,12 @@ public class WarContributionProcessor implements ContributionProcessor {
             }
             contribution.setManifest(manifest);
         } catch (LoaderException e) {
-            throw new ContributionException(e);
+            throw new InstallException(e);
         }
 
         iterateArtifacts(contribution, new Action() {
             public void process(Contribution contribution, String contentType, URL url)
-                    throws ContributionException {
+                    throws InstallException {
                 InputStream stream = null;
                 try {
                     stream = url.openStream();
@@ -131,7 +131,7 @@ public class WarContributionProcessor implements ContributionProcessor {
                     // Tomcat's underlying URLConnection returns a file not found exception when URL.openStream() is called. This is safe as
                     // interateArtifacts only iterates entries found in a contribution archive and FileNotFoundException should generally not happen.
                 } catch (IOException e) {
-                    throw new ContributionException(e);
+                    throw new InstallException(e);
                 } finally {
                     try {
                         if (stream != null) {
@@ -145,17 +145,17 @@ public class WarContributionProcessor implements ContributionProcessor {
         });
     }
 
-    public void index(Contribution contribution, final ValidationContext context) throws ContributionException {
+    public void index(Contribution contribution, final ValidationContext context) throws InstallException {
         iterateArtifacts(contribution, new Action() {
             public void process(Contribution contribution, String contentType, URL url)
-                    throws ContributionException {
+                    throws InstallException {
                 registry.indexResource(contribution, contentType, url, context);
             }
         });
     }
 
     @SuppressWarnings({"unchecked"})
-    private void iterateArtifacts(Contribution contribution, Action action) throws ContributionException {
+    private void iterateArtifacts(Contribution contribution, Action action) throws InstallException {
         ServletContext context = info.getServletContext();
         Set<String> metaInfpaths = context.getResourcePaths("/META-INF/");
         Set<String> webInfpaths = context.getResourcePaths("/WEB-INF/");
@@ -163,15 +163,15 @@ public class WarContributionProcessor implements ContributionProcessor {
             processResources(metaInfpaths, action, contribution, context);
             processResources(webInfpaths, action, contribution, context);
         } catch (ContentTypeResolutionException e) {
-            throw new ContributionException(e);
+            throw new InstallException(e);
         } catch (MalformedURLException e) {
-            throw new ContributionException(e);
+            throw new InstallException(e);
         }
     }
 
     private void processResources(Set<String> paths, Action action, Contribution contribution,
                                   ServletContext context) throws MalformedURLException,
-            ContributionException, ContentTypeResolutionException {
+            InstallException, ContentTypeResolutionException {
         if (paths == null || paths.isEmpty()) return;
         for (String path : paths) {
             URL entryUrl = context.getResource(path);

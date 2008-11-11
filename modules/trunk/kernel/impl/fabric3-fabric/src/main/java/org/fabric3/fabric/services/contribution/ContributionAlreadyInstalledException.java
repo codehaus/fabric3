@@ -14,17 +14,17 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.spi.services.contribution;
+package org.fabric3.fabric.services.contribution;
 
-import org.fabric3.host.contribution.ContributionException;
+import org.fabric3.host.contribution.InstallException;
 
 /**
- * @version $Rev$ $Date$
+ * @version $Revision$ $Date$
  */
-public class MatchingExportNotFoundException extends ContributionException {
-    private static final long serialVersionUID = -7749644734169598789L;
+public class ContributionAlreadyInstalledException extends InstallException {
+    private static final long serialVersionUID = 1236610771089236696L;
 
-    public MatchingExportNotFoundException(String message, String identifier) {
-        super(message, identifier);
+    public ContributionAlreadyInstalledException(String message) {
+        super(message);
     }
 }

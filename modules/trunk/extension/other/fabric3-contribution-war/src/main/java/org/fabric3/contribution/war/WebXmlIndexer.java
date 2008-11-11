@@ -25,7 +25,7 @@ import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.host.contribution.ContributionException;
+import org.fabric3.host.contribution.InstallException;
 import org.fabric3.scdl.ValidationContext;
 import org.fabric3.spi.services.contribution.QNameSymbol;
 import org.fabric3.spi.services.contribution.Resource;
@@ -64,7 +64,7 @@ public class WebXmlIndexer implements XmlIndexer {
         }
     }
 
-    public void index(Resource resource, XMLStreamReader reader, ValidationContext context) throws ContributionException {
+    public void index(Resource resource, XMLStreamReader reader, ValidationContext context) throws InstallException {
         QNameSymbol symbol;
         if (namespace) {
             symbol = new QNameSymbol(WEB_APP_NAMESPACE);

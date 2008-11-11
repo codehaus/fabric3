@@ -19,7 +19,7 @@ package org.fabric3.spi.services.contribution;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamReader;
 
-import org.fabric3.host.contribution.ContributionException;
+import org.fabric3.host.contribution.InstallException;
 import org.fabric3.scdl.ValidationContext;
 
 /**
@@ -43,7 +43,7 @@ public interface XmlElementManifestProcessor {
      * @param manifest the contribution manifest to update
      * @param reader   the reader positioned at the first element of the document
      * @param context  the context to which validation errors and warnings are reported
-     * @throws ContributionException if an error occurs processing
+     * @throws InstallException if an error occurs processing
      */
-    void process(ContributionManifest manifest, XMLStreamReader reader, ValidationContext context) throws ContributionException;
+    void process(ContributionManifest manifest, XMLStreamReader reader, ValidationContext context) throws InstallException;
 }

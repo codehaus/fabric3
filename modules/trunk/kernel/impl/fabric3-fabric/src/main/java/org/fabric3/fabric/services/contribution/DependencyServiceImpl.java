@@ -33,7 +33,6 @@ import org.fabric3.fabric.util.graph.TopologicalSorter;
 import org.fabric3.fabric.util.graph.TopologicalSorterImpl;
 import org.fabric3.fabric.util.graph.Vertex;
 import org.fabric3.fabric.util.graph.VertexImpl;
-import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.spi.services.contribution.Contribution;
 import org.fabric3.spi.services.contribution.ContributionManifest;
 import org.fabric3.spi.services.contribution.Export;
@@ -57,7 +56,7 @@ public class DependencyServiceImpl implements DependencyService {
         sorter = new TopologicalSorterImpl<Contribution>();
     }
 
-    public List<Contribution> order(List<Contribution> contributions) throws ContributionException {
+    public List<Contribution> order(List<Contribution> contributions) throws DependencyException {
         // create a DAG
         DirectedGraph<Contribution> dag = new DirectedGraphImpl<Contribution>();
         // add the contributions as vertices
@@ -78,7 +77,7 @@ public class DependencyServiceImpl implements DependencyService {
                 Vertex<Contribution> sink = findTargetVertex(dag, imprt);
                 if (sink == null) {
                     String uri = contribution.getUri().toString();
-                    throw new UnresolvableImportException("Unable to resolve import " + imprt + " in contribution " + uri, uri, imprt);
+                    throw new UnresolvableImportException("Unable to resolve import " + imprt + " in contribution " + uri, imprt);
                 }
                 Edge<Contribution> edge = new EdgeImpl<Contribution>(source, sink);
                 dag.add(edge);
@@ -99,7 +98,7 @@ public class DependencyServiceImpl implements DependencyService {
             }
             return ordered;
         } catch (GraphException e) {
-            throw new ContributionException(e);
+            throw new DependencyException(e);
         }
     }
 

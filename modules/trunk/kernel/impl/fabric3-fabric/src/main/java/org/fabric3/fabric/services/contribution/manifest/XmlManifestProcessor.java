@@ -26,7 +26,7 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.host.contribution.ContributionException;
+import org.fabric3.host.contribution.InstallException;
 import org.fabric3.scdl.ValidationContext;
 import org.fabric3.services.xmlfactory.XMLFactory;
 import org.fabric3.spi.services.contribution.ContributionManifest;
@@ -63,7 +63,7 @@ public class XmlManifestProcessor implements ManifestProcessor {
         return "application/xml";
     }
 
-    public void process(ContributionManifest manifest, InputStream stream, ValidationContext context) throws ContributionException {
+    public void process(ContributionManifest manifest, InputStream stream, ValidationContext context) throws InstallException {
         XMLStreamReader reader = null;
         try {
             reader = xmlFactory.createXMLStreamReader(stream);
@@ -75,7 +75,7 @@ public class XmlManifestProcessor implements ManifestProcessor {
             }
             manifestProcessorRegistry.process(reader.getName(), manifest, reader, context);
         } catch (XMLStreamException e) {
-            throw new ContributionException(e);
+            throw new InstallException(e);
         } finally {
             try {
                 if (reader != null) {

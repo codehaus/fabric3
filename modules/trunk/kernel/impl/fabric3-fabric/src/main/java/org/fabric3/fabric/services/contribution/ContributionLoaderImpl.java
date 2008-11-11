@@ -19,21 +19,20 @@ package org.fabric3.fabric.services.contribution;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.HashSet;
 
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.host.contribution.ContributionInUseException;
+import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.spi.classloader.MultiParentClassLoader;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.services.contribution.ClasspathProcessorRegistry;
 import org.fabric3.spi.services.contribution.Contribution;
 import org.fabric3.spi.services.contribution.ContributionManifest;
 import org.fabric3.spi.services.contribution.Import;
-import org.fabric3.spi.services.contribution.MatchingExportNotFoundException;
 import org.fabric3.spi.services.contribution.MetaDataStore;
 
 /**
@@ -59,7 +58,7 @@ public class ContributionLoaderImpl implements ContributionLoader {
         classloaderIsolation = info.supportsClassLoaderIsolation();
     }
 
-    public ClassLoader load(Contribution contribution) throws ContributionLoadException, MatchingExportNotFoundException {
+    public ClassLoader load(Contribution contribution) throws ContributionLoadException {
         URI contributionUri = contribution.getUri();
         ClassLoader cl = classLoaderRegistry.getClassLoader(APP_CLASSLOADER);
         if (!classloaderIsolation) {
@@ -99,14 +98,13 @@ public class ContributionLoaderImpl implements ContributionLoader {
     }
 
 
-    private void resolveImports(Contribution contribution, MultiParentClassLoader loader)
-            throws MatchingExportNotFoundException, ContributionLoadException {
+    private void resolveImports(Contribution contribution, MultiParentClassLoader loader) throws ContributionLoadException {
         ContributionManifest manifest = contribution.getManifest();
         for (Import imprt : manifest.getImports()) {
             Contribution imported = store.resolve(imprt);
             if (imported == null) {
                 String id = imprt.toString();
-                throw new MatchingExportNotFoundException("No matching export found for: " + id, id);
+                throw new MatchingExportNotFoundException("No matching export found for: " + id);
             }
             // add the resolved URI to the contribution
             URI importedUri = imported.getUri();
@@ -122,14 +120,13 @@ public class ContributionLoaderImpl implements ContributionLoader {
         }
     }
 
-    private void verifyImports(Contribution contribution)
-            throws MatchingExportNotFoundException, ContributionLoadException {
+    private void verifyImports(Contribution contribution) throws MatchingExportNotFoundException {
         ContributionManifest manifest = contribution.getManifest();
         for (Import imprt : manifest.getImports()) {
             Contribution imported = store.resolve(imprt);
             if (imported == null) {
                 String id = imprt.toString();
-                throw new MatchingExportNotFoundException("No matching export found for: " + id, id);
+                throw new MatchingExportNotFoundException("No matching export found for: " + id);
             }
             // add the resolved URI to the contribution
             URI importedUri = imported.getUri();

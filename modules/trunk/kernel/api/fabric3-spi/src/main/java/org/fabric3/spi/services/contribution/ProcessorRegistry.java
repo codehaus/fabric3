@@ -20,7 +20,7 @@ import java.io.InputStream;
 import java.net.URI;
 import java.net.URL;
 
-import org.fabric3.host.contribution.ContributionException;
+import org.fabric3.host.contribution.InstallException;
 import org.fabric3.scdl.ValidationContext;
 
 /**
@@ -76,9 +76,9 @@ public interface ProcessorRegistry {
      *
      * @param contribution the contribution
      * @param context      the context to which validation errors and warnings are reported
-     * @throws ContributionException if there was a problem processing the manifest
+     * @throws InstallException if there was a problem processing the manifest
      */
-    void processManifest(Contribution contribution, ValidationContext context) throws ContributionException;
+    void processManifest(Contribution contribution, ValidationContext context) throws InstallException;
 
     /**
      * Dispatches to a {@link ManifestProcessor} to process a manifest artifact contaned in a contribution.
@@ -87,19 +87,19 @@ public interface ProcessorRegistry {
      * @param contentType the artifact MIME type
      * @param inputStream the input stream for the artifact
      * @param context     the context to which validation errors and warnings are reported
-     * @throws ContributionException if there was a problem processing the artifact
+     * @throws InstallException if there was a problem processing the artifact
      */
     void processManifestArtifact(ContributionManifest manifest, String contentType, InputStream inputStream, ValidationContext context)
-            throws ContributionException;
+            throws InstallException;
 
     /**
      * Dispatches to a {@link ContributionProcessor} to index a contribution.
      *
      * @param contribution the contribution to index
      * @param context      the context to which validation errors and warnings are reported
-     * @throws ContributionException if there was a problem indexing the contribution
+     * @throws InstallException if there was a problem indexing the contribution
      */
-    void indexContribution(Contribution contribution, ValidationContext context) throws ContributionException;
+    void indexContribution(Contribution contribution, ValidationContext context) throws InstallException;
 
     /**
      * Dispatches to a {@link ResourceProcessor} to index a resource contained in a contribution.
@@ -108,9 +108,9 @@ public interface ProcessorRegistry {
      * @param contentType  the content type of the resource to process
      * @param url          a dereferenceable URL for the resource
      * @param context      the context to which validation errors and warnings are reported
-     * @throws ContributionException if there was a problem indexing the contribution
+     * @throws InstallException if there was a problem indexing the contribution
      */
-    void indexResource(Contribution contribution, String contentType, URL url, ValidationContext context) throws ContributionException;
+    void indexResource(Contribution contribution, String contentType, URL url, ValidationContext context) throws InstallException;
 
     /**
      * Loads all indexed resources in a contribution.
@@ -118,9 +118,9 @@ public interface ProcessorRegistry {
      * @param contribution The contribution
      * @param context      the context to which validation errors and warnings are reported
      * @param loader       the classloader conribution resources must be laoded in
-     * @throws ContributionException if there was a problem loading resources in the contribution
+     * @throws InstallException if there was a problem loading resources in the contribution
      */
-    void processContribution(Contribution contribution, ValidationContext context, ClassLoader loader) throws ContributionException;
+    void processContribution(Contribution contribution, ValidationContext context, ClassLoader loader) throws InstallException;
 
     /**
      * Loads a contained resource in a contribution.
@@ -129,8 +129,8 @@ public interface ProcessorRegistry {
      * @param resource        the resource to process
      * @param context         the context to which validation errors and warnings are reported
      * @param loader          the classloader contribution the resource must be loaded in
-     * @throws ContributionException if there was a problem loading the resoure
+     * @throws InstallException if there was a problem loading the resoure
      */
-    void processResource(URI contributionUri, Resource resource, ValidationContext context, ClassLoader loader) throws ContributionException;
+    void processResource(URI contributionUri, Resource resource, ValidationContext context, ClassLoader loader) throws InstallException;
 
 }

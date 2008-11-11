@@ -29,7 +29,7 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.host.contribution.Constants;
-import org.fabric3.host.contribution.ContributionException;
+import org.fabric3.host.contribution.InstallException;
 import org.fabric3.introspection.DefaultIntrospectionContext;
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.xml.Loader;
@@ -69,7 +69,7 @@ public class CompositeResourceProcessor implements ResourceProcessor {
         return Constants.COMPOSITE_CONTENT_TYPE;
     }
 
-    public void index(Contribution contribution, URL url, ValidationContext context) throws ContributionException {
+    public void index(Contribution contribution, URL url, ValidationContext context) throws InstallException {
         XMLStreamReader reader = null;
         InputStream stream = null;
         try {
@@ -89,9 +89,9 @@ public class CompositeResourceProcessor implements ResourceProcessor {
             resource.addResourceElement(element);
             contribution.addResource(resource);
         } catch (XMLStreamException e) {
-            throw new ContributionException(e);
+            throw new InstallException(e);
         } catch (IOException e) {
-            throw new ContributionException(e);
+            throw new InstallException(e);
         } finally {
             try {
                 if (stream != null) {
@@ -111,7 +111,7 @@ public class CompositeResourceProcessor implements ResourceProcessor {
     }
 
     @SuppressWarnings({"unchecked"})
-    public void process(URI contributionUri, Resource resource, ValidationContext context, ClassLoader classLoader) throws ContributionException {
+    public void process(URI contributionUri, Resource resource, ValidationContext context, ClassLoader classLoader) throws InstallException {
         URL url = resource.getUrl();
         IntrospectionContext childContext = new DefaultIntrospectionContext(classLoader, contributionUri, url);
         Composite composite;
@@ -119,7 +119,7 @@ public class CompositeResourceProcessor implements ResourceProcessor {
             // check to see if the resoruce has already been evaluated
             composite = loader.load(url, Composite.class, childContext);
         } catch (LoaderException e) {
-            throw new ContributionException(e);
+            throw new InstallException(e);
         }
         composite.validate(childContext);
         boolean found = false;

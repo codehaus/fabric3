@@ -21,11 +21,11 @@ import java.util.Map;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamReader;
 
-import org.fabric3.host.contribution.ContributionException;
+import org.fabric3.host.contribution.InstallException;
+import org.fabric3.scdl.ValidationContext;
 import org.fabric3.spi.services.contribution.Resource;
 import org.fabric3.spi.services.contribution.XmlIndexer;
 import org.fabric3.spi.services.contribution.XmlIndexerRegistry;
-import org.fabric3.scdl.ValidationContext;
 
 /**
  * Default impelmentation of an XmlIndexerRegistry.
@@ -43,7 +43,7 @@ public class XmlIndexerRegistryImpl implements XmlIndexerRegistry {
         cache.remove(name);
     }
 
-    public void index(Resource resource, XMLStreamReader reader, ValidationContext context) throws ContributionException {
+    public void index(Resource resource, XMLStreamReader reader, ValidationContext context) throws InstallException {
         QName name = reader.getName();
         XmlIndexer indexer = cache.get(name);
         if (indexer == null) {

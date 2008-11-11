@@ -21,7 +21,7 @@ import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
-import org.fabric3.host.contribution.ContributionException;
+import org.fabric3.host.contribution.InstallException;
 import org.fabric3.scdl.ValidationContext;
 
 /**
@@ -52,10 +52,10 @@ public interface XmlResourceElementLoaderRegistry {
      * @param resource        the resource
      * @param context         the context to which validation errors and warnings are reported
      * @param loader          the classloader to resolve resources with
-     * @throws ContributionException if a fatal error loading the resource occurs
+     * @throws InstallException if a fatal error loading the resource occurs
      * @throws XMLStreamException    if an error parsing the XML stream occurs
      */
     void load(XMLStreamReader reader, URI contributionUri, Resource resource, ValidationContext context, ClassLoader loader)
-            throws ContributionException, XMLStreamException;
+            throws InstallException, XMLStreamException;
 
 }

@@ -16,19 +16,21 @@
  */
 package org.fabric3.loader.xmlcontribution;
 
+import java.io.FileNotFoundException;
+import javax.xml.namespace.QName;
 import static javax.xml.stream.XMLStreamConstants.END_DOCUMENT;
 import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
 import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
-import static org.osoa.sca.Constants.SCA_NS;
-
-import java.io.FileNotFoundException;
-
-import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
-import org.fabric3.host.contribution.ContributionException;
+import static org.osoa.sca.Constants.SCA_NS;
+import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Init;
+import org.osoa.sca.annotations.Reference;
+
 import org.fabric3.host.contribution.Deployable;
+import org.fabric3.host.contribution.InstallException;
 import org.fabric3.introspection.DefaultIntrospectionContext;
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.xml.Loader;
@@ -40,9 +42,6 @@ import org.fabric3.spi.services.contribution.Export;
 import org.fabric3.spi.services.contribution.Import;
 import org.fabric3.spi.services.contribution.XmlElementManifestProcessor;
 import org.fabric3.spi.services.contribution.XmlManifestProcessorRegistry;
-import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Init;
-import org.osoa.sca.annotations.Reference;
 
 /**
  * @version $Revision$ $Date$
@@ -68,7 +67,7 @@ public class XmlContributionTypeManifestProcessor implements XmlElementManifestP
         return XML_CONTRIBUTION;
     }
 
-    public void process(ContributionManifest manifest, XMLStreamReader reader, ValidationContext context) throws ContributionException {
+    public void process(ContributionManifest manifest, XMLStreamReader reader, ValidationContext context) throws InstallException {
         try {
             while (true) {
                 int i = reader.next();
@@ -114,10 +113,10 @@ public class XmlContributionTypeManifestProcessor implements XmlElementManifestP
             if (e.getCause() instanceof FileNotFoundException) {
                 return;
             } else {
-                throw new ContributionException(e);
+                throw new InstallException(e);
             }
         } catch (XMLStreamException e) {
-            throw new ContributionException(e);
+            throw new InstallException(e);
         }
 
     }

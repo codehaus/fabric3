@@ -20,7 +20,6 @@ import java.io.File;
 import java.io.Serializable;
 import java.net.URI;
 import java.net.URL;
-import java.util.List;
 import java.util.Set;
 import javax.xml.namespace.QName;
 
@@ -51,16 +50,6 @@ public class MetaDataStoreImplTestCase extends TestCase {
         QNameImport imprt = new QNameImport(IMPORT_EXPORT_QNAME);
         Contribution contribution = store.resolve(imprt);
         assertEquals(RESOURCE_URI, contribution.getUri());
-    }
-
-    public void testTransitiveResolution() throws Exception {
-        Contribution contribution = new Contribution(URI.create("resource"));
-        ContributionManifest manifest = new ContributionManifest();
-        QNameImport imprt = new QNameImport(IMPORT_EXPORT_QNAME2);
-        manifest.addImport(imprt);
-        contribution.setManifest(manifest);
-        List<Contribution> contributions = store.resolveTransitiveImports(contribution);
-        assertEquals(2, contributions.size());
     }
 
     public void testResolveContainingResource() throws Exception {

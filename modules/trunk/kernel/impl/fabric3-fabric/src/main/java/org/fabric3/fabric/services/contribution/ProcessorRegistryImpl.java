@@ -25,7 +25,8 @@ import java.util.Map;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Service;
 
-import org.fabric3.host.contribution.ContributionException;
+import org.fabric3.host.contribution.InstallException;
+import org.fabric3.scdl.ValidationContext;
 import org.fabric3.spi.services.contribution.Contribution;
 import org.fabric3.spi.services.contribution.ContributionManifest;
 import org.fabric3.spi.services.contribution.ContributionProcessor;
@@ -33,7 +34,6 @@ import org.fabric3.spi.services.contribution.ManifestProcessor;
 import org.fabric3.spi.services.contribution.ProcessorRegistry;
 import org.fabric3.spi.services.contribution.Resource;
 import org.fabric3.spi.services.contribution.ResourceProcessor;
-import org.fabric3.scdl.ValidationContext;
 
 /**
  * Default implementation of ProcessorRegistry
@@ -77,7 +77,7 @@ public class ProcessorRegistryImpl implements ProcessorRegistry {
         manifestProcessorCache.remove(contentType);
     }
 
-    public void processManifest(Contribution contribution, ValidationContext context) throws ContributionException {
+    public void processManifest(Contribution contribution, ValidationContext context) throws InstallException {
         String contentType = contribution.getContentType();
         ContributionProcessor processor = contributionProcessorCache.get(contentType);
         if (processor == null) {
@@ -89,14 +89,14 @@ public class ProcessorRegistryImpl implements ProcessorRegistry {
     }
 
     public void processManifestArtifact(ContributionManifest manifest, String contentType, InputStream inputStream, ValidationContext context)
-            throws ContributionException {
+            throws InstallException {
         ManifestProcessor processor = manifestProcessorCache.get(contentType);
         if (processor != null) {
             processor.process(manifest, inputStream, context);
         }
     }
 
-    public void indexContribution(Contribution contribution, ValidationContext context) throws ContributionException {
+    public void indexContribution(Contribution contribution, ValidationContext context) throws InstallException {
         String contentType = contribution.getContentType();
         ContributionProcessor processor = contributionProcessorCache.get(contentType);
         if (processor == null) {
@@ -106,7 +106,7 @@ public class ProcessorRegistryImpl implements ProcessorRegistry {
         processor.index(contribution, context);
     }
 
-    public void indexResource(Contribution contribution, String contentType, URL url, ValidationContext context) throws ContributionException {
+    public void indexResource(Contribution contribution, String contentType, URL url, ValidationContext context) throws InstallException {
         ResourceProcessor processor = resourceProcessorCache.get(contentType);
         if (processor == null) {
             // unknown type, skip
@@ -115,7 +115,7 @@ public class ProcessorRegistryImpl implements ProcessorRegistry {
         processor.index(contribution, url, context);
     }
 
-    public void processContribution(Contribution contribution, ValidationContext context, ClassLoader loader) throws ContributionException {
+    public void processContribution(Contribution contribution, ValidationContext context, ClassLoader loader) throws InstallException {
         String contentType = contribution.getContentType();
         ContributionProcessor processor = contributionProcessorCache.get(contentType);
         if (processor == null) {
@@ -125,7 +125,7 @@ public class ProcessorRegistryImpl implements ProcessorRegistry {
         processor.process(contribution, context, loader);
     }
 
-    public void processResource(URI contributionUri, Resource resource, ValidationContext context, ClassLoader loader) throws ContributionException {
+    public void processResource(URI contributionUri, Resource resource, ValidationContext context, ClassLoader loader) throws InstallException {
         ResourceProcessor processor = resourceProcessorCache.get(resource.getContentType());
         if (processor == null) {
             // FIXME for now, return null

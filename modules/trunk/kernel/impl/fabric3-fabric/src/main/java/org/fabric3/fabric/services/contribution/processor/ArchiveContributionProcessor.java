@@ -24,12 +24,12 @@ import java.util.List;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.fabric.services.contribution.UnsupportedContentTypeException;
-import org.fabric3.host.contribution.ContributionException;
+import org.fabric3.host.contribution.InstallException;
+import org.fabric3.scdl.ValidationContext;
 import org.fabric3.spi.services.contribution.Action;
 import org.fabric3.spi.services.contribution.ArchiveContributionHandler;
 import org.fabric3.spi.services.contribution.Contribution;
 import org.fabric3.spi.services.contribution.Resource;
-import org.fabric3.scdl.ValidationContext;
 
 /**
  * Handles common processing for contribution archives
@@ -54,23 +54,23 @@ public class ArchiveContributionProcessor extends AbstractContributionProcessor 
         return CONTENT_TYPES;
     }
 
-    public void processManifest(Contribution contribution, ValidationContext context) throws ContributionException {
+    public void processManifest(Contribution contribution, ValidationContext context) throws InstallException {
         ArchiveContributionHandler handler = getHandler(contribution);
         handler.processManifest(contribution, context);
     }
 
-    public void index(Contribution contribution, final ValidationContext context) throws ContributionException {
+    public void index(Contribution contribution, final ValidationContext context) throws InstallException {
         ArchiveContributionHandler handler = getHandler(contribution);
         handler.iterateArtifacts(contribution, new Action() {
             public void process(Contribution contribution, String contentType, URL url)
-                    throws ContributionException {
+                    throws InstallException {
                 registry.indexResource(contribution, contentType, url, context);
             }
         });
 
     }
 
-    public void process(Contribution contribution, ValidationContext context, ClassLoader loader) throws ContributionException {
+    public void process(Contribution contribution, ValidationContext context, ClassLoader loader) throws InstallException {
         ClassLoader oldClassloader = Thread.currentThread().getContextClassLoader();
         URI contributionUri = contribution.getUri();
         try {

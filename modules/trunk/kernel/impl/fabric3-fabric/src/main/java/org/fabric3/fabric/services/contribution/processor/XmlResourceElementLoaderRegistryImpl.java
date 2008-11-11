@@ -23,7 +23,7 @@ import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
-import org.fabric3.host.contribution.ContributionException;
+import org.fabric3.host.contribution.InstallException;
 import org.fabric3.scdl.ValidationContext;
 import org.fabric3.spi.services.contribution.Resource;
 import org.fabric3.spi.services.contribution.XmlResourceElementLoader;
@@ -47,7 +47,7 @@ public class XmlResourceElementLoaderRegistryImpl implements XmlResourceElementL
 
     @SuppressWarnings({"unchecked"})
     public void load(XMLStreamReader reader, URI contributionUri, Resource resource, ValidationContext context,  ClassLoader loader)
-            throws ContributionException, XMLStreamException {
+            throws InstallException, XMLStreamException {
         try {
             QName name = reader.getName();
             XmlResourceElementLoader elementLoader = cache.get(name);

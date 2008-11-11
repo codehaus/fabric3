@@ -23,7 +23,7 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.host.contribution.ContributionException;
+import org.fabric3.host.contribution.InstallException;
 import org.fabric3.introspection.xml.MissingAttribute;
 import static org.fabric3.loader.plan.DeploymentPlanConstants.PLAN;
 import static org.fabric3.loader.plan.DeploymentPlanConstants.PLAN_NAMESPACE;
@@ -59,7 +59,7 @@ public class DeploymentPlanIndexer implements XmlIndexer {
         return PLAN;
     }
 
-    public void index(Resource resource, XMLStreamReader reader, ValidationContext context) throws ContributionException {
+    public void index(Resource resource, XMLStreamReader reader, ValidationContext context) throws InstallException {
         QName qname = reader.getName();
         assert PLAN.equals(qname);
         String name = reader.getAttributeValue(null, "name");

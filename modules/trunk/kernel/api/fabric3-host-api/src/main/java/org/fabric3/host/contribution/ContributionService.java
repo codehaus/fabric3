@@ -69,17 +69,19 @@ public interface ContributionService {
      * Installs a stored contribution.
      *
      * @param uri the contribution URI
-     * @throws ContributionException if there an error reading, introspecting or loading the contribution
+     * @throws InstallException              if there an error reading, introspecting or loading the contribution
+     * @throws ContributionNotFoundException if the contribution is not found
      */
-    void install(URI uri) throws ContributionException;
+    void install(URI uri) throws InstallException, ContributionNotFoundException;
 
     /**
      * Installs a list of stored contributions.
      *
      * @param uris the contribution URIs
-     * @throws ContributionException if there an error reading, introspecting or loading the contribution
+     * @throws ContributionNotFoundException if a contribution is not found
+     * @throws InstallException              if there an error reading, introspecting or loading the contribution
      */
-    void install(List<URI> uris) throws ContributionException;
+    void install(List<URI> uris) throws InstallException, ContributionNotFoundException;
 
 
     /**

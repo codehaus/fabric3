@@ -14,17 +14,15 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.spi.services.contribution;
-
-import org.fabric3.host.contribution.InstallException;
+package org.fabric3.fabric.services.contribution;
 
 /**
  * @version $Rev$ $Date$
  */
-public class ResourceElementNotFoundException extends InstallException {
-    private static final long serialVersionUID = -5136038576712536339L;
+public class MatchingExportNotFoundException extends ContributionLoadException {
+    private static final long serialVersionUID = -7749644734169598789L;
 
-    public ResourceElementNotFoundException(String message, String identifier) {
-        super(message, identifier);
+    public MatchingExportNotFoundException(String message) {
+        super(message);
     }
 }

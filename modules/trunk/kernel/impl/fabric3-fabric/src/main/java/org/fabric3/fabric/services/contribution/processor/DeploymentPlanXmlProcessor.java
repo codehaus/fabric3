@@ -17,12 +17,14 @@
 package org.fabric3.fabric.services.contribution.processor;
 
 import java.net.URI;
-
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
-import org.fabric3.host.contribution.ContributionException;
+import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Reference;
+
+import org.fabric3.host.contribution.InstallException;
 import org.fabric3.scdl.ValidationContext;
 import org.fabric3.spi.Namespaces;
 import org.fabric3.spi.services.contribution.Contribution;
@@ -30,8 +32,6 @@ import org.fabric3.spi.services.contribution.Resource;
 import org.fabric3.spi.services.contribution.XmlProcessor;
 import org.fabric3.spi.services.contribution.XmlProcessorRegistry;
 import org.fabric3.spi.services.contribution.XmlResourceElementLoader;
-import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Reference;
 
 /**
  * Processes a contributed deployment plan file.
@@ -54,14 +54,14 @@ public class DeploymentPlanXmlProcessor implements XmlProcessor {
     }
 
     public void processContent(Contribution contribution, ValidationContext context, XMLStreamReader reader, ClassLoader cl)
-            throws ContributionException {
+            throws InstallException {
         try {
             URI uri = contribution.getUri();
             assert contribution.getResources().size() == 1;
             Resource resource = contribution.getResources().get(0);
             loader.load(reader, uri, resource, context, cl);
         } catch (XMLStreamException e) {
-            throw new ContributionException(e);
+            throw new InstallException(e);
         }
     }
 }

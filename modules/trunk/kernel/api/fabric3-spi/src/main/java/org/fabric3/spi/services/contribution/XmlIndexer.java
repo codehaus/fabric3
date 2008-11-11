@@ -19,7 +19,7 @@ package org.fabric3.spi.services.contribution;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamReader;
 
-import org.fabric3.host.contribution.ContributionException;
+import org.fabric3.host.contribution.InstallException;
 import org.fabric3.scdl.ValidationContext;
 
 /**
@@ -42,8 +42,8 @@ public interface XmlIndexer {
      * @param resource the resource being indexed
      * @param reader   the reader positioned on the document element
      * @param context  the context to which validation errors and warnings are reported
-     * @throws ContributionException if an error occurs during indexing
+     * @throws InstallException if an error occurs during indexing
      */
-    void index(Resource resource, XMLStreamReader reader, ValidationContext context) throws ContributionException;
+    void index(Resource resource, XMLStreamReader reader, ValidationContext context) throws InstallException;
 
 }

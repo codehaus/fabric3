@@ -18,7 +18,6 @@ package org.fabric3.fabric.services.contribution;
 
 import java.util.List;
 
-import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.spi.services.contribution.Contribution;
 
 /**
@@ -29,14 +28,12 @@ import org.fabric3.spi.services.contribution.Contribution;
 public interface DependencyService {
 
     /**
-     * Orders a list of contributions by their import dependencies using a reverse topological sort of contribution
-     * imports.
+     * Orders a list of contributions by their import dependencies using a reverse topological sort of contribution imports.
      *
      * @param contributions the  list of contributions to order
      * @return the ordered list of contributions
-     * @throws ContributionException if an error occurs ordering the contributions such as an unresolvable import or
-     *                               dependency cycle
+     * @throws DependencyException if an error occurs ordering the contributions such as an unresolvable import or dependency cycle
      */
-    List<Contribution> order(List<Contribution> contributions) throws ContributionException;
+    List<Contribution> order(List<Contribution> contributions) throws DependencyException;
 
 }

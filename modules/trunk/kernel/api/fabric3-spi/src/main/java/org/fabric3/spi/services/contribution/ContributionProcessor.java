@@ -19,6 +19,7 @@ package org.fabric3.spi.services.contribution;
 import java.util.List;
 
 import org.fabric3.host.contribution.ContributionException;
+import org.fabric3.host.contribution.InstallException;
 import org.fabric3.scdl.ValidationContext;
 
 /**
@@ -46,18 +47,18 @@ public interface ContributionProcessor {
      *
      * @param contribution the contribution that will be used to hold the results from the processing
      * @param context      the context to which validation errors and warnings are reported
-     * @throws ContributionException if there was a problem with the contribution
+     * @throws InstallException if there was a problem with the contribution
      */
-    void processManifest(Contribution contribution, ValidationContext context) throws ContributionException;
+    void processManifest(Contribution contribution, ValidationContext context) throws InstallException;
 
     /**
      * Indexes all contribution resources
      *
      * @param contribution the contribution to index
      * @param context      the context to which validation errors and warnings are reported
-     * @throws ContributionException if there was a problem indexing
+     * @throws InstallException if there was a problem indexing
      */
-    void index(Contribution contribution, ValidationContext context) throws ContributionException;
+    void index(Contribution contribution, ValidationContext context) throws InstallException;
 
     /**
      * Loads all resources in the contribution.
@@ -65,8 +66,8 @@ public interface ContributionProcessor {
      * @param contribution the contribution
      * @param context      the context to which validation errors and warnings are reported
      * @param loader       the classloader contribution resources must be loaded in
-     * @throws ContributionException if there was a problem loading the contribution resoruces
+     * @throws InstallException if there was a problem loading the contribution resoruces
      */
-    public void process(Contribution contribution, ValidationContext context, ClassLoader loader) throws ContributionException;
+    public void process(Contribution contribution, ValidationContext context, ClassLoader loader) throws InstallException;
 
 }

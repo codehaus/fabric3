@@ -23,7 +23,7 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.host.contribution.ContributionException;
+import org.fabric3.host.contribution.InstallException;
 import org.fabric3.scdl.ValidationContext;
 import org.fabric3.spi.services.contribution.ContributionManifest;
 import org.fabric3.spi.services.contribution.Import;
@@ -59,7 +59,7 @@ public class HibernatePersistenceManifestProcessor implements XmlElementManifest
         registry.register(this);
     }
 
-    public void process(ContributionManifest manifest, XMLStreamReader reader, ValidationContext context) throws ContributionException {
+    public void process(ContributionManifest manifest, XMLStreamReader reader, ValidationContext context) throws InstallException {
         // TODO this assumes Hibernate is available on the controller, which is not necessary since it is only required at runtime.
         //  An import scope similar to Maven's "runtime" would be a possible solution.
         for (Import imprt : manifest.getImports()) {

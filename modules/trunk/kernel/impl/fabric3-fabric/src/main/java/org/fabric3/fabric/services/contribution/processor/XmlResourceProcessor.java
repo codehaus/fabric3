@@ -29,15 +29,15 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.host.contribution.ContributionException;
+import org.fabric3.host.contribution.InstallException;
+import org.fabric3.scdl.ValidationContext;
+import org.fabric3.services.xmlfactory.XMLFactory;
 import org.fabric3.spi.services.contribution.Contribution;
 import org.fabric3.spi.services.contribution.ProcessorRegistry;
 import org.fabric3.spi.services.contribution.Resource;
 import org.fabric3.spi.services.contribution.ResourceProcessor;
 import org.fabric3.spi.services.contribution.XmlIndexerRegistry;
 import org.fabric3.spi.services.contribution.XmlResourceElementLoaderRegistry;
-import org.fabric3.services.xmlfactory.XMLFactory;
-import org.fabric3.scdl.ValidationContext;
 
 /**
  * Processes an XML-based resource in a contribution, delegating to a an XMLIndexer to index the resource and a Loader to load it based on the root
@@ -71,7 +71,7 @@ public class XmlResourceProcessor implements ResourceProcessor {
         return "application/xml";
     }
 
-    public void index(Contribution contribution, URL url, ValidationContext context) throws ContributionException {
+    public void index(Contribution contribution, URL url, ValidationContext context) throws InstallException {
         XMLStreamReader reader = null;
         InputStream stream = null;
         try {
@@ -84,9 +84,9 @@ public class XmlResourceProcessor implements ResourceProcessor {
             indexerRegistry.index(resource, reader, context);
             contribution.addResource(resource);
         } catch (XMLStreamException e) {
-            throw new ContributionException(e);
+            throw new InstallException(e);
         } catch (IOException e) {
-            throw new ContributionException(e);
+            throw new InstallException(e);
         } finally {
             try {
                 if (stream != null) {
@@ -105,7 +105,7 @@ public class XmlResourceProcessor implements ResourceProcessor {
         }
     }
 
-    public void process(URI contributionUri, Resource resource, ValidationContext context, ClassLoader loader) throws ContributionException {
+    public void process(URI contributionUri, Resource resource, ValidationContext context, ClassLoader loader) throws InstallException {
         InputStream stream = null;
         XMLStreamReader reader = null;
         try {
@@ -118,9 +118,9 @@ public class XmlResourceProcessor implements ResourceProcessor {
             elementLoaderRegistry.load(reader, contributionUri, resource, context, loader);
             resource.setProcessed(true);
         } catch (XMLStreamException e) {
-            throw new ContributionException(e);
+            throw new InstallException(e);
         } catch (IOException e) {
-            throw new ContributionException(e);
+            throw new InstallException(e);
         } finally {
             try {
                 if (stream != null) {

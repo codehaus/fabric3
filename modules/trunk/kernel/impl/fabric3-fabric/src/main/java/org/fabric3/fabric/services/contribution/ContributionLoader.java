@@ -16,9 +16,8 @@
  */
 package org.fabric3.fabric.services.contribution;
 
-import org.fabric3.spi.services.contribution.Contribution;
-import org.fabric3.spi.services.contribution.MatchingExportNotFoundException;
 import org.fabric3.host.contribution.ContributionInUseException;
+import org.fabric3.spi.services.contribution.Contribution;
 
 /**
  * Loads an installed contribution.
@@ -34,10 +33,8 @@ public interface ContributionLoader {
      * @param contribution the contribution to load
      * @return the classloader with access to the contribution and dependent resources
      * @throws ContributionLoadException if an error occurs during load
-     * @throws MatchingExportNotFoundException
-     *                                   if matching export could not be found
      */
-    ClassLoader load(Contribution contribution) throws ContributionLoadException, MatchingExportNotFoundException;
+    ClassLoader load(Contribution contribution) throws ContributionLoadException;
 
     /**
      * Unloads a contribution from memory.

@@ -16,20 +16,22 @@
  */
 package org.fabric3.loader.plan;
 
+import java.net.URI;
+import javax.xml.namespace.QName;
 import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
 import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
-import static org.fabric3.loader.plan.DeploymentPlanConstants.PLAN;
-import static org.fabric3.loader.plan.DeploymentPlanConstants.PLAN_NAMESPACE;
-
-import java.net.URI;
-
-import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
-import org.fabric3.host.contribution.ContributionException;
+import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Init;
+import org.osoa.sca.annotations.Reference;
+
+import org.fabric3.host.contribution.InstallException;
 import org.fabric3.introspection.xml.LoaderUtil;
 import org.fabric3.introspection.xml.MissingAttribute;
+import static org.fabric3.loader.plan.DeploymentPlanConstants.PLAN;
+import static org.fabric3.loader.plan.DeploymentPlanConstants.PLAN_NAMESPACE;
 import org.fabric3.scdl.ValidationContext;
 import org.fabric3.spi.Namespaces;
 import org.fabric3.spi.plan.DeploymentPlan;
@@ -38,9 +40,6 @@ import org.fabric3.spi.services.contribution.Resource;
 import org.fabric3.spi.services.contribution.ResourceElement;
 import org.fabric3.spi.services.contribution.XmlResourceElementLoader;
 import org.fabric3.spi.services.contribution.XmlResourceElementLoaderRegistry;
-import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Init;
-import org.osoa.sca.annotations.Reference;
 
 /**
  * Processes a deployment plan.
@@ -68,7 +67,7 @@ public class DeploymentPlanProcessor implements XmlResourceElementLoader {
     }
 
     public void load(XMLStreamReader reader, URI contributionUri, Resource resource, ValidationContext context, ClassLoader loader)
-            throws ContributionException {
+            throws InstallException {
         try {
             QName qname = reader.getName();
             assert PLAN.equals(qname);
@@ -99,7 +98,7 @@ public class DeploymentPlanProcessor implements XmlResourceElementLoader {
                 }
             }
         } catch (XMLStreamException e) {
-            throw new ContributionException("Error processing contribution: " + contributionUri, e);
+            throw new InstallException("Error processing contribution: " + contributionUri, e);
         }
 
 

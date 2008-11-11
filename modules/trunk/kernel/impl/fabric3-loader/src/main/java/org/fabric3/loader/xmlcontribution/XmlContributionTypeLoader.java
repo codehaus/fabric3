@@ -16,21 +16,23 @@
  */
 package org.fabric3.loader.xmlcontribution;
 
-import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
-import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
-import static org.osoa.sca.Constants.SCA_NS;
-
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
-
 import javax.xml.namespace.QName;
+import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
+import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
+import static org.osoa.sca.Constants.SCA_NS;
+import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Init;
+import org.osoa.sca.annotations.Reference;
+
 import org.fabric3.host.contribution.Constants;
-import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.host.contribution.Deployable;
+import org.fabric3.host.contribution.InstallException;
 import org.fabric3.introspection.DefaultIntrospectionContext;
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.xml.Loader;
@@ -48,9 +50,6 @@ import org.fabric3.spi.services.contribution.ResourceElementNotFoundException;
 import org.fabric3.spi.services.contribution.Symbol;
 import org.fabric3.spi.services.contribution.XmlProcessor;
 import org.fabric3.spi.services.contribution.XmlProcessorRegistry;
-import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Init;
-import org.osoa.sca.annotations.Reference;
 
 /**
  * Loader for definitions.
@@ -80,7 +79,7 @@ public class XmlContributionTypeLoader implements XmlProcessor {
     }
 
     public void processContent(Contribution contribution, ValidationContext context, XMLStreamReader reader, ClassLoader classLoader)
-            throws ContributionException {
+            throws InstallException {
         validateAttributes(reader, context);
         List<Composite> composites = new ArrayList<Composite>();
         String targetNamespace = reader.getAttributeValue(null, "targetNamespace");
@@ -96,7 +95,7 @@ public class XmlContributionTypeLoader implements XmlProcessor {
                         try {
                             definition = loader.load(reader, Composite.class, childContext);
                         } catch (UnrecognizedElementException e) {
-                            throw new ContributionException("Error processing contribution: " + contributionUri.toString(), e);
+                            throw new InstallException("Error processing contribution: " + contributionUri.toString(), e);
                         }
                     }
                     if (definition != null) {
@@ -148,7 +147,7 @@ public class XmlContributionTypeLoader implements XmlProcessor {
             }
         } catch (XMLStreamException e) {
             String uri = contribution.getUri().toString();
-            throw new ContributionException("Error processing contribution: " + uri, e);
+            throw new InstallException("Error processing contribution: " + uri, e);
         }
 
     }

@@ -31,8 +31,8 @@ import org.osoa.sca.annotations.Reference;
 import org.fabric3.fabric.command.ProvisionClassloaderCommand;
 import org.fabric3.fabric.command.UnprovisionClassloaderCommand;
 import org.fabric3.fabric.runtime.ComponentNames;
+import org.fabric3.fabric.services.contribution.DependencyException;
 import org.fabric3.fabric.services.contribution.DependencyService;
-import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.scdl.CompositeImplementation;
 import org.fabric3.spi.command.Command;
 import org.fabric3.spi.generator.GenerationException;
@@ -152,7 +152,7 @@ public class ClassLoaderCommandGeneratorImpl implements ClassLoaderCommandGenera
                 // referenced by other registered classloaders. This requires dependent classloaders to be released first.
                 ordered = dependencyService.order(new ArrayList<Contribution>(entry.getValue()));
                 Collections.reverse(ordered);
-            } catch (ContributionException e) {
+            } catch (DependencyException e) {
                 throw new GenerationException(e);
             }
             for (Contribution contribution : ordered) {

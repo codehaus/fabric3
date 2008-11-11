@@ -18,7 +18,7 @@ package org.fabric3.spi.services.contribution;
 
 import java.io.InputStream;
 
-import org.fabric3.host.contribution.ContributionException;
+import org.fabric3.host.contribution.InstallException;
 import org.fabric3.scdl.ValidationContext;
 
 /**
@@ -41,9 +41,9 @@ public interface ManifestProcessor {
      * @param manifest the manifest to update
      * @param stream   the stream for the artifact
      * @param context  the context to which validation errors and warnings are reported
-     * @throws ContributionException if an error occurs processing the stream
+     * @throws InstallException if an error occurs processing the stream
      */
-    void process(ContributionManifest manifest, InputStream stream, ValidationContext context) throws ContributionException;
+    void process(ContributionManifest manifest, InputStream stream, ValidationContext context) throws InstallException;
 
 }
 

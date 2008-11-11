@@ -28,11 +28,11 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.host.contribution.ContributionException;
-import org.fabric3.scdl.definitions.AbstractDefinition;
-import org.fabric3.scdl.ValidationContext;
+import org.fabric3.host.contribution.InstallException;
 import org.fabric3.introspection.xml.LoaderUtil;
 import org.fabric3.introspection.xml.MissingAttribute;
+import org.fabric3.scdl.ValidationContext;
+import org.fabric3.scdl.definitions.AbstractDefinition;
 import org.fabric3.spi.services.contribution.QNameSymbol;
 import org.fabric3.spi.services.contribution.Resource;
 import org.fabric3.spi.services.contribution.ResourceElement;
@@ -67,7 +67,7 @@ public class DefinitionsIndexer implements XmlIndexer {
         return DEFINITIONS;
     }
 
-    public void index(Resource resource, XMLStreamReader reader, ValidationContext context) throws ContributionException {
+    public void index(Resource resource, XMLStreamReader reader, ValidationContext context) throws InstallException {
         String targetNamespace = reader.getAttributeValue(null, "targetNamespace");
 
         while (true) {
@@ -97,7 +97,7 @@ public class DefinitionsIndexer implements XmlIndexer {
                     return;
                 }
             } catch (XMLStreamException e) {
-                throw new ContributionException(e);
+                throw new InstallException(e);
             }
         }
 

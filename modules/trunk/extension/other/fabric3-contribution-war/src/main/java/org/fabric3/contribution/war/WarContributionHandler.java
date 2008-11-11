@@ -32,7 +32,7 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.api.annotation.Monitor;
 import org.fabric3.host.contribution.Constants;
-import org.fabric3.host.contribution.ContributionException;
+import org.fabric3.host.contribution.InstallException;
 import org.fabric3.introspection.DefaultIntrospectionContext;
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.xml.Loader;
@@ -86,7 +86,7 @@ public class WarContributionHandler implements ArchiveContributionHandler {
         return sourceUrl.endsWith(".war");
     }
 
-    public void processManifest(Contribution contribution, final ValidationContext context) throws ContributionException {
+    public void processManifest(Contribution contribution, final ValidationContext context) throws InstallException {
         ContributionManifest manifest;
         try {
             URL sourceUrl = contribution.getLocation();
@@ -106,20 +106,20 @@ public class WarContributionHandler implements ArchiveContributionHandler {
             if (e.getCause() instanceof FileNotFoundException) {
                 // ignore no manifest found
             } else {
-                throw new ContributionException(e);
+                throw new InstallException(e);
             }
         } catch (MalformedURLException e) {
             // ignore no manifest found
         }
 
         iterateArtifacts(contribution, new Action() {
-            public void process(Contribution contribution, String contentType, URL url) throws ContributionException {
+            public void process(Contribution contribution, String contentType, URL url) throws InstallException {
                 InputStream stream = null;
                 try {
                     stream = url.openStream();
                     registry.processManifestArtifact(contribution.getManifest(), contentType, stream, context);
                 } catch (IOException e) {
-                    throw new ContributionException(e);
+                    throw new InstallException(e);
                 } finally {
                     try {
                         if (stream != null) {
@@ -133,7 +133,7 @@ public class WarContributionHandler implements ArchiveContributionHandler {
         });
     }
 
-    public void iterateArtifacts(Contribution contribution, Action action) throws ContributionException {
+    public void iterateArtifacts(Contribution contribution, Action action) throws InstallException {
         URL location = contribution.getLocation();
         ZipInputStream zipStream = null;
         try {
@@ -160,11 +160,11 @@ public class WarContributionHandler implements ArchiveContributionHandler {
                 action.process(contribution, contentType, entryUrl);
             }
         } catch (ContentTypeResolutionException e) {
-            throw new ContributionException(e);
+            throw new InstallException(e);
         } catch (MalformedURLException e) {
-            throw new ContributionException(e);
+            throw new InstallException(e);
         } catch (IOException e) {
-            throw new ContributionException(e);
+            throw new InstallException(e);
         } finally {
             try {
                 if (zipStream != null) {

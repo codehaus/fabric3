@@ -18,8 +18,7 @@ package org.fabric3.spi.services.contribution;
 
 import java.net.URL;
 
-import org.fabric3.host.contribution.ContributionException;
-import org.fabric3.spi.services.contribution.Contribution;
+import org.fabric3.host.contribution.InstallException;
 
 /**
  * Used to perform a callback operation when iterating contained artifacts in a contribution.
@@ -33,7 +32,7 @@ public interface Action {
      * @param contribution the contribution being traversed
      * @param contentType  the artifact MIME type to process
      * @param url          the artifact url
-     * @throws ContributionException if an error occurs processing the artifact
+     * @throws InstallException if an error occurs processing the artifact
      */
-    void process(Contribution contribution, String contentType, URL url) throws ContributionException;
+    void process(Contribution contribution, String contentType, URL url) throws InstallException;
 }

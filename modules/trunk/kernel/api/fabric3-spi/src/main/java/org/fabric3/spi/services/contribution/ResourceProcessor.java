@@ -19,7 +19,7 @@ package org.fabric3.spi.services.contribution;
 import java.net.URI;
 import java.net.URL;
 
-import org.fabric3.host.contribution.ContributionException;
+import org.fabric3.host.contribution.InstallException;
 import org.fabric3.scdl.ValidationContext;
 
 /**
@@ -42,9 +42,9 @@ public interface ResourceProcessor {
      * @param contribution the containing contribution
      * @param url          a dereferenceable url to the resource
      * @param context      the context to which validation errors and warnings are reported
-     * @throws ContributionException if an error occurs during indexing
+     * @throws InstallException if an error occurs during indexing
      */
-    void index(Contribution contribution, URL url, ValidationContext context) throws ContributionException;
+    void index(Contribution contribution, URL url, ValidationContext context) throws InstallException;
 
     /**
      * Loads the the Resource
@@ -54,8 +54,8 @@ public interface ResourceProcessor {
      * @param context         the context to which validation errors and warnings are reported
      * @param loader          the classloader contribution the resource must be loaded in @throws ContributionException if an error occurs during
      *                        introspection
-     * @throws ContributionException if an error processing the contribution occurs
+     * @throws InstallException if an error processing the contribution occurs
      */
-    void process(URI contributionUri, Resource resource, ValidationContext context, ClassLoader loader) throws ContributionException;
+    void process(URI contributionUri, Resource resource, ValidationContext context, ClassLoader loader) throws InstallException;
 
 }

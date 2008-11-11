@@ -16,15 +16,18 @@
  */
 package org.fabric3.loader.xmlcontribution;
 
-import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
-import static org.osoa.sca.Constants.SCA_NS;
-
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamConstants;
+import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
-import org.fabric3.host.contribution.ContributionException;
+import static org.osoa.sca.Constants.SCA_NS;
+import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Init;
+import org.osoa.sca.annotations.Reference;
+
+import org.fabric3.host.contribution.InstallException;
 import org.fabric3.introspection.xml.MissingAttribute;
 import org.fabric3.scdl.Composite;
 import org.fabric3.scdl.ValidationContext;
@@ -34,9 +37,6 @@ import org.fabric3.spi.services.contribution.Resource;
 import org.fabric3.spi.services.contribution.ResourceElement;
 import org.fabric3.spi.services.contribution.XmlIndexer;
 import org.fabric3.spi.services.contribution.XmlIndexerRegistry;
-import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Init;
-import org.osoa.sca.annotations.Reference;
 
 /**
  * Indexer for the <xmlContribution> type.
@@ -63,7 +63,7 @@ public class XmlContributionTypeIndexer implements XmlIndexer {
         return XML_CONTRIBUTION;
     }
 
-    public void index(Resource resource, XMLStreamReader reader, ValidationContext context) throws ContributionException {
+    public void index(Resource resource, XMLStreamReader reader, ValidationContext context) throws InstallException {
 
         while (true) {
             try {
@@ -90,7 +90,7 @@ public class XmlContributionTypeIndexer implements XmlIndexer {
                     return;
                 }
             } catch (XMLStreamException e) {
-                throw new ContributionException("Error processing resource: " + resource.getUrl().toString(), e);
+                throw new InstallException("Error processing resource: " + resource.getUrl().toString(), e);
             }
         }
 

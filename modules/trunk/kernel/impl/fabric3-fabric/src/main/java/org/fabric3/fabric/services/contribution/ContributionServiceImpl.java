@@ -59,6 +59,7 @@ import org.fabric3.host.contribution.DuplicateContributionException;
 import org.fabric3.host.contribution.ValidationFailure;
 import org.fabric3.host.contribution.ContributionLockedException;
 import org.fabric3.host.contribution.StoreException;
+import org.fabric3.host.contribution.InstallException;
 import org.fabric3.introspection.validation.InvalidContributionException;
 import org.fabric3.introspection.validation.ValidationUtils;
 import org.fabric3.scdl.ArtifactValidationFailure;
@@ -129,17 +130,21 @@ public class ContributionServiceImpl implements ContributionService {
         return contribution.getUri();
     }
 
-    public void install(URI uri) throws ContributionException {
+    public void install(URI uri) throws InstallException {
         Contribution contribution = metaDataStore.find(uri);
         install(contribution);
         // update the store with changes
-        metaDataStore.store(contribution);
+        try {
+            metaDataStore.store(contribution);
+        } catch (StoreException e) {
+            throw new InstallException(e);
+        }
         for (ContributionServiceListener listener : listeners) {
             listener.onInstall(contribution);
         }
     }
 
-    public void install(List<URI> uris) throws ContributionException {
+    public void install(List<URI> uris) throws InstallException, ContributionNotFoundException {
         List<Contribution> contributions = new ArrayList<Contribution>(uris.size());
         for (URI uri : uris) {
             Contribution contribution = metaDataStore.find(uri);
@@ -290,11 +295,11 @@ public class ContributionServiceImpl implements ContributionService {
      * Installs a contribution by introspecting and loading it in memory.
      *
      * @param contribution the contribution
-     * @throws ContributionException if there is an error installing the contribution
+     * @throws InstallException if there is an error installing the contribution
      */
-    private void install(Contribution contribution) throws ContributionException {
+    private void install(Contribution contribution) throws InstallException {
         if (ContributionState.STORED != contribution.getState()) {
-            throw new IllegalContributionStateException("Contribution is already installed");
+            throw new ContributionAlreadyInstalledException("Contribution is already installed");
         }
         introspect(contribution);
         ClassLoader loader = contributionLoader.load(contribution);
@@ -307,15 +312,19 @@ public class ContributionServiceImpl implements ContributionService {
      *
      * @param contributions the contributions
      * @return the ordered list of contribution URIs
-     * @throws ContributionException if there is an error installing the contributions
+     * @throws InstallException if there is an error installing the contributions
      */
-    private List<URI> installInOrder(List<Contribution> contributions) throws ContributionException {
+    private List<URI> installInOrder(List<Contribution> contributions) throws InstallException {
         for (Contribution contribution : contributions) {
             // process any SCA manifest information, including imports and exports
             introspect(contribution);
         }
         // order the contributions based on their dependencies
-        contributions = dependencyService.order(contributions);
+        try {
+            contributions = dependencyService.order(contributions);
+        } catch (DependencyException e) {
+            throw new InstallException(e);
+        }
         for (Contribution contribution : contributions) {
             ClassLoader loader = contributionLoader.load(contribution);
             // continue processing the contributions. As they are ordered, dependencies will resolve correctly
@@ -336,9 +345,9 @@ public class ContributionServiceImpl implements ContributionService {
      * Intospects and validates contribution.
      *
      * @param contribution the contribution
-     * @throws ContributionException if there is an error during introspection such as an invalid contribution
+     * @throws InstallException if there is an error during introspection such as an invalid contribution
      */
-    private void introspect(Contribution contribution) throws ContributionException {
+    private void introspect(Contribution contribution) throws InstallException {
         ValidationContext context = new DefaultValidationContext();
         processorRegistry.processManifest(contribution, context);
         if (context.hasErrors()) {
@@ -359,9 +368,9 @@ public class ContributionServiceImpl implements ContributionService {
      *
      * @param contribution the contribution to process
      * @param loader       the classloader to load resources in
-     * @throws ContributionException if an error occurs during processing
+     * @throws InstallException if an error occurs during processing
      */
-    private void processContents(Contribution contribution, ClassLoader loader) throws ContributionException {
+    private void processContents(Contribution contribution, ClassLoader loader) throws InstallException {
         try {
             ValidationContext context = new DefaultValidationContext();
             processorRegistry.indexContribution(contribution, context);
@@ -380,7 +389,7 @@ public class ContributionServiceImpl implements ContributionService {
             }
             addContributionUri(contribution);
         } catch (StoreException e) {
-            throw new ContributionException(e);
+            throw new InstallException(e);
         }
     }
 
@@ -483,9 +492,8 @@ public class ContributionServiceImpl implements ContributionService {
      * Recursively adds the contribution URI to all components.
      *
      * @param contribution the contribution the component is defined in
-     * @throws ContributionNotFoundException if a required imported contribution is not found
      */
-    private void addContributionUri(Contribution contribution) throws ContributionException {
+    private void addContributionUri(Contribution contribution) {
         for (Resource resource : contribution.getResources()) {
             for (ResourceElement<?, ?> element : resource.getResourceElements()) {
                 Object value = element.getValue();

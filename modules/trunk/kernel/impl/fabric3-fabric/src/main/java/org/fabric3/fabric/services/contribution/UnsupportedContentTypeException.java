@@ -16,7 +16,7 @@
  */
 package org.fabric3.fabric.services.contribution;
 
-import org.fabric3.host.contribution.ContributionException;
+import org.fabric3.host.contribution.InstallException;
 
 /**
  * Exception thrown to indicate that a Content-Type is not supported by this SCA Domain. The Content-Type value supplied will be returned as the
@@ -24,7 +24,7 @@ import org.fabric3.host.contribution.ContributionException;
  *
  * @version $Rev$ $Date$
  */
-public class UnsupportedContentTypeException extends ContributionException {
+public class UnsupportedContentTypeException extends InstallException {
     private static final long serialVersionUID = -1831797280021355672L;
 
     /**
