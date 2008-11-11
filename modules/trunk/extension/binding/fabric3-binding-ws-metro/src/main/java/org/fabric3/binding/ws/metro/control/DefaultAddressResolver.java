@@ -39,9 +39,12 @@ import java.net.URI;
 import java.net.URL;
 import java.util.StringTokenizer;
 
-import javax.xml.namespace.QName;
-
+import org.fabric3.binding.ws.metro.provision.WsdlElement;
 import org.fabric3.spi.generator.GenerationException;
+
+import com.sun.xml.ws.api.model.wsdl.WSDLModel;
+import com.sun.xml.ws.api.model.wsdl.WSDLPort;
+import com.sun.xml.ws.api.model.wsdl.WSDLService;
 
 /**
  * Default implementation of the address resolvers.
@@ -53,22 +56,20 @@ public class DefaultAddressResolver implements AddressResolver {
      * Resolves the address on which the service is provisioned.
      * 
      * @param targetUri Target URI specified on the service binding.
-     * @param portName Qualified name of the port.
-     * @param wsdlLocation URL to the WSDL document.
+     * @param wsdlElement WSDL element containing the service and port name.
+     * @param wsdlModel Model object containing the WSDL information.
      * @return URI on which the service is provisioned.
      * 
      * @throws GenerationException If unable to resolve the address.
      */
-    public URI resolveServiceAddress(URI targetUri, QName portName, URL wsdlLocation) throws GenerationException {
+    public URI resolveServiceAddress(URI targetUri, WsdlElement wsdlElement, WSDLModel wsdlModel) throws GenerationException {
         
-        if (targetUri != null) {
-            if (!targetUri.toASCIIString().startsWith("/")) {
-                throw new GenerationException("Service URIs should be relative");
-            }
-            return targetUri;
-        } else {
-            throw new GenerationException("Introspecting WSDL not currently supported");
+        URI uri = getUri(targetUri, wsdlElement, wsdlModel);
+        
+        if (!uri.toASCIIString().startsWith("/")) {
+            throw new GenerationException("Service URIs should be relative");
         }
+        return uri;
         
     }
     
@@ -76,32 +77,45 @@ public class DefaultAddressResolver implements AddressResolver {
      * Resolves the address on which the service is provisioned.
      * 
      * @param targetUri Target URI specified on the reference binding.
-     * @param portName Qualified name of the port.
-     * @param wsdlLocation URL to the WSDL document.
+     * @param wsdlElement WSDL element containing the service and port name.
+     * @param wsdlModel Model object containing the WSDL information.
      * @return List of URLs on which the service can be invoked..
      * 
      * @throws GenerationException If unable to resolve the address.
      */
-    public URL[] resolveReferenceAddress(URI targetUri, QName portName, URL wsdlLocation) throws GenerationException {
+    public URL[] resolveReferenceAddress(URI targetUri, WsdlElement wsdlElement, WSDLModel wsdlModel) throws GenerationException {
+        
+        URI uri = getUri(targetUri, wsdlElement, wsdlModel);
         
         URL[] referenceAddresses = null;
         
-        if (targetUri != null) {
-            
-            StringTokenizer stringTokenizer = new StringTokenizer(targetUri.toASCIIString());
-            referenceAddresses = new URL[stringTokenizer.countTokens()];
-            for (int i = 0; i < referenceAddresses.length;i++) {
-                try {
-                    referenceAddresses[i] = new URL(stringTokenizer.nextToken());
-                } catch (MalformedURLException e) {
-                    throw new GenerationException(e);
-                }
+        StringTokenizer stringTokenizer = new StringTokenizer(uri.toASCIIString());
+        referenceAddresses = new URL[stringTokenizer.countTokens()];
+        for (int i = 0; i < referenceAddresses.length;i++) {
+            try {
+                referenceAddresses[i] = new URL(stringTokenizer.nextToken());
+            } catch (MalformedURLException e) {
+                throw new GenerationException(e);
             }
-            
-            return referenceAddresses;
-            
+        }
+        
+        return referenceAddresses;
+        
+    }
+
+    /*
+     * Gets the URI.
+     */
+    private URI getUri(URI targetUri, WsdlElement wsdlElement, WSDLModel wsdlModel) throws GenerationException {
+        
+        if (targetUri != null) {
+            return targetUri;
+        } else if (wsdlModel!= null) {
+            WSDLService wsdlService = wsdlModel.getService(wsdlElement.getServiceName());
+            WSDLPort wsdlPort = wsdlService.get(wsdlElement.getPortName());
+            return wsdlPort.getAddress().getURI();
         } else {
-            throw new GenerationException("Introspecting WSDL not currently supported");
+            throw new GenerationException("Either target URI or wsdlLocation should be specified");
         }
         
     }

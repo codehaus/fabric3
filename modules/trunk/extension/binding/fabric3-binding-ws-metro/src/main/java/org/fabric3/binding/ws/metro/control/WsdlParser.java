@@ -34,42 +34,24 @@
  */
 package org.fabric3.binding.ws.metro.control;
 
-import java.net.URI;
 import java.net.URL;
 
-import org.fabric3.binding.ws.metro.provision.WsdlElement;
 import org.fabric3.spi.generator.GenerationException;
 
 import com.sun.xml.ws.api.model.wsdl.WSDLModel;
 
 /**
- * Resolves the address on which service is provisioned or reference is invoked.
- *
+ * Interface for parsing WSDL documents.
  */
-public interface AddressResolver {
+public interface WsdlParser {
     
     /**
-     * Resolves the address on which the service is provisioned.
+     * Parses a WSDL document to the information model.
+     * @param wsdlLocation Location of the WSDL document.
+     * @return WSDL model object.
      * 
-     * @param targetUri Target URI specified on the service binding.
-     * @param wsdlElement WSDL element containing the service and port name.
-     * @param wsdlModel Model object representing the WSDL information.
-     * @return URI on which the service is provisioned.
-     * 
-     * @throws GenerationException If unable to resolve the address.
+     * @throws GenerationException If unable to parse the WSDL.
      */
-    URI resolveServiceAddress(URI targetUri, WsdlElement wsdlElement, WSDLModel wsdlModel) throws GenerationException;
-    
-    /**
-     * Resolves the address on which the service is provisioned.
-     * 
-     * @param targetUri Target URI specified on the reference binding.
-     * @param wsdlElement WSDL element containing the service and port name.
-     * @param wsdlModel Model object representing the WSDL information.
-     * @return List of URLs on which the service can be invoked.
-     * 
-     * @throws GenerationException If unable to resolve the address.
-     */
-    URL[] resolveReferenceAddress(URI targetUri, WsdlElement wsdlElement, WSDLModel wsdlModel) throws GenerationException;
+    WSDLModel parse(URL wsdlLocation) throws GenerationException;
 
 }

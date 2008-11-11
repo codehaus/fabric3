@@ -34,14 +34,16 @@
  */
 package org.fabric3.binding.ws.metro.control;
 
-import java.net.URL;
-
 import javax.xml.namespace.QName;
 
 import org.fabric3.binding.ws.metro.provision.WsdlElement;
 import org.fabric3.introspection.impl.contract.JavaServiceContract;
 import org.fabric3.scdl.ServiceContract;
 import org.fabric3.spi.generator.GenerationException;
+
+import com.sun.xml.ws.api.model.wsdl.WSDLModel;
+import com.sun.xml.ws.api.model.wsdl.WSDLPort;
+import com.sun.xml.ws.api.model.wsdl.WSDLService;
 
 /**
  * 
@@ -56,21 +58,21 @@ public class DefaultWsdlElementParser implements WsdlElementParser {
      * Parses the WSDL element.
      * 
      * @param wsdlElement String representation of the WSDL element.
-     * @param wsdlLocation URL to the WSDL.
+     * @param wsdlModel Model object representing the WSDL information.
      * @param serviceContract Service contract for the WSDL.
      * @return Parsed WSDL element.
      * @throws GenerationException If unable to parse the WSDL element.
      */
-    public WsdlElement parseWsdlElement(String wsdlElement, URL wsdlLocation, ServiceContract<?> serviceContract) throws GenerationException {
+    public WsdlElement parseWsdlElement(String wsdlElement, WSDLModel wsdlModel, ServiceContract<?> serviceContract) throws GenerationException {
         
         // No wsdl element, just location, parse the WSDL location
-        if (wsdlElement == null && wsdlLocation != null) {
-            return parseWsdl(wsdlLocation);
+        if (wsdlElement == null && wsdlModel != null) {
+            return parseWsdl(wsdlModel);
         }
         
         // Wsdl element present, so parse it
         if (wsdlElement != null) {
-            return parseWsdlElement(wsdlElement, wsdlLocation);
+            return parseWsdlElement(wsdlElement, wsdlModel);
         }
         
         // No wsdl element or location, synthesize the names
@@ -81,26 +83,48 @@ public class DefaultWsdlElementParser implements WsdlElementParser {
     /*
      * Parses the service name and port name from the WSDL.
      */
-    private WsdlElement parseWsdl(URL wsdlLocation) throws GenerationException {
-        // TODO Support wsdl document parsing
-        throw new GenerationException("WSDL element not specified in the binding");
+    private WsdlElement parseWsdl(WSDLModel wsdlModel) throws GenerationException {
+        
+        WSDLService wsdlService = wsdlModel.getServices().values().iterator().next();
+        if (wsdlService == null) {
+            throw new GenerationException("WSDL doesn't contain any service");
+        }
+        WSDLPort wsdlPort = wsdlService.getFirstPort();
+        if (wsdlPort == null) {
+            throw new GenerationException("WSDL doesn't contain any port");
+        }
+        
+        return new WsdlElement(wsdlService.getName(), wsdlPort.getName());
+        
     }
 
     /*
      * Parses the service name and port name from the WSDL element.
      */
-    private WsdlElement parseWsdlElement(String wsdlElement, URL wsdlLocation) throws GenerationException {
+    private WsdlElement parseWsdlElement(String wsdlElement, WSDLModel wsdlModel) throws GenerationException {
         
         String[] token = wsdlElement.split("#");
         String namespaceUri = token[0];
         
-        if (token[1].startsWith("wsdl.port")) {
+        if (!token[1].startsWith("wsdl.port")) {
             throw new GenerationException("Only WSDL 1.1 ports are currently supported");
         }
-        token = token[1].substring(token[1].indexOf('('), token[1].indexOf(')')).split("/");
+        token = token[1].substring(token[1].indexOf('(') + 1, token[1].indexOf(')')).split("/");
 
-        // TODO verify against the WSDL is WSDL location is specified
-        return new WsdlElement(new QName(namespaceUri, token[0]), new QName(namespaceUri, token[1]));
+        QName serviceName = new QName(namespaceUri, token[0]);
+        QName portName = new QName(namespaceUri, token[1]);
+        
+        if (wsdlModel != null) {
+            WSDLService wsdlService = wsdlModel.getService(serviceName);
+            if (wsdlService == null) {
+                throw new GenerationException("Service " + serviceName + " not found in WSDL");
+            }
+            if (wsdlService.get(portName) == null) {
+                throw new GenerationException("Port " + portName + " not found in WSDL");
+            }
+        }
+        
+        return new WsdlElement(serviceName, portName);
         
     }
 
@@ -112,9 +136,9 @@ public class DefaultWsdlElementParser implements WsdlElementParser {
         if (serviceContract instanceof JavaServiceContract) {
             
             JavaServiceContract javaServiceContract = (JavaServiceContract) serviceContract;
-            String qualifedName = javaServiceContract.getInterfaceName();
+            String qualifedName = javaServiceContract.getInterfaceClass();
             String packageName = qualifedName.substring(0, qualifedName.lastIndexOf('.'));
-            String unqualifiedName = qualifedName.substring(qualifedName.lastIndexOf('.'));
+            String unqualifiedName = qualifedName.substring(qualifedName.lastIndexOf('.') + 1);
             
             return new WsdlElement(new QName(packageName, unqualifiedName + "Service"), new QName(packageName, unqualifiedName + "Port"));
             

@@ -34,11 +34,11 @@
  */
 package org.fabric3.binding.ws.metro.control;
 
-import java.net.URL;
-
 import org.fabric3.binding.ws.metro.provision.WsdlElement;
 import org.fabric3.scdl.ServiceContract;
 import org.fabric3.spi.generator.GenerationException;
+
+import com.sun.xml.ws.api.model.wsdl.WSDLModel;
 
 /**
  * Interface for parsing the WSDL element.
@@ -50,11 +50,11 @@ public interface WsdlElementParser {
      * Parses the WSDL element.
      * 
      * @param wsdlElement String representation of the WSDL element.
-     * @param wsdlLocation URL to the WSDL.
+     * @param wsdlModel Model object containing the WSDL information.
      * @param serviceContract Service contract for the WSDL.
      * @return Parsed WSDL element.
      * @throws GenerationException If unable to parse the WSDL element.
      */
-    WsdlElement parseWsdlElement(String wsdlElement, URL wsdlLocation, ServiceContract<?> serviceContract) throws GenerationException;
+    WsdlElement parseWsdlElement(String wsdlElement, WSDLModel wsdlModel, ServiceContract<?> serviceContract) throws GenerationException;
 
 }

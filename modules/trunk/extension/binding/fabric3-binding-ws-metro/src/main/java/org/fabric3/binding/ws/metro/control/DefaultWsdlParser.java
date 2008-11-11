@@ -34,42 +34,67 @@
  */
 package org.fabric3.binding.ws.metro.control;
 
-import java.net.URI;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 
-import org.fabric3.binding.ws.metro.provision.WsdlElement;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.transform.stream.StreamSource;
+
 import org.fabric3.spi.generator.GenerationException;
+import org.xml.sax.EntityResolver;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
 
 import com.sun.xml.ws.api.model.wsdl.WSDLModel;
+import com.sun.xml.ws.api.server.Container;
+import com.sun.xml.ws.wsdl.parser.RuntimeWSDLParser;
 
-/**
- * Resolves the address on which service is provisioned or reference is invoked.
- *
+/*
+ * Default implementation of the WSDL parser.
  */
-public interface AddressResolver {
+public class DefaultWsdlParser implements WsdlParser {
     
     /**
-     * Resolves the address on which the service is provisioned.
+     * Parses a WSDL document to the information model.
+     * @param wsdlLocation Location of the WSDL document.
+     * @return WSDL model object.
      * 
-     * @param targetUri Target URI specified on the service binding.
-     * @param wsdlElement WSDL element containing the service and port name.
-     * @param wsdlModel Model object representing the WSDL information.
-     * @return URI on which the service is provisioned.
-     * 
-     * @throws GenerationException If unable to resolve the address.
+     * @throws GenerationException If unable to parse the WSDL.
      */
-    URI resolveServiceAddress(URI targetUri, WsdlElement wsdlElement, WSDLModel wsdlModel) throws GenerationException;
+    public WSDLModel parse(URL wsdlLocation) throws GenerationException {
+        
+        if (wsdlLocation == null) {
+            return null;
+        }
+        
+        InputStream inputStream = null;
+        try {
+            inputStream = wsdlLocation.openStream();
+            return RuntimeWSDLParser.parse(wsdlLocation, new StreamSource(inputStream), entityResolver, false, (Container) null);
+        } catch (XMLStreamException e) {
+            throw new GenerationException(e);
+        } catch (IOException e) {
+            throw new GenerationException(e);
+        } catch (SAXException e) {
+            throw new GenerationException(e);
+        } finally {
+            try {
+                inputStream.close();
+            } catch (IOException e) {
+                throw new GenerationException(e);
+            }
+        }
+        
+    }
     
-    /**
-     * Resolves the address on which the service is provisioned.
-     * 
-     * @param targetUri Target URI specified on the reference binding.
-     * @param wsdlElement WSDL element containing the service and port name.
-     * @param wsdlModel Model object representing the WSDL information.
-     * @return List of URLs on which the service can be invoked.
-     * 
-     * @throws GenerationException If unable to resolve the address.
+    /*
+     * Entity resolution is not currently supported.
      */
-    URL[] resolveReferenceAddress(URI targetUri, WsdlElement wsdlElement, WSDLModel wsdlModel) throws GenerationException;
+    private EntityResolver entityResolver = new EntityResolver() {
+        public InputSource resolveEntity(String systemId, String publicId) throws SAXException, IOException {
+            return null;
+        }
+    };
 
 }

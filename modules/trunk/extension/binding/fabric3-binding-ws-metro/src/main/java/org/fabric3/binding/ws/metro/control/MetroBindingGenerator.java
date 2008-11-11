@@ -33,6 +33,8 @@ import org.fabric3.spi.policy.Policy;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.osoa.sca.annotations.Reference;
 
+import com.sun.xml.ws.api.model.wsdl.WSDLModel;
+
 /**
  * @version $Revision$ $Date$
  * 
@@ -43,6 +45,7 @@ public class MetroBindingGenerator  implements BindingGenerator<MetroWireSourceD
     @Reference protected ClassLoaderRegistry classLoaderRegistry;
     @Reference protected WsdlElementParser wsdlElementParser;
     @Reference protected AddressResolver addressResolver;
+    @Reference protected WsdlParser wsdlParser;
 
     /**
      * Creates the wire source definition.
@@ -54,9 +57,10 @@ public class MetroBindingGenerator  implements BindingGenerator<MetroWireSourceD
         WsBindingDefinition definition = binding.getDefinition();
         URI classLoaderId = binding.getParent().getParent().getClassLoaderId();
         URL wsdlLocation = getWsdlLocation(definition.getWsdlLocation(), classLoaderId);
+        WSDLModel wsdlModel = wsdlParser.parse(wsdlLocation);
         
-        WsdlElement wsdlElement = wsdlElementParser.parseWsdlElement(definition.getWsdlElement(), wsdlLocation, serviceDefinition.getServiceContract());
-        URI servicePath = addressResolver.resolveServiceAddress(definition.getTargetUri(), wsdlElement.getPortName(), wsdlLocation);
+        WsdlElement wsdlElement = wsdlElementParser.parseWsdlElement(definition.getWsdlElement(), wsdlModel, serviceDefinition.getServiceContract());
+        URI servicePath = addressResolver.resolveServiceAddress(definition.getTargetUri(), wsdlElement, wsdlModel);
         
         return new MetroWireSourceDefinition(wsdlElement, wsdlLocation, servicePath);
         
@@ -72,9 +76,10 @@ public class MetroBindingGenerator  implements BindingGenerator<MetroWireSourceD
         WsBindingDefinition definition = binding.getDefinition();
         URI classLoaderId = binding.getParent().getParent().getClassLoaderId();
         URL wsdlLocation = getWsdlLocation(definition.getWsdlLocation(), classLoaderId);
+        WSDLModel wsdlModel = wsdlParser.parse(wsdlLocation);
         
-        WsdlElement wsdlElement = wsdlElementParser.parseWsdlElement(definition.getWsdlElement(), wsdlLocation, referenceDefinition.getServiceContract());
-        URL[] referenceUrls = addressResolver.resolveReferenceAddress(definition.getTargetUri(), wsdlElement.getPortName(), wsdlLocation);
+        WsdlElement wsdlElement = wsdlElementParser.parseWsdlElement(definition.getWsdlElement(), wsdlModel, referenceDefinition.getServiceContract());
+        URL[] referenceUrls = addressResolver.resolveReferenceAddress(definition.getTargetUri(), wsdlElement, wsdlModel);
         
         return new MetroWireTargetDefinition(wsdlElement, wsdlLocation, referenceUrls);
 
