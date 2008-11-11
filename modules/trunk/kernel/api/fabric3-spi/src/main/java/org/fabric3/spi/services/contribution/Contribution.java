@@ -21,6 +21,9 @@ import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
+import java.util.HashSet;
+import javax.xml.namespace.QName;
 
 /**
  * The base representation of a deployed contribution
@@ -41,6 +44,7 @@ public class Contribution implements Serializable {
     private ContributionManifest manifest = new ContributionManifest();
     private List<Resource> resources = new ArrayList<Resource>();
     private List<URI> resolvedImports = new ArrayList<URI>();
+    private Set<QName> lockOwners = new HashSet<QName>();
 
     public Contribution(URI uri) {
         this.uri = uri;
@@ -138,7 +142,7 @@ public class Contribution implements Serializable {
     }
 
     /**
-     * Returns the contribution manifest
+     * Returns the contribution manifest.
      *
      * @return the contribution manifest
      */
@@ -156,7 +160,7 @@ public class Contribution implements Serializable {
     }
 
     /**
-     * Adds a resource to the contribution
+     * Adds a resource to the contribution.
      *
      * @param resource the resource
      */
@@ -174,7 +178,7 @@ public class Contribution implements Serializable {
     }
 
     /**
-     * Returns a ResourceElement matching the symbol or null if not found
+     * Returns a ResourceElement matching the symbol or null if not found.
      *
      * @param symbol the symbol to match
      * @return a ResourceElement matching the symbol or null if not found
@@ -209,4 +213,45 @@ public class Contribution implements Serializable {
         return resolvedImports;
     }
 
+    /**
+     * Acquires a lock for the contribution. If a contribution is locked, it cannot be uninstalled. Locks may be acquired by multiple owners, for
+     * example, deployable composites that are contained in a contribution when they are deployed.
+     *
+     * @param owner the lock owner
+     */
+    public void acquireLock(QName owner) {
+        if (lockOwners.contains(owner)) {
+            throw new IllegalStateException("Lock already held by owner for contribution" + uri + " :" + owner);
+        }
+        lockOwners.add(owner);
+    }
+
+    /**
+     * Releases a lock held by the given owner.
+     *
+     * @param owner the lock owner
+     */
+    public void releaseLock(QName owner) {
+        if (!lockOwners.remove(owner)) {
+            throw new IllegalStateException("Lock not held by owner for contribution" + uri + " :" + owner);
+        }
+    }
+
+    /**
+     * Returns the set of current lock owners.
+     *
+     * @return the set of current lock owners
+     */
+    public Set<QName> getLockOwners() {
+        return lockOwners;
+    }
+
+    /**
+     * Returns true if the contribution is locked. Locked contributions cannot be uninstalled.
+     *
+     * @return true if the contribution is locked
+     */
+    public boolean isLocked() {
+        return !lockOwners.isEmpty();
+    }
 }
