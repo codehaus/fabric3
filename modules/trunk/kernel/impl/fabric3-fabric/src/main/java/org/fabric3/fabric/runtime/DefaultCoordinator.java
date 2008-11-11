@@ -59,6 +59,7 @@ import org.fabric3.spi.services.contribution.MetaDataStoreException;
 import org.fabric3.spi.services.contribution.QNameSymbol;
 import org.fabric3.spi.services.contribution.Resource;
 import org.fabric3.spi.services.contribution.ResourceElement;
+import org.fabric3.spi.services.contribution.ContributionState;
 import org.fabric3.spi.services.definitions.DefinitionActivationException;
 import org.fabric3.spi.services.definitions.DefinitionsRegistry;
 import org.fabric3.spi.services.event.EventService;
@@ -211,7 +212,7 @@ public class DefaultCoordinator<RUNTIME extends Fabric3Runtime<?>, BOOTSTRAPPER 
             XmlManifestProcessor processor =
                     runtime.getSystemComponent(XmlManifestProcessor.class, ComponentNames.XML_MANIFEST_PROCESSOR);
             Contribution contribution = new Contribution(ComponentNames.BOOT_CLASSLOADER_ID);
-
+            contribution.setState(ContributionState.INSTALLED);
             ValidationContext context = new DefaultValidationContext();
             for (String export : bootExports) {
                 InputStream stream =
