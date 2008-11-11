@@ -62,6 +62,7 @@ import org.fabric3.host.contribution.StoreException;
 import org.fabric3.host.contribution.InstallException;
 import org.fabric3.host.contribution.UpdateException;
 import org.fabric3.host.contribution.UninstallException;
+import org.fabric3.host.contribution.RemoveException;
 import org.fabric3.introspection.validation.InvalidContributionException;
 import org.fabric3.introspection.validation.ValidationUtils;
 import org.fabric3.scdl.ArtifactValidationFailure;
@@ -258,19 +259,19 @@ public class ContributionServiceImpl implements ContributionService {
 
     }
 
-    public void remove(URI uri) throws ContributionException {
+    public void remove(URI uri) throws RemoveException, ContributionNotFoundException {
         Contribution contribution = metaDataStore.find(uri);
         if (contribution == null) {
             throw new ContributionNotFoundException("Contribution not found:" + uri);
         }
         if (contribution.getState() != ContributionState.STORED) {
-            throw new IllegalContributionStateException("Contribution must first be uninstalled: " + uri);
+            throw new RemoveException("Contribution must first be uninstalled: " + uri);
         }
         metaDataStore.remove(uri);
         try {
             archiveStore.remove(uri);
         } catch (ArchiveStoreException e) {
-            throw new ContributionException(e);
+            throw new RemoveException("Error removing contribution archive", e);
         }
         for (ContributionServiceListener listener : listeners) {
             listener.onRemove(contribution);

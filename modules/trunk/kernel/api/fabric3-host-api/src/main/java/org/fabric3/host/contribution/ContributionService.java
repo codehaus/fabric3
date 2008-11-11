@@ -114,7 +114,7 @@ public interface ContributionService {
      * Uninstalls a contribution.
      *
      * @param uri The URI of the contribution
-     * @throws UninstallException if there was a problem with the contribution
+     * @throws UninstallException            if there was a problem with the contribution
      * @throws ContributionNotFoundException if a contribution is not found
      */
     void uninstall(URI uri) throws UninstallException, ContributionNotFoundException;
@@ -123,9 +123,10 @@ public interface ContributionService {
      * Remove a contribution from persistent storage. Contribution must be uninstalled prior to being removed.
      *
      * @param uri The URI of the contribution
-     * @throws ContributionException if there was a problem with the contribution
+     * @throws RemoveException               if there was a problem with the contribution
+     * @throws ContributionNotFoundException if a contribution is not found
      */
-    void remove(URI uri) throws ContributionException;
+    void remove(URI uri) throws RemoveException, ContributionNotFoundException;
 
     /**
      * Returns true if a contribution for the given URI exists.
