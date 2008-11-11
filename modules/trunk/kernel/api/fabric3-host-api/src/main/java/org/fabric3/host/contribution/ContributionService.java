@@ -61,9 +61,9 @@ public interface ContributionService {
      *
      * @param source the contribution source
      * @return a URI that uniquely identifies this contribution within the domain
-     * @throws ContributionException if there is an error persisting the contribution
+     * @throws StoreException if there is an error storing the contribution
      */
-    URI store(ContributionSource source) throws ContributionException;
+    URI store(ContributionSource source) throws StoreException;
 
     /**
      * Installs a stored contribution.
@@ -154,6 +154,6 @@ public interface ContributionService {
      * @return a list of deployables in a contribution. If no deployables are found, an empty list is returned.
      * @throws ContributionNotFoundException if a contribution corresponding to the URI is not found
      */
-    public List<Deployable> getDeployables(URI uri) throws ContributionException;
+    public List<Deployable> getDeployables(URI uri) throws ContributionNotFoundException;
 
 }

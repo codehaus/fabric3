@@ -21,6 +21,7 @@ import java.net.URI;
 import java.util.Set;
 
 import org.fabric3.scdl.ValidationContext;
+import org.fabric3.host.contribution.StoreException;
 
 /**
  * Implementations store contribution metadata.
@@ -33,9 +34,9 @@ public interface MetaDataStore {
      * Stores the contribution metadata
      *
      * @param contribution the contribution metadata
-     * @throws MetaDataStoreException if an error storing the metadata occurs
+     * @throws StoreException if an error storing the metadata occurs
      */
-    void store(Contribution contribution) throws MetaDataStoreException;
+    void store(Contribution contribution) throws StoreException;
 
     /**
      * Returns the contribution for the given URI.
@@ -64,9 +65,9 @@ public interface MetaDataStore {
      *
      * @param symbol the symbol used to represent the resource element.
      * @return the resource element or null if not found
-     * @throws MetaDataStoreException if an error occurs during resolution
+     * @throws StoreException if an error occurs during resolution
      */
-    <S extends Symbol> ResourceElement<S, ?> resolve(S symbol) throws MetaDataStoreException;
+    <S extends Symbol> ResourceElement<S, ?> resolve(S symbol) throws StoreException;
 
     /**
      * Resolves the containing resource for a resource element symbol against the given contribution symbol space.
@@ -85,10 +86,10 @@ public interface MetaDataStore {
      * @param symbol          the symbol used to represent the resource element.
      * @param context         the context to which validation errors and warnings are reported
      * @return the resource element or null if not found
-     * @throws MetaDataStoreException if an error occurs during resolution
+     * @throws org.fabric3.host.contribution.StoreException if an error occurs during resolution
      */
     <S extends Symbol, V extends Serializable> ResourceElement<S, V> resolve(URI contributionUri, Class<V> type, S symbol, ValidationContext context)
-            throws MetaDataStoreException;
+            throws StoreException;
 
     /**
      * Resolves an import to a matching export.

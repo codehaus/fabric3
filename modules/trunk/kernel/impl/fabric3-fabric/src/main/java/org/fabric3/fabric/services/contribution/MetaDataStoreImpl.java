@@ -30,13 +30,13 @@ import org.osoa.sca.Constants;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.host.contribution.ContributionException;
+import org.fabric3.host.contribution.StoreException;
 import org.fabric3.scdl.ValidationContext;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.services.contribution.Contribution;
 import org.fabric3.spi.services.contribution.Export;
 import org.fabric3.spi.services.contribution.Import;
 import org.fabric3.spi.services.contribution.MetaDataStore;
-import org.fabric3.spi.services.contribution.MetaDataStoreException;
 import org.fabric3.spi.services.contribution.ProcessorRegistry;
 import org.fabric3.spi.services.contribution.Resource;
 import org.fabric3.spi.services.contribution.ResourceElement;
@@ -70,7 +70,7 @@ public class MetaDataStoreImpl implements MetaDataStore {
         this.processorRegistry = processorRegistry;
     }
 
-    public void store(Contribution contribution) throws MetaDataStoreException {
+    public void store(Contribution contribution) throws StoreException {
         cache.put(contribution.getUri(), contribution);
         addToExports(contribution);
     }
@@ -97,14 +97,14 @@ public class MetaDataStoreImpl implements MetaDataStore {
     }
 
     @SuppressWarnings({"unchecked"})
-    public <S extends Symbol> ResourceElement<S, ?> resolve(S symbol) throws MetaDataStoreException {
+    public <S extends Symbol> ResourceElement<S, ?> resolve(S symbol) throws StoreException {
         for (Contribution contribution : cache.values()) {
             for (Resource resource : contribution.getResources()) {
                 for (ResourceElement<?, ?> element : resource.getResourceElements()) {
                     if (element.getSymbol().equals(symbol)) {
                         if (!resource.isProcessed()) {
                             // this is a programming error as resolve(Symbol) should only be called after contribution resources have been processed
-                            throw new MetaDataStoreException("Attempt to resolve a resource before it is processed");
+                            throw new StoreException("Attempt to resolve a resource before it is processed");
                         }
                         return (ResourceElement<S, ?>) element;
                     }
@@ -145,7 +145,7 @@ public class MetaDataStoreImpl implements MetaDataStore {
                                                                                     Class<V> type,
                                                                                     S symbol,
                                                                                     ValidationContext context)
-            throws MetaDataStoreException {
+            throws StoreException {
         Contribution contribution = find(contributionUri);
         if (contribution == null) {
             String identifier = contributionUri.toString();
@@ -228,7 +228,7 @@ public class MetaDataStoreImpl implements MetaDataStore {
                                                                                              Class<V> type,
                                                                                              S symbol,
                                                                                              ValidationContext context)
-            throws MetaDataStoreException {
+            throws StoreException {
         URI contributionUri = contribution.getUri();
         ClassLoader loader = classLoaderRegistry.getClassLoader(contributionUri);
         assert loader != null;
@@ -240,7 +240,7 @@ public class MetaDataStoreImpl implements MetaDataStore {
                             processorRegistry.processResource(contributionUri, resource, context, loader);
                         } catch (ContributionException e) {
                             String identifier = resource.getUrl().toString();
-                            throw new MetaDataStoreException("Error resolving resource: " + identifier, identifier, e);
+                            throw new StoreException("Error resolving resource: " + identifier, identifier, e);
                         }
                     }
                     if (!type.isInstance(element.getValue())) {

@@ -58,6 +58,7 @@ import org.fabric3.host.contribution.Deployable;
 import org.fabric3.host.contribution.DuplicateContributionException;
 import org.fabric3.host.contribution.ValidationFailure;
 import org.fabric3.host.contribution.ContributionLockedException;
+import org.fabric3.host.contribution.StoreException;
 import org.fabric3.introspection.validation.InvalidContributionException;
 import org.fabric3.introspection.validation.ValidationUtils;
 import org.fabric3.scdl.ArtifactValidationFailure;
@@ -75,7 +76,6 @@ import org.fabric3.spi.services.contribution.Contribution;
 import org.fabric3.spi.services.contribution.ContributionServiceListener;
 import org.fabric3.spi.services.contribution.ContributionState;
 import org.fabric3.spi.services.contribution.MetaDataStore;
-import org.fabric3.spi.services.contribution.MetaDataStoreException;
 import org.fabric3.spi.services.contribution.ProcessorRegistry;
 import org.fabric3.spi.services.contribution.QNameSymbol;
 import org.fabric3.spi.services.contribution.Resource;
@@ -120,7 +120,7 @@ public class ContributionServiceImpl implements ContributionService {
         this.listeners = listeners;
     }
 
-    public URI store(ContributionSource source) throws ContributionException {
+    public URI store(ContributionSource source) throws StoreException {
         Contribution contribution = persist(source);
         metaDataStore.store(contribution);
         for (ContributionServiceListener listener : listeners) {
@@ -219,7 +219,7 @@ public class ContributionServiceImpl implements ContributionService {
         return uris;
     }
 
-    public List<Deployable> getDeployables(URI contributionUri) throws ContributionException {
+    public List<Deployable> getDeployables(URI contributionUri) throws ContributionNotFoundException {
         Contribution contribution = find(contributionUri);
         List<Deployable> list = new ArrayList<Deployable>();
         if (contribution.getManifest() != null) {
@@ -379,7 +379,7 @@ public class ContributionServiceImpl implements ContributionService {
                 monitor.contributionWarnings(ValidationUtils.outputWarnings(context.getWarnings()));
             }
             addContributionUri(contribution);
-        } catch (MetaDataStoreException e) {
+        } catch (StoreException e) {
             throw new ContributionException(e);
         }
     }
@@ -435,9 +435,9 @@ public class ContributionServiceImpl implements ContributionService {
      *
      * @param source the contribution source
      * @return the contribution
-     * @throws ContributionException if an error occurs during the store operation
+     * @throws StoreException if an error occurs during the store operation
      */
-    private Contribution persist(ContributionSource source) throws ContributionException {
+    private Contribution persist(ContributionSource source) throws StoreException {
         URI contributionUri = source.getUri();
         if (archiveStore.exists(contributionUri)) {
             throw new DuplicateContributionException("Contribution is already installed: " + contributionUri);
@@ -452,9 +452,9 @@ public class ContributionServiceImpl implements ContributionService {
                 stream = source.getSource();
                 locationUrl = archiveStore.store(contributionUri, stream);
             } catch (IOException e) {
-                throw new ContributionException(e);
+                throw new StoreException(e);
             } catch (ArchiveStoreException e) {
-                throw new ContributionException(e);
+                throw new StoreException(e);
             } finally {
                 try {
                     if (stream != null) {
@@ -475,7 +475,7 @@ public class ContributionServiceImpl implements ContributionService {
             long timestamp = source.getTimestamp();
             return new Contribution(contributionUri, locationUrl, checksum, timestamp, type, persistent);
         } catch (ContentTypeResolutionException e) {
-            throw new ContributionException(e);
+            throw new StoreException(e);
         }
     }
 

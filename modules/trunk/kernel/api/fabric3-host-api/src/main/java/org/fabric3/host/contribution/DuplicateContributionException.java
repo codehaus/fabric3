@@ -19,7 +19,7 @@ package org.fabric3.host.contribution;
 /**
  * @version $Revision$ $Date$
  */
-public class DuplicateContributionException extends ContributionException {
+public class DuplicateContributionException extends StoreException {
     private static final long serialVersionUID = 6504143245399239606L;
 
     public DuplicateContributionException(String message) {

@@ -55,7 +55,7 @@ import org.fabric3.spi.domain.Domain;
 import org.fabric3.spi.services.contribution.Contribution;
 import org.fabric3.spi.services.contribution.ContributionManifest;
 import org.fabric3.spi.services.contribution.MetaDataStore;
-import org.fabric3.spi.services.contribution.MetaDataStoreException;
+import org.fabric3.host.contribution.StoreException;
 import org.fabric3.spi.services.contribution.QNameSymbol;
 import org.fabric3.spi.services.contribution.Resource;
 import org.fabric3.spi.services.contribution.ResourceElement;
@@ -228,7 +228,7 @@ public class DefaultCoordinator<RUNTIME extends Fabric3Runtime<?>, BOOTSTRAPPER 
             }
             MetaDataStore store = runtime.getSystemComponent(MetaDataStore.class, ComponentNames.METADATA_STORE_URI);
             store.store(contribution);
-        } catch (MetaDataStoreException e) {
+        } catch (StoreException e) {
             throw new InitializationException(e);
         } catch (ContributionException e) {
             throw new InitializationException(e);

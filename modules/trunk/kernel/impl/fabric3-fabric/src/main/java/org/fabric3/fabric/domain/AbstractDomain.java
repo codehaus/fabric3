@@ -35,6 +35,7 @@ import org.fabric3.host.domain.DeploymentException;
 import org.fabric3.host.domain.ContributionNotInstalledException;
 import org.fabric3.host.domain.UndeploymentException;
 import org.fabric3.host.contribution.Deployable;
+import org.fabric3.host.contribution.StoreException;
 import org.fabric3.loader.plan.DeploymentPlanConstants;
 import org.fabric3.scdl.Composite;
 import org.fabric3.scdl.Include;
@@ -54,14 +55,12 @@ import org.fabric3.spi.model.instance.LogicalState;
 import org.fabric3.spi.model.instance.LogicalWire;
 import org.fabric3.spi.plan.DeploymentPlan;
 import org.fabric3.spi.services.contribution.MetaDataStore;
-import org.fabric3.spi.services.contribution.MetaDataStoreException;
 import org.fabric3.spi.services.contribution.QNameSymbol;
 import org.fabric3.spi.services.contribution.ResourceElement;
 import org.fabric3.spi.services.contribution.Contribution;
 import org.fabric3.spi.services.contribution.Resource;
 import org.fabric3.spi.services.contribution.ContributionState;
 import org.fabric3.spi.services.lcm.LogicalComponentManager;
-import org.fabric3.spi.services.lcm.StoreException;
 import org.fabric3.spi.services.routing.RoutingException;
 import org.fabric3.spi.services.routing.RoutingService;
 
@@ -205,7 +204,7 @@ public abstract class AbstractDomain implements Domain {
             QNameSymbol deployableSymbol = new QNameSymbol(deployable);
             Contribution contribution = metadataStore.resolveContainingContribution(deployableSymbol);
             contribution.releaseLock(deployable);
-        } catch (StoreException e) {
+        } catch (org.fabric3.spi.services.lcm.StoreException e) {
             throw new UndeploymentException("Error applying undeployment: " + deployable, e);
         }
     }
@@ -252,7 +251,7 @@ public abstract class AbstractDomain implements Domain {
         try {
             QName planName = new QName(DeploymentPlanConstants.PLAN_NAMESPACE, plan);
             element = metadataStore.resolve(new QNameSymbol(planName));
-        } catch (MetaDataStoreException e) {
+        } catch (StoreException e) {
             throw new DeploymentException("Error finding plan: " + plan, e);
         }
         if (element == null) {
@@ -279,7 +278,7 @@ public abstract class AbstractDomain implements Domain {
         ResourceElement<QNameSymbol, ?> element;
         try {
             element = metadataStore.resolve(new QNameSymbol(deployable));
-        } catch (MetaDataStoreException e) {
+        } catch (StoreException e) {
             throw new DeploymentException("Error deploying: " + deployable, e);
         }
         if (element == null) {
@@ -330,7 +329,7 @@ public abstract class AbstractDomain implements Domain {
             // TODO this should happen after nodes have deployed the components and wires
             markAsProvisioned(change);
             logicalComponentManager.replaceRootComponent(domain);
-        } catch (StoreException e) {
+        } catch (org.fabric3.spi.services.lcm.StoreException e) {
             throw new DeploymentException("Error applying deployment", e);
         }
     }

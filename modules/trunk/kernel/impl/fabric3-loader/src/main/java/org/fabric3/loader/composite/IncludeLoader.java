@@ -58,7 +58,7 @@ import org.fabric3.introspection.xml.UnrecognizedAttribute;
 import org.fabric3.scdl.Composite;
 import org.fabric3.scdl.Include;
 import org.fabric3.spi.services.contribution.MetaDataStore;
-import org.fabric3.spi.services.contribution.MetaDataStoreException;
+import org.fabric3.host.contribution.StoreException;
 import org.fabric3.spi.services.contribution.QNameSymbol;
 import org.fabric3.spi.services.contribution.ResourceElement;
 
@@ -139,7 +139,7 @@ public class IncludeLoader implements TypeLoader<Include> {
                 include.setName(name);
                 include.setIncluded(composite);
                 return include;
-            } catch (MetaDataStoreException e) {
+            } catch (StoreException e) {
                 ElementLoadFailure failure = new ElementLoadFailure("Error loading element", e, reader);
                 context.addError(failure);
                 return null;

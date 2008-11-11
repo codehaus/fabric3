@@ -14,29 +14,33 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.spi.services.contribution;
-
-import org.fabric3.host.contribution.ContributionException;
+package org.fabric3.host.contribution;
 
 /**
+ * Denotes an error storing a contribution.
+ *
  * @version $Rev$ $Date$
  */
-public class MetaDataStoreException extends ContributionException {
+public class StoreException extends ContributionException {
     private static final long serialVersionUID = 5509464593295262830L;
 
-    public MetaDataStoreException(String message) {
+    public StoreException(String message) {
         super(message);
     }
 
-    public MetaDataStoreException(String message, Throwable cause) {
+    public StoreException(String message, Throwable cause) {
         super(message, cause);
     }
 
-    public MetaDataStoreException(String message, String identifier) {
+    public StoreException(String message, String identifier) {
         super(message, identifier);
     }
 
-    public MetaDataStoreException(String message, String identifier, Throwable cause) {
+    public StoreException(String message, String identifier, Throwable cause) {
         super(message, identifier, cause);
+    }
+
+    public StoreException(Throwable cause) {
+        super(cause);
     }
 }
