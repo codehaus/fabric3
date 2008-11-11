@@ -78,8 +78,8 @@ public interface ContributionService {
      * Installs a list of stored contributions.
      *
      * @param uris the contribution URIs
-     * @throws ContributionNotFoundException if a contribution is not found
      * @throws InstallException              if there an error reading, introspecting or loading the contribution
+     * @throws ContributionNotFoundException if a contribution is not found
      */
     void install(List<URI> uris) throws InstallException, ContributionNotFoundException;
 
@@ -106,9 +106,10 @@ public interface ContributionService {
      * Updates a previously stored artifact if its timestamp and checksum have changed.
      *
      * @param source the contribution source
-     * @throws ContributionException if an error occurs during the update procecedure, for example, a previuous contribution is not found
+     * @throws UpdateException               if an error occurs during the update procecedure, for example, a previuous contribution is not found
+     * @throws ContributionNotFoundException if a contribution is not found
      */
-    void update(ContributionSource source) throws ContributionException;
+    void update(ContributionSource source) throws UpdateException, ContributionNotFoundException;
 
     /**
      * Uninstalls a contribution.

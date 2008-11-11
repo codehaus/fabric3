@@ -60,6 +60,7 @@ import org.fabric3.host.contribution.ValidationFailure;
 import org.fabric3.host.contribution.ContributionLockedException;
 import org.fabric3.host.contribution.StoreException;
 import org.fabric3.host.contribution.InstallException;
+import org.fabric3.host.contribution.UpdateException;
 import org.fabric3.introspection.validation.InvalidContributionException;
 import org.fabric3.introspection.validation.ValidationUtils;
 import org.fabric3.scdl.ArtifactValidationFailure;
@@ -186,7 +187,7 @@ public class ContributionServiceImpl implements ContributionService {
         return metaDataStore.find(uri) != null;
     }
 
-    public void update(ContributionSource source) throws ContributionException {
+    public void update(ContributionSource source) throws UpdateException, ContributionNotFoundException {
         URI uri = source.getUri();
         byte[] checksum = source.getChecksum();
         long timestamp = source.getTimestamp();
@@ -195,7 +196,7 @@ public class ContributionServiceImpl implements ContributionService {
             is = source.getSource();
             update(uri, checksum, timestamp);
         } catch (IOException e) {
-            throw new ContributionException("Contribution error", e);
+            throw new UpdateException("Contribution error", e);
         } finally {
             try {
                 if (is != null) {
@@ -420,7 +421,7 @@ public class ContributionServiceImpl implements ContributionService {
         }
     }
 
-    private void update(URI uri, byte[] checksum, long timestamp) throws ContributionException, IOException {
+    private void update(URI uri, byte[] checksum, long timestamp) throws UpdateException, IOException, ContributionNotFoundException {
         Contribution contribution = metaDataStore.find(uri);
         if (contribution == null) {
             throw new ContributionNotFoundException("Contribution not found for: " + uri);
