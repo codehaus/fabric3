@@ -33,6 +33,7 @@ import org.fabric3.fabric.instantiator.LogicalModelInstantiator;
 import org.fabric3.host.domain.AssemblyException;
 import org.fabric3.host.domain.DeploymentException;
 import org.fabric3.host.domain.ContributionNotInstalledException;
+import org.fabric3.host.domain.UndeploymentException;
 import org.fabric3.host.contribution.Deployable;
 import org.fabric3.loader.plan.DeploymentPlanConstants;
 import org.fabric3.scdl.Composite;
@@ -177,30 +178,25 @@ public abstract class AbstractDomain implements Domain {
         allocateAndDeploy(domain, plans, change);
     }
 
-    public void undeploy(QName deployable) throws DeploymentException {
+    public void undeploy(QName deployable) throws UndeploymentException {
         undeploy(deployable, false);
     }
 
-    public void undeploy(QName deployable, boolean transactional) throws DeploymentException {
+    public void undeploy(QName deployable, boolean transactional) throws UndeploymentException {
         LogicalCompositeComponent domain = logicalComponentManager.getRootComponent();
 
         if (transactional) {
             domain = CopyUtil.copy(domain);
         }
-        LogicalChange change = collector.mark(deployable, domain);
-        if (change.hasErrors()) {
-            throw new AssemblyException(change.getErrors(), change.getWarnings());
-        } else if (change.hasWarnings()) {
-            // TOOD log warnings
-        }
+        collector.mark(deployable, domain);
         try {
             CommandMap commandMap = physicalModelGenerator.generate(domain.getComponents());
             String id = UUID.randomUUID().toString();
             routingService.route(id, commandMap);
         } catch (GenerationException e) {
-            throw new DeploymentException("Error undeploying: " + deployable, e);
+            throw new UndeploymentException("Error undeploying: " + deployable, e);
         } catch (RoutingException e) {
-            throw new DeploymentException("Error undeploying: " + deployable, e);
+            throw new UndeploymentException("Error undeploying: " + deployable, e);
 
         }
         try {
@@ -210,7 +206,7 @@ public abstract class AbstractDomain implements Domain {
             Contribution contribution = metadataStore.resolveContainingContribution(deployableSymbol);
             contribution.releaseLock(deployable);
         } catch (StoreException e) {
-            throw new DeploymentException("Error applying undeployment: " + deployable, e);
+            throw new UndeploymentException("Error applying undeployment: " + deployable, e);
         }
     }
 

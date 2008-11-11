@@ -35,7 +35,7 @@
 package org.fabric3.host.domain;
 
 /**
- * Denotes an error during deployment.
+ * Denotes an deploying a composite.
  *
  * @version $Rev$ $Date$
  */
