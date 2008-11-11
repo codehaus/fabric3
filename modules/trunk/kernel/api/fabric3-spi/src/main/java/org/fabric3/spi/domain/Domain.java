@@ -16,12 +16,12 @@
  */
 package org.fabric3.spi.domain;
 
+import java.net.URI;
 import java.util.List;
 import javax.xml.namespace.QName;
 
 import org.fabric3.host.domain.DeploymentException;
 import org.fabric3.scdl.Composite;
-import org.fabric3.spi.plan.DeploymentPlan;
 
 /**
  * Represents a domain.
@@ -77,27 +77,16 @@ public interface Domain {
     void include(Composite composite) throws DeploymentException;
 
     /**
-     * Include a Composite in the domain.
+     * Include all deployables contained in the list of contributions in the domain. If deployment plans are present in the composites, they will be
+     * used. This operation is intended for composites that are synthesized from multiple deployable composites that are associated with individual
+     * deployment plans.
      *
-     * @param composite     the composite to include
-     * @param plan          the deployment plan to use
+     * @param uris          the contributions to deploy
      * @param transactional if true, the deployment operation will be done transactionally. That is, changes to the logical model will only be applied
      *                      after componnets have been deployed to a runtime or runtimes.
      * @throws DeploymentException if an error is encountered during inclusion
      */
-    void include(Composite composite, DeploymentPlan plan, boolean transactional) throws DeploymentException;
-
-    /**
-     * Include a collection of Composites in the domain using a corresponding collection of DeploymentPlans. This operation is intended for composites
-     * that are synthesized from multiple deployable composites that are associated with individual deployment plans.
-     *
-     * @param composites    the composites to deploy
-     * @param plans         the deployment plans
-     * @param transactional if true, the deployment operation will be done transactionally. That is, changes to the logical model will only be applied
-     *                      after componnets have been deployed to a runtime or runtimes.
-     * @throws DeploymentException if an error is encountered during inclusion
-     */
-    void include(List<Composite> composites, List<DeploymentPlan> plans, boolean transactional) throws DeploymentException;
+    void include(List<URI> uris, boolean transactional) throws DeploymentException;
 
     /**
      * Remove a deployable Composite from the domain.

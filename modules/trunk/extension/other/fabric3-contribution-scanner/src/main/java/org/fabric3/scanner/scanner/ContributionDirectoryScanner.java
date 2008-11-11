@@ -28,7 +28,6 @@ import java.util.Map;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
-import javax.xml.namespace.QName;
 
 import org.osoa.sca.annotations.Destroy;
 import org.osoa.sca.annotations.EagerInit;
@@ -41,23 +40,15 @@ import org.fabric3.api.annotation.Monitor;
 import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.host.contribution.ContributionService;
 import org.fabric3.host.contribution.ContributionSource;
-import org.fabric3.host.contribution.Deployable;
 import org.fabric3.host.contribution.FileContributionSource;
 import org.fabric3.host.contribution.ValidationException;
 import org.fabric3.host.domain.AssemblyException;
 import org.fabric3.host.domain.DeploymentException;
 import org.fabric3.host.runtime.HostInfo;
-import org.fabric3.scdl.Composite;
 import org.fabric3.spi.domain.Domain;
-import org.fabric3.spi.plan.DeploymentPlan;
 import org.fabric3.spi.scanner.FileSystemResource;
 import org.fabric3.spi.scanner.FileSystemResourceFactoryRegistry;
 import org.fabric3.spi.services.VoidService;
-import org.fabric3.spi.services.contribution.Contribution;
-import org.fabric3.spi.services.contribution.MetaDataStore;
-import org.fabric3.spi.services.contribution.QNameSymbol;
-import org.fabric3.spi.services.contribution.Resource;
-import org.fabric3.spi.services.contribution.ResourceElement;
 import org.fabric3.spi.services.event.EventService;
 import org.fabric3.spi.services.event.Fabric3EventListener;
 import org.fabric3.spi.services.event.RuntimeStart;
@@ -83,7 +74,6 @@ public class ContributionDirectoryScanner implements Runnable, Fabric3EventListe
     private final Map<String, FileSystemResource> errorCache = new HashMap<String, FileSystemResource>();
     private final ContributionService contributionService;
     private final EventService eventService;
-    private MetaDataStore metaDataStore;
     private final ScannerMonitor monitor;
     private final Domain domain;
     private Map<String, URI> processed = new HashMap<String, URI>();
@@ -97,14 +87,12 @@ public class ContributionDirectoryScanner implements Runnable, Fabric3EventListe
                                         @Reference ContributionService contributionService,
                                         @Reference(name = "assembly") Domain domain,
                                         @Reference EventService eventService,
-                                        @Reference MetaDataStore metaDataStore,
                                         @Reference HostInfo info,
                                         @Monitor ScannerMonitor monitor) {
         this.registry = registry;
         this.contributionService = contributionService;
         this.domain = domain;
         this.eventService = eventService;
-        this.metaDataStore = metaDataStore;
         path = new File(info.getBaseDir(), "deploy");
         this.monitor = monitor;
     }
@@ -273,9 +261,7 @@ public class ContributionDirectoryScanner implements Runnable, Fabric3EventListe
                 List<URI> addedUris = contributionService.contribute(sources);
                 // activate the contributions by including deployables in a synthesized composite. This will ensure components are started according
                 // to dependencies even if a dependent component is defined in a different contribution.
-                List<Composite> deployables = getDeployables(addedUris);
-                List<DeploymentPlan> plans = getDeploymentPlans(addedUris);
-                domain.include(deployables, plans, false);
+                domain.include(addedUris, false);
                 for (URI uri : addedUris) {
                     String name = uri.toString();
                     // URI is the file name
@@ -320,57 +306,6 @@ public class ContributionDirectoryScanner implements Runnable, Fabric3EventListe
         }
     }
 
-    /**
-     * Returns the list of deployables from contributions identified by the list of URIs
-     *
-     * @param contributionUris the contributions containing the deployables
-     * @return the list of deployables
-     */
-    private List<Composite> getDeployables(List<URI> contributionUris) {
-        List<Composite> deployables = new ArrayList<Composite>();
-        for (URI uri : contributionUris) {
-            Contribution contribution = metaDataStore.find(uri);
-            assert contribution != null;
-            for (Resource resource : contribution.getResources()) {
-                for (ResourceElement<?, ?> entry : resource.getResourceElements()) {
-                    if (!(entry.getValue() instanceof Composite)) {
-                        continue;
-                    }
-                    @SuppressWarnings({"unchecked"})
-                    ResourceElement<QNameSymbol, Composite> element = (ResourceElement<QNameSymbol, Composite>) entry;
-                    QName name = element.getSymbol().getKey();
-                    Composite composite = element.getValue();
-                    for (Deployable deployable : contribution.getManifest().getDeployables()) {
-                        if (deployable.getName().equals(name)) {
-                            deployables.add(composite);
-                            break;
-                        }
-                    }
-                }
-            }
-        }
-        return deployables;
-    }
-
-    private List<DeploymentPlan> getDeploymentPlans(List<URI> contributionUris) {
-        List<DeploymentPlan> plans = new ArrayList<DeploymentPlan>();
-        for (URI uri : contributionUris) {
-            Contribution contribution = metaDataStore.find(uri);
-            assert contribution != null;
-            for (Resource resource : contribution.getResources()) {
-                for (ResourceElement<?, ?> entry : resource.getResourceElements()) {
-                    if (!(entry.getValue() instanceof DeploymentPlan)) {
-                        continue;
-                    }
-                    @SuppressWarnings({"unchecked"})
-                    ResourceElement<QNameSymbol, DeploymentPlan> element = (ResourceElement<QNameSymbol, DeploymentPlan>) entry;
-                    DeploymentPlan plan = element.getValue();
-                    plans.add(plan);
-                }
-            }
-        }
-        return plans;
-    }
 
     private synchronized void processRemovals(File[] files) {
         Map<String, File> index = new HashMap<String, File>(files.length);

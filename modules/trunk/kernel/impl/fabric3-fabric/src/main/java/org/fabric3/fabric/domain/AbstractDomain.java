@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
+import java.net.URI;
 import javax.xml.namespace.QName;
 
 import static org.osoa.sca.Constants.SCA_NS;
@@ -31,6 +32,7 @@ import org.fabric3.fabric.instantiator.LogicalChange;
 import org.fabric3.fabric.instantiator.LogicalModelInstantiator;
 import org.fabric3.host.domain.AssemblyException;
 import org.fabric3.host.domain.DeploymentException;
+import org.fabric3.host.contribution.Deployable;
 import org.fabric3.loader.plan.DeploymentPlanConstants;
 import org.fabric3.scdl.Composite;
 import org.fabric3.scdl.Include;
@@ -53,6 +55,8 @@ import org.fabric3.spi.services.contribution.MetaDataStore;
 import org.fabric3.spi.services.contribution.MetaDataStoreException;
 import org.fabric3.spi.services.contribution.QNameSymbol;
 import org.fabric3.spi.services.contribution.ResourceElement;
+import org.fabric3.spi.services.contribution.Contribution;
+import org.fabric3.spi.services.contribution.Resource;
 import org.fabric3.spi.services.lcm.LogicalComponentManager;
 import org.fabric3.spi.services.lcm.StoreException;
 import org.fabric3.spi.services.routing.RoutingException;
@@ -138,31 +142,23 @@ public abstract class AbstractDomain implements Domain {
         include(composite, null, false);
     }
 
-    public void include(Composite composite, DeploymentPlan plan, boolean transactional) throws DeploymentException {
-        List<DeploymentPlan> plans = new ArrayList<DeploymentPlan>();
-        plans.add(plan);
+    public void include(List<URI> uris, boolean transactional) throws DeploymentException {
         LogicalCompositeComponent domain = logicalComponentManager.getRootComponent();
+        List<Contribution> contributions = resolveContributions(uris);
+        List<Composite> deployables = getDeployables(contributions);
+        List<DeploymentPlan> plans = getDeploymentPlans(contributions);
+
+        // lock the contributions
+        for (Contribution contribution : contributions) {
+            for (Deployable deployable : contribution.getManifest().getDeployables()) {
+                contribution.acquireLock(deployable.getName());
+            }
+        }
 
         if (transactional) {
             domain = CopyUtil.copy(domain);
         }
-        LogicalChange change = logicalModelInstantiator.include(domain, composite);
-        if (change.hasErrors()) {
-            throw new AssemblyException(change.getErrors(), change.getWarnings());
-        } else if (change.hasWarnings()) {
-            // TOOD log warnings
-        }
-        allocateAndDeploy(domain, plans, change);
-
-    }
-
-    public void include(List<Composite> composites, List<DeploymentPlan> plans, boolean transactional) throws DeploymentException {
-        LogicalCompositeComponent domain = logicalComponentManager.getRootComponent();
-
-        if (transactional) {
-            domain = CopyUtil.copy(domain);
-        }
-        LogicalChange change = logicalModelInstantiator.include(domain, composites);
+        LogicalChange change = logicalModelInstantiator.include(domain, deployables);
         if (change.hasErrors()) {
             throw new AssemblyException(change.getErrors(), change.getWarnings());
         } else if (change.hasWarnings()) {
@@ -201,9 +197,36 @@ public abstract class AbstractDomain implements Domain {
         try {
             // TODO this should happen after nodes have deployed the components and wires
             logicalComponentManager.replaceRootComponent(domain);
+            QNameSymbol deployableSymbol = new QNameSymbol(deployable);
+            Contribution contribution = metadataStore.resolveContainingContribution(deployableSymbol);
+            contribution.releaseLock(deployable);
         } catch (StoreException e) {
             throw new DeploymentException("Error applying undeployment: " + deployable, e);
         }
+    }
+
+    private void include(Composite composite, DeploymentPlan plan, boolean transactional) throws DeploymentException {
+        List<DeploymentPlan> plans = new ArrayList<DeploymentPlan>();
+        plans.add(plan);
+        LogicalCompositeComponent domain = logicalComponentManager.getRootComponent();
+
+        QName name = composite.getName();
+        Contribution contribution = metadataStore.resolveContainingContribution(new QNameSymbol(name));
+        if (contribution != null) {
+            // a composite may not be associated with a contribution, e.g. a bootstrap composite
+            // lock the contribution
+            contribution.acquireLock(name);
+        }
+        if (transactional) {
+            domain = CopyUtil.copy(domain);
+        }
+        LogicalChange change = logicalModelInstantiator.include(domain, composite);
+        if (change.hasErrors()) {
+            throw new AssemblyException(change.getErrors(), change.getWarnings());
+        } else if (change.hasWarnings()) {
+            // TOOD log warnings
+        }
+        allocateAndDeploy(domain, plans, change);
     }
 
     /**
@@ -369,5 +392,69 @@ public abstract class AbstractDomain implements Domain {
             }
         }
     }
+
+    private List<Contribution> resolveContributions(List<URI> uris) {
+        List<Contribution> contributions = new ArrayList<Contribution>(uris.size());
+        for (URI uri : uris) {
+            Contribution contribution = metadataStore.find(uri);
+            contributions.add(contribution);
+        }
+        return contributions;
+    }
+
+    /**
+     * Returns the list of deployable composites contained in the list of contributions
+     *
+     * @param contributions the contributions containing the deployables
+     * @return the list of deployables
+     */
+    private List<Composite> getDeployables(List<Contribution> contributions) {
+        List<Composite> deployables = new ArrayList<Composite>();
+        for (Contribution contribution : contributions) {
+            for (Resource resource : contribution.getResources()) {
+                for (ResourceElement<?, ?> entry : resource.getResourceElements()) {
+                    if (!(entry.getValue() instanceof Composite)) {
+                        continue;
+                    }
+                    @SuppressWarnings({"unchecked"})
+                    ResourceElement<QNameSymbol, Composite> element = (ResourceElement<QNameSymbol, Composite>) entry;
+                    QName name = element.getSymbol().getKey();
+                    Composite composite = element.getValue();
+                    for (Deployable deployable : contribution.getManifest().getDeployables()) {
+                        if (deployable.getName().equals(name)) {
+                            deployables.add(composite);
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+        return deployables;
+    }
+
+    /**
+     * Returns a list of deployment plans contained in the list of contributions.
+     *
+     * @param contributions the contributions plans
+     * @return the deployment plans
+     */
+    private List<DeploymentPlan> getDeploymentPlans(List<Contribution> contributions) {
+        List<DeploymentPlan> plans = new ArrayList<DeploymentPlan>();
+        for (Contribution contribution : contributions) {
+            for (Resource resource : contribution.getResources()) {
+                for (ResourceElement<?, ?> entry : resource.getResourceElements()) {
+                    if (!(entry.getValue() instanceof DeploymentPlan)) {
+                        continue;
+                    }
+                    @SuppressWarnings({"unchecked"})
+                    ResourceElement<QNameSymbol, DeploymentPlan> element = (ResourceElement<QNameSymbol, DeploymentPlan>) entry;
+                    DeploymentPlan plan = element.getValue();
+                    plans.add(plan);
+                }
+            }
+        }
+        return plans;
+    }
+
 
 }
