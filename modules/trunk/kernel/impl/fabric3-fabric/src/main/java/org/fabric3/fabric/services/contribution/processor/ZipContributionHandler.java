@@ -87,16 +87,16 @@ public class ZipContributionHandler implements ArchiveContributionHandler {
             if (childContext.hasErrors() || childContext.hasWarnings()) {
                 return;
             }
+            contribution.setManifest(manifest);
         } catch (LoaderException e) {
             if (e.getCause() instanceof FileNotFoundException) {
-                manifest = new ContributionManifest();
+                // ignore no manifest found
             } else {
                 throw new ContributionException(e);
             }
         } catch (MalformedURLException e) {
-            manifest = new ContributionManifest();
+            // ignore no manifest found
         }
-        contribution.setManifest(manifest);
 
         iterateArtifacts(contribution, new Action() {
             public void process(Contribution contribution, String contentType, URL url)

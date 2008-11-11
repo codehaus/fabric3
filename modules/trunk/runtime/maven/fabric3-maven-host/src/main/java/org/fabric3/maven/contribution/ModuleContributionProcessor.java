@@ -32,7 +32,6 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.fabric.util.FileHelper;
 import org.fabric3.host.contribution.ContributionException;
-import org.fabric3.host.contribution.ValidationFailure;
 import org.fabric3.introspection.DefaultIntrospectionContext;
 import org.fabric3.introspection.IntrospectionContext;
 import org.fabric3.introspection.xml.Loader;
@@ -107,16 +106,16 @@ public class ModuleContributionProcessor implements ContributionProcessor {
             if (childContext.hasWarnings()) {
                 context.addWarnings(childContext.getWarnings());
             }
+            contribution.setManifest(manifest);
         } catch (LoaderException e) {
             if (e.getCause() instanceof FileNotFoundException) {
-                manifest = new ContributionManifest();
+                // ignore no manifest found
             } else {
                 throw new ContributionException(e);
             }
         } catch (MalformedURLException e) {
-            manifest = new ContributionManifest();
+            // ignore no manifest found
         }
-        contribution.setManifest(manifest);
 
         iterateArtifacts(contribution, context, new Action() {
             public void process(Contribution contribution, String contentType, URL url)
@@ -155,7 +154,8 @@ public class ModuleContributionProcessor implements ContributionProcessor {
         iterateArtifactsResursive(contribution, context, action, root);
     }
 
-    private void iterateArtifactsResursive(Contribution contribution, final ValidationContext context, Action action, File dir) throws ContributionException {
+    private void iterateArtifactsResursive(Contribution contribution, final ValidationContext context, Action action, File dir)
+            throws ContributionException {
         File[] files = dir.listFiles();
         for (File file : files) {
             if (file.isDirectory()) {

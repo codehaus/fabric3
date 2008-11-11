@@ -78,8 +78,7 @@ public class XmlContributionProcessor implements ContributionProcessor {
     }
 
     public void processManifest(Contribution contribution, ValidationContext context) throws ContributionException {
-        ContributionManifest manifest = new ContributionManifest();
-        contribution.setManifest(manifest);
+        ContributionManifest manifest = contribution.getManifest();
         InputStream stream = null;
         XMLStreamReader reader = null;
         try {

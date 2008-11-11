@@ -211,7 +211,6 @@ public class DefaultCoordinator<RUNTIME extends Fabric3Runtime<?>, BOOTSTRAPPER 
             XmlManifestProcessor processor =
                     runtime.getSystemComponent(XmlManifestProcessor.class, ComponentNames.XML_MANIFEST_PROCESSOR);
             Contribution contribution = new Contribution(ComponentNames.BOOT_CLASSLOADER_ID);
-            ContributionManifest manifest = new ContributionManifest();
 
             ValidationContext context = new DefaultValidationContext();
             for (String export : bootExports) {
@@ -220,12 +219,12 @@ public class DefaultCoordinator<RUNTIME extends Fabric3Runtime<?>, BOOTSTRAPPER 
                 if (stream == null) {
                     throw new InitializationException("boot jar is missing a pom.xml: " + export);
                 }
+                ContributionManifest manifest = contribution.getManifest();
                 processor.process(manifest, stream, context);
             }
             if (context.hasErrors()) {
                 throw new InvalidContributionException(context.getErrors(), context.getWarnings());
             }
-            contribution.setManifest(manifest);
             MetaDataStore store = runtime.getSystemComponent(MetaDataStore.class, ComponentNames.METADATA_STORE_URI);
             store.store(contribution);
         } catch (MetaDataStoreException e) {

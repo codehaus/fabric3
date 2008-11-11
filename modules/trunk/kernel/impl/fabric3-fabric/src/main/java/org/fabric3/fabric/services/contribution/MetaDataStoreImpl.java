@@ -86,9 +86,6 @@ public class MetaDataStoreImpl implements MetaDataStore {
     public void remove(URI contributionUri) {
         Contribution contribution = find(contributionUri);
         if (contribution != null) {
-            if (contribution.getManifest() == null) {
-                return;
-            }
             List<Export> exports = contribution.getManifest().getExports();
             if (exports.size() > 0) {
                 for (Export export : exports) {
@@ -249,10 +246,6 @@ public class MetaDataStoreImpl implements MetaDataStore {
      * @param contribution the contribution containing the exports to add
      */
     private void addToExports(Contribution contribution) {
-
-        if (contribution.getManifest() == null) {
-            return;
-        }
 
         List<Export> exports = contribution.getManifest().getExports();
         if (exports.size() > 0) {

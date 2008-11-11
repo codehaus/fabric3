@@ -95,11 +95,10 @@ public class WarContributionProcessor implements ContributionProcessor {
         try {
             manifestURL = info.getServletContext().getResource("/WEB-INF/sca-contribution.xml");
             if (manifestURL == null) {
-                contribution.setManifest(new ContributionManifest());
                 return;
             }
         } catch (MalformedURLException e) {
-            contribution.setManifest(new ContributionManifest());
+            // ignore
             return;
         }
 

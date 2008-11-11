@@ -38,7 +38,7 @@ public class Contribution implements Serializable {
     private long timestamp;
     private String contentType;
     private boolean persistent;
-    private ContributionManifest manifest;
+    private ContributionManifest manifest = new ContributionManifest();
     private List<Resource> resources = new ArrayList<Resource>();
     private List<URI> resolvedImports = new ArrayList<URI>();
 
