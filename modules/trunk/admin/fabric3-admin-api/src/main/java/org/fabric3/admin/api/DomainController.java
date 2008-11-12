@@ -26,6 +26,7 @@ import org.fabric3.management.contribution.ContributionManagementException;
 import org.fabric3.management.contribution.ContributionUninstallException;
 import org.fabric3.management.contribution.ContributionRemoveException;
 import org.fabric3.management.contribution.ContributionInstallException;
+import org.fabric3.management.contribution.InvalidContributionException;
 import org.fabric3.management.domain.DeploymentManagementException;
 
 /**

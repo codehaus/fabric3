@@ -35,16 +35,15 @@ import org.apache.http.impl.client.DefaultHttpClient;
 
 import org.fabric3.admin.api.CommunicationException;
 import org.fabric3.admin.api.DomainController;
-import org.fabric3.management.contribution.DuplicateContributionManagementException;
-import org.fabric3.management.contribution.ContributionInfo;
-import org.fabric3.management.contribution.ContributionManagementException;
-import org.fabric3.management.contribution.InvalidContributionException;
-import org.fabric3.management.contribution.ContributionInstallException;
-import org.fabric3.management.contribution.ContributionUninstallException;
 import org.fabric3.management.contribution.ContributionInUseManagementException;
+import org.fabric3.management.contribution.ContributionInfo;
+import org.fabric3.management.contribution.ContributionInstallException;
 import org.fabric3.management.contribution.ContributionLockedManagementException;
+import org.fabric3.management.contribution.ContributionManagementException;
+import org.fabric3.management.contribution.ContributionUninstallException;
+import org.fabric3.management.contribution.DuplicateContributionManagementException;
+import org.fabric3.management.contribution.InvalidContributionException;
 import org.fabric3.management.domain.DeploymentManagementException;
-import org.fabric3.management.domain.InvalidDeploymentException;
 
 /**
  * Default implementation of the DomainController API.
@@ -166,12 +165,7 @@ public class DomainControllerImpl implements DomainController {
             ObjectName oName = new ObjectName(DOMAIN_MBEAN);
             conn.invoke(oName, "deploy", new URI[]{uri}, new String[]{URI.class.getName()});
         } catch (MBeanException e) {
-            if (e.getTargetException() instanceof InvalidContributionException) {
-                InvalidContributionException ex = (InvalidContributionException) e.getTargetException();
-                throw new InvalidDeploymentException("Error deploying " + uri, ex.getErrors());
-            } else {
-                throw new DeploymentManagementException(e.getTargetException().getMessage(), e.getTargetException());
-            }
+            throw new DeploymentManagementException(e.getTargetException().getMessage(), e.getTargetException());
         } catch (JMException e) {
             throw new CommunicationException(e);
         } catch (IOException e) {
@@ -189,13 +183,7 @@ public class DomainControllerImpl implements DomainController {
             ObjectName oName = new ObjectName(DOMAIN_MBEAN);
             conn.invoke(oName, "deploy", new Object[]{uri, plan}, new String[]{URI.class.getName(), "java.lang.String"});
         } catch (MBeanException e) {
-            if (e.getTargetException() instanceof InvalidContributionException) {
-                // can be thrown when installing the deployment plan
-                InvalidContributionException ex = (InvalidContributionException) e.getTargetException();
-                throw new InvalidDeploymentException("Error deploying " + uri, ex.getErrors());
-            } else {
-                throw new DeploymentManagementException(e.getTargetException().getMessage(), e.getTargetException());
-            }
+            throw new DeploymentManagementException(e.getTargetException().getMessage(), e.getTargetException());
         } catch (JMException e) {
             throw new CommunicationException(e);
         } catch (IOException e) {

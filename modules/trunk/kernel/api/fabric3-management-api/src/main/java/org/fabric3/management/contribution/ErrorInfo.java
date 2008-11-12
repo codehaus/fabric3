@@ -16,23 +16,20 @@
  */
 package org.fabric3.management.contribution;
 
-import java.util.List;
+import java.io.Serializable;
 
 /**
- * Denotes an invalid contribution and reports introspection errors.
- *
  * @version $Revision$ $Date$
  */
-public class InvalidContributionException extends ContributionInstallException {
-    private static final long serialVersionUID = -9209475021865946685L;
-    private List<ErrorInfo> errors;
+public class ErrorInfo implements Serializable {
+    private static final long serialVersionUID = 6418588000824961044L;
+    private String error;
 
-    public InvalidContributionException(String message, List<ErrorInfo> errors) {
-        super(message);
-        this.errors = errors;
+    public ErrorInfo(String error) {
+        this.error = error;
     }
 
-    public List<ErrorInfo> getErrors() {
-        return errors;
+    public String getError() {
+        return error;
     }
 }

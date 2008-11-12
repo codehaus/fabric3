@@ -18,6 +18,11 @@ package org.fabric3.admin.interpreter.command;
 
 import java.net.URI;
 import java.net.URL;
+import java.io.PrintStream;
+
+import org.fabric3.management.contribution.InvalidContributionException;
+import org.fabric3.management.contribution.ErrorInfo;
+import org.fabric3.management.contribution.ArtifactErrorInfo;
 
 /**
  * @version $Revision$ $Date$
@@ -51,5 +56,20 @@ public class CommandHelper {
             contributionName = path.substring(pos + 1);
         }
         return URI.create(contributionName);
+    }
+
+    public static void printErrors(PrintStream out, InvalidContributionException e) {
+        for (ErrorInfo info : e.getErrors()) {
+            if (info instanceof ArtifactErrorInfo) {
+                ArtifactErrorInfo aei = (ArtifactErrorInfo) info;
+                out.println("Errors in " + aei.getName() + " \n");
+                for (ErrorInfo errorInfo : aei.getErrors()) {
+                    out.println("  " + errorInfo.getError());
+                }
+            } else {
+                out.println(info.getError());
+            }
+        }
+
     }
 }

@@ -152,10 +152,8 @@ public class DeployCommand implements Command {
             out.println("ERROR: Error connecting to domain controller");
             e.printStackTrace(out);
         } catch (InvalidContributionException e) {
-            out.println("The following errors were found in the deployment plan:");
-            for (String desc : e.getErrors()) {
-                out.println("ERROR: " + desc);
-            }
+            out.println("The following errors were found in the deployment plan:\n");
+            CommandHelper.printErrors(out, e);
             revertPlan(planContributionUri, out);
 
         } catch (DuplicateContributionManagementException e) {

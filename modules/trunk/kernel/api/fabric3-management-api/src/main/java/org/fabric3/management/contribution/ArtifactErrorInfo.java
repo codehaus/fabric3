@@ -16,23 +16,33 @@
  */
 package org.fabric3.management.contribution;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Denotes an invalid contribution and reports introspection errors.
+ * Encapsulates errors for a contribution artifact.
  *
  * @version $Revision$ $Date$
  */
-public class InvalidContributionException extends ContributionInstallException {
-    private static final long serialVersionUID = -9209475021865946685L;
-    private List<ErrorInfo> errors;
+public class ArtifactErrorInfo extends ErrorInfo {
+    private static final long serialVersionUID = 1620259064648312693L;
+    private String name;
+    private List<ErrorInfo> errors = new ArrayList<ErrorInfo>();
 
-    public InvalidContributionException(String message, List<ErrorInfo> errors) {
-        super(message);
-        this.errors = errors;
+    public ArtifactErrorInfo(String name) {
+        super(null);
+        this.name = name;
     }
 
     public List<ErrorInfo> getErrors() {
         return errors;
+    }
+
+    public void addError(ErrorInfo error) {
+        errors.add(error);
+    }
+
+    public String getName() {
+        return name;
     }
 }

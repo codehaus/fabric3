@@ -47,8 +47,11 @@ import org.fabric3.management.contribution.ContributionServiceMBean;
 import org.fabric3.management.contribution.ContributionUninstallException;
 import org.fabric3.management.contribution.InvalidContributionException;
 import org.fabric3.management.contribution.ContributionLockedManagementException;
+import org.fabric3.management.contribution.ErrorInfo;
+import org.fabric3.management.contribution.ArtifactErrorInfo;
 import org.fabric3.spi.services.contribution.Contribution;
 import org.fabric3.spi.services.contribution.MetaDataStore;
+import org.fabric3.scdl.ArtifactValidationFailure;
 
 /**
  * @version $Revision$ $Date$
@@ -154,9 +157,20 @@ public class ContibutionServiceMBeanImpl implements ContributionServiceMBean {
             contributionService.install(uri);
         } catch (ValidationException e) {
             // propagate validaton error messages to the client
-            List<String> errors = new ArrayList<String>();
+            List<ErrorInfo> errors = new ArrayList<ErrorInfo>();
             for (ValidationFailure failure : e.getErrors()) {
-                errors.add(failure.getMessage());
+                if (failure instanceof ArtifactValidationFailure) {
+                    ArtifactValidationFailure avf = (ArtifactValidationFailure) failure;
+                    ArtifactErrorInfo error = new ArtifactErrorInfo(avf.getArtifactName());
+                    for (ValidationFailure entry : avf.getFailures()) {
+                        ErrorInfo info = new ErrorInfo(entry.getMessage());
+                        error.addError(info);
+                    }
+                    errors.add(error);
+                } else {
+                    ErrorInfo info = new ErrorInfo(failure.getMessage());
+                    errors.add(info);
+                }
             }
             throw new InvalidContributionException("Error installing " + uri, errors);
         } catch (ContributionException e) {
