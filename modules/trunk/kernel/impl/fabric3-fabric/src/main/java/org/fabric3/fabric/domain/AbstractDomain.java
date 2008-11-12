@@ -34,6 +34,8 @@ import org.fabric3.host.domain.AssemblyException;
 import org.fabric3.host.domain.DeploymentException;
 import org.fabric3.host.domain.ContributionNotInstalledException;
 import org.fabric3.host.domain.UndeploymentException;
+import org.fabric3.host.domain.CompositeAlreadyDeployedException;
+import org.fabric3.host.domain.DeployableNotFoundException;
 import org.fabric3.host.contribution.Deployable;
 import org.fabric3.host.contribution.StoreException;
 import org.fabric3.loader.plan.DeploymentPlanConstants;
@@ -160,7 +162,12 @@ public abstract class AbstractDomain implements Domain {
         // lock the contributions
         for (Contribution contribution : contributions) {
             for (Deployable deployable : contribution.getManifest().getDeployables()) {
-                contribution.acquireLock(deployable.getName());
+                QName name = deployable.getName();
+                // check if the deployable has already been deployed by querying the lock owners
+                if (contribution.getLockOwners().contains(name)) {
+                    throw new CompositeAlreadyDeployedException("Composite has already been deployed: " + name);
+                }
+                contribution.acquireLock(name);
             }
         }
 
@@ -220,10 +227,14 @@ public abstract class AbstractDomain implements Domain {
         }
 
         if (contribution != null) {
+            // check if the deployable has already been deployed by querying the lock owners
+            if (contribution.getLockOwners().contains(name)) {
+                throw new CompositeAlreadyDeployedException("Composite has already been deployed: " + name);
+            }
             // lock the contribution
             contribution.acquireLock(name);
         }
-        
+
         if (transactional) {
             domain = CopyUtil.copy(domain);
         }

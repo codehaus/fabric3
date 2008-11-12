@@ -30,6 +30,8 @@ import org.fabric3.host.domain.DeploymentException;
 import org.fabric3.host.domain.ContributionNotInstalledException;
 import org.fabric3.host.domain.UndeploymentException;
 import org.fabric3.host.domain.DomainException;
+import org.fabric3.host.domain.CompositeAlreadyDeployedException;
+import org.fabric3.host.domain.DeployableNotFoundException;
 import org.fabric3.management.domain.ContributionNotFoundException;
 import org.fabric3.management.domain.DeploymentManagementException;
 import org.fabric3.management.domain.DomainMBean;
@@ -78,6 +80,10 @@ public class DomainMBeanImpl implements DomainMBean {
                     errors.add(error.getMessage());
                 }
                 throw new InvalidDeploymentException("Error deploying " + uri, errors);
+            } catch (CompositeAlreadyDeployedException e) {
+                throw new ContributionNotInstalledManagementException(e.getMessage());
+            } catch (DeployableNotFoundException e) {
+                throw new ContributionNotInstalledManagementException(e.getMessage());
             } catch (DeploymentException e) {
                 reportError(uri, e);
             }

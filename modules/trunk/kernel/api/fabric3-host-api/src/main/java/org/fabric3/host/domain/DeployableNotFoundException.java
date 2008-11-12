@@ -14,9 +14,7 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.fabric.domain;
-
-import org.fabric3.host.domain.DeploymentException;
+package org.fabric3.host.domain;
 
 /**
  * @version $Rev$ $Date$
