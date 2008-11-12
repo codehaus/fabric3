@@ -74,7 +74,6 @@ public class DomainMBeanImpl implements DomainMBean {
             } catch (ContributionNotInstalledException e) {
                 throw new ContributionNotInstalledManagementException(e.getMessage());
             } catch (AssemblyException e) {
-                monitor.error("Error deploying " + uri, e);
                 List<String> errors = new ArrayList<String>();
                 for (AssemblyFailure error : e.getErrors()) {
                     errors.add(error.getMessage());

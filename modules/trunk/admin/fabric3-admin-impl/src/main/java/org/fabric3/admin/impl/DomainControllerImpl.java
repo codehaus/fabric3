@@ -44,6 +44,7 @@ import org.fabric3.management.contribution.ContributionUninstallException;
 import org.fabric3.management.contribution.DuplicateContributionManagementException;
 import org.fabric3.management.contribution.InvalidContributionException;
 import org.fabric3.management.domain.DeploymentManagementException;
+import org.fabric3.management.domain.InvalidDeploymentException;
 
 /**
  * Default implementation of the DomainController API.
@@ -165,7 +166,11 @@ public class DomainControllerImpl implements DomainController {
             ObjectName oName = new ObjectName(DOMAIN_MBEAN);
             conn.invoke(oName, "deploy", new URI[]{uri}, new String[]{URI.class.getName()});
         } catch (MBeanException e) {
-            throw new DeploymentManagementException(e.getTargetException().getMessage(), e.getTargetException());
+            if (e.getTargetException() instanceof InvalidDeploymentException) {
+                throw (InvalidDeploymentException) e.getTargetException();
+            } else {
+                throw new DeploymentManagementException(e.getTargetException().getMessage(), e.getTargetException());
+            }
         } catch (JMException e) {
             throw new CommunicationException(e);
         } catch (IOException e) {
@@ -183,7 +188,11 @@ public class DomainControllerImpl implements DomainController {
             ObjectName oName = new ObjectName(DOMAIN_MBEAN);
             conn.invoke(oName, "deploy", new Object[]{uri, plan}, new String[]{URI.class.getName(), "java.lang.String"});
         } catch (MBeanException e) {
-            throw new DeploymentManagementException(e.getTargetException().getMessage(), e.getTargetException());
+            if (e.getTargetException() instanceof InvalidDeploymentException) {
+                throw (InvalidDeploymentException) e.getTargetException();
+            } else {
+                throw new DeploymentManagementException(e.getTargetException().getMessage(), e.getTargetException());
+            }
         } catch (JMException e) {
             throw new CommunicationException(e);
         } catch (IOException e) {

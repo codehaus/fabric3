@@ -114,14 +114,14 @@ public class DeployCommand implements Command {
             controller.deploy(contributionUri, planName);
             out.println("Deployed " + contributionUri);
             return true;
+        } catch (CommunicationException e) {
+            out.println("ERROR: Error connecting to domain controller");
+            e.printStackTrace(out);
         } catch (InvalidDeploymentException e) {
             out.println("The following deployment errors were reported:");
             for (String desc : e.getErrors()) {
                 out.println("ERROR: " + desc);
             }
-        } catch (CommunicationException e) {
-            out.println("ERROR: Error connecting to domain controller");
-            e.printStackTrace(out);
         } catch (DeploymentManagementException e) {
             out.println("ERROR: Error deploying contribution");
             out.println("       " + e.getMessage());

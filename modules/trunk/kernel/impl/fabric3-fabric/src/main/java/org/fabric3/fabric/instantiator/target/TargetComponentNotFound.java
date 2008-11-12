@@ -40,7 +40,7 @@ public class TargetComponentNotFound extends AssemblyFailure {
     }
 
     public String getMessage() {
-        return "Target component component for reference " + reference.getUri() + " not found: " + targetUri;
+        return "Target component for reference " + reference.getUri() + " not found: " + targetUri;
     }
 
 }
