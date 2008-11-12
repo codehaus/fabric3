@@ -19,6 +19,8 @@ package org.fabric3.management.contribution;
 import java.io.Serializable;
 
 /**
+ * Used to propagate error information during contribution deployment.
+ *
  * @version $Revision$ $Date$
  */
 public class ErrorInfo implements Serializable {
