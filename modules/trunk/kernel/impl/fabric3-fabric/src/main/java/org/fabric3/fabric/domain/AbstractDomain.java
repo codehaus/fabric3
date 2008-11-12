@@ -171,15 +171,28 @@ public abstract class AbstractDomain implements Domain {
             }
         }
 
-        if (transactional) {
-            domain = CopyUtil.copy(domain);
-        }
-        LogicalChange change = logicalModelInstantiator.include(domain, deployables);
-        if (change.hasErrors()) {
-            throw new AssemblyException(change.getErrors());
-        }
+        try {
+            if (transactional) {
+                domain = CopyUtil.copy(domain);
+            }
+            LogicalChange change = logicalModelInstantiator.include(domain, deployables);
+            if (change.hasErrors()) {
+                throw new AssemblyException(change.getErrors());
+            }
 
-        allocateAndDeploy(domain, plans, change);
+            allocateAndDeploy(domain, plans, change);
+        } catch (DeploymentException e) {
+            // release the contribution locks if there was an error
+            for (Contribution contribution : contributions) {
+                for (Deployable deployable : contribution.getManifest().getDeployables()) {
+                    QName name = deployable.getName();
+                    if (contribution.getLockOwners().contains(name)) {
+                        contribution.releaseLock(name);
+                    }
+                }
+            }
+            throw e;
+        }
     }
 
     public void undeploy(QName deployable) throws UndeploymentException {
@@ -226,23 +239,31 @@ public abstract class AbstractDomain implements Domain {
             throw new ContributionNotInstalledException("Contribution is not installed: " + contribution.getUri());
         }
 
-        if (contribution != null) {
-            // check if the deployable has already been deployed by querying the lock owners
-            if (contribution.getLockOwners().contains(name)) {
-                throw new CompositeAlreadyDeployedException("Composite has already been deployed: " + name);
+        try {
+            if (contribution != null) {
+                // check if the deployable has already been deployed by querying the lock owners
+                if (contribution.getLockOwners().contains(name)) {
+                    throw new CompositeAlreadyDeployedException("Composite has already been deployed: " + name);
+                }
+                // lock the contribution
+                contribution.acquireLock(name);
             }
-            // lock the contribution
-            contribution.acquireLock(name);
-        }
 
-        if (transactional) {
-            domain = CopyUtil.copy(domain);
+            if (transactional) {
+                domain = CopyUtil.copy(domain);
+            }
+            LogicalChange change = logicalModelInstantiator.include(domain, composite);
+            if (change.hasErrors()) {
+                throw new AssemblyException(change.getErrors());
+            }
+            allocateAndDeploy(domain, plans, change);
+        } catch (DeploymentException e) {
+            // release the contribution lock if there was an error
+            if (contribution != null && contribution.getLockOwners().contains(name)) {
+                contribution.releaseLock(name);
+            }
+            throw e;
         }
-        LogicalChange change = logicalModelInstantiator.include(domain, composite);
-        if (change.hasErrors()) {
-            throw new AssemblyException(change.getErrors());
-        }
-        allocateAndDeploy(domain, plans, change);
     }
 
     /**
