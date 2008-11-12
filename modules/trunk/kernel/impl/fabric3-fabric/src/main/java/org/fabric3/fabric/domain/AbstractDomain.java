@@ -169,9 +169,7 @@ public abstract class AbstractDomain implements Domain {
         }
         LogicalChange change = logicalModelInstantiator.include(domain, deployables);
         if (change.hasErrors()) {
-            throw new AssemblyException(change.getErrors(), change.getWarnings());
-        } else if (change.hasWarnings()) {
-            // TOOD log warnings
+            throw new AssemblyException(change.getErrors());
         }
 
         allocateAndDeploy(domain, plans, change);
@@ -231,9 +229,7 @@ public abstract class AbstractDomain implements Domain {
         }
         LogicalChange change = logicalModelInstantiator.include(domain, composite);
         if (change.hasErrors()) {
-            throw new AssemblyException(change.getErrors(), change.getWarnings());
-        } else if (change.hasWarnings()) {
-            // TOOD log warnings
+            throw new AssemblyException(change.getErrors());
         }
         allocateAndDeploy(domain, plans, change);
     }

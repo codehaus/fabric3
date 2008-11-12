@@ -116,7 +116,7 @@ public class SingletonComponentSynthesizer implements ComponentSynthesizer {
         LogicalChange change = new LogicalChange(domain);
         LogicalComponent<Implementation<?>> logical = instantiator.instantiate(domain, domain.getPropertyValues(), definition, change);
         if (change.hasErrors()) {
-            throw new AssemblyException(change.getErrors(), change.getWarnings());
+            throw new AssemblyException(change.getErrors());
         }
         // mark singleton components as provisioned since instances are not created
         logical.setState(LogicalState.PROVISIONED);

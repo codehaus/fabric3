@@ -38,19 +38,13 @@ public class AssemblyException extends DeploymentException {
     };
 
     private final List<AssemblyFailure> errors;
-    private final List<AssemblyFailure> warnings;
 
-    public AssemblyException(List<AssemblyFailure> errors, List<AssemblyFailure> warnings) {
+    public AssemblyException(List<AssemblyFailure> errors) {
         this.errors = errors;
-        this.warnings = warnings;
     }
 
     public List<AssemblyFailure> getErrors() {
         return errors;
-    }
-
-    public List<AssemblyFailure> getWarnings() {
-        return warnings;
     }
 
     public String getMessage() {
@@ -64,13 +58,6 @@ public class AssemblyException extends DeploymentException {
             for (AssemblyFailure error : sorted) {
                 writer.write(error.getMessage());
                 writer.write("\n\n");
-            }
-        }
-        if (!warnings.isEmpty()) {
-            List<AssemblyFailure> sorted = new ArrayList<AssemblyFailure>(warnings);
-            Collections.sort(sorted, COMPARATOR);
-            for (AssemblyFailure warning : sorted) {
-                writer.write(warning.getMessage());
             }
         }
         writer.flush();

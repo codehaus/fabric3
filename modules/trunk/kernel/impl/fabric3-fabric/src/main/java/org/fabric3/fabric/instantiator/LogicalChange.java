@@ -39,7 +39,6 @@ public class LogicalChange {
     private final LogicalCompositeComponent parent;
 
     private final List<AssemblyFailure> errors = new ArrayList<AssemblyFailure>();
-    private final List<AssemblyFailure> warnings = new ArrayList<AssemblyFailure>();
 
     private final Map<String, Document> addedProperties = new HashMap<String, Document>();
     private final List<String> deletedProperties = new ArrayList<String>();
@@ -106,43 +105,6 @@ public class LogicalChange {
     public void addErrors(List<AssemblyFailure> errors) {
         this.errors.addAll(errors);
     }
-
-    /**
-     * Returns true if the change generation has detected any non-fatal warnings.
-     *
-     * @return true if the change generation has detected any non-fatal warnings
-     */
-    public boolean hasWarnings() {
-        return !warnings.isEmpty();
-    }
-
-    /**
-     * Returns the list of non-fatal warnings detected during change generation.
-     *
-     * @return the list of non-fatal warnings detected during change generation
-     */
-    public List<AssemblyFailure> getWarnings() {
-        return warnings;
-    }
-
-    /**
-     * Add a non-fatal warning to the change.
-     *
-     * @param warning the non-fatal warning that has been found
-     */
-    public void addWarning(AssemblyFailure warning) {
-        warnings.add(warning);
-    }
-
-    /**
-     * Add a collection of non-fatal warnings to the change.
-     *
-     * @param warnings the non-fatal warnings that have been found
-     */
-    public void addWarnings(List<AssemblyFailure> warnings) {
-        this.warnings.addAll(warnings);
-    }
-
 
     /**
      * Record a property being added.
