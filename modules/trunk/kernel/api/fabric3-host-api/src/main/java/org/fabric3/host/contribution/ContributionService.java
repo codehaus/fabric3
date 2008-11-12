@@ -149,7 +149,7 @@ public interface ContributionService {
      *
      * @return the URIs of contributions in the domain
      */
-    public Set<URI> getContributions();
+    Set<URI> getContributions();
 
     /**
      * Returns a list of deployables in a contribution.
@@ -158,6 +158,6 @@ public interface ContributionService {
      * @return a list of deployables in a contribution. If no deployables are found, an empty list is returned.
      * @throws ContributionNotFoundException if a contribution corresponding to the URI is not found
      */
-    public List<Deployable> getDeployables(URI uri) throws ContributionNotFoundException;
+    List<Deployable> getDeployables(URI uri) throws ContributionNotFoundException;
 
 }
