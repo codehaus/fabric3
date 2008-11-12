@@ -63,6 +63,7 @@ import org.fabric3.host.contribution.InstallException;
 import org.fabric3.host.contribution.UpdateException;
 import org.fabric3.host.contribution.UninstallException;
 import org.fabric3.host.contribution.RemoveException;
+import org.fabric3.host.contribution.ContributionInUseException;
 import org.fabric3.introspection.validation.InvalidContributionException;
 import org.fabric3.introspection.validation.ValidationUtils;
 import org.fabric3.scdl.ArtifactValidationFailure;
@@ -306,7 +307,17 @@ public class ContributionServiceImpl implements ContributionService {
         }
         introspect(contribution);
         ClassLoader loader = contributionLoader.load(contribution);
-        processContents(contribution, loader);
+        try {
+            processContents(contribution, loader);
+        } catch (InstallException e) {
+            try {
+                contributionLoader.unload(contribution);
+            } catch (ContributionInUseException ex) {
+                // this can't happen
+                throw new InstallException(ex);
+            }
+            throw e;
+        }
         contribution.setState(ContributionState.INSTALLED);
     }
 
