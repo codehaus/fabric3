@@ -45,22 +45,11 @@ public class ArchiveResolverServlet extends HttpServlet {
 
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String info = req.getPathInfo().substring(1);    // path info always begins with '/'
-        int index = info.indexOf("/");
-        if (index < 1) {
-            throw new ServletException("Invalid URI: " + info);
-        }
-        // parse the encoded scheme, which is the first segment in the path
-        String scheme = info.substring(0, index);
-        if (EncodingConstants.DEFAULT_SCHEME.equals(scheme)) {
-            // the contribution URI does not have an explicit encoded scheme
-            scheme = null;
-        }
-        String base = info.substring(index + 1);
         try {
-            URI uri = new URI(scheme, null, base, null);
+            URI uri = new URI(info);
             Contribution contribution = store.find(uri);
             if (contribution == null) {
-                throw new ServletException("Contribution not found for: " + info);
+                throw new ServletException("Contribution not found: " + info + ". Request URL was: " + info);
             }
             URL url = contribution.getLocation();
             copy(url.openStream(), resp.getOutputStream());

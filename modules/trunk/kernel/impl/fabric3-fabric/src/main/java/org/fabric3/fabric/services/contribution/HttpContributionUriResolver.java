@@ -41,12 +41,16 @@ import org.fabric3.spi.services.contribution.Contribution;
 @EagerInit
 public class HttpContributionUriResolver implements ContributionUriResolver {
     private static final String HTTP_SCHEME = "http";
+    // the path mapping of the ArchiveResolverServlet
+    private static final String REPOSITORY = "/repository/";
 
     private ArchiveStore archiveStore;
     private MetaDataStore metaDataStore;
     private ArtifactResolverMonitor monitor;
 
-    public HttpContributionUriResolver(@Reference ArchiveStore archiveStore, @Reference MetaDataStore metaDataStore, @Monitor ArtifactResolverMonitor monitor) {
+    public HttpContributionUriResolver(@Reference ArchiveStore archiveStore,
+                                       @Reference MetaDataStore metaDataStore,
+                                       @Monitor ArtifactResolverMonitor monitor) {
         this.archiveStore = archiveStore;
         this.metaDataStore = metaDataStore;
         this.monitor = monitor;
@@ -58,19 +62,20 @@ public class HttpContributionUriResolver implements ContributionUriResolver {
             Contribution contribution = metaDataStore.find(uri);
             if (contribution == null) {
                 String id = uri.toString();
-                throw new ResolutionException("Contribution not fould: " + id, id);
+                throw new ResolutionException("Contribution not found: " + id, id);
             }
             return contribution.getLocation();
         }
         InputStream stream = null;
         try {
+            URI decoded = URI.create(uri.getPath().substring(REPOSITORY.length()));
             // check to see if the archive is cached locally
-            URL localURL = archiveStore.find(uri);
+            URL localURL = archiveStore.find(decoded);
             if (localURL == null) {
                 // resolve remotely
                 URL url = uri.toURL();
                 stream = url.openStream();
-                localURL = archiveStore.store(uri, stream);
+                localURL = archiveStore.store(decoded, stream);
             }
             return localURL;
         } catch (IOException e) {

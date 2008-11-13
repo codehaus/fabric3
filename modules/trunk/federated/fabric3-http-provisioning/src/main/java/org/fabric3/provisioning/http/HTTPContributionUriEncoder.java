@@ -39,7 +39,7 @@ public class HTTPContributionUriEncoder implements ContributionUriEncoder {
     private MetaDataStore store;
     private String address;
     private int port;
-    private String mappingPath = "/contribution";
+    private String mappingPath = "/repository";
 
     public HTTPContributionUriEncoder(@Reference ServletHost host, @Reference MetaDataStore store) {
         this.host = host;
@@ -70,12 +70,7 @@ public class HTTPContributionUriEncoder implements ContributionUriEncoder {
     }
 
     public URI encode(URI uri) throws URISyntaxException {
-        String scheme = uri.getScheme();
-        if (scheme == null) {
-            // no scheme present, use the default
-            scheme = EncodingConstants.DEFAULT_SCHEME;
-        }
-        String path = mappingPath + "/" + scheme + "/" + uri.getPath();
+        String path = mappingPath + "/" + uri.getPath();
         return new URI("http", null, address, port, path, null, null);
     }
 }
