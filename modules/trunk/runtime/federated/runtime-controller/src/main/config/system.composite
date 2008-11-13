@@ -80,12 +80,20 @@
     <!-- include policy configuration -->
     <include name="org.fabric3.policy.Policy" scdlResource="org/fabric3/policy/policy.composite"/>
 
-    <component name="assemblyRecoveryService">
+    <component name="NonPersistentLogicalComponentStore">
         <f3-impl:implementation.system class="org.fabric3.fabric.services.lcm.NonPersistentLogicalComponentStore"/>
     </component>
 
     <component name="HttpContributionUriResolver">
         <f3-impl:implementation.system class="org.fabric3.fabric.services.contribution.HttpContributionUriResolver"/>
+    </component>
+
+    <component name="ContributionReplayer">
+        <f3-impl:implementation.system class="org.fabric3.fabric.services.contribution.ContributionReplayer"/>
+    </component>
+
+    <component name="ContributionTracker">
+        <f3-impl:implementation.system class="org.fabric3.fabric.services.contribution.ContributionTracker"/>
     </component>
 
 
