@@ -69,6 +69,7 @@ public class UninstallCommand implements Command {
     }
 
     public boolean execute(PrintStream out) throws CommandException {
+        boolean disconnected = !controller.isConnected();
         try {
             if (username != null) {
                 controller.setUsername(username);
@@ -76,7 +77,7 @@ public class UninstallCommand implements Command {
             if (password != null) {
                 controller.setPassword(password);
             }
-            if (!controller.isConnected()) {
+            if (disconnected) {
                 controller.connect();
             }
             controller.uninstall(contributionUri);
@@ -104,6 +105,14 @@ public class UninstallCommand implements Command {
         } catch (ContributionUninstallException e) {
             out.println("ERROR: Error uninstalling contribution");
             out.println("       " + e.getMessage());
+        } finally {
+            if (disconnected && controller.isConnected()) {
+                try {
+                    controller.disconnect();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
         return false;
     }

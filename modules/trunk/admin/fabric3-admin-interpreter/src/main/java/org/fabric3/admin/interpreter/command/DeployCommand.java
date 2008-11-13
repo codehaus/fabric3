@@ -91,21 +91,32 @@ public class DeployCommand implements Command {
         if (password != null) {
             controller.setPassword(password);
         }
-        if (!controller.isConnected()) {
-            try {
-                controller.connect();
-            } catch (IOException e) {
-                out.println("ERROR: Error connecting to domain controller");
-                e.printStackTrace(out);
-                return false;
+        boolean disconnected = !controller.isConnected();
+        try {
+            if (disconnected) {
+                try {
+                    controller.connect();
+                } catch (IOException e) {
+                    out.println("ERROR: Error connecting to domain controller");
+                    e.printStackTrace(out);
+                    return false;
+                }
             }
-        }
-        if (planName != null) {
-            return deployByName(out);
-        } else if (planFile != null) {
-            return deployByFile(out);
-        } else {
-            return deployNoPlan(out);
+            if (planName != null) {
+                return deployByName(out);
+            } else if (planFile != null) {
+                return deployByFile(out);
+            } else {
+                return deployNoPlan(out);
+            }
+        } finally {
+            if (disconnected && controller.isConnected()) {
+                try {
+                    controller.disconnect();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 

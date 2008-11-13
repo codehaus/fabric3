@@ -70,23 +70,30 @@ public class UndeployCommand implements Command {
         if (password != null) {
             controller.setPassword(password);
         }
-        if (!controller.isConnected()) {
-            try {
-                controller.connect();
-            } catch (IOException e) {
-                out.println("ERROR: Error connecting to domain controller");
-                e.printStackTrace(out);
-            }
-        }
+        boolean disconnected = !controller.isConnected();
         try {
+            if (disconnected) {
+                controller.connect();
+            }
             controller.undeploy(contributionUri);
             return true;
+        } catch (IOException e) {
+            out.println("ERROR: Error connecting to domain controller");
+            e.printStackTrace(out);
         } catch (CommunicationException ex) {
             out.println("ERROR: Error connecting to domain controller");
             ex.printStackTrace(out);
         } catch (DeploymentManagementException ex) {
             out.println("ERROR: Error undeploying contribution");
             out.println("       " + ex.getMessage());
+        } finally {
+            if (disconnected && controller.isConnected()) {
+                try {
+                    controller.disconnect();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
         return false;
     }

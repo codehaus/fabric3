@@ -17,6 +17,7 @@
 package org.fabric3.admin.interpreter.command;
 
 import java.io.PrintStream;
+import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
 
@@ -31,8 +32,10 @@ public class ProvisionCommand implements Command {
     private DeployCommand deployCommand;
     private StoreCommand storeCommand;
     private InstallCommand installCommand;
+    private DomainController controller;
 
     public ProvisionCommand(DomainController controller) {
+        this.controller = controller;
         storeCommand = new StoreCommand(controller);
         installCommand = new InstallCommand(controller);
         deployCommand = new DeployCommand(controller);
@@ -69,7 +72,18 @@ public class ProvisionCommand implements Command {
     }
 
     public boolean execute(PrintStream out) throws CommandException {
-        return storeCommand.execute(out) && installCommand.execute(out) && deployCommand.execute(out);
+        boolean disconnected = !controller.isConnected();
+        try {
+            return storeCommand.execute(out) && installCommand.execute(out) && deployCommand.execute(out);
+        } finally {
+            if (disconnected && controller.isConnected()) {
+                try {
+                    controller.disconnect();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
 

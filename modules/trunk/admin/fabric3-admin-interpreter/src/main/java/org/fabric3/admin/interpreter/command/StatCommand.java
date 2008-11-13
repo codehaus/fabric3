@@ -61,8 +61,9 @@ public class StatCommand implements Command {
         if (password != null) {
             controller.setPassword(password);
         }
+        boolean disconnected = !controller.isConnected();
         try {
-            if (!controller.isConnected()) {
+            if (disconnected) {
                 controller.connect();
             }
             Set<ContributionInfo> infos = controller.stat();
@@ -80,6 +81,14 @@ public class StatCommand implements Command {
             e.printStackTrace(out);
         } catch (CommunicationException e) {
             throw new CommandException(e);
+        } finally {
+            if (disconnected && controller.isConnected()) {
+                try {
+                    controller.disconnect();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
         return false;
     }

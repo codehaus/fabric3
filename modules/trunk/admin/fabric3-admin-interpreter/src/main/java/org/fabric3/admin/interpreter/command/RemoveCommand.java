@@ -65,6 +65,7 @@ public class RemoveCommand implements Command {
     }
 
     public boolean execute(PrintStream out) throws CommandException {
+        boolean disconnected = !controller.isConnected();
         try {
             if (username != null) {
                 controller.setUsername(username);
@@ -72,7 +73,7 @@ public class RemoveCommand implements Command {
             if (password != null) {
                 controller.setPassword(password);
             }
-            if (!controller.isConnected()) {
+            if (disconnected) {
                 controller.connect();
             }
             controller.remove(contributionUri);
@@ -90,6 +91,14 @@ public class RemoveCommand implements Command {
         } catch (ContributionRemoveException e) {
             out.println("ERROR: Error removing contribution");
             out.println("       " + e.getMessage());
+        } finally {
+            if (disconnected && controller.isConnected()) {
+                try {
+                    controller.disconnect();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
         }
         return false;
     }
