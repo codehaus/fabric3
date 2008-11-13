@@ -39,7 +39,7 @@ public class HTTPContributionUriEncoder implements ContributionUriEncoder {
     private MetaDataStore store;
     private String address;
     private int port;
-    private String mappingPath = "/repository";
+    private String mappingPath = HttpProvisionConstants.REPOSITORY;
 
     public HTTPContributionUriEncoder(@Reference ServletHost host, @Reference MetaDataStore store) {
         this.host = host;
@@ -66,7 +66,7 @@ public class HTTPContributionUriEncoder implements ContributionUriEncoder {
         if (address == null) {
             address = InetAddress.getLocalHost().getHostAddress();
         }
-        host.registerMapping(mappingPath + "/*", new ArchiveResolverServlet(store));
+        host.registerMapping("/" + mappingPath + "/*", new ArchiveResolverServlet(store));
     }
 
     public URI encode(URI uri) throws URISyntaxException {

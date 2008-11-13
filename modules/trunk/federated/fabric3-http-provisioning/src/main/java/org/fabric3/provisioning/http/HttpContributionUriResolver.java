@@ -42,7 +42,6 @@ import org.fabric3.spi.services.contribution.Contribution;
 public class HttpContributionUriResolver implements ContributionUriResolver {
     private static final String HTTP_SCHEME = "http";
     // the path mapping of the ArchiveResolverServlet
-    private static final String REPOSITORY = "/repository/";
 
     private ArchiveStore archiveStore;
     private MetaDataStore metaDataStore;
@@ -68,7 +67,7 @@ public class HttpContributionUriResolver implements ContributionUriResolver {
         }
         InputStream stream = null;
         try {
-            URI decoded = URI.create(uri.getPath().substring(REPOSITORY.length()));
+            URI decoded = URI.create(uri.getPath().substring(HttpProvisionConstants.REPOSITORY.length() +2)); // +2 to account for leading and trailing '/'
             // check to see if the archive is cached locally
             URL localURL = archiveStore.find(decoded);
             if (localURL == null) {
