@@ -84,10 +84,16 @@
         <f3-impl:implementation.system class="org.fabric3.fabric.services.lcm.NonPersistentLogicalComponentStore"/>
     </component>
 
-    <component name="HttpContributionUriResolver">
-        <f3-impl:implementation.system class="org.fabric3.fabric.services.contribution.HttpContributionUriResolver"/>
+    <component name="LocalContributionUriEncoder">
+        <f3-impl:implementation.system
+                class="org.fabric3.fabric.services.contribution.LocalContributionUriEncoder"/>
     </component>
 
+    <component name="LocalContributionUriResolver">
+        <f3-impl:implementation.system
+                class="org.fabric3.fabric.services.contribution.LocalContributionUriResolver"/>
+    </component>
+    
     <component name="ContributionReplayer">
         <f3-impl:implementation.system class="org.fabric3.fabric.services.contribution.ContributionReplayer"/>
     </component>

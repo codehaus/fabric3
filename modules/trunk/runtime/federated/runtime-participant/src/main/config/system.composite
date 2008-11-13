@@ -59,6 +59,7 @@
     <include name="org.fabric3.fabric.Deployment" scdlResource="org/fabric3/fabric/deployment.composite"/>
     <include name="org.fabric3.fabric.Stores" scdlResource="org/fabric3/fabric/nonPersistentStore.composite"/>
 
+    <include name="org.fabric3.fabric.LocalProvisioning" scdlResource="org/fabric3/fabric/localProvisioning.composite"/>
 
     <!-- include transform configuration -->
     <include name="org.fabric3.transform.Transform" scdlResource="org/fabric3/transform/transform.composite"/>
@@ -70,14 +71,6 @@
         <f3-impl:implementation.system class="org.fabric3.fabric.services.lcm.NonPersistentLogicalComponentStore"/>
     </component>
 
-    <component name="HttpContributionUriResolver">
-        <f3-impl:implementation.system
-                class="org.fabric3.fabric.services.contribution.HttpContributionUriResolver"/>
-    </component>
 
-    <component name="LocalContributionUriEncoder">
-        <f3-impl:implementation.system
-                class="org.fabric3.fabric.services.contribution.LocalContributionUriEncoder"/>
-    </component>
 
 </composite>

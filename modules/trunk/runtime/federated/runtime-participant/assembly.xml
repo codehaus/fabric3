@@ -139,6 +139,7 @@
                 <include>org.codehaus.fabric3:fabric3-federation-deployment</include>
                 <include>org.codehaus.fabric3:fabric3-federation-participant-shoal</include>
                 <include>org.codehaus.fabric3:fabric3-federation-shoal</include>
+                <include>org.codehaus.fabric3:fabric3-http-provisioning</include>
             </includes>
             <outputDirectory>extensions</outputDirectory>
         </dependencySet>

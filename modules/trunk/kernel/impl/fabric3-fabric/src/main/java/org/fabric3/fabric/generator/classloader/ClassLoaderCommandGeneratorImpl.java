@@ -75,15 +75,11 @@ public class ClassLoaderCommandGeneratorImpl implements ClassLoaderCommandGenera
      * Setter for injecting the service for encoding contribution URIs so they may be derferenced in a domain. This is done lazily as the encoder is
      * supplied by an extension which is intialized after this component which is needed during bootstrap.
      *
-     * @param encoders the encoder to inject
+     * @param encoder the encoder to inject
      */
     @Reference(required = false)
-    public void setEncoder(List<ContributionUriEncoder> encoders) {
-        if (encoders == null || encoders.isEmpty()) {
-            return;
-        }
-        // workaround for FABRICTHREE-262: only multiplicity references can be reinjected
-        this.encoder = encoders.get(0);
+    public void setEncoder(ContributionUriEncoder encoder) {
+        this.encoder = encoder;
     }
 
     /**

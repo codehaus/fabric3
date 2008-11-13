@@ -26,4 +26,14 @@
         <property name="address" source="$systemConfig//provisioner/@address"/>
     </component>
 
+    <wire source="ClassLoaderGenerator/encoder" target="HTTPArtifactLocationEncoder"/>
+
+    <component name="HttpContributionUriResolver">
+        <f3-impl:implementation.system
+                class="org.fabric3.provisioning.http.HttpContributionUriResolver"/>
+    </component>
+
+    <wire source="ClassLoaderBuilder/contributionUriResolver" target="HttpContributionUriResolver"/>
+
+
 </composite>

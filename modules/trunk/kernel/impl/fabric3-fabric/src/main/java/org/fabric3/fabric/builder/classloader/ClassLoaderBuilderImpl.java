@@ -76,6 +76,16 @@ public class ClassLoaderBuilderImpl implements ClassLoaderBuilder {
         classLoaderIsolation = info.supportsClassLoaderIsolation();
     }
 
+    /**
+     * Optionally, lazily injects the contribution URI resolver that may be supplied as an extension.
+     *
+     * @param contributionUriResolver the resolver
+     */
+    @Reference(required = false)
+    public void setContributionUriResolver(ContributionUriResolver contributionUriResolver) {
+        this.contributionUriResolver = contributionUriResolver;
+    }
+
     public void build(PhysicalClassLoaderDefinition definition) throws ClassLoaderBuilderException {
 
         if (classLoaderRegistry.getClassLoader(definition.getUri()) != null) {
