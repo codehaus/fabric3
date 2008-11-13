@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
+import java.util.Collections;
 import java.net.URI;
 import javax.xml.namespace.QName;
 
@@ -228,8 +229,13 @@ public abstract class AbstractDomain implements Domain {
     }
 
     private void include(Composite composite, DeploymentPlan plan, boolean transactional) throws DeploymentException {
-        List<DeploymentPlan> plans = new ArrayList<DeploymentPlan>();
-        plans.add(plan);
+        List<DeploymentPlan> plans;
+        if (plan != null) {
+            plans = new ArrayList<DeploymentPlan>();
+            plans.add(plan);
+        } else {
+            plans = Collections.emptyList();
+        }
         LogicalCompositeComponent domain = logicalComponentManager.getRootComponent();
 
         QName name = composite.getName();
