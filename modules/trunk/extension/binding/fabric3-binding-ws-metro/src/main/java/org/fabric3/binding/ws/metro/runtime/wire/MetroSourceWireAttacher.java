@@ -34,17 +34,45 @@
  */
 package org.fabric3.binding.ws.metro.runtime.wire;
 
+import java.net.URI;
+import java.net.URL;
+import java.util.Map;
+
 import org.fabric3.binding.ws.metro.provision.MetroWireSourceDefinition;
+import org.fabric3.binding.ws.metro.provision.WsdlElement;
+import org.fabric3.binding.ws.metro.runtime.core.F3Invoker;
+import org.fabric3.binding.ws.metro.runtime.core.MetroServlet;
 import org.fabric3.spi.ObjectFactory;
+import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.SourceWireAttacher;
+import org.fabric3.spi.host.ServletHost;
+import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
+import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
+import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.Wire;
+import org.osoa.sca.annotations.Init;
+import org.osoa.sca.annotations.Reference;
 
 /**
  * Source wire attacher that provisions services.
  *
  */
 public class MetroSourceWireAttacher implements SourceWireAttacher<MetroWireSourceDefinition> {
+    
+    @Reference protected ServletHost servletHost;
+    @Reference protected ClassLoaderRegistry classLoaderRegistry;
+    
+    private MetroServlet metroServlet = new MetroServlet();
+    
+    /**
+     * Registers the servlet.
+     */
+    @Init
+    public void start() {
+        servletHost.registerMapping("/metro/*", metroServlet);
+        
+    }
 
     /**
      * Not supported.
@@ -57,7 +85,28 @@ public class MetroSourceWireAttacher implements SourceWireAttacher<MetroWireSour
     /**
      * Provisions the service.
      */    
-    public void attachToSource(MetroWireSourceDefinition source, PhysicalWireTargetDefinition target, Wire wire) {
+    public void attachToSource(MetroWireSourceDefinition source, PhysicalWireTargetDefinition target, Wire wire) throws WiringException {
+        
+        try {
+
+            URI servicePath = source.getUri();
+            WsdlElement wsdlElement = source.getWsdlElement();
+            Map<PhysicalOperationDefinition, InvocationChain> invocationChains = wire.getInvocationChains();
+            URI classLoaderId = source.getClassLoaderId();
+            String interfaze = source.getInterfaze();
+            URL wsdlUrl = source.getWsdlUrl();
+            
+            ClassLoader classLoader = classLoaderRegistry.getClassLoader(classLoaderId);
+            Class<?> sei = classLoader.loadClass(interfaze);
+            
+            F3Invoker f3Invoker = new F3Invoker(invocationChains);
+            
+            metroServlet.registerService(sei, wsdlUrl, servicePath.toASCIIString(), wsdlElement, f3Invoker);
+            
+        } catch (ClassNotFoundException e) {
+            throw new WiringException(e);
+        }
+        
     }
 
     /**

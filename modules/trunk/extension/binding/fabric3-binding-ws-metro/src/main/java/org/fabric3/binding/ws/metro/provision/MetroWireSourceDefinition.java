@@ -48,6 +48,7 @@ public class MetroWireSourceDefinition extends PhysicalWireSourceDefinition {
     private WsdlElement wsdlElement;
     private URL wsdlUrl;
     private URI servicePath;
+    private String interfaze;
 
     /**
      * Initialises information required for provisioning the service.
@@ -55,11 +56,13 @@ public class MetroWireSourceDefinition extends PhysicalWireSourceDefinition {
      * @param wsdlElement WSDL element that encasulates the qualified WSDL 1.1 service and port names.
      * @param wsdlUrl Optional URL to the WSDL location.
      * @param servicePath Relative path on which the service is provisioned.
+     * @param interfaze Interface for the service contract.
      */
-    public MetroWireSourceDefinition(WsdlElement wsdlElement, URL wsdlUrl, URI servicePath) {
+    public MetroWireSourceDefinition(WsdlElement wsdlElement, URL wsdlUrl, URI servicePath, String interfaze) {
         this.wsdlElement = wsdlElement;
         this.wsdlUrl = wsdlUrl;
         this.servicePath = servicePath;
+        this.interfaze = interfaze;
     }
 
     /**
@@ -87,6 +90,15 @@ public class MetroWireSourceDefinition extends PhysicalWireSourceDefinition {
      */
     public URI getServicePath() {
         return servicePath;
+    }
+    
+    /**
+     * Gets the interface for the service contract.
+     * 
+     * @return Interface for the service contract.
+     */
+    public String getInterfaze() {
+        return interfaze;
     }
 
 }

@@ -61,8 +61,9 @@ public class MetroBindingGenerator  implements BindingGenerator<MetroWireSourceD
         
         WsdlElement wsdlElement = wsdlElementParser.parseWsdlElement(definition.getWsdlElement(), wsdlModel, serviceDefinition.getServiceContract());
         URI servicePath = addressResolver.resolveServiceAddress(definition.getTargetUri(), wsdlElement, wsdlModel);
+        String interfaze = serviceDefinition.getServiceContract().getQualifiedInterfaceName();
         
-        return new MetroWireSourceDefinition(wsdlElement, wsdlLocation, servicePath);
+        return new MetroWireSourceDefinition(wsdlElement, wsdlLocation, servicePath, interfaze);
         
     }
 
@@ -80,8 +81,9 @@ public class MetroBindingGenerator  implements BindingGenerator<MetroWireSourceD
         
         WsdlElement wsdlElement = wsdlElementParser.parseWsdlElement(definition.getWsdlElement(), wsdlModel, referenceDefinition.getServiceContract());
         URL[] referenceUrls = addressResolver.resolveReferenceAddress(definition.getTargetUri(), wsdlElement, wsdlModel);
+        String interfaze = referenceDefinition.getServiceContract().getQualifiedInterfaceName();
         
-        return new MetroWireTargetDefinition(wsdlElement, wsdlLocation, referenceUrls);
+        return new MetroWireTargetDefinition(wsdlElement, wsdlLocation, interfaze, referenceUrls);
 
     }
 

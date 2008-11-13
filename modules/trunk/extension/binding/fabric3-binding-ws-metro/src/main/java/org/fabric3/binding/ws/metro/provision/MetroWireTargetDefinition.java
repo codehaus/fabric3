@@ -47,6 +47,7 @@ public class MetroWireTargetDefinition extends PhysicalWireTargetDefinition {
     private WsdlElement wsdlElement;
     private URL wsdlUrl;
     private URL[] targetUrls;
+    private String interfaze;
 
     /**
      * Initialises information required for provisioning the service.
@@ -54,11 +55,13 @@ public class MetroWireTargetDefinition extends PhysicalWireTargetDefinition {
      * @param wsdlElement WSDL element that encasulates the qualified WSDL 1.1 service and port names.
      * @param wsdlUrl Optional URL to the WSDL location.
      * @param targetUrls One or more URLs used to invoke the service.
+     * @param interfaze Interface for the service contract.
      */
-    public MetroWireTargetDefinition(WsdlElement wsdlElement, URL wsdlUrl, URL ... targetUrls) {
+    public MetroWireTargetDefinition(WsdlElement wsdlElement, URL wsdlUrl, String interfaze, URL ... targetUrls) {
         this.wsdlElement = wsdlElement;
         this.wsdlUrl = wsdlUrl;
         this.targetUrls = targetUrls;
+        this.interfaze = interfaze;
     }
 
     /**
@@ -86,6 +89,15 @@ public class MetroWireTargetDefinition extends PhysicalWireTargetDefinition {
      */
     public URL[] getTargetUrls() {
         return targetUrls;
+    }
+    
+    /**
+     * Gets the interface for the service contract.
+     * 
+     * @return Interface for the service contract.
+     */
+    public String getInterfaze() {
+        return interfaze;
     }
 
 }

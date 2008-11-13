@@ -37,9 +37,9 @@ package org.fabric3.binding.ws.metro.runtime.core;
 import java.net.URL;
 
 import javax.servlet.ServletConfig;
-import javax.xml.namespace.QName;
 
-import com.sun.xml.ws.api.server.Invoker;
+import org.fabric3.binding.ws.metro.provision.WsdlElement;
+
 import com.sun.xml.ws.api.server.SDDocumentSource;
 import com.sun.xml.ws.api.server.WSEndpoint;
 import com.sun.xml.ws.binding.BindingImpl;
@@ -62,12 +62,10 @@ public class MetroServlet extends WSServlet {
      * @param sei Service end point interface.
      * @param wsdlUrl Optional URL to the WSDL document.
      * @param servicePath Relative path on which the service is provisioned.
-     * @param serviceName Qualified name of the WSDL 1.1 service.
-     * @param portName Qualified name of the WSDL 1.1 port.
+     * @param wsdlElement WSDL element that encapsulates the WSDL 1.1 service and port names.
+     * @param invoker Invoker for receiving the web service request.
      */
-    public void registerService(Class<?> sei, URL wsdlUrl, String servicePath, QName serviceName, QName portName) {
-        
-        Invoker invoker = new F3Invoker();
+    public void registerService(Class<?> sei, URL wsdlUrl, String servicePath, WsdlElement wsdlElement, F3Invoker invoker) {
         
         SDDocumentSource primaryWsdl = null;
         if (wsdlUrl != null) {
@@ -77,8 +75,8 @@ public class MetroServlet extends WSServlet {
         WSEndpoint<?> wsEndpoint = WSEndpoint.create(sei, 
                                                      false, 
                                                      invoker, 
-                                                     serviceName, 
-                                                     portName, 
+                                                     wsdlElement.getServiceName(), 
+                                                     wsdlElement.getPortName(), 
                                                      null, 
                                                      BindingImpl.getDefaultBinding(), 
                                                      primaryWsdl,  
