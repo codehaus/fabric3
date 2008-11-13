@@ -34,23 +34,54 @@
  */
 package org.fabric3.binding.ws.metro.runtime.wire;
 
+import java.net.URI;
+import java.net.URL;
+
 import org.fabric3.binding.ws.metro.provision.MetroWireTargetDefinition;
+import org.fabric3.binding.ws.metro.provision.WsdlElement;
+import org.fabric3.binding.ws.metro.runtime.core.TargetInterceptor;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.TargetWireAttacher;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
+import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
+import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.Wire;
+import org.osoa.sca.annotations.Reference;
 
 /**
  * Provides the infrastructure for invoking a target web service.
  *
  */
 public class MetroTargetWireAttacher implements TargetWireAttacher<MetroWireTargetDefinition> {
+    
+    @Reference protected ClassLoaderRegistry classLoaderRegistry;
 
     /**
      * Attaches to the target.
      */
     public void attachToTarget(PhysicalWireSourceDefinition source, MetroWireTargetDefinition target, Wire wire) throws WiringException {
+        
+        try {
+        
+            WsdlElement wsdlElement = target.getWsdlElement();
+            URL[] referenceUrls = target.getTargetUrls();
+            String interfaze = target.getInterfaze();
+            URI classLoaderId = source.getClassLoaderId();
+            
+            ClassLoader classLoader = classLoaderRegistry.getClassLoader(classLoaderId);
+            
+            Class<?> sei = classLoader.loadClass(interfaze);
+            
+            for (InvocationChain invocationChain : wire.getInvocationChains().values()) {
+                TargetInterceptor targetInterceptor = new TargetInterceptor(wsdlElement, sei, referenceUrls);
+                invocationChain.addInterceptor(targetInterceptor);
+            }
+            
+        } catch (ClassNotFoundException e) {
+            throw new WiringException(e);
+        }
+        
     }
 
     /**
