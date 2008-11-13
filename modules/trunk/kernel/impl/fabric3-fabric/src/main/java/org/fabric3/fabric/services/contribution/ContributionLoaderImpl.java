@@ -34,6 +34,7 @@ import org.fabric3.spi.services.contribution.Contribution;
 import org.fabric3.spi.services.contribution.ContributionManifest;
 import org.fabric3.spi.services.contribution.Import;
 import org.fabric3.spi.services.contribution.MetaDataStore;
+import org.fabric3.fabric.runtime.ComponentNames;
 
 /**
  * Default implementation of the ContributionLoader. Classloaders corresponding to loaded contributions are registered by name with the system
@@ -42,7 +43,6 @@ import org.fabric3.spi.services.contribution.MetaDataStore;
  * @version $Rev$ $Date$
  */
 public class ContributionLoaderImpl implements ContributionLoader {
-    private static final URI APP_CLASSLOADER = URI.create("fabric3://runtime/ApplicationClassLoader");
     private final ClassLoaderRegistry classLoaderRegistry;
     private final MetaDataStore store;
     private final ClasspathProcessorRegistry classpathProcessorRegistry;
@@ -60,7 +60,7 @@ public class ContributionLoaderImpl implements ContributionLoader {
 
     public ClassLoader load(Contribution contribution) throws ContributionLoadException {
         URI contributionUri = contribution.getUri();
-        ClassLoader cl = classLoaderRegistry.getClassLoader(APP_CLASSLOADER);
+        ClassLoader cl = classLoaderRegistry.getClassLoader(ComponentNames.APPLICATION_CLASSLOADER_ID);
         if (!classloaderIsolation) {
             // the host environment does not support classloader isolation so only verify extensions are present
             verifyImports(contribution);

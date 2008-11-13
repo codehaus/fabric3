@@ -47,9 +47,9 @@ public final class ComponentNames {
 
     public static final URI RUNTIME_URI = URI.create(RUNTIME_NAME);
 
-    public static final URI BOOT_CLASSLOADER_ID = URI.create("fabric3://runtime/BootClassLoader");
+    public static final URI BOOT_CLASSLOADER_ID = URI.create("Fabric3BootClassLoader");
 
-    public static final URI APPLICATION_CLASSLOADER_ID = URI.create("fabric3://runtime/ApplicationClassLoader");
+    public static final URI APPLICATION_CLASSLOADER_ID = URI.create("Fabric3RootApplicationClassLoader");
 
     public static final URI APPLICATION_DOMAIN_URI = URI.create(RUNTIME_NAME + "/ApplicationDomain");
 

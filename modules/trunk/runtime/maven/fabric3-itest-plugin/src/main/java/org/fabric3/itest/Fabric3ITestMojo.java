@@ -548,7 +548,7 @@ public class Fabric3ITestMojo extends AbstractMojo {
                 log.debug("  " + url);
             }
         }
-        return new MultiParentClassLoader(URI.create("fabric3://runtime/BootClassLoader"), urls, parent);
+        return new MultiParentClassLoader(URI.create("Fabric3BootClassLoader"), urls, parent);
     }
 
     /**
