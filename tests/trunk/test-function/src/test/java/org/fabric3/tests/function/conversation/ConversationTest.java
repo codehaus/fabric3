@@ -43,43 +43,39 @@ public class ConversationTest extends TestCase {
     }
 
     public void testStateIsRetained() {
-        assertNull(service.getValue());
-        service.setValue("Hello");
-        assertEquals("Hello", service.getValue());
-        assertEquals("Hello", service.getValue());
+        service.setValue("testStateIsRetained");
+        assertEquals("testStateIsRetained", service.getValue());
+        assertEquals("testStateIsRetained", service.getValue());
     }
 
     public void testEndConversation() {
-        service.setValue("Hello");
-        assertEquals("Hello", service.end());
+        service.setValue("testEndConversation");
+        assertEquals("testEndConversation", service.end());
         assertNull(service.getValue());
     }
 
     public void testConversationalityIsInherited() {
-        assertNull(subService.getValue());
-        subService.setValue("Hello");
-        assertEquals("Hello", subService.getValue());
-        assertEquals("Hello", subService.getValue());
+        subService.setValue("testConversationalityIsInherited");
+        assertEquals("testConversationalityIsInherited", subService.getValue());
+        assertEquals("testConversationalityIsInherited", subService.getValue());
     }
 
     public void testCompositeStateIsRetained() {
-        assertNull(compositeService.getValue());
-        compositeService.setValue("Hello");
-        assertEquals("Hello", compositeService.getValue());
-        assertEquals("Hello", compositeService.getValue());
+        compositeService.setValue("testCompositeStateIsRetained");
+        assertEquals("testCompositeStateIsRetained", compositeService.getValue());
+        assertEquals("testCompositeStateIsRetained", compositeService.getValue());
     }
 
     public void testCompositeEndConversation() {
-        compositeService.setValue("Hello");
-        assertEquals("Hello", compositeService.end());
+        compositeService.setValue("testCompositeEndConversation");
+        assertEquals("testCompositeEndConversation", compositeService.end());
         assertNull(compositeService.getValue());
     }
 
     public void testCompositeConversationalityIsInherited() {
-        assertNull(compositeSubService.getValue());
-        compositeSubService.setValue("Hello");
-        assertEquals("Hello", compositeSubService.getValue());
-        assertEquals("Hello", compositeSubService.getValue());
+        compositeSubService.setValue("testCompositeConversationalityIsInherited");
+        assertEquals("testCompositeConversationalityIsInherited", compositeSubService.getValue());
+        assertEquals("testCompositeConversationalityIsInherited", compositeSubService.getValue());
     }
 
 //    public void testExpiration() throws Exception{
