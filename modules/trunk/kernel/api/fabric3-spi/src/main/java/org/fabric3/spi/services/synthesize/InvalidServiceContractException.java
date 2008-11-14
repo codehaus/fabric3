@@ -38,7 +38,7 @@ import java.util.List;
 
 import org.fabric3.host.runtime.InitializationException;
 import org.fabric3.host.contribution.ValidationFailure;
-import org.fabric3.introspection.xml.XmlValidationFailure;
+import org.fabric3.spi.introspection.xml.XmlValidationFailure;
 
 /**
  * @version $Rev: 4336 $ $Date: 2008-05-25 02:06:15 -0700 (Sun, 25 May 2008) $

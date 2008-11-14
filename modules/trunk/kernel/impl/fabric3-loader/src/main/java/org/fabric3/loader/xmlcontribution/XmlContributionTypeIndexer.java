@@ -28,7 +28,7 @@ import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.host.contribution.InstallException;
-import org.fabric3.introspection.xml.MissingAttribute;
+import org.fabric3.spi.introspection.xml.MissingAttribute;
 import org.fabric3.scdl.Composite;
 import org.fabric3.scdl.ValidationContext;
 import org.fabric3.spi.Namespaces;

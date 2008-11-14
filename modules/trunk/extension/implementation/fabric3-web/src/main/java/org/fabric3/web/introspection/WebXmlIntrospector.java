@@ -18,8 +18,7 @@ package org.fabric3.web.introspection;
 
 import java.util.List;
 
-import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.introspection.IntrospectionException;
+import org.fabric3.spi.introspection.IntrospectionContext;
 
 /**
  * Introspects a web.xml descriptor.

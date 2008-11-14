@@ -18,13 +18,13 @@ package org.fabric3.junit.introspection;
 
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.introspection.DefaultIntrospectionContext;
-import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.introspection.IntrospectionHelper;
-import org.fabric3.introspection.TypeMapping;
-import org.fabric3.introspection.java.ClassWalker;
-import org.fabric3.introspection.java.HeuristicProcessor;
-import org.fabric3.introspection.java.ImplementationNotFoundException;
+import org.fabric3.spi.introspection.DefaultIntrospectionContext;
+import org.fabric3.spi.introspection.IntrospectionContext;
+import org.fabric3.spi.introspection.IntrospectionHelper;
+import org.fabric3.spi.introspection.TypeMapping;
+import org.fabric3.spi.introspection.java.ClassWalker;
+import org.fabric3.spi.introspection.java.HeuristicProcessor;
+import org.fabric3.spi.introspection.java.ImplementationNotFoundException;
 import org.fabric3.junit.scdl.JUnitImplementation;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.validation.MissingResource;
@@ -39,7 +39,7 @@ public class JUnitImplementationProcessorImpl implements JUnitImplementationProc
 
     public JUnitImplementationProcessorImpl(@Reference(name = "classWalker")ClassWalker<JUnitImplementation> classWalker,
                                             @Reference(name = "heuristic")HeuristicProcessor<JUnitImplementation> heuristic,
-                                            @Reference(name = "helper")IntrospectionHelper helper) {
+                                            @Reference(name = "helper") IntrospectionHelper helper) {
         this.classWalker = classWalker;
         this.heuristic = heuristic;
         this.helper = helper;

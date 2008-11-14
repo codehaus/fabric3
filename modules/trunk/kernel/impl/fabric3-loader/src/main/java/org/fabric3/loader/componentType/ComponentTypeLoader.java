@@ -46,12 +46,12 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.introspection.xml.LoaderRegistry;
-import org.fabric3.introspection.xml.LoaderUtil;
-import org.fabric3.introspection.xml.TypeLoader;
-import org.fabric3.introspection.xml.UnrecognizedElement;
-import org.fabric3.introspection.xml.UnrecognizedElementException;
+import org.fabric3.spi.introspection.IntrospectionContext;
+import org.fabric3.spi.introspection.xml.LoaderRegistry;
+import org.fabric3.spi.introspection.xml.LoaderUtil;
+import org.fabric3.spi.introspection.xml.TypeLoader;
+import org.fabric3.spi.introspection.xml.UnrecognizedElement;
+import org.fabric3.spi.introspection.xml.UnrecognizedElementException;
 import org.fabric3.scdl.ComponentType;
 import org.fabric3.scdl.ModelObject;
 import org.fabric3.scdl.Property;

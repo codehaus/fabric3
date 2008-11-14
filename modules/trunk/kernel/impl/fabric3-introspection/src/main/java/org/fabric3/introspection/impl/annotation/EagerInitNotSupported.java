@@ -34,8 +34,6 @@
  */
 package org.fabric3.introspection.impl.annotation;
 
-import java.lang.reflect.Method;
-
 import org.fabric3.host.contribution.ValidationFailure;
 
 /**

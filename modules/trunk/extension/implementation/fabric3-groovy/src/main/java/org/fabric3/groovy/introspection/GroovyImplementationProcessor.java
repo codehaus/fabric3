@@ -24,14 +24,14 @@ import groovy.lang.GroovyCodeSource;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.groovy.scdl.GroovyImplementation;
-import org.fabric3.introspection.DefaultIntrospectionContext;
-import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.introspection.IntrospectionHelper;
-import org.fabric3.introspection.TypeMapping;
-import org.fabric3.introspection.java.ClassWalker;
-import org.fabric3.introspection.java.HeuristicProcessor;
-import org.fabric3.introspection.java.ImplementationNotFoundException;
-import org.fabric3.introspection.java.ImplementationProcessor;
+import org.fabric3.spi.introspection.DefaultIntrospectionContext;
+import org.fabric3.spi.introspection.IntrospectionContext;
+import org.fabric3.spi.introspection.IntrospectionHelper;
+import org.fabric3.spi.introspection.TypeMapping;
+import org.fabric3.spi.introspection.java.ClassWalker;
+import org.fabric3.spi.introspection.java.HeuristicProcessor;
+import org.fabric3.spi.introspection.java.ImplementationNotFoundException;
+import org.fabric3.spi.introspection.java.ImplementationProcessor;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.validation.MissingResource;
 
@@ -46,7 +46,7 @@ public class GroovyImplementationProcessor implements ImplementationProcessor<Gr
 
     public GroovyImplementationProcessor(@Reference(name = "classWalker")ClassWalker<GroovyImplementation> classWalker,
                                          @Reference(name = "heuristic")HeuristicProcessor<GroovyImplementation> heuristic,
-                                         @Reference(name = "helper")IntrospectionHelper helper) {
+                                         @Reference(name = "helper") IntrospectionHelper helper) {
         this.classWalker = classWalker;
         this.heuristic = heuristic;
         this.helper = helper;

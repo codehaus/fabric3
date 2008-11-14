@@ -45,12 +45,12 @@ import org.easymock.EasyMock;
 import static org.osoa.sca.Constants.SCA_NS;
 
 import org.fabric3.host.contribution.ValidationFailure;
-import org.fabric3.introspection.DefaultIntrospectionContext;
-import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.introspection.xml.LoaderException;
-import org.fabric3.introspection.xml.LoaderHelper;
-import org.fabric3.introspection.xml.LoaderRegistry;
-import org.fabric3.introspection.xml.TypeLoader;
+import org.fabric3.spi.introspection.DefaultIntrospectionContext;
+import org.fabric3.spi.introspection.IntrospectionContext;
+import org.fabric3.spi.introspection.xml.LoaderException;
+import org.fabric3.spi.introspection.xml.LoaderHelper;
+import org.fabric3.spi.introspection.xml.LoaderRegistry;
+import org.fabric3.spi.introspection.xml.TypeLoader;
 import org.fabric3.scdl.ArtifactValidationFailure;
 import org.fabric3.scdl.ComponentType;
 import org.fabric3.scdl.CompositeService;

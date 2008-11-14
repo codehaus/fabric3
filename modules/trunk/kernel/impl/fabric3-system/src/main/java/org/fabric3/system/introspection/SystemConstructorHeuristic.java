@@ -18,12 +18,12 @@ package org.fabric3.system.introspection;
 
 import java.lang.reflect.Constructor;
 
-import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.introspection.java.HeuristicProcessor;
+import org.fabric3.spi.introspection.IntrospectionContext;
+import org.fabric3.spi.introspection.java.HeuristicProcessor;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.Signature;
 import org.fabric3.scdl.validation.AmbiguousConstructor;
-import org.fabric3.introspection.java.NoConstructorFound;
+import org.fabric3.spi.introspection.java.NoConstructorFound;
 import org.fabric3.system.scdl.SystemImplementation;
 
 /**

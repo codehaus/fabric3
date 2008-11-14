@@ -18,7 +18,7 @@ package org.fabric3.loader.composite;
 
 import javax.xml.stream.XMLStreamReader;
 
-import org.fabric3.introspection.xml.XmlValidationFailure;
+import org.fabric3.spi.introspection.xml.XmlValidationFailure;
 
 /**
  * @version $Revision$ $Date$

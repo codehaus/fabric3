@@ -34,7 +34,7 @@
  */
 package org.fabric3.system.introspection;
 
-import org.fabric3.introspection.java.ImplementationProcessor;
+import org.fabric3.spi.introspection.java.ImplementationProcessor;
 import org.fabric3.system.scdl.SystemImplementation;
 
 /**

@@ -27,12 +27,12 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.binding.ejb.scdl.EjbBindingDefinition;
-import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.introspection.xml.InvalidValue;
-import org.fabric3.introspection.xml.LoaderHelper;
-import org.fabric3.introspection.xml.LoaderUtil;
-import org.fabric3.introspection.xml.MissingAttribute;
-import org.fabric3.introspection.xml.TypeLoader;
+import org.fabric3.spi.introspection.IntrospectionContext;
+import org.fabric3.spi.introspection.xml.InvalidValue;
+import org.fabric3.spi.introspection.xml.LoaderHelper;
+import org.fabric3.spi.introspection.xml.LoaderUtil;
+import org.fabric3.spi.introspection.xml.MissingAttribute;
+import org.fabric3.spi.introspection.xml.TypeLoader;
 
 
 /**

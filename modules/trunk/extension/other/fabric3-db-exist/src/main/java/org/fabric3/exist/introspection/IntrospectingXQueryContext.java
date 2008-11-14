@@ -33,7 +33,7 @@ import org.exist.xquery.Variable;
 import org.exist.xquery.XPathException;
 import org.exist.xquery.XQueryContext;
 import org.exist.xquery.value.SequenceType;
-import org.fabric3.introspection.IntrospectionContext;
+import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.scdl.DataType;
 import org.fabric3.scdl.Operation;
 import org.fabric3.scdl.ReferenceDefinition;

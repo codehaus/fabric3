@@ -104,7 +104,6 @@
             <includes>
                 <include>org.codehaus.fabric3:fabric3-scdl</include>
                 <include>org.codehaus.fabric3:fabric3-monitor</include>
-                <include>org.codehaus.fabric3:fabric3-introspection-spi</include>
                 <include>org.codehaus.fabric3:fabric3-introspection</include>
                 <include>org.codehaus.fabric3:fabric3-spi</include>
                 <include>org.codehaus.fabric3:fabric3-xmlfactory</include>

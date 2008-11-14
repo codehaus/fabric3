@@ -85,12 +85,6 @@
         <!-- standalone runtime -->
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
-            <artifactId>fabric3-introspection-spi</artifactId>
-            <version>0.7-SNAPSHOT</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-xmlfactory</artifactId>
             <version>0.7-SNAPSHOT</version>
         </dependency>

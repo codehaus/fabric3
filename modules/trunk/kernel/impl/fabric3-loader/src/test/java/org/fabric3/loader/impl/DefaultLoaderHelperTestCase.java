@@ -46,7 +46,7 @@ import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
 
-import org.fabric3.introspection.xml.InvalidPrefixException;
+import org.fabric3.spi.introspection.xml.InvalidPrefixException;
 
 /**
  * @version $Rev$ $Date$

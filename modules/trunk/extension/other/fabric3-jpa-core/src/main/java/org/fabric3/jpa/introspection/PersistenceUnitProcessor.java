@@ -25,10 +25,10 @@ import javax.persistence.PersistenceUnit;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.introspection.TypeMapping;
-import org.fabric3.introspection.contract.ContractProcessor;
-import org.fabric3.introspection.java.AbstractAnnotationProcessor;
+import org.fabric3.spi.introspection.IntrospectionContext;
+import org.fabric3.spi.introspection.TypeMapping;
+import org.fabric3.spi.introspection.contract.ContractProcessor;
+import org.fabric3.spi.introspection.java.AbstractAnnotationProcessor;
 import org.fabric3.jpa.scdl.PersistenceUnitResource;
 import org.fabric3.scdl.DefaultValidationContext;
 import org.fabric3.scdl.FieldInjectionSite;

@@ -25,10 +25,10 @@ import static org.osoa.sca.Constants.SCA_NS;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.introspection.xml.LoaderHelper;
-import org.fabric3.introspection.xml.LoaderUtil;
-import org.fabric3.introspection.xml.TypeLoader;
+import org.fabric3.spi.introspection.IntrospectionContext;
+import org.fabric3.spi.introspection.xml.LoaderHelper;
+import org.fabric3.spi.introspection.xml.LoaderUtil;
+import org.fabric3.spi.introspection.xml.TypeLoader;
 
 @EagerInit
 public class RmiBindingLoader implements TypeLoader<RmiBindingDefinition> {

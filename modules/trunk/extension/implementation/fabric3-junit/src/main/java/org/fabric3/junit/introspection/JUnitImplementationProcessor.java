@@ -16,9 +16,7 @@
  */
 package org.fabric3.junit.introspection;
 
-import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.introspection.java.ImplementationProcessor;
-import org.fabric3.introspection.xml.LoaderException;
+import org.fabric3.spi.introspection.java.ImplementationProcessor;
 import org.fabric3.junit.scdl.JUnitImplementation;
 
 /**

@@ -42,9 +42,9 @@ import java.util.Map;
 
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.introspection.java.AnnotationProcessor;
-import org.fabric3.introspection.java.ClassWalker;
+import org.fabric3.spi.introspection.java.AnnotationProcessor;
+import org.fabric3.spi.introspection.java.ClassWalker;
+import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.scdl.Implementation;
 import org.fabric3.scdl.InjectingComponentType;
 

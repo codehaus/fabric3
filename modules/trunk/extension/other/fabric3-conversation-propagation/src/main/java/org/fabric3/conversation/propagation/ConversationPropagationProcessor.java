@@ -40,8 +40,8 @@ import java.lang.reflect.Method;
 import javax.xml.namespace.QName;
 
 import org.fabric3.api.annotation.PropagatesConversation;
-import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.introspection.java.AbstractAnnotationProcessor;
+import org.fabric3.spi.introspection.IntrospectionContext;
+import org.fabric3.spi.introspection.java.AbstractAnnotationProcessor;
 import org.fabric3.scdl.Implementation;
 import org.fabric3.scdl.InjectingComponentType;
 import org.fabric3.spi.Namespaces;

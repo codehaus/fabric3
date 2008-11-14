@@ -43,9 +43,9 @@ import org.osoa.sca.annotations.Callback;
 import org.osoa.sca.annotations.Conversational;
 import org.osoa.sca.annotations.EndsConversation;
 
-import org.fabric3.introspection.IntrospectionHelper;
-import org.fabric3.introspection.TypeMapping;
-import org.fabric3.introspection.contract.ContractProcessor;
+import org.fabric3.spi.introspection.contract.ContractProcessor;
+import org.fabric3.spi.introspection.TypeMapping;
+import org.fabric3.spi.introspection.IntrospectionHelper;
 import org.fabric3.introspection.impl.DefaultIntrospectionHelper;
 import org.fabric3.scdl.DataType;
 import org.fabric3.scdl.DefaultValidationContext;

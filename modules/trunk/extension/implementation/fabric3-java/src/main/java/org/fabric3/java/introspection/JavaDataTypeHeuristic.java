@@ -31,8 +31,8 @@ import javax.xml.datatype.XMLGregorianCalendar;
 import javax.xml.namespace.QName;
 import javax.xml.transform.Source;
 
-import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.introspection.java.HeuristicProcessor;
+import org.fabric3.spi.introspection.IntrospectionContext;
+import org.fabric3.spi.introspection.java.HeuristicProcessor;
 import org.fabric3.java.scdl.JavaImplementation;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.InjectableAttribute;

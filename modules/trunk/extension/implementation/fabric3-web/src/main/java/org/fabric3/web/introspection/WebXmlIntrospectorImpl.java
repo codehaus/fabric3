@@ -30,7 +30,7 @@ import javax.xml.stream.XMLStreamReader;
 
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.introspection.IntrospectionContext;
+import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.scdl.validation.MissingResource;
 import org.fabric3.services.xmlfactory.XMLFactory;
 import org.fabric3.spi.services.contribution.MetaDataStore;

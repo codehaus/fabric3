@@ -27,8 +27,8 @@ import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.api.annotation.Monitor;
-import org.fabric3.introspection.IntrospectionHelper;
-import org.fabric3.introspection.contract.ContractProcessor;
+import org.fabric3.spi.introspection.IntrospectionHelper;
+import org.fabric3.spi.introspection.contract.ContractProcessor;
 import org.fabric3.introspection.impl.DefaultClassWalker;
 import org.fabric3.introspection.impl.DefaultIntrospectionHelper;
 import org.fabric3.introspection.impl.annotation.DestroyProcessor;
@@ -38,8 +38,8 @@ import org.fabric3.introspection.impl.annotation.MonitorProcessor;
 import org.fabric3.introspection.impl.annotation.PropertyProcessor;
 import org.fabric3.introspection.impl.annotation.ReferenceProcessor;
 import org.fabric3.introspection.impl.contract.DefaultContractProcessor;
-import org.fabric3.introspection.java.AnnotationProcessor;
-import org.fabric3.introspection.java.ClassWalker;
+import org.fabric3.spi.introspection.java.AnnotationProcessor;
+import org.fabric3.spi.introspection.java.ClassWalker;
 import org.fabric3.system.scdl.SystemImplementation;
 
 /**

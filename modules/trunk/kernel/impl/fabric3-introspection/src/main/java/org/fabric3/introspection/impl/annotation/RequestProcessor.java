@@ -37,8 +37,8 @@ package org.fabric3.introspection.impl.annotation;
 import org.osoa.sca.annotations.Scope;
 
 import org.fabric3.api.annotation.scope.Request;
-import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.introspection.java.AbstractAnnotationProcessor;
+import org.fabric3.spi.introspection.java.AbstractAnnotationProcessor;
+import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.scdl.Implementation;
 import org.fabric3.scdl.InjectingComponentType;
 

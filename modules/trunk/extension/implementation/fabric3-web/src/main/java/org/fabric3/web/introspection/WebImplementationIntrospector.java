@@ -16,8 +16,7 @@
  */
 package org.fabric3.web.introspection;
 
-import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.introspection.IntrospectionException;
+import org.fabric3.spi.introspection.IntrospectionContext;
 
 /**
  * Introspects the contents of a web application for a web component and generates a corresponding component type. Introspected information will be

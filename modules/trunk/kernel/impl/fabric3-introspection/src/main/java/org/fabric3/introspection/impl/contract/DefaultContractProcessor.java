@@ -48,11 +48,11 @@ import org.osoa.sca.annotations.OneWay;
 import org.osoa.sca.annotations.Reference;
 import org.osoa.sca.annotations.Remotable;
 
-import org.fabric3.introspection.IntrospectionHelper;
-import org.fabric3.introspection.TypeMapping;
-import org.fabric3.introspection.contract.ContractProcessor;
-import org.fabric3.introspection.contract.InterfaceIntrospector;
-import org.fabric3.introspection.contract.OperationIntrospector;
+import org.fabric3.spi.introspection.contract.ContractProcessor;
+import org.fabric3.spi.introspection.contract.InterfaceIntrospector;
+import org.fabric3.spi.introspection.contract.OperationIntrospector;
+import org.fabric3.spi.introspection.IntrospectionHelper;
+import org.fabric3.spi.introspection.TypeMapping;
 import org.fabric3.scdl.DataType;
 import org.fabric3.scdl.Operation;
 import static org.fabric3.scdl.Operation.CONVERSATION_END;

@@ -59,9 +59,9 @@ import org.osoa.sca.annotations.Callback;
 import org.osoa.sca.annotations.Remotable;
 import org.osoa.sca.annotations.Service;
 
-import org.fabric3.introspection.IntrospectionHelper;
-import org.fabric3.introspection.TypeMapping;
-import org.fabric3.introspection.java.ImplementationNotFoundException;
+import org.fabric3.spi.introspection.java.ImplementationNotFoundException;
+import org.fabric3.spi.introspection.IntrospectionHelper;
+import org.fabric3.spi.introspection.TypeMapping;
 import org.fabric3.scdl.DataType;
 import org.fabric3.scdl.InjectableAttributeType;
 import org.fabric3.scdl.Operation;
@@ -74,6 +74,7 @@ import org.fabric3.scdl.Signature;
 public class DefaultIntrospectionHelper implements IntrospectionHelper {
     // the wrapper classes we understand and which all have a single type parameter
     private static final Set<Class<?>> WRAPPERS;
+
     static {
         WRAPPERS = new HashSet<Class<?>>();
         WRAPPERS.add(Collection.class);
@@ -230,7 +231,8 @@ public class DefaultIntrospectionHelper implements IntrospectionHelper {
     public Set<Class<?>> getImplementedInterfaces(Class<?> type) {
         Set<Class<?>> interfaces = new HashSet<Class<?>>();
         while (type != null) {
-            nextInterface: for (Class<?> current : (Class<?>[]) type.getInterfaces()) {
+            nextInterface:
+            for (Class<?> current : (Class<?>[]) type.getInterfaces()) {
                 for (Class<?> foundAlready : interfaces) {
                     if (current.isAssignableFrom(foundAlready)) {
                         continue nextInterface;
@@ -331,7 +333,7 @@ public class DefaultIntrospectionHelper implements IntrospectionHelper {
                 exclude.add(name);
                 fields.add(field);
             }
-            
+
             type = type.getSuperclass();
         }
         return fields;

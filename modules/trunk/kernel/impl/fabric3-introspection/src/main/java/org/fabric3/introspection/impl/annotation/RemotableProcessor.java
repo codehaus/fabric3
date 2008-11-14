@@ -39,9 +39,9 @@ import java.lang.reflect.Type;
 import org.osoa.sca.annotations.Reference;
 import org.osoa.sca.annotations.Remotable;
 
-import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.introspection.contract.ContractProcessor;
-import org.fabric3.introspection.java.AbstractAnnotationProcessor;
+import org.fabric3.spi.introspection.contract.ContractProcessor;
+import org.fabric3.spi.introspection.java.AbstractAnnotationProcessor;
+import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.scdl.Implementation;
 import org.fabric3.scdl.InjectingComponentType;
 import org.fabric3.scdl.ServiceContract;

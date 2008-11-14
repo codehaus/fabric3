@@ -26,11 +26,11 @@ import java.util.Set;
 
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.introspection.IntrospectionHelper;
-import org.fabric3.introspection.TypeMapping;
-import org.fabric3.introspection.contract.ContractProcessor;
-import org.fabric3.introspection.java.HeuristicProcessor;
+import org.fabric3.spi.introspection.IntrospectionContext;
+import org.fabric3.spi.introspection.IntrospectionHelper;
+import org.fabric3.spi.introspection.TypeMapping;
+import org.fabric3.spi.introspection.contract.ContractProcessor;
+import org.fabric3.spi.introspection.java.HeuristicProcessor;
 import org.fabric3.junit.scdl.JUnitImplementation;
 import org.fabric3.junit.scdl.JUnitServiceContract;
 import org.fabric3.pojo.scdl.PojoComponentType;

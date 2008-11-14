@@ -39,16 +39,16 @@ import javax.xml.stream.XMLStreamReader;
 
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.introspection.IntrospectionHelper;
-import org.fabric3.introspection.TypeMapping;
-import org.fabric3.introspection.contract.ContractProcessor;
-import org.fabric3.introspection.java.ImplementationNotFoundException;
-import org.fabric3.introspection.xml.LoaderUtil;
-import org.fabric3.introspection.xml.MissingAttribute;
-import org.fabric3.introspection.xml.ResourceNotFound;
-import org.fabric3.introspection.xml.TypeLoader;
-import org.fabric3.introspection.xml.UnrecognizedAttribute;
+import org.fabric3.spi.introspection.IntrospectionContext;
+import org.fabric3.spi.introspection.IntrospectionHelper;
+import org.fabric3.spi.introspection.TypeMapping;
+import org.fabric3.spi.introspection.contract.ContractProcessor;
+import org.fabric3.spi.introspection.java.ImplementationNotFoundException;
+import org.fabric3.spi.introspection.xml.LoaderUtil;
+import org.fabric3.spi.introspection.xml.MissingAttribute;
+import org.fabric3.spi.introspection.xml.ResourceNotFound;
+import org.fabric3.spi.introspection.xml.TypeLoader;
+import org.fabric3.spi.introspection.xml.UnrecognizedAttribute;
 import org.fabric3.scdl.ServiceContract;
 
 /**

@@ -42,9 +42,8 @@ import junit.framework.TestCase;
 
 import org.fabric3.scdl.Implementation;
 import org.fabric3.scdl.InjectingComponentType;
-import org.fabric3.scdl.AbstractComponentType;
-import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.introspection.DefaultIntrospectionContext;
+import org.fabric3.spi.introspection.IntrospectionContext;
+import org.fabric3.spi.introspection.DefaultIntrospectionContext;
 
 import org.osoa.sca.annotations.Scope;
 import org.osoa.sca.annotations.Init;

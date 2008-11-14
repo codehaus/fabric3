@@ -39,8 +39,8 @@ import java.lang.reflect.Method;
 
 import org.osoa.sca.annotations.ConversationID;
 
-import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.introspection.java.AbstractAnnotationProcessor;
+import org.fabric3.spi.introspection.java.AbstractAnnotationProcessor;
+import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.scdl.FieldInjectionSite;
 import org.fabric3.scdl.Implementation;
 import org.fabric3.scdl.InjectableAttribute;

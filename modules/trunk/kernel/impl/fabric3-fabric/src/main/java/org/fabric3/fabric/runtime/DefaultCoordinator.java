@@ -45,7 +45,7 @@ import org.fabric3.host.runtime.InitializationException;
 import org.fabric3.host.runtime.RuntimeLifecycleCoordinator;
 import org.fabric3.host.runtime.ShutdownException;
 import org.fabric3.host.runtime.StartException;
-import org.fabric3.introspection.validation.InvalidContributionException;
+import org.fabric3.spi.introspection.validation.InvalidContributionException;
 import org.fabric3.scdl.Composite;
 import org.fabric3.scdl.DefaultValidationContext;
 import org.fabric3.scdl.Include;

@@ -16,7 +16,7 @@
  */
 package org.fabric3.xquery.introspection;
 
-import org.fabric3.introspection.IntrospectionContext;
+import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.xquery.scdl.XQueryImplementation;
 
 /**

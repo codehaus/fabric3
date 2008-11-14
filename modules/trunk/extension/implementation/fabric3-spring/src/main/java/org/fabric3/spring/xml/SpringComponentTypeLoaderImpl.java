@@ -16,8 +16,8 @@
  */
 package org.fabric3.spring.xml;
 
-import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.introspection.xml.LoaderException;
+import org.fabric3.spi.introspection.IntrospectionContext;
+import org.fabric3.spi.introspection.xml.LoaderException;
 import org.fabric3.spring.SpringComponentType;
 import org.fabric3.spring.SpringImplementation;
 

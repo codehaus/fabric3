@@ -24,7 +24,7 @@ import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.host.contribution.InstallException;
-import org.fabric3.introspection.xml.MissingAttribute;
+import org.fabric3.spi.introspection.xml.MissingAttribute;
 import static org.fabric3.loader.plan.DeploymentPlanConstants.PLAN;
 import static org.fabric3.loader.plan.DeploymentPlanConstants.PLAN_NAMESPACE;
 import org.fabric3.scdl.ValidationContext;

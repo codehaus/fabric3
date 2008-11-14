@@ -25,8 +25,8 @@ import javax.xml.stream.XMLStreamReader;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.introspection.xml.TypeLoader;
+import org.fabric3.spi.introspection.IntrospectionContext;
+import org.fabric3.spi.introspection.xml.TypeLoader;
 
 /**
  * Loads implementation.mock from the scdl. The XML fragment is expeced to look like,

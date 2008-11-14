@@ -17,8 +17,8 @@
 package org.fabric3.groovy.introspection;
 
 import org.fabric3.groovy.scdl.GroovyImplementation;
-import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.introspection.java.HeuristicProcessor;
+import org.fabric3.spi.introspection.IntrospectionContext;
+import org.fabric3.spi.introspection.java.HeuristicProcessor;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.Signature;
 

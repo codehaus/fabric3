@@ -42,8 +42,8 @@ import junit.framework.TestCase;
 import org.easymock.EasyMock;
 import static org.osoa.sca.Constants.SCA_NS;
 
-import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.introspection.xml.LoaderHelper;
+import org.fabric3.spi.introspection.IntrospectionContext;
+import org.fabric3.spi.introspection.xml.LoaderHelper;
 import org.fabric3.scdl.Autowire;
 import org.fabric3.scdl.Composite;
 import org.fabric3.scdl.PolicyAware;

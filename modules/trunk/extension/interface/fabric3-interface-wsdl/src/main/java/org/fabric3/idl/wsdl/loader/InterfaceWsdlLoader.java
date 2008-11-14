@@ -26,10 +26,11 @@ import org.osoa.sca.annotations.EagerInit;
 
 import org.fabric3.idl.wsdl.scdl.WsdlContract;
 import org.fabric3.idl.wsdl.processor.WsdlProcessor;
-import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.introspection.xml.LoaderUtil;
-import org.fabric3.introspection.xml.MissingAttribute;
-import org.fabric3.introspection.xml.TypeLoader;
+import org.fabric3.spi.introspection.IntrospectionContext;
+import org.fabric3.spi.introspection.xml.LoaderUtil;
+import org.fabric3.spi.introspection.xml.MissingAttribute;
+import org.fabric3.spi.introspection.xml.TypeLoader;
+
 import org.osoa.sca.annotations.Reference;
 
 /**

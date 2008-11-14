@@ -42,15 +42,14 @@ import javax.xml.stream.XMLStreamReader;
 
 import junit.framework.TestCase;
 import org.easymock.EasyMock;
-import static org.easymock.EasyMock.expect;
 import static org.osoa.sca.Constants.SCA_NS;
 
-import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.introspection.DefaultIntrospectionContext;
-import org.fabric3.introspection.xml.Loader;
-import org.fabric3.introspection.xml.LoaderException;
-import org.fabric3.introspection.xml.LoaderHelper;
-import org.fabric3.introspection.xml.TypeLoader;
+import org.fabric3.spi.introspection.IntrospectionContext;
+import org.fabric3.spi.introspection.DefaultIntrospectionContext;
+import org.fabric3.spi.introspection.xml.Loader;
+import org.fabric3.spi.introspection.xml.LoaderException;
+import org.fabric3.spi.introspection.xml.LoaderHelper;
+import org.fabric3.spi.introspection.xml.TypeLoader;
 import org.fabric3.scdl.ComponentService;
 import org.fabric3.scdl.ComponentType;
 import org.fabric3.scdl.Implementation;

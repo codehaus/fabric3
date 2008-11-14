@@ -21,7 +21,7 @@ import java.lang.reflect.Method;
 import javax.jws.WebMethod;
 
 import org.fabric3.binding.ws.axis2.common.Constant;
-import org.fabric3.introspection.contract.OperationIntrospector;
+import org.fabric3.spi.introspection.contract.OperationIntrospector;
 import org.fabric3.scdl.Operation;
 import org.fabric3.scdl.ValidationContext;
 

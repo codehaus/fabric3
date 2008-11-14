@@ -38,12 +38,12 @@ import junit.framework.TestCase;
 import org.easymock.EasyMock;
 import org.easymock.IMocksControl;
 
-import org.fabric3.introspection.IntrospectionContext;
-import org.fabric3.introspection.IntrospectionException;
-import org.fabric3.introspection.IntrospectionHelper;
+import org.fabric3.spi.introspection.IntrospectionContext;
+import org.fabric3.spi.introspection.IntrospectionException;
+import org.fabric3.spi.introspection.IntrospectionHelper;
 import org.fabric3.introspection.impl.DefaultIntrospectionHelper;
-import org.fabric3.introspection.java.ClassWalker;
-import org.fabric3.introspection.java.HeuristicProcessor;
+import org.fabric3.spi.introspection.java.ClassWalker;
+import org.fabric3.spi.introspection.java.HeuristicProcessor;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.system.scdl.SystemImplementation;
 
