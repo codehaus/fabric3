@@ -60,9 +60,9 @@ import org.fabric3.spi.introspection.validation.InvalidCompositeException;
 import org.fabric3.spi.introspection.xml.Loader;
 import org.fabric3.spi.introspection.xml.LoaderException;
 import org.fabric3.host.monitor.MonitorFactory;
+import org.fabric3.host.xml.XMLFactory;
 import org.fabric3.scdl.Composite;
-import org.fabric3.services.xmlfactory.XMLFactory;
-import org.fabric3.services.xmlfactory.impl.XMLFactoryImpl;
+import org.fabric3.fabric.services.xml.XMLFactoryImpl;
 import org.fabric3.system.introspection.BootstrapLoaderFactory;
 import org.fabric3.system.introspection.SystemImplementationProcessor;
 

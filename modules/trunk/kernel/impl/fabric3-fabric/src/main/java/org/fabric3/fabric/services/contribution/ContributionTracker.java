@@ -34,7 +34,7 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.api.annotation.Monitor;
 import org.fabric3.host.runtime.HostInfo;
-import org.fabric3.services.xmlfactory.XMLFactory;
+import org.fabric3.host.xml.XMLFactory;
 import org.fabric3.spi.Namespaces;
 import org.fabric3.spi.services.contribution.Contribution;
 import org.fabric3.spi.services.contribution.ContributionServiceListener;

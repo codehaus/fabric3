@@ -17,7 +17,6 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="fabric3-spi" exported="" />
     <orderEntry type="module" module-name="fabric3-api" exported="" />
-    <orderEntry type="module" module-name="fabric3-monitor-api" exported="" />
     <orderEntry type="module-library">
       <library name="stax:stax-api:1.0">
         <CLASSES>

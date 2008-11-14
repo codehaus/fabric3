@@ -14,13 +14,13 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.services.xmlfactory.impl;
+package org.fabric3.fabric.services.xml;
 
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLOutputFactory;
 
-import org.fabric3.services.xmlfactory.XMLFactory;
-import org.fabric3.services.xmlfactory.XMLFactoryInstantiationException;
+import org.fabric3.host.xml.XMLFactory;
+import org.fabric3.host.xml.XMLFactoryInstantiationException;
 
 /**
  * Implementation of XMLFactory that uses the default factories provided by the StAX API.

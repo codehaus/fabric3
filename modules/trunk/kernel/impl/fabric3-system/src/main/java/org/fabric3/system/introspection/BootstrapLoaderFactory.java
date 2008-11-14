@@ -34,7 +34,7 @@ import org.fabric3.loader.composite.WireLoader;
 import org.fabric3.loader.impl.DefaultLoaderHelper;
 import org.fabric3.loader.impl.LoaderRegistryImpl;
 import org.fabric3.host.monitor.MonitorFactory;
-import org.fabric3.services.xmlfactory.XMLFactory;
+import org.fabric3.host.xml.XMLFactory;
 import org.fabric3.system.scdl.SystemImplementation;
 
 /**

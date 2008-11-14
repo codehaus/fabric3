@@ -18,7 +18,6 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="fabric3-maven-api" exported="" />
     <orderEntry type="module" module-name="fabric3-host-api" exported="" />
-    <orderEntry type="module" module-name="fabric3-monitor-api" exported="" />
     <orderEntry type="module-library" exported="">
       <library name="org.apache.maven.surefire:surefire-api:2.0">
         <CLASSES>
@@ -49,7 +48,6 @@
     <orderEntry type="module" module-name="fabric3-spi" exported="" />
     <orderEntry type="module" module-name="fabric3-api" exported="" />
     <orderEntry type="module" module-name="fabric3-scdl" exported="" />
-    <orderEntry type="module" module-name="fabric3-xmlfactory" exported="" />
     <orderEntry type="module" module-name="fabric3-monitor" exported="" />
     <orderEntry type="module" module-name="fabric3-pojo" exported="" />
     <orderEntry type="module" module-name="fabric3-transform" exported="" />

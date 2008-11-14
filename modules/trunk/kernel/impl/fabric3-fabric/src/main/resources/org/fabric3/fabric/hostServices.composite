@@ -39,7 +39,7 @@
            autowire="true">
 
     <component name="XMLFactory">
-        <f3-impl:implementation.system class="org.fabric3.services.xmlfactory.impl.XMLFactoryImpl"/>
+        <f3-impl:implementation.system class="org.fabric3.fabric.services.xml.XMLFactoryImpl"/>
         <property name="input">com.ctc.wstx.stax.WstxInputFactory</property>
         <property name="output">com.ctc.wstx.stax.WstxOutputFactory</property>
     </component>

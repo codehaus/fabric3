@@ -26,8 +26,8 @@ import org.easymock.EasyMock;
 
 import org.fabric3.host.contribution.ContributionService;
 import org.fabric3.host.runtime.HostInfo;
-import org.fabric3.services.xmlfactory.XMLFactory;
-import org.fabric3.services.xmlfactory.impl.XMLFactoryImpl;
+import org.fabric3.host.xml.XMLFactory;
+import org.fabric3.fabric.services.xml.XMLFactoryImpl;
 import org.fabric3.spi.services.contribution.Contribution;
 import org.fabric3.spi.services.contribution.ContributionState;
 import org.fabric3.spi.services.contribution.MetaDataStore;

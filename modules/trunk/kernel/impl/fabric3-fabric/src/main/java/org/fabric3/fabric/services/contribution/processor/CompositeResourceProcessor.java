@@ -37,7 +37,7 @@ import org.fabric3.spi.introspection.xml.LoaderException;
 import org.fabric3.spi.introspection.xml.MissingAttribute;
 import org.fabric3.scdl.Composite;
 import org.fabric3.scdl.ValidationContext;
-import org.fabric3.services.xmlfactory.XMLFactory;
+import org.fabric3.host.xml.XMLFactory;
 import org.fabric3.spi.services.contribution.Contribution;
 import org.fabric3.spi.services.contribution.ProcessorRegistry;
 import org.fabric3.spi.services.contribution.QNameSymbol;

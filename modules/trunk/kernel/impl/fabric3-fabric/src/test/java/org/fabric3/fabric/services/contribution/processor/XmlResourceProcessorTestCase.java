@@ -20,8 +20,8 @@ import javax.xml.namespace.QName;
 
 import junit.framework.TestCase;
 
-import org.fabric3.services.xmlfactory.impl.XMLFactoryImpl;
-import org.fabric3.services.xmlfactory.XMLFactory;
+import org.fabric3.fabric.services.xml.XMLFactoryImpl;
+import org.fabric3.host.xml.XMLFactory;
 
 /**
  * @version $Rev$ $Date$

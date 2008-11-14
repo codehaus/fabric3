@@ -32,7 +32,7 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.scdl.validation.MissingResource;
-import org.fabric3.services.xmlfactory.XMLFactory;
+import org.fabric3.host.xml.XMLFactory;
 import org.fabric3.spi.services.contribution.MetaDataStore;
 import org.fabric3.spi.services.contribution.QNameSymbol;
 import org.fabric3.spi.services.contribution.Resource;

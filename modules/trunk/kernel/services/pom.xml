@@ -30,6 +30,5 @@
 	<packaging>pom</packaging>
 
 	<modules>
-		<module>fabric3-xmlfactory</module>
 	</modules>
 </project>

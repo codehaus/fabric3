@@ -34,10 +34,10 @@ import org.osoa.sca.annotations.Service;
 
 import org.fabric3.fabric.util.FileHelper;
 import org.fabric3.host.runtime.HostInfo;
+import org.fabric3.host.xml.XMLFactory;
 import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.Composite;
 import org.fabric3.scdl.CompositeImplementation;
-import org.fabric3.services.xmlfactory.XMLFactory;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 import org.fabric3.spi.services.lcm.LogicalComponentStore;
 import org.fabric3.spi.services.lcm.StoreException;

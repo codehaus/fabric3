@@ -105,7 +105,6 @@
                 <include>org.codehaus.fabric3:fabric3-monitor</include>
                 <include>org.codehaus.fabric3:fabric3-introspection</include>
                 <include>org.codehaus.fabric3:fabric3-spi</include>
-                <include>org.codehaus.fabric3:fabric3-xmlfactory</include>
                 <include>org.codehaus.fabric3:fabric3-util</include>
                 <include>org.codehaus.fabric3:fabric3-jmx</include>
                 <include>org.codehaus.fabric3:fabric3-pojo</include>

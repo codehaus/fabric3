@@ -16,7 +16,6 @@
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="fabric3-jmx-agent" exported="" />
     <orderEntry type="module" module-name="fabric3-host-api" exported="" />
-    <orderEntry type="module" module-name="fabric3-monitor-api" exported="" />
     <orderEntry type="module" module-name="fabric3-standalone-api" exported="" />
     <orderEntry type="module" module-name="fabric3-api" exported="" />
     <orderEntry type="module-library" exported="">

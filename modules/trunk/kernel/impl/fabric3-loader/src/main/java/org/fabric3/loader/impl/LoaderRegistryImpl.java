@@ -52,7 +52,7 @@ import org.fabric3.spi.introspection.xml.LoaderException;
 import org.fabric3.spi.introspection.xml.LoaderRegistry;
 import org.fabric3.spi.introspection.xml.TypeLoader;
 import org.fabric3.spi.introspection.xml.UnrecognizedElementException;
-import org.fabric3.services.xmlfactory.XMLFactory;
+import org.fabric3.host.xml.XMLFactory;
 
 /**
  * The default implementation of a loader registry
