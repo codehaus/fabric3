@@ -107,6 +107,7 @@ public class DefaultAddressResolver implements AddressResolver {
     /*
      * Gets the URI.
      */
+    @SuppressWarnings("deprecation")
     private URI getUri(URI targetUri, WsdlElement wsdlElement, WSDLModel wsdlModel) throws GenerationException {
         
         if (targetUri != null) {
