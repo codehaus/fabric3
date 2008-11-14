@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Fabric3
+ Copyright © 2008 Metaform Systems Limited
+
+ This proprietary software may be used only connection with the Fabric3 license
+ (the “License”), a copy of which is included in the software or may be
+ obtained at: http://www.metaformsystems.com/licenses/license.html.
+
+ Software distributed under the License is distributed on an “as is” basis,
+ without warranties or conditions of any kind.  See the License for the
+ specific language governing permissions and limitations of use of the software.
+ This software is distributed in conjunction with other software licensed under
+ different terms.  See the separate licenses for those programs included in the
+ distribution for the permitted and restricted uses of such software.
+
+-->
+<composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
+           xmlns:sca="http://www.osoa.org/xmlns/sca/1.0"
+           xmlns:f3-impl="urn:fabric3.org:implementation"           
+           xmlns:f3-core="urn:fabric3.org:core"     
+           xmlns:f3-policy="urn:fabric3.org:policy"
+           xmlns:wsdli="http://www.w3.org/2004/08/wsdl-instance"
+           name="MetroTestComposite">
+
+    <component name="SimpleTypeTest">
+        <f3-impl:junit class="org.fabric3.tests.binding.metro.SimpleTypeTest"/>
+        <reference name="helloWorldPortType">
+            <binding.ws wsdlElement="urn:helloworld#wsdl.port(HelloWorldService/HelloWorldPort)" 
+                        wsdli:wsdlLocation="HelloWorld.wsdl" 
+                        uri="http://localhost:8900/metro/hello"/>
+        </reference>
+    </component>
+
+    <component name="HelloService">
+        <implementation.java class="org.fabric3.tests.binding.metro.hello.HelloWorldPortTypeImpl"/>
+        <service name="HelloWorldPortType">
+            <binding.ws wsdlElement="urn:helloworld#wsdl.port(HelloWorldService/HelloWorldPort)" 
+                        wsdli:wsdlLocation="HelloWorld.wsdl"
+                        uri="/hello"/>
+        </service>
+    </component>
+
+</composite>
