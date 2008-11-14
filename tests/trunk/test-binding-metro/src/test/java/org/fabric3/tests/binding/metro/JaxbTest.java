@@ -34,8 +34,26 @@
  */
 package org.fabric3.tests.binding.metro;
 
+import org.fabric3.tests.binding.metro.weather.WeatherPortType;
+import org.fabric3.tests.binding.metro.weather.WeatherRequest;
+import org.fabric3.tests.binding.metro.weather.WeatherResponse;
+import org.osoa.sca.annotations.Reference;
+
 import junit.framework.TestCase;
 
 public class JaxbTest extends TestCase {
+    
+    @Reference protected WeatherPortType weatherPortType;
+    
+    public void testWeather() throws Exception {
+        
+        WeatherRequest weatherRequest = new WeatherRequest();
+        weatherRequest.setCity("London");
+        
+        WeatherResponse weatherResponse = weatherPortType.getWeather(weatherRequest);
+        assertNotNull(weatherResponse);
+        assertEquals("SUNNY", weatherResponse.getForecast());
+        assertEquals(12.0, weatherResponse.getTemperature());
+    }
 
 }
