@@ -33,10 +33,9 @@
 		<module>fabric3-api</module>
         <module>fabric3-management-api</module>
 		<module>fabric3-host-api</module>
-		<module>fabric3-introspection-spi</module>
 		<module>fabric3-jpa-api</module>
-		<module>fabric3-monitor-api</module>
 		<module>fabric3-scdl</module>
 		<module>fabric3-spi</module>
+        <module>fabric3-monitor-api</module>
 	</modules>
 </project>
