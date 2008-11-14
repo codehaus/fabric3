@@ -14,19 +14,17 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.transform;
+package org.fabric3.spi.transform;
+
+import org.fabric3.scdl.DataType;
 
 /**
  * @version $Rev$ $Date$
  */
-public interface PushTransformer<SOURCE, TARGET> extends Transformer {
-    /**
-     * Transforms the source by writing it to the target.
-     *
-     * @param source the source instance
-     * @param target the target to be written to
-     * @param context the context for this transformation
-     * @throws TransformationException if there was a problem during the transformation
-     */
-    void transform(SOURCE source, TARGET target, TransformContext context) throws TransformationException;
+public interface TransformerRegistry<T extends Transformer> {
+    void register(T transformer);
+
+    void unregister(T transformer);
+
+    T getTransformer(DataType<?> source, DataType<?> target);
 }

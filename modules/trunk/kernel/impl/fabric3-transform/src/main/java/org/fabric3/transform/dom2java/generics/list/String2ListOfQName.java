@@ -27,8 +27,8 @@ import org.w3c.dom.Node;
 import org.fabric3.scdl.DataType;
 import org.fabric3.spi.model.type.JavaParameterizedType;
 import org.fabric3.transform.AbstractPullTransformer;
-import org.fabric3.transform.TransformContext;
-import org.fabric3.transform.TransformationException;
+import org.fabric3.spi.transform.TransformContext;
+import org.fabric3.spi.transform.TransformationException;
 
 /**
  * Converts a String value to a list of QNames. Expects the property to be defined in the format,

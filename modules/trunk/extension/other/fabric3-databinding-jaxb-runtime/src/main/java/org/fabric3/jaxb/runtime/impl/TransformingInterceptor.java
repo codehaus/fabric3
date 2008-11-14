@@ -19,8 +19,8 @@ package org.fabric3.jaxb.runtime.impl;
 import org.fabric3.spi.invocation.Message;
 import org.fabric3.spi.wire.Interceptor;
 import org.fabric3.spi.wire.InvocationRuntimeException;
-import org.fabric3.transform.PullTransformer;
-import org.fabric3.transform.TransformationException;
+import org.fabric3.spi.transform.PullTransformer;
+import org.fabric3.spi.transform.TransformationException;
 
 /**
  * Transforms invocation parameters from one format to another.

@@ -14,7 +14,7 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.transform;
+package org.fabric3.spi.transform;
 
 
 /**
@@ -24,7 +24,7 @@ public interface PullTransformer<SOURCE, TARGET> extends Transformer {
     /**
      * Transforms the source instance into a new instance of the target type.
      *
-     * @param source the source instance
+     * @param source  the source instance
      * @param context the context for this transformation
      * @return a new instance of the target type
      * @throws TransformationException if there was a problem during the transformation

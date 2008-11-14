@@ -32,9 +32,9 @@ import javax.xml.stream.XMLStreamReader;
 import javax.xml.stream.XMLStreamWriter;
 
 import org.fabric3.scdl.DataType;
-import org.fabric3.transform.TransformContext;
+import org.fabric3.spi.transform.TransformContext;
 import org.fabric3.transform.AbstractPushTransformer;
-import org.fabric3.transform.TransformationException;
+import org.fabric3.spi.transform.TransformationException;
 
 /**
  * @version $Rev$ $Date$

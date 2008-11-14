@@ -25,7 +25,7 @@ import org.osoa.sca.annotations.Reference;
 import org.fabric3.jaxb.provision.ServiceTransformingInterceptorDefinition;
 import org.fabric3.jaxb.runtime.spi.DataBindingTransformerFactory;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
-import org.fabric3.transform.PullTransformer;
+import org.fabric3.spi.transform.PullTransformer;
 
 /**
  * Builds a transforming interceptor for the service side of a wire.

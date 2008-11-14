@@ -34,6 +34,7 @@ import org.fabric3.pojo.provision.InstanceFactoryDefinition;
 import org.fabric3.scdl.InjectableAttribute;
 import org.fabric3.scdl.Scope;
 import org.fabric3.spi.SingletonObjectFactory;
+import org.fabric3.spi.transform.PullTransformer;
 import org.fabric3.spi.builder.BuilderException;
 import org.fabric3.spi.builder.component.ComponentBuilderRegistry;
 import org.fabric3.spi.component.InstanceFactoryProvider;
@@ -41,8 +42,7 @@ import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.services.proxy.ProxyService;
-import org.fabric3.transform.PullTransformer;
-import org.fabric3.transform.TransformerRegistry;
+import org.fabric3.spi.transform.TransformerRegistry;
 
 /**
  * Builds a JavaComponent from a physical definition.
@@ -58,7 +58,7 @@ public class JavaComponentBuilder<T> extends PojoComponentBuilder<T, JavaCompone
                                 @Reference ScopeRegistry scopeRegistry,
                                 @Reference InstanceFactoryBuilderRegistry providerBuilders,
                                 @Reference ClassLoaderRegistry classLoaderRegistry,
-                                @Reference(name = "transformerRegistry")TransformerRegistry<PullTransformer<?, ?>> transformerRegistry,
+                                @Reference(name = "transformerRegistry") TransformerRegistry<PullTransformer<?, ?>> transformerRegistry,
                                 @Reference ProxyService proxyService) {
         super(builderRegistry, scopeRegistry, providerBuilders, classLoaderRegistry, transformerRegistry);
         this.proxyService = proxyService;

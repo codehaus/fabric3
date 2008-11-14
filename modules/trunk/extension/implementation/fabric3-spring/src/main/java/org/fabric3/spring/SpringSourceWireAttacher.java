@@ -23,6 +23,7 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.pojo.builder.PojoSourceWireAttacher;
 import org.fabric3.spi.ObjectFactory;
+import org.fabric3.spi.transform.PullTransformer;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.SourceWireAttacher;
 import org.fabric3.spi.component.AtomicComponent;
@@ -34,8 +35,7 @@ import org.fabric3.spi.services.componentmanager.ComponentManager;
 import org.fabric3.spi.services.proxy.ProxyService;
 import org.fabric3.spi.util.UriHelper;
 import org.fabric3.spi.wire.Wire;
-import org.fabric3.transform.PullTransformer;
-import org.fabric3.transform.TransformerRegistry;
+import org.fabric3.spi.transform.TransformerRegistry;
 
 /**
  * The component builder for Spring implementation types. Responsible for creating the Component runtime artifact from a physical component

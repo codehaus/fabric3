@@ -16,7 +16,7 @@
  */
 package org.fabric3.transform.dom2java;
 
-import org.fabric3.transform.TransformationException;
+import org.fabric3.spi.transform.TransformationException;
 
 /**
  * Tests String to Integer Transform

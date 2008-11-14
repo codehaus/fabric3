@@ -14,7 +14,7 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.transform;
+package org.fabric3.spi.transform;
 
 import java.net.URL;
 

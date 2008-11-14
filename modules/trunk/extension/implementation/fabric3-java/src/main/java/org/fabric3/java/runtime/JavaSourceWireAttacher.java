@@ -36,8 +36,8 @@ import org.fabric3.spi.services.componentmanager.ComponentManager;
 import org.fabric3.spi.services.proxy.ProxyService;
 import org.fabric3.spi.util.UriHelper;
 import org.fabric3.spi.wire.Wire;
-import org.fabric3.transform.PullTransformer;
-import org.fabric3.transform.TransformerRegistry;
+import org.fabric3.spi.transform.PullTransformer;
+import org.fabric3.spi.transform.TransformerRegistry;
 
 /**
  * Attaches wires to and from components implemented using the Java programming model.

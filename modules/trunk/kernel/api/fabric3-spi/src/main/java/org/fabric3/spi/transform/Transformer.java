@@ -14,7 +14,7 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.transform;
+package org.fabric3.spi.transform;
 
 import org.fabric3.scdl.DataType;
 
@@ -23,6 +23,8 @@ import org.fabric3.scdl.DataType;
  */
 public interface Transformer {
     DataType<?> getSourceType();
+
     DataType<?> getTargetType();
+
     boolean canTransform(DataType<?> targetType);
 }

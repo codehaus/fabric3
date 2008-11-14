@@ -22,8 +22,8 @@ import java.util.Map;
 
 import org.fabric3.scdl.DataType;
 import org.fabric3.spi.model.type.JavaParameterizedType;
-import org.fabric3.transform.TransformContext;
-import org.fabric3.transform.TransformationException;
+import org.fabric3.spi.transform.TransformationException;
+import org.fabric3.spi.transform.TransformContext;
 import org.fabric3.transform.AbstractPullTransformer;
 
 import org.w3c.dom.Element;
@@ -51,14 +51,14 @@ public class String2MapOfString2String extends AbstractPullTransformer<Node, Map
     }
 
     /**
-     * @see org.fabric3.transform.Transformer#getTargetType()
+     * @see org.fabric3.spi.transform.Transformer#getTargetType()
      */
     public DataType<?> getTargetType() {
         return TARGET;
     }
 
     /**
-     * @see org.fabric3.transform.PullTransformer#transform(java.lang.Object, org.fabric3.transform.TransformContext)
+     * @see org.fabric3.spi.transform.PullTransformer#transform(java.lang.Object, org.fabric3.spi.transform.TransformContext)
      */
     public Map<String, String> transform(final Node node, final TransformContext context)
             throws TransformationException {

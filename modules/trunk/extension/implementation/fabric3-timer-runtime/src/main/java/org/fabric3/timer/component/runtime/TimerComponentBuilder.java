@@ -32,6 +32,7 @@ import org.fabric3.pojo.provision.InstanceFactoryDefinition;
 import org.fabric3.scdl.InjectableAttribute;
 import org.fabric3.scdl.Scope;
 import org.fabric3.spi.SingletonObjectFactory;
+import org.fabric3.spi.transform.PullTransformer;
 import org.fabric3.spi.builder.BuilderException;
 import org.fabric3.spi.builder.component.ComponentBuilderRegistry;
 import org.fabric3.spi.component.InstanceFactoryProvider;
@@ -42,8 +43,7 @@ import org.fabric3.spi.services.proxy.ProxyService;
 import org.fabric3.timer.component.provision.TimerComponentDefinition;
 import org.fabric3.timer.component.provision.TriggerData;
 import org.fabric3.timer.spi.TimerService;
-import org.fabric3.transform.PullTransformer;
-import org.fabric3.transform.TransformerRegistry;
+import org.fabric3.spi.transform.TransformerRegistry;
 
 /**
  * @version $Revision$ $Date$

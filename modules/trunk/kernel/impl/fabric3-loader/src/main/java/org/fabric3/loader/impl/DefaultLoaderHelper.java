@@ -54,7 +54,7 @@ import org.fabric3.introspection.xml.InvalidPrefixException;
 import org.fabric3.introspection.xml.LoaderHelper;
 import org.fabric3.scdl.PolicyAware;
 import org.fabric3.spi.Namespaces;
-import org.fabric3.transform.TransformationException;
+import org.fabric3.spi.transform.TransformationException;
 import org.fabric3.transform.xml.Stream2Element2;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;

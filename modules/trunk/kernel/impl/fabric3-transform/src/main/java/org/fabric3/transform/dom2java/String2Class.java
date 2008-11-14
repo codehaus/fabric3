@@ -22,9 +22,9 @@ import org.w3c.dom.Node;
 import org.fabric3.scdl.DataType;
 import org.fabric3.spi.model.type.JavaClass;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
-import org.fabric3.transform.TransformContext;
+import org.fabric3.spi.transform.TransformationException;
+import org.fabric3.spi.transform.TransformContext;
 import org.fabric3.transform.AbstractPullTransformer;
-import org.fabric3.transform.TransformationException;
 
 /**
  * @version $Rev$ $Date$

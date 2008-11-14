@@ -40,9 +40,9 @@ import org.w3c.dom.Text;
 
 import org.fabric3.scdl.DataType;
 import org.fabric3.spi.model.type.JavaClass;
+import org.fabric3.spi.transform.TransformationException;
 import org.fabric3.transform.AbstractPullTransformer;
-import org.fabric3.transform.TransformContext;
-import org.fabric3.transform.TransformationException;
+import org.fabric3.spi.transform.TransformContext;
 
 /**
  * Pull transformer that will convert a Stax stream to a DOM representation. The transformer expects the cursor to be at the element from which the

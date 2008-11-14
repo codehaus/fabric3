@@ -21,7 +21,8 @@ import javax.xml.namespace.QName;
 
 import org.fabric3.jaxb.runtime.spi.DataBindingTransformerFactory;
 import org.fabric3.spi.Namespaces;
-import org.fabric3.transform.PullTransformer;
+import org.fabric3.spi.transform.PullTransformer;
+
 import org.osoa.sca.annotations.EagerInit;
 
 /**

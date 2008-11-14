@@ -19,7 +19,7 @@ package org.fabric3.transform.dom2java;
 import java.net.MalformedURLException;
 import java.net.URL;
 
-import org.fabric3.transform.TransformationException;
+import org.fabric3.spi.transform.TransformationException;
 
 
 /**

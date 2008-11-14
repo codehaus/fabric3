@@ -33,7 +33,7 @@ import org.fabric3.loader.impl.InvalidQNamePrefix;
 import org.fabric3.scdl.definitions.PolicyPhase;
 import org.fabric3.scdl.definitions.PolicySet;
 import org.fabric3.spi.Namespaces;
-import org.fabric3.transform.TransformationException;
+import org.fabric3.spi.transform.TransformationException;
 import org.fabric3.transform.xml.Stream2Document;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;

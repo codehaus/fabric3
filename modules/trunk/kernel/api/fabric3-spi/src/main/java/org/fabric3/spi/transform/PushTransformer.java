@@ -14,24 +14,19 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.transform;
+package org.fabric3.spi.transform;
 
 /**
  * @version $Rev$ $Date$
  */
-public class TransformationException extends Exception {
-    public TransformationException() {
-    }
-
-    public TransformationException(String string) {
-        super(string);
-    }
-
-    public TransformationException(String string, Throwable throwable) {
-        super(string, throwable);
-    }
-
-    public TransformationException(Throwable throwable) {
-        super(throwable);
-    }
+public interface PushTransformer<SOURCE, TARGET> extends Transformer {
+    /**
+     * Transforms the source by writing it to the target.
+     *
+     * @param source  the source instance
+     * @param target  the target to be written to
+     * @param context the context for this transformation
+     * @throws TransformationException if there was a problem during the transformation
+     */
+    void transform(SOURCE source, TARGET target, TransformContext context) throws TransformationException;
 }

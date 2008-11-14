@@ -19,7 +19,7 @@ package org.fabric3.jaxb.runtime.spi;
 import javax.xml.bind.JAXBContext;
 import javax.xml.namespace.QName;
 
-import org.fabric3.transform.PullTransformer;
+import org.fabric3.spi.transform.PullTransformer;
 
 /**
  * Creates transformers for marshalling between JAXB objects and a data type.

@@ -22,8 +22,8 @@ import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.scdl.DataType;
-import org.fabric3.transform.PushTransformer;
-import org.fabric3.transform.TransformerRegistry;
+import org.fabric3.spi.transform.PushTransformer;
+import org.fabric3.spi.transform.TransformerRegistry;
 
 /**
  * @version $Rev$ $Date$

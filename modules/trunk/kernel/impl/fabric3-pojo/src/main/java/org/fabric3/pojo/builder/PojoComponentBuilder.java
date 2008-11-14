@@ -51,6 +51,7 @@ import org.fabric3.scdl.InjectableAttribute;
 import org.fabric3.scdl.InjectableAttributeType;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.SingletonObjectFactory;
+import org.fabric3.spi.transform.PullTransformer;
 import org.fabric3.spi.builder.BuilderException;
 import org.fabric3.spi.builder.component.ComponentBuilder;
 import org.fabric3.spi.builder.component.ComponentBuilderRegistry;
@@ -62,9 +63,8 @@ import org.fabric3.spi.model.type.JavaParameterizedType;
 import org.fabric3.spi.model.type.XSDSimpleType;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.services.expression.ExpressionExpander;
-import org.fabric3.transform.PullTransformer;
-import org.fabric3.transform.TransformContext;
-import org.fabric3.transform.TransformerRegistry;
+import org.fabric3.spi.transform.TransformContext;
+import org.fabric3.spi.transform.TransformerRegistry;
 
 /**
  * Base class for ComponentBuilders that build components based on POJOs.

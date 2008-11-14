@@ -18,6 +18,9 @@ package org.fabric3.transform;
 
 import org.fabric3.scdl.DataType;
 import org.fabric3.spi.model.type.XSDSimpleType;
+import org.fabric3.spi.transform.PullTransformer;
+import org.fabric3.spi.transform.TransformerRegistry;
+
 import org.osoa.sca.annotations.Destroy;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
@@ -58,7 +61,7 @@ public abstract class AbstractPullTransformer<SOURCE, TARGET> implements PullTra
     }
     
     /**
-     * @see Transformer#getSourceType()
+     * @see org.fabric3.spi.transform.Transformer#getSourceType()
      */
     public DataType<?> getSourceType() {
     	return DEFAULT_SOURCE;

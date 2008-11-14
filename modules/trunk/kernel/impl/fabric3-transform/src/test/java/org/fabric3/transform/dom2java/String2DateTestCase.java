@@ -20,7 +20,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import org.fabric3.transform.TransformationException;
+import org.fabric3.spi.transform.TransformationException;
 
 /**
  * Tests String to Date Transform
