@@ -68,15 +68,27 @@ public interface ProxyService {
     /**
      * Create an ObjectFactory that provides proxies for the callback wire.
      *
-     * @param interfaze the interface the proxy implements
-     * @param container the the scope container that manages component implementations where proxies created by the object factory will be injected
-     * @param targetUri the callback service uri
-     * @param wire      the wire to proxy
+     * @param interfaze   the interface the proxy implements
+     * @param container   the the scope container that manages component implementations where proxies created by the object factory will be injected
+     * @param callbackUri the callback service uri
+     * @param wire        the wire to proxy
      * @return an ObjectFactory that will create proxies
      * @throws ProxyCreationException if there was a problem creating the proxy
      */
-    <T> ObjectFactory<T> createCallbackObjectFactory(Class<T> interfaze, ScopeContainer container, URI targetUri, Wire wire)
+    <T> ObjectFactory<T> createCallbackObjectFactory(Class<T> interfaze, ScopeContainer container, URI callbackUri, Wire wire)
             throws ProxyCreationException;
+
+    /**
+     * Updates an ObjectFactory with an additional callback wire. This is used when multiple clients are wired to a target bidirectional service.
+     *
+     * @param factory     the ObjectFactory to update
+     * @param callbackUri the callback service uri
+     * @param wire        the wire to proxy
+     * @return an ObjectFactory that will create proxies
+     * @throws ProxyCreationException if there was a problem creating the proxy
+     */
+    ObjectFactory<?> updateCallbackObjectFactory(ObjectFactory<?> factory, URI callbackUri, Wire wire) throws ProxyCreationException;
+
 
     /**
      * Creates a Java proxy for the given wire.

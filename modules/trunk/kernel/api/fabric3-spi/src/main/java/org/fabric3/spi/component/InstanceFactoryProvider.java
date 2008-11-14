@@ -61,27 +61,35 @@ public interface InstanceFactoryProvider<T> {
     /**
      * Sets an object factory for an injection site.
      *
-     * @param name          the injection site name
-     * @param objectFactory the object factory
-     * @param key           the key for Map-based injection sites
+     * @param attribute the injection site
+     * @param objectFactory       the object factory
+     * @param key                 the key for Map-based injection sites
      */
-    void setObjectFactory(InjectableAttribute name, ObjectFactory<?> objectFactory, Object key);
+    void setObjectFactory(InjectableAttribute attribute, ObjectFactory<?> objectFactory, Object key);
+
+    /**
+     * Returns a previously added object factory for the injection site.
+     *
+     * @param attribute the injection site
+     * @return the object factory or null
+     */
+    ObjectFactory<?> getObjectFactory(InjectableAttribute attribute);
 
     /**
      * Returns the type for the injection site
      *
-     * @param injectionSite the injection site name
+     * @param attribute the injection site
      * @return the required type
      */
-    Class<?> getMemberType(InjectableAttribute injectionSite);
+    Class<?> getMemberType(InjectableAttribute attribute);
 
     /**
      * Returns the generic type for the injection site
      *
-     * @param injectionSite the injection site name
+     * @param attribute the injection site
      * @return the required type
      */
-    Type getGenericType(InjectableAttribute injectionSite);
+    Type getGenericType(InjectableAttribute attribute);
 
     /**
      * Create an instance factory that can be used to create component instances.

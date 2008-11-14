@@ -53,7 +53,7 @@ public class JavaSourceWireAttacher extends PojoSourceWireAttacher implements So
     public JavaSourceWireAttacher(@Reference ComponentManager manager,
                                   @Reference ProxyService proxyService,
                                   @Reference ClassLoaderRegistry classLoaderRegistry,
-                                  @Reference(name = "transformerRegistry")TransformerRegistry<PullTransformer<?, ?>> transformerRegistry) {
+                                  @Reference(name = "transformerRegistry") TransformerRegistry<PullTransformer<?, ?>> transformerRegistry) {
         super(transformerRegistry, classLoaderRegistry);
         this.manager = manager;
         this.proxyService = proxyService;
@@ -75,10 +75,14 @@ public class JavaSourceWireAttacher extends PojoSourceWireAttacher implements So
             throw new WireAttachException("Unable to load interface class: " + name, sourceUri, null, e);
         }
         if (InjectableAttributeType.CALLBACK.equals(injectableAttribute.getValueType())) {
-            URI targetUri = targetDefinition.getUri();
+            URI callbackUri = targetDefinition.getUri();
             ScopeContainer<?> container = source.getScopeContainer();
-            ObjectFactory<?> factory = proxyService.createCallbackObjectFactory(type, container, targetUri, wire);
-            // JFM TODO inject updates to object factory as this does not support a proxy fronting multiple callback wires
+            ObjectFactory<?> factory = source.getObjectFactory(injectableAttribute);
+            if (factory == null) {
+                factory = proxyService.createCallbackObjectFactory(type, container, callbackUri, wire);
+            } else {
+                factory = proxyService.updateCallbackObjectFactory(factory, callbackUri, wire);
+            }
             source.setObjectFactory(injectableAttribute, factory);
         } else {
             String callbackUri = null;

@@ -170,6 +170,10 @@ public abstract class PojoComponent<T> extends AbstractLifecycle implements Atom
         instanceFactory = null;
     }
 
+    public ObjectFactory<?> getObjectFactory(InjectableAttribute attribute) {
+        return provider.getObjectFactory(attribute);
+    }
+
     public Class<?> getMemberType(InjectableAttribute injectionSite) {
         return provider.getMemberType(injectionSite);
     }

@@ -78,6 +78,7 @@ public class ReflectiveInstanceFactoryProvider<T> implements InstanceFactoryProv
     private final Map<InjectableAttribute, ObjectFactory<?>> factories = new HashMap<InjectableAttribute, ObjectFactory<?>>();
     private final ClassLoader cl;
     private final boolean reinjectable;
+
     public ReflectiveInstanceFactoryProvider(Constructor<T> constructor,
                                              List<InjectableAttribute> cdiSources,
                                              Map<InjectionSite, InjectableAttribute> postConstruction,
@@ -96,23 +97,27 @@ public class ReflectiveInstanceFactoryProvider<T> implements InstanceFactoryProv
 
     }
 
-    public void setObjectFactory(InjectableAttribute name, ObjectFactory<?> objectFactory) {
-        setObjectFactory(name, objectFactory, null);
+    public void setObjectFactory(InjectableAttribute attribute, ObjectFactory<?> objectFactory) {
+        setObjectFactory(attribute, objectFactory, null);
     }
 
-    public void setObjectFactory(InjectableAttribute name, ObjectFactory<?> objectFactory, Object key) {
-        if (InjectableAttributeType.REFERENCE == name.getValueType() || InjectableAttributeType.CALLBACK == name.getValueType()) {
-            setUpdateableFactory(name, objectFactory, key);
+    public void setObjectFactory(InjectableAttribute attribute, ObjectFactory<?> objectFactory, Object key) {
+        if (InjectableAttributeType.REFERENCE == attribute.getValueType() || InjectableAttributeType.CALLBACK == attribute.getValueType()) {
+            setUpdateableFactory(attribute, objectFactory, key);
         } else {
             // the factory corresponds to a property or context, which will override previous values if reinjected
-            factories.put(name, objectFactory);
+            factories.put(attribute, objectFactory);
         }
     }
 
-    public Class<?> getMemberType(InjectableAttribute injectableAttribute) {
-        InjectionSite site = findInjectionSite(injectableAttribute);
+    public ObjectFactory<?> getObjectFactory(InjectableAttribute attribute) {
+        return factories.get(attribute);
+    }
+
+    public Class<?> getMemberType(InjectableAttribute attribute) {
+        InjectionSite site = findInjectionSite(attribute);
         if (site == null) {
-            throw new AssertionError("No injection site for " + injectableAttribute + " in " + implementationClass);
+            throw new AssertionError("No injection site for " + attribute + " in " + implementationClass);
         }
         if (site instanceof FieldInjectionSite) {
             try {
@@ -148,10 +153,10 @@ public class ReflectiveInstanceFactoryProvider<T> implements InstanceFactoryProv
         }
     }
 
-    public Type getGenericType(InjectableAttribute injectableAttribute) {
-        InjectionSite site = findInjectionSite(injectableAttribute);
+    public Type getGenericType(InjectableAttribute attribute) {
+        InjectionSite site = findInjectionSite(attribute);
         if (site == null) {
-            throw new AssertionError("No injection site for " + injectableAttribute + " in " + implementationClass);
+            throw new AssertionError("No injection site for " + attribute + " in " + implementationClass);
         }
         if (site instanceof FieldInjectionSite) {
             try {

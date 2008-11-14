@@ -84,12 +84,25 @@ public class JDKProxyService implements ProxyService {
         return new WireObjectFactory<T>(interfaze, type, callbackUri, this, mappings);
     }
 
-    public <T> ObjectFactory<T> createCallbackObjectFactory(Class<T> interfaze, ScopeContainer container, URI targetUri, Wire wire)
+    public <T> ObjectFactory<T> createCallbackObjectFactory(Class<T> interfaze, ScopeContainer container, URI callbackUri, Wire wire)
             throws ProxyCreationException {
         Map<Method, InvocationChain> operationMappings = createInterfaceToWireMapping(interfaze, wire);
         Map<String, Map<Method, InvocationChain>> mappings = new HashMap<String, Map<Method, InvocationChain>>();
-        mappings.put(targetUri.toString(), operationMappings);
+        mappings.put(callbackUri.toString(), operationMappings);
         return new CallbackWireObjectFactory<T>(interfaze, container, this, mappings);
+    }
+
+    public ObjectFactory<?> updateCallbackObjectFactory(ObjectFactory<?> factory, URI callbackUri, Wire wire) throws ProxyCreationException {
+        if (!(factory instanceof CallbackWireObjectFactory)) {
+            String name = factory.getClass().getName();
+            // programming name
+            throw new IllegalArgumentException("ObjectFactory must be an instance of " + CallbackWireObjectFactory.class.getName() + ": " + name);
+        }
+        CallbackWireObjectFactory<?> callbackFactory = (CallbackWireObjectFactory) factory;
+        final Class<?> interfaze = callbackFactory.getInterfaze();
+        Map<Method, InvocationChain> operationMappings = createInterfaceToWireMapping(interfaze, wire);
+        callbackFactory.updateMappings(callbackUri.toString(), operationMappings);
+        return callbackFactory;
     }
 
     public <T> T createProxy(Class<T> interfaze, InteractionType type, String callbackUri, Map<Method, InvocationChain> mappings)
