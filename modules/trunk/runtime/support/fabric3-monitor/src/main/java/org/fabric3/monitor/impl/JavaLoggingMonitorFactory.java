@@ -53,7 +53,7 @@ import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 
 import org.fabric3.api.annotation.logging.LogLevels;
-import org.fabric3.monitor.MonitorFactory;
+import org.fabric3.host.monitor.MonitorFactory;
 
 /**
  * A factory for monitors that forwards events to a {@link java.util.logging.Logger Java Logging (JSR47) Logger}.

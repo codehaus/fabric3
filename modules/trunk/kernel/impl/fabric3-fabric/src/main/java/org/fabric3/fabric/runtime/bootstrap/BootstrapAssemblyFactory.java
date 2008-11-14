@@ -98,7 +98,7 @@ import org.fabric3.jmx.control.JMXBindingGenerator;
 import org.fabric3.jmx.provision.JMXWireSourceDefinition;
 import org.fabric3.jmx.runtime.JMXWireAttacher;
 import org.fabric3.jmx.scdl.JMXBinding;
-import org.fabric3.monitor.MonitorFactory;
+import org.fabric3.host.monitor.MonitorFactory;
 import org.fabric3.pojo.control.GenerationHelperImpl;
 import org.fabric3.pojo.instancefactory.BuildHelperImpl;
 import org.fabric3.pojo.instancefactory.DefaultInstanceFactoryBuilderRegistry;

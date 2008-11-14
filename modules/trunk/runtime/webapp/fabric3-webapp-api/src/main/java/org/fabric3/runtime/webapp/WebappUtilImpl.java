@@ -46,10 +46,6 @@ import static org.fabric3.runtime.webapp.Constants.LOG_FORMATTER_DEFAULT;
 import static org.fabric3.runtime.webapp.Constants.LOG_FORMATTER_PARAM;
 import static org.fabric3.runtime.webapp.Constants.MONITOR_FACTORY_DEFAULT;
 import static org.fabric3.runtime.webapp.Constants.MONITOR_FACTORY_PARAM;
-import static org.fabric3.runtime.webapp.Constants.NUM_WORKERS_DEFAULT;
-import static org.fabric3.runtime.webapp.Constants.NUM_WORKERS_PARAM;
-import static org.fabric3.runtime.webapp.Constants.PAUSE_ON_START_DEFAULT;
-import static org.fabric3.runtime.webapp.Constants.PAUSE_ON_START_PARAM;
 import static org.fabric3.runtime.webapp.Constants.RUNTIME_DEFAULT;
 import static org.fabric3.runtime.webapp.Constants.RUNTIME_PARAM;
 import static org.fabric3.runtime.webapp.Constants.SYSTEM_MONITORING_DEFAULT;
@@ -68,9 +64,8 @@ import javax.servlet.ServletContext;
 import org.fabric3.host.runtime.Bootstrapper;
 import org.fabric3.host.runtime.RuntimeLifecycleCoordinator;
 import org.fabric3.host.runtime.ScdlBootstrapper;
-import org.fabric3.host.work.WorkScheduler;
+import org.fabric3.host.monitor.MonitorFactory;
 import org.fabric3.jmx.agent.DefaultAgent;
-import org.fabric3.monitor.MonitorFactory;
 
 /**
  * @version $Rev$ $Date$

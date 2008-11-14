@@ -35,7 +35,7 @@
 package org.fabric3.runtime.standalone.host;
 
 import org.fabric3.fabric.runtime.AbstractRuntime;
-import org.fabric3.monitor.MonitorFactory;
+import org.fabric3.host.monitor.MonitorFactory;
 import org.fabric3.runtime.standalone.StandaloneHostInfo;
 import org.fabric3.runtime.standalone.StandaloneRuntime;
 

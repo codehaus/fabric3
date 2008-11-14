@@ -19,7 +19,7 @@ package org.fabric3.host.runtime;
 import java.net.URI;
 import javax.management.MBeanServer;
 
-import org.fabric3.monitor.MonitorFactory;
+import org.fabric3.host.monitor.MonitorFactory;
 
 /**
  * Represents a runtime in a domain.

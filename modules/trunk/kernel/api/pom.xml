@@ -36,6 +36,5 @@
 		<module>fabric3-jpa-api</module>
 		<module>fabric3-scdl</module>
 		<module>fabric3-spi</module>
-        <module>fabric3-monitor-api</module>
 	</modules>
 </project>

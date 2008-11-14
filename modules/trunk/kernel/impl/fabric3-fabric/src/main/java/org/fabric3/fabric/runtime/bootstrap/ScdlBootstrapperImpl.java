@@ -59,7 +59,7 @@ import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.validation.InvalidCompositeException;
 import org.fabric3.spi.introspection.xml.Loader;
 import org.fabric3.spi.introspection.xml.LoaderException;
-import org.fabric3.monitor.MonitorFactory;
+import org.fabric3.host.monitor.MonitorFactory;
 import org.fabric3.scdl.Composite;
 import org.fabric3.services.xmlfactory.XMLFactory;
 import org.fabric3.services.xmlfactory.impl.XMLFactoryImpl;

@@ -45,7 +45,7 @@ import org.fabric3.host.runtime.ShutdownException;
 import org.fabric3.jmx.agent.Agent;
 import org.fabric3.jmx.agent.DefaultAgent;
 import org.fabric3.maven.runtime.MavenEmbeddedRuntime;
-import org.fabric3.monitor.MonitorFactory;
+import org.fabric3.host.monitor.MonitorFactory;
 import org.fabric3.featureset.FeatureSet;
 
 /**

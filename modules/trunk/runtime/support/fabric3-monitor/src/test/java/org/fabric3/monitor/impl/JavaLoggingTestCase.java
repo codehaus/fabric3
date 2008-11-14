@@ -50,7 +50,7 @@ import org.fabric3.api.annotation.logging.LogLevel;
 import org.fabric3.api.annotation.logging.LogLevels;
 import org.fabric3.api.annotation.logging.Severe;
 import org.fabric3.api.annotation.logging.Warning;
-import org.fabric3.monitor.MonitorFactory;
+import org.fabric3.host.monitor.MonitorFactory;
 
 /**
  * Test case for the JavaLoggingMonitorFactory.

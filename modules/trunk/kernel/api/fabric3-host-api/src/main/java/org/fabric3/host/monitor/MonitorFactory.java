@@ -32,63 +32,57 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.monitor.impl;
+package org.fabric3.host.monitor;
 
-import java.lang.reflect.InvocationHandler;
-import java.lang.reflect.Method;
-import java.lang.reflect.Proxy;
 import java.net.URI;
 import java.util.Properties;
 import java.util.logging.Level;
 
-import org.fabric3.monitor.MonitorFactory;
-
 /**
- * Implementation of a {@link MonitorFactory} that produces implementations that simply
- * return.
+ * A MonitorFactory creates implementations of components' monitor interfaces that interface with a its monitoring scheme. For example, a
+ * implementation may create versions that emit appropriate logging events or which send notifications to a management API.
  *
  * @version $Rev$ $Date$
  */
-public class NullMonitorFactory implements MonitorFactory {
+public interface MonitorFactory {
+    /**
+     * Return a monitor for a monitor interface.
+     *
+     * @param monitorInterface the monitoring interface
+     * @return an implementation of the monitoring interface; will not be null
+     */
+    <T> T getMonitor(Class<T> monitorInterface);
 
     /**
-     * Singleton hander that does nothing.
+     * Return a monitor for a component's monitor interface.
+     *
+     * @param monitorInterface the component's monitoring interface
+     * @param componentId      the specific component to monitor
+     * @return an implementation of the monitoring interface; will not be null
      */
-    private static final InvocationHandler NULL_MONITOR = new InvocationHandler() {
-        public Object invoke(Object proxy, Method method, Object[] args) {
-            return null;
-        }
-    };
+    <T> T getMonitor(Class<T> monitorInterface, URI componentId);
 
-    public <T> T getMonitor(Class<T> monitorInterface) {
-        /*
-         * This uses a reflection proxy to implement the monitor interface which
-         * is a simple but perhaps not very performant solution. Performance
-         * might be improved by code generating an implementation with empty methods.
-         */
-        Object proxy = Proxy.newProxyInstance(monitorInterface.getClassLoader(),
-                                              new Class<?>[]{monitorInterface},
-                                              NULL_MONITOR);
-        return monitorInterface.cast(proxy);
-    }
+    void setConfiguration(Properties configuration);
 
-    public <T> T getMonitor(Class<T> monitorInterface, URI componentId) {
-        return getMonitor(monitorInterface);
-    }
+    /**
+     * Sets the definition of custom levels for specific monitored methods, may be null or empty
+     *
+     * @param levels definition of custom levels for specific monitored methods, may be null or empty
+     */
+    void setLevels(Properties levels);
 
-    public void setConfiguration(Properties configuration) {
+    /**
+     * Sets the default log level to use.
+     *
+     * @param defaultLevel the default log level to use
+     */
+    void setDefaultLevel(Level defaultLevel);
 
-    }
-
-    public void setLevels(Properties levels) {
-
-    }
-
-    public void setDefaultLevel(Level defaultLevel) {
-
-    }
-
-    public void setBundleName(String bundleName) {
-
-    }
+    /**
+     * Sets the name of a resource bundle that will be used.
+     *
+     * @param bundleName the name of a resource bundle that will be passed to the logger
+     */
+    void setBundleName(String bundleName);
+    
 }

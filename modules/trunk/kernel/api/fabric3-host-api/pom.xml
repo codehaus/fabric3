@@ -35,11 +35,6 @@
         </dependency>
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
-            <artifactId>fabric3-monitor-api</artifactId>
-            <version>0.7-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-management-api</artifactId>
             <version>0.7-SNAPSHOT</version>
         </dependency>
