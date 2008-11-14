@@ -17,19 +17,19 @@
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:sca="http://www.osoa.org/xmlns/sca/1.0"
-           xmlns:f3="http://fabric3.org/xmlns/sca/2.0-alpha"
+           xmlns:f3-impl="urn:fabric3.org:implementation"
            name="JpaTestComposite">
 
-    <component name="org.fabric3.jpa.provider.FirstPersistenceUnitTest">
-        <f3:junit class="org.fabric3.jpa.provider.FirstPersistenceUnitTest"/>
+    <component name="org.fabric3.jpa.provider.FirstPersistenceUnitTest" requires="sca:managedTransaction">
+        <f3-impl:junit class="org.fabric3.jpa.provider.FirstPersistenceUnitTest"/>
     </component>
 
     <component name="org.fabric3.jpa.provider.SecondPersistenceUnitTest">
-        <f3:junit class="org.fabric3.jpa.provider.SecondPersistenceUnitTest"/>
+        <f3-impl:junit class="org.fabric3.jpa.provider.SecondPersistenceUnitTest"/>
     </component>
 
     <component name="org.fabric3.jpa.provider.ThirdPersistenceUnitTest">
-        <f3:junit class="org.fabric3.jpa.provider.ThirdPersistenceUnitTest"/>
+        <f3-impl:junit class="org.fabric3.jpa.provider.ThirdPersistenceUnitTest"/>
     </component>
 
 </composite>
