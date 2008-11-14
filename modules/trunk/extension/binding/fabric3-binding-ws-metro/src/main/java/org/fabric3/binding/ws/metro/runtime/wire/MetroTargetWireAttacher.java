@@ -34,8 +34,10 @@
  */
 package org.fabric3.binding.ws.metro.runtime.wire;
 
+import java.lang.reflect.Method;
 import java.net.URI;
 import java.net.URL;
+import java.util.Map;
 
 import org.fabric3.binding.ws.metro.provision.MetroWireTargetDefinition;
 import org.fabric3.binding.ws.metro.provision.WsdlElement;
@@ -43,6 +45,7 @@ import org.fabric3.binding.ws.metro.runtime.core.TargetInterceptor;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.TargetWireAttacher;
+import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.wire.InvocationChain;
@@ -72,10 +75,18 @@ public class MetroTargetWireAttacher implements TargetWireAttacher<MetroWireTarg
             ClassLoader classLoader = classLoaderRegistry.getClassLoader(classLoaderId);
             
             Class<?> sei = classLoader.loadClass(interfaze);
+            Method[] methods = sei.getDeclaredMethods();
             
-            for (InvocationChain invocationChain : wire.getInvocationChains().values()) {
-                TargetInterceptor targetInterceptor = new TargetInterceptor(wsdlElement, sei, referenceUrls);
-                invocationChain.addInterceptor(targetInterceptor);
+            for (Map.Entry<PhysicalOperationDefinition, InvocationChain> entry : wire.getInvocationChains().entrySet()) {
+                Method method = null;
+                for (Method meth : methods) {
+                    if (entry.getKey().getName().equals(meth.getName())) {
+                        method = meth;
+                        break;
+                    }
+                }
+                TargetInterceptor targetInterceptor = new TargetInterceptor(wsdlElement, sei, referenceUrls, classLoader, method);
+                entry.getValue().addInterceptor(targetInterceptor);
             }
             
         } catch (ClassNotFoundException e) {

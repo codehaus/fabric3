@@ -21,4 +21,12 @@
            name="MetroRuntimeExtension"
            autowire="true">
 
+    <component f3-core:key="org.fabric3.binding.ws.metro.provision.MetroWireSourceDefinition" name="MetroSourceWireAttacher">
+        <f3-impl:implementation.system class="org.fabric3.binding.ws.metro.runtime.wire.MetroSourceWireAttacher"/>
+    </component>
+    
+    <component f3-core:key="org.fabric3.binding.ws.metro.provision.MetroWireTargetDefinition" name="MetroTargetWireAttacher">
+        <f3-impl:implementation.system class="org.fabric3.binding.ws.metro.runtime.wire.MetroTargetWireAttacher"/>
+    </component>
+
 </composite>

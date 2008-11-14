@@ -89,7 +89,7 @@ public class MetroSourceWireAttacher implements SourceWireAttacher<MetroWireSour
         
         try {
 
-            URI servicePath = source.getUri();
+            URI servicePath = source.getServicePath();
             WsdlElement wsdlElement = source.getWsdlElement();
             Map<PhysicalOperationDefinition, InvocationChain> invocationChains = wire.getInvocationChains();
             URI classLoaderId = source.getClassLoaderId();
@@ -101,7 +101,7 @@ public class MetroSourceWireAttacher implements SourceWireAttacher<MetroWireSour
             
             F3Invoker f3Invoker = new F3Invoker(invocationChains);
             
-            metroServlet.registerService(sei, wsdlUrl, servicePath.toASCIIString(), wsdlElement, f3Invoker);
+            metroServlet.registerService(sei, wsdlUrl, "/metro" + servicePath.toASCIIString(), wsdlElement, f3Invoker);
             
         } catch (ClassNotFoundException e) {
             throw new WiringException(e);

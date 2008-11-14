@@ -26,4 +26,19 @@
         <f3-impl:implementation.system class="org.fabric3.binding.ws.metro.control.MetroBindingGenerator"/>
     </component>
 
+    <!-- Address Resolver -->
+    <component name="AddressResolver">
+        <f3-impl:implementation.system class="org.fabric3.binding.ws.metro.control.DefaultAddressResolver"/>
+    </component>
+
+    <!-- Wsdl Element Parser -->
+    <component name="WsdlElementParser">
+        <f3-impl:implementation.system class="org.fabric3.binding.ws.metro.control.DefaultWsdlElementParser"/>
+    </component>
+
+    <!-- Wsdl Parser -->
+    <component name="WsdlParser">
+        <f3-impl:implementation.system class="org.fabric3.binding.ws.metro.control.DefaultWsdlParser"/>
+    </component>
+
 </composite>

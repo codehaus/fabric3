@@ -34,11 +34,11 @@
  */
 package org.fabric3.binding.ws.metro.runtime.core;
 
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.net.URL;
 
-import javax.xml.ws.Dispatch;
 import javax.xml.ws.Service;
-import javax.xml.ws.Service.Mode;
 
 import org.fabric3.binding.ws.metro.provision.WsdlElement;
 import org.fabric3.spi.invocation.Message;
@@ -54,6 +54,8 @@ public class TargetInterceptor implements Interceptor {
     private WsdlElement wsdlElement;
     private Class<?> sei;
     private URL[] referenceUrls;
+    private ClassLoader classLoader;
+    private Method method;
     
 
     /**
@@ -62,11 +64,14 @@ public class TargetInterceptor implements Interceptor {
      * @param wsdlElement WSDL element contains the WSDL 1.1 port and service names.
      * @param sei Service endpoint interface.
      * @param referenceUrls URLs used to invoke the web service.
+     * @param method Method to be invoked.
      */
-    public TargetInterceptor(WsdlElement wsdlElement, Class<?> sei, URL[] referenceUrls) {
+    public TargetInterceptor(WsdlElement wsdlElement, Class<?> sei, URL[] referenceUrls, ClassLoader classLoader, Method method) {
         this.wsdlElement = wsdlElement;
         this.sei = sei;
         this.referenceUrls = referenceUrls;
+        this.classLoader = classLoader;
+        this.method = method;
     }
 
     /**
@@ -85,15 +90,28 @@ public class TargetInterceptor implements Interceptor {
     /**
      * Invokes the web service.
      */
-    @SuppressWarnings("unchecked")
     public Message invoke(Message msg) {
         
-        Service service = Service.create(referenceUrls[0], wsdlElement.getServiceName());
-        Dispatch dispatch = service.createDispatch(wsdlElement.getPortName(), sei, Mode.PAYLOAD);
+        ClassLoader oldClassLoader = Thread.currentThread().getContextClassLoader();
         
-        Object ret = dispatch.invoke(msg.getBody());
+        try {
         
-        return new MessageImpl(ret, false, null);
+            Thread.currentThread().setContextClassLoader(classLoader);
+            
+            Service service = Service.create(referenceUrls[0], wsdlElement.getServiceName());
+            Object proxy = service.getPort(sei);
+            Object[] payload = (Object[]) msg.getBody();
+            Object ret = method.invoke(proxy, payload[0]);
+            
+            return new MessageImpl(ret, false, null);
+            
+        } catch (IllegalAccessException e) {
+            throw new AssertionError(e);
+        } catch (InvocationTargetException e) {
+            throw new AssertionError(e);
+        } finally {
+            Thread.currentThread().setContextClassLoader(oldClassLoader);
+        }
         
     }
 

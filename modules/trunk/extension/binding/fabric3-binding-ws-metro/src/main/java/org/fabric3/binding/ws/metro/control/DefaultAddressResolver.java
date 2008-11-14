@@ -37,6 +37,7 @@ package org.fabric3.binding.ws.metro.control;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
+import java.net.URLDecoder;
 import java.util.StringTokenizer;
 
 import org.fabric3.binding.ws.metro.provision.WsdlElement;
@@ -109,7 +110,7 @@ public class DefaultAddressResolver implements AddressResolver {
     private URI getUri(URI targetUri, WsdlElement wsdlElement, WSDLModel wsdlModel) throws GenerationException {
         
         if (targetUri != null) {
-            return targetUri;
+            return URI.create(URLDecoder.decode(targetUri.toASCIIString()));
         } else if (wsdlModel!= null) {
             WSDLService wsdlService = wsdlModel.getService(wsdlElement.getServiceName());
             WSDLPort wsdlPort = wsdlService.get(wsdlElement.getPortName());

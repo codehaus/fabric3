@@ -63,7 +63,7 @@ public class MetroBindingGenerator  implements BindingGenerator<MetroWireSourceD
         URI servicePath = addressResolver.resolveServiceAddress(definition.getTargetUri(), wsdlElement, wsdlModel);
         String interfaze = serviceDefinition.getServiceContract().getQualifiedInterfaceName();
         
-        return new MetroWireSourceDefinition(wsdlElement, wsdlLocation, servicePath, interfaze);
+        return new MetroWireSourceDefinition(wsdlElement, wsdlLocation, servicePath, interfaze, classLoaderId);
         
     }
 
@@ -83,7 +83,7 @@ public class MetroBindingGenerator  implements BindingGenerator<MetroWireSourceD
         URL[] referenceUrls = addressResolver.resolveReferenceAddress(definition.getTargetUri(), wsdlElement, wsdlModel);
         String interfaze = referenceDefinition.getServiceContract().getQualifiedInterfaceName();
         
-        return new MetroWireTargetDefinition(wsdlElement, wsdlLocation, interfaze, referenceUrls);
+        return new MetroWireTargetDefinition(wsdlElement, wsdlLocation, interfaze, classLoaderId, referenceUrls);
 
     }
 
@@ -99,7 +99,7 @@ public class MetroBindingGenerator  implements BindingGenerator<MetroWireSourceD
         try {
             return new URL(wsdlLocation);
         } catch (MalformedURLException e) {
-            ClassLoader classLoader = classLoaderRegistry.getClassLoader(classloaderId);
+            ClassLoader classLoader = classLoaderRegistry.getClassLoader(URI.create("fabric3://runtime/ApplicationClassLoader"));
             return classLoader.getResource(wsdlLocation);
         }
         

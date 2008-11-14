@@ -67,24 +67,32 @@ public class MetroServlet extends WSServlet {
      */
     public void registerService(Class<?> sei, URL wsdlUrl, String servicePath, WsdlElement wsdlElement, F3Invoker invoker) {
         
-        SDDocumentSource primaryWsdl = null;
-        if (wsdlUrl != null) {
-            primaryWsdl = SDDocumentSource.create(wsdlUrl);
+        ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
+        
+        try {
+            Thread.currentThread().setContextClassLoader(getClass().getClassLoader());
+            
+            SDDocumentSource primaryWsdl = null;
+            if (wsdlUrl != null) {
+                primaryWsdl = SDDocumentSource.create(wsdlUrl);
+            }
+            
+            WSEndpoint<?> wsEndpoint = WSEndpoint.create(sei, 
+                                                         false, 
+                                                         invoker, 
+                                                         wsdlElement.getServiceName(), 
+                                                         wsdlElement.getPortName(), 
+                                                         null, 
+                                                         BindingImpl.getDefaultBinding(), 
+                                                         primaryWsdl,  
+                                                         null, 
+                                                         null,
+                                                         true);
+            
+            delegate.registerServletAdapter(servletAdapterFactory.createAdapter(servicePath, servicePath, wsEndpoint));
+        } finally {
+            Thread.currentThread().setContextClassLoader(classLoader);
         }
-        
-        WSEndpoint<?> wsEndpoint = WSEndpoint.create(sei, 
-                                                     false, 
-                                                     invoker, 
-                                                     wsdlElement.getServiceName(), 
-                                                     wsdlElement.getPortName(), 
-                                                     null, 
-                                                     BindingImpl.getDefaultBinding(), 
-                                                     primaryWsdl,  
-                                                     null, 
-                                                     null,
-                                                     true);
-        
-        delegate.registerServletAdapter(servletAdapterFactory.createAdapter(servicePath, servicePath, wsEndpoint));
         
     }
 

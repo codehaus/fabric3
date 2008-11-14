@@ -34,6 +34,7 @@
  */
 package org.fabric3.binding.ws.metro.provision;
 
+import java.net.URI;
 import java.net.URL;
 
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
@@ -54,14 +55,16 @@ public class MetroWireTargetDefinition extends PhysicalWireTargetDefinition {
      * 
      * @param wsdlElement WSDL element that encasulates the qualified WSDL 1.1 service and port names.
      * @param wsdlUrl Optional URL to the WSDL location.
-     * @param targetUrls One or more URLs used to invoke the service.
      * @param interfaze Interface for the service contract.
+     * @param classLoaderId ClassLoader Id.
+     * @param targetUrls One or more URLs used to invoke the service.
      */
-    public MetroWireTargetDefinition(WsdlElement wsdlElement, URL wsdlUrl, String interfaze, URL ... targetUrls) {
+    public MetroWireTargetDefinition(WsdlElement wsdlElement, URL wsdlUrl, String interfaze, URI classLoaderId, URL ... targetUrls) {
         this.wsdlElement = wsdlElement;
         this.wsdlUrl = wsdlUrl;
         this.targetUrls = targetUrls;
         this.interfaze = interfaze;
+        setClassLoaderId(classLoaderId);
     }
 
     /**
