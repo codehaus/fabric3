@@ -29,12 +29,11 @@ import org.fabric3.tests.function.callback.common.CallbackData;
  */
 @Service(interfaces = {ForwardService.class, ClientService.class, CallbackService.class})
 public class CallbackClient implements ForwardService, CallbackService, ClientService {
+    @Property
+    protected boolean fail;
 
     @Reference
     protected ForwardService forwardService;
-
-    @Property
-    protected boolean fail;
 
 //    @Reference
 //    protected ServiceReference<ForwardService> serviceReference;
@@ -58,8 +57,16 @@ public class CallbackClient implements ForwardService, CallbackService, ClientSe
         forwardService.invokeMultipleHops(data);
     }
 
+    public void setErrorOnCallback() {
+        fail = true;
+    }
+
     public void onCallback(CallbackData data) {
-        data.callback();
+        if (fail) {
+            data.setException(new AssertionError("Wrong CallbackClient was invoked"));
+        } else {
+            data.callback();
+        }
         data.getLatch().countDown();
     }
 
@@ -69,6 +76,11 @@ public class CallbackClient implements ForwardService, CallbackService, ClientSe
     }
 
     public void onSyncCallback(CallbackData data) {
+        if (fail) {
+            data.setException(new AssertionError("Wrong CallbackClient was invoked"));
+        } else {
+            data.callback();
+        }
         data.callback();
     }
 

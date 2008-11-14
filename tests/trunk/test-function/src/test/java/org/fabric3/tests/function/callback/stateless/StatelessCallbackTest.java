@@ -30,11 +30,11 @@ public class StatelessCallbackTest extends TestCase {
     @Reference
     protected ClientService client1;
 
-//    @Reference
-//    protected ClientService client2;
+    @Reference
+    protected ClientService client2;
 
     /**
-     * Verifies the case where two clients are wired to the same target service.
+     * Verifies the case where two clients are wired to the same target bidirectional service and the callback is made to the correct client.
      *
      * @throws Exception
      */
@@ -43,8 +43,6 @@ public class StatelessCallbackTest extends TestCase {
         client1.invoke(data);
         data.getLatch().await();
         assertTrue(data.isCalledBack());
-        // test that the other client was not issued a callback
-        // assertFalse(client2.isCallback());
     }
 
     /**

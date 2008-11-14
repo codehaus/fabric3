@@ -36,7 +36,6 @@ public interface ClientService {
     void invokeServiceReferenceCallback(CallbackData data);
 
     @OneWay
-    public void invokeMultipleHops(CallbackData data);
-
+    void invokeMultipleHops(CallbackData data);
 
 }
