@@ -36,8 +36,6 @@ package org.fabric3.itest;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.Reader;
-import java.io.StringReader;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
@@ -48,8 +46,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
 import java.util.Set;
-import java.util.concurrent.ExecutionException;
-import java.util.concurrent.Future;
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.maven.artifact.Artifact;
@@ -61,23 +57,11 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.project.MavenProject;
-import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import org.fabric3.api.annotation.logging.Severe;
 import org.fabric3.featureset.FeatureSet;
-import org.fabric3.host.contribution.ContributionSource;
-import org.fabric3.host.contribution.FileContributionSource;
-import org.fabric3.host.runtime.BootConfiguration;
-import org.fabric3.host.runtime.InitializationException;
-import org.fabric3.host.runtime.RuntimeLifecycleCoordinator;
-import org.fabric3.host.runtime.ScdlBootstrapper;
-import org.fabric3.host.runtime.ShutdownException;
-import org.fabric3.host.runtime.StartException;
-import org.fabric3.jmx.agent.Agent;
-import org.fabric3.jmx.agent.DefaultAgent;
 import org.fabric3.maven.runtime.MavenEmbeddedRuntime;
-import org.fabric3.monitor.MonitorFactory;
 import org.fabric3.spi.classloader.MultiParentClassLoader;
 
 /**
@@ -88,8 +72,6 @@ import org.fabric3.spi.classloader.MultiParentClassLoader;
  * @phase integration-test
  */
 public class Fabric3ITestMojo extends AbstractMojo {
-    private static final String SYSTEM_CONFIG_XML_FILE = "systemConfig.xml";
-    private static final String DEFAULT_SYSTEM_CONFIG_DIR = "test-classes" + File.separator + "META-INF" + File.separator;
 
     /**
      * POM
@@ -173,41 +155,12 @@ public class Fabric3ITestMojo extends AbstractMojo {
     public File testClassesDirectory;
 
     /**
-     * The SCA domain in which to deploy the test components.
-     *
-     * @parameter expression="fabric3://domain"
-     * @required
-     */
-    public String testDomain;
-
-    /**
      * The location of the SCDL that configures the Fabric3 runtime. This allows the default runtime configuration supplied in this plugin to be
      * overridden.
      *
      * @parameter
      */
     public URL systemScdl;
-
-    /**
-     * Class name for the implementation of the runtime to use.
-     *
-     * @parameter expression="org.fabric3.maven.runtime.MavenEmbeddedRuntimeImpl"
-     */
-    public String runtimeImpl;
-
-    /**
-     * Class name for the implementation of the bootstrapper to use.
-     *
-     * @parameter expression="org.fabric3.fabric.runtime.bootstrap.ScdlBootstrapperImpl"
-     */
-    public String bootstrapperImpl;
-
-    /**
-     * Class name for the implementation of the coordinator to use.
-     *
-     * @parameter expression="org.fabric3.fabric.runtime.DefaultCoordinator"
-     */
-    public String coordinatorImpl;
 
     /**
      * The location of the default intents file for the Fabric3 runtime.
@@ -335,18 +288,12 @@ public class Fabric3ITestMojo extends AbstractMojo {
      */
     protected File outputDirectory;
 
-    // JMX management agent
-    private Agent agent;
-
-    // Resolved feature sets
-    private List<FeatureSet> featureSets = new LinkedList<FeatureSet>();
-
 
     @SuppressWarnings("unchecked")
     public void execute() throws MojoExecutionException, MojoFailureException {
 
         if (!testScdl.exists()) {
-            getLog().info("No itest SCDL found, skipping integration tests");
+            getLog().info("No itest composite found, skipping integration tests");
             return;
         }
         if (skip) {
@@ -357,23 +304,40 @@ public class Fabric3ITestMojo extends AbstractMojo {
         artifactHelper.setLocalRepository(localRepository);
         artifactHelper.setProject(project);
 
-        List<Dependency> featurestoInstall = getFeaturesToInstall();
-        if (!featurestoInstall.isEmpty()) {
-            for (Dependency feature : featurestoInstall) {
-                Artifact artifact = artifactHelper.resolve(feature);
-                try {
-                    FeatureSet featureSet = FeatureSet.deserialize(artifact.getFile());
-                    featureSets.add(featureSet);
-                } catch (ParserConfigurationException e) {
-                    throw new MojoExecutionException("Error booting Fabric3 runtime", e);
-                } catch (SAXException e) {
-                    throw new MojoExecutionException("Error booting Fabric3 runtime", e);
-                } catch (IOException e) {
-                    throw new MojoExecutionException("Error booting Fabric3 runtime", e);
-                }
+        MavenBootConfiguration configuration = createBootConfiguration();
+
+        Thread.currentThread().setContextClassLoader(configuration.getBootClassLoader());
+
+        MavenRuntimeBooter booter = new MavenRuntimeBooter(configuration);
+
+        MavenEmbeddedRuntime runtime = booter.boot();
+        try {
+            TestDeployer deployer;
+            if (compositeName == null) {
+                deployer = new TestDeployer(testScdl, buildDirectory, getLog());
+            } else {
+                deployer = new TestDeployer(compositeNamespace, compositeName, buildDirectory, getLog());
+            }
+            deployer.deploy(runtime);
+            TestRunner runner = new TestRunner(reportsDirectory, trimStackTrace, getLog());
+            runner.executeTests(runtime);
+        } finally {
+            try {
+                booter.shutdown();
+            } catch (Exception e) {
+                // ignore
             }
         }
+    }
 
+    /**
+     * Creates the configuration to boot the Maven runtime, including resolving dependencies.
+     *
+     * @return the boot configuration
+     * @throws MojoExecutionException if there is an error creating the configuration
+     */
+    private MavenBootConfiguration createBootConfiguration() throws MojoExecutionException {
+        List<FeatureSet> featureSets = resolveFeatureSets();
         Set<Artifact> runtimeArtifacts = artifactHelper.calculateRuntimeArtifacts(runtimeVersion);
         Set<Artifact> hostArtifacts = artifactHelper.calculateHostArtifacts(runtimeArtifacts, shared, featureSets);
         Set<Artifact> dependencies = artifactHelper.calculateDependencies();
@@ -383,151 +347,36 @@ public class Fabric3ITestMojo extends AbstractMojo {
         ClassLoader hostClassLoader = createHostClassLoader(parentClassLoader, hostArtifacts);
         ClassLoader bootClassLoader = createBootClassLoader(hostClassLoader, runtimeArtifacts);
 
-        Thread.currentThread().setContextClassLoader(bootClassLoader);
-
-        MavenEmbeddedRuntime runtime = createRuntime(bootClassLoader, hostClassLoader, moduleDependencies);
-        BootConfiguration<MavenEmbeddedRuntime, ScdlBootstrapper> configuration =
-                createBootConfiguration(runtime, bootClassLoader, hostClassLoader);
-        RuntimeLifecycleCoordinator<MavenEmbeddedRuntime, ScdlBootstrapper> coordinator =
-                instantiate(RuntimeLifecycleCoordinator.class, coordinatorImpl, bootClassLoader);
-        coordinator.setConfiguration(configuration);
-        bootRuntime(coordinator);
-        try {
-            TestRunner runner = new TestRunner(testDomain,
-                                               compositeNamespace,
-                                               compositeName,
-                                               testScdl,
-                                               reportsDirectory,
-                                               trimStackTrace,
-                                               buildDirectory,
-                                               getLog());
-            runner.executeTests(runtime);
-        } finally {
-            try {
-                shutdownRuntime(coordinator);
-            } catch (Exception e) {
-                // ignore
-            }
-        }
-    }
-
-    private void bootRuntime(RuntimeLifecycleCoordinator<MavenEmbeddedRuntime, ScdlBootstrapper> coordinator) throws MojoExecutionException {
-        try {
-            getLog().info("Starting Embedded Fabric3 Runtime ...");
-            coordinator.bootPrimordial();
-            coordinator.initialize();
-            Future<Void> future = coordinator.recover();
-            future.get();
-            future = coordinator.joinDomain(-1);
-            future.get();
-            future = coordinator.start();
-            future.get();
-        } catch (StartException e) {
-            throw new MojoExecutionException("Error booting Fabric3 runtime", e);
-        } catch (ExecutionException e) {
-            throw new MojoExecutionException("Error booting Fabric3 runtime", e);
-        } catch (InterruptedException e) {
-            throw new MojoExecutionException("Error booting Fabric3 runtime", e);
-        } catch (InitializationException e) {
-            throw new MojoExecutionException("Error booting Fabric3 runtime", e);
-        }
-    }
-
-    private void shutdownRuntime(RuntimeLifecycleCoordinator<MavenEmbeddedRuntime, ScdlBootstrapper> coordinator)
-            throws ShutdownException, InterruptedException, ExecutionException {
-        getLog().info("Stopping Fabric3 Runtime ...");
-        Future<Void> future = coordinator.shutdown();
-        future.get();
-    }
-
-    private BootConfiguration<MavenEmbeddedRuntime, ScdlBootstrapper> createBootConfiguration(MavenEmbeddedRuntime runtime,
-                                                                                              ClassLoader bootClassLoader,
-                                                                                              ClassLoader appClassLoader)
-            throws MojoExecutionException {
-
-        BootConfiguration<MavenEmbeddedRuntime, ScdlBootstrapper> configuration = new BootConfiguration<MavenEmbeddedRuntime, ScdlBootstrapper>();
-        configuration.setAppClassLoader(appClassLoader);
+        MavenBootConfiguration configuration = new MavenBootConfiguration();
         configuration.setBootClassLoader(bootClassLoader);
+        configuration.setHostClassLoader(hostClassLoader);
+        configuration.setManagementDomain(managementDomain);
+        configuration.setLog(getLog());
+        configuration.setExtensionHelper(extensionHelper);
 
-        // create the runtime bootrapper
-        ScdlBootstrapper bootstrapper = createBootstrapper(bootClassLoader);
-        configuration.setBootstrapper(bootstrapper);
-
-        // add the boot libraries to export as contributions. This is necessary so extension contributions can import them
-        List<String> bootExports = new ArrayList<String>();
-        bootExports.add("META-INF/maven/org.codehaus.fabric3/fabric3-spi/pom.xml");
-        bootExports.add("META-INF/maven/org.codehaus.fabric3/fabric3-pojo/pom.xml");
-        bootExports.add("META-INF/maven/org.codehaus.fabric3/fabric3-java/pom.xml");
-        configuration.setBootLibraryExports(bootExports);
-
-        // process extensions
-        extensionHelper.processExtensions(configuration, extensions, featureSets, userExtensions, userExtensionsArchives);
-
-        // process the baseline intents
-        if (intentsLocation == null) {
-            intentsLocation = bootClassLoader.getResource("META-INF/fabric3/intents.xml");
-        }
-        URI uri = URI.create("StandardIntents");
-        ContributionSource source = new FileContributionSource(uri, intentsLocation, -1, new byte[0]);
-        configuration.setIntents(source);
-        configuration.setRuntime(runtime);
+        configuration.setFeatureSets(featureSets);
+        configuration.setExtensions(extensions);
+        configuration.setUserExtensions(userExtensions);
+        configuration.setUserExtensionsArchives(userExtensionsArchives);
+        configuration.setIntentsLocation(intentsLocation);
+        configuration.setModuleDependencies(moduleDependencies);
+        configuration.setOutputDirectory(outputDirectory);
+        configuration.setProperties(properties);
+        configuration.setSystemConfig(systemConfig);
+        configuration.setSystemConfigDir(systemConfigDir);
+        configuration.setSystemScdl(systemScdl);
         return configuration;
     }
 
-    private ScdlBootstrapper createBootstrapper(ClassLoader bootClassLoader) throws MojoExecutionException {
-        ScdlBootstrapper bootstrapper = instantiate(ScdlBootstrapper.class, bootstrapperImpl, bootClassLoader);
-        if (systemScdl == null) {
-            systemScdl = bootClassLoader.getResource("META-INF/fabric3/embeddedMaven.composite");
-        }
-        bootstrapper.setScdlLocation(systemScdl);
-        if (systemConfig != null) {
-            Reader reader = new StringReader(systemConfig);
-            InputSource source = new InputSource(reader);
-            bootstrapper.setSystemConfig(source);
-        } else {
-            URL systemConfig = getSystemConfig();
-            bootstrapper.setSystemConfig(systemConfig);
-        }
-        return bootstrapper;
-    }
+    /**
+     * Creates the classloader to boot the runtime.
+     *
+     * @param parent    the parent classloader
+     * @param artifacts the set of artifacts to include on the boot classpath
+     * @return the boot classloader
+     */
+    private ClassLoader createBootClassLoader(ClassLoader parent, Set<Artifact> artifacts) {
 
-    private MavenEmbeddedRuntime createRuntime(ClassLoader bootClassLoader, ClassLoader hostClassLoader, Set<URL> moduleDependencies) {
-        MonitorFactory monitorFactory = new MavenMonitorFactory(getLog(), "f3");
-        MavenEmbeddedRuntime runtime = instantiate(MavenEmbeddedRuntime.class, runtimeImpl, bootClassLoader);
-        runtime.setMonitorFactory(monitorFactory);
-        runtime.setHostClassLoader(hostClassLoader);
-
-        Properties hostProperties = properties != null ? properties : System.getProperties();
-        MavenHostInfoImpl hostInfo = new MavenHostInfoImpl(URI.create(testDomain), hostProperties, moduleDependencies);
-        runtime.setHostInfo(hostInfo);
-
-        runtime.setJmxSubDomain(managementDomain);
-
-        // TODO Add better host JMX support from the next release
-        agent = new DefaultAgent();
-        runtime.setMBeanServer(agent.getMBeanServer());
-
-        return runtime;
-    }
-
-    private <T> T instantiate(Class<T> type, String impl, ClassLoader cl) {
-        try {
-            Class<?> implClass = cl.loadClass(impl);
-            return type.cast(implClass.newInstance());
-        } catch (ClassNotFoundException e) {
-            // programming errror
-            throw new AssertionError(e);
-        } catch (IllegalAccessException e) {
-            // programming errror
-            throw new AssertionError(e);
-        } catch (InstantiationException e) {
-            // programming errror
-            throw new AssertionError(e);
-        }
-    }
-
-    private ClassLoader createBootClassLoader(ClassLoader parent, Set<Artifact> artifacts)
-            throws MojoExecutionException {
         URL[] urls = new URL[artifacts.size()];
         int i = 0;
         for (Artifact artifact : artifacts) {
@@ -575,26 +424,33 @@ public class Fabric3ITestMojo extends AbstractMojo {
         return new URLClassLoader(urls.toArray(new URL[urls.size()]), parent);
     }
 
-    private URL getSystemConfig() throws MojoExecutionException {
-        File systemConfig = new File(outputDirectory, DEFAULT_SYSTEM_CONFIG_DIR + SYSTEM_CONFIG_XML_FILE);
-        if (systemConfigDir != null) {
-            systemConfig = new File(outputDirectory, systemConfigDir + File.separator + SYSTEM_CONFIG_XML_FILE);
-            if (!systemConfig.exists()) {
-                //The user has explicitly attempted to configure the system config location but the information is incorrect
-                throw new MojoExecutionException("Failed to find the system config information in: " + systemConfig.getAbsolutePath());
+    /**
+     * Resolves configured feature sets to load as runtime extensions.
+     *
+     * @return the resolved set of FeatureSets
+     * @throws MojoExecutionException if a resolution error occurs
+     */
+    private List<FeatureSet> resolveFeatureSets() throws MojoExecutionException {
+        List<Dependency> featurestoInstall = getFeaturesToInstall();
+        // Resolved feature sets
+        List<FeatureSet> featureSets = new LinkedList<FeatureSet>();
+
+        if (!featurestoInstall.isEmpty()) {
+            for (Dependency feature : featurestoInstall) {
+                Artifact artifact = artifactHelper.resolve(feature);
+                try {
+                    FeatureSet featureSet = FeatureSet.deserialize(artifact.getFile());
+                    featureSets.add(featureSet);
+                } catch (ParserConfigurationException e) {
+                    throw new MojoExecutionException("Error booting Fabric3 runtime", e);
+                } catch (SAXException e) {
+                    throw new MojoExecutionException("Error booting Fabric3 runtime", e);
+                } catch (IOException e) {
+                    throw new MojoExecutionException("Error booting Fabric3 runtime", e);
+                }
             }
         }
-
-        Log log = getLog();
-        if (log.isDebugEnabled()) {
-            log.debug("Using system config information from: " + systemConfig.getAbsolutePath());
-        }
-
-        try {
-            return systemConfig.exists() ? systemConfig.toURL() : null;
-        } catch (MalformedURLException e) {
-            throw new MojoExecutionException("Invalid system configuration: " + systemConfig, e);
-        }
+        return featureSets;
     }
 
     private List<Dependency> getFeaturesToInstall() {

@@ -27,6 +27,8 @@ import org.fabric3.introspection.xml.LoaderUtil;
 import org.fabric3.introspection.xml.TypeLoader;
 import org.fabric3.introspection.xml.UnrecognizedAttribute;
 import org.fabric3.junit.scdl.JUnitImplementation;
+import org.fabric3.junit.scdl.JUnitBindingDefinition;
+import org.fabric3.scdl.ServiceDefinition;
 
 /**
  * @version $Rev$ $Date$
@@ -47,6 +49,11 @@ public class JUnitImplementationLoader implements TypeLoader<JUnitImplementation
 
         JUnitImplementation impl = new JUnitImplementation(className);
         implementationProcessor.introspect(impl, introspectionContext);
+        // Add bindings so wires are generated to the test operations. These wires will be used by the testing runtime to dispatch to the
+        // JUnit components
+        for (ServiceDefinition definition : impl.getComponentType().getServices().values()) {
+            definition.addBinding(new JUnitBindingDefinition());
+        }
         return impl;
     }
 

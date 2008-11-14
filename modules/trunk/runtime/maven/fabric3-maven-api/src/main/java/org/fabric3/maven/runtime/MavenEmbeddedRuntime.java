@@ -34,28 +34,27 @@
  */
 package org.fabric3.maven.runtime;
 
-import java.net.URI;
 import java.net.URL;
 import javax.xml.namespace.QName;
 
-import org.apache.maven.surefire.testset.TestSetFailedException;
+import org.apache.maven.surefire.suite.SurefireTestSuite;
 
 import org.fabric3.host.contribution.ContributionException;
-import org.fabric3.host.contribution.ContributionSource;
 import org.fabric3.host.domain.DeploymentException;
 import org.fabric3.host.runtime.Fabric3Runtime;
 import org.fabric3.scdl.Composite;
-import org.fabric3.scdl.Operation;
 
 /**
- * Contract for the Maven runtime.
+ * API for the Maven runtime. The Maven runtime requires system component of type Map<String, Wire> named "TestWireHolder" that contains wires to
+ * integration test operations to be invoked. Extensions such as JUnit are required to introspect test implementation and generate the appropriate
+ * metadata to instantiate wires to test operations. These wires must then be attached to the TestWireHolder component.
  *
  * @version $Rev$ $Date$
  */
 public interface MavenEmbeddedRuntime extends Fabric3Runtime<MavenHostInfo> {
 
     /**
-     * Activates a composite by qualified name contained in the Maven module the runtime is currently executing for.
+     * Deploys a composite by qualified name contained in the Maven module the runtime is currently executing for.
      *
      * @param base      the module output directory location
      * @param composite the composite qname to activate
@@ -64,25 +63,13 @@ public interface MavenEmbeddedRuntime extends Fabric3Runtime<MavenHostInfo> {
      *                               this case the errors should be reported back to the user.
      * @throws DeploymentException   if there is an error activating the test composite
      */
-    Composite activate(URL base, QName composite) throws ContributionException, DeploymentException;
+    Composite deploy(URL base, QName composite) throws ContributionException, DeploymentException;
 
     /**
-     * Activates a composite by qualified name contained in the contribution source.
-     *
-     * @param source    the source of the contribution
-     * @param composite the composite qname to activate
-     * @return the activated composite's component type
-     * @throws ContributionException if a contribution is thrown. The cause may a ValidationException resulting from  errors in the contribution. In
-     *                               this case the errors should be reported back to the user.
-     * @throws DeploymentException   if there is an error activating the test composite
-     */
-    Composite activate(ContributionSource source, QName composite) throws ContributionException, DeploymentException;
-
-    /**
-     * Activates a composite pointed to by the SCDL location.
+     * Deploys a composite pointed to by the SCDL location.
      * <p/>
-     * Note this method preserves backward compatibility through specifying the composite by location. When possible, use {@link
-     * #activate(java.net.URL, javax.xml.namespace.QName)} instead.
+     * Note this method preserves backward compatibility through specifying the composite by location. When possible, use {@link #deploy(java.net.URL,
+     * javax.xml.namespace.QName)} instead.
      *
      * @param base         the module output directory location
      * @param scdlLocation the composite file location
@@ -91,7 +78,14 @@ public interface MavenEmbeddedRuntime extends Fabric3Runtime<MavenHostInfo> {
      * @throws ContributionException if a contribution is thrown. The cause may a ValidationException resulting from  errors in the contribution. In
      *                               this case the errors should be reported back to the user.
      */
-    Composite activate(URL base, URL scdlLocation) throws ContributionException, DeploymentException;
+    Composite deploy(URL base, URL scdlLocation) throws ContributionException, DeploymentException;
+
+    /**
+     * Creates a test suite for testing components in the deployed composite.
+     *
+     * @return the test suite
+     */
+    SurefireTestSuite createTestSuite();
 
     /**
      * Starts the component context
@@ -101,11 +95,4 @@ public interface MavenEmbeddedRuntime extends Fabric3Runtime<MavenHostInfo> {
      */
     void startContext(QName compositeId) throws ContextStartException;
 
-    /**
-     * @param contextId     the context id assocated with the test
-     * @param componentName the test component name
-     * @param operation     the operation to invoke on the test service contract
-     * @throws TestSetFailedException if a test case fails
-     */
-    void executeTest(URI contextId, String componentName, Operation<?> operation) throws TestSetFailedException;
 }

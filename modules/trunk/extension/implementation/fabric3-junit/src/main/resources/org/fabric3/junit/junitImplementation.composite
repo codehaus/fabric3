@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
  Fabric3
  Copyright Â© 2008 Metaform Systems Limited
@@ -17,7 +17,7 @@
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:f3-impl="urn:fabric3.org:implementation"
            xmlns:f3-core="urn:fabric3.org:core"
-           name="JUnitExtension" 
+           name="JUnitExtension"
            targetNamespace="urn:org.codehaus.fabric3"
            autowire="true">
 
@@ -46,6 +46,19 @@
 
     <component name="JUnitComponentGenerator">
         <f3-impl:implementation.system class="org.fabric3.junit.control.JUnitComponentGenerator"/>
+    </component>
+
+    <component f3-core:key="org.fabric3.junit.scdl.JUnitBindingDefinition" name="JUnitBindingGenerator">
+        <f3-impl:implementation.system class="org.fabric3.junit.control.JUnitBindingGenerator"/>
+    </component>
+
+    <component f3-core:key="org.fabric3.junit.provision.JUnitWireSourceDefinition" name="JunitSourceWireAttacher">
+        <f3-impl:implementation.system class="org.fabric3.junit.runtime.JunitSourceWireAttacher"/>
+    </component>
+
+    <!-- expected by the Maven runtime -->
+    <component name="TestWireHolder">
+        <f3-impl:implementation.system class="org.fabric3.junit.runtime.JUnitWireHolderImpl"/>
     </component>
 
 </composite>

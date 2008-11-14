@@ -36,18 +36,19 @@ package org.fabric3.maven.runtime;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.lang.reflect.Method;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.Map;
 import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
-import org.apache.maven.surefire.testset.TestSetFailedException;
+import org.apache.maven.surefire.suite.SurefireTestSuite;
 
 import org.fabric3.fabric.runtime.AbstractRuntime;
+import org.fabric3.fabric.runtime.ComponentNames;
 import static org.fabric3.fabric.runtime.ComponentNames.APPLICATION_DOMAIN_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.CONTRIBUTION_SERVICE_URI;
 import static org.fabric3.fabric.runtime.ComponentNames.XML_FACTORY_URI;
@@ -57,22 +58,15 @@ import org.fabric3.host.contribution.ContributionService;
 import org.fabric3.host.contribution.ContributionSource;
 import org.fabric3.host.domain.DeploymentException;
 import org.fabric3.maven.contribution.ModuleContributionSource;
-import org.fabric3.pojo.PojoWorkContextTunnel;
-import org.fabric3.pojo.component.InvokerInterceptor;
-import org.fabric3.pojo.component.PojoComponent;
 import org.fabric3.scdl.Composite;
-import org.fabric3.scdl.Operation;
 import org.fabric3.services.xmlfactory.XMLFactory;
-import org.fabric3.spi.ObjectCreationException;
 import org.fabric3.spi.component.GroupInitializationException;
-import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.domain.Domain;
 import org.fabric3.spi.invocation.CallFrame;
-import org.fabric3.spi.invocation.Message;
-import org.fabric3.spi.invocation.MessageImpl;
 import org.fabric3.spi.invocation.WorkContext;
 import org.fabric3.spi.services.contribution.QNameSymbol;
 import org.fabric3.spi.services.contribution.ResourceElement;
+import org.fabric3.spi.wire.Wire;
 
 /**
  * Default Maven runtime implementation.
@@ -84,12 +78,12 @@ public class MavenEmbeddedRuntimeImpl extends AbstractRuntime<MavenHostInfo> imp
         super(MavenHostInfo.class, null);
     }
 
-    public Composite activate(URL url, QName qName) throws ContributionException, DeploymentException {
+    public Composite deploy(URL url, QName qName) throws ContributionException, DeploymentException {
         try {
             URI contributionUri = url.toURI();
             ModuleContributionSource source =
                     new ModuleContributionSource(contributionUri, FileHelper.toFile(url).toString());
-            return activate(source, qName);
+            return deploy(source, qName);
         } catch (MalformedURLException e) {
             String identifier = url.toString();
             throw new DeploymentException("Invalid project directory: " + identifier, identifier, e);
@@ -98,20 +92,7 @@ public class MavenEmbeddedRuntimeImpl extends AbstractRuntime<MavenHostInfo> imp
         }
     }
 
-    public Composite activate(ContributionSource source, QName qName) throws ContributionException, DeploymentException {
-        // contribute the Maven project to the application domain
-        Domain domain = getSystemComponent(Domain.class, APPLICATION_DOMAIN_URI);
-        ContributionService contributionService =
-                getSystemComponent(ContributionService.class, CONTRIBUTION_SERVICE_URI);
-        contributionService.contribute(source);
-        // activate the deployable composite in the domain
-        domain.include(qName);
-        ResourceElement<?, ?> element = getMetaDataStore().resolve(new QNameSymbol(qName));
-        assert element != null;
-        return (Composite) element.getValue();
-    }
-
-    public Composite activate(URL url, URL scdlLocation) throws ContributionException, DeploymentException {
+    public Composite deploy(URL url, URL scdlLocation) throws ContributionException, DeploymentException {
         QName name;
         try {
             name = parseCompositeQName(scdlLocation);
@@ -120,7 +101,7 @@ public class MavenEmbeddedRuntimeImpl extends AbstractRuntime<MavenHostInfo> imp
         } catch (XMLStreamException e) {
             throw new ContributionException(e);
         }
-        return activate(url, name);
+        return deploy(url, name);
     }
 
     public void startContext(QName deployable) throws ContextStartException {
@@ -135,36 +116,41 @@ public class MavenEmbeddedRuntimeImpl extends AbstractRuntime<MavenHostInfo> imp
     }
 
     @SuppressWarnings({"unchecked"})
-    public void executeTest(URI contextId, String componentName, Operation<?> operation) throws TestSetFailedException {
-        WorkContext oldContext = PojoWorkContextTunnel.getThreadWorkContext();
-        try {
-            WorkContext workContext = new WorkContext();
-            CallFrame frame = new CallFrame();
-            workContext.addCallFrame(frame);
-            URI componentId = URI.create(contextId.toString() + "/" + componentName);
-
-            // FIXME we should not be creating a InvokerInterceptor here
-            // FIXME this should create a wire to the JUnit component and invoke the head interceptor on the chain
-            PojoComponent component = (PojoComponent) getComponentManager().getComponent(componentId);
-            PojoWorkContextTunnel.setThreadWorkContext(workContext);
-            Object instance = component.createObjectFactory().getInstance();
-            Method m = instance.getClass().getMethod(operation.getName());
-            ScopeContainer scopeContainer = component.getScopeContainer();
-            InvokerInterceptor<?, ?> interceptor = new InvokerInterceptor(m, false, false, component, scopeContainer);
-
-            Message msg = new MessageImpl();
-            msg.setWorkContext(workContext);
-            Message response = interceptor.invoke(msg);
-            if (response.isFault()) {
-                throw new TestSetFailedException(operation.getName(), (Throwable) response.getBody());
-            }
-        } catch (NoSuchMethodException e) {
-            throw new AssertionError(e);
-        } catch (ObjectCreationException e) {
-            throw new AssertionError(e);
-        } finally {
-            PojoWorkContextTunnel.setThreadWorkContext(oldContext);
+    public SurefireTestSuite createTestSuite() {
+        // get wires to test operations generated by test extensions
+        URI uri = URI.create(ComponentNames.RUNTIME_NAME + "/TestWireHolder");
+        Map<String, Wire> wires = getSystemComponent(Map.class, uri);
+        if (wires == null) {
+            throw new AssertionError("TestWireHolder is not configured");
         }
+        SCATestSuite suite = new SCATestSuite();
+        for (Map.Entry<String, Wire> entry : wires.entrySet()) {
+            SCATestSet testSet = new SCATestSet(entry.getKey(), entry.getValue());
+            suite.add(testSet);
+        }
+        return suite;
+    }
+
+    /**
+     * Deploys a deployable in a contribution
+     *
+     * @param source the source
+     * @param qName  the deployable QName
+     * @return the Composite deployable
+     * @throws ContributionException if an error occurs introspecting the contribution
+     * @throws DeploymentException   if a deployment error occurs
+     */
+    private Composite deploy(ContributionSource source, QName qName) throws ContributionException, DeploymentException {
+        // contribute the Maven project to the application domain
+        Domain domain = getSystemComponent(Domain.class, APPLICATION_DOMAIN_URI);
+        ContributionService contributionService =
+                getSystemComponent(ContributionService.class, CONTRIBUTION_SERVICE_URI);
+        contributionService.contribute(source);
+        // activate the deployable composite in the domain
+        domain.include(qName);
+        ResourceElement<?, ?> element = getMetaDataStore().resolve(new QNameSymbol(qName));
+        assert element != null;
+        return (Composite) element.getValue();
     }
 
     /**

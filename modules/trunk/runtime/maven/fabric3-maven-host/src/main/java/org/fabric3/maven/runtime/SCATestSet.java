@@ -32,47 +32,56 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.itest;
+package org.fabric3.maven.runtime;
 
-import java.util.Collection;
-import java.net.URI;
+import java.util.Map;
 
+import org.apache.maven.surefire.report.PojoStackTraceWriter;
+import org.apache.maven.surefire.report.ReportEntry;
+import org.apache.maven.surefire.report.ReporterManager;
+import org.apache.maven.surefire.report.StackTraceWriter;
 import org.apache.maven.surefire.testset.SurefireTestSet;
 import org.apache.maven.surefire.testset.TestSetFailedException;
-import org.apache.maven.surefire.report.ReporterManager;
-import org.apache.maven.surefire.report.ReportEntry;
-import org.apache.maven.surefire.report.StackTraceWriter;
-import org.apache.maven.surefire.report.PojoStackTraceWriter;
 
-import org.fabric3.scdl.Operation;
-import org.fabric3.maven.runtime.MavenEmbeddedRuntime;
+import org.fabric3.pojo.PojoWorkContextTunnel;
+import org.fabric3.spi.invocation.CallFrame;
+import org.fabric3.spi.invocation.Message;
+import org.fabric3.spi.invocation.MessageImpl;
+import org.fabric3.spi.invocation.WorkContext;
+import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
+import org.fabric3.spi.wire.InvocationChain;
+import org.fabric3.spi.wire.Wire;
 
 /**
  * @version $Rev$ $Date$
  */
 public class SCATestSet implements SurefireTestSet {
-    private final MavenEmbeddedRuntime runtime;
     private final String name;
-    private final URI contextId;
-    private final Collection<? extends Operation<?>> operations;
+    private Wire wire;
 
-    public SCATestSet(MavenEmbeddedRuntime runtime,
-                      String name,
-                      URI contextId,
-                      Collection<? extends Operation<?>> operations) {
-        this.runtime = runtime;
+    public SCATestSet(String name, Wire wire) {
         this.name = name;
-        this.contextId = contextId;
-        this.operations = operations;
+        this.wire = wire;
     }
 
-    public void execute(ReporterManager reporterManager, ClassLoader classLoader) throws TestSetFailedException {
-        for (Operation<?> operation : operations) {
-            String operationName = operation.getName();
+    public void execute(ReporterManager reporterManager, ClassLoader loader) throws TestSetFailedException {
+        for (Map.Entry<PhysicalOperationDefinition, InvocationChain> entry : wire.getInvocationChains().entrySet()) {
+            String operationName = entry.getKey().getName();
             reporterManager.testStarting(new ReportEntry(this, operationName, name));
             try {
-                runtime.executeTest(contextId, name, operation);
+                WorkContext workContext = new WorkContext();
+                CallFrame frame = new CallFrame();
+                workContext.addCallFrame(frame);
+
+                MessageImpl msg = new MessageImpl();
+                msg.setWorkContext(workContext);
+                Message response = entry.getValue().getHeadInterceptor().invoke(msg);
+                if (response.isFault()) {
+                    throw new TestSetFailedException(operationName, (Throwable) response.getBody());
+                }
+
                 reporterManager.testSucceeded(new ReportEntry(this, operationName, name));
+
             } catch (TestSetFailedException e) {
                 StackTraceWriter stw = new PojoStackTraceWriter(name, operationName, e.getCause());
                 reporterManager.testFailed(new ReportEntry(this, operationName, name, stw));
@@ -82,7 +91,7 @@ public class SCATestSet implements SurefireTestSet {
     }
 
     public int getTestCount() {
-        return operations.size();
+        return wire.getInvocationChains().size();
     }
 
     public String getName() {
