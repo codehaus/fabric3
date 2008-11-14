@@ -101,7 +101,7 @@ public class TargetInterceptor implements Interceptor {
             Service service = Service.create(referenceUrls[0], wsdlElement.getServiceName());
             Object proxy = service.getPort(sei);
             Object[] payload = (Object[]) msg.getBody();
-            Object ret = method.invoke(proxy, payload[0]);
+            Object ret = method.invoke(proxy, payload);
             
             return new MessageImpl(ret, false, null);
             
