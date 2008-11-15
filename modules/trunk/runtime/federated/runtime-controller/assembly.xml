@@ -74,6 +74,7 @@
             <includes>
                 <include>org.codehaus.fabric3.spec:sca-api-r1.0</include>
                 <include>org.codehaus.fabric3:fabric3-api</include>
+                <include>org.codehaus.fabric3:fabric3-scdl</include>
                 <include>org.codehaus.fabric3:fabric3-host-api</include>
                 <include>org.codehaus.fabric3:fabric3-management-api</include>
                 <include>org.codehaus.fabric3.standalone:fabric3-standalone-api</include>
@@ -102,7 +103,6 @@
         <!-- copy boot dependencies to standalone profile -->
         <dependencySet>
             <includes>
-                <include>org.codehaus.fabric3:fabric3-scdl</include>
                 <include>org.codehaus.fabric3:fabric3-monitor</include>
                 <include>org.codehaus.fabric3:fabric3-introspection</include>
                 <include>org.codehaus.fabric3:fabric3-spi</include>
