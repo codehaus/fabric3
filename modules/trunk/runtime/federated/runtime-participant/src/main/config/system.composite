@@ -67,7 +67,7 @@
     <!-- include policy configuration -->
     <include name="org.fabric3.policy.Policy" scdlResource="org/fabric3/policy/policy.composite"/>
 
-    <component name="assemblyRecoveryService">
+    <component name="LogicalComponentStore">
         <f3-impl:implementation.system class="org.fabric3.fabric.services.lcm.NonPersistentLogicalComponentStore"/>
     </component>
 

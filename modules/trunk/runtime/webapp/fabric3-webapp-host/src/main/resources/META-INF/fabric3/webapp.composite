@@ -106,8 +106,7 @@
         <f3-impl:implementation.system class="org.fabric3.runtime.webapp.activator.EmbeddedWebApplicationActivator"/>
     </component>
 
-    <!-- no recovery for the webapp runtime -->
-    <component name="assemblyRecoveryService">
+    <component name="LogicalComponentStore">
         <f3-impl:implementation.system class="org.fabric3.fabric.services.lcm.NonPersistentLogicalComponentStore"/>
     </component>
 

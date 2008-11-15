@@ -94,8 +94,7 @@
     <include name="JavaIntrospection" scdlResource="META-INF/javaIntrospection.composite"/>
     <include name="JavaRuntime" scdlResource="META-INF/javaRuntime.composite"/>
 
-    <!-- no recovery for the iTest runtime   -->
-    <component name="AssemblyRecoveryService">
+    <component name="LogicalComponentStore">
         <f3-impl:implementation.system class="org.fabric3.fabric.services.lcm.NonPersistentLogicalComponentStore"/>
     </component>
 
