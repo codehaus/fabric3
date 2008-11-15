@@ -62,7 +62,6 @@
     <orderEntry type="module" module-name="fabric3-introspection" exported="" />
     <orderEntry type="module" module-name="fabric3-standalone-host" exported="" />
     <orderEntry type="module" module-name="fabric3-fabric" exported="" />
-    <orderEntry type="module" module-name="fabric3-monitor" exported="" />
     <orderEntry type="module" module-name="fabric3-pojo" exported="" />
     <orderEntry type="module" module-name="fabric3-transform" exported="" />
     <orderEntry type="module" module-name="fabric3-loader" exported="" />

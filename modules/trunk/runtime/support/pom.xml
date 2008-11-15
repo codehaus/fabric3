@@ -30,7 +30,6 @@
 	<packaging>pom</packaging>
 
 	<modules>
-		<module>fabric3-monitor</module>
                 <module>fabric3-thread-pool</module>
 	</modules>
 </project>
