@@ -43,7 +43,6 @@ import org.apache.maven.surefire.report.StackTraceWriter;
 import org.apache.maven.surefire.testset.SurefireTestSet;
 import org.apache.maven.surefire.testset.TestSetFailedException;
 
-import org.fabric3.pojo.PojoWorkContextTunnel;
 import org.fabric3.spi.invocation.CallFrame;
 import org.fabric3.spi.invocation.Message;
 import org.fabric3.spi.invocation.MessageImpl;
