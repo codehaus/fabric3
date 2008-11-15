@@ -30,7 +30,7 @@ import org.fabric3.host.contribution.ValidationException;
 import org.fabric3.host.contribution.Deployable;
 import org.fabric3.host.domain.AssemblyException;
 import org.fabric3.host.domain.DeploymentException;
-import org.fabric3.maven.runtime.ContextStartException;
+import org.fabric3.host.runtime.ContextStartException;
 import org.fabric3.maven.runtime.MavenEmbeddedRuntime;
 
 /**

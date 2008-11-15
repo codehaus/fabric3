@@ -44,7 +44,6 @@ import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.host.contribution.Deployable;
 import org.fabric3.host.domain.DeploymentException;
 import org.fabric3.host.runtime.Fabric3Runtime;
-import org.fabric3.scdl.Composite;
 
 /**
  * API for the Maven runtime. The Maven runtime requires system component of type Map<String, Wire> named "TestWireHolder" that contains wires to
@@ -87,13 +86,5 @@ public interface MavenEmbeddedRuntime extends Fabric3Runtime<MavenHostInfo> {
      * @return the test suite
      */
     SurefireTestSuite createTestSuite();
-
-    /**
-     * Starts the component context
-     *
-     * @param compositeId the context id
-     * @throws ContextStartException if an error starting the context is encountered
-     */
-    void startContext(QName compositeId) throws ContextStartException;
 
 }

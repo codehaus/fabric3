@@ -32,7 +32,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.maven.runtime;
+package org.fabric3.host.runtime;
 
 import org.fabric3.host.Fabric3Exception;
 

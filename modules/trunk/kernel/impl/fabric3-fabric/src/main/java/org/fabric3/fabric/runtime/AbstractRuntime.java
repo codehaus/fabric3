@@ -36,6 +36,7 @@ package org.fabric3.fabric.runtime;
 
 import java.net.URI;
 import javax.management.MBeanServer;
+import javax.xml.namespace.QName;
 
 import org.fabric3.fabric.component.scope.CompositeScopeContainer;
 import org.fabric3.fabric.component.scope.ScopeContainerMonitor;
@@ -51,6 +52,7 @@ import org.fabric3.host.runtime.Fabric3Runtime;
 import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.host.runtime.InitializationException;
 import org.fabric3.host.runtime.StartException;
+import org.fabric3.host.runtime.ContextStartException;
 import org.fabric3.host.work.WorkScheduler;
 import org.fabric3.host.monitor.MonitorFactory;
 import org.fabric3.pojo.PojoWorkContextTunnel;
@@ -60,7 +62,9 @@ import org.fabric3.spi.component.InstanceLifecycleException;
 import org.fabric3.spi.component.InstanceWrapper;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.ScopeRegistry;
+import org.fabric3.spi.component.GroupInitializationException;
 import org.fabric3.spi.invocation.WorkContext;
+import org.fabric3.spi.invocation.CallFrame;
 import org.fabric3.spi.runtime.RuntimeServices;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.services.componentmanager.ComponentManager;
@@ -82,12 +86,12 @@ public abstract class AbstractRuntime<HI extends HostInfo> implements Fabric3Run
     /**
      * Information provided by the host about its runtime environment.
      */
-    protected HI hostInfo;
+    private HI hostInfo;
 
     /**
      * MonitorFactory provided by the host for directing events to its management framework.
      */
-    protected MonitorFactory monitorFactory;
+    private MonitorFactory monitorFactory;
 
     /**
      * The LogicalComponentManager that manages all logical components in this runtime.
@@ -102,7 +106,7 @@ public abstract class AbstractRuntime<HI extends HostInfo> implements Fabric3Run
     /**
      * The ScopeContainer used to managed system component instances.
      */
-    protected ScopeContainer<?> scopeContainer;
+    private ScopeContainer<?> scopeContainer;
 
     /**
      * The ClassLoaderRegristy that manages all runtime classloaders.
@@ -117,9 +121,9 @@ public abstract class AbstractRuntime<HI extends HostInfo> implements Fabric3Run
     /**
      * The ScopeRegistry that manages runtime ScopeContainers
      */
-    protected ScopeRegistry scopeRegistry;
+    private ScopeRegistry scopeRegistry;
 
-    protected ClassLoader hostClassLoader;
+    private ClassLoader hostClassLoader;
 
 
     protected AbstractRuntime(Class<HI> runtimeInfoType, MonitorFactory monitorFactory) {
@@ -220,6 +224,17 @@ public abstract class AbstractRuntime<HI extends HostInfo> implements Fabric3Run
             throw new AssertionError(e);
         } finally {
             PojoWorkContextTunnel.setThreadWorkContext(oldContext);
+        }
+    }
+
+    public void startContext(QName deployable) throws ContextStartException {
+        WorkContext workContext = new WorkContext();
+        CallFrame frame = new CallFrame(deployable);
+        workContext.addCallFrame(frame);
+        try {
+            scopeContainer.startContext(workContext);
+        } catch (GroupInitializationException e) {
+            throw new ContextStartException(e);
         }
     }
 

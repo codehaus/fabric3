@@ -18,6 +18,7 @@ package org.fabric3.host.runtime;
 
 import java.net.URI;
 import javax.management.MBeanServer;
+import javax.xml.namespace.QName;
 
 import org.fabric3.host.monitor.MonitorFactory;
 
@@ -139,5 +140,13 @@ public interface Fabric3Runtime<HI extends HostInfo> {
      * @return an implementation of the requested service
      */
     <I> I getSystemComponent(Class<I> service, URI uri);
+
+    /**
+     * Starts the component context.
+     *
+     * @param compositeId the context id
+     * @throws ContextStartException if an error starting the context is encountered
+     */
+    void startContext(QName compositeId) throws ContextStartException;
 
 }
