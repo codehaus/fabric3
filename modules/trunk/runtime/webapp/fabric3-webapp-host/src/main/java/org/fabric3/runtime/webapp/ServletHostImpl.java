@@ -35,8 +35,8 @@
 package org.fabric3.runtime.webapp;
 
 import java.io.IOException;
-import java.util.Map;
 import java.util.HashMap;
+import java.util.Map;
 import javax.servlet.Servlet;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletContext;
@@ -49,7 +49,6 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 import org.osoa.sca.annotations.Service;
 
-import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.spi.host.ServletHost;
 
 /**
@@ -60,8 +59,7 @@ import org.fabric3.spi.host.ServletHost;
 @Service(interfaces = {ServletHost.class, ServletRequestInjector.class})
 @EagerInit
 public class ServletHostImpl implements ServletHost, ServletRequestInjector {
-    protected Map<String, Servlet> servlets;
-    protected ScopeRegistry registry;
+    private Map<String, Servlet> servlets;
     private WebappHostInfo info;
 
     public ServletHostImpl(@Reference WebappHostInfo info) {
@@ -78,7 +76,7 @@ public class ServletHostImpl implements ServletHost, ServletRequestInjector {
             servlet.init(config);
         }
     }
-    
+
     public void service(ServletRequest req, ServletResponse resp) throws ServletException, IOException {
         assert req instanceof HttpServletRequest;
         String path = ((HttpServletRequest) req).getPathInfo();
