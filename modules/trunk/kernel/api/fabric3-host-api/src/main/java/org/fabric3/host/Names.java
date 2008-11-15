@@ -57,6 +57,4 @@ public interface Names {
 
     URI RUNTIME_DOMAIN_SERVICE_URI = URI.create(RUNTIME_NAME + "/RuntimeDomain");
 
-    URI XML_FACTORY_URI = URI.create(RUNTIME_NAME + "/XMLFactory");
-
 }
