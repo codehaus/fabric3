@@ -14,14 +14,12 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.spi.domain;
+package org.fabric3.host.domain;
 
 import java.net.URI;
 import java.util.List;
 import javax.xml.namespace.QName;
 
-import org.fabric3.host.domain.DeploymentException;
-import org.fabric3.host.domain.UndeploymentException;
 import org.fabric3.scdl.Composite;
 
 /**

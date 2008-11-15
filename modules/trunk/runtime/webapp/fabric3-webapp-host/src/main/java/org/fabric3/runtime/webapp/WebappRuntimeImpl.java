@@ -52,9 +52,9 @@ import static org.fabric3.fabric.runtime.ComponentNames.APPLICATION_DOMAIN_URI;
 import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.host.contribution.ContributionService;
 import org.fabric3.host.domain.DeploymentException;
+import org.fabric3.host.domain.Domain;
 import org.fabric3.pojo.PojoWorkContextTunnel;
 import org.fabric3.runtime.webapp.contribution.WarContributionSource;
-import org.fabric3.spi.domain.Domain;
 import org.fabric3.spi.invocation.WorkContext;
 
 /**

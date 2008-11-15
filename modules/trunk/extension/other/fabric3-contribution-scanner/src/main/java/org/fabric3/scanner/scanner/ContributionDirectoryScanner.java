@@ -45,7 +45,7 @@ import org.fabric3.host.contribution.ValidationException;
 import org.fabric3.host.domain.AssemblyException;
 import org.fabric3.host.domain.DeploymentException;
 import org.fabric3.host.runtime.HostInfo;
-import org.fabric3.spi.domain.Domain;
+import org.fabric3.host.domain.Domain;
 import org.fabric3.spi.scanner.FileSystemResource;
 import org.fabric3.spi.scanner.FileSystemResourceFactoryRegistry;
 import org.fabric3.spi.services.VoidService;
