@@ -39,5 +39,6 @@
 		<module>fabric3-system</module>
 		<module>fabric3-transform</module>
 		<module>fabric3-util</module>
+        <module>fabric3-jmx-agent</module>
 	</modules>
 </project>
