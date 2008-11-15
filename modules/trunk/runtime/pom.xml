@@ -33,7 +33,6 @@
 		<module>federated</module>
 		<module>maven</module>
 		<module>standalone</module>
-		<module>support</module>
 		<module>webapp</module>
 	</modules>
 </project>
