@@ -34,38 +34,30 @@
  */
 package org.fabric3.maven.runtime;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.List;
 import java.util.Map;
 import javax.xml.namespace.QName;
-import javax.xml.stream.XMLStreamException;
-import javax.xml.stream.XMLStreamReader;
 
 import org.apache.maven.surefire.suite.SurefireTestSuite;
 
 import org.fabric3.fabric.runtime.AbstractRuntime;
+import org.fabric3.fabric.util.FileHelper;
 import org.fabric3.host.Names;
 import static org.fabric3.host.Names.APPLICATION_DOMAIN_URI;
 import static org.fabric3.host.Names.CONTRIBUTION_SERVICE_URI;
-import static org.fabric3.host.Names.XML_FACTORY_URI;
-import org.fabric3.fabric.util.FileHelper;
 import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.host.contribution.ContributionService;
-import org.fabric3.host.contribution.ContributionSource;
+import org.fabric3.host.contribution.Deployable;
 import org.fabric3.host.domain.DeploymentException;
 import org.fabric3.host.domain.Domain;
-import org.fabric3.host.xml.XMLFactory;
 import org.fabric3.maven.contribution.ModuleContributionSource;
-import org.fabric3.scdl.Composite;
 import org.fabric3.spi.component.GroupInitializationException;
 import org.fabric3.spi.invocation.CallFrame;
 import org.fabric3.spi.invocation.WorkContext;
-import org.fabric3.spi.services.contribution.QNameSymbol;
-import org.fabric3.spi.services.contribution.ResourceElement;
 import org.fabric3.spi.wire.Wire;
 
 /**
@@ -78,12 +70,18 @@ public class MavenEmbeddedRuntimeImpl extends AbstractRuntime<MavenHostInfo> imp
         super(MavenHostInfo.class, null);
     }
 
-    public Composite deploy(URL url, QName qName) throws ContributionException, DeploymentException {
+    public void deploy(URL url, QName qName) throws ContributionException, DeploymentException {
         try {
             URI contributionUri = url.toURI();
             ModuleContributionSource source =
                     new ModuleContributionSource(contributionUri, FileHelper.toFile(url).toString());
-            return deploy(source, qName);
+            // contribute the Maven project to the application domain
+            ContributionService contributionService =
+                    getSystemComponent(ContributionService.class, CONTRIBUTION_SERVICE_URI);
+            Domain domain = getSystemComponent(Domain.class, APPLICATION_DOMAIN_URI);
+            contributionService.contribute(source);
+            // activate the deployable composite in the domain
+            domain.include(qName);
         } catch (MalformedURLException e) {
             String identifier = url.toString();
             throw new DeploymentException("Invalid project directory: " + identifier, identifier, e);
@@ -92,16 +90,29 @@ public class MavenEmbeddedRuntimeImpl extends AbstractRuntime<MavenHostInfo> imp
         }
     }
 
-    public Composite deploy(URL url, URL scdlLocation) throws ContributionException, DeploymentException {
-        QName name;
+    public List<Deployable> deploy(URL url, URL scdlLocation) throws ContributionException, DeploymentException {
         try {
-            name = parseCompositeQName(scdlLocation);
-        } catch (IOException e) {
-            throw new ContributionException(e);
-        } catch (XMLStreamException e) {
-            throw new ContributionException(e);
+            URI contributionUri = url.toURI();
+            ModuleContributionSource source =
+                    new ModuleContributionSource(contributionUri, FileHelper.toFile(url).toString());
+
+            ContributionService contributionService =
+                    getSystemComponent(ContributionService.class, CONTRIBUTION_SERVICE_URI);
+            Domain domain = getSystemComponent(Domain.class, APPLICATION_DOMAIN_URI);
+            contributionService.contribute(source);
+            List<Deployable> deployables = contributionService.getDeployables(contributionUri);
+            assert !deployables.isEmpty();
+            for (Deployable deployable : deployables) {
+                domain.include(deployable.getName());
+            }
+            return deployables;
+        } catch (MalformedURLException e) {
+            String identifier = url.toString();
+            throw new DeploymentException("Invalid project directory: " + identifier, identifier, e);
+        } catch (URISyntaxException e) {
+            throw new DeploymentException("Error activating test contribution", e);
         }
-        return deploy(url, name);
+
     }
 
     public void startContext(QName deployable) throws ContextStartException {
@@ -130,67 +141,4 @@ public class MavenEmbeddedRuntimeImpl extends AbstractRuntime<MavenHostInfo> imp
         }
         return suite;
     }
-
-    /**
-     * Deploys a deployable in a contribution
-     *
-     * @param source the source
-     * @param qName  the deployable QName
-     * @return the Composite deployable
-     * @throws ContributionException if an error occurs introspecting the contribution
-     * @throws DeploymentException   if a deployment error occurs
-     */
-    private Composite deploy(ContributionSource source, QName qName) throws ContributionException, DeploymentException {
-        // contribute the Maven project to the application domain
-        Domain domain = getSystemComponent(Domain.class, APPLICATION_DOMAIN_URI);
-        ContributionService contributionService =
-                getSystemComponent(ContributionService.class, CONTRIBUTION_SERVICE_URI);
-        contributionService.contribute(source);
-        // activate the deployable composite in the domain
-        domain.include(qName);
-        ResourceElement<?, ?> element = getMetaDataStore().resolve(new QNameSymbol(qName));
-        assert element != null;
-        return (Composite) element.getValue();
-    }
-
-    /**
-     * Determines a composite's QName.
-     * <p/>
-     * This method preserves backward compatibility for specifying SCDL location in an iTest plugin configuration.
-     *
-     * @param url the SCDL location
-     * @return the composite QName
-     * @throws IOException        if an error occurs opening the composite file
-     * @throws XMLStreamException if an error occurs processing the composite
-     */
-    private QName parseCompositeQName(URL url) throws IOException, XMLStreamException {
-        XMLStreamReader reader = null;
-        InputStream stream = null;
-        try {
-            stream = url.openStream();
-            XMLFactory xmlFactory = getSystemComponent(XMLFactory.class, XML_FACTORY_URI);
-            reader = xmlFactory.newInputFactoryInstance().createXMLStreamReader(stream);
-            reader.nextTag();
-            String name = reader.getAttributeValue(null, "name");
-            String targetNamespace = reader.getAttributeValue(null, "targetNamespace");
-            return new QName(targetNamespace, name);
-        } finally {
-            try {
-                if (stream != null) {
-                    stream.close();
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            try {
-                if (reader != null) {
-                    reader.close();
-                }
-            } catch (XMLStreamException e) {
-                e.printStackTrace();
-            }
-        }
-
-    }
-
 }

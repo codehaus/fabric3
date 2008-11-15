@@ -16,21 +16,22 @@
  */
 package org.fabric3.itest;
 
-import java.net.URL;
-import java.net.MalformedURLException;
 import java.io.File;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.util.List;
 import javax.xml.namespace.QName;
 
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.logging.Log;
 
-import org.fabric3.maven.runtime.MavenEmbeddedRuntime;
-import org.fabric3.maven.runtime.ContextStartException;
-import org.fabric3.host.domain.DeploymentException;
-import org.fabric3.host.domain.AssemblyException;
 import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.host.contribution.ValidationException;
-import org.fabric3.scdl.Composite;
+import org.fabric3.host.contribution.Deployable;
+import org.fabric3.host.domain.AssemblyException;
+import org.fabric3.host.domain.DeploymentException;
+import org.fabric3.maven.runtime.ContextStartException;
+import org.fabric3.maven.runtime.MavenEmbeddedRuntime;
 
 /**
  * Deploys a test composite.
@@ -80,8 +81,10 @@ public class TestDeployer {
         try {
             log.info("Deploying test composite from " + testScdl);
             URL buildDirUrl = getBuildDirectoryUrl();
-            Composite composite = runtime.deploy(buildDirUrl, testScdlURL);
-            runtime.startContext(composite.getName());
+            List<Deployable> deployables = runtime.deploy(buildDirUrl, testScdlURL);
+            for (Deployable deployable : deployables) {
+                runtime.startContext(deployable.getName());
+            }
         } catch (ValidationException e) {
             // print out the validaiton errors
             reportContributionErrors(e);
@@ -99,10 +102,9 @@ public class TestDeployer {
         try {
             QName qName = new QName(compositeNamespace, compositeName);
             log.info("Deploying test composite " + qName);
-            Composite composite;
             URL buildDirUrl = getBuildDirectoryUrl();
-            composite = runtime.deploy(buildDirUrl, qName);
-            runtime.startContext(composite.getName());
+            runtime.deploy(buildDirUrl, qName);
+            runtime.startContext(qName);
         } catch (ValidationException e) {
             // print out the validation errors
             reportContributionErrors(e);

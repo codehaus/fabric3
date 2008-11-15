@@ -35,11 +35,13 @@
 package org.fabric3.maven.runtime;
 
 import java.net.URL;
+import java.util.List;
 import javax.xml.namespace.QName;
 
 import org.apache.maven.surefire.suite.SurefireTestSuite;
 
 import org.fabric3.host.contribution.ContributionException;
+import org.fabric3.host.contribution.Deployable;
 import org.fabric3.host.domain.DeploymentException;
 import org.fabric3.host.runtime.Fabric3Runtime;
 import org.fabric3.scdl.Composite;
@@ -58,12 +60,11 @@ public interface MavenEmbeddedRuntime extends Fabric3Runtime<MavenHostInfo> {
      *
      * @param base      the module output directory location
      * @param composite the composite qname to activate
-     * @return the activated composite's component type
      * @throws ContributionException if a contribution is thrown. The cause may a ValidationException resulting from  errors in the contribution. In
      *                               this case the errors should be reported back to the user.
      * @throws DeploymentException   if there is an error activating the test composite
      */
-    Composite deploy(URL base, QName composite) throws ContributionException, DeploymentException;
+    void deploy(URL base, QName composite) throws ContributionException, DeploymentException;
 
     /**
      * Deploys a composite pointed to by the SCDL location.
@@ -73,12 +74,12 @@ public interface MavenEmbeddedRuntime extends Fabric3Runtime<MavenHostInfo> {
      *
      * @param base         the module output directory location
      * @param scdlLocation the composite file location
-     * @return the activated composite's component type
+     * @return the list of deployable composites deployed
      * @throws DeploymentException   if there is an error activating the test composite
      * @throws ContributionException if a contribution is thrown. The cause may a ValidationException resulting from  errors in the contribution. In
      *                               this case the errors should be reported back to the user.
      */
-    Composite deploy(URL base, URL scdlLocation) throws ContributionException, DeploymentException;
+    List<Deployable> deploy(URL base, URL scdlLocation) throws ContributionException, DeploymentException;
 
     /**
      * Creates a test suite for testing components in the deployed composite.
