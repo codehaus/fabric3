@@ -44,7 +44,7 @@ import java.util.Set;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.fabric.runtime.ComponentNames;
+import org.fabric3.host.Names;
 import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.spi.classloader.MultiParentClassLoader;
 import org.fabric3.spi.model.physical.PhysicalClassLoaderDefinition;
@@ -154,7 +154,7 @@ public class ClassLoaderBuilderImpl implements ClassLoaderBuilder {
         // build the classloader using the locally cached resources
         MultiParentClassLoader loader = new MultiParentClassLoader(name, classpath, null);
         // add the host classloader
-        ClassLoader cl = classLoaderRegistry.getClassLoader(ComponentNames.APPLICATION_CLASSLOADER_ID);
+        ClassLoader cl = classLoaderRegistry.getClassLoader(Names.APPLICATION_CLASSLOADER_ID);
         loader.addParent(cl);
         if (classLoaderIsolation) {
             // if the host supports isolated classloaders, add any parents

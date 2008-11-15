@@ -26,17 +26,16 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import javax.xml.namespace.QName;
 
-import static org.fabric3.fabric.runtime.ComponentNames.APPLICATION_DOMAIN_URI;
-import static org.fabric3.fabric.runtime.ComponentNames.CONTRIBUTION_SERVICE_URI;
-import static org.fabric3.fabric.runtime.ComponentNames.DEFINITIONS_REGISTRY;
-import static org.fabric3.fabric.runtime.ComponentNames.EVENT_SERVICE_URI;
-import static org.fabric3.fabric.runtime.ComponentNames.METADATA_STORE_URI;
-import static org.fabric3.fabric.runtime.ComponentNames.RUNTIME_DOMAIN_URI;
 import org.fabric3.fabric.services.contribution.manifest.XmlManifestProcessor;
+import static org.fabric3.host.Names.APPLICATION_DOMAIN_URI;
+import static org.fabric3.host.Names.BOOT_CLASSLOADER_ID;
+import static org.fabric3.host.Names.CONTRIBUTION_SERVICE_URI;
+import static org.fabric3.host.Names.RUNTIME_DOMAIN_SERVICE_URI;
 import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.host.contribution.ContributionService;
 import org.fabric3.host.contribution.ContributionSource;
 import org.fabric3.host.contribution.Deployable;
+import org.fabric3.host.contribution.StoreException;
 import org.fabric3.host.domain.DeploymentException;
 import org.fabric3.host.domain.Domain;
 import org.fabric3.host.runtime.BootConfiguration;
@@ -46,20 +45,23 @@ import org.fabric3.host.runtime.InitializationException;
 import org.fabric3.host.runtime.RuntimeLifecycleCoordinator;
 import org.fabric3.host.runtime.ShutdownException;
 import org.fabric3.host.runtime.StartException;
-import org.fabric3.spi.introspection.validation.InvalidContributionException;
 import org.fabric3.scdl.Composite;
 import org.fabric3.scdl.DefaultValidationContext;
 import org.fabric3.scdl.Include;
 import org.fabric3.scdl.ValidationContext;
-import org.fabric3.spi.Namespaces;
+import static org.fabric3.spi.Namespaces.IMPLEMENTATION;
+import static org.fabric3.spi.SPINames.DEFINITIONS_REGISTRY;
+import static org.fabric3.spi.SPINames.EVENT_SERVICE_URI;
+import static org.fabric3.spi.SPINames.METADATA_STORE_URI;
+import static org.fabric3.spi.SPINames.XML_MANIFEST_PROCESSOR_URI;
+import org.fabric3.spi.introspection.validation.InvalidContributionException;
 import org.fabric3.spi.services.contribution.Contribution;
 import org.fabric3.spi.services.contribution.ContributionManifest;
+import org.fabric3.spi.services.contribution.ContributionState;
 import org.fabric3.spi.services.contribution.MetaDataStore;
-import org.fabric3.host.contribution.StoreException;
 import org.fabric3.spi.services.contribution.QNameSymbol;
 import org.fabric3.spi.services.contribution.Resource;
 import org.fabric3.spi.services.contribution.ResourceElement;
-import org.fabric3.spi.services.contribution.ContributionState;
 import org.fabric3.spi.services.definitions.DefinitionActivationException;
 import org.fabric3.spi.services.definitions.DefinitionsRegistry;
 import org.fabric3.spi.services.event.EventService;
@@ -149,7 +151,7 @@ public class DefaultCoordinator<RUNTIME extends Fabric3Runtime<?>, BOOTSTRAPPER 
             return new SyncFuture(new ExecutionException(e));
 
         }
-        EventService eventService = runtime.getSystemComponent(EventService.class, ComponentNames.EVENT_SERVICE_URI);
+        EventService eventService = runtime.getSystemComponent(EventService.class, EVENT_SERVICE_URI);
         eventService.publish(new Recover());
         state = State.RECOVERED;
         return new SyncFuture();
@@ -159,7 +161,7 @@ public class DefaultCoordinator<RUNTIME extends Fabric3Runtime<?>, BOOTSTRAPPER 
         if (state != State.RECOVERED) {
             throw new IllegalStateException("Not in RECOVERED state");
         }
-        EventService eventService = runtime.getSystemComponent(EventService.class, ComponentNames.EVENT_SERVICE_URI);
+        EventService eventService = runtime.getSystemComponent(EventService.class, EVENT_SERVICE_URI);
         eventService.publish(new JoinDomain());
         state = State.DOMAIN_JOINED;
         // no domain to join
@@ -210,8 +212,8 @@ public class DefaultCoordinator<RUNTIME extends Fabric3Runtime<?>, BOOTSTRAPPER 
         try {
             assert !bootExports.isEmpty();
             XmlManifestProcessor processor =
-                    runtime.getSystemComponent(XmlManifestProcessor.class, ComponentNames.XML_MANIFEST_PROCESSOR);
-            Contribution contribution = new Contribution(ComponentNames.BOOT_CLASSLOADER_ID);
+                    runtime.getSystemComponent(XmlManifestProcessor.class, XML_MANIFEST_PROCESSOR_URI);
+            Contribution contribution = new Contribution(BOOT_CLASSLOADER_ID);
             contribution.setState(ContributionState.INSTALLED);
             ValidationContext context = new DefaultValidationContext();
             for (String export : bootExports) {
@@ -226,7 +228,7 @@ public class DefaultCoordinator<RUNTIME extends Fabric3Runtime<?>, BOOTSTRAPPER 
             if (context.hasErrors()) {
                 throw new InvalidContributionException(context.getErrors(), context.getWarnings());
             }
-            MetaDataStore store = runtime.getSystemComponent(MetaDataStore.class, ComponentNames.METADATA_STORE_URI);
+            MetaDataStore store = runtime.getSystemComponent(MetaDataStore.class, METADATA_STORE_URI);
             store.store(contribution);
         } catch (StoreException e) {
             throw new InitializationException(e);
@@ -250,7 +252,7 @@ public class DefaultCoordinator<RUNTIME extends Fabric3Runtime<?>, BOOTSTRAPPER 
     }
 
     protected void includeExtensionContributions(List<URI> contributionUris) throws InitializationException {
-        Domain domain = runtime.getSystemComponent(Domain.class, RUNTIME_DOMAIN_URI);
+        Domain domain = runtime.getSystemComponent(Domain.class, RUNTIME_DOMAIN_SERVICE_URI);
         Composite composite = createExtensionComposite(contributionUris);
         try {
             domain.include(composite);
@@ -273,7 +275,7 @@ public class DefaultCoordinator<RUNTIME extends Fabric3Runtime<?>, BOOTSTRAPPER 
             String id = METADATA_STORE_URI.toString();
             throw new InitializationException("Extensions metadata store not configured: " + id, id);
         }
-        QName qName = new QName(Namespaces.IMPLEMENTATION, "extension");
+        QName qName = new QName(IMPLEMENTATION, "extension");
         Composite composite = new Composite(qName);
         for (URI uri : contributionUris) {
             Contribution contribution = metaDataStore.find(uri);

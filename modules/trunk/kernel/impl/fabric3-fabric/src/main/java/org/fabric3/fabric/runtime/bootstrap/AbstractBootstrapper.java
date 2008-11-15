@@ -41,10 +41,10 @@ import org.w3c.dom.Document;
 
 import org.fabric3.fabric.instantiator.component.AtomicComponentInstantiator;
 import org.fabric3.fabric.instantiator.component.ComponentInstantiator;
-import org.fabric3.fabric.runtime.ComponentNames;
-import static org.fabric3.fabric.runtime.ComponentNames.APPLICATION_CLASSLOADER_ID;
-import static org.fabric3.fabric.runtime.ComponentNames.BOOT_CLASSLOADER_ID;
-import static org.fabric3.fabric.runtime.ComponentNames.RUNTIME_URI;
+import org.fabric3.host.Names;
+import static org.fabric3.host.Names.APPLICATION_CLASSLOADER_ID;
+import static org.fabric3.host.Names.BOOT_CLASSLOADER_ID;
+import static org.fabric3.host.Names.RUNTIME_URI;
 import org.fabric3.fabric.services.documentloader.DocumentLoader;
 import org.fabric3.fabric.services.documentloader.DocumentLoaderImpl;
 import org.fabric3.fabric.services.synthesizer.SingletonComponentSynthesizer;
@@ -244,7 +244,7 @@ public abstract class AbstractBootstrapper implements Bootstrapper {
     private void registerDomain(Fabric3Runtime<?> runtime) throws InitializationException {
         registerComponent("RuntimeDomain", Domain.class, runtimeDomain, true);
         // the following is a hack to initialize the domain
-        runtime.getSystemComponent(Domain.class, ComponentNames.RUNTIME_DOMAIN_URI);
+        runtime.getSystemComponent(Domain.class, Names.RUNTIME_DOMAIN_SERVICE_URI);
     }
 
     private void registerClassLoaders(ClassLoader bootClassLoader, ClassLoader appClassLoader) {

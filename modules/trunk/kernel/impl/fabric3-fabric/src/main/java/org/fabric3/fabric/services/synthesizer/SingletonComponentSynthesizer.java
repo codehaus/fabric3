@@ -25,7 +25,7 @@ import org.fabric3.fabric.implementation.singleton.SingletonComponent;
 import org.fabric3.fabric.implementation.singleton.SingletonImplementation;
 import org.fabric3.fabric.instantiator.LogicalChange;
 import org.fabric3.fabric.instantiator.component.ComponentInstantiator;
-import static org.fabric3.fabric.runtime.ComponentNames.BOOT_CLASSLOADER_ID;
+import static org.fabric3.host.Names.BOOT_CLASSLOADER_ID;
 import org.fabric3.host.domain.AssemblyException;
 import org.fabric3.spi.introspection.DefaultIntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionContext;

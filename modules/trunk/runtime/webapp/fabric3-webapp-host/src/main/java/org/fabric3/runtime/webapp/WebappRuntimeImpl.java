@@ -46,9 +46,9 @@ import javax.xml.namespace.QName;
 
 import org.fabric3.container.web.spi.WebRequestTunnel;
 import org.fabric3.fabric.runtime.AbstractRuntime;
-import org.fabric3.fabric.runtime.ComponentNames;
-import static org.fabric3.fabric.runtime.ComponentNames.CONTRIBUTION_SERVICE_URI;
-import static org.fabric3.fabric.runtime.ComponentNames.APPLICATION_DOMAIN_URI;
+import org.fabric3.host.Names;
+import static org.fabric3.host.Names.CONTRIBUTION_SERVICE_URI;
+import static org.fabric3.host.Names.APPLICATION_DOMAIN_URI;
 import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.host.contribution.ContributionService;
 import org.fabric3.host.domain.DeploymentException;
@@ -96,7 +96,7 @@ public class WebappRuntimeImpl extends AbstractRuntime<WebappHostInfo> implement
 
     public ServletRequestInjector getRequestInjector() {
         if (requestInjector == null) {
-            URI uri = URI.create(ComponentNames.RUNTIME_NAME + "/servletHost");
+            URI uri = URI.create(Names.RUNTIME_NAME + "/servletHost");
             requestInjector = getSystemComponent(ServletRequestInjector.class, uri);
         }
         return requestInjector;
@@ -126,7 +126,7 @@ public class WebappRuntimeImpl extends AbstractRuntime<WebappHostInfo> implement
 
     private HttpSessionListener getSessionListener() {
         if (sessionListener == null) {
-            URI uri = URI.create(ComponentNames.RUNTIME_NAME + "/WebApplicationActivator");
+            URI uri = URI.create(Names.RUNTIME_NAME + "/WebApplicationActivator");
             sessionListener = getSystemComponent(HttpSessionListener.class, uri);
         }
         return sessionListener;

@@ -23,7 +23,7 @@ import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.fabric.command.AttachWireCommand;
-import org.fabric3.fabric.runtime.ComponentNames;
+import org.fabric3.host.Names;
 import org.fabric3.scdl.CompositeImplementation;
 import org.fabric3.spi.generator.CommandGenerator;
 import org.fabric3.spi.generator.GenerationException;
@@ -117,7 +117,7 @@ public class LocalWireCommandGenerator implements CommandGenerator {
             URI uri = logicalWire.getTargetUri();
             String serviceName = uri.getFragment();
             LogicalComponent<?> target;
-            if (uri.toString().startsWith(ComponentNames.RUNTIME_NAME)) {
+            if (uri.toString().startsWith(Names.RUNTIME_NAME)) {
                 target = runtimeLCM.getComponent(uri);
             } else {
                 target = applicationLCM.getComponent(uri);

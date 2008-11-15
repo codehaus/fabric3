@@ -32,42 +32,31 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.fabric.runtime;
+package org.fabric3.host;
 
 import java.net.URI;
 
 /**
- * Class that defines the URIs of well-known components.
+ * Defines URIs of well-known runtime components and classloaders available through the host API.
  *
  * @version $Rev$ $Date$
  */
-public final class ComponentNames {
+public interface Names {
 
-    public static final String RUNTIME_NAME = "fabric3://runtime";
+    URI BOOT_CLASSLOADER_ID = URI.create("Fabric3BootClassLoader");
 
-    public static final URI RUNTIME_URI = URI.create(RUNTIME_NAME);
+    URI APPLICATION_CLASSLOADER_ID = URI.create("Fabric3RootApplicationClassLoader");
 
-    public static final URI BOOT_CLASSLOADER_ID = URI.create("Fabric3BootClassLoader");
+    String RUNTIME_NAME = "fabric3://runtime";
 
-    public static final URI APPLICATION_CLASSLOADER_ID = URI.create("Fabric3RootApplicationClassLoader");
+    URI RUNTIME_URI = URI.create(RUNTIME_NAME);
 
-    public static final URI APPLICATION_DOMAIN_URI = URI.create(RUNTIME_NAME + "/ApplicationDomain");
+    URI APPLICATION_DOMAIN_URI = URI.create(RUNTIME_NAME + "/ApplicationDomain");
 
-    public static final URI RUNTIME_DOMAIN_URI = URI.create(RUNTIME_NAME + "/RuntimeDomain");
+    URI CONTRIBUTION_SERVICE_URI = URI.create(RUNTIME_NAME + "/ContributionService");
 
-    public static final URI EVENT_SERVICE_URI = URI.create(RUNTIME_NAME + "/EventService");
+    URI RUNTIME_DOMAIN_SERVICE_URI = URI.create(RUNTIME_NAME + "/RuntimeDomain");
 
-    public static final URI CONTRIBUTION_SERVICE_URI = URI.create(RUNTIME_NAME + "/ContributionService");
-
-    public static final URI DEFINITIONS_REGISTRY = URI.create(RUNTIME_NAME + "/DefinitionsRegistry");
-
-    public static final URI METADATA_STORE_URI = URI.create(RUNTIME_NAME + "/MetaDataStore");
-
-    public static final URI XML_MANIFEST_PROCESSOR = URI.create(RUNTIME_NAME + "/XmlManifestProcessor");
-
-    public static final URI XML_FACTORY_URI = URI.create(RUNTIME_NAME + "/XMLFactory");
-
-    private ComponentNames() {
-    }
+    URI XML_FACTORY_URI = URI.create(RUNTIME_NAME + "/XMLFactory");
 
 }

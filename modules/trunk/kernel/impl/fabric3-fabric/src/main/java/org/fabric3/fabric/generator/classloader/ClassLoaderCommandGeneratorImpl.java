@@ -30,7 +30,7 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.fabric.command.ProvisionClassloaderCommand;
 import org.fabric3.fabric.command.UnprovisionClassloaderCommand;
-import org.fabric3.fabric.runtime.ComponentNames;
+import org.fabric3.host.Names;
 import org.fabric3.fabric.services.contribution.DependencyException;
 import org.fabric3.fabric.services.contribution.DependencyService;
 import org.fabric3.scdl.CompositeImplementation;
@@ -110,7 +110,7 @@ public class ClassLoaderCommandGeneratorImpl implements ClassLoaderCommandGenera
         // generate commands to unprovision component classloaders
         for (LogicalComponent<?> component : components) {
             URI classLoaderUri = component.getClassLoaderId();
-            if (LogicalState.MARKED != component.getState() || ComponentNames.BOOT_CLASSLOADER_ID.equals(classLoaderUri)) {
+            if (LogicalState.MARKED != component.getState() || Names.BOOT_CLASSLOADER_ID.equals(classLoaderUri)) {
                 // skip provisioning for previously provisioned components and the boot classloader
                 continue;
             }
@@ -188,7 +188,7 @@ public class ClassLoaderCommandGeneratorImpl implements ClassLoaderCommandGenera
                 // imported contributions must also be provisioned 
                 for (URI uri : contribution.getResolvedImportUris()) {
                     // ignore the boot and application classloaders
-                    if (ComponentNames.BOOT_CLASSLOADER_ID.equals(uri) || ComponentNames.APPLICATION_CLASSLOADER_ID.equals(uri)) {
+                    if (Names.BOOT_CLASSLOADER_ID.equals(uri) || Names.APPLICATION_CLASSLOADER_ID.equals(uri)) {
                         continue;
                     }
                     Contribution imported = store.find(uri);
@@ -251,7 +251,7 @@ public class ClassLoaderCommandGeneratorImpl implements ClassLoaderCommandGenera
                                             Map<String, Set<PhysicalClassLoaderDefinition>> definitionsPerZone) throws GenerationException {
         for (LogicalComponent<?> component : components) {
             URI classLoaderUri = component.getClassLoaderId();
-            if (LogicalState.NEW != component.getState() || ComponentNames.BOOT_CLASSLOADER_ID.equals(classLoaderUri)) {
+            if (LogicalState.NEW != component.getState() || Names.BOOT_CLASSLOADER_ID.equals(classLoaderUri)) {
                 // skip provisioning for previously provisioned components and the boot classloader
                 continue;
             }
@@ -267,7 +267,7 @@ public class ClassLoaderCommandGeneratorImpl implements ClassLoaderCommandGenera
             if (contributionUri == null) {
                 // xcv FIXME bootstrap services should be associated with a contribution
                 // the logical component is not provisioned as part of a contribution, e.g. a boostrap system service
-                definition.addParentClassLoader(ComponentNames.BOOT_CLASSLOADER_ID);
+                definition.addParentClassLoader(Names.BOOT_CLASSLOADER_ID);
                 if (definitions == null) {
                     definitions = new LinkedHashSet<PhysicalClassLoaderDefinition>();
                     definitionsPerZone.put(component.getZone(), definitions);

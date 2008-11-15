@@ -40,7 +40,7 @@ import javax.management.MBeanServer;
 import org.fabric3.fabric.component.scope.CompositeScopeContainer;
 import org.fabric3.fabric.component.scope.ScopeContainerMonitor;
 import org.fabric3.fabric.component.scope.ScopeRegistryImpl;
-import static org.fabric3.fabric.runtime.ComponentNames.RUNTIME_URI;
+import static org.fabric3.host.Names.RUNTIME_URI;
 import org.fabric3.fabric.services.classloading.ClassLoaderRegistryImpl;
 import org.fabric3.fabric.services.componentmanager.ComponentManagerImpl;
 import org.fabric3.fabric.services.contribution.MetaDataStoreImpl;
