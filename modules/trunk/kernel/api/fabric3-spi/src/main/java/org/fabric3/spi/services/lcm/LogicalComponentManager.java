@@ -63,9 +63,9 @@ public interface LogicalComponentManager {
     /**
      * Initializes the manager.
      *
-     * @throws RecoveryException if there was a problem initializing the components
+     * @throws ReadException if there was a problem initializing the components
      */
-    void initialize() throws RecoveryException;
+    void initialize() throws ReadException;
 
 
 }

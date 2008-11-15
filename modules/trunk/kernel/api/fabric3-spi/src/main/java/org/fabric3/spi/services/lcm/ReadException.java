@@ -22,14 +22,14 @@ import org.fabric3.host.Fabric3Exception;
 /**
  * @version $Rev$ $Date$
  */
-public class RecoveryException extends Fabric3Exception {
+public class ReadException extends Fabric3Exception {
     private static final long serialVersionUID = -7196926074584212395L;
 
-    public RecoveryException(String message, Throwable cause) {
+    public ReadException(String message, Throwable cause) {
         super(message, cause);
     }
 
-    public RecoveryException(String message, String identifier, Throwable cause) {
+    public ReadException(String message, String identifier, Throwable cause) {
         super(message, identifier, cause);
     }
 }

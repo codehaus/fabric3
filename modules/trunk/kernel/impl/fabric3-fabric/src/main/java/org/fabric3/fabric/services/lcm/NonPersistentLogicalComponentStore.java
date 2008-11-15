@@ -25,7 +25,7 @@ import org.fabric3.scdl.Composite;
 import org.fabric3.scdl.CompositeImplementation;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 import org.fabric3.spi.services.lcm.LogicalComponentStore;
-import org.fabric3.spi.services.lcm.RecoveryException;
+import org.fabric3.spi.services.lcm.ReadException;
 
 import org.osoa.sca.annotations.Constructor;
 import org.osoa.sca.annotations.Reference;
@@ -49,7 +49,7 @@ public class NonPersistentLogicalComponentStore implements LogicalComponentStore
         domainUri = info.getDomain();
     }
 
-    public LogicalCompositeComponent read() throws RecoveryException {
+    public LogicalCompositeComponent read() throws ReadException {
         Composite type = new Composite(null);
         CompositeImplementation impl = new CompositeImplementation();
         impl.setComponentType(type);

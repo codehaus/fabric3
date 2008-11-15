@@ -37,8 +37,8 @@ public interface LogicalComponentStore {
      * Reads the domain model from the store.
      *
      * @return the domain model from the store
-     * @throws RecoveryException f an error occurs reading from the store
+     * @throws ReadException f an error occurs reading from the store
      */
-    LogicalCompositeComponent read() throws RecoveryException;
+    LogicalCompositeComponent read() throws ReadException;
 
 }

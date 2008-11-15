@@ -68,7 +68,7 @@ import org.fabric3.spi.services.contribution.MetaDataStore;
 import org.fabric3.spi.services.contribution.ProcessorRegistry;
 import org.fabric3.spi.services.lcm.LogicalComponentManager;
 import org.fabric3.spi.services.lcm.LogicalComponentStore;
-import org.fabric3.spi.services.lcm.RecoveryException;
+import org.fabric3.spi.services.lcm.ReadException;
 
 /**
  * @version $Rev$ $Date$
@@ -180,7 +180,7 @@ public abstract class AbstractRuntime<HI extends HostInfo> implements Fabric3Run
         logicalComponentManager = new LogicalComponentManagerImpl(store);
         try {
             logicalComponentManager.initialize();
-        } catch (RecoveryException e) {
+        } catch (ReadException e) {
             throw new InitializationException(e);
         }
         componentManager = new ComponentManagerImpl();
