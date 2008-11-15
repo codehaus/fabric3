@@ -35,7 +35,7 @@
 package org.fabric3.scdl.validation;
 
 import org.fabric3.scdl.ModelObject;
-import org.fabric3.host.contribution.ValidationFailure;
+import org.fabric3.scdl.ValidationFailure;
 
 /**
  * Validation failure indicating that a composite service or reference does not specify what it promotes.

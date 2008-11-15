@@ -51,7 +51,7 @@ import org.xml.sax.SAXException;
 import org.fabric3.fabric.services.documentloader.DocumentLoader;
 import org.fabric3.fabric.services.documentloader.DocumentLoaderImpl;
 import org.fabric3.host.contribution.ContributionException;
-import org.fabric3.host.contribution.ValidationFailure;
+import org.fabric3.scdl.ValidationFailure;
 import org.fabric3.host.runtime.InitializationException;
 import org.fabric3.host.runtime.ScdlBootstrapper;
 import org.fabric3.spi.introspection.DefaultIntrospectionContext;

@@ -16,7 +16,7 @@
  */
 package org.fabric3.spi.introspection.java;
 
-import org.fabric3.host.contribution.ValidationFailure;
+import org.fabric3.scdl.ValidationFailure;
 
 /**
  * @version $Rev$ $Date$

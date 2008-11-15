@@ -35,7 +35,7 @@
 package org.fabric3.scdl.validation;
 
 import org.fabric3.scdl.Implementation;
-import org.fabric3.host.contribution.ValidationFailure;
+import org.fabric3.scdl.ValidationFailure;
 
 /**
  * Validation failure indicating that an implementation does not have an associated component type.

@@ -53,7 +53,7 @@ import org.fabric3.spi.introspection.xml.TypeLoader;
 import org.fabric3.scdl.ComponentType;
 import org.fabric3.scdl.CompositeReference;
 import org.fabric3.scdl.Implementation;
-import org.fabric3.host.contribution.ValidationFailure;
+import org.fabric3.scdl.ValidationFailure;
 import org.fabric3.scdl.ArtifactValidationFailure;
 
 /**

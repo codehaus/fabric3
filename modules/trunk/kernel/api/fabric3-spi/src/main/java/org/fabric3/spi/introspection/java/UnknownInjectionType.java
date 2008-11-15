@@ -16,7 +16,7 @@
  */
 package org.fabric3.spi.introspection.java;
 
-import org.fabric3.host.contribution.ValidationFailure;
+import org.fabric3.scdl.ValidationFailure;
 import org.fabric3.scdl.ConstructorInjectionSite;
 import org.fabric3.scdl.FieldInjectionSite;
 import org.fabric3.scdl.InjectableAttributeType;

@@ -16,7 +16,7 @@
  */
 package org.fabric3.groovy.introspection;
 
-import org.fabric3.host.contribution.ValidationFailure;
+import org.fabric3.scdl.ValidationFailure;
 
 /**
  * @version $Revision$ $Date$

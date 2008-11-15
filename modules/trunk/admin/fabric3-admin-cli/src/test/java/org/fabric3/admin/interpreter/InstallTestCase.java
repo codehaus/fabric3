@@ -18,10 +18,8 @@ package org.fabric3.admin.interpreter;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
-import java.io.File;
 import java.io.InputStream;
 import java.io.PrintStream;
-import java.net.URL;
 import java.net.URI;
 
 import junit.framework.TestCase;
