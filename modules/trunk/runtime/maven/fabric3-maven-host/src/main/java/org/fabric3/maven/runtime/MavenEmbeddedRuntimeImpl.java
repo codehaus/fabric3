@@ -55,9 +55,6 @@ import org.fabric3.host.contribution.Deployable;
 import org.fabric3.host.domain.DeploymentException;
 import org.fabric3.host.domain.Domain;
 import org.fabric3.maven.contribution.ModuleContributionSource;
-import org.fabric3.spi.component.GroupInitializationException;
-import org.fabric3.spi.invocation.CallFrame;
-import org.fabric3.spi.invocation.WorkContext;
 import org.fabric3.spi.wire.Wire;
 
 /**
