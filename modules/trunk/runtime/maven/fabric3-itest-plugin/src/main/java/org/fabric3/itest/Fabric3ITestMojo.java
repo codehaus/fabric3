@@ -37,7 +37,6 @@ package org.fabric3.itest;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
-import java.net.URI;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
@@ -62,7 +61,6 @@ import org.xml.sax.SAXException;
 import org.fabric3.api.annotation.logging.Severe;
 import org.fabric3.featureset.FeatureSet;
 import org.fabric3.maven.runtime.MavenEmbeddedRuntime;
-import org.fabric3.spi.classloader.MultiParentClassLoader;
 
 /**
  * Run integration tests on a SCA composite using an embedded Fabric3 runtime.
@@ -397,7 +395,7 @@ public class Fabric3ITestMojo extends AbstractMojo {
                 log.debug("  " + url);
             }
         }
-        return new MultiParentClassLoader(URI.create("Fabric3BootClassLoader"), urls, parent);
+        return new URLClassLoader(urls, parent);
     }
 
     /**
