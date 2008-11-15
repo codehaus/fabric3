@@ -19,7 +19,7 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.codehaus.fabric3</groupId>
-        <artifactId>fabric3-runtime-support-parent-pom</artifactId>
+        <artifactId>fabric3-kernel-impl-parent-pom</artifactId>
         <version>0.7-SNAPSHOT</version>
     </parent>
     <groupId>org.codehaus.fabric3</groupId>

@@ -30,6 +30,5 @@
 	<packaging>pom</packaging>
 
 	<modules>
-                <module>fabric3-thread-pool</module>
 	</modules>
 </project>
