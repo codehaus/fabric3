@@ -92,12 +92,12 @@ public abstract class AbstractRuntime<HI extends HostInfo> implements Fabric3Run
     /**
      * The LogicalComponentManager that manages all logical components in this runtime.
      */
-    protected LogicalComponentManager logicalComponentManager;
+    private LogicalComponentManager logicalComponentManager;
 
     /**
      * The ComponentManager that manages all physical components in this runtime.
      */
-    protected ComponentManager componentManager;
+    private ComponentManager componentManager;
 
     /**
      * The ScopeContainer used to managed system component instances.
@@ -107,12 +107,12 @@ public abstract class AbstractRuntime<HI extends HostInfo> implements Fabric3Run
     /**
      * The ClassLoaderRegristy that manages all runtime classloaders.
      */
-    protected ClassLoaderRegistry classLoaderRegistry;
+    private ClassLoaderRegistry classLoaderRegistry;
 
     /**
      * The MetaDataStore that indexes contribution metadata and artifacts.
      */
-    protected MetaDataStore metaDataStore;
+    private MetaDataStore metaDataStore;
 
     /**
      * The ScopeRegistry that manages runtime ScopeContainers
