@@ -14,27 +14,16 @@
           <setting name="EXPLODED_ENABLED" value="false" />
           <setting name="JAR_URL" value="file://$MODULE_DIR$/target/test-runtime-tomcat.war" />
           <setting name="JAR_ENABLED" value="true" />
-          <setting name="BUILD_MODULE_ON_FRAME_DEACTIVATION" value="false" />
           <setting name="EXCLUDE_EXPLODED_DIRECTORY" value="true" />
-          <setting name="RUN_JASPER_VALIDATION" value="false" />
-          <setting name="BUILD_ONLY_WEB_RESOURCES" value="false" />
         </building>
         <packaging>
           <containerElement type="module" name="fabric3-webapp-api">
             <attribute name="method" value="5" />
             <attribute name="URI" value="/WEB-INF/lib/fabric3-webapp-api-0.5ALPHA3-SNAPSHOT.jar" />
           </containerElement>
-          <containerElement type="module" name="fabric3-jmx-agent">
-            <attribute name="method" value="5" />
-            <attribute name="URI" value="/WEB-INF/lib/fabric3-jmx-agent-0.5ALPHA3-SNAPSHOT.jar" />
-          </containerElement>
           <containerElement type="module" name="fabric3-host-api">
             <attribute name="method" value="5" />
             <attribute name="URI" value="/WEB-INF/lib/fabric3-host-api-0.5ALPHA3-SNAPSHOT.jar" />
-          </containerElement>
-          <containerElement type="module" name="fabric3-monitor-api">
-            <attribute name="method" value="5" />
-            <attribute name="URI" value="/WEB-INF/lib/fabric3-monitor-api-0.5ALPHA3-SNAPSHOT.jar" />
           </containerElement>
           <containerElement type="library" name="org.codehaus.fabric3.spec:sca-api-r1.0:0.2.1" level="module">
             <attribute name="method" value="1" />
@@ -43,10 +32,6 @@
           <containerElement type="module" name="fabric3-api">
             <attribute name="method" value="5" />
             <attribute name="URI" value="/WEB-INF/lib/fabric3-api-0.5ALPHA3-SNAPSHOT.jar" />
-          </containerElement>
-          <containerElement type="module" name="fabric3-monitor">
-            <attribute name="method" value="5" />
-            <attribute name="URI" value="/WEB-INF/lib/fabric3-monitor-0.5ALPHA3-SNAPSHOT.jar" />
           </containerElement>
           <containerElement type="library" name="javax.activation:activation:1.1" level="module">
             <attribute name="method" value="1" />
@@ -67,6 +52,7 @@
       <configuration>
         <setting name="validation-enabled" value="true" />
         <setting name="provider-name" value="" />
+        <setting name="targe-facet" value="" />
         <datasource-mapping />
         <deploymentDescriptor name="persistence.xml" url="file://$MODULE_DIR$/src/main/resources/META-INF/persistence.xml" optional="false" version="1.0" />
       </configuration>
@@ -92,11 +78,8 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="fabric3-webapp-api" exported="" />
-    <orderEntry type="module" module-name="fabric3-jmx-agent" exported="" />
     <orderEntry type="module" module-name="fabric3-host-api" exported="" />
-    <orderEntry type="module" module-name="fabric3-monitor-api" exported="" />
     <orderEntry type="module" module-name="fabric3-api" exported="" />
-    <orderEntry type="module" module-name="fabric3-monitor" exported="" />
     <orderEntry type="module-library">
       <library name="javax.servlet:servlet-api:2.4">
         <CLASSES>
