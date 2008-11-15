@@ -17,7 +17,6 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
     <orderEntry type="module" module-name="fabric3-webapp-api" exported="" />
-    <orderEntry type="module" module-name="fabric3-jmx-agent" exported="" />
     <orderEntry type="module" module-name="fabric3-host-api" exported="" />
     <orderEntry type="module" module-name="fabric3-api" exported="" />
     <orderEntry type="module" module-name="fabric3-monitor" exported="" />
