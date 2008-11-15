@@ -26,7 +26,7 @@ import javax.xml.namespace.QName;
 import junit.framework.TestCase;
 
 import org.fabric3.fabric.services.classloading.ClassLoaderRegistryImpl;
-import org.fabric3.fabric.util.FileHelper;
+import org.fabric3.util.io.FileHelper;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.services.contribution.Contribution;
 import org.fabric3.spi.services.contribution.ContributionManifest;

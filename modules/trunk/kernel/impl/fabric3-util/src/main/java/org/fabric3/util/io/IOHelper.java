@@ -32,7 +32,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.fabric.util;
+package org.fabric3.util.io;
 
 import java.io.Closeable;
 import java.io.IOException;

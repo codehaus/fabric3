@@ -30,7 +30,7 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.fabric.util.FileHelper;
+import org.fabric3.util.io.FileHelper;
 import org.fabric3.host.contribution.InstallException;
 import org.fabric3.spi.introspection.DefaultIntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionContext;

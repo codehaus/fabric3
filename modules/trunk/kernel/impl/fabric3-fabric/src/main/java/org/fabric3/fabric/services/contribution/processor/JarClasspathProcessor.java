@@ -33,7 +33,7 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.fabric.util.IOHelper;
+import org.fabric3.util.io.IOHelper;
 import org.fabric3.spi.services.contribution.ClasspathProcessor;
 import org.fabric3.spi.services.contribution.ClasspathProcessorRegistry;
 

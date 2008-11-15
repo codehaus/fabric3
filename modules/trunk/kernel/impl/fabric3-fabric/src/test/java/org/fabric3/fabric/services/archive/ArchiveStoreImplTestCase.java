@@ -25,7 +25,7 @@ import java.net.URL;
 import junit.framework.TestCase;
 import org.easymock.EasyMock;
 
-import org.fabric3.fabric.util.FileHelper;
+import org.fabric3.util.io.FileHelper;
 import org.fabric3.host.runtime.HostInfo;
 
 public class ArchiveStoreImplTestCase extends TestCase {

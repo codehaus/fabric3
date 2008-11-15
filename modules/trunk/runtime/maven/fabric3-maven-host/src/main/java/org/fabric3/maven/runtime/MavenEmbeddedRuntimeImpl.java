@@ -45,7 +45,7 @@ import javax.xml.namespace.QName;
 import org.apache.maven.surefire.suite.SurefireTestSuite;
 
 import org.fabric3.fabric.runtime.AbstractRuntime;
-import org.fabric3.fabric.util.FileHelper;
+import org.fabric3.util.io.FileHelper;
 import org.fabric3.host.Names;
 import static org.fabric3.host.Names.APPLICATION_DOMAIN_URI;
 import static org.fabric3.host.Names.CONTRIBUTION_SERVICE_URI;
