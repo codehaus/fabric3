@@ -38,6 +38,24 @@
         <option name="XML_TEXT_WRAP" value="0" />
         <option name="PARAMETER_ANNOTATION_WRAP" value="1" />
         <option name="VARIABLE_ANNOTATION_WRAP" value="2" />
+        <ADDITIONAL_INDENT_OPTIONS fileType="groovy">
+          <option name="INDENT_SIZE" value="2" />
+          <option name="CONTINUATION_INDENT_SIZE" value="8" />
+          <option name="TAB_SIZE" value="4" />
+          <option name="USE_TAB_CHARACTER" value="false" />
+          <option name="SMART_TABS" value="false" />
+          <option name="LABEL_INDENT_SIZE" value="0" />
+          <option name="LABEL_INDENT_ABSOLUTE" value="false" />
+        </ADDITIONAL_INDENT_OPTIONS>
+        <ADDITIONAL_INDENT_OPTIONS fileType="gsp">
+          <option name="INDENT_SIZE" value="2" />
+          <option name="CONTINUATION_INDENT_SIZE" value="8" />
+          <option name="TAB_SIZE" value="4" />
+          <option name="USE_TAB_CHARACTER" value="false" />
+          <option name="SMART_TABS" value="false" />
+          <option name="LABEL_INDENT_SIZE" value="0" />
+          <option name="LABEL_INDENT_ABSOLUTE" value="false" />
+        </ADDITIONAL_INDENT_OPTIONS>
         <ADDITIONAL_INDENT_OPTIONS fileType="java">
           <option name="INDENT_SIZE" value="4" />
           <option name="CONTINUATION_INDENT_SIZE" value="8" />
@@ -185,9 +203,41 @@
         <inspection_tool class="SerialPersistentFieldsWithWrongSignature" level="WARNING" enabled="true" />
         <inspection_tool class="SerialVersionUIDNotStaticFinal" level="WARNING" enabled="true" />
         <inspection_tool class="TransientFieldInNonSerializableClass" level="WARNING" enabled="true" />
+        <inspection_tool class="AbstractBeanReferencesInspection" level="ERROR" enabled="false" />
+        <inspection_tool class="AutowiredDependenciesInspection" level="WARNING" enabled="false" />
+        <inspection_tool class="SpringJavaAutowiringInspection" level="ERROR" enabled="false" />
+        <inspection_tool class="SpringBeanConstructorArgInspection" level="ERROR" enabled="false" />
+        <inspection_tool class="DuplicatedBeanNamesInspection" level="ERROR" enabled="false" />
+        <inspection_tool class="SpringOsgiElementsInconsistencyInspection" level="ERROR" enabled="false" />
+        <inspection_tool class="SpringInjectionValueConsistencyInspection" level="ERROR" enabled="false" />
+        <inspection_tool class="InjectionValueTypeInspection" level="ERROR" enabled="false" />
+        <inspection_tool class="SpringBeanLookupMethodInspection" level="ERROR" enabled="false" />
+        <inspection_tool class="SpringReplacedMethodsInspection" level="ERROR" enabled="false" />
+        <inspection_tool class="SpringRequiredAnnotationInspection" level="ERROR" enabled="false" />
+        <inspection_tool class="SpringRequiredPropertyInspection" level="ERROR" enabled="false" />
+        <inspection_tool class="SpringOsgiServiceCommonInspection" level="ERROR" enabled="false" />
+        <inspection_tool class="SpringBeanAutowiringInspection" level="ERROR" enabled="false" />
+        <inspection_tool class="SpringBeanDepedencyCheckInspection" level="ERROR" enabled="false" />
+        <inspection_tool class="SpringFactoryMethodInspection" level="ERROR" enabled="false" />
+        <inspection_tool class="SpringBeanInstantiationInspection" level="ERROR" enabled="false" />
+        <inspection_tool class="SpringBeanNameConventionInspection" level="WARNING" enabled="false" />
+        <inspection_tool class="SpringFacetInspection" level="WARNING" enabled="false">
+          <option name="checkTestFiles" value="false" />
+        </inspection_tool>
+        <inspection_tool class="SpringInjectionValueStyleInspection" level="WARNING" enabled="false" />
+        <inspection_tool class="SpringJamErrorInspection" level="WARNING" enabled="false" />
+        <inspection_tool class="SpringModelInspection" level="ERROR" enabled="false" />
+        <inspection_tool class="SpringScopesInspection" level="ERROR" enabled="false" />
+        <inspection_tool class="UnparsedCustomBeanInspection" level="WARNING" enabled="false" />
+        <inspection_tool class="UtilSchemaInspection" level="ERROR" enabled="false" />
       </profile>
     </profiles>
-    <list size="0" />
+    <list size="4">
+      <item index="0" class="java.lang.String" itemvalue="SERVER PROBLEM" />
+      <item index="1" class="java.lang.String" itemvalue="INFO" />
+      <item index="2" class="java.lang.String" itemvalue="WARNING" />
+      <item index="3" class="java.lang.String" itemvalue="ERROR" />
+    </list>
   </component>
   <component name="JavacSettings">
     <option name="DEBUGGING_INFO" value="true" />
@@ -356,6 +406,11 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/binding/fabric3-binding-test-harness/binding-test-harness.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/binding/fabric3-binding-test-harness/binding-test-harness.iml" group="tests" />
       <module fileurl="file://$PROJECT_DIR$/fabric-pom/trunk/fabric-pom.iml" filepath="$PROJECT_DIR$/fabric-pom/trunk/fabric-pom.iml" group="poms" />
+      <module fileurl="file://$PROJECT_DIR$/modules/trunk/admin/fabric3-admin-api/fabric3-admin-api.iml" filepath="$PROJECT_DIR$/modules/trunk/admin/fabric3-admin-api/fabric3-admin-api.iml" group="admin" />
+      <module fileurl="file://$PROJECT_DIR$/modules/trunk/admin/fabric3-admin-cli/fabric3-admin-cli.iml" filepath="$PROJECT_DIR$/modules/trunk/admin/fabric3-admin-cli/fabric3-admin-cli.iml" group="admin" />
+      <module fileurl="file://$PROJECT_DIR$/modules/trunk/admin/fabric3-admin-grammar/fabric3-admin-grammar.iml" filepath="$PROJECT_DIR$/modules/trunk/admin/fabric3-admin-grammar/fabric3-admin-grammar.iml" group="admin" />
+      <module fileurl="file://$PROJECT_DIR$/modules/trunk/admin/fabric3-admin-impl/fabric3-admin-impl.iml" filepath="$PROJECT_DIR$/modules/trunk/admin/fabric3-admin-impl/fabric3-admin-impl.iml" group="admin" />
+      <module fileurl="file://$PROJECT_DIR$/modules/trunk/admin/fabric3-admin-interpreter/fabric3-admin-interpreter.iml" filepath="$PROJECT_DIR$/modules/trunk/admin/fabric3-admin-interpreter/fabric3-admin-interpreter.iml" group="admin" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/federated/fabric3-federation-allocation/fabric3-allocation.iml" filepath="$PROJECT_DIR$/modules/trunk/federated/fabric3-federation-allocation/fabric3-allocation.iml" group="federated" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/kernel/api/fabric3-api/fabric3-api.iml" filepath="$PROJECT_DIR$/modules/trunk/kernel/api/fabric3-api/fabric3-api.iml" group="kernel/api" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/other/fabric3-async-loader/fabric3-async-loader.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/other/fabric3-async-loader/fabric3-async-loader.iml" group="other/async" />
@@ -372,8 +427,6 @@
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/binding/fabric3-binding-test/fabric3-binding-test.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/binding/fabric3-binding-test/fabric3-binding-test.iml" group="bindings" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/binding/fabric3-binding-ws/fabric3-binding-ws.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/binding/fabric3-binding-ws/fabric3-binding-ws.iml" group="bindings" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/binding/fabric3-binding-ws-axis2/fabric3-binding-ws-axis2.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/binding/fabric3-binding-ws-axis2/fabric3-binding-ws-axis2.iml" group="bindings" />
-      <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/binding/fabric3-binding-ws-cxf/fabric3-binding-ws-cxf.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/binding/fabric3-binding-ws-cxf/fabric3-binding-ws-cxf.iml" group="bindings" />
-      <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/binding/fabric3-binding-ws-jaxws/fabric3-binding-ws-jaxws.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/binding/fabric3-binding-ws-jaxws/fabric3-binding-ws-jaxws.iml" group="bindings" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/other/fabric3-container-web-jetty/fabric3-container-web-jetty.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/other/fabric3-container-web-jetty/fabric3-container-web-jetty.iml" group="other/web" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/other/fabric3-container-web-spi/fabric3-container-web-spi.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/other/fabric3-container-web-spi/fabric3-container-web-spi.iml" group="other/web" />
       <module fileurl="file://$PROJECT_DIR$/plugins/trunk/fabric3-contribution-plugin/fabric3-contribution-plugin.iml" filepath="$PROJECT_DIR$/plugins/trunk/fabric3-contribution-plugin/fabric3-contribution-plugin.iml" group="plugins" />
@@ -404,14 +457,13 @@
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/federated/fabric3-http-provisioning/fabric3-http-provisioning.iml" filepath="$PROJECT_DIR$/modules/trunk/federated/fabric3-http-provisioning/fabric3-http-provisioning.iml" group="federated" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/interface/fabric3-interface-wsdl/fabric3-interface-wsdl.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/interface/fabric3-interface-wsdl/fabric3-interface-wsdl.iml" group="idls" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/kernel/impl/fabric3-introspection/fabric3-introspection.iml" filepath="$PROJECT_DIR$/modules/trunk/kernel/impl/fabric3-introspection/fabric3-introspection.iml" group="kernel/impl" />
-      <module fileurl="file://$PROJECT_DIR$/modules/trunk/kernel/api/fabric3-introspection-spi/fabric3-introspection-spi.iml" filepath="$PROJECT_DIR$/modules/trunk/kernel/api/fabric3-introspection-spi/fabric3-introspection-spi.iml" group="kernel/api" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/runtime/maven/fabric3-itest-plugin/fabric3-itest-plugin.iml" filepath="$PROJECT_DIR$/modules/trunk/runtime/maven/fabric3-itest-plugin/fabric3-itest-plugin.iml" group="runtimes/maven" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/implementation/fabric3-java/fabric3-java.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/implementation/fabric3-java/fabric3-java.iml" group="implementations" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/other/fabric3-jaxb/fabric3-jaxb.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/other/fabric3-jaxb/fabric3-jaxb.iml" group="other/databinding" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/other/fabric3-jdk-proxy/fabric3-jdk-proxy.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/other/fabric3-jdk-proxy/fabric3-jdk-proxy.iml" group="other" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/other/fabric3-jetty/fabric3-jetty.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/other/fabric3-jetty/fabric3-jetty.iml" group="other" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/kernel/impl/fabric3-jmx/fabric3-jmx.iml" filepath="$PROJECT_DIR$/modules/trunk/kernel/impl/fabric3-jmx/fabric3-jmx.iml" group="kernel/impl" />
-      <module fileurl="file://$PROJECT_DIR$/modules/trunk/runtime/support/fabric3-jmx-agent/fabric3-jmx-agent.iml" filepath="$PROJECT_DIR$/modules/trunk/runtime/support/fabric3-jmx-agent/fabric3-jmx-agent.iml" group="runtimes" />
+      <module fileurl="file://$PROJECT_DIR$/modules/trunk/kernel/impl/fabric3-jmx-agent/fabric3-jmx-agent.iml" filepath="$PROJECT_DIR$/modules/trunk/kernel/impl/fabric3-jmx-agent/fabric3-jmx-agent.iml" group="kernel/impl" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/kernel/api/fabric3-jpa-api/fabric3-jpa-api.iml" filepath="$PROJECT_DIR$/modules/trunk/kernel/api/fabric3-jpa-api/fabric3-jpa-api.iml" group="other/jpa" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/other/fabric3-jpa-core/fabric3-jpa-core.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/other/fabric3-jpa-core/fabric3-jpa-core.iml" group="other/jpa" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/other/fabric3-jpa-hibernate/fabric3-jpa-hibernate.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/other/fabric3-jpa-hibernate/fabric3-jpa-hibernate.iml" group="other/jpa" />
@@ -426,8 +478,7 @@
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/federated/fabric3-messaging/fabric3-messaging.iml" filepath="$PROJECT_DIR$/modules/trunk/federated/fabric3-messaging/fabric3-messaging.iml" group="federated" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/federated/fabric3-messaging-jxta/fabric3-messaging-jxta.iml" filepath="$PROJECT_DIR$/modules/trunk/federated/fabric3-messaging-jxta/fabric3-messaging-jxta.iml" group="federated" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/implementation/fabric3-mock/fabric3-mock.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/implementation/fabric3-mock/fabric3-mock.iml" group="implementations" />
-      <module fileurl="file://$PROJECT_DIR$/modules/trunk/runtime/support/fabric3-monitor/fabric3-monitor.iml" filepath="$PROJECT_DIR$/modules/trunk/runtime/support/fabric3-monitor/fabric3-monitor.iml" group="runtimes" />
-      <module fileurl="file://$PROJECT_DIR$/modules/trunk/kernel/api/fabric3-monitor-api/fabric3-monitor-api.iml" filepath="$PROJECT_DIR$/modules/trunk/kernel/api/fabric3-monitor-api/fabric3-monitor-api.iml" group="kernel/api" />
+      <module fileurl="file://$PROJECT_DIR$/modules/trunk/kernel/impl/fabric3-monitor/fabric3-monitor.iml" filepath="$PROJECT_DIR$/modules/trunk/kernel/impl/fabric3-monitor/fabric3-monitor.iml" group="kernel/impl" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/other/fabric3-naming/fabric3-naming.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/other/fabric3-naming/fabric3-naming.iml" group="other" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/kernel/impl/fabric3-pojo/fabric3-pojo.iml" filepath="$PROJECT_DIR$/modules/trunk/kernel/impl/fabric3-pojo/fabric3-pojo.iml" group="kernel/impl" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/kernel/impl/fabric3-policy/fabric3-policy.iml" filepath="$PROJECT_DIR$/modules/trunk/kernel/impl/fabric3-policy/fabric3-policy.iml" group="kernel/impl" />
@@ -438,19 +489,19 @@
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/other/fabric3-security/fabric3-security.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/other/fabric3-security/fabric3-security.iml" group="other" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/kernel/api/fabric3-spi/fabric3-spi.iml" filepath="$PROJECT_DIR$/modules/trunk/kernel/api/fabric3-spi/fabric3-spi.iml" group="kernel/api" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/implementation/fabric3-spring/fabric3-spring.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/implementation/fabric3-spring/fabric3-spring.iml" group="implementations" />
+      <module fileurl="file://$PROJECT_DIR$/modules/trunk/runtime/standalone/fabric3-standalone-admin/fabric3-standalone-admin.iml" filepath="$PROJECT_DIR$/modules/trunk/runtime/standalone/fabric3-standalone-admin/fabric3-standalone-admin.iml" group="runtimes/standalone" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/runtime/standalone/fabric3-standalone-api/fabric3-standalone-api.iml" filepath="$PROJECT_DIR$/modules/trunk/runtime/standalone/fabric3-standalone-api/fabric3-standalone-api.iml" group="runtimes/standalone" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/runtime/standalone/fabric3-standalone-host/fabric3-standalone-host.iml" filepath="$PROJECT_DIR$/modules/trunk/runtime/standalone/fabric3-standalone-host/fabric3-standalone-host.iml" group="runtimes/standalone" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/runtime/standalone/fabric3-standalone-server/fabric3-standalone-server.iml" filepath="$PROJECT_DIR$/modules/trunk/runtime/standalone/fabric3-standalone-server/fabric3-standalone-server.iml" group="runtimes/standalone" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/runtime/standalone/fabric3-standalone-shutdown/fabric3-standalone-shutdown.iml" filepath="$PROJECT_DIR$/modules/trunk/runtime/standalone/fabric3-standalone-shutdown/fabric3-standalone-shutdown.iml" group="runtimes/standalone" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/kernel/impl/fabric3-system/fabric3-system.iml" filepath="$PROJECT_DIR$/modules/trunk/kernel/impl/fabric3-system/fabric3-system.iml" group="kernel/impl" />
-      <module fileurl="file://$PROJECT_DIR$/modules/trunk/runtime/support/fabric3-thread-pool/fabric3-thread-pool.iml" filepath="$PROJECT_DIR$/modules/trunk/runtime/support/fabric3-thread-pool/fabric3-thread-pool.iml" group="runtimes" />
+      <module fileurl="file://$PROJECT_DIR$/modules/trunk/kernel/impl/fabric3-thread-pool/fabric3-thread-pool.iml" filepath="$PROJECT_DIR$/modules/trunk/kernel/impl/fabric3-thread-pool/fabric3-thread-pool.iml" group="kernel/impl" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/implementation/fabric3-timer-loader/fabric3-timer-loader.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/implementation/fabric3-timer-loader/fabric3-timer-loader.iml" group="implementations/timer" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/implementation/fabric3-timer-provision/fabric3-timer-provision.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/implementation/fabric3-timer-provision/fabric3-timer-provision.iml" group="implementations/timer" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/other/fabric3-timer-quartz/fabric3-timer-quartz.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/other/fabric3-timer-quartz/fabric3-timer-quartz.iml" group="other" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/implementation/fabric3-timer-runtime/fabric3-timer-runtime.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/implementation/fabric3-timer-runtime/fabric3-timer-runtime.iml" group="implementations/timer" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/other/fabric3-timer-spi/fabric3-timer-spi.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/other/fabric3-timer-spi/fabric3-timer-spi.iml" group="other" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/kernel/impl/fabric3-transform/fabric3-transform.iml" filepath="$PROJECT_DIR$/modules/trunk/kernel/impl/fabric3-transform/fabric3-transform.iml" group="kernel/impl" />
-      <module fileurl="file://$PROJECT_DIR$/modules/trunk/kernel/api/fabric3-transform-api/fabric3-transform-api.iml" filepath="$PROJECT_DIR$/modules/trunk/kernel/api/fabric3-transform-api/fabric3-transform-api.iml" group="kernel/api" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/other/fabric3-tx/fabric3-tx.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/other/fabric3-tx/fabric3-tx.iml" group="other/tx" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/other/fabric3-tx-jotm/fabric3-tx-jotm.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/other/fabric3-tx-jotm/fabric3-tx-jotm.iml" group="other/tx" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/kernel/impl/fabric3-util/fabric3-util.iml" filepath="$PROJECT_DIR$/modules/trunk/kernel/impl/fabric3-util/fabric3-util.iml" group="kernel/impl" />
@@ -459,7 +510,7 @@
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/runtime/webapp/fabric3-webapp-host/fabric3-webapp-host.iml" filepath="$PROJECT_DIR$/modules/trunk/runtime/webapp/fabric3-webapp-host/fabric3-webapp-host.iml" group="runtimes/webapp" />
       <module fileurl="file://$PROJECT_DIR$/plugins/trunk/fabric3-webapp-plugin/fabric3-webapp-plugin.iml" filepath="$PROJECT_DIR$/plugins/trunk/fabric3-webapp-plugin/fabric3-webapp-plugin.iml" group="plugins" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/other/fabric3-xapool/fabric3-xapool.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/other/fabric3-xapool/fabric3-xapool.iml" group="other" />
-      <module fileurl="file://$PROJECT_DIR$/modules/trunk/kernel/services/fabric3-xmlfactory/fabric3-xmlfactory.iml" filepath="$PROJECT_DIR$/modules/trunk/kernel/services/fabric3-xmlfactory/fabric3-xmlfactory.iml" group="kernel" />
+      <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/implementation/fabric3-xquery/fabric3-xquery.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/implementation/fabric3-xquery/fabric3-xquery.iml" group="implementations" />
       <module fileurl="file://$PROJECT_DIR$/parent-pom/trunk/parent-pom.iml" filepath="$PROJECT_DIR$/parent-pom/trunk/parent-pom.iml" group="poms" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/runtime/federated/runtime-controller/runtime-controller.iml" filepath="$PROJECT_DIR$/modules/trunk/runtime/federated/runtime-controller/runtime-controller.iml" group="runtimes/standalone" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/runtime/federated/runtime-participant/runtime-participant.iml" filepath="$PROJECT_DIR$/modules/trunk/runtime/federated/runtime-participant/runtime-participant.iml" group="runtimes/standalone" />
@@ -494,7 +545,7 @@
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-user-resource/test-user-resource.iml" filepath="$PROJECT_DIR$/tests/trunk/test-user-resource/test-user-resource.iml" group="tests" />
     </modules>
   </component>
-  <component name="ProjectRootManager" version="2" assert-keyword="true" jdk-15="true" project-jdk-name="1.5" project-jdk-type="JavaSDK" />
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_1_5" assert-keyword="true" jdk-15="true" project-jdk-name="1.5" project-jdk-type="JavaSDK" />
   <component name="ResourceManagerContainer">
     <option name="myResourceBundles">
       <value>
@@ -519,9 +570,2001 @@
             </SvnBranchConfiguration>
           </value>
         </entry>
+        <entry key="$PROJECT_DIR$/modules/trunk/extension/other/fabric3-contribution-scanner">
+          <value>
+            <SvnBranchConfiguration>
+              <option name="branchMap">
+                <map>
+                  <entry key="https://svn.codehaus.org/fabric3/modules/tags">
+                    <value>
+                      <list>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1222575031048" />
+                          <option name="revision" value="5508" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-modules-parent-pom-0.6.5" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1221439158640" />
+                          <option name="revision" value="5413" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-modules-parent-pom-0.6" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1216328442160" />
+                          <option name="revision" value="5043" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-modules-parent-pom-0.5.1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1216283606354" />
+                          <option name="revision" value="5040" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-contribution-plugin-0.5.1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1215426954207" />
+                          <option name="revision" value="4979" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-modules-parent-pom-0.5" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1215370361422" />
+                          <option name="revision" value="4966" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-contribution-plugin-0.5" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1211958444691" />
+                          <option name="revision" value="4702" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-itest-plugin-0.5BETA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1211957814338" />
+                          <option name="revision" value="4698" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/runtime-participant-0.5BETA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1211957216495" />
+                          <option name="revision" value="4694" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/runtime-controller-0.5BETA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1211956960397" />
+                          <option name="revision" value="4690" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-webapp-host-0.5BETA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1211956763486" />
+                          <option name="revision" value="4686" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-webapp-api-0.5BETA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1211956332441" />
+                          <option name="revision" value="4682" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/runtime-standalone-0.5BETA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1211956062745" />
+                          <option name="revision" value="4678" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-standalone-shutdown-0.5BETA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1211955901432" />
+                          <option name="revision" value="4674" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-standalone-server-0.5BETA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1211955704427" />
+                          <option name="revision" value="4670" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-standalone-host-0.5BETA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1211955508491" />
+                          <option name="revision" value="4666" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-standalone-api-0.5BETA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1211955257381" />
+                          <option name="revision" value="4662" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-maven-host-0.5BETA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1211955054422" />
+                          <option name="revision" value="4658" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-maven-api-0.5BETA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1211954818362" />
+                          <option name="revision" value="4654" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-messaging-jxta-0.5BETA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1211954670420" />
+                          <option name="revision" value="4650" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-messaging-0.5BETA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1211954452417" />
+                          <option name="revision" value="4646" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-http-provisioning-0.5BETA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1211954261383" />
+                          <option name="revision" value="4642" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-discovery-jxta-0.5BETA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1211954066388" />
+                          <option name="revision" value="4638" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-jxta-0.5BETA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1211953897351" />
+                          <option name="revision" value="4634" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-install-jxta-0.5BETA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1211953655509" />
+                          <option name="revision" value="4630" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-async-runtime-0.5BETA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1211953430472" />
+                          <option name="revision" value="4626" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-async-loader-0.5BETA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1211953164431" />
+                          <option name="revision" value="4622" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-console-0.5BETA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1211952846643" />
+                          <option name="revision" value="4618" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-tx-jotm-0.5BETA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1211952625402" />
+                          <option name="revision" value="4614" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-tx-0.5BETA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1211952452457" />
+                          <option name="revision" value="4610" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-security-0.5BETA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1211951575395" />
+                          <option name="revision" value="4606" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/sca-taglib-r0.9-0.5BETA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1211951320474" />
+                          <option name="revision" value="4602" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-resource-0.5BETA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1211950984669" />
+                          <option name="revision" value="4598" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-naming-0.5BETA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1211950802171" />
+                          <option name="revision" value="4594" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-marshal-xstream-0.5BETA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1211950504822" />
+                          <option name="revision" value="4590" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-jpa-hibernate-0.5BETA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1211950123706" />
+                          <option name="revision" value="4586" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-jpa-core-0.5BETA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1211949886737" />
+                          <option name="revision" value="4582" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-jpa-spi-0.5BETA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1211949574767" />
+                          <option name="revision" value="4578" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-jdk-proxy-0.5BETA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1211949352123" />
+                          <option name="revision" value="4574" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-db-h2-0.5BETA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1211949182585" />
+                          <option name="revision" value="4570" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-xapool-0.5BETA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1211948796498" />
+                          <option name="revision" value="4566" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-conversation-propagation-0.5BETA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1211948438414" />
+                          <option name="revision" value="4562" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-container-web-jetty-0.5BETA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1211948099479" />
+                          <option name="revision" value="4558" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-jetty-0.5BETA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1211924342422" />
+                          <option name="revision" value="4551" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-contribution-scanner-war-0.5BETA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1211924015444" />
+                          <option name="revision" value="4547" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-contribution-war-0.5BETA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1211923809533" />
+                          <option name="revision" value="4543" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-contribution-scanner-0.5BETA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1211923603600" />
+                          <option name="revision" value="4539" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-contribution-scanner-spi-0.5BETA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1211874087403" />
+                          <option name="revision" value="4528" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-web-0.5BETA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1211873907386" />
+                          <option name="revision" value="4524" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-container-web-spi-0.5BETA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1211873496342" />
+                          <option name="revision" value="4520" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-spring-0.5BETA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1211873294329" />
+                          <option name="revision" value="4516" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-mock-0.5BETA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1211873044346" />
+                          <option name="revision" value="4512" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-junit-0.5BETA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1211872825389" />
+                          <option name="revision" value="4508" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-java-0.5BETA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1211872586412" />
+                          <option name="revision" value="4504" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-groovy-0.5BETA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1211872279547" />
+                          <option name="revision" value="4500" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-interface-wsdl-0.5BETA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1211871977420" />
+                          <option name="revision" value="4496" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-binding-ws-jaxws-0.5BETA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1211871642762" />
+                          <option name="revision" value="4492" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-binding-ws-cxf-0.5BETA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1211871104476" />
+                          <option name="revision" value="4488" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-binding-ws-axis2-0.5BETA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1211870837507" />
+                          <option name="revision" value="4484" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-binding-ws-0.5BETA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1211870586438" />
+                          <option name="revision" value="4480" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-binding-test-0.5BETA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1211870366396" />
+                          <option name="revision" value="4476" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-binding-rmi-0.5BETA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1211870113466" />
+                          <option name="revision" value="4472" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-binding-jms-0.5BETA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1211869657776" />
+                          <option name="revision" value="4468" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-binding-hessian-0.5BETA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1211869428744" />
+                          <option name="revision" value="4464" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-binding-ejb-0.5BETA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1211868713398" />
+                          <option name="revision" value="4460" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-binding-codegen-0.5BETA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1211868430615" />
+                          <option name="revision" value="4456" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-binding-burlap-0.5BETA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1211868130471" />
+                          <option name="revision" value="4452" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/binding-test-harness-0.5BETA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1211867437693" />
+                          <option name="revision" value="4448" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-fabric-0.5BETA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1211867192801" />
+                          <option name="revision" value="4444" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-jmx-agent-0.5BETA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1211866989423" />
+                          <option name="revision" value="4440" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-monitor-0.5BETA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1211866551560" />
+                          <option name="revision" value="4436" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-system-0.5BETA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1211866261437" />
+                          <option name="revision" value="4432" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-jmx-0.5BETA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1211866048505" />
+                          <option name="revision" value="4428" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-introspection-0.5BETA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1211865773522" />
+                          <option name="revision" value="4424" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-loader-0.5BETA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1211865409412" />
+                          <option name="revision" value="4420" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-pojo-0.5BETA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1211865124347" />
+                          <option name="revision" value="4416" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-policy-0.5BETA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1211864862561" />
+                          <option name="revision" value="4412" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-transform-0.5BETA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1211864663436" />
+                          <option name="revision" value="4408" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-util-0.5BETA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1211863700943" />
+                          <option name="revision" value="4404" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-spi-0.5BETA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1211863520366" />
+                          <option name="revision" value="4400" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-xmlfactory-0.5BETA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1211863186375" />
+                          <option name="revision" value="4396" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-jpa-api-0.5BETA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1211862918133" />
+                          <option name="revision" value="4392" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-transform-api-0.5BETA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1211862696273" />
+                          <option name="revision" value="4388" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-introspection-spi-0.5BETA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1211862415193" />
+                          <option name="revision" value="4384" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-scdl-0.5BETA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1211861316190" />
+                          <option name="revision" value="4380" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-host-api-0.5BETA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1211861007252" />
+                          <option name="revision" value="4376" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-monitor-api-0.5BETA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1211860772102" />
+                          <option name="revision" value="4372" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-api-0.5BETA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1211860481284" />
+                          <option name="revision" value="4368" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-webapp-plugin-0.5BETA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1211860157118" />
+                          <option name="revision" value="4364" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-contribution-plugin-0.5BETA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1209335535681" />
+                          <option name="revision" value="4043" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-messaging-jxta-0.5ALPHA2" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1209335385449" />
+                          <option name="revision" value="4039" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-messaging-0.5ALPHA2" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1209335236356" />
+                          <option name="revision" value="4035" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-discovery-jxta-0.5ALPHA2" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1209335007306" />
+                          <option name="revision" value="4031" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-jxta-0.5ALPHA2" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1209334780459" />
+                          <option name="revision" value="4027" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-install-jxta-0.5ALPHA2" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1209334499272" />
+                          <option name="revision" value="4024" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-itest-plugin-0.5ALPHA2" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1209333986411" />
+                          <option name="revision" value="4020" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/runtime-standalone-0.5ALPHA2" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1209333675401" />
+                          <option name="revision" value="4016" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-standalone-shutdown-0.5ALPHA2" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1209333553490" />
+                          <option name="revision" value="4013" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-standalone-server-0.5ALPHA2" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1209333372480" />
+                          <option name="revision" value="4009" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-standalone-host-0.5ALPHA2" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1209333065153" />
+                          <option name="revision" value="4005" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-standalone-api-0.5ALPHA2" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1209332693616" />
+                          <option name="revision" value="4001" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-interface-wsdl-0.5ALPHA2" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1209332240645" />
+                          <option name="revision" value="3997" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-jpa-hibernate-0.5ALPHA2" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1209332055637" />
+                          <option name="revision" value="3993" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-jpa-core-0.5ALPHA2" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1209331861591" />
+                          <option name="revision" value="3989" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-jpa-spi-0.5ALPHA2" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1209331715618" />
+                          <option name="revision" value="3986" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-marshal-xstream-0.5ALPHA2" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1209331494601" />
+                          <option name="revision" value="3982" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-naming-0.5ALPHA2" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1209331320553" />
+                          <option name="revision" value="3978" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-xapool-0.5ALPHA2" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1209331042872" />
+                          <option name="revision" value="3974" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-tx-jotm-0.5ALPHA2" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1209330854743" />
+                          <option name="revision" value="3970" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-tx-0.5ALPHA2" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1209330683549" />
+                          <option name="revision" value="3966" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-security-0.5ALPHA2" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1209330450560" />
+                          <option name="revision" value="3962" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/sca-taglib-r0.9-0.5ALPHA2" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1209330272534" />
+                          <option name="revision" value="3959" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-resource-0.5ALPHA2" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1209329551568" />
+                          <option name="revision" value="3955" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-conversation-propagation-0.5ALPHA2" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1209329340726" />
+                          <option name="revision" value="3951" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-contribution-scanner-war-0.5ALPHA2" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1209329154554" />
+                          <option name="revision" value="3947" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-contribution-war-0.5ALPHA2" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1209328958710" />
+                          <option name="revision" value="3943" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-contribution-scanner-0.5ALPHA2" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1209328016278" />
+                          <option name="revision" value="3939" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-binding-ws-jaxws-0.5ALPHA2" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1209327765873" />
+                          <option name="revision" value="3935" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-binding-ejb-0.5ALPHA2" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1209327583207" />
+                          <option name="revision" value="3931" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-binding-rmi-0.5ALPHA2" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1209327524557" />
+                          <option name="revision" value="3927" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-contribution-scanner-spi-0.5ALPHA2" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1209327137854" />
+                          <option name="revision" value="3923" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-binding-codegen-0.5ALPHA2" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1209325638881" />
+                          <option name="revision" value="3920" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-binding-ws-axis2-0.5ALPHA2" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1209324143046" />
+                          <option name="revision" value="3916" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-container-web-jetty-0.5ALPHA2" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1209323930683" />
+                          <option name="revision" value="3912" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-jetty-0.5ALPHA2" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1209322604274" />
+                          <option name="revision" value="3906" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-binding-ws-0.5ALPHA2" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1209322582625" />
+                          <option name="revision" value="3903" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-async-runtime-0.5ALPHA2" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1209322401249" />
+                          <option name="revision" value="3898" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-binding-test-0.5ALPHA2" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1209322372621" />
+                          <option name="revision" value="3895" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-async-loader-0.5ALPHA2" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1209321957125" />
+                          <option name="revision" value="3890" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-binding-jms-0.5ALPHA2" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1209321697422" />
+                          <option name="revision" value="3886" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-binding-hessian-0.5ALPHA2" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1209321683699" />
+                          <option name="revision" value="3883" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-webapp-host-0.5ALPHA2" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1209321399117" />
+                          <option name="revision" value="3878" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-binding-burlap-0.5ALPHA2" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1209321139142" />
+                          <option name="revision" value="3874" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-spring-0.5ALPHA2" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1209321129397" />
+                          <option name="revision" value="3871" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/binding-test-harness-0.5ALPHA2" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1209320765041" />
+                          <option name="revision" value="3867" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-mock-0.5ALPHA2" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1209320451547" />
+                          <option name="revision" value="3863" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-junit-0.5ALPHA2" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1209320262552" />
+                          <option name="revision" value="3859" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-groovy-0.5ALPHA2" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1209320068625" />
+                          <option name="revision" value="3855" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-java-0.5ALPHA2" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1209319841865" />
+                          <option name="revision" value="3851" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-jdk-proxy-0.5ALPHA2" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1209319455610" />
+                          <option name="revision" value="3847" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-web-0.5ALPHA2" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1209317841574" />
+                          <option name="revision" value="3843" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-container-web-spi-0.5ALPHA2" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1209296735858" />
+                          <option name="revision" value="3839" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-webapp-api-0.5ALPHA2" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1209296574845" />
+                          <option name="revision" value="3835" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-maven-host-0.5ALPHA2" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1209296419039" />
+                          <option name="revision" value="3831" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-maven-api-0.5ALPHA2" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1209295183974" />
+                          <option name="revision" value="3827" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-fabric-0.5ALPHA2" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1209295030029" />
+                          <option name="revision" value="3823" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-monitor-0.5ALPHA2" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1209294806915" />
+                          <option name="revision" value="3819" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-system-0.5ALPHA2" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1209294614095" />
+                          <option name="revision" value="3815" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-introspection-0.5ALPHA2" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1209294429819" />
+                          <option name="revision" value="3811" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-jmx-0.5ALPHA2" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1209294261933" />
+                          <option name="revision" value="3807" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-pojo-0.5ALPHA2" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1209294061941" />
+                          <option name="revision" value="3803" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-policy-0.5ALPHA2" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1209293890101" />
+                          <option name="revision" value="3799" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-loader-0.5ALPHA2" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1209292694942" />
+                          <option name="revision" value="3795" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-transform-0.5ALPHA2" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1209292352945" />
+                          <option name="revision" value="3791" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-util-0.5ALPHA2" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1209284151244" />
+                          <option name="revision" value="3788" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-spi-0.5ALPHA2" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1209283965757" />
+                          <option name="revision" value="3784" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-xmlfactory-0.5ALPHA2" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1209283689730" />
+                          <option name="revision" value="3780" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-introspection-spi-0.5ALPHA2" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1209283435792" />
+                          <option name="revision" value="3776" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-transform-api-0.5ALPHA2" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1209283079792" />
+                          <option name="revision" value="3772" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-scdl-0.5ALPHA2" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1209282880859" />
+                          <option name="revision" value="3769" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-host-api-0.5ALPHA2" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1209282349811" />
+                          <option name="revision" value="3765" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-monitor-api-0.5ALPHA2" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1209282148899" />
+                          <option name="revision" value="3762" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-api-0.5ALPHA2" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1209263558450" />
+                          <option name="revision" value="3759" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-webapp-plugin-0.5ALPHA2" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1209263076571" />
+                          <option name="revision" value="3756" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-contribution-plugin-0.5ALPHA2" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1206871556500" />
+                          <option name="revision" value="3481" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-interface-wsdl-0.5ALPHA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1206871218178" />
+                          <option name="revision" value="3477" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-discovery-jxta-0.5ALPHA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1206871208503" />
+                          <option name="revision" value="3474" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-messaging-jxta-0.5ALPHA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1206871000663" />
+                          <option name="revision" value="3469" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-messaging-0.5ALPHA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1206870894764" />
+                          <option name="revision" value="3465" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-jxta-0.5ALPHA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1206870796577" />
+                          <option name="revision" value="3461" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-install-jxta-0.5ALPHA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1206870634662" />
+                          <option name="revision" value="3458" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/runtime-standalone-0.5ALPHA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1206870301657" />
+                          <option name="revision" value="3454" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-standalone-shutdown-0.5ALPHA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1206870208452" />
+                          <option name="revision" value="3451" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-standalone-server-0.5ALPHA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1206870137587" />
+                          <option name="revision" value="3447" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-standalone-host-0.5ALPHA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1206870020540" />
+                          <option name="revision" value="3443" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-standalone-api-0.5ALPHA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1206869945632" />
+                          <option name="revision" value="3439" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-jmx-0.5ALPHA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1206868979631" />
+                          <option name="revision" value="3435" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-jetty-0.5ALPHA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1206820279899" />
+                          <option name="revision" value="3431" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-itest-plugin-0.5ALPHA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1206820129726" />
+                          <option name="revision" value="3427" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-webapp-host-0.5ALPHA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1206820024735" />
+                          <option name="revision" value="3423" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-maven-host-0.5ALPHA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1206819952074" />
+                          <option name="revision" value="3419" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-webapp-api-0.5ALPHA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1206819861418" />
+                          <option name="revision" value="3415" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-maven-api-0.5ALPHA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1206806783236" />
+                          <option name="revision" value="3411" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-xapool-0.5ALPHA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1206806571016" />
+                          <option name="revision" value="3407" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-tx-0.5ALPHA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1206806563103" />
+                          <option name="revision" value="3404" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-tx-jotm-0.5ALPHA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1206806385998" />
+                          <option name="revision" value="3399" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-resource-0.5ALPHA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1206806373018" />
+                          <option name="revision" value="3396" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-security-0.5ALPHA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1206806149114" />
+                          <option name="revision" value="3391" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-naming-0.5ALPHA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1206806142074" />
+                          <option name="revision" value="3388" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-marshal-xstream-0.5ALPHA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1206805774381" />
+                          <option name="revision" value="3383" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-jpa-hibernate-0.5ALPHA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1206805768160" />
+                          <option name="revision" value="3380" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-jpa-core-0.5ALPHA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1206805581279" />
+                          <option name="revision" value="3375" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-jpa-spi-0.5ALPHA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1206805528261" />
+                          <option name="revision" value="3372" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-contribution-scanner-0.5ALPHA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1206805412160" />
+                          <option name="revision" value="3368" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-contribution-scanner-spi-0.5ALPHA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1206805352671" />
+                          <option name="revision" value="3364" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-console-0.5ALPHA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1206805224198" />
+                          <option name="revision" value="3360" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-async-runtime-0.5ALPHA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1206805154269" />
+                          <option name="revision" value="3357" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-async-loader-0.5ALPHA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1206804682034" />
+                          <option name="revision" value="3352" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-binding-ws-axis2-0.5ALPHA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1206804594387" />
+                          <option name="revision" value="3348" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-binding-ws-cxf-0.5ALPHA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1206804399429" />
+                          <option name="revision" value="3344" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-binding-ws-0.5ALPHA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1206804390116" />
+                          <option name="revision" value="3341" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-binding-test-0.5ALPHA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1206804217255" />
+                          <option name="revision" value="3336" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-binding-jms-0.5ALPHA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1206804184176" />
+                          <option name="revision" value="3332" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-binding-ejb-0.5ALPHA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1206803897296" />
+                          <option name="revision" value="3328" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-binding-hessian-0.5ALPHA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1206803891748" />
+                          <option name="revision" value="3325" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-binding-rmi-0.5ALPHA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1206803557618" />
+                          <option name="revision" value="3320" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-binding-burlap-0.5ALPHA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1206803548042" />
+                          <option name="revision" value="3317" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/binding-test-harness-0.5ALPHA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1206803277463" />
+                          <option name="revision" value="3311" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-spring-0.5ALPHA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1206803215432" />
+                          <option name="revision" value="3307" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-groovy-0.5ALPHA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1206803110359" />
+                          <option name="revision" value="3303" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-mock-0.5ALPHA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1206803045293" />
+                          <option name="revision" value="3299" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-junit-0.5ALPHA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1206802714783" />
+                          <option name="revision" value="3295" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-java-0.5ALPHA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1206802005442" />
+                          <option name="revision" value="3291" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-webapp-plugin-0.5ALPHA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1206801741736" />
+                          <option name="revision" value="3288" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-fabric-0.5ALPHA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1206801496529" />
+                          <option name="revision" value="3284" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-system-0.5ALPHA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1206801027513" />
+                          <option name="revision" value="3280" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-introspection-0.5ALPHA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1206800599806" />
+                          <option name="revision" value="3276" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-pojo-0.5ALPHA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1206800352875" />
+                          <option name="revision" value="3272" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-policy-0.5ALPHA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1206800098012" />
+                          <option name="revision" value="3268" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-loader-0.5ALPHA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1206799892588" />
+                          <option name="revision" value="3264" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-transform-0.5ALPHA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1206799537093" />
+                          <option name="revision" value="3260" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-util-0.5ALPHA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1206799378438" />
+                          <option name="revision" value="3257" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-monitor-0.5ALPHA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1206798996550" />
+                          <option name="revision" value="3253" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-spi-0.5ALPHA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1206798841375" />
+                          <option name="revision" value="3249" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-xmlfactory-0.5ALPHA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1206798672392" />
+                          <option name="revision" value="3245" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-introspection-spi-0.5ALPHA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1206798324176" />
+                          <option name="revision" value="3241" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-scdl-0.5ALPHA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1206798164452" />
+                          <option name="revision" value="3238" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-host-api-0.5ALPHA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1206797718308" />
+                          <option name="revision" value="3234" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-monitor-api-0.5ALPHA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1206796531449" />
+                          <option name="revision" value="3231" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-api-0.5ALPHA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1206795929442" />
+                          <option name="revision" value="3227" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-contribution-plugin-0.5ALPHA1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1206218191291" />
+                          <option name="revision" value="3199" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-transform-0.5-ALPHA-1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1206217782395" />
+                          <option name="revision" value="3194" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-pojo-0.5-ALPHA-1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1206215033186" />
+                          <option name="revision" value="3189" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-spi-0.5-ALPHA-1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1206214767955" />
+                          <option name="revision" value="3184" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-introspection-spi-0.5-ALPHA-1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1206214449246" />
+                          <option name="revision" value="3179" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-xmlfactory-0.5-ALPHA-1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1206214166215" />
+                          <option name="revision" value="3175" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-scdl-0.5-ALPHA-1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1206213973015" />
+                          <option name="revision" value="3171" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-host-api-0.5-ALPHA-1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1206213750292" />
+                          <option name="revision" value="3166" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-monitor-0.5-ALPHA-1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1206213509292" />
+                          <option name="revision" value="3162" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-api-0.5-ALPHA-1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1206211680491" />
+                          <option name="revision" value="3157" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/binding-test-harness-0.5-ALPHA-1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1201258532207" />
+                          <option name="revision" value="2649" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-async-runtime-0.1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1201258356454" />
+                          <option name="revision" value="2645" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-async-loader-0.1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1201006471426" />
+                          <option name="revision" value="2637" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-mock-0.2" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1200953908872" />
+                          <option name="revision" value="2632" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-groovy-0.3" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1200953454673" />
+                          <option name="revision" value="2628" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-tx-jotm-0.2" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1200953237702" />
+                          <option name="revision" value="2625" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-jetty-0.4" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1200953190212" />
+                          <option name="revision" value="2622" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-tx-0.3" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1200953159939" />
+                          <option name="revision" value="2619" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-binding-ws-cxf-0.2" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1200953010249" />
+                          <option name="revision" value="2615" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-resource-0.2" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1200952679234" />
+                          <option name="revision" value="2612" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-jpa-hibernate-0.2" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1200952647397" />
+                          <option name="revision" value="2609" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-binding-ws-axis2-0.2" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1200952435275" />
+                          <option name="revision" value="2603" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-binding-ws-0.4" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1200952353289" />
+                          <option name="revision" value="2600" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-jpa-core-0.2" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1200952249383" />
+                          <option name="revision" value="2596" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-binding-jms-0.4" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1200952100216" />
+                          <option name="revision" value="2593" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-jpa-spi-0.2" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1200952073959" />
+                          <option name="revision" value="2590" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-binding-hessian-0.4" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1200951830705" />
+                          <option name="revision" value="2586" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-binding-burlap-0.4" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1200946775244" />
+                          <option name="revision" value="2582" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-webapp-host-0.4" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1200946398197" />
+                          <option name="revision" value="2578" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-webapp-api-0.4" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1200945267648" />
+                          <option name="revision" value="2574" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-itest-plugin-0.4" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1200945031092" />
+                          <option name="revision" value="2570" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-maven-host-0.4" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1200944780068" />
+                          <option name="revision" value="2566" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-maven-api-0.4" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1200944370143" />
+                          <option name="revision" value="2561" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/binding-test-harness-0.2" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1200944223112" />
+                          <option name="revision" value="2558" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-xapool-0.1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1200941336965" />
+                          <option name="revision" value="2554" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-junit-0.2" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1200941008915" />
+                          <option name="revision" value="2550" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-java-0.2" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1200875953006" />
+                          <option name="revision" value="2546" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-fabric-0.4" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1200875835129" />
+                          <option name="revision" value="2543" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-policy-0.4" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1200875468790" />
+                          <option name="revision" value="2539" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-pojo-0.4" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1200875293909" />
+                          <option name="revision" value="2536" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-extension-0.4" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1200875144919" />
+                          <option name="revision" value="2533" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-loader-0.4" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1200874815748" />
+                          <option name="revision" value="2529" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-transform-0.4" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1200874669991" />
+                          <option name="revision" value="2526" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-util-0.1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1200873779754" />
+                          <option name="revision" value="2522" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-spi-0.4" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1200873106567" />
+                          <option name="revision" value="2517" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-scdl-0.4" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1200872684560" />
+                          <option name="revision" value="2513" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-host-api-0.3" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1200872201367" />
+                          <option name="revision" value="2509" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-monitor-0.1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1200871102699" />
+                          <option name="revision" value="2504" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-api-0.3" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1200870119633" />
+                          <option name="revision" value="2500" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-contribution-plugin-0.3" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1200869894498" />
+                          <option name="revision" value="2497" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-webapp-plugin-0.3" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1197457807853" />
+                          <option name="revision" value="2262" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-contribution-plugin-0.2.1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1195228408123" />
+                          <option name="revision" value="2034" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-mock-0.1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1194997011532" />
+                          <option name="revision" value="2026" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/runtime-development-0.3" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1194996635381" />
+                          <option name="revision" value="2022" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/runtime-standalone-0.3" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1194994787236" />
+                          <option name="revision" value="2018" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-development-host-0.2.1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1194994426459" />
+                          <option name="revision" value="2014" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-webapp-host-0.3.2" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1194994233773" />
+                          <option name="revision" value="2010" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-webapp-api-0.3.1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1194994045391" />
+                          <option name="revision" value="2007" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-standalone-host-0.3.1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1194993679081" />
+                          <option name="revision" value="2003" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-itest-plugin-0.3.1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1194993376574" />
+                          <option name="revision" value="1999" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-junit-0.1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1194992834455" />
+                          <option name="revision" value="1996" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-fabric-0.3.2" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1194991835387" />
+                          <option name="revision" value="1992" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-pojo-0.3.1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1194991490753" />
+                          <option name="revision" value="1989" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-loader-0.3.1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1194482284886" />
+                          <option name="revision" value="1887" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-binding-ws-axis2-0.1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1194481665051" />
+                          <option name="revision" value="1883" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-binding-ws-cxf-0.1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1194481349365" />
+                          <option name="revision" value="1879" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-binding-ws-0.3" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1194480875053" />
+                          <option name="revision" value="1876" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-binding-jms-0.3" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1194480562361" />
+                          <option name="revision" value="1873" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-binding-hessian-0.3" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1194480358093" />
+                          <option name="revision" value="1870" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-binding-burlap-0.3" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1194479965059" />
+                          <option name="revision" value="1867" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-tx-jotm-0.1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1194479698663" />
+                          <option name="revision" value="1864" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-tx-0.2" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1194479309137" />
+                          <option name="revision" value="1861" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-jpa-hibernate-0.1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1194478972982" />
+                          <option name="revision" value="1857" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-jpa-core-0.1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1194478433291" />
+                          <option name="revision" value="1852" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-jpa-spi-0.1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1194383318800" />
+                          <option name="revision" value="1845" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-resource-0.1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1194382707549" />
+                          <option name="revision" value="1842" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-contribution-scanner-0.3" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1194381051715" />
+                          <option name="revision" value="1839" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-contribution-scanner-spi-0.3" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1194352274246" />
+                          <option name="revision" value="1835" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-standalone-server-0.3" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1194351491515" />
+                          <option name="revision" value="1831" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-standalone-host-0.3" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1194347249927" />
+                          <option name="revision" value="1826" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-development-api-0.3" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1194345888345" />
+                          <option name="revision" value="1820" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-webapp-host-0.3" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1194345415756" />
+                          <option name="revision" value="1816" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-webapp-api-0.3" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1194345279338" />
+                          <option name="revision" value="1813" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-standalone-api-0.3" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1194303318783" />
+                          <option name="revision" value="1807" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-jetty-0.3" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1194289949643" />
+                          <option name="revision" value="1795" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-binding-test-0.1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1194289616646" />
+                          <option name="revision" value="1791" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-itest-plugin-0.3" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1194288558186" />
+                          <option name="revision" value="1786" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-fabric-0.3.1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1194285072872" />
+                          <option name="revision" value="1781" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-maven-host-0.3" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1194271596073" />
+                          <option name="revision" value="1775" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-fabric-0.3" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1194270573300" />
+                          <option name="revision" value="1770" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-java-0.1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1194269752725" />
+                          <option name="revision" value="1766" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-policy-0.3" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1194268020850" />
+                          <option name="revision" value="1762" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-pojo-0.3" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1194265169981" />
+                          <option name="revision" value="1755" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-loader-0.3" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1194262438652" />
+                          <option name="revision" value="1751" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-transform-0.3" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1194261174710" />
+                          <option name="revision" value="1747" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-extension-0.3.1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1194203535231" />
+                          <option name="revision" value="1736" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-spi-0.3.1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1194203070050" />
+                          <option name="revision" value="1731" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-scdl-0.3.1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1194105202126" />
+                          <option name="revision" value="1701" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/binding-test-harness-0.1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1194083568587" />
+                          <option name="revision" value="1677" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-extension-0.3" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1194030723202" />
+                          <option name="revision" value="1660" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-contribution-plugin-0.2" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1194029199245" />
+                          <option name="revision" value="1656" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-spi-0.3" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1194028723290" />
+                          <option name="revision" value="1652" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-scdl-0.3" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1189371085371" />
+                          <option name="revision" value="1260" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-contribution-scanner-0.2.1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1189351719316" />
+                          <option name="revision" value="1256" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-development-api-0.2" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1189351719316" />
+                          <option name="revision" value="1256" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-development-host-0.2" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1189351719316" />
+                          <option name="revision" value="1256" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-standalone-api-0.2" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1189351719316" />
+                          <option name="revision" value="1256" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-standalone-host-0.2" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1189351719316" />
+                          <option name="revision" value="1256" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-standalone-server-0.2" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1189351719316" />
+                          <option name="revision" value="1256" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-standalone-shutdown-0.2" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1189351719316" />
+                          <option name="revision" value="1256" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-webapp-api-0.2" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1189351719316" />
+                          <option name="revision" value="1256" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-webapp-host-0.2" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1189317609255" />
+                          <option name="revision" value="1242" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-tx-0.1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1189291487994" />
+                          <option name="revision" value="1233" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-binding-jms-0.2.1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1189289636979" />
+                          <option name="revision" value="1227" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-binding-burlap-0.2.1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1189289359029" />
+                          <option name="revision" value="1224" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-binding-hessian-0.2.1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1189285674428" />
+                          <option name="revision" value="1218" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-console-0.2" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1189285325671" />
+                          <option name="revision" value="1214" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-jmx-0.2" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1189285145923" />
+                          <option name="revision" value="1211" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-messaging-jxta-0.2" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1189284880584" />
+                          <option name="revision" value="1206" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-discovery-jxta-0.2" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1189284664188" />
+                          <option name="revision" value="1201" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-jxta-0.2" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1189284530269" />
+                          <option name="revision" value="1197" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-install-jxta-0.1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1189283923323" />
+                          <option name="revision" value="1194" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-webapp-plugin-0.2" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1189283255568" />
+                          <option name="revision" value="1190" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-groovy-0.2" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1189283014803" />
+                          <option name="revision" value="1186" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-jetty-0.2" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1189282677151" />
+                          <option name="revision" value="1182" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-binding-ws-0.2" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1189282455169" />
+                          <option name="revision" value="1178" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-binding-jms-0.2" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1189282250449" />
+                          <option name="revision" value="1166" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-binding-hessian-0.2" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1189280644402" />
+                          <option name="revision" value="1138" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-contribution-scanner-0.2" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1189279979269" />
+                          <option name="revision" value="1134" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-contribution-scanner-spi-0.2" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1189279875564" />
+                          <option name="revision" value="1131" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-binding-burlap-0.2" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1189278982372" />
+                          <option name="revision" value="1127" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-contribution-plugin-0.1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1189278572290" />
+                          <option name="revision" value="1123" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-itest-plugin-0.2" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1189278297299" />
+                          <option name="revision" value="1119" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-maven-0.2" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1189278057374" />
+                          <option name="revision" value="1116" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-policy-0.2" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1189277740425" />
+                          <option name="revision" value="1112" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-fabric-0.2" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1189277085295" />
+                          <option name="revision" value="1108" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-tx-loader-0.1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1189275740303" />
+                          <option name="revision" value="1102" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-loader-0.1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1189275519198" />
+                          <option name="revision" value="1098" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-transform-0.2" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1189275273398" />
+                          <option name="revision" value="1095" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-pojo-0.2" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1189275034174" />
+                          <option name="revision" value="1090" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-policy-spi-0.2" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1189274810216" />
+                          <option name="revision" value="1085" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-extension-0.2" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1189274530265" />
+                          <option name="revision" value="1080" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-spi-0.2" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1189273883177" />
+                          <option name="revision" value="1074" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-scdl-0.1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1189273571459" />
+                          <option name="revision" value="1071" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-host-api-0.2" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1189273366570" />
+                          <option name="revision" value="1068" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-api-0.2" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1188335789691" />
+                          <option name="revision" value="897" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/module-parent-1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1185422115483" />
+                          <option name="revision" value="593" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-binding-jms-0.1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1183492361218" />
+                          <option name="revision" value="420" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-console-0.1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1183402917995" />
+                          <option name="revision" value="401" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-discovery-jxta-0.1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1183402917995" />
+                          <option name="revision" value="401" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-jxta-0.1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1183402917995" />
+                          <option name="revision" value="401" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-messaging-jxta-0.1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1183325321261" />
+                          <option name="revision" value="386" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-binding-ws-0.1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1183304339433" />
+                          <option name="revision" value="384" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-binding-burlap-0.1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1183304339433" />
+                          <option name="revision" value="384" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-binding-hessian-0.1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1183293418362" />
+                          <option name="revision" value="378" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-jetty-0.1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1183244152704" />
+                          <option name="revision" value="356" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-extension-0.1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1183244152704" />
+                          <option name="revision" value="356" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-fabric-0.1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1183244152704" />
+                          <option name="revision" value="356" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-jmx-0.1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1183244152704" />
+                          <option name="revision" value="356" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-pojo-0.1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1183244152704" />
+                          <option name="revision" value="356" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-spi-0.1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1183244152704" />
+                          <option name="revision" value="356" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-transform-0.1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1183130526303" />
+                          <option name="revision" value="318" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-webapp-plugin-0.1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1183126306786" />
+                          <option name="revision" value="316" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-host-api-0.1" />
+                        </SvnBranchItem>
+                        <SvnBranchItem>
+                          <option name="creationDateMillis" value="1183125146398" />
+                          <option name="revision" value="314" />
+                          <option name="url" value="https://svn.codehaus.org/fabric3/modules/tags/fabric3-api-0.1" />
+                        </SvnBranchItem>
+                      </list>
+                    </value>
+                  </entry>
+                </map>
+              </option>
+              <option name="branchUrls">
+                <list>
+                  <option value="https://svn.codehaus.org/fabric3/modules/tags" />
+                </list>
+              </option>
+              <option name="trunkUrl" value="https://svn.codehaus.org/fabric3/modules/trunk" />
+            </SvnBranchConfiguration>
+          </value>
+        </entry>
       </map>
     </option>
-    <option name="myVersion" value="123" />
+    <option name="myVersion" value="124" />
   </component>
   <component name="VcsDirectoryMappings">
     <mapping directory="" vcs="svn" />
