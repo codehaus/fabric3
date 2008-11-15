@@ -23,8 +23,8 @@ import javax.xml.stream.XMLOutputFactory;
 import org.osoa.sca.annotations.Constructor;
 import org.osoa.sca.annotations.Property;
 
-import org.fabric3.host.xml.XMLFactoryInstantiationException;
-import org.fabric3.host.xml.XMLFactory;
+import org.fabric3.spi.xml.XMLFactoryInstantiationException;
+import org.fabric3.spi.xml.XMLFactory;
 
 /**
  * An implementation of XMLFactory that uses WoodStox stax parser for input &

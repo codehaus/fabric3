@@ -19,8 +19,8 @@ package org.fabric3.fabric.services.xml;
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLOutputFactory;
 
-import org.fabric3.host.xml.XMLFactory;
-import org.fabric3.host.xml.XMLFactoryInstantiationException;
+import org.fabric3.spi.xml.XMLFactory;
+import org.fabric3.spi.xml.XMLFactoryInstantiationException;
 
 /**
  * Implementation of XMLFactory that uses the default factories provided by the StAX API.

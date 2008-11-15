@@ -14,14 +14,14 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.host.xml;
+package org.fabric3.spi.xml;
 
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLOutputFactory;
 
 /**
- * This service has been added as a work around to a problem in JDK stax parser api
- * This allows to get instances of XML input and output factories
+ * Provides instances of XMLInputFactory and XMLOutputFactory. This service provides classloading semantics and works around a bug in the JDK StAX
+ * parser API (StAX 1.0) which returns an XMLInputFactory for XMLInputFactory.newInstance(String,ClassLoader).
  */
 
 public interface XMLFactory {
@@ -30,7 +30,8 @@ public interface XMLFactory {
      * Return the runtime's XMLInputFactory implementation.
      *
      * @return the factory
-     * @throws XMLFactoryInstantiationException if an error occurs loading the factory
+     * @throws XMLFactoryInstantiationException
+     *          if an error occurs loading the factory
      */
     XMLInputFactory newInputFactoryInstance() throws XMLFactoryInstantiationException;
 
@@ -38,7 +39,8 @@ public interface XMLFactory {
      * Return the runtime's XMLOutputFactory implementation.
      *
      * @return the factory
-     * @throws XMLFactoryInstantiationException if an error occurs loading the factory
+     * @throws XMLFactoryInstantiationException
+     *          if an error occurs loading the factory
      */
     XMLOutputFactory newOutputFactoryInstance() throws XMLFactoryInstantiationException;
 

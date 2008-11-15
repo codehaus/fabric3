@@ -43,7 +43,7 @@ import org.fabric3.api.annotation.Monitor;
 import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.host.contribution.ContributionService;
 import org.fabric3.host.runtime.HostInfo;
-import org.fabric3.host.xml.XMLFactory;
+import org.fabric3.spi.xml.XMLFactory;
 import org.fabric3.spi.Namespaces;
 import org.fabric3.spi.services.contribution.Contribution;
 import org.fabric3.spi.services.contribution.ContributionState;

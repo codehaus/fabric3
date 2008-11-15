@@ -30,15 +30,13 @@
     <dependencies>
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
-            <artifactId>fabric3-management-api</artifactId>
+            <artifactId>fabric3-scdl</artifactId>
             <version>0.7-SNAPSHOT</version>
         </dependency>
         <dependency>
-            <groupId>stax</groupId>
-            <artifactId>stax-api</artifactId>
-            <!-- use version 1.0 as it is the version bundled in JDK 6 -->
-            <version>1.0</version>
-            <scope>provided</scope>
+            <groupId>org.codehaus.fabric3</groupId>
+            <artifactId>fabric3-management-api</artifactId>
+            <version>0.7-SNAPSHOT</version>
         </dependency>
         <dependency>
             <groupId>junit</groupId>

@@ -21,7 +21,7 @@ import javax.xml.namespace.QName;
 import junit.framework.TestCase;
 
 import org.fabric3.fabric.services.xml.XMLFactoryImpl;
-import org.fabric3.host.xml.XMLFactory;
+import org.fabric3.spi.xml.XMLFactory;
 
 /**
  * @version $Rev$ $Date$
