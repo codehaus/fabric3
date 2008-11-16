@@ -43,6 +43,22 @@
                 <extensions>true</extensions>
                 <configuration>
                     <extensions>
+                        <dependency>
+                            <groupId>org.codehaus.fabric3</groupId>
+                            <artifactId>fabric3-jdk-proxy</artifactId>
+                            <version>0.7-SNAPSHOT</version>
+                            <scope>runtime</scope>
+                        </dependency>
+                        <dependency>
+                            <groupId>org.codehaus.fabric3</groupId>
+                            <artifactId>fabric3-java</artifactId>
+                            <version>0.7-SNAPSHOT</version>
+                        </dependency>
+                        <dependency>
+                            <groupId>org.codehaus.fabric3</groupId>
+                            <artifactId>fabric3-junit</artifactId>
+                            <version>0.7-SNAPSHOT</version>
+                        </dependency>
                        <dependency>
                            <groupId>org.codehaus.fabric3</groupId>
                            <artifactId>fabric3-async-provision</artifactId>

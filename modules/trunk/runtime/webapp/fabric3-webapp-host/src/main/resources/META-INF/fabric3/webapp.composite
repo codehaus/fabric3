@@ -69,9 +69,6 @@
 
     <include name="org.fabric3.fabric.FileSystemResolver" scdlResource="org/fabric3/fabric/localProvisioning.composite"/>
     
-    <!-- proxy service implementation -->
-    <include name="org.fabric3.JDKProxy" scdlResource="META-INF/jdkproxy.composite"/>
-
     <!-- Pojo implementation type -->
     <include name="org.fabric3.fabric.PojoImplementation" scdlResource="org/fabric3/pojo/pojoImplementation.composite"/>
 
@@ -84,15 +81,10 @@
     <!-- JMX components -->
     <include name="org.fabric3.jmx.JMXExtension" scdlResource="org/fabric3/jmx/jmx.composite"/>
     
-    <!-- include Java implementation type -->
-    <include name="org.fabric3.JavaControl" scdlResource="META-INF/javaControl.composite"/>
-    <include name="org.fabric3.JavaIntrospection" scdlResource="META-INF/javaIntrospection.composite"/>
-    <include name="org.fabric3.JavaRuntime" scdlResource="META-INF/javaRuntime.composite"/>
-
     <!-- include web implementation type -->
-    <include name="org.fabric3.WebControl" scdlResource="META-INF/webControl.composite"/>
-    <include name="org.fabric3.WebIntrospection" scdlResource="META-INF/webIntrospection.composite"/>
-    <include name="org.fabric3.WebRuntime" scdlResource="META-INF/webRuntime.composite"/>
+    <!--<include name="org.fabric3.WebControl" scdlResource="META-INF/webControl.composite"/>-->
+    <!--<include name="org.fabric3.WebIntrospection" scdlResource="META-INF/webIntrospection.composite"/>-->
+    <!--<include name="org.fabric3.WebRuntime" scdlResource="META-INF/webRuntime.composite"/>-->
 
     <!-- include transform configuration -->
     <include name="org.fabric3.transform.Transform" scdlResource="org/fabric3/transform/transform.composite"/>

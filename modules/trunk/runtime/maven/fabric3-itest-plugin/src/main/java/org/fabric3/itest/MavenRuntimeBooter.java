@@ -143,7 +143,6 @@ public class MavenRuntimeBooter {
         List<String> bootExports = new ArrayList<String>();
         bootExports.add("META-INF/maven/org.codehaus.fabric3/fabric3-spi/pom.xml");
         bootExports.add("META-INF/maven/org.codehaus.fabric3/fabric3-pojo/pom.xml");
-        bootExports.add("META-INF/maven/org.codehaus.fabric3/fabric3-java/pom.xml");
         configuration.setBootLibraryExports(bootExports);
 
         // process extensions

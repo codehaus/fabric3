@@ -223,13 +223,9 @@
       </library>
     </orderEntry>
     <orderEntry type="module" module-name="fabric3-host-api" exported="" />
-    <orderEntry type="module" module-name="fabric3-jdk-proxy" exported="" />
-    <orderEntry type="module" module-name="fabric3-pojo" exported="" />
     <orderEntry type="module" module-name="fabric3-spi" exported="" />
     <orderEntry type="module" module-name="fabric3-api" exported="" />
     <orderEntry type="module" module-name="fabric3-scdl" exported="" />
-    <orderEntry type="module" module-name="fabric3-java" exported="" />
-    <orderEntry type="module" module-name="fabric3-junit" exported="" />
     <orderEntry type="module" module-name="fabric3-maven-api" exported="" />
     <orderEntry type="module-library" exported="">
       <library name="org.codehaus.woodstox:wstx-asl:3.2.2">
@@ -284,6 +280,7 @@
       </library>
     </orderEntry>
     <orderEntry type="module" module-name="fabric3-feature-set-plugin" />
+    <orderEntry type="module" module-name="fabric3-jmx-agent" />
   </component>
 </module>
 

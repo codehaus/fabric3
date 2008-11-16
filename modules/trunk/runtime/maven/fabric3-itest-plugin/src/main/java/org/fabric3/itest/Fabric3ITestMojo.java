@@ -390,7 +390,7 @@ public class Fabric3ITestMojo extends AbstractMojo {
 
         Log log = getLog();
         if (log.isDebugEnabled()) {
-            log.debug("Fabric3 extension classpath:");
+            log.debug("Fabric3 boot classpath:");
             for (URL url : urls) {
                 log.debug("  " + url);
             }

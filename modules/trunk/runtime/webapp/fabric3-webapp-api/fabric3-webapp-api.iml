@@ -83,6 +83,7 @@
         </SOURCES>
       </library>
     </orderEntry>
+    <orderEntry type="module" module-name="fabric3-jmx-agent" />
   </component>
 </module>
 

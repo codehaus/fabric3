@@ -71,9 +71,6 @@
     <!-- include transform configuration -->
     <include name="Transform" scdlResource="org/fabric3/transform/transform.composite"/>
 
-    <!-- proxy service implementation -->
-    <include name="JDKProxy" scdlResource="META-INF/jdkproxy.composite"/>
-
     <!-- Pojo implementation type -->
     <include name="PojoImplementation" scdlResource="org/fabric3/pojo/pojoImplementation.composite"/>
 
@@ -85,14 +82,6 @@
 
     <!-- JMX components -->
     <include name="JMXExtension" scdlResource="org/fabric3/jmx/jmx.composite"/>
-
-    <!-- include JUnit implementation type -->
-    <include name="junit:JUnitImplementation" scdlResource="org/fabric3/junit/junitImplementation.composite"/>
-
-    <!-- include Java implementation type -->
-    <include name="JavaControl" scdlResource="META-INF/javaControl.composite"/>
-    <include name="JavaIntrospection" scdlResource="META-INF/javaIntrospection.composite"/>
-    <include name="JavaRuntime" scdlResource="META-INF/javaRuntime.composite"/>
 
     <component name="LogicalComponentStore">
         <f3-impl:implementation.system class="org.fabric3.fabric.services.lcm.NonPersistentLogicalComponentStore"/>

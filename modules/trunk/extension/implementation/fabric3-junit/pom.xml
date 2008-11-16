@@ -24,12 +24,12 @@
     </parent>
     <groupId>org.codehaus.fabric3</groupId>
     <artifactId>fabric3-junit</artifactId>
-    <packaging>jar</packaging>
+    <packaging>sca-contribution-jar</packaging>
     <name>Fabric3 JUnit Extension</name>
     <description>Fabric3 JUnit Extension.</description>
 
     <dependencies>
-    
+
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-spi</artifactId>
@@ -55,8 +55,33 @@
             <version>1.0</version>
             <scope>provided</scope>
         </dependency>
-        
+
     </dependencies>
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.fabric3</groupId>
+                <artifactId>fabric3-contribution-plugin</artifactId>
+                <version>0.7-SNAPSHOT</version>
+                <extensions>true</extensions>
+                <configuration>
+                    <mavenImports>
+                        <mavenImport>
+                            <groupId>org.codehaus.fabric3</groupId>
+                            <artifactId>fabric3-java</artifactId>
+                        </mavenImport>
+                        <mavenImport>
+                            <groupId>org.codehaus.fabric3</groupId>
+                            <artifactId>fabric3-spi</artifactId>
+                        </mavenImport>
+                    </mavenImports>
+                    <deployables>
+                        <deployable>META-INF/junitImplementation.composite</deployable>
+                    </deployables>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
     <scm>
         <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/extension/implementation/fabric3-junit</connection>

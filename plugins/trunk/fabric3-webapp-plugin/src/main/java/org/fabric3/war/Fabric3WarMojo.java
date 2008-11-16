@@ -266,15 +266,15 @@ public class Fabric3WarMojo extends AbstractMojo {
             Set<Dependency> uniqueExtensions = new HashSet<Dependency>();
             if (extensions != null) {
                 for (Dependency extension : extensions) {
-					if (extension.getVersion() == null) {
-					  resolveDependencyVersion(extension);
+                    if (extension.getVersion() == null) {
+                        resolveDependencyVersion(extension);
                     }
                     uniqueExtensions.add(extension);
                 }
             }
-            
+
             List<Dependency> featuresToInstall = getFeaturesToInstall();
-            
+
             if (!featuresToInstall.isEmpty()) {
                 for (Dependency feature : featuresToInstall) {
                     if (feature.getVersion() == null) {
@@ -296,7 +296,7 @@ public class Fabric3WarMojo extends AbstractMojo {
                         Element versionElement = (Element) extensionElement.getElementsByTagName("version").item(0);
 
                         Dependency extension =
-                            new Dependency(groupIdElement.getTextContent(), artifactIdElement.getTextContent(), versionElement.getTextContent());
+                                new Dependency(groupIdElement.getTextContent(), artifactIdElement.getTextContent(), versionElement.getTextContent());
 
                         uniqueExtensions.add(extension);
 
@@ -307,15 +307,15 @@ public class Fabric3WarMojo extends AbstractMojo {
             uniqueExtensions.clear();
             if (userExtensions != null) {
                 for (Dependency extension : userExtensions) {
-					if (extension.getVersion() == null) {
-						resolveDependencyVersion(extension);
+                    if (extension.getVersion() == null) {
+                        resolveDependencyVersion(extension);
                     }
                     uniqueExtensions.add(extension);
                 }
                 processExtensions(USER_EXTENSIONS_PATH, "f3UserExtensions.properties", uniqueExtensions);
             }
 
-        } catch(SAXParseException e) {
+        } catch (SAXParseException e) {
             throw new MojoExecutionException(e.getMessage(), e);
         } catch (IOException e) {
             throw new MojoExecutionException(e.getMessage(), e);
@@ -325,19 +325,19 @@ public class Fabric3WarMojo extends AbstractMojo {
 
     }
 
-	private List<Dependency> getFeaturesToInstall() {
-		List<Dependency> featuresToInstall = new ArrayList<Dependency>();
-		
-		if (features != null) {
-			featuresToInstall.addAll(Arrays.asList(features));
-		}
-		if (!excludeDefaultFeatures) {
-			Dependency dependency = new Dependency("org.codehaus.fabric3", "fabric3-default-feature", runTimeVersion);
-			dependency.setType("xml");
-			featuresToInstall.add(dependency);
-		}
-		return featuresToInstall;
-	}
+    private List<Dependency> getFeaturesToInstall() {
+        List<Dependency> featuresToInstall = new ArrayList<Dependency>();
+
+        if (features != null) {
+            featuresToInstall.addAll(Arrays.asList(features));
+        }
+        if (!excludeDefaultFeatures) {
+            Dependency dependency = new Dependency("org.codehaus.fabric3", "fabric3-default-webapp-feature", runTimeVersion);
+            dependency.setType("xml");
+            featuresToInstall.add(dependency);
+        }
+        return featuresToInstall;
+    }
 
     private void processExtensions(String extenstionsPath, String extensionProperties, Set<Dependency> extensions) throws MojoExecutionException {
 
@@ -424,6 +424,7 @@ public class Fabric3WarMojo extends AbstractMojo {
      *
      * @param extension the dependcy information for the extension
      */
+    @SuppressWarnings({"unchecked"})
     private void resolveDependencyVersion(Dependency extension) {
         List<org.apache.maven.model.Dependency> dependencies = project.getDependencyManagement().getDependencies();
         for (org.apache.maven.model.Dependency dependecy : dependencies) {
@@ -441,11 +442,7 @@ public class Fabric3WarMojo extends AbstractMojo {
      * @param artifact   Artifact to be resolved.
      * @param transitive Whether to resolve transitively.
      * @return A set of resolved artifacts.
-     * @throws IOException                 In case of an unexpected IO error.
-     * @throws ArtifactResolutionException If the artifact cannot be resolved.
-     * @throws ArtifactNotFoundException   If the artifact is not found.
-     * @throws ArtifactMetadataRetrievalException
-     *                                     In case of error in retrieving metadata.
+     * @throws MojoExecutionException if there is an error resolving the artifact
      */
     private Set<Artifact> resolveArtifact(Artifact artifact, boolean transitive) throws MojoExecutionException {
 
