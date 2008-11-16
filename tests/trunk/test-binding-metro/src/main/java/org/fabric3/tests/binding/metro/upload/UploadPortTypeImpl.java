@@ -34,12 +34,28 @@
  */
 package org.fabric3.tests.binding.metro.upload;
 
+import java.io.IOException;
+import java.io.InputStream;
+
 import javax.activation.DataHandler;
 
 public class UploadPortTypeImpl implements UploadPortType {
 
-    public void upload(String name, DataHandler data) {
-        System.err.println("Received file " + name);
+    public int upload(String name, DataHandler data) {
+        
+        try {
+            byte[] buffer = new byte[1024];
+            InputStream stream = data.getInputStream();
+            int read = stream.read(buffer);
+            int total = 0;
+            while (read != -1) {
+                total += read;
+                read = stream.read(buffer);
+            }
+            return total;
+        } catch (IOException e) {
+            throw new AssertionError(e);
+        }
     }
 
 }

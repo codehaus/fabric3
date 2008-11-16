@@ -48,7 +48,8 @@ public class MtomTest extends TestCase {
     public void testUpload() throws Exception {
         
         DataHandler dataHandler = new DataHandler(getClass().getClassLoader().getResource("test.dat"));
-        uploadPortType.upload("test.dat", dataHandler);
+        int total = uploadPortType.upload("test.dat", dataHandler);
+        assertEquals(21732480, total);
         
     }
 

@@ -19,7 +19,13 @@
                 <element name="data" type="base64Binary" xmime:expectedContentTypes="application/octet-stream"/>
             </sequence>
         </complexType>
+        <complexType name="uploadResponseType">
+            <sequence>
+                <element name="size" type="xsd:int"/>
+            </sequence>
+        </complexType>
         <element name="upload" type="types:uploadType"/>
+        <element name="uploadOut" type="types:uploadResponseType"/>
         </schema>
 
     </wsdl:types>
@@ -28,10 +34,15 @@
         <wsdl:part name="data" element="types:upload"/>
     </wsdl:message>
 
+    <wsdl:message name="uploadOut">
+        <wsdl:part name="data" element="types:uploadOut"/>
+    </wsdl:message>
+
     <wsdl:portType name="UploadPortType">
         <!-- mtom test -->
         <wsdl:operation name="upload">
             <wsdl:input message="tns:uploadIn"/>
+            <wsdl:output message="tns:uploadOut"/>
         </wsdl:operation>
     </wsdl:portType>
 
@@ -42,6 +53,9 @@
             <wsdl:input>
                 <soap:body use="literal"/>
             </wsdl:input>
+            <wsdl:output>
+                <soap:body use="literal"/>
+            </wsdl:output>
         </wsdl:operation>
 
     </wsdl:binding>

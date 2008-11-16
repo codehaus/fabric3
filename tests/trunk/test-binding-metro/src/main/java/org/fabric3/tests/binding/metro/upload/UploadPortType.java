@@ -2,11 +2,12 @@
 package org.fabric3.tests.binding.metro.upload;
 
 import javax.activation.DataHandler;
-import javax.jws.Oneway;
 import javax.jws.WebMethod;
 import javax.jws.WebParam;
+import javax.jws.WebResult;
 import javax.jws.WebService;
 import javax.xml.ws.RequestWrapper;
+import javax.xml.ws.ResponseWrapper;
 
 
 /**
@@ -23,11 +24,14 @@ public interface UploadPortType {
      * 
      * @param data
      * @param name
+     * @return
+     *     returns int
      */
     @WebMethod
-    @Oneway
+    @WebResult(name = "size", targetNamespace = "urn:upload")
     @RequestWrapper(localName = "upload", targetNamespace = "urn:upload", className = "upload.UploadType")
-    public void upload(
+    @ResponseWrapper(localName = "uploadOut", targetNamespace = "urn:upload", className = "upload.UploadResponseType")
+    public int upload(
         @WebParam(name = "name", targetNamespace = "urn:upload")
         String name,
         @WebParam(name = "data", targetNamespace = "urn:upload")
