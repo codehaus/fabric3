@@ -37,9 +37,12 @@ package org.fabric3.binding.ws.metro.runtime.core;
 import java.net.URL;
 
 import javax.servlet.ServletConfig;
+import javax.xml.ws.WebServiceFeature;
+import javax.xml.ws.soap.MTOMFeature;
 
 import org.fabric3.binding.ws.metro.provision.WsdlElement;
 
+import com.sun.xml.ws.api.BindingID;
 import com.sun.xml.ws.api.server.SDDocumentSource;
 import com.sun.xml.ws.api.server.WSEndpoint;
 import com.sun.xml.ws.binding.BindingImpl;
@@ -83,7 +86,7 @@ public class MetroServlet extends WSServlet {
                                                          wsdlElement.getServiceName(), 
                                                          wsdlElement.getPortName(), 
                                                          null, 
-                                                         BindingImpl.getDefaultBinding(), 
+                                                         BindingImpl.create(BindingID.SOAP11_HTTP, new WebServiceFeature[] {new MTOMFeature()}), 
                                                          primaryWsdl,  
                                                          null, 
                                                          null,

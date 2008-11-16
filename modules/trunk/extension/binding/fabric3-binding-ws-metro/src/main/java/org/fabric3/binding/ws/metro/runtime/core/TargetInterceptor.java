@@ -37,13 +37,19 @@ package org.fabric3.binding.ws.metro.runtime.core;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.net.URL;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Random;
 
 import javax.xml.ws.Service;
+import javax.xml.ws.soap.MTOMFeature;
 
 import org.fabric3.binding.ws.metro.provision.WsdlElement;
 import org.fabric3.spi.invocation.Message;
 import org.fabric3.spi.invocation.MessageImpl;
 import org.fabric3.spi.wire.Interceptor;
+
+import com.sun.xml.ws.wsdl.parser.InaccessibleWSDLException;
 
 /**
  * Interceptor for invoking web services.
@@ -56,6 +62,9 @@ public class TargetInterceptor implements Interceptor {
     private URL[] referenceUrls;
     private ClassLoader classLoader;
     private Method method;
+    
+    private Random random = new Random();
+    private List<URL> failedUrls = new LinkedList<URL>();
     
 
     /**
@@ -92,19 +101,29 @@ public class TargetInterceptor implements Interceptor {
      */
     public Message invoke(Message msg) {
         
+        URL endpointUrl = getEndpointUrl();
+        
         ClassLoader oldClassLoader = Thread.currentThread().getContextClassLoader();
         
         try {
         
             Thread.currentThread().setContextClassLoader(classLoader);
             
-            Service service = Service.create(referenceUrls[0], wsdlElement.getServiceName());
-            Object proxy = service.getPort(sei);
+            Service service = Service.create(endpointUrl, wsdlElement.getServiceName());
+            Object proxy = service.getPort(sei, new MTOMFeature());
             Object[] payload = (Object[]) msg.getBody();
             Object ret = method.invoke(proxy, payload);
             
+            failedUrls.clear();
             return new MessageImpl(ret, false, null);
             
+        } catch (InaccessibleWSDLException e) {
+            failedUrls.add(endpointUrl);
+            if (failedUrls.size() != referenceUrls.length) {
+                return invoke(msg);
+            } else {
+                throw e;
+            }
         } catch (IllegalAccessException e) {
             throw new AssertionError(e);
         } catch (InvocationTargetException e) {
@@ -113,6 +132,22 @@ public class TargetInterceptor implements Interceptor {
             Thread.currentThread().setContextClassLoader(oldClassLoader);
         }
         
+    }
+
+    /*
+     * Gets the endpoint url
+     */
+    private URL getEndpointUrl() {
+
+        int index = random.nextInt(referenceUrls.length);
+        URL endpointUrl = referenceUrls[index];
+
+        if (failedUrls.contains(endpointUrl)) {
+            endpointUrl = getEndpointUrl();
+        }
+
+        return endpointUrl;
+
     }
 
 }
