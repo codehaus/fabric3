@@ -123,12 +123,12 @@ public class JmsBindingGenerator implements BindingGenerator<JmsWireSourceDefini
 
         // If any operation has the intent, return that
         for (Operation<?> operation : serviceContract.getOperations()) {
-            for (Intent intent : policy.getProvidedIntents(operation)) {
-                if (TRANSACTED_ONEWAY_GLOBAL.equals(intent.getName())) {
+            for (QName intent : policy.getProvidedIntents(operation)) {
+                if (TRANSACTED_ONEWAY_GLOBAL.equals(intent)) {
                     return TransactionType.GLOBAL;
-                } else if (TRANSACTED_ONEWAY_LOCAL.equals(intent.getName())) {
+                } else if (TRANSACTED_ONEWAY_LOCAL.equals(intent)) {
                     return TransactionType.LOCAL;
-                } else if (TRANSACTED_ONEWAY.equals(intent.getName())) {
+                } else if (TRANSACTED_ONEWAY.equals(intent)) {
                     return TransactionType.GLOBAL;
                 }
             }
@@ -145,8 +145,8 @@ public class JmsBindingGenerator implements BindingGenerator<JmsWireSourceDefini
         Set<String> result = null;
         // If any operation has the intent, return that
         for (Operation<?> operation : serviceContract.getOperations()) {
-            for (Intent intent : policy.getProvidedIntents(operation)) {
-                if (ONEWAY.equals(intent.getName())) {
+            for (QName intent : policy.getProvidedIntents(operation)) {
+                if (ONEWAY.equals(intent)) {
                     if (result == null) {
                         result = new HashSet<String>();
                     }

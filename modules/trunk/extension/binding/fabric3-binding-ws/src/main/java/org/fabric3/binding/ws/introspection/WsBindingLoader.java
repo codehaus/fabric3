@@ -88,7 +88,8 @@ public class WsBindingLoader implements TypeLoader<WsBindingDefinition> {
      *
      * @param loaderHelper the policy helper
      */
-    public WsBindingLoader(@Reference LoaderHelper loaderHelper) {
+    public WsBindingLoader(@Reference
+    LoaderHelper loaderHelper) {
         this.loaderHelper = loaderHelper;
     }
 
@@ -114,7 +115,7 @@ public class WsBindingLoader implements TypeLoader<WsBindingDefinition> {
                 bd = new WsBindingDefinition(endpointUri, implementation, wsdlLocation, wsdlElement, loaderHelper.loadKey(reader));
             }
             loaderHelper.loadPolicySetsAndIntents(bd, reader, introspectionContext);
-            
+
             //Load optional config parameters
             loadConfig(bd, reader);
 
@@ -134,30 +135,30 @@ public class WsBindingLoader implements TypeLoader<WsBindingDefinition> {
     }
 
     private void loadConfig(WsBindingDefinition bd, XMLStreamReader reader) throws XMLStreamException {
-	Map<String, String> config = null;
-	String name = null;
+        Map<String, String> config = null;
+        String name = null;
         while (true) {
-            switch(reader.next()) {
-                case START_ELEMENT:
-                    name = reader.getName().getLocalPart();
-                    if("config".equals(name)) {
-                	config = new HashMap<String, String>();
-                    } else if ("parameter".equals(name)) {
-                        final String key = reader.getAttributeValue(null, "name");
-                        final String value = reader.getElementText();
-                        config.put(key, value);
-                    }
-                    break;
-                case END_ELEMENT:
-                    name = reader.getName().getLocalPart();
-                    if("config".equals(name)) {
-                	bd.setConfig(config);
-                    } else if("binding.ws".equals(name)) {
-                        return ;
-                    }
-                    break;
+            switch (reader.next()) {
+            case START_ELEMENT:
+                name = reader.getName().getLocalPart();
+                if ("config".equals(name)) {
+                    config = new HashMap<String, String>();
+                } else if ("parameter".equals(name)) {
+                    final String key = reader.getAttributeValue(null, "name");
+                    final String value = reader.getElementText();
+                    config.put(key, value);
+                }
+                break;
+            case END_ELEMENT:
+                name = reader.getName().getLocalPart();
+                if ("config".equals(name)) {
+                    bd.setConfig(config);
+                } else if ("binding.ws".equals(name)) {
+                    return;
+                }
+                break;
             }
-        }        
+        }
     }
 
     private void validateAttributes(XMLStreamReader reader, IntrospectionContext context) {

@@ -18,6 +18,8 @@ package org.fabric3.spi.policy;
 
 import java.util.List;
 
+import javax.xml.namespace.QName;
+
 import org.fabric3.scdl.Operation;
 import org.fabric3.scdl.definitions.Intent;
 import org.fabric3.scdl.definitions.PolicySet;
@@ -34,7 +36,7 @@ public interface Policy {
      * @param operation Operation for which requested intents are provided.
      * @return Requested intents that are provided.
      */
-    public List<Intent> getProvidedIntents(Operation<?> operation);
+    public List<QName> getProvidedIntents(Operation<?> operation);
 
     /**
      * Policy sets that are provided by the binding or implemenenation for the
@@ -44,5 +46,21 @@ public interface Policy {
      * @return Resolved policy sets that are provided.
      */
     public List<PolicySet> getProvidedPolicySets(Operation<?> operation);
+
+    /**
+     * Intents that are provided by the binding or implemenenation for 
+     * all operations.
+     * 
+     * @return Requested intents that are provided.
+     */
+    public List<QName> getProvidedIntents();
+
+    /**
+     * Policy sets that are provided by the binding or implemenenation for 
+     * all operations.
+     * 
+     * @return Resolved policy sets that are provided.
+     */
+    public List<PolicySet> getProvidedPolicySets();
 
 }

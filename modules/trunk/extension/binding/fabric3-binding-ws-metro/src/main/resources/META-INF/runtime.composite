@@ -28,5 +28,9 @@
     <component f3-core:key="org.fabric3.binding.ws.metro.provision.MetroWireTargetDefinition" name="MetroTargetWireAttacher">
         <f3-impl:implementation.system class="org.fabric3.binding.ws.metro.runtime.wire.MetroTargetWireAttacher"/>
     </component>
+    
+    <component name="FeatureResolver">
+        <f3-impl:implementation.system class="org.fabric3.binding.ws.metro.runtime.policy.DefaultFeatureResolver"/>
+    </component>
 
 </composite>

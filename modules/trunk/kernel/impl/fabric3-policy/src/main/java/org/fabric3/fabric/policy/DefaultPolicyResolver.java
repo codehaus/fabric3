@@ -66,11 +66,19 @@ public class DefaultPolicyResolver implements PolicyResolver {
 
         public Policy getSourcePolicy() {
             return new Policy() {
-                public List<Intent> getProvidedIntents(Operation<?> operation) {
+                public List<QName> getProvidedIntents(Operation<?> operation) {
                     return Collections.emptyList();
                 }
 
                 public List<PolicySet> getProvidedPolicySets(Operation<?> operation) {
+                    return Collections.emptyList();
+                }
+
+                public List<QName> getProvidedIntents() {
+                    return Collections.emptyList();
+                }
+
+                public List<PolicySet> getProvidedPolicySets() {
                     return Collections.emptyList();
                 }
             };
@@ -78,11 +86,19 @@ public class DefaultPolicyResolver implements PolicyResolver {
 
         public Policy getTargetPolicy() {
             return new Policy() {
-                public List<Intent> getProvidedIntents(Operation<?> operation) {
+                public List<QName> getProvidedIntents(Operation<?> operation) {
                     return Collections.emptyList();
                 }
 
                 public List<PolicySet> getProvidedPolicySets(Operation<?> operation) {
+                    return Collections.emptyList();
+                }
+
+                public List<QName> getProvidedIntents() {
+                    return Collections.emptyList();
+                }
+
+                public List<PolicySet> getProvidedPolicySets() {
                     return Collections.emptyList();
                 }
             };
@@ -135,11 +151,6 @@ public class DefaultPolicyResolver implements PolicyResolver {
         for (Operation<?> operation : serviceContract.getOperations()) {
 
             policyResult.addSourceIntents(operation, interactionPolicyHelper.getProvidedIntents(sourceBinding, operation));
-            
-            // Don't do policy resolution on souce components for implementation intents
-            // if (source != null) {
-            //    policyResult.addSourceIntents(operation, implementationPolicyHelper.getProvidedIntents(source, operation));
-            //}
 
             policyResult.addTargetIntents(operation, interactionPolicyHelper.getProvidedIntents(targetBinding, operation));
             if (target != null) {
@@ -148,14 +159,6 @@ public class DefaultPolicyResolver implements PolicyResolver {
 
             Set<PolicySet> policies;
             Element policyInfoset;
-
-            // Don't do policy resolution on souce components for implementation intents
-            //if (source != null) {
-            //    policyInfoset = policyInfosetBuilder.buildInfoSet(source);
-            //    policies = implementationPolicyHelper.resolveIntents(source, operation, policyInfoset);
-            //    policyResult.addSourcePolicySets(operation, CollectionUtils.filter(policies, PROVIDED));
-            //    policyResult.addInterceptedPolicySets(operation, CollectionUtils.filter(policies, INTERCEPTION));
-            //}
 
             policyInfoset = policyInfosetBuilder.buildInfoSet(sourceBinding);
             policies = interactionPolicyHelper.resolveIntents(sourceBinding, operation, policyInfoset);

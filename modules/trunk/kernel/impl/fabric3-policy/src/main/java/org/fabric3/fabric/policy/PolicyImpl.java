@@ -18,9 +18,12 @@ package org.fabric3.fabric.policy;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import javax.xml.namespace.QName;
 
 import org.fabric3.scdl.Operation;
 import org.fabric3.scdl.definitions.Intent;
@@ -35,6 +38,34 @@ public class PolicyImpl implements Policy {
     
     private final Map<Operation<?>, List<Intent>> intentMap = new HashMap<Operation<?>, List<Intent>>();
     private final Map<Operation<?>, List<PolicySet>> policySetMap = new HashMap<Operation<?>, List<PolicySet>>();
+
+    /**
+     * Intents that are provided by the binding or implemenenation for 
+     * all operations.
+     * 
+     * @return Requested intents that are provided.
+     */
+    public List<QName> getProvidedIntents() {
+        List<QName> ret = new LinkedList<QName>();
+        for (Operation<?> operation : intentMap.keySet()) {
+            ret.addAll(getProvidedIntents(operation));
+        }
+        return ret;
+    }
+
+    /**
+     * Policy sets that are provided by the binding or implemenenation for 
+     * all operations.
+     * 
+     * @return Resolved policy sets that are provided.
+     */
+    public List<PolicySet> getProvidedPolicySets() {
+        List<PolicySet> ret = new LinkedList<PolicySet>();
+        for (Operation<?> operation : intentMap.keySet()) {
+            ret.addAll(getProvidedPolicySets(operation));
+        }
+        return ret;
+    }
     
     /**
      * Gets the intents that are provided by the component or binding types 
@@ -43,8 +74,12 @@ public class PolicyImpl implements Policy {
      * @param operation Operation against which the intent was requested.
      * @return All intents that are provided.
      */
-    public List<Intent> getProvidedIntents(Operation<?> operation) {
-        return intentMap.get(operation);
+    public List<QName> getProvidedIntents(Operation<?> operation) {
+        List<QName> ret = new LinkedList<QName>();
+        for (Intent intent : intentMap.get(operation)) {
+            ret.add(intent.getName());
+        }
+        return ret;
     }
     
     /**

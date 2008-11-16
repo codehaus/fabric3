@@ -36,12 +36,18 @@ package org.fabric3.binding.ws.metro.runtime.wire;
 
 import java.net.URI;
 import java.net.URL;
+import java.util.List;
 import java.util.Map;
+
+import javax.xml.namespace.QName;
+import javax.xml.ws.WebServiceFeature;
 
 import org.fabric3.binding.ws.metro.provision.MetroWireSourceDefinition;
 import org.fabric3.binding.ws.metro.provision.WsdlElement;
 import org.fabric3.binding.ws.metro.runtime.core.F3Invoker;
 import org.fabric3.binding.ws.metro.runtime.core.MetroServlet;
+import org.fabric3.binding.ws.metro.runtime.policy.FeatureResolver;
+import org.fabric3.scdl.definitions.PolicySet;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.SourceWireAttacher;
@@ -62,6 +68,7 @@ public class MetroSourceWireAttacher implements SourceWireAttacher<MetroWireSour
     
     @Reference protected ServletHost servletHost;
     @Reference protected ClassLoaderRegistry classLoaderRegistry;
+    @Reference protected FeatureResolver featureResolver;
     
     private MetroServlet metroServlet = new MetroServlet();
     
@@ -95,13 +102,16 @@ public class MetroSourceWireAttacher implements SourceWireAttacher<MetroWireSour
             URI classLoaderId = source.getClassLoaderId();
             String interfaze = source.getInterfaze();
             URL wsdlUrl = source.getWsdlUrl();
+            List<QName> requestedIntents = source.getRequestedIntents();
+            List<PolicySet> requestedPolisySets = null;
             
             ClassLoader classLoader = classLoaderRegistry.getClassLoader(classLoaderId);
             Class<?> sei = classLoader.loadClass(interfaze);
+            WebServiceFeature[] features = featureResolver.getFeatures(requestedIntents, requestedPolisySets);
             
             F3Invoker f3Invoker = new F3Invoker(invocationChains);
             
-            metroServlet.registerService(sei, wsdlUrl, "/metro" + servicePath.toASCIIString(), wsdlElement, f3Invoker);
+            metroServlet.registerService(sei, wsdlUrl, "/metro" + servicePath.toASCIIString(), wsdlElement, f3Invoker, features);
             
         } catch (ClassNotFoundException e) {
             throw new WiringException(e);

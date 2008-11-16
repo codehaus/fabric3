@@ -38,11 +38,11 @@ import java.net.URL;
 
 import javax.servlet.ServletConfig;
 import javax.xml.ws.WebServiceFeature;
-import javax.xml.ws.soap.MTOMFeature;
 
 import org.fabric3.binding.ws.metro.provision.WsdlElement;
 
 import com.sun.xml.ws.api.BindingID;
+import com.sun.xml.ws.api.WSBinding;
 import com.sun.xml.ws.api.server.SDDocumentSource;
 import com.sun.xml.ws.api.server.WSEndpoint;
 import com.sun.xml.ws.binding.BindingImpl;
@@ -67,8 +67,9 @@ public class MetroServlet extends WSServlet {
      * @param servicePath Relative path on which the service is provisioned.
      * @param wsdlElement WSDL element that encapsulates the WSDL 1.1 service and port names.
      * @param invoker Invoker for receiving the web service request.
+     * @param features Web service features to enable.
      */
-    public void registerService(Class<?> sei, URL wsdlUrl, String servicePath, WsdlElement wsdlElement, F3Invoker invoker) {
+    public void registerService(Class<?> sei, URL wsdlUrl, String servicePath, WsdlElement wsdlElement, F3Invoker invoker, WebServiceFeature[] features) {
         
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         
@@ -80,13 +81,16 @@ public class MetroServlet extends WSServlet {
                 primaryWsdl = SDDocumentSource.create(wsdlUrl);
             }
             
+            // TODO Select a binding based on intent
+            WSBinding binding = BindingImpl.create(BindingID.SOAP11_HTTP, features);
+            
             WSEndpoint<?> wsEndpoint = WSEndpoint.create(sei, 
                                                          false, 
                                                          invoker, 
                                                          wsdlElement.getServiceName(), 
                                                          wsdlElement.getPortName(), 
                                                          null, 
-                                                         BindingImpl.create(BindingID.SOAP11_HTTP, new WebServiceFeature[] {new MTOMFeature()}), 
+                                                         binding, 
                                                          primaryWsdl,  
                                                          null, 
                                                          null,

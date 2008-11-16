@@ -47,7 +47,6 @@ import org.osoa.sca.Constants;
  *
  */
 public final class Intent extends AbstractDefinition {
-    private static final long serialVersionUID = 5208711249716729521L;
 
     /** Binding QName */
     public static final QName BINDING = new QName(Constants.SCA_NS, "binding");

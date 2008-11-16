@@ -37,11 +37,17 @@ package org.fabric3.binding.ws.metro.runtime.wire;
 import java.lang.reflect.Method;
 import java.net.URI;
 import java.net.URL;
+import java.util.List;
 import java.util.Map;
+
+import javax.xml.namespace.QName;
+import javax.xml.ws.WebServiceFeature;
 
 import org.fabric3.binding.ws.metro.provision.MetroWireTargetDefinition;
 import org.fabric3.binding.ws.metro.provision.WsdlElement;
 import org.fabric3.binding.ws.metro.runtime.core.TargetInterceptor;
+import org.fabric3.binding.ws.metro.runtime.policy.FeatureResolver;
+import org.fabric3.scdl.definitions.PolicySet;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.TargetWireAttacher;
@@ -59,6 +65,7 @@ import org.osoa.sca.annotations.Reference;
 public class MetroTargetWireAttacher implements TargetWireAttacher<MetroWireTargetDefinition> {
     
     @Reference protected ClassLoaderRegistry classLoaderRegistry;
+    @Reference protected FeatureResolver featureResolver;
 
     /**
      * Attaches to the target.
@@ -71,8 +78,11 @@ public class MetroTargetWireAttacher implements TargetWireAttacher<MetroWireTarg
             URL[] referenceUrls = target.getTargetUrls();
             String interfaze = target.getInterfaze();
             URI classLoaderId = source.getClassLoaderId();
+            List<QName> requestedIntents = target.getRequestedIntents();
+            List<PolicySet> requestedPolisySets = null;
             
             ClassLoader classLoader = classLoaderRegistry.getClassLoader(classLoaderId);
+            WebServiceFeature[] features = featureResolver.getFeatures(requestedIntents, requestedPolisySets);
             
             Class<?> sei = classLoader.loadClass(interfaze);
             Method[] methods = sei.getDeclaredMethods();
@@ -85,7 +95,7 @@ public class MetroTargetWireAttacher implements TargetWireAttacher<MetroWireTarg
                         break;
                     }
                 }
-                TargetInterceptor targetInterceptor = new TargetInterceptor(wsdlElement, sei, referenceUrls, classLoader, method);
+                TargetInterceptor targetInterceptor = new TargetInterceptor(wsdlElement, sei, referenceUrls, classLoader, method, features);
                 entry.getValue().addInterceptor(targetInterceptor);
             }
             

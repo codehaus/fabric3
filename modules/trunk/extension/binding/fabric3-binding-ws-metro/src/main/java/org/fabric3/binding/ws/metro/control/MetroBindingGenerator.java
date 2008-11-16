@@ -19,6 +19,9 @@ package org.fabric3.binding.ws.metro.control;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
+import java.util.List;
+
+import javax.xml.namespace.QName;
 
 import org.fabric3.binding.ws.metro.provision.MetroWireSourceDefinition;
 import org.fabric3.binding.ws.metro.provision.MetroWireTargetDefinition;
@@ -63,7 +66,9 @@ public class MetroBindingGenerator  implements BindingGenerator<MetroWireSourceD
         URI servicePath = addressResolver.resolveServiceAddress(definition.getTargetUri(), wsdlElement, wsdlModel);
         String interfaze = serviceDefinition.getServiceContract().getQualifiedInterfaceName();
         
-        return new MetroWireSourceDefinition(wsdlElement, wsdlLocation, servicePath, interfaze, classLoaderId);
+        List<QName> requestedIntents = policy.getProvidedIntents();
+        
+        return new MetroWireSourceDefinition(wsdlElement, wsdlLocation, servicePath, interfaze, classLoaderId, requestedIntents);
         
     }
 
@@ -83,7 +88,9 @@ public class MetroBindingGenerator  implements BindingGenerator<MetroWireSourceD
         URL[] referenceUrls = addressResolver.resolveReferenceAddress(definition.getTargetUri(), wsdlElement, wsdlModel);
         String interfaze = referenceDefinition.getServiceContract().getQualifiedInterfaceName();
         
-        return new MetroWireTargetDefinition(wsdlElement, wsdlLocation, interfaze, classLoaderId, referenceUrls);
+        List<QName> requestedIntents = policy.getProvidedIntents();
+        
+        return new MetroWireTargetDefinition(wsdlElement, wsdlLocation, interfaze, classLoaderId, requestedIntents, referenceUrls);
 
     }
 

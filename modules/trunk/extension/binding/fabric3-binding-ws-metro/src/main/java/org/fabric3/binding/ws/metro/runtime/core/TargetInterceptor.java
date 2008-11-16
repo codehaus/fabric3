@@ -42,7 +42,7 @@ import java.util.List;
 import java.util.Random;
 
 import javax.xml.ws.Service;
-import javax.xml.ws.soap.MTOMFeature;
+import javax.xml.ws.WebServiceFeature;
 
 import org.fabric3.binding.ws.metro.provision.WsdlElement;
 import org.fabric3.spi.invocation.Message;
@@ -62,6 +62,7 @@ public class TargetInterceptor implements Interceptor {
     private URL[] referenceUrls;
     private ClassLoader classLoader;
     private Method method;
+    private WebServiceFeature[] features;
     
     private Random random = new Random();
     private List<URL> failedUrls = new LinkedList<URL>();
@@ -74,13 +75,15 @@ public class TargetInterceptor implements Interceptor {
      * @param sei Service endpoint interface.
      * @param referenceUrls URLs used to invoke the web service.
      * @param method Method to be invoked.
+     * @param features Features to enable.
      */
-    public TargetInterceptor(WsdlElement wsdlElement, Class<?> sei, URL[] referenceUrls, ClassLoader classLoader, Method method) {
+    public TargetInterceptor(WsdlElement wsdlElement, Class<?> sei, URL[] referenceUrls, ClassLoader classLoader, Method method, WebServiceFeature[] features) {
         this.wsdlElement = wsdlElement;
         this.sei = sei;
         this.referenceUrls = referenceUrls;
         this.classLoader = classLoader;
         this.method = method;
+        this.features = features;
     }
 
     /**
@@ -108,9 +111,9 @@ public class TargetInterceptor implements Interceptor {
         try {
         
             Thread.currentThread().setContextClassLoader(classLoader);
-            
+
             Service service = Service.create(endpointUrl, wsdlElement.getServiceName());
-            Object proxy = service.getPort(sei, new MTOMFeature());
+            Object proxy = service.getPort(sei, features);
             Object[] payload = (Object[]) msg.getBody();
             Object ret = method.invoke(proxy, payload);
             

@@ -36,6 +36,9 @@ package org.fabric3.binding.ws.metro.provision;
 
 import java.net.URI;
 import java.net.URL;
+import java.util.List;
+
+import javax.xml.namespace.QName;
 
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 
@@ -49,6 +52,7 @@ public class MetroWireSourceDefinition extends PhysicalWireSourceDefinition {
     private URL wsdlUrl;
     private URI servicePath;
     private String interfaze;
+    private List<QName> requestedIntents;
 
     /**
      * Initialises information required for provisioning the service.
@@ -58,13 +62,15 @@ public class MetroWireSourceDefinition extends PhysicalWireSourceDefinition {
      * @param servicePath Relative path on which the service is provisioned.
      * @param interfaze Interface for the service contract.
      * @param classLoaderId ClassLoader Id.
+     * @param requestedIntents Intents requested by the binding.
      */
-    public MetroWireSourceDefinition(WsdlElement wsdlElement, URL wsdlUrl, URI servicePath, String interfaze, URI classLoaderId) {
+    public MetroWireSourceDefinition(WsdlElement wsdlElement, URL wsdlUrl, URI servicePath, String interfaze, URI classLoaderId, List<QName> requestedIntents) {
         this.wsdlElement = wsdlElement;
         this.wsdlUrl = wsdlUrl;
         this.servicePath = servicePath;
         this.interfaze = interfaze;
         setClassLoaderId(classLoaderId);
+        this.requestedIntents = requestedIntents;
     }
 
     /**
@@ -101,6 +107,15 @@ public class MetroWireSourceDefinition extends PhysicalWireSourceDefinition {
      */
     public String getInterfaze() {
         return interfaze;
+    }
+
+    /**
+     * Gets the intents requested by the binding.
+     * 
+     * @return Intents requested by the binding.
+     */
+    public List<QName> getRequestedIntents() {
+        return requestedIntents;
     }
 
 }

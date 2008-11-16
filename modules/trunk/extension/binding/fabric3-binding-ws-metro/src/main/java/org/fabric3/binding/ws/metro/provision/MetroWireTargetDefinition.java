@@ -36,6 +36,9 @@ package org.fabric3.binding.ws.metro.provision;
 
 import java.net.URI;
 import java.net.URL;
+import java.util.List;
+
+import javax.xml.namespace.QName;
 
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 
@@ -49,6 +52,7 @@ public class MetroWireTargetDefinition extends PhysicalWireTargetDefinition {
     private URL wsdlUrl;
     private URL[] targetUrls;
     private String interfaze;
+    private List<QName> requestedIntents;
 
     /**
      * Initialises information required for provisioning the service.
@@ -57,14 +61,16 @@ public class MetroWireTargetDefinition extends PhysicalWireTargetDefinition {
      * @param wsdlUrl Optional URL to the WSDL location.
      * @param interfaze Interface for the service contract.
      * @param classLoaderId ClassLoader Id.
+     * @param requestedIntents Intents requested by the binding.
      * @param targetUrls One or more URLs used to invoke the service.
      */
-    public MetroWireTargetDefinition(WsdlElement wsdlElement, URL wsdlUrl, String interfaze, URI classLoaderId, URL ... targetUrls) {
+    public MetroWireTargetDefinition(WsdlElement wsdlElement, URL wsdlUrl, String interfaze, URI classLoaderId, List<QName> requestedIntents, URL ... targetUrls) {
         this.wsdlElement = wsdlElement;
         this.wsdlUrl = wsdlUrl;
         this.targetUrls = targetUrls;
         this.interfaze = interfaze;
         setClassLoaderId(classLoaderId);
+        this.requestedIntents = requestedIntents;
     }
 
     /**
@@ -101,6 +107,15 @@ public class MetroWireTargetDefinition extends PhysicalWireTargetDefinition {
      */
     public String getInterfaze() {
         return interfaze;
+    }
+
+    /**
+     * Gets the intents requested by the binding.
+     * 
+     * @return Intents requested by the binding.
+     */
+    public List<QName> getRequestedIntents() {
+        return requestedIntents;
     }
 
 }

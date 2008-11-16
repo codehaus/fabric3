@@ -19,6 +19,8 @@ package org.fabric3.fabric.policy;
 import java.util.Collections;
 import java.util.List;
 
+import javax.xml.namespace.QName;
+
 import org.fabric3.scdl.Operation;
 import org.fabric3.scdl.ServiceContract;
 import org.fabric3.scdl.definitions.Intent;
@@ -48,10 +50,16 @@ public class NullPolicyResolver implements PolicyResolver {
 
             public Policy getSourcePolicy() {
                 return new Policy() {
-                    public List<Intent> getProvidedIntents(Operation<?> operation) {
+                    public List<QName> getProvidedIntents(Operation<?> operation) {
                         return Collections.emptyList();
                     }
                     public List<PolicySet> getProvidedPolicySets(Operation<?> operation) {
+                        return Collections.emptyList();
+                    }
+                    public List<QName> getProvidedIntents() {
+                        return Collections.emptyList();
+                    }
+                    public List<PolicySet> getProvidedPolicySets() {
                         return Collections.emptyList();
                     }
                 };
@@ -59,10 +67,16 @@ public class NullPolicyResolver implements PolicyResolver {
 
             public Policy getTargetPolicy() {
                 return new Policy() {
-                    public List<Intent> getProvidedIntents(Operation<?> operation) {
+                    public List<QName> getProvidedIntents(Operation<?> operation) {
                         return Collections.emptyList();
                     }
                     public List<PolicySet> getProvidedPolicySets(Operation<?> operation) {
+                        return Collections.emptyList();
+                    }
+                    public List<QName> getProvidedIntents() {
+                        return Collections.emptyList();
+                    }
+                    public List<PolicySet> getProvidedPolicySets() {
                         return Collections.emptyList();
                     }
                 };
