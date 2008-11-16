@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!--
+ Fabric3
+ Copyright © 2008 Metaform Systems Limited
+
+ This proprietary software may be used only connection with the Fabric3 license
+ (the “License”), a copy of which is included in the software or may be
+ obtained at: http://www.metaformsystems.com/licenses/license.html.
+
+ Software distributed under the License is distributed on an “as is” basis,
+ without warranties or conditions of any kind.  See the License for the
+ specific language governing permissions and limitations of use of the software.
+ This software is distributed in conjunction with other software licensed under
+ different terms.  See the separate licenses for those programs included in the
+ distribution for the permitted and restricted uses of such software.
+
+-->
+<composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
+           xmlns:f3-impl="urn:fabric3.org:implementation"   
+           xmlns:f3-policy="urn:fabric3.org:policy"
+           xmlns:wsdli="http://www.w3.org/2004/08/wsdl-instance"
+           name="MtomTest">
+
+    <component name="MtomTest">
+        <f3-impl:junit class="org.fabric3.tests.binding.metro.MtomTest"/>
+        <reference name="uploadPortType">
+            <binding.ws wsdlElement="urn:upload#wsdl.port(UploadService/UploadPort)" 
+                        wsdli:wsdlLocation="Upload.wsdl" 
+                        uri="http://localhost:8900/metro/upload"
+                        requires="f3-policy:messageOptimisation"/>
+        </reference>
+    </component>
+
+    <component name="UploadService">
+        <implementation.java class="org.fabric3.tests.binding.metro.upload.UploadPortTypeImpl"/>
+        <service name="UploadPortType">
+            <binding.ws wsdlElement="urn:upload#wsdl.port(UploadService/UploadPort)" 
+                        wsdli:wsdlLocation="Upload.wsdl" 
+                        uri="/upload"
+                        requires="f3-policy:messageOptimisation"/>
+        </service>
+    </component>
+
+</composite>

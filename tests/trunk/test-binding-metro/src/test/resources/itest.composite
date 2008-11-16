@@ -15,68 +15,10 @@
  distribution for the permitted and restricted uses of such software.
 
 -->
-<composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
-           xmlns:sca="http://www.osoa.org/xmlns/sca/1.0"
-           xmlns:f3-impl="urn:fabric3.org:implementation"           
-           xmlns:f3-core="urn:fabric3.org:core"     
-           xmlns:f3-policy="urn:fabric3.org:policy"
-           xmlns:wsdli="http://www.w3.org/2004/08/wsdl-instance"
-           name="MetroTestComposite">
+<composite xmlns="http://www.osoa.org/xmlns/sca/1.0" name="MetroTestComposite">
 
-    <component name="SimpleTypeTest">
-        <f3-impl:junit class="org.fabric3.tests.binding.metro.SimpleTypeTest"/>
-        <reference name="helloWorldPortType">
-            <binding.ws wsdlElement="urn:helloworld#wsdl.port(HelloWorldService/HelloWorldPort)" 
-                        wsdli:wsdlLocation="HelloWorld.wsdl" 
-                        uri="http://localhost:8901/metro/hello,http://localhost:8900/metro/hello"/>
-        </reference>
-    </component>
-
-    <component name="HelloService">
-        <implementation.java class="org.fabric3.tests.binding.metro.hello.HelloWorldPortTypeImpl"/>
-        <service name="HelloWorldPortType">
-            <binding.ws wsdlElement="urn:helloworld#wsdl.port(HelloWorldService/HelloWorldPort)" 
-                        wsdli:wsdlLocation="HelloWorld.wsdl"
-                        uri="/hello"/>
-        </service>
-    </component>
-
-    <component name="JaxbTest">
-        <f3-impl:junit class="org.fabric3.tests.binding.metro.JaxbTest"/>
-        <reference name="weatherPortType">
-            <binding.ws wsdlElement="urn:weather#wsdl.port(WeatherService/WeatherPort)" 
-                        wsdli:wsdlLocation="Weather.wsdl" 
-                        uri="http://localhost:8900/metro/weather"/>
-        </reference>
-    </component>
-
-    <component name="WeatherService">
-        <implementation.java class="org.fabric3.tests.binding.metro.weather.WeatherPortTypeImpl"/>
-        <service name="WeatherPortType">
-            <binding.ws wsdlElement="urn:weather#wsdl.port(WeatherService/WeatherPort)" 
-                        wsdli:wsdlLocation="Weather.wsdl"
-                        uri="/weather"/>
-        </service>
-    </component>
-
-    <component name="MtomTest">
-        <f3-impl:junit class="org.fabric3.tests.binding.metro.MtomTest"/>
-        <reference name="uploadPortType">
-            <binding.ws wsdlElement="urn:upload#wsdl.port(UploadService/UploadPort)" 
-                        wsdli:wsdlLocation="Upload.wsdl" 
-                        uri="http://localhost:8900/metro/upload"
-                        requires="f3-policy:messageOptimisation"/>
-        </reference>
-    </component>
-
-    <component name="UploadService">
-        <implementation.java class="org.fabric3.tests.binding.metro.upload.UploadPortTypeImpl"/>
-        <service name="UploadPortType">
-            <binding.ws wsdlElement="urn:upload#wsdl.port(UploadService/UploadPort)" 
-                        wsdli:wsdlLocation="Upload.wsdl" 
-                        uri="/upload"
-                        requires="f3-policy:messageOptimisation"/>
-        </service>
-    </component>
+    <include name="SimpleTypeTest" />
+    <include name="JaxbTest" />
+    <include name="MtomTest" />
 
 </composite>
