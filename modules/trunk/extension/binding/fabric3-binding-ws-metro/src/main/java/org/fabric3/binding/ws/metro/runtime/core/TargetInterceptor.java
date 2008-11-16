@@ -130,7 +130,7 @@ public class TargetInterceptor implements Interceptor {
         } catch (IllegalAccessException e) {
             throw new AssertionError(e);
         } catch (InvocationTargetException e) {
-            throw new AssertionError(e);
+            return new MessageImpl(e.getTargetException(), true, null);
         } finally {
             Thread.currentThread().setContextClassLoader(oldClassLoader);
         }

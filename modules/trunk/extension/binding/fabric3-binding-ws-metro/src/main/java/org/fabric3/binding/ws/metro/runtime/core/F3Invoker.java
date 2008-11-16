@@ -81,7 +81,7 @@ public class F3Invoker extends Invoker {
     /**
      * Invokes the head interceptor.
      */
-    public Object invoke(Packet packet, Method method, Object... args) throws InvocationTargetException, IllegalAccessException {
+    public Object invoke(Packet packet, Method method, Object... args) throws InvocationTargetException {
         
         Interceptor head = invocationChains.get(method.getName()).getHeadInterceptor();
         WorkContext workContext = new WorkContext();
@@ -90,7 +90,12 @@ public class F3Invoker extends Invoker {
         Message input = new MessageImpl(args, false, workContext);
         Message ret = head.invoke(input);
         
-        return ret.getBody();
+        if (!ret.isFault()) {
+            return ret.getBody();
+        } else {
+            Throwable th = (Throwable) ret.getBody();
+            throw new InvocationTargetException(th);
+        }
         
     }
 
