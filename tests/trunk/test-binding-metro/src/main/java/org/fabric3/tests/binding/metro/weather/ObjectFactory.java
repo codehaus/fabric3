@@ -25,6 +25,7 @@ import javax.xml.namespace.QName;
 public class ObjectFactory {
 
     private final static QName _WeatherRequest_QNAME = new QName("urn:weather", "weatherRequest");
+    private final static QName _WeatherFault_QNAME = new QName("urn:weather", "weatherFault");
     private final static QName _WeatherResponse_QNAME = new QName("urn:weather", "weatherResponse");
 
     /**
@@ -32,14 +33,6 @@ public class ObjectFactory {
      * 
      */
     public ObjectFactory() {
-    }
-
-    /**
-     * Create an instance of {@link WeatherResponse }
-     * 
-     */
-    public WeatherResponse createWeatherResponse() {
-        return new WeatherResponse();
     }
 
     /**
@@ -51,12 +44,37 @@ public class ObjectFactory {
     }
 
     /**
+     * Create an instance of {@link WeatherFault }
+     * 
+     */
+    public WeatherFault createWeatherFault() {
+        return new WeatherFault();
+    }
+
+    /**
+     * Create an instance of {@link WeatherResponse }
+     * 
+     */
+    public WeatherResponse createWeatherResponse() {
+        return new WeatherResponse();
+    }
+
+    /**
      * Create an instance of {@link JAXBElement }{@code <}{@link WeatherRequest }{@code >}}
      * 
      */
     @XmlElementDecl(namespace = "urn:weather", name = "weatherRequest")
     public JAXBElement<WeatherRequest> createWeatherRequest(WeatherRequest value) {
         return new JAXBElement<WeatherRequest>(_WeatherRequest_QNAME, WeatherRequest.class, null, value);
+    }
+
+    /**
+     * Create an instance of {@link JAXBElement }{@code <}{@link WeatherFault }{@code >}}
+     * 
+     */
+    @XmlElementDecl(namespace = "urn:weather", name = "weatherFault")
+    public JAXBElement<WeatherFault> createWeatherFault(WeatherFault value) {
+        return new JAXBElement<WeatherFault>(_WeatherFault_QNAME, WeatherFault.class, null, value);
     }
 
     /**

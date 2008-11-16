@@ -21,8 +21,15 @@
                     <element name="temperature" type="xsd:double" />
                 </sequence>
             </complexType>
+            <complexType name="WeatherFault">
+                <sequence>
+                    <element name="code" type="xsd:string" />
+                    <element name="detail" type="xsd:string" />
+                </sequence>
+            </complexType>
             <element name="weatherRequest" type="tns:WeatherRequest" />
             <element name="weatherResponse" type="tns:WeatherResponse" />
+            <element name="weatherFault" type="tns:WeatherFault" />
         </xsd:schema>
     </types>
                 
@@ -33,11 +40,16 @@
     <message name="weatherResponse">
         <part name="weatherResponse" element="tns:weatherResponse" />
     </message>
+                
+    <message name="weatherFault">
+        <part name="weatherFault" element="tns:weatherFault" />
+    </message>
     
     <portType name="WeatherPortType">
         <operation name="getWeather">
             <input message="tns:weatherRequest"/>
             <output message="tns:weatherResponse"/>
+            <fault name="weatherFault" message="tns:weatherFault" />
         </operation>
     </portType>
     
@@ -51,6 +63,9 @@
             <output>
                 <soap:body use="literal" />
             </output>
+            <fault name="weatherFault">
+                <soap:fault name="weatherFault" use="literal" />
+            </fault>
         </operation>
     </binding>
     
