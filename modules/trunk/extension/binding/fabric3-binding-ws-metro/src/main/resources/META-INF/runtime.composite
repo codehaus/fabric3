@@ -32,5 +32,9 @@
     <component name="FeatureResolver">
         <f3-impl:implementation.system class="org.fabric3.binding.ws.metro.runtime.policy.DefaultFeatureResolver"/>
     </component>
+    
+    <component name="BindingIDResolver">
+        <f3-impl:implementation.system class="org.fabric3.binding.ws.metro.runtime.policy.DefaultBindingIdResolver"/>
+    </component>
 
 </composite>

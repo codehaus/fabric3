@@ -42,7 +42,7 @@
         </description>
     </intent>
 
-    <intent name="protocolBinding.http" constrains="binding">
+    <intent name="protocolBinding.rest" constrains="binding">
         <description>
             Unqualified intent for using HTTP.
         </description>

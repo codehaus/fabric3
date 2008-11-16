@@ -46,6 +46,7 @@ import org.fabric3.binding.ws.metro.provision.MetroWireSourceDefinition;
 import org.fabric3.binding.ws.metro.provision.WsdlElement;
 import org.fabric3.binding.ws.metro.runtime.core.F3Invoker;
 import org.fabric3.binding.ws.metro.runtime.core.MetroServlet;
+import org.fabric3.binding.ws.metro.runtime.policy.BindingIdResolver;
 import org.fabric3.binding.ws.metro.runtime.policy.FeatureResolver;
 import org.fabric3.scdl.definitions.PolicySet;
 import org.fabric3.spi.ObjectFactory;
@@ -60,6 +61,8 @@ import org.fabric3.spi.wire.Wire;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
+import com.sun.xml.ws.api.BindingID;
+
 /**
  * Source wire attacher that provisions services.
  *
@@ -69,6 +72,7 @@ public class MetroSourceWireAttacher implements SourceWireAttacher<MetroWireSour
     @Reference protected ServletHost servletHost;
     @Reference protected ClassLoaderRegistry classLoaderRegistry;
     @Reference protected FeatureResolver featureResolver;
+    @Reference protected BindingIdResolver bindingIdResolver;
     
     private MetroServlet metroServlet = new MetroServlet();
     
@@ -103,15 +107,16 @@ public class MetroSourceWireAttacher implements SourceWireAttacher<MetroWireSour
             String interfaze = source.getInterfaze();
             URL wsdlUrl = source.getWsdlUrl();
             List<QName> requestedIntents = source.getRequestedIntents();
-            List<PolicySet> requestedPolisySets = null;
+            List<PolicySet> requestedPolicySets = null;
             
             ClassLoader classLoader = classLoaderRegistry.getClassLoader(classLoaderId);
             Class<?> sei = classLoader.loadClass(interfaze);
-            WebServiceFeature[] features = featureResolver.getFeatures(requestedIntents, requestedPolisySets);
+            WebServiceFeature[] features = featureResolver.getFeatures(requestedIntents, requestedPolicySets);
+            BindingID bindingID = bindingIdResolver.resolveBindingId(requestedIntents, requestedPolicySets);
             
             F3Invoker f3Invoker = new F3Invoker(invocationChains);
             
-            metroServlet.registerService(sei, wsdlUrl, "/metro" + servicePath.toASCIIString(), wsdlElement, f3Invoker, features);
+            metroServlet.registerService(sei, wsdlUrl, "/metro" + servicePath.toASCIIString(), wsdlElement, f3Invoker, features, bindingID);
             
         } catch (ClassNotFoundException e) {
             throw new WiringException(e);

@@ -79,10 +79,10 @@ public class MetroTargetWireAttacher implements TargetWireAttacher<MetroWireTarg
             String interfaze = target.getInterfaze();
             URI classLoaderId = source.getClassLoaderId();
             List<QName> requestedIntents = target.getRequestedIntents();
-            List<PolicySet> requestedPolisySets = null;
+            List<PolicySet> requestedPolicySets = null;
             
             ClassLoader classLoader = classLoaderRegistry.getClassLoader(classLoaderId);
-            WebServiceFeature[] features = featureResolver.getFeatures(requestedIntents, requestedPolisySets);
+            WebServiceFeature[] features = featureResolver.getFeatures(requestedIntents, requestedPolicySets);
             
             Class<?> sei = classLoader.loadClass(interfaze);
             Method[] methods = sei.getDeclaredMethods();

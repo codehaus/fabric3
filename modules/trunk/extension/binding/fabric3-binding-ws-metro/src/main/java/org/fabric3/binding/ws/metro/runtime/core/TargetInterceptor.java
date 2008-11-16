@@ -76,8 +76,14 @@ public class TargetInterceptor implements Interceptor {
      * @param referenceUrls URLs used to invoke the web service.
      * @param method Method to be invoked.
      * @param features Features to enable.
+     * @param bindingID Binding ID to use.
      */
-    public TargetInterceptor(WsdlElement wsdlElement, Class<?> sei, URL[] referenceUrls, ClassLoader classLoader, Method method, WebServiceFeature[] features) {
+    public TargetInterceptor(WsdlElement wsdlElement, 
+                             Class<?> sei, 
+                             URL[] referenceUrls, 
+                             ClassLoader classLoader, 
+                             Method method, 
+                             WebServiceFeature[] features) {
         this.wsdlElement = wsdlElement;
         this.sei = sei;
         this.referenceUrls = referenceUrls;

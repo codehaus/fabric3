@@ -34,42 +34,27 @@
  */
 package org.fabric3.binding.ws.metro.runtime.policy;
 
-import java.util.LinkedList;
 import java.util.List;
 
 import javax.xml.namespace.QName;
-import javax.xml.ws.WebServiceFeature;
-import javax.xml.ws.soap.MTOMFeature;
 
 import org.fabric3.scdl.definitions.PolicySet;
 
-import com.sun.xml.ws.developer.BindingTypeFeature;
-import com.sun.xml.ws.developer.JAXWSProperties;
+import com.sun.xml.ws.api.BindingID;
 
-public class DefaultFeatureResolver implements FeatureResolver {
+/**
+ * Interface for resolving binding id.
+ *
+ */
+public interface BindingIdResolver {
     
     /**
-     * Translates the requested intents and policy sets to web service features.
+     * Resolves bindings based on the requested intents and policy sets.
      * 
-     * @param requestedIntents Requested intents.
-     * @param requestedPolicySets Requested policy sets.
-     * @return Rsolved feature sets.
+     * @param requestedIntents Intents requested on the bindings.
+     * @param requestedPolicySets Policy sets requested on the bindings.
+     * @return Resolved binding Id.
      */
-    public WebServiceFeature[] getFeatures(List<QName> requestedIntents, List<PolicySet> requestedPolicySets) {
-        
-        List<WebServiceFeature> features = new LinkedList<WebServiceFeature>();
-        if (requestedIntents.contains(MayProvidedIntents.MESSAGE_OPTIMISATION)) {
-            features.add(new MTOMFeature());
-        }
-        if (requestedIntents.contains(MayProvidedIntents.PROTOCOL_REST)) {
-            features.add(new BindingTypeFeature(JAXWSProperties.REST_BINDING));
-        }
-        
-        WebServiceFeature[] webServiceFeatures = new WebServiceFeature[features.size()];
-        webServiceFeatures = features.toArray(webServiceFeatures);
-        
-        return webServiceFeatures;
-        
-    }
+    BindingID resolveBindingId(List<QName> requestedIntents, List<PolicySet> requestedPolicySets);
 
 }

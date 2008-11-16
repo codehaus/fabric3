@@ -68,21 +68,22 @@ public class MetroServlet extends WSServlet {
      * @param wsdlElement WSDL element that encapsulates the WSDL 1.1 service and port names.
      * @param invoker Invoker for receiving the web service request.
      * @param features Web service features to enable.
+     * @param bindingID Binding ID to use.
      */
-    public void registerService(Class<?> sei, URL wsdlUrl, String servicePath, WsdlElement wsdlElement, F3Invoker invoker, WebServiceFeature[] features) {
+    public void registerService(Class<?> sei, URL wsdlUrl, String servicePath, WsdlElement wsdlElement, F3Invoker invoker, WebServiceFeature[] features, BindingID bindingID) {
         
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         
         try {
-            Thread.currentThread().setContextClassLoader(getClass().getClassLoader());
+            Thread.currentThread().setContextClassLoader(sei.getClassLoader());
             
             SDDocumentSource primaryWsdl = null;
             if (wsdlUrl != null) {
                 primaryWsdl = SDDocumentSource.create(wsdlUrl);
             }
             
-            // TODO Select a binding based on intent
-            WSBinding binding = BindingImpl.create(BindingID.SOAP11_HTTP, features);
+            WSBinding binding = BindingImpl.create(bindingID, features);
+            System.err.println("********************************** binding id" + bindingID);
             
             WSEndpoint<?> wsEndpoint = WSEndpoint.create(sei, 
                                                          false, 
