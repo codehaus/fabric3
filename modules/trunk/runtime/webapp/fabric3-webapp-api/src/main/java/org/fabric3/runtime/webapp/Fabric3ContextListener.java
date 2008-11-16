@@ -127,7 +127,7 @@ public class Fabric3ContextListener implements ServletContextListener {
             monitor.started(runtime.getJMXSubDomain());
             // deploy the application composite
             QName qName = new QName(compositeNamespace, compositeName);
-            runtime.activate(qName, componentId);
+            runtime.deploy(qName, componentId);
             monitor.compositeDeployed(qName);
         } catch (ValidationException e) {
             // print out the validation errors
@@ -204,8 +204,8 @@ public class Fabric3ContextListener implements ServletContextListener {
         List<String> bootExports = new ArrayList<String>();
         bootExports.add("META-INF/maven/org.codehaus.fabric3/fabric3-spi/pom.xml");
         bootExports.add("META-INF/maven/org.codehaus.fabric3/fabric3-pojo/pom.xml");
-        bootExports.add("META-INF/maven/org.codehaus.fabric3/fabric3-java/pom.xml");
         bootExports.add("META-INF/maven/org.codehaus.fabric3/fabric3-container-web-spi/pom.xml");
+        bootExports.add("META-INF/maven/org.codehaus.fabric3.webapp/fabric3-webapp-api/pom.xml");
         configuration.setBootLibraryExports(bootExports);
 
         // process extensions

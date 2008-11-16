@@ -14,7 +14,7 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.runtime.webapp.contribution;
+package org.fabric3.runtime.webapp;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -26,6 +26,8 @@ import java.net.URL;
 import org.fabric3.host.contribution.ContributionSource;
 
 /**
+ * Used to install the current webapp as a contribution.w
+ *
  * @version $Rev$ $Date$
  */
 public class WarContributionSource implements ContributionSource {

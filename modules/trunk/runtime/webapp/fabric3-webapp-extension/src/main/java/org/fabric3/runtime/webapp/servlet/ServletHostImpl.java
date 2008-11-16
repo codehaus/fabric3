@@ -32,7 +32,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.runtime.webapp;
+package org.fabric3.runtime.webapp.servlet;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -50,6 +50,8 @@ import org.osoa.sca.annotations.Reference;
 import org.osoa.sca.annotations.Service;
 
 import org.fabric3.spi.host.ServletHost;
+import org.fabric3.runtime.webapp.ServletRequestInjector;
+import org.fabric3.runtime.webapp.WebappHostInfo;
 
 /**
  * A <code>ServletHost</code> implementation that forwards requests to registered servlets

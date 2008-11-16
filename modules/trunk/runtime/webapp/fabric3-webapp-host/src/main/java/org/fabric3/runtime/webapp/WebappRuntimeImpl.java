@@ -37,25 +37,20 @@ package org.fabric3.runtime.webapp;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import javax.servlet.ServletRequest;
 import javax.servlet.ServletRequestEvent;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSessionEvent;
 import javax.servlet.http.HttpSessionListener;
 import javax.xml.namespace.QName;
 
-import org.fabric3.container.web.spi.WebRequestTunnel;
 import org.fabric3.fabric.runtime.AbstractRuntime;
 import org.fabric3.host.Names;
-import static org.fabric3.host.Names.CONTRIBUTION_SERVICE_URI;
 import static org.fabric3.host.Names.APPLICATION_DOMAIN_URI;
+import static org.fabric3.host.Names.CONTRIBUTION_SERVICE_URI;
 import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.host.contribution.ContributionService;
 import org.fabric3.host.domain.DeploymentException;
 import org.fabric3.host.domain.Domain;
-import org.fabric3.pojo.PojoWorkContextTunnel;
-import org.fabric3.runtime.webapp.contribution.WarContributionSource;
-import org.fabric3.spi.invocation.WorkContext;
 
 /**
  * Bootstrapper for the Fabric3 runtime in a web application host. This listener manages one runtime per servlet context; the lifecycle of that
@@ -72,15 +67,17 @@ import org.fabric3.spi.invocation.WorkContext;
 public class WebappRuntimeImpl extends AbstractRuntime<WebappHostInfo> implements WebappRuntime {
     private ServletRequestInjector requestInjector;
     private HttpSessionListener sessionListener;
+    private F3RequestListener listener;
 
     public WebappRuntimeImpl() {
         super(WebappHostInfo.class);
     }
 
-    public void activate(QName qName, URI componentId) throws ContributionException, DeploymentException {
+    public void deploy(QName qName, URI componentId) throws ContributionException, DeploymentException {
         try {
             // contribute the war to the application domain
             Domain domain = getSystemComponent(Domain.class, APPLICATION_DOMAIN_URI);
+            listener = getSystemComponent(F3RequestListener.class, F3RequestListener.LISTENER_URI);
             ContributionService contributionService = getSystemComponent(ContributionService.class, CONTRIBUTION_SERVICE_URI);
             URI contributionUri = new URI("file", qName.getLocalPart(), null);
             WarContributionSource source = new WarContributionSource(contributionUri);
@@ -103,17 +100,11 @@ public class WebappRuntimeImpl extends AbstractRuntime<WebappHostInfo> implement
     }
 
     public void requestInitialized(ServletRequestEvent sre) {
-        WorkContext workContext = new WorkContext();
-        PojoWorkContextTunnel.setThreadWorkContext(workContext);
-        ServletRequest req = sre.getServletRequest();
-        if (req instanceof HttpServletRequest) {
-            WebRequestTunnel.setRequest(((HttpServletRequest) req));
-        }
+        listener.onRequestStart(sre);
     }
 
     public void requestDestroyed(ServletRequestEvent sre) {
-        PojoWorkContextTunnel.setThreadWorkContext(null);
-        WebRequestTunnel.setRequest(null);
+        listener.onRequestEnd(sre);
     }
 
     public void sessionCreated(HttpSessionEvent event) {

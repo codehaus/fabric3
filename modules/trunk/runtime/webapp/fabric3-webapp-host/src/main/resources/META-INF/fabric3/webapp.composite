@@ -80,40 +80,13 @@
 
     <!-- JMX components -->
     <include name="org.fabric3.jmx.JMXExtension" scdlResource="org/fabric3/jmx/jmx.composite"/>
-    
-    <!-- include web implementation type -->
-    <!--<include name="org.fabric3.WebControl" scdlResource="META-INF/webControl.composite"/>-->
-    <!--<include name="org.fabric3.WebIntrospection" scdlResource="META-INF/webIntrospection.composite"/>-->
-    <!--<include name="org.fabric3.WebRuntime" scdlResource="META-INF/webRuntime.composite"/>-->
 
     <!-- include transform configuration -->
     <include name="org.fabric3.transform.Transform" scdlResource="org/fabric3/transform/transform.composite"/>
-
-    <!-- Web app ServletHost -->
-    <component name="servletHost">
-        <f3-impl:implementation.system class="org.fabric3.runtime.webapp.ServletHostImpl"/>
-    </component>
-
-    <component name="WebApplicationActivator">
-        <f3-impl:implementation.system class="org.fabric3.runtime.webapp.activator.EmbeddedWebApplicationActivator"/>
-    </component>
 
     <component name="LogicalComponentStore">
         <f3-impl:implementation.system class="org.fabric3.fabric.services.lcm.NonPersistentLogicalComponentStore"/>
     </component>
 
-    <component name="WarContributionProcessor">
-        <f3-impl:implementation.system class="org.fabric3.runtime.webapp.contribution.WarContributionProcessor"/>
-    </component>
-
-    <component name="WebXmlIndexer">
-        <f3-impl:implementation.system class="org.fabric3.runtime.webapp.contribution.WebXmlIndexer"/>
-        <property name="namespace">false</property>
-    </component>
-
-    <component name="WebXmlIndexerNamepsaceAware">
-        <f3-impl:implementation.system class="org.fabric3.runtime.webapp.contribution.WebXmlIndexer"/>
-        <property name="namespace">true</property>
-    </component>
 
 </composite>

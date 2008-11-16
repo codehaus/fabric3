@@ -32,5 +32,6 @@
 	<modules>
 		<module>fabric3-webapp-api</module>
 		<module>fabric3-webapp-host</module>
+		<module>fabric3-webapp-extension</module>
 	</modules>
 </project>

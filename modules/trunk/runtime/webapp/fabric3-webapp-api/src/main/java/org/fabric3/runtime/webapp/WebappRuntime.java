@@ -52,7 +52,7 @@ import org.fabric3.host.runtime.Fabric3Runtime;
 public interface WebappRuntime extends ServletRequestListener, HttpSessionListener, Fabric3Runtime<WebappHostInfo> {
 
     /**
-     * Activates a composite in the domain.
+     * Deploys a composite in the domain.
      *
      * @param qName       the composite qualified name
      * @param componentId the id of the component that should be bound to the webapp
@@ -60,7 +60,7 @@ public interface WebappRuntime extends ServletRequestListener, HttpSessionListen
      * @throws ContributionException if an error is found in the contribution. If validation errors are encountered, a ValidationException will be
      *                               thrown.
      */
-    void activate(QName qName, URI componentId) throws ContributionException, DeploymentException;
+    void deploy(QName qName, URI componentId) throws ContributionException, DeploymentException;
 
     /**
      * Returns the ServletRequestInjector for the runtime.

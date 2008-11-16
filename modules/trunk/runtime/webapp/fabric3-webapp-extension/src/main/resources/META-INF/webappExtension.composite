@@ -30,11 +30,40 @@
  KIND, either express or implied.  See the License for the
  specific language governing permissions and limitations
  under the License.
--->
-<composite xmlns="http://www.osoa.org/xmlns/sca/1.0" name="testapp">
 
-    <component name="component">
-        <implementation.java class="org.fabric3.runtime.webapp.FooImpl"/>
+    $Rev: 5971 $ $Date: 2008-11-16 10:47:20 -0800 (Sun, 16 Nov 2008) $
+-->
+<composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
+           xmlns:f3-core="urn:fabric3.org:core"
+           xmlns:f3-impl="urn:fabric3.org:implementation"
+           targetNamespace="org.codehaus.fabric3"
+           name="WebappExtensionComposite"
+           autowire="true">
+
+    <component name="F3RequestListener">
+        <f3-impl:implementation.system class="org.fabric3.runtime.webapp.listener.F3RequestListenerImpl"/>
+    </component>
+
+    <component name="servletHost">
+        <f3-impl:implementation.system class="org.fabric3.runtime.webapp.servlet.ServletHostImpl"/>
+    </component>
+
+    <component name="WebApplicationActivator">
+        <f3-impl:implementation.system class="org.fabric3.runtime.webapp.activator.EmbeddedWebApplicationActivator"/>
+    </component>
+
+    <component name="WarContributionProcessor">
+        <f3-impl:implementation.system class="org.fabric3.runtime.webapp.contribution.WarContributionProcessor"/>
+    </component>
+
+    <component name="WebXmlIndexer">
+        <f3-impl:implementation.system class="org.fabric3.runtime.webapp.contribution.WebXmlIndexer"/>
+        <property name="namespace">false</property>
+    </component>
+
+    <component name="WebXmlIndexerNamepsaceAware">
+        <f3-impl:implementation.system class="org.fabric3.runtime.webapp.contribution.WebXmlIndexer"/>
+        <property name="namespace">true</property>
     </component>
 
 </composite>
