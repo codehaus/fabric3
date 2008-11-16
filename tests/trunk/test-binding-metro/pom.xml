@@ -82,6 +82,11 @@
                             <artifactId>jaxws-rt</artifactId>
                             <version>2.1.5</version>
                         </dependency>
+                        <dependency>
+                            <groupId>com.sun.xml.fastinfoset</groupId>
+                            <artifactId>FastInfoset</artifactId>
+                            <version>1.2.3</version>
+                        </dependency>
                     </shared>
                     <systemConfig>
                         <![CDATA[

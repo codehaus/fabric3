@@ -15,11 +15,23 @@
  distribution for the permitted and restricted uses of such software.
 
 -->
-<composite xmlns="http://www.osoa.org/xmlns/sca/1.0" name="MetroTestComposite">
+<composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
+           xmlns:f3-impl="urn:fabric3.org:implementation"   
+           xmlns:f3-policy="urn:fabric3.org:policy"
+           name="RestTest">
 
-    <include name="SimpleTypeTest" />
-    <include name="JaxbTest" />
-    <include name="MtomTest" />
-    <include name="RestTest" />
+    <component name="RestTest">
+        <f3-impl:junit class="org.fabric3.tests.binding.metro.RestTest"/>
+        <reference name="searchService">
+            <binding.ws uri="http://localhost:2000/metro/searchBooks" requires="f3-policy:protocolBinding.rest"/>
+        </reference>
+    </component>
+
+    <component name="BookStoreService">
+        <implementation.java class="org.fabric3.tests.binding.metro.bookstore.DefaultSearchService"/>
+        <service name="SearchService">
+            <binding.ws uri="/searchBooks" requires="f3-policy:protocolBinding.rest"/>
+        </service>
+    </component>
 
 </composite>
