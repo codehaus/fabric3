@@ -28,7 +28,7 @@
         <reference name="helloWorldPortType">
             <binding.ws wsdlElement="urn:helloworld#wsdl.port(HelloWorldService/HelloWorldPort)" 
                         wsdli:wsdlLocation="HelloWorld.wsdl" 
-                        uri="http://localhost:8900/metro/hello"/>
+                        uri="http://localhost:8901/metro/hello,http://localhost:8900/metro/hello"/>
         </reference>
     </component>
 
@@ -56,6 +56,24 @@
             <binding.ws wsdlElement="urn:weather#wsdl.port(WeatherService/WeatherPort)" 
                         wsdli:wsdlLocation="Weather.wsdl"
                         uri="/weather"/>
+        </service>
+    </component>
+
+    <component name="MtomTest">
+        <f3-impl:junit class="org.fabric3.tests.binding.metro.MtomTest"/>
+        <reference name="uploadPortType">
+            <binding.ws wsdlElement="urn:upload#wsdl.port(UploadService/UploadPort)" 
+                        wsdli:wsdlLocation="Upload.wsdl" 
+                        uri="http://localhost:8900/metro/upload"/>
+        </reference>
+    </component>
+
+    <component name="UploadService">
+        <implementation.java class="org.fabric3.tests.binding.metro.upload.UploadPortTypeImpl"/>
+        <service name="UploadPortType">
+            <binding.ws wsdlElement="urn:upload#wsdl.port(UploadService/UploadPort)" 
+                        wsdli:wsdlLocation="Upload.wsdl" 
+                        uri="/upload"/>
         </service>
     </component>
 
