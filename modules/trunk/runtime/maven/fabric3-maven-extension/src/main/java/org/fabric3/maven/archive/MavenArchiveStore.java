@@ -32,7 +32,7 @@ import org.fabric3.spi.services.archive.ArchiveStoreException;
 /**
  * An archive store that delegates to a set of local and remote Maven repositories.
  *
- * @version $Rev$ $Date$
+ * @version $Rev: 5976 $ $Date: 2008-11-16 16:10:37 -0800 (Sun, 16 Nov 2008) $
  */
 @EagerInit
 public class MavenArchiveStore implements ArchiveStore {

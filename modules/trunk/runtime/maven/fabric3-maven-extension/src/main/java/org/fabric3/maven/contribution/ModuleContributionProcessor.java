@@ -49,7 +49,7 @@ import org.fabric3.spi.services.contribution.Resource;
 /**
  * Processes a Maven module directory.
  *
- * @version $Rev$ $Date$
+ * @version $Rev: 5954 $ $Date: 2008-11-15 12:52:25 -0800 (Sat, 15 Nov 2008) $
  */
 @EagerInit
 public class ModuleContributionProcessor implements ContributionProcessor {

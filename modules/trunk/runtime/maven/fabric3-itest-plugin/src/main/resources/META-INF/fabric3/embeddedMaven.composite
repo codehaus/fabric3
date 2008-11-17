@@ -83,20 +83,7 @@
     <!-- JMX components -->
     <include name="JMXExtension" scdlResource="org/fabric3/jmx/jmx.composite"/>
 
-    <component name="LogicalComponentStore">
-        <f3-impl:implementation.system class="org.fabric3.fabric.services.lcm.NonPersistentLogicalComponentStore"/>
-    </component>
-
-    <component name="ContributionStore">
-        <f3-impl:implementation.system class="org.fabric3.maven.archive.MavenArchiveStore"/>
-    </component>
-
-    <component name="ModuleContributionProcessor">
-        <f3-impl:implementation.system class="org.fabric3.maven.contribution.ModuleContributionProcessor"/>
-    </component>
-
-    <component name="ModuleClasspathProcessor">
-        <f3-impl:implementation.system class="org.fabric3.maven.contribution.ModuleClasspathProcessor"/>
-    </component>
-
+    <!-- The maven extension must be included as a bootstrap extension as the MavenArchiveStore is needed during boot initialization -->
+ +    <include name="MavenExtension" scdlResource="org/fabric3/maven/mavenExtension.composite"/>
+ 
 </composite>

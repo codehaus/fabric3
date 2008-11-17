@@ -7,7 +7,7 @@ import junit.framework.TestCase;
 import org.fabric3.maven.archive.MavenArchiveStore;
 
 /**
- * @version $Rev$ $Date$
+ * @version $Rev: 5976 $ $Date: 2008-11-16 16:10:37 -0800 (Sun, 16 Nov 2008) $
  */
 public class MavenArchiveStoreTestCase extends TestCase {
 

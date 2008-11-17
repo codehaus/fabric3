@@ -58,7 +58,7 @@
     </build>
     <repositories>
         <repository>
-            <releases />
+            <releases/>
             <snapshots>
                 <enabled>false</enabled>
             </snapshots>
@@ -104,6 +104,13 @@
             <version>1.0</version>
             <scope>compile</scope>
         </dependency>
+
+        <dependency>
+            <groupId>org.codehaus.fabric3</groupId>
+            <artifactId>fabric3-util</artifactId>
+            <version>0.7-SNAPSHOT</version>
+        </dependency>
+        
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-jmx-agent</artifactId>
@@ -121,6 +128,11 @@
         </dependency>
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
+            <artifactId>fabric3-test-spi</artifactId>
+            <version>0.7-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-monitor</artifactId>
             <version>0.7-SNAPSHOT</version>
         </dependency>
@@ -128,6 +140,12 @@
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-maven-api</artifactId>
             <version>0.7-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.codehaus.fabric3</groupId>
+            <artifactId>fabric3-maven-extension</artifactId>
+            <version>0.7-SNAPSHOT</version>
+            <scope>runtime</scope>
         </dependency>
         <dependency>
             <groupId>org.codehaus.woodstox</groupId>

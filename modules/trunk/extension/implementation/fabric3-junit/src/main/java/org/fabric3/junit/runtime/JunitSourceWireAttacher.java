@@ -16,8 +16,6 @@
  */
 package org.fabric3.junit.runtime;
 
-import java.util.Map;
-
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
@@ -27,21 +25,22 @@ import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 import org.fabric3.spi.wire.Wire;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.junit.provision.JUnitWireSourceDefinition;
+import org.fabric3.TestWireHolder;
 
 /**
  * @version $Revision$ $Date$
  */
 @EagerInit
 public class JunitSourceWireAttacher implements SourceWireAttacher<JUnitWireSourceDefinition> {
-    private WireHolder holder;
+    private TestWireHolder holder;
 
-    public JunitSourceWireAttacher(@Reference WireHolder holder) {
+    public JunitSourceWireAttacher(@Reference TestWireHolder holder) {
         this.holder = holder;
     }
 
     public void attachToSource(JUnitWireSourceDefinition source, PhysicalWireTargetDefinition target, Wire wire) throws WiringException {
         final String testName = source.getTestName();
-        holder.put(testName, wire);
+        holder.add(testName, wire);
     }
 
     public void attachObjectFactory(JUnitWireSourceDefinition source, ObjectFactory<?> objectFactory, PhysicalWireTargetDefinition target)

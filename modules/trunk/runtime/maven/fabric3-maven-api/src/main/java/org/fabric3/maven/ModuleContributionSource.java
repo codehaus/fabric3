@@ -14,7 +14,7 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.maven.contribution;
+package org.fabric3.maven;
 
 import java.io.IOException;
 import java.io.InputStream;

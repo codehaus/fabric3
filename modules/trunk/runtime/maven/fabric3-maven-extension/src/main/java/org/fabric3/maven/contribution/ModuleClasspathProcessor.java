@@ -34,7 +34,7 @@ import org.fabric3.spi.services.contribution.ClasspathProcessorRegistry;
 /**
  * Fabricates a classpath for a Maven module by including the classes and test-classes directories and any module dependencies.
  *
- * @version $Rev$ $Date$
+ * @version $Rev: 5976 $ $Date: 2008-11-16 16:10:37 -0800 (Sun, 16 Nov 2008) $
  */
 @EagerInit
 public class ModuleClasspathProcessor implements ClasspathProcessor {

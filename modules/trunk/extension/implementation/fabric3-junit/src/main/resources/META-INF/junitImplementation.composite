@@ -56,9 +56,4 @@
         <f3-impl:implementation.system class="org.fabric3.junit.runtime.JunitSourceWireAttacher"/>
     </component>
 
-    <!-- expected by the Maven runtime -->
-    <component name="TestWireHolder">
-        <f3-impl:implementation.system class="org.fabric3.junit.runtime.JUnitWireHolderImpl"/>
-    </component>
-
 </composite>

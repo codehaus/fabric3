@@ -142,6 +142,7 @@ public class MavenRuntimeBooter {
         // add the boot libraries to export as contributions. This is necessary so extension contributions can import them
         List<String> bootExports = new ArrayList<String>();
         bootExports.add("META-INF/maven/org.codehaus.fabric3/fabric3-spi/pom.xml");
+        bootExports.add("META-INF/maven/org.codehaus.fabric3/fabric3-test-spi/pom.xml");
         bootExports.add("META-INF/maven/org.codehaus.fabric3/fabric3-pojo/pom.xml");
         configuration.setBootLibraryExports(bootExports);
 

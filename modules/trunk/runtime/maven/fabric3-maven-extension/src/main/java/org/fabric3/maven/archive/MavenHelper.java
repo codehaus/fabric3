@@ -73,7 +73,7 @@ import org.codehaus.plexus.embed.Embedder;
 /**
  * Utility class for embedding Maven.
  *
- * @version $Rev$ $Date$
+ * @version $Rev: 5976 $ $Date: 2008-11-16 16:10:37 -0800 (Sun, 16 Nov 2008) $
  */
 public class MavenHelper {
 

@@ -21,7 +21,7 @@ import org.fabric3.host.Fabric3RuntimeException;
 /**
  * Exception thrown in case of an artifact error.
  *
- * @version $Rev$ $Date$
+ * @version $Rev: 5976 $ $Date: 2008-11-16 16:10:37 -0800 (Sun, 16 Nov 2008) $
  */
 public class Fabric3DependencyException extends Fabric3RuntimeException {
     private static final long serialVersionUID = -3993762841835195146L;
