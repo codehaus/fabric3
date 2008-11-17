@@ -56,6 +56,10 @@
         <f3-impl:implementation.system class="org.fabric3.maven.contribution.ModuleClasspathProcessor"/>
     </component>
 
+    <component name="CompositeQNameService">
+        <f3-impl:implementation.system class="org.fabric3.maven.contribution.CompositeQNameServiceImpl"/>
+    </component>
+
     <component name="TestSuiteFactory">
         <f3-impl:implementation.system class="org.fabric3.maven.test.TestSuiteFactoryImpl"/>
     </component>

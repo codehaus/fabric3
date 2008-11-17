@@ -81,10 +81,8 @@ public class TestDeployer {
         try {
             log.info("Deploying test composite from " + testScdl);
             URL buildDirUrl = getBuildDirectoryUrl();
-            List<Deployable> deployables = runtime.deploy(buildDirUrl, testScdlURL);
-            for (Deployable deployable : deployables) {
-                runtime.startContext(deployable.getName());
-            }
+            QName deployable = runtime.deploy(buildDirUrl, testScdlURL);
+            runtime.startContext(deployable);
         } catch (ValidationException e) {
             // print out the validaiton errors
             reportContributionErrors(e);

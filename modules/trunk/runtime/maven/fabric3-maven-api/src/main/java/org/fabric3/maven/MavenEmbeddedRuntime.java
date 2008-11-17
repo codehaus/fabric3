@@ -35,13 +35,11 @@
 package org.fabric3.maven;
 
 import java.net.URL;
-import java.util.List;
 import javax.xml.namespace.QName;
 
 import org.apache.maven.surefire.suite.SurefireTestSuite;
 
 import org.fabric3.host.contribution.ContributionException;
-import org.fabric3.host.contribution.Deployable;
 import org.fabric3.host.domain.DeploymentException;
 import org.fabric3.host.runtime.Fabric3Runtime;
 
@@ -73,12 +71,12 @@ public interface MavenEmbeddedRuntime extends Fabric3Runtime<MavenHostInfo> {
      *
      * @param base         the module output directory location
      * @param scdlLocation the composite file location
-     * @return the list of deployable composites deployed
+     * @return the  QName of the composite that was deployed
      * @throws DeploymentException   if there is an error activating the test composite
      * @throws ContributionException if a contribution is thrown. The cause may a ValidationException resulting from  errors in the contribution. In
      *                               this case the errors should be reported back to the user.
      */
-    List<Deployable> deploy(URL base, URL scdlLocation) throws ContributionException, DeploymentException;
+    QName deploy(URL base, URL scdlLocation) throws ContributionException, DeploymentException;
 
     /**
      * Creates a test suite for testing components in the deployed composite.

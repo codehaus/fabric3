@@ -38,7 +38,6 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.List;
 import javax.xml.namespace.QName;
 
 import org.apache.maven.surefire.suite.SurefireTestSuite;
@@ -55,6 +54,8 @@ import org.fabric3.maven.MavenEmbeddedRuntime;
 import org.fabric3.maven.MavenHostInfo;
 import org.fabric3.maven.ModuleContributionSource;
 import org.fabric3.maven.TestSuiteFactory;
+import org.fabric3.maven.CompositeQNameService;
+import org.fabric3.maven.InvalidResourceException;
 import org.fabric3.util.io.FileHelper;
 
 /**
@@ -87,7 +88,7 @@ public class MavenEmbeddedRuntimeImpl extends AbstractRuntime<MavenHostInfo> imp
         }
     }
 
-    public List<Deployable> deploy(URL url, URL scdlLocation) throws ContributionException, DeploymentException {
+    public QName deploy(URL url, URL scdlLocation) throws ContributionException, DeploymentException {
         try {
             URI contributionUri = url.toURI();
             ModuleContributionSource source =
@@ -97,16 +98,16 @@ public class MavenEmbeddedRuntimeImpl extends AbstractRuntime<MavenHostInfo> imp
                     getSystemComponent(ContributionService.class, CONTRIBUTION_SERVICE_URI);
             Domain domain = getSystemComponent(Domain.class, APPLICATION_DOMAIN_URI);
             contributionService.contribute(source);
-            List<Deployable> deployables = contributionService.getDeployables(contributionUri);
-            assert !deployables.isEmpty();
-            for (Deployable deployable : deployables) {
-                domain.include(deployable.getName());
-            }
-            return deployables;
+            CompositeQNameService qNameService = getSystemComponent(CompositeQNameService.class, CompositeQNameService.SERVICE_URI);
+            QName deployable = qNameService.getQName(contributionUri, scdlLocation);
+            domain.include(deployable);
+            return deployable;
         } catch (MalformedURLException e) {
             String identifier = url.toString();
             throw new DeploymentException("Invalid project directory: " + identifier, identifier, e);
         } catch (URISyntaxException e) {
+            throw new DeploymentException("Error activating test contribution", e);
+        } catch (InvalidResourceException e) {
             throw new DeploymentException("Error activating test contribution", e);
         }
 
