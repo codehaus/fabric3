@@ -104,14 +104,12 @@ public class ContributionServiceImpl implements ContributionService {
     private List<ContributionServiceListener> listeners;
 
     public ContributionServiceImpl(@Reference ProcessorRegistry processorRegistry,
-                                   @Reference ArchiveStore archiveStore,
                                    @Reference MetaDataStore metaDataStore,
                                    @Reference ContributionLoader contributionLoader,
                                    @Reference ContentTypeResolver contentTypeResolver,
                                    @Reference DependencyService dependencyService,
                                    @Monitor ContributionServiceMonitor monitor) throws IOException, ClassNotFoundException {
         this.processorRegistry = processorRegistry;
-        this.archiveStore = archiveStore;
         this.metaDataStore = metaDataStore;
         this.contributionLoader = contributionLoader;
         this.contentTypeResolver = contentTypeResolver;
@@ -123,6 +121,16 @@ public class ContributionServiceImpl implements ContributionService {
     @Reference(required = false)
     public void setListeners(List<ContributionServiceListener> listeners) {
         this.listeners = listeners;
+    }
+
+    /**
+     * Lazily injects the archive store. Some environments may inject the archive store via an extension loaded after bootstrap.
+     *
+     * @param archiveStore the store to inject
+     */
+    @Reference(required = false)
+    public void setArchiveStore(ArchiveStore archiveStore) {
+        this.archiveStore = archiveStore;
     }
 
     public URI store(ContributionSource source) throws StoreException {
@@ -270,7 +278,7 @@ public class ContributionServiceImpl implements ContributionService {
         }
         metaDataStore.remove(uri);
         try {
-            archiveStore.remove(uri);
+            getArchiveStore().remove(uri);
         } catch (ArchiveStoreException e) {
             throw new RemoveException("Error removing contribution archive", e);
         }
@@ -462,7 +470,7 @@ public class ContributionServiceImpl implements ContributionService {
      */
     private Contribution persist(ContributionSource source) throws StoreException {
         URI contributionUri = source.getUri();
-        if (archiveStore.exists(contributionUri)) {
+        if (metaDataStore.find(contributionUri) != null) {
             throw new DuplicateContributionException("Contribution is already installed: " + contributionUri);
         }
         URL locationUrl;
@@ -473,7 +481,7 @@ public class ContributionServiceImpl implements ContributionService {
             InputStream stream = null;
             try {
                 stream = source.getSource();
-                locationUrl = archiveStore.store(contributionUri, stream);
+                locationUrl = getArchiveStore().store(contributionUri, stream);
             } catch (IOException e) {
                 throw new StoreException(e);
             } catch (ArchiveStoreException e) {
@@ -537,5 +545,10 @@ public class ContributionServiceImpl implements ContributionService {
         }
     }
 
-
+    private ArchiveStore getArchiveStore() {
+        if (archiveStore == null) {
+            throw new UnsupportedOperationException(ArchiveStore.class.getSimpleName() + " not configured");
+        }
+        return archiveStore;
+    }
 }
