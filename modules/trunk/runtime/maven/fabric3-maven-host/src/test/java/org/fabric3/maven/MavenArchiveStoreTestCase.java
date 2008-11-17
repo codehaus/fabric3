@@ -4,6 +4,8 @@ import java.net.URI;
 
 import junit.framework.TestCase;
 
+import org.fabric3.maven.archive.MavenArchiveStore;
+
 /**
  * @version $Rev$ $Date$
  */

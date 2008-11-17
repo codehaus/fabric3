@@ -32,7 +32,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.maven;
+package org.fabric3.maven.archive;
 
 import java.io.File;
 import java.lang.reflect.Constructor;

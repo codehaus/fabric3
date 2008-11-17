@@ -60,7 +60,7 @@ import org.xml.sax.SAXException;
 
 import org.fabric3.api.annotation.logging.Severe;
 import org.fabric3.featureset.FeatureSet;
-import org.fabric3.maven.runtime.MavenEmbeddedRuntime;
+import org.fabric3.maven.MavenEmbeddedRuntime;
 
 /**
  * Run integration tests on a SCA composite using an embedded Fabric3 runtime.

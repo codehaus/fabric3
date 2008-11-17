@@ -40,7 +40,7 @@ import java.util.Properties;
 import java.util.Set;
 import java.io.File;
 
-import org.fabric3.maven.runtime.MavenHostInfo;
+import org.fabric3.maven.MavenHostInfo;
 
 /**
  * @version $Rev$ $Date$

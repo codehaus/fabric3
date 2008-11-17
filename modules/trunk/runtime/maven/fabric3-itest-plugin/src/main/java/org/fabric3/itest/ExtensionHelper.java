@@ -32,7 +32,7 @@ import org.fabric3.host.contribution.ContributionSource;
 import org.fabric3.host.contribution.FileContributionSource;
 import org.fabric3.host.runtime.BootConfiguration;
 import org.fabric3.host.runtime.ScdlBootstrapper;
-import org.fabric3.maven.runtime.MavenEmbeddedRuntime;
+import org.fabric3.maven.MavenEmbeddedRuntime;
 
 /**
  * @version $Revision$ $Date$

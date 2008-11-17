@@ -32,7 +32,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.maven.runtime;
+package org.fabric3.maven;
 
 import java.net.URL;
 import java.util.Set;

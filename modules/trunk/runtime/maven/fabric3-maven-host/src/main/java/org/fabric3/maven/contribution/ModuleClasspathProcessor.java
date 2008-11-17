@@ -27,7 +27,7 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.maven.runtime.MavenHostInfo;
+import org.fabric3.maven.MavenHostInfo;
 import org.fabric3.spi.services.contribution.ClasspathProcessor;
 import org.fabric3.spi.services.contribution.ClasspathProcessorRegistry;
 

@@ -55,6 +55,8 @@ import org.fabric3.host.contribution.Deployable;
 import org.fabric3.host.domain.DeploymentException;
 import org.fabric3.host.domain.Domain;
 import org.fabric3.maven.contribution.ModuleContributionSource;
+import org.fabric3.maven.MavenEmbeddedRuntime;
+import org.fabric3.maven.MavenHostInfo;
 import org.fabric3.spi.wire.Wire;
 
 /**

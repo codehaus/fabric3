@@ -32,7 +32,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.maven;
+package org.fabric3.maven.archive;
 
 import java.net.URL;
 import java.util.HashSet;
@@ -94,8 +94,8 @@ public class Artifact {
     }
 
     /**
-     * Returns the name of a logical grouping to which this artifact belongs. For example, this might represent the
-     * original publisher of the artifact.
+     * Returns the name of a logical grouping to which this artifact belongs. For example, this might represent the original publisher of the
+     * artifact.
      *
      * @return the name of a logical grouping to which this artifact belongs
      */
@@ -149,9 +149,8 @@ public class Artifact {
     }
 
     /**
-     * Returns a way of classifying an artifact. This can be used to distinguish variants of an artifact that provide
-     * the same function but which may have platform specific requirements. For example, it may contain the name of a
-     * hardware platform for artifacts that contain native code.
+     * Returns a way of classifying an artifact. This can be used to distinguish variants of an artifact that provide the same function but which may
+     * have platform specific requirements. For example, it may contain the name of a hardware platform for artifacts that contain native code.
      *
      * @return a way of classifying an artifact
      */

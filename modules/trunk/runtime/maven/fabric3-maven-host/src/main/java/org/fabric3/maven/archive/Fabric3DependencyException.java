@@ -14,7 +14,7 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.maven;
+package org.fabric3.maven.archive;
 
 import org.fabric3.host.Fabric3RuntimeException;
 

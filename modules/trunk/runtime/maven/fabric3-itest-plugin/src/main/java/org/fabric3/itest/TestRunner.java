@@ -51,7 +51,7 @@ import org.apache.maven.surefire.report.XMLReporter;
 import org.apache.maven.surefire.suite.SurefireTestSuite;
 import org.apache.maven.surefire.testset.TestSetFailedException;
 
-import org.fabric3.maven.runtime.MavenEmbeddedRuntime;
+import org.fabric3.maven.MavenEmbeddedRuntime;
 
 /**
  * Executes integration tests.
