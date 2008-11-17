@@ -47,6 +47,7 @@ import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
  *
  */
 public class MetroWireTargetDefinition extends PhysicalWireTargetDefinition {
+    private static final long serialVersionUID = 5758003268658918242L;
 
     private WsdlElement wsdlElement;
     private URL wsdlUrl;

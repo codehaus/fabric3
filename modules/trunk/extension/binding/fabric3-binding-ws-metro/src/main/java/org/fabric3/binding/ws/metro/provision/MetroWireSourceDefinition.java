@@ -47,6 +47,7 @@ import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
  *
  */
 public class MetroWireSourceDefinition extends PhysicalWireSourceDefinition {
+    private static final long serialVersionUID = -7874049193479847748L;
 
     private WsdlElement wsdlElement;
     private URL wsdlUrl;

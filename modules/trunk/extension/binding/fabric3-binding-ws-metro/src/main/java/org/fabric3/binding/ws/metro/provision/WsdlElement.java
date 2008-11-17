@@ -34,6 +34,7 @@
  */
 package org.fabric3.binding.ws.metro.provision;
 
+import java.io.Serializable;
 import javax.xml.namespace.QName;
 
 /**
@@ -41,11 +42,12 @@ import javax.xml.namespace.QName;
  * Encapsulates the service name and QName.
  *
  */
-public class WsdlElement {
-    
+public class WsdlElement implements Serializable {
+    private static final long serialVersionUID = -5255699761094991645L;
+
     private QName serviceName;
     private QName portName;
-    
+
     /**
      * Initialises the service name and port name.
      * 

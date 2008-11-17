@@ -37,41 +37,39 @@ package org.fabric3.binding.ws.metro.control;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-
 import javax.xml.stream.XMLStreamException;
 import javax.xml.transform.stream.StreamSource;
 
-import org.fabric3.spi.generator.GenerationException;
+import com.sun.xml.ws.api.model.wsdl.WSDLModel;
+import com.sun.xml.ws.wsdl.parser.RuntimeWSDLParser;
 import org.xml.sax.EntityResolver;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
-import com.sun.xml.ws.api.model.wsdl.WSDLModel;
-import com.sun.xml.ws.api.server.Container;
-import com.sun.xml.ws.wsdl.parser.RuntimeWSDLParser;
+import org.fabric3.spi.generator.GenerationException;
 
 /*
  * Default implementation of the WSDL parser.
  */
 public class DefaultWsdlParser implements WsdlParser {
-    
+
     /**
      * Parses a WSDL document to the information model.
+     *
      * @param wsdlLocation Location of the WSDL document.
      * @return WSDL model object.
-     * 
      * @throws GenerationException If unable to parse the WSDL.
      */
     public WSDLModel parse(URL wsdlLocation) throws GenerationException {
-        
+
         if (wsdlLocation == null) {
             return null;
         }
-        
+
         InputStream inputStream = null;
         try {
             inputStream = wsdlLocation.openStream();
-            return RuntimeWSDLParser.parse(wsdlLocation, new StreamSource(inputStream), entityResolver, false, (Container) null);
+            return RuntimeWSDLParser.parse(wsdlLocation, new StreamSource(inputStream), entityResolver, false, null);
         } catch (XMLStreamException e) {
             throw new GenerationException(e);
         } catch (IOException e) {
@@ -80,17 +78,19 @@ public class DefaultWsdlParser implements WsdlParser {
             throw new GenerationException(e);
         } finally {
             try {
-                inputStream.close();
+                if (inputStream != null) {
+                    inputStream.close();
+                }
             } catch (IOException e) {
-                throw new GenerationException(e);
+                // ignore
             }
         }
-        
+
     }
-    
+
     /*
-     * Entity resolution is not currently supported.
-     */
+    * Entity resolution is not currently supported.
+    */
     private EntityResolver entityResolver = new EntityResolver() {
         public InputSource resolveEntity(String systemId, String publicId) throws SAXException, IOException {
             return null;
