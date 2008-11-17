@@ -34,9 +34,7 @@
  */
 package org.fabric3.maven.runtime;
 
-import java.net.MalformedURLException;
 import java.net.URI;
-import java.net.URISyntaxException;
 import java.net.URL;
 import javax.xml.namespace.QName;
 
@@ -55,7 +53,6 @@ import org.fabric3.maven.MavenEmbeddedRuntime;
 import org.fabric3.maven.MavenHostInfo;
 import org.fabric3.maven.ModuleContributionSource;
 import org.fabric3.maven.TestSuiteFactory;
-import org.fabric3.util.io.FileHelper;
 
 /**
  * Default Maven runtime implementation.
@@ -63,49 +60,34 @@ import org.fabric3.util.io.FileHelper;
  * @version $Rev$ $Date$
  */
 public class MavenEmbeddedRuntimeImpl extends AbstractRuntime<MavenHostInfo> implements MavenEmbeddedRuntime {
+    private static final URI CONTRIBUTION_URI = URI.create("iTestContribution");
+
     public MavenEmbeddedRuntimeImpl() {
         super(MavenHostInfo.class, null);
     }
 
-    public void deploy(URL url, QName qName) throws ContributionException, DeploymentException {
-        try {
-            URI contributionUri = url.toURI();
-            ModuleContributionSource source =
-                    new ModuleContributionSource(contributionUri, FileHelper.toFile(url).toString());
-            // contribute the Maven project to the application domain
-            ContributionService contributionService =
-                    getSystemComponent(ContributionService.class, CONTRIBUTION_SERVICE_URI);
-            Domain domain = getSystemComponent(Domain.class, APPLICATION_DOMAIN_URI);
-            contributionService.contribute(source);
-            // activate the deployable composite in the domain
-            domain.include(qName);
-        } catch (MalformedURLException e) {
-            String identifier = url.toString();
-            throw new DeploymentException("Invalid project directory: " + identifier, identifier, e);
-        } catch (URISyntaxException e) {
-            throw new DeploymentException("Error activating test contribution", e);
-        }
+    public void deploy(URL base, QName qName) throws ContributionException, DeploymentException {
+        ModuleContributionSource source = new ModuleContributionSource(CONTRIBUTION_URI, base);
+        // contribute the Maven project to the application domain
+        ContributionService contributionService =
+                getSystemComponent(ContributionService.class, CONTRIBUTION_SERVICE_URI);
+        Domain domain = getSystemComponent(Domain.class, APPLICATION_DOMAIN_URI);
+        contributionService.contribute(source);
+        // activate the deployable composite in the domain
+        domain.include(qName);
     }
 
-    public QName deploy(URL url, URL scdlLocation) throws ContributionException, DeploymentException {
+    public QName deploy(URL base, URL scdlLocation) throws ContributionException, DeploymentException {
         try {
-            URI contributionUri = url.toURI();
-            ModuleContributionSource source =
-                    new ModuleContributionSource(contributionUri, FileHelper.toFile(url).toString());
+            ModuleContributionSource source = new ModuleContributionSource(CONTRIBUTION_URI, base);
 
-            ContributionService contributionService =
-                    getSystemComponent(ContributionService.class, CONTRIBUTION_SERVICE_URI);
+            ContributionService contributionService = getSystemComponent(ContributionService.class, CONTRIBUTION_SERVICE_URI);
             Domain domain = getSystemComponent(Domain.class, APPLICATION_DOMAIN_URI);
             contributionService.contribute(source);
             CompositeQNameService qNameService = getSystemComponent(CompositeQNameService.class, CompositeQNameService.SERVICE_URI);
-            QName deployable = qNameService.getQName(contributionUri, scdlLocation);
+            QName deployable = qNameService.getQName(CONTRIBUTION_URI, scdlLocation);
             domain.include(deployable);
             return deployable;
-        } catch (MalformedURLException e) {
-            String identifier = url.toString();
-            throw new DeploymentException("Invalid project directory: " + identifier, identifier, e);
-        } catch (URISyntaxException e) {
-            throw new DeploymentException("Error activating test contribution", e);
         } catch (InvalidResourceException e) {
             throw new DeploymentException("Error activating test contribution", e);
         }

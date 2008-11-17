@@ -19,7 +19,6 @@ package org.fabric3.itest;
 import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.List;
 import javax.xml.namespace.QName;
 
 import org.apache.maven.plugin.MojoExecutionException;
@@ -27,7 +26,6 @@ import org.apache.maven.plugin.logging.Log;
 
 import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.host.contribution.ValidationException;
-import org.fabric3.host.contribution.Deployable;
 import org.fabric3.host.domain.AssemblyException;
 import org.fabric3.host.domain.DeploymentException;
 import org.fabric3.host.runtime.ContextStartException;

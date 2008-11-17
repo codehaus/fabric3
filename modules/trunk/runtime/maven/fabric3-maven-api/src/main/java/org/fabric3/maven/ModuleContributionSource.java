@@ -18,7 +18,6 @@ package org.fabric3.maven;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 
@@ -37,9 +36,9 @@ public class ModuleContributionSource implements ContributionSource {
     private long timestamp;
     private byte[] checksum;
 
-    public ModuleContributionSource(URI uri, String base) throws MalformedURLException {
+    public ModuleContributionSource(URI uri, URL url) {
         this.uri = uri;
-        url = new URL("file", "", -1, base);
+        this.url = url;
         checksum = new byte[0];
         timestamp = System.currentTimeMillis();
     }

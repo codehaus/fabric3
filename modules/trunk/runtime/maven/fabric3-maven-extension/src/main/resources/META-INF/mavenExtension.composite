@@ -40,10 +40,6 @@
            name="MavenExtensionComposite"
            autowire="true">
 
-    <component name="LogicalComponentStore">
-        <f3-impl:implementation.system class="org.fabric3.fabric.services.lcm.NonPersistentLogicalComponentStore"/>
-    </component>
-    
     <component name="ContributionStore">
         <f3-impl:implementation.system class="org.fabric3.maven.archive.MavenArchiveStore"/>
     </component>
