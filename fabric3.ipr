@@ -38,15 +38,6 @@
         <option name="XML_TEXT_WRAP" value="0" />
         <option name="PARAMETER_ANNOTATION_WRAP" value="1" />
         <option name="VARIABLE_ANNOTATION_WRAP" value="2" />
-        <ADDITIONAL_INDENT_OPTIONS fileType="groovy">
-          <option name="INDENT_SIZE" value="2" />
-          <option name="CONTINUATION_INDENT_SIZE" value="8" />
-          <option name="TAB_SIZE" value="4" />
-          <option name="USE_TAB_CHARACTER" value="false" />
-          <option name="SMART_TABS" value="false" />
-          <option name="LABEL_INDENT_SIZE" value="0" />
-          <option name="LABEL_INDENT_ABSOLUTE" value="false" />
-        </ADDITIONAL_INDENT_OPTIONS>
         <ADDITIONAL_INDENT_OPTIONS fileType="gsp">
           <option name="INDENT_SIZE" value="2" />
           <option name="CONTINUATION_INDENT_SIZE" value="8" />
@@ -481,6 +472,7 @@
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/kernel/api/fabric3-management-api/fabric3-management-api.iml" filepath="$PROJECT_DIR$/modules/trunk/kernel/api/fabric3-management-api/fabric3-management-api.iml" group="kernel/api" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/other/fabric3-marshal-xstream/fabric3-marshal-xstream.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/other/fabric3-marshal-xstream/fabric3-marshal-xstream.iml" group="other" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/runtime/maven/fabric3-maven-api/fabric3-maven-api.iml" filepath="$PROJECT_DIR$/modules/trunk/runtime/maven/fabric3-maven-api/fabric3-maven-api.iml" group="runtimes/maven" />
+      <module fileurl="file://$PROJECT_DIR$/modules/trunk/runtime/maven/fabric3-maven-extension/fabric3-maven-extension.iml" filepath="$PROJECT_DIR$/modules/trunk/runtime/maven/fabric3-maven-extension/fabric3-maven-extension.iml" group="runtimes/maven" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/runtime/maven/fabric3-maven-host/fabric3-maven-host.iml" filepath="$PROJECT_DIR$/modules/trunk/runtime/maven/fabric3-maven-host/fabric3-maven-host.iml" group="runtimes/maven" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/federated/fabric3-messaging/fabric3-messaging.iml" filepath="$PROJECT_DIR$/modules/trunk/federated/fabric3-messaging/fabric3-messaging.iml" group="federated" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/federated/fabric3-messaging-jxta/fabric3-messaging-jxta.iml" filepath="$PROJECT_DIR$/modules/trunk/federated/fabric3-messaging-jxta/fabric3-messaging-jxta.iml" group="federated" />
@@ -502,6 +494,7 @@
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/runtime/standalone/fabric3-standalone-server/fabric3-standalone-server.iml" filepath="$PROJECT_DIR$/modules/trunk/runtime/standalone/fabric3-standalone-server/fabric3-standalone-server.iml" group="runtimes/standalone" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/runtime/standalone/fabric3-standalone-shutdown/fabric3-standalone-shutdown.iml" filepath="$PROJECT_DIR$/modules/trunk/runtime/standalone/fabric3-standalone-shutdown/fabric3-standalone-shutdown.iml" group="runtimes/standalone" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/kernel/impl/fabric3-system/fabric3-system.iml" filepath="$PROJECT_DIR$/modules/trunk/kernel/impl/fabric3-system/fabric3-system.iml" group="kernel/impl" />
+      <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/other/fabric3-test-spi/fabric3-test-spi.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/other/fabric3-test-spi/fabric3-test-spi.iml" group="other" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/kernel/impl/fabric3-thread-pool/fabric3-thread-pool.iml" filepath="$PROJECT_DIR$/modules/trunk/kernel/impl/fabric3-thread-pool/fabric3-thread-pool.iml" group="kernel/impl" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/implementation/fabric3-timer-loader/fabric3-timer-loader.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/implementation/fabric3-timer-loader/fabric3-timer-loader.iml" group="implementations/timer" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/implementation/fabric3-timer-provision/fabric3-timer-provision.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/implementation/fabric3-timer-provision/fabric3-timer-provision.iml" group="implementations/timer" />
