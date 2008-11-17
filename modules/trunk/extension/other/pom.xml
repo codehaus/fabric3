@@ -61,6 +61,7 @@
 		<module>fabric3-xapool</module>
 		<module>fabric3-timer-spi</module>
 		<module>fabric3-timer-quartz</module>
+		<module>fabric3-test-spi</module>
 		<module>fabric3-jaxb</module>
 		<module>fabric3-databinding-jaxb-provision</module>
 		<module>fabric3-databinding-jaxb-loader</module>
