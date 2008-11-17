@@ -34,6 +34,8 @@ import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.policy.Policy;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
+import org.fabric3.host.Names;
+
 import org.osoa.sca.annotations.Reference;
 
 import com.sun.xml.ws.api.model.wsdl.WSDLModel;
@@ -59,7 +61,7 @@ public class MetroBindingGenerator  implements BindingGenerator<MetroWireSourceD
         
         WsBindingDefinition definition = binding.getDefinition();
         URI classLoaderId = binding.getParent().getParent().getClassLoaderId();
-        URL wsdlLocation = getWsdlLocation(definition.getWsdlLocation(), classLoaderId);
+        URL wsdlLocation = getWsdlLocation(definition.getWsdlLocation());
         WSDLModel wsdlModel = wsdlParser.parse(wsdlLocation);
         
         WsdlElement wsdlElement = wsdlElementParser.parseWsdlElement(definition.getWsdlElement(), wsdlModel, serviceDefinition.getServiceContract());
@@ -81,7 +83,7 @@ public class MetroBindingGenerator  implements BindingGenerator<MetroWireSourceD
         
         WsBindingDefinition definition = binding.getDefinition();
         URI classLoaderId = binding.getParent().getParent().getClassLoaderId();
-        URL wsdlLocation = getWsdlLocation(definition.getWsdlLocation(), classLoaderId);
+        URL wsdlLocation = getWsdlLocation(definition.getWsdlLocation());
         WSDLModel wsdlModel = wsdlParser.parse(wsdlLocation);
         
         WsdlElement wsdlElement = wsdlElementParser.parseWsdlElement(definition.getWsdlElement(), wsdlModel, referenceDefinition.getServiceContract());
@@ -97,7 +99,7 @@ public class MetroBindingGenerator  implements BindingGenerator<MetroWireSourceD
     /*
      * Gets the WSDL location as a URL.
      */
-    private URL getWsdlLocation(String wsdlLocation, URI classloaderId) {
+    private URL getWsdlLocation(String wsdlLocation) {
         
         if (wsdlLocation == null) {
             return null;
@@ -106,7 +108,7 @@ public class MetroBindingGenerator  implements BindingGenerator<MetroWireSourceD
         try {
             return new URL(wsdlLocation);
         } catch (MalformedURLException e) {
-            ClassLoader classLoader = classLoaderRegistry.getClassLoader(URI.create("fabric3://runtime/ApplicationClassLoader"));
+            ClassLoader classLoader = classLoaderRegistry.getClassLoader(Names.APPLICATION_CLASSLOADER_ID);
             return classLoader.getResource(wsdlLocation);
         }
         
