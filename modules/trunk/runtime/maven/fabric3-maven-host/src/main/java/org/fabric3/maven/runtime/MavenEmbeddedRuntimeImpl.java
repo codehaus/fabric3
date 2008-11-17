@@ -47,15 +47,14 @@ import static org.fabric3.host.Names.APPLICATION_DOMAIN_URI;
 import static org.fabric3.host.Names.CONTRIBUTION_SERVICE_URI;
 import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.host.contribution.ContributionService;
-import org.fabric3.host.contribution.Deployable;
 import org.fabric3.host.domain.DeploymentException;
 import org.fabric3.host.domain.Domain;
+import org.fabric3.maven.CompositeQNameService;
+import org.fabric3.maven.InvalidResourceException;
 import org.fabric3.maven.MavenEmbeddedRuntime;
 import org.fabric3.maven.MavenHostInfo;
 import org.fabric3.maven.ModuleContributionSource;
 import org.fabric3.maven.TestSuiteFactory;
-import org.fabric3.maven.CompositeQNameService;
-import org.fabric3.maven.InvalidResourceException;
 import org.fabric3.util.io.FileHelper;
 
 /**
