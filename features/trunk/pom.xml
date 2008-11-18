@@ -34,5 +34,6 @@
         <module>fabric3-default-feature</module>
         <module>fabric3-hibernate-feature</module>
         <module>fabric3-hibernate-jotm-feature</module>
+        <module>fabric3-default-webapp-feature</module>
     </modules>
 </project>
