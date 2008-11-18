@@ -46,62 +46,69 @@ import com.sun.xml.ws.api.WSBinding;
 import com.sun.xml.ws.api.server.SDDocumentSource;
 import com.sun.xml.ws.api.server.WSEndpoint;
 import com.sun.xml.ws.binding.BindingImpl;
+import com.sun.xml.ws.transport.http.servlet.ServletAdapter;
 import com.sun.xml.ws.transport.http.servlet.WSServlet;
 import com.sun.xml.ws.transport.http.servlet.WSServletDelegate;
 
 /**
- * Servlet that handles all the incoming request, extends the Metro servlet and 
- * overrides the <code>getDelegate</code> method.
- *
+ * Servlet that handles all the incoming request, extends the Metro servlet and overrides the <code>getDelegate</code> method.
  */
 public class MetroServlet extends WSServlet {
+    private static final long serialVersionUID = -2581439830158433922L;
 
     private ServletAdapterFactory servletAdapterFactory = new ServletAdapterFactory();
     private F3ServletDelegate delegate;
-    
+
     /**
      * Registers a new service.
-     * 
-     * @param sei Service end point interface.
-     * @param wsdlUrl Optional URL to the WSDL document.
+     *
+     * @param sei         Service end point interface.
+     * @param wsdlUrl     Optional URL to the WSDL document.
      * @param servicePath Relative path on which the service is provisioned.
      * @param wsdlElement WSDL element that encapsulates the WSDL 1.1 service and port names.
-     * @param invoker Invoker for receiving the web service request.
-     * @param features Web service features to enable.
-     * @param bindingID Binding ID to use.
+     * @param invoker     Invoker for receiving the web service request.
+     * @param features    Web service features to enable.
+     * @param bindingID   Binding ID to use.
      */
-    public void registerService(Class<?> sei, URL wsdlUrl, String servicePath, WsdlElement wsdlElement, F3Invoker invoker, WebServiceFeature[] features, BindingID bindingID) {
-        
+    public void registerService(Class<?> sei,
+                                URL wsdlUrl,
+                                String servicePath,
+                                WsdlElement wsdlElement,
+                                F3Invoker invoker,
+                                WebServiceFeature[] features,
+                                BindingID bindingID) {
+
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-        
+
+        ClassLoader seiClassLoader = sei.getClassLoader();
         try {
-            Thread.currentThread().setContextClassLoader(sei.getClassLoader());
-            
+            Thread.currentThread().setContextClassLoader(seiClassLoader);
+
             SDDocumentSource primaryWsdl = null;
             if (wsdlUrl != null) {
                 primaryWsdl = SDDocumentSource.create(wsdlUrl);
             }
-            
+
             WSBinding binding = BindingImpl.create(bindingID, features);
-            System.err.println("********************************** binding id" + bindingID);
-            
-            WSEndpoint<?> wsEndpoint = WSEndpoint.create(sei, 
-                                                         false, 
-                                                         invoker, 
-                                                         wsdlElement.getServiceName(), 
-                                                         wsdlElement.getPortName(), 
-                                                         null, 
-                                                         binding, 
-                                                         primaryWsdl,  
-                                                         null, 
+
+            WSEndpoint<?> wsEndpoint = WSEndpoint.create(sei,
+                                                         false,
+                                                         invoker,
+                                                         wsdlElement.getServiceName(),
+                                                         wsdlElement.getPortName(),
+                                                         null,
+                                                         binding,
+                                                         primaryWsdl,
+                                                         null,
                                                          null,
                                                          true);
-            
-            delegate.registerServletAdapter(servletAdapterFactory.createAdapter(servicePath, servicePath, wsEndpoint));
+
+            ServletAdapter adapter = servletAdapterFactory.createAdapter(servicePath, servicePath, wsEndpoint);
+            delegate.registerServletAdapter(adapter, seiClassLoader);
         } finally {
             Thread.currentThread().setContextClassLoader(classLoader);
         }
-        
+
     }
 
     /**

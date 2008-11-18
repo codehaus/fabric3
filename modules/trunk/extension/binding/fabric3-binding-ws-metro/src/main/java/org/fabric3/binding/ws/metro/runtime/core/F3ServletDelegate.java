@@ -35,39 +35,43 @@
 package org.fabric3.binding.ws.metro.runtime.core;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Map;
-
+import java.util.concurrent.ConcurrentHashMap;
 import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import com.sun.xml.ws.transport.http.servlet.ServletAdapter;
 import com.sun.xml.ws.transport.http.servlet.WSServletDelegate;
 
 /**
  * Custom servlet delegate that supports lazy initiation of adapters.
- *
  */
 public class F3ServletDelegate extends WSServletDelegate {
-    
-    private Map<String, ServletAdapter> adapters = new HashMap<String, ServletAdapter>();
+
+    private Map<String, ServletAdapter> adapters = new ConcurrentHashMap<String, ServletAdapter>();
+    private Map<String, ClassLoader> classLoaders = new ConcurrentHashMap<String, ClassLoader>();
 
     /**
      * Initialises an empty list of adapters.
-     * 
+     *
      * @param servletContext Servlet context.
      */
     public F3ServletDelegate(ServletContext servletContext) {
         super(new ArrayList<ServletAdapter>(), servletContext);
     }
-    
+
     /**
      * Registers a new servlet adapter. Each adapter corresponds to a provisioned service.
-     * 
+     *
      * @param servletAdapter Servlet adapter to be registsred.
+     * @param classLoader    the TCCL classloader to set on incoming requests
      */
-    public void registerServletAdapter(ServletAdapter servletAdapter) {
-        adapters.put(servletAdapter.urlPattern, servletAdapter);
+    public void registerServletAdapter(ServletAdapter servletAdapter, ClassLoader classLoader) {
+        final String path = servletAdapter.urlPattern;
+        adapters.put(path, servletAdapter);
+        classLoaders.put(path, classLoader);
     }
 
     /**
@@ -79,4 +83,19 @@ public class F3ServletDelegate extends WSServletDelegate {
         return adapters.get(path);
     }
 
+    @Override
+    public void doPost(HttpServletRequest request, HttpServletResponse response, ServletContext servletContext)
+            throws ServletException {
+        String path = request.getRequestURI().substring(request.getContextPath().length());
+        ClassLoader classLoader = classLoaders.get(path);
+        assert classLoader != null;
+        ClassLoader old = Thread.currentThread().getContextClassLoader();
+        try {
+            // set the TCCL to the service endpoint classloader
+            Thread.currentThread().setContextClassLoader(classLoader);
+            super.doPost(request, response, servletContext);
+        } finally {
+            Thread.currentThread().setContextClassLoader(old);
+        }
+    }
 }

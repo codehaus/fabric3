@@ -39,9 +39,10 @@ import java.net.URI;
 import java.net.URL;
 import java.util.List;
 import java.util.Map;
-
 import javax.xml.namespace.QName;
 import javax.xml.ws.WebServiceFeature;
+
+import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.binding.ws.metro.provision.MetroWireTargetDefinition;
 import org.fabric3.binding.ws.metro.provision.WsdlElement;
@@ -51,42 +52,54 @@ import org.fabric3.scdl.definitions.PolicySet;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.TargetWireAttacher;
+import org.fabric3.spi.classloader.MultiParentClassLoader;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.Wire;
-import org.osoa.sca.annotations.Reference;
 
 /**
  * Provides the infrastructure for invoking a target web service.
- *
  */
 public class MetroTargetWireAttacher implements TargetWireAttacher<MetroWireTargetDefinition> {
-    
-    @Reference protected ClassLoaderRegistry classLoaderRegistry;
-    @Reference protected FeatureResolver featureResolver;
+
+    @Reference
+    protected ClassLoaderRegistry classLoaderRegistry;
+    @Reference
+    protected FeatureResolver featureResolver;
 
     /**
      * Attaches to the target.
      */
     public void attachToTarget(PhysicalWireSourceDefinition source, MetroWireTargetDefinition target, Wire wire) throws WiringException {
-        
+
         try {
-        
+
             WsdlElement wsdlElement = target.getWsdlElement();
             URL[] referenceUrls = target.getTargetUrls();
             String interfaze = target.getInterfaze();
             URI classLoaderId = source.getClassLoaderId();
             List<QName> requestedIntents = target.getRequestedIntents();
             List<PolicySet> requestedPolicySets = null;
-            
+
             ClassLoader classLoader = classLoaderRegistry.getClassLoader(classLoaderId);
             WebServiceFeature[] features = featureResolver.getFeatures(requestedIntents, requestedPolicySets);
-            
+
             Class<?> sei = classLoader.loadClass(interfaze);
-            Method[] methods = sei.getDeclaredMethods();
             
+            // Metro requires library classes to be visibile to the application classloader. If executing in an environment that supports classloader
+            // isolation, dynamically update the application classloader by setting a parent to the Metro classloader.
+            ClassLoader seiClassLoader = sei.getClassLoader();
+            if (seiClassLoader instanceof MultiParentClassLoader) {
+                MultiParentClassLoader multiParentClassLoader = (MultiParentClassLoader) seiClassLoader;
+                ClassLoader extensionCl = getClass().getClassLoader();
+                if (!multiParentClassLoader.getParents().contains(extensionCl)) {
+                    multiParentClassLoader.addParent(extensionCl);
+                }
+            }
+            Method[] methods = sei.getDeclaredMethods();
+
             for (Map.Entry<PhysicalOperationDefinition, InvocationChain> entry : wire.getInvocationChains().entrySet()) {
                 Method method = null;
                 for (Method meth : methods) {
@@ -95,14 +108,14 @@ public class MetroTargetWireAttacher implements TargetWireAttacher<MetroWireTarg
                         break;
                     }
                 }
-                TargetInterceptor targetInterceptor = new TargetInterceptor(wsdlElement, sei, referenceUrls, classLoader, method, features);
+                TargetInterceptor targetInterceptor = new TargetInterceptor(wsdlElement, sei, referenceUrls, seiClassLoader, method, features);
                 entry.getValue().addInterceptor(targetInterceptor);
             }
-            
+
         } catch (ClassNotFoundException e) {
             throw new WiringException(e);
         }
-        
+
     }
 
     /**
