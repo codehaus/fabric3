@@ -57,7 +57,8 @@
                 <module>test-binding-ftp</module>
                 <module>test-binding-tcp</module>
                 <module>test-rs</module>
-                <!-- <module>test-xquery-exist</module> -->
+                <module>test-xquery-exist</module>
+                <module>test-binding-metro</module>
             </modules>
         </profile>
     </profiles>
