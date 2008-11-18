@@ -20,6 +20,6 @@
     <include name="SimpleTypeTest" />
     <include name="JaxbTest" />
     <include name="MtomTest" />
-    <!--<include name="RestTest" />-->
+    <include name="RestTest" />
 
 </composite>

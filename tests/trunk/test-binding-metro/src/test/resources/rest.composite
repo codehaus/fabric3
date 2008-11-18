@@ -23,7 +23,7 @@
     <component name="RestTest">
         <f3-impl:junit class="org.fabric3.tests.binding.metro.RestTest"/>
         <reference name="searchService">
-            <binding.ws uri="http://localhost:2000/metro/searchBooks" requires="f3-policy:protocolBinding.rest"/>
+            <binding.ws uri="http://localhost:8900/metro/searchBooks" requires="f3-policy:protocolBinding.rest"/>
         </reference>
     </component>
 
