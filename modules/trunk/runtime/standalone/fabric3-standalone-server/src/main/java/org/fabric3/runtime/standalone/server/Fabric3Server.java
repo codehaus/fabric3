@@ -116,7 +116,7 @@ public class Fabric3Server implements Fabric3ServerMBean {
         final StandaloneRuntime runtime;
         try {
 
-            File configDir = BootstrapHelper.getDirectory(installDirectory, null, "config");
+            File configDir = BootstrapHelper.getDirectory(installDirectory, "config");
 
             // load properties for this runtime
             File propFile = new File(configDir, "runtime.properties");
@@ -144,11 +144,9 @@ public class Fabric3Server implements Fabric3ServerMBean {
             }
 
             // create the classloaders for booting the runtime
-            String bootPath = props.getProperty("fabric3.bootDir", null);
-            File bootDir = BootstrapHelper.getDirectory(installDirectory, bootPath, "boot");
+            File bootDir = BootstrapHelper.getDirectory(installDirectory, "boot");
 
-            String hostPath = props.getProperty("fabric3.hostDir", null);
-            File hostDir = BootstrapHelper.getDirectory(installDirectory, hostPath, "host");
+            File hostDir = BootstrapHelper.getDirectory(installDirectory, "host");
 
             ClassLoader systemClassLoader = ClassLoader.getSystemClassLoader();
             ClassLoader hostLoader = BootstrapHelper.createClassLoader(systemClassLoader, hostDir);

@@ -123,43 +123,20 @@ public final class BootstrapHelper {
     }
 
     /**
-     * Gets the boot directory where all the boot libraries are stored. This is expected to be a directory named <code>boot</code> under the install
-     * directory.
+     * Gets the directory for the specified base directory/path combination.
      *
-     * @param installDirectory Fabric3 install directory.
-     * @param bootPath         Boot path for the runtime.
-     * @return Fabric3 boot directory.
-     */
-    public static File getBootDirectory(File installDirectory, String bootPath) {
-
-        File bootDirectory = new File(installDirectory, bootPath);
-        if (!bootDirectory.exists()) {
-            throw new IllegalStateException("Boot directory doesn't exist: " + bootDirectory.getAbsolutePath());
-        }
-        return bootDirectory;
-
-    }
-
-    /**
-     * Gets the directory for the specified profile. If the bootPath is not null then it is used to specify the location of the boot directory
-     * relative to the profile directory. Otherwise, if there is a directory named "boot" relative to the profile or install directory then it is
-     * used.
-     *
-     * @param installDir  the installation directory
-     * @param path        the path to the boot directory
-     * @param defaultPath the default path
+     * @param baseDir the base directory
+     * @param path    the  path
      * @return the boot directory
      * @throws FileNotFoundException if the boot directory does not exist
      */
-    public static File getDirectory(File installDir, String path, String defaultPath) throws FileNotFoundException {
-        File dir;
-        if (path != null) {
-            dir = new File(path);
-        } else {
-            dir = new File(installDir, defaultPath);
+    public static File getDirectory(File baseDir, String path) throws FileNotFoundException {
+        File dir = new File(baseDir, path);
+        if (!dir.exists()) {
+            throw new FileNotFoundException("Directory does not exist: " + dir);
         }
         if (!dir.isDirectory()) {
-            throw new FileNotFoundException("Unable to locate boot directory: " + dir);
+            throw new FileNotFoundException("Resource is not a directory: " + dir);
         }
         return dir;
     }
@@ -231,11 +208,9 @@ public final class BootstrapHelper {
 
         // online unless the offline property is set
         boolean online = !Boolean.parseBoolean(props.getProperty("offline", "false"));
-        String extensionsPath = props.getProperty("fabric3.extensionsDir", null);
-        File extensionsDir = getDirectory(baseDir, extensionsPath, "extensions");
+        File extensionsDir = getDirectory(baseDir, "extensions");
 
-        String userExtensionsPath = props.getProperty("fabric3.userExtensionsDir", null);
-        File userExtensionsDir = getDirectory(baseDir, userExtensionsPath, "user");
+        File userExtensionsDir = getDirectory(baseDir, "user");
 
         try {
 
