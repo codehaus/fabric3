@@ -34,38 +34,29 @@
  */
 package org.fabric3.runtime.webapp;
 
-import static org.fabric3.runtime.webapp.Constants.APPLICATION_SCDL_PATH_DEFAULT;
-import static org.fabric3.runtime.webapp.Constants.APPLICATION_SCDL_PATH_PARAM;
+import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
+import javax.management.MBeanServer;
+import javax.servlet.ServletContext;
+
+import org.fabric3.host.monitor.MonitorFactory;
+import org.fabric3.host.runtime.Bootstrapper;
+import org.fabric3.host.runtime.RuntimeLifecycleCoordinator;
+import org.fabric3.host.runtime.ScdlBootstrapper;
+import org.fabric3.jmx.agent.DefaultAgent;
 import static org.fabric3.runtime.webapp.Constants.BOOTSTRAP_DEFAULT;
 import static org.fabric3.runtime.webapp.Constants.BOOTSTRAP_PARAM;
 import static org.fabric3.runtime.webapp.Constants.COORDINATOR_DEFAULT;
 import static org.fabric3.runtime.webapp.Constants.COORDINATOR_PARAM;
 import static org.fabric3.runtime.webapp.Constants.INTENTS_PATH_DEFAULT;
 import static org.fabric3.runtime.webapp.Constants.INTENTS_PATH_PARAM;
-import static org.fabric3.runtime.webapp.Constants.LOG_FORMATTER_DEFAULT;
-import static org.fabric3.runtime.webapp.Constants.LOG_FORMATTER_PARAM;
 import static org.fabric3.runtime.webapp.Constants.MONITOR_FACTORY_DEFAULT;
 import static org.fabric3.runtime.webapp.Constants.MONITOR_FACTORY_PARAM;
 import static org.fabric3.runtime.webapp.Constants.RUNTIME_DEFAULT;
 import static org.fabric3.runtime.webapp.Constants.RUNTIME_PARAM;
-import static org.fabric3.runtime.webapp.Constants.SYSTEM_MONITORING_DEFAULT;
-import static org.fabric3.runtime.webapp.Constants.SYSTEM_MONITORING_PARAM;
 import static org.fabric3.runtime.webapp.Constants.SYSTEM_SCDL_PATH_DEFAULT;
 import static org.fabric3.runtime.webapp.Constants.SYSTEM_SCDL_PATH_PARAM;
-
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.util.Properties;
-import java.util.logging.Level;
-
-import javax.management.MBeanServer;
-import javax.servlet.ServletContext;
-
-import org.fabric3.host.runtime.Bootstrapper;
-import org.fabric3.host.runtime.RuntimeLifecycleCoordinator;
-import org.fabric3.host.runtime.ScdlBootstrapper;
-import org.fabric3.host.monitor.MonitorFactory;
-import org.fabric3.jmx.agent.DefaultAgent;
 
 /**
  * @version $Rev$ $Date$
@@ -86,7 +77,6 @@ public class WebappUtilImpl implements WebappUtil {
 
         MonitorFactory factory = createMonitorFactory(bootClassLoader);
         MBeanServer mBeanServer = createMBeanServer();
-
 
         runtime.setMonitorFactory(factory);
         runtime.setMBeanServer(mBeanServer);
@@ -157,28 +147,79 @@ public class WebappUtilImpl implements WebappUtil {
 
     }
 
-    public String getApplicationName() {
+    public String getInitParameter(String name, String value) {
 
-        String name = servletContext.getServletContextName();
-        if (name == null) {
-            name = "application";
+        String result = servletContext.getInitParameter(name);
+        if (result != null && result.length() != 0) {
+            return result;
         }
-        return name;
+        return value;
 
     }
 
-    public URL getApplicationScdl(ClassLoader bootClassLoader) throws InvalidResourcePath {
+    /**
+     * Extension point for creating the MBean server.
+     *
+     * @return MBean server.
+     * @throws Fabric3InitException If unable to initialize the MBean server.
+     */
+    private MBeanServer createMBeanServer() throws Fabric3InitException {
+        return new DefaultAgent().getMBeanServer();
+    }
 
-        String path = getInitParameter(APPLICATION_SCDL_PATH_PARAM, APPLICATION_SCDL_PATH_DEFAULT);
+    /**
+     * Extension point for creating the runtime.
+     *
+     * @param bootClassLoader Classloader for loading the runtime class.
+     * @return Webapp runtime instance.
+     * @throws Fabric3InitException If unable to initialize the runtime.
+     */
+    private WebappRuntime createRuntime(ClassLoader bootClassLoader) throws Fabric3InitException {
+
         try {
-            return convertToURL(path, bootClassLoader);
-        } catch (MalformedURLException e) {
-            throw new InvalidResourcePath(APPLICATION_SCDL_PATH_PARAM, path, e);
+            String className = getInitParameter(RUNTIME_PARAM, RUNTIME_DEFAULT);
+            return (WebappRuntime) bootClassLoader.loadClass(className).newInstance();
+        } catch (InstantiationException e) {
+            throw new Fabric3InitException(e);
+        } catch (IllegalAccessException e) {
+            throw new Fabric3InitException(e);
+        } catch (ClassNotFoundException e) {
+            throw new Fabric3InitException("Runtime Implementation not found", e);
         }
 
     }
 
-    public URL convertToURL(String path, ClassLoader classLoader) throws MalformedURLException {
+    /**
+     * Extension point for creating the monitor factory.
+     *
+     * @param bootClassLoader Classloader for loading the monitor factory class.
+     * @return Monitor factory instance.
+     * @throws Fabric3InitException If unable to initialize the monitor factory.
+     */
+    private MonitorFactory createMonitorFactory(ClassLoader bootClassLoader) throws Fabric3InitException {
+
+        try {
+            String monitorFactoryClass = getInitParameter(MONITOR_FACTORY_PARAM, MONITOR_FACTORY_DEFAULT);
+            MonitorFactory factory = (MonitorFactory) bootClassLoader.loadClass(monitorFactoryClass).newInstance();
+            URL configUrl = convertToURL(Constants.MONITOR_CONFIG_PATH, bootClassLoader);
+            if (configUrl != null) {
+                factory.readConfiguration(configUrl);
+            }
+            return factory;
+
+        } catch (InstantiationException e) {
+            throw new Fabric3InitException(e);
+        } catch (IllegalAccessException e) {
+            throw new Fabric3InitException(e);
+        } catch (ClassNotFoundException e) {
+            throw new Fabric3InitException("Monitor factory Implementation not found", e);
+        } catch (IOException e) {
+            throw new Fabric3InitException(e);
+        }
+
+    }
+
+    URL convertToURL(String path, ClassLoader classLoader) throws MalformedURLException {
 
         URL ret = null;
         if (path.charAt(0) == '/') {
@@ -193,80 +234,4 @@ public class WebappUtilImpl implements WebappUtil {
 
     }
 
-    public String getInitParameter(String name, String value) {
-
-        String result = servletContext.getInitParameter(name);
-        if (result != null && result.length() != 0) {
-            return result;
-        }
-        return value;
-
-    }
-    
-    /**
-     * Extension point for creating the MBean server.
-     * 
-     * @return MBean server.
-	 * @throws Fabric3InitException If unable to initialize the MBean server.
-     */
-    protected MBeanServer createMBeanServer() throws Fabric3InitException {
-    	return new DefaultAgent().getMBeanServer();
-    }
-
-	/**
-	 * Extension point for creating the runtime.
-	 * 
-	 * @param bootClassLoader Classloader for loading the runtime class.
-	 * @return Webapp runtime instance.
-	 * @throws Fabric3InitException If unable to initialize the runtime.
-	 */
-	protected WebappRuntime createRuntime(ClassLoader bootClassLoader) throws Fabric3InitException {
-
-        try {
-			String className = getInitParameter(RUNTIME_PARAM, RUNTIME_DEFAULT);
-			return (WebappRuntime) bootClassLoader.loadClass(className).newInstance();
-        } catch (InstantiationException e) {
-            throw new Fabric3InitException(e);
-        } catch (IllegalAccessException e) {
-            throw new Fabric3InitException(e);
-        } catch (ClassNotFoundException e) {
-            throw new Fabric3InitException("Runtime Implementation not found", e);
-        }
-        
-	}
-
-	/**
-	 * Extension point for creating the monitor factory.
-	 * 
-	 * @param bootClassLoader Classloader for loading the monitor factory class.
-	 * @return Monitor factory instance.
-	 * @throws Fabric3InitException If unable to initialize the monitor factory.
-	 */
-	protected MonitorFactory createMonitorFactory(ClassLoader bootClassLoader) throws Fabric3InitException {
-
-        try {
-        	
-			String monitorFactoryClass = getInitParameter(MONITOR_FACTORY_PARAM, MONITOR_FACTORY_DEFAULT);
-			MonitorFactory factory = (MonitorFactory) bootClassLoader.loadClass(monitorFactoryClass).newInstance();
-	
-			String level = getInitParameter(SYSTEM_MONITORING_PARAM, SYSTEM_MONITORING_DEFAULT);
-			factory.setDefaultLevel(Level.parse(level));
-			factory.setBundleName("f3");
-			String formatterClass = getInitParameter(LOG_FORMATTER_PARAM, LOG_FORMATTER_DEFAULT);
-			Properties configuration = new Properties();
-			configuration.setProperty("fabric3.jdkLogFormatter", formatterClass);
-			factory.setConfiguration(configuration);
-		
-			return factory;
-
-        } catch (InstantiationException e) {
-            throw new Fabric3InitException(e);
-        } catch (IllegalAccessException e) {
-            throw new Fabric3InitException(e);
-        } catch (ClassNotFoundException e) {
-            throw new Fabric3InitException("Monitor factory Implementation not found", e);
-        }
-        
-	}
-	
 }

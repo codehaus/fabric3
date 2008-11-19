@@ -34,7 +34,6 @@
  */
 package org.fabric3.runtime.webapp;
 
-import java.net.MalformedURLException;
 import java.net.URL;
 
 import org.fabric3.host.runtime.Bootstrapper;
@@ -46,8 +45,6 @@ import org.fabric3.host.runtime.ScdlBootstrapper;
  */
 public interface WebappUtil {
 
-    String getApplicationName();
-
     WebappRuntime getRuntime(ClassLoader bootClassLoader) throws Fabric3InitException;
 
     ScdlBootstrapper getBootstrapper(ClassLoader bootClassLoader) throws Fabric3InitException;
@@ -57,10 +54,6 @@ public interface WebappUtil {
     URL getSystemScdl(ClassLoader bootClassLoader) throws InvalidResourcePath;
 
     URL getIntentsLocation(ClassLoader bootClassLoader) throws InvalidResourcePath;
-
-    URL getApplicationScdl(ClassLoader bootClassLoader) throws InvalidResourcePath;
-
-    URL convertToURL(String path, ClassLoader classLoader) throws MalformedURLException;
 
     /**
      * Return a init parameter from the servlet context or provide a default.

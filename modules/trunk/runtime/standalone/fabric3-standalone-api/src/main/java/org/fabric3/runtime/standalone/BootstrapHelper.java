@@ -48,12 +48,11 @@ import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.Properties;
 import java.util.jar.JarFile;
-import java.util.logging.Level;
 
+import org.fabric3.host.monitor.MonitorFactory;
 import org.fabric3.host.runtime.Bootstrapper;
 import org.fabric3.host.runtime.RuntimeLifecycleCoordinator;
 import org.fabric3.host.runtime.ScdlBootstrapper;
-import org.fabric3.host.monitor.MonitorFactory;
 
 /**
  * Utility class for boostrap related operations.
@@ -66,6 +65,7 @@ public final class BootstrapHelper {
      * Installation directory system property name.
      */
     private static final String INSTALL_DIRECTORY_PROPERTY = "fabric3.installDir";
+    private static final String DEFAULT_MONITOR_FACTORY = "org.fabric3.monitor.impl.JavaLoggingMonitorFactory";
 
     private BootstrapHelper() {
     }
@@ -230,22 +230,14 @@ public final class BootstrapHelper {
 
     }
 
-    public static MonitorFactory createMonitorFactory(ClassLoader bootClassLoader, Properties properties) throws BootstrapException {
-        try {
-            String monitorFactoryName = properties.getProperty("fabric3.monitorFactoryClass",
-                                                               "org.fabric3.monitor.impl.JavaLoggingMonitorFactory");
-            String bundleName = properties.getProperty("fabric3.monitorBundle", "f3");
-            Level level = Level.parse(properties.getProperty("fabric3.defaultLevel", "FINE"));
+    public static MonitorFactory createDefaultMonitorFactory(ClassLoader classLoader) throws BootstrapException {
+        return createMonitorFactory(classLoader, DEFAULT_MONITOR_FACTORY);
+    }
 
-            String formatterClass = properties.getProperty("fabric3.jdkLogFormatter", "org.fabric3.monitor.impl.Fabric3LogFormatter");
-            Properties configuration = new Properties();
-            configuration.setProperty("fabric3.jdkLogFormatter", formatterClass);
-            Class<?> monitorClass = Class.forName(monitorFactoryName, true, bootClassLoader);
-            MonitorFactory monitorFactory = (MonitorFactory) monitorClass.newInstance();
-            monitorFactory.setBundleName(bundleName);
-            monitorFactory.setDefaultLevel(level);
-            monitorFactory.setConfiguration(configuration);
-            return monitorFactory;
+    public static MonitorFactory createMonitorFactory(ClassLoader classLoader, String factoryClass) throws BootstrapException {
+        try {
+            Class<?> monitorClass = Class.forName(factoryClass, true, classLoader);
+            return (MonitorFactory) monitorClass.newInstance();
         } catch (ClassNotFoundException e) {
             throw new BootstrapException(e);
         } catch (IllegalAccessException e) {
@@ -260,8 +252,7 @@ public final class BootstrapHelper {
         ClassLoader hostClassLoader = ClassLoader.getSystemClassLoader();
 
         // locate the implementation
-        String className = hostInfo.getProperty("fabric3.runtimeClass",
-                                                "org.fabric3.runtime.standalone.host.StandaloneRuntimeImpl");
+        String className = hostInfo.getProperty("fabric3.runtimeClass", "org.fabric3.runtime.standalone.host.StandaloneRuntimeImpl");
         try {
             Class<?> implClass = Class.forName(className, true, bootClassLoader);
             Constructor<?> ctor = implClass.getConstructor(MonitorFactory.class);
@@ -331,4 +322,5 @@ public final class BootstrapHelper {
             throw new BootstrapException(e);
         }
     }
+
 }

@@ -91,6 +91,9 @@ public class Fabric3Server implements Fabric3ServerMBean {
      */
     public static void main(String[] args) throws Exception {
         Fabric3Server server = new Fabric3Server();
+
+
+
         String jmxDomain = System.getProperty(JMX_DOMAIN, "standalone");
         server.startRuntime(jmxDomain);
         server.shutdownRuntime(jmxDomain);
@@ -154,7 +157,18 @@ public class Fabric3Server implements Fabric3ServerMBean {
 
             // create the HostInfo, MonitorFactory, and runtime
             hostInfo = BootstrapHelper.createHostInfo(installDirectory, configDir, props);
-            MonitorFactory monitorFactory = BootstrapHelper.createMonitorFactory(bootLoader, props);
+            String monitorFactoryName = props.getProperty("fabric3.monitorFactoryClass");
+            MonitorFactory monitorFactory;
+            if (monitorFactoryName != null) {
+                monitorFactory = BootstrapHelper.createMonitorFactory(bootLoader, monitorFactoryName);
+            } else {
+                monitorFactory = BootstrapHelper.createDefaultMonitorFactory(bootLoader);
+            }
+            File logConfigFile = new File(configDir, "monitor.properties");
+            if (logConfigFile.exists()) {
+                monitorFactory.readConfiguration(logConfigFile.toURI().toURL());
+            }
+
             runtime = BootstrapHelper.createRuntime(hostInfo, bootLoader, monitorFactory);
             monitor = runtime.getMonitorFactory().getMonitor(ServerMonitor.class);
 

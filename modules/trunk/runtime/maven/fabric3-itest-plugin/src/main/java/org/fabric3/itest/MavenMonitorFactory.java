@@ -39,17 +39,19 @@ import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.net.URI;
+import java.net.URL;
 import java.text.MessageFormat;
 import java.util.Locale;
 import java.util.Map;
 import java.util.MissingResourceException;
-import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.WeakHashMap;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
+import java.io.IOException;
 
 import org.apache.maven.plugin.logging.Log;
+
 import org.fabric3.api.annotation.logging.LogLevels;
 import org.fabric3.host.monitor.MonitorFactory;
 
@@ -68,24 +70,12 @@ public class MavenMonitorFactory implements MonitorFactory {
         this.defaultLevel = Level.FINEST;
     }
 
+    public void readConfiguration(URL url) throws IOException {
+        throw new UnsupportedOperationException();
+    }
+
     public synchronized <T> T getMonitor(Class<T> monitorInterface, URI componentId) {
         return getMonitor(monitorInterface);
-    }
-
-    public void setConfiguration(Properties configuration) {
-
-    }
-
-    public void setLevels(Properties levels) {
-
-    }
-
-    public void setDefaultLevel(Level defaultLevel) {
-        this.defaultLevel = defaultLevel;
-    }
-
-    public void setBundleName(String bundleName) {
-        this.bundleName = bundleName;
     }
 
     public synchronized <T> T getMonitor(Class<T> monitorInterface) {
@@ -129,7 +119,7 @@ public class MavenMonitorFactory implements MonitorFactory {
         Method[] methods = monitorInterface.getMethods();
         Map<Method, MethodHandler> handlers = new ConcurrentHashMap<Method, MethodHandler>(methods.length);
         for (Method method : methods) {
-            
+
             LogLevels level = LogLevels.getAnnotatedLogLevel(method);
             int value = translateLogLevel(level).intValue();
             int throwable = getExceptionParameterIndex(method);
@@ -195,14 +185,13 @@ public class MavenMonitorFactory implements MonitorFactory {
             message = builder.toString();
         }
         return message;
-    }  
-    
+    }
+
     private Level translateLogLevel(LogLevels level) {
         Level result = null;
         if (level == null) {
             result = defaultLevel;
-        } 
-        else {
+        } else {
             try {
                 //Because the LogLevels' values are based on the Level's logging levels, 
                 //no translation is required, just a pass-through mapping
@@ -213,10 +202,10 @@ public class MavenMonitorFactory implements MonitorFactory {
             }
         }
         return result;
-    }    
-    
+    }
+
     private int getExceptionParameterIndex(Method method) {
-        
+
         int result = -1;
         for (int i = 0; i < method.getParameterTypes().length; i++) {
             Class<?> paramType = method.getParameterTypes()[i];
@@ -225,9 +214,9 @@ public class MavenMonitorFactory implements MonitorFactory {
                 break;
             }
         }
-        
+
         return result;
-    }    
+    }
 
     private static class Handler implements InvocationHandler {
         private final Map<Method, MethodHandler> handlers;

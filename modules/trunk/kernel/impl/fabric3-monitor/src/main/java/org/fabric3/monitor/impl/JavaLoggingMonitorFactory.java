@@ -34,21 +34,24 @@
  */
 package org.fabric3.monitor.impl;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.lang.ref.WeakReference;
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
 import java.net.URI;
+import java.net.URL;
 import java.util.Locale;
 import java.util.Map;
 import java.util.MissingResourceException;
-import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.WeakHashMap;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Formatter;
 import java.util.logging.Handler;
 import java.util.logging.Level;
+import java.util.logging.LogManager;
 import java.util.logging.LogRecord;
 import java.util.logging.Logger;
 
@@ -62,11 +65,10 @@ import org.fabric3.host.monitor.MonitorFactory;
  * @see java.util.logging
  */
 public class JavaLoggingMonitorFactory implements MonitorFactory {
-    private Properties levels;
-    private Level defaultLevel;
-    private String bundleName;
+    private Level defaultLevel = Level.FINEST;
+    private String bundleName = "f3";
     private final Map<Class<?>, WeakReference<?>> proxies = new WeakHashMap<Class<?>, WeakReference<?>>();
-    private Formatter formatter;
+    private Formatter formatter = new Fabric3LogFormatter();
 
     /**
      * Construct a MonitorFactory that will monitor the specified methods at the specified levels and generate messages using java.util.logging.
@@ -78,24 +80,16 @@ public class JavaLoggingMonitorFactory implements MonitorFactory {
     public JavaLoggingMonitorFactory() {
     }
 
-    public void setLevels(Properties levels) {
-        this.levels = levels;
-    }
-
-    public void setDefaultLevel(Level defaultLevel) {
-        this.defaultLevel = defaultLevel;
-    }
-
-    public void setBundleName(String bundleName) {
-        this.bundleName = bundleName;
-    }
-
     public <T> T getMonitor(Class<T> monitorInterface, URI componentId) {
         return getMonitor(monitorInterface);
     }
 
-    public void setConfiguration(Properties configuration) {
-        String formatterClass = (String) configuration.get("fabric3.jdkLogFormatter");
+    @SuppressWarnings({"unchecked"})
+    public void readConfiguration(URL url) throws IOException {
+        LogManager manager = LogManager.getLogManager();
+        InputStream stream = url.openStream();
+        manager.readConfiguration(stream);
+        String formatterClass = manager.getProperty("fabric3.jdkLogFormatter");
         if (formatterClass != null) {
             try {
                 Class<Formatter> clazz = (Class<Formatter>) Class.forName(formatterClass);
@@ -108,6 +102,11 @@ public class JavaLoggingMonitorFactory implements MonitorFactory {
                 throw new IllegalArgumentException("Invalid formatter class", e);
             }
         }
+        String name = manager.getProperty("fabric3.monitorBundle");
+        if (name != null) {
+            bundleName = name;
+        }
+
     }
 
     public synchronized <T> T getMonitor(Class<T> monitorInterface) {
@@ -119,12 +118,12 @@ public class JavaLoggingMonitorFactory implements MonitorFactory {
         return monitor;
     }
 
-    protected <T> T getCachedMonitor(Class<T> monitorInterface) {
+    private <T> T getCachedMonitor(Class<T> monitorInterface) {
         WeakReference<?> ref = proxies.get(monitorInterface);
         return (ref != null) ? monitorInterface.cast(ref.get()) : null;
     }
 
-    protected <T> T createMonitor(Class<T> monitorInterface) {
+    private <T> T createMonitor(Class<T> monitorInterface) {
         String className = monitorInterface.getName();
         Logger logger = Logger.getLogger(className);
         setFormatter(logger);
@@ -134,12 +133,11 @@ public class JavaLoggingMonitorFactory implements MonitorFactory {
         Map<Method, MethodInfo> methodInfo = new ConcurrentHashMap<Method, MethodInfo>(methods.length);
         for (Method method : methods) {
             String methodName = method.getName();
-            String key = className + '#' + methodName;
-            
-            LogLevels level = getLogLevel(method, key);            
+
+            LogLevels level = LogLevels.getAnnotatedLogLevel(method);
             Level methodLevel = translateLogLevel(level);
             int throwable = getExceptionParameterIndex(method);
-            
+
             MethodInfo info = new MethodInfo(logger, methodLevel, methodName, bundle, throwable);
             methodInfo.put(method, info);
         }
@@ -151,14 +149,6 @@ public class JavaLoggingMonitorFactory implements MonitorFactory {
         return monitorInterface.cast(proxy);
     }
 
-    private LogLevels getLogLevel(Method method, String key) {
-        LogLevels level = getLogLevelFromConfig(key);            
-        if (level == null) {
-            level = LogLevels.getAnnotatedLogLevel(method);
-        }
-        return level;
-    }
-
     private int getExceptionParameterIndex(Method method) {
         int result = -1;
         for (int i = 0; i < method.getParameterTypes().length; i++) {
@@ -168,13 +158,13 @@ public class JavaLoggingMonitorFactory implements MonitorFactory {
                 break;
             }
         }
-        
+
         //The position in the monitor interface's parameter list of the first throwable
         //is used when creating the LogRecord in the MethodInfo
         return result;
     }
 
-    protected <T> ResourceBundle locateBundle(Class<T> monitorInterface, String bundleName) {
+    private <T> ResourceBundle locateBundle(Class<T> monitorInterface, String bundleName) {
         Locale locale = Locale.getDefault();
         ClassLoader cl = monitorInterface.getClassLoader();
         String packageName = monitorInterface.getPackage().getName();
@@ -196,13 +186,12 @@ public class JavaLoggingMonitorFactory implements MonitorFactory {
             return null;
         }
     }
-    
+
     private Level translateLogLevel(LogLevels level) {
-        Level result = null;
+        Level result;
         if (level == null) {
             result = defaultLevel;
-        } 
-        else {
+        } else {
             try {
                 //Because the LogLevels' values are based on the Level's logging levels, 
                 //no translation is required, just a pass-through mapping
@@ -211,18 +200,6 @@ public class JavaLoggingMonitorFactory implements MonitorFactory {
                 //TODO: Add error reporting for unsupported log level
                 result = defaultLevel;
             }
-        }
-        return result;
-    }
-
-    private LogLevels getLogLevelFromConfig(String key) {
-        LogLevels result = null;
-        if (levels != null && levels.getProperty(key) != null) {
-            try {
-                result = Enum.valueOf(LogLevels.class, levels.getProperty(key));                    
-            } catch (IllegalArgumentException e) {
-                //TODO: Add error reporting for unsupported log level
-            }                
         }
         return result;
     }
@@ -238,7 +215,7 @@ public class JavaLoggingMonitorFactory implements MonitorFactory {
                 }
             }
         }
-    }    
+    }
 
     private static class MethodInfo {
         private final Logger logger;

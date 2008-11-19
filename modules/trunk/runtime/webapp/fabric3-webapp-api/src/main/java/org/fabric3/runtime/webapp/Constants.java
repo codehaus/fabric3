@@ -87,11 +87,6 @@ public final class Constants {
     public static final String APPLICATION_SCDL_PATH_DEFAULT = "/WEB-INF/web.composite";
 
     /**
-     * Servlet context-param name for setting if the runtime is online.
-     */
-    public static final String ONLINE_PARAM = "fabric3.online";
-
-    /**
      * Name of the context attribute that contains the ComponentContext.
      */
     public static final String CONTEXT_ATTRIBUTE = "org.osoa.sca.ComponentContext";
@@ -146,7 +141,6 @@ public final class Constants {
      */
     public static final String COORDINATOR_DEFAULT = "org.fabric3.fabric.runtime.DefaultCoordinator";
 
-
     /**
      * Servlet context-param name for user-specified system SCDL path.
      */
@@ -173,21 +167,6 @@ public final class Constants {
     public static final String RUNTIME_ATTRIBUTE = "fabric3.runtime";
 
     /**
-     * Servlet context-param name for the path to the composite to set as the webb app composite
-     */
-    public static final String CURRENT_COMPOSITE_PATH_PARAM = "fabric3.currentCompositePath";
-
-    /**
-     * Servlet context-param name for system monitoring level. Supported values are the names of statics defined in java.util.logging.Level.
-     */
-    public static final String SYSTEM_MONITORING_PARAM = "fabric3.monitoringLevel";
-
-    /**
-     * Default log level
-     */
-    public static final String SYSTEM_MONITORING_DEFAULT = "FINEST";
-
-    /**
      * Name of the parameter that defines the class to load to launch the runtime.
      */
     public static final String MONITOR_FACTORY_PARAM = "fabric3.monitorFactory";
@@ -198,23 +177,9 @@ public final class Constants {
     public static final String MONITOR_FACTORY_DEFAULT = "org.fabric3.monitor.impl.JavaLoggingMonitorFactory";
 
     /**
-     * Parameter that defines the log formatter
+     * Default monitor configuration file path found in the webapp.
      */
-    public static final String LOG_FORMATTER_PARAM = "fabric3.jdkLogFormatter";
-
-    /**
-     * Name of the default log formatter
-     */
-    public static final String LOG_FORMATTER_DEFAULT = "org.fabric3.monitor.impl.Fabric3LogFormatter";
-    /**
-     * Name of bundle files used for monitoring messages
-     */
-    public static final String MONITORING_BUNDLE_PARAM = "fabric3.monitoringBundle";
-
-    /**
-     * Default name of bundle files for monitoring messages
-     */
-    public static final String MONITORING_BUNDLE_DEFAULT = "f3";
+    public static final String MONITOR_CONFIG_PATH = "/WEB-INF/monitor.properties";
 
     private Constants() {
     }

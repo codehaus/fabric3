@@ -36,7 +36,6 @@ package org.fabric3.monitor.impl;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 import java.util.logging.Handler;
 import java.util.logging.Level;
 import java.util.logging.LogRecord;
@@ -159,15 +158,7 @@ public class JavaLoggingTestCase extends TestCase {
         LOGGER.addHandler(HANDLER);
         HANDLER.flush();
 
-        String sourceClass = Monitor.class.getName();
-        Properties levels = new Properties();
-        levels.setProperty(sourceClass + "#eventWithNoArgs", "INFO");
-        levels.setProperty(sourceClass + "#eventWithOneArg", "INFO");
-        levels.setProperty(sourceClass + "#eventWithThrowable", "WARNING");
         factory = new JavaLoggingMonitorFactory();
-        factory.setLevels(levels);
-        factory.setDefaultLevel(Level.FINE);
-        factory.setBundleName("TestMessages");
     }
 
     protected void tearDown() throws Exception {
