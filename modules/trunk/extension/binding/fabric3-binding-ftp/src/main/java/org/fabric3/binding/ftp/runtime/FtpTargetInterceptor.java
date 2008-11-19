@@ -44,6 +44,7 @@ public class FtpTargetInterceptor implements Interceptor {
     private final int timeout;
     private SocketFactory factory;
     private List<String> commands;
+    private FtpInterceptorMonitor monitor;
 
     private final FtpSecurity security;
     private final boolean active;
@@ -54,8 +55,8 @@ public class FtpTargetInterceptor implements Interceptor {
                                 boolean active,
                                 int timeout,
                                 SocketFactory factory,
-                                List<String> commands)
-            throws UnknownHostException {
+                                List<String> commands,
+                                FtpInterceptorMonitor monitor) throws UnknownHostException {
         this.hostAddress = hostAddress;
         this.port = port;
         this.security = security;
@@ -63,6 +64,7 @@ public class FtpTargetInterceptor implements Interceptor {
         this.timeout = timeout;
         this.factory = factory;
         this.commands = commands;
+        this.monitor = monitor;
     }
 
     public Interceptor getNext() {
@@ -78,38 +80,53 @@ public class FtpTargetInterceptor implements Interceptor {
                 ftpClient.setDefaultTimeout(timeout);
                 ftpClient.setDataTimeout(timeout);
             }
+            monitor.onConnect(hostAddress, port);
             ftpClient.connect(hostAddress, port);
+            monitor.onResponse(ftpClient.getReplyString());
             String type = msg.getWorkContext().getHeader(String.class, FtpConstants.HEADER_CONTENT_TYPE);
             if (type != null && type.equalsIgnoreCase(FtpConstants.BINARY_TYPE)) {
+                monitor.onCommand("TYPE I");
                 ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
+                monitor.onResponse(ftpClient.getReplyString());
             } else if (type != null && type.equalsIgnoreCase(FtpConstants.TEXT_TYPE)) {
+                monitor.onCommand("TYPE A");
                 ftpClient.setFileType(FTP.ASCII_FILE_TYPE);
+                monitor.onResponse(ftpClient.getReplyString());
             }
 
             /*if (!ftpClient.login(security.getUser(), security.getPassword())) {
                 throw new ServiceUnavailableException("Invalid credentials");
             }*/
             // TODO Fix above
+            monitor.onAuthenticate();
             ftpClient.login(security.getUser(), security.getPassword());
+            monitor.onResponse(ftpClient.getReplyString());
 
             Object[] args = (Object[]) msg.getBody();
             String fileName = (String) args[0];
             InputStream data = (InputStream) args[1];
 
             if (active) {
+                monitor.onCommand("ACTV");
                 ftpClient.enterLocalActiveMode();
+                monitor.onResponse(ftpClient.getReplyString());
             } else {
+                monitor.onCommand("PASV");
                 ftpClient.enterLocalPassiveMode();
+                monitor.onResponse(ftpClient.getReplyString());
             }
             if (commands != null) {
                 for (String command : commands) {
+                    monitor.onCommand(command);
                     ftpClient.sendCommand(command);
+                    monitor.onResponse(ftpClient.getReplyString());
                 }
             }
+            monitor.onCommand("STOR " + fileName);
             if (!ftpClient.storeFile(fileName, data)) {
                 throw new ServiceUnavailableException("Unable to upload data. Response sent from server: " + ftpClient.getReplyString());
             }
-
+            monitor.onResponse(ftpClient.getReplyString());
         } catch (IOException e) {
             throw new ServiceUnavailableException(e);
         }

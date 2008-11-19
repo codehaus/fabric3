@@ -26,6 +26,7 @@ import java.util.List;
 import org.apache.commons.net.SocketFactory;
 import org.osoa.sca.annotations.Reference;
 
+import org.fabric3.api.annotation.Monitor;
 import org.fabric3.binding.ftp.provision.FtpSecurity;
 import org.fabric3.binding.ftp.provision.FtpWireTargetDefinition;
 import org.fabric3.spi.ObjectFactory;
@@ -42,9 +43,11 @@ import org.fabric3.spi.wire.Wire;
  */
 public class FtpTargetWireAttacher implements TargetWireAttacher<FtpWireTargetDefinition> {
     private ExpressionExpander expander;
+    private FtpInterceptorMonitor monitor;
 
-    public FtpTargetWireAttacher(@Reference ExpressionExpander expander) {
+    public FtpTargetWireAttacher(@Reference ExpressionExpander expander, @Monitor FtpInterceptorMonitor monitor) {
         this.expander = expander;
+        this.monitor = monitor;
     }
 
     public void attachToTarget(PhysicalWireSourceDefinition source, FtpWireTargetDefinition target, Wire wire) throws WiringException {
@@ -62,7 +65,8 @@ public class FtpTargetWireAttacher implements TargetWireAttacher<FtpWireTargetDe
             SocketFactory factory = new ExpiringSocketFactory(connectTimeout);
             int socketTimeout = target.getSocketTimeout();
             List<String> cmds = target.getSTORCommands();
-            FtpTargetInterceptor targetInterceptor = new FtpTargetInterceptor(hostAddress, port, security, active, socketTimeout, factory, cmds);
+            FtpTargetInterceptor targetInterceptor =
+                    new FtpTargetInterceptor(hostAddress, port, security, active, socketTimeout, factory, cmds, monitor);
             invocationChain.addInterceptor(targetInterceptor);
         } catch (UnknownHostException e) {
             throw new WiringException(e);
