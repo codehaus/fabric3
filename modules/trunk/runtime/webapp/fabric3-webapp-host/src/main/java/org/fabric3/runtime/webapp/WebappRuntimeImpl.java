@@ -56,8 +56,8 @@ import org.fabric3.host.domain.Domain;
  * runtime corresponds to the the lifecycle of the associated servlet context.
  * <p/>
  * The bootstrapper launches the runtime, booting system extensions and applications, according to the servlet parameters defined in {@link
- * Constants}. When the runtime is instantiated, it is placed in the servlet context with the attribute {@link Constants#RUNTIME_PARAM}. The runtime
- * implements {@link WebappRuntime} so that filters and servlets loaded in the parent web app classloader may pass events and requests to it.
+ * Constants}. When the runtime is instantiated, it is placed in the servlet context with the attribute {@link Constants#RUNTIME_ATTRIBUTE}. The
+ * runtime implements {@link WebappRuntime} so that filters and servlets loaded in the parent web app classloader may pass events and requests to it.
  * <p/>
  *
  * @version $$Rev$$ $$Date$$

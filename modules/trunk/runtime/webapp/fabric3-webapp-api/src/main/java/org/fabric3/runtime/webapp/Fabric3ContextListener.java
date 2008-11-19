@@ -66,9 +66,8 @@ import org.fabric3.host.runtime.RuntimeLifecycleCoordinator;
 import org.fabric3.host.runtime.ScdlBootstrapper;
 import org.fabric3.host.runtime.ShutdownException;
 import org.fabric3.jmx.agent.Agent;
-import static org.fabric3.runtime.webapp.Constants.APPLICATION_SCDL_PATH_DEFAULT;
-import static org.fabric3.runtime.webapp.Constants.APPLICATION_SCDL_PATH_PARAM;
-import static org.fabric3.runtime.webapp.Constants.BASE_DIR;
+import static org.fabric3.runtime.webapp.Constants.APPLICATION_COMPOSITE_PATH_DEFAULT;
+import static org.fabric3.runtime.webapp.Constants.APPLICATION_COMPOSITE_PATH_PARAM;
 import static org.fabric3.runtime.webapp.Constants.COMPONENT_PARAM;
 import static org.fabric3.runtime.webapp.Constants.COMPOSITE_NAMESPACE_PARAM;
 import static org.fabric3.runtime.webapp.Constants.COMPOSITE_PARAM;
@@ -103,7 +102,7 @@ public class Fabric3ContextListener implements ServletContextListener {
             String compositeNamespace = utils.getInitParameter(COMPOSITE_NAMESPACE_PARAM, null);
             String compositeName = utils.getInitParameter(COMPOSITE_PARAM, defaultComposite);
             URI componentId = new URI(utils.getInitParameter(COMPONENT_PARAM, "webapp"));
-            String scdlPath = utils.getInitParameter(APPLICATION_SCDL_PATH_PARAM, APPLICATION_SCDL_PATH_DEFAULT);
+            String scdlPath = utils.getInitParameter(APPLICATION_COMPOSITE_PATH_PARAM, APPLICATION_COMPOSITE_PATH_DEFAULT);
             URL scdl = servletContext.getResource(scdlPath);
             if (scdl == null) {
                 throw new InitializationException("Web composite not found");
@@ -154,13 +153,7 @@ public class Fabric3ContextListener implements ServletContextListener {
 
         try {
 
-            String baseDirParam = utils.getInitParameter(BASE_DIR, null);
-            File baseDir;
-            if (baseDirParam == null) {
-                baseDir = new File(URLDecoder.decode(context.getResource("/WEB-INF/lib/").getFile(), "UTF-8"));
-            } else {
-                baseDir = new File(baseDirParam);
-            }
+            File baseDir = new File(URLDecoder.decode(context.getResource("/WEB-INF/lib/").getFile(), "UTF-8"));
 
             URI domain = new URI(utils.getInitParameter(DOMAIN_PARAM, "fabric3://domain"));
             WebappHostInfo info = new WebappHostInfoImpl(context, domain, baseDir);

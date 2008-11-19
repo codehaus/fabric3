@@ -26,7 +26,7 @@ import java.net.URL;
 import org.fabric3.host.contribution.ContributionSource;
 
 /**
- * Used to install the current webapp as a contribution.w
+ * Used to install the current webapp as a contribution.
  *
  * @version $Rev$ $Date$
  */

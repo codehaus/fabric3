@@ -45,18 +45,8 @@ import org.fabric3.host.runtime.Bootstrapper;
 import org.fabric3.host.runtime.RuntimeLifecycleCoordinator;
 import org.fabric3.host.runtime.ScdlBootstrapper;
 import org.fabric3.jmx.agent.DefaultAgent;
-import static org.fabric3.runtime.webapp.Constants.BOOTSTRAP_DEFAULT;
-import static org.fabric3.runtime.webapp.Constants.BOOTSTRAP_PARAM;
-import static org.fabric3.runtime.webapp.Constants.COORDINATOR_DEFAULT;
-import static org.fabric3.runtime.webapp.Constants.COORDINATOR_PARAM;
-import static org.fabric3.runtime.webapp.Constants.INTENTS_PATH_DEFAULT;
-import static org.fabric3.runtime.webapp.Constants.INTENTS_PATH_PARAM;
 import static org.fabric3.runtime.webapp.Constants.MONITOR_FACTORY_DEFAULT;
 import static org.fabric3.runtime.webapp.Constants.MONITOR_FACTORY_PARAM;
-import static org.fabric3.runtime.webapp.Constants.RUNTIME_DEFAULT;
-import static org.fabric3.runtime.webapp.Constants.RUNTIME_PARAM;
-import static org.fabric3.runtime.webapp.Constants.SYSTEM_SCDL_PATH_DEFAULT;
-import static org.fabric3.runtime.webapp.Constants.SYSTEM_SCDL_PATH_PARAM;
 
 /**
  * @version $Rev$ $Date$
@@ -64,6 +54,11 @@ import static org.fabric3.runtime.webapp.Constants.SYSTEM_SCDL_PATH_PARAM;
 public class WebappUtilImpl implements WebappUtil {
 
     private static final String SYSTEM_CONFIG = "/WEB-INF/systemConfig.xml";
+    private static final String RUNTIME_CLASS = "org.fabric3.runtime.webapp.WebappRuntimeImpl";
+    private static final String BOOTSTRAPPER_CLASS = "org.fabric3.fabric.runtime.bootstrap.ScdlBootstrapperImpl";
+    private static final String COORDINATOR_CLASS = "org.fabric3.fabric.runtime.DefaultCoordinator";
+    private static final String SYSETM_COMPOSITE = "META-INF/fabric3/webapp.composite";
+    private static final String SYSTEM_INTENTS = "META-INF/fabric3/intents.xml";
 
     private final ServletContext servletContext;
 
@@ -89,8 +84,7 @@ public class WebappUtilImpl implements WebappUtil {
 
         try {
 
-            String className = getInitParameter(BOOTSTRAP_PARAM, BOOTSTRAP_DEFAULT);
-            ScdlBootstrapper scdlBootstrapper = (ScdlBootstrapper) bootClassLoader.loadClass(className).newInstance();
+            ScdlBootstrapper scdlBootstrapper = (ScdlBootstrapper) bootClassLoader.loadClass(BOOTSTRAPPER_CLASS).newInstance();
             scdlBootstrapper.setSystemConfig(servletContext.getResource(SYSTEM_CONFIG));
 
             return scdlBootstrapper;
@@ -112,8 +106,7 @@ public class WebappUtilImpl implements WebappUtil {
 
         try {
 
-            String className = getInitParameter(COORDINATOR_PARAM, COORDINATOR_DEFAULT);
-            return (RuntimeLifecycleCoordinator<WebappRuntime, Bootstrapper>) bootClassLoader.loadClass(className).newInstance();
+            return (RuntimeLifecycleCoordinator<WebappRuntime, Bootstrapper>) bootClassLoader.loadClass(COORDINATOR_CLASS).newInstance();
 
         } catch (InstantiationException e) {
             throw new Fabric3InitException(e);
@@ -127,22 +120,20 @@ public class WebappUtilImpl implements WebappUtil {
 
     public URL getSystemScdl(ClassLoader bootClassLoader) throws InvalidResourcePath {
 
-        String path = getInitParameter(SYSTEM_SCDL_PATH_PARAM, SYSTEM_SCDL_PATH_DEFAULT);
         try {
-            return convertToURL(path, bootClassLoader);
+            return convertToURL(SYSETM_COMPOSITE, bootClassLoader);
         } catch (MalformedURLException e) {
-            throw new InvalidResourcePath(SYSTEM_SCDL_PATH_PARAM, path, e);
+            throw new InvalidResourcePath("Webapp system composite", SYSETM_COMPOSITE, e);
         }
 
     }
 
     public URL getIntentsLocation(ClassLoader bootClassLoader) throws InvalidResourcePath {
 
-        String path = getInitParameter(INTENTS_PATH_PARAM, INTENTS_PATH_DEFAULT);
         try {
-            return convertToURL(path, bootClassLoader);
+            return convertToURL(SYSTEM_INTENTS, bootClassLoader);
         } catch (MalformedURLException e) {
-            throw new InvalidResourcePath(SYSTEM_SCDL_PATH_PARAM, path, e);
+            throw new InvalidResourcePath("Ssytem intents", SYSTEM_INTENTS, e);
         }
 
     }
@@ -177,8 +168,7 @@ public class WebappUtilImpl implements WebappUtil {
     private WebappRuntime createRuntime(ClassLoader bootClassLoader) throws Fabric3InitException {
 
         try {
-            String className = getInitParameter(RUNTIME_PARAM, RUNTIME_DEFAULT);
-            return (WebappRuntime) bootClassLoader.loadClass(className).newInstance();
+            return (WebappRuntime) bootClassLoader.loadClass(RUNTIME_CLASS).newInstance();
         } catch (InstantiationException e) {
             throw new Fabric3InitException(e);
         } catch (IllegalAccessException e) {

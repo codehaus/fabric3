@@ -35,7 +35,7 @@
 package org.fabric3.runtime.webapp;
 
 /**
- * Constants used by the web application booter
+ * Configuration paramterts used by the web application runtime bootstrap process.
  *
  * @version $Rev$ $Date$
  */
@@ -67,11 +67,6 @@ public final class Constants {
     public static final String COMPOSITE_PARAM = "fabric3.composite";
 
     /**
-     * Servlet context-param name for the base runtime directory.
-     */
-    public static final String BASE_DIR = "fabric3.baseDir";
-
-    /**
      * Name of the servlet context-param that should contain the component id for the webapp.
      */
     public static final String COMPONENT_PARAM = "fabric3.component";
@@ -79,27 +74,17 @@ public final class Constants {
     /**
      * Servlet context-param name for user-specified application SCDL path.
      */
-    public static final String APPLICATION_SCDL_PATH_PARAM = "fabric3.applicationScdlPath";
+    public static final String APPLICATION_COMPOSITE_PATH_PARAM = "fabric3.applicationCompositePath";
 
     /**
-     * Default application SCDL path.
+     * Default application composite path.
      */
-    public static final String APPLICATION_SCDL_PATH_DEFAULT = "/WEB-INF/web.composite";
+    public static final String APPLICATION_COMPOSITE_PATH_DEFAULT = "/WEB-INF/web.composite";
 
     /**
      * Name of the context attribute that contains the ComponentContext.
      */
     public static final String CONTEXT_ATTRIBUTE = "org.osoa.sca.ComponentContext";
-
-    /**
-     * Name of the parameter that defines the class to load to launch the runtime.
-     */
-    public static final String RUNTIME_PARAM = "fabric3.runtimeImpl";
-
-    /**
-     * Name of the default webapp runtime implementation.
-     */
-    public static final String RUNTIME_DEFAULT = "org.fabric3.runtime.webapp.WebappRuntimeImpl";
 
     /**
      * Name of the parameter that defines whether the work scheduler should pause on start.
@@ -120,46 +105,6 @@ public final class Constants {
      * The number of default worker threads.
      */
     public static final String NUM_WORKERS_DEFAULT = "10";
-
-    /**
-     * Name of the parameter that defines the class to load to bootstrap the runtime.
-     */
-    public static final String BOOTSTRAP_PARAM = "fabric3.bootstrapImpl";
-
-    /**
-     * Name of the default webapp bootstrap implementation.
-     */
-    public static final String BOOTSTRAP_DEFAULT = "org.fabric3.fabric.runtime.bootstrap.ScdlBootstrapperImpl";
-
-    /**
-     * Name of the parameter that defines the class to load to coordinate booting the runtime.
-     */
-    public static final String COORDINATOR_PARAM = "fabric3.coordinatorImpl";
-
-    /**
-     * Name of the default webapp coordinator implementation.
-     */
-    public static final String COORDINATOR_DEFAULT = "org.fabric3.fabric.runtime.DefaultCoordinator";
-
-    /**
-     * Servlet context-param name for user-specified system SCDL path.
-     */
-    public static final String SYSTEM_SCDL_PATH_PARAM = "fabric3.systemScdlPath";
-
-    /**
-     * Default webapp system SCDL path.
-     */
-    public static final String SYSTEM_SCDL_PATH_DEFAULT = "META-INF/fabric3/webapp.composite";
-
-    /**
-     * Servlet context-param name for user-specified intents file path.
-     */
-    public static final String INTENTS_PATH_PARAM = "fabric3.intentsPath";
-
-    /**
-     * Default webapp system intents file path.
-     */
-    public static final String INTENTS_PATH_DEFAULT = "META-INF/fabric3/intents.xml";
 
     /**
      * Context attribute to which the Fabric3 runtime for this servlet context is stored.
