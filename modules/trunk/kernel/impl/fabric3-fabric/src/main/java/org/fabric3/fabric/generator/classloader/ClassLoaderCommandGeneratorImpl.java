@@ -30,10 +30,9 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.fabric.command.ProvisionClassloaderCommand;
 import org.fabric3.fabric.command.UnprovisionClassloaderCommand;
-import org.fabric3.host.Names;
 import org.fabric3.fabric.services.contribution.DependencyException;
 import org.fabric3.fabric.services.contribution.DependencyService;
-import org.fabric3.scdl.CompositeImplementation;
+import org.fabric3.host.Names;
 import org.fabric3.spi.command.Command;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.LogicalComponent;
@@ -256,27 +255,21 @@ public class ClassLoaderCommandGeneratorImpl implements ClassLoaderCommandGenera
                 continue;
             }
             PhysicalClassLoaderDefinition definition = new PhysicalClassLoaderDefinition(classLoaderUri);
-            LogicalComponent<CompositeImplementation> grandParent = component.getParent().getParent();
-            if (grandParent != null) {
-                // set the classloader hierarchy if we are not at the domain level
-                URI uri = grandParent.getUri();
-                definition.addParentClassLoader(uri);
-            }
             URI contributionUri = component.getDefinition().getContributionUri();
             Set<PhysicalClassLoaderDefinition> definitions = definitionsPerZone.get(component.getZone());
             if (contributionUri == null) {
+                definition.addParentClassLoader(Names.BOOT_CLASSLOADER_ID);
                 // xcv FIXME bootstrap services should be associated with a contribution
                 // the logical component is not provisioned as part of a contribution, e.g. a boostrap system service
-                definition.addParentClassLoader(Names.BOOT_CLASSLOADER_ID);
                 if (definitions == null) {
                     definitions = new LinkedHashSet<PhysicalClassLoaderDefinition>();
                     definitionsPerZone.put(component.getZone(), definitions);
                 }
                 definitions.add(definition);
-                continue;
+            } else {
+                definition.addParentClassLoader(contributionUri);
+                definitions.add(definition);
             }
-            definition.addParentClassLoader(contributionUri);
-            definitions.add(definition);
         }
     }
 
