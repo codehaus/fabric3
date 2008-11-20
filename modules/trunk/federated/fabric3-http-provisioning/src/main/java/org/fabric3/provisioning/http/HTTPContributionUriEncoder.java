@@ -70,7 +70,7 @@ public class HTTPContributionUriEncoder implements ContributionUriEncoder {
     }
 
     public URI encode(URI uri) throws URISyntaxException {
-        String path = mappingPath + "/" + uri.getPath();
+        String path = "/" + mappingPath + "/" + uri.getPath();
         return new URI("http", null, address, port, path, null, null);
     }
 }
