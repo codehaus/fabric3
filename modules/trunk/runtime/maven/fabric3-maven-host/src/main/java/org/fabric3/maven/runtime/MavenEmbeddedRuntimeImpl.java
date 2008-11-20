@@ -86,6 +86,9 @@ public class MavenEmbeddedRuntimeImpl extends AbstractRuntime<MavenHostInfo> imp
             contributionService.contribute(source);
             CompositeQNameService qNameService = getSystemComponent(CompositeQNameService.class, CompositeQNameService.SERVICE_URI);
             QName deployable = qNameService.getQName(CONTRIBUTION_URI, scdlLocation);
+            if (deployable == null) {
+                throw new DeploymentException("Test composite not found:" + scdlLocation);
+            }
             domain.include(deployable);
             return deployable;
         } catch (InvalidResourceException e) {

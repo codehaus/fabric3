@@ -16,30 +16,40 @@
  */
 package org.fabric3.maven.contribution;
 
-import java.net.URL;
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
+import java.net.URL;
 import javax.xml.namespace.QName;
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
 
 import org.osoa.sca.annotations.Reference;
 
+import org.fabric3.host.contribution.Constants;
+import org.fabric3.host.contribution.ContributionNotFoundException;
 import org.fabric3.maven.CompositeQNameService;
 import org.fabric3.maven.InvalidResourceException;
-import org.fabric3.spi.services.contribution.MetaDataStore;
+import org.fabric3.scdl.Composite;
 import org.fabric3.spi.services.contribution.Contribution;
+import org.fabric3.spi.services.contribution.MetaDataStore;
+import org.fabric3.spi.services.contribution.QNameSymbol;
 import org.fabric3.spi.services.contribution.Resource;
 import org.fabric3.spi.services.contribution.ResourceElement;
 import org.fabric3.spi.services.contribution.Symbol;
-import org.fabric3.spi.services.contribution.QNameSymbol;
-import org.fabric3.host.contribution.ContributionNotFoundException;
+import org.fabric3.spi.xml.XMLFactory;
 
 /**
  * @version $Revision$ $Date$
  */
 public class CompositeQNameServiceImpl implements CompositeQNameService {
     private MetaDataStore store;
+    private XMLInputFactory xmlFactory;
 
-    public CompositeQNameServiceImpl(@Reference MetaDataStore store) {
+    public CompositeQNameServiceImpl(@Reference MetaDataStore store, @Reference XMLFactory factory) {
         this.store = store;
+        this.xmlFactory = factory.newInputFactoryInstance();
     }
 
     public QName getQName(URI uri, URL url) throws ContributionNotFoundException, InvalidResourceException {
@@ -47,6 +57,45 @@ public class CompositeQNameServiceImpl implements CompositeQNameService {
         if (contribution == null) {
             throw new ContributionNotFoundException("Contribution not found: " + uri);
         }
+        XMLStreamReader reader = null;
+        InputStream stream = null;
+        try {
+            stream = url.openStream();
+            reader = xmlFactory.createXMLStreamReader(stream);
+            reader.nextTag();
+            String name = reader.getAttributeValue(null, "name");
+            if (name == null) {
+                throw new InvalidResourceException("Composite name not specified in : " + url);
+            }
+            Resource resource = new Resource(url, Constants.COMPOSITE_CONTENT_TYPE);
+            String targetNamespace = reader.getAttributeValue(null, "targetNamespace");
+            QName compositeName = new QName(targetNamespace, name);
+            QNameSymbol symbol = new QNameSymbol(compositeName);
+            ResourceElement<QNameSymbol, Composite> element = new ResourceElement<QNameSymbol, Composite>(symbol);
+            resource.addResourceElement(element);
+            contribution.addResource(resource);
+        } catch (XMLStreamException e) {
+            throw new InvalidResourceException("Error reading " + url, e);
+        } catch (IOException e) {
+            throw new InvalidResourceException("Error reading " + url, e);
+        } finally {
+            try {
+                if (stream != null) {
+                    stream.close();
+                }
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            try {
+                if (reader != null) {
+                    reader.close();
+                }
+            } catch (XMLStreamException e) {
+                e.printStackTrace();
+            }
+        }
+
+
         for (Resource resource : contribution.getResources()) {
             if (url.equals(resource.getUrl())) {
                 if (resource.getResourceElements().size() != 1) {

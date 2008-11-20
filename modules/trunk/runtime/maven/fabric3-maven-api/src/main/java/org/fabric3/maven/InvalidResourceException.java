@@ -24,7 +24,13 @@ import org.fabric3.host.Fabric3Exception;
 public class InvalidResourceException extends Fabric3Exception {
     private static final long serialVersionUID = 3510451706705428374L;
 
+    public InvalidResourceException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
     public InvalidResourceException(String message) {
         super(message);
+
+
     }
 }
