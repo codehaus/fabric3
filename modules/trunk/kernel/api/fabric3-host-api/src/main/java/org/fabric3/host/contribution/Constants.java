@@ -42,18 +42,11 @@ import javax.xml.namespace.QName;
  * @version $Rev$ $Date$
  */
 public final class Constants {
-    /**
-     * A changeSet represented as XML.
-     */
-    public static final String CHANGESET_XML = "application/x-fabric3.fabric3.changeSet+xml";
+
     public static final String ZIP_CONTENT_TYPE = "application/zip";
     public static final String FOLDER_CONTENT_TYPE = "application/vnd.fabric3.folder";
     public static final String COMPOSITE_CONTENT_TYPE = "text/vnd.fabric3.composite+xml";
-    public static final String DEFINITIONS_TYPE = "text/vnd.fabric3.definitions+xml";
-    public static final String JAVA_CONTENT_TYPE = "application/java-vm";
-    public final static String CONTENT_UNKONWN = "content/unknown";
-    public final static String CONTENT_DEFAULT = "application/octet-stream";
-    
+    public static final String DEFINITIONS_TYPE = "text/vnd.fabric3.definitions+xml";    
     public final static QName COMPOSITE_TYPE = new QName("http://www.osoa.org/xmlns/sca/1.0", "composite");
 
     private Constants() {
