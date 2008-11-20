@@ -46,11 +46,9 @@ public interface Bootstrapper {
      *
      * @param runtime         the runtime to initialize the domain for
      * @param bootClassLoader the bootstrap classloader
-     * @param appClassLoader  the top-level application classloader
      * @throws InitializationException if there was a problem bootstrapping the runtime
      */
-    public void bootRuntimeDomain(Fabric3Runtime<?> runtime, ClassLoader bootClassLoader, ClassLoader appClassLoader)
-            throws InitializationException;
+    public void bootRuntimeDomain(Fabric3Runtime<?> runtime, ClassLoader bootClassLoader) throws InitializationException;
 
     /**
      * Initialize the core system components for the supplied runtime.

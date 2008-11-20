@@ -45,7 +45,7 @@ public interface Names {
 
     URI BOOT_CLASSLOADER_ID = URI.create("Fabric3BootClassLoader");
 
-    URI APPLICATION_CLASSLOADER_ID = URI.create("Fabric3RootApplicationClassLoader");
+    URI HOST_CLASSLOADER_ID = URI.create("Fabric3HostClassLoader");
 
     String RUNTIME_NAME = "fabric3://runtime";
 

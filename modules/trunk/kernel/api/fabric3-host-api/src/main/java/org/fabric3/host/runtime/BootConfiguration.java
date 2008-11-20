@@ -77,10 +77,6 @@ public class BootConfiguration<RUNTIME extends Fabric3Runtime<?>, BOOTSTRAPPER e
         this.bootClassLoader = bootClassLoader;
     }
 
-    public ClassLoader getAppClassLoader() {
-        return appClassLoader;
-    }
-
     public void setAppClassLoader(ClassLoader appClassLoader) {
         this.appClassLoader = appClassLoader;
     }

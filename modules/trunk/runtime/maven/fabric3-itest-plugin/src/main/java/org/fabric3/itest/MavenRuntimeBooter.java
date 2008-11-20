@@ -132,7 +132,6 @@ public class MavenRuntimeBooter {
     private BootConfiguration<MavenEmbeddedRuntime, ScdlBootstrapper> createBootConfiguration() throws MojoExecutionException {
 
         BootConfiguration<MavenEmbeddedRuntime, ScdlBootstrapper> configuration = new BootConfiguration<MavenEmbeddedRuntime, ScdlBootstrapper>();
-        configuration.setAppClassLoader(hostClassLoader);
         configuration.setBootClassLoader(bootClassLoader);
 
         // create the runtime bootrapper

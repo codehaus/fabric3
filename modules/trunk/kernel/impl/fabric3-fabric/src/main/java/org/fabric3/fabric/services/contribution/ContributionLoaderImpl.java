@@ -60,7 +60,7 @@ public class ContributionLoaderImpl implements ContributionLoader {
 
     public ClassLoader load(Contribution contribution) throws ContributionLoadException {
         URI contributionUri = contribution.getUri();
-        ClassLoader cl = classLoaderRegistry.getClassLoader(Names.APPLICATION_CLASSLOADER_ID);
+        ClassLoader cl = classLoaderRegistry.getClassLoader(Names.HOST_CLASSLOADER_ID);
         if (!classloaderIsolation) {
             // the host environment does not support classloader isolation so only verify extensions are present
             verifyImports(contribution);

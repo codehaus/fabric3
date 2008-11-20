@@ -108,7 +108,7 @@ public class MetroBindingGenerator  implements BindingGenerator<MetroWireSourceD
         try {
             return new URL(wsdlLocation);
         } catch (MalformedURLException e) {
-            ClassLoader classLoader = classLoaderRegistry.getClassLoader(Names.APPLICATION_CLASSLOADER_ID);
+            ClassLoader classLoader = classLoaderRegistry.getClassLoader(Names.HOST_CLASSLOADER_ID);
             return classLoader.getResource(wsdlLocation);
         }
         

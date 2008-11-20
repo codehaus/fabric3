@@ -184,7 +184,6 @@ public class Fabric3ContextListener implements ServletContextListener {
                                                                                    WebappUtil utils) throws InitializationException {
 
         BootConfiguration<WebappRuntime, Bootstrapper> configuration = new BootConfiguration<WebappRuntime, Bootstrapper>();
-        configuration.setAppClassLoader(webappClassLoader);
         configuration.setBootClassLoader(webappClassLoader);
 
         // create the runtime bootrapper

@@ -93,7 +93,6 @@ public class Fabric3Server implements Fabric3ServerMBean {
         Fabric3Server server = new Fabric3Server();
 
 
-
         String jmxDomain = System.getProperty(JMX_DOMAIN, "standalone");
         server.startRuntime(jmxDomain);
         server.shutdownRuntime(jmxDomain);
@@ -181,7 +180,7 @@ public class Fabric3Server implements Fabric3ServerMBean {
 
             // boot the runtime
             coordinator = BootstrapHelper.createCoordinator(hostInfo, bootLoader);
-            BootConfiguration<StandaloneRuntime, Bootstrapper> configuration = createBootConfiguration(runtime, bootLoader, hostLoader);
+            BootConfiguration<StandaloneRuntime, Bootstrapper> configuration = createBootConfiguration(runtime, bootLoader);
             coordinator.setConfiguration(configuration);
             coordinator.bootPrimordial();
             // load and initialize runtime extension components and the local runtime domain
@@ -234,13 +233,10 @@ public class Fabric3Server implements Fabric3ServerMBean {
     }
 
 
-    private BootConfiguration<StandaloneRuntime, Bootstrapper> createBootConfiguration(StandaloneRuntime runtime,
-                                                                                       ClassLoader bootClassLoader,
-                                                                                       ClassLoader appClassLoader)
+    private BootConfiguration<StandaloneRuntime, Bootstrapper> createBootConfiguration(StandaloneRuntime runtime, ClassLoader bootClassLoader)
             throws BootstrapException, InitializationException {
         StandaloneHostInfo hostInfo = runtime.getHostInfo();
         BootConfiguration<StandaloneRuntime, Bootstrapper> configuration = new BootConfiguration<StandaloneRuntime, Bootstrapper>();
-        configuration.setAppClassLoader(appClassLoader);
         configuration.setBootClassLoader(bootClassLoader);
 
         Bootstrapper bootstrapper = BootstrapHelper.createBootstrapper(hostInfo, bootClassLoader);

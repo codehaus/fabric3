@@ -187,7 +187,7 @@ public class ClassLoaderCommandGeneratorImpl implements ClassLoaderCommandGenera
                 // imported contributions must also be provisioned 
                 for (URI uri : contribution.getResolvedImportUris()) {
                     // ignore the boot and application classloaders
-                    if (Names.BOOT_CLASSLOADER_ID.equals(uri) || Names.APPLICATION_CLASSLOADER_ID.equals(uri)) {
+                    if (Names.BOOT_CLASSLOADER_ID.equals(uri) || Names.HOST_CLASSLOADER_ID.equals(uri)) {
                         continue;
                     }
                     Contribution imported = store.find(uri);

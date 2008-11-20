@@ -80,7 +80,6 @@ public class DefaultCoordinator<RUNTIME extends Fabric3Runtime<?>, BOOTSTRAPPER 
     private RUNTIME runtime;
     private BOOTSTRAPPER bootstrapper;
     private ClassLoader bootClassLoader;
-    private ClassLoader appClassLoader;
     private List<String> bootExports;
     private ContributionSource intents;
     private List<ContributionSource> extensions;
@@ -101,7 +100,6 @@ public class DefaultCoordinator<RUNTIME extends Fabric3Runtime<?>, BOOTSTRAPPER 
         runtime = configuration.getRuntime();
         bootstrapper = configuration.getBootstrapper();
         bootClassLoader = configuration.getBootClassLoader();
-        appClassLoader = configuration.getAppClassLoader();
         bootExports = configuration.getBootLibraryExports();
         intents = configuration.getIntents();
         extensions = configuration.getExtensions();
@@ -113,7 +111,7 @@ public class DefaultCoordinator<RUNTIME extends Fabric3Runtime<?>, BOOTSTRAPPER 
             throw new IllegalStateException("Not in UNINITIALIZED state");
         }
         runtime.initialize();
-        bootstrapper.bootRuntimeDomain(runtime, bootClassLoader, appClassLoader);
+        bootstrapper.bootRuntimeDomain(runtime, bootClassLoader);
         state = State.PRIMORDIAL;
     }
 

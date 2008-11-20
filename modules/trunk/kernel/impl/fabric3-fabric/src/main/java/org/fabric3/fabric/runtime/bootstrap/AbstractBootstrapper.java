@@ -41,28 +41,26 @@ import org.w3c.dom.Document;
 
 import org.fabric3.fabric.instantiator.component.AtomicComponentInstantiator;
 import org.fabric3.fabric.instantiator.component.ComponentInstantiator;
-import org.fabric3.host.Names;
-import static org.fabric3.host.Names.APPLICATION_CLASSLOADER_ID;
-import static org.fabric3.host.Names.BOOT_CLASSLOADER_ID;
-import static org.fabric3.host.Names.RUNTIME_URI;
 import org.fabric3.fabric.services.documentloader.DocumentLoader;
 import org.fabric3.fabric.services.documentloader.DocumentLoaderImpl;
 import org.fabric3.fabric.services.synthesizer.SingletonComponentSynthesizer;
+import org.fabric3.host.Names;
+import static org.fabric3.host.Names.HOST_CLASSLOADER_ID;
+import static org.fabric3.host.Names.BOOT_CLASSLOADER_ID;
 import org.fabric3.host.domain.DeploymentException;
 import org.fabric3.host.domain.Domain;
+import org.fabric3.host.monitor.MonitorFactory;
 import org.fabric3.host.runtime.Bootstrapper;
 import org.fabric3.host.runtime.Fabric3Runtime;
 import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.host.runtime.InitializationException;
-import org.fabric3.host.monitor.MonitorFactory;
-import org.fabric3.spi.introspection.IntrospectionHelper;
-import org.fabric3.spi.introspection.contract.ContractProcessor;
 import org.fabric3.introspection.impl.DefaultIntrospectionHelper;
 import org.fabric3.introspection.impl.contract.DefaultContractProcessor;
 import org.fabric3.scdl.Composite;
-import org.fabric3.spi.classloader.MultiParentClassLoader;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.ScopeRegistry;
+import org.fabric3.spi.introspection.IntrospectionHelper;
+import org.fabric3.spi.introspection.contract.ContractProcessor;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 import org.fabric3.spi.runtime.RuntimeServices;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
@@ -81,7 +79,6 @@ import org.fabric3.system.introspection.SystemImplementationProcessor;
  */
 public abstract class AbstractBootstrapper implements Bootstrapper {
 
-    private static final URI HOST_CLASSLOADER_ID = URI.create("fabric3://runtime/HostClassLoader");
     private static final URI RUNTIME_SERVICES = URI.create("fabric3://RuntimeServices");
 
     // bootstrap components - these are disposed of after the core runtime system components are booted
@@ -92,7 +89,6 @@ public abstract class AbstractBootstrapper implements Bootstrapper {
 
     // runtime components - these are persistent and supplied by the runtime implementation
     private MonitorFactory monitorFactory;
-    private HostInfo hostInfo;
     private ClassLoaderRegistry classLoaderRegistry;
     private MetaDataStore metaDataStore;
     private ScopeRegistry scopeRegistry;
@@ -115,14 +111,14 @@ public abstract class AbstractBootstrapper implements Bootstrapper {
         systemImplementationProcessor = BootstrapIntrospectionFactory.createSystemImplementationProcessor();
     }
 
-    public void bootRuntimeDomain(Fabric3Runtime<?> runtime, ClassLoader bootClassLoader, ClassLoader appClassLoader) throws InitializationException {
+    public void bootRuntimeDomain(Fabric3Runtime<?> runtime, ClassLoader bootClassLoader) throws InitializationException {
 
         this.bootClassLoader = bootClassLoader;
         // classloader shared by extension and application classes
         this.hostClassLoader = runtime.getHostClassLoader();
 
         monitorFactory = runtime.getMonitorFactory();
-        hostInfo = runtime.getHostInfo();
+        HostInfo hostInfo = runtime.getHostInfo();
 
         RuntimeServices runtimeServices = runtime.getSystemComponent(RuntimeServices.class, RUNTIME_SERVICES);
         logicalComponetManager = runtimeServices.getLogicalComponentManager();
@@ -157,7 +153,7 @@ public abstract class AbstractBootstrapper implements Bootstrapper {
         registerDomain(runtime);
 
         // register the classloaders
-        registerClassLoaders(bootClassLoader, appClassLoader);
+        registerClassLoaders();
 
     }
 
@@ -247,16 +243,9 @@ public abstract class AbstractBootstrapper implements Bootstrapper {
         runtime.getSystemComponent(Domain.class, Names.RUNTIME_DOMAIN_SERVICE_URI);
     }
 
-    private void registerClassLoaders(ClassLoader bootClassLoader, ClassLoader appClassLoader) {
-
+    private void registerClassLoaders() {
         classLoaderRegistry.register(HOST_CLASSLOADER_ID, hostClassLoader);
         classLoaderRegistry.register(BOOT_CLASSLOADER_ID, bootClassLoader);
-        classLoaderRegistry.register(RUNTIME_URI, new MultiParentClassLoader(RUNTIME_URI, bootClassLoader));
-
-        URI domainId = hostInfo.getDomain();
-        classLoaderRegistry.register(APPLICATION_CLASSLOADER_ID, appClassLoader);
-        MultiParentClassLoader applicationClassLoader = new MultiParentClassLoader(domainId, appClassLoader);
-        classLoaderRegistry.register(domainId, applicationClassLoader);
     }
 
     private <S, I extends S> void registerComponent(String name, Class<S> type, I instance, boolean introspect) throws InitializationException {
