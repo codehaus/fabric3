@@ -34,6 +34,7 @@
  */
 package org.fabric3.host.runtime;
 
+import java.net.URL;
 import java.util.List;
 
 import org.fabric3.host.contribution.ContributionSource;
@@ -47,8 +48,7 @@ public class BootConfiguration<RUNTIME extends Fabric3Runtime<?>, BOOTSTRAPPER e
     private RUNTIME runtime;
     private BOOTSTRAPPER bootstrapper;
     private ClassLoader bootClassLoader;
-    private ClassLoader appClassLoader;
-    private List<String> bootExports;
+    private List<URL> bootExports;
     private ContributionSource intents;
     private List<ContributionSource> extensions;
     private List<ContributionSource> userExtensions;
@@ -77,15 +77,11 @@ public class BootConfiguration<RUNTIME extends Fabric3Runtime<?>, BOOTSTRAPPER e
         this.bootClassLoader = bootClassLoader;
     }
 
-    public void setAppClassLoader(ClassLoader appClassLoader) {
-        this.appClassLoader = appClassLoader;
-    }
-
-    public List<String> getBootLibraryExports() {
+    public List<URL> getBootLibraryExports() {
         return bootExports;
     }
 
-    public void setBootLibraryExports(List<String> bootExports) {
+    public void setBootLibraryExports(List<URL> bootExports) {
         this.bootExports = bootExports;
     }
 

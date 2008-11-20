@@ -17,7 +17,9 @@
 package org.fabric3.fabric.runtime;
 
 import java.io.InputStream;
+import java.io.IOException;
 import java.net.URI;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -80,7 +82,7 @@ public class DefaultCoordinator<RUNTIME extends Fabric3Runtime<?>, BOOTSTRAPPER 
     private RUNTIME runtime;
     private BOOTSTRAPPER bootstrapper;
     private ClassLoader bootClassLoader;
-    private List<String> bootExports;
+    private List<URL> bootExports;
     private ContributionSource intents;
     private List<ContributionSource> extensions;
     private List<ContributionSource> userExtensions;
@@ -214,11 +216,12 @@ public class DefaultCoordinator<RUNTIME extends Fabric3Runtime<?>, BOOTSTRAPPER 
             Contribution contribution = new Contribution(BOOT_CLASSLOADER_ID);
             contribution.setState(ContributionState.INSTALLED);
             ValidationContext context = new DefaultValidationContext();
-            for (String export : bootExports) {
-                InputStream stream =
-                        bootClassLoader.getResourceAsStream(export);
-                if (stream == null) {
-                    throw new InitializationException("boot jar is missing a pom.xml: " + export);
+            for (URL url : bootExports) {
+                InputStream stream;
+                try {
+                    stream = url.openStream();
+                } catch (IOException e) {
+                    throw new InitializationException("boot jar is missing a pom.xml: " + url);
                 }
                 ContributionManifest manifest = contribution.getManifest();
                 processor.process(manifest, stream, context);
