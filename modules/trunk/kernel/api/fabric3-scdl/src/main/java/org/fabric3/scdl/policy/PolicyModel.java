@@ -21,20 +21,10 @@ import javax.xml.namespace.QName;
  * Represents a policy model.
  *
  */
-public class PolicyModel extends PolicyNode {
+public class PolicyModel extends PolicyOperatorParentNode {
     
     public PolicyModel(QName qname) {
         super(qname);
-    }
-
-    private PolicyOperator policyOperator;
-
-    public PolicyOperator getPolicyOperator() {
-        return policyOperator;
-    }
-
-    public void setPolicyOperator(PolicyOperator policyOperator) {
-        this.policyOperator = policyOperator;
     }
 
 }

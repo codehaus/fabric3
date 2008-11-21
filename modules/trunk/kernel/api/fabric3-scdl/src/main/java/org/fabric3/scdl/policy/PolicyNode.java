@@ -21,7 +21,7 @@ import javax.xml.namespace.QName;
  * Represents all policy nodes.
  *
  */
-public class PolicyNode {
+public abstract class PolicyNode {
     
     private QName qname;
 

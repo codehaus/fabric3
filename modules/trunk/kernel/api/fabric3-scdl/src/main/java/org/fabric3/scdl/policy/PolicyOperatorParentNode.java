@@ -15,36 +15,25 @@
  */
 package org.fabric3.scdl.policy;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.xml.namespace.QName;
 
+public class PolicyOperatorParentNode extends ParentPolicyNode<PolicyOperator> {
 
-/**
- * Represents a policy operator.
- *
- */
-public class PolicyAssertion extends PolicyOperatorParentNode {
-    
-    private boolean optional;
-    private boolean ignorable;
-    
-    public PolicyAssertion(QName qname) {
+    private Set<PolicyOperator> policyOperators = new HashSet<PolicyOperator>();
+
+    public PolicyOperatorParentNode(QName qname) {
         super(qname);
     }
 
-    public boolean isOptional() {
-        return optional;
+    public Set<PolicyOperator> getPolicyOperators() {
+        return policyOperators;
     }
 
-    public void setOptional(boolean optional) {
-        this.optional = optional;
-    }
-
-    public boolean isIgnorable() {
-        return ignorable;
-    }
-
-    public void setIgnorable(boolean ignorable) {
-        this.ignorable = ignorable;
+    public void addChild(PolicyOperator policyOperator) {
+        policyOperators.add(policyOperator);
     }
 
 }

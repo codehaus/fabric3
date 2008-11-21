@@ -17,34 +17,13 @@ package org.fabric3.scdl.policy;
 
 import javax.xml.namespace.QName;
 
-
-/**
- * Represents a policy operator.
- *
- */
-public class PolicyAssertion extends PolicyOperatorParentNode {
+public abstract class ParentPolicyNode<CHILD extends PolicyNode> extends PolicyNode {
     
-    private boolean optional;
-    private boolean ignorable;
-    
-    public PolicyAssertion(QName qname) {
+    public ParentPolicyNode(QName qname) {
         super(qname);
+        // TODO Auto-generated constructor stub
     }
 
-    public boolean isOptional() {
-        return optional;
-    }
-
-    public void setOptional(boolean optional) {
-        this.optional = optional;
-    }
-
-    public boolean isIgnorable() {
-        return ignorable;
-    }
-
-    public void setIgnorable(boolean ignorable) {
-        this.ignorable = ignorable;
-    }
+    public abstract void addChild(CHILD child);
 
 }
