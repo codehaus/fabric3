@@ -17,14 +17,20 @@ package org.fabric3.scdl.policy;
 
 import javax.xml.namespace.QName;
 
-/**
- * Represents a policy model.
- *
- */
-public class PolicyModel extends PolicyOperatorParentNode {
+public class SimpleAssertionParameter extends AssertionParameter {
     
-    public PolicyModel(QName qname) {
+    private String value;
+
+    public SimpleAssertionParameter(QName qname) {
         super(qname);
+    }
+
+    public String getValue() {
+        return value;
+    }
+
+    public void setValue(String value) {
+        this.value = value;
     }
 
 }

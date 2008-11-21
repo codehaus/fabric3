@@ -15,6 +15,9 @@
  */
 package org.fabric3.scdl.policy;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.xml.namespace.QName;
 
 
@@ -22,10 +25,12 @@ import javax.xml.namespace.QName;
  * Represents a policy operator.
  *
  */
-public class PolicyAssertion extends PolicyOperatorParentNode {
+public class PolicyAssertion extends PolicyNode implements PolicyOperatorParent {
     
     private boolean optional;
     private boolean ignorable;
+    private Set<PolicyOperator> policyOperators = new HashSet<PolicyOperator>();
+    private Set<AssertionParameter> assertionParameters = new HashSet<AssertionParameter>();
     
     public PolicyAssertion(QName qname) {
         super(qname);
@@ -45,6 +50,22 @@ public class PolicyAssertion extends PolicyOperatorParentNode {
 
     public void setIgnorable(boolean ignorable) {
         this.ignorable = ignorable;
+    }
+
+    public Set<PolicyOperator> getPolicyOperators() {
+        return policyOperators;
+    }
+
+    public void addPolicyOperator(PolicyOperator policyOperator) {
+        policyOperators.add(policyOperator);
+    }
+
+    public Set<AssertionParameter> getAssertionParameters() {
+        return assertionParameters;
+    }
+
+    public void addAssertionParameter(AssertionParameter assertionParameter) {
+        assertionParameters.add(assertionParameter);
     }
 
 }

@@ -22,16 +22,6 @@ import javax.xml.namespace.QName;
  *
  */
 public class AssertionParameter extends PolicyNode {
-    
-    private String value;
-
-    public String getValue() {
-        return value;
-    }
-
-    public void setValue(String value) {
-        this.value = value;
-    }
 
     public AssertionParameter(QName qname) {
         super(qname);

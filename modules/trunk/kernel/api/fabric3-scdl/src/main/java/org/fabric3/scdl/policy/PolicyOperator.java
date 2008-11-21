@@ -24,21 +24,35 @@ import javax.xml.namespace.QName;
  * Generic abstraction for a policy operator.
  *
  */
-public class PolicyOperator extends ParentPolicyNode<PolicyAssertion> {
+public class PolicyOperator extends PolicyNode implements PolicyOperatorParent  {
+    
+    private Set<PolicyOperator> policyOperators = new HashSet<PolicyOperator>();
+    private Set<PolicyAssertion> policyAssertions = new HashSet<PolicyAssertion>();
     
     public PolicyOperator(QName qname) {
         super(qname);
     }
 
-    private Set<PolicyAssertion> assertions = new HashSet<PolicyAssertion>();
-
-    public Set<PolicyAssertion> getAssertions() {
-        return assertions;
+    public Set<PolicyAssertion> getPolicyAssertions() {
+        return policyAssertions;
     }
 
-    @Override
-    public void addChild(PolicyAssertion child) {
-        assertions.add(child);
+    public void addPolicyAssertion(PolicyAssertion policyAssertion) {
+        policyAssertions.add(policyAssertion);
+    }
+
+    /* (non-Javadoc)
+     * @see org.fabric3.scdl.policy.PolicyOperatorParent#getPolicyOperators()
+     */
+    public Set<PolicyOperator> getPolicyOperators() {
+        return policyOperators;
+    }
+
+    /* (non-Javadoc)
+     * @see org.fabric3.scdl.policy.PolicyOperatorParent#addPolicyOperator(org.fabric3.scdl.policy.PolicyOperator)
+     */
+    public void addPolicyOperator(PolicyOperator policyOperator) {
+        policyOperators.add(policyOperator);
     }
 
 }

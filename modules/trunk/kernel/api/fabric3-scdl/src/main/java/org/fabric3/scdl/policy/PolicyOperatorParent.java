@@ -15,25 +15,12 @@
  */
 package org.fabric3.scdl.policy;
 
-import java.util.HashSet;
 import java.util.Set;
 
-import javax.xml.namespace.QName;
+public interface PolicyOperatorParent {
 
-public class PolicyOperatorParentNode extends ParentPolicyNode<PolicyOperator> {
+    public abstract Set<PolicyOperator> getPolicyOperators();
 
-    private Set<PolicyOperator> policyOperators = new HashSet<PolicyOperator>();
-
-    public PolicyOperatorParentNode(QName qname) {
-        super(qname);
-    }
-
-    public Set<PolicyOperator> getPolicyOperators() {
-        return policyOperators;
-    }
-
-    public void addChild(PolicyOperator policyOperator) {
-        policyOperators.add(policyOperator);
-    }
+    public abstract void addPolicyOperator(PolicyOperator policyOperator);
 
 }
