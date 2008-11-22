@@ -56,7 +56,6 @@ import org.fabric3.scdl.Operation;
 import org.fabric3.scdl.ReferenceDefinition;
 import org.fabric3.scdl.ServiceContract;
 import org.fabric3.scdl.ServiceDefinition;
-import org.fabric3.scdl.definitions.Intent;
 import org.fabric3.spi.generator.BindingGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.LogicalBinding;
@@ -91,12 +90,10 @@ public class JmsBindingGenerator implements BindingGenerator<JmsWireSourceDefini
         TransactionType transactionType = getTransactionType(policy, serviceContract);
         Set<String> oneWayOperations = getOneWayOperations(policy, serviceContract);
 
-        URI classloaderId = logicalBinding.getParent().getParent().getClassLoaderId();
-
         JmsBindingMetadata metadata = logicalBinding.getDefinition().getMetadata();
         Map<String, PayloadType> payloadTypes = processPayloadTypes(serviceContract);
         URI uri = logicalBinding.getDefinition().getTargetUri();
-        return new JmsWireSourceDefinition(uri, metadata, payloadTypes, transactionType, oneWayOperations, classloaderId);
+        return new JmsWireSourceDefinition(uri, metadata, payloadTypes, transactionType, oneWayOperations);
     }
 
     public JmsWireTargetDefinition generateWireTarget(LogicalBinding<JmsBindingDefinition> logicalBinding,
@@ -108,12 +105,10 @@ public class JmsBindingGenerator implements BindingGenerator<JmsWireSourceDefini
         TransactionType transactionType = getTransactionType(policy, serviceContract);
         Set<String> oneWayOperations = getOneWayOperations(policy, serviceContract);
 
-        URI classloaderId = logicalBinding.getParent().getParent().getClassLoaderId();
-
         URI uri = logicalBinding.getDefinition().getTargetUri();
         JmsBindingMetadata metadata = logicalBinding.getDefinition().getMetadata();
         Map<String, PayloadType> payloadTypes = processPayloadTypes(serviceContract);
-        return new JmsWireTargetDefinition(uri, metadata, payloadTypes, transactionType, oneWayOperations, classloaderId);
+        return new JmsWireTargetDefinition(uri, metadata, payloadTypes, transactionType, oneWayOperations);
     }
 
     /*

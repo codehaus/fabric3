@@ -16,15 +16,14 @@
  */
 package org.fabric3.xquery.provision;
 
-import java.net.URI;
-
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.xml.namespace.QName;
-import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
+
 import org.w3c.dom.Document;
+
+import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
 
 /**
  * @version $Rev$ $Date$
@@ -32,7 +31,6 @@ import org.w3c.dom.Document;
 public class XQueryComponentDefinition extends PhysicalComponentDefinition {
     private static final long serialVersionUID = -2176668190738465467L;
 
-    private URI classLoaderId;
     private String location;
     private String context;
     private Map<String, Document> propertyValues = new HashMap<String, Document>();
@@ -42,24 +40,6 @@ public class XQueryComponentDefinition extends PhysicalComponentDefinition {
     //private Map<String, List<QName>> serviceCallbackFunctions;
     //private Map<String, List<QName>> referenceCallbackFunctions;
     private Map<String, QName> properties;
-
-    /**
-     * Gets the classloader id.
-     *
-     * @return Classloader id.
-     */
-    public URI getClassLoaderId() {
-        return classLoaderId;
-    }
-
-    /**
-     * Set the classloader id.
-     *
-     * @param classLoaderId Classloader id.
-     */
-    public void setClassLoaderId(URI classLoaderId) {
-        this.classLoaderId = classLoaderId;
-    }
 
     public String getContext() {
         return context;
@@ -93,7 +73,6 @@ public class XQueryComponentDefinition extends PhysicalComponentDefinition {
         return referenceFunctions;
     }
 
-  
 
     public Map<String, QName> getProperties() {
         return properties;
@@ -107,7 +86,7 @@ public class XQueryComponentDefinition extends PhysicalComponentDefinition {
         this.referenceFunctions = referenceFunctions;
     }
 
-    
+
     public void setCallbackFunctions(Map<String, List<QName>> callbackFunctions) {
         this.callbackFunctions = callbackFunctions;
     }
@@ -115,6 +94,7 @@ public class XQueryComponentDefinition extends PhysicalComponentDefinition {
     public Map<String, List<QName>> getCallbackFunctions() {
         return callbackFunctions;
     }
+
     /*
      public void setReferenceCallbackFunctions(Map<String, List<QName>> callbackFunctions) {
         this.referenceCallbackFunctions = callbackFunctions;

@@ -40,9 +40,9 @@ import java.util.List;
 import org.fabric3.spi.component.Component;
 
 /**
- * Responsible for tracking and managing the component tree for a runtime instance. The tree corresponds to components
- * deployed to the current runtime and hence may be sparse in comparison to the assembly component hierarchy for the SCA
- * domain as parents and children may be distributed to different runtimes.
+ * Responsible for tracking and managing the component tree for a runtime instance. The tree corresponds to components deployed to the current runtime
+ * and hence may be sparse in comparison to the assembly component hierarchy for the SCA domain as parents and children may be distributed to
+ * different runtimes.
  *
  * @version $Rev$ $Date$
  */
@@ -71,6 +71,13 @@ public interface ComponentManager {
      * @return the component or null if not found
      */
     Component getComponent(URI uri);
+
+    /**
+     * Returns a list of all registered components.
+     *
+     * @return a list of all registered components
+     */
+    List<Component> getComponents();
 
     /**
      * Returns a list of component URIs in the given hierarchy, e.g a domain or composite within a domain.

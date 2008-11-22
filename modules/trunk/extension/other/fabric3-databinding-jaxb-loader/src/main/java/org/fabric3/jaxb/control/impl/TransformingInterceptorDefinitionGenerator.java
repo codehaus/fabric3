@@ -79,13 +79,12 @@ public class TransformingInterceptorDefinitionGenerator implements InterceptorDe
             return null;
         }
 
-        URI classLoaderId = logicalBinding.getParent().getParent().getClassLoaderId();
         Set<String> classNames = calculateParameterClassNames(operation);
 
         if (logicalBinding.getParent() instanceof LogicalService) {
-            return new ServiceTransformingInterceptorDefinition(classLoaderId, dataType, classNames);
+            return new ServiceTransformingInterceptorDefinition(dataType, classNames);
         } else {
-            return new ReferenceTransformingInterceptorDefinition(classLoaderId, dataType, classNames);
+            return new ReferenceTransformingInterceptorDefinition(dataType, classNames);
         }
     }
 

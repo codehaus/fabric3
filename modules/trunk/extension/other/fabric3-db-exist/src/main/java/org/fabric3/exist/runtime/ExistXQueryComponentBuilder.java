@@ -72,7 +72,6 @@ public class ExistXQueryComponentBuilder implements ComponentBuilder<XQueryCompo
     public XQueryComponent build(XQueryComponentDefinition definition) throws BuilderException {
         URI componentId = definition.getComponentId();
         QName groupId = definition.getDeployable();
-        URI classLoaderId = definition.getClassLoaderId();
         ExistDBInstance instance = dbRegistry.getInstance(definition.getContext());
         ClassLoader classLoader = classLoaderRegistry.getClassLoader(definition.getClassLoaderId());
         URL locationURL = classLoader.getResource(definition.getLocation());
@@ -83,7 +82,6 @@ public class ExistXQueryComponentBuilder implements ComponentBuilder<XQueryCompo
         URLSource source = new URLSource(locationURL);
         ExistXQueryCompiler compiler = new ExistXQueryCompiler(classLoader, instance,trRegistry, source);
         ExistXQueryComponent component= new ExistXQueryComponent(componentId,
-                classLoaderId,
                 groupId,
                 compiler);
 

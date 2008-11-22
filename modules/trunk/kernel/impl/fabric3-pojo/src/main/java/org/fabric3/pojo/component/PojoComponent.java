@@ -67,6 +67,7 @@ public abstract class PojoComponent<T> extends AbstractLifecycle implements Atom
     private final long maxIdleTime;
     private final long maxAge;
     private InstanceFactory<T> instanceFactory;
+    private URI classLoaderId;
 
     public PojoComponent(URI componentId,
                          InstanceFactoryProvider<T> provider,
@@ -90,6 +91,14 @@ public abstract class PojoComponent<T> extends AbstractLifecycle implements Atom
 
     public QName getDeployable() {
         return deployable;
+    }
+
+    public URI getClassLoaderId() {
+        return classLoaderId;
+    }
+
+    public void setClassLoaderId(URI classLoaderId) {
+        this.classLoaderId = classLoaderId;
     }
 
     public boolean isEagerInit() {

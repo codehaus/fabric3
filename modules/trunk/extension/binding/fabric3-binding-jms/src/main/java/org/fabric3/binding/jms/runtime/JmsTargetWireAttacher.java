@@ -125,7 +125,7 @@ public class JmsTargetWireAttacher implements TargetWireAttacher<JmsWireTargetDe
         Destination resDestination = null;
         ConnectionFactory resCf = null;
         
-        ClassLoader cl = classLoaderRegistry.getClassLoader(targetDefinition.getClassloaderUri());
+        ClassLoader cl = classLoaderRegistry.getClassLoader(targetDefinition.getClassLoaderId());
 
         JmsBindingMetadata metadata = targetDefinition.getMetadata();
 

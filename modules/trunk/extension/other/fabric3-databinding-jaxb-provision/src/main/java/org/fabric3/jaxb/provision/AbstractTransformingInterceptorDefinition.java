@@ -16,7 +16,6 @@
  */
 package org.fabric3.jaxb.provision;
 
-import java.net.URI;
 import java.util.Set;
 import javax.xml.namespace.QName;
 
@@ -28,33 +27,22 @@ import org.fabric3.spi.model.physical.PhysicalInterceptorDefinition;
  * @version $Revision$ $Date$
  */
 public abstract class AbstractTransformingInterceptorDefinition extends PhysicalInterceptorDefinition {
-    private URI classLoaderId;
+    private static final long serialVersionUID = -2187418436391138272L;
     private QName dataType;
     private Set<String> classNames;
 
     /**
      * Cosntructor.
      *
-     * @param classLoaderId classloader id for loading parameter and fault types.
      * @param dataType      the data type the transformer must convert to and from
      * @param classNames    set of parameter and fault types the transformer must be able to convert
      */
-    public AbstractTransformingInterceptorDefinition(URI classLoaderId, QName dataType, Set<String> classNames) {
-        this.classLoaderId = classLoaderId;
+    public AbstractTransformingInterceptorDefinition(QName dataType, Set<String> classNames) {
         this.dataType = dataType;
         this.classNames = classNames;
     }
 
-    /**
-     * The classloader id for loading parameter and fault types.
-     *
-     * @return the classlaoder id
-     */
-    public URI getClassLoaderId() {
-        return classLoaderId;
-    }
-
-    /**
+     /**
      * The set of parameter and fault types the transformer must be able to convert.
      *
      * @return the parameter and fault types

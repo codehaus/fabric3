@@ -72,8 +72,6 @@ public class MockComponentGenerator implements ComponentGenerator<LogicalCompone
 
         componentDefinition.setScope(componentType.getScope());
 
-        URI classLoaderId = component.getClassLoaderId();
-        componentDefinition.setClassLoaderId(classLoaderId);
 
         return componentDefinition;
 
@@ -88,8 +86,6 @@ public class MockComponentGenerator implements ComponentGenerator<LogicalCompone
 
         MockWireTargetDefinition definition = new MockWireTargetDefinition();
         definition.setUri(service.getUri());
-        URI classLoaderId = component.getClassLoaderId();
-        definition.setClassLoaderId(classLoaderId);
         ServiceContract<?> serviceContract = service.getDefinition().getServiceContract();
 
         definition.setMockedInterface(serviceContract.getQualifiedInterfaceName());

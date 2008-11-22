@@ -77,7 +77,6 @@ public class WebComponentBuilder implements ComponentBuilder<WebComponentDefinit
         String contextUrl = definition.getContextUrl();
         return new WebComponent(componentId,
                                 contextUrl,
-                                classLoaderId,
                                 deployable,
                                 archiveUri,
                                 cl,

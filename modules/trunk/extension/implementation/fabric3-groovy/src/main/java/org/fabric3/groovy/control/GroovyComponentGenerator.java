@@ -78,8 +78,6 @@ public class GroovyComponentGenerator implements ComponentGenerator<LogicalCompo
         physical.setProviderDefinition(providerDefinition);
         helper.processPropertyValues(component, physical);
         // generate the classloader resource definition
-        URI classLoaderId = component.getClassLoaderId();
-        physical.setClassLoaderId(classLoaderId);
 
         return physical;
     }
@@ -91,7 +89,6 @@ public class GroovyComponentGenerator implements ComponentGenerator<LogicalCompo
         URI uri = reference.getUri();
         ServiceContract<?> serviceContract = reference.getDefinition().getServiceContract();
         String interfaceName = serviceContract.getQualifiedInterfaceName();
-        URI classLoaderId = source.getClassLoaderId();
 
         GroovyWireSourceDefinition wireDefinition = new GroovyWireSourceDefinition();
         wireDefinition.setUri(uri);
@@ -100,7 +97,6 @@ public class GroovyComponentGenerator implements ComponentGenerator<LogicalCompo
         // assume for now that any wire from a Groovy component can be optimized
         wireDefinition.setOptimizable(true);
 
-        wireDefinition.setClassLoaderId(classLoaderId);
         return wireDefinition;
     }
 

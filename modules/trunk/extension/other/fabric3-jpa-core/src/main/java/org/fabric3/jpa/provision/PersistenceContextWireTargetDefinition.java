@@ -24,6 +24,7 @@ import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
  * @version $Revision$ $Date$
  */
 public class PersistenceContextWireTargetDefinition extends PhysicalWireTargetDefinition {
+    private static final long serialVersionUID = -6823873953780670817L;
     private String unitName;
     private boolean extended;
     private boolean multiThreaded = true;

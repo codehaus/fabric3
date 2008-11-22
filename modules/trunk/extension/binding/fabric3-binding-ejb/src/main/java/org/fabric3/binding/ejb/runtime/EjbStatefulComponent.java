@@ -35,6 +35,7 @@ import org.fabric3.spi.invocation.WorkContext;
 public class EjbStatefulComponent extends AbstractLifecycle implements AtomicComponent<EjbStatefulInstanceWrapper> {
 
     private final QName deployable;
+    private URI classLoaderId;
 
     public EjbStatefulComponent(QName deployable) {
         this.deployable = deployable;
@@ -42,6 +43,14 @@ public class EjbStatefulComponent extends AbstractLifecycle implements AtomicCom
 
     public QName getDeployable() {
         return deployable;
+    }
+
+    public URI getClassLoaderId() {
+        return classLoaderId;
+    }
+
+    public void setClassLoaderId(URI classLoaderId) {
+        this.classLoaderId = classLoaderId;
     }
 
     public boolean isEagerInit() {

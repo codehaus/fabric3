@@ -46,9 +46,9 @@ import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
  * @version $Revision$ $Date$
  */
 public class JmsWireTargetDefinition extends PhysicalWireTargetDefinition {
+    private static final long serialVersionUID = -151189038434425132L;
     private JmsBindingMetadata metadata;
     private TransactionType transactionType;
-    private URI classloaderUri;
     private Set<String> oneWayOperations;
     private Map<String, PayloadType> payloadTypes;
 
@@ -60,29 +60,17 @@ public class JmsWireTargetDefinition extends PhysicalWireTargetDefinition {
      * @param payloadTypes     The payload types keyed by operation name
      * @param transactionType  Transaction type
      * @param oneWayOperations The set of oneway operation names
-     * @param classloaderUri   The classloader URI to deserialize types in
      */
     public JmsWireTargetDefinition(URI uri,
                                    JmsBindingMetadata metadata,
                                    Map<String, PayloadType> payloadTypes,
                                    TransactionType transactionType,
-                                   Set<String> oneWayOperations,
-                                   URI classloaderUri) {
+                                   Set<String> oneWayOperations) {
         this.metadata = metadata;
         this.transactionType = transactionType;
-        this.classloaderUri = classloaderUri;
         this.oneWayOperations = oneWayOperations;
         this.payloadTypes = payloadTypes;
         setUri(uri);
-    }
-
-    /**
-     * Returns the URI of the classloader  to load classes and deserialize parameter types.
-     *
-     * @return URI of the classloader  to load classes and deserialize parameter types
-     */
-    public URI getClassloaderUri() {
-        return classloaderUri;
     }
 
     /**

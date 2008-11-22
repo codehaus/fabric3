@@ -32,7 +32,6 @@ import org.fabric3.fabric.command.ProvisionClassloaderCommand;
 import org.fabric3.fabric.command.UnprovisionClassloaderCommand;
 import org.fabric3.fabric.services.contribution.DependencyException;
 import org.fabric3.fabric.services.contribution.DependencyService;
-import org.fabric3.host.Names;
 import org.fabric3.spi.command.Command;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.LogicalComponent;
@@ -43,23 +42,27 @@ import org.fabric3.spi.services.contribution.ContributionUriEncoder;
 import org.fabric3.spi.services.contribution.MetaDataStore;
 
 /**
- * Fabric3 may be configured to enforce a modular environment where classloader isolation is maintained between application and extension code. This
- * component generates classloader provision and unprovision commands used during deployment and undeployment that provide this isolation. The
- * classloader architecture for modular environments is described below.
+ * Fabric3 may be configured to enforce a modular environment where isolation is maintained between user an extension contributions.
  * <p/>
- * During deployment, components are associated with a classloader for their composite. Included composites have their own classloader. Contributions
- * required by components are loaded in their own classloaders. Composite classloaders are multiparent and have the contribution classloaders required
- * to run their components set as parents. All classloaders have a URI which correspnds either to the composite or contribution URI. In single-VM
- * domains, an optimization is made where contribution classloaders used by the contribution service infrastructure are reused during deployment and
- * visibile to the appropriate composite classloaders.
+ * Isolation is achieved through a peer-classloader architecture. When contributions are installed, they are loaded in their own classloader, which is
+ * given a URI matching the contribution. Imported artifacts will be resolved to contributions that export them based on the specific import/export
+ * semantics. The exporting contribution classloaders will be set as a parent of the importing contribution. A contribution that imports artifacts
+ * from multiple exporting contributions will have multiple parents.
  * <p/>
- * During deployment, classloader definitions for contributions (and their transitive imports) required by components and composite classloaders are
- * generated. These definitions are used by classloader provision commands which are sent to the zones where the components are deployed.
+ * When a composite is deployed to a zone in multi-VM environments that support isolation, contributions required to run it (i.e. the contribution
+ * containing the composite and any resolved exporting contributions) will be provisioned to runtimes in that zone. The provisioned contributions will
+ * be loaded in classloaders which are given a matching URI. Component implementation instances will then be instantiated on runtimes in the
+ * appropriate contribution classloader to service requests.
  * <p/>
- * During undeployment, the process is reversed. Commands for releasing composite classloaders and contribution classloaders are sent to the zones
- * where components are being undeployed. Invidual zones and runtimes are responsible for deciding when to dispose of released classloaders. For
- * example, a contribution classloader used by two composites that is released when one composite is undeployed will not be removed until both
- * composites are undeployed.
+ * In single-VM environments that support isolation, an optimization is made where classloader provisioning is short-circuited. The same classloader
+ * used to install a contribution is reused to instantiate component implementation instances.
+ * <p/>
+ * In environments that do not support isolation, the creation of individual classloaders is ignored and the host classloader is used for all
+ * instantiations.
+ * <p/>
+ * During undeployment, the process is reversed. Commands for releasing contribution classloaders are sent to the zones where components are being
+ * undeployed. Invidual zones and runtimes are responsible for deciding when to dispose of classloaders. For example, a contribution classloader used
+ * by two composites that is released when one composite is undeployed will not be removed until both composites are undeployed.
  */
 public class ClassLoaderCommandGeneratorImpl implements ClassLoaderCommandGenerator {
     private MetaDataStore store;
@@ -98,29 +101,12 @@ public class ClassLoaderCommandGeneratorImpl implements ClassLoaderCommandGenera
         // Create the classloader definitions for contributions required to run the components being deployed.
         // These are created first since they must be instantitated on a runtime prior to component classloaders
         Map<String, Set<PhysicalClassLoaderDefinition>> definitionsPerZone = createContributionDefinitions(collated);
-        createComponentDefinitions(components, definitionsPerZone);
         return createProvisionCommands(definitionsPerZone);
     }
 
     public Map<String, Set<Command>> release(List<LogicalComponent<?>> components) throws GenerationException {
         // commands mapped to the zone
         Map<String, Set<Command>> commandsPerZone = new HashMap<String, Set<Command>>();
-
-        // generate commands to unprovision component classloaders
-        for (LogicalComponent<?> component : components) {
-            URI classLoaderUri = component.getClassLoaderId();
-            if (LogicalState.MARKED != component.getState() || Names.BOOT_CLASSLOADER_ID.equals(classLoaderUri)) {
-                // skip provisioning for previously provisioned components and the boot classloader
-                continue;
-            }
-            UnprovisionClassloaderCommand command = new UnprovisionClassloaderCommand(7, classLoaderUri);
-            Set<Command> commands = commandsPerZone.get(component.getZone());
-            if (commands == null) {
-                commands = new LinkedHashSet<Command>();
-                commandsPerZone.put(component.getZone(), commands);
-            }
-            commands.add(command);
-        }
 
         Map<String, Set<Contribution>> collated = collateContributions(components, LogicalState.MARKED);
 
@@ -129,8 +115,7 @@ public class ClassLoaderCommandGeneratorImpl implements ClassLoaderCommandGenera
             if (entry.getKey() == null) {
                 // Don't uprovision the contribution classloader for locally deployed components since it is shared by the contrbution service
                 // In a multi-VM domain, the contribution classloaders are unprovisioned when they are no longer referenced by component classloaders.
-                // However, in a single-VM domain, the contribution classloader is shared by the contribution service infrastucture
-                // (contributions are loaded in memory via a classloader) and any component classloaders that require the contribution.
+                // However, in a single-VM domain, the contribution classloader is used by runtime components.
                 // Consequently, the contribution classloader cannot be removed until the contribution is uninstalled.
                 continue;
             }
@@ -175,24 +160,21 @@ public class ClassLoaderCommandGeneratorImpl implements ClassLoaderCommandGenera
                 continue;
             }
             URI contributionUri = component.getDefinition().getContributionUri();
-            if (contributionUri != null) {
-                // xcv FIXME contribution URIs can be null if component is primordial. this should be fixed in the synthesize
-                String zone = component.getZone();
-                Set<Contribution> contributions = contributionsPerZone.get(zone);
-                if (contributions == null) {
-                    contributions = new LinkedHashSet<Contribution>();
-                    contributionsPerZone.put(zone, contributions);
-                }
-                Contribution contribution = store.find(contributionUri);
-                // imported contributions must also be provisioned 
-                for (URI uri : contribution.getResolvedImportUris()) {
-                    Contribution imported = store.find(uri);
-                    if (!contributions.contains(imported)) {
-                        contributions.add(imported);
-                    }
-                }
-                contributions.add(contribution);
+            String zone = component.getZone();
+            Set<Contribution> contributions = contributionsPerZone.get(zone);
+            if (contributions == null) {
+                contributions = new LinkedHashSet<Contribution>();
+                contributionsPerZone.put(zone, contributions);
             }
+            Contribution contribution = store.find(contributionUri);
+            // imported contributions must also be provisioned
+            for (URI uri : contribution.getResolvedImportUris()) {
+                Contribution imported = store.find(uri);
+                if (!contributions.contains(imported)) {
+                    contributions.add(imported);
+                }
+            }
+            contributions.add(contribution);
         }
         return contributionsPerZone;
     }
@@ -208,12 +190,8 @@ public class ClassLoaderCommandGeneratorImpl implements ClassLoaderCommandGenera
             throws GenerationException {
         Map<String, Set<PhysicalClassLoaderDefinition>> definitionsPerZone = new HashMap<String, Set<PhysicalClassLoaderDefinition>>();
         for (Map.Entry<String, Set<Contribution>> entry : contributionsPerZone.entrySet()) {
-            if (entry.getKey() == null) {
-                // provisioning to the local runtime so there is no need to create a classloader since there will be one for the loaded contribution
-                continue;
-            }
+            String zone = entry.getKey();
             for (Contribution contribution : entry.getValue()) {
-                String zone = entry.getKey();
                 URI uri = contribution.getUri();
                 PhysicalClassLoaderDefinition definition = new PhysicalClassLoaderDefinition(uri);
                 if (zone == null) {
@@ -236,41 +214,6 @@ public class ClassLoaderCommandGeneratorImpl implements ClassLoaderCommandGenera
 
         }
         return definitionsPerZone;
-    }
-
-    /**
-     * Creates classloader definitions required to run a set of components and adds them to the supplied collection of
-     * PhysicalClassLoaderDefinitions.
-     *
-     * @param components         the component set
-     * @param definitionsPerZone the collection of PhysicalClassLoaderDefinitions keyed by zone
-     * @throws GenerationException if a generation error occurs
-     */
-    @Deprecated
-    private void createComponentDefinitions(List<LogicalComponent<?>> components,
-                                            Map<String, Set<PhysicalClassLoaderDefinition>> definitionsPerZone) throws GenerationException {
-        for (LogicalComponent<?> component : components) {
-            URI classLoaderUri = component.getClassLoaderId();
-            if (LogicalState.NEW != component.getState() || Names.BOOT_CLASSLOADER_ID.equals(classLoaderUri)) {
-                // skip provisioning for previously provisioned components and the boot classloader
-                continue;
-            }
-            PhysicalClassLoaderDefinition definition = new PhysicalClassLoaderDefinition(classLoaderUri);
-            URI contributionUri = component.getDefinition().getContributionUri();
-            String zone = component.getZone();
-            Set<PhysicalClassLoaderDefinition> definitions = definitionsPerZone.get(zone);
-            if (contributionUri == null) {
-                // XCV remove this 
-                continue;
-            } else {
-                definition.addParentClassLoader(contributionUri);
-                if (definitions == null) {
-                    definitions = new LinkedHashSet<PhysicalClassLoaderDefinition>();
-                    definitionsPerZone.put(zone, definitions);
-                }
-                definitions.add(definition);
-            }
-        }
     }
 
     /**

@@ -62,15 +62,13 @@ public class MetroWireSourceDefinition extends PhysicalWireSourceDefinition {
      * @param wsdlUrl Optional URL to the WSDL location.
      * @param servicePath Relative path on which the service is provisioned.
      * @param interfaze Interface for the service contract.
-     * @param classLoaderId ClassLoader Id.
      * @param requestedIntents Intents requested by the binding.
      */
-    public MetroWireSourceDefinition(WsdlElement wsdlElement, URL wsdlUrl, URI servicePath, String interfaze, URI classLoaderId, List<QName> requestedIntents) {
+    public MetroWireSourceDefinition(WsdlElement wsdlElement, URL wsdlUrl, URI servicePath, String interfaze, List<QName> requestedIntents) {
         this.wsdlElement = wsdlElement;
         this.wsdlUrl = wsdlUrl;
         this.servicePath = servicePath;
         this.interfaze = interfaze;
-        setClassLoaderId(classLoaderId);
         this.requestedIntents = requestedIntents;
     }
 

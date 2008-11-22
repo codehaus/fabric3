@@ -18,8 +18,9 @@ package org.fabric3.mock;
 
 import java.net.URI;
 import java.util.Map;
-
 import javax.xml.namespace.QName;
+
+import org.osoa.sca.ComponentContext;
 
 import org.fabric3.scdl.PropertyValue;
 import org.fabric3.spi.AbstractLifecycle;
@@ -28,7 +29,6 @@ import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.component.AtomicComponent;
 import org.fabric3.spi.component.InstanceWrapper;
 import org.fabric3.spi.invocation.WorkContext;
-import org.osoa.sca.ComponentContext;
 
 /**
  * @version $Revision$ $Date$
@@ -37,7 +37,8 @@ public class MockComponent<T> extends AbstractLifecycle implements AtomicCompone
     
     private final URI componentId;
     private final ObjectFactory<T> objectFactory;
-    
+    private URI classLoaderId;
+
     public MockComponent(URI componentId, ObjectFactory<T> objectFactory) {
         this.componentId = componentId;
         this.objectFactory = objectFactory;
@@ -45,6 +46,14 @@ public class MockComponent<T> extends AbstractLifecycle implements AtomicCompone
 
     public URI getUri() {
         return componentId;
+    }
+
+    public URI getClassLoaderId() {
+        return classLoaderId;
+    }
+
+    public void setClassLoaderId(URI classLoaderId) {
+        this.classLoaderId = classLoaderId;
     }
 
     @SuppressWarnings("unchecked")

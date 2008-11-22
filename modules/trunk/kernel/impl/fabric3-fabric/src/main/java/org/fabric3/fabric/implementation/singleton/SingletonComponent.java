@@ -73,6 +73,7 @@ public class SingletonComponent<T> extends AbstractLifecycle implements AtomicCo
     private InstanceWrapper<T> wrapper;
     private Map<String, PropertyValue> defaultPropertyValues;
     private Map<ObjectFactory, InjectableAttribute> reinjectionValues;
+    private URI classLoaderId;
 
     public SingletonComponent(URI componentId, T instance, Map<InjectionSite, InjectableAttribute> mappings) {
         this.uri = componentId;
@@ -80,6 +81,14 @@ public class SingletonComponent<T> extends AbstractLifecycle implements AtomicCo
         this.wrapper = new SingletonWrapper<T>(instance);
         this.reinjectionValues = new HashMap<ObjectFactory, InjectableAttribute>();
         initializeInjectionSites(instance, mappings);
+    }
+
+    public URI getClassLoaderId() {
+        return classLoaderId;
+    }
+
+    public void setClassLoaderId(URI classLoaderId) {
+        this.classLoaderId = classLoaderId;
     }
 
     public String getKey() {

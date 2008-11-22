@@ -259,7 +259,7 @@ public class BootstrapAssemblyFactory {
 
         ClasspathProcessorRegistry cpRegistry = new ClasspathProcessorRegistryImpl();
 
-        ClassLoaderBuilder classLoaderBuilder = createClassLoaderBuilder(classLoaderRegistry, cpRegistry, metaDataStore, info);
+        ClassLoaderBuilder classLoaderBuilder = createClassLoaderBuilder(classLoaderRegistry, cpRegistry, metaDataStore, componentManager, info);
 
         CommandExecutorRegistryImpl commandRegistry = new CommandExecutorRegistryImpl();
 
@@ -277,12 +277,13 @@ public class BootstrapAssemblyFactory {
     private static ClassLoaderBuilder createClassLoaderBuilder(ClassLoaderRegistry classLoaderRegistry,
                                                                ClasspathProcessorRegistry cpRegistry,
                                                                MetaDataStore metaDataStore,
+                                                               ComponentManager componentManager,
                                                                HostInfo info) {
 
         LocalContributionUriResolver resolver = new LocalContributionUriResolver(metaDataStore);
         JarClasspathProcessor classpathProcessor = new JarClasspathProcessor(cpRegistry);
         classpathProcessor.init();
-        return new ClassLoaderBuilderImpl(classLoaderRegistry, resolver, cpRegistry, info);
+        return new ClassLoaderBuilderImpl(classLoaderRegistry, resolver, cpRegistry, componentManager, info);
     }
 
     private static PhysicalModelGenerator createPhysicalModelGenerator(LogicalComponentManager logicalComponentManager,

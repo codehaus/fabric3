@@ -55,6 +55,20 @@ public interface Component extends Lifecycle {
     URI getUri();
 
     /**
+     * Returns the classloader the component is associated with.
+     *
+     * @return the classloader the component is associated with.
+     */
+    URI getClassLoaderId();
+
+    /**
+     * Sets the classloader the component is associated with.
+     *
+     * @param classLoaderId the classloader the component is associated with.
+     */
+    void setClassLoaderId(URI classLoaderId);
+
+    /**
      * Returns the default property values associated with the component.
      *
      * @return default property values associated with the component.

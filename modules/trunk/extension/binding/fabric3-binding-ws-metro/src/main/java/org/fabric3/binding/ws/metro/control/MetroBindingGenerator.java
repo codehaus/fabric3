@@ -20,13 +20,16 @@ import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
 import java.util.List;
-
 import javax.xml.namespace.QName;
+
+import com.sun.xml.ws.api.model.wsdl.WSDLModel;
+import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.binding.ws.metro.provision.MetroWireSourceDefinition;
 import org.fabric3.binding.ws.metro.provision.MetroWireTargetDefinition;
 import org.fabric3.binding.ws.metro.provision.WsdlElement;
 import org.fabric3.binding.ws.scdl.WsBindingDefinition;
+import org.fabric3.host.Names;
 import org.fabric3.scdl.ReferenceDefinition;
 import org.fabric3.scdl.ServiceDefinition;
 import org.fabric3.spi.generator.BindingGenerator;
@@ -34,11 +37,6 @@ import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.policy.Policy;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
-import org.fabric3.host.Names;
-
-import org.osoa.sca.annotations.Reference;
-
-import com.sun.xml.ws.api.model.wsdl.WSDLModel;
 
 /**
  * @version $Revision$ $Date$
@@ -60,7 +58,6 @@ public class MetroBindingGenerator  implements BindingGenerator<MetroWireSourceD
                                                         ServiceDefinition serviceDefinition) throws GenerationException {
         
         WsBindingDefinition definition = binding.getDefinition();
-        URI classLoaderId = binding.getParent().getParent().getClassLoaderId();
         URL wsdlLocation = getWsdlLocation(definition.getWsdlLocation());
         WSDLModel wsdlModel = wsdlParser.parse(wsdlLocation);
         
@@ -70,7 +67,7 @@ public class MetroBindingGenerator  implements BindingGenerator<MetroWireSourceD
         
         List<QName> requestedIntents = policy.getProvidedIntents();
         
-        return new MetroWireSourceDefinition(wsdlElement, wsdlLocation, servicePath, interfaze, classLoaderId, requestedIntents);
+        return new MetroWireSourceDefinition(wsdlElement, wsdlLocation, servicePath, interfaze, requestedIntents);
         
     }
 
@@ -82,7 +79,6 @@ public class MetroBindingGenerator  implements BindingGenerator<MetroWireSourceD
                                                         ReferenceDefinition referenceDefinition) throws GenerationException {
         
         WsBindingDefinition definition = binding.getDefinition();
-        URI classLoaderId = binding.getParent().getParent().getClassLoaderId();
         URL wsdlLocation = getWsdlLocation(definition.getWsdlLocation());
         WSDLModel wsdlModel = wsdlParser.parse(wsdlLocation);
         
@@ -92,7 +88,7 @@ public class MetroBindingGenerator  implements BindingGenerator<MetroWireSourceD
         
         List<QName> requestedIntents = policy.getProvidedIntents();
         
-        return new MetroWireTargetDefinition(wsdlElement, wsdlLocation, interfaze, classLoaderId, requestedIntents, referenceUrls);
+        return new MetroWireTargetDefinition(wsdlElement, wsdlLocation, interfaze, requestedIntents, referenceUrls);
 
     }
 

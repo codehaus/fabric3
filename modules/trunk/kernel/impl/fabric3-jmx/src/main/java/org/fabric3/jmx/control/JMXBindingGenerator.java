@@ -49,7 +49,6 @@ public class JMXBindingGenerator implements BindingGenerator<JMXWireSourceDefini
             uri = logicalService.getUri();
         }
         definition.setUri(uri);
-        definition.setClassLoaderId(logicalComponent.getClassLoaderId());
         definition.setInterfaceName(serviceDefinition.getServiceContract().getQualifiedInterfaceName());
         definition.setOptimizable(true);
         return definition;

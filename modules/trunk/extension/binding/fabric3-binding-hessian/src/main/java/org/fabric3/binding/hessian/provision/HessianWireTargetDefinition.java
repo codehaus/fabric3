@@ -34,34 +34,20 @@
  */
 package org.fabric3.binding.hessian.provision;
 
-import java.net.URI;
-
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 
 /**
  * Physical wire target definition for Hessian binding.
- * 
+ *
  * @version $Revision$ $Date$
  */
 public class HessianWireTargetDefinition extends PhysicalWireTargetDefinition {
-    private final URI classLoaderId;
+    private static final long serialVersionUID = -4611651878255596005L;
 
     /**
      * Constructor.
-     *
-     * @param classLoaderId the classloader id to deserialize responses with
      */
-
-    public HessianWireTargetDefinition(URI classLoaderId) {
-        this.classLoaderId = classLoaderId;
+    public HessianWireTargetDefinition() {
     }
 
-    /**
-     * Returns the classloader id to deserialize responses with.
-     *
-     * @return the classloader id to deserialize responses with
-     */
-    public URI getClassLoaderId() {
-        return classLoaderId;
-    }
 }

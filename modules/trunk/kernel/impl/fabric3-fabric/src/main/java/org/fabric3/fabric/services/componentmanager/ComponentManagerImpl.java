@@ -76,6 +76,10 @@ public class ComponentManagerImpl implements ComponentManager {
         return components.get(name);
     }
 
+    public List<Component> getComponents() {
+        return new ArrayList<Component>(components.values());
+    }
+
     public List<URI> getComponentsInHierarchy(URI uri) {
         String strigified = uri.toString();
         List<URI> uris = new ArrayList<URI>();

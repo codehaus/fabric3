@@ -40,10 +40,9 @@ public class ExistXQueryComponent extends XQueryComponent implements Lifecycle {
     private ExistXQueryCompiler compiler;
 
     public ExistXQueryComponent(URI uri,
-            URI classLoaderId,
             QName groupId,
             ExistXQueryCompiler compiler) {
-        super(uri, classLoaderId, groupId);
+        super(uri, groupId);
         this.compiler=compiler;
        
     }

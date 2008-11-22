@@ -16,8 +16,6 @@
  */
 package org.fabric3.binding.rmi.model.physical;
 
-import java.net.URI;
-
 import org.osoa.sca.annotations.EagerInit;
 
 import org.fabric3.binding.rmi.model.logical.RmiBindingDefinition;
@@ -46,8 +44,6 @@ public class RmiBindingGenerator implements BindingGenerator<RmiWireSourceDefini
         ServiceContract<?> contract = serviceDefinition.getServiceContract();
         ewsd.setInterfaceName(contract.getQualifiedInterfaceName());
 
-        URI classloaderId = logicalBinding.getParent().getParent().getClassLoaderId();
-        ewsd.setClassLoaderId(classloaderId);
         return ewsd;
 
     }
@@ -66,8 +62,6 @@ public class RmiBindingGenerator implements BindingGenerator<RmiWireSourceDefini
         ServiceContract<?> contract = referenceDefinition.getServiceContract();
         ewtd.setInterfaceName(contract.getQualifiedInterfaceName());
 
-        URI classloaderId = logicalBinding.getParent().getParent().getClassLoaderId();
-        ewtd.setClassLoaderURI(classloaderId);
         return ewtd;
 
     }

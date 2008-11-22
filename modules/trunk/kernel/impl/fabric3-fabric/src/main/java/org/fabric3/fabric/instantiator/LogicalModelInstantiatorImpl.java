@@ -175,18 +175,10 @@ public class LogicalModelInstantiatorImpl implements LogicalModelInstantiator {
 
         if (definition.getImplementation().isComposite()) {
             ComponentDefinition<CompositeImplementation> componentDefinition = (ComponentDefinition<CompositeImplementation>) definition;
-            LogicalComponent<?> component = compositeComponentInstantiator.instantiate(parent, properties, componentDefinition, change);
-            component.setClassLoaderId(component.getUri());
-            return component;
+            return compositeComponentInstantiator.instantiate(parent, properties, componentDefinition, change);
         } else {
             ComponentDefinition<Implementation<?>> componentDefinition = (ComponentDefinition<Implementation<?>>) definition;
-            LogicalComponent<?> component = atomicComponentInstantiator.instantiate(parent, properties, componentDefinition, change);
-            if (classLoaderId != null) {
-                component.setClassLoaderId(classLoaderId);
-            } else {
-                component.setClassLoaderId(parent.getUri());
-            }
-            return component;
+            return atomicComponentInstantiator.instantiate(parent, properties, componentDefinition, change);
         }
     }
 

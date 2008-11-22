@@ -19,8 +19,9 @@ package org.fabric3.spring;
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
-
 import javax.xml.namespace.QName;
+
+import org.osoa.sca.ComponentContext;
 
 import org.fabric3.scdl.PropertyValue;
 import org.fabric3.spi.AbstractLifecycle;
@@ -29,7 +30,6 @@ import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.component.AtomicComponent;
 import org.fabric3.spi.component.InstanceWrapper;
 import org.fabric3.spi.invocation.WorkContext;
-import org.osoa.sca.ComponentContext;
 
 /**
  * @version $Revision$ $Date$
@@ -39,8 +39,9 @@ public class SpringComponent<T> extends AbstractLifecycle implements AtomicCompo
     private final URI componentId;
     private final ObjectFactory<T> objectFactory;
     private Map<String, ObjectFactory<?>> refNameToObjFactory;
+    private URI classLoaderId;
 
-    
+
     public SpringComponent(URI componentId, ObjectFactory<T> objectFactory) {
         this.componentId = componentId;
         this.objectFactory = objectFactory;
@@ -59,6 +60,14 @@ public class SpringComponent<T> extends AbstractLifecycle implements AtomicCompo
         return componentId;
     }
 
+    public URI getClassLoaderId() {
+        return classLoaderId;
+    }
+
+    public void setClassLoaderId(URI classLoaderId) {
+        this.classLoaderId = classLoaderId;
+    }
+    
     @SuppressWarnings("unchecked")
     public ObjectFactory<T> createObjectFactory() {
         return objectFactory;

@@ -77,8 +77,6 @@ public class SingletonComponentGenerator implements ComponentGenerator<LogicalCo
         wireDefinition.setUri(uri);
         wireDefinition.setValueSource(new InjectableAttribute(InjectableAttributeType.REFERENCE, uri.getFragment()));
 
-        URI classLoaderId = source.getClassLoaderId();
-        wireDefinition.setClassLoaderId(classLoaderId);
         return wireDefinition;
     }
 
@@ -88,8 +86,6 @@ public class SingletonComponentGenerator implements ComponentGenerator<LogicalCo
         URI uri = logical.getUri().resolve(service.getUri());
         wireDefinition.setUri(uri);
         wireDefinition.setOptimizable(true);
-        URI classLoaderId = logical.getClassLoaderId();
-        wireDefinition.setClassLoaderId(classLoaderId);
         return wireDefinition;
     }
 

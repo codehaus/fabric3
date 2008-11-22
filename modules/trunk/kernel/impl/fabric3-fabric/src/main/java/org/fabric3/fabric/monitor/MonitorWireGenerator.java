@@ -58,7 +58,6 @@ public class MonitorWireGenerator implements ResourceWireGenerator<MonitorWireTa
         definition.setMonitorType(resource.getResourceDefinition().getServiceContract().getQualifiedInterfaceName());
         definition.setUri(component.getUri());
         definition.setOptimizable(true);
-        definition.setClassLoaderId(component.getClassLoaderId());
 
         return definition;
     }

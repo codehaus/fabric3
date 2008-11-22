@@ -17,8 +17,9 @@
 package org.fabric3.java.control;
 
 import java.net.URI;
-
 import javax.xml.namespace.QName;
+
+import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.java.provision.JavaComponentDefinition;
 import org.fabric3.java.provision.JavaWireSourceDefinition;
@@ -45,7 +46,6 @@ import org.fabric3.spi.model.physical.InteractionType;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 import org.fabric3.spi.policy.Policy;
-import org.osoa.sca.annotations.Reference;
 
 /**
  * @version $Revision$ $Date$
@@ -82,8 +82,6 @@ public class JavaGenerationHelperImpl implements JavaGenerationHelper {
         physical.setProviderDefinition(providerDefinition);
         helper.processPropertyValues(component, physical);
         // generate the classloader resource definition
-        URI classLoaderId = component.getClassLoaderId();
-        physical.setClassLoaderId(classLoaderId);
         return physical;
     }
 
@@ -95,7 +93,6 @@ public class JavaGenerationHelperImpl implements JavaGenerationHelper {
         URI uri = reference.getUri();
         ServiceContract<?> serviceContract = reference.getDefinition().getServiceContract();
         String interfaceName = serviceContract.getQualifiedInterfaceName();
-        URI classLoaderId = source.getClassLoaderId();
 
         wireDefinition.setUri(uri);
         wireDefinition.setValueSource(new InjectableAttribute(InjectableAttributeType.REFERENCE, uri.getFragment()));
@@ -103,7 +100,6 @@ public class JavaGenerationHelperImpl implements JavaGenerationHelper {
         // assume for now that any wire from a Java component can be optimized
         wireDefinition.setOptimizable(true);
 
-        wireDefinition.setClassLoaderId(classLoaderId);
         calculateConversationalPolicy(wireDefinition, serviceContract, policy);
         return wireDefinition;
     }
@@ -113,7 +109,6 @@ public class JavaGenerationHelperImpl implements JavaGenerationHelper {
                                                                    ServiceContract<?> serviceContract,
                                                                    Policy policy) throws GenerationException {
         String interfaceName = serviceContract.getQualifiedInterfaceName();
-        URI classLoaderId = source.getClassLoaderId();
         PojoComponentType type = source.getDefinition().getImplementation().getComponentType();
         String name = null;
         for (CallbackDefinition entry : type.getCallbacks().values()) {
@@ -133,7 +128,6 @@ public class JavaGenerationHelperImpl implements JavaGenerationHelper {
         wireDefinition.setInterfaceName(interfaceName);
         wireDefinition.setUri(URI.create(source.getUri().toString() + "#" + name));
         wireDefinition.setOptimizable(false);
-        wireDefinition.setClassLoaderId(classLoaderId);
         return wireDefinition;
     }
 
@@ -143,11 +137,9 @@ public class JavaGenerationHelperImpl implements JavaGenerationHelper {
         URI uri = resource.getUri();
         ServiceContract<?> serviceContract = resource.getResourceDefinition().getServiceContract();
         String interfaceName = serviceContract.getQualifiedInterfaceName();
-        URI classLoaderId = source.getClassLoaderId();
 
         wireDefinition.setUri(uri);
         wireDefinition.setValueSource(new InjectableAttribute(InjectableAttributeType.RESOURCE, uri.getFragment()));
-        wireDefinition.setClassLoaderId(classLoaderId);
         wireDefinition.setInterfaceName(interfaceName);
         return wireDefinition;
     }
@@ -164,8 +156,6 @@ public class JavaGenerationHelperImpl implements JavaGenerationHelper {
             uri = target.getUri();
         }
         wireDefinition.setUri(uri);
-        URI classLoaderId = target.getClassLoaderId();
-        wireDefinition.setClassLoaderId(classLoaderId);
 
         // assume for now that only wires to composite scope components can be optimized
         String scope = target.getDefinition().getImplementation().getComponentType().getScope();

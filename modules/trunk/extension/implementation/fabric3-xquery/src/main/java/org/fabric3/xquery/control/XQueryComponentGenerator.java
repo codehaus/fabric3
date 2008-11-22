@@ -81,7 +81,6 @@ public class XQueryComponentGenerator implements ComponentGenerator<LogicalCompo
     public PhysicalComponentDefinition generate(LogicalComponent<XQueryImplementation> component) throws GenerationException {
         ComponentDefinition<XQueryImplementation> definition = component.getDefinition();
         XQueryComponentDefinition physical = new XQueryComponentDefinition();
-        physical.setClassLoaderId(component.getClassLoaderId());
         physical.setLocation(definition.getImplementation().getLocation());
         physical.setContext(definition.getImplementation().getContext());
         processPropertyValues(component, physical);
@@ -216,7 +215,6 @@ public class XQueryComponentGenerator implements ComponentGenerator<LogicalCompo
                                                                    ServiceContract<?> serviceContract,
                                                                    Policy policy) throws GenerationException {
         XQueryComponentWireSourceDefinition sourceDefinition = new XQueryComponentWireSourceDefinition();
-        URI classLoaderId = source.getClassLoaderId();
         XQueryComponentType type = source.getDefinition().getImplementation().getComponentType();
         String name = null;
         for (Map.Entry<String, ServiceDefinition> entry : type.getServices().entrySet()) {
@@ -231,7 +229,6 @@ public class XQueryComponentGenerator implements ComponentGenerator<LogicalCompo
         }
         sourceDefinition.setUri(URI.create(source.getUri().toString() + "#" + name));
         sourceDefinition.setOptimizable(false);
-        sourceDefinition.setClassLoaderId(classLoaderId);
         return sourceDefinition;
     }
 

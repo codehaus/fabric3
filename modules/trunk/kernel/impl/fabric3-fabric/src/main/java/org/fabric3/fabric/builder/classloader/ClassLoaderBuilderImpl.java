@@ -44,14 +44,16 @@ import java.util.Set;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.host.Names;
+import static org.fabric3.host.Names.HOST_CLASSLOADER_ID;
 import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.spi.classloader.MultiParentClassLoader;
 import org.fabric3.spi.model.physical.PhysicalClassLoaderDefinition;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
+import org.fabric3.spi.services.componentmanager.ComponentManager;
 import org.fabric3.spi.services.contribution.ClasspathProcessorRegistry;
 import org.fabric3.spi.services.contribution.ContributionUriResolver;
 import org.fabric3.spi.services.contribution.ResolutionException;
+import org.fabric3.spi.component.Component;
 
 /**
  * Default implementation of ClassLoaderBuilder.
@@ -64,15 +66,18 @@ public class ClassLoaderBuilderImpl implements ClassLoaderBuilder {
     private ClassLoaderRegistry classLoaderRegistry;
     private ContributionUriResolver contributionUriResolver;
     private ClasspathProcessorRegistry classpathProcessorRegistry;
+    private ComponentManager componentManager;
     private boolean classLoaderIsolation;
 
     public ClassLoaderBuilderImpl(@Reference ClassLoaderRegistry classLoaderRegistry,
                                   @Reference ContributionUriResolver contributionUriResolver,
                                   @Reference ClasspathProcessorRegistry classpathProcessorRegistry,
+                                  @Reference ComponentManager componentManager,
                                   @Reference HostInfo info) {
         this.classLoaderRegistry = classLoaderRegistry;
         this.contributionUriResolver = contributionUriResolver;
         this.classpathProcessorRegistry = classpathProcessorRegistry;
+        this.componentManager = componentManager;
         classLoaderIsolation = info.supportsClassLoaderIsolation();
     }
 
@@ -87,70 +92,62 @@ public class ClassLoaderBuilderImpl implements ClassLoaderBuilder {
     }
 
     public void build(PhysicalClassLoaderDefinition definition) throws ClassLoaderBuilderException {
-        URI name = definition.getUri();
+        URI uri = definition.getUri();
+        if (classLoaderRegistry.getClassLoader(uri) != null) {
+            /*
+             The classloader was already loaded. The classloader will already be created if: it is the boot classloader; the environment is
+             single-VM as classloaders are shared between the contribution and runtime infrastructure; two composites are deployed individually
+             from the same contribution.
+             */
+            return;
+        }
+        if (classLoaderIsolation) {
+            buildIsolatedClassLoaderEnvironment(definition);
+        } else {
+            buildCommonClassLoaderEnvironment(definition);
+        }
+    }
+
+    private void buildCommonClassLoaderEnvironment(PhysicalClassLoaderDefinition definition) {
+        URI uri = definition.getUri();
+        // Create an alias to the host classloader which contains all contribution artifacts in a non-isolated environment.
+        // This simulates multiple classloaders
+        ClassLoader hostClassLoader = classLoaderRegistry.getClassLoader(HOST_CLASSLOADER_ID);
+        classLoaderRegistry.register(uri, hostClassLoader);
+    }
+
+    private void buildIsolatedClassLoaderEnvironment(PhysicalClassLoaderDefinition definition) throws ClassLoaderBuilderException {
+        URI uri = definition.getUri();
         URL[] classpath = resolveClasspath(definition.getContributionUris());
 
         // build the classloader using the locally cached resources
-        MultiParentClassLoader loader = new MultiParentClassLoader(name, classpath, null);
-        // add the host classloader
-        ClassLoader cl = classLoaderRegistry.getClassLoader(Names.HOST_CLASSLOADER_ID);
-        loader.addParent(cl);
-        if (classLoaderIsolation) {
-            // if the host supports isolated classloaders, add any parents
-            for (URI uri : definition.getParentClassLoaders()) {
-                ClassLoader parent = classLoaderRegistry.getClassLoader(uri);
-                if (parent == null) {
-                    String identifier = uri.toString();
-                    throw new ClassLoaderNotFoundException("Parent classloader not found: " + identifier);
-                }
-                loader.addParent(parent);
+        MultiParentClassLoader loader = new MultiParentClassLoader(uri, classpath, null);
+        // TODO this should be removed add the host classloader
+        ClassLoader hostClassLoader = classLoaderRegistry.getClassLoader(HOST_CLASSLOADER_ID);
+        loader.addParent(hostClassLoader);
+        // if the host supports isolated classloaders, add any parents
+        for (URI parentUri : definition.getParentClassLoaders()) {
+            ClassLoader parent = classLoaderRegistry.getClassLoader(parentUri);
+            if (parent == null) {
+                String identifier = parentUri.toString();
+                throw new ClassLoaderNotFoundException("Parent classloader not found: " + identifier);
             }
+            loader.addParent(parent);
         }
-        classLoaderRegistry.register(name, loader);
+        classLoaderRegistry.register(uri, loader);
     }
 
     public void destroy(URI uri) {
         ClassLoader loader = classLoaderRegistry.getClassLoader(uri);
         assert loader != null;
-        boolean referenced = false;
-        for (ClassLoader cl : classLoaderRegistry.getClassLoaders().values()) {
-            if (cl == loader) {
-                continue;
-            }
-            if (cl instanceof MultiParentClassLoader) {
-                MultiParentClassLoader multi = (MultiParentClassLoader) cl;
-                for (ClassLoader parent : multi.getParents()) {
-                    referenced = checkReferenced(loader, parent);
-                }
-            } else {
-                referenced = checkReferenced(loader, cl);
-            }
-            if (referenced) {
-                break;
+        List<Component> components = componentManager.getComponents();
+        // remove the classloader if there are no components that reference it
+        for (Component component : components) {
+            if (uri.equals(component.getClassLoaderId())) {
+                return;
             }
         }
-        if (!referenced) {
-            classLoaderRegistry.unregister(uri);
-        }
-    }
-
-    /**
-     * Returns true if the first classloader is referenced in the second's classloader hierarchy.
-     *
-     * @param classLoaderToCheck the classloader to check
-     * @param classLoader        the classloader hierarchy
-     * @return true if the first classloader is referenced
-     */
-    private boolean checkReferenced(ClassLoader classLoaderToCheck, ClassLoader classLoader) {
-        boolean referenced = false;
-        while (classLoader.getParent() != null) {
-            classLoader = classLoader.getParent();
-            if (classLoader == classLoaderToCheck) {
-                referenced = true;
-                break;
-            }
-        }
-        return referenced;
+        classLoaderRegistry.unregister(uri);
     }
 
     /**

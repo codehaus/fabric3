@@ -30,30 +30,11 @@ import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
  */
 public class WebComponentDefinition extends PhysicalComponentDefinition {
     private static final long serialVersionUID = 2871569095506575868L;
-    private URI classLoaderId;
     private URI contributionUri;
     private String contextUrl;
     // map of resource id to injection site name/InjectionSite pair
     private Map<String, Map<String, InjectionSite>> injectionSiteMappings = new HashMap<String, Map<String, InjectionSite>>();
     private final Map<String, Document> propertyValues = new HashMap<String, Document>();
-
-    /**
-     * Gets the classloader id.
-     *
-     * @return Classloader id.
-     */
-    public URI getClassLoaderId() {
-        return classLoaderId;
-    }
-
-    /**
-     * Set the classloader id.
-     *
-     * @param classLoaderId Classloader id.
-     */
-    public void setClassLoaderId(URI classLoaderId) {
-        this.classLoaderId = classLoaderId;
-    }
 
     public URI getContributionUri() {
         return contributionUri;

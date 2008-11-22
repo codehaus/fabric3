@@ -16,6 +16,8 @@
  */
 package org.fabric3.binding.ejb.control;
 
+import org.osoa.sca.annotations.EagerInit;
+
 import org.fabric3.binding.ejb.provision.EjbWireSourceDefinition;
 import org.fabric3.binding.ejb.provision.EjbWireTargetDefinition;
 import org.fabric3.binding.ejb.scdl.EjbBindingDefinition;
@@ -26,7 +28,6 @@ import org.fabric3.spi.generator.BindingGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.policy.Policy;
-import org.osoa.sca.annotations.EagerInit;
 
 /**
  * Implementation of the EJB binding generator.
@@ -48,7 +49,6 @@ public class EjbBindingGenerator implements BindingGenerator<EjbWireSourceDefini
         ewsd.setBindingDefinition(logicalBinding.getDefinition());
         ServiceContract<?> contract = serviceDefinition.getServiceContract();
         ewsd.setInterfaceName(contract.getQualifiedInterfaceName());
-        ewsd.setClassLoaderId(logicalBinding.getParent().getParent().getClassLoaderId());
 
         return ewsd;
     }
@@ -65,7 +65,6 @@ public class EjbBindingGenerator implements BindingGenerator<EjbWireSourceDefini
         ewtd.setBindingDefinition(logicalBinding.getDefinition());
         ServiceContract<?> contract = referenceDefinition.getServiceContract();
         ewtd.setInterfaceName(contract.getQualifiedInterfaceName());
-        ewtd.setClassLoaderURI(logicalBinding.getParent().getParent().getClassLoaderId());
 
         return ewtd;
     }

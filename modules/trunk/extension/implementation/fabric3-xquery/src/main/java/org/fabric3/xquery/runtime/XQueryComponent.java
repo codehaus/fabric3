@@ -38,21 +38,26 @@ import org.fabric3.spi.wire.Wire;
 public abstract class XQueryComponent<T> extends AbstractLifecycle implements AtomicComponent<T> {
 
     protected final URI uri;
-    protected final URI classLoaderId;
+    protected URI classLoaderId;
     protected final QName deployable;
     protected final Map<String, ObjectFactory<?>> referenceFactories;
 
-    public XQueryComponent(URI uri,
-                           URI classLoaderId,
-                           QName deployable) {
+    public XQueryComponent(URI uri, QName deployable) {
         this.uri = uri;
-        this.classLoaderId = classLoaderId;
         this.deployable = deployable;
         referenceFactories = new ConcurrentHashMap<String, ObjectFactory<?>>();
     }
 
     public URI getUri() {
         return uri;
+    }
+
+    public URI getClassLoaderId() {
+        return classLoaderId;
+    }
+
+    public void setClassLoaderId(URI classLoaderId) {
+        this.classLoaderId = classLoaderId;
     }
 
     public Map<String, PropertyValue> getDefaultPropertyValues() {

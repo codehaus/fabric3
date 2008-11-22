@@ -17,7 +17,6 @@
 package org.fabric3.mock;
 
 import java.util.List;
-import java.net.URI;
 
 import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
 
@@ -26,26 +25,7 @@ import org.fabric3.spi.model.physical.PhysicalComponentDefinition;
  */
 public class MockComponentDefinition extends PhysicalComponentDefinition {
     private static final long serialVersionUID = 9028368024803049278L;
-    private URI classLoaderId;
     private List<String> interfaces;
-
-    /**
-     * Gets the classloader id.
-     *
-     * @return Classloader id.
-     */
-    public URI getClassLoaderId() {
-        return classLoaderId;
-    }
-
-    /**
-     * Set the classloader id.
-     *
-     * @param classLoaderId Classloader id.
-     */
-    public void setClassLoaderId(URI classLoaderId) {
-        this.classLoaderId = classLoaderId;
-    }
 
     /**
      * @return List of interfaces that are mocked.

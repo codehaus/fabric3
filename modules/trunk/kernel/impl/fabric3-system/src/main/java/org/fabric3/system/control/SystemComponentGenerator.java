@@ -96,10 +96,6 @@ public class SystemComponentGenerator implements ComponentGenerator<LogicalCompo
         physical.setProviderDefinition(providerDefinition);
         helper.processPropertyValues(component, physical);
 
-        // generate the classloader resource definition
-        URI classLoaderId = component.getClassLoaderId();
-        physical.setClassLoaderId(classLoaderId);
-
         return physical;
     }
 
@@ -114,9 +110,6 @@ public class SystemComponentGenerator implements ComponentGenerator<LogicalCompo
         ServiceContract<?> serviceContract = reference.getDefinition().getServiceContract();
         String interfaceName = serviceContract.getQualifiedInterfaceName();
         wireDefinition.setInterfaceName(interfaceName);
-         
-        URI classLoaderId = source.getClassLoaderId();
-        wireDefinition.setClassLoaderId(classLoaderId);
 
         return wireDefinition;
     }
@@ -132,8 +125,6 @@ public class SystemComponentGenerator implements ComponentGenerator<LogicalCompo
         SystemWireTargetDefinition wireDefinition = new SystemWireTargetDefinition();
         wireDefinition.setOptimizable(true);
         wireDefinition.setUri(service.getUri());
-        URI classLoaderId = logical.getClassLoaderId();
-        wireDefinition.setClassLoaderId(classLoaderId);
         return wireDefinition;
     }
 
@@ -144,9 +135,6 @@ public class SystemComponentGenerator implements ComponentGenerator<LogicalCompo
         wireDefinition.setOptimizable(true);
         wireDefinition.setUri(uri);
         wireDefinition.setValueSource(new InjectableAttribute(InjectableAttributeType.RESOURCE, uri.getFragment()));
-
-        URI classLoaderId = source.getClassLoaderId();
-        wireDefinition.setClassLoaderId(classLoaderId);
 
         return wireDefinition;
     }

@@ -16,11 +16,12 @@
  */
 package org.fabric3.binding.ws.axis2.control;
 
-import java.net.URI;
 import java.util.List;
 import java.util.Map;
-
 import javax.xml.namespace.QName;
+
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 
 import org.fabric3.binding.ws.axis2.provision.Axis2PolicyAware;
 import org.fabric3.binding.ws.axis2.provision.Axis2WireSourceDefinition;
@@ -37,8 +38,6 @@ import org.fabric3.spi.generator.BindingGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.policy.Policy;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
 
 /**
  * @version $Revision$ $Date$
@@ -59,9 +58,6 @@ public class Axis2BindingGenerator  implements BindingGenerator<Axis2WireSourceD
         ServiceContract<?> contract = serviceDefinition.getServiceContract();
         hwsd.setServiceInterface(contract.getQualifiedInterfaceName());
         
-        URI classloaderId = binding.getParent().getParent().getClassLoaderId();
-        hwsd.setClassLoaderId(classloaderId);
-        
         setPolicyConfigs(hwsd, policy, contract);
         
         return hwsd;
@@ -77,9 +73,6 @@ public class Axis2BindingGenerator  implements BindingGenerator<Axis2WireSourceD
         
         ServiceContract<?> contract = referenceDefinition.getServiceContract();
         hwtd.setReferenceInterface(contract.getQualifiedInterfaceName());
-        
-        URI classloaderId = binding.getParent().getParent().getClassLoaderId();
-        hwtd.setClassloaderURI(classloaderId);
         
         //Set Axis2 operation parameters
         addOperationInfo(hwtd, contract);

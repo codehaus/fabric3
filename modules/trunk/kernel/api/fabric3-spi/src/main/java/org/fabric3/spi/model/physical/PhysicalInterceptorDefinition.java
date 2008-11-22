@@ -35,6 +35,7 @@
 package org.fabric3.spi.model.physical;
 
 import java.io.Serializable;
+import java.net.URI;
 
 /**
  * Model class representing the portable definition of an interceptor. This class is used to describe the interceptors around inbound and outbound
@@ -44,4 +45,13 @@ import java.io.Serializable;
  */
 public class PhysicalInterceptorDefinition implements Serializable {
     private static final long serialVersionUID = -1850310857357736392L;
+    private URI classLoaderId;
+
+    public URI getClassLoaderId() {
+        return classLoaderId;
+    }
+
+    public void setClassLoaderId(URI classLoaderId) {
+        this.classLoaderId = classLoaderId;
+    }
 }

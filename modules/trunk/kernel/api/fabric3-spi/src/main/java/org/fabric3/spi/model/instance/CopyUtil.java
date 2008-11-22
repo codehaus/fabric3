@@ -52,7 +52,6 @@ public class CopyUtil {
         LogicalCompositeComponent copy =
                 new LogicalCompositeComponent(composite.getUri(), composite.getDefinition(), parent);
         copy.setAutowireOverride(composite.getAutowireOverride());
-        copy.setClassLoaderId(composite.getClassLoaderId());
         copy.setState(composite.getState());
         copy.setZone(composite.getZone());
         for (Map.Entry<String, Document> entry : composite.getPropertyValues().entrySet()) {

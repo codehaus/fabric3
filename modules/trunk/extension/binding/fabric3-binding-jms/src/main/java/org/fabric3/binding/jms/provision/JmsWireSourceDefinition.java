@@ -46,6 +46,7 @@ import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
  * @version $Revision$ $Date$
  */
 public class JmsWireSourceDefinition extends PhysicalWireSourceDefinition {
+    private static final long serialVersionUID = -4274093421849649471L;
     private JmsBindingMetadata metadata;
     private TransactionType transactionType;
     private Set<String> oneWayOperations;
@@ -59,20 +60,17 @@ public class JmsWireSourceDefinition extends PhysicalWireSourceDefinition {
      * @param payloadTypes     The JMS payload types keyed by operation name
      * @param transactionType  Transaction type
      * @param oneWayOperations The set of oneway operation names
-     * @param classloaderId    the classloader id associated with user datatypes
      */
     public JmsWireSourceDefinition(URI uri,
                                    JmsBindingMetadata metadata,
                                    Map<String, PayloadType> payloadTypes,
                                    TransactionType transactionType,
-                                   Set<String> oneWayOperations,
-                                   URI classloaderId) {
+                                   Set<String> oneWayOperations) {
         this.metadata = metadata;
         this.transactionType = transactionType;
         this.oneWayOperations = oneWayOperations;
         this.payloadTypes = payloadTypes;
         setUri(uri);
-        setClassLoaderId(classloaderId);
     }
 
     /**

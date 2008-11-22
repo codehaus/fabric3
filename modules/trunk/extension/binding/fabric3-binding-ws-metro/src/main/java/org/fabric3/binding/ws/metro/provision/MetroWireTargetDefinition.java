@@ -34,17 +34,14 @@
  */
 package org.fabric3.binding.ws.metro.provision;
 
-import java.net.URI;
 import java.net.URL;
 import java.util.List;
-
 import javax.xml.namespace.QName;
 
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 
 /**
  * Wire target definition for Metro binding.
- *
  */
 public class MetroWireTargetDefinition extends PhysicalWireTargetDefinition {
     private static final long serialVersionUID = 5758003268658918242L;
@@ -57,26 +54,24 @@ public class MetroWireTargetDefinition extends PhysicalWireTargetDefinition {
 
     /**
      * Initialises information required for provisioning the service.
-     * 
-     * @param wsdlElement WSDL element that encasulates the qualified WSDL 1.1 service and port names.
-     * @param wsdlUrl Optional URL to the WSDL location.
-     * @param interfaze Interface for the service contract.
-     * @param classLoaderId ClassLoader Id.
+     *
+     * @param wsdlElement      WSDL element that encasulates the qualified WSDL 1.1 service and port names.
+     * @param wsdlUrl          Optional URL to the WSDL location.
+     * @param interfaze        Interface for the service contract.
      * @param requestedIntents Intents requested by the binding.
-     * @param targetUrls One or more URLs used to invoke the service.
+     * @param targetUrls       One or more URLs used to invoke the service.
      */
-    public MetroWireTargetDefinition(WsdlElement wsdlElement, URL wsdlUrl, String interfaze, URI classLoaderId, List<QName> requestedIntents, URL ... targetUrls) {
+    public MetroWireTargetDefinition(WsdlElement wsdlElement, URL wsdlUrl, String interfaze, List<QName> requestedIntents, URL... targetUrls) {
         this.wsdlElement = wsdlElement;
         this.wsdlUrl = wsdlUrl;
         this.targetUrls = targetUrls;
         this.interfaze = interfaze;
-        setClassLoaderId(classLoaderId);
         this.requestedIntents = requestedIntents;
     }
 
     /**
      * Gets the WSDL element that encasulates the qualified WSDL 1.1 service and port names.
-     * 
+     *
      * @return WSDL element that encasulates the qualified WSDL 1.1 service and port names.
      */
     public WsdlElement getWsdlElement() {
@@ -85,7 +80,7 @@ public class MetroWireTargetDefinition extends PhysicalWireTargetDefinition {
 
     /**
      * Gets an optional URL to the WSDL document.
-     * 
+     *
      * @return Optional URL to the WSDL document.
      */
     public URL getWsdlUrl() {
@@ -94,16 +89,16 @@ public class MetroWireTargetDefinition extends PhysicalWireTargetDefinition {
 
     /**
      * Gets one or more URLs used to invoke the service.
-     * 
+     *
      * @return One or more URLs used to invoke the service.
      */
     public URL[] getTargetUrls() {
         return targetUrls;
     }
-    
+
     /**
      * Gets the interface for the service contract.
-     * 
+     *
      * @return Interface for the service contract.
      */
     public String getInterfaze() {
@@ -112,7 +107,7 @@ public class MetroWireTargetDefinition extends PhysicalWireTargetDefinition {
 
     /**
      * Gets the intents requested by the binding.
-     * 
+     *
      * @return Intents requested by the binding.
      */
     public List<QName> getRequestedIntents() {

@@ -34,7 +34,6 @@
  */
 package org.fabric3.pojo.provision;
 
-import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -51,7 +50,6 @@ public abstract class PojoComponentDefinition extends PhysicalComponentDefinitio
     private static final long serialVersionUID = 297672484973345029L;
 
     private InstanceFactoryDefinition providerDefinition;
-    private URI classLoaderId;
     private final Map<String, Document> propertyValues = new HashMap<String, Document>();
 
     /**
@@ -71,24 +69,6 @@ public abstract class PojoComponentDefinition extends PhysicalComponentDefinitio
      */
     public void setProviderDefinition(InstanceFactoryDefinition providerDefinition) {
         this.providerDefinition = providerDefinition;
-    }
-
-    /**
-     * Gets the classloader id.
-     *
-     * @return Classloader id.
-     */
-    public URI getClassLoaderId() {
-        return classLoaderId;
-    }
-
-    /**
-     * Set the classloader id.
-     *
-     * @param classLoaderId Classloader id.
-     */
-    public void setClassLoaderId(URI classLoaderId) {
-        this.classLoaderId = classLoaderId;
     }
 
     /**

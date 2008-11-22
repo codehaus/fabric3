@@ -84,8 +84,6 @@ public class WebComponentGenerator implements ComponentGenerator<LogicalComponen
         Map<String, Map<String, InjectionSite>> sites = generateInjectionMapping(componentType);
         physical.setInjectionMappings(sites);
         processPropertyValues(component, physical);
-        URI classLoaderId = component.getClassLoaderId();
-        physical.setClassLoaderId(classLoaderId);
         if (component.getZone() == null) {
             physical.setContributionUri(definition.getContributionUri());
         } else {

@@ -52,7 +52,7 @@ import org.fabric3.spi.wire.Wire;
 public class WebComponent<T> extends AbstractLifecycle implements AtomicComponent<T> {
 
     private final URI uri;
-    private final URI classLoaderId;
+    private URI classLoaderId;
     private ClassLoader classLoader;
     private InjectorFactory injectorFactory;
     private final WebApplicationActivator activator;
@@ -68,7 +68,6 @@ public class WebComponent<T> extends AbstractLifecycle implements AtomicComponen
 
     public WebComponent(URI uri,
                         String contextUrl,
-                        URI classLoaderId,
                         QName deployable,
                         URI archiveUri,
                         ClassLoader classLoader,
@@ -79,7 +78,6 @@ public class WebComponent<T> extends AbstractLifecycle implements AtomicComponen
                         Map<String, Map<String, InjectionSite>> injectorMappings) throws WebComponentCreationException {
         this.uri = uri;
         this.contextUrl = contextUrl;
-        this.classLoaderId = classLoaderId;
         this.archiveUri = archiveUri;
         this.classLoader = classLoader;
         this.injectorFactory = injectorFactory;
@@ -93,6 +91,14 @@ public class WebComponent<T> extends AbstractLifecycle implements AtomicComponen
 
     public URI getUri() {
         return uri;
+    }
+
+    public URI getClassLoaderId() {
+        return classLoaderId;
+    }
+
+    public void setClassLoaderId(URI classLoaderId) {
+        this.classLoaderId = classLoaderId;
     }
 
     public void start() {

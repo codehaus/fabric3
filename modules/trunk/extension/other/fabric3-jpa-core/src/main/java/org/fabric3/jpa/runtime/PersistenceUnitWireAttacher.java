@@ -17,8 +17,9 @@
 package org.fabric3.jpa.runtime;
 
 import java.net.URI;
-
 import javax.persistence.EntityManagerFactory;
+
+import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.jpa.provision.PersistenceUnitWireTargetDefinition;
 import org.fabric3.jpa.spi.EmfBuilderException;
@@ -29,7 +30,6 @@ import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.TargetWireAttacher;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 import org.fabric3.spi.wire.Wire;
-import org.osoa.sca.annotations.Reference;
 
 /**
  * Attaches the target side of entity manager factories.
@@ -63,7 +63,7 @@ public class PersistenceUnitWireAttacher implements TargetWireAttacher<Persisten
     public ObjectFactory<?> createObjectFactory(PersistenceUnitWireTargetDefinition target) throws WiringException {
         
         final String unitName = target.getUnitName();
-        URI classLoaderUri = target.getClassLoaderUri();
+        URI classLoaderUri = target.getClassLoaderId();
         final ClassLoader appCl = classLoaderService.getEmfClassLoader(classLoaderUri);
         ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
 

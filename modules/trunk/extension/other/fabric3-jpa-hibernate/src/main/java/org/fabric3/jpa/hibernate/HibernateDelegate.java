@@ -90,6 +90,7 @@ public class HibernateDelegate implements EmfBuilderDelegate {
             keys.add(datasource);
             proxy.setDataSourceKeys(keys);
             proxy.init();
+            // TODO unregister this when the app is undeployed that uses it
             synthesizer.registerComponent(datasource + "Component", DataSource.class, proxy, false);
             return proxy;
         } catch (NamingException e) {

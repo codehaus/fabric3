@@ -56,6 +56,7 @@ import org.fabric3.fabric.services.documentloader.DocumentLoaderImpl;
 import org.fabric3.fabric.services.synthesizer.SingletonComponentSynthesizer;
 import org.fabric3.host.Names;
 import static org.fabric3.host.Names.BOOT_CLASSLOADER_ID;
+import static org.fabric3.host.Names.HOST_CLASSLOADER_ID;
 import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.host.domain.DeploymentException;
 import org.fabric3.host.domain.Domain;
@@ -309,8 +310,8 @@ public abstract class AbstractBootstrapper implements Bootstrapper {
      */
     private void synthesizeContributions() throws InitializationException {
         try {
-            synthesizeContribution(Names.HOST_CLASSLOADER_ID, Collections.<URL>emptyList(), hostClassLoader);
-            synthesizeContribution(Names.BOOT_CLASSLOADER_ID, bootManifests, bootClassLoader);
+            synthesizeContribution(HOST_CLASSLOADER_ID, Collections.<URL>emptyList(), hostClassLoader);
+            synthesizeContribution(BOOT_CLASSLOADER_ID, bootManifests, bootClassLoader);
         } catch (ContributionException e) {
             throw new InitializationException(e);
         }

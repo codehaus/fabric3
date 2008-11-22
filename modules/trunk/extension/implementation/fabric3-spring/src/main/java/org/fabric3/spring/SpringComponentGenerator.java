@@ -64,10 +64,6 @@ public class SpringComponentGenerator implements ComponentGenerator<LogicalCompo
         SpringComponentDefinition physical = new SpringComponentDefinition();
         physical.setScope(type.getScope());
 
-        // generate the classloader resource definition
-        URI classLoaderId = component.getClassLoaderId();
-        physical.setClassLoaderId(classLoaderId);
-
         // For Spring component: service name = spring bean id (name)
         // TODO Need to go through the whole list
         Iterator<String> i = componentDefinition.getServices().keySet().iterator();
@@ -94,8 +90,6 @@ public class SpringComponentGenerator implements ComponentGenerator<LogicalCompo
         if (conversational) {
             wireDefinition.setInteractionType(InteractionType.CONVERSATIONAL);
         }
-        URI classLoaderId = source.getClassLoaderId();
-        wireDefinition.setClassLoaderId(classLoaderId);
 
         ComponentDefinition<SpringImplementation> componentDefinition = source.getDefinition();
         SpringImplementation implementation = componentDefinition.getImplementation();

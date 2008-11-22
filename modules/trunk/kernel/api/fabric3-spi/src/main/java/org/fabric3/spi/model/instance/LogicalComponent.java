@@ -64,7 +64,6 @@ public class LogicalComponent<I extends Implementation<?>> extends LogicalScaArt
     private final Map<String, LogicalService> services = new HashMap<String, LogicalService>();
     private final Map<String, LogicalReference> references = new HashMap<String, LogicalReference>();
     private final Map<String, LogicalResource<?>> resources = new HashMap<String, LogicalResource<?>>();
-    private URI classLoaderId;
     private String zone;
     private QName deployable;
     private Autowire autowire;
@@ -329,21 +328,4 @@ public class LogicalComponent<I extends Implementation<?>> extends LogicalScaArt
         this.state = state;
     }
 
-    /**
-     * Returns the classloader id the component is associated with.
-     *
-     * @return the classloader id the component is associated with
-     */
-    public URI getClassLoaderId() {
-        return classLoaderId;
-    }
-
-    /**
-     * Sets the classloader id the component is associated with.
-     *
-     * @param id the classloader id the component is associated with
-     */
-    public void setClassLoaderId(URI id) {
-        this.classLoaderId = id;
-    }
 }

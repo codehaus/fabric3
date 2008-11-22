@@ -27,10 +27,6 @@ import org.fabric3.fabric.instantiator.LogicalChange;
 import org.fabric3.fabric.instantiator.component.ComponentInstantiator;
 import static org.fabric3.host.Names.BOOT_CLASSLOADER_ID;
 import org.fabric3.host.domain.AssemblyException;
-import org.fabric3.spi.introspection.DefaultIntrospectionContext;
-import org.fabric3.spi.introspection.IntrospectionContext;
-import org.fabric3.spi.introspection.TypeMapping;
-import org.fabric3.spi.introspection.contract.ContractProcessor;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.Implementation;
@@ -40,11 +36,15 @@ import org.fabric3.scdl.ServiceDefinition;
 import org.fabric3.spi.component.AtomicComponent;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.ScopeRegistry;
+import org.fabric3.spi.introspection.DefaultIntrospectionContext;
+import org.fabric3.spi.introspection.IntrospectionContext;
+import org.fabric3.spi.introspection.TypeMapping;
+import org.fabric3.spi.introspection.contract.ContractProcessor;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
-import org.fabric3.spi.model.instance.LogicalWire;
 import org.fabric3.spi.model.instance.LogicalState;
+import org.fabric3.spi.model.instance.LogicalWire;
 import org.fabric3.spi.services.componentmanager.ComponentManager;
 import org.fabric3.spi.services.componentmanager.RegistrationException;
 import org.fabric3.spi.services.lcm.LogicalComponentManager;
@@ -120,7 +120,6 @@ public class SingletonComponentSynthesizer implements ComponentSynthesizer {
         }
         // mark singleton components as provisioned since instances are not created
         logical.setState(LogicalState.PROVISIONED);
-        logical.setClassLoaderId(BOOT_CLASSLOADER_ID);
         // all references are initially resolved since they are manually injected
         for (LogicalReference reference : logical.getReferences()) {
             reference.setResolved(true);
@@ -146,6 +145,7 @@ public class SingletonComponentSynthesizer implements ComponentSynthesizer {
             ComponentDefinition<Implementation<?>> def = new ComponentDefinition<Implementation<?>>(name);
             SingletonImplementation singletonImplementation = new SingletonImplementation(implementation.getComponentType(), implClassName);
             def.setImplementation(singletonImplementation);
+            def.setContributionUri(BOOT_CLASSLOADER_ID);
             return def;
         } else {
             // instance does not have any services injected
@@ -163,6 +163,7 @@ public class SingletonComponentSynthesizer implements ComponentSynthesizer {
             implementation.setComponentType(componentType);
             ComponentDefinition<Implementation<?>> def = new ComponentDefinition<Implementation<?>>(name);
             def.setImplementation(implementation);
+            def.setContributionUri(BOOT_CLASSLOADER_ID);
             return def;
         }
     }
@@ -171,7 +172,9 @@ public class SingletonComponentSynthesizer implements ComponentSynthesizer {
         URI uri = logicalComponent.getUri();
         PojoComponentType type = (PojoComponentType) logicalComponent.getComponentType();
         type.getInjectionSites();
-        return new SingletonComponent<I>(uri, instance, type.getInjectionSites());
+        SingletonComponent<I> component = new SingletonComponent<I>(uri, instance, type.getInjectionSites());
+        component.setClassLoaderId(BOOT_CLASSLOADER_ID);
+        return component;
     }
 
 

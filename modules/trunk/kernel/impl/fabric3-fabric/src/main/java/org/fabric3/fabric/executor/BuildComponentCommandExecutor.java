@@ -34,6 +34,8 @@
  */
 package org.fabric3.fabric.executor;
 
+import java.net.URI;
+
 import org.osoa.sca.annotations.Constructor;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
@@ -86,8 +88,9 @@ public class BuildComponentCommandExecutor implements CommandExecutor<BuildCompo
         try {
             PhysicalComponentDefinition physicalComponentDefinition = command.getDefinition();
             Component component = componentBuilderRegistry.build(physicalComponentDefinition);
+            URI classLoaderId = physicalComponentDefinition.getClassLoaderId();
+            component.setClassLoaderId(classLoaderId);
             componentManager.register(component);
-
         } catch (BuilderException e) {
             throw new ExecutionException(e.getMessage(), e);
         } catch (RegistrationException e) {

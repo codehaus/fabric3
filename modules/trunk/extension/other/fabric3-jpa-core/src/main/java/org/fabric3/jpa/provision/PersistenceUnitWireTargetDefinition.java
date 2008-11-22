@@ -16,8 +16,6 @@
  */
 package org.fabric3.jpa.provision;
 
-import java.net.URI;
-
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 
 /**
@@ -26,9 +24,9 @@ import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
  * @version $Revision$ $Date$
  */
 public class PersistenceUnitWireTargetDefinition extends PhysicalWireTargetDefinition {
+    private static final long serialVersionUID = 5921863240878645759L;
 
     private String unitName;
-    private URI classLoaderUri;
 
     /**
      * @return The persistence unit name.
@@ -44,18 +42,5 @@ public class PersistenceUnitWireTargetDefinition extends PhysicalWireTargetDefin
         this.unitName = unitName;
     }
 
-    /**
-     * @return The classloader URI.
-     */
-    public URI getClassLoaderUri() {
-        return classLoaderUri;
-    }
-
-    /**
-     * @param classLoaderUri The classloader URI.
-     */
-    public void setClassLoaderUri(URI classLoaderUri) {
-        this.classLoaderUri = classLoaderUri;
-    }
 
 }

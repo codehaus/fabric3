@@ -16,7 +16,6 @@
  */
 package org.fabric3.binding.ws.axis2.provision.jaxb;
 
-import java.net.URI;
 import java.util.Set;
 
 import org.fabric3.spi.model.physical.PhysicalInterceptorDefinition;
@@ -25,21 +24,16 @@ import org.fabric3.spi.model.physical.PhysicalInterceptorDefinition;
  * @version $Revision$ $Date$
  */
 public class JaxbInterceptorDefinition extends PhysicalInterceptorDefinition {
-    
-    private final URI classLoaderId;
+    private static final long serialVersionUID = -8415124613439053493L;
+
     private final Set<String> classNames;
     private final Set<String> faultNames;
     private final boolean service;
-    
-    public JaxbInterceptorDefinition(URI classLoaderId, Set<String> classNames, Set<String> faultNames, boolean service) {
-        this.classLoaderId = classLoaderId;
+
+    public JaxbInterceptorDefinition(Set<String> classNames, Set<String> faultNames, boolean service) {
         this.classNames = classNames;
         this.faultNames = faultNames;
         this.service = service;
-    }
-
-    public URI getClassLoaderId() {
-        return classLoaderId;
     }
 
     public Set<String> getClassNames() {

@@ -85,9 +85,6 @@ public class JUnitComponentGenerator implements ComponentGenerator<LogicalCompon
 
         JavaComponentDefinition physical = new JavaComponentDefinition();
 
-        URI classLoaderId = component.getClassLoaderId();
-        physical.setClassLoaderId(classLoaderId);
-
         physical.setScope(scope);
         physical.setInitLevel(level);
         physical.setProviderDefinition(providerDefinition);
@@ -101,7 +98,6 @@ public class JUnitComponentGenerator implements ComponentGenerator<LogicalCompon
         URI uri = reference.getUri();
         ServiceContract<?> serviceContract = reference.getDefinition().getServiceContract();
         String interfaceName = getInterfaceName(serviceContract);
-        URI classLoaderId = source.getClassLoaderId();
 
         JavaWireSourceDefinition wireDefinition = new JavaWireSourceDefinition();
         wireDefinition.setUri(uri);
@@ -114,7 +110,6 @@ public class JUnitComponentGenerator implements ComponentGenerator<LogicalCompon
         // assume for now that any wire from a JUnit component can be optimized
         wireDefinition.setOptimizable(true);
 
-        wireDefinition.setClassLoaderId(classLoaderId);
         return wireDefinition;
     }
 
@@ -131,12 +126,10 @@ public class JUnitComponentGenerator implements ComponentGenerator<LogicalCompon
         URI uri = resource.getUri();
         ServiceContract<?> serviceContract = resource.getResourceDefinition().getServiceContract();
         String interfaceName = getInterfaceName(serviceContract);
-        URI classLoaderId = source.getClassLoaderId();
 
         JavaWireSourceDefinition wireDefinition = new JavaWireSourceDefinition();
         wireDefinition.setUri(uri);
         wireDefinition.setValueSource(new InjectableAttribute(InjectableAttributeType.RESOURCE, uri.getFragment()));
-        wireDefinition.setClassLoaderId(classLoaderId);
         wireDefinition.setInterfaceName(interfaceName);
         return wireDefinition;
     }
@@ -150,8 +143,6 @@ public class JUnitComponentGenerator implements ComponentGenerator<LogicalCompon
                                                            Policy policy) throws GenerationException {
         JavaWireTargetDefinition wireDefinition = new JavaWireTargetDefinition();
         wireDefinition.setUri(service.getUri());
-        URI classLoaderId = target.getClassLoaderId();
-        wireDefinition.setClassLoaderId(classLoaderId);
         return wireDefinition;
     }
 }

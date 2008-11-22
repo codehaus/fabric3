@@ -16,7 +16,6 @@
  */
 package org.fabric3.jaxb.provision;
 
-import java.net.URI;
 import java.util.Set;
 import javax.xml.namespace.QName;
 
@@ -26,8 +25,9 @@ import javax.xml.namespace.QName;
  * @version $Revision$ $Date$
  */
 public class ServiceTransformingInterceptorDefinition extends AbstractTransformingInterceptorDefinition {
+    private static final long serialVersionUID = 715629734446774203L;
 
-    public ServiceTransformingInterceptorDefinition(URI classLoaderId, QName dataType, Set<String> classNames) {
-        super(classLoaderId, dataType, classNames);
+    public ServiceTransformingInterceptorDefinition(QName dataType, Set<String> classNames) {
+        super(dataType, classNames);
     }
 }

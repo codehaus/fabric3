@@ -539,9 +539,8 @@ public class ContributionServiceImpl implements ContributionService {
                 CompositeImplementation compositeImplementation = CompositeImplementation.class.cast(implementation);
                 Composite componentType = compositeImplementation.getComponentType();
                 addContributionUri(contribution, componentType);
-            } else {
-                definition.setContributionUri(contribution.getUri());
             }
+            definition.setContributionUri(contribution.getUri());
         }
     }
 

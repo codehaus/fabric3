@@ -52,6 +52,7 @@ public abstract class PhysicalComponentDefinition implements Serializable {
     private int initLevel;
     private long maxIdleTime;
     private long maxAge;
+    private URI classLoaderId;
 
     /**
      * Gets the component id.
@@ -87,6 +88,24 @@ public abstract class PhysicalComponentDefinition implements Serializable {
      */
     public void setDeployable(QName deployable) {
         this.deployable = deployable;
+    }
+
+    /**
+     * Gets the classloader id.
+     *
+     * @return Classloader id.
+     */
+    public URI getClassLoaderId() {
+        return classLoaderId;
+    }
+
+    /**
+     * Set the classloader id.
+     *
+     * @param classLoaderId Classloader id.
+     */
+    public void setClassLoaderId(URI classLoaderId) {
+        this.classLoaderId = classLoaderId;
     }
 
     /**
