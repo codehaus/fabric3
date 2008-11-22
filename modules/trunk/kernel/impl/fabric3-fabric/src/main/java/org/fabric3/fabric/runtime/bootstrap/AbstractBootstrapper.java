@@ -118,6 +118,7 @@ public abstract class AbstractBootstrapper implements Bootstrapper {
 
     private Domain runtimeDomain;
 
+    private Fabric3Runtime<?> runtime;
     private ClassLoader bootClassLoader;
     private List<URL> bootManifests;
     private ClassLoader hostClassLoader;
@@ -134,6 +135,7 @@ public abstract class AbstractBootstrapper implements Bootstrapper {
 
     public void bootRuntimeDomain(Fabric3Runtime<?> runtime, ClassLoader bootClassLoader, List<URL> bootManifests) throws InitializationException {
 
+        this.runtime = runtime;
         this.bootClassLoader = bootClassLoader;
         this.bootManifests = bootManifests;
         // classloader shared by extension and application classes
@@ -159,7 +161,7 @@ public abstract class AbstractBootstrapper implements Bootstrapper {
                                                         scopeContainer);
 
         // register primordial components provided by the runtime itself
-        registerRuntimeComponents(runtime);
+        registerRuntimeComponents();
 
         runtimeDomain = BootstrapAssemblyFactory.createDomain(monitorFactory,
                                                               classLoaderRegistry,
@@ -172,7 +174,7 @@ public abstract class AbstractBootstrapper implements Bootstrapper {
                                                               hostInfo);
 
         // create and register bootstrap components provided by this bootstrapper
-        registerDomain(runtime);
+        registerDomain();
 
         // register the classloaders
         synthesizeContributions();
@@ -245,14 +247,16 @@ public abstract class AbstractBootstrapper implements Bootstrapper {
     /**
      * Registers the primordial runtime components.
      *
-     * @param runtime the runtme to register the components with
      * @throws InitializationException if there is an error during registration
      */
-    private <T extends HostInfo> void registerRuntimeComponents(Fabric3Runtime<T> runtime) throws InitializationException {
+    @SuppressWarnings({"unchecked"})
+    private <T extends HostInfo> void registerRuntimeComponents() throws InitializationException {
 
         // services available through the outward facing Fabric3Runtime API
         registerComponent("MonitorFactory", MonitorFactory.class, monitorFactory, true);
-        registerComponent("HostInfo", runtime.getHostInfoType(), runtime.getHostInfo(), true);
+        Class<T> type = (Class<T>) runtime.getHostInfoType();
+        T info = (T) runtime.getHostInfo();
+        registerComponent("HostInfo", type, info, true);
         MBeanServer mbServer = runtime.getMBeanServer();
         if (mbServer != null) {
             registerComponent("MBeanServer", MBeanServer.class, mbServer, false);
@@ -272,10 +276,9 @@ public abstract class AbstractBootstrapper implements Bootstrapper {
     /**
      * Registers the runtime domain
      *
-     * @param runtime the runtime to register the domain
      * @throws InitializationException if there is an error during registration
      */
-    private void registerDomain(Fabric3Runtime<?> runtime) throws InitializationException {
+    private void registerDomain() throws InitializationException {
         registerComponent("RuntimeDomain", Domain.class, runtimeDomain, true);
         // the following is a hack to initialize the domain
         runtime.getSystemComponent(Domain.class, Names.RUNTIME_DOMAIN_SERVICE_URI);
