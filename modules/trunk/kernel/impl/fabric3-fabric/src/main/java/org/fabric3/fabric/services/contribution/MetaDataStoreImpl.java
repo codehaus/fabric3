@@ -221,8 +221,9 @@ public class MetaDataStoreImpl implements MetaDataStore {
                             throw new StoreException("Error resolving resource: " + identifier, identifier, e);
                         }
                     }
-                    if (!type.isInstance(element.getValue())) {
-                        throw new IllegalArgumentException("Invalid type for symbol: " + type);
+                    Object val = element.getValue();
+                    if (!type.isInstance(val)) {
+                        throw new IllegalArgumentException("Invalid type for symbol. Expected: " + type + " was: " + val);
                     }
                     return (ResourceElement<S, V>) element;
                 }
