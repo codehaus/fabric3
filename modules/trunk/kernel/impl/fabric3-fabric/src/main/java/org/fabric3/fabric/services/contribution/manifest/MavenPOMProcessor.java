@@ -22,6 +22,7 @@ import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
+import org.osoa.sca.annotations.Constructor;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
@@ -46,13 +47,19 @@ public class MavenPOMProcessor implements XmlElementManifestProcessor {
 
     private XmlManifestProcessorRegistry registry;
 
+    public MavenPOMProcessor() {
+    }
+
+    @Constructor
     public MavenPOMProcessor(@Reference XmlManifestProcessorRegistry registry) {
         this.registry = registry;
     }
 
     @Init
     public void init() {
-        registry.register(this);
+        if (registry != null) {
+            registry.register(this);
+        }
     }
 
     public QName getType() {

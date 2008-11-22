@@ -34,7 +34,6 @@ public class PhysicalClassLoaderDefinition implements Serializable {
     private URI uri;
     private List<URI> parentClassLoaders = new ArrayList<URI>();
     private Set<URI> contributionUris = new LinkedHashSet<URI>();
-    private Set<URI> extensionUris = new LinkedHashSet<URI>();
 
     public PhysicalClassLoaderDefinition(URI uri) {
         this.uri = uri;
@@ -68,24 +67,6 @@ public class PhysicalClassLoaderDefinition implements Serializable {
     }
 
     /**
-     * Associates the classloader with an extension. When a classloader is created, the extension classes will be visible to the classloader.
-     *
-     * @param uri the URI to add
-     */
-    public void addExtensionUri(URI uri) {
-        extensionUris.add(uri);
-    }
-
-    /**
-     * Returns the URIs of extensions associated with this classloader as an ordered Set. Order is guaranteed for set iteration.
-     *
-     * @return the URIs as an ordered Set
-     */
-    public Set<URI> getExtensionUris() {
-        return extensionUris;
-    }
-
-    /**
      * Returns the list of parent classloader URIs.
      *
      * @return the list of parent classloader URIs
@@ -114,7 +95,6 @@ public class PhysicalClassLoaderDefinition implements Serializable {
 
         return parentClassLoaders.equals(other.parentClassLoaders)
                 && contributionUris.equals(other.contributionUris)
-                && extensionUris.equals(other.extensionUris)
                 && uri.equals(other.uri);
     }
 
@@ -123,7 +103,6 @@ public class PhysicalClassLoaderDefinition implements Serializable {
         result = (uri != null ? uri.hashCode() : 0);
         result = 31 * result + (parentClassLoaders != null ? parentClassLoaders.hashCode() : 0);
         result = 31 * result + (contributionUris != null ? contributionUris.hashCode() : 0);
-        result = 31 * result + (extensionUris != null ? extensionUris.hashCode() : 0);
         return result;
     }
 }

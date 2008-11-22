@@ -16,8 +16,6 @@
  */
 package org.fabric3.fabric.runtime;
 
-import java.io.InputStream;
-import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
@@ -28,16 +26,13 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 import javax.xml.namespace.QName;
 
-import org.fabric3.fabric.services.contribution.manifest.XmlManifestProcessor;
 import static org.fabric3.host.Names.APPLICATION_DOMAIN_URI;
-import static org.fabric3.host.Names.BOOT_CLASSLOADER_ID;
 import static org.fabric3.host.Names.CONTRIBUTION_SERVICE_URI;
 import static org.fabric3.host.Names.RUNTIME_DOMAIN_SERVICE_URI;
 import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.host.contribution.ContributionService;
 import org.fabric3.host.contribution.ContributionSource;
 import org.fabric3.host.contribution.Deployable;
-import org.fabric3.host.contribution.StoreException;
 import org.fabric3.host.domain.DeploymentException;
 import org.fabric3.host.domain.Domain;
 import org.fabric3.host.runtime.BootConfiguration;
@@ -48,18 +43,12 @@ import org.fabric3.host.runtime.RuntimeLifecycleCoordinator;
 import org.fabric3.host.runtime.ShutdownException;
 import org.fabric3.host.runtime.StartException;
 import org.fabric3.scdl.Composite;
-import org.fabric3.scdl.DefaultValidationContext;
 import org.fabric3.scdl.Include;
-import org.fabric3.scdl.ValidationContext;
 import static org.fabric3.spi.Namespaces.IMPLEMENTATION;
 import static org.fabric3.spi.SPINames.DEFINITIONS_REGISTRY;
 import static org.fabric3.spi.SPINames.EVENT_SERVICE_URI;
 import static org.fabric3.spi.SPINames.METADATA_STORE_URI;
-import static org.fabric3.spi.SPINames.XML_MANIFEST_PROCESSOR_URI;
-import org.fabric3.spi.introspection.validation.InvalidContributionException;
 import org.fabric3.spi.services.contribution.Contribution;
-import org.fabric3.spi.services.contribution.ContributionManifest;
-import org.fabric3.spi.services.contribution.ContributionState;
 import org.fabric3.spi.services.contribution.MetaDataStore;
 import org.fabric3.spi.services.contribution.QNameSymbol;
 import org.fabric3.spi.services.contribution.Resource;
@@ -113,7 +102,7 @@ public class DefaultCoordinator<RUNTIME extends Fabric3Runtime<?>, BOOTSTRAPPER 
             throw new IllegalStateException("Not in UNINITIALIZED state");
         }
         runtime.initialize();
-        bootstrapper.bootRuntimeDomain(runtime, bootClassLoader);
+        bootstrapper.bootRuntimeDomain(runtime, bootClassLoader, bootExports);
         state = State.PRIMORDIAL;
     }
 
@@ -125,8 +114,6 @@ public class DefaultCoordinator<RUNTIME extends Fabric3Runtime<?>, BOOTSTRAPPER 
         }
         // initialize core system components
         bootstrapper.bootSystem();
-
-        synthesizeBootContribution();
 
         try {
             activateIntents(intents);
@@ -204,36 +191,6 @@ public class DefaultCoordinator<RUNTIME extends Fabric3Runtime<?>, BOOTSTRAPPER 
         } catch (ContributionException e) {
             throw new InitializationException(e);
         } catch (DefinitionActivationException e) {
-            throw new InitializationException(e);
-        }
-    }
-
-    protected void synthesizeBootContribution() throws InitializationException {
-        try {
-            assert !bootExports.isEmpty();
-            XmlManifestProcessor processor =
-                    runtime.getSystemComponent(XmlManifestProcessor.class, XML_MANIFEST_PROCESSOR_URI);
-            Contribution contribution = new Contribution(BOOT_CLASSLOADER_ID);
-            contribution.setState(ContributionState.INSTALLED);
-            ValidationContext context = new DefaultValidationContext();
-            for (URL url : bootExports) {
-                InputStream stream;
-                try {
-                    stream = url.openStream();
-                } catch (IOException e) {
-                    throw new InitializationException("boot jar is missing a pom.xml: " + url);
-                }
-                ContributionManifest manifest = contribution.getManifest();
-                processor.process(manifest, stream, context);
-            }
-            if (context.hasErrors()) {
-                throw new InvalidContributionException(context.getErrors(), context.getWarnings());
-            }
-            MetaDataStore store = runtime.getSystemComponent(MetaDataStore.class, METADATA_STORE_URI);
-            store.store(contribution);
-        } catch (StoreException e) {
-            throw new InitializationException(e);
-        } catch (ContributionException e) {
             throw new InitializationException(e);
         }
     }

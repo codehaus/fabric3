@@ -50,19 +50,22 @@ import org.xml.sax.SAXException;
 
 import org.fabric3.fabric.services.documentloader.DocumentLoader;
 import org.fabric3.fabric.services.documentloader.DocumentLoaderImpl;
+import org.fabric3.fabric.services.xml.XMLFactoryImpl;
 import org.fabric3.host.contribution.ContributionException;
-import org.fabric3.scdl.ValidationFailure;
+import org.fabric3.host.monitor.MonitorFactory;
 import org.fabric3.host.runtime.InitializationException;
 import org.fabric3.host.runtime.ScdlBootstrapper;
+import org.fabric3.scdl.ComponentDefinition;
+import org.fabric3.scdl.Composite;
+import org.fabric3.scdl.CompositeImplementation;
+import org.fabric3.scdl.Implementation;
+import org.fabric3.scdl.ValidationFailure;
 import org.fabric3.spi.introspection.DefaultIntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.validation.InvalidCompositeException;
 import org.fabric3.spi.introspection.xml.Loader;
 import org.fabric3.spi.introspection.xml.LoaderException;
 import org.fabric3.spi.xml.XMLFactory;
-import org.fabric3.host.monitor.MonitorFactory;
-import org.fabric3.scdl.Composite;
-import org.fabric3.fabric.services.xml.XMLFactoryImpl;
 import org.fabric3.system.introspection.BootstrapLoaderFactory;
 import org.fabric3.system.introspection.SystemImplementationProcessor;
 
@@ -75,7 +78,6 @@ public class ScdlBootstrapperImpl extends AbstractBootstrapper implements ScdlBo
 
     private static final String USER_CONFIG = System.getProperty("user.home") + "/.fabric3/config.xml";
 
-    private final XMLFactory xmlFactory;
     private final DocumentLoader documentLoader;
 
     private URL scdlLocation;
@@ -87,8 +89,7 @@ public class ScdlBootstrapperImpl extends AbstractBootstrapper implements ScdlBo
     }
 
     private ScdlBootstrapperImpl(XMLFactory xmlFactory) {
-        super();
-        this.xmlFactory = xmlFactory;
+        super(xmlFactory);
         this.documentLoader = new DocumentLoaderImpl();
     }
 
@@ -109,7 +110,7 @@ public class ScdlBootstrapperImpl extends AbstractBootstrapper implements ScdlBo
                                             SystemImplementationProcessor processor,
                                             MonitorFactory monitorFactory) throws InitializationException {
         try {
-            Loader loader = BootstrapLoaderFactory.createLoader(processor, monitorFactory, xmlFactory);
+            Loader loader = BootstrapLoaderFactory.createLoader(processor, monitorFactory, getXmlFactory());
 
             // load the system composite
             IntrospectionContext introspectionContext = new DefaultIntrospectionContext(bootClassLoader, contributionUri, scdlLocation);
@@ -121,6 +122,7 @@ public class ScdlBootstrapperImpl extends AbstractBootstrapper implements ScdlBo
                 List<ValidationFailure> warnings = introspectionContext.getWarnings();
                 throw new InvalidCompositeException(name, errors, warnings);
             }
+            addContributionUri(contributionUri, composite);
             return composite;
         } catch (ContributionException e) {
             throw new InitializationException(e);
@@ -188,4 +190,24 @@ public class ScdlBootstrapperImpl extends AbstractBootstrapper implements ScdlBo
             throw new AssertionError(e);
         }
     }
+
+    /**
+     * Adds the contibution URI to a component and its children if it is a composite.
+     *
+     * @param contributionUri the contribution URI
+     * @param composite    the composite
+     */
+    private void addContributionUri(URI contributionUri, Composite composite) {
+        for (ComponentDefinition<?> definition : composite.getComponents().values()) {
+            Implementation<?> implementation = definition.getImplementation();
+            if (CompositeImplementation.class.isInstance(implementation)) {
+                CompositeImplementation compositeImplementation = CompositeImplementation.class.cast(implementation);
+                Composite componentType = compositeImplementation.getComponentType();
+                addContributionUri(contributionUri, componentType);
+            } else {
+                definition.setContributionUri(contributionUri);
+            }
+        }
+    }
+    
 }

@@ -186,10 +186,6 @@ public class ClassLoaderCommandGeneratorImpl implements ClassLoaderCommandGenera
                 Contribution contribution = store.find(contributionUri);
                 // imported contributions must also be provisioned 
                 for (URI uri : contribution.getResolvedImportUris()) {
-                    // ignore the boot and application classloaders
-                    if (Names.BOOT_CLASSLOADER_ID.equals(uri) || Names.HOST_CLASSLOADER_ID.equals(uri)) {
-                        continue;
-                    }
                     Contribution imported = store.find(uri);
                     if (!contributions.contains(imported)) {
                         contributions.add(imported);
@@ -212,12 +208,16 @@ public class ClassLoaderCommandGeneratorImpl implements ClassLoaderCommandGenera
             throws GenerationException {
         Map<String, Set<PhysicalClassLoaderDefinition>> definitionsPerZone = new HashMap<String, Set<PhysicalClassLoaderDefinition>>();
         for (Map.Entry<String, Set<Contribution>> entry : contributionsPerZone.entrySet()) {
+            if (entry.getKey() == null) {
+                // provisioning to the local runtime so there is no need to create a classloader since there will be one for the loaded contribution
+                continue;
+            }
             for (Contribution contribution : entry.getValue()) {
                 String zone = entry.getKey();
                 URI uri = contribution.getUri();
                 PhysicalClassLoaderDefinition definition = new PhysicalClassLoaderDefinition(uri);
                 if (zone == null) {
-                    // If the contribution is providioned to this runtime, its URI should not be encoded
+                    // If the contribution is provisioned to this runtime, its URI should not be encoded
                     definition.addContributionUri(uri);
                 } else {
                     URI encoded = encode(uri);
@@ -246,6 +246,7 @@ public class ClassLoaderCommandGeneratorImpl implements ClassLoaderCommandGenera
      * @param definitionsPerZone the collection of PhysicalClassLoaderDefinitions keyed by zone
      * @throws GenerationException if a generation error occurs
      */
+    @Deprecated
     private void createComponentDefinitions(List<LogicalComponent<?>> components,
                                             Map<String, Set<PhysicalClassLoaderDefinition>> definitionsPerZone) throws GenerationException {
         for (LogicalComponent<?> component : components) {
@@ -256,18 +257,17 @@ public class ClassLoaderCommandGeneratorImpl implements ClassLoaderCommandGenera
             }
             PhysicalClassLoaderDefinition definition = new PhysicalClassLoaderDefinition(classLoaderUri);
             URI contributionUri = component.getDefinition().getContributionUri();
-            Set<PhysicalClassLoaderDefinition> definitions = definitionsPerZone.get(component.getZone());
+            String zone = component.getZone();
+            Set<PhysicalClassLoaderDefinition> definitions = definitionsPerZone.get(zone);
             if (contributionUri == null) {
-                definition.addParentClassLoader(Names.BOOT_CLASSLOADER_ID);
-                // xcv FIXME bootstrap services should be associated with a contribution
-                // the logical component is not provisioned as part of a contribution, e.g. a boostrap system service
-                if (definitions == null) {
-                    definitions = new LinkedHashSet<PhysicalClassLoaderDefinition>();
-                    definitionsPerZone.put(component.getZone(), definitions);
-                }
-                definitions.add(definition);
+                // XCV remove this 
+                continue;
             } else {
                 definition.addParentClassLoader(contributionUri);
+                if (definitions == null) {
+                    definitions = new LinkedHashSet<PhysicalClassLoaderDefinition>();
+                    definitionsPerZone.put(zone, definitions);
+                }
                 definitions.add(definition);
             }
         }

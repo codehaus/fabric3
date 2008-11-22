@@ -34,6 +34,9 @@
  */
 package org.fabric3.host.runtime;
 
+import java.net.URL;
+import java.util.List;
+
 /**
  * Implementations bootstrap a runtime in two phases. The first phase initializes the runtime domain. The second phase initializes the core runtime
  * services.
@@ -46,9 +49,10 @@ public interface Bootstrapper {
      *
      * @param runtime         the runtime to initialize the domain for
      * @param bootClassLoader the bootstrap classloader
+     * @param manifestFiles   the files to introspect to create a contribution manifest for the boot contribution
      * @throws InitializationException if there was a problem bootstrapping the runtime
      */
-    public void bootRuntimeDomain(Fabric3Runtime<?> runtime, ClassLoader bootClassLoader) throws InitializationException;
+    public void bootRuntimeDomain(Fabric3Runtime<?> runtime, ClassLoader bootClassLoader, List<URL> manifestFiles) throws InitializationException;
 
     /**
      * Initialize the core system components for the supplied runtime.

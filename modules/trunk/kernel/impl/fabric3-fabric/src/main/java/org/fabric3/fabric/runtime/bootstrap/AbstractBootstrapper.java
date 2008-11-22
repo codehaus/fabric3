@@ -34,19 +34,29 @@
  */
 package org.fabric3.fabric.runtime.bootstrap;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
+import java.net.URL;
+import java.util.Collections;
+import java.util.List;
 import javax.management.MBeanServer;
+import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamException;
+import javax.xml.stream.XMLStreamReader;
+import javax.xml.stream.XMLStreamConstants;
 
 import org.w3c.dom.Document;
 
 import org.fabric3.fabric.instantiator.component.AtomicComponentInstantiator;
 import org.fabric3.fabric.instantiator.component.ComponentInstantiator;
+import org.fabric3.fabric.services.contribution.manifest.MavenPOMProcessor;
 import org.fabric3.fabric.services.documentloader.DocumentLoader;
 import org.fabric3.fabric.services.documentloader.DocumentLoaderImpl;
 import org.fabric3.fabric.services.synthesizer.SingletonComponentSynthesizer;
 import org.fabric3.host.Names;
-import static org.fabric3.host.Names.HOST_CLASSLOADER_ID;
 import static org.fabric3.host.Names.BOOT_CLASSLOADER_ID;
+import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.host.domain.DeploymentException;
 import org.fabric3.host.domain.Domain;
 import org.fabric3.host.monitor.MonitorFactory;
@@ -57,18 +67,25 @@ import org.fabric3.host.runtime.InitializationException;
 import org.fabric3.introspection.impl.DefaultIntrospectionHelper;
 import org.fabric3.introspection.impl.contract.DefaultContractProcessor;
 import org.fabric3.scdl.Composite;
+import org.fabric3.scdl.DefaultValidationContext;
+import org.fabric3.scdl.ValidationContext;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.spi.introspection.IntrospectionHelper;
 import org.fabric3.spi.introspection.contract.ContractProcessor;
+import org.fabric3.spi.introspection.validation.InvalidContributionException;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 import org.fabric3.spi.runtime.RuntimeServices;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.services.componentmanager.ComponentManager;
+import org.fabric3.spi.services.contribution.Contribution;
+import org.fabric3.spi.services.contribution.ContributionManifest;
+import org.fabric3.spi.services.contribution.ContributionState;
 import org.fabric3.spi.services.contribution.MetaDataStore;
 import org.fabric3.spi.services.lcm.LogicalComponentManager;
 import org.fabric3.spi.services.synthesize.ComponentRegistrationException;
 import org.fabric3.spi.services.synthesize.ComponentSynthesizer;
+import org.fabric3.spi.xml.XMLFactory;
 import org.fabric3.system.introspection.BootstrapIntrospectionFactory;
 import org.fabric3.system.introspection.SystemImplementationProcessor;
 
@@ -97,12 +114,16 @@ public abstract class AbstractBootstrapper implements Bootstrapper {
     private ComponentManager componentManager;
     private ScopeContainer<?> scopeContainer;
 
+    private XMLFactory xmlFactory;
+
     private Domain runtimeDomain;
 
     private ClassLoader bootClassLoader;
+    private List<URL> bootManifests;
     private ClassLoader hostClassLoader;
 
-    protected AbstractBootstrapper() {
+    protected AbstractBootstrapper(XMLFactory xmlFactory) {
+        this.xmlFactory = xmlFactory;
         // create components needed for to bootstrap the runtime
         IntrospectionHelper helper = new DefaultIntrospectionHelper();
         contractProcessor = new DefaultContractProcessor(helper);
@@ -111,9 +132,10 @@ public abstract class AbstractBootstrapper implements Bootstrapper {
         systemImplementationProcessor = BootstrapIntrospectionFactory.createSystemImplementationProcessor();
     }
 
-    public void bootRuntimeDomain(Fabric3Runtime<?> runtime, ClassLoader bootClassLoader) throws InitializationException {
+    public void bootRuntimeDomain(Fabric3Runtime<?> runtime, ClassLoader bootClassLoader, List<URL> bootManifests) throws InitializationException {
 
         this.bootClassLoader = bootClassLoader;
+        this.bootManifests = bootManifests;
         // classloader shared by extension and application classes
         this.hostClassLoader = runtime.getHostClassLoader();
 
@@ -153,7 +175,7 @@ public abstract class AbstractBootstrapper implements Bootstrapper {
         registerDomain(runtime);
 
         // register the classloaders
-        registerClassLoaders();
+        synthesizeContributions();
 
     }
 
@@ -181,6 +203,10 @@ public abstract class AbstractBootstrapper implements Bootstrapper {
             throw new InitializationException(e);
         }
 
+    }
+
+    protected XMLFactory getXmlFactory() {
+        return xmlFactory;
     }
 
     /**
@@ -216,6 +242,12 @@ public abstract class AbstractBootstrapper implements Bootstrapper {
      */
     protected abstract Document loadSystemConfig() throws InitializationException;
 
+    /**
+     * Registers the primordial runtime components.
+     *
+     * @param runtime the runtme to register the components with
+     * @throws InitializationException if there is an error during registration
+     */
     private <T extends HostInfo> void registerRuntimeComponents(Fabric3Runtime<T> runtime) throws InitializationException {
 
         // services available through the outward facing Fabric3Runtime API
@@ -237,17 +269,28 @@ public abstract class AbstractBootstrapper implements Bootstrapper {
         registerComponent("MetaDataStore", MetaDataStore.class, metaDataStore, true);
     }
 
+    /**
+     * Registers the runtime domain
+     *
+     * @param runtime the runtime to register the domain
+     * @throws InitializationException if there is an error during registration
+     */
     private void registerDomain(Fabric3Runtime<?> runtime) throws InitializationException {
         registerComponent("RuntimeDomain", Domain.class, runtimeDomain, true);
         // the following is a hack to initialize the domain
         runtime.getSystemComponent(Domain.class, Names.RUNTIME_DOMAIN_SERVICE_URI);
     }
 
-    private void registerClassLoaders() {
-        classLoaderRegistry.register(HOST_CLASSLOADER_ID, hostClassLoader);
-        classLoaderRegistry.register(BOOT_CLASSLOADER_ID, bootClassLoader);
-    }
 
+    /**
+     * Registers a primordial component
+     *
+     * @param name       the component name
+     * @param type       the service interface type
+     * @param instance   the component instance
+     * @param introspect true if the component should be introspected for references
+     * @throws InitializationException if there is an error during registration
+     */
     private <S, I extends S> void registerComponent(String name, Class<S> type, I instance, boolean introspect) throws InitializationException {
         try {
             synthesizer.registerComponent(name, type, instance, introspect);
@@ -255,5 +298,77 @@ public abstract class AbstractBootstrapper implements Bootstrapper {
             throw new InitializationException(e);
         }
     }
+
+    /**
+     * Creates contributions for the host and boot classloaders. These contributions may be imported by extensions and user contributions.
+     *
+     * @throws InitializationException if there is an error synthesizing the contributions
+     */
+    private void synthesizeContributions() throws InitializationException {
+        try {
+            synthesizeContribution(Names.HOST_CLASSLOADER_ID, Collections.<URL>emptyList(), hostClassLoader);
+            synthesizeContribution(Names.BOOT_CLASSLOADER_ID, bootManifests, bootClassLoader);
+        } catch (ContributionException e) {
+            throw new InitializationException(e);
+        }
+    }
+
+    /**
+     * Synthesizes a contribution from a classloader and installs it.
+     *
+     * @param contributionUri the contribution URI
+     * @param manifests       a list of URLs to introspect to create an SCA manifest containing exports for the contribution
+     * @param loader          the classloader
+     * @throws ContributionException if there is an error synthesizing the contribution
+     */
+    private void synthesizeContribution(URI contributionUri, List<URL> manifests, ClassLoader loader) throws ContributionException {
+        Contribution contribution = new Contribution(contributionUri);
+        contribution.setState(ContributionState.INSTALLED);
+        ValidationContext context = new DefaultValidationContext();
+        XMLInputFactory xmlInputFactory = xmlFactory.newInputFactoryInstance();
+        InputStream stream = null;
+        XMLStreamReader reader = null;
+        for (URL url : manifests) {
+            try {
+                stream = url.openStream();
+                ContributionManifest manifest = contribution.getManifest();
+                MavenPOMProcessor processor = new MavenPOMProcessor();
+                reader = xmlInputFactory.createXMLStreamReader(stream);
+                // advance to first tag
+                while (reader.hasNext() && XMLStreamConstants.START_ELEMENT != reader.getEventType()) {
+                    reader.next();
+                }
+                if (XMLStreamConstants.END_DOCUMENT == reader.getEventType()) {
+                    return;
+                }
+                processor.process(manifest, reader, context);
+            } catch (IOException e) {
+                throw new ContributionException("Invalid manifest: " + url, e);
+            } catch (XMLStreamException e) {
+                throw new ContributionException("Unable to read manifest: " + url, e);
+            } finally {
+                try {
+                    if (reader != null) {
+                        reader.close();
+                    }
+                } catch (XMLStreamException e) {
+                    e.printStackTrace();
+                }
+                try {
+                    if (stream != null) {
+                        stream.close();
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+        if (context.hasErrors()) {
+            throw new InvalidContributionException(context.getErrors(), context.getWarnings());
+        }
+        metaDataStore.store(contribution);
+        classLoaderRegistry.register(contributionUri, loader);
+    }
+
 
 }

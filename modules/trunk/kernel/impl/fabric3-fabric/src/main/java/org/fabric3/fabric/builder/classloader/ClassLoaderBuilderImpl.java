@@ -87,13 +87,26 @@ public class ClassLoaderBuilderImpl implements ClassLoaderBuilder {
     }
 
     public void build(PhysicalClassLoaderDefinition definition) throws ClassLoaderBuilderException {
+        URI name = definition.getUri();
+        URL[] classpath = resolveClasspath(definition.getContributionUris());
 
-        if (classLoaderRegistry.getClassLoader(definition.getUri()) != null) {
-            updateClassLoader(definition);
-        } else {
-            createClassLoader(definition);
+        // build the classloader using the locally cached resources
+        MultiParentClassLoader loader = new MultiParentClassLoader(name, classpath, null);
+        // add the host classloader
+        ClassLoader cl = classLoaderRegistry.getClassLoader(Names.HOST_CLASSLOADER_ID);
+        loader.addParent(cl);
+        if (classLoaderIsolation) {
+            // if the host supports isolated classloaders, add any parents
+            for (URI uri : definition.getParentClassLoaders()) {
+                ClassLoader parent = classLoaderRegistry.getClassLoader(uri);
+                if (parent == null) {
+                    String identifier = uri.toString();
+                    throw new ClassLoaderNotFoundException("Parent classloader not found: " + identifier);
+                }
+                loader.addParent(parent);
+            }
         }
-
+        classLoaderRegistry.register(name, loader);
     }
 
     public void destroy(URI uri) {
@@ -138,95 +151,6 @@ public class ClassLoaderBuilderImpl implements ClassLoaderBuilder {
             }
         }
         return referenced;
-    }
-
-    /**
-     * Creates a new classloader from a PhysicalClassLoaderDefinition.
-     *
-     * @param definition the PhysicalClassLoaderDefinition to create the classloader from
-     * @throws ClassLoaderBuilderException if an error occurs creating the classloader
-     */
-    private void createClassLoader(PhysicalClassLoaderDefinition definition) throws ClassLoaderBuilderException {
-
-        URI name = definition.getUri();
-        URL[] classpath = resolveClasspath(definition.getContributionUris());
-
-        // build the classloader using the locally cached resources
-        MultiParentClassLoader loader = new MultiParentClassLoader(name, classpath, null);
-        // add the host classloader
-        ClassLoader cl = classLoaderRegistry.getClassLoader(Names.HOST_CLASSLOADER_ID);
-        loader.addParent(cl);
-        if (classLoaderIsolation) {
-            // if the host supports isolated classloaders, add any parents
-            for (URI uri : definition.getParentClassLoaders()) {
-                ClassLoader parent = classLoaderRegistry.getClassLoader(uri);
-                if (parent == null) {
-                    String identifier = uri.toString();
-                    throw new ClassLoaderNotFoundException("Parent classloader not found: " + identifier);
-                }
-                loader.addParent(parent);
-            }
-        }
-        classLoaderRegistry.register(name, loader);
-    }
-
-    /**
-     * Updates the given classloader with additional artifacts from the PhysicalClassLoaderDefinition. Classloader updates are typically performed
-     * during an include operation where the included component requires additional libraries or classes not currently on the composite classpath.
-     *
-     * @param definition the definition to update the classloader with
-     * @throws ClassLoaderBuilderException if an error occurs updating the classloader
-     */
-    private void updateClassLoader(PhysicalClassLoaderDefinition definition) throws ClassLoaderBuilderException {
-
-        ClassLoader cl = classLoaderRegistry.getClassLoader(definition.getUri());
-        assert cl instanceof MultiParentClassLoader;
-        MultiParentClassLoader loader = (MultiParentClassLoader) cl;
-        Set<URI> uris = definition.getContributionUris();
-
-        for (URI uri : uris) {
-            try {
-                // resolve the remote artifact URL and add it to the classloader
-                URL resolvedUrl = contributionUriResolver.resolve(uri);
-                // introspect and expand if necessary
-                List<URL> processedUrls = classpathProcessorRegistry.process(resolvedUrl);
-                URL[] loaderUrls = loader.getURLs();
-                // check if URLs are already on the classpath, and if so do not add them
-                for (URL processedUrl : processedUrls) {
-                    boolean found = false;
-                    for (URL loaderUrl : loaderUrls) {
-                        if (loaderUrl.equals(processedUrl)) {
-                            found = true;
-                            break;
-                        }
-                    }
-                    if (!found) {
-                        // the URL is not on the classpath, update the classloader
-                        loader.addURL(processedUrl);
-                    }
-
-                }
-            } catch (ResolutionException e) {
-                throw new ClassLoaderBuilderException("Error resolving artifact: " + uri.toString(), e);
-            } catch (IOException e) {
-                throw new ClassLoaderBuilderException("Error processing: " + uri.toString(), e);
-            }
-        }
-
-        if (!definition.getExtensionUris().isEmpty()) {
-            // since all extensions are merged into the system classloader, just add it
-            ClassLoader systemCL = classLoaderRegistry.getClassLoader(URI.create("fabric3://runtime"));
-            if (!loader.getParents().contains(systemCL)) {
-                loader.addParent(systemCL);
-            }
-        }
-        for (URI uri : definition.getParentClassLoaders()) {
-            ClassLoader parent = classLoaderRegistry.getClassLoader(uri);
-            if (!loader.getParents().contains(parent)) {
-                loader.addParent(parent);
-            }
-        }
-
     }
 
     /**
