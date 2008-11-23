@@ -14,11 +14,9 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.loader.impl;
+package org.fabric3.spi.introspection.xml;
 
 import javax.xml.stream.XMLStreamReader;
-
-import org.fabric3.spi.introspection.xml.XmlValidationFailure;
 
 /**
  * @version $Revision$ $Date$

@@ -30,7 +30,7 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.host.contribution.Constants;
 import org.fabric3.host.contribution.Deployable;
-import org.fabric3.loader.impl.InvalidQNamePrefix;
+import org.fabric3.spi.introspection.xml.InvalidQNamePrefix;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.xml.LoaderRegistry;
 import org.fabric3.spi.introspection.xml.TypeLoader;

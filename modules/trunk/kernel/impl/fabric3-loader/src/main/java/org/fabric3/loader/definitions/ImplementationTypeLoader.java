@@ -48,7 +48,7 @@ import org.fabric3.spi.introspection.xml.LoaderHelper;
 import org.fabric3.spi.introspection.xml.LoaderUtil;
 import org.fabric3.spi.introspection.xml.TypeLoader;
 import org.fabric3.spi.introspection.xml.UnrecognizedAttribute;
-import org.fabric3.loader.impl.InvalidQNamePrefix;
+import org.fabric3.spi.introspection.xml.InvalidQNamePrefix;
 import org.fabric3.scdl.definitions.ImplementationType;
 
 /**

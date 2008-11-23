@@ -16,31 +16,28 @@
  */
 package org.fabric3.fabric.domain;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
-import java.util.Collections;
-import java.net.URI;
 import javax.xml.namespace.QName;
-
-import static org.osoa.sca.Constants.SCA_NS;
 
 import org.fabric3.fabric.binding.BindingSelector;
 import org.fabric3.fabric.collector.Collector;
 import org.fabric3.fabric.generator.PhysicalModelGenerator;
 import org.fabric3.fabric.instantiator.LogicalChange;
 import org.fabric3.fabric.instantiator.LogicalModelInstantiator;
-import org.fabric3.host.domain.AssemblyException;
-import org.fabric3.host.domain.DeploymentException;
-import org.fabric3.host.domain.ContributionNotInstalledException;
-import org.fabric3.host.domain.UndeploymentException;
-import org.fabric3.host.domain.CompositeAlreadyDeployedException;
-import org.fabric3.host.domain.DeployableNotFoundException;
-import org.fabric3.host.domain.Domain;
 import org.fabric3.host.contribution.Deployable;
 import org.fabric3.host.contribution.StoreException;
-import org.fabric3.loader.plan.DeploymentPlanConstants;
+import org.fabric3.host.domain.AssemblyException;
+import org.fabric3.host.domain.CompositeAlreadyDeployedException;
+import org.fabric3.host.domain.ContributionNotInstalledException;
+import org.fabric3.host.domain.DeployableNotFoundException;
+import org.fabric3.host.domain.DeploymentException;
+import org.fabric3.host.domain.Domain;
+import org.fabric3.host.domain.UndeploymentException;
 import org.fabric3.scdl.Composite;
 import org.fabric3.scdl.Include;
 import org.fabric3.spi.allocator.AllocationException;
@@ -57,12 +54,12 @@ import org.fabric3.spi.model.instance.LogicalService;
 import org.fabric3.spi.model.instance.LogicalState;
 import org.fabric3.spi.model.instance.LogicalWire;
 import org.fabric3.spi.plan.DeploymentPlan;
+import org.fabric3.spi.services.contribution.Contribution;
+import org.fabric3.spi.services.contribution.ContributionState;
 import org.fabric3.spi.services.contribution.MetaDataStore;
 import org.fabric3.spi.services.contribution.QNameSymbol;
-import org.fabric3.spi.services.contribution.ResourceElement;
-import org.fabric3.spi.services.contribution.Contribution;
 import org.fabric3.spi.services.contribution.Resource;
-import org.fabric3.spi.services.contribution.ContributionState;
+import org.fabric3.spi.services.contribution.ResourceElement;
 import org.fabric3.spi.services.lcm.LogicalComponentManager;
 import org.fabric3.spi.services.routing.RoutingException;
 import org.fabric3.spi.services.routing.RoutingService;
@@ -73,7 +70,7 @@ import org.fabric3.spi.services.routing.RoutingService;
  * @version $Rev$ $Date$
  */
 public abstract class AbstractDomain implements Domain {
-    public static final QName COMPOSITE = new QName(SCA_NS, "composite");
+    private static final String PLAN_NAMESPACE = "urn:fabric3.org:extension:plan";
 
     private final MetaDataStore metadataStore;
     private final LogicalComponentManager logicalComponentManager;
@@ -283,7 +280,7 @@ public abstract class AbstractDomain implements Domain {
         ResourceElement<QNameSymbol, ?> element;
         DeploymentPlan deploymentPlan;
         try {
-            QName planName = new QName(DeploymentPlanConstants.PLAN_NAMESPACE, plan);
+            QName planName = new QName(PLAN_NAMESPACE, plan);
             element = metadataStore.resolve(new QNameSymbol(planName));
         } catch (StoreException e) {
             throw new DeploymentException("Error finding plan: " + plan, e);

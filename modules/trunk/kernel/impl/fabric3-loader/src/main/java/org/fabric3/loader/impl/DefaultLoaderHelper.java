@@ -52,6 +52,7 @@ import javax.xml.stream.XMLStreamReader;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.xml.InvalidPrefixException;
 import org.fabric3.spi.introspection.xml.LoaderHelper;
+import org.fabric3.spi.introspection.xml.InvalidQNamePrefix;
 import org.fabric3.scdl.PolicyAware;
 import org.fabric3.spi.Namespaces;
 import org.fabric3.spi.transform.TransformationException;
