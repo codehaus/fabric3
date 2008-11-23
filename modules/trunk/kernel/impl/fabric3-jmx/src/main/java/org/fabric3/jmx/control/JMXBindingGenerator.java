@@ -41,7 +41,6 @@ public class JMXBindingGenerator implements BindingGenerator<JMXWireSourceDefini
     public JMXWireSourceDefinition generateWireSource(LogicalBinding<JMXBinding> binding, Policy policy, ServiceDefinition serviceDefinition)
             throws GenerationException {
         Bindable logicalService = binding.getParent();
-        LogicalComponent<?> logicalComponent = logicalService.getParent();
 
         JMXWireSourceDefinition definition = new JMXWireSourceDefinition();
         URI uri = binding.getUri();

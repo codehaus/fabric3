@@ -16,10 +16,31 @@
  */
 package org.fabric3.jmx.provision;
 
-import org.fabric3.pojo.provision.PojoWireSourceDefinition;
+import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
 
 /**
  * @version $Rev$ $Date$
  */
-public class JMXWireSourceDefinition extends PojoWireSourceDefinition {
+public class JMXWireSourceDefinition extends PhysicalWireSourceDefinition {
+    private static final long serialVersionUID = 5646551044358124108L;
+
+    private String interfaceName;
+
+    /**
+     * Returns the name of the Java interface for the MBean.
+     *
+     * @return the name of the Java interface for the MBean
+     */
+    public String getInterfaceName() {
+        return interfaceName;
+    }
+
+    /**
+     * Sets the name of the Java interface for the MBean.
+     *
+     * @param interfaceName the name of the Java interface for the MBean
+     */
+    public void setInterfaceName(String interfaceName) {
+        this.interfaceName = interfaceName;
+    }
 }
