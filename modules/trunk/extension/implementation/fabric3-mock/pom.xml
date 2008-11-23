@@ -32,7 +32,7 @@
 
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
-            <artifactId>fabric3-pojo</artifactId>
+            <artifactId>fabric3-spi</artifactId>
             <version>0.7-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
@@ -48,13 +48,6 @@
             <artifactId>wstx-asl</artifactId>
             <version>3.2.2</version>
             <scope>provided</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>org.codehaus.fabric3</groupId>
-            <artifactId>fabric3-introspection</artifactId>
-            <version>0.7-SNAPSHOT</version>
-            <scope>test</scope>
         </dependency>
 
         <dependency>

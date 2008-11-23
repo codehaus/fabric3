@@ -19,59 +19,64 @@ package org.fabric3.mock;
 import java.util.LinkedList;
 import java.util.List;
 
+import junit.framework.TestCase;
 import org.easymock.EasyMock;
+import org.easymock.IMocksControl;
+
+import org.fabric3.scdl.JavaServiceContract;
+import org.fabric3.scdl.ServiceContract;
+import org.fabric3.scdl.ServiceDefinition;
+import org.fabric3.scdl.ValidationContext;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionHelper;
+import org.fabric3.spi.introspection.TypeMapping;
 import org.fabric3.spi.introspection.contract.ContractProcessor;
-import org.fabric3.introspection.impl.contract.DefaultContractProcessor;
-import org.fabric3.introspection.impl.DefaultIntrospectionHelper;
-import org.fabric3.scdl.ServiceDefinition;
-
-import junit.framework.TestCase;
 
 /**
  * @version $Revision$ $Date$
  */
-public class MockComponentTypeLoaderImplTest extends TestCase {
+public class MockComponentTypeLoaderImplTestCase extends TestCase {
 
+    @SuppressWarnings({"unchecked"})
     public void testLoad() throws Exception {
-        
+
         IntrospectionContext context = EasyMock.createMock(IntrospectionContext.class);
         EasyMock.expect(context.getTargetClassLoader()).andReturn(getClass().getClassLoader());
         EasyMock.replay(context);
 
-        IntrospectionHelper helper = new DefaultIntrospectionHelper();
-        ContractProcessor processor = new DefaultContractProcessor(helper);
+        IntrospectionHelper helper = EasyMock.createMock(IntrospectionHelper.class);
+        EasyMock.expect(helper.mapTypeParameters(EasyMock.isA(Class.class))).andReturn(new TypeMapping()).atLeastOnce();
+        EasyMock.expect(helper.isAnnotationPresent(EasyMock.isA(Class.class), EasyMock.isA(Class.class))).andReturn(false).atLeastOnce();
+        EasyMock.replay(helper);
+
+        ContractProcessor processor = EasyMock.createMock(ContractProcessor.class);
+        ServiceContract controlContract = new JavaServiceContract(IMocksControl.class);
+        ServiceContract fooContract = new JavaServiceContract(Foo.class);
+        EasyMock.expect(processor.introspect(EasyMock.isA(TypeMapping.class),
+                                             EasyMock.eq(IMocksControl.class),
+                                             EasyMock.isA(ValidationContext.class))).andReturn(controlContract);
+        EasyMock.expect(processor.introspect(EasyMock.isA(TypeMapping.class),
+                                             EasyMock.eq(Foo.class),
+                                             EasyMock.isA(ValidationContext.class))).andReturn(fooContract);
+        EasyMock.replay(processor);
+
         MockComponentTypeLoader componentTypeLoader = new MockComponentTypeLoaderImpl(helper, processor);
-        
+
         List<String> mockedInterfaces = new LinkedList<String>();
         mockedInterfaces.add("org.fabric3.mock.Foo");
-        mockedInterfaces.add("org.fabric3.mock.Bar");
-        mockedInterfaces.add("org.fabric3.mock.Baz");
-        
+
         MockComponentType componentType = componentTypeLoader.load(mockedInterfaces, context);
-        
+
         assertNotNull(componentType);
         java.util.Map<String, ServiceDefinition> services = componentType.getServices();
-        
-        assertEquals(3, services.size());
-        
-        ServiceDefinition service = services.get("service0");
+
+        assertEquals(2, services.size());    // 4 because the mock service is added implicitly
+
+        ServiceDefinition service = services.get("Foo");
         assertNotNull(service);
-        assertEquals("Foo", service.getName());
         assertEquals("org.fabric3.mock.Foo", service.getServiceContract().getQualifiedInterfaceName());
 
-        service = services.get("service1");
-        assertNotNull(service);
-        assertEquals("Bar", service.getName());
-        assertEquals("org.fabric3.mock.Bar", service.getServiceContract().getQualifiedInterfaceName());
 
-        service = services.get("service2");
-        assertNotNull(service);
-        assertEquals("Baz", service.getName());
-        assertEquals("org.fabric3.mock.Baz", service.getServiceContract().getQualifiedInterfaceName());
-        
-        
     }
 
 }

@@ -18,20 +18,19 @@ package org.fabric3.mock;
 
 import java.io.InputStream;
 import java.util.List;
-
 import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamReader;
 
-import org.easymock.EasyMock;
-import org.fabric3.spi.introspection.IntrospectionContext;
-
 import junit.framework.TestCase;
+import org.easymock.EasyMock;
+
+import org.fabric3.spi.introspection.IntrospectionContext;
 
 /**
  * @version $Revision$ $Date$
  */
-public class ImplementationMockLoaderTest extends TestCase {
+public class ImplementationMockLoaderTestCase extends TestCase {
 
     public void testLoad() throws Exception {
         
@@ -54,9 +53,9 @@ public class ImplementationMockLoaderTest extends TestCase {
         
         List<String> interfaces = implementationMock.getMockedInterfaces();
         assertEquals(3, interfaces.size());
-        assertEquals("org.fabric3.mock.test.Foo", interfaces.get(0));
-        assertEquals("org.fabric3.mock.test.Bar", interfaces.get(1));
-        assertEquals("org.fabric3.mock.test.Baz", interfaces.get(2));
+        assertEquals(Foo.class.getName(), interfaces.get(0));
+        assertEquals(Bar.class.getName(), interfaces.get(1));
+        assertEquals(Baz.class.getName(), interfaces.get(2));
         
     }
 
