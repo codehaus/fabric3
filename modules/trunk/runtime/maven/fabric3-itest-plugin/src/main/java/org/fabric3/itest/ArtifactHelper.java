@@ -52,7 +52,6 @@ import org.apache.maven.artifact.metadata.ResolutionGroup;
 import org.apache.maven.artifact.repository.ArtifactRepository;
 import org.apache.maven.artifact.resolver.ArtifactNotFoundException;
 import org.apache.maven.artifact.resolver.ArtifactResolutionException;
-import org.apache.maven.artifact.resolver.ArtifactResolutionResult;
 import org.apache.maven.artifact.resolver.ArtifactResolver;
 import org.apache.maven.artifact.resolver.filter.ArtifactFilter;
 import org.apache.maven.model.Dependency;
@@ -204,6 +203,7 @@ public class ArtifactHelper {
         
         for (Artifact sharedArtifact : sharedArtifacts) {
             hostArtifacts.add(sharedArtifact);
+            hostArtifacts.addAll(resolveTransitive(Collections.emptyList(), sharedArtifact));
         }
         
         for (FeatureSet featureSet : featureSets) {
@@ -257,13 +257,31 @@ public class ArtifactHelper {
                 return artifacts;
             }
             
+            Set<Artifact> resolvedArtifacts = resolveTransitive(exclusions, rootArtifact);
+            artifacts.addAll(resolvedArtifacts);
+            
+            return artifacts;
+            
+        } catch (ArtifactResolutionException e) {
+            throw new MojoExecutionException(e.getMessage(), e);
+        } catch (ArtifactNotFoundException e) {
+            throw new MojoExecutionException(e.getMessage(), e);
+        }
+        
+    }
+
+    @SuppressWarnings("unchecked")
+    private Set<Artifact> resolveTransitive(final List<?> exclusions, Artifact rootArtifact) throws MojoExecutionException {
+        
+        try {
+        
             ResolutionGroup resolutionGroup = metadataSource.retrieve(rootArtifact, localRepository, remoteRepositories);
             ArtifactFilter filter = new ArtifactFilter() {
-
+    
                 public boolean include(Artifact artifact) {
                     String groupId = artifact.getGroupId();
                     String artifactId = artifact.getArtifactId();
-
+    
                     for (int i = 0; i < exclusions.size();i++) {
                         Exclusion exclusion = (Exclusion) exclusions.get(i);
                         if (artifactId.equals(exclusion.getArtifactId()) && groupId.equals(exclusion.getGroupId())) {
@@ -272,22 +290,15 @@ public class ArtifactHelper {
                     }
                     return true;
                 }
-
+    
             };
-            ArtifactResolutionResult result = resolver.resolveTransitively(resolutionGroup.getArtifacts(),
-                                                                           rootArtifact,
-                                                                           Collections.emptyMap(),
-                                                                           localRepository,
-                                                                           remoteRepositories,
-                                                                           metadataSource,
-                                                                           filter);
-            Iterator<?> resolvedArtifacts = result.getArtifacts().iterator();
-            
-            while (resolvedArtifacts.hasNext()) {
-                artifacts.add((Artifact) resolvedArtifacts.next());
-            }
-            
-            return artifacts;
+            return (Set<Artifact>) resolver.resolveTransitively(resolutionGroup.getArtifacts(),
+                                                                rootArtifact,
+                                                                Collections.emptyMap(),
+                                                                localRepository,
+                                                                remoteRepositories,
+                                                                metadataSource,
+                                                                filter).getArtifacts();
             
         } catch (ArtifactResolutionException e) {
             throw new MojoExecutionException(e.getMessage(), e);
