@@ -24,7 +24,7 @@ import javax.servlet.http.HttpServletResponse;
 import org.mortbay.jetty.handler.HandlerWrapper;
 
 import org.fabric3.container.web.spi.WebRequestTunnel;
-import org.fabric3.pojo.PojoWorkContextTunnel;
+import org.fabric3.spi.invocation.WorkContextTunnel;
 import org.fabric3.spi.invocation.CallFrame;
 import org.fabric3.spi.invocation.WorkContext;
 
@@ -40,11 +40,11 @@ public class WorkContextHandler extends HandlerWrapper {
             WorkContext workContext = new WorkContext();
             CallFrame frame = new CallFrame();
             workContext.addCallFrame(frame);
-            oldContext = PojoWorkContextTunnel.setThreadWorkContext(workContext);
+            oldContext = WorkContextTunnel.setThreadWorkContext(workContext);
             WebRequestTunnel.setRequest(request);
             super.handle(target, request, response, dispatch);
         } finally {
-            PojoWorkContextTunnel.setThreadWorkContext(oldContext);
+            WorkContextTunnel.setThreadWorkContext(oldContext);
             WebRequestTunnel.setRequest(null);
         }
     }

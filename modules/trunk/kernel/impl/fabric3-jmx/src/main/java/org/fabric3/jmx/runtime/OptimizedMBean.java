@@ -26,7 +26,7 @@ import javax.management.MBeanException;
 import javax.management.MBeanInfo;
 import javax.management.ReflectionException;
 
-import org.fabric3.pojo.PojoWorkContextTunnel;
+import org.fabric3.spi.invocation.WorkContextTunnel;
 import org.fabric3.spi.invocation.CallFrame;
 import org.fabric3.spi.invocation.WorkContext;
 import org.fabric3.spi.ObjectFactory;
@@ -82,7 +82,7 @@ public class OptimizedMBean<T> extends AbstractMBean {
     Object invoke(Method interceptor, Object[] args) throws MBeanException, ReflectionException {
         WorkContext workContext = new WorkContext();
         workContext.addCallFrame(new CallFrame());
-        WorkContext oldContext = PojoWorkContextTunnel.setThreadWorkContext(workContext);
+        WorkContext oldContext = WorkContextTunnel.setThreadWorkContext(workContext);
         try {
             T instance = objectFactory.getInstance();
             return interceptor.invoke(instance, args);
@@ -98,7 +98,7 @@ public class OptimizedMBean<T> extends AbstractMBean {
                 throw new ReflectionException(e);
             }
         } finally {
-            PojoWorkContextTunnel.setThreadWorkContext(oldContext);
+            WorkContextTunnel.setThreadWorkContext(oldContext);
         }
     }
 }

@@ -19,7 +19,7 @@ package org.fabric3.proxy.jdk;
 import java.lang.reflect.Method;
 import java.util.Map;
 
-import org.fabric3.pojo.PojoWorkContextTunnel;
+import org.fabric3.spi.invocation.WorkContextTunnel;
 import org.fabric3.scdl.Scope;
 import org.fabric3.spi.ObjectCreationException;
 import org.fabric3.spi.ObjectFactory;
@@ -61,7 +61,7 @@ public class CallbackWireObjectFactory<T> implements ObjectFactory<T> {
         if (Scope.COMPOSITE.equals(container.getScope())) {
             return interfaze.cast(proxyService.createCallbackProxy(interfaze, mappings));
         } else {
-            CallFrame frame = PojoWorkContextTunnel.getThreadWorkContext().peekCallFrame();
+            CallFrame frame = WorkContextTunnel.getThreadWorkContext().peekCallFrame();
             String callbackUri = frame.getCallbackUri();
             assert callbackUri != null;
             Map<Method, InvocationChain> mapping = mappings.get(callbackUri);

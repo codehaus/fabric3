@@ -28,7 +28,7 @@ import javax.transaction.TransactionManager;
 import org.osoa.sca.Conversation;
 import org.osoa.sca.ServiceRuntimeException;
 
-import org.fabric3.pojo.PojoWorkContextTunnel;
+import org.fabric3.spi.invocation.WorkContextTunnel;
 import org.fabric3.spi.invocation.WorkContext;
 
 /**
@@ -156,7 +156,7 @@ public class MultiThreadedEntityManagerProxy implements EntityManagerProxy {
     private EntityManager getEntityManager() {
         if (extended) {
             // an extended persistence context, associate it with the current conversation
-            WorkContext context = PojoWorkContextTunnel.getThreadWorkContext();
+            WorkContext context = WorkContextTunnel.getThreadWorkContext();
             Conversation conversation = context.peekCallFrame().getConversation();
             if (conversation == null) {
                 throw new IllegalStateException("No conversational context associated with the current component");

@@ -27,7 +27,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.fabric3.pojo.PojoWorkContextTunnel;
+import org.fabric3.spi.invocation.WorkContextTunnel;
 import org.fabric3.spi.invocation.CallFrame;
 import org.fabric3.spi.invocation.WorkContext;
 
@@ -102,7 +102,7 @@ public final class RsWebApplication extends HttpServlet {
                 WorkContext workContext = new WorkContext();
                 CallFrame frame = new CallFrame();
                 workContext.addCallFrame(frame);
-                oldContext = PojoWorkContextTunnel.setThreadWorkContext(workContext);
+                oldContext = WorkContextTunnel.setThreadWorkContext(workContext);
                 servlet.service(req, res);
             } catch (ServletException se) {
                 se.printStackTrace();//Jetty only seems to log exceptions when debug is enabled
@@ -116,7 +116,7 @@ public final class RsWebApplication extends HttpServlet {
                 throw se;
             } finally {
                 Thread.currentThread().setContextClassLoader(oldcl);
-                PojoWorkContextTunnel.setThreadWorkContext(oldContext);
+                WorkContextTunnel.setThreadWorkContext(oldContext);
             }
         } finally {
             serviceLock.unlock();

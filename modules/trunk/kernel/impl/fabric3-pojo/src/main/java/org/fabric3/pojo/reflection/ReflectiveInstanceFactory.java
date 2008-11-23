@@ -34,7 +34,7 @@
  */
 package org.fabric3.pojo.reflection;
 
-import org.fabric3.pojo.PojoWorkContextTunnel;
+import org.fabric3.spi.invocation.WorkContextTunnel;
 import org.fabric3.scdl.InjectableAttribute;
 import org.fabric3.spi.ObjectCreationException;
 import org.fabric3.spi.ObjectFactory;
@@ -74,7 +74,7 @@ public class ReflectiveInstanceFactory<T> implements InstanceFactory<T> {
         // push the work context onto the thread when calling the user object
         ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
         Thread.currentThread().setContextClassLoader(cl);
-        WorkContext oldContext = PojoWorkContextTunnel.setThreadWorkContext(workContext);
+        WorkContext oldContext = WorkContextTunnel.setThreadWorkContext(workContext);
         try {
             T instance = constructor.getInstance();
             if (injectors != null) {
@@ -84,7 +84,7 @@ public class ReflectiveInstanceFactory<T> implements InstanceFactory<T> {
             }
             return new ReflectiveInstanceWrapper<T>(instance, reinjectable, cl, initInvoker, destroyInvoker, attributes, injectors);
         } finally {
-            PojoWorkContextTunnel.setThreadWorkContext(oldContext);
+            WorkContextTunnel.setThreadWorkContext(oldContext);
             Thread.currentThread().setContextClassLoader(oldCl);
         }
     }

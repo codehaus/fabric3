@@ -45,7 +45,7 @@ import org.osoa.sca.ServiceReference;
 import org.osoa.sca.ServiceUnavailableException;
 
 import org.fabric3.pojo.ConversationImpl;
-import org.fabric3.pojo.PojoWorkContextTunnel;
+import org.fabric3.spi.invocation.WorkContextTunnel;
 import org.fabric3.spi.component.ConversationExpirationCallback;
 import org.fabric3.spi.component.InstanceInvocationException;
 import org.fabric3.spi.component.ScopeContainer;
@@ -174,7 +174,7 @@ public final class JDKInvocationHandler<B> implements ConversationExpirationCall
         Interceptor headInterceptor = chain.getHeadInterceptor();
         assert headInterceptor != null;
 
-        WorkContext workContext = PojoWorkContextTunnel.getThreadWorkContext();
+        WorkContext workContext = WorkContextTunnel.getThreadWorkContext();
         CallFrame frame = initalizeCallFrame(workContext);
         Message msg = new MessageImpl();
         msg.setBody(args);

@@ -55,7 +55,7 @@ import org.fabric3.host.runtime.StartException;
 import org.fabric3.host.runtime.ContextStartException;
 import org.fabric3.host.work.WorkScheduler;
 import org.fabric3.host.monitor.MonitorFactory;
-import org.fabric3.pojo.PojoWorkContextTunnel;
+import org.fabric3.spi.invocation.WorkContextTunnel;
 import org.fabric3.scdl.Autowire;
 import org.fabric3.spi.component.AtomicComponent;
 import org.fabric3.spi.component.InstanceLifecycleException;
@@ -215,7 +215,7 @@ public abstract class AbstractRuntime<HI extends HostInfo> implements Fabric3Run
         }
 
         WorkContext workContext = new WorkContext();
-        WorkContext oldContext = PojoWorkContextTunnel.setThreadWorkContext(workContext);
+        WorkContext oldContext = WorkContextTunnel.setThreadWorkContext(workContext);
         try {
             InstanceWrapper<?> wrapper = scopeContainer.getWrapper(component, workContext);
             return service.cast(wrapper.getInstance());
@@ -223,7 +223,7 @@ public abstract class AbstractRuntime<HI extends HostInfo> implements Fabric3Run
             // this is an error with the runtime and not something that is recoverable
             throw new AssertionError(e);
         } finally {
-            PojoWorkContextTunnel.setThreadWorkContext(oldContext);
+            WorkContextTunnel.setThreadWorkContext(oldContext);
         }
     }
 

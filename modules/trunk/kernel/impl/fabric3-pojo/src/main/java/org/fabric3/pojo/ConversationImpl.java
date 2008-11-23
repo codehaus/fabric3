@@ -23,6 +23,7 @@ import org.osoa.sca.Conversation;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.invocation.CallFrame;
 import org.fabric3.spi.invocation.WorkContext;
+import org.fabric3.spi.invocation.WorkContextTunnel;
 
 /**
  * Implementation of specification Conversation interface.
@@ -53,7 +54,7 @@ public class ConversationImpl implements Conversation, Serializable {
         if (scopeContainer == null) {
             throw new UnsupportedOperationException("Remote conversation end not supported");
         }
-        WorkContext workContext = PojoWorkContextTunnel.getThreadWorkContext();
+        WorkContext workContext = WorkContextTunnel.getThreadWorkContext();
         try {
             // Ensure that the conversation context is placed on the stack
             // This may not be the case if end() is called from a client component intending to end the conversation with a reference target

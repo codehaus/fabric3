@@ -21,7 +21,7 @@ import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 
 import org.fabric3.container.web.spi.WebRequestTunnel;
-import org.fabric3.pojo.PojoWorkContextTunnel;
+import org.fabric3.spi.invocation.WorkContextTunnel;
 import org.fabric3.runtime.webapp.F3RequestListener;
 import org.fabric3.spi.invocation.WorkContext;
 
@@ -32,7 +32,7 @@ public class F3RequestListenerImpl implements F3RequestListener {
 
     public void onRequestStart(ServletRequestEvent request) {
         WorkContext workContext = new WorkContext();
-        PojoWorkContextTunnel.setThreadWorkContext(workContext);
+        WorkContextTunnel.setThreadWorkContext(workContext);
         ServletRequest req = request.getServletRequest();
         if (req instanceof HttpServletRequest) {
             WebRequestTunnel.setRequest(((HttpServletRequest) req));
@@ -40,7 +40,7 @@ public class F3RequestListenerImpl implements F3RequestListener {
     }
 
     public void onRequestEnd(ServletRequestEvent request) {
-        PojoWorkContextTunnel.setThreadWorkContext(null);
+        WorkContextTunnel.setThreadWorkContext(null);
         WebRequestTunnel.setRequest(null);
     }
 

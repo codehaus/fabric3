@@ -18,7 +18,7 @@ package org.fabric3.pojo.injection;
 
 import org.osoa.sca.Conversation;
 
-import org.fabric3.pojo.PojoWorkContextTunnel;
+import org.fabric3.spi.invocation.WorkContextTunnel;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.invocation.WorkContext;
 import org.fabric3.spi.invocation.CallFrame;
@@ -29,7 +29,7 @@ public class ConversationIDObjectFactory implements ObjectFactory<String> {
     }
 
     public String getInstance() {
-        WorkContext workContext = PojoWorkContextTunnel.getThreadWorkContext();
+        WorkContext workContext = WorkContextTunnel.getThreadWorkContext();
         CallFrame frame = workContext.peekCallFrame();
         Conversation conversation = frame.getConversation();
         if (conversation == null) {

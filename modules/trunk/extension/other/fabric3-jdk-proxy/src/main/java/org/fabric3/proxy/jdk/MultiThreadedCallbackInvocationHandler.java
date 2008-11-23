@@ -19,7 +19,7 @@ package org.fabric3.proxy.jdk;
 import java.lang.reflect.Method;
 import java.util.Map;
 
-import org.fabric3.pojo.PojoWorkContextTunnel;
+import org.fabric3.spi.invocation.WorkContextTunnel;
 import org.fabric3.spi.invocation.CallFrame;
 import org.fabric3.spi.invocation.WorkContext;
 import org.fabric3.spi.wire.InvocationChain;
@@ -51,7 +51,7 @@ public class MultiThreadedCallbackInvocationHandler<T> extends AbstractCallbackI
     }
 
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-        WorkContext workContext = PojoWorkContextTunnel.getThreadWorkContext();
+        WorkContext workContext = WorkContextTunnel.getThreadWorkContext();
         CallFrame frame = workContext.peekCallFrame();
         String callbackUri = frame.getCallbackUri();
         Map<Method, InvocationChain> chains = mappings.get(callbackUri);

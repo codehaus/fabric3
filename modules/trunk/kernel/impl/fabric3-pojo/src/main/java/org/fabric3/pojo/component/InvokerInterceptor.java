@@ -39,7 +39,7 @@ import java.lang.reflect.Method;
 
 import org.osoa.sca.ConversationEndedException;
 
-import org.fabric3.pojo.PojoWorkContextTunnel;
+import org.fabric3.spi.invocation.WorkContextTunnel;
 import org.fabric3.scdl.Scope;
 import org.fabric3.spi.component.AtomicComponent;
 import org.fabric3.spi.component.ExpirationPolicy;
@@ -168,7 +168,7 @@ public class InvokerInterceptor<T, CONTEXT> implements Interceptor {
      * @return the response message
      */
     private Message invoke(Message msg, WorkContext workContext, Object instance) {
-        WorkContext oldWorkContext = PojoWorkContextTunnel.setThreadWorkContext(workContext);
+        WorkContext oldWorkContext = WorkContextTunnel.setThreadWorkContext(workContext);
         try {
             Object body = msg.getBody();
             if (targetTCCLClassLoader == null) {
@@ -187,7 +187,7 @@ public class InvokerInterceptor<T, CONTEXT> implements Interceptor {
         } catch (IllegalAccessException e) {
             throw new InvocationRuntimeException(e);
         } finally {
-            PojoWorkContextTunnel.setThreadWorkContext(oldWorkContext);
+            WorkContextTunnel.setThreadWorkContext(oldWorkContext);
         }
         return msg;
     }

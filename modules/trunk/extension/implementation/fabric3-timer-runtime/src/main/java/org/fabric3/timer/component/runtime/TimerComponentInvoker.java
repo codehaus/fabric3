@@ -16,7 +16,7 @@
  */
 package org.fabric3.timer.component.runtime;
 
-import org.fabric3.pojo.PojoWorkContextTunnel;
+import org.fabric3.spi.invocation.WorkContextTunnel;
 import org.fabric3.spi.component.InstanceDestructionException;
 import org.fabric3.spi.component.InstanceLifecycleException;
 import org.fabric3.spi.component.InstanceWrapper;
@@ -56,11 +56,11 @@ public class TimerComponentInvoker<T> implements Runnable {
         try {
             Object instance = wrapper.getInstance();
             assert instance instanceof Runnable;  // all timer components must implement java.lang.Runnable
-            WorkContext oldWorkContext = PojoWorkContextTunnel.setThreadWorkContext(workContext);
+            WorkContext oldWorkContext = WorkContextTunnel.setThreadWorkContext(workContext);
             try {
                 ((Runnable) instance).run();
             } finally {
-                PojoWorkContextTunnel.setThreadWorkContext(oldWorkContext);
+                WorkContextTunnel.setThreadWorkContext(oldWorkContext);
             }
         } finally {
             try {

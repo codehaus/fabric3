@@ -32,25 +32,22 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.pojo;
-
-import org.fabric3.spi.invocation.WorkContext;
+package org.fabric3.spi.invocation;
 
 /**
- * Class for tunneling a WorkContext through the invocation of a user class.
+ * Class for tunneling a WorkContext through the invocation of user code.
  *
  * @version $Rev$ $Date$
  */
-public final class PojoWorkContextTunnel {
-    private PojoWorkContextTunnel() {
+public final class WorkContextTunnel {
+    private WorkContextTunnel() {
     }
 
     private static final ThreadLocal<WorkContext> CONTEXT = new ThreadLocal<WorkContext>();
 
     /**
-     * Set the WorkContext for the current thread.
-     * The current work context is returned and must be restored after the invocation is complete.
-     * Typical usage would be:
+     * Set the WorkContext for the current thread. The current work context is returned and must be restored after the invocation is complete. Typical
+     * usage is:
      * <pre>
      *   WorkContext old = PojoWorkContextTunnel.setThreadWorkContext(newContext);
      *   try {
@@ -59,7 +56,8 @@ public final class PojoWorkContextTunnel {
      *     PojoWorkContextTunnel.setThreadWorkContext(old);
      *   }
      * </pre>
-     * @param context
+     *
+     * @param context the current work context to tunnel
      * @return the current work context for the thread; this must be restored after the invocation is made
      */
     public static WorkContext setThreadWorkContext(WorkContext context) {
