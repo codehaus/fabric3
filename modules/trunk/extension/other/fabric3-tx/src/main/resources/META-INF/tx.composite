@@ -32,7 +32,4 @@
         <f3-impl:implementation.system class="org.fabric3.tx.interceptor.TxInterceptorDefinitionGenerator"/>
     </component>
 
-    <!-- Feature -->
-    <f3-impl:feature name="TransactionFeature">{urn:fabric3.org:policy}transaction</f3-impl:feature>
-
 </composite>

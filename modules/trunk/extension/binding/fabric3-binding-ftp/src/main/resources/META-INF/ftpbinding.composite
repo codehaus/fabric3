@@ -45,7 +45,4 @@
         <f3-impl:implementation.system class="org.fabric3.binding.ftp.runtime.FtpTargetWireAttacher"/>
     </component>
 
-    <!-- Feature -->
-    <f3-impl:feature name="FtpBindingFeature">{urn:fabric3.org:binding}ftpBinding</f3-impl:feature>
-
 </composite>

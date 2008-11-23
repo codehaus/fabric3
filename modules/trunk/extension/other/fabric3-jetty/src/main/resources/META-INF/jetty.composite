@@ -27,7 +27,4 @@
         <property name="httpPort" source="$systemConfig//web.server/http/@port"/>
     </component>
 
-    <!-- Feature -->
-    <f3-impl:feature name="ServletHostFeature">{urn:fabric3.org:other}jetty</f3-impl:feature>
-
 </composite>

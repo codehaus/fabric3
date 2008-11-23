@@ -38,7 +38,4 @@
         <f3-impl:implementation.system class="org.fabric3.binding.rmi.model.physical.RmiBindingGenerator"/>
     </component>
 
-    <!-- Feature -->
-    <f3-impl:feature name="RMIBindingFeature">{urn:fabric3.org:binding}rmi</f3-impl:feature>
-
 </composite>

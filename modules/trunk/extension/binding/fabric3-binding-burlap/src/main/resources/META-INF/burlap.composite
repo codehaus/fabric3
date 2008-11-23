@@ -56,7 +56,4 @@
         <f3-impl:implementation.system class="org.fabric3.binding.burlap.runtime.BurlapTargetWireAttacher"/>
     </component>
 
-    <!-- Feature -->
-    <f3-impl:feature name="BurlapBindingFeature">{urn:fabric3.org:binding}burlap</f3-impl:feature>
-
 </composite>

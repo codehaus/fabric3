@@ -61,7 +61,4 @@
         <f3-impl:implementation.system class="org.fabric3.binding.hessian.runtime.HessianTargetWireAttacher"/>
     </component>
 
-    <!-- Feature -->
-    <f3-impl:feature name="HessianBindingFeature">{urn:fabric3.org:binding}hessian</f3-impl:feature>
-
 </composite>

@@ -79,14 +79,6 @@
         <f3-impl:implementation.system class="org.fabric3.fabric.generator.GeneratorRegistryImpl"/>
     </component>
 
-    <component name="AdvertismentService">
-        <f3-impl:implementation.system class="org.fabric3.fabric.services.advertisement.DefaultAdvertismentService"/>
-    </component>
-
-    <component name="FeatureLoader" f3-core:key="f3-impl:feature">
-        <f3-impl:implementation.system class="org.fabric3.fabric.services.advertisement.FeatureLoader"/>
-    </component>
-
     <!-- Default scopes -->
     <component name="StatelessScopeContainer">
         <f3-impl:implementation.system class="org.fabric3.fabric.component.scope.StatelessScopeContainer"/>

@@ -102,7 +102,4 @@
         <f3-impl:implementation.system class="org.fabric3.binding.jms.runtime.lookup.connectionfactory.IfNotExistConnectionFactoryStrategy"/>
     </component>
 
-    <!-- Feature -->
-    <f3-impl:feature name="JmsBindingFeature">{urn:fabric3.org:binding}jms</f3-impl:feature>
-
 </composite>

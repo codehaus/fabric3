@@ -21,9 +21,6 @@
            name="Axis2RuntimeExtension"
            autowire="true">
 
-    <!-- Feature -->
-    <f3-impl:feature name="WsAxis2BindingFeature">{urn:fabric3.org:binding}ws-axis2</f3-impl:feature>
-
     <component f3-core:key="org.fabric3.binding.ws.axis2.provision.Axis2WireSourceDefinition" name="Axis2SourceWireAttacher">
         <f3-impl:implementation.system class="org.fabric3.binding.ws.axis2.runtime.Axis2SourceWireAttacher"/>
     </component>

@@ -34,18 +34,9 @@
  */
 package org.fabric3.jetty;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-
 import javax.servlet.Servlet;
 import javax.servlet.ServletContext;
-import javax.xml.namespace.QName;
 
-import org.fabric3.api.annotation.Monitor;
-import org.fabric3.host.work.DefaultPausableWork;
-import org.fabric3.host.work.WorkScheduler;
-import org.fabric3.spi.Namespaces;
-import org.fabric3.spi.services.advertisement.AdvertisementService;
 import org.mortbay.jetty.Connector;
 import org.mortbay.jetty.Handler;
 import org.mortbay.jetty.Server;
@@ -68,6 +59,10 @@ import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Property;
 import org.osoa.sca.annotations.Reference;
 
+import org.fabric3.api.annotation.Monitor;
+import org.fabric3.host.work.DefaultPausableWork;
+import org.fabric3.host.work.WorkScheduler;
+
 /**
  * Implements an HTTP transport service using Jetty.
  *
@@ -75,7 +70,6 @@ import org.osoa.sca.annotations.Reference;
  */
 @EagerInit
 public class JettyServiceImpl implements JettyService {
-    private static final QName HTTP = new QName(Namespaces.CORE, "transport.http.base");
 
     private static final String ROOT = "/";
     private static final int ERROR = 0;
@@ -94,7 +88,6 @@ public class JettyServiceImpl implements JettyService {
     private String keyPassword;
     private boolean sendServerVersion;
     private boolean isHttps;
-    private AdvertisementService advertisementService;
     private TransportMonitor monitor;
     private WorkScheduler scheduler;
     private boolean debug;
@@ -111,10 +104,7 @@ public class JettyServiceImpl implements JettyService {
 
 
     @Constructor
-    public JettyServiceImpl(@Reference WorkScheduler scheduler,
-                            @Reference AdvertisementService advertisementService,
-                            @Monitor TransportMonitor monitor) {
-        this.advertisementService = advertisementService;
+    public JettyServiceImpl(@Reference WorkScheduler scheduler, @Monitor TransportMonitor monitor) {
         this.monitor = monitor;
         this.scheduler = scheduler;
         // Jetty uses a static logger, so jam in the monitor into a static reference
@@ -174,17 +164,6 @@ public class JettyServiceImpl implements JettyService {
 
     @Init
     public void init() throws JettyInitializationException {
-        try {
-            if (advertisementService != null) {
-                // advertise the http port the runtime is listening on to the controller
-                InetAddress address = InetAddress.getByName("localhost");
-                advertisementService.addTransportMetadata(HTTP, address.getHostAddress() + ":" + httpPort);
-            }
-        } catch (NumberFormatException e) {
-            throw new JettyInitializationException("Invalid HTTP port: " + httpPort);
-        } catch (UnknownHostException e) {
-            throw new JettyInitializationException("Error determining IP address", e);
-        }
         try {
             state = STARTING;
             server = new Server();
