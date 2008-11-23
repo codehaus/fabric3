@@ -16,16 +16,18 @@
  */
 package org.fabric3.jpa.introspection;
 
+import javax.persistence.EntityManagerFactory;
 import javax.persistence.PersistenceUnit;
 
 import junit.framework.TestCase;
 import org.easymock.EasyMock;
 
-import org.fabric3.introspection.impl.DefaultIntrospectionHelper;
-import org.fabric3.introspection.impl.contract.DefaultContractProcessor;
-import org.fabric3.spi.introspection.contract.ContractProcessor;
-import org.fabric3.spi.introspection.IntrospectionHelper;
 import org.fabric3.jpa.scdl.PersistenceUnitResource;
+import org.fabric3.scdl.JavaServiceContract;
+import org.fabric3.scdl.ServiceContract;
+import org.fabric3.scdl.ValidationContext;
+import org.fabric3.spi.introspection.TypeMapping;
+import org.fabric3.spi.introspection.contract.ContractProcessor;
 
 /**
  * @version $Rev$ $Date$
@@ -42,6 +44,7 @@ public class PersistenceUnitProcessorTestCase extends TestCase {
         assertEquals("unitName", definition.getUnitName());
     }
 
+    @SuppressWarnings({"unchecked"})
     protected void setUp() throws Exception {
         super.setUp();
 
@@ -50,8 +53,12 @@ public class PersistenceUnitProcessorTestCase extends TestCase {
         EasyMock.expect(annotation.unitName()).andReturn("unitName");
         EasyMock.replay(annotation);
 
-        IntrospectionHelper helper = new DefaultIntrospectionHelper();
-        ContractProcessor contractProcessor = new DefaultContractProcessor(helper);
+        ContractProcessor contractProcessor = EasyMock.createMock(ContractProcessor.class);
+        ServiceContract contract = new JavaServiceContract(EntityManagerFactory.class);
+        EasyMock.expect(contractProcessor.introspect(EasyMock.isA(TypeMapping.class),
+                                                     EasyMock.eq(EntityManagerFactory.class),
+                                                     EasyMock.isA(ValidationContext.class))).andReturn(contract);
+        EasyMock.replay(contractProcessor);
         processor = new PersistenceUnitProcessor(contractProcessor);
     }
 }
