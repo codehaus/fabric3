@@ -46,14 +46,14 @@ public abstract class AbstractPushTransformer<SOURCE, TARGET> implements PushTra
     public void destroy() {
         registry.unregister(this);
     }
-    
+
     /**
      * Checks whether this transformer can transform the specified type.
-     * 
-     * @param target Target type.
+     *
+     * @param targetType Target type.
      * @return True if this type can be transformed.
      */
     public boolean canTransform(DataType<?> targetType) {
-    	return false;
+        return false;
     }
 }

@@ -16,64 +16,73 @@
  */
 package org.fabric3.transform;
 
-import org.fabric3.scdl.DataType;
-import org.fabric3.spi.model.type.XSDSimpleType;
-import org.fabric3.spi.transform.PullTransformer;
-import org.fabric3.spi.transform.TransformerRegistry;
-
 import org.osoa.sca.annotations.Destroy;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 import org.w3c.dom.Node;
 
+import org.fabric3.scdl.DataType;
+import org.fabric3.spi.model.type.XSDSimpleType;
+import org.fabric3.spi.transform.PullTransformer;
+import org.fabric3.spi.transform.TransformerRegistry;
+
 /**
  * @version $Rev$ $Date$
  */
 @EagerInit
 public abstract class AbstractPullTransformer<SOURCE, TARGET> implements PullTransformer<SOURCE, TARGET> {
-	
-	/** Default source to be used */
-	private static final XSDSimpleType DEFAULT_SOURCE = new XSDSimpleType(Node.class, XSDSimpleType.STRING);
-	
-    /** Transform Registry to be used*/
+
+    /**
+     * Default source to be used
+     */
+    private static final XSDSimpleType DEFAULT_SOURCE = new XSDSimpleType(Node.class, XSDSimpleType.STRING);
+
+    /**
+     * Transform Registry to be used
+     */
     private TransformerRegistry<PullTransformer<SOURCE, TARGET>> registry;
 
     /**
-     * Set Registry
-     * @param registry
+     * Sets the TransformerRegistry
+     *
+     * @param registry the transformer registry
      */
     @Reference
     public void setRegistry(TransformerRegistry<PullTransformer<SOURCE, TARGET>> registry) {
         this.registry = registry;
     }
 
-    /** Register Transformer*/
+    /**
+     * Register Transformer
+     */
     @Init
     public void init() {
         registry.register(this);
     }
 
-    /** Unregister Registry*/
+    /**
+     * Unregister Registry
+     */
     @Destroy
     public void destroy() {
         registry.unregister(this);
     }
-    
+
     /**
      * @see org.fabric3.spi.transform.Transformer#getSourceType()
      */
     public DataType<?> getSourceType() {
-    	return DEFAULT_SOURCE;
+        return DEFAULT_SOURCE;
     }
-    
+
     /**
      * Checks whether this transformer can transform the specified type.
-     * 
-     * @param target Target type.
+     *
+     * @param targetType Target type.
      * @return True if this type can be transformed.
      */
     public boolean canTransform(DataType<?> targetType) {
-    	return false;
+        return false;
     }
 }
