@@ -42,9 +42,9 @@ import java.util.Collections;
 import java.util.List;
 import javax.management.MBeanServer;
 import javax.xml.stream.XMLInputFactory;
+import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
-import javax.xml.stream.XMLStreamConstants;
 
 import org.w3c.dom.Document;
 
@@ -74,6 +74,7 @@ import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.spi.introspection.IntrospectionHelper;
 import org.fabric3.spi.introspection.contract.ContractProcessor;
+import org.fabric3.spi.introspection.java.ImplementationProcessor;
 import org.fabric3.spi.introspection.validation.InvalidContributionException;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 import org.fabric3.spi.runtime.RuntimeServices;
@@ -88,7 +89,7 @@ import org.fabric3.spi.services.synthesize.ComponentRegistrationException;
 import org.fabric3.spi.services.synthesize.ComponentSynthesizer;
 import org.fabric3.spi.xml.XMLFactory;
 import org.fabric3.system.introspection.BootstrapIntrospectionFactory;
-import org.fabric3.system.introspection.SystemImplementationProcessor;
+import org.fabric3.system.scdl.SystemImplementation;
 
 /**
  * The base Bootstrapper implementation.
@@ -102,7 +103,7 @@ public abstract class AbstractBootstrapper implements Bootstrapper {
     // bootstrap components - these are disposed of after the core runtime system components are booted
     private final ContractProcessor contractProcessor;
     private final ComponentInstantiator instantiator;
-    private final SystemImplementationProcessor systemImplementationProcessor;
+    private final ImplementationProcessor<SystemImplementation> systemImplementationProcessor;
     private ComponentSynthesizer synthesizer;
 
     // runtime components - these are persistent and supplied by the runtime implementation
@@ -224,7 +225,7 @@ public abstract class AbstractBootstrapper implements Bootstrapper {
      */
     protected abstract Composite loadSystemComposite(URI contributionUri,
                                                      ClassLoader bootClassLoader,
-                                                     SystemImplementationProcessor processor,
+                                                     ImplementationProcessor<SystemImplementation> processor,
                                                      MonitorFactory monitorFactory) throws InitializationException;
 
     /**

@@ -62,12 +62,13 @@ import org.fabric3.scdl.Implementation;
 import org.fabric3.scdl.ValidationFailure;
 import org.fabric3.spi.introspection.DefaultIntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionContext;
+import org.fabric3.spi.introspection.java.ImplementationProcessor;
 import org.fabric3.spi.introspection.validation.InvalidCompositeException;
 import org.fabric3.spi.introspection.xml.Loader;
 import org.fabric3.spi.introspection.xml.LoaderException;
 import org.fabric3.spi.xml.XMLFactory;
 import org.fabric3.system.introspection.BootstrapLoaderFactory;
-import org.fabric3.system.introspection.SystemImplementationProcessor;
+import org.fabric3.system.scdl.SystemImplementation;
 
 /**
  * Bootstrapper that initializes a runtime by reading a system SCDL file.
@@ -107,7 +108,7 @@ public class ScdlBootstrapperImpl extends AbstractBootstrapper implements ScdlBo
 
     protected Composite loadSystemComposite(URI contributionUri,
                                             ClassLoader bootClassLoader,
-                                            SystemImplementationProcessor processor,
+                                            ImplementationProcessor<SystemImplementation> processor,
                                             MonitorFactory monitorFactory) throws InitializationException {
         try {
             Loader loader = BootstrapLoaderFactory.createLoader(processor, monitorFactory, getXmlFactory());

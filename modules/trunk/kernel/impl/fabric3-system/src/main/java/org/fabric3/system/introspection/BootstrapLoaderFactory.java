@@ -20,10 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 import javax.xml.namespace.QName;
 
-import org.fabric3.spi.introspection.xml.Loader;
-import org.fabric3.spi.introspection.xml.LoaderHelper;
-import org.fabric3.spi.introspection.xml.TypeLoader;
-import org.fabric3.spi.xml.XMLFactory;
+import org.fabric3.host.monitor.MonitorFactory;
 import org.fabric3.loader.common.ComponentReferenceLoader;
 import org.fabric3.loader.common.ComponentServiceLoader;
 import org.fabric3.loader.common.PropertyLoader;
@@ -34,7 +31,11 @@ import org.fabric3.loader.composite.PropertyValueLoader;
 import org.fabric3.loader.composite.WireLoader;
 import org.fabric3.loader.impl.DefaultLoaderHelper;
 import org.fabric3.loader.impl.LoaderRegistryImpl;
-import org.fabric3.host.monitor.MonitorFactory;
+import org.fabric3.spi.introspection.java.ImplementationProcessor;
+import org.fabric3.spi.introspection.xml.Loader;
+import org.fabric3.spi.introspection.xml.LoaderHelper;
+import org.fabric3.spi.introspection.xml.TypeLoader;
+import org.fabric3.spi.xml.XMLFactory;
 import org.fabric3.system.scdl.SystemImplementation;
 
 /**
@@ -53,7 +54,7 @@ import org.fabric3.system.scdl.SystemImplementation;
  */
 public class BootstrapLoaderFactory {
 
-    public static Loader createLoader(SystemImplementationProcessor processor, MonitorFactory monitorFactory, XMLFactory xmlFactory) {
+    public static Loader createLoader(ImplementationProcessor<SystemImplementation> processor, MonitorFactory monitorFactory, XMLFactory xmlFactory) {
 
         LoaderHelper loaderHelper = new DefaultLoaderHelper();
 

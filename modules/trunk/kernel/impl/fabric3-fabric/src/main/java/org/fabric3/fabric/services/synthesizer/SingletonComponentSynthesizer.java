@@ -40,6 +40,7 @@ import org.fabric3.spi.introspection.DefaultIntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.TypeMapping;
 import org.fabric3.spi.introspection.contract.ContractProcessor;
+import org.fabric3.spi.introspection.java.ImplementationProcessor;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
@@ -51,7 +52,6 @@ import org.fabric3.spi.services.lcm.LogicalComponentManager;
 import org.fabric3.spi.services.synthesize.ComponentRegistrationException;
 import org.fabric3.spi.services.synthesize.ComponentSynthesizer;
 import org.fabric3.spi.services.synthesize.InvalidServiceContractException;
-import org.fabric3.system.introspection.SystemImplementationProcessor;
 import org.fabric3.system.scdl.SystemImplementation;
 
 /**
@@ -61,7 +61,7 @@ import org.fabric3.system.scdl.SystemImplementation;
  */
 public class SingletonComponentSynthesizer implements ComponentSynthesizer {
 
-    private SystemImplementationProcessor implementationProcessor;
+    private ImplementationProcessor<SystemImplementation> implementationProcessor;
     private ComponentInstantiator instantiator;
     private LogicalComponentManager lcm;
     private ComponentManager componentManager;
@@ -69,7 +69,7 @@ public class SingletonComponentSynthesizer implements ComponentSynthesizer {
     private ScopeContainer scopeContainer;
 
     @Constructor
-    public SingletonComponentSynthesizer(@Reference SystemImplementationProcessor implementationProcessor,
+    public SingletonComponentSynthesizer(@Reference ImplementationProcessor<SystemImplementation> implementationProcessor,
                                          @Reference ComponentInstantiator instantiator,
                                          @Reference LogicalComponentManager lcm,
                                          @Reference ComponentManager componentManager,
@@ -78,7 +78,7 @@ public class SingletonComponentSynthesizer implements ComponentSynthesizer {
         this(implementationProcessor, instantiator, lcm, componentManager, contractProcessor, registry.getScopeContainer(Scope.COMPOSITE));
     }
 
-    public SingletonComponentSynthesizer(SystemImplementationProcessor implementationProcessor,
+    public SingletonComponentSynthesizer(ImplementationProcessor<SystemImplementation> implementationProcessor,
                                          ComponentInstantiator instantiator,
                                          LogicalComponentManager lcm,
                                          ComponentManager componentManager,

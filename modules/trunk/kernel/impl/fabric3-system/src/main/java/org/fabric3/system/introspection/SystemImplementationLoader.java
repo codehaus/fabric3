@@ -41,6 +41,7 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.spi.introspection.IntrospectionContext;
+import org.fabric3.spi.introspection.java.ImplementationProcessor;
 import org.fabric3.spi.introspection.xml.LoaderUtil;
 import org.fabric3.spi.introspection.xml.MissingAttribute;
 import org.fabric3.spi.introspection.xml.TypeLoader;
@@ -55,14 +56,14 @@ import org.fabric3.system.scdl.SystemImplementation;
 @EagerInit
 public class SystemImplementationLoader implements TypeLoader<SystemImplementation> {
 
-    private final SystemImplementationProcessor implementationProcessor;
+    private final ImplementationProcessor<SystemImplementation> implementationProcessor;
 
     /**
      * Constructor used during bootstrap and load scdl.
      *
      * @param implementationProcessor the component type loader to use
      */
-    public SystemImplementationLoader(@Reference SystemImplementationProcessor implementationProcessor) {
+    public SystemImplementationLoader(@Reference ImplementationProcessor<SystemImplementation> implementationProcessor) {
         this.implementationProcessor = implementationProcessor;
     }
 
