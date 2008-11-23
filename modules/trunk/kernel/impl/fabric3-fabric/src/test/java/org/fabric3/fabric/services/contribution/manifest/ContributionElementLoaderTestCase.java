@@ -27,9 +27,7 @@ import org.easymock.IMocksControl;
 import static org.osoa.sca.Constants.SCA_NS;
 
 import org.fabric3.spi.introspection.IntrospectionContext;
-import org.fabric3.spi.introspection.xml.LoaderHelper;
 import org.fabric3.spi.introspection.xml.LoaderRegistry;
-import org.fabric3.loader.impl.DefaultLoaderHelper;
 import org.fabric3.spi.services.contribution.ContributionManifest;
 import org.fabric3.spi.services.contribution.Export;
 import org.fabric3.spi.services.contribution.Import;
@@ -62,8 +60,7 @@ public class ContributionElementLoaderTestCase extends TestCase {
         super.setUp();
         control = EasyMock.createStrictControl();
         LoaderRegistry loaderRegistry = EasyMock.createMock(LoaderRegistry.class);
-        LoaderHelper helper = new DefaultLoaderHelper();
-        loader = new ContributionElementLoader(loaderRegistry, helper);
+        loader = new ContributionElementLoader(loaderRegistry);
 
         reader = EasyMock.createMock(XMLStreamReader.class);
         EasyMock.expect(reader.getAttributeCount()).andReturn(0);
@@ -81,7 +78,7 @@ public class ContributionElementLoaderTestCase extends TestCase {
         EasyMock.expect(reader.getName()).andReturn(IMPORT_ELEMENT);
         Import contribImport = new Import() {
             public URI getLocation() {
-                 return null;
+                return null;
             }
 
             public void setLocation(URI location) {

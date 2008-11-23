@@ -30,14 +30,13 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.host.contribution.Constants;
 import org.fabric3.host.contribution.Deployable;
+import org.fabric3.loader.impl.InvalidQNamePrefix;
 import org.fabric3.spi.introspection.IntrospectionContext;
-import org.fabric3.spi.introspection.xml.LoaderHelper;
 import org.fabric3.spi.introspection.xml.LoaderRegistry;
 import org.fabric3.spi.introspection.xml.TypeLoader;
 import org.fabric3.spi.introspection.xml.UnrecognizedAttribute;
 import org.fabric3.spi.introspection.xml.UnrecognizedElement;
 import org.fabric3.spi.introspection.xml.UnrecognizedElementException;
-import org.fabric3.loader.impl.InvalidQNamePrefix;
 import org.fabric3.spi.services.contribution.ContributionManifest;
 import org.fabric3.spi.services.contribution.Export;
 import org.fabric3.spi.services.contribution.Import;
@@ -53,12 +52,9 @@ public class ContributionElementLoader implements TypeLoader<ContributionManifes
     private static final QName DEPLOYABLE = new QName(SCA_NS, "deployable");
 
     private final LoaderRegistry registry;
-    private final LoaderHelper helper;
 
-    public ContributionElementLoader(@Reference LoaderRegistry registry,
-                                     @Reference LoaderHelper helper) {
+    public ContributionElementLoader(@Reference LoaderRegistry registry) {
         this.registry = registry;
-        this.helper = helper;
     }
 
     @Init
