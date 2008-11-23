@@ -38,13 +38,13 @@ import junit.framework.TestCase;
 import org.easymock.EasyMock;
 import org.easymock.IMocksControl;
 
+import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionException;
 import org.fabric3.spi.introspection.IntrospectionHelper;
-import org.fabric3.introspection.impl.DefaultIntrospectionHelper;
+import org.fabric3.spi.introspection.TypeMapping;
 import org.fabric3.spi.introspection.java.ClassWalker;
 import org.fabric3.spi.introspection.java.HeuristicProcessor;
-import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.system.scdl.SystemImplementation;
 
 /**
@@ -79,7 +79,12 @@ public class SystemImplementationProcessorImplTestCase extends TestCase {
     protected void setUp() throws Exception {
         super.setUp();
         impl = new SystemImplementation();
-        IntrospectionHelper helper = new DefaultIntrospectionHelper();
+
+        IntrospectionHelper helper = EasyMock.createMock(IntrospectionHelper.class);
+        helper.loadClass(EasyMock.isA(String.class), EasyMock.isA(ClassLoader.class));
+        EasyMock.expectLastCall().andReturn(Simple.class);
+        EasyMock.expect(helper.mapTypeParameters(EasyMock.isA(Class.class))).andReturn(new TypeMapping());
+        EasyMock.replay(helper);
 
 
         context = EasyMock.createNiceMock(IntrospectionContext.class);
