@@ -15,6 +15,7 @@
       <value>
         <option name="INDENT_CASE_FROM_SWITCH" value="false" />
         <option name="ALIGN_MULTILINE_PARAMETERS_IN_CALLS" value="true" />
+        <option name="USE_FQ_CLASS_NAMES_IN_JAVADOC" value="false" />
         <option name="CLASS_COUNT_TO_USE_IMPORT_ON_DEMAND" value="9999" />
         <option name="NAMES_COUNT_TO_USE_IMPORT_ON_DEMAND" value="999" />
         <option name="IMPORT_LAYOUT_TABLE">
@@ -27,6 +28,7 @@
             <package name="org.fabric3" withSubpackages="true" />
           </value>
         </option>
+        <option name="OPTIMIZE_IMPORTS_ON_THE_FLY" value="true" />
         <option name="RIGHT_MARGIN" value="150" />
         <option name="CALL_PARAMETERS_WRAP" value="5" />
         <option name="METHOD_PARAMETERS_WRAP" value="5" />
@@ -424,6 +426,7 @@
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/binding/fabric3-binding-test/fabric3-binding-test.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/binding/fabric3-binding-test/fabric3-binding-test.iml" group="bindings" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/binding/fabric3-binding-ws/fabric3-binding-ws.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/binding/fabric3-binding-ws/fabric3-binding-ws.iml" group="bindings" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/binding/fabric3-binding-ws-axis2/fabric3-binding-ws-axis2.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/binding/fabric3-binding-ws-axis2/fabric3-binding-ws-axis2.iml" group="bindings" />
+      <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/binding/fabric3-binding-ws-metro/fabric3-binding-ws-metro.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/binding/fabric3-binding-ws-metro/fabric3-binding-ws-metro.iml" group="bindings" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/other/fabric3-container-web-jetty/fabric3-container-web-jetty.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/other/fabric3-container-web-jetty/fabric3-container-web-jetty.iml" group="other/web" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/other/fabric3-container-web-spi/fabric3-container-web-spi.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/other/fabric3-container-web-spi/fabric3-container-web-spi.iml" group="other/web" />
       <module fileurl="file://$PROJECT_DIR$/plugins/trunk/fabric3-contribution-plugin/fabric3-contribution-plugin.iml" filepath="$PROJECT_DIR$/plugins/trunk/fabric3-contribution-plugin/fabric3-contribution-plugin.iml" group="plugins" />
@@ -439,7 +442,6 @@
       <module fileurl="file://$PROJECT_DIR$/features/trunk/fabric3-default-feature/fabric3-default-feature.iml" filepath="$PROJECT_DIR$/features/trunk/fabric3-default-feature/fabric3-default-feature.iml" group="features" />
       <module fileurl="file://$PROJECT_DIR$/features/trunk/fabric3-default-webapp-feature/fabric3-default-webapp-feature.iml" filepath="$PROJECT_DIR$/features/trunk/fabric3-default-webapp-feature/fabric3-default-webapp-feature.iml" group="features" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/federated/fabric3-federation-deployment/fabric3-deployment.iml" filepath="$PROJECT_DIR$/modules/trunk/federated/fabric3-federation-deployment/fabric3-deployment.iml" group="federated" />
-      <module fileurl="file://$PROJECT_DIR$/modules/trunk/federated/fabric3-discovery-jxta/fabric3-discovery-jxta.iml" filepath="$PROJECT_DIR$/modules/trunk/federated/fabric3-discovery-jxta/fabric3-discovery-jxta.iml" group="federated" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/kernel/impl/fabric3-fabric/fabric3-fabric.iml" filepath="$PROJECT_DIR$/modules/trunk/kernel/impl/fabric3-fabric/fabric3-fabric.iml" group="kernel/impl" />
       <module fileurl="file://$PROJECT_DIR$/plugins/trunk/fabric3-feature-set-plugin/fabric3-feature-set-plugin.iml" filepath="$PROJECT_DIR$/plugins/trunk/fabric3-feature-set-plugin/fabric3-feature-set-plugin.iml" group="plugins" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/federated/fabric3-federation-controller-shoal/fabric3-federation-controller-shoal.iml" filepath="$PROJECT_DIR$/modules/trunk/federated/fabric3-federation-controller-shoal/fabric3-federation-controller-shoal.iml" group="federated" />
@@ -467,15 +469,12 @@
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/other/fabric3-jpa-hibernate/fabric3-jpa-hibernate.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/other/fabric3-jpa-hibernate/fabric3-jpa-hibernate.iml" group="other/jpa" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/other/fabric3-jpa-spi/fabric3-jpa-spi.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/other/fabric3-jpa-spi/fabric3-jpa-spi.iml" group="other/jpa" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/implementation/fabric3-junit/fabric3-junit.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/implementation/fabric3-junit/fabric3-junit.iml" group="implementations" />
-      <module fileurl="file://$PROJECT_DIR$/modules/trunk/federated/fabric3-jxta/fabric3-jxta.iml" filepath="$PROJECT_DIR$/modules/trunk/federated/fabric3-jxta/fabric3-jxta.iml" group="federated" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/kernel/impl/fabric3-loader/fabric3-loader.iml" filepath="$PROJECT_DIR$/modules/trunk/kernel/impl/fabric3-loader/fabric3-loader.iml" group="kernel/impl" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/kernel/api/fabric3-management-api/fabric3-management-api.iml" filepath="$PROJECT_DIR$/modules/trunk/kernel/api/fabric3-management-api/fabric3-management-api.iml" group="kernel/api" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/other/fabric3-marshal-xstream/fabric3-marshal-xstream.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/other/fabric3-marshal-xstream/fabric3-marshal-xstream.iml" group="other" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/runtime/maven/fabric3-maven-api/fabric3-maven-api.iml" filepath="$PROJECT_DIR$/modules/trunk/runtime/maven/fabric3-maven-api/fabric3-maven-api.iml" group="runtimes/maven" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/runtime/maven/fabric3-maven-extension/fabric3-maven-extension.iml" filepath="$PROJECT_DIR$/modules/trunk/runtime/maven/fabric3-maven-extension/fabric3-maven-extension.iml" group="runtimes/maven" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/runtime/maven/fabric3-maven-host/fabric3-maven-host.iml" filepath="$PROJECT_DIR$/modules/trunk/runtime/maven/fabric3-maven-host/fabric3-maven-host.iml" group="runtimes/maven" />
-      <module fileurl="file://$PROJECT_DIR$/modules/trunk/federated/fabric3-messaging/fabric3-messaging.iml" filepath="$PROJECT_DIR$/modules/trunk/federated/fabric3-messaging/fabric3-messaging.iml" group="federated" />
-      <module fileurl="file://$PROJECT_DIR$/modules/trunk/federated/fabric3-messaging-jxta/fabric3-messaging-jxta.iml" filepath="$PROJECT_DIR$/modules/trunk/federated/fabric3-messaging-jxta/fabric3-messaging-jxta.iml" group="federated" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/implementation/fabric3-mock/fabric3-mock.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/implementation/fabric3-mock/fabric3-mock.iml" group="implementations" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/kernel/impl/fabric3-monitor/fabric3-monitor.iml" filepath="$PROJECT_DIR$/modules/trunk/kernel/impl/fabric3-monitor/fabric3-monitor.iml" group="kernel/impl" />
       <module fileurl="file://$PROJECT_DIR$/modules/trunk/extension/other/fabric3-naming/fabric3-naming.iml" filepath="$PROJECT_DIR$/modules/trunk/extension/other/fabric3-naming/fabric3-naming.iml" group="other" />
@@ -523,6 +522,7 @@
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-binding-ftp/test-binding-ftp.iml" filepath="$PROJECT_DIR$/tests/trunk/test-binding-ftp/test-binding-ftp.iml" group="tests" />
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-binding-hessian/test-binding-hessian.iml" filepath="$PROJECT_DIR$/tests/trunk/test-binding-hessian/test-binding-hessian.iml" group="tests" />
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-binding-jms/test-binding-jms.iml" filepath="$PROJECT_DIR$/tests/trunk/test-binding-jms/test-binding-jms.iml" group="tests" />
+      <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-binding-metro/test-binding-metro.iml" filepath="$PROJECT_DIR$/tests/trunk/test-binding-metro/test-binding-metro.iml" group="tests" />
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-clover/test-clover.iml" filepath="$PROJECT_DIR$/tests/trunk/test-clover/test-clover.iml" group="tests" />
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-ds-extension/test-ds-extension.iml" filepath="$PROJECT_DIR$/tests/trunk/test-ds-extension/test-ds-extension.iml" group="tests" />
       <module fileurl="file://$PROJECT_DIR$/tests/trunk/test-ftp-server-extension/test-ftp-server-extension.iml" filepath="$PROJECT_DIR$/tests/trunk/test-ftp-server-extension/test-ftp-server-extension.iml" group="tests" />
