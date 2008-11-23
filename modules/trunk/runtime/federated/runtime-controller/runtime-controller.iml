@@ -246,7 +246,6 @@
         </SOURCES>
       </library>
     </orderEntry>
-    <orderEntry type="module" module-name="fabric3-jxta" exported="" />
     <orderEntry type="module-library" exported="">
       <library name="bouncycastle:bcprov-jdk14:124">
         <CLASSES>
@@ -286,9 +285,6 @@
         </SOURCES>
       </library>
     </orderEntry>
-    <orderEntry type="module" module-name="fabric3-messaging" exported="" />
-    <orderEntry type="module" module-name="fabric3-messaging-jxta" exported="" />
-    <orderEntry type="module" module-name="fabric3-discovery-jxta" exported="" />
     <orderEntry type="module" module-name="fabric3-http-provisioning" exported="" />
     <orderEntry type="module" module-name="fabric3-resource" exported="" />
   </component>
