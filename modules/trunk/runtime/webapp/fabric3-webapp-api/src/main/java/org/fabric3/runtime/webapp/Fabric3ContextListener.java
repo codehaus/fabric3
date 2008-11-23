@@ -55,6 +55,7 @@ import javax.servlet.ServletContextListener;
 import javax.xml.namespace.QName;
 
 import org.fabric3.host.Fabric3RuntimeException;
+import org.fabric3.host.Names;
 import org.fabric3.host.contribution.ContributionSource;
 import org.fabric3.host.contribution.FileContributionSource;
 import org.fabric3.host.contribution.ValidationException;
@@ -212,8 +213,7 @@ public class Fabric3ContextListener implements ServletContextListener {
         if (intentsLocation == null) {
             intentsLocation = webappClassLoader.getResource("META-INF/fabric3/intents.xml");
         }
-        URI uri = URI.create("StandardIntents");
-        ContributionSource source = new FileContributionSource(uri, intentsLocation, -1, new byte[0]);
+        ContributionSource source = new FileContributionSource(Names.CORE_INTENTS_CONTRIBUTION, intentsLocation, -1, new byte[0]);
         configuration.setIntents(source);
         configuration.setRuntime(runtime);
 

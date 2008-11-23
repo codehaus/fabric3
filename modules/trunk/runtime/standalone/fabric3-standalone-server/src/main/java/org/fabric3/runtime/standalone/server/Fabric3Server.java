@@ -55,6 +55,7 @@ import org.fabric3.host.runtime.InitializationException;
 import org.fabric3.host.runtime.RuntimeLifecycleCoordinator;
 import org.fabric3.host.runtime.ShutdownException;
 import org.fabric3.host.monitor.MonitorFactory;
+import org.fabric3.host.Names;
 import org.fabric3.jmx.agent.rmi.RmiAgent;
 import org.fabric3.runtime.standalone.BootstrapException;
 import org.fabric3.runtime.standalone.BootstrapHelper;
@@ -271,9 +272,8 @@ public class Fabric3Server implements Fabric3ServerMBean {
             if (!file.exists()) {
                 return null;
             }
-            URI contribuUri = URI.create("StandardIntents");
             URL location = file.toURI().toURL();
-            return new FileContributionSource(contribuUri, location, -1, new byte[0]);
+            return new FileContributionSource(Names.CORE_INTENTS_CONTRIBUTION, location, -1, new byte[0]);
         } catch (MalformedURLException e) {
             throw new InitializationException(e);
         }

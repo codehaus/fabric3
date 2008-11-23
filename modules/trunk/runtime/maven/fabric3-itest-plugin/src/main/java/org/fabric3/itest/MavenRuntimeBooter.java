@@ -29,24 +29,25 @@ import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
+import org.apache.maven.model.Dependency;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.logging.Log;
-import org.apache.maven.model.Dependency;
 import org.xml.sax.InputSource;
 
+import org.fabric3.featureset.FeatureSet;
+import org.fabric3.host.Names;
 import org.fabric3.host.contribution.ContributionSource;
 import org.fabric3.host.contribution.FileContributionSource;
+import org.fabric3.host.monitor.MonitorFactory;
 import org.fabric3.host.runtime.BootConfiguration;
 import org.fabric3.host.runtime.InitializationException;
 import org.fabric3.host.runtime.RuntimeLifecycleCoordinator;
 import org.fabric3.host.runtime.ScdlBootstrapper;
-import org.fabric3.host.runtime.StartException;
 import org.fabric3.host.runtime.ShutdownException;
+import org.fabric3.host.runtime.StartException;
 import org.fabric3.jmx.agent.Agent;
 import org.fabric3.jmx.agent.DefaultAgent;
 import org.fabric3.maven.MavenEmbeddedRuntime;
-import org.fabric3.host.monitor.MonitorFactory;
-import org.fabric3.featureset.FeatureSet;
 
 /**
  * @version $Revision$ $Date$
@@ -153,8 +154,7 @@ public class MavenRuntimeBooter {
         if (intentsLocation == null) {
             intentsLocation = bootClassLoader.getResource("META-INF/fabric3/intents.xml");
         }
-        URI uri = URI.create("StandardIntents");
-        ContributionSource source = new FileContributionSource(uri, intentsLocation, -1, new byte[0]);
+        ContributionSource source = new FileContributionSource(Names.CORE_INTENTS_CONTRIBUTION, intentsLocation, -1, new byte[0]);
         configuration.setIntents(source);
         configuration.setRuntime(runtime);
         return configuration;

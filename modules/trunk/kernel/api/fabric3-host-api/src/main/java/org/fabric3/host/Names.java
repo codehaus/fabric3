@@ -37,7 +37,7 @@ package org.fabric3.host;
 import java.net.URI;
 
 /**
- * Defines URIs of well-known runtime components and classloaders available through the host API.
+ * Defines URIs of well-known runtime components and contributions available through the host API.
  *
  * @version $Rev$ $Date$
  */
@@ -46,6 +46,8 @@ public interface Names {
     URI BOOT_CONTRIBUTION = URI.create("fabric3-boot");
 
     URI HOST_CONTRIBUTION = URI.create("fabric3-host");
+
+    URI CORE_INTENTS_CONTRIBUTION = URI.create("fabric3-core-intents");
 
     String RUNTIME_NAME = "fabric3://runtime";
 
