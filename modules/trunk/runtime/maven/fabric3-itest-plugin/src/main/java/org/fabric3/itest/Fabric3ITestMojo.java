@@ -45,6 +45,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
 import java.util.Set;
+
 import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.maven.artifact.Artifact;
@@ -56,11 +57,12 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.project.MavenProject;
-import org.xml.sax.SAXException;
-
 import org.fabric3.api.annotation.logging.Severe;
 import org.fabric3.featureset.FeatureSet;
 import org.fabric3.maven.MavenEmbeddedRuntime;
+import org.fabric3.util.closure.Closure;
+import org.fabric3.util.closure.CollectionUtils;
+import org.xml.sax.SAXException;
 
 /**
  * Run integration tests on a SCA composite using an embedded Fabric3 runtime.
@@ -286,8 +288,6 @@ public class Fabric3ITestMojo extends AbstractMojo {
      */
     protected File outputDirectory;
 
-
-    @SuppressWarnings("unchecked")
     public void execute() throws MojoExecutionException, MojoFailureException {
 
         if (!testScdl.exists()) {
@@ -354,6 +354,8 @@ public class Fabric3ITestMojo extends AbstractMojo {
 
         configuration.setFeatureSets(featureSets);
         configuration.setExtensions(extensions);
+        configuration.setExtensionArtifacts(getArtifacts("f3-extension"));
+        
         configuration.setUserExtensions(userExtensions);
         configuration.setUserExtensionsArchives(userExtensionsArchives);
         configuration.setIntentsLocation(intentsLocation);
@@ -466,6 +468,18 @@ public class Fabric3ITestMojo extends AbstractMojo {
             featuresToInstall.add(dependency);
         }
         return featuresToInstall;
+    }
+
+    @SuppressWarnings("unchecked")
+    private Set<Artifact> getArtifacts(final String scope) throws MojoExecutionException {
+        
+        Set<Artifact> artifacts = (Set<Artifact>) project.getArtifacts();
+        return CollectionUtils.filter(artifacts, new Closure<Artifact, Boolean>() {
+            public Boolean execute(Artifact artifact) {
+                return scope.equals(artifact.getScope());
+            }
+        });
+        
     }
 
     public interface MojoMonitor {

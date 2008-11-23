@@ -29,6 +29,7 @@ import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
+import org.apache.maven.artifact.Artifact;
 import org.apache.maven.model.Dependency;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.logging.Log;
@@ -72,6 +73,8 @@ public class MavenRuntimeBooter {
     private ClassLoader hostClassLoader;
     private Set<URL> moduleDependencies;
     private org.apache.maven.model.Dependency[] extensions;
+    private Set<Artifact> extensionArtifacts;
+    
     private Dependency[] userExtensions;
     private File[] userExtensionsArchives;
     private List<FeatureSet> featureSets;
@@ -99,6 +102,7 @@ public class MavenRuntimeBooter {
         featureSets = configuration.getFeatureSets();
         log = configuration.getLog();
         extensionHelper = configuration.getExtensionHelper();
+        extensionArtifacts = configuration.getExtensionArtifacts();
     }
 
     @SuppressWarnings({"unchecked"})
@@ -148,7 +152,7 @@ public class MavenRuntimeBooter {
         configuration.setBootLibraryExports(bootExports);
 
         // process extensions
-        extensionHelper.processExtensions(configuration, extensions, featureSets, userExtensions, userExtensionsArchives);
+        extensionHelper.processExtensions(configuration, extensions, extensionArtifacts, featureSets, userExtensions, userExtensionsArchives);
 
         // process the baseline intents
         if (intentsLocation == null) {

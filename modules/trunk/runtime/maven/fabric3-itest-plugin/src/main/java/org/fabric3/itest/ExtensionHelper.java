@@ -43,10 +43,11 @@ public class ExtensionHelper {
 
     public void processExtensions(BootConfiguration<MavenEmbeddedRuntime, ScdlBootstrapper> configuration,
                                   Dependency[] extensions,
+                                  Set<Artifact> extensionArtifacts,
                                   List<FeatureSet> featureSets,
                                   Dependency[] userExtensions,
                                   File[] userExtensionsArchives) throws MojoExecutionException {
-        List<URL> extensionUrls = resolveDependencies(extensions);
+        List<URL> extensionUrls = resolveDependencies(extensions, extensionArtifacts);
 
         if (featureSets != null) {
             for (FeatureSet featureSet : featureSets) {
@@ -56,7 +57,7 @@ public class ExtensionHelper {
         List<ContributionSource> sources = createContributionSources(extensionUrls);
         configuration.setExtensions(sources);
 
-        List<URL> userExtensionUrls = resolveDependencies(userExtensions);
+        List<URL> userExtensionUrls = resolveDependencies(userExtensions, null);
         // add extensions that are not Maven artifacts
         if (userExtensionsArchives != null) {
             for (File entry : userExtensionsArchives) {
@@ -87,23 +88,31 @@ public class ExtensionHelper {
 
     private List<URL> processFeatures(FeatureSet featureSet) throws MojoExecutionException {
         Set<Dependency> dependencies = featureSet.getExtensions();
-        return resolveDependencies(featureSet.getExtensions().toArray(new Dependency[dependencies.size()]));
+        return resolveDependencies(featureSet.getExtensions().toArray(new Dependency[dependencies.size()]), null);
     }
 
-    private List<URL> resolveDependencies(Dependency[] dependencies) throws MojoExecutionException {
+    private List<URL> resolveDependencies(Dependency[] dependencies, Set<Artifact> extensionArtifacts) throws MojoExecutionException {
 
         List<URL> urls = new ArrayList<URL>();
 
-        if (dependencies == null) {
-            return urls;
+        if (dependencies != null) {
+            for (Dependency dependency : dependencies) {
+                Artifact artifact = artifactHelper.resolve(dependency);
+                try {
+                    urls.add(artifact.getFile().toURI().toURL());
+                } catch (MalformedURLException e) {
+                    throw new AssertionError();
+                }
+            }
         }
-
-        for (Dependency dependency : dependencies) {
-            Artifact artifact = artifactHelper.resolve(dependency);
-            try {
-                urls.add(artifact.getFile().toURI().toURL());
-            } catch (MalformedURLException e) {
-                throw new AssertionError();
+        
+        if (extensionArtifacts != null) {
+            for (Artifact extensionArtifact : extensionArtifacts) {
+                try {
+                    urls.add(extensionArtifact.getFile().toURI().toURL());
+                } catch (MalformedURLException e) {
+                    throw new AssertionError();
+                }
             }
         }
 

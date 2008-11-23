@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Properties;
 import java.util.Set;
 
+import org.apache.maven.artifact.Artifact;
 import org.apache.maven.model.Dependency;
 import org.apache.maven.plugin.logging.Log;
 
@@ -23,13 +24,23 @@ public class MavenBootConfiguration {
     private ClassLoader hostClassLoader;
     private Set<URL> moduleDependencies;
     private Dependency[] extensions;
-//    private Dependency[] features;
+    private Set<Artifact> extensionArtifacts;
+
+    //    private Dependency[] features;
 //    private boolean excludeDefaultFeatures;
     private Dependency[] userExtensions;
     private File[] userExtensionsArchives;
     private List<FeatureSet> featureSets;
     private Log log;
     private ExtensionHelper extensionHelper;
+    
+    public Set<Artifact> getExtensionArtifacts() {
+        return extensionArtifacts;
+    }
+
+    public void setExtensionArtifacts(Set<Artifact> extensionArtifacts) {
+        this.extensionArtifacts = extensionArtifacts;
+    }
 
     public URL getSystemScdl() {
         return systemScdl;
