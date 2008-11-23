@@ -36,6 +36,9 @@ package org.fabric3.system.introspection;
 
 import org.osoa.sca.annotations.Reference;
 
+import org.fabric3.pojo.scdl.PojoComponentType;
+import org.fabric3.scdl.validation.InvalidImplementation;
+import org.fabric3.scdl.validation.MissingResource;
 import org.fabric3.spi.introspection.DefaultIntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionHelper;
@@ -43,9 +46,7 @@ import org.fabric3.spi.introspection.TypeMapping;
 import org.fabric3.spi.introspection.java.ClassWalker;
 import org.fabric3.spi.introspection.java.HeuristicProcessor;
 import org.fabric3.spi.introspection.java.ImplementationNotFoundException;
-import org.fabric3.pojo.scdl.PojoComponentType;
-import org.fabric3.scdl.validation.InvalidImplementation;
-import org.fabric3.scdl.validation.MissingResource;
+import org.fabric3.spi.introspection.java.ImplementationProcessor;
 import org.fabric3.system.scdl.SystemImplementation;
 
 /**
@@ -53,14 +54,14 @@ import org.fabric3.system.scdl.SystemImplementation;
  *
  * @version $Rev$ $Date$
  */
-public class SystemImplementationProcessorImpl implements SystemImplementationProcessor {
+public class SystemImplementationProcessorImpl implements ImplementationProcessor<SystemImplementation> {
     private final ClassWalker<SystemImplementation> classWalker;
     private final HeuristicProcessor<SystemImplementation> heuristic;
     private final IntrospectionHelper helper;
 
-    public SystemImplementationProcessorImpl(@Reference(name = "classWalker")ClassWalker<SystemImplementation> classWalker,
-                                             @Reference(name = "heuristic")HeuristicProcessor<SystemImplementation> heuristic,
-                                             @Reference(name = "helper")IntrospectionHelper helper) {
+    public SystemImplementationProcessorImpl(@Reference(name = "classWalker") ClassWalker<SystemImplementation> classWalker,
+                                             @Reference(name = "heuristic") HeuristicProcessor<SystemImplementation> heuristic,
+                                             @Reference(name = "helper") IntrospectionHelper helper) {
         this.classWalker = classWalker;
         this.heuristic = heuristic;
         this.helper = helper;

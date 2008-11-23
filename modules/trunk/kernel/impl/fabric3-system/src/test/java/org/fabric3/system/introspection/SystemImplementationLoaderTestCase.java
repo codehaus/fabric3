@@ -39,10 +39,11 @@ import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamReader;
 
 import junit.framework.TestCase;
-
 import org.easymock.EasyMock;
-import org.fabric3.spi.introspection.IntrospectionContext;
+
 import org.fabric3.spi.Namespaces;
+import org.fabric3.spi.introspection.IntrospectionContext;
+import org.fabric3.spi.introspection.java.ImplementationProcessor;
 import org.fabric3.system.scdl.SystemImplementation;
 
 /**
@@ -53,7 +54,7 @@ public class SystemImplementationLoaderTestCase extends TestCase {
     public static final QName SYSTEM_IMPLEMENTATION = new QName(Namespaces.IMPLEMENTATION, "implementation.system");
     private IntrospectionContext context;
     private XMLStreamReader reader;
-    private SystemImplementationProcessor implementationProcessor;
+    private ImplementationProcessor<SystemImplementation> implementationProcessor;
     private SystemImplementationLoader loader;
 
     public void testLoad() throws Exception {
@@ -76,7 +77,7 @@ public class SystemImplementationLoaderTestCase extends TestCase {
     @SuppressWarnings("unchecked")
     protected void setUp() throws Exception {
         super.setUp();
-        implementationProcessor = EasyMock.createMock(SystemImplementationProcessor.class);
+        implementationProcessor = EasyMock.createMock(ImplementationProcessor.class);
 
         context = EasyMock.createMock(IntrospectionContext.class);
         EasyMock.replay(context);
