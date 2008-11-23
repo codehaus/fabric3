@@ -27,7 +27,7 @@ import java.util.Set;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.fabric.services.contribution.manifest.ContributionImport;
-import static org.fabric3.host.Names.HOST_CLASSLOADER_ID;
+import static org.fabric3.host.Names.HOST_CONTRIBUTION;
 import org.fabric3.host.contribution.ContributionInUseException;
 import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.spi.classloader.MultiParentClassLoader;
@@ -59,12 +59,12 @@ public class ContributionLoaderImpl implements ContributionLoader {
         this.store = store;
         this.classpathProcessorRegistry = classpathProcessorRegistry;
         classloaderIsolation = info.supportsClassLoaderIsolation();
-        hostImport = new ContributionImport(HOST_CLASSLOADER_ID);
+        hostImport = new ContributionImport(HOST_CONTRIBUTION);
     }
 
     public ClassLoader load(Contribution contribution) throws ContributionLoadException {
         URI contributionUri = contribution.getUri();
-        ClassLoader hostClassLoader = classLoaderRegistry.getClassLoader(HOST_CLASSLOADER_ID);
+        ClassLoader hostClassLoader = classLoaderRegistry.getClassLoader(HOST_CONTRIBUTION);
         // all contributions implicitly import the host contribution
         contribution.getManifest().addImport(hostImport);
 

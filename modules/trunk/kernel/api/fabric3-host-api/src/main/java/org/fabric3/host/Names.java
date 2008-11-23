@@ -43,9 +43,9 @@ import java.net.URI;
  */
 public interface Names {
 
-    URI BOOT_CLASSLOADER_ID = URI.create("Fabric3BootClassLoader");
+    URI BOOT_CONTRIBUTION = URI.create("fabric3-boot");
 
-    URI HOST_CLASSLOADER_ID = URI.create("Fabric3HostClassLoader");
+    URI HOST_CONTRIBUTION = URI.create("fabric3-host");
 
     String RUNTIME_NAME = "fabric3://runtime";
 

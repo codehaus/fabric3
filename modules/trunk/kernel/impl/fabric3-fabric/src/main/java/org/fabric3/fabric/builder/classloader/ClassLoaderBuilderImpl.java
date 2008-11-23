@@ -44,7 +44,7 @@ import java.util.Set;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
-import static org.fabric3.host.Names.HOST_CLASSLOADER_ID;
+import static org.fabric3.host.Names.HOST_CONTRIBUTION;
 import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.spi.classloader.MultiParentClassLoader;
 import org.fabric3.spi.model.physical.PhysicalClassLoaderDefinition;
@@ -112,7 +112,7 @@ public class ClassLoaderBuilderImpl implements ClassLoaderBuilder {
         URI uri = definition.getUri();
         // Create an alias to the host classloader which contains all contribution artifacts in a non-isolated environment.
         // This simulates multiple classloaders
-        ClassLoader hostClassLoader = classLoaderRegistry.getClassLoader(HOST_CLASSLOADER_ID);
+        ClassLoader hostClassLoader = classLoaderRegistry.getClassLoader(HOST_CONTRIBUTION);
         classLoaderRegistry.register(uri, hostClassLoader);
     }
 

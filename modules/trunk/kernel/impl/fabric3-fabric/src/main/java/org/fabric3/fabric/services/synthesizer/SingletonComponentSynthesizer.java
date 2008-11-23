@@ -25,7 +25,7 @@ import org.fabric3.fabric.implementation.singleton.SingletonComponent;
 import org.fabric3.fabric.implementation.singleton.SingletonImplementation;
 import org.fabric3.fabric.instantiator.LogicalChange;
 import org.fabric3.fabric.instantiator.component.ComponentInstantiator;
-import static org.fabric3.host.Names.BOOT_CLASSLOADER_ID;
+import static org.fabric3.host.Names.BOOT_CONTRIBUTION;
 import org.fabric3.host.domain.AssemblyException;
 import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.scdl.ComponentDefinition;
@@ -145,7 +145,7 @@ public class SingletonComponentSynthesizer implements ComponentSynthesizer {
             ComponentDefinition<Implementation<?>> def = new ComponentDefinition<Implementation<?>>(name);
             SingletonImplementation singletonImplementation = new SingletonImplementation(implementation.getComponentType(), implClassName);
             def.setImplementation(singletonImplementation);
-            def.setContributionUri(BOOT_CLASSLOADER_ID);
+            def.setContributionUri(BOOT_CONTRIBUTION);
             return def;
         } else {
             // instance does not have any services injected
@@ -163,7 +163,7 @@ public class SingletonComponentSynthesizer implements ComponentSynthesizer {
             implementation.setComponentType(componentType);
             ComponentDefinition<Implementation<?>> def = new ComponentDefinition<Implementation<?>>(name);
             def.setImplementation(implementation);
-            def.setContributionUri(BOOT_CLASSLOADER_ID);
+            def.setContributionUri(BOOT_CONTRIBUTION);
             return def;
         }
     }
@@ -173,7 +173,7 @@ public class SingletonComponentSynthesizer implements ComponentSynthesizer {
         PojoComponentType type = (PojoComponentType) logicalComponent.getComponentType();
         type.getInjectionSites();
         SingletonComponent<I> component = new SingletonComponent<I>(uri, instance, type.getInjectionSites());
-        component.setClassLoaderId(BOOT_CLASSLOADER_ID);
+        component.setClassLoaderId(BOOT_CONTRIBUTION);
         return component;
     }
 

@@ -55,8 +55,8 @@ import org.fabric3.fabric.services.documentloader.DocumentLoader;
 import org.fabric3.fabric.services.documentloader.DocumentLoaderImpl;
 import org.fabric3.fabric.services.synthesizer.SingletonComponentSynthesizer;
 import org.fabric3.host.Names;
-import static org.fabric3.host.Names.BOOT_CLASSLOADER_ID;
-import static org.fabric3.host.Names.HOST_CLASSLOADER_ID;
+import static org.fabric3.host.Names.BOOT_CONTRIBUTION;
+import static org.fabric3.host.Names.HOST_CONTRIBUTION;
 import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.host.domain.DeploymentException;
 import org.fabric3.host.domain.Domain;
@@ -186,7 +186,7 @@ public abstract class AbstractBootstrapper implements Bootstrapper {
         try {
 
             // load the system composite
-            Composite composite = loadSystemComposite(BOOT_CLASSLOADER_ID, bootClassLoader, systemImplementationProcessor, monitorFactory);
+            Composite composite = loadSystemComposite(BOOT_CONTRIBUTION, bootClassLoader, systemImplementationProcessor, monitorFactory);
 
             // load user configuration
             Document userConfig = loadUserConfig();
@@ -310,8 +310,8 @@ public abstract class AbstractBootstrapper implements Bootstrapper {
      */
     private void synthesizeContributions() throws InitializationException {
         try {
-            synthesizeContribution(HOST_CLASSLOADER_ID, Collections.<URL>emptyList(), hostClassLoader);
-            synthesizeContribution(BOOT_CLASSLOADER_ID, bootManifests, bootClassLoader);
+            synthesizeContribution(HOST_CONTRIBUTION, Collections.<URL>emptyList(), hostClassLoader);
+            synthesizeContribution(BOOT_CONTRIBUTION, bootManifests, bootClassLoader);
         } catch (ContributionException e) {
             throw new InitializationException(e);
         }
