@@ -160,7 +160,10 @@ public class ArtifactHelper {
      * @return set of artifacts to be included in the host classloader
      * @throws MojoExecutionException if an error occurs calculating the transitive dependencies
      */
-    public Set<Artifact> calculateHostArtifacts(Set<Artifact> runtimeArtifacts, Dependency[] shared, List<FeatureSet> featureSets) throws MojoExecutionException {
+    public Set<Artifact> calculateHostArtifacts(Set<Artifact> runtimeArtifacts, 
+                                                Dependency[] shared, 
+                                                Set<Artifact> sharedArtifacts,
+                                                List<FeatureSet> featureSets) throws MojoExecutionException {
         
         Set<Artifact> hostArtifacts = new HashSet<Artifact>();
         List<Exclusion> exclusions = Collections.emptyList();
@@ -197,6 +200,10 @@ public class ArtifactHelper {
             for (Dependency sharedDependency : shared) {
                 hostArtifacts.addAll(resolveAll(sharedDependency));
             }
+        }
+        
+        for (Artifact sharedArtifact : sharedArtifacts) {
+            hostArtifacts.add(sharedArtifact);
         }
         
         for (FeatureSet featureSet : featureSets) {
