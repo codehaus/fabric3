@@ -59,6 +59,7 @@ import static org.fabric3.scdl.Operation.CONVERSATION_END;
 import static org.fabric3.scdl.Operation.NO_CONVERSATION;
 import org.fabric3.scdl.ServiceContract;
 import org.fabric3.scdl.ValidationContext;
+import org.fabric3.scdl.JavaServiceContract;
 
 /**
  * Default implementation of a ContractProcessor for Java interfaces.

@@ -43,8 +43,9 @@ import javax.xml.stream.XMLStreamException;
 import junit.framework.TestCase;
 
 import org.fabric3.binding.ws.metro.provision.WsdlElement;
-import org.fabric3.introspection.impl.contract.JavaServiceContract;
+import org.fabric3.scdl.JavaServiceContract;
 import org.fabric3.spi.generator.GenerationException;
+
 import org.xml.sax.SAXException;
 
 import com.sun.xml.ws.api.model.wsdl.WSDLModel;

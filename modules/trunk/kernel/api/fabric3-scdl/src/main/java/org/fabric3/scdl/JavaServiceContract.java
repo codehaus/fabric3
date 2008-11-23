@@ -32,19 +32,15 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.introspection.impl.contract;
+package org.fabric3.scdl;
 
+import java.io.Serializable;
 import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.List;
-import java.io.Serializable;
-
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import org.fabric3.scdl.DataType;
-import org.fabric3.scdl.Operation;
-import org.fabric3.scdl.ServiceContract;
 
 /**
  * Represents a service contract specified using a Java interface

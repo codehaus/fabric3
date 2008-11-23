@@ -30,7 +30,7 @@ import org.fabric3.fabric.instantiator.target.ServiceContractResolver;
 import org.fabric3.fabric.instantiator.target.ServiceContractResolverImpl;
 import org.fabric3.fabric.instantiator.target.TargetResolutionService;
 import org.fabric3.fabric.instantiator.target.TypeBasedAutowireResolutionService;
-import org.fabric3.introspection.impl.contract.JavaServiceContract;
+import org.fabric3.scdl.JavaServiceContract;
 import org.fabric3.scdl.AbstractComponentType;
 import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.ComponentReference;
