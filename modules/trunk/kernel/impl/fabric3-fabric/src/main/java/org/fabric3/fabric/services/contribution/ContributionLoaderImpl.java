@@ -19,12 +19,15 @@ package org.fabric3.fabric.services.contribution;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 import org.osoa.sca.annotations.Reference;
 
+import org.fabric3.fabric.services.contribution.manifest.ContributionImport;
+import static org.fabric3.host.Names.HOST_CLASSLOADER_ID;
 import org.fabric3.host.contribution.ContributionInUseException;
 import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.spi.classloader.MultiParentClassLoader;
@@ -34,7 +37,6 @@ import org.fabric3.spi.services.contribution.Contribution;
 import org.fabric3.spi.services.contribution.ContributionManifest;
 import org.fabric3.spi.services.contribution.Import;
 import org.fabric3.spi.services.contribution.MetaDataStore;
-import org.fabric3.host.Names;
 
 /**
  * Default implementation of the ContributionLoader. Classloaders corresponding to loaded contributions are registered by name with the system
@@ -43,6 +45,7 @@ import org.fabric3.host.Names;
  * @version $Rev$ $Date$
  */
 public class ContributionLoaderImpl implements ContributionLoader {
+    private final ContributionImport hostImport;
     private final ClassLoaderRegistry classLoaderRegistry;
     private final MetaDataStore store;
     private final ClasspathProcessorRegistry classpathProcessorRegistry;
@@ -56,17 +59,22 @@ public class ContributionLoaderImpl implements ContributionLoader {
         this.store = store;
         this.classpathProcessorRegistry = classpathProcessorRegistry;
         classloaderIsolation = info.supportsClassLoaderIsolation();
+        hostImport = new ContributionImport(HOST_CLASSLOADER_ID);
     }
 
     public ClassLoader load(Contribution contribution) throws ContributionLoadException {
         URI contributionUri = contribution.getUri();
-        ClassLoader cl = classLoaderRegistry.getClassLoader(Names.HOST_CLASSLOADER_ID);
+        ClassLoader hostClassLoader = classLoaderRegistry.getClassLoader(HOST_CLASSLOADER_ID);
+        // all contributions implicitly import the host contribution
+        contribution.getManifest().addImport(hostImport);
+
+        // verify and resolve the imports
+        List<ClassLoader> resolved = resolveImports(contribution);
         if (!classloaderIsolation) {
-            // the host environment does not support classloader isolation so only verify extensions are present
-            verifyImports(contribution);
-            return cl;
+            // the host environment does not support classloader isolation, return the host classloader
+            return hostClassLoader;
         }
-        MultiParentClassLoader loader = new MultiParentClassLoader(contributionUri, cl);
+        MultiParentClassLoader loader = new MultiParentClassLoader(contributionUri, hostClassLoader);
         List<URL> classpath;
         try {
             // construct the classpath for contained resources in the contribution
@@ -78,7 +86,12 @@ public class ContributionLoaderImpl implements ContributionLoader {
         for (URL library : classpath) {
             loader.addURL(library);
         }
-        resolveImports(contribution, loader);
+        for (ClassLoader classLoader : resolved) {
+            if (classLoader != hostClassLoader) {
+                // skip the host classloader as it is the primary parent
+                loader.addParent(classLoader);
+            }
+        }
         // register the classloader
         classLoaderRegistry.register(contributionUri, loader);
         return loader;
@@ -98,7 +111,8 @@ public class ContributionLoaderImpl implements ContributionLoader {
     }
 
 
-    private void resolveImports(Contribution contribution, MultiParentClassLoader loader) throws ContributionLoadException {
+    private List<ClassLoader> resolveImports(Contribution contribution) throws ContributionLoadException {
+        List<ClassLoader> resolved = new ArrayList<ClassLoader>();
         ContributionManifest manifest = contribution.getManifest();
         for (Import imprt : manifest.getImports()) {
             Contribution imported = store.resolve(imprt);
@@ -111,27 +125,11 @@ public class ContributionLoaderImpl implements ContributionLoader {
             contribution.addResolvedImportUri(importedUri);
             // add the imported classloader
             ClassLoader importedLoader = classLoaderRegistry.getClassLoader(importedUri);
-            if (importedLoader == null) {
-                // TODO load in a transient classloader
-                String uri = importedUri.toString();
-                throw new ContributionLoadException("Imported classloader could not be found: " + uri, uri);
-            }
-            loader.addParent(importedLoader);
+            assert importedLoader != null;
+            resolved.add(importedLoader);
         }
+        return resolved;
     }
 
-    private void verifyImports(Contribution contribution) throws MatchingExportNotFoundException {
-        ContributionManifest manifest = contribution.getManifest();
-        for (Import imprt : manifest.getImports()) {
-            Contribution imported = store.resolve(imprt);
-            if (imported == null) {
-                String id = imprt.toString();
-                throw new MatchingExportNotFoundException("No matching export found for: " + id);
-            }
-            // add the resolved URI to the contribution
-            URI importedUri = imported.getUri();
-            contribution.addResolvedImportUri(importedUri);
-        }
-    }
 
 }

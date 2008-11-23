@@ -175,6 +175,13 @@ public class MetaDataStoreImpl implements MetaDataStore {
      * @return the contribution or null
      */
     public Contribution resolve(Import imprt) {
+        URI location = imprt.getLocation();
+        if (location != null) {
+            Contribution resolved = cache.get(location);
+            if (resolved != null) {
+                return resolved;
+            }
+        }
         Map<Export, Contribution> map = exportsToContributionCache.get(imprt.getType());
         if (map == null) {
             return null;

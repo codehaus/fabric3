@@ -122,10 +122,6 @@ public class ClassLoaderBuilderImpl implements ClassLoaderBuilder {
 
         // build the classloader using the locally cached resources
         MultiParentClassLoader loader = new MultiParentClassLoader(uri, classpath, null);
-        // TODO this should be removed add the host classloader
-        ClassLoader hostClassLoader = classLoaderRegistry.getClassLoader(HOST_CLASSLOADER_ID);
-        loader.addParent(hostClassLoader);
-        // if the host supports isolated classloaders, add any parents
         for (URI parentUri : definition.getParentClassLoaders()) {
             ClassLoader parent = classLoaderRegistry.getClassLoader(parentUri);
             if (parent == null) {
