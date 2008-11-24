@@ -32,7 +32,7 @@ import org.fabric3.spi.executor.CommandExecutorRegistry;
 import org.fabric3.spi.executor.ExecutionException;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.topology.RuntimeManager;
-import org.fabric3.spi.util.MultiClassLoaderObjectInputStream;
+import org.fabric3.spi.classloader.MultiClassLoaderObjectInputStream;
 
 /**
  * Handles communications between a zone participant and the ZoneManager. Specifically, executes commands received from the ZoneManager and updates

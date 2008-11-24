@@ -25,7 +25,7 @@ import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.spi.command.Command;
 import org.fabric3.spi.services.event.EventService;
 import org.fabric3.spi.topology.Zone;
-import org.fabric3.spi.util.MultiClassLoaderObjectOutputStream;
+import org.fabric3.spi.classloader.MultiClassLoaderObjectOutputStream;
 
 /**
  * @version $Revision$ $Date$

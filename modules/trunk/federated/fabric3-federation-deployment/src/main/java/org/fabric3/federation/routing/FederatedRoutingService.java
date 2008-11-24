@@ -50,7 +50,7 @@ import org.fabric3.spi.services.routing.RoutingMonitor;
 import org.fabric3.spi.services.routing.RoutingService;
 import org.fabric3.spi.topology.DomainManager;
 import org.fabric3.spi.topology.MessageException;
-import org.fabric3.spi.util.MultiClassLoaderObjectOutputStream;
+import org.fabric3.spi.classloader.MultiClassLoaderObjectOutputStream;
 
 /**
  * A routing service implementation that routes commands to a zone.

@@ -42,7 +42,7 @@ import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.topology.MessageException;
 import org.fabric3.spi.topology.RuntimeInstance;
 import org.fabric3.spi.topology.ZoneManager;
-import org.fabric3.spi.util.MultiClassLoaderObjectInputStream;
+import org.fabric3.spi.classloader.MultiClassLoaderObjectInputStream;
 
 /**
  * Manages communications between a zone and the DomainManager. As communications are segmented between domain-wide messages and zone-specific

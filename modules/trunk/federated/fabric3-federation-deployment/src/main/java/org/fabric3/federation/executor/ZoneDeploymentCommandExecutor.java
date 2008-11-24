@@ -35,7 +35,7 @@ import org.fabric3.spi.topology.MessageException;
 import org.fabric3.spi.topology.RuntimeInstance;
 import org.fabric3.spi.topology.RuntimeService;
 import org.fabric3.spi.topology.ZoneManager;
-import org.fabric3.spi.util.MultiClassLoaderObjectOutputStream;
+import org.fabric3.spi.classloader.MultiClassLoaderObjectOutputStream;
 
 /**
  * Processes a ZoneDeploymentCommand and sends a corresponding RuntimeDeploymentCommand to all runtimes in a zone.
