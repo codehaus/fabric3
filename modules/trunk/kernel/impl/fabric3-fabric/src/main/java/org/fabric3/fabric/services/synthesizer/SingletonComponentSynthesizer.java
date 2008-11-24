@@ -21,8 +21,8 @@ import java.net.URI;
 import org.osoa.sca.annotations.Constructor;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.fabric.implementation.singleton.SingletonComponent;
-import org.fabric3.fabric.implementation.singleton.SingletonImplementation;
+import org.fabric3.system.singleton.SingletonComponent;
+import org.fabric3.system.singleton.SingletonImplementation;
 import org.fabric3.fabric.instantiator.LogicalChange;
 import org.fabric3.fabric.instantiator.component.ComponentInstantiator;
 import static org.fabric3.host.Names.BOOT_CONTRIBUTION;

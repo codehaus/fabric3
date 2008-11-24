@@ -14,12 +14,12 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.fabric.implementation.singleton;
+package org.fabric3.system.singleton;
 
-import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
+import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 
 /**
  * @version $Rev$ $Date$
  */
-public class SingletonWireSourceDefinition extends PhysicalWireSourceDefinition {
+public class SingletonWireTargetDefinition extends PhysicalWireTargetDefinition {
 }

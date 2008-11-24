@@ -14,7 +14,7 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.fabric.implementation.singleton;
+package org.fabric3.system.singleton;
 
 import java.net.URI;
 

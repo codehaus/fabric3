@@ -42,15 +42,15 @@
     <!-- Singleton implementation type -->
 
     <component name="SingletonGenerator">
-        <f3-impl:implementation.system class="org.fabric3.fabric.implementation.singleton.SingletonComponentGenerator"/>
+        <f3-impl:implementation.system class="org.fabric3.system.singleton.SingletonComponentGenerator"/>
     </component>
 
-    <component name="SingletonWireSourceAttacher" f3-core:key="org.fabric3.fabric.implementation.singleton.SingletonWireSourceDefinition">
-        <f3-impl:implementation.system class="org.fabric3.fabric.implementation.singleton.SingletonSourceWireAttacher"/>
+    <component name="SingletonWireSourceAttacher" f3-core:key="org.fabric3.system.singleton.SingletonWireSourceDefinition">
+        <f3-impl:implementation.system class="org.fabric3.system.singleton.SingletonSourceWireAttacher"/>
     </component>
 
-    <component name="SingletonWireTargetAttacher" f3-core:key="org.fabric3.fabric.implementation.singleton.SingletonWireTargetDefinition">
-        <f3-impl:implementation.system class="org.fabric3.fabric.implementation.singleton.SingletonTargetWireAttacher"/>
+    <component name="SingletonWireTargetAttacher" f3-core:key="org.fabric3.system.singleton.SingletonWireTargetDefinition">
+        <f3-impl:implementation.system class="org.fabric3.system.singleton.SingletonTargetWireAttacher"/>
     </component>
 
 </composite>

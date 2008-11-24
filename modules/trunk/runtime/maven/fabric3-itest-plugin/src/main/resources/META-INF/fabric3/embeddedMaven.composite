@@ -78,7 +78,7 @@
     <include name="SystemImplementation" scdlResource="org/fabric3/system/systemImplementation.composite"/>
 
     <!-- Singleton implementation type -->
-    <include name="org.fabric3.fabric.SingletonImplementation" scdlResource="org/fabric3/fabric/singletonImplementation.composite"/>
+    <include name="org.fabric3.fabric.SingletonImplementation" scdlResource="org/fabric3/system/singletonImplementation.composite"/>
 
     <!-- JMX components -->
     <include name="JMXExtension" scdlResource="org/fabric3/jmx/jmx.composite"/>
