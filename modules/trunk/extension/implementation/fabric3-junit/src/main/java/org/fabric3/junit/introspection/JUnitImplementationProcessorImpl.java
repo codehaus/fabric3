@@ -18,6 +18,9 @@ package org.fabric3.junit.introspection;
 
 import org.osoa.sca.annotations.Reference;
 
+import org.fabric3.java.introspection.ImplementationArtifactNotFound;
+import org.fabric3.junit.scdl.JUnitImplementation;
+import org.fabric3.pojo.scdl.PojoComponentType;
 import org.fabric3.spi.introspection.DefaultIntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionHelper;
@@ -25,9 +28,6 @@ import org.fabric3.spi.introspection.TypeMapping;
 import org.fabric3.spi.introspection.java.ClassWalker;
 import org.fabric3.spi.introspection.java.HeuristicProcessor;
 import org.fabric3.spi.introspection.java.ImplementationNotFoundException;
-import org.fabric3.junit.scdl.JUnitImplementation;
-import org.fabric3.pojo.scdl.PojoComponentType;
-import org.fabric3.scdl.validation.MissingResource;
 
 /**
  * @version $Rev$ $Date$
@@ -52,11 +52,19 @@ public class JUnitImplementationProcessorImpl implements JUnitImplementationProc
         implementation.setComponentType(componentType);
 
         ClassLoader cl = context.getTargetClassLoader();
-        Class<?> implClass = null;
+        Class<?> implClass;
         try {
             implClass = helper.loadClass(implClassName, cl);
         } catch (ImplementationNotFoundException e) {
-            context.addError(new MissingResource("JUnit test class not found on classpath: ", implClassName));
+            Throwable cause = e.getCause();
+            if (cause instanceof ClassNotFoundException || cause instanceof NoClassDefFoundError) {
+                // CNFE and NCDFE may be thrown as a result of a referenced class not being on the classpath
+                // If this is the case, ensure the correct class name is reported, not just the implementation 
+                context.addError(new ImplementationArtifactNotFound(implClassName, e.getCause().getMessage()));
+            } else {
+                context.addError(new ImplementationArtifactNotFound(implClassName));
+            }
+            return;
         }
         TypeMapping typeMapping = helper.mapTypeParameters(implClass);
 

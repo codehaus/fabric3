@@ -124,7 +124,7 @@ public class TimerImplementationLoader implements TypeLoader<TimerImplementation
 
             }
         } catch (ClassNotFoundException e) {
-            ImplementationArtifactNotFound failure = new ImplementationArtifactNotFound(implementation, e.getMessage());
+            ImplementationArtifactNotFound failure = new ImplementationArtifactNotFound(implClass, e.getMessage());
             context.addError(failure);
             LoaderUtil.skipToEndElement(reader);
             return false;

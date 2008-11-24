@@ -17,30 +17,28 @@
 package org.fabric3.java.introspection;
 
 import org.fabric3.scdl.ValidationFailure;
-import org.fabric3.java.scdl.JavaImplementation;
 
 /**
  * @version $Revision$ $Date$
  */
-public class ImplementationArtifactNotFound extends ValidationFailure<JavaImplementation> {
+public class ImplementationArtifactNotFound extends ValidationFailure<String> {
     private String artifact;
 
-    public ImplementationArtifactNotFound(JavaImplementation implementation) {
-        super(implementation);
+    public ImplementationArtifactNotFound(String clazz) {
+        super(clazz);
     }
 
-    public ImplementationArtifactNotFound(JavaImplementation implementation, String artifact) {
-        super(implementation);
+    public ImplementationArtifactNotFound(String clazz, String artifact) {
+        super(clazz);
         this.artifact = artifact.replace("/", ".");
     }
 
     public String getMessage() {
-        String implementationClass = getValidatable().getImplementationClass();
-        if (artifact == null || artifact.equals(implementationClass)) {
-            return "Implementation class not found: " + implementationClass + ". Check that the class is contained in the contribution archive, " +
+        if (artifact == null || artifact.equals(getValidatable())) {
+            return "Implementation class not found: " + getValidatable() + ". Check that the class is contained in the contribution archive, " +
                     "included as a library, or imported in the SCA contribution manifest.";
         } else {
-            return "Class " + artifact + " referenced in component implementation " + implementationClass + " not found. Check that the class is " +
+            return "Class " + artifact + " referenced in component implementation " + getValidatable() + " not found. Check that the class is " +
                     "contained in the contribution archive, included as a library, or imported in the SCA contribution manifest.";
         }
     }
