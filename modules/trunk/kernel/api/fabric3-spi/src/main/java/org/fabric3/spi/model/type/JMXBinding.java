@@ -14,13 +14,15 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.jmx.scdl;
+package org.fabric3.spi.model.type;
 
 import javax.xml.namespace.QName;
 
 import org.fabric3.scdl.BindingDefinition;
 
 /**
+ * Represents a service bound to a JMX provider.
+ *
  * @version $Rev$ $Date$
  */
 public class JMXBinding extends BindingDefinition {

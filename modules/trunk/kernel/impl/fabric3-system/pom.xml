@@ -54,11 +54,6 @@
             <artifactId>fabric3-pojo</artifactId>
             <version>0.7-SNAPSHOT</version>
         </dependency>
-        <dependency>
-            <groupId>org.codehaus.fabric3</groupId>
-            <artifactId>fabric3-jmx</artifactId>
-            <version>0.7-SNAPSHOT</version>
-        </dependency>
 
         <!-- mark the API as provided as it is included in Java6 -->
         <dependency>

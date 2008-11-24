@@ -97,7 +97,7 @@ import org.fabric3.host.runtime.InitializationException;
 import org.fabric3.jmx.control.JMXBindingGenerator;
 import org.fabric3.jmx.provision.JMXWireSourceDefinition;
 import org.fabric3.jmx.runtime.JMXWireAttacher;
-import org.fabric3.jmx.scdl.JMXBinding;
+import org.fabric3.spi.model.type.JMXBinding;
 import org.fabric3.host.monitor.MonitorFactory;
 import org.fabric3.host.domain.Domain;
 import org.fabric3.pojo.control.GenerationHelperImpl;

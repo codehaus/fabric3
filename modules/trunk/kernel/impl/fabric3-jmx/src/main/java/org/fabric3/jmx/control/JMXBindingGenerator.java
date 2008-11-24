@@ -21,14 +21,13 @@ import java.net.URI;
 import org.osoa.sca.annotations.EagerInit;
 
 import org.fabric3.jmx.provision.JMXWireSourceDefinition;
-import org.fabric3.jmx.scdl.JMXBinding;
+import org.fabric3.spi.model.type.JMXBinding;
 import org.fabric3.scdl.ReferenceDefinition;
 import org.fabric3.scdl.ServiceDefinition;
 import org.fabric3.spi.generator.BindingGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.Bindable;
 import org.fabric3.spi.model.instance.LogicalBinding;
-import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 import org.fabric3.spi.policy.Policy;
 
