@@ -335,9 +335,13 @@ public class Fabric3ITestMojo extends AbstractMojo {
      * @throws MojoExecutionException if there is an error creating the configuration
      */
     private MavenBootConfiguration createBootConfiguration() throws MojoExecutionException {
+        
         List<FeatureSet> featureSets = resolveFeatureSets();
         Set<Artifact> runtimeArtifacts = artifactHelper.calculateRuntimeArtifacts(runtimeVersion);
-        Set<Artifact> hostArtifacts = artifactHelper.calculateHostArtifacts(runtimeArtifacts, shared, getArtifacts("f3-shared"), featureSets);
+        Set<Artifact> hostArtifacts = artifactHelper.calculateHostArtifacts(runtimeArtifacts, 
+                                                                            shared, 
+                                                                            getArtifacts("f3-extension"), 
+                                                                            featureSets);
         Set<Artifact> dependencies = artifactHelper.calculateDependencies();
         Set<URL> moduleDependencies = artifactHelper.calculateModuleDependencies(dependencies, hostArtifacts);
 
