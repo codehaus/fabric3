@@ -18,12 +18,10 @@ package org.fabric3.fabric.policy;
 
 import java.util.Collections;
 import java.util.List;
-
 import javax.xml.namespace.QName;
 
 import org.fabric3.scdl.Operation;
 import org.fabric3.scdl.ServiceContract;
-import org.fabric3.scdl.definitions.Intent;
 import org.fabric3.scdl.definitions.PolicySet;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.instance.LogicalComponent;
