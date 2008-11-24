@@ -88,7 +88,7 @@ import org.fabric3.spi.services.lcm.LogicalComponentManager;
 import org.fabric3.spi.services.synthesize.ComponentRegistrationException;
 import org.fabric3.spi.services.synthesize.ComponentSynthesizer;
 import org.fabric3.spi.xml.XMLFactory;
-import org.fabric3.system.introspection.BootstrapIntrospectionFactory;
+import org.fabric3.fabric.runtime.bootstrap.BootstrapIntrospectionFactory;
 import org.fabric3.system.scdl.SystemImplementation;
 
 /**

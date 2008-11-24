@@ -14,7 +14,7 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.system.introspection;
+package org.fabric3.fabric.runtime.bootstrap;
 
 import java.lang.annotation.Annotation;
 import java.util.HashMap;
@@ -42,6 +42,11 @@ import org.fabric3.spi.introspection.java.AnnotationProcessor;
 import org.fabric3.spi.introspection.java.ClassWalker;
 import org.fabric3.spi.introspection.java.ImplementationProcessor;
 import org.fabric3.system.scdl.SystemImplementation;
+import org.fabric3.system.introspection.SystemServiceHeuristic;
+import org.fabric3.system.introspection.SystemConstructorHeuristic;
+import org.fabric3.system.introspection.SystemUnannotatedHeuristic;
+import org.fabric3.system.introspection.SystemHeuristic;
+import org.fabric3.system.introspection.SystemImplementationProcessorImpl;
 
 /**
  * Instantiates an ImplementationProcessor for introspecting system components. System components are composite-scoped and support the standard SCA

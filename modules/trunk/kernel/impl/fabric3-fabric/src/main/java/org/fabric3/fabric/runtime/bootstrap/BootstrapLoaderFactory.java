@@ -14,7 +14,7 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.system.introspection;
+package org.fabric3.fabric.runtime.bootstrap;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -37,6 +37,7 @@ import org.fabric3.spi.introspection.xml.LoaderHelper;
 import org.fabric3.spi.introspection.xml.TypeLoader;
 import org.fabric3.spi.xml.XMLFactory;
 import org.fabric3.system.scdl.SystemImplementation;
+import org.fabric3.system.introspection.SystemImplementationLoader;
 
 /**
  * Factory class for an implementation of Loader that can handle system SCDL.
