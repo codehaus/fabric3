@@ -40,25 +40,33 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.StringTokenizer;
-
 import javax.xml.XMLConstants;
 import javax.xml.namespace.QName;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import static javax.xml.stream.XMLStreamConstants.CDATA;
+import static javax.xml.stream.XMLStreamConstants.CHARACTERS;
+import static javax.xml.stream.XMLStreamConstants.COMMENT;
+import static javax.xml.stream.XMLStreamConstants.DTD;
+import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
+import static javax.xml.stream.XMLStreamConstants.ENTITY_REFERENCE;
+import static javax.xml.stream.XMLStreamConstants.PROCESSING_INSTRUCTION;
+import static javax.xml.stream.XMLStreamConstants.SPACE;
+import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
-import org.fabric3.spi.introspection.IntrospectionContext;
-import org.fabric3.spi.introspection.xml.InvalidPrefixException;
-import org.fabric3.spi.introspection.xml.LoaderHelper;
-import org.fabric3.spi.introspection.xml.InvalidQNamePrefix;
-import org.fabric3.scdl.PolicyAware;
-import org.fabric3.spi.Namespaces;
-import org.fabric3.spi.transform.TransformationException;
-import org.fabric3.transform.xml.Stream2Element2;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
+import org.w3c.dom.Text;
+
+import org.fabric3.scdl.PolicyAware;
+import org.fabric3.spi.Namespaces;
+import org.fabric3.spi.introspection.IntrospectionContext;
+import org.fabric3.spi.introspection.xml.InvalidPrefixException;
+import org.fabric3.spi.introspection.xml.InvalidQNamePrefix;
+import org.fabric3.spi.introspection.xml.LoaderHelper;
 
 /**
  * Default implementation of the loader helper.
@@ -66,21 +74,18 @@ import org.w3c.dom.Element;
  * @version $Revision$ $Date$
  */
 public class DefaultLoaderHelper implements LoaderHelper {
-    private final Stream2Element2 stream2Element;
     private final DocumentBuilderFactory documentBuilderFactory;
 
     public DefaultLoaderHelper() {
-        stream2Element = new Stream2Element2();
         documentBuilderFactory = DocumentBuilderFactory.newInstance();
         documentBuilderFactory.setNamespaceAware(true);
     }
+
     /**
      * Load the value of the attribute key from the current element.
      *
      * @param reader a stream containing a property value
      * @return a standalone document containing the value
-     * @throws javax.xml.stream.XMLStreamException
-     *          if there was a problem reading the stream
      */
     public Document loadKey(XMLStreamReader reader) {
         DocumentBuilder builder;
@@ -113,7 +118,7 @@ public class DefaultLoaderHelper implements LoaderHelper {
         // set the text value
         element.appendChild(document.createTextNode(key));
         return document;
-    	
+
     }
 
 
@@ -127,11 +132,7 @@ public class DefaultLoaderHelper implements LoaderHelper {
         Document value = builder.newDocument();
         Element root = value.createElement("value");
         value.appendChild(root);
-        try {
-            stream2Element.transform(reader, root, null);
-        } catch (TransformationException e) {
-            throw (XMLStreamException) e.getCause();
-        }
+        transform(reader, root);
         return value;
     }
 
@@ -205,9 +206,64 @@ public class DefaultLoaderHelper implements LoaderHelper {
             StringTokenizer tok = new StringTokenizer(value);
             List<URI> result = new ArrayList<URI>(tok.countTokens());
             while (tok.hasMoreTokens()) {
-            	result.add(getURI(tok.nextToken().trim()));
+                result.add(getURI(tok.nextToken().trim()));
             }
             return result;
         }
     }
+
+    private void transform(XMLStreamReader reader, Element element) throws XMLStreamException {
+
+        Document document = element.getOwnerDocument();
+        int depth = 0;
+        while (true) {
+            int next = reader.next();
+            switch (next) {
+            case START_ELEMENT:
+
+                Element child = document.createElementNS(reader.getNamespaceURI(), reader.getLocalName());
+
+                for (int i = 0; i < reader.getAttributeCount(); i++) {
+                    child.setAttributeNS(reader.getAttributeNamespace(i),
+                                         reader.getAttributeLocalName(i),
+                                         reader.getAttributeValue(i));
+                }
+
+                // Handle namespaces
+                for (int i = 0; i < reader.getNamespaceCount(); i++) {
+
+                    String prefix = reader.getNamespacePrefix(i);
+                    String uri = reader.getNamespaceURI(i);
+
+                    prefix = prefix == null ? "xmlns" : "xmlns:" + prefix;
+
+                    child.setAttribute(prefix, uri);
+
+                }
+
+                element.appendChild(child);
+                element = child;
+                depth++;
+                break;
+            case CHARACTERS:
+            case CDATA:
+                Text text = document.createTextNode(reader.getText());
+                element.appendChild(text);
+                break;
+            case END_ELEMENT:
+                if (depth == 0) {
+                    return;
+                }
+                depth--;
+                element = (Element) element.getParentNode();
+            case ENTITY_REFERENCE:
+            case COMMENT:
+            case SPACE:
+            case PROCESSING_INSTRUCTION:
+            case DTD:
+                break;
+            }
+        }
+    }
+
 }
