@@ -93,6 +93,14 @@
             <artifactId>FastInfoset</artifactId>
             <version>1.2.3</version>
         </dependency>
+         
+         <!-- Shared dependencies -->
+		<dependency>
+			<groupId>javax.xml.ws</groupId>
+			<artifactId>jaxws-api</artifactId>
+			<version>2.1</version>
+			<scope>f3-shared</scope>
+		</dependency>
 
     </dependencies>
     
