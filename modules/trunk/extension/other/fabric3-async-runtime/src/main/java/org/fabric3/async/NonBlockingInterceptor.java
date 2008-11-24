@@ -14,17 +14,17 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.fabric.async;
+package org.fabric3.async;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.HashMap;
 
 import org.fabric3.host.work.WorkScheduler;
 import org.fabric3.spi.invocation.CallFrame;
-import org.fabric3.spi.invocation.WorkContext;
 import org.fabric3.spi.invocation.Message;
+import org.fabric3.spi.invocation.WorkContext;
 import org.fabric3.spi.wire.Interceptor;
 
 /**

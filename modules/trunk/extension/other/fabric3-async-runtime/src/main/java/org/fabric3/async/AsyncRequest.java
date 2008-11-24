@@ -14,16 +14,16 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.fabric.async;
+package org.fabric3.async;
 
 import java.util.List;
 import java.util.Map;
 
 import org.fabric3.host.work.DefaultPausableWork;
-import org.fabric3.spi.wire.Interceptor;
-import org.fabric3.spi.invocation.Message;
 import org.fabric3.spi.invocation.CallFrame;
+import org.fabric3.spi.invocation.Message;
 import org.fabric3.spi.invocation.WorkContext;
+import org.fabric3.spi.wire.Interceptor;
 
 /**
  * Encapsulates an invocation to be processed asynchronously.

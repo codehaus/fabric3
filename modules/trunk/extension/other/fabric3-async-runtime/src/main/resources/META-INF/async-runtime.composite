@@ -22,8 +22,8 @@
            name="AsyncRuntimeExtension"
            autowire="true">
 
-    <component f3-core:key="org.fabric3.fabric.async.NonBlockingInterceptorDefinition" name="NonBlockingInterceptorBuilder">
-        <f3-impl:implementation.system class="org.fabric3.fabric.async.NonBlockingInterceptorBuilder"/>
+    <component f3-core:key="org.fabric3.async.NonBlockingInterceptorDefinition" name="NonBlockingInterceptorBuilder">
+        <f3-impl:implementation.system class="org.fabric3.async.NonBlockingInterceptorBuilder"/>
     </component>
 
 </composite>

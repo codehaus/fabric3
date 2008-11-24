@@ -14,7 +14,7 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.fabric.async;
+package org.fabric3.async;
 
 import junit.framework.TestCase;
 

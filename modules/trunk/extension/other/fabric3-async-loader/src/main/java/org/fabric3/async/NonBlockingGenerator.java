@@ -14,9 +14,14 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.fabric.async;
+package org.fabric3.async;
 
 import javax.xml.namespace.QName;
+
+import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Init;
+import org.osoa.sca.annotations.Reference;
+import org.w3c.dom.Element;
 
 import org.fabric3.scdl.Operation;
 import org.fabric3.spi.Namespaces;
@@ -25,10 +30,6 @@ import org.fabric3.spi.generator.GeneratorRegistry;
 import org.fabric3.spi.generator.InterceptorDefinitionGenerator;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.physical.PhysicalInterceptorDefinition;
-import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Init;
-import org.osoa.sca.annotations.Reference;
-import org.w3c.dom.Element;
 
 /**
  * Creates {@link NonBlockingInterceptorDefinition}s for one-way operations.
@@ -37,9 +38,9 @@ import org.w3c.dom.Element;
  */
 @EagerInit
 public class NonBlockingGenerator implements InterceptorDefinitionGenerator {
-    
+
     private static final QName QNAME = new QName(Namespaces.POLICY, "oneWayPolicy");
-    
+
     private GeneratorRegistry registry;
 
     public NonBlockingGenerator(@Reference GeneratorRegistry registry) {
