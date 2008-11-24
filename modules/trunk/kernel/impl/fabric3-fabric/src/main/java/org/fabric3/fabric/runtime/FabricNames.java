@@ -14,18 +14,18 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.spi;
+package org.fabric3.fabric.runtime;
 
 import java.net.URI;
 
 import org.fabric3.host.Names;
 
 /**
- * Defines URIs of well-known runtime components and classloaders available through the SPI.
+ * Defines URIs of well-known runtime component names used during bootstrap.
  *
  * @version $Revision$ $Date$
  */
-public interface SPINames {
+public interface FabricNames {
 
     URI EVENT_SERVICE_URI = URI.create(Names.RUNTIME_NAME + "/EventService");
 
@@ -33,6 +33,5 @@ public interface SPINames {
 
     URI METADATA_STORE_URI = URI.create(Names.RUNTIME_NAME + "/MetaDataStore");
 
-    URI XML_MANIFEST_PROCESSOR_URI = URI.create(Names.RUNTIME_NAME + "/XmlManifestProcessor");
 
 }
