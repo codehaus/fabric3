@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
  Fabric3
  Copyright © 2008 Metaform Systems Limited
@@ -23,19 +23,19 @@
 
     <!-- Unit test -->
     <component name="TransactionalServiceTest">
-        <f3-impl:junit class="org.fabric3.fabric.policy.TransactionalServiceTest"/>
+        <f3-impl:junit class="org.fabric3.policy.TransactionalServiceTest"/>
         <reference name="transactionalService" target="TransactionalService1"/>
     </component>
 
     <!-- Transactional Service Impl -->
     <component name="TransactionalService1">
-        <implementation.java class="org.fabric3.fabric.policy.TransactionalServiceImpl" requires="sca:managedTransaction"/>
+        <implementation.java class="org.fabric3.policy.TransactionalServiceImpl" requires="sca:managedTransaction"/>
         <reference name="childService" target="TransactionalService2" requires="sca:suspendsTransaction"/>
     </component>
 
     <!-- Transactional Service Impl -->
     <component name="TransactionalService2">
-        <implementation.java class="org.fabric3.fabric.policy.TransactionalServiceImpl" requires="sca:managedTransaction"/>
+        <implementation.java class="org.fabric3.policy.TransactionalServiceImpl" requires="sca:managedTransaction"/>
     </component>
 
 </composite>

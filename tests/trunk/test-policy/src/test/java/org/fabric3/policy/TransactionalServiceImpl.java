@@ -14,14 +14,29 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.fabric.policy;
+package org.fabric3.policy;
 
+import org.osoa.sca.annotations.Reference;
+import org.osoa.sca.annotations.Scope;
 
 /**
  * @version $Revision$ $Date$
  */
-public interface TransactionalService {
+@Scope("COMPOSITE")
+public class TransactionalServiceImpl implements TransactionalService {
+
+    private TransactionalService transactionalService;
     
-    void call() throws Exception;
+    @Reference(required = false)
+    public void setChildService(TransactionalService transactionalService) {
+        this.transactionalService = transactionalService;
+    }
+    
+    public void call() throws Exception {
+        if (transactionalService != null) {
+            transactionalService.call();
+        }
+    }
+
 
 }

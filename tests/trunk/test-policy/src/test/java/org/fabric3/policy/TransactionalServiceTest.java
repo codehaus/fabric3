@@ -14,11 +14,10 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.fabric.policy;
-
-import org.osoa.sca.annotations.Reference;
+package org.fabric3.policy;
 
 import junit.framework.TestCase;
+import org.osoa.sca.annotations.Reference;
 
 /**
  * @version $Revision$ $Date$
