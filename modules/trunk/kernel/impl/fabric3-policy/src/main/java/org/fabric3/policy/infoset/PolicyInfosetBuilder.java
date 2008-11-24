@@ -14,24 +14,33 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.fabric.policy.infoset;
+package org.fabric3.policy.infoset;
 
+import org.fabric3.spi.model.instance.LogicalBinding;
+import org.fabric3.spi.model.instance.LogicalComponent;
 import org.w3c.dom.Element;
 
 /**
+ * Builds an infoset against which the policy set is evaluated.
+ * 
  * @version $Revision$ $Date$
  */
-public interface PolicySetEvaluator {
+public interface PolicyInfosetBuilder {
     
     /**
-     * Whether the policy set applies for the target element. The target element 
-     * represents the infoset for either the parent of a binding or implementation.
+     * Builds the infoset to evaluate the policy expression for an interaction intent.
      * 
-     * @param target Target element against which the XPath is evaluated.
-     * @param appliesToXPath XPath expression specified against the policy set.
-     * @param operation Operation against which the intents are evaluated.
-     * @return True if the policy set applies against the target element.
+     * @param logicalBinding Target binding.
+     * @return Infoset against whch whether the policy appplies is checked.
      */
-    boolean doesApply(Element target, String appliesToXPath, String operation);
+    Element buildInfoSet(LogicalBinding<?> logicalBinding);
+    
+    /**
+     * Builds the infoset to evaluate the policy expression for an implementation intent.
+     * 
+     * @param logicalComponent Target component.
+     * @return Infoset against whch whether the policy appplies is checked.
+     */
+    Element buildInfoSet(LogicalComponent<?> logicalComponent);
 
 }

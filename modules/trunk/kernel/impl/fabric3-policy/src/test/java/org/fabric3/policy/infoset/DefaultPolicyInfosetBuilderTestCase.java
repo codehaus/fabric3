@@ -14,11 +14,12 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.fabric.policy.infoset;
+package org.fabric3.policy.infoset;
 
 import javax.xml.namespace.QName;
 
 import junit.framework.TestCase;
+import org.w3c.dom.Element;
 
 import org.fabric3.scdl.AbstractComponentType;
 import org.fabric3.scdl.BindingDefinition;
@@ -31,19 +32,18 @@ import org.fabric3.scdl.ServiceDefinition;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.model.instance.LogicalComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
-import org.w3c.dom.Element;
 
 /**
  * @version $Revision$ $Date$
  */
-public class DefaultPolicyInfosetBuilderTest extends TestCase {
+public class DefaultPolicyInfosetBuilderTestCase extends TestCase {
 
     public void testBuildInfoSetLogicalBinding() {
         
         Element element = new DefaultPolicyInfosetBuilder().buildInfoSet(getTestBinding());
         
-        assertEquals("service", element.getNodeName());
-        assertEquals("testService", element.getAttribute("name"));
+        assertEquals("reference", element.getNodeName());
+        assertEquals("testReference", element.getAttribute("name"));
         assertEquals("binding.test", element.getFirstChild().getNodeName());
         assertEquals("component", element.getParentNode().getNodeName());
         assertEquals("testComponent", element.getParentNode().getAttributes().getNamedItem("name").getNodeValue());
@@ -76,7 +76,7 @@ public class DefaultPolicyInfosetBuilderTest extends TestCase {
         ComponentDefinition<TestImplementation> componentDefinition = new ComponentDefinition<TestImplementation>("testComponent", implementation);
         LogicalComponent<TestImplementation> logicalComponent = new LogicalComponent<TestImplementation>(null, componentDefinition, null);
         
-        ReferenceDefinition referenceDefinition = new ReferenceDefinition("testService", null);
+        ReferenceDefinition referenceDefinition = new ReferenceDefinition("testReference", null);
         LogicalReference logicalReference = new LogicalReference(null, referenceDefinition, logicalComponent);
         
         TestBinidingDefinition testBinidingDefinition = new TestBinidingDefinition();

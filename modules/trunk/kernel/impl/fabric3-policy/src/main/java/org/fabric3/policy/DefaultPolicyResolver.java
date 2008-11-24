@@ -14,20 +14,21 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.fabric.policy;
+package org.fabric3.policy;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
-
 import javax.xml.namespace.QName;
 
-import org.fabric3.fabric.policy.helper.ImplementationPolicyHelper;
-import org.fabric3.fabric.policy.helper.InteractionPolicyHelper;
-import org.fabric3.fabric.policy.infoset.PolicyInfosetBuilder;
+import org.osoa.sca.annotations.Reference;
+import org.w3c.dom.Element;
+
+import org.fabric3.policy.infoset.PolicyInfosetBuilder;
+import org.fabric3.policy.helper.ImplementationPolicyHelper;
+import org.fabric3.policy.helper.InteractionPolicyHelper;
 import org.fabric3.scdl.Operation;
 import org.fabric3.scdl.ServiceContract;
-import org.fabric3.scdl.definitions.Intent;
 import org.fabric3.scdl.definitions.PolicyPhase;
 import org.fabric3.scdl.definitions.PolicySet;
 import org.fabric3.spi.Namespaces;
@@ -39,8 +40,6 @@ import org.fabric3.spi.policy.PolicyResolver;
 import org.fabric3.spi.policy.PolicyResult;
 import org.fabric3.util.closure.Closure;
 import org.fabric3.util.closure.CollectionUtils;
-import org.osoa.sca.annotations.Reference;
-import org.w3c.dom.Element;
 
 /**
  * @version $Revision$ $Date$

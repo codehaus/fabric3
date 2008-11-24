@@ -14,18 +14,29 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.fabric.policy.registry;
+package org.fabric3.policy.interceptor.simple;
 
-import junit.framework.TestCase;
+import org.fabric3.spi.builder.BuilderException;
 
 /**
- *
+ * Exception thrown in case of instantiating interceptors.
+ * 
  * @version $Revision$ $Date$
  */
-public class DefaultPolicyRegistryTest extends TestCase {
+public class SimpleInterceptorBuilderException extends BuilderException {
 
-    public void testGetInterceptorBuilders() {
-        fail("Not yet implemented");
+    /**
+     * Serial version UID.
+     */
+    private static final long serialVersionUID = -3619466088352819526L;
+
+    /**
+     * @param message Message for the exception.
+     * @param identifier Exception identifier.
+     * @param cause Root cause of the exception.
+     */
+    public SimpleInterceptorBuilderException(String message, String identifier, Throwable cause) {
+        super(message, identifier, cause);
     }
 
 }

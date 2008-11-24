@@ -14,7 +14,7 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.fabric.policy.helper;
+package org.fabric3.policy.helper;
 
 import java.util.Set;
 

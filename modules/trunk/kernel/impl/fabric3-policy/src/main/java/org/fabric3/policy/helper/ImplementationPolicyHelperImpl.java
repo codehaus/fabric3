@@ -14,49 +14,51 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.fabric.policy.helper;
+package org.fabric3.policy.helper;
 
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Set;
-
 import javax.xml.namespace.QName;
 
-import org.fabric3.fabric.policy.infoset.PolicySetEvaluator;
-import org.fabric3.scdl.Operation;
-import org.fabric3.scdl.definitions.BindingType;
-import org.fabric3.scdl.definitions.Intent;
-import org.fabric3.scdl.definitions.PolicySet;
-import org.fabric3.spi.model.instance.LogicalBinding;
-import org.fabric3.spi.policy.PolicyResolutionException;
-import org.fabric3.spi.services.definitions.DefinitionsRegistry;
 import org.osoa.sca.annotations.Reference;
 import org.w3c.dom.Element;
+
+import org.fabric3.policy.infoset.PolicySetEvaluator;
+import org.fabric3.scdl.Implementation;
+import org.fabric3.scdl.Operation;
+import org.fabric3.scdl.definitions.ImplementationType;
+import org.fabric3.scdl.definitions.Intent;
+import org.fabric3.scdl.definitions.PolicySet;
+import org.fabric3.spi.model.instance.LogicalComponent;
+import org.fabric3.spi.policy.PolicyResolutionException;
+import org.fabric3.spi.services.definitions.DefinitionsRegistry;
 
 /**
  * @version $Revision$ $Date$
  */
-public class InteractionPolicyHelperImpl extends AbstractPolicyHelper implements InteractionPolicyHelper {
+public class ImplementationPolicyHelperImpl extends AbstractPolicyHelper implements ImplementationPolicyHelper {
 
-    public InteractionPolicyHelperImpl(@Reference DefinitionsRegistry definitionsRegistry,
-                                       @Reference PolicySetEvaluator policySetEvaluator) {
+    public ImplementationPolicyHelperImpl(@Reference DefinitionsRegistry definitionsRegistry,
+                                          @Reference PolicySetEvaluator policySetEvaluator) {
         super(definitionsRegistry, policySetEvaluator);
     }
-
-    public Set<Intent> getProvidedIntents(LogicalBinding<?> logicalBinding, Operation<?> operation) throws PolicyResolutionException {
+    
+    public Set<Intent> getProvidedIntents(LogicalComponent<?> logicalComponent, Operation<?> operation) throws PolicyResolutionException {
         
-        QName type = logicalBinding.getDefinition().getType();
-        BindingType bindingType = definitionsRegistry.getDefinition(type, BindingType.class);
+        Implementation<?> implementation = logicalComponent.getDefinition().getImplementation();
+        QName type = implementation.getType();
+        ImplementationType implementationType = definitionsRegistry.getDefinition(type, ImplementationType.class);
         
-        // FIXME This should not happen, all binding types should be registsred
-        if (bindingType == null) {
+        // FIXME This should not happen, all implementation types should be registsred
+        if(implementationType == null) {
             return Collections.emptySet();
         }
-
-        Set<QName> mayProvidedIntents = bindingType.getMayProvide();
         
-        Set<Intent> requiredIntents = getRequestedIntents(logicalBinding, operation);
+        Set<QName> mayProvidedIntents = implementationType.getMayProvide();
+
+        Set<Intent> requiredIntents = getRequestedIntents(logicalComponent, operation);
         
         Set<Intent> intentsToBeProvided = new LinkedHashSet<Intent>();
         for(Intent intent : requiredIntents) {
@@ -64,26 +66,26 @@ public class InteractionPolicyHelperImpl extends AbstractPolicyHelper implements
                 intentsToBeProvided.add(intent);
             }
         }
-        
         return intentsToBeProvided;
         
     }
     
-    public Set<PolicySet> resolveIntents(LogicalBinding<?> logicalBinding, Operation<?> operation, Element target) throws PolicyResolutionException {
-
-        QName type = logicalBinding.getDefinition().getType();
-        BindingType bindingType = definitionsRegistry.getDefinition(type, BindingType.class);
+    public Set<PolicySet> resolveIntents(LogicalComponent<?> logicalComponent, Operation<?> operation, Element target) throws PolicyResolutionException {
+        
+        Implementation<?> implementation = logicalComponent.getDefinition().getImplementation();
+        QName type = implementation.getType();
+        ImplementationType implementationType = definitionsRegistry.getDefinition(type, ImplementationType.class);
         
         Set<QName> alwaysProvidedIntents = new LinkedHashSet<QName>();
         Set<QName> mayProvidedIntents = new LinkedHashSet<QName>();
 
-        // FIXME This should not happen, all binding types should be registsred
-        if (bindingType != null) {
-            alwaysProvidedIntents = bindingType.getAlwaysProvide();
-            mayProvidedIntents = bindingType.getMayProvide();
+        // FIXME This should not happen, all implementation types should be registsred
+        if(implementationType != null) {
+            alwaysProvidedIntents = implementationType.getAlwaysProvide();
+            mayProvidedIntents = implementationType.getMayProvide();
         }
 
-        Set<Intent> requiredIntents = getRequestedIntents(logicalBinding, operation);
+        Set<Intent> requiredIntents = getRequestedIntents(logicalComponent, operation);
         Set<Intent> requiredIntentsCopy = new HashSet<Intent>(requiredIntents);
         
         // Remove intents that are provided
@@ -103,20 +105,19 @@ public class InteractionPolicyHelperImpl extends AbstractPolicyHelper implements
         
     }
 
-    private Set<Intent> getRequestedIntents(LogicalBinding<?> logicalBinding, 
-                                            Operation<?> operation) throws PolicyResolutionException {
+    private Set<Intent> getRequestedIntents(LogicalComponent<?> logicalComponent, Operation<?> operation) throws PolicyResolutionException {
         
         // Aggregate all the intents from the ancestors
         Set<QName> intentNames = new LinkedHashSet<QName>();
         intentNames.addAll(operation.getIntents());
-        intentNames.addAll(logicalBinding.getDefinition().getIntents());
-        intentNames.addAll(aggregateIntents(logicalBinding));
+        intentNames.addAll(logicalComponent.getDefinition().getImplementation().getIntents());
+        intentNames.addAll(aggregateIntents(logicalComponent));
         
         // Expand all the profile intents
         Set<Intent> requiredIntents = resolveProfileIntents(intentNames);
         
         // Remove intents not applicable to the artifact
-        filterInvalidIntents(Intent.BINDING, requiredIntents);
+        filterInvalidIntents(Intent.IMPLEMENTATION, requiredIntents);
         
         return requiredIntents;
         

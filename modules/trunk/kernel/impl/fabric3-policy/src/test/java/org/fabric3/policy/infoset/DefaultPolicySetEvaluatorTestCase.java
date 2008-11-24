@@ -14,31 +14,30 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.fabric.policy.infoset;
+package org.fabric3.policy.infoset;
 
 import junit.framework.TestCase;
-
 import org.w3c.dom.Element;
 
 /**
  * @version $Revision$ $Date$
  */
-public class DefaultPolicySetEvaluatorTest extends TestCase {
+public class DefaultPolicySetEvaluatorTestCase extends TestCase {
     
     private PolicyInfosetBuilder policyInfosetBuilder = new DefaultPolicyInfosetBuilder();
     private PolicySetEvaluator policySetEvaluator = new DefaultPolicySetEvaluator();
 
     public void testDoesApplyForBinding() {
         
-        Element bindableElement = policyInfosetBuilder.buildInfoSet(DefaultPolicyInfosetBuilderTest.getTestBinding());
-        String expression = "@name='testService' and ../@name='testComponent' and $Operation='testOperation'";
+        Element bindableElement = policyInfosetBuilder.buildInfoSet(DefaultPolicyInfosetBuilderTestCase.getTestBinding());
+        String expression = "@name='testReference' and ../@name='testComponent' and $Operation='testOperation'";
         assertTrue(policySetEvaluator.doesApply(bindableElement, expression, "testOperation"));
         
     }
 
     public void testDoesApplyForBindingSimple() {
         
-        Element bindableElement = policyInfosetBuilder.buildInfoSet(DefaultPolicyInfosetBuilderTest.getTestBinding());
+        Element bindableElement = policyInfosetBuilder.buildInfoSet(DefaultPolicyInfosetBuilderTestCase.getTestBinding());
         String expression = "local-name() = 'reference'";
         assertTrue(policySetEvaluator.doesApply(bindableElement, expression, "testOperation"));
         
@@ -46,7 +45,7 @@ public class DefaultPolicySetEvaluatorTest extends TestCase {
 
     public void testDoesApplyForBindingFalse() {
         
-        Element bindableElement = policyInfosetBuilder.buildInfoSet(DefaultPolicyInfosetBuilderTest.getTestBinding());
+        Element bindableElement = policyInfosetBuilder.buildInfoSet(DefaultPolicyInfosetBuilderTestCase.getTestBinding());
         String expression = "@name='testService' and ../@name='testComponent' and $Operation='testOperation'";
         assertFalse(policySetEvaluator.doesApply(bindableElement, expression, "testOperation1"));
         
@@ -54,7 +53,7 @@ public class DefaultPolicySetEvaluatorTest extends TestCase {
 
     public void testDoesApplyForImplementation() {
         
-        Element componentElement = policyInfosetBuilder.buildInfoSet(DefaultPolicyInfosetBuilderTest.getTestComponent());
+        Element componentElement = policyInfosetBuilder.buildInfoSet(DefaultPolicyInfosetBuilderTestCase.getTestComponent());
         String expression = "@name='testComponent'";
         assertTrue(policySetEvaluator.doesApply(componentElement, expression, "testOperation"));
         
@@ -62,7 +61,7 @@ public class DefaultPolicySetEvaluatorTest extends TestCase {
 
     public void testDoesApplyForImplementationFalse() {
         
-        Element componentElement = policyInfosetBuilder.buildInfoSet(DefaultPolicyInfosetBuilderTest.getTestComponent());
+        Element componentElement = policyInfosetBuilder.buildInfoSet(DefaultPolicyInfosetBuilderTestCase.getTestComponent());
         String expression = "@name='testComponent' and $Operation='testOperation'";
         assertFalse(policySetEvaluator.doesApply(componentElement, expression, "testOperation1"));
         
