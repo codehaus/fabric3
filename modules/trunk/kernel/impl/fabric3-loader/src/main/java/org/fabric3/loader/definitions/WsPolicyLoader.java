@@ -62,7 +62,7 @@ public class WsPolicyLoader {
                 QName name = reader.getName();
                 System.err.println(name);
                 if (POLICY.equals(name) || ALL.equals(name)) {
-                    AllPolicyOperator allPolicyOperator = new AllPolicyOperator(name);
+                    AllPolicyOperator allPolicyOperator = new AllPolicyOperator(ALL);
                     if (!policyNodes.isEmpty()) {
                         PolicyOperatorParent parent = (PolicyOperatorParent) policyNodes.peek();
                         parent.addPolicyOperator(allPolicyOperator);

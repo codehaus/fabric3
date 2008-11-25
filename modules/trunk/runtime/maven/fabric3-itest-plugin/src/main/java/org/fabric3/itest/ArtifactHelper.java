@@ -38,24 +38,22 @@ import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.StringTokenizer;
 
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.factory.ArtifactFactory;
-import org.apache.maven.artifact.metadata.ArtifactMetadata;
 import org.apache.maven.artifact.metadata.ArtifactMetadataRetrievalException;
 import org.apache.maven.artifact.metadata.ArtifactMetadataSource;
 import org.apache.maven.artifact.metadata.ResolutionGroup;
@@ -70,10 +68,7 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.MavenProject;
 import org.fabric3.featureset.FeatureSet;
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
-
 
 /**
  *
@@ -292,13 +287,14 @@ public class ArtifactHelper {
             Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(pomFile);
             
             XPath xpath = XPathFactory.newInstance().newXPath();
-            NodeList nodeList = (NodeList) xpath.evaluate("//dependencies/dependency[scope/text()='f3-shared']", doc, XPathConstants.NODESET);
+            String f3Shared = xpath.evaluate("//f3Shared/text()", doc);
             
-            for (int i = 0;i < nodeList.getLength();i++) {
-                Element dependencyNode = (Element) nodeList.item(i);
-                String artifactId = xpath.evaluate("artifactId", dependencyNode);
-                String groupId = xpath.evaluate("groupId", dependencyNode);
-                String version = xpath.evaluate("version", dependencyNode);
+            StringTokenizer tok1 = new StringTokenizer(f3Shared, ";");
+            while (tok1.hasMoreTokens()) {
+                StringTokenizer tok2 = new StringTokenizer(tok1.nextToken(), ":");
+                String groupId = tok2.nextToken();
+                String artifactId = tok2.nextToken();
+                String version = tok2.nextToken();
                 Dependency dependency = new Dependency();
                 dependency.setArtifactId(artifactId);
                 dependency.setVersion(version);
