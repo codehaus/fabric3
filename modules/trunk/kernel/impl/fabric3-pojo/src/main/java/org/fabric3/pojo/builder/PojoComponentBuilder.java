@@ -45,6 +45,7 @@ import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 
 import org.fabric3.pojo.instancefactory.InstanceFactoryBuilderRegistry;
+import org.fabric3.pojo.instancefactory.InstanceFactoryProvider;
 import org.fabric3.pojo.provision.PojoComponentDefinition;
 import org.fabric3.scdl.DataType;
 import org.fabric3.scdl.InjectableAttribute;
@@ -56,7 +57,6 @@ import org.fabric3.spi.builder.BuilderException;
 import org.fabric3.spi.builder.component.ComponentBuilder;
 import org.fabric3.spi.builder.component.ComponentBuilderRegistry;
 import org.fabric3.spi.component.Component;
-import org.fabric3.spi.component.InstanceFactoryProvider;
 import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.spi.model.type.JavaClass;
 import org.fabric3.spi.model.type.JavaParameterizedType;

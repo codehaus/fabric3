@@ -34,7 +34,7 @@
  */
 package org.fabric3.pojo.instancefactory;
 
-import org.fabric3.spi.component.InstanceFactoryProvider;
+import org.fabric3.pojo.instancefactory.InstanceFactoryProvider;
 import org.fabric3.pojo.provision.InstanceFactoryDefinition;
 
 /**

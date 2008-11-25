@@ -39,7 +39,7 @@ import java.net.URI;
 import javax.xml.namespace.QName;
 
 import org.fabric3.pojo.component.PojoComponent;
-import org.fabric3.spi.component.InstanceFactoryProvider;
+import org.fabric3.pojo.instancefactory.InstanceFactoryProvider;
 import org.fabric3.spi.component.ScopeContainer;
 
 /**

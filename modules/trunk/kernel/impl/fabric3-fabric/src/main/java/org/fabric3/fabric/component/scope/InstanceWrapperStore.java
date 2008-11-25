@@ -32,7 +32,10 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.spi.component;
+package org.fabric3.fabric.component.scope;
+
+import org.fabric3.spi.component.AtomicComponent;
+import org.fabric3.spi.component.InstanceWrapper;
 
 /**
  * Interface implemented by services that are able to store InstanceWrappers between invocations.

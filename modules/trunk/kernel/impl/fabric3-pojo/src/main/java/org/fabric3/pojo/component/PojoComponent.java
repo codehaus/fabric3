@@ -40,14 +40,14 @@ import java.util.Map;
 import javax.xml.namespace.QName;
 
 import org.fabric3.pojo.injection.ComponentObjectFactory;
+import org.fabric3.pojo.instancefactory.InstanceFactoryProvider;
 import org.fabric3.scdl.InjectableAttribute;
 import org.fabric3.scdl.PropertyValue;
 import org.fabric3.spi.AbstractLifecycle;
 import org.fabric3.spi.ObjectCreationException;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.component.AtomicComponent;
-import org.fabric3.spi.component.InstanceFactory;
-import org.fabric3.spi.component.InstanceFactoryProvider;
+import org.fabric3.pojo.instancefactory.InstanceFactory;
 import org.fabric3.spi.component.InstanceWrapper;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.invocation.WorkContext;

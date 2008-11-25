@@ -56,8 +56,8 @@ import org.fabric3.scdl.InjectableAttributeType;
 import org.fabric3.scdl.InjectionSite;
 import org.fabric3.scdl.MethodInjectionSite;
 import org.fabric3.spi.ObjectFactory;
-import org.fabric3.spi.component.InstanceFactory;
-import org.fabric3.spi.component.InstanceFactoryProvider;
+import org.fabric3.pojo.instancefactory.InstanceFactory;
+import org.fabric3.pojo.instancefactory.InstanceFactoryProvider;
 
 /**
  * @version $Rev$ $Date$

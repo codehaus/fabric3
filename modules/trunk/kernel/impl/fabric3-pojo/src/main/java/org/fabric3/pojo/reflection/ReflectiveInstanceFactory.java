@@ -38,7 +38,7 @@ import org.fabric3.spi.invocation.WorkContextTunnel;
 import org.fabric3.scdl.InjectableAttribute;
 import org.fabric3.spi.ObjectCreationException;
 import org.fabric3.spi.ObjectFactory;
-import org.fabric3.spi.component.InstanceFactory;
+import org.fabric3.pojo.instancefactory.InstanceFactory;
 import org.fabric3.spi.component.InstanceWrapper;
 import org.fabric3.spi.invocation.WorkContext;
 

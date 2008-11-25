@@ -63,7 +63,7 @@ import org.fabric3.spi.component.GroupInitializationException;
 import org.fabric3.spi.component.InstanceDestructionException;
 import org.fabric3.spi.component.InstanceLifecycleException;
 import org.fabric3.spi.component.InstanceWrapper;
-import org.fabric3.spi.component.InstanceWrapperStore;
+import org.fabric3.fabric.component.scope.InstanceWrapperStore;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.invocation.CallFrame;
 import org.fabric3.spi.invocation.ConversationContext;

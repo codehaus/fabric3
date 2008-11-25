@@ -32,9 +32,10 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.spi.component;
+package org.fabric3.pojo.instancefactory;
 
 import org.fabric3.spi.ObjectCreationException;
+import org.fabric3.spi.component.InstanceWrapper;
 import org.fabric3.spi.invocation.WorkContext;
 
 /**

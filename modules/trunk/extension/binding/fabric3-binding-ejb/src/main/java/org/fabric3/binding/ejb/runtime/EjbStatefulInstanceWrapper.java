@@ -20,9 +20,8 @@ import javax.ejb.EJBLocalObject;
 import javax.ejb.EJBObject;
 
 import org.fabric3.spi.ObjectFactory;
-import org.fabric3.spi.component.InstanceWrapper;
 import org.fabric3.spi.component.InstanceDestructionException;
-import org.fabric3.spi.component.InstanceInitializationException;
+import org.fabric3.spi.component.InstanceWrapper;
 
 /**
  * @version $Revision Date: Oct 29, 2007 Time: 5:01:22 PM
@@ -44,7 +43,7 @@ public class EjbStatefulInstanceWrapper implements InstanceWrapper {
         return started;
     }
 
-    public void start() throws InstanceInitializationException {
+    public void start() {
         started = true;
     }
 

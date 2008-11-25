@@ -54,7 +54,7 @@ import org.fabric3.scdl.InjectionSite;
 import org.fabric3.scdl.MethodInjectionSite;
 import org.fabric3.spi.ObjectCreationException;
 import org.fabric3.spi.ObjectFactory;
-import org.fabric3.spi.component.InstanceFactory;
+import org.fabric3.pojo.instancefactory.InstanceFactory;
 import org.fabric3.spi.component.InstanceWrapper;
 import org.fabric3.spi.component.InstanceInitializationException;
 import org.fabric3.spi.component.InstanceLifecycleException;
