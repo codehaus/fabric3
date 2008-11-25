@@ -86,10 +86,8 @@ public class MetaDataStoreImpl implements MetaDataStore {
         Contribution contribution = find(contributionUri);
         if (contribution != null) {
             List<Export> exports = contribution.getManifest().getExports();
-            if (exports.size() > 0) {
-                for (Export export : exports) {
-                    exportsToContributionCache.remove(export.getType());
-                }
+            for (Export export : exports) {
+                exportsToContributionCache.remove(export.getType());
             }
         }
         cache.remove(contributionUri);
