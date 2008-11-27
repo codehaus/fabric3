@@ -169,7 +169,7 @@ public class Fabric3Server implements Fabric3ServerMBean {
                 monitorFactory.readConfiguration(logConfigFile.toURI().toURL());
             }
 
-            runtime = BootstrapHelper.createRuntime(hostInfo, bootLoader, monitorFactory);
+            runtime = BootstrapHelper.createRuntime(hostInfo, hostLoader, bootLoader, monitorFactory);
             monitor = runtime.getMonitorFactory().getMonitor(ServerMonitor.class);
 
             // boot the JMX agent

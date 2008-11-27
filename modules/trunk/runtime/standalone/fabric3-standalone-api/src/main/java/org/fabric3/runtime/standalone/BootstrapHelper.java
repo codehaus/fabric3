@@ -247,9 +247,11 @@ public final class BootstrapHelper {
         }
     }
 
-    public static StandaloneRuntime createRuntime(StandaloneHostInfo hostInfo, ClassLoader bootClassLoader, MonitorFactory monitorFactory)
+    public static StandaloneRuntime createRuntime(StandaloneHostInfo hostInfo,
+                                                  ClassLoader hostClassLoader,
+                                                  ClassLoader bootClassLoader,
+                                                  MonitorFactory monitorFactory)
             throws BootstrapException {
-        ClassLoader hostClassLoader = ClassLoader.getSystemClassLoader();
 
         // locate the implementation
         String className = hostInfo.getProperty("fabric3.runtimeClass", "org.fabric3.runtime.standalone.host.StandaloneRuntimeImpl");
