@@ -69,8 +69,9 @@ public class ListRequestHandler implements RequestHandler {
             stream.close();
             session.write(new DefaultResponse(226, "Transfer complete"));
         } catch (IOException ex) {
-            closeDataConnection(session, passivePort);
             session.write(new DefaultResponse(425, "Can't open data connection"));
+        } finally {
+            closeDataConnection(session, passivePort);
         }
 
     }
