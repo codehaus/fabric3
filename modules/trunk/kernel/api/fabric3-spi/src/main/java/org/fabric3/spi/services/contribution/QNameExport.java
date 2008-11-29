@@ -27,7 +27,7 @@ import org.fabric3.spi.Namespaces;
  */
 public class QNameExport implements Export {
     private static final long serialVersionUID = -6813997109078522174L;
-    private static final QName TYPE = new QName(Namespaces.CORE, "qname");
+    private static final QName TYPE = new QName(Namespaces.CORE, "qNameImport");
     private QName namespace;
 
     public QNameExport(QName namespace) {
