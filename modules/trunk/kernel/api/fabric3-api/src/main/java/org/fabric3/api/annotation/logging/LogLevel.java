@@ -35,5 +35,5 @@ public @interface LogLevel {
     /**
      * The log level as specified by {@link LogLevels}.
      */
-    @SuppressWarnings({"JavaDoc"}) LogLevels value();
+    LogLevels value();
 }
