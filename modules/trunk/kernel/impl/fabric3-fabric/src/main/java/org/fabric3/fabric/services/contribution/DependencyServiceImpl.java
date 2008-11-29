@@ -71,7 +71,7 @@ public class DependencyServiceImpl implements DependencyService {
             for (Import imprt : manifest.getImports()) {
                 // first, see if the import is already installed
                 // note that extension imports do not need to be checked since we assume extensons are installed prior
-                if (store.resolve(imprt) != null) {
+                if (store.isResolved(imprt)) {
                     continue;
                 }
                 Vertex<Contribution> sink = findTargetVertex(dag, imprt);

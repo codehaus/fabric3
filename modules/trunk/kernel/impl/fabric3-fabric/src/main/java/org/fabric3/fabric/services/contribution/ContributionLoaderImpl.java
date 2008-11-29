@@ -22,6 +22,7 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.osoa.sca.annotations.Reference;
@@ -35,8 +36,10 @@ import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.services.contribution.ClasspathProcessorRegistry;
 import org.fabric3.spi.services.contribution.Contribution;
 import org.fabric3.spi.services.contribution.ContributionManifest;
+import org.fabric3.spi.services.contribution.ContributionWire;
 import org.fabric3.spi.services.contribution.Import;
 import org.fabric3.spi.services.contribution.MetaDataStore;
+import org.fabric3.spi.services.contribution.UnresolvedImportException;
 
 /**
  * Default implementation of the ContributionLoader. Classloaders corresponding to loaded contributions are registered by name with the system
@@ -50,26 +53,29 @@ public class ContributionLoaderImpl implements ContributionLoader {
     private final MetaDataStore store;
     private final ClasspathProcessorRegistry classpathProcessorRegistry;
     private boolean classloaderIsolation;
+    private Map<Class<? extends ContributionWire<?, ?>>, ContributionWireConnector<?>> connectors;
 
     public ContributionLoaderImpl(@Reference ClassLoaderRegistry classLoaderRegistry,
                                   @Reference MetaDataStore store,
                                   @Reference ClasspathProcessorRegistry classpathProcessorRegistry,
+                                  @Reference Map<Class<? extends ContributionWire<?, ?>>, ContributionWireConnector<?>> connectors,
                                   @Reference HostInfo info) {
         this.classLoaderRegistry = classLoaderRegistry;
         this.store = store;
         this.classpathProcessorRegistry = classpathProcessorRegistry;
+        this.connectors = connectors;
         classloaderIsolation = info.supportsClassLoaderIsolation();
         hostImport = new ContributionImport(HOST_CONTRIBUTION);
     }
 
-    public ClassLoader load(Contribution contribution) throws ContributionLoadException {
+    public ClassLoader load(Contribution contribution) throws ContributionLoadException, UnresolvedImportException {
         URI contributionUri = contribution.getUri();
         ClassLoader hostClassLoader = classLoaderRegistry.getClassLoader(HOST_CONTRIBUTION);
         // all contributions implicitly import the host contribution
         contribution.getManifest().addImport(hostImport);
 
         // verify and resolve the imports
-        List<ClassLoader> resolved = resolveImports(contribution);
+        List<ContributionWire<?, ?>> wires = resolveImports(contribution);
         if (!classloaderIsolation) {
             // the host environment does not support classloader isolation, return the host classloader
             return hostClassLoader;
@@ -86,11 +92,15 @@ public class ContributionLoaderImpl implements ContributionLoader {
         for (URL library : classpath) {
             loader.addURL(library);
         }
-        for (ClassLoader classLoader : resolved) {
-            if (classLoader != hostClassLoader) {
-                // skip the host classloader as it is the primary parent
-                loader.addParent(classLoader);
-            }
+
+        // connect imported contribution classloaders according to their wires
+        for (ContributionWire<?, ?> wire : wires) {
+            ContributionWireConnector connector = connectors.get(wire.getClass());
+            assert connector != null;
+            URI uri = wire.getExportContributionUri();
+            // the classloader name is the same as the contribution URI
+            ClassLoader targetClassLoader = classLoaderRegistry.getClassLoader(uri);
+            connector.connect(wire, loader, targetClassLoader);
         }
         // register the classloader
         classLoaderRegistry.register(contributionUri, loader);
@@ -111,22 +121,16 @@ public class ContributionLoaderImpl implements ContributionLoader {
     }
 
 
-    private List<ClassLoader> resolveImports(Contribution contribution) throws ContributionLoadException {
-        List<ClassLoader> resolved = new ArrayList<ClassLoader>();
+    private List<ContributionWire<?, ?>> resolveImports(Contribution contribution) throws UnresolvedImportException {
+        List<ContributionWire<?, ?>> resolved = new ArrayList<ContributionWire<?, ?>>();
         ContributionManifest manifest = contribution.getManifest();
         for (Import imprt : manifest.getImports()) {
-            Contribution imported = store.resolve(imprt);
-            if (imported == null) {
-                String id = imprt.toString();
-                throw new MatchingExportNotFoundException("No matching export found for: " + id);
-            }
+            URI uri = contribution.getUri();
+            ContributionWire<?, ?> wire = store.resolve(uri, imprt);
             // add the resolved URI to the contribution
-            URI importedUri = imported.getUri();
-            contribution.addResolvedImportUri(importedUri);
-            // add the imported classloader
-            ClassLoader importedLoader = classLoaderRegistry.getClassLoader(importedUri);
-            assert importedLoader != null;
-            resolved.add(importedLoader);
+            contribution.addResolvedImportUri(wire.getExportContributionUri());
+            contribution.addWire(wire);
+            resolved.add(wire);
         }
         return resolved;
     }

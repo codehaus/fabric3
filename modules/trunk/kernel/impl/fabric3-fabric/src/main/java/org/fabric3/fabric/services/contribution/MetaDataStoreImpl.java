@@ -28,11 +28,13 @@ import javax.xml.namespace.QName;
 import org.osoa.sca.Constants;
 import org.osoa.sca.annotations.Reference;
 
+import org.fabric3.fabric.services.contribution.wire.ContributionWireInstantiatorRegistry;
 import org.fabric3.host.contribution.ContributionException;
 import org.fabric3.host.contribution.StoreException;
 import org.fabric3.scdl.ValidationContext;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.services.contribution.Contribution;
+import org.fabric3.spi.services.contribution.ContributionWire;
 import org.fabric3.spi.services.contribution.Export;
 import org.fabric3.spi.services.contribution.Import;
 import org.fabric3.spi.services.contribution.MetaDataStore;
@@ -40,6 +42,7 @@ import org.fabric3.spi.services.contribution.ProcessorRegistry;
 import org.fabric3.spi.services.contribution.Resource;
 import org.fabric3.spi.services.contribution.ResourceElement;
 import org.fabric3.spi.services.contribution.Symbol;
+import org.fabric3.spi.services.contribution.UnresolvedImportException;
 
 /**
  * Default MetaDataStore implementation
@@ -49,10 +52,10 @@ import org.fabric3.spi.services.contribution.Symbol;
 public class MetaDataStoreImpl implements MetaDataStore {
     public static final QName COMPOSITE = new QName(Constants.SCA_NS, "composite");
     private Map<URI, Contribution> cache = new ConcurrentHashMap<URI, Contribution>();
-    private Map<QName, Map<Export, Contribution>> exportsToContributionCache =
-            new ConcurrentHashMap<QName, Map<Export, Contribution>>();
+    private Map<QName, Map<Export, Contribution>> exportsToContributionCache = new ConcurrentHashMap<QName, Map<Export, Contribution>>();
     private ProcessorRegistry processorRegistry;
     private ClassLoaderRegistry classLoaderRegistry;
+    private ContributionWireInstantiatorRegistry instantiatorRegistry;
 
     public MetaDataStoreImpl(ClassLoaderRegistry classLoaderRegistry, ProcessorRegistry processorRegistry) {
         this.classLoaderRegistry = classLoaderRegistry;
@@ -67,6 +70,11 @@ public class MetaDataStoreImpl implements MetaDataStore {
     @Reference
     public void setProcessorRegistry(ProcessorRegistry processorRegistry) {
         this.processorRegistry = processorRegistry;
+    }
+
+    @Reference
+    public void setInstantiatorRegistry(ContributionWireInstantiatorRegistry instantiatorRegistry) {
+        this.instantiatorRegistry = instantiatorRegistry;
     }
 
     public void store(Contribution contribution) throws StoreException {
@@ -152,7 +160,13 @@ public class MetaDataStoreImpl implements MetaDataStore {
         if (element != null) {
             return element;
         }
-        for (URI uri : contribution.getResolvedImportUris()) {
+        for (ContributionWire<?, ?> wire : contribution.getWires()) {
+            if (!wire.resolves(symbol)) {
+                // the wire doesn't resolve the specific resource
+                continue;
+            }
+            URI uri = wire.getExportContributionUri();
+
             Contribution resolved = cache.get(uri);
             if (resolved == null) {
                 String identifier = contributionUri.toString();
@@ -166,31 +180,36 @@ public class MetaDataStoreImpl implements MetaDataStore {
         return null;
     }
 
-    /**
-     * Resolves an import to a Contribution that exports it
-     *
-     * @param imprt the import to resolve
-     * @return the contribution or null
-     */
-    public Contribution resolve(Import imprt) {
-        URI location = imprt.getLocation();
-        if (location != null) {
-            Contribution resolved = cache.get(location);
-            if (resolved != null) {
-                return resolved;
+    public boolean isResolved(Import imprt) {
+        Map<Export, Contribution> exports = exportsToContributionCache.get(imprt.getType());
+        if (exports != null) {
+            for (Export export : exports.keySet()) {
+                if (Export.EXACT_MATCH == export.match(imprt)) {
+                    return true;
+                }
             }
         }
+        return false;
+    }
+
+    public ContributionWire<?, ?> resolve(URI uri, Import imprt) throws UnresolvedImportException {
         Map<Export, Contribution> map = exportsToContributionCache.get(imprt.getType());
         if (map == null) {
             return null;
         }
         for (Map.Entry<Export, Contribution> entry : map.entrySet()) {
-            int level = entry.getKey().match(imprt);
+            Export export = entry.getKey();
+            int level = export.match(imprt);
             if (level == Export.EXACT_MATCH) {
-                return entry.getValue();
+                if (instantiatorRegistry == null) {
+                    // Programming error: an illegal attempt to resolve a contribution before bootstrap has completed. 
+                    throw new AssertionError("Instantiator not yet configured");
+                }
+                URI exportUri = entry.getValue().getUri();
+                return instantiatorRegistry.instantiate(imprt, export, uri, exportUri);
             }
         }
-        return null;
+        throw new UnresolvedImportException("Unable to resolve import: " + imprt);
     }
 
     public Set<Contribution> resolveDependentContributions(URI uri) {

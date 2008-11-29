@@ -20,21 +20,27 @@ import java.io.File;
 import java.io.Serializable;
 import java.net.URI;
 import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Set;
 import javax.xml.namespace.QName;
 
 import junit.framework.TestCase;
 
 import org.fabric3.fabric.services.classloading.ClassLoaderRegistryImpl;
-import org.fabric3.util.io.FileHelper;
+import org.fabric3.fabric.services.contribution.wire.ContributionWireInstantiatorRegistryImpl;
+import org.fabric3.fabric.services.contribution.wire.QNameWireInstantiator;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.services.contribution.Contribution;
 import org.fabric3.spi.services.contribution.ContributionManifest;
+import org.fabric3.spi.services.contribution.ContributionWire;
+import org.fabric3.spi.services.contribution.Import;
 import org.fabric3.spi.services.contribution.QNameExport;
 import org.fabric3.spi.services.contribution.QNameImport;
 import org.fabric3.spi.services.contribution.QNameSymbol;
 import org.fabric3.spi.services.contribution.Resource;
 import org.fabric3.spi.services.contribution.ResourceElement;
+import org.fabric3.util.io.FileHelper;
 
 /**
  * @version $Rev$ $Date$
@@ -47,9 +53,10 @@ public class MetaDataStoreImplTestCase extends TestCase {
     private MetaDataStoreImpl store;
 
     public void testResolve() throws Exception {
+        URI uri = URI.create("source");
         QNameImport imprt = new QNameImport(IMPORT_EXPORT_QNAME);
-        Contribution contribution = store.resolve(imprt);
-        assertEquals(RESOURCE_URI, contribution.getUri());
+        ContributionWire<?,?> wire = store.resolve(uri, imprt);
+        assertEquals(RESOURCE_URI, wire.getExportContributionUri());
     }
 
     public void testResolveContainingResource() throws Exception {
@@ -75,6 +82,12 @@ public class MetaDataStoreImplTestCase extends TestCase {
         ClassLoaderRegistry registry = new ClassLoaderRegistryImpl();
         registry.register(URI.create("resource"), getClass().getClassLoader());
         store = new MetaDataStoreImpl(registry, null);
+        Map<Class<? extends Import>, ContributionWireInstantiator<?, ?, ?>> instantiators =
+                new HashMap<Class<? extends Import>, ContributionWireInstantiator<?, ?, ?>>();
+        instantiators.put(QNameImport.class, new QNameWireInstantiator());
+        ContributionWireInstantiatorRegistryImpl instantiatorRegistry = new ContributionWireInstantiatorRegistryImpl();
+        instantiatorRegistry.setInstantiators(instantiators);
+        store.setInstantiatorRegistry(instantiatorRegistry);
         Contribution contribution = new Contribution(RESOURCE_URI);
         ContributionManifest manifest = contribution.getManifest();
         QNameExport export = new QNameExport(IMPORT_EXPORT_QNAME);

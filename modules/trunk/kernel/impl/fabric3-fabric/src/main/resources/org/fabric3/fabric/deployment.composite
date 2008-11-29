@@ -146,5 +146,42 @@
         <f3-impl:implementation.system class="org.fabric3.fabric.services.contribution.manifest.JavaImportLoader"/>
     </component>
 
+    <component name="ContributionWireInstantiatorRegistry">
+        <f3-impl:implementation.system class="org.fabric3.fabric.services.contribution.wire.ContributionWireInstantiatorRegistryImpl"/>
+    </component>
+
+    <wire source="MetaDataStore/instantiatorRegistry" target="ContributionWireInstantiatorRegistry"/>
+
+    <component name="QNameWireInstantiator" f3-core:key="org.fabric3.spi.services.contribution.QNameImport">
+        <f3-impl:implementation.system class="org.fabric3.fabric.services.contribution.wire.QNameWireInstantiator"/>
+    </component>
+
+    <component name="JavaContributionWireInstantiator" f3-core:key="org.fabric3.fabric.services.contribution.manifest.JavaImport">
+        <f3-impl:implementation.system class="org.fabric3.fabric.services.contribution.wire.JavaContributionWireInstantiator"/>
+    </component>
+
+    <component name="LocationContributionWireInstantiator" f3-core:key="org.fabric3.fabric.services.contribution.manifest.ContributionImport">
+        <f3-impl:implementation.system class="org.fabric3.fabric.services.contribution.wire.LocationContributionWireInstantiator"/>
+    </component>
+
+    <component name="MavenContributionWireInstantiator" f3-core:key="org.fabric3.spi.services.contribution.MavenImport">
+        <f3-impl:implementation.system class="org.fabric3.fabric.services.contribution.wire.MavenContributionWireInstantiator"/>
+    </component>
+
+    <component name="JavaContributionWireConnector" f3-core:key="org.fabric3.fabric.services.contribution.wire.JavaContributionWire">
+        <f3-impl:implementation.system class="org.fabric3.fabric.services.contribution.connector.JavaContributionWireConnector"/>
+    </component>
+
+    <component name="QNameContributionWireConnector" f3-core:key="org.fabric3.fabric.services.contribution.wire.QNameContributionWire">
+        <f3-impl:implementation.system class="org.fabric3.fabric.services.contribution.connector.QNameContributionWireConnector"/>
+    </component>
+
+    <component name="LocationContributionWireConnector" f3-core:key="org.fabric3.fabric.services.contribution.wire.LocationContributionWire">
+        <f3-impl:implementation.system class="org.fabric3.fabric.services.contribution.connector.LocationContributionWireConnector"/>
+    </component>
+
+    <component name="MavenContributionWireConnector" f3-core:key="org.fabric3.fabric.services.contribution.wire.MavenContributionWire">
+        <f3-impl:implementation.system class="org.fabric3.fabric.services.contribution.connector.MavenContributionWireConnector"/>
+    </component>
 
 </composite>

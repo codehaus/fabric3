@@ -50,6 +50,9 @@ import org.w3c.dom.Document;
 
 import org.fabric3.fabric.instantiator.component.AtomicComponentInstantiator;
 import org.fabric3.fabric.instantiator.component.ComponentInstantiator;
+import org.fabric3.fabric.runtime.FabricNames;
+import org.fabric3.fabric.runtime.RuntimeServices;
+import org.fabric3.fabric.services.contribution.manifest.ContributionExport;
 import org.fabric3.fabric.services.contribution.manifest.MavenPOMProcessor;
 import org.fabric3.fabric.services.documentloader.DocumentLoader;
 import org.fabric3.fabric.services.documentloader.DocumentLoaderImpl;
@@ -77,7 +80,6 @@ import org.fabric3.spi.introspection.contract.ContractProcessor;
 import org.fabric3.spi.introspection.java.ImplementationProcessor;
 import org.fabric3.spi.introspection.validation.InvalidContributionException;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
-import org.fabric3.fabric.runtime.RuntimeServices;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.services.componentmanager.ComponentManager;
 import org.fabric3.spi.services.contribution.Contribution;
@@ -88,7 +90,6 @@ import org.fabric3.spi.services.lcm.LogicalComponentManager;
 import org.fabric3.spi.services.synthesize.ComponentRegistrationException;
 import org.fabric3.spi.services.synthesize.ComponentSynthesizer;
 import org.fabric3.spi.xml.XMLFactory;
-import org.fabric3.fabric.runtime.bootstrap.BootstrapIntrospectionFactory;
 import org.fabric3.system.scdl.SystemImplementation;
 
 /**
@@ -282,8 +283,9 @@ public abstract class AbstractBootstrapper implements Bootstrapper {
      */
     private void registerDomain() throws InitializationException {
         registerComponent("RuntimeDomain", Domain.class, runtimeDomain, true);
-        // the following is a hack to initialize the domain
+        // the following is a hack to initialize the Domain and MetaDataStore so they may be reinjected
         runtime.getSystemComponent(Domain.class, Names.RUNTIME_DOMAIN_SERVICE_URI);
+        runtime.getSystemComponent(MetaDataStore.class, FabricNames.METADATA_STORE_URI);
     }
 
 
@@ -329,6 +331,9 @@ public abstract class AbstractBootstrapper implements Bootstrapper {
     private void synthesizeContribution(URI contributionUri, List<URL> manifests, ClassLoader loader) throws ContributionException {
         Contribution contribution = new Contribution(contributionUri);
         contribution.setState(ContributionState.INSTALLED);
+        ContributionManifest manifest = contribution.getManifest();
+        // add the ContributionExport
+        manifest.addExport(new ContributionExport(contributionUri));
         ValidationContext context = new DefaultValidationContext();
         XMLInputFactory xmlInputFactory = xmlFactory.newInputFactoryInstance();
         InputStream stream = null;
@@ -336,7 +341,6 @@ public abstract class AbstractBootstrapper implements Bootstrapper {
         for (URL url : manifests) {
             try {
                 stream = url.openStream();
-                ContributionManifest manifest = contribution.getManifest();
                 MavenPOMProcessor processor = new MavenPOMProcessor();
                 reader = xmlInputFactory.createXMLStreamReader(stream);
                 // advance to first tag

@@ -20,8 +20,8 @@ import java.io.Serializable;
 import java.net.URI;
 import java.util.Set;
 
-import org.fabric3.scdl.ValidationContext;
 import org.fabric3.host.contribution.StoreException;
+import org.fabric3.scdl.ValidationContext;
 
 /**
  * Implementations store contribution metadata.
@@ -86,18 +86,29 @@ public interface MetaDataStore {
      * @param symbol          the symbol used to represent the resource element.
      * @param context         the context to which validation errors and warnings are reported
      * @return the resource element or null if not found
-     * @throws org.fabric3.host.contribution.StoreException if an error occurs during resolution
+     * @throws org.fabric3.host.contribution.StoreException
+     *          if an error occurs during resolution
      */
     <S extends Symbol, V extends Serializable> ResourceElement<S, V> resolve(URI contributionUri, Class<V> type, S symbol, ValidationContext context)
             throws StoreException;
 
     /**
-     * Resolves an import to a matching export.
+     * Returns true if the import is resolved.
      *
-     * @param imprt the import to resolve
-     * @return a matching contribution or null
+     * @param imprt the import
+     * @return true if the import is resolved
      */
-    Contribution resolve(Import imprt);
+    boolean isResolved(Import imprt);
+
+    /**
+     * Resolves an import to a matching export and returns the associated ContributionWire.
+     *
+     * @param uri   the importing contribution  URI
+     * @param imprt the import to resolve @return a ContributionWire or null
+     * @return the ContributionWire
+     * @throws UnresolvedImportException if the import cannot be resolved
+     */
+    ContributionWire<?,?> resolve(URI uri, Import imprt) throws UnresolvedImportException;
 
     /**
      * Resolves contributions that import the contribution represented by the given URI.
