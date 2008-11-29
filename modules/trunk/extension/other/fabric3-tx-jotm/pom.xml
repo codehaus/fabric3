@@ -27,6 +27,17 @@
     <name>Fabric3 JOTM Transaction Manager</name>
     <description>Fabric3 JOTM Transaction Manager.</description>
     <packaging>sca-contribution-jar</packaging>    
+
+    <repositories>
+        <repository>
+            <id>java.net</id>
+            <url>https://maven-repository.dev.java.net/nonav/repository</url>
+            <layout>legacy</layout>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+        </repository>
+    </repositories>
     
     <properties>
         <f3Shared>
@@ -36,6 +47,11 @@
 		                <groupId>javax.resource</groupId>
 		                <artifactId>connector-api</artifactId>
 		                <version>1.5</version>
+		            </dependency>
+		            <dependency>
+		                <groupId>javax.transaction</groupId>
+		                <artifactId>transaction-api</artifactId>
+		                <version>1.1</version>
 		            </dependency>
 		        </dependencies>
             ]]>
@@ -52,17 +68,15 @@
         </dependency>
 
         <dependency>
-            <groupId>geronimo-spec</groupId>
-            <artifactId>geronimo-spec-jta</artifactId>
-            <version>1.0.1B-rc4</version>
-            <scope>provided</scope>
+            <groupId>javax.transaction</groupId>
+            <artifactId>transaction-api</artifactId>
+            <version>1.1</version>
         </dependency>
-
+        
         <dependency>
-            <groupId>geronimo-spec</groupId>
-            <artifactId>geronimo-spec-j2ee-connector</artifactId>
-            <version>1.5-rc4</version>
-            <scope>provided</scope>
+            <groupId>javax.resource</groupId>
+            <artifactId>connector-api</artifactId>
+            <version>1.5</version>
         </dependency>
 
         <dependency>
