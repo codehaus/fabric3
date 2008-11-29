@@ -41,7 +41,14 @@
                 <enabled>false</enabled>
             </snapshots>
         </repository>
-    </repositories>
+    </repositories>    
+    
+    <properties>
+        <f3Shared>
+            javax.transaction:transaction-api:1.1;
+            javax.persistence:persistence-api:1.0.2
+        </f3Shared>
+    </properties>
 
     <dependencies>
 
@@ -100,9 +107,9 @@
         </dependency>
 
         <dependency>
-            <groupId>geronimo-spec</groupId>
-            <artifactId>geronimo-spec-jta</artifactId>
-            <version>1.0.1B-rc4</version>
+            <groupId>javax.transaction</groupId>
+            <artifactId>transaction-api</artifactId>
+            <version>1.1</version>
             <scope>provided</scope>
         </dependency>
 

@@ -26,7 +26,13 @@
     <artifactId>fabric3-tx-jotm</artifactId>
     <name>Fabric3 JOTM Transaction Manager</name>
     <description>Fabric3 JOTM Transaction Manager.</description>
-    <packaging>sca-contribution-jar</packaging>
+    <packaging>sca-contribution-jar</packaging>    
+    
+    <properties>
+        <f3Shared>
+            javax.resource:connector-api:1.5
+        </f3Shared>
+    </properties>
 
     <dependencies>
 

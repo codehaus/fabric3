@@ -128,7 +128,7 @@ public class ArtifactHelper {
         Set<URL> urls = new LinkedHashSet<URL>();
         for (Artifact artifact : projectArtifacts) {
             try {
-                if (hostArtifacts.contains(artifact) || Artifact.SCOPE_PROVIDED.equals(artifact.getScope())) {
+                if (hostArtifacts.contains(artifact) || Artifact.SCOPE_PROVIDED.equals(artifact.getScope()) || "f3-extension".equals(artifact.getScope())) {
                     continue;
                 }
                 File pathElement = artifact.getFile();
@@ -150,13 +150,18 @@ public class ArtifactHelper {
         List<?> dependencies = project.getDependencies();
         for (int i = 0;i < dependencies.size();i++) {
             Dependency dependency = (Dependency) dependencies.get(i);
-            artifacts.addAll(resolveAll(dependency));
+            if (!dependency.getScope().equals("f3-extension")) {
+                artifacts.addAll(resolveAll(dependency));
+            }
         }
 
         // include any artifacts that have been added by other plugins (e.g. Clover see FABRICTHREE-220)
         Iterator<?> it = project.getDependencyArtifacts().iterator();
         while (it.hasNext()) {
-        	artifacts.add((Artifact) it.next());
+            Artifact artifact = (Artifact) it.next();
+            if (!artifact.getScope().equals("f3-extension")) {
+                artifacts.add(artifact);
+            }
         }
         return artifacts;
     }
@@ -287,14 +292,14 @@ public class ArtifactHelper {
             Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(pomFile);
             
             XPath xpath = XPathFactory.newInstance().newXPath();
-            String f3Shared = xpath.evaluate("//f3Shared/text()", doc);
+            String f3Shared = xpath.evaluate("//f3Shared/text()", doc).trim();
             
             StringTokenizer tok1 = new StringTokenizer(f3Shared, ";");
             while (tok1.hasMoreTokens()) {
                 StringTokenizer tok2 = new StringTokenizer(tok1.nextToken(), ":");
-                String groupId = tok2.nextToken();
-                String artifactId = tok2.nextToken();
-                String version = tok2.nextToken();
+                String groupId = tok2.nextToken().trim();
+                String artifactId = tok2.nextToken().trim();
+                String version = tok2.nextToken().trim();
                 Dependency dependency = new Dependency();
                 dependency.setArtifactId(artifactId);
                 dependency.setVersion(version);

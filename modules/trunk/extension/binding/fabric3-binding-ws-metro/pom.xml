@@ -40,7 +40,9 @@
     </repositories>    
     
     <properties>
-        <f3Shared>javax.xml.ws:jaxws-api:2.1</f3Shared>
+        <f3Shared>
+            javax.xml.ws:jaxws-api:2.1
+        </f3Shared>
     </properties>
 
     <dependencies>
