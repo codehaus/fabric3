@@ -317,15 +317,15 @@ public class ArtifactHelper {
                 dependency.setArtifactId(xpath.evaluate("artifactId/text()", sharedDependencyElement));
                 dependency.setVersion(xpath.evaluate("version/text()", sharedDependencyElement));
                 
-                NodeList exclusions = (NodeList) xpath.evaluate("/exclusions/exclusion", sharedDependencyElement, XPathConstants.NODESET);
+                NodeList exclusions = (NodeList) xpath.evaluate("exclusions/exclusion", sharedDependencyElement, XPathConstants.NODESET);
                 
                 for (int j = 0; j < exclusions.getLength();j++) {
                     
                     Element exclusionElement = (Element) exclusions.item(j);
                     
                     Exclusion exclusion = new Exclusion();
-                    dependency.setGroupId(xpath.evaluate("groupId/text()", exclusionElement));
-                    dependency.setArtifactId(xpath.evaluate("artifactId/text()", exclusionElement));
+                    exclusion.setGroupId(xpath.evaluate("groupId/text()", exclusionElement));
+                    exclusion.setArtifactId(xpath.evaluate("artifactId/text()", exclusionElement));
                     
                     dependency.addExclusion(exclusion);
                     
