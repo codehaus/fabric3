@@ -20,9 +20,9 @@ import java.io.Serializable;
 import java.net.URI;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.HashSet;
 import javax.xml.namespace.QName;
 
 /**
@@ -44,6 +44,8 @@ public class Contribution implements Serializable {
     private ContributionManifest manifest = new ContributionManifest();
     private List<Resource> resources = new ArrayList<Resource>();
     private List<URI> resolvedImports = new ArrayList<URI>();
+    private List<ContributionWire<?, ?>> wires = new ArrayList<ContributionWire<?, ?>>();
+
     private Set<QName> lockOwners = new HashSet<QName>();
 
     public Contribution(URI uri) {
@@ -211,6 +213,24 @@ public class Contribution implements Serializable {
      */
     public List<URI> getResolvedImportUris() {
         return resolvedImports;
+    }
+
+    /**
+     * Adds a wire for an import
+     *
+     * @param wire the wire
+     */
+    public void addWire(ContributionWire<?, ?> wire) {
+        wires.add(wire);
+    }
+
+    /**
+     * Returns the wires for this contribution.
+     *
+     * @return the wires for this contribution
+     */
+    public List<ContributionWire<?, ?>> getWires() {
+        return wires;
     }
 
     /**
