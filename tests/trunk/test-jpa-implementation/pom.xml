@@ -54,6 +54,48 @@
             <artifactId>fabric3-api</artifactId>
             <version>0.7-SNAPSHOT</version>
         </dependency>
+	    <!-- JPA Hibernate Extensions -->
+	    <dependency>
+	        <groupId>org.codehaus.fabric3</groupId>
+	        <artifactId>fabric3-jpa-hibernate</artifactId>
+	        <version>0.7-SNAPSHOT</version>
+	        <scope>f3-extension</scope>
+	    </dependency>
+	    <!-- JPA Core Components -->
+	    <dependency>
+	        <groupId>org.codehaus.fabric3</groupId>
+	        <artifactId>fabric3-jpa-spi</artifactId>
+	        <version>0.7-SNAPSHOT</version>
+	        <scope>f3-extension</scope>
+	    </dependency>
+	    <!-- Transaction Manager Using JOTM -->
+	    <dependency>
+	        <groupId>org.codehaus.fabric3</groupId>
+	        <artifactId>fabric3-tx-jotm</artifactId>
+	        <version>0.7-SNAPSHOT</version>
+	        <scope>f3-extension</scope>
+	    </dependency>
+	    <!-- Declarative Transaction Policies -->
+	    <dependency>
+	        <groupId>org.codehaus.fabric3</groupId>
+	        <artifactId>fabric3-tx</artifactId>
+	        <version>0.7-SNAPSHOT</version>
+	        <scope>f3-extension</scope>
+	    </dependency>
+	    <!-- JSR 250 Resource Support and Datasource Management -->
+	    <dependency>
+	        <groupId>org.codehaus.fabric3</groupId>
+	        <artifactId>fabric3-resource</artifactId>
+	        <version>0.7-SNAPSHOT</version>
+	        <scope>f3-extension</scope>
+	    </dependency>
+	    <!-- Test Extension to Install the Datasource -->
+	    <dependency>
+	        <groupId>org.codehaus.fabric3.tests</groupId>
+	        <artifactId>test-ds-extension</artifactId>
+	        <version>0.1-SNAPSHOT</version>
+	        <scope>f3-extension</scope>
+	    </dependency>
     </dependencies>
 
     <build>
@@ -68,62 +110,6 @@
                 <configuration>
                     <runtimeVersion>0.7-SNAPSHOT</runtimeVersion>
                     <systemConfigDir>classes/META-INF</systemConfigDir>
-                    <extensions>
-                        <!-- JPA Hibernate Extensions -->
-                        <dependency>
-                            <groupId>org.codehaus.fabric3</groupId>
-                            <artifactId>fabric3-jpa-hibernate</artifactId>
-                            <version>0.7-SNAPSHOT</version>
-                        </dependency>
-                        <!-- JPA Core Components -->
-                        <dependency>
-                            <groupId>org.codehaus.fabric3</groupId>
-                            <artifactId>fabric3-jpa-spi</artifactId>
-                            <version>0.7-SNAPSHOT</version>
-                        </dependency>
-                        <!-- Transaction Manager Using JOTM -->
-                        <dependency>
-                            <groupId>org.codehaus.fabric3</groupId>
-                            <artifactId>fabric3-tx-jotm</artifactId>
-                            <version>0.7-SNAPSHOT</version>
-                        </dependency>
-                        <!-- Declarative Transaction Policies -->
-                        <dependency>
-                            <groupId>org.codehaus.fabric3</groupId>
-                            <artifactId>fabric3-tx</artifactId>
-                            <version>0.7-SNAPSHOT</version>
-                        </dependency>
-                        <!-- JSR 250 Resource Support and Datasource Management -->
-                        <dependency>
-                            <groupId>org.codehaus.fabric3</groupId>
-                            <artifactId>fabric3-resource</artifactId>
-                            <version>0.7-SNAPSHOT</version>
-                        </dependency>
-                        <!-- Test Extension to Install the Datasource -->
-                        <dependency>
-                            <groupId>org.codehaus.fabric3.tests</groupId>
-                            <artifactId>test-ds-extension</artifactId>
-                            <version>0.1-SNAPSHOT</version>
-                        </dependency>
-                    </extensions>
-                    <!-- API classes need to be shared between the application and extension classloaders -->
-                    <shared>
-                        <dependency>
-                            <groupId>javax.persistence</groupId>
-                            <artifactId>persistence-api</artifactId>
-                            <version>1.0</version>
-                        </dependency>
-                        <dependency>
-                            <groupId>geronimo-spec</groupId>
-                            <artifactId>geronimo-spec-jta</artifactId>
-                            <version>1.0.1B-rc4</version>
-                        </dependency>
-                        <dependency>
-                            <groupId>geronimo-spec</groupId>
-                            <artifactId>geronimo-spec-j2ee-connector</artifactId>
-                            <version>1.5-rc4</version>
-                        </dependency>
-                    </shared>
                 </configuration>
                 <executions>
                     <execution>

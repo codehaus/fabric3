@@ -31,6 +31,15 @@
     <name>Fabric3 JPA Hibernate Test</name>
     <packaging>jar</packaging>
     <description>Fabric3 JPA Hibernate Test.</description>
+    
+    <repositories>
+        <repository>
+            <id>java.net</id>
+            <url>https://maven-repository.dev.java.net/nonav/repository</url>
+            <layout>legacy</layout>
+            <snapshots><enabled>false</enabled></snapshots>
+        </repository>
+    </repositories>
 
     <dependencies>
 
@@ -69,6 +78,44 @@
             </exclusions>
             <scope>provided</scope>
         </dependency>
+        
+        <!-- Extensions -->
+	    <dependency>
+	        <groupId>org.codehaus.fabric3</groupId>
+	        <artifactId>fabric3-jpa-hibernate</artifactId>
+	        <version>0.7-SNAPSHOT</version>
+	        <scope>f3-extension</scope>
+	    </dependency>
+	    <dependency>
+	        <groupId>org.codehaus.fabric3</groupId>
+	        <artifactId>fabric3-jpa-spi</artifactId>
+	        <version>0.7-SNAPSHOT</version>
+	        <scope>f3-extension</scope>
+	    </dependency>
+	    <dependency>
+	        <groupId>org.codehaus.fabric3</groupId>
+	        <artifactId>fabric3-tx-jotm</artifactId>
+	        <version>0.7-SNAPSHOT</version>
+	        <scope>f3-extension</scope>
+	    </dependency>
+	    <dependency>
+	        <groupId>org.codehaus.fabric3</groupId>
+	        <artifactId>fabric3-tx</artifactId>
+	        <version>0.7-SNAPSHOT</version>
+	        <scope>f3-extension</scope>
+	    </dependency>
+	    <dependency>
+	        <groupId>org.codehaus.fabric3</groupId>
+	        <artifactId>fabric3-resource</artifactId>
+	        <version>0.7-SNAPSHOT</version>
+	        <scope>f3-extension</scope>
+	    </dependency>
+	    <dependency>
+	        <groupId>org.codehaus.fabric3.tests</groupId>
+	        <artifactId>test-ds-extension</artifactId>
+	        <version>0.1-SNAPSHOT</version>
+	        <scope>f3-extension</scope>
+	    </dependency>
 
     </dependencies>
 
@@ -84,23 +131,6 @@
                 <configuration>
                     <runtimeVersion>0.7-SNAPSHOT</runtimeVersion>
                     <systemConfigDir>classes/META-INF</systemConfigDir>
-                    <features>
-                        <!-- JPA Hibernate Extensions -->
-                        <dependency>
-                            <groupId>org.codehaus.fabric3</groupId>
-                            <artifactId>fabric3-hibernate-jotm-feature</artifactId>
-                            <version>0.7-SNAPSHOT</version>
-                            <type>xml</type>
-                        </dependency>
-                    </features>
-                    <extensions>
-                        <!-- Test Extension to Install the Datasource -->
-                        <dependency>
-                            <groupId>org.codehaus.fabric3.tests</groupId>
-                            <artifactId>test-ds-extension</artifactId>
-                            <version>0.1-SNAPSHOT</version>
-                        </dependency>
-                    </extensions>
                 </configuration>
                 <executions>
                     <execution>
