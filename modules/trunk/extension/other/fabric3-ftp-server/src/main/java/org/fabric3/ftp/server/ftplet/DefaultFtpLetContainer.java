@@ -19,7 +19,7 @@ package org.fabric3.ftp.server.ftplet;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
-import org.fabric3.ftp.api.FtpLet;
+import org.fabric3.api.ftp.FtpLet;
 import org.fabric3.ftp.spi.FtpLetContainer;
 
 /**

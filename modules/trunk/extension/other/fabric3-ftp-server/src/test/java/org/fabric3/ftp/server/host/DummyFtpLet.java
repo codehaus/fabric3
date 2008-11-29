@@ -18,7 +18,7 @@ package org.fabric3.ftp.server.host;
 
 import java.io.InputStream;
 
-import org.fabric3.ftp.api.FtpLet;
+import org.fabric3.api.ftp.FtpLet;
 
 /**
  * @version $Revision$ $Date$

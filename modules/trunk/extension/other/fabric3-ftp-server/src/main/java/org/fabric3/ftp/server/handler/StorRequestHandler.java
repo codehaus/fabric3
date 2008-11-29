@@ -22,7 +22,7 @@ import java.io.InputStream;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.api.annotation.Monitor;
-import org.fabric3.ftp.api.FtpLet;
+import org.fabric3.api.ftp.FtpLet;
 import org.fabric3.ftp.server.data.DataConnection;
 import org.fabric3.ftp.server.monitor.FtpMonitor;
 import org.fabric3.ftp.server.passive.PassiveConnectionService;
