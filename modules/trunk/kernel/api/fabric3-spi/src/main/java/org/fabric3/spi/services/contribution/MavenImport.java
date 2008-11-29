@@ -17,7 +17,6 @@
 package org.fabric3.spi.services.contribution;
 
 import java.net.URI;
-
 import javax.xml.namespace.QName;
 
 import org.fabric3.spi.Namespaces;
@@ -29,7 +28,7 @@ import org.fabric3.spi.Namespaces;
  */
 public class MavenImport implements Import {
     private static final long serialVersionUID = -252985481705630453L;
-    private static final QName TYPE = new QName(Namespaces.MAVEN, "maven");
+    private static final QName TYPE = new QName(Namespaces.MAVEN, "mavenImport");
 
     private String groupId;
     private String artifactId;

@@ -27,7 +27,7 @@ import org.fabric3.spi.Namespaces;
  */
 public class MavenExport implements Export {
     private static final long serialVersionUID = 2622386855322390297L;
-    private static final QName TYPE = new QName(Namespaces.MAVEN, "maven");
+    private static final QName TYPE = new QName(Namespaces.MAVEN, "mavenImport");
     private String groupId;
     private String artifactId;
     private String version = "unspecified";
