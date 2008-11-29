@@ -29,27 +29,34 @@ import org.fabric3.spi.services.contribution.Import;
  */
 public class JavaExport implements Export {
     private static final long serialVersionUID = -1362112844218693711L;
-    private static final QName TYPE = new QName(Namespaces.CORE, "java");
-    private String packageName;
+    private static final QName TYPE = new QName(Namespaces.CORE, "javaImport");
+    private PackageInfo packageInfo;
 
-    public JavaExport(String packageName) {
-        this.packageName = packageName;
-    }
-
-    public String getPackageName() {
-        return packageName;
-    }
-
-    public int match(Import contributionImport) {
-        if (contributionImport instanceof JavaImport
-                && ((JavaImport) contributionImport).getPackageName().startsWith(packageName)) {
-            return EXACT_MATCH;
-        }
-        return NO_MATCH;
+    public JavaExport(PackageInfo packageInfo) {
+        this.packageInfo = packageInfo;
     }
 
     public QName getType() {
         return TYPE;
     }
+
+    public PackageInfo getPackageInfo() {
+        return packageInfo;
+    }
+
+    public int match(Import imprt) {
+        if (imprt instanceof JavaImport) {
+            JavaImport javaImport = (JavaImport) imprt;
+            if (javaImport.getPackageInfo().matches(packageInfo)) {
+                return EXACT_MATCH;
+            }
+        }
+        return NO_MATCH;
+    }
+
+    public String toString() {
+        return "Exported package [" + packageInfo + "]";
+    }
+
 }
 

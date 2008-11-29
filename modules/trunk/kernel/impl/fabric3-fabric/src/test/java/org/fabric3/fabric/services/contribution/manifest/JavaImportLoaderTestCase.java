@@ -16,28 +16,35 @@
  */
 package org.fabric3.fabric.services.contribution.manifest;
 
+import java.io.ByteArrayInputStream;
+import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamReader;
 
 import junit.framework.TestCase;
-import org.easymock.EasyMock;
 
 /**
  * @version $Rev$ $Date$
  */
 public class JavaImportLoaderTestCase extends TestCase {
-    private JavaImportLoader loader = new JavaImportLoader();
+    private static final String XML = "<import.java package=\"org.bar\" required=\"true\"/>";
+
+    private JavaImportLoader loader;
     private XMLStreamReader reader;
 
     public void testRead() throws Exception {
         JavaImport jimport = loader.load(reader, null);
-        assertEquals("foo.bar.baz", jimport.getPackageName());
+        PackageInfo info = jimport.getPackageInfo();
+        assertEquals("org.bar", info.getName());
+        assertTrue(info.isRequired());
     }
-
 
     protected void setUp() throws Exception {
         super.setUp();
-        reader = EasyMock.createMock(XMLStreamReader.class);
-        EasyMock.expect(reader.getAttributeValue(null, "package")).andReturn("foo.bar.baz");
-        EasyMock.replay(reader);
+        loader = new JavaImportLoader();
+        ByteArrayInputStream b = new ByteArrayInputStream(XML.getBytes());
+        reader = XMLInputFactory.newInstance().createXMLStreamReader(b);
+        reader.nextTag();
     }
+
+
 }

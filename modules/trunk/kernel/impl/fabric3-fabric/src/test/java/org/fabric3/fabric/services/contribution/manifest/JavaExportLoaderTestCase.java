@@ -16,28 +16,33 @@
  */
 package org.fabric3.fabric.services.contribution.manifest;
 
+import java.io.ByteArrayInputStream;
+import javax.xml.stream.XMLInputFactory;
 import javax.xml.stream.XMLStreamReader;
 
 import junit.framework.TestCase;
-import org.easymock.EasyMock;
 
 /**
  * @version $Rev$ $Date$
  */
 public class JavaExportLoaderTestCase extends TestCase {
-    private JavaExportLoader loader = new JavaExportLoader();
+    private static final String XML = "<export.java package=\"org.bar\"/>";
+
+    private JavaExportLoader loader;
     private XMLStreamReader reader;
 
     public void testRead() throws Exception {
         JavaExport export = loader.load(reader, null);
-        assertEquals("com.foo.bar", export.getPackageName());
+        PackageInfo info = export.getPackageInfo();
+        assertEquals("org.bar", info.getName());
     }
 
 
     protected void setUp() throws Exception {
         super.setUp();
-        reader = EasyMock.createMock(XMLStreamReader.class);
-        EasyMock.expect(reader.getAttributeValue(null, "package")).andReturn("com.foo.bar");
-        EasyMock.replay(reader);
+        loader = new JavaExportLoader();
+        ByteArrayInputStream b = new ByteArrayInputStream(XML.getBytes());
+        reader = XMLInputFactory.newInstance().createXMLStreamReader(b);
+        reader.nextTag();
     }
 }

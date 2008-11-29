@@ -34,12 +34,15 @@ import org.fabric3.spi.introspection.xml.TypeLoader;
 public class JavaImportLoader implements TypeLoader<JavaImport> {
 
     public JavaImport load(XMLStreamReader reader, IntrospectionContext context) throws XMLStreamException {
-        String packageName = reader.getAttributeValue(null, "package");
-        if (packageName == null) {
+        String statement = reader.getAttributeValue(null, "package");
+        if (statement == null) {
             MissingPackage failure = new MissingPackage("No package name specified", reader);
             context.addError(failure);
             return null;
         }
-        return new JavaImport(packageName);
+        // TODO add version parsing
+        boolean required = Boolean.parseBoolean(reader.getAttributeValue(null, "required"));
+        PackageInfo info = new PackageInfo(statement, required);
+        return new JavaImport(info);
     }
 }

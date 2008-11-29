@@ -17,7 +17,6 @@
 package org.fabric3.fabric.services.contribution.manifest;
 
 import java.net.URI;
-
 import javax.xml.namespace.QName;
 
 import org.fabric3.spi.Namespaces;
@@ -30,9 +29,13 @@ import org.fabric3.spi.services.contribution.Import;
  */
 public class JavaImport implements Import {
     private static final long serialVersionUID = -7863768515125756048L;
-    private static final QName TYPE = new QName(Namespaces.CORE, "java");
-    private String packageName;
+    private static final QName TYPE = new QName(Namespaces.CORE, "javaImport");
     private URI location;
+    private PackageInfo packageInfo;
+
+    public JavaImport(PackageInfo packageInfo) {
+        this.packageInfo = packageInfo;
+    }
 
     public URI getLocation() {
         return location;
@@ -42,20 +45,15 @@ public class JavaImport implements Import {
         this.location = location;
     }
 
-    public JavaImport(String namespace) {
-        this.packageName = namespace;
-    }
-
-    public String getPackageName() {
-        return packageName;
-    }
-
     public QName getType() {
         return TYPE;
     }
 
+    public PackageInfo getPackageInfo() {
+        return packageInfo;
+    }
 
     public String toString() {
-        return "package [" + packageName + "]";
+        return "Imported package [" + packageInfo + "]";
     }
 }
