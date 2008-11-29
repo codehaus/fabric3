@@ -41,7 +41,15 @@
     
     <properties>
         <f3Shared>
-            javax.xml.ws:jaxws-api:2.1
+            <![CDATA[
+	            <dependencies>
+		            <dependency>
+		                <groupId>javax.xml.ws</groupId>
+		                <artifactId>jaxws-api</artifactId>
+		                <version>2.1</version>
+		            </dependency>
+		        </dependencies>
+            ]]>
         </f3Shared>
     </properties>
 

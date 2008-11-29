@@ -30,7 +30,15 @@
     
     <properties>
         <f3Shared>
-            javax.resource:connector-api:1.5
+            <![CDATA[
+	            <dependencies>
+		            <dependency>
+		                <groupId>javax.resource</groupId>
+		                <artifactId>connector-api</artifactId>
+		                <version>1.5</version>
+		            </dependency>
+		        </dependencies>
+            ]]>
         </f3Shared>
     </properties>
 

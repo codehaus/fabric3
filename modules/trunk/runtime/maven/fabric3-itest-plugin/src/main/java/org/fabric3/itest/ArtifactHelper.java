@@ -34,6 +34,7 @@
  */
 package org.fabric3.itest;
 
+import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.net.MalformedURLException;
@@ -46,9 +47,11 @@ import java.util.List;
 import java.util.Set;
 import java.util.StringTokenizer;
 
+import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.xpath.XPath;
+import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
 import javax.xml.xpath.XPathFactory;
 
@@ -68,6 +71,8 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.MavenProject;
 import org.fabric3.featureset.FeatureSet;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
 /**
@@ -289,22 +294,45 @@ public class ArtifactHelper {
             Set<Artifact> sharedArtifacts = new HashSet<Artifact>();
             File file = extensionArtifact.getFile();
             File pomFile = new File(file.getAbsolutePath().replace(".jar", ".pom"));
-            Document doc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(pomFile);
+            
+            DocumentBuilder documentBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
+            Document doc = documentBuilder.parse(pomFile);
             
             XPath xpath = XPathFactory.newInstance().newXPath();
-            String f3Shared = xpath.evaluate("//f3Shared/text()", doc).trim();
+            String f3Shared = xpath.evaluate("//f3Shared/text()", doc);
             
-            StringTokenizer tok1 = new StringTokenizer(f3Shared, ";");
-            while (tok1.hasMoreTokens()) {
-                StringTokenizer tok2 = new StringTokenizer(tok1.nextToken(), ":");
-                String groupId = tok2.nextToken().trim();
-                String artifactId = tok2.nextToken().trim();
-                String version = tok2.nextToken().trim();
+            if (f3Shared == null || "".equals(f3Shared.trim())) {
+                return sharedArtifacts;
+            }
+            
+            doc = documentBuilder.parse(new ByteArrayInputStream(f3Shared.trim().getBytes()));
+            NodeList sharedDependencies = (NodeList) xpath.evaluate("//dependency", doc, XPathConstants.NODESET);
+            
+            for (int i = 0; i < sharedDependencies.getLength();i++) {
+                
+                Element sharedDependencyElement = (Element)sharedDependencies.item(i);
+
                 Dependency dependency = new Dependency();
-                dependency.setArtifactId(artifactId);
-                dependency.setVersion(version);
-                dependency.setGroupId(groupId);
+                dependency.setGroupId(xpath.evaluate("groupId/text()", sharedDependencyElement));
+                dependency.setArtifactId(xpath.evaluate("artifactId/text()", sharedDependencyElement));
+                dependency.setVersion(xpath.evaluate("version/text()", sharedDependencyElement));
+                
+                NodeList exclusions = (NodeList) xpath.evaluate("/exclusions/exclusion", sharedDependencyElement, XPathConstants.NODESET);
+                
+                for (int j = 0; j < exclusions.getLength();j++) {
+                    
+                    Element exclusionElement = (Element) exclusions.item(j);
+                    
+                    Exclusion exclusion = new Exclusion();
+                    dependency.setGroupId(xpath.evaluate("groupId/text()", exclusionElement));
+                    dependency.setArtifactId(xpath.evaluate("artifactId/text()", exclusionElement));
+                    
+                    dependency.addExclusion(exclusion);
+                    
+                }
+
                 sharedArtifacts.addAll(resolveAll(dependency));
+                
             }
             
             return sharedArtifacts;
