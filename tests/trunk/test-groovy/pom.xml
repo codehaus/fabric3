@@ -39,6 +39,12 @@
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
         </dependency>
+        <dependency>
+            <groupId>org.codehaus.fabric3</groupId>
+            <artifactId>fabric3-groovy</artifactId>
+            <version>0.7-SNAPSHOT</version>
+            <scope>f3-extension</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -51,13 +57,6 @@
                 <version>0.7-SNAPSHOT</version>
                 <configuration>
                     <runtimeVersion>0.7-SNAPSHOT</runtimeVersion>
-                    <extensions>
-                        <dependency>
-                            <groupId>org.codehaus.fabric3</groupId>
-                            <artifactId>fabric3-groovy</artifactId>
-                            <version>0.7-SNAPSHOT</version>
-                        </dependency>
-                    </extensions>
                 </configuration>
                 <executions>
                     <execution>
