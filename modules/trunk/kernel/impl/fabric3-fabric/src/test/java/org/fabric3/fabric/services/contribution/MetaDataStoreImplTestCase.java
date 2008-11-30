@@ -46,8 +46,8 @@ import org.fabric3.util.io.FileHelper;
  * @version $Rev$ $Date$
  */
 public class MetaDataStoreImplTestCase extends TestCase {
-    private static final URI RESOURCE_URI = URI.create("DefaultStore/test-resource");
-    private static final URI RESOURCE_URI2 = URI.create("DefaultStore/test-resource2");
+    private static final URI RESOURCE_URI = URI.create("test-resource");
+    private static final URI RESOURCE_URI2 = URI.create("test-resource2");
     private static final QName IMPORT_EXPORT_QNAME = new QName("test", "test");
     private static final QName IMPORT_EXPORT_QNAME2 = new QName("test2", "test2");
     private MetaDataStoreImpl store;
@@ -55,7 +55,7 @@ public class MetaDataStoreImplTestCase extends TestCase {
     public void testResolve() throws Exception {
         URI uri = URI.create("source");
         QNameImport imprt = new QNameImport(IMPORT_EXPORT_QNAME);
-        ContributionWire<?,?> wire = store.resolve(uri, imprt);
+        ContributionWire<?, ?> wire = store.resolve(uri, imprt);
         assertEquals(RESOURCE_URI, wire.getExportContributionUri());
     }
 
@@ -100,8 +100,9 @@ public class MetaDataStoreImplTestCase extends TestCase {
         manifest2.addImport(imprt);
         QNameExport export2 = new QNameExport(IMPORT_EXPORT_QNAME2);
         manifest2.addExport(export2);
-        contribution2.addResolvedImportUri(RESOURCE_URI);
         store.store(contribution2);
+        ContributionWire<?,?> wire = store.resolve(RESOURCE_URI2, imprt);
+        contribution2.addWire(wire);
 
     }
 

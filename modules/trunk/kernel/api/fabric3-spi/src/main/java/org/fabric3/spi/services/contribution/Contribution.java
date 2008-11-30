@@ -43,7 +43,6 @@ public class Contribution implements Serializable {
     private boolean persistent;
     private ContributionManifest manifest = new ContributionManifest();
     private List<Resource> resources = new ArrayList<Resource>();
-    private List<URI> resolvedImports = new ArrayList<URI>();
     private List<ContributionWire<?, ?>> wires = new ArrayList<ContributionWire<?, ?>>();
 
     private Set<QName> lockOwners = new HashSet<QName>();
@@ -195,24 +194,6 @@ public class Contribution implements Serializable {
             }
         }
         return null;
-    }
-
-    /**
-     * Adds a contribution URI for a resolved import.
-     *
-     * @param uri the contribution URI
-     */
-    public void addResolvedImportUri(URI uri) {
-        resolvedImports.add(uri);
-    }
-
-    /**
-     * Returns the list of contribution URIs matching resolved imports.
-     *
-     * @return the list of contribution URIs matching resolved imports
-     */
-    public List<URI> getResolvedImportUris() {
-        return resolvedImports;
     }
 
     /**

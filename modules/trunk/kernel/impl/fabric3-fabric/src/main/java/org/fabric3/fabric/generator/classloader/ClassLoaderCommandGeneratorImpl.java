@@ -39,6 +39,7 @@ import org.fabric3.spi.model.instance.LogicalState;
 import org.fabric3.spi.model.physical.PhysicalClassLoaderDefinition;
 import org.fabric3.spi.services.contribution.Contribution;
 import org.fabric3.spi.services.contribution.ContributionUriEncoder;
+import org.fabric3.spi.services.contribution.ContributionWire;
 import org.fabric3.spi.services.contribution.MetaDataStore;
 
 /**
@@ -168,8 +169,9 @@ public class ClassLoaderCommandGeneratorImpl implements ClassLoaderCommandGenera
             }
             Contribution contribution = store.find(contributionUri);
             // imported contributions must also be provisioned
-            for (URI uri : contribution.getResolvedImportUris()) {
-                Contribution imported = store.find(uri);
+            List<ContributionWire<?, ?>> contributionWires = contribution.getWires();
+            for (ContributionWire<?, ?> wire : contributionWires) {
+                Contribution imported = store.find(wire.getExportContributionUri());
                 if (!contributions.contains(imported)) {
                     contributions.add(imported);
                 }
@@ -201,8 +203,9 @@ public class ClassLoaderCommandGeneratorImpl implements ClassLoaderCommandGenera
                     URI encoded = encode(uri);
                     definition.addContributionUri(encoded);
                 }
-                for (URI resolved : contribution.getResolvedImportUris()) {
-                    definition.addParentClassLoader(resolved);
+                List<ContributionWire<?, ?>> contributionWires = contribution.getWires();
+                for (ContributionWire<?, ?> wire : contributionWires) {
+                    definition.addParentClassLoader(wire.getExportContributionUri());
                 }
                 Set<PhysicalClassLoaderDefinition> definitions = definitionsPerZone.get(zone);
                 if (definitions == null) {

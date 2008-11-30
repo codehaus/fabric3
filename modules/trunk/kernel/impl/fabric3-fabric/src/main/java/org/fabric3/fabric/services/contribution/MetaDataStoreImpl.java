@@ -215,8 +215,9 @@ public class MetaDataStoreImpl implements MetaDataStore {
     public Set<Contribution> resolveDependentContributions(URI uri) {
         Set<Contribution> dependents = new HashSet<Contribution>();
         for (Contribution entry : cache.values()) {
-            for (URI resolvedUri : entry.getResolvedImportUris()) {
-                if (uri.equals(resolvedUri)) {
+            List<ContributionWire<?, ?>> contributionWires = entry.getWires();
+            for (ContributionWire<?, ?> wire : contributionWires) {
+                if (uri.equals(wire.getExportContributionUri())) {
                     dependents.add(entry);
                     break;
                 }
