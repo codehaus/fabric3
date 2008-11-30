@@ -6,10 +6,8 @@ import java.util.List;
 import java.util.Properties;
 import java.util.Set;
 
-import org.apache.maven.artifact.Artifact;
 import org.apache.maven.model.Dependency;
 import org.apache.maven.plugin.logging.Log;
-
 import org.fabric3.featureset.FeatureSet;
 
 public class MavenBootConfiguration {
@@ -24,7 +22,7 @@ public class MavenBootConfiguration {
     private ClassLoader hostClassLoader;
     private Set<URL> moduleDependencies;
     private Dependency[] extensions;
-    private Set<Artifact> extensionArtifacts;
+    private List<Dependency> extensionDependencies;
 
     //    private Dependency[] features;
 //    private boolean excludeDefaultFeatures;
@@ -34,12 +32,12 @@ public class MavenBootConfiguration {
     private Log log;
     private ExtensionHelper extensionHelper;
     
-    public Set<Artifact> getExtensionArtifacts() {
-        return extensionArtifacts;
+    public List<Dependency> getExtensionDependencies() {
+        return extensionDependencies;
     }
 
-    public void setExtensionArtifacts(Set<Artifact> extensionArtifacts) {
-        this.extensionArtifacts = extensionArtifacts;
+    public void setExtensionDependencies(List<Dependency> extensionDependencies) {
+        this.extensionDependencies = extensionDependencies;
     }
 
     public URL getSystemScdl() {

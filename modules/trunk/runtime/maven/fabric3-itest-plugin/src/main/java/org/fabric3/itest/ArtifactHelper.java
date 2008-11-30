@@ -45,7 +45,6 @@ import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
-import java.util.StringTokenizer;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -180,7 +179,8 @@ public class ArtifactHelper {
      */
     public Set<Artifact> calculateHostArtifacts(Set<Artifact> runtimeArtifacts, 
                                                 Dependency[] shared, 
-                                                Set<Artifact> extensionArtifacts,
+                                                List<Dependency> extensionDependencies,
+                                                List<Dependency> sharedDependencies,
                                                 List<FeatureSet> featureSets) throws MojoExecutionException {
         
         Set<Artifact> hostArtifacts = new HashSet<Artifact>();
@@ -220,8 +220,12 @@ public class ArtifactHelper {
             }
         }
         
-        for (Artifact extensionArtifact : extensionArtifacts) {
-            hostArtifacts.addAll(getSharedArtifacts(extensionArtifact));
+        for (Dependency extensionDependency : extensionDependencies) {
+            hostArtifacts.addAll(getSharedArtifacts(extensionDependency));
+        }
+        
+        for (Dependency sharedDependency : sharedDependencies) {
+            hostArtifacts.addAll(resolveAll(sharedDependency));
         }
         
         for (FeatureSet featureSet : featureSets) {
@@ -287,9 +291,11 @@ public class ArtifactHelper {
         
     }
 
-    private Set<Artifact> getSharedArtifacts(Artifact extensionArtifact) throws MojoExecutionException {
+    private Set<Artifact> getSharedArtifacts(Dependency extensionDependency) throws MojoExecutionException {
         
         try {
+
+            Artifact extensionArtifact = resolve(extensionDependency);
         
             Set<Artifact> sharedArtifacts = new HashSet<Artifact>();
             File file = extensionArtifact.getFile();

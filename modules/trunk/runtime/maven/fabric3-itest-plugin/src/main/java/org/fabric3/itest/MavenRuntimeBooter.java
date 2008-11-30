@@ -29,12 +29,9 @@ import java.util.Set;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.Future;
 
-import org.apache.maven.artifact.Artifact;
 import org.apache.maven.model.Dependency;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.logging.Log;
-import org.xml.sax.InputSource;
-
 import org.fabric3.featureset.FeatureSet;
 import org.fabric3.host.Names;
 import org.fabric3.host.contribution.ContributionSource;
@@ -49,6 +46,7 @@ import org.fabric3.host.runtime.StartException;
 import org.fabric3.jmx.agent.Agent;
 import org.fabric3.jmx.agent.DefaultAgent;
 import org.fabric3.maven.MavenEmbeddedRuntime;
+import org.xml.sax.InputSource;
 
 /**
  * @version $Revision$ $Date$
@@ -73,7 +71,7 @@ public class MavenRuntimeBooter {
     private ClassLoader hostClassLoader;
     private Set<URL> moduleDependencies;
     private org.apache.maven.model.Dependency[] extensions;
-    private Set<Artifact> extensionArtifacts;
+    private List<Dependency> extensionDependencies;
     
     private Dependency[] userExtensions;
     private File[] userExtensionsArchives;
@@ -102,7 +100,7 @@ public class MavenRuntimeBooter {
         featureSets = configuration.getFeatureSets();
         log = configuration.getLog();
         extensionHelper = configuration.getExtensionHelper();
-        extensionArtifacts = configuration.getExtensionArtifacts();
+        extensionDependencies = configuration.getExtensionDependencies();
     }
 
     @SuppressWarnings({"unchecked"})
@@ -152,7 +150,7 @@ public class MavenRuntimeBooter {
         configuration.setBootLibraryExports(bootExports);
 
         // process extensions
-        extensionHelper.processExtensions(configuration, extensions, extensionArtifacts, featureSets, userExtensions, userExtensionsArchives);
+        extensionHelper.processExtensions(configuration, extensions, extensionDependencies, featureSets, userExtensions, userExtensionsArchives);
 
         // process the baseline intents
         if (intentsLocation == null) {

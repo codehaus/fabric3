@@ -43,11 +43,11 @@ public class ExtensionHelper {
 
     public void processExtensions(BootConfiguration<MavenEmbeddedRuntime, ScdlBootstrapper> configuration,
                                   Dependency[] extensions,
-                                  Set<Artifact> extensionArtifacts,
+                                  List<Dependency> extensionDependencies,
                                   List<FeatureSet> featureSets,
                                   Dependency[] userExtensions,
                                   File[] userExtensionsArchives) throws MojoExecutionException {
-        List<URL> extensionUrls = resolveDependencies(extensions, extensionArtifacts);
+        List<URL> extensionUrls = resolveDependencies(extensions, extensionDependencies);
 
         if (featureSets != null) {
             for (FeatureSet featureSet : featureSets) {
@@ -91,7 +91,7 @@ public class ExtensionHelper {
         return resolveDependencies(featureSet.getExtensions().toArray(new Dependency[dependencies.size()]), null);
     }
 
-    private List<URL> resolveDependencies(Dependency[] dependencies, Set<Artifact> extensionArtifacts) throws MojoExecutionException {
+    private List<URL> resolveDependencies(Dependency[] dependencies, List<Dependency> extensionDependencies) throws MojoExecutionException {
 
         List<URL> urls = new ArrayList<URL>();
 
@@ -106,10 +106,11 @@ public class ExtensionHelper {
             }
         }
         
-        if (extensionArtifacts != null) {
-            for (Artifact extensionArtifact : extensionArtifacts) {
+        if (extensionDependencies != null) {
+            for (Dependency extensionDependency : extensionDependencies) {
+                Artifact artifact = artifactHelper.resolve(extensionDependency);
                 try {
-                    urls.add(extensionArtifact.getFile().toURI().toURL());
+                    urls.add(artifact.getFile().toURI().toURL());
                 } catch (MalformedURLException e) {
                     throw new AssertionError();
                 }

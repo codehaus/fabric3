@@ -340,7 +340,8 @@ public class Fabric3ITestMojo extends AbstractMojo {
         Set<Artifact> runtimeArtifacts = artifactHelper.calculateRuntimeArtifacts(runtimeVersion);
         Set<Artifact> hostArtifacts = artifactHelper.calculateHostArtifacts(runtimeArtifacts, 
                                                                             shared, 
-                                                                            getArtifacts("f3-extension"), 
+                                                                            getDependenciesForScope("f3-extension"), 
+                                                                            getDependenciesForScope("f3-shared"),
                                                                             featureSets);
         Set<Artifact> dependencies = artifactHelper.calculateDependencies();
         Set<URL> moduleDependencies = artifactHelper.calculateModuleDependencies(dependencies, hostArtifacts);
@@ -358,7 +359,7 @@ public class Fabric3ITestMojo extends AbstractMojo {
 
         configuration.setFeatureSets(featureSets);
         configuration.setExtensions(extensions);
-        configuration.setExtensionArtifacts(getArtifacts("f3-extension"));
+        configuration.setExtensionDependencies(getDependenciesForScope("f3-extension"));
         
         configuration.setUserExtensions(userExtensions);
         configuration.setUserExtensionsArchives(userExtensionsArchives);
@@ -475,12 +476,12 @@ public class Fabric3ITestMojo extends AbstractMojo {
     }
 
     @SuppressWarnings("unchecked")
-    private Set<Artifact> getArtifacts(final String scope) throws MojoExecutionException {
+    private List<Dependency> getDependenciesForScope(final String scope) throws MojoExecutionException {
         
-        Set<Artifact> artifacts = (Set<Artifact>) project.getArtifacts();
-        return CollectionUtils.filter(artifacts, new Closure<Artifact, Boolean>() {
-            public Boolean execute(Artifact artifact) {
-                return scope.equals(artifact.getScope());
+        List<Dependency> artifacts = (List<Dependency>) project.getDependencies();
+        return CollectionUtils.filter(artifacts, new Closure<Dependency, Boolean>() {
+            public Boolean execute(Dependency dependency) {
+                return scope.equals(dependency.getScope());
             }
         });
         
