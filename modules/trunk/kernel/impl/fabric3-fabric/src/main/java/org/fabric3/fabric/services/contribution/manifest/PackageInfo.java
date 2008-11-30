@@ -109,12 +109,30 @@ public class PackageInfo {
     }
 
     /**
+     * True if the minimum version range is exclusive.
+     *
+     * @return true if the minimum version range is exclusive.
+     */
+    public boolean isMinInclusive() {
+        return minInclusive;
+    }
+
+    /**
      * The maximum required version. When no maximum version is specified, the minimum version is interpreted as a specific required version.
      *
      * @return the maximum version or null
      */
     public PackageVersion getMaxVersion() {
         return maxVersion;
+    }
+
+    /**
+     * True if the maximum version range is exclusive.
+     *
+     * @return true if the maximum version range is exclusive.
+     */
+    public boolean isMaxInclusive() {
+        return maxInclusive;
     }
 
     /**
@@ -159,20 +177,18 @@ public class PackageInfo {
             }
         }
         if (maxVersion != null) {
+            // The exporting PackageInfo.minVersion is used as the export version. Compare the range against that.
             if (maxInclusive) {
-                if (maxVersion.compareTo(exportPackage.minVersion) < 0) {     // minVersion because the export always specifies an exact version
+                if (maxVersion.compareTo(exportPackage.minVersion) < 0) {
                     return false;
                 }
             } else {
-                if (maxVersion.compareTo(exportPackage.minVersion) <= 0) {     // minVersion because the export always specifies an exact version
+                if (maxVersion.compareTo(exportPackage.minVersion) <= 0) {
                     return false;
                 }
             }
         }
         return true;
-        // The exporting PackageInfo.minVersion is used as the export version. Compare the range against that.
-//        return !(minVersion != null && minVersion.compareTo(exportPackage.minVersion) > 0)
-//                && (maxVersion == null || (maxVersion.compareTo(exportPackage.minVersion) >= 0));
     }
 
     private void setName(String name) {

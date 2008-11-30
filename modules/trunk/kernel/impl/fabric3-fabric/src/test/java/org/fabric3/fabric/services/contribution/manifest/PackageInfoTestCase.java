@@ -91,6 +91,18 @@ public class PackageInfoTestCase extends TestCase {
         assertFalse(imprt.matches(export));
     }
 
+    /**
+     * Versions specified without a range default to minium inclusive with a maximum to infinity
+     */
+    public void testMatchVersionOSGiDefault() throws Exception {
+        PackageVersion min = new PackageVersion(1, 0, 0);
+        PackageVersion exportedVersion = new PackageVersion(2, 0, 0);
+
+        PackageInfo imprt = new PackageInfo("foo.bar", min, true, true);
+        PackageInfo export = new PackageInfo("foo.bar", exportedVersion, true, true);
+        assertTrue(imprt.matches(export));
+    }
+
     public void testMatchRangeVersionMinInclusive() throws Exception {
         PackageVersion min = new PackageVersion(1, 0, 0);
         PackageVersion exportedVersion = new PackageVersion(1, 0, 0);
