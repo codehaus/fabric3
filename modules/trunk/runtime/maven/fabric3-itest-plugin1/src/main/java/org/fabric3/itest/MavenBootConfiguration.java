@@ -8,7 +8,6 @@ import java.util.Set;
 
 import org.apache.maven.model.Dependency;
 import org.apache.maven.plugin.logging.Log;
-import org.fabric3.featureset.FeatureSet;
 
 public class MavenBootConfiguration {
     private URL systemScdl;
@@ -21,14 +20,7 @@ public class MavenBootConfiguration {
     private ClassLoader bootClassLoader;
     private ClassLoader hostClassLoader;
     private Set<URL> moduleDependencies;
-    private Dependency[] extensions;
     private List<Dependency> extensionDependencies;
-
-    //    private Dependency[] features;
-//    private boolean excludeDefaultFeatures;
-    private Dependency[] userExtensions;
-    private File[] userExtensionsArchives;
-    private List<FeatureSet> featureSets;
     private Log log;
     private ExtensionHelper extensionHelper;
     
@@ -118,38 +110,6 @@ public class MavenBootConfiguration {
 
     public void setModuleDependencies(Set<URL> moduleDependencies) {
         this.moduleDependencies = moduleDependencies;
-    }
-
-    public Dependency[] getExtensions() {
-        return extensions;
-    }
-
-    public void setExtensions(Dependency[] extensions) {
-        this.extensions = extensions;
-    }
-
-    public Dependency[] getUserExtensions() {
-        return userExtensions;
-    }
-
-    public void setUserExtensions(Dependency[] userExtensions) {
-        this.userExtensions = userExtensions;
-    }
-
-    public File[] getUserExtensionsArchives() {
-        return userExtensionsArchives;
-    }
-
-    public void setUserExtensionsArchives(File[] userExtensionsArchives) {
-        this.userExtensionsArchives = userExtensionsArchives;
-    }
-
-    public List<FeatureSet> getFeatureSets() {
-        return featureSets;
-    }
-
-    public void setFeatureSets(List<FeatureSet> featureSets) {
-        this.featureSets = featureSets;
     }
 
     public Log getLog() {

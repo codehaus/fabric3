@@ -35,18 +35,13 @@
 package org.fabric3.itest;
 
 import java.io.File;
-import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Properties;
 import java.util.Set;
-
-import javax.xml.parsers.ParserConfigurationException;
 
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.factory.ArtifactFactory;
@@ -58,11 +53,9 @@ import org.apache.maven.plugin.MojoFailureException;
 import org.apache.maven.plugin.logging.Log;
 import org.apache.maven.project.MavenProject;
 import org.fabric3.api.annotation.logging.Severe;
-import org.fabric3.featureset.FeatureSet;
 import org.fabric3.maven.MavenEmbeddedRuntime;
 import org.fabric3.util.closure.Closure;
 import org.fabric3.util.closure.CollectionUtils;
-import org.xml.sax.SAXException;
 
 /**
  * Run integration tests on a SCA composite using an embedded Fabric3 runtime.
@@ -81,13 +74,6 @@ public class Fabric3ITestMojo extends AbstractMojo {
      * @required
      */
     protected MavenProject project;
-
-    /**
-     * Optional parameter for management domain.
-     *
-     * @parameter
-     */
-    public String managementDomain = "itest-host";
 
     /**
      * Optional parameter for thread pool size.
@@ -172,51 +158,9 @@ public class Fabric3ITestMojo extends AbstractMojo {
     /**
      * The version of the runtime to use.
      *
-     * @parameter expression="0.7"
+     * @parameter  expression="${project.version}"
      */
     public String runtimeVersion;
-
-    /**
-     * Set of runtime extension artifacts that should be deployed to the runtime.
-     *
-     * @parameter
-     */
-    public Dependency[] extensions;
-
-    /**
-     * Set of runtime extension artifacts that should be deployed to the runtime expressed as feature sets.
-     *
-     * @parameter
-     */
-    public Dependency[] features;
-
-    /**
-     * Whether to exclude default features.
-     *
-     * @parameter
-     */
-    public boolean excludeDefaultFeatures;
-
-    /**
-     * Set of user extension artifacts that should be deployed to the runtime.
-     *
-     * @parameter
-     */
-    public Dependency[] userExtensions;
-
-    /**
-     * Set of user extension artifacts that are not Maven artifacts.
-     *
-     * @parameter
-     */
-    public File[] userExtensionsArchives;
-
-    /**
-     * Libraries available to application and runtime.
-     *
-     * @parameter
-     */
-    public Dependency[] shared;
 
     /**
      * Properties passed to the runtime throught the HostInfo interface.
@@ -335,14 +279,12 @@ public class Fabric3ITestMojo extends AbstractMojo {
      * @throws MojoExecutionException if there is an error creating the configuration
      */
     private MavenBootConfiguration createBootConfiguration() throws MojoExecutionException {
+
+        List<Dependency> extensionDependencies = getDependenciesForScope("f3-extension");
+        List<Dependency> sharedDependencies = getDependenciesForScope("f3-shared");
         
-        List<FeatureSet> featureSets = resolveFeatureSets();
         Set<Artifact> runtimeArtifacts = artifactHelper.calculateRuntimeArtifacts(runtimeVersion);
-        Set<Artifact> hostArtifacts = artifactHelper.calculateHostArtifacts(runtimeArtifacts, 
-                                                                            shared, 
-                                                                            getDependenciesForScope("f3-extension"), 
-                                                                            getDependenciesForScope("f3-shared"),
-                                                                            featureSets);
+        Set<Artifact> hostArtifacts = artifactHelper.calculateHostArtifacts(runtimeArtifacts, extensionDependencies, sharedDependencies);
         Set<Artifact> dependencies = artifactHelper.calculateDependencies();
         Set<URL> moduleDependencies = artifactHelper.calculateModuleDependencies(dependencies, hostArtifacts);
 
@@ -353,16 +295,27 @@ public class Fabric3ITestMojo extends AbstractMojo {
         MavenBootConfiguration configuration = new MavenBootConfiguration();
         configuration.setBootClassLoader(bootClassLoader);
         configuration.setHostClassLoader(hostClassLoader);
-        configuration.setManagementDomain(managementDomain);
         configuration.setLog(getLog());
         configuration.setExtensionHelper(extensionHelper);
 
-        configuration.setFeatureSets(featureSets);
-        configuration.setExtensions(extensions);
-        configuration.setExtensionDependencies(getDependenciesForScope("f3-extension"));
+        String[] defaultExtensions = { "fabric3-maven-extension", 
+                                       "fabric3-jdk-proxy",
+                                       "fabric3-java",
+                                       "fabric3-junit",
+                                       "fabric3-async-provision",
+                                       "fabric3-async-loader",
+                                       "fabric3-async-runtime",
+                                       "fabric3-conversation-propagation"
+                                     };
+        for (String defaultExtension : defaultExtensions) {
+            Dependency dep = new Dependency();
+            dep.setGroupId("org.codehaus.fabric3");
+            dep.setArtifactId(defaultExtension);
+            dep.setVersion(runtimeVersion);
+            extensionDependencies.add(dep);
+        }
+        configuration.setExtensionDependencies(extensionDependencies);
         
-        configuration.setUserExtensions(userExtensions);
-        configuration.setUserExtensionsArchives(userExtensionsArchives);
         configuration.setIntentsLocation(intentsLocation);
         configuration.setModuleDependencies(moduleDependencies);
         configuration.setOutputDirectory(outputDirectory);
@@ -427,52 +380,6 @@ public class Fabric3ITestMojo extends AbstractMojo {
 
         }
         return new URLClassLoader(urls.toArray(new URL[urls.size()]), parent);
-    }
-
-    /**
-     * Resolves configured feature sets to load as runtime extensions.
-     *
-     * @return the resolved set of FeatureSets
-     * @throws MojoExecutionException if a resolution error occurs
-     */
-    private List<FeatureSet> resolveFeatureSets() throws MojoExecutionException {
-        List<Dependency> featurestoInstall = getFeaturesToInstall();
-        // Resolved feature sets
-        List<FeatureSet> featureSets = new LinkedList<FeatureSet>();
-
-        if (!featurestoInstall.isEmpty()) {
-            for (Dependency feature : featurestoInstall) {
-                Artifact artifact = artifactHelper.resolve(feature);
-                try {
-                    FeatureSet featureSet = FeatureSet.deserialize(artifact.getFile());
-                    featureSets.add(featureSet);
-                } catch (ParserConfigurationException e) {
-                    throw new MojoExecutionException("Error booting Fabric3 runtime", e);
-                } catch (SAXException e) {
-                    throw new MojoExecutionException("Error booting Fabric3 runtime", e);
-                } catch (IOException e) {
-                    throw new MojoExecutionException("Error booting Fabric3 runtime", e);
-                }
-            }
-        }
-        return featureSets;
-    }
-
-    private List<Dependency> getFeaturesToInstall() {
-        List<Dependency> featuresToInstall = new ArrayList<Dependency>();
-
-        if (features != null) {
-            featuresToInstall.addAll(Arrays.asList(features));
-        }
-        if (!excludeDefaultFeatures) {
-            Dependency dependency = new Dependency();
-            dependency.setArtifactId("fabric3-default-feature");
-            dependency.setGroupId("org.codehaus.fabric3");
-            dependency.setVersion(runtimeVersion);
-            dependency.setType("xml");
-            featuresToInstall.add(dependency);
-        }
-        return featuresToInstall;
     }
 
     @SuppressWarnings("unchecked")

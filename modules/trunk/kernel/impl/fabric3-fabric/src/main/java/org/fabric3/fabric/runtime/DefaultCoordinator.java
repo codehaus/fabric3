@@ -74,7 +74,6 @@ public class DefaultCoordinator<RUNTIME extends Fabric3Runtime<?>, BOOTSTRAPPER 
     private List<URL> bootExports;
     private ContributionSource intents;
     private List<ContributionSource> extensions;
-    private List<ContributionSource> userExtensions;
 
     public enum State {
         UNINITIALIZED,
@@ -94,7 +93,6 @@ public class DefaultCoordinator<RUNTIME extends Fabric3Runtime<?>, BOOTSTRAPPER 
         bootExports = configuration.getBootLibraryExports();
         intents = configuration.getIntents();
         extensions = configuration.getExtensions();
-        userExtensions = configuration.getUserExtensions();
     }
 
     public void bootPrimordial() throws InitializationException {
@@ -118,7 +116,6 @@ public class DefaultCoordinator<RUNTIME extends Fabric3Runtime<?>, BOOTSTRAPPER 
         try {
             activateIntents(intents);
             includeExtensions(extensions);
-            includeExtensions(userExtensions);
         } catch (DefinitionActivationException e) {
             throw new InitializationException(e);
         }

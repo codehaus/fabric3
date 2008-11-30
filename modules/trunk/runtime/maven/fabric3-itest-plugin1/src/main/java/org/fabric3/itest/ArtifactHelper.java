@@ -68,7 +68,6 @@ import org.apache.maven.model.Dependency;
 import org.apache.maven.model.Exclusion;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.MavenProject;
-import org.fabric3.featureset.FeatureSet;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;
@@ -177,11 +176,9 @@ public class ArtifactHelper {
      * @return set of artifacts to be included in the host classloader
      * @throws MojoExecutionException if an error occurs calculating the transitive dependencies
      */
-    public Set<Artifact> calculateHostArtifacts(Set<Artifact> runtimeArtifacts, 
-                                                Dependency[] shared, 
+    public Set<Artifact> calculateHostArtifacts(Set<Artifact> runtimeArtifacts,
                                                 List<Dependency> extensionDependencies,
-                                                List<Dependency> sharedDependencies,
-                                                List<FeatureSet> featureSets) throws MojoExecutionException {
+                                                List<Dependency> sharedDependencies) throws MojoExecutionException {
         
         Set<Artifact> hostArtifacts = new HashSet<Artifact>();
         List<Exclusion> exclusions = Collections.emptyList();
@@ -212,13 +209,6 @@ public class ArtifactHelper {
         jsr250API.setVersion("1.1");
         jsr250API.setExclusions(exclusions);
         hostArtifacts.addAll(resolveAll(jsr250API));
-
-        // add shared artifacts to the host classpath
-        if (shared != null) {
-            for (Dependency sharedDependency : shared) {
-                hostArtifacts.addAll(resolveAll(sharedDependency));
-            }
-        }
         
         for (Dependency extensionDependency : extensionDependencies) {
             hostArtifacts.addAll(getSharedArtifacts(extensionDependency));
@@ -228,11 +218,6 @@ public class ArtifactHelper {
             hostArtifacts.addAll(resolveAll(sharedDependency));
         }
         
-        for (FeatureSet featureSet : featureSets) {
-        	for (Dependency sharedLibrary : featureSet.getSharedLibraries()) {
-                hostArtifacts.addAll(resolveAll(sharedLibrary));
-        	}
-        }
         return hostArtifacts;
     }
     

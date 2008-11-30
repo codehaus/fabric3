@@ -32,7 +32,6 @@ import java.util.concurrent.Future;
 import org.apache.maven.model.Dependency;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugin.logging.Log;
-import org.fabric3.featureset.FeatureSet;
 import org.fabric3.host.Names;
 import org.fabric3.host.contribution.ContributionSource;
 import org.fabric3.host.contribution.FileContributionSource;
@@ -70,12 +69,8 @@ public class MavenRuntimeBooter {
     private ClassLoader bootClassLoader;
     private ClassLoader hostClassLoader;
     private Set<URL> moduleDependencies;
-    private org.apache.maven.model.Dependency[] extensions;
     private List<Dependency> extensionDependencies;
     
-    private Dependency[] userExtensions;
-    private File[] userExtensionsArchives;
-    private List<FeatureSet> featureSets;
     private Log log;
 
 
@@ -94,10 +89,6 @@ public class MavenRuntimeBooter {
         bootClassLoader = configuration.getBootClassLoader();
         hostClassLoader = configuration.getHostClassLoader();
         moduleDependencies = configuration.getModuleDependencies();
-        extensions = configuration.getExtensions();
-        userExtensions = configuration.getUserExtensions();
-        userExtensionsArchives = configuration.getUserExtensionsArchives();
-        featureSets = configuration.getFeatureSets();
         log = configuration.getLog();
         extensionHelper = configuration.getExtensionHelper();
         extensionDependencies = configuration.getExtensionDependencies();
@@ -150,7 +141,7 @@ public class MavenRuntimeBooter {
         configuration.setBootLibraryExports(bootExports);
 
         // process extensions
-        extensionHelper.processExtensions(configuration, extensions, extensionDependencies, featureSets, userExtensions, userExtensionsArchives);
+        extensionHelper.processExtensions(configuration, extensionDependencies);
 
         // process the baseline intents
         if (intentsLocation == null) {
