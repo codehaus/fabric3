@@ -48,7 +48,7 @@
 <!-- Advanced Test -->
     <component name="AdvancedTestClient">
         <f3-impl:junit class="tests.xquery.AdvancedTestClient"/>
-        <reference name="xqService" target="Advanced/XQueryService"/>
+        <!-- reference name="xqService" target="Advanced/XQueryService"/-->
         <reference name="service" target="Advanced/AdvancedService"/>
     </component>
 

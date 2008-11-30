@@ -37,15 +37,33 @@
             <artifactId>sca-api-r1.0</artifactId>
             <version>0.2.1</version>
         </dependency>
-        <dependency>
+        <!-- dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-xquery</artifactId>
             <version>0.7-SNAPSHOT</version>
-        </dependency>
+        </dependency-->
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
         </dependency>
+                        <dependency>
+                            <groupId>org.codehaus.fabric3</groupId>
+                            <artifactId>fabric3-xquery</artifactId>
+                            <version>0.7-SNAPSHOT</version>
+                            <scope>f3-extension</scope>
+                        </dependency>
+                        <dependency>
+                            <groupId>org.codehaus.fabric3</groupId>
+                            <artifactId>fabric3-db-exist</artifactId>
+                            <version>0.7-SNAPSHOT</version>
+                            <scope>f3-extension</scope>
+                        </dependency>
+                        <dependency>
+                            <groupId>org.codehaus.fabric3.tests</groupId>
+                            <artifactId>test-xquery-exist-instance</artifactId>
+                            <version>0.1-SNAPSHOT</version>
+                            <scope>f3-extension</scope>
+                        </dependency>
     </dependencies>
     <build>
         <defaultGoal>verify</defaultGoal>
@@ -57,21 +75,6 @@
                 <configuration>
                     <runtimeVersion>0.7-SNAPSHOT</runtimeVersion>
                     <extensions>
-                        <dependency>
-                            <groupId>org.codehaus.fabric3</groupId>
-                            <artifactId>fabric3-xquery</artifactId>
-                            <version>0.7-SNAPSHOT</version>
-                        </dependency>
-                        <dependency>
-                            <groupId>org.codehaus.fabric3</groupId>
-                            <artifactId>fabric3-db-exist</artifactId>
-                            <version>0.7-SNAPSHOT</version>
-                        </dependency>
-                        <dependency>
-                            <groupId>org.codehaus.fabric3.tests</groupId>
-                            <artifactId>test-xquery-exist-instance</artifactId>
-                            <version>0.1-SNAPSHOT</version>
-                        </dependency>
                     </extensions>
                 </configuration>
                 <executions>

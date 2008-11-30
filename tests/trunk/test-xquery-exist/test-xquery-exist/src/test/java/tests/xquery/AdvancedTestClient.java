@@ -18,15 +18,14 @@ package tests.xquery;
 
 import java.io.StringReader;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import javax.xml.namespace.QName;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
+
 import junit.framework.TestCase;
+
 import org.osoa.sca.annotations.Reference;
-import org.fabric3.xquery.XQueryService;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
@@ -42,9 +41,6 @@ public class AdvancedTestClient extends TestCase {
     public 
     @Reference
     AdvancedService service;
-    public 
-    @Reference
-    XQueryService xqService;
 
     public AdvancedTestClient() {
     }
@@ -191,7 +187,7 @@ public class AdvancedTestClient extends TestCase {
     assertEquals("1",service.varFunction());
     }
      */
-    public void testXQFunction() {
+    /*public void testXQFunction() {
         QName var = new QName("sca:property:value", "value", "value");
         Map mappings = new HashMap();
         mappings.put(var, "value");
@@ -204,5 +200,5 @@ public class AdvancedTestClient extends TestCase {
         assertEquals("adv:advFunction", n.getNodeName());
         assertTrue(n.hasAttributes());
         assertEquals("service value", n.getAttributes().item(0).getNodeValue());
-    }
+    }*/
 }
