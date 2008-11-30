@@ -86,43 +86,10 @@
         <plugins>
             <plugin>
                 <groupId>org.codehaus.fabric3</groupId>
-                <artifactId>fabric3-itest-plugin</artifactId>
+                <artifactId>fabric3-itest-plugin1</artifactId>
                 <version>0.7-SNAPSHOT</version>
                 <configuration>
                     <runtimeVersion>0.7-SNAPSHOT</runtimeVersion>
-                    <!-- shared>
-                        <dependency>
-                            <groupId>commons-codec</groupId>
-                            <artifactId>commons-codec</artifactId>
-                            <version>1.3</version>
-                        </dependency>
-                        <dependency>
-                            <groupId>org.apache.axis2</groupId>
-                            <artifactId>axis2-kernel</artifactId>
-                            <version>1.4.1</version>
-                            <exclusions>
-                                <exclusion>
-                                    <groupId>org.apache.ant</groupId>
-                                    <artifactId>ant</artifactId>
-                                </exclusion>
-                            </exclusions>
-                        </dependency>
-                        <dependency>
-                            <groupId>javax.xml.ws</groupId>
-                            <artifactId>jaxws-api</artifactId>
-                            <version>2.1</version>
-                        </dependency>
-                        <dependency>
-                            <groupId>javax.xml.bind</groupId>
-                            <artifactId>jaxb-api</artifactId>
-                            <version>2.1</version>
-                        </dependency>
-                        <dependency>
-                            <groupId>com.sun.xml.bind</groupId>
-                            <artifactId>jaxb-impl</artifactId>
-                            <version>2.1.6</version>
-                        </dependency>
-                    </shared-->
                     <systemConfig>
                         <![CDATA[
                         <config>

@@ -57,31 +57,6 @@
             <artifactId>fabric3-binding-test-harness</artifactId>
             <version>0.7-SNAPSHOT</version>
         </dependency>
-        <!-- verifies manual configuration of features. This should be done in a separate battery of itests -->
-        <dependency>
-            <groupId>org.codehaus.fabric3</groupId>
-            <artifactId>fabric3-maven-extension</artifactId>
-            <version>0.7-SNAPSHOT</version>
-            <scope>f3-extension</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.codehaus.fabric3</groupId>
-            <artifactId>fabric3-jdk-proxy</artifactId>
-            <version>0.7-SNAPSHOT</version>
-            <scope>f3-extension</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.codehaus.fabric3</groupId>
-            <artifactId>fabric3-java</artifactId>
-            <version>0.7-SNAPSHOT</version>
-            <scope>f3-extension</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.codehaus.fabric3</groupId>
-            <artifactId>fabric3-junit</artifactId>
-            <version>0.7-SNAPSHOT</version>
-            <scope>f3-extension</scope>
-        </dependency>
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-binding-burlap</artifactId>
@@ -101,7 +76,7 @@
         <plugins>
             <plugin>
                 <groupId>org.codehaus.fabric3</groupId>
-                <artifactId>fabric3-itest-plugin</artifactId>
+                <artifactId>fabric3-itest-plugin1</artifactId>
                 <version>0.7-SNAPSHOT</version>
                 <configuration>
                     <runtimeVersion>0.7-SNAPSHOT</runtimeVersion>
@@ -114,7 +89,6 @@
                         </config>
                         ]]>
                     </systemConfig>
-                    <excludeDefaultFeatures>true</excludeDefaultFeatures>
                 </configuration>
                 <executions>
                     <execution>
