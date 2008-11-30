@@ -14,7 +14,7 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.loader.xmlcontribution;
+package org.fabric3.fabric.services.contribution.xmlcontribution;
 
 import java.io.FileNotFoundException;
 import javax.xml.namespace.QName;

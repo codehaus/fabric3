@@ -21,20 +21,19 @@
            xmlns:sca="http://www.osoa.org/xmlns/sca/1.0"
            xmlns:f3-core="urn:fabric3.org:core"
            xmlns:f3-impl="urn:fabric3.org:implementation"
-           name="XmlContributionLoaderBootComposite" targetNamespace="urn:maven:org.codehaus.fabric3:fabric3-loader"
-        >
+           name="XmlContributionLoaderBootComposite" >
 
     <!-- Definitions SCDL loader implementation -->
     <component name="XmlContributionTypeLoader">
-        <f3-impl:implementation.system class="org.fabric3.loader.xmlcontribution.XmlContributionTypeLoader"/>
+        <f3-impl:implementation.system class="org.fabric3.fabric.services.contribution.xmlcontribution.XmlContributionTypeLoader"/>
     </component>
 
     <component name="XmlContributionTypeIndexer">
-        <f3-impl:implementation.system class="org.fabric3.loader.xmlcontribution.XmlContributionTypeIndexer"/>
+        <f3-impl:implementation.system class="org.fabric3.fabric.services.contribution.xmlcontribution.XmlContributionTypeIndexer"/>
     </component>
 
     <component name="XmlContributionTypeManifestProcessor">
-        <f3-impl:implementation.system class="org.fabric3.loader.xmlcontribution.XmlContributionTypeManifestProcessor"/>
+        <f3-impl:implementation.system class="org.fabric3.fabric.services.contribution.xmlcontribution.XmlContributionTypeManifestProcessor"/>
     </component>
 
 </composite>

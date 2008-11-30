@@ -184,4 +184,6 @@
         <f3-impl:implementation.system class="org.fabric3.fabric.services.contribution.connector.MavenContributionWireConnector"/>
     </component>
 
+    <include name="xmlContributionLoaderComposite" scdlLocation="xmlContributionLoader.composite"/>
+    
 </composite>
