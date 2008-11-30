@@ -28,6 +28,7 @@
     <packaging>sca-contribution-jar</packaging>
     <name>Fabric3 REST</name>
     <description>Fabric3 JSR-311 REST Implementation Type Extension.</description>
+    
     <repositories>
         <repository>
             <id>maven2-repository.dev.java.net</id>
@@ -36,6 +37,32 @@
             <layout>default</layout>
         </repository>
     </repositories>
+    
+    <properties>
+        <f3Shared>
+            <![CDATA[
+	            <dependencies>
+		            <dependency>
+	                    <groupId>com.sun.jersey</groupId>
+	                    <artifactId>jersey-server</artifactId>
+	                    <version>1.0</version>
+	                    <exclusions>
+	                        <exclusion>
+	                            <groupId>asm</groupId>
+	                            <artifactId>asm</artifactId>
+	                        </exclusion>
+	                    </exclusions>
+	                </dependency>
+	                <dependency>
+	                    <groupId>cglib</groupId>
+	                    <artifactId>cglib</artifactId>
+	                    <version>2.1_3</version>
+	                </dependency>
+		        </dependencies>
+            ]]>
+        </f3Shared>
+    </properties>
+    
     <dependencies>
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
