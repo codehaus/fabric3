@@ -49,6 +49,18 @@
             <artifactId>jaxb-api</artifactId>
             <version>2.1</version>
         </dependency>
+        <dependency>
+            <groupId>org.codehaus.fabric3</groupId>
+            <artifactId>fabric3-binding-test</artifactId>
+            <version>0.7-SNAPSHOT</version>
+            <scope>f3-extension</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.xml.bind</groupId>
+            <artifactId>jaxb-impl</artifactId>
+            <version>2.1.6</version>
+            <scope>f3-shared</scope>
+        </dependency>
     </dependencies>
 
     <build>
@@ -61,25 +73,6 @@
                 <version>0.7-SNAPSHOT</version>
                 <configuration>
                     <runtimeVersion>0.7-SNAPSHOT</runtimeVersion>
-                    <extensions>
-                        <dependency>
-                            <groupId>org.codehaus.fabric3</groupId>
-                            <artifactId>fabric3-binding-test</artifactId>
-                            <version>0.7-SNAPSHOT</version>
-                        </dependency>
-                    </extensions>
-                    <shared>
-                        <!-- dependency>
-                            <groupId>javax.xml.bind</groupId>
-                            <artifactId>jaxb-api</artifactId>
-                            <version>2.1</version>
-                        </dependency-->
-                        <dependency>
-                            <groupId>com.sun.xml.bind</groupId>
-                            <artifactId>jaxb-impl</artifactId>
-                            <version>2.1.6</version>
-                        </dependency>
-                    </shared>
                     <compositeName>FunctionTestHarnessComposite</compositeName>
                     <systemConfig>
                         <![CDATA[
