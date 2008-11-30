@@ -39,14 +39,14 @@
     </parent>
     <modelVersion>4.0.0</modelVersion>
     <groupId>org.codehaus.fabric3</groupId>
-    <artifactId>fabric3-itest-plugin</artifactId>
+    <artifactId>fabric3-itest-plugin1</artifactId>
     <packaging>maven-plugin</packaging>
     <name>Fabric3 Integration Test Maven Plugin</name>
     <description>Fabric3 Integration Test Maven Plugin.</description>
     <scm>
-        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/runtime/maven/fabric3-itest-plugin</connection>
-        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/trunk/runtime/maven/fabric3-itest-plugin</developerConnection>
-        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/trunk/runtime/maven/fabric3-itest-plugin</url>
+        <connection>scm:svn:http://svn.codehaus.org/fabric3/modules/trunk/runtime/maven/fabric3-itest-plugin1</connection>
+        <developerConnection>scm:svn:https://svn.codehaus.org/fabric3/modules/trunk/runtime/maven/fabric3-itest-plugin1</developerConnection>
+        <url>http://svn.fabric3.codehaus.org/browse/fabric3/modules/trunk/runtime/maven/fabric3-itest-plugin1</url>
     </scm>
     <build>
         <plugins>
@@ -183,7 +183,7 @@
         <site>
             <id>dav.codehaus.org</id>
             <name>Fabric3 Website</name>
-            <url>dav:https://dav.codehaus.org/fabric3/fabric3-itest-plugin</url>
+            <url>dav:https://dav.codehaus.org/fabric3/fabric3-itest-plugin1</url>
         </site>
     </distributionManagement>
 </project>
