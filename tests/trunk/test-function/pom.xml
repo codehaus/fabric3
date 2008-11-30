@@ -68,7 +68,7 @@
         <plugins>
             <plugin>
                 <groupId>org.codehaus.fabric3</groupId>
-                <artifactId>fabric3-itest-plugin</artifactId>
+                <artifactId>fabric3-itest-plugin1</artifactId>
                 <!-- generally this should point to the latest plugin and kernel version -->
                 <version>0.7-SNAPSHOT</version>
                 <configuration>
