@@ -27,7 +27,7 @@ import java.util.zip.ZipInputStream;
 
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.host.contribution.Constants;
+import org.fabric3.spi.services.contribution.Constants;
 import org.fabric3.host.contribution.InstallException;
 import org.fabric3.spi.introspection.DefaultIntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionContext;

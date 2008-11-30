@@ -27,7 +27,7 @@ import javax.xml.stream.XMLStreamReader;
 
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.host.contribution.Constants;
+import org.fabric3.spi.services.contribution.Constants;
 import org.fabric3.host.contribution.ContributionNotFoundException;
 import org.fabric3.maven.CompositeQNameService;
 import org.fabric3.maven.InvalidResourceException;
