@@ -27,16 +27,27 @@ public class PackageInfo {
     private PackageVersion maxVersion;
     private boolean required;
     private String[] packageNames;
+    private boolean minInclusive;
+    private boolean maxInclusive;
 
     /**
      * Constructor for an import package declaration specifying a version range.
      *
-     * @param name       the package name
-     * @param minVersion the minimum version
-     * @param maxVersion the maximum version
-     * @param required   if package resolution is required
+     * @param name         the package name
+     * @param minVersion   the minimum version
+     * @param minInclusive true if the minimum version is considered inclusive for range matching
+     * @param maxVersion   the maximum version
+     * @param maxInclusive if the maximum version is considered inclusive for range matching
+     * @param required     if package resolution is required
      */
-    public PackageInfo(String name, PackageVersion minVersion, PackageVersion maxVersion, boolean required) {
+    public PackageInfo(String name,
+                       PackageVersion minVersion,
+                       boolean minInclusive,
+                       PackageVersion maxVersion,
+                       boolean maxInclusive,
+                       boolean required) {
+        this.minInclusive = minInclusive;
+        this.maxInclusive = maxInclusive;
         setName(name);
         this.minVersion = minVersion;
         this.maxVersion = maxVersion;
@@ -46,13 +57,15 @@ public class PackageInfo {
     /**
      * Constructor for an import or export package declaration specifying an exact version.
      *
-     * @param name     the package name
-     * @param version  the minimum version
-     * @param required if package resolution is required
+     * @param name         the package name
+     * @param version      the minimum version
+     * @param minInclusive true if the minimum version is considered inclusive for range matching
+     * @param required     if package resolution is required
      */
-    public PackageInfo(String name, PackageVersion version, boolean required) {
+    public PackageInfo(String name, PackageVersion version, boolean minInclusive, boolean required) {
         setName(name);
         this.minVersion = version;
+        this.minInclusive = minInclusive;
         this.required = required;
     }
 
@@ -134,9 +147,32 @@ public class PackageInfo {
                 return false;
             }
         }
+        if (minVersion != null) {
+            if (minInclusive) {
+                if (minVersion.compareTo(exportPackage.minVersion) > 0) {
+                    return false;
+                }
+            } else {
+                if (minVersion.compareTo(exportPackage.minVersion) >= 0) {
+                    return false;
+                }
+            }
+        }
+        if (maxVersion != null) {
+            if (maxInclusive) {
+                if (maxVersion.compareTo(exportPackage.minVersion) < 0) {     // minVersion because the export always specifies an exact version
+                    return false;
+                }
+            } else {
+                if (maxVersion.compareTo(exportPackage.minVersion) <= 0) {     // minVersion because the export always specifies an exact version
+                    return false;
+                }
+            }
+        }
+        return true;
         // The exporting PackageInfo.minVersion is used as the export version. Compare the range against that.
-        return !(minVersion != null && minVersion.compareTo(exportPackage.minVersion) > 0)
-                && (maxVersion == null || (maxVersion.compareTo(exportPackage.minVersion) >= 0));
+//        return !(minVersion != null && minVersion.compareTo(exportPackage.minVersion) > 0)
+//                && (maxVersion == null || (maxVersion.compareTo(exportPackage.minVersion) >= 0));
     }
 
     private void setName(String name) {
