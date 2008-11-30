@@ -28,6 +28,19 @@
       </library>
     </orderEntry>
     <orderEntry type="module" module-name="sca-spec" exported="" />
+    <orderEntry type="module-library">
+      <library name="javax.persistence:persistence-api:1.0">
+        <CLASSES>
+          <root url="jar://$M2_REPO$/javax/persistence/persistence-api/1.0/persistence-api-1.0.jar!/" />
+        </CLASSES>
+        <JAVADOC>
+          <root url="jar://$M2_REPO$/javax/persistence/persistence-api/1.0/persistence-api-1.0-javadoc.jar!/" />
+        </JAVADOC>
+        <SOURCES>
+          <root url="jar://$M2_REPO$/javax/persistence/persistence-api/1.0/persistence-api-1.0-sources.jar!/" />
+        </SOURCES>
+      </library>
+    </orderEntry>
   </component>
 </module>
 
