@@ -33,6 +33,7 @@ import org.apache.axis2.description.AxisModule;
 import org.apache.axis2.description.AxisOperation;
 import org.apache.axis2.description.AxisService;
 import org.apache.axis2.description.Parameter;
+import org.apache.axis2.description.WSDL2Constants;
 import org.apache.axis2.engine.MessageReceiver;
 import org.apache.axis2.transport.http.AxisServlet;
 import org.osoa.sca.annotations.EagerInit;
@@ -57,7 +58,10 @@ import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.Wire;
 
 /**
+ * Axis2 Service provisioner.
+ * 
  * @version $Revision$ $Date$
+ * 
  */
 @EagerInit
 public class Axis2ServiceProvisionerImpl implements Axis2ServiceProvisioner {
@@ -193,11 +197,16 @@ public class Axis2ServiceProvisionerImpl implements Axis2ServiceProvisioner {
         for (Iterator<?> i = axisService.getOperations(); i.hasNext();) {
             AxisOperation axisOp = (AxisOperation) i.next();
             InvocationChain invocationChain = interceptors.get(axisOp.getName().getLocalPart());
-            // TODO Select message receiver based on MEP
-            MessageReceiver messageReceiver = new InOutServiceProxyHandler(invocationChain);
+            
+            MessageReceiver messageReceiver = null;
+            if (WSDL2Constants.MEP_URI_IN_ONLY.equals(axisOp.getMessageExchangePattern()) || 
+                WSDL2Constants.MEP_URI_ROBUST_IN_ONLY.equals(axisOp.getMessageExchangePattern())) {
+                messageReceiver = new InOnlyServiceProxyHandler(invocationChain);        	
+            } else {//Default MEP is IN-OUT for backward compatibility
+                messageReceiver = new InOutServiceProxyHandler(invocationChain);
+            }
             axisOp.setMessageReceiver(messageReceiver);
         }
-
     }
 
 
@@ -218,6 +227,5 @@ public class Axis2ServiceProvisionerImpl implements Axis2ServiceProvisioner {
             throw new WiringException(e);
         }
     }
-
 
 }

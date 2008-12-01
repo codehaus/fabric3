@@ -45,9 +45,9 @@ import javax.xml.ws.WebServiceFeature;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.binding.ws.metro.provision.MetroWireTargetDefinition;
-import org.fabric3.binding.ws.metro.provision.WsdlElement;
 import org.fabric3.binding.ws.metro.runtime.core.TargetInterceptor;
 import org.fabric3.binding.ws.metro.runtime.policy.FeatureResolver;
+import org.fabric3.binding.ws.provision.WsdlElement;
 import org.fabric3.scdl.definitions.PolicySet;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.WiringException;

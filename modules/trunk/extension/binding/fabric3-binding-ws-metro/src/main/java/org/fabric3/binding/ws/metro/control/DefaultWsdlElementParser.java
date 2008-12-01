@@ -40,7 +40,7 @@ import com.sun.xml.ws.api.model.wsdl.WSDLModel;
 import com.sun.xml.ws.api.model.wsdl.WSDLPort;
 import com.sun.xml.ws.api.model.wsdl.WSDLService;
 
-import org.fabric3.binding.ws.metro.provision.WsdlElement;
+import org.fabric3.binding.ws.provision.WsdlElement;
 import org.fabric3.scdl.JavaServiceContract;
 import org.fabric3.scdl.ServiceContract;
 import org.fabric3.spi.generator.GenerationException;

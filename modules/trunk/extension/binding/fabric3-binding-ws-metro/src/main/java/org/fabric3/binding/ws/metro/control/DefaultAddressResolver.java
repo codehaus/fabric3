@@ -40,7 +40,7 @@ import java.net.URL;
 import java.net.URLDecoder;
 import java.util.StringTokenizer;
 
-import org.fabric3.binding.ws.metro.provision.WsdlElement;
+import org.fabric3.binding.ws.provision.WsdlElement;
 import org.fabric3.spi.generator.GenerationException;
 
 import com.sun.xml.ws.api.model.wsdl.WSDLModel;

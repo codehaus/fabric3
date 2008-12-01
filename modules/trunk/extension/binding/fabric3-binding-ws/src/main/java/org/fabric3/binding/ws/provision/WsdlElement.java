@@ -32,7 +32,7 @@
  * specific language governing permissions and limitations
  * under the License.    
  */
-package org.fabric3.binding.ws.metro.provision;
+package org.fabric3.binding.ws.provision;
 
 import java.io.Serializable;
 import javax.xml.namespace.QName;

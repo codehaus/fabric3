@@ -17,6 +17,7 @@
 package org.fabric3.binding.ws.axis2.runtime;
 
 import java.net.ConnectException;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -35,6 +36,8 @@ import org.apache.axis2.description.AxisDescription;
 import org.apache.axis2.description.AxisModule;
 import org.apache.axis2.description.AxisOperation;
 import org.apache.axis2.description.AxisService;
+import org.apache.axis2.description.OutInAxisOperation;
+import org.apache.axis2.description.WSDL2Constants;
 import org.fabric3.binding.ws.axis2.common.Constant;
 import org.fabric3.binding.ws.axis2.provision.AxisPolicy;
 import org.fabric3.binding.ws.axis2.runtime.config.F3Configurator;
@@ -60,6 +63,7 @@ public class Axis2TargetInterceptor implements Interceptor {
 
     private Random random = new Random();
     private List<String> failedUris = new LinkedList<String>();
+    private AxisService axisService;
 
     /**
      * Initializes the end point reference.
@@ -69,9 +73,10 @@ public class Axis2TargetInterceptor implements Interceptor {
      * @param policies the set of policies applied to the service or reference configuration
      * @param f3Configurator a configuration helper for classloading
      * @param policyApplier the helper for applying configured policies
+     * @param axisService client side axis2 service.
      */
     public Axis2TargetInterceptor(List<String> endpointUris, String operation, Set<AxisPolicy> policies, Map<String, String> operationInfo,
-            Map<String, String> config, F3Configurator f3Configurator, PolicyApplier policyApplier) {
+            Map<String, String> config, F3Configurator f3Configurator, PolicyApplier policyApplier, AxisService axisService) {
 
         this.operation = operation;
         this.endpointUris = endpointUris;
@@ -80,6 +85,7 @@ public class Axis2TargetInterceptor implements Interceptor {
         this.policyApplier = policyApplier;
         this.operationInfo = operationInfo;
         this.config = config;
+        this.axisService = axisService;
     }
 
     public Interceptor getNext() {
@@ -121,14 +127,28 @@ public class Axis2TargetInterceptor implements Interceptor {
             sender.setOptions(options);
             sender.getOptions().setTimeOutInMilliSeconds(0l);
             applyPolicies(sender, operation);
-
-            Object result = sender.sendReceive(message);
-
+            
+            AxisOperation axisOperation = getAxisOperation(axisService, operation);
             Message ret = new MessageImpl();
-            if (result instanceof Throwable) {
-                ret.setBodyWithFault(result);
-            } else {
-                ret.setBody(result);
+                        
+            if (WSDL2Constants.MEP_URI_OUT_ONLY.equals(axisOperation.getMessageExchangePattern()) ||
+                WSDL2Constants.MEP_URI_ROBUST_OUT_ONLY.equals(axisOperation.getMessageExchangePattern())) {
+                try {
+                    sender.sendRobust(message);
+                } catch (AxisFault e) {
+                    if (e.getCause() instanceof ConnectException) {
+                        throw e; //retry
+                    }
+                    ret.setBodyWithFault(e.getDetail());
+               }
+                    
+            } else { //Default MEP is IN-OUT for backward compatibility
+                Object result = sender.sendReceive(message);
+                if (result instanceof Throwable) {
+                    ret.setBodyWithFault(result);
+                } else {
+                    ret.setBody(result);
+                }
             }
             failedUris.clear();
 
@@ -141,6 +161,22 @@ public class Axis2TargetInterceptor implements Interceptor {
         }
 
     }
+    
+    private AxisOperation getAxisOperation(AxisService axisService, String opName) {
+        AxisOperation axisOperation = new OutInAxisOperation();//Default
+        
+        if(axisService != null) {
+            for (Iterator<?> i = axisService.getOperations(); i.hasNext();) {
+                AxisOperation axisOp = (AxisOperation) i.next();
+                if(axisOp.getName().getLocalPart().equals(opName)) {
+                    axisOperation = axisOp;
+                    break;
+                }
+            }
+        }
+        return axisOperation;
+    }
+    
 
     private Message handleFault(Message msg, String endpointUri, AxisFault e) {
 

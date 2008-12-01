@@ -39,7 +39,7 @@ import java.net.URL;
 import javax.servlet.ServletConfig;
 import javax.xml.ws.WebServiceFeature;
 
-import org.fabric3.binding.ws.metro.provision.WsdlElement;
+import org.fabric3.binding.ws.provision.WsdlElement;
 
 import com.sun.xml.ws.api.BindingID;
 import com.sun.xml.ws.api.WSBinding;

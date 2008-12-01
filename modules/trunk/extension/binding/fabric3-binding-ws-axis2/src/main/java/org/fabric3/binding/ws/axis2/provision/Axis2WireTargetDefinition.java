@@ -22,7 +22,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import org.fabric3.binding.ws.axis2.provision.AxisPolicy;
+import org.fabric3.binding.ws.provision.WsdlElement;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 
 /**
@@ -35,6 +35,8 @@ public class Axis2WireTargetDefinition extends PhysicalWireTargetDefinition impl
     private Map<String, Map<String, String>> operationInfo;
     private Map<String, String> config;
     private URI classloaderURI;
+    private String wsdlLocation;
+    private WsdlElement wsdlElement;
 
     /**
      * @return Reference interface for the wire target.
@@ -102,6 +104,22 @@ public class Axis2WireTargetDefinition extends PhysicalWireTargetDefinition impl
             this.policies.put(operation, new HashSet<AxisPolicy>());
         }
         this.policies.get(operation).add(policy);
+    }
+
+    public String getWsdlLocation() {
+        return wsdlLocation;
+    }
+
+    public void setWsdlLocation(String wsdlLocation) {
+        this.wsdlLocation = wsdlLocation;
+    }
+
+    public WsdlElement getWsdlElement() {
+        return wsdlElement;
+    }
+
+    public void setWsdlElement(WsdlElement wsdlElement) {
+        this.wsdlElement = wsdlElement;
     }
 
 }

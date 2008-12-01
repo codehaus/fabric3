@@ -44,7 +44,7 @@ import java.util.Random;
 import javax.xml.ws.Service;
 import javax.xml.ws.WebServiceFeature;
 
-import org.fabric3.binding.ws.metro.provision.WsdlElement;
+import org.fabric3.binding.ws.provision.WsdlElement;
 import org.fabric3.spi.invocation.Message;
 import org.fabric3.spi.invocation.MessageImpl;
 import org.fabric3.spi.wire.Interceptor;

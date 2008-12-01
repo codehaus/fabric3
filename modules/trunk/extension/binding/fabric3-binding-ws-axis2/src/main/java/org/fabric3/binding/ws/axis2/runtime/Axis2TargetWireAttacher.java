@@ -17,7 +17,9 @@
 package org.fabric3.binding.ws.axis2.runtime;
 
 import java.io.UnsupportedEncodingException;
+import java.net.MalformedURLException;
 import java.net.URI;
+import java.net.URL;
 import java.net.URLDecoder;
 import java.util.LinkedList;
 import java.util.List;
@@ -25,9 +27,9 @@ import java.util.Map;
 import java.util.Set;
 import java.util.StringTokenizer;
 
-import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Reference;
-
+import org.apache.axis2.AxisFault;
+import org.apache.axis2.client.Options;
+import org.apache.axis2.description.AxisService;
 import org.fabric3.binding.ws.axis2.provision.Axis2WireTargetDefinition;
 import org.fabric3.binding.ws.axis2.provision.AxisPolicy;
 import org.fabric3.binding.ws.axis2.runtime.config.F3Configurator;
@@ -37,11 +39,14 @@ import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.TargetWireAttacher;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
+import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.services.expression.ExpressionExpander;
 import org.fabric3.spi.services.expression.ExpressionExpansionException;
 import org.fabric3.spi.wire.Interceptor;
 import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.Wire;
+import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Reference;
 
 /**
  * @version $Revision$ $Date$
@@ -53,13 +58,16 @@ public class Axis2TargetWireAttacher implements TargetWireAttacher<Axis2WireTarg
     private final PolicyApplier policyApplier;
     private final F3Configurator f3Configurator;
     private ExpressionExpander expander;
+    private ClassLoaderRegistry classLoaderRegistry;
 
     public Axis2TargetWireAttacher(@Reference PolicyApplier policyApplier,
                                    @Reference F3Configurator f3Configurator,
-                                   @Reference ExpressionExpander expander) {
+                                   @Reference ExpressionExpander expander,
+                                   @Reference ClassLoaderRegistry classLoaderRegistry) {
         this.policyApplier = policyApplier;
         this.f3Configurator = f3Configurator;
         this.expander = expander;
+        this.classLoaderRegistry = classLoaderRegistry;
     }
 
     public void attachToTarget(PhysicalWireSourceDefinition source, Axis2WireTargetDefinition target, Wire wire) throws WiringException {
@@ -69,8 +77,9 @@ public class Axis2TargetWireAttacher implements TargetWireAttacher<Axis2WireTarg
         StringTokenizer tok = new StringTokenizer(endpointUri);
         while (tok.hasMoreElements()) {
             endpointUris.add(tok.nextToken().trim());
-
         }
+        AxisService axisService = createAxisClientService(target);
+        
         for (Map.Entry<PhysicalOperationDefinition, InvocationChain> entry : wire.getInvocationChains().entrySet()) {
 
             String operation = entry.getKey().getName();
@@ -79,7 +88,7 @@ public class Axis2TargetWireAttacher implements TargetWireAttacher<Axis2WireTarg
             Map<String, String> opInfo = target.getOperationInfo() != null ? target.getOperationInfo().get(operation) : null;
 
             Interceptor interceptor =
-                    new Axis2TargetInterceptor(endpointUris, operation, policies, opInfo, target.getConfig(), f3Configurator, policyApplier);
+                    new Axis2TargetInterceptor(endpointUris, operation, policies, opInfo, target.getConfig(), f3Configurator, policyApplier, axisService);
             entry.getValue().addInterceptor(interceptor);
         }
 
@@ -109,6 +118,37 @@ public class Axis2TargetWireAttacher implements TargetWireAttacher<Axis2WireTarg
             throw new AssertionError(e);
         } catch (ExpressionExpansionException e) {
             throw new WiringException(e);
+        }
+    }
+    
+    private URL getWsdlURL(String wsdlLocation, URI classLoaderId) {
+        if (wsdlLocation == null) {
+            return null;
+        }        
+        try {
+            return new URL(wsdlLocation);
+        } catch (MalformedURLException e) {
+            return classLoaderRegistry.getClassLoader(classLoaderId).getResource(wsdlLocation);
+        }        
+    }
+    
+    /*
+     * Create instance of client side Axis2 service to get info about the Webservice
+     */
+    private AxisService createAxisClientService(Axis2WireTargetDefinition target) throws WiringException{
+        
+        URL wsdlURL = getWsdlURL(target.getWsdlLocation(), target.getClassLoaderId());    
+        if(wsdlURL != null) {
+            try {
+                return AxisService.createClientSideAxisService(wsdlURL,
+                                                               target.getWsdlElement().getServiceName(),
+                                                               target.getWsdlElement().getPortName().getLocalPart(),
+                                                               new Options());
+            } catch (AxisFault e) {
+                throw new WiringException(e);
+            }
+        } else {
+            return null;
         }
     }
 }

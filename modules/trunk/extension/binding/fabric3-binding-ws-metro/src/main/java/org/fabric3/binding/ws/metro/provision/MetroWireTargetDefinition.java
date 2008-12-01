@@ -38,6 +38,7 @@ import java.net.URL;
 import java.util.List;
 import javax.xml.namespace.QName;
 
+import org.fabric3.binding.ws.provision.WsdlElement;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
 
 /**

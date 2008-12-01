@@ -27,7 +27,7 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.binding.ws.metro.provision.MetroWireSourceDefinition;
 import org.fabric3.binding.ws.metro.provision.MetroWireTargetDefinition;
-import org.fabric3.binding.ws.metro.provision.WsdlElement;
+import org.fabric3.binding.ws.provision.WsdlElement;
 import org.fabric3.binding.ws.scdl.WsBindingDefinition;
 import org.fabric3.host.Names;
 import org.fabric3.scdl.ReferenceDefinition;
