@@ -22,24 +22,28 @@ import java.io.InputStream;
 import java.net.MalformedURLException;
 import java.net.URI;
 import java.net.URL;
+import java.util.Collections;
+import java.util.List;
+import java.util.jar.Manifest;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.spi.services.contribution.Constants;
 import org.fabric3.host.contribution.InstallException;
+import org.fabric3.scdl.ValidationContext;
 import org.fabric3.spi.introspection.DefaultIntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.xml.Loader;
 import org.fabric3.spi.introspection.xml.LoaderException;
-import org.fabric3.scdl.ValidationContext;
 import org.fabric3.spi.services.contenttype.ContentTypeResolutionException;
 import org.fabric3.spi.services.contenttype.ContentTypeResolver;
 import org.fabric3.spi.services.contribution.Action;
 import org.fabric3.spi.services.contribution.ArchiveContributionHandler;
+import org.fabric3.spi.services.contribution.Constants;
 import org.fabric3.spi.services.contribution.Contribution;
 import org.fabric3.spi.services.contribution.ContributionManifest;
+import org.fabric3.spi.services.contribution.JarManifestHandler;
 import org.fabric3.spi.services.contribution.ProcessorRegistry;
 
 /**
@@ -47,6 +51,7 @@ import org.fabric3.spi.services.contribution.ProcessorRegistry;
  */
 public class ZipContributionHandler implements ArchiveContributionHandler {
 
+    private List<JarManifestHandler> manifestHandlers = Collections.emptyList();
     private final Loader loader;
     private final ContentTypeResolver contentTypeResolver;
     private ProcessorRegistry registry;
@@ -60,6 +65,11 @@ public class ZipContributionHandler implements ArchiveContributionHandler {
         this.contentTypeResolver = contentTypeResolver;
     }
 
+    @Reference(required = false)
+    public void setManifestHandlers(List<JarManifestHandler> manifestHandlers) {
+        this.manifestHandlers = manifestHandlers;
+    }
+
     public String getContentType() {
         return Constants.ZIP_CONTENT_TYPE;
     }
@@ -70,14 +80,13 @@ public class ZipContributionHandler implements ArchiveContributionHandler {
     }
 
     public void processManifest(Contribution contribution, final ValidationContext context) throws InstallException {
-        ContributionManifest manifest;
+        URL sourceUrl = contribution.getLocation();
         try {
-            URL sourceUrl = contribution.getLocation();
             URL manifestURL = new URL("jar:" + sourceUrl.toExternalForm() + "!/META-INF/sca-contribution.xml");
             ClassLoader cl = getClass().getClassLoader();
             URI uri = contribution.getUri();
             IntrospectionContext childContext = new DefaultIntrospectionContext(cl, uri, null);
-            manifest = loader.load(manifestURL, ContributionManifest.class, childContext);
+            ContributionManifest manifest = loader.load(manifestURL, ContributionManifest.class, childContext);
             if (childContext.hasErrors()) {
                 context.addErrors(childContext.getErrors());
             }
@@ -97,7 +106,28 @@ public class ZipContributionHandler implements ArchiveContributionHandler {
         } catch (MalformedURLException e) {
             // ignore no manifest found
         }
-
+        InputStream manifestStream = null;
+        try {
+            URL jarUrl = new URL("jar:" + sourceUrl.toExternalForm() + "!/META-INF/MANIFEST.MF");
+            manifestStream = jarUrl.openStream();
+            Manifest jarManifest = new Manifest(manifestStream);
+            for (JarManifestHandler handler : manifestHandlers) {
+                handler.processManifest(contribution.getManifest(), jarManifest, context);
+            }
+        } catch (MalformedURLException e) {
+            // ignore no manifest found
+        } catch (IOException e) {
+            throw new InstallException(e);
+        } finally {
+            try {
+                if (manifestStream != null) {
+                    manifestStream.close();
+                }
+            } catch (IOException e) {
+                // ignore
+                e.printStackTrace();
+            }
+        }
         iterateArtifacts(contribution, new Action() {
             public void process(Contribution contribution, String contentType, URL url)
                     throws InstallException {

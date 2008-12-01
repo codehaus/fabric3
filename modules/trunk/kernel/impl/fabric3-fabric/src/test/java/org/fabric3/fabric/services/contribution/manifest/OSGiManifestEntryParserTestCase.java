@@ -38,17 +38,23 @@ public class OSGiManifestEntryParserTestCase extends TestCase {
         assertEquals(OSGiManifestEntryParser.EventType.PARAMETER, type);
         assertEquals("resolution:=required", parser.getText());
         type = parser.next();
+        assertEquals(OSGiManifestEntryParser.EventType.END_CLAUSE, type);
+        type = parser.next();
         assertEquals(OSGiManifestEntryParser.EventType.PATH, type);
         assertEquals("org.fabric3.bar", parser.getText());
         type = parser.next();
         assertEquals(OSGiManifestEntryParser.EventType.PARAMETER, type);
         assertEquals("resolution:=optional", parser.getText());
         type = parser.next();
+        assertEquals(OSGiManifestEntryParser.EventType.END_CLAUSE, type);
+        type = parser.next();
         assertEquals(OSGiManifestEntryParser.EventType.PATH, type);
         assertEquals("org.fabric3.baz", parser.getText());
         type = parser.next();
         assertEquals(OSGiManifestEntryParser.EventType.PARAMETER, type);
         assertEquals("version=\"[1.0.0,2.0.0)\"", parser.getText());
+        type = parser.next();
+        assertEquals(OSGiManifestEntryParser.EventType.END_CLAUSE, type);
         type = parser.next();
         assertEquals(OSGiManifestEntryParser.EventType.END, type);
     }
@@ -61,6 +67,8 @@ public class OSGiManifestEntryParserTestCase extends TestCase {
         type = parser.next();
         assertEquals(OSGiManifestEntryParser.EventType.PARAMETER, type);
         assertEquals("version=1.0.0", parser.getText());
+        type = parser.next();
+        assertEquals(OSGiManifestEntryParser.EventType.END_CLAUSE, type);
         type = parser.next();
         assertEquals(OSGiManifestEntryParser.EventType.END, type);
     }
@@ -76,6 +84,8 @@ public class OSGiManifestEntryParserTestCase extends TestCase {
         type = parser.next();
         assertEquals(OSGiManifestEntryParser.EventType.PARAMETER, type);
         assertEquals("resolution:=required", parser.getText());
+        type = parser.next();
+        assertEquals(OSGiManifestEntryParser.EventType.END_CLAUSE, type);
         type = parser.next();
         assertEquals(OSGiManifestEntryParser.EventType.END, type);
     }

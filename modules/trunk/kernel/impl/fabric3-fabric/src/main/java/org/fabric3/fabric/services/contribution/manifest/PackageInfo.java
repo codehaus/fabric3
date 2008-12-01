@@ -21,7 +21,7 @@ package org.fabric3.fabric.services.contribution.manifest;
  *
  * @version $Revision$ $Date$
  */
-public class PackageInfo {
+public final class PackageInfo {
     private String name;
     private PackageVersion minVersion;
     private PackageVersion maxVersion;
@@ -91,12 +91,29 @@ public class PackageInfo {
     }
 
     /**
+     * Default constructor.
+     */
+    public PackageInfo() {
+
+    }
+
+    /**
      * The package name.
      *
      * @return package name
      */
     public String getName() {
         return name;
+    }
+
+    /**
+     * Sets the package name
+     *
+     * @param name the package name
+     */
+    public void setName(String name) {
+        this.name = name;
+        packageNames = name.split("\\.");
     }
 
     /**
@@ -109,12 +126,30 @@ public class PackageInfo {
     }
 
     /**
+     * Sets the minimum required version.
+     *
+     * @param minVersion the minimum required version.
+     */
+    public void setMinVersion(PackageVersion minVersion) {
+        this.minVersion = minVersion;
+    }
+
+    /**
      * True if the minimum version range is exclusive.
      *
      * @return true if the minimum version range is exclusive.
      */
     public boolean isMinInclusive() {
         return minInclusive;
+    }
+
+    /**
+     * Sets if the minimum version range is exclusive
+     *
+     * @param minInclusive true if the minimum version range is exclusive
+     */
+    public void setMinInclusive(boolean minInclusive) {
+        this.minInclusive = minInclusive;
     }
 
     /**
@@ -127,12 +162,32 @@ public class PackageInfo {
     }
 
     /**
+     * Sets the maximum required version.
+     *
+     * @param maxVersion maximum version
+     */
+    public void setMaxVersion(PackageVersion maxVersion) {
+        this.maxVersion = maxVersion;
+    }
+
+
+    /**
      * True if the maximum version range is exclusive.
      *
      * @return true if the maximum version range is exclusive.
      */
     public boolean isMaxInclusive() {
         return maxInclusive;
+    }
+
+
+    /**
+     * Sets if the maximum version range is exclusive.
+     *
+     * @param maxInclusive true if the maximum version range is exclusive
+     */
+    public void setMaxInclusive(boolean maxInclusive) {
+        this.maxInclusive = maxInclusive;
     }
 
     /**
@@ -142,6 +197,15 @@ public class PackageInfo {
      */
     public boolean isRequired() {
         return required;
+    }
+
+    /**
+     * True if the package is required.
+     *
+     * @param required true if the package is required
+     */
+    public void setRequired(boolean required) {
+        this.required = required;
     }
 
     /**
@@ -189,11 +253,6 @@ public class PackageInfo {
             }
         }
         return true;
-    }
-
-    private void setName(String name) {
-        this.name = name;
-        packageNames = name.split("\\.");
     }
 
 

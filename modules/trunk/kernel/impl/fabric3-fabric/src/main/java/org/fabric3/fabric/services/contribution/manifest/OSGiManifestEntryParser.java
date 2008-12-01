@@ -44,6 +44,11 @@ public class OSGiManifestEntryParser {
         PARAMETER,
 
         /**
+         * The parser enters the END_CLAUSE state when its cursor is position past the last character in the current clause
+         */
+        END_CLAUSE,
+
+        /**
          * The parser enters the END state when cursor is positioned past the last header character
          */
         END
@@ -64,8 +69,8 @@ public class OSGiManifestEntryParser {
     // the current position the parser is at reading the header
     private int pos = 0;
 
-    // true if the parser is currently evaluating a version range, of the form '[' or '('
-    private boolean inRange;
+    // true if the parser is currently evaluating quoted text
+    private boolean inQuote;
 
     /**
      * Constructor.
@@ -84,42 +89,52 @@ public class OSGiManifestEntryParser {
      * @return the event type.
      */
     public EventType next() {
-        if (EventType.PATH == state || EventType.PARAMETER == state) {
-            text = null;
-        }
         if (pos <= header.length() - 1) {
+            if (EventType.END_CLAUSE == state) {
+                // finished with the previous clause, fire the END_CLAUSE and reset to a new path event
+                state = EventType.PATH;
+                return EventType.END_CLAUSE;
+            }
+            if (EventType.PATH == state || EventType.PARAMETER == state) {
+                text = null;
+            }
             while (pos <= header.length() - 1) {
                 char c = header.charAt(pos);
                 ++pos;
                 if (PARAMETER_SEPARATOR == c) {
-                    inRange = false;
+                    inQuote = false;
                     if (EventType.PATH == state || EventType.BEGIN == state) {
                         state = EventType.PARAMETER;
                         return EventType.PATH;
                     }
                     return state;
                 } else if (SEPARATOR == c) {
-                    if (inRange) {
+                    if (inQuote) {
                         appendNoWhiteSpace(c);
 
                     } else {
                         EventType current = state;
-                        state = EventType.PATH;
+                        state = EventType.END_CLAUSE;
                         return current;
                     }
 
                 } else {
-                    if (c == '[' || c == '(') {
-                        inRange = true;
-                    } else if (c == ']' || c == ')') {
-                        inRange = false;
+                    if (inQuote && c == '"') {
+                        inQuote = false;
+                    } else if (c == '"') {
+                        inQuote = true;
                     }
                     appendNoWhiteSpace(c);
                 }
             }
             return state;
         } else {
-            state = EventType.END;
+            if (state == EventType.END_CLAUSE) {
+                state = EventType.END;
+            } else {
+                // An END_CLAUSE event was not fired since it is the last parameter or path in the list. Force the event.
+                state = EventType.END_CLAUSE;
+            }
             return state;
         }
     }
@@ -131,7 +146,8 @@ public class OSGiManifestEntryParser {
      * @throws IllegalStateException if the parser is not in the EventType.PATH or EventType.PARAMETER state.
      */
     public String getText() {
-        if (state != EventType.PATH && state != EventType.PARAMETER) {
+        // allow END_CLAUSE since we set the state in advance above when a ',' is found
+        if (state != EventType.PATH && state != EventType.PARAMETER && state != EventType.END_CLAUSE) {
             throw new IllegalStateException("Invalid state:" + state);
         }
         return text.toString();
