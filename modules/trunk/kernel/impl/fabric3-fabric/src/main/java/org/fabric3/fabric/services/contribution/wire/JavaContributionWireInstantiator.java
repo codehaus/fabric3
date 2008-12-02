@@ -18,7 +18,6 @@ package org.fabric3.fabric.services.contribution.wire;
 
 import java.net.URI;
 
-import org.fabric3.fabric.services.contribution.ContributionWireInstantiator;
 import org.fabric3.fabric.services.contribution.manifest.JavaExport;
 import org.fabric3.fabric.services.contribution.manifest.JavaImport;
 

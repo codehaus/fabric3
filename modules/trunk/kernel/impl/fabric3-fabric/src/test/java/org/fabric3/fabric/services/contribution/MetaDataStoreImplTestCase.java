@@ -30,6 +30,7 @@ import junit.framework.TestCase;
 import org.fabric3.fabric.services.classloading.ClassLoaderRegistryImpl;
 import org.fabric3.fabric.services.contribution.wire.ContributionWireInstantiatorRegistryImpl;
 import org.fabric3.fabric.services.contribution.wire.QNameWireInstantiator;
+import org.fabric3.fabric.services.contribution.wire.ContributionWireInstantiator;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.services.contribution.Contribution;
 import org.fabric3.spi.services.contribution.ContributionManifest;

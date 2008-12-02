@@ -23,7 +23,6 @@ import java.util.Map;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.fabric.services.contribution.ContributionWireInstantiator;
 import org.fabric3.spi.services.contribution.ContributionWire;
 import org.fabric3.spi.services.contribution.Export;
 import org.fabric3.spi.services.contribution.Import;

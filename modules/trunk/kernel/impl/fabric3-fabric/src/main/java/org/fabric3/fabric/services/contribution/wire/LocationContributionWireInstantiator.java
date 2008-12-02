@@ -20,7 +20,6 @@ import java.net.URI;
 
 import org.osoa.sca.annotations.EagerInit;
 
-import org.fabric3.fabric.services.contribution.ContributionWireInstantiator;
 import org.fabric3.fabric.services.contribution.manifest.ContributionExport;
 import org.fabric3.fabric.services.contribution.manifest.ContributionImport;
 
