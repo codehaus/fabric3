@@ -14,7 +14,7 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.fabric.services.contribution;
+package org.fabric3.fabric.services.contribution.manifest;
 
 import javax.xml.stream.XMLStreamReader;
 
