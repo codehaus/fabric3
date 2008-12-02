@@ -184,6 +184,10 @@
         <f3-impl:implementation.system class="org.fabric3.fabric.services.contribution.connector.MavenContributionWireConnector"/>
     </component>
 
+    <component name="OSGiManifestHandler">
+        <f3-impl:implementation.system class="org.fabric3.fabric.services.contribution.manifest.OSGiManifestHandler"/>
+    </component>
+
     <include name="xmlContributionLoaderComposite" scdlLocation="xmlContributionLoader.composite"/>
-    
+
 </composite>
