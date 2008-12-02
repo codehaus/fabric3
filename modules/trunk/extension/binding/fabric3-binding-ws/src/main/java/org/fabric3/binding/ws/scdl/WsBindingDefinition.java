@@ -36,10 +36,12 @@ package org.fabric3.binding.ws.scdl;
 
 import java.net.URI;
 import java.util.Map;
+import javax.xml.namespace.QName;
+
+import org.osoa.sca.Constants;
+import org.w3c.dom.Document;
 
 import org.fabric3.scdl.BindingDefinition;
-import org.fabric3.binding.ws.introspection.WsBindingLoader;
-import org.w3c.dom.Document;
 
 /**
  * Logical binding definition for web services.
@@ -49,13 +51,18 @@ import org.w3c.dom.Document;
 public class WsBindingDefinition extends BindingDefinition {
     private static final long serialVersionUID = -2097314069798596206L;
 
+    /**
+     * Qualified name for the binding element.
+     */
+    public static final QName BINDING_QNAME = new QName(Constants.SCA_NS, "binding.ws");
+
     private final String implementation;
     private final String wsdlLocation;
     private final String wsdlElement;
     private Map<String, String> config;
 
     public WsBindingDefinition(URI targetUri, String implementation, String wsdlLocation, String wsdlElement, Document key) {
-        super(targetUri, WsBindingLoader.BINDING_QNAME, key);
+        super(targetUri, BINDING_QNAME, key);
         this.implementation = implementation;
         this.wsdlElement = wsdlElement;
         this.wsdlLocation = wsdlLocation;        

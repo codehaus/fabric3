@@ -34,31 +34,28 @@
  */
 package org.fabric3.binding.ws.introspection;
 
-import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
-import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
-
 import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.Map;
-
-import javax.xml.namespace.QName;
+import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
+import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
+import org.osoa.sca.annotations.EagerInit;
+import org.osoa.sca.annotations.Reference;
+
 import org.fabric3.binding.ws.scdl.WsBindingDefinition;
+import org.fabric3.spi.Namespaces;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.xml.InvalidValue;
 import org.fabric3.spi.introspection.xml.LoaderHelper;
 import org.fabric3.spi.introspection.xml.MissingAttribute;
 import org.fabric3.spi.introspection.xml.TypeLoader;
 import org.fabric3.spi.introspection.xml.UnrecognizedAttribute;
-import org.fabric3.spi.Namespaces;
-import org.osoa.sca.Constants;
-import org.osoa.sca.annotations.EagerInit;
-import org.osoa.sca.annotations.Reference;
 
 /**
  * @version $Revision$ $Date$
@@ -66,10 +63,6 @@ import org.osoa.sca.annotations.Reference;
 @EagerInit
 public class WsBindingLoader implements TypeLoader<WsBindingDefinition> {
 
-    /**
-     * Qualified name for the binding element.
-     */
-    public static final QName BINDING_QNAME = new QName(Constants.SCA_NS, "binding.ws");
     private static final Map<String, String> ATTRIBUTES = new HashMap<String, String>();
 
     static {
