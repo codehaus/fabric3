@@ -163,7 +163,7 @@ public class OSGiManifestHandler implements JarManifestHandler {
                 info.setMaxVersion(packageVersion);
             }
         } catch (IllegalArgumentException e) {
-            InvalidOSGiManifest failure = new InvalidOSGiManifest("Invalid version " + versions[0] + " in Import-Package:" + text, e);
+            InvalidOSGiManifest failure = new InvalidOSGiManifest("Invalid version " + versions[0] + " in: " + text, e);
             context.addError(failure);
             return false;
         }
