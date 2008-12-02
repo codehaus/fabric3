@@ -44,7 +44,7 @@ import java.util.Set;
 
 import org.fabric3.scdl.InjectableAttributeType;
 import org.fabric3.scdl.ServiceDefinition;
-import org.fabric3.spi.introspection.java.ImplementationNotFoundException;
+import org.fabric3.spi.introspection.ImplementationNotFoundException;
 
 /**
  * Helper service that provides support methods to simplify introspection.
@@ -60,7 +60,7 @@ public interface IntrospectionHelper {
      * @param name the name of the class to load
      * @param cl   the classloader to use to load it
      * @return the class
-     * @throws org.fabric3.spi.introspection.java.ImplementationNotFoundException
+     * @throws ImplementationNotFoundException
      *          if the class could not be found
      */
     Class<?> loadClass(String name, ClassLoader cl) throws ImplementationNotFoundException;

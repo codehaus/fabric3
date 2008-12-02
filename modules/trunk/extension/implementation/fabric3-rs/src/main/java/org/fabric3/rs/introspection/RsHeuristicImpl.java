@@ -29,7 +29,7 @@ import javax.ws.rs.ext.Provider;
 
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionHelper;
-import org.fabric3.spi.introspection.java.ImplementationNotFoundException;
+import org.fabric3.spi.introspection.ImplementationNotFoundException;
 import org.fabric3.java.scdl.JavaImplementation;
 import org.fabric3.rs.scdl.RsBindingDefinition;
 import org.fabric3.scdl.DataType;

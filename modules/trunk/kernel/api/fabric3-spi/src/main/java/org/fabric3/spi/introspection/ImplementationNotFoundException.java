@@ -14,9 +14,7 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.spi.introspection.java;
-
-import org.fabric3.spi.introspection.IntrospectionException;
+package org.fabric3.spi.introspection;
 
 /**
  * @version $Rev$ $Date$

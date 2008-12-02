@@ -42,7 +42,7 @@ import org.springframework.core.io.UrlResource;
 
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.IntrospectionHelper;
-import org.fabric3.spi.introspection.java.ImplementationNotFoundException;
+import org.fabric3.spi.introspection.ImplementationNotFoundException;
 import org.fabric3.spi.introspection.xml.InvalidValue;
 import org.fabric3.spi.introspection.xml.LoaderException;
 import org.fabric3.spi.introspection.xml.LoaderHelper;
