@@ -37,13 +37,11 @@ package org.fabric3.binding.jms.introspection;
 import java.net.URISyntaxException;
 import java.util.HashMap;
 import java.util.Map;
-import javax.xml.namespace.QName;
 import static javax.xml.stream.XMLStreamConstants.END_ELEMENT;
 import static javax.xml.stream.XMLStreamConstants.START_ELEMENT;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
-import org.osoa.sca.Constants;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Reference;
 
@@ -59,12 +57,12 @@ import org.fabric3.binding.jms.common.OperationPropertiesDefinition;
 import org.fabric3.binding.jms.common.PropertyAwareObject;
 import org.fabric3.binding.jms.common.ResponseDefinition;
 import org.fabric3.binding.jms.scdl.JmsBindingDefinition;
+import org.fabric3.jaxb.control.api.JAXBTransformationService;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.xml.InvalidValue;
 import org.fabric3.spi.introspection.xml.LoaderHelper;
 import org.fabric3.spi.introspection.xml.TypeLoader;
 import org.fabric3.spi.introspection.xml.UnrecognizedAttribute;
-import org.fabric3.jaxb.control.api.JAXBTransformationService;
 
 
 /**
@@ -73,10 +71,6 @@ import org.fabric3.jaxb.control.api.JAXBTransformationService;
 @EagerInit
 public class JmsBindingLoader implements TypeLoader<JmsBindingDefinition> {
 
-    /**
-     * Qualified name for the binding element.
-     */
-    public static final QName BINDING_QNAME = new QName(Constants.SCA_NS, "binding.jms");
     private static final Map<String, String> ATTRIBUTES = new HashMap<String, String>();
 
     static {
@@ -109,7 +103,7 @@ public class JmsBindingLoader implements TypeLoader<JmsBindingDefinition> {
      */
     public JmsBindingLoader(@Reference LoaderHelper loaderHelper, @Reference JAXBTransformationService transformationService) {
         this.loaderHelper = loaderHelper;
-        transformationService.registerBinding(BINDING_QNAME, JAXBTransformationService.DATATYPE_XML);
+        transformationService.registerBinding(JmsBindingDefinition.BINDING_QNAME, JAXBTransformationService.DATATYPE_XML);
     }
 
     public JmsBindingDefinition load(XMLStreamReader reader, IntrospectionContext introspectionContext) throws XMLStreamException {

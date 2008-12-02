@@ -35,11 +35,13 @@
 package org.fabric3.binding.jms.scdl;
 
 import java.net.URI;
+import javax.xml.namespace.QName;
+
+import org.osoa.sca.Constants;
+import org.w3c.dom.Document;
 
 import org.fabric3.binding.jms.common.JmsBindingMetadata;
-import org.fabric3.binding.jms.introspection.JmsBindingLoader;
 import org.fabric3.scdl.BindingDefinition;
-import org.w3c.dom.Document;
 
 /**
  * Logical model object for JMS binding definition. TODO Support for overriding
@@ -51,6 +53,11 @@ import org.w3c.dom.Document;
 public class JmsBindingDefinition extends BindingDefinition {
 	private static final long serialVersionUID = -1888120511695824132L;
 
+    /**
+     * Qualified name for the binding element.
+     */
+    public static final QName BINDING_QNAME = new QName(Constants.SCA_NS, "binding.jms");
+    
 	/***
      * A generated URI overriding TargetUri in base class.
      */
@@ -61,12 +68,12 @@ public class JmsBindingDefinition extends BindingDefinition {
      */
     private JmsBindingMetadata metadata;
 
-    
+
     /**
      * @param metadata Metadata to be initialized.
      */
     public JmsBindingDefinition(JmsBindingMetadata metadata, Document key) {
-        super(null, JmsBindingLoader.BINDING_QNAME, key);
+        super(null, BINDING_QNAME, key);
         this.metadata = metadata;
     }
     
@@ -75,7 +82,7 @@ public class JmsBindingDefinition extends BindingDefinition {
 	 * @param metadata Metadata to be initialized.
 	 */
     public JmsBindingDefinition(URI targetURI,JmsBindingMetadata metadata, Document key) {
-        super(targetURI, JmsBindingLoader.BINDING_QNAME, key);
+        super(targetURI, BINDING_QNAME, key);
         this.metadata = metadata;
     }
     /**
