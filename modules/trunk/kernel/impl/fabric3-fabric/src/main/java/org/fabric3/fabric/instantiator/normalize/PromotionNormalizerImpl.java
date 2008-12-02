@@ -23,6 +23,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.fabric3.fabric.instantiator.LogicalChange;
+import org.fabric3.fabric.instantiator.PromotionNormalizer;
 import org.fabric3.scdl.CompositeImplementation;
 import org.fabric3.spi.model.instance.Bindable;
 import org.fabric3.spi.model.instance.LogicalBinding;

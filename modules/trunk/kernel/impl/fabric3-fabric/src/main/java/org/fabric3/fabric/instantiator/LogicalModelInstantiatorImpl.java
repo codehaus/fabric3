@@ -28,7 +28,6 @@ import org.w3c.dom.Document;
 
 import org.fabric3.fabric.instantiator.component.ComponentInstantiator;
 import org.fabric3.fabric.instantiator.component.WireInstantiator;
-import org.fabric3.fabric.instantiator.normalize.PromotionNormalizer;
 import org.fabric3.scdl.Autowire;
 import org.fabric3.scdl.BindingDefinition;
 import org.fabric3.scdl.ComponentDefinition;
@@ -137,7 +136,7 @@ public class LogicalModelInstantiatorImpl implements LogicalModelInstantiator {
         Collection<ComponentDefinition<? extends Implementation<?>>> definitions = composite.getDeclaredComponents().values();
         List<LogicalComponent<?>> newComponents = new ArrayList<LogicalComponent<?>>(definitions.size());
         for (ComponentDefinition<? extends Implementation<?>> definition : definitions) {
-            LogicalComponent<?> logicalComponent = instantiate(parent, properties, null, definition, change);
+            LogicalComponent<?> logicalComponent = instantiate(parent, properties, definition, change);
             setAutowire(composite, definition, logicalComponent);
             setDeployable(logicalComponent, composite.getName());
             newComponents.add(logicalComponent);
@@ -147,8 +146,7 @@ public class LogicalModelInstantiatorImpl implements LogicalModelInstantiator {
         for (Include include : composite.getIncludes().values()) {
             // xcv FIXME need to recurse down included hierarchy
             for (ComponentDefinition<? extends Implementation<?>> definition : include.getIncluded().getComponents().values()) {
-                URI classLoaderId = URI.create(parent.getUri().toString() + "/" + include.getName().getLocalPart());
-                LogicalComponent<?> logicalComponent = instantiate(parent, properties, classLoaderId, definition, change);
+                LogicalComponent<?> logicalComponent = instantiate(parent, properties, definition, change);
                 setAutowire(composite, definition, logicalComponent);
                 if (synthetic) {
                     // If it is a synthetic composite, included composites are the deployables.
@@ -169,7 +167,6 @@ public class LogicalModelInstantiatorImpl implements LogicalModelInstantiator {
     @SuppressWarnings("unchecked")
     private LogicalComponent<?> instantiate(LogicalCompositeComponent parent,
                                             Map<String, Document> properties,
-                                            URI classLoaderId,
                                             ComponentDefinition<?> definition,
                                             LogicalChange change) {
 
