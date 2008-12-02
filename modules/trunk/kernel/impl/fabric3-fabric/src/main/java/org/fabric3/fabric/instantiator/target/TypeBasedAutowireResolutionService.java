@@ -24,6 +24,7 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.fabric.instantiator.LogicalChange;
 import org.fabric3.fabric.instantiator.ReferenceNotFound;
+import org.fabric3.fabric.instantiator.TargetResolutionService;
 import org.fabric3.scdl.AbstractComponentType;
 import org.fabric3.scdl.Autowire;
 import org.fabric3.scdl.ComponentDefinition;

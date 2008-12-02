@@ -17,6 +17,7 @@
 package org.fabric3.fabric.instantiator.target;
 
 import org.fabric3.fabric.instantiator.LogicalChange;
+import org.fabric3.fabric.instantiator.TargetResolutionService;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 import org.fabric3.spi.model.instance.LogicalReference;
 

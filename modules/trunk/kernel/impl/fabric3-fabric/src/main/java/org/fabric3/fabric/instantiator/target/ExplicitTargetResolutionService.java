@@ -28,6 +28,7 @@ import org.fabric3.fabric.instantiator.AmbiguousService;
 import org.fabric3.fabric.instantiator.LogicalChange;
 import org.fabric3.fabric.instantiator.NoServiceOnComponent;
 import org.fabric3.fabric.instantiator.ServiceNotFound;
+import org.fabric3.fabric.instantiator.TargetResolutionService;
 import org.fabric3.scdl.ComponentReference;
 import org.fabric3.scdl.ServiceContract;
 import org.fabric3.spi.model.instance.LogicalComponent;
