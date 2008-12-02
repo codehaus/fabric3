@@ -29,6 +29,8 @@ import org.fabric3.spi.services.contribution.ContributionManifest;
 import org.fabric3.spi.services.contribution.JarManifestHandler;
 
 /**
+ * Parses OSGi manifest headers and adds the metadta to the SCA contribution manifest.
+ *
  * @version $Revision$ $Date$
  */
 @EagerInit
