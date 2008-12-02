@@ -44,6 +44,7 @@ import java.util.Map;
 import junit.framework.TestCase;
 
 import org.fabric3.pojo.provision.InstanceFactoryDefinition;
+import org.fabric3.pojo.reflection.ReflectiveInstanceFactoryBuilder;
 import org.fabric3.scdl.ConstructorInjectionSite;
 import org.fabric3.scdl.FieldInjectionSite;
 import org.fabric3.scdl.InjectableAttribute;

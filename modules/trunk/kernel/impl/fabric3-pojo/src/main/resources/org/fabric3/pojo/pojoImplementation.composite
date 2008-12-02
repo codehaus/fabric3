@@ -45,7 +45,7 @@
     </component>
 
     <component name="ReflectiveInstanceFactoryBuilder">
-        <f3-impl:implementation.system class="org.fabric3.pojo.instancefactory.ReflectiveInstanceFactoryBuilder"/>
+        <f3-impl:implementation.system class="org.fabric3.pojo.reflection.ReflectiveInstanceFactoryBuilder"/>
     </component>
 
     <component name="GenerationHelperImpl">

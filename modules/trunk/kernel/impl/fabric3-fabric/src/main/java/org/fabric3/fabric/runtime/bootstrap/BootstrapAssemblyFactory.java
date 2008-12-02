@@ -99,7 +99,7 @@ import org.fabric3.pojo.instancefactory.BuildHelperImpl;
 import org.fabric3.pojo.instancefactory.DefaultInstanceFactoryBuilderRegistry;
 import org.fabric3.pojo.instancefactory.InstanceFactoryBuildHelper;
 import org.fabric3.pojo.instancefactory.InstanceFactoryBuilderRegistry;
-import org.fabric3.pojo.instancefactory.ReflectiveInstanceFactoryBuilder;
+import org.fabric3.pojo.reflection.ReflectiveInstanceFactoryBuilder;
 import org.fabric3.spi.builder.component.ComponentBuilderRegistry;
 import org.fabric3.spi.builder.component.SourceWireAttacher;
 import org.fabric3.spi.builder.component.TargetWireAttacher;

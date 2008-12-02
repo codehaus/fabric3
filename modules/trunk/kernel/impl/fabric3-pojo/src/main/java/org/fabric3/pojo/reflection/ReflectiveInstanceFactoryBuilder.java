@@ -32,7 +32,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.pojo.instancefactory;
+package org.fabric3.pojo.reflection;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
@@ -44,8 +44,11 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
+import org.fabric3.pojo.instancefactory.InstanceFactoryBuildHelper;
+import org.fabric3.pojo.instancefactory.InstanceFactoryBuilder;
+import org.fabric3.pojo.instancefactory.InstanceFactoryBuilderException;
+import org.fabric3.pojo.instancefactory.InstanceFactoryBuilderRegistry;
 import org.fabric3.pojo.provision.InstanceFactoryDefinition;
-import org.fabric3.pojo.reflection.ReflectiveInstanceFactoryProvider;
 import org.fabric3.scdl.ConstructorInjectionSite;
 import org.fabric3.scdl.InjectableAttribute;
 import org.fabric3.scdl.InjectionSite;
