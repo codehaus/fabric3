@@ -36,7 +36,6 @@ package org.fabric3.binding.burlap.introspection;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
@@ -51,18 +50,12 @@ import org.fabric3.spi.introspection.xml.LoaderUtil;
 import org.fabric3.spi.introspection.xml.MissingAttribute;
 import org.fabric3.spi.introspection.xml.TypeLoader;
 import org.fabric3.spi.introspection.xml.UnrecognizedAttribute;
-import org.fabric3.spi.Namespaces;
 
 /**
  * @version $Revision$ $Date$
  */
 @EagerInit
 public class BurlapBindingLoader implements TypeLoader<BurlapBindingDefinition> {
-
-    /**
-     * Qualified name for the binding element.
-     */
-    public static final QName BINDING_QNAME = new QName(Namespaces.BINDING, "binding.burlap");
 
     private final LoaderHelper loaderHelper;
 

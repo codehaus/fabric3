@@ -36,7 +36,6 @@ package org.fabric3.binding.hessian.introspection;
 
 import java.net.URI;
 import java.net.URISyntaxException;
-import javax.xml.namespace.QName;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
 
@@ -51,7 +50,6 @@ import org.fabric3.spi.introspection.xml.LoaderUtil;
 import org.fabric3.spi.introspection.xml.MissingAttribute;
 import org.fabric3.spi.introspection.xml.TypeLoader;
 import org.fabric3.spi.introspection.xml.UnrecognizedAttribute;
-import org.fabric3.spi.Namespaces;
 
 /**
  * @version $Revision$ $Date$
@@ -59,10 +57,6 @@ import org.fabric3.spi.Namespaces;
 @EagerInit
 public class HessianBindingLoader implements TypeLoader<HessianBindingDefinition> {
 
-    /**
-     * Qualified name for the binding element.
-     */
-    public static final QName BINDING_QNAME = new QName(Namespaces.BINDING, "binding.hessian");
 
     private final LoaderHelper loaderHelper;
 

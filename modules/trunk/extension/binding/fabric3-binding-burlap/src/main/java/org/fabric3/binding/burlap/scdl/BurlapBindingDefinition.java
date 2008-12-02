@@ -35,10 +35,12 @@
 package org.fabric3.binding.burlap.scdl;
 
 import java.net.URI;
+import javax.xml.namespace.QName;
 
-import org.fabric3.binding.burlap.introspection.BurlapBindingLoader;
-import org.fabric3.scdl.BindingDefinition;
 import org.w3c.dom.Document;
+
+import org.fabric3.scdl.BindingDefinition;
+import org.fabric3.spi.Namespaces;
 
 /**
  * @version $Revision$ $Date$
@@ -46,7 +48,13 @@ import org.w3c.dom.Document;
 public class BurlapBindingDefinition extends BindingDefinition {
     private static final long serialVersionUID = 9051452184163076358L;
 
+    /**
+     * Qualified name for the binding element.
+     */
+    public static final QName BINDING_QNAME = new QName(Namespaces.BINDING, "binding.burlap");
+
+
     public BurlapBindingDefinition(URI targetUri, Document key) {
-        super(targetUri, BurlapBindingLoader.BINDING_QNAME, key);
+        super(targetUri, BINDING_QNAME, key);
     }
 }

@@ -35,18 +35,24 @@
 package org.fabric3.binding.hessian.scdl;
 
 import java.net.URI;
+import javax.xml.namespace.QName;
 
-import org.fabric3.binding.hessian.introspection.HessianBindingLoader;
-import org.fabric3.scdl.BindingDefinition;
 import org.w3c.dom.Document;
+
+import org.fabric3.scdl.BindingDefinition;
+import org.fabric3.spi.Namespaces;
 
 /**
  * @version $Revision$ $Date$
  */
 public class HessianBindingDefinition extends BindingDefinition {
     private static final long serialVersionUID = 1740501132107914441L;
+    /**
+     * Qualified name for the binding element.
+     */
+    public static final QName BINDING_QNAME = new QName(Namespaces.BINDING, "binding.hessian");
 
     public HessianBindingDefinition(URI targetUri, Document key) {
-        super(targetUri, HessianBindingLoader.BINDING_QNAME, key);
+        super(targetUri, BINDING_QNAME, key);
     }
 }
