@@ -14,7 +14,7 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.spi.services.synthesize;
+package org.fabric3.spi.synthesize;
 
 import org.fabric3.host.Fabric3Exception;
 
@@ -26,5 +26,9 @@ public class ComponentRegistrationException extends Fabric3Exception {
 
     public ComponentRegistrationException(Throwable cause) {
         super(cause);
+    }
+
+    public ComponentRegistrationException(String message) {
+        super(message);
     }
 }

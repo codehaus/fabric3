@@ -32,18 +32,17 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.spi.services.synthesize;
+package org.fabric3.spi.synthesize;
 
 import java.util.List;
 
-import org.fabric3.host.runtime.InitializationException;
 import org.fabric3.scdl.ValidationFailure;
 import org.fabric3.spi.introspection.xml.XmlValidationFailure;
 
 /**
  * @version $Rev: 4336 $ $Date: 2008-05-25 02:06:15 -0700 (Sun, 25 May 2008) $
  */
-public class InvalidServiceContractException extends InitializationException {
+public class InvalidServiceContractException extends ComponentRegistrationException {
     private static final long serialVersionUID = 4367622270403828483L;
     private List<ValidationFailure> errors;
 

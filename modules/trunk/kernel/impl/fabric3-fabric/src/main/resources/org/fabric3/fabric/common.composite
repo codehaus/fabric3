@@ -106,7 +106,7 @@
     </component>
 
     <component name="SingletonComponentSynthesizer">
-        <f3-impl:implementation.system class="org.fabric3.fabric.services.synthesizer.SingletonComponentSynthesizer"/>
+        <f3-impl:implementation.system class="org.fabric3.fabric.synthesizer.SingletonComponentSynthesizer"/>
     </component>
 
     <!-- Definitions registry -->

@@ -31,8 +31,8 @@ import org.fabric3.jpa.spi.EmfBuilderException;
 import org.fabric3.jpa.spi.delegate.EmfBuilderDelegate;
 import org.fabric3.resource.jndi.proxy.jdbc.DataSourceProxy;
 import org.fabric3.spi.resource.DataSourceRegistry;
-import org.fabric3.spi.services.synthesize.ComponentRegistrationException;
-import org.fabric3.spi.services.synthesize.ComponentSynthesizer;
+import org.fabric3.spi.synthesize.ComponentRegistrationException;
+import org.fabric3.spi.synthesize.ComponentSynthesizer;
 
 /**
  * @version $Revision$ $Date$

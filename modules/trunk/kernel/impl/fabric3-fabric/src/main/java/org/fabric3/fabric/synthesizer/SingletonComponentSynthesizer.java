@@ -14,15 +14,13 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.fabric.services.synthesizer;
+package org.fabric3.fabric.synthesizer;
 
 import java.net.URI;
 
 import org.osoa.sca.annotations.Constructor;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.system.singleton.SingletonComponent;
-import org.fabric3.system.singleton.SingletonImplementation;
 import org.fabric3.fabric.instantiator.LogicalChange;
 import org.fabric3.fabric.instantiator.component.ComponentInstantiator;
 import static org.fabric3.host.Names.BOOT_CONTRIBUTION;
@@ -49,10 +47,12 @@ import org.fabric3.spi.model.instance.LogicalWire;
 import org.fabric3.spi.services.componentmanager.ComponentManager;
 import org.fabric3.spi.services.componentmanager.RegistrationException;
 import org.fabric3.spi.services.lcm.LogicalComponentManager;
-import org.fabric3.spi.services.synthesize.ComponentRegistrationException;
-import org.fabric3.spi.services.synthesize.ComponentSynthesizer;
-import org.fabric3.spi.services.synthesize.InvalidServiceContractException;
+import org.fabric3.spi.synthesize.ComponentRegistrationException;
+import org.fabric3.spi.synthesize.ComponentSynthesizer;
+import org.fabric3.spi.synthesize.InvalidServiceContractException;
 import org.fabric3.system.scdl.SystemImplementation;
+import org.fabric3.system.singleton.SingletonComponent;
+import org.fabric3.system.singleton.SingletonImplementation;
 
 /**
  * Implementation that synthesizes a singleton component from an existing object instance.
@@ -99,8 +99,6 @@ public class SingletonComponentSynthesizer implements ComponentSynthesizer {
             lcm.getRootComponent().addComponent(logical);
             componentManager.register(physical);
             scopeContainer.register(physical);
-        } catch (InvalidServiceContractException e) {
-            throw new ComponentRegistrationException(e);
         } catch (RegistrationException e) {
             throw new ComponentRegistrationException(e);
         } catch (AssemblyException e) {

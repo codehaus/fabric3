@@ -14,7 +14,7 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.spi.services.synthesize;
+package org.fabric3.spi.synthesize;
 
 /**
  * Synthesizes and registers a component from an existing object instance in the runtime domain.
