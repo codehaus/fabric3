@@ -89,8 +89,10 @@ public class OSGiManifestHandler implements JarManifestHandler {
 
                 break;
             case END_CLAUSE:
-                JavaImport imprt = new JavaImport(info);
-                imports.add(imprt);
+                if (info != null) {
+                    JavaImport imprt = new JavaImport(info);
+                    imports.add(imprt);
+                }
                 break;
             case END:
                 return imports;
@@ -136,7 +138,7 @@ public class OSGiManifestHandler implements JarManifestHandler {
         } else if (val.startsWith("\"(")) {
             info.setMinInclusive(false);
             val = val.substring(2);
-        } else if(val.startsWith("\"")) {
+        } else if (val.startsWith("\"")) {
             // strip quote
             val = val.substring(1);
         }
@@ -146,7 +148,7 @@ public class OSGiManifestHandler implements JarManifestHandler {
         } else if (val.endsWith(")\"")) {
             info.setMaxInclusive(false);
             val = val.substring(0, val.length() - 2);
-        } else if(val.endsWith("\"")) {
+        } else if (val.endsWith("\"")) {
             // strip quote
             val = val.substring(0, val.length() - 1);
         }
