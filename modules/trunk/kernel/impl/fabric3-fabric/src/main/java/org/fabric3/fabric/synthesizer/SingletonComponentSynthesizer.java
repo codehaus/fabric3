@@ -22,7 +22,7 @@ import org.osoa.sca.annotations.Constructor;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.fabric.instantiator.LogicalChange;
-import org.fabric3.fabric.instantiator.component.ComponentInstantiator;
+import org.fabric3.fabric.instantiator.ComponentInstantiator;
 import static org.fabric3.host.Names.BOOT_CONTRIBUTION;
 import org.fabric3.host.domain.AssemblyException;
 import org.fabric3.pojo.scdl.PojoComponentType;

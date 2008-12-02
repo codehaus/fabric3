@@ -49,7 +49,7 @@ import javax.xml.stream.XMLStreamReader;
 import org.w3c.dom.Document;
 
 import org.fabric3.fabric.instantiator.component.AtomicComponentInstantiator;
-import org.fabric3.fabric.instantiator.component.ComponentInstantiator;
+import org.fabric3.fabric.instantiator.ComponentInstantiator;
 import org.fabric3.fabric.runtime.FabricNames;
 import org.fabric3.fabric.runtime.RuntimeServices;
 import org.fabric3.fabric.services.contribution.manifest.ContributionExport;

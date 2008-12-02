@@ -45,7 +45,7 @@ import org.fabric3.spi.model.instance.LogicalService;
  */
 public class AtomicComponentInstantiator extends AbstractComponentInstantiator {
 
-    public AtomicComponentInstantiator(@Reference(name = "documentLoader")DocumentLoader documentLoader) {
+    public AtomicComponentInstantiator(@Reference(name = "documentLoader") DocumentLoader documentLoader) {
         super(documentLoader);
     }
 

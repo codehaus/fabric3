@@ -26,7 +26,9 @@ import java.util.Set;
 import org.osoa.sca.annotations.Reference;
 import org.w3c.dom.Document;
 
+import org.fabric3.fabric.instantiator.ComponentInstantiator;
 import org.fabric3.fabric.instantiator.LogicalChange;
+import org.fabric3.fabric.instantiator.WireInstantiator;
 import org.fabric3.fabric.services.documentloader.DocumentLoader;
 import org.fabric3.scdl.BindingDefinition;
 import org.fabric3.scdl.ComponentDefinition;
@@ -55,9 +57,9 @@ public class CompositeComponentInstantiator extends AbstractComponentInstantiato
     private WireInstantiator wireInstantiator;
 
     public CompositeComponentInstantiator(
-            @Reference(name = "atomicComponentInstantiator")ComponentInstantiator atomicComponentInstantiator,
+            @Reference(name = "atomicComponentInstantiator") ComponentInstantiator atomicComponentInstantiator,
             @Reference WireInstantiator wireInstantiator,
-            @Reference(name = "documentLoader")DocumentLoader documentLoader) {
+            @Reference(name = "documentLoader") DocumentLoader documentLoader) {
         super(documentLoader);
         this.atomicComponentInstantiator = atomicComponentInstantiator;
         this.wireInstantiator = wireInstantiator;

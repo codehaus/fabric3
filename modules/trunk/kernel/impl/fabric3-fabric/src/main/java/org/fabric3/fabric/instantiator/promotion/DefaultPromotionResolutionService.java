@@ -25,6 +25,7 @@ import org.fabric3.fabric.instantiator.AmbiguousService;
 import org.fabric3.fabric.instantiator.LogicalChange;
 import org.fabric3.fabric.instantiator.NoServiceOnComponent;
 import org.fabric3.fabric.instantiator.PromotedComponentNotFound;
+import org.fabric3.fabric.instantiator.PromotionResolutionService;
 import org.fabric3.fabric.instantiator.ReferenceNotFound;
 import org.fabric3.fabric.instantiator.ServiceNotFound;
 import org.fabric3.spi.model.instance.LogicalComponent;
@@ -78,7 +79,8 @@ public class DefaultPromotionResolutionService implements PromotionResolutionSer
         } else {
             if (promotedComponent.getService(promotedServiceName) == null) {
                 String message =
-                        "Service " + promotedServiceName + " promoted from " + logicalService.getUri() + " not found on component " + promotedComponentUri;
+                        "Service " + promotedServiceName + " promoted from " + logicalService.getUri() + " not found on component " + promotedComponentUri
+                        ;
                 ServiceNotFound error = new ServiceNotFound(message, logicalService, promotedComponentUri);
                 change.addError(error);
             }

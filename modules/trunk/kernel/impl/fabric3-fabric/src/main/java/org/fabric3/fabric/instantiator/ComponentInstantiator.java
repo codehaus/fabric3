@@ -14,13 +14,12 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.fabric.instantiator.component;
+package org.fabric3.fabric.instantiator;
 
 import java.util.Map;
 
 import org.w3c.dom.Document;
 
-import org.fabric3.fabric.instantiator.LogicalChange;
 import org.fabric3.scdl.ComponentDefinition;
 import org.fabric3.scdl.Implementation;
 import org.fabric3.spi.model.instance.LogicalComponent;

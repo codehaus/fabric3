@@ -26,7 +26,7 @@ import org.easymock.classextension.EasyMock;
 
 import org.fabric3.fabric.instantiator.component.AtomicComponentInstantiator;
 import org.fabric3.fabric.instantiator.component.CompositeComponentInstantiator;
-import org.fabric3.fabric.instantiator.component.WireInstantiator;
+import org.fabric3.fabric.instantiator.WireInstantiator;
 import org.fabric3.fabric.instantiator.component.WireInstantiatorImpl;
 import org.fabric3.fabric.instantiator.PromotionNormalizer;
 import org.fabric3.scdl.AbstractComponentType;

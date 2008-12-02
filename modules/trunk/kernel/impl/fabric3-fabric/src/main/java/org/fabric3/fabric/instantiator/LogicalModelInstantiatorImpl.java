@@ -26,8 +26,6 @@ import javax.xml.namespace.QName;
 import org.osoa.sca.annotations.Reference;
 import org.w3c.dom.Document;
 
-import org.fabric3.fabric.instantiator.component.ComponentInstantiator;
-import org.fabric3.fabric.instantiator.component.WireInstantiator;
 import org.fabric3.scdl.Autowire;
 import org.fabric3.scdl.BindingDefinition;
 import org.fabric3.scdl.ComponentDefinition;

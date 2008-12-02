@@ -14,9 +14,8 @@
  * distribution for the permitted and restricted uses of such software.
  *
  */
-package org.fabric3.fabric.instantiator.component;
+package org.fabric3.fabric.instantiator;
 
-import org.fabric3.fabric.instantiator.LogicalChange;
 import org.fabric3.scdl.Composite;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
 
