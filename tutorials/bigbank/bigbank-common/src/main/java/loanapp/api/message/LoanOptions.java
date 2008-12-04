@@ -1,4 +1,4 @@
-package loanapp.message;
+package loanapp.api.message;
 
 import java.io.Serializable;
 import java.util.ArrayList;

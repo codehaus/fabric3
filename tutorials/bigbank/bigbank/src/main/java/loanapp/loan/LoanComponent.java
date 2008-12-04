@@ -17,8 +17,11 @@
 package loanapp.loan;
 
 import loanapp.api.acceptance.AcceptanceCoordinator;
-import loanapp.message.LoanRequest;
-import loanapp.request.RequestCoordinator;
+import loanapp.api.loan.LoanException;
+import loanapp.api.loan.LoanService;
+import loanapp.api.loan.OptionSelection;
+import loanapp.api.message.LoanRequest;
+import loanapp.api.request.RequestCoordinator;
 import loanapp.validation.ValidationResult;
 import loanapp.validation.ValidationService;
 import org.osoa.sca.annotations.Reference;
@@ -42,7 +45,7 @@ public class LoanComponent implements LoanService {
      * @param acceptanceCoordinator coordinator that handles acceptance and rejection processing
      */
     public LoanComponent(@Reference(name = "validationService")ValidationService validationService,
-                         @Reference(name = "requestCoordinator")RequestCoordinator requestCoordinator,
+                         @Reference(name = "requestCoordinator") RequestCoordinator requestCoordinator,
                          @Reference(name = "acceptanceCoordinator") AcceptanceCoordinator acceptanceCoordinator) {
         this.validationService = validationService;
         this.requestCoordinator = requestCoordinator;

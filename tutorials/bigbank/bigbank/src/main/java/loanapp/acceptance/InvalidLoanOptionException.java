@@ -18,7 +18,7 @@
  */
 package loanapp.acceptance;
 
-import loanapp.loan.LoanException;
+import loanapp.api.loan.LoanException;
 
 /**
  * @version $Revision$ $Date$

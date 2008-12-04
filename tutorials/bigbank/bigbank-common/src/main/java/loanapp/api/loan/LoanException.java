@@ -1,4 +1,4 @@
-package loanapp.loan;
+package loanapp.api.loan;
 
 /**
  * @version $Revision$ $Date$

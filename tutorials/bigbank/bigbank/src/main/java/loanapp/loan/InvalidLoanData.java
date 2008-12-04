@@ -1,5 +1,7 @@
 package loanapp.loan;
 
+import loanapp.api.loan.LoanException;
+
 /**
  * @version $Revision$ $Date$
  */

@@ -14,11 +14,11 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package loanapp.loan;
+package loanapp.api.loan;
 
 import org.osoa.sca.annotations.Remotable;
 
-import loanapp.message.LoanRequest;
+import loanapp.api.message.LoanRequest;
 
 /**
  * Implementations process a loan application.

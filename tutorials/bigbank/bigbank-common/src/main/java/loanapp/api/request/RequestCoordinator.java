@@ -16,10 +16,10 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package loanapp.request;
+package loanapp.api.request;
 
-import loanapp.loan.LoanException;
-import loanapp.message.LoanRequest;
+import loanapp.api.loan.LoanException;
+import loanapp.api.message.LoanRequest;
 import org.osoa.sca.annotations.Conversational;
 
 /**

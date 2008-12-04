@@ -18,7 +18,7 @@
  */
 package loanapp.appraisal;
 
-import loanapp.message.Address;
+import loanapp.api.message.Address;
 import org.osoa.sca.annotations.Callback;
 import org.osoa.sca.annotations.OneWay;
 import org.osoa.sca.annotations.Scope;

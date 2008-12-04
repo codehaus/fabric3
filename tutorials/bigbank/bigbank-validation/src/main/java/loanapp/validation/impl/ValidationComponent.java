@@ -22,7 +22,7 @@ import loanapp.validation.RequestValidator;
 import loanapp.validation.ValidationService;
 import loanapp.validation.ValidationResult;
 import loanapp.validation.DataError;
-import loanapp.message.LoanRequest;
+import loanapp.api.message.LoanRequest;
 
 import java.util.List;
 import java.util.ArrayList;

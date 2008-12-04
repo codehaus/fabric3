@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package loanapp.loan;
+package loanapp.api.loan;
 
 import javax.xml.bind.annotation.XmlRootElement;
 

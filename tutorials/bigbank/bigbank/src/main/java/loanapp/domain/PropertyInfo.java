@@ -18,7 +18,7 @@
  */
 package loanapp.domain;
 
-import loanapp.message.Address;
+import loanapp.api.message.Address;
 
 import javax.persistence.*;
 import java.io.Serializable;

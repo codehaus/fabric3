@@ -14,7 +14,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package loanapp.message;
+package loanapp.api.message;
 
 import java.io.Serializable;
 import javax.xml.bind.annotation.XmlRootElement;

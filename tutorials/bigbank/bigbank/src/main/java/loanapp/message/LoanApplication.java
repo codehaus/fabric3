@@ -16,6 +16,8 @@
  */
 package loanapp.message;
 
+import loanapp.api.message.Address;
+
 import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 
@@ -57,7 +59,7 @@ public class LoanApplication implements Serializable {
     }
 
     /**
-     * Returns the loan status as defined in {@link loanapp.message.LoanStatus}.
+     * Returns the loan status as defined in {@link loanapp.api.message.LoanStatus}.
      *
      * @return the loan status
      */
@@ -66,7 +68,7 @@ public class LoanApplication implements Serializable {
     }
 
     /**
-     * Sets the loan status as defined in {@link loanapp.message.LoanStatus}.
+     * Sets the loan status as defined in {@link loanapp.api.message.LoanStatus}.
      *
      * @param status the loan status
      */

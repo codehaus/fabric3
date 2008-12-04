@@ -30,7 +30,7 @@
         <class>loanapp.domain.RiskInfo</class>
         <class>loanapp.domain.RiskReasonInfo</class>
         <class>loanapp.domain.TermInfo</class>
-        <class>loanapp.message.Address</class>
+        <class>loanapp.api.message.Address</class>
         <properties>
             <property name="hibernate.dialect" value="org.hibernate.dialect.H2Dialect"/>
             <property name="hibernate.transaction.manager_lookup_class"

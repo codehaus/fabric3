@@ -19,7 +19,7 @@ package org.fabric3.loanapp.webclient;
 import loanapp.api.acceptance.AcceptanceCoordinator;
 import loanapp.api.acceptance.LoanNotApprovedException;
 import loanapp.api.acceptance.LoanNotFoundException;
-import loanapp.loan.LoanException;
+import loanapp.api.loan.LoanException;
 import org.osoa.sca.ComponentContext;
 import org.osoa.sca.annotations.Context;
 

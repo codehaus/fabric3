@@ -16,11 +16,11 @@
  */
 package org.fabric3.loanapp.webclient;
 
-import loanapp.loan.LoanException;
-import loanapp.message.Address;
-import loanapp.message.LoanRequest;
-import loanapp.message.LoanStatus;
-import loanapp.request.RequestCoordinator;
+import loanapp.api.loan.LoanException;
+import loanapp.api.message.Address;
+import loanapp.api.message.LoanRequest;
+import loanapp.api.message.LoanStatus;
+import loanapp.api.request.RequestCoordinator;
 import loanapp.validation.ValidationService;
 import org.osoa.sca.ComponentContext;
 import org.osoa.sca.annotations.Context;

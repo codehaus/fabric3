@@ -17,7 +17,7 @@
 -->
 <componentType xmlns="http://www.osoa.org/xmlns/sca/1.0">
     <reference name="requestCoordinator">
-        <interface.java interface="loanapp.request.RequestCoordinator"/>
+        <interface.java interface="loanapp.api.request.RequestCoordinator"/>
     </reference>
     <reference name="acceptanceCoordinator">
         <interface.java interface="loanapp.api.acceptance.AcceptanceCoordinator"/>

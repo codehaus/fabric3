@@ -18,7 +18,7 @@
  */
 package loanapp.validation;
 
-import loanapp.message.LoanRequest;
+import loanapp.api.message.LoanRequest;
 
 /**
  * Validates loan application data.

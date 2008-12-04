@@ -18,7 +18,7 @@
  */
 package loanapp.validation;
 
-import loanapp.message.LoanRequest;
+import loanapp.api.message.LoanRequest;
 
 import java.util.List;
 
