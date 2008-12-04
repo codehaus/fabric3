@@ -16,9 +16,9 @@
  */
 package org.fabric3.loanapp.webclient;
 
-import loanapp.acceptance.AcceptanceCoordinator;
-import loanapp.acceptance.LoanNotApprovedException;
-import loanapp.acceptance.LoanNotFoundException;
+import loanapp.api.acceptance.AcceptanceCoordinator;
+import loanapp.api.acceptance.LoanNotApprovedException;
+import loanapp.api.acceptance.LoanNotFoundException;
 import loanapp.loan.LoanException;
 import loanapp.message.LoanOptions;
 import org.osoa.sca.ComponentContext;

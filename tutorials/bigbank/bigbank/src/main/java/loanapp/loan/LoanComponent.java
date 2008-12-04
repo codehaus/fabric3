@@ -16,7 +16,7 @@
  */
 package loanapp.loan;
 
-import loanapp.acceptance.AcceptanceCoordinator;
+import loanapp.api.acceptance.AcceptanceCoordinator;
 import loanapp.message.LoanRequest;
 import loanapp.request.RequestCoordinator;
 import loanapp.validation.ValidationResult;
@@ -43,7 +43,7 @@ public class LoanComponent implements LoanService {
      */
     public LoanComponent(@Reference(name = "validationService")ValidationService validationService,
                          @Reference(name = "requestCoordinator")RequestCoordinator requestCoordinator,
-                         @Reference(name = "acceptanceCoordinator")AcceptanceCoordinator acceptanceCoordinator) {
+                         @Reference(name = "acceptanceCoordinator") AcceptanceCoordinator acceptanceCoordinator) {
         this.validationService = validationService;
         this.requestCoordinator = requestCoordinator;
         this.acceptanceCoordinator = acceptanceCoordinator;

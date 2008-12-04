@@ -16,7 +16,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package loanapp.acceptance;
+package loanapp.api.acceptance;
 
 import loanapp.loan.LoanException;
 
