@@ -72,6 +72,7 @@
             <groupId>org.codehaus.fabric3.tutorials</groupId>
             <artifactId>fabric3-tutorial-bigbank-common</artifactId>
             <version>0.7-SNAPSHOT</version>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>org.codehaus.fabric3.tutorials</groupId>
@@ -90,18 +91,6 @@
                 <artifactId>fabric3-contribution-plugin</artifactId>
                 <version>0.7-SNAPSHOT</version>
                 <extensions>true</extensions>
-                <!--<configuration>-->
-                    <!--<mavenExports>-->
-                        <!--<mavenExport>-->
-                            <!--<groupId>org.codehaus.fabric3.tutorials</groupId>-->
-                            <!--<artifactId>fabric3-tutorial-bigbank</artifactId>-->
-                            <!--<version>0.7-SNAPSHOT"</version>-->
-                        <!--</mavenExport>-->
-                    <!--</mavenExports>-->
-                    <!--<deployables>-->
-                        <!--<deployable>META-INF/loanapp.composite</deployable>-->
-                    <!--</deployables>-->
-                <!--</configuration>-->
             </plugin>
         </plugins>
     </build>

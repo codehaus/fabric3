@@ -58,6 +58,7 @@
             <groupId>org.codehaus.fabric3.tutorials</groupId>
             <artifactId>fabric3-tutorial-bigbank-common</artifactId>
             <version>0.7-SNAPSHOT</version>
+           <scope>provided</scope>
         </dependency>
          <dependency>
             <groupId>junit</groupId>

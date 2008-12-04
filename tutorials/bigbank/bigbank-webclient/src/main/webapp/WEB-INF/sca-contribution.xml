@@ -1,8 +1,9 @@
 <?xml version="1.0" encoding="ASCII"?>
 <contribution xmlns="http://www.osoa.org/xmlns/sca/1.0"
-              xmlns:tutorials="urn:fabric3.org:tutorials"
-              xmlns:maven="urn:fabric3.org:maven">
+              xmlns:tutorials="urn:fabric3.org:tutorials">
     <deployable composite="tutorials:LoanWebAppComposite"/>
-    <maven:import groupId="org.codehaus.fabric3.tutorials" artifactId="fabric3-tutorial-bigbank" version="0.7-SNAPSHOT"/>
-
+    <import.java package="loanapp.api.acceptance"/>
+    <import.java package="loanapp.api.loan"/>
+    <import.java package="loanapp.api.message"/>
+    <import.java package="loanapp.api.request"/>
 </contribution>
