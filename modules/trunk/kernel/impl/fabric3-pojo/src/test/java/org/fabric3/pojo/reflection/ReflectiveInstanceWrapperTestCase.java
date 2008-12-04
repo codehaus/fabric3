@@ -40,6 +40,7 @@ import static org.easymock.EasyMock.createMock;
 
 import org.fabric3.spi.component.InstanceDestructionException;
 import org.fabric3.spi.component.InstanceInitializationException;
+import org.fabric3.spi.invocation.WorkContext;
 
 /**
  * @version $Rev$ $Date$
@@ -54,7 +55,8 @@ public class ReflectiveInstanceWrapperTestCase extends TestCase {
     public void testWithNoCallbacks() {
         wrapper = new ReflectiveInstanceWrapper<Object>(instance, false, cl, null, null, null, null);
         try {
-            wrapper.start();
+            WorkContext workContext = new WorkContext();
+            wrapper.start(workContext);
         } catch (InstanceInitializationException e) {
             fail();
         }
@@ -70,7 +72,8 @@ public class ReflectiveInstanceWrapperTestCase extends TestCase {
         EasyMock.replay(initInvoker);
         wrapper = new ReflectiveInstanceWrapper<Object>(instance,false, cl, initInvoker, null, null, null);
         try {
-            wrapper.start();
+            WorkContext workContext = new WorkContext();
+            wrapper.start(workContext);
         } catch (InstanceInitializationException e) {
             fail();
         }
@@ -82,7 +85,8 @@ public class ReflectiveInstanceWrapperTestCase extends TestCase {
         EasyMock.replay(destroyInvoker);
         wrapper = new ReflectiveInstanceWrapper<Object>(instance, false, cl, null, destroyInvoker, null, null);
         try {
-            wrapper.start();
+            WorkContext workContext = new WorkContext();
+            wrapper.start(workContext);
             wrapper.stop();
         } catch (InstanceDestructionException e) {
             fail();

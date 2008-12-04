@@ -41,7 +41,6 @@ import java.lang.reflect.Method;
 import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
-
 import javax.xml.namespace.QName;
 
 import org.osoa.sca.ComponentContext;
@@ -219,7 +218,7 @@ public class SingletonComponent<T> extends AbstractLifecycle implements AtomicCo
             return true;
         }
 
-        public void start() throws InstanceInitializationException {
+        public void start(WorkContext workContext) throws InstanceInitializationException {
         }
 
         public void stop() throws InstanceDestructionException {

@@ -193,7 +193,7 @@ public class CompositeScopeContainer extends AbstractScopeContainer<QName> {
         }
         // some component instances such as system singletons may already be started
         if (!wrapper.isStarted()) {
-            wrapper.start();
+            wrapper.start(workContext);
             List<InstanceWrapper<?>> queue;
             QName deployable = component.getDeployable();
             synchronized (destroyQueues) {
@@ -256,7 +256,7 @@ public class CompositeScopeContainer extends AbstractScopeContainer<QName> {
             return true;
         }
 
-        public void start() throws InstanceInitializationException {
+        public void start(WorkContext workContext) throws InstanceInitializationException {
         }
 
         public void stop() throws InstanceDestructionException {

@@ -49,11 +49,11 @@ public final class WorkContextTunnel {
      * Set the WorkContext for the current thread. The current work context is returned and must be restored after the invocation is complete. Typical
      * usage is:
      * <pre>
-     *   WorkContext old = PojoWorkContextTunnel.setThreadWorkContext(newContext);
+     *   WorkContext old = WorkContextTunnel.setThreadWorkContext(newContext);
      *   try {
      *      ... invoke user code ...
      *   } finally {
-     *     PojoWorkContextTunnel.setThreadWorkContext(old);
+     *      WorkContextTunnel.setThreadWorkContext(old);
      *   }
      * </pre>
      *

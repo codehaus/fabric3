@@ -44,10 +44,9 @@ import org.fabric3.spi.component.AtomicComponent;
 import org.fabric3.spi.component.GroupInitializationException;
 import org.fabric3.spi.component.InstanceLifecycleException;
 import org.fabric3.spi.component.InstanceWrapper;
-import org.fabric3.fabric.component.scope.InstanceWrapperStore;
 import org.fabric3.spi.invocation.CallFrame;
-import org.fabric3.spi.invocation.WorkContext;
 import org.fabric3.spi.invocation.ConversationContext;
+import org.fabric3.spi.invocation.WorkContext;
 
 /**
  * @version $Rev$ $Date$
@@ -71,9 +70,10 @@ public class ConversationalScopeContainerTestCase extends TestCase {
     }
 
     public void testWrapperCreatedIfNotFound() throws Exception {
+
         EasyMock.expect(store.getWrapper(component, conversation)).andReturn(null);
         EasyMock.expect(component.createInstanceWrapper(workContext)).andReturn(wrapper);
-        wrapper.start();
+        wrapper.start(EasyMock.isA(WorkContext.class));
         store.putWrapper(component, conversation, wrapper);
         store.startContext(EasyMock.eq(conversation));
         control.replay();

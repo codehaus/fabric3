@@ -66,7 +66,7 @@ public class StatelessScopeContainer extends AbstractScopeContainer<Object> {
     public <T> InstanceWrapper<T> getWrapper(AtomicComponent<T> component, WorkContext workContext) throws InstanceLifecycleException {
         try {
             InstanceWrapper<T> wrapper = component.createInstanceWrapper(workContext);
-            wrapper.start();
+            wrapper.start(workContext);
             return wrapper;
         } catch (ObjectCreationException e) {
             throw new InstanceLifecycleException(e.getMessage(), component.getUri().toString(), e);

@@ -67,7 +67,7 @@ public class CompositeScopeContainerTestCase<T> extends TestCase {
         EasyMock.expect(component.isEagerInit()).andStubReturn(false);
         EasyMock.expect(component.createInstanceWrapper(workContext)).andReturn(wrapper);
         EasyMock.expect(wrapper.isStarted()).andReturn(false);
-        wrapper.start();
+        wrapper.start(EasyMock.isA(WorkContext.class));
         EasyMock.expect(component.getDeployable()).andStubReturn(deployable);
         control.replay();
         scopeContainer.register(component);

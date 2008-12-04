@@ -44,6 +44,8 @@ import org.fabric3.spi.component.InstanceDestructionException;
 import org.fabric3.spi.component.InstanceInitializationException;
 import org.fabric3.spi.component.InstanceLifecycleException;
 import org.fabric3.spi.component.InstanceWrapper;
+import org.fabric3.spi.invocation.WorkContext;
+import org.fabric3.spi.invocation.WorkContextTunnel;
 
 /**
  * @version $Rev$ $Date$
@@ -90,17 +92,20 @@ public class ReflectiveInstanceWrapper<T> implements InstanceWrapper<T> {
         return started;
     }
 
-    public void start() throws InstanceInitializationException {
+    public void start(WorkContext context) throws InstanceInitializationException {
         assert !started;
         if (initInvoker != null) {
             ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
+            WorkContext oldWorkContext = WorkContextTunnel.getThreadWorkContext();
             try {
                 Thread.currentThread().setContextClassLoader(cl);
+                WorkContextTunnel.setThreadWorkContext(context);
                 initInvoker.invokeEvent(instance);
             } catch (ObjectCallbackException e) {
                 throw new InstanceInitializationException(e.getMessage(), e);
             } finally {
                 Thread.currentThread().setContextClassLoader(oldCl);
+                WorkContextTunnel.setThreadWorkContext(oldWorkContext);
             }
         }
         started = true;

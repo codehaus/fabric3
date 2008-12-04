@@ -35,27 +35,61 @@
 package org.fabric3.spi.component;
 
 import org.fabric3.spi.ObjectFactory;
+import org.fabric3.spi.invocation.WorkContext;
 
 
 /**
- * Provides lifecycle management for an implementation instance associated with an {@link
- * org.fabric3.spi.component.AtomicComponent} for use by the atomic component's associated {@link
- * org.fabric3.spi.component.ScopeContainer}
+ * Provides lifecycle management for an implementation instance associated with an {@link org.fabric3.spi.component.AtomicComponent} for use by the
+ * atomic component's associated {@link org.fabric3.spi.component.ScopeContainer}
  *
  * @version $Rev$ $Date$
  */
 public interface InstanceWrapper<T> {
 
+    /**
+     * Returns the instance managed by this wrapper.
+     *
+     * @return the instance managed by this wrapper.
+     */
     T getInstance();
 
+    /**
+     * Returns true if the instance is started.
+     *
+     * @return true if the instance is started.
+     */
     boolean isStarted();
 
-    void start() throws InstanceInitializationException;
+    /**
+     * Starts the instance,issuing an initialization callback if the instance is configured to receive one.
+     *
+     * @param context the current work context
+     * @throws InstanceInitializationException
+     *          if an error occured starting the instance
+     */
+    void start(WorkContext context) throws InstanceInitializationException;
 
+    /**
+     * Stops the instance, issuing a destruction callback if the instance is configured to receive one..
+     *
+     * @throws InstanceDestructionException if an error stopping the instance occurs
+     */
     void stop() throws InstanceDestructionException;
-    
+
+    /**
+     * Reinjects updated references on an instance.
+     *
+     * @throws InstanceLifecycleException if an error occurs during reinjection
+     */
     void reinject() throws InstanceLifecycleException;
 
+    /**
+     * Adds an object factory for the given reference.
+     *
+     * @param referenceName the reference
+     * @param factory       the object factory
+     * @param key           the key associated with the object factory
+     */
     void addObjectFactory(String referenceName, ObjectFactory<?> factory, Object key);
 
 }

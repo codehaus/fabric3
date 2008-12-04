@@ -64,9 +64,9 @@ public class StatelessScopeContainerTestCase<T> extends TestCase {
         InstanceWrapper<T> wrapper2 = control.createMock(InstanceWrapper.class);
 
         EasyMock.expect(component.createInstanceWrapper(workContext)).andReturn(wrapper);
-        wrapper.start();
+        wrapper.start(workContext);
         EasyMock.expect(component.createInstanceWrapper(workContext)).andReturn(wrapper2);
-        wrapper2.start();
+        wrapper2.start(workContext);
         control.replay();
 
         assertSame(wrapper, scopeContainer.getWrapper(component, workContext));

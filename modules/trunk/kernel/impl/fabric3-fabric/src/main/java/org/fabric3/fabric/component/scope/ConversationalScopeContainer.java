@@ -63,7 +63,6 @@ import org.fabric3.spi.component.GroupInitializationException;
 import org.fabric3.spi.component.InstanceDestructionException;
 import org.fabric3.spi.component.InstanceLifecycleException;
 import org.fabric3.spi.component.InstanceWrapper;
-import org.fabric3.fabric.component.scope.InstanceWrapperStore;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.invocation.CallFrame;
 import org.fabric3.spi.invocation.ConversationContext;
@@ -264,7 +263,7 @@ public class ConversationalScopeContainer extends AbstractScopeContainer<Convers
             } catch (ObjectCreationException e) {
                 throw new InstanceLifecycleException(e.getMessage(), component.getUri().toString(), e);
             }
-            wrapper.start();
+            wrapper.start(workContext);
             store.putWrapper(component, conversation, wrapper);
             List<InstanceWrapper<?>> queue = destroyQueues.get(conversation);
             if (queue == null) {

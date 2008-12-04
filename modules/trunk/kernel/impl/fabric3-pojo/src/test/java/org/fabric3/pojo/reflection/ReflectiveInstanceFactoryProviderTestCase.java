@@ -54,6 +54,7 @@ import org.fabric3.scdl.InjectionSite;
 import org.fabric3.scdl.MethodInjectionSite;
 import org.fabric3.spi.ObjectCreationException;
 import org.fabric3.spi.ObjectFactory;
+import org.fabric3.spi.invocation.WorkContext;
 import org.fabric3.pojo.instancefactory.InstanceFactory;
 import org.fabric3.spi.component.InstanceWrapper;
 import org.fabric3.spi.component.InstanceInitializationException;
@@ -138,7 +139,8 @@ public class ReflectiveInstanceFactoryProviderTestCase extends TestCase {
         InstanceFactory<Foo> instanceFactory = provider.createFactory();
         InstanceWrapper<Foo> instanceWrapper = instanceFactory.newInstance(null);
         try {
-            instanceWrapper.start();
+            WorkContext workContext = new WorkContext();
+            instanceWrapper.start(workContext);
         } catch (InstanceInitializationException e) {
             fail();
         }
