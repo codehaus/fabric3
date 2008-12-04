@@ -34,9 +34,7 @@
  */
 package org.fabric3.itest;
 
-import java.io.ByteArrayInputStream;
 import java.io.File;
-import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Collections;
@@ -45,14 +43,6 @@ import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
-
-import javax.xml.parsers.DocumentBuilder;
-import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.xpath.XPath;
-import javax.xml.xpath.XPathConstants;
-import javax.xml.xpath.XPathExpressionException;
-import javax.xml.xpath.XPathFactory;
 
 import org.apache.maven.artifact.Artifact;
 import org.apache.maven.artifact.factory.ArtifactFactory;
@@ -69,10 +59,6 @@ import org.apache.maven.model.Exclusion;
 import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.project.MavenProject;
 import org.fabric3.featureset.FeatureSet;
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
 
 /**
  *
@@ -178,9 +164,7 @@ public class ArtifactHelper {
      * @throws MojoExecutionException if an error occurs calculating the transitive dependencies
      */
     public Set<Artifact> calculateHostArtifacts(Set<Artifact> runtimeArtifacts, 
-                                                Dependency[] shared, 
-                                                List<Dependency> extensionDependencies,
-                                                List<Dependency> sharedDependencies,
+                                                Dependency[] shared,
                                                 List<FeatureSet> featureSets) throws MojoExecutionException {
         
         Set<Artifact> hostArtifacts = new HashSet<Artifact>();
@@ -218,14 +202,6 @@ public class ArtifactHelper {
             for (Dependency sharedDependency : shared) {
                 hostArtifacts.addAll(resolveAll(sharedDependency));
             }
-        }
-        
-        for (Dependency extensionDependency : extensionDependencies) {
-            hostArtifacts.addAll(getSharedArtifacts(extensionDependency));
-        }
-        
-        for (Dependency sharedDependency : sharedDependencies) {
-            hostArtifacts.addAll(resolveAll(sharedDependency));
         }
         
         for (FeatureSet featureSet : featureSets) {
@@ -286,70 +262,6 @@ public class ArtifactHelper {
         } catch (ArtifactResolutionException e) {
             throw new MojoExecutionException(e.getMessage(), e);
         } catch (ArtifactNotFoundException e) {
-            throw new MojoExecutionException(e.getMessage(), e);
-        }
-        
-    }
-
-    private Set<Artifact> getSharedArtifacts(Dependency extensionDependency) throws MojoExecutionException {
-        
-        try {
-
-            Artifact extensionArtifact = resolve(extensionDependency);
-        
-            Set<Artifact> sharedArtifacts = new HashSet<Artifact>();
-            File file = extensionArtifact.getFile();
-            File pomFile = new File(file.getAbsolutePath().replace(".jar", ".pom"));
-            
-            DocumentBuilder documentBuilder = DocumentBuilderFactory.newInstance().newDocumentBuilder();
-            Document doc = documentBuilder.parse(pomFile);
-            
-            XPath xpath = XPathFactory.newInstance().newXPath();
-            String f3Shared = xpath.evaluate("//f3Shared/text()", doc);
-            
-            if (f3Shared == null || "".equals(f3Shared.trim())) {
-                return sharedArtifacts;
-            }
-            
-            doc = documentBuilder.parse(new ByteArrayInputStream(f3Shared.trim().getBytes()));
-            NodeList sharedDependencies = (NodeList) xpath.evaluate("//dependency", doc, XPathConstants.NODESET);
-            
-            for (int i = 0; i < sharedDependencies.getLength();i++) {
-                
-                Element sharedDependencyElement = (Element)sharedDependencies.item(i);
-
-                Dependency dependency = new Dependency();
-                dependency.setGroupId(xpath.evaluate("groupId/text()", sharedDependencyElement));
-                dependency.setArtifactId(xpath.evaluate("artifactId/text()", sharedDependencyElement));
-                dependency.setVersion(xpath.evaluate("version/text()", sharedDependencyElement));
-                
-                NodeList exclusions = (NodeList) xpath.evaluate("exclusions/exclusion", sharedDependencyElement, XPathConstants.NODESET);
-                
-                for (int j = 0; j < exclusions.getLength();j++) {
-                    
-                    Element exclusionElement = (Element) exclusions.item(j);
-                    
-                    Exclusion exclusion = new Exclusion();
-                    exclusion.setGroupId(xpath.evaluate("groupId/text()", exclusionElement));
-                    exclusion.setArtifactId(xpath.evaluate("artifactId/text()", exclusionElement));
-                    
-                    dependency.addExclusion(exclusion);
-                    
-                }
-
-                sharedArtifacts.addAll(resolveAll(dependency));
-                
-            }
-            
-            return sharedArtifacts;
-            
-        } catch (SAXException e) {
-            throw new MojoExecutionException(e.getMessage(), e);
-        } catch (IOException e) {
-            throw new MojoExecutionException(e.getMessage(), e);
-        } catch (ParserConfigurationException e) {
-            throw new MojoExecutionException(e.getMessage(), e);
-        } catch (XPathExpressionException e) {
             throw new MojoExecutionException(e.getMessage(), e);
         }
         

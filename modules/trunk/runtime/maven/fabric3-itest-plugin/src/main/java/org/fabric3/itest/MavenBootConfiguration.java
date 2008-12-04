@@ -22,23 +22,9 @@ public class MavenBootConfiguration {
     private ClassLoader hostClassLoader;
     private Set<URL> moduleDependencies;
     private Dependency[] extensions;
-    private List<Dependency> extensionDependencies;
-
-    //    private Dependency[] features;
-//    private boolean excludeDefaultFeatures;
-    private Dependency[] userExtensions;
-    private File[] userExtensionsArchives;
     private List<FeatureSet> featureSets;
     private Log log;
     private ExtensionHelper extensionHelper;
-    
-    public List<Dependency> getExtensionDependencies() {
-        return extensionDependencies;
-    }
-
-    public void setExtensionDependencies(List<Dependency> extensionDependencies) {
-        this.extensionDependencies = extensionDependencies;
-    }
 
     public URL getSystemScdl() {
         return systemScdl;
@@ -126,22 +112,6 @@ public class MavenBootConfiguration {
 
     public void setExtensions(Dependency[] extensions) {
         this.extensions = extensions;
-    }
-
-    public Dependency[] getUserExtensions() {
-        return userExtensions;
-    }
-
-    public void setUserExtensions(Dependency[] userExtensions) {
-        this.userExtensions = userExtensions;
-    }
-
-    public File[] getUserExtensionsArchives() {
-        return userExtensionsArchives;
-    }
-
-    public void setUserExtensionsArchives(File[] userExtensionsArchives) {
-        this.userExtensionsArchives = userExtensionsArchives;
     }
 
     public List<FeatureSet> getFeatureSets() {

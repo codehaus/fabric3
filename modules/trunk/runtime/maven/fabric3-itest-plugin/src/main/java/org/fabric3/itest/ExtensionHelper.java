@@ -43,11 +43,8 @@ public class ExtensionHelper {
 
     public void processExtensions(BootConfiguration<MavenEmbeddedRuntime, ScdlBootstrapper> configuration,
                                   Dependency[] extensions,
-                                  List<Dependency> extensionDependencies,
-                                  List<FeatureSet> featureSets,
-                                  Dependency[] userExtensions,
-                                  File[] userExtensionsArchives) throws MojoExecutionException {
-        List<URL> extensionUrls = resolveDependencies(extensions, extensionDependencies);
+                                  List<FeatureSet> featureSets) throws MojoExecutionException {
+        List<URL> extensionUrls = resolveDependencies(extensions);
 
         if (featureSets != null) {
             for (FeatureSet featureSet : featureSets) {
@@ -56,23 +53,6 @@ public class ExtensionHelper {
         }
         List<ContributionSource> sources = createContributionSources(extensionUrls);
         configuration.setExtensions(sources);
-
-        List<URL> userExtensionUrls = resolveDependencies(userExtensions, null);
-        // add extensions that are not Maven artifacts
-        if (userExtensionsArchives != null) {
-            for (File entry : userExtensionsArchives) {
-                if (!entry.exists()) {
-                    throw new MojoExecutionException("User extension does not exist: " + entry);
-                }
-                try {
-                    userExtensionUrls.add(entry.toURI().toURL());
-                } catch (MalformedURLException e) {
-                    throw new MojoExecutionException("Invalid user extension URL: " + entry, e);
-                }
-            }
-        }
-        sources = createContributionSources(userExtensionUrls);
-        configuration.setUserExtensions(sources);
     }
 
     private List<ContributionSource> createContributionSources(List<URL> urls) {
@@ -88,27 +68,16 @@ public class ExtensionHelper {
 
     private List<URL> processFeatures(FeatureSet featureSet) throws MojoExecutionException {
         Set<Dependency> dependencies = featureSet.getExtensions();
-        return resolveDependencies(featureSet.getExtensions().toArray(new Dependency[dependencies.size()]), null);
+        return resolveDependencies(featureSet.getExtensions().toArray(new Dependency[dependencies.size()]));
     }
 
-    private List<URL> resolveDependencies(Dependency[] dependencies, List<Dependency> extensionDependencies) throws MojoExecutionException {
+    private List<URL> resolveDependencies(Dependency[] dependencies) throws MojoExecutionException {
 
         List<URL> urls = new ArrayList<URL>();
 
         if (dependencies != null) {
             for (Dependency dependency : dependencies) {
                 Artifact artifact = artifactHelper.resolve(dependency);
-                try {
-                    urls.add(artifact.getFile().toURI().toURL());
-                } catch (MalformedURLException e) {
-                    throw new AssertionError();
-                }
-            }
-        }
-        
-        if (extensionDependencies != null) {
-            for (Dependency extensionDependency : extensionDependencies) {
-                Artifact artifact = artifactHelper.resolve(extensionDependency);
                 try {
                     urls.add(artifact.getFile().toURI().toURL());
                 } catch (MalformedURLException e) {

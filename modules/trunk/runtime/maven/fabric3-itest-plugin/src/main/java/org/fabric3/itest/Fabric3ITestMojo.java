@@ -60,8 +60,6 @@ import org.apache.maven.project.MavenProject;
 import org.fabric3.api.annotation.logging.Severe;
 import org.fabric3.featureset.FeatureSet;
 import org.fabric3.maven.MavenEmbeddedRuntime;
-import org.fabric3.util.closure.Closure;
-import org.fabric3.util.closure.CollectionUtils;
 import org.xml.sax.SAXException;
 
 /**
@@ -198,20 +196,6 @@ public class Fabric3ITestMojo extends AbstractMojo {
     public boolean excludeDefaultFeatures;
 
     /**
-     * Set of user extension artifacts that should be deployed to the runtime.
-     *
-     * @parameter
-     */
-    public Dependency[] userExtensions;
-
-    /**
-     * Set of user extension artifacts that are not Maven artifacts.
-     *
-     * @parameter
-     */
-    public File[] userExtensionsArchives;
-
-    /**
      * Libraries available to application and runtime.
      *
      * @parameter
@@ -338,11 +322,7 @@ public class Fabric3ITestMojo extends AbstractMojo {
         
         List<FeatureSet> featureSets = resolveFeatureSets();
         Set<Artifact> runtimeArtifacts = artifactHelper.calculateRuntimeArtifacts(runtimeVersion);
-        Set<Artifact> hostArtifacts = artifactHelper.calculateHostArtifacts(runtimeArtifacts, 
-                                                                            shared, 
-                                                                            getDependenciesForScope("f3-extension"), 
-                                                                            getDependenciesForScope("f3-shared"),
-                                                                            featureSets);
+        Set<Artifact> hostArtifacts = artifactHelper.calculateHostArtifacts(runtimeArtifacts, shared, featureSets);
         Set<Artifact> dependencies = artifactHelper.calculateDependencies();
         Set<URL> moduleDependencies = artifactHelper.calculateModuleDependencies(dependencies, hostArtifacts);
 
@@ -359,10 +339,7 @@ public class Fabric3ITestMojo extends AbstractMojo {
 
         configuration.setFeatureSets(featureSets);
         configuration.setExtensions(extensions);
-        configuration.setExtensionDependencies(getDependenciesForScope("f3-extension"));
         
-        configuration.setUserExtensions(userExtensions);
-        configuration.setUserExtensionsArchives(userExtensionsArchives);
         configuration.setIntentsLocation(intentsLocation);
         configuration.setModuleDependencies(moduleDependencies);
         configuration.setOutputDirectory(outputDirectory);
@@ -473,18 +450,6 @@ public class Fabric3ITestMojo extends AbstractMojo {
             featuresToInstall.add(dependency);
         }
         return featuresToInstall;
-    }
-
-    @SuppressWarnings("unchecked")
-    private List<Dependency> getDependenciesForScope(final String scope) throws MojoExecutionException {
-        
-        List<Dependency> artifacts = (List<Dependency>) project.getDependencies();
-        return CollectionUtils.filter(artifacts, new Closure<Dependency, Boolean>() {
-            public Boolean execute(Dependency dependency) {
-                return scope.equals(dependency.getScope());
-            }
-        });
-        
     }
 
     public interface MojoMonitor {
