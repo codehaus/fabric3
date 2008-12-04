@@ -201,7 +201,8 @@ public abstract class AbstractRuntime<HI extends HostInfo> implements Fabric3Run
 
     public void destroy() {
         // destroy system components
-        scopeContainer.stopAllContexts();
+        WorkContext workContext = new WorkContext();
+        scopeContainer.stopAllContexts(workContext);
     }
 
     public <I> I getSystemComponent(Class<I> service, URI uri) {

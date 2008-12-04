@@ -72,9 +72,10 @@ public interface InstanceWrapper<T> {
     /**
      * Stops the instance, issuing a destruction callback if the instance is configured to receive one..
      *
+     * @param context the current work context
      * @throws InstanceDestructionException if an error stopping the instance occurs
      */
-    void stop() throws InstanceDestructionException;
+    void stop(WorkContext context) throws InstanceDestructionException;
 
     /**
      * Reinjects updated references on an instance.

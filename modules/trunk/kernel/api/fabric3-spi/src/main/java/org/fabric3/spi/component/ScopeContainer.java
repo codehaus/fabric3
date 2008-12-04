@@ -131,8 +131,10 @@ public interface ScopeContainer<KEY> extends Lifecycle {
 
     /**
      * Stops all active contexts.
+     *
+     * @param workContext the current work context
      */
-    void stopAllContexts();
+    void stopAllContexts(WorkContext workContext);
 
     /**
      * Initialise an ordered list of components. The list is traversed in order and the getWrapper() method called for each to associate an instance

@@ -154,14 +154,14 @@ public class CompositeScopeContainer extends AbstractScopeContainer<QName> {
             if (list == null) {
                 throw new IllegalStateException("Context does not exist: " + contextId);
             }
-            destroyInstances(list);
+            destroyInstances(list, workContext);
         }
     }
 
-    public void stopAllContexts() {
+    public void stopAllContexts(WorkContext workContext) {
         synchronized (destroyQueues) {
             for (List<InstanceWrapper<?>> queue : destroyQueues.values()) {
-                destroyInstances(queue);
+                destroyInstances(queue, workContext);
             }
         }
     }
@@ -259,7 +259,7 @@ public class CompositeScopeContainer extends AbstractScopeContainer<QName> {
         public void start(WorkContext workContext) throws InstanceInitializationException {
         }
 
-        public void stop() throws InstanceDestructionException {
+        public void stop(WorkContext workContext) throws InstanceDestructionException {
         }
 
         public void reinject() {

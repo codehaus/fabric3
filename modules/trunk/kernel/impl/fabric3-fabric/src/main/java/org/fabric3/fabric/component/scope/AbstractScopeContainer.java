@@ -99,7 +99,7 @@ public abstract class AbstractScopeContainer<KEY> extends AbstractLifecycle impl
         }
     }
 
-    public void stopAllContexts() {
+    public void stopAllContexts(WorkContext workContext) {
         throw new UnsupportedOperationException();
     }
 
@@ -146,8 +146,9 @@ public abstract class AbstractScopeContainer<KEY> extends AbstractLifecycle impl
      * as shutdown is occuring will also be shut down.
      *
      * @param instances the list of instances to shutdown
+     * @param workContext the current work context
      */
-    protected void destroyInstances(List<InstanceWrapper<?>> instances) {
+    protected void destroyInstances(List<InstanceWrapper<?>> instances, WorkContext workContext) {
         while (true) {
             InstanceWrapper<?> toDestroy;
             synchronized (instances) {
@@ -157,7 +158,7 @@ public abstract class AbstractScopeContainer<KEY> extends AbstractLifecycle impl
                 toDestroy = instances.remove(instances.size() - 1);
             }
             try {
-                toDestroy.stop();
+                toDestroy.stop(workContext);
             } catch (InstanceDestructionException e) {
                 // log the error from destroy but continue
                 monitor.destructionError(e);

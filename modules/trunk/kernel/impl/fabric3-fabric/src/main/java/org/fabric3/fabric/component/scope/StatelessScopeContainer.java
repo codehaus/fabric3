@@ -75,7 +75,7 @@ public class StatelessScopeContainer extends AbstractScopeContainer<Object> {
 
     public <T> void returnWrapper(AtomicComponent<T> component, WorkContext workContext, InstanceWrapper<T> wrapper)
             throws InstanceDestructionException {
-        wrapper.stop();
+        wrapper.stop(workContext);
     }
 
     public void startContext(WorkContext workContext) throws GroupInitializationException {

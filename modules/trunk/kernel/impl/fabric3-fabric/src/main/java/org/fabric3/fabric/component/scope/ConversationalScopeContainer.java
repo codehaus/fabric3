@@ -162,17 +162,17 @@ public class ConversationalScopeContainer extends AbstractScopeContainer<Convers
     public void stopContext(WorkContext workContext) {
         Conversation conversation = workContext.peekCallFrame().getConversation();
         assert conversation != null;
-        stopContext(conversation);
+        stopContext(conversation, workContext);
         expirationPolicies.remove(conversation);
         notifyExpirationCallbacks(conversation);
     }
 
-    private void stopContext(Conversation conversation) {
+    private void stopContext(Conversation conversation, WorkContext workContext) {
         List<InstanceWrapper<?>> list = destroyQueues.remove(conversation);
         if (list == null) {
             throw new IllegalStateException("Conversation does not exist: " + conversation);
         }
-        destroyInstances(list);
+        destroyInstances(list, workContext);
 
         store.stopContext(conversation);
     }
@@ -234,7 +234,7 @@ public class ConversationalScopeContainer extends AbstractScopeContainer<Convers
                     WorkContext workContext = new WorkContext();
                     CallFrame frame = new CallFrame(null, conversation, conversation, null);
                     workContext.addCallFrame(frame);
-                    stopContext(conversation);
+                    stopContext(conversation, workContext);
                     notifyExpirationCallbacks(conversation);
                 }
             }

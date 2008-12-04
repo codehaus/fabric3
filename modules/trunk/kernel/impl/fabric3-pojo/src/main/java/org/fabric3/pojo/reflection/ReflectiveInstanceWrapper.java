@@ -112,16 +112,19 @@ public class ReflectiveInstanceWrapper<T> implements InstanceWrapper<T> {
     }
 
 
-    public void stop() throws InstanceDestructionException {
+    public void stop(WorkContext context) throws InstanceDestructionException {
         assert started;
+        WorkContext oldWorkContext = WorkContextTunnel.getThreadWorkContext();
         try {
             if (destroyInvoker != null) {
                 ClassLoader oldCl = Thread.currentThread().getContextClassLoader();
                 try {
                     Thread.currentThread().setContextClassLoader(cl);
+                    WorkContextTunnel.setThreadWorkContext(context);
                     destroyInvoker.invokeEvent(instance);
                 } finally {
                     Thread.currentThread().setContextClassLoader(oldCl);
+                    WorkContextTunnel.setThreadWorkContext(oldWorkContext);
                 }
             }
         } catch (ObjectCallbackException e) {

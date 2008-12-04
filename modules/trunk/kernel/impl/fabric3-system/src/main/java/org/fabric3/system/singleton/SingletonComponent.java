@@ -221,7 +221,7 @@ public class SingletonComponent<T> extends AbstractLifecycle implements AtomicCo
         public void start(WorkContext workContext) throws InstanceInitializationException {
         }
 
-        public void stop() throws InstanceDestructionException {
+        public void stop(WorkContext workContext) throws InstanceDestructionException {
         }
 
         public void reinject() {

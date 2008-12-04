@@ -75,7 +75,7 @@ public class StatelessScopeContainerTestCase<T> extends TestCase {
     }
 
     public void testReturnWrapper() throws Exception {
-        wrapper.stop();
+        wrapper.stop(workContext);
         control.replay();
         scopeContainer.returnWrapper(component, workContext, wrapper);
         control.verify();
