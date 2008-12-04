@@ -329,11 +329,15 @@ public class Fabric3ContributionMojo extends AbstractMojo {
      */
     private void generateSCAManifest() throws MojoExecutionException {
 
-        File srcContributionFile = new File(project.getBuild().getSourceDirectory(), "META-INF" + File.separator + "sca-contribution.xml");
+        File srcContributionFile = new File(project.getBasedir(), File.separator + "src" + File.separator + "main" + File.separator + "resources"
+                + File.separator + "META-INF" + File.separator + "sca-contribution.xml");
         File contributionFile = new File(classesDirectory, "META-INF" + File.separator + "sca-contribution.xml");
 
         if ((deployables != null || mavenImports != null) && srcContributionFile.exists()) {
             throw new MojoExecutionException("SCA contribution xml already exists");
+        }  else if (srcContributionFile.exists()) {
+            // manifest file manually created
+            return;
         }
         Document document;
         try {
