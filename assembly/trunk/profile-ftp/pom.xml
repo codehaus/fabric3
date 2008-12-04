@@ -46,11 +46,11 @@
     </pluginRepositories>
 
     <dependencies>
-        <dependency>
+       <!-- <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-ftp-api</artifactId>
             <version>0.7-SNAPSHOT</version>
-        </dependency>
+        </dependency> -->
         <dependency>
             <groupId>org.codehaus.fabric3</groupId>
             <artifactId>fabric3-ftp-spi</artifactId>
