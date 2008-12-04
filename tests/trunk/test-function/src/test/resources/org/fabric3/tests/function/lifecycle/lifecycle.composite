@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
  Fabric3
  Copyright © 2008 Metaform Systems Limited
@@ -27,9 +27,21 @@
 
     <component name="EagerInitTest">
         <f3-impl:junit class="org.fabric3.tests.function.lifecycle.EagerInitTest"/>
+        <reference name="callout" target="CalloutComponent"/>
     </component>
 
     <component name="EagerInitImpl">
         <implementation.java class="org.fabric3.tests.function.lifecycle.EagerInitImpl"/>
     </component>
+
+
+    <component name="CalloutComponent">
+        <implementation.java class="org.fabric3.tests.function.lifecycle.CalloutComponent"/>
+        <reference name="target" target="CalloutTarget"/>
+    </component>
+
+    <component name="CalloutTarget">
+        <implementation.java class="org.fabric3.tests.function.lifecycle.CalloutTargetImpl"/>
+    </component>
+
 </composite>

@@ -16,21 +16,9 @@
  */
 package org.fabric3.tests.function.lifecycle;
 
-import junit.framework.TestCase;
-import org.osoa.sca.annotations.Reference;
-
 /**
- * @version $Rev$ $Date$
+ * @version $Revision$ $Date$
  */
-public class EagerInitTest extends TestCase {
-    @Reference
-    protected CalloutService callout;
-
-    public void testCompositeEagerInit() {
-        assertTrue(EagerInitImpl.isInitialized());
-    }
-
-    public void testCallout() {
-        callout.invoke();
-    }
+public interface CalloutTarget {
+    void invoke();
 }

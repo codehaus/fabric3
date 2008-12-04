@@ -16,21 +16,32 @@
  */
 package org.fabric3.tests.function.lifecycle;
 
-import junit.framework.TestCase;
+import org.osoa.sca.annotations.Destroy;
+import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
 /**
- * @version $Rev$ $Date$
+ * Used to verify invocations during @Init and @Destroy. Best practice dictates services should not be invoked during @Destroy but this serves to
+ * verify the runtime functions properly if it is done.
+ *
+ * @version $Revision$ $Date$
  */
-public class EagerInitTest extends TestCase {
+public class CalloutComponent implements CalloutService {
     @Reference
-    protected CalloutService callout;
+    protected CalloutTarget target;
 
-    public void testCompositeEagerInit() {
-        assertTrue(EagerInitImpl.isInitialized());
+    @Init
+    public void init() {
+        target.invoke();
     }
 
-    public void testCallout() {
-        callout.invoke();
+    @Destroy
+    public void destroy() {
+        target.invoke();
+    }
+
+
+    public void invoke() {
+        // no-op, just ensure the implementation was dispatched to
     }
 }
