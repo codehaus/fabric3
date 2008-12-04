@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="ASCII"?>
 <contribution xmlns="http://www.osoa.org/xmlns/sca/1.0"
-              xmlns:maven="http://fabric3.org/xmlns/sca/2.0-alpha/maven">
+              xmlns:maven="urn:fabric3.org:maven">
     <deployable composite="tutorial:LoanAppComposite"/>
     <maven:export groupId="org.codehaus.fabric3.tutorials" artifactId="fabric3-tutorial-bigbank" version="0.7-SNAPSHOT"/>
 </contribution>
