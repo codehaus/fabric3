@@ -19,7 +19,7 @@
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
            name="WebCalculator"
-           targetNamespace="http://fabric3.org/xmlns/sca/tutorials/0.6.5">
+           targetNamespace="urn:fabric3.org:tutorials">
 
     <component name="calculator">
         <implementation.web/>
