@@ -50,16 +50,6 @@ import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.spi.introspection.DefaultIntrospectionContext;
-import org.fabric3.spi.introspection.IntrospectionContext;
-import org.fabric3.spi.introspection.xml.Loader;
-import org.fabric3.spi.introspection.xml.LoaderHelper;
-import org.fabric3.spi.introspection.xml.LoaderRegistry;
-import org.fabric3.spi.introspection.xml.LoaderUtil;
-import org.fabric3.spi.introspection.xml.TypeLoader;
-import org.fabric3.spi.introspection.xml.UnrecognizedAttribute;
-import org.fabric3.spi.introspection.xml.UnrecognizedElement;
-import org.fabric3.spi.introspection.xml.UnrecognizedElementException;
 import org.fabric3.scdl.ArtifactValidationFailure;
 import org.fabric3.scdl.Autowire;
 import org.fabric3.scdl.ComponentDefinition;
@@ -70,6 +60,16 @@ import org.fabric3.scdl.Include;
 import org.fabric3.scdl.ModelObject;
 import org.fabric3.scdl.Property;
 import org.fabric3.scdl.WireDefinition;
+import org.fabric3.spi.introspection.DefaultIntrospectionContext;
+import org.fabric3.spi.introspection.IntrospectionContext;
+import org.fabric3.spi.introspection.xml.Loader;
+import org.fabric3.spi.introspection.xml.LoaderHelper;
+import org.fabric3.spi.introspection.xml.LoaderRegistry;
+import org.fabric3.spi.introspection.xml.LoaderUtil;
+import org.fabric3.spi.introspection.xml.TypeLoader;
+import org.fabric3.spi.introspection.xml.UnrecognizedAttribute;
+import org.fabric3.spi.introspection.xml.UnrecognizedElement;
+import org.fabric3.spi.introspection.xml.UnrecognizedElementException;
 
 /**
  * Loads a composite component definition from an XML-based assembly file
@@ -203,117 +203,27 @@ public class CompositeLoader implements TypeLoader<Composite> {
             case START_ELEMENT:
                 QName qname = reader.getName();
                 if (INCLUDE.equals(qname)) {
-                    Include include = includeLoader.load(reader, childContext);
-                    if (include == null) {
-                        // errror encountered loading the include
-                        continue;
-                    }
-                    QName includeName = include.getName();
-                    if (type.getIncludes().containsKey(includeName)) {
-                        String identifier = includeName.toString();
-                        DuplicateInclude failure = new DuplicateInclude(identifier, reader);
-                        childContext.addError(failure);
-                        continue;
-                    }
-                    for (ComponentDefinition definition : include.getIncluded().getComponents().values()) {
-                        String key = definition.getName();
-                        if (type.getComponents().containsKey(key)) {
-                            DuplicateComponentName failure = new DuplicateComponentName(key, reader);
-                            childContext.addError(failure);
-                        }
-                    }
-                    type.add(include);
+                    handleInclude(type, reader, childContext);
+                    continue;
                 } else if (PROPERTY.equals(qname)) {
-                    Property property = propertyLoader.load(reader, childContext);
-                    if (property == null) {
-                        // errror encountered loading the property
-                        continue;
-                    }
-                    String key = property.getName();
-                    if (type.getProperties().containsKey(key)) {
-                        DuplicateProperty failure = new DuplicateProperty(key, reader);
-                        childContext.addError(failure);
-                    } else {
-                        type.add(property);
-                    }
+                    handleProperty(type, reader, childContext);
+                    continue;
                 } else if (SERVICE.equals(qname)) {
-                    CompositeService service = serviceLoader.load(reader, childContext);
-                    if (service == null) {
-                        // errror encountered loading the service
-                        continue;
-                    }
-                    if (type.getServices().containsKey(service.getName())) {
-                        String key = service.getName();
-                        DuplicateService failure = new DuplicateService(key, reader);
-                        childContext.addError(failure);
-                    } else {
-                        type.add(service);
-                    }
+                    handleService(type, reader, childContext);
+                    continue;
                 } else if (REFERENCE.equals(qname)) {
-                    CompositeReference reference = referenceLoader.load(reader, childContext);
-                    if (reference == null) {
-                        // errror encountered loading the reference
-                        continue;
-                    }
-                    if (type.getReferences().containsKey(reference.getName())) {
-                        String key = reference.getName();
-                        DuplicatePromotedReferenceName failure = new DuplicatePromotedReferenceName(key, reader);
-                        childContext.addError(failure);
-                    } else {
-                        type.add(reference);
-                    }
+                    handleReference(type, reader, childContext);
+                    continue;
                 } else if (COMPONENT.equals(qname)) {
-                    ComponentDefinition<?> componentDefinition = componentLoader.load(reader, childContext);
-                    if (componentDefinition == null) {
-                        // errror encountered loading the componentDefinition
-                        continue;
-                    }
-                    String key = componentDefinition.getName();
-                    if (type.getComponents().containsKey(key)) {
-                        DuplicateComponentName failure = new DuplicateComponentName(key, reader);
-                        childContext.addError(failure);
-                        continue;
-                    }
-                    if (type.getAutowire() != Autowire.INHERITED && componentDefinition.getAutowire() == Autowire.INHERITED) {
-                        componentDefinition.setAutowire(type.getAutowire());
-                    }
-                    type.add(componentDefinition);
+                    handleComponent(type, reader, childContext);
+                    continue;
                 } else if (WIRE.equals(qname)) {
-                    WireDefinition wire = wireLoader.load(reader, childContext);
-                    if (wire == null) {
-                        // errror encountered loading the wire
-                        continue;
-                    }
-                    type.add(wire);
+                    handleWire(type, reader, childContext);
+                    continue;
                 } else {
-                    // Extension element - for now try to load and see if we can handle it
-                    ModelObject modelObject;
-                    try {
-                        modelObject = loader.load(reader, ModelObject.class, childContext);
-                        // TODO when the loader registry is replaced this try..catch must be replaced with a check for a loader and an
-                        // UnrecognizedElement added to the context if none is found
-                    } catch (UnrecognizedElementException e) {
-                        UnrecognizedElement failure = new UnrecognizedElement(reader);
-                        childContext.addError(failure);
-                        continue;
-                    }
-                    if (modelObject instanceof Property) {
-                        type.add((Property) modelObject);
-                    } else if (modelObject instanceof CompositeService) {
-                        type.add((CompositeService) modelObject);
-                    } else if (modelObject instanceof CompositeReference) {
-                        type.add((CompositeReference) modelObject);
-                    } else if (modelObject instanceof ComponentDefinition) {
-                        type.add((ComponentDefinition<?>) modelObject);
-                    } else if (type == null) {
-                        // there was an error loading the element, ingore it as the errors will have been reported
-                        continue;
-                    } else {
-                        childContext.addError(new UnrecognizedElement(reader));
-                        continue;
-                    }
+                    handleExtensionElement(type, reader, childContext);
+                    continue;
                 }
-                break;
             case END_ELEMENT:
                 assert COMPOSITE.equals(reader.getName());
                 if (childContext.hasErrors() || childContext.hasWarnings()) {
@@ -331,6 +241,128 @@ public class CompositeLoader implements TypeLoader<Composite> {
                 return type;
             }
         }
+    }
+
+    private void handleExtensionElement(Composite type, XMLStreamReader reader, IntrospectionContext childContext) throws XMLStreamException {
+        // Extension element - for now try to load and see if we can handle it
+        ModelObject modelObject;
+        try {
+            modelObject = loader.load(reader, ModelObject.class, childContext);
+            // TODO when the loader registry is replaced this try..catch must be replaced with a check for a loader and an
+            // UnrecognizedElement added to the context if none is found
+        } catch (UnrecognizedElementException e) {
+            UnrecognizedElement failure = new UnrecognizedElement(reader);
+            childContext.addError(failure);
+            return;
+        }
+        if (modelObject instanceof Property) {
+            type.add((Property) modelObject);
+        } else if (modelObject instanceof CompositeService) {
+            type.add((CompositeService) modelObject);
+        } else if (modelObject instanceof CompositeReference) {
+            type.add((CompositeReference) modelObject);
+        } else if (modelObject instanceof ComponentDefinition) {
+            type.add((ComponentDefinition<?>) modelObject);
+        } else if (type == null) {
+            // there was an error loading the element, ingore it as the errors will have been reported
+        } else {
+            childContext.addError(new UnrecognizedElement(reader));
+        }
+    }
+
+    private void handleWire(Composite type, XMLStreamReader reader, IntrospectionContext childContext) throws XMLStreamException {
+        WireDefinition wire = wireLoader.load(reader, childContext);
+        if (wire == null) {
+            // errror encountered loading the wire
+            return;
+        }
+        type.add(wire);
+    }
+
+    private void handleComponent(Composite type, XMLStreamReader reader, IntrospectionContext childContext) throws XMLStreamException {
+        ComponentDefinition<?> componentDefinition = componentLoader.load(reader, childContext);
+        if (componentDefinition == null) {
+            // errror encountered loading the componentDefinition
+            return;
+        }
+        String key = componentDefinition.getName();
+        if (type.getComponents().containsKey(key)) {
+            DuplicateComponentName failure = new DuplicateComponentName(key, reader);
+            childContext.addError(failure);
+            return;
+        }
+        if (type.getAutowire() != Autowire.INHERITED && componentDefinition.getAutowire() == Autowire.INHERITED) {
+            componentDefinition.setAutowire(type.getAutowire());
+        }
+        type.add(componentDefinition);
+    }
+
+    private void handleReference(Composite type, XMLStreamReader reader, IntrospectionContext childContext) throws XMLStreamException {
+        CompositeReference reference = referenceLoader.load(reader, childContext);
+        if (reference == null) {
+            // errror encountered loading the reference
+            return;
+        }
+        if (type.getReferences().containsKey(reference.getName())) {
+            String key = reference.getName();
+            DuplicatePromotedReferenceName failure = new DuplicatePromotedReferenceName(key, reader);
+            childContext.addError(failure);
+        } else {
+            type.add(reference);
+        }
+    }
+
+    private void handleService(Composite type, XMLStreamReader reader, IntrospectionContext childContext) throws XMLStreamException {
+        CompositeService service = serviceLoader.load(reader, childContext);
+        if (service == null) {
+            // errror encountered loading the service
+            return;
+        }
+        if (type.getServices().containsKey(service.getName())) {
+            String key = service.getName();
+            DuplicateService failure = new DuplicateService(key, reader);
+            childContext.addError(failure);
+        } else {
+            type.add(service);
+        }
+    }
+
+    private void handleProperty(Composite type, XMLStreamReader reader, IntrospectionContext childContext) throws XMLStreamException {
+        Property property = propertyLoader.load(reader, childContext);
+        if (property == null) {
+            // errror encountered loading the property
+            return;
+        }
+        String key = property.getName();
+        if (type.getProperties().containsKey(key)) {
+            DuplicateProperty failure = new DuplicateProperty(key, reader);
+            childContext.addError(failure);
+        } else {
+            type.add(property);
+        }
+    }
+
+    private void handleInclude(Composite type, XMLStreamReader reader, IntrospectionContext childContext) throws XMLStreamException {
+        Include include = includeLoader.load(reader, childContext);
+        if (include == null) {
+            // errror encountered loading the include
+            return;
+        }
+        QName includeName = include.getName();
+        if (type.getIncludes().containsKey(includeName)) {
+            String identifier = includeName.toString();
+            DuplicateInclude failure = new DuplicateInclude(identifier, reader);
+            childContext.addError(failure);
+            return;
+        }
+        for (ComponentDefinition definition : include.getIncluded().getComponents().values()) {
+            String key = definition.getName();
+            if (type.getComponents().containsKey(key)) {
+                DuplicateComponentName failure = new DuplicateComponentName(key, reader);
+                childContext.addError(failure);
+            }
+        }
+        type.add(include);
     }
 
     private void validateAttributes(XMLStreamReader reader, IntrospectionContext context) {
