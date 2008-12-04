@@ -18,7 +18,7 @@
  * under the License.
 -->
 <composite xmlns="http://www.osoa.org/xmlns/sca/1.0"
-           targetNamespace="http://fabric3.org/xmlns/sca/tutorials/0.6.5"
+           targetNamespace="urn:fabric3.org:tutorials"
            name="LoanWebAppComposite">
 
     <component name="lending">
