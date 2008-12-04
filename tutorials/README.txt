@@ -12,9 +12,9 @@ II. Prerequisites
 
 * The Fabric3 standalone runtime, downloadable from http://fabric3.codehaus.org/Downloads.
 * The Fabric3 Tutorials distribution (this package)
-* WebCalc and BigBank require the Web Profile, downloadable from http://repository.codehaus.org/org/codehaus/fabric3/profile-web/0.5.1/profile-web-0.5.1-bin.zip.
-* BigBank requires the JPA profile, downloadable from http://repository.codehaus.org/org/codehaus/fabric3/profile-jpa/0.5.1/profile-jpa-0.5.1-bin.zip.
-* BigBank requires the H2 database extension, downloadable from http://repository.codehaus.org/org/codehaus/fabric3/fabric3-db-h2/0.5.1/fabric3-db-h2-0.5.1.jar.
+* WebCalc and BigBank require the Web Profile, downloadable from http://repository.codehaus.org/org/codehaus/fabric3/profile-web/0.7/profile-web-0.7-bin.zip.
+* BigBank requires the JPA profile, downloadable from http://repository.codehaus.org/org/codehaus/fabric3/profile-jpa/0.7/profile-jpa-0.7-bin.zip.
+* BigBank requires the H2 database extension, downloadable from http://repository.codehaus.org/org/codehaus/fabric3/fabric3-db-h2/0.7/fabric3-db-h2-0.7.jar.
 * The build system requires Maven 2.0.8 or later. It can be downloaded from http://maven.apache.org/download.html.
 
 III. Runtime and Tutorial Installation
@@ -41,9 +41,9 @@ V. Building and Deploying BigBank
 
 * To build BigBank, go to the bigbank project folder and execute: mvn -r clean install. The '-r' command is required so all BigBank modules will be built. Note internet access is required the first time the project is built so Maven can download the required project dependencies. Remote access can be turned off for subsequent builds by executing: mvn -o clean install.
 
-* Install the BigBank datasource configuration by copying datasource.xml (located in /bigbank/config) to the /user directory where the standalone runtime is installed. 
+* Install the BigBank datasource configuration by copying datasource.xml (located in /bigbank/config) to the /extensions directory where the standalone runtime is installed. 
 
-* Copy the fabric3-tutorial-bigbank-0.5.1.jar (located in /bigbank/bigbank/target) and the fabric3-tutorial-bigbank-webclient-0.5.1.war (located in /bigbank/bigbank-webclient/target) archived to the Fabric3 /deploy directory. 
+* Copy the fabric3-tutorial-bigbank-0.7.jar (located in /bigbank/bigbank/target) and the fabric3-tutorial-bigbank-webclient-0.7.war (located in /bigbank/bigbank-webclient/target) archived to the Fabric3 /deploy directory. 
 
 * Start the runtime from the /bin directory by executing: java -jar server.jar standalone.
 

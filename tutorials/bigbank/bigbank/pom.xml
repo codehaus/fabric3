@@ -15,7 +15,8 @@
  specific language governing permissions and limitations
  under the License.
 -->
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>org.codehaus.fabric3.tutorials</groupId>
@@ -89,11 +90,18 @@
                 <artifactId>fabric3-contribution-plugin</artifactId>
                 <version>0.7-SNAPSHOT</version>
                 <extensions>true</extensions>
-                <configuration>
-                    <deployables>
-                        <deployable>META-INF/loanapp.composite</deployable>
-                    </deployables>
-                </configuration>
+                <!--<configuration>-->
+                    <!--<mavenExports>-->
+                        <!--<mavenExport>-->
+                            <!--<groupId>org.codehaus.fabric3.tutorials</groupId>-->
+                            <!--<artifactId>fabric3-tutorial-bigbank</artifactId>-->
+                            <!--<version>0.7-SNAPSHOT"</version>-->
+                        <!--</mavenExport>-->
+                    <!--</mavenExports>-->
+                    <!--<deployables>-->
+                        <!--<deployable>META-INF/loanapp.composite</deployable>-->
+                    <!--</deployables>-->
+                <!--</configuration>-->
             </plugin>
         </plugins>
     </build>
