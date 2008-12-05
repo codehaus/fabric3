@@ -40,7 +40,7 @@
            autowire="true">
 
     <component name="LocalRoutingService">
-        <f3-impl:implementation.system class="org.fabric3.fabric.services.routing.LocalRoutingService"/>
+        <f3-impl:implementation.system class="org.fabric3.fabric.domain.LocalRoutingService"/>
     </component>
     <!-- this wire reinjects the routing service into the RuntimeDomain -->
     <wire source="RuntimeDomain/routingService" target="LocalRoutingService"/>

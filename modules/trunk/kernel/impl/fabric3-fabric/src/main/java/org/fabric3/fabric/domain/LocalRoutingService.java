@@ -32,25 +32,56 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.spi.services.routing;
+package org.fabric3.fabric.domain;
 
+import java.util.Set;
+
+import org.osoa.sca.annotations.Reference;
+
+import org.fabric3.scdl.Scope;
+import org.fabric3.spi.command.Command;
+import org.fabric3.spi.component.InstanceLifecycleException;
+import org.fabric3.spi.component.ScopeRegistry;
+import org.fabric3.spi.domain.RoutingService;
+import org.fabric3.spi.executor.CommandExecutorRegistry;
+import org.fabric3.spi.executor.ExecutionException;
 import org.fabric3.spi.generator.CommandMap;
+import org.fabric3.spi.domain.RoutingException;
 
 /**
- * Implementations route physical commands to a runtime node.
+ * A routing service implementation that routes commands to the local runtime instance.
  *
  * @version $Rev$ $Date$
  */
-public interface RoutingService {
+public class LocalRoutingService implements RoutingService {
 
-    /**
-     * Routes a command set to a runtime node
-     *
-     * @param id         the command set id used for correlation
-     * @param commandMap the command map to route @throws RoutingException if an exception occurs during routing @throws RoutingException if an error
-     *                   occurs routing the command set
-     * @throws RoutingException if an exception occurs routing the command set
-     */
-    void route(String id, CommandMap commandMap) throws RoutingException;
+    private CommandExecutorRegistry registry;
+    private ScopeRegistry scopeRegistry;
+
+    public LocalRoutingService(@Reference CommandExecutorRegistry registry, @Reference ScopeRegistry scopeRegistry) {
+        this.registry = registry;
+        this.scopeRegistry = scopeRegistry;
+    }
+
+    public void route(String id, CommandMap commandMap) throws RoutingException {
+
+        Set<Command> commands = commandMap.getCommandsForZone(null);
+        for (Command command : commands) {
+            try {
+                registry.execute(command);
+            } catch (ExecutionException e) {
+                throw new RoutingException(e);
+            }
+        }
+
+        try {
+            if (scopeRegistry != null) {
+                scopeRegistry.getScopeContainer(Scope.COMPOSITE).reinject();
+            }
+        } catch (InstanceLifecycleException e) {
+            throw new RoutingException(e);
+        }
+
+    }
 
 }

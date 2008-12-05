@@ -32,38 +32,24 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.spi.services.routing;
+package org.fabric3.spi.domain;
 
-import org.fabric3.host.Fabric3Exception;
+import org.fabric3.spi.generator.CommandMap;
 
 /**
- * Base routing exception.
+ * Implementations route commands to zones in a domain.
  *
  * @version $Rev$ $Date$
  */
-public class RoutingException extends Fabric3Exception {
-    private static final long serialVersionUID = -7865833725458046880L;
+public interface RoutingService {
 
-    public RoutingException() {
-    }
+    /**
+     * Routes a set of commands to zones in a domain
+     *
+     * @param id         the command set id used for correlation
+     * @param commandMap the command map to route @throws RoutingException if an exception occurs during routing
+     * @throws RoutingException if an exception occurs routing the command set
+     */
+    void route(String id, CommandMap commandMap) throws RoutingException;
 
-    public RoutingException(String message, String identifier) {
-        super(message, identifier);
-    }
-
-    public RoutingException(Throwable cause) {
-        super(cause);
-    }
-
-    public RoutingException(String message, Throwable cause) {
-        super(message, cause);
-    }
-
-    public RoutingException(String message, String identifier, Throwable cause) {
-        super(message, identifier, cause);
-    }
-
-    public RoutingException(String message) {
-        super(message);
-    }
 }

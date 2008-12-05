@@ -32,7 +32,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.spi.services.routing;
+package org.fabric3.spi.domain;
 
 import org.fabric3.api.annotation.logging.Fine;
 

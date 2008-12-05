@@ -19,14 +19,14 @@ package org.fabric3.fabric.domain;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.fabric.binding.BindingSelector;
+import org.fabric3.fabric.collector.Collector;
 import org.fabric3.fabric.generator.PhysicalModelGenerator;
 import org.fabric3.fabric.instantiator.LogicalModelInstantiator;
-import org.fabric3.fabric.collector.Collector;
-import org.fabric3.spi.allocator.Allocator;
 import org.fabric3.host.domain.Domain;
+import org.fabric3.spi.allocator.Allocator;
+import org.fabric3.spi.domain.RoutingService;
 import org.fabric3.spi.services.contribution.MetaDataStore;
 import org.fabric3.spi.services.lcm.LogicalComponentManager;
-import org.fabric3.spi.services.routing.RoutingService;
 
 /**
  * Implements a distributed domain containing user-defined services.

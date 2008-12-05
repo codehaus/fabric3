@@ -32,56 +32,38 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.fabric.services.routing;
+package org.fabric3.spi.domain;
 
-import java.util.Set;
-
-import org.osoa.sca.annotations.Reference;
-
-import org.fabric3.scdl.Scope;
-import org.fabric3.spi.command.Command;
-import org.fabric3.spi.component.InstanceLifecycleException;
-import org.fabric3.spi.component.ScopeRegistry;
-import org.fabric3.spi.executor.CommandExecutorRegistry;
-import org.fabric3.spi.executor.ExecutionException;
-import org.fabric3.spi.generator.CommandMap;
-import org.fabric3.spi.services.routing.RoutingException;
-import org.fabric3.spi.services.routing.RoutingService;
+import org.fabric3.host.Fabric3Exception;
 
 /**
- * A routing service implementation that routes commands to the local runtime instance.
+ * Base routing exception.
  *
  * @version $Rev$ $Date$
  */
-public class LocalRoutingService implements RoutingService {
+public class RoutingException extends Fabric3Exception {
+    private static final long serialVersionUID = -7865833725458046880L;
 
-    private CommandExecutorRegistry registry;
-    private ScopeRegistry scopeRegistry;
-
-    public LocalRoutingService(@Reference CommandExecutorRegistry registry, @Reference ScopeRegistry scopeRegistry) {
-        this.registry = registry;
-        this.scopeRegistry = scopeRegistry;
+    public RoutingException() {
     }
 
-    public void route(String id, CommandMap commandMap) throws RoutingException {
-
-        Set<Command> commands = commandMap.getCommandsForZone(null);
-        for (Command command : commands) {
-            try {
-                registry.execute(command);
-            } catch (ExecutionException e) {
-                throw new RoutingException(e);
-            }
-        }
-
-        try {
-            if (scopeRegistry != null) {
-                scopeRegistry.getScopeContainer(Scope.COMPOSITE).reinject();
-            }
-        } catch (InstanceLifecycleException e) {
-            throw new RoutingException(e);
-        }
-
+    public RoutingException(String message, String identifier) {
+        super(message, identifier);
     }
 
+    public RoutingException(Throwable cause) {
+        super(cause);
+    }
+
+    public RoutingException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+    public RoutingException(String message, String identifier, Throwable cause) {
+        super(message, identifier, cause);
+    }
+
+    public RoutingException(String message) {
+        super(message);
+    }
 }

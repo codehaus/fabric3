@@ -43,6 +43,8 @@ import org.fabric3.scdl.Include;
 import org.fabric3.spi.allocator.AllocationException;
 import org.fabric3.spi.allocator.Allocator;
 import org.fabric3.spi.binding.BindingSelectionException;
+import org.fabric3.spi.domain.RoutingService;
+import org.fabric3.spi.domain.RoutingException;
 import org.fabric3.spi.generator.CommandMap;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.CopyUtil;
@@ -61,8 +63,6 @@ import org.fabric3.spi.services.contribution.QNameSymbol;
 import org.fabric3.spi.services.contribution.Resource;
 import org.fabric3.spi.services.contribution.ResourceElement;
 import org.fabric3.spi.services.lcm.LogicalComponentManager;
-import org.fabric3.spi.services.routing.RoutingException;
-import org.fabric3.spi.services.routing.RoutingService;
 
 /**
  * Base class for a domain.
