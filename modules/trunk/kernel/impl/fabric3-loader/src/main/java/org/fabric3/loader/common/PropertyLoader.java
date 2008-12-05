@@ -42,11 +42,11 @@ import javax.xml.stream.XMLStreamReader;
 import org.osoa.sca.annotations.Reference;
 import org.w3c.dom.Document;
 
+import org.fabric3.model.type.component.Property;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.xml.LoaderHelper;
 import org.fabric3.spi.introspection.xml.TypeLoader;
 import org.fabric3.spi.introspection.xml.UnrecognizedAttribute;
-import org.fabric3.model.type.component.Property;
 
 /**
  * Loads a property declaration from an XML-based assembly file
@@ -58,6 +58,7 @@ public class PropertyLoader implements TypeLoader<Property> {
     private static final String MANY = "many";
     private static final String MUST_SUPPLY = "mustSupply";
     private static final String TYPE = "type";
+    private static final String SOURCE = "source";
     private static final QName XS_STRING = new QName(XMLConstants.W3C_XML_SCHEMA_NS_URI, "string");
 
     private final LoaderHelper helper;
@@ -85,7 +86,7 @@ public class PropertyLoader implements TypeLoader<Property> {
     private void validateAttributes(XMLStreamReader reader, IntrospectionContext context) {
         for (int i = 0; i < reader.getAttributeCount(); i++) {
             String name = reader.getAttributeLocalName(i);
-            if (!NAME.equals(name) && !MANY.equals(name) && !MUST_SUPPLY.equals(name) && !TYPE.equals(name)) {
+            if (!NAME.equals(name) && !MANY.equals(name) && !MUST_SUPPLY.equals(name) && !TYPE.equals(name) && !SOURCE.equals(name)) {
                 context.addError(new UnrecognizedAttribute(name, reader));
             }
         }
