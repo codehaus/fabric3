@@ -27,9 +27,9 @@ import org.fabric3.host.contribution.InstallException;
 import org.fabric3.model.type.ValidationContext;
 import org.fabric3.spi.services.contribution.ContributionManifest;
 import org.fabric3.spi.services.contribution.Import;
-import org.fabric3.spi.services.contribution.MavenImport;
-import org.fabric3.spi.services.contribution.XmlElementManifestProcessor;
-import org.fabric3.spi.services.contribution.XmlManifestProcessorRegistry;
+import org.fabric3.spi.services.contribution.manifest.MavenImport;
+import org.fabric3.spi.services.contribution.manifest.XmlElementManifestProcessor;
+import org.fabric3.spi.services.contribution.manifest.XmlManifestProcessorRegistry;
 
 /**
  * Adds an implicit import of the Hibernate contribution extension into any contribution using JPA on a runtime cnfigured to use Hibernate. This is

@@ -59,7 +59,7 @@ import org.fabric3.model.type.component.Composite;
 import org.fabric3.model.type.component.Include;
 import org.fabric3.spi.services.contribution.MetaDataStore;
 import org.fabric3.host.contribution.StoreException;
-import org.fabric3.spi.services.contribution.QNameSymbol;
+import org.fabric3.spi.services.contribution.manifest.QNameSymbol;
 import org.fabric3.spi.services.contribution.ResourceElement;
 
 /**

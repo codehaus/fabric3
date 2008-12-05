@@ -22,7 +22,7 @@ import javax.xml.stream.XMLStreamReader;
 import junit.framework.TestCase;
 import org.easymock.EasyMock;
 
-import org.fabric3.spi.services.contribution.QNameExport;
+import org.fabric3.spi.services.contribution.manifest.QNameExport;
 
 /**
  * @version $Rev$ $Date$

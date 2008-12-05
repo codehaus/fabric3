@@ -40,7 +40,7 @@ import org.fabric3.runtime.webapp.WebappHostInfo;
 import org.fabric3.model.type.ValidationContext;
 import org.fabric3.spi.services.contenttype.ContentTypeResolutionException;
 import org.fabric3.spi.services.contenttype.ContentTypeResolver;
-import org.fabric3.spi.services.contribution.Action;
+import org.fabric3.spi.services.contribution.archive.Action;
 import org.fabric3.spi.services.contribution.Contribution;
 import org.fabric3.spi.services.contribution.ContributionManifest;
 import org.fabric3.spi.services.contribution.ContributionProcessor;

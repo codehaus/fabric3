@@ -65,11 +65,11 @@
     </component>
 
     <component name="ArchiveContributionProcessor">
-        <f3-impl:implementation.system class="org.fabric3.fabric.services.contribution.processor.ArchiveContributionProcessor"/>
+        <f3-impl:implementation.system class="org.fabric3.fabric.services.contribution.archive.ArchiveContributionProcessor"/>
     </component>
 
     <component name="ZipContributionHandler">
-        <f3-impl:implementation.system class="org.fabric3.fabric.services.contribution.processor.ZipContributionHandler"/>
+        <f3-impl:implementation.system class="org.fabric3.fabric.services.contribution.archive.ZipContributionHandler"/>
     </component>
 
     <component name="XmlResourceProcessor">
@@ -152,7 +152,7 @@
 
     <wire source="MetaDataStore/instantiatorRegistry" target="ContributionWireInstantiatorRegistry"/>
 
-    <component name="QNameWireInstantiator" f3-core:key="org.fabric3.spi.services.contribution.QNameImport">
+    <component name="QNameWireInstantiator" f3-core:key="org.fabric3.spi.services.contribution.manifest.QNameImport">
         <f3-impl:implementation.system class="org.fabric3.fabric.services.contribution.wire.QNameWireInstantiator"/>
     </component>
 
@@ -164,7 +164,7 @@
         <f3-impl:implementation.system class="org.fabric3.fabric.services.contribution.wire.LocationContributionWireInstantiator"/>
     </component>
 
-    <component name="MavenContributionWireInstantiator" f3-core:key="org.fabric3.spi.services.contribution.MavenImport">
+    <component name="MavenContributionWireInstantiator" f3-core:key="org.fabric3.spi.services.contribution.manifest.MavenImport">
         <f3-impl:implementation.system class="org.fabric3.fabric.services.contribution.wire.MavenContributionWireInstantiator"/>
     </component>
 

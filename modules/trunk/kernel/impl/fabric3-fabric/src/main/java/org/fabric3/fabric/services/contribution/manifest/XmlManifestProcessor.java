@@ -32,10 +32,11 @@ import org.fabric3.model.type.ValidationContext;
 import org.fabric3.spi.services.contribution.ContributionManifest;
 import org.fabric3.spi.services.contribution.ManifestProcessor;
 import org.fabric3.spi.services.contribution.ProcessorRegistry;
-import org.fabric3.spi.services.contribution.XmlManifestProcessorRegistry;
+import org.fabric3.spi.services.contribution.manifest.XmlManifestProcessorRegistry;
+import org.fabric3.spi.services.contribution.manifest.XmlElementManifestProcessor;
 
 /**
- * Processes XML artifacts in a contribution that contain manifest information. Dispatches to {@link org.fabric3.spi.services.contribution.XmlElementManifestProcessor}
+ * Processes XML artifacts in a contribution that contain manifest information. Dispatches to {@link XmlElementManifestProcessor}
  * based on the document element type for further processing.
  *
  * @version $Rev$ $Date$

@@ -24,8 +24,8 @@ import javax.xml.stream.XMLStreamReader;
 import org.fabric3.host.contribution.InstallException;
 import org.fabric3.model.type.ValidationContext;
 import org.fabric3.spi.services.contribution.Contribution;
-import org.fabric3.spi.services.contribution.XmlProcessor;
-import org.fabric3.spi.services.contribution.XmlProcessorRegistry;
+import org.fabric3.spi.services.contribution.xml.XmlProcessor;
+import org.fabric3.spi.services.contribution.xml.XmlProcessorRegistry;
 
 /**
  * Default impelmentation of an XmlProcessorRegistry.

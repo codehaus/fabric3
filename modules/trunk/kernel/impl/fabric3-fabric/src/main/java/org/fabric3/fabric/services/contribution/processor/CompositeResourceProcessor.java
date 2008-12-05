@@ -40,7 +40,7 @@ import org.fabric3.model.type.ValidationContext;
 import org.fabric3.spi.xml.XMLFactory;
 import org.fabric3.spi.services.contribution.Contribution;
 import org.fabric3.spi.services.contribution.ProcessorRegistry;
-import org.fabric3.spi.services.contribution.QNameSymbol;
+import org.fabric3.spi.services.contribution.manifest.QNameSymbol;
 import org.fabric3.spi.services.contribution.Resource;
 import org.fabric3.spi.services.contribution.ResourceElement;
 import org.fabric3.spi.services.contribution.ResourceElementNotFoundException;

@@ -26,7 +26,7 @@ import org.easymock.EasyMock;
 
 import org.fabric3.fabric.services.xml.XMLFactoryImpl;
 import org.fabric3.spi.services.contribution.ContributionManifest;
-import org.fabric3.spi.services.contribution.XmlManifestProcessorRegistry;
+import org.fabric3.spi.services.contribution.manifest.XmlManifestProcessorRegistry;
 import org.fabric3.spi.xml.XMLFactory;
 import org.fabric3.model.type.ValidationContext;
 import org.fabric3.model.type.DefaultValidationContext;

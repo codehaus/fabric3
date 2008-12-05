@@ -29,11 +29,11 @@ import static org.fabric3.loader.plan.DeploymentPlanConstants.PLAN;
 import static org.fabric3.loader.plan.DeploymentPlanConstants.PLAN_NAMESPACE;
 import org.fabric3.model.type.ValidationContext;
 import org.fabric3.spi.plan.DeploymentPlan;
-import org.fabric3.spi.services.contribution.QNameSymbol;
+import org.fabric3.spi.services.contribution.manifest.QNameSymbol;
 import org.fabric3.spi.services.contribution.Resource;
 import org.fabric3.spi.services.contribution.ResourceElement;
-import org.fabric3.spi.services.contribution.XmlIndexer;
-import org.fabric3.spi.services.contribution.XmlIndexerRegistry;
+import org.fabric3.spi.services.contribution.xml.XmlIndexer;
+import org.fabric3.spi.services.contribution.xml.XmlIndexerRegistry;
 
 /**
  * Indexes a deployment plan.

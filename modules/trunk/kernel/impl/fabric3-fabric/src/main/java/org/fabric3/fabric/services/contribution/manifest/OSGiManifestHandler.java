@@ -26,7 +26,7 @@ import org.osoa.sca.annotations.EagerInit;
 
 import org.fabric3.model.type.ValidationContext;
 import org.fabric3.spi.services.contribution.ContributionManifest;
-import org.fabric3.spi.services.contribution.JarManifestHandler;
+import org.fabric3.spi.services.contribution.manifest.JarManifestHandler;
 
 /**
  * Parses OSGi manifest headers and adds the metadta to the SCA contribution manifest.

@@ -19,9 +19,9 @@ package org.fabric3.fabric.services.contribution.wire;
 import java.net.URI;
 
 import org.fabric3.spi.services.contribution.ContributionWire;
-import org.fabric3.spi.services.contribution.QNameExport;
-import org.fabric3.spi.services.contribution.QNameImport;
-import org.fabric3.spi.services.contribution.QNameSymbol;
+import org.fabric3.spi.services.contribution.manifest.QNameExport;
+import org.fabric3.spi.services.contribution.manifest.QNameImport;
+import org.fabric3.spi.services.contribution.manifest.QNameSymbol;
 import org.fabric3.spi.services.contribution.Symbol;
 
 /**

@@ -36,8 +36,8 @@ import org.fabric3.spi.services.contribution.Contribution;
 import org.fabric3.spi.services.contribution.ProcessorRegistry;
 import org.fabric3.spi.services.contribution.Resource;
 import org.fabric3.spi.services.contribution.ResourceProcessor;
-import org.fabric3.spi.services.contribution.XmlIndexerRegistry;
-import org.fabric3.spi.services.contribution.XmlResourceElementLoaderRegistry;
+import org.fabric3.spi.services.contribution.xml.XmlIndexerRegistry;
+import org.fabric3.spi.services.contribution.xml.XmlResourceElementLoaderRegistry;
 
 /**
  * Processes an XML-based resource in a contribution, delegating to a an XMLIndexer to index the resource and a Loader to load it based on the root

@@ -38,9 +38,9 @@ import org.fabric3.spi.services.contribution.ContributionManifest;
 import org.fabric3.spi.services.contribution.ContributionProcessor;
 import org.fabric3.spi.services.contribution.ProcessorRegistry;
 import org.fabric3.spi.services.contribution.Resource;
-import org.fabric3.spi.services.contribution.XmlIndexerRegistry;
-import org.fabric3.spi.services.contribution.XmlManifestProcessorRegistry;
-import org.fabric3.spi.services.contribution.XmlProcessorRegistry;
+import org.fabric3.spi.services.contribution.xml.XmlIndexerRegistry;
+import org.fabric3.spi.services.contribution.manifest.XmlManifestProcessorRegistry;
+import org.fabric3.spi.services.contribution.xml.XmlProcessorRegistry;
 
 /**
  * Processes an XML-based contribution. The implementaton dispatches to a specific XmlProcessor based on the QName of the document element.

@@ -26,8 +26,8 @@ import javax.xml.stream.XMLStreamReader;
 import org.fabric3.host.contribution.InstallException;
 import org.fabric3.model.type.ValidationContext;
 import org.fabric3.spi.services.contribution.Resource;
-import org.fabric3.spi.services.contribution.XmlResourceElementLoader;
-import org.fabric3.spi.services.contribution.XmlResourceElementLoaderRegistry;
+import org.fabric3.spi.services.contribution.xml.XmlResourceElementLoader;
+import org.fabric3.spi.services.contribution.xml.XmlResourceElementLoaderRegistry;
 
 /**
  * Default impelmentation of an XmlIndexerRegistry.

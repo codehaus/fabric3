@@ -25,8 +25,8 @@ import java.util.Map;
 
 import org.osoa.sca.annotations.EagerInit;
 
-import org.fabric3.spi.services.contribution.ClasspathProcessor;
-import org.fabric3.spi.services.contribution.ClasspathProcessorRegistry;
+import org.fabric3.spi.services.contribution.archive.ClasspathProcessor;
+import org.fabric3.spi.services.contribution.archive.ClasspathProcessorRegistry;
 
 /**
  * @version $Rev$ $Date$

@@ -27,11 +27,10 @@ import org.osoa.sca.annotations.Reference;
 import org.fabric3.api.annotation.Monitor;
 import org.fabric3.spi.services.archive.ArchiveStore;
 import org.fabric3.spi.services.archive.ArchiveStoreException;
-import org.fabric3.spi.services.contribution.ContributionUriResolver;
-import org.fabric3.spi.services.contribution.ArtifactResolverMonitor;
-import org.fabric3.spi.services.contribution.ResolutionException;
-import org.fabric3.spi.services.contribution.MetaDataStore;
 import org.fabric3.spi.services.contribution.Contribution;
+import org.fabric3.spi.services.contribution.ContributionUriResolver;
+import org.fabric3.spi.services.contribution.MetaDataStore;
+import org.fabric3.spi.services.contribution.ResolutionException;
 
 /**
  * Resolves contributions using the <code>http</code> scheme, copying them to a local archive store.

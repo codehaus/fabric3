@@ -119,7 +119,7 @@
     </component>
 
     <component name="JarClasspathProcessor">
-        <f3-impl:implementation.system class="org.fabric3.fabric.services.contribution.processor.JarClasspathProcessor"/>
+        <f3-impl:implementation.system class="org.fabric3.fabric.services.contribution.archive.JarClasspathProcessor"/>
     </component>
 
     <component name="ProcessorRegistry">

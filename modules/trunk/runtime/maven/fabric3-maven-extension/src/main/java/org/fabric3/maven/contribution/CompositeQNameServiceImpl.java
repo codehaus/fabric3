@@ -34,7 +34,7 @@ import org.fabric3.maven.InvalidResourceException;
 import org.fabric3.model.type.component.Composite;
 import org.fabric3.spi.services.contribution.Contribution;
 import org.fabric3.spi.services.contribution.MetaDataStore;
-import org.fabric3.spi.services.contribution.QNameSymbol;
+import org.fabric3.spi.services.contribution.manifest.QNameSymbol;
 import org.fabric3.spi.services.contribution.Resource;
 import org.fabric3.spi.services.contribution.ResourceElement;
 import org.fabric3.spi.services.contribution.Symbol;

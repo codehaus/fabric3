@@ -20,11 +20,12 @@ import java.io.InputStream;
 
 import org.fabric3.host.contribution.InstallException;
 import org.fabric3.model.type.ValidationContext;
+import org.fabric3.spi.services.contribution.ContributionManifest;
 
 /**
  * Processes an artifact containing manifest information in a contribution archive.
  *
- * @version $Rev$ $Date$
+ * @version $Rev: 6194 $ $Date: 2008-12-05 07:52:09 -0800 (Fri, 05 Dec 2008) $
  */
 public interface ManifestProcessor {
 

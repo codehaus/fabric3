@@ -26,10 +26,10 @@ import org.easymock.EasyMock;
 
 import org.fabric3.model.type.DefaultValidationContext;
 import org.fabric3.model.type.ValidationContext;
-import org.fabric3.spi.services.contribution.QNameSymbol;
+import org.fabric3.spi.services.contribution.manifest.QNameSymbol;
 import org.fabric3.spi.services.contribution.Resource;
 import org.fabric3.spi.services.contribution.ResourceElement;
-import org.fabric3.spi.services.contribution.XmlIndexerRegistry;
+import org.fabric3.spi.services.contribution.xml.XmlIndexerRegistry;
 
 /**
  * @version $Revision$ $Date$

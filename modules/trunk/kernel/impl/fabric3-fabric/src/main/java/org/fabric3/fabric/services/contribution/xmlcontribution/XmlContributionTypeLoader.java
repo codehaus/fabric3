@@ -43,13 +43,13 @@ import org.fabric3.model.type.ValidationContext;
 import org.fabric3.spi.Namespaces;
 import org.fabric3.spi.services.contribution.Contribution;
 import org.fabric3.spi.services.contribution.ContributionManifest;
-import org.fabric3.spi.services.contribution.QNameSymbol;
+import org.fabric3.spi.services.contribution.manifest.QNameSymbol;
 import org.fabric3.spi.services.contribution.Resource;
 import org.fabric3.spi.services.contribution.ResourceElement;
 import org.fabric3.spi.services.contribution.ResourceElementNotFoundException;
 import org.fabric3.spi.services.contribution.Symbol;
-import org.fabric3.spi.services.contribution.XmlProcessor;
-import org.fabric3.spi.services.contribution.XmlProcessorRegistry;
+import org.fabric3.spi.services.contribution.xml.XmlProcessor;
+import org.fabric3.spi.services.contribution.xml.XmlProcessorRegistry;
 
 /**
  * Loader for definitions.

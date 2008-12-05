@@ -33,11 +33,11 @@ import org.fabric3.spi.introspection.xml.LoaderUtil;
 import org.fabric3.spi.introspection.xml.MissingAttribute;
 import org.fabric3.model.type.ValidationContext;
 import org.fabric3.model.type.definitions.AbstractDefinition;
-import org.fabric3.spi.services.contribution.QNameSymbol;
+import org.fabric3.spi.services.contribution.manifest.QNameSymbol;
 import org.fabric3.spi.services.contribution.Resource;
 import org.fabric3.spi.services.contribution.ResourceElement;
-import org.fabric3.spi.services.contribution.XmlIndexer;
-import org.fabric3.spi.services.contribution.XmlIndexerRegistry;
+import org.fabric3.spi.services.contribution.xml.XmlIndexer;
+import org.fabric3.spi.services.contribution.xml.XmlIndexerRegistry;
 
 /**
  * Indexer for definitions.

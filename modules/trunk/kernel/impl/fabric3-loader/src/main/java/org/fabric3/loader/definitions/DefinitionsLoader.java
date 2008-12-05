@@ -42,13 +42,13 @@ import org.fabric3.model.type.definitions.BindingType;
 import org.fabric3.model.type.definitions.ImplementationType;
 import org.fabric3.model.type.definitions.Intent;
 import org.fabric3.model.type.definitions.PolicySet;
-import org.fabric3.spi.services.contribution.QNameSymbol;
+import org.fabric3.spi.services.contribution.manifest.QNameSymbol;
 import org.fabric3.spi.services.contribution.Resource;
 import org.fabric3.spi.services.contribution.ResourceElement;
 import org.fabric3.spi.services.contribution.ResourceElementNotFoundException;
 import org.fabric3.spi.services.contribution.Symbol;
-import org.fabric3.spi.services.contribution.XmlResourceElementLoader;
-import org.fabric3.spi.services.contribution.XmlResourceElementLoaderRegistry;
+import org.fabric3.spi.services.contribution.xml.XmlResourceElementLoader;
+import org.fabric3.spi.services.contribution.xml.XmlResourceElementLoaderRegistry;
 
 /**
  * Loader for definitions.

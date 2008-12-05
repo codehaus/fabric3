@@ -82,7 +82,7 @@ import org.fabric3.spi.services.contribution.ContributionServiceListener;
 import org.fabric3.spi.services.contribution.ContributionState;
 import org.fabric3.spi.services.contribution.MetaDataStore;
 import org.fabric3.spi.services.contribution.ProcessorRegistry;
-import org.fabric3.spi.services.contribution.QNameSymbol;
+import org.fabric3.spi.services.contribution.manifest.QNameSymbol;
 import org.fabric3.spi.services.contribution.Resource;
 import org.fabric3.spi.services.contribution.ResourceElement;
 

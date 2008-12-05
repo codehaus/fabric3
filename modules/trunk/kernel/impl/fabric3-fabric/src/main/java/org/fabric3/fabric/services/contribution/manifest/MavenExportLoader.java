@@ -24,7 +24,7 @@ import org.osoa.sca.annotations.EagerInit;
 import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.spi.introspection.xml.TypeLoader;
 import org.fabric3.spi.introspection.xml.UnrecognizedAttribute;
-import org.fabric3.spi.services.contribution.MavenExport;
+import org.fabric3.spi.services.contribution.manifest.MavenExport;
 
 /**
  * Loads Maven export entries in a contribution manifest.

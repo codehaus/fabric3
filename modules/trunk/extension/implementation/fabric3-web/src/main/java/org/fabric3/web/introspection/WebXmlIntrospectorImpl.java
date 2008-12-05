@@ -34,7 +34,7 @@ import org.fabric3.spi.introspection.IntrospectionContext;
 import org.fabric3.model.type.component.MissingResource;
 import org.fabric3.spi.xml.XMLFactory;
 import org.fabric3.spi.services.contribution.MetaDataStore;
-import org.fabric3.spi.services.contribution.QNameSymbol;
+import org.fabric3.spi.services.contribution.manifest.QNameSymbol;
 import org.fabric3.spi.services.contribution.Resource;
 
 /**

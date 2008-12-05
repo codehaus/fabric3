@@ -40,8 +40,8 @@ import org.fabric3.spi.Namespaces;
 import org.fabric3.spi.services.contribution.ContributionManifest;
 import org.fabric3.spi.services.contribution.Export;
 import org.fabric3.spi.services.contribution.Import;
-import org.fabric3.spi.services.contribution.XmlElementManifestProcessor;
-import org.fabric3.spi.services.contribution.XmlManifestProcessorRegistry;
+import org.fabric3.spi.services.contribution.manifest.XmlElementManifestProcessor;
+import org.fabric3.spi.services.contribution.manifest.XmlManifestProcessorRegistry;
 
 /**
  * @version $Revision$ $Date$

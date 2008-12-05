@@ -41,7 +41,7 @@ import org.fabric3.model.type.definitions.AbstractDefinition;
 import org.fabric3.model.type.definitions.Intent;
 import org.fabric3.model.type.definitions.PolicySet;
 import org.fabric3.spi.Namespaces;
-import org.fabric3.spi.services.contribution.QNameSymbol;
+import org.fabric3.spi.services.contribution.manifest.QNameSymbol;
 import org.fabric3.spi.services.contribution.Resource;
 import org.fabric3.spi.services.contribution.ResourceElement;
 
