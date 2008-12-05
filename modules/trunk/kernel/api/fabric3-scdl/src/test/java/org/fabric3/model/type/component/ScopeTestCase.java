@@ -32,13 +32,11 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.scdl;
+package org.fabric3.model.type.component;
 
-import java.net.URI;
+import javax.xml.namespace.QName;
 
 import junit.framework.TestCase;
-
-import org.fabric3.model.type.component.Scope;
 
 /**
  * @version $Rev$ $Date$
@@ -46,7 +44,7 @@ import org.fabric3.model.type.component.Scope;
 public class ScopeTestCase extends TestCase {
     public void testEquality() {
         assertEquals(Scope.COMPOSITE, Scope.COMPOSITE);
-        assertEquals(Scope.COMPOSITE, new Scope<URI>("COMPOSITE", URI.class));
+        assertEquals(Scope.COMPOSITE, new Scope<QName>("COMPOSITE", QName.class));
         Scope<?> scope = Scope.COMPOSITE;
         assertFalse(scope.equals(Scope.STATELESS));
     }

@@ -32,17 +32,14 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.scdl;
+package org.fabric3.model.type.component;
 
-import java.util.Collection;
 import java.net.URI;
+import java.util.Collection;
 import javax.xml.namespace.QName;
 
 import junit.framework.TestCase;
 
-import org.fabric3.model.type.component.ComponentDefinition;
-import org.fabric3.model.type.component.Composite;
-import org.fabric3.model.type.component.ServiceDefinition;
 import org.fabric3.model.type.java.InjectingComponentType;
 
 /**

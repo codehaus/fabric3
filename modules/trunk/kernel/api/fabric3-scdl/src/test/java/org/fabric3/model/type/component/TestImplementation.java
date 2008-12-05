@@ -32,11 +32,10 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.scdl;
+package org.fabric3.model.type.component;
 
 import javax.xml.namespace.QName;
 
-import org.fabric3.model.type.component.Implementation;
 import org.fabric3.model.type.java.InjectingComponentType;
 
 /**

@@ -32,7 +32,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.scdl;
+package org.fabric3.model.type.component;
 
 import java.lang.reflect.Type;
 
