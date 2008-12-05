@@ -60,7 +60,7 @@ import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.spi.model.type.JavaClass;
 import org.fabric3.spi.model.type.JavaParameterizedType;
 import org.fabric3.spi.model.type.XSDSimpleType;
-import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
+import org.fabric3.spi.classloader.ClassLoaderRegistry;
 import org.fabric3.spi.services.expression.ExpressionExpander;
 import org.fabric3.spi.transform.PullTransformer;
 import org.fabric3.spi.transform.TransformContext;

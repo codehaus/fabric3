@@ -24,7 +24,7 @@ import javax.xml.namespace.QName;
 
 import org.fabric3.scdl.DataType;
 import org.fabric3.spi.model.type.JavaParameterizedType;
-import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
+import org.fabric3.spi.classloader.ClassLoaderRegistry;
 import org.fabric3.spi.transform.TransformationException;
 import org.fabric3.spi.transform.TransformContext;
 import org.fabric3.transform.AbstractPullTransformer;

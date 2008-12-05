@@ -32,7 +32,7 @@ import static org.fabric3.host.Names.HOST_CONTRIBUTION;
 import org.fabric3.host.contribution.ContributionInUseException;
 import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.spi.classloader.MultiParentClassLoader;
-import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
+import org.fabric3.spi.classloader.ClassLoaderRegistry;
 import org.fabric3.spi.services.contribution.ClasspathProcessorRegistry;
 import org.fabric3.spi.services.contribution.Contribution;
 import org.fabric3.spi.services.contribution.ContributionManifest;

@@ -49,11 +49,11 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.scdl.Scope;
 import org.fabric3.spi.ObjectFactory;
+import org.fabric3.spi.classloader.ClassLoaderRegistry;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.spi.model.physical.InteractionType;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
-import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.pojo.builder.ProxyCreationException;
 import org.fabric3.pojo.builder.ProxyService;
 import org.fabric3.spi.wire.InvocationChain;

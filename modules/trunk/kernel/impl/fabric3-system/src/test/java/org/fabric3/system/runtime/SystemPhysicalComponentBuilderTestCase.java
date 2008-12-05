@@ -46,7 +46,7 @@ import org.fabric3.pojo.provision.InstanceFactoryDefinition;
 import org.fabric3.scdl.Signature;
 import org.fabric3.spi.builder.component.ComponentBuilderRegistry;
 import org.fabric3.spi.component.ScopeRegistry;
-import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
+import org.fabric3.spi.classloader.ClassLoaderRegistry;
 import org.fabric3.system.provision.SystemComponentDefinition;
 
 /**

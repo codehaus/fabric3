@@ -34,7 +34,7 @@ import com.thoughtworks.xstream.mapper.Mapper;
 import com.thoughtworks.xstream.mapper.OuterClassMapper;
 import org.osoa.sca.annotations.Reference;
 
-import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
+import org.fabric3.spi.classloader.ClassLoaderRegistry;
 
 /**
  * Default implemenation of XStreamFactory. The factory may be configured with custom converters and drivers.

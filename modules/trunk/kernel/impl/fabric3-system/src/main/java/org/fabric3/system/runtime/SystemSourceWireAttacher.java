@@ -49,7 +49,7 @@ import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.SourceWireAttacher;
 import org.fabric3.spi.builder.component.WireAttachException;
 import org.fabric3.spi.model.physical.PhysicalWireTargetDefinition;
-import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
+import org.fabric3.spi.classloader.ClassLoaderRegistry;
 import org.fabric3.spi.services.componentmanager.ComponentManager;
 import org.fabric3.spi.util.UriHelper;
 import org.fabric3.spi.wire.Wire;

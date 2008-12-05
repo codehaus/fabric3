@@ -41,7 +41,8 @@ import java.util.List;
 
 import junit.framework.TestCase;
 
-import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
+import org.fabric3.spi.classloader.ClassLoaderRegistry;
+import org.fabric3.fabric.classloader.ClassLoaderRegistryImpl;
 
 /**
  * @version $Rev$ $Date$

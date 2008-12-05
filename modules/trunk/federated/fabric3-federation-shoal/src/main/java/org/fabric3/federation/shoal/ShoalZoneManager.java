@@ -38,7 +38,7 @@ import static org.fabric3.federation.shoal.FederationConstants.ZONE_TRANSPORT_IN
 import org.fabric3.spi.command.Command;
 import org.fabric3.spi.executor.CommandExecutorRegistry;
 import org.fabric3.spi.executor.ExecutionException;
-import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
+import org.fabric3.spi.classloader.ClassLoaderRegistry;
 import org.fabric3.spi.topology.MessageException;
 import org.fabric3.spi.topology.RuntimeInstance;
 import org.fabric3.spi.topology.ZoneManager;

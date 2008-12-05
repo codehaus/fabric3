@@ -39,7 +39,7 @@ import org.fabric3.spi.builder.BuilderException;
 import org.fabric3.spi.builder.component.ComponentBuilderRegistry;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.ScopeRegistry;
-import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
+import org.fabric3.spi.classloader.ClassLoaderRegistry;
 import org.fabric3.timer.component.provision.TimerComponentDefinition;
 import org.fabric3.timer.component.provision.TriggerData;
 import org.fabric3.timer.spi.TimerService;

@@ -22,7 +22,7 @@ import com.thoughtworks.xstream.mapper.CannotResolveClassException;
 import com.thoughtworks.xstream.mapper.DefaultMapper;
 
 import org.fabric3.spi.classloader.MultiParentClassLoader;
-import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
+import org.fabric3.spi.classloader.ClassLoaderRegistry;
 
 /**
  * Encodes classnames and the classloader they are to be loaded in. This Mapper is used by the XStreamFactory so classes loaded in extension

@@ -35,7 +35,7 @@ import org.fabric3.spi.component.Component;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
-import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
+import org.fabric3.spi.classloader.ClassLoaderRegistry;
 import org.fabric3.spi.services.componentmanager.ComponentManager;
 import org.fabric3.spi.util.UriHelper;
 import org.fabric3.spi.wire.InvocationChain;

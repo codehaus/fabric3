@@ -16,8 +16,6 @@
  */
 package org.fabric3.binding.ws.axis2.control;
 
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.List;
 import java.util.Map;
 
@@ -39,7 +37,7 @@ import org.fabric3.spi.generator.BindingGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.policy.Policy;
-import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
+import org.fabric3.spi.classloader.ClassLoaderRegistry;
 import org.osoa.sca.annotations.Reference;
 import org.w3c.dom.Element;
 import org.w3c.dom.NodeList;

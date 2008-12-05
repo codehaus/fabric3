@@ -33,7 +33,7 @@ import org.osoa.sca.annotations.Reference;
 import org.fabric3.spi.builder.BuilderException;
 import org.fabric3.spi.builder.component.ComponentBuilder;
 import org.fabric3.spi.builder.component.ComponentBuilderRegistry;
-import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
+import org.fabric3.spi.classloader.ClassLoaderRegistry;
 import org.fabric3.xquery.provision.XQueryComponentDefinition;
 
 

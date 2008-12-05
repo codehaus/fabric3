@@ -16,7 +16,6 @@
  */
 package org.fabric3.mock;
 
-import java.net.URI;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -25,7 +24,7 @@ import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.BuilderException;
 import org.fabric3.spi.builder.component.ComponentBuilder;
 import org.fabric3.spi.builder.component.ComponentBuilderRegistry;
-import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
+import org.fabric3.spi.classloader.ClassLoaderRegistry;
 import org.osoa.sca.annotations.EagerInit;
 import org.osoa.sca.annotations.Init;
 import org.osoa.sca.annotations.Reference;

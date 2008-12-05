@@ -36,7 +36,7 @@ import org.fabric3.spi.generator.BindingGenerator;
 import org.fabric3.spi.generator.GenerationException;
 import org.fabric3.spi.model.instance.LogicalBinding;
 import org.fabric3.spi.policy.Policy;
-import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
+import org.fabric3.spi.classloader.ClassLoaderRegistry;
 
 /**
  * @version $Revision$ $Date$

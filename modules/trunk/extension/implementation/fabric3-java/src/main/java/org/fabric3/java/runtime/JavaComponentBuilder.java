@@ -35,13 +35,13 @@ import org.fabric3.pojo.provision.InstanceFactoryDefinition;
 import org.fabric3.scdl.InjectableAttribute;
 import org.fabric3.scdl.Scope;
 import org.fabric3.spi.SingletonObjectFactory;
+import org.fabric3.spi.classloader.ClassLoaderRegistry;
 import org.fabric3.spi.transform.PullTransformer;
 import org.fabric3.spi.builder.BuilderException;
 import org.fabric3.spi.builder.component.ComponentBuilderRegistry;
 import org.fabric3.pojo.instancefactory.InstanceFactoryProvider;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.ScopeRegistry;
-import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
 import org.fabric3.spi.transform.TransformerRegistry;
 
 /**

@@ -21,7 +21,7 @@ import java.net.URI;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.jpa.spi.classloading.EmfClassLoaderService;
-import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
+import org.fabric3.spi.classloader.ClassLoaderRegistry;
 
 /**
  * Returns the previously constructed classloader. The Hibernate extension implicitly imports the Hibernate extension contribution into any

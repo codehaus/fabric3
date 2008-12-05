@@ -22,7 +22,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectStreamClass;
 import java.net.URI;
 
-import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
+import org.fabric3.spi.classloader.ClassLoaderRegistry;
 
 /**
  * A specialized ObjectInputStream that can deserialize objects loaded in different runtime classloaders. When ObjectInputStream.resolveClass() is

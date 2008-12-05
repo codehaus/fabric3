@@ -23,7 +23,7 @@ import org.easymock.IAnswer;
 import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.spi.command.Command;
 import org.fabric3.spi.executor.CommandExecutorRegistry;
-import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
+import org.fabric3.spi.classloader.ClassLoaderRegistry;
 import org.fabric3.spi.services.event.EventService;
 
 /**

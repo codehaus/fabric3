@@ -39,7 +39,7 @@ import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.builder.component.TargetWireAttacher;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 import org.fabric3.spi.model.physical.PhysicalWireSourceDefinition;
-import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
+import org.fabric3.spi.classloader.ClassLoaderRegistry;
 import org.fabric3.spi.services.expression.ExpressionExpander;
 import org.fabric3.spi.services.expression.ExpressionExpansionException;
 import org.fabric3.spi.wire.Interceptor;

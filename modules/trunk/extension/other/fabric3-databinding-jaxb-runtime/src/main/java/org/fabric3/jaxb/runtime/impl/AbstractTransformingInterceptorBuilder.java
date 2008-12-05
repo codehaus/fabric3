@@ -25,7 +25,7 @@ import javax.xml.namespace.QName;
 import org.fabric3.jaxb.provision.AbstractTransformingInterceptorDefinition;
 import org.fabric3.spi.builder.BuilderException;
 import org.fabric3.spi.builder.interceptor.InterceptorBuilder;
-import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
+import org.fabric3.spi.classloader.ClassLoaderRegistry;
 import org.fabric3.spi.wire.Interceptor;
 
 /**

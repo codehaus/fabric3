@@ -43,7 +43,7 @@ import org.osoa.sca.annotations.Reference;
 import org.osoa.sca.annotations.EagerInit;
 
 import org.fabric3.spi.ObjectFactory;
-import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
+import org.fabric3.spi.classloader.ClassLoaderRegistry;
 import org.fabric3.spi.services.componentmanager.ComponentManager;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.builder.WiringException;

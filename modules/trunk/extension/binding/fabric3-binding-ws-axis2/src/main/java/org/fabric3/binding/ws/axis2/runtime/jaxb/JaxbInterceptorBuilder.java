@@ -31,7 +31,7 @@ import org.osoa.sca.annotations.Reference;
 import org.fabric3.binding.ws.axis2.provision.jaxb.JaxbInterceptorDefinition;
 import org.fabric3.spi.builder.BuilderException;
 import org.fabric3.spi.builder.interceptor.InterceptorBuilder;
-import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
+import org.fabric3.spi.classloader.ClassLoaderRegistry;
 
 /**
  * @version $Revision$ $Date$

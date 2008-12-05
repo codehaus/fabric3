@@ -48,7 +48,7 @@ import static org.fabric3.host.Names.HOST_CONTRIBUTION;
 import org.fabric3.host.runtime.HostInfo;
 import org.fabric3.spi.classloader.MultiParentClassLoader;
 import org.fabric3.spi.model.physical.PhysicalClassLoaderDefinition;
-import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
+import org.fabric3.spi.classloader.ClassLoaderRegistry;
 import org.fabric3.spi.services.componentmanager.ComponentManager;
 import org.fabric3.spi.services.contribution.ClasspathProcessorRegistry;
 import org.fabric3.spi.services.contribution.ContributionUriResolver;

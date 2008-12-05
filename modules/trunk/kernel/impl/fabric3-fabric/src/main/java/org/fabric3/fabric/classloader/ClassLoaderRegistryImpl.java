@@ -32,7 +32,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.fabric.services.classloading;
+package org.fabric3.fabric.classloader;
 
 import java.net.URI;
 import java.util.ArrayList;
@@ -42,8 +42,8 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.fabric3.spi.classloader.MultiParentClassLoader;
-import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
-import org.fabric3.spi.services.classloading.DuplicateClassLoaderException;
+import org.fabric3.spi.classloader.ClassLoaderRegistry;
+import org.fabric3.spi.classloader.DuplicateClassLoaderException;
 
 /**
  * Implementation of a registry for classloaders.

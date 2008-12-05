@@ -40,7 +40,7 @@ import java.lang.reflect.Method;
 import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.scdl.Signature;
-import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
+import org.fabric3.spi.classloader.ClassLoaderRegistry;
 
 /**
  * @version $Rev$ $Date$

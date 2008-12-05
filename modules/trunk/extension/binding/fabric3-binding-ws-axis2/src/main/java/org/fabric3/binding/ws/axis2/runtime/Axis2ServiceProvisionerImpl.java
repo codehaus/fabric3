@@ -51,7 +51,7 @@ import org.fabric3.binding.ws.axis2.runtime.servlet.F3AxisServlet;
 import org.fabric3.spi.builder.WiringException;
 import org.fabric3.spi.host.ServletHost;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
-import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
+import org.fabric3.spi.classloader.ClassLoaderRegistry;
 import org.fabric3.spi.services.expression.ExpressionExpander;
 import org.fabric3.spi.services.expression.ExpressionExpansionException;
 import org.fabric3.spi.wire.InvocationChain;

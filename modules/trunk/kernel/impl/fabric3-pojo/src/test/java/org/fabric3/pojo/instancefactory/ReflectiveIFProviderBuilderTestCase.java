@@ -52,8 +52,8 @@ import org.fabric3.scdl.InjectableAttributeType;
 import org.fabric3.scdl.InjectionSite;
 import org.fabric3.scdl.MethodInjectionSite;
 import org.fabric3.scdl.Signature;
-import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
-import org.fabric3.spi.services.classloading.DuplicateClassLoaderException;
+import org.fabric3.spi.classloader.ClassLoaderRegistry;
+import org.fabric3.spi.classloader.DuplicateClassLoaderException;
 
 /**
  * @version $Date$ $Revision$

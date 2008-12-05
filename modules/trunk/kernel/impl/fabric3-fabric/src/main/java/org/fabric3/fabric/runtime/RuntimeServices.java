@@ -18,7 +18,7 @@ package org.fabric3.fabric.runtime;
 
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.ScopeRegistry;
-import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
+import org.fabric3.spi.classloader.ClassLoaderRegistry;
 import org.fabric3.spi.services.componentmanager.ComponentManager;
 import org.fabric3.spi.services.contribution.MetaDataStore;
 import org.fabric3.spi.services.lcm.LogicalComponentManager;

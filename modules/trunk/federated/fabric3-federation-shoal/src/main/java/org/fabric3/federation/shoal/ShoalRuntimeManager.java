@@ -30,7 +30,7 @@ import static org.fabric3.federation.shoal.FederationConstants.RUNTIME_MANAGER;
 import org.fabric3.spi.command.Command;
 import org.fabric3.spi.executor.CommandExecutorRegistry;
 import org.fabric3.spi.executor.ExecutionException;
-import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
+import org.fabric3.spi.classloader.ClassLoaderRegistry;
 import org.fabric3.spi.topology.RuntimeManager;
 import org.fabric3.spi.classloader.MultiClassLoaderObjectInputStream;
 

@@ -80,7 +80,7 @@ import org.fabric3.spi.introspection.contract.ContractProcessor;
 import org.fabric3.spi.introspection.java.ImplementationProcessor;
 import org.fabric3.spi.introspection.validation.InvalidContributionException;
 import org.fabric3.spi.model.instance.LogicalCompositeComponent;
-import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
+import org.fabric3.spi.classloader.ClassLoaderRegistry;
 import org.fabric3.spi.services.componentmanager.ComponentManager;
 import org.fabric3.spi.services.contribution.Contribution;
 import org.fabric3.spi.services.contribution.ContributionManifest;

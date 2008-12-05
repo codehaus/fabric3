@@ -50,7 +50,7 @@ import org.fabric3.spi.builder.BuilderException;
 import org.fabric3.spi.builder.component.ComponentBuilderRegistry;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.ScopeRegistry;
-import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
+import org.fabric3.spi.classloader.ClassLoaderRegistry;
 import org.fabric3.system.provision.SystemComponentDefinition;
 import org.fabric3.spi.transform.PullTransformer;
 import org.fabric3.spi.transform.TransformerRegistry;
