@@ -25,7 +25,7 @@ import org.fabric3.spi.ObjectCreationException;
 import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.invocation.CallFrame;
-import org.fabric3.spi.services.proxy.ProxyService;
+import org.fabric3.pojo.builder.ProxyService;
 import org.fabric3.spi.wire.InvocationChain;
 
 /**

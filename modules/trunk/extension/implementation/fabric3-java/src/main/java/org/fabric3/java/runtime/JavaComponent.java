@@ -25,7 +25,7 @@ import org.osoa.sca.ServiceReference;
 import org.fabric3.pojo.component.PojoComponent;
 import org.fabric3.pojo.instancefactory.InstanceFactoryProvider;
 import org.fabric3.spi.component.ScopeContainer;
-import org.fabric3.spi.services.proxy.ProxyService;
+import org.fabric3.pojo.builder.ProxyService;
 
 /**
  * The runtime instantiation of a Java component implementation.

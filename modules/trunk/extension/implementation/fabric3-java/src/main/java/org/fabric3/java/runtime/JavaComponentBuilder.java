@@ -26,6 +26,7 @@ import org.osoa.sca.annotations.Reference;
 
 import org.fabric3.java.provision.JavaComponentDefinition;
 import org.fabric3.pojo.builder.PojoComponentBuilder;
+import org.fabric3.pojo.builder.ProxyService;
 import org.fabric3.pojo.component.PojoComponentContext;
 import org.fabric3.pojo.component.PojoRequestContext;
 import org.fabric3.pojo.injection.ConversationIDObjectFactory;
@@ -41,7 +42,6 @@ import org.fabric3.pojo.instancefactory.InstanceFactoryProvider;
 import org.fabric3.spi.component.ScopeContainer;
 import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
-import org.fabric3.spi.services.proxy.ProxyService;
 import org.fabric3.spi.transform.TransformerRegistry;
 
 /**

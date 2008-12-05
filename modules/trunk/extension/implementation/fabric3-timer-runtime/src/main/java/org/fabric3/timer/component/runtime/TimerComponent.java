@@ -24,7 +24,7 @@ import javax.xml.namespace.QName;
 import org.fabric3.java.runtime.JavaComponent;
 import org.fabric3.pojo.instancefactory.InstanceFactoryProvider;
 import org.fabric3.spi.component.ScopeContainer;
-import org.fabric3.spi.services.proxy.ProxyService;
+import org.fabric3.pojo.builder.ProxyService;
 import org.fabric3.timer.component.provision.TriggerData;
 import org.fabric3.timer.spi.TimerService;
 

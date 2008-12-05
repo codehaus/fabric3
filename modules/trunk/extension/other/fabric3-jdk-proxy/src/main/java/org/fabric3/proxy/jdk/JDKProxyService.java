@@ -54,8 +54,8 @@ import org.fabric3.spi.component.ScopeRegistry;
 import org.fabric3.spi.model.physical.InteractionType;
 import org.fabric3.spi.model.physical.PhysicalOperationDefinition;
 import org.fabric3.spi.services.classloading.ClassLoaderRegistry;
-import org.fabric3.spi.services.proxy.ProxyCreationException;
-import org.fabric3.spi.services.proxy.ProxyService;
+import org.fabric3.pojo.builder.ProxyCreationException;
+import org.fabric3.pojo.builder.ProxyService;
 import org.fabric3.spi.wire.InvocationChain;
 import org.fabric3.spi.wire.Wire;
 

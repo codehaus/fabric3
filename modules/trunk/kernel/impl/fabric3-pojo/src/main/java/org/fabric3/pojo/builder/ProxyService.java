@@ -32,7 +32,7 @@
  * specific language governing permissions and limitations
  * under the License.
  */
-package org.fabric3.spi.services.proxy;
+package org.fabric3.pojo.builder;
 
 import java.lang.reflect.Method;
 import java.net.URI;

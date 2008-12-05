@@ -33,7 +33,7 @@ import org.fabric3.spi.ObjectFactory;
 import org.fabric3.spi.builder.BuilderException;
 import org.fabric3.spi.builder.component.ComponentBuilder;
 import org.fabric3.spi.builder.component.ComponentBuilderRegistry;
-import org.fabric3.spi.services.proxy.ProxyService;
+import org.fabric3.pojo.builder.ProxyService;
 import org.fabric3.web.provision.WebComponentDefinition;
 
 /**
