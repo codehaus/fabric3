@@ -32,17 +32,6 @@
     <packaging>jar</packaging>
     <description>Fabric3 Policy Test.</description>
 
-    <repositories>
-        <repository>
-            <id>java.net</id>
-            <url>https://maven-repository.dev.java.net/nonav/repository</url>
-            <layout>legacy</layout>
-            <snapshots>
-                <enabled>false</enabled>
-            </snapshots>
-        </repository>
-    </repositories>
-
     <dependencies>
 
         <dependency>
@@ -60,37 +49,15 @@
         </dependency>
 
         <dependency>
-            <groupId>javax.transaction</groupId>
-            <artifactId>transaction-api</artifactId>
-            <version>1.1</version>
+            <groupId>geronimo-spec</groupId>
+            <artifactId>geronimo-spec-jta</artifactId>
+            <version>1.0.1B-rc4</version>
         </dependency>
 
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
         </dependency>
-        
-		<dependency>
-		    <groupId>org.codehaus.fabric3</groupId>
-		    <artifactId>fabric3-tx</artifactId>
-		    <version>0.7-SNAPSHOT</version>
-		    <scope>f3-extension</scope>
-		</dependency>
-		
-		<dependency>
-		    <groupId>org.codehaus.fabric3</groupId>
-		    <artifactId>fabric3-tx-jotm</artifactId>
-		    <version>0.7-SNAPSHOT</version>
-		    <scope>f3-extension</scope>
-		</dependency>
-		
-		<dependency>
-		    <groupId>org.codehaus.fabric3</groupId>
-		    <artifactId>fabric3-resource</artifactId>
-		    <version>0.7-SNAPSHOT</version>
-		    <scope>f3-extension</scope>
-		</dependency>
-		
     </dependencies>
 
     <build>
@@ -100,10 +67,39 @@
         <plugins>
             <plugin>
                 <groupId>org.codehaus.fabric3</groupId>
-                <artifactId>fabric3-itest-plugin1</artifactId>
+                <artifactId>fabric3-itest-plugin</artifactId>
                 <version>0.7-SNAPSHOT</version>
                 <configuration>
                     <runtimeVersion>0.7-SNAPSHOT</runtimeVersion>
+                    <extensions>
+                        <dependency>
+                            <groupId>org.codehaus.fabric3</groupId>
+                            <artifactId>fabric3-tx</artifactId>
+                            <version>0.7-SNAPSHOT</version>
+                        </dependency>
+                        <dependency>
+                            <groupId>org.codehaus.fabric3</groupId>
+                            <artifactId>fabric3-tx-jotm</artifactId>
+                            <version>0.7-SNAPSHOT</version>
+                        </dependency>
+                        <dependency>
+                            <groupId>org.codehaus.fabric3</groupId>
+                            <artifactId>fabric3-resource</artifactId>
+                            <version>0.7-SNAPSHOT</version>
+                        </dependency>
+                    </extensions>
+                    <shared>
+                        <dependency>
+                            <groupId>geronimo-spec</groupId>
+                            <artifactId>geronimo-spec-jta</artifactId>
+                            <version>1.0.1B-rc4</version>
+                        </dependency>
+                        <dependency>
+                            <groupId>geronimo-spec</groupId>
+                            <artifactId>geronimo-spec-j2ee-connector</artifactId>
+                            <version>1.5-rc4</version>
+                        </dependency>
+                    </shared>
                 </configuration>
                 <executions>
                     <execution>
